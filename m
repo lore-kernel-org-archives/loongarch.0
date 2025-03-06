@@ -1,146 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE30DDA8
-	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 19:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CB025D8FA
+	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 20:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741289867; cv=none; b=QjBFV3ALiqsUUFUOLGWGUCvKzLAkcK06hu5PKDF6592TH9uiFUnG11XhVeocTSg0/jKiib9lxjAwjrtqQA1SMZ8+LRtnOpvwh6SNzQokO+fa6uyKQJhu5U9W95UYPZDPpBGQYmu04rH6Fjx7K1yNlPUZxzMv6oDFpvYY85adqIw=
+	t=1741293440; cv=none; b=g+tbMKpkK+2IX+O35VAJ4oTqrbjkfefX2FHWc15ghpF8A+c2HFHf1pUKVF4s8CmOfFbUrAKvKY3Y0Sh2+6dFBJ9LyAO8GRMjQTtWejjxzBgsUPpyIlw7kFs1ZbUbXpSWT7YWyEU9E5Dwy9/WEouf+XdxQeOGa2tYCQCy9y/tZxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741289867; c=relaxed/simple;
-	bh=Koeuz5ZXlB1/U5aBCNcFQSm7CBaqDpCzuvHfyPrx7nY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IULoI0gvX2WYdSBnV37qfN4AicRs2Cc6mtXs7ji4fR3rT9sazboLmoIOLeMDAX30e4AtIo55uz4h4uZmxp896IqZ/mGAezeldTQcuhbdn6IgJw2H4cB3zUPiHaUHDDMQU06Bn4KTP5W0q7W98yaeHTf/KJwyiUoOJ18eTZte/Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YtojnV/Z; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741293440; c=relaxed/simple;
+	bh=R2aBQXqe76n44wlQboEU86eLZISUmm8xoc3v6vHTwTQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YFKrBJZ0qPxTA+Z7zNeU6eAjnbydbkbMZPQAT0W5ZaVJOqmpxSdI33e4qC2lD1B4UAgSRAbIsPzwamWuzItAb5ZtTzz8LytVsMeBI3sc1ZZ78IchBLLJeJhNb6soFQDDwFLUkhJtH9ynuSggaw0J8WIcxbSxi1ZeLq7ovnHMdq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MlWJ5+Gz; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YtojnV/Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741289865; x=1772825865;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Koeuz5ZXlB1/U5aBCNcFQSm7CBaqDpCzuvHfyPrx7nY=;
-  b=YtojnV/ZPZ2ftGNVVwhOLa0sWdrnDUT5txvnAT2xbJnA3bz73w60Uui8
-   HKPtdHqlGnYXmN1MoFI/toBAqgozeDKFwuiy1mmJvK8/xqm5KSLSjHioL
-   qHHlcP1cRVQlXUskHm2BdMihZJE/xN2wPGHuESYHO7sHwNTrnGluH9yq5
-   5WPFHHTJNPq3UnUXkXVieWBdqkwAokDdl6gFPl1PFxfw/Scf5tyco7iU/
-   MzCMetmqKYrCT6CDAl4KaGAQF2Kl1cTywWB1K4lDvfxe9UDCZZujwIQrB
-   6Ak7X9eeMbMV80ZM1guBaoDnmHHsZVIOYvBvYxz4Duc6pASCJFeTO8R3H
-   g==;
-X-CSE-ConnectionGUID: wXsvy8cpRjClEMAciSQwpA==
-X-CSE-MsgGUID: o71mBvvJQeuYjS9L44rmPA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="52967947"
-X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
-   d="scan'208";a="52967947"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 11:37:44 -0800
-X-CSE-ConnectionGUID: jtUCN+0ERJKOiuT891wUKA==
-X-CSE-MsgGUID: BhyG0YZCS02zwlxq4/E1Nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
-   d="scan'208";a="119128122"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.110.31]) ([10.125.110.31])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 11:37:42 -0800
-Message-ID: <b8922286-cfb9-4071-942c-b90d03d36b13@intel.com>
-Date: Thu, 6 Mar 2025 11:38:02 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlWJ5+Gz"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-474e0bd966dso9145461cf.0
+        for <loongarch@lists.linux.dev>; Thu, 06 Mar 2025 12:37:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741293437; x=1741898237; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u3sGJ8o/dKJaiJh5keAs+as1aOJ+rHZACcRN9kFRumQ=;
+        b=MlWJ5+Gzje0qrMs1DjHRcPCmvz2heJ0xHHsegXXJT01SORVt1H7GjTj4t/yFwZS3qE
+         v8EMwTlVeDC1979nMq0QZw0KcvcQ65rq9S7JhnWKq6x9svGXe13eKVHjXAurRJ92RsBu
+         vO0J6xAkIaL4v4M042XwIZRNcQHthy7pM0Yoztn1RSBuEyOvjm2s2+ae5fJU5JSqJR6c
+         mmjL34UuCAuXcrzPwqTLsWJI1TpBj8ywKQtLyprS2EJoLWXlR7sXn7dEee7slYdYISUP
+         M2NnMklGybHfb6Eydze3ZB/ynjstgIBrOazNtRDz4BNb6/LgDt6X8ueubV/U7V9ikWm9
+         a+ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741293437; x=1741898237;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u3sGJ8o/dKJaiJh5keAs+as1aOJ+rHZACcRN9kFRumQ=;
+        b=BBup9oDMKsG6S2eohGwgMY3vmd1BT7mTHSb7NEVPZgq3eZtHcJgXXUSoL0DPjvWzfW
+         QTGhz6gUai/CJk8cUfL1FY4cQcxhin2iLlPJQn+ikiFbwBu5eqwlRY5TZLdgk1h/Jv+V
+         N9QyZacYuQcnimxmVg5TsFOkH8pPOGGTiYe4tku52MpcXcQjupokujRI8OkDkoTWIHwX
+         9yMywQyczAdIxyG4+hPnArf32zj5mAgm0rLdRFjOIrlvER6T6as6V418EQsFHJ3Vs+sn
+         ylfNNdGthnaxrTZPQHyIYjvzJTSEbB6QhvffTWre1CcObrvXcbZHTmc0RQ8uy5X37Fry
+         KoSA==
+X-Gm-Message-State: AOJu0YzBwOxrgxfJf4Wg0Gy1WjUGVSLW0ReWdkdrBfPCw99j+lFaB8/j
+	JXS80vx5iq7eyYXeWXONplsRUPuTyx8s7FlW35kzrnPECiuPFsL4IqYWBCVeOdB2fRNrEQMFwHK
+	Ou14cEzDkhZC8CDwWUoIGXhC5zu4=
+X-Gm-Gg: ASbGncvG/5kSgrvNQa7Q8pnvD0LLOlpjBJD9DXmYv3ZohOeiLBM4JxkvlSnubnCO3J5
+	AQ+EliAPA5mmhucHz+YY64M1hwrvMkDnn7kZ7sES8dW7EYcWsARW962C4lwEgXGNw12YGtBid6n
+	0Qx3nlCv+azrLtHAZ7OLcdpeZ+PFqrNsOJggnAwW6WVa73WhmAKNZm6Yb3Vbs=
+X-Google-Smtp-Source: AGHT+IGaFrZrgFITow4KddN7WPBVxwXecWVQYu7YHINtHH5o3/ly8vnZzt9yeA+WutWeTz3/I6c8wXPxdIcX17DIG1g=
+X-Received: by 2002:ac8:7dd0:0:b0:474:fee1:7913 with SMTP id
+ d75a77b69052e-476109c1698mr5848481cf.24.1741293437150; Thu, 06 Mar 2025
+ 12:37:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/13] arch, mm: reduce code duplication in mem_init()
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
- Brian Cain <bcain@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Guo Ren
- <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
- Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Simek <monstr@monstr.eu>, Palmer Dabbelt <palmer@dabbelt.com>,
- Peter Zijlstra <peterz@infradead.org>, Richard Weinberger <richard@nod.at>,
- Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
- linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-mm@kvack.org, x86@kernel.org
-References: <20250306185124.3147510-1-rppt@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250306185124.3147510-1-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAK3+h2w6WESdBN3UCr3WKHByD7D6Q_Ve1EDAjotVrnx6Or_c8g@mail.gmail.com>
+ <CAEyhmHRCXHbd9NL2QvOvY4yhKg2W7T0+d+0U9-PH5JCt8RqG1g@mail.gmail.com> <CAK3+h2zWGJ3BKO6bErk=-m0+gE49iQ_JJG5FQZxXoiGsGY_CXQ@mail.gmail.com>
+In-Reply-To: <CAK3+h2zWGJ3BKO6bErk=-m0+gE49iQ_JJG5FQZxXoiGsGY_CXQ@mail.gmail.com>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Thu, 6 Mar 2025 12:37:06 -0800
+X-Gm-Features: AQ5f1JqPpze9_j4Di7wOlhQWAVStIaUedqs9v3wAjEvN0Xz5quUOOwZoHWQw-9k
+Message-ID: <CAK3+h2wBF1_B3iBqk=8HFyxSYE4KioSnkxj6CvVmHDLx-RhbNQ@mail.gmail.com>
+Subject: Re: [BUG?] loxilb tc BPF program cause Loongarch kernel hard lockup
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/6/25 10:51, Mike Rapoport wrote:
->  53 files changed, 151 insertions(+), 618 deletions(-)
->  delete mode 100644 arch/x86/include/asm/numa_32.h
->  delete mode 100644 arch/x86/mm/highmem_32.c
+On Thu, Mar 6, 2025 at 7:39=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.com>=
+ wrote:
+>
+> On Wed, Mar 5, 2025 at 11:34=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.co=
+m> wrote:
+> >
+> > Hi Vincent,
+> >
+> > On Thu, Mar 6, 2025 at 8:53=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.=
+com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > I have an issue recorded here [0] with kernel call trace  when I star=
+t
+> > > loxilb, the loxilb tc BPF program seems to be loaded and attached to
+> > > the network interface, but immediately it causes a loongarch kernel
+> > > hard lockup, no keyboard response. Sometimes the panic call trace
+> > > shows up in the monitor screen after I disabled kernel panic reboot
+> > > (echo 0 > /proc/sys/kernel/panic) and started loxilb.
+> > >
+> > > Background: I ported open source IPFire [1] to Loongarch CPU
+> > > architecture and enabled kernel BPF features, added loxilb as LFS
+> > > (Linux from scratch) addon software, loxilb 0.9.8.3 has libbpf 1.5.0
+> > > which has loongarch support [2]. The same loxilb addon runs fine on
+> > > x86 architecture. Any clue on this?
+> > >
+> > > [0]: https://github.com/vincentmli/BPFire/issues/76
+> > > [1]: https://github.com/ipfire/ipfire-2.x
+> > > [2]: https://github.com/loxilb-io/loxilb/issues/972
+> > >
+> > > Vincent
+> > >
+> >
+> > What's your kernel version ?
+> > Could you craft a minimal reproducible bpf prog or try with latest kern=
+el ?
+> >
+>
 
-Holy cow, nice work. For the x86 bits:
+I tried lastest kernel 6.14-rc5, same issue.
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-
+> I am not familiar with the details of the loxilb tc BPF program, It
+> can be tricky for me to come up with a minimal reproducible bpf prog.
+>
+> I  has another smaller XDP program
+> https://github.com/vincentmli/xdp-tools/blob/loongjit/xdp-dnsrrl/xdp_dnsr=
+rl.bpf.c
+> that could also lockup loongarch kernel and can be reproducilble on
+> Loongarch fedora community release,  but it may be a different issue.
+> The common thing between loxilb tc BPF program and this XDP program is
+> they both use bpf tail call, not sure if that is related.
+>
+> I can upload the new loongfire flash image  which can be installed on
+> 3A6000 if that is helpful.
+>
+> > Cheers,
+> > --
+> > Hengqi
