@@ -1,133 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BFA176242
-	for <loongarch@lists.linux.dev>; Sat,  8 Mar 2025 05:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CAAD2BAF9
+	for <loongarch@lists.linux.dev>; Sat,  8 Mar 2025 05:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741411726; cv=none; b=a4bbJIEUsKRtYf1bQi/foXyc5HuvRtoK/6vV1aLAEoN+mchk6sRghNF8taNosRQzZQ24GK6EDknlN1RE2DH6GsYMymf53JTuSMBk+8KecPSUlGcEcjUKY4+czH13DsE7XcwjMmZEtvffmdEibSW/8ZagxSgCWgrybtFGsftj0r0=
+	t=1741412303; cv=none; b=YVQf2Ye9CdGVUgLvBWtZ06YBoLXxOtBf+8cQqJ++q0AL0rvIR+ysmiiUQQj1SUztxJ6CkVhVf0XtqXucN85dKrl6jvhLNwMBPTENSiQVHuSgeDHlbdhWdSa3pL0X7L1zE5KKN+F4zfXqP31BTI1trAZC3yfqxvc187cH7UXbsOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741411726; c=relaxed/simple;
-	bh=bf2oRrLyX61wmm9csWKqaHXp373r0RDGKowQWE05Wm0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LpvmxWrk4tDG1drHdVJcoN3GOrkeMkMjNliw7vin6dnYWNtN3a6PgkBhNdP2wTNh9aoxTuEsMPJTWFkWvb0Do7bx7v7KZYcbaXVyx6DFzeMRIQSdrWX+P2DEZUzuF/Dwni6FT7JOLyEFomNyo9DFtSynOa/1JjPX6NkcL2dYd1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfQd84zj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfQd84zj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D5BCC4CEE4
-	for <loongarch@lists.linux.dev>; Sat,  8 Mar 2025 05:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741411725;
-	bh=bf2oRrLyX61wmm9csWKqaHXp373r0RDGKowQWE05Wm0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MfQd84zj0WCS3WDjDja96SPDkDKjd+2NE62W1PkAi9bHplgBgO24wU22ENsJHdCuu
-	 MBVhGVqgI8uWsjRYVgSvUy6WBr0xkxjMiqpvFn+pJcbH/jHML3848r3ou7EqNHNsnu
-	 kU0g/iydv+N0P+cnk5v3eQGBA1WhKIGpVzTEzbgjzrLazl/6jjmRwKIfpiJQ8RWYiy
-	 nKN3N8baO3lqajoGQBwgYstjkHU4ZJsef6Vgsf31v9GF8zzFqhsqzBrvLwrCghj8HV
-	 PLlHRfFcJFBCyTylpO/iwVdJwXsMDuVzeDBCe/6G8SqWJCgF2cFlGBH5NKsyc4Pjvk
-	 7HzN17ZsmLRAw==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so3023258a12.0
-        for <loongarch@lists.linux.dev>; Fri, 07 Mar 2025 21:28:45 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVC02KkQhSk3twJYoKF6psVz1JtYYRi6qUzp8PtI5fgkErh2DlKspSmJSCyXuO6ttZyFp8rgZj/I4E=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx8jgflR33KW5rZRGE8qfDIWSUii6UjU5pUkcvTmly+C46Db81D
-	M62/0M8LBdYINGUfdVHdiUzXWoE3gfK48mfutqeehumwjbFgJK9unWqrn6CNJHmV730o2I4N8IC
-	wPYg5Eh+FjT58EHigi0RnnqWSYu0=
-X-Google-Smtp-Source: AGHT+IGmBMWxNTIA9gWOEi+br3asuk6ba+EEBk7sBSjlNNzVHOnOv4RBDYUKXhxSogkNckgvoMcZT2chPBEHY7pKulE=
-X-Received: by 2002:a17:907:1b05:b0:abf:74d6:e2b0 with SMTP id
- a640c23a62f3a-ac252747c60mr676960166b.3.1741411724129; Fri, 07 Mar 2025
- 21:28:44 -0800 (PST)
+	s=arc-20240116; t=1741412303; c=relaxed/simple;
+	bh=YFAZgufb3emHD29pGSeY13qd+z0iS1KWRUTYdjfaGDg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NQFPO4v1nUvusI9Ql5LGnOuim04hb9GkF/tdIjv1hxMTvo/9FWwnusbt0lh0YDhPZPNttDtRK+5/ldceVm+PD8YBc742U79Sd6aoV8AOar3hjqpakSeG6EnlsHl8htQRkcWMjPeZYjtBPBFZXPmcO9jUQ+oY/BHmOpYVU38BWNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.156])
+	by gateway (Coremail) with SMTP id _____8BxlmnD18tnQL+OAA--.46996S3;
+	Sat, 08 Mar 2025 13:38:11 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.156])
+	by front1 (Coremail) with SMTP id qMiowMBxWsS918tn2rg9AA--.14474S2;
+	Sat, 08 Mar 2025 13:38:09 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 6.12/6.13] loongarch: Use ASM_REACHABLE
+Date: Sat,  8 Mar 2025 13:37:53 +0800
+Message-ID: <20250308053753.3632741-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <2025030745-flaxseed-unsubtly-c5e3@gregkh> <20250307214943.372210-1-ojeda@kernel.org>
-In-Reply-To: <20250307214943.372210-1-ojeda@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 8 Mar 2025 13:28:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5TZ5ZE1XEQpzDU_o407V6+-q7i8xMFnmKdvyexG8ZG1Q@mail.gmail.com>
-X-Gm-Features: AQ5f1JoR79KqQ8X2M9GvSz3UUmv0znvq0FO8VdTeRwCjtfFrzxdZGCv2L-NFnvo
-Message-ID: <CAAhV-H5TZ5ZE1XEQpzDU_o407V6+-q7i8xMFnmKdvyexG8ZG1Q@mail.gmail.com>
-Subject: Re: Linux 6.12.18
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: gregkh@linuxfoundation.org, akpm@linux-foundation.org, jslaby@suse.cz, 
-	linux-kernel@vger.kernel.org, lwn@lwn.net, stable@vger.kernel.org, 
-	torvalds@linux-foundation.org, WANG Xuerui <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxWsS918tn2rg9AA--.14474S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uF1UCr4kuFW5KFWDJFykCrX_yoW8Zw18pa
+	n7AFn8KFs5GryktwnFyr1F9F12qr4fCw47Ww18Wry0vayUZwnYqrsYqrsxZFyrGa92gryU
+	XFWfWwnaqFy5G3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-Hi, Miguel,
+From: Peter Zijlstra <peterz@infradead.org>
 
-On Sat, Mar 8, 2025 at 5:50=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wrot=
-e:
->
-> On Fri, 07 Mar 2025 18:52:44 +0100 Greg Kroah-Hartman <gregkh@linuxfounda=
-tion.org> wrote:
-> >
-> > I'm announcing the release of the 6.12.18 kernel.
-> >
-> > All users of the 6.12 kernel series must upgrade.
->
-> While testing another backport, I found an unrelated build failure for
-> loongarch in v6.12.18 that I did not see in v6.12.17 -- I cannot find it
-> reported from a quick look, so I am doing so here:
->
->        CC      arch/loongarch/kernel/asm-offsets.s - due to target missin=
-g
->     In file included from arch/loongarch/kernel/asm-offsets.c:8:
->     In file included from ./include/linux/sched.h:12:
->     In file included from ./arch/loongarch/include/generated/asm/current.=
-h:1:
->     In file included from ./include/asm-generic/current.h:6:
->     ./include/linux/thread_info.h:249:6: error: call to undeclared functi=
-on 'annotate_reachable'; ISO C99 and later do not support implicit function=
- declarations [-Wimplicit-function-declaration]
->       249 |         if (WARN_ON_ONCE(bytes > INT_MAX))
->           |             ^
->     ./include/asm-generic/bug.h:113:3: note: expanded from macro 'WARN_ON=
-_ONCE'
->       113 |                 __WARN_FLAGS(BUGFLAG_ONCE |                  =
-   \
->           |                 ^
->     ./arch/loongarch/include/asm/bug.h:47:2: note: expanded from macro '_=
-_WARN_FLAGS'
->        47 |         annotate_reachable();                                =
-   \
->           |         ^
->
-> As well as warnings:
->
->     In file included from arch/loongarch/kernel/asm-offsets.c:9:
->     In file included from ./include/linux/mm.h:1120:
->     In file included from ./include/linux/huge_mm.h:8:
->     In file included from ./include/linux/fs.h:33:
->     In file included from ./include/linux/percpu-rwsem.h:7:
->     In file included from ./include/linux/rcuwait.h:6:
->     In file included from ./include/linux/sched/signal.h:6:
->     ./include/linux/signal.h:114:27: warning: array index 3 is past the e=
-nd of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
->       114 |                 return  (set1->sig[3] =3D=3D set2->sig[3]) &&
->           |                                          ^         ~
->     ./include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared =
-here
->        62 |         unsigned long sig[_NSIG_WORDS];
->           |         ^
->
-> I hope that helps.
-This is caused by the backport commit 06e24745985c8dd0da183 ("objtool:
-Remove annotate_{,un}reachable()"), but missing the commit
-624bde3465f660e54a7cd4c1 ("loongarch: Use ASM_REACHABLE"), I will fix
-it later.
+commit 624bde3465f660e54a7cd4c1efc3e536349fead5 upstream.
 
-In addition, it is better to also backport [1], since similar patches
-for x86 have been backported, otherwise there will be build warnings.
+annotate_reachable() is unreliable since the compiler is free to place
+random code inbetween two consecutive asm() statements.
 
-[1] https://lore.kernel.org/loongarch/20250211115016.26913-8-yangtiezhu@loo=
-ngson.cn/T/#u
+This removes the last and only annotate_reachable() user.
 
-Huacai
->
-> Cheers,
-> Miguel
+Backport to solve a build error since relevant commits have already been
+backported.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Link: https://lore.kernel.org/r/20241128094312.133437051@infradead.org
+Closes: https://lore.kernel.org/loongarch/20250307214943.372210-1-ojeda@kernel.org/
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/bug.h | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
+index 08388876ade4..561ac1bf79e2 100644
+--- a/arch/loongarch/include/asm/bug.h
++++ b/arch/loongarch/include/asm/bug.h
+@@ -4,6 +4,7 @@
+ 
+ #include <asm/break.h>
+ #include <linux/stringify.h>
++#include <linux/objtool.h>
+ 
+ #ifndef CONFIG_DEBUG_BUGVERBOSE
+ #define _BUGVERBOSE_LOCATION(file, line)
+@@ -33,25 +34,25 @@
+ 
+ #define ASM_BUG_FLAGS(flags)					\
+ 	__BUG_ENTRY(flags)					\
+-	break		BRK_BUG
++	break		BRK_BUG;
+ 
+ #define ASM_BUG()	ASM_BUG_FLAGS(0)
+ 
+-#define __BUG_FLAGS(flags)					\
+-	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags)));
++#define __BUG_FLAGS(flags, extra)					\
++	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags))		\
++			     extra);
+ 
+ #define __WARN_FLAGS(flags)					\
+ do {								\
+ 	instrumentation_begin();				\
+-	__BUG_FLAGS(BUGFLAG_WARNING|(flags));			\
+-	annotate_reachable();					\
++	__BUG_FLAGS(BUGFLAG_WARNING|(flags), ASM_REACHABLE);	\
+ 	instrumentation_end();					\
+ } while (0)
+ 
+ #define BUG()							\
+ do {								\
+ 	instrumentation_begin();				\
+-	__BUG_FLAGS(0);						\
++	__BUG_FLAGS(0, "");					\
+ 	unreachable();						\
+ } while (0)
+ 
+-- 
+2.47.1
+
