@@ -1,69 +1,63 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE03518FDBE
-	for <loongarch@lists.linux.dev>; Sat,  8 Mar 2025 12:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16C3AD4B;
+	Sat,  8 Mar 2025 17:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741437455; cv=none; b=FSrDmUOLwpXxbXdNIOMCyTS79FK7Z6uP2wUNboIlhK1o1lKfwLHpthfyfgSE4yQiuECye2r9/nOIGHZa16nc+5s1LPBN5u4v0igelmjq4Gz2SUAH49/ZAXlsSLmZEsUjWEeNbccJ5bXi1l/awpL3UOCItkS88BKdrdwHVUXCeQU=
+	t=1741454821; cv=none; b=LZ9CCRnf3l7Q3aM8icCDrUguCr/gntJ0Uypnk02Ql8b8RQ3f5EF+sR0IPDz7f7ZyMT+OYTjb6x6Uj7PH6oZT8hGOorMG1brZN5/aoiy2vNUUsuwTTyqmXSECbWDDu4+5RvEvz8i90r8GNXRnwBNEotlevyEUy5uTj11BKgDdV4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741437455; c=relaxed/simple;
-	bh=Wf6JVzMeFP5SfVmulbI17SdUBUG71XcLDFYVQDNtUEg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iOfKT27YhxsAV9bQWSHgMhoMS0K9CpBaUdQnkwMaAzmrI5vuKInc2ZmbEXyPMk/asUHRvZFH24NDp5gqQPtprzblsUYWwi1ZEpDagUZAM0fX/SAFrFViTMsapkNsjTszuDP4Np3U8//aXAAwzdmfjkL+ckcan+2wYri/qncAT+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YhsDrL/2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NmGNVQkP; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741454821; c=relaxed/simple;
+	bh=mUoLAgB2TRlEqRgc6MjOBQVaXIMMYiv4bRRRpyakf1A=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=MkThbVsHo540KCXGyl9OLeAryKxjta+oOoxoWvoYTD9S3mqaYcc1IomK20Kf2/CwAEMdOywOsFIkL6eP8pGUcSBIJ/+uSAy3LQymUWqo+UTc08wAg02atbVRPgHXqI4uUNWPf6fJuJFFkA/aBPjbab4pyFtaJKh7KcIjNuyLj0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2+8hwqf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YhsDrL/2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NmGNVQkP"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741437451;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o8abf0OObLh7cZ3WWFsVYwo4EpsS2nDZ7Ej/A+vuDoM=;
-	b=YhsDrL/295LV4DMGJmyeG5m59Er0pBPxblaWRcnwCDK/y5yjozDd7DoDlxC4bSiVpPZsnB
-	GZoA4+vyRWmZmNZaXWQFwnhovlRyTLOo574r4Z+foLcPKukYepMMYXLQpBFTr1m809WX1i
-	d3XL3e4Jr1WtoJnuzrLWExFXZExHJ4wwoZigcjXm0pu8Jyb+TYq4EGyp7Rx6YkW27BjQ3w
-	OSPvivQ5uLtI6Be5KZxDwAny2jbZVJn6SLPPCdccoyVef3ReL92MkoEyvPJNYU9R3RpSZb
-	5CykgaB95PHj+uYCIDlz5HvjXkqH1lnXSZ5RdL5ZLjSH2zzPDaRPicgAz8OyIQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741437451;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o8abf0OObLh7cZ3WWFsVYwo4EpsS2nDZ7Ej/A+vuDoM=;
-	b=NmGNVQkPtxoG8GIZFsUt/CCutMvDnEhlPGrPQZUlA1eDT4l0qZQMhgwHpBWHBvXMWmgDRT
-	2OQzka/4GKlsjLBw==
-To: Charlie Jenkins <charlie@rivosinc.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Huacai
- Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Peter
- Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
- Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
-Subject: Re: [PATCH v5 4/4] entry: Inline syscall_exit_to_user_mode()
-In-Reply-To: <20250305-riscv_optimize_entry-v5-4-6507b5dff3ce@rivosinc.com>
-References: <20250305-riscv_optimize_entry-v5-0-6507b5dff3ce@rivosinc.com>
- <20250305-riscv_optimize_entry-v5-4-6507b5dff3ce@rivosinc.com>
-Date: Sat, 08 Mar 2025 13:37:30 +0100
-Message-ID: <87senn3dh1.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2+8hwqf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4414DC4CEE0;
+	Sat,  8 Mar 2025 17:27:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741454820;
+	bh=mUoLAgB2TRlEqRgc6MjOBQVaXIMMYiv4bRRRpyakf1A=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=j2+8hwqfYX8qY7zNE3wo4KR4yhNHz5T0nKvxjIzXUN9hkVXCTJqmvDXcN2hIdBPSJ
+	 Mz/Q7OoKc1oRyyqsdGtAiHfVQN7IV2mZuQGKndywq+jvyPW7lkHTwlKdCc+V3jBOX6
+	 rbNXP/nHlnKGOUR97cDQwGv7MeaNbzUQLL/rB7H7c9VXHoVdclyUYe/vcBzztLSyxq
+	 ArWuOb2X5dSMtVsfYzy1TKg/BDlSrvVhG3SZ+LXP4i9DZj2uxhBR/VOR9QfYRZNM7i
+	 tF+NV5DRvDL4yCtEQ9ZMXY06iCqTXDmOfMS+3rug1o8hup9g0TT5fmrxKZDbehWEFd
+	 M/q9yKsvTG7Yw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 344CC380CFDC;
+	Sat,  8 Mar 2025 17:27:35 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.14-rc6
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250308102416.3722203-1-chenhuacai@loongson.cn>
+References: <20250308102416.3722203-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20250308102416.3722203-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git loongarch-fixes-6.14-2
+X-PR-Tracked-Commit-Id: 6bdbb73dc8d99fbb77f5db79dbb6f108708090b4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2e51e0ac575c2095da869ea62d406f617550e6ed
+Message-Id: <174145485380.2700204.14421571196244354799.pr-tracker-bot@kernel.org>
+Date: Sat, 08 Mar 2025 17:27:33 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-On Wed, Mar 05 2025 at 16:43, Charlie Jenkins wrote:
-> Architectures using the generic entry code can be optimized by having
-> syscall_exit_to_user_mode inlined.
+The pull request you sent on Sat,  8 Mar 2025 18:24:16 +0800:
 
-That's a pretty handwavy claim. What's the actual benefit in numbers?
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git loongarch-fixes-6.14-2
 
-Thanks,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2e51e0ac575c2095da869ea62d406f617550e6ed
 
-        tglx
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
