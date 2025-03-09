@@ -1,73 +1,82 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4412F10E5
-	for <loongarch@lists.linux.dev>; Sun,  9 Mar 2025 08:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4921DA109;
+	Sun,  9 Mar 2025 19:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741508604; cv=none; b=eJ6UWEM8HQlLKCwho+ZuAarhSfuXCUdqDidUWVrDFnUveYhLSLGXxoKuHP9T5zqA5F43qaRK9/hmiltjg+lArEONey3l/INO1Vh2JDNa2zvx10dyXvR+A8DUXKKkBbkz2iDaRIQaisQ/EMW1TdkJG5Fmb/o5BsuK5lnWEp1ChcI=
+	t=1741550202; cv=none; b=ATAimBnqYTACeNz6V8DSPmUBFoylgzhFUh2fq+tBJYW+mGJ+WbVCuHPdxUpFfHA7XxREfZy4mhdHEktgVtXbPmVBtPDR1PLIEovWh2MY/tQDE7Uuht4U9tf3Op1+X0KpvQQq4DUqkdvohkEX4ni07TUmbGBR5JgeERGaFM6Da6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741508604; c=relaxed/simple;
-	bh=4G2oC/NE+kGa8qqrLwL81mlZJEp69TjT+8rgSD9/wmc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hjTLl6XkQEeM7vIDqYUOOGp36ILR33mWDsThMqtFu5jaGRH9sMMm9GHzvE4caMBHzUw4/tZi1dpucuzUy8OD1EHjHpIGFiPsNxPIc/ulmmat0uUTIeG64J4AF2fZ/VNSDQaHC8K4ODygiIeERR77zlEXcVM02oQX03l2udw/3r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FGpvuTua; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hGRltaDW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741550202; c=relaxed/simple;
+	bh=9zth3ji/1gSASSbT74qef/gpNPTW4q7Xzz9+gH90Nws=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ov02k0g0p/vj0jPmMW9XdBR8DeJRLi0LL6sD09ge2BsT76KrEhQLV/SJTwmFx8ZLs5f6x1+CVDmL6UI8dtdE4eNGqWcwrGhB8iSdEHCOpbyS2it8gELF7LIa0wosnjgkF/k42T+cQawr5oWe8F3vORO199u4I5+wZHe3A7NPO7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jicQ10rx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FGpvuTua";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hGRltaDW"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741508601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sZEfVXfbWSs4mJiGD94+1pNr7HfhKB5xKrjUV7TTCks=;
-	b=FGpvuTuaBLJSb1t+8raGXBRaENq4zgAFP5112yZK6Y/PRpvsL0QIULDhRL8YZL1BuBa242
-	KruaEiHzda+wWE730CcnNZ6DUNxRFAGaqPHOGzBLdV+DdSD7mkn0YfMQYkjLQukxMDlLxM
-	ueGqpnesEEhjskLv+h7ZAV3QhceW09d1uaY8mp1mwEev1XGHS+p64zjqovZjCCE6XxN2dE
-	a8MEPtFd+8OfpeUynCyE/8oEQX2VEctEkfXE4ztHoA32weQHqoZ/mnMwIf983ZTU/C9kn9
-	WcMDVwdquae+ufreSX1XS4roIe8xPrQvQSkbDyyk5QlVL7mOAS6Rgz88UofbgQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741508601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sZEfVXfbWSs4mJiGD94+1pNr7HfhKB5xKrjUV7TTCks=;
-	b=hGRltaDWVms6RukgrjSfzrFHRypAnpcy7O0x/FIB69T7MKmVomnus0BjoUxWbhUYqunqmW
-	c/K+5IMExs81UbCw==
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Peter Zijlstra <peterz@infradead.org>, Andy
- Lutomirski <luto@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-Subject: Re: [PATCH v5 4/4] entry: Inline syscall_exit_to_user_mode()
-In-Reply-To: <Z8zb-L8bFMh_YHxO@ghost>
-References: <20250305-riscv_optimize_entry-v5-0-6507b5dff3ce@rivosinc.com>
- <20250305-riscv_optimize_entry-v5-4-6507b5dff3ce@rivosinc.com>
- <87senn3dh1.ffs@tglx> <Z8zb-L8bFMh_YHxO@ghost>
-Date: Sun, 09 Mar 2025 09:23:20 +0100
-Message-ID: <87jz8y3953.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jicQ10rx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63392C4CEE3;
+	Sun,  9 Mar 2025 19:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741550202;
+	bh=9zth3ji/1gSASSbT74qef/gpNPTW4q7Xzz9+gH90Nws=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jicQ10rx8YCGb1nPT0GsF8Ry7D154mk/tl64osb5PD/y/trtNC1eYWB0RG6HadmAj
+	 vku4gl6GxXYHX/CK3nCWiMAY89EVbvOP29WJEEDaBiCwtWGPdBOqJxZn9wfkYU6Okd
+	 vUz0JObz4x9qxurQFGFLcM2sEW2Ttn2/qqXu7c1sDGFyu7vaFPmIYguxq83kUzgvT8
+	 JNlC/HBu+mEfP6Wo6kI1T+CKIblCSzTPBmcRPyNYrFO6oYbSkby8UdcXv11t84Srh7
+	 togOcLPwFW9v5JnB3Isvvrb8secp7GYyEUjQYdzp4O4B6wEytF4txoZMR6kdAgphWi
+	 nOG/BiVJQ3MTw==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: chenhuacai@loongson.cn
+Cc: chenhuacai@kernel.org,
+	gregkh@linuxfoundation.org,
+	jpoimboe@kernel.org,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	peterz@infradead.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH 6.12/6.13] loongarch: Use ASM_REACHABLE
+Date: Sun,  9 Mar 2025 20:56:22 +0100
+Message-ID: <20250309195622.1541936-1-ojeda@kernel.org>
+In-Reply-To: <20250308053753.3632741-1-chenhuacai@loongson.cn>
+References: <20250308053753.3632741-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 08 2025 at 16:08, Charlie Jenkins wrote:
-> On Sat, Mar 08, 2025 at 01:37:30PM +0100, Thomas Gleixner wrote:
->> On Wed, Mar 05 2025 at 16:43, Charlie Jenkins wrote:
->> > Architectures using the generic entry code can be optimized by having
->> > syscall_exit_to_user_mode inlined.
->> 
->> That's a pretty handwavy claim. What's the actual benefit in numbers?
+On Sat, 08 Mar 2025 13:37:53 +0800 Huacai Chen <chenhuacai@loongson.cn> wrote:
 >
-> I put the numbers in the cover letter! Here is the data I gathered:
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> commit 624bde3465f660e54a7cd4c1efc3e536349fead5 upstream.
+>
+> annotate_reachable() is unreliable since the compiler is free to place
+> random code inbetween two consecutive asm() statements.
+>
+> This removes the last and only annotate_reachable() user.
+>
+> Backport to solve a build error since relevant commits have already been
+> backported.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Link: https://lore.kernel.org/r/20241128094312.133437051@infradead.org
+> Closes: https://lore.kernel.org/loongarch/20250307214943.372210-1-ojeda@kernel.org/
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
-They should be in the change log as the cover letter is not part of what
-ends up in git.
+This indeed removes the build failure for me -- built-tested for loongarch64
+(together with the rest of the Rust long backport series):
+
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
+
+Thanks!
+
+Cheers,
+Miguel
