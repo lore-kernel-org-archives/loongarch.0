@@ -1,235 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DABB2F28
-	for <loongarch@lists.linux.dev>; Mon, 10 Mar 2025 00:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4120F156861
+	for <loongarch@lists.linux.dev>; Mon, 10 Mar 2025 02:13:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741567452; cv=none; b=ZohmTsatCQPGV/KI0opYS6GgjYq0AudraRPZFPx/tJ9Ux2iBCUEb+FVKMK2WXjrgZJlsSQo5Z+w8f4xUbfpEipsh5qrL8MobKWI7MMgDjULFlaV9Tf8fJEtSx/CZLdqbpl7HTLwwXeb6P0czZQYcqUByCbmGYTbqY2xFKLMfRbI=
+	t=1741572818; cv=none; b=lNTj7JZTICaKdQjl+zWjnPdZ9xfxq2m3YA/m79ITK/fUzZuyzomTL7FvHKCrCf+R2LHfz1fRE/XEOyfeadG/24rOtYVoJCnmEA4imy5ntNnfttx+f8lihPmKbTI2jtIINjnRX+ca24QUbyEs/AAZrDRWLXJbILtGoDTDhVz0Hug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741567452; c=relaxed/simple;
-	bh=tXY/sDLcuj92SaFYz0hFOsAFXofDkFw5jSfwl2CB2dY=;
+	s=arc-20240116; t=1741572818; c=relaxed/simple;
+	bh=z9mLsHw9Q3v422/Yt1W+ofnnkznofgPzm/tT/dzXn38=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Avpb6nQg8tiypAKPBMsOqP2D7bXIzPcadQ1KsHlPsa1osw3FPzko/b5HgaP/u0Vz6K2pdii+7ywrKIJgka1Kyh/lcaV+ADaH1mrT7iS67J0aX5c1LZy9hICJJ3etYcTCxhWa8PKTs4wMW62vm7Sp1vW2o+/rMtuhCS88vYI2s3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVSocaYZ; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=LEsZghhSgnhWFmkV/b0uYgKtKJsNnZtnp8MEspnQ9DyXfXhW96yNcL8hjedqcIIV1AhxbBZWZfLrpAsiLZ+gbkiCpnTGkOnO/IyRn6LnXI9cIEAWlJUBjZYYE0cBJINcMzXClmST/I+oUHHnoyG6s3S4Wbe/wrDYTtRPawmu9Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HR3HVoEJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVSocaYZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69AFC4CEF3
-	for <loongarch@lists.linux.dev>; Mon, 10 Mar 2025 00:44:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HR3HVoEJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF46C4CEED
+	for <loongarch@lists.linux.dev>; Mon, 10 Mar 2025 02:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741567451;
-	bh=tXY/sDLcuj92SaFYz0hFOsAFXofDkFw5jSfwl2CB2dY=;
+	s=k20201202; t=1741572817;
+	bh=z9mLsHw9Q3v422/Yt1W+ofnnkznofgPzm/tT/dzXn38=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BVSocaYZc2rAS9DmzOR25Py/nYQDKd36w67O/0f9ylpFUIWrKw00/eEyMdMxUmEnT
-	 NCXedm8BdKAPb2DDHW/gVC70TSdEV2tqTRDbyeVdnS0x5i7l3qBINrQb5+yrFjV2nL
-	 yJlPfiMabW5EhD/hEm2DYm0W3dPpC5LvZoTr7ApvT8Ju7gY1RegDx5zL1A0z9PwyXG
-	 3yRjPZw573XVubRbjFOXqpAoQhLdKtK714p3+ESSV5Xi9sNjr5uTPAsxaHljEkBrNR
-	 8s92NP6QLtWXH4QXEwGK53QDFSH2XRVYuup0zGWIcKuguSpfx56dz9btSD3K/PGaKw
-	 AQmLlaIjyhUCw==
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39129fc51f8so3057856f8f.0
-        for <loongarch@lists.linux.dev>; Sun, 09 Mar 2025 17:44:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVzyHdjCrDhnB+AAv+8kkW3w8Q01VDvlExIQ60yKkCUNtHmx4hjIk3XpMs3koDoN5PUbXi2dHJA7rw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxTZMoUZfT4jKj386vXsOA23dKPAlEf6K9LL/T71cRcTMyxQFZO
-	6Z8PnOnP1HOXNRtMC7dKgCwecYNx4J19SwIos9Gj9z+Rim2xohTwxBHpSCZ/f9FVAeZfoRWYwZB
-	FixMqaLbVEvnhf2go7n6ADkFOCVI=
-X-Google-Smtp-Source: AGHT+IHp0xTG1Ng23HFO+vDoVdsoufkarKG1pMLa2Hgf32UrExuCoU7QvtsFi3JnHOAx4U/X+f6ME+7JOCYs321ZM0M=
-X-Received: by 2002:a5d:6d8a:0:b0:391:1218:d5f7 with SMTP id
- ffacd0b85a97d-39132dacbd3mr7997015f8f.40.1741567450112; Sun, 09 Mar 2025
- 17:44:10 -0700 (PDT)
+	b=HR3HVoEJs8Dj3SJUQJl/9yOkY3qzYNH49NJSed8dRp+v8BKG7DmZN4jkt97KyJc0b
+	 r5kJKlTVYyJPJBrKUJXCa+eJt0MrjnGYClR9q2KAzOQgc9Ixw+TUTAD8tHdCTm8INh
+	 TjfexCnSzVOWUHewX3eeZTMyY6U4YkR6yRaJPRelwGTDeWt4gQxZNbDP7QntiPZnyS
+	 EjZodPom+DIfeozpq4+YApfldJjutgQTSIgU9BY94Qm/1L2c6oI3wJoJC0p6IqKa2t
+	 xhqNc1/CG/p1coU/y2Ckk+KrUR5B9n1JH+6a7KFXAp2X2fTaGrHg44mpj2TaUh2CrL
+	 1ZnerZ2TWwT0w==
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43bc30adad5so21057625e9.1
+        for <loongarch@lists.linux.dev>; Sun, 09 Mar 2025 19:13:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVvnMMCMhzhsY3l3d2534x1RdPMNF4/5g9mboTdI5NcGJgLsK9KFGH7RcPdNTk09xPeiWQw1pB9e/Q=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx16LJRptWelIr4Zgj9oS6ouIhBPv8wIa/dtXV11/odtWuzoEOU
+	BoyzGyQUUPvgmsUfq3AUcnk1fEIHRwbdEvqwxqLPta5XbCfJPqUbjzE3tS+TIHzoyTQ8raZQqMG
+	LOntbYlIDiiNYutAZMaqzRhB7l7w=
+X-Google-Smtp-Source: AGHT+IFKsAup9e8Gc1v8ulkbmHr98edm6s87EvlcdJ5Cvko4at1GaCbqwTsdJwbMKXfm/BQUgl53lstuyy4HISvzJV0=
+X-Received: by 2002:a05:600c:1d1a:b0:43c:e6d1:efe7 with SMTP id
+ 5b1f17b1804b1-43ce6d1f1e6mr28755625e9.26.1741572816273; Sun, 09 Mar 2025
+ 19:13:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250306185124.3147510-1-rppt@kernel.org> <20250306185124.3147510-3-rppt@kernel.org>
-In-Reply-To: <20250306185124.3147510-3-rppt@kernel.org>
+References: <20250224112042.60282-1-xry111@xry111.site> <91797ac4bbe27d7d60b89053050e429bcd630db3.camel@xry111.site>
+In-Reply-To: <91797ac4bbe27d7d60b89053050e429bcd630db3.camel@xry111.site>
 From: Guo Ren <guoren@kernel.org>
-Date: Mon, 10 Mar 2025 08:43:58 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQBLMt01QjnhX1tCgHs6HJm1hZXQXgVjNkNS5Yt5t4UCQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JpCBLojM2w9P1ED3pCe1VmP9TPz-dzItajSIbNDMlmKYLEeMGoNaHpCAZk
-Message-ID: <CAJF2gTQBLMt01QjnhX1tCgHs6HJm1hZXQXgVjNkNS5Yt5t4UCQ@mail.gmail.com>
-Subject: Re: [PATCH 02/13] csky: move setup_initrd() to setup.c
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, 
-	Stafford Horne <shorne@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, 
-	x86@kernel.org
+Date: Mon, 10 Mar 2025 10:13:24 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRXyMX+9C_aEDbxAsxWDD2rbnDWO775YDZ3EmrQ=QinfQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JpxPLjcz__aP8mbaWjnVB43tgqVJ36D7ViX6jxsCAtJ6NThRTlt4NTpaRI
+Message-ID: <CAJF2gTRXyMX+9C_aEDbxAsxWDD2rbnDWO775YDZ3EmrQ=QinfQ@mail.gmail.com>
+Subject: Re: Ping: [PATCH 0/3] Drop explicit --hash-style= setting for new
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Fangrui Song <i@maskray.me>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Move setup_initrd from mem_init into memblock_init, that LGTM.
+On Wed, Mar 5, 2025 at 9:27=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
+:
+>
+> Ping.
+>
+> On Mon, 2025-02-24 at 19:20 +0800, Xi Ruoyao wrote:
+> > For riscv, csky, and LoongArch, GNU hash had already become the de-
+> > facto
+> > standard when they borned, so there's no Glibc/Musl releases for them
+> > without GNU hash support, and the traditional SysV hash is just
+> > wasting
+> > space for them.
+> >
+> > Remove those settings and follow the distro toolchain default, which
+> > is
+> > likely --hash-style=3Dgnu.  In the past it could break vDSO self tests,
+> > but now the issue has been addressed by commit
+> > e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH").
+> >
+> > Xi Ruoyao (3):
+> >   riscv: vDSO: Remove --hash-style=3Dboth
+The patch's comment is incorrect; when I removed --hash-style=3Dboth,
+the output still contained the HASH, and no space was saved.
 
-Acked by: Guo Ren (csky) <guoren@kernel.org>
+--hash-style=3Dboth and after the patch are the same:
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+  [ 0]                   NULL             0000000000000000  00000000
+       0000000000000000  0000000000000000           0     0     0
+  [ 1] .hash             HASH             0000000000000120  00000120
+       000000000000003c  0000000000000004   A       3     0     8
+  [ 2] .gnu.hash         GNU_HASH         0000000000000160  00000160
+       0000000000000044  0000000000000000   A       3     0     8
 
-On Fri, Mar 7, 2025 at 2:52=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wrot=
-e:
+But, --hash-style=3Dgnu could save space:
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+  [ 0]                   NULL             0000000000000000  00000000
+       0000000000000000  0000000000000000           0     0     0
+  [ 1] .gnu.hash         GNU_HASH         0000000000000120  00000120
+       0000000000000044  0000000000000000   A       2     0     8
+
+
+Here is my GCC VERSION:
+Using built-in specs.
+COLLECT_GCC=3D/rvhome/ren.guo/source/toolchain/rv64lp64/bin/riscv64-unknown=
+-linux-gnu-gcc
+COLLECT_LTO_WRAPPER=3D/rvhome/ren.guo/source/toolchain/rv64lp64/bin/../libe=
+xec/gcc/riscv64-unknown-linux-gnu/13.2.0/lto-wrapper
+Target: riscv64-unknown-linux-gnu
+Configured with:
+/home/runner/work/riscv-gnu-toolchain/riscv-gnu-toolchain/gcc/configure
+--target=3Driscv64-unknown-linux-gnu --prefix=3D/opt/riscv
+--with-sysroot=3D/opt/riscv/sysroot --with-pkgversion=3D
+--with-system-zlib --enable-shared --enable-tls
+--enable-languages=3Dc,c++,fortran --disable-libmudflap --disable-libssp
+--disable-libquadmath --disable-libsanitizer --disable-nls
+--disable-bootstrap --src=3D.././gcc --disable-default-pie
+--disable-multilib --with-abi=3Dlp64d --with-arch=3Drv64gc
+--with-tune=3Drocket --with-isa-spec=3D20191213 'CFLAGS_FOR_TARGET=3D-O2
+-mcmodel=3Dmedlow' 'CXXFLAGS_FOR_TARGET=3D-O2    -mcmodel=3Dmedlow'
+Thread model: posix
+Supported LTO compression algorithms: zlib
+gcc version 13.2.0 ()
+
+So, do you mean "--hash-style=3Dgnu"?
+
+> >   csky: vDSO: Remove --hash-style=3Dboth
+> >   LoongArch: vDSO: Remove --hash-style=3Dsysv
+> >
+> >  arch/csky/kernel/vdso/Makefile  | 2 +-
+> >  arch/loongarch/vdso/Makefile    | 2 +-
+> >  arch/riscv/kernel/vdso/Makefile | 2 +-
+> >  3 files changed, 3 insertions(+), 3 deletions(-)
+> >
 >
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Memory used by initrd should be reserved as soon as possible before
-> there any memblock allocations that might overwrite that memory.
->
-> This will also help with pulling out memblock_free_all() to the generic
-> code and reducing code duplication in arch::mem_init().
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  arch/csky/kernel/setup.c | 43 ++++++++++++++++++++++++++++++++++++++++
->  arch/csky/mm/init.c      | 43 ----------------------------------------
->  2 files changed, 43 insertions(+), 43 deletions(-)
->
-> diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
-> index fe715b707fd0..e0d6ca86ea8c 100644
-> --- a/arch/csky/kernel/setup.c
-> +++ b/arch/csky/kernel/setup.c
-> @@ -12,6 +12,45 @@
->  #include <asm/mmu_context.h>
->  #include <asm/pgalloc.h>
->
-> +#ifdef CONFIG_BLK_DEV_INITRD
-> +static void __init setup_initrd(void)
-> +{
-> +       unsigned long size;
-> +
-> +       if (initrd_start >=3D initrd_end) {
-> +               pr_err("initrd not found or empty");
-> +               goto disable;
-> +       }
-> +
-> +       if (__pa(initrd_end) > PFN_PHYS(max_low_pfn)) {
-> +               pr_err("initrd extends beyond end of memory");
-> +               goto disable;
-> +       }
-> +
-> +       size =3D initrd_end - initrd_start;
-> +
-> +       if (memblock_is_region_reserved(__pa(initrd_start), size)) {
-> +               pr_err("INITRD: 0x%08lx+0x%08lx overlaps in-use memory re=
-gion",
-> +                      __pa(initrd_start), size);
-> +               goto disable;
-> +       }
-> +
-> +       memblock_reserve(__pa(initrd_start), size);
-> +
-> +       pr_info("Initial ramdisk at: 0x%p (%lu bytes)\n",
-> +               (void *)(initrd_start), size);
-> +
-> +       initrd_below_start_ok =3D 1;
-> +
-> +       return;
-> +
-> +disable:
-> +       initrd_start =3D initrd_end =3D 0;
-> +
-> +       pr_err(" - disabling initrd\n");
-> +}
-> +#endif
-> +
->  static void __init csky_memblock_init(void)
->  {
->         unsigned long lowmem_size =3D PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET=
-_OFFSET);
-> @@ -40,6 +79,10 @@ static void __init csky_memblock_init(void)
->                 max_low_pfn =3D min_low_pfn + sseg_size;
->         }
->
-> +#ifdef CONFIG_BLK_DEV_INITRD
-> +       setup_initrd();
-> +#endif
-> +
->         max_zone_pfn[ZONE_NORMAL] =3D max_low_pfn;
->
->         mmu_init(min_low_pfn, max_low_pfn);
-> diff --git a/arch/csky/mm/init.c b/arch/csky/mm/init.c
-> index bde7cabd23df..ab51acbc19b2 100644
-> --- a/arch/csky/mm/init.c
-> +++ b/arch/csky/mm/init.c
-> @@ -42,45 +42,6 @@ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsig=
-ned long)]
->                                                 __page_aligned_bss;
->  EXPORT_SYMBOL(empty_zero_page);
->
-> -#ifdef CONFIG_BLK_DEV_INITRD
-> -static void __init setup_initrd(void)
-> -{
-> -       unsigned long size;
-> -
-> -       if (initrd_start >=3D initrd_end) {
-> -               pr_err("initrd not found or empty");
-> -               goto disable;
-> -       }
-> -
-> -       if (__pa(initrd_end) > PFN_PHYS(max_low_pfn)) {
-> -               pr_err("initrd extends beyond end of memory");
-> -               goto disable;
-> -       }
-> -
-> -       size =3D initrd_end - initrd_start;
-> -
-> -       if (memblock_is_region_reserved(__pa(initrd_start), size)) {
-> -               pr_err("INITRD: 0x%08lx+0x%08lx overlaps in-use memory re=
-gion",
-> -                      __pa(initrd_start), size);
-> -               goto disable;
-> -       }
-> -
-> -       memblock_reserve(__pa(initrd_start), size);
-> -
-> -       pr_info("Initial ramdisk at: 0x%p (%lu bytes)\n",
-> -               (void *)(initrd_start), size);
-> -
-> -       initrd_below_start_ok =3D 1;
-> -
-> -       return;
-> -
-> -disable:
-> -       initrd_start =3D initrd_end =3D 0;
-> -
-> -       pr_err(" - disabling initrd\n");
-> -}
-> -#endif
-> -
->  void __init mem_init(void)
->  {
->  #ifdef CONFIG_HIGHMEM
-> @@ -92,10 +53,6 @@ void __init mem_init(void)
->  #endif
->         high_memory =3D (void *) __va(max_low_pfn << PAGE_SHIFT);
->
-> -#ifdef CONFIG_BLK_DEV_INITRD
-> -       setup_initrd();
-> -#endif
-> -
->         memblock_free_all();
->
->  #ifdef CONFIG_HIGHMEM
 > --
-> 2.47.2
->
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
+
 
 
 --=20
