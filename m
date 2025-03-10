@@ -1,211 +1,140 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60392224240
-	for <loongarch@lists.linux.dev>; Mon, 10 Mar 2025 09:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3071581F9
+	for <loongarch@lists.linux.dev>; Mon, 10 Mar 2025 21:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741600708; cv=none; b=N0dkmHPGH7dmBviWSmfWNjtR37bOush+DAmMW0vMOBWFHlgW3fxJdqdaFNUs93fubaVJEnhRi5q1HLj5t4hL6gCDIGqjkVd7xaHc/M+BRZI8ZIW3qFuX2drwy3txvt6gxD20wafaaBNzEN1a4/4x5QxWFVBwntVUQlLK+ZyLMM8=
+	t=1741643009; cv=none; b=KrHok7B8B2mqAbOmGGvGSnMlDardBuyO9YcROnz9pNqe990/Yu1dQBG+PVuSTgODl3nBPgFB8dOwrNLH9fbkekGygTRQHyBBZiXh2j5aqNq5/PGjXojrGPA2iuTb010WY3A0OFBqU2i61VNH961Sgen8Pk/sbSOhU2Mt6gfzLCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741600708; c=relaxed/simple;
-	bh=ZwaLaXDoVEdopEWx6MLjOmW1+Aiu31WDeG+F2281xdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a0tnUrRNwQdydC8ArVRn1my25GdW+xLNoblk55WSIGgYUn1yCi6lH0n4/Ci0ip9uegriKrhgh2eQElAQ/zdX7q6PCdwkY+89DxPehGf8NQEkYd9AFmyiNgFQ5azYTDYo1kn+yWITeWKujFzdzuQNj7SOOAWbd2fLeHPrv031w14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CB5DC44201;
-	Mon, 10 Mar 2025 09:58:15 +0000 (UTC)
-Message-ID: <346ecf28-807f-4ae9-be5d-08ebd649d241@ghiti.fr>
-Date: Mon, 10 Mar 2025 10:58:15 +0100
+	s=arc-20240116; t=1741643009; c=relaxed/simple;
+	bh=MYOks50WoDkdoyOrPCyipUL7n4yzFqH0q8gA8fGLCyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EXg0OyPyQXBXEMm8xIbfnQKQRCbbp5AeU2wsei5HgB5BHgjk0AcVYkQZG/hAwCwJXiXvUp6+f8mmU4vMV+1/rXFu96xc5mygldbbIfPljazb+zlNNYSgmYAcOM7Cdmf2TrtVd/UA4usPE/usX04TTWurPDyXTp+GcZ7sSl2noZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXKxXnSP; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXKxXnSP"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223959039f4so94539895ad.3
+        for <loongarch@lists.linux.dev>; Mon, 10 Mar 2025 14:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741643007; x=1742247807; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lOzTUQX1PxOvtdBltrj7hxyrhemHlWPuwAmT+cGIKWA=;
+        b=bXKxXnSPrFgkj6wnqE+fBNH1fap9UgZL/DBE+g5NH9g56FClfXyB7BKeQHi8xSBk1L
+         S9vNsM2e6308gbxAU2d54LTAY7wNiGxFvWTz1B52H4vYHqMNtMNtvl0Z6HJr2vI2yUJf
+         rUJKiS3q+uLs9677DoERdbNmHqXvoc7Ntt5KgLna7FDwg+3jadeVuoti00EOTDNkyNHR
+         xlOkf2pHzXb3IYZZb+IKyfnURsYgnXXgrgUOWPt6vMZ0cHRQNVNt1WM59yRuPSVQ6FSP
+         3q4vvWFVhoZnhj/toNvET8jp+Vlo4ogcSFueTe3X9ccCklBxdt9mEit/RiepUsqkVmOp
+         htFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741643007; x=1742247807;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lOzTUQX1PxOvtdBltrj7hxyrhemHlWPuwAmT+cGIKWA=;
+        b=EgO5nqYDhUWWL8nHiUJZnuEE/pOGZF4i3WPRE77i89xM1jbicuabiieScrIUGi3OIE
+         XMbGCZ7mgAW5ME4Lhw+eeIcduukboSxNFBcTTJYhFLDEG6vr6P3KlyqAe/Oo0WRQJQmw
+         i6bLn6FyfFi8c5unv9R1v4Pd+5m4nPCxtnt1kt7jm5xAlrWwZ6FHKHPRC+9m5wpXZosW
+         lqSp0g1hn/6VxW1qvXcMqJSsJkCtxS4pO2FItYKnkqqPUSXvfBdk4igF6zyI55lXGTIM
+         DSoFWQ66DEaK7anWlrqJtjTsHwWG3E5VQQ3HC0FXDs5mLfGy6AMmq3X1KYxm7RKTIq4y
+         Ml1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWw/5hgnVUiRO3YDS87u1pHHcD7SMLN+dI+6hFDvtmFfGCzMz20YMixmUQFD0cQspgXQZFS1GI5640=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyUfy2WiI9aO7vSPvMmVndLaqlAYtocXFA8wMxYYDE7DThLQQMb
+	a1JXOoyXHDtsqpac1cpwTydE0/VzdJtSf1k3ji/s/OoKGsI2IGEG
+X-Gm-Gg: ASbGncvrGgc+UP3CorCtTOKngD3aDvoBcYl9ts/sDqL3cez98LIyYycWcvS9mie4Qcw
+	gYxvUVLn9XPMtsVDaJaXPwYU123v0Xav6yDTJ1PcucKjC8qJbYa+AgKsEENeXg6/pd/UeFXjDFf
+	w/vot5KrkoQ7+5Naa8JBZLU3zXxq0lp2lr6jqL9OFjaJwZ1KfJFSbAnnFlFCYl665XiwCaeM8av
+	8pXZVdv62JUYPxRd2LquTcbgpuwwpDo2nDoMWk1dhFSR4vIzPSqY+i8xc5Dg92desST8ujTPRcW
+	F9LV29Wx0thEJdk9PvpGT4qKepLM44SKSwyMX4cdp11gTVUL
+X-Google-Smtp-Source: AGHT+IFXLOvBDK4X9wfckI1WGUGqObmmijVRJTHS5odxNcOP7KVkt0gWd9EjluMvYqCdzJjttkoSSw==
+X-Received: by 2002:a17:903:1b63:b0:220:d79f:60f1 with SMTP id d9443c01a7336-22428bd591fmr224360105ad.42.1741643005529;
+        Mon, 10 Mar 2025 14:43:25 -0700 (PDT)
+Received: from localhost ([129.210.115.104])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736ad7e4448sm7037677b3a.111.2025.03.10.14.43.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 14:43:24 -0700 (PDT)
+Date: Mon, 10 Mar 2025 14:43:23 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: Vincent Li <vincent.mc.li@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev
+Subject: Re: [BUG?] loxilb tc BPF program cause Loongarch kernel hard lockup
+Message-ID: <Z89c+5k3sRX8Al1I@pop-os.localdomain>
+References: <CAK3+h2woEjG_N=-XzqEGaAeCmgu2eTCUc7p6bP4u8Q+DFHm-7g@mail.gmail.com>
+ <Z8oXIhptXWhbCeCF@pop-os.localdomain>
+ <CAK3+h2ys8ivcnnd=em7QZRWqqmtSuqy4xEiDoV6+9ccOzJHu4w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] entry: Inline syscall_exit_to_user_mode()
-Content-Language: en-US
-To: Charlie Jenkins <charlie@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>,
- Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
- Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20250305-riscv_optimize_entry-v5-0-6507b5dff3ce@rivosinc.com>
- <20250305-riscv_optimize_entry-v5-4-6507b5dff3ce@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250305-riscv_optimize_entry-v5-4-6507b5dff3ce@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudeltdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeehvdekmedufheijeemkedugedumeekgegvkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemhedvkeemudhfieejmeekudegudemkeegvgekpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeehvdekmedufheijeemkedugedumeekgegvkegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrt
- ghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhesgigvnhdtnhdrnhgrmhgvpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhuthhosehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK3+h2ys8ivcnnd=em7QZRWqqmtSuqy4xEiDoV6+9ccOzJHu4w@mail.gmail.com>
 
-Hi Charlie,
+On Thu, Mar 06, 2025 at 08:04:14PM -0800, Vincent Li wrote:
+> Sorry I had a type error on the loongarch mailing list address, corrected it.
+> 
+> On Thu, Mar 6, 2025 at 1:44 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> >
+> > On Wed, Mar 05, 2025 at 04:51:15PM -0800, Vincent Li wrote:
+> > > Hi,
+> > >
+> > > I have an issue recorded here [0] with kernel call trace  when I start
+> > > loxilb, the loxilb tc BPF program seems to be loaded and attached to
+> > > the network interface, but immediately it causes a loongarch kernel
+> > > hard lockup, no keyboard response. Sometimes the panic call trace
+> > > shows up in the monitor screen after I disabled kernel panic reboot
+> > > (echo 0 > /proc/sys/kernel/panic) and started loxilb.
+> > >
+> > > Background: I ported open source IPFire [1] to Loongarch CPU
+> > > architecture and enabled kernel BPF features, added loxilb as LFS
+> > > (Linux from scratch) addon software, loxilb 0.9.8.3 has libbpf 1.5.0
+> > > which has loongarch support [2]. The same loxilb addon runs fine on
+> > > x86 architecture. Any clue on this?
+> > >
+> > > [0]: https://github.com/vincentmli/BPFire/issues/76
+> > > [1]: https://github.com/ipfire/ipfire-2.x
+> > > [2]: https://github.com/loxilb-io/loxilb/issues/972
+> > >
+> >
+> > Thanks for your report!
+> >
+> > I have extracted the kernel crash log from your photo with AI so that
+> > people can easily interpret it.
+> >
+> 
+> Nice to know AI could do that :)
+> 
+> > From a quick glance, it seems related to MIPS JIT. So it would be
+> > helpful if you could locate the eBPF program which triggered this and
+> > dump its JIT'ed BPF instructions.
+> >
+> 
+> This is call trace from Loongarch CPU so related to Loongarch BPF JIT.
+> the kernel seems to lockup immediately right after attaching to the
+> network interface. to dump the JIT'ed BPF instructions, maybe just
+> load the BPF program, but not attach it so I can dump the BPF
+> instructions?
 
-On 06/03/2025 01:43, Charlie Jenkins wrote:
-> Architectures using the generic entry code can be optimized by having
-> syscall_exit_to_user_mode inlined.
->
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
->   include/linux/entry-common.h | 43 ++++++++++++++++++++++++++++++++++++--
->   kernel/entry/common.c        | 49 +-------------------------------------------
->   2 files changed, 42 insertions(+), 50 deletions(-)
->
-> diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-> index fc61d0205c97084acc89c8e45e088946f5e6d9b2..f94f3fdf15fc0091223cc9f7b823970302e67312 100644
-> --- a/include/linux/entry-common.h
-> +++ b/include/linux/entry-common.h
-> @@ -14,6 +14,7 @@
->   #include <linux/kmsan.h>
->   
->   #include <asm/entry-common.h>
-> +#include <asm/syscall.h>
->   
->   /*
->    * Define dummy _TIF work flags if not defined by the architecture or for
-> @@ -366,6 +367,15 @@ static __always_inline void exit_to_user_mode(void)
->   	lockdep_hardirqs_on(CALLER_ADDR0);
->   }
->   
-> +/**
-> + * syscall_exit_work - Handle work before returning to user mode
-> + * @regs:	Pointer to current pt_regs
-> + * @work:	Current thread syscall work
-> + *
-> + * Do one-time syscall specific work.
-> + */
-> +void syscall_exit_work(struct pt_regs *regs, unsigned long work);
-> +
->   /**
->    * syscall_exit_to_user_mode_work - Handle work before returning to user mode
->    * @regs:	Pointer to currents pt_regs
-> @@ -379,7 +389,30 @@ static __always_inline void exit_to_user_mode(void)
->    * make the final state transitions. Interrupts must stay disabled between
->    * return from this function and the invocation of exit_to_user_mode().
->    */
-> -void syscall_exit_to_user_mode_work(struct pt_regs *regs);
-> +static __always_inline void syscall_exit_to_user_mode_work(struct pt_regs *regs)
-> +{
-> +	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
-> +	unsigned long nr = syscall_get_nr(current, regs);
-> +
-> +	CT_WARN_ON(ct_state() != CT_STATE_KERNEL);
-> +
-> +	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-> +		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
-> +			local_irq_enable();
-> +	}
-> +
-> +	rseq_syscall(regs);
-> +
-> +	/*
-> +	 * Do one-time syscall specific work. If these work items are
-> +	 * enabled, we want to run them exactly once per syscall exit with
-> +	 * interrupts enabled.
-> +	 */
-> +	if (unlikely(work & SYSCALL_WORK_EXIT))
-> +		syscall_exit_work(regs, work);
-> +	local_irq_disable_exit_to_user();
-> +	exit_to_user_mode_prepare(regs);
-> +}
->   
->   /**
->    * syscall_exit_to_user_mode - Handle work before returning to user mode
-> @@ -410,7 +443,13 @@ void syscall_exit_to_user_mode_work(struct pt_regs *regs);
->    * exit_to_user_mode(). This function is preferred unless there is a
->    * compelling architectural reason to use the separate functions.
->    */
-> -void syscall_exit_to_user_mode(struct pt_regs *regs);
-> +static __always_inline void syscall_exit_to_user_mode(struct pt_regs *regs)
-> +{
-> +	instrumentation_begin();
-> +	syscall_exit_to_user_mode_work(regs);
-> +	instrumentation_end();
-> +	exit_to_user_mode();
-> +}
->   
->   /**
->    * irqentry_enter_from_user_mode - Establish state before invoking the irq handler
-> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-> index e33691d5adf7aab4af54cf2bf8e5ef5bd6ad1424..f55e421fb196dd5f9d4e34dd85ae096c774cf879 100644
-> --- a/kernel/entry/common.c
-> +++ b/kernel/entry/common.c
-> @@ -146,7 +146,7 @@ static inline bool report_single_step(unsigned long work)
->   	return work & SYSCALL_WORK_SYSCALL_EXIT_TRAP;
->   }
->   
-> -static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
-> +void syscall_exit_work(struct pt_regs *regs, unsigned long work)
->   {
->   	bool step;
->   
-> @@ -173,53 +173,6 @@ static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
->   		ptrace_report_syscall_exit(regs, step);
->   }
->   
-> -/*
-> - * Syscall specific exit to user mode preparation. Runs with interrupts
-> - * enabled.
-> - */
-> -static void syscall_exit_to_user_mode_prepare(struct pt_regs *regs)
-> -{
-> -	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
-> -	unsigned long nr = syscall_get_nr(current, regs);
-> -
-> -	CT_WARN_ON(ct_state() != CT_STATE_KERNEL);
-> -
-> -	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-> -		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
-> -			local_irq_enable();
-> -	}
-> -
-> -	rseq_syscall(regs);
-> -
-> -	/*
-> -	 * Do one-time syscall specific work. If these work items are
-> -	 * enabled, we want to run them exactly once per syscall exit with
-> -	 * interrupts enabled.
-> -	 */
-> -	if (unlikely(work & SYSCALL_WORK_EXIT))
-> -		syscall_exit_work(regs, work);
-> -}
-> -
-> -static __always_inline void __syscall_exit_to_user_mode_work(struct pt_regs *regs)
-> -{
-> -	syscall_exit_to_user_mode_prepare(regs);
-> -	local_irq_disable_exit_to_user();
-> -	exit_to_user_mode_prepare(regs);
-> -}
-> -
-> -void syscall_exit_to_user_mode_work(struct pt_regs *regs)
-> -{
-> -	__syscall_exit_to_user_mode_work(regs);
-> -}
-> -
-> -__visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
-> -{
-> -	instrumentation_begin();
-> -	__syscall_exit_to_user_mode_work(regs);
-> -	instrumentation_end();
-> -	exit_to_user_mode();
-> -}
-> -
->   noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
->   {
->   	enter_from_user_mode(regs);
->
+Yes!
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+You can load the eBPF program which triggered the crash manually without
+attaching it, using commands similar to the following:
 
-Thanks,
+# Load the program without attaching it
+sudo bpftool prog load hello.o /sys/fs/bpf/hello
 
-Alex
+# List programs to find its ID
+sudo bpftool prog list
 
+# Dump JIT instructions (replace 123 with your actual program ID)
+sudo bpftool prog dump jited id 123
+
+
+Thanks.
