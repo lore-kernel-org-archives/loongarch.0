@@ -1,44 +1,44 @@
 Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDB2265602
-	for <loongarch@lists.linux.dev>; Tue, 11 Mar 2025 22:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA77262819
+	for <loongarch@lists.linux.dev>; Tue, 11 Mar 2025 22:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741730425; cv=none; b=qXoEeRN3cifbttXjg9D7x9DyUHZqx0STH0BwpLsxRpEfhPYkvuGTD/p07IlUH3mq0O8agZ0K09yxveZvSlKW8xEle3pkcHpyHTxihNyTm9weePhZwlODHPvg3peEI2RyjqrnsFx4NC45w1ELVfMTem2a9ccpuntg5Jgt6wY7eBA=
+	t=1741730785; cv=none; b=JQlPWNFGuMmqj4OyPlx084k1bNAK45OBEpgdJkw9JiE4UbQ6fzdIBvhWBU33mZykYraa+4VuqZaT+BL+GZcMespO9SZXLzIbjY1UHuV60Z6lGcZ2UUCtN3m60VqLS+LkADR7G4z4isQ1aSweTNN0RN8cCCOcBIJ5z1wHNYy00RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741730425; c=relaxed/simple;
-	bh=KW9q+EPECptB7iseFxr1KMbGaCZk6HumkEumo9/sS7E=;
+	s=arc-20240116; t=1741730785; c=relaxed/simple;
+	bh=1FsEAoBQCwul9SXkYZakBAby+nof+BFT5YLa9ZLbmWo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DZJiAOnRr4GI4CrHTnJqasgv+Waa3qIg9L6XV81sQ1RSwTxXPkEnejStW/pyzymKQG0dj8ztSilXqlno7M5w1tFIopMPA6HoqpCRgO6+rEdAPoQ2B82BGPM0dN7UXsMVX4PSUOZ7GBcYu6KWl7p3JhwaLOH5QbQjT0buoZVd9O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=F1O49Jcd; arc=none smtp.client-ip=78.32.30.218
+	 Content-Type:Content-Disposition:In-Reply-To; b=uSo5QO42QV3+OzGckDKxnByKt4eQWYBbqteaMB1YzOon40M1hkYiuvlOKF4NKh+RBzciWieAt1IRNACyBxKia8agstdEvsPyaFUB+JjY4A4rKiCVmjumAiQgp47A+CRLMqVBQjGXj4BQFuMsM3YYWr34JIKW6UFeX+7iSCRtXqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=JMh6fI6C; arc=none smtp.client-ip=78.32.30.218
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="F1O49Jcd"
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JMh6fI6C"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
 	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=LWqJoM88kHGjOcIG7y4jtQUycMU0Xkkz6/jQHA0YJWI=; b=F1O49JcdrryD+c7bjEti6SJD0k
-	5m7yB4f0mnO5oz3PWpTGFZeEDOz6jtfbEDUSGHdJuMJUdyyJrvc8w+axXtk6TDmTIIbFbkuO1ydxZ
-	ZkUVQwkCQYx3t/GvJXd0N89ERqlBZ1oyV/qsqt5n8bhxYILHdPBMEdtZh+E3rV1O6LTEgz6NY19dX
-	uMkm10gBWDJvLQbGsJ+OV21R+sYmoK2kOuMEJxHVPH/5fNpWBs+wMK5IxvFr7yXp1/8ISm8hB2ZeX
-	FrHvjmC4OQ8J8YC0afIQJre6b+7hqinDLiAbLbux5CbnHbe0gdh4CpCr9WT+96+4aXVFDLO7rTs/o
-	DeeyVT7w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55314)
+	bh=VEtYjw1bJy2FyEgqNltD6h1CKY3ei2RKfjZVJcAYac8=; b=JMh6fI6ClsD77q6QFlO594QFyv
+	sKF4LPcJaQcTQzRqy28KBHvEvNbva/Q4T4karOQKqy3zGz5C6FZf26kql8lG10rd/yWDclC8ace2t
+	E8nv+RSCOd4MSUMTE37Jd6pwCjUlHw6IB88o86uJeQeu1vXLQvCcelUpTMH5zI9UW1Ln/0xzTIYnc
+	+ZxX47CDZdxAPYKw9IFXZpxwHKBPV2C5StuOVk/ouA+IPkzqmTobJn+hz8OlhffXTedE2VG2aUA6F
+	6ipRngplcXCrRC298lr1CqzLj89tc6A4tBT19pldI+iCk9Vc5UcPgIif4YSb1J3UDshYyiuaHWSri
+	JsTs7FhA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38464)
 	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <linux@armlinux.org.uk>)
-	id 1ts7dT-0004fB-2A;
-	Tue, 11 Mar 2025 21:59:39 +0000
+	id 1ts7j7-0004gC-0h;
+	Tue, 11 Mar 2025 22:05:29 +0000
 Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
 	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1ts7dN-0003qv-0O;
-	Tue, 11 Mar 2025 21:59:33 +0000
-Date: Tue, 11 Mar 2025 21:59:32 +0000
+	id 1ts7j4-0003rB-0F;
+	Tue, 11 Mar 2025 22:05:26 +0000
+Date: Tue, 11 Mar 2025 22:05:25 +0000
 From: "Russell King (Oracle)" <linux@armlinux.org.uk>
 To: Mark Brown <broonie@kernel.org>
 Cc: Mike Rapoport <rppt@kernel.org>,
@@ -81,10 +81,12 @@ Cc: Mike Rapoport <rppt@kernel.org>,
 	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
 	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
 Subject: Re: [PATCH 10/13] arch, mm: set high_memory in free_area_init()
-Message-ID: <Z9CyRHewqfZlmgIo@shell.armlinux.org.uk>
+Message-ID: <Z9CzpTlA2e0jR7UJ@shell.armlinux.org.uk>
 References: <20250306185124.3147510-1-rppt@kernel.org>
  <20250306185124.3147510-11-rppt@kernel.org>
  <cee346ec-5fa5-4d0b-987b-413ee585dbaa@sirena.org.uk>
+ <Z9Cl8JKkRGhaRrgM@kernel.org>
+ <5e40219b-f149-4e0f-aa10-c09fa183945e@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -93,61 +95,47 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cee346ec-5fa5-4d0b-987b-413ee585dbaa@sirena.org.uk>
+In-Reply-To: <5e40219b-f149-4e0f-aa10-c09fa183945e@sirena.org.uk>
 Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Mar 11, 2025 at 05:51:06PM +0000, Mark Brown wrote:
-> On Thu, Mar 06, 2025 at 08:51:20PM +0200, Mike Rapoport wrote:
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > 
-> > high_memory defines upper bound on the directly mapped memory.
-> > This bound is defined by the beginning of ZONE_HIGHMEM when a system has
-> > high memory and by the end of memory otherwise.
-> > 
-> > All this is known to generic memory management initialization code that
-> > can set high_memory while initializing core mm structures.
-> > 
-> > Remove per-architecture calculation of high_memory and add a generic
-> > version to free_area_init().
-> 
-> This patch appears to be causing breakage on a number of 32 bit arm
-> platforms, including qemu's virt-2.11,gic-version=3.  Affected platforms
-> die on boot with no output, a bisect with qemu points at this commit and
-> those for physical platforms appear to be converging on the same place.
+On Tue, Mar 11, 2025 at 09:33:29PM +0000, Mark Brown wrote:
+> [    0.000000] Booting Linux on physical CPU 0x0
+> [    0.000000] Linux version 6.14.0-rc6-next-20250311 (tuxmake@tuxmake) (arm-linux-gnueabihf-gcc (Debian 13.3.0-5) 13.3.0, GNU ld (GNU Binutils for Debian) 2.43.1) #1 SMP @1741691801
+> [    0.000000] CPU: ARMv7 Processor [414fc0f0] revision 0 (ARMv7), cr=10c5387d
+> [    0.000000] CPU: div instructions available: patching division code
+> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
+> [    0.000000] OF: fdt: Machine model: linux,dummy-virt
+> [    0.000000] random: crng init done
+> [    0.000000] earlycon: pl11 at MMIO 0x09000000 (options '')
+> [    0.000000] printk: legacy bootconsole [pl11] enabled
+> [    0.000000] Memory policy: Data cache writealloc
+> [    0.000000] efi: UEFI not found.
+> [    0.000000] cma: Reserved 64 MiB at 0x00000000
 
-I'm not convinced that the old and the new code is doing the same
-thing.
+If that CMA address is correct, then it's wrong. virt machines start
+DRAM at 0x40000000. This is a small memory VM:
 
-The new code:
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000040000000-0x0000000045ffffff]
+[    0.000000]   HighMem  empty
 
-+       phys_addr_t highmem = memblock_end_of_DRAM();
-+
-+#ifdef CONFIG_HIGHMEM
-+       unsigned long pfn = arch_zone_lowest_possible_pfn[ZONE_HIGHMEM];
-+
-+       if (arch_has_descending_max_zone_pfns() || highmem > PFN_PHYS(pfn))
-+               highmem = PFN_PHYS(pfn);
-+#endif
-+
-+       high_memory = phys_to_virt(highmem - 1) + 1;
+and this is a larger memory VM:
 
-First, when CONFIG_HIGHMEM is disabled, this code assumes that the last
-byte of DRAM declared to memblock is the highmem limit. This _could_
-overflow phys_to_virt() and lead to an invalid value for high_memory.
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000040000000-0x000000006fffffff]
+[    0.000000]   HighMem  [mem 0x0000000070000000-0x000000007fffffff]
 
-Second, arch_zone_lowest_possible_pfn[ZONE_HIGHMEM] is the _start_ of
-highmem. This is not what arch code sets high_memory to - because
-the start of highmem may not contiguously follow on from lowmem.
+Neither have CMA enabled (it's not necessary for a VM).
 
-In arch/arm/mm/mmu.c, lowmem_limit is computed to be the highest + 1
-physical address that lowmem can possibly be, taking into account the
-amount of vmalloc memory that is required. This is used to set
-high_memory.
+On a real platform where CMA and highmem is enabled, then:
 
-We also limit the amount of usable RAM via memblock_set_current_limit()
-which memblock_end_of_DRAM() doesn't respect.
+[    0.000000] cma: Reserved 16 MiB at 0x4f000000 on node -1
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000010000000-0x000000003fffffff]
+[    0.000000]   HighMem  [mem 0x0000000040000000-0x000000004fffffff]
 
-I don't think the proposed generic version is suitable for 32-bit arm.
+So that "cma:" line you are seeing is indicating that something is very
+very wrong - it should definitely not be zero.
 
 -- 
 RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
