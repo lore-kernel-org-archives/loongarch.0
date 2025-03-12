@@ -1,144 +1,167 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9074022FF58
-	for <loongarch@lists.linux.dev>; Wed, 12 Mar 2025 08:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D581F23E33F;
+	Wed, 12 Mar 2025 15:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741768740; cv=none; b=poJKm/NaGvXnMafrQhsKec/5vikLM3ObTOAOMxpltJMtGd2aVGl96S9PCsdQslPZ7YSESEkZZ1oP+r7L2FuhlIzqH3m7RoNIkSAueLHBA8z9qqEUzQthtcYtu+X7xpgwqGSbaXn2jKhdVL7WK8/g2dLjv9i6eErWdyW1B5RhuBQ=
+	t=1741793180; cv=none; b=aqil8AIHOJDD1Km5UqTL/ph0h2l6lzt8KRkfKj5UCCVWxUS5Qck+E/RzuNsUTID9x38DqjObD9G4N0w9Fx2FWqtxYiu2Jl7HffQ8SaRScfCYVgCZgLppM1kp1/ZKTtCT4sBZ0CJne26G5mmisGwVziSsrlkAzdnfs8zq34FEyVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741768740; c=relaxed/simple;
-	bh=U33hEvHJjZLQGk9HJu8MWoqd1bx3vlt2f9SlenNSOKg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=eJG95LCpKUgv9Q+LH1geFAyD0pxDg16ExYh9WKW2EfZvRz3NWArzpuRimx0JPAN4ccmaaOWKm/SgA58EjprnoYHqEFSKqZ1ZUS5rMODsmzma3PZCnMBwWVmvs1IBRnbhrGqiFfMsODy1RjpCv7nIkQe/76wubJjqr0hjriTwMPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8CxvnIXSNFnrCmTAA--.54378S3;
-	Wed, 12 Mar 2025 16:38:47 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMDxesQTSNFnu51FAA--.16811S2;
-	Wed, 12 Mar 2025 16:38:46 +0800 (CST)
-Subject: Re: [PATCH v4 1/6] mfd: Add support for Loongson Security Module
-To: Lee Jones <lee@kernel.org>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, peterhuewe@gmx.de,
- jarkko@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>
-References: <20250226030358.15924-1-zhaoqunqin@loongson.cn>
- <20250226030358.15924-2-zhaoqunqin@loongson.cn>
- <20250307200031.GG8350@google.com>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <5a3c49e7-3f80-25fe-6f08-a3a6ddc496d0@loongson.cn>
-Date: Wed, 12 Mar 2025 16:38:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1741793180; c=relaxed/simple;
+	bh=Q7awIL7HKUND4G5BgT8sxgfvPYxZ5dldw9MgDhs69ls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fvlOj8xDiy39wtexLiuc8/e4guuSZNCJajkCPIUiGsXCuvTJfAvU/OqX55lXa7SLnO0gg7EmZ0Y7gquwiS8n/T+OPIng0G1VLYGngXzlpdLRJ431baq8zeUnUXeqTNzXFZu+jLknrh9LrbUGdSTVNkFiT+zrWb/sDtI7jwFGOk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ky/BCax3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ky/BCax3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2A9C4CEDD;
+	Wed, 12 Mar 2025 15:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741793179;
+	bh=Q7awIL7HKUND4G5BgT8sxgfvPYxZ5dldw9MgDhs69ls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ky/BCax3DFeowvZEZBaSvHz/FRjz1Ff2w3mZvorveefBQ9QItq7spH+9lPk04kMHc
+	 XFcWV+q8BLDxTsMg3kWEEMrJvLlM02Ov9qT4y5J6eushhPAVsWOV5ed7v5on6xpI5H
+	 t1Jida96hvmMXnQmaaYU62DS/XhHnkqgw1xy5aAbcXTY7h92ihBZ7RpuPzMnvvZIID
+	 4Llux6n6amMPvoDVic/J1BHmAr19Dq0COPgBWULz9Gberd6x0wlqoRfavURfSg5lJv
+	 0Xm3eB6wpryKJveHw8pu/I7JXnt8N5CGgjBp/ANgLyo/AFa/GXs+sbZv0RiHoWV9rf
+	 Q6NAbrOOruTNw==
+Date: Wed, 12 Mar 2025 15:26:05 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+	Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH 10/13] arch, mm: set high_memory in free_area_init()
+Message-ID: <6d3be692-3dc3-400c-8eeb-3d378adc8dbe@sirena.org.uk>
+Mail-Followup-To: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+	Mike Rapoport <rppt@kernel.org>
+References: <20250306185124.3147510-1-rppt@kernel.org>
+ <20250306185124.3147510-11-rppt@kernel.org>
+ <cee346ec-5fa5-4d0b-987b-413ee585dbaa@sirena.org.uk>
+ <Z9Cl8JKkRGhaRrgM@kernel.org>
+ <5e40219b-f149-4e0f-aa10-c09fa183945e@sirena.org.uk>
+ <CAMuHMdUGnBeo69NkYsv35YHp6H9GJSu-hoES2A8_0WhpX1zFhQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250307200031.GG8350@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMDxesQTSNFnu51FAA--.16811S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWFWrZr1kZFWfWFy5JF43urX_yoW5XF1fpa
-	yDJFyrCF48Jw42ka13W3WUuFy5Ga92grW3KFy7Wa4xuF9xZa47JrZ0kFy7GrZ7Jr1xXry2
-	gF95Za45CF1YyacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
-	JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
-	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
-	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
-	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-	Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="auPMsTU3HApbt9PI"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUGnBeo69NkYsv35YHp6H9GJSu-hoES2A8_0WhpX1zFhQ@mail.gmail.com>
+X-Cookie: You will outgrow your usefulness.
 
 
-在 2025/3/12 下午4:08, Lee Jones 写道:
-> On Wed, 26 Feb 2025, Qunqin Zhao wrote:
->
->> This driver supports Loongson Security Module, which provides the control
->> for it's hardware encryption acceleration child devices.
->>
->> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
->> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
->> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
->> ---
->> v3-v4: None
->>
->> v2: Removed "ls6000se-sdf" device, added "ls6000se-tpm" device.
->>      Passed dmamem size to SE firmware in se_init_hw() function.
->>
->>   drivers/mfd/Kconfig          |  10 +
->>   drivers/mfd/Makefile         |   2 +
->>   drivers/mfd/ls6000se.c       | 374 +++++++++++++++++++++++++++++++++++
->>   include/linux/mfd/ls6000se.h |  75 +++++++
->>   4 files changed, 461 insertions(+)
->>   create mode 100644 drivers/mfd/ls6000se.c
->>   create mode 100644 include/linux/mfd/ls6000se.h
->>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index d44c69bb3d..318fb113c1 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -2439,5 +2439,15 @@ config MFD_UPBOARD_FPGA
->>   	  To compile this driver as a module, choose M here: the module will be
->>   	  called upboard-fpga.
->>   
->> +config MFD_LS6000SE
->> +	tristate "Loongson Security Module Interface"
->> +	depends on LOONGARCH && ACPI
->> +	select MFD_CORE
->> +	help
->> +	  The Loongson security module provides the control for hardware
->> +	  encryption acceleration devices. Each device uses at least one
->> +	  channel to interact with security module, and each channel may
->> +	  have its own buffer provided by security module.
->> +
->>   endmenu
->>   endif
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index 9220eaf7cf..9556de7715 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -294,3 +294,5 @@ obj-$(CONFIG_MFD_RSMU_I2C)	+= rsmu_i2c.o rsmu_core.o
->>   obj-$(CONFIG_MFD_RSMU_SPI)	+= rsmu_spi.o rsmu_core.o
->>   
->>   obj-$(CONFIG_MFD_UPBOARD_FPGA)	+= upboard-fpga.o
->> +
->> +obj-$(CONFIG_MFD_LS6000SE)	+= ls6000se.o
->> diff --git a/drivers/mfd/ls6000se.c b/drivers/mfd/ls6000se.c
->> new file mode 100644
->> index 0000000000..24d76c2ffc
->> --- /dev/null
->> +++ b/drivers/mfd/ls6000se.c
-> [...]
->
->> +static const struct mfd_cell se_devs[] = {
->> +	{ .name = "ls6000se-sdf" },
->> +	{ .name = "ls6000se-tpm" },
->> +};
-> Where are the drivers for these devices?  I don't see them anywhere.
->
-> I do see ls6000se-rng.  How is that registered?
+--auPMsTU3HApbt9PI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Oh.... I made a slip of the pen and wrote that  "ls6000se-sdf" not  
-"ls6000se-rng".  Will fix it in next version.
+On Tue, Mar 11, 2025 at 10:41:28PM +0100, Geert Uytterhoeven wrote:
+> On Tue, 11 Mar 2025 at 22:33, Mark Brown <broonie@kernel.org> wrote:
 
-Driver for "ls6000se-tpm" is [PATCH v4 5/6].
+> > [    0.000000] efi: UEFI not found.
+> > [    0.000000] cma: Reserved 64 MiB at 0x00000000
 
-Thanks for your comments.
+> > - I'd only been sampling the logs for the physical platforms, none of
+> > which had shown anything.
 
-BR, Qunqin.
+> Hangs that early need "earlycon", which the qemu boot above does have.
 
->
+Indeed, the physical platforms either don't support earlycon or I just
+don't wire it up as standard in my CI.  I see a fix should already be on
+the way, but FWIW the physical platforms do seem to have bisected to the
+same commit.
 
+--auPMsTU3HApbt9PI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfRp40ACgkQJNaLcl1U
+h9ClrAf9FHrCQNmJXN4iyTK9lTj/btaMWsS34HTwQo5atjLix3MlaM4Oe1X8wWdQ
+rSJgppPAE2cv7YjUDvJGyXeNJEiBsMtnourIYIcXwHIlSknwUTW93aLuOShlc+KF
+iC2gJoynMVm1M0mcCvUSxVXjQXN1rxY3pcXLx99UJqFnR+uWkHqfKq18AdWJzzrD
+MwKz6EmBguL6eE0EstxjYPLlpJ3iYWORVdj2/2h3DYrRMLDlV+dm/xW9xGlq5sxJ
+c/3bxdgHyKWQqTxjQsPQKSz99U2Amjx1VloV+6yG9htGbdo+yNQv+tUP20dHw9c8
+ECZ91Jtf4LTcMPjk/IfIVIr0Hu3V3w==
+=0Ulf
+-----END PGP SIGNATURE-----
+
+--auPMsTU3HApbt9PI--
