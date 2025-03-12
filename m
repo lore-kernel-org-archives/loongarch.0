@@ -1,142 +1,176 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA77262819
-	for <loongarch@lists.linux.dev>; Tue, 11 Mar 2025 22:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2E9199FAC
+	for <loongarch@lists.linux.dev>; Wed, 12 Mar 2025 02:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741730785; cv=none; b=JQlPWNFGuMmqj4OyPlx084k1bNAK45OBEpgdJkw9JiE4UbQ6fzdIBvhWBU33mZykYraa+4VuqZaT+BL+GZcMespO9SZXLzIbjY1UHuV60Z6lGcZ2UUCtN3m60VqLS+LkADR7G4z4isQ1aSweTNN0RN8cCCOcBIJ5z1wHNYy00RU=
+	t=1741747179; cv=none; b=rZubErTMROixeGgUwqPSLGuK756IKT/YfbEW73f49O5eticIVMCjR5rQaaGjesHoYpqSyO/A81eFIR0p3afCsq8C0Bpt230rkjDa1/wpKnIUJB7jjjssayRBWAUchTuhsUgH3z5nDHxANN54R8QCPH40vQsz0EJc+3bOSyKtzqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741730785; c=relaxed/simple;
-	bh=1FsEAoBQCwul9SXkYZakBAby+nof+BFT5YLa9ZLbmWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uSo5QO42QV3+OzGckDKxnByKt4eQWYBbqteaMB1YzOon40M1hkYiuvlOKF4NKh+RBzciWieAt1IRNACyBxKia8agstdEvsPyaFUB+JjY4A4rKiCVmjumAiQgp47A+CRLMqVBQjGXj4BQFuMsM3YYWr34JIKW6UFeX+7iSCRtXqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=JMh6fI6C; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1741747179; c=relaxed/simple;
+	bh=JGTUx+vZhgTcxc7A0OHnH+uACyGI2QXmhdI7qpfj7jo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sqshwL5OFtT1EBRSjliKAvhSPfAXAbp40Gu/z+FFKBnmBjJ8qbp93w392Gwt9JQWjTTpYviDDYljbBgdOB99weD/9tOdCFu0+9oWl23lqFr2NHdU57QSAY81tS7Utgwv9s4DJjUbADJcTHtzsdJjAXqTtjxzuPAunm2s79IPWc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=V28zAJyM; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JMh6fI6C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VEtYjw1bJy2FyEgqNltD6h1CKY3ei2RKfjZVJcAYac8=; b=JMh6fI6ClsD77q6QFlO594QFyv
-	sKF4LPcJaQcTQzRqy28KBHvEvNbva/Q4T4karOQKqy3zGz5C6FZf26kql8lG10rd/yWDclC8ace2t
-	E8nv+RSCOd4MSUMTE37Jd6pwCjUlHw6IB88o86uJeQeu1vXLQvCcelUpTMH5zI9UW1Ln/0xzTIYnc
-	+ZxX47CDZdxAPYKw9IFXZpxwHKBPV2C5StuOVk/ouA+IPkzqmTobJn+hz8OlhffXTedE2VG2aUA6F
-	6ipRngplcXCrRC298lr1CqzLj89tc6A4tBT19pldI+iCk9Vc5UcPgIif4YSb1J3UDshYyiuaHWSri
-	JsTs7FhA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38464)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1ts7j7-0004gC-0h;
-	Tue, 11 Mar 2025 22:05:29 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1ts7j4-0003rB-0F;
-	Tue, 11 Mar 2025 22:05:26 +0000
-Date: Tue, 11 Mar 2025 22:05:25 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Mark Brown <broonie@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Stafford Horne <shorne@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH 10/13] arch, mm: set high_memory in free_area_init()
-Message-ID: <Z9CzpTlA2e0jR7UJ@shell.armlinux.org.uk>
-References: <20250306185124.3147510-1-rppt@kernel.org>
- <20250306185124.3147510-11-rppt@kernel.org>
- <cee346ec-5fa5-4d0b-987b-413ee585dbaa@sirena.org.uk>
- <Z9Cl8JKkRGhaRrgM@kernel.org>
- <5e40219b-f149-4e0f-aa10-c09fa183945e@sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="V28zAJyM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1741747132;
+	bh=JGTUx+vZhgTcxc7A0OHnH+uACyGI2QXmhdI7qpfj7jo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=V28zAJyM7SX6T2TrywfWoJzowcTs8/paPVx9GZmOYkDxp3wxfhzClM71NQlc97QKO
+	 6A0hlwnEkwI0zA2nw/p0wQ15qApU6ScvqokGuNZFoyzM6n3t7NJBQSSeQB18GAOU6R
+	 YAvI738QZESL0h3b4TFW9FrS7SoMfPAB0v0M5r3I=
+X-QQ-mid: bizesmtpip4t1741747118ts6o8v4
+X-QQ-Originating-IP: o3nEVXIgqVr4Vy+SxGR5R++Os4Cd3eWOquCs/y6PuaI=
+Received: from [IPV6:240e:668:120a::212:156] ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 12 Mar 2025 10:38:36 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 16522105991542044273
+Message-ID: <D5778071F336E5F6+5c5fc5ae-1ef3-45e7-8b01-c1e496bcfd58@uniontech.com>
+Date: Wed, 12 Mar 2025 10:38:36 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e40219b-f149-4e0f-aa10-c09fa183945e@sirena.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: Fix use of logical '&&' with constant operand
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, yangtiezhu@loongson.cn, maobibo@loongson.cn,
+ guoweikang.kernel@gmail.com, agordeev@linux.ibm.com, ast@kernel.org,
+ usamaarif642@gmail.com, jiaxun.yang@flygoat.com, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zhanjun@uniontech.com,
+ niecheng1@uniontech.com, chenlinxuan@uniontech.com, donmor3000@hotmail.com,
+ Wentao Guan <guanwentao@uniontech.com>
+References: <EEBE30D1ACFF646F+20250304105246.766404-1-wangyuli@uniontech.com>
+ <CAAhV-H6zkq1KoLQSQgimEgHhdD=S--kHa9hmhfbxUS_6OOfSJQ@mail.gmail.com>
+Content-Language: en-US
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <CAAhV-H6zkq1KoLQSQgimEgHhdD=S--kHa9hmhfbxUS_6OOfSJQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------43mx7ySSAqJvNUBrybIdpW9f"
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NbLMjDNEDlGtd7mMQEchkPkV0zhjm9dX5BeZ1fILLyQLNwsdYtZRNK/p
+	KZxnUKpuP04++V1jrhLRCBAWc/A2c0EXl/yX9LX9jtmafBA2FPyLwHadoCDMMzl6cGbkBf4
+	FfDvPZWyMneZ/CLUmoNzsjDA6M53WGBZE2b4Q7kuDEostqweOCVmyK1zek6i590rpcUNkPh
+	mjGf8BSXuVUwvkzFGd7w2IvkaV7kmfl8w4HxFbs0Uj98aXFYxlFON2m9iAyv3RA0ck2bmNF
+	gjQTj3JQra8oQOf5X8CHHOxY2CniyKc+AwkCHDSy5gnPrj37ICURiUJuMIARdSt0BQdOwX2
+	PaOKeENFNMxa1c0wyVqJhg+FodLm0EN7L+Mh3dxxJqOVf616Lna86P9Nc0HV0oozCxhAGzM
+	p78UaHgiRa2REJY5RG50fVjwtuYJ3gijFmYcEq8TGB/dskOWI8/1PFBDJP+8zQNSuPqFSi9
+	O6xEekjBNkk59muO+fBjFhGWSBZYDhK5kKcCEDnTQZyJdrcyfNL6XUtE8WI5DF5n9BTewq1
+	XaG9fIf291XHRJlRihjfvX/6odm3PEBYPn5PwSNk6hp4GcgtiO7T862rFBsqBGqIPWxx+7E
+	7Go8I2k1s1vEugR2x6KI0YPtcJl8n25XHngjAR9QjRyzT2RNv/0Dsq8/NypYLhqNOt815Lm
+	OEnyRrIso0Z2hFpt95lSLQE3AiO/OGHdKmEYhcj3mQAVa246f5L0IIcF10UytaptRKM92d6
+	UXP3tdBXSNhygIoPpmIGOWy9JbY4uWqHoxUhj+AkNoo6FBuz4GjldyBPmOkO7It1T4chxzh
+	BWwKiFGuxarRMjJ/e/upxk7bvxt0gGV2qGzy9wUZNOcyKMldxYHoQDsffbJPrSYcW0rTMje
+	+yWSE9Ln9ZxQCtOAtvuMQQOS0U8ndOtKH/wXMCFU7RBxdYLk1AbNwPGpi4ZXcMzoUZRFmso
+	OhDtnEyAkRYFKVrz0T05O8nRMIcvj1DuK7be/C26e/i2rPlHuFvskg3Qre8J9RvhoS55Qga
+	VBmpztCoOw5cww6+S5JhtjX6w3wLU=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Mar 11, 2025 at 09:33:29PM +0000, Mark Brown wrote:
-> [    0.000000] Booting Linux on physical CPU 0x0
-> [    0.000000] Linux version 6.14.0-rc6-next-20250311 (tuxmake@tuxmake) (arm-linux-gnueabihf-gcc (Debian 13.3.0-5) 13.3.0, GNU ld (GNU Binutils for Debian) 2.43.1) #1 SMP @1741691801
-> [    0.000000] CPU: ARMv7 Processor [414fc0f0] revision 0 (ARMv7), cr=10c5387d
-> [    0.000000] CPU: div instructions available: patching division code
-> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
-> [    0.000000] OF: fdt: Machine model: linux,dummy-virt
-> [    0.000000] random: crng init done
-> [    0.000000] earlycon: pl11 at MMIO 0x09000000 (options '')
-> [    0.000000] printk: legacy bootconsole [pl11] enabled
-> [    0.000000] Memory policy: Data cache writealloc
-> [    0.000000] efi: UEFI not found.
-> [    0.000000] cma: Reserved 64 MiB at 0x00000000
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------43mx7ySSAqJvNUBrybIdpW9f
+Content-Type: multipart/mixed; boundary="------------wJKrXM8GukpgPJYkT2vgJx9p";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, yangtiezhu@loongson.cn, maobibo@loongson.cn,
+ guoweikang.kernel@gmail.com, agordeev@linux.ibm.com, ast@kernel.org,
+ usamaarif642@gmail.com, jiaxun.yang@flygoat.com, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zhanjun@uniontech.com,
+ niecheng1@uniontech.com, chenlinxuan@uniontech.com, donmor3000@hotmail.com,
+ Wentao Guan <guanwentao@uniontech.com>
+Message-ID: <5c5fc5ae-1ef3-45e7-8b01-c1e496bcfd58@uniontech.com>
+Subject: Re: [PATCH] LoongArch: Fix use of logical '&&' with constant operand
+References: <EEBE30D1ACFF646F+20250304105246.766404-1-wangyuli@uniontech.com>
+ <CAAhV-H6zkq1KoLQSQgimEgHhdD=S--kHa9hmhfbxUS_6OOfSJQ@mail.gmail.com>
+In-Reply-To: <CAAhV-H6zkq1KoLQSQgimEgHhdD=S--kHa9hmhfbxUS_6OOfSJQ@mail.gmail.com>
 
-If that CMA address is correct, then it's wrong. virt machines start
-DRAM at 0x40000000. This is a small memory VM:
+--------------wJKrXM8GukpgPJYkT2vgJx9p
+Content-Type: multipart/mixed; boundary="------------mOZb0BEc7RosiYPOwaRq0lSa"
 
-[    0.000000] Zone ranges:
-[    0.000000]   Normal   [mem 0x0000000040000000-0x0000000045ffffff]
-[    0.000000]   HighMem  empty
+--------------mOZb0BEc7RosiYPOwaRq0lSa
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-and this is a larger memory VM:
+SGkgSHVhY2FpLA0KDQpPbiAyMDI1LzMvNCAyMDowMCwgSHVhY2FpIENoZW4gd3JvdGU6DQo+
+IEFyZSB5b3Uga2lkZGluZyBtZT8NCg0Kbm9wZQ0KDQo+IENPTkZJR19DTURMSU5FWzBdIGlz
+IGEgY29uc3RhbnQgZm9yIGEgc3BlY2lmaWMNCj4gY29uZmlnIGJ1dCB0aGUgY29uZmlnIGlz
+IHZhcmlhYmxlIGFjcm9zcyBidWlsZGluZ3MuIFNvIHRoZSAiY29uc3RhbnQiDQo+IGZvciBj
+b21waWxlcnMgaXMgbm90IGFzICJjb25zdGFudCIgZm9yIHBlb3BsZS4NCg0KUGVyaGFwcyBJ
+J20gbm90IGZ1bGx5IHVuZGVyc3RhbmRpbmcgeW91ciBwb2ludC4NCg0KIEZyb20gbXkgdmFu
+dGFnZSBwb2ludCwgaXQgYXBwZWFycyB0aGF0IGFsbCB0aGF0J3MgbmVjZXNzYXJ5IGlzIHRv
+IA0KYXNjZXJ0YWluIHdoZXRoZXIgQ09ORklHX0NNRExJTkVbMF0gaXMgYSBudWxsIHZhbHVl
+Lg0KDQpHaXZlbiB0aGF0IHRoZSBBU0NJSSByZXByZXNlbnRhdGlvbiBvZiBOVUwgaXMgaW5k
+ZWVkIDAsIHRoaXMgbWV0aG9kIG9mIA0KYm9vbGVhbiBjb2VyY2lvbiBmb2xsb3dlZCBieSBh
+IGxvZ2ljYWwgY29uanVuY3Rpb24gd2l0aCB0aGUgYW50ZWNlZGVudCANCmJvb2xlYW4gdmFs
+dWUgc2hvdWxkIG5vdCBpbXBpbmdlIHVwb24gdGhlIGludGVuZGVkIG9wZXJhdGlvbmFsaXR5
+IG9mIA0KdGhpcyBsaW5lIG9mIGNvZGUsIGFuZCBpdCBmdXJ0aGVyIG9idmlhdGVzIGEgY29t
+cGlsYXRpb24gd2FybmluZy4NCg0KVG8gYmUgcHJlY2lzZSwgYW1lbmRpbmcgISFDT05GSUdf
+Q01ETElORVswXSB0byAoQ09ORklHX0NNRExJTkVbMF0gPT0gMCkgDQpvciBjb252ZXJ0aW5n
+IHRoZSBsb2dpY2FsIEFORCB0byBhIGJpdHdpc2UgQU5EIG9wZXJhdGlvbiB3b3VsZCBhbHNv
+IA0KbGlrZWx5IGVuZ2VuZGVyIGEgY29tbWVuc3VyYXRlIG91dGNvbWUuDQoNCkkgbWVyZWx5
+IG9wdGVkIGZvciBvbmUgbW9kaWZpY2F0aW9uIHN0cmF0ZWd5IGFuZCBwYXRjaGVkIGl0Lg0K
+DQo+IENvbXBpbGVyIHdhcm5pbmdzDQo+IHNob3VsZCBiZSBkb3VibGUtY2hlY2tlZCBieSBw
+ZW9wbGUsIHJpZ2h0Pw0KDQpOYXR1cmFsbHkuDQoNCkNvbXBpbGVycyBhcmUsIGluIGVzc2Vu
+Y2UsIGp1c3Qgc29waGlzdGljYXRlZCBzb2Z0d2FyZSBwcm9ncmFtcywgYW5kIGFyZSANCnN1
+c2NlcHRpYmxlIHRvIG51bWVyb3VzIGltcGVyZmVjdGlvbnMuDQoNCk5vbmV0aGVsZXNzLCBm
+b3IgdGhlIG1vc3QgcGFydCwgdGhlIHdhcm5pbmdzIGFuZCBlcnJvciByZXBvcnRzIHRoZXkg
+DQpvdXRwdXQgYXJlIHR5cGljYWxseSBqdXN0aWZpZWQuDQoNCg0KVGhhbmtzLg0KDQotLSAN
+Cll1bGkgV2FuZyoNCioNCg==
+--------------mOZb0BEc7RosiYPOwaRq0lSa
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-[    0.000000] Zone ranges:
-[    0.000000]   Normal   [mem 0x0000000040000000-0x000000006fffffff]
-[    0.000000]   HighMem  [mem 0x0000000070000000-0x000000007fffffff]
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-Neither have CMA enabled (it's not necessary for a VM).
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
 
-On a real platform where CMA and highmem is enabled, then:
+--------------mOZb0BEc7RosiYPOwaRq0lSa--
 
-[    0.000000] cma: Reserved 16 MiB at 0x4f000000 on node -1
-[    0.000000] Zone ranges:
-[    0.000000]   Normal   [mem 0x0000000010000000-0x000000003fffffff]
-[    0.000000]   HighMem  [mem 0x0000000040000000-0x000000004fffffff]
+--------------wJKrXM8GukpgPJYkT2vgJx9p--
 
-So that "cma:" line you are seeing is indicating that something is very
-very wrong - it should definitely not be zero.
+--------------43mx7ySSAqJvNUBrybIdpW9f
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ9DzrAUDAAAAAAAKCRDF2h8wRvQL7qwY
+APwP10RAUyDie7MZZPCvj1sJSpidz/YYJnZdv6g+Z+JfOAEAmh+yBeL9UL+shsjO/SEjLVg0LhQm
+SOZBZKb8XsD5Jwg=
+=jOvR
+-----END PGP SIGNATURE-----
+
+--------------43mx7ySSAqJvNUBrybIdpW9f--
