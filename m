@@ -1,115 +1,109 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B599189F56
-	for <loongarch@lists.linux.dev>; Thu, 13 Mar 2025 18:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC18C1F4C8A
+	for <loongarch@lists.linux.dev>; Thu, 13 Mar 2025 21:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741890676; cv=none; b=alXWBzq6k0nmE7RePPEIdnB0BdxpL1qM48KpGej4b2bB8ykpWtsA6a3mgaIP2chUEpCcoYUFyLjThXAxmoCPLkg6uTM5OFrHqX/jmWcBarUv6RL2fL143mepJmrZrmCR9XktwdWYNJE5E2BXoaGZ6ivk2uymbekSxToZ4Ctze6A=
+	t=1741903070; cv=none; b=RGRnXHrzk8CnbsnsnEm1yb30iwmB42uXXBc/eo6CHUFtsSst/Lu8a3+JNkOVWZeTr78gpWEnbgLFxQ5xNsuoqe643yfexv9JBmDQhINISImIIz7OblTV9yWzYTGBE/unUbNHLOhSHo3vlxu3m+NOnJ8RuquiAkVS0AcH7jYuEFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741890676; c=relaxed/simple;
-	bh=R7IKmWAfEV6dguBunqVGGqHpFRfFDM8SuXUyyQU9jxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sGlOWe324XwVpGMBJ6QFPV52UW2QfT7liW2i03E35dmYoDPRWY7X20f6GVSJ52DeggmO8muwDFHfvzIF+0Dy69vtLnVZTHmJ4AJQekAsJZg6Cec2tg14sWOEH2oWtxmRC+4qtbRSKwBrFyY9EmPqbGLqbSb5Dmwmcyn8Y7V5kjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6QOfHNG; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1741903070; c=relaxed/simple;
+	bh=wkxUnKWC2Yc4q9NrIhzQPhasKzAvDUxfsq4o/HmyFUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i5aZipFlaTkmyGZGwJDCueR06m8bYlralzRT3RhSpaWI8lfvJPjCL24Fk6YORzIUFI/sCeMolTilz29AV4hU2wKbwgEah3MESL8MRR/4k+JMUsIyDEqOqCj5H8S5v53j4c1YSYGlm10vz1DufvmV/verOnUYjPBA9rdNp90NXR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WcU7+jan; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6QOfHNG"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22438c356c8so26680335ad.1
-        for <loongarch@lists.linux.dev>; Thu, 13 Mar 2025 11:31:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcU7+jan"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso1301878f8f.2
+        for <loongarch@lists.linux.dev>; Thu, 13 Mar 2025 14:57:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741890674; x=1742495474; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Jt5WSssG+OEvsuPkFz6BZY4vYElG8JeyaALVDa3jMX0=;
-        b=O6QOfHNGB58g/CKAlgYC5AkPwpCIgNmmteNL19Wfslh6Kce2UGAJYToV5bVRgTtCFa
-         WJawkdPt9JamQOwRakjGsFbPG8iVoRnTadA9TVonUVkgzC85fa8bLpsdXd0qJhshWUnT
-         EfOKTJabZjQyZ9yED2BWc7Rg9wpRPuKn2StjjWqVdzfSCCR812E3LH3aG7n3VxeQAC8i
-         Sxm3ee/jqQrCUauac6xKjF0o+b1mSYU2U/D8aYwJKYn67uGNGTyDGiJh8aXE8adYCGCk
-         27UVdfcj5gIdJSJCWsmH4+lgVeqEj1BFm1IlioHj2kze45YG6eLX05smQjge1GHjD/6G
-         JAsQ==
+        d=gmail.com; s=20230601; t=1741903067; x=1742507867; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f3M8X2QWckUY8UVMTuD9mXen2KDDE46RLeaO6zC7dTM=;
+        b=WcU7+janit/tfcZLEtXbqchn5D41Qvc+Arcqd5s242dIAoo0G8k3D4f9oezrvEnqsP
+         PO5gzR7qzUiqeeswwXE+yEu+NS9CC6ii12SNUR1qGX+r3tvYCTvTldBQ0hRhIqOJGdLZ
+         rcZGRroAwcwVdWmd7HwsRpc8PL9sdRkfHXUmGF/Jt6vulsG2ovEM+dfhPgOmZLF7qlzf
+         dwxES3OFeud8EN5GOTIXwVVEGAFNKiooEzPX/v2w/r8gmT/c05x3Dni8oMwyRnHMhvjB
+         nLj/fjS9ugfaEDOpLh+gKUEXZl3fLrsjBgBX+YsH/oKMOybzk4lRn4u+oYuxT8JLcDBw
+         VHaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741890674; x=1742495474;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741903067; x=1742507867;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Jt5WSssG+OEvsuPkFz6BZY4vYElG8JeyaALVDa3jMX0=;
-        b=f4Y2UiR2ZJ3FDs3ybj/A/TGE4upQQwV6AlW3mTufvhAmD3jyry4qFuELD/1lmqP44F
-         f5q6yjHM/rCRYSnGB2zvhVO4hxFlFO/GeQOFAdr/PbvA6ARDI47LbzjE+56Irn63trqZ
-         LXy132lrXfc2lCotb8nrr6FNwipk2q9jfyWlDIyAvlIaCWI2lHtimOqpiMvE/WtzhnLx
-         h7UNOIQAIcaToy37BrIwnvrQacKrnnQC+ZFta0duXspl4DVuiniaBVdTQ3Nzi1fJAp0c
-         hDgeaxS6f47kcYyBVp8/RjylNZ4Rwr9KSsTHhIhtlPRmWdiVGfzDgiIOOYPg2RZiWgG6
-         dN4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXq/xP8nM00tv/r0oPML2xNwBkJMlD9Ag2xHyPp35peGQ3s/dyxDjT5bdN+e46d3CgnBlPG773HSpc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzo6qXMbGuaVf8PEUlO6+LYrXI4bMDRbK1+TWANSxRJCae8K6L7
-	8UDtzbKC4kNejgkdyaeTwgZ1kwg7pVPnn+uVFx13ziiX5JnD05r0
-X-Gm-Gg: ASbGncuflm6gBwv7VmUDUkSTjED2JiEFb1ojZGZEv3R0UobsFzATKZix2/EoTCPca3T
-	xtfc3Z/KYlOklFb2NFybWWBQiTROixOd5GloBLWN2SKlnzBgUhx0loCwc7wVDYN/OY+2gVV4ebS
-	+XYcz8AQXTV22aWb3X32rUh+aXn145e/Fsl75zInuGHwuLoCoMJRDyGiTZxJN6gpI2j5NpwxeAf
-	suDKF/WPn3NgF3Z/bXbQttJ5c8J33U2jyF1Yv4oFRf/AuTFRudnfcNoUckgok/s0tw9pqdKKRqH
-	qgvVFSMEMTEGaiZVyl5lyXu1/pTka4Pl9T6PqJWQvMcwP2sqXZ+Vxl/ydw==
-X-Google-Smtp-Source: AGHT+IHUyL3JZBiKaHL1hLSTeQrgywlLwwEUN5of1N0Gy8TC0X3IRTq509SX5+fcaAZt7Xsc6jRvwQ==
-X-Received: by 2002:a17:902:d48f:b0:220:fb23:48df with SMTP id d9443c01a7336-225dd8ed442mr5472005ad.36.1741890673680;
-        Thu, 13 Mar 2025 11:31:13 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3011926599csm4185647a91.35.2025.03.13.11.31.12
+        bh=f3M8X2QWckUY8UVMTuD9mXen2KDDE46RLeaO6zC7dTM=;
+        b=OEZFUIDcotLNG7YtB75miVGcnAfsuHV/1bxJ9rr9Cg7/yrASLjcztgJVAV0sIJHK4G
+         dCbM8epztzhLP31wl7DrNGr4EUsKmCPXB/zEEYYJSp8UbPH6mhdNk/V3geId6ynYBY90
+         X4EsDAGRd7vlLrWiBvsVrhr/e7Obbf1DArxjXBa5HHiPkpJj3W7W7AwkgZBYzforqJES
+         XOA1fsG3nmSHSxwj8iQSA/u+ZVw65bx8GtbYjx5SQ95d1Wee0/uo/A0P0zzoKNAfngF9
+         PUJyJoy9FEIfNQUhGu8kK0h6vZsR7kx7pxypLLnrug/PjNCGncWsweu6euRGSpBOSsxn
+         xUlA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxBb0SWDFbT5NC5Bmjd1b/UoXgQVOpBp157uYdVLPPzAAgSIEW0a/5SfLkptJx7m23EdQfTMTk3Os=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx82xHRijO0NP8lrb1dDlQhLAw7hCSCwKU96FLx3fuQXc+S1OJN
+	RrpTSkyNHMzChyKJJJ8GTZXbEKajPbhCs0rO+DCIk9SGQoRLQQfe
+X-Gm-Gg: ASbGncttIL9v3HSstYso6ytW5qlqG0iR1OmE5bp2NdiXSrH4hQE9qOgkVpwLMKmxW98
+	mjavzIWpJfH9fprcZ6QYC+M3K90JA7ge6s8ggitO3QgT9m+ELb/MsaoAxh2bxSfGGsWwjPGv7co
+	qWtKfGJgAVgWteQoeCkEjWMWQ0brIo3/nHLwg0k6zMBkrpqkftK1BLGtNF9/COXpdl+WWUAHCFH
+	dVpTBryqqoLJIJXH1TMlWcCdaPQhNpRvLoTA3/L6eqLmSod7vGo0+J5FaUVo+Yenf5DPA5cDcUM
+	qYzUo0xFCofUs8Y3FYD71IJN7aqfIhdRg/ir/c8f+k3V3Q45yL7Ndioksjv/bmAgPbkzp836n7b
+	vLmt+NkU=
+X-Google-Smtp-Source: AGHT+IHH24pd+b5gL54NDaWwuWMDj9OGu+oF3QMwmPgdGW9oUb+b+U4WJtKrTTYmfKHOFBN/QTa6kg==
+X-Received: by 2002:a05:6000:154b:b0:391:412b:e22b with SMTP id ffacd0b85a97d-396c200fc00mr1190205f8f.18.1741903066987;
+        Thu, 13 Mar 2025 14:57:46 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b6e92sm3443876f8f.38.2025.03.13.14.57.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 11:31:13 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 13 Mar 2025 11:31:12 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Alessandro Carminati <acarmina@redhat.com>,
-	linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Alessandro Carminati <alessandro.carminati@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, loongarch@lists.linux.dev, x86@kernel.org
-Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
-Message-ID: <c8287bde-fa1c-4113-af22-4701d40d386e@roeck-us.net>
-References: <20250313114329.284104-1-acarmina@redhat.com>
- <202503131016.5DCEAEC945@keescook>
- <20250313-abiding-vivid-robin-159dfa@houat>
+        Thu, 13 Mar 2025 14:57:46 -0700 (PDT)
+Date: Thu, 13 Mar 2025 21:57:44 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, yangtiezhu@loongson.cn,
+ maobibo@loongson.cn, guoweikang.kernel@gmail.com, agordeev@linux.ibm.com,
+ ast@kernel.org, usamaarif642@gmail.com, jiaxun.yang@flygoat.com,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ zhanjun@uniontech.com, niecheng1@uniontech.com, chenlinxuan@uniontech.com,
+ donmor3000@hotmail.com, Wentao Guan <guanwentao@uniontech.com>
+Subject: Re: [PATCH] LoongArch: Fix use of logical '&&' with constant
+ operand
+Message-ID: <20250313215744.69a976aa@pumpkin>
+In-Reply-To: <EEBE30D1ACFF646F+20250304105246.766404-1-wangyuli@uniontech.com>
+References: <EEBE30D1ACFF646F+20250304105246.766404-1-wangyuli@uniontech.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313-abiding-vivid-robin-159dfa@houat>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 13, 2025 at 06:24:25PM +0100, Maxime Ripard wrote:
-> > 
-> > Yeah, as with my prior review, I'm a fan of this. It makes a bunch of my
-> > very noisy tests much easier to deal with.
+On Tue,  4 Mar 2025 18:52:46 +0800
+WangYuli <wangyuli@uniontech.com> wrote:
+
+> Fix follow error with clang-19:
 > 
-> And for the record, we're also affected by this in DRM and would very
-> much like to get it merged in one shape or another.
-> 
+> arch/loongarch/kernel/setup.c:335:40: error: use of logical '&&' with constant operand [-Werror,-Wconstant-logical-operand]
+>   335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
+>       |                                               ^  ~~~~~~~~~~~~~~~~~
+> arch/loongarch/kernel/setup.c:335:40: note: use '&' for a bitwise operation
+>   335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
+>       |                                               ^~
+>       |                                               &
+> arch/loongarch/kernel/setup.c:335:40: note: remove constant to silence this warning
+>   335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
+>       |                                               ^~~~~~~~~~~~~~~~~~~~
+> 1 error generated.
 
-I was unable to get maintainers of major architectures interested enough
-to provide feedback, and did not see a path forward. Maybe Alessandro
-has more success than me.
+Isn't that just 'an error too far' ?
 
-Guenter
+There is nothing really wrong with compile-time constants in conditionals.
+The kernel is full of them.
+
+Why not just disable the warning?
+
+	David
