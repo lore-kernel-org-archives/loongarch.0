@@ -1,872 +1,164 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FD31EB191
-	for <loongarch@lists.linux.dev>; Thu, 13 Mar 2025 16:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12AF26138E;
+	Thu, 13 Mar 2025 16:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741882470; cv=none; b=gHzaaWTx2qFuhhuY9hNNEvMUAqipRKXL3444KQo2GFqWRSvQydAlPyphV3/IfTVMtC2yTPpEU/tStMWCNtrAe5y32ZUZt1UVgW0NbHBfp0avJFNQ1xZRdhzRluXs7wr3qVzdKFHnvy5gsXnKxiBq3eGsQfqy+O3OcXLW10lJmcc=
+	t=1741883991; cv=none; b=KhwbwWqMWRm0fTT47asWkw6iFJA0taVVZjmIxa5hdKi+F0wu6gYp0k2LyF07N7WGbPVfPNihF0tWaGcLcFvddtBNBCbpRWsN805B3ToRGYw7X/9a8qUlQAiA3OC6sOChcMBfco8BennWNfHFI3VpFT6pRfFY7EQh24OSAoC8E08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741882470; c=relaxed/simple;
-	bh=ur/zKLOEFtwJ8Vl8tcgYsoXIySf/HKAMRVL/qbf+6zo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=IR7/AYvlFddzhOfyFIpCVSTKPdaxi9OUbKHbo+P9vA1Bm00KHmbMyQQZ3SEKUgroa+8riJI0McuWKcLnHEnXauIMkx4XR6VfBgZb5lM7+IteSvbc2oDAsG8KhqW32hd5TM7ApSlbScOn7+9spEI95g5TD3SCiK1b6U88tNp1cG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZlP9vBI2; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741883991; c=relaxed/simple;
+	bh=SJIh4TOyAnLQgRaND+z2LtBYQ5hvnSYhcxMltVARNHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y+1b24Se3NuAf3wUSTzIYAGpvk7IeLMCrMrce5qqLvr3ixHgtMkHf9caXcuLpeqcDC4MLAgVLwl3m+8gQTmeGZgk3PxtbjngM1cHZHcYIWjxN2uq6C1qJKtP+R6R2XRadtwxi27rjm3YZlNgaOO9HquW01ojwDpxQzD9ltrS7Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXsvsd/l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZlP9vBI2"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4766cb762b6so12017601cf.0
-        for <loongarch@lists.linux.dev>; Thu, 13 Mar 2025 09:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741882465; x=1742487265; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aLGVe2i5Mp+MPhg3XfD+na0VkC8w0Mpf/i0Hrh0ve3s=;
-        b=ZlP9vBI2OoD1td/GVLO8IO+EajY4cTgrXLjVtMFpRMOmvEiN9tp+cR3PshhFUPC8t9
-         AO1+ImPhYql9pBL4o0uN4EFG8fb364wteBwuVyw+yF43z9JT605FYQFpoIHCTMR80Rzt
-         8CF0RiIJEyksx8H1XxFJ4qsMP+1Jf7Gf8j3seO41jn0TceyaKS4kpiqe0uPFB2Qj6CEA
-         cl2O2g4Be88w/WFy+MJM9M56jKqSF2x091dOVNrO4V6vJWMcT2jldodDwx54SNi9nTDg
-         gx0bt0eOMC7/4p8yumU6DitMyH7XW8Wsan2Gh6oumcUuyMrmBctgBoCec336mLlgSByV
-         aMOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741882465; x=1742487265;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aLGVe2i5Mp+MPhg3XfD+na0VkC8w0Mpf/i0Hrh0ve3s=;
-        b=aqKy+aGJZuDvqe25PfD5NhXAczvgUbPLeht/PfEuATo5F93Inldgwjh/jtSCdgbhuF
-         vAzbObFXR+mdMNUiVQPJX8nHt63gleRUPsfETudAbJmKHLNEUTJbYlk9+fNrsHP+Fj5U
-         F8egKU38zAdzGqYvkI77nRe+teOEzQ5tGhkj/uyuDohq5sFoHsPkqiO1OxoP2fM33SVr
-         hjJUsikMqCQRa4Rk/J5clvLkjwkJSkb3FiEQhISKQap0/D1KO6oMZNnZPqkGW2oarhFl
-         VYpugy+IcxAvryUZYDv/RHXvveoLHtmsudUpJ0T4ESkakzjvpRVxaw5JJ3Ythei4Xzjk
-         cTLg==
-X-Gm-Message-State: AOJu0Yy8SYKYdJpRnArocb3/vCAc08A9L5JJJaNOnqOmc166gcMuzTRE
-	Aua0pJLndG/qwT9RkCOlzeMlyEgPiR+OA7bgL9lugmPEFHZFeUrwE2gu7PxhtUyLyFuG2osiqyz
-	ovsQow40Z7Fym+twOsd4ubtFJu+UElRHl
-X-Gm-Gg: ASbGncsYaAf5gWZxpSIJ78kQVKgCeO/xmbLVl7yUNTxG17FMwwYlrLscz2n9cyiswSj
-	6AMVJRShm2660sUthGYkzRKJ8JtrIPfmCi+06kl/85RDjHfuYAZhQFGgD1ipW+ZCyBSE4E8sOG3
-	+9gf8CSMMf4nUGO7yQK0HcggZamAdlsgSsDJhy
-X-Google-Smtp-Source: AGHT+IF29J1iRwvPaJoMFWgKkhWvQBT9fSxl5u/fY31UtNW6vHJYxAuybxyoFYM8aA8e/CI7RX8haV0UB6Mjn2WlvIg=
-X-Received: by 2002:ac8:5f93:0:b0:476:b1d1:471 with SMTP id
- d75a77b69052e-476babce743mr58280961cf.25.1741882465140; Thu, 13 Mar 2025
- 09:14:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXsvsd/l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 112F0C4CEDD;
+	Thu, 13 Mar 2025 16:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741883990;
+	bh=SJIh4TOyAnLQgRaND+z2LtBYQ5hvnSYhcxMltVARNHg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jXsvsd/lxGJNEoAX6HtYBN5kSEz6YHB6jkvfmSGlAYkaC6zejLPn/jhjOGbnxowV9
+	 G4ObNvl3IBz4OwYO2TlZ/bLh8DZduHi5CkgzYMn1CVOppgH6xx0HzA9IMhHkCryYCY
+	 ZnelQtcYuqYVLCo8RDAfcA5wrN0rilAxNY4bxJB3K1CqJlX1tG+a3qgJkkTCsPFO7h
+	 mIMi9CWIvAGiys0Idmh6XXVvAFEOzxC+aoae1uw6WzZghXN98gnejmZ33szJK51KlP
+	 WWbGYBsBTpQxs6TW4o+VUbqyqW8YHpq93CdsecoGwYUTU6EUH46GDnnPb9iVFpOFP+
+	 OQMV0Bj8JCyMQ==
+Date: Thu, 13 Mar 2025 16:39:37 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v2 00/13] arch, mm: reduce code duplication in mem_init()
+Message-ID: <5de71a98-d87f-4bfd-83a1-3f6e11c84d7d@sirena.org.uk>
+Mail-Followup-To: Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+References: <20250313135003.836600-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 13 Mar 2025 09:14:14 -0700
-X-Gm-Features: AQ5f1Jpo2LLAWV5S3SasiqEYrtxEzlN5tAaHLddzVeIqCLzg9OT6VW6USKB2l7w
-Message-ID: <CAK3+h2yfM9FTNiXvEQBkvtuoJrvzmN4c_NZsFXqEk4Cj1tsBNA@mail.gmail.com>
-Subject: Loongarch JIT doesn't support bpf-to-bpf calls
-To: loongarch@lists.linux.dev, bpf <bpf@vger.kernel.org>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-
-Hi,
-
-I  use xdp-loader to load XDP program [0] that  tails call XDP
-synproxy program that was modified from kernel source [1] on Loongarch
-platform, I got message "JIT doesn't support bpf-to-bpf call near the
-bottom of the output below:
-
-[root@fedora xdp-tools]# ./xdp-loader/xdp-loader load  -vvv lo -m skb
--P 80 -p /sys/fs/bpf/xdp-synproxy-tailcall -n synproxy_tailcall
-./xdp-synproxy-tailcall/xdp_synproxy_tailcall.bpf.o
-
-Current rlimit 8388608 already >= minimum 1048576
-Loading 1 files on interface 'lo'.
-  libbpf: loading object from
-./xdp-synproxy-tailcall/xdp_synproxy_tailcall.bpf.o
-  libbpf: elf: section(2) .text, size 888, link 0, flags 6, type=1
-  libbpf: sec '.text': found program 'tscookie_tcpopt_parse_batch' at
-insn offset 0 (0 bytes), code size 111 insns (888 bytes)
-  libbpf: elf: section(3) xdp, size 7312, link 0, flags 6, type=1
-  libbpf: sec 'xdp': found program 'syncookie_xdp' at insn offset 0 (0
-bytes), code size 890 insns (7120 bytes)
-  libbpf: sec 'xdp': found program 'synproxy_tailcall' at insn offset
-890 (7120 bytes), code size 24 insns (192 bytes)
-  libbpf: elf: section(4) .relxdp, size 128, link 28, flags 40, type=9
-  libbpf: elf: section(5) .maps, size 128, link 0, flags 3, type=1
-  libbpf: elf: section(6) .rel.maps, size 16, link 28, flags 40, type=9
-  libbpf: elf: section(7) license, size 4, link 0, flags 3, type=1
-  libbpf: license of ./xdp-synproxy-tailcall/xdp_synproxy_tailcall.bpf.o is GPL
-  libbpf: elf: section(8) .rodata, size 12, link 0, flags 2, type=1
-  libbpf: elf: section(19) .BTF, size 9434, link 0, flags 0, type=1
-  libbpf: elf: section(21) .BTF.ext, size 7628, link 0, flags 0, type=1
-  libbpf: elf: section(28) .symtab, size 1656, link 1, flags 0, type=2
-  libbpf: looking for externs among 69 symbols...
-  libbpf: collected 2 externs total
-  libbpf: extern (ksym) #0: symbol 63, name bpf_ct_release
-  libbpf: extern (ksym) #1: symbol 62, name bpf_xdp_ct_lookup
-  libbpf: map 'tail_call_tbl': at sec_idx 5, offset 0.
-  libbpf: map 'tail_call_tbl': found type = 3.
-  libbpf: map 'tail_call_tbl': found key_size = 4.
-  libbpf: map 'tail_call_tbl': found value_size = 4.
-  libbpf: map 'tail_call_tbl': found max_entries = 1.
-  libbpf: map 'tail_call_tbl': found pinning = 1.
-  libbpf: map 'values': at sec_idx 5, offset 48.
-  libbpf: map 'values': found type = 2.
-  libbpf: map 'values': found key [18], sz = 4.
-  libbpf: map 'values': found value [21], sz = 8.
-  libbpf: map 'values': found max_entries = 2.
-  libbpf: map 'values': found pinning = 1.
-  libbpf: map 'allowed_ports': at sec_idx 5, offset 88.
-  libbpf: map 'allowed_ports': found type = 2.
-  libbpf: map 'allowed_ports': found key [18], sz = 4.
-  libbpf: map 'allowed_ports': found value [26], sz = 2.
-  libbpf: map 'allowed_ports': found max_entries = 24.
-  libbpf: map 'allowed_ports': found pinning = 1.
-  libbpf: map 'xdp_synp.rodata' (global data): at sec_idx 8, offset 0, flags 80.
-  libbpf: map 3 is "xdp_synp.rodata"
-  libbpf: sec '.relxdp': collecting relocation for section(3) 'xdp'
-  libbpf: sec '.relxdp': relo #0: insn #115 against 'bpf_xdp_ct_lookup'
-  libbpf: prog 'syncookie_xdp': found extern #1 'bpf_xdp_ct_lookup'
-(sym 62) for insn #115
-  libbpf: sec '.relxdp': relo #1: insn #119 against 'bpf_ct_release'
-  libbpf: prog 'syncookie_xdp': found extern #0 'bpf_ct_release' (sym
-63) for insn #119
-  libbpf: sec '.relxdp': relo #2: insn #138 against 'allowed_ports'
-  libbpf: prog 'syncookie_xdp': found map 2 (allowed_ports, sec 5, off
-88) for insn #138
-  libbpf: sec '.relxdp': relo #3: insn #386 against '.text'
-  libbpf: sec '.relxdp': relo #4: insn #450 against 'values'
-  libbpf: prog 'syncookie_xdp': found map 1 (values, sec 5, off 48)
-for insn #450
-  libbpf: sec '.relxdp': relo #5: insn #600 against 'values'
-  libbpf: prog 'syncookie_xdp': found map 1 (values, sec 5, off 48)
-for insn #600
-  libbpf: sec '.relxdp': relo #6: insn #883 against 'values'
-  libbpf: prog 'syncookie_xdp': found map 1 (values, sec 5, off 48)
-for insn #883
-  libbpf: sec '.relxdp': relo #7: insn #908 against 'tail_call_tbl'
-  libbpf: prog 'synproxy_tailcall': found map 0 (tail_call_tbl, sec 5,
-off 0) for insn #18
-  libbpf: .maps relo #0: for 61 value 0 rel->r_offset 40 name 189
-('syncookie_xdp')
-  libbpf: .maps relo #0: map 'tail_call_tbl' slot [0] points to prog
-'syncookie_xdp'
- libxdp: Found func synproxy_tailcall matching synproxy_tailcall
- libxdp: DATASEC '.xdp_run_config' not found.
-XDP program 0: Run prio: 80. Chain call actions: XDP_PASS
- libxdp: Generating multi-prog dispatcher for 1 programs
- libxdp: Checking for kernel frags support
- libxdp: Loading XDP program 'xdp-dispatcher.o' from embedded object file
-  libbpf: loading object 'xdp-dispatcher.o' from buffer
-  libbpf: elf: section(2) .text, size 528, link 0, flags 6, type=1
-  libbpf: sec '.text': found program 'prog0' at insn offset 0 (0
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog1' at insn offset 6 (48
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog2' at insn offset 12 (96
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog3' at insn offset 18 (144
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog4' at insn offset 24 (192
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog5' at insn offset 30 (240
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog6' at insn offset 36 (288
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog7' at insn offset 42 (336
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog8' at insn offset 48 (384
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog9' at insn offset 54 (432
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'compat_test' at insn offset 60
-(480 bytes), code size 6 insns (48 bytes)
-  libbpf: elf: section(3) xdp, size 1160, link 0, flags 6, type=1
-  libbpf: sec 'xdp': found program 'xdp_dispatcher' at insn offset 0
-(0 bytes), code size 143 insns (1144 bytes)
-  libbpf: sec 'xdp': found program 'xdp_pass' at insn offset 143 (1144
-bytes), code size 2 insns (16 bytes)
-  libbpf: elf: section(4) .relxdp, size 336, link 27, flags 40, type=9
-  libbpf: elf: section(5) .rodata, size 124, link 0, flags 2, type=1
-  libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
-  libbpf: license of xdp-dispatcher.o is GPL
-  libbpf: elf: section(7) xdp_metadata, size 8, link 0, flags 3, type=1
-  libbpf: elf: skipping unrecognized data section(7) xdp_metadata
-  libbpf: elf: section(18) .BTF, size 3248, link 0, flags 0, type=1
-  libbpf: elf: section(20) .BTF.ext, size 2112, link 0, flags 0, type=1
-  libbpf: elf: section(27) .symtab, size 1008, link 1, flags 0, type=2
-  libbpf: looking for externs among 42 symbols...
-  libbpf: collected 0 externs total
-  libbpf: map 'xdp_disp.rodata' (global data): at sec_idx 5, offset 0, flags 80.
-  libbpf: map 0 is "xdp_disp.rodata"
-  libbpf: sec '.relxdp': collecting relocation for section(3) 'xdp'
-  libbpf: sec '.relxdp': relo #0: insn #1 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 1
-  libbpf: sec '.relxdp': relo #1: insn #7 against 'prog0'
-  libbpf: sec '.relxdp': relo #2: insn #18 against 'prog1'
-  libbpf: sec '.relxdp': relo #3: insn #19 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 19
-  libbpf: sec '.relxdp': relo #4: insn #32 against 'prog2'
-  libbpf: sec '.relxdp': relo #5: insn #33 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 33
-  libbpf: sec '.relxdp': relo #6: insn #45 against 'prog3'
-  libbpf: sec '.relxdp': relo #7: insn #46 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 46
-  libbpf: sec '.relxdp': relo #8: insn #59 against 'prog4'
-  libbpf: sec '.relxdp': relo #9: insn #60 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 60
-  libbpf: sec '.relxdp': relo #10: insn #72 against 'prog5'
-  libbpf: sec '.relxdp': relo #11: insn #73 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 73
-  libbpf: sec '.relxdp': relo #12: insn #86 against 'prog6'
-  libbpf: sec '.relxdp': relo #13: insn #87 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 87
-  libbpf: sec '.relxdp': relo #14: insn #99 against 'prog7'
-  libbpf: sec '.relxdp': relo #15: insn #100 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 100
-  libbpf: sec '.relxdp': relo #16: insn #113 against 'prog8'
-  libbpf: sec '.relxdp': relo #17: insn #114 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 114
-  libbpf: sec '.relxdp': relo #18: insn #126 against 'prog9'
-  libbpf: sec '.relxdp': relo #19: insn #127 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 127
-  libbpf: sec '.relxdp': relo #20: insn #140 against 'compat_test'
- libxdp: DATASEC '.xdp_run_config' not found.
-  libbpf: object 'xdp-dispatcher.': failed (-95) to create BPF token
-from '/sys/fs/bpf', skipping optional step...
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog0'
-  libbpf: prog 'xdp_dispatcher': insn #7 relocated, imm 135 points to
-subprog 'prog0' (now at 143 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog1'
-  libbpf: prog 'xdp_dispatcher': insn #18 relocated, imm 130 points to
-subprog 'prog1' (now at 149 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog2'
-  libbpf: prog 'xdp_dispatcher': insn #32 relocated, imm 122 points to
-subprog 'prog2' (now at 155 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog3'
-  libbpf: prog 'xdp_dispatcher': insn #45 relocated, imm 115 points to
-subprog 'prog3' (now at 161 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog4'
-  libbpf: prog 'xdp_dispatcher': insn #59 relocated, imm 107 points to
-subprog 'prog4' (now at 167 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog5'
-  libbpf: prog 'xdp_dispatcher': insn #72 relocated, imm 100 points to
-subprog 'prog5' (now at 173 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog6'
-  libbpf: prog 'xdp_dispatcher': insn #86 relocated, imm 92 points to
-subprog 'prog6' (now at 179 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog7'
-  libbpf: prog 'xdp_dispatcher': insn #99 relocated, imm 85 points to
-subprog 'prog7' (now at 185 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog8'
-  libbpf: prog 'xdp_dispatcher': insn #113 relocated, imm 77 points to
-subprog 'prog8' (now at 191 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog9'
-  libbpf: prog 'xdp_dispatcher': insn #126 relocated, imm 70 points to
-subprog 'prog9' (now at 197 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'compat_test'
-  libbpf: prog 'xdp_dispatcher': insn #140 relocated, imm 62 points to
-subprog 'compat_test' (now at 203 offset)
-  libbpf: map 'xdp_disp.rodata': created successfully, fd=3
- libxdp: Loaded XDP program xdp_pass, got fd 10
- libxdp: Duplicated fd 10 to 11 for prog xdp_pass
- libxdp: Kernel supports XDP programs with frags
- libxdp: Loading XDP program 'xdp-dispatcher.o' from embedded object file
-  libbpf: loading object 'xdp-dispatcher.o' from buffer
-  libbpf: elf: section(2) .text, size 528, link 0, flags 6, type=1
-  libbpf: sec '.text': found program 'prog0' at insn offset 0 (0
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog1' at insn offset 6 (48
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog2' at insn offset 12 (96
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog3' at insn offset 18 (144
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog4' at insn offset 24 (192
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog5' at insn offset 30 (240
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog6' at insn offset 36 (288
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog7' at insn offset 42 (336
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog8' at insn offset 48 (384
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog9' at insn offset 54 (432
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'compat_test' at insn offset 60
-(480 bytes), code size 6 insns (48 bytes)
-  libbpf: elf: section(3) xdp, size 1160, link 0, flags 6, type=1
-  libbpf: sec 'xdp': found program 'xdp_dispatcher' at insn offset 0
-(0 bytes), code size 143 insns (1144 bytes)
-  libbpf: sec 'xdp': found program 'xdp_pass' at insn offset 143 (1144
-bytes), code size 2 insns (16 bytes)
-  libbpf: elf: section(4) .relxdp, size 336, link 27, flags 40, type=9
-  libbpf: elf: section(5) .rodata, size 124, link 0, flags 2, type=1
-  libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
-  libbpf: license of xdp-dispatcher.o is GPL
-  libbpf: elf: section(7) xdp_metadata, size 8, link 0, flags 3, type=1
-  libbpf: elf: skipping unrecognized data section(7) xdp_metadata
-  libbpf: elf: section(18) .BTF, size 3248, link 0, flags 0, type=1
-  libbpf: elf: section(20) .BTF.ext, size 2112, link 0, flags 0, type=1
-  libbpf: elf: section(27) .symtab, size 1008, link 1, flags 0, type=2
-  libbpf: looking for externs among 42 symbols...
-  libbpf: collected 0 externs total
-  libbpf: map 'xdp_disp.rodata' (global data): at sec_idx 5, offset 0, flags 80.
-  libbpf: map 0 is "xdp_disp.rodata"
-  libbpf: sec '.relxdp': collecting relocation for section(3) 'xdp'
-  libbpf: sec '.relxdp': relo #0: insn #1 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 1
-  libbpf: sec '.relxdp': relo #1: insn #7 against 'prog0'
-  libbpf: sec '.relxdp': relo #2: insn #18 against 'prog1'
-  libbpf: sec '.relxdp': relo #3: insn #19 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 19
-  libbpf: sec '.relxdp': relo #4: insn #32 against 'prog2'
-  libbpf: sec '.relxdp': relo #5: insn #33 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 33
-  libbpf: sec '.relxdp': relo #6: insn #45 against 'prog3'
-  libbpf: sec '.relxdp': relo #7: insn #46 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 46
-  libbpf: sec '.relxdp': relo #8: insn #59 against 'prog4'
-  libbpf: sec '.relxdp': relo #9: insn #60 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 60
-  libbpf: sec '.relxdp': relo #10: insn #72 against 'prog5'
-  libbpf: sec '.relxdp': relo #11: insn #73 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 73
-  libbpf: sec '.relxdp': relo #12: insn #86 against 'prog6'
-  libbpf: sec '.relxdp': relo #13: insn #87 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 87
-  libbpf: sec '.relxdp': relo #14: insn #99 against 'prog7'
-  libbpf: sec '.relxdp': relo #15: insn #100 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 100
-  libbpf: sec '.relxdp': relo #16: insn #113 against 'prog8'
-  libbpf: sec '.relxdp': relo #17: insn #114 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 114
-  libbpf: sec '.relxdp': relo #18: insn #126 against 'prog9'
-  libbpf: sec '.relxdp': relo #19: insn #127 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 127
-  libbpf: sec '.relxdp': relo #20: insn #140 against 'compat_test'
- libxdp: DATASEC '.xdp_run_config' not found.
- libxdp: At least one attached program doesn't support frags,
-disabling it for the dispatcher
- libxdp: Loading multiprog dispatcher for 1 programs without frags support
-  libbpf: object 'xdp-dispatcher.': failed (-95) to create BPF token
-from '/sys/fs/bpf', skipping optional step...
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog0'
-  libbpf: prog 'xdp_dispatcher': insn #7 relocated, imm 135 points to
-subprog 'prog0' (now at 143 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog1'
-  libbpf: prog 'xdp_dispatcher': insn #18 relocated, imm 130 points to
-subprog 'prog1' (now at 149 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog2'
-  libbpf: prog 'xdp_dispatcher': insn #32 relocated, imm 122 points to
-subprog 'prog2' (now at 155 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog3'
-  libbpf: prog 'xdp_dispatcher': insn #45 relocated, imm 115 points to
-subprog 'prog3' (now at 161 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog4'
-  libbpf: prog 'xdp_dispatcher': insn #59 relocated, imm 107 points to
-subprog 'prog4' (now at 167 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog5'
-  libbpf: prog 'xdp_dispatcher': insn #72 relocated, imm 100 points to
-subprog 'prog5' (now at 173 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog6'
-  libbpf: prog 'xdp_dispatcher': insn #86 relocated, imm 92 points to
-subprog 'prog6' (now at 179 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog7'
-  libbpf: prog 'xdp_dispatcher': insn #99 relocated, imm 85 points to
-subprog 'prog7' (now at 185 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog8'
-  libbpf: prog 'xdp_dispatcher': insn #113 relocated, imm 77 points to
-subprog 'prog8' (now at 191 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog9'
-  libbpf: prog 'xdp_dispatcher': insn #126 relocated, imm 70 points to
-subprog 'prog9' (now at 197 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'compat_test'
-  libbpf: prog 'xdp_dispatcher': insn #140 relocated, imm 62 points to
-subprog 'compat_test' (now at 203 offset)
-  libbpf: map 'xdp_disp.rodata': created successfully, fd=3
- libxdp: Loaded XDP program xdp_dispatcher, got fd 9
- libxdp: Duplicated fd 9 to 11 for prog xdp_dispatcher
- libxdp: Checking dispatcher compatibility
- libxdp: Loading XDP program 'xdp-dispatcher.o' from embedded object file
-  libbpf: loading object 'xdp-dispatcher.o' from buffer
-  libbpf: elf: section(2) .text, size 528, link 0, flags 6, type=1
-  libbpf: sec '.text': found program 'prog0' at insn offset 0 (0
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog1' at insn offset 6 (48
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog2' at insn offset 12 (96
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog3' at insn offset 18 (144
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog4' at insn offset 24 (192
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog5' at insn offset 30 (240
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog6' at insn offset 36 (288
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog7' at insn offset 42 (336
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog8' at insn offset 48 (384
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog9' at insn offset 54 (432
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'compat_test' at insn offset 60
-(480 bytes), code size 6 insns (48 bytes)
-  libbpf: elf: section(3) xdp, size 1160, link 0, flags 6, type=1
-  libbpf: sec 'xdp': found program 'xdp_dispatcher' at insn offset 0
-(0 bytes), code size 143 insns (1144 bytes)
-  libbpf: sec 'xdp': found program 'xdp_pass' at insn offset 143 (1144
-bytes), code size 2 insns (16 bytes)
-  libbpf: elf: section(4) .relxdp, size 336, link 27, flags 40, type=9
-  libbpf: elf: section(5) .rodata, size 124, link 0, flags 2, type=1
-  libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
-  libbpf: license of xdp-dispatcher.o is GPL
-  libbpf: elf: section(7) xdp_metadata, size 8, link 0, flags 3, type=1
-  libbpf: elf: skipping unrecognized data section(7) xdp_metadata
-  libbpf: elf: section(18) .BTF, size 3248, link 0, flags 0, type=1
-  libbpf: elf: section(20) .BTF.ext, size 2112, link 0, flags 0, type=1
-  libbpf: elf: section(27) .symtab, size 1008, link 1, flags 0, type=2
-  libbpf: looking for externs among 42 symbols...
-  libbpf: collected 0 externs total
-  libbpf: map 'xdp_disp.rodata' (global data): at sec_idx 5, offset 0, flags 80.
-  libbpf: map 0 is "xdp_disp.rodata"
-  libbpf: sec '.relxdp': collecting relocation for section(3) 'xdp'
-  libbpf: sec '.relxdp': relo #0: insn #1 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 1
-  libbpf: sec '.relxdp': relo #1: insn #7 against 'prog0'
-  libbpf: sec '.relxdp': relo #2: insn #18 against 'prog1'
-  libbpf: sec '.relxdp': relo #3: insn #19 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 19
-  libbpf: sec '.relxdp': relo #4: insn #32 against 'prog2'
-  libbpf: sec '.relxdp': relo #5: insn #33 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 33
-  libbpf: sec '.relxdp': relo #6: insn #45 against 'prog3'
-  libbpf: sec '.relxdp': relo #7: insn #46 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 46
-  libbpf: sec '.relxdp': relo #8: insn #59 against 'prog4'
-  libbpf: sec '.relxdp': relo #9: insn #60 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 60
-  libbpf: sec '.relxdp': relo #10: insn #72 against 'prog5'
-  libbpf: sec '.relxdp': relo #11: insn #73 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 73
-  libbpf: sec '.relxdp': relo #12: insn #86 against 'prog6'
-  libbpf: sec '.relxdp': relo #13: insn #87 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 87
-  libbpf: sec '.relxdp': relo #14: insn #99 against 'prog7'
-  libbpf: sec '.relxdp': relo #15: insn #100 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 100
-  libbpf: sec '.relxdp': relo #16: insn #113 against 'prog8'
-  libbpf: sec '.relxdp': relo #17: insn #114 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 114
-  libbpf: sec '.relxdp': relo #18: insn #126 against 'prog9'
-  libbpf: sec '.relxdp': relo #19: insn #127 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 127
-  libbpf: sec '.relxdp': relo #20: insn #140 against 'compat_test'
- libxdp: DATASEC '.xdp_run_config' not found.
- libxdp: Loading XDP program 'xdp-dispatcher.o' from embedded object file
-  libbpf: loading object 'xdp-dispatcher.o' from buffer
-  libbpf: elf: section(2) .text, size 528, link 0, flags 6, type=1
-  libbpf: sec '.text': found program 'prog0' at insn offset 0 (0
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog1' at insn offset 6 (48
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog2' at insn offset 12 (96
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog3' at insn offset 18 (144
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog4' at insn offset 24 (192
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog5' at insn offset 30 (240
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog6' at insn offset 36 (288
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog7' at insn offset 42 (336
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog8' at insn offset 48 (384
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog9' at insn offset 54 (432
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'compat_test' at insn offset 60
-(480 bytes), code size 6 insns (48 bytes)
-  libbpf: elf: section(3) xdp, size 1160, link 0, flags 6, type=1
-  libbpf: sec 'xdp': found program 'xdp_dispatcher' at insn offset 0
-(0 bytes), code size 143 insns (1144 bytes)
-  libbpf: sec 'xdp': found program 'xdp_pass' at insn offset 143 (1144
-bytes), code size 2 insns (16 bytes)
-  libbpf: elf: section(4) .relxdp, size 336, link 27, flags 40, type=9
-  libbpf: elf: section(5) .rodata, size 124, link 0, flags 2, type=1
-  libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
-  libbpf: license of xdp-dispatcher.o is GPL
-  libbpf: elf: section(7) xdp_metadata, size 8, link 0, flags 3, type=1
-  libbpf: elf: skipping unrecognized data section(7) xdp_metadata
-  libbpf: elf: section(18) .BTF, size 3248, link 0, flags 0, type=1
-  libbpf: elf: section(20) .BTF.ext, size 2112, link 0, flags 0, type=1
-  libbpf: elf: section(27) .symtab, size 1008, link 1, flags 0, type=2
-  libbpf: looking for externs among 42 symbols...
-  libbpf: collected 0 externs total
-  libbpf: map 'xdp_disp.rodata' (global data): at sec_idx 5, offset 0, flags 80.
-  libbpf: map 0 is "xdp_disp.rodata"
-  libbpf: sec '.relxdp': collecting relocation for section(3) 'xdp'
-  libbpf: sec '.relxdp': relo #0: insn #1 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 1
-  libbpf: sec '.relxdp': relo #1: insn #7 against 'prog0'
-  libbpf: sec '.relxdp': relo #2: insn #18 against 'prog1'
-  libbpf: sec '.relxdp': relo #3: insn #19 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 19
-  libbpf: sec '.relxdp': relo #4: insn #32 against 'prog2'
-  libbpf: sec '.relxdp': relo #5: insn #33 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 33
-  libbpf: sec '.relxdp': relo #6: insn #45 against 'prog3'
-  libbpf: sec '.relxdp': relo #7: insn #46 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 46
-  libbpf: sec '.relxdp': relo #8: insn #59 against 'prog4'
-  libbpf: sec '.relxdp': relo #9: insn #60 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 60
-  libbpf: sec '.relxdp': relo #10: insn #72 against 'prog5'
-  libbpf: sec '.relxdp': relo #11: insn #73 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 73
-  libbpf: sec '.relxdp': relo #12: insn #86 against 'prog6'
-  libbpf: sec '.relxdp': relo #13: insn #87 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 87
-  libbpf: sec '.relxdp': relo #14: insn #99 against 'prog7'
-  libbpf: sec '.relxdp': relo #15: insn #100 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 100
-  libbpf: sec '.relxdp': relo #16: insn #113 against 'prog8'
-  libbpf: sec '.relxdp': relo #17: insn #114 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 114
-  libbpf: sec '.relxdp': relo #18: insn #126 against 'prog9'
-  libbpf: sec '.relxdp': relo #19: insn #127 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 127
-  libbpf: sec '.relxdp': relo #20: insn #140 against 'compat_test'
- libxdp: DATASEC '.xdp_run_config' not found.
-  libbpf: object 'xdp-dispatcher.': failed (-95) to create BPF token
-from '/sys/fs/bpf', skipping optional step...
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog0'
-  libbpf: prog 'xdp_dispatcher': insn #7 relocated, imm 135 points to
-subprog 'prog0' (now at 143 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog1'
-  libbpf: prog 'xdp_dispatcher': insn #18 relocated, imm 130 points to
-subprog 'prog1' (now at 149 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog2'
-  libbpf: prog 'xdp_dispatcher': insn #32 relocated, imm 122 points to
-subprog 'prog2' (now at 155 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog3'
-  libbpf: prog 'xdp_dispatcher': insn #45 relocated, imm 115 points to
-subprog 'prog3' (now at 161 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog4'
-  libbpf: prog 'xdp_dispatcher': insn #59 relocated, imm 107 points to
-subprog 'prog4' (now at 167 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog5'
-  libbpf: prog 'xdp_dispatcher': insn #72 relocated, imm 100 points to
-subprog 'prog5' (now at 173 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog6'
-  libbpf: prog 'xdp_dispatcher': insn #86 relocated, imm 92 points to
-subprog 'prog6' (now at 179 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog7'
-  libbpf: prog 'xdp_dispatcher': insn #99 relocated, imm 85 points to
-subprog 'prog7' (now at 185 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog8'
-  libbpf: prog 'xdp_dispatcher': insn #113 relocated, imm 77 points to
-subprog 'prog8' (now at 191 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog9'
-  libbpf: prog 'xdp_dispatcher': insn #126 relocated, imm 70 points to
-subprog 'prog9' (now at 197 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'compat_test'
-  libbpf: prog 'xdp_dispatcher': insn #140 relocated, imm 62 points to
-subprog 'compat_test' (now at 203 offset)
-  libbpf: map 'xdp_disp.rodata': created successfully, fd=12
- libxdp: Loaded XDP program xdp_pass, got fd 16
- libxdp: Duplicated fd 16 to 17 for prog xdp_pass
-  libbpf: object 'xdp-dispatcher.': failed (-95) to create BPF token
-from '/sys/fs/bpf', skipping optional step...
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog0'
-  libbpf: prog 'xdp_dispatcher': insn #7 relocated, imm 135 points to
-subprog 'prog0' (now at 143 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog1'
-  libbpf: prog 'xdp_dispatcher': insn #18 relocated, imm 130 points to
-subprog 'prog1' (now at 149 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog2'
-  libbpf: prog 'xdp_dispatcher': insn #32 relocated, imm 122 points to
-subprog 'prog2' (now at 155 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog3'
-  libbpf: prog 'xdp_dispatcher': insn #45 relocated, imm 115 points to
-subprog 'prog3' (now at 161 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog4'
-  libbpf: prog 'xdp_dispatcher': insn #59 relocated, imm 107 points to
-subprog 'prog4' (now at 167 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog5'
-  libbpf: prog 'xdp_dispatcher': insn #72 relocated, imm 100 points to
-subprog 'prog5' (now at 173 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog6'
-  libbpf: prog 'xdp_dispatcher': insn #86 relocated, imm 92 points to
-subprog 'prog6' (now at 179 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog7'
-  libbpf: prog 'xdp_dispatcher': insn #99 relocated, imm 85 points to
-subprog 'prog7' (now at 185 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog8'
-  libbpf: prog 'xdp_dispatcher': insn #113 relocated, imm 77 points to
-subprog 'prog8' (now at 191 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog9'
-  libbpf: prog 'xdp_dispatcher': insn #126 relocated, imm 70 points to
-subprog 'prog9' (now at 197 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'compat_test'
-  libbpf: prog 'xdp_dispatcher': insn #140 relocated, imm 62 points to
-subprog 'compat_test' (now at 203 offset)
-  libbpf: map 'xdp_disp.rodata': created successfully, fd=13
- libxdp: Loaded XDP program xdp_pass, got fd 20
- libxdp: Duplicated fd 20 to 21 for prog xdp_pass
- libxdp: Failed to attach test program to dispatcher: Unknown error 524
- libxdp: Compatibility check for dispatcher program failed: Unknown error 524
- libxdp: Falling back to loading single prog without dispatcher
- libxdp: Checking for kernel frags support
- libxdp: Loading XDP program 'xdp-dispatcher.o' from embedded object file
-  libbpf: loading object 'xdp-dispatcher.o' from buffer
-  libbpf: elf: section(2) .text, size 528, link 0, flags 6, type=1
-  libbpf: sec '.text': found program 'prog0' at insn offset 0 (0
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog1' at insn offset 6 (48
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog2' at insn offset 12 (96
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog3' at insn offset 18 (144
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog4' at insn offset 24 (192
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog5' at insn offset 30 (240
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog6' at insn offset 36 (288
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog7' at insn offset 42 (336
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog8' at insn offset 48 (384
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'prog9' at insn offset 54 (432
-bytes), code size 6 insns (48 bytes)
-  libbpf: sec '.text': found program 'compat_test' at insn offset 60
-(480 bytes), code size 6 insns (48 bytes)
-  libbpf: elf: section(3) xdp, size 1160, link 0, flags 6, type=1
-  libbpf: sec 'xdp': found program 'xdp_dispatcher' at insn offset 0
-(0 bytes), code size 143 insns (1144 bytes)
-  libbpf: sec 'xdp': found program 'xdp_pass' at insn offset 143 (1144
-bytes), code size 2 insns (16 bytes)
-  libbpf: elf: section(4) .relxdp, size 336, link 27, flags 40, type=9
-  libbpf: elf: section(5) .rodata, size 124, link 0, flags 2, type=1
-  libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
-  libbpf: license of xdp-dispatcher.o is GPL
-  libbpf: elf: section(7) xdp_metadata, size 8, link 0, flags 3, type=1
-  libbpf: elf: skipping unrecognized data section(7) xdp_metadata
-  libbpf: elf: section(18) .BTF, size 3248, link 0, flags 0, type=1
-  libbpf: elf: section(20) .BTF.ext, size 2112, link 0, flags 0, type=1
-  libbpf: elf: section(27) .symtab, size 1008, link 1, flags 0, type=2
-  libbpf: looking for externs among 42 symbols...
-  libbpf: collected 0 externs total
-  libbpf: map 'xdp_disp.rodata' (global data): at sec_idx 5, offset 0, flags 80.
-  libbpf: map 0 is "xdp_disp.rodata"
-  libbpf: sec '.relxdp': collecting relocation for section(3) 'xdp'
-  libbpf: sec '.relxdp': relo #0: insn #1 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 1
-  libbpf: sec '.relxdp': relo #1: insn #7 against 'prog0'
-  libbpf: sec '.relxdp': relo #2: insn #18 against 'prog1'
-  libbpf: sec '.relxdp': relo #3: insn #19 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 19
-  libbpf: sec '.relxdp': relo #4: insn #32 against 'prog2'
-  libbpf: sec '.relxdp': relo #5: insn #33 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 33
-  libbpf: sec '.relxdp': relo #6: insn #45 against 'prog3'
-  libbpf: sec '.relxdp': relo #7: insn #46 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 46
-  libbpf: sec '.relxdp': relo #8: insn #59 against 'prog4'
-  libbpf: sec '.relxdp': relo #9: insn #60 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 60
-  libbpf: sec '.relxdp': relo #10: insn #72 against 'prog5'
-  libbpf: sec '.relxdp': relo #11: insn #73 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 73
-  libbpf: sec '.relxdp': relo #12: insn #86 against 'prog6'
-  libbpf: sec '.relxdp': relo #13: insn #87 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 87
-  libbpf: sec '.relxdp': relo #14: insn #99 against 'prog7'
-  libbpf: sec '.relxdp': relo #15: insn #100 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 100
-  libbpf: sec '.relxdp': relo #16: insn #113 against 'prog8'
-  libbpf: sec '.relxdp': relo #17: insn #114 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 114
-  libbpf: sec '.relxdp': relo #18: insn #126 against 'prog9'
-  libbpf: sec '.relxdp': relo #19: insn #127 against '.rodata'
-  libbpf: prog 'xdp_dispatcher': found data map 0 (xdp_disp.rodata,
-sec 5, off 0) for insn 127
-  libbpf: sec '.relxdp': relo #20: insn #140 against 'compat_test'
- libxdp: DATASEC '.xdp_run_config' not found.
-  libbpf: object 'xdp-dispatcher.': failed (-95) to create BPF token
-from '/sys/fs/bpf', skipping optional step...
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog0'
-  libbpf: prog 'xdp_dispatcher': insn #7 relocated, imm 135 points to
-subprog 'prog0' (now at 143 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog1'
-  libbpf: prog 'xdp_dispatcher': insn #18 relocated, imm 130 points to
-subprog 'prog1' (now at 149 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog2'
-  libbpf: prog 'xdp_dispatcher': insn #32 relocated, imm 122 points to
-subprog 'prog2' (now at 155 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog3'
-  libbpf: prog 'xdp_dispatcher': insn #45 relocated, imm 115 points to
-subprog 'prog3' (now at 161 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog4'
-  libbpf: prog 'xdp_dispatcher': insn #59 relocated, imm 107 points to
-subprog 'prog4' (now at 167 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog5'
-  libbpf: prog 'xdp_dispatcher': insn #72 relocated, imm 100 points to
-subprog 'prog5' (now at 173 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog6'
-  libbpf: prog 'xdp_dispatcher': insn #86 relocated, imm 92 points to
-subprog 'prog6' (now at 179 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog7'
-  libbpf: prog 'xdp_dispatcher': insn #99 relocated, imm 85 points to
-subprog 'prog7' (now at 185 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog8'
-  libbpf: prog 'xdp_dispatcher': insn #113 relocated, imm 77 points to
-subprog 'prog8' (now at 191 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'prog9'
-  libbpf: prog 'xdp_dispatcher': insn #126 relocated, imm 70 points to
-subprog 'prog9' (now at 197 offset)
-  libbpf: prog 'xdp_dispatcher': added 6 insns from sub-prog 'compat_test'
-  libbpf: prog 'xdp_dispatcher': insn #140 relocated, imm 62 points to
-subprog 'compat_test' (now at 203 offset)
-  libbpf: map 'xdp_disp.rodata': created successfully, fd=3
- libxdp: Loaded XDP program xdp_pass, got fd 10
- libxdp: Duplicated fd 10 to 11 for prog xdp_pass
- libxdp: Kernel supports XDP programs with frags
-  libbpf: object 'xdp_synproxy_ta': failed (-95) to create BPF token
-from '/sys/fs/bpf', skipping optional step...
-  libbpf: loaded kernel BTF from '/sys/kernel/btf/vmlinux'
-  libbpf: extern (func ksym) 'bpf_ct_release': resolved to nf_conntrack [154930]
-  libbpf: extern (func ksym) 'bpf_xdp_ct_lookup': resolved to
-nf_conntrack [154938]
-  libbpf: sec 'xdp': found 2 CO-RE relocations
-  libbpf: CO-RE relocating [38] struct nf_conn: found target candidate
-[70052] struct nf_conn in [vmlinux]
-  libbpf: CO-RE relocating [38] struct nf_conn: found target candidate
-[70063] struct nf_conn___init in [vmlinux]
-  libbpf: prog 'syncookie_xdp': relo #0: <byte_off> [38] struct
-nf_conn.status (0:0 @ offset 0)
-  libbpf: prog 'syncookie_xdp': relo #0: matching candidate #0
-<byte_off> [70052] struct nf_conn.status (0:4 @ offset 128)
-  libbpf: prog 'syncookie_xdp': relo #0: non-matching candidate #1
-<byte_off> [70063] struct nf_conn___init (0 @ offset 0)
-  libbpf: prog 'syncookie_xdp': relo #0: patched insn #117
-(LDX/ST/STX) off 0 -> 128
-  libbpf: CO-RE relocating [49] struct bpf_ct_opts___local: found
-target candidate [154911] struct bpf_ct_opts in [nf_conntrack]
-  libbpf: prog 'syncookie_xdp': relo #1: <byte_off> [49] struct
-bpf_ct_opts___local.error (0:1 @ offset 4)
-  libbpf: prog 'syncookie_xdp': relo #1: matching candidate #0
-<byte_off> [154911] struct bpf_ct_opts.error (0:1 @ offset 4)
-  libbpf: prog 'syncookie_xdp': relo #1: patched insn #182
-(LDX/ST/STX) off 4 -> 4
-  libbpf: prog 'syncookie_xdp': added 111 insns from sub-prog
-'tscookie_tcpopt_parse_batch'
-  libbpf: prog 'syncookie_xdp': insn #386 relocated, imm 503 points to
-subprog 'tscookie_tcpopt_parse_batch' (now at 890 offset)
-  libbpf: found no pinned map to reuse at
-'/sys/fs/bpf/xdp-synproxy-tailcall/tail_call_tbl'
-  libbpf: map 'tail_call_tbl': created successfully, fd=4
-  libbpf: pinned map '/sys/fs/bpf/xdp-synproxy-tailcall/tail_call_tbl'
-  libbpf: found no pinned map to reuse at
-'/sys/fs/bpf/xdp-synproxy-tailcall/values'
-  libbpf: map 'values': created successfully, fd=5
-  libbpf: pinned map '/sys/fs/bpf/xdp-synproxy-tailcall/values'
-  libbpf: found no pinned map to reuse at
-'/sys/fs/bpf/xdp-synproxy-tailcall/allowed_ports'
-  libbpf: map 'allowed_ports': created successfully, fd=6
-  libbpf: pinned map '/sys/fs/bpf/xdp-synproxy-tailcall/allowed_ports'
-  libbpf: map 'xdp_synp.rodata': created successfully, fd=7
-  libbpf: prog 'syncookie_xdp': BPF program load failed: Invalid argument
-  libbpf: prog 'syncookie_xdp': -- BEGIN PROG LOAD LOG --
-JIT doesn't support bpf-to-bpf calls
-calling kernel functions are not allowed in non-JITed programs
-processed 19083 insns (limit 1000000) max_states_per_insn 15
-total_states 525 peak_states 291 mark_read 35
--- END PROG LOAD LOG --
-  libbpf: prog 'syncookie_xdp': failed to load: -22
-  libbpf: unpinned map 'tail_call_tbl' from
-'/sys/fs/bpf/xdp-synproxy-tailcall/tail_call_tbl'
-  libbpf: unpinned map 'values' from '/sys/fs/bpf/xdp-synproxy-tailcall/values'
-  libbpf: unpinned map 'allowed_ports' from
-'/sys/fs/bpf/xdp-synproxy-tailcall/allowed_ports'
-  libbpf: failed to load object
-'./xdp-synproxy-tailcall/xdp_synproxy_tailcall.bpf.o'
-Couldn't attach XDP program on iface 'lo': Invalid argument(-22)
-
-How to reproduce:
-
-git clone https://github.com/vincentmli/xdp-tools.git
-cd xdp-tools; make
-./xdp-loader/xdp-loader load  -vvv lo -m skb -P 80 -p
-/sys/fs/bpf/xdp-synproxy-tailcall -n synproxy_tailcall
-./xdp-synproxy-tailcall/xdp_synproxy_tailcall.bpf.o
-
-I have another XDP program [2] also tail calls other XDP program, it
-works fine https://github.com/vincentmli/xdp-tools/tree/master/xdp-tailcall
-
-[root@fedora xdp-tools]# ./xdp-loader/xdp-loader load  -v lo -m skb -P
-80 -p /sys/fs/bpf/xdp-tailcall -n xdp_tailcall
-./xdp-tailcall/xdp_tailcall.bpf.o
-
-Current rlimit 8388608 already >= minimum 1048576
-Loading 1 files on interface 'lo'.
-XDP program 0: Run prio: 80. Chain call actions: XDP_PASS
- libxdp: Compatibility check for dispatcher program failed: Unknown error 524
- libxdp: Falling back to loading single prog without dispatcher
-
-[0] https://github.com/vincentmli/xdp-tools/tree/master/xdp-synproxy-tailcall
-[1] https://elixir.bootlin.com/linux/v6.14-rc5/source/tools/testing/selftests/bpf/progs/xdp_synproxy_kern.c
-[2] https://github.com/vincentmli/xdp-tools/tree/master/xdp-tailcall
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2QbfUHTxTDOlgUSw"
+Content-Disposition: inline
+In-Reply-To: <20250313135003.836600-1-rppt@kernel.org>
+X-Cookie: A beer delayed is a beer denied.
 
 
-Vincent
+--2QbfUHTxTDOlgUSw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Mar 13, 2025 at 03:49:50PM +0200, Mike Rapoport wrote:
+
+> v2 changes:
+> * don't use generic version for setting high_memory on architectures
+>   that use that varialble earlier than free_area_init()
+> * use memblock_alloc_or_panig() to allocate zero pages on MIPS and s390
+> * fix alignment in allocation of zero pages on s390
+> * add Acked-by
+
+This resolves the issues for 32 bit arm, at least the v7 boards:
+
+Tested-by: Mark Brown <broonie@kernel.org>
+
+My v5 and v6 boards are having issues but I think that's unrelated
+infrastructure (in one case definitely so).
+
+--2QbfUHTxTDOlgUSw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfTCkgACgkQJNaLcl1U
+h9BPbAf/SDBWCt481g26uw69KoHpeH2cGq0Z5NH3zUIIBiu3gpRrex/BeLXVuY79
+d57+lsymFEsgnNbhXNvzjAzmaRTSMBu9C1S5o4Jo3+sz8kEnBS/myycnCrbU+lVy
+9R4LmwA4hhMZw2+UhgRPVFMTjd7fsFFLAsxmHyCheEOGfLGKMTKleusqFbK2phbu
+IrDc/IU6mCxqGrgZ3lO0fV7w2SfpkBANi9bXJz7aeAbqsOBeVyLCKgAL/gsbZxDZ
+g6Y0lOdm1gfigEHb8d5DiireqslCdgHnoH90rRI+3YBQiT8QOJLd/3W3G7YrKPNy
+/ufJa9n1CuXbfkYbynfJxmTOHNUPHw==
+=M7tK
+-----END PGP SIGNATURE-----
+
+--2QbfUHTxTDOlgUSw--
