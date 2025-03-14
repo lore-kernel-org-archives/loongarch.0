@@ -1,735 +1,569 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48361D7985
-	for <loongarch@lists.linux.dev>; Fri, 14 Mar 2025 07:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 931621F3B89
+	for <loongarch@lists.linux.dev>; Fri, 14 Mar 2025 09:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936297; cv=none; b=jjt4Pm9B0gl8MeONczkqOeRkLYYGLHlue/7mb3xdjeUlDuQUDaegmWEnnCFCiibtKXnO3TwE9bo21mZaLHlyFwXDRO671esKCAYCiUQC6BlbsMOfS5fM/NvIdgqQHkhVS9/iJ19qIBz/HVKQRWUHgTRiQCR34BdYAv3aKNNuJF0=
+	t=1741945806; cv=none; b=e8NL3qwsqSaVndKIvIdk258YfVXl54FBwWvIhZAglFcpqS+9GrqXvV669IgU2D6USRw7oYGpTG4i7trVczCskcq4SYU74/1hBm3GLzxahMLVWViKIIfVs+SrEX4V2Xn1NE7SH/IqvuiuLNsqIbMMDiBc5neX6dslmEYXXB6cun4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741936297; c=relaxed/simple;
-	bh=ov4CMJJc3PVpexf2lSsz7lR/LvdIBiwltJDxi3x15kE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lOf6OJ7KqvkYn7QwktoDl3FBri/6A0aeh8qVnzK2bQqCb7ZA+OZd7gWM/zDDQgoNlJHobpxjw4f71ggSdgRHRTuR/V8gW+kt8xlMJrok8u7spGVqU5grOmYu/ihwEq704AKxIEfzE1z3iuEPZ7JvSZJXjNFwOkDLYIbhp+T1wXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hTekZemb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hTekZemb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741936293;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZjlwxBPYNXgSH1K0iKXB3quv5VFhcs4fTjGMtqKdgPY=;
-	b=hTekZemb3inui0+XWyt075x9Ie/CFXtbaA2p3OUbyd6HiK1ebau8jyLo+MQh7oVpRT5hZ4
-	oRam5vibCTzE/DnPZZfz1PDWa4fqBKIZ76qZ0A86KNro4Ol3gTt1lqvB+AmL24VINDCfqO
-	yNdAP38mhIPw/OrEbBGcCRqV+gfd3VU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-111-w1rjQonIPim8RnCIhz4RmQ-1; Fri,
- 14 Mar 2025 03:11:30 -0400
-X-MC-Unique: w1rjQonIPim8RnCIhz4RmQ-1
-X-Mimecast-MFC-AGG-ID: w1rjQonIPim8RnCIhz4RmQ_1741936288
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F81A180025B;
-	Fri, 14 Mar 2025 07:11:28 +0000 (UTC)
-Received: from thuth-p1g4.redhat.com (unknown [10.44.32.82])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8C0DF18001D4;
-	Fri, 14 Mar 2025 07:11:25 +0000 (UTC)
-From: Thomas Huth <thuth@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-arch@vger.kernel.org,
-	Thomas Huth <thuth@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: [PATCH 14/41] loongarch: Replace __ASSEMBLY__ with __ASSEMBLER__ in the loongarch headers
-Date: Fri, 14 Mar 2025 08:09:45 +0100
-Message-ID: <20250314071013.1575167-15-thuth@redhat.com>
-In-Reply-To: <20250314071013.1575167-1-thuth@redhat.com>
-References: <20250314071013.1575167-1-thuth@redhat.com>
+	s=arc-20240116; t=1741945806; c=relaxed/simple;
+	bh=ItygPhVOMyAP9b92OVwMZceKD88YUZs2rOSEhpxC3OY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ngAD0VMvymXhydoGTPgFFyDiJ0PMXopIFG/b6EjlFQ+Zpp5WqqA8HA4pMIB0BDuoi9TTA605JZ+16vII6pkoUZMz26mKb/mZSz+45VJwm+l1TFGvDpXtKSonHzTRnQYGt6ScMyPhpoFW5clgvTyMgVsFu/k5YGLcxg+0XBtGbnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZDf9G0vWrz9sS8;
+	Fri, 14 Mar 2025 10:25:22 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 7fTc4ZCXKSeV; Fri, 14 Mar 2025 10:25:22 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZDf9F4S45z9sSK;
+	Fri, 14 Mar 2025 10:25:21 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7CF118B77A;
+	Fri, 14 Mar 2025 10:25:21 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 65diyAgfwB8G; Fri, 14 Mar 2025 10:25:21 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id EF57F8B770;
+	Fri, 14 Mar 2025 10:25:18 +0100 (CET)
+Message-ID: <4b9627f2-65ff-4baf-931f-4e23b5732e6b@csgroup.eu>
+Date: Fri, 14 Mar 2025 10:25:18 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 09/13] arch, mm: set max_mapnr when allocating memory
+ map for FLATMEM
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+ Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Guo Ren
+ <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
+ Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
+ Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
+ Stafford Horne <shorne@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
+ Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+ linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-mm@kvack.org, x86@kernel.org
+References: <20250313135003.836600-1-rppt@kernel.org>
+ <20250313135003.836600-10-rppt@kernel.org>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250313135003.836600-10-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-While the GCC and Clang compilers already define __ASSEMBLER__
-automatically when compiling assembly code, __ASSEMBLY__ is a
-macro that only gets defined by the Makefiles in the kernel.
-This can be very confusing when switching between userspace
-and kernelspace coding, or when dealing with uapi headers that
-rather should use __ASSEMBLER__ instead. So let's standardize on
-the __ASSEMBLER__ macro that is provided by the compilers now.
 
-This is almost a completely mechanical patch (done with a simple
-"sed -i" statement), with one comment tweaked manually in
-arch/loongarch/include/asm/cpu.h (it was missing the trailing
-underscores).
 
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- arch/loongarch/include/asm/addrspace.h         |  8 ++++----
- arch/loongarch/include/asm/alternative-asm.h   |  4 ++--
- arch/loongarch/include/asm/alternative.h       |  4 ++--
- arch/loongarch/include/asm/asm-extable.h       |  6 +++---
- arch/loongarch/include/asm/asm.h               |  8 ++++----
- arch/loongarch/include/asm/cpu.h               |  4 ++--
- arch/loongarch/include/asm/ftrace.h            |  4 ++--
- arch/loongarch/include/asm/gpr-num.h           |  6 +++---
- arch/loongarch/include/asm/irqflags.h          |  4 ++--
- arch/loongarch/include/asm/jump_label.h        |  4 ++--
- arch/loongarch/include/asm/kasan.h             |  2 +-
- arch/loongarch/include/asm/loongarch.h         | 16 ++++++++--------
- arch/loongarch/include/asm/orc_types.h         |  4 ++--
- arch/loongarch/include/asm/page.h              |  4 ++--
- arch/loongarch/include/asm/pgtable-bits.h      |  4 ++--
- arch/loongarch/include/asm/pgtable.h           |  4 ++--
- arch/loongarch/include/asm/prefetch.h          |  2 +-
- arch/loongarch/include/asm/thread_info.h       |  4 ++--
- arch/loongarch/include/asm/types.h             |  2 +-
- arch/loongarch/include/asm/unwind_hints.h      |  4 ++--
- arch/loongarch/include/asm/vdso/getrandom.h    |  4 ++--
- arch/loongarch/include/asm/vdso/gettimeofday.h |  4 ++--
- arch/loongarch/include/asm/vdso/processor.h    |  4 ++--
- arch/loongarch/include/asm/vdso/vdso.h         |  4 ++--
- arch/loongarch/include/asm/vdso/vsyscall.h     |  4 ++--
- tools/arch/loongarch/include/asm/orc_types.h   |  4 ++--
- 26 files changed, 61 insertions(+), 61 deletions(-)
+Le 13/03/2025 à 14:49, Mike Rapoport a écrit :
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> max_mapnr is essentially the size of the memory map for systems that use
+> FLATMEM. There is no reason to calculate it in each and every architecture
+> when it's anyway calculated in alloc_node_mem_map().
+> 
+> Drop setting of max_mapnr from architecture code and set it once in
+> alloc_node_mem_map().
 
-diff --git a/arch/loongarch/include/asm/addrspace.h b/arch/loongarch/include/asm/addrspace.h
-index fe198b473f849..e739dbc6329dc 100644
---- a/arch/loongarch/include/asm/addrspace.h
-+++ b/arch/loongarch/include/asm/addrspace.h
-@@ -18,12 +18,12 @@
- /*
-  * This gives the physical RAM offset.
-  */
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- #ifndef PHYS_OFFSET
- #define PHYS_OFFSET	_UL(0)
- #endif
- extern unsigned long vm_map_base;
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #ifndef IO_BASE
- #define IO_BASE			CSR_DMW0_BASE
-@@ -66,7 +66,7 @@ extern unsigned long vm_map_base;
- #define FIXADDR_TOP		((unsigned long)(long)(int)0xfffe0000)
- #endif
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- #define _ATYPE_
- #define _ATYPE32_
- #define _ATYPE64_
-@@ -85,7 +85,7 @@ extern unsigned long vm_map_base;
- /*
-  *  32/64-bit LoongArch address spaces
-  */
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- #define _ACAST32_
- #define _ACAST64_
- #else
-diff --git a/arch/loongarch/include/asm/alternative-asm.h b/arch/loongarch/include/asm/alternative-asm.h
-index ff3d10ac393f2..7dc29bd9b2f0e 100644
---- a/arch/loongarch/include/asm/alternative-asm.h
-+++ b/arch/loongarch/include/asm/alternative-asm.h
-@@ -2,7 +2,7 @@
- #ifndef _ASM_ALTERNATIVE_ASM_H
- #define _ASM_ALTERNATIVE_ASM_H
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- 
- #include <asm/asm.h>
- 
-@@ -77,6 +77,6 @@
- 	.previous
- .endm
- 
--#endif  /*  __ASSEMBLY__  */
-+#endif  /*  __ASSEMBLER__  */
- 
- #endif /* _ASM_ALTERNATIVE_ASM_H */
-diff --git a/arch/loongarch/include/asm/alternative.h b/arch/loongarch/include/asm/alternative.h
-index cee7b29785ab2..b5bae21fb3c85 100644
---- a/arch/loongarch/include/asm/alternative.h
-+++ b/arch/loongarch/include/asm/alternative.h
-@@ -2,7 +2,7 @@
- #ifndef _ASM_ALTERNATIVE_H
- #define _ASM_ALTERNATIVE_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <linux/types.h>
- #include <linux/stddef.h>
-@@ -106,6 +106,6 @@ extern void apply_alternatives(struct alt_instr *start, struct alt_instr *end);
- #define alternative_2(oldinstr, newinstr1, feature1, newinstr2, feature2) \
- 	(asm volatile(ALTERNATIVE_2(oldinstr, newinstr1, feature1, newinstr2, feature2) ::: "memory"))
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif /* _ASM_ALTERNATIVE_H */
-diff --git a/arch/loongarch/include/asm/asm-extable.h b/arch/loongarch/include/asm/asm-extable.h
-index df05005f2b80a..d60bdf2e63775 100644
---- a/arch/loongarch/include/asm/asm-extable.h
-+++ b/arch/loongarch/include/asm/asm-extable.h
-@@ -7,7 +7,7 @@
- #define EX_TYPE_UACCESS_ERR_ZERO	2
- #define EX_TYPE_BPF			3
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- 
- #define __ASM_EXTABLE_RAW(insn, fixup, type, data)	\
- 	.pushsection	__ex_table, "a";		\
-@@ -22,7 +22,7 @@
- 	__ASM_EXTABLE_RAW(\insn, \fixup, EX_TYPE_FIXUP, 0)
- 	.endm
- 
--#else /* __ASSEMBLY__ */
-+#else /* __ASSEMBLER__ */
- 
- #include <linux/bits.h>
- #include <linux/stringify.h>
-@@ -60,6 +60,6 @@
- #define _ASM_EXTABLE_UACCESS_ERR(insn, fixup, err)			\
- 	_ASM_EXTABLE_UACCESS_ERR_ZERO(insn, fixup, err, zero)
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif /* __ASM_ASM_EXTABLE_H */
-diff --git a/arch/loongarch/include/asm/asm.h b/arch/loongarch/include/asm/asm.h
-index f591b3245def6..f018d26fc995a 100644
---- a/arch/loongarch/include/asm/asm.h
-+++ b/arch/loongarch/include/asm/asm.h
-@@ -110,7 +110,7 @@
- #define LONG_SRA	srai.w
- #define LONG_SRAV	sra.w
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- #define LONG		.word
- #endif
- #define LONGSIZE	4
-@@ -131,7 +131,7 @@
- #define LONG_SRA	srai.d
- #define LONG_SRAV	sra.d
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- #define LONG		.dword
- #endif
- #define LONGSIZE	8
-@@ -158,7 +158,7 @@
- 
- #define PTR_SCALESHIFT	2
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- #define PTR		.word
- #endif
- #define PTRSIZE		4
-@@ -181,7 +181,7 @@
- 
- #define PTR_SCALESHIFT	3
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- #define PTR		.dword
- #endif
- #define PTRSIZE		8
-diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
-index 98cf4d7b4b0a0..dfb982fe87019 100644
---- a/arch/loongarch/include/asm/cpu.h
-+++ b/arch/loongarch/include/asm/cpu.h
-@@ -46,7 +46,7 @@
- 
- #define PRID_PRODUCT_MASK	0x0fff
- 
--#if !defined(__ASSEMBLY__)
-+#if !defined(__ASSEMBLER__)
- 
- enum cpu_type_enum {
- 	CPU_UNKNOWN,
-@@ -55,7 +55,7 @@ enum cpu_type_enum {
- 	CPU_LAST
- };
- 
--#endif /* !__ASSEMBLY */
-+#endif /* !__ASSEMBLER__ */
- 
- /*
-  * ISA Level encodings
-diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-index 6e0a99763a9a7..f4caaf764f9ee 100644
---- a/arch/loongarch/include/asm/ftrace.h
-+++ b/arch/loongarch/include/asm/ftrace.h
-@@ -14,7 +14,7 @@
- 
- #define MCOUNT_INSN_SIZE 4		/* sizeof mcount call */
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #ifndef CONFIG_DYNAMIC_FTRACE
- 
-@@ -84,7 +84,7 @@ __arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long addr)
- 
- #endif
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif /* CONFIG_FUNCTION_TRACER */
- 
-diff --git a/arch/loongarch/include/asm/gpr-num.h b/arch/loongarch/include/asm/gpr-num.h
-index 996038da806d1..af95b941f48bd 100644
---- a/arch/loongarch/include/asm/gpr-num.h
-+++ b/arch/loongarch/include/asm/gpr-num.h
-@@ -2,7 +2,7 @@
- #ifndef __ASM_GPR_NUM_H
- #define __ASM_GPR_NUM_H
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- 
- 	.equ	.L__gpr_num_zero, 0
- 	.irp	num,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
-@@ -25,7 +25,7 @@
- 	.equ	.L__gpr_num_$s\num, 23 + \num
- 	.endr
- 
--#else /* __ASSEMBLY__ */
-+#else /* __ASSEMBLER__ */
- 
- #define __DEFINE_ASM_GPR_NUMS					\
- "	.equ	.L__gpr_num_zero, 0\n"				\
-@@ -47,6 +47,6 @@
- "	.equ	.L__gpr_num_$s\\num, 23 + \\num\n"		\
- "	.endr\n"						\
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif /* __ASM_GPR_NUM_H */
-diff --git a/arch/loongarch/include/asm/irqflags.h b/arch/loongarch/include/asm/irqflags.h
-index 319a8c616f1f5..fa898cfc367a3 100644
---- a/arch/loongarch/include/asm/irqflags.h
-+++ b/arch/loongarch/include/asm/irqflags.h
-@@ -5,7 +5,7 @@
- #ifndef _ASM_IRQFLAGS_H
- #define _ASM_IRQFLAGS_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <linux/compiler.h>
- #include <linux/stringify.h>
-@@ -72,6 +72,6 @@ static inline int arch_irqs_disabled(void)
- 	return arch_irqs_disabled_flags(arch_local_save_flags());
- }
- 
--#endif /* #ifndef __ASSEMBLY__ */
-+#endif /* #ifndef __ASSEMBLER__ */
- 
- #endif /* _ASM_IRQFLAGS_H */
-diff --git a/arch/loongarch/include/asm/jump_label.h b/arch/loongarch/include/asm/jump_label.h
-index 8a924bd69d196..4000c7603d8e3 100644
---- a/arch/loongarch/include/asm/jump_label.h
-+++ b/arch/loongarch/include/asm/jump_label.h
-@@ -7,7 +7,7 @@
- #ifndef __ASM_JUMP_LABEL_H
- #define __ASM_JUMP_LABEL_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <linux/types.h>
- 
-@@ -50,5 +50,5 @@ static __always_inline bool arch_static_branch_jump(struct static_key * const ke
- 	return true;
- }
- 
--#endif  /* __ASSEMBLY__ */
-+#endif  /* __ASSEMBLER__ */
- #endif	/* __ASM_JUMP_LABEL_H */
-diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/include/asm/kasan.h
-index 7f52bd31b9d4f..62f139a9c87da 100644
---- a/arch/loongarch/include/asm/kasan.h
-+++ b/arch/loongarch/include/asm/kasan.h
-@@ -2,7 +2,7 @@
- #ifndef __ASM_KASAN_H
- #define __ASM_KASAN_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <linux/linkage.h>
- #include <linux/mmzone.h>
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 52651aa0e5834..4d1a156d8ee07 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -9,15 +9,15 @@
- #include <linux/linkage.h>
- #include <linux/types.h>
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- #include <larchintrin.h>
- 
- /* CPUCFG */
- #define read_cpucfg(reg) __cpucfg(reg)
- 
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- 
- /* LoongArch Registers */
- #define REG_ZERO	0x0
-@@ -53,7 +53,7 @@
- #define REG_S7		0x1e
- #define REG_S8		0x1f
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- /* Bit fields for CPUCFG registers */
- #define LOONGARCH_CPUCFG0		0x0
-@@ -171,7 +171,7 @@
-  * SW emulation for KVM hypervirsor, see arch/loongarch/include/uapi/asm/kvm_para.h
-  */
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- /* CSR */
- #define csr_read32(reg) __csrrd_w(reg)
-@@ -187,7 +187,7 @@
- #define iocsr_write32(val, reg) __iocsrwr_w(val, reg)
- #define iocsr_write64(val, reg) __iocsrwr_d(val, reg)
- 
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
- /* CSR register number */
- 
-@@ -1195,7 +1195,7 @@
- #define LOONGARCH_IOCSR_EXTIOI_ROUTE_BASE	0x1c00
- #define IOCSR_EXTIOI_VECTOR_NUM			256
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- static __always_inline u64 drdtime(void)
- {
-@@ -1357,7 +1357,7 @@ __BUILD_CSR_OP(tlbidx)
- #define clear_csr_estat(val)	\
- 	csr_xchg32(~(val), val, LOONGARCH_CSR_ESTAT)
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- /* Generic EntryLo bit definitions */
- #define ENTRYLO_V		(_ULCAST_(1) << 0)
-diff --git a/arch/loongarch/include/asm/orc_types.h b/arch/loongarch/include/asm/orc_types.h
-index caf1f71a1057b..d5fa98d1d1779 100644
---- a/arch/loongarch/include/asm/orc_types.h
-+++ b/arch/loongarch/include/asm/orc_types.h
-@@ -34,7 +34,7 @@
- #define ORC_TYPE_REGS			3
- #define ORC_TYPE_REGS_PARTIAL		4
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- /*
-  * This struct is more or less a vastly simplified version of the DWARF Call
-  * Frame Information standard.  It contains only the necessary parts of DWARF
-@@ -53,6 +53,6 @@ struct orc_entry {
- 	unsigned int	type:3;
- 	unsigned int	signal:1;
- };
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif /* _ORC_TYPES_H */
-diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
-index 7368f12b7cb1e..a3aaf34fba16a 100644
---- a/arch/loongarch/include/asm/page.h
-+++ b/arch/loongarch/include/asm/page.h
-@@ -15,7 +15,7 @@
- #define HPAGE_MASK	(~(HPAGE_SIZE - 1))
- #define HUGETLB_PAGE_ORDER	(HPAGE_SHIFT - PAGE_SHIFT)
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <linux/kernel.h>
- #include <linux/pfn.h>
-@@ -110,6 +110,6 @@ extern int __virt_addr_valid(volatile void *kaddr);
- #include <asm-generic/memory_model.h>
- #include <asm-generic/getorder.h>
- 
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
- #endif /* _ASM_PAGE_H */
-diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
-index 45bfc65a0c9f9..7bbfb04a54cc3 100644
---- a/arch/loongarch/include/asm/pgtable-bits.h
-+++ b/arch/loongarch/include/asm/pgtable-bits.h
-@@ -92,7 +92,7 @@
- #define PAGE_KERNEL_WUC __pgprot(_PAGE_PRESENT | __READABLE | __WRITEABLE | \
- 				 _PAGE_GLOBAL | _PAGE_KERN |  _CACHE_WUC)
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #define _PAGE_IOREMAP		pgprot_val(PAGE_KERNEL_SUC)
- 
-@@ -127,6 +127,6 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
- 	return __pgprot(prot);
- }
- 
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
- #endif /* _ASM_PGTABLE_BITS_H */
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index da346733a1dae..5d1a0bc77ee43 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -55,7 +55,7 @@
- 
- #define USER_PTRS_PER_PGD       ((TASK_SIZE64 / PGDIR_SIZE)?(TASK_SIZE64 / PGDIR_SIZE):1)
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <linux/mm_types.h>
- #include <linux/mmzone.h>
-@@ -625,6 +625,6 @@ static inline long pmd_protnone(pmd_t pmd)
- #define HAVE_ARCH_UNMAPPED_AREA
- #define HAVE_ARCH_UNMAPPED_AREA_TOPDOWN
- 
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
- #endif /* _ASM_PGTABLE_H */
-diff --git a/arch/loongarch/include/asm/prefetch.h b/arch/loongarch/include/asm/prefetch.h
-index 1672262a5e2ef..0b168cdaae9a9 100644
---- a/arch/loongarch/include/asm/prefetch.h
-+++ b/arch/loongarch/include/asm/prefetch.h
-@@ -8,7 +8,7 @@
- #define Pref_Load	0
- #define Pref_Store	8
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- 
- 	.macro	__pref hint addr
- #ifdef CONFIG_CPU_HAS_PREFETCH
-diff --git a/arch/loongarch/include/asm/thread_info.h b/arch/loongarch/include/asm/thread_info.h
-index 4f5a9441754e3..9dfa2ef008167 100644
---- a/arch/loongarch/include/asm/thread_info.h
-+++ b/arch/loongarch/include/asm/thread_info.h
-@@ -10,7 +10,7 @@
- 
- #ifdef __KERNEL__
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <asm/processor.h>
- 
-@@ -53,7 +53,7 @@ static inline struct thread_info *current_thread_info(void)
- 
- register unsigned long current_stack_pointer __asm__("$sp");
- 
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
- /* thread information allocation */
- #define THREAD_SIZE		SZ_16K
-diff --git a/arch/loongarch/include/asm/types.h b/arch/loongarch/include/asm/types.h
-index baf15a0dcf8b5..0edd731f3d6a0 100644
---- a/arch/loongarch/include/asm/types.h
-+++ b/arch/loongarch/include/asm/types.h
-@@ -8,7 +8,7 @@
- #include <asm-generic/int-ll64.h>
- #include <uapi/asm/types.h>
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- #define _ULCAST_
- #define _U64CAST_
- #else
-diff --git a/arch/loongarch/include/asm/unwind_hints.h b/arch/loongarch/include/asm/unwind_hints.h
-index a01086ad9ddea..42c442ec044e0 100644
---- a/arch/loongarch/include/asm/unwind_hints.h
-+++ b/arch/loongarch/include/asm/unwind_hints.h
-@@ -5,7 +5,7 @@
- #include <linux/objtool.h>
- #include <asm/orc_types.h>
- 
--#ifdef __ASSEMBLY__
-+#ifdef __ASSEMBLER__
- 
- .macro UNWIND_HINT_UNDEFINED
- 	UNWIND_HINT type=UNWIND_HINT_TYPE_UNDEFINED
-@@ -23,6 +23,6 @@
- 	UNWIND_HINT sp_reg=ORC_REG_SP type=UNWIND_HINT_TYPE_CALL
- .endm
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif /* _ASM_LOONGARCH_UNWIND_HINTS_H */
-diff --git a/arch/loongarch/include/asm/vdso/getrandom.h b/arch/loongarch/include/asm/vdso/getrandom.h
-index e80f3c4ac7481..4fe152ca99f52 100644
---- a/arch/loongarch/include/asm/vdso/getrandom.h
-+++ b/arch/loongarch/include/asm/vdso/getrandom.h
-@@ -5,7 +5,7 @@
- #ifndef __ASM_VDSO_GETRANDOM_H
- #define __ASM_VDSO_GETRANDOM_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <asm/unistd.h>
- #include <asm/vdso/vdso.h>
-@@ -33,6 +33,6 @@ static __always_inline const struct vdso_rng_data *__arch_get_vdso_rng_data(void
- 	return &_loongarch_data.rng_data;
- }
- 
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
- #endif /* __ASM_VDSO_GETRANDOM_H */
-diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loongarch/include/asm/vdso/gettimeofday.h
-index 7eb3f041af764..3e150072cb5a7 100644
---- a/arch/loongarch/include/asm/vdso/gettimeofday.h
-+++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
-@@ -7,7 +7,7 @@
- #ifndef __ASM_VDSO_GETTIMEOFDAY_H
- #define __ASM_VDSO_GETTIMEOFDAY_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <asm/unistd.h>
- #include <asm/vdso/vdso.h>
-@@ -101,6 +101,6 @@ const struct vdso_data *__arch_get_timens_vdso_data(const struct vdso_data *vd)
- 	return _timens_data;
- }
- #endif
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
- #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
-diff --git a/arch/loongarch/include/asm/vdso/processor.h b/arch/loongarch/include/asm/vdso/processor.h
-index ef5770b343a01..1e255373b0b8e 100644
---- a/arch/loongarch/include/asm/vdso/processor.h
-+++ b/arch/loongarch/include/asm/vdso/processor.h
-@@ -5,10 +5,10 @@
- #ifndef __ASM_VDSO_PROCESSOR_H
- #define __ASM_VDSO_PROCESSOR_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #define cpu_relax()	barrier()
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif /* __ASM_VDSO_PROCESSOR_H */
-diff --git a/arch/loongarch/include/asm/vdso/vdso.h b/arch/loongarch/include/asm/vdso/vdso.h
-index 1c183a9b2115a..fa1951408f0a9 100644
---- a/arch/loongarch/include/asm/vdso/vdso.h
-+++ b/arch/loongarch/include/asm/vdso/vdso.h
-@@ -7,7 +7,7 @@
- #ifndef _ASM_VDSO_VDSO_H
- #define _ASM_VDSO_VDSO_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <asm/asm.h>
- #include <asm/page.h>
-@@ -50,6 +50,6 @@ enum vvar_pages {
- 
- extern struct loongarch_vdso_data _loongarch_data __attribute__((visibility("hidden")));
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif
-diff --git a/arch/loongarch/include/asm/vdso/vsyscall.h b/arch/loongarch/include/asm/vdso/vsyscall.h
-index 8987e951d0a93..8cbab22ba7d55 100644
---- a/arch/loongarch/include/asm/vdso/vsyscall.h
-+++ b/arch/loongarch/include/asm/vdso/vsyscall.h
-@@ -2,7 +2,7 @@
- #ifndef __ASM_VDSO_VSYSCALL_H
- #define __ASM_VDSO_VSYSCALL_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <vdso/datapage.h>
- 
-@@ -26,6 +26,6 @@ struct vdso_rng_data *__loongarch_get_k_vdso_rng_data(void)
- /* The asm-generic header needs to be included after the definitions above */
- #include <asm-generic/vdso/vsyscall.h>
- 
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
- #endif /* __ASM_VDSO_VSYSCALL_H */
-diff --git a/tools/arch/loongarch/include/asm/orc_types.h b/tools/arch/loongarch/include/asm/orc_types.h
-index caf1f71a1057b..d5fa98d1d1779 100644
---- a/tools/arch/loongarch/include/asm/orc_types.h
-+++ b/tools/arch/loongarch/include/asm/orc_types.h
-@@ -34,7 +34,7 @@
- #define ORC_TYPE_REGS			3
- #define ORC_TYPE_REGS_PARTIAL		4
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- /*
-  * This struct is more or less a vastly simplified version of the DWARF Call
-  * Frame Information standard.  It contains only the necessary parts of DWARF
-@@ -53,6 +53,6 @@ struct orc_entry {
- 	unsigned int	type:3;
- 	unsigned int	signal:1;
- };
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif /* _ORC_TYPES_H */
--- 
-2.48.1
+As far as I can see alloc_node_mem_map() is called quite late.
+
+I fear that it will regress commit daa9ada2093e ("powerpc/mm: Fix boot 
+crash with FLATMEM")
+
+Can you check ?
+
+Christophe
+
+> 
+> While on it, move definition of mem_map and max_mapnr to mm/mm_init.c so
+> there won't be two copies for MMU and !MMU variants.
+> 
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>	# x86
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>   arch/alpha/mm/init.c               |  1 -
+>   arch/arc/mm/init.c                 |  5 -----
+>   arch/arm/mm/init.c                 |  2 --
+>   arch/csky/mm/init.c                |  4 ----
+>   arch/loongarch/mm/init.c           |  1 -
+>   arch/microblaze/mm/init.c          |  4 ----
+>   arch/mips/mm/init.c                |  8 --------
+>   arch/nios2/kernel/setup.c          |  1 -
+>   arch/nios2/mm/init.c               |  2 +-
+>   arch/openrisc/mm/init.c            |  1 -
+>   arch/parisc/mm/init.c              |  1 -
+>   arch/powerpc/kernel/setup-common.c |  2 --
+>   arch/riscv/mm/init.c               |  1 -
+>   arch/s390/mm/init.c                |  1 -
+>   arch/sh/mm/init.c                  |  1 -
+>   arch/sparc/mm/init_32.c            |  1 -
+>   arch/um/include/shared/mem_user.h  |  1 -
+>   arch/um/kernel/physmem.c           | 12 ------------
+>   arch/um/kernel/um_arch.c           |  1 -
+>   arch/x86/mm/init_32.c              |  3 ---
+>   arch/xtensa/mm/init.c              |  1 -
+>   include/asm-generic/memory_model.h |  5 +++--
+>   include/linux/mm.h                 | 11 -----------
+>   mm/memory.c                        |  8 --------
+>   mm/mm_init.c                       | 25 +++++++++++++++++--------
+>   mm/nommu.c                         |  4 ----
+>   26 files changed, 21 insertions(+), 86 deletions(-)
+> 
+> diff --git a/arch/alpha/mm/init.c b/arch/alpha/mm/init.c
+> index 61c2198b1359..ec0eeae9c653 100644
+> --- a/arch/alpha/mm/init.c
+> +++ b/arch/alpha/mm/init.c
+> @@ -276,7 +276,6 @@ srm_paging_stop (void)
+>   void __init
+>   mem_init(void)
+>   {
+> -	set_max_mapnr(max_low_pfn);
+>   	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
+>   	memblock_free_all();
+>   }
+> diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
+> index 6a71b23f1383..7ef883d58dc1 100644
+> --- a/arch/arc/mm/init.c
+> +++ b/arch/arc/mm/init.c
+> @@ -154,11 +154,6 @@ void __init setup_arch_memory(void)
+>   
+>   	arch_pfn_offset = min(min_low_pfn, min_high_pfn);
+>   	kmap_init();
+> -
+> -#else /* CONFIG_HIGHMEM */
+> -	/* pfn_valid() uses this when FLATMEM=y and HIGHMEM=n */
+> -	max_mapnr = max_low_pfn - min_low_pfn;
+> -
+>   #endif /* CONFIG_HIGHMEM */
+>   
+>   	free_area_init(max_zone_pfn);
+> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> index 9aec1cb2386f..d4bcc745a044 100644
+> --- a/arch/arm/mm/init.c
+> +++ b/arch/arm/mm/init.c
+> @@ -275,8 +275,6 @@ void __init mem_init(void)
+>   	swiotlb_init(max_pfn > arm_dma_pfn_limit, SWIOTLB_VERBOSE);
+>   #endif
+>   
+> -	set_max_mapnr(pfn_to_page(max_pfn) - mem_map);
+> -
+>   #ifdef CONFIG_SA1111
+>   	/* now that our DMA memory is actually so designated, we can free it */
+>   	memblock_phys_free(PHYS_OFFSET, __pa(swapper_pg_dir) - PHYS_OFFSET);
+> diff --git a/arch/csky/mm/init.c b/arch/csky/mm/init.c
+> index ab51acbc19b2..ba6694d6170a 100644
+> --- a/arch/csky/mm/init.c
+> +++ b/arch/csky/mm/init.c
+> @@ -46,10 +46,6 @@ void __init mem_init(void)
+>   {
+>   #ifdef CONFIG_HIGHMEM
+>   	unsigned long tmp;
+> -
+> -	set_max_mapnr(highend_pfn - ARCH_PFN_OFFSET);
+> -#else
+> -	set_max_mapnr(max_low_pfn - ARCH_PFN_OFFSET);
+>   #endif
+>   	high_memory = (void *) __va(max_low_pfn << PAGE_SHIFT);
+>   
+> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> index ca5aa5f46a9f..00449df50db1 100644
+> --- a/arch/loongarch/mm/init.c
+> +++ b/arch/loongarch/mm/init.c
+> @@ -78,7 +78,6 @@ void __init paging_init(void)
+>   
+>   void __init mem_init(void)
+>   {
+> -	max_mapnr = max_low_pfn;
+>   	high_memory = (void *) __va(max_low_pfn << PAGE_SHIFT);
+>   
+>   	memblock_free_all();
+> diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
+> index 4520c5741579..857cd2b44bcf 100644
+> --- a/arch/microblaze/mm/init.c
+> +++ b/arch/microblaze/mm/init.c
+> @@ -104,17 +104,13 @@ void __init setup_memory(void)
+>   	 *
+>   	 * min_low_pfn - the first page (mm/bootmem.c - node_boot_start)
+>   	 * max_low_pfn
+> -	 * max_mapnr - the first unused page (mm/bootmem.c - node_low_pfn)
+>   	 */
+>   
+>   	/* memory start is from the kernel end (aligned) to higher addr */
+>   	min_low_pfn = memory_start >> PAGE_SHIFT; /* minimum for allocation */
+> -	/* RAM is assumed contiguous */
+> -	max_mapnr = memory_size >> PAGE_SHIFT;
+>   	max_low_pfn = ((u64)memory_start + (u64)lowmem_size) >> PAGE_SHIFT;
+>   	max_pfn = ((u64)memory_start + (u64)memory_size) >> PAGE_SHIFT;
+>   
+> -	pr_info("%s: max_mapnr: %#lx\n", __func__, max_mapnr);
+>   	pr_info("%s: min_low_pfn: %#lx\n", __func__, min_low_pfn);
+>   	pr_info("%s: max_low_pfn: %#lx\n", __func__, max_low_pfn);
+>   	pr_info("%s: max_pfn: %#lx\n", __func__, max_pfn);
+> diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
+> index 820e35a59d4d..eb61a73520a0 100644
+> --- a/arch/mips/mm/init.c
+> +++ b/arch/mips/mm/init.c
+> @@ -415,15 +415,7 @@ void __init paging_init(void)
+>   		       " %ldk highmem ignored\n",
+>   		       (highend_pfn - max_low_pfn) << (PAGE_SHIFT - 10));
+>   		max_zone_pfns[ZONE_HIGHMEM] = max_low_pfn;
+> -
+> -		max_mapnr = max_low_pfn;
+> -	} else if (highend_pfn) {
+> -		max_mapnr = highend_pfn;
+> -	} else {
+> -		max_mapnr = max_low_pfn;
+>   	}
+> -#else
+> -	max_mapnr = max_low_pfn;
+>   #endif
+>   	high_memory = (void *) __va(max_low_pfn << PAGE_SHIFT);
+>   
+> diff --git a/arch/nios2/kernel/setup.c b/arch/nios2/kernel/setup.c
+> index a4cffbfc1399..2a40150142c3 100644
+> --- a/arch/nios2/kernel/setup.c
+> +++ b/arch/nios2/kernel/setup.c
+> @@ -158,7 +158,6 @@ void __init setup_arch(char **cmdline_p)
+>   	*cmdline_p = boot_command_line;
+>   
+>   	find_limits(&min_low_pfn, &max_low_pfn, &max_pfn);
+> -	max_mapnr = max_low_pfn;
+>   
+>   	memblock_reserve(__pa_symbol(_stext), _end - _stext);
+>   #ifdef CONFIG_BLK_DEV_INITRD
+> diff --git a/arch/nios2/mm/init.c b/arch/nios2/mm/init.c
+> index aa692ad30044..3cafa87ead9e 100644
+> --- a/arch/nios2/mm/init.c
+> +++ b/arch/nios2/mm/init.c
+> @@ -51,7 +51,7 @@ void __init paging_init(void)
+>   	pagetable_init();
+>   	pgd_current = swapper_pg_dir;
+>   
+> -	max_zone_pfn[ZONE_NORMAL] = max_mapnr;
+> +	max_zone_pfn[ZONE_NORMAL] = max_low_pfn;
+>   
+>   	/* pass the memory from the bootmem allocator to the main allocator */
+>   	free_area_init(max_zone_pfn);
+> diff --git a/arch/openrisc/mm/init.c b/arch/openrisc/mm/init.c
+> index d0cb1a0126f9..9093c336e158 100644
+> --- a/arch/openrisc/mm/init.c
+> +++ b/arch/openrisc/mm/init.c
+> @@ -193,7 +193,6 @@ void __init mem_init(void)
+>   {
+>   	BUG_ON(!mem_map);
+>   
+> -	max_mapnr = max_low_pfn;
+>   	high_memory = (void *)__va(max_low_pfn * PAGE_SIZE);
+>   
+>   	/* clear the zero-page */
+> diff --git a/arch/parisc/mm/init.c b/arch/parisc/mm/init.c
+> index 61c0a2477072..2cdfc0b1195c 100644
+> --- a/arch/parisc/mm/init.c
+> +++ b/arch/parisc/mm/init.c
+> @@ -563,7 +563,6 @@ void __init mem_init(void)
+>   #endif
+>   
+>   	high_memory = __va((max_pfn << PAGE_SHIFT));
+> -	set_max_mapnr(max_low_pfn);
+>   	memblock_free_all();
+>   
+>   #ifdef CONFIG_PA11
+> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+> index a08b0ede4e64..68d47c53876c 100644
+> --- a/arch/powerpc/kernel/setup-common.c
+> +++ b/arch/powerpc/kernel/setup-common.c
+> @@ -957,8 +957,6 @@ void __init setup_arch(char **cmdline_p)
+>   
+>   	/* Parse memory topology */
+>   	mem_topology_setup();
+> -	/* Set max_mapnr before paging_init() */
+> -	set_max_mapnr(max_pfn);
+>   	high_memory = (void *)__va(max_low_pfn * PAGE_SIZE);
+>   
+>   	/*
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 15b2eda4c364..157c9ca51541 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -298,7 +298,6 @@ static void __init setup_bootmem(void)
+>   	high_memory = (void *)(__va(PFN_PHYS(max_low_pfn)));
+>   
+>   	dma32_phys_limit = min(4UL * SZ_1G, (unsigned long)PFN_PHYS(max_low_pfn));
+> -	set_max_mapnr(max_low_pfn - ARCH_PFN_OFFSET);
+>   
+>   	reserve_initrd_mem();
+>   
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index f8333feb6a7e..36fed6dffb38 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -159,7 +159,6 @@ void __init mem_init(void)
+>   	cpumask_set_cpu(0, &init_mm.context.cpu_attach_mask);
+>   	cpumask_set_cpu(0, mm_cpumask(&init_mm));
+>   
+> -	set_max_mapnr(max_low_pfn);
+>           high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
+>   
+>   	pv_init();
+> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
+> index 289a2fecebef..72aea5cd1b85 100644
+> --- a/arch/sh/mm/init.c
+> +++ b/arch/sh/mm/init.c
+> @@ -290,7 +290,6 @@ void __init paging_init(void)
+>   	 */
+>   	max_low_pfn = max_pfn = memblock_end_of_DRAM() >> PAGE_SHIFT;
+>   	min_low_pfn = __MEMORY_START >> PAGE_SHIFT;
+> -	set_max_mapnr(max_low_pfn - min_low_pfn);
+>   
+>   	nodes_clear(node_online_map);
+>   
+> diff --git a/arch/sparc/mm/init_32.c b/arch/sparc/mm/init_32.c
+> index d96a14ffceeb..6b58da14edc6 100644
+> --- a/arch/sparc/mm/init_32.c
+> +++ b/arch/sparc/mm/init_32.c
+> @@ -275,7 +275,6 @@ void __init mem_init(void)
+>   
+>   	taint_real_pages();
+>   
+> -	max_mapnr = last_valid_pfn - pfn_base;
+>   	high_memory = __va(max_low_pfn << PAGE_SHIFT);
+>   	memblock_free_all();
+>   
+> diff --git a/arch/um/include/shared/mem_user.h b/arch/um/include/shared/mem_user.h
+> index adfa08062f88..d4727efcf23d 100644
+> --- a/arch/um/include/shared/mem_user.h
+> +++ b/arch/um/include/shared/mem_user.h
+> @@ -47,7 +47,6 @@ extern int iomem_size;
+>   #define ROUND_4M(n) ((((unsigned long) (n)) + (1 << 22)) & ~((1 << 22) - 1))
+>   
+>   extern unsigned long find_iomem(char *driver, unsigned long *len_out);
+> -extern void mem_total_pages(unsigned long physmem, unsigned long iomem);
+>   extern void setup_physmem(unsigned long start, unsigned long usable,
+>   			  unsigned long len);
+>   extern void map_memory(unsigned long virt, unsigned long phys,
+> diff --git a/arch/um/kernel/physmem.c b/arch/um/kernel/physmem.c
+> index a74f17b033c4..af02b5f9911d 100644
+> --- a/arch/um/kernel/physmem.c
+> +++ b/arch/um/kernel/physmem.c
+> @@ -22,18 +22,6 @@ static int physmem_fd = -1;
+>   unsigned long high_physmem;
+>   EXPORT_SYMBOL(high_physmem);
+>   
+> -void __init mem_total_pages(unsigned long physmem, unsigned long iomem)
+> -{
+> -	unsigned long phys_pages, iomem_pages, total_pages;
+> -
+> -	phys_pages  = physmem >> PAGE_SHIFT;
+> -	iomem_pages = iomem   >> PAGE_SHIFT;
+> -
+> -	total_pages = phys_pages + iomem_pages;
+> -
+> -	max_mapnr = total_pages;
+> -}
+> -
+>   void map_memory(unsigned long virt, unsigned long phys, unsigned long len,
+>   		int r, int w, int x)
+>   {
+> diff --git a/arch/um/kernel/um_arch.c b/arch/um/kernel/um_arch.c
+> index 79ea97d4797e..6414cbf00572 100644
+> --- a/arch/um/kernel/um_arch.c
+> +++ b/arch/um/kernel/um_arch.c
+> @@ -419,7 +419,6 @@ void __init setup_arch(char **cmdline_p)
+>   
+>   	stack_protections((unsigned long) init_task.stack);
+>   	setup_physmem(uml_physmem, uml_reserved, physmem_size);
+> -	mem_total_pages(physmem_size, iomem_size);
+>   	uml_dtb_init();
+>   	read_initrd();
+>   
+> diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+> index ac41b1e0940d..6d2f8cb9451e 100644
+> --- a/arch/x86/mm/init_32.c
+> +++ b/arch/x86/mm/init_32.c
+> @@ -650,9 +650,6 @@ void __init initmem_init(void)
+>   
+>   	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
+>   
+> -#ifdef CONFIG_FLATMEM
+> -	max_mapnr = IS_ENABLED(CONFIG_HIGHMEM) ? highend_pfn : max_low_pfn;
+> -#endif
+>   	__vmalloc_start_set = true;
+>   
+>   	printk(KERN_NOTICE "%ldMB LOWMEM available.\n",
+> diff --git a/arch/xtensa/mm/init.c b/arch/xtensa/mm/init.c
+> index 01577d33e602..9f1b0d5fccc7 100644
+> --- a/arch/xtensa/mm/init.c
+> +++ b/arch/xtensa/mm/init.c
+> @@ -164,7 +164,6 @@ void __init mem_init(void)
+>   {
+>   	free_highpages();
+>   
+> -	max_mapnr = max_pfn - ARCH_PFN_OFFSET;
+>   	high_memory = (void *)__va(max_low_pfn << PAGE_SHIFT);
+>   
+>   	memblock_free_all();
+> diff --git a/include/asm-generic/memory_model.h b/include/asm-generic/memory_model.h
+> index 6d1fb6162ac1..a3b5029aebbd 100644
+> --- a/include/asm-generic/memory_model.h
+> +++ b/include/asm-generic/memory_model.h
+> @@ -19,11 +19,12 @@
+>   #define __page_to_pfn(page)	((unsigned long)((page) - mem_map) + \
+>   				 ARCH_PFN_OFFSET)
+>   
+> +/* avoid <linux/mm.h> include hell */
+> +extern unsigned long max_mapnr;
+> +
+>   #ifndef pfn_valid
+>   static inline int pfn_valid(unsigned long pfn)
+>   {
+> -	/* avoid <linux/mm.h> include hell */
+> -	extern unsigned long max_mapnr;
+>   	unsigned long pfn_offset = ARCH_PFN_OFFSET;
+>   
+>   	return pfn >= pfn_offset && (pfn - pfn_offset) < max_mapnr;
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 7b1068ddcbb7..fdf20503850e 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -45,17 +45,6 @@ extern int sysctl_page_lock_unfairness;
+>   void mm_core_init(void);
+>   void init_mm_internals(void);
+>   
+> -#ifndef CONFIG_NUMA		/* Don't use mapnrs, do it properly */
+> -extern unsigned long max_mapnr;
+> -
+> -static inline void set_max_mapnr(unsigned long limit)
+> -{
+> -	max_mapnr = limit;
+> -}
+> -#else
+> -static inline void set_max_mapnr(unsigned long limit) { }
+> -#endif
+> -
+>   extern atomic_long_t _totalram_pages;
+>   static inline unsigned long totalram_pages(void)
+>   {
+> diff --git a/mm/memory.c b/mm/memory.c
+> index b4d3d4893267..126fdd3001e3 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -95,14 +95,6 @@
+>   #warning Unfortunate NUMA and NUMA Balancing config, growing page-frame for last_cpupid.
+>   #endif
+>   
+> -#ifndef CONFIG_NUMA
+> -unsigned long max_mapnr;
+> -EXPORT_SYMBOL(max_mapnr);
+> -
+> -struct page *mem_map;
+> -EXPORT_SYMBOL(mem_map);
+> -#endif
+> -
+>   static vm_fault_t do_fault(struct vm_fault *vmf);
+>   static vm_fault_t do_anonymous_page(struct vm_fault *vmf);
+>   static bool vmf_pte_changed(struct vm_fault *vmf);
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index 2630cc30147e..50a93714e1c6 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -36,6 +36,14 @@
+>   
+>   #include <asm/setup.h>
+>   
+> +#ifndef CONFIG_NUMA
+> +unsigned long max_mapnr;
+> +EXPORT_SYMBOL(max_mapnr);
+> +
+> +struct page *mem_map;
+> +EXPORT_SYMBOL(mem_map);
+> +#endif
+> +
+>   #ifdef CONFIG_DEBUG_MEMORY_INIT
+>   int __meminitdata mminit_loglevel;
+>   
+> @@ -1617,7 +1625,7 @@ static void __init alloc_node_mem_map(struct pglist_data *pgdat)
+>   	start = pgdat->node_start_pfn & ~(MAX_ORDER_NR_PAGES - 1);
+>   	offset = pgdat->node_start_pfn - start;
+>   	/*
+> -		 * The zone's endpoints aren't required to be MAX_PAGE_ORDER
+> +	 * The zone's endpoints aren't required to be MAX_PAGE_ORDER
+>   	 * aligned but the node_mem_map endpoints must be in order
+>   	 * for the buddy allocator to function correctly.
+>   	 */
+> @@ -1633,14 +1641,15 @@ static void __init alloc_node_mem_map(struct pglist_data *pgdat)
+>   	pr_debug("%s: node %d, pgdat %08lx, node_mem_map %08lx\n",
+>   		 __func__, pgdat->node_id, (unsigned long)pgdat,
+>   		 (unsigned long)pgdat->node_mem_map);
+> -#ifndef CONFIG_NUMA
+> +
+>   	/* the global mem_map is just set as node 0's */
+> -	if (pgdat == NODE_DATA(0)) {
+> -		mem_map = NODE_DATA(0)->node_mem_map;
+> -		if (page_to_pfn(mem_map) != pgdat->node_start_pfn)
+> -			mem_map -= offset;
+> -	}
+> -#endif
+> +	WARN_ON(pgdat != NODE_DATA(0));
+> +
+> +	mem_map = pgdat->node_mem_map;
+> +	if (page_to_pfn(mem_map) != pgdat->node_start_pfn)
+> +		mem_map -= offset;
+> +
+> +	max_mapnr = end - start;
+>   }
+>   #else
+>   static inline void alloc_node_mem_map(struct pglist_data *pgdat) { }
+> diff --git a/mm/nommu.c b/mm/nommu.c
+> index baa79abdaf03..f0209dd26dfa 100644
+> --- a/mm/nommu.c
+> +++ b/mm/nommu.c
+> @@ -44,16 +44,12 @@
+>   
+>   void *high_memory;
+>   EXPORT_SYMBOL(high_memory);
+> -struct page *mem_map;
+> -unsigned long max_mapnr;
+> -EXPORT_SYMBOL(max_mapnr);
+>   unsigned long highest_memmap_pfn;
+>   int sysctl_nr_trim_pages = CONFIG_NOMMU_INITIAL_TRIM_EXCESS;
+>   int heap_stack_gap = 0;
+>   
+>   atomic_long_t mmap_pages_allocated;
+>   
+> -EXPORT_SYMBOL(mem_map);
+>   
+>   /* list of mapped, potentially shareable regions */
+>   static struct kmem_cache *vm_region_jar;
 
