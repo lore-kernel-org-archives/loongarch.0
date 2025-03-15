@@ -1,219 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128A91FF5EB;
-	Fri, 14 Mar 2025 14:43:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609409450
+	for <loongarch@lists.linux.dev>; Sat, 15 Mar 2025 03:47:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741963411; cv=none; b=LDHRCGmgjnVP41cAVeLq7cZu4rtko8HyeKiVnT5PdNo4T1VT5wl07xBhqDptm4xagWK2TeuS5hP6nLr94Q1k+J0v6sY75AXA6dczThUjyWp0EftHGG0NT8W7/6BdVUg//phiohxumGGBONK9+S/OXrHWbV4KaCOiJVPQHFoSb3M=
+	t=1742010458; cv=none; b=TU12KsMqnLVdTgeHPMSAgMUlgGGmPuHi5GlUd/n9FvhIo7RiLgpE8bDZDZE4Se5RUiiYU5yQmeIrJ4y5/7mYxQVzkfEaFH1rs2Rin3YdBeaSSjQie5pGgme1QvkCxMqUb7v15e4yOUldK+pscec+VnqxRqA6kkIT1G3U/o2IJCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741963411; c=relaxed/simple;
-	bh=OmBBejdQ6MPMCpK44mLQ8HFIWOmjQLb426wFuXj8jkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hrJ6Jy0Rm1kN+GNbu2RpJEmhHsFYezTygQ2FUL2FJPCVY+js4GEIcvweflwFRA+PwQuD2xnMFYL3sbrI5P7AP1FeOy1f20MQhfjlV5yAiQep0Y+1nJmqfvVUyflJ0r3a4Fa6ZXDOkAZiFD1zZwEH330c2M67a7YCiz72q8KRcho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFpQYiNn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742010458; c=relaxed/simple;
+	bh=rEWeaYnOxK4bckSNlu+Vv/KHF5l99ILA6qQvr9xb1f4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cF8bRBHr+ZmND1Dg33Rl25Qnm+jFbu+TLvEtjBg0pXe+yFnhOPThHZy2z79/8ioELodt/PpARlrZhm32KCYO9OgFaeTSZy+bkGRIv15Bl6wyuwPbIVf+qV/dGCI0aLp/63Xom8YHDNgsCMKxTZFuFWrajv1OjCjw0txf910g4mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZmATy2V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFpQYiNn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59AE6C4CEE3;
-	Fri, 14 Mar 2025 14:43:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZmATy2V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5103C4CEF3
+	for <loongarch@lists.linux.dev>; Sat, 15 Mar 2025 03:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741963410;
-	bh=OmBBejdQ6MPMCpK44mLQ8HFIWOmjQLb426wFuXj8jkM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fFpQYiNn8BK3GSRaTkmH0zb+nSODczrSo69/HHZE/fMKliEr410dXzUTJouOtgdNg
-	 xEYwcbf/tS7qU51N9IWwh0i+KWxQAYFvXNDFLRFNIAWMBLuhS3GTD+bnC2IPfrdyyO
-	 fwa3QixFnKqg26v6mucQdL2Hy5aAu3ea6Y1436znV7A8rhZfQsZq7x+IyAgCCKqOuH
-	 hmU1jikY5AWdBinYN0XvBA5S8lH8hFUbGpNZ1NO7mVou81GVSm6jDO4A+xZtMcIyD9
-	 K7mhPXySTl/kCt2LngJaYm7ocd7e5j6uTShuOy0VNdKQSNNetcGuOy/sxPDcWmFO4Q
-	 sSW7cc2XVUWUQ==
-Date: Fri, 14 Mar 2025 16:43:26 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
-	peterhuewe@gmx.de, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>
-Subject: Re: [PATCH v5 5/6] tpm: Add a driver for Loongson TPM device
-Message-ID: <Z9RAjuhBS62HD55L@kernel.org>
-References: <20250313090702.21300-1-zhaoqunqin@loongson.cn>
+	s=k20201202; t=1742010457;
+	bh=rEWeaYnOxK4bckSNlu+Vv/KHF5l99ILA6qQvr9xb1f4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XZmATy2V4jA6VGT/sLElJ1LtljPOd+eMlN+3pSTx9TkdWNjOqTOOI9C59zL6L1GPP
+	 P5FB7egEYgTHxA0nSzRRAd+x5dt1+PRPrxncZJomWwC4zyjGIj9Ns+8o5ijEIb6BN4
+	 nVqSLAXI0BR2jC1mtfzPs7F/O/9vk9R7SXrZPV7qP1VtWdlY2tqBFiWFVnyXf0Nsvc
+	 YGlbhOQJ+Q0LB/02yr2UavFcSwSECsY5ezmSbNcpzEkSBmX7kVMKkiF8oXbTaHCsLt
+	 hRMhxcsbIWEkv5MOx5tNYsl7DJfiwlrrHQkkrSueaAeMRq2ozZ9ZDkuZ8FIAQuVnoO
+	 C+FtruHEidFeA==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2c663a3daso562919566b.2
+        for <loongarch@lists.linux.dev>; Fri, 14 Mar 2025 20:47:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV7hCfLN0ePWa7uAhSAKfI1FJIi529pcEjTvFJxdRJy4TAEPrZRowRB/z0JEr9JjOhZZpn0v4QGEPM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzInpjkyBt6ZU2POb9zxNjDKA3dedwXUzrjY7thE0FAHOkbnERz
+	166uQB4WqVFY0M9Y4M6pCnHRXQzjg2C23OiEDVXVIexJCjZXVx135+NRXDl4asdcd6ZxcjGCsZV
+	wMGTTFuST5RbqwOOa31Bl0mfTvXU=
+X-Google-Smtp-Source: AGHT+IGvl7mvBRxnDQZkZr3SyAMYhwpiA8Buk+zLKV2NfxHnF0Ito7phi33hXpbi2pIDDMwgAz/QVCZJ9DiGfYJSMDM=
+X-Received: by 2002:a17:907:9712:b0:abf:6e6a:885c with SMTP id
+ a640c23a62f3a-ac3301e33b5mr559743866b.23.1742010456183; Fri, 14 Mar 2025
+ 20:47:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313090702.21300-1-zhaoqunqin@loongson.cn>
+References: <20250313090508.21252-1-zhaoqunqin@loongson.cn>
+ <CAAhV-H5f1k4_bVybMcK9QXhaVxLOM=b_8n0sA+0r=gyCP4YQRA@mail.gmail.com> <d77a36a3-3b74-76a9-38de-1a40ffb58374@loongson.cn>
+In-Reply-To: <d77a36a3-3b74-76a9-38de-1a40ffb58374@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 15 Mar 2025 11:47:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5hpzrCGHwhbReZXQ-UQN4AT0rz_goSjpDqkeKg+Sp+zg@mail.gmail.com>
+X-Gm-Features: AQ5f1JrsaQ0ze5L39vZJ4UNTSJ5wNo2PbJgVk6RhtobyxG7H5c28H6M_WtQqkjc
+Message-ID: <CAAhV-H5hpzrCGHwhbReZXQ-UQN4AT0rz_goSjpDqkeKg+Sp+zg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Drivers for Loongson security engine
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
+	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 13, 2025 at 05:07:01PM +0800, Qunqin Zhao wrote:
-> Loongson security engine supports random number generation, hash,
-> symmetric encryption and asymmetric encryption. Based on these
-> encryption functions, TPM2 have been implemented in the Loongson
-> security engine firmware. This driver is responsible for copying data
-> into the memory visible to the firmware and receiving data from the firmware.
-> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> ---
-> v5: None
-> v4: Prefix all with tpm_lsse instead of tpm.
->     Removed MODULE_AUTHOR fields.
-> 
-> v3: Added reminder about Loongson security engine to git log.
-> 
->  drivers/char/tpm/Kconfig    |   9 ++++
->  drivers/char/tpm/Makefile   |   1 +
->  drivers/char/tpm/tpm_lsse.c | 103 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 113 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_lsse.c
-> 
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index 0fc9a510e0..56d0417065 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -225,5 +225,14 @@ config TCG_FTPM_TEE
->  	help
->  	  This driver proxies for firmware TPM running in TEE.
->  
-> +config TCG_LSSE
-> +	tristate "Loongson TPM Interface"
-> +	depends on MFD_LS6000SE
-> +	help
-> +	  If you want to make Loongson TPM support available, say Yes and
-> +	  it will be accessible from within Linux. To compile this
-> +	  driver as a module, choose M here; the module will be called
-> +	  tpm_lsse.
-> +
->  source "drivers/char/tpm/st33zp24/Kconfig"
->  endif # TCG_TPM
-> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> index 9bb142c752..bf2280352d 100644
-> --- a/drivers/char/tpm/Makefile
-> +++ b/drivers/char/tpm/Makefile
-> @@ -44,3 +44,4 @@ obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
->  obj-$(CONFIG_TCG_CRB) += tpm_crb.o
->  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
->  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-> +obj-$(CONFIG_TCG_LSSE) += tpm_lsse.o
-> diff --git a/drivers/char/tpm/tpm_lsse.c b/drivers/char/tpm/tpm_lsse.c
-> new file mode 100644
-> index 0000000000..b476309c97
-> --- /dev/null
-> +++ b/drivers/char/tpm/tpm_lsse.c
-> @@ -0,0 +1,103 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
-> +
-> +#include <linux/device.h>
-> +#include <linux/mfd/ls6000se.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/wait.h>
-> +
-> +#include "tpm.h"
-> +
-> +struct tpm_lsse_msg {
-> +	u32 cmd;
-> +	u32 data_off;
-> +	u32 data_len;
-> +	u32 info[5];
-> +};
-> +
-> +struct tpm_lsse_dev {
-> +	struct lsse_ch *se_ch;
-> +	struct completion tpm_lsse_completion;
-> +};
-> +
-> +static void tpm_lsse_complete(struct lsse_ch *ch)
-> +{
-> +	struct tpm_lsse_dev *td = ch->priv;
-> +
-> +	complete(&td->tpm_lsse_completion);
-> +}
-> +
-> +static int tpm_lsse_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-> +{
-> +	struct tpm_lsse_dev *td = dev_get_drvdata(&chip->dev);
-> +	struct tpm_lsse_msg *rmsg;
-> +	int sig;
-> +
-> +	sig = wait_for_completion_interruptible(&td->tpm_lsse_completion);
-> +	if (sig)
-> +		return sig;
-> +
-> +	rmsg = td->se_ch->rmsg;
-> +	memcpy(buf, td->se_ch->data_buffer, rmsg->data_len);
-> +
-> +	return rmsg->data_len;
-> +}
-> +
-> +static int tpm_lsse_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> +{
-> +	struct tpm_lsse_dev *td = dev_get_drvdata(&chip->dev);
-> +	struct tpm_lsse_msg *smsg = td->se_ch->smsg;
-> +
-> +	memcpy(td->se_ch->data_buffer, buf, count);
-> +	smsg->data_len = count;
-> +
-> +	return se_send_ch_requeset(td->se_ch);
-> +}
-> +
-> +static const struct tpm_class_ops tpm_lsse_ops = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
-> +	.recv = tpm_lsse_recv,
-> +	.send = tpm_lsse_send,
-> +};
-> +
-> +static int tpm_lsse_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct tpm_lsse_msg *smsg;
-> +	struct tpm_lsse_dev *td;
-> +	struct tpm_chip *chip;
-> +
-> +	td = devm_kzalloc(dev, sizeof(struct tpm_lsse_dev), GFP_KERNEL);
-> +	if (!td)
-> +		return -ENOMEM;
-> +
-> +	init_completion(&td->tpm_lsse_completion);
-> +	td->se_ch = se_init_ch(dev->parent, SE_CH_TPM, PAGE_SIZE,
-> +			       2 * sizeof(struct tpm_lsse_msg), td,
-> +			       tpm_lsse_complete);
-> +	if (!td->se_ch)
-> +		return -ENODEV;
-> +	smsg = td->se_ch->smsg;
-> +	smsg->cmd = SE_CMD_TPM;
-> +	smsg->data_off = td->se_ch->off;
-> +
-> +	chip = tpmm_chip_alloc(dev, &tpm_lsse_ops);
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
-> +	dev_set_drvdata(&chip->dev, td);
-> +
-> +	return tpm_chip_register(chip);
-> +}
-> +
-> +static struct platform_driver tpm_lsse_driver = {
-> +	.probe   = tpm_lsse_probe,
-> +	.driver  = {
-> +		.name  = "ls6000se-tpm",
-> +	},
-> +};
-> +module_platform_driver(tpm_lsse_driver);
-> +
-> +MODULE_ALIAS("platform:ls6000se-tpm");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("Loongson TPM driver");
-> -- 
-> 2.43.0
-> 
-> 
+On Thu, Mar 13, 2025 at 5:59=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
+>
+>
+> =E5=9C=A8 2025/3/13 =E4=B8=8B=E5=8D=885:26, Huacai Chen =E5=86=99=E9=81=
+=93:
+> > You haven't seen my comments in previous version?
+> >
+> > https://lore.kernel.org/loongarch/CAAhV-H5xyRrF1_=3DE7rLM3dHeYAEBdMufYQ=
+vgoxAq6+d6s5U4Eg@mail.gmail.com/
+>
+> I am very sorry that I didn't notice your reply.
+>
+> I don't think it is necessary to change the driver file name. But if you
+> insist, I will do the change below  in  next revision .
+Changing them is a little better, but you needn't do it only for
+renaming. There may be other comments for this series, you can do them
+together.
 
-Makes sense to me and obviously operations list is just send and
-receive, given TPM_CHIP_FLAG_IRQ.
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Huacai
 
-BR, Jarkko
+>
+> "MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+> CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG, ls6000se-rng.c
+> ->loongson-rng.c
+> TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c"
+>
+>
+> BR, Qunqin.
+>
+> >
+> > Huacai
+> >
+> > On Thu, Mar 13, 2025 at 5:05=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongso=
+n.cn> wrote:
+> >> Loongson security engine supports random number generation, hash,
+> >> symmetric encryption and asymmetric encryption. Based on these
+> >> encryption functions, TPM2 have been implemented in it.
+> >>
+> >> mfd is the baser driver, crypto and tpm are users.
+> >>
+> >> v5: Registered "ls6000se-rng" device in mfd driver.
+> >> v4: Please look at changelog in tpm and MAINTAINERS. No changes to mfd
+> >>      and crypto.
+> >> v3: Put the updates to the MAINTAINERS in a separate patch.
+> >> v2: Removed misc driver. Added tpm driver.
+> >>
+> >> Qunqin Zhao (6):
+> >>    mfd: Add support for Loongson Security Module
+> >>    MAINTAINERS: Add entry for Loongson Security Module driver
+> >>    crypto: loongson - add Loongson RNG driver support
+> >>    MAINTAINERS: Add entry for Loongson RNG driver
+> >>    tpm: Add a driver for Loongson TPM device
+> >>    MAINTAINERS: Add tpm_lsse.c to LOONGSON CRYPTO DRIVER entry
+> >>
+> >>   MAINTAINERS                            |  14 +
+> >>   drivers/char/tpm/Kconfig               |   9 +
+> >>   drivers/char/tpm/Makefile              |   1 +
+> >>   drivers/char/tpm/tpm_lsse.c            | 103 +++++++
+> >>   drivers/crypto/Kconfig                 |   1 +
+> >>   drivers/crypto/Makefile                |   1 +
+> >>   drivers/crypto/loongson/Kconfig        |   6 +
+> >>   drivers/crypto/loongson/Makefile       |   2 +
+> >>   drivers/crypto/loongson/ls6000se-rng.c | 190 +++++++++++++
+> >>   drivers/mfd/Kconfig                    |  10 +
+> >>   drivers/mfd/Makefile                   |   2 +
+> >>   drivers/mfd/ls6000se.c                 | 374 +++++++++++++++++++++++=
+++
+> >>   include/linux/mfd/ls6000se.h           |  75 +++++
+> >>   13 files changed, 788 insertions(+)
+> >>   create mode 100644 drivers/char/tpm/tpm_lsse.c
+> >>   create mode 100644 drivers/crypto/loongson/Kconfig
+> >>   create mode 100644 drivers/crypto/loongson/Makefile
+> >>   create mode 100644 drivers/crypto/loongson/ls6000se-rng.c
+> >>   create mode 100644 drivers/mfd/ls6000se.c
+> >>   create mode 100644 include/linux/mfd/ls6000se.h
+> >>
+> >>
+> >> base-commit: 6a8f122c5f073c8610c32636663f2512514b1270
+> >> --
+> >> 2.43.0
+> >>
+> >>
+>
+>
