@@ -1,147 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609409450
-	for <loongarch@lists.linux.dev>; Sat, 15 Mar 2025 03:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0D518A6DF
+	for <loongarch@lists.linux.dev>; Sat, 15 Mar 2025 08:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742010458; cv=none; b=TU12KsMqnLVdTgeHPMSAgMUlgGGmPuHi5GlUd/n9FvhIo7RiLgpE8bDZDZE4Se5RUiiYU5yQmeIrJ4y5/7mYxQVzkfEaFH1rs2Rin3YdBeaSSjQie5pGgme1QvkCxMqUb7v15e4yOUldK+pscec+VnqxRqA6kkIT1G3U/o2IJCE=
+	t=1742025811; cv=none; b=qZ4y7utALFrOR53qvsr42lFyp2cfXDcEspzNwAyx/pOLLRk6JGnLrx6hi9vjGMgoBqEJHUsdPSpOA5vJy+mLFBWT6pC7Ah6G5Ys/Yru0CcJm6Ofj/Zn8111gw+VBCTd9oj0+ALiqIpmLQaGUYoZwMxCpISgzgv8LPT3BdH5OQys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742010458; c=relaxed/simple;
-	bh=rEWeaYnOxK4bckSNlu+Vv/KHF5l99ILA6qQvr9xb1f4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cF8bRBHr+ZmND1Dg33Rl25Qnm+jFbu+TLvEtjBg0pXe+yFnhOPThHZy2z79/8ioELodt/PpARlrZhm32KCYO9OgFaeTSZy+bkGRIv15Bl6wyuwPbIVf+qV/dGCI0aLp/63Xom8YHDNgsCMKxTZFuFWrajv1OjCjw0txf910g4mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZmATy2V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742025811; c=relaxed/simple;
+	bh=cK7X+ekj65GDPa3Y3otbIX2aFl4VQDsKw9VVrWlksIA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k2EG+Ae/bfJDXnkgPMicPPH6+CkHyxG/MqaDVBERvu6r14VZEO1YX3ZwpnaV7Bvyy+jR8eYdZl4JHXK0JSrGDZ4kKX51/mt6ECgK/eW2RnOK8shM/CVyDkmGxsGnx5jRq3jPHvRRm3p1sHlDIo9D5zrDqNxB8iphzjnc5lh+8gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ip0QArJv; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZmATy2V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5103C4CEF3
-	for <loongarch@lists.linux.dev>; Sat, 15 Mar 2025 03:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742010457;
-	bh=rEWeaYnOxK4bckSNlu+Vv/KHF5l99ILA6qQvr9xb1f4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XZmATy2V4jA6VGT/sLElJ1LtljPOd+eMlN+3pSTx9TkdWNjOqTOOI9C59zL6L1GPP
-	 P5FB7egEYgTHxA0nSzRRAd+x5dt1+PRPrxncZJomWwC4zyjGIj9Ns+8o5ijEIb6BN4
-	 nVqSLAXI0BR2jC1mtfzPs7F/O/9vk9R7SXrZPV7qP1VtWdlY2tqBFiWFVnyXf0Nsvc
-	 YGlbhOQJ+Q0LB/02yr2UavFcSwSECsY5ezmSbNcpzEkSBmX7kVMKkiF8oXbTaHCsLt
-	 hRMhxcsbIWEkv5MOx5tNYsl7DJfiwlrrHQkkrSueaAeMRq2ozZ9ZDkuZ8FIAQuVnoO
-	 C+FtruHEidFeA==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2c663a3daso562919566b.2
-        for <loongarch@lists.linux.dev>; Fri, 14 Mar 2025 20:47:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV7hCfLN0ePWa7uAhSAKfI1FJIi529pcEjTvFJxdRJy4TAEPrZRowRB/z0JEr9JjOhZZpn0v4QGEPM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzInpjkyBt6ZU2POb9zxNjDKA3dedwXUzrjY7thE0FAHOkbnERz
-	166uQB4WqVFY0M9Y4M6pCnHRXQzjg2C23OiEDVXVIexJCjZXVx135+NRXDl4asdcd6ZxcjGCsZV
-	wMGTTFuST5RbqwOOa31Bl0mfTvXU=
-X-Google-Smtp-Source: AGHT+IGvl7mvBRxnDQZkZr3SyAMYhwpiA8Buk+zLKV2NfxHnF0Ito7phi33hXpbi2pIDDMwgAz/QVCZJ9DiGfYJSMDM=
-X-Received: by 2002:a17:907:9712:b0:abf:6e6a:885c with SMTP id
- a640c23a62f3a-ac3301e33b5mr559743866b.23.1742010456183; Fri, 14 Mar 2025
- 20:47:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ip0QArJv"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2239c066347so58629075ad.2
+        for <loongarch@lists.linux.dev>; Sat, 15 Mar 2025 01:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742025809; x=1742630609; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MsBMohK1J5AZoR8f2vnP4yTF9NYNvX08pUGvJRqOXzk=;
+        b=ip0QArJvqMPwBumQXUBskgp9jV7vGgI9bawOElD9Bs4tUkwlmIPBOc7iceCaSSjLY+
+         Dm4bCQVskPWONRB3J/U+ARxZzg//zXYdeofWdJPEYYgo5wCLb8cNSqF5xq7kCI0lI24Z
+         htCyLnlAqM7b+pOSebspBJJ3jz3dqm41G4IGnUOa+8Ai5s3giwGGDn/kYBbLsrC6fAmd
+         aiQLAhMZS4Qa+q6ERoZoufI50ZwWEF3eng2ZvOyTgJNkXY/1GEgMeOiRxGBwDggF8Jmg
+         nVmolOydLUvyBEcPKyAECpQCjPKpk9AlUOtFBkvKmquTF920/XUbtXya1SK4PNIjB6il
+         fZiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742025809; x=1742630609;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MsBMohK1J5AZoR8f2vnP4yTF9NYNvX08pUGvJRqOXzk=;
+        b=KBAfidVeRX7+Ih6rweEHie1MdtS+X02sURWt0P3rZO4odMqPiwYzaPqfCc1gEkHaby
+         Fw6lGlpxPg7LeaE+8SuRDYktVHcwj9G/a9kCsKJfbPcx9pnOPUnSM2cKQObyshFRzIKh
+         BxhsV3bN6k1sMehhtWdSn1nYQjpyQH0doIPDSlMNdJDUxw6MKzA+xzEH2zq9DdPL7Noe
+         1vngFsLGV7s4G2DMXqDqRoTn12417f3v4229I6+3NEcv3KVeOsOQF/bVHoVudB617Jt0
+         45bgBq63mHzX7O+80msI9uJRfiwTbM59G0R1+bEOU0xUVxA1X1IjehN3pwdt/3xdEH+z
+         pgjg==
+X-Gm-Message-State: AOJu0Yy1ofD9J8ckBbnliKuw0GUiH0qlvAGXRT/+7AkuSwkY3wNa1yvN
+	ZWGueoCRLW9G1LUgl27bC4aGOh9JQcV++JJi1A1/30wyrtXXYaNPBEvHCKN6
+X-Gm-Gg: ASbGncszFfM+Q1lcn+Ipf14C1HIUe0idg2rQ5a/jHUeOGqrCccXi3VRHiD+Y4NonfF0
+	2pScVSjNtzEXNCcy9Z2ekDk6L6FMyLcadYkszLGkkpBpAw4k/ITqh3Y05XyLVPIvl5WzG5ZvFIJ
+	rsldNE7/jCr+qKl97ChMKp5/+XO4V44Gh1/jGmPe8UddaKppHelvBBP8rdVpHNiB+12PC7TD+RZ
+	J9tj/gmXa/BT5ybSgQq/z0CHyzEgt5BHsPKOSLHp3xLcehK6pEaNzg/BxvhA0FtFIcKvms3GNCn
+	4zluzWO+KL5PRjROkWBdD6SqbPBReSjpwVbeL1XRlc8s19bQcIZf7bFcov++6ikU6QRMKdE54Jf
+	eGTbWbQ==
+X-Google-Smtp-Source: AGHT+IEHVcuvOSaQ9YBO8ax6PXV3hpfu6w1q13nBl2BZtcvzWwDaa3+1um1+XUscvYqwwvNKOrpVZA==
+X-Received: by 2002:a05:6a20:9148:b0:1f1:b69:9bdd with SMTP id adf61e73a8af0-1f5c1311632mr6046505637.37.1742025808748;
+        Sat, 15 Mar 2025 01:03:28 -0700 (PDT)
+Received: from localhost.localdomain ([14.116.239.34])
+        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-af56ea7bd01sm3190508a12.61.2025.03.15.01.03.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Mar 2025 01:03:28 -0700 (PDT)
+From: Hengqi Chen <hengqi.chen@gmail.com>
+To: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org
+Cc: yangtiezhu@loongson.cn,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Vincent Li <vincent.mc.li@gmail.com>
+Subject: [PATCH] LoongArch: BPF: Fix off by one error in build_prologue()
+Date: Sat, 15 Mar 2025 08:03:20 +0000
+Message-ID: <20250315080320.4193821-1-hengqi.chen@gmail.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250313090508.21252-1-zhaoqunqin@loongson.cn>
- <CAAhV-H5f1k4_bVybMcK9QXhaVxLOM=b_8n0sA+0r=gyCP4YQRA@mail.gmail.com> <d77a36a3-3b74-76a9-38de-1a40ffb58374@loongson.cn>
-In-Reply-To: <d77a36a3-3b74-76a9-38de-1a40ffb58374@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 15 Mar 2025 11:47:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5hpzrCGHwhbReZXQ-UQN4AT0rz_goSjpDqkeKg+Sp+zg@mail.gmail.com>
-X-Gm-Features: AQ5f1JrsaQ0ze5L39vZJ4UNTSJ5wNo2PbJgVk6RhtobyxG7H5c28H6M_WtQqkjc
-Message-ID: <CAAhV-H5hpzrCGHwhbReZXQ-UQN4AT0rz_goSjpDqkeKg+Sp+zg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Drivers for Loongson security engine
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
-	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 13, 2025 at 5:59=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
-> wrote:
->
->
-> =E5=9C=A8 2025/3/13 =E4=B8=8B=E5=8D=885:26, Huacai Chen =E5=86=99=E9=81=
-=93:
-> > You haven't seen my comments in previous version?
-> >
-> > https://lore.kernel.org/loongarch/CAAhV-H5xyRrF1_=3DE7rLM3dHeYAEBdMufYQ=
-vgoxAq6+d6s5U4Eg@mail.gmail.com/
->
-> I am very sorry that I didn't notice your reply.
->
-> I don't think it is necessary to change the driver file name. But if you
-> insist, I will do the change below  in  next revision .
-Changing them is a little better, but you needn't do it only for
-renaming. There may be other comments for this series, you can do them
-together.
+Vincent reported that running BPF progs with tailcalls on LoongArch
+causes kernel hard lockup. Debugging the issues shows that the JITed
+image missing a jirl instruction at the end of the epilogue.
 
+There are two passes in JIT compile, the first pass set the flags and
+the second pass generates JIT code based on those flags. With BPF progs
+mixing bpf2bpf and tailcalls, build_prologue() generates N insns in the
+first pass and then generates N+1 insns in the second pass. This makes
+epilogue_offset off by one and we will jump to some unexpected insn and
+cause lockup. Fix this by inserting a nop insn.
 
-Huacai
+Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+Fixes: bb035ef0cc91 ("LoongArch: BPF: Support mixing bpf2bpf and tailcalls")
+Reported-by: Vincent Li <vincent.mc.li@gmail.com>
+Closes: https://lore.kernel.org/loongarch/CAK3+h2w6WESdBN3UCr3WKHByD7D6Q_Ve1EDAjotVrnx6Or_c8g@mail.gmail.com/
+Closes: https://lore.kernel.org/bpf/CAK3+h2woEjG_N=-XzqEGaAeCmgu2eTCUc7p6bP4u8Q+DFHm-7g@mail.gmail.com/
+Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+---
+ arch/loongarch/include/asm/inst.h | 5 +++++
+ arch/loongarch/net/bpf_jit.c      | 2 ++
+ 2 files changed, 7 insertions(+)
 
->
-> "MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
-> CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG, ls6000se-rng.c
-> ->loongson-rng.c
-> TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c"
->
->
-> BR, Qunqin.
->
-> >
-> > Huacai
-> >
-> > On Thu, Mar 13, 2025 at 5:05=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongso=
-n.cn> wrote:
-> >> Loongson security engine supports random number generation, hash,
-> >> symmetric encryption and asymmetric encryption. Based on these
-> >> encryption functions, TPM2 have been implemented in it.
-> >>
-> >> mfd is the baser driver, crypto and tpm are users.
-> >>
-> >> v5: Registered "ls6000se-rng" device in mfd driver.
-> >> v4: Please look at changelog in tpm and MAINTAINERS. No changes to mfd
-> >>      and crypto.
-> >> v3: Put the updates to the MAINTAINERS in a separate patch.
-> >> v2: Removed misc driver. Added tpm driver.
-> >>
-> >> Qunqin Zhao (6):
-> >>    mfd: Add support for Loongson Security Module
-> >>    MAINTAINERS: Add entry for Loongson Security Module driver
-> >>    crypto: loongson - add Loongson RNG driver support
-> >>    MAINTAINERS: Add entry for Loongson RNG driver
-> >>    tpm: Add a driver for Loongson TPM device
-> >>    MAINTAINERS: Add tpm_lsse.c to LOONGSON CRYPTO DRIVER entry
-> >>
-> >>   MAINTAINERS                            |  14 +
-> >>   drivers/char/tpm/Kconfig               |   9 +
-> >>   drivers/char/tpm/Makefile              |   1 +
-> >>   drivers/char/tpm/tpm_lsse.c            | 103 +++++++
-> >>   drivers/crypto/Kconfig                 |   1 +
-> >>   drivers/crypto/Makefile                |   1 +
-> >>   drivers/crypto/loongson/Kconfig        |   6 +
-> >>   drivers/crypto/loongson/Makefile       |   2 +
-> >>   drivers/crypto/loongson/ls6000se-rng.c | 190 +++++++++++++
-> >>   drivers/mfd/Kconfig                    |  10 +
-> >>   drivers/mfd/Makefile                   |   2 +
-> >>   drivers/mfd/ls6000se.c                 | 374 +++++++++++++++++++++++=
-++
-> >>   include/linux/mfd/ls6000se.h           |  75 +++++
-> >>   13 files changed, 788 insertions(+)
-> >>   create mode 100644 drivers/char/tpm/tpm_lsse.c
-> >>   create mode 100644 drivers/crypto/loongson/Kconfig
-> >>   create mode 100644 drivers/crypto/loongson/Makefile
-> >>   create mode 100644 drivers/crypto/loongson/ls6000se-rng.c
-> >>   create mode 100644 drivers/mfd/ls6000se.c
-> >>   create mode 100644 include/linux/mfd/ls6000se.h
-> >>
-> >>
-> >> base-commit: 6a8f122c5f073c8610c32636663f2512514b1270
-> >> --
-> >> 2.43.0
-> >>
-> >>
->
->
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index 3089785ca97e..d61b356170fe 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -695,6 +695,11 @@ static inline void emit_jirl(union loongarch_instruction *insn,
+ 	insn->reg2i16_format.rj = rj;
+ }
+ 
++static inline void emit_nop(union loongarch_instruction *insn)
++{
++	insn->word = INSN_NOP;
++}
++
+ #define DEF_EMIT_REG2BSTRD_FORMAT(NAME, OP)				\
+ static inline void emit_##NAME(union loongarch_instruction *insn,	\
+ 			       enum loongarch_gpr rd,			\
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index ea357a3edc09..2346c0b55043 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -142,6 +142,8 @@ static void build_prologue(struct jit_ctx *ctx)
+ 	 */
+ 	if (seen_tail_call(ctx) && seen_call(ctx))
+ 		move_reg(ctx, TCC_SAVED, REG_TCC);
++	else
++		emit_insn(ctx, nop);
+ 
+ 	ctx->stack_size = stack_adjust;
+ }
+-- 
+2.43.5
+
