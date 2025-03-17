@@ -1,121 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2DF18BC3D;
-	Mon, 17 Mar 2025 12:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FCF2063E5
+	for <loongarch@lists.linux.dev>; Mon, 17 Mar 2025 23:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742215226; cv=none; b=J3E9sKDuBUf4wzyXx272Izo7ldHZ5D6rxLBG4sEc3xoZU+bEy1yUBBxDUWVQqoHbfHUKe3hauj9XCNEtvu0E5z4LNuTh+wTyXNStQvjWj97pPu7/mao0bt03pmwv/ET48+yF58GERfkbPDHtpg7UWNnn1maXp4gL4mVY0D96yX0=
+	t=1742255542; cv=none; b=kwdl7u4vcMh/zf8V9n7zvU5WtcwQyrpIS+dqqgEoi6FTHZ47be0u11Q0Y2QXsaz3VGSzMftLrJUHwNbkasnSibUOo4rykaQL2u5O3YEMukNJ8XRqZnj+SleRnEUEVV2lSfbLrH5dPvEgCbkyl7ehDOiPywEdzD98DGLbFA/p8mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742215226; c=relaxed/simple;
-	bh=Qm34pbxAa6RjHCc2A1aXJ4qBOugE70Km6ONzqhDGMKA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NbXfT+CrxcTqYHciP/HJrGLlKbDsA3OTDjozsfD7Ji2ELgjvAKzTnsJeMnz5Y4+bMi596LHbuef/j0E1RoTNTyEHDan+1tyTfxC8twSQ/IBmsD97aOu3y+BnGpXGuEtHplNIs0iXOaLzF4sbe2aS/eVzPrppEFWVoCpwPOLWSs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7Ar7yyZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742255542; c=relaxed/simple;
+	bh=gvz05YIWaLvwfZjPBEm872B5QkOs/p9lPHWGYTN34MQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pbcYET3MYQM/yRvRJDyyHLYIpYTSedpLgI3FKXgi/MOdjz2k2IgnEVx7BxhpshbtRFsX/h1oWg9wweT+NvQpQ3kv680J4f0dyH8D0YwQrQ34gV8kczkvBf4BNO/7b8tbkSD5A3miT4GBO3Fsp3wAr/XSknvu0Vvn7EO4cNZ4dzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hszOd0A6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7Ar7yyZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A338C4CEE9;
-	Mon, 17 Mar 2025 12:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742215225;
-	bh=Qm34pbxAa6RjHCc2A1aXJ4qBOugE70Km6ONzqhDGMKA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=E7Ar7yyZci/sFoCidNgE8WXrHkJCdBUtC5+SBI7ElJU6LgZqLiSvRPlv1xqMCdR+2
-	 JdSknt+r47jh4J64JDHOV3bC2f8CCEHU9CwoE9ISsT1r2OFEQaCkooFpGyY2cq0AUS
-	 8BJqKWvVNVKmYaiENoybfTCks4OV2Hujobg04vepdZYEAJYEHgTYSVQtuBbCiU49Wg
-	 w4Y7etNdGOWGUdqy5s7jSxyR/7rnszsVQfJoCdbVmwcu/WQyL4uucGKWINrXNoVXHO
-	 5i4vQUYMXA8gu7KzsUBsrs+oDW3h+voixjT+nCGjato5WHQworTVVXnwjAQoo5sK7c
-	 ZdFal0K6UlYKw==
-Message-ID: <e3dfe753-fb5f-4f2f-9d24-da8a4f01be19@kernel.org>
-Date: Mon, 17 Mar 2025 07:40:20 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hszOd0A6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742255539;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ln9muO+UnoEXyYsgLcV9Ra/t7A/95ouFlMUsf8wdrpI=;
+	b=hszOd0A6rkgJ5CDCoMBctPukdt9WOtLrLmQGWsDpv4cr5tITgbuOGi5M6poYCD/w8t9THo
+	/gjcaHj0E764om2zObemR4NDjNeCueuex5s+GXbgZDwKnoc5PejbjJrQvo85oQKfSDfxcV
+	oowggg9gyxFoo/UqVW+FOYXNkjEr+MM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-19-DU2R_2XDMkuC00OGsR7rfg-1; Mon,
+ 17 Mar 2025 19:52:14 -0400
+X-MC-Unique: DU2R_2XDMkuC00OGsR7rfg-1
+X-Mimecast-MFC-AGG-ID: DU2R_2XDMkuC00OGsR7rfg_1742255532
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C30A195608B;
+	Mon, 17 Mar 2025 23:52:09 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.23])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 53A23180174E;
+	Mon, 17 Mar 2025 23:52:05 +0000 (UTC)
+Date: Tue, 18 Mar 2025 07:52:00 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	Oscar Salvador <osalvador@suse.de>, Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH v3 1/5] arch/x86: Drop own definition of pgd,p4d_leaf
+Message-ID: <Z9i1oGaAR9c2MPbN@MiWiFi-R3L-srv>
+References: <c81566e5df160587de50f9095d0ec377114fdba8.1720854135.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/13] nios2: move pr_debug() about memory start and
- end to setup_arch()
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "David S. Miller" <davem@davemloft.net>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Guo Ren
- <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
- Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
- Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>,
- Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
- Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
- Stafford Horne <shorne@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
- linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-mm@kvack.org, x86@kernel.org
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-7-rppt@kernel.org>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <20250313135003.836600-7-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c81566e5df160587de50f9095d0ec377114fdba8.1720854135.git.christophe.leroy@csgroup.eu>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 3/13/25 08:49, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On 07/13/24 at 09:08am, Christophe Leroy wrote:
+> From: Oscar Salvador <osalvador@suse.de>
 > 
-> This will help with pulling out memblock_free_all() to the generic
-> code and reducing code duplication in arch::mem_init().
+> We provide generic definitions of pXd_leaf in pgtable.h when the arch
+> do not define their own, where the generic pXd_leaf always return false.
 > 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Although x86 defines {pgd,p4d}_leaf, they end up being a no-op, so drop them
+> and make them fallback to the generic one.
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Reviewed-by: Peter Xu <peterx@redhat.com>
 > ---
->   arch/nios2/kernel/setup.c | 2 ++
->   arch/nios2/mm/init.c      | 2 --
->   2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/nios2/kernel/setup.c b/arch/nios2/kernel/setup.c
-> index da122a5fa43b..a4cffbfc1399 100644
-> --- a/arch/nios2/kernel/setup.c
-> +++ b/arch/nios2/kernel/setup.c
-> @@ -149,6 +149,8 @@ void __init setup_arch(char **cmdline_p)
->   	memory_start = memblock_start_of_DRAM();
->   	memory_end = memblock_end_of_DRAM();
->   
-> +	pr_debug("%s: start=%lx, end=%lx\n", __func__, memory_start, memory_end);
-> +
->   	setup_initial_init_mm(_stext, _etext, _edata, _end);
->   	init_task.thread.kregs = &fake_regs;
->   
-> diff --git a/arch/nios2/mm/init.c b/arch/nios2/mm/init.c
-> index a2278485de19..aa692ad30044 100644
-> --- a/arch/nios2/mm/init.c
-> +++ b/arch/nios2/mm/init.c
-> @@ -65,8 +65,6 @@ void __init mem_init(void)
->   	unsigned long end_mem   = memory_end; /* this must not include
->   						kernel stack at top */
->   
-> -	pr_debug("mem_init: start=%lx, end=%lx\n", memory_start, memory_end);
-> -
->   	end_mem &= PAGE_MASK;
->   	high_memory = __va(end_mem);
->   
+>  arch/x86/include/asm/pgtable.h | 10 ----------
+>  1 file changed, 10 deletions(-)
 
-Acked-By: Dinh Nguyen <dinguyen@kernel.org>
+Seems this series is missed. It does do a great clean up.
+
+> 
+> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+> index 65b8e5bb902c..772f778bac06 100644
+> --- a/arch/x86/include/asm/pgtable.h
+> +++ b/arch/x86/include/asm/pgtable.h
+> @@ -252,13 +252,6 @@ static inline unsigned long pgd_pfn(pgd_t pgd)
+>  	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
+>  }
+>  
+> -#define p4d_leaf p4d_leaf
+> -static inline bool p4d_leaf(p4d_t p4d)
+> -{
+> -	/* No 512 GiB pages yet */
+> -	return 0;
+> -}
+> -
+>  #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
+>  
+>  #define pmd_leaf pmd_leaf
+> @@ -1396,9 +1389,6 @@ static inline bool pgdp_maps_userspace(void *__ptr)
+>  	return (((ptr & ~PAGE_MASK) / sizeof(pgd_t)) < PGD_KERNEL_START);
+>  }
+>  
+> -#define pgd_leaf	pgd_leaf
+> -static inline bool pgd_leaf(pgd_t pgd) { return false; }
+> -
+>  #ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+>  /*
+>   * All top-level MITIGATION_PAGE_TABLE_ISOLATION page tables are order-1 pages
+> -- 
+> 2.44.0
+> 
+> 
+
