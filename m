@@ -1,47 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A1120B81F;
-	Tue, 18 Mar 2025 14:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C1C20E6FA;
+	Tue, 18 Mar 2025 15:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742308707; cv=none; b=tuvtwPG07DY17FEyLp/PxVlVFXR2psXvxhs42j8M3NAptg5E3voChZZ9b6cCohBfG0Sx0ZlXaGDO5LhL4MYS3kcP8DcrUpVH01qNNnDVWQitEO7zWLX0iWjg+U/80Ye7QwVOcQ7HFH4N1+WHo1N1AmfY5uSJ29JnMHj+LW+svSo=
+	t=1742313596; cv=none; b=oeS/Mand7Jxau2tE7KN0QjTULTOje8cy4jkTkTRSbwgjXMdjJVRJDlyvyZ8ZWusVS7TC6ZSVEmjp1+X5iz0jwAHSlHIhO2/VGCTqLAAsOgtu/5gM9ugBowfPmutJb8Kk78yeT6njuLVdeE+rPl+aGm6/S9eE0qRs+9TlxBSLQp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742308707; c=relaxed/simple;
-	bh=9umgKWqtZT/8YY/xdx8wzJAOM6nVJd/mLI1qP7HBUfs=;
+	s=arc-20240116; t=1742313596; c=relaxed/simple;
+	bh=wnqlTyxAgZ8CuVhXT9duPOO4NgjQBjimZKlWtsOUGPY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a2+WBIZxAloP4lyMvhvIxiLLWNChuc8LgKRN+fVL36F5DEua3AQ6nGaPQ2bVYVbdbVBcz1Ck8grG//fEZXpzssGyZqq3XaxoWCHlA+Av/I44mgdq/6wieYqJe5myoGmqRpgsQ9YuKvU1CZEKkRzUozb83yH3Dfy2/BeHlGEHrgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IKYCs18s; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rtNuxbEvsVojzW+7QvI93xBrqK3voNzfEGfkR3KtDUInYvUpBBq1aSF4wLJuRPQj0dePFNL+uDuqbEJwQso12VjNFc/tMypWHZORL2C34DxQBfoMRU4cECQo1rMSPOTt2wSTx13hsD6oQY2+NdGL24MCI4no+22mDotXMgSNrnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVHlHUak; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IKYCs18s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2EF2C4CEDD;
-	Tue, 18 Mar 2025 14:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742308707;
-	bh=9umgKWqtZT/8YY/xdx8wzJAOM6nVJd/mLI1qP7HBUfs=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVHlHUak"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58FD2C4CEDD;
+	Tue, 18 Mar 2025 15:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742313596;
+	bh=wnqlTyxAgZ8CuVhXT9duPOO4NgjQBjimZKlWtsOUGPY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IKYCs18sngJvAsnONKCxnwa78vZ7S2q7pckhV4HDARytrwlWG6TyVdfEApKEckyIu
-	 Wz7lUyY8brABJ5uK8A1+rixIO7S1KWhmlHz5ekaF3Aev0yYsBkdov1AzHsYAXfbXU8
-	 /VcoPes/EpYQESDqbkm0NZi/M90rrD3EopBhZbnQ=
-Date: Tue, 18 Mar 2025 15:37:08 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Jan Stancek <jstancek@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	R Nageswara Sastry <rnsastry@linux.ibm.com>,
-	Neal Gompa <neal@gompa.dev>
-Subject: Re: [PATCH 6.1&6.6 1/3] sign-file,extract-cert: move common SSL
- helper functions to a header
-Message-ID: <2025031852-angelfish-mouth-f455@gregkh>
-References: <20250318110124.2160941-1-chenhuacai@loongson.cn>
- <20250318110124.2160941-2-chenhuacai@loongson.cn>
- <2025031834-spotty-dipped-be36@gregkh>
- <CAAhV-H4y88jfpKp1mFytEjX4L0CErF=XFashZ9dXfwM58dPGGQ@mail.gmail.com>
+	b=WVHlHUakLlfN9xeuBYO1EJf+5CyU+WJKRkilNy467a1BnupPF2HSzG6De1fpXKFV+
+	 ix9jYHBoyySgyb6uel1Y6KTQEzU4+Rwm0HghzRyuSjF71hbCSnTEGnernC5xUEtu10
+	 +UeOIc/V5TKw7+jkC51H/NeBuaIOzIXiqjJlwYzUGV3n3dFHQ9MxYqNWDakJi0E6hg
+	 3eBuUyUh9Yz/C8EPNMpPnQhIe07ID+3WJ5N3wJyQiVpq4Skm6z+pxWjAjp5DobEjiB
+	 6Jrg3x/R+DiIvD5NG4zUjWrrB/2tNu1hT+SvmfpVy3qQGAt9drIa3KhZDqAUmDABl/
+	 j7eCAm37AJZIQ==
+Date: Tue, 18 Mar 2025 15:59:47 +0000
+From: Will Deacon <will@kernel.org>
+To: Alessandro Carminati <acarmina@redhat.com>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Alessandro Carminati <alessandro.carminati@gmail.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, loongarch@lists.linux.dev, x86@kernel.org,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v4 07/14] arm64: Add support for suppressing warning
+ backtraces
+Message-ID: <20250318155946.GC13829@willie-the-truck>
+References: <20250313114329.284104-1-acarmina@redhat.com>
+ <20250313114329.284104-8-acarmina@redhat.com>
+ <20250313122503.GA7438@willie-the-truck>
+ <CAGegRW5r3V2-_44-X353vS-GZwDYG=SVwc6MzSGE8GdFQuFoKA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -51,36 +72,66 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H4y88jfpKp1mFytEjX4L0CErF=XFashZ9dXfwM58dPGGQ@mail.gmail.com>
+In-Reply-To: <CAGegRW5r3V2-_44-X353vS-GZwDYG=SVwc6MzSGE8GdFQuFoKA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Mar 18, 2025 at 09:58:26PM +0800, Huacai Chen wrote:
-> Hi, Greg,
+On Thu, Mar 13, 2025 at 05:40:59PM +0100, Alessandro Carminati wrote:
+> On Thu, Mar 13, 2025 at 1:25 PM Will Deacon <will@kernel.org> wrote:
+> >
+> > On Thu, Mar 13, 2025 at 11:43:22AM +0000, Alessandro Carminati wrote:
+> > > diff --git a/arch/arm64/include/asm/bug.h b/arch/arm64/include/asm/bug.h
+> > > index 28be048db3f6..044c5e24a17d 100644
+> > > --- a/arch/arm64/include/asm/bug.h
+> > > +++ b/arch/arm64/include/asm/bug.h
+> > > @@ -11,8 +11,14 @@
+> > >
+> > >  #include <asm/asm-bug.h>
+> > >
+> > > +#ifdef HAVE_BUG_FUNCTION
+> > > +# define __BUG_FUNC  __func__
+> > > +#else
+> > > +# define __BUG_FUNC  NULL
+> > > +#endif
+> > > +
+> > >  #define __BUG_FLAGS(flags)                           \
+> > > -     asm volatile (__stringify(ASM_BUG_FLAGS(flags)));
+> > > +     asm volatile (__stringify(ASM_BUG_FLAGS(flags, %c0)) : : "i" (__BUG_FUNC));
+> >
+> > Why is 'i' the right asm constraint to use here? It seems a bit odd to
+> > use that for a pointer.
 > 
-> On Tue, Mar 18, 2025 at 9:25 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Mar 18, 2025 at 07:01:22PM +0800, Huacai Chen wrote:
-> > > From: Jan Stancek <jstancek@redhat.com>
-> > >
-> > > commit 300e6d4116f956b035281ec94297dc4dc8d4e1d3 upstream.
-> > >
-> > > Couple error handling helpers are repeated in both tools, so
-> > > move them to a common header.
-> > >
-> > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
-> > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-> > > Reviewed-by: Neal Gompa <neal@gompa.dev>
-> > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> >
-> > Is this "v2" as well?  the threading is all confusing here.  This is
-> > what my inbox looks like right now:
-> Yes, this is also V2, I'm very sorry to confuse you.
+> I received this code as legacy from a previous version.
+> In my review, I considered the case when HAVE_BUG_FUNCTION is defined:
+> Here, __BUG_FUNC is defined as __func__, which is the name of the
+> current function as a string literal.
+> Using the constraint "i" seems appropriate to me in this case.
+> 
+> However, when HAVE_BUG_FUNCTION is not defined:
+> __BUG_FUNC is defined as NULL. Initially, I considered it literal 0,
+> but after investigating your concern, I found:
+> 
+> ```
+> $ echo -E "#include <stdio.h>\n#include <stddef.h>\nint main()
+> {\nreturn 0;\n}" | aarch64-linux-gnu-gcc -E -dM - | grep NULL
+> #define NULL ((void *)0)
+> ```
+> 
+> I realized that NULL is actually a pointer that is not a link time
+> symbol, and using the "i" constraint with NULL may result in undefined
+> behavior.
+> 
+> Would the following alternative definition for __BUG_FUNC be more convincing?
+> 
+> ```
+> #ifdef HAVE_BUG_FUNCTION
+>     #define __BUG_FUNC __func__
+> #else
+>     #define __BUG_FUNC (uintptr_t)0
+> #endif
+> ```
+> Let me know your thoughts.
 
-Great!  Please resend them all as a "v3" so I'm not confused :)
+Thanks for the analysis; I hadn't noticed this specific issue, it just
+smelled a bit fishy. Anyway, the diff above looks better, thanks.
 
-thanks,
-
-greg k-h
+Will
