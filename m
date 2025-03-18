@@ -1,355 +1,134 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AB15207A0E
-	for <loongarch@lists.linux.dev>; Tue, 18 Mar 2025 11:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1C020B7FD;
+	Tue, 18 Mar 2025 11:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742295747; cv=none; b=itCLVX003YrmhcFggQIN1DSfCOvCiI62SzwnxVuypTfP2N8i8WhjPgFPWBmSUYEQVdFjCBW6SM3HMn+vZKBKDBMzTn5Y5K7scdOQ5/oLnXj2zkEPiEVuS9JGicvJSHDWFnlfmoc7oknqdwEcrgJsj5H/wNaDaCYluZVoZPXaWaU=
+	t=1742299077; cv=none; b=fvYcyfjIGeZNLdU8+taUI3k4E5kjl8B8U5frPB1g9ItsjN7yrcjea/kLp4k3TZxQ9fDBIHhoo1ETWOq9QhKwFX1mCPx8m/1pkYqwZId+rWzmj4kndns83LjLnQtT/b9yOJ+EnD8asIdLpxqxNWMtgjFVRdsQQ3fnYnsYkXIjGWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742295747; c=relaxed/simple;
-	bh=OwrZkwraIy+D4Vlns3UTlc0OPVYM49V4ksnXMUTmo7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jPsvF6nNMshsm1CcBXuKKTMCQxnnhKf8E6lm1MPfWEXKM9hH5WMmq17ErHgyi/xfT6zxDMefHGzm1FVyWGbQdAc2BLxqQpCc4XQT2vAwg0QdV1XfjjfaCa84GsrfrMUX/A3I7qq3enrno6J/VpMUvuk4SFBO92pKr1CuAcYKFqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8Bxlmm_UtlnE4ubAA--.942S3;
-	Tue, 18 Mar 2025 19:02:23 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowMDxDceOUtlnb6FRAA--.22930S5;
-	Tue, 18 Mar 2025 19:02:22 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Jan Stancek <jstancek@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	R Nageswara Sastry <rnsastry@linux.ibm.com>,
-	Neal Gompa <neal@gompa.dev>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 6.1&6.6 V2 3/3] sign-file,extract-cert: use pkcs11 provider for OPENSSL MAJOR >= 3
-Date: Tue, 18 Mar 2025 19:01:24 +0800
-Message-ID: <20250318110124.2160941-4-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250318110124.2160941-1-chenhuacai@loongson.cn>
-References: <20250318110124.2160941-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1742299077; c=relaxed/simple;
+	bh=CIhTjH9kKlO1VYGiipc2V9drjBD3Ayt0OkD0U7KRb6w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=glKBe4PT/F9TlKgVCpBMsUU1qGpCU5vlF42LRPWXW6uyzchHIjHdpkheeHrAket73nTRvDVDqRLsbo9wDd6N8N/vB11e3Q09Bx3ABm+AvMvJI2R7o2UUAoAeq77/dMtGy20TSrtlWas6S46ixoZATgbFlhtivOAMwXoKsjDdG8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNZz+D/d; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNZz+D/d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75850C4CEF7;
+	Tue, 18 Mar 2025 11:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742299076;
+	bh=CIhTjH9kKlO1VYGiipc2V9drjBD3Ayt0OkD0U7KRb6w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VNZz+D/dtbyshE97W4HnLDn48vAHhWJ1qM3mL/ZcYLXzJCavmJHa91JYiiOlMNJbz
+	 3UQHEcUGagflvTa1naQQ3WhxL7VDkHEqM2S7CkzCA9R2QNMrKsOF/87TV8TeAU7pag
+	 JnyeHsFK4NM+n6Sd6iwRDBgTTtsst7XHqqi+SMHGvuW0tYLqcabFNOqlgCauzVkD73
+	 FEV87vVnNi6+5cugxgHyXPjIWm09qmE4hdd7e5vWrscoz4DVCqYqP4MsFlrfEg/D+e
+	 hisoP8e3IL/aZBRIfu7TRQITKlDjGtX7HEA5nLU4mGdskuoLTKP3Pn1CaVYbWjJBBQ
+	 A9XO+vMkI9ejg==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac25d2b2354so942608466b.1;
+        Tue, 18 Mar 2025 04:57:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW9sIxGU8Ue/Xb1SKCMnfFTKJCI1nsoNxYU9tfHldaJ2lSmC+3rH+fjC26KKdrkrkYGtXma32PBtXI=@lists.linux.dev, AJvYcCWh+wegSZEbXAu1O4tyyJGjgZ7qIV7x6r0QmsTbqZzXL0ibIuGS0vKCRSMXoUEHYqi6dWtU@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzl4TjPYWBE/5L5N6YWP6P4zvTcPc/actlpc1Ge4tN+ujjGmqAO
+	8MerhiauVCQdMfjSm10655ukWFVCO9AX3V6EOr4crubu36Ny9BLBVFcXuWmxpz4aa9Owzvgz9NU
+	9yWel2EjYm+COWjylVDCXFig3syQ=
+X-Google-Smtp-Source: AGHT+IHWKrMLWQmDlK3EXFGkIz3JuWrB7n/PbIZxnJSxvCf68cavwFPKlU+WgeLv6v2/CTfArLyeiik7sHtiA+Oo+58=
+X-Received: by 2002:a17:907:1009:b0:ac3:3f10:e8e3 with SMTP id
+ a640c23a62f3a-ac33f10ed5cmr1299294766b.1.1742299074804; Tue, 18 Mar 2025
+ 04:57:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxDceOUtlnb6FRAA--.22930S5
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtw15Kr17GF4UuF43Kr4rZwc_yoW3Kr45pF
-	9xCFyYq340qrnrGr13Ar1Fg3srXr48Xw1avanxC393Gr4vya4UWF40gFWS93WxZ398J3Wa
-	v3yUXFW8Kr4kZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUjU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_ZF0_
-	GryDMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jNTmfUUUUU=
+References: <20250115-fix-riscv-rt_group_sched-v4-0-607606fe73a5@coelacanthus.name>
+ <20250115-fix-riscv-rt_group_sched-v4-4-607606fe73a5@coelacanthus.name> <t2dustbykx2qd24wazjeiw5hch5nwr6z2ewmaf4srg6r2grwrf@rdw47chzkef2>
+In-Reply-To: <t2dustbykx2qd24wazjeiw5hch5nwr6z2ewmaf4srg6r2grwrf@rdw47chzkef2>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 18 Mar 2025 19:57:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4fTGs-7EXE0EcR=P6GqHF2fokRE-kEte+cDmhjy=FYsA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jo4W5NNqo2SfcBdxKCe2OFxQs4im7DaCODl6wEw6MnCM3-sp2pnyba2ZAw
+Message-ID: <CAAhV-H4fTGs-7EXE0EcR=P6GqHF2fokRE-kEte+cDmhjy=FYsA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] arm: defconfig: drop RT_GROUP_SCHED=y from bcm2835/tegra/omap2plus
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Celeste Liu <uwu@coelacanthus.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, 
+	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Russell King <linux@armlinux.org.uk>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, Tony Lindgren <tony@atomide.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, 
+	Roger Quadros <rogerq@kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>, 
+	Thierry Reding <treding@nvidia.com>, soc@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jan Stancek <jstancek@redhat.com>
+On Fri, Mar 7, 2025 at 3:19=E2=80=AFAM Thierry Reding <thierry.reding@gmail=
+.com> wrote:
+>
+> On Wed, Jan 15, 2025 at 04:41:23AM +0800, Celeste Liu wrote:
+> > Commit 673ce00c5d6c ("ARM: omap2plus_defconfig: Add support for distros
+> > with systemd") said it's because of recommendation from systemd. But
+> > systemd changed their recommendation later.[1]
+> >
+> > For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierar=
+chy it
+> > needs an RT budget assigned, otherwise the processes in it will not be =
+able to
+> > get RT at all. The problem with RT group scheduling is that it requires=
+ the
+> > budget assigned but there's no way we could assign a default budget, si=
+nce the
+> > values to assign are both upper and lower time limits, are absolute, an=
+d need to
+> > be sum up to < 1 for each individal cgroup. That means we cannot really=
+ come up
+> > with values that would work by default in the general case.[2]
+> >
+> > For cgroup v2, it's almost unusable as well. If it turned on, the cpu c=
+ontroller
+> > can only be enabled when all RT processes are in the root cgroup. But i=
+t will
+> > lose the benefits of cgroup v2 if all RT process were placed in the sam=
+e cgroup.
+> >
+> > Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doe=
+sn't
+> > support it.
+> >
+> > [1]: https://github.com/systemd/systemd/commit/f4e74be1856b3ac058acbf1b=
+e321c31d5299f69f
+> > [2]: https://bugzilla.redhat.com/show_bug.cgi?id=3D1229700
+> >
+> > Tested-by: Stefan Wahren <wahrenst@gmx.net>
+> > Acked-by: Kevin Hilman <khilman@baylibre.com>
+> > Acked-by: Thierry Reding <treding@nvidia.com>
+> > Signed-off-by: Celeste Liu <uwu@coelacanthus.name>
+> > ---
+> >  arch/arm/configs/bcm2835_defconfig   | 1 -
+> >  arch/arm/configs/omap2plus_defconfig | 1 -
+> >  arch/arm/configs/tegra_defconfig     | 1 -
+> >  3 files changed, 3 deletions(-)
+>
+> Hi Arnd,
+>
+> is this something that you could pick up? I think so far only the RISC-V
+> patch was picked up, but nobody seems to feel responsible for the ARM
+> patch here.
+I will take the LoongArch patch, but may be squashed to another one
+about config file update.
 
-commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
+Huacai
 
-ENGINE API has been deprecated since OpenSSL version 3.0 [1].
-Distros have started dropping support from headers and in future
-it will likely disappear also from library.
-
-It has been superseded by the PROVIDER API, so use it instead
-for OPENSSL MAJOR >= 3.
-
-[1] https://github.com/openssl/openssl/blob/master/README-ENGINES.md
-
-[jarkko: fixed up alignment issues reported by checkpatch.pl --strict]
-
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
- scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
- 2 files changed, 138 insertions(+), 58 deletions(-)
-
-diff --git a/certs/extract-cert.c b/certs/extract-cert.c
-index 61bbe0085671..7d6d468ed612 100644
---- a/certs/extract-cert.c
-+++ b/certs/extract-cert.c
-@@ -21,17 +21,18 @@
- #include <openssl/bio.h>
- #include <openssl/pem.h>
- #include <openssl/err.h>
--#include <openssl/engine.h>
--
-+#if OPENSSL_VERSION_MAJOR >= 3
-+# define USE_PKCS11_PROVIDER
-+# include <openssl/provider.h>
-+# include <openssl/store.h>
-+#else
-+# if !defined(OPENSSL_NO_ENGINE) && !defined(OPENSSL_NO_DEPRECATED_3_0)
-+#  define USE_PKCS11_ENGINE
-+#  include <openssl/engine.h>
-+# endif
-+#endif
- #include "ssl-common.h"
- 
--/*
-- * OpenSSL 3.0 deprecates the OpenSSL's ENGINE API.
-- *
-- * Remove this if/when that API is no longer used
-- */
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--
- #define PKEY_ID_PKCS7 2
- 
- static __attribute__((noreturn))
-@@ -61,6 +62,66 @@ static void write_cert(X509 *x509)
- 		fprintf(stderr, "Extracted cert: %s\n", buf);
- }
- 
-+static X509 *load_cert_pkcs11(const char *cert_src)
-+{
-+	X509 *cert = NULL;
-+#ifdef USE_PKCS11_PROVIDER
-+	OSSL_STORE_CTX *store;
-+
-+	if (!OSSL_PROVIDER_try_load(NULL, "pkcs11", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(pkcs11)");
-+	if (!OSSL_PROVIDER_try_load(NULL, "default", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(default)");
-+
-+	store = OSSL_STORE_open(cert_src, NULL, NULL, NULL, NULL);
-+	ERR(!store, "OSSL_STORE_open");
-+
-+	while (!OSSL_STORE_eof(store)) {
-+		OSSL_STORE_INFO *info = OSSL_STORE_load(store);
-+
-+		if (!info) {
-+			drain_openssl_errors(__LINE__, 0);
-+			continue;
-+		}
-+		if (OSSL_STORE_INFO_get_type(info) == OSSL_STORE_INFO_CERT) {
-+			cert = OSSL_STORE_INFO_get1_CERT(info);
-+			ERR(!cert, "OSSL_STORE_INFO_get1_CERT");
-+		}
-+		OSSL_STORE_INFO_free(info);
-+		if (cert)
-+			break;
-+	}
-+	OSSL_STORE_close(store);
-+#elif defined(USE_PKCS11_ENGINE)
-+		ENGINE *e;
-+		struct {
-+			const char *cert_id;
-+			X509 *cert;
-+		} parms;
-+
-+		parms.cert_id = cert_src;
-+		parms.cert = NULL;
-+
-+		ENGINE_load_builtin_engines();
-+		drain_openssl_errors(__LINE__, 1);
-+		e = ENGINE_by_id("pkcs11");
-+		ERR(!e, "Load PKCS#11 ENGINE");
-+		if (ENGINE_init(e))
-+			drain_openssl_errors(__LINE__, 1);
-+		else
-+			ERR(1, "ENGINE_init");
-+		if (key_pass)
-+			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
-+		ENGINE_ctrl_cmd(e, "LOAD_CERT_CTRL", 0, &parms, NULL, 1);
-+		ERR(!parms.cert, "Get X.509 from PKCS#11");
-+		cert = parms.cert;
-+#else
-+		fprintf(stderr, "no pkcs11 engine/provider available\n");
-+		exit(1);
-+#endif
-+	return cert;
-+}
-+
- int main(int argc, char **argv)
- {
- 	char *cert_src;
-@@ -89,28 +150,10 @@ int main(int argc, char **argv)
- 		fclose(f);
- 		exit(0);
- 	} else if (!strncmp(cert_src, "pkcs11:", 7)) {
--		ENGINE *e;
--		struct {
--			const char *cert_id;
--			X509 *cert;
--		} parms;
-+		X509 *cert = load_cert_pkcs11(cert_src);
- 
--		parms.cert_id = cert_src;
--		parms.cert = NULL;
--
--		ENGINE_load_builtin_engines();
--		drain_openssl_errors(__LINE__, 1);
--		e = ENGINE_by_id("pkcs11");
--		ERR(!e, "Load PKCS#11 ENGINE");
--		if (ENGINE_init(e))
--			drain_openssl_errors(__LINE__, 1);
--		else
--			ERR(1, "ENGINE_init");
--		if (key_pass)
--			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
--		ENGINE_ctrl_cmd(e, "LOAD_CERT_CTRL", 0, &parms, NULL, 1);
--		ERR(!parms.cert, "Get X.509 from PKCS#11");
--		write_cert(parms.cert);
-+		ERR(!cert, "load_cert_pkcs11 failed");
-+		write_cert(cert);
- 	} else {
- 		BIO *b;
- 		X509 *x509;
-diff --git a/scripts/sign-file.c b/scripts/sign-file.c
-index bb3fdf1a617c..7070245edfc1 100644
---- a/scripts/sign-file.c
-+++ b/scripts/sign-file.c
-@@ -27,17 +27,18 @@
- #include <openssl/evp.h>
- #include <openssl/pem.h>
- #include <openssl/err.h>
--#include <openssl/engine.h>
--
-+#if OPENSSL_VERSION_MAJOR >= 3
-+# define USE_PKCS11_PROVIDER
-+# include <openssl/provider.h>
-+# include <openssl/store.h>
-+#else
-+# if !defined(OPENSSL_NO_ENGINE) && !defined(OPENSSL_NO_DEPRECATED_3_0)
-+#  define USE_PKCS11_ENGINE
-+#  include <openssl/engine.h>
-+# endif
-+#endif
- #include "ssl-common.h"
- 
--/*
-- * OpenSSL 3.0 deprecates the OpenSSL's ENGINE API.
-- *
-- * Remove this if/when that API is no longer used
-- */
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--
- /*
-  * Use CMS if we have openssl-1.0.0 or newer available - otherwise we have to
-  * assume that it's not available and its header file is missing and that we
-@@ -106,28 +107,64 @@ static int pem_pw_cb(char *buf, int len, int w, void *v)
- 	return pwlen;
- }
- 
--static EVP_PKEY *read_private_key(const char *private_key_name)
-+static EVP_PKEY *read_private_key_pkcs11(const char *private_key_name)
- {
--	EVP_PKEY *private_key;
-+	EVP_PKEY *private_key = NULL;
-+#ifdef USE_PKCS11_PROVIDER
-+	OSSL_STORE_CTX *store;
- 
--	if (!strncmp(private_key_name, "pkcs11:", 7)) {
--		ENGINE *e;
-+	if (!OSSL_PROVIDER_try_load(NULL, "pkcs11", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(pkcs11)");
-+	if (!OSSL_PROVIDER_try_load(NULL, "default", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(default)");
-+
-+	store = OSSL_STORE_open(private_key_name, NULL, NULL, NULL, NULL);
-+	ERR(!store, "OSSL_STORE_open");
- 
--		ENGINE_load_builtin_engines();
-+	while (!OSSL_STORE_eof(store)) {
-+		OSSL_STORE_INFO *info = OSSL_STORE_load(store);
-+
-+		if (!info) {
-+			drain_openssl_errors(__LINE__, 0);
-+			continue;
-+		}
-+		if (OSSL_STORE_INFO_get_type(info) == OSSL_STORE_INFO_PKEY) {
-+			private_key = OSSL_STORE_INFO_get1_PKEY(info);
-+			ERR(!private_key, "OSSL_STORE_INFO_get1_PKEY");
-+		}
-+		OSSL_STORE_INFO_free(info);
-+		if (private_key)
-+			break;
-+	}
-+	OSSL_STORE_close(store);
-+#elif defined(USE_PKCS11_ENGINE)
-+	ENGINE *e;
-+
-+	ENGINE_load_builtin_engines();
-+	drain_openssl_errors(__LINE__, 1);
-+	e = ENGINE_by_id("pkcs11");
-+	ERR(!e, "Load PKCS#11 ENGINE");
-+	if (ENGINE_init(e))
- 		drain_openssl_errors(__LINE__, 1);
--		e = ENGINE_by_id("pkcs11");
--		ERR(!e, "Load PKCS#11 ENGINE");
--		if (ENGINE_init(e))
--			drain_openssl_errors(__LINE__, 1);
--		else
--			ERR(1, "ENGINE_init");
--		if (key_pass)
--			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0),
--			    "Set PKCS#11 PIN");
--		private_key = ENGINE_load_private_key(e, private_key_name,
--						      NULL, NULL);
--		ERR(!private_key, "%s", private_key_name);
-+	else
-+		ERR(1, "ENGINE_init");
-+	if (key_pass)
-+		ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
-+	private_key = ENGINE_load_private_key(e, private_key_name, NULL, NULL);
-+	ERR(!private_key, "%s", private_key_name);
-+#else
-+	fprintf(stderr, "no pkcs11 engine/provider available\n");
-+	exit(1);
-+#endif
-+	return private_key;
-+}
-+
-+static EVP_PKEY *read_private_key(const char *private_key_name)
-+{
-+	if (!strncmp(private_key_name, "pkcs11:", 7)) {
-+		return read_private_key_pkcs11(private_key_name);
- 	} else {
-+		EVP_PKEY *private_key;
- 		BIO *b;
- 
- 		b = BIO_new_file(private_key_name, "rb");
-@@ -136,9 +173,9 @@ static EVP_PKEY *read_private_key(const char *private_key_name)
- 						      NULL);
- 		ERR(!private_key, "%s", private_key_name);
- 		BIO_free(b);
--	}
- 
--	return private_key;
-+		return private_key;
-+	}
- }
- 
- static X509 *read_x509(const char *x509_name)
--- 
-2.47.1
-
+>
+> Thierry
