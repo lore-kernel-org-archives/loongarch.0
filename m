@@ -1,101 +1,102 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C2317E0
-	for <loongarch@lists.linux.dev>; Wed, 19 Mar 2025 02:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507608F4A
+	for <loongarch@lists.linux.dev>; Wed, 19 Mar 2025 04:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742352862; cv=none; b=LfRNB1NjZ1jtVnTjmI9WIMJopcWa0bArm0V1cY7cGsQZginRXoEhRhrHrc3Y35p5IOPwFlVYbKcBI+U/gjnf9zd4CCTqrDhpWlwqy4Xzl6bQuJMUJHIZ3Mx7Y+jkbeP2a5SSioXjhJvGo0/TpApRmrHFcZQrpJFoGj2I75lAUBo=
+	t=1742358867; cv=none; b=IazNb04Y2Br0sqH23hOrjMX4+sG1m3NVpjPEccyMnmWXfEfZ/jfAxbMyE7mt0mAHhsfrfBjiIBxwbZ1y8KoHmKC5usKSh3uKw7TtGR6c5MWwHAHPiT2QNrIiPqe87b2X2oxmKiBRJlLtgBebXoIYQ46/ElyG+m0kvwg3LUY/W9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742352862; c=relaxed/simple;
-	bh=dKN4xjY/HkeBbjfZnhzsdYX4yrkC2f8e+I8NBbNgDEY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O00kxNgA3rD2yUzAk8MS3KdXloFKVIqnsPAegM6MM0D2C/XgRKL12FmsRHdANwC1Zk5mCID7GRg6KvA/SU/9Smk02BhuFJt/adSml7cjOOR+F22eDu2u2h/nrcFttbu0kcMR99oqIBy5u/NZu0RUn/6kwMV5W7EPgSeOQ4VedEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I/vR9Vpk; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742358867; c=relaxed/simple;
+	bh=tb219t++8fRJ9kz/h+J19vyhypnb0UhgT9+U8D020bc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BNEzNgYXZexK8LYBgChR43OUdBFOM/ix2U0hI1qny0sHXqAhMM332wjosf4dpRUhm/sP8HA92cj/yi0oAWGuxvNb0uvXjpGAHkmd/H7hY6mAthqxuGooAVvdR5Dr+UhQnTl9P6Be2e6p+iqVk/e2V1qEuMucivn3HutsntmHhjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQEQlezT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/vR9Vpk"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223594b3c6dso137122005ad.2
-        for <loongarch@lists.linux.dev>; Tue, 18 Mar 2025 19:54:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742352861; x=1742957661; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ek7cme2/eudsEK193BJL90oVx+fNXmIhOoJyqv4zYew=;
-        b=I/vR9Vpkv/PF3tKhXeqf9EC8xsf7eeoVfQMtixdMn6RS6qtp/vznbnd+r2N2B2IgRZ
-         MO1v3pNyEAE2XuDRstnovIWqhl6s45XjOdBTzYAeoTO0Ks/rWkso4JcjVHHYQ6NhobaO
-         rmjzADLPFw4vTqbWORpoXGmcpZJXVfziOR+fU8+REtAtDgk3phz6lln6Y9l1qOIbtAFY
-         6q9tsrl+4AI9oifWIWWMiqm0/LKrSiTb0PeBQwgSrGmgGVa4q1t3LMgtiTBBi2PGC2Or
-         fZx12GsOBEliDH1U3tlCxJsSH4q8hVztJrZZJpNXGLD2yL4Xf/8IP/L93H/i+12JVqD0
-         bmZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742352861; x=1742957661;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ek7cme2/eudsEK193BJL90oVx+fNXmIhOoJyqv4zYew=;
-        b=Cd5O2kh5YoS6Uu5h9iXDN4iKRoGsWGh0KKCqH3Go9KpTlqqGkT7MLJf5zwygQ0k+jX
-         s/AVP+jjLWLwD/ROHrs9HpfoAJdlNNlA7+jAUhhkNv0PDxupCbYKMwhVYlzBmAYkSixG
-         ot24e43NfHNl5/OcaHmanbTH1soq8BF/YyelK1ymt3iecGinRMgRjNxX+4UUcfj1EsFW
-         vgHs7JWVtlgUP90uQpSN3vb3ZxU7J+CIY1Cm/yGVaimGCipel5aAnSnYgqZ/D5T+O1ro
-         rkkjOr3hu53v8XpqlwkSocoCiMEG5YMkHln9wKg1GWW8X/QrPKnTt96JT8pH93atPoMx
-         JSWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWP8wMyO/9kIJ9yeucHC/6EvSdqxV0VpkoDj9yzQIveMlPqkDVd+w50IN9XxEHm7fuoIt0QnmuPpzM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyWLgBTiAQ44G+L2zId1oiKdTmE7roxPXLv1NSgLo58e2Y3lxi0
-	0Q7TfunWalKya8o9VNN1HPuH06g0YPmfPyxBxLjSW5Of7CUT+uir
-X-Gm-Gg: ASbGncsM8jzXKsx8l3+IL4xiV429DihYfbh7LNUG7oR5ZHxe7LLCvaORaZHYKaRJ82h
-	j8CHX2cI8p/LYMWKnUxJYK+nVVk9NP2Ti6XshI49hIvYfwyMVDzrR+NfOalRLBvTQkM2fe8n5Nt
-	/8V3iMedUpgGFqQTM8Oeh7xragDdQUzO46DjuwOdpKvV9gQ9NrLmvZ4Tslqi9Y/g90j3/9WZ4Dw
-	ezKzDs9DaKYlCtfgiZfI+oIElVxbcJdZrf1mcRgW3cHt4beN+wyS5m8p4LzMc4h46W7g86/5Wgk
-	mZeD6/u9XqkSPzwxnMO+m8Jtpz1A6mkOLAWonemb5ZfvY3VY5yX8EIs/ly3wxDIX5w==
-X-Google-Smtp-Source: AGHT+IF0dfIeVetmSPcgsPVe9LLjyiIoUyu5s12IyD3+OHyJqEQkUDfF5BV0koR7p2kdcOfRbFxjgA==
-X-Received: by 2002:a17:902:ccd1:b0:21f:5cd8:c67 with SMTP id d9443c01a7336-22649a47794mr14215185ad.31.1742352860696;
-        Tue, 18 Mar 2025 19:54:20 -0700 (PDT)
-Received: from localhost.localdomain ([114.254.9.37])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-225c6bbfdfesm102978775ad.203.2025.03.18.19.54.17
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 18 Mar 2025 19:54:20 -0700 (PDT)
-From: Miaoqian Lin <linmq006@gmail.com>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Hongliang Wang <wanghongliang@loongson.cn>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: linmq006@gmail.com
-Subject: [PATCH] Loongarch: Fix device node refcount leak in fdt_cpu_clk_init
-Date: Wed, 19 Mar 2025 10:54:10 +0800
-Message-Id: <20250319025413.67014-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQEQlezT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8150C4CEF2
+	for <loongarch@lists.linux.dev>; Wed, 19 Mar 2025 04:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742358866;
+	bh=tb219t++8fRJ9kz/h+J19vyhypnb0UhgT9+U8D020bc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TQEQlezT3icpgS5UbjL3/nuA4SljClyWE12hCxCswaAYUwAkXl/2EHo5W3b3aqoPz
+	 KybXxSvVCkAuoyju4KRem5WqKV+LjTfvOf34qtC4CNwJ5Ds+duQ/QufgxWQWafBcXG
+	 jyPjFDWdzelKK6FYV0heWl/NYrz1R+uG7PL3LMyzJ5d/cNoYvlHaG4C7rUoKtByI99
+	 miTmEcsa2ouf8y+7BztHintLLGValjs6nxGIMFSkyMIIH1lD+VL03wbqunD0oBEIcQ
+	 HZ2rBNViveTmHkSgc7OT14V7zRK7JOrfnHkDFJQhO7lRWa1su5O35ORw92tMBe4Zgt
+	 7vEmB7/ZzsAlA==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac298c8fa50so1181497166b.1
+        for <loongarch@lists.linux.dev>; Tue, 18 Mar 2025 21:34:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWggSoh0670WMPE34KST0IUHUPmca2RE1uHH4DcsH5kUwf/q1tmFqRer34vgECLdmUvvOiOE8N44wI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwFyK91jmYR+tpavn85Lz9io46xzBgViWkvpr4DludzZ0FoNlQT
+	TvMeH8+xclC0fY5Z8hnmkDCEIHM3A8qCG6/GfRY//W+LgKKmahXntZXB7bym5qY4OvPQJ/2W77r
+	8/8F2Oon76xI5HeO1XA7G3zfdQOA=
+X-Google-Smtp-Source: AGHT+IEKrD5BVHlMH5cIfN9exRPHgKjBOjN4LuEaeAb1uQmrKcOZ45guA8zoWyTH6F5sw4ba/gyC/dA0IVDr8yKg6Bs=
+X-Received: by 2002:a17:907:d7c7:b0:abf:68b5:f798 with SMTP id
+ a640c23a62f3a-ac3b7a9bc3amr122518966b.9.1742358865242; Tue, 18 Mar 2025
+ 21:34:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250318110124.2160941-1-chenhuacai@loongson.cn>
+ <20250318110124.2160941-2-chenhuacai@loongson.cn> <2025031834-spotty-dipped-be36@gregkh>
+ <CAAhV-H4y88jfpKp1mFytEjX4L0CErF=XFashZ9dXfwM58dPGGQ@mail.gmail.com> <2025031852-angelfish-mouth-f455@gregkh>
+In-Reply-To: <2025031852-angelfish-mouth-f455@gregkh>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 19 Mar 2025 12:34:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4ns+HQ30p++eG97iaDBm4pZB+8XpjhcaC1Czx_iex6FQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq1LpF2KOdiplv8HT0Ag3bf_-gr0IrAGadWDR9ZsBLQNMLwC9_sXBuayzA
+Message-ID: <CAAhV-H4ns+HQ30p++eG97iaDBm4pZB+8XpjhcaC1Czx_iex6FQ@mail.gmail.com>
+Subject: Re: [PATCH 6.1&6.6 1/3] sign-file,extract-cert: move common SSL
+ helper functions to a header
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, 
+	David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, 
+	Jan Stancek <jstancek@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	R Nageswara Sastry <rnsastry@linux.ibm.com>, Neal Gompa <neal@gompa.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add missing of_node_put() to properly handle the reference count of the
-device node obtained from of_get_cpu_node().
+On Tue, Mar 18, 2025 at 10:38=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Mar 18, 2025 at 09:58:26PM +0800, Huacai Chen wrote:
+> > Hi, Greg,
+> >
+> > On Tue, Mar 18, 2025 at 9:25=E2=80=AFPM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Mar 18, 2025 at 07:01:22PM +0800, Huacai Chen wrote:
+> > > > From: Jan Stancek <jstancek@redhat.com>
+> > > >
+> > > > commit 300e6d4116f956b035281ec94297dc4dc8d4e1d3 upstream.
+> > > >
+> > > > Couple error handling helpers are repeated in both tools, so
+> > > > move them to a common header.
+> > > >
+> > > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
+> > > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+> > > > Reviewed-by: Neal Gompa <neal@gompa.dev>
+> > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > ---
+> > >
+> > > Is this "v2" as well?  the threading is all confusing here.  This is
+> > > what my inbox looks like right now:
+> > Yes, this is also V2, I'm very sorry to confuse you.
+>
+> Great!  Please resend them all as a "v3" so I'm not confused :)
+OK, thanks.
 
-Fixes: 44a01f1f726a ("LoongArch: Parsing CPU-related information from DTS")
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
----
- arch/loongarch/kernel/env.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-index 2f1f5b08638f..01aea44cf4b0 100644
---- a/arch/loongarch/kernel/env.c
-+++ b/arch/loongarch/kernel/env.c
-@@ -68,6 +68,7 @@ static int __init fdt_cpu_clk_init(void)
- 		return -ENODEV;
- 
- 	clk = of_clk_get(np, 0);
-+	of_node_put(np);
- 	if (IS_ERR(clk))
- 		return -ENODEV;
- 
--- 
-2.39.5 (Apple Git-154)
-
+Huacai
+>
+> thanks,
+>
+> greg k-h
