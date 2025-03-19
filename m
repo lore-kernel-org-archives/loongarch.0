@@ -1,355 +1,151 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A4B8211A0E
-	for <loongarch@lists.linux.dev>; Wed, 19 Mar 2025 06:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A59B250BF9
+	for <loongarch@lists.linux.dev>; Wed, 19 Mar 2025 08:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742366495; cv=none; b=PcS4Vocj1T7VCKMjaVKY/OA+h9lUEDGbDwiLYt/52unZgvTNBKuvEryHmJ5ltFyauUphYGd6J37j5AzfPKEult5qXOajXxDUr/gKrpS0ZU4974OKYWzdWcTypJmh/ZtddisxoiWJ8UZv10sP3tWpPFUAtUaGC/wbtiQWrGC6bSI=
+	t=1742372406; cv=none; b=ny9fw6RmHy/pgwviwLs9LDxYKL8YYHB2XvZzOllM4ipdXUSw1UQGb7HaOcSEAefNCJMbR5HS0eLpi4vb1jyGRmJiyJGdP1hv3pRlmn+kJutOyU3XnFZFnrmMhn6igENy5KeCLNSihus0YpP0igameG5Fx4E9qi0iKYCMH/YKwCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742366495; c=relaxed/simple;
-	bh=OwrZkwraIy+D4Vlns3UTlc0OPVYM49V4ksnXMUTmo7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RblpSTcmaJ+OS6I8sNNZ21SR9P49Gzhqw+wt7qIhuqDbmKbFMW3GOYVSdBUspqP9gLB0VdJLf3vAbYT0d+5QbSYd1Z3gRVlLMqYmUX7X4lLgHqWdxLPIGMwNewyULJ238qpLn4KwzMRuPkXnqO0y4d9epL9c/gDTTy7uhpaVHx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8AxCGobZ9pnEL6cAA--.2890S3;
-	Wed, 19 Mar 2025 14:41:31 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowMAxHsfoZtpnCTFTAA--.22672S5;
-	Wed, 19 Mar 2025 14:41:29 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Jan Stancek <jstancek@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	R Nageswara Sastry <rnsastry@linux.ibm.com>,
-	Neal Gompa <neal@gompa.dev>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11 provider for OPENSSL MAJOR >= 3
-Date: Wed, 19 Mar 2025 14:40:31 +0800
-Message-ID: <20250319064031.2971073-4-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250319064031.2971073-1-chenhuacai@loongson.cn>
-References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1742372406; c=relaxed/simple;
+	bh=9OlvM4XUWWvrHJOd2iYbZSXPoeKrvur3cTL1QmV2LNQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jGPJqRUmdTHdWfAUsr7ntxP/W8arq3G/Iffg08MrASUp/VinXPonljuAYzkK09NwFa5LW256RcQKiQlbpa3nO9gVg/akVdb+kbdE6zGg2iHxeMZU/vNdIWv3DZnmvfggYrbvm7+1mN8FpBwV1uXHo4CO0bx/W3CS98Eh0Msc7N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZHh8p3p47z9sSY;
+	Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 5Pdv_1f5SWZW; Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZHh8p2Mb8z9sSX;
+	Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2617E8B78F;
+	Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id K6S1MuFrSThd; Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 585CB8B763;
+	Wed, 19 Mar 2025 09:05:28 +0100 (CET)
+Message-ID: <a64bf821-ea90-4fd9-92ec-13bf7b7a3067@csgroup.eu>
+Date: Wed, 19 Mar 2025 09:05:27 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/14] arm64: Add support for suppressing warning
+ backtraces
+To: Will Deacon <will@kernel.org>, Alessandro Carminati <acarmina@redhat.com>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+ Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Kees Cook <keescook@chromium.org>, Daniel Diaz <daniel.diaz@linaro.org>,
+ David Gow <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>,
+ Brendan Higgins <brendan.higgins@linux.dev>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard
+ <mripard@kernel.org>, =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?=
+ <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Guenter Roeck <linux@roeck-us.net>,
+ Alessandro Carminati <alessandro.carminati@gmail.com>,
+ Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org,
+ kunit-dev@googlegroups.com, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ loongarch@lists.linux.dev, x86@kernel.org,
+ Linux Kernel Functional Testing <lkft@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>
+References: <20250313114329.284104-1-acarmina@redhat.com>
+ <20250313114329.284104-8-acarmina@redhat.com>
+ <20250313122503.GA7438@willie-the-truck>
+ <CAGegRW5r3V2-_44-X353vS-GZwDYG=SVwc6MzSGE8GdFQuFoKA@mail.gmail.com>
+ <20250318155946.GC13829@willie-the-truck>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250318155946.GC13829@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxHsfoZtpnCTFTAA--.22672S5
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtw15Kr17GF4UuF43Kr4rZwc_yoW3Kr45pF
-	9xCFyYq340qrnrGr13Ar1Fg3srXr48Xw1avanxC393Gr4vya4UWF40gFWS93WxZ398J3Wa
-	v3yUXFW8Kr4kZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8_gA5UUUUU==
 
-From: Jan Stancek <jstancek@redhat.com>
 
-commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
 
-ENGINE API has been deprecated since OpenSSL version 3.0 [1].
-Distros have started dropping support from headers and in future
-it will likely disappear also from library.
+Le 18/03/2025 à 16:59, Will Deacon a écrit :
+> On Thu, Mar 13, 2025 at 05:40:59PM +0100, Alessandro Carminati wrote:
+>> On Thu, Mar 13, 2025 at 1:25 PM Will Deacon <will@kernel.org> wrote:
+>>>
+>>> On Thu, Mar 13, 2025 at 11:43:22AM +0000, Alessandro Carminati wrote:
+>>>> diff --git a/arch/arm64/include/asm/bug.h b/arch/arm64/include/asm/bug.h
+>>>> index 28be048db3f6..044c5e24a17d 100644
+>>>> --- a/arch/arm64/include/asm/bug.h
+>>>> +++ b/arch/arm64/include/asm/bug.h
+>>>> @@ -11,8 +11,14 @@
+>>>>
+>>>>   #include <asm/asm-bug.h>
+>>>>
+>>>> +#ifdef HAVE_BUG_FUNCTION
+>>>> +# define __BUG_FUNC  __func__
+>>>> +#else
+>>>> +# define __BUG_FUNC  NULL
+>>>> +#endif
+>>>> +
+>>>>   #define __BUG_FLAGS(flags)                           \
+>>>> -     asm volatile (__stringify(ASM_BUG_FLAGS(flags)));
+>>>> +     asm volatile (__stringify(ASM_BUG_FLAGS(flags, %c0)) : : "i" (__BUG_FUNC));
+>>>
+>>> Why is 'i' the right asm constraint to use here? It seems a bit odd to
+>>> use that for a pointer.
+>>
+>> I received this code as legacy from a previous version.
+>> In my review, I considered the case when HAVE_BUG_FUNCTION is defined:
+>> Here, __BUG_FUNC is defined as __func__, which is the name of the
+>> current function as a string literal.
+>> Using the constraint "i" seems appropriate to me in this case.
+>>
+>> However, when HAVE_BUG_FUNCTION is not defined:
+>> __BUG_FUNC is defined as NULL. Initially, I considered it literal 0,
+>> but after investigating your concern, I found:
+>>
+>> ```
+>> $ echo -E "#include <stdio.h>\n#include <stddef.h>\nint main()
+>> {\nreturn 0;\n}" | aarch64-linux-gnu-gcc -E -dM - | grep NULL
+>> #define NULL ((void *)0)
+>> ```
+>>
+>> I realized that NULL is actually a pointer that is not a link time
+>> symbol, and using the "i" constraint with NULL may result in undefined
+>> behavior.
+>>
+>> Would the following alternative definition for __BUG_FUNC be more convincing?
+>>
+>> ```
+>> #ifdef HAVE_BUG_FUNCTION
+>>      #define __BUG_FUNC __func__
+>> #else
+>>      #define __BUG_FUNC (uintptr_t)0
+>> #endif
+>> ```
+>> Let me know your thoughts.
+> 
+> Thanks for the analysis; I hadn't noticed this specific issue, it just
+> smelled a bit fishy. Anyway, the diff above looks better, thanks.
 
-It has been superseded by the PROVIDER API, so use it instead
-for OPENSSL MAJOR >= 3.
+That propably deserves a comment.
 
-[1] https://github.com/openssl/openssl/blob/master/README-ENGINES.md
+Doesn't sparse and/or checkpatch complain about 0 being used in lieu of 
+NULL ?
 
-[jarkko: fixed up alignment issues reported by checkpatch.pl --strict]
+By the way I had similar problem in the past with GCC not seeing NULL as 
+a __builtin_constant_p(), refer commit 1d8f739b07bd ("powerpc/kuap: Fix 
+set direction in allow/prevent_user_access()")
 
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
- scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
- 2 files changed, 138 insertions(+), 58 deletions(-)
-
-diff --git a/certs/extract-cert.c b/certs/extract-cert.c
-index 61bbe0085671..7d6d468ed612 100644
---- a/certs/extract-cert.c
-+++ b/certs/extract-cert.c
-@@ -21,17 +21,18 @@
- #include <openssl/bio.h>
- #include <openssl/pem.h>
- #include <openssl/err.h>
--#include <openssl/engine.h>
--
-+#if OPENSSL_VERSION_MAJOR >= 3
-+# define USE_PKCS11_PROVIDER
-+# include <openssl/provider.h>
-+# include <openssl/store.h>
-+#else
-+# if !defined(OPENSSL_NO_ENGINE) && !defined(OPENSSL_NO_DEPRECATED_3_0)
-+#  define USE_PKCS11_ENGINE
-+#  include <openssl/engine.h>
-+# endif
-+#endif
- #include "ssl-common.h"
- 
--/*
-- * OpenSSL 3.0 deprecates the OpenSSL's ENGINE API.
-- *
-- * Remove this if/when that API is no longer used
-- */
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--
- #define PKEY_ID_PKCS7 2
- 
- static __attribute__((noreturn))
-@@ -61,6 +62,66 @@ static void write_cert(X509 *x509)
- 		fprintf(stderr, "Extracted cert: %s\n", buf);
- }
- 
-+static X509 *load_cert_pkcs11(const char *cert_src)
-+{
-+	X509 *cert = NULL;
-+#ifdef USE_PKCS11_PROVIDER
-+	OSSL_STORE_CTX *store;
-+
-+	if (!OSSL_PROVIDER_try_load(NULL, "pkcs11", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(pkcs11)");
-+	if (!OSSL_PROVIDER_try_load(NULL, "default", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(default)");
-+
-+	store = OSSL_STORE_open(cert_src, NULL, NULL, NULL, NULL);
-+	ERR(!store, "OSSL_STORE_open");
-+
-+	while (!OSSL_STORE_eof(store)) {
-+		OSSL_STORE_INFO *info = OSSL_STORE_load(store);
-+
-+		if (!info) {
-+			drain_openssl_errors(__LINE__, 0);
-+			continue;
-+		}
-+		if (OSSL_STORE_INFO_get_type(info) == OSSL_STORE_INFO_CERT) {
-+			cert = OSSL_STORE_INFO_get1_CERT(info);
-+			ERR(!cert, "OSSL_STORE_INFO_get1_CERT");
-+		}
-+		OSSL_STORE_INFO_free(info);
-+		if (cert)
-+			break;
-+	}
-+	OSSL_STORE_close(store);
-+#elif defined(USE_PKCS11_ENGINE)
-+		ENGINE *e;
-+		struct {
-+			const char *cert_id;
-+			X509 *cert;
-+		} parms;
-+
-+		parms.cert_id = cert_src;
-+		parms.cert = NULL;
-+
-+		ENGINE_load_builtin_engines();
-+		drain_openssl_errors(__LINE__, 1);
-+		e = ENGINE_by_id("pkcs11");
-+		ERR(!e, "Load PKCS#11 ENGINE");
-+		if (ENGINE_init(e))
-+			drain_openssl_errors(__LINE__, 1);
-+		else
-+			ERR(1, "ENGINE_init");
-+		if (key_pass)
-+			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
-+		ENGINE_ctrl_cmd(e, "LOAD_CERT_CTRL", 0, &parms, NULL, 1);
-+		ERR(!parms.cert, "Get X.509 from PKCS#11");
-+		cert = parms.cert;
-+#else
-+		fprintf(stderr, "no pkcs11 engine/provider available\n");
-+		exit(1);
-+#endif
-+	return cert;
-+}
-+
- int main(int argc, char **argv)
- {
- 	char *cert_src;
-@@ -89,28 +150,10 @@ int main(int argc, char **argv)
- 		fclose(f);
- 		exit(0);
- 	} else if (!strncmp(cert_src, "pkcs11:", 7)) {
--		ENGINE *e;
--		struct {
--			const char *cert_id;
--			X509 *cert;
--		} parms;
-+		X509 *cert = load_cert_pkcs11(cert_src);
- 
--		parms.cert_id = cert_src;
--		parms.cert = NULL;
--
--		ENGINE_load_builtin_engines();
--		drain_openssl_errors(__LINE__, 1);
--		e = ENGINE_by_id("pkcs11");
--		ERR(!e, "Load PKCS#11 ENGINE");
--		if (ENGINE_init(e))
--			drain_openssl_errors(__LINE__, 1);
--		else
--			ERR(1, "ENGINE_init");
--		if (key_pass)
--			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
--		ENGINE_ctrl_cmd(e, "LOAD_CERT_CTRL", 0, &parms, NULL, 1);
--		ERR(!parms.cert, "Get X.509 from PKCS#11");
--		write_cert(parms.cert);
-+		ERR(!cert, "load_cert_pkcs11 failed");
-+		write_cert(cert);
- 	} else {
- 		BIO *b;
- 		X509 *x509;
-diff --git a/scripts/sign-file.c b/scripts/sign-file.c
-index bb3fdf1a617c..7070245edfc1 100644
---- a/scripts/sign-file.c
-+++ b/scripts/sign-file.c
-@@ -27,17 +27,18 @@
- #include <openssl/evp.h>
- #include <openssl/pem.h>
- #include <openssl/err.h>
--#include <openssl/engine.h>
--
-+#if OPENSSL_VERSION_MAJOR >= 3
-+# define USE_PKCS11_PROVIDER
-+# include <openssl/provider.h>
-+# include <openssl/store.h>
-+#else
-+# if !defined(OPENSSL_NO_ENGINE) && !defined(OPENSSL_NO_DEPRECATED_3_0)
-+#  define USE_PKCS11_ENGINE
-+#  include <openssl/engine.h>
-+# endif
-+#endif
- #include "ssl-common.h"
- 
--/*
-- * OpenSSL 3.0 deprecates the OpenSSL's ENGINE API.
-- *
-- * Remove this if/when that API is no longer used
-- */
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--
- /*
-  * Use CMS if we have openssl-1.0.0 or newer available - otherwise we have to
-  * assume that it's not available and its header file is missing and that we
-@@ -106,28 +107,64 @@ static int pem_pw_cb(char *buf, int len, int w, void *v)
- 	return pwlen;
- }
- 
--static EVP_PKEY *read_private_key(const char *private_key_name)
-+static EVP_PKEY *read_private_key_pkcs11(const char *private_key_name)
- {
--	EVP_PKEY *private_key;
-+	EVP_PKEY *private_key = NULL;
-+#ifdef USE_PKCS11_PROVIDER
-+	OSSL_STORE_CTX *store;
- 
--	if (!strncmp(private_key_name, "pkcs11:", 7)) {
--		ENGINE *e;
-+	if (!OSSL_PROVIDER_try_load(NULL, "pkcs11", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(pkcs11)");
-+	if (!OSSL_PROVIDER_try_load(NULL, "default", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(default)");
-+
-+	store = OSSL_STORE_open(private_key_name, NULL, NULL, NULL, NULL);
-+	ERR(!store, "OSSL_STORE_open");
- 
--		ENGINE_load_builtin_engines();
-+	while (!OSSL_STORE_eof(store)) {
-+		OSSL_STORE_INFO *info = OSSL_STORE_load(store);
-+
-+		if (!info) {
-+			drain_openssl_errors(__LINE__, 0);
-+			continue;
-+		}
-+		if (OSSL_STORE_INFO_get_type(info) == OSSL_STORE_INFO_PKEY) {
-+			private_key = OSSL_STORE_INFO_get1_PKEY(info);
-+			ERR(!private_key, "OSSL_STORE_INFO_get1_PKEY");
-+		}
-+		OSSL_STORE_INFO_free(info);
-+		if (private_key)
-+			break;
-+	}
-+	OSSL_STORE_close(store);
-+#elif defined(USE_PKCS11_ENGINE)
-+	ENGINE *e;
-+
-+	ENGINE_load_builtin_engines();
-+	drain_openssl_errors(__LINE__, 1);
-+	e = ENGINE_by_id("pkcs11");
-+	ERR(!e, "Load PKCS#11 ENGINE");
-+	if (ENGINE_init(e))
- 		drain_openssl_errors(__LINE__, 1);
--		e = ENGINE_by_id("pkcs11");
--		ERR(!e, "Load PKCS#11 ENGINE");
--		if (ENGINE_init(e))
--			drain_openssl_errors(__LINE__, 1);
--		else
--			ERR(1, "ENGINE_init");
--		if (key_pass)
--			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0),
--			    "Set PKCS#11 PIN");
--		private_key = ENGINE_load_private_key(e, private_key_name,
--						      NULL, NULL);
--		ERR(!private_key, "%s", private_key_name);
-+	else
-+		ERR(1, "ENGINE_init");
-+	if (key_pass)
-+		ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
-+	private_key = ENGINE_load_private_key(e, private_key_name, NULL, NULL);
-+	ERR(!private_key, "%s", private_key_name);
-+#else
-+	fprintf(stderr, "no pkcs11 engine/provider available\n");
-+	exit(1);
-+#endif
-+	return private_key;
-+}
-+
-+static EVP_PKEY *read_private_key(const char *private_key_name)
-+{
-+	if (!strncmp(private_key_name, "pkcs11:", 7)) {
-+		return read_private_key_pkcs11(private_key_name);
- 	} else {
-+		EVP_PKEY *private_key;
- 		BIO *b;
- 
- 		b = BIO_new_file(private_key_name, "rb");
-@@ -136,9 +173,9 @@ static EVP_PKEY *read_private_key(const char *private_key_name)
- 						      NULL);
- 		ERR(!private_key, "%s", private_key_name);
- 		BIO_free(b);
--	}
- 
--	return private_key;
-+		return private_key;
-+	}
- }
- 
- static X509 *read_x509(const char *x509_name)
--- 
-2.47.1
-
+Christophe
