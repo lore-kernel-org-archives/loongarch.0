@@ -1,144 +1,654 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B7A38F9C
-	for <loongarch@lists.linux.dev>; Thu, 20 Mar 2025 03:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8347F1C3BF1
+	for <loongarch@lists.linux.dev>; Thu, 20 Mar 2025 05:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742439705; cv=none; b=e5whHvIunyqYNZsZ151zA0J7gFHmWFNx+3LM1xkofi4vHeVqHXXrsV1ov+N2IpKPEyVcTBdWLuHH3b4v6uM3bJLvuVkFxj32x8YMpeY57OjlFJORg9NZUfyEuWa8DF0bhlbomPz9SA2dgvNspB+75CpDE4AMsUjNaWYT4iO6CQk=
+	t=1742448418; cv=none; b=bDxu1Pf4KTNvyu/1ocWbXW1eVAAhc6xEJI8FDnl/T+baZhPZzf7W+T1P099DO7Mq7b8cdk5fZfql6PCSxsqhBGN5bQf6Rsst4OvAXclBC+gKHfrDUfRpVy7DMRb5B47oFUp4WDApba7/5+rh6VQl7HSTLUmPk99nYQ6UETmM6IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742439705; c=relaxed/simple;
-	bh=c0OVR0nfnZkRWysIpPR89Iqk1G7jQnsqPpst6EHgn+E=;
+	s=arc-20240116; t=1742448418; c=relaxed/simple;
+	bh=7EDK8TNZC7QNYkliZGzF/aVp+o1Ytm9QNdH1obmsEAA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BLZtoiY4TiFBPBquIfHGiLgCk5+P4pXWvc9W5+BT/EA5hBxeQpEbE97LZbG7oUz5U7iEVebBoxcXcRi9HN/xQ0iGAGNqoz6PpdTZw3u5e+Myw7lOhavo2hw7nmlAnAcD4Upj3i0gnB3tX4gvoNI0+KIqzkrS7M96HxcgaipVx7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCOywEWC; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=CaQZCJmoHnT5SMjgBmWOuOe7C4C2cWINfmwcItEqb+OlfoyXI2LA4Zx5gMKj4gpp4zKWwpQ27K7GMjsVE8xQi0VyLox3PADXDuxg395pZKMF71vK2fbQIygdY6FycTaV2QbbKnHqcmrJRFk2O5t0sn2cnUNDi4k1BUoxKsyz5z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=VpMfYXIQ; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCOywEWC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10315C4CEF0
-	for <loongarch@lists.linux.dev>; Thu, 20 Mar 2025 03:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742439705;
-	bh=c0OVR0nfnZkRWysIpPR89Iqk1G7jQnsqPpst6EHgn+E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fCOywEWC8hsTk1aoRHzQ52l8BWo7neTLdqYqX3JJYjXLHwB6sDYKlPTzyyizODc5k
-	 2Y/ihlh8w4EOz7t7Bqe68tTBu6wYl4WCvhfbmyv30wR8JwNEh5I3ABHC33BAXJHOjX
-	 B/WrlIhZceIXIlRSvvBFbfyA0qclpy1BMWNluIbk86wkLs6YUzQbDWge5a68tJM5PS
-	 FUth/Z+nf04nkO65CCwcfFtPK4FVFXDij/aTM/JI/WXzK/G4zKgqQwesJXM8iC8/h0
-	 VpPM52Ax7ghnGeWClj1ch86NpW5g9DG7jTmh+RVEVzala+qDaoBrf6LgokG6WN+IQk
-	 G7SEQHBelOOhw==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso488675a12.0
-        for <loongarch@lists.linux.dev>; Wed, 19 Mar 2025 20:01:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWpJ9ckYbyq7/T38NErNSTIVb15nFKKWCzlbI6XuCkYFg444b9IlCucilwIBXqqxMfJPwlsu9LehUA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzluAGCN9o23pzPEMxnyBxXB6vGLQI3Wi8aBSpnZTIFuKJfmbJQ
-	o3P1wI6woZ4pCcXhiQuEa9EPa7pQNWS1mvKS3m5BGBek8ltvZiDtCJIEzqT3oShJKZIGqLqbO21
-	A+04SVUfrnrV2aT3gjwsVzbYto80=
-X-Google-Smtp-Source: AGHT+IHqWokcgREOirPHE31mMWzf5yAqDBsDiehm2ro+I/2WbRrfdrFc22+YmYMAdH+fNLU8SlaD6kHofdbWyes0A54=
-X-Received: by 2002:a05:6402:1d54:b0:5e5:49af:411d with SMTP id
- 4fb4d7f45d1cf-5eb80d487b5mr5702524a12.17.1742439703352; Wed, 19 Mar 2025
- 20:01:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="VpMfYXIQ"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so41262539f.1
+        for <loongarch@lists.linux.dev>; Wed, 19 Mar 2025 22:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1742448414; x=1743053214; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6TuFECIK3z+HNqsrJE6LNBjL0DFsqowu4YzYMG1uLjk=;
+        b=VpMfYXIQHN1tTSN/aSNQsyuuaKPgs/fL7ETs8lafiVRdxSz3TC/P33Z3hO7JDrMAm2
+         OUVlXo5tR5amG8DhBSYgesIgGRALW5n++qy8nOYrq7EWZfZHuBo8SjfFQqknI960dFiW
+         JhQwUO+Y2sOXaiXSQqiVaFUgncLmXxVEC8BSFJ9ik/ZQOO0UJv9te+9Fb18JqcrJAvL+
+         yNZdgMl+UCNA6D8yhfbEJdD8pqtWt3XyNJtQbU+0T9yCfURDS7ivCX637rjmOGcwGUmm
+         356d1x9r39LEGmf2aghETuagi3IwqRRD95loxoYH94k77K/wDhFsBurRsHcXQhtF7SPa
+         F0Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742448414; x=1743053214;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6TuFECIK3z+HNqsrJE6LNBjL0DFsqowu4YzYMG1uLjk=;
+        b=jInukC4ZldgzJWmhV8UdbXdOmLywgsMDfCigfwiVEuQNYQhDkGypLrjJOQ1brXKyVi
+         8Cimrm2lYnZ4xILYa+mIbA681uB2aZeys6BTMSvh5jv+kJb2cJYOZ0H+8SOUEGSBcSK1
+         Zoo5Gj7iBhW6JA8AfMnNemSm9sDlpgpqFlomRhfV3YuDxMfUfa/YFy/KC/0TMkxMG4Pg
+         AiyOExT3FIYyXA4wZDMcwAJHPJ0PrMeo8LlIBEjBTK+BRZt2JK1b5ct2xaR6h2du4aiR
+         KQWj4Ku9AZklpWtfQp9NKmtdHDScZzjHxF3TOdVzDCP8LG0ImsSnZgY/UqJigQKmoXZN
+         AoKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXKQ4nMLFBdB98uXYmYjWU5YOq+6fti11e1shmS62NtPQ0+XVHRRYUsbeUDL+YEhLx9OQRipd3/cgk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzVyr818xhzA/jvQ9Y3dpzkuaIr7rnHdq2LKExN4JVd8o1XfJvb
+	tA6h/aDYXXwi1+jjjl0S8rg5fyMCDmRDwW6HZ0J8pKNa9AwlT0Jfy5jgIrQlQiP/6NL+edTTALE
+	AfZkWDQQQLMYueARGOs/uZK4nTRNb9zAk71SDHA==
+X-Gm-Gg: ASbGncvIyqOHVkL21x2h/zijPeFUFKSJbmW1INtY7E9zGc+DGM2s1NED8hl0kUM8L6Y
+	L+TnnKth4hTGKkk+BF8eiuJdkhsTMOFJ7QNmQrcSGR5e4NS+euwpJzHQNpsrLp9bm5d4tJYdyT9
+	OBQ3zBeTCfXkZieecs1jRoXaknCFM=
+X-Google-Smtp-Source: AGHT+IFbStYTQ82zHzWMU0s2nyBJrHic6WzBpBrgrfYFVrSxbmovqNdk/u8qSTHL2YYZCsD6fapJ1eNw98FQBuQ8Kf8=
+X-Received: by 2002:a05:6e02:214d:b0:3cf:fe21:af8 with SMTP id
+ e9e14a558f8ab-3d586b14d50mr55400165ab.4.1742448414425; Wed, 19 Mar 2025
+ 22:26:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
- <20250319064031.2971073-4-chenhuacai@loongson.cn> <2025031943-disparity-dash-cfa3@gregkh>
- <Z9rYQy3l5V5cvW7W@t14s> <2025031942-portside-finite-34a9@gregkh> <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
-In-Reply-To: <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 20 Mar 2025 11:01:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4-GnvqJrnJu_Z6EBKBH5WBTiZ9xRh1vGhBmuoYNw=r9w@mail.gmail.com>
-X-Gm-Features: AQ5f1JpRALxCtqgxc8zE1UNEpDT5tsnLLr1ILnleluG0qpKgmpr6B4OtD1rd5lQ
-Message-ID: <CAAhV-H4-GnvqJrnJu_Z6EBKBH5WBTiZ9xRh1vGhBmuoYNw=r9w@mail.gmail.com>
-Subject: Re: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11
- provider for OPENSSL MAJOR >= 3
-To: Jan Stancek <jstancek@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Sasha Levin <sashal@kernel.org>, Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, 
-	David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, R Nageswara Sastry <rnsastry@linux.ibm.com>, 
-	Neal Gompa <neal@gompa.dev>
+References: <20250319092951.37667-1-jirislaby@kernel.org> <20250319092951.37667-7-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-7-jirislaby@kernel.org>
+From: Anup Patel <anup@brainfault.org>
+Date: Thu, 20 Mar 2025 10:56:41 +0530
+X-Gm-Features: AQ5f1Jpz4MSHzNnNdAhk3R_No0q-qOTvynTjpqT93LykipnY1ZhgVwUxNozrEWg
+Message-ID: <CAAhSdy0dG0nn=-OTULCrzFDdT3E7keLdjxoHAf=s7nVzUSO5YA@mail.gmail.com>
+Subject: Re: [PATCH v2 06/57] irqdomain: irqchip: Switch to of_fwnode_handle()
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org, 
+	Antoine Tenart <atenart@kernel.org>, Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Andrew Lunn <andrew@lunn.ch>, 
+	Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Linus Walleij <linusw@kernel.org>, 
+	Imre Kaloz <kaloz@openwrt.org>, Herve Codina <herve.codina@bootlin.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, asahi@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, all,
+On Wed, Mar 19, 2025 at 3:01=E2=80=AFPM Jiri Slaby (SUSE) <jirislaby@kernel=
+.org> wrote:
+>
+> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+> defined of_fwnode_handle(). The former is in the process of being
+> removed, so use the latter instead.
+>
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Antoine Tenart <atenart@kernel.org>
+> Cc: Sven Peter <sven@svenpeter.dev>
+> Cc: Janne Grunau <j@jannau.net>
+> Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Gregory Clement <gregory.clement@bootlin.com>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Linus Walleij <linusw@kernel.org>
+> Cc: Imre Kaloz <kaloz@openwrt.org>
+> Cc: Herve Codina <herve.codina@bootlin.com>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Anup Patel <anup@brainfault.org>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Alexandre Ghiti <alex@ghiti.fr>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Tero Kristo <kristo@kernel.org>
+> Cc: Santosh Shilimkar <ssantosh@kernel.org>
+> Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: asahi@lists.linux.dev
+> Cc: loongarch@lists.linux.dev
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-amlogic@lists.infradead.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
 
-On Thu, Mar 20, 2025 at 12:53=E2=80=AFAM Jan Stancek <jstancek@redhat.com> =
-wrote:
->
-> On Wed, Mar 19, 2025 at 5:26=E2=80=AFPM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Mar 19, 2025 at 03:44:19PM +0100, Jan Stancek wrote:
-> > > On Wed, Mar 19, 2025 at 07:13:13AM -0700, Greg Kroah-Hartman wrote:
-> > > > On Wed, Mar 19, 2025 at 02:40:31PM +0800, Huacai Chen wrote:
-> > > > > From: Jan Stancek <jstancek@redhat.com>
-> > > > >
-> > > > > commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
-> > > > >
-> > > > > ENGINE API has been deprecated since OpenSSL version 3.0 [1].
-> > > > > Distros have started dropping support from headers and in future
-> > > > > it will likely disappear also from library.
-> > > > >
-> > > > > It has been superseded by the PROVIDER API, so use it instead
-> > > > > for OPENSSL MAJOR >=3D 3.
-> > > > >
-> > > > > [1] https://github.com/openssl/openssl/blob/master/README-ENGINES=
-.md
-> > > > >
-> > > > > [jarkko: fixed up alignment issues reported by checkpatch.pl --st=
-rict]
-> > > > >
-> > > > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
-> > > > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-> > > > > Reviewed-by: Neal Gompa <neal@gompa.dev>
-> > > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > ---
-> > > > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------=
-------
-> > > > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++-----------=
--
-> > > > >  2 files changed, 138 insertions(+), 58 deletions(-)
-> > > >
-> > > > This seems to differ from what is upstream by a lot, please documen=
-t
-> > > > what you changed from it and why when you resend this series again.
-> > >
-> > > Hunks are arranged differently, but code appears to be identical.
-> > > When I apply the series to v6.6.83 and compare with upstream I get:
-> >
-> > If so, why is the diffstat different?  Also why are the hunks arranged
-> > differently,
->
-> He appears to be using "--diff-algorithm=3Dminimal", while you probably
-> patience or histogram.
->
-> $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb2 |
-> grep -A3 -m1 -- "---"
+LGTM for irq-riscv-intc driver
+
+Reviewed-by: Anup Patel <anup@brainfault.org>
+
+Regards,
+Anup
+
 > ---
->  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
->  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
->  2 files changed, 138 insertions(+), 58 deletions(-)
+>  drivers/irqchip/irq-alpine-msi.c            | 2 +-
+>  drivers/irqchip/irq-apple-aic.c             | 4 ++--
+>  drivers/irqchip/irq-armada-370-xp.c         | 4 ++--
+>  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 2 +-
+>  drivers/irqchip/irq-gic-v3.c                | 4 ++--
+>  drivers/irqchip/irq-ixp4xx.c                | 2 +-
+>  drivers/irqchip/irq-lan966x-oic.c           | 2 +-
+>  drivers/irqchip/irq-loongarch-cpu.c         | 2 +-
+>  drivers/irqchip/irq-loongson-eiointc.c      | 2 +-
+>  drivers/irqchip/irq-loongson-htvec.c        | 2 +-
+>  drivers/irqchip/irq-loongson-liointc.c      | 2 +-
+>  drivers/irqchip/irq-loongson-pch-msi.c      | 2 +-
+>  drivers/irqchip/irq-loongson-pch-pic.c      | 2 +-
+>  drivers/irqchip/irq-ls-scfg-msi.c           | 2 +-
+>  drivers/irqchip/irq-meson-gpio.c            | 2 +-
+>  drivers/irqchip/irq-mvebu-gicp.c            | 2 +-
+>  drivers/irqchip/irq-mvebu-odmi.c            | 2 +-
+>  drivers/irqchip/irq-mvebu-sei.c             | 6 +++---
+>  drivers/irqchip/irq-qcom-mpm.c              | 2 +-
+>  drivers/irqchip/irq-riscv-intc.c            | 2 +-
+>  drivers/irqchip/irq-sni-exiu.c              | 2 +-
+>  drivers/irqchip/irq-stm32mp-exti.c          | 2 +-
+>  drivers/irqchip/irq-ti-sci-inta.c           | 4 ++--
+>  drivers/irqchip/irq-ti-sci-intr.c           | 2 +-
+>  drivers/irqchip/irq-uniphier-aidet.c        | 2 +-
+>  25 files changed, 31 insertions(+), 31 deletions(-)
 >
-> Should be easy to regenerate with different diff-alg for v4.
-I use the default configuration to generate patches, and since the
-code is identical, should I really send a V4?
-
-Huacai
-
+> diff --git a/drivers/irqchip/irq-alpine-msi.c b/drivers/irqchip/irq-alpin=
+e-msi.c
+> index a1430ab60a8a..0207d35135da 100644
+> --- a/drivers/irqchip/irq-alpine-msi.c
+> +++ b/drivers/irqchip/irq-alpine-msi.c
+> @@ -213,7 +213,7 @@ static int alpine_msix_init_domains(struct alpine_msi=
+x_data *priv,
+>                 return -ENOMEM;
+>         }
 >
-> Regards,
-> Jan
+> -       msi_domain =3D pci_msi_create_irq_domain(of_node_to_fwnode(node),
+> +       msi_domain =3D pci_msi_create_irq_domain(of_fwnode_handle(node),
+>                                                &alpine_msix_domain_info,
+>                                                middle_domain);
+>         if (!msi_domain) {
+> diff --git a/drivers/irqchip/irq-apple-aic.c b/drivers/irqchip/irq-apple-=
+aic.c
+> index 974dc088c853..032d66dceb8e 100644
+> --- a/drivers/irqchip/irq-apple-aic.c
+> +++ b/drivers/irqchip/irq-apple-aic.c
+> @@ -1014,7 +1014,7 @@ static int __init aic_of_ic_init(struct device_node=
+ *node, struct device_node *p
 >
-> > that's a hint to me that something went wrong and I can't
-> > trust the patch at all.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
+>         irqc->info.die_stride =3D off - start_off;
+>
+> -       irqc->hw_domain =3D irq_domain_create_tree(of_node_to_fwnode(node=
+),
+> +       irqc->hw_domain =3D irq_domain_create_tree(of_fwnode_handle(node)=
+,
+>                                                  &aic_irq_domain_ops, irq=
+c);
+>         if (WARN_ON(!irqc->hw_domain))
+>                 goto err_unmap;
+> @@ -1067,7 +1067,7 @@ static int __init aic_of_ic_init(struct device_node=
+ *node, struct device_node *p
+>
+>         if (is_kernel_in_hyp_mode()) {
+>                 struct irq_fwspec mi =3D {
+> -                       .fwnode         =3D of_node_to_fwnode(node),
+> +                       .fwnode         =3D of_fwnode_handle(node),
+>                         .param_count    =3D 3,
+>                         .param          =3D {
+>                                 [0]     =3D AIC_FIQ, /* This is a lie */
+> diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-ar=
+mada-370-xp.c
+> index 2aa6a51e05d0..de98d16c1718 100644
+> --- a/drivers/irqchip/irq-armada-370-xp.c
+> +++ b/drivers/irqchip/irq-armada-370-xp.c
+> @@ -353,7 +353,7 @@ static int __init mpic_msi_init(struct mpic *mpic, st=
+ruct device_node *node,
+>         if (!mpic->msi_inner_domain)
+>                 return -ENOMEM;
+>
+> -       mpic->msi_domain =3D pci_msi_create_irq_domain(of_node_to_fwnode(=
+node), &mpic_msi_domain_info,
+> +       mpic->msi_domain =3D pci_msi_create_irq_domain(of_fwnode_handle(n=
+ode), &mpic_msi_domain_info,
+>                                                      mpic->msi_inner_doma=
+in);
+>         if (!mpic->msi_domain) {
+>                 irq_domain_remove(mpic->msi_inner_domain);
+> @@ -492,7 +492,7 @@ static int __init mpic_ipi_init(struct mpic *mpic, st=
+ruct device_node *node)
+>  {
+>         int base_ipi;
+>
+> -       mpic->ipi_domain =3D irq_domain_create_linear(of_node_to_fwnode(n=
+ode), IPI_DOORBELL_NR,
+> +       mpic->ipi_domain =3D irq_domain_create_linear(of_fwnode_handle(no=
+de), IPI_DOORBELL_NR,
+>                                                     &mpic_ipi_domain_ops,=
+ mpic);
+>         if (WARN_ON(!mpic->ipi_domain))
+>                 return -ENOMEM;
+> diff --git a/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c b/drivers/irqchi=
+p/irq-gic-v3-its-fsl-mc-msi.c
+> index 8e87fc35f8aa..11549d85f23b 100644
+> --- a/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
+> +++ b/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
+> @@ -152,7 +152,7 @@ static void __init its_fsl_mc_of_msi_init(void)
+>                 if (!of_property_read_bool(np, "msi-controller"))
+>                         continue;
+>
+> -               its_fsl_mc_msi_init_one(of_node_to_fwnode(np),
+> +               its_fsl_mc_msi_init_one(of_fwnode_handle(np),
+>                                         np->full_name);
+>         }
+>  }
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index 270d7a4d85a6..efc791c43d44 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -1826,7 +1826,7 @@ static int partition_domain_translate(struct irq_do=
+main *d,
+>
+>         ppi_idx =3D __gic_get_ppi_index(ppi_intid);
+>         ret =3D partition_translate_id(gic_data.ppi_descs[ppi_idx],
+> -                                    of_node_to_fwnode(np));
+> +                                    of_fwnode_handle(np));
+>         if (ret < 0)
+>                 return ret;
+>
+> @@ -2192,7 +2192,7 @@ static void __init gic_populate_ppi_partitions(stru=
+ct device_node *gic_node)
+>
+>                 part =3D &parts[part_idx];
+>
+> -               part->partition_id =3D of_node_to_fwnode(child_part);
+> +               part->partition_id =3D of_fwnode_handle(child_part);
+>
+>                 pr_info("GIC: PPI partition %pOFn[%d] { ",
+>                         child_part, part_idx);
+> diff --git a/drivers/irqchip/irq-ixp4xx.c b/drivers/irqchip/irq-ixp4xx.c
+> index f23b02f62a5c..a9a5a52b818a 100644
+> --- a/drivers/irqchip/irq-ixp4xx.c
+> +++ b/drivers/irqchip/irq-ixp4xx.c
+> @@ -261,7 +261,7 @@ static int __init ixp4xx_of_init_irq(struct device_no=
+de *np,
+>                 pr_crit("IXP4XX: could not ioremap interrupt controller\n=
+");
+>                 return -ENODEV;
+>         }
+> -       fwnode =3D of_node_to_fwnode(np);
+> +       fwnode =3D of_fwnode_handle(np);
+>
+>         /* These chip variants have 64 interrupts */
+>         is_356 =3D of_device_is_compatible(np, "intel,ixp43x-interrupt") =
+||
+> diff --git a/drivers/irqchip/irq-lan966x-oic.c b/drivers/irqchip/irq-lan9=
+66x-oic.c
+> index 41ac880e3b87..9445c3a6b1b0 100644
+> --- a/drivers/irqchip/irq-lan966x-oic.c
+> +++ b/drivers/irqchip/irq-lan966x-oic.c
+> @@ -224,7 +224,7 @@ static int lan966x_oic_probe(struct platform_device *=
+pdev)
+>                 .exit           =3D lan966x_oic_chip_exit,
+>         };
+>         struct irq_domain_info d_info =3D {
+> -               .fwnode         =3D of_node_to_fwnode(pdev->dev.of_node),
+> +               .fwnode         =3D of_fwnode_handle(pdev->dev.of_node),
+>                 .domain_flags   =3D IRQ_DOMAIN_FLAG_DESTROY_GC,
+>                 .size           =3D LAN966X_OIC_NR_IRQ,
+>                 .hwirq_max      =3D LAN966X_OIC_NR_IRQ,
+> diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-lo=
+ongarch-cpu.c
+> index e62dab4c97fc..950bc087e388 100644
+> --- a/drivers/irqchip/irq-loongarch-cpu.c
+> +++ b/drivers/irqchip/irq-loongarch-cpu.c
+> @@ -100,7 +100,7 @@ static const struct irq_domain_ops loongarch_cpu_intc=
+_irq_domain_ops =3D {
+>  static int __init cpuintc_of_init(struct device_node *of_node,
+>                                 struct device_node *parent)
+>  {
+> -       cpuintc_handle =3D of_node_to_fwnode(of_node);
+> +       cpuintc_handle =3D of_fwnode_handle(of_node);
+>
+>         irq_domain =3D irq_domain_create_linear(cpuintc_handle, EXCCODE_I=
+NT_NUM,
+>                                 &loongarch_cpu_intc_irq_domain_ops, NULL)=
+;
+> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq=
+-loongson-eiointc.c
+> index bb79e19dfb59..b2860eb2d32c 100644
+> --- a/drivers/irqchip/irq-loongson-eiointc.c
+> +++ b/drivers/irqchip/irq-loongson-eiointc.c
+> @@ -554,7 +554,7 @@ static int __init eiointc_of_init(struct device_node =
+*of_node,
+>                 priv->vec_count =3D VEC_COUNT;
+>
+>         priv->node =3D 0;
+> -       priv->domain_handle =3D of_node_to_fwnode(of_node);
+> +       priv->domain_handle =3D of_fwnode_handle(of_node);
+>
+>         ret =3D eiointc_init(priv, parent_irq, 0);
+>         if (ret < 0)
+> diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-l=
+oongson-htvec.c
+> index 5da02c7ad0b3..d8558eb35044 100644
+> --- a/drivers/irqchip/irq-loongson-htvec.c
+> +++ b/drivers/irqchip/irq-loongson-htvec.c
+> @@ -248,7 +248,7 @@ static int htvec_of_init(struct device_node *node,
+>         }
+>
+>         err =3D htvec_init(res.start, resource_size(&res),
+> -                       num_parents, parent_irq, of_node_to_fwnode(node))=
+;
+> +                       num_parents, parent_irq, of_fwnode_handle(node));
+>         if (err < 0)
+>                 return err;
+>
+> diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq=
+-loongson-liointc.c
+> index 2b1bd4a96665..95cade56e0be 100644
+> --- a/drivers/irqchip/irq-loongson-liointc.c
+> +++ b/drivers/irqchip/irq-loongson-liointc.c
+> @@ -363,7 +363,7 @@ static int __init liointc_of_init(struct device_node =
+*node,
+>         }
+>
+>         err =3D liointc_init(res.start, resource_size(&res),
+> -                       revision, of_node_to_fwnode(node), node);
+> +                       revision, of_fwnode_handle(node), node);
+>         if (err < 0)
+>                 return err;
+>
+> diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq=
+-loongson-pch-msi.c
+> index 9c62108b3ad5..c07876ae7b49 100644
+> --- a/drivers/irqchip/irq-loongson-pch-msi.c
+> +++ b/drivers/irqchip/irq-loongson-pch-msi.c
+> @@ -243,7 +243,7 @@ static int pch_msi_of_init(struct device_node *node, =
+struct device_node *parent)
+>                 return -EINVAL;
+>         }
+>
+> -       err =3D pch_msi_init(res.start, irq_base, irq_count, parent_domai=
+n, of_node_to_fwnode(node));
+> +       err =3D pch_msi_init(res.start, irq_base, irq_count, parent_domai=
+n, of_fwnode_handle(node));
+>         if (err < 0)
+>                 return err;
+>
+> diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq=
+-loongson-pch-pic.c
+> index 69efda35a8e7..62e6bf3a0611 100644
+> --- a/drivers/irqchip/irq-loongson-pch-pic.c
+> +++ b/drivers/irqchip/irq-loongson-pch-pic.c
+> @@ -392,7 +392,7 @@ static int pch_pic_of_init(struct device_node *node,
+>         }
+>
+>         err =3D pch_pic_init(res.start, resource_size(&res), vec_base,
+> -                               parent_domain, of_node_to_fwnode(node), 0=
+);
+> +                               parent_domain, of_fwnode_handle(node), 0)=
+;
+>         if (err < 0)
+>                 return err;
+>
+> diff --git a/drivers/irqchip/irq-ls-scfg-msi.c b/drivers/irqchip/irq-ls-s=
+cfg-msi.c
+> index 3cb80796cc7c..cbe11a8afe4f 100644
+> --- a/drivers/irqchip/irq-ls-scfg-msi.c
+> +++ b/drivers/irqchip/irq-ls-scfg-msi.c
+> @@ -225,7 +225,7 @@ static int ls_scfg_msi_domains_init(struct ls_scfg_ms=
+i *msi_data)
+>         }
+>
+>         msi_data->msi_domain =3D pci_msi_create_irq_domain(
+> -                               of_node_to_fwnode(msi_data->pdev->dev.of_=
+node),
+> +                               of_fwnode_handle(msi_data->pdev->dev.of_n=
+ode),
+>                                 &ls_scfg_msi_domain_info,
+>                                 msi_data->parent);
+>         if (!msi_data->msi_domain) {
+> diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson=
+-gpio.c
+> index 0a25536a5d07..7d177626d64b 100644
+> --- a/drivers/irqchip/irq-meson-gpio.c
+> +++ b/drivers/irqchip/irq-meson-gpio.c
+> @@ -607,7 +607,7 @@ static int meson_gpio_irq_of_init(struct device_node =
+*node, struct device_node *
+>
+>         domain =3D irq_domain_create_hierarchy(parent_domain, 0,
+>                                              ctl->params->nr_hwirq,
+> -                                            of_node_to_fwnode(node),
+> +                                            of_fwnode_handle(node),
+>                                              &meson_gpio_irq_domain_ops,
+>                                              ctl);
+>         if (!domain) {
+> diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu=
+-gicp.c
+> index d67f93f6d750..521cc265c05e 100644
+> --- a/drivers/irqchip/irq-mvebu-gicp.c
+> +++ b/drivers/irqchip/irq-mvebu-gicp.c
+> @@ -232,7 +232,7 @@ static int mvebu_gicp_probe(struct platform_device *p=
+dev)
+>
+>         inner_domain =3D irq_domain_create_hierarchy(parent_domain, 0,
+>                                                    gicp->spi_cnt,
+> -                                                  of_node_to_fwnode(node=
+),
+> +                                                  of_fwnode_handle(node)=
+,
+>                                                    &gicp_domain_ops, gicp=
+);
+>         if (!inner_domain)
+>                 return -ENOMEM;
+> diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu=
+-odmi.c
+> index 28f7e81df94f..c1fcd4525e3b 100644
+> --- a/drivers/irqchip/irq-mvebu-odmi.c
+> +++ b/drivers/irqchip/irq-mvebu-odmi.c
+> @@ -207,7 +207,7 @@ static int __init mvebu_odmi_init(struct device_node =
+*node,
+>
+>         inner_domain =3D irq_domain_create_hierarchy(parent_domain, 0,
+>                                                    odmis_count * NODMIS_P=
+ER_FRAME,
+> -                                                  of_node_to_fwnode(node=
+),
+> +                                                  of_fwnode_handle(node)=
+,
+>                                                    &odmi_domain_ops, NULL=
+);
+>         if (!inner_domain) {
+>                 ret =3D -ENOMEM;
+> diff --git a/drivers/irqchip/irq-mvebu-sei.c b/drivers/irqchip/irq-mvebu-=
+sei.c
+> index ebd4a9014e8d..5030fcecdcc3 100644
+> --- a/drivers/irqchip/irq-mvebu-sei.c
+> +++ b/drivers/irqchip/irq-mvebu-sei.c
+> @@ -402,7 +402,7 @@ static int mvebu_sei_probe(struct platform_device *pd=
+ev)
+>         }
+>
+>         /* Create the root SEI domain */
+> -       sei->sei_domain =3D irq_domain_create_linear(of_node_to_fwnode(no=
+de),
+> +       sei->sei_domain =3D irq_domain_create_linear(of_fwnode_handle(nod=
+e),
+>                                                    (sei->caps->ap_range.s=
+ize +
+>                                                     sei->caps->cp_range.s=
+ize),
+>                                                    &mvebu_sei_domain_ops,
+> @@ -418,7 +418,7 @@ static int mvebu_sei_probe(struct platform_device *pd=
+ev)
+>         /* Create the 'wired' domain */
+>         sei->ap_domain =3D irq_domain_create_hierarchy(sei->sei_domain, 0=
+,
+>                                                      sei->caps->ap_range.=
+size,
+> -                                                    of_node_to_fwnode(no=
+de),
+> +                                                    of_fwnode_handle(nod=
+e),
+>                                                      &mvebu_sei_ap_domain=
+_ops,
+>                                                      sei);
+>         if (!sei->ap_domain) {
+> @@ -432,7 +432,7 @@ static int mvebu_sei_probe(struct platform_device *pd=
+ev)
+>         /* Create the 'MSI' domain */
+>         sei->cp_domain =3D irq_domain_create_hierarchy(sei->sei_domain, 0=
+,
+>                                                      sei->caps->cp_range.=
+size,
+> -                                                    of_node_to_fwnode(no=
+de),
+> +                                                    of_fwnode_handle(nod=
+e),
+>                                                      &mvebu_sei_cp_domain=
+_ops,
+>                                                      sei);
+>         if (!sei->cp_domain) {
+> diff --git a/drivers/irqchip/irq-qcom-mpm.c b/drivers/irqchip/irq-qcom-mp=
+m.c
+> index 7942d8eb3d00..00c770e367d0 100644
+> --- a/drivers/irqchip/irq-qcom-mpm.c
+> +++ b/drivers/irqchip/irq-qcom-mpm.c
+> @@ -447,7 +447,7 @@ static int qcom_mpm_init(struct device_node *np, stru=
+ct device_node *parent)
+>
+>         priv->domain =3D irq_domain_create_hierarchy(parent_domain,
+>                                 IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP, pin_cnt,
+> -                               of_node_to_fwnode(np), &qcom_mpm_ops, pri=
+v);
+> +                               of_fwnode_handle(np), &qcom_mpm_ops, priv=
+);
+>         if (!priv->domain) {
+>                 dev_err(dev, "failed to create MPM domain\n");
+>                 ret =3D -ENOMEM;
+> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv=
+-intc.c
+> index f653c13de62b..e5805885394e 100644
+> --- a/drivers/irqchip/irq-riscv-intc.c
+> +++ b/drivers/irqchip/irq-riscv-intc.c
+> @@ -242,7 +242,7 @@ static int __init riscv_intc_init(struct device_node =
+*node,
+>                 chip =3D &andes_intc_chip;
+>         }
+>
+> -       return riscv_intc_init_common(of_node_to_fwnode(node), chip);
+> +       return riscv_intc_init_common(of_fwnode_handle(node), chip);
+>  }
+>
+>  IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
+> diff --git a/drivers/irqchip/irq-sni-exiu.c b/drivers/irqchip/irq-sni-exi=
+u.c
+> index c7db617e1a2f..7d10bf6e5824 100644
+> --- a/drivers/irqchip/irq-sni-exiu.c
+> +++ b/drivers/irqchip/irq-sni-exiu.c
+> @@ -249,7 +249,7 @@ static int __init exiu_dt_init(struct device_node *no=
+de,
+>                 return -ENXIO;
+>         }
+>
+> -       data =3D exiu_init(of_node_to_fwnode(node), &res);
+> +       data =3D exiu_init(of_fwnode_handle(node), &res);
+>         if (IS_ERR(data))
+>                 return PTR_ERR(data);
+>
+> diff --git a/drivers/irqchip/irq-stm32mp-exti.c b/drivers/irqchip/irq-stm=
+32mp-exti.c
+> index cb83d6cc6113..649b84f12efc 100644
+> --- a/drivers/irqchip/irq-stm32mp-exti.c
+> +++ b/drivers/irqchip/irq-stm32mp-exti.c
+> @@ -531,7 +531,7 @@ static int stm32mp_exti_domain_alloc(struct irq_domai=
+n *dm,
+>                 if (ret)
+>                         return ret;
+>                 /* we only support one parent, so far */
+> -               if (of_node_to_fwnode(out_irq.np) !=3D dm->parent->fwnode=
+)
+> +               if (of_fwnode_handle(out_irq.np) !=3D dm->parent->fwnode)
+>                         return -EINVAL;
+>
+>                 of_phandle_args_to_fwspec(out_irq.np, out_irq.args,
+> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-s=
+ci-inta.c
+> index a887efba262c..38dfc1f9a56b 100644
+> --- a/drivers/irqchip/irq-ti-sci-inta.c
+> +++ b/drivers/irqchip/irq-ti-sci-inta.c
+> @@ -233,7 +233,7 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_allo=
+c_parent_irq(struct irq_dom
+>         INIT_LIST_HEAD(&vint_desc->list);
+>
+>         parent_node =3D of_irq_find_parent(dev_of_node(&inta->pdev->dev))=
+;
+> -       parent_fwspec.fwnode =3D of_node_to_fwnode(parent_node);
+> +       parent_fwspec.fwnode =3D of_fwnode_handle(parent_node);
+>
+>         if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
+>                 /* Parent is GIC */
+> @@ -709,7 +709,7 @@ static int ti_sci_inta_irq_domain_probe(struct platfo=
+rm_device *pdev)
+>                 return -ENOMEM;
+>         }
+>
+> -       msi_domain =3D ti_sci_inta_msi_create_irq_domain(of_node_to_fwnod=
+e(node),
+> +       msi_domain =3D ti_sci_inta_msi_create_irq_domain(of_fwnode_handle=
+(node),
+>                                                 &ti_sci_inta_msi_domain_i=
+nfo,
+>                                                 domain);
+>         if (!msi_domain) {
+> diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-s=
+ci-intr.c
+> index b49a73106c69..686a8f69fd9c 100644
+> --- a/drivers/irqchip/irq-ti-sci-intr.c
+> +++ b/drivers/irqchip/irq-ti-sci-intr.c
+> @@ -149,7 +149,7 @@ static int ti_sci_intr_alloc_parent_irq(struct irq_do=
+main *domain,
+>                 goto err_irqs;
+>
+>         parent_node =3D of_irq_find_parent(dev_of_node(intr->dev));
+> -       fwspec.fwnode =3D of_node_to_fwnode(parent_node);
+> +       fwspec.fwnode =3D of_fwnode_handle(parent_node);
+>
+>         if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
+>                 /* Parent is GIC */
+> diff --git a/drivers/irqchip/irq-uniphier-aidet.c b/drivers/irqchip/irq-u=
+niphier-aidet.c
+> index 601f9343d5b3..6005c2d28dd9 100644
+> --- a/drivers/irqchip/irq-uniphier-aidet.c
+> +++ b/drivers/irqchip/irq-uniphier-aidet.c
+> @@ -188,7 +188,7 @@ static int uniphier_aidet_probe(struct platform_devic=
+e *pdev)
+>         priv->domain =3D irq_domain_create_hierarchy(
+>                                         parent_domain, 0,
+>                                         UNIPHIER_AIDET_NR_IRQS,
+> -                                       of_node_to_fwnode(dev->of_node),
+> +                                       of_fwnode_handle(dev->of_node),
+>                                         &uniphier_aidet_domain_ops, priv)=
+;
+>         if (!priv->domain)
+>                 return -ENOMEM;
+> --
+> 2.49.0
 >
