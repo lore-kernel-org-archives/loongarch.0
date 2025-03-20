@@ -1,121 +1,188 @@
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B23D22257E
-	for <loongarch@lists.linux.dev>; Thu, 20 Mar 2025 10:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCFC224253
+	for <loongarch@lists.linux.dev>; Thu, 20 Mar 2025 10:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742466272; cv=none; b=OHrKkQfJfZhf8ZcLWHpfG1go3PFeJmjwcPBJKf17vIUc8ugy20FFrHvvfhYo+FNQhOIrvw9CUskWyA7KHwGaUInxOsPFV/EzDtj5UO7TwOtAtMAvVcoAoWaLsX7L7eXQL5+km+7sfTj2GeccwutRGm611/HH3nRx+RkV7NVXqtU=
+	t=1742467485; cv=none; b=a2i92o7FhGlraOOr6vaqpTi62jfE6NRn6XcfVehnmYa9MWCTx9HtAA9fmEZWUH4n+G4ja9yhjVaNmPuWOEVK1pd+9AaJMdng/2RGQrNzDbGWdXdoroMIFa43SagGP9VcsZ/8eV/tHTue1wmQGL+6IfmJ6UpcScJszcqaSvhyItk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742466272; c=relaxed/simple;
-	bh=P6Cyg6ZZOL/bdfJ/B4iOaMgGeE2iSEc4uJhQIlA74AE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uiwHvrJfZRcQEfwnLrgR0i3Jt27sn2AHPwqEMaX2p0lj5SFyCkaRo0XjmVBcsCoIfYkLU21Nns+bNOxD2p80goEMaSNCffzTdztJ+4r1lhy+owKxTFNEUMy14MjO2fCCaCtCk2mJO9KXYOxf/eHZq7uqHaqWiaCyBe1hiB6wY+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Zw5ciXRY; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1742467485; c=relaxed/simple;
+	bh=O8zyyL1p84aMCSSYT842uw6SFy2rTfsgAblLzeFkCR0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=N0+X74Zu+SI+fksYt0sDMezki4xZg/osUhykjCICLsQSxQTSTa9SNHmGIKew1jgDdy7BcuGW2aHVBEKOUiK1ADfvIQm1DkU4MoySBUGTB0pjcMdOqxYFQc5oO3XD1i5mVa+AW6zRnAOkHWUym/LfqR7zKhuezlqruj9TsYqCcn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OBjLVdJI; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Zw5ciXRY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1742466212;
-	bh=UQkpjbCZSJNKsn4kZHUA6N+b2zXax0ohSXZNeMcNv0g=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=Zw5ciXRYbGkdhcv38Eo7qJsiJcfVw1tKKJ+zMxZ4/H3NerxzVK9nOB6WYtz7a6/qd
-	 /hq5rBtaJGTmwyttjh8mLyRZF87n4KF3qtAITC0yU6Kj4FZY+lxixN9GVpO93UDcK2
-	 En78vzqpnJRm1VNwEuU4z5YxdomM8iYysK5fsro0=
-X-QQ-mid: bizesmtpip3t1742466200t1f8q4h
-X-QQ-Originating-IP: QU9FNwBoxjDpk5O9q9jrJU66DqalOoSS7/8913wuNAA=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 20 Mar 2025 18:23:18 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 2980775555184553124
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: wangyuli@uniontech.com,
-	guanwentao@uniontech.com,
-	wentao@uniontech.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	zhangqing@loongson.cn,
-	zhoubinbin@loongson.cn,
-	lihui@loongson.cn,
-	rdunlap@infradead.org,
-	chenhuacai@loongson.cn,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com
-Subject: [PATCH] LoongArch: KGDB: Do not inline arch_kgdb_breakpoint()
-Date: Thu, 20 Mar 2025 18:23:14 +0800
-Message-ID: <EE51449BC2104F82+20250320102314.2062639-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OBjLVdJI"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso9419095e9.1
+        for <loongarch@lists.linux.dev>; Thu, 20 Mar 2025 03:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742467480; x=1743072280; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=j11DFSETqOLtc+vMOz1k4rHgXFA118EedepjEdU8Zqw=;
+        b=OBjLVdJIQDPCbvmycvnTe5c9SSPu29XTE9P+ch7qpqyw6O1wRtWYB6z4tx6gw5Bpyf
+         FMRLeE3EMCnOylQrAxqKEXAoXFLE1AmZDs2bnj3vUdVKwpyb/pz6HIrjSu/v92at3N40
+         +PwV8JzOGlo//BpGpG6iUMeyd4kWpC9hXLs2bBmIcpJUKZCANVquXdB66L9aG2sN/baY
+         vs9hUN5+6Gyikk8os9lut83E0RXOg95jyHsDnBitc7osDi/LTNW6aYVo5RwsdvJe/8iQ
+         fTFlYjaXDCSMX9+MEwW07CCwyRdigquOcFaHy0FKc83oppeMGfKGC3Hpgw6WFcLpKeZA
+         pp6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742467480; x=1743072280;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j11DFSETqOLtc+vMOz1k4rHgXFA118EedepjEdU8Zqw=;
+        b=IZM12KxCBAleOy8V3R5UuYPqdqlkCwvf+TOA7zsfD3FJF/9+Q5NQ2qG/ufd9Bq+CNH
+         fbE1d2yKZiHYfqFCVtxdzYF2/sK/YGM4s/yC2qUwt3rLz+66FUYR+x0Y4uSDm7uI2Yri
+         K8rNy0rlIOzvo8s5nmEM1Ph/b9LaSk2m3E+oUCVCapzBuPQZWCe4N9LHlmLiPWg04DQi
+         pqJVSMM8JU4nOZKV1j8XEWGTxXsttsnuY+IZjBHttPedmy9Dlieyz2qlHl9l3/FxQ7A1
+         ziZFTV9o++1gi4HqUly1PngYEwcjq2B2xO7xtZR1qoRNUbaEP0KaP/HUlH+tGKpHbNEZ
+         id2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUHm++gB/0NJtgZ73IZm9wtAdEdI0RBBjpuThA4Db9JjoyNAyxF7/R8YMD1EOkpRiE/zTWc3d5e47I=@lists.linux.dev
+X-Gm-Message-State: AOJu0YySCd9Grr9ZiPa+bIzEWZgFY28bEDiWDW68UYOI4MSau1GZYaFG
+	R/3EasKhLOh4rUAq6DmahtnK97DUak+VQO/um5qRMz1BsOxvf1rjWb2jd3mHHHHOTOq6Whv2x7S
+	IhODvBLdYYw==
+X-Google-Smtp-Source: AGHT+IHmhdHTuCMOMffmpvyIMCzJObzjHJotMPvb7/CKZriBN1WJ2Qe2CHVhTxdEuiWThlixsbw8H9oOiShQMA==
+X-Received: from wmgg15.prod.google.com ([2002:a05:600d:f:b0:43b:c450:ea70])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1da2:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-43d49187ba9mr20806165e9.12.1742467480075;
+ Thu, 20 Mar 2025 03:44:40 -0700 (PDT)
+Date: Thu, 20 Mar 2025 10:44:38 +0000
+In-Reply-To: <Z9sRQ0cK0rupEiT-@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NN51gi9eLBwaVbYlzEPeqmTIAxDuFI36Ki08YPBgNwm/yRt3mfSfrJCv
-	TE2U+KCj3AZFXkxn62OALKtprdcV4NHLd9XL7yR89UfbijJuL4HZoWybDEAbr4mbACTMx4o
-	o++QCDM7BUWGYlHFM9DxuXOnmLYg8I7lj5GQEWpKwx472iw4dJhdoviYMbls96vtuvOWKcC
-	gbr5uHT1+W49P+gQoH1kQ38/UUAcdEQ3iGx9hZCBqtrQirw+yy6VCc+nE4d88duDRhxBI1H
-	YgwUhsthaBAuopAhGYZ+UXYsyRXdPK2PzP22FzfyeHYAD6dH4Y4ZvVzRYOcx7+Bt0UtoaaS
-	g0qpdEDHT7f3YNPg9TLuJa5AOjTTXSMp7ctnM1V4Ih5Gnet+FD9QeEGE0ELy3p8c7nVvXiT
-	gbH5ZdXfLMRoTkvr+mN4Qoo8dxshAHI8wiPqotHbyKnDk2jFXXBNiBcc3YnZS8VDSBfBUbE
-	zzTl8+1/P3x9kVNDw67uEBns7q5bgy8eUaPx39ZuJfJ5dHI/uUT//Wk2J2Ioke//fZfvh4q
-	5g+4x/sllujMjrjWvPXNK55GxTxpfP+kU1LuhEk3K3+ZD8rSvevcMo8GaJbjh6PbnkVWAdK
-	agNBbV6XyylBSkHNxgBBFA3XHKuKi2toQ9A1l/7sVRnRiiQ+rlrUUrbICcvcJulMTnmWBr5
-	UJYSSIFcYZttBVMCGHNh8SpfrCj8tPsIIvpwVlB133bGnBsfz5XE2U+5cLpes4rU741GkDK
-	ueRsHCYflA6NyNrAswwVJO2i+IEUgSEit+5HCv2btGBs8k09icJJbJimfeYP1iwg1YWUpSp
-	/MoVQbt+hna5s/7fY8LY7IHnXtzHQaihb5WCT30zG6D3l9eD96hNsU4pyRTw4YK6LhdijrL
-	yS2R7O4nG+UKqOsoESKIuJ8XjzYkiQUECKgvCAdhauPrsdRZmi47M8ewkBGtfIz5ilsFZI7
-	k15vLblILXT09F3Wl0fqReIsVAdTqJxISmUHHaef95pohIopVr/PNwH6TVZoFV+eN6qgjPp
-	SMmmF+U48Jgu2///kHTp4Ig2hSqD0=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+Mime-Version: 1.0
+References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
+ <20250110-asi-rfc-v2-v2-4-8419288bc805@google.com> <20250319172935.GMZ9r-_zzXhyhHBLfj@fat_crate.local>
+ <Z9sRQ0cK0rupEiT-@google.com>
+X-Mailer: aerc 0.18.2
+Message-ID: <D8L164U8HBTB.G5MS86AIISLM@google.com>
+Subject: Re: [PATCH RFC v2 04/29] mm: asi: Add infrastructure for boot-time enablement
+From: Brendan Jackman <jackmanb@google.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>, Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	<x86@kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-alpha@vger.kernel.org>, <linux-snps-arc@lists.infradead.org>, 
+	<linux-arm-kernel@lists.infradead.org>, <linux-csky@vger.kernel.org>, 
+	<linux-hexagon@vger.kernel.org>, <loongarch@lists.linux.dev>, 
+	<linux-m68k@lists.linux-m68k.org>, <linux-mips@vger.kernel.org>, 
+	<linux-openrisc@vger.kernel.org>, <linux-parisc@vger.kernel.org>, 
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>, 
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>, 
+	<sparclinux@vger.kernel.org>, <linux-um@lists.infradead.org>, 
+	<linux-arch@vger.kernel.org>, <linux-mm@kvack.org>, 
+	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, 
+	<kvm@vger.kernel.org>, <linux-efi@vger.kernel.org>, 
+	Junaid Shahid <junaids@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The arch_kgdb_breakpoint() function defines the kgdb_breakinst
-symbol using inline assembly.
+On Wed Mar 19, 2025 at 6:47 PM UTC, Yosry Ahmed wrote:
+> On Wed, Mar 19, 2025 at 06:29:35PM +0100, Borislav Petkov wrote:
+> > On Fri, Jan 10, 2025 at 06:40:30PM +0000, Brendan Jackman wrote:
+> > > Add a boot time parameter to control the newly added X86_FEATURE_ASI.
+> > > "asi=on" or "asi=off" can be used in the kernel command line to enable
+> > > or disable ASI at boot time. If not specified, ASI enablement depends
+> > > on CONFIG_ADDRESS_SPACE_ISOLATION_DEFAULT_ON, which is off by default.
+> > 
+> > I don't know yet why we need this default-on thing...
+>
+> It's a convenience to avoid needing to set asi=on if you want ASI to be
+> on by default. It's similar to HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON
+> or ZSWAP_DEFAULT_ON.
+>
+> [..]
+> > > @@ -175,7 +184,11 @@ static __always_inline bool asi_is_restricted(void)
+> > >  	return (bool)asi_get_current();
+> > >  }
+> > >  
+> > > -/* If we exit/have exited, can we stay that way until the next asi_enter? */
+> > > +/*
+> > > + * If we exit/have exited, can we stay that way until the next asi_enter?
+> > 
+> > What is that supposed to mean here?
+>
+> asi_is_relaxed() checks if the thread is outside an ASI critical
+> section.
+>
+> I say "the thread" because it will also return true if we are executing
+> an interrupt that arrived during the critical section, even though the
+> interrupt handler is not technically part of the critical section.
+>
+> Now the reason it says "if we exit we stay that way" is probably
+> referring to the fact that an asi_exit() when interrupting a critical
+> section will be undone in the interrupt epilogue by re-entering ASI.
+>
+> I agree the wording here is confusing. We should probably describe this
+> more explicitly and probably rename the function after the API
+> discussions you had in the previous patch.
 
-There's a potential issue where the compiler might inline
-arch_kgdb_breakpoint(), which would then define the kgdb_breakinst
-symbol multiple times, leading to a linker error.
+Yeah, this is confusing. It's trying to very concisely define the
+concept of "relaxed" but now I see it through Boris' eyes I realise
+it's really unhelpful to try and do that. And yeah we should probably
+just rework the terminology/API.
 
-To prevent this, declare arch_kgdb_breakpoint() as noline.
+To re-iterate what Yosry said, aside from my too-clever comment style
+the more fundamental thing that's confusing here is that, using the
+terminology currently in the code there are two concepts at play:
 
-Fix follow error with LLVM-19 *only* when LTO_CLANG_FULL:
-    LD      vmlinux.o
-  ld.lld-19: error: ld-temp.o <inline asm>:3:1: symbol 'kgdb_breakinst' is already defined
-  kgdb_breakinst: break 2
-  ^
+- The critical section: this is the path from asi_enter() to
+  asi_relax(). The critical section can be interrupted, and code
+  running in those interupts is not said to be "in the critical
+  section".
 
-Fixes: e14dd076964e ("LoongArch: Add basic KGDB & KDB support")
-Co-developed-by: Winston Wen <wentao@uniontech.com>
-Signed-off-by: Winston Wen <wentao@uniontech.com>
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Tested-by: Yuli Wang <wangyuli@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- arch/loongarch/kernel/kgdb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- Being "tense" vs "relaxed". Being "tense" means the _task_ is in a
+  critical section, but the current code might not be.
 
-diff --git a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb.c
-index 445c452d72a7..03ad4632e720 100644
---- a/arch/loongarch/kernel/kgdb.c
-+++ b/arch/loongarch/kernel/kgdb.c
-@@ -224,7 +224,7 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc)
- 	regs->csr_era = pc;
- }
- 
--void arch_kgdb_breakpoint(void)
-+noinline void arch_kgdb_breakpoint(void)
- {
- 	__asm__ __volatile__ (			\
- 		".globl kgdb_breakinst\n\t"	\
--- 
-2.49.0
+This distinction is theoretically relevant because e.g. it's a bug to
+access sensitive data in a critical section, but it's OK to access it
+while in the tense state (we will switch to the restricted address
+space, but this is OK because we will have a chance to asi_enter()
+again before we get back to the untrusted code). 
 
+BTW, just to be clear:
+
+1. Both of these are only relevant to code that's pretty deeply aware
+   of ASI. (TLB flushing code, entry code, stuff like that).
+
+2. To be honest whenever you write:
+
+     if (asi_in_critical_section())
+
+   You probably mean:
+
+     if (WARN_ON(asi_in_critical_section()))
+
+   For example if we try to flush the TLB in the critical section,
+   there's a thing we can do to handle it. But that really shouldn't
+   be necessary.  We want the critical section code to be very small
+   and straight-line code.
+
+   And indeed in the present code we don't use
+   asi_in_critical_section() for anything bur WARNing.
+
+> asi_is_relaxed() checks if the thread is outside an ASI critical
+> section.
+
+Now I see it written this way, this is probably the best way to
+conceptualise it. Instead of having two concepts "tense/relaxed" vs
+"ASI critical section" we could just say "the task is in a critical
+section" vs "the CPU is in a critical section". So we could have
+something like:
+
+bool asi_task_critical(void);
+bool asi_cpu_critical(void);
+
+(They could also accept an argument for the task/CPU, but I can't see
+any reason why you'd peek at another context like that).
+
+--
+
+For everything else, Ack to Boris or +1 to Yosry respectively.
