@@ -1,197 +1,144 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D1614AD29
-	for <loongarch@lists.linux.dev>; Wed, 19 Mar 2025 18:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B7A38F9C
+	for <loongarch@lists.linux.dev>; Thu, 20 Mar 2025 03:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742410066; cv=none; b=ay4ANXiTdwlqgovBqrCwl7vEZgz7E4BWlbOYVK5pWR9JoSY48VEvxiySWl6enVayQV3UJeprF2SLxFqnjYAneIuPUImIGCVwTw/vEgeaXfzQoRdW6RzubecdthiJF9WBCkXYhwlKyrNP142PG3FkXbwHLX9rLtrTtegakLMf4b4=
+	t=1742439705; cv=none; b=e5whHvIunyqYNZsZ151zA0J7gFHmWFNx+3LM1xkofi4vHeVqHXXrsV1ov+N2IpKPEyVcTBdWLuHH3b4v6uM3bJLvuVkFxj32x8YMpeY57OjlFJORg9NZUfyEuWa8DF0bhlbomPz9SA2dgvNspB+75CpDE4AMsUjNaWYT4iO6CQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742410066; c=relaxed/simple;
-	bh=Z67lfJxfXOSQRQn2QgIM7XZlMuhz0KwFLbCo1PIaWSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u5EWmhoMT2UIDjeSjCE2qjNJIBaV/06x5up4QF8DhGdPDW73d0SieF7f1ApjpknczPDXHk7xT+i6yXgfZ09GWzEihlFa/X9SQqK0FgDZsqe/0n7UToHMrllgh+xbjkMysPxTZLPy84kyEibuF6O2a0jKzQLZ67RRna2Nv6lxR1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xaQi4Ef4; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742439705; c=relaxed/simple;
+	bh=c0OVR0nfnZkRWysIpPR89Iqk1G7jQnsqPpst6EHgn+E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BLZtoiY4TiFBPBquIfHGiLgCk5+P4pXWvc9W5+BT/EA5hBxeQpEbE97LZbG7oUz5U7iEVebBoxcXcRi9HN/xQ0iGAGNqoz6PpdTZw3u5e+Myw7lOhavo2hw7nmlAnAcD4Upj3i0gnB3tX4gvoNI0+KIqzkrS7M96HxcgaipVx7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCOywEWC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xaQi4Ef4"
-Date: Wed, 19 Mar 2025 18:47:31 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742410061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zqyBVaYb9ts4lSaXiElKMyansdaMcGaJGQGVhzkplWo=;
-	b=xaQi4Ef4746B+A1AJBeekKoem5X9BsU2Zv43rk34K1b57B9N/UUB0WB7+ebMMyAm4dfIwQ
-	po8r8m5IqUgNRKUb/IkSMFPDZP7ikmojvJbVFmFRwuujjWoxhQaSwuSjM3plvtnggGTY0s
-	MOiuRmYvVaZE3dOZtPg1/9XMdLYCzcU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Brendan Jackman <jackmanb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, Junaid Shahid <junaids@google.com>
-Subject: Re: [PATCH RFC v2 04/29] mm: asi: Add infrastructure for boot-time
- enablement
-Message-ID: <Z9sRQ0cK0rupEiT-@google.com>
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-4-8419288bc805@google.com>
- <20250319172935.GMZ9r-_zzXhyhHBLfj@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCOywEWC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10315C4CEF0
+	for <loongarch@lists.linux.dev>; Thu, 20 Mar 2025 03:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742439705;
+	bh=c0OVR0nfnZkRWysIpPR89Iqk1G7jQnsqPpst6EHgn+E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fCOywEWC8hsTk1aoRHzQ52l8BWo7neTLdqYqX3JJYjXLHwB6sDYKlPTzyyizODc5k
+	 2Y/ihlh8w4EOz7t7Bqe68tTBu6wYl4WCvhfbmyv30wR8JwNEh5I3ABHC33BAXJHOjX
+	 B/WrlIhZceIXIlRSvvBFbfyA0qclpy1BMWNluIbk86wkLs6YUzQbDWge5a68tJM5PS
+	 FUth/Z+nf04nkO65CCwcfFtPK4FVFXDij/aTM/JI/WXzK/G4zKgqQwesJXM8iC8/h0
+	 VpPM52Ax7ghnGeWClj1ch86NpW5g9DG7jTmh+RVEVzala+qDaoBrf6LgokG6WN+IQk
+	 G7SEQHBelOOhw==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso488675a12.0
+        for <loongarch@lists.linux.dev>; Wed, 19 Mar 2025 20:01:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWpJ9ckYbyq7/T38NErNSTIVb15nFKKWCzlbI6XuCkYFg444b9IlCucilwIBXqqxMfJPwlsu9LehUA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzluAGCN9o23pzPEMxnyBxXB6vGLQI3Wi8aBSpnZTIFuKJfmbJQ
+	o3P1wI6woZ4pCcXhiQuEa9EPa7pQNWS1mvKS3m5BGBek8ltvZiDtCJIEzqT3oShJKZIGqLqbO21
+	A+04SVUfrnrV2aT3gjwsVzbYto80=
+X-Google-Smtp-Source: AGHT+IHqWokcgREOirPHE31mMWzf5yAqDBsDiehm2ro+I/2WbRrfdrFc22+YmYMAdH+fNLU8SlaD6kHofdbWyes0A54=
+X-Received: by 2002:a05:6402:1d54:b0:5e5:49af:411d with SMTP id
+ 4fb4d7f45d1cf-5eb80d487b5mr5702524a12.17.1742439703352; Wed, 19 Mar 2025
+ 20:01:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319172935.GMZ9r-_zzXhyhHBLfj@fat_crate.local>
-X-Migadu-Flow: FLOW_OUT
+References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
+ <20250319064031.2971073-4-chenhuacai@loongson.cn> <2025031943-disparity-dash-cfa3@gregkh>
+ <Z9rYQy3l5V5cvW7W@t14s> <2025031942-portside-finite-34a9@gregkh> <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
+In-Reply-To: <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 20 Mar 2025 11:01:32 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4-GnvqJrnJu_Z6EBKBH5WBTiZ9xRh1vGhBmuoYNw=r9w@mail.gmail.com>
+X-Gm-Features: AQ5f1JpRALxCtqgxc8zE1UNEpDT5tsnLLr1ILnleluG0qpKgmpr6B4OtD1rd5lQ
+Message-ID: <CAAhV-H4-GnvqJrnJu_Z6EBKBH5WBTiZ9xRh1vGhBmuoYNw=r9w@mail.gmail.com>
+Subject: Re: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11
+ provider for OPENSSL MAJOR >= 3
+To: Jan Stancek <jstancek@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Sasha Levin <sashal@kernel.org>, Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, 
+	David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, R Nageswara Sastry <rnsastry@linux.ibm.com>, 
+	Neal Gompa <neal@gompa.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 06:29:35PM +0100, Borislav Petkov wrote:
-> On Fri, Jan 10, 2025 at 06:40:30PM +0000, Brendan Jackman wrote:
-> > Add a boot time parameter to control the newly added X86_FEATURE_ASI.
-> > "asi=on" or "asi=off" can be used in the kernel command line to enable
-> > or disable ASI at boot time. If not specified, ASI enablement depends
-> > on CONFIG_ADDRESS_SPACE_ISOLATION_DEFAULT_ON, which is off by default.
-> 
-> I don't know yet why we need this default-on thing...
+Hi, all,
 
-It's a convenience to avoid needing to set asi=on if you want ASI to be
-on by default. It's similar to HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON
-or ZSWAP_DEFAULT_ON.
+On Thu, Mar 20, 2025 at 12:53=E2=80=AFAM Jan Stancek <jstancek@redhat.com> =
+wrote:
+>
+> On Wed, Mar 19, 2025 at 5:26=E2=80=AFPM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Mar 19, 2025 at 03:44:19PM +0100, Jan Stancek wrote:
+> > > On Wed, Mar 19, 2025 at 07:13:13AM -0700, Greg Kroah-Hartman wrote:
+> > > > On Wed, Mar 19, 2025 at 02:40:31PM +0800, Huacai Chen wrote:
+> > > > > From: Jan Stancek <jstancek@redhat.com>
+> > > > >
+> > > > > commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
+> > > > >
+> > > > > ENGINE API has been deprecated since OpenSSL version 3.0 [1].
+> > > > > Distros have started dropping support from headers and in future
+> > > > > it will likely disappear also from library.
+> > > > >
+> > > > > It has been superseded by the PROVIDER API, so use it instead
+> > > > > for OPENSSL MAJOR >=3D 3.
+> > > > >
+> > > > > [1] https://github.com/openssl/openssl/blob/master/README-ENGINES=
+.md
+> > > > >
+> > > > > [jarkko: fixed up alignment issues reported by checkpatch.pl --st=
+rict]
+> > > > >
+> > > > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
+> > > > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+> > > > > Reviewed-by: Neal Gompa <neal@gompa.dev>
+> > > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > ---
+> > > > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------=
+------
+> > > > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++-----------=
+-
+> > > > >  2 files changed, 138 insertions(+), 58 deletions(-)
+> > > >
+> > > > This seems to differ from what is upstream by a lot, please documen=
+t
+> > > > what you changed from it and why when you resend this series again.
+> > >
+> > > Hunks are arranged differently, but code appears to be identical.
+> > > When I apply the series to v6.6.83 and compare with upstream I get:
+> >
+> > If so, why is the diffstat different?  Also why are the hunks arranged
+> > differently,
+>
+> He appears to be using "--diff-algorithm=3Dminimal", while you probably
+> patience or histogram.
+>
+> $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb2 |
+> grep -A3 -m1 -- "---"
+> ---
+>  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
+>  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
+>  2 files changed, 138 insertions(+), 58 deletions(-)
+>
+> Should be easy to regenerate with different diff-alg for v4.
+I use the default configuration to generate patches, and since the
+code is identical, should I really send a V4?
 
-[..]
-> > @@ -175,7 +184,11 @@ static __always_inline bool asi_is_restricted(void)
-> >  	return (bool)asi_get_current();
-> >  }
-> >  
-> > -/* If we exit/have exited, can we stay that way until the next asi_enter? */
-> > +/*
-> > + * If we exit/have exited, can we stay that way until the next asi_enter?
-> 
-> What is that supposed to mean here?
+Huacai
 
-asi_is_relaxed() checks if the thread is outside an ASI critical
-section.
-
-I say "the thread" because it will also return true if we are executing
-an interrupt that arrived during the critical section, even though the
-interrupt handler is not technically part of the critical section.
-
-Now the reason it says "if we exit we stay that way" is probably
-referring to the fact that an asi_exit() when interrupting a critical
-section will be undone in the interrupt epilogue by re-entering ASI.
-
-I agree the wording here is confusing. We should probably describe this
-more explicitly and probably rename the function after the API
-discussions you had in the previous patch.
-
-> 
-> > + *
-> > + * When ASI is disabled, this returns true.
-> > + */
-> >  static __always_inline bool asi_is_relaxed(void)
-> >  {
-> >  	return !asi_get_target(current);
-[..]
-> > @@ -66,10 +73,36 @@ const char *asi_class_name(enum asi_class_id class_id)
-> >  	return asi_class_names[class_id];
-> >  }
-> >  
-> > +void __init asi_check_boottime_disable(void)
-> > +{
-> > +	bool enabled = IS_ENABLED(CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION_DEFAULT_ON);
-> > +	char arg[4];
-> > +	int ret;
-> > +
-> > +	ret = cmdline_find_option(boot_command_line, "asi", arg, sizeof(arg));
-> > +	if (ret == 3 && !strncmp(arg, "off", 3)) {
-> > +		enabled = false;
-> > +		pr_info("ASI disabled through kernel command line.\n");
-> > +	} else if (ret == 2 && !strncmp(arg, "on", 2)) {
-> > +		enabled = true;
-> > +		pr_info("Ignoring asi=on param while ASI implementation is incomplete.\n");
-> > +	} else {
-> > +		pr_info("ASI %s by default.\n",
-> > +			enabled ? "enabled" : "disabled");
-> > +	}
-> > +
-> > +	if (enabled)
-> > +		pr_info("ASI enablement ignored due to incomplete implementation.\n");
-> 
-> Incomplete how?
-
-This is referring to the fact that ASI is still not fully/correctly
-functional, but it will be after the following patches.
-
-I think it will be clearer if we just add the feature flag here so that
-we have something to check for in the following patches, but add the
-infrastructure for boot-time enablement at the end of the series when
-the impelemntation is complete.
-
-Basically start by a feature flag that has no way of being enabled, use
-it in the implmentation, then add means of enabling it.
-
-> 
-> > +}
-> > +
-> >  static void __asi_destroy(struct asi *asi)
-> >  {
-> > -	lockdep_assert_held(&asi->mm->asi_init_lock);
-> > +	WARN_ON_ONCE(asi->ref_count <= 0);
-> > +	if (--(asi->ref_count) > 0)
-> 
-> Switch that to
-> 
-> include/linux/kref.h
-> 
-> It gives you a sanity-checking functionality too so you don't need the WARN...
-
-I think we hve internal changes that completely get rid of this
-ref_count and simplifies the lifetime handling that we can squash here.
-We basically keep ASI objects around until the process is torn down,
-which makes this simpler and avoids the need for complex synchronization
-when we try to context switch or run userspace without exiting ASI
-(spoiler alert :) ).
-
-> 
-> > +		return;
-> >  
-> > +	free_pages((ulong)asi->pgd, PGD_ALLOCATION_ORDER);
-> > +	memset(asi, 0, sizeof(struct asi));
-> 
-> And then you can do:
-> 
-> 	if (kref_put())
-> 		free_pages...
-> 
-> and so on.
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-> 
+>
+> Regards,
+> Jan
+>
+> > that's a hint to me that something went wrong and I can't
+> > trust the patch at all.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+>
