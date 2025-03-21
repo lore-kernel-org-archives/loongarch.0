@@ -1,176 +1,146 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B65B184F
-	for <loongarch@lists.linux.dev>; Fri, 21 Mar 2025 06:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB66F225761;
+	Fri, 21 Mar 2025 12:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742539020; cv=none; b=tP2NvgUmJafDEGzmCX2bdsXLP81nrelcK0RXVMl6uzxkiM/nQCCT2gOfvT3WPCX5MqgfaV6TH7Jrii+vVOPK6eQqyCLHveQDOL89Olg01DbLtp9llvo7me6Wes08HN1qDf+/OWWc59vHFuu4LWcWpaVQ8SLvoyR63kNMJiTxjng=
+	t=1742560151; cv=none; b=RVGvlOp7+vxoc40nh19lBUgWQ/WOODt1HZzNOhfGZYe0HbLmEeesRy8tDB6iWZL5U/6z/R2Tgm7zz51/hN5KO6rom4SeQOwXgI8vxeSwyydCiCtqDerWPqTot+vwvoqoPM+TsLaRI72U2LNoDxs+ufS21FVUCko+PN0fkygzoIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742539020; c=relaxed/simple;
-	bh=y8fZQXJC5hgTKkheB5VelzVO10FdRYFnOoE9Iq65Dyw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PYGyCEsS6IJ0VdiVVft2pLXinS29118/z+N0jKw/Y542GPDLwYBgiIRL0Aa0B3/VYvM43fSsudQYcV1UwTaHJ03YFgPovIzTxpGYpVMLOYO7crfJkFKEUJyUCX91iaMj+s68Prq5ND1ADq5xGYB7+ewZf6byIzTu2SLa8gHj4ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2296E4432E;
-	Fri, 21 Mar 2025 06:36:50 +0000 (UTC)
-Message-ID: <da40da36-097a-4b67-a67b-f00148474423@ghiti.fr>
-Date: Fri, 21 Mar 2025 07:36:50 +0100
+	s=arc-20240116; t=1742560151; c=relaxed/simple;
+	bh=lfdiISzEEgrO+slIfnGzPTZpHHwZmhdB5j/bOmU0rqs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=c2NubGeY04kvGjD9mRyKTRW/W03KiMWKaQVY0psTZvjv5qgQmVYXv2zXyzxPNSAPVupAmOONh2TodnUmxuLSSPBcMIrzOWLfQBVW23wZ7HE7ahrSvzQvmxKanOrZstooUgbh+2+B2+QCN7VhWz8Qwl9s+Xp1LkO75Q+RKwOw3wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=i57tvl4V; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lT051Oi2; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="i57tvl4V";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lT051Oi2"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id BBD171383770;
+	Fri, 21 Mar 2025 08:29:08 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-09.internal (MEProxy); Fri, 21 Mar 2025 08:29:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1742560148;
+	 x=1742646548; bh=N6kPZ0cFTmXIpixMnN6tF81nr1APN9wNYIh/tOxWbbw=; b=
+	i57tvl4VKDF5ha2G2v+8lAQuw6M4b1rAcdwypJljRX1jdQIIhzz0E6CEgVlFkLRO
+	QtFqzhLS998HFqJWRmkKelAQcaTcK0YLNtn49PmynzG8d5BS7EsoRVNiuYIoIn9I
+	cOiZVhYwtpQWmD2njqRcpGywgdu5+SQt/nPTb4yf8gMJbbwX9oQWrK8AkMTvoVOB
+	L9FmDRNfEoZgW12ShA0klsJ9QMNk9FrVQlr6W4xkhkSf5eGpp8IdkbpOJuEE/Qmg
+	lCPFhIGP50Wykl2lHlJ8xEpJHVYiNbUhYAS/6s/Ue5lmvLZ1GGZpHTY+Et+Yq5tZ
+	OE8D5fzFZEcdRDWUcd+hqQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742560148; x=
+	1742646548; bh=N6kPZ0cFTmXIpixMnN6tF81nr1APN9wNYIh/tOxWbbw=; b=l
+	T051Oi2UrKbm70CTM0+WU3RQEBl8O2InYlf0qdnaHHzwk5G/DKmvmQY4V+YoDLdm
+	QJB0kaHQp9VLye/2Xf+xPqSWKQXyi08/ivcZ8uo6Mjm7/UXyd4jeDd8oB94FhdAa
+	aC2Y99wIkKUoxgxQP84BNTei34kdy6grBEl3jybYMlOFcPhV2LExykGvfGQg7QXH
+	P5QYIGouVKBsllY6pY33yrQvIxGDFhPJFKGTV00z6bwu67sOPPpsFCxVuqIIVKfM
+	Qs66jVGIffYzvn79RakI8Q67HJVtLeA8bZT2RhUYwT+Cx7EXXNC2exbfSZPdwyak
+	fA7bufMcB9yyYIgUYf9Bg==
+X-ME-Sender: <xms:kVvdZ-dvlNxtgCueP5K-X9LrgmPY6bqsjmhT2RPPYtEaSwAWAGAdAQ>
+    <xme:kVvdZ0gcXISmmqq1VzvW-zdk0qyp2ODnRZoy7qxoIXaKjL5LU_X1LWe1jWEw4F8_G
+    dd1P2hZMkrAJWbSSTA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduudduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    feeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinh
+    hugidrohhrghdruhhkpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhr
+    tghpthhtohepkhhhihhlmhgrnhessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtoheprg
+    hnuhhpsegsrhgrihhnfhgruhhlthdrohhrghdprhgtphhtthhopegstghmqdhkvghrnhgv
+    lhdqfhgvvggusggrtghkqdhlihhsthessghrohgruggtohhmrdgtohhmpdhrtghpthhtoh
+    epfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomhdprhgtphht
+    thhopehrjhhuihessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepshgsrhgrnhguvg
+    hnsegsrhhorggutghomhdrtghomhdprhgtphhtthhopehhvghinhhrihgthhdrshgthhhu
+    tghhrghrughtsegtrghnohhnihgtrghlrdgtohhm
+X-ME-Proxy: <xmx:kVvdZyTE_63LDgMM7nvl4LCgcIFqy_9iCOFIBpOZarDifNQuZnO2iA>
+    <xmx:kVvdZ9x64sGPKdZ2VIrCvWv-1MNkOWAp6cmotk7ZALObl9LtLLnk7A>
+    <xmx:kVvdZ9ft6EbGWl4xG5AO97oQzboLTu8b0zu7dl5RWqGY1OfLFgpFBA>
+    <xmx:kVvdZ5K36lITbTqEtI95TI43l1OeBmYuUxwKKiur1-FWuKwrE3_V5Q>
+    <xmx:lFvdZ0kCqZVFDyJTIxAcWCLqQ8EY8hX7Vh8b8wygXH59ssdCdw-ftcuY>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CB0352220073; Fri, 21 Mar 2025 08:29:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/4] riscv: entry: Split ret_from_fork() into user and
- kernel
-Content-Language: en-US
-To: Charlie Jenkins <charlie@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>,
- Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
- Alexandre Ghiti <alexghiti@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>,
- Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20250320-riscv_optimize_entry-v6-0-63e187e26041@rivosinc.com>
- <20250320-riscv_optimize_entry-v6-2-63e187e26041@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250320-riscv_optimize_entry-v6-2-63e187e26041@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: Td2a26421dc1a91fa
+Date: Fri, 21 Mar 2025 13:28:43 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Thierry Reding" <thierry.reding@gmail.com>
+Cc: "Celeste Liu" <uwu@coelacanthus.name>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, guoren <guoren@kernel.org>,
+ "Anup Patel" <anup@brainfault.org>,
+ "Heinrich Schuchardt" <heinrich.schuchardt@canonical.com>,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ "Yoshinori Sato" <ysato@users.sourceforge.jp>,
+ "Rich Felker" <dalias@libc.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Florian Fainelli" <florian.fainelli@broadcom.com>,
+ "Broadcom internal kernel review list"
+ <bcm-kernel-feedback-list@broadcom.com>, "Ray Jui" <rjui@broadcom.com>,
+ "Scott Branden" <sbranden@broadcom.com>,
+ "Tony Lindgren" <tony@atomide.com>, "Jon Hunter" <jonathanh@nvidia.com>,
+ "Aaro Koskinen" <aaro.koskinen@iki.fi>,
+ "Andreas Kemnade" <andreas@kemnade.info>,
+ "Kevin Hilman" <khilman@baylibre.com>,
+ "Roger Quadros" <rogerq@kernel.org>,
+ "Palmer Dabbelt" <palmer@rivosinc.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org,
+ Linux-OMAP <linux-omap@vger.kernel.org>, linux-tegra@vger.kernel.org,
+ "Stefan Wahren" <wahrenst@gmx.net>,
+ "Thierry Reding" <treding@nvidia.com>, soc@lists.linux.dev
+Message-Id: <5fd4f314-e570-4b37-b7c2-af5b4bc85a39@app.fastmail.com>
+In-Reply-To: 
+ <t2dustbykx2qd24wazjeiw5hch5nwr6z2ewmaf4srg6r2grwrf@rdw47chzkef2>
+References: 
+ <20250115-fix-riscv-rt_group_sched-v4-0-607606fe73a5@coelacanthus.name>
+ <20250115-fix-riscv-rt_group_sched-v4-4-607606fe73a5@coelacanthus.name>
+ <t2dustbykx2qd24wazjeiw5hch5nwr6z2ewmaf4srg6r2grwrf@rdw47chzkef2>
+Subject: Re: [PATCH v4 4/4] arm: defconfig: drop RT_GROUP_SCHED=y from
+ bcm2835/tegra/omap2plus
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedtfeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpefhlefhffeggfeftddvtdeukeelgfehkeehhfeuheehleefkeelgffglefghfffueenucffohhmrghinhepvghnthhrhidrshgsnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemleekgeekmeeksgdvudemheefudejmedugeehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemleekgeekmeeksgdvudemheefudejmedugeehuddphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemleekgeekmeeksgdvudemheefudejmedugeehudgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepp
- hgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhesgigvnhdtnhdrnhgrmhgvpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhuthhosehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Charlie,
-
-On 20/03/2025 18:29, Charlie Jenkins wrote:
-> This function was unified into a single function in commit ab9164dae273
-> ("riscv: entry: Consolidate ret_from_kernel_thread into ret_from_fork").
-> However that imposed a performance degradation. Partially reverting this
-> commit to have ret_from_fork() split again results in a 1% increase on
-> the number of times fork is able to be called per second.
+On Thu, Mar 6, 2025, at 20:19, Thierry Reding wrote:
+> On Wed, Jan 15, 2025 at 04:41:23AM +0800, Celeste Liu wrote:
+>> ---
+>>  arch/arm/configs/bcm2835_defconfig   | 1 -
+>>  arch/arm/configs/omap2plus_defconfig | 1 -
+>>  arch/arm/configs/tegra_defconfig     | 1 -
+>>  3 files changed, 3 deletions(-)
 >
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
->   arch/riscv/include/asm/asm-prototypes.h |  3 ++-
->   arch/riscv/kernel/entry.S               | 13 ++++++++++---
->   arch/riscv/kernel/process.c             | 17 +++++++++++------
->   3 files changed, 23 insertions(+), 10 deletions(-)
+> Hi Arnd,
 >
-> diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/include/asm/asm-prototypes.h
-> index 733ff609778797001006c33bba9e3cc5b1f15387..bfc8ea5f9319b19449ec59493b45b926df888832 100644
-> --- a/arch/riscv/include/asm/asm-prototypes.h
-> +++ b/arch/riscv/include/asm/asm-prototypes.h
-> @@ -52,7 +52,8 @@ DECLARE_DO_ERROR_INFO(do_trap_ecall_s);
->   DECLARE_DO_ERROR_INFO(do_trap_ecall_m);
->   DECLARE_DO_ERROR_INFO(do_trap_break);
->   
-> -asmlinkage void ret_from_fork(void *fn_arg, int (*fn)(void *), struct pt_regs *regs);
-> +asmlinkage void ret_from_fork_kernel(void *fn_arg, int (*fn)(void *), struct pt_regs *regs);
-> +asmlinkage void ret_from_fork_user(struct pt_regs *regs);
->   asmlinkage void handle_bad_stack(struct pt_regs *regs);
->   asmlinkage void do_page_fault(struct pt_regs *regs);
->   asmlinkage void do_irq(struct pt_regs *regs);
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> index b2dc5e7c7b3a843fa4aa02eba2a911eb3ce31d1f..0fb338000c6dc0358742cd03497fa54b9e9d1aec 100644
-> --- a/arch/riscv/kernel/entry.S
-> +++ b/arch/riscv/kernel/entry.S
-> @@ -319,14 +319,21 @@ SYM_CODE_END(handle_kernel_stack_overflow)
->   ASM_NOKPROBE(handle_kernel_stack_overflow)
->   #endif
->   
-> -SYM_CODE_START(ret_from_fork_asm)
-> +SYM_CODE_START(ret_from_fork_kernel_asm)
->   	call schedule_tail
->   	move a0, s1 /* fn_arg */
->   	move a1, s0 /* fn */
->   	move a2, sp /* pt_regs */
-> -	call ret_from_fork
-> +	call ret_from_fork_kernel
->   	j ret_from_exception
-> -SYM_CODE_END(ret_from_fork_asm)
-> +SYM_CODE_END(ret_from_fork_kernel_asm)
-> +
-> +SYM_CODE_START(ret_from_fork_user_asm)
-> +	call schedule_tail
-> +	move a0, sp /* pt_regs */
-> +	call ret_from_fork_user
-> +	j ret_from_exception
-> +SYM_CODE_END(ret_from_fork_user_asm)
->   
->   #ifdef CONFIG_IRQ_STACKS
->   /*
-> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-> index 7b0a0bfe29aec896c2bdd8976d855dd390de88d7..485ec7a80a56097e8905cd6395af29633846b5c8 100644
-> --- a/arch/riscv/kernel/process.c
-> +++ b/arch/riscv/kernel/process.c
-> @@ -38,7 +38,8 @@ unsigned long __stack_chk_guard __read_mostly;
->   EXPORT_SYMBOL(__stack_chk_guard);
->   #endif
->   
-> -extern asmlinkage void ret_from_fork_asm(void);
-> +extern asmlinkage void ret_from_fork_kernel_asm(void);
-> +extern asmlinkage void ret_from_fork_user_asm(void);
->   
->   void noinstr arch_cpu_idle(void)
->   {
-> @@ -208,14 +209,18 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
->   	return 0;
->   }
->   
-> -asmlinkage void ret_from_fork(void *fn_arg, int (*fn)(void *), struct pt_regs *regs)
-> +asmlinkage void ret_from_fork_kernel(void *fn_arg, int (*fn)(void *), struct pt_regs *regs)
->   {
-> -	if (unlikely(fn))
-> -		fn(fn_arg);
-> +	fn(fn_arg);
->   
->   	syscall_exit_to_user_mode(regs);
->   }
->   
-> +asmlinkage void ret_from_fork_user(struct pt_regs *regs)
-> +{
-> +	syscall_exit_to_user_mode(regs);
-> +}
-> +
->   int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
->   {
->   	unsigned long clone_flags = args->flags;
-> @@ -238,6 +243,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
->   
->   		p->thread.s[0] = (unsigned long)args->fn;
->   		p->thread.s[1] = (unsigned long)args->fn_arg;
-> +		p->thread.ra = (unsigned long)ret_from_fork_kernel_asm;
->   	} else {
->   		*childregs = *(current_pt_regs());
->   		/* Turn off status.VS */
-> @@ -247,12 +253,11 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
->   		if (clone_flags & CLONE_SETTLS)
->   			childregs->tp = tls;
->   		childregs->a0 = 0; /* Return value of fork() */
-> -		p->thread.s[0] = 0;
-> +		p->thread.ra = (unsigned long)ret_from_fork_user_asm;
->   	}
->   	p->thread.riscv_v_flags = 0;
->   	if (has_vector() || has_xtheadvector())
->   		riscv_v_thread_alloc(p);
-> -	p->thread.ra = (unsigned long)ret_from_fork_asm;
->   	p->thread.sp = (unsigned long)childregs; /* kernel sp */
->   	return 0;
->   }
->
+> is this something that you could pick up? I think so far only the RISC-V
+> patch was picked up, but nobody seems to feel responsible for the ARM
+> patch here.
 
-Acked-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+I've merged it now after going through stuff in my inbox. It's
+generally ok for patches like this one to be forwarded to
+soc@lists.linux.dev where they end up in patchwork for me to apply,
+in case you don't want it to get lost.
 
-Thanks,
-
-Alex
-
+     Arnd
