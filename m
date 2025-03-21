@@ -1,146 +1,140 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB66F225761;
-	Fri, 21 Mar 2025 12:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CCE191484
+	for <loongarch@lists.linux.dev>; Fri, 21 Mar 2025 14:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742560151; cv=none; b=RVGvlOp7+vxoc40nh19lBUgWQ/WOODt1HZzNOhfGZYe0HbLmEeesRy8tDB6iWZL5U/6z/R2Tgm7zz51/hN5KO6rom4SeQOwXgI8vxeSwyydCiCtqDerWPqTot+vwvoqoPM+TsLaRI72U2LNoDxs+ufS21FVUCko+PN0fkygzoIE=
+	t=1742566277; cv=none; b=BV0Y6CBTg+1CHkPHxrXsNY42DcDQfFfSq4CohjJtxyeErRJhv0FZ8qCMNahl87zK9cu07b/KwRFPDGCarpkS2Z5fuq+5TOJO2DSW0pdGJ3s/8FuKfmu2UsRZxJI3gAqkUPJwf28j6vdJy1CBJEx6bEJKA0n70qb2RnW7VRwHKO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742560151; c=relaxed/simple;
-	bh=lfdiISzEEgrO+slIfnGzPTZpHHwZmhdB5j/bOmU0rqs=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=c2NubGeY04kvGjD9mRyKTRW/W03KiMWKaQVY0psTZvjv5qgQmVYXv2zXyzxPNSAPVupAmOONh2TodnUmxuLSSPBcMIrzOWLfQBVW23wZ7HE7ahrSvzQvmxKanOrZstooUgbh+2+B2+QCN7VhWz8Qwl9s+Xp1LkO75Q+RKwOw3wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=i57tvl4V; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lT051Oi2; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1742566277; c=relaxed/simple;
+	bh=8fMUp76T444bje/W45VHdUiPf9lotiASA/xY69OIqfI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XryB5MbTbaZHFysX0xe115IBiJONk/QlBs7rAATlFBLH0u16l57mG2raNZ7l0HCnLduPLacZnPCHBHYqogAFG9PLfPzNug9S/2ymV99hUJIkz5HCVL5z/lR/MxppMa+xANxx49f5ud4DgZYEQmXrzTOVse3/tSI7ZBKwaJG3ZhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=hRlxA1dD; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="i57tvl4V";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lT051Oi2"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id BBD171383770;
-	Fri, 21 Mar 2025 08:29:08 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-09.internal (MEProxy); Fri, 21 Mar 2025 08:29:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1742560148;
-	 x=1742646548; bh=N6kPZ0cFTmXIpixMnN6tF81nr1APN9wNYIh/tOxWbbw=; b=
-	i57tvl4VKDF5ha2G2v+8lAQuw6M4b1rAcdwypJljRX1jdQIIhzz0E6CEgVlFkLRO
-	QtFqzhLS998HFqJWRmkKelAQcaTcK0YLNtn49PmynzG8d5BS7EsoRVNiuYIoIn9I
-	cOiZVhYwtpQWmD2njqRcpGywgdu5+SQt/nPTb4yf8gMJbbwX9oQWrK8AkMTvoVOB
-	L9FmDRNfEoZgW12ShA0klsJ9QMNk9FrVQlr6W4xkhkSf5eGpp8IdkbpOJuEE/Qmg
-	lCPFhIGP50Wykl2lHlJ8xEpJHVYiNbUhYAS/6s/Ue5lmvLZ1GGZpHTY+Et+Yq5tZ
-	OE8D5fzFZEcdRDWUcd+hqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742560148; x=
-	1742646548; bh=N6kPZ0cFTmXIpixMnN6tF81nr1APN9wNYIh/tOxWbbw=; b=l
-	T051Oi2UrKbm70CTM0+WU3RQEBl8O2InYlf0qdnaHHzwk5G/DKmvmQY4V+YoDLdm
-	QJB0kaHQp9VLye/2Xf+xPqSWKQXyi08/ivcZ8uo6Mjm7/UXyd4jeDd8oB94FhdAa
-	aC2Y99wIkKUoxgxQP84BNTei34kdy6grBEl3jybYMlOFcPhV2LExykGvfGQg7QXH
-	P5QYIGouVKBsllY6pY33yrQvIxGDFhPJFKGTV00z6bwu67sOPPpsFCxVuqIIVKfM
-	Qs66jVGIffYzvn79RakI8Q67HJVtLeA8bZT2RhUYwT+Cx7EXXNC2exbfSZPdwyak
-	fA7bufMcB9yyYIgUYf9Bg==
-X-ME-Sender: <xms:kVvdZ-dvlNxtgCueP5K-X9LrgmPY6bqsjmhT2RPPYtEaSwAWAGAdAQ>
-    <xme:kVvdZ0gcXISmmqq1VzvW-zdk0qyp2ODnRZoy7qxoIXaKjL5LU_X1LWe1jWEw4F8_G
-    dd1P2hZMkrAJWbSSTA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduudduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    feeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinh
-    hugidrohhrghdruhhkpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhr
-    tghpthhtohepkhhhihhlmhgrnhessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtoheprg
-    hnuhhpsegsrhgrihhnfhgruhhlthdrohhrghdprhgtphhtthhopegstghmqdhkvghrnhgv
-    lhdqfhgvvggusggrtghkqdhlihhsthessghrohgruggtohhmrdgtohhmpdhrtghpthhtoh
-    epfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomhdprhgtphht
-    thhopehrjhhuihessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepshgsrhgrnhguvg
-    hnsegsrhhorggutghomhdrtghomhdprhgtphhtthhopehhvghinhhrihgthhdrshgthhhu
-    tghhrghrughtsegtrghnohhnihgtrghlrdgtohhm
-X-ME-Proxy: <xmx:kVvdZyTE_63LDgMM7nvl4LCgcIFqy_9iCOFIBpOZarDifNQuZnO2iA>
-    <xmx:kVvdZ9x64sGPKdZ2VIrCvWv-1MNkOWAp6cmotk7ZALObl9LtLLnk7A>
-    <xmx:kVvdZ9ft6EbGWl4xG5AO97oQzboLTu8b0zu7dl5RWqGY1OfLFgpFBA>
-    <xmx:kVvdZ5K36lITbTqEtI95TI43l1OeBmYuUxwKKiur1-FWuKwrE3_V5Q>
-    <xmx:lFvdZ0kCqZVFDyJTIxAcWCLqQ8EY8hX7Vh8b8wygXH59ssdCdw-ftcuY>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CB0352220073; Fri, 21 Mar 2025 08:29:05 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="hRlxA1dD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1742566219;
+	bh=ccIXduJ4dfdtMf/Dn3ItPL78KdsAYRi4RxbF/2CUsFs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=hRlxA1dDC5vtuHPxw5BFSKsRm9+7sVPpz1yn1Nl0lL0g9uXDsO9ty+4hODFKkBIS4
+	 vgNw889H+XFn4X8s87WEoO2C8jrvomEip2cU328MKfUqrsh04l6yyAf00IxAOq3SS2
+	 xseAvSnbpr1je7PnWjz9yIlr4DNr0A4C/kpVtM0w=
+X-QQ-mid: bizesmtpip2t1742566207tm3pwz1
+X-QQ-Originating-IP: SSOKIJx+AXGyosOlrVF/ptcOrDYJv6nJKHEZam0Hf7w=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 21 Mar 2025 22:10:05 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 18217267415120598276
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: wangyuli@uniontech.com,
+	guanwentao@uniontech.com,
+	wentao@uniontech.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zhangqing@loongson.cn,
+	zhoubinbin@loongson.cn,
+	lihui@loongson.cn,
+	rdunlap@infradead.org,
+	chenhuacai@loongson.cn,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com
+Subject: [PATCH v2] LoongArch: KGDB: Rework arch_kgdb_breakpoint() implementation
+Date: Fri, 21 Mar 2025 22:10:01 +0800
+Message-ID: <943E06D656E4E707+20250321141001.109916-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: Td2a26421dc1a91fa
-Date: Fri, 21 Mar 2025 13:28:43 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Thierry Reding" <thierry.reding@gmail.com>
-Cc: "Celeste Liu" <uwu@coelacanthus.name>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>, guoren <guoren@kernel.org>,
- "Anup Patel" <anup@brainfault.org>,
- "Heinrich Schuchardt" <heinrich.schuchardt@canonical.com>,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
- "Yoshinori Sato" <ysato@users.sourceforge.jp>,
- "Rich Felker" <dalias@libc.org>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "Russell King" <linux@armlinux.org.uk>,
- "Florian Fainelli" <florian.fainelli@broadcom.com>,
- "Broadcom internal kernel review list"
- <bcm-kernel-feedback-list@broadcom.com>, "Ray Jui" <rjui@broadcom.com>,
- "Scott Branden" <sbranden@broadcom.com>,
- "Tony Lindgren" <tony@atomide.com>, "Jon Hunter" <jonathanh@nvidia.com>,
- "Aaro Koskinen" <aaro.koskinen@iki.fi>,
- "Andreas Kemnade" <andreas@kemnade.info>,
- "Kevin Hilman" <khilman@baylibre.com>,
- "Roger Quadros" <rogerq@kernel.org>,
- "Palmer Dabbelt" <palmer@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org,
- Linux-OMAP <linux-omap@vger.kernel.org>, linux-tegra@vger.kernel.org,
- "Stefan Wahren" <wahrenst@gmx.net>,
- "Thierry Reding" <treding@nvidia.com>, soc@lists.linux.dev
-Message-Id: <5fd4f314-e570-4b37-b7c2-af5b4bc85a39@app.fastmail.com>
-In-Reply-To: 
- <t2dustbykx2qd24wazjeiw5hch5nwr6z2ewmaf4srg6r2grwrf@rdw47chzkef2>
-References: 
- <20250115-fix-riscv-rt_group_sched-v4-0-607606fe73a5@coelacanthus.name>
- <20250115-fix-riscv-rt_group_sched-v4-4-607606fe73a5@coelacanthus.name>
- <t2dustbykx2qd24wazjeiw5hch5nwr6z2ewmaf4srg6r2grwrf@rdw47chzkef2>
-Subject: Re: [PATCH v4 4/4] arm: defconfig: drop RT_GROUP_SCHED=y from
- bcm2835/tegra/omap2plus
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OB161YjlFY7FLADchKhVFssCpiaJ6Ya8+rm5rtumGkkDtz0/vy8pRO66
+	sRvw7gWiReFkUEw8xuIng8gr0WQYK7FFWKKtLWX8jkqK3z1eb27MvtjQEREHXidi9HugB4u
+	eQUQbQGeVPa8YnpqeMC4BnjaSu5KiNgDCa627IAV0U30XeVYWYTtiReok3q+sijwXkfeEzH
+	YpbRzZPy6XsaGV7TC7bwwrS7uQFpSGSift+9QnuFyVyx//DC+++DbsEOchLUWycsoyrBfHS
+	+sUomSGFDj7Q6ycZezQ21xftm5N+m6oy2WKpdF1YOfbYa+EMxSoYrBpOyBa4pxN3G7N8kpF
+	JahqnhtGhcxvIjYfLBvbN7nvc7ijHX1Dzer23iPuwLKk8c+61+3yx34CBtT337WFSv8Do6u
+	a98SymRNL0iHMCQJCKJhIJ6RCMP64t/KxRrX8s4/NDzY3zFjvYcRaX4cZFA/ayjjkmNP/de
+	CL0BcyDaH6VwQo9CL0Z+glgWaeqRnHw09eaukQ5VYlFC+lK6WqZ7H2R0LdmD/+9a71FV2mp
+	f3muamajTrcoKqqm32e+T/mbka3QjyBt1LJiG9jLQIQQxHd7tsyT58jyTPbpguukzUgC/Uc
+	WZh0GH3DV1t2pagSHR/cNJKeEhDQIHypBTJkba85QYvhVAJyu8tJkRLXFOa2CRYH6iLEkds
+	06ZNxB5+/9UaGBZzVV+sTtEpzacL5AUOUcVaP5qiNk1/VouMOUB95iEx26LrmncEnG+7l/R
+	0Q/fKUcOeyXkhaJePhpCZGZOv6esi08hbbpvwhVRjAysIuQpKTbewzwv3p9WKXkO1jbE9sO
+	vwnPU9Lz0Fl9Oug5iLM3ADFN9UnwrlN1oh1eJrJxZWvQZhJZUgitD1hrtq4VtvTpg5tVQeQ
+	cDvZFkI2+xOZPEDbXMPUaG3izw4rNRP2zFPg0KPAt8iiop/YfS/knTOQvcTOY3njH+9cwsK
+	SyJZ0VCYY1+H2MjdVNp2ljmg9CjqUkIq/pPyNdz5smo+Rq8f081Dwq9rX5Is+CDHCpQ3AFw
+	XvfMZY0g2kkmD0VzINV7Y2cB3S/USyA4BIYJ2TUoG2dO5moeVbwuHqHo4PECg=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Mar 6, 2025, at 20:19, Thierry Reding wrote:
-> On Wed, Jan 15, 2025 at 04:41:23AM +0800, Celeste Liu wrote:
->> ---
->>  arch/arm/configs/bcm2835_defconfig   | 1 -
->>  arch/arm/configs/omap2plus_defconfig | 1 -
->>  arch/arm/configs/tegra_defconfig     | 1 -
->>  3 files changed, 3 deletions(-)
->
-> Hi Arnd,
->
-> is this something that you could pick up? I think so far only the RISC-V
-> patch was picked up, but nobody seems to feel responsible for the ARM
-> patch here.
+The arch_kgdb_breakpoint() function defines the kgdb_breakinst
+symbol using inline assembly.
 
-I've merged it now after going through stuff in my inbox. It's
-generally ok for patches like this one to be forwarded to
-soc@lists.linux.dev where they end up in patchwork for me to apply,
-in case you don't want it to get lost.
+There's a potential issue where the compiler might inline
+arch_kgdb_breakpoint(), which would then define the kgdb_breakinst
+symbol multiple times, leading to a linker error.
 
-     Arnd
+To prevent this, declare arch_kgdb_breakpoint() as noline.
+
+Fix follow error with LLVM-19 *only* when LTO_CLANG_FULL:
+    LD      vmlinux.o
+  ld.lld-19: error: ld-temp.o <inline asm>:3:1: symbol 'kgdb_breakinst' is already defined
+  kgdb_breakinst: break 2
+  ^
+
+Additionally, remove "nop" here because it's meaningless for LoongArch
+here.
+
+Fixes: e14dd076964e ("LoongArch: Add basic KGDB & KDB support")
+Co-developed-by: Winston Wen <wentao@uniontech.com>
+Signed-off-by: Winston Wen <wentao@uniontech.com>
+Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Co-developed-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Tested-by: Yuli Wang <wangyuli@uniontech.com>
+Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+Changelog:
+ *v1->v2:
+    1. Drop the nop which is no effect for LoongArch here.
+    2. Add "STACK_FRAME_NON_STANDARD" for arch_kgdb_breakpoint() to
+avoid the objtool warning.
+---
+ arch/loongarch/kernel/kgdb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb.c
+index 445c452d72a7..38bd0561d7d5 100644
+--- a/arch/loongarch/kernel/kgdb.c
++++ b/arch/loongarch/kernel/kgdb.c
+@@ -224,13 +224,13 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc)
+ 	regs->csr_era = pc;
+ }
+ 
+-void arch_kgdb_breakpoint(void)
++noinline void arch_kgdb_breakpoint(void)
+ {
+ 	__asm__ __volatile__ (			\
+ 		".globl kgdb_breakinst\n\t"	\
+-		"nop\n"				\
+ 		"kgdb_breakinst:\tbreak 2\n\t"); /* BRK_KDB = 2 */
+ }
++STACK_FRAME_NON_STANDARD(arch_kgdb_breakpoint);
+ 
+ /*
+  * Calls linux_debug_hook before the kernel dies. If KGDB is enabled,
+-- 
+2.49.0
+
