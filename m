@@ -1,399 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49ED222E414
-	for <loongarch@lists.linux.dev>; Fri, 21 Mar 2025 21:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06CA230BC5
+	for <loongarch@lists.linux.dev>; Fri, 21 Mar 2025 21:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742591160; cv=none; b=Ux8AMY1FhzGMAewEz18Uwa1UAXucuCX5bO1magch3nFk6hOVHtgHWX5Y8DF+ChF0vaTegPEufbk9O1niduRa4ZrcdztEXuvFOSg92hWTT22jKJnr/7Ogc2Fymadb9MMZrzP1Z+xE2auaeH9hk3BwZmJZ/JPRSlIw2keizbKnsEQ=
+	t=1742592160; cv=none; b=FaHQgHCmJ6sZwd4ljwNMz4r/nfCIQ9PG/XdknjE86U+JNdpTF7T+gQaLXi2vI5MDL6/snBSgYcOOZ9UZZ9ku6+TV/w5rWaja/RFi4p+T9raMqdkmiR2oHUu2tPYYMqo2VStxv5ER5X3NR8NM2p3zIh8Yyn6j1AGdsK9szbQPLsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742591160; c=relaxed/simple;
-	bh=WsW2DMXDS3L3rkB0DvHWq2Ivir2+trMsAx21I9eHwoI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BQcq4jUrL3H2Tw8ZSjMZMyZNv3FkVQRa34fmSD3DaWMl7rDWLlmqIw911KVbuxg26JF4NoAcCvj+EOYlSklYNj+Op/vN5AVvAMbT280xEOOxFcgB6vi8S1Z8svVzJuKtrtfQsaVIV6nYM7pqcslKhvu3cOJ+oiJMi8c7AMYNEI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dsnmskQV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742592160; c=relaxed/simple;
+	bh=MLoEPj1DotaiblARy+HIv8f7Oy71CnrchBnjpKyGesU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XtMAJeh9l1uyQC8Vo5m2yhTma7dsC5mIMdTffikSf5fnKl6GKOOsut3GZo0Difh1wJbm1myR1M5k+/mdXGnW6OKJ7g9w5LTtw2a9eWsiXTW4pHR5ih2ubS+GrWVCv4Y43wD83RU8pqqKyg9FqHCTZCVeJ1HfK06DKaSWGTJ8egk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=urekzMMt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EZS5gE+V; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dsnmskQV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742591156;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="urekzMMt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EZS5gE+V"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742592157;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WRnJoqDrjjM/0a1a+E2erJF3D59Mlmw/EEkVC6fPK4Y=;
-	b=dsnmskQVhWG++i07p8MmlPDE3fRHF74exSOtoy8GxaXX8qVXPRj72icM7VZvQDoOfHo/LM
-	m1Om08XIda9eZv4UyXC48+WsJC40ld8LYOkomEHY3jFkd7irfh4zy6bNxT612m54dSrgXb
-	AQkjnPSkZAsjBLPWo84h4ZjlBkvYK7k=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-552-cMWjB4_KOGql-J3hjcr5rQ-1; Fri, 21 Mar 2025 17:05:55 -0400
-X-MC-Unique: cMWjB4_KOGql-J3hjcr5rQ-1
-X-Mimecast-MFC-AGG-ID: cMWjB4_KOGql-J3hjcr5rQ_1742591154
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-224364f2492so34646045ad.3
-        for <loongarch@lists.linux.dev>; Fri, 21 Mar 2025 14:05:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742591154; x=1743195954;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WRnJoqDrjjM/0a1a+E2erJF3D59Mlmw/EEkVC6fPK4Y=;
-        b=cQ4JACn3PhmcpQXqlh+ZleGnwm1vL1UK16lLPSCzH0WfjyEoMEMOnx5zSCnOaFgjHA
-         iIc2g/Yeruo/w2FxqTtWmdrUaN/ckzj+qslFoOUmCEhw3ZaiuMiTJuFdZfHmOKA212ir
-         zXORoL/BYg0RuRGxDaKdAfrUf5tE036xdDIX5snl12OnKfU9olE3K1E1bHfM1lm2n45R
-         xXv5c7UqSmPeNEP7v3t1MkY5Xx0AJ0e7ZFqfatHaFivY5/ODDSvhWq433YHydUBubVml
-         fD6f9VvPCMvhVbqB28tDS+NnkDYdTbEzkItV4onAatYzpCR2Qqdxe0KytoJSvP9S3Mb+
-         Mrng==
-X-Forwarded-Encrypted: i=1; AJvYcCX3aUkUSakTh4rCv9YJm2KVaWuL7xCfvD9r5VCZaoLvdk8ZIOYPVMAglWUwGCvOZmRwj3G5woksC8c=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzCZEGPkRQSMtkv86XCRX2JEsjUbb3nhtME42G0gP3rAKV9lEQx
-	YlN9LxqlfdaDwFIkVy6grEbFsb0tsaWqogT2SeW3TTRmLs5cJmZl20kvU+4f//bXnRu3oyoW+CP
-	3N18a4A9R7+XTGRONcUVw/BeNzDI61OGFmIjUVoN7DpSBR+pYkK1f2o71i6LHH4hEpnIfguWOH/
-	tDsshJ/t8bkcIlqxN69TtGsuFiRLrRYBr1
-X-Gm-Gg: ASbGnctdNSBK3NidmGDoKPNY/3+fJ/Oj+MtBTF17lFe7gPXDz7yNYFcLG/BYgoz071X
-	xeSRswnc9NwR0C/3sQ0pU+D/Vs54gHVBEJI0ihXbfO+sue9BxdjGQlwo0a5srnw6jyMfVPuQ=
-X-Received: by 2002:a17:902:ce08:b0:224:2175:b0cd with SMTP id d9443c01a7336-22780db3884mr78325365ad.26.1742591153938;
-        Fri, 21 Mar 2025 14:05:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEN00ZwsCSvrb1GxmsoNJZNu7MKJs1Ucfk1lD2MiRFFRVzqqr5ClONI/dVh1idt8Msn85KVY7jetnaUeKy09VA=
-X-Received: by 2002:a17:902:ce08:b0:224:2175:b0cd with SMTP id
- d9443c01a7336-22780db3884mr78324575ad.26.1742591153425; Fri, 21 Mar 2025
- 14:05:53 -0700 (PDT)
+	bh=+oNseWKuGBEgshNs5P0talv9xg+inN17z1K2AF90QsY=;
+	b=urekzMMtfA3kTy822lbKa4nufWzR1OXLr8MKXehncBoDdm+XaFkjEu7bTZMYsxv8ltVwoi
+	lvGqR9Z+4hyzbhRh4AC896uxdlwHvHw0veohERNmwzCmdAQ04k4q/CHT/60zHV4CdzuzTA
+	n6YkpC/n1jRVZjiX3ycpakTyHVyDhKkoHtGemUXzU9umIyUgY056GYou5iCqFHnXf8FjpT
+	MXxRYQ9tHrj/Lojkqh8tvOra2HYQEqECrVf9+ATCAHPRq5ctBn54mBq/86YWqdn1cU6oNr
+	KT/foI3j5FKmu9mdRZ04kF+JZgKJ/qOzzln5uAjmxECTHSDiRZ7wmLllDx7eaA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742592157;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+oNseWKuGBEgshNs5P0talv9xg+inN17z1K2AF90QsY=;
+	b=EZS5gE+VsWIJ5vRL3eP5Jndiht64acIE4ql10QAAbAlD7H53yy7I4AqzDTceNhmWCpRnL1
+	9Xun/0Uq9tAy9gAQ==
+To: Charlie Jenkins <charlie@rivosinc.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Huacai
+ Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Peter
+ Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
+Subject: Re: [PATCH v6 0/4] entry: Move ret_from_fork() to C and inline
+ syscall_exit_to_user_mode()
+In-Reply-To: <20250320-riscv_optimize_entry-v6-0-63e187e26041@rivosinc.com>
+References: <20250320-riscv_optimize_entry-v6-0-63e187e26041@rivosinc.com>
+Date: Fri, 21 Mar 2025 22:22:36 +0100
+Message-ID: <87frj613kz.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250313114329.284104-1-acarmina@redhat.com> <20250313114329.284104-11-acarmina@redhat.com>
- <b6bb68f0-7e93-4db2-9fe6-f615f06ddeb1@roeck-us.net>
-In-Reply-To: <b6bb68f0-7e93-4db2-9fe6-f615f06ddeb1@roeck-us.net>
-From: Alessandro Carminati <acarmina@redhat.com>
-Date: Fri, 21 Mar 2025 22:05:42 +0100
-X-Gm-Features: AQ5f1JoQT0Axds-sBfJ5O3FpL2NPQAbk3ZSqHh9aN-1kzXKN_DmP6zsQowxJbF0
-Message-ID: <CAGegRW4GinPmsav5=VBfjXBKy4cUEs5FWv-ixXODk7ajZ69vYg@mail.gmail.com>
-Subject: Re: [PATCH v4 10/14] s390: Add support for suppressing warning backtraces
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook <keescook@chromium.org>, 
-	Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>, 
-	Arthur Grillo <arthurgrillo@riseup.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, 
-	=?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Alessandro Carminati <alessandro.carminati@gmail.com>, Jani Nikula <jani.nikula@intel.com>, 
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, loongarch@lists.linux.dev, x86@kernel.org, 
-	Linux Kernel Functional Testing <lkft@linaro.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3sDLUviQ3r3rl71scTOsY16AN4eKWQPWuGVIxzJsD7c_1742591154
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hello Guenter,
-Sorry for being late to the party.
-
-On Fri, Mar 21, 2025 at 6:06=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> =
-wrote:
+On Thu, Mar 20 2025 at 10:29, Charlie Jenkins wrote:
+> Similar to commit 221a164035fd ("entry: Move
+> syscall_enter_from_user_mode() to header file"), move
+> syscall_exit_to_user_mode() to the header file as well.
 >
-> On 3/13/25 04:43, Alessandro Carminati wrote:
-> > From: Guenter Roeck <linux@roeck-us.net>
-> >
-> > Add name of functions triggering warning backtraces to the __bug_table
-> > object section to enable support for suppressing WARNING backtraces.
-> >
-> > To limit image size impact, the pointer to the function name is only ad=
-ded
-> > to the __bug_table section if both CONFIG_KUNIT_SUPPRESS_BACKTRACE and
-> > CONFIG_DEBUG_BUGVERBOSE are enabled. Otherwise, the __func__ assembly
-> > parameter is replaced with a (dummy) NULL parameter to avoid an image s=
-ize
-> > increase due to unused __func__ entries (this is necessary because
-> > __func__ is not a define but a virtual variable).
-> >
-> > Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > Cc: Heiko Carstens <hca@linux.ibm.com>
-> > Cc: Vasily Gorbik <gor@linux.ibm.com>
-> > Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Alessandro Carminati <acarmina@redhat.com>
-> > ---
-> >   arch/s390/include/asm/bug.h | 17 ++++++++++++++---
-> >   1 file changed, 14 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-> > index c500d45fb465..44d4e9f24ae0 100644
-> > --- a/arch/s390/include/asm/bug.h
-> > +++ b/arch/s390/include/asm/bug.h
-> > @@ -8,6 +8,15 @@
-> >
-> >   #ifdef CONFIG_DEBUG_BUGVERBOSE
-> >
-> > +#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
-> > +# define HAVE_BUG_FUNCTION
-> > +# define __BUG_FUNC_PTR      "       .long   %0-.\n"
-> > +# define __BUG_FUNC  __func__
+> Testing was done with the byte-unixbench [1] syscall benchmark (which
+> calls getpid) and QEMU. On riscv I measured a 7.09246% improvement, on
+> x86 a 2.98843% improvement, on loongarch a 6.07954% improvement, and on
+> s390 a 11.1328% improvement.
 >
-> gcc 7.5.0 on s390 barfs; it doesn't like the use of "__func__" with "%0-.=
-"
+> The Intel bot also reported "kernel test robot noticed a 1.9%
+> improvement of stress-ng.seek.ops_per_sec" [2]
 >
-> drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c: In function 'anx_dp_=
-aux_transfer':
-> ././include/linux/compiler_types.h:492:20: warning: asm operand 0 probabl=
-y doesn't match constraints
->
-> I was unable to find an alternate constraint that the compiler would acce=
-pt.
->
-> I don't know if the same problem is seen with older compilers on other ar=
-chitectures,
-> or if the problem is relevant in the first place.
->
-> gcc 10.3.0 and later do not have this problem. I also tried s390 builds w=
-ith gcc 9.4
-> and 9.5 but they both crash for unrelated reasons.
->
-> If this is a concern, the best idea I have is to make KUNIT_SUPPRESS_BACK=
-TRACE
-> depend on, say,
->         depends on CC_IS_CLANG || (CC_IS_GCC && GCC_VERSION >=3D 100300)
->
-> A more complex solution might be to define an architecture flag such
-> as HAVE_SUPPRESS_BACKTRACE, make that conditional on the gcc version
-> for s390 only, and make KUNIT_SUPPRESS_BACKTRACE depend on it.
+> Since this is on QEMU, I know these numbers are not perfect, but they
+> show a trend of general improvement across all architectures that use
+> the generic entry code.
 
-I've spent some time trying to better define the problem.
-Although it may seem trivial, the old compiler simply doesn't work=E2=80=94=
-I
-believe the issue is a bit more complex.
+This looks sane now. I've bookmarked it as post-merge window material.
 
-So, let me share some code and then comment on it.
-$ cat bug-s390.c
-#include "bug_entry.h"
-#define asm_inline asm __inline
-# define __BUG_FUNC_PTR " .long %0-.\n"
-# define __BUG_FUNC __func__
-#define __EMIT_BUG(x) do { \
-asm_inline volatile( \
-"0: mc 0,0\n" \
-".section .rodata.str,\"aMS\",@progbits,1\n" \
-"1: .asciz \""__FILE__"\"\n" \
-".previous\n" \
-".section __bug_table,\"aw\"\n" \
-"2: .long 0b-.\n" \
-" .long 1b-.\n" \
-__BUG_FUNC_PTR \
-" .short %1,%2\n" \
-" .org 2b+%3\n" \
-".previous\n" \
-: : "i" (__BUG_FUNC), \
-    "i" (__LINE__), \
-    "i" (x), \
-    "i" (sizeof(struct bug_entry))); \
-} while (0)
+Thanks,
 
-#define BUG() do { \
-__EMIT_BUG(0); \
-} while (0)
-
-void f1(){
-BUG();
-}
-void f2(){
-BUG();
-}
-int main() {
-BUG();
-        f1();
-        f2();
-return 0;
-}
-$ # This is a stripped version of the s390x code for bug
-$ ~/x-tools/s390x-ibm-linux-gnu_14/bin/s390x-ibm-linux-gnu-gcc -v
-Using built-in specs.
-COLLECT_GCC=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu_14/bin/s390x-ibm=
--linux-gnu-gcc
-COLLECT_LTO_WRAPPER=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu_14/bin/.=
-./libexec/gcc/s390x-ibm-linux-gnu/14.2.0/lto-wrapper
-Target: s390x-ibm-linux-gnu
-Configured with:
-/home/alessandro/src/s390x-toolchain/.build/s390x-ibm-linux-gnu/src/gcc/con=
-figure
---build=3Dx86_64-build_pc-linux-gnu --host=3Dx86_64-build_pc-linux-gnu
---target=3Ds390x-ibm-linux-gnu
---prefix=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu
---exec_prefix=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu
---with-sysroot=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu/s390x-ibm-lin=
-ux-gnu/sysroot
---enable-languages=3Dc,c++ --with-pkgversion=3D'crosstool-NG
-1.27.0.18_7458341' --enable-__cxa_atexit --disable-libmudflap
---disable-libgomp --disable-libssp --disable-libquadmath
---disable-libquadmath-support --disable-libsanitizer --disable-libmpx
---with-gmp=3D/home/alessandro/src/s390x-toolchain/.build/s390x-ibm-linux-gn=
-u/buildtools
---with-mpfr=3D/home/alessandro/src/s390x-toolchain/.build/s390x-ibm-linux-g=
-nu/buildtools
---with-mpc=3D/home/alessandro/src/s390x-toolchain/.build/s390x-ibm-linux-gn=
-u/buildtools
---with-isl=3D/home/alessandro/src/s390x-toolchain/.build/s390x-ibm-linux-gn=
-u/buildtools
---enable-lto --enable-threads=3Dposix --enable-target-optspace
---disable-plugin --disable-nls --disable-multilib
---with-local-prefix=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu/s390x-ib=
-m-linux-gnu/sysroot
---enable-long-long
-Thread model: posix
-Supported LTO compression algorithms: zlib zstd
-gcc version 14.2.0 (crosstool-NG 1.27.0.18_7458341)
-$ ~/x-tools/s390x-ibm-linux-gnu_14/bin/s390x-ibm-linux-gnu-gcc -S -m64
-bug-s390.c
-$ ~/x-tools/s390x-ibm-linux-gnu_14/bin/s390x-ibm-linux-gnu-gcc -S -m64
--fPIC bug-s390.c
-$ ~/x-tools/s390x-ibm-linux-gnu/bin/s390x-ibm-linux-gnu-gcc -v
-Using built-in specs.
-COLLECT_GCC=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu/bin/s390x-ibm-li=
-nux-gnu-gcc
-COLLECT_LTO_WRAPPER=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu/libexec/=
-gcc/s390x-ibm-linux-gnu/7.5.0/lto-wrapper
-Target: s390x-ibm-linux-gnu
-Configured with:
-/home/alessandro/src/cross-s390/.build/s390x-ibm-linux-gnu/src/gcc/configur=
-e
---build=3Dx86_64-build_pc-linux-gnu --host=3Dx86_64-build_pc-linux-gnu
---target=3Ds390x-ibm-linux-gnu
---prefix=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu
---exec_prefix=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu
---with-sysroot=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu/s390x-ibm-lin=
-ux-gnu/sysroot
---enable-languages=3Dc --with-pkgversion=3D'crosstool-NG
-1.27.0.18_7458341' --enable-__cxa_atexit --disable-tm-clone-registry
---disable-libmudflap --disable-libgomp --disable-libssp
---disable-libquadmath --disable-libquadmath-support
---disable-libsanitizer --disable-libmpx --disable-libstdcxx-verbose
---with-gmp=3D/home/alessandro/src/cross-s390/.build/s390x-ibm-linux-gnu/bui=
-ldtools
---with-mpfr=3D/home/alessandro/src/cross-s390/.build/s390x-ibm-linux-gnu/bu=
-ildtools
---with-mpc=3D/home/alessandro/src/cross-s390/.build/s390x-ibm-linux-gnu/bui=
-ldtools
---with-isl=3D/home/alessandro/src/cross-s390/.build/s390x-ibm-linux-gnu/bui=
-ldtools
---enable-lto --without-zstd --enable-threads=3Dposix
---enable-target-optspace --disable-plugin --disable-nls
---disable-multilib
---with-local-prefix=3D/home/alessandro/x-tools/s390x-ibm-linux-gnu/s390x-ib=
-m-linux-gnu/sysroot
---enable-long-long
-Thread model: posix
-gcc version 7.5.0 (crosstool-NG 1.27.0.18_7458341)
-$ ~/x-tools/s390x-ibm-linux-gnu/bin/s390x-ibm-linux-gnu-gcc  -S -m64 bug-s3=
-90.c
-$ ~/x-tools/s390x-ibm-linux-gnu/bin/s390x-ibm-linux-gnu-gcc  -S -m64
--fPIC bug-s390.c
-bug-s390.c: In function 'f1':
-bug-s390.c:2:20: warning: asm operand 0 probably doesn't match constraints
- #define asm_inline asm __inline
-                    ^
-bug-s390.c:6:2: note: in expansion of macro 'asm_inline'
-  asm_inline volatile(     \
-  ^~~~~~~~~~
-bug-s390.c:25:2: note: in expansion of macro '__EMIT_BUG'
-  __EMIT_BUG(0);     \
-  ^~~~~~~~~~
-bug-s390.c:29:2: note: in expansion of macro 'BUG'
-  BUG();
-  ^~~
-bug-s390.c:2:20: error: impossible constraint in 'asm'
- #define asm_inline asm __inline
-                    ^
-bug-s390.c:6:2: note: in expansion of macro 'asm_inline'
-  asm_inline volatile(     \
-  ^~~~~~~~~~
-bug-s390.c:25:2: note: in expansion of macro '__EMIT_BUG'
-  __EMIT_BUG(0);     \
-  ^~~~~~~~~~
-bug-s390.c:29:2: note: in expansion of macro 'BUG'
-  BUG();
-  ^~~
-bug-s390.c: In function 'f2':
-bug-s390.c:2:20: warning: asm operand 0 probably doesn't match constraints
- #define asm_inline asm __inline
-                    ^
-bug-s390.c:6:2: note: in expansion of macro 'asm_inline'
-  asm_inline volatile(     \
-  ^~~~~~~~~~
-bug-s390.c:25:2: note: in expansion of macro '__EMIT_BUG'
-  __EMIT_BUG(0);     \
-  ^~~~~~~~~~
-bug-s390.c:32:2: note: in expansion of macro 'BUG'
-  BUG();
-  ^~~
-bug-s390.c: In function 'main':
-bug-s390.c:2:20: warning: asm operand 0 probably doesn't match constraints
- #define asm_inline asm __inline
-                    ^
-bug-s390.c:6:2: note: in expansion of macro 'asm_inline'
-  asm_inline volatile(     \
-  ^~~~~~~~~~
-bug-s390.c:25:2: note: in expansion of macro '__EMIT_BUG'
-  __EMIT_BUG(0);     \
-  ^~~~~~~~~~
-bug-s390.c:35:2: note: in expansion of macro 'BUG'
-  BUG();
-  ^~~
-$ cat linux-6.14-rc7/arch/s390/Makefile| grep "fPIC"
-KBUILD_AFLAGS_MODULE +=3D -fPIC
-KBUILD_CFLAGS_MODULE +=3D -fPIC
-KBUILD_CFLAGS +=3D -fPIC
-
-As you can see, the problem is not that the compiler itself doesn't
-work, but rather that -fPIC introduces some complications.
-__func__ is a compile-time constant, but this holds true only for
-traditionally linked code.
-When compiling position-independent code, this assumption no longer applies=
-.
-
-GCC makes significant efforts to handle this, and for several
-architectures, it manages to solve the problem.
-However, this is not universally the case.
-Additionally, -fPIC is not widely used in kernel code... I have only
-seen it used for VDSO, the x86 boot piggyback decompressor, PowerPC
-boot, and the s390x architecture.
-
-That said, GCC has been mitigating this issue, allowing us to treat a
-non-compile-time constant as if it were one.
-A proof of this is that, at least since GCC 11, the s390x version of
-GCC is able to build this code.
-Before that... certainly in GCC 7.5 it couldn't.
-
-A simple fix would be to restrict usage to GCC versions greater than
-11 for s390.
-
-The real concern is that we have a latent issue that could be
-triggered by changes in build settings, as "feature" support varies
-across GCC versions and architectures.
-For example, while x86_64 at version 14 seems to work both with and
-without -fPIC, this is not the case for AArch64, where enabling -fPIC
-causes failures even in version 14.
-
-I'm currently working on a long-term fix for this.
-
->
-> Guenter
->
-
-
---=20
----
-Alessandro
-
+        tglx
