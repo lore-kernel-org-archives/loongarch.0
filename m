@@ -1,83 +1,135 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06CA230BC5
-	for <loongarch@lists.linux.dev>; Fri, 21 Mar 2025 21:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C641F9AB6
+	for <loongarch@lists.linux.dev>; Sat, 22 Mar 2025 12:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742592160; cv=none; b=FaHQgHCmJ6sZwd4ljwNMz4r/nfCIQ9PG/XdknjE86U+JNdpTF7T+gQaLXi2vI5MDL6/snBSgYcOOZ9UZZ9ku6+TV/w5rWaja/RFi4p+T9raMqdkmiR2oHUu2tPYYMqo2VStxv5ER5X3NR8NM2p3zIh8Yyn6j1AGdsK9szbQPLsA=
+	t=1742647901; cv=none; b=jjxNfmwnyXJ9AZeG0/M/dDtVTDEyG1FngaEuDruSC1U/NTpaOxj6HJQACJDHE4cE/gc7xcCUOVwSIr2EJCBDrItJvJMKqNFLKLIw6B+83Og4p5DfxIKemQj4PTwLxCmadMMac4jmj5UREdZO/+wDzYGyDE4yeHJ+cMOVvkK0nPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742592160; c=relaxed/simple;
-	bh=MLoEPj1DotaiblARy+HIv8f7Oy71CnrchBnjpKyGesU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XtMAJeh9l1uyQC8Vo5m2yhTma7dsC5mIMdTffikSf5fnKl6GKOOsut3GZo0Difh1wJbm1myR1M5k+/mdXGnW6OKJ7g9w5LTtw2a9eWsiXTW4pHR5ih2ubS+GrWVCv4Y43wD83RU8pqqKyg9FqHCTZCVeJ1HfK06DKaSWGTJ8egk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=urekzMMt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EZS5gE+V; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742647901; c=relaxed/simple;
+	bh=hYoLkjYnSu3Pw29O6IvXkhQKoHWKVSkRDq8h8zKxLoU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WerbWJPt6GFPZDv31I7XizOe0S8QEUCQRAij/lPEoD9wg6dZ7hzOVGe/f0Q1jL3i2DwfySxTrkz/+1Mell75JdjSSgB+CIAp739jFg6yyZz8XGU3DfUOzDprV1q3F1+lOHu66x0bsBkRgW0ENYWomB9L189dRZHbnfo2Xcn/dPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ub1wsW0n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="urekzMMt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EZS5gE+V"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742592157;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+oNseWKuGBEgshNs5P0talv9xg+inN17z1K2AF90QsY=;
-	b=urekzMMtfA3kTy822lbKa4nufWzR1OXLr8MKXehncBoDdm+XaFkjEu7bTZMYsxv8ltVwoi
-	lvGqR9Z+4hyzbhRh4AC896uxdlwHvHw0veohERNmwzCmdAQ04k4q/CHT/60zHV4CdzuzTA
-	n6YkpC/n1jRVZjiX3ycpakTyHVyDhKkoHtGemUXzU9umIyUgY056GYou5iCqFHnXf8FjpT
-	MXxRYQ9tHrj/Lojkqh8tvOra2HYQEqECrVf9+ATCAHPRq5ctBn54mBq/86YWqdn1cU6oNr
-	KT/foI3j5FKmu9mdRZ04kF+JZgKJ/qOzzln5uAjmxECTHSDiRZ7wmLllDx7eaA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742592157;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+oNseWKuGBEgshNs5P0talv9xg+inN17z1K2AF90QsY=;
-	b=EZS5gE+VsWIJ5vRL3eP5Jndiht64acIE4ql10QAAbAlD7H53yy7I4AqzDTceNhmWCpRnL1
-	9Xun/0Uq9tAy9gAQ==
-To: Charlie Jenkins <charlie@rivosinc.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Huacai
- Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Peter
- Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
- Alexandre Ghiti <alexghiti@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
-Subject: Re: [PATCH v6 0/4] entry: Move ret_from_fork() to C and inline
- syscall_exit_to_user_mode()
-In-Reply-To: <20250320-riscv_optimize_entry-v6-0-63e187e26041@rivosinc.com>
-References: <20250320-riscv_optimize_entry-v6-0-63e187e26041@rivosinc.com>
-Date: Fri, 21 Mar 2025 22:22:36 +0100
-Message-ID: <87frj613kz.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ub1wsW0n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 780D6C4CEDD
+	for <loongarch@lists.linux.dev>; Sat, 22 Mar 2025 12:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742647900;
+	bh=hYoLkjYnSu3Pw29O6IvXkhQKoHWKVSkRDq8h8zKxLoU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ub1wsW0nrFS1q4WSrFAEr8o1v6sZyf4JGVOHzfAoHGfttm+EbSS9zIYkuCS1diE6O
+	 lmlk/BQuaRiE5aVL8iJu5jB9ThIlfsg+NPOlmvOOusehus30Fcc58AYqvm1eexGTPX
+	 HWiC7falfBrTZ3h4frNdYdSzvuRKc3uh+rJ2l0Vb3iw3Nn1COYkx9DgSHe6Ip4NLSA
+	 sdO8kl+W28ZIyLttl1X1YDUiJ5Xnb2fPyCMTaielPo1fCLEE6ItVryW10ZM2FudED2
+	 sxSU4IVtEvp3s78k+EGufLHqRFE39PzrAnSE7jfzyOEkl2fRI35kklc9gP0yVMdQL3
+	 ub8oA0F7bQWqw==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5e63162a0so4510140a12.3
+        for <loongarch@lists.linux.dev>; Sat, 22 Mar 2025 05:51:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW/9KWk7WIf1LHdOCpvaLihTgTUtEL/AYszvxES7ILLQa51dFf6639131URYhGOJecOnsGZb819pZE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz9FS5KgfArbmDkbOHsRT7pAUWgZ+lqyJTK0KD1TyNnguwcFsh7
+	TD9/XcL+uS3/iGDmpj4aXh5nESe+zLfdLa7CV0+llxHGeaXohRP7Js1s89biZC0Xh0hrsxQN0uq
+	+tXPSXNV6KG+E1yIxgjyXLr0+rRs=
+X-Google-Smtp-Source: AGHT+IE0FhtEywcmqjzKYe+3HHjsyIO0OSjv7ylUWX3XFfF5rNNY+yXPmHZ1Wf1C9810aYAn1dIBl9CWoQDM/xPbZaE=
+X-Received: by 2002:a05:6402:51ce:b0:5e5:bb58:d6bd with SMTP id
+ 4fb4d7f45d1cf-5ebcd431464mr5156634a12.10.1742647899048; Sat, 22 Mar 2025
+ 05:51:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <943E06D656E4E707+20250321141001.109916-1-wangyuli@uniontech.com>
+In-Reply-To: <943E06D656E4E707+20250321141001.109916-1-wangyuli@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 22 Mar 2025 20:51:28 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H71aEKj2V8mAqbUuAe1JiHngWHW3rSaJ_Dx_CzoQC7TgQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Johy1ud_FUpN0wg1kc1goHIkqqzOcJs_N-J9BQhzJY5TN-iEQ_Uqgzcjds
+Message-ID: <CAAhV-H71aEKj2V8mAqbUuAe1JiHngWHW3rSaJ_Dx_CzoQC7TgQ@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: KGDB: Rework arch_kgdb_breakpoint() implementation
+To: WangYuli <wangyuli@uniontech.com>
+Cc: kernel@xen0n.name, guanwentao@uniontech.com, wentao@uniontech.com, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	zhoubinbin@loongson.cn, lihui@loongson.cn, rdunlap@infradead.org, 
+	chenhuacai@loongson.cn, zhanjun@uniontech.com, niecheng1@uniontech.com, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Jinyang He <hejinyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 20 2025 at 10:29, Charlie Jenkins wrote:
-> Similar to commit 221a164035fd ("entry: Move
-> syscall_enter_from_user_mode() to header file"), move
-> syscall_exit_to_user_mode() to the header file as well.
+Hi, Tiezhu & Jinyang,
+
+On Fri, Mar 21, 2025 at 10:11=E2=80=AFPM WangYuli <wangyuli@uniontech.com> =
+wrote:
 >
-> Testing was done with the byte-unixbench [1] syscall benchmark (which
-> calls getpid) and QEMU. On riscv I measured a 7.09246% improvement, on
-> x86 a 2.98843% improvement, on loongarch a 6.07954% improvement, and on
-> s390 a 11.1328% improvement.
+> The arch_kgdb_breakpoint() function defines the kgdb_breakinst
+> symbol using inline assembly.
 >
-> The Intel bot also reported "kernel test robot noticed a 1.9%
-> improvement of stress-ng.seek.ops_per_sec" [2]
+> There's a potential issue where the compiler might inline
+> arch_kgdb_breakpoint(), which would then define the kgdb_breakinst
+> symbol multiple times, leading to a linker error.
 >
-> Since this is on QEMU, I know these numbers are not perfect, but they
-> show a trend of general improvement across all architectures that use
-> the generic entry code.
+> To prevent this, declare arch_kgdb_breakpoint() as noline.
+>
+> Fix follow error with LLVM-19 *only* when LTO_CLANG_FULL:
+>     LD      vmlinux.o
+>   ld.lld-19: error: ld-temp.o <inline asm>:3:1: symbol 'kgdb_breakinst' i=
+s already defined
+>   kgdb_breakinst: break 2
+>   ^
+>
+> Additionally, remove "nop" here because it's meaningless for LoongArch
+> here.
+>
+> Fixes: e14dd076964e ("LoongArch: Add basic KGDB & KDB support")
+> Co-developed-by: Winston Wen <wentao@uniontech.com>
+> Signed-off-by: Winston Wen <wentao@uniontech.com>
+> Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+> Co-developed-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Tested-by: Yuli Wang <wangyuli@uniontech.com>
+> Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+> ---
+> Changelog:
+>  *v1->v2:
+>     1. Drop the nop which is no effect for LoongArch here.
+>     2. Add "STACK_FRAME_NON_STANDARD" for arch_kgdb_breakpoint() to
+> avoid the objtool warning.
+> ---
+>  arch/loongarch/kernel/kgdb.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb.c
+> index 445c452d72a7..38bd0561d7d5 100644
+> --- a/arch/loongarch/kernel/kgdb.c
+> +++ b/arch/loongarch/kernel/kgdb.c
+> @@ -224,13 +224,13 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigne=
+d long pc)
+>         regs->csr_era =3D pc;
+>  }
+>
+> -void arch_kgdb_breakpoint(void)
+> +noinline void arch_kgdb_breakpoint(void)
+>  {
+>         __asm__ __volatile__ (                  \
+>                 ".globl kgdb_breakinst\n\t"     \
+> -               "nop\n"                         \
+>                 "kgdb_breakinst:\tbreak 2\n\t"); /* BRK_KDB =3D 2 */
+>  }
+> +STACK_FRAME_NON_STANDARD(arch_kgdb_breakpoint);
+Is there a better solution than STACK_FRAME_NON_STANDARD()? In the
+past we can use annotate_reachable() in arch_kgdb_breakpoint(), but
+annotate_reachable() is no longer exist.
 
-This looks sane now. I've bookmarked it as post-merge window material.
+Huacai
 
-Thanks,
-
-        tglx
+>
+>  /*
+>   * Calls linux_debug_hook before the kernel dies. If KGDB is enabled,
+> --
+> 2.49.0
+>
