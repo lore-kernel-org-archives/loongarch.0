@@ -1,357 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2FA39FD9;
-	Mon, 24 Mar 2025 06:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742796917; cv=fail; b=byicBDKOWtT8aLKUBcR3vr1cqbtk6dDUGfDu0DpGRBhHobaCfymFXcDMK9GVQVhfog8lmFpaXonneOBuH//MdfO8tS1iRDQzt4Y1srTd8Yb/4m2puXzFEqvXbJ+xVjP2LfdQGgNV6PhkAuLz3iKFMIugOFl9rxEgDIV5Mdf9VbM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742796917; c=relaxed/simple;
-	bh=5xFXNxSuLtEHBUejyVMIT1o4yjF2wUc/g1cibZJWTXA=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=ilzyjocaqPd/zLhvfPkzaWbV0Vx7e1Y38dFvC9FmOzddrXG7UbwiT0vP0pAn1erJtSTVDjyuVTVdQumJcJQdUdgncX29iRsaWJ8xJ1axLwSng94h2mXlcFr5zrRZGghLtd9MTuZmp9lvnJeECNL0hVZQqxYsW+YfMtcY2iWLTSc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CfmPmVl6; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865E4250BF1
+	for <loongarch@lists.linux.dev>; Mon, 24 Mar 2025 10:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742813270; cv=none; b=ol3WO5puD9+0sMMwy0C0DmCmLblSyhIgD0Sd20778AMq+yqxhZFm0zTYbw+jkB8B91W8B3u1J4P9f8JGvsEqFA1Mg4lkviOJ2RA6i9YUXiyirpIzcUG+X2Bix+ZE3+Z7NJNabOW1DMg+Gr55nKr3SZgh3l/xZ/p7evJf08Tj6/s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742813270; c=relaxed/simple;
+	bh=KKpN7ifW0FwxjJpOhtFmsCId4QhbQ/vnhrEMIbMuqjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XJfng/lqBVmRB0CsUKk+pCXquS1YUim8rXin/rHVstbnoyAPDBFdNIwQgGNRMiP4581jQ1tYfKMhTCekJXcbKdLugr2AsouwSMWOXbbR895QqeEqgBXXlhDs2Zxm5AWBbYll5T+6E8dfrrAM9z95nwT5zXk623BuDjQ/Qevfn+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DqSoWvn2; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CfmPmVl6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742796915; x=1774332915;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=5xFXNxSuLtEHBUejyVMIT1o4yjF2wUc/g1cibZJWTXA=;
-  b=CfmPmVl6kk53NhmLnXpwq5UliZkKiCVuUvNjNVCadJ15XE79SfQqgRts
-   uEbzxokut37FmjC9aoHLiOytPlH1lKAkuwmlTaStpakwRMOC1+N0fvziF
-   fihDrbejfD6oovVWtX9pcsZYJ0ivvaJ87OqswP7nFtB51lO9mOEx8M7h0
-   g+ahoN5WxbB2AihTH2ahEKR4tqlBmMgnLJQBJ/Zf7+X9cy0BZFoYTSXhl
-   ex19I9q3b0ldxci8hHtE6AIotQCRFNzb9qQ0GXTVYLOmE5piOKF2WfJUz
-   uwAMLpnoUGTIJG1oDWLz+r5Z2QWigwB6aaf9RaQhqMULV5m7xrO3uIBlJ
-   g==;
-X-CSE-ConnectionGUID: X1auHeEATPKrVW+KQqMkvA==
-X-CSE-MsgGUID: yLq0C3csTZmwzjYVk37k3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11382"; a="47764212"
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="47764212"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2025 23:15:14 -0700
-X-CSE-ConnectionGUID: nQmokBXMQySuJu3HklDJ2Q==
-X-CSE-MsgGUID: zN3p5BKmTBuSZzlZffQ2nQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="129007066"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2025 23:15:10 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Sun, 23 Mar 2025 23:15:06 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Sun, 23 Mar 2025 23:15:06 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.45) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Sun, 23 Mar 2025 23:15:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OM8yf5WHrxVsL0s6QTPqTm1twNr7fpSYPVOlxzjFzRqkXH+CPYGT6h0fhLE0QP5qhLJAW/+8KJRPm8yUzHHkGTLmR0xdoX8lOd41YqgkhdJQnrxiBxKoikGh0Fbtciaf/wXxdwB1OvELfaLuhAb8S71Sfb2S/BNdWuPY1FN8z6WHUBoYcA2+14r9T6Zp9QypFp4odWv0saudk1kYLm6RDASLErW+w7ThP1l3KR5/HdiKgYRRYn+mZ4CciXEK+yaHOVSVIDSUmo8VCdRik3HI1xh//iC9PAsIabzP4dDdpaVXGhNtDWF5cX7lKRdbYSiZjUIS0Tud3E4iKA46FJcQ6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RaaUQXrKFJ8dGZ9Fb5AR69vZdezwC5pS+ZIUjPn7waM=;
- b=t9S0GDBT+m5aXZJSmN0UZbs94aC4SDXcTBH6bWjOh3yEEADhvAXvu2+qfXHG0AVqfBuCfudbHp03SO7AWF+bESGEtVlNMvMkfkK+BiG6pAzrLQv7RoWRWbVh3ij9+F0VUW9POObK4MogCQSv09TV3Z73CEYZpbdimvOVSXIvkHlKb5OHNaaugFtjs+d0/EDuDifoVb4/ykDpJ2e6v7Mx11TnvRMGvkJHJfoxOLVzl/srgShEV5CTDoZdtebQDLx0RU2MbBtpv9aRbZ0CfX1RGMjowz89sIBKcvu8w4oCvwqRRNUPSGwzlJtHblcgRX2rFSnjMsezWd7x2sg1yVDK2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by SJ2PR11MB7619.namprd11.prod.outlook.com (2603:10b6:a03:4d1::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Mon, 24 Mar
- 2025 06:15:02 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%4]) with mapi id 15.20.8534.040; Mon, 24 Mar 2025
- 06:15:02 +0000
-Date: Mon, 24 Mar 2025 14:14:38 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Mike Rapoport <rppt@kernel.org>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>,
-	"Andy Lutomirski" <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Borislav Betkov <bp@alien8.de>, Catalin Marinas
-	<catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, "Dinh
- Nguyen" <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Guo Ren <guoren@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen
-	<chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, Jiaxun Yang
-	<jiaxun.yang@flygoat.com>, Johannes Berg <johannes@sipsolutions.net>, "John
- Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>, Madhavan Srinivasan
-	<maddy@linux.ibm.com>, Matt Turner <mattst88@gmail.com>, Max Filippov
-	<jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek
-	<monstr@monstr.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Richard Weinberger
-	<richard@nod.at>, Russel King <linux@armlinux.org.uk>, Stafford Horne
-	<shorne@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "Thomas
- Gleinxer" <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, "Vineet
- Gupta" <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	<linux-alpha@vger.kernel.org>, <linux-snps-arc@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-csky@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-mips@vger.kernel.org>, <linux-openrisc@vger.kernel.org>,
-	<linux-parisc@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-	<linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-	<linux-um@lists.infradead.org>, <linux-arch@vger.kernel.org>,
-	<linux-mm@kvack.org>, <oliver.sang@intel.com>
-Subject: [akpm-mm:mm-stable] [arch, mm]  8268af309d:
- kernel_BUG_at_include/linux/page-flags.h
-Message-ID: <202503241424.d16223ec-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: KU1PR03CA0042.apcprd03.prod.outlook.com
- (2603:1096:802:19::30) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DqSoWvn2"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O9ptko016767;
+	Mon, 24 Mar 2025 10:47:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=VIga+xvQk4RxwLl37s8roD8US+RxZH
+	6wgAnN7cz6dUM=; b=DqSoWvn2hNYTALQxMlD7ZFoi+4zq0N1yWuxe53qPbwlofS
+	11EDXetv8BM4utLmdlLw0MYgxwUAi5gSGHNoREjNHy90tDmAWBicdY3u5OsLqFNm
+	FswP8lh4U8KL0Z+kmbDMnrfazqs0pMLjoe8sYQPDDhg+bESIKfnjQkeT2J5kZ8gZ
+	uTpBQo4JY573uCvrEvB6/7EY+71e5v7MwS2GmtATqmPLrQY+OFUtee+p4N29MFed
+	yMLrXbyFZsn7mGVDVNB3gW9NBCAPa3n7ktStYlAB993VUD+ET9ZqifqLhNy/ADTm
+	3QJgYd+LcjsIPnDPueY9NsSPBS5ASB0qja99r70Q==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jkqp44qf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 10:47:11 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52OAlA92022659;
+	Mon, 24 Mar 2025 10:47:10 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jkqp44qc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 10:47:10 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52O77iAg025489;
+	Mon, 24 Mar 2025 10:47:09 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45j7wywy1a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 10:47:09 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52OAl5LT16187800
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 24 Mar 2025 10:47:05 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 694862004B;
+	Mon, 24 Mar 2025 10:47:05 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CD8DB20040;
+	Mon, 24 Mar 2025 10:47:03 +0000 (GMT)
+Received: from osiris (unknown [9.179.14.66])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 24 Mar 2025 10:47:03 +0000 (GMT)
+Date: Mon, 24 Mar 2025 11:47:02 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Alessandro Carminati <acarmina@redhat.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, linux-kselftest@vger.kernel.org,
+        David Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>,
+        Arthur Grillo <arthurgrillo@riseup.net>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alessandro Carminati <alessandro.carminati@gmail.com>,
+        Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        loongarch@lists.linux.dev, x86@kernel.org,
+        Linux Kernel Functional Testing <lkft@linaro.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH v4 10/14] s390: Add support for suppressing warning
+ backtraces
+Message-ID: <20250324104702.12139E73-hca@linux.ibm.com>
+References: <20250313114329.284104-1-acarmina@redhat.com>
+ <20250313114329.284104-11-acarmina@redhat.com>
+ <b6bb68f0-7e93-4db2-9fe6-f615f06ddeb1@roeck-us.net>
+ <CAGegRW4GinPmsav5=VBfjXBKy4cUEs5FWv-ixXODk7ajZ69vYg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SJ2PR11MB7619:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6fd8a4e9-c65c-406f-03c1-08dd6a9b3640
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?tLfDImqnl39dokVuAWKSNqvYVAmOz/miZIfyOYIw3HhkADWgA7e4xd/gNFa6?=
- =?us-ascii?Q?/jweVANufQyxt8TJr8BjLttHk7wWEJa7SS3bBrYqIRDlk6yJuu1ZGCcXAvfq?=
- =?us-ascii?Q?q5gcAytDzYaGQ2kBOI2p4kaHpkef9OZ7iGFscqK8btkZ/tXOZ2glPa8lhlLo?=
- =?us-ascii?Q?eeKKZZKO87nepCeKNRnyEWulKwXvDgHot9zig1EdrlDrpW2lLmGUELjfEAwY?=
- =?us-ascii?Q?RJmLzZFvG1RqRiTZgfs5pC/vPE+hX6zBaBCQ+k12EpS/cwvsYmMzHjZI4Hmk?=
- =?us-ascii?Q?q/X/rLOA73qJzUL6zsuMn979qqzxM4JuBUkjc3mvPPRuzq9LFOm9x4B+gg/T?=
- =?us-ascii?Q?eE1zi3xcSX2hgm1rVc4+rownm3HiPwRgkWVQAwSclLvcDtsbSbS0zJ1HhdJQ?=
- =?us-ascii?Q?kETBNhA3dBb9F2TLyzCNinFoyFGHqlUsVfUeftP2ZbnHwOW2liVTd6Hi3z5r?=
- =?us-ascii?Q?Pd70B8SD7a8mNoFUPUu1JonxgWJfPljJhs5EYhcCTamxqJkG8jOMt6jtMcyi?=
- =?us-ascii?Q?k0LSSkj83XYMRQ85r1dxpOcbpTvXPB844M05CVjBFk4ytJdztyTaesItGTZj?=
- =?us-ascii?Q?Z0g1r7W8+4ueo5HLVzwi2UI6Im/GrOllZLyYRnDThiLn3Pn9eJMLWVvP1s43?=
- =?us-ascii?Q?8DCpOnSfZdvNuWrQ/XRWtGS6vAGO7p5mu9WzFJFHeR8wsxCg6JbKqpJ53lMY?=
- =?us-ascii?Q?qXykuzY6+5ZD4ln1GidzW7No4aq6wrUJUK4JMx6RJzmobTkk8XZ+1Jh7JdGG?=
- =?us-ascii?Q?H/4Rh+u/asSBwnGHTRH0hk/snLaZEKtMsAtnHZnah3Ihlbi9GyDhKEKNdCXo?=
- =?us-ascii?Q?4FcSGeQkIDCUPGbhenrOEXpS1oZBraKgB2mFJPUmLbNCtHXM/2B9PRhO3lKp?=
- =?us-ascii?Q?nf0SoBvE7xMBxPzKlMjNZMWl2FB6xmNNH68X4v2FAiD4mB/4HeJXUqblTpwO?=
- =?us-ascii?Q?urhNJZRKCcmLQa68q1BRTrKm7AAN4WusVoRZyEXbq/svy5+RZmlEk0tLyItx?=
- =?us-ascii?Q?caUV1ZmHqdWI5hQSU/7UWxihIhFZOlbTk3t42PKuejMbNldbYhzRcn30q5Hq?=
- =?us-ascii?Q?mbi/XtRMFot4PzrEEjxI7t6wBXbe4nCeSNEr71jDeHRjG783xCiwSGeEVRrx?=
- =?us-ascii?Q?vdwI5NCJ5kV/YEUXKtpsn/UYvmVccXIg6kwwMLb3Ega9LFIbpg089nMQRcjf?=
- =?us-ascii?Q?tiDZktBHMKxBemcORAF8mCw6RCMvJyqKjFb6dca2hLQfyXBwiUnC8x7LmT52?=
- =?us-ascii?Q?gJEpsln+dr08PFj165IvwhygwdR2y4YnLJGeLRmlUe4UlSyMhEa43igGq9zg?=
- =?us-ascii?Q?RCC89uOO94NwHI1DdA7ULCLux6FlDY3HW37c653/ra+i7+WiLz4zuHry/tVW?=
- =?us-ascii?Q?lcHWtQzv2RtVIOFNvAr2iUyVGgvk?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lDQKWlG5jKSK9CRmtiPPZyE67namW02sdqgE6lQivDbEoPLmYTkCu5G50Myd?=
- =?us-ascii?Q?ZWTcIqpMVowdsVj4jMcMpjrENqNFPYD42VPgD/LcWiZurpsdrf7McycXMdxN?=
- =?us-ascii?Q?pFA+/mFR+2KaUyVLYISO8zh77DHDhv7bGinnDeMoiiiVg47iqaFieVGFqveI?=
- =?us-ascii?Q?N0kPIkfqZ0DicpJPMP/ECRvQ5bYvCOZU0swAlnNOlZVyJghbC8wglUIvdtDf?=
- =?us-ascii?Q?ZFQg1y1LnYSnm+EmBPzYsxSvv57X/0XLzrDJWgfze519Mc58Y2uzPy0GDFNc?=
- =?us-ascii?Q?B/9G90pJjUYz4dHI575k9A75HLGu+4Xz9E1gPGYp6k6gFAUb3G7ixBVrhtKC?=
- =?us-ascii?Q?s2VRtbslU4dUpoce7yP7vPYElFEnR9/D/9FwLcaB35hKwKTwPvyPoe7w+QDB?=
- =?us-ascii?Q?XllKTcBr3NCdvjFpkhXLrCrZ8ZpebIB9SBnjo7MAja9MHg0meNThg4VDI3UO?=
- =?us-ascii?Q?6pvYJuvaGbPCePnQe/K2T5O+bx8YzQAI4BSzXpDKmqNcytMmzMKz2FRWIjqX?=
- =?us-ascii?Q?M+mJt2qI7YLQxVKv3rB0SEmGDjtrBBd+uaMu94vED6qiv+ceZvnkuoLDggPG?=
- =?us-ascii?Q?7Okfd+y+VFafxr+lZCO7CVg8osz//p5HvHbRuMVtTZtrKNRcnvuhDlRaW+s8?=
- =?us-ascii?Q?gNlThvUu/WjlOyNcI3usiSlQzArC703A15EK1FQV/S+AsLqx4unR6dNZnTSm?=
- =?us-ascii?Q?5VCYmyaFQmvjQwzsgFG4gs0x9cOm39VJOX3aHJqz8mibUMcGKlZjQKqIqctX?=
- =?us-ascii?Q?d0v3Zh35I46MViILmWVwWtIj6M3HHwr4in6b/dSi2LDXXq4EIumb6Ey/9fa3?=
- =?us-ascii?Q?wOyHxiZJSRvijU58YlnusLp/qN4ZDYMB5wy73iySlvcRVzmAmb/N4NI1qIcu?=
- =?us-ascii?Q?rGJNNa/J7xPlMC2k3/5VMlVu0OBcq0LmON805wN9I8TF9EzI2Tb6Ke6OnJ/x?=
- =?us-ascii?Q?oXa+JQDwnuHfUrg/DhipRfagNPycvoU9OBKbcRRS+6zlBVqJTaYVebCPk6ai?=
- =?us-ascii?Q?UXgJ5NULLIrk7GuTL8vTTMMZFJY7seZJLOh+2Vy9KUifRCmiExEXQjCSwI8s?=
- =?us-ascii?Q?wNVvTpkes51kN2Rydz+jhJHuIXYTW5nU6YMjiw9NKyR7+Zw1o23aSrCuJ9wE?=
- =?us-ascii?Q?opRwDAll+HmA31Avj4VGhUx27CnDPPYLcSO1mxgEphMLaY9aiKtj0lBWITzu?=
- =?us-ascii?Q?2ipasOeb18hKMv9U/UjPO0SNtYnOip9BLB1K/JJEDKf4dkWkORapG7HH7Kkv?=
- =?us-ascii?Q?cFRh4yX0YbYYAx5lcia9Wlh1A23nVXYK6/iHHTCyHmOIApzgYN3yx5iNcJ/L?=
- =?us-ascii?Q?+t1rkSamkgttSHbxIwC2+o7NlULa6mxLJZLKvz1DkCiVKZPBvBXoqwCPRNzM?=
- =?us-ascii?Q?XE39yVJv48HAKWvg7SfOsjUnj77qkSFgGFSUbWJIqcuHNULTdGtWx52Si56p?=
- =?us-ascii?Q?rnSB136nvikkMwxAI5CpWZiQ723UKFbcDpkzQwPUkbwCUsOVBw4ffMFADcXB?=
- =?us-ascii?Q?Qw2xKDmriX6GOy52h11PyhCtFyxc0vN0NAb+H82HoLy0DYl/UMEuaDtl9Q3w?=
- =?us-ascii?Q?GWPKs/CuvlNGltHHwcOQlBShr7k+WfkUAlY6gzE8bB9xYWHlgZi88VXZeanU?=
- =?us-ascii?Q?4A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fd8a4e9-c65c-406f-03c1-08dd6a9b3640
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2025 06:15:02.2686
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ET6Iug8DPGFi7DBkiGNq7/B3+TMCJgqjUmvebCXJ9p2w/3zrPWVnmzoeqn6r6Vb0Ie8KaYlhlJlYelc8cAwkLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7619
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGegRW4GinPmsav5=VBfjXBKy4cUEs5FWv-ixXODk7ajZ69vYg@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -BXK6qMXWLef6jiJ2R9hHCsaI_IjDOmx
+X-Proofpoint-ORIG-GUID: 40o9NRITvQhnDK-iPsw_sUFfSwFPyp4T
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ suspectscore=0 priorityscore=1501 impostorscore=0 spamscore=0 adultscore=0
+ mlxscore=0 mlxlogscore=810 clxscore=1011 malwarescore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503240076
 
+On Fri, Mar 21, 2025 at 10:05:42PM +0100, Alessandro Carminati wrote:
+> > > +#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
+> > > +# define HAVE_BUG_FUNCTION
+> > > +# define __BUG_FUNC_PTR      "       .long   %0-.\n"
+> > > +# define __BUG_FUNC  __func__
+> >
+> > gcc 7.5.0 on s390 barfs; it doesn't like the use of "__func__" with "%0-."
 
+...
 
-Hello,
+> GCC makes significant efforts to handle this, and for several
+> architectures, it manages to solve the problem.
+> However, this is not universally the case.
+> Additionally, -fPIC is not widely used in kernel code... I have only
+> seen it used for VDSO, the x86 boot piggyback decompressor, PowerPC
+> boot, and the s390x architecture.
+> 
+> That said, GCC has been mitigating this issue, allowing us to treat a
+> non-compile-time constant as if it were one.
+> A proof of this is that, at least since GCC 11, the s390x version of
+> GCC is able to build this code.
+> Before that... certainly in GCC 7.5 it couldn't.
+> 
+> A simple fix would be to restrict usage to GCC versions greater than
+> 11 for s390.
 
-kernel test robot noticed "kernel_BUG_at_include/linux/page-flags.h" on:
-
-commit: 8268af309d07d1c6279080b4e6fd16ec75cc977c ("arch, mm: set max_mapnr when allocating memory map for FLATMEM")
-https://git.kernel.org/cgit/linux/kernel/git/akpm/mm.git mm-stable
-
-in testcase: boot
-
-config: i386-randconfig-062-20250319
-compiler: clang-20
-test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-+------------------------------------------+------------+------------+
-|                                          | d319c8b491 | 8268af309d |
-+------------------------------------------+------------+------------+
-| boot_successes                           | 6          | 0          |
-| boot_failures                            | 0          | 6          |
-| kernel_BUG_at_include/linux/page-flags.h | 0          | 6          |
-| Oops:invalid_opcode:#[##]PREEMPT_SMP     | 0          | 6          |
-| EIP:reserve_bootmem_region               | 0          | 6          |
-| Kernel_panic-not_syncing:Fatal_exception | 0          | 6          |
-+------------------------------------------+------------+------------+
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202503241424.d16223ec-lkp@intel.com
-
-
-[    0.478410][    T0] ------------[ cut here ]------------
-[    0.478822][    T0] kernel BUG at include/linux/page-flags.h:536!
-[    0.479312][    T0] Oops: invalid opcode: 0000 [#1] PREEMPT SMP
-[    0.479768][    T0] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.14.0-rc6-00357-g8268af309d07 #1
-[    0.480470][    T0] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-[ 0.481260][ T0] EIP: reserve_bootmem_region (include/linux/page-flags.h:536) 
-[ 0.481683][ T0] Code: 5d c3 01 f1 89 c8 ba e1 38 f4 c3 e8 1e 37 8e fc 0f 0b b8 90 e2 62 c4 e8 e2 05 5e fc 01 f1 89 c8 ba be 85 f7 c3 e8 04 37 8e fc <0f> 0b b8 80 e2 62 c4 e8 c8 05 5e fc 55 89 e5 53 57 56 83 ec 10 89
-All code
-========
-   0:	5d                   	pop    %rbp
-   1:	c3                   	ret
-   2:	01 f1                	add    %esi,%ecx
-   4:	89 c8                	mov    %ecx,%eax
-   6:	ba e1 38 f4 c3       	mov    $0xc3f438e1,%edx
-   b:	e8 1e 37 8e fc       	call   0xfffffffffc8e372e
-  10:	0f 0b                	ud2
-  12:	b8 90 e2 62 c4       	mov    $0xc462e290,%eax
-  17:	e8 e2 05 5e fc       	call   0xfffffffffc5e05fe
-  1c:	01 f1                	add    %esi,%ecx
-  1e:	89 c8                	mov    %ecx,%eax
-  20:	ba be 85 f7 c3       	mov    $0xc3f785be,%edx
-  25:	e8 04 37 8e fc       	call   0xfffffffffc8e372e
-  2a:*	0f 0b                	ud2		<-- trapping instruction
-  2c:	b8 80 e2 62 c4       	mov    $0xc462e280,%eax
-  31:	e8 c8 05 5e fc       	call   0xfffffffffc5e05fe
-  36:	55                   	push   %rbp
-  37:	89 e5                	mov    %esp,%ebp
-  39:	53                   	push   %rbx
-  3a:	57                   	push   %rdi
-  3b:	56                   	push   %rsi
-  3c:	83 ec 10             	sub    $0x10,%esp
-  3f:	89                   	.byte 0x89
-
-Code starting with the faulting instruction
-===========================================
-   0:	0f 0b                	ud2
-   2:	b8 80 e2 62 c4       	mov    $0xc462e280,%eax
-   7:	e8 c8 05 5e fc       	call   0xfffffffffc5e05d4
-   c:	55                   	push   %rbp
-   d:	89 e5                	mov    %esp,%ebp
-   f:	53                   	push   %rbx
-  10:	57                   	push   %rdi
-  11:	56                   	push   %rsi
-  12:	83 ec 10             	sub    $0x10,%esp
-  15:	89                   	.byte 0x89
-[    0.483177][    T0] EAX: 00000000 EBX: c425df50 ECX: 00000000 EDX: 00000000
-[    0.483712][    T0] ESI: 017ffc00 EDI: ffffffff EBP: c425df34 ESP: c425df2c
-[    0.484248][    T0] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
-[    0.484846][    T0] CR0: 80050033 CR2: 00000000 CR3: 04b48000 CR4: 00000090
-[    0.485376][    T0] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[    0.485907][    T0] DR6: fffe0ff0 DR7: 00000400
-[    0.486253][    T0] Call Trace:
-[ 0.486494][ T0] ? __die_body (arch/x86/kernel/dumpstack.c:478) 
-[ 0.486822][ T0] ? die (arch/x86/kernel/dumpstack.c:?) 
-[ 0.487099][ T0] ? do_trap (arch/x86/kernel/traps.c:? arch/x86/kernel/traps.c:197) 
-[ 0.487409][ T0] ? do_error_trap (arch/x86/kernel/traps.c:217) 
-[ 0.487752][ T0] ? reserve_bootmem_region (include/linux/page-flags.h:536) 
-[ 0.488153][ T0] ? exc_overflow (arch/x86/kernel/traps.c:301) 
-[ 0.488490][ T0] ? handle_invalid_op (arch/x86/kernel/traps.c:254) 
-[ 0.488869][ T0] ? reserve_bootmem_region (include/linux/page-flags.h:536) 
-[ 0.489271][ T0] ? exc_invalid_op (arch/x86/kernel/traps.c:316) 
-[ 0.489619][ T0] ? handle_exception (arch/x86/entry/entry_32.S:1055) 
-[ 0.489996][ T0] ? exc_overflow (arch/x86/kernel/traps.c:301) 
-[ 0.490332][ T0] ? reserve_bootmem_region (include/linux/page-flags.h:536) 
-[ 0.490733][ T0] ? exc_overflow (arch/x86/kernel/traps.c:301) 
-[ 0.491068][ T0] ? reserve_bootmem_region (include/linux/page-flags.h:536) 
-[ 0.491470][ T0] memmap_init_reserved_pages (mm/memblock.c:2203) 
-[ 0.491887][ T0] free_low_memory_core_early (mm/memblock.c:?) 
-[ 0.492302][ T0] memblock_free_all (mm/memblock.c:2272 include/linux/atomic/atomic-arch-fallback.h:546 include/linux/atomic/atomic-long.h:123 include/linux/atomic/atomic-instrumented.h:3261 include/linux/mm.h:67 mm/memblock.c:2273) 
-[ 0.492659][ T0] mem_init (arch/x86/mm/init_32.c:735) 
-[ 0.492952][ T0] mm_core_init (mm/mm_init.c:2730) 
-[ 0.493271][ T0] start_kernel (init/main.c:958) 
-[ 0.493604][ T0] i386_start_kernel (arch/x86/kernel/head32.c:79) 
-[ 0.493969][ T0] startup_32_smp (arch/x86/kernel/head_32.S:292) 
-[    0.494317][    T0] Modules linked in:
-[    0.494604][    T0] ---[ end trace 0000000000000000 ]---
-[ 0.495009][ T0] EIP: reserve_bootmem_region (include/linux/page-flags.h:536) 
-[ 0.495422][ T0] Code: 5d c3 01 f1 89 c8 ba e1 38 f4 c3 e8 1e 37 8e fc 0f 0b b8 90 e2 62 c4 e8 e2 05 5e fc 01 f1 89 c8 ba be 85 f7 c3 e8 04 37 8e fc <0f> 0b b8 80 e2 62 c4 e8 c8 05 5e fc 55 89 e5 53 57 56 83 ec 10 89
-All code
-========
-   0:	5d                   	pop    %rbp
-   1:	c3                   	ret
-   2:	01 f1                	add    %esi,%ecx
-   4:	89 c8                	mov    %ecx,%eax
-   6:	ba e1 38 f4 c3       	mov    $0xc3f438e1,%edx
-   b:	e8 1e 37 8e fc       	call   0xfffffffffc8e372e
-  10:	0f 0b                	ud2
-  12:	b8 90 e2 62 c4       	mov    $0xc462e290,%eax
-  17:	e8 e2 05 5e fc       	call   0xfffffffffc5e05fe
-  1c:	01 f1                	add    %esi,%ecx
-  1e:	89 c8                	mov    %ecx,%eax
-  20:	ba be 85 f7 c3       	mov    $0xc3f785be,%edx
-  25:	e8 04 37 8e fc       	call   0xfffffffffc8e372e
-  2a:*	0f 0b                	ud2		<-- trapping instruction
-  2c:	b8 80 e2 62 c4       	mov    $0xc462e280,%eax
-  31:	e8 c8 05 5e fc       	call   0xfffffffffc5e05fe
-  36:	55                   	push   %rbp
-  37:	89 e5                	mov    %esp,%ebp
-  39:	53                   	push   %rbx
-  3a:	57                   	push   %rdi
-  3b:	56                   	push   %rsi
-  3c:	83 ec 10             	sub    $0x10,%esp
-  3f:	89                   	.byte 0x89
-
-Code starting with the faulting instruction
-===========================================
-   0:	0f 0b                	ud2
-   2:	b8 80 e2 62 c4       	mov    $0xc462e280,%eax
-   7:	e8 c8 05 5e fc       	call   0xfffffffffc5e05d4
-   c:	55                   	push   %rbp
-   d:	89 e5                	mov    %esp,%ebp
-   f:	53                   	push   %rbx
-  10:	57                   	push   %rdi
-  11:	56                   	push   %rsi
-  12:	83 ec 10             	sub    $0x10,%esp
-  15:	89                   	.byte 0x89
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250324/202503241424.d16223ec-lkp@intel.com
-
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+But please add that dependency only for this new feature for the time
+being. Right now I would not like to see that s390 is the only architecture
+(besides parisc) which requires a much higher minimum gcc level than every
+other architecture. Unless there are specific reasons.
