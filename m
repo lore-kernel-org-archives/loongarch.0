@@ -1,159 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B302F3E
-	for <loongarch@lists.linux.dev>; Mon, 24 Mar 2025 04:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 107F518B03
+	for <loongarch@lists.linux.dev>; Mon, 24 Mar 2025 04:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742789409; cv=none; b=rSNDy4/weeT+1wt4JjtmJ7mwbn0YAl8WEqe+D/o0i152rtcQ+U33HrKna7b0ltl8PGt33K9yySgARD+rnRGMyYvKfcGtYai5UhP3ZYEzwPcvMTigeXnkigobWJj3Z0SoPSRo/7EWJ+Oi6bBWSHwjjmXz+Bt/sRRLwXfsB+YP/Ig=
+	t=1742790709; cv=none; b=i680QXM1WhgUhO8Eyk+3HpY1tD7l0swzJdshZ79VZKyTYWmWv3sCrvSE4+P5iGmW0w1pZOt0xZbBHnhaPRsDQz8JiY/BqGEGNHe+zz+QizL21IrFVQf+sP706BPwRcFemyPxczHkIL0PVnb8wU2hGSdzNSs357+tURVIcUKkBwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742789409; c=relaxed/simple;
-	bh=SjMbRJQYqIQDGC5FlD8k7K65GLMPOGIwt+8BWth1Kqc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eYkiXjrxsoR9eUq8H3b1suFTlvGNh2YjlSfCQREbQihAuRl+AGnySMZleSUL+pCjJzaaXrV68PcFuDyEsQKcjrVjiCglKIiTbN7iWQpghfgAwH3h6HTDQkFcLRnEtRXWS7zIrg4dibfGTIlCbMsH7pDOsOTQgruZnFgMYdBdDFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sfMj/hbr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sfMj/hbr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EF4C4CEE9
-	for <loongarch@lists.linux.dev>; Mon, 24 Mar 2025 04:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742789409;
-	bh=SjMbRJQYqIQDGC5FlD8k7K65GLMPOGIwt+8BWth1Kqc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sfMj/hbrq0NH++uBtxzlF6/f6I/+Pn8oKquIPUoBNF3A1vL7uz83VKiF/UaxrF4aS
-	 L7fd1W7+M31qs9MEQdlPzSEer40ZF6BCqY+ul5FcHayoC7/qyAV82mdFddR4Wa1FLb
-	 tZqZvOiF5T2QcTyffoR4HDzrMs+tHNCG9lfbrDp8e21QEghBScakwIZPgsYFMHBGla
-	 /vqUXnTWY3PaEJcU5OZF5Qz7b1ewIgcILMNOTh58QvrUPUoFsZWMZ/uMpZkV9TUDTL
-	 o12A/zCi4rf3EQcfa6A/5RiKmZAX39Tcs9MoenSxMDkPZAl5LsPoFGJEzDy/V8M2uD
-	 WnJNKbohJHaDQ==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac25313ea37so479448966b.1
-        for <loongarch@lists.linux.dev>; Sun, 23 Mar 2025 21:10:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXDQmgIT8DsSy+7A2GLCqIRJJCnkr8ZTpT2f/yZS3dLjez2ZBpFG2o3+lRbuWEPdJflKQUt0tAw5Ss=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNB8zJYC2MVhicQl8F3q4r0MXQnyokh+uyuQc1FvNpBjgGEez4
-	LixAdYDXzXVN+yNiAoUylWHzVU+qjM9c8krQUTgBbRrERhMy3NdWg+ZHdk2nuQ9QE6OlJakv44U
-	2EgQTF/xLE7DKQEZ0Hs5jethtfRo=
-X-Google-Smtp-Source: AGHT+IEbe98Fviv+3ZJooiybHPzSdwoChxAEAhfVEIWk75mGx7wuQYzR8Ll7Bc1bNXwDF3kuOrrOYLLTM96SVAp2b6Q=
-X-Received: by 2002:a17:907:3eaa:b0:abe:fa18:1fc6 with SMTP id
- a640c23a62f3a-ac3f20b89camr1027018866b.10.1742789407766; Sun, 23 Mar 2025
- 21:10:07 -0700 (PDT)
+	s=arc-20240116; t=1742790709; c=relaxed/simple;
+	bh=hxQg9HlwvzfhGni7ezD0U429mcZreD+ANTevvZDApzE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=mzXSXoWaaR+WEhHWRtRobqUsCPgcJ/bYsQyK2FKmDR2C3nz5scJbZ7QZmBY4pPkazmE7p0LqtDTxYexloXmNWz8rYEOjSDlTutfLQnt1jDJ0G0YK7wJw5dkL8xqjhtOfkMg4M7kqRc5w2fEYdVcOFA8tEX/1i0qT1XJYEWclKDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8BxrOIv4OBn4LijAA--.39165S3;
+	Mon, 24 Mar 2025 12:31:43 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by front1 (Coremail) with SMTP id qMiowMCx_cYs4OBn0ShdAA--.15158S3;
+	Mon, 24 Mar 2025 12:31:42 +0800 (CST)
+Subject: Re: [PATCH v2] LoongArch: KGDB: Rework arch_kgdb_breakpoint()
+ implementation
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WangYuli <wangyuli@uniontech.com>, kernel@xen0n.name,
+ guanwentao@uniontech.com, wentao@uniontech.com, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zhoubinbin@loongson.cn, lihui@loongson.cn,
+ rdunlap@infradead.org, chenhuacai@loongson.cn, zhanjun@uniontech.com,
+ niecheng1@uniontech.com, Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <943E06D656E4E707+20250321141001.109916-1-wangyuli@uniontech.com>
+ <CAAhV-H71aEKj2V8mAqbUuAe1JiHngWHW3rSaJ_Dx_CzoQC7TgQ@mail.gmail.com>
+ <545ed081-bec3-395c-e0dd-a45146e00cd1@loongson.cn>
+ <CAAhV-H51AxAjhhge=w4Y=p0XnuW-RyuvA5dPpPc-F0N9YPYHrg@mail.gmail.com>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <30b25aa7-106f-7ebf-296d-0e05d7da75eb@loongson.cn>
+Date: Mon, 24 Mar 2025 12:31:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <943E06D656E4E707+20250321141001.109916-1-wangyuli@uniontech.com>
- <CAAhV-H71aEKj2V8mAqbUuAe1JiHngWHW3rSaJ_Dx_CzoQC7TgQ@mail.gmail.com> <545ed081-bec3-395c-e0dd-a45146e00cd1@loongson.cn>
-In-Reply-To: <545ed081-bec3-395c-e0dd-a45146e00cd1@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 24 Mar 2025 12:09:58 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H51AxAjhhge=w4Y=p0XnuW-RyuvA5dPpPc-F0N9YPYHrg@mail.gmail.com>
-X-Gm-Features: AQ5f1JogmAftQM828gQD5DTQzREcF5CPt-xZ4-n5oV_lse2MVClC0pEsHdy8rSQ
-Message-ID: <CAAhV-H51AxAjhhge=w4Y=p0XnuW-RyuvA5dPpPc-F0N9YPYHrg@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: KGDB: Rework arch_kgdb_breakpoint() implementation
-To: Jinyang He <hejinyang@loongson.cn>
-Cc: WangYuli <wangyuli@uniontech.com>, kernel@xen0n.name, guanwentao@uniontech.com, 
-	wentao@uniontech.com, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	zhoubinbin@loongson.cn, lihui@loongson.cn, rdunlap@infradead.org, 
-	chenhuacai@loongson.cn, zhanjun@uniontech.com, niecheng1@uniontech.com, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H51AxAjhhge=w4Y=p0XnuW-RyuvA5dPpPc-F0N9YPYHrg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCx_cYs4OBn0ShdAA--.15158S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWry7ur13XrW7tw1UXFWfCrX_yoW5KF45pF
+	W8C3WqyF48Jry8CwnxtrWYvr1ayws7Ww1xXan8K34xCa4qq3W3Jr12yFnrua42gr1xKw10
+	vFyYga4Iq3WUA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
+	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-Hi, Jinyang,
+On 2025-03-24 12:09, Huacai Chen wrote:
 
-On Mon, Mar 24, 2025 at 9:42=E2=80=AFAM Jinyang He <hejinyang@loongson.cn> =
-wrote:
+> Hi, Jinyang,
 >
-> On 2025-03-22 20:51, Huacai Chen wrote:
->
-> > Hi, Tiezhu & Jinyang,
-> >
-> > On Fri, Mar 21, 2025 at 10:11=E2=80=AFPM WangYuli <wangyuli@uniontech.c=
-om> wrote:
-> >> The arch_kgdb_breakpoint() function defines the kgdb_breakinst
-> >> symbol using inline assembly.
-> >>
-> >> There's a potential issue where the compiler might inline
-> >> arch_kgdb_breakpoint(), which would then define the kgdb_breakinst
-> >> symbol multiple times, leading to a linker error.
-> >>
-> >> To prevent this, declare arch_kgdb_breakpoint() as noline.
-> >>
-> >> Fix follow error with LLVM-19 *only* when LTO_CLANG_FULL:
-> >>      LD      vmlinux.o
-> >>    ld.lld-19: error: ld-temp.o <inline asm>:3:1: symbol 'kgdb_breakins=
-t' is already defined
-> >>    kgdb_breakinst: break 2
-> >>    ^
-> >>
-> >> Additionally, remove "nop" here because it's meaningless for LoongArch
-> >> here.
-> >>
-> >> Fixes: e14dd076964e ("LoongArch: Add basic KGDB & KDB support")
-> >> Co-developed-by: Winston Wen <wentao@uniontech.com>
-> >> Signed-off-by: Winston Wen <wentao@uniontech.com>
-> >> Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-> >> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> >> Co-developed-by: Huacai Chen <chenhuacai@loongson.cn>
-> >> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> >> Tested-by: Yuli Wang <wangyuli@uniontech.com>
-> >> Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> >> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
-> >> ---
-> >> Changelog:
-> >>   *v1->v2:
-> >>      1. Drop the nop which is no effect for LoongArch here.
-> >>      2. Add "STACK_FRAME_NON_STANDARD" for arch_kgdb_breakpoint() to
-> >> avoid the objtool warning.
-> >> ---
-> >>   arch/loongarch/kernel/kgdb.c | 4 ++--
-> >>   1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb=
-.c
-> >> index 445c452d72a7..38bd0561d7d5 100644
-> >> --- a/arch/loongarch/kernel/kgdb.c
-> >> +++ b/arch/loongarch/kernel/kgdb.c
-> >> @@ -224,13 +224,13 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsi=
-gned long pc)
-> >>          regs->csr_era =3D pc;
-> >>   }
-> >>
-> >> -void arch_kgdb_breakpoint(void)
-> >> +noinline void arch_kgdb_breakpoint(void)
-> >>   {
-> >>          __asm__ __volatile__ (                  \
-> >>                  ".globl kgdb_breakinst\n\t"     \
-> >> -               "nop\n"                         \
-> >>                  "kgdb_breakinst:\tbreak 2\n\t"); /* BRK_KDB =3D 2 */
-> >>   }
-> >> +STACK_FRAME_NON_STANDARD(arch_kgdb_breakpoint);
-> > Is there a better solution than STACK_FRAME_NON_STANDARD()? In the
-> > past we can use annotate_reachable() in arch_kgdb_breakpoint(), but
-> > annotate_reachable() is no longer exist.
->
-> Maybe we can parse the imm-code of `break` and set diffrent insn_type in
-> objtool.
-> The BRK_KDB imply the PC will go head, while the BRK_BUG imply PC stop.
-> (arch/loongarch/include/uapi/asm/break.h)
->
-> Tiezhu, how do you think?
-Touching objtool may be a little complicated, is ANNOTATE_REACHABLE()
-the successor of annotate_reachable()? I tried
-ANNOTATE_REACHABLE(kgdb_breakinst) but there was still a warning.
+> On Mon, Mar 24, 2025 at 9:42 AM Jinyang He <hejinyang@loongson.cn> wrote:
+>> On 2025-03-22 20:51, Huacai Chen wrote:
+>>
+>>> Hi, Tiezhu & Jinyang,
+>>>
+>>> On Fri, Mar 21, 2025 at 10:11 PM WangYuli <wangyuli@uniontech.com> wrote:
+>>>> The arch_kgdb_breakpoint() function defines the kgdb_breakinst
+>>>> symbol using inline assembly.
+>>>>
+>>>> There's a potential issue where the compiler might inline
+>>>> arch_kgdb_breakpoint(), which would then define the kgdb_breakinst
+>>>> symbol multiple times, leading to a linker error.
+>>>>
+>>>> To prevent this, declare arch_kgdb_breakpoint() as noline.
+>>>>
+>>>> Fix follow error with LLVM-19 *only* when LTO_CLANG_FULL:
+>>>>       LD      vmlinux.o
+>>>>     ld.lld-19: error: ld-temp.o <inline asm>:3:1: symbol 'kgdb_breakinst' is already defined
+>>>>     kgdb_breakinst: break 2
+>>>>     ^
+>>>>
+>>>> Additionally, remove "nop" here because it's meaningless for LoongArch
+>>>> here.
+>>>>
+>>>> Fixes: e14dd076964e ("LoongArch: Add basic KGDB & KDB support")
+>>>> Co-developed-by: Winston Wen <wentao@uniontech.com>
+>>>> Signed-off-by: Winston Wen <wentao@uniontech.com>
+>>>> Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+>>>> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+>>>> Co-developed-by: Huacai Chen <chenhuacai@loongson.cn>
+>>>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+>>>> Tested-by: Yuli Wang <wangyuli@uniontech.com>
+>>>> Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
+>>>> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+>>>> ---
+>>>> Changelog:
+>>>>    *v1->v2:
+>>>>       1. Drop the nop which is no effect for LoongArch here.
+>>>>       2. Add "STACK_FRAME_NON_STANDARD" for arch_kgdb_breakpoint() to
+>>>> avoid the objtool warning.
+>>>> ---
+>>>>    arch/loongarch/kernel/kgdb.c | 4 ++--
+>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb.c
+>>>> index 445c452d72a7..38bd0561d7d5 100644
+>>>> --- a/arch/loongarch/kernel/kgdb.c
+>>>> +++ b/arch/loongarch/kernel/kgdb.c
+>>>> @@ -224,13 +224,13 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc)
+>>>>           regs->csr_era = pc;
+>>>>    }
+>>>>
+>>>> -void arch_kgdb_breakpoint(void)
+>>>> +noinline void arch_kgdb_breakpoint(void)
+>>>>    {
+>>>>           __asm__ __volatile__ (                  \
+>>>>                   ".globl kgdb_breakinst\n\t"     \
+>>>> -               "nop\n"                         \
+>>>>                   "kgdb_breakinst:\tbreak 2\n\t"); /* BRK_KDB = 2 */
+>>>>    }
+>>>> +STACK_FRAME_NON_STANDARD(arch_kgdb_breakpoint);
+>>> Is there a better solution than STACK_FRAME_NON_STANDARD()? In the
+>>> past we can use annotate_reachable() in arch_kgdb_breakpoint(), but
+>>> annotate_reachable() is no longer exist.
+>> Maybe we can parse the imm-code of `break` and set diffrent insn_type in
+>> objtool.
+>> The BRK_KDB imply the PC will go head, while the BRK_BUG imply PC stop.
+>> (arch/loongarch/include/uapi/asm/break.h)
+>>
+>> Tiezhu, how do you think?
+> Touching objtool may be a little complicated, is ANNOTATE_REACHABLE()
+> the successor of annotate_reachable()? I tried
+> ANNOTATE_REACHABLE(kgdb_breakinst) but there was still a warning.
+Should it annotate to the next insn of `break`?
+Like,
 
-Huacai
+     kgdb_breakinst:
+     break 2
+     another_label:
 
+ANNOTATE_REACHABLE(another_label)
+
+Jinyang
 >
+> Huacai
 >
-> >
-> > Huacai
-> >
-> >>   /*
-> >>    * Calls linux_debug_hook before the kernel dies. If KGDB is enabled=
-,
-> >> --
-> >> 2.49.0
-> >>
->
+>>
+>>> Huacai
+>>>
+>>>>    /*
+>>>>     * Calls linux_debug_hook before the kernel dies. If KGDB is enabled,
+>>>> --
+>>>> 2.49.0
+>>>>
+
