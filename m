@@ -1,148 +1,195 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865E4250BF1
-	for <loongarch@lists.linux.dev>; Mon, 24 Mar 2025 10:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED4682899
+	for <loongarch@lists.linux.dev>; Tue, 25 Mar 2025 02:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742813270; cv=none; b=ol3WO5puD9+0sMMwy0C0DmCmLblSyhIgD0Sd20778AMq+yqxhZFm0zTYbw+jkB8B91W8B3u1J4P9f8JGvsEqFA1Mg4lkviOJ2RA6i9YUXiyirpIzcUG+X2Bix+ZE3+Z7NJNabOW1DMg+Gr55nKr3SZgh3l/xZ/p7evJf08Tj6/s=
+	t=1742868878; cv=none; b=fuJs7tIhCaNBQ5UWW/E57Xut+U+PZkqikZskNCho3xBOdZ55FHwPHcS4speapOFBRABOy7aVKppyYsgA+enKBmp3mxSu8hpCBj/HzdwRj43Sebqo/RrQ3eIsA51DdgDD9vNrlaLmCkWU/NAtlJFnR2i5pO0t9djrYGq153E+QOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742813270; c=relaxed/simple;
-	bh=KKpN7ifW0FwxjJpOhtFmsCId4QhbQ/vnhrEMIbMuqjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XJfng/lqBVmRB0CsUKk+pCXquS1YUim8rXin/rHVstbnoyAPDBFdNIwQgGNRMiP4581jQ1tYfKMhTCekJXcbKdLugr2AsouwSMWOXbbR895QqeEqgBXXlhDs2Zxm5AWBbYll5T+6E8dfrrAM9z95nwT5zXk623BuDjQ/Qevfn+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DqSoWvn2; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DqSoWvn2"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O9ptko016767;
-	Mon, 24 Mar 2025 10:47:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=VIga+xvQk4RxwLl37s8roD8US+RxZH
-	6wgAnN7cz6dUM=; b=DqSoWvn2hNYTALQxMlD7ZFoi+4zq0N1yWuxe53qPbwlofS
-	11EDXetv8BM4utLmdlLw0MYgxwUAi5gSGHNoREjNHy90tDmAWBicdY3u5OsLqFNm
-	FswP8lh4U8KL0Z+kmbDMnrfazqs0pMLjoe8sYQPDDhg+bESIKfnjQkeT2J5kZ8gZ
-	uTpBQo4JY573uCvrEvB6/7EY+71e5v7MwS2GmtATqmPLrQY+OFUtee+p4N29MFed
-	yMLrXbyFZsn7mGVDVNB3gW9NBCAPa3n7ktStYlAB993VUD+ET9ZqifqLhNy/ADTm
-	3QJgYd+LcjsIPnDPueY9NsSPBS5ASB0qja99r70Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jkqp44qf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 10:47:11 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52OAlA92022659;
-	Mon, 24 Mar 2025 10:47:10 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jkqp44qc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 10:47:10 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52O77iAg025489;
-	Mon, 24 Mar 2025 10:47:09 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45j7wywy1a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 10:47:09 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52OAl5LT16187800
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Mar 2025 10:47:05 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 694862004B;
-	Mon, 24 Mar 2025 10:47:05 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CD8DB20040;
-	Mon, 24 Mar 2025 10:47:03 +0000 (GMT)
-Received: from osiris (unknown [9.179.14.66])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 24 Mar 2025 10:47:03 +0000 (GMT)
-Date: Mon, 24 Mar 2025 11:47:02 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Alessandro Carminati <acarmina@redhat.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, linux-kselftest@vger.kernel.org,
-        David Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>,
-        Arthur Grillo <arthurgrillo@riseup.net>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Alessandro Carminati <alessandro.carminati@gmail.com>,
-        Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        loongarch@lists.linux.dev, x86@kernel.org,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH v4 10/14] s390: Add support for suppressing warning
- backtraces
-Message-ID: <20250324104702.12139E73-hca@linux.ibm.com>
-References: <20250313114329.284104-1-acarmina@redhat.com>
- <20250313114329.284104-11-acarmina@redhat.com>
- <b6bb68f0-7e93-4db2-9fe6-f615f06ddeb1@roeck-us.net>
- <CAGegRW4GinPmsav5=VBfjXBKy4cUEs5FWv-ixXODk7ajZ69vYg@mail.gmail.com>
+	s=arc-20240116; t=1742868878; c=relaxed/simple;
+	bh=jqUSCzJ3m/V47PgBm4XDMGM6+4BqyAaqVaAF0z8nO50=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ew0LEuhHxp173fA02JsxbfqPY4AECNR2Nvvt543f9//QTrZyu639AglXfghnAw4VaqEIw5PmSevl9svo2shMlgA9k4PqXDtH4VWMxhPruTqcZF94rf+SK0nIz+pE/iUoRPdRhoQMAcYPzWY/bT+fGIFqfSgMLGMpGvJfb4/G9OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxvnOBEeJn8gWlAA--.48007S3;
+	Tue, 25 Mar 2025 10:14:25 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMCxbsV9EeJnzKJeAA--.19172S3;
+	Tue, 25 Mar 2025 10:14:25 +0800 (CST)
+Subject: Re: [RFC V2] LoongArch: KVM: Handle interrupt early before enabling
+ irq
+From: bibo mao <maobibo@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20250311074737.3160546-1-maobibo@loongson.cn>
+Message-ID: <c220d043-2314-85bb-e99d-dc2c609aa739@loongson.cn>
+Date: Tue, 25 Mar 2025 10:13:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGegRW4GinPmsav5=VBfjXBKy4cUEs5FWv-ixXODk7ajZ69vYg@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -BXK6qMXWLef6jiJ2R9hHCsaI_IjDOmx
-X-Proofpoint-ORIG-GUID: 40o9NRITvQhnDK-iPsw_sUFfSwFPyp4T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- suspectscore=0 priorityscore=1501 impostorscore=0 spamscore=0 adultscore=0
- mlxscore=0 mlxlogscore=810 clxscore=1011 malwarescore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503240076
+In-Reply-To: <20250311074737.3160546-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxbsV9EeJnzKJeAA--.19172S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxur4kGrW5Jry5ZF18ZF4kKrX_yoWrZr18pF
+	W7CanYkrs5JFyxXwnrtw4v9r13WrZ3Kry3Z3s7J3ySyw4ayFy8tr4kK39IqF1rK3ykJ3WI
+	qFyFkw1qk3Z8twcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJU
+	UUUU=
 
-On Fri, Mar 21, 2025 at 10:05:42PM +0100, Alessandro Carminati wrote:
-> > > +#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
-> > > +# define HAVE_BUG_FUNCTION
-> > > +# define __BUG_FUNC_PTR      "       .long   %0-.\n"
-> > > +# define __BUG_FUNC  __func__
-> >
-> > gcc 7.5.0 on s390 barfs; it doesn't like the use of "__func__" with "%0-."
+Hi Paolo, Sean
 
-...
+This idea comes from x86, do you have any guidance or suggestion about it?
 
-> GCC makes significant efforts to handle this, and for several
-> architectures, it manages to solve the problem.
-> However, this is not universally the case.
-> Additionally, -fPIC is not widely used in kernel code... I have only
-> seen it used for VDSO, the x86 boot piggyback decompressor, PowerPC
-> boot, and the s390x architecture.
+Also I notice that there is such irq_enable()/irq_disable() pair on x86, 
+I do not know why it is so.
+     local_irq_enable();
+     ++vcpu->stat.exits;
+     local_irq_disable();
+     guest_timing_exit_irqoff();
+     local_irq_enable();
+
+Regards
+Bibo Mao
+
+On 2025/3/11 下午3:47, Bibo Mao wrote:
+> If interrupt arrive when vCPU is running, vCPU will exit because of
+> interrupt exception. Currently interrupt exception is handled after
+> local_irq_enable() is called, and it is handled by host kernel rather
+> than KVM hypervisor. It will introduce extra another interrupt
+> exception and then host will handle irq.
 > 
-> That said, GCC has been mitigating this issue, allowing us to treat a
-> non-compile-time constant as if it were one.
-> A proof of this is that, at least since GCC 11, the s390x version of
-> GCC is able to build this code.
-> Before that... certainly in GCC 7.5 it couldn't.
+> If KVM hypervisor detect that it is interrupt exception, interrupt
+> can be handle early in KVM hypervisor before local_irq_enable() is
+> called.
 > 
-> A simple fix would be to restrict usage to GCC versions greater than
-> 11 for s390.
+> On 3C5000 dual-way machine, there will be 10% -- 15% performance
+> improvement with netperf UDP_RR option with 10G ethernet card.
+>                     original     with patch    improvement
+>    netperf UDP_RR     7200          8100           +12%
+> 
+> The total performance is low because irqchip is emulated in qemu VMM,
+> however from the same testbed, there is performance improvement
+> actually.
+> 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> v1 ... v2:
+>    1. Move guest_timing_exit_irqoff() after host interrupt handling like
+>       other architectures.
+>    2. Construct interrupt context pt_regs from guest entering context
+>    3. Add cond_resched() after irq enabling
+> ---
+>   arch/loongarch/kernel/traps.c |  1 +
+>   arch/loongarch/kvm/vcpu.c     | 36 ++++++++++++++++++++++++++++++++++-
+>   2 files changed, 36 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+> index 2ec3106c0da3..eed0d8b02ee3 100644
+> --- a/arch/loongarch/kernel/traps.c
+> +++ b/arch/loongarch/kernel/traps.c
+> @@ -1114,6 +1114,7 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
+>   
+>   	irqentry_exit(regs, state);
+>   }
+> +EXPORT_SYMBOL(do_vint);
+>   
+>   unsigned long eentry;
+>   unsigned long tlbrentry;
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 9e1a9b4aa4c6..bab7a71eb965 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -5,6 +5,7 @@
+>   
+>   #include <linux/kvm_host.h>
+>   #include <linux/entry-kvm.h>
+> +#include <asm/exception.h>
+>   #include <asm/fpu.h>
+>   #include <asm/lbt.h>
+>   #include <asm/loongarch.h>
+> @@ -304,6 +305,23 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+>   	return ret;
+>   }
+>   
+> +static void kvm_handle_irq(struct kvm_vcpu *vcpu)
+> +{
+> +	struct pt_regs regs, *old;
+> +
+> +	/*
+> +	 * Construct pseudo pt_regs, only necessary registers is added
+> +	 * Interrupt context coming from guest enter context
+> +	 */
+> +	old = (struct pt_regs *)(vcpu->arch.host_sp - sizeof(struct pt_regs));
+> +	/* Disable preemption in irq exit function irqentry_exit() */
+> +	regs.csr_prmd = 0;
+> +	regs.regs[LOONGARCH_GPR_SP] = vcpu->arch.host_sp;
+> +	regs.regs[LOONGARCH_GPR_FP] = old->regs[LOONGARCH_GPR_FP];
+> +	regs.csr_era = old->regs[LOONGARCH_GPR_RA];
+> +	do_vint(&regs, (unsigned long)&regs);
+> +}
+> +
+>   /*
+>    * Return 1 for resume guest and "<= 0" for resume host.
+>    */
+> @@ -321,8 +339,23 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
+>   
+>   	kvm_lose_pmu(vcpu);
+>   
+> -	guest_timing_exit_irqoff();
+>   	guest_state_exit_irqoff();
+> +
+> +	/*
+> +	 * VM exit because of host interrupts
+> +	 * Handle irq directly before enabling irq
+> +	 */
+> +	if (!ecode && intr)
+> +		kvm_handle_irq(vcpu);
+> +
+> +	/*
+> +	 * Wait until after servicing IRQs to account guest time so that any
+> +	 * ticks that occurred while running the guest are properly accounted
+> +	 * to the guest. Waiting until IRQs are enabled degrades the accuracy
+> +	 * of accounting via context tracking, but the loss of accuracy is
+> +	 * acceptable for all known use cases.
+> +	 */
+> +	guest_timing_exit_irqoff();
+>   	local_irq_enable();
+>   
+>   	trace_kvm_exit(vcpu, ecode);
+> @@ -331,6 +364,7 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
+>   	} else {
+>   		WARN(!intr, "vm exiting with suspicious irq\n");
+>   		++vcpu->stat.int_exits;
+> +		cond_resched();
+>   	}
+>   
+>   	if (ret == RESUME_GUEST)
+> 
+> base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+> 
 
-But please add that dependency only for this new feature for the time
-being. Right now I would not like to see that s390 is the only architecture
-(besides parisc) which requires a much higher minimum gcc level than every
-other architecture. Unless there are specific reasons.
