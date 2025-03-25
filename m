@@ -1,195 +1,260 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED4682899
-	for <loongarch@lists.linux.dev>; Tue, 25 Mar 2025 02:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F992252914
+	for <loongarch@lists.linux.dev>; Tue, 25 Mar 2025 07:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742868878; cv=none; b=fuJs7tIhCaNBQ5UWW/E57Xut+U+PZkqikZskNCho3xBOdZ55FHwPHcS4speapOFBRABOy7aVKppyYsgA+enKBmp3mxSu8hpCBj/HzdwRj43Sebqo/RrQ3eIsA51DdgDD9vNrlaLmCkWU/NAtlJFnR2i5pO0t9djrYGq153E+QOU=
+	t=1742887210; cv=none; b=GyY//VbhhKmZgpCxS5tFR2b/jrY7HJmzcgU0YZ0btT6y9j7wWXg7fh1uHWrutIjqY0c9tNUR90gC2QPh4aTQDdybUbJrfr03dHxNJ8LWcUXXE4dO6BmPRDzHiiPIYQRuiGrMNlahWUxOwIP+OuvHZoZIgP3CrfOjJLSETPBfzZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742868878; c=relaxed/simple;
-	bh=jqUSCzJ3m/V47PgBm4XDMGM6+4BqyAaqVaAF0z8nO50=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ew0LEuhHxp173fA02JsxbfqPY4AECNR2Nvvt543f9//QTrZyu639AglXfghnAw4VaqEIw5PmSevl9svo2shMlgA9k4PqXDtH4VWMxhPruTqcZF94rf+SK0nIz+pE/iUoRPdRhoQMAcYPzWY/bT+fGIFqfSgMLGMpGvJfb4/G9OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxvnOBEeJn8gWlAA--.48007S3;
-	Tue, 25 Mar 2025 10:14:25 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxbsV9EeJnzKJeAA--.19172S3;
-	Tue, 25 Mar 2025 10:14:25 +0800 (CST)
-Subject: Re: [RFC V2] LoongArch: KVM: Handle interrupt early before enabling
- irq
-From: bibo mao <maobibo@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20250311074737.3160546-1-maobibo@loongson.cn>
-Message-ID: <c220d043-2314-85bb-e99d-dc2c609aa739@loongson.cn>
-Date: Tue, 25 Mar 2025 10:13:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1742887210; c=relaxed/simple;
+	bh=7yAN5DWEseLPhSuJtJplgqzsW8Fn2NnOCRGJNmY+TWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CHkRy8uTcO23FdfGr6F4BbaHpL6qztMzkGV0KVP95v/Y+HnBuf/yts59NYU5OOGRV7WrOnQmTDSVDOMLm1UxCqaHmelaiGg4Zdpxx/v+9Z8yX7BNKP24Dq+Ud2MdI1RzkH6Ok7EFbFfrDjcgJ9Sosj5cSXl9LemOEl3C4y9McRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZMLXZ26Lwz9sSV;
+	Tue, 25 Mar 2025 08:05:18 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id RFFIDcgfzoK7; Tue, 25 Mar 2025 08:05:18 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZMLXY2g73z9sSS;
+	Tue, 25 Mar 2025 08:05:17 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id DA00C8B766;
+	Tue, 25 Mar 2025 08:05:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id FEOhRsdEs3K2; Tue, 25 Mar 2025 08:05:16 +0100 (CET)
+Received: from PO20335.IDSI0.si.c-s.fr (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 285238B763;
+	Tue, 25 Mar 2025 08:05:15 +0100 (CET)
+Received: from PO20335.IDSI0.si.c-s.fr (localhost [127.0.0.1])
+	by PO20335.IDSI0.si.c-s.fr (8.18.1/8.17.1) with ESMTPS id 52P756MK009381
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 25 Mar 2025 08:05:07 +0100
+Received: (from chleroy@localhost)
+	by PO20335.IDSI0.si.c-s.fr (8.18.1/8.18.1/Submit) id 52P742SQ009337;
+	Tue, 25 Mar 2025 08:04:02 +0100
+X-Authentication-Warning: PO20335.IDSI0.si.c-s.fr: chleroy set sender to christophe.leroy@csgroup.eu using -f
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: tglx@linutronix.de, "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Alex Deucher <alexander.deucher@amd.com>, Alex Shi <alexs@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        =?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        amd-gfx@lists.freedesktop.org, Amit Kucheria <amitk@kernel.org>,
+        Anatolij Gustschin <agust@denx.de>, Andi Shyti <andi.shyti@kernel.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Andrew Jeffery <andrew@codeconstruct.com.au>,
+        Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andy@kernel.org>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Antoine Tenart <atenart@kernel.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Anup Patel <anup@brainfault.org>, Arnd Bergmann <arnd@arndb.de>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>,
+        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Daniel Mack <daniel@zonque.org>, Daniel Palmer <daniel@thingy.jp>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        DENG Qingfang <dqfext@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Dongliang Mu <dzm91@hust.edu.cn>, Doug Berger <opendmb@gmail.com>,
+        dri-devel@lists.freedesktop.org, Eddie James <eajames@linux.ibm.com>,
+        Eric Dumazet <edumazet@google.com>, Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Guo Ren <guoren@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Changhuang Liang <changhuang.liang@starfivetech.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "Chester A. Unal" <chester.a.unal@arinc9.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chris Zankel <chris@zankel.net>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Imre Kaloz <kaloz@openwrt.org>, Ingo Molnar <mingo@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, James Morse <james.morse@arm.com>,
+        Janne Grunau <j@jannau.net>, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Jiawen Wu <jiawenwu@trustnetic.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jim Quinlan <jim2101024@gmail.com>, Jingoo Han <jingoohan1@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        John Crispin <john@phrozen.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Jonas Bonn <jonas@southpole.se>, Jonathan Cameron <jic23@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Keerthy <j-keerthy@ti.com>, Kevin Hilman <khilman@baylibre.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+        Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linus Walleij <linusw@kernel.org>, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-sound@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, linux-um@lists.infradead.org,
+        linux-wireless@vger.kernel.org, loongarch@lists.linux.dev,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, "Luke D. Jones" <luke@ljones.dev>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Mengyuan Lou <mengyuanlou@net-swift.com>, Michael Buesch <m@bues.ch>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <michal.simek@amd.com>,
+        Miodrag Dinic <miodrag.dinic@mips.com>,
+        Naveen N Rao <naveen@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>, netdev@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Nikhil Agarwal <nikhil.agarwal@amd.com>,
+        Nipun Gupta <nipun.gupta@amd.com>, Nishanth Menon <nm@ti.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Paolo Abeni <pabeni@redhat.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Peter Rosin <peda@axentia.se>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+        platform-driver-x86@vger.kernel.org,
+        Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Qin Jian <qinjian@cqplus1.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>, Ray Jui <rjui@broadcom.com>,
+        Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Richard Weinberger <richard@nod.at>, Rich Felker <dalias@libc.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Robert Richter <rric@kernel.org>, Rob Herring <robh@kernel.org>,
+        Roger Quadros <rogerq@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>, Scott Wood <oss@buserror.net>,
+        Sean Paul <sean@poorly.run>, Sean Wang <sean.wang@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Simona Vetter <simona@ffwll.ch>, Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stephen Boyd <sboyd@kernel.org>, Sven Peter <sven@svenpeter.dev>,
+        Takashi Iwai <tiwai@suse.com>, Talel Shenhar <talel@amazon.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+        Thara Gopinath <thara.gopinath@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Tony Lindgren <tony@atomide.com>, Tony Luck <tony.luck@intel.com>,
+        UNGLinuxDriver@microchip.com,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vineet Gupta <vgupta@kernel.org>, Vladimir Oltean <olteanv@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>, WANG Xuerui <kernel@xen0n.name>,
+        Woojung Huh <woojung.huh@microchip.com>, x86@kernel.org,
+        Yanteng Si <si.yanteng@linux.dev>,
+        Yoshinori Sato <ysato@users.osdn.me>, Zhang Rui <rui.zhang@intel.com>
+Subject: Re: (subset) [PATCH v2 00/57] irqdomain: Cleanups and Documentation
+Date: Tue, 25 Mar 2025 08:03:28 +0100
+Message-ID: <174288553816.2234438.13558299160543301187.b4-ty@csgroup.eu>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
+References: <20250319092951.37667-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250311074737.3160546-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742886214; l=533; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=EKh0/GewaFERhfnFRfKBg2j5NzMhdBBECdrA+NV/qUk=; b=vA70hw72XKaj1SXthnl6PXh4i9Z2K3Egqlb0PIRXfpHV2vrVCLTo/AG4L7b0hc2x3UCZ6Qx3v FOB4ERwauOeBecqk7A7PBvaW/237URvW4CKvgDK24Wh/OVU59RY4zZO
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxbsV9EeJnzKJeAA--.19172S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxur4kGrW5Jry5ZF18ZF4kKrX_yoWrZr18pF
-	W7CanYkrs5JFyxXwnrtw4v9r13WrZ3Kry3Z3s7J3ySyw4ayFy8tr4kK39IqF1rK3ykJ3WI
-	qFyFkw1qk3Z8twcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJU
-	UUUU=
 
-Hi Paolo, Sean
 
-This idea comes from x86, do you have any guidance or suggestion about it?
+On Wed, 19 Mar 2025 10:28:53 +0100, Jiri Slaby (SUSE) wrote:
+> tl;dr if patches are agreed upon, I ask subsys maintainers to take the
+> respective ones via their trees (as they are split per subsys), so that
+> the IRQ tree can take only the rest. That would minimize churn/conflicts
+> during merges.
+> 
+> ===
+> 
+> [...]
 
-Also I notice that there is such irq_enable()/irq_disable() pair on x86, 
-I do not know why it is so.
-     local_irq_enable();
-     ++vcpu->stat.exits;
-     local_irq_disable();
-     guest_timing_exit_irqoff();
-     local_irq_enable();
+Applied, thanks!
 
-Regards
-Bibo Mao
+[48/57] irqdomain: soc: Switch to irq_find_mapping()
+        commit: a70a3a6322131632cc6cf71e9d2fa6409a029fd7
 
-On 2025/3/11 下午3:47, Bibo Mao wrote:
-> If interrupt arrive when vCPU is running, vCPU will exit because of
-> interrupt exception. Currently interrupt exception is handled after
-> local_irq_enable() is called, and it is handled by host kernel rather
-> than KVM hypervisor. It will introduce extra another interrupt
-> exception and then host will handle irq.
-> 
-> If KVM hypervisor detect that it is interrupt exception, interrupt
-> can be handle early in KVM hypervisor before local_irq_enable() is
-> called.
-> 
-> On 3C5000 dual-way machine, there will be 10% -- 15% performance
-> improvement with netperf UDP_RR option with 10G ethernet card.
->                     original     with patch    improvement
->    netperf UDP_RR     7200          8100           +12%
-> 
-> The total performance is low because irqchip is emulated in qemu VMM,
-> however from the same testbed, there is performance improvement
-> actually.
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
-> v1 ... v2:
->    1. Move guest_timing_exit_irqoff() after host interrupt handling like
->       other architectures.
->    2. Construct interrupt context pt_regs from guest entering context
->    3. Add cond_resched() after irq enabling
-> ---
->   arch/loongarch/kernel/traps.c |  1 +
->   arch/loongarch/kvm/vcpu.c     | 36 ++++++++++++++++++++++++++++++++++-
->   2 files changed, 36 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-> index 2ec3106c0da3..eed0d8b02ee3 100644
-> --- a/arch/loongarch/kernel/traps.c
-> +++ b/arch/loongarch/kernel/traps.c
-> @@ -1114,6 +1114,7 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
->   
->   	irqentry_exit(regs, state);
->   }
-> +EXPORT_SYMBOL(do_vint);
->   
->   unsigned long eentry;
->   unsigned long tlbrentry;
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 9e1a9b4aa4c6..bab7a71eb965 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -5,6 +5,7 @@
->   
->   #include <linux/kvm_host.h>
->   #include <linux/entry-kvm.h>
-> +#include <asm/exception.h>
->   #include <asm/fpu.h>
->   #include <asm/lbt.h>
->   #include <asm/loongarch.h>
-> @@ -304,6 +305,23 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
->   	return ret;
->   }
->   
-> +static void kvm_handle_irq(struct kvm_vcpu *vcpu)
-> +{
-> +	struct pt_regs regs, *old;
-> +
-> +	/*
-> +	 * Construct pseudo pt_regs, only necessary registers is added
-> +	 * Interrupt context coming from guest enter context
-> +	 */
-> +	old = (struct pt_regs *)(vcpu->arch.host_sp - sizeof(struct pt_regs));
-> +	/* Disable preemption in irq exit function irqentry_exit() */
-> +	regs.csr_prmd = 0;
-> +	regs.regs[LOONGARCH_GPR_SP] = vcpu->arch.host_sp;
-> +	regs.regs[LOONGARCH_GPR_FP] = old->regs[LOONGARCH_GPR_FP];
-> +	regs.csr_era = old->regs[LOONGARCH_GPR_RA];
-> +	do_vint(&regs, (unsigned long)&regs);
-> +}
-> +
->   /*
->    * Return 1 for resume guest and "<= 0" for resume host.
->    */
-> @@ -321,8 +339,23 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
->   
->   	kvm_lose_pmu(vcpu);
->   
-> -	guest_timing_exit_irqoff();
->   	guest_state_exit_irqoff();
-> +
-> +	/*
-> +	 * VM exit because of host interrupts
-> +	 * Handle irq directly before enabling irq
-> +	 */
-> +	if (!ecode && intr)
-> +		kvm_handle_irq(vcpu);
-> +
-> +	/*
-> +	 * Wait until after servicing IRQs to account guest time so that any
-> +	 * ticks that occurred while running the guest are properly accounted
-> +	 * to the guest. Waiting until IRQs are enabled degrades the accuracy
-> +	 * of accounting via context tracking, but the loss of accuracy is
-> +	 * acceptable for all known use cases.
-> +	 */
-> +	guest_timing_exit_irqoff();
->   	local_irq_enable();
->   
->   	trace_kvm_exit(vcpu, ecode);
-> @@ -331,6 +364,7 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
->   	} else {
->   		WARN(!intr, "vm exiting with suspicious irq\n");
->   		++vcpu->stat.int_exits;
-> +		cond_resched();
->   	}
->   
->   	if (ret == RESUME_GUEST)
-> 
-> base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
-> 
-
+Best regards,
+-- 
+Christophe Leroy <christophe.leroy@csgroup.eu>
