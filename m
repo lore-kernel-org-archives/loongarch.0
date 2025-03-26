@@ -1,138 +1,207 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5978C17583
-	for <loongarch@lists.linux.dev>; Wed, 26 Mar 2025 01:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879C51A3BA1
+	for <loongarch@lists.linux.dev>; Wed, 26 Mar 2025 08:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742953465; cv=none; b=M0i1u6ohDcEX4cwt7r7HbDL6BUvDSxffoRjLTbbCfKYw0eeCGjpcssZ2rPtWhsxbeKivRJ69SyIIn5rNuEBONQlrVm4jIn9SgmwUFiL4CIoirNyFa9AIzF3437KCjV3CzJImcz88wZuPkJsbqR55vHIUR4WbzpEPISCSKLyjQ4k=
+	t=1742979375; cv=none; b=BrYorJGpFBk/DeDLwa+R3/QS04/D7VEDyihPkM7nBHZD3usyL5+DJPt8TzewPP5C/3n6BiKNlxDVdSXtJ02NGXW+ZCaRtcDjdls5YDw8DA9Wmfks8eMOUT1e/nHn5hVr2R3BNGkA0691pUiynj7djNzAdO+YmLHcZ2+LgfQ3pf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742953465; c=relaxed/simple;
-	bh=GMnhNsSJVZdZ4jNyqsscLOc+TQdAsMSw5uyLlmi2W6A=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=V+ro57+HMPgghdaTYU6p+PLk30Rk02xyC/hM2j/kK3VQeeUrH1xiTTXJgkvn15ElHxCfs5iQlIl+XKgtkb56SRNafDSdnRXDzs9W/FGhafTmKn4CP0rWkOdqo+6OLc+fC06TU7kVePnpYraULvvBd9gFqGxYywFJjG+cyyUGRKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZMqMj3phLz8QrkZ;
-	Wed, 26 Mar 2025 09:44:17 +0800 (CST)
-Received: from xaxapp04.zte.com.cn ([10.99.98.157])
-	by mse-fl1.zte.com.cn with SMTP id 52Q1i4PC086739;
-	Wed, 26 Mar 2025 09:44:04 +0800 (+08)
-	(envelope-from ye.xingchen@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid31;
-	Wed, 26 Mar 2025 09:44:05 +0800 (CST)
-Date: Wed, 26 Mar 2025 09:44:05 +0800 (CST)
-X-Zmail-TransId: 2afc67e35be55b2-ae216
-X-Mailer: Zmail v1.0
-Message-ID: <20250326094405353ipJ7AEI8eo8UowlTrZWDh@zte.com.cn>
-In-Reply-To: <2d9bef01f7cf43d1456d9b0d19715a3b7d0fe234.camel@xry111.site>
-References: 20250325190844051uFjo0CxrlPVQEpKrtPO_0@zte.com.cn,2d9bef01f7cf43d1456d9b0d19715a3b7d0fe234.camel@xry111.site
+	s=arc-20240116; t=1742979375; c=relaxed/simple;
+	bh=F1foF754pT94sYW+RFuaojIiZBGsMyKzZaxtQLw5N2w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mge8GvlWvYvbjdAAKX4x0y4YMGbZmizrl4WknOhwRAXMZcUXWceYXpKCCd68rocFoapa2T3RFBEIdSKTJF0iPbJwW6KjP3Jf1L2Z9pHZgDZf9/eYJht1MZyJNNhXXYTIg8yf8aBAAvimyJhBBD8y7b4UtBOa/joOU9ezK9iV8LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yfhi5Fez; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yfhi5Fez"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742979372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ctJ2iKS2diL395+WMoYK5u4EcCy52/qwtJ7bficlTlI=;
+	b=Yfhi5Fezki67ljs+vfIlE/81Mso6xrv5nuZ7fPeDMK6fu7mYlLHIo9iF3mg3xgQKjY1yk1
+	E6/zZwNvVWzbt+iBbMXz3X0SSRHG9FqnZ7aEsdMBo0H9uOLR6LjzHwbOHKoP0fae0k0K2u
+	p/gGMSK+IreznDYsmXWDdt3ikTiZlDU=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-104-oeWhgjMMPMST-zqnaTgWoQ-1; Wed, 26 Mar 2025 04:56:11 -0400
+X-MC-Unique: oeWhgjMMPMST-zqnaTgWoQ-1
+X-Mimecast-MFC-AGG-ID: oeWhgjMMPMST-zqnaTgWoQ_1742979370
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so39476915e9.3
+        for <loongarch@lists.linux.dev>; Wed, 26 Mar 2025 01:56:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742979370; x=1743584170;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ctJ2iKS2diL395+WMoYK5u4EcCy52/qwtJ7bficlTlI=;
+        b=uftTLIGQCscW17L5qkFaPfJNdYqMg6FQ4OPQVcCI7m6ANNNGjjS3e1gcMVL5a/gyx2
+         LhLMVLnWHl/hjScsBZDimGdv4b3CwjCx6Ii8sFXTDyCbGO1RI9a0ZD7rfnVrZ4zK098A
+         KjPird41kpO6NUT5DgCHG8TS8kja1/tez0soc7IFVE9WVVLmAYJNJA0NTGD0Zc8wr+E5
+         PBvRN1IRdOijQb3gPW8/wEHejE9W1xSAAemhtu6prfWZ+SoopHJrdkVGBZJF3VOZEXvT
+         /UytMYywHLS9VMfsru/ZVJ6Z6g6tNInrHC5MZZajhPX92mZa28TFMvYWJHe1qIsxUbp/
+         5Rvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyyfOOy8vgN5WSSbGawKX0kpZu5p/L3rN3Cw5YQEDz9kyXXh6HBgAYYLQzdmiGzKC+S8O61Xa9lg4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxjUQmYyNvrEEEh79sxnwUYiaQCyyKU3UJ7CIwM2Xq4IBTgbJhW
+	J9MFxsW/XsQo/A2HhzuqWbqyFRgWJrK61GRkVHgVjgNaHU4ErBzJ+S8mGkZDKG6i63T1LBIlx6I
+	hnQSh/tDTp8vSRley84fwUKCHJet92Gem7QHJRSFoKThbn6GpGDq9w+BClw==
+X-Gm-Gg: ASbGncsljeI+O2VGH0e3cuqwLLAHxb1RrL7MNGJGVc9C11N6QZg6QkPwTGpsDYZasTA
+	iKmLxVZZb6SMGamTgJCELWyMu9kSNBG7auVQV+0Q3dko4cMtpR+bJcfNq7yqqqnW1xTHqBqQzKR
+	nreUUO02rTY8xDNCnzvaIQ93RycSmyDsvqc0CrpQMWPNiRGCPZzPIg5hB9bCLGGXfLkFFnfoahp
+	efgWXMYdhxQlOsVOzRXStznqhvOeOoHd8iu6B0IHPC2PaNxqsOCXCVUmdw0K3fAWYoniwmJtTiE
+	dLrCQ7ZyWtI9c/nNZIljaKBHGizHtNdcogIoxTJ5I6ZQmrpCN8L7sm50fTNFTlQAVHPXsziGGfl
+	t
+X-Received: by 2002:a05:600c:5025:b0:43d:300f:fa51 with SMTP id 5b1f17b1804b1-43d509ea850mr177278155e9.9.1742979369944;
+        Wed, 26 Mar 2025 01:56:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmtDcswSiHFvojL/8/X8XbIAG8pFv35YFW9PLdaiNFn4jtJsKwcY6xoArge3H5jo1mJzUGFA==
+X-Received: by 2002:a05:600c:5025:b0:43d:300f:fa51 with SMTP id 5b1f17b1804b1-43d509ea850mr177277375e9.9.1742979369446;
+        Wed, 26 Mar 2025 01:56:09 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ac67970a2sm5909443f8f.16.2025.03.26.01.56.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 01:56:08 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Jann Horn <jannh@google.com>, Rik van Riel <riel@surriel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+In-Reply-To: <CAG48ez2bSh6=J8cXJhqYX=Y8pXcGsFgC05HsGcF0b1sJK2VH7A@mail.gmail.com>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+ <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+ <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
+ <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
+ <xhsmhh64qhssj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <eef09bdc-7546-462b-9ac0-661a44d2ceae@intel.com>
+ <xhsmhfrk84k5k.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com>
+ <xhsmhy0wtngkd.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez2bSh6=J8cXJhqYX=Y8pXcGsFgC05HsGcF0b1sJK2VH7A@mail.gmail.com>
+Date: Wed, 26 Mar 2025 09:56:06 +0100
+Message-ID: <xhsmhv7rwnpax.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-From: <ye.xingchen@zte.com.cn>
-To: <xry111@xry111.site>
-Cc: <chenhuacai@kernel.org>, <kernel@xen0n.name>, <loongarch@lists.linux.dev>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBsb29uZ2FyY2gtbmV4dF0gTG9vbmdBcmNoOiBtYWtlIHhvcl90ZW1wbGF0ZS5jIGluY2x1ZGUgb25jZQ==?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl1.zte.com.cn 52Q1i4PC086739
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67E35BF1.001/4ZMqMj3phLz8QrkZ
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: LG8izwNiZLdkdf2gjzuXUd3acZUF4OFtBMR32QK8tfs_1742979370
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On 25/03/25 19:41, Jann Horn wrote:
+> On Tue, Mar 25, 2025 at 6:52=E2=80=AFPM Valentin Schneider <vschneid@redh=
+at.com> wrote:
+>> On 20/02/25 09:38, Dave Hansen wrote:
+>> > But, honestly, I'm still not sure this is worth all the trouble. If
+>> > folks want to avoid IPIs for TLB flushes, there are hardware features
+>> > that *DO* that. Just get new hardware instead of adding this complicat=
+ed
+>> > pile of software that we have to maintain forever. In 10 years, we'll
+>> > still have this software *and* 95% of our hardware has the hardware
+>> > feature too.
+>>
+>> Sorry, you're going to have to deal with my ignorance a little bit longe=
+r...
+>>
+>> Were you thinking x86 hardware specifically, or something else?
+>> AIUI things like arm64's TLBIVMALLE1IS can do what is required without a=
+ny
+>> IPI:
+>>
+>> C5.5.78
+>> """
+>> The invalidation applies to all PEs in the same Inner Shareable shareabi=
+lity domain as the PE that
+>> executes this System instruction.
+>> """
+>>
+>> But for (at least) these architectures:
+>>
+>>   alpha
+>>   x86
+>>   loongarch
+>>   mips
+>>   (non-freescale 8xx) powerpc
+>>   riscv
+>>   xtensa
+>>
+>> flush_tlb_kernel_range() has a path with a hardcoded use of on_each_cpu(=
+),
+>> so AFAICT for these the IPIs will be sent no matter the hardware.
+>
+> On X86, both AMD and Intel have some fairly recently introduced CPU
+> features that can shoot down TLBs remotely.
+>
+> The patch series
+> <https://lore.kernel.org/all/20250226030129.530345-1-riel@surriel.com/>
+> adds support for the AMD flavor; that series landed in the current
+> merge window (it's present in the mainline git repository now and should
+> be part of 6.15). I think support for the Intel flavor has not yet
+> been implemented, but the linked patch series mentions a plan to look
+> at the Intel flavor next.
 
-
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
-
-
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
-
-
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-RGVhciBNci4gWGksDQpUaGFuayB5b3UgZm9yIHBvaW50aW5nIG91dCB0aGUgY29tcGlsYXRpb24g
-aXNzdWVzIGNhdXNlZCBieSBteSBwYXRjaC4gSSBzaW5jZXJlbHkgYXBvbG9naXplIGZvciBpbnRy
-b2R1Y2luZyB0aGVzZSBlcnJvcnMgZHVlIHRvIGluc3VmZmljaWVudCBjb21waWxlLXRlc3Rpbmcg
-b2YgdGhlIGNoYW5nZXMuDQpVcG9uIHJldmlld2luZyB0aGUgY29tcGlsZXIgb3V0cHV0LCBJIHJl
-YWxpemUgdGhlIGR1cGxpY2F0ZSBpbmNsdXNpb24gb2YgeG9yX3RlbXBsYXRlLmMgY29tYmluZWQg
-d2l0aCBtYWNybyB1c2FnZSBjb25mbGljdHMgd2FzIGFuIG92ZXJzaWdodCBvbiBteSBwYXJ0LiBJ
-IHNob3VsZCBoYXZlIHBlcmZvcm1lZCBtb3JlIHJpZ29yb3VzIHRlc3RpbmcgYW5kIHZlcmlmaWNh
-dGlvbiBiZWZvcmUgc3VibWl0dGluZyB0aGUgcGF0Y2guDQpUaGFuayB5b3UgZm9yIHlvdXIgcGF0
-aWVuY2UgYW5kIG1lbnRvcnNoaXAuDQpCZXN0IHJlZ2FyZHMsDQpZZQ==
-
-
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwIHN0eWxlPSJtYXJnaW46IGNhbGModmFyKC0tZHMt
-bWQtem9vbSkqMTJweCkwOyBmb250LXNpemU6IDE2LjAwMnB4OyBsaW5lLWhlaWdodDogdmFyKC0t
-ZHMtbWQtbGluZS1oZWlnaHQpOyBjb2xvcjogcmdiKDY0LCA2NCwgNjQpOyBmb250LWZhbWlseTog
-SW50ZXIsIHN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgQmxpbmtNYWNTeXN0ZW1Gb250LCAmcXVv
-dDtTZWdvZSBVSSZxdW90OywgUm9ib3RvLCAmcXVvdDtOb3RvIFNhbnMmcXVvdDssIFVidW50dSwg
-Q2FudGFyZWxsLCAmcXVvdDtIZWx2ZXRpY2EgTmV1ZSZxdW90OywgT3h5Z2VuLCAmcXVvdDtPcGVu
-IFNhbnMmcXVvdDssIHNhbnMtc2VyaWY7IHdoaXRlLXNwYWNlOiBub3JtYWw7Ij5EZWFyIE1yLiBY
-aSw8L3A+PHAgc3R5bGU9Im1hcmdpbjogY2FsYyh2YXIoLS1kcy1tZC16b29tKSoxMnB4KTA7IGZv
-bnQtc2l6ZTogMTYuMDAycHg7IGxpbmUtaGVpZ2h0OiB2YXIoLS1kcy1tZC1saW5lLWhlaWdodCk7
-IGNvbG9yOiByZ2IoNjQsIDY0LCA2NCk7IGZvbnQtZmFtaWx5OiBJbnRlciwgc3lzdGVtLXVpLCAt
-YXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICZxdW90O1NlZ29lIFVJJnF1b3Q7LCBS
-b2JvdG8sICZxdW90O05vdG8gU2FucyZxdW90OywgVWJ1bnR1LCBDYW50YXJlbGwsICZxdW90O0hl
-bHZldGljYSBOZXVlJnF1b3Q7LCBPeHlnZW4sICZxdW90O09wZW4gU2FucyZxdW90Oywgc2Fucy1z
-ZXJpZjsgd2hpdGUtc3BhY2U6IG5vcm1hbDsiPlRoYW5rIHlvdSBmb3IgcG9pbnRpbmcgb3V0IHRo
-ZSBjb21waWxhdGlvbiBpc3N1ZXMgY2F1c2VkIGJ5IG15IHBhdGNoLiBJIHNpbmNlcmVseSBhcG9s
-b2dpemUgZm9yIGludHJvZHVjaW5nIHRoZXNlIGVycm9ycyBkdWUgdG8gaW5zdWZmaWNpZW50IGNv
-bXBpbGUtdGVzdGluZyBvZiB0aGUgY2hhbmdlcy48L3A+PHAgc3R5bGU9Im1hcmdpbjogY2FsYyh2
-YXIoLS1kcy1tZC16b29tKSoxMnB4KTA7IGZvbnQtc2l6ZTogMTYuMDAycHg7IGxpbmUtaGVpZ2h0
-OiB2YXIoLS1kcy1tZC1saW5lLWhlaWdodCk7IGNvbG9yOiByZ2IoNjQsIDY0LCA2NCk7IGZvbnQt
-ZmFtaWx5OiBJbnRlciwgc3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZv
-bnQsICZxdW90O1NlZ29lIFVJJnF1b3Q7LCBSb2JvdG8sICZxdW90O05vdG8gU2FucyZxdW90Oywg
-VWJ1bnR1LCBDYW50YXJlbGwsICZxdW90O0hlbHZldGljYSBOZXVlJnF1b3Q7LCBPeHlnZW4sICZx
-dW90O09wZW4gU2FucyZxdW90Oywgc2Fucy1zZXJpZjsgd2hpdGUtc3BhY2U6IG5vcm1hbDsiPlVw
-b24gcmV2aWV3aW5nIHRoZSBjb21waWxlciBvdXRwdXQsIEkgcmVhbGl6ZSB0aGUgZHVwbGljYXRl
-IGluY2x1c2lvbiBvZiB4b3JfdGVtcGxhdGUuYyBjb21iaW5lZCB3aXRoIG1hY3JvIHVzYWdlIGNv
-bmZsaWN0cyB3YXMgYW4gb3ZlcnNpZ2h0IG9uIG15IHBhcnQuIEkgc2hvdWxkIGhhdmUgcGVyZm9y
-bWVkIG1vcmUgcmlnb3JvdXMgdGVzdGluZyBhbmQgdmVyaWZpY2F0aW9uIGJlZm9yZSBzdWJtaXR0
-aW5nIHRoZSBwYXRjaC48L3A+PHAgc3R5bGU9Im1hcmdpbjogY2FsYyh2YXIoLS1kcy1tZC16b29t
-KSoxMnB4KTA7IGZvbnQtc2l6ZTogMTYuMDAycHg7IGxpbmUtaGVpZ2h0OiB2YXIoLS1kcy1tZC1s
-aW5lLWhlaWdodCk7IGNvbG9yOiByZ2IoNjQsIDY0LCA2NCk7IGZvbnQtZmFtaWx5OiBJbnRlciwg
-c3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICZxdW90O1NlZ29l
-IFVJJnF1b3Q7LCBSb2JvdG8sICZxdW90O05vdG8gU2FucyZxdW90OywgVWJ1bnR1LCBDYW50YXJl
-bGwsICZxdW90O0hlbHZldGljYSBOZXVlJnF1b3Q7LCBPeHlnZW4sICZxdW90O09wZW4gU2FucyZx
-dW90Oywgc2Fucy1zZXJpZjsgd2hpdGUtc3BhY2U6IG5vcm1hbDsiPlRoYW5rIHlvdSBmb3IgeW91
-ciBwYXRpZW5jZSBhbmQgbWVudG9yc2hpcC48L3A+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTYuMDAy
-cHg7IGxpbmUtaGVpZ2h0OiB2YXIoLS1kcy1tZC1saW5lLWhlaWdodCk7IGNvbG9yOiByZ2IoNjQs
-IDY0LCA2NCk7IGZvbnQtZmFtaWx5OiBJbnRlciwgc3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBC
-bGlua01hY1N5c3RlbUZvbnQsICZxdW90O1NlZ29lIFVJJnF1b3Q7LCBSb2JvdG8sICZxdW90O05v
-dG8gU2FucyZxdW90OywgVWJ1bnR1LCBDYW50YXJlbGwsICZxdW90O0hlbHZldGljYSBOZXVlJnF1
-b3Q7LCBPeHlnZW4sICZxdW90O09wZW4gU2FucyZxdW90Oywgc2Fucy1zZXJpZjsgd2hpdGUtc3Bh
-Y2U6IG5vcm1hbDsgbWFyZ2luLWJvdHRvbTogMHB4ICFpbXBvcnRhbnQ7Ij5CZXN0IHJlZ2FyZHMs
-PGJyPlllPC9wPjxwIHN0eWxlPSJmb250LXNpemU6MTRweDtmb250LWZhbWlseTrlvq7ova/pm4Xp
-u5EsTWljcm9zb2Z0IFlhSGVpOyI+PGJyPjwvcD48cCBzdHlsZT0iZm9udC1zaXplOjE0cHg7Zm9u
-dC1mYW1pbHk65b6u6L2v6ZuF6buRLE1pY3Jvc29mdCBZYUhlaTsiPjxicj48L3A+PHAgc3R5bGU9
-ImZvbnQtc2l6ZToxNHB4O2ZvbnQtZmFtaWx5OuW+rui9r+mbhem7kSxNaWNyb3NvZnQgWWFIZWk7
-Ij48YnI+PC9wPjxwIHN0eWxlPSJmb250LXNpemU6MTRweDtmb250LWZhbWlseTrlvq7ova/pm4Xp
-u5EsTWljcm9zb2Z0IFlhSGVpOyI+PGJyPjwvcD48cD48YnI+PC9wPjwvZGl2Pg==
-
-
---=====_003_next=====--
-
---=====_002_next=====--
-
---=====_001_next=====--
+Thanks for the info!
 
