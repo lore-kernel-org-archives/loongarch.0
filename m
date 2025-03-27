@@ -1,92 +1,129 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA050664C6
-	for <loongarch@lists.linux.dev>; Thu, 27 Mar 2025 02:18:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6CA7483
+	for <loongarch@lists.linux.dev>; Thu, 27 Mar 2025 03:17:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743041936; cv=none; b=KpMfxoDUMObJ5P1zTllkIidStMq6H3tVke+xa4o4vDt9mMUSDpn90JUk3SmsbjpiuRaLw4nn2OmCxKpkr1vmijTZIt8QdI6GbSEisbtDhrbGQHfDr+kZw7whc1lvLdHCKH+XKMSwLcfZuFY+Ayj5TMDc5rVRJHfh+VmGVHIMre8=
+	t=1743045459; cv=none; b=sN8d+CLF6HRuKwjxeHi3sOAJb3qRVOza4/tKgbGxeRXFa0VvxveTTlRs4QproX29lTvxG2/mhDGHPBeaa1sAn4nwitvojFdl9mQdwNBIt91PPskMBgJu5mHhtoRKC5qWdiBzjmqltJ1LPQmDyznWFWxs+XomNuMYfFq/JINgqpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743041936; c=relaxed/simple;
-	bh=DlEwUZ/5a8Jqc6JdqoVt8d9UL5upaR9WJUWmUWNmivY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I5FcITwJqAfIeXpIpLTIe3J1zNOui4Zfu3TPlaodw5I6TaQnr7EwIaGLf4PwBMvdUq2/xxlzitgzUcPLhzxNy5Z227vBr4Z0v7yE5rfSk2jFlGN/2BqjETCi5t1EvCgNOvTohQccNIjJ9wukELr8dkLPp1uslgTou28uiglKVTs=
+	s=arc-20240116; t=1743045459; c=relaxed/simple;
+	bh=LK3FQ677kjKnN1Ua1i6ZrGTNdvICfBNZt8mRjKi4gdY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dTTdtCYiJ4m0wAdxy6KYMgoP5sMe9NPYSBTrtqIy/qXUB1T3ew62Ejntp7Ccjwz9GTsG2bWADldWIDA10rsVZjLmgvopVi7Qy2mrG9eRSU4i+JhPX0snHzZYkNJiSE4k04A5TKYguRcDDDmtkKb/Qdoe875V7VKNv3NoQu/3VGk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.180])
-	by gateway (Coremail) with SMTP id _____8Bx366GteRnmL2nAA--.1180S3;
-	Thu, 27 Mar 2025 10:18:46 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.180])
-	by front1 (Coremail) with SMTP id qMiowMBxHcV3teRnOnJiAA--.29069S3;
-	Thu, 27 Mar 2025 10:18:33 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>
-Subject: [PATCH v6 6/6] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
-Date: Thu, 27 Mar 2025 10:19:40 +0800
-Message-ID: <20250327021940.29969-2-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250327021940.29969-1-zhaoqunqin@loongson.cn>
-References: <20250327021940.29969-1-zhaoqunqin@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxnmtIw+Rnu8anAA--.18902S3;
+	Thu, 27 Mar 2025 11:17:29 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMBxb8csw+Rnm35iAA--.30518S3;
+	Thu, 27 Mar 2025 11:17:25 +0800 (CST)
+Subject: Re: [RFC V2] LoongArch: KVM: Handle interrupt early before enabling
+ irq
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20250311074737.3160546-1-maobibo@loongson.cn>
+ <c220d043-2314-85bb-e99d-dc2c609aa739@loongson.cn>
+ <Z-QYwWxhBH_nvmWH@google.com>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <310c31c9-226a-3417-2a76-e7cbc97f169f@loongson.cn>
+Date: Thu, 27 Mar 2025 11:16:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <Z-QYwWxhBH_nvmWH@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxHcV3teRnOnJiAA--.29069S3
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrXw1DtFykXrW8JryDWw1Dtwc_yoWxWrb_Aa
-	y2ga97XF1kGFnrAa40vFZ3AryYvrWrJ3Wru3WDtw1fX34jyr90yrnFyF48K3W5CrW5CFZx
-	WayxGF93Cr13ZosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbSAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+X-CM-TRANSID:qMiowMBxb8csw+Rnm35iAA--.30518S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZw15GF1xJF45Cw1UJr4fZwc_yoW5Xr4fpa
+	y7Ca4vkr4DXFyIva9Fyw1IvF13Aw4kJrW5AFWkC34jv39xCw1vqr1UGayUtF9xCrykGa1j
+	qr18Ka48Was8AFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_
-	ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jVeHDUUUUU=
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU74lkDUUUU
 
-Changes to Loongson TPM driver would be best reviewed by the Loongson
-crypto driver maintainers.
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
----
-v6: "tpm_lsse.c" -> "tpm_loongson"
-v4-v5: None
+On 2025/3/26 下午11:09, Sean Christopherson wrote:
+> On Tue, Mar 25, 2025, bibo mao wrote:
+>> Hi Paolo, Sean
+>>
+>> This idea comes from x86, do you have any guidance or suggestion about it?
+>>
+>> Also I notice that there is such irq_enable()/irq_disable() pair on x86, I
+>> do not know why it is so.
+> 
+> Because on AMD (SVM), IRQ VM-Exits don't consume the IRQ, i.e. the exit is purely
+> a notification.  KVM still needs to enable IRQs to actually handle the pending IRQ.
+Good design. Previously only on some realtime HW platforms HW interrupt 
+can be configured with high priority event. So with this, IRQ will 
+trigger VM-Exits however no IRQ context since it is treated async event.
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> And if the IRQ that triggered VM-Exit is for the host's tick, then it's desirable
+> to handle the tick IRQ before guest_timing_exit_irqoff() so that the timeslice is
+> accounted to the guest, not the host (the tick IRQ arrived while the guest was
+> active).
+> 
+> On Intel (VMX), KVM always runs in a mode where the VM-Exit acknowledge/consumes
+> the IRQ, and so KVM _must_ manually call into the appropriate interrupt handler.
+> 
+>>      local_irq_enable();
+>>      ++vcpu->stat.exits;
+>>      local_irq_disable();
+>>      guest_timing_exit_irqoff();
+>>      local_irq_enable();
+>>
+>> Regards
+>> Bibo Mao
+>>
+>> On 2025/3/11 下午3:47, Bibo Mao wrote:
+>>> If interrupt arrive when vCPU is running, vCPU will exit because of
+>>> interrupt exception. Currently interrupt exception is handled after
+>>> local_irq_enable() is called, and it is handled by host kernel rather
+>>> than KVM hypervisor. It will introduce extra another interrupt
+>>> exception and then host will handle irq.
+>>>
+>>> If KVM hypervisor detect that it is interrupt exception, interrupt
+>>> can be handle early in KVM hypervisor before local_irq_enable() is
+>>> called.
+> 
+> The correctness of this depends on how LoongArch virtualization processes IRQs.
+> If the IRQ is consumed by the VM-Exit, then manually handling the IRQ early is
+> both optimal and necessary for correctness.  If the IRQ is NOT consumed by the
+LoongArch KVM is similiar with Intel vmx, host intterrupt causes 
+VM-Exit, and also there will be extra interrupt exception if 
+local_irq_enable() is called in VM-Exit path.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 814205642..16fcd35ff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13606,6 +13606,7 @@ LOONGSON CRYPTO DRIVER
- M:	Qunqin Zhao <zhaoqunqin@loongson.com>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
-+F:	drivers/char/tpm/tpm_loongson.c
- F:	drivers/crypto/loongson/
- 
- LOONGSON-2 APB DMA DRIVER
--- 
-2.45.2
+
+> VM-Exit, then manually calling the interrupt handler from KVM will result in every
+> IRQ effectively happening twice: once on the manual call, and against when KVM
+By test on LoongArch platform, manual call about IRQ handler at early 
+stage will lower interrupt level and ack IRQ. IRQ will not trigger 
+again. So I think it is consumed by the VM-Exit.
+
+And thanks for your guidance.
+
+Regards
+Bibo Mao
+> enables IRQs and the "real" IRQ fires.
+> 
 
