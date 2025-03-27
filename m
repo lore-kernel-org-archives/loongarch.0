@@ -1,129 +1,100 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6CA7483
-	for <loongarch@lists.linux.dev>; Thu, 27 Mar 2025 03:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9EB1DD88D;
+	Thu, 27 Mar 2025 03:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743045459; cv=none; b=sN8d+CLF6HRuKwjxeHi3sOAJb3qRVOza4/tKgbGxeRXFa0VvxveTTlRs4QproX29lTvxG2/mhDGHPBeaa1sAn4nwitvojFdl9mQdwNBIt91PPskMBgJu5mHhtoRKC5qWdiBzjmqltJ1LPQmDyznWFWxs+XomNuMYfFq/JINgqpg=
+	t=1743045856; cv=none; b=WJkcPxqK7PiuFt47xsTcp6y+gD+jDiNheBhyZ/3/xp4nAU9ynhuQJ3Tq5RJFRlOdKDxzUj618N2Nq0629+WeivR4b3ynragZRSPOBWNeLjH91vBZqYaoFFkAUhOrqTPZaLG6ZZPvfe+Z9HwhDZPMKYiPpseNM+oHc5MWG8x4IcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743045459; c=relaxed/simple;
-	bh=LK3FQ677kjKnN1Ua1i6ZrGTNdvICfBNZt8mRjKi4gdY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dTTdtCYiJ4m0wAdxy6KYMgoP5sMe9NPYSBTrtqIy/qXUB1T3ew62Ejntp7Ccjwz9GTsG2bWADldWIDA10rsVZjLmgvopVi7Qy2mrG9eRSU4i+JhPX0snHzZYkNJiSE4k04A5TKYguRcDDDmtkKb/Qdoe875V7VKNv3NoQu/3VGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxnmtIw+Rnu8anAA--.18902S3;
-	Thu, 27 Mar 2025 11:17:29 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMBxb8csw+Rnm35iAA--.30518S3;
-	Thu, 27 Mar 2025 11:17:25 +0800 (CST)
-Subject: Re: [RFC V2] LoongArch: KVM: Handle interrupt early before enabling
- irq
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20250311074737.3160546-1-maobibo@loongson.cn>
- <c220d043-2314-85bb-e99d-dc2c609aa739@loongson.cn>
- <Z-QYwWxhBH_nvmWH@google.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <310c31c9-226a-3417-2a76-e7cbc97f169f@loongson.cn>
-Date: Thu, 27 Mar 2025 11:16:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1743045856; c=relaxed/simple;
+	bh=pfieFhDpfQvLevcNm0LMhPf+5kEs/vR8/60fuGlDo/s=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=MWUg3KC+vpb1mA2mEiAl4uNTPWKWYvxFKF0chFltxnu2w383NExy1+bR3Xj+QRhy2YAe0k/GEWZZeWI4aOOS679ec0igJEtGP4U/n0xYSzEBw3615VqdbqZ4OE1EMAvxeQx0B3phwyiIumUnWSASxbfiWrITtdisW7638jDoWbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQJgvNz2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQJgvNz2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DE74C4CEDD;
+	Thu, 27 Mar 2025 03:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743045856;
+	bh=pfieFhDpfQvLevcNm0LMhPf+5kEs/vR8/60fuGlDo/s=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=UQJgvNz2l0z8fqtCdNnyUvqSjVoXL9wFCHHbvvPzybzC9+Gmf923AguCn+7ATs1dB
+	 /l2CeBHujWK+xvCJN0M2aMdsKhViozJInjMMHMHuTHdemgu0HYqp/81iWGeZDsLvzd
+	 rbyEySOqo0DaqGftGgf/4lE5qQCtgsvJfySatQPTo3xdKaI0+H3NF/GPTdd12tdB4i
+	 IkHxpZ5h25C8oY/cPYvhAaPf+y26NAdF9cjddpEqLLo0nWxloMQ5npTdW/W8dkCepw
+	 Jeb7lHih+Mj6k6AsS5KBshhrXBx4thVfrpsR6pUdWrEOLVPz8IvjinOfuk6M3fNFAf
+	 cIwI8TWsAgfcQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFB4380AAFD;
+	Thu, 27 Mar 2025 03:24:53 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <Z-QYwWxhBH_nvmWH@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxb8csw+Rnm35iAA--.30518S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw15GF1xJF45Cw1UJr4fZwc_yoW5Xr4fpa
-	y7Ca4vkr4DXFyIva9Fyw1IvF13Aw4kJrW5AFWkC34jv39xCw1vqr1UGayUtF9xCrykGa1j
-	qr18Ka48Was8AFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
-	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU74lkDUUUU
+Subject: Re: [PATCH 0/7] KVM: x86: nVMX IRQ fix and VM teardown cleanups
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <174304589224.1549280.1623157194395422949.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Mar 2025 03:24:52 +0000
+References: <20250224235542.2562848-1-seanjc@google.com>
+In-Reply-To: <20250224235542.2562848-1-seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-riscv@lists.infradead.org, maz@kernel.org, oliver.upton@linux.dev,
+ zhaotianrui@loongson.cn, maobibo@loongson.cn, chenhuacai@kernel.org,
+ maddy@linux.ibm.com, anup@brainfault.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, borntraeger@linux.ibm.com,
+ frankja@linux.ibm.com, imbrenda@linux.ibm.com, pbonzini@redhat.com,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, aaronlewis@google.com, jmattson@google.com,
+ yan.y.zhao@intel.com, rick.p.edgecombe@intel.com, kai.huang@intel.com,
+ isaku.yamahata@intel.com
 
+Hello:
 
-On 2025/3/26 下午11:09, Sean Christopherson wrote:
-> On Tue, Mar 25, 2025, bibo mao wrote:
->> Hi Paolo, Sean
->>
->> This idea comes from x86, do you have any guidance or suggestion about it?
->>
->> Also I notice that there is such irq_enable()/irq_disable() pair on x86, I
->> do not know why it is so.
+This series was applied to riscv/linux.git (for-next)
+by Paolo Bonzini <pbonzini@redhat.com>:
+
+On Mon, 24 Feb 2025 15:55:35 -0800 you wrote:
+> This was _supposed_ to be a tiny one-off patch to fix a nVMX bug where KVM
+> fails to detect that, after nested VM-Exit, L1 has a pending IRQ (or NMI).
+> But because x86's nested teardown flows are garbage (KVM simply forces a
+> nested VM-Exit to put the vCPU back into L1), that simple fix snowballed.
 > 
-> Because on AMD (SVM), IRQ VM-Exits don't consume the IRQ, i.e. the exit is purely
-> a notification.  KVM still needs to enable IRQs to actually handle the pending IRQ.
-Good design. Previously only on some realtime HW platforms HW interrupt 
-can be configured with high priority event. So with this, IRQ will 
-trigger VM-Exits however no IRQ context since it is treated async event.
-
-> And if the IRQ that triggered VM-Exit is for the host's tick, then it's desirable
-> to handle the tick IRQ before guest_timing_exit_irqoff() so that the timeslice is
-> accounted to the guest, not the host (the tick IRQ arrived while the guest was
-> active).
+> The immediate issue is that checking for a pending interrupt accesses the
+> legacy PIC, and x86's kvm_arch_destroy_vm() currently frees the PIC before
+> destroying vCPUs, i.e. checking for IRQs during the forced nested VM-Exit
+> results in a NULL pointer deref (or use-after-free if KVM didn't nullify
+> the PIC pointer).  That's patch 1.
 > 
-> On Intel (VMX), KVM always runs in a mode where the VM-Exit acknowledge/consumes
-> the IRQ, and so KVM _must_ manually call into the appropriate interrupt handler.
-> 
->>      local_irq_enable();
->>      ++vcpu->stat.exits;
->>      local_irq_disable();
->>      guest_timing_exit_irqoff();
->>      local_irq_enable();
->>
->> Regards
->> Bibo Mao
->>
->> On 2025/3/11 下午3:47, Bibo Mao wrote:
->>> If interrupt arrive when vCPU is running, vCPU will exit because of
->>> interrupt exception. Currently interrupt exception is handled after
->>> local_irq_enable() is called, and it is handled by host kernel rather
->>> than KVM hypervisor. It will introduce extra another interrupt
->>> exception and then host will handle irq.
->>>
->>> If KVM hypervisor detect that it is interrupt exception, interrupt
->>> can be handle early in KVM hypervisor before local_irq_enable() is
->>> called.
-> 
-> The correctness of this depends on how LoongArch virtualization processes IRQs.
-> If the IRQ is consumed by the VM-Exit, then manually handling the IRQ early is
-> both optimal and necessary for correctness.  If the IRQ is NOT consumed by the
-LoongArch KVM is similiar with Intel vmx, host intterrupt causes 
-VM-Exit, and also there will be extra interrupt exception if 
-local_irq_enable() is called in VM-Exit path.
+> [...]
 
+Here is the summary with links:
+  - [1/7] KVM: x86: Free vCPUs before freeing VM state
+    https://git.kernel.org/riscv/c/17bcd7144263
+  - [2/7] KVM: nVMX: Process events on nested VM-Exit if injectable IRQ or NMI is pending
+    https://git.kernel.org/riscv/c/982caaa11504
+  - [3/7] KVM: Assert that a destroyed/freed vCPU is no longer visible
+    (no matching commit)
+  - [4/7] KVM: x86: Don't load/put vCPU when unloading its MMU during teardown
+    (no matching commit)
+  - [5/7] KVM: x86: Unload MMUs during vCPU destruction, not before
+    (no matching commit)
+  - [6/7] KVM: x86: Fold guts of kvm_arch_sync_events() into kvm_arch_pre_destroy_vm()
+    (no matching commit)
+  - [7/7] KVM: Drop kvm_arch_sync_events() now that all implementations are nops
+    (no matching commit)
 
-> VM-Exit, then manually calling the interrupt handler from KVM will result in every
-> IRQ effectively happening twice: once on the manual call, and against when KVM
-By test on LoongArch platform, manual call about IRQ handler at early 
-stage will lower interrupt level and ack IRQ. IRQ will not trigger 
-again. So I think it is consumed by the VM-Exit.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-And thanks for your guidance.
-
-Regards
-Bibo Mao
-> enables IRQs and the "real" IRQ fires.
-> 
 
