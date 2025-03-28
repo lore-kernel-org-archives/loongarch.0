@@ -1,55 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45A320DF4;
-	Fri, 28 Mar 2025 14:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86295DF58;
+	Fri, 28 Mar 2025 15:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171643; cv=none; b=GYznc3a6x/aTo9FEHyVgyIKR9RyJ2do9gOTcgRAXOc7zh6ogZJntX5T+ZOmBuWaHIDucRxVlHAE/iHsuv3VoUNBJOPBOiwdhwP8d7GWlohVx7FnxC8HCi4R817AJCnSHSVXAgTbv3vPJ15nr45TtC+8FrDztD/A+Gg5i4HJYzSs=
+	t=1743176247; cv=none; b=Nz/pGEDWfGh/tYMiwGco0W8MUwEqqWFBs3YYaq2+xA9HPVIwz2ANka/BlfKyYif/8ySeJ6Q7tMosL6enuAK0TElwqNHoBG5v1KfEOKSjSOOmZwqGqY+t5qbRaxkLg2jMZT5GWkDbPlKuNM5UIGP2UFSDQNoIHrSI+/3Dbplvc/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171643; c=relaxed/simple;
-	bh=52BY8RWxqGI39nW50Uzq7mTE1cOGjvlmsJ2EgrcA9Ec=;
+	s=arc-20240116; t=1743176247; c=relaxed/simple;
+	bh=o4MexGeb/LCpfw+0KdNpOfw/qNqhCqQrnnNXSCVaV98=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IyIZ4ksWzfXecLRpI5w96HRhKym3gE31WGakAx4FqyNw4tRSn+V7yS+Dz0zD+s0Up40zBLqGVgxfv837chs9+RjiaVJNqpUF30f0AfYGM2HTZ8ewlQ1IdRg1J5Dn8vWXQEUYhAXvpWj72TqdPh42uqoexrZLGXMzNpMeYna6ajA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaOtsJF9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TVgA1tjosK05j9oMq2M3uRQSeMYNsr8lkuubVRgjDySWBmstk2BiDOO4rvuIJAE0BHuPCdJQDSupzlcXOFLk7CnRwdtxyYKEVvyzMPhTS06oAprnwaMRKWyCmisvCBR4NB/gX5GktReI6igibgvc55LXA9xzVoE0I47c03QwfcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VH7hJnjp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaOtsJF9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00DECC4CEE4;
-	Fri, 28 Mar 2025 14:20:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VH7hJnjp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405D7C4CEE4;
+	Fri, 28 Mar 2025 15:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743171643;
-	bh=52BY8RWxqGI39nW50Uzq7mTE1cOGjvlmsJ2EgrcA9Ec=;
+	s=k20201202; t=1743176246;
+	bh=o4MexGeb/LCpfw+0KdNpOfw/qNqhCqQrnnNXSCVaV98=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IaOtsJF9a/s3cBIUbR9Tqvn77dZbDpoeNbSKE+9o5W+xe5prQl6V2XimIGQqSPRYd
-	 5VfjWfPhjXQLQfEz78hahUx8cEJL7qeI4fFnehitos4eSBhlzGDfRRklcoYjvM/zc3
-	 wbOkObSERHHtODK1mOYAW8F2H76k54tegqVkAAw/dIGbiwRQ5/s/wDw9UA3HpXwpf8
-	 0B2Nl82gf//PCjWjulAvtdo/KBcAQt6O9NX5qL98eSrWMUgTqOVgFni+sgSnln2Z/C
-	 cQUX/fNo/MyENG5iKFB3pgZGXINNHdL08ZXVTjV4NCT5SQEjBauHzWcBKsahMmFGDS
-	 lPH6H7hIUumIA==
-Date: Fri, 28 Mar 2025 15:20:40 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: Kees Cook <kees@kernel.org>, 
-	Alessandro Carminati <acarmina@redhat.com>, linux-kselftest@vger.kernel.org, 
-	David Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>, 
-	Arthur Grillo <arthurgrillo@riseup.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Guenter Roeck <linux@roeck-us.net>, Alessandro Carminati <alessandro.carminati@gmail.com>, 
-	Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	loongarch@lists.linux.dev, x86@kernel.org
-Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
-Message-ID: <20250328-visionary-archetypal-caiman-77dedc@houat>
-References: <20250313114329.284104-1-acarmina@redhat.com>
- <202503131016.5DCEAEC945@keescook>
- <20250313-abiding-vivid-robin-159dfa@houat>
- <20250328.sah9oog5ahSh@digikod.net>
+	b=VH7hJnjpc3CNEE9iiPG3U/eaOHN+lNXoNYntt6CUo1/7mPU0rqaGMOvBRmGMYS8oj
+	 QKMV22W0DsOjScMWSADUY/8ZEJynt0XR/2g2DHWzPyNc3OUwuWv45rDyFwYBPHWFDv
+	 Rq1Q9mRAY/2Uzh50OsbCwOs9sCAPyjZdnZ+3+oGd+LDf2t/Nrp+1Oh42G4GP5SqFIH
+	 0HbgEAvtMjiMOO6jLhh3sJCpOFICL/aw+pC9C/D2TBsin/ucRGMSF0t+q0CbNIiBQG
+	 5G+iqdgboI8btzYV8dTFrVCQZDTeLnbWUQYTh4Ymrqx7xdcn9sqwUeCKBApi8Q5OZ6
+	 rXz9EdLtagH6Q==
+Date: Fri, 28 Mar 2025 16:37:23 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v9 1/2] dt-bindings: pwm: Add Loongson PWM controller
+Message-ID: <bfbni6q322ag7r3pzgcflec4dhx4luvrdqerzkoslfuczhdnb3@xxwdodl25v64>
+References: <cover.1739784071.git.zhoubinbin@loongson.cn>
+ <d6be5236ab4ff5b5fde78004c38d8bced42f2ba2.1739784071.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -57,68 +46,131 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="paxtxmnckc7vplgu"
+	protocol="application/pgp-signature"; boundary="j57y2bovoac6vyqv"
 Content-Disposition: inline
-In-Reply-To: <20250328.sah9oog5ahSh@digikod.net>
+In-Reply-To: <d6be5236ab4ff5b5fde78004c38d8bced42f2ba2.1739784071.git.zhoubinbin@loongson.cn>
 
 
---paxtxmnckc7vplgu
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+--j57y2bovoac6vyqv
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
+Subject: Re: [PATCH v9 1/2] dt-bindings: pwm: Add Loongson PWM controller
 MIME-Version: 1.0
 
-On Fri, Mar 28, 2025 at 11:38:23AM +0100, Micka=EBl Sala=FCn wrote:
-> On Thu, Mar 13, 2025 at 06:24:25PM +0100, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > On Thu, Mar 13, 2025 at 10:17:49AM -0700, Kees Cook wrote:
-> > > On Thu, Mar 13, 2025 at 11:43:15AM +0000, Alessandro Carminati wrote:
-> > > > Some unit tests intentionally trigger warning backtraces by passing=
- bad
-> > > > parameters to kernel API functions. Such unit tests typically check=
- the
-> > > > return value from such calls, not the existence of the warning back=
-trace.
-> > >=20
-> > > Thanks for picking this series back up! I honestly thought this had
-> > > already landed. :)
-> > >=20
-> > > > With CONFIG_KUNIT enabled, image size increase with this series app=
-lied is
-> > > > approximately 1%. The image size increase (and with it the function=
-ality
-> > > > introduced by this series) can be avoided by disabling
-> > > > CONFIG_KUNIT_SUPPRESS_BACKTRACE.
-> > >=20
-> > > Yeah, as with my prior review, I'm a fan of this. It makes a bunch of=
- my
-> > > very noisy tests much easier to deal with.
-> >=20
-> > And for the record, we're also affected by this in DRM and would very
-> > much like to get it merged in one shape or another.
+On Mon, Feb 17, 2025 at 05:30:24PM +0800, Binbin Zhou wrote:
+> Add Loongson PWM controller binding with DT schema format using
+> json-schema.
 >=20
-> Here is another case:
-> https://lore.kernel.org/all/20250328.Ahc0thi6CaiJ@digikod.net/
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+
+nitpick: Please put your S-o-b last.
+
+> ---
+>  .../bindings/pwm/loongson,ls7a-pwm.yaml       | 66 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 ++
+>  2 files changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-p=
+wm.yaml
 >=20
-> It would be very useful to have this feature merged.  Without it, we may
-> need to remove useful tests.
+> diff --git a/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml=
+ b/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+> new file mode 100644
+> index 000000000000..46814773e0cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/loongson,ls7a-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson PWM Controller
+> +
+> +maintainers:
+> +  - Binbin Zhou <zhoubinbin@loongson.cn>
+> +
+> +description:
+> +  The Loongson PWM has one pulse width output signal and one pulse input
+> +  signal to be measured.
+> +  It can be found on Loongson-2K series cpus and Loongson LS7A bridge ch=
+ips.
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: loongson,ls7a-pwm
+> +      - items:
+> +          - enum:
+> +              - loongson,ls2k0500-pwm
+> +              - loongson,ls2k1000-pwm
+> +              - loongson,ls2k2000-pwm
+> +          - const: loongson,ls7a-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  '#pwm-cells':
+> +    description:
+> +      The first cell must have a value of 0, which specifies the PWM out=
+put signal;
+> +      The second cell is the period in nanoseconds;
+> +      The third cell flag supported by this binding is PWM_POLARITY_INVE=
+RTED.
+> +    const: 3
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
+> +    pwm@1fe22000 {
 
-AFAIK, it's been merged in next a couple of weeks ago, so it should be
-in 6.15.
+Another nitpick: I would have added another \n between the includes and
+the dt node.
 
-Maxime
+Looking at the output of `git grep -A1 \#include
+Documentation/devicetree/bindings/pwm/` this isn't consistent, but the
+empty line is the more usual approach.
 
---paxtxmnckc7vplgu
+I'll look into the 2nd patch and if these two nitpicks are the only
+concerns left, I'll fixup accordingly unless you object.
+
+Best regards
+Uwe
+
+--j57y2bovoac6vyqv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+awOAAKCRDj7w1vZxhR
-xbs6AP9BZSaotqaSUmBTtc4k3Uj9az+ck0f+76K8QNHFnxjslgD/XFEDSUboHQ6N
-QI2urzu11I1VyDIFnSJoU7c57HPzZQ0=
-=XSrM
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfmwjEACgkQj4D7WH0S
+/k63cggAnyX1KlC2wwh7YaLfvZN82jX3GLsU6rw3NXPWLBhPEy5OMxSn2Mx6jHLB
+onFUx2IVzLonJcxH+Bb6egH6nqZAThnvVXt4lthGTr4Fitco+GPK/EkX5Srvy/k7
+WE7JfIITs+crTgIpu0Hs2syIAjzRvLQspiHXxVj8wOFvGUs2BIx+nC2XiDcREa1b
+8dm6i20kxfeDVlPNpUknPxJVX/lWjD3koXecNhYShzvYeOgGc7lJ2JtklT3jnCFt
+sCnHvLyqgFRthLbbe4IkOHinnYuIvM+THqSAxptWzEaKQDjpl5+7iW3nO0cG3gb/
+8QqAXpoxqMNseH2se8PY+hUyZ5UJlg==
+=Lp1W
 -----END PGP SIGNATURE-----
 
---paxtxmnckc7vplgu--
+--j57y2bovoac6vyqv--
