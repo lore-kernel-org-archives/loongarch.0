@@ -1,188 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392451B4257;
-	Fri, 28 Mar 2025 15:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2071CCEF0
+	for <loongarch@lists.linux.dev>; Fri, 28 Mar 2025 16:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743177371; cv=none; b=US907SRDwf3cYZnOiWHGARZRd/I/kTfCKfIC0+rXVqifhOciP83+8IST1deAUNMYeFpjf6L0oh9Kn50H/ZahfUqeIPli4ucYMoXMppt3eZvkaOSiazgHdp/Nbn+89k/te4dLovYx+aNzsHuwgejRFtXZbiEFTiE1MiodkLVXiDM=
+	t=1743178519; cv=none; b=I2OUOxoHcCscrE/bQLQoUXWk/LcUqCPcXyA7lTpeBRpKDb4TcyPWiOgm0rUm5+1RR9n2Xxs1EuEyKS/14Dh93IbUCAAr4haV+MNlO9qCNq8XplqoQnNTE2NFMLQ9P/ns+HUSOBd2AeSVoXBDr8PDBKgrBadIHRB3HBRWNbbwMqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743177371; c=relaxed/simple;
-	bh=uPBY5mtiiUGVSgn35z27L0z9pDPMwFjJGtg+FgFgDf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VEWR6cS5J2i+juheMfSqLSGP39tCG5J0kAapwHBIkL/vSYzl7ArAAIWe01sJu8ko1rhpyVWFX84VEAtJRpV022TLZgLPnjbs+zNTktrWcHbplNPMhoy7JPBH0rtrdqk21k4z32nF/Neepzqjezb15CJTRSUCNJ2WEbgQcaRLh10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEQxsreR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743178519; c=relaxed/simple;
+	bh=CmGR1W9b2oM3HkNEBI2AYOFZPDQEfP3x8ljARqgGovs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AXMJq8aRxRyJqsK73b0nrI6uUNIVoryvYvh2o9YuQn9a8kxAJuFlYoHEa+BK12szV5y5hDtiyK2s98ikKCadth5oFIdCPh0C5rhS2V2+M31mJRH26BDZmPI2+EO5+0RXneR4npvCnmbUq5h1r75JpNm7Zldi2m7KTLODBum7uMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPcETwsm; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEQxsreR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A05DC4CEE4;
-	Fri, 28 Mar 2025 15:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743177371;
-	bh=uPBY5mtiiUGVSgn35z27L0z9pDPMwFjJGtg+FgFgDf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oEQxsreR8BjRZbTDqOMxolNCUeFglnjKq1Xq9xgs6OTaCLjvDYs2patG0BOtyJkh/
-	 5GzfxS/wMUvFmM01SeOt+l+UYav3caV8xuMj9qbzB/K83BDsHiUAL49L38PjtxObw8
-	 cuJc4mm4qDoi2Ux7w89jKp61GuyxOwI/PqnhzyWBTaCrm0MvDN0x3GRCuZdAQXyzz4
-	 1+TwDHjCziEwHhzKe6pWSwlIaPHzEVht/fyMspt7Y6nFQ7iPK26TIHhIsIsjCkEfuz
-	 WOzRBLgUD+JrrayI5KQR60M4QYkUP6ulerPpAHCrlssLRLqxst4E3r3YEi97xe+P6D
-	 G1DeAfgzE+NLQ==
-Date: Fri, 28 Mar 2025 16:56:08 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v9 2/2] pwm: Add Loongson PWM controller support
-Message-ID: <pepegljg5ua2ytozj7wamrzncsrb44i3gtcyk4bouh4rrnla34@4keshxpy5dqo>
-References: <cover.1739784071.git.zhoubinbin@loongson.cn>
- <60d549be4dc099fbbd18d2539969c0329c794f2e.1739784071.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPcETwsm"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-301317939a0so494598a91.2
+        for <loongarch@lists.linux.dev>; Fri, 28 Mar 2025 09:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743178517; x=1743783317; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0awkyL5t3rsWIxtC+GV3omh0jTpCEAWKwJhyhjRWrVg=;
+        b=NPcETwsmdOFAxLCwrL5OjQxnFj30rqfyw8biyPdGbgKLNW+Nh45apVDDhNTVU77mje
+         mETGZgwXUDzyoWlXmE8yyUS+UTr+Ql3VxXikQ10EWneF2vrWJvDqO+Gcsea/mOAxmdZE
+         ZePJxlnSeD0OL/5lYTtK+zT+HbUGPupT5XHzRUPrQBTgbigmtHL045XmztjNuo/GdYQo
+         W2MZj2uzoPsarB4PC8W3XM26/X5hp/f7SKhPSdG8YZj+K69DGrMDqvtu+G8bYO19hi+4
+         FWu7ep1lYT3zskLhJxWUnj17XMTDJbEnFnxzxEG0bD+1RMfPW+Chl3L0dWC1oSQkHDY6
+         2Cag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743178517; x=1743783317;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0awkyL5t3rsWIxtC+GV3omh0jTpCEAWKwJhyhjRWrVg=;
+        b=FH4wZF0yCq1E5Gnn3XLPOkL3fAEir+Hh66Ky5GNMJbMEJXZt/bTTk+0Af3+RVxWY4K
+         WYgi3OsI4knB2yHHIwRROKSmdE2L/crPiXJwtIn6jmvZpc3Fepa8nzApcPudH9LbQdgG
+         yrTdHFgXRK36QIL3OtZERHpZWGVzJKi58ANLZkBAfA1e74qnize9cbMsWMeICmd3I0nb
+         T/i2rVsR6VpQDQsVh8pvNcjshW/ywXoL6XCOVShJThOdwKSpHjxDzpjD+GLbnuTOJQE6
+         IPmw8akp3zICNlmN6BqwKP1HqbDlOpIMe2DDbu9cVQWCP7F/KHYgBH1vnYU1U2HNCYLn
+         1Znw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgd4gvPtPrm20nsW14a5ZuPzG4F43oE2vz9Oyiogm6/kNEmiidKAIG+rwsBwkCs42JEAsizg7mYSk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyYEGGxmrITfIX+dAjPyC3SwMeWFYldHnc6mNFBbDOzD67/poYO
+	olD/oCSSRSCt0MaX8wdO2A+j9+uMXbz14hCp+2VzTHY61jUaZOayxhTsEWRbkvSUYbe0cM2yS8S
+	0Pns25S8d6ocS8oe5oK4J76zSxQ4=
+X-Gm-Gg: ASbGncvt9utUFZVSZqC4MROgtTdgbfLmpLVlJUD/+2f4H/tyWte2j4p0P0UuHZOCIbt
+	ENaQ8d/OdE/VbzAxuqfihQomiXcystEcGkNlHWXGJuqiGqgtsHtm9T8TCYVSHZv2ppMtDxIPFNT
+	DiGBrVTlstWQ9QL7kMV6Law79nQPLKUM4K9Lx8
+X-Google-Smtp-Source: AGHT+IHpn0XubsSScUGD+yuythr0b0lI1lM1TZwBkmj8zcuCFyTDK4gsc2cQ9eJf+cEDv1Ie3kf5rbPpmLeZ1kOkj8E=
+X-Received: by 2002:a17:90b:1a8f:b0:2fe:a747:935a with SMTP id
+ 98e67ed59e1d1-303b26fe5fcmr3944480a91.4.1743178516457; Fri, 28 Mar 2025
+ 09:15:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jo3irdqiccjlkr46"
-Content-Disposition: inline
-In-Reply-To: <60d549be4dc099fbbd18d2539969c0329c794f2e.1739784071.git.zhoubinbin@loongson.cn>
+References: <20250304073554.20869-1-wangrui@loongson.cn> <aab657d72a3ee578e5c7a09c6c044e0d5c5add9a.camel@xry111.site>
+ <CAAhV-H5ayw7NxbSbCeAFaxOz+TZ8QeghmhW6-j2B1vTcjYxsJQ@mail.gmail.com>
+In-Reply-To: <CAAhV-H5ayw7NxbSbCeAFaxOz+TZ8QeghmhW6-j2B1vTcjYxsJQ@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 28 Mar 2025 17:15:04 +0100
+X-Gm-Features: AQ5f1Jp78m5RCykhet4JNZuQWUIdRgx13WqG26TPp7YpFZ0W88cx3LDq6ng2qvk
+Message-ID: <CANiq72=AZ+CN4SScZcnRBpkS8ogCaZ=Uhe=k7fhGCVyecyRu5g@mail.gmail.com>
+Subject: Re: [PATCH] rust: Fix enabling Rust and building with GCC for LoongArch
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Xi Ruoyao <xry111@xry111.site>, WANG Rui <wangrui@loongson.cn>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 4, 2025 at 10:12=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> Don't rely on  default behavior, things may change in future.
+> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
 
---jo3irdqiccjlkr46
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v9 2/2] pwm: Add Loongson PWM controller support
-MIME-Version: 1.0
+I was pinged about this one -- are you picking this one through your tree?
 
-Hello,
+I didn't test it, but the change seems safe to me for other
+architectures that we have at the moment, since they don't seem to set
+any of those three from a quick look, so:
 
-I found a few minor things and hope we're done in the next iteration.
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
 
-On Mon, Feb 17, 2025 at 05:30:25PM +0800, Binbin Zhou wrote:
-> + * Limitations:
-> + * - If both DUTY and PERIOD are set to 0, the output is a constant low signal.
-> + * - When disabled the output is driven to 0 independent of the configured
-> + *   polarity.
+In any case, the usual question for these "skipped flags" is whether
+they could affect the output of `bindgen`, i.e. could they modify
+layouts somehow?
 
-Does the hardware complete the currently running period when changing
-settings or disabling? (No need to answer here, put the answer into the
-comment.)
+Also, it would be nice to mention a bit more what was the build error
+and the GCC version in the commit message.
 
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/units.h>
-> +
-> +/* Loongson PWM registers */
-> +#define LOONGSON_PWM_REG_DUTY		0x4 /* Low Pulse Buffer Register */
-> +#define LOONGSON_PWM_REG_PERIOD		0x8 /* Pulse Period Buffer Register */
-> +#define LOONGSON_PWM_REG_CTRL		0xc /* Control Register */
-> +
-> +/* Control register bits */
-> +#define LOONGSON_PWM_CTRL_EN		BIT(0)  /* Counter Enable Bit */
-> +#define LOONGSON_PWM_CTRL_OE		BIT(3)  /* Pulse Output Enable Control Bit, Valid Low */
-> +#define LOONGSON_PWM_CTRL_SINGLE	BIT(4)  /* Single Pulse Control Bit */
-> +#define LOONGSON_PWM_CTRL_INTE		BIT(5)  /* Interrupt Enable Bit */
-> +#define LOONGSON_PWM_CTRL_INT		BIT(6)  /* Interrupt Bit */
-> +#define LOONGSON_PWM_CTRL_RST		BIT(7)  /* Counter Reset Bit */
-> +#define LOONGSON_PWM_CTRL_CAPTE		BIT(8)  /* Measurement Pulse Enable Bit */
-> +#define LOONGSON_PWM_CTRL_INVERT	BIT(9)  /* Output flip-flop Enable Bit */
-> +#define LOONGSON_PWM_CTRL_DZONE		BIT(10) /* Anti-dead Zone Enable Bit */
+Finally, regarding the Cc: stable, I guess that means 6.12+ since it
+is the first LTS with loongarch64, right?
 
-I really like it when the register name is a prefix of the register
-field definitions. So maybe add _REG to the latter?
+Thanks!
 
-> +/* default input clk frequency for the ACPI case */
-> +#define LOONGSON_PWM_FREQ_DEFAULT	50000 /* Hz */
-> +
-> +struct pwm_loongson_ddata {
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	u64 clk_rate;
-> +};
-> +
-> +static inline struct pwm_loongson_ddata *to_pwm_loongson_ddata(struct pwm_chip *chip)
-
-I didn't try to compile the driver, but given that you call
-to_pwm_loongson_ddata() several times in .apply() it might be worth to
-mark this function as __pure.
-
-> +{
-> +	return pwmchip_get_drvdata(chip);
-> +}
-> +
-> [...]
-> +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			      const struct pwm_state *state)
-> +{
-> +	int ret;
-> +	u64 period, duty_cycle;
-> +	bool enabled = pwm->state.enabled;
-> +
-> +	if (!state->enabled) {
-> +		if (enabled)
-> +			pwm_loongson_disable(chip, pwm);
-> +		return 0;
-> +	}
-> +
-> +	ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
-> +	if (ret)
-> +		return ret;
-> +
-> +	period = min(state->period, NSEC_PER_SEC);
-> +	duty_cycle = min(state->duty_cycle, NSEC_PER_SEC);
-
-Why is this done? My guess is this is to guarantee that
-
-	mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_PER_SEC)
-
-results in a value that fits into an u32, but that only works if
-ddata->clk_rate <= U32_MAX.
-
-The approach that other drivers handle that is asserting in probe that
-ddata->clk_rate <= NSEC_PER_SEC and then in .apply() do:
-
-	period = mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_PER_SEC);
-	if (period > U32_MAX)
-		period = U32_MAX;
-
-> +	ret = pwm_loongson_config(chip, pwm, duty_cycle, period);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!enabled && state->enabled)
-> +		ret = pwm_loongson_enable(chip, pwm);
-> +
-> +	return ret;
-> +}
-
-Best regards
-Uwe
-
---jo3irdqiccjlkr46
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfmxpUACgkQj4D7WH0S
-/k79tgf/QyIr23cSUBMyrpKxGsaTQHFflpsg+AdEwz2ZcGI3Y8y28kGksMSociWM
-dz8ztMr8rHYpuVs6OPco18AZvKwemuf4QJSBThv44/gKGyQrj31oOhMVnMU6QNQq
-Y4TX9CwAjd3j/kt+M+rAoyJjsXwUI2qpSG1G2m40E6KCTb9QsGGFHJWeUwmyBk8q
-dRmS1FP94XHEm5fNjhNpQwK3OOtBsrSfmd8hgXOu5gDVNHGySirPj8/p6kO93D1h
-eiiTRlNqZb12rSsCRxySnY385U6KC8bHQngG6TiqCiBGuI/ZU/pd8oEb8Jt8B3gb
-JNZwTfAEL0braGn8fnyncgc3/yb0iA==
-=tVd6
------END PGP SIGNATURE-----
-
---jo3irdqiccjlkr46--
+Cheers,
+Miguel
