@@ -1,95 +1,92 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from smtp-8fab.mail.infomaniak.ch (smtp-8fab.mail.infomaniak.ch [83.166.143.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5558C1EF36F
-	for <loongarch@lists.linux.dev>; Fri, 28 Mar 2025 10:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6A08462
+	for <loongarch@lists.linux.dev>; Fri, 28 Mar 2025 10:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157179; cv=none; b=F5leP8rxUg828WF4hTWfYZ1IW6/gp4USgEM/VLrB45t24BxSICfF7rfC61ul52YNJO4lsWX8nD73XCuUkw0Ft8uRMkXpyH9F+EdSlvrW1CJrcr9i3fh66JRGJjA/LK8HMcMHrgcSOQQu1KBe4DyYbW0Ih8kARhTAtCe7F+HJ3yM=
+	t=1743158714; cv=none; b=bttBHWynhZ3B/Hz4+YuWN0r+xfczGzDSCYLNI2JaDb+6K2CqUxQrNheC7n0KmOmJNJTBokU4szzcgFkKDa18qd2umc3RoaWBR6xc4XAGAsJtz+VNLXdxoXMyVtijTaPG0ce5CySHMn6ktyClT3oDBeBo+62iHJzI1k1SMxWn5qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157179; c=relaxed/simple;
-	bh=jooCdF1JwrrJXjQWuLslEA3Jk/cX46lBROBHZgF7M5c=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=ba88SkFGUa9J1o8rP1E0gSTGXpk+pes85LAH9ndZYhz3p6aq0j8vgTL6+k+YDyJnc/xk8aVfgPVqQ/p6TseBIgefUpUQyqgNysewfADnndGYpCF2RE3Ocg0fKXJeFKSGqkBpzt7qZkfno7b6tipuJqgLhabDxKZYEYOBBrg8b+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=NKLeuKc0; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
+	s=arc-20240116; t=1743158714; c=relaxed/simple;
+	bh=E9KF9VYf5rgIBhAdPjIGjpic8a0/cAy+P9SJgR3gjkc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TGbKDfZv3My+g9leXODRDa7r6hwFgOeneRoX/a+Gea8U3fBESp7eiUN3MLm6/2KzEXUEjlPe+Shz314mWxAskdSGd+ZvubwJLO/KCblyW5vQcJWkPmhVBemkAwejSnBPvl/Hy+n0fJCzoM0N44kinDAMFXtAbKnn2+u6DeL4InA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ubL6rwRE; arc=none smtp.client-ip=83.166.143.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="NKLeuKc0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1743157166; bh=rR35e+hZRNuo1YA29CMJi0+EW7SiAaMAanzrs8CeOf0=;
-	h=From:To:Cc:Subject:Date;
-	b=NKLeuKc06F1IuIQmvJvYkI3LZv/833yUkwnCHLtgJiC7OHsKhM9Jz56Ch9GGMBwkP
-	 EGRZSr8CLLrkc0OlAavBpwNOK6EKRZQfopoPdDJzZs2iBl3qMmZfMOKAK/aaNYl34D
-	 QHZUUq3TFZeioTy/o8MrwXenyt7mSoD7ka+jXkQM=
-Received: from mail.red54.com ([139.99.8.57])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 34309049; Fri, 28 Mar 2025 18:13:03 +0800
-X-QQ-mid: xmsmtpt1743156783t48ghc6wv
-Message-ID: <tencent_7FAF68BF7A2EAD9BFE869ECFDB837F980309@qq.com>
-X-QQ-XMAILINFO: N/WmRbclY25GMfqh5izIbfJ5xGhYBVKfPatPPzVgDN5d2bv3dImBuc1q+2YO7j
-	 7pMh5QtcK85H3+FQhze+IottobVBgvsqfrz7AWxJ2raOAP1c1QIPDPSzfqu7ObBgmCbkZ4Zdffrl
-	 qqHBvEcBClnSX//AUsoQ6xzwpduPA5xQWTLbxxu1+XosFeQYan9RwBjRf/QiH4pF7TRwb+mFhMAg
-	 14fRj/Sc3q4p/xCLin4p+ZIV0fqSmSMBO8rjh3NpQtC7noXBG6f9XvPwGkHr+rC4/APB9Bgccqsj
-	 CVLw4eOcCFcAIs4Tn4A/VkrqfUL4dJLh5nOm3/nKO8pC4xEqEL2H/0cA/nFtwf2X8RBHMGvJ5J3i
-	 210hgHYPW/7U8rJpgfgZZmHQPMSEHhE9rcQp2uCScBkrDqbgsqCTnMj9BdSqVKiOFLwUCzCFeVSX
-	 AgfFMJJt3CGaU70f0TpEWgA+2rqZ3fxZqk2L8DR5l3r/ymhNooC58DiO6Ku75FhIPuIlw5EGcsFS
-	 1yAWqlf1N/0HN0rN9dDTe7pCJqaqwHaj1nCYlsW+jXv2SWzRhgIgcifbSsP1UXWYkXrcYWwtzUI8
-	 yIMOkakU+Tz9mnqgFUOpgaj2xQ45ZZiaIqVKPJdOhmKJVmi/f7hFmf4Em6+elCrQNbjusJ+4T4jD
-	 C50d5ZN2qMDVh9KpCJNYK1efrVQtpfiTslFtHNe8wFkp7X58zOVp11XD/FDZExT732GlOmyNFIGj
-	 /9ZnA2nPvy4Sf+jMv9VylQdnGuRQyuxq32BzyTOEXI+sawsD4nxf6//5yVv9RZIh8KWHSFr88Sdc
-	 woTqAt16dQfHvLQWONFUx7bD4yDsJor+IcOiYGW1STsM/NheeEXYPQ/BxHXQK0P2LliiwgJ5ACMP
-	 XKmChphvUhtXdsrQOlHjKQI+1uGQJDqhqFGkgnfvX9JbZDO0l50lev0GCZ5iHASEcpjBRzf6Fohr
-	 gpbWfHQfMiiUFVqlHhC9nSsy+7qCTOsb8Rfb7pgrZcUOePBj6nFUVKAFEV6Ia0wJygNfjLcbq83B
-	 r0viZ7CBoGBSpTEfSo
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-Sender: yeking@red54.com
-From: Yeking@Red54.com
-To: loongarch@lists.linux.dev
-Cc: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Guo Ren <guoren@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Kconfig: Fix help text of CMDLINE_EXTEND
-Date: Fri, 28 Mar 2025 10:12:03 +0000
-X-OQ-MSGID: <20250328101203.52765-1-Yeking@Red54.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ubL6rwRE"
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZPH7D4YFjzW2y;
+	Fri, 28 Mar 2025 11:38:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1743158312;
+	bh=MyuTqVvTP1UPCrUbHlnkU12n+jkzkkYz1VOSQfsDbeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ubL6rwRE1GKQDgpoFHHnqtWunMExgXmH9SIOevHevMNsSgJymrB8PqtT7RsLdLH6w
+	 LH8BY2mtUo8hpXM7UsTfJgikKEEPrGDHXtD/YG1KBqXB9zjymaqJWWlh2+lJ2/0GBJ
+	 hyNRO+Q8o5kFKLuA61PJ1bLsF5hhWu4A3JkuEPzU=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZPH735RxtzKRX;
+	Fri, 28 Mar 2025 11:38:23 +0100 (CET)
+Date: Fri, 28 Mar 2025 11:38:23 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, 
+	Alessandro Carminati <acarmina@redhat.com>, linux-kselftest@vger.kernel.org, 
+	David Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>, 
+	Arthur Grillo <arthurgrillo@riseup.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Guenter Roeck <linux@roeck-us.net>, Alessandro Carminati <alessandro.carminati@gmail.com>, 
+	Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, 
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	loongarch@lists.linux.dev, x86@kernel.org
+Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
+Message-ID: <20250328.sah9oog5ahSh@digikod.net>
+References: <20250313114329.284104-1-acarmina@redhat.com>
+ <202503131016.5DCEAEC945@keescook>
+ <20250313-abiding-vivid-robin-159dfa@houat>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250313-abiding-vivid-robin-159dfa@houat>
+X-Infomaniak-Routing: alpha
 
-From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
+On Thu, Mar 13, 2025 at 06:24:25PM +0100, Maxime Ripard wrote:
+> Hi,
+> 
+> On Thu, Mar 13, 2025 at 10:17:49AM -0700, Kees Cook wrote:
+> > On Thu, Mar 13, 2025 at 11:43:15AM +0000, Alessandro Carminati wrote:
+> > > Some unit tests intentionally trigger warning backtraces by passing bad
+> > > parameters to kernel API functions. Such unit tests typically check the
+> > > return value from such calls, not the existence of the warning backtrace.
+> > 
+> > Thanks for picking this series back up! I honestly thought this had
+> > already landed. :)
+> > 
+> > > With CONFIG_KUNIT enabled, image size increase with this series applied is
+> > > approximately 1%. The image size increase (and with it the functionality
+> > > introduced by this series) can be avoided by disabling
+> > > CONFIG_KUNIT_SUPPRESS_BACKTRACE.
+> > 
+> > Yeah, as with my prior review, I'm a fan of this. It makes a bunch of my
+> > very noisy tests much easier to deal with.
+> 
+> And for the record, we're also affected by this in DRM and would very
+> much like to get it merged in one shape or another.
 
-It is the built-in command line appended to the bootloader command line,
-not the bootloader command line appended to the built-in command line.
+Here is another case:
+https://lore.kernel.org/all/20250328.Ahc0thi6CaiJ@digikod.net/
 
-Fixes: fa96b57c1490 ("LoongArch: Add build infrastructure")
-Signed-off-by: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
----
- arch/loongarch/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 7477d5f8d876..067c0b994648 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -388,8 +388,8 @@ config CMDLINE_BOOTLOADER
- config CMDLINE_EXTEND
- 	bool "Use built-in to extend bootloader kernel arguments"
- 	help
--	  The command-line arguments provided during boot will be
--	  appended to the built-in command line. This is useful in
-+	  The built-in command line will be appended to the command-
-+	  line arguments provided during boot. This is useful in
- 	  cases where the provided arguments are insufficient and
- 	  you don't want to or cannot modify them.
- 
--- 
-2.43.0
-
+It would be very useful to have this feature merged.  Without it, we may
+need to remove useful tests.
