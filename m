@@ -1,104 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF911420DD
-	for <loongarch@lists.linux.dev>; Sat, 29 Mar 2025 08:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352B212CDAE
+	for <loongarch@lists.linux.dev>; Sat, 29 Mar 2025 09:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743237959; cv=none; b=fNYA0CKmY/RXhnDgeFzLAbt8/+m1ZzQztvlFZyuTxlxIgCNRBB3NwSnero2RQVKRc0Szh5FOpUabmwERQEsOlO/uAGjpO2Ka5qwR8SL57zlPpWIuZlnzr6sx/60PlivcSxAhXTjYJ54CTX2VGxo0OnIFf9SalG7EFU9+50KT/Vk=
+	t=1743241913; cv=none; b=lA/GDrE5dCZpaPvFwgRUjkNV0RRRlRLMiq1ESXSYnCZOrzCK6zRvcUcq72W76T7w20qSkk4LBTULM2mzyKSt3S6c5EQMR86SEDt2yqqCDHcRumV9jiHA8aCl6Zr+auw8oJ7SF+dnD18lDdbbupdILppQNL0OmsR0MFNKjyBKFl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743237959; c=relaxed/simple;
-	bh=VuNKaSttNCraDAMFXX4IwdkGLy4R9KErqa/ImpP7GDI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AQzujo/qEVQj3WbuLYYuZMFqsHS0OIeVzQvkZ/W+I/hepH/BFGl1RSLXjjf8jkngYMjiTajIbWXmYsqzwUIodfuffZ8sEeH851qrDkKG5YbvC81CJFAKg1n224pmWeLYwddGiFfHc1HBJW/jpg3RFV+rrluGG4LBJB1CPDtXoSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDTetxsQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743241913; c=relaxed/simple;
+	bh=uO0d9BIDO/bpbSee2FKDT0UDLR8JNdmMg5johFY31FI=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=FbJprQEGgTEVr6lMOXqvmwpORzYcZTZ3ks+lQ/kLHZ4tE58UiEYlL1iqI7bwxHcx2/y0/U5JiflgjY6guoLK03JpBgwP9qrS7WuxhJMhVKr3dPIvDk4+9mfpt2NHzNr6icSuCevFl6gQzxu/1ST+TQK04QwOvGDPSABAERcagr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=rAkIRY4L; arc=none smtp.client-ip=203.205.221.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDTetxsQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8398FC4CEE2
-	for <loongarch@lists.linux.dev>; Sat, 29 Mar 2025 08:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743237958;
-	bh=VuNKaSttNCraDAMFXX4IwdkGLy4R9KErqa/ImpP7GDI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TDTetxsQPSKIakOcDLvU/t64wXX8BepEtCt0Q4F8Oa2TWcetOfgFIGIqa+TlwanNu
-	 +a7w8+nY3oxzI8TXpyT14O57Dtzw7QZFSAmAE8gNBJlXapX2VXeePtnZZtIuQP7Bw6
-	 6kMZTINMQc0FVcWBb37lLYF3gL/PHOvQRuyLbbnc2jiVscrCPMwhfpW1znEKBWd/7z
-	 mTZU7nlhiLQtG+pgOM3jZNvIgjHNyK7lGz0qGnBiGrJJ03Orbw9e5Cm6PfrUeZYv71
-	 Dt2P74mG7UqfegzlzEhQsnum+s/4BR2YyMZL3F5GszCDQC0qLehmpx5Sca68B2Uyd+
-	 +BZ8Y/CeYBW3g==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso576574466b.0
-        for <loongarch@lists.linux.dev>; Sat, 29 Mar 2025 01:45:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUS7XF0Fsq3aKGZJKBs4gZjScNd1+ImpvmybGUbkIekSE4WEsTkCB9OPK6mut8C3cEHhprX6ESHIQQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzHCWXhEx5sHDzvbG9Ngr5bRs3mZj+YFKU/5a3aF6CiX9SlI8Co
-	AqXGpLk7PD0EEpwxw5LZxdonGaSGanLK3qJWxZiPbNsSKUnsu6Je2z+leGSY35CtrlgFWwsFNVG
-	xgJIbJDq078GuoqA+EF/McbK0DVg=
-X-Google-Smtp-Source: AGHT+IFcTBlHFMe+cnzJ3GscmxD7DadfgO659/mYjAgkv2zsYhCstTT+cs4vEk+dCL2YR1W8PvXdP/Jf5yhQc854D64=
-X-Received: by 2002:a17:907:6092:b0:ac4:491:1549 with SMTP id
- a640c23a62f3a-ac738a088edmr212495866b.1.1743237957112; Sat, 29 Mar 2025
- 01:45:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="rAkIRY4L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743241907; bh=uO0d9BIDO/bpbSee2FKDT0UDLR8JNdmMg5johFY31FI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=rAkIRY4LzBvHMIFX6uYhFRc6QwIl8wZp5BvcqlCORwu7UbxLFB6izBOgv7Ta/KDXB
+	 cj4oPgIpi2cVTH6Tz5XVv7YhkDeRTwQok93P4uFoufg5rPMIETguae8+PCS4SFDGbt
+	 TwZMfRh3k8znghlr++zCjyH6hgnld6OZSrPgmu28=
+Received: from mail.red54.com ([139.99.8.57])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id B322E276; Sat, 29 Mar 2025 17:44:50 +0800
+X-QQ-mid: xmsmtpt1743241490tcmriygi4
+Message-ID: <tencent_928F84F5CCDFC9B34B7BCACF5CA00FED5006@qq.com>
+X-QQ-XMAILINFO: MS1AjjpKGz7zRbIxx+8FqvSySv5AXR1Lmczx1Nt7aCHo87XWcgg8G0EVJOaogC
+	 xoCgfKRUze0yM6BvTD1elL3nJujcnfp3GTNhUvQHTcPSmCUg4+QUEGgnl7M3eSw3/G0BeTrjra2z
+	 xYs17lUibplv4iZmETmvQwYA81FJW5oi8JIb8E9QCrrzmE04EMUQoSQHt5qkw/o/AlwCw0dNe8aK
+	 NlryLNuW2/oP2eUkL0peUmRtGxZhSFtngcdSknY/CZ3zBnFyN+jazuFwvFDz92mvLxzRL+jWUyhu
+	 3HzZ3nGNMhnKmLEQCxFeHFyM+lnZem/52sSGZ+DTNYAydBm2cXHET0HL8FuOTaRegSSEbS6K0mFS
+	 lMNLU4OvoH+yxe++I/7/nsopNFD3H1JeJh8x9ZQpdkezfHQEXpUMBel7LFVYumNhn5gQFIJjCWID
+	 bVr7BJg3PbEBLs6del7AnFWq+A3twoRaJrHfct9qVpBd8iwSlNgwgC5PjqUydCJ/WamXrrpoTos+
+	 9io9kpB8wijNSD3V75uLmhN7d3McYejqdt7KiCskIwuqCbY4/4xS6lzSTiPZe9Yc/xx/fpCozClM
+	 veDhqjtNuLK8RSh1sc3bGYgmqdU5xj53CC30FzgiE3+8C4mxuj1/+yk9E1gh7smbjfgAc2VsB1YV
+	 6eD//ilmQs69FDW+bQDpERqNjDwORNfx6196w8nBVLd/CWvfn0NiAp/3na2tWA9Duo3c/t9KLs0T
+	 6ZpHRhudjdWPovKX1nQh9C9ZGoLStGde/Pjay7P6/CttbWP7RYTo8bzJ+7JXEeQUWdqNPAsoQsPm
+	 5QqGgzbFVn7towYOgS6nDq+vCBQBLe/tzapqBGq+MlwDNM4Sg0UHlzAl2KlBTDtDitgF/fbGZbYm
+	 Y5d6V0gNtHZ2ocyGS5oip+PN3xlHTn93l/MzsPzH5XOHSmaLFzovPx7d0oFZVZuR7+ZI6bHxEw1s
+	 V+5e9Jm5fXdR9GFvngLg==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+Sender: yeking@red54.com
+From: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>
+To: chenhuacai@kernel.org
+Cc: Yeking@red54.com,
+	guoren@kernel.org,
+	jiaxun.yang@flygoat.com,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: Re: [PATCH] LoongArch: Kconfig: Fix help text of CMDLINE_EXTEND
+Date: Sat, 29 Mar 2025 09:44:47 +0000
+X-OQ-MSGID: <20250329094448.74837-1-Yeking@Red54.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAAhV-H5T3DLFfzPg4Zgzn7JbzqoNZdYn5_F06QNHS230xq-1MA@mail.gmail.com>
+References: <CAAhV-H5T3DLFfzPg4Zgzn7JbzqoNZdYn5_F06QNHS230xq-1MA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250304073554.20869-1-wangrui@loongson.cn> <aab657d72a3ee578e5c7a09c6c044e0d5c5add9a.camel@xry111.site>
- <CAAhV-H5ayw7NxbSbCeAFaxOz+TZ8QeghmhW6-j2B1vTcjYxsJQ@mail.gmail.com> <CANiq72=AZ+CN4SScZcnRBpkS8ogCaZ=Uhe=k7fhGCVyecyRu5g@mail.gmail.com>
-In-Reply-To: <CANiq72=AZ+CN4SScZcnRBpkS8ogCaZ=Uhe=k7fhGCVyecyRu5g@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 29 Mar 2025 16:45:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Yc8d4qSN0Fwe=wShXHzJrdJ0KX87kV0_0ToQiHBEECQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo_BhIWW_S-wVrrfYgevxjvR72OSEu-wwQPjbXYleu9ZtV1saltGmiCwUg
-Message-ID: <CAAhV-H5Yc8d4qSN0Fwe=wShXHzJrdJ0KX87kV0_0ToQiHBEECQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: Fix enabling Rust and building with GCC for LoongArch
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Xi Ruoyao <xry111@xry111.site>, WANG Rui <wangrui@loongson.cn>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Miguel,
+Hi, Huacai,
 
-On Sat, Mar 29, 2025 at 12:15=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Tue, Mar 4, 2025 at 10:12=E2=80=AFAM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> >
-> > Don't rely on  default behavior, things may change in future.
-> > Acked-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> I was pinged about this one -- are you picking this one through your tree=
-?
-OK, I wll pick it to the loongarch tree, thanks.
+> How about replace "to the built-in command line" with "with the
+> built-in command line" and keep others unchanged?
+It seems that the use of the preposition "with" does not conform to the regular
+collocation of "append" and may lead to ambiguity.
+You can consult an LLM such as DeepSeek, Qwen, or ChatGPT.
 
-Huacai
+Zhibang
 
->
-> I didn't test it, but the change seems safe to me for other
-> architectures that we have at the moment, since they don't seem to set
-> any of those three from a quick look, so:
->
-> Acked-by: Miguel Ojeda <ojeda@kernel.org>
->
-> In any case, the usual question for these "skipped flags" is whether
-> they could affect the output of `bindgen`, i.e. could they modify
-> layouts somehow?
->
-> Also, it would be nice to mention a bit more what was the build error
-> and the GCC version in the commit message.
->
-> Finally, regarding the Cc: stable, I guess that means 6.12+ since it
-> is the first LTS with loongarch64, right?
->
-> Thanks!
->
-> Cheers,
-> Miguel
