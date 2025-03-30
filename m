@@ -1,99 +1,145 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9861D516F
-	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 12:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E55A47
+	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 13:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743337097; cv=none; b=dQfokgmCT/XO4Til1DK8n991l+4mKLkOXaKp/3MRqcQQXrcc9bJR2VX5KK0II5JrtBpppso44HZESw6aYPyP3/Ry9mTot3QRobO17GGeWyFU5JyOHtQ2m0bYzYw5iTpMMPxTnMQtZpHxMH5NJ+FD/zjeWGobf8QjeMx/zk0AV40=
+	t=1743340061; cv=none; b=dziVVUnZG7O6cv3NEaIJvp0BEtybDizv6NiMiRyzNIYh2qtmZFaUQwPIDX0Q7svA4xVrRanV4UBB25xuqMtc71zUppgVY6R8psSGuwZV1x4xCfrxZ0BkWHhesn+7dtm0MaMC9JE5h626cyKXAgzqtHWUPHMzzk2MD+fvk4Zhu8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743337097; c=relaxed/simple;
-	bh=UqhtKa70a5/2askHmDGMX26oUmyn54ientlmKEHX2lk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TEyBzRGl4Ng4yYC/lW/hHvGCY9uQhsvlYw+pOz4DssSUtFenBdDY/tAk6zAPRO7sddHP+ZfKiL1lYMpI1qhkz8hCRkN8pu2ZL1rCEe2zFXCgZ4v3Sgx4Wpw8r5vfVt3DRgTEuonqi6MELZ+GnP9nKrwkcDwpniRu1M0xG4Pfy88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Ezlj5uz3; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1743340061; c=relaxed/simple;
+	bh=4fkcn/ee0GBAw/wWJYEwRjJcNAIwUXCfEH3IvQv9uc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hb0+Szwqat80bPqRjkX/4CrBe6J1kIQSv6gaeHEZBtMEPB4WI3jWvLqGfMzjSNXMFWVGihCO3VDKI9S4l6pXGXw/Fx6lKxLP6o20nDUpRC9BPnTbXDdEU5f1H1tX+Fuf8ZNhXEsn7SpVoIfvpVT8qDsR2MrvO5d/4O5WBXdzAu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RBcd2yWW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Ezlj5uz3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1743337086;
-	bh=UqhtKa70a5/2askHmDGMX26oUmyn54ientlmKEHX2lk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Ezlj5uz3KLCvLbixTDOfWM9JMvtSf6orMo8URoeZQs3kdZh4iirzBLX+p/eyrYfja
-	 ++VOhAphiak2/zxRHBW/Gc97Xy9SPbqtRUV5C+DRojnIIrH5Sud+ZSTAwxS69XVtcK
-	 RIAIedtBk6vzb9t1cyvyE3n3m0L/1kXqBjVx2+yw=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 428AE659C8;
-	Sun, 30 Mar 2025 08:18:04 -0400 (EDT)
-Message-ID: <42dc2fc95fc9d56abd68ec620b29602eef9aa742.camel@xry111.site>
-Subject: Re: Ping: [PATCH 0/3] Drop explicit --hash-style= setting for new
-From: Xi Ruoyao <xry111@xry111.site>
-To: Guo Ren <guoren@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Fangrui Song <i@maskray.me>, Tiezhu
- Yang <yangtiezhu@loongson.cn>, 	linux-csky@vger.kernel.org,
- loongarch@lists.linux.dev, 	linux-riscv@lists.infradead.org,
- linux-arch@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Sun, 30 Mar 2025 20:18:02 +0800
-In-Reply-To: <CAJF2gTRXyMX+9C_aEDbxAsxWDD2rbnDWO775YDZ3EmrQ=QinfQ@mail.gmail.com>
-References: <20250224112042.60282-1-xry111@xry111.site>
-	 <91797ac4bbe27d7d60b89053050e429bcd630db3.camel@xry111.site>
-	 <CAJF2gTRXyMX+9C_aEDbxAsxWDD2rbnDWO775YDZ3EmrQ=QinfQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RBcd2yWW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0515FC4CEED
+	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 13:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743340061;
+	bh=4fkcn/ee0GBAw/wWJYEwRjJcNAIwUXCfEH3IvQv9uc4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RBcd2yWWFdUbUE5pjitkQm4oQJA+RmPYpQVqHY4Ajn//IhkkChvSX6NRYQrZLiauu
+	 CV7ORi53lUlODd6Dl0oamWmzDIaO8DhA76LWfLFYWDHhyKz0a8EaL41wB5TXYGPwgu
+	 9Ec5bJu8os8vb8r+cLnwpClBzwYoFk0MZS3snE8jrqZtQeNOOb65djdzl97/g1L2Go
+	 4fzIMOqDw5snUBX7MEZqyN5e/AEAFkoZp+6YvJNw2Z/OUq+Z/dDoWcD3ipXwfbIllM
+	 L3mKVe6Fv3sWrM5OJRsKL8Mg2f2u0WV9usvhoAvCrkVAeOrcEjKwyH4kA1UgiTC4rb
+	 Ai8rFZDijNjPw==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so599394566b.0
+        for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 06:07:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVd43leLYqoZk9M19hgwZiWWukGOJ8FiJJr9ta/A/Q/WyIIxruaAgx0AkO5jGQ7tJPVkR+LXMLwSps=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxsm6XF25wKIwLh27wCVdSsHn2iphVVbCe2VLg0lFBbJvzWazCJ
+	yUCWRYiAxG1X0wnZsdT7xxyfzYLhomrPNDfIRB8w6v4MGM1ue/NSB1Xi5caHFwZ96DU2lIGPObE
+	aDdvrFkPyjhiw/q4PvSJpOOxTR+Q=
+X-Google-Smtp-Source: AGHT+IFAawyj1EZJacFB7lPOlHE/sLuxr6nqwGy8x4wXEm4WSPiqm8D8dRPwkV+ZuY/NFvlzmiHFfF+vy5pxguZo2lI=
+X-Received: by 2002:a17:907:2d07:b0:ac3:ed4c:6a17 with SMTP id
+ a640c23a62f3a-ac738a36df5mr452541766b.24.1743340059563; Sun, 30 Mar 2025
+ 06:07:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
+ <20250319064031.2971073-4-chenhuacai@loongson.cn> <2025031943-disparity-dash-cfa3@gregkh>
+ <Z9rYQy3l5V5cvW7W@t14s> <2025031942-portside-finite-34a9@gregkh> <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
+In-Reply-To: <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 30 Mar 2025 21:07:28 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7ECQp4S8SNF8_fbK2CHHpgAsfAZk4QdJLYb4iXtjLYyA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp3x96k66jg3TQPvsXg4rxU088H7mKXTpRrrpYUCQMd2JOJNB7bwpUNSpo
+Message-ID: <CAAhV-H7ECQp4S8SNF8_fbK2CHHpgAsfAZk4QdJLYb4iXtjLYyA@mail.gmail.com>
+Subject: Re: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11
+ provider for OPENSSL MAJOR >= 3
+To: Jan Stancek <jstancek@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Sasha Levin <sashal@kernel.org>, Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, 
+	David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, R Nageswara Sastry <rnsastry@linux.ibm.com>, 
+	Neal Gompa <neal@gompa.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-03-10 at 10:13 +0800, Guo Ren wrote:
-> On Wed, Mar 5, 2025 at 9:27=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
-te:
-> >=20
-> > Ping.
-> >=20
-> > On Mon, 2025-02-24 at 19:20 +0800, Xi Ruoyao wrote:
-> > > For riscv, csky, and LoongArch, GNU hash had already become the de-
-> > > facto
-> > > standard when they borned, so there's no Glibc/Musl releases for them
-> > > without GNU hash support, and the traditional SysV hash is just
-> > > wasting
-> > > space for them.
-> > >=20
-> > > Remove those settings and follow the distro toolchain default, which
-> > > is
-> > > likely --hash-style=3Dgnu.=C2=A0 In the past it could break vDSO self=
- tests,
-> > > but now the issue has been addressed by commit
-> > > e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH").
-> > >=20
-> > > Xi Ruoyao (3):
-> > > =C2=A0 riscv: vDSO: Remove --hash-style=3Dboth
-> The patch's comment is incorrect; when I removed --hash-style=3Dboth,
-> the output still contained the HASH, and no space was saved.
+On Thu, Mar 20, 2025 at 12:53=E2=80=AFAM Jan Stancek <jstancek@redhat.com> =
+wrote:
+>
+> On Wed, Mar 19, 2025 at 5:26=E2=80=AFPM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Mar 19, 2025 at 03:44:19PM +0100, Jan Stancek wrote:
+> > > On Wed, Mar 19, 2025 at 07:13:13AM -0700, Greg Kroah-Hartman wrote:
+> > > > On Wed, Mar 19, 2025 at 02:40:31PM +0800, Huacai Chen wrote:
+> > > > > From: Jan Stancek <jstancek@redhat.com>
+> > > > >
+> > > > > commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
+> > > > >
+> > > > > ENGINE API has been deprecated since OpenSSL version 3.0 [1].
+> > > > > Distros have started dropping support from headers and in future
+> > > > > it will likely disappear also from library.
+> > > > >
+> > > > > It has been superseded by the PROVIDER API, so use it instead
+> > > > > for OPENSSL MAJOR >=3D 3.
+> > > > >
+> > > > > [1] https://github.com/openssl/openssl/blob/master/README-ENGINES=
+.md
+> > > > >
+> > > > > [jarkko: fixed up alignment issues reported by checkpatch.pl --st=
+rict]
+> > > > >
+> > > > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
+> > > > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+> > > > > Reviewed-by: Neal Gompa <neal@gompa.dev>
+> > > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > ---
+> > > > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------=
+------
+> > > > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++-----------=
+-
+> > > > >  2 files changed, 138 insertions(+), 58 deletions(-)
+> > > >
+> > > > This seems to differ from what is upstream by a lot, please documen=
+t
+> > > > what you changed from it and why when you resend this series again.
+> > >
+> > > Hunks are arranged differently, but code appears to be identical.
+> > > When I apply the series to v6.6.83 and compare with upstream I get:
+> >
+> > If so, why is the diffstat different?  Also why are the hunks arranged
+> > differently,
+>
+> He appears to be using "--diff-algorithm=3Dminimal", while you probably
+> patience or histogram.
+Hi, Jan,
 
-The idea is following the distro toolchain default (which can be
-configured building binutils).
+I tried --diff-algorithm=3Dminimal/patience/histogram from the upstream
+commit, they all give the same result as this patch. But Sasha said
+the upstream diffstat is different, so how does he generate the patch?
 
-If the distro toolchain default is gnu, we'll use gnu.
+Huacai
 
-If the distro toolchain default is both, the distro is already wasting
-space everywhere for (a) some bizarre applications depending on DT_HASH
-for some bizzare reason; or (b) an oversight.
-
-In the case of (a) the bizarre application may needs DT_HASH in vDSO as
-well, and in the case of (b) it should be fixed for the entire distro,
-not only vDSO, for example what we are doing for AOSC:
-https://github.com/AOSC-Dev/aosc-os-abbs/pull/9531
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+>
+> $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb2 |
+> grep -A3 -m1 -- "---"
+> ---
+>  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
+>  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
+>  2 files changed, 138 insertions(+), 58 deletions(-)
+>
+> Should be easy to regenerate with different diff-alg for v4.
+>
+> Regards,
+> Jan
+>
+> > that's a hint to me that something went wrong and I can't
+> > trust the patch at all.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+>
