@@ -1,78 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21F718DF6E
-	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 08:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5162E7E107
+	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743324022; cv=none; b=ktEIPQsGgs18aaA50G2fW7bBVTcXynvOQadbHDIbyu0FznZvUS6oKgpqeQejwVAk7LwfaOC3bJSRs1yaDlDr9l7g5YwoqgM2qkITWMGO53+IcHg5wa8BvckoHd9n2RWeleuhnD46Uq11KrbqGDiFYa/C2eASU/kfvR0RDEXYFb0=
+	t=1743327539; cv=none; b=txXUu+4i8wQin2psAX0dGrtt61EHwfeTD0GZE3UStD71zTl5q4/KmZwCMq9qE/KPj5CkNoAvkQpJ9P4XHMD0v/uZHVKoikyc4SoLqLX0O/sI5s+X3gqlwXWV7vJwLbXZxHoqOGQSRQWvmrr+tB7h/OxDqffLyePvtPM4isnIu1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743324022; c=relaxed/simple;
-	bh=ca5Lq/0EQ7jPAb3oWTyli15DsYson7jaU3ejVDyRXHw=;
+	s=arc-20240116; t=1743327539; c=relaxed/simple;
+	bh=YiHNtfz0tq2wuQOuRP5C5M+9WMXZgb+359E3DHp0Tzs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=byX1ktT5enqWBnKKWCHBHGkw3o/7h0jvCiG9sLi+BYGD++DNuwWiKmPMz5ET9yC/TAzdXVf8v1GkUd1hmvh+1z/ShtQBnvsaAg27dlTn9sroNRgnOdEBTeWJpntoTqMuY4DATYI2Hmszg8nw3cSSVdzR8lapLZOi/RDuKjDPzzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKMgljRK; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=qYRxaVf0g9WZfDKgoSHfvECQe8CJ6w8QG8hEvS043d/Y960GlQ6IuewrRw/40GDRJlhe3c3dVAiG++8jjcTNJWK/j1v1RmwDynhLFxVA2lrhEJYoaqB4QFfpuVQf3p14GkjaCKorDI4yclZDdCtwBzgEdGghaA+CSA0mVNEQJjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n5EsSbjL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKMgljRK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D030C4CEED
-	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 08:40:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5EsSbjL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C97D8C4CEE8
+	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743324022;
-	bh=ca5Lq/0EQ7jPAb3oWTyli15DsYson7jaU3ejVDyRXHw=;
+	s=k20201202; t=1743327538;
+	bh=YiHNtfz0tq2wuQOuRP5C5M+9WMXZgb+359E3DHp0Tzs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XKMgljRKvL4AO1eX36ymWzy3P0jjfHeIfdZu/+uYDZOcsGsTs4KllnR7ZJeShfZIm
-	 ANW61QQWKqt4ACCZkYejxaYxll+SKWaFWkR3PemovCK3m8i56supLX4RIoMhs8nd/b
-	 hU80tK3ApvjKAJyYgt1mNv7RQIOCARD3GOeThIvNFzIBNmFFj6q7YwfkJH7hwtX0+p
-	 OeNu1tgENzJPeb47Cw7QTGgvA84cjW7W+5a8oGuRIx4YX+B+wQlRxc0ktCRHBqyKmu
-	 GAjDiNOG65ynzkbIX2X5c6JlheZVN3YIHiwpTzMr0SmQnUQxcfRNQefQpel+ef3PA4
-	 0GBb0buthwSjQ==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso709060166b.3
-        for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 01:40:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVgyOJdu3/K2AFDXPhbv24gSS4q7qoNxtuOo8GNGRgcjW1ZvYAwhiuTsr35zG2Rqt7wsI24y73bzQc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxtb/Q2a49qUmsdm4oXcuyHWoaOo8CK1pt/fmP+Wue3A25diITS
-	liXxkIdIbgD6sJAU0YEJi+urMBOo/fqG25CBDFLfHT5aMRTEVstvXkWU4pVNCDtGiRB3lBD7KsG
-	rVVUBmyyCoPwvwg3FGoCb5Lt6mIs=
-X-Google-Smtp-Source: AGHT+IEaTL7KP2VLk2bwtDA9C4Ekdb7n8ZwK058Y6N9KwEcNBMb5l8HLNp2UJfs8Vk9cgMj+oA5ubRu6EVYSnxM88Ys=
-X-Received: by 2002:a17:907:a08a:b0:ac3:cff:80f1 with SMTP id
- a640c23a62f3a-ac738c880d3mr413105666b.54.1743324020941; Sun, 30 Mar 2025
- 01:40:20 -0700 (PDT)
+	b=n5EsSbjLkH5OIMoN5SS0SSgpzfSNXQpkXEIV00XjI9P5By+qCftCqGBYBtPoip/F/
+	 MJ5N3SuIbGe5j8kuXS9Muu0uirqMSzoN06Q6mJt3rbPu71zOvwtxyuGpaYM7qRntJS
+	 nqFuVlAKNO9LFkxLdiQy+gmPfbz44jxunIOjEnJMhdBpdjIof5/CaecbZgOlVBKBbT
+	 mTGoH0kV+43LKbQUmnn384fDibWbigudxLjCyDIIwuM9hwaB/XAMpbGvAxzmAGWbSz
+	 ApVk1chVQ6bcLm82TYr82vK6tYZSpsBvxYpkSa/ueyrbfunYXDRW9Egl9yK+FMgLDr
+	 RCRjsX0vthvaw==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so575391066b.1
+        for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 02:38:58 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwapLRqNHMEsKZ2l4755dqyYIDYgnztcccxrkiy8X9NjzreEXc9
+	52z62o+OwNYszo41GlMkz5w0B5fbdtB+3RMFFW8w2HDvUMZt7LV6IVKs6PdIWMMm+M5tjihhQ3G
+	KsD9Lx202qm5WMOyjW/RAtKq+c2k=
+X-Google-Smtp-Source: AGHT+IESIcekoCRsxAVSswSRDsHykLeiuXZzWYETBwqeAWCbtTzrXXuzbjfzbeCoJNecUysmsIdfrQ5Msqm7Cn9v27U=
+X-Received: by 2002:a17:907:7e82:b0:ac2:b086:88d5 with SMTP id
+ a640c23a62f3a-ac738a668e8mr566588366b.18.1743327537433; Sun, 30 Mar 2025
+ 02:38:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAhV-H5T3DLFfzPg4Zgzn7JbzqoNZdYn5_F06QNHS230xq-1MA@mail.gmail.com>
- <tencent_928F84F5CCDFC9B34B7BCACF5CA00FED5006@qq.com>
-In-Reply-To: <tencent_928F84F5CCDFC9B34B7BCACF5CA00FED5006@qq.com>
+References: <20250315080320.4193821-1-hengqi.chen@gmail.com>
+In-Reply-To: <20250315080320.4193821-1-hengqi.chen@gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 30 Mar 2025 16:40:09 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4mAHixEZOgoYb3v1ELMW0=xUJwsfmR_DG5G3i7QTo=3A@mail.gmail.com>
-X-Gm-Features: AQ5f1JplMwHWAOKASkzCgYlRsRXZPm7krKQyvbHM_XbTUYWI8r1eDh3a1GeUN_s
-Message-ID: <CAAhV-H4mAHixEZOgoYb3v1ELMW0=xUJwsfmR_DG5G3i7QTo=3A@mail.gmail.com>
-Subject: Re: Re: [PATCH] LoongArch: Kconfig: Fix help text of CMDLINE_EXTEND
-To: =?UTF-8?B?6LCi6Ie06YKmIChYSUUgWmhpYmFuZyk=?= <Yeking@red54.com>
-Cc: guoren@kernel.org, jiaxun.yang@flygoat.com, kernel@xen0n.name, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Date: Sun, 30 Mar 2025 17:38:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H64upy2ebqBZzY6LUD3crH+6PvKTDSq_K73zXc4u+fe6Q@mail.gmail.com>
+X-Gm-Features: AQ5f1JoVLmHAKN8k0vtQddR4iDAtz0Z5JfkEv4z-gHNzZ-YkzAh57hDrRxJVFMs
+Message-ID: <CAAhV-H64upy2ebqBZzY6LUD3crH+6PvKTDSq_K73zXc4u+fe6Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Fix off by one error in build_prologue()
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, yangtiezhu@loongson.cn, 
+	Vincent Li <vincent.mc.li@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 29, 2025 at 5:45=E2=80=AFPM =E8=B0=A2=E8=87=B4=E9=82=A6 (XIE Zh=
-ibang) <Yeking@red54.com> wrote:
->
-> Hi, Huacai,
->
-> > How about replace "to the built-in command line" with "with the
-> > built-in command line" and keep others unchanged?
-> It seems that the use of the preposition "with" does not conform to the r=
-egular
-> collocation of "append" and may lead to ambiguity.
-> You can consult an LLM such as DeepSeek, Qwen, or ChatGPT.
-OK, I applied but change the title to "LoongArch: Fix help text of
-CMDLINE_EXTEND in Kconfig", thanks.
+Applied, thanks.
 
 Huacai
 
+On Sat, Mar 15, 2025 at 4:03=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
 >
-> Zhibang
+> Vincent reported that running BPF progs with tailcalls on LoongArch
+> causes kernel hard lockup. Debugging the issues shows that the JITed
+> image missing a jirl instruction at the end of the epilogue.
+>
+> There are two passes in JIT compile, the first pass set the flags and
+> the second pass generates JIT code based on those flags. With BPF progs
+> mixing bpf2bpf and tailcalls, build_prologue() generates N insns in the
+> first pass and then generates N+1 insns in the second pass. This makes
+> epilogue_offset off by one and we will jump to some unexpected insn and
+> cause lockup. Fix this by inserting a nop insn.
+>
+> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+> Fixes: bb035ef0cc91 ("LoongArch: BPF: Support mixing bpf2bpf and tailcall=
+s")
+> Reported-by: Vincent Li <vincent.mc.li@gmail.com>
+> Closes: https://lore.kernel.org/loongarch/CAK3+h2w6WESdBN3UCr3WKHByD7D6Q_=
+Ve1EDAjotVrnx6Or_c8g@mail.gmail.com/
+> Closes: https://lore.kernel.org/bpf/CAK3+h2woEjG_N=3D-XzqEGaAeCmgu2eTCUc7=
+p6bP4u8Q+DFHm-7g@mail.gmail.com/
+> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> ---
+>  arch/loongarch/include/asm/inst.h | 5 +++++
+>  arch/loongarch/net/bpf_jit.c      | 2 ++
+>  2 files changed, 7 insertions(+)
+>
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
+sm/inst.h
+> index 3089785ca97e..d61b356170fe 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -695,6 +695,11 @@ static inline void emit_jirl(union loongarch_instruc=
+tion *insn,
+>         insn->reg2i16_format.rj =3D rj;
+>  }
+>
+> +static inline void emit_nop(union loongarch_instruction *insn)
+> +{
+> +       insn->word =3D INSN_NOP;
+> +}
+> +
+>  #define DEF_EMIT_REG2BSTRD_FORMAT(NAME, OP)                            \
+>  static inline void emit_##NAME(union loongarch_instruction *insn,      \
+>                                enum loongarch_gpr rd,                   \
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index ea357a3edc09..2346c0b55043 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -142,6 +142,8 @@ static void build_prologue(struct jit_ctx *ctx)
+>          */
+>         if (seen_tail_call(ctx) && seen_call(ctx))
+>                 move_reg(ctx, TCC_SAVED, REG_TCC);
+> +       else
+> +               emit_insn(ctx, nop);
+>
+>         ctx->stack_size =3D stack_adjust;
+>  }
+> --
+> 2.43.5
+>
 >
