@@ -1,58 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FA378F29
-	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:44:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38167175D50
+	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743327841; cv=none; b=n8yTBQtEWg/S/hMq3A3aqxucQmYX9FlMpwO3jIi48QvHiYAXOfB5WKN/y1JZHdLlIDL/jWV3YYK+6jU3f/hGSHv6E3CTPnGWCfMxIknu4MsfRlsksbMjBEW22ModUXI2a78LRAAoZJiIw5fO9uLj50Wdj20aet0d+Mijweukbkk=
+	t=1743328519; cv=none; b=VUS9mrRF8/p0mp6+BEkKDKAqjIC9ffu0Vf+jDt6m8Ejv4UNWSpAaKDifsaCsGK5z+3Ogx6ltafkJSUAyoJ+mUgmy9TcW6aDoezQ35zzhH9vFMjhbDD0S2ODxqKjIVNJO5ZwVWOGbfSxGQzlAqZwQt/KYjhQbnhAastlXsjFyrTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743327841; c=relaxed/simple;
-	bh=0YXluHFZq6Z9vSO7L1Xh83iHulVfnNR6llaVWJByH0I=;
+	s=arc-20240116; t=1743328519; c=relaxed/simple;
+	bh=5JcLcytBRlmqq09jrH9DsNQgRgGQPz51SsbBw3q5JSM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YwL9JoTH245jmI2wRMmb/wN9MXHUkabSD+bEkwYmHYMqPumicDT2smcA/b/umABV3FeiS79Ld0Bgh4Vrdx4H59tYd3lN2ts3ZMVq06/HGdF4cWHu9Xrp1xfEGt2jZmxfPJHZvzD0TGYnOGLSreX4Kf05Y+6BAuc7Bda7+ARPq78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S45ZTCwq; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=jxoyufvwoRumKlPIpTU4IjeQCwx+o2HoBcZpaL8nY88LSC3T/woOOsKMPDz8E9A5mrMatXOP4iA/uLKsKcQ63Ipc2v2fdP93gpYY6gcqaAQUNz62UfPtzMrOl0dW6jlCeq4mB0fF4+2QV7T4KTsWnlvymi8lLdKCXY4YGe2jrv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVwYvOID; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S45ZTCwq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C7FC4CEE8
-	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:44:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVwYvOID"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC0C8C4AF0B
+	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743327841;
-	bh=0YXluHFZq6Z9vSO7L1Xh83iHulVfnNR6llaVWJByH0I=;
+	s=k20201202; t=1743328518;
+	bh=5JcLcytBRlmqq09jrH9DsNQgRgGQPz51SsbBw3q5JSM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=S45ZTCwq2kHVpFq/y3lL/UzaEcOgqEFfNnoj0RgYBW0yzxe6NdD/WLYSasBzr+ClB
-	 N0p2TVTk2JNC1ouiQJGH+obGWPPbglZwU6Idz8zrBaACJeGP+9sFbsQEUDGn58ibkf
-	 ot1nNui2w7Nome/adQMqGebl+LSBGf9QY6G7rZDomD0e5ifdpw0SOWYuwpVJHV0PJC
-	 LM0U6F4jpQPQufX+Pjo6ua/cCQMeVRKaLBH9xemK+kbzw3G8e/NuZBDfHzFpXQBet7
-	 3OE4PD0Bwsci5SObKYd089ggNUv2gTooG3GFRvRj8O4BRqOmBTba7yfUcAz8c1t33v
-	 Ib7S+4kUC/96A==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso536522566b.1
-        for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 02:44:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU1X/sWDV71TGPgcjnl946KRw7Ryq8a0dDrH2A7O9npHOQKvo5t2n3qRjldv070XNVHGOj+4/ge97Y=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwVQ/5SBD9bolvGk0xi43afwtMONLGSTmVdAuAO7iH+jsbSkZgH
-	gwLlKBsOS9Esavk/N36pw87YJwOrkucujLv5i4lHu7HS82icWl3x8+18LsHeTLKK4tVYVv0BYQK
-	LijjrC7vUr5O+8AEZYdrGs2emmYA=
-X-Google-Smtp-Source: AGHT+IFNzj5RgPbZFTwtEoDlkVrQD7AFWQB2HR/KFzTHpsjuJk7kAi+3yG6WGzLSjp8vJaxh9TNURuFlgBvLCOVFDDQ=
-X-Received: by 2002:a17:907:9693:b0:ac6:ff34:d046 with SMTP id
- a640c23a62f3a-ac7389ea430mr489833366b.2.1743327839602; Sun, 30 Mar 2025
- 02:43:59 -0700 (PDT)
+	b=LVwYvOIDxdCP0Z9BjL3B1PAHmQd53fCbPCe/8WOgLcx1ljiuXcCB9ADzvsgrEEe7N
+	 J94UI9F1F43dVael8ZKw1WrBuL3Z8/K01PAuFyK7QiPLBN6nFeQ/4lCtBWE6PGKg+k
+	 AATkpLpk7JltkfNCvra7WIZyxcrPpu0ZfnDz+0crF5lR6jU3TahgKiKt29zC974P/p
+	 BLnyAJcEmlTXSgR0RsYJfH/b43X7GogMb1dfG3N44taBxdk6Pkt2UaoeKV31gy9kPC
+	 bUQX4ziINEwxmfZh6H2syHazgTlPuXw7zvRmWKCwu4l5B/eufTJ22wNH9Q0ywZ3M1d
+	 Zeam7t1/znD7A==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso6923393a12.2
+        for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 02:55:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX83ZRrYHefnoODWFZUf0pGPZghrf2LuaiBQMoHnjhCg5//1pllAcmzhBMdp2lfdurl3LS8Q455oBw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwO6f6NWUYUjFZeJbxDAb7790VaQaZa1Le0PqWjT2RwEYP3mK3G
+	yCHTRn3RHw3HKfaLUh10HZEnAjFr/8mUwOwnZjAuYU0Cb/qUSNUpwmjS234vRJJJEpMuz2ltq96
+	Oxs3bkAqDkfolRHMuwd7U4a8/HGw=
+X-Google-Smtp-Source: AGHT+IE+jFr2hSf27y/s5sTiGjkAaHOpg05In4illWNF6eBuAiUU/eLj5n9SWJwueOHAvvfk8n3IXs3JbaDs3TMErMA=
+X-Received: by 2002:a17:907:6092:b0:abf:3cb2:1c04 with SMTP id
+ a640c23a62f3a-ac738a0f3b3mr442616566b.9.1743328517187; Sun, 30 Mar 2025
+ 02:55:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250319025413.67014-1-linmq006@gmail.com>
-In-Reply-To: <20250319025413.67014-1-linmq006@gmail.com>
+References: <20250224112042.60282-1-xry111@xry111.site> <20250224112042.60282-4-xry111@xry111.site>
+In-Reply-To: <20250224112042.60282-4-xry111@xry111.site>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 30 Mar 2025 17:43:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H77Y2aCWd678KOABZ+yEkXVZWr2ZLMzLQKKs23EWGPPuw@mail.gmail.com>
-X-Gm-Features: AQ5f1JovyJXUWpxNRcfdKpHq0uOXu1s-LbigB0Ck1IzFHnj9mnOzVtoQC_UVERY
-Message-ID: <CAAhV-H77Y2aCWd678KOABZ+yEkXVZWr2ZLMzLQKKs23EWGPPuw@mail.gmail.com>
-Subject: Re: [PATCH] Loongarch: Fix device node refcount leak in fdt_cpu_clk_init
-To: Miaoqian Lin <linmq006@gmail.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Hongliang Wang <wanghongliang@loongson.cn>, loongarch@lists.linux.dev, 
+Date: Sun, 30 Mar 2025 17:55:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5-h3iJSDAkXz2dnW6JQRGJm03EFG2KLL_Ak1q83LMKAA@mail.gmail.com>
+X-Gm-Features: AQ5f1JoPN8zLi6dXxQbDVe9ayOBCDaGT24wARYK2-Hg0w9-96JHC_84wcc-aObw
+Message-ID: <CAAhV-H5-h3iJSDAkXz2dnW6JQRGJm03EFG2KLL_Ak1q83LMKAA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] LoongArch: vDSO: Remove --hash-style=sysv
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Guo Ren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Fangrui Song <i@maskray.me>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -61,31 +63,45 @@ Applied, thanks.
 
 Huacai
 
-On Wed, Mar 19, 2025 at 10:54=E2=80=AFAM Miaoqian Lin <linmq006@gmail.com> =
-wrote:
+On Mon, Feb 24, 2025 at 7:21=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
 >
-> Add missing of_node_put() to properly handle the reference count of the
-> device node obtained from of_get_cpu_node().
+> glibc added support for .gnu.hash in 2006 and .hash has been obsoleted
+> far before the first LoongArch CPU was taped.  Using
+> --hash-style=3Dsysv might imply unaddressed issues and confuse readers.
 >
-> Fixes: 44a01f1f726a ("LoongArch: Parsing CPU-related information from DTS=
-")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> Some architectures use an explicit --hash-style=3Dboth here, but
+> DT_GNU_HASH has already been supported by Glibc and Musl and become the
+> de-facto standard of the distros when the first LoongArch CPU was taped.
+> So DT_HASH seems just wasting storage space for LoongArch.
+>
+> Just drop the option and rely on the linker default, which is likely
+> "gnu" (Arch, Debian, Gentoo, LFS) on all LoongArch distros (confirmed on
+> Arch, Debian, Gentoo, and LFS; AOSC now defaults to "both" but it seems
+> just an oversight).
+>
+> Following the logic of commit 48f6430505c0
+> ("arm64/vdso: Remove --hash-style=3Dsysv").
+>
+> Link: https://github.com/AOSC-Dev/aosc-os-abbs/pull/9796
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 > ---
->  arch/loongarch/kernel/env.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/loongarch/vdso/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-> index 2f1f5b08638f..01aea44cf4b0 100644
-> --- a/arch/loongarch/kernel/env.c
-> +++ b/arch/loongarch/kernel/env.c
-> @@ -68,6 +68,7 @@ static int __init fdt_cpu_clk_init(void)
->                 return -ENODEV;
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index fdde1bcd4e26..abaf87c58f9d 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -37,7 +37,7 @@ endif
+>  # VDSO linker flags.
+>  ldflags-y :=3D -Bsymbolic --no-undefined -soname=3Dlinux-vdso.so.1 \
+>         $(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared \
+> -       --hash-style=3Dsysv --build-id -T
+> +       --build-id -T
 >
->         clk =3D of_clk_get(np, 0);
-> +       of_node_put(np);
->         if (IS_ERR(clk))
->                 return -ENODEV;
->
+>  #
+>  # Shared build commands.
 > --
-> 2.39.5 (Apple Git-154)
+> 2.48.1
 >
