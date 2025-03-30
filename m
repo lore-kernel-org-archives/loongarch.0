@@ -1,57 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BDF7E107
-	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:39:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FA378F29
+	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:44:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743327573; cv=none; b=NihS2pnnwX4oa3gaxTKdWj7iqHsc/6M/pdi2vOswO6pUEOFwLJ6GMj3MMVwCrxRRVD8aRshoDR3Zp2PfyZlLzujdS1SBoKv59frM0XblvVl1O/y3eWVFoPsdL9sw/WjpX/c65OA8ik8N9bEZrNQwsI8QmTJdU3X4Hndvw/U5DZw=
+	t=1743327841; cv=none; b=n8yTBQtEWg/S/hMq3A3aqxucQmYX9FlMpwO3jIi48QvHiYAXOfB5WKN/y1JZHdLlIDL/jWV3YYK+6jU3f/hGSHv6E3CTPnGWCfMxIknu4MsfRlsksbMjBEW22ModUXI2a78LRAAoZJiIw5fO9uLj50Wdj20aet0d+Mijweukbkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743327573; c=relaxed/simple;
-	bh=dqxX88uoSc8jiPaSwkPSFYEM26rcxCmZHen7rkG7jOc=;
+	s=arc-20240116; t=1743327841; c=relaxed/simple;
+	bh=0YXluHFZq6Z9vSO7L1Xh83iHulVfnNR6llaVWJByH0I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uyr8FURPBzjU8ig1kGLEE8KFkQrTLDH578pNnZ0nnDKfib2dYCzMRbSASxxtdUE8SN/4vT7UQwSbEvuh0QhWLvHDWNdiJ7a6wdQkL+PGT/skt9HawzgOUqPuMwbG4hgrPe2lYVOIvIbphn5AWb9wht2O2oZI20B/8ulr7Y+N/80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+XFXPaN; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=YwL9JoTH245jmI2wRMmb/wN9MXHUkabSD+bEkwYmHYMqPumicDT2smcA/b/umABV3FeiS79Ld0Bgh4Vrdx4H59tYd3lN2ts3ZMVq06/HGdF4cWHu9Xrp1xfEGt2jZmxfPJHZvzD0TGYnOGLSreX4Kf05Y+6BAuc7Bda7+ARPq78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S45ZTCwq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+XFXPaN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36409C4CEED
-	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:39:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S45ZTCwq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C7FC4CEE8
+	for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 09:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743327573;
-	bh=dqxX88uoSc8jiPaSwkPSFYEM26rcxCmZHen7rkG7jOc=;
+	s=k20201202; t=1743327841;
+	bh=0YXluHFZq6Z9vSO7L1Xh83iHulVfnNR6llaVWJByH0I=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=r+XFXPaN3WQYmLbn5oZ95OcWqnNrAHyG/X4gvi6qcrthFpMenRgIJAk8iKn/ayJv/
-	 IGrDcU8yH9wIetWV2Yn8Ul1CNbDEzJ11Xioor2Ezw+pM6nKCn/pSIzF/9QsqujVqpq
-	 jZryjMwzCi/AciHfTbB2gK60ivVe6EH0MydkKx74x8x+jhQgdC06/dFt54vDm+RHD8
-	 f0znDZfqflnSfrSj+MPneLkYj0+vYwBTG0er7YLI7yBxsT+h3a2dbRZk08Izyo/9wH
-	 FrJZvHLkU5BjM2XR4dzex3EfA9STY5jFuFFBJAX+mkJJIuirXI6ykqDerKfIb/ZXY3
-	 4uhJKUOaQJXjQ==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso561019466b.3
-        for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 02:39:33 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yy2n1ZgOh/cqFJTbAsMR/yfy9r0XQjfU/vcSGOBiMIXyDQmlCFg
-	rXkR/VG7r4sTz13JJmQdk6eaVRwXStG7fBjiGajBObcunKxt2aybBmoU4p194nF0ith6N+81mSb
-	HUnODEqYqb6Juwha+nK2d/lWV3zc=
-X-Google-Smtp-Source: AGHT+IHBFKdBTMToxsEZlMY82v0AkEQOR+pSjQDV3ODD3ZEeW2eg59rTurjLiz0ovF5SU9ES4ID/NdAlMmA3Lhzmb7k=
-X-Received: by 2002:a17:907:72ce:b0:ac2:4b9:dff8 with SMTP id
- a640c23a62f3a-ac738a4f21fmr466846366b.32.1743327571773; Sun, 30 Mar 2025
- 02:39:31 -0700 (PDT)
+	b=S45ZTCwq2kHVpFq/y3lL/UzaEcOgqEFfNnoj0RgYBW0yzxe6NdD/WLYSasBzr+ClB
+	 N0p2TVTk2JNC1ouiQJGH+obGWPPbglZwU6Idz8zrBaACJeGP+9sFbsQEUDGn58ibkf
+	 ot1nNui2w7Nome/adQMqGebl+LSBGf9QY6G7rZDomD0e5ifdpw0SOWYuwpVJHV0PJC
+	 LM0U6F4jpQPQufX+Pjo6ua/cCQMeVRKaLBH9xemK+kbzw3G8e/NuZBDfHzFpXQBet7
+	 3OE4PD0Bwsci5SObKYd089ggNUv2gTooG3GFRvRj8O4BRqOmBTba7yfUcAz8c1t33v
+	 Ib7S+4kUC/96A==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso536522566b.1
+        for <loongarch@lists.linux.dev>; Sun, 30 Mar 2025 02:44:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU1X/sWDV71TGPgcjnl946KRw7Ryq8a0dDrH2A7O9npHOQKvo5t2n3qRjldv070XNVHGOj+4/ge97Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwVQ/5SBD9bolvGk0xi43afwtMONLGSTmVdAuAO7iH+jsbSkZgH
+	gwLlKBsOS9Esavk/N36pw87YJwOrkucujLv5i4lHu7HS82icWl3x8+18LsHeTLKK4tVYVv0BYQK
+	LijjrC7vUr5O+8AEZYdrGs2emmYA=
+X-Google-Smtp-Source: AGHT+IFNzj5RgPbZFTwtEoDlkVrQD7AFWQB2HR/KFzTHpsjuJk7kAi+3yG6WGzLSjp8vJaxh9TNURuFlgBvLCOVFDDQ=
+X-Received: by 2002:a17:907:9693:b0:ac6:ff34:d046 with SMTP id
+ a640c23a62f3a-ac7389ea430mr489833366b.2.1743327839602; Sun, 30 Mar 2025
+ 02:43:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250325141046.38347-1-hengqi.chen@gmail.com>
-In-Reply-To: <20250325141046.38347-1-hengqi.chen@gmail.com>
+References: <20250319025413.67014-1-linmq006@gmail.com>
+In-Reply-To: <20250319025413.67014-1-linmq006@gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 30 Mar 2025 17:39:20 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H71KH_PBRqFKkp0pFzRNdECTp5fecg1_auqnX-gS=cmUw@mail.gmail.com>
-X-Gm-Features: AQ5f1Jp31ng2tOT8HmuQn11aEG4AfVcy-DBpG6_n7xxkNUAP2VnT0wYJqqdTE_s
-Message-ID: <CAAhV-H71KH_PBRqFKkp0pFzRNdECTp5fecg1_auqnX-gS=cmUw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Don't override subprog's return value
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, yangtiezhu@loongson.cn, 
-	john.fastabend@gmail.com
+Date: Sun, 30 Mar 2025 17:43:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H77Y2aCWd678KOABZ+yEkXVZWr2ZLMzLQKKs23EWGPPuw@mail.gmail.com>
+X-Gm-Features: AQ5f1JovyJXUWpxNRcfdKpHq0uOXu1s-LbigB0Ck1IzFHnj9mnOzVtoQC_UVERY
+Message-ID: <CAAhV-H77Y2aCWd678KOABZ+yEkXVZWr2ZLMzLQKKs23EWGPPuw@mail.gmail.com>
+Subject: Re: [PATCH] Loongarch: Fix device node refcount leak in fdt_cpu_clk_init
+To: Miaoqian Lin <linmq006@gmail.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Hongliang Wang <wanghongliang@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -59,43 +61,31 @@ Applied, thanks.
 
 Huacai
 
-On Tue, Mar 25, 2025 at 10:11=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com=
-> wrote:
+On Wed, Mar 19, 2025 at 10:54=E2=80=AFAM Miaoqian Lin <linmq006@gmail.com> =
+wrote:
 >
-> The verifier test `calls: div by 0 in subprog` triggers a panic at the
-> ld.bu instruction. The ld.bu insn is trying to load byte from memory
-> address returned by the subprog. The subprog actually set the correct
-> address at the a5 register (dedicated register for BPF return values).
-> But at commit 73c359d1d356 ("LoongArch: BPF: Sign-extend return values")
-> we also sign extended a5 to the a0 register (return value in LoongArch).
-> For function call insn, we later propagate the a0 register back to a5
-> register. This is right for native calls but wrong for bpf2bpf calls
-> which expect zero-extended return value in a5 register. So only move a0
-> to a5 for native calls (i.e. non-BPF_PSEUDO_CALL).
+> Add missing of_node_put() to properly handle the reference count of the
+> device node obtained from of_get_cpu_node().
 >
-> Fixes: 73c359d1d356 ("LoongArch: BPF: Sign-extend return values")
-> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> Fixes: 44a01f1f726a ("LoongArch: Parsing CPU-related information from DTS=
+")
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 > ---
->  arch/loongarch/net/bpf_jit.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  arch/loongarch/kernel/env.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index a06bf89fed67..73ff1a657aa5 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -907,7 +907,9 @@ static int build_insn(const struct bpf_insn *insn, st=
-ruct jit_ctx *ctx, bool ext
+> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+> index 2f1f5b08638f..01aea44cf4b0 100644
+> --- a/arch/loongarch/kernel/env.c
+> +++ b/arch/loongarch/kernel/env.c
+> @@ -68,6 +68,7 @@ static int __init fdt_cpu_clk_init(void)
+>                 return -ENODEV;
 >
->                 move_addr(ctx, t1, func_addr);
->                 emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
-> -               move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
-> +
-> +               if (insn->src_reg !=3D BPF_PSEUDO_CALL)
-> +                       move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0=
-);
->                 break;
+>         clk =3D of_clk_get(np, 0);
+> +       of_node_put(np);
+>         if (IS_ERR(clk))
+>                 return -ENODEV;
 >
->         /* tail call */
 > --
-> 2.43.5
+> 2.39.5 (Apple Git-154)
 >
