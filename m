@@ -1,427 +1,601 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA75617C224
-	for <loongarch@lists.linux.dev>; Mon, 31 Mar 2025 06:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE9A1C5D5E
+	for <loongarch@lists.linux.dev>; Mon, 31 Mar 2025 07:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743404054; cv=none; b=thcq8aQum7mB9P0xwJnEESG02NHxYsHEiALGn67jwVwdQmItfWNQAJTozSgAMekCXdorm53ra55z5lK4YzqZFxxwvqqQyoezw2GdcHWXaA2XVmov5XSQmWHm1AhsRdoabudcnnEgSHf8ct35KkXVbHdpkvxQPuFFmm3D22XV0h8=
+	t=1743407612; cv=none; b=mbDazZe/wzdWtllzT5NuBs7SxAiKj/1u4IYTLtcVzzqhDtDv3+zp2ssGVG6Dg6sJxEKcGsuAg1+kZlAWIdPRGfjQ8eSvuT+lLhaFSHuRDWgcLYHfwgfnSb3MXd2/nwQ6jhz5lu/MyYTDxuILnXJDCUFLPU1WpUDXm06h1xS++mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743404054; c=relaxed/simple;
-	bh=6S24YgnR2xWO62sGpW8skHBlHQ/4igIM5p9j7Ivrrv0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gG+32hHfH12MZFrpAaVMrNjqqEU5e3eTmQozPLV9aJXL7Xr9Q2yDKEvoXkcXDIcZNezsnfmkZzUNtAFIv3GJckJepzg1mRJECqreSZ1jKGI7sj78+mY0ye/UJy1r+J1oCCHYyU0JEdjolMyUgqQycEytLOFA0IAgp1VRBmxyHTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8DxWOESPOpn7iisAA--.25198S3;
-	Mon, 31 Mar 2025 14:54:10 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowMDxu8QJPOpnYuFoAA--.50182S4;
-	Mon, 31 Mar 2025 14:54:06 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Juxin Gao <gaojuxin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v10 2/2] pwm: Add Loongson PWM controller support
-Date: Mon, 31 Mar 2025 14:53:50 +0800
-Message-ID: <76050a903a8015422fb9261ad88c7d9cc2edbbd8.1743403075.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1743403075.git.zhoubinbin@loongson.cn>
-References: <cover.1743403075.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1743407612; c=relaxed/simple;
+	bh=bbpD/3pok6sOic2LPw8HY8+645TZaYLXv3rmW+sxl/E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WaciNhFOYKg4twuVQTS9frZhCqlP+xeTLoBR0JWiJFt5vomxrYzh0FJcSMiQkALYSAMizDRmaUvoWs9x/0fj917BgifuM45N7tJMsHnq7NfwlgkmHvfo1RD7x8i1fobbCEmBPg+Idkof3TbA/zLzaO1sFRLuqpSzkp981dNs09E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=flRjbZYl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O2cA2XCe; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=flRjbZYl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O2cA2XCe; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="flRjbZYl";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O2cA2XCe";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="flRjbZYl";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O2cA2XCe"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C8EAC210F6;
+	Mon, 31 Mar 2025 07:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743407607; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q2vARJRvNkPdRpoKwIMNRpIF5e+XCyM4elnS5tzw/So=;
+	b=flRjbZYlzMlvZ8zhNKajnyY5ZBfsrw05d+Wa9zmEdWZS784/vFmnrIAM1wAY4C+1unvQLA
+	Ine/2ObOkZJ75OZEXKa2lB4YNW1jIb7JyzzLZY+gVTXkUyRlaxwzsXVbR6I5ct0USTx7ue
+	lV2h9cacIMs52N+bmg8fzGC3FukUcU4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743407607;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q2vARJRvNkPdRpoKwIMNRpIF5e+XCyM4elnS5tzw/So=;
+	b=O2cA2XCe3r0gCDUcWWzDznsqZCle/kTiALcRmts2srrpII64QDAsH0uwKsLHwbI9mT6ZRI
+	DFqs4grz2G6cTxDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=flRjbZYl;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=O2cA2XCe
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743407607; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q2vARJRvNkPdRpoKwIMNRpIF5e+XCyM4elnS5tzw/So=;
+	b=flRjbZYlzMlvZ8zhNKajnyY5ZBfsrw05d+Wa9zmEdWZS784/vFmnrIAM1wAY4C+1unvQLA
+	Ine/2ObOkZJ75OZEXKa2lB4YNW1jIb7JyzzLZY+gVTXkUyRlaxwzsXVbR6I5ct0USTx7ue
+	lV2h9cacIMs52N+bmg8fzGC3FukUcU4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743407607;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q2vARJRvNkPdRpoKwIMNRpIF5e+XCyM4elnS5tzw/So=;
+	b=O2cA2XCe3r0gCDUcWWzDznsqZCle/kTiALcRmts2srrpII64QDAsH0uwKsLHwbI9mT6ZRI
+	DFqs4grz2G6cTxDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5EFEC13A1F;
+	Mon, 31 Mar 2025 07:53:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OlfHFfdJ6mclMAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 31 Mar 2025 07:53:27 +0000
+Message-ID: <67afd398-f039-4937-a859-cc4d5b0a53d5@suse.de>
+Date: Mon, 31 Mar 2025 09:53:27 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/4] drm/ls2kbmc: Add Loongson-2K BMC reset function
+ support
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
+ <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+ Corey Minyard <minyard@acm.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>,
+ linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+ dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
+References: <cover.1735550269.git.zhoubinbin@loongson.cn>
+ <b0ac8b81fbb8955ed8ada27aba423cff45aad9f6.1735550269.git.zhoubinbin@loongson.cn>
+ <f365c722-c294-4834-8c84-fd6dcd4a9ee9@suse.de>
+ <CAMpQs4JXKu4GDD79Mdkq9vASSDE_5SQsjsg4htfaZ5yGm3=k5g@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAMpQs4JXKu4GDD79Mdkq9vASSDE_5SQsjsg4htfaZ5yGm3=k5g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxu8QJPOpnYuFoAA--.50182S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3ZF1DZr18AryDXFWfAr4xAFc_yoWkuw4UpF
-	95Aa4YgryayryDKrs5AFZ5urnxZ34fXa9rJFWfCw1UCr9rtw1kZw1kKF97Ga17Ar1kGr4I
-	qFWrCrWrCF4DGFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8l38UUUUUU==
+X-Rspamd-Queue-Id: C8EAC210F6
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[loongson.cn,kernel.org,acm.org,linux.intel.com,gmail.com,ffwll.ch,vger.kernel.org,lists.sourceforge.net,lists.freedesktop.org,xen0n.name,lists.linux.dev];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-This commit adds a generic PWM framework driver for the PWM controller
-found on Loongson family chips.
+Hi
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
-Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- MAINTAINERS                |   1 +
- drivers/pwm/Kconfig        |  12 ++
- drivers/pwm/Makefile       |   1 +
- drivers/pwm/pwm-loongson.c | 290 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 304 insertions(+)
- create mode 100644 drivers/pwm/pwm-loongson.c
+Am 11.02.25 um 12:27 schrieb Binbin Zhou:
+> Hi Thomas:
+>
+> Sorry for my late reply and thanks for your advice.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9fcde52aec4b..ef17bd5bdc97 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13621,6 +13621,7 @@ M:	Binbin Zhou <zhoubinbin@loongson.cn>
- L:	linux-pwm@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
-+F:	drivers/pwm/pwm-loongson.c
- 
- LOONGSON-2 SOC SERIES CLOCK DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4731d5b90d7e..ead63f9d0c73 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -351,6 +351,18 @@ config PWM_KEEMBAY
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-keembay.
- 
-+config PWM_LOONGSON
-+	tristate "Loongson PWM support"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	depends on COMMON_CLK
-+	help
-+	  Generic PWM framework driver for Loongson family.
-+	  It can be found on Loongson-2K series cpus and Loongson LS7A
-+	  bridge chips.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-loongson.
-+
- config PWM_LP3943
- 	tristate "TI/National Semiconductor LP3943 PWM support"
- 	depends on MFD_LP3943
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 539e0def3f82..e52d0940b247 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_KEEMBAY)	+= pwm-keembay.o
-+obj-$(CONFIG_PWM_LOONGSON)	+= pwm-loongson.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
- obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
- obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
-diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-new file mode 100644
-index 000000000000..412c67739ef9
---- /dev/null
-+++ b/drivers/pwm/pwm-loongson.c
-@@ -0,0 +1,290 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2017-2025 Loongson Technology Corporation Limited.
-+ *
-+ * Loongson PWM driver
-+ *
-+ * For Loongson's PWM IP block documentation please refer Chapter 11 of
-+ * Reference Manual: https://loongson.github.io/LoongArch-Documentation/Loongson-7A1000-usermanual-EN.pdf
-+ *
-+ * Author: Juxin Gao <gaojuxin@loongson.cn>
-+ * Further cleanup and restructuring by:
-+ *         Binbin Zhou <zhoubinbin@loongson.cn>
-+ *
-+ * Limitations:
-+ * - If both DUTY and PERIOD are set to 0, the output is a constant low signal.
-+ * - When disabled the output is driven to 0 independent of the configured
-+ *   polarity.
-+ * - If the register is reconfigured while PWM is running, it does not complete
-+ *   the currently running period.
-+ * - Disabling the PWM stops the output immediately (without waiting for current
-+ *   period to complete first).
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/units.h>
-+
-+/* Loongson PWM registers */
-+#define LOONGSON_PWM_REG_DUTY		0x4 /* Low Pulse Buffer Register */
-+#define LOONGSON_PWM_REG_PERIOD		0x8 /* Pulse Period Buffer Register */
-+#define LOONGSON_PWM_REG_CTRL		0xc /* Control Register */
-+
-+/* Control register bits */
-+#define LOONGSON_PWM_CTRL_REG_EN	BIT(0)  /* Counter Enable Bit */
-+#define LOONGSON_PWM_CTRL_REG_OE	BIT(3)  /* Pulse Output Enable Control Bit, Valid Low */
-+#define LOONGSON_PWM_CTRL_REG_SINGLE	BIT(4)  /* Single Pulse Control Bit */
-+#define LOONGSON_PWM_CTRL_REG_INTE	BIT(5)  /* Interrupt Enable Bit */
-+#define LOONGSON_PWM_CTRL_REG_INT	BIT(6)  /* Interrupt Bit */
-+#define LOONGSON_PWM_CTRL_REG_RST	BIT(7)  /* Counter Reset Bit */
-+#define LOONGSON_PWM_CTRL_REG_CAPTE	BIT(8)  /* Measurement Pulse Enable Bit */
-+#define LOONGSON_PWM_CTRL_REG_INVERT	BIT(9)  /* Output flip-flop Enable Bit */
-+#define LOONGSON_PWM_CTRL_REG_DZONE	BIT(10) /* Anti-dead Zone Enable Bit */
-+
-+/* default input clk frequency for the ACPI case */
-+#define LOONGSON_PWM_FREQ_DEFAULT	50000 /* Hz */
-+
-+struct pwm_loongson_ddata {
-+	struct clk *clk;
-+	void __iomem *base;
-+	u64 clk_rate;
-+};
-+
-+static inline __pure struct pwm_loongson_ddata *to_pwm_loongson_ddata(struct pwm_chip *chip)
-+{
-+	return pwmchip_get_drvdata(chip);
-+}
-+
-+static inline u32 pwm_loongson_readl(struct pwm_loongson_ddata *ddata, u32 offset)
-+{
-+	return readl(ddata->base + offset);
-+}
-+
-+static inline void pwm_loongson_writel(struct pwm_loongson_ddata *ddata,
-+				       u32 val, u32 offset)
-+{
-+	writel(val, ddata->base + offset);
-+}
-+
-+static int pwm_loongson_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
-+				     enum pwm_polarity polarity)
-+{
-+	u16 val;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+
-+	if (polarity == PWM_POLARITY_INVERSED)
-+		/* Duty cycle defines LOW period of PWM */
-+		val |= LOONGSON_PWM_CTRL_REG_INVERT;
-+	else
-+		/* Duty cycle defines HIGH period of PWM */
-+		val &= ~LOONGSON_PWM_CTRL_REG_INVERT;
-+
-+	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
-+
-+	return 0;
-+}
-+
-+static void pwm_loongson_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	u32 val;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+	val &= ~LOONGSON_PWM_CTRL_REG_EN;
-+	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
-+}
-+
-+static int pwm_loongson_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	u32 val;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+	val |= LOONGSON_PWM_CTRL_REG_EN;
-+	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       u64 duty_ns, u64 period_ns)
-+{
-+	u32 duty, period;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	/* duty = duty_ns * ddata->clk_rate / NSEC_PER_SEC */
-+	duty = mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NSEC_PER_SEC);
-+	if (duty > U32_MAX)
-+		duty = U32_MAX;
-+
-+	/* period = period_ns * ddata->clk_rate / NSEC_PER_SEC */
-+	period = mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_PER_SEC);
-+	if (period > U32_MAX)
-+		period = U32_MAX;
-+
-+	pwm_loongson_writel(ddata, duty, LOONGSON_PWM_REG_DUTY);
-+	pwm_loongson_writel(ddata, period, LOONGSON_PWM_REG_PERIOD);
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      const struct pwm_state *state)
-+{
-+	int ret;
-+	bool enabled = pwm->state.enabled;
-+
-+	if (!state->enabled) {
-+		if (enabled)
-+			pwm_loongson_disable(chip, pwm);
-+		return 0;
-+	}
-+
-+	ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
-+	if (ret)
-+		return ret;
-+
-+	ret = pwm_loongson_config(chip, pwm, state->duty_cycle, state->period);
-+	if (ret)
-+		return ret;
-+
-+	if (!enabled && state->enabled)
-+		ret = pwm_loongson_enable(chip, pwm);
-+
-+	return ret;
-+}
-+
-+static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				  struct pwm_state *state)
-+{
-+	u32 duty, period, ctrl;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	duty = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
-+	period = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
-+	ctrl = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+
-+	/* duty & period have a max of 2^32, so we can't overflow */
-+	state->duty_cycle = DIV64_U64_ROUND_UP((u64)duty * NSEC_PER_SEC, ddata->clk_rate);
-+	state->period = DIV64_U64_ROUND_UP((u64)period * NSEC_PER_SEC, ddata->clk_rate);
-+	state->polarity = (ctrl & LOONGSON_PWM_CTRL_REG_INVERT) ? PWM_POLARITY_INVERSED :
-+			  PWM_POLARITY_NORMAL;
-+	state->enabled = (ctrl & LOONGSON_PWM_CTRL_REG_EN) ? true : false;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops pwm_loongson_ops = {
-+	.apply = pwm_loongson_apply,
-+	.get_state = pwm_loongson_get_state,
-+};
-+
-+static int pwm_loongson_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct pwm_chip *chip;
-+	struct pwm_loongson_ddata *ddata;
-+	struct device *dev = &pdev->dev;
-+
-+	chip = devm_pwmchip_alloc(dev, 1, sizeof(*ddata));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	ddata = to_pwm_loongson_ddata(chip);
-+
-+	ddata->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(ddata->base))
-+		return PTR_ERR(ddata->base);
-+
-+	ddata->clk = devm_clk_get_optional_enabled(dev, NULL);
-+	if (IS_ERR(ddata->clk))
-+		return dev_err_probe(dev, PTR_ERR(ddata->clk),
-+				     "Failed to get pwm clock\n");
-+	if (ddata->clk) {
-+		ret = devm_clk_rate_exclusive_get(dev, ddata->clk);
-+		if (ret)
-+			return dev_err_probe(dev, PTR_ERR(ddata->clk),
-+					     "Failed to get exclusive rate\n");
-+
-+		ddata->clk_rate = clk_get_rate(ddata->clk);
-+		if (!ddata->clk_rate)
-+			return dev_err_probe(dev, -EINVAL,
-+					     "Failed to get frequency\n");
-+	} else {
-+		ddata->clk_rate = LOONGSON_PWM_FREQ_DEFAULT;
-+	}
-+
-+	/* This check is done to prevent an overflow in .apply */
-+	if (ddata->clk_rate > NSEC_PER_SEC)
-+		return dev_err_probe(dev, -EINVAL, "PWM clock out of range\n");
-+
-+	chip->ops = &pwm_loongson_ops;
-+	chip->atomic = true;
-+	dev_set_drvdata(dev, chip);
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_suspend(struct device *dev)
-+{
-+	struct pwm_chip *chip = dev_get_drvdata(dev);
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+	struct pwm_device *pwm = &chip->pwms[0];
-+
-+	if (pwm->state.enabled)
-+		return -EBUSY;
-+
-+	clk_disable_unprepare(ddata->clk);
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_resume(struct device *dev)
-+{
-+	struct pwm_chip *chip = dev_get_drvdata(dev);
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	return clk_prepare_enable(ddata->clk);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(pwm_loongson_pm_ops, pwm_loongson_suspend,
-+				pwm_loongson_resume);
-+
-+static const struct of_device_id pwm_loongson_of_ids[] = {
-+	{ .compatible = "loongson,ls7a-pwm" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, pwm_loongson_of_ids);
-+
-+static const struct acpi_device_id pwm_loongson_acpi_ids[] = {
-+	{ "LOON0006" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, pwm_loongson_acpi_ids);
-+
-+static struct platform_driver pwm_loongson_driver = {
-+	.probe = pwm_loongson_probe,
-+	.driver = {
-+		.name = "loongson-pwm",
-+		.pm = pm_ptr(&pwm_loongson_pm_ops),
-+		.of_match_table = pwm_loongson_of_ids,
-+		.acpi_match_table = pwm_loongson_acpi_ids,
-+	},
-+};
-+module_platform_driver(pwm_loongson_driver);
-+
-+MODULE_DESCRIPTION("Loongson PWM driver");
-+MODULE_AUTHOR("Loongson Technology Corporation Limited.");
-+MODULE_LICENSE("GPL");
+Apologies, I missed your email.
+
+
+>
+> On Wed, Jan 15, 2025 at 2:57 PM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>> Hi
+>>
+>>
+>> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
+>>> Since the display is a sub-function of the Loongson-2K BMC, when the
+>>> BMC reset, the entire BMC PCIe is disconnected, including the display
+>>> which is interrupted.
+>> To me, that's a strong indicator to set up the entire thing from scratch.
+>>
+>>> Not only do you need to save/restore the relevant PCIe registers
+>>> throughout the reset process, but you also need to re-push the display
+>>> to the monitor at the end.
+>>>
+>>> Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+>>> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+>>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+>>> ---
+>>>    drivers/gpu/drm/tiny/ls2kbmc.c | 284 ++++++++++++++++++++++++++++++++-
+>>>    1 file changed, 283 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/tiny/ls2kbmc.c b/drivers/gpu/drm/tiny/ls2kbmc.c
+>>> index 909d6c687193..4b440f20cb4d 100644
+>>> --- a/drivers/gpu/drm/tiny/ls2kbmc.c
+>>> +++ b/drivers/gpu/drm/tiny/ls2kbmc.c
+>> Move all the reset detection into the BMC core driver. When you see a
+>> reset, remove the display's platform device via
+>> platform_device_unregister(). This will release the device  and the DRM
+>> driver on top. We do this for simpledrm/efifb/etc. Hence user-space code
+>> is able to deal with it. Then set up a new platform device when the new
+>> framebuffer is available. Your DRM driver will bind to it and user-space
+>> code will continue with the new DRM device.
+> I tried to refactor the bmc restart part according to your scheme. I'm
+> not quite sure if the experimental results are exactly right.
+>
+> Key part:
+>
+> New solution:
+> 1. platform_device_unregister(simpledrm)
+> 2. wait and detect if the BMC reboot is complete;
+> 3. platform_device_register_resndata(simpledrm)
+
+You are doing this in the MFD driver, right?
+
+Apologies again, I find it very confusing which component does what.
+
+If the MFD driver created the initial graphics device, it should also 
+remove it on BMC resets. And then establish a new graphics device when 
+the reset has been complete. It shouldn't matter if the driver is 
+simpledrm or a custom driver for your hardware.
+
+
+>
+> Original solution:
+> 1. wait and detect if the BMC reboot is complete;
+> 2. ls2kbmc_push_drm_mode() pushes display data such as crtc.
+>
+> When the BMC reboot is completed, the display in the new solution will
+> lose all the information of the previous desktop and redisplay the
+> system login interface, while the original solution will keep the
+> desktop information.
+>
+> Is this normal for our new solution, or is there something wrong with
+> my implementation?
+
+The desktop should mostly remain as-is. Maybe flicker, but not go back 
+to the login screen. Is there any error in the log files of the desktop 
+or compositor?
+
+Best regards
+Thomas
+
+>
+>> Best regards
+>> Thomas
+>>
+>>> @@ -8,10 +8,12 @@
+>>>     */
+>>>
+>>>    #include <linux/aperture.h>
+>>> +#include <linux/delay.h>
+>>>    #include <linux/minmax.h>
+>>>    #include <linux/pci.h>
+>>>    #include <linux/platform_data/simplefb.h>
+>>>    #include <linux/platform_device.h>
+>>> +#include <linux/stop_machine.h>
+>>>
+>>>    #include <drm/drm_atomic.h>
+>>>    #include <drm/drm_atomic_state_helper.h>
+>>> @@ -32,9 +34,27 @@
+>>>    #include <drm/drm_panic.h>
+>>>    #include <drm/drm_probe_helper.h>
+>>>
+>>> +#define BMC_RESET_DELAY      (60 * HZ)
+>>> +#define BMC_RESET_WAIT       10000
+>>> +
+>>> +static const u32 index[] = { 0x4, 0x10, 0x14, 0x18, 0x1c, 0x20, 0x24,
+>>> +                          0x30, 0x3c, 0x54, 0x58, 0x78, 0x7c, 0x80 };
+>>> +static const u32 cindex[] = { 0x4, 0x10, 0x3c };
+>>> +
+>>> +struct ls2kbmc_pci_data {
+>>> +     u32 d80c;
+>>> +     u32 d71c;
+>>> +     u32 data[14];
+>>> +     u32 cdata[3];
+>>> +};
+>>> +
+>>>    struct ls2kbmc_pdata {
+>>>        struct pci_dev *pdev;
+>>> +     struct drm_device *ddev;
+>>> +     struct work_struct bmc_work;
+>>> +     unsigned long reset_time;
+>>>        struct simplefb_platform_data pd;
+>>> +     struct ls2kbmc_pci_data pci_data;
+>>>    };
+>>>
+>>>    /*
+>>> @@ -583,6 +603,265 @@ static struct ls2kbmc_device *ls2kbmc_device_create(struct drm_driver *drv,
+>>>        return sdev;
+>>>    }
+>>>
+>>> +static bool ls2kbmc_bar0_addr_is_set(struct pci_dev *ppdev)
+>>> +{
+>>> +     u32 addr;
+>>> +
+>>> +     pci_read_config_dword(ppdev, PCI_BASE_ADDRESS_0, &addr);
+>>> +     addr &= PCI_BASE_ADDRESS_MEM_MASK;
+>>> +
+>>> +     return addr ? true : false;
+>>> +}
+>>> +
+>>> +static void ls2kbmc_save_pci_data(struct ls2kbmc_pdata *priv)
+>>> +{
+>>> +     struct pci_dev *pdev = priv->pdev;
+>>> +     struct pci_dev *parent = pdev->bus->self;
+>>> +     int i;
+>>> +
+>>> +     for (i = 0; i < ARRAY_SIZE(index); i++)
+>>> +             pci_read_config_dword(parent, index[i], &priv->pci_data.data[i]);
+>>> +
+>>> +     for (i = 0; i < ARRAY_SIZE(cindex); i++)
+>>> +             pci_read_config_dword(pdev, cindex[i], &priv->pci_data.cdata[i]);
+>>> +
+>>> +     pci_read_config_dword(parent, 0x80c, &priv->pci_data.d80c);
+>>> +     priv->pci_data.d80c = (priv->pci_data.d80c & ~(3 << 17)) | (1 << 17);
+>>> +
+>>> +     pci_read_config_dword(parent, 0x71c, &priv->pci_data.d71c);
+>>> +     priv->pci_data.d71c |= 1 << 26;
+>>> +}
+>>> +
+>>> +static bool ls2kbmc_check_pcie_connected(struct pci_dev *parent, struct drm_device *dev)
+>>> +{
+>>> +     void __iomem *mmio;
+>>> +     int sts, timeout = 10000;
+>>> +
+>>> +     mmio = pci_iomap(parent, 0, 0x100);
+>>> +     if (!mmio)
+>>> +             return false;
+>>> +
+>>> +     writel(readl(mmio) | 0x8, mmio);
+>>> +     while (timeout) {
+>>> +             sts = readl(mmio + 0xc);
+>>> +             if ((sts & 0x11) == 0x11)
+>>> +                     break;
+>>> +             mdelay(1);
+>>> +             timeout--;
+>>> +     }
+>>> +
+>>> +     pci_iounmap(parent, mmio);
+>>> +
+>>> +     if (!timeout) {
+>>> +             drm_err(dev, "pcie train failed status=0x%x\n", sts);
+>>> +             return false;
+>>> +     }
+>>> +
+>>> +     return true;
+>>> +}
+>>> +
+>>> +static int ls2kbmc_recove_pci_data(void *data)
+>>> +{
+>>> +     struct ls2kbmc_pdata *priv = data;
+>>> +     struct pci_dev *pdev = priv->pdev;
+>>> +     struct drm_device *dev = priv->ddev;
+>>> +     struct pci_dev *parent = pdev->bus->self;
+>>> +     u32 i, timeout, retry = 0;
+>>> +     bool ready;
+>>> +
+>>> +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_2, 0);
+>>> +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_3, 0);
+>>> +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_4, 0);
+>>> +
+>>> +     timeout = 10000;
+>>> +     while (timeout) {
+>>> +             ready = ls2kbmc_bar0_addr_is_set(parent);
+>>> +             if (!ready)
+>>> +                     break;
+>>> +             mdelay(1);
+>>> +             timeout--;
+>>> +     };
+>>> +
+>>> +     if (!timeout)
+>>> +             drm_warn(dev, "bar not clear 0\n");
+>>> +
+>>> +retrain:
+>>> +     for (i = 0; i < ARRAY_SIZE(index); i++)
+>>> +             pci_write_config_dword(parent, index[i], priv->pci_data.data[i]);
+>>> +
+>>> +     pci_write_config_dword(parent, 0x80c, priv->pci_data.d80c);
+>>> +     pci_write_config_dword(parent, 0x71c, priv->pci_data.d71c);
+>>> +
+>>> +     /* Check if the pcie is connected */
+>>> +     ready = ls2kbmc_check_pcie_connected(parent, dev);
+>>> +     if (!ready)
+>>> +             return ready;
+>>> +
+>>> +     for (i = 0; i < ARRAY_SIZE(cindex); i++)
+>>> +             pci_write_config_dword(pdev, cindex[i], priv->pci_data.cdata[i]);
+>>> +
+>>> +     drm_info(dev, "pcie recovered done\n");
+>>> +
+>>> +     if (!retry) {
+>>> +             /*wait u-boot ddr config */
+>>> +             mdelay(BMC_RESET_WAIT);
+>>> +             ready = ls2kbmc_bar0_addr_is_set(parent);
+>>> +             if (!ready) {
+>>> +                     retry = 1;
+>>> +                     goto retrain;
+>>> +             }
+>>> +     }
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int ls2kbmc_push_drm_mode(struct drm_device *dev)
+>>> +{
+>>> +     struct ls2kbmc_device *sdev = ls2kbmc_device_of_dev(dev);
+>>> +     struct drm_crtc *crtc = &sdev->crtc;
+>>> +     struct drm_plane *plane = crtc->primary;
+>>> +     struct drm_connector *connector = &sdev->connector;
+>>> +     struct drm_framebuffer *fb = NULL;
+>>> +     struct drm_mode_set set;
+>>> +     struct drm_modeset_acquire_ctx ctx;
+>>> +     int ret;
+>>> +
+>>> +     mutex_lock(&dev->mode_config.mutex);
+>>> +     connector->funcs->fill_modes(connector, 4096, 4096);
+>>> +     mutex_unlock(&dev->mode_config.mutex);
+>>> +
+>>> +     DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx,
+>>> +                                DRM_MODESET_ACQUIRE_INTERRUPTIBLE, ret);
+>>> +
+>>> +     if (plane->state)
+>>> +             fb = plane->state->fb;
+>>> +     else
+>>> +             fb = plane->fb;
+>>> +
+>>> +     if (!fb) {
+>>> +             drm_dbg(dev, "CRTC doesn't have current FB\n");
+>>> +             ret = -EINVAL;
+>>> +             goto out;
+>>> +     }
+>>> +
+>>> +     drm_framebuffer_get(fb);
+>>> +
+>>> +     set.crtc = crtc;
+>>> +     set.x = 0;
+>>> +     set.y = 0;
+>>> +     set.mode = &sdev->mode;
+>>> +     set.connectors = &connector;
+>>> +     set.num_connectors = 1;
+>>> +     set.fb = fb;
+>>> +
+>>> +     ret = crtc->funcs->set_config(&set, &ctx);
+>>> +
+>>> +out:
+>>> +     DRM_MODESET_LOCK_ALL_END(dev, ctx, ret);
+>>> +
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +static void ls2kbmc_events_fn(struct work_struct *work)
+>>> +{
+>>> +     struct ls2kbmc_pdata *priv = container_of(work, struct ls2kbmc_pdata, bmc_work);
+>>> +
+>>> +     /*
+>>> +      * The pcie is lost when the BMC resets,
+>>> +      * at which point access to the pcie from other CPUs
+>>> +      * is suspended to prevent a crash.
+>>> +      */
+>>> +     stop_machine(ls2kbmc_recove_pci_data, priv, NULL);
+>>> +
+>>> +     drm_info(priv->ddev, "redraw console\n");
+>>> +
+>>> +     /* We need to re-push the display due to previous pcie loss. */
+>>> +     ls2kbmc_push_drm_mode(priv->ddev);
+>>> +}
+>>> +
+>>> +static irqreturn_t ls2kbmc_interrupt(int irq, void *arg)
+>>> +{
+>>> +     struct ls2kbmc_pdata *priv = arg;
+>>> +
+>>> +     if (system_state != SYSTEM_RUNNING)
+>>> +             return IRQ_HANDLED;
+>>> +
+>>> +     /* skip interrupt in BMC_RESET_DELAY */
+>>> +     if (time_after(jiffies, priv->reset_time + BMC_RESET_DELAY))
+>>> +             schedule_work(&priv->bmc_work);
+>>> +
+>>> +     priv->reset_time = jiffies;
+>>> +
+>>> +     return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +#define BMC_RESET_GPIO                       14
+>>> +#define LOONGSON_GPIO_REG_BASE               0x1fe00500
+>>> +#define LOONGSON_GPIO_REG_SIZE               0x18
+>>> +#define LOONGSON_GPIO_OEN            0x0
+>>> +#define LOONGSON_GPIO_FUNC           0x4
+>>> +#define LOONGSON_GPIO_INTPOL         0x10
+>>> +#define LOONGSON_GPIO_INTEN          0x14
+>>> +
+>>> +/* The gpio interrupt is a watchdog interrupt that is triggered when the BMC resets. */
+>>> +static int ls2kbmc_gpio_reset_handler(struct ls2kbmc_pdata *priv)
+>>> +{
+>>> +     int irq, ret = 0;
+>>> +     int gsi = 16 + (BMC_RESET_GPIO & 7);
+>>> +     void __iomem *gpio_base;
+>>> +
+>>> +     /* Since Loongson-3A hardware does not support GPIO interrupt cascade,
+>>> +      * chip->gpio_to_irq() cannot be implemented,
+>>> +      * here acpi_register_gsi() is used to get gpio irq.
+>>> +      */
+>>> +     irq = acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW);
+>>> +     if (irq < 0)
+>>> +             return irq;
+>>> +
+>>> +     gpio_base = ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG_SIZE);
+>>> +     if (!gpio_base) {
+>>> +             acpi_unregister_gsi(gsi);
+>>> +             return PTR_ERR(gpio_base);
+>>> +     }
+>>> +
+>>> +     writel(readl(gpio_base + LOONGSON_GPIO_OEN) | BIT(BMC_RESET_GPIO),
+>>> +            gpio_base + LOONGSON_GPIO_OEN);
+>>> +     writel(readl(gpio_base + LOONGSON_GPIO_FUNC) & ~BIT(BMC_RESET_GPIO),
+>>> +            gpio_base + LOONGSON_GPIO_FUNC);
+>>> +     writel(readl(gpio_base + LOONGSON_GPIO_INTPOL) & ~BIT(BMC_RESET_GPIO),
+>>> +            gpio_base + LOONGSON_GPIO_INTPOL);
+>>> +     writel(readl(gpio_base + LOONGSON_GPIO_INTEN) | BIT(BMC_RESET_GPIO),
+>>> +            gpio_base + LOONGSON_GPIO_INTEN);
+>>> +
+>>> +     ret = request_irq(irq, ls2kbmc_interrupt, IRQF_SHARED | IRQF_TRIGGER_FALLING,
+>>> +                       "ls2kbmc gpio", priv);
+>>> +
+>>> +     acpi_unregister_gsi(gsi);
+>>> +     iounmap(gpio_base);
+>>> +
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +static int ls2kbmc_pdata_initial(struct platform_device *pdev, struct ls2kbmc_pdata *priv)
+>>> +{
+>>> +     int ret;
+>>> +
+>>> +     priv->pdev = *(struct pci_dev **)dev_get_platdata(&pdev->dev);
+>>> +
+>>> +     ls2kbmc_save_pci_data(priv);
+>>> +
+>>> +     INIT_WORK(&priv->bmc_work, ls2kbmc_events_fn);
+>>> +
+>>> +     ret = request_irq(priv->pdev->irq, ls2kbmc_interrupt,
+>>> +                       IRQF_SHARED | IRQF_TRIGGER_RISING, "ls2kbmc pcie", priv);
+>>> +     if (ret) {
+>>> +             pr_err("request_irq(%d) failed\n", priv->pdev->irq);
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     return ls2kbmc_gpio_reset_handler(priv);
+>>> +}
+>>> +
+>>>    /*
+>>>     * Platform driver
+>>>     */
+>>> @@ -598,12 +877,15 @@ static int ls2kbmc_probe(struct platform_device *pdev)
+>>>        if (IS_ERR(priv))
+>>>                return -ENOMEM;
+>>>
+>>> -     priv->pdev = *(struct pci_dev **)dev_get_platdata(&pdev->dev);
+>>> +     ret = ls2kbmc_pdata_initial(pdev, priv);
+>>> +     if (ret)
+>>> +             return ret;
+>>>
+>>>        sdev = ls2kbmc_device_create(&ls2kbmc_driver, pdev, priv);
+>>>        if (IS_ERR(sdev))
+>>>                return PTR_ERR(sdev);
+>>>        dev = &sdev->dev;
+>>> +     priv->ddev = &sdev->dev;
+>>>
+>>>        ret = drm_dev_register(dev, 0);
+>>>        if (ret)
+>> --
+>> --
+>> Thomas Zimmermann
+>> Graphics Driver Developer
+>> SUSE Software Solutions Germany GmbH
+>> Frankenstrasse 146, 90461 Nuernberg, Germany
+>> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+>> HRB 36809 (AG Nuernberg)
+>>
+>
+> --
+> Thanks.
+> Binbin
+
 -- 
-2.47.1
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
