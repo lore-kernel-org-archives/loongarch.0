@@ -1,90 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C4242AA3
-	for <loongarch@lists.linux.dev>; Tue,  1 Apr 2025 01:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C602D05E
+	for <loongarch@lists.linux.dev>; Tue,  1 Apr 2025 01:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743470913; cv=none; b=gitlhcj2JHzpLGr9uDyKnGQ7NLfZzYT20EKiyImvpbfCCX8LOuzxOAgYmKzAx/ug160gFk8T9IvlgIK5/ljPk6wBsriFPPDk64sPX8OLfDQ9SDh9o2pzIHoMdJL5hFSwBsf/ysw0hIFYDpDNa/RjAg8VGjelS//8YwfN3ydN2bo=
+	t=1743471610; cv=none; b=LwsioY1z0HUSVWIhSqwOFebKOaBlqlgZWItPO51cRtprSdBcIKIrbU/+ZjVLl4RHNCvbQZZHwMph/abPmwKvHAKq30SpUHQGV2j/ibRakcF88Rm/TAE/+m0pyrZDRwYQwU+DGPebx/jjXwy8nKeKS7HvoGDX7r6q1jkO4fapJQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743470913; c=relaxed/simple;
-	bh=m19wp1+qd0zKInAT915y9W17LSkxdTNL2RvcBHT5uXs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P361NkhE5Se9OHrkH3Gy7uML+PidcdlsrmOLL0mSyX6UPxlq6Zioxqcre/JrRXPBnlGA9i0hWo0n33Bctn/XYA6F9hXABe27o9KiIDJ3lM7Hv8kU4i4dV/vDNFGo4oFj3/sAY0UMDFBtdO7grtVNBI38tSVW3ZITYNPX9Hi6m4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTWjTXvC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743471610; c=relaxed/simple;
+	bh=Ln079lz0yzjobmwJiN0OVPo+66Jkvv2FG4dAT0dZWOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JaCJCkrtZVpJkkRl402GQNq0MTpbrT/s/y0uL4GAzshtWv4WMeC+OTlMsqwEIxkq/LeN7cgF/8wpR22eIJuJjZVD6PjhABSOxmB2JkVvTIrZ8dE9yYcmaGQadfLPA6dV+kjjlew0JncyCxcKMtcp4v1QJfMIaFL+Nh09/T5TUIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=r3y1bId/; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTWjTXvC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A88AC4CEED
-	for <loongarch@lists.linux.dev>; Tue,  1 Apr 2025 01:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743470912;
-	bh=m19wp1+qd0zKInAT915y9W17LSkxdTNL2RvcBHT5uXs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PTWjTXvCcUnasUodvlrnnF0dr9ZUhgq/ydy063wqquo2xeUJjKZtmFZ1tmNSaYVwi
-	 2+h1LZb+8CUuLN29w4E8jYOvegaf1Imn10A7TdrbCAShIZrGS5p5h4oGKaO6gvBW96
-	 EzntVQN9DTJ2qQ1q28xS9fzQuc6pbxqnE+R/EtzAl0wglkkhoDxIC2WpZ825YEdORs
-	 V0H1RYxwTjUMYs8NJs8fmXkApEUxsq9S8C0TGTRb2+CE4HnDUwGM6LajJFI8mYZLIG
-	 ScK8YDn00u+aGuTMhecac4+bfoAM+2XAQ3mZIzbNJc/W7aNRc8vEEsYQziLpIOeIBl
-	 En8eMMJiM0f2g==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso949479166b.0
-        for <loongarch@lists.linux.dev>; Mon, 31 Mar 2025 18:28:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX7o6cWD1mDJl6nZhlNqRP5D2AJYjNQ9EY3t0IHjKMCYrwqPl2TmnygFRNdTpmDYhrahGRs3XfDUN4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyRkC3bXWhCkIWrlEx3ikXfXHmuy34peh4uZ627ZRAE9fv/DNRL
-	K5GZBMFt6IYs4g99dXMuk0jv06G+YaQnfjKHMOb5Wj1bQpOZiJznjUv4KZ/Bl7XqkOEnPL3DLbB
-	Y8xfEbGM2Dp+vtMWhmR0QArcf4PY=
-X-Google-Smtp-Source: AGHT+IGgG1Nsg6TIae/1JBbjS1Lsi1zVJj+BXszVrJTrloL3d5guVx8xHxArlenv2sIyuyn5yKV8+U7MzPjhAqqfDBY=
-X-Received: by 2002:a17:906:f5a8:b0:ac7:3911:35e7 with SMTP id
- a640c23a62f3a-ac782ead5ddmr84107066b.59.1743470911115; Mon, 31 Mar 2025
- 18:28:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="r3y1bId/"
+Message-ID: <d9b6f34c-95f2-45f6-b5dc-89098d1f8d22@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743471604;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o9ohi78hJmC8ZbZkUbSfn1oReFwEpPo/O49EMuN7f7U=;
+	b=r3y1bId/Oq6Q+U02X4bb5gIfLFeBuu1LrKdBUBdSdiBo+rCUJxcBW9Hd8HR+h5jtqkUk9z
+	EnY4fkQO6lEOGRJPOg29JTy318DZJcwTB2tWwZw/V8NPPWUNuWoUVQm6qsm4yfUV+XNElf
+	vcKHzZ5Dzk3wJCWMbONGk9oi96TsNdc=
+Date: Tue, 1 Apr 2025 09:39:57 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1743403075.git.zhoubinbin@loongson.cn> <zfdhcdy27q5dhaezc22bmx3dnmn2avazsfbpsd4k5lyjikmxnd@dsdbbokjjjag>
-In-Reply-To: <zfdhcdy27q5dhaezc22bmx3dnmn2avazsfbpsd4k5lyjikmxnd@dsdbbokjjjag>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 1 Apr 2025 09:28:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Ter6jYObtffAU_ixUy97UQyU13YRwKcE__hZAPZG5vQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JrmtBIR-Ec8RwbiRAx-SJRnlMqzQKm7UogoAX_fed_d-wGUvckU0wpF-WM
-Message-ID: <CAAhV-H5Ter6jYObtffAU_ixUy97UQyU13YRwKcE__hZAPZG5vQ@mail.gmail.com>
-Subject: Re: [PATCH v10 0/2] pwm: Introduce pwm driver for the Loongson family chips
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/2] Docs/LoongArch: Add Advanced Extended-Redirect IRQ
+ model description
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, tglx@linutronix.de,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
+ <20250331064116.32540-2-zhangtianyang@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250331064116.32540-2-zhangtianyang@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi, Uwe,
 
-On Mon, Mar 31, 2025 at 10:52=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ke=
-rnel.org> wrote:
+在 3/31/25 2:41 PM, Tianyang Zhang 写道:
+> Introduce the redirect interrupt controllers.When the redirect interrupt
+> controller is enabled, the routing target of MSI interrupts is no longer a
+> specific CPU and vector number, but a specific redirect entry. The actual
+> CPU and vector number used are described by the redirect entry.
 >
-> Hello Binbin,
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> ---
+>   .../arch/loongarch/irq-chip-model.rst         | 38 +++++++++++++++++++
+>   .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 ++++++++++++++++++
+>   2 files changed, 75 insertions(+)
 >
-> On Mon, Mar 31, 2025 at 02:53:48PM +0800, Binbin Zhou wrote:
-> > This patchset introduce a generic PWM framework driver for Loongson fam=
-ily.
-> > Each PWM has one pulse width output signal and one pulse input signal t=
-o be measured.
-> >
-> > It can be found on Loongson-2K series cpus and Loongson LS7A bridge chi=
-ps.
-> >
-> > Thanks.
->
-> applied as v5.16-rc1 material to
->
->         https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.gi=
-t pwm/for-nexxt
-For v5.16-rc1? Maybe v6.15-rc1 or v6.16-rc1?
+> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+> index a7ecce11e445..84fafb86ec17 100644
+> --- a/Documentation/arch/loongarch/irq-chip-model.rst
+> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
+> @@ -181,6 +181,44 @@ go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then go to CPUINTC directly::
+>                | Devices |
+>                +---------+
+>   
 
-Huacai
+> +Advanced Extended IRQ model (with redirection)
+> +===============
 
->
-> Thanks for your patience and effort to wait and act on my reviews,
-> Uwe
+Did you do the build test?
+
+
+> +
+> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
+> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, PCH-MSI interrupts go
+> +to REDIRECT for remapping it to AVEC, and then go to CPUINTC directly, while all
+> +other devices interrupts go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then
+> +go to CPUINTC directly::
+> +
+> + +-----+     +-----------------------+     +-------+
+> + | IPI | --> |        CPUINTC        | <-- | Timer |
+> + +-----+     +-----------------------+     +-------+
+> +              ^          ^          ^
+> +              |          |          |
+> +       +---------+ +----------+ +---------+     +-------+
+> +       | EIOINTC | | AVECINTC | | LIOINTC | <-- | UARTs |
+> +       +---------+ +----------+ +---------+     +-------+
+> +            ^            ^
+> +            |            |
+> +            |      +----------+
+> +            |      | REDIRECT |
+> +            |      +----------+
+> +            |            ^
+> +            |            |
+> +       +---------+  +---------+
+> +       | PCH-PIC |  | PCH-MSI |
+> +       +---------+  +---------+
+> +         ^     ^           ^
+> +         |     |           |
+> + +---------+ +---------+ +---------+
+> + | Devices | | PCH-LPC | | Devices |
+> + +---------+ +---------+ +---------+
+> +                  ^
+> +                  |
+> +             +---------+
+> +             | Devices |
+> +             +---------+
+> +
+>   ACPI-related definitions
+>   ========================
+>   
+> diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+> index d4ff80de47b6..5d82cba07482 100644
+> --- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+> +++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+> @@ -174,6 +174,43 @@ CPU串口（UARTs）中断发送到LIOINTC，PCH-MSI中断发送到AVECINTC，
+>                | Devices |
+>                +---------+
+>   
+
+> +高级扩展IRQ模型 (带重定向)
+> +===============
+
+ditto
+
+
+Thanks,
+
+Yanteng
+
