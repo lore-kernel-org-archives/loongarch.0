@@ -1,242 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EB613C9C4
-	for <loongarch@lists.linux.dev>; Tue,  1 Apr 2025 07:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD1E1FC0F3
+	for <loongarch@lists.linux.dev>; Tue,  1 Apr 2025 12:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743491680; cv=none; b=jLWGFaFBQJp9yt5O4eNMgDaPt8KMy4IIZ6J3JwqEjFg7OPhu5vWsy686B5k2We9Zw0oiygTPB3UfndJmNAN8qmQCPGhsOY6gfWK1bzIZfJQLR39lfS+7KXoeecm0t8uQoAMQcaBGssXHC1IYBVVp60ROOlXeukmXlqvYHboWA2w=
+	t=1743510008; cv=none; b=f+Ao33njydIB7Foq7th/2kPcMgXiUBo7SY7mhp5MeeDmCwrzeToYM4j5tDHOkOjXV64XAL7rSo0b2r7it9DNkl3A7W/0N0Noh8WQY1A2SVk/k49MhPGFVFnwIm/iPcwq4VoSNogpCsJRe7RmylbikThaz/nF8o2P73o21rIirhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743491680; c=relaxed/simple;
-	bh=nUOHroF+0XkPQGstjVhmf/WCBbJVGo1d8cH+vjBRrzs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BzLpte9dm8fg9YAgB8SOIwgw6hZpyPrL0pFR/7HyVWIwAwzP8SCeBoRZNIHSdNTZsxsLcfdVut4V0tvZIwaC6HctXMxOpvhqn2wAiWv7x2nfa4yFzEmRW7lLfJFvku73eSAHpetJdDID1KY4UEeZp0pZz/zHUgwy/IXfhTvZZuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dgtT31HH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rEug0PAm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dgtT31HH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rEug0PAm"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743491677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Sun3c8Lmw+e7fjJdrqY5kBivpZpnMD3xstjmCGLqhE=;
-	b=dgtT31HHMoeFC3XSjNmCmMSuz9dNEUuYJALN6paPNVygBkbePdkVzk9iI5oBd9Xvdgs+xh
-	6qsXGzoyOUjbbaYvmk6e23GFL1P8dlodC3q2/sVQXTKq4ISAlcQfuMlmglWSrad9Ktd77t
-	7/W3/wHY3MctOvsE4xdvGNH+S/eYyCY7QLRiDHB61r40wZYPg2/b4DCPbYF/HFfvPmGht4
-	iPZZ+ZYB22RHGtNnJq2UYXAaHU3ioxe9uhyZKbu99Vkh5LBCIUF8dVoQZ+lXkUaD59qqNp
-	fqRC7yQch13KrZJDmzXpHCRpjQfL7tq0/mYuEy5ZBEV3JbFmOcGEncBBtXWwBw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743491677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Sun3c8Lmw+e7fjJdrqY5kBivpZpnMD3xstjmCGLqhE=;
-	b=rEug0PAmwMI7u9bdtbI9ACTshakfWHarFbbRfNN+IGF3W4DpwjKcCSLhmT9gKRY29+ykwy
-	q9XDKStsmjEUjOAg==
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
- kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
- jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
- gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: Re: [PATCH v2 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-In-Reply-To: <20250331064116.32540-3-zhangtianyang@loongson.cn>
-References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
- <20250331064116.32540-3-zhangtianyang@loongson.cn>
-Date: Tue, 01 Apr 2025 09:14:36 +0200
-Message-ID: <87ldskwdyb.ffs@tglx>
+	s=arc-20240116; t=1743510008; c=relaxed/simple;
+	bh=DpGxsgVgr/Xpff/beTHEZQp3I9HuOTYslzz02JBPytQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NMYkDVsx59AmLr0P/RmM2uDZtYUwegbfGDycX3YJAl1fX752CFkXG/CDTkqwPG2SExkj0ub/YGgky4E41MdINJpCZ5JsYNjODugWlrtEHAk2dCKaf1CNWxjHf/ya5wK4H3GTFJavAmwDrltOY/BfAYRtmfhhIBV3ri+pQNfOp5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.198])
+	by gateway (Coremail) with SMTP id _____8Cxqmry2etnT8CtAA--.29152S3;
+	Tue, 01 Apr 2025 20:20:02 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.198])
+	by front1 (Coremail) with SMTP id qMiowMBxGcTp2etnLbhqAA--.28868S2;
+	Tue, 01 Apr 2025 20:20:01 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.15
+Date: Tue,  1 Apr 2025 20:19:44 +0800
+Message-ID: <20250401121945.3814892-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxGcTp2etnLbhqAA--.28868S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXFy7uw47XrWrJF1DAF47GFX_yoW5XF1xpr
+	y3uFnxGr4DGr9xJwnrK343Wr1DtF1fGr1xXa13G348Cr1UZr1UWr1xGFZ5XFyUt3yktr10
+	qr1rG3ZxKF1UA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-On Mon, Mar 31 2025 at 14:41, Tianyang Zhang wrote:
->  	irq_data_update_effective_affinity(data, cpumask_of(cpu));
-> @@ -242,6 +233,7 @@ static void avecintc_irq_dispatch(struct irq_desc *desc)
->  		d = this_cpu_read(irq_map[vector]);
->  		if (d) {
->  			generic_handle_irq_desc(d);
-> +
+The following changes since commit 38fec10eb60d687e30c8c6b5420d86e8149f7557:
 
-Stray newline.
+  Linux 6.14 (2025-03-24 07:02:41 -0700)
 
->  		} else {
+are available in the Git repository at:
 
-> +
-> +static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
-> +{
-> +	struct irde_inv_cmd *inv_addr;
-> +	u32 tail;
-> +
-> +	guard(raw_spinlock_irqsave)(&rqueue->lock);
-> +
-> +	while (invalid_queue_is_full(rqueue->node, &tail))
-> +		cpu_relax();
-> +
-> +	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
-> +	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
-> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
-> +
-> +	wmb();
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.15
 
-Undocumented memory barrier.
+for you to fetch changes up to 17ba839c3c6c95562f329340e67da432309dd0d4:
 
-> +
-> +	iocsr_write32(tail, LOONGARCH_IOCSR_REDIRECT_CQT);
-> +}
-> +
-> +static void smp_call_invalid_enqueue(void *arg)
-> +{
-> +	struct smp_invalid_arg *s_arg = (struct smp_invalid_arg *)arg;
-> +
-> +	invalid_enqueue(s_arg->queue, s_arg->cmd);
-> +}
-> +
-> +static void irde_invlid_entry_node(struct redirect_item *item)
-> +{
-> +	struct redirect_queue *rqueue;
-> +	struct smp_invalid_arg arg;
-> +	struct irde_inv_cmd cmd;
-> +	volatile u64 raddr = 0;
-> +	int node = item->table->node, cpu;
-> +
-> +	rqueue = &(irde_descs[node].inv_queue);
-> +	cmd.cmd_info = 0;
-> +	cmd.index.type = INVALID_INDEX;
-> +	cmd.index.need_notice = 1;
-> +	cmd.index.index = item->index;
-> +	cmd.notice_addr = (u64)(__pa(&raddr));
-> +
-> +	if (cpu_to_node(smp_processor_id()) == node)
-> +		invalid_enqueue(rqueue, &cmd);
-> +	else {
+  LoongArch: Update Loongson-3 default config file (2025-03-30 16:31:16 +0800)
 
-if () lacks brackets
+----------------------------------------------------------------
+LoongArch changes for v6.15
 
-> +		for_each_cpu(cpu, cpumask_of_node(node)) {
-> +			if (cpu_online(cpu))
-> +				break;
-> +		}
-> +		arg.queue = rqueue;
-> +		arg.cmd = &cmd;
-> +		smp_call_function_single(cpu, smp_call_invalid_enqueue, &arg, 0);
-> +	}
-> +
-> +	while (!raddr)
-> +		cpu_relax();
-> +
-> +}
+1, Add jump table support for objtool;
+2, Always select HAVE_VIRT_CPU_ACCOUNTING_GEN;
+3, Enable UBSAN (Undefined Behavior Sanitizer);
+4, Increase MAX_IO_PICS up to 8;
+5, Increase ARCH_DMA_MINALIGN up to 16;
+6, Fix and improve BPF JIT;
+7, Fix and improve vDSO implementation;
+8, Update the default config file;
+9, Some bug fixes and other small changes.
 
+Note: There is conflicts in arch/loongarch/Kconfig and rust/Makefile,
+but can be simply fixed by adjusting context as Stephen Rothwell done
+in linux-next.
 
-> +static int redirect_table_free(struct redirect_item *item)
-> +{
-> +	struct redirect_table *ird_table;
-> +	struct redirect_entry *entry;
-> +	unsigned long flags;
-> +
-> +	ird_table = item->table;
-> +
-> +	entry = item->entry;
-> +	memset(entry, 0, sizeof(struct redirect_entry));
-> +
-> +	raw_spin_lock_irqsave(&ird_table->lock, flags);
-> +	bitmap_release_region(ird_table->bitmap, item->index, 0);
-> +	raw_spin_unlock_irqrestore(&ird_table->lock, flags);
+----------------------------------------------------------------
+Bibo Mao (1):
+      LoongArch: Always select HAVE_VIRT_CPU_ACCOUNTING_GEN
 
-	scoped_guard(raw_spinlock_irqsave, &ird_table->lock)
-		bitmap_release_region(ird_table->bitmap, item->index, 0);
+Hengqi Chen (3):
+      LoongArch: BPF: Fix off-by-one error in build_prologue()
+      LoongArch: BPF: Use move_addr() for BPF_PSEUDO_FUNC
+      LoongArch: BPF: Don't override subprog's return value
 
-> +static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
-> +{
-> +	struct redirect_item *item = data->chip_data;
-> +	struct avecintc_data *adata;
-> +	int ret;
-> +
-> +	ret = irq_chip_set_affinity_parent(data, dest, force);
-> +	if (ret == IRQ_SET_MASK_OK_DONE)
-> +		return IRQ_SET_MASK_OK;
+Huacai Chen (4):
+      Merge Merge tag 'objtool-core-2025-03-22' into loongarch-next
+      LoongArch: Increase MAX_IO_PICS up to 8
+      LoongArch: Increase ARCH_DMA_MINALIGN up to 16
+      LoongArch: Update Loongson-3 default config file
 
-Again bracket rules. Also what is this return value translation about?
+Miaoqian Lin (1):
+      LoongArch: Fix device node refcount leak in fdt_cpu_clk_init()
 
-> +	else if (ret) {
-> +		pr_err("IRDE:set_affinity error %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	adata = irq_data_get_avec_data(data);
-> +
-> +	redirect_domain_prepare_entry(item, adata);
-> +
-> +	irde_invlid_entry_node(item);
+WANG Rui (1):
+      rust: Fix enabling Rust and building with GCC for LoongArch
 
-This cannot work when irde_invlid_entry_node() goes into the SMP
-function call path, because smp_call_function_single() cannot be invoked
-with interrupts disabled.
+Xi Ruoyao (2):
+      LoongArch: vDSO: Remove --hash-style=sysv
+      LoongArch: vDSO: Make use of the t8 register for vgetrandom-chacha
 
-> +
-> +static void redirect_free_resources(struct irq_domain *domain,
-> +						unsigned int virq, unsigned int nr_irqs)
+Yuli Wang (2):
+      LoongArch: Enable UBSAN (Undefined Behavior Sanitizer)
+      LoongArch: Rework the arch_kgdb_breakpoint() implementation
 
-Please align the arguments as documented.
+谢致邦 (XIE Zhibang) (1):
+      LoongArch: Fix help text of CMDLINE_EXTEND in Kconfig
 
-> +{
-> +	struct irq_data *irq_data;
-> +	struct redirect_item *item;
-> +
+ arch/loongarch/Kconfig                     |  7 ++++---
+ arch/loongarch/configs/loongson3_defconfig | 11 ++++++++++-
+ arch/loongarch/include/asm/cache.h         |  2 ++
+ arch/loongarch/include/asm/irq.h           |  2 +-
+ arch/loongarch/kernel/env.c                |  2 ++
+ arch/loongarch/kernel/kgdb.c               |  5 +++--
+ arch/loongarch/net/bpf_jit.c               | 12 ++++++++++--
+ arch/loongarch/net/bpf_jit.h               |  5 +++++
+ arch/loongarch/vdso/Makefile               |  3 +--
+ arch/loongarch/vdso/vgetrandom-chacha.S    | 13 +++----------
+ rust/Makefile                              |  4 +++-
+ 11 files changed, 44 insertions(+), 22 deletions(-)
 
-Please move the variables into the scope where they are used
-
-> +	for (int i = 0; i < nr_irqs; i++) {
-> +		irq_data = irq_domain_get_irq_data(domain, virq  + i);
-> +		if (irq_data && irq_data->chip_data) {
-> +			item = irq_data->chip_data;
-> +			redirect_table_free(item);
-> +			kfree(item);
-> +		}
-> +	}
-> +}
-> +
-> +static int redirect_alloc(struct irq_domain *domain,
-> +					unsigned int virq, unsigned int nr_irqs,
-> +					 void *arg)
-
-More random coding style
-
-> +{
-> +	struct redirect_table *ird_table;
-> +	struct avecintc_data *avec_data;
-> +	struct irq_data *irq_data;
-> +	int ret, i, node;
-> +
-> +#ifdef CONFIG_NUMA
-> +	node = ((msi_alloc_info_t *)arg)->desc->dev->numa_node;
-
-Bah.
-
-> +#else
-> +	node = 0;
-> +#endif
-
-        msi_alloc_info_t *info = arg;
-
-        node = dev_to_node(info->desc->dev);
-
-> +static int redirect_table_init(int node)
-> +{
-> +	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
-> +	struct page *pages;
-> +	unsigned long *bitmap;
-
-Use proper reverse fir tree ordering
-
-Thanks,
-
-        tglx
