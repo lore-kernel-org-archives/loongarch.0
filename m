@@ -1,43 +1,38 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 405031898F8
-	for <loongarch@lists.linux.dev>; Thu,  3 Apr 2025 02:47:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9215618DB20
+	for <loongarch@lists.linux.dev>; Thu,  3 Apr 2025 09:33:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743648435; cv=none; b=QSw8fGd0L11D4dsTZPZysAZtN7hb1/Fxhs7SgKHuoCnWxRzxHtUYKIRlD1fwc/aJo8xJsRVZOT/r5+GVUnTBR/NihNaCbquQpqPep/ce9ouWBi4aom5sApCxXPApMOiAltBDLqojQf1wCfsctL8HR8vpIrDG6iL+EThq6bXxNCg=
+	t=1743672805; cv=none; b=Na60kKf/cT82smpemQ8eN5+Iwj8WhP9GyHh2vSpgd4aumoxWLjs5vnL/NCfVYg03H4LLnAwJ1RptpdgLf3Po6vznKtNRYvNlMExv4oSqFgZY7N2Yz2Lh/FJG1qJ7BBknXJNxSMSXE3yN+ydcGQWzQl+yJ2D5nXxKS7kYEi4VYxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743648435; c=relaxed/simple;
-	bh=S3q9bb4U9e2oivwjcyGVae6pXFc0/ArY9TSeWTFYhXI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S16gHslzSLB7Qzmzr/JBQY9Vr7LZi8mfbM8BedqriV1FeXvTmd8vErFuEFJWHxGsQXbl/JjuiqHhlbCycJIr5urwNWRVEsG1FYg5Ua8YvWvI9GszbsacLoQkd6shD9Y1D4wepurtSerf12IujmoOK1o5VPMr0tNwjJoGY7QSqic=
+	s=arc-20240116; t=1743672805; c=relaxed/simple;
+	bh=ub5dIR0MadGwEmMkBhscZrATERyfT0UYkW0XODW7hYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qsV7fgvZ1T2bzgbvSs2ZLvCzIlqcNhHrFZ6MtVMOMNRXZch8awd6R95MjhsJjLkTpvHL6e9Yfuom7wDoRWorEdUdxdg+f0H2ki+zXwDtzmjdNMKlrnnvL/55ifcGIoMZPbriNXLkusPqWajrf9YMPqyy6GcY8vTEHU6wmFLCTVA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.180])
-	by gateway (Coremail) with SMTP id _____8AxWXGl9u1nb8evAA--.31090S3;
-	Thu, 03 Apr 2025 10:47:01 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.180])
-	by front1 (Coremail) with SMTP id qMiowMCx7xua9u1ndyJtAA--.61678S3;
-	Thu, 03 Apr 2025 10:46:52 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v7 6/6] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
-Date: Thu,  3 Apr 2025 10:47:50 +0800
-Message-ID: <20250403024750.4448-2-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250403024750.4448-1-zhaoqunqin@loongson.cn>
-References: <20250403024750.4448-1-zhaoqunqin@loongson.cn>
+Received: from loongson.cn (unknown [223.64.68.198])
+	by gateway (Coremail) with SMTP id _____8BxjazbVe5naBawAA--.64335S3;
+	Thu, 03 Apr 2025 17:33:16 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.198])
+	by front1 (Coremail) with SMTP id qMiowMCxKcTWVe5nSIBtAA--.29648S2;
+	Thu, 03 Apr 2025 17:33:13 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Qihang Gao <gaoqihang@loongson.cn>,
+	Juxin Gao <gaojuxin@loongson.cn>
+Subject: [PATCH] LoongArch: Preserve firmware configuration when desired
+Date: Thu,  3 Apr 2025 17:32:57 +0800
+Message-ID: <20250403093257.1059912-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -45,52 +40,73 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx7xua9u1ndyJtAA--.61678S3
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GFyftFyrAF48Jr1rCw1xJFc_yoW3Crc_Ca
-	y7t3yxXr1kGFn2934FvF97Aw4YvrWrJ3Wxu3WUtw1fX34Utr98trnFyF48K3W3CrW5CFZx
-	WayxGFn5Ar1avosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbSAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_
-	ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jVeHDUUUUU=
+X-CM-TRANSID:qMiowMCxKcTWVe5nSIBtAA--.29648S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7AF17JF18AF17ur4DtFW7ZFc_yoW8AF47pF
+	W3Zw1UGFW8Gr15GrZay3yrXFs09FZYkrWYqa13ZrZrAwsFvw10vryDA34qvFy5Can5Ka18
+	ZFZIyr1UGF4DA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8RuWPUUUUU==
 
-Changes to Loongson TPM driver would be best reviewed by the Loongson
-crypto driver maintainers.
+If we must preserve the firmware resource assignments, claim the existing
+resources rather than reassigning everything.
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+According to PCI Firmware Specification: if ACPI DSM#5 function returns
+0, the OS must retain the resource allocation for PCI in the firmware; if
+ACPI DSM#5 function returns 1, the OS can ignore the resource allocation
+for PCI and reallocate it.
+
+Signed-off-by: Qihang Gao <gaoqihang@loongson.cn>
+Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
-v7: Added tag from Jarkko and Huacai
-v6: "tpm_lsse.c" -> "tpm_loongson"
-v4-v5: None
+ arch/loongarch/pci/acpi.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 814205642..16fcd35ff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13606,6 +13606,7 @@ LOONGSON CRYPTO DRIVER
- M:	Qunqin Zhao <zhaoqunqin@loongson.com>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
-+F:	drivers/char/tpm/tpm_loongson.c
- F:	drivers/crypto/loongson/
+diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
+index 1da4dc46df43..50c9016641a4 100644
+--- a/arch/loongarch/pci/acpi.c
++++ b/arch/loongarch/pci/acpi.c
+@@ -194,6 +194,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+ {
+ 	struct pci_bus *bus;
+ 	struct pci_root_info *info;
++	struct pci_host_bridge *host;
+ 	struct acpi_pci_root_ops *root_ops;
+ 	int domain = root->segment;
+ 	int busnum = root->secondary.start;
+@@ -237,8 +238,17 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+ 			return NULL;
+ 		}
  
- LOONGSON-2 APB DMA DRIVER
+-		pci_bus_size_bridges(bus);
+-		pci_bus_assign_resources(bus);
++		/* If we must preserve the resource configuration, claim now */
++		host = pci_find_host_bridge(bus);
++		if (host->preserve_config)
++			pci_bus_claim_resources(bus);
++
++		/*
++		 * Assign whatever was left unassigned. If we didn't claim above,
++		 * this will reassign everything.
++		 */
++		pci_assign_unassigned_root_bus_resources(bus);
++
+ 		list_for_each_entry(child, &bus->children, node)
+ 			pcie_bus_configure_settings(child);
+ 	}
 -- 
-2.45.2
+2.47.1
 
