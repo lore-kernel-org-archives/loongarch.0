@@ -1,85 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4241F4CB1;
-	Thu,  3 Apr 2025 14:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEA624E019
+	for <loongarch@lists.linux.dev>; Thu,  3 Apr 2025 15:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691077; cv=none; b=MMvClMvddA4nyigViMTzfSRdoEWyucm9sJcseKT5IhFjdpXWeFeUKAnPbAl33QJaYRviQVHsQjBsrslOW9+xDf4qZOA5qlnNa/1qNxtsg63rI4hZxNpjpKrULC5V/v0DhrWZscmRwW0nu5+IJKZUGkAw4Kd27NfG4arjDfG8r1s=
+	t=1743695336; cv=none; b=m8V1D4pXLnGWxATrBzHgHMjuD3EWV5YKuquO4EaeDnG6AGd3jy6GewgMUFvbFi6+ivFMWnQArbr1Cnmb2wfSj0iWDybJT8XDRLtsNgVlIOrjyNq3rjlwoCIhfMi8zV/KijetmXB3ZGl+3WB+KCahjusw49x5Qz+PiicHPjSRfzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691077; c=relaxed/simple;
-	bh=HwJlTt/e0qaK+PhaHQ1s/8UlFlBGWC9KoWIgqNb5+0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hsjsBb/D6nJE9VdSP5gngo8W7jG2Xozxfv+8x7sJxgXtW08PeKEi7Eocb9o0HlTRtXgP/fLX2yCA/CT376ITBO/dlAbyiA6JHbzjdd9xqvLiwOF3EFMVkOhMgl6GsZTsCqyyAU9s7p4aPwl5opWYOoAB8iuJ2NCBik2VQiNomsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7fnG9L6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743695336; c=relaxed/simple;
+	bh=IyhGAuZ1M1UhhKEFOifJmLUL71CeOYd1aWvREsqk1fw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pIVx31GUeOw0MXeeIjt/2cLtNHGPKnArkGAdZOmQJUzvwVVN7K8B1z10P6fA8pz5MAZCEkuyMFgpBv2mhr+zkAy1s8rrJYicSs5szwjM6i3aGb9FhYIDwZor8VOeC3htCzrgTM6elfUwOmU7Ca6jVEM9zzfbzHwLURnKUcl5fn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KmbGUXIt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a6Zsce6/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7fnG9L6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146E1C4CEE3;
-	Thu,  3 Apr 2025 14:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743691077;
-	bh=HwJlTt/e0qaK+PhaHQ1s/8UlFlBGWC9KoWIgqNb5+0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f7fnG9L61AcTg5asIweNwtN59M2R1LZjVkrqxDDvY8s8Iudgdv2CnDs8j8NRJA0LH
-	 GnWBRapes85/eDUZbAf1jgMs0kgMPgIT6yGz+Yg54xkzXJrkr5IMMCPxj9Kryirlw5
-	 JLXn8dj/z6cZwsHECZCsDGvrveEd9oWnQOj3nrq6+ad+mxUQ4FaOa/+Ae0lOdwwWqR
-	 1YSnMjWhSfcD+mXJ0nGzq8y1VwDzjrynHIBptYzndo4G5LPn7tEaL1TnRvz5SiEO69
-	 dRi+M0PYq6+RTNyxPONilRMt++JeAXrLgW60m7/r549GgjlCDRVxMuV+2HaP8VCvJ9
-	 hRsPcxKhX6ETg==
-Date: Thu, 3 Apr 2025 07:37:54 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>, 
-	Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev, 
-	Andrew Morton <akpm@linux-foundation.org>, Linux Memory Management List <linux-mm@kvack.org>, 
-	Alessandro Carminati <acarmina@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
- warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
- reg2[24]=-2-24
-Message-ID: <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
-References: <202504011011.jyZ6NtXx-lkp@intel.com>
- <Z+ttzRArSBMqfABz@rli9-mobl>
- <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
- <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KmbGUXIt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a6Zsce6/"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743695333;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TRXuTnqZuKLmYdUAaHIN/9JYCVB2WRD59cR8duNwERU=;
+	b=KmbGUXIt6TR6J9JwRySB41nKyT3fdlCZ8DDENXdWgMXx594YGivph479pg3SrqtKtP4vbL
+	DCCur0zQ2IWVnMo6jAanbeTDBqGXVrl8csnrOHHrLCivXMkhjM435zWQUg6OzHJAgHagTI
+	iWmc9eMKING/LNwkCQLrSC1y79fc7hRxzF4RNUaIVeurO48wukJb1KFw66BwJIqZh2840g
+	f2H6+7x+Ly9THiszqgFT6YgQRcvrr19Xq8Rz3Jzsig34+zmkmX46qjk8yqtZw5LIzsSGK5
+	0SIym8IJktR/AamUdi51Rmsk4d//duNQdSlIvRAR504V4KfcOb17gUSDM0D1uA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743695333;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TRXuTnqZuKLmYdUAaHIN/9JYCVB2WRD59cR8duNwERU=;
+	b=a6Zsce6/qaIAFwe6G7iZDWlz3d+fhgGModIJ7SK1sFYPXsjp2O8W1mENU0x7LgTQtS+8my
+	P9+ZU6Z9i5d/a6CA==
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Xuefeng Li
+ <lixuefeng@loongson.cn>, Huacai Chen <chenhuacai@gmail.com>, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ stable@vger.kernel.org, Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: Re: [PATCH] irqchip/loongson-liointc: Support to set
+ IRQ_TYPE_EDGE_BOTH
+In-Reply-To: <20250402092500.514305-1-chenhuacai@loongson.cn>
+References: <20250402092500.514305-1-chenhuacai@loongson.cn>
+Date: Thu, 03 Apr 2025 17:48:52 +0200
+Message-ID: <87jz81uty3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
+Content-Type: text/plain
 
-On Thu, Apr 03, 2025 at 05:35:51PM +0800, Tiezhu Yang wrote:
-> On 04/02/2025 03:45 AM, Josh Poimboeuf wrote:
-> > On Tue, Apr 01, 2025 at 12:38:37PM +0800, Philip Li wrote:
-> > > On Tue, Apr 01, 2025 at 10:44:57AM +0800, kernel test robot wrote:
-> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> > > > head:   405e2241def89c88f008dcb899eb5b6d4be8b43c
-> > > > commit: 9016dad4dca4bbe61c48ffd5a273cad980caa0d1 [12681/13861] loongarch: add support for suppressing warning backtraces
-> > > > config: loongarch-randconfig-001-20250401 (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/config)
-> > > > compiler: loongarch64-linux-gcc (GCC) 14.2.0
-> > > > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/reproduce)
-> > > > 
-> > > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > > > the same patch/commit), kindly add following tags
-> > > > | Reported-by: kernel test robot <lkp@intel.com>
-> > > > | Closes: https://lore.kernel.org/oe-kbuild-all/202504011011.jyZ6NtXx-lkp@intel.com/
-> > > > 
-> > > > All warnings (new ones prefixed by >>):
-> > > > 
-> > > > > > drivers/i2c/i2c-core-base.o: warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
-> > 
-> > Tiezhu, this looks like a loongarch GCC bug with asm goto, or am I
-> > confused?  See analysis below.
-> 
-> This is related with GCC optimization "-fshrink-wrap" which is default y
-> on LoongArch, use "-fno-shrink-wrap" can avoid such issues, like this:
+On Wed, Apr 02 2025 at 17:25, Huacai Chen wrote:
+> Some peripheral subsystems request IRQ_TYPE_EDGE_BOTH interrupt type and
+> report request failures on LIOINTC. To avoid such failures we support to
+> set IRQ_TYPE_EDGE_BOTH type on LIOINTC, by setting LIOINTC_REG_INTC_EDGE
+> to true and keep LIOINTC_REG_INTC_POL as is.
 
-As I showed, it looks like an actual runtime bug, not an objtool false
-positive.  Disabling it only for CONFIG_OBJTOOLonly wouldn't fix that.
+That's broken because it will either trigger on the rising or the
+falling edge depending on the setting of LIOINTC_REG_INTC_POL.
 
--- 
-Josh
+But it won't trigger on both. So no, you cannot claim that this fixes
+anything.
+
+Thanks,
+
+        tglx
