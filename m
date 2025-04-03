@@ -1,131 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBB21E5B8B;
-	Thu,  3 Apr 2025 09:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0ED2505DA
+	for <loongarch@lists.linux.dev>; Thu,  3 Apr 2025 14:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743673238; cv=none; b=BVhCIKc1rLz/UNAq+GUky7+RudSW4B6WvXnp8+Vo8PxwYwFdxIgv4pkHOu31sqAfeRJPOrMJMJOXz/vGmn0Zhm4Yvi3lUPFPXfgnwae4wKhdHapz9o3NOvPTYqZgQcJwZXiWc/nMGAk6ni7yMDiRnlGSExKwpThf4oAlaONYg9Y=
+	t=1743689492; cv=none; b=IQmc0kYot6aaXw7A7SYTFgvmJXxHHjnPoHSfM/EXCyJJ86SRMM0CYVE7Bib1M0dtPhlczdpj3n5pZWzh5iS4PtmsP/CAR9YidQh8yP1afXzlFuW/eOqpCZZxTAr4RX0sLSYnZxQxHKYFcJxOzzpv0zzmpcVviExWOrspVjewSKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743673238; c=relaxed/simple;
-	bh=WzsalunK3uz/JcGIaDbLEIdrDSctOaLsK5Ua8a0x9Ps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GEbukLSIYRR/y6ZTaC3GFqEh+6gT9pNs0XgIRYAcQB7SnCnen22QRtD8H2S3/JuJpcePSBwk747oi13mWG/D1RuJderfIvD2u1mhvYch/MJs4jEySMK54lLNBgvwHdlZTtf+vjU+qsW/1pYn46kKMZ5+5rmZgzTZt2s0mDH5h2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q6M8iGIu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743689492; c=relaxed/simple;
+	bh=RGHJTQze7kvfvQj1ObUvTp1kIBQZdW9W32EHMDx/fp0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c56Y9ATrSkT+MLPuv4x4GsTTdTicSo9k3jVe8ufpJQIAU4fxD/72Sa4VCstEdx3IRPN5BpWlgV6mERcfmDN/6dBbZ3YruUsIiWcLmRtiYllrproqDqAGQAfL6V7DeXdfvfW7tkap6g5s3u1cHQJpctkf7FJY2zToAyr2i0YvNbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WkL9Yvd1; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q6M8iGIu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3704C4AF09;
-	Thu,  3 Apr 2025 09:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743673238;
-	bh=WzsalunK3uz/JcGIaDbLEIdrDSctOaLsK5Ua8a0x9Ps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=q6M8iGIuclQIqDpFQvkWn6+p6swUx58RhUw26K5cu6DQ8XqS9Sc3/0ptj0BnoLJgq
-	 jJcaLdngyMEUJgL1EGhDvHrmE1zws2uuxrj1svkOm7Tm1E898ZyIIBLQbb9T8NCNgU
-	 ns0XIXVG59P3AhJkBjV5tJI+Rhr9BJN8Yy+bO/yK6IoR5QF2buwGQieaZy1u2snhl6
-	 OcPWLdxbegGNntYpUKwrG119HtR2KI8YJvKbIuWIQUSWike+LIZPOu1SJoDW/Vubrz
-	 H4/KV1jCEnM7pHCCT8EPyY5LJRu6jHayW7bNkd8uwRX/uwvWBhtnT+Hx1BSJ6vxg3e
-	 yVPLDRwODk5Vw==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so1138997a12.1;
-        Thu, 03 Apr 2025 02:40:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVqR0alPGG7EwPuemv6+XFovYk9esCrWRinLe+mMdnfddR7N7Jk5uFO1SKTire7ZThKtoskS1qnlxnCP5SNJw==@lists.linux.dev, AJvYcCWdJ9Doof3bckXG5SeHNfcVJ21CG1SFhAa4heUSTbUw2heqWdk7vx2E1IA0rcpOXJzLgTPdxHX/4LY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzBje4fyjohBIuoG7qPvKcNYjeuWdppq6lmtYSqcsjEb1sj1GHN
-	VRYiZG8wjqWYLNVo+v3Wo5XSdPkgPeJfSWdGslWi05ocIwwTb5RKlmINRk0r9gEUb8egYlMMbn4
-	m4Zd912aiozohEkxZWo6wIh54T7c=
-X-Google-Smtp-Source: AGHT+IFiZrIG0pUE+pKViMjastRqGOMtAgm0YIRyI2nqCEZthyUO6iyQFwq7VOCErChZU3oXuptwZeufQHUTQyxnbc8=
-X-Received: by 2002:a17:906:6a14:b0:ac6:b731:965c with SMTP id
- a640c23a62f3a-ac7bc0dc604mr157905766b.23.1743673236541; Thu, 03 Apr 2025
- 02:40:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WkL9Yvd1"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-391324ef4a0so129556f8f.2
+        for <loongarch@lists.linux.dev>; Thu, 03 Apr 2025 07:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743689488; x=1744294288; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K0VfW05t/iqaQhnmWEi7FoyTUAy7cc09x7Pm7VnpG3Y=;
+        b=WkL9Yvd1oyaU/I5KOmTbQm+GjBe+Iwfd/whWAV6T8R3l4pdqNsCTzEhhPp0QOly09x
+         mx7GKcHC4WrtYVNcuF06uVhOmyZBLBWpeinYWjjoGHIPoOwOolxUOUww89RsqssY0/V0
+         g1uHczW91bAhaoaVn+XuHp7FcHBlMs3sEi1yBF2Bz8kdbwnH0E/ggGBGbXKx9ixhPYq8
+         IZYcygttyhaVnuX/YVFPxdX/PIb4MqELNtkhpWSrW6AYbmbR4sKZjHWu/RK706zbN1po
+         fB+fuxSWBfvdzZh+vx7TBmNaGVjMDHq+rvtv3gqTo5H72veeUeCQkZHQmPrri+r4jElH
+         mBKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743689488; x=1744294288;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K0VfW05t/iqaQhnmWEi7FoyTUAy7cc09x7Pm7VnpG3Y=;
+        b=oUg2i7plWRUMyfNs91dswMKjM6Sea5Jwe8In+/fu+JiXOCWzULrSw5fdIL+rsJhW4m
+         wilswh2L4Fs2zS7rUi0Rd8jRJEMtYTWvl0USV0z5SLpkolMXzf9is4s3McKmEMWX/rPj
+         DFbhcEyBdbXZPMecusSymgzFMQfvTI/bC4jCCnnjeYl8uOoEOWfq3XeceJizkiAf6rDv
+         GMm19c8mbLvdLqKy39TA9TihAAAQ77NbQ/sAH01STyRX9Ejqz3e9VLiZ3rYXzdsyjAwK
+         GMq1rGaJMXgaJzMnmsmN83sjcfIPaoavR8bsF+W4RMFbmjGA4Dsl2h9abhkS2ryAD1DH
+         cbrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjc3RjclsqeXo3DBZZ1ygaTWSbNPJAUp2ay8kv7WyJ8SSLhEOANqPZVxZAD5nY1zsUaOU6tCUwkh0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzYXlqziA71FQ7acDGx0hFik//rHge5A9i910017sHO46nHc+ar
+	UQV6B+Zm7bk92N6ab83Ph7o4gkb8seEyj/nQ6UjjZtwh0NxksCWkGtH9j4zAJxs=
+X-Gm-Gg: ASbGncsnJDFNXVemAoRqordbhUbchCud24yEx2NnnGRK9S4JKMFrA1y2Rj8uSsZxP6j
+	IUjyO3IwNrF7wlPoEBgWtBTyio4X+PbPOD40VpzWaRdeDyeWwjTknfmiM6tsoCkEPv7nT2iBAMH
+	0iJAsQ+CBwbqEye9PLrEzXpVlycvPUvAq+TpW4vgqMGj9KMfIwecWIijl5YnFIyYmtDSil+deFz
+	g7g7ekvIIMTTR1Hq0rCKHmAUEAOjNXmL9lPXqVK5OUkn8tRgGZ7knB79lOeXiLs1o02bHQgZtuY
+	kwwKDVQBHJz3AZKGmNbdIITlzBYolAvsnQ9Y5UW3BYccogPprhcmmvNm6LEKpSic2tyLRPOvxs0
+	OIhEJIisJLyLqwLGFeUQL7b9H9nxJCkx/1zY=
+X-Google-Smtp-Source: AGHT+IHiffo8Q7QbwNeKM3hUk+/mFfPZfaoRh6iLXZTeYovOPnPhwX5QouFrxPFyA5XS+S3AtKDdew==
+X-Received: by 2002:a05:6000:4582:b0:39c:1401:6ef5 with SMTP id ffacd0b85a97d-39c14016ff2mr4608687f8f.2.1743689488137;
+        Thu, 03 Apr 2025 07:11:28 -0700 (PDT)
+Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301b6778sm1853301f8f.46.2025.04.03.07.11.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 07:11:27 -0700 (PDT)
+From: Petr Tesarik <ptesarik@suse.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Guo Weikang <guoweikang.kernel@gmail.com>
+Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH] LoongArch: Remove a bogus reference to ZONE_DMA
+Date: Thu,  3 Apr 2025 16:11:25 +0200
+Message-ID: <20250403141125.271047-1-ptesarik@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <202504011011.jyZ6NtXx-lkp@intel.com> <Z+ttzRArSBMqfABz@rli9-mobl>
- <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6> <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
-In-Reply-To: <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 3 Apr 2025 17:40:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5iwFS15GU-_aPJSK8FzkxL-=eDJa+TW48QW1PC6RQxrQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JpU-0wXbARvlP1nSGCgqzPoN15JbefJ2EY_AQMyYHkgfkmRAxFJLZ4_HAw
-Message-ID: <CAAhV-H5iwFS15GU-_aPJSK8FzkxL-=eDJa+TW48QW1PC6RQxrQ@mail.gmail.com>
-Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
- warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Philip Li <philip.li@intel.com>, 
-	kernel test robot <lkp@intel.com>, Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>, Alessandro Carminati <acarmina@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 3, 2025 at 5:36=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
- wrote:
->
-> On 04/02/2025 03:45 AM, Josh Poimboeuf wrote:
-> > On Tue, Apr 01, 2025 at 12:38:37PM +0800, Philip Li wrote:
-> >> On Tue, Apr 01, 2025 at 10:44:57AM +0800, kernel test robot wrote:
-> >>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-ne=
-xt.git master
-> >>> head:   405e2241def89c88f008dcb899eb5b6d4be8b43c
-> >>> commit: 9016dad4dca4bbe61c48ffd5a273cad980caa0d1 [12681/13861] loonga=
-rch: add support for suppressing warning backtraces
-> >>> config: loongarch-randconfig-001-20250401 (https://download.01.org/0d=
-ay-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/config)
-> >>> compiler: loongarch64-linux-gcc (GCC) 14.2.0
-> >>> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/a=
-rchive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/reproduce)
-> >>>
-> >>> If you fix the issue in a separate patch/commit (i.e. not just a new =
-version of
-> >>> the same patch/commit), kindly add following tags
-> >>> | Reported-by: kernel test robot <lkp@intel.com>
-> >>> | Closes: https://lore.kernel.org/oe-kbuild-all/202504011011.jyZ6NtXx=
--lkp@intel.com/
-> >>>
-> >>> All warnings (new ones prefixed by >>):
-> >>>
-> >>>>> drivers/i2c/i2c-core-base.o: warning: objtool: __i2c_transfer+0x120=
-: stack state mismatch: reg1[24]=3D-1+0 reg2[24]=3D-2-24
-> >
-> > Tiezhu, this looks like a loongarch GCC bug with asm goto, or am I
-> > confused?  See analysis below.
->
-> This is related with GCC optimization "-fshrink-wrap" which is default y
-> on LoongArch, use "-fno-shrink-wrap" can avoid such issues, like this:
->
-> ---8<---
->
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index 0304eabbe606..2d5529322357 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -106,6 +106,7 @@ KBUILD_CFLAGS                       +=3D
-> -mannotate-tablejump
->   else
->   KBUILD_CFLAGS                  +=3D -fno-jump-tables # keep
-> compatibility with older compilers
->   endif
-> +KBUILD_CFLAGS                  +=3D -fno-shrink-wrap
->   endif
->
->   KBUILD_RUSTFLAGS               +=3D
-> --target=3Dloongarch64-unknown-none-softfloat -Ccode-model=3Dsmall
->
-> If you are OK with this change, I will send a formal patch after the
-> merge window.
-Is this the same problem solved by the commit below?
+Remove dead code. LoongArch does not have a DMA memory zone. The
+architecture does not even define MAX_DMA_PFN.
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=
-=3Dobjtool/urgent&id=3D7c977393b8277ed319e92e4b598b26598c9d30c0
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ arch/loongarch/mm/init.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Huacai
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index ca5aa5f46a9f..7fab370efa74 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -65,9 +65,6 @@ void __init paging_init(void)
+ {
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES];
+ 
+-#ifdef CONFIG_ZONE_DMA
+-	max_zone_pfns[ZONE_DMA] = MAX_DMA_PFN;
+-#endif
+ #ifdef CONFIG_ZONE_DMA32
+ 	max_zone_pfns[ZONE_DMA32] = MAX_DMA32_PFN;
+ #endif
+-- 
+2.48.1
 
->
-> Thanks,
-> Tiezhu
->
->
