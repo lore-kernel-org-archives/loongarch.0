@@ -1,73 +1,270 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEA624E019
-	for <loongarch@lists.linux.dev>; Thu,  3 Apr 2025 15:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743695336; cv=none; b=m8V1D4pXLnGWxATrBzHgHMjuD3EWV5YKuquO4EaeDnG6AGd3jy6GewgMUFvbFi6+ivFMWnQArbr1Cnmb2wfSj0iWDybJT8XDRLtsNgVlIOrjyNq3rjlwoCIhfMi8zV/KijetmXB3ZGl+3WB+KCahjusw49x5Qz+PiicHPjSRfzs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743695336; c=relaxed/simple;
-	bh=IyhGAuZ1M1UhhKEFOifJmLUL71CeOYd1aWvREsqk1fw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pIVx31GUeOw0MXeeIjt/2cLtNHGPKnArkGAdZOmQJUzvwVVN7K8B1z10P6fA8pz5MAZCEkuyMFgpBv2mhr+zkAy1s8rrJYicSs5szwjM6i3aGb9FhYIDwZor8VOeC3htCzrgTM6elfUwOmU7Ca6jVEM9zzfbzHwLURnKUcl5fn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KmbGUXIt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a6Zsce6/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4859019EED2;
+	Thu,  3 Apr 2025 21:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743714113; cv=fail; b=upjU4yzMtBNJ6gfUcpk9e2upNpIpG20Wl3RRU6fJ0aldLebnpQaoFf4GcAr9LV6MfEAsu7tBeaHNVgm+EiAjD+0UXo/pZy/7VomMIzjWjRmHLXNPrKVhSC+EZWur3By0g5AwL8fGx7I3ncDJDCJNUMOZ7It+sbtFlQndIPsp5MM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743714113; c=relaxed/simple;
+	bh=KUodNTW1X1mNht48GXRCp6GGy1L9c8oI58TZTNqet2M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qaHK8r1mLlJBWmyEHQUWNxNYSj5wi/QN0ICiTH48IS/QYmn2BsuVlIsyWl9Ct+c/FSMGK5TcW0DCFvgcjJG8IU1ZmkSozU/IPb9YRiJgqnuzyxpmPfZBH2oFTe9dbs8FL/e3WjnV6N0JP5B+WvmGxj75DjwnhKp1EuPMiGto6U0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QuAWdIsf; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KmbGUXIt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a6Zsce6/"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743695333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TRXuTnqZuKLmYdUAaHIN/9JYCVB2WRD59cR8duNwERU=;
-	b=KmbGUXIt6TR6J9JwRySB41nKyT3fdlCZ8DDENXdWgMXx594YGivph479pg3SrqtKtP4vbL
-	DCCur0zQ2IWVnMo6jAanbeTDBqGXVrl8csnrOHHrLCivXMkhjM435zWQUg6OzHJAgHagTI
-	iWmc9eMKING/LNwkCQLrSC1y79fc7hRxzF4RNUaIVeurO48wukJb1KFw66BwJIqZh2840g
-	f2H6+7x+Ly9THiszqgFT6YgQRcvrr19Xq8Rz3Jzsig34+zmkmX46qjk8yqtZw5LIzsSGK5
-	0SIym8IJktR/AamUdi51Rmsk4d//duNQdSlIvRAR504V4KfcOb17gUSDM0D1uA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743695333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TRXuTnqZuKLmYdUAaHIN/9JYCVB2WRD59cR8duNwERU=;
-	b=a6Zsce6/qaIAFwe6G7iZDWlz3d+fhgGModIJ7SK1sFYPXsjp2O8W1mENU0x7LgTQtS+8my
-	P9+ZU6Z9i5d/a6CA==
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Xuefeng Li
- <lixuefeng@loongson.cn>, Huacai Chen <chenhuacai@gmail.com>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
- stable@vger.kernel.org, Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: Re: [PATCH] irqchip/loongson-liointc: Support to set
- IRQ_TYPE_EDGE_BOTH
-In-Reply-To: <20250402092500.514305-1-chenhuacai@loongson.cn>
-References: <20250402092500.514305-1-chenhuacai@loongson.cn>
-Date: Thu, 03 Apr 2025 17:48:52 +0200
-Message-ID: <87jz81uty3.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QuAWdIsf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743714111; x=1775250111;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=KUodNTW1X1mNht48GXRCp6GGy1L9c8oI58TZTNqet2M=;
+  b=QuAWdIsfVjrrfwKw12TVQAtQvPno5i4MX3RP7FdmHem7up24ylLHt4v2
+   3/jKYD/72Q6sruZ5qaHRCkPT5aW0ZYsBjalVfVNxueKeL1S+Zrwx/+wJi
+   hNX+9THxn7ru9TLV+NQZnTuunGBW3Q3hdev1Z+2Vq9CN3XuYJppHXyxmx
+   BkfR5rLT0CqA76pQz4qeMsvn/pV9aJXkZRLVSwYBr36wqPodeVPYzq8oV
+   mWCG53iZ1BMVeDDHpRL2V1CnboCTVT/6xh9cs7iO9kuYFkM65sDMNodjT
+   PeFFPBxCM4wq1F462SlbGoxSWGPFigCVSniLKStOY+eiSS3lY11ywqN0X
+   A==;
+X-CSE-ConnectionGUID: IzJjtBlaRTummzUXB53Qcw==
+X-CSE-MsgGUID: QMIklwrySiGyECCNVFiSNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56132697"
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="56132697"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 14:01:50 -0700
+X-CSE-ConnectionGUID: n+0ef/BjS0GtEHzZiCVP0g==
+X-CSE-MsgGUID: UNFvUSUxS1O5RF27s3ZpYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="158112591"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 14:01:48 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 3 Apr 2025 14:01:47 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 3 Apr 2025 14:01:47 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 3 Apr 2025 14:01:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LvFbhP0IE7lQmMpt2yZXtIp0clnIfPSAlajN+/XEl2BLYYbl5CfEscsuQRYsmfstTuaikZq31MBQ3v9tSwOZma32KUGI8SgFOJzDepOpsAPIUcRrfsVYdc99l6Glc60Oih086pSGrENduBuyIdj8uADDaKJaas0SIrspdLC2Na4Jza0cTstepW6LqdETGe/1byrTWQUTze6KXn3zt5xRNAoq3ivTxNwfRxwyuaDo3fYxxr4WF+co5T/hVhDZE3GgAjD//nlqUUmVjTj/Q5059zK90ETTxHNEPZTSEp3kM9sUjTgU5mTkPS05KjxtCB9pOvlt0OdFPoFFN0s8xDxwFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pIeW1Ux1GJ8FuGZdyMwpQoZHQERuQrn5ILkOOZL0pcw=;
+ b=aPPVAV1Q+hb9ZRpCY3+o0NH3gKUxnNDFuvEtLIz8v1HeDGeylUTWWRNLPs8XQGGupyuynoJDa0nCVhg2iD6Xa0X/Jc0ByqRs/qwub9oQBUNvN29gtB5pEXj0spXIMZyFmr4b44QTPtHSvV7Ap1cpyiy297zkP1/C92c3wIuS9hKvxsfvGrcTwYbjcWoMpNVoP2FJnynv6pe+0N9/4xAcBKJ+0s2TN/8jD8jkyp51XS9z6Ax35ISPCzo6gWqsdSnhvPosjw3DssLJKXTSM9rfVsSijmkj1U2HOgNC5Nm1r85MGoq5l27qup/tr6B+5auPi0FoUnCGSpxiHRMw11oX6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by MW3PR11MB4601.namprd11.prod.outlook.com (2603:10b6:303:59::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 3 Apr
+ 2025 21:01:28 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8583.041; Thu, 3 Apr 2025
+ 21:01:28 +0000
+Date: Thu, 3 Apr 2025 14:01:24 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: kernel test robot <lkp@intel.com>, Yuquan Wang
+	<wangyuquan1236@phytium.com.cn>, <Jonathan.Cameron@huawei.com>,
+	<dan.j.williams@intel.com>, <rppt@kernel.org>, <rafael@kernel.org>,
+	<lenb@kernel.org>, <akpm@linux-foundation.org>, <alison.schofield@intel.com>,
+	<rrichter@amd.com>, <bfaccini@nvidia.com>, <haibo1.xu@intel.com>,
+	<david@redhat.com>
+CC: <oe-kbuild-all@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<chenbaozi@phytium.com.cn>, Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+	<linux-cxl@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Message-ID: <67eef72411bec_464ec29434@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
+ <202503282026.QNaOAK79-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <202503282026.QNaOAK79-lkp@intel.com>
+X-ClientProxiedBy: MW4PR04CA0178.namprd04.prod.outlook.com
+ (2603:10b6:303:85::33) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW3PR11MB4601:EE_
+X-MS-Office365-Filtering-Correlation-Id: e78213a1-492b-4d88-d5d3-08dd72f2b3f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?higcMwvAiNU1lisWu2dyidp5BNXYavcLXB8pjZyWSiSJk19wJvzBSEyqbze+?=
+ =?us-ascii?Q?cSAX0vSLFQSRLDPj1heQOMsP1sxgOFXWiREu7YmFXNw8UDwyjVRgRIOVSpI8?=
+ =?us-ascii?Q?gPfBvdxJQvc7eqGksVuWRe/qFOrYb40+Kulhvrv4mL+wn31xzktJqtG0M9IB?=
+ =?us-ascii?Q?dZr8e6JXS/6tSZwchKZNofO6DRutIkMjVhOsQ0Jb1RtrzrPBZIwL2Ttn2AON?=
+ =?us-ascii?Q?AZEqCBu2prnWRIUKr3D+aXBqbJ8L61MFm8IreJi6rcRCvQ2VQe1dzSwGjVty?=
+ =?us-ascii?Q?YuHWU7GdJhkLRGNWT+c9JGe/MwlZno8IB15Z8A95DoUKL5tfZ+n1MTYjjUu8?=
+ =?us-ascii?Q?d8GS8k3hp08ci1Dw8/eHDPcvXF8CyDJheAnsU/BVt1OWtVrvTbM8Lp9Fktrm?=
+ =?us-ascii?Q?sLnLSBavacqOoF9/MgXrDsqMUHcJDBjAgTnz5SyCLTyTh4WJD/Zh8ItJsp5L?=
+ =?us-ascii?Q?Hdb1hplJuWyovuMmzFTh7/Ee6QPoiA+gr9Q6rPrIvHl/ikdxT1HEMqtxUpUr?=
+ =?us-ascii?Q?+LO5iZkHaYClklU6WVturpyqUlbmMX3Owl1sexJ9dcPHTzFhnuyiwVaAoq2P?=
+ =?us-ascii?Q?Rxu8rk2pO6nb8+v/OUVnl73NPyPxyLepNwFvubeOEk4ShFTqjZrST5ybORS5?=
+ =?us-ascii?Q?Ey0IwTTu6nomvFQNO3WEoVlE3L24wjNBzpG2af27iovlRQ7BYjQNCLN6S74/?=
+ =?us-ascii?Q?M7EG+C6UWzayairUYthaYeSjW6H/FoKybewah8CLBLAw7OKW45OaAbFsc+os?=
+ =?us-ascii?Q?KxYV+6zpZr2F5lgXihM85Unw4RuP9jdnlEqswW1KkA9ZGY9K9J/MVbvd7d7f?=
+ =?us-ascii?Q?T7160CsYpK5UDQIcYkjj5S5zRcyvc+ELcfVjo2+xeq/xTIyOxapJpmlJ/15C?=
+ =?us-ascii?Q?eK/BtbELwKNOS/Icib8aBbdxvD4EwmR1g5zJyzHm8m4FvyjVjMLVVcRI/FTn?=
+ =?us-ascii?Q?Fsm1KQHTpovnZ17pUv4g273j6LOiUdiAw7PbRiZ7AhlRyXP+UizhPKicZ1fD?=
+ =?us-ascii?Q?Onoqj9mwkwXY0C3U/Fxj40jZiRGfvazlueHFZ2CUZLr3xKLgzp64jn4X5UE1?=
+ =?us-ascii?Q?dCuhvbLmW1icobTXS0JQ3V5wXH2lC/KBFp7HmJ8/+H2dk2AujNjSeiHr6lfa?=
+ =?us-ascii?Q?PCP6/W4LNWkNX00X949zIfdIIn5hXOOpku2dGQMVKe4+1zLp9Lxh6qyA7Jw7?=
+ =?us-ascii?Q?AluTcvBB9YdeaHiY2mGo+Hb9rpBPaH2mgUiisxRXnaupYEL2z/Puz5FBBsq5?=
+ =?us-ascii?Q?aT+sx2hVZZrEhzW7u4eGmuk5q/FGOW6Ifrga2B3DSMQoEFceO2BouJZ5ymDn?=
+ =?us-ascii?Q?Vxupv8yXshUOBaOkTTLW8nl7jaUWa2C0uBzsAJIRxHUt8Pw2TYZI4rcKErrh?=
+ =?us-ascii?Q?wUc2De1yd4VhA3HXEV1lAqClfygM?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?X06mOzojTO3JOYOsltUcxoge3BNNdZJ5I1up5LeEChUiRc03FnZwkdWFBKsI?=
+ =?us-ascii?Q?uV3WUY/sOCdUfanIFF26C4k9AaQWif5ovJKQwNhLKdbC4Agoy7AG/m1eGL1T?=
+ =?us-ascii?Q?Ryk1Bnra5fhGUWLair5joXQKn+RudWkNXwEbZ0YSqgS63xhJi83s2Hubwmt6?=
+ =?us-ascii?Q?QZuUxbg6Ru0J31y7hko2OLlXi6IxTHgf3oA10lCG9EHErcnwHNjk+/xup+Dt?=
+ =?us-ascii?Q?sU7psE765iBpJfgZkE3W0hnbDs6ssMx+NWh07QL/lFYfUwVnL1NK1BAFzO0P?=
+ =?us-ascii?Q?TemUV+KeuEhWMNi818trvwnYFJ6iRXqjb3Rc5/v5jwXAu0tRS2YN15gYOKJu?=
+ =?us-ascii?Q?VA3CRGD3ht/wnfOx73MvNFIhEv4WeB/HlZbxgxp8IhZM2VjNfoBaMqF0FLnp?=
+ =?us-ascii?Q?faxoSEefxjROFkEQnpXvUx6hRH3YfcOANGYPGa5AbMCFkQezMRnnZ1QDerMq?=
+ =?us-ascii?Q?LH08v4xy7JSvTs+u7noZAycd77y2cl1cUfCYzFxZYFtAAdrUScmPG/lkPHpP?=
+ =?us-ascii?Q?tJs5immdbYrfUB6kKi2Aj+5vS5ut6KeJX4PHyjHLoMVKUXPjCWTC7URY59HF?=
+ =?us-ascii?Q?x+RAdRsodp4T92fyH9hI+M7zZYNS6JZjA5MOiLh75qfk/4rzyZp53p7WfutL?=
+ =?us-ascii?Q?bRlKL0T56XYgsnwHpn0iU+Wk4+HE8lSMhP4e6UaLE83zlXeysyuCWVTmhUaJ?=
+ =?us-ascii?Q?dxHoFgXiDFK4E9r/40mSGTvspLK+LeAuTAHFU7L/gMew3T7XTpwEFJWm6Olu?=
+ =?us-ascii?Q?CpRjPzVYyklIju0HUA/DCFipO1K4jp9RNCniGfWo2iZB/jQhFPgSUZTMju6t?=
+ =?us-ascii?Q?tfu0pMDMq+zeHzap12//WJy2856StcnojXH+fs+fxZPhKmu2SHjEz0kUnijo?=
+ =?us-ascii?Q?dvJGkrKhDfJfYvNmCwXUIdiIvreFhiq7xgXGMk/xGBGnjX9Bs/7wTSG0A4Qe?=
+ =?us-ascii?Q?LZISSKH/dwWgB/deOf3xwdeEf00m9N4/izh68mZjVIDt+LVmeDXIaKJHjlY0?=
+ =?us-ascii?Q?G44xhG9t/OtLjTm/4hdk0onkY4UykJ1dKej0Mk+rBf5vErns+A3YaZ/HKsdf?=
+ =?us-ascii?Q?y2/uX+5xpv+8/cW1ysl6/704u6kVam+ItBjRKL6Dsy26VPUPsFv0EBEocQ1C?=
+ =?us-ascii?Q?NuZzsa6CgABalQern9ojR9rSxXJxkvu4x/9LGLtHuOHexWZBYClvMs0fq38V?=
+ =?us-ascii?Q?k6M7UeMsHTFUSI0XvjQEscFAsKL8kKhtLZYPIoDnKBLw9pWmCyLWmpqjTEBs?=
+ =?us-ascii?Q?qYlgAzQlzdA67n46/a6t3tyGopcl0nYGcOmbu1LbUbADQkt9K3Ti6DPfKait?=
+ =?us-ascii?Q?IiGIVAhbKVTgAep63H6R6y8ZvDVTFPSkyfvKYZGnyx1D3yqmjgNnJlByAkl3?=
+ =?us-ascii?Q?N6gwG6+mUr9CfAAYqCFtOHNz1OxhEI4rr4yOCl3SIY4ogix1ODCEaYVfAn/c?=
+ =?us-ascii?Q?lB2IA1snmPAerjcJ4g7w1Lnlxz/UcicnwrF4vZXBxDlp+dwn0MyzkOdspZA8?=
+ =?us-ascii?Q?UlYaR/dwDumBRnuSJbuD3KHUJDuikZwXHL2TISnLt6yF1OoRGdGJE5hmR/Ol?=
+ =?us-ascii?Q?trHFhKcAm9nvVopu9lpvvhUDb9pWom3M59OX+xEEUd3PzVrRNVwALJbY/Kkd?=
+ =?us-ascii?Q?aw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e78213a1-492b-4d88-d5d3-08dd72f2b3f3
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 21:01:28.5229
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7Qq7o97kvbyQaG6dkFMYtYVNQ3jMFiTtmDiz6EDv/Ro46Ba26wRMQQ4ZunEytg8SrXrX/Q+7o4cDzu2G+WDhJhKULuXratGsY+ccXRLsOZE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4601
+X-OriginatorOrg: intel.com
 
-On Wed, Apr 02 2025 at 17:25, Huacai Chen wrote:
-> Some peripheral subsystems request IRQ_TYPE_EDGE_BOTH interrupt type and
-> report request failures on LIOINTC. To avoid such failures we support to
-> set IRQ_TYPE_EDGE_BOTH type on LIOINTC, by setting LIOINTC_REG_INTC_EDGE
-> to true and keep LIOINTC_REG_INTC_POL as is.
+[add loongarch folks, cc linux-cxl ]
 
-That's broken because it will either trigger on the rising or the
-falling edge depending on the setting of LIOINTC_REG_INTC_POL.
+kernel test robot wrote:
+> Hi Yuquan,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on akpm-mm/mm-everything]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Yuquan-Wang/mm-numa_memblks-introduce-numa_add_reserved_memblk/20250328-172428
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+> patch link:    https://lore.kernel.org/r/20250328092132.2695299-1-wangyuquan1236%40phytium.com.cn
+> patch subject: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+> config: loongarch-randconfig-002-20250328 (https://download.01.org/0day-ci/archive/20250328/202503282026.QNaOAK79-lkp@intel.com/config)
+> compiler: loongarch64-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250328/202503282026.QNaOAK79-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202503282026.QNaOAK79-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from include/linux/build_bug.h:5,
+>                     from include/linux/container_of.h:5,
+>                     from include/linux/list.h:5,
+>                     from include/linux/module.h:12,
+>                     from drivers/acpi/numa/srat.c:10:
+>    drivers/acpi/numa/srat.c: In function 'acpi_parse_cfmws':
+> >> drivers/acpi/numa/srat.c:461:13: error: implicit declaration of function 'numa_add_reserved_memblk' [-Wimplicit-function-declaration]
+>      461 |         if (numa_add_reserved_memblk(node, start, end) < 0) {
+>          |             ^~~~~~~~~~~~~~~~~~~~~~~~
 
-But it won't trigger on both. So no, you cannot claim that this fixes
-anything.
+So it looks like loongarch was left out of the numa_memblks conversion:
+87482708210f ("mm: introduce numa_memblks")
 
-Thanks,
+I think the update needed is something like this (untested):
 
-        tglx
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 2b8bd27a852f..cac16c827159 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -183,6 +183,7 @@ config LOONGARCH
+ 	select MODULES_USE_ELF_RELA if MODULES
+ 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+ 	select NEED_PER_CPU_PAGE_FIRST_CHUNK
++	select NUMA_MEMBLKS
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+ 	select PCI
+diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/asm/numa.h
+index b5f9de9f102e..bbf9f70bd25f 100644
+--- a/arch/loongarch/include/asm/numa.h
++++ b/arch/loongarch/include/asm/numa.h
+@@ -22,20 +22,6 @@ extern int numa_off;
+ extern s16 __cpuid_to_node[CONFIG_NR_CPUS];
+ extern nodemask_t numa_nodes_parsed __initdata;
+ 
+-struct numa_memblk {
+-	u64			start;
+-	u64			end;
+-	int			nid;
+-};
+-
+-#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
+-struct numa_meminfo {
+-	int			nr_blks;
+-	struct numa_memblk	blk[NR_NODE_MEMBLKS];
+-};
+-
+-extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+-
+ extern void __init early_numa_add_cpu(int cpuid, s16 node);
+ extern void numa_add_cpu(unsigned int cpu);
+ extern void numa_remove_cpu(unsigned int cpu);
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index 84fe7f854820..57b21082e893 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -18,6 +18,7 @@
+ #include <linux/efi.h>
+ #include <linux/irq.h>
+ #include <linux/pci.h>
++#include <linux/numa_memblks.h>
+ #include <asm/bootinfo.h>
+ #include <asm/loongson.h>
+ #include <asm/numa.h>
+
+Could someone from the loongarch side propose the fixups needed here so
+Yuquan can land this patch?
