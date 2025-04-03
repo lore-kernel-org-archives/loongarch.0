@@ -1,112 +1,115 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9215618DB20
-	for <loongarch@lists.linux.dev>; Thu,  3 Apr 2025 09:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F37DA24418E;
+	Thu,  3 Apr 2025 09:36:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743672805; cv=none; b=Na60kKf/cT82smpemQ8eN5+Iwj8WhP9GyHh2vSpgd4aumoxWLjs5vnL/NCfVYg03H4LLnAwJ1RptpdgLf3Po6vznKtNRYvNlMExv4oSqFgZY7N2Yz2Lh/FJG1qJ7BBknXJNxSMSXE3yN+ydcGQWzQl+yJ2D5nXxKS7kYEi4VYxw=
+	t=1743672972; cv=none; b=uYNZo15fqmqO0QdqWBDKUE3fakgPnBs5bHU44jo/hYPLy2yx0l6qozDWj2i2elid+h5TrVWw+pSORCvXS7Vguxm+jBr8NgypTzsXGhH5zQCma34zB/yRu8OwfhCjvFzpCpAzYN3pPmxddcC5dcLc3kJ8sb9Q5ntd1LRy5GViRTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743672805; c=relaxed/simple;
-	bh=ub5dIR0MadGwEmMkBhscZrATERyfT0UYkW0XODW7hYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qsV7fgvZ1T2bzgbvSs2ZLvCzIlqcNhHrFZ6MtVMOMNRXZch8awd6R95MjhsJjLkTpvHL6e9Yfuom7wDoRWorEdUdxdg+f0H2ki+zXwDtzmjdNMKlrnnvL/55ifcGIoMZPbriNXLkusPqWajrf9YMPqyy6GcY8vTEHU6wmFLCTVA=
+	s=arc-20240116; t=1743672972; c=relaxed/simple;
+	bh=6tKPEyRrOoKoMd0e8cKWhIb4UdWyLCd4SdxpyxMSD7A=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Ku544BnA7ZIoBpMY1iOBBPusSsDYGY1ySsS4e/DgHI2X5Vy1GgD1ujECt0I/ZF2OcAKchWlamnKgB3rBavcuQuwlWmbXC245qJckp2HyzLTlM33Vku6FGE5Hgt4X8SVjzKPKseJv6mEorwMLeF0Wwrt8ua3n0v7PzfnQLhb49A8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8BxjazbVe5naBawAA--.64335S3;
-	Thu, 03 Apr 2025 17:33:16 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowMCxKcTWVe5nSIBtAA--.29648S2;
-	Thu, 03 Apr 2025 17:33:13 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Qihang Gao <gaoqihang@loongson.cn>,
-	Juxin Gao <gaojuxin@loongson.cn>
-Subject: [PATCH] LoongArch: Preserve firmware configuration when desired
-Date: Thu,  3 Apr 2025 17:32:57 +0800
-Message-ID: <20250403093257.1059912-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxyuCFVu5nNhewAA--.31660S3;
+	Thu, 03 Apr 2025 17:36:05 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMAxj8V3Vu5n9YBtAA--.1829S3;
+	Thu, 03 Apr 2025 17:35:52 +0800 (CST)
+Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
+ warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
+ reg2[24]=-2-24
+To: Josh Poimboeuf <jpoimboe@kernel.org>, Philip Li <philip.li@intel.com>
+References: <202504011011.jyZ6NtXx-lkp@intel.com> <Z+ttzRArSBMqfABz@rli9-mobl>
+ <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
+Cc: kernel test robot <lkp@intel.com>, Guenter Roeck <linux@roeck-us.net>,
+ oe-kbuild-all@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Alessandro Carminati <acarmina@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
+Date: Thu, 3 Apr 2025 17:35:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxKcTWVe5nSIBtAA--.29648S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AF17JF18AF17ur4DtFW7ZFc_yoW8AF47pF
-	W3Zw1UGFW8Gr15GrZay3yrXFs09FZYkrWYqa13ZrZrAwsFvw10vryDA34qvFy5Can5Ka18
-	ZFZIyr1UGF4DA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+In-Reply-To: <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMAxj8V3Vu5n9YBtAA--.1829S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr15Zw4fWw1rCrWUKr13ZFc_yoW8uw4xpa
+	y3Aa1vyr48Xry0q39rtas0ga1Dtr4DGw13WFyY9ryUZF42vry3uFyIyFZ8WF9FywnrC340
+	qrWSq3Z3tF4jv3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
 	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8RuWPUUUUU==
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-If we must preserve the firmware resource assignments, claim the existing
-resources rather than reassigning everything.
+On 04/02/2025 03:45 AM, Josh Poimboeuf wrote:
+> On Tue, Apr 01, 2025 at 12:38:37PM +0800, Philip Li wrote:
+>> On Tue, Apr 01, 2025 at 10:44:57AM +0800, kernel test robot wrote:
+>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+>>> head:   405e2241def89c88f008dcb899eb5b6d4be8b43c
+>>> commit: 9016dad4dca4bbe61c48ffd5a273cad980caa0d1 [12681/13861] loongarch: add support for suppressing warning backtraces
+>>> config: loongarch-randconfig-001-20250401 (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/config)
+>>> compiler: loongarch64-linux-gcc (GCC) 14.2.0
+>>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/reproduce)
+>>>
+>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>> the same patch/commit), kindly add following tags
+>>> | Reported-by: kernel test robot <lkp@intel.com>
+>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202504011011.jyZ6NtXx-lkp@intel.com/
+>>>
+>>> All warnings (new ones prefixed by >>):
+>>>
+>>>>> drivers/i2c/i2c-core-base.o: warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
+>
+> Tiezhu, this looks like a loongarch GCC bug with asm goto, or am I
+> confused?  See analysis below.
 
-According to PCI Firmware Specification: if ACPI DSM#5 function returns
-0, the OS must retain the resource allocation for PCI in the firmware; if
-ACPI DSM#5 function returns 1, the OS can ignore the resource allocation
-for PCI and reallocate it.
+This is related with GCC optimization "-fshrink-wrap" which is default y
+on LoongArch, use "-fno-shrink-wrap" can avoid such issues, like this:
 
-Signed-off-by: Qihang Gao <gaoqihang@loongson.cn>
-Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/pci/acpi.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+---8<---
 
-diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
-index 1da4dc46df43..50c9016641a4 100644
---- a/arch/loongarch/pci/acpi.c
-+++ b/arch/loongarch/pci/acpi.c
-@@ -194,6 +194,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
- {
- 	struct pci_bus *bus;
- 	struct pci_root_info *info;
-+	struct pci_host_bridge *host;
- 	struct acpi_pci_root_ops *root_ops;
- 	int domain = root->segment;
- 	int busnum = root->secondary.start;
-@@ -237,8 +238,17 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
- 			return NULL;
- 		}
- 
--		pci_bus_size_bridges(bus);
--		pci_bus_assign_resources(bus);
-+		/* If we must preserve the resource configuration, claim now */
-+		host = pci_find_host_bridge(bus);
-+		if (host->preserve_config)
-+			pci_bus_claim_resources(bus);
-+
-+		/*
-+		 * Assign whatever was left unassigned. If we didn't claim above,
-+		 * this will reassign everything.
-+		 */
-+		pci_assign_unassigned_root_bus_resources(bus);
-+
- 		list_for_each_entry(child, &bus->children, node)
- 			pcie_bus_configure_settings(child);
- 	}
--- 
-2.47.1
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 0304eabbe606..2d5529322357 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -106,6 +106,7 @@ KBUILD_CFLAGS                       += 
+-mannotate-tablejump
+  else
+  KBUILD_CFLAGS                  += -fno-jump-tables # keep 
+compatibility with older compilers
+  endif
++KBUILD_CFLAGS                  += -fno-shrink-wrap
+  endif
+
+  KBUILD_RUSTFLAGS               += 
+--target=loongarch64-unknown-none-softfloat -Ccode-model=small
+
+If you are OK with this change, I will send a formal patch after the
+merge window.
+
+Thanks,
+Tiezhu
 
