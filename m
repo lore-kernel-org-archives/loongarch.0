@@ -1,63 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37041F1521;
-	Wed,  2 Apr 2025 20:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C3362581
+	for <loongarch@lists.linux.dev>; Thu,  3 Apr 2025 02:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743625781; cv=none; b=tGJU7ZXNnTK7TtNIN3ANCzserv7RLsG9yENaLvlqtacoEZEMhFU072AoWq70ZB4DWY03SJZnsxqWcs2V2UUPtEhgFn0A3Zb6i+KWkhEZafCVeuJJHLC0bnmdq3dKhaUNVIsk5AczoPWoUSQIM0gDmWsxWLV+ZCVEyzN0j2u4YnE=
+	t=1743648363; cv=none; b=InAn2ewelW06lxMC3JGnVrDWPxC2OukySYhvtOQ4FS3OsEzc91cahvm9LhCNtTJ4/V/ZVXuBGNGeOsM4+Y0/bjPubaNnFTWgBwR9X4iYC3bt56V0zzHT8sbMOI0QghgCZLc1BXGWVs5GHuGQj4R7gsGAmPN+i+FlJvPpotGEJ4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743625781; c=relaxed/simple;
-	bh=2xZiyApAQj6FWAXDa4C0e8IhwZeJzDAPI4MOaonkTI4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=t2Mu5nWpHA78Yy3IRICPpfrOVoal+L4et1uugjvcIvg6+xwQDCav/0cuF1GJ+raE9G1gdRrCDg8FLP5IdtzTgQQRzT15lsNQKK0Jz91hXH/WXC5AihGF8acI19OWPOaYuGlwUVSaxC0dWqEtEOocdD7N2n60ZiE1Bchg1e0q46U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aD3dbwl8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aD3dbwl8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17988C4CEDD;
-	Wed,  2 Apr 2025 20:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743625781;
-	bh=2xZiyApAQj6FWAXDa4C0e8IhwZeJzDAPI4MOaonkTI4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=aD3dbwl89hO72bt86xs4Sa2+fmcv60TxKJK9AcnTIrWeMzQZB1ChJyMuLSu/dXS7O
-	 MCjHWMemL7GWkj+wWagcRcGTt+E+aJzoYEyxF7B9Ceihfe3SfBdJDWv361uFS8DtdM
-	 hsLaU2Hwy4E9ZTUz/iiG1rz66Mtzd4lyFMVdwQBU28joDj5qmC2u74+W5GXQBNoBp3
-	 Fsg3/4dwjkGw8WF8FH44c2t6u0/6A84lZCuXBoFBua34TJ13owGC8cPboTdJ/351d8
-	 yrBPqn9YJtSkh0H/vTYNu92cvILT3m/e9LyzIbRiHc12Xweo+XmEuZtAbsLzj9z2w+
-	 sC3ZtH8nIyqpg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 341AD380665A;
-	Wed,  2 Apr 2025 20:30:19 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v6.15
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250401121945.3814892-1-chenhuacai@loongson.cn>
-References: <20250401121945.3814892-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20250401121945.3814892-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.15
-X-PR-Tracked-Commit-Id: 17ba839c3c6c95562f329340e67da432309dd0d4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1c241cba196decd73b6959e851bfb71d0a1c1767
-Message-Id: <174362581767.1664588.3464451912801210611.pr-tracker-bot@kernel.org>
-Date: Wed, 02 Apr 2025 20:30:17 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=arc-20240116; t=1743648363; c=relaxed/simple;
+	bh=wYDe+NDCryacjfJNe0gUCwkcwnMy3XpGd5T3KUopJQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BkPUFOIv2hdVuO2DT+HA3xbbhVwDHI+4sB+m01hGskHKaDYuGPpcKOyEe9pESie19tI5NE+/BHt+ii1EkRIqKlA8RxS5z1ZEZzCXo1+dds3L6P47sei15KYhlfcuHXXkUel/8UoGZZ88Tp9bfXWTGTRxfiQUmoOz232dNCa4W8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.180])
+	by gateway (Coremail) with SMTP id _____8Bxnmtf9u1nw8avAA--.30715S3;
+	Thu, 03 Apr 2025 10:45:51 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.180])
+	by front1 (Coremail) with SMTP id qMiowMBx3MRY9u1n8SFtAA--.62246S2;
+	Thu, 03 Apr 2025 10:45:44 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v7 0/6] Drivers for Loongson security engine
+Date: Thu,  3 Apr 2025 10:46:39 +0800
+Message-ID: <20250403024645.4427-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBx3MRY9u1n8SFtAA--.62246S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFW8GrWxJrWxAr1xWFW7Awc_yoW8ur4fpF
+	43C3yrCr4UJr47Crn3JFW8GFyfZa4fWr9xKay2qw15Wr9rAa48J3y3CFyUCa9rAF18JryI
+	qFZ5Cr4UCF1UuacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUUU==
 
-The pull request you sent on Tue,  1 Apr 2025 20:19:44 +0800:
+Loongson security engine supports random number generation, hash,
+symmetric encryption and asymmetric encryption. Based on these
+encryption functions, TPM2 have been implemented in it.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.15
+mfd is the baser driver, crypto and tpm are users.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1c241cba196decd73b6959e851bfb71d0a1c1767
+v7: Addressed Huacai's comments.
 
-Thank you!
+v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
 
+    crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+    ls6000se-rng.c ->loongson-rng.c
+
+    tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+
+v5: Registered "ls6000se-rng" device in mfd driver.
+v4: Please look at changelog in tpm and MAINTAINERS. No changes to mfd
+    and crypto.
+v3: Put the updates to the MAINTAINERS in a separate patch.
+v2: Removed misc driver. Added tpm driver.
+
+
+Qunqin Zhao (6):
+  mfd: Add support for Loongson Security Module
+  MAINTAINERS: Add entry for Loongson Security Module driver
+  crypto: loongson - add Loongson RNG driver support
+  MAINTAINERS: Add entry for Loongson RNG driver
+  tpm: Add a driver for Loongson TPM device
+  MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+
+ MAINTAINERS                            |  14 +
+ drivers/char/tpm/Kconfig               |   9 +
+ drivers/char/tpm/Makefile              |   1 +
+ drivers/char/tpm/tpm_loongson.c        | 103 +++++++
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |   6 +
+ drivers/crypto/loongson/Makefile       |   2 +
+ drivers/crypto/loongson/loongson-rng.c | 190 +++++++++++++
+ drivers/mfd/Kconfig                    |  10 +
+ drivers/mfd/Makefile                   |   2 +
+ drivers/mfd/loongson-se.c              | 374 +++++++++++++++++++++++++
+ include/linux/mfd/loongson-se.h        |  75 +++++
+ 13 files changed, 788 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_loongson.c
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/loongson-rng.c
+ create mode 100644 drivers/mfd/loongson-se.c
+ create mode 100644 include/linux/mfd/loongson-se.h
+
+
+base-commit: b904243247d1acb0ebbd4978feb639441dc51fc1
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.45.2
+
