@@ -1,339 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559E9188CCA
-	for <loongarch@lists.linux.dev>; Sun,  6 Apr 2025 09:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD04B2F36
+	for <loongarch@lists.linux.dev>; Sun,  6 Apr 2025 09:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743930327; cv=none; b=R7/6E6AX53SuEouGZWKt+g1b2uy95qKUDBngecYeSYlOswbw1NSkwVRHDWYb31ik34u8R+ZulHqiPQowJUVmagxmfXESu9zgxbnNaOxSKeBtTQa3gSQHQEFobLhvqPDsejjhkvcaOGJWCb9AYoq7V97gZzbi0uN2pj5/lXKza3c=
+	t=1743932816; cv=none; b=U2tLyCZ4zlirNRJh5PPeL1two6Lkv9oRPiAg5ZcReDZdpf661dBKmI6jGtrTZ20gquMlVV1sGcvwXWWK/RpA1gJ58WIIDHeXxLOjLqVASLQ5s66LFpbtBQ0VAT3CH2sp6YuV3hEIFbePljfAg2OHANfGJ6x0YGYg2pME4yacc1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743930327; c=relaxed/simple;
-	bh=8HppInsbIo8ANnv0KzVr7mCU0OkTEyE/7eBNjt7qig8=;
+	s=arc-20240116; t=1743932816; c=relaxed/simple;
+	bh=MzU98WVndeQLX8uu0mheW8QCkJcKR2vzd4DXiU4pRMc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bI+MNdaPw2MWkECiOgpcZ/V+cmjF7RacrQjH3fKslbhCraqq+rsP72ZWpfveGg5iRKRjHXH3VMQNdji6mRY+KtJt6YncvUbohMUeeNcU8Pb2Dhp0Wm9JE+UwIYcnAPQ7Yh5qZ71ukrFb8T2zuBEPGmVGlX1aV9qT+Xx6m1KWueg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwOrasoD; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=mVneeX0sN/iKuYUwK75KJx5BjhUpJRtl2rg07jVxblwbGHutIz1oSPWVCg/AeR2XZ1J9InBs/PZAs/hX6/DERTd9UTpLWIiFNt6l5Svtxe+M/WD2WjfV22jB/fZ1ab77tiKB0BVpumDdWfgJszHoOA4LssDplzY/LAP+pOPzV2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSpm8CA5; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwOrasoD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF54CC4CEEC
-	for <loongarch@lists.linux.dev>; Sun,  6 Apr 2025 09:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743930326;
-	bh=8HppInsbIo8ANnv0KzVr7mCU0OkTEyE/7eBNjt7qig8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IwOrasoDeDzS3yUBfr8g94+5gZoiu+5AgF6rMrv7SteF7Bc8nm13Y7vRz3FvVjRf2
-	 T12ORznnepbij0kgIrpYgWtUJsBMGicgVNNZ9LKjXeav94jZ9oQXVEpfI5zX1EhFtD
-	 GpjiaDs0q/V1Il+bKxV0TH9E0j27Mz75wlFtjdeLGzfHXZZ3DkdvwXjFHOukKFtgy6
-	 lmrfugunHjzDBzTyORKeQroDL0gRpCwAZrdPMvVeXtteVwzf9ODeL/tvUTIgqIL/t1
-	 k6bDIJ3pzuMmDYykjX84dtvqtMI0dLdyTTzFtQBKjdx2Qco8cTpPYoaXRsXLP5pohA
-	 0vUcscdLjHqfQ==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so295398966b.2
-        for <loongarch@lists.linux.dev>; Sun, 06 Apr 2025 02:05:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUnD04stL9j1emnD55wAJtKcqhsT8sOW23NKBrky7T24jbiQ9NYCKpY+rs5KaUD7YKRsocCeDM9nMw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwZYbLGquj8wBkWV0jyqhl1iZ6+nk/WhbOrtrV8sEA64p8FUf8u
-	mXGA8D87kkq4Cku5w+3cUY0sG15xlpHsI7i/sNsQoChA4VtVh0ZTaxvmJaS20mmm/v+mZP1gO7X
-	v1Sa9TXQv57tQfnulzs8oHh1JuXM=
-X-Google-Smtp-Source: AGHT+IGnNuCrgMy9P3d6NcUjmzNvarGtmG4DsB2kEka2+JK8o2USJQLfNhexkE7Myk6TQhY8RdwX6T2Run352Tj2b/I=
-X-Received: by 2002:a17:907:7207:b0:ac7:95b0:d0fb with SMTP id
- a640c23a62f3a-ac7d18ccf44mr582095566b.34.1743930325304; Sun, 06 Apr 2025
- 02:05:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSpm8CA5"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so444371166b.0
+        for <loongarch@lists.linux.dev>; Sun, 06 Apr 2025 02:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743932813; x=1744537613; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dQ5KcV6b2T7SBZC70etncna4BQfvzILzKvR1JLokorg=;
+        b=aSpm8CA5r4ab1pTQVxR4dQkop0F52+UaSF1+wfIkmzzuawGVM8FQ769TZ9LOAplDYs
+         CuW4HZN2JG9Zb387/Efykpo6RQqg5hBQlqW4TzpxZ41pcpLjnE66rTas/tj0LRHidVL4
+         6aO8DFXQNm/Qrw9qah+iob/bEz0Fp3CtM8SymfGK38YLwY4SWn7SI4wgoGV27NzUjmF+
+         gbs9/uqpEJUkkP15nzE3pK4aaQoHgEJ/ourLpZ/Hg0dVkeL2q8hn4q+O1sg2fVjzpdCx
+         GrTuBMqXo5A/wdq1xeb6L4BO85cpJFc6lyqdxjaKqpbzlxuiLL/SWWYbg+7Cv1a+iA6s
+         4O6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743932813; x=1744537613;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dQ5KcV6b2T7SBZC70etncna4BQfvzILzKvR1JLokorg=;
+        b=nwyTT7cVTBkT5vXu2r615+xlg4gn5VEOIZpfpEcTS/kSDO+/o22dPCE+HnpCW7baAm
+         SljINa8+HER+f8ubq7+YayVzf1I2MLh3rmL8weU3gy1YAqNduLYNLKpFkQKMZ1qVz1lt
+         tWLlLTgcZodAzUgM50Is/jKL3GDUQ4RWNFi4ENJ4+RU8peFI+5Chap24/72BJHSQ3Few
+         75sAbE195tX3cIjJ9opIlNefnxDW1kEMBU6H9IM0ln3o6vkBoG05n0w4wd3RptRY4L6M
+         YD/LGoc2xYZpRo7jRsOtIoaY32dUBWNqTn1cOjnS9PlOHtNx6oN9Ay/JgN8sbu4/9ujI
+         U82Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVJK1Q0+AxFrE8wPKp3iLekI7oeCqtfUpzBrtqHaSbL59BlUOaVS11xo0OL5altDvPI4+dQUffNF+I=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxgMDWun2BmCmcupU6nfanUCxT0IK5Rb7aF1hp65nNjJw61QuKh
+	p56WtIoqw/IevFNu3gjK4uxSuPSX6p30U/A1p6PsmqjcGcN8cdNvZUZgykhVnheekiiDsrDbLhz
+	dY3/+s4H2T3jzOxkYL1Hx9nSq0iY=
+X-Gm-Gg: ASbGncv3TdvgAhbFe6aUXlujC/ZFS+g8jH1xVmErE5IIHBYpV6XgLF8wdsiUOqtjHBq
+	IN1jmqGiJrE+R2WhSQc2mIiJnh2jGR0vzaaBctdXQcz04Ayt0txMWX8/hPO+cNWC5EHBxg7dxZy
+	BlBFJhb5/AT8qpztmWJ902rHTFf31h
+X-Google-Smtp-Source: AGHT+IE+eHm4l67vCbDvHozk2ou/wNvkCdLxpPfZsBIEdy3dp+Diuf52eSKNj4usIndB9jkEHkYtCvUenVFfy7BkPwY=
+X-Received: by 2002:a17:907:988:b0:ac7:31a4:d4e9 with SMTP id
+ a640c23a62f3a-ac7d16bc089mr941079866b.4.1743932812879; Sun, 06 Apr 2025
+ 02:46:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250403024645.4427-1-zhaoqunqin@loongson.cn> <20250403024645.4427-4-zhaoqunqin@loongson.cn>
-In-Reply-To: <20250403024645.4427-4-zhaoqunqin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 6 Apr 2025 17:05:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H45vYe3Brgy=0_+ciTjcJ-+x3zwoeY-ym20o5PGGxvJCw@mail.gmail.com>
-X-Gm-Features: ATxdqUE_15XGhijQDn39K9ebew3z8rFKKC1Cu8MxG-GMMAfETFR9hD85GjMWF6E
-Message-ID: <CAAhV-H45vYe3Brgy=0_+ciTjcJ-+x3zwoeY-ym20o5PGGxvJCw@mail.gmail.com>
-Subject: Re: [PATCH v7 3/6] crypto: loongson - add Loongson RNG driver support
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
-	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de, 
-	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+References: <20250402092500.514305-1-chenhuacai@loongson.cn> <87jz81uty3.ffs@tglx>
+In-Reply-To: <87jz81uty3.ffs@tglx>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Sun, 6 Apr 2025 17:46:45 +0800
+X-Gm-Features: ATxdqUEX8mja4RttrRUq-FhWIoVMgkwqM61JDoRBejrnMEqRJw0aI0NuPgefasI
+Message-ID: <CAAhV-H5sO0x1EkWks5QZ8ah-stB7JbDk6eFFeeonXD6JT9fHAw@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/loongson-liointc: Support to set IRQ_TYPE_EDGE_BOTH
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Qunqin,
+Hi, Thomas,
 
-On Thu, Apr 3, 2025 at 10:46=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.cn=
+On Thu, Apr 3, 2025 at 11:48=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
 > wrote:
 >
-> Loongson's Random Number Generator is found inside Loongson security
-> engine.
+> On Wed, Apr 02 2025 at 17:25, Huacai Chen wrote:
+> > Some peripheral subsystems request IRQ_TYPE_EDGE_BOTH interrupt type an=
+d
+> > report request failures on LIOINTC. To avoid such failures we support t=
+o
+> > set IRQ_TYPE_EDGE_BOTH type on LIOINTC, by setting LIOINTC_REG_INTC_EDG=
+E
+> > to true and keep LIOINTC_REG_INTC_POL as is.
 >
-> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
-> v7: Change the lsrng_ prefix to loongson_rng_
-> v6: Replace all "ls6000se" with "loongson"
-> v2-v5: None
->
->  drivers/crypto/Kconfig                 |   1 +
->  drivers/crypto/Makefile                |   1 +
->  drivers/crypto/loongson/Kconfig        |   6 +
->  drivers/crypto/loongson/Makefile       |   2 +
->  drivers/crypto/loongson/loongson-rng.c | 190 +++++++++++++++++++++++++
->  5 files changed, 200 insertions(+)
->  create mode 100644 drivers/crypto/loongson/Kconfig
->  create mode 100644 drivers/crypto/loongson/Makefile
->  create mode 100644 drivers/crypto/loongson/loongson-rng.c
->
-> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-> index 19ab145f9..567ed81b0 100644
-> --- a/drivers/crypto/Kconfig
-> +++ b/drivers/crypto/Kconfig
-> @@ -855,5 +855,6 @@ config CRYPTO_DEV_SA2UL
->
->  source "drivers/crypto/aspeed/Kconfig"
->  source "drivers/crypto/starfive/Kconfig"
-> +source "drivers/crypto/loongson/Kconfig"
->
->  endif # CRYPTO_HW
-> diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
-> index fef18ffdb..643c3710b 100644
-> --- a/drivers/crypto/Makefile
-> +++ b/drivers/crypto/Makefile
-> @@ -50,3 +50,4 @@ obj-y +=3D hisilicon/
->  obj-$(CONFIG_CRYPTO_DEV_AMLOGIC_GXL) +=3D amlogic/
->  obj-y +=3D intel/
->  obj-y +=3D starfive/
-> +obj-y +=3D loongson/
-> diff --git a/drivers/crypto/loongson/Kconfig b/drivers/crypto/loongson/Kc=
-onfig
-> new file mode 100644
-> index 000000000..4368701ad
-> --- /dev/null
-> +++ b/drivers/crypto/loongson/Kconfig
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +config CRYPTO_DEV_LOONGSON_RNG
-> +        tristate "Support for Loongson RNG Driver"
-> +        depends on MFD_LOONGSON_SE
-> +        help
-> +          Support for Loongson RNG Driver.
-> diff --git a/drivers/crypto/loongson/Makefile b/drivers/crypto/loongson/M=
-akefile
-> new file mode 100644
-> index 000000000..b8b013c86
-> --- /dev/null
-> +++ b/drivers/crypto/loongson/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_CRYPTO_DEV_LOONGSON_RNG)  +=3D loongson-rng.o
-> diff --git a/drivers/crypto/loongson/loongson-rng.c b/drivers/crypto/loon=
-gson/loongson-rng.c
-> new file mode 100644
-> index 000000000..307014992
-> --- /dev/null
-> +++ b/drivers/crypto/loongson/loongson-rng.c
-> @@ -0,0 +1,190 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2019 HiSilicon Limited. */
-> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
-> +
-> +#include <linux/crypto.h>
-> +#include <linux/err.h>
-> +#include <linux/hw_random.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/list.h>
-> +#include <linux/mfd/loongson-se.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/random.h>
-> +#include <crypto/internal/rng.h>
-> +
-> +struct loongson_rng_list {
-> +       struct mutex lock;
-> +       struct list_head list;
-> +       int is_init;
-> +};
-> +
-> +struct lsrng {
-> +       bool is_used;
-> +       struct se_channel *se_ch;
-> +       struct list_head list;
-> +       struct completion rng_completion;
-> +};
-Since there are other comments that should be addressed, you can
-rename lsrng to loongson_rng to keep consistency.
+> That's broken because it will either trigger on the rising or the
+> falling edge depending on the setting of LIOINTC_REG_INTC_POL.
+Yes, this patch does exactly this.
 
-Huacai
+>
+> But it won't trigger on both. So no, you cannot claim that this fixes
+> anything.
+Yes, it won't trigger on both (not perfect), but it allows drivers
+that request "both" work (better than fail to request), and there are
+other irqchip drivers that do similar things.
 
-> +
-> +struct loongson_rng_ctx {
-> +       struct lsrng *rng;
-> +};
-> +
-> +struct rng_msg {
-> +       u32 cmd;
-> +       union {
-> +               u32 len;
-> +               u32 ret;
-> +       } u;
-> +       u32 resved;
-> +       u32 out_off;
-> +       u32 pad[4];
-> +};
-> +
-> +static atomic_t rng_active_devs;
-> +static struct loongson_rng_list rng_devices;
-> +
-> +static void loongson_rng_complete(struct se_channel *ch)
-> +{
-> +       struct lsrng *rng =3D (struct lsrng *)ch->priv;
-> +
-> +       complete(&rng->rng_completion);
-> +}
-> +
-> +static int loongson_rng_generate(struct crypto_rng *tfm, const u8 *src,
-> +                         unsigned int slen, u8 *dstn, unsigned int dlen)
-> +{
-> +       struct loongson_rng_ctx *ctx =3D crypto_rng_ctx(tfm);
-> +       struct lsrng *rng =3D ctx->rng;
-> +       struct rng_msg *msg;
-> +       int err, len;
-> +
-> +       do {
-> +               len =3D min(dlen, PAGE_SIZE);
-> +               msg =3D rng->se_ch->smsg;
-> +               msg->u.len =3D len;
-> +               err =3D se_send_ch_requeset(rng->se_ch);
-> +               if (err)
-> +                       return err;
-> +
-> +               wait_for_completion_interruptible(&rng->rng_completion);
-> +
-> +               msg =3D rng->se_ch->rmsg;
-> +               if (msg->u.ret)
-> +                       return -EFAULT;
-> +
-> +               memcpy(dstn, rng->se_ch->data_buffer, len);
-> +               dlen -=3D len;
-> +               dstn +=3D len;
-> +       } while (dlen > 0);
-> +
-> +       return 0;
-> +}
-> +
-> +static int loongson_rng_init(struct crypto_tfm *tfm)
-> +{
-> +       struct loongson_rng_ctx *ctx =3D crypto_tfm_ctx(tfm);
-> +       struct lsrng *rng;
-> +       int ret =3D -EBUSY;
-> +
-> +       mutex_lock(&rng_devices.lock);
-> +       list_for_each_entry(rng, &rng_devices.list, list) {
-> +               if (!rng->is_used) {
-> +                       rng->is_used =3D true;
-> +                       ctx->rng =3D rng;
-> +                       ret =3D 0;
-> +                       break;
-> +               }
-> +       }
-> +       mutex_unlock(&rng_devices.lock);
-> +
-> +       return ret;
-> +}
-> +
-> +static void loongson_rng_exit(struct crypto_tfm *tfm)
-> +{
-> +       struct loongson_rng_ctx *ctx =3D crypto_tfm_ctx(tfm);
-> +
-> +       mutex_lock(&rng_devices.lock);
-> +       ctx->rng->is_used =3D false;
-> +       mutex_unlock(&rng_devices.lock);
-> +}
-> +
-> +static int no_seed(struct crypto_rng *tfm, const u8 *seed, unsigned int =
-slen)
-> +{
-> +       return 0;
-> +}
-> +
-> +static struct rng_alg loongson_rng_alg =3D {
-> +       .generate =3D loongson_rng_generate,
-> +       .seed =3D no_seed,
-> +       .base =3D {
-> +               .cra_name =3D "stdrng",
-> +               .cra_driver_name =3D "loongson_stdrng",
-> +               .cra_priority =3D 300,
-> +               .cra_ctxsize =3D sizeof(struct loongson_rng_ctx),
-> +               .cra_module =3D THIS_MODULE,
-> +               .cra_init =3D loongson_rng_init,
-> +               .cra_exit =3D loongson_rng_exit,
-> +       },
-> +};
-> +
-> +static void loongson_rng_add_to_list(struct lsrng *rng)
-> +{
-> +       mutex_lock(&rng_devices.lock);
-> +       list_add_tail(&rng->list, &rng_devices.list);
-> +       mutex_unlock(&rng_devices.lock);
-> +}
-> +
-> +static int loongson_rng_probe(struct platform_device *pdev)
-> +{
-> +       struct rng_msg *msg;
-> +       struct lsrng *rng;
-> +       int ret;
-> +
-> +       rng =3D devm_kzalloc(&pdev->dev, sizeof(*rng), GFP_KERNEL);
-> +       if (!rng)
-> +               return -ENOMEM;
-> +
-> +       init_completion(&rng->rng_completion);
-> +       rng->se_ch =3D se_init_ch(pdev->dev.parent, SE_CH_RNG, PAGE_SIZE,
-> +                               sizeof(struct rng_msg) * 2, rng, loongson=
-_rng_complete);
-> +       if (!rng->se_ch)
-> +               return -ENODEV;
-> +       msg =3D rng->se_ch->smsg;
-> +       msg->cmd =3D SE_CMD_RNG;
-> +       msg->out_off =3D rng->se_ch->off;
-> +
-> +       if (!rng_devices.is_init) {
-> +               ret =3D crypto_register_rng(&loongson_rng_alg);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "failed to register crypto(%d=
-)\n", ret);
-> +                       return ret;
-> +               }
-> +               INIT_LIST_HEAD(&rng_devices.list);
-> +               mutex_init(&rng_devices.lock);
-> +               rng_devices.is_init =3D true;
-> +       }
-> +
-> +       loongson_rng_add_to_list(rng);
-> +       atomic_inc(&rng_active_devs);
-> +
-> +       return 0;
-> +}
-> +
-> +static struct platform_driver loongson_rng_driver =3D {
-> +       .probe          =3D loongson_rng_probe,
-> +       .driver         =3D {
-> +               .name   =3D "loongson-rng",
-> +       },
-> +};
-> +module_platform_driver(loongson_rng_driver);
-> +
-> +MODULE_ALIAS("platform:loongson-rng");
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Yinggang Gu <guyinggang@loongson.cn>");
-> +MODULE_AUTHOR("Qunqin Zhao <zhaoqunqin@loongson.cn>");
-> +MODULE_DESCRIPTION("Loongson random number generator driver");
-> --
-> 2.45.2
+For example,
+
+drivers/irqchip/irq-mips-gic.c
+        case IRQ_TYPE_EDGE_BOTH:
+                pol =3D 0; /* Doesn't matter */
+                trig =3D GIC_TRIG_EDGE;
+                dual =3D GIC_DUAL_DUAL;
+                break;
+
+drivers/irqchip/irq-qcom-mpm.c
+        if (type & IRQ_TYPE_EDGE_BOTH)
+                type =3D IRQ_TYPE_EDGE_RISING;
+
+ Huacai
+
 >
+> Thanks,
 >
+>         tglx
