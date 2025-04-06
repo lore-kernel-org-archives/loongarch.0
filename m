@@ -1,520 +1,339 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E947422EE5;
-	Sat,  5 Apr 2025 17:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559E9188CCA
+	for <loongarch@lists.linux.dev>; Sun,  6 Apr 2025 09:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743873735; cv=none; b=iRJ126a43c7Kcv1XZpccbPzSBPVijPNLvsAIRMNoDN4qdwUvyMFjHyILJwjtiE8DlSvL9C/jajTn6qLx2XueXJm1PH7bQdUB8HZJAEgvFAwVzDE7i0bdNYKrkwX4ZV+0KdBw+ksUKy2TdMEn/ELj9XV9juEBYDuS01Z04+EEeOE=
+	t=1743930327; cv=none; b=R7/6E6AX53SuEouGZWKt+g1b2uy95qKUDBngecYeSYlOswbw1NSkwVRHDWYb31ik34u8R+ZulHqiPQowJUVmagxmfXESu9zgxbnNaOxSKeBtTQa3gSQHQEFobLhvqPDsejjhkvcaOGJWCb9AYoq7V97gZzbi0uN2pj5/lXKza3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743873735; c=relaxed/simple;
-	bh=3L6rACBhlQe09RbyplsUDn19Nacmp2yKAiUszBKSwZg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=A5y0iD8OccmJj9PdtLH4H50RmRf0y9E/Cdh7aZy9oPFZ7NHTrKvD3G+P3kSUIbBBIEBU4KPSakriOG8FI+sIILKUqGgzbzIJh79CR0eO7TNpE35bi5fnz6+EJmIkBXAwK1vSbNXKPHsapOYBNnQhpYNBRDUCpIhsAka1GGdhDQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=ZuEUTPov; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1743930327; c=relaxed/simple;
+	bh=8HppInsbIo8ANnv0KzVr7mCU0OkTEyE/7eBNjt7qig8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bI+MNdaPw2MWkECiOgpcZ/V+cmjF7RacrQjH3fKslbhCraqq+rsP72ZWpfveGg5iRKRjHXH3VMQNdji6mRY+KtJt6YncvUbohMUeeNcU8Pb2Dhp0Wm9JE+UwIYcnAPQ7Yh5qZ71ukrFb8T2zuBEPGmVGlX1aV9qT+Xx6m1KWueg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwOrasoD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="ZuEUTPov"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=b3Kx3WcHaCshZaunVEkbII7fyp2B54EZnHGN6XDAJSE=; t=1743873731; x=1744478531; 
-	b=ZuEUTPov9ILeQi5mPSt02qOFNcXB/NRngVzIfiV9xSfKIh5N9aLR/zEk6rDW85d3mU33BYM38S4
-	64PqMrKES82Pj1LyYWTYDmrRVptXt5KIoadWO6UhHdgZzIbhLXPwzR63n5KsBu3DZSWmm8x1FBEC+
-	Dc31+/CQHJkxpmpmDH8QKctH5aOQKp8vkKV4CH1HwwAbj6SfXt2k1Z8WL7CJHCTjkYTf3zHC9Z1U3
-	Iauz9zOhaEUAmQC4vyhjEwqs1VwKBX2MHyjK1xQpdUUQGoGCO8W68KugoezKHDvfEJGw8/MRb1lIS
-	0R/pV1i5duvs0/W/94yNLfvVn3M3ztezPXZA==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1u17DS-00000003woY-1k4y; Sat, 05 Apr 2025 19:21:58 +0200
-Received: from dynamic-002-242-014-214.2.242.pool.telefonica.de ([2.242.14.214] helo=suse-laptop.fritz.box)
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1u17DS-00000000biA-0QUK; Sat, 05 Apr 2025 19:21:58 +0200
-Message-ID: <4209b9816551367f8e5670cc5a08e139f0f2c215.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v2 1/1] mm: pgtable: fix pte_swp_exclusive
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Magnus Lindholm <linmag7@gmail.com>, richard.henderson@linaro.org, 
-	mattst88@gmail.com, ink@unseen.parts, kees@kernel.org, arnd@arndb.de, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org
-Cc: chris@zankel.net, dinguyen@kernel.org, jcmvbkbc@gmail.com, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-um@lists.infradead.org, loongarch@lists.linux.dev, monstr@monstr.eu, 
-	sparclinux@vger.kernel.org, x86@kernel.org
-Date: Sat, 05 Apr 2025 19:21:56 +0200
-In-Reply-To: <20250218175735.19882-2-linmag7@gmail.com>
-References: <20250218175735.19882-1-linmag7@gmail.com>
-	 <20250218175735.19882-2-linmag7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwOrasoD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF54CC4CEEC
+	for <loongarch@lists.linux.dev>; Sun,  6 Apr 2025 09:05:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743930326;
+	bh=8HppInsbIo8ANnv0KzVr7mCU0OkTEyE/7eBNjt7qig8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IwOrasoDeDzS3yUBfr8g94+5gZoiu+5AgF6rMrv7SteF7Bc8nm13Y7vRz3FvVjRf2
+	 T12ORznnepbij0kgIrpYgWtUJsBMGicgVNNZ9LKjXeav94jZ9oQXVEpfI5zX1EhFtD
+	 GpjiaDs0q/V1Il+bKxV0TH9E0j27Mz75wlFtjdeLGzfHXZZ3DkdvwXjFHOukKFtgy6
+	 lmrfugunHjzDBzTyORKeQroDL0gRpCwAZrdPMvVeXtteVwzf9ODeL/tvUTIgqIL/t1
+	 k6bDIJ3pzuMmDYykjX84dtvqtMI0dLdyTTzFtQBKjdx2Qco8cTpPYoaXRsXLP5pohA
+	 0vUcscdLjHqfQ==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so295398966b.2
+        for <loongarch@lists.linux.dev>; Sun, 06 Apr 2025 02:05:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUnD04stL9j1emnD55wAJtKcqhsT8sOW23NKBrky7T24jbiQ9NYCKpY+rs5KaUD7YKRsocCeDM9nMw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwZYbLGquj8wBkWV0jyqhl1iZ6+nk/WhbOrtrV8sEA64p8FUf8u
+	mXGA8D87kkq4Cku5w+3cUY0sG15xlpHsI7i/sNsQoChA4VtVh0ZTaxvmJaS20mmm/v+mZP1gO7X
+	v1Sa9TXQv57tQfnulzs8oHh1JuXM=
+X-Google-Smtp-Source: AGHT+IGnNuCrgMy9P3d6NcUjmzNvarGtmG4DsB2kEka2+JK8o2USJQLfNhexkE7Myk6TQhY8RdwX6T2Run352Tj2b/I=
+X-Received: by 2002:a17:907:7207:b0:ac7:95b0:d0fb with SMTP id
+ a640c23a62f3a-ac7d18ccf44mr582095566b.34.1743930325304; Sun, 06 Apr 2025
+ 02:05:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+References: <20250403024645.4427-1-zhaoqunqin@loongson.cn> <20250403024645.4427-4-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250403024645.4427-4-zhaoqunqin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 6 Apr 2025 17:05:17 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H45vYe3Brgy=0_+ciTjcJ-+x3zwoeY-ym20o5PGGxvJCw@mail.gmail.com>
+X-Gm-Features: ATxdqUE_15XGhijQDn39K9ebew3z8rFKKC1Cu8MxG-GMMAfETFR9hD85GjMWF6E
+Message-ID: <CAAhV-H45vYe3Brgy=0_+ciTjcJ-+x3zwoeY-ym20o5PGGxvJCw@mail.gmail.com>
+Subject: Re: [PATCH v7 3/6] crypto: loongson - add Loongson RNG driver support
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
+	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de, 
+	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Magnus,
+Hi, Qunqin,
 
-On Tue, 2025-02-18 at 18:55 +0100, Magnus Lindholm wrote:
-> Make pte_swp_exclusive return bool instead of int. This will better refle=
-ct
-> how pte_swp_exclusive is actually used in the code. This fixes swap/swapo=
-ff
-> problems on Alpha due pte_swp_exclusive not returning correct values when
-> _PAGE_SWP_EXCLUSIVE bit resides in upper 32-bits of PTE (like on alpha).
-
-Minor nitpick:
-
-"when _PAGE_SWP_EXCLUSIVE" =3D> "when the _PAGE_SWP_EXCLUSIVE"
-
->=20
-> Signed-off-by: Magnus Lindholm <linmag7@gmail.com>
+On Thu, Apr 3, 2025 at 10:46=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
+>
+> Loongson's Random Number Generator is found inside Loongson security
+> engine.
+>
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->  arch/alpha/include/asm/pgtable.h             | 2 +-
->  arch/arc/include/asm/pgtable-bits-arcv2.h    | 2 +-
->  arch/arm/include/asm/pgtable.h               | 2 +-
->  arch/arm64/include/asm/pgtable.h             | 2 +-
->  arch/csky/include/asm/pgtable.h              | 2 +-
->  arch/hexagon/include/asm/pgtable.h           | 2 +-
->  arch/loongarch/include/asm/pgtable.h         | 2 +-
->  arch/m68k/include/asm/mcf_pgtable.h          | 2 +-
->  arch/m68k/include/asm/motorola_pgtable.h     | 2 +-
->  arch/m68k/include/asm/sun3_pgtable.h         | 2 +-
->  arch/microblaze/include/asm/pgtable.h        | 2 +-
->  arch/mips/include/asm/pgtable.h              | 4 ++--
->  arch/nios2/include/asm/pgtable.h             | 2 +-
->  arch/openrisc/include/asm/pgtable.h          | 2 +-
->  arch/parisc/include/asm/pgtable.h            | 2 +-
->  arch/powerpc/include/asm/book3s/32/pgtable.h | 2 +-
->  arch/powerpc/include/asm/book3s/64/pgtable.h | 2 +-
->  arch/powerpc/include/asm/nohash/pgtable.h    | 2 +-
->  arch/riscv/include/asm/pgtable.h             | 2 +-
->  arch/s390/include/asm/pgtable.h              | 2 +-
->  arch/sh/include/asm/pgtable_32.h             | 2 +-
->  arch/sparc/include/asm/pgtable_32.h          | 2 +-
->  arch/sparc/include/asm/pgtable_64.h          | 2 +-
->  arch/um/include/asm/pgtable.h                | 2 +-
->  arch/x86/include/asm/pgtable.h               | 2 +-
->  arch/xtensa/include/asm/pgtable.h            | 2 +-
->  26 files changed, 27 insertions(+), 27 deletions(-)
->=20
-> diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pg=
-table.h
-> index 02e8817a8921..b0870de4b5b8 100644
-> --- a/arch/alpha/include/asm/pgtable.h
-> +++ b/arch/alpha/include/asm/pgtable.h
-> @@ -334,7 +334,7 @@ extern inline pte_t mk_swap_pte(unsigned long type, u=
-nsigned long offset)
->  #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/arc/include/asm/pgtable-bits-arcv2.h b/arch/arc/include=
-/asm/pgtable-bits-arcv2.h
-> index 8ebec1b21d24..3084c53f402d 100644
-> --- a/arch/arc/include/asm/pgtable-bits-arcv2.h
-> +++ b/arch/arc/include/asm/pgtable-bits-arcv2.h
-> @@ -130,7 +130,7 @@ void update_mmu_cache_range(struct vm_fault *vmf, str=
-uct vm_area_struct *vma,
->  #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)		((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtabl=
-e.h
-> index be91e376df79..aa4f3f71789c 100644
-> --- a/arch/arm/include/asm/pgtable.h
-> +++ b/arch/arm/include/asm/pgtable.h
-> @@ -303,7 +303,7 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t ne=
-wprot)
->  #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(swp)	__pte((swp).val)
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_isset(pte, L_PTE_SWP_EXCLUSIVE);
->  }
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pg=
-table.h
-> index 0b2a2ad1b9e8..b48b70d8d12d 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -496,7 +496,7 @@ static inline pte_t pte_swp_mkexclusive(pte_t pte)
->  	return set_pte_bit(pte, __pgprot(PTE_SWP_EXCLUSIVE));
->  }
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & PTE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/csky/include/asm/pgtable.h b/arch/csky/include/asm/pgta=
-ble.h
-> index a397e1718ab6..e68722eb33d9 100644
-> --- a/arch/csky/include/asm/pgtable.h
-> +++ b/arch/csky/include/asm/pgtable.h
-> @@ -200,7 +200,7 @@ static inline pte_t pte_mkyoung(pte_t pte)
->  	return pte;
->  }
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/hexagon/include/asm/pgtable.h b/arch/hexagon/include/as=
-m/pgtable.h
-> index 8c5b7a1c3d90..fa007eb9aad3 100644
-> --- a/arch/hexagon/include/asm/pgtable.h
-> +++ b/arch/hexagon/include/asm/pgtable.h
-> @@ -390,7 +390,7 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
->  		(((type & 0x1f) << 1) | \
->  		 ((offset & 0x3ffff8) << 10) | ((offset & 0x7) << 7)) })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
-e/asm/pgtable.h
-> index da346733a1da..bac946693d87 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -302,7 +302,7 @@ static inline pte_t mk_swap_pte(unsigned long type, u=
-nsigned long offset)
->  #define __pmd_to_swp_entry(pmd) ((swp_entry_t) { pmd_val(pmd) })
->  #define __swp_entry_to_pmd(x)	((pmd_t) { (x).val | _PAGE_HUGE })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/m68k/include/asm/mcf_pgtable.h b/arch/m68k/include/asm/=
-mcf_pgtable.h
-> index 48f87a8a8832..7e9748b29c44 100644
-> --- a/arch/m68k/include/asm/mcf_pgtable.h
-> +++ b/arch/m68k/include/asm/mcf_pgtable.h
-> @@ -274,7 +274,7 @@ extern pgd_t kernel_pg_dir[PTRS_PER_PGD];
->  #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)	(__pte((x).val))
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/m68k/include/asm/motorola_pgtable.h b/arch/m68k/include=
-/asm/motorola_pgtable.h
-> index 9866c7acdabe..26da9b985c5f 100644
-> --- a/arch/m68k/include/asm/motorola_pgtable.h
-> +++ b/arch/m68k/include/asm/motorola_pgtable.h
-> @@ -191,7 +191,7 @@ extern pgd_t kernel_pg_dir[128];
->  #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/m68k/include/asm/sun3_pgtable.h b/arch/m68k/include/asm=
-/sun3_pgtable.h
-> index 30081aee8164..ac0793f57f31 100644
-> --- a/arch/m68k/include/asm/sun3_pgtable.h
-> +++ b/arch/m68k/include/asm/sun3_pgtable.h
-> @@ -175,7 +175,7 @@ extern pgd_t kernel_pg_dir[PTRS_PER_PGD];
->  #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/microblaze/include/asm/pgtable.h b/arch/microblaze/incl=
-ude/asm/pgtable.h
-> index e4ea2ec3642f..b281c2bbd6c0 100644
-> --- a/arch/microblaze/include/asm/pgtable.h
-> +++ b/arch/microblaze/include/asm/pgtable.h
-> @@ -406,7 +406,7 @@ extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
->  #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) >> 2 })
->  #define __swp_entry_to_pte(x)	((pte_t) { (x).val << 2 })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgta=
-ble.h
-> index c29a551eb0ca..c19da4ab7552 100644
-> --- a/arch/mips/include/asm/pgtable.h
-> +++ b/arch/mips/include/asm/pgtable.h
-> @@ -540,7 +540,7 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t ne=
-wprot)
->  #endif
-> =20
->  #if defined(CONFIG_PHYS_ADDR_T_64BIT) && defined(CONFIG_CPU_MIPS32)
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte.pte_low & _PAGE_SWP_EXCLUSIVE;
->  }
-> @@ -557,7 +557,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte=
-)
->  	return pte;
->  }
->  #else
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pg=
-table.h
-> index eab87c6beacb..64ce06bae8ac 100644
-> --- a/arch/nios2/include/asm/pgtable.h
-> +++ b/arch/nios2/include/asm/pgtable.h
-> @@ -265,7 +265,7 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
->  #define __swp_entry_to_pte(swp)	((pte_t) { (swp).val })
->  #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/openrisc/include/asm/pgtable.h b/arch/openrisc/include/=
-asm/pgtable.h
-> index 60c6ce7ff2dc..34cad9177a48 100644
-> --- a/arch/openrisc/include/asm/pgtable.h
-> +++ b/arch/openrisc/include/asm/pgtable.h
-> @@ -413,7 +413,7 @@ static inline void update_mmu_cache_range(struct vm_f=
-ault *vmf,
->  #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)		((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/parisc/include/asm/pgtable.h b/arch/parisc/include/asm/=
-pgtable.h
-> index babf65751e81..dfeba45b6d6f 100644
-> --- a/arch/parisc/include/asm/pgtable.h
-> +++ b/arch/parisc/include/asm/pgtable.h
-> @@ -431,7 +431,7 @@ static inline void set_ptes(struct mm_struct *mm, uns=
-igned long addr,
->  #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)		((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/=
-include/asm/book3s/32/pgtable.h
-> index 42c3af90d1f0..92d21c6faf1e 100644
-> --- a/arch/powerpc/include/asm/book3s/32/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
-> @@ -365,7 +365,7 @@ static inline void __ptep_set_access_flags(struct vm_=
-area_struct *vma,
->  #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) >> 3 })
->  #define __swp_entry_to_pte(x)		((pte_t) { (x).val << 3 })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/=
-include/asm/book3s/64/pgtable.h
-> index 6d98e6f08d4d..dbf772bef20d 100644
-> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> @@ -693,7 +693,7 @@ static inline pte_t pte_swp_mkexclusive(pte_t pte)
->  	return __pte_raw(pte_raw(pte) | cpu_to_be64(_PAGE_SWP_EXCLUSIVE));
->  }
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return !!(pte_raw(pte) & cpu_to_be64(_PAGE_SWP_EXCLUSIVE));
->  }
-> diff --git a/arch/powerpc/include/asm/nohash/pgtable.h b/arch/powerpc/inc=
-lude/asm/nohash/pgtable.h
-> index 8d1f0b7062eb..7d6b9e5b286e 100644
-> --- a/arch/powerpc/include/asm/nohash/pgtable.h
-> +++ b/arch/powerpc/include/asm/nohash/pgtable.h
-> @@ -286,7 +286,7 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t ne=
-wprot)
->  	return __pte((pte_val(pte) & _PAGE_CHG_MASK) | pgprot_val(newprot));
->  }
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pg=
-table.h
-> index 050fdc49b5ad..433c78c44e02 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -880,7 +880,7 @@ extern pmd_t pmdp_collapse_flush(struct vm_area_struc=
-t *vma,
->  #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgta=
-ble.h
-> index 3ca5af4cfe43..cb86dbf7126a 100644
-> --- a/arch/s390/include/asm/pgtable.h
-> +++ b/arch/s390/include/asm/pgtable.h
-> @@ -913,7 +913,7 @@ static inline int pmd_protnone(pmd_t pmd)
->  }
->  #endif
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/sh/include/asm/pgtable_32.h b/arch/sh/include/asm/pgtab=
-le_32.h
-> index f939f1215232..5f221f3269e3 100644
-> --- a/arch/sh/include/asm/pgtable_32.h
-> +++ b/arch/sh/include/asm/pgtable_32.h
-> @@ -478,7 +478,7 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
->  /* In both cases, we borrow bit 6 to store the exclusive marker in swap =
-PTEs. */
->  #define _PAGE_SWP_EXCLUSIVE	_PAGE_USER
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte.pte_low & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm=
-/pgtable_32.h
-> index 62bcafe38b1f..0362f8357371 100644
-> --- a/arch/sparc/include/asm/pgtable_32.h
-> +++ b/arch/sparc/include/asm/pgtable_32.h
-> @@ -353,7 +353,7 @@ static inline swp_entry_t __swp_entry(unsigned long t=
-ype, unsigned long offset)
->  #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)		((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & SRMMU_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm=
-/pgtable_64.h
-> index 2b7f358762c1..65e53491fe07 100644
-> --- a/arch/sparc/include/asm/pgtable_64.h
-> +++ b/arch/sparc/include/asm/pgtable_64.h
-> @@ -1027,7 +1027,7 @@ pgtable_t pgtable_trans_huge_withdraw(struct mm_str=
-uct *mm, pmd_t *pmdp);
->  #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)		((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/um/include/asm/pgtable.h b/arch/um/include/asm/pgtable.=
-h
-> index 5601ca98e8a6..c32309614a15 100644
-> --- a/arch/um/include/asm/pgtable.h
-> +++ b/arch/um/include/asm/pgtable.h
-> @@ -316,7 +316,7 @@ extern pte_t *virt_to_pte(struct mm_struct *mm, unsig=
-ned long addr);
->  	((swp_entry_t) { pte_val(pte_mkuptodate(pte)) })
->  #define __swp_entry_to_pte(x)		((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_get_bits(pte, _PAGE_SWP_EXCLUSIVE);
->  }
-> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtabl=
-e.h
-> index 593f10aabd45..4c7ce40023d3 100644
-> --- a/arch/x86/include/asm/pgtable.h
-> +++ b/arch/x86/include/asm/pgtable.h
-> @@ -1586,7 +1586,7 @@ static inline pte_t pte_swp_mkexclusive(pte_t pte)
->  	return pte_set_flags(pte, _PAGE_SWP_EXCLUSIVE);
->  }
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_flags(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
-> diff --git a/arch/xtensa/include/asm/pgtable.h b/arch/xtensa/include/asm/=
-pgtable.h
-> index 1647a7cc3fbf..6da0aa0604f1 100644
-> --- a/arch/xtensa/include/asm/pgtable.h
-> +++ b/arch/xtensa/include/asm/pgtable.h
-> @@ -355,7 +355,7 @@ ptep_set_wrprotect(struct mm_struct *mm, unsigned lon=
-g addr, pte_t *ptep)
->  #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
->  #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
-> =20
-> -static inline int pte_swp_exclusive(pte_t pte)
-> +static inline bool pte_swp_exclusive(pte_t pte)
->  {
->  	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
->  }
+> v7: Change the lsrng_ prefix to loongson_rng_
+> v6: Replace all "ls6000se" with "loongson"
+> v2-v5: None
+>
+>  drivers/crypto/Kconfig                 |   1 +
+>  drivers/crypto/Makefile                |   1 +
+>  drivers/crypto/loongson/Kconfig        |   6 +
+>  drivers/crypto/loongson/Makefile       |   2 +
+>  drivers/crypto/loongson/loongson-rng.c | 190 +++++++++++++++++++++++++
+>  5 files changed, 200 insertions(+)
+>  create mode 100644 drivers/crypto/loongson/Kconfig
+>  create mode 100644 drivers/crypto/loongson/Makefile
+>  create mode 100644 drivers/crypto/loongson/loongson-rng.c
+>
+> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+> index 19ab145f9..567ed81b0 100644
+> --- a/drivers/crypto/Kconfig
+> +++ b/drivers/crypto/Kconfig
+> @@ -855,5 +855,6 @@ config CRYPTO_DEV_SA2UL
+>
+>  source "drivers/crypto/aspeed/Kconfig"
+>  source "drivers/crypto/starfive/Kconfig"
+> +source "drivers/crypto/loongson/Kconfig"
+>
+>  endif # CRYPTO_HW
+> diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
+> index fef18ffdb..643c3710b 100644
+> --- a/drivers/crypto/Makefile
+> +++ b/drivers/crypto/Makefile
+> @@ -50,3 +50,4 @@ obj-y +=3D hisilicon/
+>  obj-$(CONFIG_CRYPTO_DEV_AMLOGIC_GXL) +=3D amlogic/
+>  obj-y +=3D intel/
+>  obj-y +=3D starfive/
+> +obj-y +=3D loongson/
+> diff --git a/drivers/crypto/loongson/Kconfig b/drivers/crypto/loongson/Kc=
+onfig
+> new file mode 100644
+> index 000000000..4368701ad
+> --- /dev/null
+> +++ b/drivers/crypto/loongson/Kconfig
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +config CRYPTO_DEV_LOONGSON_RNG
+> +        tristate "Support for Loongson RNG Driver"
+> +        depends on MFD_LOONGSON_SE
+> +        help
+> +          Support for Loongson RNG Driver.
+> diff --git a/drivers/crypto/loongson/Makefile b/drivers/crypto/loongson/M=
+akefile
+> new file mode 100644
+> index 000000000..b8b013c86
+> --- /dev/null
+> +++ b/drivers/crypto/loongson/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_CRYPTO_DEV_LOONGSON_RNG)  +=3D loongson-rng.o
+> diff --git a/drivers/crypto/loongson/loongson-rng.c b/drivers/crypto/loon=
+gson/loongson-rng.c
+> new file mode 100644
+> index 000000000..307014992
+> --- /dev/null
+> +++ b/drivers/crypto/loongson/loongson-rng.c
+> @@ -0,0 +1,190 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2019 HiSilicon Limited. */
+> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> +
+> +#include <linux/crypto.h>
+> +#include <linux/err.h>
+> +#include <linux/hw_random.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/mfd/loongson-se.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/random.h>
+> +#include <crypto/internal/rng.h>
+> +
+> +struct loongson_rng_list {
+> +       struct mutex lock;
+> +       struct list_head list;
+> +       int is_init;
+> +};
+> +
+> +struct lsrng {
+> +       bool is_used;
+> +       struct se_channel *se_ch;
+> +       struct list_head list;
+> +       struct completion rng_completion;
+> +};
+Since there are other comments that should be addressed, you can
+rename lsrng to loongson_rng to keep consistency.
 
-I'm not so sure about this implicit cast from unsigned long to bool though.
+Huacai
 
-Is this verified to work correctly on all architectures? I wonder why this
-bug was not caught earlier on alpha on the other hand.
-
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> +
+> +struct loongson_rng_ctx {
+> +       struct lsrng *rng;
+> +};
+> +
+> +struct rng_msg {
+> +       u32 cmd;
+> +       union {
+> +               u32 len;
+> +               u32 ret;
+> +       } u;
+> +       u32 resved;
+> +       u32 out_off;
+> +       u32 pad[4];
+> +};
+> +
+> +static atomic_t rng_active_devs;
+> +static struct loongson_rng_list rng_devices;
+> +
+> +static void loongson_rng_complete(struct se_channel *ch)
+> +{
+> +       struct lsrng *rng =3D (struct lsrng *)ch->priv;
+> +
+> +       complete(&rng->rng_completion);
+> +}
+> +
+> +static int loongson_rng_generate(struct crypto_rng *tfm, const u8 *src,
+> +                         unsigned int slen, u8 *dstn, unsigned int dlen)
+> +{
+> +       struct loongson_rng_ctx *ctx =3D crypto_rng_ctx(tfm);
+> +       struct lsrng *rng =3D ctx->rng;
+> +       struct rng_msg *msg;
+> +       int err, len;
+> +
+> +       do {
+> +               len =3D min(dlen, PAGE_SIZE);
+> +               msg =3D rng->se_ch->smsg;
+> +               msg->u.len =3D len;
+> +               err =3D se_send_ch_requeset(rng->se_ch);
+> +               if (err)
+> +                       return err;
+> +
+> +               wait_for_completion_interruptible(&rng->rng_completion);
+> +
+> +               msg =3D rng->se_ch->rmsg;
+> +               if (msg->u.ret)
+> +                       return -EFAULT;
+> +
+> +               memcpy(dstn, rng->se_ch->data_buffer, len);
+> +               dlen -=3D len;
+> +               dstn +=3D len;
+> +       } while (dlen > 0);
+> +
+> +       return 0;
+> +}
+> +
+> +static int loongson_rng_init(struct crypto_tfm *tfm)
+> +{
+> +       struct loongson_rng_ctx *ctx =3D crypto_tfm_ctx(tfm);
+> +       struct lsrng *rng;
+> +       int ret =3D -EBUSY;
+> +
+> +       mutex_lock(&rng_devices.lock);
+> +       list_for_each_entry(rng, &rng_devices.list, list) {
+> +               if (!rng->is_used) {
+> +                       rng->is_used =3D true;
+> +                       ctx->rng =3D rng;
+> +                       ret =3D 0;
+> +                       break;
+> +               }
+> +       }
+> +       mutex_unlock(&rng_devices.lock);
+> +
+> +       return ret;
+> +}
+> +
+> +static void loongson_rng_exit(struct crypto_tfm *tfm)
+> +{
+> +       struct loongson_rng_ctx *ctx =3D crypto_tfm_ctx(tfm);
+> +
+> +       mutex_lock(&rng_devices.lock);
+> +       ctx->rng->is_used =3D false;
+> +       mutex_unlock(&rng_devices.lock);
+> +}
+> +
+> +static int no_seed(struct crypto_rng *tfm, const u8 *seed, unsigned int =
+slen)
+> +{
+> +       return 0;
+> +}
+> +
+> +static struct rng_alg loongson_rng_alg =3D {
+> +       .generate =3D loongson_rng_generate,
+> +       .seed =3D no_seed,
+> +       .base =3D {
+> +               .cra_name =3D "stdrng",
+> +               .cra_driver_name =3D "loongson_stdrng",
+> +               .cra_priority =3D 300,
+> +               .cra_ctxsize =3D sizeof(struct loongson_rng_ctx),
+> +               .cra_module =3D THIS_MODULE,
+> +               .cra_init =3D loongson_rng_init,
+> +               .cra_exit =3D loongson_rng_exit,
+> +       },
+> +};
+> +
+> +static void loongson_rng_add_to_list(struct lsrng *rng)
+> +{
+> +       mutex_lock(&rng_devices.lock);
+> +       list_add_tail(&rng->list, &rng_devices.list);
+> +       mutex_unlock(&rng_devices.lock);
+> +}
+> +
+> +static int loongson_rng_probe(struct platform_device *pdev)
+> +{
+> +       struct rng_msg *msg;
+> +       struct lsrng *rng;
+> +       int ret;
+> +
+> +       rng =3D devm_kzalloc(&pdev->dev, sizeof(*rng), GFP_KERNEL);
+> +       if (!rng)
+> +               return -ENOMEM;
+> +
+> +       init_completion(&rng->rng_completion);
+> +       rng->se_ch =3D se_init_ch(pdev->dev.parent, SE_CH_RNG, PAGE_SIZE,
+> +                               sizeof(struct rng_msg) * 2, rng, loongson=
+_rng_complete);
+> +       if (!rng->se_ch)
+> +               return -ENODEV;
+> +       msg =3D rng->se_ch->smsg;
+> +       msg->cmd =3D SE_CMD_RNG;
+> +       msg->out_off =3D rng->se_ch->off;
+> +
+> +       if (!rng_devices.is_init) {
+> +               ret =3D crypto_register_rng(&loongson_rng_alg);
+> +               if (ret) {
+> +                       dev_err(&pdev->dev, "failed to register crypto(%d=
+)\n", ret);
+> +                       return ret;
+> +               }
+> +               INIT_LIST_HEAD(&rng_devices.list);
+> +               mutex_init(&rng_devices.lock);
+> +               rng_devices.is_init =3D true;
+> +       }
+> +
+> +       loongson_rng_add_to_list(rng);
+> +       atomic_inc(&rng_active_devs);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver loongson_rng_driver =3D {
+> +       .probe          =3D loongson_rng_probe,
+> +       .driver         =3D {
+> +               .name   =3D "loongson-rng",
+> +       },
+> +};
+> +module_platform_driver(loongson_rng_driver);
+> +
+> +MODULE_ALIAS("platform:loongson-rng");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Yinggang Gu <guyinggang@loongson.cn>");
+> +MODULE_AUTHOR("Qunqin Zhao <zhaoqunqin@loongson.cn>");
+> +MODULE_DESCRIPTION("Loongson random number generator driver");
+> --
+> 2.45.2
+>
+>
