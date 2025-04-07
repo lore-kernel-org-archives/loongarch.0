@@ -1,147 +1,309 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D851AC892
-	for <loongarch@lists.linux.dev>; Mon,  7 Apr 2025 08:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 721B5226CF9;
+	Mon,  7 Apr 2025 10:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744013182; cv=none; b=F5PJzG09HtWWcbyfO5OV4z0Bqq4+ygMiiqHmixif0ZlGVPGk4h+J9VLDNSCNV61pCbZGqRYY8tgywHfQGy7UxDZjATxtI/IQP2LIqj9/5ZfTYaKfGrAnuG/0R+5ZmgY/UOw6fzasHoRNRiA3Rj/MQZLOu41eRLni90pLr1NFG4U=
+	t=1744023144; cv=none; b=fSLdEnEN3CWyMQWQ2yNgZPjhHku004cOcV2FOh1Cmzgkr4Ssb6gYmLWQEyowGP0FeH4pdGt+FcGgYeTusmhlaoVmOLtIaqzhe10PWUfytAEQNCc8q543LIMTng0DnKIxY1M9MmvAlA0D3DuyGM4dodgdj7q+cTatB7IV5UO3KPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744013182; c=relaxed/simple;
-	bh=Jv1axMlTH1d7Bc5hi8tVqQgcr6gs+9TX6BEWYeJwdVQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CKQ957o1MSkafX5pwI7Gf9clj6PbObqcZLcQY1jcfJNOJzNpwIDpAxt1QdNKrNj/R3+XmyblYmIphZlmKkyxHL6zGP32AsswlkQglnUGDjIvB0RazXGFp36Ie39qgdJyu1oZFXS/v42rZ8J86fhpmgqfN1qi5G/gSU+BgIlDHns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-52413efd0d3so1713334e0c.2
-        for <loongarch@lists.linux.dev>; Mon, 07 Apr 2025 01:06:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744013177; x=1744617977;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=em0yD0kIpDtyZFKdGXKgNdHuMfrDjAXLZIWfYU3VNv0=;
-        b=FW3E72BxpefJsK/BO+7t1CFJwo4U4bsF9cViSjeymtNRBTV7Oq3I6Cg0A4wQga75mH
-         08qbL+C9/nF65OmFLS7plgjHfpMr8lKW2ZxGJrloBGIK49RyyvUzTvSHzdNykGUbqzX7
-         3pYz5m6hADFZp/Iy8FFM15WHVAXmZ7C+meYjSsFZKIEmYvKj8KHiLrv9HUAQpd7EtxVi
-         l9DroLlUziCTgMN/qpfaSnXpGNPWIjz6oRPBfQunKysM18+qj/bgn4f2YnJ0H/WszLRl
-         j6xAp4euwMr6zHEMw5aFF6UYZnkYe3rPUhkjswc+4oMW4Dk+nVw+6BIDql9idXnR/MHX
-         RoKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmIUV5MZeHXmnbd8UlLhztIkEus/b8LoitE1b7PMpUPLPnoM0e4DK5qkc06R24rTU6yWT7X1y0AcI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzAWXReqCn8BZMVpuui70RnY5MeH1i1RSS25uGlOnTXrIYUHwVu
-	1ZYUB/afLca0e+MzI09L6lQXMJQNswZQieOlsn5WSI1CrWboE+NoUCk7fJ6w
-X-Gm-Gg: ASbGncsgSJ/6Mhp2U8YGoyRivDtOO71tnjimIAyQm6M97Zflv4MdiCIjTcOOd2mC4gL
-	g0KejYVORMK6NEA+f3nfYYZtK4MkgPcF7gQO3DlJ1C0roVioZPGNgN10xEbyTy99GzvpEip8qMK
-	ypQ3zp3KxR5hSXasOZ2t7exzgZJLRSsjY80Q36YTyMNTfKOL/hJFveMgqk++CHlGl7Xy2lJMvsx
-	RGAgezglLZufCTI0pl/NRDZPxv4GXFHO/GW1GHvgsmSL14ETNZi+gswxQzg4zW1BODel0k3i23s
-	9w9jBoakGChEJ1Wk6DEs+ZdSaEQwojpxOnMO3diJOswsTUi9fULKmSf13CZaB5Q2/O5w63DyZ9J
-	ai33GBbM=
-X-Google-Smtp-Source: AGHT+IHHG7xybaAW4xzVcczH+N46Ra7rmqtNBUM/RKqw8PMPs3DJ7Bnsq0XW/qjKx9ShmEPl30TyUw==
-X-Received: by 2002:a05:6102:26ce:b0:4c1:a2b4:aa0c with SMTP id ada2fe7eead31-4c8553a0b9fmr8345418137.10.1744013177365;
-        Mon, 07 Apr 2025 01:06:17 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c849539b47sm1849475137.24.2025.04.07.01.06.16
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 01:06:16 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86b9d9b02cbso1699542241.1
-        for <loongarch@lists.linux.dev>; Mon, 07 Apr 2025 01:06:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUzY0aDnra36tToRNBu/BmoxDqBaXPrbMSW0+/FNHxBHBAf0lRyqpc2KNFf5I6siezHH/aQjq+cx50=@lists.linux.dev
-X-Received: by 2002:a05:6102:1622:b0:4c3:221:8f47 with SMTP id
- ada2fe7eead31-4c8553d0fafmr8533368137.13.1744013176401; Mon, 07 Apr 2025
- 01:06:16 -0700 (PDT)
+	s=arc-20240116; t=1744023144; c=relaxed/simple;
+	bh=azv7dy+V9qtN/B4MRwCfouvh1u0P9FFBepJiCoKsfiQ=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=X5kVUBti9AsM8vxsDQG7JWxYL9jhZbBssjKMQuC8UagMDwJ9zTX3BWY6aXm1sL/FYnO7yYq1PYogVlJep1pvnNoQdUBMxxedCPGvfcHFjmGnmjV1qPe+Ib8sFBOPfRdid9hqwa6h+CVZbf3lcRcTh8TcFk8EClnBYoeLBZR17Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxieBhrvNn8kW0AA--.59091S3;
+	Mon, 07 Apr 2025 18:52:17 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMCxbsVbrvNn4VJzAA--.18984S3;
+	Mon, 07 Apr 2025 18:52:12 +0800 (CST)
+Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
+ warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
+ reg2[24]=-2-24
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <202504011011.jyZ6NtXx-lkp@intel.com> <Z+ttzRArSBMqfABz@rli9-mobl>
+ <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
+ <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
+ <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
+Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>,
+ Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Alessandro Carminati <acarmina@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <0cbe7ab8-bd87-b5f7-0513-07c82a7e76c9@loongson.cn>
+Date: Mon, 7 Apr 2025 18:52:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250218175735.19882-1-linmag7@gmail.com> <20250218175735.19882-2-linmag7@gmail.com>
- <4209b9816551367f8e5670cc5a08e139f0f2c215.camel@physik.fu-berlin.de>
-In-Reply-To: <4209b9816551367f8e5670cc5a08e139f0f2c215.camel@physik.fu-berlin.de>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 7 Apr 2025 10:06:03 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWLVw8aUY8aCowgOz+puxjrDqcbUXUAoVXGi8=FpTHwrA@mail.gmail.com>
-X-Gm-Features: ATxdqUEtUaFZruSQ19joR0gbmVyVokHgxasQdxoPHK2-UPmtdbKL5noyYxpgMcc
-Message-ID: <CAMuHMdWLVw8aUY8aCowgOz+puxjrDqcbUXUAoVXGi8=FpTHwrA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] mm: pgtable: fix pte_swp_exclusive
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Magnus Lindholm <linmag7@gmail.com>, richard.henderson@linaro.org, mattst88@gmail.com, 
-	ink@unseen.parts, kees@kernel.org, arnd@arndb.de, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, chris@zankel.net, 
-	dinguyen@kernel.org, jcmvbkbc@gmail.com, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, 
-	loongarch@lists.linux.dev, monstr@monstr.eu, sparclinux@vger.kernel.org, 
-	x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMCxbsVbrvNn4VJzAA--.18984S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtry8XF1rXrWDGry3tFy7Arc_yoW3uFWfpa
+	1IvFs8GF4kGr10vwnrtF1YgrnxtFs5AF15Wry3JF1jvas0qF97W3Wftr4UuF1kJr47Za40
+	q393AwnxtF1jywcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-Hi Adrian,
-
-On Sat, 5 Apr 2025 at 19:22, John Paul Adrian Glaubitz
-<glaubitz@physik.fu-berlin.de> wrote:
-> On Tue, 2025-02-18 at 18:55 +0100, Magnus Lindholm wrote:
-> > Make pte_swp_exclusive return bool instead of int. This will better reflect
-> > how pte_swp_exclusive is actually used in the code. This fixes swap/swapoff
-> > problems on Alpha due pte_swp_exclusive not returning correct values when
-> > _PAGE_SWP_EXCLUSIVE bit resides in upper 32-bits of PTE (like on alpha).
+On 04/03/2025 10:37 PM, Josh Poimboeuf wrote:
+> On Thu, Apr 03, 2025 at 05:35:51PM +0800, Tiezhu Yang wrote:
+>> On 04/02/2025 03:45 AM, Josh Poimboeuf wrote:
+>>> On Tue, Apr 01, 2025 at 12:38:37PM +0800, Philip Li wrote:
+>>>> On Tue, Apr 01, 2025 at 10:44:57AM +0800, kernel test robot wrote:
+>>>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+>>>>> head:   405e2241def89c88f008dcb899eb5b6d4be8b43c
+>>>>> commit: 9016dad4dca4bbe61c48ffd5a273cad980caa0d1 [12681/13861] loongarch: add support for suppressing warning backtraces
+>>>>> config: loongarch-randconfig-001-20250401 (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/config)
+>>>>> compiler: loongarch64-linux-gcc (GCC) 14.2.0
+>>>>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/reproduce)
+>>>>>
+>>>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>>>> the same patch/commit), kindly add following tags
+>>>>> | Reported-by: kernel test robot <lkp@intel.com>
+>>>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202504011011.jyZ6NtXx-lkp@intel.com/
+>>>>>
+>>>>> All warnings (new ones prefixed by >>):
+>>>>>
+>>>>>>> drivers/i2c/i2c-core-base.o: warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
+>>>
+>>> Tiezhu, this looks like a loongarch GCC bug with asm goto, or am I
+>>> confused?  See analysis below.
+>>
+>> This is related with GCC optimization "-fshrink-wrap" which is default y
+>> on LoongArch, use "-fno-shrink-wrap" can avoid such issues, like this:
 >
-> Minor nitpick:
->
-> "when _PAGE_SWP_EXCLUSIVE" => "when the _PAGE_SWP_EXCLUSIVE"
->
-> >
-> > Signed-off-by: Magnus Lindholm <linmag7@gmail.com>
+> As I showed, it looks like an actual runtime bug, not an objtool false
+> positive.  Disabling it only for CONFIG_OBJTOOLonly wouldn't fix that.
 
-> > --- a/arch/alpha/include/asm/pgtable.h
-> > +++ b/arch/alpha/include/asm/pgtable.h
-> > @@ -334,7 +334,7 @@ extern inline pte_t mk_swap_pte(unsigned long type, unsigned long offset)
-> >  #define __pte_to_swp_entry(pte)      ((swp_entry_t) { pte_val(pte) })
-> >  #define __swp_entry_to_pte(x)        ((pte_t) { (x).val })
-> >
-> > -static inline int pte_swp_exclusive(pte_t pte)
-> > +static inline bool pte_swp_exclusive(pte_t pte)
-> >  {
-> >       return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
-> >  }
+Here are my thoughts:
 
-> > --- a/arch/xtensa/include/asm/pgtable.h
-> > +++ b/arch/xtensa/include/asm/pgtable.h
-> > @@ -355,7 +355,7 @@ ptep_set_wrprotect(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
-> >  #define __pte_to_swp_entry(pte)      ((swp_entry_t) { pte_val(pte) })
-> >  #define __swp_entry_to_pte(x)        ((pte_t) { (x).val })
-> >
-> > -static inline int pte_swp_exclusive(pte_t pte)
-> > +static inline bool pte_swp_exclusive(pte_t pte)
-> >  {
-> >       return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
-> >  }
->
-> I'm not so sure about this implicit cast from unsigned long to bool though.
->
-> Is this verified to work correctly on all architectures? I wonder why this
+(1) -fshrink-wrap
 
-Should work fine: any non-zero value is mapped to one.
+The prologue may perform a variety of target dependent tasks such
+as saving callee-saved registers, saving the return address, etc.
 
-> bug was not caught earlier on alpha on the other hand.
+On some targets some of these tasks may be independent of others
+and thus may be shrink-wrapped separately. These independent tasks
+are referred to as components and are handled generically by the
+target independent parts of GCC.
 
-On Alpha, "pte_val(pte) & _PAGE_SWP_EXCLUSIVE" is either
-_PAGE_SWP_EXCLUSIVE == 0x8000000000UL or zero.  Due to the return
-type being int, the return value was truncated, and the function always
-returned zero.
+The initialization is not done as frequently on execution paths
+where this would unnecessary.
 
-Gr{oetje,eeting}s,
+"-fshrink-wrap" is enabled by default at -O and higher, will emit
+function prologues only before parts of the function that need it,
+rather than at the top of the function.
 
-                        Geert
+https://gcc.gnu.org/onlinedocs/gccint/Shrink-wrapping-separate-components.html
+https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-fshrink-wrap
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+There is a potential execution path with only using s0 and ra
+(without using s1, s2, s3, etc): 2d58-->2d70-->2f88-->2e78-->2e84
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+0000000000002d58 <__i2c_transfer>:
+     2d58:       02fe8063        addi.d          $sp, $sp, -96
+     2d5c:       29c14077        st.d            $s0, $sp, 80
+     2d60:       29c16061        st.d            $ra, $sp, 88
+     2d64:       28c0408c        ld.d            $t0, $a0, 16
+     2d68:       00150097        or              $s0, $a0, $zero
+     2d6c:       2600018c        ldptr.d         $t0, $t0, 0
+     2d70:       40021980        beqz            $t0, 536        # 2f88 
+<.LVL1023>
+...
+0000000000002f88 <.LVL1023>:
+     2f88:       1a000006        pcalau12i       $a2, 0
+
+0000000000002f8c <.LVL1024>:
+     2f8c:       1a000004        pcalau12i       $a0, 0
+
+0000000000002f90 <.LVL1025>:
+     2f90:       02c00084        addi.d          $a0, $a0, 0
+     2f94:       02c1c2e5        addi.d          $a1, $s0, 112
+
+0000000000002f98 <.LVL1026>:
+     2f98:       02c000c6        addi.d          $a2, $a2, 0
+     2f9c:       54000000        bl              0       # 2f9c 
+<.LVL1026+0x4>
+ >
+0000000000002fa0 <.LVL1027>:
+     2fa0:       02be8404        addi.w          $a0, $zero, -95
+     2fa4:       53fed7ff        b               -300    # 2e78 <.L845>
+...
+0000000000002e78 <.L845>:
+     2e78:       28c16061        ld.d            $ra, $sp, 88
+     2e7c:       28c14077        ld.d            $s0, $sp, 80
+
+0000000000002e80 <.LVL994>:
+     2e80:       02c18063        addi.d          $sp, $sp, 96
+     2e84:       4c000020        jirl            $zero, $ra, 0
+
+ From this point of view, it seems that there is no problem for the
+generated instructions of the current code, it is not a runtime bug,
+just a GCC optimization.
+
+(2) Analysis
+
+In fact, the generated objtool warning is because the break instruction
+(2ee8) which is before the restoring s1 instruction (2eec) is annotated
+as dead end.
+
+0000000000002d58 <__i2c_transfer>:
+     2d58:       02fe8063        addi.d          $sp, $sp, -96
+     2d5c:       29c14077        st.d            $s0, $sp, 80
+     2d60:       29c16061        st.d            $ra, $sp, 88
+     2d64:       28c0408c        ld.d            $t0, $a0, 16
+     2d68:       00150097        or              $s0, $a0, $zero
+     2d6c:       2600018c        ldptr.d         $t0, $t0, 0
+     2d70:       40021980        beqz            $t0, 536        # 2f88 
+<.LVL1023>
+     2d74:       29c12078        st.d            $s1, $sp, 72
+     2d78:       001500b8        or              $s1, $a1, $zero
+
+0000000000002d7c <.LBB2114>:
+     2d7c:       400150a0        beqz            $a1, 336        # 2ecc 
+<.LVL999+0x4>
+...
+     2ecc:       1a000004        pcalau12i       $a0, 0
+
+0000000000002ed0 <.LVL1000>:
+     2ed0:       02c00084        addi.d          $a0, $a0, 0
+     2ed4:       02c5a084        addi.d          $a0, $a0, 360
+     2ed8:       54000000        bl              0       # 2ed8 
+<.LVL1000+0x8>
+
+0000000000002edc <.LVL1001>:
+     2edc:       0015008c        or              $t0, $a0, $zero
+     2ee0:       02bfa804        addi.w          $a0, $zero, -22
+     2ee4:       44003d80        bnez            $t0, 60 # 2f20 
+<.LVL1008+0x8>
+
+0000000000002ee8 <.L10001^B7>:
+     2ee8:       002a0001        break           0x1
+     2eec:       28c12078        ld.d            $s1, $sp, 72
+
+0000000000002ef0 <.LVL1002>:
+     2ef0:       53ff8bff        b               -120    # 2e78 <.L845>
+
+This issue is introduced by the following changes:
+
+  #define __WARN_FLAGS(flags)					\
+  do {								\
+  	instrumentation_begin();				\
+-	__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
++	if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))			\
++		__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
+  	instrumentation_end();					\
+  } while (0)
+
+of commit e61a8b4b0d83 ("loongarch: add support for suppressing warning
+backtraces") in the linux-next.git.
+
+(3) -fno-shrink-wrap
+
+"-fno-shrink-wrap" will save callee-saved registers and the return
+address together as a whole block in the prologue at the top of the
+function, and also restores them together as a whole block in the
+epilogue.
+
+0000000000002b38 <__i2c_transfer>:
+     2b38:       02fe8063        addi.d          $sp, $sp, -96
+     2b3c:       29c14077        st.d            $s0, $sp, 80
+     2b40:       29c12078        st.d            $s1, $sp, 72
+     2b44:       29c10079        st.d            $s2, $sp, 64
+     2b48:       29c16061        st.d            $ra, $sp, 88
+     2b4c:       29c0e07a        st.d            $s3, $sp, 56
+     2b50:       29c0c07b        st.d            $s4, $sp, 48
+     2b54:       29c0a07c        st.d            $s5, $sp, 40
+     2b58:       29c0807d        st.d            $s6, $sp, 32
+     2b5c:       29c0607e        st.d            $s7, $sp, 24
+     2b60:       29c0407f        st.d            $s8, $sp, 16
+...
+0000000000002c38 <.L747>:
+     2c38:       28c16061        ld.d            $ra, $sp, 88
+     2c3c:       28c14077        ld.d            $s0, $sp, 80
+
+0000000000002c40 <.LVL937>:
+     2c40:       28c12078        ld.d            $s1, $sp, 72
+     2c44:       28c10079        ld.d            $s2, $sp, 64
+
+0000000000002c48 <.LVL938>:
+     2c48:       28c0e07a        ld.d            $s3, $sp, 56
+     2c4c:       28c0c07b        ld.d            $s4, $sp, 48
+     2c50:       28c0a07c        ld.d            $s5, $sp, 40
+     2c54:       28c0807d        ld.d            $s6, $sp, 32
+     2c58:       28c0607e        ld.d            $s7, $sp, 24
+     2c5c:       28c0407f        ld.d            $s8, $sp, 16
+     2c60:       02c18063        addi.d          $sp, $sp, 96
+     2c64:       4c000020        jirl            $zero, $ra, 0
+
+(4) Solution 1
+One way is to annotate __BUG_ENTRY() as reachable whether
+KUNIT_IS_SUPPRESSED_WARNING() is true or false, like this:
+
+---8<---
+diff --git a/arch/loongarch/include/asm/bug.h 
+b/arch/loongarch/include/asm/bug.h
+index b79ff6696ce6..e41ebeaba204 100644
+--- a/arch/loongarch/include/asm/bug.h
++++ b/arch/loongarch/include/asm/bug.h
+@@ -60,8 +60,9 @@
+  #define __WARN_FLAGS(flags)                                    \
+  do {                                                           \
+         instrumentation_begin();                                \
+-       if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))                     \
+-               __BUG_FLAGS(BUGFLAG_WARNING|(flags), 
+ANNOTATE_REACHABLE(10001b));\
++       if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))             \
++               __BUG_FLAGS(BUGFLAG_WARNING|(flags), "");       \
++       __BUG_FLAGS(0, ANNOTATE_REACHABLE(10001b));             \
+         instrumentation_end();                                  \
+  } while (0)
+
+(5) Solution 2
+The other way is to use "-fno-shrink-wrap" to aovid such issue under
+CONFIG_OBJTOOL at compile-time, like this:
+
+---8<---
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 0304eabbe606..2d5529322357 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -106,6 +106,7 @@ KBUILD_CFLAGS                       +=
+-mannotate-tablejump
+   else
+   KBUILD_CFLAGS                  += -fno-jump-tables # keep
+compatibility with older compilers
+   endif
++KBUILD_CFLAGS                  += -fno-shrink-wrap
+   endif
+
+   KBUILD_RUSTFLAGS               +=
+--target=loongarch64-unknown-none-softfloat -Ccode-model=small
+
+If you have more suggestion, please let me know.
+
+Thanks,
+Tiezhu
+
