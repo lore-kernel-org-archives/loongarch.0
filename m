@@ -1,150 +1,198 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115B926F47C
-	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 12:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297F41C460A
+	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 13:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744115871; cv=none; b=MSOXhLrTsMq1YSMRWx2jalzWkel6pALLQTtU6l5U061N/dEumaafXFPL0Lq3R4jDhWgCddpqnnXBBzfj07ccWBi4Qyg8qi19FUjuP/cRAuvAEAbtO5G8X2Fo51d/hCnB1/h6jhRdfr8RUu0XY3FB0iS9YbH9SV+GCCrYFlbei6Q=
+	t=1744120555; cv=none; b=hRJdArieNvcLRpNuB4tz7YfELpneMhJghWQfQVwZ5oeIBLyluRfsa70X1FUzjk2Tkg6shB9PUvxr9Jz/ciZyeJJTobpF7b4wnlCW9dHYPrU986XgGa4eTs8Yj84DTI/ce+AC+Anmt3ql4HbQB7UFIARuMlYmL/H4HAVuR8i/mRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744115871; c=relaxed/simple;
-	bh=n5yY3c/M7DGrAou208VOkwvsGsTS780Xs0GL0+1p0Rk=;
+	s=arc-20240116; t=1744120555; c=relaxed/simple;
+	bh=A6oBXcNkDqEcBwguJfqIOppUobE7Rt7ruRENVRB7a+o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=px5KRGZs5AO3AThCgL27vJUQr/Zthi83/gLRdXUIlNsigjxho6Y9n5Bg/ScFW395oaXqAGRKKeW1yfU9QVcMt/TOwUG9jFmrlE/h18bMuy4gQwH50huuP7KW/eAPupxCcpM6p8Ksebcye0OQtd5Tb394IObORclc5Xji6prN+4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gBz6ZOYv; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Y/ruwzgSvDpeQYWGppyQd1W+MtZMNWySYbdFof+weJ6o/dU6L9hblkui93cZoEoD938/KzspQOJlpvGLwLDfilB2Xmz3Bguoc1PLQUHh/afltbHNnEslEPeZuRP4U5dRQAa9PfCXnWVIUTSAivGgZ77OCCDha4Nr72yILuDDB+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=raS+SSrM; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBz6ZOYv"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so728998366b.0
-        for <loongarch@lists.linux.dev>; Tue, 08 Apr 2025 05:37:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="raS+SSrM"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39149bccb69so5247679f8f.2
+        for <loongarch@lists.linux.dev>; Tue, 08 Apr 2025 06:55:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744115868; x=1744720668; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1744120551; x=1744725351; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3XDdHAFVrIm9VYmfrBSLGHN4jyk7mQe9dLRJj0l1S2A=;
-        b=gBz6ZOYvuZYG8cU88Z9R0E6rLLmH68UOhCAc3bdRLq93ESVh8O+0M5MVIlQxDiDgee
-         SOHsXCMlAcj9T6m2OQgBoaTsz8HBz8eqMtasYklm8f6j9i80dYTarj0mSIjvtOGxEu9U
-         eLwHAvv9kDvW9wSmwnzdosGAqcHf7JgeKTbPrJAClBeA/bEii6as/L3oXKaPLCG2n7Hb
-         32qHavDgW9cNIyrVzz1PtfzGc+94DgZ5rxOXdkLR1muowmaoHtuy/Bi75HqiDIx+mQGG
-         vpb1E3OA67gb+VubN4e8lzZ7bfcfkE7uSlz4JsUW+wgOgvhn7Oncy27edGFo2+IS6bTA
-         HSOw==
+        bh=NKIKzdAk3P2Y6YQbz9/8N2BLD9HfzvL0US6679wvjAc=;
+        b=raS+SSrMUua7ejYp0geiTnWfbID/0Vx5dHk9vQPMxUFxMcl1RC/uaC21RG8t1boB3h
+         xdsWV8GMhfT3wI/Z6ZyJr6ITXRiwewDkrDXVStMS/pkzzExOK2olaKNAu5BJDcglTNrM
+         ZFGvopXLfCK1UDt22eZHS4/zZBqRoK8ooypvIKgcX0fBbopPXNVyyMKCrDw8vVTFmRlH
+         gFLbkZsEH1vXmbbiJGBzLZh0AibUQMXM9kB+kX/8FX5DbHjiZzrVXvLNjLhOi4hkWN42
+         oqAI5j5HaHF2hyPT6vdMzzDPm7apAQxsbxPGsLm7n+sEZTifd3hFsK7b8v0gnQRbDX73
+         Jo+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744115868; x=1744720668;
+        d=1e100.net; s=20230601; t=1744120551; x=1744725351;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3XDdHAFVrIm9VYmfrBSLGHN4jyk7mQe9dLRJj0l1S2A=;
-        b=t89wJyUOLzNNGxZqnd6VmbLO2vYJTfbF985/48nrKvMzm1JNCnvA/erxAPR3cmNiMV
-         3yk33LGnVniZrqjA7a1JrA2GCsaJyx5hX8IWlpZTGcD15EUFl3jreyFTnyKcZvoVVQ8b
-         zJUFS7S4CwIxW1YuBc6K4JEuMwiQ56g9WGMSY2uqpjZxlqYosLo0j0udqbygZOtnc5TX
-         Aju2MwGwSwwmSO8PXGjgS4BAI4YoP3dmFFQ8ZtaXmKNs0ibrnVekS+JX6O+cioPmk3kj
-         /RaJ45m1OLeTKGbv8TuN+wXOO3MQroTtyLWUj7kCo7ipRQy/KVnSwI2h6dbUL/SctArX
-         li2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXKx9w/i+1vKQM0jGVlXxZyQH8AYEIJXTunj4qxaaNjA144An8YgDZa4u/q5NIkWoHfGPF2NfAHLkA=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz6CcTN8tzM6CrjsB+EPalal3J34FKm4KISNJRyEGkO7eQ01uyY
-	LPd4/Cf0vmCp7tqZlNEQli3d2jqEzuTFwT/EptJ/EhMi7sqRJ9ym/3md7+kub1JYm9TY+otZwHK
-	zEqdcjA2iu7mRpz7pnSq2mjS4hn4=
-X-Gm-Gg: ASbGncsMhdO9dAr89WOakRv53JHP1Qhpp6v5he+FfFxvDOcqcoL7DGRE0yyJLzfG/cP
-	j7+n1Zy9W/04r/rAk5dkY+HINHIwVwA8kZK/QWq2/t+BPR7e+avVHPG9iK8y3C3JaqusN3j3Zcd
-	S2misfG7pg+LpTsNOcSF5KFguIxd4CTd2tBHJObw==
-X-Google-Smtp-Source: AGHT+IFnh++FCRpnlhvrWegLUR+La0yffyAijO55u8NHyZxWVOF15mHkPKXDFhuFgNXjtR3SujjYNEfhlW/FnTHrSHE=
-X-Received: by 2002:a17:907:3d87:b0:abf:6aa4:924c with SMTP id
- a640c23a62f3a-ac7d17747cfmr1453840866b.17.1744115868044; Tue, 08 Apr 2025
- 05:37:48 -0700 (PDT)
+        bh=NKIKzdAk3P2Y6YQbz9/8N2BLD9HfzvL0US6679wvjAc=;
+        b=o/PUJsi7O8aiTycFuP/TIx25lUo/NPxyfr9YPmF/5vOC2tGNblrBN4qFVhk6PQF/H5
+         ljWjIBUbtBhoNyH8Gfv6VVMHknFkzvwCcy+k50AdYi1Ikvagzy1yPukoC53ytgKsiCzO
+         sVFm6FjDPj8uOcFxzjvGORjGTzZzZoJETKfk+tNCGqxFCh8uZYBezU7rJJ+oPSDM6lOV
+         EH1M6tFeVkQTHZXOnk/0YOY4D5FZVRKrXiQaoLlKoujRUz8UpykuKd6ot9df1p1q5VeV
+         HPtVnx4glwa39JuqrjTGToRwjuOMVPUTxBwGAgxrOyPzxV+WwqdibKN1VMWeN4vm1lRP
+         DaUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgCkEsgCD+rW64QevvjnPXPk0MFdgl8mtNpW1YQOPJUg1AcVmMydz4RbZ8lriCSaXwV2PdHx9EbFs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwhGXgDMXGKotGGyrXmP52cAGNNLp8yROP9TZQNWt307+k5MO0U
+	5QZ4I5A9Mmh745DcY2JgnUMPeAgPJxGinEbEgelMRTBNGfwr4cwxsIi77O4vIjVDeXP7AVztoMy
+	YNfXRmYKbWvwm0XRNYmynZq52l7Zjfcx8NZTa
+X-Gm-Gg: ASbGncvlf5fRLF8rWde6YhgXKYU3we6JyRhVT6lsM9KK9zEzjaQZDCF4vd1/T4zx5nl
+	DsnI5FpZ09aVisOlfntiT0Z9JNBImWK1sOCUNqEMO0HPC1JOF44T4PrvWfEitACXBcf7QE5RNt1
+	8enNkhrb200nhmw+hgHiuH143ogU7kC0wS3jzZKbdscBkMUnYosybWsfZW
+X-Google-Smtp-Source: AGHT+IGe1he6VcB1HjanCrhxVAfQjIesMa6esygphkYmjhBdMP180Rn3O9/cuFUiPeqzOl258PSQo96dNzHqinw3Rqo=
+X-Received: by 2002:a05:6000:1888:b0:39a:c80b:8288 with SMTP id
+ ffacd0b85a97d-39d6fc83ac7mr10495756f8f.33.1744120551236; Tue, 08 Apr 2025
+ 06:55:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250402092500.514305-1-chenhuacai@loongson.cn>
- <87jz81uty3.ffs@tglx> <CAAhV-H5sO0x1EkWks5QZ8ah-stB7JbDk6eFFeeonXD6JT9fHAw@mail.gmail.com>
- <87bjt9wq3b.ffs@tglx> <CAAhV-H6r_iiKauPB=7eWhyTetvsTvxt5O9HtmmKb72y62yvXnA@mail.gmail.com>
- <875xjhwewg.ffs@tglx>
-In-Reply-To: <875xjhwewg.ffs@tglx>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Tue, 8 Apr 2025 20:37:36 +0800
-X-Gm-Features: ATxdqUFI9fVaIwXUxf1Igx0gCLAe6stGaO29HAebgaBrjAmfEMADUOm1aVbUZ1k
-Message-ID: <CAAhV-H6tUvwN9UejTRf0zKXdhGG4o5X4ZOppE+1oQhL-rADFHg@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/loongson-liointc: Support to set IRQ_TYPE_EDGE_BOTH
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>
+References: <20250305110814.272792-1-fujita.tomonori@gmail.com> <20250305110814.272792-5-fujita.tomonori@gmail.com>
+In-Reply-To: <20250305110814.272792-5-fujita.tomonori@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 8 Apr 2025 15:55:38 +0200
+X-Gm-Features: ATxdqUHiYJtkNt0G-spjemExiwLroDOvAjC-UywxGL0GYlMeas4Df-5aHcFmNEQ
+Message-ID: <CAH5fLgiDx5CQQMv=k=ejFYGM=ey1-dgQ44s1Ej1k2+mL7vnZaA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] rust: Add warn_on macro
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	x86@kernel.org, linux-riscv@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
+	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn, 
+	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 6, 2025 at 10:20=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
+On Wed, Mar 5, 2025 at 12:10=E2=80=AFPM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
 >
-> On Sun, Apr 06 2025 at 20:46, Huacai Chen wrote:
-> > On Sun, Apr 6, 2025 at 6:18=E2=80=AFPM Thomas Gleixner <tglx@linutronix=
-.de> wrote:
-> >> On Sun, Apr 06 2025 at 17:46, Huacai Chen wrote:
-> >> > On Thu, Apr 3, 2025 at 11:48=E2=80=AFPM Thomas Gleixner <tglx@linutr=
-onix.de> wrote:
-> >> >> But it won't trigger on both. So no, you cannot claim that this fix=
-es
-> >> >> anything.
-> >> > Yes, it won't trigger on both (not perfect), but it allows drivers
-> >> > that request "both" work (better than fail to request), and there ar=
-e
-> >>
-> >> By some definition of 'work'. There is probably a good technical reaso=
-n
-> >> why those drivers expect EDGE_BOTH to work correctly and otherwise fai=
-l
-> >> to load.
-> > The real problem we encounter is the MMC driver. In
-> > drivers/mmc/core/slot-gpio.c there is
-> > devm_request_threaded_irq(host->parent, irq,
-> >                         NULL, ctx->cd_gpio_isr,
-> >                         IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
-> > IRQF_ONESHOT,
-> >                         ctx->cd_label, host);
-> >
-> > "IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING" is an alias of
-> > "IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING", and
-> > "IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING" is
-> > "IRQ_TYPE_EDGE_BOTH".
+> Add warn_on macro, uses the BUG/WARN feature (lib/bug.c) via assembly
+> for x86_64/arm64/riscv.
 >
-> I know that.
+> The current Rust code simply wraps BUG() macro but doesn't provide the
+> proper debug information. The BUG/WARN feature can only be used from
+> assembly.
 >
-> > Except MMC, "grep IRQ_TYPE_EDGE_BOTH drivers" can give some more exampl=
-es.
+> This uses the assembly code exported by the C side via ARCH_WARN_ASM
+> macro. To avoid duplicating the assembly code, this approach follows
+> the same strategy as the static branch code: it generates the assembly
+> code for Rust using the C preprocessor at compile time.
 >
-> Sure, but you still do not explain why this works even when the driver
-> is obviously depending on EDGE_BOTH. If it does not then the driver is
-> bogus.
+> Similarly, ARCH_WARN_REACHABLE is also used at compile time to
+> generate the assembly code; objtool's reachable anotation code. It's
+> used for only architectures that use objtool.
 >
-> Looking at it, there is obviously a reason for this particular driver to
-> request BOTH. Why?
+> For now, Loongarch just uses a wrapper for WARN macro.
 >
-> This is the card change detection and it uses a GPIO. Insert raises one
-> edge and remove the opposite one.
+> UML doesn't use the assembly BUG/WARN feature; just wrapping generic
+> BUG/WARN functions implemented in C works.
 >
-> Which means whatever edge you chose randomly the detection will only
-> work in one direction. Please don't tell me that this is correct by any
-> meaning of correct. It's not.
-From experiments, either setting to EDGE_RISING or EDGE_FALLING, card
-detection (inserting and removing) works. Maybe the driver request
-"BOTH", but it really need "ANY"? I've searched git log, but I haven't
-get any useful information.
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
+Overall looks reasonable. A few nits below:
 
-Huacai
+> +#[macro_export]
+> +#[doc(hidden)]
+> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML), not(CONFIG_LOONGARCH)))]
+> +#[cfg(CONFIG_DEBUG_BUGVERBOSE)]
+> +macro_rules! warn_flags {
+> +    ($flags:expr) =3D> {
+> +        const FLAGS: u32 =3D $crate::bindings::BUGFLAG_WARNING | $flags;
+> +        const _FILE: &[u8] =3D file!().as_bytes();
+> +        // Plus one for null-terminator.
+> +        static FILE: [u8; _FILE.len() + 1] =3D {
+> +            let mut bytes =3D [0; _FILE.len() + 1];
+> +            let mut i =3D 0;
+> +            while i < _FILE.len() {
+> +                bytes[i] =3D _FILE[i];
+> +                i +=3D 1;
+> +            }
+> +            bytes
+> +        };
+> +        // SAFETY: Just an FFI call.
+> +        unsafe {
+> +            $crate::asm!(concat!(
+> +                "/* {size} */",
+> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generate=
+d_arch_warn_asm.rs")),
+> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generate=
+d_arch_reachable_asm.rs")));
+> +            file =3D sym FILE,
+> +            line =3D const line!(),
+> +            flags =3D const FLAGS,
+> +            size =3D const ::core::mem::size_of::<$crate::bindings::bug_=
+entry>(),
 
->
-> The driver is perfectly fine, when the request fails. It then does the
-> obvious right thing to poll the card detection pin.
->
-> So your change makes it worse as it screws up the detection mechanism.
->
-> What are you actually making "work"?
->
-> Thanks,
->
->         tglx
+The indentation here is odd. Shouldn't the arguments be indented one more?
+
+> +            );
+> +        }
+> +    }
+> +}
+> +
+> +#[macro_export]
+> +#[doc(hidden)]
+> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML), not(CONFIG_LOONGARCH)))]
+> +#[cfg(not(CONFIG_DEBUG_BUGVERBOSE))]
+> +macro_rules! warn_flags {
+> +    ($flags:expr) =3D> {
+> +        const FLAGS: u32 =3D $crate::bindings::BUGFLAG_WARNING | $flags;
+> +        // SAFETY: Just an FFI call.
+> +        unsafe {
+> +            $crate::asm!(
+> +            concat!(
+> +                "/* {size} */",
+> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generate=
+d_arch_warn_asm.rs")),
+> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generate=
+d_arch_reachable_asm.rs")));
+> +            flags =3D const FLAGS,
+> +            size =3D const ::core::mem::size_of::<$crate::bindings::bug_=
+entry>(),
+
+Same thing here.
+
+> +            );
+> +        }
+> +    }
+> +}
+> +
+> +#[macro_export]
+> +#[doc(hidden)]
+> +#[cfg(all(CONFIG_BUG, CONFIG_UML))]
+> +macro_rules! warn_flags {
+> +    ($flags:expr) =3D> {
+> +        // SAFETY: Just an FFI call.
+> +        unsafe {
+> +            $crate::bindings::warn_slowpath_fmt(
+> +                $crate::c_str!(::core::file!()).as_ptr() as *const ::cor=
+e::ffi::c_uchar,
+> +                line!() as i32,
+> +                $flags as u32,
+> +                ::core::ptr::null() as *const ::core::ffi::c_uchar,
+
+Why unsigned char? I think this should be ::kernel::ffi::c_char to
+utilize the custom integer type definitions in kernel rather than the
+faulty ones in core.
+
+(Maybe $crate rather than kernel)
+
+Alice
