@@ -1,71 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0134226170;
-	Tue,  8 Apr 2025 06:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44C626157E
+	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 07:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744093769; cv=none; b=SXqEqoD/IFjlnrML+C2dGs0W/R9GIvCujQy1UqxTzoy1hPYj+kBvfo7ldxMRLvI6fbQ/yZjTN1CYCLUdgCuyaIpAc/Ox/qfI7nvqmvwUpJFC2SKfJtKFjhyrH6ZKFxUAZXsc2BMpRMxDrGC5TUGYfJmus4TxGA/SX5CME3vgrFg=
+	t=1744096837; cv=none; b=TFw8zdESJ6fc06ZsyK/8WWYVJy2v4jmhDkx0BCz7mR3jgJyX1Ve152CGCGhlOEhxFI32N7jQgNgUvHnV8shW8yXeseh5xvr1dsNv7GB499nSVDe7lnTm2dTPW8UXQtWEeWsBZb11NlkLKoQZXYSlhlGT7f50OhBQXgVpeYulY4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744093769; c=relaxed/simple;
-	bh=TZRXQXyAJjfumstgWlPjlJzn7XUS2S2DJGD2Io8pZrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WUd1du7FZFKi3AZUNSBp7nSpIKLiJNOYska7+qE/hJh255+LBYKLO/h9SkxSVNuDdUKSfGBW8KwNnBQjOL4tVGxr4t5L/LHJgsCFhhI8iiXuyz+nFJWYWlsSg3ogq4h+BVzcP2fqN47zxQq3vkbv5BuG2h0KUkAk3PkncTZ3PMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3NYKgdA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3NYKgdA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDE3BC4CEE5;
-	Tue,  8 Apr 2025 06:29:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744093768;
-	bh=TZRXQXyAJjfumstgWlPjlJzn7XUS2S2DJGD2Io8pZrM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D3NYKgdALL38S3fbgMTg/PelGxLq8NIML9a3wOQ+5DPzXYfIRaIfCIpZF8yAimzu9
-	 8Hd2CH1ve0x+mFotzF2ozNBDWJMAivtJKYrVJoDIUV6wSIfJ7j8EsGAFn+ILEMqpvb
-	 kIoeF1cyMdUBvYrQHVHW8dwsoyNyIA5FskcTZSjTTo6oIEBz9ulJUQD1asV34sdrxT
-	 gOWXfs65XKoeec7rSdF/W1CZElIrGxZy+A1EoDe+SSvElPcdEubi+YD182GeKkHCff
-	 w+GeY8ZOGkYuut/1jLy6zzipVy9ZalCYIcqsZqz1BndnxjDiKkk2r90RQRXmtnL436
-	 ULFhrJH/HdFdg==
-Date: Mon, 7 Apr 2025 23:29:26 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>, 
-	Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev, 
-	Andrew Morton <akpm@linux-foundation.org>, Linux Memory Management List <linux-mm@kvack.org>, 
-	Alessandro Carminati <acarmina@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
- warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
- reg2[24]=-2-24
-Message-ID: <ozfqe7ppl6q632nzyimsxvs2vh2uanjaranc3kj4pca5uwzt7g@hmhmjvtvrmb2>
-References: <202504011011.jyZ6NtXx-lkp@intel.com>
- <Z+ttzRArSBMqfABz@rli9-mobl>
- <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
- <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
- <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
- <0cbe7ab8-bd87-b5f7-0513-07c82a7e76c9@loongson.cn>
- <bzy7cad37tafrbcmsstn355fpljxxmi25ifc4piihp6ln3ztxh@zp3c7ydsjmuq>
- <5f830e7a-7cfa-3c62-ba3f-f93808e95821@loongson.cn>
+	s=arc-20240116; t=1744096837; c=relaxed/simple;
+	bh=leAZBUvTDieNUCTCUQ6Z093axNVZ+MVhp4DKPjyWQPA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=QLzJS7IqMbL4v0+dypM2SePbUX3Cjwij0HryHMN0nbKuIPP3jBaUvuHR2qTpxvFdgBpooNxC5ntLCG45+/m1RVC1Wdn8t9yPtV+PwL6hXd8MbL6K17p962AnIaXWge0aUolJKIWYIhDD+lZxBRYzmLX3L4klBHI33RAEe7TYbJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4ZWw9P60QFz9vkm;
+	Tue,  8 Apr 2025 07:48:25 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 42ojJD_HJEii; Tue,  8 Apr 2025 07:48:25 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4ZWw9N2JlBz9vkp;
+	Tue,  8 Apr 2025 07:48:24 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 369B28B76C;
+	Tue,  8 Apr 2025 07:48:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id aUNb9W1lbxmx; Tue,  8 Apr 2025 07:48:24 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id DC9078B767;
+	Tue,  8 Apr 2025 07:48:21 +0200 (CEST)
+Message-ID: <ff31c2ff-55be-452e-b94a-6a84c4583258@csgroup.eu>
+Date: Tue, 8 Apr 2025 07:48:22 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5f830e7a-7cfa-3c62-ba3f-f93808e95821@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 09/13] arch, mm: set max_mapnr when allocating memory
+ map for FLATMEM
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+ Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Guo Ren
+ <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
+ Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
+ Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
+ Stafford Horne <shorne@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
+ Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+ linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-mm@kvack.org, x86@kernel.org
+References: <20250313135003.836600-1-rppt@kernel.org>
+ <20250313135003.836600-10-rppt@kernel.org>
+ <4b9627f2-65ff-4baf-931f-4e23b5732e6b@csgroup.eu>
+Content-Language: fr-FR
+In-Reply-To: <4b9627f2-65ff-4baf-931f-4e23b5732e6b@csgroup.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 10:45:51AM +0800, Tiezhu Yang wrote:
-> So this is a run-time bug rather than a compile-time warning, it should
-> put the option "-fno-shrink-wrap" outside CONFIG_OBJTOOL in
-> arch/loongarch/Makefile as a workaround, like this:
+Hi Mike,
 
-If loongarch folks agree it's a compiler bug, it should be reported to
-GCC, so the issue is better understood (and can get fixed).
+Le 14/03/2025 à 10:25, Christophe Leroy a écrit :
+> 
+> 
+> Le 13/03/2025 à 14:49, Mike Rapoport a écrit :
+>> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>>
+>> max_mapnr is essentially the size of the memory map for systems that use
+>> FLATMEM. There is no reason to calculate it in each and every 
+>> architecture
+>> when it's anyway calculated in alloc_node_mem_map().
+>>
+>> Drop setting of max_mapnr from architecture code and set it once in
+>> alloc_node_mem_map().
+> 
+> As far as I can see alloc_node_mem_map() is called quite late.
+> 
+> I fear that it will regress commit daa9ada2093e ("powerpc/mm: Fix boot 
+> crash with FLATMEM")
+> 
+> Can you check ?
 
-Without understanding the root cause, we don't know if -fno-shrink-wrap
-fixes it, or just makes this particular occurrence go away.
+I see this patch is now merged into mainline (v6.15-rc1). Have you been 
+able to check and/or analyse whether it doesn't regress the fix in 
+commit daa9ada2093e ("powerpc/mm: Fix boot crash with FLATMEM") ?
 
--- 
-Josh
+Thanks
+Christophe
+
