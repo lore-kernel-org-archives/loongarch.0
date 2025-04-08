@@ -1,113 +1,78 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9A022D7B2
-	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 16:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E074322B8A1
+	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 16:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128312; cv=none; b=DAmb9cEIoIhJjaOXE4aEZGvbpx+L0Ny0qGEkZyBDuIWdKW4fPaxXCX41cDhUnKQGKzx93aHppQc69IKqXCe1kfed7rrebme+QGQy72Fsyx/ldTq6Mvshk7882oSDj/g+hfhFLaaVX+d8IVFfv3q5PGoICN62/x9vT921Bm/OWI4=
+	t=1744128789; cv=none; b=XRdujxw1OriHN7Xq6bsmkwg0ehe6j22M0+1XMXDdPQvYsjSAvktXQ8De6cSELZcL8TzKs906wtxBR30yPzBAWNFv2iu3njDF6QSWSOyJUC2i0J8ppyFFWnvkJL78SS3Y+9mb7CPJCDda0nzW3uxFgFerHUESM8V4VX40/+FHbKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128312; c=relaxed/simple;
-	bh=Bul8n2HqBK5HaxZWiL9cD+VYCHhnK6HWIKmTk3OoomU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NiorwHCe9gSMjlbT/Ak9vm6MM9keb5BI4PgkjQXb+RObV1hz+j+VYjI/BaRT5D4goJ9V/cR2AwV1jaoWp+ie8oiZYw8Sd1l973OXptS7FjSOOPWvCeczOYR3JNhzGhwbLzdm9DFjD1kNc7QQgqBK9VKPDnaXJ8qKPAQSZ4Zg0y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T641j4Un; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F28H9YGA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744128789; c=relaxed/simple;
+	bh=/8Lgt7AKgNy/yDj5PsFIIZ/OI++yjozIZZNWQd0Jg2I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Q0ssBjsaAqGIN1GgjRbMn9dEbVA5n47cH98u+p2kp77eeWn57jMdM2Cv1hcyPawsqciU4B3bqm1kiItw25RfzWh2AK0Rg6QqhJU/rPhCHwc0+EjFY/X1II6nWD8eDzSO+ZeDlR+WBPf0xr2JojSPbn9bQVu2AmjMVFD6XO/HkyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=T9Mw1ZCd; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T641j4Un";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F28H9YGA"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744128308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UnN5WiyeTB4h3Ec6LnU3d9BBZisxrepypzd6MoCtTMw=;
-	b=T641j4Un1+Rj/VWuq63hqsFG2Ivpj7npNV9ICLgQ6vhIITnAe7HUNe/L2a0ojNRx+fnSzB
-	qgHE2H9GzC6V2u1l+06ZHdgo/aVdLLA6wt2haHdCLglWH3LO8bSQ4juHo0pZG4Y+q+4dSU
-	NOJLMiioRMgT4aimJqh7m7uBVrp52dBeCIQn21NE2bYlNdj0pmJo0ATz+z91H0O6uN7XNe
-	sME6jYJLTDOSTKqSGUuz5XhaKhLzVHWELSYly6tbSilNvVthBdnzndJ1HcHOhwvEdu7HDC
-	Y1T2KeF6PBqwkTWgju5/PRJqRfJuTuTzl7/IFWYIfIRA9h0qNWZQ0bIMauh9bQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744128308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UnN5WiyeTB4h3Ec6LnU3d9BBZisxrepypzd6MoCtTMw=;
-	b=F28H9YGAIGMMzlpBJRXOktnnCfUMr9wfIq7HToRk3KCQZDLeMBPNtvSkysl2B0qToXFIDA
-	uzpAZ+xhHJVafhDA==
-To: Huacai Chen <chenhuacai@gmail.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, Jiaxun
- Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, Yinbo Zhu
- <zhuyinbo@loongson.cn>
-Subject: Re: [PATCH] irqchip/loongson-liointc: Support to set
- IRQ_TYPE_EDGE_BOTH
-In-Reply-To: <CAAhV-H6tUvwN9UejTRf0zKXdhGG4o5X4ZOppE+1oQhL-rADFHg@mail.gmail.com>
-References: <20250402092500.514305-1-chenhuacai@loongson.cn>
- <87jz81uty3.ffs@tglx>
- <CAAhV-H5sO0x1EkWks5QZ8ah-stB7JbDk6eFFeeonXD6JT9fHAw@mail.gmail.com>
- <87bjt9wq3b.ffs@tglx>
- <CAAhV-H6r_iiKauPB=7eWhyTetvsTvxt5O9HtmmKb72y62yvXnA@mail.gmail.com>
- <875xjhwewg.ffs@tglx>
- <CAAhV-H6tUvwN9UejTRf0zKXdhGG4o5X4ZOppE+1oQhL-rADFHg@mail.gmail.com>
-Date: Tue, 08 Apr 2025 18:05:08 +0200
-Message-ID: <87cydmvdu3.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="T9Mw1ZCd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744128769;
+	bh=/8Lgt7AKgNy/yDj5PsFIIZ/OI++yjozIZZNWQd0Jg2I=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=T9Mw1ZCdw6VmCwcNeQ8NyuErcuE70NIe6GHvHBoSCslDNc/geczEXqIH8WfJ98S9G
+	 mdzBbKL4IIrSPUAT/tFYhqQw3d4MWElJ55GzfJIjLHUFXq5aQmhK4gKAgP9ieY6nn+
+	 4xM68HH+OwhHKOA0cZlKOFQxEvQvxxGAjH3JmlR4=
+X-QQ-mid: bizesmtpsz9t1744128763tb211cb
+X-QQ-Originating-IP: B3aoT2lfQT7lhb4CK9eX2m41pUeTGC7vlEq6PnA9Zbg=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 09 Apr 2025 00:12:40 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 14729311663327765348
+From: Wentao Guan <guanwentao@uniontech.com>
+To: yangtiezhu@loongson.cn
+Cc: chenhuacai@kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
+Date: Wed,  9 Apr 2025 00:12:39 +0800
+Message-Id: <20250408161239.1023788-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250408092907.22856-1-yangtiezhu@loongson.cn>
+References: <20250408092907.22856-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
+X-QQ-XMAILINFO: NRN3UPsLzYKVqIrPzeEpHTRKRq7s/4DCgNDwMWIe0+UiIz4mph4S3ZU1
+	LWI1eS7ChDVbMfg2oou0gd2elwvFTwy7tkX8jL0dEB5GEcANibimH4Z+DsJtGc8TDsL5pjC
+	+zuuWmzuCzd1QXUhoztriJA0ge4o4cBKTikEPsw6SZQDM0RSg8xRStaf0RyBqAAIqNyleSu
+	G8krFAVl5tla39YHVGKUNydR3kzgkuGQ3I5rB7CQtPp56URfMsZUQ3aa+FSe/Qo21XWLKoA
+	FJqm+G65FS8QHEqYrns+LqWsYXOmckxLfSHeVI3x5isZwPKMBMVm1qDgt7LAoLvss0LjrI2
+	5wN4ZjxBJXnXR+YOmGr0GG/+kBOFGUkfArXGFxzfzlyND2QY5R9QDYRZvnP62DeTjTsSAzG
+	Kw+nrNf6KLCBmPu7YiFpCEKKrxro95hL8VkDDL1RNCaY3ZQ3KTqMUFsXy1iTdSommaAwC2p
+	/gulo3Jx0A6qPRL+d5FCFSWX9CQeUHalQDrTBjeXrQQKroRwXy7g4vFMSXS5xlERD3QpiZb
+	XZi0WzhFlsCV5+eM/Ohx9iRtbYeAP96ywt528SPweH55v5kNz+RGwCynIXsmxucQJPe4AIa
+	0ufi/rUjGny1IcKKjOI7Ql7ZUiuePMe6a9I3J+aeLbd8ybK6LeALiokmh+WfGCetvSOOLEc
+	78OSmEiMAMSL8SholdfBahMTcg2dbFT6fuJefdqT123k0FF9Hq2mfsqenzCOYxNY9uVbOmR
+	1McDOixyhdtCBFDlGr0Hl9aFizxtRZoRWDzA1USKlHz0n7SE1PUoLBPesFoIEltWBo4sbJF
+	xqrS7orMkYuxhsPuwF+cpDjC8BLLN3n7Cz7Frib4bf2eYUd630tAMIwT+5LzRb25meN5zmm
+	K8aDA4/1hPCa8A0NgttnVgx8jL57CIa18ySjeNtlLC0DW+Hn405pmKhXS+4mgGelwrclEry
+	UcJPF43fAqLhDnDVpc5hUxG/Qfo1JRYnIal0e1a8+ovzlFPE1yxzJBN/A
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Apr 08 2025 at 20:37, Huacai Chen wrote:
-> On Sun, Apr 6, 2025 at 10:20=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
->> This is the card change detection and it uses a GPIO. Insert raises one
->> edge and remove the opposite one.
->>
->> Which means whatever edge you chose randomly the detection will only
->> work in one direction. Please don't tell me that this is correct by any
->> meaning of correct. It's not.
->
-> From experiments, either setting to EDGE_RISING or EDGE_FALLING, card
-> detection (inserting and removing) works.
+Hello Yang,
 
-You might get lucky in that case because the switch bounces and there is
-no debounce mechanism in place.
+I don`t know why change it defination remove "asmlinkage",
+why not explain it in commit message?
 
-> Maybe the driver request "BOTH", but it really need "ANY"? I've
-> searched git log, but I haven't get any useful information.
-
-There is no maybe at all and speculation is not a technical argument.
-
-It's well defined by the hardware:
-
-Present           ________________
-                 |               |
-Not present _____|               |_______________
-
-How can you detect that with a single edge?
-
-If the switch bounces then the signal is:
-
-Present           __  ___________  __
-                 | | |          | | |
-Not present _____| |_|          |_| |_______________
-
-which makes it "work" by accident, but not by design.
-
-There is ZERO guarantee that this will work with all other drivers which
-request EDGE_BOTH.
-
-Thanks,
-
-        tglx
-
-
-
+BRs
+Wentao Guan
