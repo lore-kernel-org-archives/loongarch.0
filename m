@@ -1,198 +1,113 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297F41C460A
-	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 13:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9A022D7B2
+	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 16:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744120555; cv=none; b=hRJdArieNvcLRpNuB4tz7YfELpneMhJghWQfQVwZ5oeIBLyluRfsa70X1FUzjk2Tkg6shB9PUvxr9Jz/ciZyeJJTobpF7b4wnlCW9dHYPrU986XgGa4eTs8Yj84DTI/ce+AC+Anmt3ql4HbQB7UFIARuMlYmL/H4HAVuR8i/mRo=
+	t=1744128312; cv=none; b=DAmb9cEIoIhJjaOXE4aEZGvbpx+L0Ny0qGEkZyBDuIWdKW4fPaxXCX41cDhUnKQGKzx93aHppQc69IKqXCe1kfed7rrebme+QGQy72Fsyx/ldTq6Mvshk7882oSDj/g+hfhFLaaVX+d8IVFfv3q5PGoICN62/x9vT921Bm/OWI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744120555; c=relaxed/simple;
-	bh=A6oBXcNkDqEcBwguJfqIOppUobE7Rt7ruRENVRB7a+o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y/ruwzgSvDpeQYWGppyQd1W+MtZMNWySYbdFof+weJ6o/dU6L9hblkui93cZoEoD938/KzspQOJlpvGLwLDfilB2Xmz3Bguoc1PLQUHh/afltbHNnEslEPeZuRP4U5dRQAa9PfCXnWVIUTSAivGgZ77OCCDha4Nr72yILuDDB+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=raS+SSrM; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744128312; c=relaxed/simple;
+	bh=Bul8n2HqBK5HaxZWiL9cD+VYCHhnK6HWIKmTk3OoomU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NiorwHCe9gSMjlbT/Ak9vm6MM9keb5BI4PgkjQXb+RObV1hz+j+VYjI/BaRT5D4goJ9V/cR2AwV1jaoWp+ie8oiZYw8Sd1l973OXptS7FjSOOPWvCeczOYR3JNhzGhwbLzdm9DFjD1kNc7QQgqBK9VKPDnaXJ8qKPAQSZ4Zg0y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T641j4Un; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F28H9YGA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="raS+SSrM"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39149bccb69so5247679f8f.2
-        for <loongarch@lists.linux.dev>; Tue, 08 Apr 2025 06:55:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744120551; x=1744725351; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NKIKzdAk3P2Y6YQbz9/8N2BLD9HfzvL0US6679wvjAc=;
-        b=raS+SSrMUua7ejYp0geiTnWfbID/0Vx5dHk9vQPMxUFxMcl1RC/uaC21RG8t1boB3h
-         xdsWV8GMhfT3wI/Z6ZyJr6ITXRiwewDkrDXVStMS/pkzzExOK2olaKNAu5BJDcglTNrM
-         ZFGvopXLfCK1UDt22eZHS4/zZBqRoK8ooypvIKgcX0fBbopPXNVyyMKCrDw8vVTFmRlH
-         gFLbkZsEH1vXmbbiJGBzLZh0AibUQMXM9kB+kX/8FX5DbHjiZzrVXvLNjLhOi4hkWN42
-         oqAI5j5HaHF2hyPT6vdMzzDPm7apAQxsbxPGsLm7n+sEZTifd3hFsK7b8v0gnQRbDX73
-         Jo+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744120551; x=1744725351;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NKIKzdAk3P2Y6YQbz9/8N2BLD9HfzvL0US6679wvjAc=;
-        b=o/PUJsi7O8aiTycFuP/TIx25lUo/NPxyfr9YPmF/5vOC2tGNblrBN4qFVhk6PQF/H5
-         ljWjIBUbtBhoNyH8Gfv6VVMHknFkzvwCcy+k50AdYi1Ikvagzy1yPukoC53ytgKsiCzO
-         sVFm6FjDPj8uOcFxzjvGORjGTzZzZoJETKfk+tNCGqxFCh8uZYBezU7rJJ+oPSDM6lOV
-         EH1M6tFeVkQTHZXOnk/0YOY4D5FZVRKrXiQaoLlKoujRUz8UpykuKd6ot9df1p1q5VeV
-         HPtVnx4glwa39JuqrjTGToRwjuOMVPUTxBwGAgxrOyPzxV+WwqdibKN1VMWeN4vm1lRP
-         DaUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgCkEsgCD+rW64QevvjnPXPk0MFdgl8mtNpW1YQOPJUg1AcVmMydz4RbZ8lriCSaXwV2PdHx9EbFs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwhGXgDMXGKotGGyrXmP52cAGNNLp8yROP9TZQNWt307+k5MO0U
-	5QZ4I5A9Mmh745DcY2JgnUMPeAgPJxGinEbEgelMRTBNGfwr4cwxsIi77O4vIjVDeXP7AVztoMy
-	YNfXRmYKbWvwm0XRNYmynZq52l7Zjfcx8NZTa
-X-Gm-Gg: ASbGncvlf5fRLF8rWde6YhgXKYU3we6JyRhVT6lsM9KK9zEzjaQZDCF4vd1/T4zx5nl
-	DsnI5FpZ09aVisOlfntiT0Z9JNBImWK1sOCUNqEMO0HPC1JOF44T4PrvWfEitACXBcf7QE5RNt1
-	8enNkhrb200nhmw+hgHiuH143ogU7kC0wS3jzZKbdscBkMUnYosybWsfZW
-X-Google-Smtp-Source: AGHT+IGe1he6VcB1HjanCrhxVAfQjIesMa6esygphkYmjhBdMP180Rn3O9/cuFUiPeqzOl258PSQo96dNzHqinw3Rqo=
-X-Received: by 2002:a05:6000:1888:b0:39a:c80b:8288 with SMTP id
- ffacd0b85a97d-39d6fc83ac7mr10495756f8f.33.1744120551236; Tue, 08 Apr 2025
- 06:55:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T641j4Un";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F28H9YGA"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744128308;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UnN5WiyeTB4h3Ec6LnU3d9BBZisxrepypzd6MoCtTMw=;
+	b=T641j4Un1+Rj/VWuq63hqsFG2Ivpj7npNV9ICLgQ6vhIITnAe7HUNe/L2a0ojNRx+fnSzB
+	qgHE2H9GzC6V2u1l+06ZHdgo/aVdLLA6wt2haHdCLglWH3LO8bSQ4juHo0pZG4Y+q+4dSU
+	NOJLMiioRMgT4aimJqh7m7uBVrp52dBeCIQn21NE2bYlNdj0pmJo0ATz+z91H0O6uN7XNe
+	sME6jYJLTDOSTKqSGUuz5XhaKhLzVHWELSYly6tbSilNvVthBdnzndJ1HcHOhwvEdu7HDC
+	Y1T2KeF6PBqwkTWgju5/PRJqRfJuTuTzl7/IFWYIfIRA9h0qNWZQ0bIMauh9bQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744128308;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UnN5WiyeTB4h3Ec6LnU3d9BBZisxrepypzd6MoCtTMw=;
+	b=F28H9YGAIGMMzlpBJRXOktnnCfUMr9wfIq7HToRk3KCQZDLeMBPNtvSkysl2B0qToXFIDA
+	uzpAZ+xhHJVafhDA==
+To: Huacai Chen <chenhuacai@gmail.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, Jiaxun
+ Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, Yinbo Zhu
+ <zhuyinbo@loongson.cn>
+Subject: Re: [PATCH] irqchip/loongson-liointc: Support to set
+ IRQ_TYPE_EDGE_BOTH
+In-Reply-To: <CAAhV-H6tUvwN9UejTRf0zKXdhGG4o5X4ZOppE+1oQhL-rADFHg@mail.gmail.com>
+References: <20250402092500.514305-1-chenhuacai@loongson.cn>
+ <87jz81uty3.ffs@tglx>
+ <CAAhV-H5sO0x1EkWks5QZ8ah-stB7JbDk6eFFeeonXD6JT9fHAw@mail.gmail.com>
+ <87bjt9wq3b.ffs@tglx>
+ <CAAhV-H6r_iiKauPB=7eWhyTetvsTvxt5O9HtmmKb72y62yvXnA@mail.gmail.com>
+ <875xjhwewg.ffs@tglx>
+ <CAAhV-H6tUvwN9UejTRf0zKXdhGG4o5X4ZOppE+1oQhL-rADFHg@mail.gmail.com>
+Date: Tue, 08 Apr 2025 18:05:08 +0200
+Message-ID: <87cydmvdu3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250305110814.272792-1-fujita.tomonori@gmail.com> <20250305110814.272792-5-fujita.tomonori@gmail.com>
-In-Reply-To: <20250305110814.272792-5-fujita.tomonori@gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 8 Apr 2025 15:55:38 +0200
-X-Gm-Features: ATxdqUHiYJtkNt0G-spjemExiwLroDOvAjC-UywxGL0GYlMeas4Df-5aHcFmNEQ
-Message-ID: <CAH5fLgiDx5CQQMv=k=ejFYGM=ey1-dgQ44s1Ej1k2+mL7vnZaA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] rust: Add warn_on macro
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	x86@kernel.org, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
-	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn, 
-	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 5, 2025 at 12:10=E2=80=AFPM FUJITA Tomonori
-<fujita.tomonori@gmail.com> wrote:
+On Tue, Apr 08 2025 at 20:37, Huacai Chen wrote:
+> On Sun, Apr 6, 2025 at 10:20=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
+de> wrote:
+>> This is the card change detection and it uses a GPIO. Insert raises one
+>> edge and remove the opposite one.
+>>
+>> Which means whatever edge you chose randomly the detection will only
+>> work in one direction. Please don't tell me that this is correct by any
+>> meaning of correct. It's not.
 >
-> Add warn_on macro, uses the BUG/WARN feature (lib/bug.c) via assembly
-> for x86_64/arm64/riscv.
->
-> The current Rust code simply wraps BUG() macro but doesn't provide the
-> proper debug information. The BUG/WARN feature can only be used from
-> assembly.
->
-> This uses the assembly code exported by the C side via ARCH_WARN_ASM
-> macro. To avoid duplicating the assembly code, this approach follows
-> the same strategy as the static branch code: it generates the assembly
-> code for Rust using the C preprocessor at compile time.
->
-> Similarly, ARCH_WARN_REACHABLE is also used at compile time to
-> generate the assembly code; objtool's reachable anotation code. It's
-> used for only architectures that use objtool.
->
-> For now, Loongarch just uses a wrapper for WARN macro.
->
-> UML doesn't use the assembly BUG/WARN feature; just wrapping generic
-> BUG/WARN functions implemented in C works.
->
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> From experiments, either setting to EDGE_RISING or EDGE_FALLING, card
+> detection (inserting and removing) works.
 
-Overall looks reasonable. A few nits below:
+You might get lucky in that case because the switch bounces and there is
+no debounce mechanism in place.
 
-> +#[macro_export]
-> +#[doc(hidden)]
-> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML), not(CONFIG_LOONGARCH)))]
-> +#[cfg(CONFIG_DEBUG_BUGVERBOSE)]
-> +macro_rules! warn_flags {
-> +    ($flags:expr) =3D> {
-> +        const FLAGS: u32 =3D $crate::bindings::BUGFLAG_WARNING | $flags;
-> +        const _FILE: &[u8] =3D file!().as_bytes();
-> +        // Plus one for null-terminator.
-> +        static FILE: [u8; _FILE.len() + 1] =3D {
-> +            let mut bytes =3D [0; _FILE.len() + 1];
-> +            let mut i =3D 0;
-> +            while i < _FILE.len() {
-> +                bytes[i] =3D _FILE[i];
-> +                i +=3D 1;
-> +            }
-> +            bytes
-> +        };
-> +        // SAFETY: Just an FFI call.
-> +        unsafe {
-> +            $crate::asm!(concat!(
-> +                "/* {size} */",
-> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generate=
-d_arch_warn_asm.rs")),
-> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generate=
-d_arch_reachable_asm.rs")));
-> +            file =3D sym FILE,
-> +            line =3D const line!(),
-> +            flags =3D const FLAGS,
-> +            size =3D const ::core::mem::size_of::<$crate::bindings::bug_=
-entry>(),
+> Maybe the driver request "BOTH", but it really need "ANY"? I've
+> searched git log, but I haven't get any useful information.
 
-The indentation here is odd. Shouldn't the arguments be indented one more?
+There is no maybe at all and speculation is not a technical argument.
 
-> +            );
-> +        }
-> +    }
-> +}
-> +
-> +#[macro_export]
-> +#[doc(hidden)]
-> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML), not(CONFIG_LOONGARCH)))]
-> +#[cfg(not(CONFIG_DEBUG_BUGVERBOSE))]
-> +macro_rules! warn_flags {
-> +    ($flags:expr) =3D> {
-> +        const FLAGS: u32 =3D $crate::bindings::BUGFLAG_WARNING | $flags;
-> +        // SAFETY: Just an FFI call.
-> +        unsafe {
-> +            $crate::asm!(
-> +            concat!(
-> +                "/* {size} */",
-> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generate=
-d_arch_warn_asm.rs")),
-> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generate=
-d_arch_reachable_asm.rs")));
-> +            flags =3D const FLAGS,
-> +            size =3D const ::core::mem::size_of::<$crate::bindings::bug_=
-entry>(),
+It's well defined by the hardware:
 
-Same thing here.
+Present           ________________
+                 |               |
+Not present _____|               |_______________
 
-> +            );
-> +        }
-> +    }
-> +}
-> +
-> +#[macro_export]
-> +#[doc(hidden)]
-> +#[cfg(all(CONFIG_BUG, CONFIG_UML))]
-> +macro_rules! warn_flags {
-> +    ($flags:expr) =3D> {
-> +        // SAFETY: Just an FFI call.
-> +        unsafe {
-> +            $crate::bindings::warn_slowpath_fmt(
-> +                $crate::c_str!(::core::file!()).as_ptr() as *const ::cor=
-e::ffi::c_uchar,
-> +                line!() as i32,
-> +                $flags as u32,
-> +                ::core::ptr::null() as *const ::core::ffi::c_uchar,
+How can you detect that with a single edge?
 
-Why unsigned char? I think this should be ::kernel::ffi::c_char to
-utilize the custom integer type definitions in kernel rather than the
-faulty ones in core.
+If the switch bounces then the signal is:
 
-(Maybe $crate rather than kernel)
+Present           __  ___________  __
+                 | | |          | | |
+Not present _____| |_|          |_| |_______________
 
-Alice
+which makes it "work" by accident, but not by design.
+
+There is ZERO guarantee that this will work with all other drivers which
+request EDGE_BOTH.
+
+Thanks,
+
+        tglx
+
+
+
