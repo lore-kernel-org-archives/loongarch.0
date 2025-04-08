@@ -1,232 +1,123 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A014264FAC
-	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 09:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13FA52638B0;
+	Tue,  8 Apr 2025 09:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104555; cv=none; b=fTf4gmnPQtVnOVW6hVR1BfXy0rCzunZ04HAbcf8HFhw62o+bvXSt6oS8vhm2Y/G4JsH1Nh41qc3gLVPT7JfOCPeM8N9VKqzp1sO/CkzFNQR2TrW2OIuXmAol8ZIvTSCHSnksRuFz5s9EmkPi2HctQLSvlsAtpNGs3utKqV88qgo=
+	t=1744104729; cv=none; b=EeUgobHsmwlNLitn7+Au7OWGb8CqOli/iV53P26YsVZkqlHcpRYNam1hk89+KNxUxeCHh6ECya8pOsSN9edRSudHGpXrSiP1wHKEyHvgoe3scg42NHTO19zZUEunDKs3yYl6JhGDItOgtIWlaYMkaqaeOWgghL88EIPFw91ZQuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104555; c=relaxed/simple;
-	bh=hXwghIbYaI9OMHcN+QAQSNVkjiUy08hKNKzDfZ3Gzqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qio94FmtVfrh5SoKGPzXcXsbPrdrZRZrmSsR7Whi+pWNsAshKMKyHeK5q/5ElL+dqyju7eEtSgPXplX229UlBFMkeZzf7COYX5Nl1hP8IctpzJ3y4S9PdzifSKninYd/8ItqQjgltAVZ+j7xhgQZ+8HUZOg20P2UJZ5DoFVxccg=
+	s=arc-20240116; t=1744104729; c=relaxed/simple;
+	bh=eUgN16UZ6MZKlcacifOD015XeGjpiWidkDRVHjo/3mY=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=D89/GUqOKDrcmLJ9CLOZPZozv0htqXRD3sR8nnaHOxaAysk8q8cbjOukEdJHZoVqa/OJoR26Pb6jMxgRHJ4So9pzMbnxeSj4Qv4JgLQ1IQHH9iGHh0k6/Hu4wFM0zD7Y7eAlBEMsBomA6Wh78Dzzg0TLG9rjpMfwq5cGJ3xjO2k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxlnBn7PRnchC1AA--.38810S3;
-	Tue, 08 Apr 2025 17:29:11 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxPcVm7PRno350AA--.18853S2;
-	Tue, 08 Apr 2025 17:29:10 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bx364T7fRn8RC1AA--.21070S3;
+	Tue, 08 Apr 2025 17:32:03 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDxPcUS7fRnun90AA--.18864S3;
+	Tue, 08 Apr 2025 17:32:03 +0800 (CST)
+Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
+ warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
+ reg2[24]=-2-24
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <202504011011.jyZ6NtXx-lkp@intel.com> <Z+ttzRArSBMqfABz@rli9-mobl>
+ <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
+ <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
+ <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
+ <0cbe7ab8-bd87-b5f7-0513-07c82a7e76c9@loongson.cn>
+ <bzy7cad37tafrbcmsstn355fpljxxmi25ifc4piihp6ln3ztxh@zp3c7ydsjmuq>
+ <5f830e7a-7cfa-3c62-ba3f-f93808e95821@loongson.cn>
+ <ozfqe7ppl6q632nzyimsxvs2vh2uanjaranc3kj4pca5uwzt7g@hmhmjvtvrmb2>
+Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>,
+ Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Alessandro Carminati <acarmina@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
-Date: Tue,  8 Apr 2025 17:29:07 +0800
-Message-ID: <20250408092907.22856-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+Message-ID: <35f7eac8-a970-5fd3-25f4-55f417e8e15e@loongson.cn>
+Date: Tue, 8 Apr 2025 17:32:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPcVm7PRno350AA--.18853S2
+In-Reply-To: <ozfqe7ppl6q632nzyimsxvs2vh2uanjaranc3kj4pca5uwzt7g@hmhmjvtvrmb2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMDxPcUS7fRnun90AA--.18864S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3JF4rtw48CFyxKw4Dur1rGrX_yoWxAw43pr
-	nrArn7Cw48GFnav34DXa4jvFZxXas8GF1S93Wqy34fCr1j9r9rurn3Ga1qvFyUKa48Ar4F
-	9r4avFySyFyUC3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7uw45XF1kGFWxJF1fKr43CFX_yoW8WF47pr
+	ZrA395CF4kGF4rtF9Fyw4jqF4Yvr93KryaqF4xK3yDAF1Yqry7CF48KFWq9F98G392q3yS
+	qF47WasI9F4UAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY38nUUUUU=
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
 
-Like the other relevant symbols, export some fp, lsx, lasx and lbt
-assembly symbols and put the function declarations in header files
-rather than source files.
+On 04/08/2025 02:29 PM, Josh Poimboeuf wrote:
+> On Tue, Apr 08, 2025 at 10:45:51AM +0800, Tiezhu Yang wrote:
+>> So this is a run-time bug rather than a compile-time warning, it should
+>> put the option "-fno-shrink-wrap" outside CONFIG_OBJTOOL in
+>> arch/loongarch/Makefile as a workaround, like this:
+>
+> If loongarch folks agree it's a compiler bug, it should be reported to
+> GCC, so the issue is better understood (and can get fixed).
+>
+> Without understanding the root cause, we don't know if -fno-shrink-wrap
+> fixes it, or just makes this particular occurrence go away.
 
-Cc: stable@vger.kernel.org # 6.6+
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/fpu.h |  6 ++++++
- arch/loongarch/include/asm/lbt.h |  4 ++++
- arch/loongarch/kernel/fpu.S      |  6 ++++++
- arch/loongarch/kernel/lbt.S      |  4 ++++
- arch/loongarch/kernel/signal.c   | 21 ---------------------
- 5 files changed, 20 insertions(+), 21 deletions(-)
+OK, thank you. I have discussed offline with the developers
+Rui Wang and Lulu Cheng who are familiar with compiler, the
+root cause may be that if a jump label's control flow path
+exactly matches the caller's epilogue, the compiler may omit
+restoring saved registers, it needs to be confirmed by GCC
+developers.
 
-diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
-index 3177674228f8..52efb2f4df1c 100644
---- a/arch/loongarch/include/asm/fpu.h
-+++ b/arch/loongarch/include/asm/fpu.h
-@@ -28,16 +28,22 @@ extern void kernel_fpu_end(void);
- extern void _init_fpu(unsigned int);
- extern void _save_fp(struct loongarch_fpu *);
- extern void _restore_fp(struct loongarch_fpu *);
-+extern int _save_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
-+extern int _restore_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
- 
- extern void _save_lsx(struct loongarch_fpu *fpu);
- extern void _restore_lsx(struct loongarch_fpu *fpu);
- extern void _init_lsx_upper(void);
- extern void _restore_lsx_upper(struct loongarch_fpu *fpu);
-+extern int _save_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
-+extern int _restore_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
- 
- extern void _save_lasx(struct loongarch_fpu *fpu);
- extern void _restore_lasx(struct loongarch_fpu *fpu);
- extern void _init_lasx_upper(void);
- extern void _restore_lasx_upper(struct loongarch_fpu *fpu);
-+extern int _save_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
-+extern int _restore_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
- 
- static inline void enable_lsx(void);
- static inline void disable_lsx(void);
-diff --git a/arch/loongarch/include/asm/lbt.h b/arch/loongarch/include/asm/lbt.h
-index e671978bf552..24a9ee232fee 100644
---- a/arch/loongarch/include/asm/lbt.h
-+++ b/arch/loongarch/include/asm/lbt.h
-@@ -15,6 +15,10 @@
- extern void _init_lbt(void);
- extern void _save_lbt(struct loongarch_lbt *);
- extern void _restore_lbt(struct loongarch_lbt *);
-+extern int _save_lbt_context(void __user *regs, void __user *eflags);
-+extern int _restore_lbt_context(void __user *regs, void __user *eflags);
-+extern int _save_ftop_context(void __user *ftop);
-+extern int _restore_ftop_context(void __user *ftop);
- 
- static inline int is_lbt_enabled(void)
- {
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index 6ab640101457..28caf416ae36 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -458,6 +458,7 @@ SYM_FUNC_START(_save_fp_context)
- 	li.w		a0, 0				# success
- 	jr		ra
- SYM_FUNC_END(_save_fp_context)
-+EXPORT_SYMBOL_GPL(_save_fp_context)
- 
- /*
-  * a0: fpregs
-@@ -471,6 +472,7 @@ SYM_FUNC_START(_restore_fp_context)
- 	li.w		a0, 0				# success
- 	jr		ra
- SYM_FUNC_END(_restore_fp_context)
-+EXPORT_SYMBOL_GPL(_restore_fp_context)
- 
- /*
-  * a0: fpregs
-@@ -484,6 +486,7 @@ SYM_FUNC_START(_save_lsx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_save_lsx_context)
-+EXPORT_SYMBOL_GPL(_save_lsx_context)
- 
- /*
-  * a0: fpregs
-@@ -497,6 +500,7 @@ SYM_FUNC_START(_restore_lsx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_restore_lsx_context)
-+EXPORT_SYMBOL_GPL(_restore_lsx_context)
- 
- /*
-  * a0: fpregs
-@@ -510,6 +514,7 @@ SYM_FUNC_START(_save_lasx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_save_lasx_context)
-+EXPORT_SYMBOL_GPL(_save_lasx_context)
- 
- /*
-  * a0: fpregs
-@@ -523,6 +528,7 @@ SYM_FUNC_START(_restore_lasx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_restore_lasx_context)
-+EXPORT_SYMBOL_GPL(_restore_lasx_context)
- 
- .L_fpu_fault:
- 	li.w	a0, -EFAULT				# failure
-diff --git a/arch/loongarch/kernel/lbt.S b/arch/loongarch/kernel/lbt.S
-index 001f061d226a..71678912d24c 100644
---- a/arch/loongarch/kernel/lbt.S
-+++ b/arch/loongarch/kernel/lbt.S
-@@ -90,6 +90,7 @@ SYM_FUNC_START(_save_lbt_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_save_lbt_context)
-+EXPORT_SYMBOL_GPL(_save_lbt_context)
- 
- /*
-  * a0: scr
-@@ -110,6 +111,7 @@ SYM_FUNC_START(_restore_lbt_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_restore_lbt_context)
-+EXPORT_SYMBOL_GPL(_restore_lbt_context)
- 
- /*
-  * a0: ftop
-@@ -120,6 +122,7 @@ SYM_FUNC_START(_save_ftop_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_save_ftop_context)
-+EXPORT_SYMBOL_GPL(_save_ftop_context)
- 
- /*
-  * a0: ftop
-@@ -150,6 +153,7 @@ SYM_FUNC_START(_restore_ftop_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_restore_ftop_context)
-+EXPORT_SYMBOL_GPL(_restore_ftop_context)
- 
- .L_lbt_fault:
- 	li.w		a0, -EFAULT		# failure
-diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
-index 7a555b600171..4740cb5b2388 100644
---- a/arch/loongarch/kernel/signal.c
-+++ b/arch/loongarch/kernel/signal.c
-@@ -51,27 +51,6 @@
- #define lock_lbt_owner()	({ preempt_disable(); pagefault_disable(); })
- #define unlock_lbt_owner()	({ pagefault_enable(); preempt_enable(); })
- 
--/* Assembly functions to move context to/from the FPU */
--extern asmlinkage int
--_save_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
--extern asmlinkage int
--_restore_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
--extern asmlinkage int
--_save_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--extern asmlinkage int
--_restore_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--extern asmlinkage int
--_save_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--extern asmlinkage int
--_restore_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--
--#ifdef CONFIG_CPU_HAS_LBT
--extern asmlinkage int _save_lbt_context(void __user *regs, void __user *eflags);
--extern asmlinkage int _restore_lbt_context(void __user *regs, void __user *eflags);
--extern asmlinkage int _save_ftop_context(void __user *ftop);
--extern asmlinkage int _restore_ftop_context(void __user *ftop);
--#endif
--
- struct rt_sigframe {
- 	struct siginfo rs_info;
- 	struct ucontext rs_uctx;
--- 
-2.42.0
+By the way, add an empty inline assembly can also work around
+the problem, like this:
+
+diff --git a/arch/loongarch/include/asm/jump_label.h 
+b/arch/loongarch/include/asm/jump_label.h
+index 8a924bd69d19..dbc105e62380 100644
+--- a/arch/loongarch/include/asm/jump_label.h
++++ b/arch/loongarch/include/asm/jump_label.h
+@@ -34,6 +34,7 @@ static __always_inline bool arch_static_branch(struct 
+static_key * const key, co
+         return false;
+
+  l_yes:
++       asm volatile("");
+         return true;
+  }
+
+@@ -47,6 +48,7 @@ static __always_inline bool 
+arch_static_branch_jump(struct static_key * const ke
+         return false;
+
+  l_yes:
++       asm volatile("");
+         return true;
+  }
+
+We will fix this issue once the root cause is clear.
+
+Thanks,
+Tiezhu
 
