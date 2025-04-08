@@ -1,118 +1,90 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44C626157E
-	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 07:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F84264A85
+	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 09:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744096837; cv=none; b=TFw8zdESJ6fc06ZsyK/8WWYVJy2v4jmhDkx0BCz7mR3jgJyX1Ve152CGCGhlOEhxFI32N7jQgNgUvHnV8shW8yXeseh5xvr1dsNv7GB499nSVDe7lnTm2dTPW8UXQtWEeWsBZb11NlkLKoQZXYSlhlGT7f50OhBQXgVpeYulY4M=
+	t=1744104491; cv=none; b=YY3RMdc011OychGAhGiJwBXT8qFoJuf+yBcGvjb5+WX7wKR2WIXZhrt8w6v2kPrHDqLKB95gJbdSCOoZ4bswOnJXxbVTsY+7BHDSDNSZaZQlYXOX+DUXstx7zbissczhXsxcTI52/tThYmO5N6anx3Qi2eMQXYOw/5cSZEKjj9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744096837; c=relaxed/simple;
-	bh=leAZBUvTDieNUCTCUQ6Z093axNVZ+MVhp4DKPjyWQPA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=QLzJS7IqMbL4v0+dypM2SePbUX3Cjwij0HryHMN0nbKuIPP3jBaUvuHR2qTpxvFdgBpooNxC5ntLCG45+/m1RVC1Wdn8t9yPtV+PwL6hXd8MbL6K17p962AnIaXWge0aUolJKIWYIhDD+lZxBRYzmLX3L4klBHI33RAEe7TYbJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4ZWw9P60QFz9vkm;
-	Tue,  8 Apr 2025 07:48:25 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 42ojJD_HJEii; Tue,  8 Apr 2025 07:48:25 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4ZWw9N2JlBz9vkp;
-	Tue,  8 Apr 2025 07:48:24 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 369B28B76C;
-	Tue,  8 Apr 2025 07:48:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id aUNb9W1lbxmx; Tue,  8 Apr 2025 07:48:24 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id DC9078B767;
-	Tue,  8 Apr 2025 07:48:21 +0200 (CEST)
-Message-ID: <ff31c2ff-55be-452e-b94a-6a84c4583258@csgroup.eu>
-Date: Tue, 8 Apr 2025 07:48:22 +0200
+	s=arc-20240116; t=1744104491; c=relaxed/simple;
+	bh=eyqOzFeAfWPRcomofF0iPt9yEMcU5b0bxRDqwp3CnvM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aBMjZIQMph01xhCd+/JK/hCKaSntpNoH4iAXLNK5fQnnRIR42Fvf3BlZUmN4pSSRdfBmfIHsJPvzwuLhnXzSsolyR0PZp83HVg4ZHx0UzcYgQClTuVc0XHvq4/sYAqbYhg0uW8w4WfjcljIhrVD1Js+vUDRT+zlkXEXVMjAXJck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxvOIf7PRnRBC1AA--.40854S3;
+	Tue, 08 Apr 2025 17:27:59 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMBxLscd7PRnF350AA--.24496S2;
+	Tue, 08 Apr 2025 17:27:58 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Enhance robust of kprobe
+Date: Tue,  8 Apr 2025 17:27:56 +0800
+Message-ID: <20250408092756.22339-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/13] arch, mm: set max_mapnr when allocating memory
- map for FLATMEM
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Guo Ren
- <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
- Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
- Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>,
- Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
- Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
- Stafford Horne <shorne@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
- linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-mm@kvack.org, x86@kernel.org
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-10-rppt@kernel.org>
- <4b9627f2-65ff-4baf-931f-4e23b5732e6b@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <4b9627f2-65ff-4baf-931f-4e23b5732e6b@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxLscd7PRnF350AA--.24496S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr1kKFyfJw1DGFW7XFy5trc_yoW8WryfpF
+	47Cas5tr4kW3W0va4qv34xur10yFWDCrWxWw4UA345Kws8uwn0vr1xG3WDXF95W3yFqr1S
+	vF1rKrWIqF1DCFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOF4_UUUUU=
 
-Hi Mike,
+Currently, interrupts need to be disabled before single-step mode is set,
+it requires that the CSR_PRMD_PIE must be cleared in save_local_irqflag()
+which is called by setup_singlestep(), this is reasonable.
 
-Le 14/03/2025 à 10:25, Christophe Leroy a écrit :
-> 
-> 
-> Le 13/03/2025 à 14:49, Mike Rapoport a écrit :
->> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->>
->> max_mapnr is essentially the size of the memory map for systems that use
->> FLATMEM. There is no reason to calculate it in each and every 
->> architecture
->> when it's anyway calculated in alloc_node_mem_map().
->>
->> Drop setting of max_mapnr from architecture code and set it once in
->> alloc_node_mem_map().
-> 
-> As far as I can see alloc_node_mem_map() is called quite late.
-> 
-> I fear that it will regress commit daa9ada2093e ("powerpc/mm: Fix boot 
-> crash with FLATMEM")
-> 
-> Can you check ?
+But in the first kprobe breakpoint exception, if the irq is enabled at the
+beginning of do_bp(), it will not be disabled at the end of do_bp() due to
+the CSR_PRMD_PIE has been cleared in save_local_irqflag(). For this case,
+it may corrupt exception context when restoring exception after do_bp() in
+handle_bp(), this is not reasonable.
 
-I see this patch is now merged into mainline (v6.15-rc1). Have you been 
-able to check and/or analyse whether it doesn't regress the fix in 
-commit daa9ada2093e ("powerpc/mm: Fix boot crash with FLATMEM") ?
+Based on the above analysis, in order to make sure the irq is disabled at
+the end of do_bp() for the first kprobe breakpoint exception, it is proper
+to disable irq first before clearing CSR_PRMD_PIE in save_local_irqflag().
 
-Thanks
-Christophe
+Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
+Co-developed-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/kprobes.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+index 8ba391cfabb0..6eab97636e6b 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -113,6 +113,7 @@ NOKPROBE_SYMBOL(set_current_kprobe);
+ static void save_local_irqflag(struct kprobe_ctlblk *kcb,
+ 			       struct pt_regs *regs)
+ {
++	local_irq_disable();
+ 	kcb->saved_status = regs->csr_prmd;
+ 	regs->csr_prmd &= ~CSR_PRMD_PIE;
+ }
+-- 
+2.42.0
 
