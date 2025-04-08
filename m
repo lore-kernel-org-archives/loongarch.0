@@ -1,193 +1,71 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B897249F9;
-	Tue,  8 Apr 2025 02:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0134226170;
+	Tue,  8 Apr 2025 06:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744080366; cv=none; b=nfFpi7Ar9tYxqAUiMt+QJngUgTuPut3mW1JCxWGUpPdd3fLvMQlZMj7rixHKBmlNz/aj0/FsAaAtBzADLotsHOkjqjoZIB5dOEZ+/SozKRGOVeKiuLsi/wi9spoPneLMrz5gbqPwF0/48DFoFWj2iy0xow1Avuo9qQWt1vOvTJU=
+	t=1744093769; cv=none; b=SXqEqoD/IFjlnrML+C2dGs0W/R9GIvCujQy1UqxTzoy1hPYj+kBvfo7ldxMRLvI6fbQ/yZjTN1CYCLUdgCuyaIpAc/Ox/qfI7nvqmvwUpJFC2SKfJtKFjhyrH6ZKFxUAZXsc2BMpRMxDrGC5TUGYfJmus4TxGA/SX5CME3vgrFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744080366; c=relaxed/simple;
-	bh=EJwspP7jB0NxkzeKqLfyaDNnRfd+oKg3DseSPP9tNLs=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=S8dTt3/SvUUNEN1AExrIKByhATnSJGzUA+x55MTlNLCUvcHZQa4AFJ+ZtsbKAnYZW+8x6h97a9KKFFHIFGfO+Sd8er6U4DorwUkvagwjwChVJsXuGRiHvEizCJdpnCKi6Ob53QpXdKwj/X2uvhT00Hg/PN+u5OT7oahkfR1G6CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxdWnkjfRnHdq0AA--.38958S3;
-	Tue, 08 Apr 2025 10:45:56 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMAxj8XfjfRnhCB0AA--.21383S3;
-	Tue, 08 Apr 2025 10:45:52 +0800 (CST)
+	s=arc-20240116; t=1744093769; c=relaxed/simple;
+	bh=TZRXQXyAJjfumstgWlPjlJzn7XUS2S2DJGD2Io8pZrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WUd1du7FZFKi3AZUNSBp7nSpIKLiJNOYska7+qE/hJh255+LBYKLO/h9SkxSVNuDdUKSfGBW8KwNnBQjOL4tVGxr4t5L/LHJgsCFhhI8iiXuyz+nFJWYWlsSg3ogq4h+BVzcP2fqN47zxQq3vkbv5BuG2h0KUkAk3PkncTZ3PMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3NYKgdA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3NYKgdA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDE3BC4CEE5;
+	Tue,  8 Apr 2025 06:29:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744093768;
+	bh=TZRXQXyAJjfumstgWlPjlJzn7XUS2S2DJGD2Io8pZrM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D3NYKgdALL38S3fbgMTg/PelGxLq8NIML9a3wOQ+5DPzXYfIRaIfCIpZF8yAimzu9
+	 8Hd2CH1ve0x+mFotzF2ozNBDWJMAivtJKYrVJoDIUV6wSIfJ7j8EsGAFn+ILEMqpvb
+	 kIoeF1cyMdUBvYrQHVHW8dwsoyNyIA5FskcTZSjTTo6oIEBz9ulJUQD1asV34sdrxT
+	 gOWXfs65XKoeec7rSdF/W1CZElIrGxZy+A1EoDe+SSvElPcdEubi+YD182GeKkHCff
+	 w+GeY8ZOGkYuut/1jLy6zzipVy9ZalCYIcqsZqz1BndnxjDiKkk2r90RQRXmtnL436
+	 ULFhrJH/HdFdg==
+Date: Mon, 7 Apr 2025 23:29:26 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>, 
+	Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, Linux Memory Management List <linux-mm@kvack.org>, 
+	Alessandro Carminati <acarmina@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
 Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
  warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
  reg2[24]=-2-24
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-References: <202504011011.jyZ6NtXx-lkp@intel.com> <Z+ttzRArSBMqfABz@rli9-mobl>
+Message-ID: <ozfqe7ppl6q632nzyimsxvs2vh2uanjaranc3kj4pca5uwzt7g@hmhmjvtvrmb2>
+References: <202504011011.jyZ6NtXx-lkp@intel.com>
+ <Z+ttzRArSBMqfABz@rli9-mobl>
  <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
  <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
  <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
  <0cbe7ab8-bd87-b5f7-0513-07c82a7e76c9@loongson.cn>
  <bzy7cad37tafrbcmsstn355fpljxxmi25ifc4piihp6ln3ztxh@zp3c7ydsjmuq>
-Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>,
- Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev,
- Andrew Morton <akpm@linux-foundation.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Alessandro Carminati <acarmina@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <5f830e7a-7cfa-3c62-ba3f-f93808e95821@loongson.cn>
-Date: Tue, 8 Apr 2025 10:45:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+ <5f830e7a-7cfa-3c62-ba3f-f93808e95821@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <bzy7cad37tafrbcmsstn355fpljxxmi25ifc4piihp6ln3ztxh@zp3c7ydsjmuq>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMAxj8XfjfRnhCB0AA--.21383S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw4rur4UAF47tw4rCr4UGFX_yoWrAr18pF
-	s2v3WkJa1kJr4vyr9rXF4fXF15ArsrGw1Uu34fWFyUAa1Yqr97XF95tr45ZFZYgwsrAry0
-	qrZ5CrnaqF90ywcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
-	JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
-	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
-	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
-	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-	Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8q2NtUUUUU==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5f830e7a-7cfa-3c62-ba3f-f93808e95821@loongson.cn>
 
-On 04/08/2025 09:23 AM, Josh Poimboeuf wrote:
-> On Mon, Apr 07, 2025 at 06:52:10PM +0800, Tiezhu Yang wrote:
->> There is a potential execution path with only using s0 and ra
->> (without using s1, s2, s3, etc): 2d58-->2d70-->2f88-->2e78-->2e84
->
-> [...]
->
->> From this point of view, it seems that there is no problem for the
->> generated instructions of the current code, it is not a runtime bug,
->> just a GCC optimization.
->
-> I don't see how this is responsive to my email.
->
-> I described a code path which revealed a GCC bug, specifically with asm
-> goto (unless I got something wrong).  Then you responded with a
-> *completely different* code path.
->
-> How does that prove my original code path isn't possible?
->
-> To summarize, the path I found was
->
->   2d58 ... 2d9c -> 2da8 .. 2dc4 -> 2ebc .. 2ec0 (runtime patched static branch) -> 2e78 .. 2e84 (ret)
+On Tue, Apr 08, 2025 at 10:45:51AM +0800, Tiezhu Yang wrote:
+> So this is a run-time bug rather than a compile-time warning, it should
+> put the option "-fno-shrink-wrap" outside CONFIG_OBJTOOL in
+> arch/loongarch/Makefile as a workaround, like this:
 
-Sorry, you are right, I misunderstood.
+If loongarch folks agree it's a compiler bug, it should be reported to
+GCC, so the issue is better understood (and can get fixed).
 
->> (2) Analysis
->>
->> In fact, the generated objtool warning is because the break instruction
->> (2ee8) which is before the restoring s1 instruction (2eec) is annotated
->> as dead end.
->
-> Actually, it's the opposite.  Objtool would normally consider BREAK to
-> be a dead end.  But it's annotated as "reachable", aka "non dead end".
->
->> This issue is introduced by the following changes:
->>
->>  #define __WARN_FLAGS(flags)					\
->>  do {								\
->>  	instrumentation_begin();				\
->> -	__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
->> +	if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))			\
->> +		__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
->>  	instrumentation_end();					\
->>  } while (0)
->>
->> of commit e61a8b4b0d83 ("loongarch: add support for suppressing warning
->> backtraces") in the linux-next.git.
->
-> Putting that annotation behind a conditional should not break anything.
+Without understanding the root cause, we don't know if -fno-shrink-wrap
+fixes it, or just makes this particular occurrence go away.
 
-OK, got it.
-
->> (4) Solution 1
->> One way is to annotate __BUG_ENTRY() as reachable whether
->> KUNIT_IS_SUPPRESSED_WARNING() is true or false, like this:
->>
->> ---8<---
->> diff --git a/arch/loongarch/include/asm/bug.h
->> b/arch/loongarch/include/asm/bug.h
->> index b79ff6696ce6..e41ebeaba204 100644
->> --- a/arch/loongarch/include/asm/bug.h
->> +++ b/arch/loongarch/include/asm/bug.h
->> @@ -60,8 +60,9 @@
->>  #define __WARN_FLAGS(flags)                                    \
->>  do {                                                           \
->>         instrumentation_begin();                                \
->> -       if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))                     \
->> -               __BUG_FLAGS(BUGFLAG_WARNING|(flags),
->> ANNOTATE_REACHABLE(10001b));\
->> +       if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))             \
->> +               __BUG_FLAGS(BUGFLAG_WARNING|(flags), "");       \
->> +       __BUG_FLAGS(0, ANNOTATE_REACHABLE(10001b));             \
->>         instrumentation_end();                                  \
->>  } while (0)
->
-> Huh?  That's basically:
->
-> 	if (!suppress_warning)
-> 		WARN();
-> 	BUG();
->
-> So it upgrades a conditional WARN to an unconditional BUG???
->
-> Not to mention the reachable annotations are backwards: the WARN() is
-> annotated as dead end while the BUG() is annotated reachable.
->
-> Even if that silences objtool somehow, it will most definitely have the
-> wrong runtime behavior.
-
-Yes, my original analysis seems wrong.
-
->> (5) Solution 2
->> The other way is to use "-fno-shrink-wrap" to aovid such issue under
->> CONFIG_OBJTOOL at compile-time, like this:
->
-> As far as I can tell, that would be a workaround to get objtool to stop
-> warning about a legitimate compiler bug.
-
-So this is a run-time bug rather than a compile-time warning, it should
-put the option "-fno-shrink-wrap" outside CONFIG_OBJTOOL in
-arch/loongarch/Makefile as a workaround, like this:
-
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 0304eabbe606..98241e3015fb 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -108,6 +108,8 @@ KBUILD_CFLAGS                       += 
--fno-jump-tables # keep compatibility with older compilers
-  endif
-  endif
-
-+KBUILD_CFLAGS                  += -fno-shrink-wrap
-+
-  KBUILD_RUSTFLAGS               += 
---target=loongarch64-unknown-none-softfloat -Ccode-model=small
-  KBUILD_RUSTFLAGS_KERNEL                += 
--Zdirect-access-external-data=yes
-  KBUILD_RUSTFLAGS_MODULE                += -Zdirect-access-external-data=no
-
-Thanks,
-Tiezhu
-
+-- 
+Josh
