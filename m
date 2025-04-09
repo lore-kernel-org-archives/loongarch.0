@@ -1,78 +1,123 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E074322B8A1
-	for <loongarch@lists.linux.dev>; Tue,  8 Apr 2025 16:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C90A4AEE2
+	for <loongarch@lists.linux.dev>; Wed,  9 Apr 2025 02:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128789; cv=none; b=XRdujxw1OriHN7Xq6bsmkwg0ehe6j22M0+1XMXDdPQvYsjSAvktXQ8De6cSELZcL8TzKs906wtxBR30yPzBAWNFv2iu3njDF6QSWSOyJUC2i0J8ppyFFWnvkJL78SS3Y+9mb7CPJCDda0nzW3uxFgFerHUESM8V4VX40/+FHbKM=
+	t=1744165044; cv=none; b=bqpnWHFfAfWC3Hryhhr+tV3m/tytnPvz4IGcsLVB/I3objSHetbGRXsaAFkZ3u8vsjy7Dtur7grmculRqUPI8+wO/VrhVjbZA8+15ScT+Qc4mINv2+HDBdrAqa2ZnHL6unv3jx2X0pfBOGPH/Ih2xTszLaPsdgmSn3sjFi1fEu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128789; c=relaxed/simple;
-	bh=/8Lgt7AKgNy/yDj5PsFIIZ/OI++yjozIZZNWQd0Jg2I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q0ssBjsaAqGIN1GgjRbMn9dEbVA5n47cH98u+p2kp77eeWn57jMdM2Cv1hcyPawsqciU4B3bqm1kiItw25RfzWh2AK0Rg6QqhJU/rPhCHwc0+EjFY/X1II6nWD8eDzSO+ZeDlR+WBPf0xr2JojSPbn9bQVu2AmjMVFD6XO/HkyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=T9Mw1ZCd; arc=none smtp.client-ip=54.204.34.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="T9Mw1ZCd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744128769;
-	bh=/8Lgt7AKgNy/yDj5PsFIIZ/OI++yjozIZZNWQd0Jg2I=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=T9Mw1ZCdw6VmCwcNeQ8NyuErcuE70NIe6GHvHBoSCslDNc/geczEXqIH8WfJ98S9G
-	 mdzBbKL4IIrSPUAT/tFYhqQw3d4MWElJ55GzfJIjLHUFXq5aQmhK4gKAgP9ieY6nn+
-	 4xM68HH+OwhHKOA0cZlKOFQxEvQvxxGAjH3JmlR4=
-X-QQ-mid: bizesmtpsz9t1744128763tb211cb
-X-QQ-Originating-IP: B3aoT2lfQT7lhb4CK9eX2m41pUeTGC7vlEq6PnA9Zbg=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 09 Apr 2025 00:12:40 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 14729311663327765348
-From: Wentao Guan <guanwentao@uniontech.com>
-To: yangtiezhu@loongson.cn
-Cc: chenhuacai@kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
-Date: Wed,  9 Apr 2025 00:12:39 +0800
-Message-Id: <20250408161239.1023788-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250408092907.22856-1-yangtiezhu@loongson.cn>
-References: <20250408092907.22856-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1744165044; c=relaxed/simple;
+	bh=WDqMBd92k2n/VhyZDze6xnRKCm6vD/2kvmn85px7pIA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YH4hDgmG8eorZBmrLc7RVBlszgbjaT858C3tkzQN7OsJQGa/OzC2jVrD0WE5VmTHzMdN4L0Em4e1z6pqgWl7zi6fdcO661jlK881PUsJMCi+yR4pEObCxbunTJA+pel/wZKMwuwr3oTlxypCp4YFILBd1cqNFpeqnenG/2vnMnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8CxvnKr2PVnX6y1AA--.40690S3;
+	Wed, 09 Apr 2025 10:17:15 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by front1 (Coremail) with SMTP id qMiowMCxPsep2PVnbb91AA--.26584S3;
+	Wed, 09 Apr 2025 10:17:15 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Enhance robust of kprobe
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250408092756.22339-1-yangtiezhu@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
+Date: Wed, 9 Apr 2025 10:17:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20250408092756.22339-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: NRN3UPsLzYKVqIrPzeEpHTRKRq7s/4DCgNDwMWIe0+UiIz4mph4S3ZU1
-	LWI1eS7ChDVbMfg2oou0gd2elwvFTwy7tkX8jL0dEB5GEcANibimH4Z+DsJtGc8TDsL5pjC
-	+zuuWmzuCzd1QXUhoztriJA0ge4o4cBKTikEPsw6SZQDM0RSg8xRStaf0RyBqAAIqNyleSu
-	G8krFAVl5tla39YHVGKUNydR3kzgkuGQ3I5rB7CQtPp56URfMsZUQ3aa+FSe/Qo21XWLKoA
-	FJqm+G65FS8QHEqYrns+LqWsYXOmckxLfSHeVI3x5isZwPKMBMVm1qDgt7LAoLvss0LjrI2
-	5wN4ZjxBJXnXR+YOmGr0GG/+kBOFGUkfArXGFxzfzlyND2QY5R9QDYRZvnP62DeTjTsSAzG
-	Kw+nrNf6KLCBmPu7YiFpCEKKrxro95hL8VkDDL1RNCaY3ZQ3KTqMUFsXy1iTdSommaAwC2p
-	/gulo3Jx0A6qPRL+d5FCFSWX9CQeUHalQDrTBjeXrQQKroRwXy7g4vFMSXS5xlERD3QpiZb
-	XZi0WzhFlsCV5+eM/Ohx9iRtbYeAP96ywt528SPweH55v5kNz+RGwCynIXsmxucQJPe4AIa
-	0ufi/rUjGny1IcKKjOI7Ql7ZUiuePMe6a9I3J+aeLbd8ybK6LeALiokmh+WfGCetvSOOLEc
-	78OSmEiMAMSL8SholdfBahMTcg2dbFT6fuJefdqT123k0FF9Hq2mfsqenzCOYxNY9uVbOmR
-	1McDOixyhdtCBFDlGr0Hl9aFizxtRZoRWDzA1USKlHz0n7SE1PUoLBPesFoIEltWBo4sbJF
-	xqrS7orMkYuxhsPuwF+cpDjC8BLLN3n7Cz7Frib4bf2eYUd630tAMIwT+5LzRb25meN5zmm
-	K8aDA4/1hPCa8A0NgttnVgx8jL57CIa18ySjeNtlLC0DW+Hn405pmKhXS+4mgGelwrclEry
-	UcJPF43fAqLhDnDVpc5hUxG/Qfo1JRYnIal0e1a8+ovzlFPE1yxzJBN/A
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCxPsep2PVnbb91AA--.26584S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWrWkAw13WFWfJFWxAF17XFc_yoW5GFy8pF
+	s7C3yrtrW8XFy0va4UAw15uryFy3yUJ3yxWw1UAa43tws8Cw1qqr1xWrWq9Fn8Gr4rtr1S
+	vF18Kry0vF1UGFgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUU
+	U
 
-Hello Yang,
+On 2025-04-08 17:27, Tiezhu Yang wrote:
 
-I don`t know why change it defination remove "asmlinkage",
-why not explain it in commit message?
+> Currently, interrupts need to be disabled before single-step mode is set,
+> it requires that the CSR_PRMD_PIE must be cleared in save_local_irqflag()
+> which is called by setup_singlestep(), this is reasonable.
+>
+> But in the first kprobe breakpoint exception, if the irq is enabled at the
+> beginning of do_bp(), it will not be disabled at the end of do_bp() due to
+> the CSR_PRMD_PIE has been cleared in save_local_irqflag(). For this case,
+> it may corrupt exception context when restoring exception after do_bp() in
+> handle_bp(), this is not reasonable.
+>
+> Based on the above analysis, in order to make sure the irq is disabled at
+> the end of do_bp() for the first kprobe breakpoint exception, it is proper
+> to disable irq first before clearing CSR_PRMD_PIE in save_local_irqflag().
+>
+> Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
+> Co-developed-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   arch/loongarch/kernel/kprobes.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+> index 8ba391cfabb0..6eab97636e6b 100644
+> --- a/arch/loongarch/kernel/kprobes.c
+> +++ b/arch/loongarch/kernel/kprobes.c
+> @@ -113,6 +113,7 @@ NOKPROBE_SYMBOL(set_current_kprobe);
+>   static void save_local_irqflag(struct kprobe_ctlblk *kcb,
+>   			       struct pt_regs *regs)
+>   {
+> +	local_irq_disable();
+>   	kcb->saved_status = regs->csr_prmd;
+>   	regs->csr_prmd &= ~CSR_PRMD_PIE;
+>   }
 
-BRs
-Wentao Guan
+Hi, Tiezhu,
+
+I think the carsh is caused by "irq-triggered re-re-enter" clear
+the previous_kprobe status. An example things like,
+
+...
+   static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+                    struct kprobe_ctlblk *kcb, int reenter)
+   {
+       union loongarch_instruction insn;
+
+       if (reenter) {
+           save_previous_kprobe(kcb);
+  ===================   <- irq and trigger re-re-enter in its handler
+           set_current_kprobe(p);
+           kcb->kprobe_status = KPROBE_REENTER;
+       } else {
+           kcb->kprobe_status = KPROBE_HIT_SS;
+       }
+...
+
+We should assure the previous_kprobe status not be changed after re-enter.
+So this `local_irq_disable` should be set in reenter block begin.
+And for !reenter block, `local_irq_disable` may be not needed.
+
+Jinyang
+
