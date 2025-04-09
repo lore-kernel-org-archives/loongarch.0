@@ -1,101 +1,43 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82C1215789
-	for <loongarch@lists.linux.dev>; Wed,  9 Apr 2025 06:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 545E11DD88F
+	for <loongarch@lists.linux.dev>; Wed,  9 Apr 2025 07:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744181986; cv=none; b=aTVx9Rar4vK05GIiSy8BnGa+VZ7V2idhh9NB7eVFcjoaaq7Zl6xHJkDGRQmFm9nM3hccTtjbuePyC25fuL/yU+mxD63Qfz9bOnsnT/T4EA2K2KdQ2swT+VZ2C+L116+OxyuiVBtbrnTQbDRFmeZ0wqdMewlT2lgUKX0vhU8mwK0=
+	t=1744182204; cv=none; b=Wn7lpup8JCHtaldBXHfNhvLK01I7zLBO2ZJ4IgWZ+15EBeG1fjAi0QYT5aIQRRF6KMFBKh4I+HKT3sa9HwyZQbafi9vE7kopZYzE20C7zLiwXJhiD1ZHwFc0wZqbyR9MwUyDee3Q7zZXkaVNdn9yNXcyBl5uotNfAMPEG83EMoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744181986; c=relaxed/simple;
-	bh=RD0EcDzYAZoxm8jCd4YXUgat4LaEe4RwK0X8uRzREnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N6NX6mFhy3F8qaxXFBQnRQx4/gp/8KemBinN7OLGk7u/qMn+EqrPKw+8Sqxmacoc4D2CW2HUXrIS59mXS4KMaIpuaDAlDFABcT5iZJ/xa4IVFzloeC703OLhsdHbkh2rp/RDD7XyNx7T9ZQBnM3VnUkwORlb/XhVN9AMRKd4qtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gp4Y84oZ; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gp4Y84oZ"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-aee79a0f192so4089481a12.3
-        for <loongarch@lists.linux.dev>; Tue, 08 Apr 2025 23:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744181984; x=1744786784; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F2pbd0UXlj8lTX4R24mljIUMw3V77RSQ2B9I8eYN8Ew=;
-        b=Gp4Y84oZ19DYjqbU+/adSuB6l54EZ0k79+2QCYz3rJsidmsUGKa1zkvD6v+37beZft
-         fh5pca3h3BfjJLKZ2ZmYj5C3aN6PkEfKy+1349hNj6ffCJllQkkYR4QBWocvYXUooin3
-         QX0AeEsjO5iUzY2zpLPUWs+PPRZm5NOYmZeakVAwZOXYtvUn1mxsdw6QyfJsXtyO8ZXr
-         okvIALR1fZE0a6t6hPZzx3zJOW/GjW83hlmxcsWK+XmKnMxHDxObBq2JZXKVsMY5zzj1
-         RIxNJuzjSdOAPV0uhhfoeH8BDLv1M9orgJJZ1K/A+mgVn+QfCov186sj27pf0LpuYnlh
-         bTcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744181984; x=1744786784;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F2pbd0UXlj8lTX4R24mljIUMw3V77RSQ2B9I8eYN8Ew=;
-        b=e7xhPxjaiR/+18Wvk1xxbGniYbHGU4X1hsm3VPDxHrfT+NM7YCjNEJZbNlhvNsSpyw
-         8MKL3C3qxb2bwmkzba7zPGwxFYKj7FVSZN374xrWyCqVFGrr7OZa+dZGlvrTbFkeo7Xi
-         e75X8GnWGgVhnLsQbA8WQG1VEUWzdUoczfNY3y51zhRZfhzRSu+uJO96E92LwKxPb/Ap
-         SgThLDgAV9+5BrSRdlU+rIVqc/LhVXW/f1uVswBEkszKCsbQaafONenoidXXh4Hpmodp
-         KmU3dybkii/+3lJjRTvrJ5qhIgVTAr8UwhXjzVoA5ll6Dq/uXIp+BsJXkYg67OLr4sKU
-         GFVg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+FWoty5GmAM/N7xTQCSeXVnMMxxvns5QXNO19SXMUFzoiDdSwIYJSXXHvhuWEJ2QgKiwTPsN6N08=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyRsHIji+3cZ2BBOUCpzleOrPblT7VeEJ2F7u1eu7/uinpHxiQu
-	O4csP93UanhufQQhdhYsf9zrV98qTbZBz3sadYyp7YnPkdDr/6Du
-X-Gm-Gg: ASbGncurrUbFsrvD4Ho7dbL9occBScPgI0uCaDrmBML4D4vDHugITdgWrA8Y/e43eku
-	B9yaK5Mh17BobBIOiIwDrZd0fextBlPu0I2k4yF5xab9LrZdpayRq30VHr5dH2nq7ZZx/Ralh63
-	xGEruV4rLhBtn1I0HkznAuwNeStTENtCkVfQwpkyTycPReli9q1ypDOUqQo/7a576HZhQzdz9eo
-	LRmNqEtaX1HyEAXBjQs0FoB+RWJB6ZplN2B8cGMbsMYTr3G9AILGMJpgBqxRuLj+AFodRxWTpo8
-	B7qsoVrRVt1zIcrCZO9pm668UJ457ADVw7Xpd4A0p8lTIvEojKOrOg9lugBuSCCkdn2/ryY9cnX
-	JIan5WAbKUPaGa1FY2/ormUQtHb2b
-X-Google-Smtp-Source: AGHT+IFL9TT6QHLOFKEcpZF9HUypYUw7Ycu6go8EQ/Dq6j+9vVp6HhyJwtriYGJC2NztmRjbeXt+qw==
-X-Received: by 2002:a17:903:1c7:b0:223:5ada:88ff with SMTP id d9443c01a7336-22ac29be057mr34017775ad.24.1744181983864;
-        Tue, 08 Apr 2025 23:59:43 -0700 (PDT)
-Received: from mew.. (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccb596sm4407815ad.220.2025.04.08.23.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 23:59:43 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Cc: x86@kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	peterz@infradead.org,
-	hpa@zytor.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	chenhuacai@kernel.org,
+	s=arc-20240116; t=1744182204; c=relaxed/simple;
+	bh=q39kQhDN49GLm/lEOP32rR1ke0TxfqFy3ziGaeITL1I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TnPl1bjuoG1WizjEpEkr0Mz41O97PBgG27gUwkOlKDIu4/T4XhdoFIbaqfYkA7hToOLPO9Czm2JW6TMOieht/6oGazFACt+LKLmSoQberLZQo4KnC6uI33S/SZNgvW+5TOHnVPlGIw/JMPKHmtXc12548CZ8fCPv+ZLEObGMaC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwCnrGixG_Znwm65Ew--.14874S2;
+	Wed, 09 Apr 2025 15:03:13 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwBnaoasG_ZnhURkAA--.7272S3;
+	Wed, 09 Apr 2025 15:03:09 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: chenhuacai@kernel.org,
 	kernel@xen0n.name,
-	tangyouling@loongson.cn,
-	hejinyang@loongson.cn,
-	yangtiezhu@loongson.cn,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu
-Subject: [PATCH v5 4/4] rust: Add warn_on macro
-Date: Wed,  9 Apr 2025 15:58:01 +0900
-Message-ID: <20250409065802.136971-5-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250409065802.136971-1-fujita.tomonori@gmail.com>
-References: <20250409065802.136971-1-fujita.tomonori@gmail.com>
+	jiaxun.yang@flygoat.com,
+	rppt@kernel.org,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	dave.hansen@linux.intel.com,
+	dan.j.williams@intel.com,
+	alison.schofield@intel.com
+Cc: chenbaozi@phytium.com.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH 1/1] LoongArch: Introduce the numa_memblks conversion
+Date: Wed,  9 Apr 2025 15:02:50 +0800
+Message-Id: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -103,248 +45,137 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwBnaoasG_ZnhURkAA--.7272S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAPAWf1gRgDIgADsm
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFWxtrW7Gr45Ar4UJrW5ZFb_yoWrGF4rpF
+	ZxCrs3Xr48Wr18Ja40kry29w15Kwn7KanxXa47GFyfZF12vryDZr40grn2vFyUt3y8ur40
+	9rn5C3WavF4rJ3JanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Add warn_on macro, uses the BUG/WARN feature (lib/bug.c) via assembly
-for x86_64/arm64/riscv.
+"mm: introduce numa_memblks"(87482708210f) has moved numa_memblks
+from x86 to the generic code, but loongarch was left out of this
+conversion.
 
-The current Rust code simply wraps BUG() macro but doesn't provide the
-proper debug information. The BUG/WARN feature can only be used from
-assembly.
+This patch introduces the generic numa_memblks.
 
-This uses the assembly code exported by the C side via ARCH_WARN_ASM
-macro. To avoid duplicating the assembly code, this approach follows
-the same strategy as the static branch code: it generates the assembly
-code for Rust using the C preprocessor at compile time.
-
-Similarly, ARCH_WARN_REACHABLE is also used at compile time to
-generate the assembly code; objtool's reachable anotation code. It's
-used for only architectures that use objtool.
-
-For now, Loongarch and arm32 just use a wrapper for WARN macro.
-
-UML doesn't use the assembly BUG/WARN feature; just wrapping generic
-BUG/WARN functions implemented in C works.
-
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 ---
- rust/Makefile                                 |   8 ++
- rust/helpers/bug.c                            |   5 +
- rust/kernel/.gitignore                        |   2 +
- rust/kernel/bug.rs                            | 114 ++++++++++++++++++
- rust/kernel/generated_arch_reachable_asm.rs.S |   7 ++
- rust/kernel/generated_arch_warn_asm.rs.S      |   7 ++
- rust/kernel/lib.rs                            |   1 +
- 7 files changed, 144 insertions(+)
- create mode 100644 rust/kernel/bug.rs
- create mode 100644 rust/kernel/generated_arch_reachable_asm.rs.S
- create mode 100644 rust/kernel/generated_arch_warn_asm.rs.S
 
-diff --git a/rust/Makefile b/rust/Makefile
-index fa0eea8a9eca..25f498607d1b 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -34,6 +34,9 @@ obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated.o
- obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.o
+Background
+----------
+I am managed to land the patch[1] "mm: numa_memblks: introduce numa_add_reserved_memblk"
+but kernel test CI noticed build errors[2] from loongarch64-linux-gcc.
+
+Link:
+[1]: https://lore.kernel.org/all/20250409040121.3212489-1-wangyuquan1236@phytium.com.cn/
+[2]: https://lore.kernel.org/all/202503282026.QNaOAK79-lkp@intel.com/
+
+ arch/loongarch/Kconfig            |  1 +
+ arch/loongarch/include/asm/numa.h | 14 ----------
+ arch/loongarch/kernel/numa.c      | 43 +------------------------------
+ 3 files changed, 2 insertions(+), 56 deletions(-)
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 067c0b994648..5906ccd06705 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -186,6 +186,7 @@ config LOONGARCH
+ 	select MODULES_USE_ELF_RELA if MODULES
+ 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+ 	select NEED_PER_CPU_PAGE_FIRST_CHUNK
++	select NUMA_MEMBLKS
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+ 	select PCI
+diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/asm/numa.h
+index b5f9de9f102e..bbf9f70bd25f 100644
+--- a/arch/loongarch/include/asm/numa.h
++++ b/arch/loongarch/include/asm/numa.h
+@@ -22,20 +22,6 @@ extern int numa_off;
+ extern s16 __cpuid_to_node[CONFIG_NR_CPUS];
+ extern nodemask_t numa_nodes_parsed __initdata;
  
- always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) += kernel/generated_arch_static_branch_asm.rs
-+ifndef CONFIG_UML
-+always-$(subst y,$(CONFIG_RUST),$(CONFIG_BUG)) += kernel/generated_arch_warn_asm.rs kernel/generated_arch_reachable_asm.rs
-+endif
- 
- # Avoids running `$(RUSTC)` when it may not be available.
- ifdef CONFIG_RUST
-@@ -536,5 +539,10 @@ $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/build_error.o $(obj)/pin_init.o \
- ifdef CONFIG_JUMP_LABEL
- $(obj)/kernel.o: $(obj)/kernel/generated_arch_static_branch_asm.rs
- endif
-+ifndef CONFIG_UML
-+ifdef CONFIG_BUG
-+$(obj)/kernel.o: $(obj)/kernel/generated_arch_warn_asm.rs $(obj)/kernel/generated_arch_reachable_asm.rs
-+endif
-+endif
- 
- endif # CONFIG_RUST
-diff --git a/rust/helpers/bug.c b/rust/helpers/bug.c
-index e2d13babc737..a62c96f507d1 100644
---- a/rust/helpers/bug.c
-+++ b/rust/helpers/bug.c
-@@ -6,3 +6,8 @@ __noreturn void rust_helper_BUG(void)
- {
- 	BUG();
+-struct numa_memblk {
+-	u64			start;
+-	u64			end;
+-	int			nid;
+-};
+-
+-#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
+-struct numa_meminfo {
+-	int			nr_blks;
+-	struct numa_memblk	blk[NR_NODE_MEMBLKS];
+-};
+-
+-extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+-
+ extern void __init early_numa_add_cpu(int cpuid, s16 node);
+ extern void numa_add_cpu(unsigned int cpu);
+ extern void numa_remove_cpu(unsigned int cpu);
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index 30a72fd528c0..0ed384635566 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -18,6 +18,7 @@
+ #include <linux/efi.h>
+ #include <linux/irq.h>
+ #include <linux/pci.h>
++#include <linux/numa_memblks.h>
+ #include <asm/bootinfo.h>
+ #include <asm/loongson.h>
+ #include <asm/numa.h>
+@@ -145,48 +146,6 @@ void numa_remove_cpu(unsigned int cpu)
+ 	cpumask_clear_cpu(cpu, &cpus_on_node[nid]);
  }
-+
-+bool rust_helper_WARN_ON(bool cond)
-+{
-+	return WARN_ON(cond);
-+}
-diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
-index 6ba39a178f30..f636ad95aaf3 100644
---- a/rust/kernel/.gitignore
-+++ b/rust/kernel/.gitignore
-@@ -1,3 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
  
- /generated_arch_static_branch_asm.rs
-+/generated_arch_warn_asm.rs
-+/generated_arch_reachable_asm.rs
-diff --git a/rust/kernel/bug.rs b/rust/kernel/bug.rs
-new file mode 100644
-index 000000000000..761f0c49ae04
---- /dev/null
-+++ b/rust/kernel/bug.rs
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+// Copyright (C) 2024, 2025 FUJITA Tomonori <fujita.tomonori@gmail.com>
-+
-+//! Support for BUG and WARN functionality.
-+//!
-+//! C header: [`include/asm-generic/bug.h`](srctree/include/asm-generic/bug.h)
-+
-+#[macro_export]
-+#[doc(hidden)]
-+#[cfg(all(CONFIG_BUG, not(CONFIG_UML), not(CONFIG_LOONGARCH), not(CONFIG_ARM)))]
-+#[cfg(CONFIG_DEBUG_BUGVERBOSE)]
-+macro_rules! warn_flags {
-+    ($flags:expr) => {
-+        const FLAGS: u32 = $crate::bindings::BUGFLAG_WARNING | $flags;
-+        const _FILE: &[u8] = file!().as_bytes();
-+        // Plus one for null-terminator.
-+        static FILE: [u8; _FILE.len() + 1] = {
-+            let mut bytes = [0; _FILE.len() + 1];
-+            let mut i = 0;
-+            while i < _FILE.len() {
-+                bytes[i] = _FILE[i];
-+                i += 1;
-+            }
-+            bytes
-+        };
-+        // SAFETY: Just an FFI call.
-+        unsafe {
-+            $crate::asm!(
-+                concat!(
-+                    "/* {size} */",
-+                    include!(concat!(env!("OBJTREE"), "/rust/kernel/generated_arch_warn_asm.rs")),
-+                    include!(concat!(env!("OBJTREE"), "/rust/kernel/generated_arch_reachable_asm.rs")));
-+                file = sym FILE,
-+                line = const line!(),
-+                flags = const FLAGS,
-+                size = const ::core::mem::size_of::<$crate::bindings::bug_entry>(),
-+            );
-+        }
-+    }
-+}
-+
-+#[macro_export]
-+#[doc(hidden)]
-+#[cfg(all(CONFIG_BUG, not(CONFIG_UML), not(CONFIG_LOONGARCH), not(CONFIG_ARM)))]
-+#[cfg(not(CONFIG_DEBUG_BUGVERBOSE))]
-+macro_rules! warn_flags {
-+    ($flags:expr) => {
-+        const FLAGS: u32 = $crate::bindings::BUGFLAG_WARNING | $flags;
-+        // SAFETY: Just an FFI call.
-+        unsafe {
-+            $crate::asm!(
-+                concat!(
-+                    "/* {size} */",
-+                    include!(concat!(env!("OBJTREE"), "/rust/kernel/generated_arch_warn_asm.rs")),
-+                    include!(concat!(env!("OBJTREE"), "/rust/kernel/generated_arch_reachable_asm.rs")));
-+                flags = const FLAGS,
-+                size = const ::core::mem::size_of::<$crate::bindings::bug_entry>(),
-+            );
-+        }
-+    }
-+}
-+
-+#[macro_export]
-+#[doc(hidden)]
-+#[cfg(all(CONFIG_BUG, CONFIG_UML))]
-+macro_rules! warn_flags {
-+    ($flags:expr) => {
-+        // SAFETY: Just an FFI call.
-+        unsafe {
-+            $crate::bindings::warn_slowpath_fmt(
-+                $crate::c_str!(::core::file!()).as_ptr() as *const $crate::ffi::c_char,
-+                line!() as i32,
-+                $flags as u32,
-+                ::core::ptr::null() as *const $crate::ffi::c_char,
-+            );
-+        }
-+    };
-+}
-+
-+#[macro_export]
-+#[doc(hidden)]
-+#[cfg(all(CONFIG_BUG, any(CONFIG_LOONGARCH, CONFIG_ARM)))]
-+macro_rules! warn_flags {
-+    ($flags:expr) => {
-+        // SAFETY: Just an FFI call.
-+        unsafe { $crate::bindings::WARN_ON(true) }
-+    };
-+}
-+
-+#[macro_export]
-+#[doc(hidden)]
-+#[cfg(not(CONFIG_BUG))]
-+macro_rules! warn_flags {
-+    ($flags:expr) => {};
-+}
-+
-+#[doc(hidden)]
-+pub const fn bugflag_taint(value: u32) -> u32 {
-+    value << 8
-+}
-+
-+/// Report a warning if `cond` is true and return the condition's evaluation result.
-+#[macro_export]
-+macro_rules! warn_on {
-+    ($cond:expr) => {{
-+        if $cond {
-+            const WARN_ON_FLAGS: u32 = $crate::bug::bugflag_taint($crate::bindings::TAINT_WARN);
-+
-+            $crate::warn_flags!(WARN_ON_FLAGS);
-+        }
-+        $cond
-+    }};
-+}
-diff --git a/rust/kernel/generated_arch_reachable_asm.rs.S b/rust/kernel/generated_arch_reachable_asm.rs.S
-new file mode 100644
-index 000000000000..3886a9ad3a99
---- /dev/null
-+++ b/rust/kernel/generated_arch_reachable_asm.rs.S
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/bug.h>
-+
-+// Cut here.
-+
-+::kernel::concat_literals!(ARCH_WARN_REACHABLE)
-diff --git a/rust/kernel/generated_arch_warn_asm.rs.S b/rust/kernel/generated_arch_warn_asm.rs.S
-new file mode 100644
-index 000000000000..409eb4c2d3a1
---- /dev/null
-+++ b/rust/kernel/generated_arch_warn_asm.rs.S
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/bug.h>
-+
-+// Cut here.
-+
-+::kernel::concat_literals!(ARCH_WARN_ASM("{file}", "{line}",  "{flags}", "{size}"))
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index de07aadd1ff5..bc13e92bdb1e 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -40,6 +40,7 @@
- pub mod alloc;
- #[cfg(CONFIG_BLOCK)]
- pub mod block;
-+pub mod bug;
- #[doc(hidden)]
- pub mod build_assert;
- pub mod cred;
+-static int __init numa_add_memblk_to(int nid, u64 start, u64 end,
+-				     struct numa_meminfo *mi)
+-{
+-	/* ignore zero length blks */
+-	if (start == end)
+-		return 0;
+-
+-	/* whine about and ignore invalid blks */
+-	if (start > end || nid < 0 || nid >= MAX_NUMNODES) {
+-		pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+-			   nid, start, end - 1);
+-		return 0;
+-	}
+-
+-	if (mi->nr_blks >= NR_NODE_MEMBLKS) {
+-		pr_err("NUMA: too many memblk ranges\n");
+-		return -EINVAL;
+-	}
+-
+-	mi->blk[mi->nr_blks].start = PFN_ALIGN(start);
+-	mi->blk[mi->nr_blks].end = PFN_ALIGN(end - PAGE_SIZE + 1);
+-	mi->blk[mi->nr_blks].nid = nid;
+-	mi->nr_blks++;
+-	return 0;
+-}
+-
+-/**
+- * numa_add_memblk - Add one numa_memblk to numa_meminfo
+- * @nid: NUMA node ID of the new memblk
+- * @start: Start address of the new memblk
+- * @end: End address of the new memblk
+- *
+- * Add a new memblk to the default numa_meminfo.
+- *
+- * RETURNS:
+- * 0 on success, -errno on failure.
+- */
+-int __init numa_add_memblk(int nid, u64 start, u64 end)
+-{
+-	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+-}
+-
+ static void __init node_mem_init(unsigned int node)
+ {
+ 	unsigned long start_pfn, end_pfn;
 -- 
-2.43.0
+2.34.1
 
