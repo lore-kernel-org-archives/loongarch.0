@@ -1,143 +1,224 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCD01E2858;
-	Wed,  9 Apr 2025 09:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDBC265CA7
+	for <loongarch@lists.linux.dev>; Wed,  9 Apr 2025 14:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744191795; cv=none; b=NXr0AfcFdQSYd9OZnEN+8cWxdPyJcTBYCyFeSZe5p4Y3HunO8441oSWrSd/t+wNelPE4GGYozsmQtuESYNVaSweIe2Dnm5+Cv5iRTS+PpB6I2dFT4XG5V/Pg7a3OhFV1WFgOGcoH+giyAEkX4w66ls/RCim/V8mPU/8bUelgaSk=
+	t=1744208409; cv=none; b=RRRx2gnnd1gJ78aUWF/80aFoMySt6pyS2HgTLYcju6TyTBincwNehNVxV6kMhjhwQ1WvoY/uXOmpCxAIkV2YerNkt5ji+sRHCCfB745ffCT1pQW3msAwXnvJ+YtDQYA2x+k5SrWguzXCFmsdXMF/q8nzdE/IVT++NGyKkZihpec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744191795; c=relaxed/simple;
-	bh=FjJ4QbW9SU1iP+ML3U0A+ucRm2GiU0e71LPKaPgthFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O9uIxhsaykid0/I+Foi1W9ZB3if08gqJMuMRtAmkZUSmxZr2bZXu3vs+FJA6O+ZyRXz+/6vYPtAJm/EmvCQ+KnEhAGRN0YzEYsj8uQXjxRBbMMtHrSRf4rUQzD4P06nYU5kuGhC1k1wLqQrVBCmllUxRFcxJd/sfGI1NlnfVI0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tz4G8OLX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744208409; c=relaxed/simple;
+	bh=BG/OzJES1M7Q6UgqXIWZo0kbqsw0xFTv9avIXvDfKl8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WkhMgGxrgH5vtKnbaqpxuiAipmuSdwQ1L16rstey/KrsD46Yg5Oc+ST75Wfsc1ReSshlgUy+unUc7RV4RCND2nirAYEbwIDk+SFve8V8Z8UOS3q0qtMrTzLdPwA33Hesxl/ZrNdAkagkqO+aI1Dsau0clFMrop9EF6qJyhUk150=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6b+5FET; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tz4G8OLX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D74C4CEE3;
-	Wed,  9 Apr 2025 09:43:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6b+5FET"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE44C4CEED
+	for <loongarch@lists.linux.dev>; Wed,  9 Apr 2025 14:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744191795;
-	bh=FjJ4QbW9SU1iP+ML3U0A+ucRm2GiU0e71LPKaPgthFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tz4G8OLX8nnog0v22oBwDuD3JId5z/TPCCskKfAVQorpXd7wLsaFqhlnrza8EuDMr
-	 LjSnxnsFChBhBrq58wtx6DvwfQsfs7tAiWIIKakzb9Xg9v5uRbB8qkgMkPeZwtzxaQ
-	 TVhfhlHk1twuHM91sNPkjfQ6MjrSyV2+6ZvkUlgZUkYqmtQQRiZQgb5yhbxsBEmuMN
-	 rAIwMAQPKjWVXqAhNsd794HAiVN0G2Eoq/x4eOZgFSgw5Vy7MDHX7QTtaerCV8vohN
-	 OGG1pkLzIMzw5GUh6ZL01fFSd/lTo7OpijYZUThfFL+l7TLpzEAExukEGjyXZj6dH0
-	 87Ol5Ac251Mdg==
-Date: Wed, 9 Apr 2025 12:43:06 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
-	rafael@kernel.org, lenb@kernel.org, akpm@linux-foundation.org,
-	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
-	haibo1.xu@intel.com, david@redhat.com, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, chenbaozi@phytium.com.cn,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Message-ID: <Z_ZBKl8h_BzrW9yG@kernel.org>
-References: <20250409040121.3212489-1-wangyuquan1236@phytium.com.cn>
+	s=k20201202; t=1744208408;
+	bh=BG/OzJES1M7Q6UgqXIWZo0kbqsw0xFTv9avIXvDfKl8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=A6b+5FET2spOgRa2vacU9wjGBMCpfe11c1PD8P8XThPDX4dJUL2NG8ORLineivW1s
+	 E8KhoXiacRx2toMKAt13wzybtd94ack8IqWGGzxRaQqJa1RuDhflgvhEutEiyNBjVj
+	 YdGcrOD8CnUmFEjd2y6kr0JHq530JlofuMx3whHajwo3jL2HyBERFMjS2NFd6nUW5b
+	 qBPe7eu0YmBc27zezOWBF2Svwvz60gJC98D1f3uc2diOLLxFGfZWWWguFa/VK0ctRL
+	 DPbnQ+u8bKlEZ537fh9ztwNMEISzOxiRJpCrO+a1i+vxe9N0Zy1AxSVXCUNAcHT512
+	 8/KZy+OrNJ7jA==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso1181464866b.3
+        for <loongarch@lists.linux.dev>; Wed, 09 Apr 2025 07:20:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXF+Ss+CCgJzZ8OKzxfIIizLwXBUSi7sx1U57At5enGAcD03aHySXWDMTF/tI5E+el1mLHKMIKU+wM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyBPcA5hVawyRw4fBQITT1qQiXojUS4B6U+pw133NZ+1mpK7SS1
+	pimeqpGtYOAqHA3FdPDIa5CMRUy3/Aa6v/FdW/lpokWU/ZehLcNOGbiZodxhtT3k/bqcA+dJ/El
+	8kBwyUc85s3qnzPFVLcUGhfdlnwE=
+X-Google-Smtp-Source: AGHT+IFnF6UDYloYX0LOUBH6jYkuCNYIOTsP2lHmKeGs/z9SZN3K4qP8DEu2FfQoknF3uccBjAD217TToS6ep+829MQ=
+X-Received: by 2002:a17:907:971a:b0:ac4:3cd:2cb2 with SMTP id
+ a640c23a62f3a-aca9b607dcemr354551866b.1.1744208406974; Wed, 09 Apr 2025
+ 07:20:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409040121.3212489-1-wangyuquan1236@phytium.com.cn>
+References: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
+In-Reply-To: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 9 Apr 2025 22:20:03 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H59A797mfwxjEe8SO0JioxkF3H0Rr0E_TK1qn0PHdRMXA@mail.gmail.com>
+X-Gm-Features: ATxdqUHdB7qVVvs9U6XaymRSOHZ0sp8fImlHDnojMC_VV6MWDytUBwxnn0hxTYI
+Message-ID: <CAAhV-H59A797mfwxjEe8SO0JioxkF3H0Rr0E_TK1qn0PHdRMXA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] LoongArch: Introduce the numa_memblks conversion
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: kernel@xen0n.name, jiaxun.yang@flygoat.com, rppt@kernel.org, 
+	akpm@linux-foundation.org, david@redhat.com, Jonathan.Cameron@huawei.com, 
+	dave.hansen@linux.intel.com, dan.j.williams@intel.com, 
+	alison.schofield@intel.com, chenbaozi@phytium.com.cn, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 09, 2025 at 12:01:21PM +0800, Yuquan Wang wrote:
-> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-> with the expectation that numa_cleanup_meminfo moves them to
-> numa_reserved_meminfo. There is no need for that indirection when it is
-> known in advance that these unpopulated ranges are meant for
-> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
-> 
-> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-> ranges directly.
-> 
+Hi, Yuquan,
+
+On Wed, Apr 9, 2025 at 3:03=E2=80=AFPM Yuquan Wang
+<wangyuquan1236@phytium.com.cn> wrote:
+>
+> "mm: introduce numa_memblks"(87482708210f) has moved numa_memblks
+> from x86 to the generic code, but loongarch was left out of this
+> conversion.
+>
+> This patch introduces the generic numa_memblks.
+Thank you for your patch, but it cause many errors:
+loongarch64-linux-ld: mm/numa_memblks.o: in function
+`memory_add_physaddr_to_nid':
+numa_memblks.c:(.text+0x60): multiple definition of
+`memory_add_physaddr_to_nid';
+arch/loongarch/mm/init.o:init.c:(.text+0x0): first defined here
+loongarch64-linux-ld: mm/numa_memblks.o: in function `numa_set_distance':
+numa_memblks.c:(.init.text+0x248): multiple definition of
+`numa_set_distance';
+arch/loongarch/kernel/acpi.o:acpi.c:(.init.text+0x534): first defined
+here
+loongarch64-linux-ld: mm/numa_memblks.o: in function `.LANCHOR2':
+numa_memblks.c:(.init.data+0x0): multiple definition of
+`numa_nodes_parsed';
+arch/loongarch/kernel/numa.o:numa.c:(.init.data+0x0): first defined
+here
+make[2]: *** [scripts/Makefile.vmlinux_o:72=EF=BC=9Avmlinux.o] =E9=94=99=E8=
+=AF=AF 1
+make[1]: *** [/home/chenhuacai/linux-official.git/Makefile:1223=EF=BC=9Avml=
+inux_o] =E9=94=99=E8=AF=AF 2
+make: *** [Makefile:248=EF=BC=9A__sub-make] =E9=94=99=C3=A8=C2=AF=C2=AF 2
+  INSTALL /home/chenhuacai/dest/lib/modules/6.15.0-rc1+/vdso/vdso.so
+
+It cannot be fixed easily, but I will try my best to do that based on
+your patch.
+
+Huacai
+
+>
 > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
 > ---
-> 
-> Changes in v2 (Thanks to Dan & Alison):
-> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-> - Add comments to describe the usage of numa_add_reserved_memblk()
-> - Updating the commit message to clarify the purpose of the patch
-> 
->  drivers/acpi/numa/srat.c     |  2 +-
->  include/linux/numa_memblks.h |  1 +
->  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
->  3 files changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index 0a725e46d017..751774f0b4e5 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  		return -EINVAL;
->  	}
->  
-> -	if (numa_add_memblk(node, start, end) < 0) {
-> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
->  		/* CXL driver must handle the NUMA_NO_NODE case */
->  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
->  			node, start, end);
-> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
-> index dd85613cdd86..991076cba7c5 100644
-> --- a/include/linux/numa_memblks.h
-> +++ b/include/linux/numa_memblks.h
-> @@ -22,6 +22,7 @@ struct numa_meminfo {
->  };
->  
->  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
->  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
->  
->  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
-> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-> index ff4054f4334d..541a99c4071a 100644
-> --- a/mm/numa_memblks.c
-> +++ b/mm/numa_memblks.c
-> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
->  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+>
+> Background
+> ----------
+> I am managed to land the patch[1] "mm: numa_memblks: introduce numa_add_r=
+eserved_memblk"
+> but kernel test CI noticed build errors[2] from loongarch64-linux-gcc.
+>
+> Link:
+> [1]: https://lore.kernel.org/all/20250409040121.3212489-1-wangyuquan1236@=
+phytium.com.cn/
+> [2]: https://lore.kernel.org/all/202503282026.QNaOAK79-lkp@intel.com/
+>
+>  arch/loongarch/Kconfig            |  1 +
+>  arch/loongarch/include/asm/numa.h | 14 ----------
+>  arch/loongarch/kernel/numa.c      | 43 +------------------------------
+>  3 files changed, 2 insertions(+), 56 deletions(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 067c0b994648..5906ccd06705 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -186,6 +186,7 @@ config LOONGARCH
+>         select MODULES_USE_ELF_RELA if MODULES
+>         select NEED_PER_CPU_EMBED_FIRST_CHUNK
+>         select NEED_PER_CPU_PAGE_FIRST_CHUNK
+> +       select NUMA_MEMBLKS
+>         select OF
+>         select OF_EARLY_FLATTREE
+>         select PCI
+> diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/a=
+sm/numa.h
+> index b5f9de9f102e..bbf9f70bd25f 100644
+> --- a/arch/loongarch/include/asm/numa.h
+> +++ b/arch/loongarch/include/asm/numa.h
+> @@ -22,20 +22,6 @@ extern int numa_off;
+>  extern s16 __cpuid_to_node[CONFIG_NR_CPUS];
+>  extern nodemask_t numa_nodes_parsed __initdata;
+>
+> -struct numa_memblk {
+> -       u64                     start;
+> -       u64                     end;
+> -       int                     nid;
+> -};
+> -
+> -#define NR_NODE_MEMBLKS                (MAX_NUMNODES*2)
+> -struct numa_meminfo {
+> -       int                     nr_blks;
+> -       struct numa_memblk      blk[NR_NODE_MEMBLKS];
+> -};
+> -
+> -extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> -
+>  extern void __init early_numa_add_cpu(int cpuid, s16 node);
+>  extern void numa_add_cpu(unsigned int cpu);
+>  extern void numa_remove_cpu(unsigned int cpu);
+> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+> index 30a72fd528c0..0ed384635566 100644
+> --- a/arch/loongarch/kernel/numa.c
+> +++ b/arch/loongarch/kernel/numa.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/efi.h>
+>  #include <linux/irq.h>
+>  #include <linux/pci.h>
+> +#include <linux/numa_memblks.h>
+>  #include <asm/bootinfo.h>
+>  #include <asm/loongson.h>
+>  #include <asm/numa.h>
+> @@ -145,48 +146,6 @@ void numa_remove_cpu(unsigned int cpu)
+>         cpumask_clear_cpu(cpu, &cpus_on_node[nid]);
 >  }
->  
-> +/**
-> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
-> + * @nid: NUMA node ID of the new memblk
-> + * @start: Start address of the new memblk
-> + * @end: End address of the new memblk
-> + *
-> + * Add a new memblk to the numa_reserved_meminfo.
-> + *
-> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
-> + * against memblock_type information and moves any that intersect reserved
-> + * ranges to numa_reserved_meminfo. However, when that information is known
-> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
-> + * to numa_reserved_meminfo directly.
-> + *
-> + * RETURNS:
-> + * 0 on success, -errno on failure.
-> + */
-> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
-> +{
-> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
-> +}
-> +
->  /**
->   * numa_cleanup_meminfo - Cleanup a numa_meminfo
->   * @mi: numa_meminfo to clean up
-> -- 
+>
+> -static int __init numa_add_memblk_to(int nid, u64 start, u64 end,
+> -                                    struct numa_meminfo *mi)
+> -{
+> -       /* ignore zero length blks */
+> -       if (start =3D=3D end)
+> -               return 0;
+> -
+> -       /* whine about and ignore invalid blks */
+> -       if (start > end || nid < 0 || nid >=3D MAX_NUMNODES) {
+> -               pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010=
+Lx-%#010Lx]\n",
+> -                          nid, start, end - 1);
+> -               return 0;
+> -       }
+> -
+> -       if (mi->nr_blks >=3D NR_NODE_MEMBLKS) {
+> -               pr_err("NUMA: too many memblk ranges\n");
+> -               return -EINVAL;
+> -       }
+> -
+> -       mi->blk[mi->nr_blks].start =3D PFN_ALIGN(start);
+> -       mi->blk[mi->nr_blks].end =3D PFN_ALIGN(end - PAGE_SIZE + 1);
+> -       mi->blk[mi->nr_blks].nid =3D nid;
+> -       mi->nr_blks++;
+> -       return 0;
+> -}
+> -
+> -/**
+> - * numa_add_memblk - Add one numa_memblk to numa_meminfo
+> - * @nid: NUMA node ID of the new memblk
+> - * @start: Start address of the new memblk
+> - * @end: End address of the new memblk
+> - *
+> - * Add a new memblk to the default numa_meminfo.
+> - *
+> - * RETURNS:
+> - * 0 on success, -errno on failure.
+> - */
+> -int __init numa_add_memblk(int nid, u64 start, u64 end)
+> -{
+> -       return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+> -}
+> -
+>  static void __init node_mem_init(unsigned int node)
+>  {
+>         unsigned long start_pfn, end_pfn;
+> --
 > 2.34.1
-> 
-> 
-
--- 
-Sincerely yours,
-Mike.
+>
+>
