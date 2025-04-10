@@ -1,201 +1,105 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F90E1EEA5D
-	for <loongarch@lists.linux.dev>; Thu, 10 Apr 2025 07:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22A631EF372
+	for <loongarch@lists.linux.dev>; Thu, 10 Apr 2025 08:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744270794; cv=none; b=XyyS5FbSumv1OjAZQhYbJg21SG27LHg75r80z+QDd+Qc3uLyb4jV9+Pconp1ePz1ujrbPJKQUCCge1U6WyTnVHnKXLN4xammSBFpk2Me2H7NATnnXBHaY4uHgQf9rFu7V46AbXtDi/8xUSp2bzLTX4qu0AlYrcXeSU8nTI4Bzbs=
+	t=1744274464; cv=none; b=JNscuxeS0SnmozWvOHTNAAnyPkmafNdPXXyLX6vgO4FW4mpeUCtlyrQaFZ5cgrleV4AboRT6OfCjIu9D4VDuYS0WLiUEfLM/KxtSX4KiryfhWGVKX2Km0eToiMAfxzT+w5CSjp3VN2+v7rAEvKQjdmVlUaY3sMOVux5aJfGSPng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744270794; c=relaxed/simple;
-	bh=90MdqMTv2wKUDJa9ptKTpbNjKDGDht+G12XHObwq5/U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mpSaCA+FZtmBKZFSr4hssyyeqJ49xRJsGE+Fwhg4eplCyDiPbqiSwk5yC5uUkUY1WGiNXOXIuPxRZZTx1VaXDqKHoDgaomD/Ky1I3eragVXx/mfVXEO0GxIqRAnfKAd8DmthhbH5vEAxRYzCmbqIohXUz2uKp9nsWGdZqQhVbgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3uAs0TzU; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3uAs0TzU"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so3007465e9.3
-        for <loongarch@lists.linux.dev>; Thu, 10 Apr 2025 00:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744270791; x=1744875591; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K7iRFA3oNaQCwmL6cxtFdZ1cbJzfUU/GeSk9zwV0n3w=;
-        b=3uAs0TzUT0kx4JLjxwksvk7Hf8BmrE0wiy43Ssf3ADJVvj4GRdXO+ydDvdaHufbKmR
-         QgYnDIVEuWOaBPWQPqefydLNbn9itUv11kZJX/LSu/w0UYRIewU4c0rYSOammkPbscsS
-         4yeVQ4MyyhJzQh4MS2+KOiFI/8HklRJEs5Eg5ChL68VHmdpRThEGBrI9z812BOK2GFSt
-         u4YM/R4v2iL+QC7bPBqFpZrKtO2v+EbJ3AH/YM6QuH3fY3fnwWl8YB9JXTzR6PWwCM0V
-         WI0YI0ViLXsAAfMuwMeNEU3k+AUVYpriaL9HIRkGPFNW4ayj7j5WPmRpaRXigH8je3+L
-         vZIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744270791; x=1744875591;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K7iRFA3oNaQCwmL6cxtFdZ1cbJzfUU/GeSk9zwV0n3w=;
-        b=AKvscJuIlBI+fb3EF0Wqn2g95UzkDKrtQ12DbVI23iNXJq8sNYB/w3VDp25YkYuARj
-         Rw1tqKZnrKxCNyJvsg5HHLsYkAAfrS/oZJm/sPcG4JYv6jTdSy8q3SiLAAXyNsU0ZRnt
-         tMlOW10RaYdKflPQVDgKWCWA5izu/TxRoV2Jr+KIyPTD2V0hI/RAjV+Ic1aTQXmjEXhk
-         6cQVlsDENcQmkBlM58vWXXfuv0zoy3vvu0jDmgr9BD+BUCG0zYkvjsP4RKjr/3/GDUE5
-         ZXiIxmBWQ4xQskwQcVtHoMJbu86OPuOJRKjwGm6GL8zK9zpAULZbzVwpsdtsJymQXxu5
-         T6uw==
-X-Forwarded-Encrypted: i=1; AJvYcCUntogVoqq264siJdvgm/VK4oOBBjUoQShOykvQvLsLShc7jALQ8nwBEZ+UsF1d1XVWzBrGh3EpgAs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyGs4qOWL7z731Bt/PqaG7CDG9rcpKbG5ox28PTaYHRaMTGJA7U
-	gB+xJ6nLYwANF5jkAsytRFvP/S0/JFvu2CgIt/E1womLOh0Uzg+Nzq1fGTsbgMIfzTmpv8skI5x
-	wf8ZSv3wChGL18A==
-X-Google-Smtp-Source: AGHT+IHlkpBGJEWBW3cHYQJGmG67relPMhD9NvzbuRhqbRBizGar1eZ7vJOB4Vl1S32BZGUFqnryZcgjcRbEP1Q=
-X-Received: from wmgg6.prod.google.com ([2002:a05:600d:6:b0:43c:ef7b:ffac])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:c0b:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-43f2d97d4c7mr15493055e9.29.1744270790968;
- Thu, 10 Apr 2025 00:39:50 -0700 (PDT)
-Date: Thu, 10 Apr 2025 07:39:48 +0000
-In-Reply-To: <20250409065802.136971-5-fujita.tomonori@gmail.com>
+	s=arc-20240116; t=1744274464; c=relaxed/simple;
+	bh=t2+OBeJgd6vIgnkDPi51zU+djJ+sYytL4w9vvY7Gjv8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jug1J51YBxCysipayqRSNYwLfvOhlrCcjksOQ9WEkBYmrWmeqF3UMlZDu5PrVZSJU5OOMjNvYf07kc7nG0w0TuLNuv6M1N2rM78miFEO/JAhSSg03mqVEq68czZ0yMshAM61t0c2tTvDffQ9jMAD7u+HOXudOjvF0pHWmiPoTTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.198])
+	by gateway (Coremail) with SMTP id _____8AxGHEYhPdnnbi2AA--.43808S3;
+	Thu, 10 Apr 2025 16:40:56 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.198])
+	by front1 (Coremail) with SMTP id qMiowMDxH+UQhPdnGrJ3AA--.30039S2;
+	Thu, 10 Apr 2025 16:40:51 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v1 0/4] LoongArch: Introduce the Loongson-2K MMC host controller driver
+Date: Thu, 10 Apr 2025 16:40:34 +0800
+Message-ID: <cover.1744273956.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250409065802.136971-1-fujita.tomonori@gmail.com> <20250409065802.136971-5-fujita.tomonori@gmail.com>
-Message-ID: <Z_d1xAAptnfzqg1l@google.com>
-Subject: Re: [PATCH v5 4/4] rust: Add warn_on macro
-From: Alice Ryhl <aliceryhl@google.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	x86@kernel.org, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
-	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn, 
-	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxH+UQhPdnGrJ3AA--.30039S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ury8ArWDAFWDZr4kJrykCrX_yoW8Xw1Upa
+	13u3y3Kr4UCr43uF93Ga48Cry5u34fJ39rGanxJwn5Wa93u34UWryIkayYvrZxury8Jryx
+	ZFyrua18u3Z8GFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xuctUUUUU==
 
-On Wed, Apr 09, 2025 at 03:58:01PM +0900, FUJITA Tomonori wrote:
-> Add warn_on macro, uses the BUG/WARN feature (lib/bug.c) via assembly
-> for x86_64/arm64/riscv.
-> 
-> The current Rust code simply wraps BUG() macro but doesn't provide the
-> proper debug information. The BUG/WARN feature can only be used from
-> assembly.
-> 
-> This uses the assembly code exported by the C side via ARCH_WARN_ASM
-> macro. To avoid duplicating the assembly code, this approach follows
-> the same strategy as the static branch code: it generates the assembly
-> code for Rust using the C preprocessor at compile time.
-> 
-> Similarly, ARCH_WARN_REACHABLE is also used at compile time to
-> generate the assembly code; objtool's reachable anotation code. It's
-> used for only architectures that use objtool.
-> 
-> For now, Loongarch and arm32 just use a wrapper for WARN macro.
-> 
-> UML doesn't use the assembly BUG/WARN feature; just wrapping generic
-> BUG/WARN functions implemented in C works.
-> 
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-> ---
->  rust/Makefile                                 |   8 ++
->  rust/helpers/bug.c                            |   5 +
->  rust/kernel/.gitignore                        |   2 +
->  rust/kernel/bug.rs                            | 114 ++++++++++++++++++
->  rust/kernel/generated_arch_reachable_asm.rs.S |   7 ++
->  rust/kernel/generated_arch_warn_asm.rs.S      |   7 ++
->  rust/kernel/lib.rs                            |   1 +
->  7 files changed, 144 insertions(+)
->  create mode 100644 rust/kernel/bug.rs
->  create mode 100644 rust/kernel/generated_arch_reachable_asm.rs.S
->  create mode 100644 rust/kernel/generated_arch_warn_asm.rs.S
-> 
-> diff --git a/rust/Makefile b/rust/Makefile
-> index fa0eea8a9eca..25f498607d1b 100644
-> --- a/rust/Makefile
-> +++ b/rust/Makefile
-> @@ -34,6 +34,9 @@ obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated.o
->  obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.o
->  
->  always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) += kernel/generated_arch_static_branch_asm.rs
-> +ifndef CONFIG_UML
-> +always-$(subst y,$(CONFIG_RUST),$(CONFIG_BUG)) += kernel/generated_arch_warn_asm.rs kernel/generated_arch_reachable_asm.rs
-> +endif
->  
->  # Avoids running `$(RUSTC)` when it may not be available.
->  ifdef CONFIG_RUST
-> @@ -536,5 +539,10 @@ $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/build_error.o $(obj)/pin_init.o \
->  ifdef CONFIG_JUMP_LABEL
->  $(obj)/kernel.o: $(obj)/kernel/generated_arch_static_branch_asm.rs
->  endif
-> +ifndef CONFIG_UML
-> +ifdef CONFIG_BUG
-> +$(obj)/kernel.o: $(obj)/kernel/generated_arch_warn_asm.rs $(obj)/kernel/generated_arch_reachable_asm.rs
-> +endif
-> +endif
->  
->  endif # CONFIG_RUST
-> diff --git a/rust/helpers/bug.c b/rust/helpers/bug.c
-> index e2d13babc737..a62c96f507d1 100644
-> --- a/rust/helpers/bug.c
-> +++ b/rust/helpers/bug.c
-> @@ -6,3 +6,8 @@ __noreturn void rust_helper_BUG(void)
->  {
->  	BUG();
->  }
-> +
-> +bool rust_helper_WARN_ON(bool cond)
-> +{
-> +	return WARN_ON(cond);
-> +}
-> diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
-> index 6ba39a178f30..f636ad95aaf3 100644
-> --- a/rust/kernel/.gitignore
-> +++ b/rust/kernel/.gitignore
-> @@ -1,3 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  /generated_arch_static_branch_asm.rs
-> +/generated_arch_warn_asm.rs
-> +/generated_arch_reachable_asm.rs
-> diff --git a/rust/kernel/bug.rs b/rust/kernel/bug.rs
-> new file mode 100644
-> index 000000000000..761f0c49ae04
-> --- /dev/null
-> +++ b/rust/kernel/bug.rs
-> @@ -0,0 +1,114 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2024, 2025 FUJITA Tomonori <fujita.tomonori@gmail.com>
-> +
-> +//! Support for BUG and WARN functionality.
-> +//!
-> +//! C header: [`include/asm-generic/bug.h`](srctree/include/asm-generic/bug.h)
-> +
-> +#[macro_export]
-> +#[doc(hidden)]
-> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML), not(CONFIG_LOONGARCH), not(CONFIG_ARM)))]
-> +#[cfg(CONFIG_DEBUG_BUGVERBOSE)]
-> +macro_rules! warn_flags {
-> +    ($flags:expr) => {
-> +        const FLAGS: u32 = $crate::bindings::BUGFLAG_WARNING | $flags;
-> +        const _FILE: &[u8] = file!().as_bytes();
-> +        // Plus one for null-terminator.
-> +        static FILE: [u8; _FILE.len() + 1] = {
-> +            let mut bytes = [0; _FILE.len() + 1];
-> +            let mut i = 0;
-> +            while i < _FILE.len() {
-> +                bytes[i] = _FILE[i];
-> +                i += 1;
-> +            }
-> +            bytes
-> +        };
-> +        // SAFETY: Just an FFI call.
+Hi all:
 
-Safety comments could be improved. This being an FFI call is not the
-reason why it's okay. Furthermore, it's not an FFI call.
+This patchset introduce the MMC host controller on Loongson-2K series
+CPUs.
 
-Otherwise, this series LGTM.
+They are similar, except for the interface characteristics and the use of
+DMA engine, specifically, the Loongson-2K0500/Loongson-2K1000 use an
+externally shared APBDMA engine, while the Loongson-2K2000 uses an
+internally exclusive DMA.
 
-Alice
+Based on this, I'm splitting the driver into two patches.
+
+List of the patchset:
+Patch1: bindings for Loongson-2K0500/Loongson-2K1000;
+Patch2: driver for MMC controller using externally shared APBDMA engine;
+Patch3: bindings for Loongson-2K2000;
+Patch4: driver for MMC controller using internally exclusive DMA.
+
+Thanks.
+
+Binbin Zhou (4):
+  dt-bindings: mmc: Add Loongson-2K SD/SDIO/eMMC controller binding
+  mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
+  dt-bindings: mmc: loongson,ls2k-mmc: Add compatible for
+    Loongson-2K2000
+  mmc: loongson2: Add Loongson-2K2000 SD/SDIO controller driver
+
+ .../bindings/mmc/loongson,ls2k-mmc.yaml       | 110 +++
+ MAINTAINERS                                   |   8 +
+ drivers/mmc/host/Kconfig                      |  13 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/loongson2-mmc.c              | 781 ++++++++++++++++++
+ drivers/mmc/host/loongson2-mmc.h              | 224 +++++
+ 6 files changed, 1137 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/loongson,ls2k-mmc.yaml
+ create mode 100644 drivers/mmc/host/loongson2-mmc.c
+ create mode 100644 drivers/mmc/host/loongson2-mmc.h
+
+
+base-commit: 6b8dba9a7fdba6d669e4119e390a071e44383934
+-- 
+2.47.1
+
