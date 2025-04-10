@@ -1,224 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDBC265CA7
-	for <loongarch@lists.linux.dev>; Wed,  9 Apr 2025 14:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F90E1EEA5D
+	for <loongarch@lists.linux.dev>; Thu, 10 Apr 2025 07:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744208409; cv=none; b=RRRx2gnnd1gJ78aUWF/80aFoMySt6pyS2HgTLYcju6TyTBincwNehNVxV6kMhjhwQ1WvoY/uXOmpCxAIkV2YerNkt5ji+sRHCCfB745ffCT1pQW3msAwXnvJ+YtDQYA2x+k5SrWguzXCFmsdXMF/q8nzdE/IVT++NGyKkZihpec=
+	t=1744270794; cv=none; b=XyyS5FbSumv1OjAZQhYbJg21SG27LHg75r80z+QDd+Qc3uLyb4jV9+Pconp1ePz1ujrbPJKQUCCge1U6WyTnVHnKXLN4xammSBFpk2Me2H7NATnnXBHaY4uHgQf9rFu7V46AbXtDi/8xUSp2bzLTX4qu0AlYrcXeSU8nTI4Bzbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744208409; c=relaxed/simple;
-	bh=BG/OzJES1M7Q6UgqXIWZo0kbqsw0xFTv9avIXvDfKl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WkhMgGxrgH5vtKnbaqpxuiAipmuSdwQ1L16rstey/KrsD46Yg5Oc+ST75Wfsc1ReSshlgUy+unUc7RV4RCND2nirAYEbwIDk+SFve8V8Z8UOS3q0qtMrTzLdPwA33Hesxl/ZrNdAkagkqO+aI1Dsau0clFMrop9EF6qJyhUk150=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6b+5FET; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744270794; c=relaxed/simple;
+	bh=90MdqMTv2wKUDJa9ptKTpbNjKDGDht+G12XHObwq5/U=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mpSaCA+FZtmBKZFSr4hssyyeqJ49xRJsGE+Fwhg4eplCyDiPbqiSwk5yC5uUkUY1WGiNXOXIuPxRZZTx1VaXDqKHoDgaomD/Ky1I3eragVXx/mfVXEO0GxIqRAnfKAd8DmthhbH5vEAxRYzCmbqIohXUz2uKp9nsWGdZqQhVbgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3uAs0TzU; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6b+5FET"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE44C4CEED
-	for <loongarch@lists.linux.dev>; Wed,  9 Apr 2025 14:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744208408;
-	bh=BG/OzJES1M7Q6UgqXIWZo0kbqsw0xFTv9avIXvDfKl8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A6b+5FET2spOgRa2vacU9wjGBMCpfe11c1PD8P8XThPDX4dJUL2NG8ORLineivW1s
-	 E8KhoXiacRx2toMKAt13wzybtd94ack8IqWGGzxRaQqJa1RuDhflgvhEutEiyNBjVj
-	 YdGcrOD8CnUmFEjd2y6kr0JHq530JlofuMx3whHajwo3jL2HyBERFMjS2NFd6nUW5b
-	 qBPe7eu0YmBc27zezOWBF2Svwvz60gJC98D1f3uc2diOLLxFGfZWWWguFa/VK0ctRL
-	 DPbnQ+u8bKlEZ537fh9ztwNMEISzOxiRJpCrO+a1i+vxe9N0Zy1AxSVXCUNAcHT512
-	 8/KZy+OrNJ7jA==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso1181464866b.3
-        for <loongarch@lists.linux.dev>; Wed, 09 Apr 2025 07:20:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXF+Ss+CCgJzZ8OKzxfIIizLwXBUSi7sx1U57At5enGAcD03aHySXWDMTF/tI5E+el1mLHKMIKU+wM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyBPcA5hVawyRw4fBQITT1qQiXojUS4B6U+pw133NZ+1mpK7SS1
-	pimeqpGtYOAqHA3FdPDIa5CMRUy3/Aa6v/FdW/lpokWU/ZehLcNOGbiZodxhtT3k/bqcA+dJ/El
-	8kBwyUc85s3qnzPFVLcUGhfdlnwE=
-X-Google-Smtp-Source: AGHT+IFnF6UDYloYX0LOUBH6jYkuCNYIOTsP2lHmKeGs/z9SZN3K4qP8DEu2FfQoknF3uccBjAD217TToS6ep+829MQ=
-X-Received: by 2002:a17:907:971a:b0:ac4:3cd:2cb2 with SMTP id
- a640c23a62f3a-aca9b607dcemr354551866b.1.1744208406974; Wed, 09 Apr 2025
- 07:20:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3uAs0TzU"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so3007465e9.3
+        for <loongarch@lists.linux.dev>; Thu, 10 Apr 2025 00:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744270791; x=1744875591; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K7iRFA3oNaQCwmL6cxtFdZ1cbJzfUU/GeSk9zwV0n3w=;
+        b=3uAs0TzUT0kx4JLjxwksvk7Hf8BmrE0wiy43Ssf3ADJVvj4GRdXO+ydDvdaHufbKmR
+         QgYnDIVEuWOaBPWQPqefydLNbn9itUv11kZJX/LSu/w0UYRIewU4c0rYSOammkPbscsS
+         4yeVQ4MyyhJzQh4MS2+KOiFI/8HklRJEs5Eg5ChL68VHmdpRThEGBrI9z812BOK2GFSt
+         u4YM/R4v2iL+QC7bPBqFpZrKtO2v+EbJ3AH/YM6QuH3fY3fnwWl8YB9JXTzR6PWwCM0V
+         WI0YI0ViLXsAAfMuwMeNEU3k+AUVYpriaL9HIRkGPFNW4ayj7j5WPmRpaRXigH8je3+L
+         vZIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744270791; x=1744875591;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K7iRFA3oNaQCwmL6cxtFdZ1cbJzfUU/GeSk9zwV0n3w=;
+        b=AKvscJuIlBI+fb3EF0Wqn2g95UzkDKrtQ12DbVI23iNXJq8sNYB/w3VDp25YkYuARj
+         Rw1tqKZnrKxCNyJvsg5HHLsYkAAfrS/oZJm/sPcG4JYv6jTdSy8q3SiLAAXyNsU0ZRnt
+         tMlOW10RaYdKflPQVDgKWCWA5izu/TxRoV2Jr+KIyPTD2V0hI/RAjV+Ic1aTQXmjEXhk
+         6cQVlsDENcQmkBlM58vWXXfuv0zoy3vvu0jDmgr9BD+BUCG0zYkvjsP4RKjr/3/GDUE5
+         ZXiIxmBWQ4xQskwQcVtHoMJbu86OPuOJRKjwGm6GL8zK9zpAULZbzVwpsdtsJymQXxu5
+         T6uw==
+X-Forwarded-Encrypted: i=1; AJvYcCUntogVoqq264siJdvgm/VK4oOBBjUoQShOykvQvLsLShc7jALQ8nwBEZ+UsF1d1XVWzBrGh3EpgAs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyGs4qOWL7z731Bt/PqaG7CDG9rcpKbG5ox28PTaYHRaMTGJA7U
+	gB+xJ6nLYwANF5jkAsytRFvP/S0/JFvu2CgIt/E1womLOh0Uzg+Nzq1fGTsbgMIfzTmpv8skI5x
+	wf8ZSv3wChGL18A==
+X-Google-Smtp-Source: AGHT+IHlkpBGJEWBW3cHYQJGmG67relPMhD9NvzbuRhqbRBizGar1eZ7vJOB4Vl1S32BZGUFqnryZcgjcRbEP1Q=
+X-Received: from wmgg6.prod.google.com ([2002:a05:600d:6:b0:43c:ef7b:ffac])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:c0b:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-43f2d97d4c7mr15493055e9.29.1744270790968;
+ Thu, 10 Apr 2025 00:39:50 -0700 (PDT)
+Date: Thu, 10 Apr 2025 07:39:48 +0000
+In-Reply-To: <20250409065802.136971-5-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
-In-Reply-To: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 9 Apr 2025 22:20:03 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H59A797mfwxjEe8SO0JioxkF3H0Rr0E_TK1qn0PHdRMXA@mail.gmail.com>
-X-Gm-Features: ATxdqUHdB7qVVvs9U6XaymRSOHZ0sp8fImlHDnojMC_VV6MWDytUBwxnn0hxTYI
-Message-ID: <CAAhV-H59A797mfwxjEe8SO0JioxkF3H0Rr0E_TK1qn0PHdRMXA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] LoongArch: Introduce the numa_memblks conversion
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: kernel@xen0n.name, jiaxun.yang@flygoat.com, rppt@kernel.org, 
-	akpm@linux-foundation.org, david@redhat.com, Jonathan.Cameron@huawei.com, 
-	dave.hansen@linux.intel.com, dan.j.williams@intel.com, 
-	alison.schofield@intel.com, chenbaozi@phytium.com.cn, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250409065802.136971-1-fujita.tomonori@gmail.com> <20250409065802.136971-5-fujita.tomonori@gmail.com>
+Message-ID: <Z_d1xAAptnfzqg1l@google.com>
+Subject: Re: [PATCH v5 4/4] rust: Add warn_on macro
+From: Alice Ryhl <aliceryhl@google.com>
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	x86@kernel.org, linux-riscv@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
+	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn, 
+	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu
+Content-Type: text/plain; charset="utf-8"
 
-Hi, Yuquan,
-
-On Wed, Apr 9, 2025 at 3:03=E2=80=AFPM Yuquan Wang
-<wangyuquan1236@phytium.com.cn> wrote:
->
-> "mm: introduce numa_memblks"(87482708210f) has moved numa_memblks
-> from x86 to the generic code, but loongarch was left out of this
-> conversion.
->
-> This patch introduces the generic numa_memblks.
-Thank you for your patch, but it cause many errors:
-loongarch64-linux-ld: mm/numa_memblks.o: in function
-`memory_add_physaddr_to_nid':
-numa_memblks.c:(.text+0x60): multiple definition of
-`memory_add_physaddr_to_nid';
-arch/loongarch/mm/init.o:init.c:(.text+0x0): first defined here
-loongarch64-linux-ld: mm/numa_memblks.o: in function `numa_set_distance':
-numa_memblks.c:(.init.text+0x248): multiple definition of
-`numa_set_distance';
-arch/loongarch/kernel/acpi.o:acpi.c:(.init.text+0x534): first defined
-here
-loongarch64-linux-ld: mm/numa_memblks.o: in function `.LANCHOR2':
-numa_memblks.c:(.init.data+0x0): multiple definition of
-`numa_nodes_parsed';
-arch/loongarch/kernel/numa.o:numa.c:(.init.data+0x0): first defined
-here
-make[2]: *** [scripts/Makefile.vmlinux_o:72=EF=BC=9Avmlinux.o] =E9=94=99=E8=
-=AF=AF 1
-make[1]: *** [/home/chenhuacai/linux-official.git/Makefile:1223=EF=BC=9Avml=
-inux_o] =E9=94=99=E8=AF=AF 2
-make: *** [Makefile:248=EF=BC=9A__sub-make] =E9=94=99=C3=A8=C2=AF=C2=AF 2
-  INSTALL /home/chenhuacai/dest/lib/modules/6.15.0-rc1+/vdso/vdso.so
-
-It cannot be fixed easily, but I will try my best to do that based on
-your patch.
-
-Huacai
-
->
-> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+On Wed, Apr 09, 2025 at 03:58:01PM +0900, FUJITA Tomonori wrote:
+> Add warn_on macro, uses the BUG/WARN feature (lib/bug.c) via assembly
+> for x86_64/arm64/riscv.
+> 
+> The current Rust code simply wraps BUG() macro but doesn't provide the
+> proper debug information. The BUG/WARN feature can only be used from
+> assembly.
+> 
+> This uses the assembly code exported by the C side via ARCH_WARN_ASM
+> macro. To avoid duplicating the assembly code, this approach follows
+> the same strategy as the static branch code: it generates the assembly
+> code for Rust using the C preprocessor at compile time.
+> 
+> Similarly, ARCH_WARN_REACHABLE is also used at compile time to
+> generate the assembly code; objtool's reachable anotation code. It's
+> used for only architectures that use objtool.
+> 
+> For now, Loongarch and arm32 just use a wrapper for WARN macro.
+> 
+> UML doesn't use the assembly BUG/WARN feature; just wrapping generic
+> BUG/WARN functions implemented in C works.
+> 
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 > ---
->
-> Background
-> ----------
-> I am managed to land the patch[1] "mm: numa_memblks: introduce numa_add_r=
-eserved_memblk"
-> but kernel test CI noticed build errors[2] from loongarch64-linux-gcc.
->
-> Link:
-> [1]: https://lore.kernel.org/all/20250409040121.3212489-1-wangyuquan1236@=
-phytium.com.cn/
-> [2]: https://lore.kernel.org/all/202503282026.QNaOAK79-lkp@intel.com/
->
->  arch/loongarch/Kconfig            |  1 +
->  arch/loongarch/include/asm/numa.h | 14 ----------
->  arch/loongarch/kernel/numa.c      | 43 +------------------------------
->  3 files changed, 2 insertions(+), 56 deletions(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 067c0b994648..5906ccd06705 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -186,6 +186,7 @@ config LOONGARCH
->         select MODULES_USE_ELF_RELA if MODULES
->         select NEED_PER_CPU_EMBED_FIRST_CHUNK
->         select NEED_PER_CPU_PAGE_FIRST_CHUNK
-> +       select NUMA_MEMBLKS
->         select OF
->         select OF_EARLY_FLATTREE
->         select PCI
-> diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/a=
-sm/numa.h
-> index b5f9de9f102e..bbf9f70bd25f 100644
-> --- a/arch/loongarch/include/asm/numa.h
-> +++ b/arch/loongarch/include/asm/numa.h
-> @@ -22,20 +22,6 @@ extern int numa_off;
->  extern s16 __cpuid_to_node[CONFIG_NR_CPUS];
->  extern nodemask_t numa_nodes_parsed __initdata;
->
-> -struct numa_memblk {
-> -       u64                     start;
-> -       u64                     end;
-> -       int                     nid;
-> -};
-> -
-> -#define NR_NODE_MEMBLKS                (MAX_NUMNODES*2)
-> -struct numa_meminfo {
-> -       int                     nr_blks;
-> -       struct numa_memblk      blk[NR_NODE_MEMBLKS];
-> -};
-> -
-> -extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-> -
->  extern void __init early_numa_add_cpu(int cpuid, s16 node);
->  extern void numa_add_cpu(unsigned int cpu);
->  extern void numa_remove_cpu(unsigned int cpu);
-> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-> index 30a72fd528c0..0ed384635566 100644
-> --- a/arch/loongarch/kernel/numa.c
-> +++ b/arch/loongarch/kernel/numa.c
-> @@ -18,6 +18,7 @@
->  #include <linux/efi.h>
->  #include <linux/irq.h>
->  #include <linux/pci.h>
-> +#include <linux/numa_memblks.h>
->  #include <asm/bootinfo.h>
->  #include <asm/loongson.h>
->  #include <asm/numa.h>
-> @@ -145,48 +146,6 @@ void numa_remove_cpu(unsigned int cpu)
->         cpumask_clear_cpu(cpu, &cpus_on_node[nid]);
->  }
->
-> -static int __init numa_add_memblk_to(int nid, u64 start, u64 end,
-> -                                    struct numa_meminfo *mi)
-> -{
-> -       /* ignore zero length blks */
-> -       if (start =3D=3D end)
-> -               return 0;
-> -
-> -       /* whine about and ignore invalid blks */
-> -       if (start > end || nid < 0 || nid >=3D MAX_NUMNODES) {
-> -               pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010=
-Lx-%#010Lx]\n",
-> -                          nid, start, end - 1);
-> -               return 0;
-> -       }
-> -
-> -       if (mi->nr_blks >=3D NR_NODE_MEMBLKS) {
-> -               pr_err("NUMA: too many memblk ranges\n");
-> -               return -EINVAL;
-> -       }
-> -
-> -       mi->blk[mi->nr_blks].start =3D PFN_ALIGN(start);
-> -       mi->blk[mi->nr_blks].end =3D PFN_ALIGN(end - PAGE_SIZE + 1);
-> -       mi->blk[mi->nr_blks].nid =3D nid;
-> -       mi->nr_blks++;
-> -       return 0;
-> -}
-> -
-> -/**
-> - * numa_add_memblk - Add one numa_memblk to numa_meminfo
-> - * @nid: NUMA node ID of the new memblk
-> - * @start: Start address of the new memblk
-> - * @end: End address of the new memblk
-> - *
-> - * Add a new memblk to the default numa_meminfo.
-> - *
-> - * RETURNS:
-> - * 0 on success, -errno on failure.
-> - */
-> -int __init numa_add_memblk(int nid, u64 start, u64 end)
-> -{
-> -       return numa_add_memblk_to(nid, start, end, &numa_meminfo);
-> -}
-> -
->  static void __init node_mem_init(unsigned int node)
+>  rust/Makefile                                 |   8 ++
+>  rust/helpers/bug.c                            |   5 +
+>  rust/kernel/.gitignore                        |   2 +
+>  rust/kernel/bug.rs                            | 114 ++++++++++++++++++
+>  rust/kernel/generated_arch_reachable_asm.rs.S |   7 ++
+>  rust/kernel/generated_arch_warn_asm.rs.S      |   7 ++
+>  rust/kernel/lib.rs                            |   1 +
+>  7 files changed, 144 insertions(+)
+>  create mode 100644 rust/kernel/bug.rs
+>  create mode 100644 rust/kernel/generated_arch_reachable_asm.rs.S
+>  create mode 100644 rust/kernel/generated_arch_warn_asm.rs.S
+> 
+> diff --git a/rust/Makefile b/rust/Makefile
+> index fa0eea8a9eca..25f498607d1b 100644
+> --- a/rust/Makefile
+> +++ b/rust/Makefile
+> @@ -34,6 +34,9 @@ obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated.o
+>  obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.o
+>  
+>  always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) += kernel/generated_arch_static_branch_asm.rs
+> +ifndef CONFIG_UML
+> +always-$(subst y,$(CONFIG_RUST),$(CONFIG_BUG)) += kernel/generated_arch_warn_asm.rs kernel/generated_arch_reachable_asm.rs
+> +endif
+>  
+>  # Avoids running `$(RUSTC)` when it may not be available.
+>  ifdef CONFIG_RUST
+> @@ -536,5 +539,10 @@ $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/build_error.o $(obj)/pin_init.o \
+>  ifdef CONFIG_JUMP_LABEL
+>  $(obj)/kernel.o: $(obj)/kernel/generated_arch_static_branch_asm.rs
+>  endif
+> +ifndef CONFIG_UML
+> +ifdef CONFIG_BUG
+> +$(obj)/kernel.o: $(obj)/kernel/generated_arch_warn_asm.rs $(obj)/kernel/generated_arch_reachable_asm.rs
+> +endif
+> +endif
+>  
+>  endif # CONFIG_RUST
+> diff --git a/rust/helpers/bug.c b/rust/helpers/bug.c
+> index e2d13babc737..a62c96f507d1 100644
+> --- a/rust/helpers/bug.c
+> +++ b/rust/helpers/bug.c
+> @@ -6,3 +6,8 @@ __noreturn void rust_helper_BUG(void)
 >  {
->         unsigned long start_pfn, end_pfn;
-> --
-> 2.34.1
->
->
+>  	BUG();
+>  }
+> +
+> +bool rust_helper_WARN_ON(bool cond)
+> +{
+> +	return WARN_ON(cond);
+> +}
+> diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
+> index 6ba39a178f30..f636ad95aaf3 100644
+> --- a/rust/kernel/.gitignore
+> +++ b/rust/kernel/.gitignore
+> @@ -1,3 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  /generated_arch_static_branch_asm.rs
+> +/generated_arch_warn_asm.rs
+> +/generated_arch_reachable_asm.rs
+> diff --git a/rust/kernel/bug.rs b/rust/kernel/bug.rs
+> new file mode 100644
+> index 000000000000..761f0c49ae04
+> --- /dev/null
+> +++ b/rust/kernel/bug.rs
+> @@ -0,0 +1,114 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +// Copyright (C) 2024, 2025 FUJITA Tomonori <fujita.tomonori@gmail.com>
+> +
+> +//! Support for BUG and WARN functionality.
+> +//!
+> +//! C header: [`include/asm-generic/bug.h`](srctree/include/asm-generic/bug.h)
+> +
+> +#[macro_export]
+> +#[doc(hidden)]
+> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML), not(CONFIG_LOONGARCH), not(CONFIG_ARM)))]
+> +#[cfg(CONFIG_DEBUG_BUGVERBOSE)]
+> +macro_rules! warn_flags {
+> +    ($flags:expr) => {
+> +        const FLAGS: u32 = $crate::bindings::BUGFLAG_WARNING | $flags;
+> +        const _FILE: &[u8] = file!().as_bytes();
+> +        // Plus one for null-terminator.
+> +        static FILE: [u8; _FILE.len() + 1] = {
+> +            let mut bytes = [0; _FILE.len() + 1];
+> +            let mut i = 0;
+> +            while i < _FILE.len() {
+> +                bytes[i] = _FILE[i];
+> +                i += 1;
+> +            }
+> +            bytes
+> +        };
+> +        // SAFETY: Just an FFI call.
+
+Safety comments could be improved. This being an FFI call is not the
+reason why it's okay. Furthermore, it's not an FFI call.
+
+Otherwise, this series LGTM.
+
+Alice
