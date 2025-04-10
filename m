@@ -1,66 +1,66 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46C1284B22
-	for <loongarch@lists.linux.dev>; Thu, 10 Apr 2025 12:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6981B1E515
+	for <loongarch@lists.linux.dev>; Thu, 10 Apr 2025 14:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744288462; cv=none; b=D3o3jguV7xBMZ89JK8RrjD5CqYaYcMKvPzI769lRKBQIucxj7z4SjVkll/XklNBtgXvXL4LU7xpoq3q7/Sqg1LN2N1yTml+zaFzsrBGMC+uEKPYYen8/7vi6PjxwlFYNl1PdO+hrX7sldW5175CiWuWbc7K6Ec+who2R1SLCEcs=
+	t=1744293717; cv=none; b=eCuTU2UmRYs++V+cbMk49bdQJsdcXlVI15DG3UC2uKddvI1odKvRaurapnFORTa8omMWXZEPu2MISG4BJQsY/9HebQqj3MT9P+s+Jg0sqy7ZtMSfKxXQvTylfeUqeA72i2b41XmK5ZsLbTD05XRSK8p1hVj07ylAeAOCZ7SiLSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744288462; c=relaxed/simple;
-	bh=aYnz96tviR6JkjQrvqHBO9WzzIuRSa6ZnA54LbzQIXI=;
+	s=arc-20240116; t=1744293717; c=relaxed/simple;
+	bh=sw3vK6z8fQjBuRgQszQR109R2Cqf5C0TdwJ61a/B8JQ=;
 	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sQgWKx00lZwrAHY8Ejn0H8hx+3N1S/+tyLZv0nbyGJxyqurre+Oiyg8WJwkTYBWOPfRCvWPkcMqx7TQBNRRIieSsgjsi+C6FnEQTyw7OglOsT7Gd1H3wXHbIDvxOvpgli79MijjwFUM3ljgwnmEJV/XymkizRj5y0Q7LiRvnaSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PWoTU3uf; arc=none smtp.client-ip=209.85.210.175
+	 Mime-Version:Content-Type; b=qCpqFmtGHuv+lwk9+T42BYBlVHZdJnN5ZsRPqnjopb4zT0rCgVhgSqpd6YY0a7l5VnJdnEIbcH0hYbqhIMv9JA6Y+RXR16t/y4TVhrZhSbWd7Xdue6ukI3fT7Kzmt3LF9w5QdXApcWGjoMIvRpaYTQYVTEgoMftdkM0daC/F2/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SAqy8hm9; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWoTU3uf"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736c277331eso1750752b3a.1
-        for <loongarch@lists.linux.dev>; Thu, 10 Apr 2025 05:34:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAqy8hm9"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so785809b3a.1
+        for <loongarch@lists.linux.dev>; Thu, 10 Apr 2025 07:01:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744288460; x=1744893260; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1744293715; x=1744898515; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to:from
          :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CYYB8xWXXp3NrY8EvpLd9vo2DOULWKf7nlbTH+Fs28E=;
-        b=PWoTU3ufhWTZWVD/yb97sQ6TrI5zvjP47XiP0UfKeZQPgC3WP2vJhtlRxjEoi2kI3T
-         9bQlKCinoj2rdBbCIl97cYKD2OVjMw0xMse8o8UVxM5ROis86RJLVYwsAiMMlWVTzQF+
-         mAgIMVB7OE6F429z/1bi25P2CbKfrLZTU31lrMoJf3FJV4fB/z9iyWetd3HnPze8Rccw
-         t+3ccvBadyedSsJs9BNV+eoRCsfqATH5z47w4iSQSivYpamsgDQDQblcn0bSt2AEBuP5
-         yKnma8pV7s9SxvIa6demQuDBarEwVTVY02q+MX8XwEyL+cMUPUCCvAxiem/U6wHUbBJ6
-         wDgQ==
+        bh=cWAOaB8U3KFCIOrhTxD2O2vP23GerEEFQhxVmQdK6Js=;
+        b=SAqy8hm9NSGypq9AUIxsBSRoTG4GuvPJUWu2Kh+iUfJwTkz6URVqY08hjvYTSuQe5L
+         GAN2RpHBJ/9EZNIhkXwWgKTk/9QWiAMllNeNOI9eTrnBB8bjhmAXONjyhDFl1rJBH5t5
+         ENlt+uSx+IdwP+y9fY8jme65/ncro7n+FbyVpvfLiiB8G0TgSPKaQ0ugpPOrl0ERWSqy
+         K5b9sCQ5v0+djOjmQCf+DtaEqLdgmt2cBC/0KbzI8rS2apfjMgSbyxE2Nd5FgRCn7KMk
+         C2FvkASQrTpAuWBB9nlpTwupqCkBt1z/QUhQAQx9UDN1OTXWeubjwIkWTDcNv798GyHB
+         I4sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744288460; x=1744893260;
+        d=1e100.net; s=20230601; t=1744293715; x=1744898515;
         h=content-transfer-encoding:mime-version:references:in-reply-to:from
          :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=CYYB8xWXXp3NrY8EvpLd9vo2DOULWKf7nlbTH+Fs28E=;
-        b=Wj1VcyB6NanassCMCPa3RJ3PhchsX+AHjvtpg4wei+AWlaVJdKiiPSZGkBj8nIE6Cg
-         c/em/bijFJyAHZ3k/2RAPxBeuzGuxAkd9pG7Pn3PV2xIRO7gG3yjfiS4Ode+CUdhc4Rd
-         CWjHdAU38eqUO72CnVcrtwtNQ4x+oCPJWHX9GmAVuwMWbVTtfJVy4QgU7cyXLJZ75t4k
-         /X5DotsZfQq/grEC13DIS9PiFgfcJDZQr6zSiT7xGYAXByMDmaETwDW2KeZHa9q6ON0e
-         I/gjkHV46gib4+6/5mTVL38sM2PrKwGRAgZWm6uA3md8GL56A2tHSBEVqz0uqKRWWoK0
-         XWBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvihoKR21fFaB92VVjCq8Tc85BsEsvLZX3bFPjGePZNvJelbEHxJfYCuwquEXTKY95Qukml7fguqM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxd3wnnIAiSUOzkyab9xw3sPLcTUb6jXXYCFR2MHbahWNJXscRL
-	flYONUpCKahLbWjBr9dUiE+lzQ9m+06OcfKD3GQJApPOQJ0txwNi
-X-Gm-Gg: ASbGnctpiofJ7kjxByQ1WmP6xwml/ggqTJdFRot/f1EIzhxB1qlFvH1XU6nqVCdRGWK
-	iUquIbuYpunVGjIxmZk9lnfsOQyf9SG/7hIyfmlrH/VdDmWEdwE9NG0cR08Azcez7BpjAehdw57
-	P3xG45tPNckmeO1B9x3GZCaNo2KnMSgfm99/fFNV3ZTpogMEHaFVf+ERK7cIfaiztABq9d1dn1N
-	UHGIuJQH/qE+9yJHwwOOEBT1nmHLcTUXHXJr02PuyMmnAcQ8cayFDLERmnJyNu94KnLBi2vTf4I
-	YY4sVqkhOiQ2xtv8L1RviZPl+c4Cj8NjBstjY1HIYs/v5YUbicAXG56EhkxERz9qdu2fKxNoghw
-	cpgWVjjc8AscPLmxQPf0AjJc=
-X-Google-Smtp-Source: AGHT+IGl2utS2unvYHRMdT2RP9ueZqQhdCzDP3jwZyYMjQoG9MrpSlL23CvVNg2kZbwezJItYp/l0w==
-X-Received: by 2002:a05:6a00:1487:b0:732:1ce5:4a4c with SMTP id d2e1a72fcca58-73bbf869048mr3236065b3a.1.1744288459852;
-        Thu, 10 Apr 2025 05:34:19 -0700 (PDT)
+        bh=cWAOaB8U3KFCIOrhTxD2O2vP23GerEEFQhxVmQdK6Js=;
+        b=lelKHHQ1kkvXpiwty3mSGYZY6JtFRnQum6yjeihuRMg0L1W1nT7NXMvAdcgWewTYZz
+         43Go3/wQgOCEoZVn6KPxQVv8sfscgeV4j37MLv/FW4m7dW/Xhnd9p3pobo06bGj9GqUW
+         TKisk8qIazLebQrP12dxJiUfHYRxNpndEqbCoCVosga7Yunw5Kw8zt16WHZ1X+FBMXjj
+         56va1p0FbiTfmKMyWFBqKGg+u7G0hA/XaRVmgr2R34dpvMxsVfJwQbqkGMNiSyJyb46M
+         xx5EMUCryFGQ+fTp0BeM1ndy2XTYvLVcnn7VtGPT/Gt2i5qXq/o8LhBvsTzQ3SEHP4SY
+         wNmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgpd12pP5imRaapDo1DUl4YrBDWiITwT+UvvHLLwQ9Gb4szlSU9wbsZqMagh7S4020grOrAIuNSkA=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy9CQPjN3mf9yHrunbGLgQ/fTJ3jKuriRnViBtGKKMadpGdaiiN
+	HdzHo8O7xq74b0xInaQ/lkYoJm3nwAQbppeYoy6dqWwKDaS4Jr6p
+X-Gm-Gg: ASbGncvpdccUPl5LBEByhxq+CphPyMCexQ73+0Dsx5IVTHvhp7JqXWgYVap7FA+jGRL
+	lRBlP+Pvy/vzjGYgvtp1BeR1NztZHJe8BmANw3oGFcdcNz7jK0W8fqet+YkUzb0MSHRQHTHmKbL
+	pHVsoXjNq6gJ+4dK76TDTqT07yzaXWLJTQHV2tJBu2gG2HoYhiFpucwiRQkfAtQt18wpKamzgPC
+	LniDG+VtDXYqQF3GltY8m2yvE1uA6w1YFmgoMF3zKNlc+bRVnZAav4+zC6R1T9Ng79rYOffoG1Z
+	ldoWgasONHTifoP8xHRYruBRZmUsEqH94nuHXs6WHjMyTgNQST7ijn1i7rzyp3HDjl3sDs08n7E
+	GksfvL/DDPx6O+n+c3HEvpzg=
+X-Google-Smtp-Source: AGHT+IHBTE6t3tMPyBmMiDGR0D6P+It1/bo69iX0No3GsbY7YKBIFvGuQ1V6G4gotfqVUWbx+i87Xg==
+X-Received: by 2002:a05:6a00:8c9:b0:736:a973:748 with SMTP id d2e1a72fcca58-73bbf01e262mr3359584b3a.22.1744293714003;
+        Thu, 10 Apr 2025 07:01:54 -0700 (PDT)
 Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e69ae9sm3206479b3a.173.2025.04.10.05.34.13
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e3824asm3362820b3a.103.2025.04.10.07.01.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 05:34:19 -0700 (PDT)
-Date: Thu, 10 Apr 2025 21:34:02 +0900 (JST)
-Message-Id: <20250410.213402.1373597003035091247.fujita.tomonori@gmail.com>
-To: aliceryhl@google.com
+        Thu, 10 Apr 2025 07:01:53 -0700 (PDT)
+Date: Thu, 10 Apr 2025 23:01:38 +0900 (JST)
+Message-Id: <20250410.230138.20974725432146108.fujita.tomonori@gmail.com>
+To: gregkh@linuxfoundation.org
 Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
  rust-for-linux@vger.kernel.org, x86@kernel.org,
  linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
@@ -72,13 +72,13 @@ Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
  hejinyang@loongson.cn, yangtiezhu@loongson.cn, ojeda@kernel.org,
  alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
  bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
- tmgross@umich.edu
+ aliceryhl@google.com, tmgross@umich.edu
 Subject: Re: [PATCH v5 4/4] rust: Add warn_on macro
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <Z_d1xAAptnfzqg1l@google.com>
+In-Reply-To: <2025040954-prenatal-enamel-373f@gregkh>
 References: <20250409065802.136971-1-fujita.tomonori@gmail.com>
 	<20250409065802.136971-5-fujita.tomonori@gmail.com>
-	<Z_d1xAAptnfzqg1l@google.com>
+	<2025040954-prenatal-enamel-373f@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -88,49 +88,42 @@ Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Apr 2025 07:39:48 +0000
-Alice Ryhl <aliceryhl@google.com> wrote:
+On Wed, 9 Apr 2025 09:38:53 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
->> diff --git a/rust/kernel/bug.rs b/rust/kernel/bug.rs
->> new file mode 100644
->> index 000000000000..761f0c49ae04
->> --- /dev/null
->> +++ b/rust/kernel/bug.rs
->> @@ -0,0 +1,114 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +// Copyright (C) 2024, 2025 FUJITA Tomonori <fujita.tomonori@gmail.com>
->> +
->> +//! Support for BUG and WARN functionality.
->> +//!
->> +//! C header: [`include/asm-generic/bug.h`](srctree/include/asm-generic/bug.h)
->> +
->> +#[macro_export]
->> +#[doc(hidden)]
->> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML), not(CONFIG_LOONGARCH), not(CONFIG_ARM)))]
->> +#[cfg(CONFIG_DEBUG_BUGVERBOSE)]
->> +macro_rules! warn_flags {
->> +    ($flags:expr) => {
->> +        const FLAGS: u32 = $crate::bindings::BUGFLAG_WARNING | $flags;
->> +        const _FILE: &[u8] = file!().as_bytes();
->> +        // Plus one for null-terminator.
->> +        static FILE: [u8; _FILE.len() + 1] = {
->> +            let mut bytes = [0; _FILE.len() + 1];
->> +            let mut i = 0;
->> +            while i < _FILE.len() {
->> +                bytes[i] = _FILE[i];
->> +                i += 1;
->> +            }
->> +            bytes
->> +        };
->> +        // SAFETY: Just an FFI call.
+> On Wed, Apr 09, 2025 at 03:58:01PM +0900, FUJITA Tomonori wrote:
+>> Add warn_on macro, uses the BUG/WARN feature (lib/bug.c) via assembly
+>> for x86_64/arm64/riscv.
+>> 
+>> The current Rust code simply wraps BUG() macro but doesn't provide the
+>> proper debug information. The BUG/WARN feature can only be used from
+>> assembly.
+>> 
+>> This uses the assembly code exported by the C side via ARCH_WARN_ASM
+>> macro. To avoid duplicating the assembly code, this approach follows
+>> the same strategy as the static branch code: it generates the assembly
+>> code for Rust using the C preprocessor at compile time.
+>> 
+>> Similarly, ARCH_WARN_REACHABLE is also used at compile time to
+>> generate the assembly code; objtool's reachable anotation code. It's
+>> used for only architectures that use objtool.
+>> 
+>> For now, Loongarch and arm32 just use a wrapper for WARN macro.
+>> 
+>> UML doesn't use the assembly BUG/WARN feature; just wrapping generic
+>> BUG/WARN functions implemented in C works.
+>> 
+>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 > 
-> Safety comments could be improved. This being an FFI call is not the
-> reason why it's okay. Furthermore, it's not an FFI call.
-> 
-> Otherwise, this series LGTM.
+> I don't object to this change, but I would STRONGLY recommend never
+> using this in any driver if at all possible.  Only use this if the
+> system is in such a state that the only way out is to reboot the kernel,
+> which is what both WARN() and BUG() will do.
 
-SAFETY: It's always safe to embed metadata such as the source file
-name, line number, and flags into the .bug_table ELF section.
+Totally agree.
 
-Looks good?
+As stated in the commit log, BUG() is already used in multiple
+locations within the Rust abstractions.
+
+I'm not trying to introduce BUG() or WARN() as new features. This
+patchset aims to improve the information provided by BUG() and WARN().
