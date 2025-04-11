@@ -1,120 +1,69 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0993238C3D
-	for <loongarch@lists.linux.dev>; Fri, 11 Apr 2025 11:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79A921B905;
+	Fri, 11 Apr 2025 17:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744371445; cv=none; b=KQY1HVVF/XPTtPH3G0w07ovw9n+0PA2QiQp+yhqWs6UUDhLDjcjhXB+e8ZXjoPu7ZIp1F5PM7Mzluw0s9M4sC7EVFNZjo8F+pxbQvY/UTZ6IWA+Dnq4/8OTNPSOwgF3ZVBP0qU0f6tFQ3SwXOFdNzqFlv4314fi2Tou7iiiXXBk=
+	t=1744391019; cv=none; b=Y/8oXtJVDab3qckn/KnxNH29NTImhdQCYuWKDeLJZw8Bdv2FN9pifBg23C4arR08C3zUtR3tqAfWQ/1wHXs9Lb/w0EkVpkAkKJ3781k6trsbvyo5+TybYcrhv8QOWC24N1DrzUCJTpHorrlRgk61YHoZuVC1FBpkXECb4aOtogg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744371445; c=relaxed/simple;
-	bh=GgvsIiMSWI7ot2dKymYgJgOK0zbQ7qHM79BD698yXeI=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PI6YCO4Pu226S6YP6cepuH5b5Ox9hUC1CsTrLa8jSEfzYys5zSCurqtzeFjmcyTSsv+ooHJgZbcfvLLdXdVQ1vuOl6ILSD1/81/VA0clREd1W9UdBzzxS7gnpYRdZUyRSe4pzblBVBgviCJ/3SwQwMGE0wKKteXxE4lZX2EefRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axjmvs_vhnf8u4AA--.44747S3;
-	Fri, 11 Apr 2025 19:37:17 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxPcXr_vhniKl6AA--.36349S3;
-	Fri, 11 Apr 2025 19:37:15 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Enhance robust of kprobe
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-References: <20250408092756.22339-1-yangtiezhu@loongson.cn>
- <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
- <0b5039c3-019b-fd3d-e822-5d2a52c4111d@loongson.cn>
- <56519aed-b23e-fece-3e91-f8db44da6d45@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <5c0db0f8-bab8-7cdb-172e-931658ed0548@loongson.cn>
-Date: Fri, 11 Apr 2025 19:37:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1744391019; c=relaxed/simple;
+	bh=lTRD/ogPCfC2CaO6K3z7kIWgrD+QpMzRDVdDjdeTbrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJGIPWXxGYYtVsl/gKsnd/kS+9+2Khjl3qSWfkGaxH2AAMx8kDUKFDKTC7NN+t048CxRoXnw2aF4+0hQikrRc5pomh3f103inm6DKbyQE5odPAy7r8lLmUfwYy1vevj+PrnL920R8FPnPpCUbd+xbSsAQo61kVPdIglHpS/1N+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3usqmWR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3usqmWR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13C18C4CEE2;
+	Fri, 11 Apr 2025 17:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744391018;
+	bh=lTRD/ogPCfC2CaO6K3z7kIWgrD+QpMzRDVdDjdeTbrA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q3usqmWR5CRy7u8qPLvL7e1tH00uWcv6p7zLwGpIk5SoCaY3D7mwozL+ZAZCByyvZ
+	 vsOEFqNvf3/ih+Ezlgt56uQeiLYyP/UU5V3fF/L2B9kNCsHS1ED52zeTiFTNnw3l8y
+	 gAMR0ydoDRS//e+Yf9hjTnttaPZ1Zxjv22WaPklwohbXHRxY+ZESkE8KAt6h7wfM1H
+	 /w/oI9TtPdmsAd1xq4ywywiWQyJMcqZdEnkuLIw3biEL34T+A6MEH4d1a459Sf+eqS
+	 3iI9zfq11Fn40xm6Ec5CoE5CLUTlhJ6YJ+SjPXvl226y6pX9NsB3+nJ9FE0tI0KroO
+	 s80a6hj5tNCWA==
+Date: Fri, 11 Apr 2025 12:03:37 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	loongarch@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 1/4] dt-bindings: mmc: Add Loongson-2K SD/SDIO/eMMC
+ controller binding
+Message-ID: <174439101645.3390925.18194031700115958837.robh@kernel.org>
+References: <cover.1744273956.git.zhoubinbin@loongson.cn>
+ <9c8d0f4b28e8023ecbfe49cc934b6d0c2e0e1fdc.1744273956.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <56519aed-b23e-fece-3e91-f8db44da6d45@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMDxPcXr_vhniKl6AA--.36349S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kr1xAr1rKr4UuFy7Ar18Zwc_yoW8Wr1xpF
-	W7AF4kGrZ7WF1kZFyDJw4Sv3WxJrZ3K34xCa1vk3yfuF43Cr95Xrn7C347Z3Wqv395AF10
-	9FyDtwnIqFsxAFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcrWFUUUU
-	U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c8d0f4b28e8023ecbfe49cc934b6d0c2e0e1fdc.1744273956.git.zhoubinbin@loongson.cn>
 
-On 04/11/2025 12:46 PM, Jinyang He wrote:
->
-> On 2025-04-11 10:48, Tiezhu Yang wrote:
->> On 04/09/2025 10:17 AM, Jinyang He wrote:
->>> On 2025-04-08 17:27, Tiezhu Yang wrote:
 
-...
+On Thu, 10 Apr 2025 16:40:35 +0800, Binbin Zhou wrote:
+> Add the Loongson-2K SoC's SD/SDIO/eMMC controller binding with DT schema
+> format using json-schema.
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  .../bindings/mmc/loongson,ls2k-mmc.yaml       | 67 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 ++
+>  2 files changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/loongson,ls2k-mmc.yaml
+> 
 
-> I have just explained the previous status may be broken by IRQ.
-
-The initial aim is to make sure the irq is disabled at the end of
-do_bp(), so let us narrow down the scope.
-
-> On the other hand, have you tried only fix do_bp weather cause hang?
->
-> bool this_bp_ie = regs->csr_prmd & CSR_PRMD_PIE;
-> if (this_bp_ie)
->   local_irq_enable();
-> ...
-> if (this_bp_ie)
->   local_irq_disable();
-
-This is a good idea, thank you.
-
-I will test the following change, if it works well and no more comments,
-I will send v2 in the next week.
-
----8<---
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 2ec3106c0da3..68cc4165578a 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -710,11 +710,12 @@ asmlinkage void noinstr do_bce(struct pt_regs *regs)
-  asmlinkage void noinstr do_bp(struct pt_regs *regs)
-  {
-         bool user = user_mode(regs);
-+       bool pie = regs->csr_prmd & CSR_PRMD_PIE;
-         unsigned int opcode, bcode;
-         unsigned long era = exception_era(regs);
-         irqentry_state_t state = irqentry_enter(regs);
-
--       if (regs->csr_prmd & CSR_PRMD_PIE)
-+       if (pie)
-                 local_irq_enable();
-
-         if (__get_inst(&opcode, (u32 *)era, user))
-@@ -780,7 +781,7 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
-         }
-
-  out:
--       if (regs->csr_prmd & CSR_PRMD_PIE)
-+       if (pie)
-                 local_irq_disable();
-
-         irqentry_exit(regs, state);
-
-Thanks,
-Tiezhu
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
