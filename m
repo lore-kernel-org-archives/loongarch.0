@@ -1,225 +1,120 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C619817D2
-	for <loongarch@lists.linux.dev>; Fri, 11 Apr 2025 04:46:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0993238C3D
+	for <loongarch@lists.linux.dev>; Fri, 11 Apr 2025 11:37:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744346818; cv=none; b=C1t5deL/h1vgSlBs7A0AmJV/53ZB3FqhN65zd97kNWO987nqYqkCO/Rv781b5yqlyV2Vl4QvLP1LNGwHvVLXgmZ0X8abymCg2sk6/F/5uWmKsVl6qryV4TCXNZs87JaXzk0LPtPGX2S6ajtFvtW0JXQgsg+5pAzuWErAilePRjY=
+	t=1744371445; cv=none; b=KQY1HVVF/XPTtPH3G0w07ovw9n+0PA2QiQp+yhqWs6UUDhLDjcjhXB+e8ZXjoPu7ZIp1F5PM7Mzluw0s9M4sC7EVFNZjo8F+pxbQvY/UTZ6IWA+Dnq4/8OTNPSOwgF3ZVBP0qU0f6tFQ3SwXOFdNzqFlv4314fi2Tou7iiiXXBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744346818; c=relaxed/simple;
-	bh=F7fYWogcw5eutD7PRWxegHsVvGSLPd2jumIaO2wXTI8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=S7SEn41q+CYanuDXlGBk1RfnG3yXHUq24PnaXQXiElgRKJf3LxQUUyjeFAiSNLPti/Ir31HIF4eAkTyqhN1DKZ75U8dLx7JYTX4NrX86dNagAyYzjawQ11AAzeYZDnBUCvA7RnPIbxbo2UX48mZKMVbFZV5UIdwfxqieJhy6+74=
+	s=arc-20240116; t=1744371445; c=relaxed/simple;
+	bh=GgvsIiMSWI7ot2dKymYgJgOK0zbQ7qHM79BD698yXeI=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PI6YCO4Pu226S6YP6cepuH5b5Ox9hUC1CsTrLa8jSEfzYys5zSCurqtzeFjmcyTSsv+ooHJgZbcfvLLdXdVQ1vuOl6ILSD1/81/VA0clREd1W9UdBzzxS7gnpYRdZUyRSe4pzblBVBgviCJ/3SwQwMGE0wKKteXxE4lZX2EefRw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8Cxqmq1nvhnrE24AA--.45883S3;
-	Fri, 11 Apr 2025 12:46:46 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by front1 (Coremail) with SMTP id qMiowMAxzMSxnvhnD+95AA--.35696S3;
-	Fri, 11 Apr 2025 12:46:44 +0800 (CST)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Axjmvs_vhnf8u4AA--.44747S3;
+	Fri, 11 Apr 2025 19:37:17 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDxPcXr_vhniKl6AA--.36349S3;
+	Fri, 11 Apr 2025 19:37:15 +0800 (CST)
 Subject: Re: [PATCH] LoongArch: Enhance robust of kprobe
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
 References: <20250408092756.22339-1-yangtiezhu@loongson.cn>
  <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
  <0b5039c3-019b-fd3d-e822-5d2a52c4111d@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <56519aed-b23e-fece-3e91-f8db44da6d45@loongson.cn>
-Date: Fri, 11 Apr 2025 12:46:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ <56519aed-b23e-fece-3e91-f8db44da6d45@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <5c0db0f8-bab8-7cdb-172e-931658ed0548@loongson.cn>
+Date: Fri, 11 Apr 2025 19:37:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <0b5039c3-019b-fd3d-e822-5d2a52c4111d@loongson.cn>
+In-Reply-To: <56519aed-b23e-fece-3e91-f8db44da6d45@loongson.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMAxzMSxnvhnD+95AA--.35696S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKr4UCFy7Gry3Zw48Xw15KFX_yoWxJF1fpF
-	1kC3W5trWUXF1kZryUJw1UZryrtr1UJ34UGr1UJa45tw45Ar1qqF1xWryj9Fn8Ww48Jr1I
-	vr1UtryUZF1UJFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMDxPcXr_vhniKl6AA--.36349S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kr1xAr1rKr4UuFy7Ar18Zwc_yoW8Wr1xpF
+	W7AF4kGrZ7WF1kZFyDJw4Sv3WxJrZ3K34xCa1vk3yfuF43Cr95Xrn7C347Z3Wqv395AF10
+	9FyDtwnIqFsxAFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
 	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
 	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
 	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
 	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
 	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwmhFDUUU
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcrWFUUUU
 	U
 
-
-On 2025-04-11 10:48, Tiezhu Yang wrote:
-> On 04/09/2025 10:17 AM, Jinyang He wrote:
->> On 2025-04-08 17:27, Tiezhu Yang wrote:
->>
->>> Currently, interrupts need to be disabled before single-step mode is 
->>> set,
->>> it requires that the CSR_PRMD_PIE must be cleared in 
->>> save_local_irqflag()
->>> which is called by setup_singlestep(), this is reasonable.
->>>
->>> But in the first kprobe breakpoint exception, if the irq is enabled at
->>> the
->>> beginning of do_bp(), it will not be disabled at the end of do_bp()
->>> due to
->>> the CSR_PRMD_PIE has been cleared in save_local_irqflag(). For this 
->>> case,
->>> it may corrupt exception context when restoring exception after
->>> do_bp() in
->>> handle_bp(), this is not reasonable.
->>>
->>> Based on the above analysis, in order to make sure the irq is 
->>> disabled at
->>> the end of do_bp() for the first kprobe breakpoint exception, it is
->>> proper
->>> to disable irq first before clearing CSR_PRMD_PIE in
->>> save_local_irqflag().
->>>
->>> Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
->>> Co-developed-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>> ---
->>>   arch/loongarch/kernel/kprobes.c | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/arch/loongarch/kernel/kprobes.c
->>> b/arch/loongarch/kernel/kprobes.c
->>> index 8ba391cfabb0..6eab97636e6b 100644
->>> --- a/arch/loongarch/kernel/kprobes.c
->>> +++ b/arch/loongarch/kernel/kprobes.c
->>> @@ -113,6 +113,7 @@ NOKPROBE_SYMBOL(set_current_kprobe);
->>>   static void save_local_irqflag(struct kprobe_ctlblk *kcb,
->>>                      struct pt_regs *regs)
->>>   {
->>> +    local_irq_disable();
->>>       kcb->saved_status = regs->csr_prmd;
->>>       regs->csr_prmd &= ~CSR_PRMD_PIE;
->>>   }
->>
->> Hi, Tiezhu,
->>
->> I think the carsh is caused by "irq-triggered re-re-enter" clear
->> the previous_kprobe status. An example things like,
->>
->> ...
->>   static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
->>                    struct kprobe_ctlblk *kcb, int reenter)
->>   {
->>       union loongarch_instruction insn;
->>
->>       if (reenter) {
->>           save_previous_kprobe(kcb);
->>  ===================   <- irq and trigger re-re-enter in its handler
->>           set_current_kprobe(p);
->>           kcb->kprobe_status = KPROBE_REENTER;
->>       } else {
->>           kcb->kprobe_status = KPROBE_HIT_SS;
->>       }
->> ...
->>
->> We should assure the previous_kprobe status not be changed after 
->> re-enter.
->> So this `local_irq_disable` should be set in reenter block begin.
->> And for !reenter block, `local_irq_disable` may be not needed.
+On 04/11/2025 12:46 PM, Jinyang He wrote:
 >
-> If you mean to do the following change:
->
-> diff --git a/arch/loongarch/kernel/kprobes.c 
-> b/arch/loongarch/kernel/kprobes.c
-> index 8ba391cfabb0..1ad67a3c7b70 100644
-> --- a/arch/loongarch/kernel/kprobes.c
-> +++ b/arch/loongarch/kernel/kprobes.c
-> @@ -158,6 +158,7 @@ static void setup_singlestep(struct kprobe *p, 
-> struct pt_regs *regs,
->         union loongarch_instruction insn;
->
->         if (reenter) {
-> +               local_irq_disable();
->                 save_previous_kprobe(kcb);
->                 set_current_kprobe(p);
->                 kcb->kprobe_status = KPROBE_REENTER;
->
-> then it can not fix the case Tianyang and I have met.
->
-> With the above change, the issue of kernel hang can
-> still be reproduced after a few hours.
->
-> With the original change of this patch, the issue of
-> kernel hang can not be reproduced for several days,
-> it works well.
->
-> Maybe what you said is another case, but anyway, the
-> original change of this patch is safe for any case
-> because its coverage is more extensive, so just keep
-> it as is.
->
-   static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
-                    struct kprobe_ctlblk *kcb, int reenter)
-   {
-       union loongarch_instruction insn;
+> On 2025-04-11 10:48, Tiezhu Yang wrote:
+>> On 04/09/2025 10:17 AM, Jinyang He wrote:
+>>> On 2025-04-08 17:27, Tiezhu Yang wrote:
 
-       if (reenter) {
--> My meaning, local_irq_disable();
-LabelA:
-           save_previous_kprobe(kcb);
-           set_current_kprobe(p);
-           kcb->kprobe_status = KPROBE_REENTER;
-LabelC:
-       } else {
-LabelD:
-           kcb->kprobe_status = KPROBE_HIT_SS;
-       }
-
-       if (p->ainsn.insn) {
--> Yours, local_irq_disable();
-LabelB:
-           /* IRQs and single stepping do not mix well */
-           save_local_irqflag(kcb, regs);
-           /* set ip register to prepare for single stepping */
-           regs->csr_era = (unsigned long)p->ainsn.insn;
-       } else {
-           /* simulate single steping */
-           insn.word = p->opcode;
-           arch_simulate_insn(insn, regs);
-           /* now go for post processing */
-           post_kprobe_handler(p, kcb, regs);
-       }
-   }
-
-
-I have just explained the previous status may be broken by IRQ.
-That's why we should protected LabelA->LabelC.
-For the case `p->ainsn.insn`, my meaning is just not protecte LabelD.
-If that is wrong, the change should be changed to
-
-   static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
-                    struct kprobe_ctlblk *kcb, int reenter)
-   {
-       union loongarch_instruction insn;
-  + if (reenter || p->ainsn.insn) local_irq_disable();
-        ... other codes.
-   }
-
-
-On the other hand, have you tried only fix do_bp weather cause hang?
-
-bool this_bp_ie = regs->csr_prmd & CSR_PRMD_PIE;
-if (this_bp_ie)
-   local_irq_enable();
 ...
-if (this_bp_ie)
-   local_irq_disable();
+
+> I have just explained the previous status may be broken by IRQ.
+
+The initial aim is to make sure the irq is disabled at the end of
+do_bp(), so let us narrow down the scope.
+
+> On the other hand, have you tried only fix do_bp weather cause hang?
+>
+> bool this_bp_ie = regs->csr_prmd & CSR_PRMD_PIE;
+> if (this_bp_ie)
+>   local_irq_enable();
+> ...
+> if (this_bp_ie)
+>   local_irq_disable();
+
+This is a good idea, thank you.
+
+I will test the following change, if it works well and no more comments,
+I will send v2 in the next week.
+
+---8<---
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 2ec3106c0da3..68cc4165578a 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -710,11 +710,12 @@ asmlinkage void noinstr do_bce(struct pt_regs *regs)
+  asmlinkage void noinstr do_bp(struct pt_regs *regs)
+  {
+         bool user = user_mode(regs);
++       bool pie = regs->csr_prmd & CSR_PRMD_PIE;
+         unsigned int opcode, bcode;
+         unsigned long era = exception_era(regs);
+         irqentry_state_t state = irqentry_enter(regs);
+
+-       if (regs->csr_prmd & CSR_PRMD_PIE)
++       if (pie)
+                 local_irq_enable();
+
+         if (__get_inst(&opcode, (u32 *)era, user))
+@@ -780,7 +781,7 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
+         }
+
+  out:
+-       if (regs->csr_prmd & CSR_PRMD_PIE)
++       if (pie)
+                 local_irq_disable();
+
+         irqentry_exit(regs, state);
+
+Thanks,
+Tiezhu
 
