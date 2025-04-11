@@ -1,32 +1,31 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 810B5347C7
-	for <loongarch@lists.linux.dev>; Fri, 11 Apr 2025 02:47:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 777F242AAF
+	for <loongarch@lists.linux.dev>; Fri, 11 Apr 2025 02:48:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744339646; cv=none; b=smu6h/b/3IZ1fCRlPOsPhy1PTqgqXpzyWB/nohECt6exGjPxazT8WLqibbe9i9CnfryoFzBQk8lh0sGvSiEQyY3qUE2I0Y5r91WaJigrFSfwZ8BZqfwR3d5QjtT0s78yK1bnA8X/JEZTQNlzxtZ7Ir9Tzuj6guDCDmtHLKre+mE=
+	t=1744339725; cv=none; b=IG+2jtoszNaJbNemVtUMY1Sg9/ciV8UWhsuAjOfXHWW7XnjO6ECMPTgZ4EnV5NM+Jfo0WAZ+mf1QkQ1gQAnTy/EhEUFtDIOmyR/DpvIRf61RPIuv6ljjU2vaiLiwiR2GVsIce1PDvr4gJWmoKZTmZVrcpDDdr+fml1SVwc4Z/50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744339646; c=relaxed/simple;
-	bh=bTyR4xbeIuIV2k+SYHoVRkW4JkBMOCjGrTDld2aXbsQ=;
+	s=arc-20240116; t=1744339725; c=relaxed/simple;
+	bh=8WlF5XVV0ZGzLD33sGA//s7anOwy8zzyeGAAmUR2obY=;
 	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=F96vf7Uk5ZswVH6YN5Ca2elISi2/rZ3lIacWD1L7krooxJFtn+4laWINoxuA2lzDp967xzWiP7+Du7NsEZL0NJVSkpAZLNZ94Mz6Z4WV4p/N5LlibWKvdatQngLK7/Hkjp++0jVW259siecGCj61VeoqlKOgtHd29XSS445jRfI=
+	 In-Reply-To:Content-Type; b=X1pb8QEH86iSoLxcAMzUesyJ98vJVWAzOOZ9OT4A4ha1qOWyHaj/OumuarY1X8NwUHf14eApE4yZvn28vuSXg/meSlZ+HJQM+ohBVC65oFnT1IVg5RbUR8ohYEh1TVe3IRZKHYpVVdRh6hdBfulQEA7aNQf2LHToUKWIXNBIcYo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxlmmzgvhnBi+4AA--.44085S3;
-	Fri, 11 Apr 2025 10:47:16 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxHHIDg_hnhS+4AA--.44168S3;
+	Fri, 11 Apr 2025 10:48:35 +0800 (CST)
 Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxb8evgvhn8sB5AA--.34844S3;
-	Fri, 11 Apr 2025 10:47:13 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
-To: Wentao Guan <guanwentao@uniontech.com>
-References: <20250408092907.22856-1-yangtiezhu@loongson.cn>
- <20250408161239.1023788-1-guanwentao@uniontech.com>
-Cc: chenhuacai@kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
+	by front1 (Coremail) with SMTP id qMiowMBxb8f_gvhnh8F5AA--.34849S3;
+	Fri, 11 Apr 2025 10:48:34 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Enhance robust of kprobe
+To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+References: <20250408092756.22339-1-yangtiezhu@loongson.cn>
+ <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <3019eada-7496-ca11-b645-f5efd7d215f4@loongson.cn>
-Date: Fri, 11 Apr 2025 10:47:11 +0800
+Message-ID: <0b5039c3-019b-fd3d-e822-5d2a52c4111d@loongson.cn>
+Date: Fri, 11 Apr 2025 10:48:30 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -35,79 +34,128 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250408161239.1023788-1-guanwentao@uniontech.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMBxb8evgvhn8sB5AA--.34844S3
+X-CM-TRANSID:qMiowMBxb8f_gvhnh8F5AA--.34849S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cr17KF45Cw17uw4xtryDXFc_yoW8AF43pa
-	srCrnxGr4kCrs7uFn5G3y0vF47JasFyFW2qryDtr9rAas0vw1qgw42gwsxCFyxWa1kA3y8
-	JF47Aws8Cr9YkacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxuFy7Cr4fur4xXr45JFy3WrX_yoW5Kr1xpF
+	ZrCas5tF48XFy8ZasrAw15Zw1Fy3yDCrWxWw4Yk343Kws8Cwn0yF1xu3yDuF98Ww4Fyr4S
+	vFn5try0qFy8CacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
-	JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
-	v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
-	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
-	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-	Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU88Ma5UUUUU==
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwMKuUUUU
+	U
 
-On 04/09/2025 12:12 AM, Wentao Guan wrote:
-> Hello Yang,
+On 04/09/2025 10:17 AM, Jinyang He wrote:
+> On 2025-04-08 17:27, Tiezhu Yang wrote:
 >
-> I don`t know why change it defination remove "asmlinkage",
-> why not explain it in commit message?
+>> Currently, interrupts need to be disabled before single-step mode is set,
+>> it requires that the CSR_PRMD_PIE must be cleared in save_local_irqflag()
+>> which is called by setup_singlestep(), this is reasonable.
+>>
+>> But in the first kprobe breakpoint exception, if the irq is enabled at
+>> the
+>> beginning of do_bp(), it will not be disabled at the end of do_bp()
+>> due to
+>> the CSR_PRMD_PIE has been cleared in save_local_irqflag(). For this case,
+>> it may corrupt exception context when restoring exception after
+>> do_bp() in
+>> handle_bp(), this is not reasonable.
+>>
+>> Based on the above analysis, in order to make sure the irq is disabled at
+>> the end of do_bp() for the first kprobe breakpoint exception, it is
+>> proper
+>> to disable irq first before clearing CSR_PRMD_PIE in
+>> save_local_irqflag().
+>>
+>> Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
+>> Co-developed-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   arch/loongarch/kernel/kprobes.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/loongarch/kernel/kprobes.c
+>> b/arch/loongarch/kernel/kprobes.c
+>> index 8ba391cfabb0..6eab97636e6b 100644
+>> --- a/arch/loongarch/kernel/kprobes.c
+>> +++ b/arch/loongarch/kernel/kprobes.c
+>> @@ -113,6 +113,7 @@ NOKPROBE_SYMBOL(set_current_kprobe);
+>>   static void save_local_irqflag(struct kprobe_ctlblk *kcb,
+>>                      struct pt_regs *regs)
+>>   {
+>> +    local_irq_disable();
+>>       kcb->saved_status = regs->csr_prmd;
+>>       regs->csr_prmd &= ~CSR_PRMD_PIE;
+>>   }
+>
+> Hi, Tiezhu,
+>
+> I think the carsh is caused by "irq-triggered re-re-enter" clear
+> the previous_kprobe status. An example things like,
+>
+> ...
+>   static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+>                    struct kprobe_ctlblk *kcb, int reenter)
+>   {
+>       union loongarch_instruction insn;
+>
+>       if (reenter) {
+>           save_previous_kprobe(kcb);
+>  ===================   <- irq and trigger re-re-enter in its handler
+>           set_current_kprobe(p);
+>           kcb->kprobe_status = KPROBE_REENTER;
+>       } else {
+>           kcb->kprobe_status = KPROBE_HIT_SS;
+>       }
+> ...
+>
+> We should assure the previous_kprobe status not be changed after re-enter.
+> So this `local_irq_disable` should be set in reenter block begin.
+> And for !reenter block, `local_irq_disable` may be not needed.
 
-$ grep -rnw "define asmlinkage" .
-./arch/x86/include/asm/linkage.h:20:#define asmlinkage CPP_ASMLINKAGE 
-__attribute__((regparm(0)))
-./include/linux/linkage.h:22:#define asmlinkage CPP_ASMLINKAGE
+If you mean to do the following change:
 
-include/linux/linkage.h
+diff --git a/arch/loongarch/kernel/kprobes.c 
+b/arch/loongarch/kernel/kprobes.c
+index 8ba391cfabb0..1ad67a3c7b70 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -158,6 +158,7 @@ static void setup_singlestep(struct kprobe *p, 
+struct pt_regs *regs,
+         union loongarch_instruction insn;
 
-#ifdef __cplusplus
-#define CPP_ASMLINKAGE extern "C"
-#else
-#define CPP_ASMLINKAGE
-#endif
+         if (reenter) {
++               local_irq_disable();
+                 save_previous_kprobe(kcb);
+                 set_current_kprobe(p);
+                 kcb->kprobe_status = KPROBE_REENTER;
 
-#ifndef asmlinkage
-#define asmlinkage CPP_ASMLINKAGE
-#endif
+then it can not fix the case Tianyang and I have met.
 
-So for LoongArch, asmlinkage means extern "C" or NULL, there is no
-need to use asmlinkage for these prototypes because they are not put
-in uapi headers, that is to say, they will be called and built only
-by C compiler rather than C++ compiler, so asmlinkage is actually
-NULL in this case.
+With the above change, the issue of kernel hang can
+still be reproduced after a few hours.
 
-Furthermore, there are no asmlinkage for the other exist prototypes
-such as _save_fp, _restore_fp in arch/loongarch/include/asm/fpu.h,
-so in my opinion, just keep them consistent.
+With the original change of this patch, the issue of
+kernel hang can not be reproduced for several days,
+it works well.
 
-But according to Documentation/process/coding-style.rst, it seems
-asmlinkage should be used.
-
-"Large, non-trivial assembly functions should go in .S files, with 
-corresponding
-C prototypes defined in C header files.  The C prototypes for assembly
-functions should use ``asmlinkage``."
-
-There are two ways:
-(1) no need to use asmlinkage for these new added prototypes for
-     assembly functions in asm/fpu.h and asm/lbt.h to keep consistent.
-
-(2) use asmlinkage for these new added prototypes for assembly functions
-     in asm/fpu.h and asm/lbt.h according to Documentation, and then add
-     asmlinkage for the other exist prototypes if necessary.
-
-That's up to the arch maintainer Huacai.
+Maybe what you said is another case, but anyway, the
+original change of this patch is safe for any case
+because its coverage is more extensive, so just keep
+it as is.
 
 Thanks,
 Tiezhu
