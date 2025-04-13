@@ -1,150 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04F2221DB3;
-	Fri, 11 Apr 2025 17:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9C710A1F
+	for <loongarch@lists.linux.dev>; Sun, 13 Apr 2025 02:17:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744391137; cv=none; b=FF8SJj1aIldOMa89SaGF7wiLezX869l5Xvjri8RuHAB2dTp3vOwx4Tm9UzhmmgCO7ucFNH9jitVnqSz7rT2LThHnSBUgj6EVIORwwp6lKbmkHo24OmKGBNzedKCuV5vdQe2nWmbv6rrYwGJSnAdL1bdKUYfVdM4C+CYuZrobX/g=
+	t=1744510670; cv=none; b=jaBx0qkCW99u8S6RyvDGjDdLAxr0e4viL0WA06pUVHOXPWHmXGiPr23fs4oQVJwZrfNWko8uM0hGkukTaBbYNceSBShhEnljJ2lNjgLNHC6sKX95I0KcxwL7PwwrkERl8XrYf+UaVbnGhOnSXvh3UHgOUTf0sJJzYvBGZQkmClQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744391137; c=relaxed/simple;
-	bh=PfGPVWiR4UxNAnBai380IGxTf6wYvxNfjOD+EC1euOw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W7Z5m5Zojc/UYnkuNOFm8BeS1IImd4qvCmZd2DLYmkwy+t7+X65vxjWuJiIUE5bRGTDHn9rV4Vhae3UHgfth4asNAV1FvZolnrJHRgPGitM99O3WIwZvxk76gZbfOuCcfJ3oHsw5ZFyr9jnQLvJ87wmEbaI2P+sctj5okxYJATw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpWzvNVB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744510670; c=relaxed/simple;
+	bh=XBacDJ8TTx0bZb+ts4bWGx7WTQu7kXS2R4oRAovaA4s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jQEI57sDQ30x+K2ClgSaMOA3ZrUOzrH0sCSGjNmZnaw867KbNZWsBqy+PfrEH+cYHaib8XtoKtNbunvWixhlIMtHUYy6/blG4fuJ3ZXeTEjGN/9Dvz3gznpyOJqsceiYA1CDFfWwrAFq0wYGXc3q1mbem0u2w462UKTbewLDdgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnLhYLI6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpWzvNVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 388ABC4CEE2;
-	Fri, 11 Apr 2025 17:05:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnLhYLI6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E8C2C4CEE8
+	for <loongarch@lists.linux.dev>; Sun, 13 Apr 2025 02:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744391136;
-	bh=PfGPVWiR4UxNAnBai380IGxTf6wYvxNfjOD+EC1euOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QpWzvNVBKx9XHRe+51DoRjU7ms0IuIOGkEOTeLsgNDUTgpHRyxmgj8YC3Jy8KXemv
-	 F7laDyJsapjMRpK2ZorpzxPL2LgDaEF/N9Pw1Ws4vD4xWw9uAfJNctQHvUA6/8l26O
-	 fdT3N5ZtRefNx9ZgIDFQr2QMuj9PObkUBF+nuvmwFxQ5XrKDp4jDEo9ElcmmqOggv2
-	 uniQdCtAs/fXSQFDIdojJmtkSlvE5VXj4jfADsAewD/whBSm/5hDBL42FU2tt1BPqL
-	 WyrCGFag3mAsd5d9sSw4k/7T4+dAm2qHkHdN3QG2i6RAo8RE9UGGrStvZKSniUoG+k
-	 6SBBj02SDdVcA==
-Date: Fri, 11 Apr 2025 12:05:35 -0500
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH v1 3/4] dt-bindings: mmc: loongson,ls2k-mmc: Add
- compatible for Loongson-2K2000
-Message-ID: <20250411170535.GA3391061-robh@kernel.org>
-References: <cover.1744273956.git.zhoubinbin@loongson.cn>
- <cefcd16d303936247b94bc13047c8a1861bb8330.1744273956.git.zhoubinbin@loongson.cn>
+	s=k20201202; t=1744510669;
+	bh=XBacDJ8TTx0bZb+ts4bWGx7WTQu7kXS2R4oRAovaA4s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OnLhYLI6/XOb7ZgH3TYe8LHSuxc0ow7eKuhRW2kkK6dMlxag5Sny9GHhZO+wa3Flu
+	 L3B5uWaauGmfJ+MyXAYYhgsEZKsxDL2k9EQISk6ftOOKxqyK0X9viwVlvSxhP0oeuh
+	 a8osSABTuCZIwYwMYh+yhvs8rw/jRbQDZwiE6iUrCpg6C57qm/Gmg/eHn9eUVP7LXv
+	 GD1wUXcIvJvr3NoVUE6IBO8w5YOrnQWst2S3RQpY3gmK+1dq8ri4Yycr+EyYicMNn5
+	 rSa//tDVsYRJ/BBz1OC5JxaHVBGTQJaT/aWY7s+QHB9opMP0CF+ghoW8UTcMKvMc23
+	 uEahZKeDE3vrQ==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so544669366b.0
+        for <loongarch@lists.linux.dev>; Sat, 12 Apr 2025 19:17:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUo2ZHqMbf8Dq+IVFrdc7GuytmelFlfhaEPkfp4CSt6LG1F8COjtPDrrjLkUt92HVrIwgKlpO+Yg7E=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy6HXS250L0wit3SrLGsUUpI3TQ0TDlKz/a4h/b001R8tofcxVP
+	dwO5NoYWqP25Y7NuFFrNL6QpsMpXyLvHnlDrhudqirXQxlJjUzY1FGqv/wlxqTL6gqDn2sJ4EgP
+	zF0Kc9rBCPhmHLPmxahw7jqc0WCM=
+X-Google-Smtp-Source: AGHT+IFeruouREPtB4pZKqUd6dutMB/oK79JNUlrnPgSUbPi6ZalYJedegLnNmx3x0kSak6pVo+QaF7+AYY1imE5vXg=
+X-Received: by 2002:a17:906:719:b0:aca:d6f0:af0c with SMTP id
+ a640c23a62f3a-acad6f0af2bmr479281166b.59.1744510668060; Sat, 12 Apr 2025
+ 19:17:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cefcd16d303936247b94bc13047c8a1861bb8330.1744273956.git.zhoubinbin@loongson.cn>
+References: <20250408092907.22856-1-yangtiezhu@loongson.cn>
+ <20250408161239.1023788-1-guanwentao@uniontech.com> <3019eada-7496-ca11-b645-f5efd7d215f4@loongson.cn>
+In-Reply-To: <3019eada-7496-ca11-b645-f5efd7d215f4@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 13 Apr 2025 10:17:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H56zc70Rj+ymFYGYXt9rnEpEPcdse2QFxYiiVpDA14UZA@mail.gmail.com>
+X-Gm-Features: ATxdqUEQS-csrxBhK5ag-lP5Gq_xogoIx_CkgNQwD8EP1HlD_FAUgrX5tHyLbus
+Message-ID: <CAAhV-H56zc70Rj+ymFYGYXt9rnEpEPcdse2QFxYiiVpDA14UZA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Wentao Guan <guanwentao@uniontech.com>, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 04:40:37PM +0800, Binbin Zhou wrote:
-> Add the devicetree compatible for Loongson-2K2000 EMMC/SD/SDIO controller.
-> 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../bindings/mmc/loongson,ls2k-mmc.yaml       | 47 ++++++++++++++++++-
->  1 file changed, 45 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/loongson,ls2k-mmc.yaml b/Documentation/devicetree/bindings/mmc/loongson,ls2k-mmc.yaml
-> index f3e94f5f3a35..24d217a9bbe6 100644
-> --- a/Documentation/devicetree/bindings/mmc/loongson,ls2k-mmc.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/loongson,ls2k-mmc.yaml
-> @@ -9,6 +9,9 @@ title: The SD/SDIO/eMMC host controller for Loongson-2K family SoCs
->  description:
->    The MMC host controller on the Loongson-2K0500/2K1000 (using an externally
->    shared apbdma controller) provides the SD and SDIO device interfaces.
-> +  The two MMC host controllers on the Loongson-2K2000 are similar,
-> +  except that they use internal exclusive DMA. one controller provides
-> +  the eMMC interface and the other provides the SD/SDIO interface.
->  
->  maintainers:
->    - Binbin Zhou <zhoubinbin@loongson.cn>
-> @@ -21,8 +24,10 @@ properties:
->      enum:
->        - loongson,ls2k0500-mmc
->        - loongson,ls2k1000-mmc
-> +      - loongson,ls2k2000-mmc
->  
->    reg:
-> +    minItems: 1
->      maxItems: 2
+Hi, Tiezhu,
 
-Missed this in the first patch, but you need to define what each entry 
-is.
+On Fri, Apr 11, 2025 at 10:47=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
+n> wrote:
+>
+> On 04/09/2025 12:12 AM, Wentao Guan wrote:
+> > Hello Yang,
+> >
+> > I don`t know why change it defination remove "asmlinkage",
+> > why not explain it in commit message?
+>
+> $ grep -rnw "define asmlinkage" .
+> ./arch/x86/include/asm/linkage.h:20:#define asmlinkage CPP_ASMLINKAGE
+> __attribute__((regparm(0)))
+> ./include/linux/linkage.h:22:#define asmlinkage CPP_ASMLINKAGE
+>
+> include/linux/linkage.h
+>
+> #ifdef __cplusplus
+> #define CPP_ASMLINKAGE extern "C"
+> #else
+> #define CPP_ASMLINKAGE
+> #endif
+>
+> #ifndef asmlinkage
+> #define asmlinkage CPP_ASMLINKAGE
+> #endif
+>
+> So for LoongArch, asmlinkage means extern "C" or NULL, there is no
+> need to use asmlinkage for these prototypes because they are not put
+> in uapi headers, that is to say, they will be called and built only
+> by C compiler rather than C++ compiler, so asmlinkage is actually
+> NULL in this case.
+>
+> Furthermore, there are no asmlinkage for the other exist prototypes
+> such as _save_fp, _restore_fp in arch/loongarch/include/asm/fpu.h,
+> so in my opinion, just keep them consistent.
+>
+> But according to Documentation/process/coding-style.rst, it seems
+> asmlinkage should be used.
+>
+> "Large, non-trivial assembly functions should go in .S files, with
+> corresponding
+> C prototypes defined in C header files.  The C prototypes for assembly
+> functions should use ``asmlinkage``."
+>
+> There are two ways:
+> (1) no need to use asmlinkage for these new added prototypes for
+>      assembly functions in asm/fpu.h and asm/lbt.h to keep consistent.
+>
+> (2) use asmlinkage for these new added prototypes for assembly functions
+>      in asm/fpu.h and asm/lbt.h according to Documentation, and then add
+>      asmlinkage for the other exist prototypes if necessary.
+I think this way is better, especially you have CCed stable, it should
+really fix something.
 
->  
->    interrupts:
-> @@ -42,11 +47,31 @@ required:
->    - reg
->    - interrupts
->    - clocks
-> -  - dmas
-> -  - dma-names
->  
->  unevaluatedProperties: false
->  
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - loongson,ls2k0500-mmc
-> +          - loongson,ls2k1000-mmc
-> +
-> +then:
-> +  properties:
-> +    reg:
-> +      minItems: 2
-> +
-> +  required:
-> +    - dmas
-> +    - dma-names
-> +
-> +else:
-> +  properties:
-> +    reg:
-> +      maxItems: 1
-> +
->  examples:
->    - |
->      #include <dt-bindings/gpio/gpio.h>
-> @@ -65,3 +90,21 @@ examples:
->          bus-width = <4>;
->          cd-gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
->      };
-> +
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
-> +
-> +    mmc@79990000 {
-> +        compatible = "loongson,ls2k2000-mmc";
-> +        reg = <0x79990000 0x1000>;
-> +        interrupt-parent = <&pic>;
-> +        interrupts = <51 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clk LOONGSON2_EMMC_CLK>;
-> +        bus-width = <8>;
-> +        non-removable;
-> +        cap-mmc-highspeed;
-> +        mmc-hs200-1_8v;
-> +        no-sd;
-> +        no-sdio;
-> +    };
-> -- 
-> 2.47.1
-> 
+Huacai
+
+>
+> That's up to the arch maintainer Huacai.
+>
+> Thanks,
+> Tiezhu
+>
