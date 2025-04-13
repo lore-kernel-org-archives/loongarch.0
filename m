@@ -1,123 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9C710A1F
-	for <loongarch@lists.linux.dev>; Sun, 13 Apr 2025 02:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E54A927
+	for <loongarch@lists.linux.dev>; Sun, 13 Apr 2025 02:22:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744510670; cv=none; b=jaBx0qkCW99u8S6RyvDGjDdLAxr0e4viL0WA06pUVHOXPWHmXGiPr23fs4oQVJwZrfNWko8uM0hGkukTaBbYNceSBShhEnljJ2lNjgLNHC6sKX95I0KcxwL7PwwrkERl8XrYf+UaVbnGhOnSXvh3UHgOUTf0sJJzYvBGZQkmClQ=
+	t=1744510958; cv=none; b=GcKO7xhOIAezu26d4t7cJWs7wPES4BhrMujRjpfMJjqS7SU/YXezUS03sRc3aRDkrdAQy+0Wa+JkSAEldh3D1w5ReS4vYsbRZgk5DKsuLjJavjRE/L59+7vrXZK315NlxdLrdqdTJjmmmU7mcwahJ5+HS6ft8KRl9mclHT1hqF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744510670; c=relaxed/simple;
-	bh=XBacDJ8TTx0bZb+ts4bWGx7WTQu7kXS2R4oRAovaA4s=;
+	s=arc-20240116; t=1744510958; c=relaxed/simple;
+	bh=eg8zX3gnw5guGU4wvxS5VhO3Wye6cNDyMxnD5mfO7To=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jQEI57sDQ30x+K2ClgSaMOA3ZrUOzrH0sCSGjNmZnaw867KbNZWsBqy+PfrEH+cYHaib8XtoKtNbunvWixhlIMtHUYy6/blG4fuJ3ZXeTEjGN/9Dvz3gznpyOJqsceiYA1CDFfWwrAFq0wYGXc3q1mbem0u2w462UKTbewLDdgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnLhYLI6; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=ddg2Z/TjFJTfHZIgpoqjxhWe2p7pma1pwRizObJJXm0zq3wvetTlPn0D66vYRm1YRHsLs0wi2cIMPBFlE8XZ1oVDAD/WqxactaoqkA/E33GCmkyLbgfQQeY15HoNuWiV7p5H2Gc/1nxtOukaHnKjRnbwvvmJTIV49muTw6KuAIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XMDWDRow; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnLhYLI6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E8C2C4CEE8
-	for <loongarch@lists.linux.dev>; Sun, 13 Apr 2025 02:17:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XMDWDRow"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 807BBC4CEE8
+	for <loongarch@lists.linux.dev>; Sun, 13 Apr 2025 02:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744510669;
-	bh=XBacDJ8TTx0bZb+ts4bWGx7WTQu7kXS2R4oRAovaA4s=;
+	s=k20201202; t=1744510957;
+	bh=eg8zX3gnw5guGU4wvxS5VhO3Wye6cNDyMxnD5mfO7To=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OnLhYLI6/XOb7ZgH3TYe8LHSuxc0ow7eKuhRW2kkK6dMlxag5Sny9GHhZO+wa3Flu
-	 L3B5uWaauGmfJ+MyXAYYhgsEZKsxDL2k9EQISk6ftOOKxqyK0X9viwVlvSxhP0oeuh
-	 a8osSABTuCZIwYwMYh+yhvs8rw/jRbQDZwiE6iUrCpg6C57qm/Gmg/eHn9eUVP7LXv
-	 GD1wUXcIvJvr3NoVUE6IBO8w5YOrnQWst2S3RQpY3gmK+1dq8ri4Yycr+EyYicMNn5
-	 rSa//tDVsYRJ/BBz1OC5JxaHVBGTQJaT/aWY7s+QHB9opMP0CF+ghoW8UTcMKvMc23
-	 uEahZKeDE3vrQ==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so544669366b.0
-        for <loongarch@lists.linux.dev>; Sat, 12 Apr 2025 19:17:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUo2ZHqMbf8Dq+IVFrdc7GuytmelFlfhaEPkfp4CSt6LG1F8COjtPDrrjLkUt92HVrIwgKlpO+Yg7E=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy6HXS250L0wit3SrLGsUUpI3TQ0TDlKz/a4h/b001R8tofcxVP
-	dwO5NoYWqP25Y7NuFFrNL6QpsMpXyLvHnlDrhudqirXQxlJjUzY1FGqv/wlxqTL6gqDn2sJ4EgP
-	zF0Kc9rBCPhmHLPmxahw7jqc0WCM=
-X-Google-Smtp-Source: AGHT+IFeruouREPtB4pZKqUd6dutMB/oK79JNUlrnPgSUbPi6ZalYJedegLnNmx3x0kSak6pVo+QaF7+AYY1imE5vXg=
-X-Received: by 2002:a17:906:719:b0:aca:d6f0:af0c with SMTP id
- a640c23a62f3a-acad6f0af2bmr479281166b.59.1744510668060; Sat, 12 Apr 2025
- 19:17:48 -0700 (PDT)
+	b=XMDWDRowKvAeVP100SMpR8hBzaUxZjeQFtIzkccMq7jg05yF3/usyVeEr44MU0A85
+	 qGax9cxJyX2/q1X+R98/UGaMwr2hYFOTaa8K4McQd3eyoF1jd9PR+Sl58cKob1zIg2
+	 Z5MTh+qfy0aruAA3jleaBpx2wG2mI8Bg4RY58OYK72i1GX1aWZz60el3mJZlsojFSC
+	 6NKwE1JZB8s395HLxihqExZDERCoGEiaSwYdBTo6YVvxqLEJbOL2nqJwdoliY1fUY2
+	 Xx0xJiTIcTiU+Kj/IzBWmOIQoqNcdbwt8ldHpTMjQB5NDqLHxP03DFz5eZBSZTILlS
+	 9/sl1xLFm5ArA==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so599975466b.2
+        for <loongarch@lists.linux.dev>; Sat, 12 Apr 2025 19:22:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVAuqpl0yhv3aOIIMAhAyVCNScBvFUMbyr4/d4UHl72CnBX0yot+t/s8sLXw4NOPFxSGBKqjlCDtKg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw6IzkugNx3Wuu+s7X0Y+WMS+UvQckyc5EQN1S/KF25uIRwQlAw
+	h+yL9GB1QLoRsmZf2NpEvBtMjsOqwlcsplrqLPq/6UPQzNyFbQ5edgM/WHTxmM0TqHh4I2NNAB2
+	uQJCSo0e8SU03gKEbiVhOVOd5PCw=
+X-Google-Smtp-Source: AGHT+IHhXpI5vEqv+Wd2A/4RfkWqOK1gbnvDrr6xD6vV5AL9tVi2SCet9Rb7ZEOuxjq5d9c4ywjOOC2VdjhPoJrtGFM=
+X-Received: by 2002:a17:906:c106:b0:ac7:c584:e691 with SMTP id
+ a640c23a62f3a-acad36d9a9amr701386266b.54.1744510956098; Sat, 12 Apr 2025
+ 19:22:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250408092907.22856-1-yangtiezhu@loongson.cn>
- <20250408161239.1023788-1-guanwentao@uniontech.com> <3019eada-7496-ca11-b645-f5efd7d215f4@loongson.cn>
-In-Reply-To: <3019eada-7496-ca11-b645-f5efd7d215f4@loongson.cn>
+References: <20250408092756.22339-1-yangtiezhu@loongson.cn>
+ <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn> <0b5039c3-019b-fd3d-e822-5d2a52c4111d@loongson.cn>
+ <56519aed-b23e-fece-3e91-f8db44da6d45@loongson.cn> <5c0db0f8-bab8-7cdb-172e-931658ed0548@loongson.cn>
+In-Reply-To: <5c0db0f8-bab8-7cdb-172e-931658ed0548@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 13 Apr 2025 10:17:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H56zc70Rj+ymFYGYXt9rnEpEPcdse2QFxYiiVpDA14UZA@mail.gmail.com>
-X-Gm-Features: ATxdqUEQS-csrxBhK5ag-lP5Gq_xogoIx_CkgNQwD8EP1HlD_FAUgrX5tHyLbus
-Message-ID: <CAAhV-H56zc70Rj+ymFYGYXt9rnEpEPcdse2QFxYiiVpDA14UZA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
+Date: Sun, 13 Apr 2025 10:22:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4JmiNzDAhvXS+wppg1_HbO6KmRLGMXKBxiyybFsQQfog@mail.gmail.com>
+X-Gm-Features: ATxdqUF9a9EuRvxEU9W_h2khwwXwaJg3tKtdgscv_RJ5490yh98FyVgTd6I2v1U
+Message-ID: <CAAhV-H4JmiNzDAhvXS+wppg1_HbO6KmRLGMXKBxiyybFsQQfog@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Enhance robust of kprobe
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Wentao Guan <guanwentao@uniontech.com>, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev
+Cc: Jinyang He <hejinyang@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hi, Tiezhu,
 
-On Fri, Apr 11, 2025 at 10:47=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
+On Fri, Apr 11, 2025 at 7:37=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> On 04/09/2025 12:12 AM, Wentao Guan wrote:
-> > Hello Yang,
+> On 04/11/2025 12:46 PM, Jinyang He wrote:
 > >
-> > I don`t know why change it defination remove "asmlinkage",
-> > why not explain it in commit message?
+> > On 2025-04-11 10:48, Tiezhu Yang wrote:
+> >> On 04/09/2025 10:17 AM, Jinyang He wrote:
+> >>> On 2025-04-08 17:27, Tiezhu Yang wrote:
 >
-> $ grep -rnw "define asmlinkage" .
-> ./arch/x86/include/asm/linkage.h:20:#define asmlinkage CPP_ASMLINKAGE
-> __attribute__((regparm(0)))
-> ./include/linux/linkage.h:22:#define asmlinkage CPP_ASMLINKAGE
+> ...
 >
-> include/linux/linkage.h
+> > I have just explained the previous status may be broken by IRQ.
 >
-> #ifdef __cplusplus
-> #define CPP_ASMLINKAGE extern "C"
-> #else
-> #define CPP_ASMLINKAGE
-> #endif
+> The initial aim is to make sure the irq is disabled at the end of
+> do_bp(), so let us narrow down the scope.
 >
-> #ifndef asmlinkage
-> #define asmlinkage CPP_ASMLINKAGE
-> #endif
+> > On the other hand, have you tried only fix do_bp weather cause hang?
+> >
+> > bool this_bp_ie =3D regs->csr_prmd & CSR_PRMD_PIE;
+> > if (this_bp_ie)
+> >   local_irq_enable();
+> > ...
+> > if (this_bp_ie)
+> >   local_irq_disable();
 >
-> So for LoongArch, asmlinkage means extern "C" or NULL, there is no
-> need to use asmlinkage for these prototypes because they are not put
-> in uapi headers, that is to say, they will be called and built only
-> by C compiler rather than C++ compiler, so asmlinkage is actually
-> NULL in this case.
+> This is a good idea, thank you.
 >
-> Furthermore, there are no asmlinkage for the other exist prototypes
-> such as _save_fp, _restore_fp in arch/loongarch/include/asm/fpu.h,
-> so in my opinion, just keep them consistent.
->
-> But according to Documentation/process/coding-style.rst, it seems
-> asmlinkage should be used.
->
-> "Large, non-trivial assembly functions should go in .S files, with
-> corresponding
-> C prototypes defined in C header files.  The C prototypes for assembly
-> functions should use ``asmlinkage``."
->
-> There are two ways:
-> (1) no need to use asmlinkage for these new added prototypes for
->      assembly functions in asm/fpu.h and asm/lbt.h to keep consistent.
->
-> (2) use asmlinkage for these new added prototypes for assembly functions
->      in asm/fpu.h and asm/lbt.h according to Documentation, and then add
->      asmlinkage for the other exist prototypes if necessary.
-I think this way is better, especially you have CCed stable, it should
-really fix something.
+> I will test the following change, if it works well and no more comments,
+> I will send v2 in the next week.
+If it works, I think there is a more fundamental problem, all do_xyz()
+should be fixed because PRMD may change during handling. And you can
+use
+bool pie =3D regs_irqs_disabled(regs)
+instead of
+bool pie =3D regs->csr_prmd & CSR_PRMD_PIE
 
 Huacai
 
 >
-> That's up to the arch maintainer Huacai.
+> ---8<---
+> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.=
+c
+> index 2ec3106c0da3..68cc4165578a 100644
+> --- a/arch/loongarch/kernel/traps.c
+> +++ b/arch/loongarch/kernel/traps.c
+> @@ -710,11 +710,12 @@ asmlinkage void noinstr do_bce(struct pt_regs *regs=
+)
+>   asmlinkage void noinstr do_bp(struct pt_regs *regs)
+>   {
+>          bool user =3D user_mode(regs);
+> +       bool pie =3D regs->csr_prmd & CSR_PRMD_PIE;
+>          unsigned int opcode, bcode;
+>          unsigned long era =3D exception_era(regs);
+>          irqentry_state_t state =3D irqentry_enter(regs);
+>
+> -       if (regs->csr_prmd & CSR_PRMD_PIE)
+> +       if (pie)
+>                  local_irq_enable();
+>
+>          if (__get_inst(&opcode, (u32 *)era, user))
+> @@ -780,7 +781,7 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
+>          }
+>
+>   out:
+> -       if (regs->csr_prmd & CSR_PRMD_PIE)
+> +       if (pie)
+>                  local_irq_disable();
+>
+>          irqentry_exit(regs, state);
 >
 > Thanks,
 > Tiezhu
+>
 >
