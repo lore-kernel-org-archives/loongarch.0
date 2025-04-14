@@ -1,199 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F5025229C
-	for <loongarch@lists.linux.dev>; Mon, 14 Apr 2025 13:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638758; cv=none; b=ai2KD+0+J5JQvfG9LL+DI8uiRMK0TA08FLkuZlIzK6/lcpWOGSUfQ3mnJQ7w6cM4bI3MGupfIFTNtmbp3pFWqugmVkKubKb5QMtHe2U7OVtYna4RYa4gXn+w7/CdMtnXUyfiywqvqKW8Il1NMBtqSZEzsRPTWgSZdpgk3/ksZqs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638758; c=relaxed/simple;
-	bh=ua8cASNkPaWRfa3lb5p4l80TaaxTdU9VK5enTPHP22U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RmcLoCYPMx8bP9D0Ut79TVHPMYX8OqLizKZI7QgewbXbTb7mi3+wMk4eCrqasDQdFlEdmZEup005TfaS5n76webK8u7aOPqvmQMDK+KHJa/z48kyt0LADBVI3GBv0gqxQPQwVWsjWzVPGsNwm0poYjHgK41OK8bpTng4XLQ4ytU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ahPqO+Kr; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBED134CF
+	for <loongarch@lists.linux.dev>; Mon, 14 Apr 2025 14:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744639454; cv=fail; b=Ef/xlh+9Xwuk6AjDpiK+1mjG7pDuRYU0iom+PnYU7Ibiyu2szTwsxS3ReOWnuzvMC+WTMPElmEpJ/CPZYde2Zs9wFGct7/JkRulEeAHS/Z+p0cldKkzm33fRdm2y6e2hB99QwgTpDl90sZq5J7I3L5xqv+H2k5WBxWaOj8ztaGo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744639454; c=relaxed/simple;
+	bh=Vo18GSNxw7wbb9tqV2xZulHETxrJoiyhp+B97PTzd9Q=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=qXsbfGxm0WVdY3L9sNceqKndR+3kglAW1q0ULWIRqWD4RxniZLwe/AQ2WbMw/QcuFdHMUasU235d/MOFTtUmcXqwK9Oup4AnRA5H4NYWYRwggnEN3VLMlnry1zPVHlv3rfSGE2x5rSyApFkLw6CzMvddIFPmVT8nvyuj0jueyJE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IILEe/gv; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WFD5vfOM; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ahPqO+Kr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9E37C4CEEC
-	for <loongarch@lists.linux.dev>; Mon, 14 Apr 2025 13:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744638757;
-	bh=ua8cASNkPaWRfa3lb5p4l80TaaxTdU9VK5enTPHP22U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ahPqO+KrHywQ67X0jg6OFqxHJXauh6j6cNKL2DMaJrr0rGaJUE9dwfYz0fwlfuWip
-	 RDOAVaN5D7SJ4LTjqyh/y4GjMkuEaD7P+LepE4/bkr19rbi10xKkp1smTzggotPwg2
-	 QZ1qWtViHBICqC/dGXJC2xgLigJGzjM8HpO/veyrSoLhpg8kFaUbEjgaQFAyLhK3o9
-	 /9be2ehMw25OgUFhvK6zrMIt1fFETPNGAp9x0GDLQRS08kkmCOAwdQ/caC6OpLr5H+
-	 B74jwS8GCfjKEsGFbQ6RMzIhWUcXHjzfGeiTP6sO8FkpC7Hs6it3fsAZCINcM7NxGx
-	 k55f2cOe3voJg==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so7053910a12.0
-        for <loongarch@lists.linux.dev>; Mon, 14 Apr 2025 06:52:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUMJ9XZ5X+m0j03FGJlzLKqIPPVXv/IMw5XxCXxqclp7CJ9gaGP6x4h2J2GHs3lbr65jmqxsWzU/Js=@lists.linux.dev
-X-Gm-Message-State: AOJu0YztipfO8WZVJ6+b8Ww8v1pGV2etGKO21GGxmQiJiHqhiOz8BeT5
-	r8+UNPa9OQH+Ub3iJqDA2oKB55EqXiNTmGJ5HmbyfwaaljS7krkj099t6efNr0R0Cw8myH8Rmtc
-	LmpRVWYwUkwS6ujRXo1a0DTMpeTw=
-X-Google-Smtp-Source: AGHT+IEb9cXahzO8rO6tTtsRYaxmrd0g3AGSHrWP5pO4nON1SGuxFGxFHtpFDvEAu9sp8G1Us6/u8WHw7IosPBIF6N0=
-X-Received: by 2002:a17:906:f585:b0:ac7:3912:5ea8 with SMTP id
- a640c23a62f3a-acad371af0amr1104496566b.61.1744638756467; Mon, 14 Apr 2025
- 06:52:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IILEe/gv";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WFD5vfOM"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53ECq3sh021393;
+	Mon, 14 Apr 2025 14:03:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=SRpmcJa6uk+G5RIHXO
+	Tn4nfXMonGVNCo3bVOQS4FhsU=; b=IILEe/gvGlGQE5YZEnpck4sUrmLgroTkjr
+	Dx1LJIheevNl5O8hQ9/ppYUkT/Vg3ZXxs/VOW4b+NBHnhbb4cMvVGFDHvYrGrDUw
+	LmH/1jwJMG8WgfxILlQcABpNuIeG7kTDLu40yv596tpGHy08ELTxtBrchFuuyc0f
+	mj1LI9qBRzlR0N9xYptgsLlO8y5DnTm954m+9EwFmPRz68sS/5TxVbudAG95gQLf
+	Lc+2JcFGzfZRX5dFYCCtTDhicT1JGxKXH0If11Y75Qe/3sEzDYNocLnP/DwabKEu
+	4UNhg3J4IcrGNMfxWpw8L0gqI5HC5UxKN/m48Zs/I5RRdtfxOg0A==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4612r7869a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 14:03:59 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53ECG8ia009194;
+	Mon, 14 Apr 2025 14:03:59 GMT
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazlp17010005.outbound.protection.outlook.com [40.93.11.5])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 460d3gjagc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 14:03:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pGSZlc6oPezQfLlkrVRm3Eao3WozkYsvZbqszIjqEG2xzFDzN3kv9nTcKuwpl1hDL33NOrwF/+f4pbXZJU+8TZ3P4skl8jiHuwEEzCQVe8ZYI5+eKmV6+IH3TiTlDcjTjAPi04KLxIhcVIPNU//Pn9KFZgWdYnWd2KW7W9eRU2L4hp69BlWoYn2rWKgB1yxC7Fn52wX7ZAcsdyLrcN3L5dbxSzY9X32ffxYOpk9aq2BvARgx0XoX+ofbXXeqqGGRUeyvQ2t/mGweSXgvR5dwfmt12j9ntfhAqWg/QNkVikiYITjc9QPiizuTU6XjVbMzM3ijfhUJLvSqcctkdvSlQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SRpmcJa6uk+G5RIHXOTn4nfXMonGVNCo3bVOQS4FhsU=;
+ b=IwnBJDDoRnHi/r85VZIB4WB5qN3QYxZiKW3QuoxoC5Ozppe85jFviZoBkzsDsCEAvTYCMDcJsoHVFJP7drLgfsJZLzkAVNWgcfgxdLhA80IV4cjHTaHNc5F6hCGwoFY3SK2pUIw2lHXIxF8kftp7VsqtiToMP5H4z5fRXrVwNDZxFpHSKRhgXW9amTsK5MwprOsewUr/565QkDCBYd792xEQDXa7rnqI2jC8bJozrsbWwTkrGSu1A/OhZi7AOinjj9xbgICnbMq8wP5EQX7Esu26QX2/qQkRyzR7CKQKYsgiQwf1n4ZYqe9DsCqtf0haArpSX67drTAeo1HQyrKJfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SRpmcJa6uk+G5RIHXOTn4nfXMonGVNCo3bVOQS4FhsU=;
+ b=WFD5vfOMDRLh98Xh4pZ0b3iREVoOCuu1neXkODOWv8nFB51Vn9OXe268pwhaGjmUuTEhlZdh/MD2oYYICXD/Ayr+CJHg9vrCF9iFkj5otrBsX7AJMjP3ZrO4Yy95WiNJ3+J8wd/ro2UnxACijRXKrklkhBlXvLYle1DXBZQxbDw=
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+ by DS0PR10MB7400.namprd10.prod.outlook.com (2603:10b6:8:138::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 14 Apr
+ 2025 14:03:56 +0000
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf%3]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 14:03:56 +0000
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Ard
+ Biesheuvel <ardb@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, linux-s390@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] lib/crc: make the CPU feature static keys __ro_after_init
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20250413154350.10819-1-ebiggers@kernel.org> (Eric Biggers's
+	message of "Sun, 13 Apr 2025 08:43:50 -0700")
+Organization: Oracle Corporation
+Message-ID: <yq1tt6qhmc2.fsf@ca-mkp.ca.oracle.com>
+References: <20250413154350.10819-1-ebiggers@kernel.org>
+Date: Mon, 14 Apr 2025 10:03:54 -0400
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0211.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::6) To CH0PR10MB5338.namprd10.prod.outlook.com
+ (2603:10b6:610:cb::8)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
- <20250319064031.2971073-4-chenhuacai@loongson.cn> <2025031943-disparity-dash-cfa3@gregkh>
- <Z9rYQy3l5V5cvW7W@t14s> <2025031942-portside-finite-34a9@gregkh>
- <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
- <CAAhV-H7ECQp4S8SNF8_fbK2CHHpgAsfAZk4QdJLYb4iXtjLYyA@mail.gmail.com> <CAASaF6zvEntqKZUzqRjw4Pp5edsRHdd0Dz7-RD=TTMc1n_HMPA@mail.gmail.com>
-In-Reply-To: <CAASaF6zvEntqKZUzqRjw4Pp5edsRHdd0Dz7-RD=TTMc1n_HMPA@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 14 Apr 2025 21:52:35 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7h5SW40jDyJs2naBQ3ZLH9S_PLNeq=19P5+75jwT5eYQ@mail.gmail.com>
-X-Gm-Features: ATxdqUG1icZREjZMGI3uSy2brC-wqNFlBfkcadOO9-HvQ5kt1SjX-qscPsLmFhE
-Message-ID: <CAAhV-H7h5SW40jDyJs2naBQ3ZLH9S_PLNeq=19P5+75jwT5eYQ@mail.gmail.com>
-Subject: Re: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11
- provider for OPENSSL MAJOR >= 3
-To: Jan Stancek <jstancek@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Sasha Levin <sashal@kernel.org>, Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, 
-	David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, R Nageswara Sastry <rnsastry@linux.ibm.com>, 
-	Neal Gompa <neal@gompa.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|DS0PR10MB7400:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4bc269e9-5adc-400d-97d9-08dd7b5d325e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?heXeLHzB8if400Ajk3J40aSo9X1hoqeCcyrPninXZQ3JPYWZ285JMmPMqx2A?=
+ =?us-ascii?Q?MBB508UeSo7448uekwwwZgs9jczVHCkRKRKY7Mx7wYzo2J35jtzq9xQGO5FG?=
+ =?us-ascii?Q?pkdKmVgN5KkdFRX8OtDzJbAGucpJo6B3m0b+SimWk6kaNzpWmOBVODYayxaq?=
+ =?us-ascii?Q?qzyo/fucKT8NruKzA9HSg7MhopQiOtNMQeQ0aWStyI7rTTvaclkE10Jw6ESg?=
+ =?us-ascii?Q?2T0JtpSHmgbsE1aWRA2VETtYRfO/qfcJWVtgIyWe3tCxCTdmjQ036nm1qgma?=
+ =?us-ascii?Q?4hAROAU6KLojzKSlSLOmTJXxl+08witEYv92/cLca7RPPczkICfnGq35jzT+?=
+ =?us-ascii?Q?QPlpIlmSqPjezCbGJXnLgKbztiEOh+5ONXoybckeRY83Biym2wO8NXMqsZKT?=
+ =?us-ascii?Q?2gU0BldjRXwi5jmYqTN1JxHp7eJifkDBn4kFskE02Z0gCr+bv0mbWhsKnEMB?=
+ =?us-ascii?Q?fi59TXx1BoasPg5JtSe7aCL+u6kOZmTdxuk39TvlJQRt/8XkDN1oMTcjPu+B?=
+ =?us-ascii?Q?nCsDQrEYcB2aFD3X8E5ODCrmft8ybx2N6oXTbcxuWYHMG6BTf6Nel86fmyaz?=
+ =?us-ascii?Q?HDEyzdVS5oVb8kfnVzOPRGEsFknG4a9fvwuLFK8iNTRB11hBXHNrvEUEJXHG?=
+ =?us-ascii?Q?VIn3T7cG2IplfxAcMmLwYoVggdwvkGwn3zteGXU7TL0uaqxAf2ZSeFMsbX9N?=
+ =?us-ascii?Q?yMxUbz9fPSTDks3HEh/CYQUHvRGMlrDqIJjtzWkfOiah1VuW1nnu6ec5l4kq?=
+ =?us-ascii?Q?omucNXuilhVCQ2YHosiI0RBWKl7YhcGkK34SLNKbZwx0XdOCst8NX42IF6fG?=
+ =?us-ascii?Q?UdiXETXIvizenucaUcXHAj0SS9wQdbsEfbT39I0upGnc0DXQxIKhbEcN0DY+?=
+ =?us-ascii?Q?mhTHlE3RqtMhk4xg/x/xBeIEXASQE1KFO5zo7W+U+7hs/NgMLw1MK/HECG6w?=
+ =?us-ascii?Q?P2zsVMFQ91gACvKjlKbNVgh3CR1Y4tG8vF6Io2syerqhB2Qda9IatWz/ph+4?=
+ =?us-ascii?Q?LmSKFxKavPyoQ/UJkKesMye6iVJjcshzXxYGwAqWkfhjyfX6U/99/eoNucux?=
+ =?us-ascii?Q?LjxUXKYrhvyM0mz5XM6epXOeGaaSqnr/1mBu2ZmCwgOgGEExU+w7svbPM1MP?=
+ =?us-ascii?Q?dLXn7lwoyKDJT3dvaRYH36P2y3xQ+9H01kSvd9xxhNzQrxue9sg/BfaT1Rrv?=
+ =?us-ascii?Q?b0esuZ4aYN4OnQeFKHOiqF4TAwiuRZyq8eM+W8vW6tTGdm4dOKm74FdT+ucP?=
+ =?us-ascii?Q?UqBYXQhl9JDRG4v2Fk0Q5H6HfITmVpEvx6gUTQ7w2rTT5LdlM4X2/Warv0+G?=
+ =?us-ascii?Q?+RlsdlJjiDyCZCFZ2dCC78NDRhzS3YM1pRwR+bYdlgHCZvalYpbiuX8mMvQT?=
+ =?us-ascii?Q?FxG1KoZvdxf6eFOcmyiOASWCMks1MBjhLmiKN930hI/2cKQZyc3moTIyE+wV?=
+ =?us-ascii?Q?BABvBvMOumI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?RQv/m980/T2oPcUOhR+4NxD/UUzmm49Mfh2DZgWeCWwtzOc4PsiszNGmM9Z8?=
+ =?us-ascii?Q?s439wQE4x1kNIYt+kxY6ZvGO4XH+y94TDkunPHuxwzE0ZXf0s1dXTPi79Azm?=
+ =?us-ascii?Q?2qchTIQ26xRPuRqO1h8ZeIir1xDGdndTG/69Jg3wMKPJl+erJ3r/p+FjfjWh?=
+ =?us-ascii?Q?7kWQW3aOq/1iC8Bqwc29gCQ3qcjNwTsc8xtSzchvQze7G0wKs0NMmWRNiHdS?=
+ =?us-ascii?Q?mw31m525/iB292am+1d6W+rwa4GBRy7zikhwTZjNXJ+l6k7tcof+6JpTfaHj?=
+ =?us-ascii?Q?2H2XRCth65Z7ka/QRyMv2s8/j1M5Pja9MHlLnOT1BrZPe5KVDcWpPgt524ko?=
+ =?us-ascii?Q?JpOCSM/IZaecInoarMDv2AbGkumi+JmQUPlBf/Vxzyy0/7t9H7BIQsu7kicx?=
+ =?us-ascii?Q?0zhGYT8g+VCo8ly0WtyJWOksxQliqYaV5Bqzk1nxfmZSQ0ENRGPgFeKkWwC9?=
+ =?us-ascii?Q?AL7dbZtHe/TmZRmOGmFzAhuCdirgujoIA+8JHBexYvta/x6AG7I4KdkH0J/5?=
+ =?us-ascii?Q?pMVQqYEPkcd3gk7D7MzpOnhmikkVboBiFUvn+FI84zLPnqCMwGmPef3M3Qpe?=
+ =?us-ascii?Q?4k8k4uRoEb/Ee7hTjrm6P8SOh3LrGWKV6p+s0iZqj3fIEpm2/mkYYKWapK8C?=
+ =?us-ascii?Q?UJoesIWdLx0isJy9Y/n+IT/rrDDnfWuQalwkuZ3/MVN++7yWTpBLR4g6icMQ?=
+ =?us-ascii?Q?rhsf/d3cXEflowhpnLfhtjKGaLNig1HK4jtZUoqwVPBbbDTXyY61hlu6KB0O?=
+ =?us-ascii?Q?5ncvIbfsm3cd0etupY2j7ap/CHMJxSnU00GpUvp22KQ4J75wBtk2p3HnNpOv?=
+ =?us-ascii?Q?GYuUD8Af9slIDNpoCi/IJ5VaXK2HJ0RcCwasVHg5y/yI3S+xQHEtHfWMp5rm?=
+ =?us-ascii?Q?wGP+SsFLU+x6203j0MXzcW8ergKSCVCgkG6Mxu7ZdmDh3Lw3nia7F/NBi7Pp?=
+ =?us-ascii?Q?Cb5CQntLrawNYB6L2HIwa7aOzzRcZf03ijqd+7ca4kkyD9h2LAdlRmkcUgvC?=
+ =?us-ascii?Q?fG4DIfKfRUKPEBjAPkjUx3nhnjEPnc1x21Ww83rLdUN5Ry7JOcFEjFcw84Lr?=
+ =?us-ascii?Q?/I+727nKaEr+q+V6pb1e0YHel3xZEMDFgCDui645NsTyIQ38z51reVDMm37T?=
+ =?us-ascii?Q?f4q/hfXPCy8ie021/tKmkE5JHtPgHFyYQtFClelkspmXAeFd3hh5/zO/HBUs?=
+ =?us-ascii?Q?OlzTF6GowE9w/2uKJE10eT50Tnel9+GD/0cO6cfhmmXjKctD/8aod1KiUyUb?=
+ =?us-ascii?Q?fJGb2sXBTYTBOGYPoAavJBD7w3i4GoPrL7BI8w60gQ4rnCQFdzGsOHQMCnM7?=
+ =?us-ascii?Q?GpANaNJud+OY9GAC4hkhOvRd4/Lq2fv6WasuYn2v6cwRCGHUbSefxK2NQ/q7?=
+ =?us-ascii?Q?835J+e9yGDjBIR81AABGZ7o0V2Zze+imjXSDU6oNn1b/DLP0ggss/EUEE7ct?=
+ =?us-ascii?Q?QimTglFgeyMqJ8YgNctXIdYWv0hONFSKgqTCWgJ5DcrSpjMxl8ITtmhtjW/0?=
+ =?us-ascii?Q?tBGHGOcoPn8h6SUCfZTKzwQR8tl0CcU80KP6onv4UdqY19+YrR6XfybuuhnU?=
+ =?us-ascii?Q?cfoUykk3PRcTVpZ9BLJ+TDZi5CWaBIvyE6v/vGjlSCOvntx6R41vUM9D29mM?=
+ =?us-ascii?Q?Dg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Ze6LJ+sKipMYGBi0mWP+nXUYCyApofbmgUhApWvL0gfovcX0fOrp761PAZFkyYonKY4ZQQZW0pflFugGor8blNqoMcJySOIooBaqC+ANFiv/iHceTuWN+5wh0sAKOJUeohLLgYqjGkMmhAGbyu+wbLf4iX8mIYhLJD7n5psd4WScbwhvTUFpwoN6GrGw5H6bVGtGeMl3ooqYbMHxxzdjHcJwQTkHdzOMUOLAAQRyMaLFU/Azkjk4EsAeB0yyzfHsl9VOOj54EUbFt2pMiNm3YPAl+zRLh96d4BK5XFGDCNvPgoeGKcgNSnilq78H9EnuD7gKTb4e/8NaGPY8vxnfZKe8+dnJfLe4sd/T+ntnlnZjOgBxnubJZCjU4YLTTkTT2SRA3ofPTszKH+JdieaTtlAlHyvpK0kuboecYE8NkJuxlUgho6N7kJEkz8bz6m2akUDpsINWgzZ6Yrr5JNZwPYM3NVoMjjY7+TVimTbb1OCQ0E0SK9lUIZC3ESmhxc6Yf9vV9l7PYZMr1RL6ejSS30huQBDjhRmBeL2TO6Cy9rzZHrBLFi8HJA6UTWcvqyZsJ1e4BDfs3Vat2dIrrRaj9SlOWr/BZ74kAwMDvIPHzEg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bc269e9-5adc-400d-97d9-08dd7b5d325e
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 14:03:56.5041
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ip6BensbNUgBvAoYNeXmya5s6HlsIeGe/dIYHIR6J9fCB8kti3jF2yNt9SoDWiZmtVtXiqOwfekM4J9ckoJE6qig5pKZKv7++EI1hoWXw+E=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7400
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-14_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504140102
+X-Proofpoint-GUID: BdyBqGi6kxUfUY6Qs1S880bGMkmBiiOF
+X-Proofpoint-ORIG-GUID: BdyBqGi6kxUfUY6Qs1S880bGMkmBiiOF
 
-Hi, Greg and Sasha,
 
-On Sun, Mar 30, 2025 at 9:40=E2=80=AFPM Jan Stancek <jstancek@redhat.com> w=
-rote:
->
-> On Sun, Mar 30, 2025 at 3:08=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> >
-> > On Thu, Mar 20, 2025 at 12:53=E2=80=AFAM Jan Stancek <jstancek@redhat.c=
-om> wrote:
-> > >
-> > > On Wed, Mar 19, 2025 at 5:26=E2=80=AFPM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Wed, Mar 19, 2025 at 03:44:19PM +0100, Jan Stancek wrote:
-> > > > > On Wed, Mar 19, 2025 at 07:13:13AM -0700, Greg Kroah-Hartman wrot=
-e:
-> > > > > > On Wed, Mar 19, 2025 at 02:40:31PM +0800, Huacai Chen wrote:
-> > > > > > > From: Jan Stancek <jstancek@redhat.com>
-> > > > > > >
-> > > > > > > commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
-> > > > > > >
-> > > > > > > ENGINE API has been deprecated since OpenSSL version 3.0 [1].
-> > > > > > > Distros have started dropping support from headers and in fut=
-ure
-> > > > > > > it will likely disappear also from library.
-> > > > > > >
-> > > > > > > It has been superseded by the PROVIDER API, so use it instead
-> > > > > > > for OPENSSL MAJOR >=3D 3.
-> > > > > > >
-> > > > > > > [1] https://github.com/openssl/openssl/blob/master/README-ENG=
-INES.md
-> > > > > > >
-> > > > > > > [jarkko: fixed up alignment issues reported by checkpatch.pl =
---strict]
-> > > > > > >
-> > > > > > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
-> > > > > > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > > > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-> > > > > > > Reviewed-by: Neal Gompa <neal@gompa.dev>
-> > > > > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > > > ---
-> > > > > > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++---=
-----------
-> > > > > > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++-------=
------
-> > > > > > >  2 files changed, 138 insertions(+), 58 deletions(-)
-> > > > > >
-> > > > > > This seems to differ from what is upstream by a lot, please doc=
-ument
-> > > > > > what you changed from it and why when you resend this series ag=
-ain.
-> > > > >
-> > > > > Hunks are arranged differently, but code appears to be identical.
-> > > > > When I apply the series to v6.6.83 and compare with upstream I ge=
-t:
-> > > >
-> > > > If so, why is the diffstat different?  Also why are the hunks arran=
-ged
-> > > > differently,
-> > >
-> > > He appears to be using "--diff-algorithm=3Dminimal", while you probab=
-ly
-> > > patience or histogram.
-> > Hi, Jan,
-> >
-> > I tried --diff-algorithm=3Dminimal/patience/histogram from the upstream
-> > commit, they all give the same result as this patch. But Sasha said
-> > the upstream diffstat is different, so how does he generate the patch?
->
-> Hi,
->
-> I don't know how he generates the patch, but with git-2.43 I get noticabl=
-e
-> different patches and diff stats for minimal vs. histogram. "minimal" one
-> matches your v3 patch. I don't know details of Greg's workflow, just offe=
-red
-> one possible explanation that would allow this series to progress further=
-.
->
-> $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb2 |
-> grep -A3 -m1 -- "---"
-Could you please tell me how you generate patches? I always get the
-same result from the upstream repo.
+Eric,
 
-Huacai
+> All of the CRC library's CPU feature static_keys are initialized by
+> initcalls and never change afterwards, so there's no need for them to
+> be in the regular .data section. Put them in .data..ro_after_init
+> instead.
 
-> ---
->  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
->  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
->  2 files changed, 138 insertions(+), 58 deletions(-)
->
-> $ git format-patch -1 --stdout --diff-algorithm=3Dhistogram 558bdc45dfb2
-> | grep -A3 -m1 -- "---"
-> ---
->  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
->  scripts/sign-file.c  |  95 +++++++++++++++++++++++++++------------
->  2 files changed, 139 insertions(+), 59 deletions(-)
->
-> Regards,
-> Jan
->
-> >
-> > Huacai
-> >
-> > >
-> > > $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb=
-2 |
-> > > grep -A3 -m1 -- "---"
-> > > ---
-> > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-----------=
---
-> > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
-> > >  2 files changed, 138 insertions(+), 58 deletions(-)
-> > >
-> > > Should be easy to regenerate with different diff-alg for v4.
-> > >
-> > > Regards,
-> > > Jan
-> > >
-> > > > that's a hint to me that something went wrong and I can't
-> > > > trust the patch at all.
-> > > >
-> > > > thanks,
-> > > >
-> > > > greg k-h
-> > > >
-> > >
-> >
->
->
+LGTM.
+
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+
+-- 
+Martin K. Petersen
