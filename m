@@ -1,264 +1,121 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFF3314B945
-	for <loongarch@lists.linux.dev>; Tue, 15 Apr 2025 09:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2B728DEE0
+	for <loongarch@lists.linux.dev>; Tue, 15 Apr 2025 11:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744708786; cv=none; b=CSjHGfsvCjNKPi2NqgfAQDpMhpzYDdVfENV9/Rg2Q3Y+Pqh/vOE91xSj7gSRSBS5bD+QqvnTJ4dtOkfIbsKwckzoFVt0hnwXzXAOW/UBnqLuKBEvHydb4ncYKy1fGC+7+ygsnobxOulNCbRM0/+GfQ3GcMyiEk48yb1j9hA+64Q=
+	t=1744717236; cv=none; b=MdNb7tDwv/r78j+OfHK1kDACJ97cHfroJwP8LA4IZ166Ik+7cSJYz+6inlkKhjJZ6R/9z92wsCWKobLlXcZCRIVDtquPIbaQ2Y1cDt5J3Fh4UxHn5UIp0ihFGm5ArmFz0+1gHZrZG2Ynu07aBJ3Ed3w3HEBpiy+eiGs3y4OpWwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744708786; c=relaxed/simple;
-	bh=LUmlEpZ4Ez9LtPfiPkGnfU5PRDp3fu5I4ZGM8vvkSnM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFH9ZSWA1u/zeQXm08krFLWplh+SvN3iYVf4xBwfwPaymywiFw+xxvtmOrKVZGxXYbb2Z8z6zfjuE224u3dU47JjKouRLJLWWfN1G3wLWVFw994kjfS+2ZJgWyNIbp50fxqWts/4ljyMxZyuKtqOsRfs4zsLZszz/gfeG/3drKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxlnCqJP5n3Mu9AA--.52156S3;
-	Tue, 15 Apr 2025 17:19:38 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCx7xukJP5nHMyCAA--.57263S2;
-	Tue, 15 Apr 2025 17:19:34 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
-Date: Tue, 15 Apr 2025 17:19:30 +0800
-Message-ID: <20250415091930.19529-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1744717236; c=relaxed/simple;
+	bh=crUzhLZR6kohcn8ctKDzFw/yNkNnOwRO4xA4Ob5DDd0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CrfhVHDx3/l7ozKfBgaDv6aoN9EsyQ4Ile6XCcmSnADPIoQOQ2nqQw84sHMmuybInrqFyDy2nR4LIFdLWSfUu/jeVNDmmpwPPO6rGBCJE7t7H9t+E7lXYjhHCUC4XFyblC2uRRPsR4IZfOs3leuYglumbLMQRLZioogukI4rCcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=B0eR0mUn; arc=none smtp.client-ip=51.81.35.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="B0eR0mUn"
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 390312142B
+	for <loongarch@lists.linux.dev>; Tue, 15 Apr 2025 11:34:44 +0000 (UTC)
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [151.80.165.199])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 896F82618F
+	for <loongarch@lists.linux.dev>; Tue, 15 Apr 2025 11:34:35 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay2.mymailcheap.com (Postfix) with ESMTPS id 39FE73E886;
+	Tue, 15 Apr 2025 11:34:28 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 9FE7C40009;
+	Tue, 15 Apr 2025 11:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1744716867; bh=crUzhLZR6kohcn8ctKDzFw/yNkNnOwRO4xA4Ob5DDd0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=B0eR0mUn2B/U7VU0hYTXDvhfRcvzrd4/36BaXkysrHdIZVCxbCsA12ZShTGhWBs0J
+	 I/Ld0LOoH0iCHs5+PEW6wgbq/G8PUMkENw7CMlAeAnqcmMyDMKNfsgAJBtJOvjwZzu
+	 /NZ9YPS5IHzo0+sgtxy1HyKUMzuBXOUyjys+jpq0=
+Received: from [50.50.1.183] (unknown [58.246.137.130])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id F34364082E;
+	Tue, 15 Apr 2025 11:34:21 +0000 (UTC)
+Message-ID: <d82b174f-60a7-41e1-8987-c56155c60630@aosc.io>
+Date: Tue, 15 Apr 2025 19:34:17 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx7xukJP5nHMyCAA--.57263S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3JF4rtw48CFy3JFW3Wr4fXrc_yoW3Zr47pr
-	nrArn5Cw48GFnav34DJ34jvFZ8Xas5Ga1S93Zrt34fCr1jkr9rurn7Ga1DZFy8Ka48Ar1F
-	9r4avF1Sy3WUC3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 0/3] net: stmmac: dwmac-loongson: Add
+ Loongson-2K3000 support
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Yanteng Si <si.yanteng@linux.dev>,
+ Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>,
+ Mingcong Bai <jeffbai@aosc.io>
+References: <20250415071128.3774235-1-chenhuacai@loongson.cn>
+Content-Language: en-US
+From: Henry Chen <chenx97@aosc.io>
+In-Reply-To: <20250415071128.3774235-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9FE7C40009
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Spamd-Result: default: False [1.40 / 10.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[netdev];
+	MID_RHS_MATCH_FROM(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[chenx97.aosc.io:server fail,chenhuacai.loongson.cn:server fail,dongbiao.loongson.cn:server fail,zhangbaoqi.loongson.cn:server fail];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[linux.dev,gmail.com,lists.linux.dev,vger.kernel.org,loongson.cn,aosc.io];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Action: no action
 
-Like the other relevant symbols, export some fp, lsx, lasx and lbt
-assembly symbols and put the function declarations in header files
-rather than source files.
+On 4/15/25 15:11, Huacai Chen wrote:
+> This series add stmmac driver support for Loongson-2K3000/Loongson-3B6000M,
+> which introduces a new CORE ID (0x12) and a new PCI device ID (0x7a23). The
+> new core reduces channel numbers from 8 to 4, but checksum is supported for
+> all channels.
+> 
+> Huacai Chen (3):
+>    net: stmmac: dwmac-loongson: Move queue number init to common function
+>    net: stmmac: dwmac-loongson: Add new multi-chan IP core support
+>    net: stmmac: dwmac-loongson: Add new GMAC's PCI device ID support
+> 
+> Tested-by: Biao Dong <dongbiao@loongson.cn>
+> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   .../net/ethernet/stmicro/stmmac/dwmac-loongson.c   | 105 ++++++++++-----------
+>   1 file changed, 49 insertions(+), 56 deletions(-)
+> ---
+> 2.27.0
+> 
+> 
 
-While at it, use "asmlinkage" for the other existing C prototypes
-of assembly functions and also do not use the "extern" keyword with
-function declarations according to the document coding-style.rst.
+I have tested This patch series on my Loongson-3A5000-HV-7A2000-1w-V0.1-
+EVB. The onboard STMMAC ethernet works as expected.
 
-Cc: stable@vger.kernel.org # 6.6+
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/fpu.h | 38 ++++++++++++++++++--------------
- arch/loongarch/include/asm/lbt.h | 10 ++++++---
- arch/loongarch/kernel/fpu.S      |  6 +++++
- arch/loongarch/kernel/lbt.S      |  4 ++++
- arch/loongarch/kernel/signal.c   | 21 ------------------
- 5 files changed, 39 insertions(+), 40 deletions(-)
+Tested-by: Henry Chen <chenx97@aosc.io>
 
-diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
-index 3177674228f8..23f5a4b9c32d 100644
---- a/arch/loongarch/include/asm/fpu.h
-+++ b/arch/loongarch/include/asm/fpu.h
-@@ -22,22 +22,28 @@
- struct sigcontext;
- 
- #define kernel_fpu_available() cpu_has_fpu
--extern void kernel_fpu_begin(void);
--extern void kernel_fpu_end(void);
--
--extern void _init_fpu(unsigned int);
--extern void _save_fp(struct loongarch_fpu *);
--extern void _restore_fp(struct loongarch_fpu *);
--
--extern void _save_lsx(struct loongarch_fpu *fpu);
--extern void _restore_lsx(struct loongarch_fpu *fpu);
--extern void _init_lsx_upper(void);
--extern void _restore_lsx_upper(struct loongarch_fpu *fpu);
--
--extern void _save_lasx(struct loongarch_fpu *fpu);
--extern void _restore_lasx(struct loongarch_fpu *fpu);
--extern void _init_lasx_upper(void);
--extern void _restore_lasx_upper(struct loongarch_fpu *fpu);
-+void kernel_fpu_begin(void);
-+void kernel_fpu_end(void);
-+
-+asmlinkage void _init_fpu(unsigned int);
-+asmlinkage void _save_fp(struct loongarch_fpu *);
-+asmlinkage void _restore_fp(struct loongarch_fpu *);
-+asmlinkage int _save_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
-+asmlinkage int _restore_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
-+
-+asmlinkage void _save_lsx(struct loongarch_fpu *fpu);
-+asmlinkage void _restore_lsx(struct loongarch_fpu *fpu);
-+asmlinkage void _init_lsx_upper(void);
-+asmlinkage void _restore_lsx_upper(struct loongarch_fpu *fpu);
-+asmlinkage int _save_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
-+asmlinkage int _restore_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
-+
-+asmlinkage void _save_lasx(struct loongarch_fpu *fpu);
-+asmlinkage void _restore_lasx(struct loongarch_fpu *fpu);
-+asmlinkage void _init_lasx_upper(void);
-+asmlinkage void _restore_lasx_upper(struct loongarch_fpu *fpu);
-+asmlinkage int _save_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
-+asmlinkage int _restore_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
- 
- static inline void enable_lsx(void);
- static inline void disable_lsx(void);
-diff --git a/arch/loongarch/include/asm/lbt.h b/arch/loongarch/include/asm/lbt.h
-index e671978bf552..38566574e562 100644
---- a/arch/loongarch/include/asm/lbt.h
-+++ b/arch/loongarch/include/asm/lbt.h
-@@ -12,9 +12,13 @@
- #include <asm/loongarch.h>
- #include <asm/processor.h>
- 
--extern void _init_lbt(void);
--extern void _save_lbt(struct loongarch_lbt *);
--extern void _restore_lbt(struct loongarch_lbt *);
-+asmlinkage void _init_lbt(void);
-+asmlinkage void _save_lbt(struct loongarch_lbt *);
-+asmlinkage void _restore_lbt(struct loongarch_lbt *);
-+asmlinkage int _save_lbt_context(void __user *regs, void __user *eflags);
-+asmlinkage int _restore_lbt_context(void __user *regs, void __user *eflags);
-+asmlinkage int _save_ftop_context(void __user *ftop);
-+asmlinkage int _restore_ftop_context(void __user *ftop);
- 
- static inline int is_lbt_enabled(void)
- {
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index 6ab640101457..28caf416ae36 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -458,6 +458,7 @@ SYM_FUNC_START(_save_fp_context)
- 	li.w		a0, 0				# success
- 	jr		ra
- SYM_FUNC_END(_save_fp_context)
-+EXPORT_SYMBOL_GPL(_save_fp_context)
- 
- /*
-  * a0: fpregs
-@@ -471,6 +472,7 @@ SYM_FUNC_START(_restore_fp_context)
- 	li.w		a0, 0				# success
- 	jr		ra
- SYM_FUNC_END(_restore_fp_context)
-+EXPORT_SYMBOL_GPL(_restore_fp_context)
- 
- /*
-  * a0: fpregs
-@@ -484,6 +486,7 @@ SYM_FUNC_START(_save_lsx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_save_lsx_context)
-+EXPORT_SYMBOL_GPL(_save_lsx_context)
- 
- /*
-  * a0: fpregs
-@@ -497,6 +500,7 @@ SYM_FUNC_START(_restore_lsx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_restore_lsx_context)
-+EXPORT_SYMBOL_GPL(_restore_lsx_context)
- 
- /*
-  * a0: fpregs
-@@ -510,6 +514,7 @@ SYM_FUNC_START(_save_lasx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_save_lasx_context)
-+EXPORT_SYMBOL_GPL(_save_lasx_context)
- 
- /*
-  * a0: fpregs
-@@ -523,6 +528,7 @@ SYM_FUNC_START(_restore_lasx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_restore_lasx_context)
-+EXPORT_SYMBOL_GPL(_restore_lasx_context)
- 
- .L_fpu_fault:
- 	li.w	a0, -EFAULT				# failure
-diff --git a/arch/loongarch/kernel/lbt.S b/arch/loongarch/kernel/lbt.S
-index 001f061d226a..71678912d24c 100644
---- a/arch/loongarch/kernel/lbt.S
-+++ b/arch/loongarch/kernel/lbt.S
-@@ -90,6 +90,7 @@ SYM_FUNC_START(_save_lbt_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_save_lbt_context)
-+EXPORT_SYMBOL_GPL(_save_lbt_context)
- 
- /*
-  * a0: scr
-@@ -110,6 +111,7 @@ SYM_FUNC_START(_restore_lbt_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_restore_lbt_context)
-+EXPORT_SYMBOL_GPL(_restore_lbt_context)
- 
- /*
-  * a0: ftop
-@@ -120,6 +122,7 @@ SYM_FUNC_START(_save_ftop_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_save_ftop_context)
-+EXPORT_SYMBOL_GPL(_save_ftop_context)
- 
- /*
-  * a0: ftop
-@@ -150,6 +153,7 @@ SYM_FUNC_START(_restore_ftop_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_restore_ftop_context)
-+EXPORT_SYMBOL_GPL(_restore_ftop_context)
- 
- .L_lbt_fault:
- 	li.w		a0, -EFAULT		# failure
-diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
-index 7a555b600171..4740cb5b2388 100644
---- a/arch/loongarch/kernel/signal.c
-+++ b/arch/loongarch/kernel/signal.c
-@@ -51,27 +51,6 @@
- #define lock_lbt_owner()	({ preempt_disable(); pagefault_disable(); })
- #define unlock_lbt_owner()	({ pagefault_enable(); preempt_enable(); })
- 
--/* Assembly functions to move context to/from the FPU */
--extern asmlinkage int
--_save_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
--extern asmlinkage int
--_restore_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
--extern asmlinkage int
--_save_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--extern asmlinkage int
--_restore_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--extern asmlinkage int
--_save_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--extern asmlinkage int
--_restore_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--
--#ifdef CONFIG_CPU_HAS_LBT
--extern asmlinkage int _save_lbt_context(void __user *regs, void __user *eflags);
--extern asmlinkage int _restore_lbt_context(void __user *regs, void __user *eflags);
--extern asmlinkage int _save_ftop_context(void __user *ftop);
--extern asmlinkage int _restore_ftop_context(void __user *ftop);
--#endif
--
- struct rt_sigframe {
- 	struct siginfo rs_info;
- 	struct ucontext rs_uctx;
--- 
-2.42.0
-
+      Henry
