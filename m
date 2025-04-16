@@ -1,25 +1,24 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65CCD25771
-	for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 02:30:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14C9A1C1F0D
+	for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 02:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744770651; cv=none; b=BXmhQHm/UcqiL63aQEyElh8Eyzo9H+vgd8eW0vwkTSsfdOFO1Bb/hhLicrvRBAM8XauX6lfghNsN+tvfBSwYFi51Y0hg24+F+Qs81TnL0tiyTUp/CyaTbvwLNdKhFG4+5S02/J5pXVPhDnIlrXgmpcU85Lu22YZuE5nsBQzBJOA=
+	t=1744771053; cv=none; b=CQ6MweLQ2EOwnx1iGy4fEw5Zz/t99a4zDjHy8smvqiFv+/76Ce4izs3PHE7Rqao/J2D/+YnxcDNtb79Q1pYrKBBkBFMVE3chwApJwX6eNXq3U1iibeINy9wEMoc1x959h2MKBfGeHMTPoiwn6jEUYfJrjRHz5y38aDx2SBDOcHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744770651; c=relaxed/simple;
-	bh=JWhq+XXYyMJEFwa1sLaoVo607RP3LT68poj4yLhNFsg=;
+	s=arc-20240116; t=1744771053; c=relaxed/simple;
+	bh=GJPc6rDaq9qmr80cAjmQqa54UWqVwKhMVrhP2kNVQpM=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=fZDB05URYeq3sRzWokOfXqcfk52NZnRvkksL8VtDccraBGXl17leZ3F3YB9gQz31UtVieK5pDFhs/mlmXc5ufi58Q12oYA+6w5r7WT/2CqNeRpjCY/L8TuayazlVq1cu8g5urlzRKuscHDsAluHWcaIS+Ffu7huBr8GIvuO6mPI=
+	 In-Reply-To:Content-Type; b=LbyQbJDRxAM6ZhrxnEfVW+da4gFN3nk0WEGna1NukvhS9QV23a+Gb27TCeKGPP94pOEBLMSEhrRofOONVX6PGpsMTJoJJ3fKo3QAEp0dsNB09kivXGuXk0o+wCIlW7LqZ6A+yeu7TqngTtnO3wDAMWHjrCiir2rLivnq7fPPkC8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8Bx12lNFv9nCxu_AA--.54406S3;
-	Wed, 16 Apr 2025 10:30:37 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxvOLiF_9n8xy_AA--.56318S3;
+	Wed, 16 Apr 2025 10:37:22 +0800 (CST)
 Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMCx7xtHFv9nv_SEAA--.63165S3;
-	Wed, 16 Apr 2025 10:30:36 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] Docs/LoongArch: Add Advanced Extended-Redirect IRQ
- model description
+	by front1 (Coremail) with SMTP id qMiowMBxHcXaF_9nAfiEAA--.63916S3;
+	Wed, 16 Apr 2025 10:37:17 +0800 (CST)
+Subject: Re: [PATCH v2 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
 To: Yanteng Si <si.yanteng@linux.dev>, chenhuacai@kernel.org,
  kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, tglx@linutronix.de,
  jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
@@ -28,11 +27,11 @@ To: Yanteng Si <si.yanteng@linux.dev>, chenhuacai@kernel.org,
 Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
- <20250331064116.32540-2-zhangtianyang@loongson.cn>
- <d9b6f34c-95f2-45f6-b5dc-89098d1f8d22@linux.dev>
+ <20250331064116.32540-3-zhangtianyang@loongson.cn>
+ <6863ae24-10de-4d50-9175-ab5012f204ed@linux.dev>
 From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <3f31ead7-f342-1d64-edf0-902779613537@loongson.cn>
-Date: Wed, 16 Apr 2025 10:29:55 +0800
+Message-ID: <ebfc0d43-df69-5afc-bff1-5bb6d5f7f6ab@loongson.cn>
+Date: Wed, 16 Apr 2025 10:36:38 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -41,68 +40,299 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <d9b6f34c-95f2-45f6-b5dc-89098d1f8d22@linux.dev>
+In-Reply-To: <6863ae24-10de-4d50-9175-ab5012f204ed@linux.dev>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:qMiowMCx7xtHFv9nv_SEAA--.63165S3
+X-CM-TRANSID:qMiowMBxHcXaF_9nAfiEAA--.63916S3
 X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ur1xWF18WFWUZw1rCw15Awc_yoW8Xryfpr
-	Z7CFn3JFZ3J34xGF1fu3WUXry3J3WxCa1YqF1fCF18Xwn8ur1vqr18XryvgFy5Ww4vyay0
-	gr4rGF98uF1UAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3WF1rtFWDWw4xJFy3Xr1UJwc_yoWfZrW5pF
+	4kJFWUXrWrJr1rWr1UGr4UZFyayr18Ja1DJr18X3WUJrsFkr10gF1UWryq9F1rAr4rJr1U
+	Ar4jqrZrurnrJrgCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
 	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
 	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
 	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
 
 Hi, Yanteng
 
-在 2025/4/1 上午9:39, Yanteng Si 写道:
+在 2025/4/1 上午10:15, Yanteng Si 写道:
 >
 > 在 3/31/25 2:41 PM, Tianyang Zhang 写道:
->> Introduce the redirect interrupt controllers.When the redirect interrupt
->> controller is enabled, the routing target of MSI interrupts is no 
->> longer a
->> specific CPU and vector number, but a specific redirect entry. The 
->> actual
->> CPU and vector number used are described by the redirect entry.
+>> The main function of the Redirected interrupt controller is to manage 
+>> the
+>> redirected-interrupt table, which consists of many redirected entries.
+>> When MSI interrupts are requested, the driver creates a corresponding
+>> redirected entry that describes the target CPU/vector number and the
+>> operating mode of the interrupt. The redirected interrupt module has an
+>> independent cache, and during the interrupt routing process, it will
+>> prioritize the redirected entries that hit the cache. The driver
+>> invalidates certain entry caches via a command queue.
 >>
+>> Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
+>> Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
 >> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
 >> ---
->>   .../arch/loongarch/irq-chip-model.rst         | 38 +++++++++++++++++++
->>   .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 ++++++++++++++++++
->>   2 files changed, 75 insertions(+)
+>>   arch/loongarch/include/asm/cpu-features.h |   1 +
+>>   arch/loongarch/include/asm/cpu.h          |   2 +
+>>   arch/loongarch/include/asm/loongarch.h    |   6 +
+>>   arch/loongarch/kernel/cpu-probe.c         |   2 +
+>>   drivers/irqchip/Makefile                  |   2 +-
+>>   drivers/irqchip/irq-loongarch-avec.c      |  21 +-
+>>   drivers/irqchip/irq-loongarch-ir.c        | 561 ++++++++++++++++++++++
+>>   drivers/irqchip/irq-loongson.h            |  12 +
+>>   include/linux/cpuhotplug.h                |   1 +
+>>   9 files changed, 594 insertions(+), 14 deletions(-)
+>>   create mode 100644 drivers/irqchip/irq-loongarch-ir.c
 >>
->> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst 
->> b/Documentation/arch/loongarch/irq-chip-model.rst
->> index a7ecce11e445..84fafb86ec17 100644
->> --- a/Documentation/arch/loongarch/irq-chip-model.rst
->> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
->> @@ -181,6 +181,44 @@ go to PCH-PIC/PCH-LPC and gathered by EIOINTC, 
->> and then go to CPUINTC directly::
->>                | Devices |
->>                +---------+
+>>
+>> +static void invalid_enqueue(struct redirect_queue *rqueue, struct 
+>> irde_inv_cmd *cmd)
+>> +{
+>> +    struct irde_inv_cmd *inv_addr;
+>> +    u32 tail;
+>> +
+>> +    guard(raw_spinlock_irqsave)(&rqueue->lock);
+>> +
+>> +    while (invalid_queue_is_full(rqueue->node, &tail))
+>> +        cpu_relax();
+>> +
+>> +    inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * 
+>> sizeof(struct irde_inv_cmd));
+>> +    memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+>> +    tail = (tail + 1) % INVALID_QUEUE_SIZE;
+>> +
 >
->> +Advanced Extended IRQ model (with redirection)
->> +===============
+>> +    wmb();
 >
-> Did you do the build test?
-If you're referring to the equal sign alignment issue, this is indeed my 
-oversight. Thank you for pointing it out.
+> Add some comments?  In kernel docs:
 >
+>
+> 22) 所有内存屏障（例如 ``barrier()``, ``rmb()``, ``wmb()`` 
+> ）都需要源代码注
+>     释来解释它们正在执行的操作及其原因的逻辑。
+Ok, I got it ,thansk
+>> +
+>> +    iocsr_write32(tail, LOONGARCH_IOCSR_REDIRECT_CQT);
+>> +}
+>> +
+>> +static void smp_call_invalid_enqueue(void *arg)
+>> +{
+>> +    struct smp_invalid_arg *s_arg = (struct smp_invalid_arg *)arg;
+>> +
+>> +    invalid_enqueue(s_arg->queue, s_arg->cmd);
+>> +}
+>> +
+>> +static void irde_invlid_entry_node(struct redirect_item *item)
+>> +{
+>> +    struct redirect_queue *rqueue;
+>> +    struct smp_invalid_arg arg;
+>> +    struct irde_inv_cmd cmd;
+>> +    volatile u64 raddr = 0;
+>> +    int node = item->table->node, cpu;
+>> +
+>> +    rqueue = &(irde_descs[node].inv_queue);
+>> +    cmd.cmd_info = 0;
+>> +    cmd.index.type = INVALID_INDEX;
+>> +    cmd.index.need_notice = 1;
+>> +    cmd.index.index = item->index;
+>> +    cmd.notice_addr = (u64)(__pa(&raddr));
+>> +
+>> +    if (cpu_to_node(smp_processor_id()) == node)
+>> +        invalid_enqueue(rqueue, &cmd);
+>> +    else {
+>> +        for_each_cpu(cpu, cpumask_of_node(node)) {
+>> +            if (cpu_online(cpu))
+>> +                break;
+>> +        }
+>> +        arg.queue = rqueue;
+>> +        arg.cmd = &cmd;
+>> +        smp_call_function_single(cpu, smp_call_invalid_enqueue, 
+>> &arg, 0);
+>> +    }
+>> +
+>> +    while (!raddr)
+>> +        cpu_relax();
+>> +
+>> +}
+>> +
+>> +static inline struct avecintc_data *irq_data_get_avec_data(struct 
+>> irq_data *data)
+>> +{
+>> +    return data->parent_data->chip_data;
+>> +}
+>> +
+>> +static int redirect_table_alloc(struct redirect_item *item, struct 
+>> redirect_table *ird_table)
+>> +{
+>> +    int index;
+>> +
+>> +    guard(raw_spinlock_irqsave)(&ird_table->lock);
+>> +
+>> +    index = find_first_zero_bit(ird_table->bitmap, IRD_ENTRIES);
+>> +    if (index > IRD_ENTRIES) {
+>> +        pr_err("No redirect entry to use\n");
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    __set_bit(index, ird_table->bitmap);
+>> +
+>> +    item->index = index;
+>> +    item->entry = &ird_table->table[index];
+>> +    item->table = ird_table;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int redirect_table_free(struct redirect_item *item)
+>> +{
+>> +    struct redirect_table *ird_table;
+>> +    struct redirect_entry *entry;
+>> +    unsigned long flags;
+>> +
+>> +    ird_table = item->table;
+>> +
+>> +    entry = item->entry;
+>> +    memset(entry, 0, sizeof(struct redirect_entry));
+>> +
+>> +    raw_spin_lock_irqsave(&ird_table->lock, flags);
+>> +    bitmap_release_region(ird_table->bitmap, item->index, 0);
+>> +    raw_spin_unlock_irqrestore(&ird_table->lock, flags);
+>> +
+>> +    kfree(item->gpid);
+>> +
+>> +    irde_invlid_entry_node(item);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static inline void redirect_domain_prepare_entry(struct 
+>> redirect_item *item, struct avecintc_data *adata)
+>> +{
+>> +    struct redirect_entry *entry = item->entry;
+>> +
+>> +    item->gpid->en = 1;
+>> +    item->gpid->irqnum = adata->vec;
+>> +    item->gpid->dst = adata->cpu;
+>> +
+>> +    entry->lo.valid = 1;
+>> +    entry->lo.gpid = ((long)item->gpid >> GPID_ADDR_SHIFT) & 
+>> (GPID_ADDR_MASK);
+>> +    entry->lo.vector = 0xff;
+>> +    wmb();
+>> +}
+>> +
+>> +static int redirect_set_affinity(struct irq_data *data, const struct 
+>> cpumask *dest, bool force)
+>> +{
+>> +    struct redirect_item *item = data->chip_data;
+>> +    struct avecintc_data *adata;
+>> +    int ret;
+>> +
+>> +    ret = irq_chip_set_affinity_parent(data, dest, force);
+>> +    if (ret == IRQ_SET_MASK_OK_DONE)
+>> +        return IRQ_SET_MASK_OK;
+>> +    else if (ret) {
+>> +        pr_err("IRDE:set_affinity error %d\n", ret);
+>> +        return ret;
+>> +    }
+>> +
+>> +    adata = irq_data_get_avec_data(data);
+>> +
+>> +    redirect_domain_prepare_entry(item, adata);
+>> +
+>> +    irde_invlid_entry_node(item);
+>> +
+>> +    avecintc_sync(adata);
+>> +    return IRQ_SET_MASK_OK;
+>> +}
+>> +
+>> +static void redirect_compose_msi_msg(struct irq_data *d, struct 
+>> msi_msg *msg)
+>> +{
+>> +    struct redirect_item *item;
+>> +
+>> +    item = irq_data_get_irq_chip_data(d);
+>> +    msg->address_lo = (msi_base_addr | 1 << 2 | ((item->index & 
+>> 0xffff) << 4));
+>> +    msg->address_hi = 0x0;
+>> +    msg->data = 0x0;
+>> +}
+>> +
+>> +static inline void redirect_ack_irq(struct irq_data *d)
+>> +{
+>> +}
+>> +
+>> +static inline void redirect_unmask_irq(struct irq_data *d)
+>> +{
+>> +}
+>> +
+>> +static inline void redirect_mask_irq(struct irq_data *d)
+>> +{
+>> +}
+>> +
+>> +static struct irq_chip loongarch_redirect_chip = {
+>> +    .name            = "REDIRECT",
+>> +    .irq_ack        = redirect_ack_irq,
+>> +    .irq_mask        = redirect_mask_irq,
+>> +    .irq_unmask        = redirect_unmask_irq,
+>> +    .irq_set_affinity    = redirect_set_affinity,
+>> +    .irq_compose_msi_msg    = redirect_compose_msi_msg,
+>> +};
+>> +
+>> +static void redirect_free_resources(struct irq_domain *domain,
+>> +                        unsigned int virq, unsigned int nr_irqs)
+>> +{
+>> +    struct irq_data *irq_data;
+>> +    struct redirect_item *item;
+>> +
+>> +    for (int i = 0; i < nr_irqs; i++) {
+>> +        irq_data = irq_domain_get_irq_data(domain, virq  + i);
+>> +        if (irq_data && irq_data->chip_data) {
+>> +            item = irq_data->chip_data;
+>> +            redirect_table_free(item);
+>> +            kfree(item);
+>> +        }
+>> +    }
+>> +}
+>> +
+>
+>> +static int redirect_alloc(struct irq_domain *domain,
+>> +                    unsigned int virq, unsigned int nr_irqs,
+>> +                     void *arg)
+>
+> The line break handling here is not good. Two lines would be
+>
+> sufficient. Your code style is extremely terrible, and it seems
+>
+> that you haven't passed the checkpatch.pl test yet.
+>
+>
+> https://docs.kernel.org/translations/zh_CN/process/coding-style.html
+>
+>
+> Maybe it would be a good idea to read the kernel
+>
+> documentation before preparing for v3.
+Well, according to the documentation, this is indeed inappropriate. I'll 
+take your advice.
 >
 >
 > Thanks,
 >
 > Yanteng
+
+Thanks,
+
+Tianyang
 
