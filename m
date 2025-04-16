@@ -1,338 +1,167 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14C9A1C1F0D
-	for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 02:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9E31C8638
+	for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 07:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744771053; cv=none; b=CQ6MweLQ2EOwnx1iGy4fEw5Zz/t99a4zDjHy8smvqiFv+/76Ce4izs3PHE7Rqao/J2D/+YnxcDNtb79Q1pYrKBBkBFMVE3chwApJwX6eNXq3U1iibeINy9wEMoc1x959h2MKBfGeHMTPoiwn6jEUYfJrjRHz5y38aDx2SBDOcHA=
+	t=1744790044; cv=none; b=f+3pTlc3fZD6vpyAihhLYTVlFgAs5nw62nz0sDXtjF2QFwo5atPsHB9Uo8Clukl2gHzrtp7x4oydfhgj1U7n5dJibQGutddCOlq29UXS1FNaYn0zV3x0191pxWxe2J73vaFAcWfLAUSb8vgPpiM5Ggc9dIwKnGnj1Co4w+FAuLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744771053; c=relaxed/simple;
-	bh=GJPc6rDaq9qmr80cAjmQqa54UWqVwKhMVrhP2kNVQpM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=LbyQbJDRxAM6ZhrxnEfVW+da4gFN3nk0WEGna1NukvhS9QV23a+Gb27TCeKGPP94pOEBLMSEhrRofOONVX6PGpsMTJoJJ3fKo3QAEp0dsNB09kivXGuXk0o+wCIlW7LqZ6A+yeu7TqngTtnO3wDAMWHjrCiir2rLivnq7fPPkC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8CxvOLiF_9n8xy_AA--.56318S3;
-	Wed, 16 Apr 2025 10:37:22 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMBxHcXaF_9nAfiEAA--.63916S3;
-	Wed, 16 Apr 2025 10:37:17 +0800 (CST)
-Subject: Re: [PATCH v2 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-To: Yanteng Si <si.yanteng@linux.dev>, chenhuacai@kernel.org,
- kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, tglx@linutronix.de,
- jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
- gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
- <20250331064116.32540-3-zhangtianyang@loongson.cn>
- <6863ae24-10de-4d50-9175-ab5012f204ed@linux.dev>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <ebfc0d43-df69-5afc-bff1-5bb6d5f7f6ab@loongson.cn>
-Date: Wed, 16 Apr 2025 10:36:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1744790044; c=relaxed/simple;
+	bh=X/q+bSdJRCkfdg4Za99CLYjq0EmAcEoPH+vEoAhTJe8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mFWH1Ti3KT+XLSVk2OfQ9NvQUGue3HT8Jd8q+wP2R3/YvWdgTU7OYJ+G96kT87wZ/C49hbM7pCCkXHdYGAO8g/jHVCqSUe0FtdqKGKfqgm1mP0DW4w8IA1BBxhp0y89k8wwC39xVuF4Kj1fuIyMkjVJ3Ir+kaqzuPGF6PRhAwr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKhxlz6D; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKhxlz6D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1273C4CEF1
+	for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 07:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744790043;
+	bh=X/q+bSdJRCkfdg4Za99CLYjq0EmAcEoPH+vEoAhTJe8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oKhxlz6D5W/ke2kWbAnifKlT0SVcKnV0ZaDBVOZX9jt5sTNAMMWROIL1A03GHQteJ
+	 l3Kh4z4+KJBfh9tVQkKrjtZ6QgQyi72jfcP4VDrl0rV+7llm1Cyg6rPJgaveoAEpkp
+	 H2byMqx/K44uGJuwdmAWnGkOT5g5ipbJTZDlM94ZiLZ71191cOJuEoWJlfkDOgD0gM
+	 bKGSzonoqoB/1XrYud5t9V21TFer7nagjimu+HpDRvYquS591F7MD+7piwtvRjRZoo
+	 /nd1dOY/ylegwn2+gFIfewibX1S3tOQn1KYv+TJgI8uhuF+ImjxxbNdJps5mzN0SUu
+	 ZIhFkXbc2RUkQ==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so962719466b.0
+        for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 00:54:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV35PzBq9bVsuy25mGv+2s0OsbKooc3Agjj0+WBLlB6pfQnpj9VMOTfBsxbUCakrVQ/o27IhSxw2Ck=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwpC2Yf5iA06iKRDjrtJE9wuIU5qouYQZeopaqbZn7RXLgvMGD3
+	mMaBoYaoVKGC5NeYv3DsS3pjQNOpwbE3XB+YvwBaov6Urdbhcruys0FNaPJEU3I4ksLjUJNKz1M
+	l/k2KDA979ljxn422nBXd5tZ5HXw=
+X-Google-Smtp-Source: AGHT+IFPbQ/+0Kt3PqldkPRGr8J/mjDNM6g1HMxMFxDQkkIGy9rM2wtaLVWjay/J2gKGexhcIfpJSzp+PpKK6gwypHo=
+X-Received: by 2002:a17:907:988:b0:ac2:912d:5a80 with SMTP id
+ a640c23a62f3a-acb428790e4mr70967966b.5.1744790042113; Wed, 16 Apr 2025
+ 00:54:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <6863ae24-10de-4d50-9175-ab5012f204ed@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMBxHcXaF_9nAfiEAA--.63916S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WF1rtFWDWw4xJFy3Xr1UJwc_yoWfZrW5pF
-	4kJFWUXrWrJr1rWr1UGr4UZFyayr18Ja1DJr18X3WUJrsFkr10gF1UWryq9F1rAr4rJr1U
-	Ar4jqrZrurnrJrgCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
-	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
+References: <648AB3031B5618C0+20250415153903.570662-1-wangyuli@uniontech.com> <6954e026-94d2-4d96-a8f6-eddf0353598b@lucifer.local>
+In-Reply-To: <6954e026-94d2-4d96-a8f6-eddf0353598b@lucifer.local>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 16 Apr 2025 15:53:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4=SZrJjVwVv6fqxTZn9ODP-s1ZEgYKTmHMPH7aoJuvng@mail.gmail.com>
+X-Gm-Features: ATxdqUEwJBQMW8ntRK1edUoWfQzA_dk_OHCsHaWC8kBUBAzVe0GJFA-poB1LYx8
+Message-ID: <CAAhV-H4=SZrJjVwVv6fqxTZn9ODP-s1ZEgYKTmHMPH7aoJuvng@mail.gmail.com>
+Subject: Re: [PATCH v2] mseal sysmap: enable LoongArch
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: WangYuli <wangyuli@uniontech.com>, corbet@lwn.net, kernel@xen0n.name, 
+	akpm@linux-foundation.org, jeffxu@chromium.org, Liam.Howlett@oracle.com, 
+	kees@kernel.org, hca@linux.ibm.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, xry111@xry111.site, 
+	tglx@linutronix.de, thomas.weissschuh@linutronix.de, Jason@zx2c4.com, 
+	zhanjun@uniontech.com, niecheng1@uniontech.com, guanwentao@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Yanteng
+Hi, Lorenzo,
 
-在 2025/4/1 上午10:15, Yanteng Si 写道:
+On Tue, Apr 15, 2025 at 11:53=E2=80=AFPM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
 >
-> 在 3/31/25 2:41 PM, Tianyang Zhang 写道:
->> The main function of the Redirected interrupt controller is to manage 
->> the
->> redirected-interrupt table, which consists of many redirected entries.
->> When MSI interrupts are requested, the driver creates a corresponding
->> redirected entry that describes the target CPU/vector number and the
->> operating mode of the interrupt. The redirected interrupt module has an
->> independent cache, and during the interrupt routing process, it will
->> prioritize the redirected entries that hit the cache. The driver
->> invalidates certain entry caches via a command queue.
->>
->> Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
->> Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
->> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/cpu-features.h |   1 +
->>   arch/loongarch/include/asm/cpu.h          |   2 +
->>   arch/loongarch/include/asm/loongarch.h    |   6 +
->>   arch/loongarch/kernel/cpu-probe.c         |   2 +
->>   drivers/irqchip/Makefile                  |   2 +-
->>   drivers/irqchip/irq-loongarch-avec.c      |  21 +-
->>   drivers/irqchip/irq-loongarch-ir.c        | 561 ++++++++++++++++++++++
->>   drivers/irqchip/irq-loongson.h            |  12 +
->>   include/linux/cpuhotplug.h                |   1 +
->>   9 files changed, 594 insertions(+), 14 deletions(-)
->>   create mode 100644 drivers/irqchip/irq-loongarch-ir.c
->>
->>
->> +static void invalid_enqueue(struct redirect_queue *rqueue, struct 
->> irde_inv_cmd *cmd)
->> +{
->> +    struct irde_inv_cmd *inv_addr;
->> +    u32 tail;
->> +
->> +    guard(raw_spinlock_irqsave)(&rqueue->lock);
->> +
->> +    while (invalid_queue_is_full(rqueue->node, &tail))
->> +        cpu_relax();
->> +
->> +    inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * 
->> sizeof(struct irde_inv_cmd));
->> +    memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
->> +    tail = (tail + 1) % INVALID_QUEUE_SIZE;
->> +
+> On Tue, Apr 15, 2025 at 11:39:03PM +0800, WangYuli wrote:
+> > Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on LoongArch,
+> > covering the vdso.
 >
->> +    wmb();
->
-> Add some comments?  In kernel docs:
->
->
-> 22) 所有内存屏障（例如 ``barrier()``, ``rmb()``, ``wmb()`` 
-> ）都需要源代码注
->     释来解释它们正在执行的操作及其原因的逻辑。
-Ok, I got it ,thansk
->> +
->> +    iocsr_write32(tail, LOONGARCH_IOCSR_REDIRECT_CQT);
->> +}
->> +
->> +static void smp_call_invalid_enqueue(void *arg)
->> +{
->> +    struct smp_invalid_arg *s_arg = (struct smp_invalid_arg *)arg;
->> +
->> +    invalid_enqueue(s_arg->queue, s_arg->cmd);
->> +}
->> +
->> +static void irde_invlid_entry_node(struct redirect_item *item)
->> +{
->> +    struct redirect_queue *rqueue;
->> +    struct smp_invalid_arg arg;
->> +    struct irde_inv_cmd cmd;
->> +    volatile u64 raddr = 0;
->> +    int node = item->table->node, cpu;
->> +
->> +    rqueue = &(irde_descs[node].inv_queue);
->> +    cmd.cmd_info = 0;
->> +    cmd.index.type = INVALID_INDEX;
->> +    cmd.index.need_notice = 1;
->> +    cmd.index.index = item->index;
->> +    cmd.notice_addr = (u64)(__pa(&raddr));
->> +
->> +    if (cpu_to_node(smp_processor_id()) == node)
->> +        invalid_enqueue(rqueue, &cmd);
->> +    else {
->> +        for_each_cpu(cpu, cpumask_of_node(node)) {
->> +            if (cpu_online(cpu))
->> +                break;
->> +        }
->> +        arg.queue = rqueue;
->> +        arg.cmd = &cmd;
->> +        smp_call_function_single(cpu, smp_call_invalid_enqueue, 
->> &arg, 0);
->> +    }
->> +
->> +    while (!raddr)
->> +        cpu_relax();
->> +
->> +}
->> +
->> +static inline struct avecintc_data *irq_data_get_avec_data(struct 
->> irq_data *data)
->> +{
->> +    return data->parent_data->chip_data;
->> +}
->> +
->> +static int redirect_table_alloc(struct redirect_item *item, struct 
->> redirect_table *ird_table)
->> +{
->> +    int index;
->> +
->> +    guard(raw_spinlock_irqsave)(&ird_table->lock);
->> +
->> +    index = find_first_zero_bit(ird_table->bitmap, IRD_ENTRIES);
->> +    if (index > IRD_ENTRIES) {
->> +        pr_err("No redirect entry to use\n");
->> +        return -ENOMEM;
->> +    }
->> +
->> +    __set_bit(index, ird_table->bitmap);
->> +
->> +    item->index = index;
->> +    item->entry = &ird_table->table[index];
->> +    item->table = ird_table;
->> +
->> +    return 0;
->> +}
->> +
->> +static int redirect_table_free(struct redirect_item *item)
->> +{
->> +    struct redirect_table *ird_table;
->> +    struct redirect_entry *entry;
->> +    unsigned long flags;
->> +
->> +    ird_table = item->table;
->> +
->> +    entry = item->entry;
->> +    memset(entry, 0, sizeof(struct redirect_entry));
->> +
->> +    raw_spin_lock_irqsave(&ird_table->lock, flags);
->> +    bitmap_release_region(ird_table->bitmap, item->index, 0);
->> +    raw_spin_unlock_irqrestore(&ird_table->lock, flags);
->> +
->> +    kfree(item->gpid);
->> +
->> +    irde_invlid_entry_node(item);
->> +
->> +    return 0;
->> +}
->> +
->> +static inline void redirect_domain_prepare_entry(struct 
->> redirect_item *item, struct avecintc_data *adata)
->> +{
->> +    struct redirect_entry *entry = item->entry;
->> +
->> +    item->gpid->en = 1;
->> +    item->gpid->irqnum = adata->vec;
->> +    item->gpid->dst = adata->cpu;
->> +
->> +    entry->lo.valid = 1;
->> +    entry->lo.gpid = ((long)item->gpid >> GPID_ADDR_SHIFT) & 
->> (GPID_ADDR_MASK);
->> +    entry->lo.vector = 0xff;
->> +    wmb();
->> +}
->> +
->> +static int redirect_set_affinity(struct irq_data *data, const struct 
->> cpumask *dest, bool force)
->> +{
->> +    struct redirect_item *item = data->chip_data;
->> +    struct avecintc_data *adata;
->> +    int ret;
->> +
->> +    ret = irq_chip_set_affinity_parent(data, dest, force);
->> +    if (ret == IRQ_SET_MASK_OK_DONE)
->> +        return IRQ_SET_MASK_OK;
->> +    else if (ret) {
->> +        pr_err("IRDE:set_affinity error %d\n", ret);
->> +        return ret;
->> +    }
->> +
->> +    adata = irq_data_get_avec_data(data);
->> +
->> +    redirect_domain_prepare_entry(item, adata);
->> +
->> +    irde_invlid_entry_node(item);
->> +
->> +    avecintc_sync(adata);
->> +    return IRQ_SET_MASK_OK;
->> +}
->> +
->> +static void redirect_compose_msi_msg(struct irq_data *d, struct 
->> msi_msg *msg)
->> +{
->> +    struct redirect_item *item;
->> +
->> +    item = irq_data_get_irq_chip_data(d);
->> +    msg->address_lo = (msi_base_addr | 1 << 2 | ((item->index & 
->> 0xffff) << 4));
->> +    msg->address_hi = 0x0;
->> +    msg->data = 0x0;
->> +}
->> +
->> +static inline void redirect_ack_irq(struct irq_data *d)
->> +{
->> +}
->> +
->> +static inline void redirect_unmask_irq(struct irq_data *d)
->> +{
->> +}
->> +
->> +static inline void redirect_mask_irq(struct irq_data *d)
->> +{
->> +}
->> +
->> +static struct irq_chip loongarch_redirect_chip = {
->> +    .name            = "REDIRECT",
->> +    .irq_ack        = redirect_ack_irq,
->> +    .irq_mask        = redirect_mask_irq,
->> +    .irq_unmask        = redirect_unmask_irq,
->> +    .irq_set_affinity    = redirect_set_affinity,
->> +    .irq_compose_msi_msg    = redirect_compose_msi_msg,
->> +};
->> +
->> +static void redirect_free_resources(struct irq_domain *domain,
->> +                        unsigned int virq, unsigned int nr_irqs)
->> +{
->> +    struct irq_data *irq_data;
->> +    struct redirect_item *item;
->> +
->> +    for (int i = 0; i < nr_irqs; i++) {
->> +        irq_data = irq_domain_get_irq_data(domain, virq  + i);
->> +        if (irq_data && irq_data->chip_data) {
->> +            item = irq_data->chip_data;
->> +            redirect_table_free(item);
->> +            kfree(item);
->> +        }
->> +    }
->> +}
->> +
->
->> +static int redirect_alloc(struct irq_domain *domain,
->> +                    unsigned int virq, unsigned int nr_irqs,
->> +                     void *arg)
->
-> The line break handling here is not good. Two lines would be
->
-> sufficient. Your code style is extremely terrible, and it seems
->
-> that you haven't passed the checkpatch.pl test yet.
->
->
-> https://docs.kernel.org/translations/zh_CN/process/coding-style.html
->
->
-> Maybe it would be a good idea to read the kernel
->
-> documentation before preparing for v3.
-Well, according to the documentation, this is indeed inappropriate. I'll 
-take your advice.
->
->
-> Thanks,
->
-> Yanteng
+> I've also checked and determined that, as far as I can tell, the loongarc=
+h
+> arch-specific doe don't appear at any point to rely upon remapping the VD=
+SO
+> or VVAR areas so sealing these should not be problematic.
+What does "remapping the VDSO" mean here? There is a function
+vdso_mremap() in arch/loongarch/kernel/vdso.c.
 
-Thanks,
+Huacai
 
-Tianyang
-
+>
+> >
+> > Link: https://lore.kernel.org/all/25bad37f-273e-4626-999c-e1890be96182@=
+lucifer.local/
+> > Tested-by: Yuli Wang <wangyuli@uniontech.com>
+> > Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+>
+> LGTM,
+>
+> Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>
+> But let's get some R-b's from the arch people please!
+>
+> > ---
+> > Changelog:
+> >  *v1->v2: Modify mseal_sys_mappings/arch-support.txt.
+> > ---
+> >  .../features/core/mseal_sys_mappings/arch-support.txt         | 2 +-
+> >  Documentation/userspace-api/mseal.rst                         | 2 +-
+> >  arch/loongarch/Kconfig                                        | 1 +
+> >  arch/loongarch/kernel/vdso.c                                  | 4 +++-
+> >  4 files changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/features/core/mseal_sys_mappings/arch-suppor=
+t.txt b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
+> > index c6cab9760d57..a3c24233eb9b 100644
+> > --- a/Documentation/features/core/mseal_sys_mappings/arch-support.txt
+> > +++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
+> > @@ -12,7 +12,7 @@
+> >      |       arm64: |  ok  |
+> >      |        csky: |  N/A |
+> >      |     hexagon: |  N/A |
+> > -    |   loongarch: | TODO |
+> > +    |   loongarch: |  ok  |
+> >      |        m68k: |  N/A |
+> >      |  microblaze: |  N/A |
+> >      |        mips: | TODO |
+> > diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/user=
+space-api/mseal.rst
+> > index 1dabfc29be0d..ef733f69003d 100644
+> > --- a/Documentation/userspace-api/mseal.rst
+> > +++ b/Documentation/userspace-api/mseal.rst
+> > @@ -144,7 +144,7 @@ Use cases
+> >    architecture.
+> >
+> >    The following architectures currently support this feature: x86-64, =
+arm64,
+> > -  and s390.
+> > +  loongarch and s390.
+> >
+> >    WARNING: This feature breaks programs which rely on relocating
+> >    or unmapping system mappings. Known broken software at the time
+> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> > index 067c0b994648..54ed5b59a690 100644
+> > --- a/arch/loongarch/Kconfig
+> > +++ b/arch/loongarch/Kconfig
+> > @@ -69,6 +69,7 @@ config LOONGARCH
+> >       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+> >       select ARCH_SUPPORTS_LTO_CLANG
+> >       select ARCH_SUPPORTS_LTO_CLANG_THIN
+> > +     select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+> >       select ARCH_SUPPORTS_NUMA_BALANCING
+> >       select ARCH_SUPPORTS_RT
+> >       select ARCH_USE_BUILTIN_BSWAP
+> > diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.=
+c
+> > index 10cf1608c7b3..7b888d9085a0 100644
+> > --- a/arch/loongarch/kernel/vdso.c
+> > +++ b/arch/loongarch/kernel/vdso.c
+> > @@ -105,7 +105,9 @@ int arch_setup_additional_pages(struct linux_binprm=
+ *bprm, int uses_interp)
+> >
+> >       vdso_addr =3D data_addr + VVAR_SIZE;
+> >       vma =3D _install_special_mapping(mm, vdso_addr, info->size,
+> > -                                    VM_READ | VM_EXEC | VM_MAYREAD | V=
+M_MAYWRITE | VM_MAYEXEC,
+> > +                                    VM_READ | VM_EXEC |
+> > +                                    VM_MAYREAD | VM_MAYWRITE | VM_MAYE=
+XEC |
+> > +                                    VM_SEALED_SYSMAP,
+> >                                      &info->code_mapping);
+> >       if (IS_ERR(vma)) {
+> >               ret =3D PTR_ERR(vma);
+> > --
+> > 2.49.0
+> >
