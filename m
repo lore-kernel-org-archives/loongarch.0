@@ -1,105 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B08E21B9DE
-	for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 10:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85C081ADC67
+	for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 14:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798373; cv=none; b=jd/kFY5qbZVXIMYaZMK/vJBnIFgJqV4Acs59NSQdhbtP+KXR9RIZsEsNpyeN8gCJUCeUInN9WSR0lNYe6+YOIGSmuNs7rPgNsMMyKTmHVHVkbHULESt0I8uuwkzjrY3C8GaPqow8oIwG9cEr4011OFopqeQlgT0R4NqdiNjhHtE=
+	t=1744814528; cv=none; b=GK3RdshJsi9L5w4OzlvXvBXDPwS/a2UHTJsXGaU58apdDsTL8KoTIRlQwB7mVX0iF6ZuCmo8pMWaTtQOF9QQWUakuVa+T6H3abwR40SH1Ht169qLQqkQBtAQFVmHAX3Q5C2g1/ml1BeefuN18tjMrgdGYPfuKHvQGLvOoSFBuzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798373; c=relaxed/simple;
-	bh=1r+Isg8f/c2kqwIlg8Ba9Y4smt7tLmBuV62Bq/vYutk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bG5Rtscre29hpgEmISG/+3d4d3q+U6w9eDqD7BlTD+xVUdZhEUbEAGe0aP4mv9qHk6RIEB71FJVBCjMG6tlylTEJfkpNrfhnr1gqYgNyLUP/asCjRYCMH4JcoAaKBMCWS2lIHJEU7OTj91hGAu4LH9hGLak5KkBRtKnMEVRWU9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJ9aS4zl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJ9aS4zl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FDF3C4CEED
-	for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 10:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744798372;
-	bh=1r+Isg8f/c2kqwIlg8Ba9Y4smt7tLmBuV62Bq/vYutk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QJ9aS4zl2LqwkemHoYAzso857fBzAUNSaE8KeJUmdBmKMhXqQENmNmucsumJuPjHO
-	 dgRAgpQx83FNn5qvPDEpmmsaNZbOs0ur977Y2uItIpvabg7IVjIDCkmfNglP/VMP3q
-	 b0e+2JZCbmaC6bby2Ze4n0Wa2iKuZfMaaccxVNfikkBJ+J8qoDJtlFZuNwOSzSV+MZ
-	 NIU323FH0ro4Hubfc+sPgvqbbQe24x18n6hQGbNv1skUcE6xZpnwO6LyKMXPQ4L8XF
-	 lHv5F6E2EoR8plNFKSl6UpYQtO4fItIVkHlA/Z64XzSUJWYXfkbU7emnskSEgmOxwZ
-	 5HaOz6wWXZbtw==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aca99fc253bso1022676366b.0
-        for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 03:12:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9tjIH6Gwk03IeXTVScNHdMtDIpVEG8peaS45OXvfjIz6g4UyHLRj517nFpMjbd9UR8aDIqnMWdX4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxTuD4PPuLr6h7mY7jYva6n8n79z44uSRok2lQTG+aO1PI2JHC4
-	JaP8tBlHolLuBxU0ZHwwAX8f72HzOZetLLRKfUZnymsdT+czQbxyttIv1P/+j5UjQFiV1pozxDh
-	ZorsOSRVfwczF9zWEE2b2Q0nrGhE=
-X-Google-Smtp-Source: AGHT+IFnykHuewB9jGPC8MTy0mT3ysEpGVlhBELN6aRyj+xNO4JcPP7XeoygaEGYkcdnPIyODv4sTvH79N/xLBixU6s=
-X-Received: by 2002:a17:907:940c:b0:aca:e1ea:c5fc with SMTP id
- a640c23a62f3a-acb429dfb90mr103508966b.26.1744798371058; Wed, 16 Apr 2025
- 03:12:51 -0700 (PDT)
+	s=arc-20240116; t=1744814528; c=relaxed/simple;
+	bh=ldl1AxkOIRevGD1SiYIVGXJ14yYJbiVl1tt+Y9wb3ug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ld3KnDO5ukVL8u0T6I1JjgZ0R1O3V6/+WiU4rtCSK1dgF+22oIFWSqWlnyyLP7OLiAKqeN+9WPtI2EZMxbuQhyZ3J+HAuGHN/r5GYZZ587zZoAM/TqslOTuDpGwOrRa162jc3R/8JSWtmF3/+61TVCJLmsDyJW7jii+WAjS2lw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.238])
+	by gateway (Coremail) with SMTP id _____8AxQK22wf9nEfy_AA--.38979S3;
+	Wed, 16 Apr 2025 22:41:58 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.238])
+	by front1 (Coremail) with SMTP id qMiowMBx2xqowf9nLD2GAA--.2909S2;
+	Wed, 16 Apr 2025 22:41:56 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Yanteng Si <si.yanteng@linux.dev>,
+	Feiyang Chen <chris.chenfeiyang@gmail.com>,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Biao Dong <dongbiao@loongson.cn>,
+	Baoqi Zhang <zhangbaoqi@loongson.cn>
+Subject: [PATCH net-next V2 0/3] net: stmmac: dwmac-loongson: Add Loongson-2K3000 support
+Date: Wed, 16 Apr 2025 22:41:29 +0800
+Message-ID: <20250416144132.3857990-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250415071128.3774235-1-chenhuacai@loongson.cn>
- <20250415071128.3774235-2-chenhuacai@loongson.cn> <62da41f9-2891-4c63-94b4-83230cd7ddae@lunn.ch>
-In-Reply-To: <62da41f9-2891-4c63-94b4-83230cd7ddae@lunn.ch>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 16 Apr 2025 18:12:41 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6QEBvQWDkJHxba=TRr_Y7L57gqcZYWE9p-SHkyX0S3kg@mail.gmail.com>
-X-Gm-Features: ATxdqUHnZAVh76tz72EUYHX5B7mJ4VwADdODGjp8gFkVGJIDENyVL5GqxaiOAWA
-Message-ID: <CAAhV-H6QEBvQWDkJHxba=TRr_Y7L57gqcZYWE9p-SHkyX0S3kg@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/3] net: stmmac: dwmac-loongson: Move queue
- number init to common function
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Yanteng Si <si.yanteng@linux.dev>, 
-	Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBx2xqowf9nLD2GAA--.2909S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GFy3uw15XFWDtryxWw4Dtrc_yoWfXrg_ua
+	ySvas5XFs5JF1Iq343Xr4rXr13uw4qga1Y9Fnrtrn5Z347tr90qF1UCrWDWF13urZxZrnx
+	X3ykKry8Cw1xtosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbVkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
+	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1l
+	Yx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrw
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWU
+	AwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xII
+	jxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
+	A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI
+	43ZEXa7IU8hiSPUUUUU==
 
-On Tue, Apr 15, 2025 at 10:49=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote=
-:
->
-> On Tue, Apr 15, 2025 at 03:11:26PM +0800, Huacai Chen wrote:
-> > Currently, the tx and rx queue number initialization is duplicated in
-> > loongson_gmac_data() and loongson_gnet_data(), so move it to the common
-> > function loongson_default_data().
-> >
-> > This is a preparation for later patches.
-> >
-> > Tested-by: Biao Dong <dongbiao@loongson.cn>
-> > Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 39 +++++--------------
-> >  1 file changed, 9 insertions(+), 30 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/dri=
-vers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > index 1a93787056a7..f5fdef56da2c 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > @@ -83,6 +83,9 @@ struct stmmac_pci_info {
-> >  static void loongson_default_data(struct pci_dev *pdev,
-> >                                 struct plat_stmmacenet_data *plat)
-> >  {
-> > +     int i;
-> > +     struct loongson_data *ld =3D plat->bsp_priv;
->
-> Reverse Christmas tree please. Longest first, shortest last.
-OK, I think it is better to move "int i" to the for-loop.
+This series add stmmac driver support for Loongson-2K3000/Loongson-3B6000M,
+which introduces a new CORE ID (0x12) and a new PCI device ID (0x7a23). The
+new core reduces channel numbers from 8 to 4, but checksum is supported for
+all channels. 
 
-Huacai
+V1 -> V2:
+1. Use correct coding style.
+2. Add Tested-by and Reviewed-by.
 
->
->     Andrew
->
-> ---
-> pw-bot: cr
->
->
+Huacai Chen (3):
+  net: stmmac: dwmac-loongson: Move queue number init to common function 
+  net: stmmac: dwmac-loongson: Add new multi-chan IP core support
+  net: stmmac: dwmac-loongson: Add new GMAC's PCI device ID support
+
+Tested-by: Biao Dong <dongbiao@loongson.cn>
+Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ .../net/ethernet/stmicro/stmmac/dwmac-loongson.c   | 105 ++++++++++-----------
+ 1 file changed, 49 insertions(+), 56 deletions(-)
+---
+2.27.0
+
