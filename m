@@ -1,120 +1,236 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D4321DDC1A
-	for <loongarch@lists.linux.dev>; Wed, 16 Apr 2025 14:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C311D19DF60
+	for <loongarch@lists.linux.dev>; Thu, 17 Apr 2025 02:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744814602; cv=none; b=nhkc/XMT9uNwHs7YL+CwcNZUvCDdiXJzXitjgkFcdRnJ+dTlD3677nAcl1xdQrW0pP/JOYKuqQp4YwuQPmLp4YtL46XrLEHkncRxQ7D6l/ufx7B28715SCfyQI+M07od2kqw8/J95NPbEdcs9GIOwC7PZ/1fOMEpfcj26slvfLE=
+	t=1744856428; cv=none; b=HlhGo49DL9f7uyKyydPa1WgOqHv2HMOSmP7Yk7CrWdU/mgapvKuv4KUJnJ1XOXXGQS0n1yL2PS3ExMZVfsRBtt7+b40CwUkTz7e4RZSaFqauRzxEdzUuBmOKFn3FRlp5zpm/vEI9LP343ZhUlpIPtZi9xQhOy4TGpkA5HyzDAjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744814602; c=relaxed/simple;
-	bh=/OC7e4P2dnaJxneYyWEnenCxMKH6b4HqmRjheb0R7+o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IDAlXq7BlfImkysUIp/VGazOPFa640a44zefnf6HTDgxwfOptdbpXDuuBAeHmZFQw6x+LfQtFYvHSfX+Ob7wUBP5fNA2syWEwjD3DafhzJQrtKHuoMl536XWbPvbXbmwq5w8VXnznypOBSFn3kccZEkRofWR+kmWRNykvW/ljTM=
+	s=arc-20240116; t=1744856428; c=relaxed/simple;
+	bh=rhvCIqQEwxBgv4DhjWDvEpT8TN1nGrgFuyPNSSHoA9M=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=csGX5O5VJKKvSDgcv8Qxc6x4XFW0ldKnffoYLY0zOki9Nq2P5+z1LiLzamV60nvgjyLpxVa/6CGM9gHKwNp2TDDAKsQ8nuk9PYHYa+5qHApijeghYPzmab76/xwY9t/rIEFBkQzPimlJN5NRNXpL8JAZCEBHL55WwbCfe2bUYvY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.238])
-	by gateway (Coremail) with SMTP id _____8AxbeIEwv9nl_y_AA--.17855S3;
-	Wed, 16 Apr 2025 22:43:16 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.238])
-	by front1 (Coremail) with SMTP id qMiowMBx2xqowf9nLD2GAA--.2909S5;
-	Wed, 16 Apr 2025 22:43:15 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Yanteng Si <si.yanteng@linux.dev>,
-	Feiyang Chen <chris.chenfeiyang@gmail.com>,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Henry Chen <chenx97@aosc.io>,
-	Biao Dong <dongbiao@loongson.cn>,
-	Baoqi Zhang <zhangbaoqi@loongson.cn>
-Subject: [PATCH net-next V2 3/3] net: stmmac: dwmac-loongson: Add new GMAC's PCI device ID support
-Date: Wed, 16 Apr 2025 22:41:32 +0800
-Message-ID: <20250416144132.3857990-4-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250416144132.3857990-1-chenhuacai@loongson.cn>
-References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8CxdXBkZQBoK6bAAA--.58003S3;
+	Thu, 17 Apr 2025 10:20:20 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMDxvhtfZQBo_kOHAA--.20302S3;
+	Thu, 17 Apr 2025 10:20:17 +0800 (CST)
+Subject: Re: [PATCH v2 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
+ <20250331064116.32540-3-zhangtianyang@loongson.cn> <87ldskwdyb.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <a916e71b-de79-391a-55be-f8d7583ca344@loongson.cn>
+Date: Thu, 17 Apr 2025 10:19:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <87ldskwdyb.ffs@tglx>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx2xqowf9nLD2GAA--.2909S5
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrWrtrykCrW8KF13Kw4Dtrc_yoW8KrW5pr
-	45Za9FgrZ7GF45Ca1vqrWDWry5ZFZxG3srCF42yw4UWF9xJ342q3sF9Fs8Ar17ur4rXFy2
-	vrWkCw48CFs8KwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+Content-Language: en-US
+X-CM-TRANSID:qMiowMDxvhtfZQBo_kOHAA--.20302S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCFWfWw48uw1DXF4kCF13ZFc_yoWrKF1DpF
+	yUGay2yayrXF4UWr10gF4DAFWIqr48GrZrKrWrGa43A3sI9r1xCF10grya9F95Crn5CF12
+	vF4jvrZ7ur1DJFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3
-	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0_WrPUUUUU==
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-Add a new GMAC's PCI device ID (0x7a23) support which is used in
-Loongson-2K3000/Loongson-3B6000M. The new GMAC device use external PHY,
-so it reuses loongson_gmac_data() as the old GMAC device (0x7a03), and
-the new GMAC device still doesn't support flow control now.
+Hi, Thomas
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Tested-by: Henry Chen <chenx97@aosc.io>
-Tested-by: Biao Dong <dongbiao@loongson.cn>
-Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ÔÚ 2025/4/1 ÏÂÎç3:14, Thomas Gleixner Ð´µÀ:
+> On Mon, Mar 31 2025 at 14:41, Tianyang Zhang wrote:
+>>   	irq_data_update_effective_affinity(data, cpumask_of(cpu));
+>> @@ -242,6 +233,7 @@ static void avecintc_irq_dispatch(struct irq_desc *desc)
+>>   		d = this_cpu_read(irq_map[vector]);
+>>   		if (d) {
+>>   			generic_handle_irq_desc(d);
+>> +
+> Stray newline.
+OK, I got it
+>
+>>   		} else {
+>> +
+>> +static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
+>> +{
+>> +	struct irde_inv_cmd *inv_addr;
+>> +	u32 tail;
+>> +
+>> +	guard(raw_spinlock_irqsave)(&rqueue->lock);
+>> +
+>> +	while (invalid_queue_is_full(rqueue->node, &tail))
+>> +		cpu_relax();
+>> +
+>> +	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
+>> +	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+>> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
+>> +
+>> +	wmb();
+> Undocumented memory barrier.
+OK , I got it
+>
+>> +
+>> +	iocsr_write32(tail, LOONGARCH_IOCSR_REDIRECT_CQT);
+>> +}
+>> +
+>> +static void smp_call_invalid_enqueue(void *arg)
+>> +{
+>> +	struct smp_invalid_arg *s_arg = (struct smp_invalid_arg *)arg;
+>> +
+>> +	invalid_enqueue(s_arg->queue, s_arg->cmd);
+>> +}
+>> +
+>> +static void irde_invlid_entry_node(struct redirect_item *item)
+>> +{
+>> +	struct redirect_queue *rqueue;
+>> +	struct smp_invalid_arg arg;
+>> +	struct irde_inv_cmd cmd;
+>> +	volatile u64 raddr = 0;
+>> +	int node = item->table->node, cpu;
+>> +
+>> +	rqueue = &(irde_descs[node].inv_queue);
+>> +	cmd.cmd_info = 0;
+>> +	cmd.index.type = INVALID_INDEX;
+>> +	cmd.index.need_notice = 1;
+>> +	cmd.index.index = item->index;
+>> +	cmd.notice_addr = (u64)(__pa(&raddr));
+>> +
+>> +	if (cpu_to_node(smp_processor_id()) == node)
+>> +		invalid_enqueue(rqueue, &cmd);
+>> +	else {
+> if () lacks brackets
+OK , I got it
+>
+>> +		for_each_cpu(cpu, cpumask_of_node(node)) {
+>> +			if (cpu_online(cpu))
+>> +				break;
+>> +		}
+>> +		arg.queue = rqueue;
+>> +		arg.cmd = &cmd;
+>> +		smp_call_function_single(cpu, smp_call_invalid_enqueue, &arg, 0);
+>> +	}
+>> +
+>> +	while (!raddr)
+>> +		cpu_relax();
+>> +
+>> +}
+>
+>> +static int redirect_table_free(struct redirect_item *item)
+>> +{
+>> +	struct redirect_table *ird_table;
+>> +	struct redirect_entry *entry;
+>> +	unsigned long flags;
+>> +
+>> +	ird_table = item->table;
+>> +
+>> +	entry = item->entry;
+>> +	memset(entry, 0, sizeof(struct redirect_entry));
+>> +
+>> +	raw_spin_lock_irqsave(&ird_table->lock, flags);
+>> +	bitmap_release_region(ird_table->bitmap, item->index, 0);
+>> +	raw_spin_unlock_irqrestore(&ird_table->lock, flags);
+> 	scoped_guard(raw_spinlock_irqsave, &ird_table->lock)
+> 		bitmap_release_region(ird_table->bitmap, item->index, 0);
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index 57917f26ab4d..e1591e6217d4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -66,7 +66,8 @@
- 					 DMA_STATUS_TPS | DMA_STATUS_TI  | \
- 					 DMA_STATUS_MSK_COMMON_LOONGSON)
- 
--#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
-+#define PCI_DEVICE_ID_LOONGSON_GMAC1	0x7a03
-+#define PCI_DEVICE_ID_LOONGSON_GMAC2	0x7a23
- #define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
- #define DWMAC_CORE_MULTICHAN_V1	0x10	/* Loongson custom ID 0x10 */
- #define DWMAC_CORE_MULTICHAN_V2	0x12	/* Loongson custom ID 0x12 */
-@@ -371,7 +372,7 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
- 	/* Loongson GMAC doesn't support the flow control. Loongson GNET
- 	 * without multi-channel doesn't support the half-duplex link mode.
- 	 */
--	if (pdev->device == PCI_DEVICE_ID_LOONGSON_GMAC) {
-+	if (pdev->device != PCI_DEVICE_ID_LOONGSON_GNET) {
- 		mac->link.caps = MAC_10 | MAC_100 | MAC_1000;
- 	} else {
- 		if (ld->multichan)
-@@ -659,7 +660,8 @@ static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
- 			 loongson_dwmac_resume);
- 
- static const struct pci_device_id loongson_dwmac_id_table[] = {
--	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
-+	{ PCI_DEVICE_DATA(LOONGSON, GMAC1, &loongson_gmac_pci_info) },
-+	{ PCI_DEVICE_DATA(LOONGSON, GMAC2, &loongson_gmac_pci_info) },
- 	{ PCI_DEVICE_DATA(LOONGSON, GNET, &loongson_gnet_pci_info) },
- 	{}
- };
--- 
-2.47.1
+Initially, I thought there were no complex branches here, so I directly 
+used raw_spin_lock_irqsave.
+
+However, considering the unified code style, scoped_guard is more 
+appropriate
+
+>
+>> +static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
+>> +{
+>> +	struct redirect_item *item = data->chip_data;
+>> +	struct avecintc_data *adata;
+>> +	int ret;
+>> +
+>> +	ret = irq_chip_set_affinity_parent(data, dest, force);
+>> +	if (ret == IRQ_SET_MASK_OK_DONE)
+>> +		return IRQ_SET_MASK_OK;
+> Again bracket rules. Also what is this return value ranslation about?
+
+My initial aim was to keep the return value consistent with the previous 
+one.
+
+I'll study the differences between the two return values and make 
+appropriate changes. Thank you.
+
+>
+>> +	else if (ret) {
+>> +		pr_err("IRDE:set_affinity error %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	adata = irq_data_get_avec_data(data);
+>> +
+>> +	redirect_domain_prepare_entry(item, adata);
+>> +
+>> +	irde_invlid_entry_node(item);
+> This cannot work when irde_invlid_entry_node() goes into the SMP
+> function call path, because smp_call_function_single() cannot be invoked
+> with interrupts disabled.
+My oversight. This approach is indeed risky. I'll rethink the design. 
+Thanks for your advice.
+>> +{
+>> +	struct redirect_table *ird_table;
+>> +	struct avecintc_data *avec_data;
+>> +	struct irq_data *irq_data;
+>> +	int ret, i, node;
+>> +
+>> +#ifdef CONFIG_NUMA
+>> +	node = ((msi_alloc_info_t *)arg)->desc->dev->numa_node;
+> Bah.
+>
+>> +#else
+>> +	node = 0;
+>> +#endif
+>          msi_alloc_info_t *info = arg;
+>
+>          node = dev_to_node(info->desc->dev);
+This is appropriate and safe. Thank you.
+>
+>> +static int redirect_table_init(int node)
+>> +{
+>> +	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
+>> +	struct page *pages;
+>> +	unsigned long *bitmap;
+> Use proper reverse fir tree ordering
+>
+> Thanks,
+>
+>          tglx
+
+I'll strive to fix other code style issues.
+
+Thank you for your reply.
+
+Tianyang
 
