@@ -1,80 +1,107 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 473B917A2EB
-	for <loongarch@lists.linux.dev>; Thu, 17 Apr 2025 02:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB3222DF85
+	for <loongarch@lists.linux.dev>; Thu, 17 Apr 2025 08:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744856501; cv=none; b=D8Sh+RexfBwQjICU90dCWHdaCdQne5sm2C/Qb6kjcAWvW/yijqUPQiVdZ1KKo6YLP80B/acuV6jZ/G+U3Rdzlg3mKfoauuvM9ovRrAIbO28sh4hg9fNkgdeOp8pvx/WK06Qfc2ySHzub/8WL2XGxLCY/pJDzV0IoJq8cFCDOaSQ=
+	t=1744877336; cv=none; b=V+2fbM0+uJQCD31yEPuDid4pgvWcuN0WjbgeIqv6CR++4dAuPA/ek8GEsnMMXrUyp2BuLJzwDAeimlDg2dtY9uMhJs9CVSyI3HVQ6d3QsEIF9o4hSmVN9XPZK17fM/bcNxQrtsBXdwZLrHURL2lBB/8XzG99oP0TAcxbSngelcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744856501; c=relaxed/simple;
-	bh=V2KrCMHax9m0AVZunKMyeYhMXeu9u8+9Jc67ojto8wo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RNjvzd44IqMV2EN4pks6AByZQE3Tk+yY0BYk931mRZpXgoezc0rwNf8Tvoov0Rc7hR4Jr+hgMDDO99JH4FXF4zn5GQHrSnqymF6UjGK1ckV4i/U6jRbq2oVSM0+WrM/nad/Fj7KA/DVq9E89wf/FIQOHt47qmgfRoIg0J0IOH+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8AxaeCtZQBok6bAAA--.58459S3;
-	Thu, 17 Apr 2025 10:21:33 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMDxvhurZQBoX0SHAA--.20310S3;
-	Thu, 17 Apr 2025 10:21:32 +0800 (CST)
-Subject: Re: [PATCH v2 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org,
- si.yanteng@linux.dev, tglx@linutronix.de, jiaxun.yang@flygoat.com,
- peterz@infradead.org, wangliupu@loongson.cn, lvjianmin@loongson.cn,
- maobibo@loongson.cn, siyanteng@cqsoftware.com.cn, gaosong@loongson.cn,
- yangtiezhu@loongson.cn, loongarch@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
- <20250331064116.32540-3-zhangtianyang@loongson.cn>
- <CAAhV-H5a_220F2sXYRgZM2BHPMuL=K7TaP3gtPiFnw5m6=Qevw@mail.gmail.com>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <7502f96f-14b1-deac-bd4e-f2ad6c719465@loongson.cn>
-Date: Thu, 17 Apr 2025 10:20:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1744877336; c=relaxed/simple;
+	bh=LvPXnh51V+FxKza9w5I8Oa/g8MHXOgAa70guwTdd9x4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YAcICTug78GCzSDRPn7vmXo/Gt8uKeDl5mAR4JiAzIO1Yhd0p4ow2zK2oBj4NYyLKYzBNgw3HVfb0Uw15liWy8PiCHKsnQOup3w1MZ4fZ8eBWjzKBp8TqcenbHcOFc22ns6B6rWFigX3H80pMIhcuTtDphyWVu28Cqawob7J6HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dpP/pLMS; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dpP/pLMS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744877292;
+	bh=BXpHJIusXX/IjXfyhBs6rYyVHN78GVwZVH7M4sTBy4I=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=dpP/pLMS94WMcr29wC5e3TMBL4p/3MasyT8JtRZ4LYme0zOsxvdFx/ZvFM1B6sJAa
+	 uEQ9iNK1+XdqcXbEvNnNR5ip9wUPeLvjrzwH46asES0rfjllNnaeFZnOgf4FiA18Rh
+	 A8jUr/jr9W5kbHJl9+ElHm9+GYjn6qErxEFSgeEg=
+X-QQ-mid: zesmtpip2t1744877281ta446f0d2
+X-QQ-Originating-IP: KgSWvsVE5LlZFuuA8sg1K79V3p+hHggUJiMUP3zDgVU=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 17 Apr 2025 16:07:59 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 8397205687042694865
+EX-QQ-RecipientCnt: 12
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	jiaxun.yang@flygoat.com,
+	liuyun@loongson.cn,
+	chenhuacai@loongson.cn,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>,
+	Erpeng Xu <xuerpeng@uniontech.com>
+Subject: [PATCH] LoongArch: Select ARCH_USE_MEMTEST
+Date: Thu, 17 Apr 2025 16:07:46 +0800
+Message-ID: <CC80F694AAFA2099+20250417080746.352276-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5a_220F2sXYRgZM2BHPMuL=K7TaP3gtPiFnw5m6=Qevw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMDxvhurZQBoX0SHAA--.20310S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUPKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxAqzxv262kKe7AKxVWUAVWUtwCF54CYxVCY1x02
-	62kKe7AKxVWUAVWUtwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVW8ZVWrXw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x07josjUUUUUU=
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: ODtOp3q7LZp1JSPzBJGD3Nmsc+fXMszNTto8IS0/OJqetBWt48vcnATg
+	aQB5A8b1bReT0/+0KfnXe1dv35vZVNOAbGFT4f04TnjV25RZ+c1LDcA/K5bIdO5Cyi506PR
+	pDA5x3I7dlXaSWhj/hrv+ooYjTVkubLDf+1HA1dfkSc0sSonvKIu3cQTWnSYAr41gK2VWSY
+	B9DnPZCP6KJJu4CFzlLW5tahR4bjkVqdXvxfPy+rNWal2Rw42LL8G9QmLB0oSdBikxR4lFt
+	/1eHTNoeGxMW8NfsRIzdqQx5GvSz4FweUbmnC0+EHY3CByVwS01Z5eYoaPu27Ef/2kiGFV9
+	7Dt3Z/Jco6SVUXwCvtW0h2B51Q/FChX51pk/oIvkTZzmdRKP0dja96j94JQFCEnaViq38eG
+	MgH6wtc0NSZo0OyEAnmn+uxsleWre05nZ32HLigliNyuHEr2fpRfcQV4dIkdUhrIXCyU16D
+	ZiTVBKYx/9O2t8fuHXPkuVpHH+fvHSJMJeNyZvN3DpmYqbp+9vSTv5f+U4I5tH1vK6+Ic29
+	hreRlzKdCY9exlf7Co/Tjw3MDbZvg0bxEzTtJYWeZYMI/k13Shxqr11W6ebUGnJP/bVzFHQ
+	ryJz3FRwA7/Nat/NCpWoU+KUyumNDCdwPhh1dS09rx54N4fI1kdNIA9DLxziM2DcFkrS9Eo
+	V97kATnuVAmwKizq7otIEGd4CZ1hLTBsvPcvLPUGnqW8MGqvtXdaquZ0M14N4AQDnovtdOD
+	U7rP2ZQ1qy3pRtAQ0sEb71llSxj4UKd4egupVXmIMwA16juJznJwcJCWKVsA0Bcpluqcfmv
+	vsU94Hho3DM7a8r9+dsluiSvzs1rPIE5bVbUfm/MLbvwSX8dmqlUM963WH9t8NQC0bOojZM
+	dmQ3rdzd0Is/HxDxT0z+lxPEKklBjSb90HGmh26M80I98+6f6cZgRXb7skh2WX2h60izQzj
+	Xacs9OLhKFhQhBCEJWckJipfytDGkctaaNv5iIhnC6cM6uL0AWtVJaSmawKBdhbEpM762I/
+	HlF2kBU4Lfaczr1Z7ScHyZMFOrIwj5uVfUz0tpHrOqwEZZGMMt
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-Hi, Huacai
+As of commit dce44566192e ("mm/memtest: add ARCH_USE_MEMTEST"),
+architectures must select ARCH_USE_MEMTESET to enable CONFIG_MEMTEST.
 
-在 2025/4/1 下午8:30, Huacai Chen 写道:
-> +static const struct irq_domain_ops redirect_domain_ops = {
-> +       .alloc          = redirect_alloc,
-> +       .free           = redirect_free,
-> Since this patch needs a new version, you can rename
-> redirect_alloc/redirect_free to
-> redirect_domain_alloc/redirect_domain_free as other loongson specific
-> drivers.
->
-> Huacai
+Commit 628c3bb40e9a ("LoongArch: Add boot and setup routines") added
+support for early_memtest but did not select ARCH_USE_MEMTESET.
 
-Ok, I got it
+Fixes: 628c3bb40e9a ("LoongArch: Add boot and setup routines")
+Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
+Tested-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 54ed5b59a690..1ce9b8f5fd03 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -74,6 +74,7 @@ config LOONGARCH
+ 	select ARCH_SUPPORTS_RT
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
++	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+ 	select ARCH_WANT_DEFAULT_BPF_JIT
+-- 
+2.49.0
 
