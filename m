@@ -1,107 +1,182 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB3222DF85
-	for <loongarch@lists.linux.dev>; Thu, 17 Apr 2025 08:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6AD17A311
+	for <loongarch@lists.linux.dev>; Thu, 17 Apr 2025 12:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877336; cv=none; b=V+2fbM0+uJQCD31yEPuDid4pgvWcuN0WjbgeIqv6CR++4dAuPA/ek8GEsnMMXrUyp2BuLJzwDAeimlDg2dtY9uMhJs9CVSyI3HVQ6d3QsEIF9o4hSmVN9XPZK17fM/bcNxQrtsBXdwZLrHURL2lBB/8XzG99oP0TAcxbSngelcw=
+	t=1744894412; cv=none; b=T5v/c9Hxq+xacoL8U7liNEfQYk3DMAsRNkzpqe+DJGXMXbH5eMKss2fyL0snnjECzT+VZ3yHMqZiMh2Fa8VWleXSM3LK7NCPuoTBWNRsFlC4ibcSqrWEIQMhemi3pi227Bem5ZNDYcREtN/R3O1AtCGQxbwZXBjgcVBtK2o8wXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877336; c=relaxed/simple;
-	bh=LvPXnh51V+FxKza9w5I8Oa/g8MHXOgAa70guwTdd9x4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YAcICTug78GCzSDRPn7vmXo/Gt8uKeDl5mAR4JiAzIO1Yhd0p4ow2zK2oBj4NYyLKYzBNgw3HVfb0Uw15liWy8PiCHKsnQOup3w1MZ4fZ8eBWjzKBp8TqcenbHcOFc22ns6B6rWFigX3H80pMIhcuTtDphyWVu28Cqawob7J6HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dpP/pLMS; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744894412; c=relaxed/simple;
+	bh=/H1MitLHmc2IfhQSw0i74/aezvU0Kk8Juplt2SWiPzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uO0RX+i2g3e+pDsIpL74by5DMrpxp/O/A2kE1q+ysDUbCfmmuPfD++6W9uMoj13jdhJ+TEnxpoxgqGQeO9J/KDf6NZ0EH8DQtJI7u0mVDUQaiMMsJLdLherFRcxZbYhvKAP9vuvoazAODHvcPg4BImAx/JtrVRoB9zdJCCiQMmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PWxMTYAZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dpP/pLMS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744877292;
-	bh=BXpHJIusXX/IjXfyhBs6rYyVHN78GVwZVH7M4sTBy4I=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=dpP/pLMS94WMcr29wC5e3TMBL4p/3MasyT8JtRZ4LYme0zOsxvdFx/ZvFM1B6sJAa
-	 uEQ9iNK1+XdqcXbEvNnNR5ip9wUPeLvjrzwH46asES0rfjllNnaeFZnOgf4FiA18Rh
-	 A8jUr/jr9W5kbHJl9+ElHm9+GYjn6qErxEFSgeEg=
-X-QQ-mid: zesmtpip2t1744877281ta446f0d2
-X-QQ-Originating-IP: KgSWvsVE5LlZFuuA8sg1K79V3p+hHggUJiMUP3zDgVU=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 17 Apr 2025 16:07:59 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8397205687042694865
-EX-QQ-RecipientCnt: 12
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	jiaxun.yang@flygoat.com,
-	liuyun@loongson.cn,
-	chenhuacai@loongson.cn,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>,
-	Erpeng Xu <xuerpeng@uniontech.com>
-Subject: [PATCH] LoongArch: Select ARCH_USE_MEMTEST
-Date: Thu, 17 Apr 2025 16:07:46 +0800
-Message-ID: <CC80F694AAFA2099+20250417080746.352276-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PWxMTYAZ"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HArisF018556;
+	Thu, 17 Apr 2025 12:53:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=sxLU9duCgf8SfMyLYupstJbj0NSNm6
+	H3ZBa2n7luzGc=; b=PWxMTYAZ4jnrtqWzXSaZS0fkAjAfJEXKUK/86EdoDIpOLK
+	Mi497z2LA4c5kb5ba7ec2eQVjOzk/U3pYoNyZ3x/Xa64hRZEmweEClWVDQR/KXdf
+	HPCzXWTM7hxoszv8Rgmt1+J6WifRVXZaCOf7oinw+eHq4BpuZOOGkdLxvUICR0An
+	BYd0qbFuIsHPb5vsphRj20fxQMNtsCW7eM12dalLCns/dLLDVIILJ1cxJC3l+M5l
+	R+7302WjXk2EPc6LPIADZYTdknfcB1TaDL6hNDABJ7SUQrTXaRUfdcB3CcqdVsMU
+	8gRwk2dzZ/ZL1FtsQs9WMz04oP12qVgg+3xzK4EQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462ph0b11r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 12:53:23 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53HA0HLn030943;
+	Thu, 17 Apr 2025 12:53:22 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4603gnwr4y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 12:53:22 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53HCrKoc35651856
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 12:53:21 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D500B20043;
+	Thu, 17 Apr 2025 12:53:20 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 469F420040;
+	Thu, 17 Apr 2025 12:53:20 +0000 (GMT)
+Received: from osiris (unknown [9.87.137.75])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 17 Apr 2025 12:53:20 +0000 (GMT)
+Date: Thu, 17 Apr 2025 14:53:18 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>, linux-arm-kernel@lists.infradead.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-s390@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] lib/crc: make the CPU feature static keys __ro_after_init
+Message-ID: <20250417125318.12521F12-hca@linux.ibm.com>
+References: <20250413154350.10819-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: ODtOp3q7LZp1JSPzBJGD3Nmsc+fXMszNTto8IS0/OJqetBWt48vcnATg
-	aQB5A8b1bReT0/+0KfnXe1dv35vZVNOAbGFT4f04TnjV25RZ+c1LDcA/K5bIdO5Cyi506PR
-	pDA5x3I7dlXaSWhj/hrv+ooYjTVkubLDf+1HA1dfkSc0sSonvKIu3cQTWnSYAr41gK2VWSY
-	B9DnPZCP6KJJu4CFzlLW5tahR4bjkVqdXvxfPy+rNWal2Rw42LL8G9QmLB0oSdBikxR4lFt
-	/1eHTNoeGxMW8NfsRIzdqQx5GvSz4FweUbmnC0+EHY3CByVwS01Z5eYoaPu27Ef/2kiGFV9
-	7Dt3Z/Jco6SVUXwCvtW0h2B51Q/FChX51pk/oIvkTZzmdRKP0dja96j94JQFCEnaViq38eG
-	MgH6wtc0NSZo0OyEAnmn+uxsleWre05nZ32HLigliNyuHEr2fpRfcQV4dIkdUhrIXCyU16D
-	ZiTVBKYx/9O2t8fuHXPkuVpHH+fvHSJMJeNyZvN3DpmYqbp+9vSTv5f+U4I5tH1vK6+Ic29
-	hreRlzKdCY9exlf7Co/Tjw3MDbZvg0bxEzTtJYWeZYMI/k13Shxqr11W6ebUGnJP/bVzFHQ
-	ryJz3FRwA7/Nat/NCpWoU+KUyumNDCdwPhh1dS09rx54N4fI1kdNIA9DLxziM2DcFkrS9Eo
-	V97kATnuVAmwKizq7otIEGd4CZ1hLTBsvPcvLPUGnqW8MGqvtXdaquZ0M14N4AQDnovtdOD
-	U7rP2ZQ1qy3pRtAQ0sEb71llSxj4UKd4egupVXmIMwA16juJznJwcJCWKVsA0Bcpluqcfmv
-	vsU94Hho3DM7a8r9+dsluiSvzs1rPIE5bVbUfm/MLbvwSX8dmqlUM963WH9t8NQC0bOojZM
-	dmQ3rdzd0Is/HxDxT0z+lxPEKklBjSb90HGmh26M80I98+6f6cZgRXb7skh2WX2h60izQzj
-	Xacs9OLhKFhQhBCEJWckJipfytDGkctaaNv5iIhnC6cM6uL0AWtVJaSmawKBdhbEpM762I/
-	HlF2kBU4Lfaczr1Z7ScHyZMFOrIwj5uVfUz0tpHrOqwEZZGMMt
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250413154350.10819-1-ebiggers@kernel.org>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=QJdoRhLL c=1 sm=1 tr=0 ts=6800f9c3 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=D0vrx1nMhUQuyXyLR1kA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: CiZgrlgThAo1hPOeoX6oy1totgLBfc2n
+X-Proofpoint-ORIG-GUID: CiZgrlgThAo1hPOeoX6oy1totgLBfc2n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_03,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ adultscore=0 mlxlogscore=942 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1011 malwarescore=0
+ impostorscore=0 classifier=spam authscore=0 adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504170090
 
-As of commit dce44566192e ("mm/memtest: add ARCH_USE_MEMTEST"),
-architectures must select ARCH_USE_MEMTESET to enable CONFIG_MEMTEST.
+On Sun, Apr 13, 2025 at 08:43:50AM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> All of the CRC library's CPU feature static_keys are initialized by
+> initcalls and never change afterwards, so there's no need for them to be
+> in the regular .data section.  Put them in .data..ro_after_init instead.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+> 
+> I'm planning to take this via the crc tree.
+> 
+>  arch/arm/lib/crc-t10dif-glue.c       | 4 ++--
+>  arch/arm/lib/crc32-glue.c            | 4 ++--
+>  arch/arm64/lib/crc-t10dif-glue.c     | 4 ++--
+>  arch/loongarch/lib/crc32-loongarch.c | 2 +-
+>  arch/mips/lib/crc32-mips.c           | 2 +-
+>  arch/powerpc/lib/crc-t10dif-glue.c   | 2 +-
+>  arch/powerpc/lib/crc32-glue.c        | 2 +-
+>  arch/s390/lib/crc32-glue.c           | 2 +-
 
-Commit 628c3bb40e9a ("LoongArch: Add boot and setup routines") added
-support for early_memtest but did not select ARCH_USE_MEMTESET.
 
-Fixes: 628c3bb40e9a ("LoongArch: Add boot and setup routines")
-Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
-Tested-by: Yuli Wang <wangyuli@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
+
+I just realized that we can get rid of the static key in the s390
+piece and end up with slightly better code. Could you add the patch
+below to your tree, please? If this would go via the s390 tree this
+would result in a merge conflict, which is unnecessary.
+
+From 6c4c0ca6fe87e43acf6192f1afc0a6346db994f4 Mon Sep 17 00:00:00 2001
+From: Heiko Carstens <hca@linux.ibm.com>
+Date: Thu, 17 Apr 2025 14:30:56 +0200
+Subject: [PATCH] s390/crc32: Remove have_vxrs static key
+
+Replace the have_vxrs static key with a cpu_has_vx() call.  cpu_has_vx()
+resolves into a compile time constant (true) if the kernel is compiled for
+z13 or newer. Otherwise it generates an unconditional one instruction
+branch, which is patched based on CPU alternatives.
+
+In any case the generated code is at least as good as before and avoids
+static key handling.
+
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 ---
- arch/loongarch/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/s390/lib/crc32-glue.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 54ed5b59a690..1ce9b8f5fd03 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -74,6 +74,7 @@ config LOONGARCH
- 	select ARCH_SUPPORTS_RT
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF
-+	select ARCH_USE_MEMTEST
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
- 	select ARCH_WANT_DEFAULT_BPF_JIT
+diff --git a/arch/s390/lib/crc32-glue.c b/arch/s390/lib/crc32-glue.c
+index 8f20a8e595c3..649ed7e8b99c 100644
+--- a/arch/s390/lib/crc32-glue.c
++++ b/arch/s390/lib/crc32-glue.c
+@@ -18,8 +18,6 @@
+ #define VX_ALIGNMENT		16L
+ #define VX_ALIGN_MASK		(VX_ALIGNMENT - 1)
+ 
+-static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_vxrs);
+-
+ /*
+  * DEFINE_CRC32_VX() - Define a CRC-32 function using the vector extension
+  *
+@@ -34,8 +32,7 @@ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_vxrs);
+ 		unsigned long prealign, aligned, remaining;		    \
+ 		DECLARE_KERNEL_FPU_ONSTACK16(vxstate);			    \
+ 									    \
+-		if (datalen < VX_MIN_LEN + VX_ALIGN_MASK ||		    \
+-		    !static_branch_likely(&have_vxrs))			    \
++		if (datalen < VX_MIN_LEN + VX_ALIGN_MASK || !cpu_has_vx())  \
+ 			return ___crc32_sw(crc, data, datalen);		    \
+ 									    \
+ 		if ((unsigned long)data & VX_ALIGN_MASK) {		    \
+@@ -66,8 +63,6 @@ DEFINE_CRC32_VX(crc32c_arch, crc32c_le_vgfm_16, crc32c_base)
+ 
+ static int __init crc32_s390_init(void)
+ {
+-	if (cpu_have_feature(S390_CPU_FEATURE_VXRS))
+-		static_branch_enable(&have_vxrs);
+ 	return 0;
+ }
+ arch_initcall(crc32_s390_init);
+@@ -79,10 +74,11 @@ module_exit(crc32_s390_exit);
+ 
+ u32 crc32_optimizations(void)
+ {
+-	if (static_key_enabled(&have_vxrs))
++	if (cpu_has_vx()) {
+ 		return CRC32_LE_OPTIMIZATION |
+ 		       CRC32_BE_OPTIMIZATION |
+ 		       CRC32C_OPTIMIZATION;
++	}
+ 	return 0;
+ }
+ EXPORT_SYMBOL(crc32_optimizations);
 -- 
-2.49.0
+2.45.2
 
