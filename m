@@ -1,93 +1,97 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C53D326FDB5
-	for <loongarch@lists.linux.dev>; Fri, 18 Apr 2025 09:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2650148316
+	for <loongarch@lists.linux.dev>; Fri, 18 Apr 2025 14:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744968860; cv=none; b=OXY9LG29xLQTAbnV6vZMU8+aboFDklfk6GRllMDFKzrAHk4mnyd+nUbjNCaTAzIJEDvo97dP7eKyRzfxlSAQAC5+MxxKN3veOr5UUhuExjEX0ewJTzxTFTa+D9mAKoHkdwr/rb5+UvnueT2qf+JpRbSYmiIaPzMN2k1L4EnTZXc=
+	t=1744985972; cv=none; b=hhpB68ucaIcfQRJOEdZYY5qM0rUEQHxZYy/IYQQuQdlXm+WKz9hrsHIKLwlB7NkKgAczWYPjRrp6/BODxUxf+Cf2TAY+TsNLDcYjT82CsJKLXQDskVoLviEsUYbWar8OE8D8yRBRRW6lHrACwmwH6ubE57Dg7/XuGoe0ILpUgP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744968860; c=relaxed/simple;
-	bh=hrpcTytiLAurxxX1yrL4qNQ146cijwzFSzKIOnUFEqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZhbDPP34TAuYBg/desNA8lvgrqToSZeHxsvF9ZLZ/qz3fcRcH8lMX8NM6zXjTzixnGxnB24W6sO3lJZvLyKPtfJ09JwccoJq0/sgUMbKwpTSfhqOWPlmBEtvKN4DdgZ4wKpaDe8BXgRSt2Hr2u+ao02uu0GQabcSsNNTm1L7EbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.180])
-	by gateway (Coremail) with SMTP id _____8BxrnKYHAJo06LBAA--.58568S3;
-	Fri, 18 Apr 2025 17:34:16 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.180])
-	by front1 (Coremail) with SMTP id qMiowMDxPcWUHAJoyUKJAA--.11173S2;
-	Fri, 18 Apr 2025 17:34:14 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v8 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
-Date: Fri, 18 Apr 2025 17:36:00 +0800
-Message-ID: <20250418093600.1363-1-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1744985972; c=relaxed/simple;
+	bh=om+Vna/2GFvSm09tdyvQMrH5gELgac15SstCZnvcK14=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lQv6Fge8LkDTIUffMw6dYfoNbG9yr19cTM0Gta89booGMwvCbfLAOfaqC9hgsPllUYw+d9HYCFR/1wTffkFSqbxdJPrABtNDwLWeKBmqNdiuDKliV/w6hfbkUvh+sMKwvESzJo7Zm/1Vias2bPzaIIlOSeYWuJ9XbpUjnpQWW00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRV/mjio; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRV/mjio"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46A86C4CEEE
+	for <loongarch@lists.linux.dev>; Fri, 18 Apr 2025 14:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744985972;
+	bh=om+Vna/2GFvSm09tdyvQMrH5gELgac15SstCZnvcK14=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RRV/mjioS01PV47nXvZ0TWue3NIWYz4g3TvMtcGSc9SzDjv5ENiZxjjzbX9r29B3r
+	 9/rQJy4n6bGeoy4ykbB+W4/4F7W0D3C9D3cINHvpgD0y02oiSDkrEm5G7Vf1UOSJNB
+	 RQpnb5utZNxuqYFRuG86JaRbyR2LQdUMJyr2qEc11qUB69jHurGTthMhKqWn9Y9PcS
+	 Nzl/cYyfucM8in2jji8Q98Ls2NeNC3pWDwx+RpeSSgWLOWSWmRB1nmRVItasiBs5Oy
+	 j4ge2AaFjDu59Ljk0ccoDDlfXsh5ZyrSwgoTZOaXCcDebHhf0VadkqEJMQ5k7pZQjU
+	 NX/2hSLrgVIsw==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30db1bd3bddso18405141fa.3
+        for <loongarch@lists.linux.dev>; Fri, 18 Apr 2025 07:19:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUASwNkfzyMsmDAy0CxTfhQJRc5pa5BTaDyGcSfXkVgSA/FYQ+KI3oBuRH2fpkmbKhue8BmckICubc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwVxR+cXBsltFVehbXUeIf21fXxml0OYP6W4XIvxsDoxlALtyba
+	2gH886zJTEc0kGylJk/ts9MB8laeSBOZgy3M2rHZCp7NLFg6HlvOyB2P9mG57JyVEiDS+zDtQBT
+	Kii9Ynbj4bIp9AG0jSCS9AtLBRf4=
+X-Google-Smtp-Source: AGHT+IFnh+q+URrFYgeso0knkjqFFZnTfGmXzWjvKWHdUWW3YHckdLRG/cd76/RqwZUrPe+JG12yfp7YED1LQQgVI5I=
+X-Received: by 2002:a05:651c:241:b0:310:779b:9ef1 with SMTP id
+ 38308e7fff4ca-310904d4972mr9346751fa.13.1744985970634; Fri, 18 Apr 2025
+ 07:19:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPcWUHAJoyUKJAA--.11173S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GFyftFyrAF48Jr1rCw1xJFc_yoW3ZFc_Ca
-	y2g397Xr1kGr1I9asYvFZ3Zw4YvFWrJ3Wfu3Wqqw1fX34jyr9IyrnrAF4vk3W3urW5CFZx
-	ua97GFs5Cr13ZosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7
-	McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
-	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26F1j6w1UMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjxUIeT5DUUUU
+References: <20250417182623.67808-1-ebiggers@kernel.org>
+In-Reply-To: <20250417182623.67808-1-ebiggers@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 18 Apr 2025 16:19:19 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXE4T4p7iCkfo=4RoMeU4sHh47EZyBUSdWv7HTqdAY2oCA@mail.gmail.com>
+X-Gm-Features: ATxdqUG3NGrAHvWSlyQ9Wx2CgTU0VxdHzlcc8yhyIdwCb_viAAYGMbAHFukqzA8
+Message-ID: <CAMj1kXE4T4p7iCkfo=4RoMeU4sHh47EZyBUSdWv7HTqdAY2oCA@mail.gmail.com>
+Subject: Re: [PATCH 00/15] Finish disentangling ChaCha, Poly1305, and BLAKE2s
+ from CRYPTO
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org, 
+	"Jason A . Donenfeld" <Jason@zx2c4.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Changes to Loongson TPM driver would be best reviewed by the Loongson
-crypto driver maintainers.
+On Thu, 17 Apr 2025 at 20:27, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> This series removes the unnecessary dependency of the ChaCha, Poly1305,
+> and BLAKE2s library functions on the generic crypto infrastructure, i.e.
+> CONFIG_CRYPTO.  To do this, it moves arch/*/crypto/Kconfig from a
+> submenu of crypto/Kconfig to a submenu of arch/*/Kconfig, then re-adds
+> the CRYPTO dependency to the symbols that actually need it.
+>
+> Patches 14-15 then simplify the ChaCha and Poly1305 symbols by removing
+> the unneeded "internal" symbols.
+>
+> Note that Curve25519 is still entangled.  Later patches will fix that.
+>
+> Eric Biggers (15):
+>   crypto: arm - remove CRYPTO dependency of library functions
+>   crypto: arm64 - drop redundant dependencies on ARM64
+>   crypto: arm64 - remove CRYPTO dependency of library functions
+>   crypto: loongarch - source arch/loongarch/crypto/Kconfig without
+>     CRYPTO
+>   crypto: mips - remove CRYPTO dependency of library functions
+>   crypto: powerpc - drop redundant dependencies on PPC
+>   crypto: powerpc - remove CRYPTO dependency of library functions
+>   crypto: riscv - remove CRYPTO dependency of library functions
+>   crypto: s390 - drop redundant dependencies on S390
+>   crypto: s390 - remove CRYPTO dependency of library functions
+>   crypto: sparc - source arch/sparc/crypto/Kconfig without CRYPTO
+>   crypto: x86 - drop redundant dependencies on X86
+>   crypto: x86 - remove CRYPTO dependency of library functions
+>   crypto: lib/chacha - remove INTERNAL symbol and selection of CRYPTO
+>   crypto: lib/poly1305 - remove INTERNAL symbol and selection of CRYPTO
+>
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
----
-v8: None
-v7: Added tag from Jarkko and Huacai
-v6: "tpm_lsse.c" -> "tpm_loongson"
-v4-v5: None
+This seems like a good idea.
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a4726df8f..eb99b7a66 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13916,6 +13916,7 @@ LOONGSON CRYPTO DRIVER
- M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
-+F:	drivers/char/tpm/tpm_loongson.c
- F:	drivers/crypto/loongson/
- 
- LOONGSON-2 SOC SERIES CLOCK DRIVER
--- 
-2.45.2
-
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
