@@ -1,79 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF29288CC;
-	Sat, 19 Apr 2025 07:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D77318C004
+	for <loongarch@lists.linux.dev>; Sat, 19 Apr 2025 07:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745049116; cv=none; b=SgF5zVN+6UCqL68HqnEt9Wu4yMsNlvNodnyyz27LLiZ/PbMcuJdVSZZIS78RM2yG02tJlvFNAmXd9kZl+k8aocKnw7OayV7Jyqe1GoSfWhwvu9yi+twR6vJ9Sos8AwsrOsAnTxH26FooAHgYgf38byGHuoK8SHIPjKW7vQkvQXA=
+	t=1745049448; cv=none; b=McWgimECTgbYD/jyAQlwkykSiE/jWqAoxdWJd/mO6db7FONWehWCG77rDFb61W09x+w+s2AAZn78qQh5w6kuR1el4G+thlu++zQ4IJKdYSyuU1lvs4LcFnhMF/8SL8n0zwh9Jzta59ufJGBb9oPVqWFyYQDkaECuGzHRjtVxFto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745049116; c=relaxed/simple;
-	bh=E25V98aVCwrCilbltTLlWt2+/aCJN7l5q9y98oKOc9o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pfCqYWEbThZPxfflwt080UfAShg77EDq2sZVpcFQWeHxRY+FaAFREZ8tIFetzFxpiBZ+Q94Dd+A7Z+pwwXrM2pVjnRnms53mHgX8xf/B6lllDJdPvUGfQGTul1pwfhwRjRsfJpGtPyiUglIcJYpyRj7ExN0RHi0ApVl9a89DhIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBfoLQox; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745049448; c=relaxed/simple;
+	bh=2He1zuUDbO4B67P/rTuPwUbz5lQW21kyiVSnyfe0MdA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l9c6KZFMQY/yb4CapmQ33thGNaveVTz71ubbysxZtf9VEBpXqU5bhg1HInT4Yd3KTt4smgyHbflDAtZhP6JCejWjAwHZkBGOGfFR6ytcJf6+l34YvuQUBNdi0h1wd9MgvWvhYU7bPeFCpomXRVPjs0lHyCJzIFrsH6fKQKboHkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfXJsW2i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBfoLQox"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03E2C4CEE7;
-	Sat, 19 Apr 2025 07:51:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfXJsW2i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A494C4CEED
+	for <loongarch@lists.linux.dev>; Sat, 19 Apr 2025 07:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745049115;
-	bh=E25V98aVCwrCilbltTLlWt2+/aCJN7l5q9y98oKOc9o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cBfoLQoxO0nmDpeDfxZD4Hke/hxs26KgdXJXCEsaz/TXl8ohNPna2SWzdn7hfnCsJ
-	 otvtUAOIF/vf7nas6lNOc92rrG/gP33Tm1JMq9bH+CY6fSUQQHqTwzYIiI8pX1NgYg
-	 rWGVJsmAXOHYN2OaP1e4qCyzbbS94E8NOg2MGlADP7/5cJp+9NbfxWBVtAMsOXWibS
-	 0xGGzQSen4+Al7XEInYTICel6ifyjdOcDSBS2s2Jwd+OVJYIV8R6kL814MeZ+OLeME
-	 g3E/weD77lKzJJGRhJlOZrdH/bWLNm3aqyxFEuaDp3rQmzBGLbWVOmtagrOJkjTr+0
-	 BTM5Xum45YhhQ==
-Date: Sat, 19 Apr 2025 10:51:46 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
-	akpm@linux-foundation.org, david@redhat.com,
-	Jonathan.Cameron@huawei.com, dave.hansen@linux.intel.com,
-	dan.j.williams@intel.com, alison.schofield@intel.com,
-	chenbaozi@phytium.com.cn, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/1] LoongArch: Introduce the numa_memblks conversion
-Message-ID: <aANWElXU6wi4QJt2@kernel.org>
-References: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
+	s=k20201202; t=1745049448;
+	bh=2He1zuUDbO4B67P/rTuPwUbz5lQW21kyiVSnyfe0MdA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GfXJsW2i9I4zWJFMj8RWZutnG9Ehh4Z/AKNu0F/0CmkrjhoTUVpEdDAKPCS33aDAK
+	 6XqoMHH0ie9yDCC2s+2ZwJg9wRn+nqy8W8xc7KqLgGrPTn3IMz1vUORjtlNG+Q62uF
+	 3AkXj6BAqiUSq1OUbTUm4qwkLqDQKbhbMaksPD4xlq2lUCw8GAXx+v2ZAuM1+QCr/3
+	 bdMmTab7qUumBSc6bMTO3cS6gXm8A1rwRVZGMfbYi+zljvIbunh1MvDZd4nFlmJ8n1
+	 HTBe6eqotGnRfq9dPrWdHmNRCCRXVKzA17CrTWmgVEzWq8G1ira5hrBI+kPF6uZVC1
+	 MQ9nFXlDTbjzQ==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f62ef3c383so1233844a12.2
+        for <loongarch@lists.linux.dev>; Sat, 19 Apr 2025 00:57:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWa7TVqII3q0161j3GchKV++HiY2Q6w1POzC2H2MU0Tdu699U/NtJwBA40SkxWtjR4rRluE6No5TOE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx8RnrcTyaRdEYEvH8rE2oFzsevgRU6uGZ6eMRbPUlMkzdW7gCa
+	BkwInc7FlfSqu5uw1Ept0yu2pwHfl1Nn4iHpA/2LOjprl3cHeeL5xoVZV8UTlc9V9lJcjqBDdgl
+	ccRRt/ltfjeARxjKBXt5BKaiIKq0=
+X-Google-Smtp-Source: AGHT+IFBOqeUjjkSD9wb1GlhkO06JWAuI2wpsT1LO42Oj7bB21kjJElgl2H6DfIYII5GwzUBO4nCf8/dr9DE7t2PaC0=
+X-Received: by 2002:a17:907:3da7:b0:ac3:c7bd:e436 with SMTP id
+ a640c23a62f3a-acb74dd5869mr470058166b.51.1745049446685; Sat, 19 Apr 2025
+ 00:57:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
+References: <20250415072118.3774454-1-chenhuacai@loongson.cn> <aANVMaepni3KeABI@kernel.org>
+In-Reply-To: <aANVMaepni3KeABI@kernel.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 19 Apr 2025 15:57:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H65jh29ccYzcaJf1=QpDuV5xZfBd-1Kr0=in_nk-Z4h7Q@mail.gmail.com>
+X-Gm-Features: ATxdqUEswLyYsdm0DWCKHpfX2YeoU7V4Mr883tkxyRMQSGcVNfs2948KijY-SYM
+Message-ID: <CAAhV-H65jh29ccYzcaJf1=QpDuV5xZfBd-1Kr0=in_nk-Z4h7Q@mail.gmail.com>
+Subject: Re: [PATCH V2] LoongArch: Introduce the numa_memblks conversion
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-kernel@vger.kernel.org, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Yuquan,
+Hi, Mike,
 
-On Wed, Apr 09, 2025 at 03:02:50PM +0800, Yuquan Wang wrote:
-> "mm: introduce numa_memblks"(87482708210f) has moved numa_memblks
-> from x86 to the generic code, but loongarch was left out of this
-> conversion.
-> 
-> This patch introduces the generic numa_memblks.
-> 
-> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> ---
-> 
-> Background
-> ----------
-> I am managed to land the patch[1] "mm: numa_memblks: introduce numa_add_reserved_memblk"
-> but kernel test CI noticed build errors[2] from loongarch64-linux-gcc.
+On Sat, Apr 19, 2025 at 3:48=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> Hi Huacai,
+>
+> On Tue, Apr 15, 2025 at 03:21:18PM +0800, Huacai Chen wrote:
+> > Commit 87482708210ff3333a ("mm: introduce numa_memblks") has moved
+> > numa_memblks from x86 to the generic code, but LoongArch was left out
+> > of this conversion.
+> >
+> > This patch introduces the generic numa_memblks for LoongArch.
+> >
+> > In detail:
+> > 1. Enable NUMA_MEMBLKS (but disable NUMA_EMU) in Kconfig;
+> > 2. Use generic definition for numa_memblk and numa_meminfo;
+> > 3. Use generic implementation for numa_add_memblk() and its friends;
+> > 4. Use generic implementation for numa_set_distance() and its friends;
+> > 5. Use generic implementation for memory_add_physaddr_to_nid() and its
+> >    friends.
+> >
+> > Note: Disable NUMA_EMU because it needs more efforts and no obvious
+> > demand now.
+> >
+> > Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  arch/loongarch/Kconfig                 |   1 +
+> >  arch/loongarch/include/asm/numa.h      |  14 ----
+> >  arch/loongarch/include/asm/sparsemem.h |   5 --
+> >  arch/loongarch/include/asm/topology.h  |   7 +-
+> >  arch/loongarch/kernel/acpi.c           |  11 ---
+> >  arch/loongarch/kernel/numa.c           | 108 +++----------------------
+> >  arch/loongarch/mm/init.c               |   8 --
+> >  mm/Kconfig                             |   1 +
+> >  8 files changed, 16 insertions(+), 139 deletions(-)
+>
+> This is really cool simplification!
+>
+> I wonder if maybe we can take a step or two further and make loongarch to
+> share more code with other architectures.
+>
+> Is there a strong reason not to call numa_memblks_init() from
+> init_numa_memory()?
+> And more broadly, maybe loongarch can be even switched to arch_numa?
+This is a minimal change for Yuquan, I will make it in linux-next as
+soon as possible so Yuquan can continue his work.
 
-I think you can just add a dummy static inline numa_add_reserved_memblk()
-to arch/loongarch/include/asm/numa.h to fix the build. Then moving
-loongarch to numa_memblks won't be a stopper for your change.
- 
-> Link:
-> [1]: https://lore.kernel.org/all/20250409040121.3212489-1-wangyuquan1236@phytium.com.cn/
-> [2]: https://lore.kernel.org/all/202503282026.QNaOAK79-lkp@intel.com/
+Switching to numa_memblks_init() or arch_numa will be done in future,
+but need some time because some machines seem to need some hacks.
 
--- 
-Sincerely yours,
-Mike.
+Huacai
+
+>
+> --
+> Sincerely yours,
+> Mike.
