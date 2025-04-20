@@ -1,104 +1,194 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster5-host4-snip4-1.eps.apple.com [57.103.66.162])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF085C96
-	for <loongarch@lists.linux.dev>; Sun, 20 Apr 2025 14:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.66.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424D92AD14
+	for <loongarch@lists.linux.dev>; Sun, 20 Apr 2025 15:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745159083; cv=none; b=fjLXsAYCmy0q4tC0C/05vPIMaP2VWYPqfWzFcnZFb8cctcSt71HvtJzBdvwZx3xE8puRp41PjbXbO4FNazt5yt5b7cZyzcFDX/R6ZYd43dUUxl14nHpGMDhvQM0zubUkxZMNEnTQlItRzJmdPdeIyAVzCRYrU4JfmsusG7pdWeo=
+	t=1745163688; cv=none; b=praJbH3zzExcmKwxg2rnFN6sxPDhhOSn2yNAW8BJsu5B0eGQ918PVQuE5zwoDqPWiJhFFY6WpEMFVtNSfmC+z8afFwvkDeQq/NkaBhTTuOYcVzMWsRA1qSHks7ifR4UWC/2Kf6TGVdy1VgC6p3EApIhCq7/wdYyfGiFqFeBnbpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745159083; c=relaxed/simple;
-	bh=C7oHjwBFQPcC5W8X662UjLV6BfkP4JZLsO6qkF2LO5I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T60bvsqrvxRcj3ooQv68MPO45LN8XaKo4Imp5Xh/xU32T9IOyZbZWzaUwSZnJlutIVqB6cNYwop0KmKASQyzKEzkRq+6UEWeXeJLdWeLtbnMK1E9uL5iS3UO9tna6RvtUOsCm8BGD5u2pHFoKk0qwHVsww1bEAFkSVuar6gr9OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=taHIXa0G; arc=none smtp.client-ip=57.103.66.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1745163688; c=relaxed/simple;
+	bh=nhTglPnOAg08AHjqHpekaXKx6PVluJKvKK23RG4Rlf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RbwSEp4JWhzIWUqjhYkRPHGJMcY/XPGsETSo+FY+J8etzljswLG27+GU43MBPohtwcc1xOG+pGqs3fyRo6CFAiQbveO5K5dqqcSHFfL1ROIVBGjUVDODBmT1mt3h0BVdVqTA2AOVNpahZKMs6Sk/Vd7QZZONgywGeDa1IWcHq8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=ScZQM2Fd; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="taHIXa0G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=SLL53Zyrzf/XGPI8J2sDrnNWqwFR43iPnrLdrzXb5hY=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:x-icloud-hme;
-	b=taHIXa0GjkN/gisTDtEOUdA2oMNKqVYKWCWXgwgneRuvSvaXZnmphoG4JjHv95m7w
-	 2bzG4MwdVu/koEqcEIWsVfwqGoByzpxZrWZ/Ruh9MDqyVDA5IyRH7i58tmyOILQRJn
-	 z6fcQ8bqdMTTUJFWH9+t31jGUzs04ky/MHaAZ1woCVlTwTjq9y0DniFPlRw/Cfh+RF
-	 rjtQNitJgtCH8EOzw7Q7GfL7TSsF+vKNSb2MkmwfTvFdEErpen029GcWKVNZMWmRDM
-	 Ez4/IuzBqEbqBhgyVbwde2ayESt6FLclxJsFcYl6biLIVwc3VzTfGf5qR6cRtI9dFv
-	 F5Cl6ufRaP4QA==
-Received: from localhost.localdomain (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id CFE43180009C;
-	Sun, 20 Apr 2025 14:24:37 +0000 (UTC)
-From: Yulong Han <wheatfox17@icloud.com>
-To: zhaotianrui@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	Yulong Han <wheatfox17@icloud.com>
-Subject: [PATCH] LoongArch: Fixed multiple typos of KVM code
-Date: Sun, 20 Apr 2025 22:22:09 +0800
-Message-Id: <20250420142208.2252280-1-wheatfox17@icloud.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="ScZQM2Fd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745163638;
+	bh=nhTglPnOAg08AHjqHpekaXKx6PVluJKvKK23RG4Rlf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=ScZQM2Fdj/l0p9c6EB4i5+qPofkvZOoWnOHZe6st2J0VczliL2LyTc5QOOiQPnh8A
+	 cNzfQ7ghNu6rhknIOnYDYZ1oEAQaCXa18GlHh7bBJywtiv6PvvOW3Won3Xys5e9x9h
+	 Oxgs3lqiTXHEI9+y5T8xIJsCfrkevDjiM0bpFFgI=
+X-QQ-mid: zesmtpip4t1745163634tcfca585c
+X-QQ-Originating-IP: 1yYsjgPrP5ZdGz9cFI6f19bOjM0L3l3pDE04ebFc7b8=
+Received: from [IPV6:240e:36c:de5:1600:ee7d:28 ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sun, 20 Apr 2025 23:40:32 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 16990448463783898360
+Message-ID: <B9FBAB180AE77BDB+52e0b4e7-58fa-4047-a35d-c2d00bc1f5bf@uniontech.com>
+Date: Sun, 20 Apr 2025 23:40:27 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: CMo66aeNh-HOB2qtibKmSPWzgphIhy4O
-X-Proofpoint-GUID: CMo66aeNh-HOB2qtibKmSPWzgphIhy4O
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-20_06,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- adultscore=0 suspectscore=0 malwarescore=0 clxscore=1011 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2504200118
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] LoongArch: Fixed multiple typos of KVM code
+To: Yulong Han <wheatfox17@icloud.com>, zhaotianrui@loongson.cn,
+ Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
+ WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, Xianglai Li <lixianglai@loongson.cn>,
+ Min Zhou <zhoumin@loongson.cn>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250420142208.2252280-1-wheatfox17@icloud.com>
+From: WangYuli <wangyuli@uniontech.com>
+Content-Language: en-US
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <20250420142208.2252280-1-wheatfox17@icloud.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------qLiP73nPuROm2ta6KfVvNMdZ"
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MYxAV9ScJiquo4ocg0NsHT2EFg58XvEML16CV5UKOtkQYgcjEq3G0DZE
+	LMAmbqB7exV901y6yEXmSQ7LigFwH3YtwFkOR2DBw7CEmKcUK1I6YVxsiAfERSi8UgonXHV
+	mBUkoS6b/LUcJ+yEsQ8WKNdBqeltWKzs4Uuj+9mD2rr0NDDFV7jY3pRmfP8l4DuCc7nAWUX
+	qAr0A7JBeQBBO+28Zzv0B7JlSKcMFX2sUgCLw8MBKOoGol5S677vswT3350Fo5ff32xLMfL
+	/U5FnNJD+bVAiZ4/UIBlA0xtZ5gKy9PkrTw67hFtudQBW/OKDvsO7U2TZNyTuMZAcuId/GX
+	T6hGLV8B1VhnxmzzyLbOyz0nz/Mr/Vrw5YR2xFZuze2Ljt1QYWDhJEUud0aN8qgytAIAEaA
+	+3FsUlPaBoSNIK9hs6nrsOz7HzANbEiS2/4HyaI+xBq8rb6+ncOjQL3tKbbCBShbeYiMXge
+	9Dst5fX93Qepq+z5kKX5cPEzRypdRplJ+A2e0m30691Ac2R9l+mbT53cy3lUt7BcWMQy/Zg
+	NTDSqHH8msMqMKf/EnSkgHBdo+sSZPhkI156FiHVJ5dcJKohCfuk+i6hhm+zjkzujsO+dl2
+	dEGFBCgodQf/+TN4BsJ5hYX2mMoI+zIMQRWFO9EzuYMHRr36UGQygD8cwhFUrT5c0b1jAjX
+	xT58vBmSG9Tdti/tcinLM5DgirOfH28kXrRapQi1GOWN/JqqUnKQh/1eiCblcRSn5sNYBpm
+	a0wI8CAxfGWMSMltPpdxtj3GGUO1/OgKPuCsOv6hwcAJJ/2Sz+Ynxuj+ud3zI4d4KiFiyPg
+	Ms7IvY83WJHZh/FkXZa3skYFOXruiTqF8CHYssYZmfJ4W6N27UPccEa2tUzE3CGOwIM68EV
+	tvZ2FCU7yHatt5+j8PE+bN1zFPUZzSBNbCFrxhG2TDWReBKNdQitwbuVtz+SlAKod8gxA4Z
+	0giDkb7JeE4/mSrD/Q7Ywfejuc0Qbo08AGecUcHxAsfblEcgSW0rTcPSt9a0faixgWxAZow
+	n0kqY6Rm9rGFfGqM/8MZhLYtYG5QI=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 
-Fixed multiple typos inside arch/loongarch/kvm.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------qLiP73nPuROm2ta6KfVvNMdZ
+Content-Type: multipart/mixed; boundary="------------iiPgVCIWWmMhxp9ZmuRv0Sug";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: Yulong Han <wheatfox17@icloud.com>, zhaotianrui@loongson.cn,
+ Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
+ WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, Xianglai Li <lixianglai@loongson.cn>,
+ Min Zhou <zhoumin@loongson.cn>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <52e0b4e7-58fa-4047-a35d-c2d00bc1f5bf@uniontech.com>
+Subject: Re: [PATCH] LoongArch: Fixed multiple typos of KVM code
+References: <20250420142208.2252280-1-wheatfox17@icloud.com>
+In-Reply-To: <20250420142208.2252280-1-wheatfox17@icloud.com>
 
-Signed-off-by: Yulong Han <wheatfox17@icloud.com>
----
- arch/loongarch/kvm/intc/ipi.c | 4 ++--
- arch/loongarch/kvm/main.c     | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+--------------iiPgVCIWWmMhxp9ZmuRv0Sug
+Content-Type: multipart/mixed; boundary="------------wrV00aSyKd0gd7bLn3pf6ovz"
 
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-index 93f4acd44..fe734dc06 100644
---- a/arch/loongarch/kvm/intc/ipi.c
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -111,7 +111,7 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, gpa_t addr, uint64_t data)
- 		ret = kvm_io_bus_read(vcpu, KVM_IOCSR_BUS, addr, sizeof(val), &val);
- 		srcu_read_unlock(&vcpu->kvm->srcu, idx);
- 		if (unlikely(ret)) {
--			kvm_err("%s: : read date from addr %llx failed\n", __func__, addr);
-+			kvm_err("%s: : read data from addr %llx failed\n", __func__, addr);
- 			return ret;
- 		}
- 		/* Construct the mask by scanning the bit 27-30 */
-@@ -127,7 +127,7 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, gpa_t addr, uint64_t data)
- 	ret = kvm_io_bus_write(vcpu, KVM_IOCSR_BUS, addr, sizeof(val), &val);
- 	srcu_read_unlock(&vcpu->kvm->srcu, idx);
- 	if (unlikely(ret))
--		kvm_err("%s: : write date to addr %llx failed\n", __func__, addr);
-+		kvm_err("%s: : write data to addr %llx failed\n", __func__, addr);
- 
- 	return ret;
- }
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index d165cd38c..80ea63d46 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -296,10 +296,10 @@ int kvm_arch_enable_virtualization_cpu(void)
- 	/*
- 	 * Enable virtualization features granting guest direct control of
- 	 * certain features:
--	 * GCI=2:       Trap on init or unimplement cache instruction.
-+	 * GCI=2:       Trap on init or unimplemented cache instruction.
- 	 * TORU=0:      Trap on Root Unimplement.
- 	 * CACTRL=1:    Root control cache.
--	 * TOP=0:       Trap on Previlege.
-+	 * TOP=0:       Trap on Privilege.
- 	 * TOE=0:       Trap on Exception.
- 	 * TIT=0:       Trap on Timer.
- 	 */
--- 
-2.39.5
+--------------wrV00aSyKd0gd7bLn3pf6ovz
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
+WyBFeHBhbmRlZCB0aGUgcmVjaXBpZW50IGxpc3QuwqAgXQ0KDQpIaSBZdWxvbmcsDQoNCk9u
+IDIwMjUvNC8yMCAyMjoyMiwgWXVsb25nIEhhbiB3cm90ZToNCj4gRml4ZWQgbXVsdGlwbGUg
+dHlwb3MgaW5zaWRlIGFyY2gvbG9vbmdhcmNoL2t2bS4NCj4NCj4gU2lnbmVkLW9mZi1ieTog
+WXVsb25nIEhhbiA8d2hlYXRmb3gxN0BpY2xvdWQuY29tPg0KPiAtLS0NCj4gICBhcmNoL2xv
+b25nYXJjaC9rdm0vaW50Yy9pcGkuYyB8IDQgKystLQ0KPiAgIGFyY2gvbG9vbmdhcmNoL2t2
+bS9tYWluLmMgICAgIHwgNCArKy0tDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlv
+bnMoKyksIDQgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9hcmNoL2xvb25nYXJj
+aC9rdm0vaW50Yy9pcGkuYyBiL2FyY2gvbG9vbmdhcmNoL2t2bS9pbnRjL2lwaS5jDQo+IGlu
+ZGV4IDkzZjRhY2Q0NC4uZmU3MzRkYzA2IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2xvb25nYXJj
+aC9rdm0vaW50Yy9pcGkuYw0KPiArKysgYi9hcmNoL2xvb25nYXJjaC9rdm0vaW50Yy9pcGku
+Yw0KPiBAQCAtMTExLDcgKzExMSw3IEBAIHN0YXRpYyBpbnQgc2VuZF9pcGlfZGF0YShzdHJ1
+Y3Qga3ZtX3ZjcHUgKnZjcHUsIGdwYV90IGFkZHIsIHVpbnQ2NF90IGRhdGEpDQo+ICAgCQly
+ZXQgPSBrdm1faW9fYnVzX3JlYWQodmNwdSwgS1ZNX0lPQ1NSX0JVUywgYWRkciwgc2l6ZW9m
+KHZhbCksICZ2YWwpOw0KPiAgIAkJc3JjdV9yZWFkX3VubG9jaygmdmNwdS0+a3ZtLT5zcmN1
+LCBpZHgpOw0KPiAgIAkJaWYgKHVubGlrZWx5KHJldCkpIHsNCj4gLQkJCWt2bV9lcnIoIiVz
+OiA6IHJlYWQgZGF0ZSBmcm9tIGFkZHIgJWxseCBmYWlsZWRcbiIsIF9fZnVuY19fLCBhZGRy
+KTsNCj4gKwkJCWt2bV9lcnIoIiVzOiA6IHJlYWQgZGF0YSBmcm9tIGFkZHIgJWxseCBmYWls
+ZWRcbiIsIF9fZnVuY19fLCBhZGRyKTsNCj4gICAJCQlyZXR1cm4gcmV0Ow0KPiAgIAkJfQ0K
+PiAgIAkJLyogQ29uc3RydWN0IHRoZSBtYXNrIGJ5IHNjYW5uaW5nIHRoZSBiaXQgMjctMzAg
+Ki8NCj4gQEAgLTEyNyw3ICsxMjcsNyBAQCBzdGF0aWMgaW50IHNlbmRfaXBpX2RhdGEoc3Ry
+dWN0IGt2bV92Y3B1ICp2Y3B1LCBncGFfdCBhZGRyLCB1aW50NjRfdCBkYXRhKQ0KPiAgIAly
+ZXQgPSBrdm1faW9fYnVzX3dyaXRlKHZjcHUsIEtWTV9JT0NTUl9CVVMsIGFkZHIsIHNpemVv
+Zih2YWwpLCAmdmFsKTsNCj4gICAJc3JjdV9yZWFkX3VubG9jaygmdmNwdS0+a3ZtLT5zcmN1
+LCBpZHgpOw0KPiAgIAlpZiAodW5saWtlbHkocmV0KSkNCj4gLQkJa3ZtX2VycigiJXM6IDog
+d3JpdGUgZGF0ZSB0byBhZGRyICVsbHggZmFpbGVkXG4iLCBfX2Z1bmNfXywgYWRkcik7DQo+
+ICsJCWt2bV9lcnIoIiVzOiA6IHdyaXRlIGRhdGEgdG8gYWRkciAlbGx4IGZhaWxlZFxuIiwg
+X19mdW5jX18sIGFkZHIpOw0KPiAgIA0KPiAgIAlyZXR1cm4gcmV0Ow0KPiAgIH0NCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL2t2bS9tYWluLmMgYi9hcmNoL2xvb25nYXJjaC9r
+dm0vbWFpbi5jDQo+IGluZGV4IGQxNjVjZDM4Yy4uODBlYTYzZDQ2IDEwMDY0NA0KPiAtLS0g
+YS9hcmNoL2xvb25nYXJjaC9rdm0vbWFpbi5jDQo+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL2t2
+bS9tYWluLmMNCj4gQEAgLTI5NiwxMCArMjk2LDEwIEBAIGludCBrdm1fYXJjaF9lbmFibGVf
+dmlydHVhbGl6YXRpb25fY3B1KHZvaWQpDQo+ICAgCS8qDQo+ICAgCSAqIEVuYWJsZSB2aXJ0
+dWFsaXphdGlvbiBmZWF0dXJlcyBncmFudGluZyBndWVzdCBkaXJlY3QgY29udHJvbCBvZg0K
+PiAgIAkgKiBjZXJ0YWluIGZlYXR1cmVzOg0KPiAtCSAqIEdDST0yOiAgICAgICBUcmFwIG9u
+IGluaXQgb3IgdW5pbXBsZW1lbnQgY2FjaGUgaW5zdHJ1Y3Rpb24uDQo+ICsJICogR0NJPTI6
+ICAgICAgIFRyYXAgb24gaW5pdCBvciB1bmltcGxlbWVudGVkIGNhY2hlIGluc3RydWN0aW9u
+Lg0KPiAgIAkgKiBUT1JVPTA6ICAgICAgVHJhcCBvbiBSb290IFVuaW1wbGVtZW50Lg0KPiAg
+IAkgKiBDQUNUUkw9MTogICAgUm9vdCBjb250cm9sIGNhY2hlLg0KPiAtCSAqIFRPUD0wOiAg
+ICAgICBUcmFwIG9uIFByZXZpbGVnZS4NCj4gKwkgKiBUT1A9MDogICAgICAgVHJhcCBvbiBQ
+cml2aWxlZ2UuDQo+ICAgCSAqIFRPRT0wOiAgICAgICBUcmFwIG9uIEV4Y2VwdGlvbi4NCj4g
+ICAJICogVElUPTA6ICAgICAgIFRyYXAgb24gVGltZXIuDQo+ICAgCSAqLw0KUmV2aWV3ZWQt
+Ynk6IFl1bGkgV2FuZyA8d2FuZ3l1bGlAdW5pb250ZWNoLmNvbT4NCg0KUGxlYXNlIG5vdGUg
+dGhhdCBpZiB5b3Ugd2lzaCBmb3IgYSB0aW1lbHkgcmVzcG9uc2UgdG8geW91ciBwYXRjaCwg
+eW91IA0Kc2hvdWxkIGVuc3VyZSB0aGF0IGFsbCBtYWludGFpbmVycyBvdXRwdXQgYnkgLi9z
+Y3JpcHRzL2dldF9tYWludGFpbmVyLnBsIA0KYW5kIHRoZSByZWxldmFudCBvcGVuIG1haWxp
+bmcgbGlzdHMgYXJlIGZ1bGx5IHByZXNlbnQgaW4geW91ciByZWNpcGllbnQgDQpsaXN0Lg0K
+DQpUaGFua3MsDQotLSANCldhbmdZdWxpDQo=
+--------------wrV00aSyKd0gd7bLn3pf6ovz
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------wrV00aSyKd0gd7bLn3pf6ovz--
+
+--------------iiPgVCIWWmMhxp9ZmuRv0Sug--
+
+--------------qLiP73nPuROm2ta6KfVvNMdZ
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCaAUVawUDAAAAAAAKCRDF2h8wRvQL7rKP
+AQDgmCXxwbXKb46wPrUJdmVltSb51mvqb+EA5426+hYlygD+JxxdnIuLpu0tdhPZlDBlBxlrsopH
+/orCwLlmlPBPAQ0=
+=HNz+
+-----END PGP SIGNATURE-----
+
+--------------qLiP73nPuROm2ta6KfVvNMdZ--
