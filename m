@@ -1,120 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D77318C004
-	for <loongarch@lists.linux.dev>; Sat, 19 Apr 2025 07:57:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC9943ABC
+	for <loongarch@lists.linux.dev>; Sun, 20 Apr 2025 07:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745049448; cv=none; b=McWgimECTgbYD/jyAQlwkykSiE/jWqAoxdWJd/mO6db7FONWehWCG77rDFb61W09x+w+s2AAZn78qQh5w6kuR1el4G+thlu++zQ4IJKdYSyuU1lvs4LcFnhMF/8SL8n0zwh9Jzta59ufJGBb9oPVqWFyYQDkaECuGzHRjtVxFto=
+	t=1745133458; cv=none; b=Q1sjTgqrsK4BGSM3oCGg9Kjyxf1KpdVNS+M/jPhIhkJqUFXRe+JuIs3hmh5j6+pTarMBYMKNeSybVkUto9VNmLG0z+Mlb9e750O9PqPhBHBI8lerkumvvTy1c4zXku0oRxhJEn+mMxAfl/olxUC0quGDEnjPqBE1BwVaqc3wLRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745049448; c=relaxed/simple;
-	bh=2He1zuUDbO4B67P/rTuPwUbz5lQW21kyiVSnyfe0MdA=;
+	s=arc-20240116; t=1745133458; c=relaxed/simple;
+	bh=kAbt2L4kg671pYS37gU/fZtxIXbvKl2K/RxKTomXmT8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l9c6KZFMQY/yb4CapmQ33thGNaveVTz71ubbysxZtf9VEBpXqU5bhg1HInT4Yd3KTt4smgyHbflDAtZhP6JCejWjAwHZkBGOGfFR6ytcJf6+l34YvuQUBNdi0h1wd9MgvWvhYU7bPeFCpomXRVPjs0lHyCJzIFrsH6fKQKboHkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfXJsW2i; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=WPVLWQ0OuV4AR+Wjxt9EppJqlWTU/qssA1/jxFPm3ycDRk6H2tNn+a0eMX916rYpB69Mo4J4snczAXFsLsHTGlZ4cYjBffxJ7nX2hCFpy8ebg/iJrrPBeZ9+x2AK0izkRweGIM2aNYMksb5ab46bHvtWdAfj/uRDh3XO2VSRVC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nzeff6/y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfXJsW2i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A494C4CEED
-	for <loongarch@lists.linux.dev>; Sat, 19 Apr 2025 07:57:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nzeff6/y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DFB9C4CEEA
+	for <loongarch@lists.linux.dev>; Sun, 20 Apr 2025 07:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745049448;
-	bh=2He1zuUDbO4B67P/rTuPwUbz5lQW21kyiVSnyfe0MdA=;
+	s=k20201202; t=1745133457;
+	bh=kAbt2L4kg671pYS37gU/fZtxIXbvKl2K/RxKTomXmT8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GfXJsW2i9I4zWJFMj8RWZutnG9Ehh4Z/AKNu0F/0CmkrjhoTUVpEdDAKPCS33aDAK
-	 6XqoMHH0ie9yDCC2s+2ZwJg9wRn+nqy8W8xc7KqLgGrPTn3IMz1vUORjtlNG+Q62uF
-	 3AkXj6BAqiUSq1OUbTUm4qwkLqDQKbhbMaksPD4xlq2lUCw8GAXx+v2ZAuM1+QCr/3
-	 bdMmTab7qUumBSc6bMTO3cS6gXm8A1rwRVZGMfbYi+zljvIbunh1MvDZd4nFlmJ8n1
-	 HTBe6eqotGnRfq9dPrWdHmNRCCRXVKzA17CrTWmgVEzWq8G1ira5hrBI+kPF6uZVC1
-	 MQ9nFXlDTbjzQ==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f62ef3c383so1233844a12.2
-        for <loongarch@lists.linux.dev>; Sat, 19 Apr 2025 00:57:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWa7TVqII3q0161j3GchKV++HiY2Q6w1POzC2H2MU0Tdu699U/NtJwBA40SkxWtjR4rRluE6No5TOE=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx8RnrcTyaRdEYEvH8rE2oFzsevgRU6uGZ6eMRbPUlMkzdW7gCa
-	BkwInc7FlfSqu5uw1Ept0yu2pwHfl1Nn4iHpA/2LOjprl3cHeeL5xoVZV8UTlc9V9lJcjqBDdgl
-	ccRRt/ltfjeARxjKBXt5BKaiIKq0=
-X-Google-Smtp-Source: AGHT+IFBOqeUjjkSD9wb1GlhkO06JWAuI2wpsT1LO42Oj7bB21kjJElgl2H6DfIYII5GwzUBO4nCf8/dr9DE7t2PaC0=
-X-Received: by 2002:a17:907:3da7:b0:ac3:c7bd:e436 with SMTP id
- a640c23a62f3a-acb74dd5869mr470058166b.51.1745049446685; Sat, 19 Apr 2025
- 00:57:26 -0700 (PDT)
+	b=Nzeff6/yynvStEnBnW35r39G49OQu2MTljTONZkQieNcZu3kPYn+FWKKIWC8yINQr
+	 Djq3eXpij4bDEhrg4Uno68L14b9SdWuKGFPuemZEvIpIePvODTaxwRUXzCldwwm7AO
+	 jKSXJBrafY59LbaFu6aOkW2IyCbqHKqlw47DYOqc8BNg4R5lpqaM/XyJW+ICqLTY8b
+	 61RRSATkXLuns755feYrs50Hx8NC7fXRZcLJOVC/jIfod3kIWv2BvFan6XFjr8rYJN
+	 qorGd8x03AwlQjNYyO6QGy37M46EC/iGpoqKKdlAmIF9RyqCNfBnYWRhxWhqnpYl15
+	 0S2Z6UTAahA0g==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so439145066b.1
+        for <loongarch@lists.linux.dev>; Sun, 20 Apr 2025 00:17:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV8NfRFDff0TzCpkAV5khCVPl41zj802K4+Iy99D+4CjpjguaYhOshquBFWu5vx0KLa9ZIHXBiHo8A=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw/jrSqb40jWUbMb9NHOKGOaqQ+OUr4Mm2MQ2vDQI66Rttaerek
+	p3FYZeBA82f4UhER2qEjaoaFBAExH3Vft4FSjaanf6BRips5qcA9To9jqmIIDDQ+ApBkLRy7QSu
+	kV/uzISVgZh7HYKhuUxMfp0N8oKQ=
+X-Google-Smtp-Source: AGHT+IFipSDphqQejDTjEHb6w0t3D9Mrp3gh/Gk2d+8YbuuQI2ckZv0Gh3jPFkzypUkadOvfGgfov6bhfBarLFeSYpA=
+X-Received: by 2002:a17:907:7d90:b0:aca:c864:369a with SMTP id
+ a640c23a62f3a-acb74b36c86mr707209566b.18.1745133455991; Sun, 20 Apr 2025
+ 00:17:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250415072118.3774454-1-chenhuacai@loongson.cn> <aANVMaepni3KeABI@kernel.org>
-In-Reply-To: <aANVMaepni3KeABI@kernel.org>
+References: <20250418093506.1349-1-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250418093506.1349-1-zhaoqunqin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 19 Apr 2025 15:57:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H65jh29ccYzcaJf1=QpDuV5xZfBd-1Kr0=in_nk-Z4h7Q@mail.gmail.com>
-X-Gm-Features: ATxdqUEswLyYsdm0DWCKHpfX2YeoU7V4Mr883tkxyRMQSGcVNfs2948KijY-SYM
-Message-ID: <CAAhV-H65jh29ccYzcaJf1=QpDuV5xZfBd-1Kr0=in_nk-Z4h7Q@mail.gmail.com>
-Subject: Re: [PATCH V2] LoongArch: Introduce the numa_memblks conversion
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-kernel@vger.kernel.org, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Date: Sun, 20 Apr 2025 15:17:23 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
+X-Gm-Features: ATxdqUHeiIpaROzGe_pe_P3wq4_tDyoL2Q2Sk3RB0jlyT4bmdmtQNL857Drp9PY
+Message-ID: <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
+Subject: Re: [PATCH v8 0/5] Add Loongson Security Engine chip driver
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net, peterhuewe@gmx.de, 
+	jarkko@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org, 
+	pmenzel@molgen.mpg.de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Mike,
+Hi, Qunqin,
 
-On Sat, Apr 19, 2025 at 3:48=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
-te:
+On Fri, Apr 18, 2025 at 5:33=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
 >
-> Hi Huacai,
+> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+> accelerator engines. Each engine have its own DMA buffer provided
+> by the controller. The kernel cannot directly send commands to the
+> engine and must first send them to the controller, which will
+> forward them to the corresponding engine. Based on these engines,
+> TPM2 have been implemented in the chip, then let's treat TPM2 itself
+> as an engine.
 >
-> On Tue, Apr 15, 2025 at 03:21:18PM +0800, Huacai Chen wrote:
-> > Commit 87482708210ff3333a ("mm: introduce numa_memblks") has moved
-> > numa_memblks from x86 to the generic code, but LoongArch was left out
-> > of this conversion.
-> >
-> > This patch introduces the generic numa_memblks for LoongArch.
-> >
-> > In detail:
-> > 1. Enable NUMA_MEMBLKS (but disable NUMA_EMU) in Kconfig;
-> > 2. Use generic definition for numa_memblk and numa_meminfo;
-> > 3. Use generic implementation for numa_add_memblk() and its friends;
-> > 4. Use generic implementation for numa_set_distance() and its friends;
-> > 5. Use generic implementation for memory_add_physaddr_to_nid() and its
-> >    friends.
-> >
-> > Note: Disable NUMA_EMU because it needs more efforts and no obvious
-> > demand now.
-> >
-> > Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  arch/loongarch/Kconfig                 |   1 +
-> >  arch/loongarch/include/asm/numa.h      |  14 ----
-> >  arch/loongarch/include/asm/sparsemem.h |   5 --
-> >  arch/loongarch/include/asm/topology.h  |   7 +-
-> >  arch/loongarch/kernel/acpi.c           |  11 ---
-> >  arch/loongarch/kernel/numa.c           | 108 +++----------------------
-> >  arch/loongarch/mm/init.c               |   8 --
-> >  mm/Kconfig                             |   1 +
-> >  8 files changed, 16 insertions(+), 139 deletions(-)
->
-> This is really cool simplification!
->
-> I wonder if maybe we can take a step or two further and make loongarch to
-> share more code with other architectures.
->
-> Is there a strong reason not to call numa_memblks_init() from
-> init_numa_memory()?
-> And more broadly, maybe loongarch can be even switched to arch_numa?
-This is a minimal change for Yuquan, I will make it in linux-next as
-soon as possible so Yuquan can continue his work.
-
-Switching to numa_memblks_init() or arch_numa will be done in future,
-but need some time because some machines seem to need some hacks.
+> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+>     are all encryption related drivers and SM2, SM3, and SM4 drivers
+>     will be added to the crypto subsystem in the future, the base driver
+>     need to be changed when adding these drivers. Therefore, it may be
+>     more appropriate to place the base driver within the crypto subsystem=
+.
+I don't know what Lee Jones exactly means. But I don't think this
+version is what he wants. You move the SE driver from drivers/mfd to
+drivers/crypto, but it is still a mfd driver because of "struct
+mfd_cell engines".
 
 Huacai
 
 >
+>     Removed complete callback in all drivers. Removed the concepts of
+>     "channel", "msg" and "request" as they may be confusing. Used the
+>     concepts of "egnine" and "command" may be better.
+>
+> v7: Addressed Huacai's comments.
+>
+> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+>
+>     crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+>     ls6000se-rng.c ->loongson-rng.c
+>
+>     tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+>
+> v5: Registered "ls6000se-rng" device in mfd driver.
+> v4: Please look at changelog in tpm and MAINTAINERS. No changes to mfd
+>     and crypto.
+> v3: Put the updates to the MAINTAINERS in a separate patch.
+>
+> Qunqin Zhao (5):
+>   crypto: loongson - Add Loongson Security Engine chip controller driver
+>   crypto: loongson - add Loongson RNG driver support
+>   MAINTAINERS: Add entry for Loongson crypto driver
+>   tpm: Add a driver for Loongson TPM device
+>   MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+>
+>  MAINTAINERS                            |   7 +
+>  drivers/char/tpm/Kconfig               |   9 +
+>  drivers/char/tpm/Makefile              |   1 +
+>  drivers/char/tpm/tpm_loongson.c        |  78 ++++++++
+>  drivers/crypto/Kconfig                 |   1 +
+>  drivers/crypto/Makefile                |   1 +
+>  drivers/crypto/loongson/Kconfig        |  17 ++
+>  drivers/crypto/loongson/Makefile       |   3 +
+>  drivers/crypto/loongson/loongson-rng.c | 198 ++++++++++++++++++++
+>  drivers/crypto/loongson/loongson-se.c  | 239 +++++++++++++++++++++++++
+>  drivers/crypto/loongson/loongson-se.h  |  52 ++++++
+>  11 files changed, 606 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_loongson.c
+>  create mode 100644 drivers/crypto/loongson/Kconfig
+>  create mode 100644 drivers/crypto/loongson/Makefile
+>  create mode 100644 drivers/crypto/loongson/loongson-rng.c
+>  create mode 100644 drivers/crypto/loongson/loongson-se.c
+>  create mode 100644 drivers/crypto/loongson/loongson-se.h
+>
+>
+> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
 > --
-> Sincerely yours,
-> Mike.
+> 2.45.2
+>
+>
