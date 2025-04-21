@@ -1,83 +1,131 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED993249E5
-	for <loongarch@lists.linux.dev>; Mon, 21 Apr 2025 02:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1B218DB3D
+	for <loongarch@lists.linux.dev>; Mon, 21 Apr 2025 02:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745201722; cv=none; b=KoLt09Donrj4WUuIPoh/YfQJnl4WQbfI8wIfoYx4u7KdqklryGs78uKZOaQu+3RAGUZ8oMQiM8tTWRsNPtozDBJs3v4UftaItJoi2ydOyVhfTXqPyEqQtO2EJae4p/I5yMYYTfZnnZqheTJCh9/8Hp9JmVTT5ZJTKSEgNbDdtVo=
+	t=1745202453; cv=none; b=FLgx2U61Qw7U5okcVHSAfeyE//76djiRViBgRwq3FN5YBOiyQr+EH3dvozVARV2GNl3kXU+8mWZ6vb8pPLbkJTUBhbGENIHhkww9r4UNNuK3Q/JxbJuw6SrHAJCs6Vxv2mYjheeC7Y26el1dcxSka6h5ZYQM0DcLwpEhTCQ3e6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745201722; c=relaxed/simple;
-	bh=SSzYHzvdWPiC1S20Z/FQZqw5w+ZdGaHQ8jeVsGP8h8E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UCWJ6YUSFuFGV9WgoJgjQUGUIF5CAwPXPy7GgQUFe69EKD4An5Fn84mzaa2oA2P69mbKreHBhYW6mQES1urc9T1PqbTV5VerhRa5OjUvCbzzv7q97M7eOJf5atC/2VrcXUY1yLgCU73FX+K1/tcafOA+tHJkrXRjEb2JxTb1/TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mIQHQaN7; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745202453; c=relaxed/simple;
+	bh=NrNC4IJl9Ke8dPV1S35kFEDK+tghxOLjqSRbsc4BXCg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ESltM5dHXIp4aklOAmKQWvsZrigi2Xd/SX4Y/DDcAydtWPsbXXd2iEROsAxyUUEPYXhYbmXU7pOcx74EcWmOSqPkcvN3iYhakX/XDh8o+9gMnnkI/o6EMaFSdgstdOqeeRxYmmQFmhOS8hH926/3/Yh1OTnyDZc/YR8U+stmSck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Wh8GBI7G; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mIQHQaN7"
-Message-ID: <4068852f-db8c-4780-a1df-dbbd69f7e526@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745201717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RBMq7xgDK0mfdUWx1cjYpvG3AKniIYiwC4eZ90x1nng=;
-	b=mIQHQaN7+2XxyNUF1re4VpBr2wH993eXv3H54uuE/QTuL2amLZb4VWgXtjRTUX6wy/ZfsN
-	0UAjBbjhdrNcwdh4WQx4lTXQkYKd9Y+8f3Pqh1gmnuSJz0gRhG9gbbpDoqhXHw9Aebun4a
-	9/qd3/pwWLopyqpV8kvN02UIW3CcFtI=
-Date: Mon, 21 Apr 2025 10:14:26 +0800
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Wh8GBI7G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1745202443;
+	bh=plNE1fq2Q8qJWBIt/72HFbCl29tQ3CZgFJkjrMKBEmY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Wh8GBI7GMKsTbcPom3IpAxkhb/CvwVj1vJgydtGOTTLcb5ITDY2d7sLvxQ3wObmm9
+	 37AjstE/92V+0ik1ub/M54WSYDGhZFJYRWzocq8r2GEG6bpMdHLwhOoEoplafPNRZV
+	 l6C5J2M6joWL/j2scuy56MxdgvdTmoLdUGJQsOz4=
+Received: from [192.168.124.30] (unknown [113.200.174.127])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id A038F65A96;
+	Sun, 20 Apr 2025 22:27:22 -0400 (EDT)
+Message-ID: <a61ccfc40e80a6b418328718a9d40d28792ef2fa.camel@xry111.site>
+Subject: Re: [PATCH 2/3] LoongArch/build: Add fallback install.sh
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <youling.tang@linux.dev>, Huacai Chen
+ <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, Youling Tang <tangyouling@kylinos.cn>
+Date: Mon, 21 Apr 2025 10:27:19 +0800
+In-Reply-To: <20250421020301.34185-2-youling.tang@linux.dev>
+References: <20250421020301.34185-1-youling.tang@linux.dev>
+	 <20250421020301.34185-2-youling.tang@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next V2 0/3] net: stmmac: dwmac-loongson: Add
- Loongson-2K3000 support
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>
-References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250416144132.3857990-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
+On Mon, 2025-04-21 at 10:03 +0800, Youling Tang wrote:
+> From: Youling Tang <tangyouling@kylinos.cn>
+>=20
+> As specified in scripts/install.sh, the priority order is
+> as follows (from highest to lowest):
+> =C2=A0 ~/bin/installkernel
+> =C2=A0 /sbin/installkernel
+> =C2=A0 arch/loongarch/boot/install.sh
+>=20
+> Fallback to default install.sh if installkernel not found.
+>=20
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> ---
+> =C2=A0arch/loongarch/boot/install.sh | 44
+> ++++++++++++++++++++++++++++++++++
+> =C2=A01 file changed, 44 insertions(+)
+> =C2=A0create mode 100755 arch/loongarch/boot/install.sh
+>=20
+> diff --git a/arch/loongarch/boot/install.sh
+> b/arch/loongarch/boot/install.sh
+> new file mode 100755
+> index 000000000000..c97f611ca913
+> --- /dev/null
+> +++ b/arch/loongarch/boot/install.sh
+> @@ -0,0 +1,44 @@
+> +#!/bin/sh
+> +#
+> +# This file is subject to the terms and conditions of the GNU General
+> Public
+> +# License.=C2=A0 See the file "COPYING" in the main directory of this
+> archive
+> +# for more details.
+> +#
+> +# Copyright (C) 1995 by Linus Torvalds
+> +#
+> +# Adapted from code in arch/i386/boot/Makefile by H. Peter Anvin
+> +# Adapted from code in arch/i386/boot/install.sh by Russell King
+> +#
+> +# "make install" script for the RISC-V Linux port
+                                   ^^^^^^
 
-在 4/16/25 10:41 PM, Huacai Chen 写道:
-> This series add stmmac driver support for Loongson-2K3000/Loongson-3B6000M,
-> which introduces a new CORE ID (0x12) and a new PCI device ID (0x7a23). The
-> new core reduces channel numbers from 8 to 4, but checksum is supported for
-> all channels.
->
-> V1 -> V2:
-> 1. Use correct coding style.
-> 2. Add Tested-by and Reviewed-by.
->
-> Huacai Chen (3):
->    net: stmmac: dwmac-loongson: Move queue number init to common function
->    net: stmmac: dwmac-loongson: Add new multi-chan IP core support
->    net: stmmac: dwmac-loongson: Add new GMAC's PCI device ID support
+Pasto here.
 
-> Tested-by: Biao Dong <dongbiao@loongson.cn>
+> +#
+> +# Arguments:
+> +#=C2=A0=C2=A0 $1 - kernel version
+> +#=C2=A0=C2=A0 $2 - kernel image file
+> +#=C2=A0=C2=A0 $3 - kernel map file
+> +#=C2=A0=C2=A0 $4 - default install path (blank if root directory)
+> +
+> +set -e
+> +
+> +case "${2##*/}" in
+> +# Compressed install
+> +vmlinuz.efi)
+> +=C2=A0 echo "Installing compressed kernel"
+> +=C2=A0 base=3Dvmlinuz
+> +=C2=A0 ;;
+> +# Normal install
+> +*)
+> +=C2=A0 echo "Installing normal kernel"
+> +=C2=A0 base=3Dvmlinux
+> +=C2=A0 ;;
+> +esac
+> +
+> +if [ -f $4/$base-$1 ]; then
+> +=C2=A0 mv $4/$base-$1 $4/$base-$1.old
+> +fi
+> +cat $2 > $4/$base-$1
+> +
+> +# Install system map file
+> +if [ -f $4/System.map-$1 ]; then
+> +=C2=A0 mv $4/System.map-$1 $4/System.map-$1.old
+> +fi
+> +cp $3 $4/System.map-$1
 
-I checked version 1, and no one has signed this tag. It seems to have
-
-been carried out internally by Loongson, and this is somewhat ......
-
-
-Thanks,
-
-Yanteng
-
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
