@@ -1,41 +1,41 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D6B1C69D
-	for <loongarch@lists.linux.dev>; Mon, 21 Apr 2025 02:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6DE253B76
+	for <loongarch@lists.linux.dev>; Mon, 21 Apr 2025 02:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745201055; cv=none; b=E8KnrnJ4wK8ammGcANjQStsNM1HVGXmcwnNwWF5aA4AsfqfbKcvgYuEMFvbtLkfoAyjdxfmogNfPrg5YbADkDz1Twe/j8BWwFWR6jziduox8I8eLobuy514iamNBMwKYO8QViWI/UoXWkAfXG3j37Sn4x25iHwfMsL5CdUxRPTs=
+	t=1745201371; cv=none; b=MvbkFU0B4/G2XIjLv3ugo6GuCisQNII8ljqY0yQlI8aHIrPGTmO3l1pZCcKj5UYL8ajnc3ICXI9241TEwO63w10bH38N3jGhRZ+UXe6TmcQaXF7hc5t26NkG2jezLG73/roR5BkU+zSCL2UoKb+ajG/0VFMfYjfjAuxkB1huhcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745201055; c=relaxed/simple;
-	bh=gssSfk14d0gdyaSI1JfGpXeyLwjf1XNlt4vmc66FZF4=;
+	s=arc-20240116; t=1745201371; c=relaxed/simple;
+	bh=vQwPL41UhXSWhazxVBZ9yhLnlauIudYDFz+u76RyH7U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uUD7kkaDh0arv5ffm6UEH7Lyj/h4RLXLcwxd3fZ3Mu4gapaXGOkYvkAqugdmCchyKN1MYYmI8xvRfPjd2Xxpk6BklxbLQGagGyr8620dxtq94atw0COSf4rOZoa2K7h/41rOlNxu+F+GaGRSmmIJxuqfjlS7LllnlJY+YpuIsSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Hqdd8MCX; arc=none smtp.client-ip=91.218.175.170
+	 In-Reply-To:Content-Type; b=EUNjYu2m44T5tC8FYIEwdNShObaiYIXAGjYIuMdCFjKmvyb6T6d+RjuifjOawywfdjiJVpiG/G5/g0luHB4F1h3vupF9vhriBi5UH900qG4DpAPnwfIlI/0X5Z2WSnOp++s4wwfFqbEtpL1rgynyE3t+9fRqHZhFVSqr3YcM7rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G2ht85LP; arc=none smtp.client-ip=91.218.175.185
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Hqdd8MCX"
-Message-ID: <fe0a5e7a-6bb2-45ef-8172-c06684885b36@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G2ht85LP"
+Message-ID: <ba5bb0ed-54e6-4655-ac52-0594acc3d9ea@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745201041;
+	t=1745201367;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hvGlbY9EFV4y3yHv3JUSuiPsFAx7nRV2Qxo2cbhE80s=;
-	b=Hqdd8MCXPCcUSemP06gamRIfPbfM/Dibh8+UP6OpntUJiYg7b5qdqrvKIxVG/1klzWwH02
-	NQvtp8xhNDfDv0Yl7Cs44XpH1HW7i4YDJrLcXmWenrN+h12N40zBXsTxsJouLZ1yG3Ekz+
-	/hMZ4n7ZUganFZfUHEv4ceJkmRwYai8=
-Date: Mon, 21 Apr 2025 10:03:45 +0800
+	bh=BkvpI/QNH8sX2vc89J73S1BGYLDtEYPlsj2xsRPRVmc=;
+	b=G2ht85LPDq7ZDR6eziLKyEU9SpDkF7/mxdwUPBkHPi9fnliu01mm+LEGpICIR3qyR6tCeV
+	KCuomqISg7G8ZD939n16VGAQHIaDEofbqGpGlTw4WfVBISU+it6vQ9h2y8YXv1r8wTMe7m
+	YEveVruvceFOMuXF9V8shPCOYwzyhXE=
+Date: Mon, 21 Apr 2025 10:09:12 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next V2 2/3] net: stmmac: dwmac-loongson: Add new
- multi-chan IP core support
+Subject: Re: [PATCH net-next V2 3/3] net: stmmac: dwmac-loongson: Add new
+ GMAC's PCI device ID support
 To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
  <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
  "David S . Miller" <davem@davemloft.net>, Eric Dumazet
@@ -46,152 +46,69 @@ Cc: Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
  Andrew Lunn <andrew@lunn.ch>, Henry Chen <chenx97@aosc.io>,
  Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>
 References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
- <20250416144132.3857990-3-chenhuacai@loongson.cn>
+ <20250416144132.3857990-4-chenhuacai@loongson.cn>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250416144132.3857990-3-chenhuacai@loongson.cn>
+In-Reply-To: <20250416144132.3857990-4-chenhuacai@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
 
 在 4/16/25 10:41 PM, Huacai Chen 写道:
-> Add a new multi-chan IP core (0x12) support which is used in Loongson-
-> 2K3000/Loongson-3B6000M. Compared with the 0x10 core, the new 0x12 core
-> reduces channel numbers from 8 to 4, but checksum is supported for all
-> channels.
+> Add a new GMAC's PCI device ID (0x7a23) support which is used in
+> Loongson-2K3000/Loongson-3B6000M. The new GMAC device use external PHY,
+> so it reuses loongson_gmac_data() as the old GMAC device (0x7a03), and
+> the new GMAC device still doesn't support flow control now.
 >
 > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 > Tested-by: Henry Chen <chenx97@aosc.io>
 > Tested-by: Biao Dong <dongbiao@loongson.cn>
 > Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
 > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->   .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 62 +++++++++++--------
->   1 file changed, 37 insertions(+), 25 deletions(-)
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> index 2fb7a137b312..57917f26ab4d 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> @@ -68,10 +68,11 @@
->   
->   #define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
->   #define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
-> -#define DWMAC_CORE_LS_MULTICHAN	0x10	/* Loongson custom ID */
-> -#define CHANNEL_NUM			8
-> +#define DWMAC_CORE_MULTICHAN_V1	0x10	/* Loongson custom ID 0x10 */
-> +#define DWMAC_CORE_MULTICHAN_V2	0x12	/* Loongson custom ID 0x12 */
->   
->   struct loongson_data {
-> +	u32 multichan;
 
-In order to make the logic clearer, I suggest splitting this patch.：
-
-
-2/4  Add multichan for loongson_data
-
-3/4 Add new multi-chan IP core support
-
-
->   	u32 loongson_id;
->   	struct device *dev;
->   };
-> @@ -119,18 +120,29 @@ static void loongson_default_data(struct pci_dev *pdev,
->   	plat->dma_cfg->pbl = 32;
->   	plat->dma_cfg->pblx8 = true;
->   
-> -	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
-> -		plat->rx_queues_to_use = CHANNEL_NUM;
-> -		plat->tx_queues_to_use = CHANNEL_NUM;
-> +	switch (ld->loongson_id) {
-> +	case DWMAC_CORE_MULTICHAN_V1:
-
-How about adding some comments? For example:
-
-case DWMAC_CORE_MULTICHAN_V1:	/* 2K2000 */
-case DWMAC_CORE_MULTICHAN_V2:	/* 2K3000 and 3B6000M */
-...
-
-> +		ld->multichan = 1;
-> +		plat->rx_queues_to_use = 8;
-> +		plat->tx_queues_to_use = 8;
->   
->   		/* Only channel 0 supports checksum,
->   		 * so turn off checksum to enable multiple channels.
->   		 */
-> -		for (int i = 1; i < CHANNEL_NUM; i++)
-> +		for (int i = 1; i < 8; i++)
->   			plat->tx_queues_cfg[i].coe_unsupported = 1;
-> -	} else {
-> +
-> +		break;
-> +	case DWMAC_CORE_MULTICHAN_V2:
-> +		ld->multichan = 1;
-> +		plat->rx_queues_to_use = 4;
-> +		plat->tx_queues_to_use = 4;
-> +		break;
-> +	default:
-> +		ld->multichan = 0;
->   		plat->tx_queues_to_use = 1;
->   		plat->rx_queues_to_use = 1;
-> +		break;
->   	}
->   }
->   
-> @@ -328,14 +340,14 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
->   		return NULL;
->   
->   	/* The Loongson GMAC and GNET devices are based on the DW GMAC
-> -	 * v3.50a and v3.73a IP-cores. But the HW designers have changed the
-> -	 * GMAC_VERSION.SNPSVER field to the custom 0x10 value on the
-> -	 * network controllers with the multi-channels feature
-> +	 * v3.50a and v3.73a IP-cores. But the HW designers have changed
-> +	 * the GMAC_VERSION.SNPSVER field to the custom 0x10/0x12 value
-> +	 * on the network controllers with the multi-channels feature
->   	 * available to emphasize the differences: multiple DMA-channels,
->   	 * AV feature and GMAC_INT_STATUS CSR flags layout. Get back the
->   	 * original value so the correct HW-interface would be selected.
->   	 */
-> -	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
-> +	if (ld->multichan) {
->   		priv->synopsys_id = DWMAC_CORE_3_70;
->   		*dma = dwmac1000_dma_ops;
->   		dma->init_chan = loongson_dwmac_dma_init_channel;
-> @@ -356,13 +368,13 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
->   	if (mac->multicast_filter_bins)
->   		mac->mcast_bits_log2 = ilog2(mac->multicast_filter_bins);
->   
-> -	/* Loongson GMAC doesn't support the flow control. LS2K2000
-> -	 * GNET doesn't support the half-duplex link mode.
-> +	/* Loongson GMAC doesn't support the flow control. Loongson GNET
-> +	 * without multi-channel doesn't support the half-duplex link mode.
->   	 */
->   	if (pdev->device == PCI_DEVICE_ID_LOONGSON_GMAC) {
->   		mac->link.caps = MAC_10 | MAC_100 | MAC_1000;
->   	} else {
-> -		if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN)
-> +		if (ld->multichan)
->   			mac->link.caps = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
->   					 MAC_10 | MAC_100 | MAC_1000;
->   		else
-> @@ -391,9 +403,11 @@ static int loongson_dwmac_msi_config(struct pci_dev *pdev,
->   				     struct plat_stmmacenet_data *plat,
->   				     struct stmmac_resources *res)
->   {
-> -	int i, ret, vecs;
-> +	int i, ch_num, ret, vecs;
->   
-> -	vecs = roundup_pow_of_two(CHANNEL_NUM * 2 + 1);
-> +	ch_num = min(plat->tx_queues_to_use, plat->rx_queues_to_use);
-
-I'm curious. Will there still be hardware with RX not equal to TX in the 
-future?
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
 
 
 Thanks,
 
 Yanteng
 
-
+> ---
+>   drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> index 57917f26ab4d..e1591e6217d4 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> @@ -66,7 +66,8 @@
+>   					 DMA_STATUS_TPS | DMA_STATUS_TI  | \
+>   					 DMA_STATUS_MSK_COMMON_LOONGSON)
+>   
+> -#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
+> +#define PCI_DEVICE_ID_LOONGSON_GMAC1	0x7a03
+> +#define PCI_DEVICE_ID_LOONGSON_GMAC2	0x7a23
+>   #define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
+>   #define DWMAC_CORE_MULTICHAN_V1	0x10	/* Loongson custom ID 0x10 */
+>   #define DWMAC_CORE_MULTICHAN_V2	0x12	/* Loongson custom ID 0x12 */
+> @@ -371,7 +372,7 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
+>   	/* Loongson GMAC doesn't support the flow control. Loongson GNET
+>   	 * without multi-channel doesn't support the half-duplex link mode.
+>   	 */
+> -	if (pdev->device == PCI_DEVICE_ID_LOONGSON_GMAC) {
+> +	if (pdev->device != PCI_DEVICE_ID_LOONGSON_GNET) {
+>   		mac->link.caps = MAC_10 | MAC_100 | MAC_1000;
+>   	} else {
+>   		if (ld->multichan)
+> @@ -659,7 +660,8 @@ static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
+>   			 loongson_dwmac_resume);
+>   
+>   static const struct pci_device_id loongson_dwmac_id_table[] = {
+> -	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
+> +	{ PCI_DEVICE_DATA(LOONGSON, GMAC1, &loongson_gmac_pci_info) },
+> +	{ PCI_DEVICE_DATA(LOONGSON, GMAC2, &loongson_gmac_pci_info) },
+>   	{ PCI_DEVICE_DATA(LOONGSON, GNET, &loongson_gnet_pci_info) },
+>   	{}
+>   };
