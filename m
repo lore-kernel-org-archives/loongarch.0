@@ -1,40 +1,40 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D627C257AD5
-	for <loongarch@lists.linux.dev>; Mon, 21 Apr 2025 05:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16401257AF1
+	for <loongarch@lists.linux.dev>; Mon, 21 Apr 2025 05:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745214529; cv=none; b=cjawibGpeaB8BBWss5zSoD+dgRYZTRa1MEJZ9sx2YARDhq7c3ZClJLbPQpitkswICs81c5mNxSnw0tj4t24htJtJmDKPonUXtqd6k64xYagpSiO7P32DL7S51fDvP41v6OBn27v979ZqtWcMaHtMayOC2FyLV/B3jkdx+eMYokE=
+	t=1745214531; cv=none; b=FrjJ9zx+t+ffR/fH8I/wabn8zy2pZMg8EP4ZKvevcUmqV3OmS2l8e6CHzf/rvp50X5H64CTF0kSFQQIgk2wCZDEi7SMY3upnrFcGwRecGYeiIM+lo2ucFL2jVdu428Bba8rOapBs5Dp7MInjvh7fD+s1W+QSVNZDpMQs3TKIE7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745214529; c=relaxed/simple;
-	bh=y9A3JRroeWYTxd46hgBlioZSDI2MwYHdP5wmDZ0pIv0=;
+	s=arc-20240116; t=1745214531; c=relaxed/simple;
+	bh=HTKtEFujXdWxwmOHB66Uck35dTxZ/n2lbnV3PodrQeM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FyWpTJsoXXGR/txgIGyyDey6kPkEfuBOqQdG7uQXxOcjmYS8YEjnRd1eQNcCxvNJRVJKsPJrY5tdZcbZVCJMxRMlUGCWY22sgKuR92vGA/2/11bOWnKROXLNRPy7d9MXkMcf66zx3gtzlkjzvW8CbaJa7Qpbuh22kJqLQp5hOFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nrXpzekV; arc=none smtp.client-ip=91.218.175.170
+	 MIME-Version; b=DsLVvDM11bUyP9qszcla8APSjrL8Nu2HOUymUos+Xt8YUTzjLVVEyd73e3gsLsBQBQGvpXLM3LhgMr6j5r++CPHT965SGgulXTvN09N0FUiyNREZCc9UM8Tvx2B/7jkNJtCwXiDB3aEmX6rNrehd+/r14kWZ+DXYTwbCJVi0Tjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Pwnh4tMX; arc=none smtp.client-ip=91.218.175.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nrXpzekV"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Pwnh4tMX"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745214524;
+	t=1745214526;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FAfNR08WgM84cbv74ne0ZkM/VlszL1AZGZbCuUQLpMc=;
-	b=nrXpzekVmChhYKK4Shj58pt3e0AUe4TSWs+FNeGEg14dHpS0MOOMnQTg63t+ofoUmID1TX
-	+NYCtK+1JEsoY3Lc7tkfj378cI+87N4DDnjtBRWeoMIEDqkDfQqymHUxL5FLmqHo90aY3E
-	FDmkZAEUffU6fdlOXHYFxOLPm+rn81s=
+	bh=23KSoHXN6CmttMFYMnbpbOo4nfH4OgEcFEIby3GMa4M=;
+	b=Pwnh4tMXe9udB7Y9lDtWS10PGowjnCJfjcdP89Q0wP72qrHAIw9Cd/NXLXhXfTOREYEtPx
+	gATvgQ3FeD0istweck9Xj6Fjs9J7bE+lCsJV5bR/DXMfaH5FrA/JSrJr7IHTZ3ewueUVyb
+	7Po8wrwsTyfmvyKT73fYQ6/N7SKEwZg=
 From: Youling Tang <youling.tang@linux.dev>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	youling.tang@linux.dev,
 	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH v2 1/3] LoongArch: Add fallback install.sh
-Date: Mon, 21 Apr 2025 13:47:42 +0800
-Message-Id: <20250421054744.46791-2-youling.tang@linux.dev>
+Subject: [PATCH v2 2/3] LoongArch: Using a generic scripts/install.sh in `make install`
+Date: Mon, 21 Apr 2025 13:47:43 +0800
+Message-Id: <20250421054744.46791-3-youling.tang@linux.dev>
 In-Reply-To: <20250421054744.46791-1-youling.tang@linux.dev>
 References: <20250421054744.46791-1-youling.tang@linux.dev>
 Precedence: bulk
@@ -48,79 +48,31 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Youling Tang <tangyouling@kylinos.cn>
 
-As specified in scripts/install.sh, the priority order is
-as follows (from highest to lowest):
-  ~/bin/installkernel
-  /sbin/installkernel
-  arch/loongarch/boot/install.sh
-
-Fallback to default install.sh if installkernel not found.
+Use the generic script/install.sh to perform the make install operation.
+This will automatically generate the initrd file and modify grub.cfg
+without manual intervention (The previous image and System.map will also
+be generated), similar to other architectures.
 
 Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 ---
- arch/loongarch/boot/install.sh | 53 ++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100755 arch/loongarch/boot/install.sh
+ arch/loongarch/Makefile | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/boot/install.sh b/arch/loongarch/boot/install.sh
-new file mode 100755
-index 000000000000..7ce76810b8b7
---- /dev/null
-+++ b/arch/loongarch/boot/install.sh
-@@ -0,0 +1,53 @@
-+#!/bin/sh
-+#
-+# This file is subject to the terms and conditions of the GNU General Public
-+# License.  See the file "COPYING" in the main directory of this archive
-+# for more details.
-+#
-+# Copyright (C) 1995 by Linus Torvalds
-+#
-+# Adapted from code in arch/i386/boot/Makefile by H. Peter Anvin
-+# Adapted from code in arch/i386/boot/install.sh by Russell King
-+#
-+# "make install" script for the LoongArch Linux port
-+#
-+# Arguments:
-+#   $1 - kernel version
-+#   $2 - kernel image file
-+#   $3 - kernel map file
-+#   $4 - default install path (blank if root directory)
-+
-+set -e
-+
-+case "${2##*/}" in
-+# Compressed install
-+vmlinuz.efi)
-+  echo "Installing compressed vmlinuz.efi kernel"
-+  base=vmlinuz
-+  ;;
-+# Uncompressed install
-+vmlinux.efi)
-+  echo "Installing uncompressed vmlinux.efi kernel"
-+  base=vmlinux
-+  ;;
-+vmlinux.elf)
-+  echo "Installing uncompressed vmlinux.elf kernel"
-+  base=vmlinux
-+  ;;
-+# Unexpected type
-+*)
-+ echo "Warning: Not expected kernel type"
-+ exit 1
-+ ;;
-+esac
-+
-+if [ -f $4/$base-$1 ]; then
-+  mv $4/$base-$1 $4/$base-$1.old
-+fi
-+cat $2 > $4/$base-$1
-+
-+# Install system map file
-+if [ -f $4/System.map-$1 ]; then
-+  mv $4/System.map-$1 $4/System.map-$1.old
-+fi
-+cp $3 $4/System.map-$1
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 0304eabbe606..64bdb52ddf7c 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -181,9 +181,7 @@ vmlinux.elf vmlinux.efi vmlinuz.efi: vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(bootvars-y) $(boot)/$@
+ 
+ install:
+-	$(Q)install -D -m 755 $(KBUILD_IMAGE) $(INSTALL_PATH)/$(image-name-y)-$(KERNELRELEASE)
+-	$(Q)install -D -m 644 .config $(INSTALL_PATH)/config-$(KERNELRELEASE)
+-	$(Q)install -D -m 644 System.map $(INSTALL_PATH)/System.map-$(KERNELRELEASE)
++	$(call cmd,install)
+ 
+ define archhelp
+ 	echo '  install              - install kernel into $(INSTALL_PATH)'
 -- 
 2.38.1
 
