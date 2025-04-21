@@ -1,169 +1,74 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D308B179BD
-	for <loongarch@lists.linux.dev>; Mon, 21 Apr 2025 01:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DACC12B63
+	for <loongarch@lists.linux.dev>; Mon, 21 Apr 2025 02:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745198532; cv=none; b=OQjAH5yG4Ch89gkd74KXOvxAKIvvSheMuzchXcpZ+hoBqkgrbtAF/TAH22vItr2/wqdMWq8/GeUxXL0iSkY1hWxdpWJUbFVCQf/p1Bib7ko+MsUn6SfE9G1LDzLqcI2oDmojUiAZJ/F68teZyxOKbTvBbc818aCvYS6C5TPL2/0=
+	t=1745201022; cv=none; b=fDLqj3vIuJ/cHLZBAaDrMTFKQk11yq2zf/2ZOG1NBf/nPfAaNGqjZ6Av8+xJIP0jK9nPDYqJZfE8/LQWYzEGuwbA8EqMNJYELoxg2fPkKUxOtJc5xKXOM0FM14h66F9GnrIlSo/DlpAMMdC/L+ulhy6708k8L2NCFU+fAR9GQtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745198532; c=relaxed/simple;
-	bh=SFE0MJRfjYH4OGtYcClVp9vSMnQJgeOEqGG4xlve4Vg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rVPG64MKQncxBuCwgUYjjEZbqUa6xpvE9x8a6LUk58hrX1BWojjcA/is/TUZnsiWZtoeshnGN6y10nGyfAXoutahjW500tNCGOF3+OmkzskKx710k5Hqml9jjxsM8j07FUV8lSnIYfu6juFfTtT4ykgnAZj4CREWc9zeS94oajg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=D3CB4m9P; arc=none smtp.client-ip=91.218.175.171
+	s=arc-20240116; t=1745201022; c=relaxed/simple;
+	bh=HTKtEFujXdWxwmOHB66Uck35dTxZ/n2lbnV3PodrQeM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AYm4XUIrzYavsfaD4lbb0lmrRIm/6bgcYqrkCHqDKP8KbwkNr91q8XqdS4VO1UkT7nmXVIj7zjNqtLA8ONIBoPa2+HfY1KWvequNiBRckU0y3UmNKk+Oo39A4a0egp7duY+NdKVq58KyQPNEaaEDbGIVJLtCHn+GF5SDa4IgQj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FtVIiOAn; arc=none smtp.client-ip=95.215.58.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="D3CB4m9P"
-Message-ID: <329a7e1e-d3dc-4dcc-9599-828b6ff1a0f1@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FtVIiOAn"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745198525;
+	t=1745201017;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=56eepAxGX2u61o56/SlW6FxmYQZ28USspOPPNVGSEvY=;
-	b=D3CB4m9PWee+iZiVHLBxgU7qhe0ehupvlmj0ZU3ayFyo6x2E+QpcZ9lkCHu9OfELc4+3ap
-	2tHCRLBdLArKgAINFexKPVKcbaml/JEyxzp6JNmXX3bVlIoKzQbKCwk14IgWKwOVL7em/T
-	RDCVoew9eE6PTnGIZaNDVVYLnNjFn/I=
-Date: Mon, 21 Apr 2025 09:21:45 +0800
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=23KSoHXN6CmttMFYMnbpbOo4nfH4OgEcFEIby3GMa4M=;
+	b=FtVIiOAn+eztX05R+oIltFimhqzfM3mAW/G1dmzEM+MGHlj61u3bRNQ96RkSdspzQQiuwn
+	mX9HtB+6YncI78Vfn4DfyQOXUga2y1ynbPYp1PXSMFLjtabCnWWQzY2ujLB5X8EpEm3j6U
+	bzXPhISF73txhBLHoLv5oXkOtxzBdgw=
+From: Youling Tang <youling.tang@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	youling.tang@linux.dev,
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: [PATCH 1/3] LoongArch/build: Using a generic scripts/install.sh in `make install`
+Date: Mon, 21 Apr 2025 10:02:59 +0800
+Message-Id: <20250421020301.34185-1-youling.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next V2 1/3] net: stmmac: dwmac-loongson: Move queue
- number init to common function
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Henry Chen <chenx97@aosc.io>, Biao Dong <dongbiao@loongson.cn>,
- Baoqi Zhang <zhangbaoqi@loongson.cn>
-References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
- <20250416144132.3857990-2-chenhuacai@loongson.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250416144132.3857990-2-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
+From: Youling Tang <tangyouling@kylinos.cn>
 
-在 4/16/25 10:41 PM, Huacai Chen 写道:
-> Currently, the tx and rx queue number initialization is duplicated in
-> loongson_gmac_data() and loongson_gnet_data(), so move it to the common
-> function loongson_default_data().
->
-> This is a preparation for later patches.
->
-> Tested-by: Henry Chen <chenx97@aosc.io>
-> Tested-by: Biao Dong <dongbiao@loongson.cn>
-> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Use the generic script/install.sh to perform the make install operation.
+This will automatically generate the initrd file and modify grub.cfg
+without manual intervention (The previous image and System.map will also
+be generated), similar to other architectures.
 
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+---
+ arch/loongarch/Makefile | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 0304eabbe606..64bdb52ddf7c 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -181,9 +181,7 @@ vmlinux.elf vmlinux.efi vmlinuz.efi: vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(bootvars-y) $(boot)/$@
+ 
+ install:
+-	$(Q)install -D -m 755 $(KBUILD_IMAGE) $(INSTALL_PATH)/$(image-name-y)-$(KERNELRELEASE)
+-	$(Q)install -D -m 644 .config $(INSTALL_PATH)/config-$(KERNELRELEASE)
+-	$(Q)install -D -m 644 System.map $(INSTALL_PATH)/System.map-$(KERNELRELEASE)
++	$(call cmd,install)
+ 
+ define archhelp
+ 	echo '  install              - install kernel into $(INSTALL_PATH)'
+-- 
+2.38.1
 
-Thanks,
-
-Yanteng
-
-> ---
->   .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 54 ++++++-------------
->   1 file changed, 16 insertions(+), 38 deletions(-)
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> index 1a93787056a7..2fb7a137b312 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> @@ -83,6 +83,8 @@ struct stmmac_pci_info {
->   static void loongson_default_data(struct pci_dev *pdev,
->   				  struct plat_stmmacenet_data *plat)
->   {
-> +	struct loongson_data *ld = plat->bsp_priv;
-> +
->   	/* Get bus_id, this can be overwritten later */
->   	plat->bus_id = pci_dev_id(pdev);
->   
-> @@ -116,32 +118,27 @@ static void loongson_default_data(struct pci_dev *pdev,
->   
->   	plat->dma_cfg->pbl = 32;
->   	plat->dma_cfg->pblx8 = true;
-> +
-> +	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
-> +		plat->rx_queues_to_use = CHANNEL_NUM;
-> +		plat->tx_queues_to_use = CHANNEL_NUM;
-> +
-> +		/* Only channel 0 supports checksum,
-> +		 * so turn off checksum to enable multiple channels.
-> +		 */
-> +		for (int i = 1; i < CHANNEL_NUM; i++)
-> +			plat->tx_queues_cfg[i].coe_unsupported = 1;
-> +	} else {
-> +		plat->tx_queues_to_use = 1;
-> +		plat->rx_queues_to_use = 1;
-> +	}
->   }
->   
->   static int loongson_gmac_data(struct pci_dev *pdev,
->   			      struct plat_stmmacenet_data *plat)
->   {
-> -	struct loongson_data *ld;
-> -	int i;
-> -
-> -	ld = plat->bsp_priv;
-> -
->   	loongson_default_data(pdev, plat);
->   
-> -	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
-> -		plat->rx_queues_to_use = CHANNEL_NUM;
-> -		plat->tx_queues_to_use = CHANNEL_NUM;
-> -
-> -		/* Only channel 0 supports checksum,
-> -		 * so turn off checksum to enable multiple channels.
-> -		 */
-> -		for (i = 1; i < CHANNEL_NUM; i++)
-> -			plat->tx_queues_cfg[i].coe_unsupported = 1;
-> -	} else {
-> -		plat->tx_queues_to_use = 1;
-> -		plat->rx_queues_to_use = 1;
-> -	}
-> -
->   	plat->phy_interface = PHY_INTERFACE_MODE_RGMII_ID;
->   
->   	return 0;
-> @@ -172,27 +169,8 @@ static void loongson_gnet_fix_speed(void *priv, int speed, unsigned int mode)
->   static int loongson_gnet_data(struct pci_dev *pdev,
->   			      struct plat_stmmacenet_data *plat)
->   {
-> -	struct loongson_data *ld;
-> -	int i;
-> -
-> -	ld = plat->bsp_priv;
-> -
->   	loongson_default_data(pdev, plat);
->   
-> -	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
-> -		plat->rx_queues_to_use = CHANNEL_NUM;
-> -		plat->tx_queues_to_use = CHANNEL_NUM;
-> -
-> -		/* Only channel 0 supports checksum,
-> -		 * so turn off checksum to enable multiple channels.
-> -		 */
-> -		for (i = 1; i < CHANNEL_NUM; i++)
-> -			plat->tx_queues_cfg[i].coe_unsupported = 1;
-> -	} else {
-> -		plat->tx_queues_to_use = 1;
-> -		plat->rx_queues_to_use = 1;
-> -	}
-> -
->   	plat->phy_interface = PHY_INTERFACE_MODE_GMII;
->   	plat->mdio_bus_data->phy_mask = ~(u32)BIT(2);
->   	plat->fix_mac_speed = loongson_gnet_fix_speed;
