@@ -1,243 +1,83 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CC419CD1B
-	for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 02:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39DA81CAA79
+	for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 07:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288989; cv=none; b=deXFRUdVgdGZ5Gy2VWMRuDY9frEf+BVOmzis1ONQ8dN+d+wIvQTZMJ8thhan7HqD0izYdEyEJF7uZkZwwbYEMLEYSXOyuyNF7ELhQzWKilnVXnVdSeMa8nL9maN6xewV3/OXFDE03LAHEK0QdvFxtTa0S0EMqKFYCTBw3OOW5WI=
+	t=1745308168; cv=none; b=E/G20YogEQf59jdoUIQ3OIsJz7Ea+g1sJ6IP37PkJ1DEZ+pjb2bR9tFhKmuvqbetnTsVf3mVD2MngvoigpZ6tBZe9vguPWp/SvQrpxJjHIcSYuUAkF1rwiyNxiWWA2XtEizjPTdk9+11qPJyJ2Uyd/qLrS+v7NrpyjNpQDvDZyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288989; c=relaxed/simple;
-	bh=tVa7GIhpI0NwTOHCDlMqhyckvtYinVRvJ22Q+x1zBS4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VIFc8yBzM7Rr1DDic54ILaWG6Y9OB3Ec9k7WoZozNJ+73yIhLEKmmAkivYLn6ysNXFOrlIdU4p24SsyK4YKHKVUnjVEns/mwwSuR98ejvK9+mFJCoVlSo93MsDads9BqcQX/syr6MxsqCB7yVI9GYY/7rX4VLbZnXFb3WbulU0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V8eB9Lvf; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V8eB9Lvf"
-Message-ID: <99ae096a-e14f-44bc-a520-a3198e7c0671@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745288983;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ua+k9/MdgJ0TKCXUAuG1GGWStOBoaKgVe0E5C+mR/mY=;
-	b=V8eB9Lvf/fZU07PBzUN6ggY+QD0SgC8dL+LlvrnCYwIkEKYk5UMllS3MUXpAOEa6Z17Bjh
-	CN4cxxDyjf3tROqqduPs6IsUx0SwcA7KpXsVR6/4HsBLePStarr7x41FYq4Zk0i2qmvWZx
-	aRqqM4vMyMTk2OkXcyJiFEZFeZL0roE=
-Date: Tue, 22 Apr 2025 10:29:24 +0800
+	s=arc-20240116; t=1745308168; c=relaxed/simple;
+	bh=88lOgi3xu7hzqGNyHhhR9o/AIcemv5r5pdFBgOamQyI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AC5kBIBzmi6qGo04ic8o70iC77xZSeDkSxL4sMSfQA7Y+iDdfN/uKIJeAxKcaeu9lEjokYEQJ9lQssydUp4G0Hq8jTBLPxQG16ghLIoe7KWwDuMIx3z+mE8iK7NtDqO3bdodQFYDCB2ZMLylIxhZm8ChuHgyinnYLSU9JVoXoXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxaeH+SQdoIOHDAA--.18635S3;
+	Tue, 22 Apr 2025 15:49:18 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDx_MT9SQdoWaGPAA--.27089S2;
+	Tue, 22 Apr 2025 15:49:18 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: loongarch@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] rtla: Define __NR_sched_setattr for LoongArch
+Date: Tue, 22 Apr 2025 15:49:17 +0800
+Message-ID: <20250422074917.25771-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next V2 2/3] net: stmmac: dwmac-loongson: Add new
- multi-chan IP core support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Feiyang Chen <chris.chenfeiyang@gmail.com>,
- loongarch@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
- Henry Chen <chenx97@aosc.io>, Biao Dong <dongbiao@loongson.cn>,
- Baoqi Zhang <zhangbaoqi@loongson.cn>
-References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
- <20250416144132.3857990-3-chenhuacai@loongson.cn>
- <fe0a5e7a-6bb2-45ef-8172-c06684885b36@linux.dev>
- <CAAhV-H5ELoqM8n5A-DD7LOzjb2mkRDR+pM-CAOcfGwZYcVQQ-A@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <CAAhV-H5ELoqM8n5A-DD7LOzjb2mkRDR+pM-CAOcfGwZYcVQQ-A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowMDx_MT9SQdoWaGPAA--.27089S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XFy3Xr1fWrWxZFW7JryUtwc_yoWfGwb_tr
+	yxAw17Xr95CrWUtwnrXFW5CF1fWay3ZF4v93Z7trZruF15KFy5XFs0kr98WF1Ykr4qyF9r
+	Gws3tr1ruw4YkosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07URa0PUUUUU=
 
+When executing "make -C tools/tracing/rtla" on LoongArch, there exists
+the following error:
 
-在 4/21/25 12:20 PM, Huacai Chen 写道:
-> Hi, Yanteng,
->
-> On Mon, Apr 21, 2025 at 10:04 AM Yanteng Si <si.yanteng@linux.dev> wrote:
->>
->> 在 4/16/25 10:41 PM, Huacai Chen 写道:
->>> Add a new multi-chan IP core (0x12) support which is used in Loongson-
->>> 2K3000/Loongson-3B6000M. Compared with the 0x10 core, the new 0x12 core
->>> reduces channel numbers from 8 to 4, but checksum is supported for all
->>> channels.
->>>
->>> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
->>> Tested-by: Henry Chen <chenx97@aosc.io>
->>> Tested-by: Biao Dong <dongbiao@loongson.cn>
->>> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
->>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->>> ---
->>>    .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 62 +++++++++++--------
->>>    1 file changed, 37 insertions(+), 25 deletions(-)
->>>
->>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->>> index 2fb7a137b312..57917f26ab4d 100644
->>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->>> @@ -68,10 +68,11 @@
->>>
->>>    #define PCI_DEVICE_ID_LOONGSON_GMAC 0x7a03
->>>    #define PCI_DEVICE_ID_LOONGSON_GNET 0x7a13
->>> -#define DWMAC_CORE_LS_MULTICHAN      0x10    /* Loongson custom ID */
->>> -#define CHANNEL_NUM                  8
->>> +#define DWMAC_CORE_MULTICHAN_V1      0x10    /* Loongson custom ID 0x10 */
->>> +#define DWMAC_CORE_MULTICHAN_V2      0x12    /* Loongson custom ID 0x12 */
->>>
->>>    struct loongson_data {
->>> +     u32 multichan;
->> In order to make the logic clearer, I suggest splitting this patch.：
->>
->>
->> 2/4  Add multichan for loongson_data
->>
->> 3/4 Add new multi-chan IP core support
-> I don't think the patch is unclear now, the multichan flag is really a
-> combination of DWMAC_CORE_MULTICHAN_V1 and DWMAC_CORE_MULTICHAN_V2.
-OK, please describe this code modification in the commit message.
->
->>
->>>        u32 loongson_id;
->>>        struct device *dev;
->>>    };
->>> @@ -119,18 +120,29 @@ static void loongson_default_data(struct pci_dev *pdev,
->>>        plat->dma_cfg->pbl = 32;
->>>        plat->dma_cfg->pblx8 = true;
->>>
->>> -     if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
->>> -             plat->rx_queues_to_use = CHANNEL_NUM;
->>> -             plat->tx_queues_to_use = CHANNEL_NUM;
->>> +     switch (ld->loongson_id) {
->>> +     case DWMAC_CORE_MULTICHAN_V1:
->> How about adding some comments? For example:
->>
->> case DWMAC_CORE_MULTICHAN_V1:   /* 2K2000 */
->> case DWMAC_CORE_MULTICHAN_V2:   /* 2K3000 and 3B6000M */
-> Do you know why we deprecate PRID (a.k.a SOC name) detection and
-> prefer CPUCFG detection in cpu_probe()? Because SOC-types and function
-> features are orthogonal, they should not be strictly bound. There will
-> be other SOCs using MULTICHAN_V1 or MULTICHAN_V2, should we update the
-> comments every time when a new SOC publishes? There may also be one
-> SOC with different IP-cores, then how to comment on this case?
+  src/utils.c:237:24: error: '__NR_sched_setattr' undeclared
 
-In my opinion, having something is better than having nothing.
+Just define __NR_sched_setattr for LoongArch if not exist.
 
-I've come up with a way to address your concerns:
+Reported-by: Haiyong Sun <sunhaiyong@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/tracing/rtla/src/utils.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+index 4995d35cf3ec..d6ab15dcb490 100644
+--- a/tools/tracing/rtla/src/utils.c
++++ b/tools/tracing/rtla/src/utils.c
+@@ -227,6 +227,8 @@ long parse_ns_duration(char *val)
+ #  define __NR_sched_setattr	355
+ # elif __s390x__
+ #  define __NR_sched_setattr	345
++# elif __loongarch__
++#  define __NR_sched_setattr	274
+ # endif
+ #endif
+ 
+-- 
+2.42.0
 
-case DWMAC_CORE_MULTICHAN_V1:   /* 2K2000 ... */
-case DWMAC_CORE_MULTICHAN_V2:   /* 2K3000, 3B6000M ...*/
-
-
-These limited comments are very friendly to developers outside
-
-Loongson Company. Of course, I don't want to discuss this matter
-
-any further. If you don't want to add code comments, I won't object
-
-to this patch because of that.
-
->
->> ...
->>
->>> +             ld->multichan = 1;
->>> +             plat->rx_queues_to_use = 8;
->>> +             plat->tx_queues_to_use = 8;
->>>
->>>                /* Only channel 0 supports checksum,
->>>                 * so turn off checksum to enable multiple channels.
->>>                 */
->>> -             for (int i = 1; i < CHANNEL_NUM; i++)
->>> +             for (int i = 1; i < 8; i++)
->>>                        plat->tx_queues_cfg[i].coe_unsupported = 1;
->>> -     } else {
->>> +
->>> +             break;
->>> +     case DWMAC_CORE_MULTICHAN_V2:
->>> +             ld->multichan = 1;
->>> +             plat->rx_queues_to_use = 4;
->>> +             plat->tx_queues_to_use = 4;
->>> +             break;
->>> +     default:
->>> +             ld->multichan = 0;
->>>                plat->tx_queues_to_use = 1;
->>>                plat->rx_queues_to_use = 1;
->>> +             break;
->>>        }
->>>    }
->>>
->>> @@ -328,14 +340,14 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
->>>                return NULL;
->>>
->>>        /* The Loongson GMAC and GNET devices are based on the DW GMAC
->>> -      * v3.50a and v3.73a IP-cores. But the HW designers have changed the
->>> -      * GMAC_VERSION.SNPSVER field to the custom 0x10 value on the
->>> -      * network controllers with the multi-channels feature
->>> +      * v3.50a and v3.73a IP-cores. But the HW designers have changed
->>> +      * the GMAC_VERSION.SNPSVER field to the custom 0x10/0x12 value
->>> +      * on the network controllers with the multi-channels feature
->>>         * available to emphasize the differences: multiple DMA-channels,
->>>         * AV feature and GMAC_INT_STATUS CSR flags layout. Get back the
->>>         * original value so the correct HW-interface would be selected.
->>>         */
->>> -     if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
->>> +     if (ld->multichan) {
->>>                priv->synopsys_id = DWMAC_CORE_3_70;
->>>                *dma = dwmac1000_dma_ops;
->>>                dma->init_chan = loongson_dwmac_dma_init_channel;
->>> @@ -356,13 +368,13 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
->>>        if (mac->multicast_filter_bins)
->>>                mac->mcast_bits_log2 = ilog2(mac->multicast_filter_bins);
->>>
->>> -     /* Loongson GMAC doesn't support the flow control. LS2K2000
->>> -      * GNET doesn't support the half-duplex link mode.
->>> +     /* Loongson GMAC doesn't support the flow control. Loongson GNET
->>> +      * without multi-channel doesn't support the half-duplex link mode.
->>>         */
->>>        if (pdev->device == PCI_DEVICE_ID_LOONGSON_GMAC) {
->>>                mac->link.caps = MAC_10 | MAC_100 | MAC_1000;
->>>        } else {
->>> -             if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN)
->>> +             if (ld->multichan)
->>>                        mac->link.caps = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
->>>                                         MAC_10 | MAC_100 | MAC_1000;
->>>                else
->>> @@ -391,9 +403,11 @@ static int loongson_dwmac_msi_config(struct pci_dev *pdev,
->>>                                     struct plat_stmmacenet_data *plat,
->>>                                     struct stmmac_resources *res)
->>>    {
->>> -     int i, ret, vecs;
->>> +     int i, ch_num, ret, vecs;
->>>
->>> -     vecs = roundup_pow_of_two(CHANNEL_NUM * 2 + 1);
->>> +     ch_num = min(plat->tx_queues_to_use, plat->rx_queues_to_use);
->> I'm curious. Will there still be hardware with RX not equal to TX in the
->> future?
-> Currently rx queue number is equal to tx queue number, but
-> min(plat->tx_queues_to_use, plat->rx_queues_to_use) is still the best
-> solution. If not, which one should be used here? tx_queues_to_use or
-> rx_queues_to_use?
-
-All right.
-
-
-Thanks,
-
-Yanteng
-
->
-> Huacai
->
->>
->> Thanks,
->>
->> Yanteng
->>
->>
