@@ -1,138 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC52D15B115;
-	Tue, 22 Apr 2025 07:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84AB24BBEC
+	for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 08:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745308410; cv=none; b=mQDKMdSpj+/ZCo2Cl055M295z2Lyu/XKanFAEQ0jrreCzLUoUJaz7KuVbKaB79/PcrxyZNBL5rGLg/HoB4jbmluHOiBvRbf4W48YoCG41UcO/kLC0Qlf22lpz6XbulGlFFZx8LEFCV2gSu9+rQSeEmIk5qX+h5r4BUUNcOMzF+8=
+	t=1745310095; cv=none; b=khM4K75J6iiXT+x9BTe9LHNPLqKnUURrZYmL2csJt1EpHjnkeSRPQr97JRe8t1npJN5uM20BrG3dPhXicXn38z5BFVAnJMuQxpeVnjF9NONgiFU527d0Yo3BxV+BSMqp0t4eK0Ap4+ihrT8Nj55s/ZJe+u47k4lZtH+K5zhmsYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745308410; c=relaxed/simple;
-	bh=kwB0a86wE2nShYbf16A4URlr365wNayqQZSZU/CPmQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qjdrQlLpC6yHH1yB1e1A6fq4Vayx20YPTThAoQBBzEndDfUJsK6NRf1O23aoVgxi2Sq/PS8FuGUeX8kogjFy0SwoOt9lPfrE4qx4tl7Ir9TpszsAvbi+Hb5+tptqJPbIy0H5m1jW9QVqTzP0pXQ61ZjbiN4S4Daj8StYpFSECBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IsbAgfN2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745310095; c=relaxed/simple;
+	bh=7hcHPGUjHgIqJWh8JfloOCfacNCsHEB3EZKSoBFwgoQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PfNcLW06foC4OQzfrknS01SmB2t7M9OF2VEC8Xb9xKylTpZym58ss1IB6JMyl9S8VfiWflU2KYBii3d4aPIxxkWAv9J+ANSTy8no/p8Bjulw0Hx4zvSrTminrZ0lD6y6kcFBWMTVjfbgn1hDyCubCD8rppEevu3d0woBL1bLdl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=W/8gag7Z; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IsbAgfN2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95A2C4CEE9;
-	Tue, 22 Apr 2025 07:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745308409;
-	bh=kwB0a86wE2nShYbf16A4URlr365wNayqQZSZU/CPmQs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IsbAgfN2P8M1IJl09b9TIBsWTYvYi5JK6s3EtlQbIJ66/YL/S6+CnrzO5NW2mJPfK
-	 RQDX/80InlSw904V57fGVCo0+fS/VkstWRjbOn/tVUi5u9c2sPV2gqM8NVWolF1QLG
-	 G1O5jRi67SEqJ7qjExqKsD8oZ2cfNipfepiXfSKk=
-Date: Tue, 22 Apr 2025 09:53:27 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jan Stancek <jstancek@redhat.com>, Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	R Nageswara Sastry <rnsastry@linux.ibm.com>,
-	Neal Gompa <neal@gompa.dev>
-Subject: Re: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11
- provider for OPENSSL MAJOR >= 3
-Message-ID: <2025042213-throttle-destruct-004b@gregkh>
-References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
- <20250319064031.2971073-4-chenhuacai@loongson.cn>
- <2025031943-disparity-dash-cfa3@gregkh>
- <Z9rYQy3l5V5cvW7W@t14s>
- <2025031942-portside-finite-34a9@gregkh>
- <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
- <CAAhV-H7ECQp4S8SNF8_fbK2CHHpgAsfAZk4QdJLYb4iXtjLYyA@mail.gmail.com>
- <CAASaF6zvEntqKZUzqRjw4Pp5edsRHdd0Dz7-RD=TTMc1n_HMPA@mail.gmail.com>
- <CAAhV-H7h5SW40jDyJs2naBQ3ZLH9S_PLNeq=19P5+75jwT5eYQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="W/8gag7Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745310052;
+	bh=JdsM9Qm5wZLMP/iGrG0PmmBZq7+rJ6WyAgG/IfufPuA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=W/8gag7ZfpcG9PrbC0TExEa6hiLwOqegZlBlXkWFuUTuCtMojjcH60oYNu910IMEE
+	 FIY6/nl+peraUQc0sNSyUmjIGN953yk1vhU7NN7LPw5zhJSOObSihvQlDQyZy1V3z/
+	 +CQQrl9fR8Hu/w7S/YgtjbcEjgBT+6VizNzGUXW0=
+X-QQ-mid: zesmtpip2t1745310034t45cb9d0f
+X-QQ-Originating-IP: /StdUmGbCyVKdK8oWoJJaynvgvySgpQ6RdugyU4ivcI=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 16:20:32 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 17761032627602379019
+EX-QQ-RecipientCnt: 10
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	wangyuli@uniontech.com,
+	maobibo@loongson.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 6.1/6.6/6.12] LoongArch: Eliminate superfluous get_numa_distances_cnt()
+Date: Tue, 22 Apr 2025 16:20:06 +0800
+Message-ID: <BE39E39147C04E96+20250422082006.89643-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7h5SW40jDyJs2naBQ3ZLH9S_PLNeq=19P5+75jwT5eYQ@mail.gmail.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MyhNtuNETreeP8VLAhGlnYq1zn/+boQYvT84hWcM1khhfMesoKoJHeay
+	OoO08Sb1a/D4O9Cs7+mbXPr7C+34RT56ZGSONcryEpk5cegxBcVFzsm/IDGJ0q+zTOzuNgF
+	AKYtgj+2KYq1AKIsCTBKZqMryak2wmnZlIOtUpQ0P/iT3Cl1fa6EmGMnfCLMIYW+SlvOrjG
+	knxLiRI+0PDc92XtqheOhUldK3Uj5GJIwrL4wmx67rHI+abrSVdUPX0E9r2DEv9TfKHODzq
+	0x/YCbrAI1AHI02lztDRB3pMSFLwzjQhhC/CfDr9vJ4/zYQiC+VY0hw8Ab6iJqwiuKHYdyg
+	bAxamuoxxznYvJV5EOeKVfJOyKtoZdL7oIHOYQ3ZRaSiDLlYMw80NsWjrvMqypAZrjxBIj8
+	aX/bj5ATd44GPNIzFZLcc3+5huLj7hUIecPg6IDhr7faV7STBTz9C2oiTrqXlWJIgsF3NpY
+	BhFeH5zEK+eZ34QbuMF9dfo7qZFLhSTtflYEx4DfXSkM3HjgxCy0w36y7hJP++HovIvbdAM
+	qQoH6PtsdB8JK3DMhIE8Jr1dT57z3hRaIN8axYhNU7f/t8rThWifRFPCA3toSVqIHGGCKIf
+	2QTLjh8sjVio6yaeMvg8ZewVbc1hMN5hC7HuVUb/j+PesLqCphTNbOazEWLZxzIeprauUzk
+	DmyBdwpeIPXdAC1oUMh1C/5PAdTtij1ZJgaNl8Wt5WmDCvaxepcgEzUbixQaKWkwYKHYaMI
+	EyktMf8vjOLyEFugOVIUUTL8ZxAEWwN+vUx5h+TBD2vTtznO3VxBJAlT+eaMArAJrIn9kgp
+	GRG0/vtbO1fra6H5vHTBr1qwBJhMkEAaNMzTAsAF0rLOLfDbVQQfU+69BWQ5TXbyYs+eGhZ
+	v6sl7og5poAFNc46HK7JQzGeCD5Klpu+PNlyQt8Evq12Z+Z8KEkpTWKhbkiyf6cY4Nj//ZA
+	eo0NufC4zCzWJMLiXHix3AYUBTFj/WyFt43IuQLowhR30bvP/iunqakXPjEJb9jpKzxY=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Apr 14, 2025 at 09:52:35PM +0800, Huacai Chen wrote:
-> Hi, Greg and Sasha,
-> 
-> On Sun, Mar 30, 2025 at 9:40 PM Jan Stancek <jstancek@redhat.com> wrote:
-> >
-> > On Sun, Mar 30, 2025 at 3:08 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > >
-> > > On Thu, Mar 20, 2025 at 12:53 AM Jan Stancek <jstancek@redhat.com> wrote:
-> > > >
-> > > > On Wed, Mar 19, 2025 at 5:26 PM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Wed, Mar 19, 2025 at 03:44:19PM +0100, Jan Stancek wrote:
-> > > > > > On Wed, Mar 19, 2025 at 07:13:13AM -0700, Greg Kroah-Hartman wrote:
-> > > > > > > On Wed, Mar 19, 2025 at 02:40:31PM +0800, Huacai Chen wrote:
-> > > > > > > > From: Jan Stancek <jstancek@redhat.com>
-> > > > > > > >
-> > > > > > > > commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
-> > > > > > > >
-> > > > > > > > ENGINE API has been deprecated since OpenSSL version 3.0 [1].
-> > > > > > > > Distros have started dropping support from headers and in future
-> > > > > > > > it will likely disappear also from library.
-> > > > > > > >
-> > > > > > > > It has been superseded by the PROVIDER API, so use it instead
-> > > > > > > > for OPENSSL MAJOR >= 3.
-> > > > > > > >
-> > > > > > > > [1] https://github.com/openssl/openssl/blob/master/README-ENGINES.md
-> > > > > > > >
-> > > > > > > > [jarkko: fixed up alignment issues reported by checkpatch.pl --strict]
-> > > > > > > >
-> > > > > > > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
-> > > > > > > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > > > > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-> > > > > > > > Reviewed-by: Neal Gompa <neal@gompa.dev>
-> > > > > > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > > > > ---
-> > > > > > > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
-> > > > > > > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
-> > > > > > > >  2 files changed, 138 insertions(+), 58 deletions(-)
-> > > > > > >
-> > > > > > > This seems to differ from what is upstream by a lot, please document
-> > > > > > > what you changed from it and why when you resend this series again.
-> > > > > >
-> > > > > > Hunks are arranged differently, but code appears to be identical.
-> > > > > > When I apply the series to v6.6.83 and compare with upstream I get:
-> > > > >
-> > > > > If so, why is the diffstat different?  Also why are the hunks arranged
-> > > > > differently,
-> > > >
-> > > > He appears to be using "--diff-algorithm=minimal", while you probably
-> > > > patience or histogram.
-> > > Hi, Jan,
-> > >
-> > > I tried --diff-algorithm=minimal/patience/histogram from the upstream
-> > > commit, they all give the same result as this patch. But Sasha said
-> > > the upstream diffstat is different, so how does he generate the patch?
-> >
-> > Hi,
-> >
-> > I don't know how he generates the patch, but with git-2.43 I get noticable
-> > different patches and diff stats for minimal vs. histogram. "minimal" one
-> > matches your v3 patch. I don't know details of Greg's workflow, just offered
-> > one possible explanation that would allow this series to progress further.
-> >
-> > $ git format-patch -1 --stdout --diff-algorithm=minimal 558bdc45dfb2 |
-> > grep -A3 -m1 -- "---"
-> Could you please tell me how you generate patches? I always get the
-> same result from the upstream repo.a
+From: Yuli Wang <wangyuli@uniontech.com>
 
-A simple 'git show' is all I use.  Try it again and submit what you have
-if you can't get anything different here.
+[ Upstream commit a0d3c8bcb9206ac207c7ad3182027c6b0a1319bb ]
 
-Note, my algorithm is set to "algorithm = histogram" in my .gitconfig
-file.
+In LoongArch, get_numa_distances_cnt() isn't in use, resulting in a
+compiler warning.
 
-thanks,
+Fix follow errors with clang-18 when W=1e:
 
-greg k-h
+arch/loongarch/kernel/acpi.c:259:28: error: unused function 'get_numa_distances_cnt' [-Werror,-Wunused-function]
+  259 | static inline unsigned int get_numa_distances_cnt(struct acpi_table_slit *slit)
+      |                            ^~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+
+Link: https://lore.kernel.org/all/Z7bHPVUH4lAezk0E@kernel.org/
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/acpi.c | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 382a09a7152c..1120ac2824f6 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -249,18 +249,6 @@ static __init int setup_node(int pxm)
+ 	return acpi_map_pxm_to_node(pxm);
+ }
+ 
+-/*
+- * Callback for SLIT parsing.  pxm_to_node() returns NUMA_NO_NODE for
+- * I/O localities since SRAT does not list them.  I/O localities are
+- * not supported at this point.
+- */
+-unsigned int numa_distance_cnt;
+-
+-static inline unsigned int get_numa_distances_cnt(struct acpi_table_slit *slit)
+-{
+-	return slit->locality_count;
+-}
+-
+ void __init numa_set_distance(int from, int to, int distance)
+ {
+ 	if ((u8)distance != distance || (from == to && distance != LOCAL_DISTANCE)) {
+-- 
+2.49.0
+
