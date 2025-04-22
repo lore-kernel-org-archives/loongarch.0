@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0E7427D779
-	for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 12:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67B5B27E1C3
+	for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 12:32:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745325136; cv=none; b=O5y63zFkEwf7OCDC/UbDN4hRnLWRvqm/0SxQy+z93ttTzkHmmwf+4BLzbMXxz6g/tofCI4T38QmdAhFB7WnSQOSEZYqhu07nfHqsyOKRErO7u1k1xlzHWV2UqFkC3alTkgW6TrfGf7mjdf0fieFI1yKUPlw7Gpd0CfDHzp0t0S8=
+	t=1745325151; cv=none; b=s17jq7YijM4RciUEjB3s2o3lkkxkWKA17cGRz47dRgawiDZFJqwZdpFaKZELxuZ22Jr3nl3SqaPHs2iQvZqneFTopRsGUJQjke/1S5JZb8NTW4C9o6vQExzkTHHL/dp1jBhVPvLnr4LGIfmJQWYBOw3IIB935KR2Kmjlsmsf6G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745325136; c=relaxed/simple;
-	bh=tfD7M20cP0D+irF1aqqM0KqwJMCbTvGphLb/LBpnGjg=;
+	s=arc-20240116; t=1745325151; c=relaxed/simple;
+	bh=7ybQb+1fYQ9nDV2w2AqFUb1y78jzKoQw4hSaMH4Zke0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=adFxT8u9cqqth3zgqwBD7ojSYipP2IeE+U5zT4ryt28+k9LAlfCV+9FMVkO9wvjeUxDk39se7XMAYae8wcY+3bCPkiF+eK9mY+7DbvVo/woQ6EJPHz8lY0ne/yJ/D3u+pTJIH4APMFNMCDiuQ/wwNYpnWnFH/fdbTtGthYLeYM4=
+	 MIME-Version; b=oubIUpp0zSDzqKJkLV6hDU4eRd1Z9YLPuMK5RMP6z4LB99n+lcrwx2SZtOzJbYRrsvzPYsx2Gyne/lxFI8JCbyU5o/cmdkG/tfLW2gqCh88M7C0ITaomoGxA84jkNBfOo8UlMy1ym3jJT6JYOGWMqaT32+L2r1bq2rz6IG9tyUk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.238])
-	by gateway (Coremail) with SMTP id _____8BxlmlKjAdo2wbEAA--.62298S3;
-	Tue, 22 Apr 2025 20:32:10 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxvnJbjAdo7AbEAA--.62989S3;
+	Tue, 22 Apr 2025 20:32:27 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.238])
-	by front1 (Coremail) with SMTP id qMiowMAxTRszjAdoEPePAA--.4685S3;
-	Tue, 22 Apr 2025 20:32:06 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAxTRszjAdoEPePAA--.4685S4;
+	Tue, 22 Apr 2025 20:32:26 +0800 (CST)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
@@ -34,9 +34,9 @@ Cc: Xuerui Wang <kernel@xen0n.name>,
 	R Nageswara Sastry <rnsastry@linux.ibm.com>,
 	Neal Gompa <neal@gompa.dev>,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 6.1&6.6 V4 1/3] sign-file,extract-cert: move common SSL helper functions to a header
-Date: Tue, 22 Apr 2025 20:31:33 +0800
-Message-ID: <20250422123135.1784083-2-chenhuacai@loongson.cn>
+Subject: [PATCH 6.1&6.6 V4 2/3] sign-file,extract-cert: avoid using deprecated ERR_get_error_line()
+Date: Tue, 22 Apr 2025 20:31:34 +0800
+Message-ID: <20250422123135.1784083-3-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250422123135.1784083-1-chenhuacai@loongson.cn>
 References: <20250422123135.1784083-1-chenhuacai@loongson.cn>
@@ -47,32 +47,35 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxTRszjAdoEPePAA--.4685S3
+X-CM-TRANSID:qMiowMAxTRszjAdoEPePAA--.4685S4
 X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Jw15ur1kKw1Uur45ZFW7WrX_yoW7GrW7pa
-	1fAw1ftr93JF9rGasrCFyYg3Wj9rWvkr1jvrZrKw1fAFn8A34Iva92kw1Fg348XFyDA3W3
-	urW5XFyjkr48J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxGFyDGFW3Ar1kCr15Jw18JFc_yoW5KrWkpa
+	1xXwn7trykXFZ8Gr9rAFy0g3Wj9F4vkr4jvFnrG39xZF1DX3yIgw1Sq3Wa9348ZF95J3W3
+	AFn8X340kr48C3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4Xo7DUUUU
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8_gA5UUUUU==
 
 From: Jan Stancek <jstancek@redhat.com>
 
-commit 300e6d4116f956b035281ec94297dc4dc8d4e1d3 upstream.
+commit 467d60eddf55588add232feda325da7215ddaf30 upstream.
 
-Couple error handling helpers are repeated in both tools, so
-move them to a common header.
+ERR_get_error_line() is deprecated since OpenSSL 3.0.
+
+Use ERR_peek_error_line() instead, and combine display_openssl_errors()
+and drain_openssl_errors() to a single function where parameter decides
+if it should consume errors silently.
 
 Signed-off-by: Jan Stancek <jstancek@redhat.com>
 Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
@@ -81,125 +84,87 @@ Reviewed-by: Neal Gompa <neal@gompa.dev>
 Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- MAINTAINERS          |  1 +
- certs/Makefile       |  2 +-
- certs/extract-cert.c | 37 ++-----------------------------------
- scripts/sign-file.c  | 37 ++-----------------------------------
- scripts/ssl-common.h | 39 +++++++++++++++++++++++++++++++++++++++
- 5 files changed, 45 insertions(+), 71 deletions(-)
- create mode 100644 scripts/ssl-common.h
+ certs/extract-cert.c |  4 ++--
+ scripts/sign-file.c  |  6 +++---
+ scripts/ssl-common.h | 23 ++++++++---------------
+ 3 files changed, 13 insertions(+), 20 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9278c30ef1d5..23f902884855 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5204,6 +5204,7 @@ S:	Maintained
- F:	Documentation/admin-guide/module-signing.rst
- F:	certs/
- F:	scripts/sign-file.c
-+F:	scripts/ssl-common.h
- F:	tools/certs/
- 
- CFAG12864B LCD DRIVER
-diff --git a/certs/Makefile b/certs/Makefile
-index 1094e3860c2a..f6fa4d8d75e0 100644
---- a/certs/Makefile
-+++ b/certs/Makefile
-@@ -84,5 +84,5 @@ targets += x509_revocation_list
- 
- hostprogs := extract-cert
- 
--HOSTCFLAGS_extract-cert.o = $(shell $(HOSTPKG_CONFIG) --cflags libcrypto 2> /dev/null)
-+HOSTCFLAGS_extract-cert.o = $(shell $(HOSTPKG_CONFIG) --cflags libcrypto 2> /dev/null) -I$(srctree)/scripts
- HOSTLDLIBS_extract-cert = $(shell $(HOSTPKG_CONFIG) --libs libcrypto 2> /dev/null || echo -lcrypto)
 diff --git a/certs/extract-cert.c b/certs/extract-cert.c
-index 70e9ec89d87d..8e7ba9974a1f 100644
+index 8e7ba9974a1f..61bbe0085671 100644
 --- a/certs/extract-cert.c
 +++ b/certs/extract-cert.c
-@@ -23,6 +23,8 @@
- #include <openssl/err.h>
- #include <openssl/engine.h>
+@@ -99,11 +99,11 @@ int main(int argc, char **argv)
+ 		parms.cert = NULL;
  
-+#include "ssl-common.h"
-+
- /*
-  * OpenSSL 3.0 deprecates the OpenSSL's ENGINE API.
-  *
-@@ -40,41 +42,6 @@ void format(void)
- 	exit(2);
- }
- 
--static void display_openssl_errors(int l)
--{
--	const char *file;
--	char buf[120];
--	int e, line;
--
--	if (ERR_peek_error() == 0)
--		return;
--	fprintf(stderr, "At main.c:%d:\n", l);
--
--	while ((e = ERR_get_error_line(&file, &line))) {
--		ERR_error_string(e, buf);
--		fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
--	}
--}
--
--static void drain_openssl_errors(void)
--{
--	const char *file;
--	int line;
--
--	if (ERR_peek_error() == 0)
--		return;
--	while (ERR_get_error_line(&file, &line)) {}
--}
--
--#define ERR(cond, fmt, ...)				\
--	do {						\
--		bool __cond = (cond);			\
--		display_openssl_errors(__LINE__);	\
--		if (__cond) {				\
--			err(1, fmt, ## __VA_ARGS__);	\
--		}					\
--	} while(0)
--
- static const char *key_pass;
- static BIO *wb;
- static char *cert_dst;
+ 		ENGINE_load_builtin_engines();
+-		drain_openssl_errors();
++		drain_openssl_errors(__LINE__, 1);
+ 		e = ENGINE_by_id("pkcs11");
+ 		ERR(!e, "Load PKCS#11 ENGINE");
+ 		if (ENGINE_init(e))
+-			drain_openssl_errors();
++			drain_openssl_errors(__LINE__, 1);
+ 		else
+ 			ERR(1, "ENGINE_init");
+ 		if (key_pass)
 diff --git a/scripts/sign-file.c b/scripts/sign-file.c
-index 3edb156ae52c..39ba58db5d4e 100644
+index 39ba58db5d4e..bb3fdf1a617c 100644
 --- a/scripts/sign-file.c
 +++ b/scripts/sign-file.c
-@@ -29,6 +29,8 @@
- #include <openssl/err.h>
- #include <openssl/engine.h>
+@@ -114,11 +114,11 @@ static EVP_PKEY *read_private_key(const char *private_key_name)
+ 		ENGINE *e;
  
-+#include "ssl-common.h"
-+
- /*
-  * OpenSSL 3.0 deprecates the OpenSSL's ENGINE API.
-  *
-@@ -83,41 +85,6 @@ void format(void)
- 	exit(2);
- }
+ 		ENGINE_load_builtin_engines();
+-		drain_openssl_errors();
++		drain_openssl_errors(__LINE__, 1);
+ 		e = ENGINE_by_id("pkcs11");
+ 		ERR(!e, "Load PKCS#11 ENGINE");
+ 		if (ENGINE_init(e))
+-			drain_openssl_errors();
++			drain_openssl_errors(__LINE__, 1);
+ 		else
+ 			ERR(1, "ENGINE_init");
+ 		if (key_pass)
+@@ -273,7 +273,7 @@ int main(int argc, char **argv)
+ 
+ 		/* Digest the module data. */
+ 		OpenSSL_add_all_digests();
+-		display_openssl_errors(__LINE__);
++		drain_openssl_errors(__LINE__, 0);
+ 		digest_algo = EVP_get_digestbyname(hash_algo);
+ 		ERR(!digest_algo, "EVP_get_digestbyname");
+ 
+diff --git a/scripts/ssl-common.h b/scripts/ssl-common.h
+index e6711c75ed91..2db0e181143c 100644
+--- a/scripts/ssl-common.h
++++ b/scripts/ssl-common.h
+@@ -3,7 +3,7 @@
+  * SSL helper functions shared by sign-file and extract-cert.
+  */
  
 -static void display_openssl_errors(int l)
--{
--	const char *file;
--	char buf[120];
--	int e, line;
--
--	if (ERR_peek_error() == 0)
--		return;
++static void drain_openssl_errors(int l, int silent)
+ {
+ 	const char *file;
+ 	char buf[120];
+@@ -11,28 +11,21 @@ static void display_openssl_errors(int l)
+ 
+ 	if (ERR_peek_error() == 0)
+ 		return;
 -	fprintf(stderr, "At main.c:%d:\n", l);
--
++	if (!silent)
++		fprintf(stderr, "At main.c:%d:\n", l);
+ 
 -	while ((e = ERR_get_error_line(&file, &line))) {
--		ERR_error_string(e, buf);
++	while ((e = ERR_peek_error_line(&file, &line))) {
+ 		ERR_error_string(e, buf);
 -		fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
--	}
--}
--
++		if (!silent)
++			fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
++		ERR_get_error();
+ 	}
+ }
+ 
 -static void drain_openssl_errors(void)
 -{
 -	const char *file;
@@ -210,63 +175,14 @@ index 3edb156ae52c..39ba58db5d4e 100644
 -	while (ERR_get_error_line(&file, &line)) {}
 -}
 -
--#define ERR(cond, fmt, ...)				\
--	do {						\
--		bool __cond = (cond);			\
+ #define ERR(cond, fmt, ...)				\
+ 	do {						\
+ 		bool __cond = (cond);			\
 -		display_openssl_errors(__LINE__);	\
--		if (__cond) {				\
--			errx(1, fmt, ## __VA_ARGS__);	\
--		}					\
--	} while(0)
--
- static const char *key_pass;
- 
- static int pem_pw_cb(char *buf, int len, int w, void *v)
-diff --git a/scripts/ssl-common.h b/scripts/ssl-common.h
-new file mode 100644
-index 000000000000..e6711c75ed91
---- /dev/null
-+++ b/scripts/ssl-common.h
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: LGPL-2.1+ */
-+/*
-+ * SSL helper functions shared by sign-file and extract-cert.
-+ */
-+
-+static void display_openssl_errors(int l)
-+{
-+	const char *file;
-+	char buf[120];
-+	int e, line;
-+
-+	if (ERR_peek_error() == 0)
-+		return;
-+	fprintf(stderr, "At main.c:%d:\n", l);
-+
-+	while ((e = ERR_get_error_line(&file, &line))) {
-+		ERR_error_string(e, buf);
-+		fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
-+	}
-+}
-+
-+static void drain_openssl_errors(void)
-+{
-+	const char *file;
-+	int line;
-+
-+	if (ERR_peek_error() == 0)
-+		return;
-+	while (ERR_get_error_line(&file, &line)) {}
-+}
-+
-+#define ERR(cond, fmt, ...)				\
-+	do {						\
-+		bool __cond = (cond);			\
-+		display_openssl_errors(__LINE__);	\
-+		if (__cond) {				\
-+			errx(1, fmt, ## __VA_ARGS__);	\
-+		}					\
-+	} while (0)
++		drain_openssl_errors(__LINE__, 0);	\
+ 		if (__cond) {				\
+ 			errx(1, fmt, ## __VA_ARGS__);	\
+ 		}					\
 -- 
 2.47.1
 
