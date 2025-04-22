@@ -1,91 +1,181 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C23B277032
-	for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 11:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27F827D763
+	for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 12:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745320048; cv=none; b=CZHdoINuKmjmAdObhia5bcv6opZKIDgracLvKqSHzylVxVPSrT1DsFdpdOwOSmSrbvjnTwjr/WlvxVlVm8XPkdKjNBBL1ZXlhybXGupZoASpc1AnYUW48JCzEASeSTly4+0q4KQQQwE82agPa7l7CpvaBR2DtK5cAekRWH+n3Vk=
+	t=1745325052; cv=none; b=Yl3RIgw9mW47yqTa5bXWEeWiZ3fBrXs324JhMMrznr/14kK2TKYBVQaYzSKEBHlgLbvUuujdA/V2bl9qY+N+Yy9vfQ4cwnWigFSU0onkJFRgx/LQwRlKEXJmf4IYRYQXw8czLecvl62+aKHc6SN+N1WXiYYOKm4x8LXdovzNcyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745320048; c=relaxed/simple;
-	bh=B0mqH/GhTJVmfY3J8t0PqVycZFkniE9/OOhD7YK8Q0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C24ldFUfKRmBcK1av986B/KQ3mR+nabybCTrtGL1uhsZ5XtM6aoAQSJrX9czvrAkRpNwgO8ra1FgQLz6Iz3CMdk+yI9w/atro7HjNHDMj10iy7ss/VNFGHG93W+RhZSqfM6kg/q7kcq+2SRsxXWodnbtVO89KLt9q/y5mqMiN/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx32tpeAdo_PvDAA--.62868S3;
-	Tue, 22 Apr 2025 19:07:21 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCxbsVneAdoe9yPAA--.33268S3;
-	Tue, 22 Apr 2025 19:07:21 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] LoongArch: Make regs_irqs_disabled() more clear
-Date: Tue, 22 Apr 2025 19:07:18 +0800
-Message-ID: <20250422110719.15673-2-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250422110719.15673-1-yangtiezhu@loongson.cn>
-References: <20250422110719.15673-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1745325052; c=relaxed/simple;
+	bh=+xGHpnZfETb4tjUpz3mu6GNY/9R7BjlVlNDhNT5Wfds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sX1iGDr5Ehxt49l+VhqYIRE1NQdgZ8pIqBlDxWlcKrC6ksz/JvcAYHyJ1ibpZB11ZUb0nmF2WW5PHuu6XvemzjvigJCNmF/SmGzmRiRf6RKjpCwB5PfEQJWgbEG0NBOTTpxupLGx7yy2J9hDcJ8t42/qXbXAlNG8SCDzK9Wca80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0N2agaV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0N2agaV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351FDC4CEEA
+	for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 12:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745325052;
+	bh=+xGHpnZfETb4tjUpz3mu6GNY/9R7BjlVlNDhNT5Wfds=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=W0N2agaVptFo5boKIVa/4m9nrAdDjXPLgMAznzn7Hg6fY9YKHKIIVx+j/+cQNz2IF
+	 GhMO60oYBt/T2/W9bGjM69IOVnEIiTJehp9mV/KwvH2uZ8ve/JJq5izon6JMOsXiD6
+	 On9UGBJgGS0MTOTWlZRzdPQxHQUvvSYkGvJ9TR5WEquhFcojeywDphziZixPMpPOGq
+	 +iqhpkW4ecWG/mkn0Zxk6PFTC6PKSRMOffs+1lSif5E+NpzDkHXntZ9uQ/SNeIiCiB
+	 gwlx2ecG3sqRzMp9RB2oSSDw6ip6qYLHx1xMDiWg6/LF8+cTVj3v8n7tyjWiAWTo1T
+	 UedNGV33NF5lw==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so8332693a12.3
+        for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 05:30:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjXBW08yZ9KF+A/ICZDy0tKeW2sAjJwEJyNsnVrUE2Hh4l10Q+J7mlyyyYe7z2NhqunS8glZUHAC0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwxKMdjyrTeVey+n6udZJmsQSg62FqP3Ex2F0NzWdlOPJ8BSz0D
+	xlbUu5SHOicLMrCdI0YyQfF4zrejkIrBJ+1NKxiCpqZRiRL7kt0y+ypbMUIK5Sc3HNo2r9sv5QA
+	pI8Sr1hQwue3LzBficbeygTFCmlA=
+X-Google-Smtp-Source: AGHT+IGfEBTaHRyUlz10z552U4a09AtElLy+HMb6/8nIVep6DEsI3SCMLMgnpZCb7VW60FmSJ6qxYwt2Km64sfYxYhA=
+X-Received: by 2002:a17:907:3f96:b0:aca:b45a:7c86 with SMTP id
+ a640c23a62f3a-acb74aa9323mr1428985766b.1.1745325050728; Tue, 22 Apr 2025
+ 05:30:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxbsVneAdoe9yPAA--.33268S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cr1rWF1xtw1UZF4UXryUCFX_yoW8GrWUpF
-	9rCF97GF48uF109FZrXFZ8XrZ8JrZ5G392kw17Ga4YyF15Xr1Fqrn7Gw1YvFy8Aa9ayFya
-	qFn8tr1rZF45ZabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
+ <20250319064031.2971073-4-chenhuacai@loongson.cn> <2025031943-disparity-dash-cfa3@gregkh>
+ <Z9rYQy3l5V5cvW7W@t14s> <2025031942-portside-finite-34a9@gregkh>
+ <CAASaF6zNsiwUOcSD177aORwfBu4kaq8EKh1XdZkO13kgedcOPA@mail.gmail.com>
+ <CAAhV-H7ECQp4S8SNF8_fbK2CHHpgAsfAZk4QdJLYb4iXtjLYyA@mail.gmail.com>
+ <CAASaF6zvEntqKZUzqRjw4Pp5edsRHdd0Dz7-RD=TTMc1n_HMPA@mail.gmail.com>
+ <CAAhV-H7h5SW40jDyJs2naBQ3ZLH9S_PLNeq=19P5+75jwT5eYQ@mail.gmail.com> <2025042213-throttle-destruct-004b@gregkh>
+In-Reply-To: <2025042213-throttle-destruct-004b@gregkh>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 22 Apr 2025 20:30:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5A+GL0B7Mkv67W1XLmMeh4v0GrHfbq=HHa5WPixvvVpg@mail.gmail.com>
+X-Gm-Features: ATxdqUGCwdjqOQpt6bT5EIQqJKUX6C8yqQBALzT_CAtxV5HvWZHQ_1yXsHWqUuY
+Message-ID: <CAAhV-H5A+GL0B7Mkv67W1XLmMeh4v0GrHfbq=HHa5WPixvvVpg@mail.gmail.com>
+Subject: Re: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11
+ provider for OPENSSL MAJOR >= 3
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jan Stancek <jstancek@redhat.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Sasha Levin <sashal@kernel.org>, Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, 
+	David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, R Nageswara Sastry <rnsastry@linux.ibm.com>, 
+	Neal Gompa <neal@gompa.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the current code, the definition of regs_irqs_disabled() is actually
-!(regs->csr_prmd & CSR_CRMD_IE) because arch_irqs_disabled_flags() is
-defined as !(flags & CSR_CRMD_IE), it looks a little strange.
+On Tue, Apr 22, 2025 at 3:53=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Apr 14, 2025 at 09:52:35PM +0800, Huacai Chen wrote:
+> > Hi, Greg and Sasha,
+> >
+> > On Sun, Mar 30, 2025 at 9:40=E2=80=AFPM Jan Stancek <jstancek@redhat.co=
+m> wrote:
+> > >
+> > > On Sun, Mar 30, 2025 at 3:08=E2=80=AFPM Huacai Chen <chenhuacai@kerne=
+l.org> wrote:
+> > > >
+> > > > On Thu, Mar 20, 2025 at 12:53=E2=80=AFAM Jan Stancek <jstancek@redh=
+at.com> wrote:
+> > > > >
+> > > > > On Wed, Mar 19, 2025 at 5:26=E2=80=AFPM Greg Kroah-Hartman
+> > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > >
+> > > > > > On Wed, Mar 19, 2025 at 03:44:19PM +0100, Jan Stancek wrote:
+> > > > > > > On Wed, Mar 19, 2025 at 07:13:13AM -0700, Greg Kroah-Hartman =
+wrote:
+> > > > > > > > On Wed, Mar 19, 2025 at 02:40:31PM +0800, Huacai Chen wrote=
+:
+> > > > > > > > > From: Jan Stancek <jstancek@redhat.com>
+> > > > > > > > >
+> > > > > > > > > commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
+> > > > > > > > >
+> > > > > > > > > ENGINE API has been deprecated since OpenSSL version 3.0 =
+[1].
+> > > > > > > > > Distros have started dropping support from headers and in=
+ future
+> > > > > > > > > it will likely disappear also from library.
+> > > > > > > > >
+> > > > > > > > > It has been superseded by the PROVIDER API, so use it ins=
+tead
+> > > > > > > > > for OPENSSL MAJOR >=3D 3.
+> > > > > > > > >
+> > > > > > > > > [1] https://github.com/openssl/openssl/blob/master/README=
+-ENGINES.md
+> > > > > > > > >
+> > > > > > > > > [jarkko: fixed up alignment issues reported by checkpatch=
+.pl --strict]
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
+> > > > > > > > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > > > > > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+> > > > > > > > > Reviewed-by: Neal Gompa <neal@gompa.dev>
+> > > > > > > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > > > > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > > > > > ---
+> > > > > > > > >  certs/extract-cert.c | 103 +++++++++++++++++++++++++++++=
++-------------
+> > > > > > > > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++---=
+---------
+> > > > > > > > >  2 files changed, 138 insertions(+), 58 deletions(-)
+> > > > > > > >
+> > > > > > > > This seems to differ from what is upstream by a lot, please=
+ document
+> > > > > > > > what you changed from it and why when you resend this serie=
+s again.
+> > > > > > >
+> > > > > > > Hunks are arranged differently, but code appears to be identi=
+cal.
+> > > > > > > When I apply the series to v6.6.83 and compare with upstream =
+I get:
+> > > > > >
+> > > > > > If so, why is the diffstat different?  Also why are the hunks a=
+rranged
+> > > > > > differently,
+> > > > >
+> > > > > He appears to be using "--diff-algorithm=3Dminimal", while you pr=
+obably
+> > > > > patience or histogram.
+> > > > Hi, Jan,
+> > > >
+> > > > I tried --diff-algorithm=3Dminimal/patience/histogram from the upst=
+ream
+> > > > commit, they all give the same result as this patch. But Sasha said
+> > > > the upstream diffstat is different, so how does he generate the pat=
+ch?
+> > >
+> > > Hi,
+> > >
+> > > I don't know how he generates the patch, but with git-2.43 I get noti=
+cable
+> > > different patches and diff stats for minimal vs. histogram. "minimal"=
+ one
+> > > matches your v3 patch. I don't know details of Greg's workflow, just =
+offered
+> > > one possible explanation that would allow this series to progress fur=
+ther.
+> > >
+> > > $ git format-patch -1 --stdout --diff-algorithm=3Dminimal 558bdc45dfb=
+2 |
+> > > grep -A3 -m1 -- "---"
+> > Could you please tell me how you generate patches? I always get the
+> > same result from the upstream repo.a
+>
+> A simple 'git show' is all I use.  Try it again and submit what you have
+> if you can't get anything different here.
+>
+> Note, my algorithm is set to "algorithm =3D histogram" in my .gitconfig
+> file.
+OK, it seems I can generate the correct patches as yours now, I will
+send V4 later.
 
-Define regs_irqs_disabled() as !(regs->csr_prmd & CSR_PRMD_PIE) directly
-to make it more clear, no functional change.
+Huacai
 
-While at it, the return value of regs_irqs_disabled() is true or false,
-so change its type to reflect that and also make it always inline.
-
-Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/ptrace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-index f3ddaed9ef7f..a5b63c84f854 100644
---- a/arch/loongarch/include/asm/ptrace.h
-+++ b/arch/loongarch/include/asm/ptrace.h
-@@ -33,9 +33,9 @@ struct pt_regs {
- 	unsigned long __last[];
- } __aligned(8);
- 
--static inline int regs_irqs_disabled(struct pt_regs *regs)
-+static __always_inline bool regs_irqs_disabled(struct pt_regs *regs)
- {
--	return arch_irqs_disabled_flags(regs->csr_prmd);
-+	return !(regs->csr_prmd & CSR_PRMD_PIE);
- }
- 
- static inline unsigned long kernel_stack_pointer(struct pt_regs *regs)
--- 
-2.42.0
-
+>
+> thanks,
+>
+> greg k-h
