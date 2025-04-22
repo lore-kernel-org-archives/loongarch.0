@@ -1,216 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E53B1DFDA5;
-	Mon, 21 Apr 2025 18:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CC419CD1B
+	for <loongarch@lists.linux.dev>; Tue, 22 Apr 2025 02:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745261892; cv=none; b=cyQ0GtmC0xj2ZU8MULGFyTO0yMOrSkOgkHcy/GqXPD5b0NxA0FCx+FgX90ECqWkF99ygDopBhbQcO9nuMGfOCLd2nPylWdlhbjjQ9ibKMw6/U+99ba6u1HNGt9py4zeWgrciNTTHFZ7ZBotn5tnpSnq2bM5bFNwI4XIbLuOpytY=
+	t=1745288989; cv=none; b=deXFRUdVgdGZ5Gy2VWMRuDY9frEf+BVOmzis1ONQ8dN+d+wIvQTZMJ8thhan7HqD0izYdEyEJF7uZkZwwbYEMLEYSXOyuyNF7ELhQzWKilnVXnVdSeMa8nL9maN6xewV3/OXFDE03LAHEK0QdvFxtTa0S0EMqKFYCTBw3OOW5WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745261892; c=relaxed/simple;
-	bh=B6sys5WdN91Aw6eHyVt/FtKngZPJQdoTWF7tsS23tyg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lueq5Z+VqcssOhdzWm/k1TEenM80aro3W1WM9b9C8nX6VoUUTYuNtIfQix+04EQ/j1FEIN9dL3Zv2LEXojnLA/Rk0UTg/Re5uAH0x5EU0FqGngmDYU3rjx6v9WBre2Cm8pnGDEo6k1OSF1NqQMNHLIGc8kufRxT885SECl2cXRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JDX5Hns2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745288989; c=relaxed/simple;
+	bh=tVa7GIhpI0NwTOHCDlMqhyckvtYinVRvJ22Q+x1zBS4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VIFc8yBzM7Rr1DDic54ILaWG6Y9OB3Ec9k7WoZozNJ+73yIhLEKmmAkivYLn6ysNXFOrlIdU4p24SsyK4YKHKVUnjVEns/mwwSuR98ejvK9+mFJCoVlSo93MsDads9BqcQX/syr6MxsqCB7yVI9GYY/7rX4VLbZnXFb3WbulU0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V8eB9Lvf; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JDX5Hns2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D548C4CEE4;
-	Mon, 21 Apr 2025 18:58:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745261891;
-	bh=B6sys5WdN91Aw6eHyVt/FtKngZPJQdoTWF7tsS23tyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JDX5Hns2KRvUaHfWr5Dk8GDwNDEtbg2c7Wf28ZBBW9rRno4JODflvPGjEaKPaEQkX
-	 AmOoQU8cWNZGSymOq3w+GhIR8WOmJHDIvxW9l109Jz18A3a3ah3NulNnSZ9CxT1lRS
-	 MAwI6Jcu3yvgURPQhFf/LP2mVSOeRX3yJBmdAhMhWdb5aUVkvwCH9rPYplGPFrq+X5
-	 fwOk/sim0UaekNq0vOVxqtja4AyQWD/0sagTRn+KeOxsmvHkcBsDhXhRkPfFYjzzCs
-	 MpkkyxAQvriLMT7Yw0jfs3Cyawiz6UGU65OSOPHTqA8p3SjRGG+9lK8BT/1o+xlYGf
-	 IuHAJt6TXP7Mw==
-Date: Mon, 21 Apr 2025 21:58:07 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, peterhuewe@gmx.de,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org, jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v8 4/5] tpm: Add a driver for Loongson TPM device
-Message-ID: <aAaVP8yG6rM436uw@kernel.org>
-References: <20250418093407.1335-1-zhaoqunqin@loongson.cn>
- <20250418093407.1335-5-zhaoqunqin@loongson.cn>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V8eB9Lvf"
+Message-ID: <99ae096a-e14f-44bc-a520-a3198e7c0671@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745288983;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ua+k9/MdgJ0TKCXUAuG1GGWStOBoaKgVe0E5C+mR/mY=;
+	b=V8eB9Lvf/fZU07PBzUN6ggY+QD0SgC8dL+LlvrnCYwIkEKYk5UMllS3MUXpAOEa6Z17Bjh
+	CN4cxxDyjf3tROqqduPs6IsUx0SwcA7KpXsVR6/4HsBLePStarr7x41FYq4Zk0i2qmvWZx
+	aRqqM4vMyMTk2OkXcyJiFEZFeZL0roE=
+Date: Tue, 22 Apr 2025 10:29:24 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418093407.1335-5-zhaoqunqin@loongson.cn>
-
-On Fri, Apr 18, 2025 at 05:34:06PM +0800, Qunqin Zhao wrote:
-> Loongson Security Engine supports random number generation, hash,
-> symmetric encryption and asymmetric encryption. Based on these
-> encryption functions, TPM2 have been implemented in the Loongson
-> Security Engine firmware. This driver is responsible for copying data
-> into the memory visible to the firmware and receiving data from the
-> firmware.
-> 
-> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
-> v8: In the send callback, it will wait until the TPM2 command is
->     completed. So do not need to wait in the recv callback.
->     Removed Jarkko's tag cause there are some changes in v8
-> 
-> v7: Moved Kconfig entry between TCG_IBMVTPM and TCG_XEN.
->     Added Jarkko's tag(a little change, should be fine).
-> 
-> v6: Replace all "ls6000se" with "loongson"
->     Prefix all with tpm_loongson instead of tpm_lsse.
->     Removed Jarkko's tag cause there are some changes in v6
-> 
-> v5: None
-> v4: Prefix all with tpm_lsse instead of tpm.
->     Removed MODULE_AUTHOR fields.
-> 
-> v3: Added reminder about Loongson security engine to git log.
-> 
->  drivers/char/tpm/Kconfig        |  9 ++++
->  drivers/char/tpm/Makefile       |  1 +
->  drivers/char/tpm/tpm_loongson.c | 78 +++++++++++++++++++++++++++++++++
->  3 files changed, 88 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_loongson.c
-> 
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index fe4f3a609..34302a875 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -189,6 +189,15 @@ config TCG_IBMVTPM
->  	  will be accessible from within Linux.  To compile this driver
->  	  as a module, choose M here; the module will be called tpm_ibmvtpm.
->  
-> +config TCG_LOONGSON
-> +	tristate "Loongson TPM Interface"
-> +	depends on CRYPTO_DEV_LOONGSON_SE
-> +	help
-> +	  If you want to make Loongson TPM support available, say Yes and
-> +	  it will be accessible from within Linux. To compile this
-> +	  driver as a module, choose M here; the module will be called
-> +	  tpm_loongson.
-> +
->  config TCG_XEN
->  	tristate "XEN TPM Interface"
->  	depends on TCG_TPM && XEN
-> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> index 2b004df8c..cb534b235 100644
-> --- a/drivers/char/tpm/Makefile
-> +++ b/drivers/char/tpm/Makefile
-> @@ -45,3 +45,4 @@ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
->  obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
->  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
->  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-> +obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
-> diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
-> new file mode 100644
-> index 000000000..c4d69d28d
-> --- /dev/null
-> +++ b/drivers/char/tpm/tpm_loongson.c
-> @@ -0,0 +1,78 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
-> +
-> +#include <linux/device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/wait.h>
-> +
-> +#include "../../drivers/crypto/loongson/loongson-se.h"
-> +#include "tpm.h"
-> +
-> +struct tpm_loongson_cmd {
-> +	u32 cmd_id;
-> +	u32 data_off;
-> +	u32 data_len;
-> +	u32 pad[5];
-> +};
-> +
-> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-> +{
-> +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-> +	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
-> +
-> +	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
-> +
-> +	return cmd_ret->data_len;
-> +}
-> +
-> +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> +{
-> +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-> +	struct tpm_loongson_cmd *cmd = tpm_engine->command;
-> +
-> +	cmd->data_len = count;
-> +	memcpy(tpm_engine->data_buffer, buf, count);
-> +
-> +	return loongson_se_send_engine_cmd(tpm_engine);
-> +}
-> +
-> +static const struct tpm_class_ops tpm_loongson_ops = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
-> +	.recv = tpm_loongson_recv,
-> +	.send = tpm_loongson_send,
-> +};
-> +
-> +static int tpm_loongson_probe(struct platform_device *pdev)
-> +{
-> +	struct loongson_se_engine *tpm_engine;
-> +	struct device *dev = &pdev->dev;
-> +	struct tpm_loongson_cmd *cmd;
-> +	struct tpm_chip *chip;
-> +
-> +	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
-> +	if (!tpm_engine)
-> +		return -ENODEV;
-> +	cmd = tpm_engine->command;
-> +	cmd->cmd_id = SE_CMD_TPM;
-> +	cmd->data_off = tpm_engine->buffer_off;
-> +
-> +	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
-> +	dev_set_drvdata(&chip->dev, tpm_engine);
-> +
-> +	return tpm_chip_register(chip);
-> +}
-> +
-> +static struct platform_driver tpm_loongson_driver = {
-> +	.probe   = tpm_loongson_probe,
-> +	.driver  = {
-> +		.name  = "loongson-tpm",
-> +	},
-> +};
-> +module_platform_driver(tpm_loongson_driver);
+Subject: Re: [PATCH net-next V2 2/3] net: stmmac: dwmac-loongson: Add new
+ multi-chan IP core support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Feiyang Chen <chris.chenfeiyang@gmail.com>,
+ loongarch@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+ Henry Chen <chenx97@aosc.io>, Biao Dong <dongbiao@loongson.cn>,
+ Baoqi Zhang <zhangbaoqi@loongson.cn>
+References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
+ <20250416144132.3857990-3-chenhuacai@loongson.cn>
+ <fe0a5e7a-6bb2-45ef-8172-c06684885b36@linux.dev>
+ <CAAhV-H5ELoqM8n5A-DD7LOzjb2mkRDR+pM-CAOcfGwZYcVQQ-A@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <CAAhV-H5ELoqM8n5A-DD7LOzjb2mkRDR+pM-CAOcfGwZYcVQQ-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
-It's otherwise fine but this should be just "tpm_loongson" :-)
+在 4/21/25 12:20 PM, Huacai Chen 写道:
+> Hi, Yanteng,
+>
+> On Mon, Apr 21, 2025 at 10:04 AM Yanteng Si <si.yanteng@linux.dev> wrote:
+>>
+>> 在 4/16/25 10:41 PM, Huacai Chen 写道:
+>>> Add a new multi-chan IP core (0x12) support which is used in Loongson-
+>>> 2K3000/Loongson-3B6000M. Compared with the 0x10 core, the new 0x12 core
+>>> reduces channel numbers from 8 to 4, but checksum is supported for all
+>>> channels.
+>>>
+>>> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>>> Tested-by: Henry Chen <chenx97@aosc.io>
+>>> Tested-by: Biao Dong <dongbiao@loongson.cn>
+>>> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+>>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+>>> ---
+>>>    .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 62 +++++++++++--------
+>>>    1 file changed, 37 insertions(+), 25 deletions(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+>>> index 2fb7a137b312..57917f26ab4d 100644
+>>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+>>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+>>> @@ -68,10 +68,11 @@
+>>>
+>>>    #define PCI_DEVICE_ID_LOONGSON_GMAC 0x7a03
+>>>    #define PCI_DEVICE_ID_LOONGSON_GNET 0x7a13
+>>> -#define DWMAC_CORE_LS_MULTICHAN      0x10    /* Loongson custom ID */
+>>> -#define CHANNEL_NUM                  8
+>>> +#define DWMAC_CORE_MULTICHAN_V1      0x10    /* Loongson custom ID 0x10 */
+>>> +#define DWMAC_CORE_MULTICHAN_V2      0x12    /* Loongson custom ID 0x12 */
+>>>
+>>>    struct loongson_data {
+>>> +     u32 multichan;
+>> In order to make the logic clearer, I suggest splitting this patch.：
+>>
+>>
+>> 2/4  Add multichan for loongson_data
+>>
+>> 3/4 Add new multi-chan IP core support
+> I don't think the patch is unclear now, the multichan flag is really a
+> combination of DWMAC_CORE_MULTICHAN_V1 and DWMAC_CORE_MULTICHAN_V2.
+OK, please describe this code modification in the commit message.
+>
+>>
+>>>        u32 loongson_id;
+>>>        struct device *dev;
+>>>    };
+>>> @@ -119,18 +120,29 @@ static void loongson_default_data(struct pci_dev *pdev,
+>>>        plat->dma_cfg->pbl = 32;
+>>>        plat->dma_cfg->pblx8 = true;
+>>>
+>>> -     if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
+>>> -             plat->rx_queues_to_use = CHANNEL_NUM;
+>>> -             plat->tx_queues_to_use = CHANNEL_NUM;
+>>> +     switch (ld->loongson_id) {
+>>> +     case DWMAC_CORE_MULTICHAN_V1:
+>> How about adding some comments? For example:
+>>
+>> case DWMAC_CORE_MULTICHAN_V1:   /* 2K2000 */
+>> case DWMAC_CORE_MULTICHAN_V2:   /* 2K3000 and 3B6000M */
+> Do you know why we deprecate PRID (a.k.a SOC name) detection and
+> prefer CPUCFG detection in cpu_probe()? Because SOC-types and function
+> features are orthogonal, they should not be strictly bound. There will
+> be other SOCs using MULTICHAN_V1 or MULTICHAN_V2, should we update the
+> comments every time when a new SOC publishes? There may also be one
+> SOC with different IP-cores, then how to comment on this case?
 
-+1 revision add
+In my opinion, having something is better than having nothing.
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+I've come up with a way to address your concerns:
 
-as long as this is renamed.
 
-> +
-> +MODULE_ALIAS("platform:loongson-tpm");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("Loongson TPM driver");
-> -- 
-> 2.45.2
-> 
-> 
+case DWMAC_CORE_MULTICHAN_V1:   /* 2K2000 ... */
+case DWMAC_CORE_MULTICHAN_V2:   /* 2K3000, 3B6000M ...*/
 
-BR, Jarkko
+
+These limited comments are very friendly to developers outside
+
+Loongson Company. Of course, I don't want to discuss this matter
+
+any further. If you don't want to add code comments, I won't object
+
+to this patch because of that.
+
+>
+>> ...
+>>
+>>> +             ld->multichan = 1;
+>>> +             plat->rx_queues_to_use = 8;
+>>> +             plat->tx_queues_to_use = 8;
+>>>
+>>>                /* Only channel 0 supports checksum,
+>>>                 * so turn off checksum to enable multiple channels.
+>>>                 */
+>>> -             for (int i = 1; i < CHANNEL_NUM; i++)
+>>> +             for (int i = 1; i < 8; i++)
+>>>                        plat->tx_queues_cfg[i].coe_unsupported = 1;
+>>> -     } else {
+>>> +
+>>> +             break;
+>>> +     case DWMAC_CORE_MULTICHAN_V2:
+>>> +             ld->multichan = 1;
+>>> +             plat->rx_queues_to_use = 4;
+>>> +             plat->tx_queues_to_use = 4;
+>>> +             break;
+>>> +     default:
+>>> +             ld->multichan = 0;
+>>>                plat->tx_queues_to_use = 1;
+>>>                plat->rx_queues_to_use = 1;
+>>> +             break;
+>>>        }
+>>>    }
+>>>
+>>> @@ -328,14 +340,14 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
+>>>                return NULL;
+>>>
+>>>        /* The Loongson GMAC and GNET devices are based on the DW GMAC
+>>> -      * v3.50a and v3.73a IP-cores. But the HW designers have changed the
+>>> -      * GMAC_VERSION.SNPSVER field to the custom 0x10 value on the
+>>> -      * network controllers with the multi-channels feature
+>>> +      * v3.50a and v3.73a IP-cores. But the HW designers have changed
+>>> +      * the GMAC_VERSION.SNPSVER field to the custom 0x10/0x12 value
+>>> +      * on the network controllers with the multi-channels feature
+>>>         * available to emphasize the differences: multiple DMA-channels,
+>>>         * AV feature and GMAC_INT_STATUS CSR flags layout. Get back the
+>>>         * original value so the correct HW-interface would be selected.
+>>>         */
+>>> -     if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
+>>> +     if (ld->multichan) {
+>>>                priv->synopsys_id = DWMAC_CORE_3_70;
+>>>                *dma = dwmac1000_dma_ops;
+>>>                dma->init_chan = loongson_dwmac_dma_init_channel;
+>>> @@ -356,13 +368,13 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
+>>>        if (mac->multicast_filter_bins)
+>>>                mac->mcast_bits_log2 = ilog2(mac->multicast_filter_bins);
+>>>
+>>> -     /* Loongson GMAC doesn't support the flow control. LS2K2000
+>>> -      * GNET doesn't support the half-duplex link mode.
+>>> +     /* Loongson GMAC doesn't support the flow control. Loongson GNET
+>>> +      * without multi-channel doesn't support the half-duplex link mode.
+>>>         */
+>>>        if (pdev->device == PCI_DEVICE_ID_LOONGSON_GMAC) {
+>>>                mac->link.caps = MAC_10 | MAC_100 | MAC_1000;
+>>>        } else {
+>>> -             if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN)
+>>> +             if (ld->multichan)
+>>>                        mac->link.caps = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
+>>>                                         MAC_10 | MAC_100 | MAC_1000;
+>>>                else
+>>> @@ -391,9 +403,11 @@ static int loongson_dwmac_msi_config(struct pci_dev *pdev,
+>>>                                     struct plat_stmmacenet_data *plat,
+>>>                                     struct stmmac_resources *res)
+>>>    {
+>>> -     int i, ret, vecs;
+>>> +     int i, ch_num, ret, vecs;
+>>>
+>>> -     vecs = roundup_pow_of_two(CHANNEL_NUM * 2 + 1);
+>>> +     ch_num = min(plat->tx_queues_to_use, plat->rx_queues_to_use);
+>> I'm curious. Will there still be hardware with RX not equal to TX in the
+>> future?
+> Currently rx queue number is equal to tx queue number, but
+> min(plat->tx_queues_to_use, plat->rx_queues_to_use) is still the best
+> solution. If not, which one should be used here? tx_queues_to_use or
+> rx_queues_to_use?
+
+All right.
+
+
+Thanks,
+
+Yanteng
+
+>
+> Huacai
+>
+>>
+>> Thanks,
+>>
+>> Yanteng
+>>
+>>
