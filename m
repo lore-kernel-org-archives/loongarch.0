@@ -1,101 +1,122 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 685AF54670
-	for <loongarch@lists.linux.dev>; Wed, 23 Apr 2025 01:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22201514E4;
+	Wed, 23 Apr 2025 03:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745373110; cv=none; b=AeQczy7dHAcKPdVdH0Cotkb1TlCdJxNwSwoncnQhNtkxDnG5P2fSTA/9apcm2+vFafDiu5GgdtcakEsb0DJ9oZvMqnzooze8R4K1WLYQ+uSlzpvkJe2wyVaq9OfXoUiz/B23rXcQOGniXBW1IHvdWeGW4LT2tg6uP42z2rOL/8k=
+	t=1745380125; cv=none; b=EyJFxe1C6A35rL5AyWiox7oovIr3kfkoaGnO+9EMwWDvR3f3vrPWko1/4uCujnQpqd8xt3yjJdZmQy6XbOLdNf2fs+P2/STPEUz2YMMXoR1PPEyUnaikvjWw54lkPH2KgABXmFUa1D0Qq6dVG9dqulVV5CP+kZ4e+Qfdq8B0OD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745373110; c=relaxed/simple;
-	bh=524B77zUmQ8K7a2shf7Mu+7jo//vmdRuMIeZyo4ImCM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jYITZtkp+7yaIKxwAbG4LhbrUiT0p58JSaKTRJqHRwDbkJKF9WLG2x5AIUlVUa318MObPBQJh+MMPgv36uPBeETjOatg2wXMS5rXDK1HEZS/r30bj5uxbP95fvwxGsU6q8ngVmnBnLVW0rRfh6PcxOgcBhbpjOXKRYwyXGmFmAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxaWpaRwhoIGLEAA--.65010S3;
-	Wed, 23 Apr 2025 09:50:18 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxrhtYRwhooO2QAA--.47758S3;
-	Wed, 23 Apr 2025 09:50:18 +0800 (CST)
-Subject: Re: BUG: bpf test case fails to run on LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <32989acf-93ef-b90f-c3ba-2a3c07dee4a3@loongson.cn>
- <8cd87100-88f3-687d-6704-f4fec0ca48b3@loongson.cn>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <c9d7be2b-8c2d-bd5e-b32d-37ed4bb693cc@loongson.cn>
-Date: Wed, 23 Apr 2025 09:49:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1745380125; c=relaxed/simple;
+	bh=2XL6ixfoDpURIpoCw5CidzLKNggYQxj1Gaju6sbV1kU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RKPel7HO+PzGJc3MwGUoiby1S6+Kk+CluXfLEJ+rtAkzw+3gAJ9DZH6IuB938t6ubVn1Th5teW44NfR2FEcB4CR0IVDLGF8iGT3aWz4GKcRmE170ZB44O0PhpjL6XLMN+/An5OCB8VRJ4NiYCc3gxhJG3WiZsQc0ESrxh3lznjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=pjh1pdQC; arc=none smtp.client-ip=159.100.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="pjh1pdQC"
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.156])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id E64302618F;
+	Wed, 23 Apr 2025 03:48:35 +0000 (UTC)
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay4.mymailcheap.com (Postfix) with ESMTPS id D5F30209CE;
+	Wed, 23 Apr 2025 03:48:27 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id D6E3440168;
+	Wed, 23 Apr 2025 03:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1745380105; bh=2XL6ixfoDpURIpoCw5CidzLKNggYQxj1Gaju6sbV1kU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pjh1pdQCK38Wp8MSJgAvBRaRjTLU++31bZOoNV8JxG+KbVUcHVgAZ0OpH7CSzmGIO
+	 zf3crQabzIzTw28HzTC7Gyr+fI87AvUX5vhlE7vVofccmszqi6SuG7mlun/VEpueZK
+	 ewAvMZe65/WopydXRQRDIHrsZ42YPYdOAPz5PfsE=
+Received: from [198.18.0.1] (unknown [203.175.14.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 23EED4036E;
+	Wed, 23 Apr 2025 03:48:18 +0000 (UTC)
+Message-ID: <ab7f1ba8-a49c-41a1-9b6f-ca142fbbe9d2@aosc.io>
+Date: Wed, 23 Apr 2025 11:48:14 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <8cd87100-88f3-687d-6704-f4fec0ca48b3@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] drm/amd/display: Stop control flow if the divisior
+ is zero
+To: Tiezhu Yang <yangtiezhu@loongson.cn>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Xinhui Pan <Xinhui.Pan@amd.com>, Harry Wentland <harry.wentland@amd.com>,
+ Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+ Huacai Chen <chenhuacai@loongson.cn>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org,
+ llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250114132856.19463-1-yangtiezhu@loongson.cn>
 Content-Language: en-US
+From: Mingcong Bai <jeffbai@aosc.io>
+In-Reply-To: <20250114132856.19463-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxrhtYRwhooO2QAA--.47758S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uw1xJry3XF15ZF1ftF4UJrc_yoW8Jw1UpF
-	ZxtryfKw1Yga40qr10qa10yF9YyFsay3y5AryUJ34kGrs5Ar1qqF18Jr1Svr93tryv9rWU
-	A3y0qan0kwnrJFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxU25EfUUUUU
+X-Rspamd-Queue-Id: D6E3440168
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Spamd-Result: default: False [0.00 / 10.00];
+	SUBJECT_RANDOM_CHARS_1(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Action: no action
 
+Hi all,
 
-
-On 2025/4/23 上午9:28, Tiezhu Yang wrote:
-> On 04/21/2025 10:52 AM, bibo mao wrote:
->> Hi,
->>
->> When I run built-in bpf test case with lib/test_bpf.c,
->> it reports such error, I do not know whether it is a problem.
->>
->>  test_bpf: #843 ALU32_RSH_X: all shift values jited:1 239 PASS
->>  test_bpf: #844 ALU32_ARSH_X: all shift values jited:1 237 PASS
->>  test_bpf: #845 ALU64_LSH_X: all shift values with the same register
->>  ------------[ cut here ]------------
->>  kernel BUG at lib/test_bpf.c:794!
+在 2025/1/14 21:28, Tiezhu Yang 写道:
+> As far as I can tell, with the current existing macro definitions, there
+> is no better way to do the minimal and proper changes to stop the control
+> flow if the divisior is zero.
 > 
-> This is a known issue I have ever encountered.
-> I guess your GCC version is 14.1, this is a bug of GCC,
-yes, My gcc version is 14.1
-
-> it has been fixed in the higher version, you can update
-> you GCC version (14.2+).
-OK, I will update my gcc. And sorry for the noise.
-
-Regards
-Bibo Mao
+> In order to keep the current ability for the aim of debugging and avoid
+> printing the warning message twice, it is better to only use ASSERT_BUG()
+> and SPL_ASSERT_BUG() directly after doing the following two steps:
 > 
-> $ gcc --version | head -1
-> gcc (GCC) 14.2.1 20241104
-> $ dmesg -t | grep Summary
-> test_bpf: Summary: 1053 PASSED, 0 FAILED, [0/1041 JIT'ed]
-> test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [0/10 JIT'ed]
-> test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
-> test_bpf: Summary: 1053 PASSED, 0 FAILED, [1041/1041 JIT'ed]
-> test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10 JIT'ed]
-> test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
+> (1) Add ASSERT_BUG() macro definition
+> (2) Add SPL_ASSERT_BUG() macro definition
 > 
-> Thanks,
-> Tiezhu
+> This version is based on 6.13-rc7, tested on x86 and LoongArch.
+> 
+> Tiezhu Yang (3):
+>    drm/amd/display: Add ASSERT_BUG() macro definition
+>    drm/amd/display: Add SPL_ASSERT_BUG() macro definition
+>    drm/amd/display: Harden callers of division functions
+> 
+>   drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c  |  2 +-
+>   drivers/gpu/drm/amd/display/dc/os_types.h           |  7 +++++++
+>   drivers/gpu/drm/amd/display/dc/spl/spl_debug.h      | 11 +++++++++++
+>   drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c |  2 +-
+>   4 files changed, 20 insertions(+), 2 deletions(-)
 > 
 
+Gentle ping on this series...
+
+Harry and Huacai, can you please take a look at this updated series 
+(since you have both provided comments on previous revisions?), thank you!
+
+Best Regards,
+Mingcong Bai
