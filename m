@@ -1,43 +1,33 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A50F1581EE
-	for <loongarch@lists.linux.dev>; Thu, 24 Apr 2025 02:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F36981A23B1
+	for <loongarch@lists.linux.dev>; Thu, 24 Apr 2025 06:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745462520; cv=none; b=OyLosCBc2ma3HciUPJhtZywRIafT91AIzi/nnbvQvVFNkJMqMrOpVZ48GryQ8Cb+AYd1lzuhTcbIpIMh1SHYWLWeQyz1hrXgRjB3IYzX/92EbIPWkjFIwptvaE90hGCzW3dYzlL6hLAOi3uBvbFob+An07QukO5GtK9FaNZg8pk=
+	t=1745476735; cv=none; b=rIHwMsEAIvrmniv0oM13YqaG2hrmKZbFI3IJ8LhuQmQlrWVSuvJFw0kNWywS5mG+F7hoh+Am4iu1hjQgA0KwF3YjIjEXWRmstXCxvgFWKkf0B/5elEB5LChjF/W5B6KdfPBuHJszUoIhLaobkTxNQixQyVC4Ep7O9wbknR3oge8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745462520; c=relaxed/simple;
-	bh=MrzV+3X/xEyXN4HuhlmnoAsayUGQLlKoEXj6MMJMdgk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C274Fw1kwH25pBOAYvgSV82z3LW6jhf1wpHTA5h9gUohaVxylPn3gQRj+GXn46CSPhNH7s3F7VDb/m4Gsv68QvIg2OgmXT7Q05z0o4dfjas7y9PD7w3B4312MFvggFjChvTLGtJ4/kEdFjwoF27Jbmr3qnYreg5c3N09QmZdQA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oEFWZsTX; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oEFWZsTX"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745462516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hvnStUlONu9e+qIIWIBP2lqUAozvyqkrzzFTXoYeR3w=;
-	b=oEFWZsTXdu6hAwtkjWZOrcUbRjLi3sL+/mVike0iX/8oxHiSKcRvaeybBzyLRlYF58LZK9
-	ws998n/Y/Ao9j6XP4Vs0JwJXUxbIv+34CqkkL4EVsVFLa8fVfR5USgU1GIrbyL8//wmEUi
-	X/aNR4S5mgJFAESDrMx/zXeC/9yvtc8=
-From: Youling Tang <youling.tang@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	youling.tang@linux.dev,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH v3 3/3] LoongArch: Add some annotations in archhelp
-Date: Thu, 24 Apr 2025 10:40:34 +0800
-Message-Id: <20250424024034.78436-4-youling.tang@linux.dev>
-In-Reply-To: <20250424024034.78436-1-youling.tang@linux.dev>
-References: <20250424024034.78436-1-youling.tang@linux.dev>
+	s=arc-20240116; t=1745476735; c=relaxed/simple;
+	bh=6DfyKxy4Irk863tKGrYcyu34xpRr1zF/UCKKSkYi7bA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s0ECrIDlVH+TZd1f32l8mAIhzIDoggrqROeMpDuMb/OsOiIw3aC862Sq3ZeUn8+t7A00xRNI50aFZXB0XR+o0WUc/cB2aFGR5Upn5hf9r/p6eV2kIxFL0y3BltNfZi1d2Q8HeVHtYMsoGl9tPWocnRP5XDtEzhu59sjUyMwPG94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxWOF53Aloqh7FAA--.64001S3;
+	Thu, 24 Apr 2025 14:38:49 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMDxH+V23AlouhaTAA--.39561S2;
+	Thu, 24 Apr 2025 14:38:48 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Fully clear some registers when VM reboot
+Date: Thu, 24 Apr 2025 14:38:46 +0800
+Message-Id: <20250424063846.3927992-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -45,35 +35,51 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowMDxH+V23AlouhaTAA--.39561S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-From: Youling Tang <tangyouling@kylinos.cn>
+Some registers such as LOONGARCH_CSR_ESTAT and LOONGARCH_CSR_GINTC
+are partly cleared with function _kvm_set_csr(). This comes from hardware
+specification, some bits are read only in VM mode, and however it can be
+written in host mode. So it is partly cleared in VM mode, and can be fully
+cleared in host mode.
 
-- Add annotations to the kernel image.
-- Modify the annotations of make insatll.
+These read only bits show pending interrupt or exception status. When VM
+reset, the read-only bits should be cleared, otherwise vCPU will receive
+unknown interrupts in boot stage.
 
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+Here registers LOONGARCH_CSR_ESTAT/LOONGARCH_CSR_GINTC are fully cleared
+in ioctl KVM_REG_LOONGARCH_VCPU_RESET vCPU reset path.
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/Makefile | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/loongarch/kvm/vcpu.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 64bdb52ddf7c..b0703a4e02a2 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -184,6 +184,11 @@ install:
- 	$(call cmd,install)
- 
- define archhelp
--	echo '  install              - install kernel into $(INSTALL_PATH)'
-+	echo '  vmlinux.elf    - Uncompressed ELF kernel image (arch/loongarch/boot/vmlinux.elf)'
-+	echo '  vmlinux.efi    - Uncompressed EFI kernel image (arch/loongarch/boot/vmlinux.efi)'
-+	echo '  vmlinuz.efi    - GZIP/ZSTD-compressed EFI kernel image (arch/loongarch/boot/vmlinuz.efi)'
-+	echo '                   Default when CONFIG_EFI_ZBOOT=y'
-+	echo '  install        - Install kernel using (your) ~/bin/$(INSTALLKERNEL) or'
-+	echo '                   (distribution) /sbin/$(INSTALLKERNEL) or install.sh to $$(INSTALL_PATH)'
- 	echo
- endef
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 8e427b379661..80b2316d6f58 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -902,6 +902,14 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
+ 			vcpu->arch.st.guest_addr = 0;
+ 			memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
+ 			memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
++
++			/*
++			 * When vCPU reset, clear the ESTAT and GINTC registers
++			 * And the other CSR registers are cleared with function
++			 * _kvm_set_csr().
++			 */
++			kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_GINTC, 0);
++			kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_ESTAT, 0);
+ 			break;
+ 		default:
+ 			ret = -EINVAL;
+
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
 -- 
-2.38.1
+2.39.3
 
