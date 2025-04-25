@@ -1,198 +1,133 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC5C122301
-	for <loongarch@lists.linux.dev>; Fri, 25 Apr 2025 02:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14C01E5B70;
+	Fri, 25 Apr 2025 07:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745549262; cv=none; b=NKgRZra3FkcAz48JAqGk0HhXgmN+oNfHV1WqxKcTdAXRXU4K099ff9+t2p7wceTZg9I5CPf27Hg6HafcI4z/Ce/fGsdN82YPkWfYeZB0+zFg0cXs6cgN9TiHVpehXckanlPFx1brqPFRTeFfaZDxaTRqh4641/vv9B1pGEgwANk=
+	t=1745564748; cv=none; b=oZrNtrRUMwmjhPv1e/3/kxWSqeBA1VXuxCZpl0ntvZ4NJbGjJb5AHJDBX1bgnn62ApNVCWtN42TQJ/XfPK3xE+toNuprt0sbK6DKobGn7WETRRSFlKQp1D+VrazKZYy8LAHHB+WKu22pFLk6wq8FEi185J7yEZ6h5yIOc1zNnPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745549262; c=relaxed/simple;
-	bh=b3EDeG/OJiHYURM6f12B1qR3ZvFT+UBlcOLiHvMArdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kPVB+nPLcGaWPbLCjjijzlCUTDSH4XqoQOc0ibN+yh8FnwaC2v//4Xl3So/1pQ6ar5g1ARaIIQdomN47bTFyBcEtDGctm1ITo8ahNqXZdTTuX5VaorlD2B2L6HDNzwQp6nweT6sKivEU83UqbmtwtoSYebq/S7gDSU/W4OdVbHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [124.127.64.69])
-	by gateway (Coremail) with SMTP id _____8BxlmnF9wpoY8zFAA--.25S3;
-	Fri, 25 Apr 2025 10:47:33 +0800 (CST)
-Received: from [192.168.196.221] (unknown [124.127.64.69])
-	by front1 (Coremail) with SMTP id qMiowMDxDce89wpofHaUAA--.43251S2;
-	Fri, 25 Apr 2025 10:47:26 +0800 (CST)
-Message-ID: <b8fe05f1-23c2-423f-88cc-310996c6aad5@loongson.cn>
-Date: Fri, 25 Apr 2025 10:47:24 +0800
+	s=arc-20240116; t=1745564748; c=relaxed/simple;
+	bh=N9+UJn6y4cFBdFcoyH2JNE8g1T9WsgLzOAr9war2gvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hZeMIMB+euvjLbDmqrkizWjEZ2xqbPQN+5wD4w9XcKkRHHf3VmhJ3lYa7+nJesN7VOEQCU1raIq4oGnlJosGCPrBp1xvmhYnCfomKmCI7oT3TVzpXv6U4UjyVGYm8KHm3T9e9FIxxEpAcxYl7Gb5230GXRESpCkH3bBGk2BhURw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hinBbkYT; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hinBbkYT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745564746; x=1777100746;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N9+UJn6y4cFBdFcoyH2JNE8g1T9WsgLzOAr9war2gvE=;
+  b=hinBbkYToU10EJnDLAtL6//UlFmC8HUqYaF1fZ/3X4fDfFEZueiXfdWD
+   VEBgf5NLawA+tPG/nU/jLYyK09ZytGBLgBDJcsn+C1al7yymz8vdzaqXA
+   BapL7BXsiakgf7CtfN0UKCGVsJzV/pERC/YhmwxGtROIFXImrKQ5rWkXR
+   JxB5HxC/+FKGA6pRbzjumqOi30p3NZt0NEgCKdzj3Cn6Sq6Ptmwt90URd
+   zdzOSaX6rPRbZKJXTTlljeZnEvQ4aRxVYApH3TQa7BOkWo1G3lQA11TwS
+   zm4SjkHeFDfM93OBH053/1CBan1SvC1fHhYcasXCFd4LiEm9b0fH3Su+j
+   A==;
+X-CSE-ConnectionGUID: hUN+NcrgREK6HFmOWif+Cw==
+X-CSE-MsgGUID: QhL2aHsASbKE5DZmoP6OmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="49877222"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="49877222"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:05:46 -0700
+X-CSE-ConnectionGUID: 5XZttJ3MSH6P0E+RUKkd/w==
+X-CSE-MsgGUID: wlvduCpeStiokvFAcP1zww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="163789917"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 25 Apr 2025 00:05:44 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8D81-0004uH-0o;
+	Fri, 25 Apr 2025 07:05:41 +0000
+Date: Fri, 25 Apr 2025 15:05:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] LoongArch: KVM: Add parameter exception code with
+ exception handler
+Message-ID: <202504251458.EJKsZMLH-lkp@intel.com>
+References: <20250424064625.3928278-2-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: LoongArch: Return NULL from huge_pte_offset()
- for none PMD
-To: Peter Xu <peterx@redhat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Andrew Morton <akpm@linux-foundation.org>,
- Hongchen Zhang <zhanghongchen@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, lixuefeng@loongson.cn, gaojuxin@loongson.cn,
- chenhuacai@loongson.cn
-References: <20250424083037.2226732-1-wangming01@loongson.cn>
- <aAqHkdXt50van31B@x1.local>
-Content-Language: en-US
-From: Ming Wang <wangming01@loongson.cn>
-In-Reply-To: <aAqHkdXt50van31B@x1.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxDce89wpofHaUAA--.43251S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAgEDEmgKxeYEAAAAsX
-X-Coremail-Antispam: 1Uk129KBj93XoW3WrWfAryktF1xGFyfCF1UXFc_yoWxZF4DpF
-	93K3sYvr1kGrykWan7tw4vqFn5Zws3Wa1UGF98GrW5AwnxX347XryUK3yaga4ru395Gw4a
-	vFWjqFZrJa1jy3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
-	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07joeHDUUUUU
-	=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424064625.3928278-2-maobibo@loongson.cn>
 
-Hi Peter Xu,
+Hi Bibo,
 
-Thanks for taking a look and raising these important points!
+kernel test robot noticed the following build warnings:
 
-On 4/25/25 02:48, Peter Xu wrote:
-> On Thu, Apr 24, 2025 at 04:30:37PM +0800, Ming Wang wrote:
->> LoongArch's huge_pte_offset() currently returns a pointer to a PMD slot
->> even if the underlying entry points to invalid_pte_table (indicating no
->> mapping). Callers like smaps_hugetlb_range() fetch this invalid entry
->> value (the address of invalid_pte_table) via this pointer.
-> 
-> So it's in smaps_hugetlb_range() context, then..
-The root cause involves several steps:
-1. When the hugetlbfs file is mapped (MAP_PRIVATE), the initial PMD
-   (or relevant level) entry is often populated by the kernel during mmap()
-   with a non-present entry pointing to the architecture's invalid_pte_table
-   On the affected LoongArch system, this address was observed to
-   be 0x90000000031e4000.
-2. The smaps walker (walk_hugetlb_range -> smaps_hugetlb_range) reads
-   this entry.
-3. The generic is_swap_pte() macro checks `!pte_present() && !pte_none()`.
-   The entry (invalid_pte_table address) is not present. Crucially,
-   the generic pte_none() check (`!(pte_val(pte) & ~_PAGE_GLOBAL)`)
-   returns false because the invalid_pte_table address is non-zero.
-   Therefore, is_swap_pte() incorrectly returns true.
-4. The code enters the `else if (is_swap_pte(...))` block.
-5. Inside this block, it checks `is_pfn_swap_entry()`. Due to a bit
-   pattern coincidence in the invalid_pte_table address on LoongArch,
-   the embedded generic `is_migration_entry()` check happens to return
-   true (misinterpreting parts of the address as a migration type).
-6. This leads to a call to pfn_swap_entry_to_page() with the bogus
-   swap entry derived from the invalid table address.
-7. pfn_swap_entry_to_page() extracts a meaningless PFN, finds an
-   unrelated struct page, checks its lock status (unlocked), and hits
-   the `BUG_ON(is_migration_entry(entry) && !PageLocked(p))` assertion.
-> 
->>
->> The generic is_swap_pte() check then incorrectly identifies this address
->> as a swap entry on LoongArch, because it satisfies the !pte_present()
->> && !pte_none() conditions. This misinterpretation, combined with a
->> coincidental match by is_migration_entry() on the address bits, leads
->> to kernel crashes in pfn_swap_entry_to_page().
-> 
-> .. you mentioned !pte_none() is checked.  Could you explain why it's
-> pte_none() rather than huge_pte_none()?  As I saw loongarch has exactly
-> this..
-> 
-> static inline int huge_pte_none(pte_t pte)
-> {
-> 	unsigned long val = pte_val(pte) & ~_PAGE_GLOBAL;
-> 	return !val || (val == (unsigned long)invalid_pte_table);
-> }
-> 
-> I'm not familiar with loongarch's invalid_pte_table, but I would expect at
-> least for now in hugetlb specific paths it should be reported as none even
-> without this patch.
-> 
-> One more thing to mention is the kernel (AFAIU) is trying to moving away
-> from hugetlb specific pgtable parsing to generic pgtable walkers.  It means
-> it could happen at some point where the kernel walks the hugetlb pgtables
-> using normal pgtable APIs.  I'm not yet sure what would happen then, but
-> maybe at some point the invalid_pte_table check is needed in pte_none() too
-> for loongarch.
-> 
-> Thanks,
+[auto build test WARNING on 9d7a0577c9db35c4cc52db90bc415ea248446472]
 
-You asked why the check involves pte_none() rather than huge_pte_none(), given that LoongArch
-provides the latter which correctly identifies the invalid_pte_table address.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-KVM-Add-parameter-exception-code-with-exception-handler/20250424-144905
+base:   9d7a0577c9db35c4cc52db90bc415ea248446472
+patch link:    https://lore.kernel.org/r/20250424064625.3928278-2-maobibo%40loongson.cn
+patch subject: [PATCH 1/2] LoongArch: KVM: Add parameter exception code with exception handler
+config: loongarch-randconfig-001-20250425 (https://download.01.org/0day-ci/archive/20250425/202504251458.EJKsZMLH-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250425/202504251458.EJKsZMLH-lkp@intel.com/reproduce)
 
-That's a great question, and the crux seems to be in how the generic code path works. The crash
-originates within smaps_hugetlb_range() after the generic `is_swap_pte(ptent)` macro returns true.
-Looking at the definition of `is_swap_pte()` (in include/linux/mm.h or similar), it typically
-expands to `!pte_present(pte) && !pte_none(pte)`.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504251458.EJKsZMLH-lkp@intel.com/
 
-Critically, even though `smaps_hugetlb_range()` deals with HugeTLB entries (often PMDs cast to pte_t),
-the generic `is_swap_pte()` macro itself, when expanded, calls the **generic `pte_none()` macro**, not
-the specialized `huge_pte_none()`.
+All warnings (new ones prefixed by >>):
 
-LoongArch's generic `pte_none()` macro is defined as:
-`#define pte_none(pte) (!(pte_val(pte) & ~_PAGE_GLOBAL))`
-This definition does *not* check for the `invalid_pte_table` address and thus returns false for it, 
-leading to `is_swap_pte()` incorrectly returning true.
+>> arch/loongarch/kvm/exit.c:734: warning: Function parameter or struct member 'ecode' not described in 'kvm_handle_fpu_disabled'
 
-So, while LoongArch does provide `huge_pte_none()` which *could* correctly identify the state, it's not
-actually invoked in the code path triggered by `is_swap_pte()` within `smaps_hugetlb_range()`.
 
-This is why modifying `huge_pte_offset()` seems necessary and appropriate at the architecture level.
-By returning NULL when the underlying PMD entry is none (checked using the correct `pmd_none()`, which *does*
-check for invalid_pte_table on LoongArch), we prevent the invalid pointer and its problematic value from reaching
-`smaps_hugetlb_range()` and subsequently fooling the generic `is_swap_pte()` check that uses the generic `pte_none()`.
+vim +734 arch/loongarch/kvm/exit.c
 
-Regarding your point about generic page table walkers possibly needing `pte_none()` itself to handle `invalid_pte_table`
-in the future – I understand the concern. That might indeed be a separate, future enhancement needed for LoongArch's
-generic page table support. However, the current patch addresses the immediate crash within the existing hugetlb-specific
-walker (`smaps_hugetlb_range`) by stopping the problematic value at the source (`huge_pte_offset`), which seems like a
-necessary and correct fix for the present issue.
+2737dee1067c2f Bibo Mao     2025-01-13  725  
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  726  /**
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  727   * kvm_handle_fpu_disabled() - Guest used fpu however it is disabled at host
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  728   * @vcpu:	Virtual CPU context.
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  729   *
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  730   * Handle when the guest attempts to use fpu which hasn't been allowed
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  731   * by the root context.
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  732   */
+74303fac8d0580 Bibo Mao     2025-04-24  733  static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu, int ecode)
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02 @734  {
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  735  	struct kvm_run *run = vcpu->run;
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  736  
+db1ecca22edf27 Tianrui Zhao 2023-12-19  737  	if (!kvm_guest_has_fpu(&vcpu->arch)) {
+db1ecca22edf27 Tianrui Zhao 2023-12-19  738  		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+db1ecca22edf27 Tianrui Zhao 2023-12-19  739  		return RESUME_GUEST;
+db1ecca22edf27 Tianrui Zhao 2023-12-19  740  	}
+db1ecca22edf27 Tianrui Zhao 2023-12-19  741  
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  742  	/*
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  743  	 * If guest FPU not present, the FPU operation should have been
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  744  	 * treated as a reserved instruction!
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  745  	 * If FPU already in use, we shouldn't get this at all.
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  746  	 */
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  747  	if (WARN_ON(vcpu->arch.aux_inuse & KVM_LARCH_FPU)) {
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  748  		kvm_err("%s internal error\n", __func__);
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  749  		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  750  		return RESUME_HOST;
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  751  	}
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  752  
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  753  	kvm_own_fpu(vcpu);
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  754  
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  755  	return RESUME_GUEST;
+37cdfc6dbf0416 Tianrui Zhao 2023-10-02  756  }
+71f4fb845874c3 Tianrui Zhao 2023-10-02  757  
 
-Does this explanation clarify the interaction between the generic macros and the arch-specific helpers in this context?
-
-Thanks,
-Ming
-> 
->>
->> Fix this at the architecture level by modifying huge_pte_offset() to
->> check the PMD entry's content using pmd_none() before returning. If the
->> entry is none (i.e., it points to invalid_pte_table), return NULL
->> instead of the pointer to the slot.
->>
->> Co-developed-by: Hongchen Zhang <zhanghongchen@loongson.cn>
->> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
->> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->> Signed-off-by: Ming Wang <wangming01@loongson.cn>
->> ---
->>  arch/loongarch/mm/hugetlbpage.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/mm/hugetlbpage.c b/arch/loongarch/mm/hugetlbpage.c
->> index e4068906143b..cea84d7f2b91 100644
->> --- a/arch/loongarch/mm/hugetlbpage.c
->> +++ b/arch/loongarch/mm/hugetlbpage.c
->> @@ -47,7 +47,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr,
->>  				pmd = pmd_offset(pud, addr);
->>  		}
->>  	}
->> -	return (pte_t *) pmd;
->> +	return pmd_none(pmdp_get(pmd)) ? NULL : (pte_t *) pmd;
->>  }
->>  
->>  uint64_t pmd_to_entrylo(unsigned long pmd_val)
->> -- 
->> 2.43.0
->>
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
