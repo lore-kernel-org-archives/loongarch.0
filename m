@@ -1,61 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B38818C91F
-	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:13:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C13E18C91F
+	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745662431; cv=none; b=eAqhEVbGPoekuh/L7Q8Cy73CmoziLpyseEYiSAJfFNXsvPOOajm5WSRWVLbuvSLMgOEd30fJZKjJ1Zs8D86ymHek5tKiMFC51OzE4Du3c3Ki7n/SK9W0PJKq/0qFZJvbLkQUgydAguDF7e4Y6/Qs3bfyJ+7h7aNmRdtYF5NWkZQ=
+	t=1745662480; cv=none; b=lXK3B7gtzCoPUmhQApE36vaVl6Wz/CzWbL2RtX/Nyt65La1TA18S0CIGm+sA5gRFbP4YSxRUN9F9g4UJVZ756FF5+W5nEy1i2XPzkzJZF5ddbbUEQaymUQJODLBqIlXRUDfOaOu5LwQWnWex5mCuk0iENr622tezPievti06qpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745662431; c=relaxed/simple;
-	bh=EQiqrKqTukWbVBL5IGd2hbGdeBS1OCfXZkEgYDGooII=;
+	s=arc-20240116; t=1745662480; c=relaxed/simple;
+	bh=7iUIwNzlYmvXp7hwThAllikHvzT/UtKTKKu+tu2ruis=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X+Bt0/MhB7+OjuiNBncjhM8QJIazDxWuMRe9xNjlvKUCh0wiOc2CMQzLTeVtpC6UB82+1Q4zhZLHj5VFZ+Fz8PA5s3k67KArh57RQJzN3H0rX38z+yHLrJalC1wi2A4KprTQ/3sUNjEVHHPotreGhPXCDEodGHi7VatqjRmfLfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNQ9VUyf; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=oSh56nVl/3OOv2gv7Le2xbAp/IPU435hfK1w1N3FxgTI/n4ah80ysVzYQknJQaFiKhpbGPi7CrhpxPOnihV+K2dgl1WWCvJ2InDkYr0hV26CCNZvj1XKQYtxq94hNKCDDrUMKyrYpRTYWFQLZC0PyC+JjHATUfUIExeHILWa4w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rPDANzru; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNQ9VUyf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0D00C4CEEC
-	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:13:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rPDANzru"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC7B9C4AF09
+	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745662430;
-	bh=EQiqrKqTukWbVBL5IGd2hbGdeBS1OCfXZkEgYDGooII=;
+	s=k20201202; t=1745662480;
+	bh=7iUIwNzlYmvXp7hwThAllikHvzT/UtKTKKu+tu2ruis=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BNQ9VUyfS5WR1b7FJVwWXUXcEDM4rrJs6y2qRQhNsnXyjop7hn02vYciIuwI1yRDv
-	 Fc+dCAEoHBo1j0z8CjJS4s+//R+na9qdZPEWD1OeDtJQTloaBMcXcdbXRPBVG8zxd3
-	 n3xheH9U8a50OFztZTeSv0ss4k4qtqE6fHMin1nOlTWXQmL4p3z/7Zu4WOpiTOFX3Y
-	 NsSfiDbqS2hS1UnAbqZu5HEicVXrxQHN9w8dOEAFYldPjvzYGr2BFP0i5//1zRcGWM
-	 D2DnF/FUXED191BTZ0JkYAJUWvxm24HzOFwSN48T5jjOIMKJCH/qFppdKWPImRlbRq
-	 PZBubzKMiCdHQ==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f62ef3c383so5825562a12.2
-        for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 03:13:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWxqcOPcAvj71tm6fQa819rie7n+TIgVn4veIRJ0yryN96KqC5zq74/Q1t8bu9Ok/h/9nTmcWK/fUU=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzwqb/65K14hxqIRF2gGEGYgjbbQENuz4YqcRebldeGEXee2nZY
-	f4aQSrzxruYtJnMcJjE53KBmzlt2uHtoBKr6e5WrGqPQCj/sTvcgAnqoDUA2exkU696xF5xMie6
-	JNqJB+QMpQQaDOFprEnDeqHHW9gc=
-X-Google-Smtp-Source: AGHT+IEZjc2EQqDCixMAOSJTMEsc3fcgtaBnZPEL4M3yGy4i7IUGdVWlnt55DQeCJrxyp75W4qKPWFCvnRYdM3ug334=
-X-Received: by 2002:a17:907:86ac:b0:aca:c7c6:b218 with SMTP id
- a640c23a62f3a-ace848c28femr196158566b.1.1745662429435; Sat, 26 Apr 2025
- 03:13:49 -0700 (PDT)
+	b=rPDANzruQlJCO9Nt6jKQUyyShWPtDnDjnThZiop5gm5qehhLHgZSepBg2w5/NESfY
+	 thsryg0I3UlEc4H6U89ysAuoEYDXD0w8wEPI+cGOV5skHfqE0PsejZjSiHVYWHeJAD
+	 4eJaNG1E8ptDJmKriieQXHch3UJYr8k+R3I9TefLvvmqm4LoTBhn3aPusB/ndKghsC
+	 OewaUMkpi4nnZYklkSoLHY8WIps8WTYOJVwb9pT7obM+69xNnclaW1jclJHN/voac2
+	 wRc/hln1o4McZDD+bcnCikURY6H22i6ZhEwl/qNj3Xw3cis/F8BEe3hdz5ujSLq4Ow
+	 EQ7H5tk9nlGLQ==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac25d2b2354so454359666b.1
+        for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 03:14:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUCfAh4RXcrZSbZj2ZaGJI80jSr+ZRtv0sfE8OLpFl2atorqsSHsTMqC0bvmsKO4kL7wWTDlS13XNg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz1qg/Lumi1wbg+PcuRT/YT/bWSriPkn5aKoPeNY2MO+6nVb2iW
+	AJWtz35aeMn/XWFSc+5N1KOrwusI3CsEDXLxpQUyw+/8/8b8zBVjAY5pHQ+e6lEH39s4Xne1Stz
+	4nx5hh3JM3y+rfVwMc2y07XwuYyg=
+X-Google-Smtp-Source: AGHT+IFcwiMN85t40/cLjSE9iIPsNndZzMgOhumyyrprni3Lud3HSd4CTuxxCNydrObvZOVOpTvc8J0Espn93FV2N+c=
+X-Received: by 2002:a17:907:8694:b0:ac7:7f13:2e80 with SMTP id
+ a640c23a62f3a-ace7104821amr397849466b.9.1745662478544; Sat, 26 Apr 2025
+ 03:14:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250424083037.2226732-1-wangming01@loongson.cn>
-In-Reply-To: <20250424083037.2226732-1-wangming01@loongson.cn>
+References: <20250420142208.2252280-1-wheatfox17@icloud.com>
+In-Reply-To: <20250420142208.2252280-1-wheatfox17@icloud.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 26 Apr 2025 18:13:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4uiJC0dz+MDUvXEQa0wx78L9U=-XVXZ-xC5AhV_J+gaQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFMJA4o5CR-fsncn0k0L2x8oe7F61DzM3fg9Z4yooOUjlJawEIGteazZqA
-Message-ID: <CAAhV-H4uiJC0dz+MDUvXEQa0wx78L9U=-XVXZ-xC5AhV_J+gaQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/hugetlb: LoongArch: Return NULL from huge_pte_offset()
- for none PMD
-To: Ming Wang <wangming01@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Peter Xu <peterx@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Hongchen Zhang <zhanghongchen@loongson.cn>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	lixuefeng@loongson.cn, gaojuxin@loongson.cn, chenhuacai@loongson.cn
+Date: Sat, 26 Apr 2025 18:14:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H53PKkJJX5K=YuarTmm=ZJYx6m_uUyhY+W_dooLuL6r3A@mail.gmail.com>
+X-Gm-Features: ATxdqUG6k7aBA0j5XyblETKQ7GP_Vr6uV7fmdKVn4YvwIZL1ffoofSEI51-6tI0
+Message-ID: <CAAhV-H53PKkJJX5K=YuarTmm=ZJYx6m_uUyhY+W_dooLuL6r3A@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fixed multiple typos of KVM code
+To: Yulong Han <wheatfox17@icloud.com>
+Cc: zhaotianrui@loongson.cn, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -63,48 +59,68 @@ Applied, thanks.
 
 Huacai
 
-On Thu, Apr 24, 2025 at 4:30=E2=80=AFPM Ming Wang <wangming01@loongson.cn> =
-wrote:
+On Sun, Apr 20, 2025 at 10:24=E2=80=AFPM Yulong Han <wheatfox17@icloud.com>=
+ wrote:
 >
-> LoongArch's huge_pte_offset() currently returns a pointer to a PMD slot
-> even if the underlying entry points to invalid_pte_table (indicating no
-> mapping). Callers like smaps_hugetlb_range() fetch this invalid entry
-> value (the address of invalid_pte_table) via this pointer.
+> Fixed multiple typos inside arch/loongarch/kvm.
 >
-> The generic is_swap_pte() check then incorrectly identifies this address
-> as a swap entry on LoongArch, because it satisfies the !pte_present()
-> && !pte_none() conditions. This misinterpretation, combined with a
-> coincidental match by is_migration_entry() on the address bits, leads
-> to kernel crashes in pfn_swap_entry_to_page().
->
-> Fix this at the architecture level by modifying huge_pte_offset() to
-> check the PMD entry's content using pmd_none() before returning. If the
-> entry is none (i.e., it points to invalid_pte_table), return NULL
-> instead of the pointer to the slot.
->
-> Co-developed-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Ming Wang <wangming01@loongson.cn>
+> Signed-off-by: Yulong Han <wheatfox17@icloud.com>
 > ---
->  arch/loongarch/mm/hugetlbpage.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/loongarch/kvm/intc/ipi.c | 4 ++--
+>  arch/loongarch/kvm/main.c     | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 >
-> diff --git a/arch/loongarch/mm/hugetlbpage.c b/arch/loongarch/mm/hugetlbp=
-age.c
-> index e4068906143b..cea84d7f2b91 100644
-> --- a/arch/loongarch/mm/hugetlbpage.c
-> +++ b/arch/loongarch/mm/hugetlbpage.c
-> @@ -47,7 +47,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned l=
-ong addr,
->                                 pmd =3D pmd_offset(pud, addr);
+> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.=
+c
+> index 93f4acd44..fe734dc06 100644
+> --- a/arch/loongarch/kvm/intc/ipi.c
+> +++ b/arch/loongarch/kvm/intc/ipi.c
+> @@ -111,7 +111,7 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, gpa_t=
+ addr, uint64_t data)
+>                 ret =3D kvm_io_bus_read(vcpu, KVM_IOCSR_BUS, addr, sizeof=
+(val), &val);
+>                 srcu_read_unlock(&vcpu->kvm->srcu, idx);
+>                 if (unlikely(ret)) {
+> -                       kvm_err("%s: : read date from addr %llx failed\n"=
+, __func__, addr);
+> +                       kvm_err("%s: : read data from addr %llx failed\n"=
+, __func__, addr);
+>                         return ret;
 >                 }
->         }
-> -       return (pte_t *) pmd;
-> +       return pmd_none(pmdp_get(pmd)) ? NULL : (pte_t *) pmd;
->  }
+>                 /* Construct the mask by scanning the bit 27-30 */
+> @@ -127,7 +127,7 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, gpa_t=
+ addr, uint64_t data)
+>         ret =3D kvm_io_bus_write(vcpu, KVM_IOCSR_BUS, addr, sizeof(val), =
+&val);
+>         srcu_read_unlock(&vcpu->kvm->srcu, idx);
+>         if (unlikely(ret))
+> -               kvm_err("%s: : write date to addr %llx failed\n", __func_=
+_, addr);
+> +               kvm_err("%s: : write data to addr %llx failed\n", __func_=
+_, addr);
 >
->  uint64_t pmd_to_entrylo(unsigned long pmd_val)
+>         return ret;
+>  }
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> index d165cd38c..80ea63d46 100644
+> --- a/arch/loongarch/kvm/main.c
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -296,10 +296,10 @@ int kvm_arch_enable_virtualization_cpu(void)
+>         /*
+>          * Enable virtualization features granting guest direct control o=
+f
+>          * certain features:
+> -        * GCI=3D2:       Trap on init or unimplement cache instruction.
+> +        * GCI=3D2:       Trap on init or unimplemented cache instruction=
+.
+>          * TORU=3D0:      Trap on Root Unimplement.
+>          * CACTRL=3D1:    Root control cache.
+> -        * TOP=3D0:       Trap on Previlege.
+> +        * TOP=3D0:       Trap on Privilege.
+>          * TOE=3D0:       Trap on Exception.
+>          * TIT=3D0:       Trap on Timer.
+>          */
 > --
-> 2.43.0
+> 2.39.5
+>
 >
