@@ -1,59 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489CF22A1EF
-	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:11:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B38818C91F
+	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:13:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745662312; cv=none; b=J0J7M0A9wsZMECr2ipfi08DQqNU6VwfIBBCn3mxLj2/rqtTzZhbJWMoDBHSh5DeVM2uiJIsBsMKen3VEm/U94A9EhZ8UJ69ORSR8KgCxcGtM03lrY2SBq3AL1kzBLEcOQRhqIkP/j4PVT0iz3cyXwS6hmVRw5U9oFHa12jVre9U=
+	t=1745662431; cv=none; b=eAqhEVbGPoekuh/L7Q8Cy73CmoziLpyseEYiSAJfFNXsvPOOajm5WSRWVLbuvSLMgOEd30fJZKjJ1Zs8D86ymHek5tKiMFC51OzE4Du3c3Ki7n/SK9W0PJKq/0qFZJvbLkQUgydAguDF7e4Y6/Qs3bfyJ+7h7aNmRdtYF5NWkZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745662312; c=relaxed/simple;
-	bh=R/z+cT1aLxJvVZUTaDnZ/yW/7pzsBc856twY10Tzvbo=;
+	s=arc-20240116; t=1745662431; c=relaxed/simple;
+	bh=EQiqrKqTukWbVBL5IGd2hbGdeBS1OCfXZkEgYDGooII=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZzzSC8LuOHQ0t6T4ivPbWqo8eSZg7/O1rJYkQbuPkb1Jppt4Bg0Aa/RXID85FW5QjkC1t637hAc6wVYRv/+KIPAM7P3g0mv7hvfQYnoXUb/0ztREuxqpi+yi52VHYUFj99QtKJ0dF2p9JYA58IWr8psDY1ren6fDSlCWQDLYshc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p3ZjoVtG; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=X+Bt0/MhB7+OjuiNBncjhM8QJIazDxWuMRe9xNjlvKUCh0wiOc2CMQzLTeVtpC6UB82+1Q4zhZLHj5VFZ+Fz8PA5s3k67KArh57RQJzN3H0rX38z+yHLrJalC1wi2A4KprTQ/3sUNjEVHHPotreGhPXCDEodGHi7VatqjRmfLfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNQ9VUyf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p3ZjoVtG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84793C4CEE8
-	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:11:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNQ9VUyf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0D00C4CEEC
+	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745662311;
-	bh=R/z+cT1aLxJvVZUTaDnZ/yW/7pzsBc856twY10Tzvbo=;
+	s=k20201202; t=1745662430;
+	bh=EQiqrKqTukWbVBL5IGd2hbGdeBS1OCfXZkEgYDGooII=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=p3ZjoVtGv6t/AbJne0Fz1a21IxRud/np3jG9jUoGTYeAUgYXcWlfBOp5kJLhWM2km
-	 dFapUI0CCdp0txBnyvVALDyXNgmqWhSpgwiLuBrjdw9Rlvo377BstaAiGazCQozte9
-	 42WjAC++9T1dAIHUKiMxjDlgXn6sluF+QnKhUWVxCfLr1LN6H/3xsthaBgNQqAVraj
-	 qVxjYr/t+GADtbmR3mNPyWffkdCoUw3uP2bob0tO4RHSYzAxIRz4Y6Dg9NRCrQzSCs
-	 gl9LfhFQeATQ5q2YhRb9pnhSq6tewLMj6NOqMwy6xFspeoafrWRKCA3jUTTpFo7qmR
-	 UCOswBlk+fkPA==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso4632231a12.0
-        for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 03:11:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXwHK0pvqDSRIaKbFsx7vWIr1cUSv4eyE91UDBNqcX1AfjR0KZ9gBVb0PL+lykaMzlErn8yQqtF3p8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyuzXTuhAh4dMwNt4dldrzrjCa8oRmAlTnRq2Et1AvHdjCGvV+S
-	Kvb9Y0ZC/bkfSJQ6NWIvcf1aXX2nEHLoJxrCBuePHH8hROoSv3yhmPeuqL0HsV3OF35TDuDuv6S
-	YTAbOEpMcOeB3yfRPKsCr+sP4++c=
-X-Google-Smtp-Source: AGHT+IFnDEj0swtiLrH81M0hKi0swEOGyiTwK87JYI2K1I634GI/T8PYJBtEwdDvVZR1dU8//WYu3DUc1hnm0LfrL5M=
-X-Received: by 2002:a17:907:97ce:b0:ace:3732:8a86 with SMTP id
- a640c23a62f3a-ace7136ce85mr509180566b.41.1745662310207; Sat, 26 Apr 2025
- 03:11:50 -0700 (PDT)
+	b=BNQ9VUyfS5WR1b7FJVwWXUXcEDM4rrJs6y2qRQhNsnXyjop7hn02vYciIuwI1yRDv
+	 Fc+dCAEoHBo1j0z8CjJS4s+//R+na9qdZPEWD1OeDtJQTloaBMcXcdbXRPBVG8zxd3
+	 n3xheH9U8a50OFztZTeSv0ss4k4qtqE6fHMin1nOlTWXQmL4p3z/7Zu4WOpiTOFX3Y
+	 NsSfiDbqS2hS1UnAbqZu5HEicVXrxQHN9w8dOEAFYldPjvzYGr2BFP0i5//1zRcGWM
+	 D2DnF/FUXED191BTZ0JkYAJUWvxm24HzOFwSN48T5jjOIMKJCH/qFppdKWPImRlbRq
+	 PZBubzKMiCdHQ==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f62ef3c383so5825562a12.2
+        for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 03:13:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWxqcOPcAvj71tm6fQa819rie7n+TIgVn4veIRJ0yryN96KqC5zq74/Q1t8bu9Ok/h/9nTmcWK/fUU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzwqb/65K14hxqIRF2gGEGYgjbbQENuz4YqcRebldeGEXee2nZY
+	f4aQSrzxruYtJnMcJjE53KBmzlt2uHtoBKr6e5WrGqPQCj/sTvcgAnqoDUA2exkU696xF5xMie6
+	JNqJB+QMpQQaDOFprEnDeqHHW9gc=
+X-Google-Smtp-Source: AGHT+IEZjc2EQqDCixMAOSJTMEsc3fcgtaBnZPEL4M3yGy4i7IUGdVWlnt55DQeCJrxyp75W4qKPWFCvnRYdM3ug334=
+X-Received: by 2002:a17:907:86ac:b0:aca:c7c6:b218 with SMTP id
+ a640c23a62f3a-ace848c28femr196158566b.1.1745662429435; Sat, 26 Apr 2025
+ 03:13:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250403141125.271047-1-ptesarik@suse.com>
-In-Reply-To: <20250403141125.271047-1-ptesarik@suse.com>
+References: <20250424083037.2226732-1-wangming01@loongson.cn>
+In-Reply-To: <20250424083037.2226732-1-wangming01@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 26 Apr 2025 18:11:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5gkv1aVJRBE5b06ne0biKEZxASr2_h6HVCypfNpaBxrA@mail.gmail.com>
-X-Gm-Features: ATxdqUGHeRtcP3yyuXP3Cx3XAHMr-BIFRwCDcLk4Nb8rvTyawtZ9fVzZuvdOXTY
-Message-ID: <CAAhV-H5gkv1aVJRBE5b06ne0biKEZxASr2_h6HVCypfNpaBxrA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Remove a bogus reference to ZONE_DMA
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, Guo Weikang <guoweikang.kernel@gmail.com>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Bibo Mao <maobibo@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Sat, 26 Apr 2025 18:13:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4uiJC0dz+MDUvXEQa0wx78L9U=-XVXZ-xC5AhV_J+gaQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFMJA4o5CR-fsncn0k0L2x8oe7F61DzM3fg9Z4yooOUjlJawEIGteazZqA
+Message-ID: <CAAhV-H4uiJC0dz+MDUvXEQa0wx78L9U=-XVXZ-xC5AhV_J+gaQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/hugetlb: LoongArch: Return NULL from huge_pte_offset()
+ for none PMD
+To: Ming Wang <wangming01@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Peter Xu <peterx@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Hongchen Zhang <zhanghongchen@loongson.cn>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	lixuefeng@loongson.cn, gaojuxin@loongson.cn, chenhuacai@loongson.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -61,31 +63,48 @@ Applied, thanks.
 
 Huacai
 
-On Thu, Apr 3, 2025 at 10:11=E2=80=AFPM Petr Tesarik <ptesarik@suse.com> wr=
-ote:
+On Thu, Apr 24, 2025 at 4:30=E2=80=AFPM Ming Wang <wangming01@loongson.cn> =
+wrote:
 >
-> Remove dead code. LoongArch does not have a DMA memory zone. The
-> architecture does not even define MAX_DMA_PFN.
+> LoongArch's huge_pte_offset() currently returns a pointer to a PMD slot
+> even if the underlying entry points to invalid_pte_table (indicating no
+> mapping). Callers like smaps_hugetlb_range() fetch this invalid entry
+> value (the address of invalid_pte_table) via this pointer.
 >
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> The generic is_swap_pte() check then incorrectly identifies this address
+> as a swap entry on LoongArch, because it satisfies the !pte_present()
+> && !pte_none() conditions. This misinterpretation, combined with a
+> coincidental match by is_migration_entry() on the address bits, leads
+> to kernel crashes in pfn_swap_entry_to_page().
+>
+> Fix this at the architecture level by modifying huge_pte_offset() to
+> check the PMD entry's content using pmd_none() before returning. If the
+> entry is none (i.e., it points to invalid_pte_table), return NULL
+> instead of the pointer to the slot.
+>
+> Co-developed-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Ming Wang <wangming01@loongson.cn>
 > ---
->  arch/loongarch/mm/init.c | 3 ---
->  1 file changed, 3 deletions(-)
+>  arch/loongarch/mm/hugetlbpage.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-> index ca5aa5f46a9f..7fab370efa74 100644
-> --- a/arch/loongarch/mm/init.c
-> +++ b/arch/loongarch/mm/init.c
-> @@ -65,9 +65,6 @@ void __init paging_init(void)
->  {
->         unsigned long max_zone_pfns[MAX_NR_ZONES];
+> diff --git a/arch/loongarch/mm/hugetlbpage.c b/arch/loongarch/mm/hugetlbp=
+age.c
+> index e4068906143b..cea84d7f2b91 100644
+> --- a/arch/loongarch/mm/hugetlbpage.c
+> +++ b/arch/loongarch/mm/hugetlbpage.c
+> @@ -47,7 +47,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned l=
+ong addr,
+>                                 pmd =3D pmd_offset(pud, addr);
+>                 }
+>         }
+> -       return (pte_t *) pmd;
+> +       return pmd_none(pmdp_get(pmd)) ? NULL : (pte_t *) pmd;
+>  }
 >
-> -#ifdef CONFIG_ZONE_DMA
-> -       max_zone_pfns[ZONE_DMA] =3D MAX_DMA_PFN;
-> -#endif
->  #ifdef CONFIG_ZONE_DMA32
->         max_zone_pfns[ZONE_DMA32] =3D MAX_DMA32_PFN;
->  #endif
+>  uint64_t pmd_to_entrylo(unsigned long pmd_val)
 > --
-> 2.48.1
+> 2.43.0
 >
