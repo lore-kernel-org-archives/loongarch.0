@@ -1,57 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C13E18C91F
-	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B403022172E
+	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745662480; cv=none; b=lXK3B7gtzCoPUmhQApE36vaVl6Wz/CzWbL2RtX/Nyt65La1TA18S0CIGm+sA5gRFbP4YSxRUN9F9g4UJVZ756FF5+W5nEy1i2XPzkzJZF5ddbbUEQaymUQJODLBqIlXRUDfOaOu5LwQWnWex5mCuk0iENr622tezPievti06qpM=
+	t=1745662791; cv=none; b=FxCNADjSe2V/ChBHfQaDhW2+l1CfbmHlHYZdWOiANfF5uePZ32F710VE46iRjyOAjrl+ozjlsQ8+K8MJH419qV7CTVtXra6bX8s0ljKZadK3WIBYv2z3L85vLQlhW+ErpOHAFfj/0F2nLppreMPtFVChH0VLF3ir9Pe/26y+49E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745662480; c=relaxed/simple;
-	bh=7iUIwNzlYmvXp7hwThAllikHvzT/UtKTKKu+tu2ruis=;
+	s=arc-20240116; t=1745662791; c=relaxed/simple;
+	bh=UpcT+3FkVUFNLUGi/AvO/GxU4NG3xBdJi0g1eg5g5Es=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oSh56nVl/3OOv2gv7Le2xbAp/IPU435hfK1w1N3FxgTI/n4ah80ysVzYQknJQaFiKhpbGPi7CrhpxPOnihV+K2dgl1WWCvJ2InDkYr0hV26CCNZvj1XKQYtxq94hNKCDDrUMKyrYpRTYWFQLZC0PyC+JjHATUfUIExeHILWa4w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rPDANzru; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=FhaFWkeVbx0klYGnSYad3ZQESaPqG/gPouXVIHiIqJ/gHWQFQtSV50afd1nK2eKbLEhDBzoY2jlsqzOW+0iOlRHJwHXr2m6MJhNX7R+yCB29dtmPQ2WG1oonEFJvmzu9Nas7hr1ayGEoM3wV3HuTdVAYPXibj+dQNe+vMNjYNXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZbZqfpT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rPDANzru"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC7B9C4AF09
-	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:14:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZbZqfpT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B279C4CEE2
+	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745662480;
-	bh=7iUIwNzlYmvXp7hwThAllikHvzT/UtKTKKu+tu2ruis=;
+	s=k20201202; t=1745662791;
+	bh=UpcT+3FkVUFNLUGi/AvO/GxU4NG3xBdJi0g1eg5g5Es=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rPDANzruQlJCO9Nt6jKQUyyShWPtDnDjnThZiop5gm5qehhLHgZSepBg2w5/NESfY
-	 thsryg0I3UlEc4H6U89ysAuoEYDXD0w8wEPI+cGOV5skHfqE0PsejZjSiHVYWHeJAD
-	 4eJaNG1E8ptDJmKriieQXHch3UJYr8k+R3I9TefLvvmqm4LoTBhn3aPusB/ndKghsC
-	 OewaUMkpi4nnZYklkSoLHY8WIps8WTYOJVwb9pT7obM+69xNnclaW1jclJHN/voac2
-	 wRc/hln1o4McZDD+bcnCikURY6H22i6ZhEwl/qNj3Xw3cis/F8BEe3hdz5ujSLq4Ow
-	 EQ7H5tk9nlGLQ==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac25d2b2354so454359666b.1
-        for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 03:14:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUCfAh4RXcrZSbZj2ZaGJI80jSr+ZRtv0sfE8OLpFl2atorqsSHsTMqC0bvmsKO4kL7wWTDlS13XNg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz1qg/Lumi1wbg+PcuRT/YT/bWSriPkn5aKoPeNY2MO+6nVb2iW
-	AJWtz35aeMn/XWFSc+5N1KOrwusI3CsEDXLxpQUyw+/8/8b8zBVjAY5pHQ+e6lEH39s4Xne1Stz
-	4nx5hh3JM3y+rfVwMc2y07XwuYyg=
-X-Google-Smtp-Source: AGHT+IFcwiMN85t40/cLjSE9iIPsNndZzMgOhumyyrprni3Lud3HSd4CTuxxCNydrObvZOVOpTvc8J0Espn93FV2N+c=
-X-Received: by 2002:a17:907:8694:b0:ac7:7f13:2e80 with SMTP id
- a640c23a62f3a-ace7104821amr397849466b.9.1745662478544; Sat, 26 Apr 2025
- 03:14:38 -0700 (PDT)
+	b=lZbZqfpT5XCRZyHUKyWSd2q/NHHMVv0WZYYuChGpimW2WRMtm/BM2VwSjRGeJZ/lF
+	 /8tfY5kZVQb4rbROd764Os0z3ASl9+CGh3McDvh2bf/SwNd5YQ4hYLsdLypxFSB9a7
+	 kLlI8W+OKfiXRmZ5NRQ6pX+N6o9h31C2RKyThwMlN4bPytq8lnNekxF63hoAXWxnnQ
+	 cqo1/7RpQD3p5xihqpVV8dSs3ndXfEKGYr92CLflfyDEbesVNXhfeCq7sw/wpH5JDF
+	 Wt6PimeGSkh6sJcW3GIssQF+XRipydzl4hhuNQXx9iSxouK8YeWd3D8v4TC8aZEL1L
+	 Y1j0uvBENJ++Q==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso4391214a12.0
+        for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 03:19:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWSygSceA3Hlypag+MCPQ4NDp3fHGUIk+2xaRVeCTJr2OR+2lv4CrByuIVC3OuRQ7iUnOyYf5ToiK8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzPBUV/81EFTFnzmV/kS4Cc9LiaMjnEB3vE5zHJFip52VUo7isP
+	kEOmsqLi9AsuoO8QzQOlP1f0u2yLZX+iTvyCxwsX397QPOvIMkk5f8lC3Cpjgn5WSJV79wuQfVG
+	2xJf0sEPZ+FFMN2Iuh5m4evbPuBc=
+X-Google-Smtp-Source: AGHT+IFZunK+Hb5PcsmB+ExxYU41URR2dFyUsmnj9Ou2OsbUODUNI09uby4WMsjfqq5YavsfeUwqbb29lU7Bt5heJ2Q=
+X-Received: by 2002:a17:907:9721:b0:ace:3a1b:d3d with SMTP id
+ a640c23a62f3a-ace71047f9dmr450900566b.2.1745662789824; Sat, 26 Apr 2025
+ 03:19:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250420142208.2252280-1-wheatfox17@icloud.com>
-In-Reply-To: <20250420142208.2252280-1-wheatfox17@icloud.com>
+References: <20250421011843.1760829-1-maobibo@loongson.cn>
+In-Reply-To: <20250421011843.1760829-1-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 26 Apr 2025 18:14:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H53PKkJJX5K=YuarTmm=ZJYx6m_uUyhY+W_dooLuL6r3A@mail.gmail.com>
-X-Gm-Features: ATxdqUG6k7aBA0j5XyblETKQ7GP_Vr6uV7fmdKVn4YvwIZL1ffoofSEI51-6tI0
-Message-ID: <CAAhV-H53PKkJJX5K=YuarTmm=ZJYx6m_uUyhY+W_dooLuL6r3A@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fixed multiple typos of KVM code
-To: Yulong Han <wheatfox17@icloud.com>
-Cc: zhaotianrui@loongson.cn, loongarch@lists.linux.dev
+Date: Sat, 26 Apr 2025 18:19:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7AFE3Th0NzmwwmN4vxsFtj1w_fUzk1CWuUyycuP9twfQ@mail.gmail.com>
+X-Gm-Features: ATxdqUEwrmnqGpPaJvW3i_JuTiLrPEM7vZIKcwgtTaEHvXdfMXPni9JNDr2IoYY
+Message-ID: <CAAhV-H7AFE3Th0NzmwwmN4vxsFtj1w_fUzk1CWuUyycuP9twfQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Fix PMU pass-through issue if VM exits to
+ host finally
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Song Gao <gaosong@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -59,68 +61,36 @@ Applied, thanks.
 
 Huacai
 
-On Sun, Apr 20, 2025 at 10:24=E2=80=AFPM Yulong Han <wheatfox17@icloud.com>=
- wrote:
+On Mon, Apr 21, 2025 at 9:18=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
 >
-> Fixed multiple typos inside arch/loongarch/kvm.
+> In function kvm_pre_enter_guest(), it prepares to enter guest and check
+> whether there are pending signals or events. And it will not enter guest
+> if there are, PMU pass-through preparation for guest should be cancelled
+> and host should own PMU hardware.
 >
-> Signed-off-by: Yulong Han <wheatfox17@icloud.com>
+> Fixes: f4e40ea9f78f ("LoongArch: KVM: Add PMU support for guest")
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  arch/loongarch/kvm/intc/ipi.c | 4 ++--
->  arch/loongarch/kvm/main.c     | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  arch/loongarch/kvm/vcpu.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.=
-c
-> index 93f4acd44..fe734dc06 100644
-> --- a/arch/loongarch/kvm/intc/ipi.c
-> +++ b/arch/loongarch/kvm/intc/ipi.c
-> @@ -111,7 +111,7 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, gpa_t=
- addr, uint64_t data)
->                 ret =3D kvm_io_bus_read(vcpu, KVM_IOCSR_BUS, addr, sizeof=
-(val), &val);
->                 srcu_read_unlock(&vcpu->kvm->srcu, idx);
->                 if (unlikely(ret)) {
-> -                       kvm_err("%s: : read date from addr %llx failed\n"=
-, __func__, addr);
-> +                       kvm_err("%s: : read data from addr %llx failed\n"=
-, __func__, addr);
->                         return ret;
->                 }
->                 /* Construct the mask by scanning the bit 27-30 */
-> @@ -127,7 +127,7 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, gpa_t=
- addr, uint64_t data)
->         ret =3D kvm_io_bus_write(vcpu, KVM_IOCSR_BUS, addr, sizeof(val), =
-&val);
->         srcu_read_unlock(&vcpu->kvm->srcu, idx);
->         if (unlikely(ret))
-> -               kvm_err("%s: : write date to addr %llx failed\n", __func_=
-_, addr);
-> +               kvm_err("%s: : write data to addr %llx failed\n", __func_=
-_, addr);
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 8e427b379661..d96191d65f53 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -294,6 +294,8 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+>                 vcpu->arch.aux_inuse &=3D ~KVM_LARCH_SWCSR_LATEST;
 >
->         return ret;
->  }
-> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> index d165cd38c..80ea63d46 100644
-> --- a/arch/loongarch/kvm/main.c
-> +++ b/arch/loongarch/kvm/main.c
-> @@ -296,10 +296,10 @@ int kvm_arch_enable_virtualization_cpu(void)
->         /*
->          * Enable virtualization features granting guest direct control o=
-f
->          * certain features:
-> -        * GCI=3D2:       Trap on init or unimplement cache instruction.
-> +        * GCI=3D2:       Trap on init or unimplemented cache instruction=
-.
->          * TORU=3D0:      Trap on Root Unimplement.
->          * CACTRL=3D1:    Root control cache.
-> -        * TOP=3D0:       Trap on Previlege.
-> +        * TOP=3D0:       Trap on Privilege.
->          * TOE=3D0:       Trap on Exception.
->          * TIT=3D0:       Trap on Timer.
->          */
+>                 if (kvm_request_pending(vcpu) || xfer_to_guest_mode_work_=
+pending()) {
+> +                       /* Lose pmu for guest and let host own it */
+> +                       kvm_lose_pmu(vcpu);
+>                         /* make sure the vcpu mode has been written */
+>                         smp_store_mb(vcpu->mode, OUTSIDE_GUEST_MODE);
+>                         local_irq_enable();
+>
+> base-commit: 3088d26962e802efa3aa5188f88f82a957f50b22
 > --
-> 2.39.5
->
+> 2.39.3
 >
