@@ -1,83 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1D31E834D;
-	Sat, 26 Apr 2025 02:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFB818C91F
+	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:09:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745634771; cv=none; b=fs4VH7kMmRna2oWrUGntihuvxHH0D8Yjb6zviOFuxRpCrqyhixi0qSwIbZVUHWFycbQT1iNTtSqpENnvxOOo2uBo7MbZVqGPmA8tjDOV6FOpYI7uhX9eqg97w9JQyIe/yOPtFTY9Htw3vkq9jrxuZcUDVeXtyUqmqG2hdqwMgUQ=
+	t=1745662186; cv=none; b=BpMt6iDIGOs+Vcu8ux0AjLK5gsSuK9JJ+9xYVsfKuA3qQRRW86hQZdho83W/EA7uJW9OPaawOOT4/oVMUIv+8UhxkKCouVRlCunaPPFOg/vpSZrULANg4EnK/It5bSCFpI19Vm/6f3Jf9nZzu64gOEjHhoH4MwX7s+H/5Ycfgds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745634771; c=relaxed/simple;
-	bh=+RUTWIt3VFeUueyp+/LHBU7OQa1nslQTo03DjgGapQA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=KZvxPmMh8fPvildNUB50dIGBJOh8LKZJLnVSTVKpTdJ4cOpiDP+pD103TAmRuZBcFzw4AwWYju6Crsa6XeJC5itsK89tIFjfPRodca2poR43PFjNS65orNctStefg8eziXAakNIwZIX5yO3R5uabW7cEg7AvuLah223sBHxSBsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NV3HH5cT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745662186; c=relaxed/simple;
+	bh=+dSeHCDPkLi4s13f7givFRWz0QNyRYjrVGiCHP5glzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=feDYTD/J0vNm6lGWohmNf+a/fAUYzpG1EKZZK9JDlVjMSeuXmqH5taQwxFMefWdNtXaRbOMyibM1tCWMyPlm9jotCO8Ptr+nbmQpRatR+o1tKsw9PG0MNHxucK6PC1tlgNCfwtQ3AC7xxhxoGDqhKmrGGAoInoNaisG/M9CFc6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiCwMDig; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NV3HH5cT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B430EC4CEE4;
-	Sat, 26 Apr 2025 02:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1745634770;
-	bh=+RUTWIt3VFeUueyp+/LHBU7OQa1nslQTo03DjgGapQA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NV3HH5cTytNLqUSnhZu/e/1hOQv76j3RXu91ccBhnAZKPShm2ywlHlwxEmP2NFyJ8
-	 9mJGv0SrHBCtXVkieOdFVL+aj36B86SkAmVo+3g7zY7zwp1CWMsmr/ZbWtOT8bEZyr
-	 8NA5f5WhQqLgsoDwMQL/xkJ+DI4oOl2RlkHukU3w=
-Date: Fri, 25 Apr 2025 19:32:49 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alessandro Carminati <acarmina@redhat.com>
-Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, Arnd
- Bergmann <arnd@arndb.de>, =?ISO-8859-1?Q?Ma=EDra?= Canal
- <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook
- <keescook@chromium.org>, Daniel Diaz <daniel.diaz@linaro.org>, David Gow
- <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>, Brendan
- Higgins <brendan.higgins@linux.dev>, Naresh Kamboju
- <naresh.kamboju@linaro.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>, Daniel
- Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, Guenter
- Roeck <linux@roeck-us.net>, Alessandro Carminati
- <alessandro.carminati@gmail.com>, Jani Nikula <jani.nikula@intel.com>,
- dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, loongarch@lists.linux.dev, x86@kernel.org
-Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
-Message-Id: <20250425193249.78b45d2589575c15f483c3d8@linux-foundation.org>
-In-Reply-To: <20250313114329.284104-1-acarmina@redhat.com>
-References: <20250313114329.284104-1-acarmina@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiCwMDig"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6A4C4AF0D
+	for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 10:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745662185;
+	bh=+dSeHCDPkLi4s13f7givFRWz0QNyRYjrVGiCHP5glzc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XiCwMDigvoBeSkH+tG4v4+R7hq4qu7y63WHd4Cqg4TUWCk51IMYegmabySKN1UDAt
+	 hh/+gp09FgMLHVIOkZR3i6w15HvMyTeJxNIjsKpLDiczL+1FFNeYjLXjr18WuZc10U
+	 EAj4bAHFLsiaK1Nsfl1mHnE7gt7MtR2p49xtkpbo+tzZYNTvBiQdt4umpNBlj7FmXb
+	 1PiwU+1Ivcldt494BCGsdfk3IsEStJQNpQAUJryw02CoMCncGwHLEUt01UCL99Ry5j
+	 A1dzcFz2TUYZIQwV/IERO3+SoExXTKxdUIttv8Os4lE0O3I7hu3nDS+fXVSG9+KVP+
+	 3SIKjQ89nKoyA==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ace333d5f7bso503518066b.3
+        for <loongarch@lists.linux.dev>; Sat, 26 Apr 2025 03:09:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXn5bKRMxz4NtRkNzNbdhw0ml4hidb0k5mi1psXb40R/sWTH7AghEj5HvycZpnQLyqqOCeqxBrCmW4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx3UFC2XScgVC/wp3ay5AtVf+WrUsnJk+kClTjiSAT9S8LoythN
+	RJ5ByShT89OznzBBd1s5IZqxtpA6jnMgRdCH+iwG3oSgnN0HqbDE4QkYBvFIPH75BZdS1cWE52O
+	9bbFsZEPVlOT1U+5eIaU2KuFqKOE=
+X-Google-Smtp-Source: AGHT+IGiCA2J42eJM1hxcTb7t1MjZL2vpEWpK37pKd4NlNOTF8InkxUxvzV7PS9ia/U3F9kdJIwWYyVKrTqiptmT2lI=
+X-Received: by 2002:a17:907:2dab:b0:ace:4fde:c28f with SMTP id
+ a640c23a62f3a-ace84ad7a54mr196891266b.41.1745662184520; Sat, 26 Apr 2025
+ 03:09:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <CC80F694AAFA2099+20250417080746.352276-1-wangyuli@uniontech.com>
+In-Reply-To: <CC80F694AAFA2099+20250417080746.352276-1-wangyuli@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 26 Apr 2025 18:09:34 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7d5CQW2nPeUQNG4Y3RJRAF-AePWKLyOrEAa105muUOAw@mail.gmail.com>
+X-Gm-Features: ATxdqUEsWNQ2lM6EcfQj5ldyBfzquoyTXLjtve2BiEeTdjeGznJHVA_uO5kjWzo
+Message-ID: <CAAhV-H7d5CQW2nPeUQNG4Y3RJRAF-AePWKLyOrEAa105muUOAw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Select ARCH_USE_MEMTEST
+To: WangYuli <wangyuli@uniontech.com>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	jiaxun.yang@flygoat.com, liuyun@loongson.cn, chenhuacai@loongson.cn, 
+	zhanjun@uniontech.com, niecheng1@uniontech.com, guanwentao@uniontech.com, 
+	Erpeng Xu <xuerpeng@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 13 Mar 2025 11:43:15 +0000 Alessandro Carminati <acarmina@redhat.com> wrote:
+Applied, thanks.
 
-> Some unit tests intentionally trigger warning backtraces by passing bad
-> parameters to kernel API functions. Such unit tests typically check the
-> return value from such calls, not the existence of the warning backtrace.
+Huacai
 
-I've had this series in mm.git's mm-new branch for a while.  I didn't
-send it up for 6.15-rc1 due to what I believe to be unresolved review
-issues.
-
-I'll drop this v4 series.  Please resend if/when suitable.
-
-Some notes I have taken are:
-
-https://lkml.kernel.org/r/202504190918.JLNuRGVb-lkp@intel.com
-https://lkml.kernel.org/r/20250402074550.GQ5880@noisy.programming.kicks-ass.net
-#arm64-add-support-for-suppressing-warning-backtraces.patch: check review
-
-Some fixes I had merged which presumably should be carried forward are
-https://lore.kernel.org/all/20250330212934.3F898C4CEDD@smtp.kernel.org/T/
-https://lkml.kernel.org/r/20250330212739.85827C4CEDD@smtp.kernel.org
-
-Thanks.
+On Thu, Apr 17, 2025 at 4:08=E2=80=AFPM WangYuli <wangyuli@uniontech.com> w=
+rote:
+>
+> As of commit dce44566192e ("mm/memtest: add ARCH_USE_MEMTEST"),
+> architectures must select ARCH_USE_MEMTESET to enable CONFIG_MEMTEST.
+>
+> Commit 628c3bb40e9a ("LoongArch: Add boot and setup routines") added
+> support for early_memtest but did not select ARCH_USE_MEMTESET.
+>
+> Fixes: 628c3bb40e9a ("LoongArch: Add boot and setup routines")
+> Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
+> Tested-by: Yuli Wang <wangyuli@uniontech.com>
+> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+> ---
+>  arch/loongarch/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 54ed5b59a690..1ce9b8f5fd03 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -74,6 +74,7 @@ config LOONGARCH
+>         select ARCH_SUPPORTS_RT
+>         select ARCH_USE_BUILTIN_BSWAP
+>         select ARCH_USE_CMPXCHG_LOCKREF
+> +       select ARCH_USE_MEMTEST
+>         select ARCH_USE_QUEUED_RWLOCKS
+>         select ARCH_USE_QUEUED_SPINLOCKS
+>         select ARCH_WANT_DEFAULT_BPF_JIT
+> --
+> 2.49.0
+>
