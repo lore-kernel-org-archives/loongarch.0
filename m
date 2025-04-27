@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C41A1FDA8E
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12098374C4
 	for <loongarch@lists.linux.dev>; Sun, 27 Apr 2025 02:45:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745721912; cv=none; b=qG1Xhyt0o93bv4SLvbrnoxwNbzV7D7h0BBqQbwxt6xfNaEuEt7074XyilZfETInEIE9ZMaPGwheqHEUuxmdB4WjBKnO6YuLltrxXIihrL3TuGfdvcJ2Pic8yu47F9pDyh/wH2evYv+Br0hzTOFYQyYSA2mYapmrjnhwIUDydraA=
+	t=1745721913; cv=none; b=AevQVXs9+4xTrkpyr9erw8gJI6KosG59hZwhtSytgdSDbm5O0hNRqFvoDGAfTuf20lGkD5WCRygACBj3qMk/mDAMrqFKauedsPmRjvZ4JD17hMfzatXu+Gpo7uNX24EjnJ9lf5YohtPniD6RHAjpCPjqa3Oe87FnRkRyxmKS3DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745721912; c=relaxed/simple;
-	bh=c/1+/uoSv0GzF4ZMXTZ9GuQ4sqCvwDSO4jEuKat8Tnw=;
+	s=arc-20240116; t=1745721913; c=relaxed/simple;
+	bh=nAUe+zERY6Zmdrwik7Z/+270Qqo+XVLUqfdyxPHwud4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VFWkBePi/X9EkGXthNoh6ahgvWSj1byMs4Onbr8J9QdFYfREF+YG1ZOl7EU20Ad6WYQt8yzm7ftqYSdO06AHd9Vz2EAvNtcQb/rgddlF1lCJephsozPyF8VzPLb38YgtFGa9+/uI2H4nNtDr6f/Lxx4V82ndLJo5ldWs8Kx07t4=
+	 MIME-Version; b=E8xFSIMCeJb6RwV3Ea0N/80MviuE7xj55PdWilJT7r9/2KmdDk3Z1/zHWkfaKCDVPkIUtrXifuj5rI5IB7d0gn6eFm0nCfKzdZ1ImTSohvDPajWFScKLcygkxrkJbqCHJdst4Q9W2fgqokMuE5fN83PffdPj+uOq7IUQz51Wk6I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxbKwzmg1ozQrHAA--.2522S3;
+	by gateway (Coremail) with SMTP id _____8CxaWozmg1oyQrHAA--.4318S3;
 	Sun, 27 Apr 2025 10:45:07 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMCxLcUxmg1oz+WXAA--.49302S4;
-	Sun, 27 Apr 2025 10:45:07 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMCxLcUxmg1oz+WXAA--.49302S3;
+	Sun, 27 Apr 2025 10:45:06 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -25,9 +25,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] LoongArch: KVM: Do not flush tlb if HW PTW supported
-Date: Sun, 27 Apr 2025 10:45:05 +0800
-Message-Id: <20250427024505.129383-3-maobibo@loongson.cn>
+Subject: [PATCH v2 1/2] LoongArch: KVM: Add parameter exception code with exception handler
+Date: Sun, 27 Apr 2025 10:45:04 +0800
+Message-Id: <20250427024505.129383-2-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20250427024505.129383-1-maobibo@loongson.cn>
 References: <20250427024505.129383-1-maobibo@loongson.cn>
@@ -38,114 +38,149 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxLcUxmg1oz+WXAA--.49302S4
+X-CM-TRANSID:qMiowMCxLcUxmg1oz+WXAA--.49302S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-With HW PTW supported, invalid TLB is not added when page fault happens.
-With EXCCODE_TLBM exception, stale TLB may exist because of last read
-access, tlb flush operation is necessary with EXCCODE_TLBM exception, and
-not necessary with other page fault exceptions.
-
-With SW PTW supported, invalid TLB is added in TLB refill exception.
-tlb flush operation is necessary with all page fault exceptions.
-
-Here remove unnecessary TLB flush opereation with HW PTW supported.
+With some KVM exception types, they share the same exception function
+handler. To show the difference, exception code is added as new
+parameter in exception handler.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/include/asm/kvm_host.h |  2 +-
- arch/loongarch/kvm/exit.c             |  8 ++++----
- arch/loongarch/kvm/mmu.c              | 18 ++++++++++++++----
- 3 files changed, 19 insertions(+), 9 deletions(-)
+ arch/loongarch/include/asm/kvm_vcpu.h |  2 +-
+ arch/loongarch/kvm/exit.c             | 29 ++++++++++++++-------------
+ 2 files changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index f457c2662e2f..a3c4cc46c892 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -301,7 +301,7 @@ int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
- /* MMU handling */
- void kvm_flush_tlb_all(void);
- void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa);
--int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long badv, bool write);
-+int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long badv, bool write, int ecode);
+diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+index 2c349f961bfb..b0a6cac07ed8 100644
+--- a/arch/loongarch/include/asm/kvm_vcpu.h
++++ b/arch/loongarch/include/asm/kvm_vcpu.h
+@@ -37,7 +37,7 @@
+ #define KVM_LOONGSON_IRQ_NUM_MASK	0xffff
  
- int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end, bool blockable);
- int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ typedef union loongarch_instruction  larch_inst;
+-typedef int (*exit_handle_fn)(struct kvm_vcpu *);
++typedef int (*exit_handle_fn)(struct kvm_vcpu *, int ecode);
+ 
+ int  kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst);
+ int  kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst);
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index e143fa3d21d4..fa52251b3bf1 100644
+index ea321403644a..e143fa3d21d4 100644
 --- a/arch/loongarch/kvm/exit.c
 +++ b/arch/loongarch/kvm/exit.c
-@@ -661,7 +661,7 @@ int kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
+@@ -341,7 +341,7 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
+  * 2) Execute CACOP/IDLE instructions;
+  * 3) Access to unimplemented CSRs/IOCSRs.
+  */
+-static int kvm_handle_gspr(struct kvm_vcpu *vcpu)
++static int kvm_handle_gspr(struct kvm_vcpu *vcpu, int ecode)
+ {
+ 	int ret = RESUME_GUEST;
+ 	enum emulation_result er = EMULATE_DONE;
+@@ -705,12 +705,12 @@ static int kvm_handle_rdwr_fault(struct kvm_vcpu *vcpu, bool write)
  	return ret;
  }
  
--static int kvm_handle_rdwr_fault(struct kvm_vcpu *vcpu, bool write)
-+static int kvm_handle_rdwr_fault(struct kvm_vcpu *vcpu, bool write, int ecode)
+-static int kvm_handle_read_fault(struct kvm_vcpu *vcpu)
++static int kvm_handle_read_fault(struct kvm_vcpu *vcpu, int ecode)
+ {
+ 	return kvm_handle_rdwr_fault(vcpu, false);
+ }
+ 
+-static int kvm_handle_write_fault(struct kvm_vcpu *vcpu)
++static int kvm_handle_write_fault(struct kvm_vcpu *vcpu, int ecode)
+ {
+ 	return kvm_handle_rdwr_fault(vcpu, true);
+ }
+@@ -726,11 +726,12 @@ int kvm_complete_user_service(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ /**
+  * kvm_handle_fpu_disabled() - Guest used fpu however it is disabled at host
+  * @vcpu:	Virtual CPU context.
++ * @ecode:	Exception code.
+  *
+  * Handle when the guest attempts to use fpu which hasn't been allowed
+  * by the root context.
+  */
+-static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
++static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu, int ecode)
+ {
+ 	struct kvm_run *run = vcpu->run;
+ 
+@@ -783,11 +784,12 @@ static long kvm_save_notify(struct kvm_vcpu *vcpu)
+ /*
+  * kvm_handle_lsx_disabled() - Guest used LSX while disabled in root.
+  * @vcpu:      Virtual CPU context.
++ * @ecode:	Exception code.
+  *
+  * Handle when the guest attempts to use LSX when it is disabled in the root
+  * context.
+  */
+-static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu)
++static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu, int ecode)
+ {
+ 	if (kvm_own_lsx(vcpu))
+ 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+@@ -798,11 +800,12 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu)
+ /*
+  * kvm_handle_lasx_disabled() - Guest used LASX while disabled in root.
+  * @vcpu:	Virtual CPU context.
++ * @ecode:	Exception code.
+  *
+  * Handle when the guest attempts to use LASX when it is disabled in the root
+  * context.
+  */
+-static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu)
++static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
+ {
+ 	if (kvm_own_lasx(vcpu))
+ 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+@@ -810,7 +813,7 @@ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu)
+ 	return RESUME_GUEST;
+ }
+ 
+-static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu)
++static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu, int ecode)
+ {
+ 	if (kvm_own_lbt(vcpu))
+ 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+@@ -872,7 +875,7 @@ static void kvm_handle_service(struct kvm_vcpu *vcpu)
+ 	kvm_write_reg(vcpu, LOONGARCH_GPR_A0, ret);
+ }
+ 
+-static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
++static int kvm_handle_hypercall(struct kvm_vcpu *vcpu, int ecode)
  {
  	int ret;
  	larch_inst inst;
-@@ -675,7 +675,7 @@ static int kvm_handle_rdwr_fault(struct kvm_vcpu *vcpu, bool write)
- 		return RESUME_GUEST;
- 	}
- 
--	ret = kvm_handle_mm_fault(vcpu, badv, write);
-+	ret = kvm_handle_mm_fault(vcpu, badv, write, ecode);
- 	if (ret) {
- 		/* Treat as MMIO */
- 		inst.word = vcpu->arch.badi;
-@@ -707,12 +707,12 @@ static int kvm_handle_rdwr_fault(struct kvm_vcpu *vcpu, bool write)
- 
- static int kvm_handle_read_fault(struct kvm_vcpu *vcpu, int ecode)
+@@ -932,16 +935,14 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
+ /*
+  * LoongArch KVM callback handling for unimplemented guest exiting
+  */
+-static int kvm_fault_ni(struct kvm_vcpu *vcpu)
++static int kvm_fault_ni(struct kvm_vcpu *vcpu, int ecode)
  {
--	return kvm_handle_rdwr_fault(vcpu, false);
-+	return kvm_handle_rdwr_fault(vcpu, false, ecode);
- }
+-	unsigned int ecode, inst;
+-	unsigned long estat, badv;
++	unsigned int inst;
++	unsigned long badv;
  
- static int kvm_handle_write_fault(struct kvm_vcpu *vcpu, int ecode)
+ 	/* Fetch the instruction */
+ 	inst = vcpu->arch.badi;
+ 	badv = vcpu->arch.badv;
+-	estat = vcpu->arch.host_estat;
+-	ecode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
+ 	kvm_err("ECode: %d PC=%#lx Inst=0x%08x BadVaddr=%#lx ESTAT=%#lx\n",
+ 			ecode, vcpu->arch.pc, inst, badv, read_gcsr_estat());
+ 	kvm_arch_vcpu_dump_regs(vcpu);
+@@ -966,5 +967,5 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
+ 
+ int kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
  {
--	return kvm_handle_rdwr_fault(vcpu, true);
-+	return kvm_handle_rdwr_fault(vcpu, true, ecode);
- }
- 
- int kvm_complete_user_service(struct kvm_vcpu *vcpu, struct kvm_run *run)
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index 4d203294767c..b1262f04fc46 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -912,7 +912,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
- 	return err;
- }
- 
--int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
-+int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long gpa, bool write, int ecode)
- {
- 	int ret;
- 
-@@ -920,9 +920,19 @@ int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
- 	if (ret)
- 		return ret;
- 
--	/* Invalidate this entry in the TLB */
--	vcpu->arch.flush_gpa = gpa;
--	kvm_make_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
-+	if (!cpu_has_ptw || (ecode == EXCCODE_TLBM)) {
-+		/*
-+		 * With HW ptw supported, invalid TLB will not be added with
-+		 * any page fault. With EXCCODE_TLBM exception, stale TLB may
-+		 * exist because of last read access.
-+		 *
-+		 * With SW ptw, invalid TLB is added in TLB refill exception
-+		 *
-+		 * Invalidate this entry in the TLB
-+		 */
-+		vcpu->arch.flush_gpa = gpa;
-+		kvm_make_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
-+	}
- 
- 	return 0;
+-	return kvm_fault_tables[fault](vcpu);
++	return kvm_fault_tables[fault](vcpu, fault);
  }
 -- 
 2.39.3
