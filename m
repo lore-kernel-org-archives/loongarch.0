@@ -1,187 +1,137 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12098374C4
-	for <loongarch@lists.linux.dev>; Sun, 27 Apr 2025 02:45:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AECE7757EA
+	for <loongarch@lists.linux.dev>; Sun, 27 Apr 2025 02:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745721913; cv=none; b=AevQVXs9+4xTrkpyr9erw8gJI6KosG59hZwhtSytgdSDbm5O0hNRqFvoDGAfTuf20lGkD5WCRygACBj3qMk/mDAMrqFKauedsPmRjvZ4JD17hMfzatXu+Gpo7uNX24EjnJ9lf5YohtPniD6RHAjpCPjqa3Oe87FnRkRyxmKS3DU=
+	t=1745722240; cv=none; b=SsbLYPD7faGnaK5P/TJUTqJ/ydVohBiQ9reSH8/mf6LPzjdx6u0/ihe4fckU06hEr2iFg0HWdEoV8mP7c12g8hz9szAzyWw9ggOTF7ldBHc6WX/Qapee0qV1gyYsmNnjnwE/pqA5+61fScI0ZXoiyG/Oqq9pBuz8cKTZ1Rr2emg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745721913; c=relaxed/simple;
-	bh=nAUe+zERY6Zmdrwik7Z/+270Qqo+XVLUqfdyxPHwud4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E8xFSIMCeJb6RwV3Ea0N/80MviuE7xj55PdWilJT7r9/2KmdDk3Z1/zHWkfaKCDVPkIUtrXifuj5rI5IB7d0gn6eFm0nCfKzdZ1ImTSohvDPajWFScKLcygkxrkJbqCHJdst4Q9W2fgqokMuE5fN83PffdPj+uOq7IUQz51Wk6I=
+	s=arc-20240116; t=1745722240; c=relaxed/simple;
+	bh=TGZLcsC/sBWPz3pHPkhHmDMqiIJeLWq/erDIoTVstOc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RP3QbxGekpytwcN/ZCYeuSc/n2RK/10fcH1pAq3gkzQZ3JDx3rvsOMrf8FXSfq+Sts31bZ17JQ5j0S3Pqah8mVQqBmAchhHQM7UDEGTIoAzEGWp3NtDX7z59KUrJEe2stsOQUA6tJbgDavsJ6kgukpqjbObZsaR7s7sDvB6TzeE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxaWozmg1oyQrHAA--.4318S3;
-	Sun, 27 Apr 2025 10:45:07 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMCxLcUxmg1oz+WXAA--.49302S3;
-	Sun, 27 Apr 2025 10:45:06 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] LoongArch: KVM: Add parameter exception code with exception handler
-Date: Sun, 27 Apr 2025 10:45:04 +0800
-Message-Id: <20250427024505.129383-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250427024505.129383-1-maobibo@loongson.cn>
-References: <20250427024505.129383-1-maobibo@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxXWt7mw1ohwvHAA--.2448S3;
+	Sun, 27 Apr 2025 10:50:35 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMBx3MR4mw1o8OeXAA--.50601S3;
+	Sun, 27 Apr 2025 10:50:34 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Fully clear some registers when VM reboot
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250424063846.3927992-1-maobibo@loongson.cn>
+ <CAAhV-H51WRgk8Bs5dsF1LrgdaqL7dk9ioy7H79voZKapov9U2g@mail.gmail.com>
+ <883cb562-9236-f161-71fa-0b963db22a11@loongson.cn>
+ <CAAhV-H5taW2fAGW8CQ7MF5wjW8nuYREcNd6SSmvBmCtoJta5rQ@mail.gmail.com>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <4e728f47-2453-f95f-587d-5df8fd2217e6@loongson.cn>
+Date: Sun, 27 Apr 2025 10:49:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H5taW2fAGW8CQ7MF5wjW8nuYREcNd6SSmvBmCtoJta5rQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxLcUxmg1oz+WXAA--.49302S3
+X-CM-TRANSID:qMiowMBx3MR4mw1o8OeXAA--.50601S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoW7KF4fGryrGFWfJw18ur1Utwc_yoW5JF15pr
+	WjkF1Dur48Wr17tF12qwsYgF1aqrZ7Kr48XF9xXFy2yrn0v345tF40krW2kF98X348JF1x
+	ZF1UC3yS9F4qy3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
+	VUUUUUU==
 
-With some KVM exception types, they share the same exception function
-handler. To show the difference, exception code is added as new
-parameter in exception handler.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_vcpu.h |  2 +-
- arch/loongarch/kvm/exit.c             | 29 ++++++++++++++-------------
- 2 files changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index 2c349f961bfb..b0a6cac07ed8 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -37,7 +37,7 @@
- #define KVM_LOONGSON_IRQ_NUM_MASK	0xffff
- 
- typedef union loongarch_instruction  larch_inst;
--typedef int (*exit_handle_fn)(struct kvm_vcpu *);
-+typedef int (*exit_handle_fn)(struct kvm_vcpu *, int ecode);
- 
- int  kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst);
- int  kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst);
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index ea321403644a..e143fa3d21d4 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -341,7 +341,7 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
-  * 2) Execute CACOP/IDLE instructions;
-  * 3) Access to unimplemented CSRs/IOCSRs.
-  */
--static int kvm_handle_gspr(struct kvm_vcpu *vcpu)
-+static int kvm_handle_gspr(struct kvm_vcpu *vcpu, int ecode)
- {
- 	int ret = RESUME_GUEST;
- 	enum emulation_result er = EMULATE_DONE;
-@@ -705,12 +705,12 @@ static int kvm_handle_rdwr_fault(struct kvm_vcpu *vcpu, bool write)
- 	return ret;
- }
- 
--static int kvm_handle_read_fault(struct kvm_vcpu *vcpu)
-+static int kvm_handle_read_fault(struct kvm_vcpu *vcpu, int ecode)
- {
- 	return kvm_handle_rdwr_fault(vcpu, false);
- }
- 
--static int kvm_handle_write_fault(struct kvm_vcpu *vcpu)
-+static int kvm_handle_write_fault(struct kvm_vcpu *vcpu, int ecode)
- {
- 	return kvm_handle_rdwr_fault(vcpu, true);
- }
-@@ -726,11 +726,12 @@ int kvm_complete_user_service(struct kvm_vcpu *vcpu, struct kvm_run *run)
- /**
-  * kvm_handle_fpu_disabled() - Guest used fpu however it is disabled at host
-  * @vcpu:	Virtual CPU context.
-+ * @ecode:	Exception code.
-  *
-  * Handle when the guest attempts to use fpu which hasn't been allowed
-  * by the root context.
-  */
--static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
-+static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu, int ecode)
- {
- 	struct kvm_run *run = vcpu->run;
- 
-@@ -783,11 +784,12 @@ static long kvm_save_notify(struct kvm_vcpu *vcpu)
- /*
-  * kvm_handle_lsx_disabled() - Guest used LSX while disabled in root.
-  * @vcpu:      Virtual CPU context.
-+ * @ecode:	Exception code.
-  *
-  * Handle when the guest attempts to use LSX when it is disabled in the root
-  * context.
-  */
--static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu)
-+static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu, int ecode)
- {
- 	if (kvm_own_lsx(vcpu))
- 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
-@@ -798,11 +800,12 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu)
- /*
-  * kvm_handle_lasx_disabled() - Guest used LASX while disabled in root.
-  * @vcpu:	Virtual CPU context.
-+ * @ecode:	Exception code.
-  *
-  * Handle when the guest attempts to use LASX when it is disabled in the root
-  * context.
-  */
--static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu)
-+static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
- {
- 	if (kvm_own_lasx(vcpu))
- 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
-@@ -810,7 +813,7 @@ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu)
- 	return RESUME_GUEST;
- }
- 
--static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu)
-+static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu, int ecode)
- {
- 	if (kvm_own_lbt(vcpu))
- 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
-@@ -872,7 +875,7 @@ static void kvm_handle_service(struct kvm_vcpu *vcpu)
- 	kvm_write_reg(vcpu, LOONGARCH_GPR_A0, ret);
- }
- 
--static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
-+static int kvm_handle_hypercall(struct kvm_vcpu *vcpu, int ecode)
- {
- 	int ret;
- 	larch_inst inst;
-@@ -932,16 +935,14 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
- /*
-  * LoongArch KVM callback handling for unimplemented guest exiting
-  */
--static int kvm_fault_ni(struct kvm_vcpu *vcpu)
-+static int kvm_fault_ni(struct kvm_vcpu *vcpu, int ecode)
- {
--	unsigned int ecode, inst;
--	unsigned long estat, badv;
-+	unsigned int inst;
-+	unsigned long badv;
- 
- 	/* Fetch the instruction */
- 	inst = vcpu->arch.badi;
- 	badv = vcpu->arch.badv;
--	estat = vcpu->arch.host_estat;
--	ecode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
- 	kvm_err("ECode: %d PC=%#lx Inst=0x%08x BadVaddr=%#lx ESTAT=%#lx\n",
- 			ecode, vcpu->arch.pc, inst, badv, read_gcsr_estat());
- 	kvm_arch_vcpu_dump_regs(vcpu);
-@@ -966,5 +967,5 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
- 
- int kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
- {
--	return kvm_fault_tables[fault](vcpu);
-+	return kvm_fault_tables[fault](vcpu, fault);
- }
--- 
-2.39.3
+On 2025/4/26 下午6:20, Huacai Chen wrote:
+> On Thu, Apr 24, 2025 at 3:07 PM bibo mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/4/24 下午2:53, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Thu, Apr 24, 2025 at 2:38 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> Some registers such as LOONGARCH_CSR_ESTAT and LOONGARCH_CSR_GINTC
+>>>> are partly cleared with function _kvm_set_csr(). This comes from hardware
+>>> I cannot find the _kvm_set_csr() function, maybe it's a typo?
+>> oop, it is _kvm_setcsr(), will refresh in next version.
+>>
+>>> And the tile can be "LoongArch: KVM: Fully clear some CSRs when VM reboot"
+>> yeap, this title is more suitable.
+> Already applied with those modifications.
+Thanks for doing this  -:)
+
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>> Huacai
+>>>
+>>>> specification, some bits are read only in VM mode, and however it can be
+>>>> written in host mode. So it is partly cleared in VM mode, and can be fully
+>>>> cleared in host mode.
+>>>>
+>>>> These read only bits show pending interrupt or exception status. When VM
+>>>> reset, the read-only bits should be cleared, otherwise vCPU will receive
+>>>> unknown interrupts in boot stage.
+>>>>
+>>>> Here registers LOONGARCH_CSR_ESTAT/LOONGARCH_CSR_GINTC are fully cleared
+>>>> in ioctl KVM_REG_LOONGARCH_VCPU_RESET vCPU reset path.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/kvm/vcpu.c | 8 ++++++++
+>>>>    1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>> index 8e427b379661..80b2316d6f58 100644
+>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>> @@ -902,6 +902,14 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
+>>>>                           vcpu->arch.st.guest_addr = 0;
+>>>>                           memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
+>>>>                           memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
+>>>> +
+>>>> +                       /*
+>>>> +                        * When vCPU reset, clear the ESTAT and GINTC registers
+>>>> +                        * And the other CSR registers are cleared with function
+>>>> +                        * _kvm_set_csr().
+>>>> +                        */
+>>>> +                       kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_GINTC, 0);
+>>>> +                       kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_ESTAT, 0);
+>>>>                           break;
+>>>>                   default:
+>>>>                           ret = -EINVAL;
+>>>>
+>>>> base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+>>>> --
+>>>> 2.39.3
+>>>>
+>>>>
+>>
 
