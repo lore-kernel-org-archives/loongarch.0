@@ -1,22 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E6E1DE4F1
-	for <loongarch@lists.linux.dev>; Mon, 28 Apr 2025 07:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED3681A8F94
+	for <loongarch@lists.linux.dev>; Mon, 28 Apr 2025 07:40:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745826027; cv=none; b=OnKYnH5XmMmWbHPlmB33EfWyGhOy7rPD2Ys6gmpdW17yih0BfhGYHe7bvMXcUrH5VJ2XwO3wPxLoXLg4sbUgwn4owksSfuVDwe5iOY25pxKzr0v98CDZwFnWpXdfS0WreM8JT4Os4K9BbQVZ7Iuf03ZgyXwQtzx62Awki3N2JU0=
+	t=1745826049; cv=none; b=BneljeXwnBxODZe5Yd6Q0NDx8dlbNbCdttT37nzxCtKEWhz0dpDNGQvwlkWb7alBeG1fizYg0u2lzULnyTCCa1+1AZn5z4qtVyhHIyh0XrtDDa0ia9fR9MIAW1mbDjJoBcBzq6npOhYu2Z+SlQGwWbXROVKjb2KwfcUoM7qcjm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745826027; c=relaxed/simple;
-	bh=V5EpiItOzlDSnQKf6oZg8W8MZoLzwDPhROtMAgJ9DEg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y+doiM7yA2tZ0n66C2LyVMhk+U3Jeii6nYONMoEXY9u2MqYPSTkfbRAcD3D7Bik8O/vaJR9lMG5b5wHBdRbjbDv2yd00+y6D4aHxTw+czDT6nPunEpjHY5LE9lf0GAP3IEgqjN7G5yhhSKKAIQ34sWuMsZe+SpV6XAvrWkkMBW8=
+	s=arc-20240116; t=1745826049; c=relaxed/simple;
+	bh=0bOL3cl7CbTN3wJxtbvcoOrllSFRUARYP/dr+7W+fl8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KF1PLx9/4LV4VAbfmYxKrrW8avvRDmGbZbZb5ntCaybJS5co6WNhor8EdU0aKoQM/tN5Le67HgT97vmL8WtK8lMMOvcjzTFEp/3sRerp6cAv2Jg5c6o+W9FyLMHEwFfXsrWaCO0UgZjbuzHT2if9h+0sZFW0QOp5RqdlkusMmHM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.238])
-	by gateway (Coremail) with SMTP id _____8CxyuDjMA9obTDIAA--.4282S3;
-	Mon, 28 Apr 2025 15:40:19 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Ax3eL9MA9otjDIAA--.30531S3;
+	Mon, 28 Apr 2025 15:40:45 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.238])
-	by front1 (Coremail) with SMTP id qMiowMCxLBvfMA9orvKaAA--.7101S2;
-	Mon, 28 Apr 2025 15:40:18 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAxSsT1MA9o7vKaAA--.40441S2;
+	Mon, 28 Apr 2025 15:40:45 +0800 (CST)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
@@ -28,9 +28,9 @@ Cc: loongarch@lists.linux.dev,
 	loongson-kernel@lists.loongnix.cn,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Move __arch_cpu_idle() to .cpuidle.text section
-Date: Mon, 28 Apr 2025 15:40:02 +0800
-Message-ID: <20250428074002.4166499-1-chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Fix MAX_REG_OFFSET calculation
+Date: Mon, 28 Apr 2025 15:40:29 +0800
+Message-ID: <20250428074029.4166974-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -39,70 +39,49 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxLBvfMA9orvKaAA--.7101S2
+X-CM-TRANSID:qMiowMAxSsT1MA9o7vKaAA--.40441S2
 X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kr1rCry5CF1rWryDZryUCFX_yoW8GF17pF
-	WUCwnIgr4DJFyfAayDtw1kur98AwnrG34a9ay5tayfAa1UXF1kXr4vv3yqgFyvg3y8Gr10
-	gFWkJ3Z2qFyUA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKF4xZw1fGryfXr45tw4rXrc_yoWkCrX_u3
+	W7ta18Cw1fGw4fWwn8C348Jr1jga18WFnIkF4ktFy7X345JrW5Cws7Zw17Zr4q9w47ZFs3
+	uF93Kry3u342gosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
 	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
 	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
 	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	IIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
 	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU27PEDUUUU
 
-Now arch_cpu_idle() is annotated with __cpuidle which means it is in
-the .cpuidle.text section, but __arch_cpu_idle() isn't. Thus, fix the
-missing .cpuidle.text section assignment for __arch_cpu_idle() in order
-to correct backtracing with nmi_backtrace().
-
-The principle is similar to the commit 97c8580e85cf81c ("MIPS: Annotate
-cpu_wait implementations with __cpuidle")
+Fix MAX_REG_OFFSET calculation, make it point to the last register
+in 'struct pt_regs' and not to the marker itself, which could allow
+regs_get_register() to return an invalid offset.
 
 Cc: stable@vger.kernel.org
+Fixes: 803b0fc5c3f2baa6e5 ("LoongArch: Add process management")
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/genex.S | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/loongarch/include/asm/ptrace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-index 4f0912141781..733a7665e434 100644
---- a/arch/loongarch/kernel/genex.S
-+++ b/arch/loongarch/kernel/genex.S
-@@ -16,6 +16,7 @@
- #include <asm/stackframe.h>
- #include <asm/thread_info.h>
+diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+index a5b63c84f854..e5d21e836d99 100644
+--- a/arch/loongarch/include/asm/ptrace.h
++++ b/arch/loongarch/include/asm/ptrace.h
+@@ -55,7 +55,7 @@ static inline void instruction_pointer_set(struct pt_regs *regs, unsigned long v
  
-+	.section .cpuidle.text, "ax"
- 	.align	5
- SYM_FUNC_START(__arch_cpu_idle)
- 	/* start of idle interrupt region */
-@@ -31,14 +32,16 @@ SYM_FUNC_START(__arch_cpu_idle)
- 	 */
- 	idle	0
- 	/* end of idle interrupt region */
--1:	jr	ra
-+idle_exit:
-+	jr	ra
- SYM_FUNC_END(__arch_cpu_idle)
-+	.previous
+ /* Query offset/name of register from its name/offset */
+ extern int regs_query_register_offset(const char *name);
+-#define MAX_REG_OFFSET (offsetof(struct pt_regs, __last))
++#define MAX_REG_OFFSET (offsetof(struct pt_regs, __last) - sizeof(unsigned long))
  
- SYM_CODE_START(handle_vint)
- 	UNWIND_HINT_UNDEFINED
- 	BACKUP_T0T1
- 	SAVE_ALL
--	la_abs	t1, 1b
-+	la_abs	t1, idle_exit
- 	LONG_L	t0, sp, PT_ERA
- 	/* 3 instructions idle interrupt region */
- 	ori	t0, t0, 0b1100
+ /**
+  * regs_get_register() - get register value from its offset
 -- 
 2.47.1
 
