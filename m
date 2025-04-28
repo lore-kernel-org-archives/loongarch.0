@@ -1,137 +1,109 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AECE7757EA
-	for <loongarch@lists.linux.dev>; Sun, 27 Apr 2025 02:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEBC78F4F
+	for <loongarch@lists.linux.dev>; Mon, 28 Apr 2025 03:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745722240; cv=none; b=SsbLYPD7faGnaK5P/TJUTqJ/ydVohBiQ9reSH8/mf6LPzjdx6u0/ihe4fckU06hEr2iFg0HWdEoV8mP7c12g8hz9szAzyWw9ggOTF7ldBHc6WX/Qapee0qV1gyYsmNnjnwE/pqA5+61fScI0ZXoiyG/Oqq9pBuz8cKTZ1Rr2emg=
+	t=1745812157; cv=none; b=B/D5fTrW4OBFbwFX67eootnIhjb4wAK1b0aKqIWz2VXYnOMxyf07MkCVVDruB0xV8iRhJOcJBZ9kuwZvUgCTWZPr6aaHfdEdzRO6mekzz7IWjw4as4umLOdvDMxSliTwgRiXca2dvy14hbpgeCz6YdxEDc/xBd49P21pukY1mIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745722240; c=relaxed/simple;
-	bh=TGZLcsC/sBWPz3pHPkhHmDMqiIJeLWq/erDIoTVstOc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RP3QbxGekpytwcN/ZCYeuSc/n2RK/10fcH1pAq3gkzQZ3JDx3rvsOMrf8FXSfq+Sts31bZ17JQ5j0S3Pqah8mVQqBmAchhHQM7UDEGTIoAzEGWp3NtDX7z59KUrJEe2stsOQUA6tJbgDavsJ6kgukpqjbObZsaR7s7sDvB6TzeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxXWt7mw1ohwvHAA--.2448S3;
-	Sun, 27 Apr 2025 10:50:35 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMBx3MR4mw1o8OeXAA--.50601S3;
-	Sun, 27 Apr 2025 10:50:34 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Fully clear some registers when VM reboot
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250424063846.3927992-1-maobibo@loongson.cn>
- <CAAhV-H51WRgk8Bs5dsF1LrgdaqL7dk9ioy7H79voZKapov9U2g@mail.gmail.com>
- <883cb562-9236-f161-71fa-0b963db22a11@loongson.cn>
- <CAAhV-H5taW2fAGW8CQ7MF5wjW8nuYREcNd6SSmvBmCtoJta5rQ@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <4e728f47-2453-f95f-587d-5df8fd2217e6@loongson.cn>
-Date: Sun, 27 Apr 2025 10:49:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1745812157; c=relaxed/simple;
+	bh=mrO0sX0AxY9NPTt5ghapA/2o2ZwZKknZIzyQtCGodvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hNi0eOqd8Z/M0YHugfsHoTNuKN2w+hLE8BCblRCNdZy9bqebzC5fqWbyLa4wFLnjJkc0nAWSOwSPqQaKT66v7LVhs+Hc36KEo9NULDo3ba25y0ZVanaLzx0I5mSU4AfTFa58C3Q7YCme9SgoH/+fkZ5j2rRFVpK2jg278T0kMZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=nuJQVH2P; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="nuJQVH2P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745812078;
+	bh=WpqtUOShDe+d+QdRjkjQdxIWTys7H+1vGp8ynPDL/AA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=nuJQVH2PQS5/69zXBh4PnF3UDE5R8oLUCgUx8yL758vK3lMufCNhRC6CbbOonU8Wp
+	 Q62G9HkzzRYk0aN5TLItLI0P+eKCxciKBDK6jZsrzzN81q//6bq8/GmdyuyZUDy3SG
+	 hj5voa6d5ZKYLYPtpfedz+xWwSDqdUkxRfTwyALc=
+X-QQ-mid: zesmtpip4t1745812071t19a885c9
+X-QQ-Originating-IP: uJ10WdG01LcOglQJft41t6kJrx/BDcIqge5YsKhZL08=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 28 Apr 2025 11:47:49 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 12876822068157501382
+EX-QQ-RecipientCnt: 18
+From: WangYuli <wangyuli@uniontech.com>
+To: corbet@lwn.net,
+	akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	paulmck@kernel.org,
+	thuth@redhat.com,
+	bp@alien8.de,
+	ardb@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	tsbogend@alpha.franken.de,
+	linux-mips@vger.kernel.org,
+	chris@zankel.net,
+	jcmvbkbc@gmail.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] Documentation/kernel-parameters: Update memtest parameter
+Date: Mon, 28 Apr 2025 11:47:46 +0800
+Message-ID: <0FC3D21CA22E8251+20250428034746.21216-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5taW2fAGW8CQ7MF5wjW8nuYREcNd6SSmvBmCtoJta5rQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx3MR4mw1o8OeXAA--.50601S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KF4fGryrGFWfJw18ur1Utwc_yoW5JF15pr
-	WjkF1Dur48Wr17tF12qwsYgF1aqrZ7Kr48XF9xXFy2yrn0v345tF40krW2kF98X348JF1x
-	ZF1UC3yS9F4qy3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
-	VUUUUUU==
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MjqaYNLY8QZGLBaPpIBOLtwPvPGjnNSEoI8HyzG5vgbOOeLGckzgnGNF
+	Gi2e+SlHSWjG65PMFv7qjK2/8wKHEG9y8PpHqaKvbekLUs0N2hKq/Fg7Q3Y/WZqiBVZSd85
+	9wutTQQ4ZKO7MsCtBtsp8st8E3ooR1+y9TKZ6+huTTzuWmm4uBJooZZ5iKydwk1u8v/5G/4
+	hskYvogmbBO+ocpho0zm55Vv6GSZtZ3n/IXJQ46pg6wiXedBsqj36xQ72d9GZtVyoirfiYi
+	drqr8ZOqUXA4r8Tkzx9cMRZBUoJ3fqC/FO8ZvRmmkwIN3LX877WZ8ULefXUka102f19i2so
+	7hnRyzLhUdUcelTtC9xH4BRFjHVvKd+loOuL4Mk2U605OUEPTWSfzfBgPAIbhBrQhZeBgIR
+	C6F7kbpEA9UrQrJt1CJe9paHIo1nYkJa9zieukZVym1FujhyKeX0/Md/DvUAPyVLW8InQ+k
+	mvhlTPCNQgHkjfM5K7Df4GabQrokV6iU08lgNVAir8c4pNVc5jorTmwf/1vhCfZkJeOyiWs
+	lIiEzp4Xu+FcpAVKUjyj+7M9AjOU3MSjx5t83jXuNGY7bFaFqTlhZsDKUz+C4EsOLg16W9F
+	g8q+es8+Y9ICnQJ9pVh5Wsq076a8F12V+p42NG9zj+30Be8xJ+Live1ifW3WgNPQdeBKPSo
+	a6U8s3hxqL2bLJCqicUXgz2P+9YetRWlQ3S5N9ByXv0sYx6FNn7Y6w23e3S1yVuN9V7lDMi
+	IbzKq6DAYYXWNdC9z2A5AF++Jc/XAPlPW7cQq+SrlSzArWr+Px86xgqMtJLU3Kpf+GMcZLF
+	lDznjj2t3ZndNGcfPRjy5GZoaHyEGgOGFfPsCN1Lxtz0GvllH9RyZ1uBhd6JFSB5fL2HkhF
+	mlKh3+YPTOnQOmcOEi6yYUtchyZjb8kWtkrM5/Smz8sk18yROSFvlmY/T367QbUCiRJN9/Z
+	9doUVlCWLdJdmbS5nCKoRGE5RFiuN0Fkfmgd4Z6+BAH3FKkbyWAtBAYOyV3CUEHIv0Os=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
+LoongArch, MIPS and XTENSA has supported memtest now.
+Update documentation for them.
 
+Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=dce44566192ec0b38597fdfd435013c2d54653ff
+Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fb8e9f59d6f292c3d9fea6c155c22ea5fc3053ab
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2025/4/26 下午6:20, Huacai Chen wrote:
-> On Thu, Apr 24, 2025 at 3:07 PM bibo mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/4/24 下午2:53, Huacai Chen wrote:
->>> Hi, Bibo,
->>>
->>> On Thu, Apr 24, 2025 at 2:38 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> Some registers such as LOONGARCH_CSR_ESTAT and LOONGARCH_CSR_GINTC
->>>> are partly cleared with function _kvm_set_csr(). This comes from hardware
->>> I cannot find the _kvm_set_csr() function, maybe it's a typo?
->> oop, it is _kvm_setcsr(), will refresh in next version.
->>
->>> And the tile can be "LoongArch: KVM: Fully clear some CSRs when VM reboot"
->> yeap, this title is more suitable.
-> Already applied with those modifications.
-Thanks for doing this  -:)
-
-> 
-> Huacai
-> 
->>
->> Regards
->> Bibo Mao
->>>
->>> Huacai
->>>
->>>> specification, some bits are read only in VM mode, and however it can be
->>>> written in host mode. So it is partly cleared in VM mode, and can be fully
->>>> cleared in host mode.
->>>>
->>>> These read only bits show pending interrupt or exception status. When VM
->>>> reset, the read-only bits should be cleared, otherwise vCPU will receive
->>>> unknown interrupts in boot stage.
->>>>
->>>> Here registers LOONGARCH_CSR_ESTAT/LOONGARCH_CSR_GINTC are fully cleared
->>>> in ioctl KVM_REG_LOONGARCH_VCPU_RESET vCPU reset path.
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>    arch/loongarch/kvm/vcpu.c | 8 ++++++++
->>>>    1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->>>> index 8e427b379661..80b2316d6f58 100644
->>>> --- a/arch/loongarch/kvm/vcpu.c
->>>> +++ b/arch/loongarch/kvm/vcpu.c
->>>> @@ -902,6 +902,14 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
->>>>                           vcpu->arch.st.guest_addr = 0;
->>>>                           memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
->>>>                           memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
->>>> +
->>>> +                       /*
->>>> +                        * When vCPU reset, clear the ESTAT and GINTC registers
->>>> +                        * And the other CSR registers are cleared with function
->>>> +                        * _kvm_set_csr().
->>>> +                        */
->>>> +                       kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_GINTC, 0);
->>>> +                       kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_ESTAT, 0);
->>>>                           break;
->>>>                   default:
->>>>                           ret = -EINVAL;
->>>>
->>>> base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
->>>> --
->>>> 2.39.3
->>>>
->>>>
->>
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index d9fd26b95b34..eeba55deb38d 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3620,7 +3620,7 @@
+ 			Note that even when enabled, there are a few cases where
+ 			the feature is not effective.
+ 
+-	memtest=	[KNL,X86,ARM,M68K,PPC,RISCV,EARLY] Enable memtest
++	memtest=	[KNL,X86,ARM,LOONGARCH,MIPS,M68K,PPC,RISCV,XTENSA,EARLY] Enable memtest
+ 			Format: <integer>
+ 			default : 0 <disable>
+ 			Specifies the number of memtest passes to be
+-- 
+2.49.0
 
