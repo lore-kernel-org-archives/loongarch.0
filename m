@@ -1,87 +1,335 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED3681A8F94
-	for <loongarch@lists.linux.dev>; Mon, 28 Apr 2025 07:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DCF26FDA7
+	for <loongarch@lists.linux.dev>; Mon, 28 Apr 2025 15:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745826049; cv=none; b=BneljeXwnBxODZe5Yd6Q0NDx8dlbNbCdttT37nzxCtKEWhz0dpDNGQvwlkWb7alBeG1fizYg0u2lzULnyTCCa1+1AZn5z4qtVyhHIyh0XrtDDa0ia9fR9MIAW1mbDjJoBcBzq6npOhYu2Z+SlQGwWbXROVKjb2KwfcUoM7qcjm8=
+	t=1745853020; cv=none; b=hTAMrNBJNp0e5HBu+HFD8Y+REMo3sed/PZBEQYm6RRq3Tlt7fSZowjZrdv5MQM7TCEhUMKAb30hyAa6DscdOb8BOd4z4GmWR2PBc6px9z1bQZYlEnvGQEa3iX/iiSwIcfnLSxXNHUySsT4ykBSEXYIstfynUgWiuI294Qncd6p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745826049; c=relaxed/simple;
-	bh=0bOL3cl7CbTN3wJxtbvcoOrllSFRUARYP/dr+7W+fl8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KF1PLx9/4LV4VAbfmYxKrrW8avvRDmGbZbZb5ntCaybJS5co6WNhor8EdU0aKoQM/tN5Le67HgT97vmL8WtK8lMMOvcjzTFEp/3sRerp6cAv2Jg5c6o+W9FyLMHEwFfXsrWaCO0UgZjbuzHT2if9h+0sZFW0QOp5RqdlkusMmHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.238])
-	by gateway (Coremail) with SMTP id _____8Ax3eL9MA9otjDIAA--.30531S3;
-	Mon, 28 Apr 2025 15:40:45 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.238])
-	by front1 (Coremail) with SMTP id qMiowMAxSsT1MA9o7vKaAA--.40441S2;
-	Mon, 28 Apr 2025 15:40:45 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Fix MAX_REG_OFFSET calculation
-Date: Mon, 28 Apr 2025 15:40:29 +0800
-Message-ID: <20250428074029.4166974-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1745853020; c=relaxed/simple;
+	bh=IqV5Nxk5VM45Sr0DmwdfE+y8FFviNPWnkCDiR3cFvyU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V2ncZlDVW/E5Jd5IdxG16lQypA/CIs/+TqjF52pI/ejb0apvJShlsI2RtB+HhJ0vTJPCzFPcW9vtw1eiUNKdHEsm2Is3GTVQ/2qCJwGkKCp3/KVBeCAx8zeIn8XiMxyd52tpYuPcj+QpFClJWvPBC1HAs35tDAbAI7+haH7AB3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u2cXVQi5; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u2cXVQi5"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-70825de932bso51043177b3.0
+        for <loongarch@lists.linux.dev>; Mon, 28 Apr 2025 08:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745853017; x=1746457817; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=M1qLEl8i2+MNssowlwtDc36gKvk/tS5q/yrKQaTL7cc=;
+        b=u2cXVQi5vZ6GEo6f2fgX0pk2XecK7l6TQA7eSIzUV3TsGIZeIk/tGtz2rFSNET8Ju2
+         ZgTFAiGMRQdPbjwGRrgO6vtjQaSm4LgrzXYQgKeI9EjBMMFNX0KyTArD8RSBk2MzarjS
+         +We0pr8r3RV2e0yaTjGEJaTcDgS9/0JuD8uXFkXeC0cZ5fg+Ulrd4u4gNtCCMwuDihhv
+         IvgNfDrVqnpYhBsRWdQ+sdUKbFp2k8SKg3FfPD8xvT2g40/idnsBQEGfvfQZtfLoigty
+         LHKRwhzJDaJjY1gRmxhYsm+X+PeLRdfsXDKH6fXUIK0X5/V1NP6zwQg4Fp1t3bLiqNc4
+         37DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745853017; x=1746457817;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M1qLEl8i2+MNssowlwtDc36gKvk/tS5q/yrKQaTL7cc=;
+        b=mCm6F+sNn3Z48MN1NBV0erIMphYjoGmLNJRb0d0+tK/ozdDDRIYywpuGyh5AugGtcZ
+         r/Y/G5OTr9QQrCzQ3leZOcJ/bChy6BXIo5/eGosEicjbKqt2hftgSe0kJsMlRjY2o4JG
+         YpVpkKqToHa6EEmDDZsC3jDxfqQL+f4y2Ef7PHTG6e7sU6Fdf8H3kNipxpQWxEACyT4L
+         +bIZfhOs0krg1eVIeq6rOKlff4qeEy7V0v9OXn0IOOy7DcV+cUrJcFJaYwKv0uazz0Ld
+         9hVP5wdeB0dAuSHcDU8HOeYid2fYfAlISTLRQ0zKpKxbeT1eoF31YucP84/xvzDbSNR+
+         RCdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhqTiYqWDBaZKzes00ZeutN7PuScTIwIrGHucuozYRdCAJw6XrbkqeTdIPA1zVG0CX060X10eZSRo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxYc0vLARsdP90Dro+raL7VvdmvkDzmdfhkX7xADPk9Inm5aK8C
+	sJ0WaB8Y7bclH1M5jZNyBo02VcxiAocCoeYDhAaDLz1pryI+W3kkUpxrdauFQX6lHtOi5l4yLde
+	3bv//GSUOSuEv64EDWws2VB4f8RByf4P85Z2XDQ==
+X-Gm-Gg: ASbGncv1U+Jwv7easDjjkqoOpYZBWPngpOLjJIhKo978TVLvE0u7ufAlnsCr/Fq5Xth
+	xZXhJSG96kAlNAmauKKK89RBaUmWHt205cUNqWMmDZG3QzcKQrvpz8g7jbV4OJTsRbj72Y+VjNf
+	7niajPOAa/CKfRqgBX0x8eIe8=
+X-Google-Smtp-Source: AGHT+IGHNOX0lCHKaBhgAkyCSaQvfkDOJurdh3fIEr+lGeqL18H1nLfQurUm4e+jX9zWc2VqfcLb4+sjjQCZ9/588Iw=
+X-Received: by 2002:a05:690c:61c8:b0:705:6afe:4580 with SMTP id
+ 00721157ae682-708544de4demr154443977b3.19.1745853017168; Mon, 28 Apr 2025
+ 08:10:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxSsT1MA9o7vKaAA--.40441S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKF4xZw1fGryfXr45tw4rXrc_yoWkCrX_u3
-	W7ta18Cw1fGw4fWwn8C348Jr1jga18WFnIkF4ktFy7X345JrW5Cws7Zw17Zr4q9w47ZFs3
-	uF93Kry3u342gosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU27PEDUUUU
+References: <cover.1744273956.git.zhoubinbin@loongson.cn> <8ff74bf9e821f5734462cebcc4b3fbaa09114e6c.1744273956.git.zhoubinbin@loongson.cn>
+In-Reply-To: <8ff74bf9e821f5734462cebcc4b3fbaa09114e6c.1744273956.git.zhoubinbin@loongson.cn>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 28 Apr 2025 17:09:41 +0200
+X-Gm-Features: ATxdqUHjTUtvuNdL6JLM2StJ5Q0auwfvIxVrtRfgnYRp_tAJ5Nl-aVKYfe94-M4
+Message-ID: <CAPDyKFqqPktwrYs70o9To4OKVWss6wM5kCg0OuXY-k2ReESwig@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Fix MAX_REG_OFFSET calculation, make it point to the last register
-in 'struct pt_regs' and not to the marker itself, which could allow
-regs_get_register() to return an invalid offset.
+On Thu, 10 Apr 2025 at 10:41, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+>
+> The MMC controllers on the Loongson-2K series CPUs are similar,
+> except for the interface characteristics and the use of DMA controllers.
+>
+> This patch describes the MMC controllers on the Loongson-2K0500/2K1000,
+> with the distinguishing feature being the use of an externally shared
+> APBDMA engine.
+>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 
-Cc: stable@vger.kernel.org
-Fixes: 803b0fc5c3f2baa6e5 ("LoongArch: Add process management")
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/ptrace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Overall this looks good to me. A few things though, please have a look below.
 
-diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-index a5b63c84f854..e5d21e836d99 100644
---- a/arch/loongarch/include/asm/ptrace.h
-+++ b/arch/loongarch/include/asm/ptrace.h
-@@ -55,7 +55,7 @@ static inline void instruction_pointer_set(struct pt_regs *regs, unsigned long v
- 
- /* Query offset/name of register from its name/offset */
- extern int regs_query_register_offset(const char *name);
--#define MAX_REG_OFFSET (offsetof(struct pt_regs, __last))
-+#define MAX_REG_OFFSET (offsetof(struct pt_regs, __last) - sizeof(unsigned long))
- 
- /**
-  * regs_get_register() - get register value from its offset
--- 
-2.47.1
+> ---
+>  MAINTAINERS                      |   2 +
+>  drivers/mmc/host/Kconfig         |  13 +
+>  drivers/mmc/host/Makefile        |   1 +
+>  drivers/mmc/host/loongson2-mmc.c | 636 +++++++++++++++++++++++++++++++
+>  drivers/mmc/host/loongson2-mmc.h | 177 +++++++++
+>  5 files changed, 829 insertions(+)
+>  create mode 100644 drivers/mmc/host/loongson2-mmc.c
+>  create mode 100644 drivers/mmc/host/loongson2-mmc.h
 
+I think we can put all code in the c-file, no need for a separate header file.
+
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32c3733a764a..e218a3e204ef 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13940,6 +13940,8 @@ M:      Binbin Zhou <zhoubinbin@loongson.cn>
+>  L:     linux-mmc@vger.kernel.org
+>  S:     Supported
+>  F:     Documentation/devicetree/bindings/mmc/loongson,ls2k-mmc.yaml
+> +F:     drivers/mmc/host/loongson2-mmc.c
+> +F:     drivers/mmc/host/loongson2-mmc.h
+>
+
+[...]
+
+> +static irqreturn_t loongson2_mmc_irq(int irq, void *dev_id)
+> +{
+> +       struct loongson2_mmc_host *host = dev_id;
+> +       struct mmc_command *cmd;
+> +       unsigned long iflags;
+> +       u32 dsts, imsk;
+> +
+> +       regmap_read(host->regmap, LOONGSON2_MMC_REG_INT, &imsk);
+> +       regmap_read(host->regmap, LOONGSON2_MMC_REG_DSTS, &dsts);
+> +
+> +       if ((dsts & LOONGSON2_MMC_DSTS_IRQ) &&
+> +           (imsk & LOONGSON2_MMC_INT_SDIOIRQ)) {
+> +               regmap_update_bits(host->regmap, LOONGSON2_MMC_REG_INT,
+> +                                  LOONGSON2_MMC_INT_SDIOIRQ,
+> +                                  LOONGSON2_MMC_INT_SDIOIRQ);
+> +
+> +               mmc_signal_sdio_irq(host->mmc);
+
+mmc_signal_sdio_irq() is the legacy interface for managing SDIO irqs.
+
+Please convert to use sdio_signal_irq() instead, along with the
+->ack_sdio_irq() callback.
+
+> +               return IRQ_HANDLED;
+> +       }
+> +
+> +       spin_lock_irqsave(&host->lock, iflags);
+> +
+> +       if (host->state == STATE_NONE || host->state == STATE_FINALIZE ||
+> +           !host->mrq)
+> +               goto irq_out;
+> +
+> +       cmd = host->cmd_is_stop ? host->mrq->stop : host->mrq->cmd;
+> +       if (!cmd)
+> +               goto irq_out;
+> +
+> +       cmd->error = 0;
+> +
+> +       if (imsk & LOONGSON2_MMC_INT_CTIMEOUT) {
+> +               cmd->error = -ETIMEDOUT;
+> +               goto close_transfer;
+> +       }
+> +
+> +       if (imsk & LOONGSON2_MMC_INT_CSENT) {
+> +               if (host->state == STATE_RSPFIN || host->state == STATE_CMDSENT)
+> +                       goto close_transfer;
+> +
+> +               if (host->state == STATE_XFERFINISH_RSPFIN)
+> +                       host->state = STATE_XFERFINISH;
+> +       }
+> +
+> +       if (!cmd->data)
+> +               goto irq_out;
+> +
+> +       if (imsk & (LOONGSON2_MMC_INT_RXCRC | LOONGSON2_MMC_INT_TXCRC)) {
+> +               cmd->data->error = -EILSEQ;
+> +               goto close_transfer;
+> +       }
+> +
+> +       if (imsk & LOONGSON2_MMC_INT_DTIMEOUT) {
+> +               cmd->data->error = -ETIMEDOUT;
+> +               goto close_transfer;
+> +       }
+> +
+> +       if (imsk & LOONGSON2_MMC_INT_DFIN) {
+> +               if (host->state == STATE_XFERFINISH) {
+> +                       host->dma_complete = 1;
+> +                       goto close_transfer;
+> +               }
+> +
+> +               if (host->state == STATE_XFERFINISH_RSPFIN)
+> +                       host->state = STATE_RSPFIN;
+> +       }
+> +
+> +irq_out:
+> +       regmap_write(host->regmap, LOONGSON2_MMC_REG_INT, imsk);
+> +       spin_unlock_irqrestore(&host->lock, iflags);
+> +       return IRQ_HANDLED;
+> +
+> +close_transfer:
+> +       host->state = STATE_FINALIZE;
+> +       host->pdata->reorder_cmd_data(host, cmd);
+> +       regmap_write(host->regmap, LOONGSON2_MMC_REG_INT, imsk);
+> +       spin_unlock_irqrestore(&host->lock, iflags);
+> +       return IRQ_WAKE_THREAD;
+> +}
+
+[...]
+
+> +
+> +static int loongson2_mmc_resource_request(struct platform_device *pdev,
+> +                                         struct loongson2_mmc_host *host)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       void __iomem *base;
+> +       int ret, irq;
+> +
+> +       base = devm_platform_get_and_ioremap_resource(pdev, 0, &host->res);
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
+> +       host->regmap = devm_regmap_init_mmio(dev, base, &host->pdata->regmap_config);
+> +       if (IS_ERR(host->regmap))
+> +               return PTR_ERR(host->regmap);
+> +
+> +       host->clk = devm_clk_get_optional_enabled(dev, NULL);
+> +       if (IS_ERR(host->clk))
+> +               return PTR_ERR(host->clk);
+> +
+> +       if (host->clk) {
+> +               ret = devm_clk_rate_exclusive_get(dev, host->clk);
+> +               if (ret)
+> +                       return PTR_ERR(host->clk);
+> +
+> +               host->rate = clk_get_rate(host->clk);
+> +       } else {
+> +               /* For ACPI, we get rate through clock-frequency attribute */
+> +               device_property_read_u64(dev, "clock-frequency", &host->rate);
+
+Is ACPI supported too?
+
+> +       }
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +       if (irq < 0)
+> +               return irq;
+> +
+> +       ret = devm_request_threaded_irq(dev, irq, loongson2_mmc_irq,
+> +                                       loongson2_mmc_irq_worker,
+> +                                       IRQF_ONESHOT, "loongson2-mmc", host);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = host->pdata->setting_dma(host, pdev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> +}
+> +
+> +static int loongson2_mmc_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct loongson2_mmc_host *host;
+> +       struct mmc_host *mmc;
+> +       int ret;
+> +
+> +       mmc = mmc_alloc_host(sizeof(*host), dev);
+
+We have devm_mmc_alloc_host() too, perhaps worth to use it to simplify
+the code a bit.
+
+> +       if (!mmc) {
+> +               dev_err(dev, "Failed to alloc mmc host\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, mmc);
+> +
+> +       host = mmc_priv(mmc);
+> +       host->mmc = mmc;
+> +       host->state = STATE_NONE;
+> +       spin_lock_init(&host->lock);
+> +
+> +       host->pdata = device_get_match_data(dev);
+> +       if (!host->pdata) {
+> +               dev_err(dev, "Failed to get match data\n");
+> +               ret = -EINVAL;
+> +               goto free_host;
+> +       }
+> +
+> +       ret = loongson2_mmc_resource_request(pdev, host);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to request resource\n");
+> +               goto free_host;
+> +       }
+> +
+> +       mmc->ops = &loongson2_mmc_ops;
+> +       mmc->ocr_avail = MMC_VDD_32_33 | MMC_VDD_33_34;
+
+How is power to the card controlled for these platforms?
+
+The preferred way is to use the regulator API to manage this - and the
+mmc core also provides a couple of helper functions for this, like
+mmc_regulator_get_supply(), for example.
+
+> +       mmc->f_min = DIV_ROUND_UP(host->rate, 256);
+> +       mmc->f_max = host->rate;
+> +       mmc->max_blk_count = 4095;
+> +       mmc->max_blk_size = 4095;
+> +       mmc->max_req_size = mmc->max_blk_count * mmc->max_blk_size;
+> +       mmc->max_segs = 1;
+> +       mmc->max_seg_size = mmc->max_req_size;
+> +
+> +       ret = mmc_of_parse(mmc);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to parse device node\n");
+> +               goto free_dma;
+> +       }
+> +
+> +       ret = mmc_add_host(mmc);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to add mmc host.\n");
+> +               goto free_dma;
+> +       }
+> +
+> +       return 0;
+> +
+> +free_dma:
+> +       host->pdata->release_dma(host, dev);
+> +free_host:
+> +       mmc_free_host(mmc);
+> +       return ret;
+> +}
+> +
+
+[...]
+
+Kind regards
+Uffe
