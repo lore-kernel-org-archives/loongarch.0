@@ -1,99 +1,123 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB84F2C2562
-	for <loongarch@lists.linux.dev>; Tue, 29 Apr 2025 11:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E1728682
+	for <loongarch@lists.linux.dev>; Tue, 29 Apr 2025 11:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745927531; cv=none; b=txiLUAUkl+aOEWP3hvnnyEOjqnFark58iHLHHuu549vj87/5M2xhKL8B0T/dK2qfqdUhiYVng6BDjICNYSXd8WckqItDkam5x0pUxvXvIhEH3I9w4Lkw/OqO6GC2NNcIHnOC1RiNo6DJZh9DBsrefDV/x7WmrNK44M6vQENLSYg=
+	t=1745927592; cv=none; b=aT0lLEPYQAyh0HdWZGOIr05b9j8ggUsFrEgL4wWepM7RVuurBsoouNe2tvJNfy9jRznQr+eP7+FWXOX+3w/PT+2XEu5YQbWLkb/J0VYKe0zHzKKHK1Li2b+NOkvr4nIxOMLjOvAlUyuLnlYMvH21ZJOxxd10vMfFcMda8Gtjn9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745927531; c=relaxed/simple;
-	bh=YSi+2pk2Y0OakkzAIbd3npt05KKhla52x73T72f+oCo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PkSLERrL1ZarFPN07L+7dNoplnzT3l8JEIF4SPKs7VfpapttX7GMLn40TZdFMLcKdFDu2aLsQygiSq1Fnkm1v/Cml0N3Wm1i8DKXBlBB4522fnbDi0+D6Zdte/N4Nf3+KrjPUIrnpIps3rKpg9yhBplWfnGCS0fxG+3o5Ddu2aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=BR/xMWVP; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1745927592; c=relaxed/simple;
+	bh=dOs92CKf0JhMagJiyIOByRh4TMYp16+L6S0KbSvHqB8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HOdRtAVt0uuhZ1mTO93cO527BBgV7RoRj5lLVwTf/bbwN2gLYSVI8n079eDFhmYjk5jx/yceVUX1+xX6PT/7Va7XC2ShJrP2rdLA2R04OufUmJlmOJZMOF7HEQIUW7RenBWOTtiCqmmVdg97OPZb/cIIdrGpNMO7nMfBuRND6yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jdnx5YVa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="BR/xMWVP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1745927090;
-	bh=NskZHmQ3jsP9LjMN23KzcSCE5zyblLz8whIXfHKEw1E=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=BR/xMWVP9VHC673+uC1BXyT6rTRpWcLKNfObTS7QVorwlWUDZok9NIhzj041nMOTF
-	 x95AduzZnykXxd5prsoIbMnmsBy7044afBCGDYktkeQf5xrTF7uyrMHH3xeUcY8JZC
-	 rK4jg3h32n/SKMxpJx3RFa5j5/90xdyk0szueYc4=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 217CC65997;
-	Tue, 29 Apr 2025 07:44:47 -0400 (EDT)
-Message-ID: <f0d7965a0016f458bb06e2968c15d8eb46be296e.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch:support CONFIG_SCHED_MC
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org, 
-	kernel@xen0n.name, wanghongliang@loongson.cn, yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Tue, 29 Apr 2025 19:44:44 +0800
-In-Reply-To: <20250429113356.17929-1-zhangtianyang@loongson.cn>
-References: <20250429113356.17929-1-zhangtianyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jdnx5YVa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0D72C4AF09
+	for <loongarch@lists.linux.dev>; Tue, 29 Apr 2025 11:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745927592;
+	bh=dOs92CKf0JhMagJiyIOByRh4TMYp16+L6S0KbSvHqB8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Jdnx5YVa8iTnPm4OVQaPtsNbH/eFhsv1mdPn+laK8veqx8RFTlOYKnIRrXxQcb2IH
+	 +WT6eWSb0OspWYUio/YT63ArpFsHuL2MDe8D/fPkYkXRJEkQQrYlXCghr8sGn8ND/N
+	 YNFKoBY+igMTRFi8Qxqe0m6h4YDhxD0LmH37wzmgtUakLa8TAbZE+rfKJ1whShQ74e
+	 SKmjP5hrexVF2FpMeypZgSD4cN+REtDBBqUMsSOh+205W3WkPmCJfGlhjpIgPhnb8A
+	 q3WMVmUZdwWtGw5mdLV20PtVVON4P2fXkPlgad+OSesewX5+occxfaOeNr95pHQ5OZ
+	 NLFc4ugACrghw==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2c663a3daso1165518866b.2
+        for <loongarch@lists.linux.dev>; Tue, 29 Apr 2025 04:53:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWUZM3q4E4l5wPv2nKrMxwCd3zyLLwNEdc/MwbNzmamMG5vvhOoDfc1OU8rL3jt0pbH5BnKlcNXo9U=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwkNv2My6rlj6AKw7h1HKSOU4uv2XK+d+6oWX5mhNGtYxS6Hhdh
+	p/dNoRCL+SZfuajSO4Cz6+3raXYaOux2+M38K8bQUkTHMEZs63vtLKbHVCL9/t+74G4z/b1uh0b
+	VJPX6h8ZAOewLQ2JURaq9pHA4h5Q=
+X-Google-Smtp-Source: AGHT+IEOc0slPQQuRPi+/t75tAzM7Kw+t3BjM1qUAK0bLzbKgCW9Ard89lg2K2P8XBa8OYHMFV6WKJ5Dqgb836X68W4=
+X-Received: by 2002:a17:907:3f9a:b0:ac7:c688:9fd7 with SMTP id
+ a640c23a62f3a-ace848f7749mr1229208766b.18.1745927590527; Tue, 29 Apr 2025
+ 04:53:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20250429113356.17929-1-zhangtianyang@loongson.cn> <f0d7965a0016f458bb06e2968c15d8eb46be296e.camel@xry111.site>
+In-Reply-To: <f0d7965a0016f458bb06e2968c15d8eb46be296e.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 29 Apr 2025 19:52:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7BejoBtsGWP8tn99Pa93M0ij=yXg_E+GJKLETYWhCt3A@mail.gmail.com>
+X-Gm-Features: ATxdqUHO0eWqPX9CX9I_BHbVYAeYG8YI1PTfS3hUPzH80g1GxIrTZ8PAqX5drT0
+Message-ID: <CAAhV-H7BejoBtsGWP8tn99Pa93M0ij=yXg_E+GJKLETYWhCt3A@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch:support CONFIG_SCHED_MC
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, kernel@xen0n.name, wanghongliang@loongson.cn, 
+	yangtiezhu@loongson.cn, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-04-29 at 19:33 +0800, Tianyang Zhang wrote:
-> From: wanghongliang <wanghongliang@loongson.cn>
->=20
-> In order to achieve more reasonable load balancing behavior,
-> support for SCHED_MC has been added.
-> The LLC distribution of Loongarch now is consistent with numa-node,
-> the balancing domain of SCHED_MC can effectively reduce the situation
-> where processes are awakened to smt_slibing
->=20
-> Co-developed-by: wanghongliang <wanghongliang@loongson.cn>
-> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> ---
-> =C2=A0arch/loongarch/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 ++++++
-> =C2=A0arch/loongarch/include/asm/smp.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 1 +
-> =C2=A0arch/loongarch/include/asm/topology.h |=C2=A0 8 +++++
-> =C2=A0arch/loongarch/kernel/smp.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 46 +++++++++++++++++++++++++++
-> =C2=A04 files changed, 64 insertions(+)
->=20
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 1a2cf012b..72a142a85 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -493,6 +493,15 @@ config NR_CPUS
-> =C2=A0	=C2=A0 This allows you to specify the maximum number of CPUs which=
- this
-> =C2=A0	=C2=A0 kernel will support.
-> =C2=A0
-> +config SCHED_MC
-> +	def_bool y
-> +	prompt "Multi-core scheduler support"
-> +	depends on SMP
-> +	help
-> +	=C2=A0 Multi-core scheduler support improves the CPU scheduler's decisi=
-on
-> +	=C2=A0 making when dealing with multi-core CPU chips at a cost of sligh=
-tly
-> +	=C2=A0 increased overhead in some places. If unsure say N here.
+On Tue, Apr 29, 2025 at 7:44=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> On Tue, 2025-04-29 at 19:33 +0800, Tianyang Zhang wrote:
+> > From: wanghongliang <wanghongliang@loongson.cn>
+> >
+> > In order to achieve more reasonable load balancing behavior,
+> > support for SCHED_MC has been added.
+> > The LLC distribution of Loongarch now is consistent with numa-node,
+> > the balancing domain of SCHED_MC can effectively reduce the situation
+> > where processes are awakened to smt_slibing
+> >
+> > Co-developed-by: wanghongliang <wanghongliang@loongson.cn>
+> > Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+> > Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> > ---
+> >  arch/loongarch/Kconfig                |  9 ++++++
+> >  arch/loongarch/include/asm/smp.h      |  1 +
+> >  arch/loongarch/include/asm/topology.h |  8 +++++
+> >  arch/loongarch/kernel/smp.c           | 46 +++++++++++++++++++++++++++
+> >  4 files changed, 64 insertions(+)
+> >
+> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> > index 1a2cf012b..72a142a85 100644
+> > --- a/arch/loongarch/Kconfig
+> > +++ b/arch/loongarch/Kconfig
+> > @@ -493,6 +493,15 @@ config NR_CPUS
+> >         This allows you to specify the maximum number of CPUs which thi=
+s
+> >         kernel will support.
+> >
+> > +config SCHED_MC
+> > +     def_bool y
+> > +     prompt "Multi-core scheduler support"
+> > +     depends on SMP
+> > +     help
+> > +       Multi-core scheduler support improves the CPU scheduler's decis=
+ion
+> > +       making when dealing with multi-core CPU chips at a cost of slig=
+htly
+> > +       increased overhead in some places. If unsure say N here.
+>
+> To me it's puzzling to say "if unsure say N here" while setting the
+> default to y.
+It seems copied from x86, I suggest to modify to
 
-To me it's puzzling to say "if unsure say N here" while setting the
-default to y.
++config SCHED_MC
++ bool "Multi-core scheduler support"
++ depends on SMP
++ default y
++ help
++  Multi-core scheduler support improves the CPU scheduler's decision
++  making when dealing with multi-core CPU chips at a cost of slightly
++  increased overhead in some places.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+And put it after SCHED_SMT.
+
+Huacai
+
+
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
