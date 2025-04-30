@@ -1,174 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC8E242D73;
-	Tue, 29 Apr 2025 16:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0160E12B63
+	for <loongarch@lists.linux.dev>; Wed, 30 Apr 2025 01:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745943128; cv=none; b=FWkKn/Tx0n9HnB4KRWlORG3LV9EUrdq6XSrirp9W9oRMXuiEpQSuvoURSjnhZupivt/K0/wvnYmCGX5RFK2qN5xyme2HKgUCoGBxXZgLvpUQbbb36A/PCSh6FTBNTTdyVySESvmDWK9XR/A1nZzWxC0ei/1ZiZmrG5sxsvLOaj4=
+	t=1745975763; cv=none; b=ugHHnE81/jXtR0LU7pb5CoDjhI+UZGL0ve/BfCC82mxkZMkm51gi0Lk+8HoyMnONod846o0mgp0cm8UQsdR8agdeNn/3AKLCFSwV6LTi/ctMbDDq0W8JAwwVY1SVvCpBPtz2gvl2bODSoGSvuNnvzi999KiZiDLu4+Y9uEt/hdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745943128; c=relaxed/simple;
-	bh=/RPzRSwGYU/TqtNWAxnjSN65OBBFBuTwX8sdhARd81w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k6bJrDJuaYTG+rMAVcT9uie9BSjz3QE7EwuzniKow1XpdFKsM1ZZuwEhPwb2jNxyeDy5B/LTFX7NYY4Olc4uo3nim8JGciiaUGWkb3brFid7j8fQa3yO7aX3c7BFrB3hDGWAbbzR684GW7sBhvxYQntLAPpTvg668vqAB70Pkgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mvk6iBAL; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mvk6iBAL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745943127; x=1777479127;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/RPzRSwGYU/TqtNWAxnjSN65OBBFBuTwX8sdhARd81w=;
-  b=Mvk6iBALOLCZMosSJXieogMcnz9NHLIl+14RWfaCSZOIgGuJ+WCPKP7C
-   0wpEUVRn0GchdbJsWYGXz9hdPR32X+WM9K4yBu43Dw+gtMrHkt/Zby2k9
-   ohyLluqm2hZeXp9Yeoa/4fJTfwKSN3f//TUataX0eNNd4FefDHndunXjo
-   3GqIwhgrB7M1S8buFxCQ6CfK+/vivQrLIjcKH7z35bsX00ngqlaYJUh1E
-   sJhrptC46uH5sIFWCs5C7TIzmAcD4/wRl3RnR7DYmFQ/tpYW5rnKbedal
-   TwuJRQwx4QXCxObwXTq6bCFp/mQQi2vFlyAN5DOwxXEylE2MUCiY6qdzb
-   w==;
-X-CSE-ConnectionGUID: 64PRj+KeTTmcUZ/0ydhCVA==
-X-CSE-MsgGUID: iiQAqLZVRDaaK6XObSSaSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="51243412"
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="51243412"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:12:06 -0700
-X-CSE-ConnectionGUID: b38aJ8qqSqC5eqNimrxdFQ==
-X-CSE-MsgGUID: 1d8Et1s7SmqzvGll9TJyYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="134856497"
-Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.223.107]) ([10.124.223.107])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:12:00 -0700
-Message-ID: <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
-Date: Tue, 29 Apr 2025 09:11:57 -0700
+	s=arc-20240116; t=1745975763; c=relaxed/simple;
+	bh=t0aXD3JL+luQqga4D/re4ukEhm5GSYKe7mt37z4f/lU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FBKjUSL7NOZewB0a1X8PUyUt2UkePvxbKVB62/wZU4f/kojodlIWwsl/H3E4qGykEtZja62ThO9KIawQq3guXjk4ka0oPeAhf1mLj2A5A7sxme8ehpgsqWjbHrXJQj6K9YtLNdTgQr4C34aGfifGnikkHYOoGC0ACgUkIWzgTMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Bx32vNeRFo6KDKAA--.8428S3;
+	Wed, 30 Apr 2025 09:15:57 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMBx3MTJeRFofjSfAA--.5036S3;
+	Wed, 30 Apr 2025 09:15:55 +0800 (CST)
+Subject: Re: [PATCH] LoongArch:support CONFIG_SCHED_MC
+To: Xi Ruoyao <xry111@xry111.site>, chenhuacai@kernel.org, kernel@xen0n.name,
+ wanghongliang@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250429113356.17929-1-zhangtianyang@loongson.cn>
+ <f0d7965a0016f458bb06e2968c15d8eb46be296e.camel@xry111.site>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <ea8c9b7b-2ed2-98b9-e859-4843b0c87227@loongson.cn>
+Date: Wed, 30 Apr 2025 09:15:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-To: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org
-Cc: Juri Lelli <juri.lelli@redhat.com>, Marcelo Tosatti
- <mtosatti@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Daniel Wagner <dwagner@suse.de>,
- Petr Tesarik <ptesarik@suse.com>, Nicolas Saenz Julienne
- <nsaenz@amazon.com>, Frederic Weisbecker <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.amakhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
- Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>,
- Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
- Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>,
- Daniel Gomez <da.gomez@samsung.com>, Naveen N Rao <naveen@kernel.org>,
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
- "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Miguel Ojeda <ojeda@kernel.org>, "Mike Rapoport (Microsoft)"
- <rppt@kernel.org>, Rong Xu <xur@google.com>,
- Rafael Aquini <aquini@redhat.com>, Song Liu <song@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Benjamin Berg <benjamin.berg@intel.com>,
- Vishal Annapurve <vannapurve@google.com>,
- Randy Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-References: <20250429113242.998312-1-vschneid@redhat.com>
-From: Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <f0d7965a0016f458bb06e2968c15d8eb46be296e.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250429113242.998312-1-vschneid@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMBx3MTJeRFofjSfAA--.5036S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw1fJry5AFWUtF15JF47GFX_yoW8Cry7pr
+	97AFn5GrW5KFn3Grsxt34UZryrJrZ7J3y2qr42ya48ur98Xwn0gr4jqr909F18Jws5G3yY
+	qFy5Ww1a9F45X3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqWUUUU
+	U
 
-I don't think we should do this series.
+Hi, Ruoyao
 
-If folks want this functionality, they should get a new CPU that can
-flush the TLB without IPIs.
+在 2025/4/29 下午7:44, Xi Ruoyao 写道:
+> On Tue, 2025-04-29 at 19:33 +0800, Tianyang Zhang wrote:
+>> From: wanghongliang <wanghongliang@loongson.cn>
+>>
+>> In order to achieve more reasonable load balancing behavior,
+>> support for SCHED_MC has been added.
+>> The LLC distribution of Loongarch now is consistent with numa-node,
+>> the balancing domain of SCHED_MC can effectively reduce the situation
+>> where processes are awakened to smt_slibing
+>>
+>> Co-developed-by: wanghongliang <wanghongliang@loongson.cn>
+>> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>> ---
+>>   arch/loongarch/Kconfig                |  9 ++++++
+>>   arch/loongarch/include/asm/smp.h      |  1 +
+>>   arch/loongarch/include/asm/topology.h |  8 +++++
+>>   arch/loongarch/kernel/smp.c           | 46 +++++++++++++++++++++++++++
+>>   4 files changed, 64 insertions(+)
+>>
+>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>> index 1a2cf012b..72a142a85 100644
+>> --- a/arch/loongarch/Kconfig
+>> +++ b/arch/loongarch/Kconfig
+>> @@ -493,6 +493,15 @@ config NR_CPUS
+>>   	  This allows you to specify the maximum number of CPUs which this
+>>   	  kernel will support.
+>>   
+>> +config SCHED_MC
+>> +	def_bool y
+>> +	prompt "Multi-core scheduler support"
+>> +	depends on SMP
+>> +	help
+>> +	  Multi-core scheduler support improves the CPU scheduler's decision
+>> +	  making when dealing with multi-core CPU chips at a cost of slightly
+>> +	  increased overhead in some places. If unsure say N here.
+> To me it's puzzling to say "if unsure say N here" while setting the
+> default to y.
+It's really confusing. I will make the necessary changes here. Thank you
+>
+
