@@ -1,97 +1,168 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBF21221F0E
-	for <loongarch@lists.linux.dev>; Wed, 30 Apr 2025 13:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0488B25A2CB
+	for <loongarch@lists.linux.dev>; Wed, 30 Apr 2025 13:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746018935; cv=none; b=k2SJhV+jdBBCb8uae4mOmw241e/ACr2Cs5V2JqInvPIYbibJxaIWxakVPOkM+3Qjd6Ojaxyh/MLE3SQ87rapO4yj5RZv2ua/Hriuxc6RZVcycCyZiOHjgb08aDZ6nnm6BpN7QM2TQZu+syV8Z3V1HMGRdPwh+e3avMivCe/rjU8=
+	t=1746020498; cv=none; b=b63l5VRs6DAlfjP5QQIi84xhGRAMlhrMrnU0XIdN0sx/2jeycFCgCDWY9e6WLIEIxUPYRgdK8m9LIkYCxhjYH2rbTnPzluuL2DR27Cdug1otFQDl7BpR+UfLAvgdp5HXqLsZD9rBLFQyLcF86WW9R8IgY3WtkYupwQMShNcipQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746018935; c=relaxed/simple;
-	bh=tfAd7pxoIaaF4Wc0E9TXD8BNBW9T4Pxdgh3Abv0XiWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OieV4aiSh/eDQY6zAh8+B6kq5nOBEYq4Ifb7KgXBk1FnB9VyloJe/4iPZjAhm0/qfLUuO9wwaWkW6KFZMdwnZOH/y+HS8mHGO7D5eMeqhWYV3S5pSlohiV/AF+RQvSRrnq4p6hoA+2zUm3Qd830iZoxSIo5xH+xxLT0OJXdcUOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxyuBrIhJoIjnLAA--.9023S3;
-	Wed, 30 Apr 2025 21:15:23 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCx_cZmIhJoqoKgAA--.14402S4;
-	Wed, 30 Apr 2025 21:15:23 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] LoongArch: Enable tracing infrastructure in defconfig
-Date: Wed, 30 Apr 2025 21:15:13 +0800
-Message-ID: <20250430131516.24287-3-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250430131516.24287-1-yangtiezhu@loongson.cn>
-References: <20250430131516.24287-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1746020498; c=relaxed/simple;
+	bh=QGB2XMZ3b98RyBr6jLE2vhZLG4Sa8QcjzCO41p/5Y4I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pd6fYPqgojBdoADx/dbVRP5meP/eOPXrjnyOwRzSMFzvztatsB6hGDteDkCZuUTUK7rsAkkKdjztAL0strAdzGcuO0NEpTbAzZtMcoghgc1jKRMH/QJfxZ1dk4VWydBPHjc7sKcaqSV4W7IqqtacwiYvK0Ur/VZb5Sw092abogM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AHRuArQ5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AHRuArQ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BFF2C4CEE9
+	for <loongarch@lists.linux.dev>; Wed, 30 Apr 2025 13:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746020497;
+	bh=QGB2XMZ3b98RyBr6jLE2vhZLG4Sa8QcjzCO41p/5Y4I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AHRuArQ5T5BE3rRZJhwhD/cPLidIj1TxMbH7D5/vjJBepTdkGvJYoB7/lCVwd1kIr
+	 owUAQgMp7M9px6qpkgyIwbLwbi/vviOnrDF/oKyxYsX2W/fHMKOtNDEsWG1qL19kmS
+	 fxYjjv4ESfjxPr01BsbYR+4ZF9g3iQs70vsZpxWKymTbyNWNNeXGMxj4tjoSZjawKb
+	 zM4bQcTXKQBrYWNmtuBJcW5mQJssyUPgce+iZxOtSxmPNghDNyBSBszHYNuG3l9XU5
+	 TaRM0vWnhmWkyRno52COd/9LaydXBKqdr5Ut+qPfG7y74RowB2RHkM/Caxc5MCErhg
+	 PjTj1euHE5JBg==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so1144767766b.1
+        for <loongarch@lists.linux.dev>; Wed, 30 Apr 2025 06:41:37 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxO0StoaMxiw1nZDhK0CZgOcpQ0zwsB6EGNwwTuNqql2da35xiF
+	+xb2js0rNycYVvYV+sd6j+Z07Z4yDGB8Upmb/g5sEr6mceVyJmfcZ1S3djkjzgRd6Z2jd5CMXlp
+	RLIhDJFhhJIs+gPzERPzjaiNVtyc=
+X-Google-Smtp-Source: AGHT+IHXUpfOm//QDSYq47hzNiCnbmw36W2KgA2g2eqr94IRM8uWxxPujN7KVzb5HO3fwsM3UXw+m62Dddzlz4IebzE=
+X-Received: by 2002:a17:907:3dac:b0:ac1:f5a4:6da5 with SMTP id
+ a640c23a62f3a-acee24b45a6mr243504666b.37.1746020496119; Wed, 30 Apr 2025
+ 06:41:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx_cZmIhJoqoKgAA--.14402S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ur1DGF1DJr1rGrWDWr1fZrc_yoW8WFWDpr
-	4fCws8trZ5Jr1Sk39rAr97WrZ5tr97Cr13W3W7CrW7C393Zw4jvF40gry3uF4DXa9xtw4F
-	va95Krya9FWUC3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8w0eJUUUUU==
+References: <20250430131516.24287-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20250430131516.24287-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 30 Apr 2025 21:41:24 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
+X-Gm-Features: ATxdqUGbaEYKmGnm9DyQj8rMCXaC6pz5JAVISdlfNXN9k8Z8IHGlk_nwdRPQh3M
+Message-ID: <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Enable some configs in loongson3_defconfig
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When executing the command "perf list", I met "Error: failed to open
-tracing events directory" twice, the first reason is that there is no
-"/sys/kernel/tracing/events" directory due to it does not enable the
-kernel tracing infrastructure with CONFIG_FTRACE, the second reason
-is that there is no root privileges.
+Hi, Tiezhu,
 
-Although the error string was added to tell the users what happened
-and what should to do in commit b48543c451c3 ("perf list: Give clues
-if failed to open tracing events directory"), it is better to enable
-CONFIG_FTRACE in defconfig to avoid the error message at runtime:
+When I enable these options:
+CONFIG_FTRACE=3Dy
+CONFIG_FUNCTION_TRACER=3Dy
+CONFIG_FUNCTION_GRAPH_TRACER=3Dy
+CONFIG_DYNAMIC_FTRACE=3Dy
+CONFIG_DYNAMIC_FTRACE_WITH_REGS=3Dy
+CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy
+CONFIG_DYNAMIC_FTRACE_WITH_ARGS=3Dy
+CONFIG_KPROBES=3Dy
+CONFIG_UPROBES=3Dy
+CONFIG_KPROBE_EVENTS=3Dy
+CONFIG_UPROBE_EVENTS=3Dy
 
-  $ ./perf list
-  Error: failed to open tracing events directory
-  /sys/kernel/tracing/events: No such file or directory
+Then your above commands will hang (or get a SIGTRAP), which options I
+am missing?
 
-Additionally, CONFIG_UPROBE_EVENTS is default y only if CONFIG_FTRACE
-is set, otherwise there exists the following error:
+I haven't tried your patches, maybe it works, but I want to know the
+exactly needed options.
 
-  $ ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-  /sys/kernel/tracing//uprobe_events does not exist.
-  Please rebuild kernel with CONFIG_UPROBE_EVENTS=y.
-    Error: Failed to add events.
+Huacai
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index a3c9d189a627..eaaf3419555c 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -1006,5 +1006,4 @@ CONFIG_STRIP_ASM_SYMS=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_FS=y
- CONFIG_SCHEDSTATS=y
--# CONFIG_FTRACE is not set
- CONFIG_UNWINDER_ORC=y
--- 
-2.42.0
-
+On Wed, Apr 30, 2025 at 9:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> This is a small patchset based on 6.15-rc4, each patch is a
+> single logical change to better describe the problem and make
+> it easier to review.
+>
+> If the changes make sense, all of them can be squashed into one
+> single patch, I think that would be fine as well, let us see if
+> other people have concern about it.
+>
+> By the way, I received many compile-time error reports about tools,
+> most are related with configs, this is the motivation of this series.
+>
+> Additionally, I also received one run-time bug report about uprobe,
+> but it works fine on my test environment. If somebody can reproduce
+> it, please let me know, maybe I am missing something.
+>
+> 1. How to reproduce
+>
+> (1) Compile and install Tongsuo
+>
+> git clone https://github.com/Tongsuo-Project/Tongsuo.git
+> cd Tongsuo && ./config --prefix=3D/opt/tongsuo -Wl,-rpath,/opt/tongsuo/li=
+b
+> make && sudo make install
+>
+> https://www.tongsuo.net/docs/compilation/source-compilation
+>
+> (2) Compile and update kernel
+>
+> Apply this series based on 6.15-rc4, then use the loongson3_defconfig,
+> CONFIG_UPROBE_EVENTS is already set.
+>
+> (3) Probe "openssl speed sm2"
+>
+> cd tools/perf && make
+> sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
+> sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery /opt/tongsuo/bi=
+n/openssl speed sm2
+>
+> 2. My test results
+>
+> fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf probe -x /usr/lib64/lib=
+crypto.so BN_mod_mul_montgomery
+> Added new event:
+>   probe_libcrypto:BN_mod_mul_montgomery (on BN_mod_mul_montgomery in /usr=
+/lib64/libcrypto.so.3.2.2)
+>
+> You can now use it in all perf tools, such as:
+>
+>         perf record -e probe_libcrypto:BN_mod_mul_montgomery -aR sleep 1
+>
+> fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf stat -e probe_libcrypto=
+:BN_mod_mul_montgomery /opt/tongsuo/bin/openssl speed sm2
+> Doing 256 bits sign CurveSM2's for 10s: 7463 256 bits CurveSM2 signs in 1=
+0.00s
+> Doing 256 bits verify CurveSM2's for 10s: 9681 256 bits CurveSM2 verify i=
+n 9.98s
+> ...
+>                               sign    verify    sign/s verify/s
+>  256 bits SM2 (CurveSM2)   0.0013s   0.0010s    746.3    970.0
+>
+>  Performance counter stats for '/opt/tongsuo/bin/openssl speed sm2':
+>
+>                  0      probe_libcrypto:BN_mod_mul_montgomery
+>
+>       20.007539877 seconds time elapsed
+>
+>       19.990010000 seconds user
+>        0.000000000 seconds sys
+>
+> Thanks,
+> Tiezhu
+>
+> Tiezhu Yang (5):
+>   LoongArch: Clean up loongson3_defconfig
+>   LoongArch: Enable tracing infrastructure in defconfig
+>   LoongArch: Enable tracing syscalls in defconfig
+>   LoongArch: Enable debug information in defconfig
+>   LoongArch: Enable kprobe and ftrace in defconfig
+>
+>  arch/loongarch/configs/loongson3_defconfig | 74 +++++-----------------
+>  1 file changed, 16 insertions(+), 58 deletions(-)
+>
+> --
+> 2.42.0
+>
