@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E872F221FB8;
-	Thu,  1 May 2025 10:54:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972E52DC781;
+	Thu,  1 May 2025 10:55:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746096858; cv=none; b=qA0xe4j73fRdzK5adq1gkLnnszj8cSusMRN6JYd8C++6GWRy5vQnm2SSf85AE4iGYr1RTUYNKiHrOOwo/1CABpkerYNE0VyP7tHbXGxmLxbODYA8LQPIDkWOgR3/gzRpIzPciNr7c1eBl9fT+xjtNiBceAvLlIv49dNFspzv0SA=
+	t=1746096912; cv=none; b=TcyBJj/XcEnVU1BozO3Lb4C0M7exIfAEcRlWKMO+GfDwLiP+KnQWLesoPfTqlDr3MprRMB21xqZ4214wzsd9EmOFe1MC3IWd9OfMKOagKlYLTvNMKtvrIwi1vnofuQWn50V8Pf14tVn3S5ADPg9f2rucG8+Ns9KZJZBpattGVo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746096858; c=relaxed/simple;
-	bh=Hfz/23rGAMML0a7O9TaLQl2mVIkvw2UCBufIDzgmuos=;
+	s=arc-20240116; t=1746096912; c=relaxed/simple;
+	bh=jZ2VATRHVVRfJuKWaUJyoPaTmoyKIYqXUtF5EyZwSAg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fSGyWuET90JuC5rikR593CQUcTcEPkO5yhIwMlv42tSnT4tjQsSGqZONpfmC/TymPgdgVEP1XWuz+jvnPd/9lnrH1j7p4vHMpjN/04hbMs9nCagG+5cUiyAuA2KaZu352amF/+YooHgNYVLuqNeQFaUUskJav8EyqWzDnu4Beoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0IWWatD; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=SWGLNLHIU9es8K9518NfoOb5n5H1Txb7N62J31pUQkgFkOHRxEFLbe3J6Khni9Zq6zLXyk56eLxcNYkBrphMpsLJqDARTKcXzPlT90i+hf1/WTTT15sweHd7Gn9k5w+XIel+hvY2dyBQ0WdlxXTd0baKZdgsMM/JTAZSuFRrttA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvaWsD0k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0IWWatD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5FDCC4CEE3;
-	Thu,  1 May 2025 10:54:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvaWsD0k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05603C4CEE4;
+	Thu,  1 May 2025 10:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746096857;
-	bh=Hfz/23rGAMML0a7O9TaLQl2mVIkvw2UCBufIDzgmuos=;
+	s=k20201202; t=1746096911;
+	bh=jZ2VATRHVVRfJuKWaUJyoPaTmoyKIYqXUtF5EyZwSAg=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=L0IWWatDTnv9kVrfEksZ8V8rPOa88n6g8AKF2fLVoLfi6/jS3Xzs4jAjXSpbT5Vv0
-	 mY5S0ezH8tufI/n08Os2c26e8yALUTFhGB1hAhhV3pczzl1PCMlvqq9eb+gFVx8FJx
-	 0bzEHJHMkOLaQxyNu8h762hlZe4k05KSbGcZViCwHrmqzgNhRcMJJQN5+XGKyfB0sm
-	 ggQ5Gec0MaGAGijCLOyPHJv2sHez2dZso0fxWuslufEv87Z6XD2kUBoJ0H6SeWlQNo
-	 EtjID92XMSSOBcLWcs7xf/cLx2Q3bnLg3GO8BWl8VqT2mqWiPlTPLdcI1w+hRgPjJ+
-	 hWmcKqBgA4wWQ==
-Message-ID: <f26cb79c-bb91-44ff-87b5-ca240ec7ad80@kernel.org>
-Date: Thu, 1 May 2025 12:54:10 +0200
+	b=EvaWsD0kFLrE/P0/8X59Cjl8bLcX8cECnp01S+YZ3PQGy+qhApx4qvZRZQaqJjRjO
+	 /u1d8oQXM0K9z52CcpeV/ew+bIh+oiZnfXni/j1aQEF6WywW240cvnL92rrUFPTwuC
+	 GgnnSV/ClSq6KtZ0/UWOdGP0ZbCWoTaMV32LGEsIue4syRZe5tUhb7NhKToK9SE7Ne
+	 IHEvbKw7IbKHJUuLpoHo1eXIIXhCY0qS5gzf4X1eNIhtEAmCjoVyYOOva8LRtgFPG3
+	 EMNjgdY6ddMO0FToqu1rHGh6vI5F1IIWcgC8j7CCaC16F3mK3QjNzwWf1HehU9mx+s
+	 5E2by8zNzhN3g==
+Message-ID: <8c102773-71e2-4c60-b260-07f099ddaae3@kernel.org>
+Date: Thu, 1 May 2025 12:55:04 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
+Subject: Re: [PATCH 3/4] LoongArch: dts: Add initial SoC devicetree for
+ Loongson 2K0300
 To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
@@ -48,7 +49,7 @@ To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
  Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
 References: <20250501044239.9404-2-ziyao@disroot.org>
- <20250501044239.9404-4-ziyao@disroot.org>
+ <20250501044239.9404-5-ziyao@disroot.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -94,16 +95,117 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250501044239.9404-4-ziyao@disroot.org>
+In-Reply-To: <20250501044239.9404-5-ziyao@disroot.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 01/05/2025 06:42, Yao Zi wrote:
-> Ninenine Pi is an Loongson 2K0300-based development board produced by
-> CTCISZ. Features include,
+> Add SoC devicetree for 2K0300 SoC, which features one LA264 dual-issue
+> core and targets embedded market. Only CPU core, legacy interrupt
+> controllers and UARTs are defined for now.
+> 
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  arch/loongarch/boot/dts/loongson-2k0300.dtsi | 197 +++++++++++++++++++
+>  1 file changed, 197 insertions(+)
+>  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
+> 
+> diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+> new file mode 100644
+> index 000000000000..6991a368ff94
+> --- /dev/null
+> +++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+> @@ -0,0 +1,197 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+> + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/ {
+> +	compatible = "loongson,ls2k0300";
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		serial1 = &uart1;
+> +		serial2 = &uart2;
+> +		serial3 = &uart3;
+> +		serial4 = &uart4;
+> +		serial5 = &uart5;
+> +		serial6 = &uart6;
+> +		serial7 = &uart7;
+> +		serial8 = &uart8;
+> +		serial9 = &uart9;
 
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+UARTs depend on connectors, so these are board-level aliases.
+
+
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			compatible = "loongson,la264";
+> +			reg = <0>;
+> +			device_type = "cpu";
+> +			clocks = <&cpu_clk>;
+> +		};
+> +
+> +	};
+> +
+> +	cpuintc: interrupt-controller {
+> +		compatible = "loongson,cpu-interrupt-controller";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +	};
+> +
+> +	cpu_clk: clock-1000m {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <1000000000>;
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges = <0x00 0x10000000 0x00 0x10000000 0x0 0x10000000>,
+> +			 <0x00 0x02000000 0x00 0x02000000 0x0 0x04000000>,
+> +			 <0x00 0x40000000 0x00 0x40000000 0x0 0x40000000>;
+> +
+> +		liointc0: interrupt-controller@16001400{
+
+Missing space, {
+
+> +			compatible = "loongson,liointc-2.0";
+> +			reg = <0x0 0x16001400 0x0 0x40>,
+> +			      <0x0 0x16001040 0x0 0x8>;
+> +			reg-names = "main", "isr0";
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +
+> +			interrupt-parent = <&cpuintc>;
+> +			interrupts = <2>;
+> +			interrupt-names = "int0";
+> +
+> +			loongson,parent_int_map = <0xffffffff>, /* int0 */
+> +						  <0x00000000>, /* int1 */
+> +						  <0x00000000>, /* int2 */
+> +						  <0x00000000>; /* int3 */
+> +		};
+> +
+
+
 
 Best regards,
 Krzysztof
