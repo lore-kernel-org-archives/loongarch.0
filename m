@@ -1,134 +1,112 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DC5232368
-	for <loongarch@lists.linux.dev>; Thu,  1 May 2025 04:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6FF2DC781;
+	Thu,  1 May 2025 10:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746074666; cv=none; b=uH+8nHSehSNxCUgNpCyIfqVq+Mz6bObP03Y05MPF01MGrctjZgIca7WFqEPNhnVoM4QwfPspKU7bcMZ8MYXEQIPWJd4tJ5cHSwN2tqeM2x/o8/nBzuEg0Hv3uVNxzT9AK1WvVWm2jnRg/PGY4BnYDekGLB6UOlDa0OBnlLD4EBk=
+	t=1746096841; cv=none; b=guRpAELvDd+xCYYfyX76QZLrQytV/hdQ+s7XfnqHtvFhqUjMhHBTD2pzbp2UNnlqWl95XkvnH8RA4XSSdI3FKf6Ledr5bpIlTzvQr8D4ERsky6zm1FRIjxM8WGgQLqNyXz5wnk9+yT/zkU3rmpoo4rY7Z+RZeUqARHwdxjzERSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746074666; c=relaxed/simple;
-	bh=/LzP27Kr7PItlbaBuhA2H/AWoUL7f41PHi1KHFImP2Y=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LAZgOJbzi4ggIu47Dt5g24Ygo6Z2779PreE4T+SdVtpHsEa7CZpwFJqaELFFh2VbPCKEkIL/PcnDLOuZd+9afe1Z9XLke+P70aHRKCDwpfDSIogvl7qrpIx3g442kB6UF/cxwuQ8Jkd2yzKpGEzsR5BTsJmBTeJ207Bc1GSKuxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=OEkw6Tbx; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746096841; c=relaxed/simple;
+	bh=3F1QaUqergxIwoSRODx5I4zuHF1ykDMQ5RNYJyubHYM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ATaevzMKLI/8Kza6WiQMuEdsc4YQtSGyFTaXga3rSMH7ev4YMxieC5gB9TeMYgHDzuyN8EwqcUZ3+xpeMOeFtS1KRh8ExQ00P8Q2jqHpvuGLBN2zRnHkdcxERcH5kgeQqPFzb8lnZuEJQ7H74Il5/EFdWm0zzWcfKRBodEGh3ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2AkVrvm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="OEkw6Tbx"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id B22CE25EF5;
-	Thu,  1 May 2025 06:44:23 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id PAlZ3cr2ZZX3; Thu,  1 May 2025 06:44:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746074663; bh=/LzP27Kr7PItlbaBuhA2H/AWoUL7f41PHi1KHFImP2Y=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=OEkw6TbxGDtroVG2dOqG4y/dgWTkRXTvBnJXLEqMtQyasWVYLTgYKwoi5ikD2I8nL
-	 jYu1PyjJ3wFhu1GP2xRob6s6gr0t++gG4us6008D3SU8delOSy+TbYwyldlriyjgSM
-	 18IM3hRT/GzjOUNrQr+1QNw8RdN90cbY87CLeIE5zIJRiaztTG+42XJAjDFRKjxDFZ
-	 ZFlumOJpk9YzaACLEMy2wCPsl5Y1EThmScYIZkj2Pa3T8k6bkunEDaebN80CZhqbe5
-	 gLsTlE2FgUa/YQLs3vshDgEOKPoc6UZTNDvLSfTIyRGpxiMiT6qLOZKPk9OVbGSfHu
-	 mVJQ+BivgSD5A==
-From: Yao Zi <ziyao@disroot.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Yao Zi <ziyao@disroot.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Junhao Xie <bigfoot@classfun.cn>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: [PATCH 4/4] LoongArch: dts: Add initial devicetree for CTCISZ Ninenine Pi
-Date: Thu,  1 May 2025 04:42:40 +0000
-Message-ID: <20250501044239.9404-6-ziyao@disroot.org>
-In-Reply-To: <20250501044239.9404-2-ziyao@disroot.org>
-References: <20250501044239.9404-2-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2AkVrvm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5DA2C4CEE3;
+	Thu,  1 May 2025 10:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746096840;
+	bh=3F1QaUqergxIwoSRODx5I4zuHF1ykDMQ5RNYJyubHYM=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=U2AkVrvmWULRYs0F3LqM1qekL3QiC9eattSMbP1DnIEau0JZ888rIy8mQK+16WCoV
+	 nxp/y6JFwIjKqkuKvcU5i5+SjJIx2G7Dw1RSH8deocTH0K/fyo6YABPEtaetbibthD
+	 QxjhVAB3LqLjzOUIlntXNTD+0gaItE40Y1gtB2838Is5kHAxp8J6jEgAGMdxy52e6Q
+	 0jn5jVYPFHNJkM9tNKSnODfl3MmBnE7/yOkSkcukAiwIL8AUC53sM1O4zdXKs8WefM
+	 m8FtubmfZd5zFr1OGfiQfxwHk+JDNnDhBoYaSMrXI10wLpEfdiiTR/R0yfKqaPhT1v
+	 X8YcXduqsmXpA==
+Message-ID: <b59900fb-8ef9-402d-9621-690d9401c32a@kernel.org>
+Date: Thu, 1 May 2025 12:53:53 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: vendor-prefixes: Add CTCISZ Technology
+ Co., LTD.
+To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+ Aradhya Bhatia <a-bhatia1@ti.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250501044239.9404-2-ziyao@disroot.org>
+ <20250501044239.9404-3-ziyao@disroot.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250501044239.9404-3-ziyao@disroot.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Enable UART0 as it's the boot UART used by firmware.
+On 01/05/2025 06:42, Yao Zi wrote:
+> CTCISZ Technology Co., LTD. is a company specializing in designing of
+> embedded systems. Document the vendor prefix.
+> 
+> Link: http://www.ctcisz.com/
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/loongarch/boot/dts/Makefile              |  1 +
- .../boot/dts/ls2k0300-ctcisz-nineninepi.dts   | 41 +++++++++++++++++++
- 2 files changed, 42 insertions(+)
- create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz-nineninepi.dts
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
-index 15d5e14fe418..e55df9f385af 100644
---- a/arch/loongarch/boot/dts/Makefile
-+++ b/arch/loongarch/boot/dts/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- dtb-y = loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k2000-ref.dtb
-+dtb-y += ls2k0300-ctcisz-nineninepi.dtb
-diff --git a/arch/loongarch/boot/dts/ls2k0300-ctcisz-nineninepi.dts b/arch/loongarch/boot/dts/ls2k0300-ctcisz-nineninepi.dts
-new file mode 100644
-index 000000000000..a67a8ce4211e
---- /dev/null
-+++ b/arch/loongarch/boot/dts/ls2k0300-ctcisz-nineninepi.dts
-@@ -0,0 +1,41 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "loongson-2k0300.dtsi"
-+
-+/ {
-+	compatible = "ctcisz,ninenine-pi", "loongson,ls2k0300";
-+	model = "CTCISZ Ninenine Pi";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@200000 {
-+		device_type = "memory";
-+		reg = <0 0x00200000 0 0x0ee00000>,
-+		      <0 0x90000000 0 0x10000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			size = <0 0x02000000>;
-+			linux,cma-default;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	clock-frequency = <100000000>;
-+	status = "okay";
-+};
--- 
-2.49.0
-
+Best regards,
+Krzysztof
