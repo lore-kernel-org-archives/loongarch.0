@@ -1,198 +1,213 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742A01F8690
-	for <loongarch@lists.linux.dev>; Thu,  1 May 2025 01:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB501A841E
+	for <loongarch@lists.linux.dev>; Thu,  1 May 2025 03:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746063492; cv=none; b=pUECdx2F9ZHgWHvEci/eBx5s8vv8JDT6al6vy+1R95AkRUUm5AvuYgSf8mZUN1AAEqBoHf8uOe3Q/tMLfZ10MQXDdr8N0cmH++QsVu08OWA9jfbutSuVAEi7P+d/Q6ppaPoC5gZ8oYL9SQZpqpswfvj16XXlN2RaIt0XK6szhe8=
+	t=1746069602; cv=none; b=r406dulemYfxG6Vqc1kxz1/o5GeYV8mzdGvVjSXzXkI6xjStUdQ4TeSKG8Y1dYgoPEwgvGKMHsN1dqCtO2OCGkVfB7RbRjk5N9wpM1KgPkkkQNle5cn2f2S+SxQbWPRYqrIDmHRvj3KNezBowBWNXkOBZPdFULMO8MMXaQOf2a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746063492; c=relaxed/simple;
-	bh=qswmRgxBtKtJNAvLHM4hZPfSNBEZni24oTOcHXgl2v4=;
+	s=arc-20240116; t=1746069602; c=relaxed/simple;
+	bh=rNZdiJjKxu84kSTnNRG+40N/y18b49cbWcQi5Jqh2cY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BET3LjXUjo+Cr/342QlOFrCf5UtOFPew0QF8XZB0Z0yajtyTutcF4ubNeXJPRd42aK6LNz172j54xyqSBq5sixt7WtSUzyQ+vj4iaqqXBpFRpw2dq6VFA1A+AzyHeaP4FVmpN62m6yHpIZ+Oxs3aniViHZnvfejZosSUHLnZ6K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lvbQSsLu; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=KC0qn0dBxM9Nq/3fJt84GWyr8nrjdMm2PmWaiFmgkWcwYhZwpvThX4Y04dlijuf/aNmG24qB7GSzGxBu28ATE4nAOUtk+P7WpmcGX+qvSAbXkxw21oclSeB2FE+VwD0bEsx2v5nYEzij3u1kbFXRsEOFVmLf8RnnshYfJJqbgnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jr23s1vv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvbQSsLu"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47686580529so6312741cf.2
-        for <loongarch@lists.linux.dev>; Wed, 30 Apr 2025 18:38:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746063489; x=1746668289; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nX4dVDllopq+tS8FzjHQ5g5N61k8rKm72Q1pN8FUsr0=;
-        b=lvbQSsLud8eoKa6G3jjNkKnguC2pKgoj0P1xRPCnwSHBhZJhlreDpY2ZAAOuLR7VlF
-         2HFinmg0ecgGe13M8M54Otk+KF0fGsXqflvIgVPZVJ89go25787G3DOOdF2o2T6ARdt6
-         Ld0xj80g0z/ifzIbvrLFHMaYf6IVOA2LTQl1nevVNqMi5OE0aUxmqrksGaGz+J/j6DPY
-         aOeyYbtWtRm7M/ebMHz3ZvPHV6SA8q39ITBY4LR7Oq45fN0elILgEozSmyrWT4yzm18w
-         /VfXcuXL3/IHJSlAPTqLKWTWG1L+NtxMF8wiJa8Ta98Wojyh4pcyAJgamPqu41kwTJM+
-         qWgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746063489; x=1746668289;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nX4dVDllopq+tS8FzjHQ5g5N61k8rKm72Q1pN8FUsr0=;
-        b=WgIdf334UNe8L1z9q1O7hhrcu+O7I1z2mF/K+4f0e9lDlbNDMqXJ9GvVQy4kkrwlUn
-         l5MwXOQrPn9sM8RcZvy4+DFzv2buhbrOY8rGOAlRPKbFqF0e88Abo2UUfO7eRJ5863sq
-         nFV7sMqUJjLSyVQTI3Z5v0VaK+CJmWU3buh+dCKQEFoboCYdDuYQtUO0OORA7p4Lxz2Z
-         Rc3WA4ycpf7RCahxFoOYWHoHUT++VprN/4rZe2uT1+JWTqJO/5GRPAXhvmk9ca26vl/h
-         ddPJjiXk8VcGVk9+QOWrmfW6JgThBfTUVFgyI3tWNT/KFBsqLQcfwvOZU1DlY/6qk9Id
-         200Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUoaOyiPQDHKuLr2hIhc+dO/LPZib6aljfir9sXVbLFoNvybpBYAGMIK/UK3K/Js+rDh5/TQQz5zBE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxPIO0oEwBiLaorIKN/A7PwwoBwirR6a7z0YrIYwVevzaN4Ncjw
-	0XKsqum/jpMZ7uVQyGGnpt4/vq/en8eXwQp3o3zmc96BQrnXkhbH4GbjelcC8FszDZjIZgJQ5Gz
-	C09d1F8mTdobK6m/LjCItJ54Q9I0Ib+6W
-X-Gm-Gg: ASbGncsuuPHIzCM+11CRijrCOqpR5nSfkl5b+tIlPs34+T9avNTkQ+dTRXshuOkNmLm
-	wmlpIVE1gGJDOI6BjQMORxIt45bYTtRCVO6VJRSohjnwIvu+6d0iOWdZoy4VNXvxLXQFHAUtqEz
-	NzWJA4CH/sufoOTmw++UAEIU6wz83ULOKlbfFMhX8lS86v8xLPsRSsAQ==
-X-Google-Smtp-Source: AGHT+IHrCLTmNcY0FHD5WEC/WePPcdfn+RpbojiuUZCKwBlyUNvxT6k2qlNTuF2RqkP+4o2DKBbTidh6sUg7qZ3qWVQ=
-X-Received: by 2002:a05:622a:1148:b0:477:5d12:aac5 with SMTP id
- d75a77b69052e-48b21a60df3mr11470771cf.35.1746063489322; Wed, 30 Apr 2025
- 18:38:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jr23s1vv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D340C4CEED
+	for <loongarch@lists.linux.dev>; Thu,  1 May 2025 03:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746069602;
+	bh=rNZdiJjKxu84kSTnNRG+40N/y18b49cbWcQi5Jqh2cY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jr23s1vvkPRLCDizbc/ovUZQ309MVDdNSx/TOwKB6I/r1CWL2CUXRC/h9jDuxTFxx
+	 fai0cYvd3haAcdNYm4n4mv/4Ej703a5Ovnb5JUbenJy5JaHz/FU9Q2H63MS9VgMo+s
+	 BjqgRxGYbweoZbvC/yuZF/dod4pBDtRWHN5zBojXkfRD2nmZBzv7z6+wZc3vCL1Bjk
+	 iPZ7+zlkbxeFf24bD++LXhEQ/tUw41LhS6bqIzCJk6NYcoT0PRl398010B4s7sviGY
+	 ALrBVQu3ld9h8V3hSP/mm1h2VBAzMgPedVgFfqxMD1Mr03oLJ0LU6XAgYz0MvXvobg
+	 Q7ANbddqURqnQ==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso1126702a12.1
+        for <loongarch@lists.linux.dev>; Wed, 30 Apr 2025 20:20:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU5Koy/2Ym3yKQe+TjG8ij+EpV3qO2KSsz7faPaK4B0oGY4hhTrNEHFxQJR6c52K+Ksi8rsrj3WhOA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzmBXYHn3wltzOt3NTQLbEwa0gR5oWNiBmndU0mXSpnu9k3v59e
+	g028u5rT6zqWh2jJaq76qdRLOspR/DR47i9aLh1xA/l5Q24SRO2eZtCI5VyXa5TwpGuUuPzH3nh
+	VwLjV6X4d8h5OisOo7zk31wcfQms=
+X-Google-Smtp-Source: AGHT+IEbIuXTioJc9AKI2HGu8HCXXj65872Ny6SvDbzCaRnxnK4JjETLTLYJ6jhqyCVXoW1C77G0g8eHSTYHyadllRI=
+X-Received: by 2002:a05:6402:5216:b0:5f6:22ca:8aae with SMTP id
+ 4fb4d7f45d1cf-5f919836912mr690952a12.2.1746069600974; Wed, 30 Apr 2025
+ 20:20:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250430131516.24287-1-yangtiezhu@loongson.cn> <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
-In-Reply-To: <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Wed, 30 Apr 2025 18:37:57 -0700
-X-Gm-Features: ATxdqUFlmxlvNicj0lwYOXAq-vMhrWpp638DpK7NoOjFQFt_McQ3EnOPUchj68M
-Message-ID: <CAK3+h2xQbw=4s8qRK9WDGmzDhsWC2WhqkYWuwKUXdJFwLaL2Pg@mail.gmail.com>
+References: <20250430131516.24287-1-yangtiezhu@loongson.cn>
+ <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com> <CAK3+h2xQbw=4s8qRK9WDGmzDhsWC2WhqkYWuwKUXdJFwLaL2Pg@mail.gmail.com>
+In-Reply-To: <CAK3+h2xQbw=4s8qRK9WDGmzDhsWC2WhqkYWuwKUXdJFwLaL2Pg@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 1 May 2025 11:19:49 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5V8YFK59KOTUqsoEq_JYgdZRiazggoGZO5gTG7oJN8Uw@mail.gmail.com>
+X-Gm-Features: ATxdqUGJW4t7VFCABxkJD2b-FGOjkjojqrk3V44BX6A4Zy-owiuDIT2yHdlMgk0
+Message-ID: <CAAhV-H5V8YFK59KOTUqsoEq_JYgdZRiazggoGZO5gTG7oJN8Uw@mail.gmail.com>
 Subject: Re: [PATCH 0/5] Enable some configs in loongson3_defconfig
-To: Huacai Chen <chenhuacai@kernel.org>
+To: Vincent Li <vincent.mc.li@gmail.com>
 Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Tiezhu,
+Hi, Vincent,
 
-On Wed, Apr 30, 2025 at 6:41=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
+On Thu, May 1, 2025 at 9:38=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.com>=
  wrote:
 >
-> Hi, Tiezhu,
+> Hi Tiezhu,
 >
-> When I enable these options:
-> CONFIG_FTRACE=3Dy
-> CONFIG_FUNCTION_TRACER=3Dy
-> CONFIG_FUNCTION_GRAPH_TRACER=3Dy
-> CONFIG_DYNAMIC_FTRACE=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_REGS=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_ARGS=3Dy
-> CONFIG_KPROBES=3Dy
-> CONFIG_UPROBES=3Dy
-> CONFIG_KPROBE_EVENTS=3Dy
-> CONFIG_UPROBE_EVENTS=3Dy
+> On Wed, Apr 30, 2025 at 6:41=E2=80=AFAM Huacai Chen <chenhuacai@kernel.or=
+g> wrote:
+> >
+> > Hi, Tiezhu,
+> >
+> > When I enable these options:
+> > CONFIG_FTRACE=3Dy
+> > CONFIG_FUNCTION_TRACER=3Dy
+> > CONFIG_FUNCTION_GRAPH_TRACER=3Dy
+> > CONFIG_DYNAMIC_FTRACE=3Dy
+> > CONFIG_DYNAMIC_FTRACE_WITH_REGS=3Dy
+> > CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy
+> > CONFIG_DYNAMIC_FTRACE_WITH_ARGS=3Dy
+> > CONFIG_KPROBES=3Dy
+> > CONFIG_UPROBES=3Dy
+> > CONFIG_KPROBE_EVENTS=3Dy
+> > CONFIG_UPROBE_EVENTS=3Dy
+> >
+> > Then your above commands will hang (or get a SIGTRAP), which options I
+> > am missing?
+> >
+> > I haven't tried your patches, maybe it works, but I want to know the
+> > exactly needed options.
+> >
+> > Huacai
+> >
+> >
+> > On Wed, Apr 30, 2025 at 9:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
+n.cn> wrote:
+> > >
+> > > This is a small patchset based on 6.15-rc4, each patch is a
+> > > single logical change to better describe the problem and make
+> > > it easier to review.
+> > >
+> > > If the changes make sense, all of them can be squashed into one
+> > > single patch, I think that would be fine as well, let us see if
+> > > other people have concern about it.
+> > >
+> > > By the way, I received many compile-time error reports about tools,
+> > > most are related with configs, this is the motivation of this series.
+> > >
+> > > Additionally, I also received one run-time bug report about uprobe,
+> > > but it works fine on my test environment. If somebody can reproduce
+> > > it, please let me know, maybe I am missing something.
+> > >
+> > > 1. How to reproduce
+> > >
+> > > (1) Compile and install Tongsuo
+> > >
+> > > git clone https://github.com/Tongsuo-Project/Tongsuo.git
+> > > cd Tongsuo && ./config --prefix=3D/opt/tongsuo -Wl,-rpath,/opt/tongsu=
+o/lib
+> > > make && sudo make install
+> > >
+> > > https://www.tongsuo.net/docs/compilation/source-compilation
+> > >
+> > > (2) Compile and update kernel
+> > >
+> > > Apply this series based on 6.15-rc4, then use the loongson3_defconfig=
+,
+> > > CONFIG_UPROBE_EVENTS is already set.
+> > >
+> > > (3) Probe "openssl speed sm2"
+> > >
+> > > cd tools/perf && make
+> > > sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
+> > > sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery /opt/tongsu=
+o/bin/openssl speed sm2
+> > >
+> > > 2. My test results
+> > >
+> > > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf probe -x /usr/lib64=
+/libcrypto.so BN_mod_mul_montgomery
+> > > Added new event:
+> > >   probe_libcrypto:BN_mod_mul_montgomery (on BN_mod_mul_montgomery in =
+/usr/lib64/libcrypto.so.3.2.2)
+> > >
+> > > You can now use it in all perf tools, such as:
+> > >
+> > >         perf record -e probe_libcrypto:BN_mod_mul_montgomery -aR slee=
+p 1
+> > >
+> > > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf stat -e probe_libcr=
+ypto:BN_mod_mul_montgomery /opt/tongsuo/bin/openssl speed sm2
+> > > Doing 256 bits sign CurveSM2's for 10s: 7463 256 bits CurveSM2 signs =
+in 10.00s
+> > > Doing 256 bits verify CurveSM2's for 10s: 9681 256 bits CurveSM2 veri=
+fy in 9.98s
+> > > ...
+> > >                               sign    verify    sign/s verify/s
+> > >  256 bits SM2 (CurveSM2)   0.0013s   0.0010s    746.3    970.0
+> > >
+> > >  Performance counter stats for '/opt/tongsuo/bin/openssl speed sm2':
+> > >
+> > >                  0      probe_libcrypto:BN_mod_mul_montgomery
+> > >
+> > >       20.007539877 seconds time elapsed
+> > >
+> > >       19.990010000 seconds user
+> > >        0.000000000 seconds sys
+> > >
+> > > Thanks,
+> > > Tiezhu
+> > >
+> > > Tiezhu Yang (5):
+> > >   LoongArch: Clean up loongson3_defconfig
+> > >   LoongArch: Enable tracing infrastructure in defconfig
+> > >   LoongArch: Enable tracing syscalls in defconfig
+> > >   LoongArch: Enable debug information in defconfig
+> > >   LoongArch: Enable kprobe and ftrace in defconfig
+> > >
+> > >  arch/loongarch/configs/loongson3_defconfig | 74 +++++---------------=
+--
+> > >  1 file changed, 16 insertions(+), 58 deletions(-)
 >
-> Then your above commands will hang (or get a SIGTRAP), which options I
-> am missing?
->
-> I haven't tried your patches, maybe it works, but I want to know the
-> exactly needed options.
->
-> Huacai
->
->
-> On Wed, Apr 30, 2025 at 9:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
-cn> wrote:
-> >
-> > This is a small patchset based on 6.15-rc4, each patch is a
-> > single logical change to better describe the problem and make
-> > it easier to review.
-> >
-> > If the changes make sense, all of them can be squashed into one
-> > single patch, I think that would be fine as well, let us see if
-> > other people have concern about it.
-> >
-> > By the way, I received many compile-time error reports about tools,
-> > most are related with configs, this is the motivation of this series.
-> >
-> > Additionally, I also received one run-time bug report about uprobe,
-> > but it works fine on my test environment. If somebody can reproduce
-> > it, please let me know, maybe I am missing something.
-> >
-> > 1. How to reproduce
-> >
-> > (1) Compile and install Tongsuo
-> >
-> > git clone https://github.com/Tongsuo-Project/Tongsuo.git
-> > cd Tongsuo && ./config --prefix=3D/opt/tongsuo -Wl,-rpath,/opt/tongsuo/=
-lib
-> > make && sudo make install
-> >
-> > https://www.tongsuo.net/docs/compilation/source-compilation
-> >
-> > (2) Compile and update kernel
-> >
-> > Apply this series based on 6.15-rc4, then use the loongson3_defconfig,
-> > CONFIG_UPROBE_EVENTS is already set.
-> >
-> > (3) Probe "openssl speed sm2"
-> >
-> > cd tools/perf && make
-> > sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-> > sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery /opt/tongsuo/=
-bin/openssl speed sm2
-> >
-> > 2. My test results
-> >
-> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf probe -x /usr/lib64/l=
-ibcrypto.so BN_mod_mul_montgomery
-> > Added new event:
-> >   probe_libcrypto:BN_mod_mul_montgomery (on BN_mod_mul_montgomery in /u=
-sr/lib64/libcrypto.so.3.2.2)
-> >
-> > You can now use it in all perf tools, such as:
-> >
-> >         perf record -e probe_libcrypto:BN_mod_mul_montgomery -aR sleep =
-1
-> >
-> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf stat -e probe_libcryp=
-to:BN_mod_mul_montgomery /opt/tongsuo/bin/openssl speed sm2
-> > Doing 256 bits sign CurveSM2's for 10s: 7463 256 bits CurveSM2 signs in=
- 10.00s
-> > Doing 256 bits verify CurveSM2's for 10s: 9681 256 bits CurveSM2 verify=
- in 9.98s
-> > ...
-> >                               sign    verify    sign/s verify/s
-> >  256 bits SM2 (CurveSM2)   0.0013s   0.0010s    746.3    970.0
-> >
-> >  Performance counter stats for '/opt/tongsuo/bin/openssl speed sm2':
-> >
-> >                  0      probe_libcrypto:BN_mod_mul_montgomery
-> >
-> >       20.007539877 seconds time elapsed
-> >
-> >       19.990010000 seconds user
-> >        0.000000000 seconds sys
-> >
-> > Thanks,
-> > Tiezhu
-> >
-> > Tiezhu Yang (5):
-> >   LoongArch: Clean up loongson3_defconfig
-> >   LoongArch: Enable tracing infrastructure in defconfig
-> >   LoongArch: Enable tracing syscalls in defconfig
-> >   LoongArch: Enable debug information in defconfig
-> >   LoongArch: Enable kprobe and ftrace in defconfig
-> >
-> >  arch/loongarch/configs/loongson3_defconfig | 74 +++++-----------------
-> >  1 file changed, 16 insertions(+), 58 deletions(-)
+> I recommend putting all the config changes in one patch so it is
+> easier to review change and test, I have to look through each patch to
+> see what config changed.
+This series is probably a RFC and I will not apply.
+1) The motivation of this series is to solve an uprobes hang issue,
+but as I mentioned above I still don't know why it hangs. Maybe due to
+config options but I'm not sure.
+2) Don't mix the kernel defconfig and distribution config. A
+distribution config tries to enable as many features as possible, and
+different distributions have different preferences. The kernel
+defconfig is probably a bootable config, plus some widely used
+features. Take x86 as an example, it doesn't even enable NUMA
+Balancing, THP and BPF which are already widely used in morden
+systems, let alone a large set of tracers.
+3) About the cleanup, as I explained before (but not in this thread),
+though CONFIG_LOONGARCH, CONFIG_64BIT, CONFIG_MACH_LOONGSON64,
+CONFIG_PAGE_SIZE_16KB=3Dy, CONFIG_HZ_250=3Dy, CONFIG_DMI=3Dy, CONFIG_EFI=3D=
+y,
+CONFIG_SMP=3Dy, CONFIG_ACPI=3Dy and some other similar options are
+implicitly selected so they will disappear during "make
+savedefconfig". I still want to keep them in the defconfig, just
+because I hope we can easily know what is fundamentally needed by
+LoongArch via reading the defconfig file.
 
-I recommend putting all the config changes in one patch so it is
-easier to review change and test, I have to look through each patch to
-see what config changed.
+Huacai
 
-> >
-> > --
-> > 2.42.0
-> >
 >
+> > >
+> > > --
+> > > 2.42.0
+> > >
+> >
