@@ -1,182 +1,195 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF274689
-	for <loongarch@lists.linux.dev>; Fri,  2 May 2025 01:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1020019DF66
+	for <loongarch@lists.linux.dev>; Fri,  2 May 2025 09:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746150767; cv=none; b=rC/8bP7U8PjV59ekdVcZGsAOj1WcP4HwHlmIM9SrEc9Yv32fffu6JEyQV3LXyic1xKxDCVXOWY+M4vLl4UEWoOmJnB6AJDv18ymfnhGf7v0zmA12i0kgu4SM3XvqJE+1R60vmTcmsMOsitU1GzKKPFAeCfIx5Zj0GxmwbqzqUg8=
+	t=1746179177; cv=none; b=dVd/F9h8QpTatZaBJ/YCj61NcaectDW1MzpHyAzCG2ksDr0JavszG71bNFvRtK7whK5sTps2gq7Ngg7kdAMIycurWJQSUhYiTaf8xwRWY7/U2V0j/8eZM7vGTy4Djf9nUTnInGxkEBcnmSIiR+QREcuco6OqA45ws1fwzJLE27I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746150767; c=relaxed/simple;
-	bh=+6KC8Er2Yg+3lM3yjbM95E/f1pA2PsuQKmRBF9nwBPI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b1oZIbUoAa5BNquNWdSzRGug4dhX8x+TtuI4r+EZNt74IJ6api97VBioEOROLwof6i/SxQSr21wAXY5EmCgfuQzGqtl+YqSjgmEnwtmGbgA1GqG7meSwaVOdjfSrfQVwA1q2CmzwbJVAET7A5UpyDtFnQ3Njn04lBVtT+ZG22xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=e9lmI114; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746179177; c=relaxed/simple;
+	bh=bL9NGsdk8Xu5wuKyoqLCssxfxtze5NXykOh+kVgSZug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QbzuP8wn64U27Wyb/9nImYCdR52Qez1ybGRq663R21ALbOGkib9YyFG3HZoHPcfodVvTS6iiVcp3mfxHVaIhfpPHsSEVK+nbdTldoq7gg0QCK9w7nqB+AAadHwXRQWOOcBCgeOBv5kM3yCM2scwvLREyIsLMYjkg1c/WJc7o040=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CgNQAqDA; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="e9lmI114"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id B325425F61;
-	Fri,  2 May 2025 03:52:43 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id VDfb4-N8fou8; Fri,  2 May 2025 03:52:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746150758; bh=+6KC8Er2Yg+3lM3yjbM95E/f1pA2PsuQKmRBF9nwBPI=;
-	h=Date:From:To:Subject:References:In-Reply-To;
-	b=e9lmI114NV6RHhztBfWeTJ0Ra99aZNmodTieZXLWzA0Bg1z0EMACs5cDutqZOY8LN
-	 tqCkxlAyF0i4fZNoliqbvSbI4l4XfZrqJrv0bHP4WN2dX/A9YZ0ulSF0oquXtmpPkC
-	 Zr0k4E+Kn0O2Xt9CtzIoy2nzr0+ABHpkXYOFqXAMuGFHEzLFahbl5NBZodJgCywHUz
-	 67/9ukio1bbsu/ZVL/X/ElhoxooyX6za26qntX4tFPAE3RsINvG++pMzFnELO5Gd4I
-	 IPtv+RWbhx5bqoHQSrabI38Dem3pZuzNlx1Q5twlKyIrR+RMcwMacnh5t3rKdOxiGC
-	 06c4RsDMTLdig==
-Date: Fri, 2 May 2025 01:52:22 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 3/4] LoongArch: dts: Add initial SoC devicetree for
- Loongson 2K0300
-Message-ID: <aBQlVrA_fxb22aPF@pie.lan>
-References: <20250501044239.9404-2-ziyao@disroot.org>
- <20250501044239.9404-5-ziyao@disroot.org>
- <8c102773-71e2-4c60-b260-07f099ddaae3@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgNQAqDA"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22c3407a87aso27399845ad.3
+        for <loongarch@lists.linux.dev>; Fri, 02 May 2025 02:46:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746179175; x=1746783975; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4pbJ3W6acVlDXwhP+g5301nbrsGq3ivMaM+7WgKEfvs=;
+        b=CgNQAqDAD0Z1VRfgImlOPNx4Mc1BTh0O9BpvwiJk/uELDv2sR7eCQ5hBeWTE5MNYCq
+         lfo5sF9/eWVGKvI+gnb8ZNrlFD4qCysTXCbr05F8dIsw67zevjvagKncdsCMr4VLAtZT
+         dwCrBP0RnRRhGiqtmJP4WXtP2nZzfeUT+I3BtYUYrKoy6Hvs/rbRLruvP2j71e6kiNL6
+         rYgKD5Kdnn45x9ht+XolVCe1WzSA0DdwUMY85+9XIesR5Z6N9jJk7BPX1zG+PNUZhXxj
+         FymqgGNuzIYMJq/oUyySxAm4/WOsZgWuPCWmH/fygDcAfddeXBySbg7ZGGxtTx8puvUQ
+         LfvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746179175; x=1746783975;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4pbJ3W6acVlDXwhP+g5301nbrsGq3ivMaM+7WgKEfvs=;
+        b=vpHHKU9NV7YNs5AqG3NQZkmFfqMoA/hxqEfOBUQc3VlOGG1KMXxeyIhlZJkc4MF+kZ
+         kMUgi1mOjhSjWCjoJte+TjWS1JMZQgWciyZ97QrJTB52qBj34vDguU1ykzheAYVzz74m
+         K2KyB3M7leZwSC83g9dNAZtMfCxVw01H1Eo3KZ+0au08ckDkBGEKPYWdJcYFx5USgcf0
+         voD1jwb+Y2Q7OZuAChURSSG+Sy+0tui2KhCIRQCjSuwBlD33NzD9MjrH+eSX3UdV+dM2
+         Mh8d+XvP3I4PafDs9b/lB1OqzVGF8pfNG2TiAh78BrxBD7lT8vQXyVMgGZrvOI/nmBAt
+         E4aw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBsSUdUNi+MsR6Q5eR/7UFyN0LgQ3JAHeS4ZV4kjA3ubIfKgr4x9RTkvoIVSVxCTHHis5hCGHUeLU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyNhX4+4mH63g1XwT/niJAnzNvlSPiSpfrEbT20HWP0UGEqqp+Q
+	MyeZnxDu0a2EJ93mjCgDyHyHKK2q6vncmuyg4+0m9Qz9VoyXTXoE
+X-Gm-Gg: ASbGncsBrMRgBKt3lNvhmQaBCGfrWZX1mxch/5YWLS/Pw10RsSgbqgMbN/IS2KRkwZE
+	WPHCjtD2JPaF3NOZnT413HJCUk/rCLrrAROeYrySOrebma7pVGUNsiRbLgwLogPZrdOu1pJehcc
+	B2lplYlB0zwppc3Y7DkYD05EQiiMZ1JVbx2QCWYbfN4jNFElTKUKYVoJlwDYjFHHy8Z8dRJPSo4
+	WZtkonm+1N6tnDrdhjqeDloKG58xviJvaboKuyjqXpZELX+B0FvPemh/B4fMifpN7T4AHlfUZag
+	uPbkXnliKvq+nwL3qpWHFHmU0HrHnd96X4TGm8zakgbyw+zHiEzzuFYG8N05my/8YIzMgXFuYqy
+	wR2uYu2fLJmKoW41LJA==
+X-Google-Smtp-Source: AGHT+IFCrNB3SEcUQSA4UULBWiPKSjzAq293G3JdHTwJkUqWADHaR7n7tHS0qoEezDF6fogaeNgeTg==
+X-Received: by 2002:a17:903:2ec3:b0:224:f12:3734 with SMTP id d9443c01a7336-22e1030ba06mr31764015ad.30.1746179175181;
+        Fri, 02 May 2025 02:46:15 -0700 (PDT)
+Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151eb166sm3273565ad.96.2025.05.02.02.46.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 02:46:14 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Cc: x86@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	peterz@infradead.org,
+	hpa@zytor.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	tangyouling@loongson.cn,
+	hejinyang@loongson.cn,
+	yangtiezhu@loongson.cn,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org
+Subject: [PATCH v6 0/4] rust: Add bug/warn abstractions
+Date: Fri,  2 May 2025 18:45:32 +0900
+Message-ID: <20250502094537.231725-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c102773-71e2-4c60-b260-07f099ddaae3@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 01, 2025 at 12:55:04PM +0200, Krzysztof Kozlowski wrote:
-> On 01/05/2025 06:42, Yao Zi wrote:
-> > Add SoC devicetree for 2K0300 SoC, which features one LA264 dual-issue
-> > core and targets embedded market. Only CPU core, legacy interrupt
-> > controllers and UARTs are defined for now.
-> > 
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  arch/loongarch/boot/dts/loongson-2k0300.dtsi | 197 +++++++++++++++++++
-> >  1 file changed, 197 insertions(+)
-> >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> > 
-> > diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> > new file mode 100644
-> > index 000000000000..6991a368ff94
-> > --- /dev/null
-> > +++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> > @@ -0,0 +1,197 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> > + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +/ {
-> > +	compatible = "loongson,ls2k0300";
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> > +
-> > +	aliases {
-> > +		serial0 = &uart0;
-> > +		serial1 = &uart1;
-> > +		serial2 = &uart2;
-> > +		serial3 = &uart3;
-> > +		serial4 = &uart4;
-> > +		serial5 = &uart5;
-> > +		serial6 = &uart6;
-> > +		serial7 = &uart7;
-> > +		serial8 = &uart8;
-> > +		serial9 = &uart9;
-> 
-> 
-> UARTs depend on connectors, so these are board-level aliases.
-> 
-> 
-> > +	};
-> > +
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu0: cpu@0 {
-> > +			compatible = "loongson,la264";
-> > +			reg = <0>;
-> > +			device_type = "cpu";
-> > +			clocks = <&cpu_clk>;
-> > +		};
-> > +
-> > +	};
-> > +
-> > +	cpuintc: interrupt-controller {
-> > +		compatible = "loongson,cpu-interrupt-controller";
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <1>;
-> > +	};
-> > +
-> > +	cpu_clk: clock-1000m {
-> > +		compatible = "fixed-clock";
-> > +		clock-frequency = <1000000000>;
-> > +		#clock-cells = <0>;
-> > +	};
-> > +
-> > +	soc {
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges = <0x00 0x10000000 0x00 0x10000000 0x0 0x10000000>,
-> > +			 <0x00 0x02000000 0x00 0x02000000 0x0 0x04000000>,
-> > +			 <0x00 0x40000000 0x00 0x40000000 0x0 0x40000000>;
-> > +
-> > +		liointc0: interrupt-controller@16001400{
-> 
-> Missing space, {
-> 
-> > +			compatible = "loongson,liointc-2.0";
-> > +			reg = <0x0 0x16001400 0x0 0x40>,
-> > +			      <0x0 0x16001040 0x0 0x8>;
-> > +			reg-names = "main", "isr0";
-> > +
-> > +			interrupt-controller;
-> > +			#interrupt-cells = <2>;
-> > +
-> > +			interrupt-parent = <&cpuintc>;
-> > +			interrupts = <2>;
-> > +			interrupt-names = "int0";
-> > +
-> > +			loongson,parent_int_map = <0xffffffff>, /* int0 */
-> > +						  <0x00000000>, /* int1 */
-> > +						  <0x00000000>, /* int2 */
-> > +						  <0x00000000>; /* int3 */
-> > +		};
-> > +
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+This patchset adds warn_on macro with the bug/warn abstraction that
+utilizes the kernel's BUG/WARN feature via assembly.
 
-Thanks for finding the issues, will fix all of them in v2.
+Currently, Rust code simply wraps BUG() macro; however the approach
+doesn't provide the proper debug information. For example, I added
+bindings::BUG() to rnull's init method and got the following output:
 
-Thanks,
-Yao Zi
+# insmod /root/rnull_mod.ko
+rnull_mod: Rust null_blk loaded
+------------[ cut here ]------------
+kernel BUG at rust/helpers/bug.c:7!
+Oops: invalid opcode: 0000 [#1] SMP CPU: 0 UID: 0 PID: 31 Comm: insmod Not tainted 6.14.0-rc1+ #103
+RIP: 0010:rust_helper_BUG+0x8/0x10
+(snip)
+
+The kernel's BUG/WARN feature (lib/bug.c) can only be used from
+assembly. Rust code needs to directly execute the same assembly code
+used on the C side. To avoid duplicating the assembly code, this
+approach follows the same strategy as the static branch code: it
+generates the assembly code for Rust using the C preprocessor at
+compile time.
+
+The 1st to 3th patches export the BUG/WARN assembly code for Rust on
+x86, RISC-V, and ARM64 architecture, with no functional changes on the
+C side. They have already been acked by the maintainers of their
+respective architectures.
+
+No change for ARM and LoongArch; they still use the current approach;
+just wrapping C's macro.
+
+UML doesn't use the assembly BUG/WARN feature; just wrapping generic
+BUG/WARN functions implemented in C works.
+
+The last patch adds warn_on implementation on the top of the
+abstraction. To make the patchset easier to review, the remaining
+features such as bug() are not included in this patchset. These
+features will be added after this patchset is merged.
+
+This has been tested on x86, ARM64, and RISC-V (QEMU), with only a
+compile test performed for LoongArch, ARM, and UML.
+
+v6:
+- improved SAFETY comments
+v5: https://lore.kernel.org/lkml/20250409065802.136971-1-fujita.tomonori@gmail.com/
+- fix indentation in the macro
+- use $crate::ffi::c_char instead ::kernel::ffi::c_uchar
+- add support for building on arm32
+v4: https://lore.kernel.org/lkml/20250305110814.272792-1-fujita.tomonori@gmail.com/
+- added Acked-by tag to the RISC-V and ARM64 asm change
+- simplify the asm code
+- use the cfgs on the macro rather in its expansion
+- use a const fn for bugflag_taint over macro
+- dropped LoongArch assembly change
+- dropped warn_on_once; make the patch easier to review
+v3: https://lore.kernel.org/lkml/20250213135759.190006-1-fujita.tomonori@gmail.com/
+- rebased on rust-next
+- use ANNOTATE_REACHABLE macro (replaced ASM_REACHABLE)
+- added Acked-by tag to the x86 change
+v2: https://lore.kernel.org/lkml/20241218062009.2402650-1-fujita.tomonori@gmail.com/
+- remove target_arch cfg by using asm comment
+- clean up the changes to loongarch asm
+v1: https://lore.kernel.org/lkml/20241210001802.228725-1-fujita.tomonori@gmail.com/
+
+FUJITA Tomonori (4):
+  x86/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
+    Rust
+  riscv/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
+    Rust
+  arm64/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
+    Rust
+  rust: Add warn_on macro
+
+ arch/arm64/include/asm/asm-bug.h              |  33 ++++-
+ arch/riscv/include/asm/bug.h                  |  37 +++---
+ arch/x86/include/asm/bug.h                    |  56 ++++----
+ rust/Makefile                                 |   8 ++
+ rust/helpers/bug.c                            |   5 +
+ rust/kernel/.gitignore                        |   2 +
+ rust/kernel/bug.rs                            | 125 ++++++++++++++++++
+ rust/kernel/generated_arch_reachable_asm.rs.S |   7 +
+ rust/kernel/generated_arch_warn_asm.rs.S      |   7 +
+ rust/kernel/lib.rs                            |   1 +
+ 10 files changed, 234 insertions(+), 47 deletions(-)
+ create mode 100644 rust/kernel/bug.rs
+ create mode 100644 rust/kernel/generated_arch_reachable_asm.rs.S
+ create mode 100644 rust/kernel/generated_arch_warn_asm.rs.S
+
+
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+-- 
+2.43.0
+
