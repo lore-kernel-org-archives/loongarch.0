@@ -1,246 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F127A21CC51
-	for <loongarch@lists.linux.dev>; Sat,  3 May 2025 12:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24C1E22301
+	for <loongarch@lists.linux.dev>; Sun,  4 May 2025 02:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746275038; cv=none; b=KSsonOiDzwUc1RjTJivt87Gmim/UhtLXx2ckVXRG256AbLgHrwow1LrApwCQCkdH5SVml2qqhZearWyp7D9+/xXb9d8wr3PEKrZrkjRdso4vhCziY2feOBiek1lqUD2z/4Er/kK2TktdKzJTs4sAukMeIcgN0HrpCN5sIisaBPA=
+	t=1746324680; cv=none; b=GKvW220Zs6x9aF+Mc12KJB9JIwsMja+wysu+2YZLLdT9FMb3S3qqSjvFWAh5gnYImsma2+RS+oGhl91AgQ0PGlL6gGuIhJkLvqz9v7t7Zrp1L/oOWU1hPy9Uqr/+3P2mmcnGLfIcSFwqaFP36zoxpngZgfWmuEAOb6CIjktizAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746275038; c=relaxed/simple;
-	bh=5U//rETcjYrALmxzf525J1E7Pyy9MUHuynm6kg3AKMc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y6E/bYADtlIIuFKUHHGhUj3fR07x4v7OlxFHjpHHBBVg2NPa0Z2pREZwJgukAdB72eMPc0FvNhfbwxen7IAXQtPl51vo32zRyOAJlRbONyi8EoM+UnOhP3TNMl8YVlWaOJACuS6DIfRPB1j0Vu5EmDRIqX1yo+p7+AbsSvPCm0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rKikO7kw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rKikO7kw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68971C4AF0B
-	for <loongarch@lists.linux.dev>; Sat,  3 May 2025 12:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746275037;
-	bh=5U//rETcjYrALmxzf525J1E7Pyy9MUHuynm6kg3AKMc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rKikO7kweNOKcaLINTL0iTVY5bZeFWJEPIc2Uoj3TIkRLpzl9p5Flhgbc/v9ip4KJ
-	 +tb4iDVKcjcZLcBPgOQ0mJAb7B/A9Z9vZA6MXQUUbGbmAk7iIwl9hck0fbtdwyLiF1
-	 NAbNFJ6FRV2wRlvVS3/lsWeK37g2L+qVFEtR5NPvn/yRPBCZnwvTUiFSm1bXQrHFwo
-	 CeAV+A1Qh+zxgrL3UdZTl7o0LTO3x3AucgCNBbjJKSaj0E1dttV/i0RbvLfn0o//KO
-	 GjIbtyImNerGVQVKqgy3TLnsMfrvg/1PSKPpeb/IKb8xREnGlRmaXC7XnfoyscTf0s
-	 ZwP3bjMkCEchw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f4d28d9fd8so4019150a12.3
-        for <loongarch@lists.linux.dev>; Sat, 03 May 2025 05:23:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW1ZKASvf1GyS1tYlvcb+o/Gvq0BcGTiXo0lPojZ3kSwCnptuvjzls2sW/zUxJSi0/vSnf9FO15iKU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwCjBn6wYUSS7QHVofAc5+KKR+6CdcQKeeRmw+LgjBGX6XncePa
-	d56zir63x79L/NIP2FXHe93np+oLs0NGAlGz0H817SBP+kSx1MCXYtSuItmp0+HiA80az9gyFCw
-	xnQYN7uM+rOX0KAPtEDgHA92n5Pk=
-X-Google-Smtp-Source: AGHT+IFwvmqxI0osNQCxLa/CnSBo000Gybd0uDxYA3k0iyudFhRjL2EEMPspXaJURfaPr9DlJTLd2NX5CRDIuXzfeGg=
-X-Received: by 2002:a17:907:9411:b0:ad1:8e78:3d79 with SMTP id
- a640c23a62f3a-ad1a48bc59emr67713066b.1.1746275035905; Sat, 03 May 2025
- 05:23:55 -0700 (PDT)
+	s=arc-20240116; t=1746324680; c=relaxed/simple;
+	bh=m/d7rSc/X+aQXzQ0IDooLNyaR8cZrb1ZN8xc7K7347I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cNNJv6twIew8vSHE9q2YsdYEVcuW7V357iekuAiGNHiphmeWjqkfBafEtJ68NIXaaBQp4Qkj/hsqsNDmO2kjGxPHs8SK3nHvL2WNWEuKJRIBFW+Hlvq7HtemGbnRcXLEvYVE18sJ/DWGK4gzt1g22JCEuHL91kg42JQmcAkLmz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.186])
+	by gateway (Coremail) with SMTP id _____8DxC3K7zBZoxnrTAA--.20259S3;
+	Sun, 04 May 2025 10:11:07 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.186])
+	by front1 (Coremail) with SMTP id qMiowMAxTRu3zBZoM7WuAA--.11681S2;
+	Sun, 04 May 2025 10:11:07 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	stable@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH for 6.1.y] LoongArch: Fix build error due to backport
+Date: Sun,  4 May 2025 10:10:54 +0800
+Message-ID: <20250504021054.783045-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250430090751.24056-1-zhangtianyang@loongson.cn>
-In-Reply-To: <20250430090751.24056-1-zhangtianyang@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 3 May 2025 20:23:45 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7e2Ssr2A17XkQQg-VfNb6PAKtJeYC-2X9WCYcz2BJ=7w@mail.gmail.com>
-X-Gm-Features: ATxdqUE9UDhCsT2u6FoPquYPxWM27N_1EZnAX41TYGBmkfiC3LxYB7wVjsiQsPs
-Message-ID: <CAAhV-H7e2Ssr2A17XkQQg-VfNb6PAKtJeYC-2X9WCYcz2BJ=7w@mail.gmail.com>
-Subject: Re: [PATCH V2] LoongArch:support CONFIG_SCHED_MC
-To: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: kernel@xen0n.name, wanghongliang@loongson.cn, yangtiezhu@loongson.cn, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxTRu3zBZoM7WuAA--.11681S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JF48Cw47CryUWF4fXF1rKrX_yoWDtFcEgF
+	1Iv3yxKr48Xw12ywsxW3y5J3WUtanY9Fn0y3Zruw13Jas0grn5Gr4vv39akr1Sg3yUWr43
+	Kr909an8Aw17tosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUUUUU==
 
-Hi, Tianyang,
+In 6.1 there is no pmdp_get() definition, so use *pmd directly, in order
+to avoid such build error due to a recently backport:
 
-On Wed, Apr 30, 2025 at 5:08=E2=80=AFPM Tianyang Zhang
-<zhangtianyang@loongson.cn> wrote:
->
-> From: wanghongliang <wanghongliang@loongson.cn>
->
-> In order to achieve more reasonable load balancing behavior,
-> support for SCHED_MC has been added.
-> The LLC distribution of Loongarch now is consistent with numa-node,
-> the balancing domain of SCHED_MC can effectively reduce the situation
-> where processes are awakened to smt_sibling
->
-> Co-developed-by: wanghongliang <wanghongliang@loongson.cn>
-> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> ---
->  arch/loongarch/Kconfig                |  9 ++++++
->  arch/loongarch/include/asm/smp.h      |  1 +
->  arch/loongarch/include/asm/topology.h |  8 +++++
->  arch/loongarch/kernel/smp.c           | 46 +++++++++++++++++++++++++++
->  4 files changed, 64 insertions(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 1a2cf012b..3d6d129ee 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -456,6 +456,15 @@ config SCHED_SMT
->           Improves scheduler's performance when there are multiple
->           threads in one physical core.
->
-> +config SCHED_MC
-> +       prompt "Multi-core scheduler support"
-This should be bool....
+arch/loongarch/mm/hugetlbpage.c: In function 'huge_pte_offset':                                                                                                                
+arch/loongarch/mm/hugetlbpage.c:50:25: error: implicit declaration of
+function 'pmdp_get'; did you mean 'ptep_get'?
+[-Wimplicit-function-declaration]                          
+   50 |         return pmd_none(pmdp_get(pmd)) ? NULL : (pte_t *) pmd;                                                                                                         
+      |                         ^~~~~~~~                                                                                                                                       
+      |                         ptep_get                            
 
-To save your time, I have fixed this typo, refresh the title and
-commit message [1], you can download it and then submit V3.
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/mm/hugetlbpage.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-And if needed, also update the version in the internal repo.
+diff --git a/arch/loongarch/mm/hugetlbpage.c b/arch/loongarch/mm/hugetlbpage.c
+index cf3b8785a921..70b4a51885c2 100644
+--- a/arch/loongarch/mm/hugetlbpage.c
++++ b/arch/loongarch/mm/hugetlbpage.c
+@@ -47,7 +47,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr,
+ 				pmd = pmd_offset(pud, addr);
+ 		}
+ 	}
+-	return pmd_none(pmdp_get(pmd)) ? NULL : (pte_t *) pmd;
++	return pmd_none(*pmd) ? NULL : (pte_t *) pmd;
+ }
+ 
+ /*
+-- 
+2.47.1
 
-[1] https://github.com/chenhuacai/linux/commit/17c9a8142696c428e2da37109ac3=
-0deb5133eaf7
-
-
-Huacai
-
-> +       depends on SMP
-> +       default y
-> +       help
-> +         Multi-core scheduler support improves the CPU scheduler's decis=
-ion
-> +         making when dealing with multi-core CPU chips at a cost of slig=
-htly
-> +         increased overhead in some places.
-> +
->  config SMP
->         bool "Multi-Processing support"
->         help
-> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/as=
-m/smp.h
-> index b87d1d5e5..13955d726 100644
-> --- a/arch/loongarch/include/asm/smp.h
-> +++ b/arch/loongarch/include/asm/smp.h
-> @@ -26,6 +26,7 @@ extern int num_processors;
->  extern int disabled_cpus;
->  extern cpumask_t cpu_sibling_map[];
->  extern cpumask_t cpu_core_map[];
-> +extern cpumask_t cpu_llc_shared_map[];
->  extern cpumask_t cpu_foreign_map[];
->
->  void loongson_smp_setup(void);
-> diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/inclu=
-de/asm/topology.h
-> index 50273c918..dfaf45d57 100644
-> --- a/arch/loongarch/include/asm/topology.h
-> +++ b/arch/loongarch/include/asm/topology.h
-> @@ -36,6 +36,14 @@ void numa_set_distance(int from, int to, int distance)=
-;
->  #define topology_sibling_cpumask(cpu)          (&cpu_sibling_map[cpu])
->  #endif
->
-> +/*
-> + * return cpus that shares the last level cache.
-> + */
-> +static inline const struct cpumask *cpu_coregroup_mask(int cpu)
-> +{
-> +       return &cpu_llc_shared_map[cpu];
-> +}
-> +
->  #include <asm-generic/topology.h>
->
->  static inline void arch_fix_phys_package_id(int num, u32 slot) { }
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index 4b24589c0..7b9e996a1 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -50,6 +50,9 @@ EXPORT_SYMBOL(cpu_sibling_map);
->  cpumask_t cpu_core_map[NR_CPUS] __read_mostly;
->  EXPORT_SYMBOL(cpu_core_map);
->
-> +cpumask_t cpu_llc_shared_map[NR_CPUS] __read_mostly;
-> +EXPORT_SYMBOL(cpu_llc_shared_map);
-> +
->  static DECLARE_COMPLETION(cpu_starting);
->  static DECLARE_COMPLETION(cpu_running);
->
-> @@ -66,6 +69,10 @@ static cpumask_t cpu_sibling_setup_map;
->  /* representing cpus for which core maps can be computed */
->  static cpumask_t cpu_core_setup_map;
->
-> +/* representing cpus for which llc sibling maps can be computed */
-> +static cpumask_t cpu_llc_shared_setup_map;
-> +
-> +
->  struct secondary_data cpuboot_data;
->  static DEFINE_PER_CPU(int, cpu_state);
->
-> @@ -102,6 +109,42 @@ static inline void set_cpu_core_map(int cpu)
->         }
->  }
->
-> +static inline bool cpus_are_shared_llc(int cpua, int cpub)
-> +{
-> +       if (cpu_to_node(cpua) !=3D cpu_to_node(cpub))
-> +               return false;
-> +
-> +       return true;
-> +}
-> +
-> +static inline void set_cpu_llc_shared_map(int cpu)
-> +{
-> +       int i;
-> +
-> +       cpumask_set_cpu(cpu, &cpu_llc_shared_setup_map);
-> +
-> +       for_each_cpu(i, &cpu_llc_shared_setup_map) {
-> +               if (cpus_are_shared_llc(cpu, i)) {
-> +                       cpumask_set_cpu(i, &cpu_llc_shared_map[cpu]);
-> +                       cpumask_set_cpu(cpu, &cpu_llc_shared_map[i]);
-> +               }
-> +       }
-> +}
-> +
-> +static inline void clear_cpu_llc_shared_map(int cpu)
-> +{
-> +       int i;
-> +
-> +       for_each_cpu(i, &cpu_llc_shared_setup_map) {
-> +               if (cpus_are_shared_llc(cpu, i)) {
-> +                       cpumask_clear_cpu(i, &cpu_llc_shared_map[cpu]);
-> +                       cpumask_clear_cpu(cpu, &cpu_llc_shared_map[i]);
-> +               }
-> +       }
-> +
-> +       cpumask_clear_cpu(cpu, &cpu_llc_shared_setup_map);
-> +}
-> +
->  static inline void set_cpu_sibling_map(int cpu)
->  {
->         int i;
-> @@ -406,6 +449,7 @@ int loongson_cpu_disable(void)
->  #endif
->         set_cpu_online(cpu, false);
->         clear_cpu_sibling_map(cpu);
-> +       clear_cpu_llc_shared_map(cpu);
->         calculate_cpu_foreign_map();
->         local_irq_save(flags);
->         irq_migrate_all_off_this_cpu();
-> @@ -573,6 +617,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
->         loongson_prepare_cpus(max_cpus);
->         set_cpu_sibling_map(0);
->         set_cpu_core_map(0);
-> +       set_cpu_llc_shared_map(0);
->         calculate_cpu_foreign_map();
->  #ifndef CONFIG_HOTPLUG_CPU
->         init_cpu_present(cpu_possible_mask);
-> @@ -614,6 +659,7 @@ asmlinkage void start_secondary(void)
->
->         set_cpu_sibling_map(cpu);
->         set_cpu_core_map(cpu);
-> +       set_cpu_llc_shared_map(cpu);
->
->         notify_cpu_starting(cpu);
->
-> --
-> 2.43.0
->
->
