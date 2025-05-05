@@ -1,90 +1,262 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24C1E22301
-	for <loongarch@lists.linux.dev>; Sun,  4 May 2025 02:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B91D19DF48
+	for <loongarch@lists.linux.dev>; Mon,  5 May 2025 04:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746324680; cv=none; b=GKvW220Zs6x9aF+Mc12KJB9JIwsMja+wysu+2YZLLdT9FMb3S3qqSjvFWAh5gnYImsma2+RS+oGhl91AgQ0PGlL6gGuIhJkLvqz9v7t7Zrp1L/oOWU1hPy9Uqr/+3P2mmcnGLfIcSFwqaFP36zoxpngZgfWmuEAOb6CIjktizAs=
+	t=1746421145; cv=none; b=Dy/GSR6FhTBZvP4s210bRqccfKCJ2sAvjv3RQdaivtbpppu+51BpDHyrZbJxDPWc/V+yKBx1SpcAAFGjFMIT3Ko70a4KrPnfAcLPtc4/5fWB4keuvYrYG0QPhrLay6qQIM5JgufgrOtOLpSXCYhIQeUI5i7CPW9GPp9I++WXg5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746324680; c=relaxed/simple;
-	bh=m/d7rSc/X+aQXzQ0IDooLNyaR8cZrb1ZN8xc7K7347I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cNNJv6twIew8vSHE9q2YsdYEVcuW7V357iekuAiGNHiphmeWjqkfBafEtJ68NIXaaBQp4Qkj/hsqsNDmO2kjGxPHs8SK3nHvL2WNWEuKJRIBFW+Hlvq7HtemGbnRcXLEvYVE18sJ/DWGK4gzt1g22JCEuHL91kg42JQmcAkLmz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.186])
-	by gateway (Coremail) with SMTP id _____8DxC3K7zBZoxnrTAA--.20259S3;
-	Sun, 04 May 2025 10:11:07 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.186])
-	by front1 (Coremail) with SMTP id qMiowMAxTRu3zBZoM7WuAA--.11681S2;
-	Sun, 04 May 2025 10:11:07 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH for 6.1.y] LoongArch: Fix build error due to backport
-Date: Sun,  4 May 2025 10:10:54 +0800
-Message-ID: <20250504021054.783045-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1746421145; c=relaxed/simple;
+	bh=K7s2g7BUqrF2uhZ/RQRKvPzy15IaDMLWYy/MInMArMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GCsdquq6m+uSm391y4NrEYyqU6PlIDy72sah9xM6whkHG69OsgO7W+0p4maVjvK/GBE4hEitKu1XTtZ/iZ+DIE23zF3yOL/eQpahIhMT4BxBURHHXOpwSTzP+XsRB8QLwIfqaVoowkt8OVgHH5aveS7cROgZZDoytg9k8XgAFfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tbUl1cR1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tbUl1cR1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0065C4CEF4
+	for <loongarch@lists.linux.dev>; Mon,  5 May 2025 04:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746421144;
+	bh=K7s2g7BUqrF2uhZ/RQRKvPzy15IaDMLWYy/MInMArMQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tbUl1cR1FVBN1yVzkCIZ38U+2oziyEQ4+g5z3n+Jvb+IgRec2lOzkHrhIIbaY72cb
+	 Jlix+qBOpRjodoP5fWl/+C5uZHLA7fb5DkllWDCFlxeQBMEBUa7mJPg6wbEUaV0BiD
+	 ai34i8JMnhinvlfecnvCVxo8Cjvi79ILLXbOD2uXLZxGB/50rpU3srWbCHf0thCxa1
+	 dqFk3Im41MDHqr/a3AHl2UTIRHTafCuQdOF/8/TZ8bQ/GjUCu6eCKrhHmLYoeSP+rT
+	 5bPQX8mh1J8drkSSJTsBu9nl0d8W5kySXNmXhZbCw6VOnauuCQcEAJcuNUkyZE+G0B
+	 wtqmWy3MwAaoQ==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso2120673a12.0
+        for <loongarch@lists.linux.dev>; Sun, 04 May 2025 21:59:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVitaXRnwtb/5gnTgis5+Op87a3gko5bmjVtc82iJPgWFglUgSjNEne72YHV6D6JxzBzOqH4kZ/sFU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwThMtXNLdkWwjWU80D7NP3jNQE1LIvkKK67n3Ft1aW3RsTVaas
+	sJ50TOHa5BQo5lKdcF85WsrSMzvkAIDdgtiLYL/e6N/erdMxTaqW99GDftIi4pj7rSIqA+nzdqO
+	v1+uDuHs3pczp8uq63qwZrWBS+pc=
+X-Google-Smtp-Source: AGHT+IG1lchCTSmjOeXTlVWNOKDNxSCiMmrVSg+nCFqgnE1LhOpMxr54poigqTD4VYCMVagIlxVTJFY1JBSjJcSej0E=
+X-Received: by 2002:a05:6402:2112:b0:5f4:ade4:88c5 with SMTP id
+ 4fb4d7f45d1cf-5faa8031175mr6421508a12.34.1746421143164; Sun, 04 May 2025
+ 21:59:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxTRu3zBZoM7WuAA--.11681S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JF48Cw47CryUWF4fXF1rKrX_yoWDtFcEgF
-	1Iv3yxKr48Xw12ywsxW3y5J3WUtanY9Fn0y3Zruw13Jas0grn5Gr4vv39akr1Sg3yUWr43
-	Kr909an8Aw17tosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUUUUU==
+References: <20250320-riscv_optimize_entry-v6-0-63e187e26041@rivosinc.com> <20250320-riscv_optimize_entry-v6-3-63e187e26041@rivosinc.com>
+In-Reply-To: <20250320-riscv_optimize_entry-v6-3-63e187e26041@rivosinc.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 5 May 2025 12:58:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4qAT-45=vEKDQ9zKWsoN+3XW9Sj5cTdfQwqE-aGJYzjQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFH04W6-dJK9c2_4Fnk38d3i97bZmImDonrAVMLvrJUAQY9c2hxFrmPdus
+Message-ID: <CAAhV-H4qAT-45=vEKDQ9zKWsoN+3XW9Sj5cTdfQwqE-aGJYzjQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] LoongArch: entry: Migrate ret_from_fork() to C
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In 6.1 there is no pmdp_get() definition, so use *pmd directly, in order
-to avoid such build error due to a recently backport:
+Hi, Charlie,
 
-arch/loongarch/mm/hugetlbpage.c: In function 'huge_pte_offset':                                                                                                                
-arch/loongarch/mm/hugetlbpage.c:50:25: error: implicit declaration of
-function 'pmdp_get'; did you mean 'ptep_get'?
-[-Wimplicit-function-declaration]                          
-   50 |         return pmd_none(pmdp_get(pmd)) ? NULL : (pte_t *) pmd;                                                                                                         
-      |                         ^~~~~~~~                                                                                                                                       
-      |                         ptep_get                            
+There are some small issues.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/mm/hugetlbpage.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Mar 21, 2025 at 1:29=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
+>
+> LoongArch is the only architecture that calls
+> syscall_exit_to_user_mode() from asm. Move the call into C so that this
+> function can be inlined across all architectures.
+>
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>  arch/loongarch/include/asm/asm-prototypes.h |  8 +++++++
+>  arch/loongarch/kernel/entry.S               | 22 +++++++++----------
+>  arch/loongarch/kernel/process.c             | 33 +++++++++++++++++++++++=
+------
+>  3 files changed, 45 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch=
+/include/asm/asm-prototypes.h
+> index 51f224bcfc654228ae423e9a066b25b35102a5b9..704066b4f7368be15be960fad=
+bcd6c2574bbf6c0 100644
+> --- a/arch/loongarch/include/asm/asm-prototypes.h
+> +++ b/arch/loongarch/include/asm/asm-prototypes.h
+> @@ -12,3 +12,11 @@ __int128_t __ashlti3(__int128_t a, int b);
+>  __int128_t __ashrti3(__int128_t a, int b);
+>  __int128_t __lshrti3(__int128_t a, int b);
+>  #endif
+> +
+> +asmlinkage void noinstr __no_stack_protector ret_from_fork(struct task_s=
+truct *prev,
+> +                                                          struct pt_regs=
+ *regs);
+> +
+> +asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(stru=
+ct task_struct *prev,
+> +                                                                   struc=
+t pt_regs *regs,
+> +                                                                   int (=
+*fn)(void *),
+> +                                                                   void =
+*fn_arg);
+> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.=
+S
+> index 48e7e34e355e83eae8165957ba2eac05a8bf17df..2abc29e573810e000f2fef464=
+6ddca0dbb80eabe 100644
+> --- a/arch/loongarch/kernel/entry.S
+> +++ b/arch/loongarch/kernel/entry.S
+> @@ -77,24 +77,22 @@ SYM_CODE_START(handle_syscall)
+>  SYM_CODE_END(handle_syscall)
+>  _ASM_NOKPROBE(handle_syscall)
+>
+> -SYM_CODE_START(ret_from_fork)
+> +SYM_CODE_START(ret_from_fork_asm)
+>         UNWIND_HINT_REGS
+> -       bl              schedule_tail           # a0 =3D struct task_stru=
+ct *prev
+> -       move            a0, sp
+> -       bl              syscall_exit_to_user_mode
+> +       move            a1, sp
+> +       bl              ret_from_fork
+>         RESTORE_STATIC
+>         RESTORE_SOME
+>         RESTORE_SP_AND_RET
+> -SYM_CODE_END(ret_from_fork)
+> +SYM_CODE_END(ret_from_fork_asm)
+>
+> -SYM_CODE_START(ret_from_kernel_thread)
+> +SYM_CODE_START(ret_from_kernel_thread_asm)
+>         UNWIND_HINT_REGS
+> -       bl              schedule_tail           # a0 =3D struct task_stru=
+ct *prev
+> -       move            a0, s1
+> -       jirl            ra, s0, 0
+> -       move            a0, sp
+> -       bl              syscall_exit_to_user_mode
+> +       move            a1, sp
+> +       move            a2, s0
+> +       move            a3, s1
+> +       bl              ret_from_kernel_thread
+>         RESTORE_STATIC
+>         RESTORE_SOME
+>         RESTORE_SP_AND_RET
+> -SYM_CODE_END(ret_from_kernel_thread)
+> +SYM_CODE_END(ret_from_kernel_thread_asm)
+> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/proc=
+ess.c
+> index 6e58f65455c7ca3eae2e88ed852c8655a6701e5c..98bc60d7c550fcc0225e8452f=
+81a7d6cd7888015 100644
+> --- a/arch/loongarch/kernel/process.c
+> +++ b/arch/loongarch/kernel/process.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/errno.h>
+> +#include <linux/entry-common.h>
+For alpa-betical order, it should be before errno.h.
 
-diff --git a/arch/loongarch/mm/hugetlbpage.c b/arch/loongarch/mm/hugetlbpage.c
-index cf3b8785a921..70b4a51885c2 100644
---- a/arch/loongarch/mm/hugetlbpage.c
-+++ b/arch/loongarch/mm/hugetlbpage.c
-@@ -47,7 +47,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr,
- 				pmd = pmd_offset(pud, addr);
- 		}
- 	}
--	return pmd_none(pmdp_get(pmd)) ? NULL : (pte_t *) pmd;
-+	return pmd_none(*pmd) ? NULL : (pte_t *) pmd;
- }
- 
- /*
--- 
-2.47.1
+>  #include <linux/sched.h>
+>  #include <linux/sched/debug.h>
+>  #include <linux/sched/task.h>
+> @@ -33,6 +34,7 @@
+>  #include <linux/prctl.h>
+>  #include <linux/nmi.h>
+>
+> +#include <asm/asm-prototypes.h>
+For alpa-betical order, it should be after asm.h.
 
+
+Huacai
+
+>  #include <asm/asm.h>
+>  #include <asm/bootinfo.h>
+>  #include <asm/cpu.h>
+> @@ -47,6 +49,7 @@
+>  #include <asm/pgtable.h>
+>  #include <asm/processor.h>
+>  #include <asm/reg.h>
+> +#include <asm/switch_to.h>
+>  #include <asm/unwind.h>
+>  #include <asm/vdso.h>
+>
+> @@ -63,8 +66,9 @@ EXPORT_SYMBOL(__stack_chk_guard);
+>  unsigned long boot_option_idle_override =3D IDLE_NO_OVERRIDE;
+>  EXPORT_SYMBOL(boot_option_idle_override);
+>
+> -asmlinkage void ret_from_fork(void);
+> -asmlinkage void ret_from_kernel_thread(void);
+> +asmlinkage void restore_and_ret(void);
+> +asmlinkage void ret_from_fork_asm(void);
+> +asmlinkage void ret_from_kernel_thread_asm(void);
+>
+>  void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long =
+sp)
+>  {
+> @@ -138,6 +142,23 @@ int arch_dup_task_struct(struct task_struct *dst, st=
+ruct task_struct *src)
+>         return 0;
+>  }
+>
+> +asmlinkage void noinstr __no_stack_protector ret_from_fork(struct task_s=
+truct *prev,
+> +                                                          struct pt_regs=
+ *regs)
+> +{
+> +       schedule_tail(prev);
+> +       syscall_exit_to_user_mode(regs);
+> +}
+> +
+> +asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(stru=
+ct task_struct *prev,
+> +                                                                   struc=
+t pt_regs *regs,
+> +                                                                   int (=
+*fn)(void *),
+> +                                                                   void =
+*fn_arg)
+> +{
+> +       schedule_tail(prev);
+> +       fn(fn_arg);
+> +       syscall_exit_to_user_mode(regs);
+> +}
+> +
+>  /*
+>   * Copy architecture-specific thread state
+>   */
+> @@ -165,8 +186,8 @@ int copy_thread(struct task_struct *p, const struct k=
+ernel_clone_args *args)
+>                 p->thread.reg03 =3D childksp;
+>                 p->thread.reg23 =3D (unsigned long)args->fn;
+>                 p->thread.reg24 =3D (unsigned long)args->fn_arg;
+> -               p->thread.reg01 =3D (unsigned long)ret_from_kernel_thread=
+;
+> -               p->thread.sched_ra =3D (unsigned long)ret_from_kernel_thr=
+ead;
+> +               p->thread.reg01 =3D (unsigned long)ret_from_kernel_thread=
+_asm;
+> +               p->thread.sched_ra =3D (unsigned long)ret_from_kernel_thr=
+ead_asm;
+>                 memset(childregs, 0, sizeof(struct pt_regs));
+>                 childregs->csr_euen =3D p->thread.csr_euen;
+>                 childregs->csr_crmd =3D p->thread.csr_crmd;
+> @@ -182,8 +203,8 @@ int copy_thread(struct task_struct *p, const struct k=
+ernel_clone_args *args)
+>                 childregs->regs[3] =3D usp;
+>
+>         p->thread.reg03 =3D (unsigned long) childregs;
+> -       p->thread.reg01 =3D (unsigned long) ret_from_fork;
+> -       p->thread.sched_ra =3D (unsigned long) ret_from_fork;
+> +       p->thread.reg01 =3D (unsigned long) ret_from_fork_asm;
+> +       p->thread.sched_ra =3D (unsigned long) ret_from_fork_asm;
+>
+>         /*
+>          * New tasks lose permission to use the fpu. This accelerates con=
+text
+>
+> --
+> 2.43.0
+>
