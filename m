@@ -1,145 +1,109 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85F817A2FA
-	for <loongarch@lists.linux.dev>; Tue,  6 May 2025 06:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69A02641CA
+	for <loongarch@lists.linux.dev>; Tue,  6 May 2025 08:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746512606; cv=none; b=sEMR1dukzSeYNsP2ffniI6L7WLGdJrzY5GmCPhjFrmXqKZ564pX+Rl4f0mdp0sxfQuRWhxKXewC5e3ZP9o9iZBsnYmGPS633D6F2XJNUREwGtYEevQWa4OH4VXVZ8xjltkGMSptsPAS5Uw2znBy9O+f5mgwhDeTrJaEwkUi8oUc=
+	t=1746521953; cv=none; b=CWxkoeAp3mwkNStHcB7qlIjBwWgZjidBtME991KXzPEnk/+jpHkdsgcx5XmP8Z37TVo5R2AZOKcC+gjNqQQbIqNS5kVuUsdIXx0SRKAn7IQzSk/rkiqCj8X/wciIpJ6hVTeS6rj5ZWxgV6IuWDZOU/wCge2WuX7Xji6EcxKTEw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746512606; c=relaxed/simple;
-	bh=RIkJJP+RXcI6vPURQiIkAusnMMfRzBhxynerb81vkFY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lKcfb7hpOewfIfVv19pUz0Qceb3pMnv9L0i3q4x9asvPlNLHJLySlDJJFfpRjV/aTax/+0kMDIhaRuQI78iltfFTKmX89uYdAP1/lnzb50gCtPcPGf0WhsiP6XK0K4GJBa/witfVxTKfoowMLu1IVVR7DWxMCCoplSAn1K4EkDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwCXnXnTqhloX7+oAg--.14041S2;
-	Tue, 06 May 2025 14:23:15 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwA3yyTJqhloDVAUAA--.24S3;
-	Tue, 06 May 2025 14:23:06 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan.Cameron@huawei.com,
-	dan.j.williams@intel.com,
-	rppt@kernel.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	akpm@linux-foundation.org,
-	alison.schofield@intel.com,
-	rrichter@amd.com,
-	bfaccini@nvidia.com,
-	haibo1.xu@intel.com,
-	david@redhat.com,
-	chenhuacai@kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	chenbaozi@phytium.com.cn,
-	loongarch@lists.linux.dev,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Date: Tue,  6 May 2025 14:22:45 +0800
-Message-Id: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746521953; c=relaxed/simple;
+	bh=SMLklkMtwkEJ27okmODX/Cq94tNArRjGlPeeM5s/2c4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=sp1bgrIQrj2Tx3vBJ6y7den1M8dJngqtr2kYtBBtnT5pv6Vkn+tiNTizrQnfqVFsQzVCG1+yFxmpU1g19ERRPJavxC1lIuC6XEwtxtnIEm50Yrt97y6JreH3/NlGv3csME7Cyv6qINFYHmKmdVALw6Qc+5l5PWNxZh6KGxV5wu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AL1w9akL; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AL1w9akL"
+Message-ID: <7e56091d-0e91-44ef-b314-facb102ee468@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746521946;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cuju97zzlBFsfo/a9MaZFctzRxnL5LXNm5kzVfm8v6s=;
+	b=AL1w9akLe9WKnXJLs8Ijkkpms5+7rMh4HE04fCiQ6O/QZFkWCLvu0T2WSEOi3/kllsgx3g
+	VdSj0EmH+tGbvrSOxD+QYDo2h+J0H2aL2V3pYUb9AiTQuvgosEPOxLQzkdoUddvtDsG8qB
+	wab2CZiAB6XMIRREFGekSScfsTSfqrU=
+Date: Tue, 6 May 2025 16:58:50 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Subject: Re: [PATCH 2/4] dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
+To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+ Aradhya Bhatia <a-bhatia1@ti.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250501044239.9404-2-ziyao@disroot.org>
+ <20250501044239.9404-4-ziyao@disroot.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250501044239.9404-4-ziyao@disroot.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwA3yyTJqhloDVAUAA--.24S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWgRLLwIYwBJsb
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXFW7Ar4xuF4DCry5trWrKrg_yoW5uFyrpa
-	yUG3Z8XF4xGw1xGw1xuryj9w1S93WrKr1DJFZrGr43ZF4rWry2vr4UtFsxZF1DtrW7Zr1r
-	Wr4vyw15uw1rAF7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+X-Migadu-Flow: FLOW_OUT
 
-acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-with the expectation that numa_cleanup_meminfo moves them to
-numa_reserved_meminfo. There is no need for that indirection when it is
-known in advance that these unpopulated ranges are meant for
-numa_reserved_meminfo in support of future hotplug / CXL provisioning.
+在 5/1/25 12:42 PM, Yao Zi 写道:
+> Ninenine Pi is an Loongson 2K0300-based development board produced by
+I think "Ninenine Pi" doesn't make sense. I browsed 
+<https://bbs.ctcisz.com/forum.php?mod=forumdisplay&fid=2> and found that 
+the Chinese name of this development board is "久久派". Interestingly, its 
+selling price is 99 yuan. In Chinese, the Roman numeral "9" has the same 
+pronunciation as the Chinese character "久". It seems that you intended 
+to name the development board after its selling price. But shouldn't it 
+be "Ninety-nine Pi" in English? Or "99 Pi"? Perhaps "Jiujiu Pi" is a 
+better option?
 
-Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-ranges directly.
 
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
----
+Thanks,
+Yanteng
 
-Changes in v2 (Thanks to Dan & Alison):
-- Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-- Add comments to describe the usage of numa_add_reserved_memblk()
-- Updating the commit message to clarify the purpose of the patch
 
-By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
-
- drivers/acpi/numa/srat.c     |  2 +-
- include/linux/numa_memblks.h |  1 +
- mm/numa_memblks.c            | 22 ++++++++++++++++++++++
- 3 files changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 0a725e46d017..751774f0b4e5 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 	}
- 
--	if (numa_add_memblk(node, start, end) < 0) {
-+	if (numa_add_reserved_memblk(node, start, end) < 0) {
- 		/* CXL driver must handle the NUMA_NO_NODE case */
- 		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
- 			node, start, end);
-diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
-index dd85613cdd86..991076cba7c5 100644
---- a/include/linux/numa_memblks.h
-+++ b/include/linux/numa_memblks.h
-@@ -22,6 +22,7 @@ struct numa_meminfo {
- };
- 
- int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
- void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
- 
- int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
-diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-index ff4054f4334d..541a99c4071a 100644
---- a/mm/numa_memblks.c
-+++ b/mm/numa_memblks.c
-@@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
- 	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
- }
- 
-+/**
-+ * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
-+ * @nid: NUMA node ID of the new memblk
-+ * @start: Start address of the new memblk
-+ * @end: End address of the new memblk
-+ *
-+ * Add a new memblk to the numa_reserved_meminfo.
-+ *
-+ * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
-+ * against memblock_type information and moves any that intersect reserved
-+ * ranges to numa_reserved_meminfo. However, when that information is known
-+ * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
-+ * to numa_reserved_meminfo directly.
-+ *
-+ * RETURNS:
-+ * 0 on success, -errno on failure.
-+ */
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
-+{
-+	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
-+}
-+
- /**
-  * numa_cleanup_meminfo - Cleanup a numa_meminfo
-  * @mi: numa_meminfo to clean up
--- 
-2.34.1
+> CTCISZ. Features include,
+> 
+> - 512MiB DDR4 RAM
+> - On-board eMMC storage
+> - Optional SD Card support
+> - 2 USB 2.0 Ports (OTG and HOST)
+> - 1 GbE Ethernet port
+> - Optional WiFi/BT support
+> - Audio output through 3.5mm phone connector
+> - Optional display output through RAW RGB interface
+> 
+> Add compatible string for the board.
+> 
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>   Documentation/devicetree/bindings/loongarch/loongson.yaml | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/loongarch/loongson.yaml b/Documentation/devicetree/bindings/loongarch/loongson.yaml
+> index e1a4a97b7576..aac4af9ee97a 100644
+> --- a/Documentation/devicetree/bindings/loongarch/loongson.yaml
+> +++ b/Documentation/devicetree/bindings/loongarch/loongson.yaml
+> @@ -14,6 +14,11 @@ properties:
+>       const: '/'
+>     compatible:
+>       oneOf:
+> +      - description: CTCISZ Ninenine Pi
+> +        items:
+> +          - const: ctcisz,ninenine-pi
+> +          - const: loongson,ls2k0300
+> +
+>         - description: Loongson-2K0500 processor based boards
+>           items:
+>             - const: loongson,ls2k0500-ref
 
