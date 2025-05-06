@@ -1,109 +1,81 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8845A27F18F
-	for <loongarch@lists.linux.dev>; Tue,  6 May 2025 12:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E06820A5F2
+	for <loongarch@lists.linux.dev>; Tue,  6 May 2025 13:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746533775; cv=none; b=C/9Qaa8pwAiudLCSn8FKDZJA5OcUDuS1TfhmfsqtEKCVvc+2R3Ln0RfD1MXqyes0M4FPGoeCH+Tu0J9TRwnll/Z5u2ZWxetYoFnzZqm1lGWJZk8EBSJ0GE9+SupMbdnQSc4D3sGkwo7XNEkxLzdcjPT+DGtTexgV/jvLDsmSNIE=
+	t=1746537163; cv=none; b=f4egTkFnx6CKXkYnMLsCpClyzOrYmBbRL+pMNvHBks69+Vl44IhCdhbRaEu1gHhrpHPq2zkzeJmfx9FnQ+7n5yqJfjA2O5N7FkLYt5WVRP/2davxm9uKh8n5cQB8Rmi1ib5YFPA7p2Wn9E7BqhfPysGLRcFt25GxG+/WBn627Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746533775; c=relaxed/simple;
-	bh=oEwS2B/SEVhvr/PEsjOt8P75XFO79S+SKeaI3RLVp/w=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=W8VxrriwXm7SjHwc5DgGc0Z+WV4qJ20E5ZnUeWIgiYxlsHyp3vneARLU0jRCEB7GpmoRJQbdBaygRkoiXJVfHQcOBS32baCIcWAezpos2XLypN1dw9GNKl520YIzVUfk0RZzx+EG6mgxYVCf+S0Gj0bQrziTxDlMNSe2F/+Aj6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8AxbeKI_Rlo+LPWAA--.51775S3;
-	Tue, 06 May 2025 20:16:08 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMCxvMaE_RloXPG2AA--.50748S2;
-	Tue, 06 May 2025 20:16:06 +0800 (CST)
-Subject: Re: [PATCH v9 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO
- DRIVER entry
-To: Yanteng Si <si.yanteng@linux.dev>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
- peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca,
- linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <20250506032053.11147-1-zhaoqunqin@loongson.cn>
- <a03b4963-55aa-4a75-b795-1e8f0db7ec89@linux.dev>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <00196f77-1060-fe67-3e6b-6721092207d6@loongson.cn>
-Date: Tue, 6 May 2025 20:14:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1746537163; c=relaxed/simple;
+	bh=WLluURKbm4eGnI6fPXUW+jlJLn5vL0ww++Ei8KhjTqI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=n7d7jW8ESSjdQ4lCInCJSyjg6Trolvug9Yzji8x7ImzuD0kcI1+wZ8qdawFfqW1Asu5tLitb/kOl8znIohPZDAVFENAbzPrCP/06YJt+WjDtpQ8dMnSpSVZKSpj6Fx0TuwbgC32tcQCwjcqMso2bKKf6pGi1csjlO5nWihkg+KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=IR10GhDy; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="IR10GhDy"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 026A2403A7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1746537161; bh=m8AIbhmxSPITdk7Wy5PZ0OjI7Z8rf39QNecnep+a59k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=IR10GhDySlD3IFtodkh3Iiciiwj5Q6TYxO3X293u114YIfE2BHgi+c+h2PzLTuzyn
+	 jy/A5sZ7XiVneRvAJxHHzFDKuQcHzrbnZUs8C8fUcerorgP7IdbJ8G8LeleT5D54kU
+	 +yc0s54sVFG+l0bEcdOWuM1QkqYG9Ctw14RRChqP8sSen23qAN0OEAnqXSFwXgwRKB
+	 H53Rb/VuCXdQ8yoGFChoknszcKW6S44N1YPagqZe2Cctv6X+AgOjXVPsj+A7ydmr3C
+	 x45eO054b/PWztWYBPbT7VOmuYxcIbu4+azb+Hhp9AMh2SAQukX6tEDwG16fWcLV98
+	 0qyzSvfJc03cQ==
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 026A2403A7;
+	Tue,  6 May 2025 13:12:40 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: WangYuli <wangyuli@uniontech.com>, akpm@linux-foundation.org,
+ rostedt@goodmis.org, paulmck@kernel.org, thuth@redhat.com, bp@alien8.de,
+ ardb@kernel.org, gregkh@linuxfoundation.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
+ tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, chris@zankel.net,
+ jcmvbkbc@gmail.com, WangYuli <wangyuli@uniontech.com>
+Subject: Re: [PATCH] Documentation/kernel-parameters: Update memtest parameter
+In-Reply-To: <0FC3D21CA22E8251+20250428034746.21216-1-wangyuli@uniontech.com>
+References: <0FC3D21CA22E8251+20250428034746.21216-1-wangyuli@uniontech.com>
+Date: Tue, 06 May 2025 07:12:37 -0600
+Message-ID: <87a57px4qi.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <a03b4963-55aa-4a75-b795-1e8f0db7ec89@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMCxvMaE_RloXPG2AA--.50748S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Jw4fJFy7ZF48ury7WFWUKFX_yoWkKFg_Ca
-	yIkr1kGr18Jrn2g3W2gr97XwnxWa98Xa4rW3WUtw1fWw1jvFyDGFs7Cw1fA3WfWFWkGFnx
-	Jrn7WFZ7Ary2vosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1l
-	Yx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
-	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
+Content-Type: text/plain
 
+WangYuli <wangyuli@uniontech.com> writes:
 
-在 2025/5/6 下午5:03, Yanteng Si 写道:
-> 在 5/6/25 11:20 AM, Qunqin Zhao 写道:
->> Changes to Loongson TPM driver would be best reviewed by the Loongson
->> crypto driver maintainers.
->>
->> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
->> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
->> ---
->> v8-v9: None
->> v7: Added tag from Jarkko and Huacai
->> v6: "tpm_lsse.c" -> "tpm_loongson"
->> v4-v5: None
->>
->>   MAINTAINERS | 1 +
->>   1 file changed, 1 insertion(+)
-> I'm just curious. Why is this patch kept outside the tmp_loongson 
-> patch set?
-
-Hi, Yanteng. Thanks for your reply.
-
-
-When sending this patch, git send-email prompted "too many commands"
-
-and disconnected from the server. Then I sent this patch separately.
-
-Even after setting sendemail.smtpBatchSize to 100, I still have this 
-problem.
-
-Now I am trying to find  Loongson SMTP server administrator to solve it.
-
-Have you ever encountered this kind of problem?
-
-
-BR, Qunqin.
-
+> LoongArch, MIPS and XTENSA has supported memtest now.
+> Update documentation for them.
 >
-> <https://lore.kernel.org/loongarch/20250506031947.11130-1-zhaoqunqin@loongson.cn/T/#mf09225c286a8e2b92a677720afafb9e20be57a18> 
+> Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=dce44566192ec0b38597fdfd435013c2d54653ff
+> Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fb8e9f59d6f292c3d9fea6c155c22ea5fc3053ab
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->
-> Thanks,
-> Yanteng
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index d9fd26b95b34..eeba55deb38d 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3620,7 +3620,7 @@
+>  			Note that even when enabled, there are a few cases where
+>  			the feature is not effective.
+>  
+> -	memtest=	[KNL,X86,ARM,M68K,PPC,RISCV,EARLY] Enable memtest
+> +	memtest=	[KNL,X86,ARM,LOONGARCH,MIPS,M68K,PPC,RISCV,XTENSA,EARLY] Enable memtest
 
+Applied, thanks.
+
+jon
