@@ -1,234 +1,256 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D2D278750;
-	Tue,  6 May 2025 13:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C3728137A
+	for <loongarch@lists.linux.dev>; Tue,  6 May 2025 14:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538921; cv=none; b=umoGpfWDybFM614BQRomTv5mzXJXvHu3x7B63XbuOENEKWjzgUNJjS8Ver+fC2g2NT/+A7XNtaYaZ3OnsgtO5hA+5wLEf81nxeI8aUWsjv8ZpPIjQQjhHTn6yfeCC/qzGXJldQtnDTG3m7fz9O3GTJPapOrPd5AodgTB1w6CArs=
+	t=1746540799; cv=none; b=RY/bdeOOeY52zqboluFs7DXqf7TixVnKzAX7UhYIgSriPspPvoMz9g4O6+EOThpqLuEQDCuZXPMqVmUMsSDcpsAp18eFYJVzAaouVzABtAmEol9yvIs9GsT6mFB+LPSjSEEoRXdmyCMFBijKcL3fzx9XpzDFg9hvdKB7avpQSyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746538921; c=relaxed/simple;
-	bh=xid3ylr8PUedVja8ADfCHrXz8QvAkNFfRtSA6wAUKzs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=e9FZdluA3SZ8NSW968QN7iixXpBgNvoXWKTIx0fpaBVATwdHVeKOasdexMhzBki3gZCOOfAPvCq0ErDw5uAA575cQbpA45kjkn9p2EafF0OKZtIr6WnyQPEOV/R8YbSiVpJPW1Rbl0oqopY8DPMmUWz95HouutGMTWeDZCxqyH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q2sp1Y2+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TpwMlv1G; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746540799; c=relaxed/simple;
+	bh=dvnpBTc5+V4/wKRdMg2GHV3TaYrI7wpbz7l2TiXkoro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=e7Uf58y7LbrpvCdvj/v83F0Y9SbvMKcLxhb2o76ch8yLv8bap2GPnm3FjvAoLez8GRwlfZsgU7yMw9fWQUZcg3DqRQVZUzJjzG+XL3+s8Lm4ZnmVHQ+DOvIwOw79Xw8b/POLIj7jEfB5WAvdIYPHCW7cIicc18bMNwCwmWmcuCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KO8PBTyP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q2sp1Y2+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TpwMlv1G"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746538917;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KO8PBTyP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746540796;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6KIDdrTanUmKEwxmKjGlY7d/jG09aY8AhXQLqxXMqzQ=;
-	b=Q2sp1Y2+Xq68ZzKhzYZogyTqNgLrdCaqNxaBagnWo870Q1OnSlOsgKyJiav900B6qyHdm1
-	L6CeSo6gv9d56bZGRLT6noxxbqxOZK3rDK5wNppbXvLTWKw8LMJtjCUcmlue78s7S3WeCj
-	cGaZhrh/vHnUIKTf7/VPznBk4rnSb/V1DiHLfKM6i+fPMllG+tdC9OSYa+o/gKOOOFIAd4
-	wKZgHD7rrMblwdpyngCi6FxefrHrxQAy1i0o64ef+KBg1TFRbwBYipPTxKQQWDHug5YkxA
-	jUghLPlkOdAMplVZEriWKt0NWtKPEESJceuOBHnYGkEwGNoBz8Bx7dGduCJddw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746538917;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6KIDdrTanUmKEwxmKjGlY7d/jG09aY8AhXQLqxXMqzQ=;
-	b=TpwMlv1G6t0w5OOsJhlXfdhYR45rTjxnfzhQF2m3v1mOUEPfqGgpW9ah4wNI+4YXMTf9UM
-	JFzC30iieDB1dnAA==
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: maz@kernel.org, linux-kernel@vger.kernel.org, "Jiri Slaby (SUSE)"
- <jirislaby@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Abhinav
- Kumar <quic_abhinavk@quicinc.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>, Alexandre Ghiti
- <alex@ghiti.fr>, Alexandre Torgue <alexandre.torgue@foss.st.com>, Alex
- Deucher <alexander.deucher@amd.com>, Alex Shi <alexs@kernel.org>, Alim
- Akhtar <alim.akhtar@samsung.com>, Alvin =?utf-8?Q?=C5=A0ipraga?=
- <alsi@bang-olufsen.dk>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, amd-gfx@lists.freedesktop.org,
- Amit Kucheria <amitk@kernel.org>, Anatolij Gustschin <agust@denx.de>, Andi
- Shyti <andi.shyti@kernel.org>, Andreas =?utf-8?Q?F=C3=A4rber?=
- <afaerber@suse.de>, Andreas
- Kemnade <andreas@kemnade.info>, Andrew Jeffery
- <andrew@codeconstruct.com.au>, Andrew Lunn <andrew@lunn.ch>, Andy
- Shevchenko <andy@kernel.org>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Antoine Tenart
- <atenart@kernel.org>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, Anup
- Patel <anup@brainfault.org>, Arnd Bergmann <arnd@arndb.de>,
- asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>, Baruch Siach
- <baruch@tkos.co.il>, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
- Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, Bjorn Andersson
- <andersson@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Borislav
- Petkov <bp@alien8.de>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, Corentin Chary <corentin.chary@gmail.com>,
- Daire McNamara <daire.mcnamara@microchip.com>, Daniel Golle
- <daniel@makrotopia.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- Daniel Mack <daniel@zonque.org>, Daniel Palmer <daniel@thingy.jp>, Dave
- Hansen <dave.hansen@linux.intel.com>, David Airlie <airlied@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, DENG Qingfang <dqfext@gmail.com>,
- Dinh Nguyen <dinguyen@kernel.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Dongliang Mu <dzm91@hust.edu.cn>, Doug
- Berger <opendmb@gmail.com>, dri-devel@lists.freedesktop.org, Eddie James
- <eajames@linux.ibm.com>, Eric Dumazet <edumazet@google.com>, Fabio Estevam
- <festevam@gmail.com>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Geoff Levand <geoff@infradead.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Gregory Clement
- <gregory.clement@bootlin.com>, Guo Ren <guoren@kernel.org>, Hans de Goede
- <hdegoede@redhat.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Haojian
- Zhuang <haojian.zhuang@linaro.org>, Heiko Stuebner <heiko@sntech.de>,
- Herve Codina <herve.codina@bootlin.com>, Hou Zhiqiang
- <Zhiqiang.Hou@nxp.com>, "H. Peter Anvin" <hpa@zytor.com>, Huacai Chen
- <chenhuacai@kernel.org>, Changhuang Liang
- <changhuang.liang@starfivetech.com>, Chen-Yu Tsai <wens@csie.org>,
- "Chester A. Unal" <chester.a.unal@arinc9.com>, Christian =?utf-8?Q?K?=
- =?utf-8?Q?=C3=B6nig?=
- <christian.koenig@amd.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Chris Zankel <chris@zankel.net>, Ilpo
- =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Imre Kaloz
- <kaloz@openwrt.org>,
- Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>, James
- Morse <james.morse@arm.com>, Janne Grunau <j@jannau.net>, Janusz
- Krzysztofik <jmkrzyszt@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Jassi
- Brar <jassisinghbrar@gmail.com>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Jianjun
- Wang <jianjun.wang@mediatek.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Jim Quinlan <jim2101024@gmail.com>,
- Jingoo Han <jingoohan1@gmail.com>, Joel Stanley <joel@jms.id.au>, Johannes
- Berg <johannes@sipsolutions.net>, John Crispin <john@phrozen.org>, John
- Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonas Bonn
- <jonas@southpole.se>, Jonathan Cameron <jic23@kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Jonathan Hunter <jonathanh@nvidia.com>, Jonathan
- =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Joyce Ooi
- <joyce.ooi@intel.com>,
- Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>, Keerthy
- <j-keerthy@ti.com>, Kevin Hilman <khilman@baylibre.com>, Konrad Dybcio
- <konradybcio@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Krzysztof
- =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Kunihiko Hayashi
- <hayashi.kunihiko@socionext.com>, Lakshmi Sowjanya D
- <lakshmi.sowjanya.d@intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Lee
- Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij
- <linus.walleij@linaro.org>, Linus Walleij <linusw@kernel.org>,
- linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
- linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-remoteproc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
- linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-um@lists.infradead.org, linux-wireless@vger.kernel.org,
- loongarch@lists.linux.dev, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Ludovic Desroches <ludovic.desroches@microchip.com>, Lukasz Luba
- <lukasz.luba@arm.com>, "Luke D. Jones" <luke@ljones.dev>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Marek =?utf-8?Q?Beh=C3=BAn?=
- <kabel@kernel.org>, Marijn
- Suijten <marijn.suijten@somainline.org>, Mark Brown <broonie@kernel.org>,
- Mark-PK Tsai <mark-pk.tsai@mediatek.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Max Filippov <jcmvbkbc@gmail.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Mengyuan Lou <mengyuanlou@net-swift.com>,
- Michael Buesch <m@bues.ch>, Michael Ellerman <mpe@ellerman.id.au>, Michal
- Simek <michal.simek@amd.com>, Miodrag Dinic <miodrag.dinic@mips.com>,
- Naveen N Rao <naveen@kernel.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, netdev@vger.kernel.org, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Nicholas Piggin <npiggin@gmail.com>, Nikhil Agarwal
- <nikhil.agarwal@amd.com>, Nipun Gupta <nipun.gupta@amd.com>, Nishanth
- Menon <nm@ti.com>, Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, Palmer
- Dabbelt
- <palmer@dabbelt.com>, Paolo Abeni <pabeni@redhat.com>, Paul Cercueil
- <paul@crapouillou.net>, Paul Walmsley <paul.walmsley@sifive.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>, Peter Rosin
- <peda@axentia.se>, Philipp Zabel <p.zabel@pengutronix.de>, Piotr
- Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
- platform-driver-x86@vger.kernel.org, Prasad Kumpatla
- <quic_pkumpatl@quicinc.com>, Qiang Zhao <qiang.zhao@nxp.com>, Qin Jian
- <qinjian@cqplus1.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Randy
- Dunlap <rdunlap@infradead.org>, Ray Jui <rjui@broadcom.com>, Rengarajan
- Sundararajan <Rengarajan.S@microchip.com>, Richard Cochran
- <richardcochran@gmail.com>, Richard Weinberger <richard@nod.at>, Rich
- Felker <dalias@libc.org>, Rob Clark <robdclark@gmail.com>, Robert Jarzmik
- <robert.jarzmik@free.fr>, Robert Richter <rric@kernel.org>, Rob Herring
- <robh@kernel.org>, Roger Quadros <rogerq@kernel.org>, Russell King
- <linux@armlinux.org.uk>, Ryan Chen <ryan_chen@aspeedtech.com>, Ryder Lee
- <ryder.lee@mediatek.com>, Samuel Holland <samuel@sholland.org>, Santosh
- Shilimkar <ssantosh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Scott Branden <sbranden@broadcom.com>, Scott Wood <oss@buserror.net>, Sean
- Paul <sean@poorly.run>, Sean Wang <sean.wang@kernel.org>, Sean Wang
- <sean.wang@mediatek.com>, Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>, Sergio Paracuellos
- <sergio.paracuellos@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Shawn Lin
- <shawn.lin@rock-chips.com>, Siddharth Vadapalli <s-vadapalli@ti.com>,
- Simona Vetter <simona@ffwll.ch>, Stafford Horne <shorne@gmail.com>, Stefan
- Kristiansson <stefan.kristiansson@saunalahti.fi>, Stephen Boyd
- <sboyd@kernel.org>, Sven Peter <sven@svenpeter.dev>, Takashi Iwai
- <tiwai@suse.com>, Talel Shenhar <talel@amazon.com>, Tero Kristo
- <kristo@kernel.org>, Thangaraj Samynathan <Thangaraj.S@microchip.com>,
- Thara Gopinath <thara.gopinath@gmail.com>, Thierry Reding
- <thierry.reding@gmail.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Toan Le <toan@os.amperecomputing.com>,
- Tony Lindgren <tony@atomide.com>, Tony Luck <tony.luck@intel.com>,
- UNGLinuxDriver@microchip.com, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>,
- Vignesh Raghavendra <vigneshr@ti.com>, Vineet Gupta <vgupta@kernel.org>,
- Vladimir Oltean <olteanv@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>,
- WANG Xuerui <kernel@xen0n.name>, Woojung Huh <woojung.huh@microchip.com>,
- x86@kernel.org, Yanteng Si <si.yanteng@linux.dev>, Yoshinori Sato
- <ysato@users.sourceforge.jp>, Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v2 00/57] irqdomain: Cleanups and Documentation
-In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
-References: <20250319092951.37667-1-jirislaby@kernel.org>
-Date: Tue, 06 May 2025 15:41:57 +0200
-Message-ID: <874ixxonyy.ffs@tglx>
+	bh=UFcgBeXDokvr+kUt+Nx4wd/ULZnjMDwH1N2JLsWAOOw=;
+	b=KO8PBTyPZxY9cAOtCPYyFjwSiN/wNOgbWV+YemoYvrx88icew8wprVcvnBJIYwCUEl1SSc
+	E49KQswV4JFBup6D7oD7RaIzXQTe+vpASykTR47tmJ+BS7eJerGl/5Y75bxHDVORMXwHQD
+	boZbtMLX8l5Ig1ci8aKZ9MHxXYt68Ak=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-333-DnCBeXsgODGLH2zHjpMIPA-1; Tue, 06 May 2025 10:13:14 -0400
+X-MC-Unique: DnCBeXsgODGLH2zHjpMIPA-1
+X-Mimecast-MFC-AGG-ID: DnCBeXsgODGLH2zHjpMIPA_1746540793
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac710ace217so417355666b.1
+        for <loongarch@lists.linux.dev>; Tue, 06 May 2025 07:13:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746540793; x=1747145593;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UFcgBeXDokvr+kUt+Nx4wd/ULZnjMDwH1N2JLsWAOOw=;
+        b=rxzA3R5bTt4uN3MTznQYz2dJTbACU2MMzDAhEI3g0lb2ScJO5Z9X2vd5dKGxMY6UlI
+         bSFGAs/VdHZZ2AJf12OyOOm0tN2Tker1lxsNPXWEoYTLmqNemTrEBuxSViXuHNgbPPkp
+         tZBNnU8W5c8lj6dUf+x3N68u1dLiAeA510d4giWkeTbQFsjPrEpvNgQjWXsCyMiiIopL
+         S6wzjXYqSGZH7iml6LOCuP9SMdz1IxhZ6Elj/kQnVRuwW5WU/HRSIi1MLD/wXGjSjwWv
+         RanrvZYtWLWK8Kiu2OUqRKuzNo3EZnPlpvYWpIMQ0LGSVU0d3wRjhFPPrjXAd4HLdSRh
+         3gxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXZwqJYgqXF387oEYXFB8uLwjwEk7iSWLQudIb052IYccFapnSgPjCaOTCzGSr7Bqt7ASymyff+S3E=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyIPvODAy8ReEJfqjdR5Vc2Rek06+VzT0dPp6VkNOO8QfD20kH6
+	63r9mgCOGfB1jKwbAW/nb5V/iZSGiT2gkfmJw/Rpl6usnD/koUTFwyGicmbxhGN90re8kaQqXeg
+	/vZzE+QWE6f4DpfMVFK7tCiFGd5e8lMDTXO2pihUz9caNvvTYTSKh70ZLBA==
+X-Gm-Gg: ASbGncvxThhvKU5XAsQPdu0U1KkHkRVO3jwkFU27wcpCyTLSdTL2gfEYmuK3y04xbSy
+	R+b3IPYeT4J5hkPWOYguOYufESYKQI7F+kQTdM7SLc+ATzfYy6AUKozwu1Qd59Rh8uVqNfdJATO
+	qC4UmLYCjCyFLPKTZnDY5mJ4jp8V+wSnOBeDVClHx/s3OKS54MKEbM45YPrTozIrpvHP6sOnSWh
+	3iJGcGYIx21LgYSjvzHGxSjfOElKFIjltW3rCPOsHzReppso9C5BRC5hagz7savZBV71zhzZz/T
+	5umZnKSnYtYVMgKG
+X-Received: by 2002:a17:907:a08e:b0:ace:9d4e:d0cd with SMTP id a640c23a62f3a-ad1a48bd2c0mr1016933166b.7.1746540793555;
+        Tue, 06 May 2025 07:13:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHBtjlS6sVWj/jhXomSr6feRAM5taE6rOBhOmzWM1geyTp2Xsw9XEuNk4QndQH7TAg8XB5sEA==
+X-Received: by 2002:a17:907:a08e:b0:ace:9d4e:d0cd with SMTP id a640c23a62f3a-ad1a48bd2c0mr1016929066b.7.1746540793005;
+        Tue, 06 May 2025 07:13:13 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.145.28])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18914d031sm710777166b.20.2025.05.06.07.13.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 07:13:12 -0700 (PDT)
+Date: Tue, 6 May 2025 16:13:04 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
+	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v9 4/5] tpm: Add a driver for Loongson TPM device
+Message-ID: <2nuadbg5awe6gvagxg7t5ewvxsbmiq4qrcrycvnrmt2etzq2ke@6oyzavctwrma>
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+ <20250506031947.11130-5-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20250506031947.11130-5-zhaoqunqin@loongson.cn>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: l9xsuCzZvwLfGc1Byjm8FYajEiGcOBZmqPcFN5eKf2Y_1746540793
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-On Wed, Mar 19 2025 at 10:28, Jiri Slaby wrote:
-
-> Hi,
+On Tue, May 06, 2025 at 11:19:46AM +0800, Qunqin Zhao wrote:
+>Loongson Security Engine supports random number generation, hash,
+>symmetric encryption and asymmetric encryption. Based on these
+>encryption functions, TPM2 have been implemented in the Loongson
+>Security Engine firmware. This driver is responsible for copying data
+>into the memory visible to the firmware and receiving data from the
+>firmware.
 >
-> tl;dr if patches are agreed upon, I ask subsys maintainers to take the
-> respective ones via their trees (as they are split per subsys), so that
-> the IRQ tree can take only the rest. That would minimize churn/conflicts
-> during merges.
+>Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+>Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+>Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+>Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+>Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+>---
+>v9: "tpm_loongson_driver" --> "tpm_loongson"
+>    "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
+>
+>v8: In the send callback, it will wait until the TPM2 command is
+>    completed. So do not need to wait in the recv callback.
+>    Removed Jarkko's tag cause there are some changes in v8
+>
+>v7: Moved Kconfig entry between TCG_IBMVTPM and TCG_XEN.
+>    Added Jarkko's tag(a little change, should be fine).
+>
+>v6: Replace all "ls6000se" with "loongson"
+>    Prefix all with tpm_loongson instead of tpm_lsse.
+>    Removed Jarkko's tag cause there are some changes in v6
+>
+>v5: None
+>v4: Prefix all with tpm_lsse instead of tpm.
+>    Removed MODULE_AUTHOR fields.
+>
+>v3: Added reminder about Loongson security engine to git log.
+>
+> drivers/char/tpm/Kconfig        |  9 ++++
+> drivers/char/tpm/Makefile       |  1 +
+> drivers/char/tpm/tpm_loongson.c | 78 +++++++++++++++++++++++++++++++++
+> 3 files changed, 88 insertions(+)
+> create mode 100644 drivers/char/tpm/tpm_loongson.c
+>
+>diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+>index fe4f3a609..13f0682c6 100644
+>--- a/drivers/char/tpm/Kconfig
+>+++ b/drivers/char/tpm/Kconfig
+>@@ -189,6 +189,15 @@ config TCG_IBMVTPM
+> 	  will be accessible from within Linux.  To compile this driver
+> 	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+>
+>+config TCG_LOONGSON
+>+	tristate "Loongson TPM Interface"
+>+	depends on MFD_LOONGSON_SE
+>+	help
+>+	  If you want to make Loongson TPM support available, say Yes and
+>+	  it will be accessible from within Linux. To compile this
+>+	  driver as a module, choose M here; the module will be called
+>+	  tpm_loongson.
+>+
+> config TCG_XEN
+> 	tristate "XEN TPM Interface"
+> 	depends on TCG_TPM && XEN
+>diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+>index 2b004df8c..cb534b235 100644
+>--- a/drivers/char/tpm/Makefile
+>+++ b/drivers/char/tpm/Makefile
+>@@ -45,3 +45,4 @@ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+> obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+> obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+> obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+>+obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
+>diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
+>new file mode 100644
+>index 000000000..cbbd9c22a
+>--- /dev/null
+>+++ b/drivers/char/tpm/tpm_loongson.c
+>@@ -0,0 +1,78 @@
+>+// SPDX-License-Identifier: GPL-2.0
+>+/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+>+
+>+#include <linux/device.h>
+>+#include <linux/mfd/loongson-se.h>
+>+#include <linux/platform_device.h>
+>+#include <linux/wait.h>
+>+
+>+#include "tpm.h"
+>+
+>+struct tpm_loongson_cmd {
+>+	u32 cmd_id;
+>+	u32 data_off;
+>+	u32 data_len;
+>+	u32 pad[5];
+>+};
+>+
+>+static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+>+{
+>+	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+>+	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+>+
+>+	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
 
-So. It's rc5 by now and I picked up everything which did not show up in
-next yet. As there are some patches in next, I delayed the removal of
-functions for the merge window so that we don't end up with merge
-dependencies.
+Should we limit the memcpy to `count`?
 
-To reducde conflicts, I grabbed the irq branch from the PCI tree under
-the assumption that this branch is stable.
-
-The series sits now in
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/cleanups
-
-and will be in next soon. If there are duplicates showing up in next,
-I'm going to remove them from my branch, so the branch is not for basing
-development on.
-
-@Jiri, I fixed up all your subject prefixes as
-
-  'irqdomain: subsys: Switch to foo()'
-
-does not make any sense at all. These subsystems have their regular
-prefixes and these changes do not justify made up irqdomain special
-prefixes at all.
+I mean, can happen that `count` is less than `cmd_ret->data_len`?
 
 Thanks,
+Stefano
 
-        tglx
+>+
+>+	return cmd_ret->data_len;
+>+}
+>+
+>+static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+>+{
+>+	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+>+	struct tpm_loongson_cmd *cmd = tpm_engine->command;
+>+
+>+	cmd->data_len = count;
+>+	memcpy(tpm_engine->data_buffer, buf, count);
+>+
+>+	return loongson_se_send_engine_cmd(tpm_engine);
+>+}
+>+
+>+static const struct tpm_class_ops tpm_loongson_ops = {
+>+	.flags = TPM_OPS_AUTO_STARTUP,
+>+	.recv = tpm_loongson_recv,
+>+	.send = tpm_loongson_send,
+>+};
+>+
+>+static int tpm_loongson_probe(struct platform_device *pdev)
+>+{
+>+	struct loongson_se_engine *tpm_engine;
+>+	struct device *dev = &pdev->dev;
+>+	struct tpm_loongson_cmd *cmd;
+>+	struct tpm_chip *chip;
+>+
+>+	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
+>+	if (!tpm_engine)
+>+		return -ENODEV;
+>+	cmd = tpm_engine->command;
+>+	cmd->cmd_id = SE_CMD_TPM;
+>+	cmd->data_off = tpm_engine->buffer_off;
+>+
+>+	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+>+	if (IS_ERR(chip))
+>+		return PTR_ERR(chip);
+>+	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+>+	dev_set_drvdata(&chip->dev, tpm_engine);
+>+
+>+	return tpm_chip_register(chip);
+>+}
+>+
+>+static struct platform_driver tpm_loongson = {
+>+	.probe   = tpm_loongson_probe,
+>+	.driver  = {
+>+		.name  = "loongson-tpm",
+>+	},
+>+};
+>+module_platform_driver(tpm_loongson);
+>+
+>+MODULE_ALIAS("platform:loongson-tpm");
+>+MODULE_LICENSE("GPL");
+>+MODULE_DESCRIPTION("Loongson TPM driver");
+>-- 
+>2.45.2
+>
+>
+
