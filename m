@@ -1,40 +1,46 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B34F35F7D3
-	for <loongarch@lists.linux.dev>; Tue,  6 May 2025 03:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85F817A2FA
+	for <loongarch@lists.linux.dev>; Tue,  6 May 2025 06:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746501585; cv=none; b=sG8SiQcjSUEk0tnPGwS238KuSE92eO5Kb9i0WgGGublfvY6rWv+OyQiJiqMQjdUVCcOyZlNNmaUZTH+UKipk5CLeQ2eBplutlP/sx79A3BmBHv9PmdjWFyRuC760nYdRNdguihXeymj3PAoHT2t7pTEJtjqWULzGAEAUpxxQEgk=
+	t=1746512606; cv=none; b=sEMR1dukzSeYNsP2ffniI6L7WLGdJrzY5GmCPhjFrmXqKZ564pX+Rl4f0mdp0sxfQuRWhxKXewC5e3ZP9o9iZBsnYmGPS633D6F2XJNUREwGtYEevQWa4OH4VXVZ8xjltkGMSptsPAS5Uw2znBy9O+f5mgwhDeTrJaEwkUi8oUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746501585; c=relaxed/simple;
-	bh=zqF6QTBzffxsZMW0fO1fWtYNslKqS3mmFRaKT3EOsI0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dRj92/IiMFaUZ0vXo7pl3upi34aE68Zj9alfLvDh8iKdMUQRQEBzAq2Php9V1PwaGbuy7OKcX42EwNW57+7pl9/iIDBUgQnmEJIxMuPL0BQT3+Jv4+jlZ5xVfoP5KbBdGxTsRax0aOHLJa7gIMVxIAU9YdJ9E6Ik+7iKHBSn6To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.178])
-	by gateway (Coremail) with SMTP id _____8AxlnDNfxlozUrWAA--.23559S3;
-	Tue, 06 May 2025 11:19:41 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.178])
-	by front1 (Coremail) with SMTP id qMiowMDxvhvLfxloNri1AA--.14266S2;
-	Tue, 06 May 2025 11:19:39 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1746512606; c=relaxed/simple;
+	bh=RIkJJP+RXcI6vPURQiIkAusnMMfRzBhxynerb81vkFY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lKcfb7hpOewfIfVv19pUz0Qceb3pMnv9L0i3q4x9asvPlNLHJLySlDJJFfpRjV/aTax/+0kMDIhaRuQI78iltfFTKmX89uYdAP1/lnzb50gCtPcPGf0WhsiP6XK0K4GJBa/witfVxTKfoowMLu1IVVR7DWxMCCoplSAn1K4EkDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwCXnXnTqhloX7+oAg--.14041S2;
+	Tue, 06 May 2025 14:23:15 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwA3yyTJqhloDVAUAA--.24S3;
+	Tue, 06 May 2025 14:23:06 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Jonathan.Cameron@huawei.com,
+	dan.j.williams@intel.com,
+	rppt@kernel.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	akpm@linux-foundation.org,
+	alison.schofield@intel.com,
+	rrichter@amd.com,
+	bfaccini@nvidia.com,
+	haibo1.xu@intel.com,
+	david@redhat.com,
+	chenhuacai@kernel.org
+Cc: linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	chenbaozi@phytium.com.cn,
 	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v9 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
-Date: Tue,  6 May 2025 11:20:53 +0800
-Message-ID: <20250506032053.11147-1-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.45.2
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Date: Tue,  6 May 2025 14:22:45 +0800
+Message-Id: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,53 +48,98 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxvhvLfxloNri1AA--.14266S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GFyftFyrAF48Jr1rCw1xJFc_yoW3Kwb_Ca
-	y2q397Wr18GF1Ig34SvF97Za1YqrW3X3Wxu3WDt34fX34qyr9xtrnrAF4kK3W3urW8GFZx
-	uayxG3Z3Ar1fZosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUneRRtUUUUU==
+X-CM-TRANSID:AQAAfwA3yyTJqhloDVAUAA--.24S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWgRLLwIYwBJsb
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFW7Ar4xuF4DCry5trWrKrg_yoW5uFyrpa
+	yUG3Z8XF4xGw1xGw1xuryj9w1S93WrKr1DJFZrGr43ZF4rWry2vr4UtFsxZF1DtrW7Zr1r
+	Wr4vyw15uw1rAF7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Changes to Loongson TPM driver would be best reviewed by the Loongson
-crypto driver maintainers.
+acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+with the expectation that numa_cleanup_meminfo moves them to
+numa_reserved_meminfo. There is no need for that indirection when it is
+known in advance that these unpopulated ranges are meant for
+numa_reserved_meminfo in support of future hotplug / CXL provisioning.
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+ranges directly.
+
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 ---
-v8-v9: None 
-v7: Added tag from Jarkko and Huacai
-v6: "tpm_lsse.c" -> "tpm_loongson"
-v4-v5: None
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v2 (Thanks to Dan & Alison):
+- Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
+- Add comments to describe the usage of numa_add_reserved_memblk()
+- Updating the commit message to clarify the purpose of the patch
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2d696671e..acbb127f3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13935,6 +13935,7 @@ LOONGSON CRYPTO DRIVER
- M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
-+F:	drivers/char/tpm/tpm_loongson.c
- F:	drivers/crypto/loongson/
- F:	drivers/mfd/loongson-se.c
- F:	include/linux/mfd/loongson-se.h
+By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
+
+ drivers/acpi/numa/srat.c     |  2 +-
+ include/linux/numa_memblks.h |  1 +
+ mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+index 0a725e46d017..751774f0b4e5 100644
+--- a/drivers/acpi/numa/srat.c
++++ b/drivers/acpi/numa/srat.c
+@@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (numa_add_memblk(node, start, end) < 0) {
++	if (numa_add_reserved_memblk(node, start, end) < 0) {
+ 		/* CXL driver must handle the NUMA_NO_NODE case */
+ 		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+ 			node, start, end);
+diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+index dd85613cdd86..991076cba7c5 100644
+--- a/include/linux/numa_memblks.h
++++ b/include/linux/numa_memblks.h
+@@ -22,6 +22,7 @@ struct numa_meminfo {
+ };
+ 
+ int __init numa_add_memblk(int nodeid, u64 start, u64 end);
++int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+ void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
+ 
+ int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
+diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+index ff4054f4334d..541a99c4071a 100644
+--- a/mm/numa_memblks.c
++++ b/mm/numa_memblks.c
+@@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+ 	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+ }
+ 
++/**
++ * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
++ * @nid: NUMA node ID of the new memblk
++ * @start: Start address of the new memblk
++ * @end: End address of the new memblk
++ *
++ * Add a new memblk to the numa_reserved_meminfo.
++ *
++ * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
++ * against memblock_type information and moves any that intersect reserved
++ * ranges to numa_reserved_meminfo. However, when that information is known
++ * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
++ * to numa_reserved_meminfo directly.
++ *
++ * RETURNS:
++ * 0 on success, -errno on failure.
++ */
++int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
++{
++	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
++}
++
+ /**
+  * numa_cleanup_meminfo - Cleanup a numa_meminfo
+  * @mi: numa_meminfo to clean up
 -- 
-2.45.2
+2.34.1
 
