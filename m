@@ -1,71 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FE41494DB;
-	Wed,  7 May 2025 01:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64014B1E5F
+	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 02:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746582947; cv=none; b=ZQfhxnrd1QB4cGkvRbORAX/Lw4tPWC3EVV8UlhncjxBT/5qJdlx4oNlW/Yqjhy7IXkuSFyeM1xK/H+hGYkIhzqhjGQwsGKzM32x1hdNWtEaEkhnc7H2dtrYpjwFQ/JYgTxC26GIeoeLdXUMHEBxJwEKEpRXzncam4lis+ALPpXw=
+	t=1746585719; cv=none; b=OlunMUBsx4A38CqrmPGfBQY9bCYSbwoIzqQ7RjsLJjkFr1erp+vJIb8LMMcTmqFSTw9/KSXforoNsp1yMrkmk/wgD7ncEAlB2y2oJ5cZHszqrJvt7zSkZLFAVzLc+B4oQwcFkUNPz0tXl7ZmpbQAB3V34OD88FRs4/7icA82Gfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746582947; c=relaxed/simple;
-	bh=2+lbSUn+6EptwsYwH2exuhL/iZeeYCz00kRKMGS1vuY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=alKPEbSCancdh2dqhgnn2xKFbtc1fGuNstsQ+6T2NAC1QJHVO6q0VuXLn/PC/1XeyZWnfE0qjsoizBgYwUp27SKbVvjl8MqJRlGsyuaH/KAyMW/c5YEx+RQp15ffX8kiUdk9otq+CAKavBlHd0a53DJY/qZIalRXQyx2MrGh34k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=uvDxH9sr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746585719; c=relaxed/simple;
+	bh=6etL97QEsqJN3YZrjYchxkPsyMZOXMw61jInfbT3Xw0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RMN6k/KQ8ycvt55btaLs+4D7/+UxWpvAp1JvYYXi7CUcmgFnuIlQFpLzYvgxQ48qBsplLk8ymNzsbHs9ZCSOCz4QVCqMfPS3WewYMqdL8Oe8VGjLVwVvHy5Tn88LSlT/oXPk6i2jAZ1BdtgnQNluI1cIsxtv50pa/e4FvV02gVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IObWT5zk; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="uvDxH9sr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCB58C4CEE4;
-	Wed,  7 May 2025 01:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746582945;
-	bh=2+lbSUn+6EptwsYwH2exuhL/iZeeYCz00kRKMGS1vuY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uvDxH9sr+HD0nbtIYkteIYrfNShEftDgUCzEe+rMCtAPa/oxs5AnZUD9NL0rMTpik
-	 gM8qBwIz/FSjH3Vfgqskh88O33BCynGu9CloCCLf9CH+E4VCbKPR1WKahR0io4VT6R
-	 qv8aX7VMXupOioWlrxpnPJB+vGGFs7RhcUO9QtgY=
-Date: Tue, 6 May 2025 18:55:44 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com, rppt@kernel.org,
- rafael@kernel.org, lenb@kernel.org, alison.schofield@intel.com,
- rrichter@amd.com, bfaccini@nvidia.com, haibo1.xu@intel.com,
- david@redhat.com, chenhuacai@kernel.org, linux-cxl@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, chenbaozi@phytium.com.cn, loongarch@lists.linux.dev
-Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Message-Id: <20250506185544.474d025e43ebadadaedb982a@linux-foundation.org>
-In-Reply-To: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
-References: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IObWT5zk"
+Message-ID: <87e475ca-c4db-4fe4-94df-4e29f779a383@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746585713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jR9JKWCrpFIfn9jOgzBStj0mD3xOCH22odNml15ltfQ=;
+	b=IObWT5zkKq5EkbWwVKTGdfdlbql9PSombG1SPX7hWaaxp/EZwXp2Nl3674HN9qu9nFmHVS
+	RgIulIF+wOLmuBVb0Sv6jMyjKYDRkt7uDwC8waWe5ZIGzGz9EYnlcH9IWiJyaih6994gMd
+	OrHpRZDB6IIrblHWYWCjsyBVZ6D71g8=
+Date: Wed, 7 May 2025 10:41:46 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Subject: Re: [PATCH v9 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO
+ DRIVER entry
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca,
+ linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de,
+ Huacai Chen <chenhuacai@loongson.cn>
+References: <20250506032053.11147-1-zhaoqunqin@loongson.cn>
+ <a03b4963-55aa-4a75-b795-1e8f0db7ec89@linux.dev>
+ <00196f77-1060-fe67-3e6b-6721092207d6@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <00196f77-1060-fe67-3e6b-6721092207d6@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue,  6 May 2025 14:22:45 +0800 Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
 
-> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-> with the expectation that numa_cleanup_meminfo moves them to
-> numa_reserved_meminfo. There is no need for that indirection when it is
-> known in advance that these unpopulated ranges are meant for
-> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
-> 
-> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-> ranges directly.
-> 
-> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> ---
-> 
-> Changes in v2 (Thanks to Dan & Alison):
-> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-> - Add comments to describe the usage of numa_add_reserved_memblk()
-> - Updating the commit message to clarify the purpose of the patch
-> 
-> By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
+在 5/6/25 8:14 PM, Qunqin Zhao 写道:
+>
+> 在 2025/5/6 下午5:03, Yanteng Si 写道:
+>> 在 5/6/25 11:20 AM, Qunqin Zhao 写道:
+>>> Changes to Loongson TPM driver would be best reviewed by the Loongson
+>>> crypto driver maintainers.
+>>>
+>>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+>>> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+>>> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+>>> ---
+>>> v8-v9: None
+>>> v7: Added tag from Jarkko and Huacai
+>>> v6: "tpm_lsse.c" -> "tpm_loongson"
+>>> v4-v5: None
+>>>
+>>>   MAINTAINERS | 1 +
+>>>   1 file changed, 1 insertion(+)
+>> I'm just curious. Why is this patch kept outside the tmp_loongson 
+>> patch set?
+>
+> Hi, Yanteng. Thanks for your reply.
+>
+>
+> When sending this patch, git send-email prompted "too many commands"
+>
+> and disconnected from the server. Then I sent this patch separately.
+>
+> Even after setting sendemail.smtpBatchSize to 100, I still have this 
+> problem.
 
-So is this patch dependent upon "LoongArch: Introduce the numa_memblks
-conversion"?
+>
+> Now I am trying to find  Loongson SMTP server administrator to solve it.
+
+This is the best solution.
+
+
+>
+> Have you ever encountered this kind of problem?
+
+This seems to be a feature of the Loongson mailbox. I've observed that Yang
+
+Tiezhu also has a patch that is outside of the patch set. An interesting 
+pattern
+
+is that there are only five emails in one patch set.
+
+
+Thanks,
+
+Yanteng
+
+
+
+>
+>
+> BR, Qunqin.
+>
+>>
+>> <https://lore.kernel.org/loongarch/20250506031947.11130-1-zhaoqunqin@loongson.cn/T/#mf09225c286a8e2b92a677720afafb9e20be57a18> 
+>>
+>>
+>> Thanks,
+>> Yanteng
+>
