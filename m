@@ -1,119 +1,109 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58B11156228
-	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 01:18:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA35979E1
+	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 01:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746580684; cv=none; b=Th6GewQetUa6k1HUXSBEZabRqDt3R45trZBO65etmOUIfi3PUW9P1nUTMT62T8EQmGSnLjpHo3xEYwdQHcRCccXxtJVSJUd7J0bTun2bUAsOj5Br0DRjRI4cdGavCUF6YHooXZGhRrlb0y9tlNpWg6W4qFWURMcJmePgGD/ulNo=
+	t=1746581745; cv=none; b=UWhiUcBKN9dv9e2MSFo18VYqPut3FdLnkfGYTXfSh+vIM0XfmGY0rYJt3lGjUN+HdGDZPSqf+GwIv9OouBma+dJNymynsOjZXYo+aLqwTdY5QRbwdk9GqnY5Xxj2kxyNDeMWHs96lU3c32/G5hCs1+L/sev5H0zd96mmKayxAWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746580684; c=relaxed/simple;
-	bh=rFhOLa7secTqn+P4t7t8+f2ee5Kpo7+MvTrFGIUwZ6o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=WZ+2rKPNNyaKY5Nx4y8uEppQi9u0W6ynK5bQym1DacHhIGQjEUMhaiFLYbTlkhPObgv6AU/XGGTfUVM+HkVd3PelBGqaS/kyFobWNan3ryOC1RsvRVTpiqcMmnfm0fb3lH+9gILpemlA/xsqj61zDG2SzrlHDCpb0xgSRzoXJp4=
+	s=arc-20240116; t=1746581745; c=relaxed/simple;
+	bh=zgD0KtQ6+c4Xt135Y5OUFoybXsZd/9SqcHvNmny7ARQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Kf0JA4XcUehnTq25kcCzvcKFSxXSrOwMzyD8sHHrXGj2M1dB9bMR3y9OhDriHQdDWq8dXv9pMTT1vTfd/a708eIpFy/GBNcsz69Z/PJbVX5xkYd6LI3esZnKrn6BnNlArh/uC9LAyTxf+CuQ+pDr0f2wqqCeVYD5jMIsz0PXsk0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.186])
-	by gateway (Coremail) with SMTP id _____8CxieDFtBpowIrXAA--.47768S3;
-	Wed, 07 May 2025 09:17:57 +0800 (CST)
-Received: from chenhuacai$loongson.cn ( [223.64.68.186] ) by
- ajax-webmail-front1 (Coremail) ; Wed, 7 May 2025 09:17:39 +0800 (GMT+08:00)
-Date: Wed, 7 May 2025 09:17:39 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?6ZmI5Y2O5omN?= <chenhuacai@loongson.cn>
-To: kan.liang@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	irogers@google.com, mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
-	"Bibo Mao" <maobibo@loongson.cn>, loongarch@lists.linux.dev
-Subject: Re: [RFC PATCH 12/15] loongarch/perf: Remove driver-specific
- throttle support
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.1-cmXT6 build
- 20240729(6d2960c6) Copyright (c) 2002-2025 www.mailtech.cn loongson
-In-Reply-To: <20250506164740.1317237-13-kan.liang@linux.intel.com>
-References: <20250506164740.1317237-1-kan.liang@linux.intel.com>
- <20250506164740.1317237-13-kan.liang@linux.intel.com>
-Content-Transfer-Encoding: base64
-X-CM-CTRLDATA: ZTMfMGZvb3Rlcl90eHQ9MTg1MTo2MTg=
-Content-Type: text/plain; charset=UTF-8
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8CxieDquBpoEI_XAA--.47789S3;
+	Wed, 07 May 2025 09:35:38 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMAxTsXduBpoXMO4AA--.49926S2;
+	Wed, 07 May 2025 09:35:28 +0800 (CST)
+Subject: Re: [PATCH v9 4/5] tpm: Add a driver for Loongson TPM device
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca,
+ linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de,
+ Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+ <20250506031947.11130-5-zhaoqunqin@loongson.cn>
+ <2nuadbg5awe6gvagxg7t5ewvxsbmiq4qrcrycvnrmt2etzq2ke@6oyzavctwrma>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <0b148f09-d20d-b6be-d31b-6c8a553658c9@loongson.cn>
+Date: Wed, 7 May 2025 09:33:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <6777794d.1b9e4.196a851ddc0.Coremail.chenhuacai@loongson.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:qMiowMDxTseztBpo+7m4AA--.14982W
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/1tbiAgEPBmgal+cBAAABsI
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zr4DuryUKF15uFykXw1rZrc_yoW8ur1kpr
-	WDCr98KrWrKFn7XwsxCr15ua4UXwn7WrZag3WDt3WrArZxZ3ykXF1kXwn8WF90qw1rGFW0
-	qw4vqF4Iga4UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+In-Reply-To: <2nuadbg5awe6gvagxg7t5ewvxsbmiq4qrcrycvnrmt2etzq2ke@6oyzavctwrma>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxTsXduBpoXMO4AA--.49926S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uw4DJr43GF43AFyfWrW3urX_yoW8Xw4DpF
+	WfCa1UGFs8Kr18CwsrJrWfZry3ZrZ5XFWDXFWDA347Crn8Awn5J34UZr4vv3WDAF48Gw1I
+	vFWI9rWF93Z8uFgCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUljb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2vj6VCEFcxC0VAYjxAxZF0EFcxC0VAYjxAxZF0Ew4CEw7
-	xC0VCjxxvEa2IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xAC
-	xx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87
-	Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFcxC0VAY
-	jxAxZF0Ew4CEw7xC0wACY4xI67k04243AVC20s07MxkF7I0En4kS14v26r126r1DMxAIw2
-	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I
-	3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxV
-	WUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8I
-	cVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
-	AFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JwCE64xvF2IEb7IF0Fy7YxBI
-	daVFxhVjvjDU0xZFpf9x07UDgArUUUUU=
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
 
-SGksIExpYW5nLAoKU2luY2Ugd2hpY2ggdmVyc2lvbiB3ZSBuZWVkIHRoaXMgcGF0Y2g/IEkgbWVh
-biB3aGljaCB2ZXJzaW9ucyB0aGlzIHBhdGNoIHNob3VsZCBiZSBiYWNrcG9ydGVkLgpBbmQgeW91
-IG5lZWQgdG8gQ0MgbG9vbmdhcmNoQGxpc3RzLmxpbnV4LmRldi4KCkh1YWNhaQoKCj4gLS0tLS3l
-jp/lp4vpgq7ku7YtLS0tLQo+IOWPkeS7tuS6ujoga2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbQo+
-IOWPkemAgeaXtumXtDoyMDI1LTA1LTA3IDAwOjQ3OjM3ICjmmJ/mnJ/kuIkpCj4g5pS25Lu25Lq6
-OiBwZXRlcnpAaW5mcmFkZWFkLm9yZywgbWluZ29AcmVkaGF0LmNvbSwgbmFtaHl1bmdAa2VybmVs
-Lm9yZywgaXJvZ2Vyc0Bnb29nbGUuY29tLCBtYXJrLnJ1dGxhbmRAYXJtLmNvbSwgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZywgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmcKPiDm
-ioTpgIE6IGVyYW5pYW5AZ29vZ2xlLmNvbSwgY3RzaGFvQGdvb2dsZS5jb20sIHRtcmljaHRAbGlu
-dXguaWJtLmNvbSwgIkthbiBMaWFuZyIgPGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+LCAiQmli
-byBNYW8iIDxtYW9iaWJvQGxvb25nc29uLmNuPiwgIkh1YWNhaSBDaGVuIiA8Y2hlbmh1YWNhaUBs
-b29uZ3Nvbi5jbj4KPiDkuLvpopg6IFtSRkMgUEFUQ0ggMTIvMTVdIGxvb25nYXJjaC9wZXJmOiBS
-ZW1vdmUgZHJpdmVyLXNwZWNpZmljIHRocm90dGxlIHN1cHBvcnQKPiAKPiBGcm9tOiBLYW4gTGlh
-bmcgPGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+Cj4gCj4gVGhlIHRocm90dGxlIHN1cHBvcnQg
-aGFzIGJlZW4gYWRkZWQgaW4gdGhlIGdlbmVyaWMgY29kZS4gUmVtb3ZlCj4gdGhlIGRyaXZlci1z
-cGVjaWZpYyB0aHJvdHRsZSBzdXBwb3J0Lgo+IAo+IEJlc2lkZXMgdGhlIHRocm90dGxlLCBwZXJm
-X2V2ZW50X292ZXJmbG93IG1heSByZXR1cm4gdHJ1ZSBiZWNhdXNlIG9mCj4gZXZlbnRfbGltaXQu
-IEl0IGFscmVhZHkgZG9lcyBhbiBpbmF0b21pYyBldmVudCBkaXNhYmxlLiBUaGUgcG11LT5zdG9w
-Cj4gaXMgbm90IHJlcXVpcmVkIGVpdGhlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBLYW4gTGlhbmcg
-PGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+Cj4gQ2M6IEJpYm8gTWFvIDxtYW9iaWJvQGxvb25n
-c29uLmNuPgo+IENjOiBIdWFjYWkgQ2hlbiA8Y2hlbmh1YWNhaUBsb29uZ3Nvbi5jbj4KPiAtLS0K
-PiAgYXJjaC9sb29uZ2FyY2gva2VybmVsL3BlcmZfZXZlbnQuYyB8IDMgKy0tCj4gIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9sb29uZ2FyY2gva2VybmVsL3BlcmZfZXZlbnQuYyBiL2FyY2gvbG9vbmdhcmNoL2tlcm5l
-bC9wZXJmX2V2ZW50LmMKPiBpbmRleCBmODZhNGI4MzhkZDcuLjhhZDA5ODcwMzQ4OCAxMDA2NDQK
-PiAtLS0gYS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcGVyZl9ldmVudC5jCj4gKysrIGIvYXJjaC9s
-b29uZ2FyY2gva2VybmVsL3BlcmZfZXZlbnQuYwo+IEBAIC00NzksOCArNDc5LDcgQEAgc3RhdGlj
-IHZvaWQgaGFuZGxlX2Fzc29jaWF0ZWRfZXZlbnQoc3RydWN0IGNwdV9od19ldmVudHMgKmNwdWMs
-IGludCBpZHgsCj4gIAlpZiAoIWxvb25nYXJjaF9wbXVfZXZlbnRfc2V0X3BlcmlvZChldmVudCwg
-aHdjLCBpZHgpKQo+ICAJCXJldHVybjsKPiAgCj4gLQlpZiAocGVyZl9ldmVudF9vdmVyZmxvdyhl
-dmVudCwgZGF0YSwgcmVncykpCj4gLQkJbG9vbmdhcmNoX3BtdV9kaXNhYmxlX2V2ZW50KGlkeCk7
-Cj4gKwlwZXJmX2V2ZW50X292ZXJmbG93KGV2ZW50LCBkYXRhLCByZWdzKTsKPiAgfQo+ICAKPiAg
-c3RhdGljIGlycXJldHVybl90IHBtdV9oYW5kbGVfaXJxKGludCBpcnEsIHZvaWQgKmRldikKPiAt
-LSAKPiAyLjM4LjEKDQoNCuacrOmCruS7tuWPiuWFtumZhOS7tuWQq+aciem+meiKr+S4reenkeea
-hOWVhuS4muenmOWvhuS/oeaBr++8jOS7hemZkOS6juWPkemAgee7meS4iumdouWcsOWdgOS4reWI
-l+WHuueahOS4quS6uuaIlue+pOe7hOOAguemgeatouS7u+S9leWFtuS7luS6uuS7peS7u+S9leW9
-ouW8j+S9v+eUqO+8iOWMheaLrOS9huS4jemZkOS6juWFqOmDqOaIlumDqOWIhuWcsOazhOmcsuOA
-geWkjeWItuaIluaVo+WPke+8ieacrOmCruS7tuWPiuWFtumZhOS7tuS4reeahOS/oeaBr+OAguWm
-guaenOaCqOmUmeaUtuacrOmCruS7tu+8jOivt+aCqOeri+WNs+eUteivneaIlumCruS7tumAmuef
-peWPkeS7tuS6uuW5tuWIoOmZpOacrOmCruS7tuOAgiANClRoaXMgZW1haWwgYW5kIGl0cyBhdHRh
-Y2htZW50cyBjb250YWluIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiBmcm9tIExvb25nc29uIFRl
-Y2hub2xvZ3kgLCB3aGljaCBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgcGVyc29uIG9yIGVudGl0
-eSB3aG9zZSBhZGRyZXNzIGlzIGxpc3RlZCBhYm92ZS4gQW55IHVzZSBvZiB0aGUgaW5mb3JtYXRp
-b24gY29udGFpbmVkIGhlcmVpbiBpbiBhbnkgd2F5IChpbmNsdWRpbmcsIGJ1dCBub3QgbGltaXRl
-ZCB0bywgdG90YWwgb3IgcGFydGlhbCBkaXNjbG9zdXJlLCByZXByb2R1Y3Rpb24gb3IgZGlzc2Vt
-aW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0aGFuIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykg
-aXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlbWFpbCBpbiBlcnJvciwgcGxlYXNl
-IG5vdGlmeSB0aGUgc2VuZGVyIGJ5IHBob25lIG9yIGVtYWlsIGltbWVkaWF0ZWx5IGFuZCBkZWxl
-dGUgaXQuIA0KDQoNCg==
+
+在 2025/5/6 下午10:13, Stefano Garzarella 写道:
+> On Tue, May 06, 2025 at 11:19:46AM +0800, Qunqin Zhao wrote:
+>> Loongson Security Engine supports random number generation, hash,
+>> symmetric encryption and asymmetric encryption. Based on these
+>> encryption functions, TPM2 have been implemented in the Loongson
+>> Security Engine firmware. This driver is responsible for copying data
+>> into the memory visible to the firmware and receiving data from the
+>> firmware.
+>>
+>> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+>> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+>> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+>> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+>> ---
+>> v9: "tpm_loongson_driver" --> "tpm_loongson"
+>>    "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
+>>
+...
+>> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t 
+>> count)
+>> +{
+>> +    struct loongson_se_engine *tpm_engine = 
+>> dev_get_drvdata(&chip->dev);
+>> +    struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+>> +
+>> +    memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+>
+> Should we limit the memcpy to `count`?
+>
+> I mean, can happen that `count` is less than `cmd_ret->data_len`?
+
+Hi, Stefan, thanks for your comment.
+
+Firmware ensures "cmd_ret->data_len" will be less than TPM_BUFSIZE,  so 
+this would never happen.
+
+BR, Qunqin.
+
+>
+> Thanks,
+> Stefano
 
