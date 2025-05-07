@@ -1,111 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAB721FF47
-	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 07:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 917F821D00D
+	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 07:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746602802; cv=none; b=AaMq00GQUtZ2PD4UdgV5R1sbR9YY9PiqFAsJbh5lV/4wjKCajlGjRFWl0bM8IOuKV9QBD9NF9WHGTjurQVo5hx6P4IB1xAqQxXQ1HPbZtOdQM1beejDRsjv+KamWhYgV82+t72k2AxxsIkju47v2fDvqEn8RAvDCiz80AviOCuc=
+	t=1746602918; cv=none; b=khw4SsP8F2isSHD8twhauKh/nx/BIgFkx9HMSG4vNgIX7wicmjp8fLqep4+WTfCkyISajIb7BFUViOhtyuWBIH+QdXUtSMEVLwev5uViDZVREgphbzNQErYLZCE8sUAzMykPOyKeQbqoefugNhL6aFDOsfFjdxM7883pbNsmAHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746602802; c=relaxed/simple;
-	bh=08DgS7JA4Cqv6Y7T/TZ8pwmK5t/7jlMA1R95ZvOXeAM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LdwaDujz6q2vqpB2CmS5NtHxxrZHjlVyt2g5CuJSoZ4G9r8YYdDJhnHi67JR5HGO5FjG2JWtQiAQsuMMxhXWM0nCG+9uQ6/mDmwiPRTEeX2IRMrdzskKmfXVHFCIcGq3c5R9f52aHZGnBDlxzv7eyLhxILqscvxQWuLB3N6ZxuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBbf3DN4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBbf3DN4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BDE0C4CEE9
-	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 07:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746602801;
-	bh=08DgS7JA4Cqv6Y7T/TZ8pwmK5t/7jlMA1R95ZvOXeAM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bBbf3DN4z1IwoxDh0Tm+QojrIxRtTE4kvRzEyy6kB/hiE4Js+fz6F9jaMmMeEZol9
-	 QnCj9H9AvVUeah+2A8/8zAtmHq9d7b37RZhXZ7FZwYtRpWd4ibceM3+l/yDoLYprPG
-	 dN4p9y1ECpfYHtZD7peiIxaQXodwxBH9g20Bc73/Shiig6MqbPntDMx4uxeriYXTvS
-	 oC2EiDB62iP8Pzt9wB2DUFjNC+FdW40H7mc1I8hFM0f2OHFr0yYcW8Y9abvxgggCsa
-	 4yIakLdX06v9cy8Aeyx4vNx87xUOIXLgLnZ2xNT6/rXgaBjACYmlb3LOKfURRjfxs0
-	 cG9ZevON2IQtw==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fab81d6677so4168131a12.1
-        for <loongarch@lists.linux.dev>; Wed, 07 May 2025 00:26:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX4H3YPCbq+2F+aswC0ROOQTpH3rb0gGn2v9Qy0XBXREXkd3jF0Co8Gv633j59rZ+kQt2qjUPrI4p8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxnFV0SxpsiR0uTK9NKYzi11kZ8IGWzIVRwkkrqxpDePgub1ugl
-	1voi0dcK+0BcSepZaQv/gXIHZlnfpVov/ixU2zLaLvOmq+C2zxmazrWIurGh0TOwiOPdbdQykY/
-	khJ5oCmq6XwN37c8UrSbBj0cS4nQ=
-X-Google-Smtp-Source: AGHT+IHFQjCmCQr0LmxjWBlTOy2KYlulJcX/rzkfl5KPvMS8CVNRz0bXOLP8Hj35w5EvGhxc9Zr2/nTP+6lXOlBFC/s=
-X-Received: by 2002:a05:6402:848:b0:5fb:f708:2a7f with SMTP id
- 4fb4d7f45d1cf-5fbf7087e9amr498361a12.32.1746602800117; Wed, 07 May 2025
- 00:26:40 -0700 (PDT)
+	s=arc-20240116; t=1746602918; c=relaxed/simple;
+	bh=1Rew0YZuYxM+n14JYaOIHTvOV12a+aiXbDY3qnhh2dU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gRlGCgLNhpJdOQ3n5izAUfX09bYpH9jFq+iibqF/VgYrMM38iYI9MCpj1vNgxtSSxiw5LAdlxjO9l0jShQIqurAQksdWX2ULnHNYMDFzbNYpO19wIHiGBrn6YYtVwWlUL6AKAUxc2Ql2KPdy9Qp4cxNpkSpZ3BgW18n+uqLDrf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.186])
+	by gateway (Coremail) with SMTP id _____8DxfWuZCxtoCOHXAA--.26471S3;
+	Wed, 07 May 2025 15:28:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.186])
+	by front1 (Coremail) with SMTP id qMiowMBxn8WVCxtoGna5AA--.12969S2;
+	Wed, 07 May 2025 15:28:22 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 0/4] LoongArch: Introduce the Loongson-2K MMC host controller driver
+Date: Wed,  7 May 2025 15:28:04 +0800
+Message-ID: <cover.1746581751.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250507-loongarch_include_order-v1-1-e8aada6a3da8@rivosinc.com>
-In-Reply-To: <20250507-loongarch_include_order-v1-1-e8aada6a3da8@rivosinc.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 7 May 2025 15:26:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7uvnqReegNM+L6Q=ScnXFmpgYnNNTmokBJe9RDSDDdWQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHvKcoRrZHuVz7XnoN3Sd9yQrReQ6jGcaThJKKnP7ijPdBSrDL6EipEJ3o
-Message-ID: <CAAhV-H7uvnqReegNM+L6Q=ScnXFmpgYnNNTmokBJe9RDSDDdWQ@mail.gmail.com>
-Subject: Re: [PATCH core/entry] LoongArch: Fix include order
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxn8WVCxtoGna5AA--.12969S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ury8ArWDAFWDZr4kJrykCrX_yoW8Zr1kpa
+	15u343tF4UJr43CFn3Ga48Ary5urWfJ3srGanxGw1kGay3u34UX3sayFWFvay3ury8Gry7
+	XFyrua1ru3WUCrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU83UUUUUUUU==
 
-Hi, Charlie,
+Hi all:
 
-On Wed, May 7, 2025 at 3:11=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.co=
-m> wrote:
->
-> Reorder some introduced include headers to keep alphabetical order.
->
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> Fixes: 7ace1602abf2 ("LoongArch: entry: Migrate ret_from_fork() to C")
-> ---
-> This is a very minor fix to a patch previously applied to the core/entry
-> tip.
-If possible, I prefer it to be squashed to the original patch.
+This patchset introduce the MMC host controller on Loongson-2K series
+CPUs.
 
-Huacai
+They are similar, except for the interface characteristics and the use of
+DMA engine, specifically, the Loongson-2K0500/Loongson-2K1000 use an
+externally shared APBDMA engine, while the Loongson-2K2000 uses an
+internally exclusive DMA.
 
-> ---
->  arch/loongarch/kernel/process.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/proc=
-ess.c
-> index 98bc60d7c550fcc0225e8452f81a7d6cd7888015..3582f591bab286c30127e715c=
-47d485f74d5e2ca 100644
-> --- a/arch/loongarch/kernel/process.c
-> +++ b/arch/loongarch/kernel/process.c
-> @@ -13,8 +13,8 @@
->  #include <linux/cpu.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
-> -#include <linux/errno.h>
->  #include <linux/entry-common.h>
-> +#include <linux/errno.h>
->  #include <linux/sched.h>
->  #include <linux/sched/debug.h>
->  #include <linux/sched/task.h>
-> @@ -34,8 +34,8 @@
->  #include <linux/prctl.h>
->  #include <linux/nmi.h>
->
-> -#include <asm/asm-prototypes.h>
->  #include <asm/asm.h>
-> +#include <asm/asm-prototypes.h>
->  #include <asm/bootinfo.h>
->  #include <asm/cpu.h>
->  #include <asm/elf.h>
->
-> ---
-> base-commit: e43b8bb56e537bfc8d9076793091e7679020fc9c
-> change-id: 20250506-loongarch_include_order-bbf509faca15
-> --
-> - Charlie
->
+Based on this, I'm splitting the driver into two patches.
+
+List of the patchset:
+Patch1: bindings for Loongson-2K0500/Loongson-2K1000;
+Patch2: driver for MMC controller using externally shared APBDMA engine;
+Patch3: bindings for Loongson-2K2000;
+Patch4: driver for MMC controller using internally exclusive DMA.
+
+Thanks.
+
+-------
+V2:
+
+patch(1/4):
+ - Add reg define for each reg entry.
+
+patch(2/4):
+ - Put all code in the c-file;
+ - Use mmc_from_priv() instead of host->mmc;
+ - Use sdio_signal_irq() instead of mmc_signal_sdio_irq();
+ - Use devm_mmc_alloc_host() instead of mmc_alloc_host();
+ - Use mmc_regulator_get_supply();
+
+patch(4/4):
+ - Add fix_cmd_interrupt function which is needed by Loongson-2K2000.
+
+Link to V1:
+https://lore.kernel.org/linux-mmc/cover.1744273956.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (4):
+  dt-bindings: mmc: Add Loongson-2K SD/SDIO/eMMC controller binding
+  mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
+  dt-bindings: mmc: loongson,ls2k-mmc: Add compatible for
+    Loongson-2K2000
+  mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC controller driver
+
+ .../bindings/mmc/loongson,ls2k-mmc.yaml       |  112 ++
+ MAINTAINERS                                   |    7 +
+ drivers/mmc/host/Kconfig                      |   13 +
+ drivers/mmc/host/Makefile                     |    1 +
+ drivers/mmc/host/loongson2-mmc.c              | 1007 +++++++++++++++++
+ 5 files changed, 1140 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/loongson,ls2k-mmc.yaml
+ create mode 100644 drivers/mmc/host/loongson2-mmc.c
+
+
+base-commit: 9e12816f9a6195f1f5b7c5dc2e388c2458411b97
+-- 
+2.47.1
+
