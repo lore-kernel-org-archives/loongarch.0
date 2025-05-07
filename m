@@ -1,149 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DFB1E7648
-	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 09:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDC3219CD07;
+	Wed,  7 May 2025 10:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746610357; cv=none; b=V3TBBVnB2giKqlFTV/Y0tOjf8B/0iC1zJ0hVSfU+2SFsHLzjK4PhrCoVvkciLjQ0YzCmKEUNh6Vf26MDe8FimU51BnwmZxRde3uZVmdGBc8jn+pLDpO3dGpSRgI84703Oxjmfo7berbZl+ElBV7u8yIJDwFWF20YMBQvtIkAixU=
+	t=1746612394; cv=none; b=Ori0a1M9SH5+R8JvAn41Vf1GSZrgJ+K/7bGZzo8b4wLnCBwny3roF6YO/RDEG5kTEWSFFrn3KOPStSTpfMrKFIUkNHSHFCXQqRjBDM4glxihpDn0figYrTkCzfRjraNdBENnnZtmN2cs9BASvtxMIQ3gT83NzKETofzP+wCjKDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746610357; c=relaxed/simple;
-	bh=+dcoGM/MPnQ7gR2bwDmEC4W4glqMT6D4Z27/zHMAu6c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=X0deuuAbzBam829lISnVO9AlIPmjKlrLJMZrAlEZNncXjEaMiwqWmsn/mMDDd69dLTKO0woRbaIFl/lfCtpOF1CYUE8eBqVsgyMy1OG6PzwpYL/6yXIxQ6+JFcHd2t9IAWlyELBo2P8eea25DLc35iNMprsStt4T8nyUzp6CZ1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XTR6XmVp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XTR6XmVp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746610353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=89g+uUbAmI4s1rHApPcoGavOskeIK/6Orkxfvy6zQ+0=;
-	b=XTR6XmVpWa4wZxSIc0nJI2ItHsT5JkZXjc92gyUPWAJ6ptdKrhEDqFKC/7KHet4l0HxFga
-	PlExHDks005c5vYQAfzAZwWplMPwQSGZpKvllUs4wTg2Ep2WnNBVx03OGznWfq45yjVsDB
-	jMCULBqfPjV1HnJpiUZCfS7SLvUiBuE=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-517-rtiJ8MwMMfyIf1oZcbBLQQ-1; Wed, 07 May 2025 05:32:32 -0400
-X-MC-Unique: rtiJ8MwMMfyIf1oZcbBLQQ-1
-X-Mimecast-MFC-AGG-ID: rtiJ8MwMMfyIf1oZcbBLQQ_1746610351
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acb98b5b0bdso536547766b.1
-        for <loongarch@lists.linux.dev>; Wed, 07 May 2025 02:32:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746610351; x=1747215151;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=89g+uUbAmI4s1rHApPcoGavOskeIK/6Orkxfvy6zQ+0=;
-        b=HKT4qx77jkweIGnD7KOfxm+3DgaqoBc1I/bImejgtEDcqJvjEm+K6a9ffZ1Z+8f3HS
-         4wRKSsEHQnsClZOuh9iH+b8qrr9FWS2RGFgDZxLRt0qL62+teUlLiIZ42tsZVEPdoZqu
-         0OOsBdpodz4VfdPMir//S4nl/J65LhZRKW4VBkTbUEZgTAnVNPtDnyKSvJh6Ra0k0uv/
-         2uMHevse3X0jgunsa/Ii/w9FCQ1rIjHlJ5PH2YnOojGOl9hQrU/cy4BPk9o7kyiEO5TK
-         bN2v1KzuCg1/x6ERaKu4W7HP+Gew7Ghkx0E+r9u/zMlcgpFULcJ1KFZNZ8phMKwU2uLW
-         kMjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBVBPkK8IkMqkBGK59LNnsGGXF0AV4IKDsg8NzBJTfR8vdZizJScwZf4CIhWX5CIh+3O0yM/UdNxA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwqIK95vgHAPAloUAXiWnAxYeGmGZY3/joIGVrTxpaucqnLJjye
-	iQdEu6099r08BxQqgg7wJSat1LOp2Isitl6O92sFf8tYlDRQoxvEgdNu4w2Lo9/ocCcfPCCho97
-	RtJ+2af4XFVcgqT6b+EMhiGFy5GEMyNqvyt5hHBbu6iNw5jrSWw7ZbDfuCIIO268tuA==
-X-Gm-Gg: ASbGnctmX0DflcyXCE+aZTM9HUaiZwOPBHfmto4Sp98/zy78pgLDbWtbZUahAW7pb1e
-	lyP4bU15BKEUKX129pd6oj3NxuN/aI8R6FKJ6KD/v0o6CN+X2CIglsy1J1goxyHiaKCK9Ia3SUg
-	y+56tAXGE1E+aPq15sF3acq9hH2dno5+MZUdPBxP+rHaK5opU+v7YKaCqrFh74ktNuDixQEyZ/6
-	BeLO87qRePusJi+Lb4cSwsvet0fI8kuF9WgEridZjDvqpabtusMjcsQwcAeIVcDzR1QnA2ArtPA
-	1UjIFWNIm2/H83dY
-X-Received: by 2002:a17:906:d54d:b0:aca:9615:3c90 with SMTP id a640c23a62f3a-ad1e8d0ba2bmr267000966b.52.1746610350920;
-        Wed, 07 May 2025 02:32:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFB9GITuMuYoSYN8HyavQFo2/J56H0NB7QS0JaWBQv+IFH3p+ygglDzNeMYFn+SDDKrajLukA==
-X-Received: by 2002:a17:906:d54d:b0:aca:9615:3c90 with SMTP id a640c23a62f3a-ad1e8d0ba2bmr266997766b.52.1746610350328;
-        Wed, 07 May 2025 02:32:30 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.165.32])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189147329sm869562066b.1.2025.05.07.02.32.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 02:32:29 -0700 (PDT)
-Date: Wed, 7 May 2025 11:32:10 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
-	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v9 4/5] tpm: Add a driver for Loongson TPM device
-Message-ID: <CAGxU2F6m2=+07sUoy4PKVs1vMR6Yr--pgkOG3SEGg8gi=HRf+g@mail.gmail.com>
-References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
- <20250506031947.11130-5-zhaoqunqin@loongson.cn>
- <2nuadbg5awe6gvagxg7t5ewvxsbmiq4qrcrycvnrmt2etzq2ke@6oyzavctwrma>
- <0b148f09-d20d-b6be-d31b-6c8a553658c9@loongson.cn>
+	s=arc-20240116; t=1746612394; c=relaxed/simple;
+	bh=TkYjw2gY1eODfPiUtFnFZw5vNxrfJTGcP3anVqaHl7c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=crH7uC8CiDq++CBfgurUtkQgB++gVohnp0VCDAoTgZEA/V8EnoFQ/AbOrNKUTQwrFwPXTwOHwnBPK0A0R2qb5iIHopvfEh3uJfLoOzXGtGKJlMMWm4FPkqrLoPxku+uNcOfeFu7Py+jY1DB6CyXzCI2DZNCo4pPrmAJc17v7F0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8DxvnOjMBtoHgvYAA--.59778S3;
+	Wed, 07 May 2025 18:06:27 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMBxXsWiMBtoQcS5AA--.13196S2;
+	Wed, 07 May 2025 18:06:26 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	bigeasy@linutronix.de,
+	clrkwllms@kernel.org,
+	rostedt@goodmis.org
+Cc: loongarch@lists.linux.dev,
+	linux-rt-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH] Loongarch:Prevent cond_resched occurring within kernel-fpu
+Date: Wed,  7 May 2025 18:06:24 +0800
+Message-Id: <20250507100624.8925-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <0b148f09-d20d-b6be-d31b-6c8a553658c9@loongson.cn>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 9P-T_SB_1nLtIkuSgXMomZXlrz0MhDBxGOSvhXwaC_I_1746610351
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxXsWiMBtoQcS5AA--.13196S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uryrJrW3Cw4rJr1fCF1fKrX_yoW8uF1rpr
+	yS9r95tr4UJ3ZIvay3Jr18Gry5J3ykGw1xWFZxGa4rA3y5Xry8Xwn2gr12qFy29FWIvFWf
+	ZFn5XrWIg3WUA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-On Wed, 7 May 2025 at 03:35, Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
->
->
-> 在 2025/5/6 下午10:13, Stefano Garzarella 写道:
-> > On Tue, May 06, 2025 at 11:19:46AM +0800, Qunqin Zhao wrote:
-> >> Loongson Security Engine supports random number generation, hash,
-> >> symmetric encryption and asymmetric encryption. Based on these
-> >> encryption functions, TPM2 have been implemented in the Loongson
-> >> Security Engine firmware. This driver is responsible for copying data
-> >> into the memory visible to the firmware and receiving data from the
-> >> firmware.
-> >>
-> >> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> >> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> >> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> >> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> >> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> >> ---
-> >> v9: "tpm_loongson_driver" --> "tpm_loongson"
-> >>    "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
-> >>
-> ...
-> >> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t
-> >> count)
-> >> +{
-> >> +    struct loongson_se_engine *tpm_engine =
-> >> dev_get_drvdata(&chip->dev);
-> >> +    struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
-> >> +
-> >> +    memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
-> >
-> > Should we limit the memcpy to `count`?
-> >
-> > I mean, can happen that `count` is less than `cmd_ret->data_len`?
->
-> Hi, Stefan, thanks for your comment.
->
-> Firmware ensures "cmd_ret->data_len" will be less than TPM_BUFSIZE,  so
-> this would never happen.
+When CONFIG_PREEMPT_COUNT is not configured, preempt_disable/preempt_enable
+merely acts as a barrier. However, cond_resched can still trigger a
+context switch and modify the EUEN, resulting in do_fpu being activated
+within kernel-fpu critical section, as demonstrated in the following path:
 
-I see, but I meant the opposite, if `count` (size of `buf`) is less than 
-`cmd_ret->data_len`.
+dcn32_calculate_wm_and_dlg
+    DC_FP_START
+	dcn32_calculate_wm_and_dlg_fpu
+	    dcn32_find_dummy_latency_index_for_fw_based_mclk_switch
+		dcn32_internal_validate_bw
+		    dcn32_enable_phantom_stream
+			dc_create_stream_for_sink
+			   kzalloc(GFP_KERNEL)
+				__kmem_cache_alloc_node
+				    __cond_resched
+    DC_FP_END
 
-I mean, should we add something like this:
+This patch is similar to d02198550423a0b695e7a24ec77153209ad45b09
+(x86/fpu: Improve crypto performance by making kernel-mode FPU reliably
+usablein softirqs),to avoids the issue, and extends kernel-fpu application
+scenarios to softirq.
 
-	if (count < cmd_ret->data_len) {
-		return -EIO;
-	}
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+---
+ arch/loongarch/kernel/kfpu.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-I see we do this in other drivers as well (e.g. crb, ftpm), so I'm 
-trying to understand why here is not the case.
-
-Thanks,
-Stefano
+diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
+index ec5b28e570c9..e60bbaca357a 100644
+--- a/arch/loongarch/kernel/kfpu.c
++++ b/arch/loongarch/kernel/kfpu.c
+@@ -18,11 +18,28 @@ static unsigned int euen_mask = CSR_EUEN_FPEN;
+ static DEFINE_PER_CPU(bool, in_kernel_fpu);
+ static DEFINE_PER_CPU(unsigned int, euen_current);
+ 
++static inline void fpu_lock(void)
++{
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++		local_bh_disable();
++	else
++		preempt_disable();
++}
++
++static inline void fpu_unlock(void)
++{
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++		local_bh_enable();
++	else
++		preempt_enable();
++}
++
+ void kernel_fpu_begin(void)
+ {
+ 	unsigned int *euen_curr;
+ 
+-	preempt_disable();
++	if (!irqs_disabled())
++		fpu_lock();
+ 
+ 	WARN_ON(this_cpu_read(in_kernel_fpu));
+ 
+@@ -73,7 +90,8 @@ void kernel_fpu_end(void)
+ 
+ 	this_cpu_write(in_kernel_fpu, false);
+ 
+-	preempt_enable();
++	if (!irqs_disabled())
++		fpu_unlock();
+ }
+ EXPORT_SYMBOL_GPL(kernel_fpu_end);
+ 
+-- 
+2.20.1
 
