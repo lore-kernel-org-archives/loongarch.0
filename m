@@ -1,121 +1,204 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64014B1E5F
-	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 02:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAC71D5160
+	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 04:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746585719; cv=none; b=OlunMUBsx4A38CqrmPGfBQY9bCYSbwoIzqQ7RjsLJjkFr1erp+vJIb8LMMcTmqFSTw9/KSXforoNsp1yMrkmk/wgD7ncEAlB2y2oJ5cZHszqrJvt7zSkZLFAVzLc+B4oQwcFkUNPz0tXl7ZmpbQAB3V34OD88FRs4/7icA82Gfo=
+	t=1746591894; cv=none; b=oQaq0IatBc4RQp5e3e8JKR3bV2Q14+BgGRGnjTvGaKbqBXZb+3OWDbFUEweViv1UPTmP3M4lJmb7xPCI93vJlYR145UyquInEwogkP4bE9KeRe7KJoumsBfjM8pEtTcBNXw4vZXQIK86hze08I7zTSnAWy12OwZ46e3fs/l2A04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746585719; c=relaxed/simple;
-	bh=6etL97QEsqJN3YZrjYchxkPsyMZOXMw61jInfbT3Xw0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RMN6k/KQ8ycvt55btaLs+4D7/+UxWpvAp1JvYYXi7CUcmgFnuIlQFpLzYvgxQ48qBsplLk8ymNzsbHs9ZCSOCz4QVCqMfPS3WewYMqdL8Oe8VGjLVwVvHy5Tn88LSlT/oXPk6i2jAZ1BdtgnQNluI1cIsxtv50pa/e4FvV02gVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IObWT5zk; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746591894; c=relaxed/simple;
+	bh=kcwpV41BC4KW8ihl8UMz+kyj/Wxk6AUGPfE92GZwFHM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sm6FIrq32N+1LKvZ+w/BBPu8WYcUIYzEitPWCZen3T7DbJNIQYuewp/VFsT3SrqT+V/JumT1qJi+p8qY6pDmNVnR4bpAgfUvGoLMMjgdN/fqjhxtMbakEW1fxnoOSFR7J2OYJrvZjVCA/+mU/vNm3RwLQRBvrmlV0ZvJOelBm74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0Od9s6B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IObWT5zk"
-Message-ID: <87e475ca-c4db-4fe4-94df-4e29f779a383@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746585713;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jR9JKWCrpFIfn9jOgzBStj0mD3xOCH22odNml15ltfQ=;
-	b=IObWT5zkKq5EkbWwVKTGdfdlbql9PSombG1SPX7hWaaxp/EZwXp2Nl3674HN9qu9nFmHVS
-	RgIulIF+wOLmuBVb0Sv6jMyjKYDRkt7uDwC8waWe5ZIGzGz9EYnlcH9IWiJyaih6994gMd
-	OrHpRZDB6IIrblHWYWCjsyBVZ6D71g8=
-Date: Wed, 7 May 2025 10:41:46 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0Od9s6B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D69E8C4CEE7
+	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 04:24:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746591893;
+	bh=kcwpV41BC4KW8ihl8UMz+kyj/Wxk6AUGPfE92GZwFHM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=L0Od9s6BxAMJ6t9plvCt3NLz5Gv/v8NbaK1Je9eWKJdht8IvSjU1gXSgH5c+AlKxO
+	 yxzOYzSgDfuZajrhlbArQNRLJPqnIL+4trJ6TIA9aZv7OV3wdtAh9RC8JRCS1MT09b
+	 1qRlbuUZAhcWliDcvPv95EoBQZT4FER1aSAMZC6owQXmPYlUEyN8rsHlwME06T4t3T
+	 NIlnrmKHYOSZJuFWC1oRiNs/5CI8iTlhIfPbpL8lejB6B4GAvLKLE9QMZ1hZLuzcZC
+	 m0sDnZejTWg7wG8WDEzasa6DgFsoa6TSsoF1VJxlpsxHrZlRv8gDobbHNHFzj9OpLO
+	 xDUo/l2svR63A==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fbcd9088a7so1108421a12.0
+        for <loongarch@lists.linux.dev>; Tue, 06 May 2025 21:24:53 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwhssRXBFUQa1Xo2LNLWEDs2Z97nGIyWMEG46/z61r9/HOgfR6n
+	02XVJe/sT5Upmzfc9tYILkRvbuBE77a40U/kX4ID1yv3GJCRdmlC2DeZUueuECqKE95LNnoPnG4
+	YXbhvhz63KiNlekHDKMd0jv2sZWQ=
+X-Google-Smtp-Source: AGHT+IHs9xp6ZZFIlEX52LdyK+HCC1QbH+Imhzalre8iOTVBs48o+DUZbbjDkhFQskHdxEgTAd8W62cG5mdEbhALLak=
+X-Received: by 2002:a05:6402:430b:b0:5f6:22ca:8aae with SMTP id
+ 4fb4d7f45d1cf-5fbe7621160mr1942455a12.2.1746591892471; Tue, 06 May 2025
+ 21:24:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH v9 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO
- DRIVER entry
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
- peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca,
- linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <20250506032053.11147-1-zhaoqunqin@loongson.cn>
- <a03b4963-55aa-4a75-b795-1e8f0db7ec89@linux.dev>
- <00196f77-1060-fe67-3e6b-6721092207d6@loongson.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <00196f77-1060-fe67-3e6b-6721092207d6@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250430131516.24287-1-yangtiezhu@loongson.cn> <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
+In-Reply-To: <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 7 May 2025 12:24:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
+X-Gm-Features: ATxdqUGzUKwc5G2b9kAUUSS2cXN8V_gP2ST8jxsM7RU_R7fUlzKBmiQfZhTnYJA
+Message-ID: <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Enable some configs in loongson3_defconfig
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Tiezhu,
 
-在 5/6/25 8:14 PM, Qunqin Zhao 写道:
+On Wed, Apr 30, 2025 at 9:41=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
 >
-> 在 2025/5/6 下午5:03, Yanteng Si 写道:
->> 在 5/6/25 11:20 AM, Qunqin Zhao 写道:
->>> Changes to Loongson TPM driver would be best reviewed by the Loongson
->>> crypto driver maintainers.
->>>
->>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
->>> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->>> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
->>> ---
->>> v8-v9: None
->>> v7: Added tag from Jarkko and Huacai
->>> v6: "tpm_lsse.c" -> "tpm_loongson"
->>> v4-v5: None
->>>
->>>   MAINTAINERS | 1 +
->>>   1 file changed, 1 insertion(+)
->> I'm just curious. Why is this patch kept outside the tmp_loongson 
->> patch set?
+> Hi, Tiezhu,
 >
-> Hi, Yanteng. Thanks for your reply.
+> When I enable these options:
+> CONFIG_FTRACE=3Dy
+> CONFIG_FUNCTION_TRACER=3Dy
+> CONFIG_FUNCTION_GRAPH_TRACER=3Dy
+> CONFIG_DYNAMIC_FTRACE=3Dy
+> CONFIG_DYNAMIC_FTRACE_WITH_REGS=3Dy
+> CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy
+> CONFIG_DYNAMIC_FTRACE_WITH_ARGS=3Dy
+> CONFIG_KPROBES=3Dy
+> CONFIG_UPROBES=3Dy
+> CONFIG_KPROBE_EVENTS=3Dy
+> CONFIG_UPROBE_EVENTS=3Dy
 >
+> Then your above commands will hang (or get a SIGTRAP), which options I
+> am missing?
 >
-> When sending this patch, git send-email prompted "too many commands"
->
-> and disconnected from the server. Then I sent this patch separately.
->
-> Even after setting sendemail.smtpBatchSize to 100, I still have this 
-> problem.
+> I haven't tried your patches, maybe it works, but I want to know the
+> exactly needed options.
+Have you investigated this? I have tried your patchset, but still get
+a SIGTRAP or system hang.
 
->
-> Now I am trying to find  Loongson SMTP server administrator to solve it.
+I think I know why your tests "success":
 
-This is the best solution.
+sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
+sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery
+/opt/tongsuo/bin/openssl speed sm2
+
+In the first step you probe the OpenSSL library, and in the second
+step you are running "Tongsuo".
+
+Have you tried (both OpenSSL)
+
+sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
+sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery openssl speed sm2
+
+or (both Tongsuo)
+
+sudo ./perf probe -x /opt/tongsuo/lib/libcrypto.so BN_mod_mul_montgomery
+sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery
+/opt/tongsuo/bin/openssl speed sm2
+
+and still success?
+
+I tried, and both got a SIGTRAP or system hang.
 
 
->
-> Have you ever encountered this kind of problem?
-
-This seems to be a feature of the Loongson mailbox. I've observed that Yang
-
-Tiezhu also has a patch that is outside of the patch set. An interesting 
-pattern
-
-is that there are only five emails in one patch set.
-
-
-Thanks,
-
-Yanteng
-
-
+Huacai
 
 >
+> Huacai
 >
-> BR, Qunqin.
 >
->>
->> <https://lore.kernel.org/loongarch/20250506031947.11130-1-zhaoqunqin@loongson.cn/T/#mf09225c286a8e2b92a677720afafb9e20be57a18> 
->>
->>
->> Thanks,
->> Yanteng
->
+> On Wed, Apr 30, 2025 at 9:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
+cn> wrote:
+> >
+> > This is a small patchset based on 6.15-rc4, each patch is a
+> > single logical change to better describe the problem and make
+> > it easier to review.
+> >
+> > If the changes make sense, all of them can be squashed into one
+> > single patch, I think that would be fine as well, let us see if
+> > other people have concern about it.
+> >
+> > By the way, I received many compile-time error reports about tools,
+> > most are related with configs, this is the motivation of this series.
+> >
+> > Additionally, I also received one run-time bug report about uprobe,
+> > but it works fine on my test environment. If somebody can reproduce
+> > it, please let me know, maybe I am missing something.
+> >
+> > 1. How to reproduce
+> >
+> > (1) Compile and install Tongsuo
+> >
+> > git clone https://github.com/Tongsuo-Project/Tongsuo.git
+> > cd Tongsuo && ./config --prefix=3D/opt/tongsuo -Wl,-rpath,/opt/tongsuo/=
+lib
+> > make && sudo make install
+> >
+> > https://www.tongsuo.net/docs/compilation/source-compilation
+> >
+> > (2) Compile and update kernel
+> >
+> > Apply this series based on 6.15-rc4, then use the loongson3_defconfig,
+> > CONFIG_UPROBE_EVENTS is already set.
+> >
+> > (3) Probe "openssl speed sm2"
+> >
+> > cd tools/perf && make
+> > sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
+> > sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery /opt/tongsuo/=
+bin/openssl speed sm2
+> >
+> > 2. My test results
+> >
+> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf probe -x /usr/lib64/l=
+ibcrypto.so BN_mod_mul_montgomery
+> > Added new event:
+> >   probe_libcrypto:BN_mod_mul_montgomery (on BN_mod_mul_montgomery in /u=
+sr/lib64/libcrypto.so.3.2.2)
+> >
+> > You can now use it in all perf tools, such as:
+> >
+> >         perf record -e probe_libcrypto:BN_mod_mul_montgomery -aR sleep =
+1
+> >
+> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf stat -e probe_libcryp=
+to:BN_mod_mul_montgomery /opt/tongsuo/bin/openssl speed sm2
+> > Doing 256 bits sign CurveSM2's for 10s: 7463 256 bits CurveSM2 signs in=
+ 10.00s
+> > Doing 256 bits verify CurveSM2's for 10s: 9681 256 bits CurveSM2 verify=
+ in 9.98s
+> > ...
+> >                               sign    verify    sign/s verify/s
+> >  256 bits SM2 (CurveSM2)   0.0013s   0.0010s    746.3    970.0
+> >
+> >  Performance counter stats for '/opt/tongsuo/bin/openssl speed sm2':
+> >
+> >                  0      probe_libcrypto:BN_mod_mul_montgomery
+> >
+> >       20.007539877 seconds time elapsed
+> >
+> >       19.990010000 seconds user
+> >        0.000000000 seconds sys
+> >
+> > Thanks,
+> > Tiezhu
+> >
+> > Tiezhu Yang (5):
+> >   LoongArch: Clean up loongson3_defconfig
+> >   LoongArch: Enable tracing infrastructure in defconfig
+> >   LoongArch: Enable tracing syscalls in defconfig
+> >   LoongArch: Enable debug information in defconfig
+> >   LoongArch: Enable kprobe and ftrace in defconfig
+> >
+> >  arch/loongarch/configs/loongson3_defconfig | 74 +++++-----------------
+> >  1 file changed, 16 insertions(+), 58 deletions(-)
+> >
+> > --
+> > 2.42.0
+> >
