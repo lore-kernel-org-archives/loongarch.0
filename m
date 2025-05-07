@@ -1,204 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAC71D5160
-	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 04:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D782163B9
+	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 07:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746591894; cv=none; b=oQaq0IatBc4RQp5e3e8JKR3bV2Q14+BgGRGnjTvGaKbqBXZb+3OWDbFUEweViv1UPTmP3M4lJmb7xPCI93vJlYR145UyquInEwogkP4bE9KeRe7KJoumsBfjM8pEtTcBNXw4vZXQIK86hze08I7zTSnAWy12OwZ46e3fs/l2A04=
+	t=1746601665; cv=none; b=sXuIN+rp3epoS8K0EEXbGIa7cKKsWDjXMS70rUEzpkaQXDRspCT4Oos3xCu244y+dIycghAutZzJS5Z+8YjuXNdk5F/ZHXFTa7w265/pS+VVPbJi9VvZYoVsoUmPJKo23XCzD7rIkgThP5Z0cNvBMI650waiQ6JZyRcUEWCTpJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746591894; c=relaxed/simple;
-	bh=kcwpV41BC4KW8ihl8UMz+kyj/Wxk6AUGPfE92GZwFHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sm6FIrq32N+1LKvZ+w/BBPu8WYcUIYzEitPWCZen3T7DbJNIQYuewp/VFsT3SrqT+V/JumT1qJi+p8qY6pDmNVnR4bpAgfUvGoLMMjgdN/fqjhxtMbakEW1fxnoOSFR7J2OYJrvZjVCA/+mU/vNm3RwLQRBvrmlV0ZvJOelBm74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0Od9s6B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746601665; c=relaxed/simple;
+	bh=cRIStsaa0AZh2Bu8bbYl44E6frjm/72zgUBqPYFB9/0=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SKmLsqRiovM5HbS/GctBlyM8Cz32r6zsKow85jJ5kyo3pDEa3NU8OcyFFD2fl5BkYnXCZScmT+Z701F5tSaHekw8spVwbh8MHsmb4Mm5K1pmkC40A12VBPkCHcZ1E/SmlJjJiphxFPGorqPaK9bPM6IdNoTu1lQyGYrd4Ur9KqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=EYUatmxy; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0Od9s6B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D69E8C4CEE7
-	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 04:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746591893;
-	bh=kcwpV41BC4KW8ihl8UMz+kyj/Wxk6AUGPfE92GZwFHM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=L0Od9s6BxAMJ6t9plvCt3NLz5Gv/v8NbaK1Je9eWKJdht8IvSjU1gXSgH5c+AlKxO
-	 yxzOYzSgDfuZajrhlbArQNRLJPqnIL+4trJ6TIA9aZv7OV3wdtAh9RC8JRCS1MT09b
-	 1qRlbuUZAhcWliDcvPv95EoBQZT4FER1aSAMZC6owQXmPYlUEyN8rsHlwME06T4t3T
-	 NIlnrmKHYOSZJuFWC1oRiNs/5CI8iTlhIfPbpL8lejB6B4GAvLKLE9QMZ1hZLuzcZC
-	 m0sDnZejTWg7wG8WDEzasa6DgFsoa6TSsoF1VJxlpsxHrZlRv8gDobbHNHFzj9OpLO
-	 xDUo/l2svR63A==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fbcd9088a7so1108421a12.0
-        for <loongarch@lists.linux.dev>; Tue, 06 May 2025 21:24:53 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwhssRXBFUQa1Xo2LNLWEDs2Z97nGIyWMEG46/z61r9/HOgfR6n
-	02XVJe/sT5Upmzfc9tYILkRvbuBE77a40U/kX4ID1yv3GJCRdmlC2DeZUueuECqKE95LNnoPnG4
-	YXbhvhz63KiNlekHDKMd0jv2sZWQ=
-X-Google-Smtp-Source: AGHT+IHs9xp6ZZFIlEX52LdyK+HCC1QbH+Imhzalre8iOTVBs48o+DUZbbjDkhFQskHdxEgTAd8W62cG5mdEbhALLak=
-X-Received: by 2002:a05:6402:430b:b0:5f6:22ca:8aae with SMTP id
- 4fb4d7f45d1cf-5fbe7621160mr1942455a12.2.1746591892471; Tue, 06 May 2025
- 21:24:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="EYUatmxy"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 04D7225F40;
+	Wed,  7 May 2025 09:07:35 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id NK8Ks1rz7fSl; Wed,  7 May 2025 09:07:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746601652; bh=cRIStsaa0AZh2Bu8bbYl44E6frjm/72zgUBqPYFB9/0=;
+	h=Date:From:To:Subject:References:In-Reply-To;
+	b=EYUatmxy4Ns11dDZA5E/dquOhEu3sUWpXXHIIMyj7V8Wm3jnPshfH10TA1iQjF9qy
+	 0pQGNZHY2zOsSyQvE+6nAlX2mkV6J9ys1QYyXPVZWTwRrfcGplflYel9kGgdjYzfwq
+	 tzQE/K/4pSTATPD7WvwlLCgO8pXlNCj0E7FMTXsn3UGr4GDDvyOburIr+Mq3kKyXPk
+	 w5wY6OdzvG8D2uvE+n60CtvmGY3FX7sQnH//pC4DYQSSQ2voea99EuwJHD5nLz9LWz
+	 W2qJOVElt+XR2gFv6EzM2pwG6+Ff8WQ55Ybvt5UWwBrzFbgW04TwwxB88mJQT9chfY
+	 8l5MfviK6OTTw==
+Date: Wed, 7 May 2025 07:07:15 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Yanteng Si <si.yanteng@linux.dev>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH 2/4] dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
+Message-ID: <aBsGozWwg_WQfe4R@pie>
+References: <20250501044239.9404-2-ziyao@disroot.org>
+ <20250501044239.9404-4-ziyao@disroot.org>
+ <7e56091d-0e91-44ef-b314-facb102ee468@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250430131516.24287-1-yangtiezhu@loongson.cn> <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
-In-Reply-To: <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 7 May 2025 12:24:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGzUKwc5G2b9kAUUSS2cXN8V_gP2ST8jxsM7RU_R7fUlzKBmiQfZhTnYJA
-Message-ID: <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Enable some configs in loongson3_defconfig
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7e56091d-0e91-44ef-b314-facb102ee468@linux.dev>
 
-Hi, Tiezhu,
+On Tue, May 06, 2025 at 04:58:50PM +0800, Yanteng Si wrote:
+> 在 5/1/25 12:42 PM, Yao Zi 写道:
+> > Ninenine Pi is an Loongson 2K0300-based development board produced by
+> I think "Ninenine Pi" doesn't make sense. I browsed
+> <https://bbs.ctcisz.com/forum.php?mod=forumdisplay&fid=2> and found that the
+> Chinese name of this development board is "久久派". Interestingly, its
+> selling price is 99 yuan. In Chinese, the Roman numeral "9" has the same
+> pronunciation as the Chinese character "久".
 
-On Wed, Apr 30, 2025 at 9:41=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> Hi, Tiezhu,
->
-> When I enable these options:
-> CONFIG_FTRACE=3Dy
-> CONFIG_FUNCTION_TRACER=3Dy
-> CONFIG_FUNCTION_GRAPH_TRACER=3Dy
-> CONFIG_DYNAMIC_FTRACE=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_REGS=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_ARGS=3Dy
-> CONFIG_KPROBES=3Dy
-> CONFIG_UPROBES=3Dy
-> CONFIG_KPROBE_EVENTS=3Dy
-> CONFIG_UPROBE_EVENTS=3Dy
->
-> Then your above commands will hang (or get a SIGTRAP), which options I
-> am missing?
->
-> I haven't tried your patches, maybe it works, but I want to know the
-> exactly needed options.
-Have you investigated this? I have tried your patchset, but still get
-a SIGTRAP or system hang.
+> It seems that you intended to name the development board after its
+> selling price.
 
-I think I know why your tests "success":
+I've confirmed with the vendor that they call the board "99pi" in
+English which is rewritten as "Ninenine Pi" to avoid possibly unexpected
+problems with a name starting with digits. This has nothing to do with
+the price.
 
-sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery
-/opt/tongsuo/bin/openssl speed sm2
+> But shouldn't it be
+> "Ninety-nine Pi" in English? Or "99 Pi"? Perhaps "Jiujiu Pi" is a better
+> option?
 
-In the first step you probe the OpenSSL library, and in the second
-step you are running "Tongsuo".
+"Ninety-nine Pi" sounds too complicated for a board name and I don't
+think "99" in "99pi" is meant to represent a number. Thus I'd like to
+stick with "ninenine pi".
 
-Have you tried (both OpenSSL)
+> 
+> 
+> Thanks,
+> Yanteng
 
-sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery openssl speed sm2
+Best regards,
+Yao Zi
 
-or (both Tongsuo)
-
-sudo ./perf probe -x /opt/tongsuo/lib/libcrypto.so BN_mod_mul_montgomery
-sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery
-/opt/tongsuo/bin/openssl speed sm2
-
-and still success?
-
-I tried, and both got a SIGTRAP or system hang.
-
-
-Huacai
-
->
-> Huacai
->
->
-> On Wed, Apr 30, 2025 at 9:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
-cn> wrote:
-> >
-> > This is a small patchset based on 6.15-rc4, each patch is a
-> > single logical change to better describe the problem and make
-> > it easier to review.
-> >
-> > If the changes make sense, all of them can be squashed into one
-> > single patch, I think that would be fine as well, let us see if
-> > other people have concern about it.
-> >
-> > By the way, I received many compile-time error reports about tools,
-> > most are related with configs, this is the motivation of this series.
-> >
-> > Additionally, I also received one run-time bug report about uprobe,
-> > but it works fine on my test environment. If somebody can reproduce
-> > it, please let me know, maybe I am missing something.
-> >
-> > 1. How to reproduce
-> >
-> > (1) Compile and install Tongsuo
-> >
-> > git clone https://github.com/Tongsuo-Project/Tongsuo.git
-> > cd Tongsuo && ./config --prefix=3D/opt/tongsuo -Wl,-rpath,/opt/tongsuo/=
-lib
-> > make && sudo make install
-> >
-> > https://www.tongsuo.net/docs/compilation/source-compilation
-> >
-> > (2) Compile and update kernel
-> >
-> > Apply this series based on 6.15-rc4, then use the loongson3_defconfig,
-> > CONFIG_UPROBE_EVENTS is already set.
-> >
-> > (3) Probe "openssl speed sm2"
-> >
-> > cd tools/perf && make
-> > sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-> > sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery /opt/tongsuo/=
-bin/openssl speed sm2
-> >
-> > 2. My test results
-> >
-> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf probe -x /usr/lib64/l=
-ibcrypto.so BN_mod_mul_montgomery
-> > Added new event:
-> >   probe_libcrypto:BN_mod_mul_montgomery (on BN_mod_mul_montgomery in /u=
-sr/lib64/libcrypto.so.3.2.2)
-> >
-> > You can now use it in all perf tools, such as:
-> >
-> >         perf record -e probe_libcrypto:BN_mod_mul_montgomery -aR sleep =
-1
-> >
-> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf stat -e probe_libcryp=
-to:BN_mod_mul_montgomery /opt/tongsuo/bin/openssl speed sm2
-> > Doing 256 bits sign CurveSM2's for 10s: 7463 256 bits CurveSM2 signs in=
- 10.00s
-> > Doing 256 bits verify CurveSM2's for 10s: 9681 256 bits CurveSM2 verify=
- in 9.98s
-> > ...
-> >                               sign    verify    sign/s verify/s
-> >  256 bits SM2 (CurveSM2)   0.0013s   0.0010s    746.3    970.0
-> >
-> >  Performance counter stats for '/opt/tongsuo/bin/openssl speed sm2':
-> >
-> >                  0      probe_libcrypto:BN_mod_mul_montgomery
-> >
-> >       20.007539877 seconds time elapsed
-> >
-> >       19.990010000 seconds user
-> >        0.000000000 seconds sys
-> >
-> > Thanks,
-> > Tiezhu
-> >
-> > Tiezhu Yang (5):
-> >   LoongArch: Clean up loongson3_defconfig
-> >   LoongArch: Enable tracing infrastructure in defconfig
-> >   LoongArch: Enable tracing syscalls in defconfig
-> >   LoongArch: Enable debug information in defconfig
-> >   LoongArch: Enable kprobe and ftrace in defconfig
-> >
-> >  arch/loongarch/configs/loongson3_defconfig | 74 +++++-----------------
-> >  1 file changed, 16 insertions(+), 58 deletions(-)
-> >
-> > --
-> > 2.42.0
-> >
+> 
+> > CTCISZ. Features include,
+> > 
+> > - 512MiB DDR4 RAM
+> > - On-board eMMC storage
+> > - Optional SD Card support
+> > - 2 USB 2.0 Ports (OTG and HOST)
+> > - 1 GbE Ethernet port
+> > - Optional WiFi/BT support
+> > - Audio output through 3.5mm phone connector
+> > - Optional display output through RAW RGB interface
+> > 
+> > Add compatible string for the board.
+> > 
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >   Documentation/devicetree/bindings/loongarch/loongson.yaml | 5 +++++
+> >   1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/loongarch/loongson.yaml b/Documentation/devicetree/bindings/loongarch/loongson.yaml
+> > index e1a4a97b7576..aac4af9ee97a 100644
+> > --- a/Documentation/devicetree/bindings/loongarch/loongson.yaml
+> > +++ b/Documentation/devicetree/bindings/loongarch/loongson.yaml
+> > @@ -14,6 +14,11 @@ properties:
+> >       const: '/'
+> >     compatible:
+> >       oneOf:
+> > +      - description: CTCISZ Ninenine Pi
+> > +        items:
+> > +          - const: ctcisz,ninenine-pi
+> > +          - const: loongson,ls2k0300
+> > +
+> >         - description: Loongson-2K0500 processor based boards
+> >           items:
+> >             - const: loongson,ls2k0500-ref
+> 
+> 
