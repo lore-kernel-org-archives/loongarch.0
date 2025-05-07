@@ -1,110 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C431199939
-	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 10:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA3128A1EC
+	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 13:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746613214; cv=none; b=agcHoRbJdh79GqeaWy+2OgzfQRYVwFOF0wjv6rOY6MQk86cFfkKoAL4mFuLFwLPa+YVKqxFhkgk9ukDuznbUouwuNoXzETvU7cApIUV4wOyxcmWCuwQwOAoEVBlj5fPYVYvELHzdj6SNqRK2+k4P04B+TO7T1sdI/AL5NdV+0TA=
+	t=1746625544; cv=none; b=s2G+JBWzB+k/ngRsBPY3O9mlWNOs3d4Lq/cQ8ICQ8+pemays9v+snP1DAzj0wbDGY2PcOtIf8e2xq+6IF68PM7lSUvFgzt6ICNoPvpCvJGaMrPbtkNwNKGEymOKGlTHT8gh2XtQHQ4gjFkSXsQKqkcEpucFrePp8LLPYnSVEGb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746613214; c=relaxed/simple;
-	bh=49gHkHgORh/qqOg+Dw3boqOH5VMEFZ8DNLpTYX4mIxo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UfXYe9dQmlzVPKZs9Vs6gnFuCAEjfzf9EQhlHGKtlonjm0/3Ck/1kcRKrfZ/irV4+jJjBXAzynMCB7yHcMDQi4HyLuROZtyZv/Eclk3Kj7jgR/2TuY8g0furnMBzAfPOOxSuFvxyvp1AvqGxcKIgmeZAeHUgrMaJNbUHunpuJGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqlJzoDZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746625544; c=relaxed/simple;
+	bh=fObmB0A/Q/sOf9nVse3eZ+xly+ZPPNVdcDl3+H5E7S8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kza6VHgbw1luunweL57ox9YFPrbUsKfg5rPSDig2VPA5xr6uYEmz1gkCib6tWtAl9fqze2R90zBk1bOWrg7POYd7BtyH+6xGuUg7UEYRMwe7pUUr0tnjVwQA9Xgdr7dNskdCD9dKvLRf/0jMMv9cn5zM1/PpObVRJpXbqumsumU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IOv0/UnJ; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqlJzoDZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67CD4C4CEEB
-	for <loongarch@lists.linux.dev>; Wed,  7 May 2025 10:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746613214;
-	bh=49gHkHgORh/qqOg+Dw3boqOH5VMEFZ8DNLpTYX4mIxo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rqlJzoDZl/W20kKJQ2E3TEITdZdVM9HtKm0ZnHu02YxdQ6xp6j3+3GFmu7Jdj+t/h
-	 gfBuZTX5yG3qx8rAAzlo6o5qdYWbWO1XZOZEABOpFE6YtB53eOv9kW1tRbp0DqOMAl
-	 ph4sc6B4M4KSzMHsIygCI40ZtUF9nzahJ8fwzv0hgUUnx1VCLNk5/+4ONas6jbMhHI
-	 a6quYGtiC4Wh+KZE5MWDVy5eYUqrP97EbVhVYuQoBFew3IlMSvwKBW+7zqKzGs1UgF
-	 BoBCwGuDhFk4yKJM+I2rJYB8pnWA3x5XreCbQKlxFxHCCPlbahjqBkAIKhLKEiE0Br
-	 pnMAQcNIFehAQ==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5fbf534f8dbso558129a12.3
-        for <loongarch@lists.linux.dev>; Wed, 07 May 2025 03:20:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXWykV9l4XaUcMRmxihmnne6HoB0g9aOvhSKCXh8Wwql4nZUNeYKK+1Q/714z/mDzipBYeTsX4xe6I=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx4zCX0VNWazZK5knyX+Sr6yzRRKkEwBp54osl165y1II5cbknX
-	hvXI0RMJXT3LKgYoGPfsQTkZexd2uFb9j+TXEn7Hef8S77TWpi63WVixh7hACdVx+zYMwDyiRzR
-	q/Z/nzu//cVyK9J52qqIfWs/JXSQ=
-X-Google-Smtp-Source: AGHT+IEl1IhNVOxMwicfaz/b3D3yCziBkLc6KxhZQ9uzsncPuNmVvRjgzqUfds/UTXZTT4UUHbLkhzBRatBkIA3n5+I=
-X-Received: by 2002:a05:6402:35cf:b0:5fb:1bd8:73b4 with SMTP id
- 4fb4d7f45d1cf-5fbe9dec3ddmr2295658a12.8.1746613213030; Wed, 07 May 2025
- 03:20:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IOv0/UnJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746625543; x=1778161543;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fObmB0A/Q/sOf9nVse3eZ+xly+ZPPNVdcDl3+H5E7S8=;
+  b=IOv0/UnJMKnk0LwhyRg4e9pNxWm0efrwp088CjPefrBxOUnmLVl+yAuK
+   hK6RDWBt9oVwdHySQRNysiI49VkLgzw5jpGZfqzNyK8DEl4tUcr8+Dw7L
+   Sf510awE/PfJzpk+VXqo5fv75kFMKwKxu4hmwXFGK3pfFkBa2Cd+DYzLq
+   p9fWJOAegvMKpGjGs86nzUAfYrtdZgxnXfi6PanLZ2qBgEQHzYgLnep26
+   7cb5dTsquCgdqtUX+v+4aU1PIboxmLqrbFYQCgVaUY7TjU+Ha7V5Jb8y9
+   hQwQlHMBqO9qWBnnslJx3gVVfxU26Vn77L+qvY2yS7FZ9ICwnXVTab2HR
+   g==;
+X-CSE-ConnectionGUID: nMX/IarLQYaU3ejyM4whtw==
+X-CSE-MsgGUID: AvX7+JUCRiOC4hM7SN0jHA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52010433"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="52010433"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:45:42 -0700
+X-CSE-ConnectionGUID: rrgsJGOgSyy+77EMXiqtlw==
+X-CSE-MsgGUID: DP+gC8F7QQyQQUa/U8hj0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="135825300"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:45:42 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id C04FA20B5736;
+	Wed,  7 May 2025 06:45:40 -0700 (PDT)
+Message-ID: <4b5212a8-f6e2-4a75-b768-bef0d17ab332@linux.intel.com>
+Date: Wed, 7 May 2025 09:45:39 -0400
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250507073428.216090-1-chenhuacai@loongson.cn> <728f6bff-d029-4ce5-a760-520fadee26ac@linux.dev>
-In-Reply-To: <728f6bff-d029-4ce5-a760-520fadee26ac@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 7 May 2025 18:20:03 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7mHVntjCYkq3fdJG5f0JLvSWAS16cwvEAAbT8u0FzNCg@mail.gmail.com>
-X-Gm-Features: ATxdqUEJYmLIcPmZuad63MLu8or5iFRZ3AADftoKYs2F7FJ0JbTL482k0L_F_7c
-Message-ID: <CAAhV-H7mHVntjCYkq3fdJG5f0JLvSWAS16cwvEAAbT8u0FzNCg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Increase max supported CPUs up to 2048
-To: Yanteng Si <si.yanteng@linux.dev>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 12/15] loongarch/perf: Remove driver-specific throttle
+ support
+To: =?UTF-8?B?6ZmI5Y2O5omN?= <chenhuacai@loongson.cn>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
+ tmricht@linux.ibm.com, Bibo Mao <maobibo@loongson.cn>,
+ loongarch@lists.linux.dev
+References: <20250506164740.1317237-1-kan.liang@linux.intel.com>
+ <20250506164740.1317237-13-kan.liang@linux.intel.com>
+ <6777794d.1b9e4.196a851ddc0.Coremail.chenhuacai@loongson.cn>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <6777794d.1b9e4.196a851ddc0.Coremail.chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 7, 2025 at 6:07=E2=80=AFPM Yanteng Si <si.yanteng@linux.dev> wr=
-ote:
->
-> =E5=9C=A8 5/7/25 3:34 PM, Huacai Chen =E5=86=99=E9=81=93:
-> > Increase max supported CPUs up to 2048, including:
-> > 1. Increase CSR.CPUID register's effective width;
-> > 2. Define MAX_CORE_PIC (a.k.a. max physical ID) to 2048;
-> > 3. Allow NR_CPUS (a.k.a. max logical ID) to be as large as 2048;
-> > 4. Introduce acpi_numa_x2apic_affinity_init() to handle ACPI SRAT
-> >     for CPUID >=3D 256.
-> >
-> > Note: The reason of increasing to 2048 rather than 4096/8192 is because
-> >        the IPI hardware can only support 2048 as a maximum.
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >   arch/loongarch/Kconfig                 |  6 ++--
-> >   arch/loongarch/include/asm/acpi.h      |  2 +-
-> >   arch/loongarch/include/asm/loongarch.h |  4 +--
-> >   arch/loongarch/kernel/acpi.c           | 41 ++++++++++++++++++++++---=
--
-> >   4 files changed, 41 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > index 38706186cf13..0c356de91bc4 100644
-> > --- a/arch/loongarch/Kconfig
-> > +++ b/arch/loongarch/Kconfig
-> > @@ -496,10 +496,10 @@ config HOTPLUG_CPU
-> >         Say N if you want to disable CPU hotplug.
-> >
->
-> >   config NR_CPUS
-> > -     int "Maximum number of CPUs (2-256)"
-> > -     range 2 256
-> > +     int "Maximum number of CPUs (2-2048)"
-> > +     range 2 2048
-> > +     default "2048"
-> I'm curious. As a new architecture, why did you write
-> such a small value at the beginning?
-Good question. Just because there are many limits at the beginning,
-hardware register, irqchips, acpi tables, and so on.
 
-Huacai
->
->
-> Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
->
-> Thanks,
-> Yanteng
->
+
+On 2025-05-06 9:17 p.m., 陈华才 wrote:
+> Hi, Liang,
+> 
+> Since which version we need this patch? I mean which versions this patch should be backported.
+
+The generic change hasn't been merged. It's still under review.
+https://lore.kernel.org/lkml/20250506164740.1317237-2-kan.liang@linux.intel.com/
+
+The driver-specific change should be applied after the generic change is
+merged.
+
+> And you need to CC loongarch@lists.linux.dev.
+> 
+
+Sure.
+
+Thanks,
+Kan
+
+> Huacai
+> 
+> 
+>> -----原始邮件-----
+>> 发件人: kan.liang@linux.intel.com
+>> 发送时间:2025-05-07 00:47:37 (星期三)
+>> 收件人: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+>> 抄送: eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com, "Kan Liang" <kan.liang@linux.intel.com>, "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@loongson.cn>
+>> 主题: [RFC PATCH 12/15] loongarch/perf: Remove driver-specific throttle support
+>>
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The throttle support has been added in the generic code. Remove
+>> the driver-specific throttle support.
+>>
+>> Besides the throttle, perf_event_overflow may return true because of
+>> event_limit. It already does an inatomic event disable. The pmu->stop
+>> is not required either.
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> Cc: Bibo Mao <maobibo@loongson.cn>
+>> Cc: Huacai Chen <chenhuacai@loongson.cn>
+>> ---
+>>  arch/loongarch/kernel/perf_event.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
+>> index f86a4b838dd7..8ad098703488 100644
+>> --- a/arch/loongarch/kernel/perf_event.c
+>> +++ b/arch/loongarch/kernel/perf_event.c
+>> @@ -479,8 +479,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc, int idx,
+>>  	if (!loongarch_pmu_event_set_period(event, hwc, idx))
+>>  		return;
+>>  
+>> -	if (perf_event_overflow(event, data, regs))
+>> -		loongarch_pmu_disable_event(idx);
+>> +	perf_event_overflow(event, data, regs);
+>>  }
+>>  
+>>  static irqreturn_t pmu_handle_irq(int irq, void *dev)
+>> -- 
+>> 2.38.1
+> 
+> 
+> 本邮件及其附件含有龙芯中科的商业秘密信息，仅限于发送给上面地址中列出的个人或群组。禁止任何其他人以任何形式使用（包括但不限于全部或部分地泄露、复制或散发）本邮件及其附件中的信息。如果您错收本邮件，请您立即电话或邮件通知发件人并删除本邮件。 
+> This email and its attachments contain confidential information from Loongson Technology , which is intended only for the person or entity whose address is listed above. Any use of the information contained herein in any way (including, but not limited to, total or partial disclosure, reproduction or dissemination) by persons other than the intended recipient(s) is prohibited. If you receive this email in error, please notify the sender by phone or email immediately and delete it. 
+> 
+> 
+
