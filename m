@@ -1,155 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E8128C859;
-	Wed,  7 May 2025 14:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B5718EB0;
+	Wed,  7 May 2025 15:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626640; cv=none; b=jbKfm8tQJ8UsAA0Us3ckN8SotcExIYPtrJn4U4HOF2ZO8a+aSCLY2jixzRrNyPPdeekHyI6w0ACGDCe3FDXJ7+DFbpkinYqVgL/AqejbwH93mhgUq8ukRz2W8x0wK3xv8HbHuQByT31I8Tpm/DHOtekbeo42L9Kjhs8Jn2N9d2k=
+	t=1746631257; cv=none; b=nRSrAUU2jwNzmCAcpMRRbjE+LbrkSpRzQw9ZROb3QS/bWxueWY/lJD51/i6S0law5Y62+PtJC8+q2Bmx1nI7ckm4uqbgyxBk52Rglrd+y3yfgFBWVa/CrxOXCfaOTl79hvmcEz4pYf8XDYaQN2i/TRbjO67DEvybR+MRGCOG/1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746626640; c=relaxed/simple;
-	bh=cPAiWqaxzmrEcflp3jNSxIq1z1vYc2M/r9eccZySA2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tta25MTgjgfdKWL8/3W+Ga5ij4rmG8BR4GzF7D2Nn6WPMx+K4oxJ+inoVat2dvcQwjz1tbTPoDedGQFKRL2rxhKnbpWwzp0IURW5+rAqqhcOAZAlqr/QAa+s58EjdFp2hHORgQNy4aD7Zu4MI/ydeIltp1dNJ5dNQKvrZkl8ylc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NtxnFrYz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746631257; c=relaxed/simple;
+	bh=DMuRy3vH/9HB8MP/eHAh3lYTSsXJDYIcI3IY1DjMl9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FLSgOflBKUjI0rPo2ZBuB+OE0knfD8CbS7Cuo8NWQfKnP1vMZ6AHhCRmsTagNEdWW7dt00LfyL3bfo1Yfgu7qcU6jJO40lW4aDU+2V9cgBpaDMMAIZamK5cO/2F1SSLB01bWnlomYCftBNlhpQpo9FQleEsM59lxP860eIMEFWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtWCiZBB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NtxnFrYz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15C91C4CEE2;
-	Wed,  7 May 2025 14:04:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtWCiZBB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24D4C4CEE2;
+	Wed,  7 May 2025 15:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746626640;
-	bh=cPAiWqaxzmrEcflp3jNSxIq1z1vYc2M/r9eccZySA2o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NtxnFrYzH/TQD41otaORYFAx+WcD1glvVrwP04w+XUu33kEL2xDy5fDa1FKIfnDFJ
-	 nE1EebkgoEfMnrrgnaK3l7Vn7EtSu9mP0l/3bfpvdZ0hKq5BGwlT08Wjh0vzsP5C6Z
-	 8l2JXpRorw8L0miaC6TlzCqz35V6lJSpEWqrtmrzx9JXD0aDuvkJt5LjyLUllmX+3o
-	 AcYRx+TOYnzTD7fu7mUdkS1e6CExFhKb5vj9+5t6Itf/1zlr1G+nwi8dxfCr6Apet9
-	 QTTdNH/3JBXkSvApLabnH4Ccq4RqNOyfjUTRrXZX3NIIBDnaTC+kwOEhSwK7BEv0Pu
-	 QR/BBoyRZsoNw==
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39129fc51f8so4713857f8f.0;
-        Wed, 07 May 2025 07:04:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVDi5BMvkvuBcu1FEL1rQoAckNakdq186AwO5Al7gOH5mR4kOZ8RHqB2RpFYnZEMl7J/xHtf0xkryJqjxZX/g==@lists.linux.dev, AJvYcCXjm41S2z/Jep5ZDM+TDg0h+XCq0OS76XHNvplGbnk49Z4Ygjq8bKAFzDLx/pFwvtX2u96vKId8cLbG@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx+bi3co+Zo+7v9mwpPnsGUtzFFF/vF6NriZSPkhmV1eLCSQFF1
-	qnBuNlXxkgEgLCoszDyDKDkGG4wi15uUN7geMRUgZBtM8BikOfD6Jtm0lBj3hfBmE9aEcdNlLP3
-	dG8SXKzWckbOec5C26cFLsJSWEdc=
-X-Google-Smtp-Source: AGHT+IGeZURpUcczy0dcfIEPPTUD5WpzPzvDAVjDBUov0uWFAtMzcSVCJS9AfYe5zVbjUedAsJhdILw4cDvOJkMaABI=
-X-Received: by 2002:a05:6000:3107:b0:3a0:83b5:f4c1 with SMTP id
- ffacd0b85a97d-3a0b49ac3ebmr2747534f8f.24.1746626638548; Wed, 07 May 2025
- 07:03:58 -0700 (PDT)
+	s=k20201202; t=1746631256;
+	bh=DMuRy3vH/9HB8MP/eHAh3lYTSsXJDYIcI3IY1DjMl9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XtWCiZBBDcigCs9rAvAR90ZGDu/yeCGV3FKIg+lWgQE5tggI55fQ1EThnEsOeZK6q
+	 DMgxmlLMOatvtvVSXCn/BryaK7YoFbb2M/POZrcgkS6EZYv7YUBvmZil/SK50Hh4lr
+	 5WjXKMjsXaXd4xa42SXkRvSxdbQSR/XvJWhUymwiON2nv7AERNtl3vpyW0LoQK7YAy
+	 cxJpPfw1+r6CRqcco+5MVQkED2iX9uAWZ9Qy4qG4xvssMDOKQ/FfnL7O6xphMDJEUB
+	 irILuNpPN/+Wv1FrkUGgMyxd+d/QABeUU6LhMKNH4yRpDpoYG7R4C5hZcdsme1/nqV
+	 Qyvq/zT/vj8NA==
+Date: Wed, 7 May 2025 18:20:47 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
+	rafael@kernel.org, lenb@kernel.org, akpm@linux-foundation.org,
+	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
+	haibo1.xu@intel.com, david@redhat.com, chenhuacai@kernel.org,
+	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	chenbaozi@phytium.com.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Message-ID: <aBt6T2hbiFBeFofE@kernel.org>
+References: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250507100624.8925-1-zhangtianyang@loongson.cn>
-In-Reply-To: <20250507100624.8925-1-zhangtianyang@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 7 May 2025 22:03:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5+kb4xiiSanFpx=xfyOuCxi5AdyF5cJ8rV9vm7UEBJPg@mail.gmail.com>
-X-Gm-Features: ATxdqUGiJi4oX7jknYaNLqIq09DM6zJU6qZXSErH6DXge3UDYwR023AWCnRtThE
-Message-ID: <CAAhV-H5+kb4xiiSanFpx=xfyOuCxi5AdyF5cJ8rV9vm7UEBJPg@mail.gmail.com>
-Subject: Re: [PATCH] Loongarch:Prevent cond_resched occurring within kernel-fpu
-To: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: kernel@xen0n.name, bigeasy@linutronix.de, clrkwllms@kernel.org, 
-	rostedt@goodmis.org, loongarch@lists.linux.dev, 
-	linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
 
-Hi, Tianyang,
+On Tue, May 06, 2025 at 02:22:45PM +0800, Yuquan Wang wrote:
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
+> 
+> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+> ranges directly.
+> 
+> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 
-LoongArch is not Loongarch in the title.
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-On Wed, May 7, 2025 at 6:06=E2=80=AFPM Tianyang Zhang <zhangtianyang@loongs=
-on.cn> wrote:
->
-> When CONFIG_PREEMPT_COUNT is not configured, preempt_disable/preempt_enab=
-le
-> merely acts as a barrier. However, cond_resched can still trigger a
-> context switch and modify the EUEN, resulting in do_fpu being activated
-> within kernel-fpu critical section, as demonstrated in the following path=
-:
->
-> dcn32_calculate_wm_and_dlg
->     DC_FP_START
->         dcn32_calculate_wm_and_dlg_fpu
->             dcn32_find_dummy_latency_index_for_fw_based_mclk_switch
->                 dcn32_internal_validate_bw
->                     dcn32_enable_phantom_stream
->                         dc_create_stream_for_sink
->                            kzalloc(GFP_KERNEL)
->                                 __kmem_cache_alloc_node
->                                     __cond_resched
->     DC_FP_END
->
-> This patch is similar to d02198550423a0b695e7a24ec77153209ad45b09
-> (x86/fpu: Improve crypto performance by making kernel-mode FPU reliably
-> usablein softirqs),to avoids the issue, and extends kernel-fpu applicatio=
-n
-> scenarios to softirq.
->
-
-You need to Cc the stable list here.
-
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
 > ---
->  arch/loongarch/kernel/kfpu.c | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
-> index ec5b28e570c9..e60bbaca357a 100644
-> --- a/arch/loongarch/kernel/kfpu.c
-> +++ b/arch/loongarch/kernel/kfpu.c
-> @@ -18,11 +18,28 @@ static unsigned int euen_mask =3D CSR_EUEN_FPEN;
->  static DEFINE_PER_CPU(bool, in_kernel_fpu);
->  static DEFINE_PER_CPU(unsigned int, euen_current);
->
-> +static inline void fpu_lock(void)
-The x86 naming, fpregs_lock() is better than fpu_lock(), we can keep the sa=
-me.
-
-To save time, I have fixed them [1], you can fetch it to send V2.
-[1] https://github.com/chenhuacai/linux/commit/fa0952bb7667b138a8941bb3e867=
-75adc9f4731f
-
-Huacai
-
-> +{
-> +       if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-> +               local_bh_disable();
-> +       else
-> +               preempt_disable();
-> +}
-> +
-> +static inline void fpu_unlock(void)
-> +{
-> +       if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-> +               local_bh_enable();
-> +       else
-> +               preempt_enable();
-> +}
-> +
->  void kernel_fpu_begin(void)
->  {
->         unsigned int *euen_curr;
->
-> -       preempt_disable();
-> +       if (!irqs_disabled())
-> +               fpu_lock();
->
->         WARN_ON(this_cpu_read(in_kernel_fpu));
->
-> @@ -73,7 +90,8 @@ void kernel_fpu_end(void)
->
->         this_cpu_write(in_kernel_fpu, false);
->
-> -       preempt_enable();
-> +       if (!irqs_disabled())
-> +               fpu_unlock();
+> 
+> Changes in v2 (Thanks to Dan & Alison):
+> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
+> - Add comments to describe the usage of numa_add_reserved_memblk()
+> - Updating the commit message to clarify the purpose of the patch
+> 
+> By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
+> 
+>  drivers/acpi/numa/srat.c     |  2 +-
+>  include/linux/numa_memblks.h |  1 +
+>  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 0a725e46d017..751774f0b4e5 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (numa_add_memblk(node, start, end) < 0) {
+> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
+>  		/* CXL driver must handle the NUMA_NO_NODE case */
+>  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+>  			node, start, end);
+> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+> index dd85613cdd86..991076cba7c5 100644
+> --- a/include/linux/numa_memblks.h
+> +++ b/include/linux/numa_memblks.h
+> @@ -22,6 +22,7 @@ struct numa_meminfo {
+>  };
+>  
+>  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+>  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
+>  
+>  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
+> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+> index ff4054f4334d..541a99c4071a 100644
+> --- a/mm/numa_memblks.c
+> +++ b/mm/numa_memblks.c
+> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
 >  }
->  EXPORT_SYMBOL_GPL(kernel_fpu_end);
->
-> --
-> 2.20.1
->
+>  
+> +/**
+> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
+> + * @nid: NUMA node ID of the new memblk
+> + * @start: Start address of the new memblk
+> + * @end: End address of the new memblk
+> + *
+> + * Add a new memblk to the numa_reserved_meminfo.
+> + *
+> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
+> + * against memblock_type information and moves any that intersect reserved
+> + * ranges to numa_reserved_meminfo. However, when that information is known
+> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
+> + * to numa_reserved_meminfo directly.
+> + *
+> + * RETURNS:
+> + * 0 on success, -errno on failure.
+> + */
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
+> +{
+> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
+> +}
+> +
+>  /**
+>   * numa_cleanup_meminfo - Cleanup a numa_meminfo
+>   * @mi: numa_meminfo to clean up
+> -- 
+> 2.34.1
+> 
+
+-- 
+Sincerely yours,
+Mike.
