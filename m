@@ -1,126 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF7886352;
-	Thu,  8 May 2025 10:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FFD26FA52
+	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 14:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746699292; cv=none; b=Zkcpyi4/dJT7Ah1D/rzWtd55qjlxgSqySxolE0qRAYplb2sij5ubUEiuzkoxQko7n6tsRab7++PHB3bDLlriBQ9RIQWJcGEuXcZ/WYf34Bi3WT2XZ3Ms5FwB5Um6xiKYesOQW+rJYc5PYE7J5/5MYONQ77vtItAHK0iL4Rx2A1c=
+	t=1746713765; cv=none; b=BCeIgDMblLmVfrBtu1GSEDN/C1dPFooLsk7OyjGor2xKBTjAAwb7JycENqAu4mRXCcvg6BslxmxhO48lWW4kB5+zP3BYuYRRdpeo3uz3mTf+4Sgvg2rodfjAmyg+jjNjkxefNKEUqcyO8PSRPwouhtnfio7fUoXzz6KQQ7bJyto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746699292; c=relaxed/simple;
-	bh=PMqBEi28bw1727cbSbRMVXRM1MWzZoOLPDAhbfMUrI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sINOtOhN6Lc1Q/LLWT8VU3IJo8ep9SEQq7Zw6nuuy9CwITEkIN26SuK5rjjcwouQVt9vg3feqNiODtMbI2NUR5D5ZlikVabsGOTc4Wb/hdojHIZz4E3IlJWP3KzsfgQfrRhEoPrd7yWYh6nwy9Iqc1ktGpqhXs3mqiPzzzQS3CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TlnZTc4O; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746713765; c=relaxed/simple;
+	bh=QDdR5tA6fCYdLD5am3vh8l+BGODzygPrPOJzBOfeJVE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PL0WdPILjHpvffluuJzrPNghDEGtJQBsjQOjFAfbgxNYg0r4tx8LLoh6OU3WWoa/edoScql6+eki8kZ1Hs+zPsalY61cHvxTH9KYg2wBCio7eY1IYVzsHny5STp3ogEOtEoSQ8hRG/wExP9Sha8vUWm8STZcL9VKPsrvN+6AhU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aw9IcFzB; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TlnZTc4O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746699288; x=1778235288;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PMqBEi28bw1727cbSbRMVXRM1MWzZoOLPDAhbfMUrI0=;
-  b=TlnZTc4OlUoDenB1MMouFCVzL15aRRvH/OZxTKNvyCEwlDCjiH32R4H7
-   kfNqAPSqG51WicqvXp2jT6YA08ZVAE07brxT0B13MAStx0rndgWIFytdF
-   GZwz6XXmCpf8bwz2Ew9Q/wWtwPr/DSPtPn7AnHPiP34/pGx0sL3Quxy/y
-   2kdLesR8PLSnxMNsX/LmNcf37btoiGSn+NWgBTaFsuLSFCJvuvTlIaf3l
-   G/68ody9JTsVVIKIQAZtSjimOG8fXWIIRA7jBAwDubvhrguM8imsXd+R3
-   c8CzaI2QjHXAzuJnCjfzSp75qD333P5yrFbP7rfXe7RDMiTGpReKOwQ3d
-   A==;
-X-CSE-ConnectionGUID: RCeVXGU2QcapN1qLlVlwHA==
-X-CSE-MsgGUID: ln7PUUmcTfmAstjZjRnKTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48180686"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="48180686"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 03:14:47 -0700
-X-CSE-ConnectionGUID: SRXa/LJyS4eksKzRF5G2TA==
-X-CSE-MsgGUID: y5al3j0FSKmBtexD1DSqeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="141145247"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 08 May 2025 03:14:44 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCyH3-000Ar9-2W;
-	Thu, 08 May 2025 10:14:41 +0000
-Date: Thu, 8 May 2025 18:13:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] mmc: loongson2: Add Loongson-2K SD/SDIO
- controller driver
-Message-ID: <202505081845.0NQYX2nS-lkp@intel.com>
-References: <1308b6ca9ffc2674cc0f089cfd163da87e53a8cd.1746581751.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aw9IcFzB"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476b89782c3so11348821cf.1
+        for <loongarch@lists.linux.dev>; Thu, 08 May 2025 07:16:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746713762; x=1747318562; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IDpuFbmKPGhtwFhs8+1sRyHe3lBe73vGf+W6LNv5WMo=;
+        b=Aw9IcFzBrN54J09bafOZKA5vT5klohvBUo5sHP7wf0EBA/sMAtIn3vcNDgQ8rbGjX9
+         owcK5ZaZKmycCWOj53yTun9/rzeURBUQretdKGluk4KeGxH2vOHqsr04kexQ0gwMqk+e
+         BL0ADYFLaONqGw8WowP1S05VPxFM6RUknM2pGoCqKXnWk9mXXoF2PFkeBAnVYPAKSaua
+         gFOYprxC/7T0pkqnJ+m6RP0xKb3O4cYmNhoTQhhzJqv/vpTHtvyNLqUfVDHaZQLP8GVS
+         wbryNtWnT5jpXts/XsFt+tg9L5QizZHlgS2LX5h4L0Fx0yw4WJnmBp/Sfn0U42dJGeVb
+         cK+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746713762; x=1747318562;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IDpuFbmKPGhtwFhs8+1sRyHe3lBe73vGf+W6LNv5WMo=;
+        b=MaGbaK8Ut2UIKJMHhr0/m9fj7L2PTKuYRuQ6uSR6D7Q1SAh3U6kcubDmC/c4KGRMU8
+         qOjHziAAYK+fZJhwfzJda7gfahhLZtaZC+dSs9HNJ7Q2gbVaFahAGPZP4JXg1LzXoBYI
+         D9VEEp4Ub95ZoaIWRz5EpCIGGX+FmM+IKKGbla1ty+EaCl4Yt4ZVUoTtqDxRzhfV2qso
+         xW10m3GTc8jT0Tme9o8NZbKnm1w5HbXS2tKhzXeKMwO2EBxtOCmYzrNnaye21NLDIJlL
+         i0t3OHxnHVZvd+mOzRKbn3kO3Y8zQxDzunAlzg0Z55AE5bJaUDcPE4gdp0IKljaXWeuJ
+         e85A==
+X-Gm-Message-State: AOJu0YwACUjmf6VurM4x1IOjQgXE/tbJKi2HZAKHn+aKQtSRLrMXID0k
+	kEh1V/i9xKwrtu4NWCZk+1ICYwzfZc5mWGXDNCPU+Vs4hHsZLol5eS4k0GusU1I4H5Ca7pZXz7Y
+	FspVtnuaDsROjss8/BcKvPpQRvMM=
+X-Gm-Gg: ASbGnct0gWYYcRoF1PIwt3l7zXl8olixmQNqc/9KeNZq+3arr2vmSg/KnqyjOHGKWDr
+	0C9X+C9rPacU7wEsZvJGRgq7USx3ZudeyMaxXiHkwznCws47RWmVS8MJH4/hAZ/yx/6XosKlpGw
+	PF2TIMYCE7RhVZ1mZvEFKwUP1zLYA++3vMPmETzVlGPkCGzH3yCU4OSck=
+X-Google-Smtp-Source: AGHT+IGWwi9f8f4070aPaewqXIlv5BeMpweYLPsMY8g6yIECw6MfdPIpRTrkMYHJ/KIn4UMTnzqtKzUo89BgwWb56Ns=
+X-Received: by 2002:ac8:58d1:0:b0:477:c04:b511 with SMTP id
+ d75a77b69052e-4922620f004mr107953411cf.31.1746713761746; Thu, 08 May 2025
+ 07:16:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1308b6ca9ffc2674cc0f089cfd163da87e53a8cd.1746581751.git.zhoubinbin@loongson.cn>
+References: <CAK3+h2wo3KidH9yrGSNsV522BSkUJyn2TUp==tSv62937xPDMw@mail.gmail.com>
+ <8f375e63-c4d5-b9cc-64c4-7563ba5c2763@loongson.cn>
+In-Reply-To: <8f375e63-c4d5-b9cc-64c4-7563ba5c2763@loongson.cn>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Thu, 8 May 2025 07:15:51 -0700
+X-Gm-Features: ATxdqUEEa1Z1mQa00hevvXcOIkbom88mG0ZyK3kU2QMuIfP-9O-RhE7kX4UTYbM
+Message-ID: <CAK3+h2xJX6de6EX=W=Pk8Ai3+-H5U7wQ9AWvQqZZ4MG5vNUUQA@mail.gmail.com>
+Subject: Re: [QUESTION] Loongarch bpf selftest liburandom_read.so build error
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, bpf <bpf@vger.kernel.org>, 
+	Hengqi Chen <hengqi.chen@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Binbin,
+On Thu, May 8, 2025 at 12:23=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> On 05/08/2025 05:30 AM, Vincent Li wrote:
+> > Hi,
+> >
+> > I tried to build kernel 6.15-rc5 bpf selftests on Loongarch machine
+> > running Fedora, the bpf test programs seems built ok, but I got
+> > liburandom_read.so build error below:
+> >
+> >   LIB      liburandom_read.so
+> >
+> > /usr/bin/ld: cannot find crtbeginS.o: No such file or directory
+> >
+> > /usr/bin/ld: cannot find -lstdc++: No such file or directory
+> >
+> > /usr/bin/ld: cannot find -lgcc: No such file or directory
+> >
+> > /usr/bin/ld: cannot find -lgcc_s: No such file or directory
+> >
+> > clang: error: linker command failed with exit code 1 (use -v to see inv=
+ocation)
+> >
+> > make: *** [Makefile:253:
+> > /usr/src/linux/tools/testing/selftests/bpf/liburandom_read.so] Error 1
+> >
+> > Am I missing  gcc tools for Fedora loongarch?
+>
+> This is related with the cmake option when compiling Clang:
+>
+>    "-DLLVM_HOST_TRIPLE=3Dloongarch64-redhat-linux"
+>
+> You can native compile and update your Clang like this:
+>
+> git clone https://github.com/llvm/llvm-project.git
+> mkdir -p llvm-project/llvm/build && cd llvm-project/llvm/build
+> cmake .. -G "Ninja" \
+>           -DCMAKE_BUILD_TYPE=3DRelease \
+>           -DLLVM_BUILD_RUNTIME=3DOFF \
+>           -DLLVM_ENABLE_PROJECTS=3D"clang;lldb" \
+>           -DCMAKE_INSTALL_PREFIX=3D/usr/local/llvm \
+>           -DLLVM_TARGETS_TO_BUILD=3D"BPF;LoongArch" \
+>           -DLLVM_HOST_TRIPLE=3Dloongarch64-redhat-linux
+> ninja -j4
+> sudo rm -rf /usr/local/llvm && sudo ninja install
+> export PATH=3D/usr/local/llvm/bin:$PATH
+> export LD_LIBRARY_PATH=3D/usr/local/llvm/lib:$LD_LIBRARY_PATH
+>
 
-kernel test robot noticed the following build errors:
+Thanks Tiezhu!
 
-[auto build test ERROR on 9e12816f9a6195f1f5b7c5dc2e388c2458411b97]
+Below is what I used, it looks like I missed the "lldb" in
+LLVM_ENABLE_PROJECTS, I will add that.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/dt-bindings-mmc-Add-Loongson-2K-SD-SDIO-eMMC-controller-binding/20250507-153435
-base:   9e12816f9a6195f1f5b7c5dc2e388c2458411b97
-patch link:    https://lore.kernel.org/r/1308b6ca9ffc2674cc0f089cfd163da87e53a8cd.1746581751.git.zhoubinbin%40loongson.cn
-patch subject: [PATCH v2 2/4] mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
-config: riscv-allyesconfig (https://download.01.org/0day-ci/archive/20250508/202505081845.0NQYX2nS-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505081845.0NQYX2nS-lkp@intel.com/reproduce)
+cd $(DIR_APP)/llvm && mkdir build
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505081845.0NQYX2nS-lkp@intel.com/
+cd $(DIR_APP)/llvm/build && cmake .. -G "Ninja"
+-DLLVM_TARGETS_TO_BUILD=3D"BPF;LoongArch" \
 
-All errors (new ones prefixed by >>):
+-DLLVM_ENABLE_PROJECTS=3D"clang"    \
 
->> drivers/mmc/host/loongson2-mmc.c:605:20: error: initializer element is not a compile-time constant
-           .regmap_config          = ls2k1000_regmap_config,
-                                     ^~~~~~~~~~~~~~~~~~~~~~
-   drivers/mmc/host/loongson2-mmc.c:637:20: error: initializer element is not a compile-time constant
-           .regmap_config          = ls2k1000_regmap_config,
-                                     ^~~~~~~~~~~~~~~~~~~~~~
-   drivers/mmc/host/loongson2-mmc.c:684:39: warning: shift count >= width of type [-Wshift-count-overflow]
-           ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-                                                ^~~~~~~~~~~~~~~~
-   include/linux/dma-mapping.h:73:54: note: expanded from macro 'DMA_BIT_MASK'
-   #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-                                                        ^ ~~~
-   1 warning and 2 errors generated.
+-DCMAKE_BUILD_TYPE=3DRelease        \
 
+-DLLVM_BUILD_RUNTIME=3DOFF \
 
-vim +605 drivers/mmc/host/loongson2-mmc.c
+-DCMAKE_INSTALL_PREFIX=3D/usr \
 
-   603	
-   604	static struct loongson2_mmc_pdata ls2k0500_mmc_pdata = {
- > 605		.regmap_config		= ls2k1000_regmap_config,
-   606		.reorder_cmd_data	= loongson2_mmc_reorder_cmd_data,
-   607		.setting_dma		= ls2k0500_mmc_set_external_dma,
-   608		.prepare_dma		= loongson2_mmc_prepare_external_dma,
-   609		.release_dma		= loongson2_mmc_release_external_dma,
-   610	};
-   611	
+-DLLVM_HOST_TRIPLE=3Dloongarch64-unknown-linux
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> or install the fedora 42 and then use this software repo:
+>
+> https://mirrors.wsyu.edu.cn/fedora/linux/F42/rawhide/Everything/loongarch=
+64/iso/
+
+good to know, I will upgrade when I get chance.
+
+>
+> Thanks,
+> Tiezhu
+>
