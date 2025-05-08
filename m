@@ -1,109 +1,80 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37145BA38
-	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 07:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363BB1DE8B0
+	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 09:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746689021; cv=none; b=rJjhEF8xKWt8xIKQa5rUhrsVGhLT/0gfQklZRziIuV6N/K1io99kn2TVEvWNEwvfTmqwu3pVwxzzwpBGlnVa5D8Ifmbq2QB+LKpl/vCBT6DB7RyNbyWY+V8IIm8hgtk3ENKF07gZH453pl6Ruq/4t4hY8Qwhf/MihQ31I2j/DPw=
+	t=1746697548; cv=none; b=RDwP7Icp6wlMbzimZIYSiniwhhx+wzXKdP909j9Ksw/V+9PGwLppCy56l1gkBsX0neiYAT9Ni34W/YbSWBywIJsDlbpnL8ksu8NtVk5GZyO5MgEJnR4xdFGLSjA8d4AvED/v1dzkgH8taVkoqI9xPZQ33+OBy1rIl6+SNnluwU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746689021; c=relaxed/simple;
-	bh=uxEJgpAIcnMz4m79HdcG4tZeIh8mWO6tOl6TBasb0l0=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dfQrFW0ACSoJ0dqIygQ4twyl9A5qDBwvuABCtADdSLh/FbJvcV9LML6RweygumNFloIsD2tHIJ9YE3pQpjCa/r+nVqDX7/KR69FObgUjWAHyD1pDYHkPUeuENlcXoH4C2rb4j1KPuclhmfwfX00CeaWfXMvpvJ2kPAhFhkRHGNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx32v1WxxoTGvZAA--.29222S3;
-	Thu, 08 May 2025 15:23:33 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxPcXyWxxo0n28AA--.19136S3;
-	Thu, 08 May 2025 15:23:31 +0800 (CST)
-Subject: Re: [QUESTION] Loongarch bpf selftest liburandom_read.so build error
-To: Vincent Li <vincent.mc.li@gmail.com>, loongarch@lists.linux.dev,
- bpf <bpf@vger.kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>
-References: <CAK3+h2wo3KidH9yrGSNsV522BSkUJyn2TUp==tSv62937xPDMw@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <8f375e63-c4d5-b9cc-64c4-7563ba5c2763@loongson.cn>
-Date: Thu, 8 May 2025 15:23:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1746697548; c=relaxed/simple;
+	bh=7mgsxlwXgZTpgICxXGcZhTz23FBiew9Od/LMjNg6saI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kM4Ejs4buPpiqDrD1O4BlLdPTKEADr8TMFkB7ctW2NFR2pcMogBsxwrqME/2NnCKmT1v5kITZstbZ/frmm2aDl38rmI5pXxeeNKSz+MLt8EnUaaL5auM/TuIkxBaY2/ZUQlPJ/lgtHSjGJtDxDRLyJcKdUfR8+OeU/BZbsueafc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZtS136R71z6K9Xl;
+	Thu,  8 May 2025 17:45:27 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E8ECC140121;
+	Thu,  8 May 2025 17:45:43 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 8 May
+ 2025 11:45:43 +0200
+Date: Thu, 8 May 2025 10:45:41 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Alison Schofield <alison.schofield@intel.com>
+CC: Yuquan Wang <wangyuquan1236@phytium.com.cn>, <dan.j.williams@intel.com>,
+	<rppt@kernel.org>, <rafael@kernel.org>, <lenb@kernel.org>,
+	<akpm@linux-foundation.org>, <rrichter@amd.com>, <bfaccini@nvidia.com>,
+	<haibo1.xu@intel.com>, <david@redhat.com>, <chenhuacai@kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<chenbaozi@phytium.com.cn>, <loongarch@lists.linux.dev>
+Subject: Re: [PATCH v3 1/1] mm: numa_memblks: introduce
+ numa_add_reserved_memblk
+Message-ID: <20250508104541.00007c4f@huawei.com>
+In-Reply-To: <aBwuY7Rj3mpr5Pm4@aschofie-mobl2.lan>
+References: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
+	<aBwuY7Rj3mpr5Pm4@aschofie-mobl2.lan>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAK3+h2wo3KidH9yrGSNsV522BSkUJyn2TUp==tSv62937xPDMw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMDxPcXyWxxo0n28AA--.19136S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uF1fJr48trWUCw45Aw4UJrc_yoW8Ww4UpF
-	W8XFZ5tFZ29FWFyr97KayUWw1rKr48Wa4YqF1293s3ArnxJFnF9ws2yF9I9FyUG3sayw40
-	vF10kr9rGFy5JagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUU
-	UUU==
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 05/08/2025 05:30 AM, Vincent Li wrote:
-> Hi,
->
-> I tried to build kernel 6.15-rc5 bpf selftests on Loongarch machine
-> running Fedora, the bpf test programs seems built ok, but I got
-> liburandom_read.so build error below:
->
->   LIB      liburandom_read.so
->
-> /usr/bin/ld: cannot find crtbeginS.o: No such file or directory
->
-> /usr/bin/ld: cannot find -lstdc++: No such file or directory
->
-> /usr/bin/ld: cannot find -lgcc: No such file or directory
->
-> /usr/bin/ld: cannot find -lgcc_s: No such file or directory
->
-> clang: error: linker command failed with exit code 1 (use -v to see invocation)
->
-> make: *** [Makefile:253:
-> /usr/src/linux/tools/testing/selftests/bpf/liburandom_read.so] Error 1
->
-> Am I missing  gcc tools for Fedora loongarch?
+On Wed, 7 May 2025 21:09:07 -0700
+Alison Schofield <alison.schofield@intel.com> wrote:
 
-This is related with the cmake option when compiling Clang:
+> On Thu, May 08, 2025 at 10:27:19AM +0800, Yuquan Wang wrote:
+> > acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> > with the expectation that numa_cleanup_meminfo moves them to
+> > numa_reserved_meminfo. There is no need for that indirection when it is
+> > known in advance that these unpopulated ranges are meant for
+> > numa_reserved_meminfo in support of future hotplug / CXL provisioning.
+> > 
+> > Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+> > ranges directly.
+> > 
+> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>  
+> 
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> 
+> 
+> 
 
-   "-DLLVM_HOST_TRIPLE=loongarch64-redhat-linux"
+Yuquan - I'm guessing this is a misunderstanding of process.
+The patch submitter should pick up tags on previous versions.
+If any are not picked up in the tag block there should be a clear
+explanation of why!
 
-You can native compile and update your Clang like this:
-
-git clone https://github.com/llvm/llvm-project.git
-mkdir -p llvm-project/llvm/build && cd llvm-project/llvm/build
-cmake .. -G "Ninja" \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DLLVM_BUILD_RUNTIME=OFF \
-          -DLLVM_ENABLE_PROJECTS="clang;lldb" \
-          -DCMAKE_INSTALL_PREFIX=/usr/local/llvm \
-          -DLLVM_TARGETS_TO_BUILD="BPF;LoongArch" \
-          -DLLVM_HOST_TRIPLE=loongarch64-redhat-linux
-ninja -j4
-sudo rm -rf /usr/local/llvm && sudo ninja install
-export PATH=/usr/local/llvm/bin:$PATH
-export LD_LIBRARY_PATH=/usr/local/llvm/lib:$LD_LIBRARY_PATH
-
-or install the fedora 42 and then use this software repo:
-
-https://mirrors.wsyu.edu.cn/fedora/linux/F42/rawhide/Everything/loongarch64/iso/
-
-Thanks,
-Tiezhu
-
+Jonathan
