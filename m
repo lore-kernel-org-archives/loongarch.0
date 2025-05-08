@@ -1,40 +1,42 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B045D433AC
-	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 02:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0A41DE4DC
+	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 02:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746672196; cv=none; b=FL2gVedPBogyFJFd7cPV9MGXe1o0ZGSna/uwagXVOfH5tib+jNZCQwvd9efjbbOLLb/TByKWFwsagxH3l/Nf/4xdvmAHSs1p7rvEFuz2rBxWMVwPXupEVxcTs6MH1wg5ipL1hz6NOHrPuMTGfgf+/bThkV7efH3IcTe8VShWerQ=
+	t=1746672577; cv=none; b=VmwTpC0hcfmaVMITxfbTVbeTWpkMJeMD5DpGcmV5VKqhCt6H+ezrx5bKL/+GLOePq0jY+WEQtV6YR60LKnx2kLgX8cVDO92gLsL0I+/V3Mg81eThiXKDef1DqG6tY44s5emA+Qsxf0CC7jKe3KxGNrzwYEz/sBH0FLcWGru3w6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746672196; c=relaxed/simple;
-	bh=8p6jGS4TZQI7rI9iRgaiegouvp+N/bSL5KFlRmDlY78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=oW3RlYiBXoRICKwGDDcC2zUv5eItdweo8oRt5oTBnlsHenqZef+BIbwrU5+OgOUCcJVMX3LCG35r7dZ7U1gkQ9O2Q3F5/VW+AA0of0gvKbhReFzcG3/LF5+Bna8bwyPvdqlrF3VeOECrrNHmywJmMqsyi4DsXLLRFNs2aPaZTDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ac3wSSl2; arc=none smtp.client-ip=95.215.58.176
+	s=arc-20240116; t=1746672577; c=relaxed/simple;
+	bh=LWtro9cEpYvHuFt0E2C5crZKY/DWfTGNe9lKkzAMZQM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=lWJC7rU4+f0auRVscpAewbJAWM7euMWc+3Mvcvk917yUht5S//3ySGhgY0Z1PZ/cNxR3LrAABR/ivTMGe7k/VuOaDV+n+3jqmdTLsrLomGZjpjRA4i0HFshS8SMQPMBXmsquKgW/rartfPLRuFGfpREo2Tn3mpbRVvqZrrYuTSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YPGBrEvL; arc=none smtp.client-ip=91.218.175.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ac3wSSl2"
-Message-ID: <1b72364f-e997-4d41-89b1-5de3b82bc664@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YPGBrEvL"
+Message-ID: <2f2c5e56-35b1-4d23-be52-0266bcb1ca98@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746672186;
+	t=1746672572;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AGdZqGDq7unsOjS9YY7VGbfeP6K3GMQsO4IbWDuMJY8=;
-	b=ac3wSSl2RZReHvZePXaYOpBuCxWBp9qhAv2452kfXxtlJSGP/SQoecK7yJCJmmcCpTB4TA
-	jnp+689Ze6cifqPcOcpkzE73tGJWkKBY9h2Or8CyL8iqeJT11Ma8b3XccAw9O2uYq2ov/O
-	qepMrN7XVFgUqiL2QdVNVtwHsB2AvNw=
-Date: Thu, 8 May 2025 10:42:40 +0800
+	bh=uO+pFkIESIfEB9NPR4KJeLeb/tgaXyqm4g7Fug6ky/Y=;
+	b=YPGBrEvL3SEMn5dr9nQ0x93QbPXx+XXXHVY97lsPhPkCKfFvYbBMLHlyOnnNnkbr8EPgLh
+	aOaNzBk5xrx+qzFXVRz9KyAzI9vdSEtPZHLJlNoJF9+SEOy9jS6XFN3IHu/Hu0w69ZKQ+K
+	39aN7dI6hI+rtRaw0FjdlkUkejBPUUo=
+Date: Thu, 8 May 2025 10:49:25 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/4] dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
+Subject: Re: [PATCH 0/4] Initial support for CTCISZ Ninenine Pi
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
 To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
@@ -47,73 +49,60 @@ To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
  Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
 References: <20250501044239.9404-2-ziyao@disroot.org>
- <20250501044239.9404-4-ziyao@disroot.org>
- <7e56091d-0e91-44ef-b314-facb102ee468@linux.dev> <aBsGozWwg_WQfe4R@pie>
+ <d0575ec1-1901-4534-875c-fa9375e54e3d@linux.dev>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <aBsGozWwg_WQfe4R@pie>
+In-Reply-To: <d0575ec1-1901-4534-875c-fa9375e54e3d@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-在 5/7/25 3:07 PM, Yao Zi 写道:
-> On Tue, May 06, 2025 at 04:58:50PM +0800, Yanteng Si wrote:
->> 在 5/1/25 12:42 PM, Yao Zi 写道:
->>> Ninenine Pi is an Loongson 2K0300-based development board produced by
->> I think "Ninenine Pi" doesn't make sense. I browsed
->> <https://bbs.ctcisz.com/forum.php?mod=forumdisplay&fid=2> and found that the
->> Chinese name of this development board is "久久派". Interestingly, its
->> selling price is 99 yuan. In Chinese, the Roman numeral "9" has the same
->> pronunciation as the Chinese character "久".
-> 
->> It seems that you intended to name the development board after its
->> selling price.
-> 
-> I've confirmed with the vendor that they call the board "99pi" in
-> English which is rewritten as "Ninenine Pi" to avoid possibly unexpected
-> problems with a name starting with digits. This has nothing to do with
-> the price.
-I searched on the Internet for a long time last night, but
-still couldn't find the source of Ninenine Pi. Can you
-provide the origin of the manufacturer's naming? Or transfer
-our offline discussion to an online platform.
 
-What are the possible unexpected problems that may be
-triggered? For example?
-> 
->> But shouldn't it be
->> "Ninety-nine Pi" in English? Or "99 Pi"? Perhaps "Jiujiu Pi" is a better
->> option?
-> 
-> "Ninety-nine Pi" sounds too complicated for a board name and I don't
-> think "99" in "99pi" is meant to represent a number. Thus I'd like to
-> stick with "ninenine pi".
-Since 99 has nothing to do with the price, and you think that
-the 9 is not used to represent a number, then I'm curious. In
-the name of this development board, what does the 9 represent?
-Based on my research, I have already clarified that "99" has
-the same Chinese pronunciation as "久久 (long time)", so I
-think the naming should carry the implication of "lasting
-or a long time".
 
-I have research on other similar development boards,
-such as Raspberry Pi, Orange Pi, Mango Pi... The English names
-of these development boards all have corresponding meanings.
-Why can't we come up with a good name?
-
-Based on the above discussion, I don't accept the name "ninenine Pi" 
-which has no implied meaning.
+在 5/7/25 6:08 PM, Yanteng Si 写道:
+> 在 5/1/25 12:42 PM, Yao Zi 写道:
+>> This series adds support for CTCISZ Ninenine Pi, which ships an Loongson
+>> 2K0300 SoC and various peripherals. The vendor prefix and the board are
+>> documented and basic SoC/board devicetrees are added.
+>>
+>> I've successfully booted into console with vendor U-Boot, a bootlog
+>> could be obtained here[1]. DTB and initramfs must be built into the
+>> kernel as the vendor bootloader cannot pass them and upstream U-Boot
+>> support for LoongArch is still WIP.
+>>
+>> Thanks for your time and review.
+>>
+>> [1]: https://gist.github.com/ziyao233/7fd2c8b3b51ef9b30fe5c17faae1bc4e
+>>
+>> Yao Zi (4):
+>>    dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
+>>    dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
+>>    LoongArch: dts: Add initial SoC devicetree for Loongson 2K0300
+>>    LoongArch: dts: Add initial devicetree for CTCISZ Ninenine Pi
+>>
+>>   .../bindings/loongarch/loongson.yaml          |   5 +
+>>   .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>>   arch/loongarch/boot/dts/Makefile              |   1 +
+>>   arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 197 ++++++++++++++++++
+>>   .../boot/dts/ls2k0300-ctcisz-nineninepi.dts   |  41 ++++
+>>   5 files changed, 246 insertions(+)
+>>   create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
+>>   create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz- 
+>> nineninepi.dts
+> 
+> For all the patch sets:
+> 
+> Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+I'm sorry. As there is no consensus yet on the name
+of the development board, could you please refrain
+from picking my R_B until this discussion is completed?
+Thank you so much for your understanding and cooperation!
 
 Thanks,
 Yanteng
 > 
->>
->>
->> Thanks,
->> Yanteng
 > 
-> Best regards,
-> Yao Zi
-> 
+> Thanks,
+> Yanteng
 >>
+> 
+
