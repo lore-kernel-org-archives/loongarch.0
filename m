@@ -1,154 +1,81 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FFD26FA52
-	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 14:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E25278E42;
+	Thu,  8 May 2025 15:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746713765; cv=none; b=BCeIgDMblLmVfrBtu1GSEDN/C1dPFooLsk7OyjGor2xKBTjAAwb7JycENqAu4mRXCcvg6BslxmxhO48lWW4kB5+zP3BYuYRRdpeo3uz3mTf+4Sgvg2rodfjAmyg+jjNjkxefNKEUqcyO8PSRPwouhtnfio7fUoXzz6KQQ7bJyto=
+	t=1746716411; cv=none; b=R6DKSzzsHdDrNrtpKM9ZUWIYLfiA8aLytNyFkxQu0NjwUX4B5T1I9XbKtJDao6imOXBK8sOZvC95HBgic2KfxMyYLhZwlMwG0/NU29GIlkuccJPGTgFhTZT+iBWIfBdWSrJ1nIbUVQ6kagC/yKjjeuGTfI84tHlBOtGB3FSEO0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746713765; c=relaxed/simple;
-	bh=QDdR5tA6fCYdLD5am3vh8l+BGODzygPrPOJzBOfeJVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PL0WdPILjHpvffluuJzrPNghDEGtJQBsjQOjFAfbgxNYg0r4tx8LLoh6OU3WWoa/edoScql6+eki8kZ1Hs+zPsalY61cHvxTH9KYg2wBCio7eY1IYVzsHny5STp3ogEOtEoSQ8hRG/wExP9Sha8vUWm8STZcL9VKPsrvN+6AhU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aw9IcFzB; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746716411; c=relaxed/simple;
+	bh=egB+VJ9N3rDD59wubqFDZ1y/1JlSIMHjUrSaB1306Pc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SxA13ZBk7OGoHxTtrd5CwUAIW7MWi8KomUAdPh0yVjQ3vB2vJwpcrByF0iglIg1nU34tatcdZ+6tfMg/alZbYvLZ3opBPdupmu/qEebpFPDJEjiDYZSeG2FB/IKQ2P9bSP4oObtftAXP+yFRnPLPiXM77lLZZ3f+aYxCHZLMU0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FByszaOY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aw9IcFzB"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476b89782c3so11348821cf.1
-        for <loongarch@lists.linux.dev>; Thu, 08 May 2025 07:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746713762; x=1747318562; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IDpuFbmKPGhtwFhs8+1sRyHe3lBe73vGf+W6LNv5WMo=;
-        b=Aw9IcFzBrN54J09bafOZKA5vT5klohvBUo5sHP7wf0EBA/sMAtIn3vcNDgQ8rbGjX9
-         owcK5ZaZKmycCWOj53yTun9/rzeURBUQretdKGluk4KeGxH2vOHqsr04kexQ0gwMqk+e
-         BL0ADYFLaONqGw8WowP1S05VPxFM6RUknM2pGoCqKXnWk9mXXoF2PFkeBAnVYPAKSaua
-         gFOYprxC/7T0pkqnJ+m6RP0xKb3O4cYmNhoTQhhzJqv/vpTHtvyNLqUfVDHaZQLP8GVS
-         wbryNtWnT5jpXts/XsFt+tg9L5QizZHlgS2LX5h4L0Fx0yw4WJnmBp/Sfn0U42dJGeVb
-         cK+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746713762; x=1747318562;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IDpuFbmKPGhtwFhs8+1sRyHe3lBe73vGf+W6LNv5WMo=;
-        b=MaGbaK8Ut2UIKJMHhr0/m9fj7L2PTKuYRuQ6uSR6D7Q1SAh3U6kcubDmC/c4KGRMU8
-         qOjHziAAYK+fZJhwfzJda7gfahhLZtaZC+dSs9HNJ7Q2gbVaFahAGPZP4JXg1LzXoBYI
-         D9VEEp4Ub95ZoaIWRz5EpCIGGX+FmM+IKKGbla1ty+EaCl4Yt4ZVUoTtqDxRzhfV2qso
-         xW10m3GTc8jT0Tme9o8NZbKnm1w5HbXS2tKhzXeKMwO2EBxtOCmYzrNnaye21NLDIJlL
-         i0t3OHxnHVZvd+mOzRKbn3kO3Y8zQxDzunAlzg0Z55AE5bJaUDcPE4gdp0IKljaXWeuJ
-         e85A==
-X-Gm-Message-State: AOJu0YwACUjmf6VurM4x1IOjQgXE/tbJKi2HZAKHn+aKQtSRLrMXID0k
-	kEh1V/i9xKwrtu4NWCZk+1ICYwzfZc5mWGXDNCPU+Vs4hHsZLol5eS4k0GusU1I4H5Ca7pZXz7Y
-	FspVtnuaDsROjss8/BcKvPpQRvMM=
-X-Gm-Gg: ASbGnct0gWYYcRoF1PIwt3l7zXl8olixmQNqc/9KeNZq+3arr2vmSg/KnqyjOHGKWDr
-	0C9X+C9rPacU7wEsZvJGRgq7USx3ZudeyMaxXiHkwznCws47RWmVS8MJH4/hAZ/yx/6XosKlpGw
-	PF2TIMYCE7RhVZ1mZvEFKwUP1zLYA++3vMPmETzVlGPkCGzH3yCU4OSck=
-X-Google-Smtp-Source: AGHT+IGWwi9f8f4070aPaewqXIlv5BeMpweYLPsMY8g6yIECw6MfdPIpRTrkMYHJ/KIn4UMTnzqtKzUo89BgwWb56Ns=
-X-Received: by 2002:ac8:58d1:0:b0:477:c04:b511 with SMTP id
- d75a77b69052e-4922620f004mr107953411cf.31.1746713761746; Thu, 08 May 2025
- 07:16:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FByszaOY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EEAC4CEE7;
+	Thu,  8 May 2025 15:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746716409;
+	bh=egB+VJ9N3rDD59wubqFDZ1y/1JlSIMHjUrSaB1306Pc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FByszaOYxRydTITw1Md8HdUlCWLQpiVbKYSulTEAncYob+ZtGd+Bn5bl9BnvYItcJ
+	 /qCutB3qM5lDcHFKl9/Xu4uF+rnYMPoWjE0DkbdAovDOtNgzqkTdR+ogBLicQeg1BU
+	 6Fm9i4GSc/98+0JnFLaizUwWUS8DyxtqpTS8bzrDaiit9kj0j+iXjqp/uXNy2vyGs5
+	 SHUdBuVxZLI+Da5TrWBreFWS4qV3ufKbRzukc4arLIoHwOFivoy9QFNTkd8ELI5VQg
+	 +fdzz7dZJENQvUDFW5cyFCzoXDq1IlgXbsae4MXRukyD2EMErumUK2JVRNoTpiA2Xe
+	 8j5EhaLQ3Ubkw==
+Date: Thu, 8 May 2025 16:00:04 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] dt-bindings: mmc: loongson,ls2k-mmc: Add
+ compatible for Loongson-2K2000
+Message-ID: <20250508-polymer-bash-315e0a304f8d@spud>
+References: <cover.1746581751.git.zhoubinbin@loongson.cn>
+ <65c7d269776319ddfc951e94a2c4cc9bf572b75c.1746581751.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAK3+h2wo3KidH9yrGSNsV522BSkUJyn2TUp==tSv62937xPDMw@mail.gmail.com>
- <8f375e63-c4d5-b9cc-64c4-7563ba5c2763@loongson.cn>
-In-Reply-To: <8f375e63-c4d5-b9cc-64c4-7563ba5c2763@loongson.cn>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 8 May 2025 07:15:51 -0700
-X-Gm-Features: ATxdqUEEa1Z1mQa00hevvXcOIkbom88mG0ZyK3kU2QMuIfP-9O-RhE7kX4UTYbM
-Message-ID: <CAK3+h2xJX6de6EX=W=Pk8Ai3+-H5U7wQ9AWvQqZZ4MG5vNUUQA@mail.gmail.com>
-Subject: Re: [QUESTION] Loongarch bpf selftest liburandom_read.so build error
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, bpf <bpf@vger.kernel.org>, 
-	Hengqi Chen <hengqi.chen@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6NUEjZG1uAKmlXIx"
+Content-Disposition: inline
+In-Reply-To: <65c7d269776319ddfc951e94a2c4cc9bf572b75c.1746581751.git.zhoubinbin@loongson.cn>
+
+
+--6NUEjZG1uAKmlXIx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 8, 2025 at 12:23=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> On 05/08/2025 05:30 AM, Vincent Li wrote:
-> > Hi,
-> >
-> > I tried to build kernel 6.15-rc5 bpf selftests on Loongarch machine
-> > running Fedora, the bpf test programs seems built ok, but I got
-> > liburandom_read.so build error below:
-> >
-> >   LIB      liburandom_read.so
-> >
-> > /usr/bin/ld: cannot find crtbeginS.o: No such file or directory
-> >
-> > /usr/bin/ld: cannot find -lstdc++: No such file or directory
-> >
-> > /usr/bin/ld: cannot find -lgcc: No such file or directory
-> >
-> > /usr/bin/ld: cannot find -lgcc_s: No such file or directory
-> >
-> > clang: error: linker command failed with exit code 1 (use -v to see inv=
-ocation)
-> >
-> > make: *** [Makefile:253:
-> > /usr/src/linux/tools/testing/selftests/bpf/liburandom_read.so] Error 1
-> >
-> > Am I missing  gcc tools for Fedora loongarch?
->
-> This is related with the cmake option when compiling Clang:
->
->    "-DLLVM_HOST_TRIPLE=3Dloongarch64-redhat-linux"
->
-> You can native compile and update your Clang like this:
->
-> git clone https://github.com/llvm/llvm-project.git
-> mkdir -p llvm-project/llvm/build && cd llvm-project/llvm/build
-> cmake .. -G "Ninja" \
->           -DCMAKE_BUILD_TYPE=3DRelease \
->           -DLLVM_BUILD_RUNTIME=3DOFF \
->           -DLLVM_ENABLE_PROJECTS=3D"clang;lldb" \
->           -DCMAKE_INSTALL_PREFIX=3D/usr/local/llvm \
->           -DLLVM_TARGETS_TO_BUILD=3D"BPF;LoongArch" \
->           -DLLVM_HOST_TRIPLE=3Dloongarch64-redhat-linux
-> ninja -j4
-> sudo rm -rf /usr/local/llvm && sudo ninja install
-> export PATH=3D/usr/local/llvm/bin:$PATH
-> export LD_LIBRARY_PATH=3D/usr/local/llvm/lib:$LD_LIBRARY_PATH
->
+On Wed, May 07, 2025 at 03:28:07PM +0800, Binbin Zhou wrote:
+> Add the devicetree compatible for Loongson-2K2000 EMMC/SD/SDIO controller.
+>=20
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 
-Thanks Tiezhu!
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Below is what I used, it looks like I missed the "lldb" in
-LLVM_ENABLE_PROJECTS, I will add that.
+--6NUEjZG1uAKmlXIx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-cd $(DIR_APP)/llvm && mkdir build
+-----BEGIN PGP SIGNATURE-----
 
-cd $(DIR_APP)/llvm/build && cmake .. -G "Ninja"
--DLLVM_TARGETS_TO_BUILD=3D"BPF;LoongArch" \
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzG9AAKCRB4tDGHoIJi
+0vnMAQC3juxhbq+LTh0mJ4laW9UQNCA4eyiI2PRS0AGSGtfQwgD/ckFbuF3UN2fC
+jBG2ttOZSe6Ed9CedKKJ+5GEO633ywA=
+=1znE
+-----END PGP SIGNATURE-----
 
--DLLVM_ENABLE_PROJECTS=3D"clang"    \
-
--DCMAKE_BUILD_TYPE=3DRelease        \
-
--DLLVM_BUILD_RUNTIME=3DOFF \
-
--DCMAKE_INSTALL_PREFIX=3D/usr \
-
--DLLVM_HOST_TRIPLE=3Dloongarch64-unknown-linux
-
-> or install the fedora 42 and then use this software repo:
->
-> https://mirrors.wsyu.edu.cn/fedora/linux/F42/rawhide/Everything/loongarch=
-64/iso/
-
-good to know, I will upgrade when I get chance.
-
->
-> Thanks,
-> Tiezhu
->
+--6NUEjZG1uAKmlXIx--
