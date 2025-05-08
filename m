@@ -1,108 +1,84 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0A41DE4DC
-	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 02:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADC74B1E5E
+	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 03:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746672577; cv=none; b=VmwTpC0hcfmaVMITxfbTVbeTWpkMJeMD5DpGcmV5VKqhCt6H+ezrx5bKL/+GLOePq0jY+WEQtV6YR60LKnx2kLgX8cVDO92gLsL0I+/V3Mg81eThiXKDef1DqG6tY44s5emA+Qsxf0CC7jKe3KxGNrzwYEz/sBH0FLcWGru3w6c=
+	t=1746673522; cv=none; b=hT6HeDUR9PRA71YB+662V2uIadoBuvNKJABo1s70Un+JoALR3Vd8193MAsv1ElLO1SIYvbYvkyyxXqtkSqo8/5cEqX1JJPh6UYMsuCpfGfScxdTQ8yb5tVx/bw9ot7dZdXbcXRmTzStRiN6nPazHVd1iSVWHvALMnB0JoJjP1Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746672577; c=relaxed/simple;
-	bh=LWtro9cEpYvHuFt0E2C5crZKY/DWfTGNe9lKkzAMZQM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=lWJC7rU4+f0auRVscpAewbJAWM7euMWc+3Mvcvk917yUht5S//3ySGhgY0Z1PZ/cNxR3LrAABR/ivTMGe7k/VuOaDV+n+3jqmdTLsrLomGZjpjRA4i0HFshS8SMQPMBXmsquKgW/rartfPLRuFGfpREo2Tn3mpbRVvqZrrYuTSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YPGBrEvL; arc=none smtp.client-ip=91.218.175.178
+	s=arc-20240116; t=1746673522; c=relaxed/simple;
+	bh=L1cDpvZc06s6NWVmwHuWIfkw38+yIiZzlrkFuSrr/0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ROs+6Bh1x8WTNP0QmWSekLXiWdsRpxFBN5BYPpmaciVjYoaZGC2M7EoUACvYpx1WoXsSuOeWCKOKtAvupFOzhIFGZr4+jTiRBNQgGiSZdPznRqATIXe+gGVb3dR6bN0V7sdb+w5YYOXTgopfaLjib0MrrUkfXCap2JVz/4Smouc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Mad7vzUS; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YPGBrEvL"
-Message-ID: <2f2c5e56-35b1-4d23-be52-0266bcb1ca98@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mad7vzUS"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746672572;
+	t=1746673513;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uO+pFkIESIfEB9NPR4KJeLeb/tgaXyqm4g7Fug6ky/Y=;
-	b=YPGBrEvL3SEMn5dr9nQ0x93QbPXx+XXXHVY97lsPhPkCKfFvYbBMLHlyOnnNnkbr8EPgLh
-	aOaNzBk5xrx+qzFXVRz9KyAzI9vdSEtPZHLJlNoJF9+SEOy9jS6XFN3IHu/Hu0w69ZKQ+K
-	39aN7dI6hI+rtRaw0FjdlkUkejBPUUo=
-Date: Thu, 8 May 2025 10:49:25 +0800
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=38bEnc3/4OdLq1Z5EdhZB16fIN47NEz1fHEWwHyvETc=;
+	b=Mad7vzUSGtU+PzDNl1CfFTxnfCS/qzbj25UzghKr9qSqIoC6KApZUnSmQ64eSMy0XITwRG
+	MQVN1I/n5uCcuVj+txjQVKWwPnDK4yYBxjfPwu/vtKn9afWbj5moyP6G5EUBzOx+HPErzT
+	EfMzAV22SIPBjaKECNEuU3A0fLQFy+g=
+From: george <dongtai.guo@linux.dev>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: rppt@kernel.org,
+	akpm@linux-foundation.org,
+	dave.hansen@linux.intel.com,
+	geert@linux-m68k.org,
+	ptesarik@suse.com,
+	guoweikang.kernel@gmail.com,
+	maobibo@loongson.cn,
+	loongarch@lists.linux.dev,
+	George Guo <guodongtai@kylinos.cn>
+Subject: [PATCH 1/1] LoongArch: mm: remove redundant pte occupancy check in __set_fixmap()
+Date: Thu,  8 May 2025 11:05:06 +0800
+Message-ID: <20250508030506.7076-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/4] Initial support for CTCISZ Ninenine Pi
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Neil Armstrong <neil.armstrong@linaro.org>,
- Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
- =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
- Aradhya Bhatia <a-bhatia1@ti.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-References: <20250501044239.9404-2-ziyao@disroot.org>
- <d0575ec1-1901-4534-875c-fa9375e54e3d@linux.dev>
-Content-Language: en-US
-In-Reply-To: <d0575ec1-1901-4534-875c-fa9375e54e3d@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
+From: George Guo <guodongtai@kylinos.cn>
 
+This check could falsely report errors when PTEs are remapped:
+arch/loongarch/mm/init.c:204: bad pte 0000000107b601c3.
 
-在 5/7/25 6:08 PM, Yanteng Si 写道:
-> 在 5/1/25 12:42 PM, Yao Zi 写道:
->> This series adds support for CTCISZ Ninenine Pi, which ships an Loongson
->> 2K0300 SoC and various peripherals. The vendor prefix and the board are
->> documented and basic SoC/board devicetrees are added.
->>
->> I've successfully booted into console with vendor U-Boot, a bootlog
->> could be obtained here[1]. DTB and initramfs must be built into the
->> kernel as the vendor bootloader cannot pass them and upstream U-Boot
->> support for LoongArch is still WIP.
->>
->> Thanks for your time and review.
->>
->> [1]: https://gist.github.com/ziyao233/7fd2c8b3b51ef9b30fe5c17faae1bc4e
->>
->> Yao Zi (4):
->>    dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
->>    dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
->>    LoongArch: dts: Add initial SoC devicetree for Loongson 2K0300
->>    LoongArch: dts: Add initial devicetree for CTCISZ Ninenine Pi
->>
->>   .../bindings/loongarch/loongson.yaml          |   5 +
->>   .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->>   arch/loongarch/boot/dts/Makefile              |   1 +
->>   arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 197 ++++++++++++++++++
->>   .../boot/dts/ls2k0300-ctcisz-nineninepi.dts   |  41 ++++
->>   5 files changed, 246 insertions(+)
->>   create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
->>   create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz- 
->> nineninepi.dts
-> 
-> For all the patch sets:
-> 
-> Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
-I'm sorry. As there is no consensus yet on the name
-of the development board, could you please refrain
-from picking my R_B until this discussion is completed?
-Thank you so much for your understanding and cooperation!
+The check was unnecessary because:
+- Fixmap slots are designed to be reusable
+- Other architectures (x86/arm64) allow PTE overwrites
+- Callers are responsible for proper mapping management
 
-Thanks,
-Yanteng
-> 
-> 
-> Thanks,
-> Yanteng
->>
-> 
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+ arch/loongarch/mm/init.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index 06f11d9e4ec1..7b7e3b1aa00d 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -200,10 +200,6 @@ void __init __set_fixmap(enum fixed_addresses idx,
+ 	BUG_ON(idx <= FIX_HOLE || idx >= __end_of_fixed_addresses);
+ 
+ 	ptep = populate_kernel_pte(addr);
+-	if (!pte_none(ptep_get(ptep))) {
+-		pte_ERROR(*ptep);
+-		return;
+-	}
+ 
+ 	if (pgprot_val(flags))
+ 		set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
+-- 
+2.34.1
 
