@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44F833FD
-	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 07:02:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37831213E7E
+	for <loongarch@lists.linux.dev>; Thu,  8 May 2025 07:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746687774; cv=none; b=aMBtPMlaPEoBJhCdsjxWAY1wOBGfYeFyo2JNHzUxLA+/qJqIOxuUvS42JoH5nLOUc22G1m1IbCIuu1iOI+ZOHGicHvJZViZcBm81inQQApYz1Xy2VzhlFkVKhuMa1DtKilN+QyjFQPNrO8P4Ef/4n36c2NXb2RamRSGIT7Ovw/Y=
+	t=1746687775; cv=none; b=OKiFal5DNJf5IXrjXgtEjTOWGrgQvxVwjqsFgQxRP8g8xAvp+hDxs4wMtqXswwIqFSKyRcYq8FjRf6cNN5qSDnFijQAibPWPhyCKIZNex5IVYO/cEPH6O+V/ELvrk7HekFxTM4EFfcsRqPg+Gh8Gf9BevPnXVSNBUbm769v6i1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746687774; c=relaxed/simple;
-	bh=PViuhnJxLGB3fWTySH+ZorDPr5tu7EgTAvfuafSYYaU=;
+	s=arc-20240116; t=1746687775; c=relaxed/simple;
+	bh=RKxas14JlrLGmO2AriMM/F4axoSBYQ44QGwJC36uwug=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lVGG6JNq/ULSh5mOdGKOXJ8uCQHpD/YRsdhzu6Z8LRWx6XpCGsDWeX+8MN8v7hmScazJebkHJONFiMd7tD9YWyxBvm9L0mV0ZVWlZTKhzZUSlRzrlD8LdCM1C0i0QpKD3w0zdhVNhQlgmnS2H2ixWFATnZD0L6JPwmpiM71LPSw=
+	 MIME-Version; b=Kt3wR6j7ySnlInMytw2ZZmNvtX14kaJQc2pYL+wbq+C1a5MwZupcXlo7tF6HENUaTnzlB3GMHdVaLYr4i3OaXzyf9TLxpKPFpKj99vbO1972axhcNkejYvdLCK8D+Azn5yCF8SW6h9UQoQFUocwUuW9tZofEVBNsPu44QYzv8bI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.186])
-	by gateway (Coremail) with SMTP id _____8Bx63EXVxxoXGXZAA--.28842S3;
-	Thu, 08 May 2025 15:02:47 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxTWsaVxxoZGXZAA--.28018S3;
+	Thu, 08 May 2025 15:02:50 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.186])
-	by front1 (Coremail) with SMTP id qMiowMBxLscWVxxo6nO8AA--.25269S3;
-	Thu, 08 May 2025 15:02:47 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMBxLscWVxxo6nO8AA--.25269S5;
+	Thu, 08 May 2025 15:02:49 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -29,9 +29,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v1 1/3] LoongArch: dts: Add PWM support to Loongson-2K0500
-Date: Thu,  8 May 2025 15:02:34 +0800
-Message-ID: <29ec8dd0a1c6ba24caada8e48867180e41553d0f.1746684614.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v1 3/3] LoongArch: dts: Add PWM support to Loongson-2K2000
+Date: Thu,  8 May 2025 15:02:36 +0800
+Message-ID: <9cd407aacc09f9581361e9ef07024c4306bd0146.1746684614.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <cover.1746684614.git.zhoubinbin@loongson.cn>
 References: <cover.1746684614.git.zhoubinbin@loongson.cn>
@@ -42,203 +42,103 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxLscWVxxo6nO8AA--.25269S3
+X-CM-TRANSID:qMiowMBxLscWVxxo6nO8AA--.25269S5
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj97XoW5Ww4xGF45Kr1xAw4xKr4rp5X_ArW7uoZIya
-	n5tr1rGa47Ca1vqry3Gw1j9rs8WF4akrWayF1fJr45Jw4xJas7Ca13uFy7urW8tryDZ342
-	9an8A3y3ArWkl-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf9Il3
-	svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIY
-	CTnIWjp_UUUYU7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcI
-	k0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK
-	021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl
-	6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrV
-	ACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8
-	JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2Z2-UUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoW7AFW8Gw4rXrWkKr1ruFWrXrc_yoW8Kw48pa
+	srC3yUKrW0qF1Ikwn8XFy8KFZ3Zr9YkF9rWFnrAFyUJ34DKw4jv3WxGFyxXF1xWr4UX34a
+	vFnak34jgFZrXwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUco7KUUUUU
 
 The module is supported, enable it.
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- arch/loongarch/boot/dts/loongson-2k0500.dtsi | 160 +++++++++++++++++++
- 1 file changed, 160 insertions(+)
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi | 60 ++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0500.dtsi b/arch/loongarch/boot/dts/loongson-2k0500.dtsi
-index 3b38ff8853a7..760c60eebb89 100644
---- a/arch/loongarch/boot/dts/loongson-2k0500.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k0500.dtsi
-@@ -169,6 +169,166 @@ eiointc: interrupt-controller@1fe11600 {
- 			interrupts = <3>;
+diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
+index b4ff55a33e90..9e0411f2754c 100644
+--- a/arch/loongarch/boot/dts/loongson-2k2000.dtsi
++++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
+@@ -165,6 +165,66 @@ msi: msi-controller@1fe01140 {
+ 			interrupt-parent = <&eiointc>;
  		};
  
-+		pwm@1ff5c000 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c000 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
++		pwm@100a0000 {
++			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
++			reg = <0x0 0x100a0000 0x0 0x10>;
++			interrupt-parent = <&pic>;
 +			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
++			clocks = <&clk LOONGSON2_MISC_CLK>;
 +			#pwm-cells = <3>;
 +			status = "disabled";
 +		};
 +
-+		pwm@1ff5c010 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c010 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@1ff5c020 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c020 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@1ff5c030 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c030 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@1ff5c040 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c040 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
++		pwm@100a0100 {
++			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
++			reg = <0x0 0x100a0100 0x0 0x10>;
++			interrupt-parent = <&pic>;
 +			interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
++			clocks = <&clk LOONGSON2_MISC_CLK>;
 +			#pwm-cells = <3>;
 +			status = "disabled";
 +		};
 +
-+		pwm@1ff5c050 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c050 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@1ff5c060 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c060 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@1ff5c070 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c070 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@1ff5c080 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c080 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
++		pwm@100a0200 {
++			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
++			reg = <0x0 0x100a0200 0x0 0x10>;
++			interrupt-parent = <&pic>;
 +			interrupts = <26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
++			clocks = <&clk LOONGSON2_MISC_CLK>;
 +			#pwm-cells = <3>;
 +			status = "disabled";
 +		};
 +
-+		pwm@1ff5c090 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c090 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@1ff5c0a0 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c0a0 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@1ff5c0b0 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c0b0 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@1ff5c0c0 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c0c0 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
++		pwm@100a0300 {
++			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
++			reg = <0x0 0x100a0300 0x0 0x10>;
++			interrupt-parent = <&pic>;
 +			interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
++			clocks = <&clk LOONGSON2_MISC_CLK>;
 +			#pwm-cells = <3>;
 +			status = "disabled";
 +		};
 +
-+		pwm@1ff5c0d0 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c0d0 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
++		pwm@100a0400 {
++			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
++			reg = <0x0 0x100a0400 0x0 0x10>;
++			interrupt-parent = <&pic>;
++			interrupts = <38 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk LOONGSON2_MISC_CLK>;
 +			#pwm-cells = <3>;
 +			status = "disabled";
 +		};
 +
-+		pwm@1ff5c0e0 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c0e0 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
++		pwm@100a0500 {
++			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
++			reg = <0x0 0x100a0500 0x0 0x10>;
++			interrupt-parent = <&pic>;
++			interrupts = <39 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk LOONGSON2_MISC_CLK>;
 +			#pwm-cells = <3>;
 +			status = "disabled";
 +		};
 +
-+		pwm@1ff5c0f0 {
-+			compatible = "loongson,ls2k0500-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x1ff5c0f0 0x0 0x10>;
-+			interrupt-parent = <&liointc0>;
-+			interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_APB_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
- 		gmac0: ethernet@1f020000 {
- 			compatible = "snps,dwmac-3.70a";
- 			reg = <0x0 0x1f020000 0x0 0x10000>;
+ 		rtc0: rtc@100d0100 {
+ 			compatible = "loongson,ls2k2000-rtc", "loongson,ls7a-rtc";
+ 			reg = <0x0 0x100d0100 0x0 0x100>;
 -- 
 2.47.1
 
