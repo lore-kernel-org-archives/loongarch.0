@@ -1,88 +1,84 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0858B235071
-	for <loongarch@lists.linux.dev>; Fri,  9 May 2025 15:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574E223C4FD;
+	Fri,  9 May 2025 17:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746803366; cv=none; b=UbLINPRwccGTXuYjd0S4Q/sznuNTudkYyaN4S9NSDd5XSQ2xaxSpL+H2y/toaBsabu3lI1fRi3P33s8Lx9pYg3529kfm+cP+3JJ0xHTVQVG7JL6wCUMY6b20yj2r8LuPcNUQwz4nceHBwFVbfCzL7YmkfGd5A0EDAgLs9u/+1Ms=
+	t=1746811800; cv=none; b=ixVCT2PcESVuWiDyvH/kIDcoZDZBzNxCwxpVKKN2sXl4Aqj0qvLT/HuefIkfq7SJqQCZrSUvroJ1Eu6FOQZF3tEwmww8nN5mMVDWJ42uv2JfRKgkY0MrDGhR/4391VE+VXmwo5i3C2qV2CdCIdhMrZfwluqVVeS9NhZb3e10mvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746803366; c=relaxed/simple;
-	bh=dA6ZcKfmigQgmyxqYP3SECtdnVaMP7ARcLCY2F5DfrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UpWyHhsSKOibJ8n9sAw0ETkALK7tgOQSPQleRvFvn6vbcAdPheFk20SFznHzcy3Hp/h48gH78xjmC4HugTL0qeOfFbcJv1xGVo50gmytKGdWbCQ1veDzkHwBw++WGIVyrciHpkL+gzoRswEGoJ49dEPhPkGOTE/SuLNLRTTedfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [36.44.121.59])
-	by gateway (Coremail) with SMTP id _____8DxbKygGh5otcLbAA--.32787S3;
-	Fri, 09 May 2025 23:09:20 +0800 (CST)
-Received: from [192.168.0.111] (unknown [36.44.121.59])
-	by front1 (Coremail) with SMTP id qMiowMAxzMSeGh5ovNbAAA--.32998S3;
-	Fri, 09 May 2025 23:09:19 +0800 (CST)
-Message-ID: <fccef9c4-da67-c232-7d61-07f2c6cabbd0@loongson.cn>
-Date: Fri, 9 May 2025 23:09:21 +0800
+	s=arc-20240116; t=1746811800; c=relaxed/simple;
+	bh=cPhjasTwI2UlEzhggO3BfP5IeHfjz55rUCtySA1MPZs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=KpeRlmGyS+qFkEKXcv2YLGF0Df8J5TV0vkca1MQIdfTC2fifZd+S9nDeDL43cwNRdHJJdw+Kpa0m+2mncmnxeA+nLpsqqeV11qlwYbumQWtPrSGc310voICfZ6xiyp9mEoS8zZMcxmHrvbxwruKKqYrW8WFCQCuUUE6UlzzDk6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1Vzq6pk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1Vzq6pk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3B86C4CEE9;
+	Fri,  9 May 2025 17:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746811799;
+	bh=cPhjasTwI2UlEzhggO3BfP5IeHfjz55rUCtySA1MPZs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=S1Vzq6pkJKMtybevOYaVo+IXvGH9iHyt73kURGEzn0tBT7dMlc+WGknIq8ZFywpB/
+	 qXYXmoq0TCaXPzQq6itNVVd3AYUhdZ6RcydeNgRW8raQp/uH/ImxtqUEThp3T6OZPF
+	 3y7ixjn93OgRSmT+QpjQ+pqm9PUFm9evikv6r+mv7q/PXaXOaWYY/n8OqfXWUOvCSO
+	 BRu/6hQTYrWgPOFizXnYvp4jceTcFUn7uVqOZISdsMcKbaIi/b9clf5uH7Eg4O/I8D
+	 RakzsEDIsD7jxW8jgm3Pa7u9Pnb25q19Sfs0Bi4DK/0cgElUkTRjXgeAERyfw+D9M2
+	 MEdKkuCHPBnOw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E4D380DBCB;
+	Fri,  9 May 2025 17:30:38 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 0/5] Enable some configs in loongson3_defconfig
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250430131516.24287-1-yangtiezhu@loongson.cn>
- <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
- <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-In-Reply-To: <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMAxzMSeGh5ovNbAAA--.32998S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZr47tr45KFyfuw1xXry7urX_yoW3Jrg_Ca
-	95GF109rykGa9Y93ZIgr4S9rsYgry0gw1kC34UGw1jq3WUWayqyFsxZas7JF15AFZ7Jryx
-	Xr4jqr17CFs8CosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_
-	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
-	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU
-	=
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/3] Drop explicit --hash-style= setting for new
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <174681183698.3697320.7074504502229425253.git-patchwork-notify@kernel.org>
+Date: Fri, 09 May 2025 17:30:36 +0000
+References: <20250224112042.60282-1-xry111@xry111.site>
+In-Reply-To: <20250224112042.60282-1-xry111@xry111.site>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: linux-riscv@lists.infradead.org, guoren@kernel.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, palmer@dabbelt.com, i@maskray.me, yangtiezhu@loongson.cn,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 5/7/25 12:24, Huacai Chen wrote:
-...
+Hello:
 
-> Have you tried (both OpenSSL)
-> 
-> sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-> sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery openssl speed sm2
-> 
-> or (both Tongsuo)
-> 
-> sudo ./perf probe -x /opt/tongsuo/lib/libcrypto.so BN_mod_mul_montgomery
-> sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery
-> /opt/tongsuo/bin/openssl speed sm2
-> 
-> and still success?
-> 
-> I tried, and both got a SIGTRAP or system hang.
+This series was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-I can reproduce it now and have a draft patch to fix it.
+On Mon, 24 Feb 2025 19:20:39 +0800 you wrote:
+> For riscv, csky, and LoongArch, GNU hash had already become the de-facto
+> standard when they borned, so there's no Glibc/Musl releases for them
+> without GNU hash support, and the traditional SysV hash is just wasting
+> space for them.
+> 
+> Remove those settings and follow the distro toolchain default, which is
+> likely --hash-style=gnu.  In the past it could break vDSO self tests,
+> but now the issue has been addressed by commit
+> e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH").
+> 
+> [...]
 
-I am busy with some emergency stuff recently and will send
-the formal patch as soon as I have some free time to make
-a proper commit message.
+Here is the summary with links:
+  - [1/3] riscv: vDSO: Remove --hash-style=both
+    https://git.kernel.org/riscv/c/2940954c1ac5
+  - [2/3] csky: vDSO: Remove --hash-style=both
+    (no matching commit)
+  - [3/3] LoongArch: vDSO: Remove --hash-style=sysv
+    (no matching commit)
 
-Thanks,
-Tiezhu
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
