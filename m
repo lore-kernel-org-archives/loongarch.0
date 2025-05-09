@@ -1,107 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06AA21D5B6;
-	Thu,  8 May 2025 19:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB4E1802B;
+	Fri,  9 May 2025 00:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746734283; cv=none; b=aQLfoxRFWFSZq9rorYY6we8eS7IT9HarT3hZaRWStmciZVhk6UD9HeYYTCyl3f47ubcQ0WvbrrwaZ3sjVIg+EGI85D9o5jf/hcwJ64RWrivimEv9gPk1gqdPBu7M0lcsVhf0NJgSxUwRdayraUqQWIFSSqa3riSdzZWOcDqJjgY=
+	t=1746751351; cv=none; b=p+l9MzZySmWH6Vun/nkR6H2sB32CE2b1tBB3hEXSkjCVmJpAX9LQb1PunSGXXlCg9ZvFsuaFccKwboe1rUULfWFFfw/UEmz5isnUPf/3Pf46ywOukBZ0mID2JAVrp5LNFQiuRSm8IbENF6L09K/dVpuPWqdyEosmZqI8kQH19F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746734283; c=relaxed/simple;
-	bh=FH9ehDK9w6juOjpTVtLhZKee0FunkstL7xkh4AtrgTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SAPNFEmV5NLXNP/AZ+vjeIponEx6AjHgnyLurZSQIw9SJfR/1KB+GGfs5kgkw928NaEfAC02kcLS82qU5e5Hnj4IKP9xq3CQmLUS3IAeyF0NkoIdY1iTiOy4J0IMx6V3kCNvXVlYTlg3dgw/auLyQ9YQH1pOdk8Dn206hhliWaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZiRICA1o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746751351; c=relaxed/simple;
+	bh=PRRpLihiyKbV/Sfm7nAyauKWja5MC4KYGOEp5dMFOPU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=BGx/fRVMknVc7i2WIPZzMK7XjWm20VwL9k38SSbDi14qIOXHbohDJIVHXRO5raiK0PRUj+n2P/BNMM8Y2mlxiHsb/w3e0UQ22gOqeNLMLfWGHfqHI+NY7a1+d3/HmkUCGmyradMCF1gAlfNsNIMEPqwYZMkoCLQEsEVd6UVC8CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GeHURCqy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZiRICA1o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DD17C4CEE7;
-	Thu,  8 May 2025 19:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746734283;
-	bh=FH9ehDK9w6juOjpTVtLhZKee0FunkstL7xkh4AtrgTw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZiRICA1oFfayFJnQV5xeTUPwimK7G3h4CFi26D/JDJTMCB/Ex+seUtV616z+bWwXv
-	 dX5eoV51Sg+vgkqhmT+7I9T2omk1J00lBbpObzTFG4VEJfXY2ajSN+9IUU9z4oHDNm
-	 OWSf+Y/8AJqDntx62kr8L/NcQehqGTzbWEBQ/QeIN+uJhVI7LQThEtxkgJkT+vTdre
-	 Ehvh1fpEmR+1Ks49iK7GS+bTbAxN1oi0yCIHoIjkUvbRXk5SSDivdJ8AFzNFL50kAD
-	 Z29BDBtD7Mf5sbdHr0973NnKVNyRlhz+ClqxoDKV3Q2Pxk/8MNAC1UEvQSASgiy8H7
-	 WG+tYLe6KBN3g==
-Date: Thu, 8 May 2025 22:57:58 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: Stefano Garzarella <sgarzare@redhat.com>, lee@kernel.org,
-	herbert@gondor.apana.org.au, davem@davemloft.net, peterhuewe@gmx.de,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org, jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v9 4/5] tpm: Add a driver for Loongson TPM device
-Message-ID: <aB0MxkdKVLso4jZD@kernel.org>
-References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
- <20250506031947.11130-5-zhaoqunqin@loongson.cn>
- <2nuadbg5awe6gvagxg7t5ewvxsbmiq4qrcrycvnrmt2etzq2ke@6oyzavctwrma>
- <0b148f09-d20d-b6be-d31b-6c8a553658c9@loongson.cn>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GeHURCqy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 715CEC4CEED;
+	Fri,  9 May 2025 00:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746751351;
+	bh=PRRpLihiyKbV/Sfm7nAyauKWja5MC4KYGOEp5dMFOPU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GeHURCqy78rgaPH336N7O9DR2zC7Dw3upYbA5PXTkE3c9yrNHxYhi+rlndDY1nj01
+	 Cs/isfb6y6BJask44SKtR4DoFzv1HGXitOByXCwXPBESsszgnZ2pSxTUoqw5WdJIJx
+	 yDmSt6Fy7MdG77SX11Re/PiIMGvbjh/GlTUS2YtY=
+Date: Thu, 8 May 2025 17:42:29 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com, rppt@kernel.org,
+ rafael@kernel.org, lenb@kernel.org, alison.schofield@intel.com,
+ rrichter@amd.com, bfaccini@nvidia.com, haibo1.xu@intel.com,
+ david@redhat.com, chenhuacai@kernel.org, linux-cxl@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, chenbaozi@phytium.com.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 1/1] mm: numa_memblks: introduce
+ numa_add_reserved_memblk
+Message-Id: <20250508174229.c310803222405c1b7d60e104@linux-foundation.org>
+In-Reply-To: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
+References: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0b148f09-d20d-b6be-d31b-6c8a553658c9@loongson.cn>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 09:33:32AM +0800, Qunqin Zhao wrote:
+On Thu,  8 May 2025 10:27:19 +0800 Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
 > 
-> 在 2025/5/6 下午10:13, Stefano Garzarella 写道:
-> > On Tue, May 06, 2025 at 11:19:46AM +0800, Qunqin Zhao wrote:
-> > > Loongson Security Engine supports random number generation, hash,
-> > > symmetric encryption and asymmetric encryption. Based on these
-> > > encryption functions, TPM2 have been implemented in the Loongson
-> > > Security Engine firmware. This driver is responsible for copying data
-> > > into the memory visible to the firmware and receiving data from the
-> > > firmware.
-> > > 
-> > > Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> > > Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> > > Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > ---
-> > > v9: "tpm_loongson_driver" --> "tpm_loongson"
-> > >    "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
-> > > 
+> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+> ranges directly.
+> 
 > ...
-> > > +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t
-> > > count)
-> > > +{
-> > > +    struct loongson_se_engine *tpm_engine =
-> > > dev_get_drvdata(&chip->dev);
-> > > +    struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
-> > > +
-> > > +    memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
-> > 
-> > Should we limit the memcpy to `count`?
-> > 
-> > I mean, can happen that `count` is less than `cmd_ret->data_len`?
-> 
-> Hi, Stefan, thanks for your comment.
-> 
-> Firmware ensures "cmd_ret->data_len" will be less than TPM_BUFSIZE,  so this
-> would never happen.
+>
+>  drivers/acpi/numa/srat.c     |  2 +-
+>  include/linux/numa_memblks.h |  1 +
+>  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
 
-It still must have check-and-fail, as we don't live in a belief system
-:-) It helps to mitigate collateral damage of possible firmware bugs
-(and thus -EIO is the appropriate error code).
-
-> 
-> BR, Qunqin.
-> 
-> > 
-> > Thanks,
-> > Stefano
-> 
-
-BR, Jarkko
+I'm not sure which tree this best belongs to so I'll add it to mm-git. 
+If it later pops up in another tree, I'll drop it again.
