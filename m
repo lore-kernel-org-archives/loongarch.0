@@ -1,105 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0CD9444
-	for <loongarch@lists.linux.dev>; Sat, 10 May 2025 07:34:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDE61459EA
+	for <loongarch@lists.linux.dev>; Sun, 11 May 2025 09:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746862453; cv=none; b=GJP1RP5+wvcNprIWo4gomklzg7kLtw4C7gHkJ6ni0gLHw2AChMKpdVJ6OPgkSaTHzVLJvpVdmB7kiMxbsmjIoNIyxD9nRtnwZZ85bD1kIWJnyg73lXQPrD/QfCu3jyknODOtgzBMk9Ag76vLt/7YWQsieGpoAGG0BoFUXPgmfQ0=
+	t=1746956079; cv=none; b=kudhB+z23735fBSnLoA8+NlzS+w+CRORw59xKAOjHOj5nsMeiGnfhQI19l3+2mYSzNoqJiDKtCUvMkfaYpLDbREow99DEESV5XfkpOWXQJCbrBD4GYmcRqF4Fq0OQ/1St323E6yqxDPvYafN7rRwJbyFhc9fhXKv7NkB6dBFzAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746862453; c=relaxed/simple;
-	bh=fvijvS2MYfhTPTg8ry3/+Dayr5PBz0uT7UGvPckdf9Q=;
+	s=arc-20240116; t=1746956079; c=relaxed/simple;
+	bh=IXTSrniA0F/bUn9kvpa82cCBTV6wX8LPQ4rmehEcxA8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DIB65gTLTFpSR7+/zDgq7ls6W9yqDa+yISu1uqQ+bUftnvfgScC3DNgy+8Nf1AvvvA65EH35iOqTGv5GsJL2ZzmHAW/P8eRYTZEXewCljvcMaV7wKKzWuNj/u15Sg2i3Wb2AQRmRcB/zQXTHkRzPPj5OD3STMzfpl+0wQkFQ5FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I650Iy8b; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Oi7XR9NLycO+DBfkSdaIZ6nN8k20OPOajZColEDJCC8HcYgavE1VG0znmQgPu4EOEHuE3ZqUN9ZCn4EWxPJMtukaGLWbmSqxdUX+a2/+UFIlpGgJIwNJTwCc0TlokT6XZzqJeCd6vOIsEjA9TCgOmjK/JayY+TkiPMMnWkZI1Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bGhZZa+6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I650Iy8b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8350C4CEEF
-	for <loongarch@lists.linux.dev>; Sat, 10 May 2025 07:34:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bGhZZa+6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFD3C4AF0C
+	for <loongarch@lists.linux.dev>; Sun, 11 May 2025 09:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746862452;
-	bh=fvijvS2MYfhTPTg8ry3/+Dayr5PBz0uT7UGvPckdf9Q=;
+	s=k20201202; t=1746956079;
+	bh=IXTSrniA0F/bUn9kvpa82cCBTV6wX8LPQ4rmehEcxA8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=I650Iy8bXVt12CPBgiA/0OB/laieVcX99twsC7A/DFl1GSbEoWuW+G58X5OyVnkvR
-	 9UlzugJmXQxjqaaWT5BGqLbQ6NZgm5Y52sFb/ZNylI9qoVSM1Al1U2j3d9v4GrZixe
-	 p79fGCqeM57jCumJaB+eTGtC1iCTtcm3QdD2ykVBuCNFKzlMHonEyb3iYbOT2embZJ
-	 FDT+ajn1YA8KDaxzFqMW99GPzf25xR4gt0FImxfH/Cgporjo2FeQV/x16VYrB1DZHe
-	 ZJyekbDCklIFzwnwaCJ0MpMdpUkk14Fc1fhG7vpx5ZQUTcY+V7GtPjfwd9Ck6K4+LM
-	 6+gvcHqCDjRlA==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5fc3f0a5506so5072616a12.0
-        for <loongarch@lists.linux.dev>; Sat, 10 May 2025 00:34:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVkP+yOPiaCVB4VhuY1t4xxWZnwy0EGusA6sx2vnY9npgdHpcns3IR5krOi8A/cgsltgtoNpl3olaY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwDyfO/Xb4my3PyCFMM8BXoiXkL1MGuY1W7Iod7abfXnp8r+IvD
-	TuPLg2CfAfXA1blG2cU/olCDrHJdURQbuab5qcL8TfGrtwGvu2ZlCP1y6pGHFkVhr2eq+XYikDq
-	do6hbDYjf2Vcd8f+mhcAp0S0eJ2Q=
-X-Google-Smtp-Source: AGHT+IEn9zSoaVBYo0DNSjXuYFOo2oyLfmd7pHQxJqaRlCJrT05m4QYdCbNqWUsi/knofpEpCN6KXcjcM/S27HldPsQ=
-X-Received: by 2002:a17:906:48d4:b0:ad2:1cd7:cef3 with SMTP id
- a640c23a62f3a-ad21cd7d372mr427924166b.23.1746862451298; Sat, 10 May 2025
- 00:34:11 -0700 (PDT)
+	b=bGhZZa+6l0D52SP+R46iUCCXFQKKJ8Zpg8HBG7B0sCHy6jTfbpHWJvdYkMCQXLE7S
+	 1As/XAaT9ziEYJskWUeXDpFOgBpksmCLrjsIZO2ncOzyyWEPSZ/nrzEujAR0EEgVXP
+	 MiyNzoJHsJ5MpdlRldp1Dc85qO8T9whw2JdEyzUU1YjW9FJvE0185VenC5j41MoMBL
+	 IRgJoBbnPYwME1rpxtKsoqAXOm+CJswQy3LTA9yzJWrwSCdKJCYBeH9ejyVCLWRf8y
+	 bdabH/+zWcGCYH0dU4RTdQ7u/VgWlqANJ5AWZ0aUjLVOWUJMCzVsd/jeIP8CC4/N6r
+	 W+zlcFSL3YjHg==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad24ee085a8so38191866b.0
+        for <loongarch@lists.linux.dev>; Sun, 11 May 2025 02:34:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUFtM+o9LPy/EqHkc8q8v46AUVNeNJoTOeQ8u4V70qsEJmFnr+FSSBAy5t6gdLG2Na3KbVAiFxhuEA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxF4mKOMRMt8qZ4BBV2r1TTTzNLWRjOVTcZIlDPadXkD74EMhYP
+	tLFkufFsP58UmPdjkrg4r+ZKXP7Fwn6zuvyG4zlpZtER7UennXN6BjfyAYji5z44ySs1r+UwRTn
+	Ic/d6VGXoORknsY9EiXWbM+SdekY=
+X-Google-Smtp-Source: AGHT+IGTmZ6EF6mEMOjWbqINnWJsCw2wRXE87kMGhAwJ2qS0Md32h3m+YkrG3Wx9y7SkE5DIAuoUoNAFRtWxn6ygHmI=
+X-Received: by 2002:a17:906:5415:b0:ad2:1cd7:cefc with SMTP id
+ a640c23a62f3a-ad21cd7d3f1mr642121766b.13.1746956077475; Sun, 11 May 2025
+ 02:34:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250508030506.7076-1-dongtai.guo@linux.dev>
-In-Reply-To: <20250508030506.7076-1-dongtai.guo@linux.dev>
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 10 May 2025 15:34:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5eUtV6N=jt9sUyKXLAP2sX2kHA7rEbyKuSL1G-kRiXFg@mail.gmail.com>
-X-Gm-Features: AX0GCFvIlddaOloms8tMR9SgFwC6VXWE77UAAFFykp2Vn3Z8ZeeyrJnJlZM3cic
-Message-ID: <CAAhV-H5eUtV6N=jt9sUyKXLAP2sX2kHA7rEbyKuSL1G-kRiXFg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] LoongArch: mm: remove redundant pte occupancy check
- in __set_fixmap()
-To: george <dongtai.guo@linux.dev>
-Cc: kernel@xen0n.name, rppt@kernel.org, akpm@linux-foundation.org, 
-	dave.hansen@linux.intel.com, geert@linux-m68k.org, ptesarik@suse.com, 
-	guoweikang.kernel@gmail.com, maobibo@loongson.cn, loongarch@lists.linux.dev, 
-	George Guo <guodongtai@kylinos.cn>
+Date: Sun, 11 May 2025 17:34:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H58WqEnqG3gJ1iJMrVaJ-okPJweLYwS1odJx4zAP41XpA@mail.gmail.com>
+X-Gm-Features: AX0GCFs1xOMk2kKU9flskV20SeyFaYR6PfUyE9kYaPhzNcBNUwhaCNzouF6DfsI
+Message-ID: <CAAhV-H58WqEnqG3gJ1iJMrVaJ-okPJweLYwS1odJx4zAP41XpA@mail.gmail.com>
+Subject: Re: [PATCH v9 0/5] Add Loongson Security Engine chip driver
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
+	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, George,
+Hi, Qunqin,
 
-On Thu, May 8, 2025 at 11:05=E2=80=AFAM george <dongtai.guo@linux.dev> wrot=
-e:
->
-> From: George Guo <guodongtai@kylinos.cn>
->
-> This check could falsely report errors when PTEs are remapped:
-> arch/loongarch/mm/init.c:204: bad pte 0000000107b601c3.
->
-> The check was unnecessary because:
-> - Fixmap slots are designed to be reusable
-> - Other architectures (x86/arm64) allow PTE overwrites
-> - Callers are responsible for proper mapping management
->
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/mm/init.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-> index 06f11d9e4ec1..7b7e3b1aa00d 100644
-> --- a/arch/loongarch/mm/init.c
-> +++ b/arch/loongarch/mm/init.c
-> @@ -200,10 +200,6 @@ void __init __set_fixmap(enum fixed_addresses idx,
->         BUG_ON(idx <=3D FIX_HOLE || idx >=3D __end_of_fixed_addresses);
->
->         ptep =3D populate_kernel_pte(addr);
-> -       if (!pte_none(ptep_get(ptep))) {
-> -               pte_ERROR(*ptep);
-> -               return;
-> -       }
-Resolve what problems? If other patches need this change, please
-submit them as a series.
+Where is the 2nd patch in V7?
 
 Huacai
 
+On Tue, May 6, 2025 at 12:33=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
 >
->         if (pgprot_val(flags))
->                 set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
+> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+> accelerator engines. Each engine have its own DMA buffer provided
+> by the controller. The kernel cannot directly send commands to the
+> engine and must first send them to the controller, which will
+> forward them to the corresponding engine. Based on these engines,
+> TPM2 have been implemented in the chip, then let's treat TPM2 itself
+> as an engine.
+>
+> v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
+>
+> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+>     are all encryption related drivers and SM2, SM3, and SM4 drivers
+>     will be added to the crypto subsystem in the future, the base driver
+>     need to be changed when adding these drivers. Therefore, it may be
+>     more appropriate to place the base driver within the crypto
+>     subsystem.
+>
+>     Removed complete callback in all drivers. Removed the concepts of
+>     "channel", "msg" and "request" as they may be confusing. Used the
+>     concepts of "egnine" and "command" may be better.
+>
+> v7: Addressed Huacai's comments.
+>
+> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+>
+>     crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+>     ls6000se-rng.c ->loongson-rng.c
+>
+>     tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+>
+> v5: Registered "ls6000se-rng" device in mfd driver
+>
+> Qunqin Zhao (5):
+>   mfd: Add support for Loongson Security Engine chip controller
+>   crypto: loongson - add Loongson RNG driver support
+>   MAINTAINERS: Add entry for Loongson crypto driver
+>   tpm: Add a driver for Loongson TPM device
+>   MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+>
+>  MAINTAINERS                            |   9 +
+>  drivers/char/tpm/Kconfig               |   9 +
+>  drivers/char/tpm/Makefile              |   1 +
+>  drivers/char/tpm/tpm_loongson.c        |  78 ++++++++
+>  drivers/crypto/Kconfig                 |   1 +
+>  drivers/crypto/Makefile                |   1 +
+>  drivers/crypto/loongson/Kconfig        |   5 +
+>  drivers/crypto/loongson/Makefile       |   1 +
+>  drivers/crypto/loongson/loongson-rng.c | 197 +++++++++++++++++++++
+>  drivers/mfd/Kconfig                    |  11 ++
+>  drivers/mfd/Makefile                   |   2 +
+>  drivers/mfd/loongson-se.c              | 235 +++++++++++++++++++++++++
+>  include/linux/mfd/loongson-se.h        |  52 ++++++
+>  13 files changed, 602 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_loongson.c
+>  create mode 100644 drivers/crypto/loongson/Kconfig
+>  create mode 100644 drivers/crypto/loongson/Makefile
+>  create mode 100644 drivers/crypto/loongson/loongson-rng.c
+>  create mode 100644 drivers/mfd/loongson-se.c
+>  create mode 100644 include/linux/mfd/loongson-se.h
+>
+>
+> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
 > --
-> 2.34.1
+> 2.45.2
 >
 >
