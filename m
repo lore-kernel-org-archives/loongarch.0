@@ -1,40 +1,34 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83D601F4C87
-	for <loongarch@lists.linux.dev>; Tue, 13 May 2025 08:05:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62BAC12CDAE
+	for <loongarch@lists.linux.dev>; Tue, 13 May 2025 08:07:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747123553; cv=none; b=kEJizUWYphYWkPt8yh4L154CbYC4WqlwGcgoy9Oe0X5Lqkom0ogmjphnjencggJ4MZY1lZjD5ANHaSWFRmFus+zERQujOHViz+bav0aT7EBvnmwN/h4tcl59Jo2hoHy6emzHI/ScFvQBHWma4j5BUo/S+B9BedkCTf1+rIscrB8=
+	t=1747123626; cv=none; b=j0bUy9Ijvhi9Ec+qpNBxGui3B7zu9+Grcxp4OC4ITNtn/gEJ4ojsr69eaCBiqnPASJYmiJPCDfAujeKN1lqjjSk+VqPfD9hvHlyiVcl+wqHctAp7YF1cnksm77KN6LJ+FP5hgwDoScV3UXVkU+CF6jJO5Oc7Ml9GQcNovwmUH14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747123553; c=relaxed/simple;
-	bh=YQiWkClv++I9ZF+Yn4KaYA6Lp7MBGtotobJmMXEFGXI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kChzynmzJquV4SegMpjnwDDmiTnFlfQkzxp0QM0MoUG5cpBgneJ4k2h1KF52Dm8DxtH8ltx3AxV/13bLL7gYUhpz4x2ydL/se8eQxKrib4e+slQlzDSli0cDKTX39ZAKabeKckf9DPB9ox7wW7nSQ7kBCJf5dYVLFf+sWLEEfQg=
+	s=arc-20240116; t=1747123626; c=relaxed/simple;
+	bh=Cq+HfICzYMkJFEWW5AjpY7hUpz8hyEiaol0Ein4Ft40=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bHwnz7N7rn2w0jVQrQO6sitheZ4g4JLR7aZhdxgzjhIP/FhN9kBAya2xJI8oivxn+0uFApge74jKQOmWp6e+l23C1IY8sWkCGptzUz1VsbgaGkjykZejMxouBTo5DNPKqfvs1XY4dF50LodswAWq2EIAM3ppKWXRU1GjLoieNYs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.186])
-	by gateway (Coremail) with SMTP id _____8AxlnBZ_SJo3JzjAA--.43016S3;
-	Tue, 13 May 2025 16:05:45 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxvnOm_SJosp3jAA--.10817S3;
+	Tue, 13 May 2025 16:07:02 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.186])
-	by front1 (Coremail) with SMTP id qMiowMDxPBtN_SJofXTNAA--.18011S2;
-	Tue, 13 May 2025 16:05:36 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMDx+xqf_SJopHXNAA--.18621S2;
+	Tue, 13 May 2025 16:06:58 +0800 (CST)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
 	Huacai Chen <chenhuacai@kernel.org>
 Cc: Xuerui Wang <kernel@xen0n.name>,
 	stable@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
 	loongarch@lists.linux.dev,
-	Zi Yan <ziy@nvidia.com>,
-	Huang Ying <ying.huang@intel.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH for 6.6] mm/migrate: correct nr_failed in migrate_pages_sync()
-Date: Tue, 13 May 2025 16:05:21 +0800
-Message-ID: <20250513080521.252543-1-chenhuacai@loongson.cn>
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Haiyong Sun <sunhaiyong@loongson.cn>
+Subject: [PATCH for 6.1/6.6] LoongArch: Explicitly specify code model in Makefile
+Date: Tue, 13 May 2025 16:06:45 +0800
+Message-ID: <20250513080645.252607-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -43,132 +37,53 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPBtN_SJofXTNAA--.18011S2
+X-CM-TRANSID:qMiowMDx+xqf_SJopHXNAA--.18621S2
 X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXr1UtrW3ZrykCr1fAw1fuFX_yoWrCw4rpF
-	4Igw1qyrW8XrWvgasxtryqkFnxCrZxZr43Ja4xGryrtFsxX3sFkrWfGayqyF4rKry2van3
-	JF4qgF1Y9ay8XrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jFApnUUUUU=
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Gw4xWrykWrWfWF47tFWDAwc_yoWDJrgEgF
+	ZrWw4kCr4fJrWDuw4agFyrZr18Kw1DCFnayFnIvr13J3y3t34rGFn0934fZF1Ig3y7WrWS
+	9aykZF98Zr1jvosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb78YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_
+	Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
 
-From: Zi Yan <ziy@nvidia.com>
+LoongArch's toolchain may change the default code model from normal to
+medium. This is unnecessary for kernel, and generates some relocations
+which cannot be handled by the module loader. So explicitly specify the
+code model to normal in Makefile (for Rust 'normal' is 'small').
 
-nr_failed was missing the large folio splits from migrate_pages_batch()
-and can cause a mismatch between migrate_pages() return value and the
-number of not migrated pages, i.e., when the return value of
-migrate_pages() is 0, there are still pages left in the from page list.
-It will happen when a non-PMD THP large folio fails to migrate due to
--ENOMEM and is split successfully but not all the split pages are not
-migrated, migrate_pages_batch() would return non-zero, but
-astats.nr_thp_split = 0.  nr_failed would be 0 and returned to the caller
-of migrate_pages(), but the not migrated pages are left in the from page
-list without being added back to LRU lists.
-
-Fix it by adding a new nr_split counter for large folio splits and adding
-it to nr_failed in migrate_page_sync() after migrate_pages_batch() is
-done.
-
-Link: https://lkml.kernel.org/r/20231017163129.2025214-1-zi.yan@sent.com
-Fixes: 2ef7dbb26990 ("migrate_pages: try migrate in batch asynchronously firstly")
-Signed-off-by: Zi Yan <ziy@nvidia.com>
-Acked-by: Huang Ying <ying.huang@intel.com>
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Tested-by: Haiyong Sun <sunhaiyong@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
-This patch has a Fixes tag and should be backported to 6.6, I don't know
-why hasn't bakported.
+We may use new toolchain to build 6.1/6.6 LTS, backport it to avoid
+problems.
 
- mm/migrate.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/loongarch/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 1004b1def1c2..4ed470885217 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1504,6 +1504,7 @@ struct migrate_pages_stats {
- 	int nr_thp_succeeded;	/* THP migrated successfully */
- 	int nr_thp_failed;	/* THP failed to be migrated */
- 	int nr_thp_split;	/* THP split before migrating */
-+	int nr_split;	/* Large folio (include THP) split before migrating */
- };
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index a74bbcb05ee1..f2966745b058 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -55,7 +55,7 @@ endif
  
- /*
-@@ -1623,6 +1624,7 @@ static int migrate_pages_batch(struct list_head *from,
- 	int nr_retry_pages = 0;
- 	int pass = 0;
- 	bool is_thp = false;
-+	bool is_large = false;
- 	struct folio *folio, *folio2, *dst = NULL, *dst2;
- 	int rc, rc_saved = 0, nr_pages;
- 	LIST_HEAD(unmap_folios);
-@@ -1638,7 +1640,8 @@ static int migrate_pages_batch(struct list_head *from,
- 		nr_retry_pages = 0;
+ ifdef CONFIG_64BIT
+ ld-emul			= $(64bit-emul)
+-cflags-y		+= -mabi=lp64s
++cflags-y		+= -mabi=lp64s -mcmodel=normal
+ endif
  
- 		list_for_each_entry_safe(folio, folio2, from, lru) {
--			is_thp = folio_test_large(folio) && folio_test_pmd_mappable(folio);
-+			is_large = folio_test_large(folio);
-+			is_thp = is_large && folio_test_pmd_mappable(folio);
- 			nr_pages = folio_nr_pages(folio);
- 
- 			cond_resched();
-@@ -1658,6 +1661,7 @@ static int migrate_pages_batch(struct list_head *from,
- 				stats->nr_thp_failed++;
- 				if (!try_split_folio(folio, split_folios)) {
- 					stats->nr_thp_split++;
-+					stats->nr_split++;
- 					continue;
- 				}
- 				stats->nr_failed_pages += nr_pages;
-@@ -1686,11 +1690,12 @@ static int migrate_pages_batch(struct list_head *from,
- 				nr_failed++;
- 				stats->nr_thp_failed += is_thp;
- 				/* Large folio NUMA faulting doesn't split to retry. */
--				if (folio_test_large(folio) && !nosplit) {
-+				if (is_large && !nosplit) {
- 					int ret = try_split_folio(folio, split_folios);
- 
- 					if (!ret) {
- 						stats->nr_thp_split += is_thp;
-+						stats->nr_split += is_large;
- 						break;
- 					} else if (reason == MR_LONGTERM_PIN &&
- 						   ret == -EAGAIN) {
-@@ -1836,6 +1841,7 @@ static int migrate_pages_sync(struct list_head *from, new_folio_t get_new_folio,
- 	stats->nr_succeeded += astats.nr_succeeded;
- 	stats->nr_thp_succeeded += astats.nr_thp_succeeded;
- 	stats->nr_thp_split += astats.nr_thp_split;
-+	stats->nr_split += astats.nr_split;
- 	if (rc < 0) {
- 		stats->nr_failed_pages += astats.nr_failed_pages;
- 		stats->nr_thp_failed += astats.nr_thp_failed;
-@@ -1843,7 +1849,11 @@ static int migrate_pages_sync(struct list_head *from, new_folio_t get_new_folio,
- 		return rc;
- 	}
- 	stats->nr_thp_failed += astats.nr_thp_split;
--	nr_failed += astats.nr_thp_split;
-+	/*
-+	 * Do not count rc, as pages will be retried below.
-+	 * Count nr_split only, since it includes nr_thp_split.
-+	 */
-+	nr_failed += astats.nr_split;
- 	/*
- 	 * Fall back to migrate all failed folios one by one synchronously. All
- 	 * failed folios except split THPs will be retried, so their failure
+ cflags-y			+= -pipe -msoft-float
 -- 
 2.47.1
 
