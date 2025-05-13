@@ -1,89 +1,87 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62BAC12CDAE
-	for <loongarch@lists.linux.dev>; Tue, 13 May 2025 08:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D171F5437;
+	Tue, 13 May 2025 08:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747123626; cv=none; b=j0bUy9Ijvhi9Ec+qpNBxGui3B7zu9+Grcxp4OC4ITNtn/gEJ4ojsr69eaCBiqnPASJYmiJPCDfAujeKN1lqjjSk+VqPfD9hvHlyiVcl+wqHctAp7YF1cnksm77KN6LJ+FP5hgwDoScV3UXVkU+CF6jJO5Oc7Ml9GQcNovwmUH14=
+	t=1747124017; cv=none; b=P3y3pqhNV+uS7lHBEjCpc5YuNTy3k0oghsJQ1WWNQbVh3jzCQ7qeA78PRLUhtvrhAEWuI2+ws3gS4WJLmgZrexWW3LI2arqjCCC6NMhgVnqP1lMcs4plsNNBnqUKsln0xw/8brc5vyYSlFgdjGl86HNc/xPuUj4VZzP7L2qJ4yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747123626; c=relaxed/simple;
-	bh=Cq+HfICzYMkJFEWW5AjpY7hUpz8hyEiaol0Ein4Ft40=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bHwnz7N7rn2w0jVQrQO6sitheZ4g4JLR7aZhdxgzjhIP/FhN9kBAya2xJI8oivxn+0uFApge74jKQOmWp6e+l23C1IY8sWkCGptzUz1VsbgaGkjykZejMxouBTo5DNPKqfvs1XY4dF50LodswAWq2EIAM3ppKWXRU1GjLoieNYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.186])
-	by gateway (Coremail) with SMTP id _____8DxvnOm_SJosp3jAA--.10817S3;
-	Tue, 13 May 2025 16:07:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.186])
-	by front1 (Coremail) with SMTP id qMiowMDx+xqf_SJopHXNAA--.18621S2;
-	Tue, 13 May 2025 16:06:58 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Haiyong Sun <sunhaiyong@loongson.cn>
-Subject: [PATCH for 6.1/6.6] LoongArch: Explicitly specify code model in Makefile
-Date: Tue, 13 May 2025 16:06:45 +0800
-Message-ID: <20250513080645.252607-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1747124017; c=relaxed/simple;
+	bh=Mwh1s3J/QlJ5abc37Djl6zBNsK2uQwu2dEU0uyMbhmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IA51F8Xr2XwfeFXJ9zNXtn5fJ+g272x4qJOfZU/YIxw1KKgxTGmczpXqbZuY6Ca33aTXzQ1oOpchVRNZxpN5AlJ5x2LUZej2IeIskOUoKwiXGM1wyLQOCaR6WgGjr7yZJ1E0NcQOs3XJJVIKBBuY1u71VQAFWuriUCvPItYjgzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M191mfSl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M191mfSl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D22BC4CEE4;
+	Tue, 13 May 2025 08:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747124017;
+	bh=Mwh1s3J/QlJ5abc37Djl6zBNsK2uQwu2dEU0uyMbhmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M191mfSlUYye565pDWRi7KtWiFLZ0eHZO9/+12sSmNezDaVIQap99TbC4xJwYbk2/
+	 pU5fVCzyI/3rjgSq+JPjkxAUVly7keWTVuMnQ1mdzoiYrXzErYty0TcN0jLPNGnRai
+	 G9C9c2jp5cIZGsMpqfHPT7zIEZguQ9jySKGQvwR4=
+Date: Tue, 13 May 2025 10:11:49 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	loongarch@lists.linux.dev, Zi Yan <ziy@nvidia.com>,
+	Huang Ying <ying.huang@intel.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH for 6.6] mm/migrate: correct nr_failed in
+ migrate_pages_sync()
+Message-ID: <2025051322-aftermost-puritan-fd62@gregkh>
+References: <20250513080521.252543-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDx+xqf_SJopHXNAA--.18621S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Gw4xWrykWrWfWF47tFWDAwc_yoWDJrgEgF
-	ZrWw4kCr4fJrWDuw4agFyrZr18Kw1DCFnayFnIvr13J3y3t34rGFn0934fZF1Ig3y7WrWS
-	9aykZF98Zr1jvosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb78YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_
-	Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513080521.252543-1-chenhuacai@loongson.cn>
 
-LoongArch's toolchain may change the default code model from normal to
-medium. This is unnecessary for kernel, and generates some relocations
-which cannot be handled by the module loader. So explicitly specify the
-code model to normal in Makefile (for Rust 'normal' is 'small').
+On Tue, May 13, 2025 at 04:05:21PM +0800, Huacai Chen wrote:
+> From: Zi Yan <ziy@nvidia.com>
+> 
+> nr_failed was missing the large folio splits from migrate_pages_batch()
+> and can cause a mismatch between migrate_pages() return value and the
+> number of not migrated pages, i.e., when the return value of
+> migrate_pages() is 0, there are still pages left in the from page list.
+> It will happen when a non-PMD THP large folio fails to migrate due to
+> -ENOMEM and is split successfully but not all the split pages are not
+> migrated, migrate_pages_batch() would return non-zero, but
+> astats.nr_thp_split = 0.  nr_failed would be 0 and returned to the caller
+> of migrate_pages(), but the not migrated pages are left in the from page
+> list without being added back to LRU lists.
+> 
+> Fix it by adding a new nr_split counter for large folio splits and adding
+> it to nr_failed in migrate_page_sync() after migrate_pages_batch() is
+> done.
+> 
+> Link: https://lkml.kernel.org/r/20231017163129.2025214-1-zi.yan@sent.com
+> Fixes: 2ef7dbb26990 ("migrate_pages: try migrate in batch asynchronously firstly")
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> Acked-by: Huang Ying <ying.huang@intel.com>
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> This patch has a Fixes tag and should be backported to 6.6, I don't know
+> why hasn't bakported.
 
-Cc: stable@vger.kernel.org
-Tested-by: Haiyong Sun <sunhaiyong@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-We may use new toolchain to build 6.1/6.6 LTS, backport it to avoid
-problems.
+Because "Fixes:" never means that it will be backported.  Please read
+the stable documentation for what needs to be added to ensure that.
 
- arch/loongarch/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index a74bbcb05ee1..f2966745b058 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -55,7 +55,7 @@ endif
- 
- ifdef CONFIG_64BIT
- ld-emul			= $(64bit-emul)
--cflags-y		+= -mabi=lp64s
-+cflags-y		+= -mabi=lp64s -mcmodel=normal
- endif
- 
- cflags-y			+= -pipe -msoft-float
--- 
-2.47.1
-
+greg k-h
