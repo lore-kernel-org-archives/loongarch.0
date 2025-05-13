@@ -1,143 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AF819E7F9;
-	Tue, 13 May 2025 02:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6965B19CC3C
+	for <loongarch@lists.linux.dev>; Tue, 13 May 2025 02:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747102197; cv=none; b=lRIZmdn4bmjKNKCm7A4OTAIkhBCZjPRS6fZpfhvvZQmCDtM+sRSh+I+kVWZ0cKrbMQ5nb0uxBZKyR8dzyWcnGzZfwOM6MbDCsQQzgbfEoI/V56WQ37PlnXbNuat+FevL+qKBCX3jUDUL/PVwGz+rnwlSuIAFAmtvRYeLkOjb+58=
+	t=1747102810; cv=none; b=HZT5dPbUB7K27V5lzIUtM4gySh3QaTrEAmMGzpCmff2JSxl9tVc7j6KJmILBc4EbsQD1UbpiFINP77QP3TFQEo9tsggN1ZgYo22xm6HwoBn8urbfdVZLeO72mlxPusLi0JBhGh3R72yqRMgLLPqLfmItOLzcV3x1t1E4sZmK1Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747102197; c=relaxed/simple;
-	bh=jli27B/5jY90qrTVnL5B2hPffaX2OOJy3Y08w33Rh5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FuN1kQ1lhNPiplEbd/L/jfkcqGuONW2jd0K9zXYGumPDxofO/Fz2kg2xfX/vTdMkRFE8UcTpRhHyi49NphpNVe5yx5NjWfk2+9PlhUG48fFBBjZU6yq16z3U7mRVW9Gf4NrWaE6BT1F0K+X3Fxhgh72DatQSNH2Ff6PpT0fpweE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hp9k/4Ph; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747102810; c=relaxed/simple;
+	bh=lqc9ZJSJMpKP1W9NCfJPGfOF/PiVnNHdc6szgzmmluE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ejW1Dm4dlTKr1qqKZox/OqabM/DC6ezCqvQUXajMXybXR3K+SLvP4IV3b51qm4d/WqQjH/R7Lr3WzqmxWdPCx9gKKculoiEV1OFJxG/VwXDlHa3+ZEaGLDy7/M+fxPCy4y5u3QnRgsNNUiuWYEb61jMWZjEp5eI5a9/I4QcBppU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mV18y68T; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hp9k/4Ph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747102195; x=1778638195;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jli27B/5jY90qrTVnL5B2hPffaX2OOJy3Y08w33Rh5k=;
-  b=hp9k/4PhH6ghE1rnd/ara5/AxElT6QQCUyO7gmtydZvIoTvJLDkD8vJU
-   PTbx+BPAyNqFdfBL5kODfEvBX8+/WSOBg4UVTCp3hjIRu7rt157hfgY2W
-   0GVFdb2ReIsCJ/2sxdGTUBkjocQPtb6QxSk8sgC5lmBghP4BIVYYyhXiJ
-   zvOTfSHrBre94rQ0Brck8Wz79+2g05llqdyZS7exAdnFvxEwUjlAD+Jwn
-   tneFra/yQll+OP64dHBJSJlRT/u4dw1sol6iL/veXFEOVePaudlmJXkbn
-   gMAl9zsbBe76FSB8gY4tndiG+QZZ4HFJmmPMrklnsQeJ+H1uCJFL0xNYi
-   g==;
-X-CSE-ConnectionGUID: pQ38nDapRauow9FCW9eRFg==
-X-CSE-MsgGUID: IhXKLGAeQE+mzqP7ms935w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59929226"
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="59929226"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 19:09:55 -0700
-X-CSE-ConnectionGUID: 4KmA8ZP2Q1Kxb+NIqTdIWA==
-X-CSE-MsgGUID: 3YBxHFhgQvCuzV2Ed3pDKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="168642027"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 12 May 2025 19:09:51 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uEf5Z-000FaV-2Y;
-	Tue, 13 May 2025 02:09:49 +0000
-Date: Tue, 13 May 2025 10:09:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-mmc@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] mmc: loongson2: Add Loongson-2K SD/SDIO
- controller driver
-Message-ID: <202505130918.uanOGxju-lkp@intel.com>
-References: <1308b6ca9ffc2674cc0f089cfd163da87e53a8cd.1746581751.git.zhoubinbin@loongson.cn>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mV18y68T"
+Date: Tue, 13 May 2025 10:19:48 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747102801;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZQsFUfbIOkh3KmaYEyRqKaKZ6EkDvY4HPuETL+dpT1E=;
+	b=mV18y68TdIWFLdKAXwKgtTyFtokQT+3PfqqwaG9xkAhnx462ok3tXC0+Pmhe2Pl8UExqkK
+	HDvHbO7BfeJm7NyZ8iywyp4ci6Vedx42EFXQ4Ke8IoIl0lLFGTlv/c88/EnwNBZeBX2kbD
+	qPYf9jZFQceN3rljGxMjKGaMFi9FnoI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: George Guo <dongtai.guo@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, rppt@kernel.org, akpm@linux-foundation.org,
+ dave.hansen@linux.intel.com, geert@linux-m68k.org, ptesarik@suse.com,
+ guoweikang.kernel@gmail.com, maobibo@loongson.cn,
+ loongarch@lists.linux.dev, George Guo <guodongtai@kylinos.cn>
+Subject: Re: [PATCH 1/1] LoongArch: mm: remove redundant pte occupancy check
+ in __set_fixmap()
+Message-ID: <20250513101948.000036d6@linux.dev>
+In-Reply-To: <CAAhV-H5eUtV6N=jt9sUyKXLAP2sX2kHA7rEbyKuSL1G-kRiXFg@mail.gmail.com>
+References: <20250508030506.7076-1-dongtai.guo@linux.dev>
+	<CAAhV-H5eUtV6N=jt9sUyKXLAP2sX2kHA7rEbyKuSL1G-kRiXFg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1308b6ca9ffc2674cc0f089cfd163da87e53a8cd.1746581751.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=GB18030
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Binbin,
+On Sat, 10 May 2025 15:34:01 +0800
+Huacai Chen <chenhuacai@kernel.org> wrote:
 
-kernel test robot noticed the following build warnings:
+> Hi, George,
+> 
+> On Thu, May 8, 2025 at 11:05 AM george <dongtai.guo@linux.dev> wrote:
+> >
+> > From: George Guo <guodongtai@kylinos.cn>
+> >
+> > This check could falsely report errors when PTEs are remapped:
+> > arch/loongarch/mm/init.c:204: bad pte 0000000107b601c3.
+> >
+> > The check was unnecessary because:
+> > - Fixmap slots are designed to be reusable
+> > - Other architectures (x86/arm64) allow PTE overwrites
+> > - Callers are responsible for proper mapping management
+> >
+> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> > ---
+> >  arch/loongarch/mm/init.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> >
+> > diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> > index 06f11d9e4ec1..7b7e3b1aa00d 100644
+> > --- a/arch/loongarch/mm/init.c
+> > +++ b/arch/loongarch/mm/init.c
+> > @@ -200,10 +200,6 @@ void __init __set_fixmap(enum fixed_addresses
+> > idx, BUG_ON(idx <= FIX_HOLE || idx >= __end_of_fixed_addresses);
+> >
+> >         ptep = populate_kernel_pte(addr);
+> > -       if (!pte_none(ptep_get(ptep))) {
+> > -               pte_ERROR(*ptep);
+> > -               return;
+> > -       }
+> Resolve what problems? If other patches need this change, please
+> submit them as a series.
+Here is a test case to show the bug:
+#include <linux/module.h>
+#include <linux/vmalloc.h>
+#include <linux/mm.h>
+#include <asm/io.h>
+#include <asm-generic/fixmap.h>
 
-[auto build test WARNING on 9e12816f9a6195f1f5b7c5dc2e388c2458411b97]
+#define ALLOC_SIZE 8192  // 8KB
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/dt-bindings-mmc-Add-Loongson-2K-SD-SDIO-eMMC-controller-binding/20250507-153435
-base:   9e12816f9a6195f1f5b7c5dc2e388c2458411b97
-patch link:    https://lore.kernel.org/r/1308b6ca9ffc2674cc0f089cfd163da87e53a8cd.1746581751.git.zhoubinbin%40loongson.cn
-patch subject: [PATCH v2 2/4] mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
-config: csky-randconfig-r112-20250513 (https://download.01.org/0day-ci/archive/20250513/202505130918.uanOGxju-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 14.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20250513/202505130918.uanOGxju-lkp@intel.com/reproduce)
+static char *vmalloc_mem = NULL;
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505130918.uanOGxju-lkp@intel.com/
+static int __init fixmap_test_init(void)
+{
+	struct page *page;
+	phys_addr_t phys;
+	void *addr;
+	char c;
+	void __iomem *base;
+	char *charp;
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/mmc/host/loongson2-mmc.c:534:41: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] @@     got restricted __be32 [usertype] @@
-   drivers/mmc/host/loongson2-mmc.c:534:41: sparse:     expected unsigned int [usertype]
-   drivers/mmc/host/loongson2-mmc.c:534:41: sparse:     got restricted __be32 [usertype]
+	pr_info("%s module loaded!\n", THIS_MODULE->name);
 
-vim +534 drivers/mmc/host/loongson2-mmc.c
+	addr = vmalloc_mem = vmalloc(ALLOC_SIZE);
+	if (!vmalloc_mem) {
+		pr_err("Failed to allocate memory with vmalloc\n");
+		return -ENOMEM;
+	}
 
-   500	
-   501	static int loongson2_reorder_cmd_list[] = { SD_APP_SEND_SCR, SD_APP_SEND_NUM_WR_BLKS,
-   502						    SD_APP_SD_STATUS, MMC_SEND_WRITE_PROT,
-   503						    SD_SWITCH };
-   504	
-   505	/*
-   506	 * According to SD spec, ACMD13, ACMD22, ACMD51 and CMD30
-   507	 * response datas has different byte order with usual data packets.
-   508	 * However sdio controller will send these datas in usual data format,
-   509	 * so we need to adjust these datas to a protocol consistent byte order.
-   510	 */
-   511	static void loongson2_mmc_reorder_cmd_data(struct loongson2_mmc_host *host,
-   512						   struct mmc_command *cmd)
-   513	{
-   514		struct scatterlist *sg;
-   515		u32 *data;
-   516		int i, j;
-   517	
-   518		if (mmc_cmd_type(cmd) != MMC_CMD_ADTC)
-   519			return;
-   520	
-   521		for (i = 0; i < ARRAY_SIZE(loongson2_reorder_cmd_list); i++)
-   522			if (cmd->opcode == loongson2_reorder_cmd_list[i])
-   523				break;
-   524	
-   525		if (i == ARRAY_SIZE(loongson2_reorder_cmd_list))
-   526			return;
-   527	
-   528		for_each_sg(cmd->data->sg, sg, cmd->data->sg_len, i) {
-   529			data = sg_virt(&sg[i]);
-   530			for (j = 0; j < (sg_dma_len(&sg[i]) / 4); j++)
-   531				if (cmd->opcode == SD_SWITCH)
-   532					data[j] = bitrev8x4(data[j]);
-   533				else
- > 534					data[j] = cpu_to_be32(data[j]);
-   535		}
-   536	}
-   537	
+	vmalloc_mem[4099] = 'a';
+	vmalloc_mem[0] = 'g';
+	pr_info("Allocated vmalloc memory at virtual address: %px,
+	vmalloc_mem[0]=%c\n", vmalloc_mem, vmalloc_mem[0]);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+	//vrit addr -> phys addr
+	page = vmalloc_to_page(addr);
+	phys = page_to_phys(page) + offset_in_page(addr);
+	pr_info("phys = 0x%lx\n", phys);
+
+
+	__set_fixmap(FIX_TEXT_POKE0, phys & PAGE_MASK, FIXMAP_PAGE_IO);
+	base = (void __iomem *)__fix_to_virt(FIX_TEXT_POKE0);
+	base += phys & ~PAGE_MASK;
+	charp = (char *)base;
+	pr_info("fixmap virt addr=0x%lx,charp[0] = %c\n",base,
+	charp[0]);
+	__set_fixmap(FIX_TEXT_POKE0, 0, FIXMAP_PAGE_CLEAR);
+
+	return 0;
+}
+
+static void __exit fixmap_test_exit(void)
+{
+	if (vmalloc_mem) {
+		vfree(vmalloc_mem);
+		pr_info("Freed vmalloc memory\n");
+	}
+
+	pr_info("%s module unloaded!\n", THIS_MODULE->name);
+}
+
+module_init(fixmap_test_init);
+module_exit(fixmap_test_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("George Guo <guodongtai@kylinos.cn>");
+MODULE_DESCRIPTION("fixmap test");
+
+And below is the log for test:
+
+arm64:
+
+first insmod:
+[10476.162720] fixmap_test module loaded!
+[10476.163390] Allocated vmalloc memory at virtual address:
+ffff80008008f000, vmalloc_mem[0]=g
+[10476.164497] phys = 0x10fab2000
+[10476.165106] fixmap virt addr=0xffffffffff5fc000,charp[0] = g
+
+rmmod then insmod again:
+[10514.031689] Freed vmalloc memory
+[10514.032268] fixmap_test module unloaded!
+[10516.391483] fixmap_test module loaded!
+[10516.392135] Allocated vmalloc memory at virtual address:
+ffff800080097000, vmalloc_mem[0]=g
+[10516.393205] phys = 0x10dc2c000
+[10516.393663] fixmap virt addr=0xffffffffff5fc000,charp[0] = g
+
+
+loongarch:
+
+first insmod:
+[   43.983300] [   T1399] fixmap test module loaded
+[   43.983570] [   T1399] Allocated vmalloc memory at virtual address:
+ffff80001b45c000, vmalloc_mem[0]=g
+[   43.983973] [   T1399] phys = 0x107b60000
+[   43.984535] [   T1399] fixmap virt addr=0xfffffffffffd8000,charp[0]
+= g
+
+rmmod then insmod again:
+[   52.266230] [   T1417] Freed vmalloc memory
+[   55.344169] [   T1421] fixmap test module loaded
+[   55.344441] [   T1421] Allocated vmalloc memory at virtual address:
+ffff80001b344000, vmalloc_mem[0]=g
+[   55.344915] [   T1421] phys = 0x10ae04000
+[   55.345503] [   T1421] arch/loongarch/mm/init.c:204: bad pte
+0000000107b601c3.
+[   55.346087] [   T1421] fixmap virt addr=0xfffffffffffd8000,charp[0]
+= \x00
+
+> 
+> Huacai
+> 
+> >
+> >         if (pgprot_val(flags))
+> >                 set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
+> > --
+> > 2.34.1
+> >
+> >
+
