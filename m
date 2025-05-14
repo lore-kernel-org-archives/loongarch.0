@@ -1,128 +1,138 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E05D190497
-	for <loongarch@lists.linux.dev>; Wed, 14 May 2025 14:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489491C6FEA
+	for <loongarch@lists.linux.dev>; Wed, 14 May 2025 14:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747234029; cv=none; b=gs3OcLnskF6tX9XX77YIux6LeNyiV81HB/2uF1Q4f0StqGcI7UmamnwaMVR1Dn46xazthICC3BDVlXqDQVWiNtinszAqUsWIKPtfmEui6+w66uf2IiInrY2jQwcG7n+uRP8wQqq5Orp3ZQ8E5JqiwTRyr1Cz1OnjyZJfbFcf/ew=
+	t=1747234280; cv=none; b=Hfdcbl0HHeTQQ26ADcnERJdkXDkiClSme5DqeZtkMWcRxNV9uy6OYXvE6tuSjBOm4lqTKpYB258QGHjfknim7hLYE+8PLNtsGjWH3ajAr0qxxdNshJD9F1vuLiOeuTOCpEZna5r9br6nixuDzXZIxCvuQfMMKPypLCmLo8JAEvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747234029; c=relaxed/simple;
-	bh=6fEQeP6TUDzlobvmkS1WrL/Rzys4yqsPWMlZIiFtHxQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XKgr86VBOAuNAX35Yda0qvHCCDc7uzKdHEaQg71/9Y28ayqFWSuxMXe6uHmzt42e90I9LGVzJqsG+Hvi/rOBXUUBkeW0+5SC4EkRzn8uOELSdyvRsEeVpRAkzAKsghCZBlfksAQMxDB8UnlW/n9Vaag4c2nCkWXI5KeBZuJ5lGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.186])
-	by gateway (Coremail) with SMTP id _____8BxIK_lrCRoMv_mAA--.45694S3;
-	Wed, 14 May 2025 22:47:01 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.186])
-	by front1 (Coremail) with SMTP id qMiowMCxLBvhrCRo1vnRAA--.19452S2;
-	Wed, 14 May 2025 22:47:01 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Xianglai Li <lixianglai@loongson.cn>
-Subject: [PATCH] LoongArch: Save and restore CSR.CNTC for hibernation
-Date: Wed, 14 May 2025 22:46:43 +0800
-Message-ID: <20250514144643.1620870-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1747234280; c=relaxed/simple;
+	bh=O7WNQrDY8/JOx9yDYkECk6fBdY8kCGDAHOxbGZh8bYQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F4lTROLGQPCDzPWoBYwMjmdkyZKf6l9TnpoL6HMxG3NZ0zmCrNUlnlDMknWpRAaCljdKPRz5IrkJYLMiMfpoMzP4xUqqaJn9SUNdTGoQSnxkKK4sG0klYe7+GGbFByjITjItZJbDX6+eRfU/CngebS+eJINr/GtfkV1EPXZHWPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFONZlvs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFONZlvs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B327BC4CEE3
+	for <loongarch@lists.linux.dev>; Wed, 14 May 2025 14:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747234278;
+	bh=O7WNQrDY8/JOx9yDYkECk6fBdY8kCGDAHOxbGZh8bYQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SFONZlvsCwA565BQdFpfDjkcMv253uLGPft7yJjo3pFhivG/KlnAEBVyQRZMCxAMo
+	 5SfjfRGRER4rCsWtcmS7lW2ib7ivcQr64SNxH/01LOonjLcfgnkI5ec+4wr8r+vSOF
+	 gnwGQ31WlALhmguu2ayOr1r3pmJwRQsEM6iNBvY+YjUo9+t/itz3r5kgkZIkGIry7X
+	 HQNd8g1xeR6BWC79gum/Q9olLAuuzOPT19XAbrJhlOAh3U2iJBCLnKcpCnEO8lvXvD
+	 PIux9I6AgzE21ffM7frhrnTD9Z1bhNLmotQKoWZ+4KoOZH+jLDrPtcLp8hke8sJJNQ
+	 sdVodGXvju8Ww==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso1987508a12.1
+        for <loongarch@lists.linux.dev>; Wed, 14 May 2025 07:51:18 -0700 (PDT)
+X-Gm-Message-State: AOJu0Ywns+hDyi2LDezuo4kKfi7h5iAeobUtgYlzuO1cL7sqwt5pHMe2
+	NnfMrhViLyYtheLRiC8puAMd64XqtibJew7ZldSgIQKLRRZ0mPQjLT280jLWwp11XEOoAQzb95n
+	ITpArUnQO8mZGRHmjqJCrFuiDhms=
+X-Google-Smtp-Source: AGHT+IH/ThODmqttSoNzxbWWABbYYF2hu3CS8DS4XL22UFTENLhop6PijzhnzaiTU8loCXoEbpnzWq9hUec6yC+fzhM=
+X-Received: by 2002:a05:6402:1e94:b0:5fc:93ff:f2bf with SMTP id
+ 4fb4d7f45d1cf-5ff95c36519mr2983841a12.15.1747234277282; Wed, 14 May 2025
+ 07:51:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxLBvhrCRo1vnRAA--.19452S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ar4kKw13Gw48tw18Zw1xCrX_yoW8tF1xpF
-	WDArWDKr40k3Z7Ja9xt3yDZr98Jrn5C3W3Wa1qy348Cwn3Xr45Zr4kKwnYqF4Yq3yrAa10
-	vFW8Cw1aqa17W3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+References: <20250513092116.25979-1-yangtiezhu@loongson.cn>
+ <20250513092116.25979-3-yangtiezhu@loongson.cn> <CAAhV-H4AgHQs4pMqGqe7WfwCA+u7mO3U+=hcm8ZWk5DQHhsO1w@mail.gmail.com>
+ <bbd7e5ad-c353-6916-cf9e-8f3aa3fefda9@loongson.cn>
+In-Reply-To: <bbd7e5ad-c353-6916-cf9e-8f3aa3fefda9@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 14 May 2025 22:51:08 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6HTx3qgoUHKC0nB0LTqN9o9t=P3QuD7PumacaOe8pjEw@mail.gmail.com>
+X-Gm-Features: AX0GCFuW0sYon0f2qyf0-wgagLfvseV3bMoL8UCdpvzdkJWXMnyXie5UBp29UXg
+Message-ID: <CAAhV-H6HTx3qgoUHKC0nB0LTqN9o9t=P3QuD7PumacaOe8pjEw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] LoongArch: uprobe: Remove redundant code about resume_era
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Save and restore CSR.CNTC for hibernation which is similar to suspend.
+On Wed, May 14, 2025 at 5:33=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> On 05/13/2025 11:13 PM, Huacai Chen wrote:
+> > Hi, Tiezhu,
+> >
+> > On Tue, May 13, 2025 at 5:21=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
+n.cn> wrote:
+> >>
+> >> arch_uprobe_skip_sstep() returns true if instruction was emulated,
+> >> that is to say, there is no need to single step for the emulated
+> >> instructions, it will point to the destination address directly
+> >> after the exception, so the resume_era related code is redundant,
+> >> just remove them.
+> >>
+> >> Fixes: 19bc6cb64092 ("LoongArch: Add uprobes support")
+> >> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> >> ---
+> >>  arch/loongarch/include/asm/uprobes.h | 1 -
+> >>  arch/loongarch/kernel/uprobes.c      | 7 +------
+> >>  2 files changed, 1 insertion(+), 7 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/uprobes.h b/arch/loongarch/inc=
+lude/asm/uprobes.h
+> >> index 99a0d198927f..025fc3f0a102 100644
+> >> --- a/arch/loongarch/include/asm/uprobes.h
+> >> +++ b/arch/loongarch/include/asm/uprobes.h
+> >> @@ -15,7 +15,6 @@ typedef u32 uprobe_opcode_t;
+> >>  #define UPROBE_XOLBP_INSN      __emit_break(BRK_UPROBE_XOLBP)
+> >>
+> >>  struct arch_uprobe {
+> >> -       unsigned long   resume_era;
+> >>         u32     insn[2];
+> >>         u32     ixol[2];
+> >>         bool    simulate;
+> >> diff --git a/arch/loongarch/kernel/uprobes.c b/arch/loongarch/kernel/u=
+probes.c
+> >> index 0ab9d8d631c4..6022eb0f71db 100644
+> >> --- a/arch/loongarch/kernel/uprobes.c
+> >> +++ b/arch/loongarch/kernel/uprobes.c
+> >> @@ -52,11 +52,7 @@ int arch_uprobe_post_xol(struct arch_uprobe *auprob=
+e, struct pt_regs *regs)
+> >>
+> >>         WARN_ON_ONCE(current->thread.trap_nr !=3D UPROBE_TRAP_NR);
+> >>         current->thread.trap_nr =3D utask->autask.saved_trap_nr;
+> >> -
+> >> -       if (auprobe->simulate)
+> >> -               instruction_pointer_set(regs, auprobe->resume_era);
+> >> -       else
+> >> -               instruction_pointer_set(regs, utask->vaddr + LOONGARCH=
+_INSN_SIZE);
+> >> +       instruction_pointer_set(regs, utask->vaddr + LOONGARCH_INSN_SI=
+ZE);
+> > This seems wrong. If in the simulate case, regs->csr_era has already
+> > pointed to the correct destination address, then here we should only
+> > handle the non-simulate case.
+>
+> What is wrong with this code? AFAICT, the code is right.
+>
+> Here are the call chains in the generic code of uprobe:
+>
+> handle_swbp()
+>    arch_uprobe_skip_sstep()
+>    pre_ssout()
+>      arch_uprobe_pre_xol()
+> handle_singlestep()
+>    arch_uprobe_post_xol()
+>
+> arch_uprobe_post_xol() only handles the instruction that is not emulated
+> because if arch_uprobe_skip_sstep() returns true, arch_uprobe_post_xol()
+> will not be called, it will be called only if arch_uprobe_skip_sstep()
+> returns false.
+OK, I know.
 
-For host this is unnecessary because sched clock is ensured continuous,
-but for kvm guest sched clock isn't enough because rdtime.d should also
-be continuous.
+Huacai
 
-Host::rdtime.d = Host::CSR.CNTC + counter
-Guest::rdtime.d = Host::CSR.CNTC + Host::CSR.GCNTC + Guest::CSR.CNTC + counter
-
-so,
-
-Guest::rdtime.d = Host::rdtime.d + Host::CSR.GCNTC + Guest::CSR.CNTC
-
-To ensure Guest::rdtime.d continuous, Host::rdtime.d should be at first
-continuous, while Host::CSR.GCNTC / Guest::CSR.CNTC is maintained by KVM.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/time.c     | 2 +-
- arch/loongarch/power/hibernate.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index e2d3bfeb6366..bc75a3a69fc8 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -111,7 +111,7 @@ static unsigned long __init get_loops_per_jiffy(void)
- 	return lpj;
- }
- 
--static long init_offset __nosavedata;
-+static long init_offset;
- 
- void save_counter(void)
- {
-diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
-index 1e0590542f98..e7b7346592cb 100644
---- a/arch/loongarch/power/hibernate.c
-+++ b/arch/loongarch/power/hibernate.c
-@@ -2,6 +2,7 @@
- #include <asm/fpu.h>
- #include <asm/loongson.h>
- #include <asm/sections.h>
-+#include <asm/time.h>
- #include <asm/tlbflush.h>
- #include <linux/suspend.h>
- 
-@@ -14,6 +15,7 @@ struct pt_regs saved_regs;
- 
- void save_processor_state(void)
- {
-+	save_counter();
- 	saved_crmd = csr_read32(LOONGARCH_CSR_CRMD);
- 	saved_prmd = csr_read32(LOONGARCH_CSR_PRMD);
- 	saved_euen = csr_read32(LOONGARCH_CSR_EUEN);
-@@ -26,6 +28,7 @@ void save_processor_state(void)
- 
- void restore_processor_state(void)
- {
-+	sync_counter();
- 	csr_write32(saved_crmd, LOONGARCH_CSR_CRMD);
- 	csr_write32(saved_prmd, LOONGARCH_CSR_PRMD);
- 	csr_write32(saved_euen, LOONGARCH_CSR_EUEN);
--- 
-2.47.1
-
+>
+> Thanks,
+> Tiezhu
+>
