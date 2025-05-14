@@ -1,138 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489491C6FEA
-	for <loongarch@lists.linux.dev>; Wed, 14 May 2025 14:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A42284663
+	for <loongarch@lists.linux.dev>; Wed, 14 May 2025 15:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747234280; cv=none; b=Hfdcbl0HHeTQQ26ADcnERJdkXDkiClSme5DqeZtkMWcRxNV9uy6OYXvE6tuSjBOm4lqTKpYB258QGHjfknim7hLYE+8PLNtsGjWH3ajAr0qxxdNshJD9F1vuLiOeuTOCpEZna5r9br6nixuDzXZIxCvuQfMMKPypLCmLo8JAEvc=
+	t=1747235689; cv=none; b=gp7oUvtcHOA2B8nMYE327VIcfQcGD4AubfZKKA46Uf/jVGYoQYRCAtbyUpwO2EE+0bThjq1J5lQH7AB44uVIjDrTucxMhbGkPGioOLhwIZcja+//UbZhMFuVO/X7/GHACE8FjwpxRWgONk8gUDFuuKZ91qu4GZF/upY+rXnVP4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747234280; c=relaxed/simple;
-	bh=O7WNQrDY8/JOx9yDYkECk6fBdY8kCGDAHOxbGZh8bYQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F4lTROLGQPCDzPWoBYwMjmdkyZKf6l9TnpoL6HMxG3NZ0zmCrNUlnlDMknWpRAaCljdKPRz5IrkJYLMiMfpoMzP4xUqqaJn9SUNdTGoQSnxkKK4sG0klYe7+GGbFByjITjItZJbDX6+eRfU/CngebS+eJINr/GtfkV1EPXZHWPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFONZlvs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747235689; c=relaxed/simple;
+	bh=dbXx+MD2QCNjSXPlgp390XJDfrTSi22QXjpUAVmjpNs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HBHBtyv2GMmtAYQ5cjJeXx8GfNmVPl3F0sDPLjD7MbDprUH5ewKh583n6nW2nMCXmj8tCl2rs05EnKYgW8tpoa85W8FhAgCopssAYLGpq2HyIOzNhEm84n6/FGdSdTbPVuvX/rpiYG221rZzxw1HsglLUC2lDvaD0flvuLLWs4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BSodNn0p; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFONZlvs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B327BC4CEE3
-	for <loongarch@lists.linux.dev>; Wed, 14 May 2025 14:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747234278;
-	bh=O7WNQrDY8/JOx9yDYkECk6fBdY8kCGDAHOxbGZh8bYQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SFONZlvsCwA565BQdFpfDjkcMv253uLGPft7yJjo3pFhivG/KlnAEBVyQRZMCxAMo
-	 5SfjfRGRER4rCsWtcmS7lW2ib7ivcQr64SNxH/01LOonjLcfgnkI5ec+4wr8r+vSOF
-	 gnwGQ31WlALhmguu2ayOr1r3pmJwRQsEM6iNBvY+YjUo9+t/itz3r5kgkZIkGIry7X
-	 HQNd8g1xeR6BWC79gum/Q9olLAuuzOPT19XAbrJhlOAh3U2iJBCLnKcpCnEO8lvXvD
-	 PIux9I6AgzE21ffM7frhrnTD9Z1bhNLmotQKoWZ+4KoOZH+jLDrPtcLp8hke8sJJNQ
-	 sdVodGXvju8Ww==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso1987508a12.1
-        for <loongarch@lists.linux.dev>; Wed, 14 May 2025 07:51:18 -0700 (PDT)
-X-Gm-Message-State: AOJu0Ywns+hDyi2LDezuo4kKfi7h5iAeobUtgYlzuO1cL7sqwt5pHMe2
-	NnfMrhViLyYtheLRiC8puAMd64XqtibJew7ZldSgIQKLRRZ0mPQjLT280jLWwp11XEOoAQzb95n
-	ITpArUnQO8mZGRHmjqJCrFuiDhms=
-X-Google-Smtp-Source: AGHT+IH/ThODmqttSoNzxbWWABbYYF2hu3CS8DS4XL22UFTENLhop6PijzhnzaiTU8loCXoEbpnzWq9hUec6yC+fzhM=
-X-Received: by 2002:a05:6402:1e94:b0:5fc:93ff:f2bf with SMTP id
- 4fb4d7f45d1cf-5ff95c36519mr2983841a12.15.1747234277282; Wed, 14 May 2025
- 07:51:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BSodNn0p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747235688; x=1778771688;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dbXx+MD2QCNjSXPlgp390XJDfrTSi22QXjpUAVmjpNs=;
+  b=BSodNn0p5g9mwA+zoWlQu+vWMlXS/KBiPn1UbHxNNJtLbpdyjSsqHVn1
+   h6oR62DWKtNQ2v0tUra0DVfx/fKEKjiIVIc1o3rJDpqpDkzvDhP/xQiAu
+   50EuaqZoCyc+HPj1BP//AXrXDxd4cvzNE0OCgTsHlmxMXxEA9IwHh0i+P
+   a2IGbupzaCSlr2lAW15bKHZIVr9udK1xw7rfczGOgKVvbkoahd8aVTuxB
+   DkeJKVq4FU0/EuihJI+rJEu3m2uk5Io0AUg0yLqMP3AyQDb1wNIaeVFHW
+   jdQlVFqM+4Bb9st8fvWY8GwxZ6PD095rQZT7LYfvbAGO7aKNUyU1r3RE2
+   Q==;
+X-CSE-ConnectionGUID: f5Usvd6qQuexXXY8At/tBg==
+X-CSE-MsgGUID: 67e3Z9O4Q/2JY9mNPSoLAQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49072797"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="49072797"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:14:47 -0700
+X-CSE-ConnectionGUID: PnJJIKlyTqaZd4PmKT1G2Q==
+X-CSE-MsgGUID: xQEo3F7WS/a5yxyQ6pAJUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="142939176"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa005.fm.intel.com with ESMTP; 14 May 2025 08:14:47 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	irogers@google.com,
+	mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: eranian@google.com,
+	ctshao@google.com,
+	tmricht@linux.ibm.com,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	loongarch@lists.linux.dev
+Subject: [PATCH V2 12/15] loongarch/perf: Remove driver-specific throttle support
+Date: Wed, 14 May 2025 08:13:58 -0700
+Message-Id: <20250514151401.2547932-13-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20250514151401.2547932-1-kan.liang@linux.intel.com>
+References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250513092116.25979-1-yangtiezhu@loongson.cn>
- <20250513092116.25979-3-yangtiezhu@loongson.cn> <CAAhV-H4AgHQs4pMqGqe7WfwCA+u7mO3U+=hcm8ZWk5DQHhsO1w@mail.gmail.com>
- <bbd7e5ad-c353-6916-cf9e-8f3aa3fefda9@loongson.cn>
-In-Reply-To: <bbd7e5ad-c353-6916-cf9e-8f3aa3fefda9@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 14 May 2025 22:51:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6HTx3qgoUHKC0nB0LTqN9o9t=P3QuD7PumacaOe8pjEw@mail.gmail.com>
-X-Gm-Features: AX0GCFuW0sYon0f2qyf0-wgagLfvseV3bMoL8UCdpvzdkJWXMnyXie5UBp29UXg
-Message-ID: <CAAhV-H6HTx3qgoUHKC0nB0LTqN9o9t=P3QuD7PumacaOe8pjEw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] LoongArch: uprobe: Remove redundant code about resume_era
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 14, 2025 at 5:33=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> On 05/13/2025 11:13 PM, Huacai Chen wrote:
-> > Hi, Tiezhu,
-> >
-> > On Tue, May 13, 2025 at 5:21=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
-> >>
-> >> arch_uprobe_skip_sstep() returns true if instruction was emulated,
-> >> that is to say, there is no need to single step for the emulated
-> >> instructions, it will point to the destination address directly
-> >> after the exception, so the resume_era related code is redundant,
-> >> just remove them.
-> >>
-> >> Fixes: 19bc6cb64092 ("LoongArch: Add uprobes support")
-> >> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> >> ---
-> >>  arch/loongarch/include/asm/uprobes.h | 1 -
-> >>  arch/loongarch/kernel/uprobes.c      | 7 +------
-> >>  2 files changed, 1 insertion(+), 7 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/uprobes.h b/arch/loongarch/inc=
-lude/asm/uprobes.h
-> >> index 99a0d198927f..025fc3f0a102 100644
-> >> --- a/arch/loongarch/include/asm/uprobes.h
-> >> +++ b/arch/loongarch/include/asm/uprobes.h
-> >> @@ -15,7 +15,6 @@ typedef u32 uprobe_opcode_t;
-> >>  #define UPROBE_XOLBP_INSN      __emit_break(BRK_UPROBE_XOLBP)
-> >>
-> >>  struct arch_uprobe {
-> >> -       unsigned long   resume_era;
-> >>         u32     insn[2];
-> >>         u32     ixol[2];
-> >>         bool    simulate;
-> >> diff --git a/arch/loongarch/kernel/uprobes.c b/arch/loongarch/kernel/u=
-probes.c
-> >> index 0ab9d8d631c4..6022eb0f71db 100644
-> >> --- a/arch/loongarch/kernel/uprobes.c
-> >> +++ b/arch/loongarch/kernel/uprobes.c
-> >> @@ -52,11 +52,7 @@ int arch_uprobe_post_xol(struct arch_uprobe *auprob=
-e, struct pt_regs *regs)
-> >>
-> >>         WARN_ON_ONCE(current->thread.trap_nr !=3D UPROBE_TRAP_NR);
-> >>         current->thread.trap_nr =3D utask->autask.saved_trap_nr;
-> >> -
-> >> -       if (auprobe->simulate)
-> >> -               instruction_pointer_set(regs, auprobe->resume_era);
-> >> -       else
-> >> -               instruction_pointer_set(regs, utask->vaddr + LOONGARCH=
-_INSN_SIZE);
-> >> +       instruction_pointer_set(regs, utask->vaddr + LOONGARCH_INSN_SI=
-ZE);
-> > This seems wrong. If in the simulate case, regs->csr_era has already
-> > pointed to the correct destination address, then here we should only
-> > handle the non-simulate case.
->
-> What is wrong with this code? AFAICT, the code is right.
->
-> Here are the call chains in the generic code of uprobe:
->
-> handle_swbp()
->    arch_uprobe_skip_sstep()
->    pre_ssout()
->      arch_uprobe_pre_xol()
-> handle_singlestep()
->    arch_uprobe_post_xol()
->
-> arch_uprobe_post_xol() only handles the instruction that is not emulated
-> because if arch_uprobe_skip_sstep() returns true, arch_uprobe_post_xol()
-> will not be called, it will be called only if arch_uprobe_skip_sstep()
-> returns false.
-OK, I know.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Huacai
+The throttle support has been added in the generic code. Remove
+the driver-specific throttle support.
 
->
-> Thanks,
-> Tiezhu
->
+Besides the throttle, perf_event_overflow may return true because of
+event_limit. It already does an inatomic event disable. The pmu->stop
+is not required either.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Bibo Mao <maobibo@loongson.cn>
+Cc: Huacai Chen <chenhuacai@loongson.cn>
+Cc: loongarch@lists.linux.dev
+---
+ arch/loongarch/kernel/perf_event.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
+index f86a4b838dd7..8ad098703488 100644
+--- a/arch/loongarch/kernel/perf_event.c
++++ b/arch/loongarch/kernel/perf_event.c
+@@ -479,8 +479,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc, int idx,
+ 	if (!loongarch_pmu_event_set_period(event, hwc, idx))
+ 		return;
+ 
+-	if (perf_event_overflow(event, data, regs))
+-		loongarch_pmu_disable_event(idx);
++	perf_event_overflow(event, data, regs);
+ }
+ 
+ static irqreturn_t pmu_handle_irq(int irq, void *dev)
+-- 
+2.38.1
+
