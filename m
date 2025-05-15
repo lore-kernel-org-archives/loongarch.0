@@ -1,76 +1,122 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427DB22D4C6
-	for <loongarch@lists.linux.dev>; Thu, 15 May 2025 01:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BFC4B1E64
+	for <loongarch@lists.linux.dev>; Thu, 15 May 2025 01:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747272215; cv=none; b=HrCCsjDgc3PeK5d5hEwLh6Er9hK8cH+CrlLHFz01HlMqUMCVFMIidC6ozFe8JExHGB6r+u1p9usXhQ3mK7g07+unFSEeNbZeUt10Ueg6/4mL9DCi8JxiKl3rk60fK+a8gb7Qo6o+9OHBGsZG+KYJ/KGwznTphvaHi9EFndg+vxM=
+	t=1747272645; cv=none; b=HmpaE26EOYWbwqpZOKIsvs5iSGl/rMEOhum2OGsHgijwFd5E3gk1fGg7JD9EtHcQd3jF98RF10vDDCG13MXjkNaLqg2EIivSy9tbL8ePTGhgw2n8DgkGU6uEwtYwReoUVt4YOqoBmt+OvjlyOca/xLHjW6pLUj3NsHp9LSbmkBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747272215; c=relaxed/simple;
-	bh=bveVUP7APeMyIrUWf8h0xy22367pGHXAPGiY6Jbqon8=;
+	s=arc-20240116; t=1747272645; c=relaxed/simple;
+	bh=7d11dxMUWSlUIvsx1ISMixfrtiUXfAzjI3gLaGSALKU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qYZUWY7Iar/BIPR5j5/Wpmc9rFOZq2UZc4yTvp7PHqAm50fQG+9tMq02FRrlrcG0DgC5rGII+ZASmeEhWmWuJnKxSwztlbKHhwNskKZf5D0lJfHMHYAPQyT/SnflBQ8fsNr6w0AIiAtWv9kj8lqAMYEyQCrhiGFofOTC1MaJBoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=m0FbXIm0; arc=none smtp.client-ip=91.218.175.180
+	 In-Reply-To:Content-Type; b=M6SS00BNM9kIoyIqDCx2EVBZDAhqdNVxOOdSAa/FgKJEEt+TW188g6I4maSYDyZ667fRcLQ3fNfmV8U0BkIejkbQirGLzAKDALlPsSgYYRDz5v8cJVLaxb4JmjfTGpRgcDp159SnXhuUCAbq84mp8fUUz5m/U/f7bFqix/u3BAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aBaWm5U+; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="m0FbXIm0"
-Message-ID: <96d9b151-40f9-46e7-b0b4-63569a65371b@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aBaWm5U+"
+Message-ID: <7135de9f-4372-4e12-994d-ecdc234bff28@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747272211;
+	t=1747272641;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ks83dKmtZt6Dt5qONYWWvSw0O20g9/OKTfH9ULmEY2c=;
-	b=m0FbXIm0l9hxfWamPMd92MUU5t2433B1IhWDMxBPVkuK295ArMO0/6+LyCfygTLcHPADv0
-	p6bc9QJJh5PBs/VX0kk7PzHIUwyK6NZkHE+suBCCzj86Fm73Ep2ABqDLIXS8cB2d39p1GO
-	Xu/uR8MlYrI5xP65vHYwjIoNxVJelKU=
-Date: Thu, 15 May 2025 09:23:23 +0800
+	bh=ciAFAPUHoqP7kxDTaOJWSofaP2GTW0t32HqF5a7B428=;
+	b=aBaWm5U+V54ipnws5yhyd78b0OCayavJMYV1WP4Do40m7+AZKeVhiwXPNb1Vh6DBT/FQbj
+	vJA1nJOn4XmwrE4UwRcPtYvDzpfZFAsDpASr85yAyd7JE8fAe7Uyhq4qOCzyLLGsswApKE
+	nnouiomU3pAY4gGj1KnCcoUmOIBCc08=
+Date: Thu, 15 May 2025 09:30:36 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 0/3] LoongArch: dts: Add PWM controller node support
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org
-References: <cover.1746684614.git.zhoubinbin@loongson.cn>
+Subject: Re: [PATCH] LoongArch: Save and restore CSR.CNTC for hibernation
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
+ Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Xianglai Li <lixianglai@loongson.cn>
+References: <20250514144643.1620870-1-chenhuacai@loongson.cn>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <cover.1746684614.git.zhoubinbin@loongson.cn>
+In-Reply-To: <20250514144643.1620870-1-chenhuacai@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-在 5/8/25 3:02 PM, Binbin Zhou 写道:
+在 5/14/25 10:46 PM, Huacai Chen 写道:
+> Save and restore CSR.CNTC for hibernation which is similar to suspend.
 > 
-> Binbin Zhou (3):
->    LoongArch: dts: Add PWM support to Loongson-2K0500
->    LoongArch: dts: Add PWM support to Loongson-2K1000
->    LoongArch: dts: Add PWM support to Loongson-2K2000
+> For host this is unnecessary because sched clock is ensured continuous,
+> but for kvm guest sched clock isn't enough because rdtime.d should also
+> be continuous.
 > 
->   arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 160 ++++++++++++++++++
->   .../boot/dts/loongson-2k1000-ref.dts          |  24 +++
->   arch/loongarch/boot/dts/loongson-2k1000.dtsi  |  42 ++++-
->   arch/loongarch/boot/dts/loongson-2k2000.dtsi  |  60 +++++++
->   4 files changed, 285 insertions(+), 1 deletion(-)
-
-For the patch sets:
-
+> Host::rdtime.d = Host::CSR.CNTC + counter
+> Guest::rdtime.d = Host::CSR.CNTC + Host::CSR.GCNTC + Guest::CSR.CNTC + counter
+> 
+> so,
+> 
+> Guest::rdtime.d = Host::rdtime.d + Host::CSR.GCNTC + Guest::CSR.CNTC
+> 
+> To ensure Guest::rdtime.d continuous, Host::rdtime.d should be at first
+> continuous, while Host::CSR.GCNTC / Guest::CSR.CNTC is maintained by KVM.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
-
 
 Thanks,
 Yanteng
+> ---
+>   arch/loongarch/kernel/time.c     | 2 +-
+>   arch/loongarch/power/hibernate.c | 3 +++
+>   2 files changed, 4 insertions(+), 1 deletion(-)
 > 
-> 
-> base-commit: b56175973e17e67e3005837346ceb79cc282187a
+> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+> index e2d3bfeb6366..bc75a3a69fc8 100644
+> --- a/arch/loongarch/kernel/time.c
+> +++ b/arch/loongarch/kernel/time.c
+> @@ -111,7 +111,7 @@ static unsigned long __init get_loops_per_jiffy(void)
+>   	return lpj;
+>   }
+>   
+> -static long init_offset __nosavedata;
+> +static long init_offset;
+>   
+>   void save_counter(void)
+>   {
+> diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
+> index 1e0590542f98..e7b7346592cb 100644
+> --- a/arch/loongarch/power/hibernate.c
+> +++ b/arch/loongarch/power/hibernate.c
+> @@ -2,6 +2,7 @@
+>   #include <asm/fpu.h>
+>   #include <asm/loongson.h>
+>   #include <asm/sections.h>
+> +#include <asm/time.h>
+>   #include <asm/tlbflush.h>
+>   #include <linux/suspend.h>
+>   
+> @@ -14,6 +15,7 @@ struct pt_regs saved_regs;
+>   
+>   void save_processor_state(void)
+>   {
+> +	save_counter();
+>   	saved_crmd = csr_read32(LOONGARCH_CSR_CRMD);
+>   	saved_prmd = csr_read32(LOONGARCH_CSR_PRMD);
+>   	saved_euen = csr_read32(LOONGARCH_CSR_EUEN);
+> @@ -26,6 +28,7 @@ void save_processor_state(void)
+>   
+>   void restore_processor_state(void)
+>   {
+> +	sync_counter();
+>   	csr_write32(saved_crmd, LOONGARCH_CSR_CRMD);
+>   	csr_write32(saved_prmd, LOONGARCH_CSR_PRMD);
+>   	csr_write32(saved_euen, LOONGARCH_CSR_EUEN);
 
