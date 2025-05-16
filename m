@@ -1,496 +1,267 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F9D230269
-	for <loongarch@lists.linux.dev>; Fri, 16 May 2025 09:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DDC42AA3
+	for <loongarch@lists.linux.dev>; Fri, 16 May 2025 15:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747387776; cv=none; b=uEFwcqfzpcavyWG21zaNnsbIeDXrex+6c5pf3aCxtjXVGnT+Z0DjMg6Kd7W0tpSPzO0vNNPrutyIf1+Kb025BWe5j8CsXJ72Hois1FRz9NDd+T8vYB8bxKZHLp4+bXLJ0aXPTjnAYoNp17/+OJTVtmNPjUJc5jOBaja5WaCXnWc=
+	t=1747409310; cv=none; b=r3Vt7jQeCij15S2p7oZGAoumje3lrqbY6MPacAEib0arRfbIgEw47wHGJuYJmGWXGpQH97A+Xw5mCYoAfXSZvRRX19cxjOafXZAJ7bntzUdDgrFKf25OdwJYGlSqVioGYdrpxSzYn52QoIkrkjfbRitun9VMuEcirNtiAnMTrBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747387776; c=relaxed/simple;
-	bh=P4Q+TwoV9CsCxq2+rEEUq8WV1ggTeAmq86PHWQKod58=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=or9DqFNSxrQg0/RSGcmSN6haHTGmkAF6qrUdsL/+7nMhmfAqAtKPIST3LPBZB6K1R/VQObvhgr0CcwUgIjKikI20bGR+ZRo41clixDoukU9zthAYz18IC0ZZdhNdXQBUrlzq/9i+7WranOCV9YMbKVSF37pf2anJV1saAeVp6NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h/teBD8m; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747409310; c=relaxed/simple;
+	bh=KS18mCmBwG/oVexqoftqFNnI2Pv+d2v1jXLpreeKDCY=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tV6DEN81VnCPaFCT1Kjq0snK8TIQwgfZ2UxZVrDcOrG3jeYEXuhyGBeDrqMCJGRqUhtl8dj1DUjHzArR113qQlat8U8jIB4w8q374NPNiw7Am1KYVyWeFXVzh8vKKxf1H6Ri952vqBMb8B+5Xa4zjVUc+0h/MAPooYkXrAaJ2xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=nubmEBDS; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/teBD8m"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fbeadf2275so3580756a12.2
-        for <loongarch@lists.linux.dev>; Fri, 16 May 2025 02:29:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="nubmEBDS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747387771; x=1747992571; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gHhHGMrWLIGUqDFlkOGWHGKdWIzyR3vOGQ1cH2zD7ao=;
-        b=h/teBD8mlSWtPw4ZEDL7NTrsQXTr9WuXQmHIRyOcD4UMZpHuJBR4uS5tGeWeqafrKe
-         3hKS8TbejmNg/SkXCeunXbcDkw6eAH9TelLUDrV4zYVmaX171DMGE5B/h8Oep1nklcCf
-         wg6tyu+M2jiqYtRLlKSUCvVRbBxVKJU4dmU0OIsyWYlsb5CeHHwvmln8oiNrmvw3fq90
-         PHiINpMrlBy5ZB2U6DprGD0qSDbGqgM+TSS7Y3sGhlag7izbUMNndhngfSiOxZzckhMd
-         UFznOKavVs8bmGKIYghQkZmIEgmeYBRT3j9yPaQ1oBh/Q3YNU+nPpY40qofMzzF4hGJh
-         EI9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747387771; x=1747992571;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gHhHGMrWLIGUqDFlkOGWHGKdWIzyR3vOGQ1cH2zD7ao=;
-        b=KXH2bwcF+33sgPqCue45g9cymCAzFrIUnde9GiRTZ6s7Qa2BqZ7AzdWggFFxrduQXJ
-         AQlB2Zalfsy14VLWisqSo45B9UtA4YC5BRpm1lqVZhc5ps31Vpb6Gf4Qqdt1FMvbnzXZ
-         rxaLqx8EbprJrKJ1c7hSHmaFW2+kfRH2kMR6cBgx0kfxZAnoNMVqlniKvCI7nEgXmKTi
-         BSiRlK3WMuG97nMCqHDVkS/N6CUtnfJiRMyL3HPzMPHm3FhoFthzwg2VtAfXzN8JOaXT
-         OZLQYnx5wzrsuf0sJ7tH5O8OuB9oWzC6QPO/SXZYUrJynbDIYh8luYH/zyIuszKLctYT
-         rlrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbFFdKOieFaQU/J/oqZb/k1UXO1H1CVAhKVXlFfhljQCnXuBgUfG15wQUmzgy2Ob554bxy5QAN+iw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz+bv6Tn2rnPo3dRIGDpmMzZDbGAR24PyNoIxQ18MumYR0uSHMy
-	fojhMqEjBHwGGKWIWZ8Nt/pzwT70EO1Wi0WiyZoe8MilKFnDX/OcBzlhDQRjWosIvf0oefSV7jq
-	6lkwlXrLRHUG6RXIWkrN5wo5WHOrJJ3k=
-X-Gm-Gg: ASbGncu0zzkOxgJzyS/EkZrIDkEu/IbOTfL7cOooKV10jXUHiAQoWhctIWNb4Mf16ET
-	K18iVmvGvy0AI534kgHdismvv7Sofq6jycoS0mghbT65PtucS0SBes+fwty4HgdwtkGoJ7lc+gE
-	UNNEtscO5xNN7djNHkSbR2pKg96zi1z+Gq
-X-Google-Smtp-Source: AGHT+IHKCOQVIPRjqeDK2kspkKwQXzvvSPySyP8vuz7UIAF5Y7ve27DSNoRzMKYZHDV7oNqSJ1eU0buBbX0uVmglaIs=
-X-Received: by 2002:a17:907:7da8:b0:ad2:4fb7:6cd7 with SMTP id
- a640c23a62f3a-ad536b5a0e6mr144436566b.2.1747387770326; Fri, 16 May 2025
- 02:29:30 -0700 (PDT)
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1747409308; x=1778945308;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=/YGeJfXKIquYSt90tYMJ+el7wnECiC9xpMwa6JMR6os=;
+  b=nubmEBDSVR4kf7Ll/DymsGk2hPxu6OkonUNThJo07qmSY1GaKEUFDm49
+   BZ4hetAsmrsMrCuDYSEEGzOVpaZoy1Iy6xDH7ArV8EZ363nNorM6EL8W9
+   /0Asg/hPfHk0jHe+3My9uHrWEXMXra/JaDqaVT3uujfiEUpQg6r9rl/Ie
+   qrIdB84CqBjqF9fUiU6KqNlPEtzDKsICzkoxRl7zDsR5eI5sabyXCZVsg
+   ZjOXcw/N3rMUxADuJydc3JilDJ6Z3XzipNkEro4bTSd3jMFpDTg8O25yT
+   0D8x879qtfFp7QrxWH+epDWb9i2wxocEixJY2qvK3HtK7uonkZOMywEen
+   g==;
+X-IronPort-AV: E=Sophos;i="6.15,294,1739836800"; 
+   d="scan'208";a="490816896"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 15:28:24 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.43.254:48579]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.40.19:2525] with esmtp (Farcaster)
+ id 8875e536-5df1-4a46-a9d9-d4740a3f3911; Fri, 16 May 2025 15:28:23 +0000 (UTC)
+X-Farcaster-Flow-ID: 8875e536-5df1-4a46-a9d9-d4740a3f3911
+Received: from EX19D039EUA004.ant.amazon.com (10.252.50.95) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 16 May 2025 15:28:20 +0000
+Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
+ EX19D039EUA004.ant.amazon.com (10.252.50.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 16 May 2025 15:28:19 +0000
+Received: from email-imr-corp-prod-iad-all-1a-6ea42a62.us-east-1.amazon.com
+ (10.25.36.214) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Fri, 16 May 2025 15:28:18 +0000
+Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
+	by email-imr-corp-prod-iad-all-1a-6ea42a62.us-east-1.amazon.com (Postfix) with ESMTP id CD1C2401B0;
+	Fri, 16 May 2025 15:28:17 +0000 (UTC)
+Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id 89B166204; Fri, 16 May 2025 17:28:17 +0200 (CEST)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Mike Rapoport <rppt@kernel.org>
+CC: Andrew Morton <akpm@linux-foundation.org>, Alexander Gordeev
+	<agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, "Andy
+ Lutomirski" <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Arnd
+ Bergmann" <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, Brian Cain
+	<bcain@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, "Dinh
+ Nguyen" <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Guo Ren <guoren@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, "Huacai
+ Chen" <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, Jiaxun Yang
+	<jiaxun.yang@flygoat.com>, Johannes Berg <johannes@sipsolutions.net>, "John
+ Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>, Madhavan Srinivasan
+	<maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>, Matt Turner
+	<mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman
+	<mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Palmer Dabbelt
+	<palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, "Richard
+ Weinberger" <richard@nod.at>, Russell King <linux@armlinux.org.uk>, "Stafford
+ Horne" <shorne@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, "Praveen
+ Kumar" <pravkmr@amazon.de>, <linux-alpha@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-snps-arc@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-csky@vger.kernel.org>,
+	<linux-hexagon@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-m68k@lists.linux-m68k.org>, <linux-mips@vger.kernel.org>,
+	<linux-openrisc@vger.kernel.org>, <linux-parisc@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<sparclinux@vger.kernel.org>, <linux-um@lists.infradead.org>,
+	<linux-arch@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>
+Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
+In-Reply-To: <20250313135003.836600-11-rppt@kernel.org>
+References: <20250313135003.836600-1-rppt@kernel.org>
+	<20250313135003.836600-11-rppt@kernel.org>
+Date: Fri, 16 May 2025 17:28:17 +0200
+Message-ID: <mafs05xi0o9ri.fsf@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1747276047.git.zhoubinbin@loongson.cn> <0963b8274bfe25a21f56da9fcba05830fb43408b.1747276047.git.zhoubinbin@loongson.cn>
- <aCaOAVgb8V7_-rLR@mail.minyard.net>
-In-Reply-To: <aCaOAVgb8V7_-rLR@mail.minyard.net>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 16 May 2025 17:29:17 +0800
-X-Gm-Features: AX0GCFveM1wfseJ1SBRSiSVMUA_R-l0h2_d8wm9QOuPSnJ5xgEOnMzOqNT15JGk
-Message-ID: <CAMpQs4+c5iDfNry__xwqVDQgoji-Chqeov_jvxFZykvvqW-Mmw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] ipmi: Add Loongson-2K BMC support
-To: corey@minyard.net
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Corey:
+Hi Mike, Andrew,
 
-Thanks so much for the detailed review.
+On Thu, Mar 13 2025, Mike Rapoport wrote:
 
-On Fri, May 16, 2025 at 8:59=E2=80=AFAM Corey Minyard <corey@minyard.net> w=
-rote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 >
-> On Thu, May 15, 2025 at 10:32:25AM +0800, Binbin Zhou wrote:
-> > This patch adds Loongson-2K BMC IPMI support.
-> >
-> > According to the existing design, we use software simulation to
-> > implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+> high_memory defines upper bound on the directly mapped memory.
+> This bound is defined by the beginning of ZONE_HIGHMEM when a system has
+> high memory and by the end of memory otherwise.
 >
-> This is a strange way to do this.  My preference would be to have a
-> separate driver for this and not put it under the ipmi_si driver.
-> But it's annoyingly close and it would duplicate a lot of ipmi_si_intf.c
-> Anyway, I think I'm ok with this basic design.  But there are problems.
+> All this is known to generic memory management initialization code that
+> can set high_memory while initializing core mm structures.
 >
-> >
-> > Also since both host side and BMC side read and write kcs status, I use
-> > fifo pointer to ensure data consistency.
+> Add a generic calculation of high_memory to free_area_init() and remove
+> per-architecture calculation except for the architectures that set and
+> use high_memory earlier than that.
 >
-> I assume this fifo pointer is part of the interface hardware or the
-> implementation on the other side of the interface.
->
-> >
-> > Therefore I made the whole IPMI driver independent.
->
-> What do you mean by this statement?
->
-> More comments inline.
->
-> >
-> > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  drivers/char/ipmi/Makefile       |   1 +
-> >  drivers/char/ipmi/ipmi_si.h      |   7 +
-> >  drivers/char/ipmi/ipmi_si_intf.c |   3 +
-> >  drivers/char/ipmi/ipmi_si_ls2k.c | 250 +++++++++++++++++++++++++++++++
-> >  4 files changed, 261 insertions(+)
-> >  create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
-> >
-> > diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
-> > index e0944547c9d0..5eb3494f5f39 100644
-> > --- a/drivers/char/ipmi/Makefile
-> > +++ b/drivers/char/ipmi/Makefile
-> > @@ -8,6 +8,7 @@ ipmi_si-y :=3D ipmi_si_intf.o ipmi_kcs_sm.o ipmi_smic_s=
-m.o ipmi_bt_sm.o \
-> >       ipmi_si_mem_io.o
-> >  ipmi_si-$(CONFIG_HAS_IOPORT) +=3D ipmi_si_port_io.o
-> >  ipmi_si-$(CONFIG_PCI) +=3D ipmi_si_pci.o
-> > +ipmi_si-$(CONFIG_LOONGARCH) +=3D ipmi_si_ls2k.o
->
-> Shouldn't this be dependent on MFD_LS2K_BMC?  It appears you can disable
-> that and still have CONFIG_LOONGARCH enabled.
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>	# x86
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  arch/alpha/mm/init.c         |  1 -
+>  arch/arc/mm/init.c           |  2 --
+>  arch/arm64/mm/init.c         |  2 --
+>  arch/csky/mm/init.c          |  1 -
+>  arch/hexagon/mm/init.c       |  6 ------
+>  arch/loongarch/kernel/numa.c |  1 -
+>  arch/loongarch/mm/init.c     |  2 --
+>  arch/microblaze/mm/init.c    |  2 --
+>  arch/mips/mm/init.c          |  2 --
+>  arch/nios2/mm/init.c         |  6 ------
+>  arch/openrisc/mm/init.c      |  2 --
+>  arch/parisc/mm/init.c        |  1 -
+>  arch/riscv/mm/init.c         |  1 -
+>  arch/s390/mm/init.c          |  2 --
+>  arch/sh/mm/init.c            |  7 -------
+>  arch/sparc/mm/init_32.c      |  1 -
+>  arch/sparc/mm/init_64.c      |  2 --
+>  arch/um/kernel/um_arch.c     |  1 -
+>  arch/x86/kernel/setup.c      |  2 --
+>  arch/x86/mm/init_32.c        |  3 ---
+>  arch/x86/mm/numa_32.c        |  3 ---
+>  arch/xtensa/mm/init.c        |  2 --
+>  mm/memory.c                  |  8 --------
+>  mm/mm_init.c                 | 30 ++++++++++++++++++++++++++++++
+>  mm/nommu.c                   |  2 --
+>  25 files changed, 30 insertions(+), 62 deletions(-)
 
-Indeed, it should rely on MFD_LS2K_BMC.
->
-> And this MFD can have multiple things hanging off of it, wouldn't you
-> want to make the individual drivers their own CONFIG items?
->
-> >  ipmi_si-$(CONFIG_PARISC) +=3D ipmi_si_parisc.o
-> >
-> >  obj-$(CONFIG_IPMI_HANDLER) +=3D ipmi_msghandler.o
-> > diff --git a/drivers/char/ipmi/ipmi_si.h b/drivers/char/ipmi/ipmi_si.h
-> > index a7ead2a4c753..71f1d4e1272c 100644
-> > --- a/drivers/char/ipmi/ipmi_si.h
-> > +++ b/drivers/char/ipmi/ipmi_si.h
-> > @@ -93,6 +93,13 @@ void ipmi_si_pci_shutdown(void);
-> >  static inline void ipmi_si_pci_init(void) { }
-> >  static inline void ipmi_si_pci_shutdown(void) { }
-> >  #endif
-> > +#ifdef CONFIG_LOONGARCH
-> > +void ipmi_si_ls2k_init(void);
-> > +void ipmi_si_ls2k_shutdown(void);
-> > +#else
-> > +static inline void ipmi_si_ls2k_init(void) { }
-> > +static inline void ipmi_si_ls2k_shutdown(void) { }
-> > +#endif
->
-> I'm not excited about this, but there is history, I guess.
->
-> Same comment as the Makefile on CONFIG_LOONGARCH.
+This patch causes a BUG() when built with CONFIG_DEBUG_VIRTUAL and
+passing in the cma= commandline parameter:
 
-It should be MFD_LS2K_BMC.
->
-> >  #ifdef CONFIG_PARISC
-> >  void ipmi_si_parisc_init(void);
-> >  void ipmi_si_parisc_shutdown(void);
-> > diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_=
-si_intf.c
-> > index 12b0b77eb1cc..323da77698ea 100644
-> > --- a/drivers/char/ipmi/ipmi_si_intf.c
-> > +++ b/drivers/char/ipmi/ipmi_si_intf.c
-> > @@ -2107,6 +2107,7 @@ static int __init init_ipmi_si(void)
-> >
-> >       ipmi_si_pci_init();
-> >
-> > +     ipmi_si_ls2k_init();
-> >       ipmi_si_parisc_init();
-> >
-> >       /* We prefer devices with interrupts, but in the case of a machin=
-e
-> > @@ -2288,6 +2289,8 @@ static void cleanup_ipmi_si(void)
-> >
-> >       ipmi_si_pci_shutdown();
-> >
-> > +     ipmi_si_ls2k_shutdown();
-> > +
-> >       ipmi_si_parisc_shutdown();
-> >
-> >       ipmi_si_platform_shutdown();
-> > diff --git a/drivers/char/ipmi/ipmi_si_ls2k.c b/drivers/char/ipmi/ipmi_=
-si_ls2k.c
-> > new file mode 100644
-> > index 000000000000..cb31bb989fca
-> > --- /dev/null
-> > +++ b/drivers/char/ipmi/ipmi_si_ls2k.c
-> > @@ -0,0 +1,250 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Driver for Loongson-2K BMC IPMI
-> > + *
-> > + * Copyright (C) 2024 Loongson Technology Corporation Limited.
-> > + *
-> > + * Originally written by Chong Qiao <qiaochong@loongson.cn>
-> > + * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
-> > + */
-> > +
-> > +#include <linux/ioport.h>
-> > +#include <linux/module.h>
-> > +#include <linux/types.h>
-> > +
-> > +#include "ipmi_si.h"
-> > +
-> > +#define LS2K_KCS_STS_OBF     BIT(0)
-> > +#define LS2K_KCS_STS_IBF     BIT(1)
-> > +#define LS2K_KCS_STS_SMS_ATN BIT(2)
-> > +#define LS2K_KCS_STS_CMD     BIT(3)
-> > +
-> > +#define LS2K_KCS_DATA_MASK   (LS2K_KCS_STS_OBF | LS2K_KCS_STS_IBF | LS=
-2K_KCS_STS_CMD)
-> > +
-> > +/* Read and write fifo pointers for data consistency. */
-> > +struct ls2k_fifo_flag {
-> > +     u8 ibfh;
-> > +     u8 ibft;
-> > +     u8 obfh;
-> > +     u8 obft;
-> > +};
-> > +
-> > +struct ls2k_kcs_reg {
-> > +     u8 status;
-> > +     u8 data_out;
-> > +     s16 data_in;
-> > +     s16 cmd;
-> > +};
-> > +
-> > +struct ls2k_kcs_data {
-> > +     struct ls2k_fifo_flag fifo;
-> > +     struct ls2k_kcs_reg reg;
-> > +     u8 cmd_data;
-> > +     u8 version;
-> > +     u32 write_req;
-> > +     u32 write_ack;
-> > +     u32 reserved[2];
-> > +};
->
-> The above appears to be a memory overlay for registers.  But you aren't
-> using readb/writeb and associated functions to read/write it.  That is
-> not the right way to do things.  Please read
-> Documentation/driver-api/device-io.rst
+    ------------[ cut here ]------------
+    kernel BUG at arch/x86/mm/physaddr.c:23!
+    ception 0x06 IP 10:ffffffff812ebbf8 error 0 cr2 0xffff88903ffff000
+    CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc6+ #231 PREEMPT(undef)
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
+    RIP: 0010:__phys_addr+0x58/0x60
+    Code: 01 48 89 c2 48 d3 ea 48 85 d2 75 05 e9 91 52 cf 00 0f 0b 48 3d ff ff ff 1f 77 0f 48 8b 05 20 54 55 01 48 01 d0 e9 78 52 cf 00 <0f> 0b 90 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+    RSP: 0000:ffffffff82803dd8 EFLAGS: 00010006 ORIG_RAX: 0000000000000000
+    RAX: 000000007fffffff RBX: 00000000ffffffff RCX: 0000000000000000
+    RDX: 000000007fffffff RSI: 0000000280000000 RDI: ffffffffffffffff
+    RBP: ffffffff82803e68 R08: 0000000000000000 R09: 0000000000000000
+    R10: ffffffff83153180 R11: ffffffff82803e48 R12: ffffffff83c9aed0
+    R13: 0000000000000000 R14: 0000001040000000 R15: 0000000000000000
+    FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: ffff88903ffff000 CR3: 0000000002838000 CR4: 00000000000000b0
+    Call Trace:
+     <TASK>
+     ? __cma_declare_contiguous_nid+0x6e/0x340
+     ? cma_declare_contiguous_nid+0x33/0x70
+     ? dma_contiguous_reserve_area+0x2f/0x70
+     ? setup_arch+0x6f1/0x870
+     ? start_kernel+0x52/0x4b0
+     ? x86_64_start_reservations+0x29/0x30
+     ? x86_64_start_kernel+0x7c/0x80
+     ? common_startup_64+0x13e/0x141
 
-Ok, I'll refactor this part of the code to redefine each struct item
-into the appropriate macro and access it via readx()/writex().
->
-> > +
-> > +static void ls2k_set_obf(struct ls2k_kcs_data *ik, u8 sts)
-> > +{
-> > +     ik->reg.status =3D (ik->reg.status & ~LS2K_KCS_STS_OBF) | (sts & =
-BIT(0));
-> > +}
-> > +
-> > +static void ls2k_set_ibf(struct ls2k_kcs_data *ik, u8 sts)
-> > +{
-> > +     ik->reg.status =3D (ik->reg.status & ~LS2K_KCS_STS_IBF) | ((sts &=
- BIT(0)) << 1);
-> > +}
-> > +
-> > +static u8 ls2k_get_ibf(struct ls2k_kcs_data *ik)
-> > +{
-> > +     return (ik->reg.status >> 1) & BIT(0);
-> > +}
-> > +
-> > +static unsigned char intf_sim_inb_v0(struct ls2k_kcs_data *ik,
-> > +                                  unsigned int offset)
-> > +{
-> > +     u32 inb =3D 0;
-> > +
-> > +     switch (offset & BIT(0)) {
-> > +     case 0:
-> > +             inb =3D ik->reg.data_out;
-> > +             ls2k_set_obf(ik, 0);
-> > +             break;
-> > +     case 1:
-> > +             inb =3D ik->reg.status;
-> > +             break;
-> > +     }
-> > +
-> > +     return inb;
-> > +}
-> > +
-> > +static unsigned char intf_sim_inb_v1(struct ls2k_kcs_data *ik,
-> > +                                  unsigned int offset)
-> > +{
-> > +     u32 inb =3D 0;
-> > +     int cmd;
-> > +     bool obf, ibf;
-> > +
-> > +     obf =3D ik->fifo.obfh !=3D ik->fifo.obft;
-> > +     ibf =3D ik->fifo.ibfh !=3D ik->fifo.ibft;
-> > +     cmd =3D ik->cmd_data;
-> > +
-> > +     switch (offset & BIT(0)) {
-> > +     case 0:
-> > +             inb =3D ik->reg.data_out;
-> > +             ik->fifo.obft =3D ik->fifo.obfh;
-> > +             break;
-> > +     case 1:
-> > +             inb =3D ik->reg.status & ~LS2K_KCS_DATA_MASK;
-> > +             inb |=3D obf | (ibf << 1) | (cmd << 3);
-> > +             break;
-> > +     }
-> > +
-> > +     return inb;
-> > +}
-> > +
-> > +static unsigned char ls2k_mem_inb(const struct si_sm_io *io,
-> > +                               unsigned int offset)
-> > +{
-> > +     struct ls2k_kcs_data *ik =3D io->addr;
-> > +     int inb =3D 0;
-> > +
-> > +     if (ik->version =3D=3D 0)
-> > +             inb =3D intf_sim_inb_v0(ik, offset);
-> > +     else if (ik->version =3D=3D 1)
-> > +             inb =3D intf_sim_inb_v1(ik, offset);
-> > +
-> > +     return inb;
-> > +}
-> > +
-> > +static void intf_sim_outb_v0(struct ls2k_kcs_data *ik, unsigned int of=
-fset,
-> > +                          unsigned char val)
-> > +{
-> > +     if (ls2k_get_ibf(ik))
-> > +             return;
-> > +
-> > +     switch (offset & BIT(0)) {
-> > +     case 0:
-> > +             ik->reg.data_in =3D val;
-> > +             ik->reg.status &=3D ~LS2K_KCS_STS_CMD;
-> > +             break;
-> > +
-> > +     case 1:
-> > +             ik->reg.cmd =3D val;
-> > +             ik->reg.status |=3D LS2K_KCS_STS_CMD;
-> > +             break;
-> > +     }
-> > +
-> > +     ls2k_set_ibf(ik, 1);
-> > +     ik->write_req++;
-> > +}
-> > +
-> > +static void intf_sim_outb_v1(struct ls2k_kcs_data *ik, unsigned int of=
-fset,
-> > +                          unsigned char val)
-> > +{
-> > +     if (ik->fifo.ibfh !=3D ik->fifo.ibft)
-> > +             return;
-> > +
-> > +     switch (offset & BIT(0)) {
-> > +     case 0:
-> > +             ik->reg.data_in =3D val;
-> > +             ik->cmd_data =3D 0;
-> > +             break;
-> > +
-> > +     case 1:
-> > +             ik->reg.cmd =3D val;
-> > +             ik->cmd_data =3D 1;
-> > +             break;
-> > +     }
-> > +
-> > +     ik->fifo.ibfh =3D !ik->fifo.ibft;
-> > +     ik->write_req++;
-> > +}
-> > +
-> > +static void ls2k_mem_outb(const struct si_sm_io *io, unsigned int offs=
-et,
-> > +                       unsigned char val)
-> > +{
-> > +     struct ls2k_kcs_data *ik =3D io->addr;
-> > +
-> > +     if (ik->version =3D=3D 0)
-> > +             intf_sim_outb_v0(ik, offset, val);
-> > +     else if (ik->version =3D=3D 1)
-> > +             intf_sim_outb_v1(ik, offset, val);
-> > +}
-> > +
-> > +static void ls2k_mem_cleanup(struct si_sm_io *io)
-> > +{
-> > +     if (io->addr)
-> > +             iounmap(io->addr);
-> > +}
-> > +
-> > +static int ipmi_ls2k_sim_setup(struct si_sm_io *io)
-> > +{
-> > +     io->addr =3D ioremap(io->addr_data, io->regspacing);
-> > +     if (!io->addr)
-> > +             return -EIO;
-> > +
-> > +     io->inputb =3D ls2k_mem_inb;
-> > +     io->outputb =3D ls2k_mem_outb;
-> > +     io->io_cleanup =3D ls2k_mem_cleanup;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int ipmi_ls2k_probe(struct platform_device *pdev)
-> > +{
-> > +     struct si_sm_io io;
-> > +
-> > +     dev_info(&pdev->dev, "probing via ls2k platform");
-> > +     memset(&io, 0, sizeof(io));
-> > +
-> > +     io.addr_source  =3D SI_PLATFORM;
-> > +     io.si_type      =3D SI_KCS;
->
-> si_type has been reworked recently, the linux next tree has the changes.
-> I'll need this modified to work with the linux next changes.
+The reason is that __cma_declare_contiguous_nid() does:
 
-OK, I will rebase my driver.
->
-> > +     io.addr_space   =3D IPMI_MEM_ADDR_SPACE;
-> > +     io.io_setup     =3D ipmi_ls2k_sim_setup;
-> > +     io.addr_data    =3D pdev->resource[0].start;
-> > +     io.regspacing   =3D pdev->resource[0].end - pdev->resource[0].sta=
-rt + 1;
-> > +     io.regsize      =3D DEFAULT_REGSIZE;
-> > +     io.regshift     =3D 0;
->
-> The above items, except for io_setup,  don't have much meaning for your
-> device; there's not much need to set them, and there's no need to
-> initialize things to zero.  They are for ipmi_si_port and ipmi_si_mem.
+    	highmem_start = __pa(high_memory - 1) + 1;
 
-The addr_data and regspacing seem to be needed in
-ipmi_ls2k_sim_setup(), in any case, I'll reorganize it based on the
-latest code.
->
-> > +     io.dev          =3D &pdev->dev;
-> > +     io.irq          =3D 0;
-> > +     if (io.irq)
-> > +             io.irq_setup =3D ipmi_std_irq_setup;
->
-> Just remove the irq thing, don't set it to zero and then check it.
+If dma_contiguous_reserve_area() (or any other CMA declaration) is
+called before free_area_init(), high_memory is uninitialized. Without
+CONFIG_DEBUG_VIRTUAL, it will likely work but use the wrong value for
+highmem_start.
 
-OK..
->
-> > +
-> > +     dev_info(&pdev->dev, "%pR regsize %d spacing %d irq %d\n",
-> > +              &pdev->resource[0], io.regsize, io.regspacing, io.irq);
-> > +
-> > +     return ipmi_si_add_smi(&io);
-> > +}
-> > +
-> > +static void ipmi_ls2k_remove(struct platform_device *pdev)
-> > +{
-> > +     ipmi_si_remove_by_dev(&pdev->dev);
-> > +}
-> > +
-> > +struct platform_driver ipmi_ls2k_platform_driver =3D {
-> > +     .driver =3D {
-> > +             .name =3D "ls2k-ipmi-si",
-> > +     },
-> > +     .probe  =3D ipmi_ls2k_probe,
-> > +     .remove =3D ipmi_ls2k_remove,
-> > +};
-> > +
-> > +static bool platform_registered;
-> > +void ipmi_si_ls2k_init(void)
-> > +{
-> > +     int rv;
-> > +
-> > +     rv =3D platform_driver_register(&ipmi_ls2k_platform_driver);
-> > +     if (rv)
-> > +             pr_err("Unable to register driver: %d\n", rv);
->
-> That's far to vague to be useful.
+Among the architectures this patch touches, the below call
+dma_contiguous_reserve_area() _before_ free_area_init():
 
-OK, let's just drop it.
->
-> > +     else
-> > +             platform_registered =3D true;
-> > +}
-> > +
-> > +void ipmi_si_ls2k_shutdown(void)
-> > +{
-> > +     if (platform_registered)
-> > +             platform_driver_unregister(&ipmi_ls2k_platform_driver);
-> > +}
-> > --
-> > 2.47.1
-> >
+- x86
+- s390
+- mips
+- riscv
+- xtensa
+- loongarch
+- csky
 
---
-Thanks.
-Binbin
+The below call it _after_ free_area_init():
+- arm64
+
+And the below don't call it at all:
+- sparc
+- nios2
+- openrisc
+- hexagon
+- sh
+- um
+- alpha
+
+One possible fix would be to move the calls to
+dma_contiguous_reserve_area() after free_area_init(). On x86, it would
+look like the diff below. The obvious downside is that moving the call
+later increases the chances of allocation failure. I'm not sure how much
+that actually matters, but at least on x86, that means crash kernel and
+hugetlb reservations go before DMA reservation. Also, adding a patch
+like that at rc7 is a bit risky.
+
+The other option would be to revert this. I tried a revert, but it isn't
+trivial. It runs into merge conflicts in pretty much all of the arch
+files. Maybe reverting patches 11, 12, and 13 as well would make it
+easier but I didn't try that.
+
+Which option should we take? If we want to move
+dma_contiguous_reserve_area() a bit further down the line then I can
+send a patch doing that on the rest of the architectures. Otherwise I
+can try my hand at the revert.
+
+--- 8< ---
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 9d2a13b37833..ca6928dde0c9 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1160,7 +1160,6 @@ void __init setup_arch(char **cmdline_p)
+ 	x86_flattree_get_config();
+ 
+ 	initmem_init();
+-	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
+ 
+ 	if (boot_cpu_has(X86_FEATURE_GBPAGES)) {
+ 		hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+@@ -1178,6 +1177,8 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	x86_init.paging.pagetable_init();
+ 
++	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
++
+ 	kasan_init();
+ 
+ 	/*
+
+-- 
+Regards,
+Pratyush Yadav
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
+
