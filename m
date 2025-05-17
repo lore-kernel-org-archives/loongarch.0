@@ -1,226 +1,221 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5625A1B4F09
-	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8341DFE12
+	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747474327; cv=none; b=jbZsZKI01gqUC+7FNU4dUtwU5qVaH2IvkRn2azzX3CzOKS9tw6eXV+PhsyBA+8lZh0VYrBwF6vtAQAzTvwz+7hWo5zucWLY7r4RRaRgwq0kE4kZv7N6MgjEEoE3TCQmfVAzGY/vSrKBlIT63awTXAk7bAUOf6ughj90VvzP910I=
+	t=1747474409; cv=none; b=Av/0XQUKPdLF9qVaX358EI8fird8j0F7vLaKWs9ZGn3A7g9VdesAJA9f82NEtBJ6mKQ/Gc8cnfy7R6LQNaQT1pMbUVsPyGr8o0zd77n1KIlBPodIepGewcdmM57NyRz5o2CznlnHNpoCOb/31CbVCu/sdAORR1bLkm/IItR6vIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747474327; c=relaxed/simple;
-	bh=D+YJzSi0/uqBQqKxIgKe3/wkFNEJZRSryTzv91KdRGo=;
+	s=arc-20240116; t=1747474409; c=relaxed/simple;
+	bh=XCM4sNjd8G3kLdZs8GWwcD5be9JJ5ZQoAzjcdwuJ2rg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GhvIBr/lm1RUXeuov69qa+Dk6xLuHCtclGo7oJ3p0xb8+HkwBR2yJ/erhlS7AXkTDyy6b5QeAzcO6lXkRUC+eBT/L8iE/OETNLu7S0A0ddDHp54KPHilSyZCiItrcP7bjau+5gx/y+vky73JKbpx8B1FNZO0oH6sAoDlViwDRfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AWEz6OYs; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=deJ4eGr8solnlqkzuMbf3nV0ZTJEpn5gNbDJZgTxe0QruIgDkRLcGNmDQ8y1epooncmq3CUvhOewcvulG2hx1ndL+0WabQV9U1jXjpolN7SLcmc3v8pCbp/brOWNXR6kbWIl7sJRtgmzVm1nB7s7COgSDi3wXiOP4DEmpM3Nksw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tacmf2ug; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AWEz6OYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD828C4CEED
-	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:32:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tacmf2ug"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD38C4AF09
+	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747474326;
-	bh=D+YJzSi0/uqBQqKxIgKe3/wkFNEJZRSryTzv91KdRGo=;
+	s=k20201202; t=1747474408;
+	bh=XCM4sNjd8G3kLdZs8GWwcD5be9JJ5ZQoAzjcdwuJ2rg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AWEz6OYs8Sr76ecLT8Jbwt7c49gkqsPDVIwxDaiaAtH67dBnR0/PJtBiG+xpFo0aT
-	 xy1fS6b4mFwtM/+eNH6PIYuQiaoLuDX+gebQ+uRJbC2maMuPOU2FqdYaafUA8y1xFI
-	 B+cyzQ/N+j4nFqt/EPOmHDL8tKHTDg1prhaP9+LcOAXKOgMStvPth4BxRD/UVAaXST
-	 fFRS8AzPBopnV/wfPBwUTDH36DR3ugvOCbdYO9kRJUpy8OnAhlGgX8AAvYFCepP70m
-	 1O0ubhjQiuYXBdy0qvwnxbDkgDr4g9P6bfU/y6aE2Yq4xxJuTfm29TnGb5MQF7flvF
-	 GbcDAtrAxN77g==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6015f8d4b7dso2443010a12.1
-        for <loongarch@lists.linux.dev>; Sat, 17 May 2025 02:32:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUq0pyHqPM4hACgKnhjQsqWCoLemQxTM+Ez55qHPfafFzV7YKrCHc1oIlGstmDDwMZ5VzqQ9twHaME=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyituW0H/5houDGiGbUXp/EgP4qsbn3/Ns7GbJ8uQhNZGelePSJ
-	dtyLqIzY7by4kuRUu0f0jgRua1eK2ASMoXndSBPz0AXFtDhaAs1m2/7LT5xkVxEauhppnaog5YE
-	Zf5Bta70yNqhZZXqqgcTLYSoeCD8xTz8=
-X-Google-Smtp-Source: AGHT+IH8BJJbkcd+cByHnhMEdGYAZ8paulvCkus7HhXahIPVltHPcwYoxQbDXLwHKWeCy3ffqffwDpqHnYVaOOm7r5M=
-X-Received: by 2002:a17:907:7e85:b0:ad2:25e9:f7a1 with SMTP id
- a640c23a62f3a-ad52d5b9fb8mr655040166b.40.1747474325484; Sat, 17 May 2025
- 02:32:05 -0700 (PDT)
+	b=tacmf2ug/JaH8+gG9EwjSrn+w7RtvPQePPreK0Elh/zFjyMgpDrWg7SYaj+hMjufV
+	 rtJr6nbcsUhZD7yXltAuUwPVMDkMQVAManPPJ5cfQ8EaDsCQeLnfFPjCwTEGFgntyM
+	 149v5M0+7Pr7caf+U69/rjVNJGM6climyNoQFN3LkAcYS9Te7lxxx9+iDSbRSj4dhd
+	 UusNvuXelmM9HYyuW8yJNFP6vj1J87VfReFt7OX9GFpBgA6rd983UxNGrCkVEZi1KJ
+	 GacblGOgl7G8DZFM+zbMTmZJNpKeI3rPSGsmTvPZepZuocQny0EiHu+Eahk7Qm6nnX
+	 4CiZp6Fpc8Pdw==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so430375066b.1
+        for <loongarch@lists.linux.dev>; Sat, 17 May 2025 02:33:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUbgnhMscnqgCBpy7ovbbxtEpslIAmdeXmyGOxMYJPnu3UoU1jyne6nlV99hGC/27esomKDtj4DEI4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyuUUaVRyd2db2cBr9F8sdQpvL/Ns7W+1NT7m+jc6R/i3MY1x4C
+	XLALFWyDmzOd0ugMMQySkdq6LaRIyWiQGgC1IFf7K63EJvrRi9ae+oXZV/lH/obz4qHcuW2DMOg
+	xWveKd0jOMGf1FQJfkR1er2tAJu+K+H4=
+X-Google-Smtp-Source: AGHT+IHTvFI6zZRv0wNKYaTlHEu0ikHrWHUB6ZLVryypaxujB2+O1jj1f3607aJS94Nj/nQDMF5ZYt5OXJP/gQE3ZgM=
+X-Received: by 2002:a17:907:7205:b0:ad5:10d9:9061 with SMTP id
+ a640c23a62f3a-ad536ffbae7mr610013866b.54.1747474407333; Sat, 17 May 2025
+ 02:33:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250507100755.9129-1-zhangtianyang@loongson.cn>
-In-Reply-To: <20250507100755.9129-1-zhangtianyang@loongson.cn>
+References: <20250424073251.81693-1-youling.tang@linux.dev>
+In-Reply-To: <20250424073251.81693-1-youling.tang@linux.dev>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 17 May 2025 17:31:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7Fv6H6bDjZzDqNJYxy4NKBMOorEGgbZo1KgofuL04iXw@mail.gmail.com>
-X-Gm-Features: AX0GCFtNqJSMj8bjSNyrS58NvcuP8fg0PZOWp8DGZtU30MEIUuUuWt-vfPLEdX8
-Message-ID: <CAAhV-H7Fv6H6bDjZzDqNJYxy4NKBMOorEGgbZo1KgofuL04iXw@mail.gmail.com>
-Subject: Re: [PATCH V3] LoongArch: Add SCHED_MC (Multi-core scheduler) support
-To: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Hongliang Wang <wanghongliang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+Date: Sat, 17 May 2025 17:33:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5E3Gjw9WfR_vuWJt-k9GaV25G8LxHmhNhZ-Hnmn3iNiQ@mail.gmail.com>
+X-Gm-Features: AX0GCFsuNX5NxxXsf4WDPqP416sllgHwynrLliakmWphUwCko2KPCdLWioNW23M
+Message-ID: <CAAhV-H5E3Gjw9WfR_vuWJt-k9GaV25G8LxHmhNhZ-Hnmn3iNiQ@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: Enable HAVE_ARCH_STACKLEAK
+To: Youling Tang <youling.tang@linux.dev>
+Cc: Ard Biesheuvel <ardb@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	Youling Tang <tangyouling@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied with small changes, thanks.
+Applied, thanks.
 
 Huacai
 
-On Wed, May 7, 2025 at 6:08=E2=80=AFPM Tianyang Zhang <zhangtianyang@loongs=
-on.cn> wrote:
+On Thu, Apr 24, 2025 at 3:33=E2=80=AFPM Youling Tang <youling.tang@linux.de=
+v> wrote:
 >
-> In order to achieve more reasonable load balancing behavior, add
-> SCHED_MC (Multi-core scheduler) support.
+> From: Youling Tang <tangyouling@kylinos.cn>
 >
-> The LLC distribution of LoongArch now is consistent with NUMA node,
-> the balancing domain of SCHED_MC can effectively reduce the situation
-> where processes are awakened to smt_sibling.
+> Add support for the stackleak feature. It initialize the stack with the
+> poison value before returning from system calls which improves the kernel
+> security.
 >
-> Co-developed-by: Hongliang Wang <wanghongliang@loongson.cn>
-> Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> At the same time, disables the plugin in EFI stub code because EFI stub
+> is out of scope for the protection.
+>
+> Tested on 3A5000 (enable CONFIG_GCC_PLUGIN_STACKLEAK and CONFIG_LKDTM):
+>  # echo STACKLEAK_ERASING > /sys/kernel/debug/provoke-crash/DIRECT
+>  # dmesg
+>    lkdtm: Performing direct entry STACKLEAK_ERASING
+>    lkdtm: stackleak stack usage:
+>       high offset: 320 bytes
+>       current:     448 bytes
+>       lowest:      1264 bytes
+>       tracked:     1264 bytes
+>       untracked:   208 bytes
+>       poisoned:    14528 bytes
+>       low offset:  64 bytes
+>    lkdtm: OK: the rest of the thread stack is properly erased
+>
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 > ---
->  arch/loongarch/Kconfig                |  9 +++++++
->  arch/loongarch/include/asm/smp.h      |  1 +
->  arch/loongarch/include/asm/topology.h |  8 ++++++
->  arch/loongarch/kernel/smp.c           | 38 +++++++++++++++++++++++++++
->  4 files changed, 56 insertions(+)
+> v2:
+>  * Make on_thread_stack() __always_inline.
+>  * Move the STACKLEAK_ERASE macro to the stackframe.h file.
+>
+>  arch/loongarch/Kconfig                    | 1 +
+>  arch/loongarch/include/asm/entry-common.h | 8 +-------
+>  arch/loongarch/include/asm/stackframe.h   | 6 ++++++
+>  arch/loongarch/include/asm/stacktrace.h   | 5 +++++
+>  arch/loongarch/kernel/entry.S             | 3 +++
+>  drivers/firmware/efi/libstub/Makefile     | 2 +-
+>  6 files changed, 17 insertions(+), 8 deletions(-)
 >
 > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 1a2cf012b8f2..609b15a26621 100644
+> index 067c0b994648..3a6bfcab2dde 100644
 > --- a/arch/loongarch/Kconfig
 > +++ b/arch/loongarch/Kconfig
-> @@ -456,6 +456,15 @@ config SCHED_SMT
->           Improves scheduler's performance when there are multiple
->           threads in one physical core.
+> @@ -122,6 +122,7 @@ config LOONGARCH
+>         select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+>         select HAVE_ARCH_SECCOMP
+>         select HAVE_ARCH_SECCOMP_FILTER
+> +       select HAVE_ARCH_STACKLEAK
+>         select HAVE_ARCH_TRACEHOOK
+>         select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+>         select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
+> diff --git a/arch/loongarch/include/asm/entry-common.h b/arch/loongarch/i=
+nclude/asm/entry-common.h
+> index 0fe2a098ded9..a7a6af490f86 100644
+> --- a/arch/loongarch/include/asm/entry-common.h
+> +++ b/arch/loongarch/include/asm/entry-common.h
+> @@ -2,12 +2,6 @@
+>  #ifndef ARCH_LOONGARCH_ENTRY_COMMON_H
+>  #define ARCH_LOONGARCH_ENTRY_COMMON_H
 >
-> +config SCHED_MC
-> +       bool "Multi-core scheduler support"
-> +       depends on SMP
-> +       default y
-> +       help
-> +         Multi-core scheduler support improves the CPU scheduler's decis=
-ion
-> +         making when dealing with multi-core CPU chips at a cost of slig=
-htly
-> +         increased overhead in some places.
-> +
->  config SMP
->         bool "Multi-Processing support"
->         help
-> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/as=
-m/smp.h
-> index b87d1d5e5890..ad0bd234a0f1 100644
-> --- a/arch/loongarch/include/asm/smp.h
-> +++ b/arch/loongarch/include/asm/smp.h
-> @@ -25,6 +25,7 @@ extern int smp_num_siblings;
->  extern int num_processors;
->  extern int disabled_cpus;
->  extern cpumask_t cpu_sibling_map[];
-> +extern cpumask_t cpu_llc_shared_map[];
->  extern cpumask_t cpu_core_map[];
->  extern cpumask_t cpu_foreign_map[];
+> -#include <linux/sched.h>
+> -#include <linux/processor.h>
+> -
+> -static inline bool on_thread_stack(void)
+> -{
+> -       return !(((unsigned long)(current->stack) ^ current_stack_pointer=
+) & ~(THREAD_SIZE - 1));
+> -}
+> +#include <asm/stacktrace.h>
 >
-> diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/inclu=
-de/asm/topology.h
-> index 50273c9187d0..6726298a85ec 100644
-> --- a/arch/loongarch/include/asm/topology.h
-> +++ b/arch/loongarch/include/asm/topology.h
-> @@ -36,6 +36,14 @@ void numa_set_distance(int from, int to, int distance)=
-;
->  #define topology_sibling_cpumask(cpu)          (&cpu_sibling_map[cpu])
 >  #endif
+> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/inc=
+lude/asm/stackframe.h
+> index 66736837085b..c37455bca29b 100644
+> --- a/arch/loongarch/include/asm/stackframe.h
+> +++ b/arch/loongarch/include/asm/stackframe.h
+> @@ -243,4 +243,10 @@
+>         RESTORE_SP_AND_RET \docfi
+>         .endm
 >
-> +/*
-> + * Return cpus that shares the last level cache.
-> + */
-> +static inline const struct cpumask *cpu_coregroup_mask(int cpu)
+> +       .macro STACKLEAK_ERASE
+> +#ifdef CONFIG_GCC_PLUGIN_STACKLEAK
+> +       bl              stackleak_erase_on_task_stack
+> +#endif
+> +       .endm
+> +
+>  #endif /* _ASM_STACKFRAME_H */
+> diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/inc=
+lude/asm/stacktrace.h
+> index fc8b64773794..5c8be156567c 100644
+> --- a/arch/loongarch/include/asm/stacktrace.h
+> +++ b/arch/loongarch/include/asm/stacktrace.h
+> @@ -31,6 +31,11 @@ bool in_irq_stack(unsigned long stack, struct stack_in=
+fo *info);
+>  bool in_task_stack(unsigned long stack, struct task_struct *task, struct=
+ stack_info *info);
+>  int get_stack_info(unsigned long stack, struct task_struct *task, struct=
+ stack_info *info);
+>
+> +static __always_inline bool on_thread_stack(void)
 > +{
-> +       return &cpu_llc_shared_map[cpu];
+> +       return !(((unsigned long)(current->stack) ^ current_stack_pointer=
+) & ~(THREAD_SIZE - 1));
 > +}
 > +
->  #include <asm-generic/topology.h>
+>  #define STR_LONG_L    __stringify(LONG_L)
+>  #define STR_LONG_S    __stringify(LONG_S)
+>  #define STR_LONGSIZE  __stringify(LONGSIZE)
+> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.=
+S
+> index 48e7e34e355e..77f6fb9146a2 100644
+> --- a/arch/loongarch/kernel/entry.S
+> +++ b/arch/loongarch/kernel/entry.S
+> @@ -73,6 +73,7 @@ SYM_CODE_START(handle_syscall)
+>         move            a0, sp
+>         bl              do_syscall
 >
->  static inline void arch_fix_phys_package_id(int num, u32 slot) { }
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index 4b24589c0b56..46036d98da75 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -46,6 +46,10 @@ EXPORT_SYMBOL(__cpu_logical_map);
->  cpumask_t cpu_sibling_map[NR_CPUS] __read_mostly;
->  EXPORT_SYMBOL(cpu_sibling_map);
+> +       STACKLEAK_ERASE
+>         RESTORE_ALL_AND_RET
+>  SYM_CODE_END(handle_syscall)
+>  _ASM_NOKPROBE(handle_syscall)
+> @@ -82,6 +83,7 @@ SYM_CODE_START(ret_from_fork)
+>         bl              schedule_tail           # a0 =3D struct task_stru=
+ct *prev
+>         move            a0, sp
+>         bl              syscall_exit_to_user_mode
+> +       STACKLEAK_ERASE
+>         RESTORE_STATIC
+>         RESTORE_SOME
+>         RESTORE_SP_AND_RET
+> @@ -94,6 +96,7 @@ SYM_CODE_START(ret_from_kernel_thread)
+>         jirl            ra, s0, 0
+>         move            a0, sp
+>         bl              syscall_exit_to_user_mode
+> +       STACKLEAK_ERASE
+>         RESTORE_STATIC
+>         RESTORE_SOME
+>         RESTORE_SP_AND_RET
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi=
+/libstub/Makefile
+> index d23a1b9fed75..b97981d63d2f 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -31,7 +31,7 @@ cflags-$(CONFIG_ARM)          +=3D -DEFI_HAVE_STRLEN -D=
+EFI_HAVE_STRNLEN \
+>                                    $(DISABLE_STACKLEAK_PLUGIN)
+>  cflags-$(CONFIG_RISCV)         +=3D -fpic -DNO_ALTERNATIVE -mno-relax \
+>                                    $(DISABLE_STACKLEAK_PLUGIN)
+> -cflags-$(CONFIG_LOONGARCH)     +=3D -fpie
+> +cflags-$(CONFIG_LOONGARCH)     +=3D -fpie $(DISABLE_STACKLEAK_PLUGIN)
 >
-> +/* Representing the last level cache shared map of each logical CPU */
-> +cpumask_t cpu_llc_shared_map[NR_CPUS] __read_mostly;
-> +EXPORT_SYMBOL(cpu_llc_shared_map);
-> +
->  /* Representing the core map of multi-core chips of each logical CPU */
->  cpumask_t cpu_core_map[NR_CPUS] __read_mostly;
->  EXPORT_SYMBOL(cpu_core_map);
-> @@ -63,6 +67,9 @@ EXPORT_SYMBOL(cpu_foreign_map);
->  /* representing cpus for which sibling maps can be computed */
->  static cpumask_t cpu_sibling_setup_map;
+>  cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)   +=3D -I$(srctree)/scripts/dtc/lib=
+fdt
 >
-> +/* representing cpus for which llc shared maps can be computed */
-> +static cpumask_t cpu_llc_shared_setup_map;
-> +
->  /* representing cpus for which core maps can be computed */
->  static cpumask_t cpu_core_setup_map;
->
-> @@ -102,6 +109,34 @@ static inline void set_cpu_core_map(int cpu)
->         }
->  }
->
-> +static inline void set_cpu_llc_shared_map(int cpu)
-> +{
-> +       int i;
-> +
-> +       cpumask_set_cpu(cpu, &cpu_llc_shared_setup_map);
-> +
-> +       for_each_cpu(i, &cpu_llc_shared_setup_map) {
-> +               if (cpu_to_node(cpu) =3D=3D cpu_to_node(i)) {
-> +                       cpumask_set_cpu(i, &cpu_llc_shared_map[cpu]);
-> +                       cpumask_set_cpu(cpu, &cpu_llc_shared_map[i]);
-> +               }
-> +       }
-> +}
-> +
-> +static inline void clear_cpu_llc_shared_map(int cpu)
-> +{
-> +       int i;
-> +
-> +       for_each_cpu(i, &cpu_llc_shared_setup_map) {
-> +               if (cpu_to_node(cpu) =3D=3D cpu_to_node(i)) {
-> +                       cpumask_clear_cpu(i, &cpu_llc_shared_map[cpu]);
-> +                       cpumask_clear_cpu(cpu, &cpu_llc_shared_map[i]);
-> +               }
-> +       }
-> +
-> +       cpumask_clear_cpu(cpu, &cpu_llc_shared_setup_map);
-> +}
-> +
->  static inline void set_cpu_sibling_map(int cpu)
->  {
->         int i;
-> @@ -406,6 +441,7 @@ int loongson_cpu_disable(void)
->  #endif
->         set_cpu_online(cpu, false);
->         clear_cpu_sibling_map(cpu);
-> +       clear_cpu_llc_shared_map(cpu);
->         calculate_cpu_foreign_map();
->         local_irq_save(flags);
->         irq_migrate_all_off_this_cpu();
-> @@ -572,6 +608,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
->         current_thread_info()->cpu =3D 0;
->         loongson_prepare_cpus(max_cpus);
->         set_cpu_sibling_map(0);
-> +       set_cpu_llc_shared_map(0);
->         set_cpu_core_map(0);
->         calculate_cpu_foreign_map();
->  #ifndef CONFIG_HOTPLUG_CPU
-> @@ -613,6 +650,7 @@ asmlinkage void start_secondary(void)
->         loongson_init_secondary();
->
->         set_cpu_sibling_map(cpu);
-> +       set_cpu_llc_shared_map(cpu);
->         set_cpu_core_map(cpu);
->
->         notify_cpu_starting(cpu);
 > --
-> 2.20.1
+> 2.38.1
 >
