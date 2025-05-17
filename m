@@ -1,97 +1,87 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6FF04A21
-	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17A31B4F09
+	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747473524; cv=none; b=JLiomRSfLF9fr1grpnLPQnogkHUKO0l9NWswAW1zmWQobJ1IFlsl1Srr1inNjul5NF+wsOP6w5XyZ3W9oQTVF1x8mVHkyEFZ9uWdLSLLgLuH/0/q7R3NhHFH5V6vapOOpz+FMw6NRgSlzybwds1zNed8OhvM6nV9CaVUhDhVT1c=
+	t=1747474275; cv=none; b=cqXS2qwOmUF8Ljd1g9P+c/y6Cws6D2h/iOgs8lJC1VFRJaz02rYTWuZgKBPl2qarzcy+9omt0z3eGAg+lnffNCren/d3jTkXY3OUo2MvALdEsfl9pIN3uPcl4TXDQ1EVhTe7oDzKoerRvsyrDPidiVzDcJ7HEhRoTt/VMIGR15Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747473524; c=relaxed/simple;
-	bh=Wx3vkHoGM2SIgtXNrgr14kmQXUf9CbbQw1ZTh/t+Fs0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jbAWDINtpg/0XFoY5ap8iHJzZaGHIbsJ1eyDUZmpGFI3NrSbtYcxaXTnGm3ob+HnGEmzCpNJxcSniqIBdeZiYwwhTmNK9JsLnAJsi/LVY1kc21t3NkqYXCO/evtPkzQmgsY8w8PHsq+/kjv4M4mWl7cIs0wZucBq0s+3u1d5sUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.186])
-	by gateway (Coremail) with SMTP id _____8AxSWpmVChoZanuAA--.23989S3;
-	Sat, 17 May 2025 17:18:30 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.186])
-	by front1 (Coremail) with SMTP id qMiowMDxOcRiVChosg_cAA--.55457S2;
-	Sat, 17 May 2025 17:18:29 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.15-rc7
-Date: Sat, 17 May 2025 17:18:17 +0800
-Message-ID: <20250517091817.3490818-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1747474275; c=relaxed/simple;
+	bh=PqPzUPxwI+GbVPiCBnMB+dwqnfzwl29HxDYi8okWcxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SouTUyTHRiPceIRe+tqtSVp9KTRFWhpN4BGvTUoS8ztA8z1riPXLnQMZmBQwh0zSz8v4x6/DHFaOHsWXxgQl/oPRRVUYlcra0j5wgZTH7LLE677q/hfUHzGchc8USEEpFFKU+s1gYFRqp1UBIJgLG9Njf3yuUP5nJ2LyfRZZA0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UMujCbM6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMujCbM6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6303CC4AF0B
+	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747474275;
+	bh=PqPzUPxwI+GbVPiCBnMB+dwqnfzwl29HxDYi8okWcxU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UMujCbM6ZwbR5Lh7Ijkkb0jRqL2DgAfXMX1mC5KPhNzLNCE6liyBIuGRHBWYDpa/v
+	 AbCQ5bkpjyCBn8Ci6M1erFSnrPSqeEsvYWNDiCTpDQKGoRtmYN4G4q9Bxo6ootPyLY
+	 RwKKg+OVaNXvyEyhIJABwDlo305h9yAWSp69ZIfXn5s5hceGsAYAavrdEYhFN3ghYQ
+	 PEsCjsl2+2e5xBfJJtRJ0/WHMjThm6fbxdbOMmmfj0OnFTZGTYNr3V4w4Z+RcZmFPR
+	 bAPav5JR/pIjYE2oy9lTiDtNH5fUPW0LgE1zi/N396Xns+VNN8Xn9YSYqBq1JaAWrA
+	 ATaXdDLEDA2YQ==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad21a5466f6so770593166b.1
+        for <loongarch@lists.linux.dev>; Sat, 17 May 2025 02:31:15 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzIThcy4//Dm2tUq2gbm5Gk4bsjyllgNHwAtaf1oselvVSQzInI
+	M+NkmBp/QQ5pGXbkPvNGy8vrFjx8AFFREtnP86xLfwyZAy+MJsjE3ljjRnfmi5Jm4uIp/qXatpR
+	Ic8GD/t9PQ+tpeFh9/VnuoqcickpCtXE=
+X-Google-Smtp-Source: AGHT+IEGb4htsnxyOShucSxpDQnZHkAUamSivEZZ3KaU4lABqzfYN8kCeRsqwaGRiP1KLn9pk0l+wiBMqtbBQEAT9Vg=
+X-Received: by 2002:a17:907:c28:b0:ad2:2c83:fb43 with SMTP id
+ a640c23a62f3a-ad50f7bdff0mr790432866b.23.1747474273996; Sat, 17 May 2025
+ 02:31:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxOcRiVChosg_cAA--.55457S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ArWrZw17AFW7CF1fAw15ZFc_yoW8Xw13pr
-	9xCrnxGF4UGr13Jr13t34DWrn8tryxGw43Xa13t34xGr1UAr1UXr18KrykXFy5t3yrKr10
-	qF18Jw1YgF1UJwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
+References: <20250424024034.78436-1-youling.tang@linux.dev>
+In-Reply-To: <20250424024034.78436-1-youling.tang@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 17 May 2025 17:31:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H69Eu9z2eG8Bn+gMo2UtJCccxSxsbO+afd0xd_QxOw5HA@mail.gmail.com>
+X-Gm-Features: AX0GCFszC6D9Zwg31JGTqkbqDMwWN9_YqCjFm9jlQ-c_vFuGXGSSsHthS25A4Xg
+Message-ID: <CAAhV-H69Eu9z2eG8Bn+gMo2UtJCccxSxsbO+afd0xd_QxOw5HA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] LoongArch: Adjust the 'make install' operation
+To: Youling Tang <youling.tang@linux.dev>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
+Applied, thanks.
 
-  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
+Huacai
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.15-2
-
-for you to fetch changes up to 12614f794274f63fbdfe76771b2b332077d63848:
-
-  LoongArch: uprobes: Remove redundant code about resume_era (2025-05-14 22:18:10 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v6.15-rc7
-
-Fix some bugs about kernel-fpu, cpu idle function, hibernation and
-uprobes.
-----------------------------------------------------------------
-Huacai Chen (3):
-      LoongArch: Fix MAX_REG_OFFSET calculation
-      LoongArch: Move __arch_cpu_idle() to .cpuidle.text section
-      LoongArch: Save and restore CSR.CNTC for hibernation
-
-Tianyang Zhang (1):
-      LoongArch: Prevent cond_resched() occurring within kernel-fpu
-
-Tiezhu Yang (2):
-      LoongArch: uprobes: Remove user_{en,dis}able_single_step()
-      LoongArch: uprobes: Remove redundant code about resume_era
-
- arch/loongarch/include/asm/ptrace.h  |  2 +-
- arch/loongarch/include/asm/uprobes.h |  1 -
- arch/loongarch/kernel/genex.S        |  7 +++++--
- arch/loongarch/kernel/kfpu.c         | 22 ++++++++++++++++++++--
- arch/loongarch/kernel/time.c         |  2 +-
- arch/loongarch/kernel/uprobes.c      | 11 +----------
- arch/loongarch/power/hibernate.c     |  3 +++
- 7 files changed, 31 insertions(+), 17 deletions(-)
-
+On Thu, Apr 24, 2025 at 10:41=E2=80=AFAM Youling Tang <youling.tang@linux.d=
+ev> wrote:
+>
+> Changelog:
+>   v3:
+>   * Add a copy of the kernel config file.
+>   * Some minor adjustments.
+>
+>   v2:
+>   * Adjust the patch sequence.
+>   * Adjust the title information.
+>   * Distinguish between vmlinux.efi and vmlinux.elf in install.sh
+>   * Correct minor mistakes.
+>
+> Youling Tang (3):
+>   LoongArch: Add a default install.sh
+>   LoongArch: Using generic scripts/install.sh in `make install`
+>   LoongArch: Add some annotations in archhelp
+>
+>  arch/loongarch/Makefile        | 11 ++++---
+>  arch/loongarch/boot/install.sh | 56 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 63 insertions(+), 4 deletions(-)
+>  create mode 100755 arch/loongarch/boot/install.sh
+>
+> --
+> 2.38.1
+>
