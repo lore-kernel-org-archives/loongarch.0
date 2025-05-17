@@ -1,59 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8341DFE12
-	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F98A18C937
+	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:34:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747474409; cv=none; b=Av/0XQUKPdLF9qVaX358EI8fird8j0F7vLaKWs9ZGn3A7g9VdesAJA9f82NEtBJ6mKQ/Gc8cnfy7R6LQNaQT1pMbUVsPyGr8o0zd77n1KIlBPodIepGewcdmM57NyRz5o2CznlnHNpoCOb/31CbVCu/sdAORR1bLkm/IItR6vIk=
+	t=1747474452; cv=none; b=rmRaNhWojsVJCjcHtVw4BJ8dXcyKTahquEzafVPTwEZ31E0KCGPP7voYCxcMKjZ42NHCsPoFdfexjwHd8Me70m2USW3sDvrFEJACUYZShPNjgGohk1SWI6EcTV4pUQ8SlI6uurHNzvfuCQHTAHJV7Kx6bNFKEnruAK4ZnW35LPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747474409; c=relaxed/simple;
-	bh=XCM4sNjd8G3kLdZs8GWwcD5be9JJ5ZQoAzjcdwuJ2rg=;
+	s=arc-20240116; t=1747474452; c=relaxed/simple;
+	bh=iw7hPS7VNDqwLduW+55keI5y01ZT6Le4WSWdcVuRvRU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=deJ4eGr8solnlqkzuMbf3nV0ZTJEpn5gNbDJZgTxe0QruIgDkRLcGNmDQ8y1epooncmq3CUvhOewcvulG2hx1ndL+0WabQV9U1jXjpolN7SLcmc3v8pCbp/brOWNXR6kbWIl7sJRtgmzVm1nB7s7COgSDi3wXiOP4DEmpM3Nksw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tacmf2ug; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=TXAGTPtlVk05sCfZIUWA5I/NoUYvw8nA5w8v3Icsu/4Ab17J9X93K/qQ60HxyIid6W+cCzQ7dlBp6Vqe4rCpSIiDgXNUmnVTlAbJSES2CuBG+ad5c9nXj7A16Syr0Eh83n1thLrI41wynO7o4K6opgxoEetlT1T6dcXwRZo9kPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WhkqxQ8y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tacmf2ug"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD38C4AF09
-	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:33:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WhkqxQ8y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D993C4CEE3
+	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747474408;
-	bh=XCM4sNjd8G3kLdZs8GWwcD5be9JJ5ZQoAzjcdwuJ2rg=;
+	s=k20201202; t=1747474452;
+	bh=iw7hPS7VNDqwLduW+55keI5y01ZT6Le4WSWdcVuRvRU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tacmf2ug/JaH8+gG9EwjSrn+w7RtvPQePPreK0Elh/zFjyMgpDrWg7SYaj+hMjufV
-	 rtJr6nbcsUhZD7yXltAuUwPVMDkMQVAManPPJ5cfQ8EaDsCQeLnfFPjCwTEGFgntyM
-	 149v5M0+7Pr7caf+U69/rjVNJGM6climyNoQFN3LkAcYS9Te7lxxx9+iDSbRSj4dhd
-	 UusNvuXelmM9HYyuW8yJNFP6vj1J87VfReFt7OX9GFpBgA6rd983UxNGrCkVEZi1KJ
-	 GacblGOgl7G8DZFM+zbMTmZJNpKeI3rPSGsmTvPZepZuocQny0EiHu+Eahk7Qm6nnX
-	 4CiZp6Fpc8Pdw==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so430375066b.1
-        for <loongarch@lists.linux.dev>; Sat, 17 May 2025 02:33:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUbgnhMscnqgCBpy7ovbbxtEpslIAmdeXmyGOxMYJPnu3UoU1jyne6nlV99hGC/27esomKDtj4DEI4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyuUUaVRyd2db2cBr9F8sdQpvL/Ns7W+1NT7m+jc6R/i3MY1x4C
-	XLALFWyDmzOd0ugMMQySkdq6LaRIyWiQGgC1IFf7K63EJvrRi9ae+oXZV/lH/obz4qHcuW2DMOg
-	xWveKd0jOMGf1FQJfkR1er2tAJu+K+H4=
-X-Google-Smtp-Source: AGHT+IHTvFI6zZRv0wNKYaTlHEu0ikHrWHUB6ZLVryypaxujB2+O1jj1f3607aJS94Nj/nQDMF5ZYt5OXJP/gQE3ZgM=
-X-Received: by 2002:a17:907:7205:b0:ad5:10d9:9061 with SMTP id
- a640c23a62f3a-ad536ffbae7mr610013866b.54.1747474407333; Sat, 17 May 2025
- 02:33:27 -0700 (PDT)
+	b=WhkqxQ8yXHyv+/sQYNxSxVoneI1GWRCprCmKP0/ztIrQFPNHitm/2gxrtHly7PH7R
+	 Q37wT785KEfIFMcjqX2bhayfwizyYQeaYXAJcXCSwGS81UJ1vn3jAXOpPpf6rlRjZn
+	 H+zDgvnBGTcEu+VtuLUtPXs6QOxV7UcK8XjUHPQAnVoD6oM1+7SjYE5R2DxdosPVBk
+	 6OIjpV3Tn87mTUVTqW46i8KeXJEoImJUGNqoMg8br1BeiuOERooXsrGs7H5zwNxVPv
+	 ZxHtrOiFRRXnFfnVFe2sBkuZImptuzRXuy75Y5ZwmB7DIH38himFDKPiuwyudyST0h
+	 7IbFQAnFUxtbQ==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5fbee929e56so5282254a12.0
+        for <loongarch@lists.linux.dev>; Sat, 17 May 2025 02:34:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXMPeXMZR69pObNXhBTHzXMqfWff+D5I0fGNM/ApgrB2CeUHwFVonnL0A6YTt/PWDvBLuYYreE9JFU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxZopDLFWhdSkfYIvRtj6buQE6ZrHvKjVNBXvsXMGT/cBYAeg+Y
+	n6AwEgmaO/zi8fhyrM7aRhTsHKQ0S+iauN4x5k905uJC7gs1kWRKZzTnxC/W93dLqybLiUTdoah
+	26K1upeodYDI7QPOILLIhIj3iVNmJbFE=
+X-Google-Smtp-Source: AGHT+IEx2sb8edU1brqzaZRXAsI93RIheeq569tRpFtROjNbVdEh5mpzfrkYPrUa1fCEAifwPVWr9MjtqN0wFAg1aOc=
+X-Received: by 2002:a05:6402:34d1:b0:5fc:aa21:5633 with SMTP id
+ 4fb4d7f45d1cf-6011411da5dmr4234560a12.24.1747474450873; Sat, 17 May 2025
+ 02:34:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250424073251.81693-1-youling.tang@linux.dev>
-In-Reply-To: <20250424073251.81693-1-youling.tang@linux.dev>
+References: <cover.1746684614.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1746684614.git.zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 17 May 2025 17:33:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5E3Gjw9WfR_vuWJt-k9GaV25G8LxHmhNhZ-Hnmn3iNiQ@mail.gmail.com>
-X-Gm-Features: AX0GCFsuNX5NxxXsf4WDPqP416sllgHwynrLliakmWphUwCko2KPCdLWioNW23M
-Message-ID: <CAAhV-H5E3Gjw9WfR_vuWJt-k9GaV25G8LxHmhNhZ-Hnmn3iNiQ@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Enable HAVE_ARCH_STACKLEAK
-To: Youling Tang <youling.tang@linux.dev>
-Cc: Ard Biesheuvel <ardb@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	Youling Tang <tangyouling@kylinos.cn>
+Date: Sat, 17 May 2025 17:33:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4EYk8j-tZcg3wF14noAmd790Czqcm8ESK2X4OMbPC-gA@mail.gmail.com>
+X-Gm-Features: AX0GCFtvFGngUnZVRc__yE5K2gZtLm2g7wpfUGseHsnPhytgYHzZ06SWDjFdgIM
+Message-ID: <CAAhV-H4EYk8j-tZcg3wF14noAmd790Czqcm8ESK2X4OMbPC-gA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] LoongArch: dts: Add PWM controller node support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -61,161 +62,24 @@ Applied, thanks.
 
 Huacai
 
-On Thu, Apr 24, 2025 at 3:33=E2=80=AFPM Youling Tang <youling.tang@linux.de=
-v> wrote:
+On Thu, May 8, 2025 at 3:02=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
+ wrote:
 >
-> From: Youling Tang <tangyouling@kylinos.cn>
 >
-> Add support for the stackleak feature. It initialize the stack with the
-> poison value before returning from system calls which improves the kernel
-> security.
+> Binbin Zhou (3):
+>   LoongArch: dts: Add PWM support to Loongson-2K0500
+>   LoongArch: dts: Add PWM support to Loongson-2K1000
+>   LoongArch: dts: Add PWM support to Loongson-2K2000
 >
-> At the same time, disables the plugin in EFI stub code because EFI stub
-> is out of scope for the protection.
+>  arch/loongarch/boot/dts/loongson-2k0500.dtsi  | 160 ++++++++++++++++++
+>  .../boot/dts/loongson-2k1000-ref.dts          |  24 +++
+>  arch/loongarch/boot/dts/loongson-2k1000.dtsi  |  42 ++++-
+>  arch/loongarch/boot/dts/loongson-2k2000.dtsi  |  60 +++++++
+>  4 files changed, 285 insertions(+), 1 deletion(-)
 >
-> Tested on 3A5000 (enable CONFIG_GCC_PLUGIN_STACKLEAK and CONFIG_LKDTM):
->  # echo STACKLEAK_ERASING > /sys/kernel/debug/provoke-crash/DIRECT
->  # dmesg
->    lkdtm: Performing direct entry STACKLEAK_ERASING
->    lkdtm: stackleak stack usage:
->       high offset: 320 bytes
->       current:     448 bytes
->       lowest:      1264 bytes
->       tracked:     1264 bytes
->       untracked:   208 bytes
->       poisoned:    14528 bytes
->       low offset:  64 bytes
->    lkdtm: OK: the rest of the thread stack is properly erased
 >
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
-> v2:
->  * Make on_thread_stack() __always_inline.
->  * Move the STACKLEAK_ERASE macro to the stackframe.h file.
->
->  arch/loongarch/Kconfig                    | 1 +
->  arch/loongarch/include/asm/entry-common.h | 8 +-------
->  arch/loongarch/include/asm/stackframe.h   | 6 ++++++
->  arch/loongarch/include/asm/stacktrace.h   | 5 +++++
->  arch/loongarch/kernel/entry.S             | 3 +++
->  drivers/firmware/efi/libstub/Makefile     | 2 +-
->  6 files changed, 17 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 067c0b994648..3a6bfcab2dde 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -122,6 +122,7 @@ config LOONGARCH
->         select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
->         select HAVE_ARCH_SECCOMP
->         select HAVE_ARCH_SECCOMP_FILTER
-> +       select HAVE_ARCH_STACKLEAK
->         select HAVE_ARCH_TRACEHOOK
->         select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->         select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
-> diff --git a/arch/loongarch/include/asm/entry-common.h b/arch/loongarch/i=
-nclude/asm/entry-common.h
-> index 0fe2a098ded9..a7a6af490f86 100644
-> --- a/arch/loongarch/include/asm/entry-common.h
-> +++ b/arch/loongarch/include/asm/entry-common.h
-> @@ -2,12 +2,6 @@
->  #ifndef ARCH_LOONGARCH_ENTRY_COMMON_H
->  #define ARCH_LOONGARCH_ENTRY_COMMON_H
->
-> -#include <linux/sched.h>
-> -#include <linux/processor.h>
-> -
-> -static inline bool on_thread_stack(void)
-> -{
-> -       return !(((unsigned long)(current->stack) ^ current_stack_pointer=
-) & ~(THREAD_SIZE - 1));
-> -}
-> +#include <asm/stacktrace.h>
->
->  #endif
-> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/inc=
-lude/asm/stackframe.h
-> index 66736837085b..c37455bca29b 100644
-> --- a/arch/loongarch/include/asm/stackframe.h
-> +++ b/arch/loongarch/include/asm/stackframe.h
-> @@ -243,4 +243,10 @@
->         RESTORE_SP_AND_RET \docfi
->         .endm
->
-> +       .macro STACKLEAK_ERASE
-> +#ifdef CONFIG_GCC_PLUGIN_STACKLEAK
-> +       bl              stackleak_erase_on_task_stack
-> +#endif
-> +       .endm
-> +
->  #endif /* _ASM_STACKFRAME_H */
-> diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/inc=
-lude/asm/stacktrace.h
-> index fc8b64773794..5c8be156567c 100644
-> --- a/arch/loongarch/include/asm/stacktrace.h
-> +++ b/arch/loongarch/include/asm/stacktrace.h
-> @@ -31,6 +31,11 @@ bool in_irq_stack(unsigned long stack, struct stack_in=
-fo *info);
->  bool in_task_stack(unsigned long stack, struct task_struct *task, struct=
- stack_info *info);
->  int get_stack_info(unsigned long stack, struct task_struct *task, struct=
- stack_info *info);
->
-> +static __always_inline bool on_thread_stack(void)
-> +{
-> +       return !(((unsigned long)(current->stack) ^ current_stack_pointer=
-) & ~(THREAD_SIZE - 1));
-> +}
-> +
->  #define STR_LONG_L    __stringify(LONG_L)
->  #define STR_LONG_S    __stringify(LONG_S)
->  #define STR_LONGSIZE  __stringify(LONGSIZE)
-> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.=
-S
-> index 48e7e34e355e..77f6fb9146a2 100644
-> --- a/arch/loongarch/kernel/entry.S
-> +++ b/arch/loongarch/kernel/entry.S
-> @@ -73,6 +73,7 @@ SYM_CODE_START(handle_syscall)
->         move            a0, sp
->         bl              do_syscall
->
-> +       STACKLEAK_ERASE
->         RESTORE_ALL_AND_RET
->  SYM_CODE_END(handle_syscall)
->  _ASM_NOKPROBE(handle_syscall)
-> @@ -82,6 +83,7 @@ SYM_CODE_START(ret_from_fork)
->         bl              schedule_tail           # a0 =3D struct task_stru=
-ct *prev
->         move            a0, sp
->         bl              syscall_exit_to_user_mode
-> +       STACKLEAK_ERASE
->         RESTORE_STATIC
->         RESTORE_SOME
->         RESTORE_SP_AND_RET
-> @@ -94,6 +96,7 @@ SYM_CODE_START(ret_from_kernel_thread)
->         jirl            ra, s0, 0
->         move            a0, sp
->         bl              syscall_exit_to_user_mode
-> +       STACKLEAK_ERASE
->         RESTORE_STATIC
->         RESTORE_SOME
->         RESTORE_SP_AND_RET
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi=
-/libstub/Makefile
-> index d23a1b9fed75..b97981d63d2f 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -31,7 +31,7 @@ cflags-$(CONFIG_ARM)          +=3D -DEFI_HAVE_STRLEN -D=
-EFI_HAVE_STRNLEN \
->                                    $(DISABLE_STACKLEAK_PLUGIN)
->  cflags-$(CONFIG_RISCV)         +=3D -fpic -DNO_ALTERNATIVE -mno-relax \
->                                    $(DISABLE_STACKLEAK_PLUGIN)
-> -cflags-$(CONFIG_LOONGARCH)     +=3D -fpie
-> +cflags-$(CONFIG_LOONGARCH)     +=3D -fpie $(DISABLE_STACKLEAK_PLUGIN)
->
->  cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)   +=3D -I$(srctree)/scripts/dtc/lib=
-fdt
->
+> base-commit: b56175973e17e67e3005837346ceb79cc282187a
 > --
-> 2.38.1
+> 2.47.1
+>
 >
