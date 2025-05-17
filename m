@@ -1,70 +1,35 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61673280008
-	for <loongarch@lists.linux.dev>; Fri, 16 May 2025 18:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6FF04A21
+	for <loongarch@lists.linux.dev>; Sat, 17 May 2025 09:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747420169; cv=none; b=i1g+YLcpzzM0RuBuDUeh2GH+0CauL6K5L7AbITregcanRFKAak//nui9Q4qkqwqdo2seAit/n6HkSfmaU2f1kjx32V8EhlwczbxhDpYcE1GlaCrV3Ys3rDaYUNvKYiVnVAzz/paw0FxvLLX3N4xA3WLffHljLzrDTUTaaJsXkUY=
+	t=1747473524; cv=none; b=JLiomRSfLF9fr1grpnLPQnogkHUKO0l9NWswAW1zmWQobJ1IFlsl1Srr1inNjul5NF+wsOP6w5XyZ3W9oQTVF1x8mVHkyEFZ9uWdLSLLgLuH/0/q7R3NhHFH5V6vapOOpz+FMw6NRgSlzybwds1zNed8OhvM6nV9CaVUhDhVT1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747420169; c=relaxed/simple;
-	bh=dbXx+MD2QCNjSXPlgp390XJDfrTSi22QXjpUAVmjpNs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rU6ctIUDvdwn/YBuEyaT+vFuFnkhJg1QtswAGWGbZRlVJ6GN3hXHmosvBVAmlaDiSS1q3qJpjluvl5cOy+tASzh7aTCnIX6JHaSilxyLbPDi0lnsKb9Z6DhdbNaaOoCE9n6RbaQ1+wF6mFfoOExx+I0MwO74ImUG89/hvHv0wig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EgREOhL7; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EgREOhL7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747420167; x=1778956167;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dbXx+MD2QCNjSXPlgp390XJDfrTSi22QXjpUAVmjpNs=;
-  b=EgREOhL71igdYKawo8Azs4IRuwTOrh9FlcblXNZD6jf8/j/SRIcf21Mf
-   0wqDdxexe4/Up7TgZ87dqK/R3lKVZkcZODKwAYvKZQHCOsqvhghgkN6zp
-   QzlCy4gAYUR14q59c+j+MKLkv16ETF3+iOEdFuCXKj4YndmhF2MhiF9Dt
-   yU7lJyijuugJcGm190r4bCLwXWm3Nnd9TUPDSNrYXhMIPUk5EEqKws3z+
-   9929hIZFMlAEp4tQ1jOSN8IFOkHxRJmbrYx7gPxWSEq3fdBioFGZPTzzR
-   7K+BbsazPBoFJc0I4Uzcy1Q4WxzBKk2tzPEsuIISfcbjg1bV7eybDIWdB
-   w==;
-X-CSE-ConnectionGUID: HdrKOwtcSOK+9Y02TRwzjg==
-X-CSE-MsgGUID: UFUMw5MFQSqGDcSJETMDaA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328900"
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="49328900"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 11:29:25 -0700
-X-CSE-ConnectionGUID: 2mfqUfHSQ9WU4ftQ6Yo07Q==
-X-CSE-MsgGUID: HyEO6Qh3TJu/Eqdx6PeuxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="169802623"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:24 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	irogers@google.com,
-	mark.rutland@arm.com,
+	s=arc-20240116; t=1747473524; c=relaxed/simple;
+	bh=Wx3vkHoGM2SIgtXNrgr14kmQXUf9CbbQw1ZTh/t+Fs0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jbAWDINtpg/0XFoY5ap8iHJzZaGHIbsJ1eyDUZmpGFI3NrSbtYcxaXTnGm3ob+HnGEmzCpNJxcSniqIBdeZiYwwhTmNK9JsLnAJsi/LVY1kc21t3NkqYXCO/evtPkzQmgsY8w8PHsq+/kjv4M4mWl7cIs0wZucBq0s+3u1d5sUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.186])
+	by gateway (Coremail) with SMTP id _____8AxSWpmVChoZanuAA--.23989S3;
+	Sat, 17 May 2025 17:18:30 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.186])
+	by front1 (Coremail) with SMTP id qMiowMDxOcRiVChosg_cAA--.55457S2;
+	Sat, 17 May 2025 17:18:29 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: eranian@google.com,
-	ctshao@google.com,
-	tmricht@linux.ibm.com,
-	leo.yan@arm.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	loongarch@lists.linux.dev
-Subject: [PATCH V3 13/16] loongarch/perf: Remove driver-specific throttle support
-Date: Fri, 16 May 2025 11:28:50 -0700
-Message-Id: <20250516182853.2610284-14-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250516182853.2610284-1-kan.liang@linux.intel.com>
-References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.15-rc7
+Date: Sat, 17 May 2025 17:18:17 +0800
+Message-ID: <20250517091817.3490818-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -72,38 +37,61 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxOcRiVChosg_cAA--.55457S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ArWrZw17AFW7CF1fAw15ZFc_yoW8Xw13pr
+	9xCrnxGF4UGr13Jr13t34DWrn8tryxGw43Xa13t34xGr1UAr1UXr18KrykXFy5t3yrKr10
+	qF18Jw1YgF1UJwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-From: Kan Liang <kan.liang@linux.intel.com>
+The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
 
-The throttle support has been added in the generic code. Remove
-the driver-specific throttle support.
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
 
-Besides the throttle, perf_event_overflow may return true because of
-event_limit. It already does an inatomic event disable. The pmu->stop
-is not required either.
+are available in the Git repository at:
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Bibo Mao <maobibo@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>
-Cc: loongarch@lists.linux.dev
----
- arch/loongarch/kernel/perf_event.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.15-2
 
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index f86a4b838dd7..8ad098703488 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -479,8 +479,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc, int idx,
- 	if (!loongarch_pmu_event_set_period(event, hwc, idx))
- 		return;
- 
--	if (perf_event_overflow(event, data, regs))
--		loongarch_pmu_disable_event(idx);
-+	perf_event_overflow(event, data, regs);
- }
- 
- static irqreturn_t pmu_handle_irq(int irq, void *dev)
--- 
-2.38.1
+for you to fetch changes up to 12614f794274f63fbdfe76771b2b332077d63848:
+
+  LoongArch: uprobes: Remove redundant code about resume_era (2025-05-14 22:18:10 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.15-rc7
+
+Fix some bugs about kernel-fpu, cpu idle function, hibernation and
+uprobes.
+----------------------------------------------------------------
+Huacai Chen (3):
+      LoongArch: Fix MAX_REG_OFFSET calculation
+      LoongArch: Move __arch_cpu_idle() to .cpuidle.text section
+      LoongArch: Save and restore CSR.CNTC for hibernation
+
+Tianyang Zhang (1):
+      LoongArch: Prevent cond_resched() occurring within kernel-fpu
+
+Tiezhu Yang (2):
+      LoongArch: uprobes: Remove user_{en,dis}able_single_step()
+      LoongArch: uprobes: Remove redundant code about resume_era
+
+ arch/loongarch/include/asm/ptrace.h  |  2 +-
+ arch/loongarch/include/asm/uprobes.h |  1 -
+ arch/loongarch/kernel/genex.S        |  7 +++++--
+ arch/loongarch/kernel/kfpu.c         | 22 ++++++++++++++++++++--
+ arch/loongarch/kernel/time.c         |  2 +-
+ arch/loongarch/kernel/uprobes.c      | 11 +----------
+ arch/loongarch/power/hibernate.c     |  3 +++
+ 7 files changed, 31 insertions(+), 17 deletions(-)
 
