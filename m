@@ -1,63 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82FE1862;
-	Sat, 17 May 2025 16:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33FD188CB1
+	for <loongarch@lists.linux.dev>; Sun, 18 May 2025 08:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747499198; cv=none; b=eGXIN92wH5CXW3cfRBRypKuKoBZbU+18PeVs6vWIhFjWaMIr47j9elRkqGqcBicJp+d/hIOBmbhBC40AqvXznht8qUwQnfHDzZPUsuNEQig+a+XZ6BzQQ3tKtHmEOkJDyB31slmp90j8Hnx6xw0ZExpc+l2Kh9Xz/H01Wc1Q/Uw=
+	t=1747555471; cv=none; b=SlrsF3YWIZQWvZN5+z2wsHUcS6GVrA3kWi1AxFoXfFd6fK4vHiZ8rhJobeiqA7b/5HPefN4xWY1rrUCa/CxzTR85Fhh2MlLOrbfroQoCtGiyW4dzwgjt0/v/mODpngT38d+Hk+y1jcGXGczpOR/xZ2zl9nsEPa3N8kqtBY+1gyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747499198; c=relaxed/simple;
-	bh=kyBMaskyMKoaSNhOg1I4qiUjOokqtWYO2fx4uUXyNB8=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GDSM/JgfsDDILJhl2PERXfUAwSXfvK21ldaRgubgyE1wFV+ripVWgUXJRJr7L8RsEdTfp6mN4yYiSNUfQ1CpfeH8ESCKyYJAjesUSriiLTsRLgdsvmxLkndxpBUgidkdEzgJc8N3TG/p2QqrYFxtlJPjk4ve9SNjDcTkMyd1z7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4mSvVHz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747555471; c=relaxed/simple;
+	bh=qePj0YixsvkA+CzrUyZ0PqeV2u8FUKJIVJoaNt3JlYQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c+auJptuV7myRtN/YuGMiibaSYTI6MKhikrnZsfn8vv8j1J5EbhugrrP1FYf00K75egz9XGO3MydGebALdsJ8yMBy8dwH9NKc7wdmQPehhsA8335DCh2ODZXaRukp2md7LodlP6kqoEOW66y0aFx7wJd6NDgGzVVxK23qY06rKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=I6uQflbp; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4mSvVHz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96812C4CEE3;
-	Sat, 17 May 2025 16:26:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747499198;
-	bh=kyBMaskyMKoaSNhOg1I4qiUjOokqtWYO2fx4uUXyNB8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=q4mSvVHztAgwCPMiE4M3/Vl8J6QXRNUeZ+ZTq0EEinVl20BQbk8lCOr0I8t3Qdw6Q
-	 ypJpjYI802wA9I/FLCKl56sxvVzagODAmssoc0VVKXUl/umDnPjWWCNr5cbYzluVst
-	 gT2ioCm5sHvrGaTwfNsrX+mZvytcaX/ZU55Z/EBF5BcxZu9SxOocDnB/gbKNGr506R
-	 Oo7O23jNnxfSKYWnajqJhRtXOoc5xrfxz0yDOVuhiyzlXSNtmwcMnm9cCkhFC4h3mw
-	 3G1xYqsT07DkwABVb9kdXcd7aKc5Fo7hzYjp5FIqQnzgGTGn0sp9RPW/q55jONR6Jw
-	 IeQRj5gVnHueA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 72885380DBE1;
-	Sat, 17 May 2025 16:27:16 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.15-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250517091817.3490818-1-chenhuacai@loongson.cn>
-References: <20250517091817.3490818-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20250517091817.3490818-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.15-2
-X-PR-Tracked-Commit-Id: 12614f794274f63fbdfe76771b2b332077d63848
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c586c97dd84a4d1c8df38171dc715f6241c7e6a3
-Message-Id: <174749923489.101931.3380478972230753488.pr-tracker-bot@kernel.org>
-Date: Sat, 17 May 2025 16:27:14 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="I6uQflbp"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 5BA1B25CE3;
+	Sun, 18 May 2025 10:04:21 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id Gbn3_WMjAtMM; Sun, 18 May 2025 10:04:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1747555453; bh=qePj0YixsvkA+CzrUyZ0PqeV2u8FUKJIVJoaNt3JlYQ=;
+	h=From:To:Cc:Subject:Date;
+	b=I6uQflbpc9GIUMConefud+QMQfgAhheIf5xabVr1M/D4AT2eD2FhGsBuNIYeCj7TL
+	 sB+X/DB+6/MIhTGCZ9KLWk4V1PnGoKPDQQmh62dMaE/WzXGTAi72o8ly5ggF8R6tsP
+	 WXv08oYVl5+Q6CWLX8lF1QKJWSRTca/WA4TL+PYAsUOhA/WkQyeKLPsxuugkiycQi2
+	 e37PpMPfk14cQxswk9uD1ZtgJFamoK4Bq2uqL3Xi+D9teHNYb2pDVNPEHS+SKTdYuT
+	 AF0pZO+ysS/2VmVPr3fTq3Awd2b1lqwjoS65HxaC/sW0cKNhu+nDNPOD06PGdM6BYs
+	 zg1eU4NBwfDEw==
+From: Yao Zi <ziyao@disroot.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Yao Zi <ziyao@disroot.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Junhao Xie <bigfoot@classfun.cn>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: [PATCH v2 0/4] Initial support for CTCISZ Forever Pi
+Date: Sun, 18 May 2025 08:03:52 +0000
+Message-ID: <20250518080356.43885-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Sat, 17 May 2025 17:18:17 +0800:
+This series adds support for CTCISZ Forever Pi, which ships an Loongson
+2K0300 SoC and various peripherals. The vendor prefix and the board are
+documented and basic SoC/board devicetrees are added.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.15-2
+I've successfully booted into console with vendor U-Boot, a bootlog
+could be obtained here[1]. DTB and initramfs must be built into the
+kernel as the vendor bootloader cannot pass them and upstream U-Boot
+support for LoongArch is still WIP.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c586c97dd84a4d1c8df38171dc715f6241c7e6a3
+Thanks for your time and review.
 
-Thank you!
+[1]: https://gist.github.com/ziyao233/54ef900406876b5554f627d1ba0e130e
+
+Changed from v1 ("Initial support for CTCISZ Ninenine Pi")
+- Board binding:
+  - Use "Forever Pi" instead of "Ninenine Pi" as translation of the
+    board model
+- SoC devicetree:
+  - Move UART aliases to the board dt
+  - Add the missing space in definition of liointc0
+- Link to v1: https://lore.kernel.org/all/20250501044239.9404-2-ziyao@disroot.org/
+
+Yao Zi (4):
+  dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
+  dt-bindings: LoongArch: Add CTCISZ Forever Pi
+  LoongArch: dts: Add initial SoC devicetree for Loongson 2K0300
+  LoongArch: dts: Add initial devicetree for CTCISZ Forever Pi
+
+ .../bindings/loongarch/loongson.yaml          |   5 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/loongarch/boot/dts/Makefile              |   1 +
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 184 ++++++++++++++++++
+ .../boot/dts/ls2k0300-ctcisz-forever-pi.dts   |  45 +++++
+ 5 files changed, 237 insertions(+)
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
+ create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz-forever-pi.dts
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.49.0
+
