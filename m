@@ -1,65 +1,50 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6EE2777F3
-	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 12:15:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A4D278168
+	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 12:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747656931; cv=none; b=C7lOlW+oBDCpQLTS16JKBZ31DL86s76I1403X9xwGD4pa9QfL8Xc1kxToeKk1dS3RQjvKwGbycLlQGlYdFPdEZL4yZeCDjjtUmgXP6STU1UYJFgcsLMvHIJ+wVFdtRCBgrypi1mRrpztWYaAXPCIsWhbDACFqD1SqyK/4jN4Cf8=
+	t=1747656938; cv=none; b=jjGv29p78oXHW/LA53y6XaQHfyRp9eEQtcCzn8xm3AlrYQKGyCJm7ARnPR2ZzKpL/NGE5SnDf57UKW0/IjtDiE+r5HNYKbhqdvjJAaeGydscroLF+FlLapoBtGe3+yMLZ7gUOUdzu2QYRbpNo8dl6xukQ05SBacjDI1BstOE8JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747656931; c=relaxed/simple;
-	bh=UxLPMqI+hbxHffo6UB0YLTd8Ghw64v4QP8WAymsijqI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eHSDPpB0X6l0rlRhn3jGzNTpn4I69FDualKslfG+EMjcuTYhq3YSTJaK8GXu+sWdJdCPUarWfaNRDDkrduuvuZhCBK2Vh6Qfm+Ul6F7BTT5fZ5rk25HXBE/EOi/qI3YQE3J9Z+vtC46T+3ruR/lgZYwZTLgXe5uzkdZhkf6QIw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=OfS3hmmp; arc=none smtp.client-ip=194.117.254.33
+	s=arc-20240116; t=1747656938; c=relaxed/simple;
+	bh=Oy70mJNGM9H500zL05oh7Gy2RqF0SFVS4i3OoDdeSgg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JNPFO6QuPkPT4Yb9jhQqiGd1mPSC3Hjpi0uxdywLnug1CWMbE0hxHrdINibXt6kvXAx557h4fbJoyO19Dn28hRj5rSVdE8AxlwV4YfmVUWbKnpOI/VC/cbTxYbLWsqEfqaxVGQbBiH6VJcV24aOKvgYqwehM9E1Ho1qGvBJfHzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=l8of7nHf; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="OfS3hmmp"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="l8of7nHf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=zix02Rf2UN8dkt
-	KxUMJpGTMpr0tknfsIvIDaFLjGkBU=; b=OfS3hmmpN6YsEPr8bsgpBis3TabWtE
-	Xz/ybh6VGsKWv91v0TKP/cHNcNALo1ydU97CoAEkgWD563P0wjx5riAOZdaVmAcm
-	BicbYuqL0M4G8fM6KBh9oBbNydZAJocW8ZlBFHG5UlqDj1zrR4ivKoYWb3jDhz2m
-	lX0pKomIaHk6Wm+jjzPW+gV2D4g9y/bspoXU4NHwZwHKVmaJrXXkzVcbtn2Rmzg/
-	NSbp3LvZSyloZgdID/TcuIMkZZ5VWLpYydIEtmWR8A96yl5Hv/ieUlW1rQKhp7NW
-	Ak2OhjdYeLAQ+IF762FNdG2omfeAA4c9A5kTi5hr2F/A+j4VuD7ppGSg==
-Received: (qmail 2474961 invoked from network); 19 May 2025 14:15:21 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 May 2025 14:15:21 +0200
-X-UD-Smtp-Session: l3s3148p1@y0H0FXw1CJpZz6+V
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=gijxyCyytDbmc4M5XdFf1uYXgh59hs4F48lFszGnbNA=; b=l8of7n
+	HfV+gYyTLUwtnsByOuEYpsvO6xIu+iKDrwLAr/DKGutFPE6XNvp+f9Ba6L/JATIS
+	iyZhOSNv94F2fK/9x9pj9zhv6FNi47h53VZAPJjUbUm28ASiEE0XCqv9nyzh4Afx
+	lu1A8XaLBE8wj9PMICNA5/Jgb0sE8tfMUpv3I/CJ5CK041XTLv1GwW6h8rIkQtJz
+	iyPb8PvfVhrKTuyV1YkjcFyRvq86JttVi7fqvEe1RSfXayHzvO9zTJLkqZyMwd2o
+	pDBV7whFi9qkqNrS4qJtFG0ykgPHijwSXh8nF7QXjas6GHukYEC1yIJKxq6LaS5i
+	ZtwRvwVU7HBr6p0g==
+Received: (qmail 2475329 invoked from network); 19 May 2025 14:15:32 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 May 2025 14:15:32 +0200
+X-UD-Smtp-Session: l3s3148p1@GdCdFnw1NLBZz6+V
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-renesas-soc@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-sunxi@lists.linux.dev,
-	loongarch@lists.linux.dev,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
 	Rob Herring <robh@kernel.org>,
-	Samuel Holland <samuel@sholland.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH 0/7] archs: use proper node names for GPIO based I2C busses
-Date: Mon, 19 May 2025 14:15:00 +0200
-Message-ID: <20250519121512.5657-1-wsa+renesas@sang-engineering.com>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH 6/7] LoongArch: dts: use proper node names for GPIO based I2C busses
+Date: Mon, 19 May 2025 14:15:06 +0200
+Message-ID: <20250519121512.5657-7-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250519121512.5657-1-wsa+renesas@sang-engineering.com>
+References: <20250519121512.5657-1-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,73 +53,35 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A lot of boards across various archs have a superfluous '-' in their
-node name for GPIO based I2C busses. 'dtbs_check' complains, so fix
-them.
+There shall not be a '-' before the number.
 
-Based on linux-next as of 20250516. Build bots are happy. ARM patches
-depend on another cleanup series[1], the rest has no dependencies. I
-suggest that patches go via their subsystem trees.
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Tested on Calao USB boards using AT91 chipsets and a Renesas Lager board
-using R-Car H2.
-
-[1] "[PATCH 0/4] ARM: dts: use recent scl/sda gpio bindings"
-    https://lore.kernel.org/r/20250519112107.2980-1-wsa+renesas@sang-engineering.com
-
-Wolfram Sang (7):
-  arm64: dts: exynos: use proper node names for GPIO based I2C busses
-  arm64: dts: mediatek: use proper node names for GPIO based I2C busses
-  ARM: dts: microchip: use proper node names for GPIO based I2C busses
-  ARM: dts: samsung: use proper node names for GPIO based I2C busses
-  ARM: dts: stm32: use proper node names for GPIO based I2C busses
-  LoongArch: dts: use proper node names for GPIO based I2C busses
-  riscv: dts: allwinner: use proper node names for GPIO based I2C busses
-
- arch/arm/boot/dts/microchip/at91-foxg20.dts      |  2 +-
- arch/arm/boot/dts/microchip/at91-qil_a9260.dts   |  2 +-
- arch/arm/boot/dts/microchip/at91-sam9_l9260.dts  |  2 +-
- arch/arm/boot/dts/microchip/at91rm9200.dtsi      |  2 +-
- arch/arm/boot/dts/microchip/at91sam9260.dtsi     |  2 +-
- arch/arm/boot/dts/microchip/at91sam9260ek.dts    |  2 +-
- arch/arm/boot/dts/microchip/at91sam9261.dtsi     |  2 +-
- arch/arm/boot/dts/microchip/at91sam9263.dtsi     |  2 +-
- arch/arm/boot/dts/microchip/at91sam9263ek.dts    |  2 +-
- .../boot/dts/microchip/at91sam9g20ek_common.dtsi |  2 +-
- arch/arm/boot/dts/microchip/at91sam9g45.dtsi     |  2 +-
- arch/arm/boot/dts/microchip/at91sam9n12.dtsi     |  2 +-
- arch/arm/boot/dts/microchip/at91sam9rl.dtsi      |  4 ++--
- arch/arm/boot/dts/microchip/at91sam9rlek.dts     |  4 ++--
- arch/arm/boot/dts/microchip/at91sam9x5.dtsi      |  6 +++---
- arch/arm/boot/dts/microchip/ethernut5.dts        |  2 +-
- arch/arm/boot/dts/microchip/evk-pro3.dts         |  2 +-
- arch/arm/boot/dts/microchip/mpa1600.dts          |  2 +-
- arch/arm/boot/dts/microchip/tny_a9263.dts        |  2 +-
- .../arm/boot/dts/microchip/usb_a9260_common.dtsi |  2 +-
- arch/arm/boot/dts/microchip/usb_a9263.dts        |  2 +-
- arch/arm/boot/dts/microchip/usb_a9g20_lpw.dts    |  2 +-
- arch/arm/boot/dts/samsung/exynos3250-monk.dts    |  2 +-
- arch/arm/boot/dts/samsung/exynos3250-rinato.dts  |  2 +-
- arch/arm/boot/dts/samsung/exynos4210-i9100.dts   |  6 +++---
- arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi   | 10 +++++-----
- .../boot/dts/samsung/exynos4412-galaxy-s3.dtsi   |  4 ++--
- arch/arm/boot/dts/samsung/exynos4412-midas.dtsi  |  6 +++---
- arch/arm/boot/dts/samsung/exynos4412-p4note.dtsi |  8 ++++----
- arch/arm/boot/dts/samsung/s5pv210-aries.dtsi     | 16 ++++++++--------
- arch/arm/boot/dts/samsung/s5pv210-galaxys.dts    |  2 +-
- .../boot/dts/st/ste-ux500-samsung-codina-tmo.dts |  8 ++++----
- .../arm/boot/dts/st/ste-ux500-samsung-codina.dts |  8 ++++----
- .../arm/boot/dts/st/ste-ux500-samsung-gavini.dts | 12 ++++++------
- .../arm/boot/dts/st/ste-ux500-samsung-golden.dts |  8 ++++----
- .../arm/boot/dts/st/ste-ux500-samsung-janice.dts | 16 ++++++++--------
- arch/arm/boot/dts/st/ste-ux500-samsung-kyle.dts  |  8 ++++----
- .../arm/boot/dts/st/ste-ux500-samsung-skomer.dts |  8 ++++----
- .../boot/dts/exynos/exynos5433-tm2-common.dtsi   |  2 +-
- .../dts/mediatek/mt7986a-bananapi-bpi-r3.dts     |  4 ++--
- arch/loongarch/boot/dts/loongson-2k1000.dtsi     |  4 ++--
- .../dts/allwinner/sun20i-d1-devterm-v3.14.dts    |  2 +-
- 42 files changed, 94 insertions(+), 94 deletions(-)
-
+diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+index 1da3beb00f0e..ddf63801eef0 100644
+--- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
++++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+@@ -46,7 +46,7 @@ cpuintc: interrupt-controller {
+ 	};
+ 
+ 	/* i2c of the dvi eeprom edid */
+-	i2c-gpio-0 {
++	i2c-gpio0 {
+ 		compatible = "i2c-gpio";
+ 		scl-gpios = <&gpio0 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 		sda-gpios = <&gpio0 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+@@ -57,7 +57,7 @@ i2c-gpio-0 {
+ 	};
+ 
+ 	/* i2c of the eeprom edid */
+-	i2c-gpio-1 {
++	i2c-gpio1 {
+ 		compatible = "i2c-gpio";
+ 		scl-gpios = <&gpio0 33 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 		sda-gpios = <&gpio0 32 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 -- 
 2.47.2
 
