@@ -1,70 +1,71 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25F82451C3
-	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 11:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D52CA6B
+	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 11:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747652641; cv=none; b=bBFXVdog0z3wUb1lsfy53Zfp0KkvSQYcGomVZl6q/CN8WFRkjvNVAt0782XtGvz7iKvTlP2lJE6MG4ZrxkPxq9prxHOR+wyz36Ea3wQz+15K49+SY9lgnoA5gz+mNR8XFteW22kPC/a+6WH3I0xWk/4RD6f5ZR0TkPnUsMZTvkE=
+	t=1747653468; cv=none; b=dYc9DR1wC51MAY1j8Ud0nTMDcJSMDMRZr9DFL8AkFg40m2eYtxMdOKPevRJWfTRWJ1hzQSV750SKkJ5k7qVfXJ/S+GM7XMpJ2dDcffFcENIFSmWZ0jRAN0kINz9wG4nNg55KgytVAwL8+6VQWxTJ8JSwLbxPHHd3LK6t133wee8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747652641; c=relaxed/simple;
-	bh=1RBzsBUZFE4oAcdXsB1WfJqMcomnc+3kLNPimm2/Js0=;
+	s=arc-20240116; t=1747653468; c=relaxed/simple;
+	bh=BBa1p+93rbInkHFD7cu4NFc1HnCPbuyMOY8gIKSTD6U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M8NL0yyvdayHRvpMcjX/PkMbexG7jK6eeKSEdWv9kGE3oYGKA60+8otim3nnKig7VfgnzL4LBA1+4VPPmURLkjHh0fklqrfT1mARgySqQPnYvfzjzhzBEwbWPMwFSFCkNTjcHt7ovsnuxKr9EIy0ZHi2t4xkxS76/r7q8ViW8kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tDRgGNhk; arc=none smtp.client-ip=209.85.219.180
+	 To:Cc:Content-Type; b=gDz3v7b2fQbeau6uFqtcLJZfNwsfcFP/QHmrYi0VsOlFYYuhhOr1hDs/CGInKZhg3b6Pg+VDZadTqyCaEQo4KzC2ao8H0iJgVYTNeYK8te7O6tRoBcZtEC0yS0pA9mfl+GelhE3SoIXBfAxdge9wdkD1T1szLjhcWwOZ4GRFdo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Kw/SDDwC; arc=none smtp.client-ip=209.85.219.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDRgGNhk"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7b7b4eaca1so2272434276.0
-        for <loongarch@lists.linux.dev>; Mon, 19 May 2025 04:03:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kw/SDDwC"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e733e25bfc7so3712940276.3
+        for <loongarch@lists.linux.dev>; Mon, 19 May 2025 04:17:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747652638; x=1748257438; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1747653465; x=1748258265; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=m2xHnKKd+aDHtHX8yu3cDHfKWt8EXdtJaGR+RnU/oP8=;
-        b=tDRgGNhkeX6Ert/AJpk38bEJ5Djj0SJjYKGdxubFIZkL3VPphkxvd/cIgRpq+8uln8
-         nV6zO6mCuvqjxmdHWo8eTfDXZ81KwHm/6BlTR8oi1YhB/roamfhvTUlLTcWtNhcc311H
-         Flv4v5HokwLjiTQ+xh6txeMBmN7Z5EoE5iZe4aAOca8mQmufHV6MuWmEzD9IHLg6/Cg/
-         R46Uf7L0caprC83UZc1m4MMwAOm2ltN2+v6cpIBGW19MWYymBpq/QJEyzxByBeny2Ez2
-         LODmen/uHyps2wtJ3RRXLj9EzvgN4rRQ8uerHJ3r+/KtNFbbcNGxf5V/ueZY76p+8BaN
-         8FXA==
+        bh=ByMrX1Fxu6vn5FGyTRQj4KFvlAc0MJvBBAYMSrSilHY=;
+        b=Kw/SDDwCj0mmg7Z39jbgMvXrP1Jwd4ntjLA2Vg1cFh5ipPB61PHup6yjbXrw4zhkp7
+         HXQOpngy91R6HagMrVFjvZyTPU+e+LpTdT8K4Hngi5fUCw+Y8S9WRg3dIQLF2/CCz0fv
+         Il9mpJIHroQzLFJW8ZFLusn1qnNmyq4BzN5Z1FUEFY9CX6LWsXOPrNwb704RGwwxwZQk
+         2iLmlyf1Om+Etz7VqfvGBX8BLoftbHcL9OyG2CFsJiX4uvU3uioKtDA7r29jMO8hcUmj
+         Uh0FajNGP9PFQb6BxQAQLm37rVO+iTc2/v+y6Sv95l67/9ucKnKlrJ04F1hY4/uawnDs
+         TG7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747652638; x=1748257438;
+        d=1e100.net; s=20230601; t=1747653465; x=1748258265;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m2xHnKKd+aDHtHX8yu3cDHfKWt8EXdtJaGR+RnU/oP8=;
-        b=tYQD9BNrCZ7mHvRBICgdpYQOVdeCctVB2wbnBZWPg2te+ceBlb31cTjDYFweYUW6SM
-         2g99zI61wOzAUEX5GkRKdOm+2jgDiTY6QA31h1ub/kQj6UJBSp5EAXrG7jNz66Wka7ay
-         KDbisDpYePdE49pL3iMci7dyRtRhvXPusUA4tdgdhCNw8yGRAJXF2vNYfXbImafObewN
-         kdL4KXdDl9r7Kd8CfM07C3ilwR7qHZiGsFkJ4WgAVSTkwKlS783Vl4QfpHpf8ah0znIW
-         e9wsCxhsRjpBOT/Gla88u+S2Lre/cknKZQAOwOv/1P/g5QlzqOoWOaFiQvR+76gXLo7r
-         GeUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXMd/kpjmHIzx0H8EBmIGUj+mYkj8w4yuwp7jCcTYLSnQLDQ+gxGlWBroSpOacyryTg1Wi1wCApeLw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw21pWUdrrLn2XcyYOkaDwAqX/QuU521uT6BZXFEjjQUJb2b7ra
-	DMoO4UspRqpdODQywl5BmIKyh2TcakONxOx1fERRmGNwrfO1WamUsZa7kLlrTXWLV1TWIF5uy4m
-	0JJvA0PobccL6CIiDsnGnzGkeSYUgCPoHDdZDn5COjQ==
-X-Gm-Gg: ASbGncvuJ2J2AbMBI9ZXl7xkDBaZjN+kpKKTRrVt6jhz3GfaWcCyNKiqU6ApN5PmArg
-	vn5aWT1UH/JbgWlV6Djyb6wiU6tfk5kKVykAo1C5hy1Z1vJzNUMrtOCFK8fpypjUGxhSc93OjaH
-	I/jVdC3yLrbZrtPy9dpx6NKQovZKOhbfub3Q==
-X-Google-Smtp-Source: AGHT+IFBUb2/Xms/raeEGwi+8becFxoSstWr/BLkHMpPNO+AziHGedBdCZ+gSklzRXJEASSnQ0GOSObcwPcchKsfqNQ=
-X-Received: by 2002:a05:6902:170a:b0:e7b:6893:d5ec with SMTP id
- 3f1490d57ef6-e7b6d40269emr15160872276.20.1747652638618; Mon, 19 May 2025
- 04:03:58 -0700 (PDT)
+        bh=ByMrX1Fxu6vn5FGyTRQj4KFvlAc0MJvBBAYMSrSilHY=;
+        b=CafjKMo9jEpEE6djpnZwR1a1O1sPcQ6LQ8U6IkPWesyybERvCSnE9ZtntYFYAeHTP8
+         C76sk8tiFnUSdjQiQSCswPCM7OokwpsCBCBeZbTi/bzUWe4rZzvqHshJ6qN9TLl8FcBg
+         dmc3B1GItA3CPMHQiiJ7cX6aQzzlCQ0gEPH6uZcGezsUxER1qc+c2gZoOujZEzdBTnlj
+         IvZiCKlmncJnttOpB658nki5r+Tu6VnKeFxtVejUsKvLf5ElFKLFQLj3x7bOhZ4pEp7u
+         /Z62P30g7/hZNFo9S7/yxGe2KIeA8abNpfZRrdcbLN/nS5NT9efHFva8tMXRfr6a/tFs
+         pnJw==
+X-Forwarded-Encrypted: i=1; AJvYcCU12kZtyMHwCGlqIojFltwjsFP+tckOHfFau+5+9P6/6KqoIjrspVGq3bihLkExB+UGoppHbtgA7Jg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxsYklrSzLL4AQVQuy54er2fEDeA8jfn/7LzMsgrhuZZqv5psSg
+	t70olz7huvEKXqeA0dgAPelUVQ/Rq9Fk6efIKbYRySNtsW19Xnpl5tPzUxQHZg0/i5MKGL29bUg
+	05PqBpGuUki2lTZSlfYZsGjp26YznrYOedvfGvmBOaF44/NcFxdwgMScfWg==
+X-Gm-Gg: ASbGncsCNl3G0SNQFbx9Yo3x4mO65fCHN6JMDBwZxl8KoRnsew9sD7S0KW1mhu//+wZ
+	tYKyGNfqtWWFjZ2iep9NXgboTvlDpXm2AceKEgpLF6HxwVY+07wSCTlUaeWuvUR7FibVBCxw8x2
+	A8KTHxA1XTSfBCQQFeEFGnpT97Mf7NnITbfA==
+X-Google-Smtp-Source: AGHT+IEKnaIepG8Xu8dXigkseIQg2Elah7K+s02DVYBTys+Y3pqAA6EVTrbsP8cwn+bjFmdEtTTVIsP4u/Z11dsLsQ4=
+X-Received: by 2002:a05:6902:2190:b0:e7d:3b61:e24a with SMTP id
+ 3f1490d57ef6-e7d3b61e544mr2112278276.32.1747653465642; Mon, 19 May 2025
+ 04:17:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1746581751.git.zhoubinbin@loongson.cn> <1308b6ca9ffc2674cc0f089cfd163da87e53a8cd.1746581751.git.zhoubinbin@loongson.cn>
-In-Reply-To: <1308b6ca9ffc2674cc0f089cfd163da87e53a8cd.1746581751.git.zhoubinbin@loongson.cn>
+References: <cover.1746581751.git.zhoubinbin@loongson.cn> <704447268706b1b9f25bbe9d15459163d0ac3404.1746581751.git.zhoubinbin@loongson.cn>
+In-Reply-To: <704447268706b1b9f25bbe9d15459163d0ac3404.1746581751.git.zhoubinbin@loongson.cn>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 19 May 2025 13:03:22 +0200
-X-Gm-Features: AX0GCFtVcITX1kDzetWV6A9kXMJvvFjktirKyT439flna1xTvzKDXV6wLcfl6Dc
-Message-ID: <CAPDyKFouNpdnQSXBxRmKhECyojrT_TkCpgg01GHbzQpuYFvEZg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
+Date: Mon, 19 May 2025 13:17:09 +0200
+X-Gm-Features: AX0GCFveu0YoTJh4AI6kbpPNJ1GJA5WZq95nOMrbprGfHNrxs7iIBViE2fZiSTI
+Message-ID: <CAPDyKFo4n=K5-SeKFpCm-0u4Bbk-E0XqUrx+KSK1yuZa35a7ug@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC
+ controller driver
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
 	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -75,84 +76,40 @@ Content-Type: text/plain; charset="UTF-8"
 
 On Wed, 7 May 2025 at 09:28, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
 >
-> The MMC controllers on the Loongson-2K series CPUs are similar,
-> except for the interface characteristics and the use of DMA controllers.
+> This patch describes the two MMC controllers of the Loongson-2K2000 SoC,
+> one providing an eMMC interface and the other exporting an SD/SDIO
+> interface.
 >
-> This patch describes the MMC controllers on the Loongson-2K0500/2K1000,
-> with the distinguishing feature being the use of an externally shared
-> APBDMA engine.
+> Compared to the Loongson-2K1000's MMC controllers, their internals are
+> similar, except that we use an internally exclusive DMA engine instead of
+> an externally shared APBDMA engine.
 >
 > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 
 [...]
 
 > +
-> +static void loongson2_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+> +static void ls2k2000_mmc_fix_cmd_interrupt(struct loongson2_mmc_host *host,
+> +                                          struct mmc_command *cmd)
 > +{
-> +       struct loongson2_mmc_host *host = mmc_priv(mmc);
-
-As we now have support for regulators, we should use them here too.
-
-Some something along the lines of this at MMC_POWER_OFF:
-if (!IS_ERR(mmc->supply.vmmc))
-      mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
-
-and at MMC_POWER_UP:
-if (!IS_ERR(mmc->supply.vmmc))
-      mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, ios->vdd);
-
+> +       int val;
 > +
-> +       switch (ios->power_mode) {
-> +       case MMC_POWER_ON:
-
-Is the fallthrough really what we want here?
-
-MMC_POWER_ON is used quite frequently when changing various ios
-settings when the core calls mmc_set_ios(). MMC_POWER_UP is set only
-once in mmc_power_up().
-
-> +       case MMC_POWER_UP:
-> +               regmap_write(host->regmap, LOONGSON2_MMC_REG_CTL, LOONGSON2_MMC_CTL_RESET);
-> +               mdelay(10);
-> +               regmap_write(host->regmap, LOONGSON2_MMC_REG_CTL, LOONGSON2_MMC_CTL_EXTCLK);
-> +               regmap_write(host->regmap, LOONGSON2_MMC_REG_INT, LOONGSON2_MMC_IEN_ALL);
-> +               regmap_write(host->regmap, LOONGSON2_MMC_REG_IEN, LOONGSON2_MMC_INT_CLEAR);
-> +               break;
-> +       case MMC_POWER_OFF:
-> +               regmap_update_bits(host->regmap, LOONGSON2_MMC_REG_CTL,
-> +                                  LOONGSON2_MMC_CTL_RESET, LOONGSON2_MMC_CTL_RESET);
+> +       if (cmd->opcode != MMC_WRITE_BLOCK && cmd->opcode != MMC_WRITE_MULTIPLE_BLOCK)
 > +               return;
-> +       default:
-> +               return;
-> +       }
 > +
-> +       loongson2_mmc_set_clk(host, ios);
-> +
-> +       host->bus_width = ios->bus_width;
-> +}
-> +
+> +       regmap_read_poll_timeout(host->regmap, LOONGSON2_MMC_REG_FSTS, val,
+> +                                (val & LOONGSON2_MMC_FSTS_TXFULL), 0, 500);
 
-[...]
+Can you please elaborate on what goes on here?
 
-> +
-> +static void loongson2_mmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
-> +{
-> +       struct loongson2_mmc_host *host = mmc_priv(mmc);
-> +
-> +       regmap_update_bits(host->regmap, LOONGSON2_MMC_REG_IEN,
-> +                          LOONGSON2_MMC_INT_SDIOIRQ, enable);
-> +}
-> +
-> +static struct mmc_host_ops loongson2_mmc_ops = {
-> +       .request        = loongson2_mmc_request,
-> +       .set_ios        = loongson2_mmc_set_ios,
-> +       .get_ro         = mmc_gpio_get_ro,
-> +       .get_cd         = mmc_gpio_get_cd,
-> +       .enable_sdio_irq = loongson2_mmc_enable_sdio_irq,
+Note that, the mmc core uses a couple of different options to manage
+busy detection monitoring on DAT0, for those commands that need it.
 
-The ->ack_sdio_irq() callback needs to be implemented too.
-
-Moreover we need to set MMC_CAP2_SDIO_IRQ_NOTHREAD.
+*) MMC_CAP_WAIT_WHILE_BUSY - if the host HW and the driver for it
+supports IRQ based busy-detection.
+*) host_ops->card_busy() callback if the HW can poll the DAT0 manually
+for busy-detection.
+*) Polling by using CMD13.
 
 [...]
 
