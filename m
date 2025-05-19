@@ -1,315 +1,92 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF971A83F9
-	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 03:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6712A2D;
+	Mon, 19 May 2025 05:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747624233; cv=none; b=ncrlnHJfuaQ4LGOgW6o6VFgBb0HtyWzOLG9U5mSW9kCwjpxvsvIyvaDgWX50QiUDdtc19L2BBi4iYr5SSZvpKnAlJpIMW/92Mzw64LAK7cNXWrWRvUvqp+LmsUz3xgqKmAxifhZEBsAYAV+vxxhw1SE9pCpUNq7mLJ73pCvcKjQ=
+	t=1747634240; cv=none; b=hVvHytOWbmuAMGhhpUCTJ1XnGcChPymebndbAq9xQMXm3uCM3EyFG/rbqpJiqH+/O0YPAAl5zPT0mTtHvuxdj1dyIlAmLIJZaraLsU8xyC18xXzZ6OmnjmduWZeoTIVWoXdFIPH0RjJJf64AUKvsJwyIaqP8b6IL3cvPtdkj+/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747624233; c=relaxed/simple;
-	bh=yHAPLS6jjuSLhfQ8PXf0pkKwXVDm9dlSYFgS/w4VFvE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HpceZ+0teLlzyThf1VzOqTe7N6f6QHCaJ+AECZmyxvN8+CQMvH4fxQpglYMd/jNbXlxvk1dWhokIGBK12LVJJ7zMameqzGgAO2IQR2xI2xLKSGx5XyxJsOar/Exypg3msJ/stFG4yBRg4ASTw5C5x3jTlncfsPHlyBQWFnzYjAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XlM7iIMA; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747634240; c=relaxed/simple;
+	bh=mZBKw0wJmnWieD8RvOZ90E/QZ8DajgvOAWCuVqPbx2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qEE4s+Dqdu+bilABmXhFzG56V2aHonrwuezqnCXR52sWqihAWn5p1ygC7NGLWzQGW4SAxVCUIXgXvCV+wL7Mdvm1TbNMN3VEqqSlybYf+ZuOotHHMLNorJlwwdwWORz4waZklkCbSlcQT/FbKke4wYU8gIzr4CJma4vNt+90qJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=msxgBqP+; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlM7iIMA"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6011407431cso3831460a12.3
-        for <loongarch@lists.linux.dev>; Sun, 18 May 2025 20:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747624229; x=1748229029; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4PjvaaU1nC+1opFg++G/pY6ZC2Hyjnh3wj0PCLJBEWE=;
-        b=XlM7iIMAja973pXLej0/zSJDpuu75/wriU3uMcoHOxJEIvBMFoVChOCvXx5cXwRxEk
-         Gg3dsL4bt6Pbx4Znubzg6sZG/ZRsomQUpLaSAvkdqa/AD7fQbcBGysjtlZPEiyt4aBDJ
-         srjSFqsjF07W4/oMkoMM5lA2vRK8DB3YZtguAieD/Z0C8yK5ULfM5pQLE8nuOvrczLrl
-         us/qtaQaKEcalAUYKu4iarzVqdwYYuQmCEjZK+sS0STi5g5OTqkd6S6quqvta62STvlA
-         bEGHDiKRQhOTMsgbuR4LU4A5s19uG4DjQcDSctZRIDXveuRIjc/kzR+wo/Pw7NEHFrVf
-         FWUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747624229; x=1748229029;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4PjvaaU1nC+1opFg++G/pY6ZC2Hyjnh3wj0PCLJBEWE=;
-        b=ElVWUO1hz78DaBK6gmkrjMBRBsjP0twi7oaD53NdkOHLrShj89Iv7vqljQXr8ed4KZ
-         z07JASItTcGb6ywBj9hAlRoww2FdkEGp5oXYSKbVLyTUenn5RGQ4LlCLfhFa0oWTBwci
-         LdyAq3mxhsoX9zl1jbT/Ug/sEgXDr9mrPjKyfPDgOnt5LvwFodCfSJwbeRHIhr649Vgu
-         4NnfGQfqZx2i3S2o86bS3baCWqljcHDy/dpW2ymM1esnS2BwkkvKeeH60DuY/iFJSWTs
-         Jx1hAxEtC3CVy8jFVUlVOut9WC79TDXVoklxc/p1Ivz0OC/T0AzZN2y+zZPJNa+wj5nH
-         0/lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsWpymwlhprq5uWPTo8N5eD9JleDpPyKJ/ypIo6Iu7+5+Pk/P/oaVFwVvI0Df0LWatsuUZ7Y1Ksy8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzd4HeEd/0gvcyHz3gVv0yhnsTMNSWArF5sH9we2TJwwAs/RAJj
-	jsgp3h5TTaO5fyT+VOW1ClQ7hMRQzz9MQdLaYUKwOqR8FWFTNboKfwHHCn8jqmCOlqaDjw9c3fk
-	IJVlherdH3f11RRxD0F6b8PQlU9/M7hToAT90l/I=
-X-Gm-Gg: ASbGnctofVGBQd7+YqSlrPOHTsl7EZN+DFxOdYGzNPaXgEwE3hVAEkeWKntM8vPztLN
-	ZTPs6UyKN5MPsrzmX2DNEHfEV9GlsULdTbjmDWZ7t/gMOCncMafWfpSSd5JJKaV+MNQnBv1vhgJ
-	KLLcOEaog2LWtl8oajw9FvTvJP3I9NLWcD
-X-Google-Smtp-Source: AGHT+IEVkb5RoxfyEOqNdmb2FFlLdTMXnUBayP9UAzkULXboHjIaViD0rLelsuDRThgAFvyiT6lWMX8f9vw7kjwXwcM=
-X-Received: by 2002:a17:907:96a1:b0:ad2:2ef3:d487 with SMTP id
- a640c23a62f3a-ad536f5ee59mr905413766b.58.1747624229296; Sun, 18 May 2025
- 20:10:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="msxgBqP+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=0zbSZULwMpBsF35qyqNlWF7Y18GG1Lj98fZQ/4Oi5ek=; b=msxgBqP+mlc27kvWTMpX+7lLkG
+	FhOl3sHQMXsS7oZlHmgJ1OFuwBBVVYPNVHNX3TMIdMqzzYc5HgVu8vdbDF6VvRGRCsPSJker9IyGo
+	95uClxLl2t+tWdQN2harV7L0oG/Xoo+J5Wzd2eo/Q420D9qHClavW0aHcz7ztbZVtbQCRcC4sZZ+N
+	2l2yG8qzY4AqBdFYYYRyry2O1XaCSBP7lG9WGmZFRPCnR+vb7b1mvl1lXTN8yf+akDd3LYO+Rvs0N
+	xZogCW0da3J43CBa5OhsK/ZXwiGe0fKLDNiiuT240Rd9u7PYZYSWieBcatDcYajVrsQh8JDmB/HRW
+	1+4VKTeg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uGtUl-00781A-0x;
+	Mon, 19 May 2025 13:57:04 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 19 May 2025 13:57:03 +0800
+Date: Mon, 19 May 2025 13:57:03 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, davem@davemloft.net, peterhuewe@gmx.de,
+	jarkko@kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v9 2/5] crypto: loongson - add Loongson RNG driver support
+Message-ID: <aCrIL_ZXL-UtaLdJ@gondor.apana.org.au>
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+ <20250506031947.11130-3-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250518080356.43885-1-ziyao@disroot.org> <20250518080356.43885-4-ziyao@disroot.org>
-In-Reply-To: <20250518080356.43885-4-ziyao@disroot.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Mon, 19 May 2025 11:10:16 +0800
-X-Gm-Features: AX0GCFtq3DXnofzn-kBzvLENqC_QvkrAY1A7sezshsGgk2UbdzGu8AXnAz3_vsQ
-Message-ID: <CAMpQs4L7U=Mkw=pburiUpJLEm=tHeMOW+6PRhWPTMnOGHxFqyA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] LoongArch: dts: Add initial SoC devicetree for
- Loongson 2K0300
-To: Yao Zi <ziyao@disroot.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>, 
-	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
-	Aradhya Bhatia <a-bhatia1@ti.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506031947.11130-3-zhaoqunqin@loongson.cn>
 
-Hi Yao:
-
-Thanks for your patch.
-
-On Sun, May 18, 2025 at 4:05=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+On Tue, May 06, 2025 at 11:19:44AM +0800, Qunqin Zhao wrote:
 >
-> Add SoC devicetree for 2K0300 SoC, which features one LA264 dual-issue
-> core and targets embedded market. Only CPU core, legacy interrupt
-> controllers and UARTs are defined for now.
->
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  arch/loongarch/boot/dts/loongson-2k0300.dtsi | 184 +++++++++++++++++++
->  1 file changed, 184 insertions(+)
->  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
->
-> diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarc=
-h/boot/dts/loongson-2k0300.dtsi
-> new file mode 100644
-> index 000000000000..17974f793947
-> --- /dev/null
-> +++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> @@ -0,0 +1,184 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-> + */
+> +static int loongson_rng_init(struct crypto_tfm *tfm)
+> +{
+> +	struct loongson_rng_ctx *ctx = crypto_tfm_ctx(tfm);
+> +	struct loongson_rng *rng;
+> +	int ret = -EBUSY;
 > +
-> +/dts-v1/;
+> +	mutex_lock(&rng_devices.lock);
+> +	list_for_each_entry(rng, &rng_devices.list, list) {
+> +		if (!rng->is_used) {
+> +			rng->is_used = true;
+> +			ctx->rng = rng;
+> +			ret = 0;
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&rng_devices.lock);
 > +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +       compatible =3D "loongson,ls2k0300";
-> +       #address-cells =3D <2>;
-> +       #size-cells =3D <2>;
-> +
-> +       cpus {
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +
-> +               cpu0: cpu@0 {
-> +                       compatible =3D "loongson,la264";
-> +                       reg =3D <0>;
-> +                       device_type =3D "cpu";
-> +                       clocks =3D <&cpu_clk>;
-> +               };
-> +
-> +       };
-> +
-> +       cpuintc: interrupt-controller {
-> +               compatible =3D "loongson,cpu-interrupt-controller";
-> +               interrupt-controller;
-> +               #interrupt-cells =3D <1>;
-> +       };
-> +
-> +       cpu_clk: clock-1000m {
-> +               compatible =3D "fixed-clock";
-> +               clock-frequency =3D <1000000000>;
-> +               #clock-cells =3D <0>;
-> +       };
-> +
-> +       soc {
-I found the following warning while doing dtbs_check, please check again:
+> +	return ret;
+> +}
 
-  DTC [C] arch/loongarch/boot/dts/ls2k0300-ctcisz-forever-pi.dtb
-arch/loongarch/boot/dts/loongson-2k0300.dtsi:41.6-183.4: Warning
-(unit_address_vs_reg): /soc: node has a reg or ranges property, but no
-unit name
+This isn't right.  The number of TFMs in the system is unlimited.
+You should not pair each tfm with an individual hardwre device.
 
-> +               compatible =3D "simple-bus";
-> +               #address-cells =3D <2>;
-> +               #size-cells =3D <2>;
-> +               ranges =3D <0x00 0x10000000 0x00 0x10000000 0x0 0x1000000=
-0>,
-> +                        <0x00 0x02000000 0x00 0x02000000 0x0 0x04000000>=
-,
-> +                        <0x00 0x40000000 0x00 0x40000000 0x0 0x40000000>=
-;
-> +
-> +               liointc0: interrupt-controller@16001400 {
-> +                       compatible =3D "loongson,liointc-2.0";
-> +                       reg =3D <0x0 0x16001400 0x0 0x40>,
-> +                             <0x0 0x16001040 0x0 0x8>;
-> +                       reg-names =3D "main", "isr0";
-> +
-> +                       interrupt-controller;
-> +                       #interrupt-cells =3D <2>;
-> +
-> +                       interrupt-parent =3D <&cpuintc>;
-> +                       interrupts =3D <2>;
-> +                       interrupt-names =3D "int0";
-> +
-> +                       loongson,parent_int_map =3D <0xffffffff>, /* int0=
- */
-> +                                                 <0x00000000>, /* int1 *=
-/
-> +                                                 <0x00000000>, /* int2 *=
-/
-> +                                                 <0x00000000>; /* int3 *=
-/
-> +               };
-> +
-> +               liointc1: interrupt-controller@16001440 {
-> +                       compatible =3D "loongson,liointc-2.0";
-> +                       reg =3D <0x0 0x16001440 0x0 0x40>,
-> +                             <0x0 0x16001048 0x0 0x8>;
-> +                       reg-names =3D "main", "isr0";
-> +
-> +                       interrupt-controller;
-> +                       #interrupt-cells =3D <2>;
-> +
-> +                       interrupt-parent =3D <&cpuintc>;
-> +                       interrupts =3D <4>;
-> +                       interrupt-names =3D "int2";
-> +
-> +                       loongson,parent_int_map =3D <0x00000000>, /* int0=
- */
-> +                                                 <0x00000000>, /* int1 *=
-/
-> +                                                 <0xffffffff>, /* int2 *=
-/
-> +                                                 <0x00000000>; /* int3 *=
-/
-> +               };
-> +
-> +               uart0: serial@16100000 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16100000 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <0 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               uart1: serial@16100400 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16100400 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <1 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               uart2: serial@16100800 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16100800 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <2 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               uart3: serial@16100c00 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16100c00 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <2 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               uart4: serial@16101000 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16101000 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <2 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               uart5: serial@16101400 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16101400 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <2 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               uart6: serial@16101800 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16101800 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <3 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               uart7: serial@16101c00 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16101c00 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <3 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               uart8: serial@16102000 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16102000 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <3 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               uart9: serial@16102400 {
-> +                       compatible =3D "ns16550a";
-> +                       reg =3D <0 0x16102400 0 0x10>;
-> +                       interrupt-parent =3D <&liointc0>;
-> +                       interrupts =3D <3 IRQ_TYPE_LEVEL_HIGH>;
-> +                       no-loopback-test;
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               isa@16400000 {
-> +                       compatible =3D "isa";
-> +                       #address-cells =3D <2>;
-> +                       #size-cells =3D <1>;
-> +                       ranges =3D <1 0x0 0x0 0x16400000 0x4000>;
-> +               };
-> +       };
-> +};
-> --
-> 2.49.0
->
->
+If you want to do load-balancing you could certainly pick a device
+per tfm, but each device must be able to support an unlimited number
+of tfms.
 
---=20
-Thanks.
-Binbin
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
