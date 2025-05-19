@@ -1,75 +1,101 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3396026B945;
-	Mon, 19 May 2025 08:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB45274FE6
+	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 09:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747644756; cv=none; b=JAN7oXv4+ADndrPIvXetVMKMcpo52B/SafwAvfsZYuQaG/+BTGjhR8U2TmLhPQnLUsNORSkUj7UXqbYGoh7Ibukt+pXM5zSbgUHkjUrPk/cTehjbGQbAZhP2w9bMIseOWT2vghw6wkZZD4QzPvgb26KzJjbISbu9e30B9UXDQxA=
+	t=1747647803; cv=none; b=r+l+1iuegwPdS5/whEunuGA/cjOLfSfYIJNCXJ7/YCQjf7KS2sBiPbdlqf6jB4xJ23CTXnz3Bm08gY4Jc8MhFU/T+1usDYG5XF3macPd0dvCX2uL3e1qTm9Ujeh8j11nZ677nYuDQSfWjdkVsQb7Bo5yNuDgASR31bbzssSI7qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747644756; c=relaxed/simple;
-	bh=o+BZPG4HTZQK5EkR2i0e4H+wb4OBpw813r8SfpCwT3k=;
+	s=arc-20240116; t=1747647803; c=relaxed/simple;
+	bh=DdT+pVsKJRe+Ut1elxuENYBzb9NXl2inPubgVgp3/fU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPUctsRgkrtKgoWoHbiNZuTScMMpGp8Q9xBodQdiH0e9hl+rOaNnFjYc91X3HjF3PW6kOU+Dw2KrXgpOZw5vWqRpzeYe1mHP/8ihWmXkvzf/CfxI7DjzqkcRmoqJ3ZUGiR8wDJZcJtF7iFCGXROe0N42TeaOoOUAGGFLmnsV0Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=kTCQRPtw; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=s5ekcnxcDixews5CsB6j717ij9Wl/rCM90hlijaQO4ELlcug6bv4NRg/21idXMUJQwXhRa7x4diB6mxDhg4JvoZDFq8qyKnSo4Ac8G6GViu9i0KcyjJTNqMWCKRLIaHWupj1lyGEhknmYurCkfzeYXMoZ954S/CGRpDhcDCFS0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HcUS+Zli; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="kTCQRPtw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=aaNx/UBvPW/YAYr0J1BIkqiBjr95NNZeumZcA+4ymxI=; b=kTCQRPtwfuFvm9OJ3H1cm9ouO3
-	y58FRaskcdaaszyHlbNuQqIlPUE2LbURQxvbh5rf42byuVpSMnNmcK4qhG2RPpGa/yV4wWUIdmPX4
-	uMSHhCejCsjCFpHEiYgrYpH2f01zdUzHB1IM2DnjiaUqYcQ2zAN4nuNwCXISG8U0VPgpDPsyWNJX0
-	q/Z2uM9/zLKKd6re6IM9hTg3kFmmndmoiBfdWdf612PPbs6sgowHXpqa+FYwoJ10SdxeMnOGOZhXH
-	sJnmP/IQK8xGcjgjPxTLlOW1J2AZfDD6lrKlIfcxDqN3UVDdTiPWavTHVtoc8naqgrodZ28FRrvgu
-	tn+a4Dpw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uGwEM-007B3M-2v;
-	Mon, 19 May 2025 16:52:19 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 19 May 2025 16:52:18 +0800
-Date: Mon, 19 May 2025 16:52:18 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, davem@davemloft.net, peterhuewe@gmx.de,
-	jarkko@kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v9 2/5] crypto: loongson - add Loongson RNG driver support
-Message-ID: <aCrxQqo1UYdNdt8l@gondor.apana.org.au>
-References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
- <20250506031947.11130-3-zhaoqunqin@loongson.cn>
- <aCrIL_ZXL-UtaLdJ@gondor.apana.org.au>
- <96118a23-3e6c-c9d1-2135-bd7a22091f35@loongson.cn>
- <aCrqPnwr7lMJNOnL@gondor.apana.org.au>
- <9d70efaf-1d68-f8e5-d9a6-cd312fc99529@loongson.cn>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HcUS+Zli"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 333B426051;
+	Mon, 19 May 2025 11:43:13 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id geiFRPnWWcd2; Mon, 19 May 2025 11:43:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1747647792; bh=DdT+pVsKJRe+Ut1elxuENYBzb9NXl2inPubgVgp3/fU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HcUS+ZliQhs4/LUkq8lNwee1BlLGJSs/TFroOxZeTRbi4BMi4nFPFJL78heLxTxG0
+	 dk9absrcsBOYO10LCFmKk9hVJRMnT2jUlWrbWYWtppUkuq6Y4nEVAGwO+dZSLdSkJj
+	 2SK345RzcW2sAdIu7Qz/CkWopqkl7TQeq1JYVHelgh03+wPffR06IJkOyVzIOc+Q1T
+	 JSTgFaXTfmiYgifd2rXi8YGfhII7wU9+lDW6JecGBuNF8WKw7lKw7MRYnwHgC9ERQR
+	 mvzYkGiaB8baBn6F2eG6faF+kIKsNZF6TXqk1fQ7l+O/MFV1JY++W3YfgrK4NOKitb
+	 iELlrSYyYETYg==
+Date: Mon, 19 May 2025 09:42:59 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH v2 4/4] LoongArch: dts: Add initial devicetree for CTCISZ
+ Forever Pi
+Message-ID: <aCr86zZWBu8yofdD@pie.lan>
+References: <20250518080356.43885-1-ziyao@disroot.org>
+ <20250518080356.43885-5-ziyao@disroot.org>
+ <CAMpQs4+GiZpLfSHx9k_QfWjXtyrNS4LS4dOuCKLbS-F8OhpoWg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9d70efaf-1d68-f8e5-d9a6-cd312fc99529@loongson.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4+GiZpLfSHx9k_QfWjXtyrNS4LS4dOuCKLbS-F8OhpoWg@mail.gmail.com>
 
-On Mon, May 19, 2025 at 04:49:45PM +0800, Qunqin Zhao wrote:
->
-> Is it fine waiting in init-callback until someone calls exit-callback?
+On Mon, May 19, 2025 at 03:58:29PM +0800, Binbin Zhou wrote:
+> Hi Yao:
+> 
+> On Sun, May 18, 2025 at 4:05 PM Yao Zi <ziyao@disroot.org> wrote:
+> >
+> > Enable UART0 as it's the boot UART used by firmware.
+> >
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  arch/loongarch/boot/dts/Makefile              |  1 +
+> >  .../boot/dts/ls2k0300-ctcisz-forever-pi.dts   | 45 +++++++++++++++++++
+> 
+> A minor suggestion:
+> As we can see, the existing dtsi/dts files are prefixed with
+> “loongosn-2k”, would it be possible to keep the filenames consistent?
 
-No that's just as bad as failing.  Remember this is exposed to
-user-space through af_alg.  If you make it wait it'll just appear
-to hang for the user invoking this.
+It's abbreviated since loongson-2k0300-ctcisz-forever-pi.dts seems a
+little too long for me, and naming devicetree files in form of
+<abbreviated-SoC-name>-<vendor>-<model> is common on other
+architectures.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I won't insist and will change it if you consider consistency really
+matters.
+
+> >  2 files changed, 46 insertions(+)
+> >  create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz-forever-pi.dts
+
+...
+
+> -- 
+> Thanks.
+> Binbin
+
+Best regards,
+Yao Zi
