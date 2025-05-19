@@ -1,167 +1,173 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7D013AC1
-	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 07:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A641FA178
+	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 07:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747641009; cv=none; b=MoVkMq4xfW4KYferBEQDUFisOdF5QU79tDPCIUOuZ1w8JqWXJKUBxw71SE4hhu89Kz7CpZtKiTTdzyR0H7LNC6JUCO2zhnuCnswjYUU/Eb4xCdYYfspxyxNzoYI2Iu8a61yc4SbBw8dzuQqBMUV7vgUjlYhzLngOuHyYYYvgRfo=
+	t=1747641526; cv=none; b=CfQlYJflGcFdxp1FsSap5Sbl9621Qt0oIwM8q5IxnrAPpdg+AQDUVbH07fEyWAEDkoXCfTEVynZ3EPJS7qhnfcWVDyADclJMbnCkcNKV3CYFd5gtKIOvwSK/IlDfWpGjBhsNU4MgPNhrjZu5AKaakhxACMkOmPcBwAi7ilzHnKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747641009; c=relaxed/simple;
-	bh=7AYBXBv9hJZfDoLFBvBon3/3G/8xWmXD3D7ANQ1f3jw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ACLoMVKhzTOeoeQsJS0EknPZln2PHq2Bz4rSq13G624zMOZSPiv+y1neYUKhZh6x69BCc/eqVzC7+gVyDWBXjXClldrcx0Q0ZJxO/rtz7lkBPrGa5QqO7dNJ+WwTE6bUO7OE0QFpWxEOsHCApix9ha0kDxX/Y9Q+z0wVUqXsQ78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=OXhGwQ3g; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1747641526; c=relaxed/simple;
+	bh=mOU7IsSOvAhYo6I0KK3r+Onvtvmk+4/SxHf4/3GGJCs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NocIif7FO2s5kPOnYBEZo6d5N8GzgdwOhZ9NmqKOzgmrlvn1RydNowDwOVIGQzquifo/ilee6AIy8g5g0bHeyyxioWuB9barfdLCoZWXTQ+uV3Mm4iIFMlF4Rml2cHXKc/FBDu3a3gMR/Zq0sAgZ3SaRWyDpNocCJdv8HtrHnmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fl8Ds6/C; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="OXhGwQ3g"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 8687726048;
-	Mon, 19 May 2025 09:50:04 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id ovcAx9lpnpgW; Mon, 19 May 2025 09:50:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1747641003; bh=7AYBXBv9hJZfDoLFBvBon3/3G/8xWmXD3D7ANQ1f3jw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=OXhGwQ3g2G/nirDRBc2kkgRofonOnnq3yruIY9oMnedr84KF1isk3GDb3lxpIjDZP
-	 IZIu28K9c0x6xyZllGhSb4W+YJqDNR1VWGd99D/jXR3nur78tQHQP2o1bXngKLRgif
-	 zwGnPACWX29107UwopKMoh09lX1mPKeXN7AtBwyJzqYG/R7+h7lvAWSVX01Sk1FJe+
-	 XIOdrroksMRxxdla4itzkO6RSfgwtEhNhZJziR4GDrt16v44naqm1h8VG1gL+tufD5
-	 /ttR+4tRCr60jvOV7usyJdHt8BQU6tG4ClZj37+5HWRjqJ5bKIUMAK5NzY5uPMrSy7
-	 p5fXrGV0cdbtw==
-Date: Mon, 19 May 2025 07:49:47 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH v2 3/4] LoongArch: dts: Add initial SoC devicetree for
- Loongson 2K0300
-Message-ID: <aCrim32dGexKJvXl@pie.lan>
-References: <20250518080356.43885-1-ziyao@disroot.org>
- <20250518080356.43885-4-ziyao@disroot.org>
- <CAMpQs4L7U=Mkw=pburiUpJLEm=tHeMOW+6PRhWPTMnOGHxFqyA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fl8Ds6/C"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5fbc736f0c7so6226961a12.2
+        for <loongarch@lists.linux.dev>; Mon, 19 May 2025 00:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747641523; x=1748246323; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5jOUNrOt8oUJ3qXNVdVJQs0v1Ku/Xv8o3RbXOBWWKp4=;
+        b=fl8Ds6/C/EmiT4KUcsi5+zNPYyD8e2KX5bqGchtbgvbMkuICbckTZuHrKh5dr0scZM
+         QtHwfiUFO2r8DnVS8jwoo82XavGNt2c8IUtQuJhGzEXO/uyHHzpe4rwXu/lf2aC72IwK
+         IuZTk9mFDnAx/R4sjIlb2jHfZiAd7yPYYb9eoPLgWGeSMP43kRpgnfld3Z2B3xzsd61B
+         +XUx0GwqZBBD4OjnBQ90QkzPOan71g8d47AgNukK+O0ZtwK8LcIhzxr/7J7PLA5XAdUf
+         KgxwsKisbU/78OWqBodYkjk/8WJXNYKO6BZ6kFrfDj3270ulW30RnJWgfXPzS1UI7mLV
+         PuQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747641523; x=1748246323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5jOUNrOt8oUJ3qXNVdVJQs0v1Ku/Xv8o3RbXOBWWKp4=;
+        b=lrc4Wu69YUwqHJ8WqUIrE2K0Dm8QO+wrfO6LZzMiYPqqaLv3LXJikQbsUSfUovsZ8/
+         GbmYy9lyHicU27tenfZkhFT//sT5Dttfo2GBzNt8aP8CFgcn5EeOaOfpQLY+DdyI2hyc
+         /aCTcZOSoZj6G9wzufzkAFUXw0ImVU9xOXH6QRc99YhJGzXYVphAt509nRb4gXqHqpzq
+         2gKEHyHKSm3u44UcE3Zks/d7WbxNB+pez4qQUtMU8BNa0QOrjignSCdMNucZNtkCqeUL
+         Jazl+BCFD2Mzis68SVPMvo3x94yuYDDNasWOAEwM3/NKXnePnQ8Wa6hCj8HM2V7ZHLs+
+         //nw==
+X-Forwarded-Encrypted: i=1; AJvYcCURrvfRS4iFQ2qWqYtGfrMFXYy1BscbXBpTjr7XOHX0o4fExw9oZv+JhAODLnPAvs0d3CLrr5c9p1g=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwSJviZY7JZ6LBAtb+T6MqR7o6SKS8wXLXIrRxtCQ1ZgSFPAf/q
+	P/lZWV2i+hPizDR9GKvWjfN+eVWdNib+uFFKVGYy4/61Nq6Cr7ymaX2JvueRNsJnXHTBe+oQ9YA
+	QDjYcy5U4O6OcVu/rCvl5C9u9W8DpEPk=
+X-Gm-Gg: ASbGncuUhLgYIuiyEJSQ4EJRj+Z8HlZkohovH62sRdKlCqiZaaxy29IBcCSpvwn0BOA
+	DRXo0i1GQpdCWyU6WxcdeopbVb4oSJEJgGU2dy5Z2pkET3phr+vxXNrsKFnWvYaqmdKq8Hv6yGp
+	OgdH4yAppv6i3yNQBo66waG7Y2O9YMOcXEfqHWuOYqH8U=
+X-Google-Smtp-Source: AGHT+IFBGC/Q7v8K+52sdgNsLjIb/o4fDl+jQjGNqG2kgSxX/P6VubQI1Lv144CKx7pzHNQ0FY/xbGhze7s+ZtcJHVA=
+X-Received: by 2002:a17:906:d542:b0:ad5:6b26:b1e2 with SMTP id
+ a640c23a62f3a-ad56b26b431mr307613866b.49.1747641522568; Mon, 19 May 2025
+ 00:58:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpQs4L7U=Mkw=pburiUpJLEm=tHeMOW+6PRhWPTMnOGHxFqyA@mail.gmail.com>
+References: <20250518080356.43885-1-ziyao@disroot.org> <20250518080356.43885-5-ziyao@disroot.org>
+In-Reply-To: <20250518080356.43885-5-ziyao@disroot.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 19 May 2025 15:58:29 +0800
+X-Gm-Features: AX0GCFvezx2cYlvQnH5iZD0p15ilC-Mldt_FcCKPiY4Jq4fpAcSkai4bZT1DS0U
+Message-ID: <CAMpQs4+GiZpLfSHx9k_QfWjXtyrNS4LS4dOuCKLbS-F8OhpoWg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] LoongArch: dts: Add initial devicetree for CTCISZ
+ Forever Pi
+To: Yao Zi <ziyao@disroot.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Aradhya Bhatia <a-bhatia1@ti.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 11:10:16AM +0800, Binbin Zhou wrote:
-> Hi Yao:
-> 
-> Thanks for your patch.
-> 
-> On Sun, May 18, 2025 at 4:05 PM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > Add SoC devicetree for 2K0300 SoC, which features one LA264 dual-issue
-> > core and targets embedded market. Only CPU core, legacy interrupt
-> > controllers and UARTs are defined for now.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  arch/loongarch/boot/dts/loongson-2k0300.dtsi | 184 +++++++++++++++++++
-> >  1 file changed, 184 insertions(+)
-> >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> >
-> > diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> > new file mode 100644
-> > index 000000000000..17974f793947
-> > --- /dev/null
-> > +++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> > @@ -0,0 +1,184 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> > + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +/ {
-> > +       compatible = "loongson,ls2k0300";
-> > +       #address-cells = <2>;
-> > +       #size-cells = <2>;
-> > +
-> > +       cpus {
-> > +               #address-cells = <1>;
-> > +               #size-cells = <0>;
-> > +
-> > +               cpu0: cpu@0 {
-> > +                       compatible = "loongson,la264";
-> > +                       reg = <0>;
-> > +                       device_type = "cpu";
-> > +                       clocks = <&cpu_clk>;
-> > +               };
-> > +
-> > +       };
-> > +
-> > +       cpuintc: interrupt-controller {
-> > +               compatible = "loongson,cpu-interrupt-controller";
-> > +               interrupt-controller;
-> > +               #interrupt-cells = <1>;
-> > +       };
-> > +
-> > +       cpu_clk: clock-1000m {
-> > +               compatible = "fixed-clock";
-> > +               clock-frequency = <1000000000>;
-> > +               #clock-cells = <0>;
-> > +       };
-> > +
-> > +       soc {
-> I found the following warning while doing dtbs_check, please check again:
-> 
->   DTC [C] arch/loongarch/boot/dts/ls2k0300-ctcisz-forever-pi.dtb
-> arch/loongarch/boot/dts/loongson-2k0300.dtsi:41.6-183.4: Warning
-> (unit_address_vs_reg): /soc: node has a reg or ranges property, but no
-> unit name
+Hi Yao:
 
-Oops, seems -Wunit_address_vs_reg is silent without W=1 specified.
-Commit 8654cb8d0371 (dtc: update warning settings for new bus and
-node/property name checks, 2017-03-21) shows it's a temporary workaround
-("Disable the new dtc warnings by default as there are 1000s").
+On Sun, May 18, 2025 at 4:05=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+>
+> Enable UART0 as it's the boot UART used by firmware.
+>
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  arch/loongarch/boot/dts/Makefile              |  1 +
+>  .../boot/dts/ls2k0300-ctcisz-forever-pi.dts   | 45 +++++++++++++++++++
 
-I'll the node to soc@10000000 in v3. Thanks for catching something I've
-never noticed before. Yanteng, is it okay for you to keep your
-reviewed-by tag with the change?
+A minor suggestion:
+As we can see, the existing dtsi/dts files are prefixed with
+=E2=80=9Cloongosn-2k=E2=80=9D, would it be possible to keep the filenames c=
+onsistent?
 
-> > +               compatible = "simple-bus";
-> > +               #address-cells = <2>;
-> > +               #size-cells = <2>;
-> > +               ranges = <0x00 0x10000000 0x00 0x10000000 0x0 0x10000000>,
-> > +                        <0x00 0x02000000 0x00 0x02000000 0x0 0x04000000>,
-> > +                        <0x00 0x40000000 0x00 0x40000000 0x0 0x40000000>;
-> > +
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz-forever-pi.dt=
+s
+>
+> diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/M=
+akefile
+> index 15d5e14fe418..9fff9e8be3de 100644
+> --- a/arch/loongarch/boot/dts/Makefile
+> +++ b/arch/loongarch/boot/dts/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>
+>  dtb-y =3D loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k200=
+0-ref.dtb
+> +dtb-y +=3D ls2k0300-ctcisz-forever-pi.dtb
+> diff --git a/arch/loongarch/boot/dts/ls2k0300-ctcisz-forever-pi.dts b/arc=
+h/loongarch/boot/dts/ls2k0300-ctcisz-forever-pi.dts
+> new file mode 100644
+> index 000000000000..a033c086461f
+> --- /dev/null
+> +++ b/arch/loongarch/boot/dts/ls2k0300-ctcisz-forever-pi.dts
+> @@ -0,0 +1,45 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "loongson-2k0300.dtsi"
+> +
+> +/ {
+> +       compatible =3D "ctcisz,forever-pi", "loongson,ls2k0300";
+> +       model =3D "CTCISZ Forever Pi";
+> +
+> +       aliases {
+> +               serial0 =3D &uart0;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path =3D "serial0:115200n8";
+> +       };
+> +
+> +       memory@200000 {
+> +               device_type =3D "memory";
+> +               reg =3D <0 0x00200000 0 0x0ee00000>,
+> +                     <0 0x90000000 0 0x10000000>;
+> +       };
+> +
+> +       reserved-memory {
+> +               #address-cells =3D <2>;
+> +               #size-cells =3D <2>;
+> +               ranges;
+> +
+> +               linux,cma {
+> +                       compatible =3D "shared-dma-pool";
+> +                       reusable;
+> +                       size =3D <0 0x02000000>;
+> +                       linux,cma-default;
+> +               };
+> +       };
+> +};
+> +
+> +&uart0 {
+> +       clock-frequency =3D <100000000>;
+> +       status =3D "okay";
+> +};
+> --
+> 2.49.0
+>
+>
 
-...
-
-> > 2.49.0
-> >
-> >
-> 
-> -- 
-> Thanks.
-> Binbin
-> 
-
-Thanks,
-Yao Zi
+--=20
+Thanks.
+Binbin
