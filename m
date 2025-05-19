@@ -1,41 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182B12139C4;
-	Sun, 18 May 2025 10:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0377A1F19A
+	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 01:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747564888; cv=none; b=U1Vf8WttcT6lsdLB/44J33ILLVS6MuOkW1wmjdi5Ibmf6m8SuKdrjBdERmMsRTIxAhApBNwlGqKt8qyA0YtXXbuE0lKMc65GoOEfy5fb39kWWJcEqD1DQ3hzdm8gxMNME/TYwSmZ6aiib1zU266yqDS6ApFmjQY8UoDyssEPFvM=
+	t=1747618467; cv=none; b=qUpVxI0H0+QHxBU/bZPW0iPYeKIoy5RbD5fP1sUyYJyD0h1MUKfUIY24XlFp85iAVbPfnS6JRPY9OjTSzxGxEEzlWWb7ydyYcf7WYONE8TSURp05M6HrBvk1eWFBpTF+afYytGSLrVl6Y93RyFZIfngAdwbxx3zrWq7puHmC89w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747564888; c=relaxed/simple;
-	bh=K1mH3WkoD9iwBulpaktyTTUh3Y+BeGp6zSlmrL77bGM=;
+	s=arc-20240116; t=1747618467; c=relaxed/simple;
+	bh=Qc1EXOp+VFVpo+P8qf5fZxdfoRyT6rf4SxmIwyBxt0o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oWDPfEA21uKd6yh2krbjN3IZY/1q998PjLOthKQCfyprrJQEBmQCJozBWlRGAmiPWhcLHHCsLbNQ2GtTS4Za7fp9rfDoKrxZ7dLmC3qCKo136XDamuiP8xksGMHQcwa+pAZmwwGRIM5DpJXTRX1/WxT6OxZpfXKAUfCmd6A+d5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDhWeEBU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=dQtfDOHUR9CGRVFyIC5/rz89PAGnEnPKC5cvFHAF6PRQZXTrHBQDPaFjTlKFKS+BAlWO9Vy8hyfSEZk/Te+WeUzS/UaF/KctFGAm5HeeeduORswV3Z6NAD2OT4frQMuzw854/cw4yYr/yO2ohLaa4VB//ID/FEAErTR0bnzsHZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TqBOW5oM; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDhWeEBU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB06C4CEEB;
-	Sun, 18 May 2025 10:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747564887;
-	bh=K1mH3WkoD9iwBulpaktyTTUh3Y+BeGp6zSlmrL77bGM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WDhWeEBUNcsNVnGcl7uQWmjvV0salNzUL8hdGVY+i9vAtQ5SS0kdmL3iEFpJu2PFl
-	 fXw6n9pfFxUWUVsrHlkJ9shV/5FJFEpRaXqYPDiDEAP0XgUWDHCzMDpbh388fnW3w/
-	 WXRk0TrCjBVpt+WudLEjHmLj0Jt8ZuIDztq9pxwRDEkApgYnmW2wOyczW7TbYwCXpf
-	 JprrqX/ja7lluea9I+ZjzrywB6ysdzf7NyLvbVfg65HmZXhoTi/9hftuU8eVv+LNx6
-	 Ws6x03/fp56NLw4ZX2R2RbSPtIrbWoy/Cr3vpTrgvPzAXu9fj28VIXAEuxmpcqHg5+
-	 WdWeM+yMnl21Q==
-Message-ID: <a06717d6-b0fd-43a7-93b4-0732427cc9dd@kernel.org>
-Date: Sun, 18 May 2025 12:41:22 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TqBOW5oM"
+Message-ID: <00f3ca2e-1794-411b-b868-1f0e44159e3c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747618461;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9MrpenPOGI8IOgPbQOKN/Gsm/XHAnt3uSEhFaolPauc=;
+	b=TqBOW5oMD0qd5K35IcIbvrISxq9nMyhRKq1kDkKDcry1enoHyqieL2gQFDkpD69hEPs10E
+	n0H2K0lbcahFy4iQQiQdCYrPjjM2iPWAP2WmLaAelkEJHNxK9P/f357CHqGlPvbtdXwg6b
+	oPUGndS/xPSHAERlkH/6r/9NJQR1oAU=
+Date: Mon, 19 May 2025 09:33:41 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] dt-bindings: LoongArch: Add CTCISZ Forever Pi
+Subject: Re: [PATCH v2 0/4] Initial support for CTCISZ Forever Pi
 To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
@@ -49,62 +48,53 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
  Kexy Biscuit <kexybiscuit@aosc.io>
 References: <20250518080356.43885-1-ziyao@disroot.org>
- <20250518080356.43885-3-ziyao@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250518080356.43885-3-ziyao@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250518080356.43885-1-ziyao@disroot.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 18/05/2025 10:03, Yao Zi wrote:
-> Forever Pi is an Loongson 2K0300-based development board produced by
-> CTCISZ. Features include,
+在 5/18/25 4:03 PM, Yao Zi 写道:
+> This series adds support for CTCISZ Forever Pi, which ships an Loongson
+> 2K0300 SoC and various peripherals. The vendor prefix and the board are
+> documented and basic SoC/board devicetrees are added.
+> 
+> I've successfully booted into console with vendor U-Boot, a bootlog
+> could be obtained here[1]. DTB and initramfs must be built into the
+> kernel as the vendor bootloader cannot pass them and upstream U-Boot
+> support for LoongArch is still WIP.
+> 
+> Thanks for your time and review.
+> 
+> [1]: https://gist.github.com/ziyao233/54ef900406876b5554f627d1ba0e130e
+> 
+> Changed from v1 ("Initial support for CTCISZ Ninenine Pi")
+> - Board binding:
+>    - Use "Forever Pi" instead of "Ninenine Pi" as translation of the
+>      board model
+> - SoC devicetree:
+>    - Move UART aliases to the board dt
+>    - Add the missing space in definition of liointc0
+> - Link to v1: https://lore.kernel.org/all/20250501044239.9404-2-ziyao@disroot.org/
 > 
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Yao Zi (4):
+>    dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
+>    dt-bindings: LoongArch: Add CTCISZ Forever Pi
+>    LoongArch: dts: Add initial SoC devicetree for Loongson 2K0300
+>    LoongArch: dts: Add initial devicetree for CTCISZ Forever Pi
+> 
+>   .../bindings/loongarch/loongson.yaml          |   5 +
+>   .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>   arch/loongarch/boot/dts/Makefile              |   1 +
+>   arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 184 ++++++++++++++++++
+>   .../boot/dts/ls2k0300-ctcisz-forever-pi.dts   |  45 +++++
+>   5 files changed, 237 insertions(+)
+For the patch sets.
 
-Best regards,
-Krzysztof
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+
+Thanks,
+Yanteng
