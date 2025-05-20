@@ -1,145 +1,87 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F66211710
-	for <loongarch@lists.linux.dev>; Tue, 20 May 2025 06:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4604025F994;
+	Tue, 20 May 2025 08:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747723785; cv=none; b=H+xmBUH4SCclUb5YqBLlkZAuzmHaZvU2yGt/YYlItn+bZLk4A95UadSZAwQqswk5/L3g/FwupPMn3MoVWIftk+OJoKk+pPG7sVNg6+kO4oPco+R4W3qPwtAeX2e9FIcjQAmqupwQeP0N8Sh40vfNk7i68JAqx+I85q7EqqSqdi4=
+	t=1747729384; cv=none; b=Tmid1apHxWZ7/23KSvvN8sTDkspRzT//R/hm0Uc3tcGvSHEef0iedGIwsd02zIcPuTRkOe6+rS9NiVPyfZ7+0Va1ZNJWc8xFSLCx3YPxkRdjtJE0Q/uq48hnJXT/SyLtponEK4DhZjxFRVoC04yjEeoiUlb7ggIPBE7Fq/QufGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747723785; c=relaxed/simple;
-	bh=QRhChKgCx1c5REOWDfJJeI9cbJ1pcG2pyDF3snU2xlM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XJkDV/nJsPGWDv/MoEvbFXUm76Qq4TuAq4WWg18CqBRw0C5th7qbAd6FAEHNP+eXxFLVKhuQvlfiL4mZJUeOCZvQiAyCyk0g8OVjXXqopEuMqzdwD/LStoN0u4Kl9kXZhq4sDViciIM7rvPMUYUo/7wWJMPHjwX/J22rz8/zUjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxWOECJixoNhPzAA--.65021S3;
-	Tue, 20 May 2025 14:49:38 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxn8UBJixorc_iAA--.56937S2;
-	Tue, 20 May 2025 14:49:37 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] LoongArch: Do not include larchintrin.h
-Date: Tue, 20 May 2025 14:49:36 +0800
-Message-ID: <20250520064936.32291-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1747729384; c=relaxed/simple;
+	bh=CbpYojFOx9hi6fdWZji6aYnRHJDIhGVyI2NkMIQwV6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j/7oiNib0+bRyBipmNu2kvZ5I9Nus3VB+4RR157uR1w9vvDWas16RkcREQCllbUpG+VfvCDWizjRBRISxoWfxaEnG0ALQBn7OwbKLWlCiGuzP9vlycZNi4Q/C5gC4x487lPon74Wfd/dT1a6PHe2Nh9xr5eBHBjON6GJEvKHeKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=jUr8jGEJ; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="jUr8jGEJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BwzWdX9UlxauyFitnj8K7HxgnGbZaQA6IrXxNXDLqjA=; b=jUr8jGEJ/jjaGU4sdJ49zJc1my
+	9YDku1GJGK1m+i+kdpEoy2TKpaM6cry7J8cWiCJq6/hRYq9V+VaJ3Ak7d0SR0Y8dKCPvx3pHvhYsb
+	yIAkI30B0XVGhcLEY830vHZ2K+rntaGKoFHM2IcyOCMMeQFyaUC2ymlDnKp7qKx1Ch7MoL0hp4quU
+	MIo0esmeu37Hl6Vk8/JQMBvR+1feNt2Whnbs25l8W5yRJyXOka8JxNrTaLEBeCYCVikaDNZICXLQq
+	uQvRh+svheAUforKZiL/OmwZZDr5LhRsrZrEZGsFAFFgOI8e5JpGm8jK3iCl3ojpl3m/WntnBUjZR
+	Y4VyYKpw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHIFW-0000000GDin-0OIq;
+	Tue, 20 May 2025 08:22:58 +0000
+Date: Tue, 20 May 2025 09:22:58 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
+Message-ID: <20250520082258.GC2023217@ZenIV>
+References: <20250520064707.31135-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxn8UBJixorc_iAA--.56937S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGrWkGw1DGrykXrWDCr1Utwc_yoW5tFWxpr
-	43Zr98trWUXF1fCwn2vF15Xrn8t3yvgw12vFy3W3yxur47JryIvrs5Grs8XF15Xa95Xr1v
-	gw1fZ34Fq3WDCabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7tx6UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520064707.31135-1-yangtiezhu@loongson.cn>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-larchintrin.h is a system header of compiler, include it in the
-kernel header may lead to the fatal error "'larchintrin.h' file
-not found".
+On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
+> When executing the bcc script, there exists the following error
+> on LoongArch and x86_64:
 
-There are two related cases so far:
+NOTABUG.  You can't require array sizes to contain no arithmetics,
+including sizeof().  Well, you can, but don't expect your requests
+to be satisfied.
 
-(1) When compiling samples/bpf, it has been fixed in the latest
-kernel [1].
+> How to reproduce:
+> 
+> git clone https://github.com/iovisor/bcc.git
+> mkdir bcc/build; cd bcc/build
+> cmake ..
+> make
+> sudo make install
+> sudo /usr/share/bcc/tools/filetop
 
-(2) When running bcc script, it has been fixed in the latest
-bcc [2] [3], like this:
+So fix the script.  Or report it to whoever wrote it, if it's
+not yours.
 
-$ /usr/share/bcc/tools/filetop
-In file included from <built-in>:4:
-In file included from /virtual/include/bcc/helpers.h:54:
-In file included from arch/loongarch/include/asm/page.h:7:
-In file included from arch/loongarch/include/asm/addrspace.h:9:
-arch/loongarch/include/asm/loongarch.h:11:10: fatal error: 'larchintrin.h' file not found
-   11 | #include <larchintrin.h>
-      |          ^~~~~~~~~~~~~~~
-1 error generated.
+I'm sorry, but we are NOT going to accomodate random parsers
+poking inside the kernel-internal headers and failing to
+actually parse the language they are written in.
 
-Maybe there are same errors for the other unknown projects, it is
-annoyance to add the include path each time. In order to avoid such
-errors once and for all, do not include larchintrin.h, just use the
-builtin functions directly.
+If you want to exfiltrate a constant, do what e.g. asm-offsets is
+doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
+and check what ends up in include/generated/asm-offsets.h - the
+latter is entirely produced out of the former.
 
-[1] https://git.kernel.org/torvalds/c/548762f05d19
-[2] https://github.com/iovisor/bcc/commit/8aa9f7072d53
-[3] https://github.com/iovisor/bcc/commit/af8258c21004
+The trick is to have inline asm that would spew a recognizable
+line when compiled into assembler, with the value(s) you want
+substituted into it.  See include/linux/kbuild.h for the macros.
 
-Cc: stable@vger.kernel.org # 6.6+
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/loongarch.h | 31 +++++++++++---------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 52651aa0e583..b33e4c9cb903 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -9,14 +9,6 @@
- #include <linux/linkage.h>
- #include <linux/types.h>
- 
--#ifndef __ASSEMBLY__
--#include <larchintrin.h>
--
--/* CPUCFG */
--#define read_cpucfg(reg) __cpucfg(reg)
--
--#endif /* !__ASSEMBLY__ */
--
- #ifdef __ASSEMBLY__
- 
- /* LoongArch Registers */
-@@ -173,19 +165,22 @@
- 
- #ifndef __ASSEMBLY__
- 
-+/* CPUCFG */
-+#define read_cpucfg(reg) __builtin_loongarch_cpucfg(reg)
-+
- /* CSR */
--#define csr_read32(reg) __csrrd_w(reg)
--#define csr_read64(reg) __csrrd_d(reg)
--#define csr_write32(val, reg) __csrwr_w(val, reg)
--#define csr_write64(val, reg) __csrwr_d(val, reg)
--#define csr_xchg32(val, mask, reg) __csrxchg_w(val, mask, reg)
--#define csr_xchg64(val, mask, reg) __csrxchg_d(val, mask, reg)
-+#define csr_read32(reg) __builtin_loongarch_csrrd_w(reg)
-+#define csr_read64(reg) __builtin_loongarch_csrrd_d(reg)
-+#define csr_write32(val, reg) __builtin_loongarch_csrwr_w(val, reg)
-+#define csr_write64(val, reg) __builtin_loongarch_csrwr_d(val, reg)
-+#define csr_xchg32(val, mask, reg) __builtin_loongarch_csrxchg_w(val, mask, reg)
-+#define csr_xchg64(val, mask, reg) __builtin_loongarch_csrxchg_d(val, mask, reg)
- 
- /* IOCSR */
--#define iocsr_read32(reg) __iocsrrd_w(reg)
--#define iocsr_read64(reg) __iocsrrd_d(reg)
--#define iocsr_write32(val, reg) __iocsrwr_w(val, reg)
--#define iocsr_write64(val, reg) __iocsrwr_d(val, reg)
-+#define iocsr_read32(reg) __builtin_loongarch_iocsrrd_w(reg)
-+#define iocsr_read64(reg) __builtin_loongarch_iocsrrd_d(reg)
-+#define iocsr_write32(val, reg) __builtin_loongarch_iocsrwr_w(val, reg)
-+#define iocsr_write64(val, reg) __builtin_loongarch_iocsrwr_d(val, reg)
- 
- #endif /* !__ASSEMBLY__ */
- 
--- 
-2.42.0
-
+Then you pick these lines out of generated your_file.s - no need
+to use python, sed(1) will do just fine.  See filechk_offsets in
+scripts/Makefile.lib for that part.
