@@ -1,87 +1,113 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4604025F994;
-	Tue, 20 May 2025 08:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961BD270EDE;
+	Tue, 20 May 2025 10:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747729384; cv=none; b=Tmid1apHxWZ7/23KSvvN8sTDkspRzT//R/hm0Uc3tcGvSHEef0iedGIwsd02zIcPuTRkOe6+rS9NiVPyfZ7+0Va1ZNJWc8xFSLCx3YPxkRdjtJE0Q/uq48hnJXT/SyLtponEK4DhZjxFRVoC04yjEeoiUlb7ggIPBE7Fq/QufGg=
+	t=1747736874; cv=none; b=jMrlSQTudQTZka/EROWrb186ps8Zla+40S7Ii7x84FkIPJuJXgjhBWGto4CyxLlI+BSDK+bM8VvG+K0+n1C7kUiCN9aDHgkjmxhutoejI2AHdeqPKbmvmgPjKses7AKFw7mHJN7jFZ3pwb/iWIJ+GAm6+Nyh5J2NDVN0pumj1wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747729384; c=relaxed/simple;
-	bh=CbpYojFOx9hi6fdWZji6aYnRHJDIhGVyI2NkMIQwV6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j/7oiNib0+bRyBipmNu2kvZ5I9Nus3VB+4RR157uR1w9vvDWas16RkcREQCllbUpG+VfvCDWizjRBRISxoWfxaEnG0ALQBn7OwbKLWlCiGuzP9vlycZNi4Q/C5gC4x487lPon74Wfd/dT1a6PHe2Nh9xr5eBHBjON6GJEvKHeKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=jUr8jGEJ; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1747736874; c=relaxed/simple;
+	bh=tDH99sUL7YDVc2eNE21Q0yZa7Foo6Ckjspz5MgPq3vk=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=koo7gVJMZndCm5SQ7OYmLWkJ7eaEh68lhE3SbLMjVI8DVv4vIc/k4+kG8lQko2fFO4AqG6zvdH6bIWpY6sZp7FG6Tf7TekoySBQdhipdwTkLevn7TJWEUefeH1EsbMC5qkggapYeZ1MWQJBdhwa7n5txQ6hwOL8CKyb4ZNzVM1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zxUWgRwh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="jUr8jGEJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BwzWdX9UlxauyFitnj8K7HxgnGbZaQA6IrXxNXDLqjA=; b=jUr8jGEJ/jjaGU4sdJ49zJc1my
-	9YDku1GJGK1m+i+kdpEoy2TKpaM6cry7J8cWiCJq6/hRYq9V+VaJ3Ak7d0SR0Y8dKCPvx3pHvhYsb
-	yIAkI30B0XVGhcLEY830vHZ2K+rntaGKoFHM2IcyOCMMeQFyaUC2ymlDnKp7qKx1Ch7MoL0hp4quU
-	MIo0esmeu37Hl6Vk8/JQMBvR+1feNt2Whnbs25l8W5yRJyXOka8JxNrTaLEBeCYCVikaDNZICXLQq
-	uQvRh+svheAUforKZiL/OmwZZDr5LhRsrZrEZGsFAFFgOI8e5JpGm8jK3iCl3ojpl3m/WntnBUjZR
-	Y4VyYKpw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHIFW-0000000GDin-0OIq;
-	Tue, 20 May 2025 08:22:58 +0000
-Date: Tue, 20 May 2025 09:22:58 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
-Message-ID: <20250520082258.GC2023217@ZenIV>
-References: <20250520064707.31135-1-yangtiezhu@loongson.cn>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zxUWgRwh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BD47C4CEEB;
+	Tue, 20 May 2025 10:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747736874;
+	bh=tDH99sUL7YDVc2eNE21Q0yZa7Foo6Ckjspz5MgPq3vk=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=zxUWgRwhtPlPvQemJ+CBSdyWjFAeB/LXwfik/BQVxBWEZrWiU7kRlLWSApANg5Yv9
+	 HnryEnPiREliLtVX2z//Rt+rzbkHTnxZ2xn9YRMi9FmqQMTfy5UQPDbLjsSo24/+dR
+	 QPZDYlRf1YSdNGpop4kPsjivZ9vSVM3VhcT24vGY=
+Subject: Patch "perf tools: Fix build error for LoongArch" has been added to the 6.14-stable tree
+To: gregkh@linuxfoundation.org,loongarch@lists.linux.dev,yangtiezhu@loongson.cn
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Tue, 20 May 2025 12:27:37 +0200
+In-Reply-To: <20250520063009.23504-1-yangtiezhu@loongson.cn>
+Message-ID: <2025052037-icky-flattery-a618@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520064707.31135-1-yangtiezhu@loongson.cn>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
-> When executing the bcc script, there exists the following error
-> on LoongArch and x86_64:
 
-NOTABUG.  You can't require array sizes to contain no arithmetics,
-including sizeof().  Well, you can, but don't expect your requests
-to be satisfied.
+This is a note to let you know that I've just added the patch titled
 
-> How to reproduce:
-> 
-> git clone https://github.com/iovisor/bcc.git
-> mkdir bcc/build; cd bcc/build
-> cmake ..
-> make
-> sudo make install
-> sudo /usr/share/bcc/tools/filetop
+    perf tools: Fix build error for LoongArch
 
-So fix the script.  Or report it to whoever wrote it, if it's
-not yours.
+to the 6.14-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-I'm sorry, but we are NOT going to accomodate random parsers
-poking inside the kernel-internal headers and failing to
-actually parse the language they are written in.
+The filename of the patch is:
+     perf-tools-fix-build-error-for-loongarch.patch
+and it can be found in the queue-6.14 subdirectory.
 
-If you want to exfiltrate a constant, do what e.g. asm-offsets is
-doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
-and check what ends up in include/generated/asm-offsets.h - the
-latter is entirely produced out of the former.
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
 
-The trick is to have inline asm that would spew a recognizable
-line when compiled into assembler, with the value(s) you want
-substituted into it.  See include/linux/kbuild.h for the macros.
 
-Then you pick these lines out of generated your_file.s - no need
-to use python, sed(1) will do just fine.  See filechk_offsets in
-scripts/Makefile.lib for that part.
+From yangtiezhu@loongson.cn  Tue May 20 11:10:01 2025
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Date: Tue, 20 May 2025 14:30:09 +0800
+Subject: perf tools: Fix build error for LoongArch
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Message-ID: <20250520063009.23504-1-yangtiezhu@loongson.cn>
+
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+There exists the following error when building perf tools on LoongArch:
+
+  CC      util/syscalltbl.o
+In file included from util/syscalltbl.c:16:
+tools/perf/arch/loongarch/include/syscall_table.h:2:10: fatal error: asm/syscall_table_64.h: No such file or directory
+    2 | #include <asm/syscall_table_64.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+This is because the generated syscall header is syscalls_64.h rather
+than syscall_table_64.h. The above problem was introduced from v6.14,
+then the header syscall_table.h has been removed from mainline tree
+in commit af472d3c4454 ("perf syscalltbl: Remove syscall_table.h"),
+just fix it only for the linux-6.14.y branch of stable tree.
+
+By the way, no need to fix the mainline tree and there is no upstream
+git id for this patch.
+
+How to reproduce:
+
+  git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+  cd linux && git checkout origin/linux-6.14.y
+  make JOBS=1 -C tools/perf
+
+Fixes: fa70857a27e5 ("perf tools loongarch: Use syscall table")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/perf/arch/loongarch/include/syscall_table.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/tools/perf/arch/loongarch/include/syscall_table.h
++++ b/tools/perf/arch/loongarch/include/syscall_table.h
+@@ -1,2 +1,2 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscall_table_64.h>
++#include <asm/syscalls_64.h>
+
+
+Patches currently in stable-queue which might be from yangtiezhu@loongson.cn are
+
+queue-6.14/loongarch-uprobes-remove-user_-en-dis-able_single_step.patch
+queue-6.14/loongarch-uprobes-remove-redundant-code-about-resume_era.patch
+queue-6.14/perf-tools-fix-build-error-for-loongarch.patch
