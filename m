@@ -1,130 +1,96 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77904210184
-	for <loongarch@lists.linux.dev>; Mon, 19 May 2025 18:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8D9A25D1E7
+	for <loongarch@lists.linux.dev>; Tue, 20 May 2025 06:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747681186; cv=none; b=bz/wqFKDmkJmJVVYDrY748BcnrXIB3SWv2y4XOWUNVuhkYtUURhr1DbJpJkz1bAmyXgA/hCY8S3wH2nFaLsV8Gv8jQ3Q8cNCVFQ2wTuMFrC82Ab1DiiLAbO8lwqJSvJhioHY2Q5P58iJrNMI9GdR0+kPgUc+EBqrgMLMoHr9Y8U=
+	t=1747722624; cv=none; b=jezRoWDPjyEQJ0JnEMbGD2oEXTFCM2Li4ZNcPIq5hRPmp3/SRKDyf9bJAzB1V+ATcBTZfdcsqULamEQRIRUHnGAk5zjBraBOLacCa4F5s+JIA58ryO8XxoKIgyIq58Ddy8lfzYENL4wrItz90YEYAZSRipWKEB285yDtttQUd3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747681186; c=relaxed/simple;
-	bh=fcRR+5EcSH2NnZRiq+ktBDbPi2pbVrwiv1JAzpr30/g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qoh2AJtOnSpNXSLK7+2J6JgAJ4O5ZNiMHr0PxEcf61wkTKgxIVEz34yeTK7cpolERspOT58IAi2pV1eQyq9sd675H2XmX5k5TugJbgWmGl10NPCqBnEmUQjQPOl38jKCR3w2tR1AmdfgdB46AmJip4J7KsCSwNvCA/8DV2TKd/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=N7zmZOKr; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="N7zmZOKr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=fcRR
-	+5EcSH2NnZRiq+ktBDbPi2pbVrwiv1JAzpr30/g=; b=N7zmZOKr6XTLjOmlTya8
-	qpS/cZfFj9/bODuxKLEJ0emekgGh3jPw9pOF397y0bUXwKq7buAu1QvQwc0Ye7pj
-	8Sg5Ek5BHup+uxJLXeECcFaJ3tBYFXP0Z7U0+WzcV+G45hE8si/ZvSwQzbd8PvXU
-	ez0V5Q1qRYZ/6m+t45zGmwhPeFGpKwxSVKGIzpPUQUuB1oYYaHaaHxKoDUFBaRtt
-	aUxFSbFudm8BI9U6TNjYQG4xO7UTn4oxHl1H/UQJ7hULuBuFfFdzeTqzDkoQ1j4k
-	zr4wKw8rRbwma44sPE0nF+jt3FaAI0IJhr0ezollsXBQEK7JMrLfnwLTzudUTIzg
-	hw==
-Received: (qmail 2605808 invoked from network); 19 May 2025 20:59:41 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 May 2025 20:59:41 +0200
-X-UD-Smtp-Session: l3s3148p1@gd37u4E1qNdZz6uL
-Date: Mon, 19 May 2025 20:59:41 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	s=arc-20240116; t=1747722624; c=relaxed/simple;
+	bh=pC7hcoBItm/p4ikdY5pstS8S6ncVBZrRXfm7pjZ61Iw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hC8Fi7QoHx8fFtHEss6cHP59pCPx9g+wSA6rHKzZa3tIf4RjpBqwdE7xBJC1yJLkseoQ1ZOtMKu45sSQh0lL+s5BqwpW5iL0OK1MvYlJ1vzyc3JQORaF9dzY/74UyvWkdYlNRXUxfOHWYAHCRKHiJ0krKAqeDTlfaQ/vC/4ljr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxaeB1ISxoDg3zAA--.1382S3;
+	Tue, 20 May 2025 14:30:14 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDxu8RxISxo+8fiAA--.53745S2;
+	Tue, 20 May 2025 14:30:10 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Rob Herring <robh@kernel.org>, Samuel Holland <samuel@sholland.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: Re: [PATCH 0/7] archs: use proper node names for GPIO based I2C
- busses
-Message-ID: <aCt_nTLapk0XdI4E@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-renesas-soc@vger.kernel.org,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	loongarch@lists.linux.dev,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Rob Herring <robh@kernel.org>, Samuel Holland <samuel@sholland.org>,
-	WANG Xuerui <kernel@xen0n.name>
-References: <20250519121512.5657-1-wsa+renesas@sang-engineering.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH for 6.14.y] perf tools: Fix build error for LoongArch
+Date: Tue, 20 May 2025 14:30:09 +0800
+Message-ID: <20250520063009.23504-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Miw4moGlT/mH/7E/"
-Content-Disposition: inline
-In-Reply-To: <20250519121512.5657-1-wsa+renesas@sang-engineering.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxu8RxISxo+8fiAA--.53745S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFy3tr4kKFy5XFWDArykXrc_yoW8Ar1UpF
+	sxC34DtFWrWryrArnrur1IgFy8Gw4DX342qFy0kr45ZwnIgr9IqF97Xas8KFyxWa9FgrW0
+	vrWSkay5GF48XabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZUUUUU=
 
+There exists the following error when building perf tools on LoongArch:
 
---Miw4moGlT/mH/7E/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+  CC      util/syscalltbl.o
+In file included from util/syscalltbl.c:16:
+tools/perf/arch/loongarch/include/syscall_table.h:2:10: fatal error: asm/syscall_table_64.h: No such file or directory
+    2 | #include <asm/syscall_table_64.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
 
-On Mon, May 19, 2025 at 02:15:00PM +0200, Wolfram Sang wrote:
-> A lot of boards across various archs have a superfluous '-' in their
-> node name for GPIO based I2C busses. 'dtbs_check' complains, so fix
-> them.
+This is because the generated syscall header is syscalls_64.h rather
+than syscall_table_64.h. The above problem was introduced from v6.14,
+then the header syscall_table.h has been removed from mainline tree
+in commit af472d3c4454 ("perf syscalltbl: Remove syscall_table.h"),
+just fix it only for the linux-6.14.y branch of stable tree.
 
-Please drop this series. We found out that upstream dt-schema is broken
-instead. I sent a fix.
+By the way, no need to fix the mainline tree and there is no upstream
+git id for this patch.
 
+How to reproduce:
 
---Miw4moGlT/mH/7E/
-Content-Type: application/pgp-signature; name="signature.asc"
+  git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+  cd linux && git checkout origin/linux-6.14.y
+  make JOBS=1 -C tools/perf
 
------BEGIN PGP SIGNATURE-----
+Fixes: fa70857a27e5 ("perf tools loongarch: Use syscall table")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/perf/arch/loongarch/include/syscall_table.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgrf5wACgkQFA3kzBSg
-Kba0/w/8DghRfAlopqU9war5gwpE26Ihxt5Q+oMhY5xMtWaQFNqTEc66w4HdQr3/
-29RR7JJnOaX3VKQ/WpSYysrZxG185wIlaNA8jb8NRcvdI5N0p06SVBaJbnFh2e05
-q3Y/EL5RCfyagvTQjCtTSZQPW0LjKIFM+EsxgWtZU2GgD8dQJMylLMgkgruViB95
-8nFoBB+wxTKUcOixJxztDXAmeGOBh5J7XnpKVU8rH7Uqp4YePBIXDtN761U4Mf5S
-PGHndrQ6+96AfztgD+X/jOLw3udkj8jM/PjkXRm00LRqk7bkC9C33WXIC4yk0G/X
-KLFBh6KOP8JB0VqUC4v3ijbxaeVnPQIEFbFwGtY/XRBftELqN9vMNIEQixTPciB/
-uBMbD2XacAwyCcmeDSEv2nqKm7oSuJ+mN5Zk6k1PnDbRFsrkq+fp+uWEyhoyybLD
-1viuWAWh/rzsPwfixjyPKy0zd9aHaV3hNT4sSzrqhCrZikEmcusq1LqLPlGLsYbx
-Mm1U9EU/JtSvJwQyUX8ZUWN5w1ndA/fzR9UDSZ9oE+cZCvnfV0PaSfuNZYH/ehVH
-UzwSkZrjklNhZ/RQQCZGxce7bCbMUbSg6UdYDn+qW+UHqXyzp7b9Uk6PDWtUtla0
-3GHameu2L+C947A6uzLxX0OJWCYJKdRqaghannzZwZibP0E5sxY=
-=J0Ho
------END PGP SIGNATURE-----
+diff --git a/tools/perf/arch/loongarch/include/syscall_table.h b/tools/perf/arch/loongarch/include/syscall_table.h
+index 9d0646d3455c..b53e31c15805 100644
+--- a/tools/perf/arch/loongarch/include/syscall_table.h
++++ b/tools/perf/arch/loongarch/include/syscall_table.h
+@@ -1,2 +1,2 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscall_table_64.h>
++#include <asm/syscalls_64.h>
+-- 
+2.42.0
 
---Miw4moGlT/mH/7E/--
