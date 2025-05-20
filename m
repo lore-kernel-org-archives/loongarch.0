@@ -1,31 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8D9A25D1E7
-	for <loongarch@lists.linux.dev>; Tue, 20 May 2025 06:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 940B5255250
+	for <loongarch@lists.linux.dev>; Tue, 20 May 2025 06:47:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747722624; cv=none; b=jezRoWDPjyEQJ0JnEMbGD2oEXTFCM2Li4ZNcPIq5hRPmp3/SRKDyf9bJAzB1V+ATcBTZfdcsqULamEQRIRUHnGAk5zjBraBOLacCa4F5s+JIA58ryO8XxoKIgyIq58Ddy8lfzYENL4wrItz90YEYAZSRipWKEB285yDtttQUd3w=
+	t=1747723641; cv=none; b=Ue3G5M+uxpswH8+2XN48wfvVtQ0VgPTuW7n+J/SbN7scYRcnkOfaLpjFGAOZ0mXdRX9kltQwH5bkovXr6aznsXR4je+E51fne9KudWvXHuQLOjWkgcGq8OlToCiTnlZq/egXIDzBnY+3sFEr5y09m68H/AqysZVM4luA/mNPAZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747722624; c=relaxed/simple;
-	bh=pC7hcoBItm/p4ikdY5pstS8S6ncVBZrRXfm7pjZ61Iw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hC8Fi7QoHx8fFtHEss6cHP59pCPx9g+wSA6rHKzZa3tIf4RjpBqwdE7xBJC1yJLkseoQ1ZOtMKu45sSQh0lL+s5BqwpW5iL0OK1MvYlJ1vzyc3JQORaF9dzY/74UyvWkdYlNRXUxfOHWYAHCRKHiJ0krKAqeDTlfaQ/vC/4ljr4=
+	s=arc-20240116; t=1747723641; c=relaxed/simple;
+	bh=fZkGjgB/UcgWxFUx/tS8ABoO9Kf/EdFNI8P4PGYnnbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VoPxjGTg+hdTi9bB3DFXlb5IgLUs4L/slcRyWUFsuemjqh8hpPa1OAdaO4MC9EvR8SBX2huQ5o4fLOPvBOn5QeEQkwu/4Zsk5akP2w42NRVpKw382wHDKMx+fbT3DvvLuFx3A8p3bqiPZgw3s7vBbyqjl+x6parpmOxCy/Zf2OI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxaeB1ISxoDg3zAA--.1382S3;
-	Tue, 20 May 2025 14:30:14 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxmnFyJSxoMBLzAA--.65282S3;
+	Tue, 20 May 2025 14:47:14 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxu8RxISxo+8fiAA--.53745S2;
-	Tue, 20 May 2025 14:30:10 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAxzMRsJSxobs7iAA--.56897S2;
+	Tue, 20 May 2025 14:47:08 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org,
+	bpf@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH for 6.14.y] perf tools: Fix build error for LoongArch
-Date: Tue, 20 May 2025 14:30:09 +0800
-Message-ID: <20250520063009.23504-1-yangtiezhu@loongson.cn>
+Subject: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
+Date: Tue, 20 May 2025 14:47:07 +0800
+Message-ID: <20250520064707.31135-1-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -34,63 +36,109 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxu8RxISxo+8fiAA--.53745S2
+X-CM-TRANSID:qMiowMAxzMRsJSxobs7iAA--.56897S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFy3tr4kKFy5XFWDArykXrc_yoW8Ar1UpF
-	sxC34DtFWrWryrArnrur1IgFy8Gw4DX342qFy0kr45ZwnIgr9IqF97Xas8KFyxWa9FgrW0
-	vrWSkay5GF48XabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF4kuF13ZF1xGw4xCry8JFc_yoW5Zw4UpF
+	n0yw4DKrWfCw4jya4DZ34fury3urykJ3WrCa9Fq3y8tF98JF98WrW7t3WY9ryxJrWSqa1a
+	yrWrAan8XF4DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
 	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
 	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
 	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
 	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
 	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZUUUUU=
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-There exists the following error when building perf tools on LoongArch:
+When executing the bcc script, there exists the following error
+on LoongArch and x86_64:
 
-  CC      util/syscalltbl.o
-In file included from util/syscalltbl.c:16:
-tools/perf/arch/loongarch/include/syscall_table.h:2:10: fatal error: asm/syscall_table_64.h: No such file or directory
-    2 | #include <asm/syscall_table_64.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
+Traceback (most recent call last):
+  File "/usr/share/bcc/tools/filetop", line 218, in <module>
+    counts = b.get_table("counts")
+  File "/usr/lib/python3.13/site-packages/bcc-0.34.0+a434ee50-py3.13.egg/bcc/__init__.py", line 658, in get_table
+    keytype = BPF._decode_table_type(json.loads(key_desc))
+                                     ~~~~~~~~~~^^^^^^^^^^
+  File "/usr/lib64/python3.13/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib64/python3.13/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.13/json/decoder.py", line 361, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ~~~~~~~~~~~~~~^^^^^^^^
+json.decoder.JSONDecodeError: Expecting ',' delimiter: line 1 column 179 (char 178)
 
-This is because the generated syscall header is syscalls_64.h rather
-than syscall_table_64.h. The above problem was introduced from v6.14,
-then the header syscall_table.h has been removed from mainline tree
-in commit af472d3c4454 ("perf syscalltbl: Remove syscall_table.h"),
-just fix it only for the linux-6.14.y branch of stable tree.
+Here is the related definition in tools/filetop.py of bcc:
 
-By the way, no need to fix the mainline tree and there is no upstream
-git id for this patch.
+// the key for the output summary
+struct info_t {
+    unsigned long inode;
+    dev_t dev;
+    dev_t rdev;
+    u32 pid;
+    u32 name_len;
+    char comm[TASK_COMM_LEN];
+    // de->d_name.name may point to de->d_iname so limit len accordingly
+    char name[DNAME_INLINE_LEN];
+    char type;
+};
+
+Here is the output of print(key_desc) in src/python/bcc/__init__.py
+of bcc, there is a missing ',' between "char" and "unsigned long" at
+column 179 for the "name" member.
+
+["info_t", [["inode","unsigned long"], ["dev","unsigned int"], ["rdev","unsigned int"], ["pid","unsigned int"], ["name_len","unsigned int"], ["comm","char", [16]], ["name","char""unsigned long", [40]], ["type","char"], ["__pad_end","char",[7]] ], "struct_packed"]
+
+In order to avoid such issues, define DNAME_INLINE_LEN as a number
+directly, there is only "char" and no "unsigned long" at column 179
+for the "name" member with this patch.
+
+["info_t", [["inode","unsigned long"], ["dev","unsigned int"], ["rdev","unsigned int"], ["pid","unsigned int"], ["name_len","unsigned int"], ["comm","char", [16]], ["name","char", [40]], ["type","char"], ["__pad_end","char",[7]] ], "struct_packed"]
 
 How to reproduce:
 
-  git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-  cd linux && git checkout origin/linux-6.14.y
-  make JOBS=1 -C tools/perf
+git clone https://github.com/iovisor/bcc.git
+mkdir bcc/build; cd bcc/build
+cmake ..
+make
+sudo make install
+sudo /usr/share/bcc/tools/filetop
 
-Fixes: fa70857a27e5 ("perf tools loongarch: Use syscall table")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- tools/perf/arch/loongarch/include/syscall_table.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/dcache.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/loongarch/include/syscall_table.h b/tools/perf/arch/loongarch/include/syscall_table.h
-index 9d0646d3455c..b53e31c15805 100644
---- a/tools/perf/arch/loongarch/include/syscall_table.h
-+++ b/tools/perf/arch/loongarch/include/syscall_table.h
-@@ -1,2 +1,2 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#include <asm/syscall_table_64.h>
-+#include <asm/syscalls_64.h>
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index e9f07e37dd6f..08e91738e3de 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -70,15 +70,17 @@ extern const struct qstr dotdot_name;
+  */
+ #ifdef CONFIG_64BIT
+ # define DNAME_INLINE_WORDS 5 /* 192 bytes */
++# define DNAME_INLINE_LEN 40
+ #else
+ # ifdef CONFIG_SMP
+ #  define DNAME_INLINE_WORDS 9 /* 128 bytes */
++#  define DNAME_INLINE_LEN 36
+ # else
+ #  define DNAME_INLINE_WORDS 11 /* 128 bytes */
++#  define DNAME_INLINE_LEN 44
+ # endif
+ #endif
+ 
+-#define DNAME_INLINE_LEN (DNAME_INLINE_WORDS*sizeof(unsigned long))
+ 
+ union shortname_store {
+ 	unsigned char string[DNAME_INLINE_LEN];
 -- 
 2.42.0
 
