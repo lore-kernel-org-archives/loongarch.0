@@ -1,113 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961BD270EDE;
-	Tue, 20 May 2025 10:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864032512CA
+	for <loongarch@lists.linux.dev>; Tue, 20 May 2025 17:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747736874; cv=none; b=jMrlSQTudQTZka/EROWrb186ps8Zla+40S7Ii7x84FkIPJuJXgjhBWGto4CyxLlI+BSDK+bM8VvG+K0+n1C7kUiCN9aDHgkjmxhutoejI2AHdeqPKbmvmgPjKses7AKFw7mHJN7jFZ3pwb/iWIJ+GAm6+Nyh5J2NDVN0pumj1wA=
+	t=1747760705; cv=none; b=DfH8Xt3fcMVHwYxUaYaZFifqb1TkZbuE9s5mwjE/jFXwlN0OnmVzNWp+n8dy6jZdk1VCYz5wMAmA3wEeBxG1HKlG07nbQxOiQzlmA2ORJIEl0b4iflCUHvjnN0BzNfZciCn7PRmnmD0/PUhnyieRaFa7talwjxWr/ORmqr9VFLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747736874; c=relaxed/simple;
-	bh=tDH99sUL7YDVc2eNE21Q0yZa7Foo6Ckjspz5MgPq3vk=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=koo7gVJMZndCm5SQ7OYmLWkJ7eaEh68lhE3SbLMjVI8DVv4vIc/k4+kG8lQko2fFO4AqG6zvdH6bIWpY6sZp7FG6Tf7TekoySBQdhipdwTkLevn7TJWEUefeH1EsbMC5qkggapYeZ1MWQJBdhwa7n5txQ6hwOL8CKyb4ZNzVM1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zxUWgRwh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747760705; c=relaxed/simple;
+	bh=vFLiIsSNJ+9LKlajAAEpNZdNi9SUrHki3vkFk8ViS1Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FS+fnhxLfcrl6WpJeFJJ9fGsOP2e6KN9JWfOmEIZGemwAQ0a50ceHqJYFyteT+9YqLl5WPJeapmn0e4VBJnwSdzV3gG3Pwlj8rPpsfpJcvE4s2C6ys35EgNbUATB9D8icJaqYA5ERYZa/DKKgummCIyumCagF/u+jrE0vJ8JEkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iN+LflFp; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zxUWgRwh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BD47C4CEEB;
-	Tue, 20 May 2025 10:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747736874;
-	bh=tDH99sUL7YDVc2eNE21Q0yZa7Foo6Ckjspz5MgPq3vk=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=zxUWgRwhtPlPvQemJ+CBSdyWjFAeB/LXwfik/BQVxBWEZrWiU7kRlLWSApANg5Yv9
-	 HnryEnPiREliLtVX2z//Rt+rzbkHTnxZ2xn9YRMi9FmqQMTfy5UQPDbLjsSo24/+dR
-	 QPZDYlRf1YSdNGpop4kPsjivZ9vSVM3VhcT24vGY=
-Subject: Patch "perf tools: Fix build error for LoongArch" has been added to the 6.14-stable tree
-To: gregkh@linuxfoundation.org,loongarch@lists.linux.dev,yangtiezhu@loongson.cn
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Tue, 20 May 2025 12:27:37 +0200
-In-Reply-To: <20250520063009.23504-1-yangtiezhu@loongson.cn>
-Message-ID: <2025052037-icky-flattery-a618@gregkh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iN+LflFp"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a36c2d3104so1747492f8f.1
+        for <loongarch@lists.linux.dev>; Tue, 20 May 2025 10:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747760702; x=1748365502; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aqfARpqDXwP7K8PtF8oJFF7SVaV8Ol18I4Q0qiBvla0=;
+        b=iN+LflFprg4OmN2LY1XqU0MNSH0AOvxneI85NQvKJEliq9JoRcMzVG+qa+sC3M/JdK
+         CBpFu+p5RU9igEjn47L1fXpB0jMB7y6WlTCUY2SdI6a4fPRAfwEUM0FTHZ+0pZ5GzgnB
+         e8rwm5njkHUy0g+C4gC1k7sTHhwd1yMXWWsBzSDRML094EBo6njZO945cQQKFUfpViGD
+         fZb8kIKxJ3anYIwZjRm35A3FXbDAKJvnPJOYnvyOjc/Qj2p4/ryKXlWpupBY+VSsi06r
+         YVTeb8/FU+atmFhGdAjrPE42UTeSNJGLvN5pRWFsHsmVFyA5HYkOjplvcg/JeVN6/B9L
+         JMLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747760702; x=1748365502;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aqfARpqDXwP7K8PtF8oJFF7SVaV8Ol18I4Q0qiBvla0=;
+        b=oJPS/QxjY2O6GSWo6yJuc+13xKHeg9zvD2ZeIbiBHngpkgK6qWMP1g0lQKqnALqL6t
+         QM4HRj14a3glQLcDsPALp5Us0ua+gA+vgDGObp1x3Mnhs7hvPpWXzDSEJBSyV6cQGt7l
+         kGJG7T+JSGa6XQqwEQ1TPNWMGdiv3df/EdIC8QakDJKDQ6TgKvzzj/7cxJIcT6tIaVAe
+         1yk3QLKKC3ZAp6kTtF6KjA3b+cDXn7C6Ovc4NnnADg4iVTkg3f0qpUMWXi17Z2HHProz
+         rtkWRY1qRGXdyZHWG4sGK709R9rwr1ACc8rsAS6cG2rD6rlyeHi/8t1Qw8sheX8fOeYp
+         WdOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvMIU0ZkzQ2o7rt3JZeJtSDjOUnf6xzjL0JuSF8hDn/fZuKsJCEuZ9QZ69Xx7sC3wB16dEBsxYfS8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz7nLXqBUbFAbhc0TODwTbcijPZcGfa+k2qR7/8lextL48L71Ak
+	5jIabm5P3Qy990w2XLGNY7vPC0FY5eE9p7+8+qHAe634KcOsi4H9abavcqJESAHzBYiq+0DzC84
+	h3AEStfYqTpui03Grn/BuavtLJKhSazs=
+X-Gm-Gg: ASbGnct32R7hodbirrXFXAvQsT2b0z5NEkkUnd9MoWYSOAJMaVssY1KZTtn3ikHPYge
+	7HfG0Ygzt+94F14kj+okaXYvdhikBz5IelT29qepiAPTo3FD/Kv7PJgu1ISReLxWvskYJ/gy92a
+	31bG1eWlZxDjrp2Ku1oQMupc9KW55mpJWVSMP+YvmRMiauoXjN
+X-Google-Smtp-Source: AGHT+IGoHLX8QBms8mFGB0R5FHXi2uOVwvd1emWDAK8vRyQoBWvaR0hqtnNxbsErK6XMC7RZZfSN4YoOe9vSv2a/T88=
+X-Received: by 2002:a5d:5f8d:0:b0:3a3:5b90:5f38 with SMTP id
+ ffacd0b85a97d-3a35c7dd76emr15608680f8f.0.1747760701511; Tue, 20 May 2025
+ 10:05:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+References: <20250520064707.31135-1-yangtiezhu@loongson.cn> <20250520082258.GC2023217@ZenIV>
+In-Reply-To: <20250520082258.GC2023217@ZenIV>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 20 May 2025 10:04:49 -0700
+X-Gm-Features: AX0GCFv2NKgzITaEikgjd3zpHj5FtmD5LjKgXj0aULr_MuBKSBnhhz5OfeXNA34
+Message-ID: <CAADnVQJW+qyq9wPD6RdoaZ8nLYX8N2+4Bhxyd19h6pdqNRMc3A@mail.gmail.com>
+Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 20, 2025 at 1:23=E2=80=AFAM Al Viro <viro@zeniv.linux.org.uk> w=
+rote:
+>
+> On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
+> > When executing the bcc script, there exists the following error
+> > on LoongArch and x86_64:
+>
+> NOTABUG.  You can't require array sizes to contain no arithmetics,
+> including sizeof().  Well, you can, but don't expect your requests
+> to be satisfied.
+>
+> > How to reproduce:
+> >
+> > git clone https://github.com/iovisor/bcc.git
+> > mkdir bcc/build; cd bcc/build
+> > cmake ..
+> > make
+> > sudo make install
+> > sudo /usr/share/bcc/tools/filetop
+>
+> So fix the script.  Or report it to whoever wrote it, if it's
+> not yours.
 
-This is a note to let you know that I've just added the patch titled
++1
 
-    perf tools: Fix build error for LoongArch
+> I'm sorry, but we are NOT going to accomodate random parsers
+> poking inside the kernel-internal headers and failing to
+> actually parse the language they are written in.
+>
+> If you want to exfiltrate a constant, do what e.g. asm-offsets is
+> doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
+> and check what ends up in include/generated/asm-offsets.h - the
+> latter is entirely produced out of the former.
+>
+> The trick is to have inline asm that would spew a recognizable
+> line when compiled into assembler, with the value(s) you want
+> substituted into it.  See include/linux/kbuild.h for the macros.
+>
+> Then you pick these lines out of generated your_file.s - no need
+> to use python, sed(1) will do just fine.  See filechk_offsets in
+> scripts/Makefile.lib for that part.
 
-to the 6.14-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+None of it is necessary.
 
-The filename of the patch is:
-     perf-tools-fix-build-error-for-loongarch.patch
-and it can be found in the queue-6.14 subdirectory.
+Tiezhu,
 
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From yangtiezhu@loongson.cn  Tue May 20 11:10:01 2025
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Tue, 20 May 2025 14:30:09 +0800
-Subject: perf tools: Fix build error for LoongArch
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Message-ID: <20250520063009.23504-1-yangtiezhu@loongson.cn>
-
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-
-There exists the following error when building perf tools on LoongArch:
-
-  CC      util/syscalltbl.o
-In file included from util/syscalltbl.c:16:
-tools/perf/arch/loongarch/include/syscall_table.h:2:10: fatal error: asm/syscall_table_64.h: No such file or directory
-    2 | #include <asm/syscall_table_64.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-
-This is because the generated syscall header is syscalls_64.h rather
-than syscall_table_64.h. The above problem was introduced from v6.14,
-then the header syscall_table.h has been removed from mainline tree
-in commit af472d3c4454 ("perf syscalltbl: Remove syscall_table.h"),
-just fix it only for the linux-6.14.y branch of stable tree.
-
-By the way, no need to fix the mainline tree and there is no upstream
-git id for this patch.
-
-How to reproduce:
-
-  git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-  cd linux && git checkout origin/linux-6.14.y
-  make JOBS=1 -C tools/perf
-
-Fixes: fa70857a27e5 ("perf tools loongarch: Use syscall table")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/perf/arch/loongarch/include/syscall_table.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/tools/perf/arch/loongarch/include/syscall_table.h
-+++ b/tools/perf/arch/loongarch/include/syscall_table.h
-@@ -1,2 +1,2 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#include <asm/syscall_table_64.h>
-+#include <asm/syscalls_64.h>
-
-
-Patches currently in stable-queue which might be from yangtiezhu@loongson.cn are
-
-queue-6.14/loongarch-uprobes-remove-user_-en-dis-able_single_step.patch
-queue-6.14/loongarch-uprobes-remove-redundant-code-about-resume_era.patch
-queue-6.14/perf-tools-fix-build-error-for-loongarch.patch
+bcc's tools/filetop.py is really old and obsolete.
+It's not worth fixing. I'd delete it.
+Use bcc's libbpf-tools/filetop instead.
