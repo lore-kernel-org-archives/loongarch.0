@@ -1,109 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93EE280306
-	for <loongarch@lists.linux.dev>; Tue, 20 May 2025 18:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FF025B1D8
+	for <loongarch@lists.linux.dev>; Tue, 20 May 2025 18:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765038; cv=none; b=qKddqpKjQ1+by8cUSFrkmLfjpjCqK60qleOu5IUuMNrvepNB+8jWXK9uwJ4n7qAkHal0IJVoE/W7luL1YxinwvNIIT31qaVB8b7xSJuCP/jADi0RdmFWTyj+U4s7e1fOmXIckvPWNpLptbgyy7K4Q60mHhS4Up4fKeYK9tNyYMs=
+	t=1747765582; cv=none; b=BZEYcHCrreBAS1ML6AVr8Hzk2JNVAdW9PS2ePL723pPPDDc3hqPSNTiC6BOwlsUdfEc5Y2ZMNPghkSLWK0YlaHg83iazmYiwgz44i4e5XsnE3haomYu6HswGJ49/W4sdIFdNgePGsMA/cRI01VOQEff3hHTnLojN7/FalbGoTCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765038; c=relaxed/simple;
-	bh=dbXx+MD2QCNjSXPlgp390XJDfrTSi22QXjpUAVmjpNs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PyrjiZqzqcPpNpc2HI6HYNeS24iMhPqNbt5IGplp1FzTWadZ7wPCDRx0hRjs6LDa6AI0+/1Ln/cKYJ0/dEHqH6sv2KjINdDIkmAiQVh/2ytJNOk2/fqhocJzGjJJlURdaBoJevDzCUSfmOF7NB9WtRb3J56tWMx1oSOrA50DbzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lUu/cM3j; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747765582; c=relaxed/simple;
+	bh=bXCaQrTI2i+zn9W34y3m9O2P4sfdV4wreHAf43KPX7k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r7R7z2LpQrVWEcjpjnrcuYxDorNRnMUrapdJrFXmWPryWujGx56goumsO0KwWU5mG/XbQxKn6CgU2r/Uq7lDAJmrdG5BCglO0Ued8Eci02yuuXJuAgjR21P9CXo3WTsLqbAQrDZMtiS2ZPeoumInAct2rpnAayzxNKJYyYnDz8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qFA8lg0I; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lUu/cM3j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747765037; x=1779301037;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dbXx+MD2QCNjSXPlgp390XJDfrTSi22QXjpUAVmjpNs=;
-  b=lUu/cM3juXcJQG/To0w+4IpGO9800DyNZzL3Xu5VK7LlXlM2Ju6Az4gp
-   UsH2VA4PBnKHtGS0miPBkfIagTTnHJG95fTL9VzclOsulRfBZcLFwl4Av
-   dCIS2Rxt2/tvXapxQvMeaKfNv5FuqYVXMtjTBvCL+yeqXKjtwbSfOKhux
-   iyfIIvnDu9lhXhup/fL3isfOMfEbsWy5TSu7/zZypXY4GKfFqamDYJ/5g
-   hZiYEhztjNcEMcoVC0rb7cOMIB4KrMyNfbOwa8OctI1lS9dV5MkqowbtF
-   JMzPkpFE91VoTTiWVKpCWXlkR4+8FHsyfjQ6uHzCib+6+yJEOUYYxDbRC
-   w==;
-X-CSE-ConnectionGUID: A6vtYLHqTqS3JEdnxbJPmw==
-X-CSE-MsgGUID: 5cWZgQvDTHSl4kweZ+GLJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49848044"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49848044"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:17:14 -0700
-X-CSE-ConnectionGUID: TrTu6ZqPT6ypv9Q1C4ThIQ==
-X-CSE-MsgGUID: 9XXQkyNdQSmcZPyPMEDAQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144514721"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa003.jf.intel.com with ESMTP; 20 May 2025 11:17:14 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	irogers@google.com,
-	mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: eranian@google.com,
-	ctshao@google.com,
-	tmricht@linux.ibm.com,
-	leo.yan@arm.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	loongarch@lists.linux.dev
-Subject: [PATCH V4 13/16] loongarch/perf: Remove driver-specific throttle support
-Date: Tue, 20 May 2025 11:16:41 -0700
-Message-Id: <20250520181644.2673067-14-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250520181644.2673067-1-kan.liang@linux.intel.com>
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qFA8lg0I"
+Message-ID: <b932c4b8-a45d-4da3-8ef9-f45055830609@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747765577;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SSGVVvj/o1r+R0aA03QBvXfE7OdysBvf0GHLfuZbsiY=;
+	b=qFA8lg0Is+yWtccFjqKbLszDszKgr/oTFUFbImylAMRe3MzsB8Z5i+3c3xpAKQ9uVU+rMk
+	Y8jfhVnqm0l87zJGVccerDPG8R0rY0CsVjJFZWtDUZA0O3sWLTDzfcg4A82hiMms4kcwdZ
+	1zllIkgzmz/36zOlPYu2KSJUmdAzEDU=
+Date: Tue, 20 May 2025 11:26:08 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
+Content-Language: en-GB
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Al Viro <viro@zeniv.linux.org.uk>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+ loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+References: <20250520064707.31135-1-yangtiezhu@loongson.cn>
+ <20250520082258.GC2023217@ZenIV>
+ <CAADnVQJW+qyq9wPD6RdoaZ8nLYX8N2+4Bhxyd19h6pdqNRMc3A@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <CAADnVQJW+qyq9wPD6RdoaZ8nLYX8N2+4Bhxyd19h6pdqNRMc3A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-The throttle support has been added in the generic code. Remove
-the driver-specific throttle support.
 
-Besides the throttle, perf_event_overflow may return true because of
-event_limit. It already does an inatomic event disable. The pmu->stop
-is not required either.
+On 5/20/25 1:04 AM, Alexei Starovoitov wrote:
+> On Tue, May 20, 2025 at 1:23 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>> On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
+>>> When executing the bcc script, there exists the following error
+>>> on LoongArch and x86_64:
+>> NOTABUG.  You can't require array sizes to contain no arithmetics,
+>> including sizeof().  Well, you can, but don't expect your requests
+>> to be satisfied.
+>>
+>>> How to reproduce:
+>>>
+>>> git clone https://github.com/iovisor/bcc.git
+>>> mkdir bcc/build; cd bcc/build
+>>> cmake ..
+>>> make
+>>> sudo make install
+>>> sudo /usr/share/bcc/tools/filetop
+>> So fix the script.  Or report it to whoever wrote it, if it's
+>> not yours.
+> +1
+>
+>> I'm sorry, but we are NOT going to accomodate random parsers
+>> poking inside the kernel-internal headers and failing to
+>> actually parse the language they are written in.
+>>
+>> If you want to exfiltrate a constant, do what e.g. asm-offsets is
+>> doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
+>> and check what ends up in include/generated/asm-offsets.h - the
+>> latter is entirely produced out of the former.
+>>
+>> The trick is to have inline asm that would spew a recognizable
+>> line when compiled into assembler, with the value(s) you want
+>> substituted into it.  See include/linux/kbuild.h for the macros.
+>>
+>> Then you pick these lines out of generated your_file.s - no need
+>> to use python, sed(1) will do just fine.  See filechk_offsets in
+>> scripts/Makefile.lib for that part.
+> None of it is necessary.
+>
+> Tiezhu,
+>
+> bcc's tools/filetop.py is really old and obsolete.
+> It's not worth fixing. I'd delete it.
+> Use bcc's libbpf-tools/filetop instead.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Bibo Mao <maobibo@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>
-Cc: loongarch@lists.linux.dev
----
- arch/loongarch/kernel/perf_event.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index f86a4b838dd7..8ad098703488 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -479,8 +479,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc, int idx,
- 	if (!loongarch_pmu_event_set_period(event, hwc, idx))
- 		return;
- 
--	if (perf_event_overflow(event, data, regs))
--		loongarch_pmu_disable_event(idx);
-+	perf_event_overflow(event, data, regs);
- }
- 
- static irqreturn_t pmu_handle_irq(int irq, void *dev)
--- 
-2.38.1
+Tiezhu, please check whether libbpf-tools/filetop satisfied your need or 
+not. Thanks!
 
