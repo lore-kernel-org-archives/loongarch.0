@@ -1,118 +1,261 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E2E2367AC
-	for <loongarch@lists.linux.dev>; Wed, 21 May 2025 09:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB75423506E
+	for <loongarch@lists.linux.dev>; Wed, 21 May 2025 09:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820252; cv=none; b=o40+hdtnlBaebNgzFsZOlFYFfuNo0UEy/ZrDbpjtAvyrQOoN96adq5uANAV/+eKF+h3fdb2cKbTKCXbzNsghXn2oWrl9G543B9nwIEIVRx82rZ6VqjoLtK5vGIiBkRo0wmpbhigbkWhZ/MPmTsSUDShq5rNR8IsUUyxDGG2eKYU=
+	t=1747820574; cv=none; b=krGeov0EMvkoren9f0L18VfzluSjgCMHf4iANjrQhnq0gwPh5i9xQJ0+ZeL4iz8j2W0SjGHE8A1JoxzmjZ0ilkDuExjfnY2i/VMhXCUaVZePySV5WeEFnw97ZMtyveHGu179x2TZbKqziuAyMmMCD1Dr2mYviFioPDZDfRn9tOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820252; c=relaxed/simple;
-	bh=N8yWSW5tYLd4q2UM0vWpfUGoZ8tTE6cCS0D8RWw2pbY=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=SKagGdrTuE6Y2uaxUq3CZZusz8JiVepdiqQlB/1V7Z4k9U4eZck5svPAI/ADcOh74luWnM2XwW47tNXBL7o8QG1mo4SaQJ0npkvhrTTBPcl249X6ahNfGexHCgDXZJ/0YuQFxU6zJOVgUkDkMgPD1J5Ki4oKatHbFt7Sba5hC2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxmnHVni1oMJv0AA--.2266S3;
-	Wed, 21 May 2025 17:37:25 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMAxzxvRni1o0QnlAA--.10296S3;
-	Wed, 21 May 2025 17:37:21 +0800 (CST)
-Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
-To: Yonghong Song <yonghong.song@linux.dev>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Al Viro <viro@zeniv.linux.org.uk>
-References: <20250520064707.31135-1-yangtiezhu@loongson.cn>
- <20250520082258.GC2023217@ZenIV>
- <CAADnVQJW+qyq9wPD6RdoaZ8nLYX8N2+4Bhxyd19h6pdqNRMc3A@mail.gmail.com>
- <b932c4b8-a45d-4da3-8ef9-f45055830609@linux.dev>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
- loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <9750057e-2efa-58e1-8739-290f1b2a9104@loongson.cn>
-Date: Wed, 21 May 2025 17:37:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1747820574; c=relaxed/simple;
+	bh=wNlIDxRKVIzfJNKE3Yzwp/kKjnqr+FQFZNDCSYg6NDw=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=a1Wup5DiplHDe7SqCpkG86V0qD2dwSk7OqtuXKtgR2mXwDqYgdGIVW98AmciEb3SeKzMi7yQCZxxUwXsl5FKgNzaZX6s52eI9200BkxsjLNXOEJunOgCdjZ1DlegfTK19STPCfVUttPOesbBfoxaxeABxkt0taJumitkKDSghyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=yCobIU2F; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="yCobIU2F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
+	s=sorc2401; t=1747820536;
+	bh=KRTKNd+TvCuHfC3gkUEnLHi6+nKNJuXiunK3jK4+BrQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=yCobIU2FUpmylBmdyzNsV5zYC9xXUc9YvzXc8EFXJJnPRjPJ69WngWIHv3p8b/s4N
+	 nMSqXx0lk29/O5nnRJSX8ExGBX9BopFgYR6kXdbINfeXhGT793H2hi6gY44lWYQl4e
+	 u2m3jKU8RCe57pJtPUEtTXBa/hXYh5DdP4n8XjsY=
+X-QQ-mid: zesmtpip3t1747820533t6a38a173
+X-QQ-Originating-IP: h7cXqADGaoiptxOnAXv2xTDzWJ8zV/2sswtxOYZPQA4=
+Received: from TYSPR06MB7158.apcprd06.prod.out ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 21 May 2025 17:42:11 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 8463398514593646057
+EX-QQ-RecipientCnt: 7
+From: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+CC: Jiaji Qin <jjtan24@m.fudan.edu.cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"syzkaller@googlegroups.com" <syzkaller@googlegroups.com>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
+Subject: KASAN: out-of-bounds Read in unwind_next_frame
+Thread-Topic: KASAN: out-of-bounds Read in unwind_next_frame
+Thread-Index: AQHbyZeyt4U4hIVkp0euwxnd9fTvtg==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date: Wed, 21 May 2025 09:42:11 +0000
+Message-ID:
+	<TYSPR06MB71586268DF7C558479DB7248F69FA@TYSPR06MB7158.apcprd06.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator:
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+msip_labels:
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <b932c4b8-a45d-4da3-8ef9-f45055830609@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxzxvRni1o0QnlAA--.10296S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFy7ZF1xKFWDWw1rXw17XFc_yoW8Zr48pa
-	45KanFkr4DKFWrAr9F9wsYvFyftws3tayYgas5Xr10y3s0vF1fGF4Ig3y5uF93Cw48Cw4j
-	9w1jqFy3Zr18AagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24SoDUUU
-	U
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NoS5wdqc5dY8u2JAu9efz37vyv6MCFypw4lDqwOrLVlFps1aVjEMVkuN
+	CL4FhKKyJnEqVvFSrmf6O0JQLSdqVcOwrXENsr4ITwirOlpVYKpH7NdfJ1kZvp/7HwLdMfw
+	Vzn6Gi3Wjga5c9H1nvyhRfqUn5RZXZgnav4ijdhu6LOpBKF6APVrwUJTRKaAoz4b10bN93i
+	I+JvCKySPy4kQMS7ZytJztwfa720dpQv5OdPbb/YLVJizFmpbfHM8LWHeEnlF9TBl5MD3Iw
+	QxdoTzYSaJjIWu/mOzFl6FLIDrC/XRAAOoP+zHHX3BAI0vpk6Z8KMN0UdTqKtmfFu4+T8Uu
+	HuGSDKewOz5GmHTT0bNbxOa8CSvswugkl/CJOTqQJbCZgZo2Zk3Q53E6wttn+irIH8BEQLZ
+	B3j5z9RSD+WDW5MblWQLmgEkikNg75iDFGGVQ9NPJ6/N5n5czQip5ef6tJOGU3Bp6LtLCne
+	31+H4XIBnXy9Q2PVsGw1CQZOQfiQU3IjRcLxzy2EK9uHCTFKjcWoixb6L1bAoZB7Hd87txx
+	OxiGTuQ+V1ASisrZMPxYg89k1y/ohay0BbSwzCkNZa/Zzy9h/5Y+LEjQMjuh1ZuiAHoQ/8D
+	YGwd9QPpz5iKftawDxGGCHq4aJCaaoeXajtok5UN9N8dD7Yloveu1j9c+1+rccOFSBk/nv0
+	63au4mYOUojnvwbyrkk76aGAQ9ct3SdfZKVqAK0iDiDQ61884v7Y+tfnuLvIZvRKgdfzuIP
+	iGxbjRv/HH+2mp8+11z3bylDYFlpLyY/iMLd/c659CD9RLA37uGQodZMJgdUCL8qJ5N7yys
+	zDtGQhjVQftolAgqp0xjwaHLaNuWP4FoOMB6lv/xRrVhG9aUtAfE11hDSdfFRV0TIhMJVZ5
+	6CqeQqJcCkwvKE3oEnAzTPfYGb/Ia2bRkf5soy13VfgVDa+4w36eFy9DId7fKC2iHEOuK4s
+	rLpsNKLFHVtNZ3FpjG03bxnnGfruLUfQEAog3ReppVV0aJrbqrveMKRDTZc+HtdVeI4t7/w
+	5HZ7cF+Q==
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-On 05/21/2025 02:26 AM, Yonghong Song wrote:
->
->
-> On 5/20/25 1:04 AM, Alexei Starovoitov wrote:
->> On Tue, May 20, 2025 at 1:23 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->>> On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
->>>> When executing the bcc script, there exists the following error
->>>> on LoongArch and x86_64:
->>> NOTABUG.  You can't require array sizes to contain no arithmetics,
->>> including sizeof().  Well, you can, but don't expect your requests
->>> to be satisfied.
->>>
->>>> How to reproduce:
->>>>
->>>> git clone https://github.com/iovisor/bcc.git
->>>> mkdir bcc/build; cd bcc/build
->>>> cmake ..
->>>> make
->>>> sudo make install
->>>> sudo /usr/share/bcc/tools/filetop
->>> So fix the script.  Or report it to whoever wrote it, if it's
->>> not yours.
->> +1
->>
->>> I'm sorry, but we are NOT going to accomodate random parsers
->>> poking inside the kernel-internal headers and failing to
->>> actually parse the language they are written in.
->>>
->>> If you want to exfiltrate a constant, do what e.g. asm-offsets is
->>> doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
->>> and check what ends up in include/generated/asm-offsets.h - the
->>> latter is entirely produced out of the former.
->>>
->>> The trick is to have inline asm that would spew a recognizable
->>> line when compiled into assembler, with the value(s) you want
->>> substituted into it.  See include/linux/kbuild.h for the macros.
->>>
->>> Then you pick these lines out of generated your_file.s - no need
->>> to use python, sed(1) will do just fine.  See filechk_offsets in
->>> scripts/Makefile.lib for that part.
->> None of it is necessary.
->>
->> Tiezhu,
->>
->> bcc's tools/filetop.py is really old and obsolete.
->> It's not worth fixing. I'd delete it.
->> Use bcc's libbpf-tools/filetop instead.
->
-> Tiezhu, please check whether libbpf-tools/filetop satisfied your need or
-> not. Thanks!
-
-Yes, it works well for me.
-
+Dear Maintainers,=0A=
+=0A=
+=0A=
+=0A=
+When using our customized Syzkaller to fuzz the latest Linux kernel, the fo=
+llowing crash (100th)was triggered.=0A=
+=0A=
+=0A=
+HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2=0A=
+git tree: upstream=0A=
+Output:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/100_KAS=
+AN%3A%20out-of-bounds%20Read%20in%20unwind_next_frame/100report.txt=0A=
+Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/=
+config.txt=0A=
+C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/1=
+00_KASAN%3A%20out-of-bounds%20Read%20in%20unwind_next_frame/100repro.c=0A=
+Syzlang reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15=
+-rc6/100_KASAN%3A%20out-of-bounds%20Read%20in%20unwind_next_frame/100repro.=
+txt=0A=
+=0A=
+=0A=
+The issue might occur in the stack_access_ok function call, which attempts =
+to validate whether an address is within a valid stack range. In theASAN re=
+port, we see an out-of-bounds read of size 2, corresponding to the address =
+ffff c90013b67600 Note the on_stack function within the stack_access_ok fun=
+ction, which triggers the out-of-bounds read when checking if an address is=
+ within the stack range, and invalid address is calculated when preparing t=
+o execute p =3D (unsigned long *)(state->sp   orc->ra_offset); or regs =3D =
+(struct pt_regsstate->sp;=0A=
+Most likely, a pointer calculation in the unwind_next_frame function result=
+ed in an invalid address, and KASAN detected the out-of- access when the co=
+de tried to read data via that address.=0A=
+We have reproduced this issue several times on 6.15-rc6 again.=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+If you fix this issue, please add the following tag to the commit:=0A=
+Reported-by: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin <jjtan24@m.fudan.edu.=
+cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>=0A=
+=0A=
+=0A=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+BUG: KASAN: out-of-bounds in unwind_next_frame+0xd87/0x1c20=0A=
+Read of size 2 at addr ffffc90013b67600 by task kworker/3:3/14224=0A=
+=0A=
+CPU: 3 UID: 0 PID: 14224 Comm: kworker/3:3 Not tainted 6.15.0-rc6 #1 PREEMP=
+T(full) =0A=
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1=
+.1 04/01/2014=0A=
+Workqueue: events console_callback=0A=
+Call Trace:=0A=
+ <IRQ>=0A=
+ dump_stack_lvl+0x116/0x1b0=0A=
+ print_report+0xc1/0x630=0A=
+ kasan_report+0x96/0xd0=0A=
+ unwind_next_frame+0xd87/0x1c20=0A=
+ show_trace_log_lvl+0x20c/0x380=0A=
+ sched_show_task+0x410/0x660=0A=
+ show_state_filter+0xf7/0x390=0A=
+ k_spec+0xeb/0x140=0A=
+ kbd_event+0xdd9/0x3930=0A=
+ input_handle_events_default+0x10a/0x1a0=0A=
+ input_pass_values+0x68d/0x870=0A=
+ input_event_dispose+0x4db/0x640=0A=
+ input_handle_event+0x122/0xde0=0A=
+ input_event+0x83/0xb0=0A=
+ hidinput_hid_event+0xa7b/0x2040=0A=
+ hid_process_event+0x4a6/0x5d0=0A=
+ hid_input_array_field+0x4dc/0x670=0A=
+ hid_report_raw_event+0xa53/0x1230=0A=
+ __hid_input_report.constprop.0+0x33d/0x440=0A=
+ hid_irq_in+0x35d/0x850=0A=
+ __usb_hcd_giveback_urb+0x2e5/0x6b0=0A=
+ usb_hcd_giveback_urb+0x391/0x450=0A=
+ dummy_timer+0x124b/0x3580=0A=
+ __hrtimer_run_queues+0x1af/0xc60=0A=
+ hrtimer_run_softirq+0x17f/0x2e0=0A=
+ handle_softirqs+0x1be/0x850=0A=
+ irq_exit_rcu+0xfd/0x150=0A=
+ sysvec_apic_timer_interrupt+0xa8/0xc0=0A=
+ </IRQ>=0A=
+ <TASK>=0A=
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20=0A=
+RIP: 0010:bit_putcs+0x5f4/0xd80=0A=
+Code: 41 89 c5 e8 7e 27 9a fc 48 89 ef 48 83 c5 01 48 b9 00 00 00 00 00 fc =
+ff df 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 0f b6 04 08 <38> d0 7f 08 84 c=
+0 0f 85 24 06 00 00 4c 89 e0 4c 89 e1 0f b6 55 ff=0A=
+RSP: 0018:ffffc9000865f838 EFLAGS: 00000202=0A=
+RAX: 0000000000000000 RBX: ffff8880430a1822 RCX: dffffc0000000000=0A=
+RDX: 0000000000000007 RSI: ffff8880774d8000 RDI: ffffffff8bf73a3f=0A=
+RBP: ffffffff8bf73a40 R08: 0000000000000000 R09: 0000000000000000=0A=
+R10: fffffbfff2107af3 R11: ffffffff9083d79f R12: ffff8880430a1fa2=0A=
+R13: 0000000000000000 R14: ffff888028d06000 R15: 0000000000000000=0A=
+ fbcon_putcs+0x37a/0x4b0=0A=
+ do_update_region+0x2e5/0x3f0=0A=
+ redraw_screen+0x62d/0x750=0A=
+ complete_change_console+0x110/0x3b0=0A=
+ change_console+0x1a5/0x2e0=0A=
+ console_callback+0x1a1/0x4c0=0A=
+ process_scheduled_works+0x5de/0x1bd0=0A=
+ worker_thread+0x5a9/0xd10=0A=
+ kthread+0x447/0x8a0=0A=
+ ret_from_fork+0x48/0x80=0A=
+ ret_from_fork_asm+0x1a/0x30=0A=
+ </TASK>=0A=
+=0A=
+The buggy address belongs to the virtual mapping at=0A=
+ [ffffc90013b60000, ffffc90013b69000) created by:=0A=
+ kernel_clone+0xea/0xee0=0A=
+=0A=
+The buggy address belongs to the physical page:=0A=
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x51f4d=
+=0A=
+memcg:ffff888000901b02=0A=
+flags: 0x4fff00000000000(node=3D1|zone=3D1|lastcpupid=3D0x7ff)=0A=
+raw: 04fff00000000000 0000000000000000 dead000000000122 0000000000000000=0A=
+raw: 0000000000000000 0000000000000000 00000001ffffffff ffff888000901b02=0A=
+page dumped because: kasan: bad access detected=0A=
+page_owner tracks the page as allocated=0A=
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x2dc2(GFP=
+_KERNEL|__GFP_HIGHMEM|__GFP_ZERO|__GFP_NOWARN), pid 708, tgid 708 (kworker/=
+u19:2), ts 86243875317, free_ts 0=0A=
+ prep_new_page+0x1b0/0x1e0=0A=
+ get_page_from_freelist+0x1c80/0x3a40=0A=
+ __alloc_frozen_pages_noprof+0x2fd/0x6d0=0A=
+ alloc_pages_mpol+0x209/0x550=0A=
+ alloc_pages_noprof+0x1c/0x250=0A=
+ __vmalloc_node_range_noprof+0xa75/0x13a0=0A=
+ __vmalloc_node_noprof+0x73/0xa0=0A=
+ copy_process+0x439c/0x77f0=0A=
+ kernel_clone+0xea/0xee0=0A=
+ user_mode_thread+0xc5/0x110=0A=
+ call_usermodehelper_exec_work+0xd0/0x180=0A=
+ process_scheduled_works+0x5de/0x1bd0=0A=
+ worker_thread+0x5a9/0xd10=0A=
+ kthread+0x447/0x8a0=0A=
+ ret_from_fork+0x48/0x80=0A=
+ ret_from_fork_asm+0x1a/0x30=0A=
+page_owner free stack trace missing=0A=
+=0A=
+Memory state around the buggy address:=0A=
+ ffffc90013b67500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
+ ffffc90013b67580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
+>ffffc90013b67600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
+                   ^=0A=
+ ffffc90013b67680: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
+ ffffc90013b67700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+----------------=0A=
+Code disassembly (best guess):=0A=
+   0:	41 89 c5             	mov    %eax,%r13d=0A=
+   3:	e8 7e 27 9a fc       	callq  0xfc9a2786=0A=
+   8:	48 89 ef             	mov    %rbp,%rdi=0A=
+   b:	48 83 c5 01          	add    $0x1,%rbp=0A=
+   f:	48 b9 00 00 00 00 00 	movabs $0xdffffc0000000000,%rcx=0A=
+  16:	fc ff df=0A=
+  19:	48 89 f8             	mov    %rdi,%rax=0A=
+  1c:	48 89 fa             	mov    %rdi,%rdx=0A=
+  1f:	48 c1 e8 03          	shr    $0x3,%rax=0A=
+  23:	83 e2 07             	and    $0x7,%edx=0A=
+  26:	0f b6 04 08          	movzbl (%rax,%rcx,1),%eax=0A=
+* 2a:	38 d0                	cmp    %dl,%al <-- trapping instruction=0A=
+  2c:	7f 08                	jg     0x36=0A=
+  2e:	84 c0                	test   %al,%al=0A=
+  30:	0f 85 24 06 00 00    	jne    0x65a=0A=
+  36:	4c 89 e0             	mov    %r12,%rax=0A=
+  39:	4c 89 e1             	mov    %r12,%rcx=0A=
+  3c:	0f b6 55 ff          	movzbl -0x1(%rbp),%edx=0A=
+=0A=
+=0A=
+thanks,=0A=
+Kun Hu=
