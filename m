@@ -1,104 +1,177 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FF025B1D8
-	for <loongarch@lists.linux.dev>; Tue, 20 May 2025 18:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70A222B5AA
+	for <loongarch@lists.linux.dev>; Wed, 21 May 2025 02:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765582; cv=none; b=BZEYcHCrreBAS1ML6AVr8Hzk2JNVAdW9PS2ePL723pPPDDc3hqPSNTiC6BOwlsUdfEc5Y2ZMNPghkSLWK0YlaHg83iazmYiwgz44i4e5XsnE3haomYu6HswGJ49/W4sdIFdNgePGsMA/cRI01VOQEff3hHTnLojN7/FalbGoTCg=
+	t=1747793692; cv=none; b=BZFv3RUxJMrF97JpFbBkVXSxhZ0cO4x3FZnZ8seoeaaZpF8h5XbFgTRvSr5g8lWD1fjMyhS/RjVHGCgHkA4aAwUX6aSu6pEawbANb45e4tuCZ5jDl1Cu6LgTPTHyiO0rQO7JJWwTzELysBdfLRN60UaFMj/CYPbS7DoQeD6LFug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765582; c=relaxed/simple;
-	bh=bXCaQrTI2i+zn9W34y3m9O2P4sfdV4wreHAf43KPX7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r7R7z2LpQrVWEcjpjnrcuYxDorNRnMUrapdJrFXmWPryWujGx56goumsO0KwWU5mG/XbQxKn6CgU2r/Uq7lDAJmrdG5BCglO0Ued8Eci02yuuXJuAgjR21P9CXo3WTsLqbAQrDZMtiS2ZPeoumInAct2rpnAayzxNKJYyYnDz8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qFA8lg0I; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747793692; c=relaxed/simple;
+	bh=w6seKvwXm8BziGL08hbBiamW41TIhjfuzmyRfEKlM/o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sP5UQDFCNzCexg8v7rKs5Bu+wbzzR+Ld2mXUyvv+Fqn67MRu5TyAfB9nZsO6lkXRHq7xQu6cec8uql1DE2uyW99RL7NVUA8a8TKrBIqgKhsb6OcXy3MDc+kOW93jTSy3N3HMffGRAZuVnTe0f0TJdXYNHR65pFEYVybDAXEqEco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nKTFvtPA; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qFA8lg0I"
-Message-ID: <b932c4b8-a45d-4da3-8ef9-f45055830609@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747765577;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SSGVVvj/o1r+R0aA03QBvXfE7OdysBvf0GHLfuZbsiY=;
-	b=qFA8lg0Is+yWtccFjqKbLszDszKgr/oTFUFbImylAMRe3MzsB8Z5i+3c3xpAKQ9uVU+rMk
-	Y8jfhVnqm0l87zJGVccerDPG8R0rY0CsVjJFZWtDUZA0O3sWLTDzfcg4A82hiMms4kcwdZ
-	1zllIkgzmz/36zOlPYu2KSJUmdAzEDU=
-Date: Tue, 20 May 2025 11:26:08 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKTFvtPA"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2d5e5e21b92so2590811fac.0
+        for <loongarch@lists.linux.dev>; Tue, 20 May 2025 19:14:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747793690; x=1748398490; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4mJmo0Dl0cGeVj4tSJVjs9Ug1bxfEHf17wTTWjcn4i4=;
+        b=nKTFvtPAB79JKhVxzzQifpnVM0Pc8VxEX3B9vXrTYpGuwBy7TN+0NDQgVRVwsojIDR
+         uSSsXRyFaAPrkvtyO0q0N+iR0YczqjDcSMsNhe5woXUgYSYg3g8EFWjiI4Nf5oiCKGum
+         QH9YM4JjU5EDKH13ESWszl3hYlguUMppT/dpF/8wRv7tBcm+9y42T7biEuEKFD1HX1zE
+         ws4+DoQL2HJdAzllgqFa/JnjRZwHNjnjVRYMDvz01d68GyDqui8yLESkhIgdbJd+wx6j
+         TiAhz8jN/OtDl2WGt8RrAdx0mFwdBEqBAMuRb5XxehqDyexbUAU5QWzVBCio2IBkph5K
+         5zMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747793690; x=1748398490;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4mJmo0Dl0cGeVj4tSJVjs9Ug1bxfEHf17wTTWjcn4i4=;
+        b=nfXV/NfYwOdfqSYkIuc8kST3Kz+yPuM7H/HA3AJS3J8QjP8HhBqXQ2iNVFOSmRwy0z
+         GLWI2n4g1XoULHQkhBQ0LC15lsac2rcSry+wpswrR9k1QRwzpW6sGv+QlZdOGp1MRSLw
+         1FbJGDHjzWX4mEsT5k2yn/YdB49gidYyupxRwho47L6BWJJ9WrY2t0Rfy4HWNyWxhWCA
+         a3PaU/qxlUVcH1YewZu1bwTbWFNlHGni1bZLJAcaXbkPtSGkXUgftpJNm5BKi+rN5vhZ
+         R4zQOnkTDbZ1IQF6teh900E45dZIgfUrdoh1k2OHTZzcTO5rePYtKuVoew4qJlSc8f7I
+         KJ/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUr3N7Vm5bIDwz7sDkZ2PMEwUy9MpSgXFeSVp+EnVfZ+FIZvEd4u2l7Ih7ae0rQVG2LMzEN3TzqHIc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyAFhMPeZtRJyDM9pfn4o1yfg6gaSdJ3yP/odg99nFgaBbXey9Z
+	Jh3Q67jbe8fgA5OblcgaGacVVqCboEBd/mB1IwhN5GqVGMki7wLzKTn7dEA4wQtbtPbihFjg5v5
+	JYjRQrhNithCESye3+Dx4hHeEZ9XDdTE=
+X-Gm-Gg: ASbGncs/3hA81xoIBH0Yrnl0grppySAKQBmtoF6B4zMdixeBLW8CDAZOK3gada45bnp
+	ifgapZhHskSOoC5XXUG6MvTaF7qqgMhJXvAhrM8WHIo4bmanhS0pv6hutEM47sy6iN4ya2rysVF
+	kMX5aPe9Tdz2EokueM7oc9UzueV/sMLPhQnWzNPYfIKg==
+X-Google-Smtp-Source: AGHT+IHuYLJczKqbxCXpT3fgGVae3G+zGZTTNY6ZCdNSKLk4ZVUQDhLPinU2zcuOeeLOEBKRRtajq324BfJXjBENvkA=
+X-Received: by 2002:a05:6870:9107:b0:2df:7cb3:7530 with SMTP id
+ 586e51a60fabf-2e3c1ca491amr8315649fac.22.1747793689962; Tue, 20 May 2025
+ 19:14:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
-Content-Language: en-GB
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Al Viro <viro@zeniv.linux.org.uk>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
- loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-References: <20250520064707.31135-1-yangtiezhu@loongson.cn>
- <20250520082258.GC2023217@ZenIV>
- <CAADnVQJW+qyq9wPD6RdoaZ8nLYX8N2+4Bhxyd19h6pdqNRMc3A@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <CAADnVQJW+qyq9wPD6RdoaZ8nLYX8N2+4Bhxyd19h6pdqNRMc3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250520064936.32291-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20250520064936.32291-1-yangtiezhu@loongson.cn>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Wed, 21 May 2025 10:14:39 +0800
+X-Gm-Features: AX0GCFug5F17gutXJTiQNZoAprTF2DD1xq-yLOXz4NGnhLZrI44eVhn0fv9RmFI
+Message-ID: <CAEyhmHSkZmV3B6y8eqkESGH_EAXCER64JJ9noz=KsX64w74mFQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] LoongArch: Do not include larchintrin.h
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 5/20/25 1:04 AM, Alexei Starovoitov wrote:
-> On Tue, May 20, 2025 at 1:23 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->> On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
->>> When executing the bcc script, there exists the following error
->>> on LoongArch and x86_64:
->> NOTABUG.  You can't require array sizes to contain no arithmetics,
->> including sizeof().  Well, you can, but don't expect your requests
->> to be satisfied.
->>
->>> How to reproduce:
->>>
->>> git clone https://github.com/iovisor/bcc.git
->>> mkdir bcc/build; cd bcc/build
->>> cmake ..
->>> make
->>> sudo make install
->>> sudo /usr/share/bcc/tools/filetop
->> So fix the script.  Or report it to whoever wrote it, if it's
->> not yours.
-> +1
+On Tue, May 20, 2025 at 2:49=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
->> I'm sorry, but we are NOT going to accomodate random parsers
->> poking inside the kernel-internal headers and failing to
->> actually parse the language they are written in.
->>
->> If you want to exfiltrate a constant, do what e.g. asm-offsets is
->> doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
->> and check what ends up in include/generated/asm-offsets.h - the
->> latter is entirely produced out of the former.
->>
->> The trick is to have inline asm that would spew a recognizable
->> line when compiled into assembler, with the value(s) you want
->> substituted into it.  See include/linux/kbuild.h for the macros.
->>
->> Then you pick these lines out of generated your_file.s - no need
->> to use python, sed(1) will do just fine.  See filechk_offsets in
->> scripts/Makefile.lib for that part.
-> None of it is necessary.
+> larchintrin.h is a system header of compiler, include it in the
+> kernel header may lead to the fatal error "'larchintrin.h' file
+> not found".
 >
-> Tiezhu,
+> There are two related cases so far:
 >
-> bcc's tools/filetop.py is really old and obsolete.
-> It's not worth fixing. I'd delete it.
-> Use bcc's libbpf-tools/filetop instead.
+> (1) When compiling samples/bpf, it has been fixed in the latest
+> kernel [1].
+>
+> (2) When running bcc script, it has been fixed in the latest
+> bcc [2] [3], like this:
+>
+> $ /usr/share/bcc/tools/filetop
+> In file included from <built-in>:4:
+> In file included from /virtual/include/bcc/helpers.h:54:
+> In file included from arch/loongarch/include/asm/page.h:7:
+> In file included from arch/loongarch/include/asm/addrspace.h:9:
+> arch/loongarch/include/asm/loongarch.h:11:10: fatal error: 'larchintrin.h=
+' file not found
+>    11 | #include <larchintrin.h>
+>       |          ^~~~~~~~~~~~~~~
+> 1 error generated.
+>
+> Maybe there are same errors for the other unknown projects, it is
+> annoyance to add the include path each time. In order to avoid such
+> errors once and for all, do not include larchintrin.h, just use the
+> builtin functions directly.
+>
 
-Tiezhu, please check whether libbpf-tools/filetop satisfied your need or 
-not. Thanks!
+Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
 
+> [1] https://git.kernel.org/torvalds/c/548762f05d19
+> [2] https://github.com/iovisor/bcc/commit/8aa9f7072d53
+> [3] https://github.com/iovisor/bcc/commit/af8258c21004
+>
+> Cc: stable@vger.kernel.org # 6.6+
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/loongarch.h | 31 +++++++++++---------------
+>  1 file changed, 13 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
+ude/asm/loongarch.h
+> index 52651aa0e583..b33e4c9cb903 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -9,14 +9,6 @@
+>  #include <linux/linkage.h>
+>  #include <linux/types.h>
+>
+> -#ifndef __ASSEMBLY__
+> -#include <larchintrin.h>
+> -
+> -/* CPUCFG */
+> -#define read_cpucfg(reg) __cpucfg(reg)
+> -
+> -#endif /* !__ASSEMBLY__ */
+> -
+>  #ifdef __ASSEMBLY__
+>
+>  /* LoongArch Registers */
+> @@ -173,19 +165,22 @@
+>
+>  #ifndef __ASSEMBLY__
+>
+> +/* CPUCFG */
+> +#define read_cpucfg(reg) __builtin_loongarch_cpucfg(reg)
+> +
+>  /* CSR */
+> -#define csr_read32(reg) __csrrd_w(reg)
+> -#define csr_read64(reg) __csrrd_d(reg)
+> -#define csr_write32(val, reg) __csrwr_w(val, reg)
+> -#define csr_write64(val, reg) __csrwr_d(val, reg)
+> -#define csr_xchg32(val, mask, reg) __csrxchg_w(val, mask, reg)
+> -#define csr_xchg64(val, mask, reg) __csrxchg_d(val, mask, reg)
+> +#define csr_read32(reg) __builtin_loongarch_csrrd_w(reg)
+> +#define csr_read64(reg) __builtin_loongarch_csrrd_d(reg)
+> +#define csr_write32(val, reg) __builtin_loongarch_csrwr_w(val, reg)
+> +#define csr_write64(val, reg) __builtin_loongarch_csrwr_d(val, reg)
+> +#define csr_xchg32(val, mask, reg) __builtin_loongarch_csrxchg_w(val, ma=
+sk, reg)
+> +#define csr_xchg64(val, mask, reg) __builtin_loongarch_csrxchg_d(val, ma=
+sk, reg)
+>
+>  /* IOCSR */
+> -#define iocsr_read32(reg) __iocsrrd_w(reg)
+> -#define iocsr_read64(reg) __iocsrrd_d(reg)
+> -#define iocsr_write32(val, reg) __iocsrwr_w(val, reg)
+> -#define iocsr_write64(val, reg) __iocsrwr_d(val, reg)
+> +#define iocsr_read32(reg) __builtin_loongarch_iocsrrd_w(reg)
+> +#define iocsr_read64(reg) __builtin_loongarch_iocsrrd_d(reg)
+> +#define iocsr_write32(val, reg) __builtin_loongarch_iocsrwr_w(val, reg)
+> +#define iocsr_write64(val, reg) __builtin_loongarch_iocsrwr_d(val, reg)
+>
+>  #endif /* !__ASSEMBLY__ */
+>
+> --
+> 2.42.0
+>
+>
