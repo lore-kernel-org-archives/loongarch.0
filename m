@@ -1,226 +1,123 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC89315C0
-	for <loongarch@lists.linux.dev>; Fri, 23 May 2025 12:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797522920B9
+	for <loongarch@lists.linux.dev>; Fri, 23 May 2025 13:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748003474; cv=none; b=BgI1tEZtGQF4cJ1R6FeF7UI6QX8En2W5fED8ZAxP1zxsJKqKwzW9FfRhiaNpjvpVxaG96nK6QT5CBP/Go89+g9uC/lO0cmAfuM/W4Pn27kyReMhcsgKEZ5TPOXOu2UwamAS8vNPwoDQQG/cXFZ9Evs5qrF6m9cjzRVkIIqnv93k=
+	t=1748006944; cv=none; b=YX5rWNuq/vqPyGetR4FZSOZmMSVeuRfkvFt5Vx9TQHhzNcYtHkwlFbpTMBmGqzCwyCF4FBY6hbchc07ggJXeSTkLGVOJc/EhBw/czjzncZvdhMeJ+U4NOLt2y2yQQpgusJWaj+gA2wD3kFAWM3g6cMnX22tl97qTUOwyP0l5frk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748003474; c=relaxed/simple;
-	bh=6RL7KQIOgJBaxllw15lEHWUqm8MNQgnkMaFeUS0xE7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Emix2L4JqQru+p9lr5nGglvNSDIEXRfn5WHpGSh8BOvq0dxXns6IyP9SJ7vJ9U0/Eel4uPsm8owGAIGM0EEh66Ls0aqt/NZW6D+v/wDyTSG4FTYyiacvVTaNOMHXt17iR+AlAZbIFdBvCekN2LG4pbBJwLR1UHC/CPt9wlvXmaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DTvU9o7X; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748006944; c=relaxed/simple;
+	bh=HoDzFFvTt+7MIu4vOoIJxdfsGPzEEGuPpV1OfsMUwZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r74wK0YJdmK8QJsirrkRvK4h1G46LWYb/KlOGBHoq1MAuuX4PlI0RJl8SQI+JDAW4cDyqTOW6B8juUpaXzUtDAqiVk22G3ilb+fGzSZ7wBfUOk2tr1q+2p9896mpIrUMOyZkSAMmfUmtb/EYH07VCgSKdyBwZqwMtWMWANo5cZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=gmJU6Eob; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTvU9o7X"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-601ed5e97e9so10603269a12.2
-        for <loongarch@lists.linux.dev>; Fri, 23 May 2025 05:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748003471; x=1748608271; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gZePJaaViCvSD05MKtWm1uzZsAobi9HR7bhRGFEkvks=;
-        b=DTvU9o7XXQlp5K+Bj3V19gsPDqAiNIymmRsPZ7tZysQuP01T4a6hYvXLrtk+b11hQp
-         k+i3dxDasEsrzubfg0hqkcwzGGvbOClv2G1RoAQzTPZ9pg4fuh+UcoJ9sxuyAeybYa07
-         Kwo2hHx6iwP8zp+Z9HZSMqRvusN77Vohg9WTxxb4kNt51hMQpOEluGJFPSHQn6wcWZA0
-         7zsZ+SGJDDo3ynjLV+j+yCi0MAPuV7Cdf1c/vNu+4WHjhi4ZyhC01G1rBF2dEoIXZwFh
-         phyXIAH4tkqHP5bD40PciJo239rakDWMouhMpZLFGdHteQhoTS72bvNZJsOuj4U9Teh5
-         9pGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748003471; x=1748608271;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gZePJaaViCvSD05MKtWm1uzZsAobi9HR7bhRGFEkvks=;
-        b=i8UMpzy1NM1Ho5PCg1+Xdo/O1TVb6tB5DeEw1yhbOxpj/ZEpR4L/l/G2UnnwOt01uU
-         +xfWW4uPeRok7YxhsBRQ0EtV/mkKMSwtzDrLJx6Zv/ChcGGHMVfq5nDzvKjjMoHdb8Ya
-         fZa+iA74iJ0W05Lud30Meb6riT04/2Z7MY1403RaNy+VjqX3u/NMCsUH1YhMc4cP5viG
-         mtAUakdQzwpa8p6JJLxKMaS9LbQCQoidlSBlMOLEAhMaaj0BfnAy0VtoxkYXeA13lqtC
-         gdcu6Fa9pqytM4Ej6eCW/DO+rEq1kD3Ftd4i3+f9nrGaOjJJNNnRyaBKw9sxsqbxSZUh
-         UXdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVjLCdBlFybZjE3jW+7zfNgYMG8TxPJ+tdhETmjo23W+9mjim3Wsv/CBTQ/qe2XtlPPGdZ0ShgldAQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzIc1iqUeoQIGDnrOnEAm37SoTolIySOX3XUpHT3lgsWXRYvOGl
-	B3hL4C57KFrelm0PkbsERumoiYROTfJqkLpDqGCZ53a1Livvc/ldBAOPTt3eGZzJUjyxokUW+J/
-	PygWKjW9A0hIpKldGC83tA+/yQxiuHh0=
-X-Gm-Gg: ASbGncuRULswJwJc57MxBy8qjgnwa6Y1GfWOQbpgnjSLHk9tV81DDEmAK20vcE2Vgod
-	Kvl2cvB8xok5lQ0HBYM8UGAvua7TibW1/M7u1jqH9mu79wBcV6NM28ADxeYbKuyj32jdes0wqQf
-	E0gcWpI40jq3AAD2mwkNywqJ4PCk3MOH1U
-X-Google-Smtp-Source: AGHT+IGWlJUkoqEM1lKufCkJoGQC1KPn5qxbYU6vzVhsAOysE3E9HU2ESod2o4cWjRIgZJsMEdsYZE4ddIeAwpI8ivY=
-X-Received: by 2002:a17:907:d05:b0:ad5:1c28:3c4b with SMTP id
- a640c23a62f3a-ad536f29859mr2451295366b.52.1748003470843; Fri, 23 May 2025
- 05:31:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="gmJU6Eob"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 7B4D02627A;
+	Fri, 23 May 2025 15:29:00 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id oF88uI5vZrak; Fri, 23 May 2025 15:28:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1748006939; bh=HoDzFFvTt+7MIu4vOoIJxdfsGPzEEGuPpV1OfsMUwZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=gmJU6EobsLP4eJiaUqwCoFGR+N1kFtqfuourF2s7eKDL2AbKi3spkZo8n4Cf/DcRH
+	 cjLlTH30DNvGVM4cjV6EBMbAmgAsVZ++3Up+O0jTkS8J2TNIpn03fIUxwIEXZZBh5x
+	 +078vGLPycx1G1odmPKmiMh/V+k+x4nLECjVlw9PhbPDMXj5U/6zRZjE3V1iIl7eNe
+	 Nz7hVS5PLXEwbcuEBLD4oP4EZ8eRjw3kwDnKpRys8tPDM7sHfBVVw43tEIcIYBnAaj
+	 2s3zAG5aPXbsukgu76U0mKapArBLhjcmJ4HlTd4Mk6BU8GB+kVuNuKBv/kbpj5avHb
+	 uyKhypTxwJ53Q==
+Date: Fri, 23 May 2025 13:28:45 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock
+ controller
+Message-ID: <aDB4DTd1Y29lJlyM@pie.lan>
+References: <20250523104552.32742-1-ziyao@disroot.org>
+ <20250523104552.32742-2-ziyao@disroot.org>
+ <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250523104552.32742-1-ziyao@disroot.org> <20250523104552.32742-2-ziyao@disroot.org>
-In-Reply-To: <20250523104552.32742-2-ziyao@disroot.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 23 May 2025 20:30:57 +0800
-X-Gm-Features: AX0GCFuUC-pGEjSv1O0q4b7QC2Sp4Bks5MdQhMyjc7562FwoYKnYCHzHRGmQXp0
-Message-ID: <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock controller
-To: Yao Zi <ziyao@disroot.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
 
-On Fri, May 23, 2025 at 6:46=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
->
-> Document the clock controller shipped in Loongson 2K0300 SoC, which
-> generates various clock signals for SoC peripherals.
->
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  .../bindings/clock/loongson,ls2k0300-clk.yaml | 52 ++++++++++++++++++
->  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
->  2 files changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k=
-0300-clk.yaml
+On Fri, May 23, 2025 at 08:30:57PM +0800, Binbin Zhou wrote:
+> On Fri, May 23, 2025 at 6:46 PM Yao Zi <ziyao@disroot.org> wrote:
+> >
+> > Document the clock controller shipped in Loongson 2K0300 SoC, which
+> > generates various clock signals for SoC peripherals.
+> >
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  .../bindings/clock/loongson,ls2k0300-clk.yaml | 52 ++++++++++++++++++
+> >  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
+> >  2 files changed, 106 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
+> 
+> I don't think a new binding file for 2K0300 is needed. Adding
+> compatible entries to loongson,ls2k-clk.yaml would be more appropriate
+> as they are almost all similar.
 
-I don't think a new binding file for 2K0300 is needed. Adding
-compatible entries to loongson,ls2k-clk.yaml would be more appropriate
-as they are almost all similar.
+Originally I've tried to integrate the 2K0300 stuff with
+loongson,ls2k-clk.yaml, but found it's hard to describe some properties.
 
->  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k0300-cl=
-k.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
-> new file mode 100644
-> index 000000000000..d96b9d7cb7c4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/loongson,ls2k0300-clk.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson-2K0300 SoC Clock Controller
-> +
-> +maintainers:
-> +  - Yao Zi <ziyao@disroot.org>
-> +
-> +description: |
-> +  The Loongson 2K0300 clock controller generates various clocks for SoC
-> +  peripherals. See include/dt-bindings/clock/loongson,ls2k0300-clk.h for
-> +  valid clock IDs.
-> +
-> +properties:
-> +  compatible:
-> +    const: loongson,ls2k0300-clk
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: External 120MHz reference clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ref_120m
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    clk: clock-controller@16000400 {
-> +        compatible =3D "loongson,ls2k0300-clk";
-> +        reg =3D <0x16000400 0x100>;
-> +        clocks =3D <&ref_120m>;
-> +        clock-names =3D "ref_120m";
-> +        #clock-cells =3D <1>;
-> +    };
-> diff --git a/include/dt-bindings/clock/loongson,ls2k0300-clk.h b/include/=
-dt-bindings/clock/loongson,ls2k0300-clk.h
-> new file mode 100644
-> index 000000000000..5e8f7b2f33f2
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> @@ -0,0 +1,54 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-> +/*
-> + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-> + */
-> +#ifndef _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
-> +#define _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
-> +
-> +/* Derivied from REFCLK */
-> +#define LS2K0300_CLK_STABLE                    0
-> +#define LS2K0300_PLL_NODE                      1
-> +#define LS2K0300_PLL_DDR                       2
-> +#define LS2K0300_PLL_PIX                       3
-> +#define LS2K0300_CLK_THSENS                    4
-> +
-> +/* Derived from PLL_NODE */
-> +#define LS2K0300_CLK_NODE_DIV                  5
-> +#define LS2K0300_CLK_NODE_PLL_GATE             6
-> +#define LS2K0300_CLK_NODE_SCALE                        7
-> +#define LS2K0300_CLK_NODE_GATE                 8
-> +#define LS2K0300_CLK_GMAC_DIV                  9
-> +#define LS2K0300_CLK_GMAC_GATE                 10
-> +#define LS2K0300_CLK_I2S_DIV                   11
-> +#define LS2K0300_CLK_I2S_SCALE                 12
-> +#define LS2K0300_CLK_I2S_GATE                  13
-> +
-> +/* Derived from PLL_DDR */
-> +#define LS2K0300_CLK_DDR_DIV                   14
-> +#define LS2K0300_CLK_DDR_GATE                  15
-> +#define LS2K0300_CLK_NET_DIV                   16
-> +#define LS2K0300_CLK_NET_GATE                  17
-> +#define LS2K0300_CLK_DEV_DIV                   18
-> +#define LS2K0300_CLK_DEV_GATE                  19
-> +
-> +/* Derived from PLL_PIX */
-> +#define LS2K0300_CLK_PIX_DIV                   20
-> +#define LS2K0300_CLK_PIX_PLL_GATE              21
-> +#define LS2K0300_CLK_PIX_SCALE                 22
-> +#define LS2K0300_CLK_PIX_GATE                  23
-> +#define LS2K0300_CLK_GMACBP_DIV                        24
-> +#define LS2K0300_CLK_GMACBP_GATE               25
-> +
-> +/* Derived from CLK_DEV */
-> +#define LS2K0300_CLK_USB_SCALE                 26
-> +#define LS2K0300_CLK_USB_GATE                  27
-> +#define LS2K0300_CLK_APB_SCALE                 28
-> +#define LS2K0300_CLK_APB_GATE                  29
-> +#define LS2K0300_CLK_BOOT_SCALE                        30
-> +#define LS2K0300_CLK_BOOT_GATE                 31
-> +#define LS2K0300_CLK_SDIO_SCALE                        32
-> +#define LS2K0300_CLK_SDIO_GATE                 33
-> +
-> +#define LS2K0300_CLK_GMAC_IN                   34
-> +
-> +#endif // _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
-> --
-> 2.49.0
->
->
+For example, currently in loongson,ls2k-clk.yaml, the clocks property is
+described as
 
---=20
-Thanks.
-Binbin
+  clocks:
+    items:
+      - description: 100m ref
+
+what should the description look like with 2K0300 introduced, whose
+reference clock runs at 120MHz instead of 100MHz? It'll be hard to
+describe things correctly without losing existing information. "120MHz
+reference clock for Loongson 2K0300, or 100MHz reference clock for other
+SoCs" sounds even a worse idea.
+
+Another example is about the description of clock IDs. loongson,ls2k-clk.yaml
+describes available clock IDs as
+
+  '#clock-cells':
+    const: 1
+    description:
+      The clock consumer should specify the desired clock by having the clock
+      ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
+      for the full list of Loongson-2 SoC clock IDs.
+
+what should the description look like if we add 2K0300 support? With a
+different header being introduced, the description will be messy.
+
+I think keeping SoCs peripherals that are different in hardware design
+in the same binding is really a bad idea. Yes, these clock controllers
+are similar enough to reuse the clock hardware driver, but they have
+different clock tree structures and register definitions, making them
+essentially different things. Trying to keep everything in the same
+place only makes the binding messy.
+
+For the reason to introduce a new binding header: loongson,ls2k-clk.h
+contains clocks that aren't present in 2K0300 and misses IDs for ones
+present. It's just messy if we mix everything in the same place, so here
+comes loongson,ls2k0300-clk.h.
+
+Thanks,
+Yao Zi
