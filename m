@@ -1,61 +1,45 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DEB226D1F
-	for <loongarch@lists.linux.dev>; Fri, 23 May 2025 09:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F82522579B
+	for <loongarch@lists.linux.dev>; Fri, 23 May 2025 10:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994148; cv=none; b=BH/npvpoSqWSts4BCVqVV8Z2ya6+YOP3nmJxjSxPPk65ZzgAP/zewjKhH22P8yQIk5wOW3mCQWlP7bMmTeyjpalPU3MAnG+GZIsUGE/k5vwUGbMEl7q1wP5tlnjuIYdQ0ESxDtJGW1EgZ58UHMh7bsXWsWF77AdrttLim/HOGJQ=
+	t=1747995600; cv=none; b=Y3DSErR2nNkSu9+/xNdRRrFhPgvK8HbdSwurLps8aFC3GqTLJ+Ny6MbpAbDsdQCfIaceACvRFtuFMqV/wwaxJ+g7FuiOR82Vlo+segPx7mW5ZsT8BUqiRSH+IIewGSZGd7ba7+ZhNC/03J/UiKJhqbjayvM4NuUZGMSkNlBONFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994148; c=relaxed/simple;
-	bh=KI9W0PaJOZE+WeFTaHv7gChpyhppsRJpx6lgKEplro0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gdQh+5Loi78L+vx/On/j/wGPqvZ4yh+z7JM7c+Gh0HgI5ourx4i9YOmtxehINiFJ3OjN6d3rasjsAF+bVpQ/cBEo4s27YXxRnc0/zf4Rbcu3RBa4UWH172QqAxKsQPbIO8+gbXhmwWT3n8OIHu8sUmO/tb7HY4kjnNUEi76KK1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=UbxLhciA; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="UbxLhciA"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 8C05B260B3;
-	Fri, 23 May 2025 11:55:45 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id Aw79C621TUhH; Fri, 23 May 2025 11:55:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1747994135; bh=KI9W0PaJOZE+WeFTaHv7gChpyhppsRJpx6lgKEplro0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UbxLhciApViRIkpz0p5I057PCtNTKj6gecYXv83Nag3ui55ix6swl5De41Ne6A3IG
-	 S4VCqK+iXxKRe+nLvpBFLEl+qz1QyQ9oLdPe6thDnPgXHQJ8M1vzVzB2xAdgZSrq4a
-	 NeoMqJD0ccmCyDJCT887mnUaeHxlZR63WRJ4aTN/BVESYgJTnpH3TzKjaNCGezqTR0
-	 tsjuxmQqMwKNUj0ozdhaKlUsGhhPZzxwYYWXT1/CS/e79Y4UUyAL+YxHcZmZuA87Sc
-	 nIGsbQuIpcVcNndkR/1V44JJhplniYwRxaEJD1rWbeglMx0nSUnC8cwpLfRqESqcLU
-	 7EhYrI+dhe+pQ==
-From: Yao Zi <ziyao@disroot.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Yao Zi <ziyao@disroot.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Junhao Xie <bigfoot@classfun.cn>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: devicetree@vger.kernel.org,
+	s=arc-20240116; t=1747995600; c=relaxed/simple;
+	bh=rI1kmj10+1W3pi4V1tUbGPED0j0Ulr5v+uy9FLuoBHs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aIbRn5mSjdgk73a1bRrdUBS3H6Gu+VgxdUF2AiAk73VBBsuCGX0jqC99l8nCRvRko5UYMJpaBU6yfvJrBd7hFmTIHC+4DXkHQxpUdVQDvJ3zKnc5ZcAFfFzMOzs+6cF7PxasLMEqcwW58ucbX5Of0GoZ3XQbCOVP3X7pUr/pmLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8CxNHCASzBobXb4AA--.7335S3;
+	Fri, 23 May 2025 18:18:40 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMCx7xt9SzBoX+zqAA--.11756S2;
+	Fri, 23 May 2025 18:18:37 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	corbet@lwn.net,
+	alexs@kernel.org,
+	si.yanteng@linux.dev,
+	tglx@linutronix.de,
+	jiaxun.yang@flygoat.com,
+	peterz@infradead.org,
+	wangliupu@loongson.cn,
+	lvjianmin@loongson.cn,
+	maobibo@loongson.cn,
+	siyanteng@cqsoftware.com.cn,
+	gaosong@loongson.cn,
+	yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: [PATCH v3 4/4] LoongArch: dts: Add initial devicetree for CTCISZ Forever Pi
-Date: Fri, 23 May 2025 09:54:08 +0000
-Message-ID: <20250523095408.25919-5-ziyao@disroot.org>
-In-Reply-To: <20250523095408.25919-1-ziyao@disroot.org>
-References: <20250523095408.25919-1-ziyao@disroot.org>
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH v3 0/2]  Loongarch irq-redirect supprot
+Date: Fri, 23 May 2025 18:18:31 +0800
+Message-Id: <20250523101833.17940-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -63,76 +47,62 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCx7xt9SzBoX+zqAA--.11756S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CrW7Ww47KrykXF1kJFW8GrX_yoW8GF4UpF
+	Zru3sYyrsYkFZ3CFn7Ca4Uury5J3WxG3y2gayaq343ury3uryDZry8CF98ZFykGa17t34S
+	gr4FgayUWFyUA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Gii3UUUUU==
 
-Enable UART0 as it's the boot UART used by firmware.
+This series of patches introduces support for interrupt-redirect
+controllers, and this hardware feature will be supported on 3C6000
+for the first time
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/loongarch/boot/dts/Makefile              |  1 +
- .../dts/loongson-2k0300-ctcisz-forever-pi.dts | 45 +++++++++++++++++++
- 2 files changed, 46 insertions(+)
- create mode 100644 arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
+change log:
+	v0->v1:
+	1.Rename the model names in the document.
+	2.Adjust the code format.
+	3.Remove architecture - specific prefixes.
+	4.Refactor the initialization logic, and IR driver no longer set AVEC_ENABLE.
+	5.Enhance compatibility under certain configurations.
+	v1->v2:
+	1.Fixed an erroneous enabling issue.
+	v2->v3
+	1.Replace smp_call with address mapping to access registers
+	2.Fix some code style issues
 
-diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
-index 15d5e14fe418..cf7f74d4b1a4 100644
---- a/arch/loongarch/boot/dts/Makefile
-+++ b/arch/loongarch/boot/dts/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- dtb-y = loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k2000-ref.dtb
-+dtb-y += loongson-2k0300-ctcisz-forever-pi.dtb
-diff --git a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-new file mode 100644
-index 000000000000..a033c086461f
---- /dev/null
-+++ b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "loongson-2k0300.dtsi"
-+
-+/ {
-+	compatible = "ctcisz,forever-pi", "loongson,ls2k0300";
-+	model = "CTCISZ Forever Pi";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@200000 {
-+		device_type = "memory";
-+		reg = <0 0x00200000 0 0x0ee00000>,
-+		      <0 0x90000000 0 0x10000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			size = <0 0x02000000>;
-+			linux,cma-default;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	clock-frequency = <100000000>;
-+	status = "okay";
-+};
+
+Tianyang Zhang (2):
+  Docs/LoongArch: Add Advanced Extended-Redirect IRQ model description
+  irq/irq-loongarch-ir:Add Redirect irqchip support
+
+ .../arch/loongarch/irq-chip-model.rst         |  38 ++
+ .../zh_CN/arch/loongarch/irq-chip-model.rst   |  37 ++
+ arch/loongarch/include/asm/cpu-features.h     |   1 +
+ arch/loongarch/include/asm/cpu.h              |   2 +
+ arch/loongarch/include/asm/loongarch.h        |   6 +
+ arch/loongarch/kernel/cpu-probe.c             |   2 +
+ drivers/irqchip/Makefile                      |   2 +-
+ drivers/irqchip/irq-loongarch-avec.c          |  20 +-
+ drivers/irqchip/irq-loongarch-ir.c            | 562 ++++++++++++++++++
+ drivers/irqchip/irq-loongson.h                |  12 +
+ include/linux/cpuhotplug.h                    |   1 +
+ 11 files changed, 669 insertions(+), 14 deletions(-)
+ create mode 100644 drivers/irqchip/irq-loongarch-ir.c
+
 -- 
-2.49.0
+2.20.1
 
