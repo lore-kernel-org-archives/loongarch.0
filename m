@@ -1,109 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8A922422E;
-	Fri, 23 May 2025 11:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC89315C0
+	for <loongarch@lists.linux.dev>; Fri, 23 May 2025 12:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748000253; cv=none; b=Dmg8X4sAIiRxzjxVZ8aCk2fXb3wEC7dRaF4dBJ3rpBVTHVfWiKxVnd4R6GVgZC5V/lSvZPbZ2msdqEeUf+QZYBhq5/9Je8C5gANnH3EB1XnZEnNnN1kHBS1wkrHS8K/7ga4wOFjTsTielTwTRWcvywGg5EPERPNgBvHRrE9Zkvs=
+	t=1748003474; cv=none; b=BgI1tEZtGQF4cJ1R6FeF7UI6QX8En2W5fED8ZAxP1zxsJKqKwzW9FfRhiaNpjvpVxaG96nK6QT5CBP/Go89+g9uC/lO0cmAfuM/W4Pn27kyReMhcsgKEZ5TPOXOu2UwamAS8vNPwoDQQG/cXFZ9Evs5qrF6m9cjzRVkIIqnv93k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748000253; c=relaxed/simple;
-	bh=ypW0g4GCfFC5qMTXKecIvDxCY9VbAXYdDGLlPMYxsgc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ooR741jxX8VTxhEy/6ecKBV0hceggNQB+Y71sGJ6vfd+7G6+NSBeHP5XUd9JHrEDa5WsvMkVEY+6stcgIbGWTqy4TrBqD53B2XXBO6pJMZJDjAxKvnEWYvVVWEaena5ZRd/aZX15PpabNXWCgBOd8X/Mpc4XgBmornyh/jvh/YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XYao0zL0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748003474; c=relaxed/simple;
+	bh=6RL7KQIOgJBaxllw15lEHWUqm8MNQgnkMaFeUS0xE7A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Emix2L4JqQru+p9lr5nGglvNSDIEXRfn5WHpGSh8BOvq0dxXns6IyP9SJ7vJ9U0/Eel4uPsm8owGAIGM0EEh66Ls0aqt/NZW6D+v/wDyTSG4FTYyiacvVTaNOMHXt17iR+AlAZbIFdBvCekN2LG4pbBJwLR1UHC/CPt9wlvXmaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DTvU9o7X; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XYao0zL0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2AC0C4CEE9;
-	Fri, 23 May 2025 11:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748000253;
-	bh=ypW0g4GCfFC5qMTXKecIvDxCY9VbAXYdDGLlPMYxsgc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XYao0zL0eGBsy4gYEv5M2EQ+0PTussn2jUP/Ysmyx5cjTZ0PpRweg8hxna9lH0c10
-	 IdNRWUqURMzyDAe7mYG1D2J1jdtHD0+3zAmpXVR/r9nBy6sGDmGRJso/eb1D5Ifu6Q
-	 Jg5MVeL7zJGsuBDSiNqR0FKmcv8DW1kUxWpdsK5umQ55Fs0rRDa4FlHeaXnqjbzVFc
-	 jKsZFexrumw/2Wg6r1N8Td17V0g29a3WoOxubz4HCIF7AZRiV/pe+egm+P2B3sM1Sy
-	 6mY6e799d2ULqjIgbkHkl9FlgZrdZ14npFho89FgmW8xk7ePYOIjYfbjluX+i2vyPx
-	 zCd1Z7i/6KTWg==
-Message-ID: <e5a09a55-844b-4045-9459-e61abda255f3@kernel.org>
-Date: Fri, 23 May 2025 13:37:28 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTvU9o7X"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-601ed5e97e9so10603269a12.2
+        for <loongarch@lists.linux.dev>; Fri, 23 May 2025 05:31:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748003471; x=1748608271; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gZePJaaViCvSD05MKtWm1uzZsAobi9HR7bhRGFEkvks=;
+        b=DTvU9o7XXQlp5K+Bj3V19gsPDqAiNIymmRsPZ7tZysQuP01T4a6hYvXLrtk+b11hQp
+         k+i3dxDasEsrzubfg0hqkcwzGGvbOClv2G1RoAQzTPZ9pg4fuh+UcoJ9sxuyAeybYa07
+         Kwo2hHx6iwP8zp+Z9HZSMqRvusN77Vohg9WTxxb4kNt51hMQpOEluGJFPSHQn6wcWZA0
+         7zsZ+SGJDDo3ynjLV+j+yCi0MAPuV7Cdf1c/vNu+4WHjhi4ZyhC01G1rBF2dEoIXZwFh
+         phyXIAH4tkqHP5bD40PciJo239rakDWMouhMpZLFGdHteQhoTS72bvNZJsOuj4U9Teh5
+         9pGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748003471; x=1748608271;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gZePJaaViCvSD05MKtWm1uzZsAobi9HR7bhRGFEkvks=;
+        b=i8UMpzy1NM1Ho5PCg1+Xdo/O1TVb6tB5DeEw1yhbOxpj/ZEpR4L/l/G2UnnwOt01uU
+         +xfWW4uPeRok7YxhsBRQ0EtV/mkKMSwtzDrLJx6Zv/ChcGGHMVfq5nDzvKjjMoHdb8Ya
+         fZa+iA74iJ0W05Lud30Meb6riT04/2Z7MY1403RaNy+VjqX3u/NMCsUH1YhMc4cP5viG
+         mtAUakdQzwpa8p6JJLxKMaS9LbQCQoidlSBlMOLEAhMaaj0BfnAy0VtoxkYXeA13lqtC
+         gdcu6Fa9pqytM4Ej6eCW/DO+rEq1kD3Ftd4i3+f9nrGaOjJJNNnRyaBKw9sxsqbxSZUh
+         UXdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjLCdBlFybZjE3jW+7zfNgYMG8TxPJ+tdhETmjo23W+9mjim3Wsv/CBTQ/qe2XtlPPGdZ0ShgldAQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzIc1iqUeoQIGDnrOnEAm37SoTolIySOX3XUpHT3lgsWXRYvOGl
+	B3hL4C57KFrelm0PkbsERumoiYROTfJqkLpDqGCZ53a1Livvc/ldBAOPTt3eGZzJUjyxokUW+J/
+	PygWKjW9A0hIpKldGC83tA+/yQxiuHh0=
+X-Gm-Gg: ASbGncuRULswJwJc57MxBy8qjgnwa6Y1GfWOQbpgnjSLHk9tV81DDEmAK20vcE2Vgod
+	Kvl2cvB8xok5lQ0HBYM8UGAvua7TibW1/M7u1jqH9mu79wBcV6NM28ADxeYbKuyj32jdes0wqQf
+	E0gcWpI40jq3AAD2mwkNywqJ4PCk3MOH1U
+X-Google-Smtp-Source: AGHT+IGWlJUkoqEM1lKufCkJoGQC1KPn5qxbYU6vzVhsAOysE3E9HU2ESod2o4cWjRIgZJsMEdsYZE4ddIeAwpI8ivY=
+X-Received: by 2002:a17:907:d05:b0:ad5:1c28:3c4b with SMTP id
+ a640c23a62f3a-ad536f29859mr2451295366b.52.1748003470843; Fri, 23 May 2025
+ 05:31:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock
- controller
-To: Yao Zi <ziyao@disroot.org>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-References: <20250523104552.32742-1-ziyao@disroot.org>
- <20250523104552.32742-2-ziyao@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
+References: <20250523104552.32742-1-ziyao@disroot.org> <20250523104552.32742-2-ziyao@disroot.org>
 In-Reply-To: <20250523104552.32742-2-ziyao@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Fri, 23 May 2025 20:30:57 +0800
+X-Gm-Features: AX0GCFuUC-pGEjSv1O0q4b7QC2Sp4Bks5MdQhMyjc7562FwoYKnYCHzHRGmQXp0
+Message-ID: <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock controller
+To: Yao Zi <ziyao@disroot.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 23/05/2025 12:45, Yao Zi wrote:
+On Fri, May 23, 2025 at 6:46=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+>
+> Document the clock controller shipped in Loongson 2K0300 SoC, which
+> generates various clock signals for SoC peripherals.
+>
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  .../bindings/clock/loongson,ls2k0300-clk.yaml | 52 ++++++++++++++++++
+>  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
+>  2 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k=
+0300-clk.yaml
+
+I don't think a new binding file for 2K0300 is needed. Adding
+compatible entries to loongson,ls2k-clk.yaml would be more appropriate
+as they are almost all similar.
+
+>  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
+>
+> diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k0300-cl=
+k.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
+> new file mode 100644
+> index 000000000000..d96b9d7cb7c4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/loongson,ls2k0300-clk.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson-2K0300 SoC Clock Controller
+> +
 > +maintainers:
 > +  - Yao Zi <ziyao@disroot.org>
 > +
 > +description: |
-
-Do not need '|' unless you need to preserve formatting.
-
 > +  The Loongson 2K0300 clock controller generates various clocks for SoC
 > +  peripherals. See include/dt-bindings/clock/loongson,ls2k0300-clk.h for
 > +  valid clock IDs.
@@ -122,9 +133,6 @@ Do not need '|' unless you need to preserve formatting.
 > +  clock-names:
 > +    items:
 > +      - const: ref_120m
-
-Just ref or drop the clock-names completely.
-
 > +
 > +  '#clock-cells':
 > +    const: 1
@@ -141,40 +149,78 @@ Just ref or drop the clock-names completely.
 > +examples:
 > +  - |
 > +    clk: clock-controller@16000400 {
+> +        compatible =3D "loongson,ls2k0300-clk";
+> +        reg =3D <0x16000400 0x100>;
+> +        clocks =3D <&ref_120m>;
+> +        clock-names =3D "ref_120m";
+> +        #clock-cells =3D <1>;
+> +    };
+> diff --git a/include/dt-bindings/clock/loongson,ls2k0300-clk.h b/include/=
+dt-bindings/clock/loongson,ls2k0300-clk.h
+> new file mode 100644
+> index 000000000000..5e8f7b2f33f2
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/loongson,ls2k0300-clk.h
+> @@ -0,0 +1,54 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
+> +/*
+> + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
+> + */
+> +#ifndef _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
+> +#define _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
+> +
+> +/* Derivied from REFCLK */
+> +#define LS2K0300_CLK_STABLE                    0
+> +#define LS2K0300_PLL_NODE                      1
+> +#define LS2K0300_PLL_DDR                       2
+> +#define LS2K0300_PLL_PIX                       3
+> +#define LS2K0300_CLK_THSENS                    4
+> +
+> +/* Derived from PLL_NODE */
+> +#define LS2K0300_CLK_NODE_DIV                  5
+> +#define LS2K0300_CLK_NODE_PLL_GATE             6
+> +#define LS2K0300_CLK_NODE_SCALE                        7
+> +#define LS2K0300_CLK_NODE_GATE                 8
+> +#define LS2K0300_CLK_GMAC_DIV                  9
+> +#define LS2K0300_CLK_GMAC_GATE                 10
+> +#define LS2K0300_CLK_I2S_DIV                   11
+> +#define LS2K0300_CLK_I2S_SCALE                 12
+> +#define LS2K0300_CLK_I2S_GATE                  13
+> +
+> +/* Derived from PLL_DDR */
+> +#define LS2K0300_CLK_DDR_DIV                   14
+> +#define LS2K0300_CLK_DDR_GATE                  15
+> +#define LS2K0300_CLK_NET_DIV                   16
+> +#define LS2K0300_CLK_NET_GATE                  17
+> +#define LS2K0300_CLK_DEV_DIV                   18
+> +#define LS2K0300_CLK_DEV_GATE                  19
+> +
+> +/* Derived from PLL_PIX */
+> +#define LS2K0300_CLK_PIX_DIV                   20
+> +#define LS2K0300_CLK_PIX_PLL_GATE              21
+> +#define LS2K0300_CLK_PIX_SCALE                 22
+> +#define LS2K0300_CLK_PIX_GATE                  23
+> +#define LS2K0300_CLK_GMACBP_DIV                        24
+> +#define LS2K0300_CLK_GMACBP_GATE               25
+> +
+> +/* Derived from CLK_DEV */
+> +#define LS2K0300_CLK_USB_SCALE                 26
+> +#define LS2K0300_CLK_USB_GATE                  27
+> +#define LS2K0300_CLK_APB_SCALE                 28
+> +#define LS2K0300_CLK_APB_GATE                  29
+> +#define LS2K0300_CLK_BOOT_SCALE                        30
+> +#define LS2K0300_CLK_BOOT_GATE                 31
+> +#define LS2K0300_CLK_SDIO_SCALE                        32
+> +#define LS2K0300_CLK_SDIO_GATE                 33
+> +
+> +#define LS2K0300_CLK_GMAC_IN                   34
+> +
+> +#endif // _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
+> --
+> 2.49.0
+>
+>
 
-Drop unused label
-
-> +        compatible = "loongson,ls2k0300-clk";
-> +        reg = <0x16000400 0x100>;
-> +        clocks = <&ref_120m>;
-> +        clock-names = "ref_120m";
-> +        #clock-cells = <1>;
-
-
-With above changes:
-
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
-
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
-
-
-
-Best regards,
-Krzysztof
+--=20
+Thanks.
+Binbin
