@@ -1,152 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F191E25C71A;
-	Fri, 23 May 2025 04:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E317B223DC8
+	for <loongarch@lists.linux.dev>; Fri, 23 May 2025 04:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747975182; cv=none; b=tlk27HtkGJ7yi4j7c+TLSGLJ3QHdFJIKL/bybfSyZIDn2d/hytE3igF29vYX52f/dz+e+3H9pKk1NLNIOXatkZymkX9mFe76CljIzDva/AmMnsrBFRH3NqlpQZAIFlW7RASPSZpRBmrk7huvp3qhBFEDIGJ7vN2TYEYTykNpFXY=
+	t=1747975878; cv=none; b=AiVKZxWeIapUaDuGMu8Q1LVB0kg5N1ws29N07cifRShcxhbP8M6ha7Ed+7tlyjBTcnKZf/swQU/6/34KqZrrX3eWqyNG4muRDhR4bhs9udRYdalnDjoWGGEk87Y8a2CHmbIc0NjbbPTzPdeu8q5IUNs4HLM2+gmGP+xlViESsRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747975182; c=relaxed/simple;
-	bh=iIpy4amE1B5BG/MZ7yXJlvvMYB45pyKPopqbUBpww1w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HsxDAwvOtPWQh9R7Daj7xhqChleNM45vC+J3CDPBKPYtf7K3NBbV3g/RLVnRJH4IB6I6FY7aH6dv44KKd7xiqIkAGrYxEgSWLLkvnOJav7K0HymSI8i5cZg/qtu0woKN9H3GfBezZqdpP1tE85jrFxc0yr1mGr/vuQ9gzg48FFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HV5smsW4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747975878; c=relaxed/simple;
+	bh=bvGqlECt3KwkjBFufymstBZjNxrZxKjrFPlMbTubDtw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q1NiKcFJ6w+m26+apErmLNdmTViV9UfsNiq+9K7fdI4oCfvrV6dtk49pMdDNMsN+BebDgGiE5kP0TOu/+IKgvJseHrxsRxAT7OmveH4gxmtIDvFqCYPEr4dnBHinmZ2k3MclyM43e58H/iCMiKucBcA5aMu5DDPT31/wDryV1sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EyqHwnk+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HV5smsW4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48AFFC4CEF7;
-	Fri, 23 May 2025 04:39:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EyqHwnk+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64D6EC4CEE9
+	for <loongarch@lists.linux.dev>; Fri, 23 May 2025 04:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747975181;
-	bh=iIpy4amE1B5BG/MZ7yXJlvvMYB45pyKPopqbUBpww1w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HV5smsW43Wblu3m/90Z637zq9GffyBGUQm2lcmxUfUaR4zx1tdFjg1IjBqTG1DSkY
-	 WEc692tI4XPAArmlbU5ttf0ws3mGJ3n5WGEPBjCDQd1zpB7O2Qk+muLgGDg/AjoyRH
-	 pHwV/rss0oksLyip+O+6bxr2uBHEA0KnenL/hBRpM5/zt0Vf86uDjR9hrsYTFhxONV
-	 Y5DuYaBXSlULt7Sjin5UKE5ok0tFkNc+Yr8kPcVVChr4jWfJ6jlSH4RL2qtd03lBiw
-	 /GiRIjYMDHZiO+8lBSUiysUXMFIK7BDjrbWbrnItcAgxNL4FI1C+4YKBbM47WE+vjz
-	 LZlja9YXJ7h4g==
-From: Kees Cook <kees@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kees Cook <kees@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	loongarch@lists.linux.dev,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH v2 10/14] loongarch: Handle KCOV __init vs inline mismatches
-Date: Thu, 22 May 2025 21:39:20 -0700
-Message-Id: <20250523043935.2009972-10-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250523043251.it.550-kees@kernel.org>
-References: <20250523043251.it.550-kees@kernel.org>
+	s=k20201202; t=1747975877;
+	bh=bvGqlECt3KwkjBFufymstBZjNxrZxKjrFPlMbTubDtw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EyqHwnk+jq+yqsctjB8OW5OE4wdREJ31fw5dPcLkbCpt71RxtCgAMYgZ/YI25jhPT
+	 TZXR9W1yAWOSy3OIs5JSq6UloP7t0NH8b27q8L8rMI6BDJirluLpcmEONG9dh3H6yw
+	 DQiKBvrbmgPFTuBcMgh6xLSjyQSaA0krVXqi1kNeyhLyXRjAQdTKmn1tP2MlnbG9bh
+	 oNWWRgJLCila52Rpu0FTxoxXAAI6vikvRXO9NWwyZbq/ZwLDWbxzQzXd9HlYj7Mo4J
+	 uJWPqoYJDxF54WLgYtClFxGTgCVqwzPSTQtwLN499as3WJm8tsRSvZOr0PPn0wi1/S
+	 cazXgsLcDVWow==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-601d10de7e1so8759427a12.1
+        for <loongarch@lists.linux.dev>; Thu, 22 May 2025 21:51:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUnZhy3WJe/vBUU380rJ2qpQgLHY5QQkufG5buBL0sQs7Qv/ub6BLs4HHvzo7RqoVFmdUFy0NtJ55w=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyu49u5qJ116/0+Q/MlO8fFAfB95MbGAYabdaXmX5SZ/ZnTABct
+	V5SmlQlGNsMV6bGBGh7w8XD7kQyZExtNSrLogDHofk4Ob4RCX2DnDPjs66Et4KJYw+Pq/X3JWXf
+	uG2H0ZbIP2X1nL839yZbjnF1AVx/D0XE=
+X-Google-Smtp-Source: AGHT+IHklNSCJoQ/XAz9qWP3J7knKOXYlupYiWCuTBYkMxK5HFRTTSmFPC5j4MN6W4KqhEl3JkAfBtaNbzfHFlNbRFo=
+X-Received: by 2002:a05:6402:5248:b0:5ff:fa46:9095 with SMTP id
+ 4fb4d7f45d1cf-60119ccd0c5mr26562056a12.28.1747975875963; Thu, 22 May 2025
+ 21:51:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2628; i=kees@kernel.org; h=from:subject; bh=iIpy4amE1B5BG/MZ7yXJlvvMYB45pyKPopqbUBpww1w=; b=owGbwMvMwCVmps19z/KJym7G02pJDBn6v3+VfPjOsGqOxm/1bvmH5mG/Ft0U++yRurxzx1V/U zZvk/rWjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAyAQ35zcDFKQATaW1g+Ml48vdNhQVZP3ef 1vDeKb/8WEj5y1q51xFz4zb0fft1+b4Pwz+7by/d73JzG/y39znK9F1H85Za25GAJ4ue8zB4rrl /awETAA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20250522125050.2215157-1-chenhuacai@loongson.cn> <fa882110d20bd824aca690ba5dfea8c0bd303fc3.camel@xry111.site>
+In-Reply-To: <fa882110d20bd824aca690ba5dfea8c0bd303fc3.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 23 May 2025 12:51:04 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5XyN2OZZqWm2_PCSj8Exs-FSNEL0nQ2AUXgwuTAJoQFw@mail.gmail.com>
+X-Gm-Features: AX0GCFtSKe1aMNQF_GMVfd092aBUDH4OMptuywDxqe3ZL8dVHk9RlfufiE8I-rE
+Message-ID: <CAAhV-H5XyN2OZZqWm2_PCSj8Exs-FSNEL0nQ2AUXgwuTAJoQFw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Avoid using $r0/$r1 as "mask" for csrxchg
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	WANG Rui <wangrui@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When KCOV is enabled all functions get instrumented, unless
-the __no_sanitize_coverage attribute is used. To prepare for
-__no_sanitize_coverage being applied to __init functions, we have to
-handle differences in how GCC's inline optimizations get resolved. For
-loongarch this exposed several places where __init annotations were
-missing but ended up being "accidentally correct". Fix these cases and
-force one function to be inline with __always_inline.
+On Fri, May 23, 2025 at 12:38=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
+te:
+>
+> On Thu, 2025-05-22 at 20:50 +0800, Huacai Chen wrote:
+> > When building kernel with LLVM there are occasionally such errors:
+> >
+> > In file included from ./include/linux/spinlock.h:59:
+> > In file included from ./include/linux/irqflags.h:17:
+> > arch/loongarch/include/asm/irqflags.h:38:3: error: must not be $r0 or $=
+r1
+> >    38 |                 "csrxchg %[val], %[mask], %[reg]\n\t"
+> >       |                 ^
+> > <inline asm>:1:16: note: instantiated into assembly here
+> >     1 |         csrxchg $a1, $ra, 0
+> >       |                       ^
+> >
+> > The "mask" of the csrxchg instruction should not be $r0 or $r1, but the
+> > compiler cannot avoid generating such code currently.
+>
+> Maybe "to prevent the compiler from allocating $r0 or $r1, the 'q'
+> constraint must be used but Clang < 22 does not support it.  So force to
+> use t0 in order to avoid using $r0/$r1 while keeping the backward
+> compatibility."
+>
+> And Link: https://github.com/llvm/llvm-project/pull/141037
+OK, that's better.
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: Bibo Mao <maobibo@loongson.cn>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: <loongarch@lists.linux.dev>
----
- arch/loongarch/include/asm/smp.h | 2 +-
- arch/loongarch/kernel/time.c     | 2 +-
- arch/loongarch/mm/ioremap.c      | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Huacai
 
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index ad0bd234a0f1..88e19d8a11f4 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -39,7 +39,7 @@ int loongson_cpu_disable(void);
- void loongson_cpu_die(unsigned int cpu);
- #endif
- 
--static inline void plat_smp_setup(void)
-+static __always_inline void plat_smp_setup(void)
- {
- 	loongson_smp_setup();
- }
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index bc75a3a69fc8..367906b10f81 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -102,7 +102,7 @@ static int constant_timer_next_event(unsigned long delta, struct clock_event_dev
- 	return 0;
- }
- 
--static unsigned long __init get_loops_per_jiffy(void)
-+static unsigned long get_loops_per_jiffy(void)
- {
- 	unsigned long lpj = (unsigned long)const_clock_freq;
- 
-diff --git a/arch/loongarch/mm/ioremap.c b/arch/loongarch/mm/ioremap.c
-index 70ca73019811..df949a3d0f34 100644
---- a/arch/loongarch/mm/ioremap.c
-+++ b/arch/loongarch/mm/ioremap.c
-@@ -16,12 +16,12 @@ void __init early_iounmap(void __iomem *addr, unsigned long size)
- 
- }
- 
--void *early_memremap_ro(resource_size_t phys_addr, unsigned long size)
-+void * __init early_memremap_ro(resource_size_t phys_addr, unsigned long size)
- {
- 	return early_memremap(phys_addr, size);
- }
- 
--void *early_memremap_prot(resource_size_t phys_addr, unsigned long size,
-+void * __init early_memremap_prot(resource_size_t phys_addr, unsigned long size,
- 		    unsigned long prot_val)
- {
- 	return early_memremap(phys_addr, size);
--- 
-2.34.1
-
+>
+> > So force to use t0
+> > in the inline asm, in order to avoid using $r0/$r1.
+> >
+> > Cc: stable@vger.kernel.org
+> > Suggested-by: WANG Rui <wangrui@loongson.cn>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  arch/loongarch/include/asm/irqflags.h | 16 ++++++++++++----
+> >  1 file changed, 12 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/loongarch/include/asm/irqflags.h b/arch/loongarch/inc=
+lude/asm/irqflags.h
+> > index 319a8c616f1f..003172b8406b 100644
+> > --- a/arch/loongarch/include/asm/irqflags.h
+> > +++ b/arch/loongarch/include/asm/irqflags.h
+> > @@ -14,40 +14,48 @@
+> >  static inline void arch_local_irq_enable(void)
+> >  {
+> >       u32 flags =3D CSR_CRMD_IE;
+> > +     register u32 mask asm("t0") =3D CSR_CRMD_IE;
+> > +
+> >       __asm__ __volatile__(
+> >               "csrxchg %[val], %[mask], %[reg]\n\t"
+> >               : [val] "+r" (flags)
+> > -             : [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD=
+)
+> > +             : [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+> >               : "memory");
+> >  }
+> >
+> >  static inline void arch_local_irq_disable(void)
+> >  {
+> >       u32 flags =3D 0;
+> > +     register u32 mask asm("t0") =3D CSR_CRMD_IE;
+> > +
+> >       __asm__ __volatile__(
+> >               "csrxchg %[val], %[mask], %[reg]\n\t"
+> >               : [val] "+r" (flags)
+> > -             : [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD=
+)
+> > +             : [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+> >               : "memory");
+> >  }
+> >
+> >  static inline unsigned long arch_local_irq_save(void)
+> >  {
+> >       u32 flags =3D 0;
+> > +     register u32 mask asm("t0") =3D CSR_CRMD_IE;
+> > +
+> >       __asm__ __volatile__(
+> >               "csrxchg %[val], %[mask], %[reg]\n\t"
+> >               : [val] "+r" (flags)
+> > -             : [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD=
+)
+> > +             : [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+> >               : "memory");
+> >       return flags;
+> >  }
+> >
+> >  static inline void arch_local_irq_restore(unsigned long flags)
+> >  {
+> > +     register u32 mask asm("t0") =3D CSR_CRMD_IE;
+> > +
+> >       __asm__ __volatile__(
+> >               "csrxchg %[val], %[mask], %[reg]\n\t"
+> >               : [val] "+r" (flags)
+> > -             : [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD=
+)
+> > +             : [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+> >               : "memory");
+> >  }
+> >
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
