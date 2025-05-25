@@ -1,149 +1,295 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF01C376
-	for <loongarch@lists.linux.dev>; Sun, 25 May 2025 02:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19A06FC3
+	for <loongarch@lists.linux.dev>; Sun, 25 May 2025 09:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748139827; cv=none; b=ZwiLBjKR/7S5a52UltUpA2vzfC0ikrzf/7+e1mTU6QdpK4YCl3BqIUFYITD9rp/5bPYA5aJZFebIa2qwTnmwaoDvI1eC3hUQQsC0nOuaLrbqbY0Hkfb7SrBkiamH1kkQOTyf0EYMfgcAUX76JNjt9wmue/vLkXWzACjYj5mw1qI=
+	t=1748164008; cv=none; b=MSTZru6GfseeQOQvoYWrnFc0jFOYi4OJRn5phMU4lRtdIh2zta1MG9XZ8dkLvSXnuvwR+CQjBqeCjyKh4TOlluP5ovJPaZn88TTOH4JAssfRsiUvvgBMygJ5j4r8JsEOmVXpRz+w6ZgwgncRxEM00lRB0OPbEIy4qed9KWwGyKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748139827; c=relaxed/simple;
-	bh=tOa1RezbqxcE1EV5iKc3IbCwta9WIxyugED05gugQ/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g1dedPcGGDvNYPPmymGRuFL9kcjhqXMPYlxsvEB3kPtd+aB2tR1GXFVJ6lbKbuJDb/2GEzjyL1mG/5J2/1LYKe8LQb4+lb+XZx5Lmot51lWUDcxXxpFJ14fIscJCz9R6mfagKTfMdM16kzfHInFgHy0TgyWNTg+5Q3D9Ys8dwN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.3])
-	by gateway (Coremail) with SMTP id _____8CxyuAufzJoE0_7AA--.12238S3;
-	Sun, 25 May 2025 10:23:42 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.69.3])
-	by front1 (Coremail) with SMTP id qMiowMDx+xonfzJolMjvAA--.26182S2;
-	Sun, 25 May 2025 10:23:40 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Yanteng Si <si.yanteng@linux.dev>,
-	WANG Rui <wangrui@loongson.cn>
-Subject: [PATCH V3] LoongArch: Avoid using $r0/$r1 as "mask" for csrxchg
-Date: Sun, 25 May 2025 10:23:25 +0800
-Message-ID: <20250525022325.170964-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1748164008; c=relaxed/simple;
+	bh=D33noQ2AMXpbt2NqWECeX0gAwhvUwt4rDukf/XL12Gw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AbjmiK3R57FtNmCsSVCtso6s91mC/Ut3YP0hkkU0rCLyJf3eVCwlprTaNoRm37+lGoYwm8dUOkM1LlTnlUmeP2Brt4LbF7pIR5j0o+Gm6dEPcLwtWkZFmEgPd5S+8qtJinvWxX3u3qXrzVosCdL8P1TuQ45xnN3kkOUT2F2GkFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VBoH9eVB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RSWFhWVd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VBoH9eVB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RSWFhWVd"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748164003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=10c6UuaUy4gsHzyjK2Ohkf/opmVxLXcOaDen0Va9OQs=;
+	b=VBoH9eVBxEV9wLTBH6/J9vF7Uhr8nPoYO99Q3JJBHUbNiDINCYUxReQIzHxJJ8Mca0WFFT
+	O75xm1I0kKICTRDbskWa7Y/yOFWjAg+/Ns6jDmyp8RnCYR+POe08CnAUKZsW5Xt7akv637
+	jegvVHPpISlv+W2N9GfJgpIc8GIW3rCC1bxe+K1q2B/f0S+MNiA2esiL84/TmsB1kopojP
+	Ysw6jpnVll8VMlAdaI4SHY83yb4sSg2LSyCeeDDhBCwP2UkCntAabwXfT107wyywct7SSv
+	E6iwWmOSxkj9D5m3w5ANuGjS74xeWOvTMbzOxuxp+qlmQLhqem+3GtvlWl7wGw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748164003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=10c6UuaUy4gsHzyjK2Ohkf/opmVxLXcOaDen0Va9OQs=;
+	b=RSWFhWVdmJrlquNScQ3F1eWUdb/ckMT7qIwsfiXscLP/beD0PsdE3lJlYVAvW10DqQYciU
+	/2bU2yyKKEjgYjDg==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: Re: [PATCH v3 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+In-Reply-To: <20250523101833.17940-3-zhangtianyang@loongson.cn>
+References: <20250523101833.17940-1-zhangtianyang@loongson.cn>
+ <20250523101833.17940-3-zhangtianyang@loongson.cn>
+Date: Sun, 25 May 2025 11:06:42 +0200
+Message-ID: <87ecwdqct9.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDx+xonfzJolMjvAA--.26182S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXrW5Gw15ZFWxJr48Ww4UAwc_yoW5Xw47pr
-	WDCr48KFs5WFyxA3yqqFnI93W3Wr97Gw4IyayDC397KFyqvr18ArZ5CF90qFWUJa1vva4I
-	vFWYyw4SvF1DJabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
+Content-Type: text/plain
 
-When building kernel with LLVM there are occasionally such errors:
+On Fri, May 23 2025 at 18:18, Tianyang Zhang wrote:
+>  
+> -static void avecintc_sync(struct avecintc_data *adata)
+> +void avecintc_sync(struct avecintc_data *adata)
+>  {
+>  	struct pending_list *plist;
+>  
+> @@ -109,7 +99,7 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
+>  			return -EBUSY;
+>  
+>  		if (cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest))
+> -			return 0;
+> +			return IRQ_SET_MASK_OK_DONE;
 
-In file included from ./include/linux/spinlock.h:59:
-In file included from ./include/linux/irqflags.h:17:
-arch/loongarch/include/asm/irqflags.h:38:3: error: must not be $r0 or $r1
-   38 |                 "csrxchg %[val], %[mask], %[reg]\n\t"
-      |                 ^
-<inline asm>:1:16: note: instantiated into assembly here
-    1 |         csrxchg $a1, $ra, 0
-      |                       ^
+This change really wants to be seperate with a proper explanation and
+not burried inside of this pile of changes.
 
-To prevent the compiler from allocating $r0 or $r1 for the "mask" of the
-csrxchg instruction, the 'q' constraint must be used but Clang < 21 does
-not support it. So force to use $t0 in the inline asm, in order to avoid
-using $r0/$r1 while keeping the backward compatibility.
+> +static inline bool invalid_queue_is_full(int node, u32 *tail)
+> +{
+> +	u32 head;
+> +
+> +	head = read_queue_head(node);
 
-Cc: stable@vger.kernel.org
-Link: https://github.com/llvm/llvm-project/pull/141037
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
-Suggested-by: WANG Rui <wangrui@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Update commit messages.
-V3: Update commit messages again.
+Please move the initialization into the declaration line:
 
- arch/loongarch/include/asm/irqflags.h | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+       u32 head = read_queue...();
 
-diff --git a/arch/loongarch/include/asm/irqflags.h b/arch/loongarch/include/asm/irqflags.h
-index 319a8c616f1f..003172b8406b 100644
---- a/arch/loongarch/include/asm/irqflags.h
-+++ b/arch/loongarch/include/asm/irqflags.h
-@@ -14,40 +14,48 @@
- static inline void arch_local_irq_enable(void)
- {
- 	u32 flags = CSR_CRMD_IE;
-+	register u32 mask asm("t0") = CSR_CRMD_IE;
-+
- 	__asm__ __volatile__(
- 		"csrxchg %[val], %[mask], %[reg]\n\t"
- 		: [val] "+r" (flags)
--		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
-+		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
- 		: "memory");
- }
- 
- static inline void arch_local_irq_disable(void)
- {
- 	u32 flags = 0;
-+	register u32 mask asm("t0") = CSR_CRMD_IE;
-+
- 	__asm__ __volatile__(
- 		"csrxchg %[val], %[mask], %[reg]\n\t"
- 		: [val] "+r" (flags)
--		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
-+		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
- 		: "memory");
- }
- 
- static inline unsigned long arch_local_irq_save(void)
- {
- 	u32 flags = 0;
-+	register u32 mask asm("t0") = CSR_CRMD_IE;
-+
- 	__asm__ __volatile__(
- 		"csrxchg %[val], %[mask], %[reg]\n\t"
- 		: [val] "+r" (flags)
--		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
-+		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
- 		: "memory");
- 	return flags;
- }
- 
- static inline void arch_local_irq_restore(unsigned long flags)
- {
-+	register u32 mask asm("t0") = CSR_CRMD_IE;
-+
- 	__asm__ __volatile__(
- 		"csrxchg %[val], %[mask], %[reg]\n\t"
- 		: [val] "+r" (flags)
--		: [mask] "r" (CSR_CRMD_IE), [reg] "i" (LOONGARCH_CSR_CRMD)
-+		: [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
- 		: "memory");
- }
- 
--- 
-2.47.1
+All over the place, where it's the first operation in the code. That
+makes the code more dense and easier to follow.
 
+> +	*tail = read_queue_tail(node);
+> +
+> +	return !!(head == ((*tail + 1) % INVALID_QUEUE_SIZE));
+
+What's the !! for? A == B is a boolean expression already.
+
+> +}
+> +
+> +static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
+> +{
+> +	struct irde_inv_cmd *inv_addr;
+> +	u32 tail;
+> +
+> +	guard(raw_spinlock_irqsave)(&rqueue->lock);
+> +
+> +	while (invalid_queue_is_full(rqueue->node, &tail))
+> +		cpu_relax();
+> +
+> +	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
+> +	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
+> +
+> +	/*
+> +	 * The uncache-memory access may have an out of order problem cache-memory access,
+> +	 * so a barrier is needed to ensure tail is valid
+> +	 */
+
+This comment does not make sense at all.
+
+What's the actual uncached vs. cached access problem here? AFAICT it's
+all about the ordering of the writes:
+
+    You need to ensure that the memcpy() data is visible _before_ the
+    tail is updated, no?
+
+> +	wmb();
+> +
+> +	write_queue_tail(rqueue->node, tail);
+> +}
+
+> +static int redirect_table_free(struct redirect_item *item)
+
+That return value is there to be ignored by the only caller, right?
+
+> +{
+> +	struct redirect_table *ird_table;
+> +	struct redirect_entry *entry;
+> +
+> +	ird_table = item->table;
+> +
+> +	entry = item->entry;
+> +	memset(entry, 0, sizeof(struct redirect_entry));
+> +
+> +	scoped_guard(raw_spinlock_irqsave, &ird_table->lock)
+> +		bitmap_release_region(ird_table->bitmap, item->index, 0);
+> +
+> +	kfree(item->gpid);
+> +
+> +	irde_invlid_entry_node(item);
+> +
+> +	return 0;
+> +}
+> +
+> +static inline void redirect_domain_prepare_entry(struct redirect_item *item,
+> +					struct avecintc_data *adata)
+
+Please align the argument in the second line properly:
+
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#line-breaks
+
+> +
+> +static inline void redirect_ack_irq(struct irq_data *d)
+> +{
+> +}
+> +
+> +static inline void redirect_unmask_irq(struct irq_data *d)
+> +{
+> +}
+> +
+> +static inline void redirect_mask_irq(struct irq_data *d)
+> +{
+> +}
+
+These want some explanation why they are empty.
+
+> +
+> +static struct irq_chip loongarch_redirect_chip = {
+> +	.name			= "REDIRECT",
+> +	.irq_ack		= redirect_ack_irq,
+> +	.irq_mask		= redirect_mask_irq,
+> +	.irq_unmask		= redirect_unmask_irq,
+> +	.irq_set_affinity	= redirect_set_affinity,
+> +	.irq_compose_msi_msg	= redirect_compose_msi_msg,
+> +};
+> +out_free_resources:
+> +	redirect_free_resources(domain, virq, nr_irqs);
+> +	irq_domain_free_irqs_common(domain, virq, nr_irqs);
+> +
+> +	return -EINVAL;
+
+-ENOMEM?
+
+> +}
+> +
+> +	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
+> +	if (!bitmap) {
+> +		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
+> +		return -ENOMEM;
+
+Leaks pages.
+
+> +	}
+> +
+> +	ird_table->bitmap = bitmap;
+> +	ird_table->nr_ird = IRD_ENTRIES;
+> +	ird_table->node = node;
+> +
+> +	raw_spin_lock_init(&ird_table->lock);
+> +
+> +	if (redirect_queue_init(node))
+> +		return -EINVAL;
+
+Leaks pages and bitmap.
+
+> +
+> +	iocsr_write64(CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
+> +	iocsr_write64(__pa(ird_table->table), LOONGARCH_IOCSR_REDIRECT_TBR);
+> +
+> +	return 0;
+> +}
+
+> +#if defined(CONFIG_ACPI)
+
+#ifdef CONFIG_ACPI
+
+> +static int __init redirect_reg_base_init(void)
+> +{
+> +	acpi_status status;
+> +	uint64_t addr = 0;
+
+What's this initialization for?
+
+> +int __init redirect_acpi_init(struct irq_domain *parent)
+> +{
+> +	struct fwnode_handle *fwnode;
+> +	struct irq_domain *domain;
+> +	int ret;
+> +
+> +	fwnode = irq_domain_alloc_named_fwnode("redirect");
+> +	if (!fwnode) {
+> +		pr_err("Unable to alloc redirect domain handle\n");
+> +		goto fail;
+> +	}
+> +
+> +	domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
+> +			&redirect_domain_ops, irde_descs);
+
+Please align the arguments in the second line properly.
+
+> +	if (!domain) {
+> +		pr_err("Unable to alloc redirect domain\n");
+> +		goto out_free_fwnode;
+> +	}
+> +
+> +	redirect_domain = domain;
+> +
+> +	ret = redirect_table_init(0);
+> +	if (ret)
+> +		goto out_free_table;
+> +
+> +	ret = acpi_cascade_irqdomain_init();
+> +	if (ret < 0) {
+> +		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
+> +		goto out_free_table;
+> +	}
+> +
+> +	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_REDIRECT_STARTING,
+> +				  "irqchip/loongarch/redirect:starting",
+> +				  redirect_cpu_online, NULL);
+
+Hmm.
+
+> +static int redirect_cpu_online(unsigned int cpu)
+> +{
+> +	int ret, node = cpu_to_node(cpu);
+> +
+> +	if (cpu != cpumask_first(cpumask_of_node(node)))
+> +		return 0;
+> +
+> +	ret = redirect_table_init(node);
+> +	if (ret) {
+> +		redirect_table_fini(node);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+
+So if you unplug all CPUs of a node and then replug the first CPU in the
+node, then this invokes redirect_table_init() unconditionally, which
+will unconditionally allocate pages and bitmap again ....
+
+Thanks,
+
+        tglx
