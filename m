@@ -1,127 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF42283FC7;
-	Wed, 28 May 2025 12:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0538686323
+	for <loongarch@lists.linux.dev>; Wed, 28 May 2025 13:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748434278; cv=none; b=Nj25nBrhoe+F260GgG1dug0d93wthTSZIhXPkdu4ozqWZVsMPxO10F+not4Pxm9Fsz/zdyH5zqrABiN6GeC7dL7ndpI9KnpJPA7ejuAvs3PwObb8qh7nP7ATk8snkqjZHZDnrXzgmcBIXSR17Q7/7iQ+8ePKLRw7ulfPWwxijPs=
+	t=1748440500; cv=none; b=MvCF0ddGf8wvYVBElmrTJlyUfaoCqwcMkQeHAdzKpdsZNdNIRB6wsQHI6QN7UHbp6W2hIA6xgzGVNZEsy6+LDkqM/MK8XNfKJGPQDY3BAmL+FB96dpF2PHd7xJSnjuShyPnRlIwuatdpIcbZhtRVxxjJoZ4qW9lABkl96lqnq0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748434278; c=relaxed/simple;
-	bh=8MfdXtHyOEsCmd1YNW5odISMpHpK4Xt9XoQx6rI00ew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IY9JRcn3BQC7ggmvFXH0ROv4YAbH93QTVPcoLlpjDHIBsIq6E8QE4Q3eQjxb6Byjd2o7sW1zmaBDBOU2ml7hjvZ1LpXyodmKXBSbdfcgBADXAIPrBvA6g2f/dHb21u5QiXDje+oT2jNJm0R4RoEQCRopfcehvuDgQqp1Ui3Ot84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5CTCwkV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748440500; c=relaxed/simple;
+	bh=k97NcxBl4V7jw/PvcH6y9RiaFq021QEAdtz1/8OVZ2U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ovUPkGFhrAEhHbH4FzFVykJexCuw9s+5ktyFJ3L7I4lWKSjIx10t6SUMO/qHt9z2aomYD7M+mrHa5wmbqZyhuf7Je/5sGcP40eJqB64C0S3PnDdUjxlALe6LXGUJPgjpLhpIMuBP0bW6lM0H9y+FUa3JGieP8iayH3ND78bpvKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vor7yCXb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5CTCwkV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E5BC4CEE7;
-	Wed, 28 May 2025 12:11:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vor7yCXb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84CD1C4CEE3
+	for <loongarch@lists.linux.dev>; Wed, 28 May 2025 13:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748434276;
-	bh=8MfdXtHyOEsCmd1YNW5odISMpHpK4Xt9XoQx6rI00ew=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G5CTCwkVw2zDw45I+BjQQ/PqW9ZeMRMNcW73i0sHphYveNnkQifCpFfdL09ode8OF
-	 HN/cDyzjy3BRjh+4HQS0qVhVPEIiAhAgLkPzqEbyjhTSUq+SwzZYnj/7g3xgEX4Hkw
-	 TiXoxfUFkNZyxgAMPC9h2sz50uxctB9XJtthduxKIyXV6Xk456XqL5WohOuxiWwAZz
-	 Kq7EQCEoClxzCIqqgBNCN5yrduDZnlZxIRoEJFvWvrAJyJ6fDC8poRnC0tloKwdZeI
-	 Ic3nz9RNlMfuMB5scE0Yt2upnWmjxPtIyiPTT40ZRqEJUI1RCf10OSdPEJCPCyiqPh
-	 y56VOzODK5zEA==
-Message-ID: <cae7d546-3e9a-4d31-8d46-ee4d6c8e0892@kernel.org>
-Date: Wed, 28 May 2025 14:11:12 +0200
+	s=k20201202; t=1748440499;
+	bh=k97NcxBl4V7jw/PvcH6y9RiaFq021QEAdtz1/8OVZ2U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Vor7yCXbUII3CJMh3yiK8Ji+X7/nRgSwsVbGgKIeau3fsDhwBvllBrG0NOn45Nb2O
+	 WE/WwfvlwwQ8Qn1Ihff94T07cw8EnjVz94BkDLK6EUcl/f85WRd69yGFxTSQ9+Okd0
+	 YfGo1DfDUPWj5xVwdL7/+hEA2yD2UObAaycctd9pTkxIx8WqiRQN1kSChJCVLxuAs4
+	 gcaV/pFSr+bn1MnP7pXI4uIGu2kAVX6GwsG6Zpu1N411rGfN7O/06KVlPhMNWTtmZe
+	 F6j0kRQ07HMdLnyf7Q8x9vBi6FmDraVclfoc1qH9ORh7cQfQ9pkoj9KaqzkWAok4KO
+	 DofQhJt3M752w==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60462e180e2so6653635a12.2
+        for <loongarch@lists.linux.dev>; Wed, 28 May 2025 06:54:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWAl5btRSwuuW74G9OQYHkrgX73+o0FRDfzCt2Pdj2pSYVLS0q8E1efFN5GsIgJoJqGMZeWPgVcaFk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YznhX9671GF3AnCgDp8CrTDCuS+KmFRSnfMEZeFKIhjO5Os2s46
+	iaIs5SHUnQtm87gdJcFnTS3QhC+MyM7Q5Kccn3GtJAEfBvNDViMO0/fn3eEmgESXlGva8uxAQSR
+	bBgwoIXPT/AJ30wSACZuCEhndXODM0SA=
+X-Google-Smtp-Source: AGHT+IEEuH8vRL+51mbmcyHxCEMeNyKwMN7QxI+1DOg59ySqj2dvrjBCrMYw1ofvYnVrmpTtEve02p2f+n5x+8YfqEs=
+X-Received: by 2002:a05:6402:d45:b0:602:ef0a:cef8 with SMTP id
+ 4fb4d7f45d1cf-602ef29d3cfmr11484327a12.18.1748440498076; Wed, 28 May 2025
+ 06:54:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON
- CRYPTO DRIVER entry
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>, lee@kernel.org,
- herbert@gondor.apana.org.au, jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <20250528070104.4525-1-zhaoqunqin@loongson.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250528070104.4525-1-zhaoqunqin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250520064936.32291-1-yangtiezhu@loongson.cn>
+ <e005dd551aec8bea185b3d37295876bd75d7b3e4.camel@xry111.site>
+ <a918b221-b7f3-9994-9a7a-d10345aa30df@loongson.cn> <19f4722d5cdb90a207129ee675c7278423cd328c.camel@xry111.site>
+In-Reply-To: <19f4722d5cdb90a207129ee675c7278423cd328c.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 28 May 2025 21:54:45 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5GEZu=r=gX4afNB2F4w_LpXa1FwuWdyDE=+pGJNnqxww@mail.gmail.com>
+X-Gm-Features: AX0GCFtlAzfumS6XolzoJ0MKPafRHvauugEExtVKJnN5aI2CpQXMkQBN4tLLIfg
+Message-ID: <CAAhV-H5GEZu=r=gX4afNB2F4w_LpXa1FwuWdyDE=+pGJNnqxww@mail.gmail.com>
+Subject: Re: [RFC PATCH] LoongArch: Do not include larchintrin.h
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28/05/2025 09:01, Qunqin Zhao wrote:
-> Changes to Loongson TPM driver would be best reviewed by the Loongson
-> crypto driver maintainers.
-> 
-> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
-> v8-v10: None 
-> v7: Added tag from Jarkko and Huacai 
-> v6: "tpm_lsse.c" -> "tpm_loongson"
-> v4-v5: None
-> 
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0fd568a6b..aa6db2912 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13984,6 +13984,7 @@ LOONGSON CRYPTO DRIVER
->  M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
->  L:	linux-crypto@vger.kernel.org
->  S:	Maintained
-> +F:	drivers/char/tpm/tpm_loongson.c
->  F:	drivers/crypto/loongson/
+On Tue, May 27, 2025 at 11:47=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wro=
+te:
+>
+> On Tue, 2025-05-27 at 11:17 +0800, Tiezhu Yang wrote:
+> > On 2025/5/21 =E4=B8=8B=E5=8D=881:41, Xi Ruoyao wrote:
+> > > On Tue, 2025-05-20 at 14:49 +0800, Tiezhu Yang wrote:
+> > > > larchintrin.h is a system header of compiler, include it in the
+> > > > kernel header may lead to the fatal error "'larchintrin.h' file
+> > > > not found".
+> > > >
+> > > > There are two related cases so far:
+> > > >
+> > > > (1) When compiling samples/bpf, it has been fixed in the latest
+> > > > kernel [1].
+> > > >
+> > > > (2) When running bcc script, it has been fixed in the latest
+> > > > bcc [2] [3], like this:
+> > > >
+> > > > $ /usr/share/bcc/tools/filetop
+> > > > In file included from <built-in>:4:
+> > > > In file included from /virtual/include/bcc/helpers.h:54:
+> > > > In file included from arch/loongarch/include/asm/page.h:7:
+> > > > In file included from arch/loongarch/include/asm/addrspace.h:9:
+> > > > arch/loongarch/include/asm/loongarch.h:11:10: fatal error:
+> > > > 'larchintrin.h' file not found
+> > > >     11 | #include <larchintrin.h>
+> > > >        |          ^~~~~~~~~~~~~~~
+> > > > 1 error generated.
+> > > >
+> > > > Maybe there are same errors for the other unknown projects, it is
+> > > > annoyance to add the include path each time. In order to avoid
+> > > > such
+> > > > errors once and for all, do not include larchintrin.h, just use
+> > > > the
+> > > > builtin functions directly.
+> > >
+> > > Sorry, but in GCC those builtin functions are not documented and may
+> > > subject to change in the future.  Only the larchintrin.h interface
+> > > is
+> > > documented.
+> >
+> > AFAICT, the LoongArch Base Built-in Functions are listed in the GCC
+> > documentation [1], they will not be changed easily and frequently in
+> > my opinion.
+> >
+> > __builtin_loongarch_cpucfg()
+> > __builtin_loongarch_csrrd_w()
+> > __builtin_loongarch_csrrd_d()
+> > __builtin_loongarch_csrwr_w()
+> > __builtin_loongarch_csrwr_d()
+> > __builtin_loongarch_csrxchg_w()
+> > __builtin_loongarch_csrxchg_d()
+> > __builtin_loongarch_iocsrrd_w()
+> > __builtin_loongarch_iocsrrd_d()
+> > __builtin_loongarch_iocsrwr_w()
+> > __builtin_loongarch_iocsrwr_d()
+> >
+> > > Thus if you don't want to rely on GCC for those operations, you may
+> > > need
+> > > to write inline asm...
+> >
+> > so these builtin functions can be used directly and safely.
+>
+> Oops, I mistakenly believed they were like __builtin_lsx_* which are not
+> documented.
+>
+> So yes they can be used directly.
+I don't think so.
 
-This makes no sense - you just added this entry in patch #3. Just add a
-complete entry instead of adding first half and second half later.
+1. csr & iocsr can be only used in kernel mode, if the kernel doesn't
+use the convenient short names, then the short names are totally
+useless.
+2. We get larchintrin.h included by "KBUILD_CFLAGS +=3D -isystem $(shell
+$(CC) -print-file-name=3Dinclude)", and this manner is also used by
+other architectures.
+3. I don't think there will be many projects that need to be modified.
 
-Best regards,
-Krzysztof
+
+Huacai
+
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
