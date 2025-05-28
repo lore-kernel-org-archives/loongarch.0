@@ -1,193 +1,127 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EAE18DB03
-	for <loongarch@lists.linux.dev>; Wed, 28 May 2025 10:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF42283FC7;
+	Wed, 28 May 2025 12:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748428852; cv=none; b=V5SwFrqzQ3rcpBshD2T4QGhTHVCbr0IU3bAJ1BdGrv1lVb4Y2rK2ZdGIs98e2RQE3s9PC/l8UpwzXij02abdbb6YJlVFBTTNqXiB0cVunRF9m+akmfvQ/uKztvWqyU9ErRVcxB+1PJjM64mPHWru1GQydx0hzdzSM3YheIgwy0k=
+	t=1748434278; cv=none; b=Nj25nBrhoe+F260GgG1dug0d93wthTSZIhXPkdu4ozqWZVsMPxO10F+not4Pxm9Fsz/zdyH5zqrABiN6GeC7dL7ndpI9KnpJPA7ejuAvs3PwObb8qh7nP7ATk8snkqjZHZDnrXzgmcBIXSR17Q7/7iQ+8ePKLRw7ulfPWwxijPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748428852; c=relaxed/simple;
-	bh=4haYlpXI5Ixcum997fl2z6nwrGcuYNAvbh9OqGw7pCg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cx2AGMvso2N4yIz46QEmxLOGaIuBdUjPytSijoOv2JM3GC3MXU3/jESn3gJhClECSxoIMYnKH6TKuNZ0jweNBgVIS0d4fH4Gt4wjN2okWbPzv6kh0twwgnR1+x0LCX2MWmgW9YpvbMNLbpRx9epZuEyrrRVjNzji67istmAWD/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 30eaf12e3bb011f0b29709d653e92f7d-20250528
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:d77636db-7685-4e1e-b6c2-abe4fb78a234,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:7
-X-CID-INFO: VERSION:1.1.45,REQID:d77636db-7685-4e1e-b6c2-abe4fb78a234,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:7
-X-CID-META: VersionHash:6493067,CLOUDID:a5b747f2bb1facfd45d139daa1634ba9,BulkI
-	D:250528184038GRIC8D5J,BulkQuantity:0,Recheck:0,SF:17|19|23|42|66|74|78|10
-	0|101|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,
-	QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-	,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_SNR
-X-UUID: 30eaf12e3bb011f0b29709d653e92f7d-20250528
-X-User: jianghaoran@kylinos.cn
-Received: from localhost.localdomain [(114.246.238.195)] by mailgw.kylinos.cn
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1632325228; Wed, 28 May 2025 18:40:36 +0800
-From: Haoran Jiang <jianghaoran@kylinos.cn>
-To: loongarch@lists.linux.dev
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel@xen0n.name,
-	chenhuacai@kernel.org,
-	hengqi.chen@gmail.com,
-	yangtiezhu@loongson.cn,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	sdf@fomichev.me,
-	kpsingh@kernel.org,
-	john.fastabend@gmail.com,
-	yonghong.song@linux.dev,
-	song@kernel.org,
-	eddyz87@gmail.com,
-	martin.lau@linux.dev,
-	andrii@kernel.org,
-	daniel@iogearbox.net
-Subject: [PATCH] LoongArch: BPF: Optimize the calculation method of jmp_offset in the emit_bpf_tail_call function
-Date: Wed, 28 May 2025 18:40:32 +0800
-Message-Id: <20250528104032.1237415-1-jianghaoran@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1748434278; c=relaxed/simple;
+	bh=8MfdXtHyOEsCmd1YNW5odISMpHpK4Xt9XoQx6rI00ew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IY9JRcn3BQC7ggmvFXH0ROv4YAbH93QTVPcoLlpjDHIBsIq6E8QE4Q3eQjxb6Byjd2o7sW1zmaBDBOU2ml7hjvZ1LpXyodmKXBSbdfcgBADXAIPrBvA6g2f/dHb21u5QiXDje+oT2jNJm0R4RoEQCRopfcehvuDgQqp1Ui3Ot84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5CTCwkV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5CTCwkV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E5BC4CEE7;
+	Wed, 28 May 2025 12:11:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748434276;
+	bh=8MfdXtHyOEsCmd1YNW5odISMpHpK4Xt9XoQx6rI00ew=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=G5CTCwkVw2zDw45I+BjQQ/PqW9ZeMRMNcW73i0sHphYveNnkQifCpFfdL09ode8OF
+	 HN/cDyzjy3BRjh+4HQS0qVhVPEIiAhAgLkPzqEbyjhTSUq+SwzZYnj/7g3xgEX4Hkw
+	 TiXoxfUFkNZyxgAMPC9h2sz50uxctB9XJtthduxKIyXV6Xk456XqL5WohOuxiWwAZz
+	 Kq7EQCEoClxzCIqqgBNCN5yrduDZnlZxIRoEJFvWvrAJyJ6fDC8poRnC0tloKwdZeI
+	 Ic3nz9RNlMfuMB5scE0Yt2upnWmjxPtIyiPTT40ZRqEJUI1RCf10OSdPEJCPCyiqPh
+	 y56VOzODK5zEA==
+Message-ID: <cae7d546-3e9a-4d31-8d46-ee4d6c8e0892@kernel.org>
+Date: Wed, 28 May 2025 14:11:12 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON
+ CRYPTO DRIVER entry
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>, lee@kernel.org,
+ herbert@gondor.apana.org.au, jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
+ jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ Huacai Chen <chenhuacai@loongson.cn>
+References: <20250528070104.4525-1-zhaoqunqin@loongson.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250528070104.4525-1-zhaoqunqin@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-For a ebpf subprog JIT，the last call bpf_int_jit_compile function will
-directly enter the skip_init_ctx process. At this point, out_offset = -1,
-the jmp_offset in emit_bpf_tail_call is calculated
-by #define jmp_offset (out_offset - (cur_offset)) is a negative number,
-which does not meet expectations.The final generated assembly as follow.
+On 28/05/2025 09:01, Qunqin Zhao wrote:
+> Changes to Loongson TPM driver would be best reviewed by the Loongson
+> crypto driver maintainers.
+> 
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> ---
+> v8-v10: None 
+> v7: Added tag from Jarkko and Huacai 
+> v6: "tpm_lsse.c" -> "tpm_loongson"
+> v4-v5: None
+> 
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0fd568a6b..aa6db2912 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13984,6 +13984,7 @@ LOONGSON CRYPTO DRIVER
+>  M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
+>  L:	linux-crypto@vger.kernel.org
+>  S:	Maintained
+> +F:	drivers/char/tpm/tpm_loongson.c
+>  F:	drivers/crypto/loongson/
 
-54:	bgeu        	$a2, $t1, -8	    # 0x0000004c
-58:	addi.d      	$a6, $s5, -1
-5c:	bltz        	$a6, -16	    # 0x0000004c
-60:	alsl.d      	$t2, $a2, $a1, 0x3
-64:	ld.d        	$t2, $t2, 264
-68:	beq         	$t2, $zero, -28	    # 0x0000004c
+This makes no sense - you just added this entry in patch #3. Just add a
+complete entry instead of adding first half and second half later.
 
-Before apply this patch, the follow test case will reveal soft lock issues.
-
-cd tools/testing/selftests/bpf/
-./test_progs --allow=tailcalls/tailcall_bpf2bpf_1
-
-dmesg:
-watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [test_progs:25056]
-
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
----
- arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
- 1 file changed, 9 insertions(+), 19 deletions(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index fa1500d4aa3e..d85490e7de89 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
- 	return true;
- }
- 
--/* initialized on the first pass of build_body() */
--static int out_offset = -1;
--static int emit_bpf_tail_call(struct jit_ctx *ctx)
-+static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
- {
- 	int off;
- 	u8 tcc = tail_call_reg(ctx);
-@@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	u8 t2 = LOONGARCH_GPR_T2;
- 	u8 t3 = LOONGARCH_GPR_T3;
- 	const int idx0 = ctx->idx;
--
--#define cur_offset (ctx->idx - idx0)
--#define jmp_offset (out_offset - (cur_offset))
-+	int tc_ninsn = 0;
-+	int jmp_offset = 0;
- 
- 	/*
- 	 * a0: &ctx
-@@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	 * if (index >= array->map.max_entries)
- 	 *	 goto out;
- 	 */
-+	tc_ninsn = insn ? ctx->offset[insn+1] - ctx->offset[insn] :
-+		ctx->offset[0];
- 	off = offsetof(struct bpf_array, map.max_entries);
- 	emit_insn(ctx, ldwu, t1, a1, off);
-+	jmp_offset = tc_ninsn - (ctx->idx - idx0);
- 	/* bgeu $a2, $t1, jmp_offset */
- 	if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset) < 0)
- 		goto toofar;
-@@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	 *	 goto out;
- 	 */
- 	emit_insn(ctx, addid, REG_TCC, tcc, -1);
-+	jmp_offset = tc_ninsn - (ctx->idx - idx0);
- 	if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
- 		goto toofar;
- 
-@@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	emit_insn(ctx, alsld, t2, a2, a1, 2);
- 	off = offsetof(struct bpf_array, ptrs);
- 	emit_insn(ctx, ldd, t2, t2, off);
-+	jmp_offset = tc_ninsn - (ctx->idx - idx0);
- 	/* beq $t2, $zero, jmp_offset */
- 	if (emit_tailcall_jmp(ctx, BPF_JEQ, t2, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
- 		goto toofar;
-@@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	emit_insn(ctx, ldd, t3, t2, off);
- 	__build_epilogue(ctx, true);
- 
--	/* out: */
--	if (out_offset == -1)
--		out_offset = cur_offset;
--	if (cur_offset != out_offset) {
--		pr_err_once("tail_call out_offset = %d, expected %d!\n",
--			    cur_offset, out_offset);
--		return -1;
--	}
--
- 	return 0;
- 
- toofar:
- 	pr_info_once("tail_call: jump too far\n");
- 	return -1;
--#undef cur_offset
--#undef jmp_offset
- }
- 
- static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
-@@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 	/* tail call */
- 	case BPF_JMP | BPF_TAIL_CALL:
- 		mark_tail_call(ctx);
--		if (emit_bpf_tail_call(ctx) < 0)
-+		if (emit_bpf_tail_call(i, ctx) < 0)
- 			return -EINVAL;
- 		break;
- 
-@@ -1342,7 +1333,6 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	if (tmp_blinded)
- 		bpf_jit_prog_release_other(prog, prog == orig_prog ? tmp : orig_prog);
- 
--	out_offset = -1;
- 
- 	return prog;
- 
--- 
-2.43.0
-
+Best regards,
+Krzysztof
