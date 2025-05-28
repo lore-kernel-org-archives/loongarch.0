@@ -1,144 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0538686323
-	for <loongarch@lists.linux.dev>; Wed, 28 May 2025 13:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE51419D07A;
+	Wed, 28 May 2025 16:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748440500; cv=none; b=MvCF0ddGf8wvYVBElmrTJlyUfaoCqwcMkQeHAdzKpdsZNdNIRB6wsQHI6QN7UHbp6W2hIA6xgzGVNZEsy6+LDkqM/MK8XNfKJGPQDY3BAmL+FB96dpF2PHd7xJSnjuShyPnRlIwuatdpIcbZhtRVxxjJoZ4qW9lABkl96lqnq0w=
+	t=1748450760; cv=none; b=cqXpEly05r+pREimyrp69ErLAWV+sSZ44oTlC0N21W/TFmhP6/piRgukFjEbCWlyhggXE/unUWOcC9AwysyIfzC2Djel9+Wx4PhH/+2LXtINz/M12eG1y92uZTX0q7+6N+NbiT5GHRSIeXEwutMBD2Dfj9ThYsIQnvWG5UCxEmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748440500; c=relaxed/simple;
-	bh=k97NcxBl4V7jw/PvcH6y9RiaFq021QEAdtz1/8OVZ2U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ovUPkGFhrAEhHbH4FzFVykJexCuw9s+5ktyFJ3L7I4lWKSjIx10t6SUMO/qHt9z2aomYD7M+mrHa5wmbqZyhuf7Je/5sGcP40eJqB64C0S3PnDdUjxlALe6LXGUJPgjpLhpIMuBP0bW6lM0H9y+FUa3JGieP8iayH3ND78bpvKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vor7yCXb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748450760; c=relaxed/simple;
+	bh=ZzP3dZbIvqBIvFOURta05rer0syVpr9AYK8L5vT3Cwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G4M64C11vrr8lkF/epF81v2cF2jjJlNkGBZICi4bbhK5LqqAjiwRSJ1z5iRX2C1FzhJtEwJR5gIFahsIx7mj8W5o1ppzcW47hBChlvrOdpKl+GZ5r9Wbt5PcRcb58O9zq8Z8FHWsnVu9EvAl2fRskkWYE/fwSQVQxtqDDYyv7io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVXzyTZM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vor7yCXb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84CD1C4CEE3
-	for <loongarch@lists.linux.dev>; Wed, 28 May 2025 13:54:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVXzyTZM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4561BC4CEE3;
+	Wed, 28 May 2025 16:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748440499;
-	bh=k97NcxBl4V7jw/PvcH6y9RiaFq021QEAdtz1/8OVZ2U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Vor7yCXbUII3CJMh3yiK8Ji+X7/nRgSwsVbGgKIeau3fsDhwBvllBrG0NOn45Nb2O
-	 WE/WwfvlwwQ8Qn1Ihff94T07cw8EnjVz94BkDLK6EUcl/f85WRd69yGFxTSQ9+Okd0
-	 YfGo1DfDUPWj5xVwdL7/+hEA2yD2UObAaycctd9pTkxIx8WqiRQN1kSChJCVLxuAs4
-	 gcaV/pFSr+bn1MnP7pXI4uIGu2kAVX6GwsG6Zpu1N411rGfN7O/06KVlPhMNWTtmZe
-	 F6j0kRQ07HMdLnyf7Q8x9vBi6FmDraVclfoc1qH9ORh7cQfQ9pkoj9KaqzkWAok4KO
-	 DofQhJt3M752w==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60462e180e2so6653635a12.2
-        for <loongarch@lists.linux.dev>; Wed, 28 May 2025 06:54:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWAl5btRSwuuW74G9OQYHkrgX73+o0FRDfzCt2Pdj2pSYVLS0q8E1efFN5GsIgJoJqGMZeWPgVcaFk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YznhX9671GF3AnCgDp8CrTDCuS+KmFRSnfMEZeFKIhjO5Os2s46
-	iaIs5SHUnQtm87gdJcFnTS3QhC+MyM7Q5Kccn3GtJAEfBvNDViMO0/fn3eEmgESXlGva8uxAQSR
-	bBgwoIXPT/AJ30wSACZuCEhndXODM0SA=
-X-Google-Smtp-Source: AGHT+IEEuH8vRL+51mbmcyHxCEMeNyKwMN7QxI+1DOg59ySqj2dvrjBCrMYw1ofvYnVrmpTtEve02p2f+n5x+8YfqEs=
-X-Received: by 2002:a05:6402:d45:b0:602:ef0a:cef8 with SMTP id
- 4fb4d7f45d1cf-602ef29d3cfmr11484327a12.18.1748440498076; Wed, 28 May 2025
- 06:54:58 -0700 (PDT)
+	s=k20201202; t=1748450759;
+	bh=ZzP3dZbIvqBIvFOURta05rer0syVpr9AYK8L5vT3Cwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LVXzyTZMwmjueFCXAoq3KZlHkwl9jf4A8JjFcq88dAM8hfAUvmtIJwb4Bxl1ws/Tr
+	 ApiRG/VITi515B6Pd224PL11E1tw2OcX/bfPd9uyszUuCLjVdgABdingNaaqyC7mzp
+	 zIF8RYFthHLqWDi0F8kgcOQGCEuFDmi74VyHJq4TwH3+1LZ9YFgH+QGTaJqYd6q0el
+	 qWnBQpBmvMyzupU04McJocy6KvMvfgj9+u3CCT9Io12x+Eg2mBF88vXa+v2YwWoPti
+	 bnkKh0jPV2DP3SpwsBor/BcnjC4nejO+DYEbJIIIS9yKBw543336xSXo+fmxCKwpFg
+	 lpXE8h/tMxsPg==
+Date: Wed, 28 May 2025 09:45:55 -0700
+From: Kees Cook <kees@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>,
+	Justin Stitt <justinstitt@google.com>
+Cc: linux-hardening@vger.kernel.org, oe-lkp@lists.linux.dev, lkp@intel.com,
+	linux-kernel@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, llvm@lists.linux.dev
+Subject: Re: [linus:master] [crypto]  40b9969796:
+ UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c
+Message-ID: <202505280937.6802F0F210@keescook>
+References: <202505281024.f42beaa7-lkp@intel.com>
+ <20250528061427.GA42911@sol>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250520064936.32291-1-yangtiezhu@loongson.cn>
- <e005dd551aec8bea185b3d37295876bd75d7b3e4.camel@xry111.site>
- <a918b221-b7f3-9994-9a7a-d10345aa30df@loongson.cn> <19f4722d5cdb90a207129ee675c7278423cd328c.camel@xry111.site>
-In-Reply-To: <19f4722d5cdb90a207129ee675c7278423cd328c.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 28 May 2025 21:54:45 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5GEZu=r=gX4afNB2F4w_LpXa1FwuWdyDE=+pGJNnqxww@mail.gmail.com>
-X-Gm-Features: AX0GCFtlAzfumS6XolzoJ0MKPafRHvauugEExtVKJnN5aI2CpQXMkQBN4tLLIfg
-Message-ID: <CAAhV-H5GEZu=r=gX4afNB2F4w_LpXa1FwuWdyDE=+pGJNnqxww@mail.gmail.com>
-Subject: Re: [RFC PATCH] LoongArch: Do not include larchintrin.h
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528061427.GA42911@sol>
 
-On Tue, May 27, 2025 at 11:47=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wro=
-te:
->
-> On Tue, 2025-05-27 at 11:17 +0800, Tiezhu Yang wrote:
-> > On 2025/5/21 =E4=B8=8B=E5=8D=881:41, Xi Ruoyao wrote:
-> > > On Tue, 2025-05-20 at 14:49 +0800, Tiezhu Yang wrote:
-> > > > larchintrin.h is a system header of compiler, include it in the
-> > > > kernel header may lead to the fatal error "'larchintrin.h' file
-> > > > not found".
-> > > >
-> > > > There are two related cases so far:
-> > > >
-> > > > (1) When compiling samples/bpf, it has been fixed in the latest
-> > > > kernel [1].
-> > > >
-> > > > (2) When running bcc script, it has been fixed in the latest
-> > > > bcc [2] [3], like this:
-> > > >
-> > > > $ /usr/share/bcc/tools/filetop
-> > > > In file included from <built-in>:4:
-> > > > In file included from /virtual/include/bcc/helpers.h:54:
-> > > > In file included from arch/loongarch/include/asm/page.h:7:
-> > > > In file included from arch/loongarch/include/asm/addrspace.h:9:
-> > > > arch/loongarch/include/asm/loongarch.h:11:10: fatal error:
-> > > > 'larchintrin.h' file not found
-> > > >     11 | #include <larchintrin.h>
-> > > >        |          ^~~~~~~~~~~~~~~
-> > > > 1 error generated.
-> > > >
-> > > > Maybe there are same errors for the other unknown projects, it is
-> > > > annoyance to add the include path each time. In order to avoid
-> > > > such
-> > > > errors once and for all, do not include larchintrin.h, just use
-> > > > the
-> > > > builtin functions directly.
-> > >
-> > > Sorry, but in GCC those builtin functions are not documented and may
-> > > subject to change in the future.  Only the larchintrin.h interface
-> > > is
-> > > documented.
-> >
-> > AFAICT, the LoongArch Base Built-in Functions are listed in the GCC
-> > documentation [1], they will not be changed easily and frequently in
-> > my opinion.
-> >
-> > __builtin_loongarch_cpucfg()
-> > __builtin_loongarch_csrrd_w()
-> > __builtin_loongarch_csrrd_d()
-> > __builtin_loongarch_csrwr_w()
-> > __builtin_loongarch_csrwr_d()
-> > __builtin_loongarch_csrxchg_w()
-> > __builtin_loongarch_csrxchg_d()
-> > __builtin_loongarch_iocsrrd_w()
-> > __builtin_loongarch_iocsrrd_d()
-> > __builtin_loongarch_iocsrwr_w()
-> > __builtin_loongarch_iocsrwr_d()
-> >
-> > > Thus if you don't want to rely on GCC for those operations, you may
-> > > need
-> > > to write inline asm...
-> >
-> > so these builtin functions can be used directly and safely.
->
-> Oops, I mistakenly believed they were like __builtin_lsx_* which are not
-> documented.
->
-> So yes they can be used directly.
-I don't think so.
+On Tue, May 27, 2025 at 11:14:27PM -0700, Eric Biggers wrote:
+> [+Kees and linux-hardening]
+> 
+> On Wed, May 28, 2025 at 01:15:05PM +0800, kernel test robot wrote:
+> > 
+> > 
+> > Hello,
+> > 
+> > by this commit, the config has below diff:
+> > 
+> > --- /pkg/linux/x86_64-randconfig-101-20250522/clang-20/d469eaed223fa485eabebd3bcd05ddd3c891f54e/.config 2025-05-23 23:44:56.781716572 +0800
+> > +++ /pkg/linux/x86_64-randconfig-101-20250522/clang-20/40b9969796bfa49ed1b0f7ddc254f48cb2ac6d2c/.config 2025-05-24 02:08:29.858605300 +0800
+> > @@ -4837,7 +4837,8 @@ CONFIG_CRYPTO_ACOMP2=y
+> >  CONFIG_CRYPTO_MANAGER=y
+> >  CONFIG_CRYPTO_MANAGER2=y
+> >  # CONFIG_CRYPTO_USER is not set
+> > -CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=y
+> > +CONFIG_CRYPTO_SELFTESTS=y
+> > +# CONFIG_CRYPTO_MANAGER_EXTRA_TESTS is not set
+> >  # CONFIG_CRYPTO_NULL is not set
+> >  CONFIG_CRYPTO_PCRYPT=m
+> >  CONFIG_CRYPTO_CRYPTD=y
+> > 
+> > it seems tests are enabled then we observe the UBSAN issues
+> > 
+> > d469eaed223fa485 40b9969796bfa49ed1b0f7ddc25
+> > ---------------- ---------------------------
+> >        fail:runs  %reproduction    fail:runs
+> >            |             |             |
+> >            :6          100%           6:6     dmesg.UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c
+> >            :6          100%           6:6     dmesg.UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305.c
+> > 
+> > it's hard for bot to apply this commit to previous commits in bisect, so we just
+> > make out below report FYI that we observe UBSAN issues in boot tests.
+> > 
+> > 
+> > kernel test robot noticed "UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c" on:
+> > 
+> > commit: 40b9969796bfa49ed1b0f7ddc254f48cb2ac6d2c ("crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > 
+> > [test failed on linux-next/master 176e917e010cb7dcc605f11d2bc33f304292482b]
+> > 
+> > in testcase: boot
+> > 
+> > config: x86_64-randconfig-101-20250522
+> > compiler: clang-20
+> > test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> > 
+> > (please refer to attached dmesg/kmsg for entire log/backtrace)
+> > 
+> > 
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <oliver.sang@intel.com>
+> > | Closes: https://lore.kernel.org/oe-lkp/202505281024.f42beaa7-lkp@intel.com
+> > 
+> > 
+> > [   12.442846][    T1] ------------[ cut here ]------------
+> > [   12.443261][    T1] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8854:47
+> > [   12.444084][    T1] 16 - 114 cannot be represented in type 'size_t' (aka 'unsigned long')
+> > [   12.444682][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G                T   6.15.0-rc5-00342-g40b9969796bf #1 VOLUNTARY
+> 
+> This issue predates the blamed commit, and it's specific to
+> CONFIG_UBSAN_INTEGER_WRAP which was recently introduced.
+> 
+> CONFIG_UBSAN_INTEGER_WRAP apparently requires clang 20.
+> 
+> To try to reproduce this, I built clang from the release/20.x branch, then built
+> a kernel with CONFIG_UBSAN_INTEGER_WRAP=y.  When booting that kernel, there are
+> many UBSAN reports:
+> 
+>     [    0.000000] UBSAN: negation-overflow in lib/sort.c:199:36
+> 
+>     [    0.000000] UBSAN: negation-overflow in lib/sort.c:185:14
+> 
+>     [    0.276708] UBSAN: unsigned-integer-overflow in ./include/linux/min_heap.h:329:24
+> 
+>     [    0.277376] UBSAN: negation-overflow in ./include/linux/min_heap.h:260:42
+> 
+>     [    0.871191] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8854:47
+> 
+>     [    0.890856] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8851:47
+> 
+>     [    0.910455] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305.c:260:57
+> 
+>     [    1.105542] UBSAN: unsigned-integer-overflow in lib/zstd/compress/zstd_compress_sequences.c:334:21
+> 
+>     [    1.113539] UBSAN: unsigned-integer-overflow in lib/zstd/compress/huf_compress.c:889:23
+> 
+>     [    1.114597] UBSAN: unsigned-integer-overflow in lib/lz4/lz4_compress.c:294:9
+> 
+> So I did get the chacha20poly1305 ones, but they're hardly unique.
+> 
+> If this new sanitizer is going to move forward, is there any sort of plan or
+> guide for how to update code to be compatible with it?  Specifically considering
+> common situations where unsigned wraparound (which is defined behavior in C) can
+> be intentionally relied on, like calculating the distance from the next N-byte
+> boundary.  What are the best practices now?
 
-1. csr & iocsr can be only used in kernel mode, if the kernel doesn't
-use the convenient short names, then the short names are totally
-useless.
-2. We get larchintrin.h included by "KBUILD_CFLAGS +=3D -isystem $(shell
-$(CC) -print-file-name=3Dinclude)", and this manner is also used by
-other architectures.
-3. I don't think there will be many projects that need to be modified.
+Hi, yes, this is still under development. I tried to make it hard to
+enable accidentally (not via COMPILE_TEST, not UBSAN-default, etc), but
+we (still) don't have a way to disable configs for randconfigs. :(
 
+We're hoping to see Clang 21 with the more versatile Overflow Behavior Types:
+https://discourse.llvm.org/t/rfc-v2-clang-introduce-overflowbehaviortypes-for-wrapping-and-non-wrapping-arithmetic/86507
 
-Huacai
+and our current testing is showing many fewer false positives. (Having
+run syzkaller for weeks now.)
 
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+> Documentation/dev-tools/ubsan.rst says nothing about this and only mentions
+> "undefined behavior", which this is not.
+
+Right -- this will get extensive documentation before we move it out of
+its development phase.
+
+I'm not sure how to enforce "don't enable this unless you're developing
+the Overflow Behavior Types" with current Kconfig, given the randconfig
+gap... I have some memory of Arnd doing something special with his
+randconfigs to avoid these kinds of things, but I can't find it now.
+
+-Kees
+
+-- 
+Kees Cook
