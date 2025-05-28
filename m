@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B747824418F
-	for <loongarch@lists.linux.dev>; Wed, 28 May 2025 07:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78B512CCDB
+	for <loongarch@lists.linux.dev>; Wed, 28 May 2025 07:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748415612; cv=none; b=hzLIjIdVKKY42eztYTtQBlHKZmx7HLID0SejArD8GdW0Mgfw1kOizQ0pRB7cjqWe0K9XLTiS3wp1mNdlq/MWxU8nfU2Pd1e0H2UFZ5xPH1NY0Ixei6xJXwuz3NnQdgsW9IjEdQS85VpJ7ZgbN4ZhVQ33RM1KZhgF9HfBKJrWXz0=
+	t=1748415648; cv=none; b=rvPjQhdbgGC0RJfvurXOJWE7ZuKCgdkT7/tACEAmUD17VcqEwOq89r06M83akj11xG3ic0srJM9A0LFxK3JFd9qGWeCrZoKEhvfCA/MIo6yQxupJgC//9JFtDK5r495iGJdY55YOPiLgGaeWsTjsl2knH2u6AUL1x0LjHyVhfew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748415612; c=relaxed/simple;
-	bh=9c1vEiQ/tinnj/9tHfqY46pY5yjHOSq8ox6KRmG1GqQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tdY7wqQNcyN0tyAqKDHhD/EmBWMMu4tRchTmzclAPFoRTSH4KwLDuKYGcT7QAACRTCKRqNUvxvwFvJkZYONKMF7FPCzRp2O/CVSkWLc/Pf3UEkJKTuK6kRu7E/vQgM23Ec1rrUna0RT8jiCB9rn+lzMCRtOEfKNQ96cU3huR0ok=
+	s=arc-20240116; t=1748415648; c=relaxed/simple;
+	bh=JBY0Di/03IIvsSC6+XlOxyMmholbxwaDw0MQQYys6Hg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rjD43zeVOJzsv/cK2Nr5C6xqpW4eW9tMq4y4GV1Sdl9RkV0GwjEI7AipJBBN2LwGkY0zfOQ/Ca921dkJ9OHEuYc/n8I5nbaahaslezh5vAR5Z7B7hncuoE9DpAQrVKguG0rPHZ1+lq/5RVFAMd/YAw+ierm07k0PDYot9/Erv0k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.40.54.178])
-	by gateway (Coremail) with SMTP id _____8CxvnJwtDZohK7_AA--.19552S3;
-	Wed, 28 May 2025 15:00:00 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxWXGctDZoC6__AA--.18908S3;
+	Wed, 28 May 2025 15:00:44 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.40.54.178])
-	by front1 (Coremail) with SMTP id qMiowMAxzxtQtDZoEG33AA--.60923S6;
-	Wed, 28 May 2025 14:59:59 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAxDcWatDZozG33AA--.45203S2;
+	Wed, 28 May 2025 15:00:42 +0800 (CST)
 From: Qunqin Zhao <zhaoqunqin@loongson.cn>
 To: lee@kernel.org,
 	herbert@gondor.apana.org.au,
@@ -30,14 +29,11 @@ Cc: linux-kernel@vger.kernel.org,
 	jgg@ziepe.ca,
 	linux-integrity@vger.kernel.org,
 	Qunqin Zhao <zhaoqunqin@loongson.cn>,
-	Yinggang Gu <guyinggang@loongson.cn>,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
-Date: Wed, 28 May 2025 14:59:43 +0800
-Message-ID: <20250528065944.4511-5-zhaoqunqin@loongson.cn>
+Subject: [PATCH v10 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+Date: Wed, 28 May 2025 15:01:04 +0800
+Message-ID: <20250528070104.4525-1-zhaoqunqin@loongson.cn>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
-References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -45,185 +41,53 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxzxtQtDZoEG33AA--.60923S6
+X-CM-TRANSID:qMiowMAxDcWatDZozG33AA--.45203S2
 X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Gw1kXFWxCF1kZw4xZw43Arc_yoW7Ww43pF
-	WfCa47Cr45Jr4jkrsxArWDuFW3Zr93XFWDKay7J34UuFyDA34rXryDtFy7Xa17Zrs7Gry2
-	gFZ5uFW8uF1Uu3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_
-	ZF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GFyftFyrAF48Jr1rCw1xJFc_yoW3Kwc_Ca
+	yIq3yxWr18GF1Ig340vF97Zr4YvrWfX3Zru3WUt34fXa4qyr9xtrnrAF4kG3W3urW5CFs8
+	uayxGas3Ar13ZosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3
+	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26c
 	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
 	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jqRRiUUUUU=
 
-Loongson Security Engine supports random number generation, hash,
-symmetric encryption and asymmetric encryption. Based on these
-encryption functions, TPM2 have been implemented in the Loongson
-Security Engine firmware. This driver is responsible for copying data
-into the memory visible to the firmware and receiving data from the
-firmware.
+Changes to Loongson TPM driver would be best reviewed by the Loongson
+crypto driver maintainers.
 
-Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
 Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
 Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
-v10: Added error check in send and recv callbak
-    
-v9: "tpm_loongson_driver" --> "tpm_loongson"
-    "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
+v8-v10: None 
+v7: Added tag from Jarkko and Huacai 
+v6: "tpm_lsse.c" -> "tpm_loongson"
+v4-v5: None
 
-v8: In the send callback, it will wait until the TPM2 command is
-    completed. So do not need to wait in the recv callback.
-    Removed Jarkko's tag cause there are some changes in v8
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-v7: Moved Kconfig entry between TCG_IBMVTPM and TCG_XEN.
-    Added Jarkko's tag(a little change, should be fine).
-    
-v6: Replace all "ls6000se" with "loongson"
-    Prefix all with tpm_loongson instead of tpm_lsse.
-    Removed Jarkko's tag cause there are some changes in v6
-
-v5: None
-v4: Prefix all with tpm_lsse instead of tpm.
-    Removed MODULE_AUTHOR fields.
-
-v3: Added reminder about Loongson security engine to git log.
-
- drivers/char/tpm/Kconfig        |  9 ++++
- drivers/char/tpm/Makefile       |  1 +
- drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++++++++++++++
- 3 files changed, 94 insertions(+)
- create mode 100644 drivers/char/tpm/tpm_loongson.c
-
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index dddd702b2..ba3924eb1 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -189,6 +189,15 @@ config TCG_IBMVTPM
- 	  will be accessible from within Linux.  To compile this driver
- 	  as a module, choose M here; the module will be called tpm_ibmvtpm.
- 
-+config TCG_LOONGSON
-+	tristate "Loongson TPM Interface"
-+	depends on MFD_LOONGSON_SE
-+	help
-+	  If you want to make Loongson TPM support available, say Yes and
-+	  it will be accessible from within Linux. To compile this
-+	  driver as a module, choose M here; the module will be called
-+	  tpm_loongson.
-+
- config TCG_XEN
- 	tristate "XEN TPM Interface"
- 	depends on TCG_TPM && XEN
-diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-index 9de1b3ea3..5b5cdc0d3 100644
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
- obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
- obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
- obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
-+obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
-diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
-new file mode 100644
-index 000000000..5cbdb37f8
---- /dev/null
-+++ b/drivers/char/tpm/tpm_loongson.c
-@@ -0,0 +1,84 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
-+
-+#include <linux/device.h>
-+#include <linux/mfd/loongson-se.h>
-+#include <linux/platform_device.h>
-+#include <linux/wait.h>
-+
-+#include "tpm.h"
-+
-+struct tpm_loongson_cmd {
-+	u32 cmd_id;
-+	u32 data_off;
-+	u32 data_len;
-+	u32 pad[5];
-+};
-+
-+static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-+{
-+	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-+	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
-+
-+	if (cmd_ret->data_len > count)
-+		return -EIO;
-+
-+	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
-+
-+	return cmd_ret->data_len;
-+}
-+
-+static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
-+{
-+	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-+	struct tpm_loongson_cmd *cmd = tpm_engine->command;
-+
-+	if (count > tpm_engine->buffer_size)
-+		return -E2BIG;
-+
-+	cmd->data_len = count;
-+	memcpy(tpm_engine->data_buffer, buf, count);
-+
-+	return loongson_se_send_engine_cmd(tpm_engine);
-+}
-+
-+static const struct tpm_class_ops tpm_loongson_ops = {
-+	.flags = TPM_OPS_AUTO_STARTUP,
-+	.recv = tpm_loongson_recv,
-+	.send = tpm_loongson_send,
-+};
-+
-+static int tpm_loongson_probe(struct platform_device *pdev)
-+{
-+	struct loongson_se_engine *tpm_engine;
-+	struct device *dev = &pdev->dev;
-+	struct tpm_loongson_cmd *cmd;
-+	struct tpm_chip *chip;
-+
-+	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
-+	if (!tpm_engine)
-+		return -ENODEV;
-+	cmd = tpm_engine->command;
-+	cmd->cmd_id = SE_CMD_TPM;
-+	cmd->data_off = tpm_engine->buffer_off;
-+
-+	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
-+	dev_set_drvdata(&chip->dev, tpm_engine);
-+
-+	return tpm_chip_register(chip);
-+}
-+
-+static struct platform_driver tpm_loongson = {
-+	.probe   = tpm_loongson_probe,
-+	.driver  = {
-+		.name  = "loongson-tpm",
-+	},
-+};
-+module_platform_driver(tpm_loongson);
-+
-+MODULE_ALIAS("platform:loongson-tpm");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Loongson TPM driver");
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0fd568a6b..aa6db2912 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13984,6 +13984,7 @@ LOONGSON CRYPTO DRIVER
+ M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
+ L:	linux-crypto@vger.kernel.org
+ S:	Maintained
++F:	drivers/char/tpm/tpm_loongson.c
+ F:	drivers/crypto/loongson/
+ F:	drivers/mfd/loongson-se.c
+ F:	include/linux/mfd/loongson-se.h
 -- 
 2.45.2
 
