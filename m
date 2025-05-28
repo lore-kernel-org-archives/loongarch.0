@@ -1,563 +1,284 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE2023DEB6
-	for <loongarch@lists.linux.dev>; Tue, 27 May 2025 08:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748333547; cv=none; b=bOSHcbD2zRHgh/YDP7kQ0gDZeXa3Gkcb0PBVtPALY41Y+JhAZ06SG1pZ8pVfqs9GCtwNaSrXihUwCo2sHEvBriPpJ1WT982hZ1POZQZLAVYiHeZiBWKAinuOBLmUSK/zr34XZ7/4HehLqCLp5t/yad90g9ZH4qXxos6UaKIdYuc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748333547; c=relaxed/simple;
-	bh=HOHrdBTeSaAxKTmZHtbLi3StXijXs5pu3qt6hrqX6PY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bKVd4YLd9YcZheUl3g1pGTx1ikLRh5iVi6vL1d3laCx0pCDWwuIcMmktJcQzKVUkIdSJBUNdjpCu8Wc5nrgtWawn2cB6LAdR2Ig0DQCDVCf7makIsAeh/SFsVKhZ1hceOpTbqVIAXxJHkGgOw/OBIN3MIKXp1RdAID66yK9jTQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cmSi/E2P; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD691D798E;
+	Wed, 28 May 2025 05:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748409363; cv=fail; b=HtcdpyyylDUWgKy6i3RWg/OoC0n8DMgIGRDRZtkllFY6bWe5TRPqp33Mrbn3D19UpWge7VCAQAwlFm/j8r6lCxfmQqF9oTJetqSj8tbLkrbojji1b/4Jpj7K9HESowxlg7oZ+joFnu/8TQOR2Pv3DyDVsf2ruLVejp35zPg0mV8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748409363; c=relaxed/simple;
+	bh=r6bn6YHQxq3foBchlGAsC1qhptfxmSddvOzXsEMIqBo=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=VgekWXuBiDfXJ8ZVBPpW95stRPWptl64/C6w7ax3CPQcJ+tx2oMFaO43N/E311ejOka58pS9ih30Tpz3Z5Yk2p3lFaweok2/z7WPbgASaKNzanEi2X3gZhxDuTEj46CKB/G6B+bHr/LUpETj40NwVB8vjU3n/OKHWIbUizDlIk4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=duQhL9w7; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmSi/E2P"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-acb5ec407b1so508402766b.1
-        for <loongarch@lists.linux.dev>; Tue, 27 May 2025 01:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748333543; x=1748938343; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hzj9YsRu706sjD1Xp/emKY7PTlORkH1Xl9Vd6icqqpY=;
-        b=cmSi/E2Pp9SuuDkAhLo/OtuD7bdQZ6UKNUGtmiCrGJFoEa+JCKkzD/MMWqEVIZtxA6
-         Q0X2HuXaVl5bD2kgCtwJ5om944uSWtzE4rnDeeApOF92QJAlmDW/ont1hVJ3vW/muO4a
-         v31xg7bOqI4OpbilzWiCh5m8Xnp57eeaoCr+WWAot6vGvkW/7rOR0eh4n3ZZssObfeS8
-         NKxTNzQULN7Ywv/pJ5PPzhIihGIoeEYV4M7FhXC02LGfhGJRRw8MsC0etJR3q5OQsNsk
-         yQyFOu2ZNMQEsLqoUBTe4ZmlS4Cby5CBViyFectO5yVYP+PHLi4inasqwxNAtxWMwVhs
-         Ta7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748333543; x=1748938343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hzj9YsRu706sjD1Xp/emKY7PTlORkH1Xl9Vd6icqqpY=;
-        b=iTxRVtYfaAk4pQ8zt2ukabm0h7X3HBJBI0HphBasLf2n/0UYZzJQPLxqtzdhIJiwfD
-         /Y3RTMYf1UA+4E7YAEMqvvH9lTeKQsX71ullZluzuL1Qm4Rh0VsAmCqXKmK1NcHdZ6Yu
-         FkLukbJoI8/rSlKN2mtUpDeVHNSMRwt5Eevxv6U06q2/rcs2+NQIRlkTtgqUTE8LTylm
-         bvu1j4mo98WkrGyt4gNIQXKSdepy5K8qLnJVSzHuNpV1K0l7KwQJ2vDRVMBH3YAYAZR/
-         pdMRxyTRMG3ihxzPevg9m6T+S8Ucvj0n1jkWadcRqZjgUBIlK+oQtHpiaP/PXKc6v4qW
-         6SLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ0qZhbwsdZ01Waxzg3hFAzeq2SOuqRrcL/kmqrDO8CpqLx87QnyjlS4gnQYe0PD75tWDnUErZ/cE=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx1PWBNCuzr8TJO5PLRprjYKczqT9OuVj17Nsh8C3WGVn2joQM3
-	WlEyYDRKR7AtYciqAMBGsB82PpH8D8ei6SlzNet0q3XxzrAOUTczJ3aA4wH2Zo0/ijtcwSNuZrc
-	vZ77bjZ0yb5EO6Fkr+7eF8okkPSXJbOeiNy/7r2Naag==
-X-Gm-Gg: ASbGncsk3seE9mb+/Xp4/YwTeKWZMVEzyLtUg51mG1Mug0F3lg3G2Lenj59jXcDaJn2
-	Cx1n6X2xPDyqq5vBYfuQIj+upR38IAhqt5wv6rOtDHFRCyBE+VBhnlFJCj7WBzJnVHb5+JENdm0
-	PAoioOK0K6G9kCOMv7oKV+WYw2mWcQx7+mMA0SNOfbUmQ=
-X-Google-Smtp-Source: AGHT+IHM+nvWRi5XKpXq3bpDtK6mbzuWQDoeBKqcTeUkr9X71mBMqoPFDjALAoRUQrIdevbLfDDeKighD+XSXNAtJCA=
-X-Received: by 2002:a17:907:9715:b0:ad8:8841:b393 with SMTP id
- a640c23a62f3a-ad88841b3a0mr242301366b.6.1748333541895; Tue, 27 May 2025
- 01:12:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="duQhL9w7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748409360; x=1779945360;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=r6bn6YHQxq3foBchlGAsC1qhptfxmSddvOzXsEMIqBo=;
+  b=duQhL9w7zClml19a5Sz7c7ypatsQbRWVjruGKdjruNxpZzs9i7zKLWrl
+   sF0TprRUQXA03nYJkt2ZbxV3RmjRzoHIEwiFXKOQhbUh5DeFAxu7JB+7R
+   gbO39yM5kXWzbBzStMzYjyNt7uzWi8mC6btWLNKiHLXXqkZNCb+LGCVUY
+   eP/rytBtlTtaomoTklhjNvDb73NmJC698zkCu4Jv7iABNoEFb7c0pMhjZ
+   IAC0hVpkUVqq9TV6qtUs3U17udW2HxLlATqWWwb7BLt2qINLzrjgF0s6A
+   2Qc9pF1zZQwiL5S53alk9+fgja1/divpk8h7L5bBekVDnG9dy4GHwcVYV
+   w==;
+X-CSE-ConnectionGUID: /DN7oQniT6++Z0tuLLPt4Q==
+X-CSE-MsgGUID: BX9MjPaKSqS0V+7F40PTfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="38042274"
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="38042274"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 22:15:59 -0700
+X-CSE-ConnectionGUID: 5Pe5RguYTxeE/6TU+5YV8w==
+X-CSE-MsgGUID: jElnol/nSyab5t7NeV9ISA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="174118440"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 22:15:58 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 27 May 2025 22:15:58 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 27 May 2025 22:15:58 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.85)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Tue, 27 May 2025 22:15:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h2TlZxmKCbSdaef+/Sz6X/9iXS/DETVIiQiarog7E/B4QregO9vgIuzNvsVQ7E7rY3vpJAheNO0Ddw6X1Inp8z2zGrJQ0WjkGmUEDVdcMQnUUS9g4pM8ckj2+JfK49nTIfRUUgZwvvQlqKKEW6JG2gYPmoD6aHwGf2wjZfJ/D8gzfJCbOTr1zNmi9ogvQLLTvvpU9OogLxOmieFgEFdFXukmN/6+SyKJrNtYvcaDEEIeDtwH0ZBk19F1NV61rEShPaaGmTFXIK6wooQQKKGGqgnihJY1riQ4mvIxG6RtPHdMwZye+V8PY8+NyOiQ0eBpdaVphbPtq8RMwpCyJ6oY3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yAUWnPMrzJA4nCuRp4y3FoZB03rY/GFxph8++0ShKRQ=;
+ b=E9nyGxFK6dQ4PivStEm4zulyEUlAH6mOGGeRxrheTXSf1dlj62GCeWyzUe7DRr0j8gXESlP07XfB79GWCK1ds76IOPhCxf097Lq3TounKVjZFVIu6ukom0ezN+C7QkICQq/cK5fiCDx7++oqE3XoTuSShrFNoeOm0Hx0kNcbquoUaYltyVUuchEe3XVb64LxznkGEmat6U1zBCQday726a5RaGeqhPSHC5kBzKrQrLd3DsXzgt+hum7v7TpgaPE2jjPSKPnEnygJ/vzWY5ul50gd3iT9vDFx9FllQOaehFvG7pk+HGYcPoVvgR5MGU/n66s+BEPhtly1PF4u0f8wLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by MW3PR11MB4714.namprd11.prod.outlook.com (2603:10b6:303:5d::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Wed, 28 May
+ 2025 05:15:15 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.8746.030; Wed, 28 May 2025
+ 05:15:15 +0000
+Date: Wed, 28 May 2025 13:15:05 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Eric Biggers <ebiggers@google.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-s390@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+	<oliver.sang@intel.com>
+Subject: [linus:master] [crypto]  40b9969796:
+ UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c
+Message-ID: <202505281024.f42beaa7-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SG2PR01CA0145.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::25) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1747276047.git.zhoubinbin@loongson.cn> <eff0c02e30118c45463f4b6488c895bf3ec9edb9.1747276047.git.zhoubinbin@loongson.cn>
- <20250522093919.GC1199143@google.com>
-In-Reply-To: <20250522093919.GC1199143@google.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 27 May 2025 16:12:09 +0800
-X-Gm-Features: AX0GCFtUvGwWhptJ7AeyI6YFo1JEdBivjGlzMCNGbxWmTHSaUbnoVZm7GeKRuIs
-Message-ID: <CAMpQs4K9yWGrscgjHCEoQ+L2bCHE5hKfJunYpk5rWZzv17Co7A@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
-To: Lee Jones <lee@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|MW3PR11MB4714:EE_
+X-MS-Office365-Filtering-Correlation-Id: 70dbc30f-41a2-4627-2d97-08dd9da6a16c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?KhtYxOYiUF8F+gR//w/ELJZ9zEzzvhrvpHuf2tOevAW89nLkpNBHvd+8MUOV?=
+ =?us-ascii?Q?sli59Cz1ttt+4h5yQgO25gIbr7KRtEt8ZJHhINffDHcYmTTTRAAiqrr4yz23?=
+ =?us-ascii?Q?6Ni7JghAqJyiSQgUHQZzs+GMUOk4KSJ14Pe/PQpFvl/vPW/uYhGnagsBMRFe?=
+ =?us-ascii?Q?bNpygVwVqHhbhnHBhKh0+aC+q3lDPFcLDqy6ApTmG2sb4Yl9CZsl/5qcWT4g?=
+ =?us-ascii?Q?y3kpFjbVeqyg7kn0gsZPpBg5uudMFPQCo6qmEKefqJA0PGpfF9GsvMbnOR+u?=
+ =?us-ascii?Q?vr5bcGS4QA3D4HgMXLZDzk2fcRa6pnp50nCkAw9xEr18ps50xjyzx63GIUZG?=
+ =?us-ascii?Q?uB5PLc8Q7aVYGxvjZ0EX0/+EVHH86BectxTfvj7FAeyF+2wVKPYwCx0oXLBD?=
+ =?us-ascii?Q?s/cdfM4SN1MCgXiV4Riky2SOYT0jCzY9RnkJBUvKFCTLh+0VaMWxMlRUakn6?=
+ =?us-ascii?Q?fZ2ejKwXMwrCEXzZ0yfgFMj7JY3Vaq9oC+oCGuSa5j569j3PaIK5WWK+pZMq?=
+ =?us-ascii?Q?anZ5+dHwZ3FygVr5gv+EGL8SVkigthUV6iy2HRoBi71UhCTcJkjRIhIMW/gx?=
+ =?us-ascii?Q?0gh9b22LmNNhTIsLPaZ7KkRuNtAldJVUOawT/nQmtL/JZH5vnuHoEjioJUMj?=
+ =?us-ascii?Q?jyDW18BBsC8Yb+350Igxw1n8s/s/dwj4BILrcXRorJ+S6fSRVeYKQnNViBtS?=
+ =?us-ascii?Q?pEPUtexc5nrgKAvK3pg98cuz+xdZe4vfR0L+aK1ryCDGWymtJfNc3eRO1C1S?=
+ =?us-ascii?Q?YnScui4AaNLoBdLT+o4lc2WykRuIvMUKDu1QaakubmHBvU9gZ3kSFqV9TRyw?=
+ =?us-ascii?Q?R5hAQxnz5S9jS53twqJiFJGtTlFRXKwW23GHVY/FLgRnNLAqCBRC5AW/g2ei?=
+ =?us-ascii?Q?x7NGXaVPMuaBw8sojo18hZ/fGFQMwjrvMkPO/jt+OZERCNc3W/lVSUA11pFM?=
+ =?us-ascii?Q?2lxVQzZKFwCxH2T0aIfU10Y9tjZUcJbYgi7oEPh6s3ShfnSnqLWeLXa1ZKzq?=
+ =?us-ascii?Q?al/+E/BxzxriqaoKLEwRxlnWGnfUmTeXlcWla3jZOaemu4bLjRe192KQgBv+?=
+ =?us-ascii?Q?oDKvMnqn14I9ZC6k18tgeHtbIsAyOE4b9SlaRYV6IzSbKbMVsRw+qfMtrfN4?=
+ =?us-ascii?Q?q3zzd09Pr9src+pJI6OQwXUkr/DDRe81RUxQfgxXyKTTTs6PZbeq/k8wnnjr?=
+ =?us-ascii?Q?TWgM/xw4DB8AZ9+Erm1Q2qcLRPZ9gNORYqnDgbfyNsQu/sj8ySfoEVDiGebQ?=
+ =?us-ascii?Q?W/mCSUBo2sJeEwEESRslKD7xS2gmpj6l7WjeolE4ySmyO6rn0ZSauaCv5LNh?=
+ =?us-ascii?Q?php0idYCGKeAFQR3u8V9Egq/7scnIxwX9YAsEeOWluQmhRkKZBYWLly9l1SC?=
+ =?us-ascii?Q?4zOPAaX3LzhYrIYQVXCp5yRq76qv?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?I3h8BYKWZRIDO0Y/AEUIbK/OJXffyIiWSLWjGBbMx7hYPPmdZnKS6VyvCUzo?=
+ =?us-ascii?Q?ngEVHpdEeBi8GTl8Didre8med0vPx1ufrsIsY0LlP6jib5Kelu5F7VPOFjZl?=
+ =?us-ascii?Q?aG0GkYLdZywAmFHNg6q+6vF+mrMu7V7CIN6e4ncAJqJTvmDDFeNwrfXMwL+O?=
+ =?us-ascii?Q?zUVHEnUc391LwM3lpzzjp8wPkfzLPTylj6jFhKnpcVZtf4L3phYj2+YQdQng?=
+ =?us-ascii?Q?fnA6I9/BpFHwB4FD0Uzxdsh5IkvD4MrwS7X3Nb91LRQAj7Kvtxyjq4nfF5lv?=
+ =?us-ascii?Q?YqcOPx2rZ8qK6zJ6PPMscQJdFtTJTZktrh1Zlc7od3qNEoTSu4wcghV7acYj?=
+ =?us-ascii?Q?DRG9QhLfvFs6a41tfK/2uEtwgazlfbm8ubLlNFLxT/dZXsT58Y4wiHHj/4bi?=
+ =?us-ascii?Q?YzMkf5YmiTc20SzVWVRCqN0QSQZE40kxvjT1pJXL0Vnt2/zRUSoN05UgDGeV?=
+ =?us-ascii?Q?he+QO+5eCfkhInZqMamgQRguBoESMaxQ5BVE5hMXZ/ccL5l5TnHdMniLU5Yy?=
+ =?us-ascii?Q?L2ZwZ5WgECqFR23VmIWsCPhGRrJNjjhHnJEoSfKc9sXO3KUcr5FuGaSycl3g?=
+ =?us-ascii?Q?Y0NzNth/3uNYPcx49yK/3+l55KN66+lE8CjGw1j11IZBIvwKyS5PL32m6Nk7?=
+ =?us-ascii?Q?BnGZtkgKSUJtkD4DNHqMrOGWzn+JR6uhrDTcxaBbdvrRG6jlocvq8zOyGWZF?=
+ =?us-ascii?Q?ZoDEFYo7wQnRPIt+hGCVzaHYR6YVHPef65NwB3euKNfb36dM4oyW4KvH8pdN?=
+ =?us-ascii?Q?FDiUSHQXKfCQ7fzoXFbRf5U/at/HYCUQGEbbixFPrNDdZDfctE/nQSMrJ5jB?=
+ =?us-ascii?Q?ggCStgY/I1nYoEmhoRJ7R2D+xsP/9Zh3pYwgIb6WzLAK+uMEAyGx90ub1xDL?=
+ =?us-ascii?Q?5N0tiOnyqVgmsfj8xd4O2AF6ywO5RvLeeYC2zjalZ1MrT0g7y0IXcHqCod+d?=
+ =?us-ascii?Q?NHxaOFqvaTRx6GcA0VDK+BISlIkFHKyUvNf33EJYDKZdta2euTSUIKiMKj8O?=
+ =?us-ascii?Q?duC9VvfEgvEj7qg3oRvWMDsA0NOekC1YQYoBpsjVvHTgqOMVisXG/DuM3Y+q?=
+ =?us-ascii?Q?fk0p93hNpfUwOn9qps+lh2alKWd7IEKXXF3umuCw0CZvWowp7E8dbrHqytdg?=
+ =?us-ascii?Q?KX+Le9dFCBsKc/3J+4lcD4KVlPcyza6p7YONIwS6jQhq/n1P3lT2fH1cR8jm?=
+ =?us-ascii?Q?NV2G1joY3U94Y6mnKrQ/mW4OT58lvy50NolY2ojdgatPKzkB4pbrXIgjp5VR?=
+ =?us-ascii?Q?eIc5Edx1Wb66jlGYoYoStEFAX30cyHO0ySUH0KAqdxCBMHRUG8tnRUx7Qn/I?=
+ =?us-ascii?Q?FG/I0Q+uHBbWEEz/j0sJiAmBptXOWtXY10Yf+8pBDDPr4nT7m39rnCx7Y/kk?=
+ =?us-ascii?Q?r5BNL+SUwncPXN80/4y2tD1a8h82VAdHJ3USU7BqdDy9DP8J8aSMwqvVkij7?=
+ =?us-ascii?Q?kyG3MrlmxCWazEZf0NFhEspoURt2ULbIYc3zmfr+JTfaYXIp1q9T4qlXpcJK?=
+ =?us-ascii?Q?nw91ueUlC7touuA3xyMvsiJJkOgDv4V+2HrPkiUOYo9B7jUyD1O8E9LkL746?=
+ =?us-ascii?Q?9JgrEbEk1RKpi4mFqSBoXzSYzkj2SzdLHBob++mPcmy0cM99x1IOWS4q0cZT?=
+ =?us-ascii?Q?DA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70dbc30f-41a2-4627-2d97-08dd9da6a16c
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 05:15:15.5891
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 71Nbx30N8e3jl2EcRNcjxr3bgiZJyAEaZ7EjCwJBQI9m3w4SBBRWBpmw4Xln6YSXL2LK9yc9cGqyocgFYKQzTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4714
+X-OriginatorOrg: intel.com
 
-Hi Lee:
 
-Thanks for your detailed review.
 
-On Thu, May 22, 2025 at 5:39=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> On Thu, 15 May 2025, Binbin Zhou wrote:
->
-> > Since the display is a sub-function of the Loongson-2K BMC, when the
-> > BMC reset, the entire BMC PCIe is disconnected, including the display
-> > which is interrupted.
-> >
-> > Not only do you need to save/restore the relevant PCIe registers
-> > throughout the reset process, but you also need to re-push the display
-> > to the monitor at the end.
-> >
-> > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  drivers/mfd/ls2kbmc-mfd.c | 242 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 242 insertions(+)
-> >
-> > diff --git a/drivers/mfd/ls2kbmc-mfd.c b/drivers/mfd/ls2kbmc-mfd.c
-> > index b309f6132c24..4d35a13b3da5 100644
-> > --- a/drivers/mfd/ls2kbmc-mfd.c
-> > +++ b/drivers/mfd/ls2kbmc-mfd.c
-> > @@ -9,8 +9,11 @@
-> >   */
-> >
-> >  #include <linux/aperture.h>
-> > +#include <linux/delay.h>
-> >  #include <linux/errno.h>
-> >  #include <linux/init.h>
-> > +#include <linux/iopoll.h>
-> > +#include <linux/kbd_kern.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/mfd/core.h>
-> >  #include <linux/module.h>
-> > @@ -18,6 +21,8 @@
-> >  #include <linux/pci_ids.h>
-> >  #include <linux/platform_data/simplefb.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/stop_machine.h>
-> > +#include <linux/vt_kern.h>
-> >
-> >  #define LS2K_DISPLAY_RES_START (SZ_16M + SZ_2M)
-> >  #define LS2K_IPMI_RES_SIZE   0x1c
-> > @@ -27,6 +32,9 @@
-> >  #define LS2K_IPMI3_RES_START (LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZ=
-E)
-> >  #define LS2K_IPMI4_RES_START (LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZ=
-E)
-> >
-> > +#define LS2K_BMC_RESET_DELAY (60 * HZ)
-> > +#define LS2K_BMC_RESET_WAIT  (10 * HZ)
-> > +
-> >  static struct resource ls2k_display_resources[] =3D {
-> >       DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-re=
-s"),
-> >  };
-> > @@ -60,6 +68,227 @@ static struct mfd_cell ls2k_bmc_cells[] =3D {
-> >       MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
-> >  };
-> >
-> > +static const u32 index[] =3D { 0x4, 0x10, 0x14, 0x18, 0x1c, 0x20, 0x24=
-,
-> > +                          0x30, 0x3c, 0x54, 0x58, 0x78, 0x7c, 0x80 };
-> > +static const u32 cindex[] =3D { 0x4, 0x10, 0x3c };
->
-> What are these?  You need to define them or at least provide a comment
-> that describes what they are and how they're used.
->
-> > +struct ls2k_bmc_pci_data {
-> > +     u32 d80c;
-> > +     u32 d71c;
-> > +     u32 data[14];
-> > +     u32 cdata[3];
->
-> To the uninitiated, this is all gibberish.
->
-> Either change the nomenclature or provide commentary.
+Hello,
 
-These are the indexes of the PCI-E configuration space that need to be
-saved, which can be found in include/uapi/linux/pci_regs.h. I will
-redefine them as follows:
+by this commit, the config has below diff:
 
-/* For LS2K BMC parent device -- LS7A2000 */
-struct ls2k_bmc_parent_pci_data {
-        u32 pci_command;
-        u32 base_address[6];
-        u32 rom_addreess;
-        u32 interrupt_line;
-        u32 msi_hi;
-        u32 msi_lo;
-        u32 devctl;
-        u32 linkcap;
-        u32 linkctl_sts;
-        u32 symbol_timer;
-        u32 gen2_ctrl;
-};
+--- /pkg/linux/x86_64-randconfig-101-20250522/clang-20/d469eaed223fa485eabebd3bcd05ddd3c891f54e/.config 2025-05-23 23:44:56.781716572 +0800
++++ /pkg/linux/x86_64-randconfig-101-20250522/clang-20/40b9969796bfa49ed1b0f7ddc254f48cb2ac6d2c/.config 2025-05-24 02:08:29.858605300 +0800
+@@ -4837,7 +4837,8 @@ CONFIG_CRYPTO_ACOMP2=y
+ CONFIG_CRYPTO_MANAGER=y
+ CONFIG_CRYPTO_MANAGER2=y
+ # CONFIG_CRYPTO_USER is not set
+-CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=y
++CONFIG_CRYPTO_SELFTESTS=y
++# CONFIG_CRYPTO_MANAGER_EXTRA_TESTS is not set
+ # CONFIG_CRYPTO_NULL is not set
+ CONFIG_CRYPTO_PCRYPT=m
+ CONFIG_CRYPTO_CRYPTD=y
 
-/* For LS2K BMC */
-struct ls2k_bmc_pci_data {
-        u32 pci_command;
-        u32 base_address0;
-        u32 interrupt_line;
-};
+it seems tests are enabled then we observe the UBSAN issues
 
->
-> > +};
-> > +
-> > +struct ls2k_bmc_pdata {
-> > +     struct device *dev;
-> > +     struct work_struct reset_work;
-> > +     unsigned long reset_time;
->
-> This always appears to be jiffies - is it used elsewhere?
+d469eaed223fa485 40b9969796bfa49ed1b0f7ddc25
+---------------- ---------------------------
+       fail:runs  %reproduction    fail:runs
+           |             |             |
+           :6          100%           6:6     dmesg.UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c
+           :6          100%           6:6     dmesg.UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305.c
 
-Emm, It's only used in ls2k_bmc_interrupt(), and I didn't seem to need
-to put it here.
->
-> > +     struct ls2k_bmc_pci_data pci_data;
-> > +};
-> > +
-> > +static bool ls2k_bmc_bar0_addr_is_set(struct pci_dev *ppdev)
-> > +{
-> > +     u32 addr;
-> > +
-> > +     pci_read_config_dword(ppdev, PCI_BASE_ADDRESS_0, &addr);
-> > +     addr &=3D PCI_BASE_ADDRESS_MEM_MASK;
-> > +
-> > +     return addr ? true : false;
-> > +}
-> > +
-> > +static bool ls2k_bmc_check_pcie_connected(struct pci_dev *parent,
-> > +                                       struct ls2k_bmc_pdata *priv)
-> > +{
-> > +     void __iomem *mmio;
-> > +     int sts, ret;
-> > +
-> > +     mmio =3D pci_iomap(parent, 0, 0x100);
->
-> Why 0x100?  This should be defined.
+it's hard for bot to apply this commit to previous commits in bisect, so we just
+make out below report FYI that we observe UBSAN issues in boot tests.
 
-This is ls7a2000 pcie port bar0 register, I will define it.
->
-> > +     if (!mmio)
-> > +             return false;
-> > +
-> > +     writel(readl(mmio) | 0x8, mmio);
-> > +
-> > +     ret =3D readl_poll_timeout_atomic(mmio + 0xc, sts, (sts & 0x11) =
-=3D=3D 0x11,
-> > +                                     1000, 1000000);
-> > +     if (ret) {
->
-> All of the magic numbers in this function should be defined.
 
-ok, I will do it.
->
-> > +             pci_iounmap(parent, mmio);
-> > +             dev_err(priv->dev, "PCIE train failed status=3D0x%x\n", s=
-ts);
-> > +             return false;
-> > +     }
-> > +
-> > +     pci_iounmap(parent, mmio);
-> > +     return true;
-> > +}
-> > +
-> > +static int ls2k_bmc_recover_pci_data(void *data)
-> > +{
-> > +     struct ls2k_bmc_pdata *priv =3D data;
-> > +     struct pci_dev *pdev =3D to_pci_dev(priv->dev);
-> > +     struct pci_dev *parent =3D pdev->bus->self;
-> > +     bool ready, dirty;
-> > +     u32 i;
-> > +
-> > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_2, 0);
-> > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_3, 0);
-> > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_4, 0);
->
-> You need to provide commentary throughout this driver!
->
-> > +
-> > +     for (i =3D 2000; i > 0 ; i--) {
->
-> Why 2000?  Please define and explain it.
->
-> > +             dirty =3D ls2k_bmc_bar0_addr_is_set(parent);
->
-> Since these are bools, you can put the function in an if() statement.
+kernel test robot noticed "UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c" on:
 
-ok...
->
-> > +             if (!dirty)
-> > +                     break;
-> > +             mdelay(1);
->
-> Why?  What are we waiting for?
+commit: 40b9969796bfa49ed1b0f7ddc254f48cb2ac6d2c ("crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
 
-Since reading ls2k bmc will be stuck after the pcie port is reset, we
-read bar0 of ls7a2000 (the parent device of ls2k bmc) to determine
-whether it is reset or not, and we can only start the training after
-the reset is successful.
->
-> > +     };
-> > +
-> > +     if (i =3D=3D 0)
-> > +             dev_warn(priv->dev, "The PCI Bar is not cleared.\n");
->
-> But it's okay to continue?  Why?
->
-> > +     for (i =3D 0; i < ARRAY_SIZE(index); i++)
-> > +             pci_write_config_dword(parent, index[i], priv->pci_data.d=
-ata[i]);
-> > +
-> > +     pci_write_config_dword(parent, 0x80c, priv->pci_data.d80c);
-> > +     pci_write_config_dword(parent, 0x71c, priv->pci_data.d71c);
-> > +
-> > +     /* Check if the pcie is connected */
->
-> PCI-E
->
-> > +     ready =3D ls2k_bmc_check_pcie_connected(parent, priv);
->
-> As above.
->
-> > +     if (!ready)
-> > +             return ready;
-> > +
-> > +     dev_dbg(priv->dev, "The PCIE recovered done.\n");
->
-> How useful is this once development is complete?
->
-> > +     /* Waiting for u-boot ddr config ready */
->
-> Will it always be U-Boot?
->
-> Should be "U-Boot" and "DDR".
->
-> > +     mdelay(jiffies_to_msecs(LS2K_BMC_RESET_WAIT));
->
-> Why not define the value in ms already?
->
-> > +     ready =3D ls2k_bmc_bar0_addr_is_set(parent);
->
-> As above.
->
-> > +     if (!ready)
-> > +             return ready;
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(cindex); i++)
-> > +             pci_write_config_dword(pdev, cindex[i], priv->pci_data.cd=
-ata[i]);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void ls2k_bmc_events_fn(struct work_struct *work)
-> > +{
-> > +     struct ls2k_bmc_pdata *priv =3D container_of(work, struct ls2k_bm=
-c_pdata, reset_work);
-> > +
-> > +     /*
-> > +      * The pcie is lost when the BMC resets,
->
-> Strange line-breaks.  Pick a limit (80-100, etc) and stick to it.
->
-> > +      * at which point access to the pcie from other CPUs
-> > +      * is suspended to prevent a crash.
-> > +      */
-> > +     stop_machine(ls2k_bmc_recover_pci_data, priv, NULL);
-> > +
-> > +#ifdef CONFIG_VT
->
-> No avoidable #ifery in C-files please.
+[test failed on linux-next/master 176e917e010cb7dcc605f11d2bc33f304292482b]
 
-This is to avoid possible compilation failures caused by randconfig
-(CONFIG_VT is not defined).
->
-> > +     /* Re-push the display due to previous pcie loss. */
-> > +     set_console(vt_move_to_console(MAX_NR_CONSOLES - 1, 1));
-> > +#endif
-> > +
-> > +     dev_info(priv->dev, "Loongson-2K BMC recovered done.\n");
->
-> Remove this line - we want clean bootlogs.
->
-> > +}
-> > +
-> > +static irqreturn_t ls2k_bmc_interrupt(int irq, void *arg)
-> > +{
-> > +     struct ls2k_bmc_pdata *priv =3D arg;
-> > +
-> > +     if (system_state !=3D SYSTEM_RUNNING)
-> > +             return IRQ_HANDLED;
-> > +
-> > +     /* Skip interrupt in LS2K_BMC_RESET_DELAY */
-> > +     if (time_after(jiffies, priv->reset_time + LS2K_BMC_RESET_DELAY))
-> > +             schedule_work(&priv->reset_work);
-> > +
-> > +     priv->reset_time =3D jiffies;
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +#define BMC_RESET_GPIO                       14
-> > +#define LOONGSON_GPIO_REG_BASE               0x1fe00500
-> > +#define LOONGSON_GPIO_REG_SIZE               0x18
-> > +#define LOONGSON_GPIO_OEN            0x0
-> > +#define LOONGSON_GPIO_FUNC           0x4
-> > +#define LOONGSON_GPIO_INTPOL         0x10
-> > +#define LOONGSON_GPIO_INTEN          0x14
->
-> Put these up with the reset of the defines.
->
-> > +/* The gpio interrupt is a watchdog interrupt that is triggered when t=
-he BMC resets. */
-> > +static int ls2k_bmc_gpio_reset_handler(struct ls2k_bmc_pdata *priv)
->
-> Why are we now doing GPIO things in here?  Why not a GPIO driver?
+in testcase: boot
 
-As I note below, our gpio controller hardware does not support
-interrupt cascading for gpio_to_irq(), so this approach was taken.
->
-> > +{
-> > +     int gsi =3D 16 + (BMC_RESET_GPIO & 7);
-> > +     void __iomem *gpio_base;
-> > +     int irq, ret =3D 0;
-> > +
-> > +     /* Since Loongson-3A hardware does not support GPIO interrupt cas=
-cade,
-> > +      * chip->gpio_to_irq() cannot be implemented,
-> > +      * here acpi_register_gsi() is used to get gpio irq.
-> > +      */
->
-> Use proper multi-line commentary as per the Coding Style documentation.
+config: x86_64-randconfig-101-20250522
+compiler: clang-20
+test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
 
-I see.
->
-> > +     irq =3D acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_AC=
-TIVE_LOW);
-> > +     if (irq < 0)
-> > +             return irq;
-> > +
-> > +     gpio_base =3D ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG_S=
-IZE);
-> > +     if (!gpio_base) {
-> > +             ret =3D PTR_ERR(gpio_base);
-> > +             goto acpi_failed;
-> > +     }
-> > +
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_OEN) | BIT(BMC_RESET_GPIO)=
-,
-> > +            gpio_base + LOONGSON_GPIO_OEN);
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_FUNC) & ~BIT(BMC_RESET_GPI=
-O),
-> > +            gpio_base + LOONGSON_GPIO_FUNC);
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_INTPOL) & ~BIT(BMC_RESET_G=
-PIO),
-> > +            gpio_base + LOONGSON_GPIO_INTPOL);
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_INTEN) | BIT(BMC_RESET_GPI=
-O),
-> > +            gpio_base + LOONGSON_GPIO_INTEN);
-> > +
-> > +     ret =3D devm_request_irq(priv->dev, irq, ls2k_bmc_interrupt,
-> > +                            IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kb=
-mc gpio", priv);
-> > +     if (ret)
-> > +             dev_err(priv->dev, "ls2kbmc gpio request_irq(%d) failed\n=
-", irq);
->
-> "LS2KBMC" and "GPIO", etc.
+(please refer to attached dmesg/kmsg for entire log/backtrace)
 
-All code formatting related issues will be fixed in the next release.
->
-> > +
-> > +     iounmap(gpio_base);
-> > +
-> > +acpi_failed:
-> > +     acpi_unregister_gsi(gsi);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static void ls2k_bmc_save_pci_data(struct pci_dev *pdev, struct ls2k_b=
-mc_pdata *priv)
-> > +{
-> > +     struct pci_dev *parent =3D pdev->bus->self;
-> > +     int i;
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(index); i++)
-> > +             pci_read_config_dword(parent, index[i], &priv->pci_data.d=
-ata[i]);
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(cindex); i++)
-> > +             pci_read_config_dword(pdev, cindex[i], &priv->pci_data.cd=
-ata[i]);
-> > +
-> > +     pci_read_config_dword(parent, 0x80c, &priv->pci_data.d80c);
-> > +     priv->pci_data.d80c =3D (priv->pci_data.d80c & ~(3 << 17)) | BIT(=
-17);
-> > +
-> > +     pci_read_config_dword(parent, 0x71c, &priv->pci_data.d71c);
-> > +     priv->pci_data.d71c |=3D BIT(26);
->
-> No magic numbers please.  Define them all.
 
-I will define them as following:
 
-#define LS2K_BMC_GEN2_CTL               0x80c
-#define LS2K_BMC_SYMBOL_TIMER           0x71c
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202505281024.f42beaa7-lkp@intel.com
 
-#define LS2K_BMC_GEN2_SPEED_CHANGE      BIT(17)
-#define LS2K_BMC_CONF_PHY_TX            BIT(18)
 
-#define LS2K_BMC_MASK_LEN_MATCH         BIT(26)
+[   12.442846][    T1] ------------[ cut here ]------------
+[   12.443261][    T1] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8854:47
+[   12.444084][    T1] 16 - 114 cannot be represented in type 'size_t' (aka 'unsigned long')
+[   12.444682][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G                T   6.15.0-rc5-00342-g40b9969796bf #1 VOLUNTARY
+[   12.444688][    T1] Tainted: [T]=RANDSTRUCT
+[   12.444689][    T1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+[   12.444691][    T1] Call Trace:
+[   12.444693][    T1]  <TASK>
+[ 12.444696][ T1] __dump_stack (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/dump_stack.c:95) 
+[ 12.444705][ T1] dump_stack_lvl (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/dump_stack.c:123 (discriminator 1)) 
+[ 12.444709][ T1] dump_stack (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/dump_stack.c:130) 
+[ 12.444712][ T1] ubsan_epilogue (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/ubsan.c:232 (discriminator 2)) 
+[ 12.444717][ T1] handle_overflow (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/ubsan.c:?) 
+[ 12.444729][ T1] __ubsan_handle_sub_overflow (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/ubsan.c:277) 
+[ 12.444732][ T1] chacha20poly1305_encrypt_bignonce (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/crypto/chacha20poly1305-selftest.c:?) 
+[ 12.444759][ T1] ? kasan_save_alloc_info (kbuild/obj/consumer/x86_64-randconfig-101-20250522/mm/kasan/generic.c:563 (discriminator 1)) 
+[ 12.444766][ T1] chacha20poly1305_selftest_encrypt (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/crypto/chacha20poly1305-selftest.c:?) 
+[ 12.444772][ T1] chacha20poly1305_selftest (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/crypto/chacha20poly1305-selftest.c:8903 (discriminator 1)) 
+[ 12.444787][ T1] chacha20poly1305_init (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/crypto/chacha20poly1305.c:362) 
+[ 12.444790][ T1] do_one_initcall (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1257) 
+[ 12.444793][ T1] ? blake2s_random_test (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/crypto/chacha20poly1305.c:360) 
+[ 12.444801][ T1] ? kasan_save_track (kbuild/obj/consumer/x86_64-randconfig-101-20250522/arch/x86/include/asm/current.h:25 (discriminator 3) kbuild/obj/consumer/x86_64-randconfig-101-20250522/mm/kasan/common.c:60 (discriminator 3) kbuild/obj/consumer/x86_64-randconfig-101-20250522/mm/kasan/common.c:69 (discriminator 3)) 
+[ 12.444803][ T1] ? kasan_save_track (kbuild/obj/consumer/x86_64-randconfig-101-20250522/mm/kasan/common.c:48 kbuild/obj/consumer/x86_64-randconfig-101-20250522/mm/kasan/common.c:68) 
+[ 12.444804][ T1] ? kasan_save_alloc_info (kbuild/obj/consumer/x86_64-randconfig-101-20250522/mm/kasan/generic.c:563 (discriminator 1)) 
+[ 12.444806][ T1] ? __kasan_kmalloc (kbuild/obj/consumer/x86_64-randconfig-101-20250522/mm/kasan/common.c:398) 
+[ 12.444808][ T1] ? __kmalloc_noprof (kbuild/obj/consumer/x86_64-randconfig-101-20250522/include/linux/kasan.h:260 kbuild/obj/consumer/x86_64-randconfig-101-20250522/mm/slub.c:4327 kbuild/obj/consumer/x86_64-randconfig-101-20250522/mm/slub.c:4339) 
+[ 12.444814][ T1] ? do_initcalls (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1329) 
+[ 12.444817][ T1] ? do_basic_setup (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1355) 
+[ 12.444824][ T1] ? trace_hardirqs_on (kbuild/obj/consumer/x86_64-randconfig-101-20250522/kernel/trace/trace_preemptirq.c:80) 
+[ 12.444829][ T1] ? irqentry_exit (kbuild/obj/consumer/x86_64-randconfig-101-20250522/kernel/entry/common.c:358) 
+[ 12.444834][ T1] ? sysvec_apic_timer_interrupt (kbuild/obj/consumer/x86_64-randconfig-101-20250522/arch/x86/kernel/apic/apic.c:1049 (discriminator 256)) 
+[ 12.444840][ T1] ? do_initcall_level (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1303) 
+[ 12.444847][ T1] ? next_arg (kbuild/obj/consumer/x86_64-randconfig-101-20250522/lib/cmdline.c:273) 
+[ 12.444853][ T1] ? parameq (kbuild/obj/consumer/x86_64-randconfig-101-20250522/kernel/params.c:90 (discriminator 1) kbuild/obj/consumer/x86_64-randconfig-101-20250522/kernel/params.c:99 (discriminator 1)) 
+[ 12.444858][ T1] ? parse_args (kbuild/obj/consumer/x86_64-randconfig-101-20250522/kernel/params.c:153 kbuild/obj/consumer/x86_64-randconfig-101-20250522/kernel/params.c:186) 
+[ 12.444869][ T1] do_initcall_level (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1318 (discriminator 6)) 
+[ 12.444874][ T1] do_initcalls (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1332 (discriminator 2)) 
+[ 12.444878][ T1] do_basic_setup (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1355) 
+[ 12.444882][ T1] kernel_init_freeable (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1571) 
+[ 12.444885][ T1] ? rest_init (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1449) 
+[ 12.444887][ T1] kernel_init (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1459) 
+[ 12.444890][ T1] ? rest_init (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1449) 
+[ 12.444892][ T1] ret_from_fork (kbuild/obj/consumer/x86_64-randconfig-101-20250522/arch/x86/kernel/process.c:153) 
+[ 12.444895][ T1] ? rest_init (kbuild/obj/consumer/x86_64-randconfig-101-20250522/init/main.c:1449) 
+[ 12.444898][ T1] ret_from_fork_asm (kbuild/obj/consumer/x86_64-randconfig-101-20250522/arch/x86/entry/entry_64.S:255) 
+[   12.444909][    T1]  </TASK>
+[   12.475589][    T1] ---[ end trace ]---
 
->
-> > +}
-> > +
-> > +static int ls2k_bmc_pdata_initial(struct pci_dev *pdev, struct ls2k_bm=
-c_pdata *priv)
-> > +{
-> > +     int ret;
-> > +
-> > +     ls2k_bmc_save_pci_data(pdev, priv);
-> > +
-> > +     INIT_WORK(&priv->reset_work, ls2k_bmc_events_fn);
-> > +
-> > +     ret =3D devm_request_irq(&pdev->dev, pdev->irq, ls2k_bmc_interrup=
-t,
-> > +                            IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kb=
-mc pcie", priv);
-> > +     if (ret) {
-> > +             dev_err(priv->dev, "ls2kbmc pcie request_irq(%d) failed\n=
-", pdev->irq);
-> > +             return ret;
-> > +     }
-> > +
-> > +     return ls2k_bmc_gpio_reset_handler(priv);
-> > +}
-> > +
-> >  /*
-> >   * Currently the Loongson-2K0500 BMC hardware does not have an i2c int=
-erface to
-> >   * adapt to the resolution.
-> > @@ -101,12 +330,25 @@ static int ls2k_bmc_probe(struct pci_dev *dev, co=
-nst struct pci_device_id *id)
-> >  {
-> >       int ret =3D 0;
-> >       resource_size_t base;
-> > +     struct ls2k_bmc_pdata *priv;
-> >       struct simplefb_platform_data pd;
-> >
-> >       ret =3D pci_enable_device(dev);
-> >       if (ret)
-> >               return ret;
-> >
-> > +     priv =3D devm_kzalloc(&dev->dev, sizeof(*priv), GFP_KERNEL);
-> > +     if (IS_ERR(priv)) {
-> > +             ret =3D -ENOMEM;
-> > +             goto disable_pci;
-> > +     }
-> > +
-> > +     priv->dev =3D &dev->dev;
-> > +
-> > +     ret =3D ls2k_bmc_pdata_initial(dev, priv);
-> > +     if (ret)
-> > +             goto disable_pci;
-> > +
-> >       ret =3D ls2k_bmc_get_video_mode(dev, &pd);
-> >       if (ret)
-> >               goto disable_pci;
-> > --
-> > 2.47.1
-> >
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
 
---
-Thanks.
-Binbin
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250528/202505281024.f42beaa7-lkp@intel.com
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
