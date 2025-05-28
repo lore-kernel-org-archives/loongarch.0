@@ -1,101 +1,129 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BDDD1F0992
-	for <loongarch@lists.linux.dev>; Wed, 28 May 2025 08:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871F92741AC
+	for <loongarch@lists.linux.dev>; Wed, 28 May 2025 09:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748421794; cv=none; b=ZEPJxwheOOfZ066V/FaKXQ0EQhqgnVJLmaTgURapFuM3w0S2CdDxjkir9ABw0GBaewKAW/KQvK/qy0E2hXQWj8lS4nRrdQ3FXLQk9tXyq9zqeGMpp1HuHSx1hL4KulE1EEMfgcqA3DVQaCQ6xf4+52Gp5GdDi2GOib39i8J3kzo=
+	t=1748422826; cv=none; b=FW7yT/BF0XiA33oKkqEj7Jrr2NtfpE+VxDbnFNt4P2X9UdXrkxziMuao/G1t7Mz+dH1Uj0jeYqwOQJCDXGyT568zWNpsqJ7S8UdOmcAUQlXPjRdYt+ha1eCJX++cD3+/6MpcLHxQAnG9INhoMRzOqSGhPKr8j9hOg/8lqvgfoKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748421794; c=relaxed/simple;
-	bh=MxnGdClLFWl1jY7LIi7McbBUXxSTG4DC87SB7p2eWgQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PvywQc3iElEvVTEbZG6WL8WeMUAJ7vWjZKQgo+Fn0G/pWGegPEsTiuclvLj/dCVd2SVGIO4X0AinPNozsMK0kmucfnbS3qLW599MnglBAyYN/cpsNS8tmR+/Ubyru/dyAgXHd9m7gMXwl92rHrLW/zPe1lM0xK4Ja+y4/OiiDEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8AxWXGczDZojNP_AA--.19153S3;
-	Wed, 28 May 2025 16:43:08 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMCxLBuWzDZonpz3AA--.26840S2;
-	Wed, 28 May 2025 16:43:04 +0800 (CST)
+	s=arc-20240116; t=1748422826; c=relaxed/simple;
+	bh=t1e/HvfosFpsLoFkhIGG8ncpvv+6aZviJ2nKgmWiOW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=TX9NEGTsukKY2/QnHU0rxS+jCvfdN/NvceyzMmavSlyYwsAblk/nbp6VCdcFV5lkv89/ca9Cx2qpJyjl9C6jZVJCaG8jAwupzbVPI8N2ybEwSZ9pTaHHrcrLIdYnzUXxBrSpt38oaisZREwJt8FHpDxCMIXJFB0ckZqrUizY/C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Olyk6Dqh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Olyk6Dqh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748422823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=64QsXwazpQwW+tOYOMo7hDdSauBGVg6nC6ZKTpmi0VI=;
+	b=Olyk6DqhoYGOoSK8kyobidveB+YlTkF0/GRpJEuIEy0XO6GzEDxQqHFqXsDZoMs/zgSzhk
+	sSaBZPvwj5FzpoiDizen9DIwrSSi33XIynhUsUDFzC16a2u194as9YzbqHF5PxY00oLzH9
+	5fQpeS6Crx2v8isLShAlLNNOxUKbjzU=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-609-oOidWUQiMn-oS5_fRSGjMQ-1; Wed, 28 May 2025 05:00:20 -0400
+X-MC-Unique: oOidWUQiMn-oS5_fRSGjMQ-1
+X-Mimecast-MFC-AGG-ID: oOidWUQiMn-oS5_fRSGjMQ_1748422819
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4dcfc375aso1921937f8f.2
+        for <loongarch@lists.linux.dev>; Wed, 28 May 2025 02:00:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748422819; x=1749027619;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=64QsXwazpQwW+tOYOMo7hDdSauBGVg6nC6ZKTpmi0VI=;
+        b=RhGUDqrnQ5VMrdoGRx+0VwEfk7fgSeWZSlkeQ3xGjCrkMgwLkiHYdfJ7wZYu23v/yX
+         AVGTftySdZGkeI7zQBnUfYHDueFdpIJdnzY+pJg+ZuD/xYfJArxUcwWFNnNzyZbCWof0
+         VYRIAjYHj18qomu5WobznwMO65/YwEK5C0dLlHAXvcLg1ExkJeh/5oLVlmfAkHmCyAfm
+         pggow53BZr8NbcFYZ/qy4wg+aWPykP7eg8VmARpSzfbR96CsAiNP3Z+DWMjYJKtFglA2
+         lG0o6XGkMzeBAtL+4G9SVTls97gU1GVaoiDWky3bIwCcaMtFJ2vBuTX+tfDO2z3Vc3CV
+         EAew==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ//rVZbVPqvRn0V0+1O2065a9TosHJ8ut+q9ReA5dnMfliz3yv952dQYbr/G+VvpFBhCZvCcc9zI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzhxkgpIUuK15HAzOxApFTnwDrTgHGaCqtY/VhZnWWIcc2CFgkE
+	p6ZCswnBAng+IE9tnEOsy6hZhk2GkZAW1sZYpm403jxL+1F/aJcB+JC9rXeppkDphwhlsG9KFaD
+	NkApBzJa3nIsB6JkpEWOxTY+MWBnRJCOA+riKuRX2eSSmg7weZWWqJdW0UGrmEA==
+X-Gm-Gg: ASbGncvWQmlkfGMeza/4uy3I24uFX6NhI56eb76c8P5Hqjy4m8OiIN3U3E+KLI7+Ur8
+	pnNHMIFCqaKq+5s8Fwye8JFEIxiiEgFiVPBn12SMjktnzmDkTnE7YyirCBvTc89HwEuSRtVYv0O
+	Ez2nKisHTfGycZaGIIuwOkTI3QZdUnb4u6wCTiRmgZFAfwT3L9uQjEuQqDRxv8Ji3rnaSssGGIA
+	djN2IIDKR8KnGKSiUaA4whwYXwnJe9SkwHMF5eWk7imkuq9ZXn0oWVoJG82EDN/y7bo3mPYkFYO
+	bWON7NKX1kWf9TZgbwtaVVj5KLFRgDRwsCNZUy3pOxYy6C9z/RPsg9P+DNF+
+X-Received: by 2002:a5d:5f8b:0:b0:3a3:6595:921f with SMTP id ffacd0b85a97d-3a4cb4b822dmr12928268f8f.41.1748422818887;
+        Wed, 28 May 2025 02:00:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGjrV5vgUL5ysXDl7B3oxB4ovG+UqKk+QHfVQ+EndsK3P47vCbb2duzqpq4xfTjaqx9Sg54xQ==
+X-Received: by 2002:a5d:5f8b:0:b0:3a3:6595:921f with SMTP id ffacd0b85a97d-3a4cb4b822dmr12928217f8f.41.1748422818345;
+        Wed, 28 May 2025 02:00:18 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eab0b596sm892079f8f.0.2025.05.28.02.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 02:00:17 -0700 (PDT)
+Date: Wed, 28 May 2025 11:00:12 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org, 
+	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
 Subject: Re: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+Message-ID: <gymx5tbghi55gm76ydtuzzd6r522expft36twwtvpkbgcl266a@zelnthnhu7kq>
 References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
  <20250528065944.4511-5-zhaoqunqin@loongson.cn>
  <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
-Date: Wed, 28 May 2025 16:42:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: d6fADN-7vnc0hoU7z7A39-nO_yAA00gi1two5BqiQVA_1748422819
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMCxLBuWzDZonpz3AA--.26840S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XF13Cr1kXF18CF17KFy8JFc_yoWDtrX_Ka
-	y5WF1rua4UCr4DJa1DCr4fuF17K3y2qF1IyayUtrWIyryDJan5AFs5J395Kr1fGa18CrZ8
-	Cr9Ig3Z3Zw13XosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1l
-	Yx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
-	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7BMNUUUUU=
 
-
-在 2025/5/28 下午3:57, Stefano Garzarella 写道:
->> +    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
->> +    if (IS_ERR(chip))
->> +        return PTR_ERR(chip);
->> +    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+On Wed, May 28, 2025 at 04:42:05PM +0800, Qunqin Zhao wrote:
 >
-> Why setting TPM_CHIP_FLAG_IRQ?
+>在 2025/5/28 下午3:57, Stefano Garzarella 写道:
+>>>+    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+>>>+    if (IS_ERR(chip))
+>>>+        return PTR_ERR(chip);
+>>>+    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+>>
+>>Why setting TPM_CHIP_FLAG_IRQ?
+>
+>When tpm_engine completes  TPM_CC* command,
+>
+>the hardware will indeed trigger an interrupt to the kernel.
 
-When tpm_engine completes  TPM_CC* command,
-
-the hardware will indeed trigger an interrupt to the kernel.
+IIUC that is hidden by loongson_se_send_engine_cmd(), that for this 
+driver is completely synchronous, no?
 
 >
-> IIUC this driver is similar to ftpm and svsm where the send is 
-> synchronous so having .status, .cancel, etc. set to 0 should be enough 
-> to call .recv() just after send() in tpm_try_transmit(). See commit 
-> 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
-The send callback would wait until the TPM_CC* command complete. We 
-don't need a poll.
+>>
+>>IIUC this driver is similar to ftpm and svsm where the send is 
+>>synchronous so having .status, .cancel, etc. set to 0 should be 
+>>enough to call .recv() just after send() in tpm_try_transmit(). See 
+>>commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} 
+>>opt")
+>The send callback would wait until the TPM_CC* command complete. We 
+>don't need a poll.
+
+Right, that's what I was saying too, send() is synchronous (as in ftpm 
+and svsm). The polling in tpm_try_transmit() is already skipped since we 
+are setting .status = 0, .req_complete_mask = 0, .req_complete_val = 0, 
+etc. so IMHO this is exactly the same of ftpm and svsm, so we don't need 
+to set TPM_CHIP_FLAG_IRQ.
 
 Thanks,
-
-Qunqin.
-
->
-> BTW, I think I should touch also this driver in the next version of my 
-> series that I'll send after the merge window:
-> https://lore.kernel.org/linux-integrity/20250514134630.137621-1-sgarzare@redhat.com/ 
->
->
-> The rest LGTM!
->
-> Thanks,
-> Stefano
+Stefano
 
