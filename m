@@ -1,33 +1,34 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C6791DDC2A
-	for <loongarch@lists.linux.dev>; Thu, 29 May 2025 01:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E5D91D6187
+	for <loongarch@lists.linux.dev>; Thu, 29 May 2025 01:11:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748481078; cv=none; b=FQmtQICYfRlgBeyt+2CxDdbrha14g5b7QJjRrP+LoGr5D2dYUd1/cndJQLDYZzvEDdU6U16V7owAyWjFxK72Q7dc60uBV+eVVglfUWvrIjWre6FFhfWA7yLUzicJE+75EzMCau6HsJ06xDb8h8AQyYAlYK/uSLbJgCkrM3H4150=
+	t=1748481078; cv=none; b=J9Hw8QdRFwq3wB3CtyjxUEGqvKlpZRkUn0B9NTHW8KESTCG6Hr6O8HPjBAdbJnZzYh4HWwc/lnckVVQ3LqSCUMsKUm+yz519K1Adp+XIlw2iff9aRFDlaBg+05ta3BjVF/IbQzjuknOp3Xe+Kk1RKSw4eL+baf8eg8hyOnQeh7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748481078; c=relaxed/simple;
-	bh=fuEkZAgcVPhsiFb0WuQVgKJco0f6gnpzL76c6CKoNkU=;
+	bh=lsSQXQJCZUyyRujFjdyDewDv8eRT7lULwGOQ1CdN5hM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fd1tBSq+F8NVFqSN2NtLtbkG5Eh4Mg8/cxQOYfP9BfXjmd+4S6c85eNRin/PjJQr5L7WebTwn2xdVsVy1mEfLM3ctL/poWnaf36cVLtoFJX/TZSf0kFav8dpUCLCjxMh87UwoSzp1vP9P4qC9p4d4Rxaynfkbh+cAJoqVZE5G7A=
+	 MIME-Version; b=mBP028IMT2ad39+QWeS4pZCMWUCd9N2i80N1oYeyedmLU7Gw4fJB2etvZX+5Q7t0FAwtHUqbrmYfJQeLOKHlhlBbIMxg47rlVHHFK2gLXiGPWoBjsvuOhf6ZqAmS/A8orgiGPTCkhSi9ya4qPcFcLhTBukAUWGHLsxXZIlAEPJg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxNHAxtDdovR4BAQ--.19885S3;
-	Thu, 29 May 2025 09:11:13 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxC3IwtDdorR4BAQ--.20437S3;
+	Thu, 29 May 2025 09:11:12 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMCx_cYmtDdoR0P5AA--.57458S6;
-	Thu, 29 May 2025 09:11:13 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMCx_cYmtDdoR0P5AA--.57458S4;
+	Thu, 29 May 2025 09:11:11 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>,
 	Xianglai Li <lixianglai@loongson.cn>
 Cc: kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] LoongArch: KVM: Remove unused parameter len
-Date: Thu, 29 May 2025 09:11:01 +0800
-Message-Id: <20250529011102.378749-5-maobibo@loongson.cn>
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH 2/5] LoongArch: KVM: Check interrupt route from physical cpu with eiointc
+Date: Thu, 29 May 2025 09:10:59 +0800
+Message-Id: <20250529011102.378749-3-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20250529011102.378749-1-maobibo@loongson.cn>
 References: <20250529011102.378749-1-maobibo@loongson.cn>
@@ -38,138 +39,82 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx_cYmtDdoR0P5AA--.57458S6
+X-CM-TRANSID:qMiowMCx_cYmtDdoR0P5AA--.57458S4
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Parameter len is unused in some functions with eiointc emulation
-driver, remove it here.
+With eiointc interrupt controller, physical cpu id is set for irq
+route. However function kvm_get_vcpu() is used to get destination vCPU
+when delivering irq. With API kvm_get_vcpu(), logical cpu is used.
 
+With API kvm_get_vcpu_by_cpuid(), vCPU can be searched from physical
+cpu id.
+
+Cc: stable@vger.kernel.org
+Fixes: 3956a52bc05b ("LoongArch: KVM: Add EIOINTC read and write functions")
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/kvm/intc/eiointc.c | 32 +++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ arch/loongarch/kvm/intc/eiointc.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
 diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index b3aa6e305a18..41fe1e6e9d3b 100644
+index d2c521b0e923..0b648c56b0c3 100644
 --- a/arch/loongarch/kvm/intc/eiointc.c
 +++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -131,7 +131,7 @@ static inline void eiointc_enable_irq(struct kvm_vcpu *vcpu,
- }
+@@ -9,7 +9,8 @@
  
- static int loongarch_eiointc_readb(struct kvm_vcpu *vcpu, struct loongarch_eiointc *s,
--				gpa_t addr, int len, void *val)
-+				gpa_t addr, void *val)
+ static void eiointc_set_sw_coreisr(struct loongarch_eiointc *s)
  {
- 	int index, ret = 0;
- 	u8 data = 0;
-@@ -173,7 +173,7 @@ static int loongarch_eiointc_readb(struct kvm_vcpu *vcpu, struct loongarch_eioin
- }
+-	int ipnum, cpu, irq_index, irq_mask, irq;
++	int ipnum, cpu, irq_index, irq_mask, irq, cpuid;
++	struct kvm_vcpu *vcpu;
  
- static int loongarch_eiointc_readw(struct kvm_vcpu *vcpu, struct loongarch_eiointc *s,
--				gpa_t addr, int len, void *val)
-+				gpa_t addr, void *val)
- {
- 	int index, ret = 0;
- 	u16 data = 0;
-@@ -215,7 +215,7 @@ static int loongarch_eiointc_readw(struct kvm_vcpu *vcpu, struct loongarch_eioin
- }
+ 	for (irq = 0; irq < EIOINTC_IRQS; irq++) {
+ 		ipnum = s->ipmap.reg_u8[irq / 32];
+@@ -20,7 +21,12 @@ static void eiointc_set_sw_coreisr(struct loongarch_eiointc *s)
+ 		irq_index = irq / 32;
+ 		irq_mask = BIT(irq & 0x1f);
  
- static int loongarch_eiointc_readl(struct kvm_vcpu *vcpu, struct loongarch_eiointc *s,
--				gpa_t addr, int len, void *val)
-+				gpa_t addr, void *val)
+-		cpu = s->coremap.reg_u8[irq];
++		cpuid = s->coremap.reg_u8[irq];
++		vcpu = kvm_get_vcpu_by_cpuid(s->kvm, cpuid);
++		if (vcpu == NULL)
++			continue;
++
++		cpu = vcpu->vcpu_id;
+ 		if (!!(s->coreisr.reg_u32[cpu][irq_index] & irq_mask))
+ 			set_bit(irq, s->sw_coreisr[cpu][ipnum]);
+ 		else
+@@ -68,17 +74,23 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
+ static inline void eiointc_update_sw_coremap(struct loongarch_eiointc *s,
+ 					int irq, u64 val, u32 len, bool notify)
  {
- 	int index, ret = 0;
- 	u32 data = 0;
-@@ -257,7 +257,7 @@ static int loongarch_eiointc_readl(struct kvm_vcpu *vcpu, struct loongarch_eioin
- }
+-	int i, cpu;
++	int i, cpu, cpuid;
++	struct kvm_vcpu *vcpu;
  
- static int loongarch_eiointc_readq(struct kvm_vcpu *vcpu, struct loongarch_eiointc *s,
--				gpa_t addr, int len, void *val)
-+				gpa_t addr, void *val)
- {
- 	int index, ret = 0;
- 	u64 data = 0;
-@@ -315,16 +315,16 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (len) {
- 	case 1:
--		ret = loongarch_eiointc_readb(vcpu, eiointc, addr, len, val);
-+		ret = loongarch_eiointc_readb(vcpu, eiointc, addr, val);
- 		break;
- 	case 2:
--		ret = loongarch_eiointc_readw(vcpu, eiointc, addr, len, val);
-+		ret = loongarch_eiointc_readw(vcpu, eiointc, addr, val);
- 		break;
- 	case 4:
--		ret = loongarch_eiointc_readl(vcpu, eiointc, addr, len, val);
-+		ret = loongarch_eiointc_readl(vcpu, eiointc, addr, val);
- 		break;
- 	case 8:
--		ret = loongarch_eiointc_readq(vcpu, eiointc, addr, len, val);
-+		ret = loongarch_eiointc_readq(vcpu, eiointc, addr, val);
- 		break;
- 	default:
- 		WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
-@@ -337,7 +337,7 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+ 	for (i = 0; i < len; i++) {
+-		cpu = val & 0xff;
++		cpuid = val & 0xff;
+ 		val = val >> 8;
  
- static int loongarch_eiointc_writeb(struct kvm_vcpu *vcpu,
- 				struct loongarch_eiointc *s,
--				gpa_t addr, int len, const void *val)
-+				gpa_t addr, const void *val)
- {
- 	int index, irq, bits, ret = 0;
- 	u8 cpu;
-@@ -416,7 +416,7 @@ static int loongarch_eiointc_writeb(struct kvm_vcpu *vcpu,
+ 		if (!(s->status & BIT(EIOINTC_ENABLE_CPU_ENCODE))) {
+-			cpu = ffs(cpu) - 1;
+-			cpu = (cpu >= 4) ? 0 : cpu;
++			cpuid = ffs(cpuid) - 1;
++			cpuid = (cpuid >= 4) ? 0 : cpuid;
+ 		}
  
- static int loongarch_eiointc_writew(struct kvm_vcpu *vcpu,
- 				struct loongarch_eiointc *s,
--				gpa_t addr, int len, const void *val)
-+				gpa_t addr, const void *val)
- {
- 	int i, index, irq, bits, ret = 0;
- 	u8 cpu;
-@@ -502,7 +502,7 @@ static int loongarch_eiointc_writew(struct kvm_vcpu *vcpu,
++		vcpu = kvm_get_vcpu_by_cpuid(s->kvm, cpuid);
++		if (vcpu == NULL)
++			continue;
++
++		cpu = vcpu->vcpu_id;
+ 		if (s->sw_coremap[irq + i] == cpu)
+ 			continue;
  
- static int loongarch_eiointc_writel(struct kvm_vcpu *vcpu,
- 				struct loongarch_eiointc *s,
--				gpa_t addr, int len, const void *val)
-+				gpa_t addr, const void *val)
- {
- 	int i, index, irq, bits, ret = 0;
- 	u8 cpu;
-@@ -588,7 +588,7 @@ static int loongarch_eiointc_writel(struct kvm_vcpu *vcpu,
- 
- static int loongarch_eiointc_writeq(struct kvm_vcpu *vcpu,
- 				struct loongarch_eiointc *s,
--				gpa_t addr, int len, const void *val)
-+				gpa_t addr, const void *val)
- {
- 	int i, index, irq, bits, ret = 0;
- 	u8 cpu;
-@@ -689,16 +689,16 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (len) {
- 	case 1:
--		ret = loongarch_eiointc_writeb(vcpu, eiointc, addr, len, val);
-+		ret = loongarch_eiointc_writeb(vcpu, eiointc, addr, val);
- 		break;
- 	case 2:
--		ret = loongarch_eiointc_writew(vcpu, eiointc, addr, len, val);
-+		ret = loongarch_eiointc_writew(vcpu, eiointc, addr, val);
- 		break;
- 	case 4:
--		ret = loongarch_eiointc_writel(vcpu, eiointc, addr, len, val);
-+		ret = loongarch_eiointc_writel(vcpu, eiointc, addr, val);
- 		break;
- 	case 8:
--		ret = loongarch_eiointc_writeq(vcpu, eiointc, addr, len, val);
-+		ret = loongarch_eiointc_writeq(vcpu, eiointc, addr, val);
- 		break;
- 	default:
- 		WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
 -- 
 2.39.3
 
