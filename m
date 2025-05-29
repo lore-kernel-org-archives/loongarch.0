@@ -1,225 +1,136 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09BC1519A6
-	for <loongarch@lists.linux.dev>; Thu, 29 May 2025 02:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C5B242D74
+	for <loongarch@lists.linux.dev>; Thu, 29 May 2025 02:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748484185; cv=none; b=LUOc2vHQzRqqFeeQptMWR/wScjkYeT9drGcT3HkqlR/x7cpZ0Dd8rbpjPW5Zv+QptDV//QTtZ5DC2++tzRo2qqyiDA1h3ANBikL6pxxclUWxr6yk4ls9SfDjhRxMqlzhbyQeaROZ1p+l43BaDg7rhBu3+RSYGABj4mRkKS3VQaM=
+	t=1748485039; cv=none; b=rv3+cxEKe+2avwrq10LamEo6OiUG4rwUTvJcxPAGiePcx28uI66NGPEBhZkFUIX4Y7DSGWndCunwBZBjutLbsEf8wW1QbNN5z5uFrgvWzmOPYhjGUU3TIg7iRB4hf83KwAjuIVDsEUuQtpsXjQLbqoZfjj7VeUm/qQNUL6OL6vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748484185; c=relaxed/simple;
-	bh=DIN6LIQaAOvcQ53vfc9A5k02oK5pSKpsJOPM8n2POLc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M2d8Pe38co4NEIRtaZhl8Z3mRHxuJ4G5aQXAnb5pJEZka6neyqBJc70Xv53BaBoJYEme/MXkbBRydZYIyq0DdKQS6PkzuxqYoxaJLMUAV6+bXMzmTDJshFuLLsyDSYNbA53AK8FTHXiz361J4s8HMcanrUJnqOdzxVmIPYjRPmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KaROZXsp; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KaROZXsp"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-6065796762fso128793eaf.3
-        for <loongarch@lists.linux.dev>; Wed, 28 May 2025 19:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748484182; x=1749088982; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R1egAo3iwBvxZqJdXFnwcv60q/WxRGcWuQcEWMsX+k0=;
-        b=KaROZXspAwbIgY3HpLdtUUhzDSZxS2iiRZmPBDDVrARoDewzJrgWYDnO5ovErwPxN6
-         kPrYVXIZljuAl7rvaeHcF9xgYQkA+0ZO7/8D4pjfME0UeKS5L8DUAQNR4ChWilWlWXqJ
-         DBcbV8ffyWXZG1GSzgspebhmxu87xnJaMsZPD2FbazBgEa3Pkvo+39/cfUkt9IInQ5hc
-         dH5IK7pcF1HOgsKvX1Lkro2T4wLkNXQyKbKGtoznSmrSyu/CNbyUFIbtW3HeN8hrQI4i
-         Gcnfnt69S0edQf/UzYXgoFUz/eyEcD+EOu3RkNlPLNqC/TEsxMtvCpDwEPb+dRuDqO57
-         xMcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748484182; x=1749088982;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R1egAo3iwBvxZqJdXFnwcv60q/WxRGcWuQcEWMsX+k0=;
-        b=bRBsACNDsnWO90HH8C3AI85yf+BgRhElS2oCkdD0DCiAQMt+7tIbQcSwmf6aa12q44
-         O5B6nf2o4kRfxo3RslwZ8bdIRbDt9He+AJWetqjv1R1tOC2iY0pzybeO0XsXUvyykT29
-         +sWyY7VIIL9OGCn2oVeCjFQS20hhP4SIIVDBXF+5qP7W5fO/QKzyJYffrWU+FBVIITdI
-         dvX8BaVxGh/Ti0gT/3TiKrGe3dQ84RFQjDn09FzRz5fz4MOI5RLS/FLYj6puBKGCySkd
-         zpdniS/jTMpZG74Gb9flpDlft1IseGbfsVxlHYjbYrjrtPzHtnB75q1GCo1Mr+WoiI/d
-         8mhQ==
-X-Gm-Message-State: AOJu0Yza/8tFCWDTQZO1Czt72P6jk4Ro+Hb1bxdbDe1SrzF+OUsnLdAX
-	1s8Z4c20xGuMmNf9GouRwp0p0mE1rbd1553pBviSzcWZtp/jAt3BMmrYu5hcqVWgb3p4iDytb9j
-	JMeZEsKQrfJJ4XAgsa2Aa6kiyB7ihNHc=
-X-Gm-Gg: ASbGncuU+nbk0BAgRDqQ/ICFH8gMw4w3RQgYnDUVSF00Fv75DrzAPHup73FckweMTYA
-	A1Dkg9KwB3Upl6jETU7WHU4s+/4wWCtcLemIFqSjmhaAG2CzF7mpZzxvYEsEpiUxqBKwe9G89NE
-	S8VRCpu82Y5AZnW5BqA3dWJGWhyl/rxmNEEcqD0Tz1uBI=
-X-Google-Smtp-Source: AGHT+IH0mfeDH3IFQ2Mw4l8ARan0BJrAfAyJQiogfmzdX/eyo4H5wdRxQMSJ66duRYCi67pL0zjvLOz0YNbhUglnQQc=
-X-Received: by 2002:a05:6871:20d:b0:2c1:62ba:cd7c with SMTP id
- 586e51a60fabf-2e861df8abamr10614260fac.15.1748484182330; Wed, 28 May 2025
- 19:03:02 -0700 (PDT)
+	s=arc-20240116; t=1748485039; c=relaxed/simple;
+	bh=BXnpxy5x+WlgemioBql8EwhnNFniZqjZLbYpZqfqrmY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PAvOI5aY3RF/I6TQs3MCIwJBy9zFc+Id8W+klzbsJy9ALIC0kQvtXsrzDYyKiS8I7pE0a0TxQV3e0lhhA6g8g0iDEpf+QvMuQEb83DXTiS0AuArlVv5Zluyqf1JzUd8l8hCB7dzGnTLeHE5PG+0Rae3VPyMiUFYU9VDpg0uRG6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8Bx7eKiwzdoZTQBAQ--.50960S3;
+	Thu, 29 May 2025 10:17:06 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMCxasSewzdoE2L5AA--.61626S2;
+	Thu, 29 May 2025 10:17:04 +0800 (CST)
+Subject: Re: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
+ jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+ <20250528065944.4511-5-zhaoqunqin@loongson.cn>
+ <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
+ <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
+ <gymx5tbghi55gm76ydtuzzd6r522expft36twwtvpkbgcl266a@zelnthnhu7kq>
+ <ccb1927d-c06a-9fde-6cbb-652974464f4b@loongson.cn>
+ <cfaf2fbb-5c6a-9f85-fdc9-325d82fb7821@loongson.cn>
+ <45xqguhrecn57cwc66hfws4eeqrb6rlijvh2z35e56ogojc2q4@pnlrgx57353b>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <7a0c5eae-f6c7-f2dc-9356-5419c7df4f6a@loongson.cn>
+Date: Thu, 29 May 2025 10:16:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250528104032.1237415-1-jianghaoran@kylinos.cn>
-In-Reply-To: <20250528104032.1237415-1-jianghaoran@kylinos.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Thu, 29 May 2025 10:02:51 +0800
-X-Gm-Features: AX0GCFujo6dWfpQa5SiUb5FoezkhVXHsP8VZTM4lE4ANnYjcbdoIqPK4PV8GCUw
-Message-ID: <CAEyhmHTg3xNMBrSxXQj96pvfD83t6_RHRT_GGtbBzOpAKztDpw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Optimize the calculation method of
- jmp_offset in the emit_bpf_tail_call function
-To: jianghaoran@kylinos.cn
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@xen0n.name, chenhuacai@kernel.org, 
-	yangtiezhu@loongson.cn, haoluo@google.com, jolsa@kernel.org, sdf@fomichev.me, 
-	kpsingh@kernel.org, john.fastabend@gmail.com, yonghong.song@linux.dev, 
-	song@kernel.org, eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, 
-	daniel@iogearbox.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <45xqguhrecn57cwc66hfws4eeqrb6rlijvh2z35e56ogojc2q4@pnlrgx57353b>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCxasSewzdoE2L5AA--.61626S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr4UWFyrtF4fGFW8WrWkXwc_yoW5Jr1rpr
+	y7W3W7GFWDJr48tr1qqw4jyFZFkF4kAw45ZryrXr93J34qyrnaqF1UtrsY9rZF9r4xJ34x
+	XF4Yv3y3Wa45ZrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
+	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUU
+	U==
 
-Hi Haoran,
 
-On Wed, May 28, 2025 at 6:40=E2=80=AFPM Haoran Jiang <jianghaoran@kylinos.c=
-n> wrote:
+在 2025/5/28 下午5:53, Stefano Garzarella 写道:
+> On Wed, May 28, 2025 at 05:34:49PM +0800, Qunqin Zhao wrote:
+>>
+>> 在 2025/5/28 下午5:24, Qunqin Zhao 写道:
+>>>
+>>> 在 2025/5/28 下午5:00, Stefano Garzarella 写道:
+>>>> On Wed, May 28, 2025 at 04:42:05PM +0800, Qunqin Zhao wrote:
+>>>>>
+>>>>> 在 2025/5/28 下午3:57, Stefano Garzarella 写道:
+>>>>>>> +    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+>>>>>>> +    if (IS_ERR(chip))
+>>>>>>> +        return PTR_ERR(chip);
+>>>>>>> +    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+>>>>>>
+>>>>>> Why setting TPM_CHIP_FLAG_IRQ?
+>>>>>
+>>>>> When tpm_engine completes  TPM_CC* command,
+>>>>>
+>>>>> the hardware will indeed trigger an interrupt to the kernel.
+>>>>
+>>>> IIUC that is hidden by loongson_se_send_engine_cmd(), that for this 
+>>>> driver is completely synchronous, no?
+>>>>
+>>>>>
+>>>>>>
+>>>>>> IIUC this driver is similar to ftpm and svsm where the send is 
+>>>>>> synchronous so having .status, .cancel, etc. set to 0 should be 
+>>>>>> enough to call .recv() just after send() in tpm_try_transmit(). 
+>>>>>> See commit 980a573621ea ("tpm: Make 
+>>>>>> chip->{status,cancel,req_canceled} opt")
+>>>>> The send callback would wait until the TPM_CC* command complete. 
+>>>>> We don't need a poll.
+>>>>
+>>>> Right, that's what I was saying too, send() is synchronous (as in 
+>>>> ftpm and svsm). The polling in tpm_try_transmit() is already 
+>>>> skipped since we are setting .status = 0, .req_complete_mask = 0, 
+>>>> .req_complete_val = 0, etc. so IMHO this is exactly the same of 
+>>>> ftpm and svsm, so we don't need to set TPM_CHIP_FLAG_IRQ.
+>>>
+>>> I see,  but why not skip polling directly in "if (chip->flags & 
+>>> TPM_CHIP_FLAG_IRQ)"  instead of do while?
+>>
+>> I mean, why not skip polling directly in "if (chip->flags & 
+>> TPM_CHIP_FLAG_IRQ)"?
+>>
+>> And In my opinion, TPM_CHIP_FLAG_SYNC and TPM_CHIP_FLAG_IRQ are 
+>> essentially the same, only with different names.
 >
-> For a ebpf subprog JIT=EF=BC=8Cthe last call bpf_int_jit_compile function=
- will
-> directly enter the skip_init_ctx process. At this point, out_offset =3D -=
-1,
-> the jmp_offset in emit_bpf_tail_call is calculated
-> by #define jmp_offset (out_offset - (cur_offset)) is a negative number,
-> which does not meet expectations.The final generated assembly as follow.
->
-> 54:     bgeu            $a2, $t1, -8        # 0x0000004c
-> 58:     addi.d          $a6, $s5, -1
-> 5c:     bltz            $a6, -16            # 0x0000004c
-> 60:     alsl.d          $t2, $a2, $a1, 0x3
-> 64:     ld.d            $t2, $t2, 264
-> 68:     beq             $t2, $zero, -28     # 0x0000004c
->
-> Before apply this patch, the follow test case will reveal soft lock issue=
-s.
->
-> cd tools/testing/selftests/bpf/
-> ./test_progs --allow=3Dtailcalls/tailcall_bpf2bpf_1
->
-> dmesg:
-> watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [test_progs:25056]
->
+> When TPM_CHIP_FLAG_SYNC is defined, the .recv() is not invoked and 
+> .send() will send the command and retrieve the response. For some 
+> driver like ftpm this will save an extra copy/buffer.
 
-This is a known issue. Does this change pass all tailcall tests ?
-If not, please refer to the tailcall hierarchy patchset([1]).
-We should address it once and for all. Thanks.
+I need to copy the data to the DMA data buffer. So my suggestion is to 
+let the vendor specific driver  decide whether to use the SYNC or IRQ flag.
 
-  [1]: https://lore.kernel.org/bpf/20240714123902.32305-1-hffilwlqm@gmail.c=
-om/
+IRQ flag is fine for me.
 
-> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> ---
->  arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
->  1 file changed, 9 insertions(+), 19 deletions(-)
+Thanks,
+
+Qunqin.
+
 >
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index fa1500d4aa3e..d85490e7de89 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
->         return true;
->  }
->
-> -/* initialized on the first pass of build_body() */
-> -static int out_offset =3D -1;
-> -static int emit_bpf_tail_call(struct jit_ctx *ctx)
-> +static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
->  {
->         int off;
->         u8 tcc =3D tail_call_reg(ctx);
-> @@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->         u8 t2 =3D LOONGARCH_GPR_T2;
->         u8 t3 =3D LOONGARCH_GPR_T3;
->         const int idx0 =3D ctx->idx;
-> -
-> -#define cur_offset (ctx->idx - idx0)
-> -#define jmp_offset (out_offset - (cur_offset))
-> +       int tc_ninsn =3D 0;
-> +       int jmp_offset =3D 0;
->
->         /*
->          * a0: &ctx
-> @@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->          * if (index >=3D array->map.max_entries)
->          *       goto out;
->          */
-> +       tc_ninsn =3D insn ? ctx->offset[insn+1] - ctx->offset[insn] :
-> +               ctx->offset[0];
->         off =3D offsetof(struct bpf_array, map.max_entries);
->         emit_insn(ctx, ldwu, t1, a1, off);
-> +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
->         /* bgeu $a2, $t1, jmp_offset */
->         if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset) < 0)
->                 goto toofar;
-> @@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->          *       goto out;
->          */
->         emit_insn(ctx, addid, REG_TCC, tcc, -1);
-> +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
->         if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC, LOONGARCH_GPR_ZERO,=
- jmp_offset) < 0)
->                 goto toofar;
->
-> @@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->         emit_insn(ctx, alsld, t2, a2, a1, 2);
->         off =3D offsetof(struct bpf_array, ptrs);
->         emit_insn(ctx, ldd, t2, t2, off);
-> +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
->         /* beq $t2, $zero, jmp_offset */
->         if (emit_tailcall_jmp(ctx, BPF_JEQ, t2, LOONGARCH_GPR_ZERO, jmp_o=
-ffset) < 0)
->                 goto toofar;
-> @@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->         emit_insn(ctx, ldd, t3, t2, off);
->         __build_epilogue(ctx, true);
->
-> -       /* out: */
-> -       if (out_offset =3D=3D -1)
-> -               out_offset =3D cur_offset;
-> -       if (cur_offset !=3D out_offset) {
-> -               pr_err_once("tail_call out_offset =3D %d, expected %d!\n"=
-,
-> -                           cur_offset, out_offset);
-> -               return -1;
-> -       }
-> -
->         return 0;
->
->  toofar:
->         pr_info_once("tail_call: jump too far\n");
->         return -1;
-> -#undef cur_offset
-> -#undef jmp_offset
->  }
->
->  static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx=
-)
-> @@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn *insn, st=
-ruct jit_ctx *ctx, bool ext
->         /* tail call */
->         case BPF_JMP | BPF_TAIL_CALL:
->                 mark_tail_call(ctx);
-> -               if (emit_bpf_tail_call(ctx) < 0)
-> +               if (emit_bpf_tail_call(i, ctx) < 0)
->                         return -EINVAL;
->                 break;
->
-> @@ -1342,7 +1333,6 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_pro=
-g *prog)
->         if (tmp_blinded)
->                 bpf_jit_prog_release_other(prog, prog =3D=3D orig_prog ? =
-tmp : orig_prog);
->
-> -       out_offset =3D -1;
->
->         return prog;
->
-> --
-> 2.43.0
->
+> Stefano
+
