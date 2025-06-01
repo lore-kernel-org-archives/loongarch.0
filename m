@@ -1,123 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from outbound.pv.icloud.com (p-west1-cluster6-host2-snip4-10.eps.apple.com [57.103.67.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682F02367A2;
-	Sat, 31 May 2025 12:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3AFE552
+	for <loongarch@lists.linux.dev>; Sun,  1 Jun 2025 10:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748696055; cv=none; b=kCXoqvwXPCMHObCVFIo0ZTO8jb4wZ4gPiLQVcRow5DzEwyCizp148FGi8eX3HZEHqrlwQMvL0D8F66VrNLytwjDMCQ0QS1zrZzuO++bu9NiEmmGQ4+z0n3Y1OqpvacP56Uhs09qbwFtMHBWmf/LSyrdMvLeJwBsLyhC3I13lAtU=
+	t=1748773850; cv=none; b=Z88sOhsrkDKQdHXOSdaxNJifeCjEiYZe7OcJtD4EM0hFF/gqXLVG23TiYS72mYr0345h9HCJ2YwCBtpivLfWQ+axRkkuK9735sWtUA6hsrme3rF1nIF9WFgYNIsOfIkTDKgNcuGLx2W62O7LwwA0eFpUIIEDdMy/LIS8Q8j5Ceg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748696055; c=relaxed/simple;
-	bh=+EmJmBR4BbbJOaqh99VTAFfhrshaX7fqFFRRNgGBdFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AHQcoxz4AGgDMQW6f20b3kI2dq+cW5X+6nlz7h9sAwD4J0l7Z+h7KYqKtEl4nk0uQzsKgqQrJSyXxDtrZCi2ODxe5SjbkAr8fvGURn3hPM6Uqkv93x/DBMFNckHoHWTRnIF+uwyTfIdOvGwDQOdQL/Cq0MRvr5YFKCnp2nubHyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C6E0wcYt; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748773850; c=relaxed/simple;
+	bh=54QW2Pqp72E0556XnENy/LwdykaqxRDqqyViFp1dgTk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=M7lL4Hk8iCxkmNfxtdTD/EtzqY7UA1/ApOhRFqdtVpiOVpETkRZ8pW9swfblH2Yf7d3kelnD0bNkWutH4rcmyqPgo5QtijamoeBtbsGQ1j4mUITQ40zitvEf0nmBmItNfXLYBMvUeSeq2ICLt7sLpYxxml0d47bmnmKdRL7ijhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Z8JpKT0F; arc=none smtp.client-ip=57.103.67.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6E0wcYt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748696053; x=1780232053;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+EmJmBR4BbbJOaqh99VTAFfhrshaX7fqFFRRNgGBdFs=;
-  b=C6E0wcYtyZorg1gtXDrLXta+9pJZkyYOyLSE3B8/+ZadxnVUH2ZUD7Ap
-   UlKEE7k39lOBWatX6ObP1QBf+2I3vOdyBmAlwa9O5U+F0r59CmsaKFvs9
-   izcHpM6PltMu7sN8b164/hSRbXasnYwKf+EerJRj1utpccf+ws1wt5gYQ
-   6K9osRPJmzKSF17HgSS/xBwiVtQheasQogRpdc6ofCc/3+PqWTmqQPMfR
-   uq0ocUs9ChfjrM49fIo2w9c2ALClBIdqDsRhZVI9fiw4WHzeHBCcgPcKF
-   GCAro3Q00eUoYW6JOdeXRw2bpVD59wleY6IMq/Q6zH3tUx301To4YCqaE
-   Q==;
-X-CSE-ConnectionGUID: m3MQd3nMRGCd0/7QJ6bc+A==
-X-CSE-MsgGUID: pa1/NAnWSU6XmxOlA1P5Iw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11450"; a="61398426"
-X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
-   d="scan'208";a="61398426"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2025 05:54:13 -0700
-X-CSE-ConnectionGUID: CBk3yu9jQiKyfvTpCjuIcg==
-X-CSE-MsgGUID: ByTmpPphRiSlFVKyMFfvbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,198,1744095600"; 
-   d="scan'208";a="145093181"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 31 May 2025 05:54:10 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uLLix-000YPY-2T;
-	Sat, 31 May 2025 12:54:07 +0000
-Date: Sat, 31 May 2025 20:53:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>
-Cc: oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
-	kexybiscuit@aosc.io, wangyao@lemote.com,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: Re: [PATCH v3 2/3] ipmi: Add Loongson-2K BMC support
-Message-ID: <202505312022.QmFmGE1F-lkp@intel.com>
-References: <01805f8d1b9c8e6564a2d6d83964f78ed29b8f1f.1748505446.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Z8JpKT0F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=ePts62dk6SIVCfGxWE1N8RmUpSKvT+XKHWvpF6Tas+0=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type:x-icloud-hme;
+	b=Z8JpKT0FaFDU5zy+JbnbdFZQMHFroqPcEWtW22IKTR57HQ7qbnkhollrizTYDvmm6
+	 YY3b83umjXWyEPokrV2FQiz4fW9hAhpYvSvVFRjZUbg3bESSt+TpC1LbjdyzKa55F4
+	 7Z4StpidHgeCnDvjorAGaJIVgCbFfdc8yngldn8D4wKSuJvlvtzkFDohYGWMfceKFv
+	 bvMC/QNdZd8GgI96Ym4xnRTEQ+HGoLKc/InO3qj/8kHLO3eXsSr1uzG+skTvELPZq1
+	 5fqsfph3z2k7Vs7PsdR5ULjtiKOUY8NSOSY9r0QlgQ6z5CgHUOkq0p8jVAUEryKuU5
+	 xfnqPCDzls4DQ==
+Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
+	by outbound.pv.icloud.com (Postfix) with ESMTPS id 01CCC18003B7;
+	Sun,  1 Jun 2025 10:30:45 +0000 (UTC)
+Received: from dedsec-amd0.tail874668.ts.net (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 4FA18180038B;
+	Sun,  1 Jun 2025 10:30:43 +0000 (UTC)
+From: Yulong Han <wheatfox17@icloud.com>
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	broonie@kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yulong Han <wheatfox17@icloud.com>
+Subject: [PATCH] LoongArch: Add numa_add_reserved_memblk() support in numa
+Date: Sun,  1 Jun 2025 18:29:24 +0800
+Message-Id: <20250601102924.2417248-1-wheatfox17@icloud.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01805f8d1b9c8e6564a2d6d83964f78ed29b8f1f.1748505446.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 0N0PwfQUetrud7knm1Y84oDuFzQJJjTs
+X-Proofpoint-ORIG-GUID: 0N0PwfQUetrud7knm1Y84oDuFzQJJjTs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-01_04,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
+ mlxlogscore=999 clxscore=1011 adultscore=0 suspectscore=0 phishscore=0
+ bulkscore=0 spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2503310001 definitions=main-2506010088
 
-Hi Binbin,
+This patch fixes the error below when compiling kernel with
+loongarch's loongson3_defconfig:
 
-kernel test robot noticed the following build errors:
+drivers/acpi/numa/srat.c: In function ‘acpi_parse_cfmws’:
+drivers/acpi/numa/srat.c:467:13: error: implicit declaration of function
+‘numa_add_reserved_memblk’ [-Werror=implicit-function-declaration]
+  467 |         if (numa_add_reserved_memblk(node, start, end) < 0) {
 
-[auto build test ERROR on 08effa6b77f7dbb4727f811daef0f6085c0d63c8]
+The error is caused by the missing the newly added 
+numa_add_reserved_memblk (under include/linux/numa_memblks.h) definition
+inside loongarch's numa related code.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250529-202628
-base:   08effa6b77f7dbb4727f811daef0f6085c0d63c8
-patch link:    https://lore.kernel.org/r/01805f8d1b9c8e6564a2d6d83964f78ed29b8f1f.1748505446.git.zhoubinbin%40loongson.cn
-patch subject: [PATCH v3 2/3] ipmi: Add Loongson-2K BMC support
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20250531/202505312022.QmFmGE1F-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505312022.QmFmGE1F-lkp@intel.com/reproduce)
+The commit's code(style) was formatted by ./scripts/checkpatch.pl
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505312022.QmFmGE1F-lkp@intel.com/
+Signed-off-by: Yulong Han <wheatfox17@icloud.com>
+---
+ arch/loongarch/include/asm/numa.h | 13 +++++++------
+ arch/loongarch/kernel/numa.c      | 31 ++++++++++++++++++++++++++++---
+ 2 files changed, 35 insertions(+), 9 deletions(-)
 
-All errors (new ones prefixed by >>):
-
->> drivers/char/ipmi/ipmi_si_ls2k.c:180:6: error: redefinition of 'ipmi_si_ls2k_init'
-     180 | void ipmi_si_ls2k_init(void)
-         |      ^~~~~~~~~~~~~~~~~
-   In file included from drivers/char/ipmi/ipmi_si_ls2k.c:17:
-   drivers/char/ipmi/ipmi_si.h:108:20: note: previous definition of 'ipmi_si_ls2k_init' with type 'void(void)'
-     108 | static inline void ipmi_si_ls2k_init(void) { }
-         |                    ^~~~~~~~~~~~~~~~~
->> drivers/char/ipmi/ipmi_si_ls2k.c:186:6: error: redefinition of 'ipmi_si_ls2k_shutdown'
-     186 | void ipmi_si_ls2k_shutdown(void)
-         |      ^~~~~~~~~~~~~~~~~~~~~
-   drivers/char/ipmi/ipmi_si.h:109:20: note: previous definition of 'ipmi_si_ls2k_shutdown' with type 'void(void)'
-     109 | static inline void ipmi_si_ls2k_shutdown(void) { }
-         |                    ^~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/ipmi_si_ls2k_init +180 drivers/char/ipmi/ipmi_si_ls2k.c
-
-   179	
- > 180	void ipmi_si_ls2k_init(void)
-   181	{
-   182		platform_driver_register(&ipmi_ls2k_platform_driver);
-   183		ls2k_registered = true;
-   184	}
-   185	
- > 186	void ipmi_si_ls2k_shutdown(void)
-
+diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/asm/numa.h
+index b5f9de9f102e4..dc35d20914c82 100644
+--- a/arch/loongarch/include/asm/numa.h
++++ b/arch/loongarch/include/asm/numa.h
+@@ -28,17 +28,18 @@ struct numa_memblk {
+ 	int			nid;
+ };
+ 
+-#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
++#define NR_NODE_MEMBLKS		(MAX_NUMNODES * 2)
+ struct numa_meminfo {
+ 	int			nr_blks;
+ 	struct numa_memblk	blk[NR_NODE_MEMBLKS];
+ };
+ 
+-extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
++int __init numa_add_memblk(int nodeid, u64 start, u64 end);
++int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+ 
+-extern void __init early_numa_add_cpu(int cpuid, s16 node);
+-extern void numa_add_cpu(unsigned int cpu);
+-extern void numa_remove_cpu(unsigned int cpu);
++void __init early_numa_add_cpu(int cpuid, s16 node);
++void numa_add_cpu(unsigned int cpu);
++void numa_remove_cpu(unsigned int cpu);
+ 
+ static inline void numa_clear_node(int cpu)
+ {
+@@ -49,7 +50,7 @@ static inline void set_cpuid_to_node(int cpuid, s16 node)
+ 	__cpuid_to_node[cpuid] = node;
+ }
+ 
+-extern int early_cpu_to_node(int cpu);
++int early_cpu_to_node(int cpu);
+ 
+ #else
+ 
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index 30a72fd528c0e..0185a9a609897 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -31,6 +31,7 @@ unsigned char node_distances[MAX_NUMNODES][MAX_NUMNODES];
+ EXPORT_SYMBOL(node_distances);
+ 
+ static struct numa_meminfo numa_meminfo;
++static struct numa_meminfo numa_reserved_meminfo;
+ cpumask_t cpus_on_node[MAX_NUMNODES];
+ cpumask_t phys_cpus_on_node[MAX_NUMNODES];
+ EXPORT_SYMBOL(cpus_on_node);
+@@ -136,12 +137,14 @@ void __init early_numa_add_cpu(int cpuid, s16 node)
+ void numa_add_cpu(unsigned int cpu)
+ {
+ 	int nid = cpu_to_node(cpu);
++
+ 	cpumask_set_cpu(cpu, &cpus_on_node[nid]);
+ }
+ 
+ void numa_remove_cpu(unsigned int cpu)
+ {
+ 	int nid = cpu_to_node(cpu);
++
+ 	cpumask_clear_cpu(cpu, &cpus_on_node[nid]);
+ }
+ 
+@@ -155,7 +158,7 @@ static int __init numa_add_memblk_to(int nid, u64 start, u64 end,
+ 	/* whine about and ignore invalid blks */
+ 	if (start > end || nid < 0 || nid >= MAX_NUMNODES) {
+ 		pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+-			   nid, start, end - 1);
++			nid, start, end - 1);
+ 		return 0;
+ 	}
+ 
+@@ -187,6 +190,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+ 	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+ }
+ 
++/**
++ * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
++ * @nid: NUMA node ID of the new memblk
++ * @start: Start address of the new memblk
++ * @end: End address of the new memblk
++ *
++ * Add a new memblk to the numa_reserved_meminfo.
++ *
++ * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
++ * against memblock_type information and moves any that intersect reserved
++ * ranges to numa_reserved_meminfo. However, when that information is known
++ * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
++ * to numa_reserved_meminfo directly.
++ *
++ * RETURNS:
++ * 0 on success, -errno on failure.
++ */
++int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
++{
++	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
++}
++
+ static void __init node_mem_init(unsigned int node)
+ {
+ 	unsigned long start_pfn, end_pfn;
+@@ -194,7 +219,7 @@ static void __init node_mem_init(unsigned int node)
+ 
+ 	node_addrspace_offset = nid_to_addrbase(node);
+ 	pr_info("Node%d's addrspace_offset is 0x%lx\n",
+-			node, node_addrspace_offset);
++		node, node_addrspace_offset);
+ 
+ 	get_pfn_range_for_nid(node, &start_pfn, &end_pfn);
+ 	pr_info("Node%d: start_pfn=0x%lx, end_pfn=0x%lx\n",
+@@ -285,7 +310,7 @@ static void __init init_node_memblock(void)
+ 		case EFI_MEMORY_MAPPED_IO:
+ 		case EFI_MEMORY_MAPPED_IO_PORT_SPACE:
+ 			pr_info("Resvd: mem_type:%d, mem_start:0x%llx, mem_size:0x%llx Bytes\n",
+-					mem_type, mem_start, mem_size);
++				mem_type, mem_start, mem_size);
+ 			break;
+ 		}
+ 	}
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.5
+
