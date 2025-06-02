@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC241A23B7
-	for <loongarch@lists.linux.dev>; Mon,  2 Jun 2025 10:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA6A211F
+	for <loongarch@lists.linux.dev>; Mon,  2 Jun 2025 11:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748860310; cv=none; b=hfA5AhWTP8/mhkLfqsw85Yu3UCTxS9bU5uKTbVHfyaUxWImcJsVvF9HAiEuWb0LRlixAIFLpOoroXJb31bVkeW+JNE8yTdJmGzg//Zdpd3C5TFezvyxNkW2eTt0PAXMi545LbdlxqeSwkn9WubngP06BMk7vN3xlKpJ3X71eVMo=
+	t=1748864718; cv=none; b=ITGSuzHVkIig5pjFKxuL8yadvYmuaQn7BdWK8I8+IB2ZiIVjdx93PVaORjNoPVB+YkVAgb0ixXpb98LWD5Ufleq/c+B/5owvfLbAnF8ig7yU+AEl/3zaSmO4cefJoqctFkxOhZj/mRN6vFWRY7huS3Nl9x+F/BX9uGWVEMBQlmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748860310; c=relaxed/simple;
-	bh=ZzssR7Z3WXTPxuV3RaTrvsQITalfSEGHtp9paP/nu3A=;
+	s=arc-20240116; t=1748864718; c=relaxed/simple;
+	bh=62q+4Y3u3AUMWco0Ri8A9+Iw4BxELPI+v9ZG2/03SOc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GxrJIzaHV4bvVzkZpsc4Ng6pvJrC0SK91De58cHeQarmknBz5JAgMtHnzDTwu9AHUJF0t9NSAvatBbHl/nyz4v6DsCqK9an5MzHMuJFgF9QWN/GBZLuM4ZijMzMlAEOA2Gbcki5imWK18BmkTv3JijdGbo++I2GYNcljXpnDDrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BIqhjEgc; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=fP70dM9NYqtpaBRfSlVmIonAUG8sak7HmKN0FGWYikvQNwvY9JS1Gm04LUvbDvpcghmzYF4WiQ41B2/rjNREEoWQu2jEH3qrXgSIclOpOCgaTXSZzT0l81FSzKU1mZVeoEugIh0XmynWP9zykw0ZM6lAiYch4dG6RP9r1R+UDiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZByUxsDK; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BIqhjEgc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZByUxsDK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748860308;
+	s=mimecast20190719; t=1748864714;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zNGcx2ArrxJr8cIK8d0qYe5Yw20pPHTlFAddIJE8YQE=;
-	b=BIqhjEgcyXhzr5YECzxep8f2NgNI8G81kTty+Kc/cu15MbXjk00H3FdW3F9zjm1Rip1Y1X
-	8teCHTL40WAdivR3ENG4a+fd1i+K4l/15xobcNpWvwx80tpFtbSQfKBiEExT+FxK7SN/8x
-	UzhdAGOzSx+Sa3aISKC+LRJcZSkSGe4=
+	bh=pluW0u/+xJd0eUGvzfkykomG6yjqcYSK31IZ33YVJmI=;
+	b=ZByUxsDKPGTaZk8y2+Kb8NwAh3A/X0ad92kDTHL3s7oa62aj+3PbBYumiAXFx4gdsn3Shr
+	5ftlCSznJBCNlmeLhWZYXTqkH0g7xrqjd3+FX+b6V66ESJv9aj2jCT/MN3K+/QjHQH9gAs
+	rRlfECCwTwghjwoEenSa88OJ8sMt7XQ=
 Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
  [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-223-FjurR3kqNuq4auXHbNhv9A-1; Mon, 02 Jun 2025 06:31:47 -0400
-X-MC-Unique: FjurR3kqNuq4auXHbNhv9A-1
-X-Mimecast-MFC-AGG-ID: FjurR3kqNuq4auXHbNhv9A_1748860306
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-451d30992bcso11449265e9.2
-        for <loongarch@lists.linux.dev>; Mon, 02 Jun 2025 03:31:46 -0700 (PDT)
+ us-mta-558-EaG5WGoCNbinCBaNDNkmqA-1; Mon, 02 Jun 2025 07:45:13 -0400
+X-MC-Unique: EaG5WGoCNbinCBaNDNkmqA-1
+X-Mimecast-MFC-AGG-ID: EaG5WGoCNbinCBaNDNkmqA_1748864712
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450de98b28eso7402535e9.0
+        for <loongarch@lists.linux.dev>; Mon, 02 Jun 2025 04:45:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748860306; x=1749465106;
+        d=1e100.net; s=20230601; t=1748864712; x=1749469512;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=zNGcx2ArrxJr8cIK8d0qYe5Yw20pPHTlFAddIJE8YQE=;
-        b=rfVmbX7CswF7e3BwCuDLFtS3+edxeXnKw42gnbyVQCCOT/yl13pO7UWJTpZwvivzmE
-         zuSJAIQuQoV6bQJ+wALel7E45BNZ4iCGwRRfT6mu9Fcyw5IAn3eSmPAHtPY16x4l8SuP
-         2RRtdCs/Sv1QRVdc4288W7mTzhNUK7C5RJJtDVTrUL5hl+G5D8ffkRytLjI9spJaOVgP
-         o/UK+HHpvBDwMpO5n0UrS9NriKs4XorO7qmvmlUJEnH1HhlhkVUNTsCztGWV7FVS3Wqk
-         gEDmqK6EvSlKQhYaVVQyTpfTbaOF0EFjZivRuSaAxpuDClnyzC/mSZj2p+R5abLGvADo
-         OLng==
-X-Forwarded-Encrypted: i=1; AJvYcCUgqg9l792F4VexbikxDEk4GPUQJOqEMwv9jChm13zRbmlNbryyNGZPaZgVC8g5lT8C0O6YntgrHIc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxW0O4P0IUTGWmcM+ZrUsN5otv08kz8AqMdoLadMyeS/xtF10H/
-	UOm+R57TyZZqnrJ2QVkuJkq8GAT+6EzrN7fqearxuIl2F32Ad73IPMYxQ+ctjjKz4AIwDZPS+Ha
-	rVPLFAPHFZX3nv/LE4o+xAVwdlKBZZTjhjD2vJATzHMPExdM0zbmiN0CUsGZj0w==
-X-Gm-Gg: ASbGnctFzE3AzYdIbv+b8ZzjYtaB6MdhgMzQUL271GDCk4bPJci5zsXDk3lF6LfSfJf
-	AHn8hoiuAKNj41z+Sf++++6Pnr4xAu5CSFdvvmkcZnM4cu95mEaiPUoDc5h/C2SESnIznahqaAA
-	JnddkVeT0BpCCxi5nk5eBhxY7EJB0Ig+54dZX2LCEkbwEit7hvKTFjG2wsmRjvNCzboIKHpWwj9
-	kWOCViIM60zVPCLgfDTDt8cEOhd4Kfn9eBVWGOxXtVV8QyG8wpKlghhPi3xqYqaCtNHnYcA5X9j
-	25ZtfBCJTiDAHus9iBmamQB06kPqVvni6QZscCfcnZzE4ryeZgvydWqeCDfwfBFrmFIHeWn0QEb
-	xfngCXgAZymGsiRQb3FF6zfrODT2KEO4ik5A9mNNjwxDLVofHgA==
-X-Received: by 2002:a05:600c:4e48:b0:443:48:66d2 with SMTP id 5b1f17b1804b1-4511ee14c08mr77083235e9.16.1748860305796;
-        Mon, 02 Jun 2025 03:31:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4lrvLwHaEWScY/8IOL/Tuots8CWM7YWfHJfcP7R1yvYuRofYdh+DhIzzTEbvoU5wPzbYr8A==
-X-Received: by 2002:a05:600c:4e48:b0:443:48:66d2 with SMTP id 5b1f17b1804b1-4511ee14c08mr77082755e9.16.1748860305291;
-        Mon, 02 Jun 2025 03:31:45 -0700 (PDT)
+        bh=pluW0u/+xJd0eUGvzfkykomG6yjqcYSK31IZ33YVJmI=;
+        b=D8NdleqQZ2+GuHJrUnq0iCGSAy20X9a4HYmWqZiHobuPaDDq8p/w6lQxVB9lQ8inxD
+         zluSXVjkeLU/m+HBIdvon3QOHqzHIgA3jFV5AxUQJJXNQW2+Mz4BuHz8s4Qx7QF+INXC
+         kYSo0bK4pP7v2eQtLsDzIKfXTQfiKfuoBA8JEj5UTJ7BHAxBeFifVhS5JhFcIYkMugc7
+         GAkTZ/9Z0hQWC/6IpwWwrjA6aKCE7LPUCRTF3ZMfBRx8Yhjvd/POrvp3QlTVDmMgrN6N
+         gz/dajwPTnFnrTdEtX2Vt1IgXFasZHSjUGgH0gVD1fuBJxtChnIRJDQ6wnM+wPhvPuuz
+         qmtw==
+X-Forwarded-Encrypted: i=1; AJvYcCXfALFX3HEbVy8K/nBQ8lx26nfrYZCXApopF2x55cMikAIYH4ammaLh/+khAnjsAenvAmuOFTMDc9s=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyuzBO1DFMGjFXqFc184O1DKGmZRi0cRis58tBHSiv8Gxg8nr09
+	bYIMzN50Lxsp9hgDettbFBAdH5f9YKQMxziUzx9wVFr19N2zQHm6/gzaMYwf7JWmn/EGxbLI4IY
+	zjlcUb8D3tG3AONHHMlSrUQYl6Mx5zMaUWGU5CmLGhmp09aABmwGe3NJpO6Uwtg==
+X-Gm-Gg: ASbGncurjvfGIRzaab+IHA6jaD/SqfRHIjS/7R6e/sXEs30q2JpYIgMEvEYYzxkowG6
+	NckQyPOmSXZZ2oULSYv+0+LsUMEEolb83TZArRDu1WGMvH+LcXeld4FhqqpqxQLymREdWSWulSm
+	or0vHfqrX9MPu6ozr4xi8/VVwznf/+ehXWwSE7Za647mLApPj7jcAssabibUgxMQ9hKNMdFid7s
+	XEBRF0JfRJUn0f2+mhXWvKbf1k1vQbhTLLGE3gS6SYYLqypZSdPXy5tYdWSRp70Q53BuGHVqQq1
+	l5iS1ajNfu0+rSCw/LgKdrIuS9Dc8LqSihC32xtx0JD5W5LsxzDbSwi01pKr22XgipsB+iw/VRJ
+	ujZAuz+ChdStcwLTd6yYxtz5HHlQGdpoPTxGs8dg=
+X-Received: by 2002:a05:600c:3555:b0:450:cabc:a6c6 with SMTP id 5b1f17b1804b1-450d6bbb899mr123242445e9.15.1748864712246;
+        Mon, 02 Jun 2025 04:45:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFNiWxj7ru1ZpdEa7TTYC+Mx0/zZsZQT6PVApBO3c8hzuU2D+iOpq+QjyaIBIup3raLJSW1Xg==
+X-Received: by 2002:a05:600c:3555:b0:450:cabc:a6c6 with SMTP id 5b1f17b1804b1-450d6bbb899mr123242185e9.15.1748864711876;
+        Mon, 02 Jun 2025 04:45:11 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f34:a300:1c2c:f35e:e8e5:488e? (p200300d82f34a3001c2cf35ee8e5488e.dip0.t-ipconnect.de. [2003:d8:2f34:a300:1c2c:f35e:e8e5:488e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8f1e7sm118287075e9.1.2025.06.02.03.31.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f92585sm126373555e9.5.2025.06.02.04.45.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 03:31:44 -0700 (PDT)
-Message-ID: <13ea6653-d33d-4f76-88c8-a17f9989d069@redhat.com>
-Date: Mon, 2 Jun 2025 12:31:43 +0200
+        Mon, 02 Jun 2025 04:45:11 -0700 (PDT)
+Message-ID: <3327f886-e708-4229-a83f-2404f115d44b@redhat.com>
+Date: Mon, 2 Jun 2025 13:45:09 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -75,7 +75,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/12] mm: Remove pXX_devmap page table bit and pfn_t type
+Subject: Re: [PATCH 08/12] mm/khugepaged: Remove redundant pmd_devmap() check
 To: Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org
 Cc: gerald.schaefer@linux.ibm.com, dan.j.williams@intel.com, jgg@ziepe.ca,
  willy@infradead.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
@@ -87,6 +87,7 @@ Cc: gerald.schaefer@linux.ibm.com, dan.j.williams@intel.com, jgg@ziepe.ca,
  linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
  linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net
 References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <2093b864560884a2a525d951a7cc20007da6b9b6.1748500293.git-series.apopple@nvidia.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -133,80 +134,23 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+In-Reply-To: <2093b864560884a2a525d951a7cc20007da6b9b6.1748500293.git-series.apopple@nvidia.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: UpM1f6_fdIKwcgwv8Z6W_eES_Esh751SRf6ZC2fcGtc_1748860306
+X-Mimecast-MFC-PROC-ID: p3oUyLPm08st_etjocfLJumvAAS2KcYhSJKrH0l8umI_1748864712
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 29.05.25 08:32, Alistair Popple wrote:
-> Changes from v2 of the RFC[1]:
+> The only users of pmd_devmap were device dax and fs dax. The check for
+> pmd_devmap() in check_pmd_state() is therefore redundant as callers
+> explicitly check for is_zone_device_page(), so this check can be dropped.
 > 
->   - My ZONE_DEVICE refcount series has been merged as commit 7851bf649d42 (Patch series
->     "fs/dax: Fix ZONE_DEVICE page reference counts", v9.) which is included in
->     v6.15 so have rebased on top of that.
-> 
->   - No major changes required for the rebase other than fixing up a new user of
->     the pfn_t type (intel_th).
-> 
->   - As a reminder the main benefit of this series is it frees up a PTE bit
->     (pte_devmap).
-> 
->   - This may be a bit late to consider for inclusion in v6.16 unless it can get
->     some more reviews before the merge window closes. I don't think missing v6.16
->     is a huge issue though.
-> 
->   - This passed xfstests for a XFS filesystem with DAX enabled on my system and
->     as many of the ndctl tests that pass on my system without it.
-> 
-> Changes for v2:
-> 
->   - This is an update to my previous RFC[2] removing just pfn_t rebased
->     on today's mm-unstable which includes my ZONE_DEVICE refcounting
->     clean-up.
-> 
->   - The removal of the devmap PTE bit and associated infrastructure was
->     dropped from that series so I have rolled it into this series.
-> 
->   - Logically this series makes sense to me, but the dropping of devmap
->     is wide ranging and touches some areas I'm less familiar with so
->     would definitely appreciate any review comments there.
-> 
-> [1] - https://lore.kernel.org/linux-mm/cover.95ff0627bc727f2bae44bea4c00ad7a83fbbcfac.1739941374.git-series.apopple@nvidia.com/
-> [2] - https://lore.kernel.org/linux-mm/cover.a7cdeffaaa366a10c65e2e7544285059cc5d55a4.1736299058.git-series.apopple@nvidia.com/
-> 
-> All users of dax now require a ZONE_DEVICE page which is properly
-> refcounted. This means there is no longer any need for the PFN_DEV, PFN_MAP
-> and PFN_SPECIAL flags. Furthermore the PFN_SG_CHAIN and PFN_SG_LAST flags
-> never appear to have been used. It is therefore possible to remove the
-> pfn_t type and replace any usage with raw pfns.
-> 
-> The remaining users of PFN_DEV have simply passed this to
-> vmf_insert_mixed() to create pte_devmap() mappings. It is unclear why this
-> was the case but presumably to ensure vm_normal_page() does not return
-> these pages. These users can be trivially converted to raw pfns and
-> creating a pXX_special() mapping to ensure vm_normal_page() still doesn't
-> return these pages.
-> 
-> Now that there are no users of PFN_DEV we can remove the devmap page table
-> bit and all associated functions and macros, freeing up a software page
-> table bit.
-> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> ---
 
-$ git grep FS_DAX_LIMITED
-fs/Kconfig:     depends on ZONE_DEVICE || FS_DAX_LIMITED
-fs/Kconfig:config FS_DAX_LIMITED
-fs/dax.c:       if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
-fs/dax.c:       if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
-fs/dax.c:       if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
-include/linux/pfn_t.h: * PFN_SPECIAL - for CONFIG_FS_DAX_LIMITED builds 
-to allow XIP, but not
-mm/memremap.c:          if (IS_ENABLED(CONFIG_FS_DAX_LIMITED)) {
-
-Can we remove that? Especially the interaction with PFN_SPECIAL looks 
-concerning.
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
