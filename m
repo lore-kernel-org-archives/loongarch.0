@@ -1,187 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBAF137C52
-	for <loongarch@lists.linux.dev>; Tue,  3 Jun 2025 04:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3312C326F
+	for <loongarch@lists.linux.dev>; Tue,  3 Jun 2025 05:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748924231; cv=none; b=A6G9ldkj2Db6EhDALwAIaqETZV6Khg5AAy5dqNNDYgTXeWHd9RM3k3uuKj7hEc+z71jB0Y/eSP2UYjtsyptlYL63Y9oACgnvwthZ089rgR7t1UbkEiV5YXvGqhtd3t1c9IKdicGuvmMJxTbpg3Cou7GMIeCziBhW57h3Xj4g+e8=
+	t=1748928395; cv=none; b=n8ZdWUVDx0/rDrlXO2eHDP7jiOi/9Z754zosVX/5wZbFbEoBqKw9EyjhfAzg3IaMRprCz12Vap0usC2eDG7NsiR1kG6Ng7uBbQRvW1tHWDPvltpoaeKHBkudK1eJ0RVoDZXhPhvCskgAw1WN30U+Oi+ZI9c0V3HPmBNWpRcX5SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748924231; c=relaxed/simple;
-	bh=XRDY9zSxHcc62kDSn/UH0a3mwSSK/2qlasZ8dIAXwAg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TiSUegSg0lS9GaUc4PgNM3W0h6jb1/Ghr7avQSxYdrEem8WzAapvupUlEX9Lg2JVZg0VnLgHxeR83gVBgp3RRymDpDAsd1s6ARlwDhc5NNL1o7OvmTjCypsywHGxWp/E44KjgtmB2aprexTaLa8fI9DA/DAjzgFROt6biUJ0RQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iFnOdzps; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFnOdzps"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500B0C4CEEF
-	for <loongarch@lists.linux.dev>; Tue,  3 Jun 2025 04:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748924231;
-	bh=XRDY9zSxHcc62kDSn/UH0a3mwSSK/2qlasZ8dIAXwAg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iFnOdzps49b6TBdsZZjI5Xiwk39Lu9OgU3gKPjD/lEfx+CRIn72wrVoBn2ETRIkuU
-	 rh5NSYQ3I3zIUGA+u/i4UJA7lLR6KO4FTvAg9q0cZoYSVXyylwUNTqFsYyX1Pk47VA
-	 3IgWftW3RlsDMezLwCOhGvVjdZM+FGuZ0N9BKMhV4c8GSj+A0cHC2PPm2+hO2iwOzh
-	 uEed9ABZFXKtRDSzqGsmXCQjz+U3G2800qm+6dFWgpDdI6UxTtBPUqYmDS++rDG2vA
-	 H+eEktm3PuFJM9OAvWp6MA0xYEctEzQaXmfA41AZplkTS8fnDkbG4IdjWiSQaEPOum
-	 rXd7yPHEy6+YA==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-602c4eae8d5so1762811a12.1
-        for <loongarch@lists.linux.dev>; Mon, 02 Jun 2025 21:17:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUnBz57+DWAV7YjDQ09Z/WA0+fRlTV6clp5fqaztf6maoI0lidFHC7cUXQ70SFekPApcEJOcBddKdI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw697pJxFskiT6frEgKqok0uhiZp43dh67vwTXvp1HZeMoJKvFY
-	f7iXrSqeSB6smLmBb6qaBa0tk6VMrEKLygb69GUvdwH7b4aFOcWUM6jzUz9/lQSvzGw8nH546rX
-	cuvfrIDqLAkMTLyvmSg4tf0pUuo2I+EE=
-X-Google-Smtp-Source: AGHT+IFlKJRUmZShCh2I0yGRQF78KfGY/dJ7szUVgLqypmx/e6zsubpaucOknF0IAGoLCJOVwpaGW5wfAGsmBvA+l2s=
-X-Received: by 2002:a05:6402:1e8c:b0:602:a0:1f2c with SMTP id
- 4fb4d7f45d1cf-606b08b3893mr909738a12.9.1748924229929; Mon, 02 Jun 2025
- 21:17:09 -0700 (PDT)
+	s=arc-20240116; t=1748928395; c=relaxed/simple;
+	bh=KfYvwiCmokBx/a1Rmyi2YE4MIW8rjmU9pulgR89dDM4=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=TUGEBo1Xkiiys0Rv3JLhRITkr9TpvNvxYCrs8mlPSOOxTrE8aep8Fvcdcsxg08dlzFhcXmpg44ejB53YoX9ZGfRBMadC5nGPRwISGHcSrl2bHCpZeV2W4Ak1qgtGDXKypxWFtp5AFG6I5CCaYM6aZ2CFxgKbAAuQrvtgfQt38O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4b1ef5f6403b11f0b29709d653e92f7d-20250603
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT
+	HR_TO_DOMAIN_COUNT, HR_TO_NAME, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED
+	DN_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:61a1d907-ff46-4547-82a4-06f4d0b6b1ac,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.45,REQID:61a1d907-ff46-4547-82a4-06f4d0b6b1ac,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:53736bfd1726ad950de57c46108b6eb9,BulkI
+	D:250603092025XIA4LIXU,BulkQuantity:2,Recheck:0,SF:17|19|24|38|44|64|66|78
+	|80|81|82|83|102|841,TC:nil,Content:4|50,EDM:-3,IP:-2,URL:0,File:nil,RT:ni
+	l,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,B
+	RR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: 4b1ef5f6403b11f0b29709d653e92f7d-20250603
+X-User: lijun01@kylinos.cn
+Received: from [192.168.31.86] [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <lijun01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1132898947; Tue, 03 Jun 2025 13:26:25 +0800
+Message-ID: <c4f90f7e786a17c7f07ab6bc8cb0d1778945573e.camel@kylinos.cn>
+Subject: Re: [PATCH] loongarch: kgdb: remove unnecessary init variable
+From: lijun <lijun01@kylinos.cn>
+To: Yanteng Si <si.yanteng@linux.dev>, chenhuacai@kernel.org,
+ kernel@xen0n.name,  loongarch@lists.linux.dev
+Cc: lijun01@kylinos.cn
+In-Reply-To: <8bcf144a-398e-4d78-8848-624502e7a85d@linux.dev>
+References: <20250530070902.410248-1-lijun01@kylinos.cn>
+	 <8bcf144a-398e-4d78-8848-624502e7a85d@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Date: Tue, 03 Jun 2025 10:55:51 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250531113851.21426-1-ziyao@disroot.org> <20250531113851.21426-3-ziyao@disroot.org>
-In-Reply-To: <20250531113851.21426-3-ziyao@disroot.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 3 Jun 2025 12:16:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
-X-Gm-Features: AX0GCFudVd0uVnRc2xdUPzyvIpGHwhh874hD1PVMo_7kVubHSRXVUsrL1bry0mc
-Message-ID: <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/loongarch: laptop: Support backlight power control
-To: Yao Zi <ziyao@disroot.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.36.1-2kord0k2.4.25.1 
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 31, 2025 at 7:39=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
->
-> loongson_laptop_turn_{on,off}_backlight() are designed for controlling
-> power of the backlight, but they aren't really used in the driver
-> previously.
->
-> Unify these two functions since they only differ in arguments passed to
-> ACPI method, and wire up loongson_laptop_backlight_update() to update
-> power state of the backlight as well. Tested on TongFang L860-T2 3A5000
-> laptop.
->
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-------------
->  1 file changed, 19 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platf=
-orm/loongarch/loongson-laptop.c
-> index 828bd62e3596..f01e53b1c84d 100644
-> --- a/drivers/platform/loongarch/loongson-laptop.c
-> +++ b/drivers/platform/loongarch/loongson-laptop.c
-> @@ -56,8 +56,6 @@ static struct input_dev *generic_inputdev;
->  static acpi_handle hotkey_handle;
->  static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
->
-> -int loongson_laptop_turn_on_backlight(void);
-> -int loongson_laptop_turn_off_backlight(void);
->  static int loongson_laptop_backlight_update(struct backlight_device *bd)=
-;
->
->  /* 2. ACPI Helpers and device model */
-> @@ -354,6 +352,22 @@ static int ec_backlight_level(u8 level)
->         return level;
->  }
->
-> +static int ec_backlight_set_power(bool state)
-> +{
-> +       int status;
-> +       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
-> +       struct acpi_object_list args =3D { 1, &arg0 };
-> +
-> +       arg0.integer.value =3D state;
-> +       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> +       if (ACPI_FAILURE(status)) {
-> +               pr_info("Loongson lvds error: 0x%x\n", status);
-> +               return -EIO;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int loongson_laptop_backlight_update(struct backlight_device *bd)
->  {
->         int lvl =3D ec_backlight_level(bd->props.brightness);
-> @@ -363,6 +377,8 @@ static int loongson_laptop_backlight_update(struct ba=
-cklight_device *bd)
->         if (ec_set_brightness(lvl))
->                 return -EIO;
->
-> +       ec_backlight_set_power(bd->props.power =3D=3D BACKLIGHT_POWER_ON =
-? true : false);
-It is better to check the status before setting, because the EC
-firmware may not be as robust as needed, a checking can reduce
-interactions between kernel and EC.
+it is not a wrong, just look clean.
 
-There is an example: dp_aux_backlight_update_status() in
-drivers/gpu/drm/display/drm_dp_helper.c.
 
-> +
->         return 0;
->  }
->
-> @@ -394,6 +410,7 @@ static int laptop_backlight_register(void)
->
->         props.brightness =3D ec_get_brightness();
->         props.max_brightness =3D status;
-> +       props.power =3D BACKLIGHT_POWER_ON;
->         props.type =3D BACKLIGHT_PLATFORM;
->
->         backlight_device_register("loongson_laptop",
-> @@ -402,38 +419,6 @@ static int laptop_backlight_register(void)
->         return 0;
->  }
->
-> -int loongson_laptop_turn_on_backlight(void)
-> -{
-> -       int status;
-> -       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
-> -       struct acpi_object_list args =3D { 1, &arg0 };
-> -
-> -       arg0.integer.value =3D 1;
-> -       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> -       if (ACPI_FAILURE(status)) {
-> -               pr_info("Loongson lvds error: 0x%x\n", status);
-> -               return -ENODEV;
-> -       }
-> -
-> -       return 0;
-> -}
-> -
-> -int loongson_laptop_turn_off_backlight(void)
-> -{
-> -       int status;
-> -       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
-> -       struct acpi_object_list args =3D { 1, &arg0 };
-> -
-> -       arg0.integer.value =3D 0;
-> -       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> -       if (ACPI_FAILURE(status)) {
-> -               pr_info("Loongson lvds error: 0x%x\n", status);
-> -               return -ENODEV;
-> -       }
-> -
-> -       return 0;
-> -}
-I prefer to keep them, in downstream kernels there are users of them,
-I don't want to add them back if one day those users are upstream.
 
-Huacai
+--------------------------
+> 在 5/30/25 3:09 PM, Li Jun 写道:
+> > the get_step_address(regs, &addr) should assign a value
+> > to 'error' before it is read.so the var don't need init
+> > to 0.
+> 
+> So, is it wrong to initialize it to 0 now?
+> 
+> 
+> Thanks,
+> Yanteng
+> > Signed-off-by: Li Jun <
+> > lijun01@kylinos.cn
+> > >
+> > ---
+> >   arch/loongarch/kernel/kgdb.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/loongarch/kernel/kgdb.c
+> > b/arch/loongarch/kernel/kgdb.c
+> > index 7be5b4c0c900..df3c7a5565e9 100644
+> > --- a/arch/loongarch/kernel/kgdb.c
+> > +++ b/arch/loongarch/kernel/kgdb.c
+> > @@ -379,7 +379,7 @@ static int get_step_address(struct pt_regs
+> > *regs, unsigned long *next_addr)
+> >   
+> >   static int do_single_step(struct pt_regs *regs)
+> >   {
+> > -	int error = 0;
+> > +	int error;
+> >   	unsigned long addr = 0; /* Determine where the target
+> > instruction will send us to */
+> >   
+> >   	error = get_step_address(regs, &addr);
 
-> -
->  static int __init event_init(struct generic_sub_driver *sub_driver)
->  {
->         int ret;
-> --
-> 2.49.0
->
->
