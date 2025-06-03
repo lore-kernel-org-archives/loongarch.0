@@ -1,105 +1,113 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3312C326F
-	for <loongarch@lists.linux.dev>; Tue,  3 Jun 2025 05:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2971D5AB5
+	for <loongarch@lists.linux.dev>; Tue,  3 Jun 2025 05:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748928395; cv=none; b=n8ZdWUVDx0/rDrlXO2eHDP7jiOi/9Z754zosVX/5wZbFbEoBqKw9EyjhfAzg3IaMRprCz12Vap0usC2eDG7NsiR1kG6Ng7uBbQRvW1tHWDPvltpoaeKHBkudK1eJ0RVoDZXhPhvCskgAw1WN30U+Oi+ZI9c0V3HPmBNWpRcX5SY=
+	t=1748929813; cv=none; b=bcSQRP7HWOHHRTeudmC/m/iQguKQGwbsYrEGmSY2Di8thzQfKJ/CLg2/uer00p5wdsH+9wXFxPHS/2a9IvyZMUzUaqJpgjfVUj51silyjZgt112IGeJzKIzfKQGi6ihBao+4hmSuv/rHJ+suRXbpA9BDOhGqoOp0P2oAmHEvq54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748928395; c=relaxed/simple;
-	bh=KfYvwiCmokBx/a1Rmyi2YE4MIW8rjmU9pulgR89dDM4=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=TUGEBo1Xkiiys0Rv3JLhRITkr9TpvNvxYCrs8mlPSOOxTrE8aep8Fvcdcsxg08dlzFhcXmpg44ejB53YoX9ZGfRBMadC5nGPRwISGHcSrl2bHCpZeV2W4Ak1qgtGDXKypxWFtp5AFG6I5CCaYM6aZ2CFxgKbAAuQrvtgfQt38O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 4b1ef5f6403b11f0b29709d653e92f7d-20250603
-X-CTIC-Tags:
-	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
-	HR_FROM_NAME, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT
-	HR_TO_DOMAIN_COUNT, HR_TO_NAME, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED
-	DN_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
-	DMARC_NOPASS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:61a1d907-ff46-4547-82a4-06f4d0b6b1ac,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.45,REQID:61a1d907-ff46-4547-82a4-06f4d0b6b1ac,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:53736bfd1726ad950de57c46108b6eb9,BulkI
-	D:250603092025XIA4LIXU,BulkQuantity:2,Recheck:0,SF:17|19|24|38|44|64|66|78
-	|80|81|82|83|102|841,TC:nil,Content:4|50,EDM:-3,IP:-2,URL:0,File:nil,RT:ni
-	l,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,B
-	RR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: 4b1ef5f6403b11f0b29709d653e92f7d-20250603
-X-User: lijun01@kylinos.cn
-Received: from [192.168.31.86] [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <lijun01@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1132898947; Tue, 03 Jun 2025 13:26:25 +0800
-Message-ID: <c4f90f7e786a17c7f07ab6bc8cb0d1778945573e.camel@kylinos.cn>
-Subject: Re: [PATCH] loongarch: kgdb: remove unnecessary init variable
-From: lijun <lijun01@kylinos.cn>
-To: Yanteng Si <si.yanteng@linux.dev>, chenhuacai@kernel.org,
- kernel@xen0n.name,  loongarch@lists.linux.dev
-Cc: lijun01@kylinos.cn
-In-Reply-To: <8bcf144a-398e-4d78-8848-624502e7a85d@linux.dev>
-References: <20250530070902.410248-1-lijun01@kylinos.cn>
-	 <8bcf144a-398e-4d78-8848-624502e7a85d@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Date: Tue, 03 Jun 2025 10:55:51 +0800
+	s=arc-20240116; t=1748929813; c=relaxed/simple;
+	bh=pMJ4jUFH5A+k3056tldetExu6M15kPKHya2L/T2Yi0M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QCZRGq4qPh2AEthHkqFQFb6hHzMpKJmJOchRaI+3XO8/l7AlEdWB2AWn98DYCfrU3BIlScKCah0Nlg6GAsy8geM246JEgktelsbX0gE02LffD4lgFlvv1aJjisbGFJjBKwtWfjkXQ18ilZKUlwqxtW4/Fk/Ia3ePcxAob22cnuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=hm233AD0; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="hm233AD0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1748929460; bh=pMJ4jUFH5A+k3056tldetExu6M15kPKHya2L/T2Yi0M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hm233AD0tlldOAMFtNJQWzJRSi93k0lraM6iNJL+/SP1jN/HYvk0HF0cLh8dJSmgi
+	 zeu6BEDp9mpZu9se9D+hjJZM1bW4EH/FG/nZlTX6sCJY9wScRDVUueSt3glDjiC0pd
+	 6sIPQCZt/Qugjgb4ky2+0BpFNAtZ1UU4yAIGhi6w=
+Received: from [IPV6:240e:b8f:949a:9000:a4ce:c2af:a2c2:7c9c] (unknown [IPv6:240e:b8f:949a:9000:a4ce:c2af:a2c2:7c9c])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id B372D6011B;
+	Tue,  3 Jun 2025 13:44:20 +0800 (CST)
+Message-ID: <77dc0324-ce8d-4af4-9aaf-815bb9a1bd82@xen0n.name>
+Date: Tue, 3 Jun 2025 13:44:20 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Evolution 3.36.1-2kord0k2.4.25.1 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] platform/loongarch: laptop: Support backlight power
+ control
+To: Huacai Chen <chenhuacai@kernel.org>, Yao Zi <ziyao@disroot.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
+ Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250531113851.21426-1-ziyao@disroot.org>
+ <20250531113851.21426-3-ziyao@disroot.org>
+ <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-it is not a wrong, just look clean.
+On 6/3/25 12:16, Huacai Chen wrote:
+> On Sat, May 31, 2025 at 7:39 PM Yao Zi <ziyao@disroot.org> wrote:
+>>
+>> loongson_laptop_turn_{on,off}_backlight() are designed for controlling
+>> power of the backlight, but they aren't really used in the driver
+>> previously.
+>>
+>> Unify these two functions since they only differ in arguments passed to
+>> ACPI method, and wire up loongson_laptop_backlight_update() to update
+>> power state of the backlight as well. Tested on TongFang L860-T2 3A5000
+>> laptop.
+>>
+>> Signed-off-by: Yao Zi <ziyao@disroot.org>
+>> ---
+>>   drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-------------
+>>   1 file changed, 19 insertions(+), 34 deletions(-)
+>>
+>> [snip]
+>>
+>> -int loongson_laptop_turn_on_backlight(void)
+>> -{
+>> -       int status;
+>> -       union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+>> -       struct acpi_object_list args = { 1, &arg0 };
+>> -
+>> -       arg0.integer.value = 1;
+>> -       status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
+>> -       if (ACPI_FAILURE(status)) {
+>> -               pr_info("Loongson lvds error: 0x%x\n", status);
+>> -               return -ENODEV;
+>> -       }
+>> -
+>> -       return 0;
+>> -}
+>> -
+>> -int loongson_laptop_turn_off_backlight(void)
+>> -{
+>> -       int status;
+>> -       union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+>> -       struct acpi_object_list args = { 1, &arg0 };
+>> -
+>> -       arg0.integer.value = 0;
+>> -       status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
+>> -       if (ACPI_FAILURE(status)) {
+>> -               pr_info("Loongson lvds error: 0x%x\n", status);
+>> -               return -ENODEV;
+>> -       }
+>> -
+>> -       return 0;
+>> -}
+> I prefer to keep them, in downstream kernels there are users of them,
+> I don't want to add them back if one day those users are upstream.
 
+Then these symbols should be properly EXPORT_SYMBOL_GPL marked?
 
+-- 
+WANG "xen0n" Xuerui
 
---------------------------
-> 在 5/30/25 3:09 PM, Li Jun 写道:
-> > the get_step_address(regs, &addr) should assign a value
-> > to 'error' before it is read.so the var don't need init
-> > to 0.
-> 
-> So, is it wrong to initialize it to 0 now?
-> 
-> 
-> Thanks,
-> Yanteng
-> > Signed-off-by: Li Jun <
-> > lijun01@kylinos.cn
-> > >
-> > ---
-> >   arch/loongarch/kernel/kgdb.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/loongarch/kernel/kgdb.c
-> > b/arch/loongarch/kernel/kgdb.c
-> > index 7be5b4c0c900..df3c7a5565e9 100644
-> > --- a/arch/loongarch/kernel/kgdb.c
-> > +++ b/arch/loongarch/kernel/kgdb.c
-> > @@ -379,7 +379,7 @@ static int get_step_address(struct pt_regs
-> > *regs, unsigned long *next_addr)
-> >   
-> >   static int do_single_step(struct pt_regs *regs)
-> >   {
-> > -	int error = 0;
-> > +	int error;
-> >   	unsigned long addr = 0; /* Determine where the target
-> > instruction will send us to */
-> >   
-> >   	error = get_step_address(regs, &addr);
-
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
