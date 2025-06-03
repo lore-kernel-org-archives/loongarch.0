@@ -1,199 +1,99 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EFB1F78E0
-	for <loongarch@lists.linux.dev>; Tue,  3 Jun 2025 07:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D071E4A4;
+	Tue,  3 Jun 2025 08:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748934363; cv=none; b=FWmIlmXBim3wdm5o4U7Hsp3u7bG49s44hVyBYFlXQIRWxELWL12VCdBjFmubNPioBmAoH0yu620FF2WguyUc1bJRewRaP1cvORCPawYeb2k9yHExD1kXFiIpdNvwJNjt7NbbS2BpjPmZ3DlHp7ymzpznN1/7GpAIXpcgIj3VugQ=
+	t=1748940468; cv=none; b=XJrXu5jO5gbuDEypAo+Lhal4xwXtKSjfCiPHRzI2sn7N//PGMGm8h5dwbpv9UqayvNIefhsKX4lzmPI+fCaKpeEIIHAJpROTNOuCejbolJBFP7olxZc73jLE1PKBlKLpXM9WwT+e1V1Q0YSdwZZMkJ+Hq30etDP5Y6rd34jwHk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748934363; c=relaxed/simple;
-	bh=Zw7JnFzVMeuo8BnGhrCv9FlB2nDeaokUhdGlmW2Jmy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TVPYTYitwj4ZqbRrSVKBfIFdp8UXdt/sztmYtEFP4mLptjeMWa8izkjgNJHt084TX68vnCe/qhofiTkLAo1He4gk1LnPR+11HNHS3apmTVOhfKGquRjiBGwM2P4j4wTozK+h3XHI3/d+51GQTIxWOulBKo+4+MyTgkGukzFCNjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=gqVVa1d0; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1748940468; c=relaxed/simple;
+	bh=jJl7zNe61UoVTJuk1dJpds0EqaxQd/Bjp7rrpdF3Vrg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=O1RWHlQeNIO3lztG2SYP+QNSM01u40WvUMPuBGRjInPJs69hGDJZnG3R5JnsOb/mGzn3MDDt66DbQxVbbb9KM3R/sWKODdkeD3QjMjYizgQgbpNp8M2DkeY6zLkUcDenNavqbq67ndu9CkqSb0+SHFcJNKLYxUdnB+4LQ7bq+wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=W43ANvm/; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="gqVVa1d0"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id CCC3D22DCD;
-	Tue,  3 Jun 2025 09:05:59 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id JxEtRYlshMp1; Tue,  3 Jun 2025 09:05:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1748934359; bh=Zw7JnFzVMeuo8BnGhrCv9FlB2nDeaokUhdGlmW2Jmy8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gqVVa1d0kS8sNmrwCPstBGKaALFpmZoZReHsVYtLmEaZgjsn4ikGbj3nzh/OugPD5
-	 HXEpOFUPqQ4pR2O+dJe1TC8d+1WujXUJb71txVCDPLb8Ktbi8K8OShQ+CTePJ6Mifv
-	 43F+2G5BmY3obv7HtWVD0XRKp7qlaCX4s8xSNcP4Z11/25z3DRLUcLROr/7E4e5mX+
-	 b4BvC1QaCY1oprNpSoSUsWpHa1R2EzBBZfflFZjdqIiPz619ckNWTIwfEDpDbPZ9xE
-	 jWCD0brTE60P5Hwz48y4h0RRSNoW2N9LfMfbAHUPzUGFlKb+C6MSMt3I+hdUmuLf5d
-	 tntexQwxWhiDw==
-Date: Tue, 3 Jun 2025 07:05:52 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 2/2] platform/loongarch: laptop: Support backlight power
- control
-Message-ID: <aD6e0JLntUC6BdH7@pie.lan>
-References: <20250531113851.21426-1-ziyao@disroot.org>
- <20250531113851.21426-3-ziyao@disroot.org>
- <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="W43ANvm/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=ll9HQg8JHducpOZaqvXxVZxIxZ1+gNQW3g36PYXusgc=;
+	t=1748940467; x=1750150067; b=W43ANvm/jK2PCmf4C1oXzPDqDDSRZ1zVHQkxCJcm6w/HiYB
+	VW6658f7aklLrNQNLom+gJ1hRl9ycgnkPhERK9THyfshpc23RtOAqz2ZZ5qXxBJFlMPmeEYm1aZc+
+	O3IwiVjeRbdDUMTZfWQ4hCj4K0XskBvgHmH1GHqA8Pou+aX60Bni5Wi2OhDgCrMZcAhl5CBv3T2qe
+	FIYjR8//KG0nDEQm8XjikFkzgD2xIiQ3nqdB0QIPpyepc9QBEOtY7gRcaoEkej0SlaTJOUpOrpGp4
+	661ZL7FYZuhoI6EweKtt83zB67dvOKFPnNR0VaBxJHGY+lfKfxM0cHnOpdP9SdcQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uMNIR-00000009mC8-119O;
+	Tue, 03 Jun 2025 10:46:59 +0200
+Message-ID: <b4fe62d12be677dc047ee2fce4a65284a5f915e8.camel@sipsolutions.net>
+Subject: Re: [PATCH 2/2] arch: use always-$(KBUILD_BUILTIN) for vmlinux.lds
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: Albert Ou <aou@eecs.berkeley.edu>, Alexander Gordeev	
+ <agordeev@linux.ibm.com>, Alexandre Ghiti <alex@ghiti.fr>, Andreas Larsson	
+ <andreas@gaisler.com>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+ Borislav Petkov	 <bp@alien8.de>, Brian Cain <bcain@kernel.org>, Catalin
+ Marinas	 <catalin.marinas@arm.com>, Chris Zankel <chris@zankel.net>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Dave Hansen	 <dave.hansen@linux.intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren	 <guoren@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Heiko Carstens	 <hca@linux.ibm.com>,
+ Helge Deller <deller@gmx.de>, Huacai Chen	 <chenhuacai@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, "James E.J. Bottomley"	
+ <James.Bottomley@HansenPartnership.com>, John Paul Adrian Glaubitz	
+ <glaubitz@physik.fu-berlin.de>, Jonas Bonn <jonas@southpole.se>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Matt Turner <mattst88@gmail.com>, Max
+ Filippov <jcmvbkbc@gmail.com>,  Michael Ellerman <mpe@ellerman.id.au>,
+ Michal Simek <monstr@monstr.eu>, Naveen N Rao <naveen@kernel.org>, Nicholas
+ Piggin <npiggin@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, Paul
+ Walmsley	 <paul.walmsley@sifive.com>, Rich Felker <dalias@libc.org>,
+ Richard Henderson	 <richard.henderson@linaro.org>, Richard Weinberger
+ <richard@nod.at>, Russell King <linux@armlinux.org.uk>, Stafford Horne
+ <shorne@gmail.com>, Stefan Kristiansson	
+ <stefan.kristiansson@saunalahti.fi>, Sven Schnelle <svens@linux.ibm.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
+ <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,  Vineet Gupta
+ <vgupta@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Will Deacon
+ <will@kernel.org>,  Yoshinori Sato <ysato@users.sourceforge.jp>,
+ linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	sparclinux@vger.kernel.org, x86@kernel.org
+Date: Tue, 03 Jun 2025 10:46:57 +0200
+In-Reply-To: <20250602181256.529033-2-masahiroy@kernel.org>
+References: <20250602181256.529033-1-masahiroy@kernel.org>
+	 <20250602181256.529033-2-masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com>
+X-malware-bazaar: not-scanned
 
-On Tue, Jun 03, 2025 at 12:16:57PM +0800, Huacai Chen wrote:
-> On Sat, May 31, 2025 at 7:39 PM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > loongson_laptop_turn_{on,off}_backlight() are designed for controlling
-> > power of the backlight, but they aren't really used in the driver
-> > previously.
-> >
-> > Unify these two functions since they only differ in arguments passed to
-> > ACPI method, and wire up loongson_laptop_backlight_update() to update
-> > power state of the backlight as well. Tested on TongFang L860-T2 3A5000
-> > laptop.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-------------
-> >  1 file changed, 19 insertions(+), 34 deletions(-)
-> >
-> > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-> > index 828bd62e3596..f01e53b1c84d 100644
-> > --- a/drivers/platform/loongarch/loongson-laptop.c
-> > +++ b/drivers/platform/loongarch/loongson-laptop.c
-> > @@ -56,8 +56,6 @@ static struct input_dev *generic_inputdev;
-> >  static acpi_handle hotkey_handle;
-> >  static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
-> >
-> > -int loongson_laptop_turn_on_backlight(void);
-> > -int loongson_laptop_turn_off_backlight(void);
-> >  static int loongson_laptop_backlight_update(struct backlight_device *bd);
-> >
-> >  /* 2. ACPI Helpers and device model */
-> > @@ -354,6 +352,22 @@ static int ec_backlight_level(u8 level)
-> >         return level;
-> >  }
-> >
-> > +static int ec_backlight_set_power(bool state)
-> > +{
-> > +       int status;
-> > +       union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-> > +       struct acpi_object_list args = { 1, &arg0 };
-> > +
-> > +       arg0.integer.value = state;
-> > +       status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> > +       if (ACPI_FAILURE(status)) {
-> > +               pr_info("Loongson lvds error: 0x%x\n", status);
-> > +               return -EIO;
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  static int loongson_laptop_backlight_update(struct backlight_device *bd)
-> >  {
-> >         int lvl = ec_backlight_level(bd->props.brightness);
-> > @@ -363,6 +377,8 @@ static int loongson_laptop_backlight_update(struct backlight_device *bd)
-> >         if (ec_set_brightness(lvl))
-> >                 return -EIO;
-> >
-> > +       ec_backlight_set_power(bd->props.power == BACKLIGHT_POWER_ON ? true : false);
-> It is better to check the status before setting, because the EC
-> firmware may not be as robust as needed, a checking can reduce
-> interactions between kernel and EC.
-> 
-> There is an example: dp_aux_backlight_update_status() in
-> drivers/gpu/drm/display/drm_dp_helper.c.
+On Tue, 2025-06-03 at 03:12 +0900, Masahiro Yamada wrote:
+> The extra-y syntax is deprecated. Instead, use always-$(KBUILD_BUILTIN),
+> which behaves equivalently.
 
-It's reasonable and I'll take it.
+OK, whatever you say ;-)
 
-> > +
-> >         return 0;
-> >  }
-> >
-> > @@ -394,6 +410,7 @@ static int laptop_backlight_register(void)
-> >
-> >         props.brightness = ec_get_brightness();
-> >         props.max_brightness = status;
-> > +       props.power = BACKLIGHT_POWER_ON;
-> >         props.type = BACKLIGHT_PLATFORM;
-> >
-> >         backlight_device_register("loongson_laptop",
-> > @@ -402,38 +419,6 @@ static int laptop_backlight_register(void)
-> >         return 0;
-> >  }
-> >
-> > -int loongson_laptop_turn_on_backlight(void)
-> > -{
-> > -       int status;
-> > -       union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-> > -       struct acpi_object_list args = { 1, &arg0 };
-> > -
-> > -       arg0.integer.value = 1;
-> > -       status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> > -       if (ACPI_FAILURE(status)) {
-> > -               pr_info("Loongson lvds error: 0x%x\n", status);
-> > -               return -ENODEV;
-> > -       }
-> > -
-> > -       return 0;
-> > -}
-> > -
-> > -int loongson_laptop_turn_off_backlight(void)
-> > -{
-> > -       int status;
-> > -       union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-> > -       struct acpi_object_list args = { 1, &arg0 };
-> > -
-> > -       arg0.integer.value = 0;
-> > -       status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> > -       if (ACPI_FAILURE(status)) {
-> > -               pr_info("Loongson lvds error: 0x%x\n", status);
-> > -               return -ENODEV;
-> > -       }
-> > -
-> > -       return 0;
-> > -}
-> I prefer to keep them, in downstream kernels there are users of them,
-> I don't want to add them back if one day those users are upstream.
+>  arch/um/kernel/Makefile         | 2 +-
 
-These two functions are mostly identical, and I think unifying them
-together should be the right way to go. If this makes sense, users
-introduced in the future should also adapt it, instead of keeping
-redundant code in the current mainline kernel.
+Acked-by: Johannes Berg <johannes@sipsolutions.net>
 
-If there're new users of the API out of the loongson3_laptop module in
-the future, it's still easy to rename ec_backlight_set_power() and
-export it.
-
-For these two points, I disagree on keeping these two symbols.
-
-> Huacai
-
-Thanks,
-Yao Zi
-
-> > -
-> >  static int __init event_init(struct generic_sub_driver *sub_driver)
-> >  {
-> >         int ret;
-> > --
-> > 2.49.0
-> >
-> >
-> 
+johannes
