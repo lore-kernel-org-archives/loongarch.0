@@ -1,148 +1,141 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23019229B12;
-	Tue,  3 Jun 2025 11:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AEA1F3FE8
+	for <loongarch@lists.linux.dev>; Tue,  3 Jun 2025 12:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748951358; cv=none; b=J/iGs2+9UyHvHpneIbAbJMiyn38xe5lzOHLTjaesZMntN5fwzOQvkWNZw215rsdnJUnBOV+asH3YXopQI2DxLGzT1aX7J7WxjFTeQ1gpBqLXjtDBN8Ts54UIQBbgQUSGklUMi4nVTiylRFa1dLEWwWCPpstXCjB/DYAQN8h3OEc=
+	t=1748955301; cv=none; b=trG8alZyH3CWdDF3JT7cdYy36o6XD6Id+/uf4C5NrFj51G3a+kbT/e+R13pdw68g1YxyQcTGDAq6q3FuE1BnQNlrpPx+qLBufvS9QwfwVVQHgsQG8x7U5c+9XH0vLIxg/1A4NRGVSmsMHfXn91vfGw378VdN4qxPqPlM6R1Ilxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748951358; c=relaxed/simple;
-	bh=wom79q92oCFLcZlN7tEa7jlXzfWsnWnHafZTXK6l0Iw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tmoGk2eYnWZyOf9ajxdD257BNkKO5KqR7tcV5DHpmFuaDo7JcxgqaK6pNuHhAyroJ7xiqBDt7h8DbY4iF/hj7KO9H/IluctabwMNqY9lf8QtNuaYtnf66z1gwYnBtD97KVKwaF6106r4wRee3JBId8a7/6drU17b3TqvHjYau34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EjwPsOj0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dUYsPeG9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748955301; c=relaxed/simple;
+	bh=/dAIwu0T7tzFgg3iCU6rIlWG6qfNpoFwGXKYEKntOA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WSK8fKrAsmC/cE/29zp45GbCrcP07r8hIxv/65rbX7OVstGMUGPQrR5mw1QRcR6PvU+BB/tNU10nDgC6psCWSVo+JdTSn69JyqnQmf4i/Z0syuAtMHWETXJmPXYSN2BLuaRmS6r6lqrLI02puSf+2gaKtnLvJsoDbzZiqtKq/0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hQ8Ept6q; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EjwPsOj0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dUYsPeG9"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748951355;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oMdxVtTtFnSvdmEEqBijs6M91boPnIabeZHBVmqzvPk=;
-	b=EjwPsOj0dLQE/8aFL3ohPMaRoo0e/s2GZB+PG+3m2tfAa0LMtAm9nqn1rx7IfHR5Z7OWBv
-	KVIIGzw5Z27uqRzZBxJXZmtv9E5hwe07m1wuksd5wdsLObVyjh/uu2KJpfI8f4Fds1JYPO
-	Moech0JSHXX71BQa1opFTYUj04mZpCnh39o84ooVyMtgoSBwF9jL2vQQdVW/jXQx9SZsWq
-	VlxCReNVl+d1ThaJPuyYE3r35k2gl69BT7zrjy470Y21AXvko1o4YwwWimTd/EQFixPNnS
-	TrNce6WbFBJDRP0B0cVSwztYjelLwszM/kDe0OMd9q/rkEBfmjBWtBpSJYVKcQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748951355;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oMdxVtTtFnSvdmEEqBijs6M91boPnIabeZHBVmqzvPk=;
-	b=dUYsPeG9AFR7ZdVKavNrhR4xPgd4/ZYrgxEEAoShaQm7l8kfScYHN/Pz4hEkoECXOJFfLt
-	0bpn1r+RHnbsesAQ==
-Date: Tue, 03 Jun 2025 13:48:54 +0200
-Subject: [PATCH] LoongArch: vDSO: correctly use asm parameters in syscall
- wrappers
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQ8Ept6q"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad88105874aso879499466b.1
+        for <loongarch@lists.linux.dev>; Tue, 03 Jun 2025 05:54:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748955298; x=1749560098; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K+UZHJ2oORlm9mx4aNJvJN/pklH00QSvht/GBCe488k=;
+        b=hQ8Ept6qf9ynr3sf3r/hr2XMd5Fs2CIbtO/MWO23HH5eLBg8Xg+r2HoqKvWnxJGPh1
+         KdyWYHwTt7y384mr6LW1jKqCUn5hFgk3hf8s6tn/cgfcW7Y1hKfdFwG4EG80zz2tKHww
+         uyS9YHqF2oDsH3cMP6xXsEpLhqgAdiWn17/6PQPmJaUSd4mW8aFh30jd4EPH+RFDUSkZ
+         G7+dYR2Ob93NEFxAXzwHdZ6YtKxG79R456yOBNQu/cJpUsTJXI6kc6LwkKkIjPL0WwMp
+         bXWtW3d6gEbqJMMnfXtAyl62WBk/QBVX9uGkPCFk12sVl+N95EjN2kjNF5YDTpGF39Ft
+         GyHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748955298; x=1749560098;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K+UZHJ2oORlm9mx4aNJvJN/pklH00QSvht/GBCe488k=;
+        b=UVeJHfGJEIB0to6GeKF/aWYzXqKyxHh4ZcpTUUe5cw9Zg3HY4XhmXiF2iQNeB92JsN
+         Skd3asAl4BwFZKOpCuAkv61Snpi+Qb/sq4dYk/s5enyhtz264HFK4f9yA7iMgDeRgvqd
+         ltfz718CAB/pzBgSCtkXUyhkU7iVVdx/eo+xjfkhsT9kLfPJjVjvJltNvQWWgPbQ/l/d
+         WdL+sAQALCvajWoXwjP1aAKbMCefqZUWozV8ovJjdKnc1E1ZOQ/3lp23WoyUA6ijdTYv
+         HsHQ1MxhBhu9H4YyGYIe9PkZE9s+z0/NMLxhOgHlHvYPX8a0ui97+kwJBYhZssIA8Pbs
+         C8hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHS/kElS7VTrNOoywSjHcA87QxyrHpJjvimkefumhEPz2vEE/svN+fnRPkq5LqCB3nIY69GqyjBJ8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw+ul7fbSA9F+FwrSBxuoy2IH3yjqsyDkl4lmYi+vbSLxbYATRV
+	MwvdpkByd2jxNDIPyKQzxvhLmJgKwHSf1CsxzKeOtLdeQyB+xi73kHaNAHLYXbUTF2Pf1+eYpiN
+	6cXjpIaluD4otQI4OVh08oiWx8ADWqaAHyw==
+X-Gm-Gg: ASbGncvrU2wrbpur3iR9cEAiq5Nnv0YZSYbCj/UdML5kLhXUq6Fkk5nYsb07oveH7zI
+	FdS8UyXp/IWjvsOXVBhVZ1kmWagFxIItTaP+FkBOqfoze55x4JUv9Fe74eSnv9JuAa8gRJb+x5J
+	pZ3KOEIq7PGk03mVQ1hNLJ0RIukuByZZWiHNAk5eWEUZs=
+X-Google-Smtp-Source: AGHT+IGDlW8MDdTNB0VgQWuhPiBRj/aK0GGHFCiZpthrYERZp7ysLrGJPfPS797EiAjNE1OLiGDDU5eJieuTQScgWVA=
+X-Received: by 2002:a17:907:7b8c:b0:ad8:8529:4fa5 with SMTP id
+ a640c23a62f3a-adb32580593mr2018270166b.46.1748955297934; Tue, 03 Jun 2025
+ 05:54:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIACXhPmgC/x3MMQqAMAxA0atIZgNVqahXEYdYowZKKw2IIt7d4
- viG/x9QTsIKQ/FA4lNUYsioygLcTmFjlCUbalNb05oGfYxho+R2PBeNqLc68h5X21nq+5nJNJD
- jI/Eq1z8ep/f9AAP8HJpoAAAA
-X-Change-ID: 20250603-loongarch-vdso-syscall-f585a99bea03
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Xi Ruoyao <xry111@xry111.site>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, stable@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748951353; l=3225;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=wom79q92oCFLcZlN7tEa7jlXzfWsnWnHafZTXK6l0Iw=;
- b=3jgZcQJ3gm6pwD+AzZ1xE/BHuSfeZIiVw/+Nnhy3PUYU1fJnM8+f0WObpafBHQrqu/2ZDkpTc
- 4bUHhFr2fhpA/aVAes5K8IZ/IBAp4j39bk92v8lblXzB0kMOLsKwQKp
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+References: <cover.1746581751.git.zhoubinbin@loongson.cn> <704447268706b1b9f25bbe9d15459163d0ac3404.1746581751.git.zhoubinbin@loongson.cn>
+ <CAPDyKFo4n=K5-SeKFpCm-0u4Bbk-E0XqUrx+KSK1yuZa35a7ug@mail.gmail.com>
+In-Reply-To: <CAPDyKFo4n=K5-SeKFpCm-0u4Bbk-E0XqUrx+KSK1yuZa35a7ug@mail.gmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 3 Jun 2025 20:54:44 +0800
+X-Gm-Features: AX0GCFti6lVzu3WMi3d-hrNdeeTMc5uSmRkY_kyrecCt1CVJXaWP6obNQRLY6Cg
+Message-ID: <CAMpQs4JCaUzJXgcQwiWOoJ0YAj=ORnyaK0dC3-GamV-cbyhNnA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC
+ controller driver
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The syscall wrappers use the "a0" register for two different register
-variables, both the first argument and the return value. The "ret"
-variable is used as both input and output while the argument register is
-only used as input. Clang treats the conflicting input parameters as
-undefined behaviour and optimizes away the argument assignment.
+Hi Ulf:
 
-The code seems to work by chance for the most part today but that may
-change in the future. Specifically clock_gettime_fallback() fails with
-clockids from 16 to 23, as implemented by the upcoming auxiliary clocks.
+Sorry for the late reply.
 
-Switch the "ret" register variable to a pure output, similar to the other
-architectures' vDSO code. This works in both clang and GCC.
+On Mon, May 19, 2025 at 7:17=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org=
+> wrote:
+>
+> On Wed, 7 May 2025 at 09:28, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+> >
+> > This patch describes the two MMC controllers of the Loongson-2K2000 SoC=
+,
+> > one providing an eMMC interface and the other exporting an SD/SDIO
+> > interface.
+> >
+> > Compared to the Loongson-2K1000's MMC controllers, their internals are
+> > similar, except that we use an internally exclusive DMA engine instead =
+of
+> > an externally shared APBDMA engine.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+>
+> [...]
+>
+> > +
+> > +static void ls2k2000_mmc_fix_cmd_interrupt(struct loongson2_mmc_host *=
+host,
+> > +                                          struct mmc_command *cmd)
+> > +{
+> > +       int val;
+> > +
+> > +       if (cmd->opcode !=3D MMC_WRITE_BLOCK && cmd->opcode !=3D MMC_WR=
+ITE_MULTIPLE_BLOCK)
+> > +               return;
+> > +
+> > +       regmap_read_poll_timeout(host->regmap, LOONGSON2_MMC_REG_FSTS, =
+val,
+> > +                                (val & LOONGSON2_MMC_FSTS_TXFULL), 0, =
+500);
+>
+> Can you please elaborate on what goes on here?
 
-Link: https://lore.kernel.org/lkml/20250602102825-42aa84f0-23f1-4d10-89fc-e8bbaffd291a@linutronix.de/
-Link: https://lore.kernel.org/lkml/20250519082042.742926976@linutronix.de/
-Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-Fixes: 18efd0b10e0f ("LoongArch: vDSO: Wire up getrandom() vDSO implementation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- arch/loongarch/include/asm/vdso/getrandom.h    | 2 +-
- arch/loongarch/include/asm/vdso/gettimeofday.h | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+This is a controller hardware issue. We need to wait until the Tx FIFO
+full flag is set before sending the write command. Otherwise, a data
+timeout will occur.
+>
+> Note that, the mmc core uses a couple of different options to manage
+> busy detection monitoring on DAT0, for those commands that need it.
+>
+> *) MMC_CAP_WAIT_WHILE_BUSY - if the host HW and the driver for it
+> supports IRQ based busy-detection.
+> *) host_ops->card_busy() callback if the HW can poll the DAT0 manually
+> for busy-detection.
+> *) Polling by using CMD13.
+>
+> [...]
+>
+> Kind regards
+> Uffe
 
-diff --git a/arch/loongarch/include/asm/vdso/getrandom.h b/arch/loongarch/include/asm/vdso/getrandom.h
-index 48c43f55b039b42168698614d0479b7a872d20f3..a81724b69f291ee49dd1f46b12d6893fc18442b8 100644
---- a/arch/loongarch/include/asm/vdso/getrandom.h
-+++ b/arch/loongarch/include/asm/vdso/getrandom.h
-@@ -20,7 +20,7 @@ static __always_inline ssize_t getrandom_syscall(void *_buffer, size_t _len, uns
- 
- 	asm volatile(
- 	"      syscall 0\n"
--	: "+r" (ret)
-+	: "=r" (ret)
- 	: "r" (nr), "r" (buffer), "r" (len), "r" (flags)
- 	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
- 	  "memory");
-diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loongarch/include/asm/vdso/gettimeofday.h
-index 88cfcf13311630ed5f1a734d23a2bc3f65d79a88..f15503e3336ca1bdc9675ec6e17bbb77abc35ef4 100644
---- a/arch/loongarch/include/asm/vdso/gettimeofday.h
-+++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
-@@ -25,7 +25,7 @@ static __always_inline long gettimeofday_fallback(
- 
- 	asm volatile(
- 	"       syscall 0\n"
--	: "+r" (ret)
-+	: "=r" (ret)
- 	: "r" (nr), "r" (tv), "r" (tz)
- 	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
- 	  "$t8", "memory");
-@@ -44,7 +44,7 @@ static __always_inline long clock_gettime_fallback(
- 
- 	asm volatile(
- 	"       syscall 0\n"
--	: "+r" (ret)
-+	: "=r" (ret)
- 	: "r" (nr), "r" (clkid), "r" (ts)
- 	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
- 	  "$t8", "memory");
-@@ -63,7 +63,7 @@ static __always_inline int clock_getres_fallback(
- 
- 	asm volatile(
- 	"       syscall 0\n"
--	: "+r" (ret)
-+	: "=r" (ret)
- 	: "r" (nr), "r" (clkid), "r" (ts)
- 	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
- 	  "$t8", "memory");
-
----
-base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
-change-id: 20250603-loongarch-vdso-syscall-f585a99bea03
-
-Best regards,
--- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
+--
+Thanks.
+Binbin
