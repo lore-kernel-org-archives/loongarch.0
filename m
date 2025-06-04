@@ -1,502 +1,156 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E33928F922
-	for <loongarch@lists.linux.dev>; Wed,  4 Jun 2025 14:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592C04C97
+	for <loongarch@lists.linux.dev>; Wed,  4 Jun 2025 14:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749048000; cv=none; b=PWf6q5oIT1o7CKWAaCpYNkjMCDumz0o9BkEnMy+TtuLNXlMaa8EnWAllSuzKDnpS2hb05sXZyNMBMzF0jZcXC6FKSGUG0WEIsKsrgWekaJJtN4DbUVw9bkBRVwGbQda9tZDcntWg6WQJwTNRUe96YpUuthiHv/Hf2UaTRb5skNc=
+	t=1749048453; cv=none; b=KKFpc9W+H8Bjn+4PzLOta+DSafxQmCQ6e0Ll6KyCyWTYJLnIWanYsEiRy9IykZP96uTIoqPXlDzD6UZYLIV000RdhRa/G4EEmjEHz9pDSuzOyPTNaUAWc1XP2tqw6EMBwZAnDrggDgT+UzCv3Hdzrq7XrqHnuslIDvTdabw9d0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749048000; c=relaxed/simple;
-	bh=/xowjaYSwrcNAVTz/1+MHUlbdruelf01vjOxRPujSrw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qVqwrAVH/hGAcc9D2qXAV4c/HK1Zz7ADm6vAAh4P3zEpTmRTSjeXAsg5RtV4/gPcW4R4pyXDyMLHguXL0lwYZaqkWhQMV6LQWbKwBZwHuaksUq84+5PtPwJavOggwypRtVBvfUQwCmzYeP1HN2bumhS5gaVtkTNdutIkVISiPK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vigHCNwY; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749048453; c=relaxed/simple;
+	bh=s794wOPYqmOh7ctoNUyErF6+1Cjz5YD1viu4ZG67VJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CiMg72PcYG6JC8U5YPYsinr3DSpCnirdkzuQ0wOXStn5yNjWTYDkn8eQPxo8HolmlgjLe98Z88sz5a8QAMgtdFDyIxa3ijVTdQBtX68H8jMcDsT0zJ9JU16Nua3RAwoIglGYwoXfxckiqqlIXwK1FCb4pI/9ZMJwjxoZW3hFDfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=T307lBYR; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vigHCNwY"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so12793a12.0
-        for <loongarch@lists.linux.dev>; Wed, 04 Jun 2025 07:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749047997; x=1749652797; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aFSaiArb5JlS4rKdNQDLgny0OyxB393pGHWtf5taMQ4=;
-        b=vigHCNwYtN6UGE/0Gwgp/iNwLusIzhxnjjHXEBrx5BifnnVLoRGKtJZsE5Dl90uBzl
-         Dv8DtKpCk8yNQDdG8axtptQHqEQwJTzQYCEzyr1TfiMfZXRcTnzmb67x/20ceND3q79g
-         mmwosbnCFtm1ya+ptCvGRj7sHqWxoxFZE1H/haXA31+HgxaRoymRrq9vD08iX5aBhozx
-         Wx1Iu0lmbzfJe7YDgCHGXDDZn+v7UU9CPXGl4MdKU5EmN2NhJPN3ic6U//tOUTaK3PW7
-         pqnpcOUujcUeK6zunCEJJhidh4I3DPlux0gJ1emEdpxwjtnZB/79GC01wIbikvucELqD
-         3zQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749047997; x=1749652797;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aFSaiArb5JlS4rKdNQDLgny0OyxB393pGHWtf5taMQ4=;
-        b=vw3SzK75ff+9whEn5olxfcij/1UaIfG72R+LT5JzCjhP76QEsCM8F7RU6DlJcNKgXa
-         KDK+nlfnOVURERvbUBWUwxIwzH61L2x4hQpz6BZfyh7QG0ul0Fe7JgVz3dgODf3LTbZG
-         7Irhqqhv5zwecvPkCS9XLUxcyUxLC0yrrYn6ouSPb/HejOV+hOZWEWCEligGYctdTvh4
-         oKXB/VoM0vVpF5xY+Au8rXnxPwgeffhmnwJhiAy8zveTKyl4Lrv7qdbHiNdNiDkUD4jS
-         PyTbEZUIqtam09AnLAXlp4l5YMXEK61FxPxOmRfIk7E/lcmlz4WgvksqnP690sRzQ/qx
-         /v0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVNuILgh9sxgQPYYdLGPvvNPjOSGitZ5jGo9MRi1X9PAbif+Hi7lfodsR+QMJHKA2ln79sc9/XM+Vg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzL2N4x1QWdOxf6yixvOEvY5rOwz8Qa7GPTesKngqxypgXPWb+S
-	6HSw86L07hKzVNm2b/dpOY+vhpF1Jhz6KcH920xLMvwqgxVRS0852kjbKT0nnELYx/OPFIWGsIo
-	AyW6tnNCbH3ZtRznTTK4Q3bPJRnGMOjEvSCl/DS/D
-X-Gm-Gg: ASbGncv6JedJYSUyE/y1f6VUqaAuK63rGwAD28p+g3f7qSNUmlpwOsLa9AwHT+8H4oe
-	Ubm4nOFfbPGNAPajB1MP1FexLTy/XStk3xk+/WB84Am4SGBKH2tbU9lXT+rc5TBe3MrMHpor7pC
-	zaGycacfdxYkRaENusCHzmZJ5RFijA+1tGbvzLUTWI3ZQ20y8NjiiLChJRUbf+miD2LUgn1zid
-X-Google-Smtp-Source: AGHT+IFe67h9c8KQL1yClqkdMmIaa6YJ4wH8M7vVp7rH287AK15LYvq5zc0Wx87dYgNK+3JMBzj2Ni08hl8HmHGq0vk=
-X-Received: by 2002:aa7:d6cd:0:b0:602:3bf:ce73 with SMTP id
- 4fb4d7f45d1cf-606ee31b340mr85155a12.1.1749047995780; Wed, 04 Jun 2025
- 07:39:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="T307lBYR"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 7B67E25B4D;
+	Wed,  4 Jun 2025 16:47:22 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id RreaCiUezlfL; Wed,  4 Jun 2025 16:47:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1749048441; bh=s794wOPYqmOh7ctoNUyErF6+1Cjz5YD1viu4ZG67VJA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=T307lBYRQTcYkHnp2ZEUgWq5m45CBUmBiHKIlJr6GlPmZhzr9eXYbYqSgI9qcpR02
+	 K/Zk4jx4VhlVeQ3bmSICTsxUkv1rSLLccFFKWnGTSGoBijsz0itN98J7Pf0rZqumPZ
+	 goDh9JE1DdcTK8/gfqhNUr2boSpAqjIk6gVqxVrnXLLobKH4QWBVa2XTQ2LRsGdC0c
+	 +a1IiNexXnEbBg89XR7hWb3bMY0v81Srw+/MHlWNmBdlVoftd6Tro+KU4AiZlDxLT4
+	 2qfCjJ4ij0RRO7kJ4y1ML2c2BjZNfUeAOHymok4j3Z//n10b3FSMAFSZPZ3Glib5IC
+	 0rS/TToWSo/eQ==
+Date: Wed, 4 Jun 2025 14:47:04 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform/loongarch: laptop: Get brightness setting
+ from EC on probe
+Message-ID: <aEBcaDvEKZVO77FY@pie.lan>
+References: <20250531113851.21426-1-ziyao@disroot.org>
+ <20250531113851.21426-2-ziyao@disroot.org>
+ <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com>
+ <aD6Zz8L9WJRXvwaW@pie.lan>
+ <CAAhV-H6j1OT9D8ZBtyEP=Mu5+m=t0ebUvuC=gVeNsoPizwK1TQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250604141958.111300-1-lorenzo.stoakes@oracle.com>
-In-Reply-To: <20250604141958.111300-1-lorenzo.stoakes@oracle.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 4 Jun 2025 07:39:41 -0700
-X-Gm-Features: AX0GCFvLFvrZnFxiBvsumrroa9R0gCS-F75JDJtm-veAoC59HniL7QD93_4kkCc
-Message-ID: <CAJuCfpH-KmYX57WEj+OTVGQKaY4GXvktZAc9Q9MnZmtgQ8tdKQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/pagewalk: split walk_page_range_novma() into
- kernel/user parts
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Barry Song <baohua@kernel.org>, 
-	David Hildenbrand <david@redhat.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jonas Bonn <jonas@southpole.se>, 
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Jann Horn <jannh@google.com>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H6j1OT9D8ZBtyEP=Mu5+m=t0ebUvuC=gVeNsoPizwK1TQ@mail.gmail.com>
 
-On Wed, Jun 4, 2025 at 7:21=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> The walk_page_range_novma() function is rather confusing - it supports tw=
-o
-> modes, one used often, the other used only for debugging.
->
-> The first mode is the common case of traversal of kernel page tables, whi=
-ch
-> is what nearly all callers use this for.
->
-> Secondly it provides an unusual debugging interface that allows for the
-> traversal of page tables in a userland range of memory even for that memo=
-ry
-> which is not described by a VMA.
->
-> It is far from certain that such page tables should even exist, but perha=
-ps
-> this is precisely why it is useful as a debugging mechanism.
->
-> As a result, this is utilised by ptdump only. Historically, things were
-> reversed - ptdump was the only user, and other parts of the kernel evolve=
-d
-> to use the kernel page table walking here.
->
-> Since we have some complicated and confusing locking rules for the novma
-> case, it makes sense to separate the two usages into their own functions.
->
-> Doing this also provide self-documentation as to the intent of the caller=
- -
-> are they doing something rather unusual or are they simply doing a standa=
-rd
-> kernel page table walk?
->
-> We therefore establish two separate functions - walk_page_range_debug() f=
-or
-> this single usage, and walk_kernel_page_table_range() for general kernel
-> page table walking.
->
-> We additionally make walk_page_range_debug() internal to mm.
->
-> Note that ptdump uses the precise same function for kernel walking as a
-> convenience, so we permit this but make it very explicit by having
-> walk_page_range_novma() invoke walk_kernel_page_table_range() in this cas=
-e.
->
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+On Wed, Jun 04, 2025 at 09:56:20PM +0800, Huacai Chen wrote:
+> On Tue, Jun 3, 2025 at 2:44 PM Yao Zi <ziyao@disroot.org> wrote:
+> >
+> > On Tue, Jun 03, 2025 at 12:11:48PM +0800, Huacai Chen wrote:
+> > > On Sat, May 31, 2025 at 7:39 PM Yao Zi <ziyao@disroot.org> wrote:
+> > > >
+> > > > Previously 1 is unconditionally taken as current brightness value. This
+> > > > causes problems since it's required to restore brightness settings on
+> > > > resumption, and a value that doesn't match EC's state before suspension
+> > > > will cause surprising changes of screen brightness.
+> > > laptop_backlight_register() isn't called at resuming, so I think your
+> > > problem has nothing to do with suspend (S3).
+> >
+> > It does have something to do with it. In loongson_hotkey_resume() which
+> > is called when leaving S3 (suspension), the brightness is restored
+> > according to props.brightness,
+> >
+> >         bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
+> >         if (bd) {
+> >                 loongson_laptop_backlight_update(bd) ?
+> >                 pr_warn("Loongson_backlight: resume brightness failed") :
+> >                 pr_info("Loongson_backlight: resume brightness %d\n", bd->props
+> > .brightness);
+> >         }
+> >
+> > and without this patch, props.brightness is always set to 1 when the
+> > driver probes, but actually (at least with the firmware on my laptop)
+> > the screen brightness is set to 80 instead of 1 on cold boot, IOW, a
+> > brightness value that doesn't match hardware state is set to
+> > props.brightness.
+> >
+> > On resumption, loongson_hotkey_resume() restores the brightness
+> > settings according to props.brightness. But as the value isn't what is
+> > used by hardware before suspension. the screen brightness will look very
+> > different (1 v.s. 80) comparing to the brightness before suspension.
+> >
+> > Some dmesg proves this as well, without this patch it says
+> >
+> >         loongson_laptop: Loongson_backlight: resume brightness 1
+> >
+> > but before suspension, reading
+> > /sys/class/backlight/loongson3_laptop/actual_brightness yields 80.
+> OK, that makes sense. But the commit message can still be improved, at
+> least replace suspension/resumption with suspend/resume. You can grep
+> them at Documentation/power.
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+Oops, thanks for the hint. Seems suspend/resume are wider used, and I
+will reword the commit message in v2 :)
 
-> ---
-> v2:
-> * Renamed walk_page_range_novma() to walk_page_range_debug() as per David=
-.
-> * Moved walk_page_range_debug() definition to mm/internal.h as per Mike.
-> * Renamed walk_page_range_kernel() to walk_kernel_page_table_range() as
->   per David.
->
-> v1 resend:
-> * Actually cc'd lists...
-> * Fixed mistake in walk_page_range_novma() not handling kernel mappings a=
-nd
->   update commit message to referene.
-> * Added Mike's off-list Acked-by.
-> * Fixed up comments as per Mike.
-> * Add some historic flavour to the commit message as per Mike.
-> https://lore.kernel.org/all/20250603192213.182931-1-lorenzo.stoakes@oracl=
-e.com/
->
-> v1:
-> (accidentally sent off-list due to error in scripting)
->
->  arch/loongarch/mm/pageattr.c |  2 +-
->  arch/openrisc/kernel/dma.c   |  4 +-
->  arch/riscv/mm/pageattr.c     |  8 +--
->  include/linux/pagewalk.h     |  7 ++-
->  mm/hugetlb_vmemmap.c         |  2 +-
->  mm/internal.h                |  4 ++
->  mm/pagewalk.c                | 98 ++++++++++++++++++++++++------------
->  mm/ptdump.c                  |  3 +-
->  8 files changed, 82 insertions(+), 46 deletions(-)
->
-> diff --git a/arch/loongarch/mm/pageattr.c b/arch/loongarch/mm/pageattr.c
-> index 99165903908a..f5e910b68229 100644
-> --- a/arch/loongarch/mm/pageattr.c
-> +++ b/arch/loongarch/mm/pageattr.c
-> @@ -118,7 +118,7 @@ static int __set_memory(unsigned long addr, int numpa=
-ges, pgprot_t set_mask, pgp
->                 return 0;
->
->         mmap_write_lock(&init_mm);
-> -       ret =3D walk_page_range_novma(&init_mm, start, end, &pageattr_ops=
-, NULL, &masks);
-> +       ret =3D walk_kernel_page_table_range(start, end, &pageattr_ops, N=
-ULL, &masks);
->         mmap_write_unlock(&init_mm);
->
->         flush_tlb_kernel_range(start, end);
-> diff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
-> index 3a7b5baaa450..af932a4ad306 100644
-> --- a/arch/openrisc/kernel/dma.c
-> +++ b/arch/openrisc/kernel/dma.c
-> @@ -72,7 +72,7 @@ void *arch_dma_set_uncached(void *cpu_addr, size_t size=
-)
->          * them and setting the cache-inhibit bit.
->          */
->         mmap_write_lock(&init_mm);
-> -       error =3D walk_page_range_novma(&init_mm, va, va + size,
-> +       error =3D walk_kernel_page_table_range(va, va + size,
->                         &set_nocache_walk_ops, NULL, NULL);
->         mmap_write_unlock(&init_mm);
->
-> @@ -87,7 +87,7 @@ void arch_dma_clear_uncached(void *cpu_addr, size_t siz=
-e)
->
->         mmap_write_lock(&init_mm);
->         /* walk_page_range shouldn't be able to fail here */
-> -       WARN_ON(walk_page_range_novma(&init_mm, va, va + size,
-> +       WARN_ON(walk_kernel_page_table_range(va, va + size,
->                         &clear_nocache_walk_ops, NULL, NULL));
->         mmap_write_unlock(&init_mm);
->  }
-> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-> index d815448758a1..3f76db3d2769 100644
-> --- a/arch/riscv/mm/pageattr.c
-> +++ b/arch/riscv/mm/pageattr.c
-> @@ -299,7 +299,7 @@ static int __set_memory(unsigned long addr, int numpa=
-ges, pgprot_t set_mask,
->                         if (ret)
->                                 goto unlock;
->
-> -                       ret =3D walk_page_range_novma(&init_mm, lm_start,=
- lm_end,
-> +                       ret =3D walk_kernel_page_table_range(lm_start, lm=
-_end,
->                                                     &pageattr_ops, NULL, =
-&masks);
->                         if (ret)
->                                 goto unlock;
-> @@ -317,13 +317,13 @@ static int __set_memory(unsigned long addr, int num=
-pages, pgprot_t set_mask,
->                 if (ret)
->                         goto unlock;
->
-> -               ret =3D walk_page_range_novma(&init_mm, lm_start, lm_end,
-> +               ret =3D walk_kernel_page_table_range(lm_start, lm_end,
->                                             &pageattr_ops, NULL, &masks);
->                 if (ret)
->                         goto unlock;
->         }
->
-> -       ret =3D  walk_page_range_novma(&init_mm, start, end, &pageattr_op=
-s, NULL,
-> +       ret =3D  walk_kernel_page_table_range(start, end, &pageattr_ops, =
-NULL,
->                                      &masks);
->
->  unlock:
-> @@ -335,7 +335,7 @@ static int __set_memory(unsigned long addr, int numpa=
-ges, pgprot_t set_mask,
->          */
->         flush_tlb_all();
->  #else
-> -       ret =3D  walk_page_range_novma(&init_mm, start, end, &pageattr_op=
-s, NULL,
-> +       ret =3D  walk_kernel_page_table_range(start, end, &pageattr_ops, =
-NULL,
->                                      &masks);
->
->         mmap_write_unlock(&init_mm);
-> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-> index 9700a29f8afb..8ac2f6d6d2a3 100644
-> --- a/include/linux/pagewalk.h
-> +++ b/include/linux/pagewalk.h
-> @@ -129,10 +129,9 @@ struct mm_walk {
->  int walk_page_range(struct mm_struct *mm, unsigned long start,
->                 unsigned long end, const struct mm_walk_ops *ops,
->                 void *private);
-> -int walk_page_range_novma(struct mm_struct *mm, unsigned long start,
-> -                         unsigned long end, const struct mm_walk_ops *op=
-s,
-> -                         pgd_t *pgd,
-> -                         void *private);
-> +int walk_kernel_page_table_range(unsigned long start,
-> +               unsigned long end, const struct mm_walk_ops *ops,
-> +               pgd_t *pgd, void *private);
->  int walk_page_range_vma(struct vm_area_struct *vma, unsigned long start,
->                         unsigned long end, const struct mm_walk_ops *ops,
->                         void *private);
-> diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-> index 27245e86df25..ba0fb1b6a5a8 100644
-> --- a/mm/hugetlb_vmemmap.c
-> +++ b/mm/hugetlb_vmemmap.c
-> @@ -166,7 +166,7 @@ static int vmemmap_remap_range(unsigned long start, u=
-nsigned long end,
->         VM_BUG_ON(!PAGE_ALIGNED(start | end));
->
->         mmap_read_lock(&init_mm);
-> -       ret =3D walk_page_range_novma(&init_mm, start, end, &vmemmap_rema=
-p_ops,
-> +       ret =3D walk_kernel_page_table_range(start, end, &vmemmap_remap_o=
-ps,
->                                     NULL, walk);
->         mmap_read_unlock(&init_mm);
->         if (ret)
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 6b8ed2017743..43788d0de6e3 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -1605,6 +1605,10 @@ static inline void accept_page(struct page *page)
->  int walk_page_range_mm(struct mm_struct *mm, unsigned long start,
->                 unsigned long end, const struct mm_walk_ops *ops,
->                 void *private);
-> +int walk_page_range_debug(struct mm_struct *mm, unsigned long start,
-> +                         unsigned long end, const struct mm_walk_ops *op=
-s,
-> +                         pgd_t *pgd,
-> +                         void *private);
->
->  /* pt_reclaim.c */
->  bool try_get_and_clear_pmd(struct mm_struct *mm, pmd_t *pmd, pmd_t *pmdv=
-al);
-> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-> index e478777c86e1..057a125c3bc0 100644
-> --- a/mm/pagewalk.c
-> +++ b/mm/pagewalk.c
-> @@ -584,9 +584,28 @@ int walk_page_range(struct mm_struct *mm, unsigned l=
-ong start,
->         return walk_page_range_mm(mm, start, end, ops, private);
->  }
->
-> +static int __walk_page_range_novma(struct mm_struct *mm, unsigned long s=
-tart,
-> +               unsigned long end, const struct mm_walk_ops *ops,
-> +               pgd_t *pgd, void *private)
-> +{
-> +       struct mm_walk walk =3D {
-> +               .ops            =3D ops,
-> +               .mm             =3D mm,
-> +               .pgd            =3D pgd,
-> +               .private        =3D private,
-> +               .no_vma         =3D true
-> +       };
-> +
-> +       if (start >=3D end || !walk.mm)
-> +               return -EINVAL;
-> +       if (!check_ops_valid(ops))
-> +               return -EINVAL;
-> +
-> +       return walk_pgd_range(start, end, &walk);
-> +}
-> +
->  /**
-> - * walk_page_range_novma - walk a range of pagetables not backed by a vm=
-a
-> - * @mm:                mm_struct representing the target process of page=
- table walk
-> + * walk_kernel_page_table_range - walk a range of kernel pagetables.
->   * @start:     start address of the virtual address range
->   * @end:       end address of the virtual address range
->   * @ops:       operation to call during the walk
-> @@ -596,56 +615,69 @@ int walk_page_range(struct mm_struct *mm, unsigned =
-long start,
->   * Similar to walk_page_range() but can walk any page tables even if the=
-y are
->   * not backed by VMAs. Because 'unusual' entries may be walked this func=
-tion
->   * will also not lock the PTEs for the pte_entry() callback. This is use=
-ful for
-> - * walking the kernel pages tables or page tables for firmware.
-> + * walking kernel pages tables or page tables for firmware.
->   *
->   * Note: Be careful to walk the kernel pages tables, the caller may be n=
-eed to
->   * take other effective approaches (mmap lock may be insufficient) to pr=
-event
->   * the intermediate kernel page tables belonging to the specified addres=
-s range
->   * from being freed (e.g. memory hot-remove).
->   */
-> -int walk_page_range_novma(struct mm_struct *mm, unsigned long start,
-> +int walk_kernel_page_table_range(unsigned long start, unsigned long end,
-> +               const struct mm_walk_ops *ops, pgd_t *pgd, void *private)
-> +{
-> +       struct mm_struct *mm =3D &init_mm;
-> +
-> +       /*
-> +        * Kernel intermediate page tables are usually not freed, so the =
-mmap
-> +        * read lock is sufficient. But there are some exceptions.
-> +        * E.g. memory hot-remove. In which case, the mmap lock is insuff=
-icient
-> +        * to prevent the intermediate kernel pages tables belonging to t=
-he
-> +        * specified address range from being freed. The caller should ta=
-ke
-> +        * other actions to prevent this race.
-> +        */
-> +       mmap_assert_locked(mm);
-> +
-> +       return __walk_page_range_novma(mm, start, end, ops, pgd, private)=
-;
-> +}
-> +
-> +/**
-> + * walk_page_range_debug - walk a range of pagetables not backed by a vm=
-a
-> + * @mm:                mm_struct representing the target process of page=
- table walk
-> + * @start:     start address of the virtual address range
-> + * @end:       end address of the virtual address range
-> + * @ops:       operation to call during the walk
-> + * @pgd:       pgd to walk if different from mm->pgd
-> + * @private:   private data for callbacks' usage
-> + *
-> + * Similar to walk_page_range() but can walk any page tables even if the=
-y are
-> + * not backed by VMAs. Because 'unusual' entries may be walked this func=
-tion
-> + * will also not lock the PTEs for the pte_entry() callback.
-> + *
-> + * This is for debugging purposes ONLY.
-> + */
-> +int walk_page_range_debug(struct mm_struct *mm, unsigned long start,
->                           unsigned long end, const struct mm_walk_ops *op=
-s,
->                           pgd_t *pgd,
->                           void *private)
->  {
-> -       struct mm_walk walk =3D {
-> -               .ops            =3D ops,
-> -               .mm             =3D mm,
-> -               .pgd            =3D pgd,
-> -               .private        =3D private,
-> -               .no_vma         =3D true
-> -       };
-> -
-> -       if (start >=3D end || !walk.mm)
-> -               return -EINVAL;
-> -       if (!check_ops_valid(ops))
-> -               return -EINVAL;
-> +       /*
-> +        * For convenience, we allow this function to also traverse kerne=
-l
-> +        * mappings.
-> +        */
-> +       if (mm =3D=3D &init_mm)
-> +               return walk_kernel_page_table_range(start, end, ops, pgd,=
- private);
->
->         /*
-> -        * 1) For walking the user virtual address space:
-> -        *
->          * The mmap lock protects the page walker from changes to the pag=
-e
->          * tables during the walk.  However a read lock is insufficient t=
-o
->          * protect those areas which don't have a VMA as munmap() detache=
-s
->          * the VMAs before downgrading to a read lock and actually tearin=
-g
->          * down PTEs/page tables. In which case, the mmap write lock shou=
-ld
-> -        * be hold.
-> -        *
-> -        * 2) For walking the kernel virtual address space:
-> -        *
-> -        * The kernel intermediate page tables usually do not be freed, s=
-o
-> -        * the mmap map read lock is sufficient. But there are some excep=
-tions.
-> -        * E.g. memory hot-remove. In which case, the mmap lock is insuff=
-icient
-> -        * to prevent the intermediate kernel pages tables belonging to t=
-he
-> -        * specified address range from being freed. The caller should ta=
-ke
-> -        * other actions to prevent this race.
-> +        * be held.
->          */
-> -       if (mm =3D=3D &init_mm)
-> -               mmap_assert_locked(walk.mm);
-> -       else
-> -               mmap_assert_write_locked(walk.mm);
-> +       mmap_assert_write_locked(mm);
->
-> -       return walk_pgd_range(start, end, &walk);
-> +       return __walk_page_range_novma(mm, start, end, ops, pgd, private)=
-;
->  }
->
->  int walk_page_range_vma(struct vm_area_struct *vma, unsigned long start,
-> diff --git a/mm/ptdump.c b/mm/ptdump.c
-> index 9374f29cdc6f..61a352aa12ed 100644
-> --- a/mm/ptdump.c
-> +++ b/mm/ptdump.c
-> @@ -4,6 +4,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/ptdump.h>
->  #include <linux/kasan.h>
-> +#include "internal.h"
->
->  #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
->  /*
-> @@ -177,7 +178,7 @@ void ptdump_walk_pgd(struct ptdump_state *st, struct =
-mm_struct *mm, pgd_t *pgd)
->
->         mmap_write_lock(mm);
->         while (range->start !=3D range->end) {
-> -               walk_page_range_novma(mm, range->start, range->end,
-> +               walk_page_range_debug(mm, range->start, range->end,
->                                       &ptdump_ops, pgd, st);
->                 range++;
->         }
-> --
-> 2.49.0
+> Huacai
+
+Regards,
+Yao Zi
+
+> >
+> > > But there is really a problem about hibernation (S4): the brightness
+> > > is 1 during booting, but when switching to the target kernel, the
+> > > brightness may jump to the old value.
+> > >
+> > > If the above case is what you meet, please update the commit message.
+> > >
+> > > Huacai
+> >
+> > Thanks,
+> > Yao Zi
+> >
+> > > >
+> > > > Let's get brightness from EC and take it as the current brightness on
+> > > > probe of the laptop driver to avoid the surprising behavior. Tested on
+> > > > TongFang L860-T2 3A5000 laptop.
+> > > >
+> > > > Cc: stable@vger.kernel.org
+> > > > Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
+> > > > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > > > ---
+> > > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+> > > > index 99203584949d..828bd62e3596 100644
+> > > > --- a/drivers/platform/loongarch/loongson-laptop.c
+> > > > +++ b/drivers/platform/loongarch/loongson-laptop.c
+> > > > @@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
+> > > >         if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
+> > > >                 return -EIO;
+> > > >
+> > > > -       props.brightness = 1;
+> > > > +       props.brightness = ec_get_brightness();
+> > > >         props.max_brightness = status;
+> > > >         props.type = BACKLIGHT_PLATFORM;
+> > > >
+> > > > --
+> > > > 2.49.0
+> > > >
+> > > >
+> 
