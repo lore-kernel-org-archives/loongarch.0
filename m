@@ -1,220 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE1E28FA90
-	for <loongarch@lists.linux.dev>; Wed,  4 Jun 2025 13:58:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E67E28F53F;
+	Wed,  4 Jun 2025 14:05:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045487; cv=none; b=EqU4RUt4YDWquD0h9mZpR/3UNGpzSc7F9BWJZPvPQxkOQj6ydUWGeBTgrV97jq2bx5e8Xp4OCVyLIZuwhcf1FzRvPeLBtW+8RedGyHlh2Ib9jMQQGNAnDXqXezrK/2Ui50rlOfhvfqCtLyOiaLUWdTw7htNiaV6ZoHZM3EMDn78=
+	t=1749045952; cv=none; b=t50tOZu0ftmpvjlU5xIcBOwBYWktx9axzSXQ+f8DdEC6vSpdm38M0wOxsMjLVGyaAlPU1tvoecxORffrbVbqBMHzo9x37AZsZu4F17z6oY/2ET+/FLTD0uGL9+aT3iG9gzQ3SXzxZ+e3ONJVemcRYP8x4uQ6NvwZaypDPXr2SJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045487; c=relaxed/simple;
-	bh=QRXYHY3k9SKVaoLTElRZshkhV3csk41wh+DXOlD/xiQ=;
+	s=arc-20240116; t=1749045952; c=relaxed/simple;
+	bh=IIEwGMNU/iJrUu7/3CwdVOUWTk7lAwMeHyQc/py9Ccg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RWS6E2w7GOJdhTqiAVe0MBH7OGOJFgSsDgL0bnHdSlu8ioGN+d26ZQ20yqtg8PSTURaCq7DUhj3gJdxJz6ZYy5EVxdC7cFu0sXETqenycGmqFiWZ3i+xTzKegfQFTFZaQjZ9Wf06dpGFT/SpdJjAhs90sE6C6tn6fe+UO7zwOQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSlvmc5U; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=UPkMg4FOtMNv0UrQPYHkfA5YROY5kzo8s5otfIOLlnwdT/Pxd6+chJSrrKCihokwCorBZrGOZRHUY7f6iy6OVKEK4BUDIjdeTe/0/92hwGTzDBgsNBW578e3Ax0rCS9RBLx9+qR2o6CpFueZU1RabN2HiZKk95aG2WT2P1479D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXv44fZ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSlvmc5U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88B5DC4CEF7
-	for <loongarch@lists.linux.dev>; Wed,  4 Jun 2025 13:58:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXv44fZ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6682C4CEE7;
+	Wed,  4 Jun 2025 14:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749045486;
-	bh=QRXYHY3k9SKVaoLTElRZshkhV3csk41wh+DXOlD/xiQ=;
+	s=k20201202; t=1749045951;
+	bh=IIEwGMNU/iJrUu7/3CwdVOUWTk7lAwMeHyQc/py9Ccg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kSlvmc5UV/fAMKvoYTu89L4yT7pJpL6XY+Dtwsck1IoVfEuNBz3kZh79EKzgTZ4Jo
-	 RnKD0pkEFoU+YD9EN1EdByM48mmyfeenyUT8Thq/W1ff2AGFxdOs13IvdtJbcT1OeW
-	 ZM/lg2KQgXN0lHOBkjgYkMVHN6xZ01myRXVqMPzYKrSlSsPnnEsJ1ZmoJ+MD4a8bOk
-	 Ch8EX8PK5RLC56eZpkkX4xu7/wNA7RF2aiysvuv9bN4cEafixJwAqNxNGaOPiUefF4
-	 54XCHaDb5NyQzc7gAJykVoxjKdWHXz1SLbpp0GhSOMU3fFoxGWyn5rt9eAeL+uR6k4
-	 o1N/uValiBfzQ==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-602039559d8so12979722a12.1
-        for <loongarch@lists.linux.dev>; Wed, 04 Jun 2025 06:58:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX5A9IcyTmFyWmEvvZLPO+vAc1japmYnEUHo0/usvWudOIj2nI3tX2V6U+HwYwRWoz3tN/+rgqt+F0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwpR5K28Zq0GLbMMWCMMrwNODlOz6Tr5LCdgywYMWBj56nhHr/r
-	AEB3/n/4MIEq2RDnEwtKD+Vx9KcM+i44/YoewOr/SOusy9gdy5a5ZmpewQ+jb3hQKM2fpgdQ4hE
-	a39idTS9Q2FoyFFDd+0LnT7XQK+So83U=
-X-Google-Smtp-Source: AGHT+IEBYJAM+K0rj2+spRhzULHWaeKMSJzGwvvpMAeB0yguZc1nfk4ig2PEKpq0Mb7MT9uKBmXBl3Ukizgy5R+1c3A=
-X-Received: by 2002:a05:6402:348e:b0:601:f3f1:f10e with SMTP id
- 4fb4d7f45d1cf-606e98b0c7fmr3019199a12.5.1749045484519; Wed, 04 Jun 2025
- 06:58:04 -0700 (PDT)
+	b=YXv44fZ0Sr4s/P77xwDWM3bl+et2NQKht5j2jXoEX7yG3Eb/UtkVmKaiHHWaUB9v8
+	 pJXXUkBke75VXdJPUmIfxipVu2+83CiMConF36hFMxRKyHRv0QCZA+JIwmG3dQRuVA
+	 8kZdxz6G/aiqVvfTX1Aq0GmkXa7fPXDY6Qt39+1VB7XnuKf6KyD28IGbCpp50cL2XD
+	 lsqvyCGCnbs5z+dx7GYJ6ZxRvM4Y+jmot4hjUu7Y2/vdmkEBUq/PdCfg8GdtunYAd2
+	 +WCBSbOFnVHpLgVnXQByT23u1jd31PlAqg5NZbDroRwqAgNwoduwYrZong1X+jdoQx
+	 PnsL1rGIH027A==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-602346b1997so11826169a12.3;
+        Wed, 04 Jun 2025 07:05:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUTfUsOcypZkcZxWZ9wpSGkAck8ILHQXSjJA2fAzewiphoQWX9tDq27N8vNCPdu8RPP3sVmUNZFl7tA@lists.linux.dev, AJvYcCVv1/rVMNUQkKR7xoGL8ZNQA4VTcXN7Jpdh0TdC+5+zqgQnt5QCGLq9rZf+gwS1vvGr7via@lists.linux.dev
+X-Gm-Message-State: AOJu0YyrQMFV8galdwVX4wR926HALFBORJdbgquVNCy1x2ivNLsMuCkz
+	Rwsq1XO8L827ChEUakOW5toGWweDKpsq5y1BB4b8pvg8ixb2SbIr63oXVJbkGzIMMfqdqd6tqr4
+	wM9uihDtEdpCpXCDmXZDzFdCsio6W4dE=
+X-Google-Smtp-Source: AGHT+IHzLrFJ0tDCiOZ2aUxsctyLKXzDo7JOd/wEZA10wfKlrAyYi5vIntUo8b7ssgCiiur5CYeoKuJbXK6hT8b9IDw=
+X-Received: by 2002:a05:6402:2351:b0:607:1973:2082 with SMTP id
+ 4fb4d7f45d1cf-6071973209cmr498604a12.11.1749045950321; Wed, 04 Jun 2025
+ 07:05:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250531113851.21426-1-ziyao@disroot.org> <20250531113851.21426-3-ziyao@disroot.org>
- <CAAhV-H7RBcaAP8WjjrX20cvuMixarqyeTLoMPdb8QMztz_648g@mail.gmail.com> <aD6e0JLntUC6BdH7@pie.lan>
-In-Reply-To: <aD6e0JLntUC6BdH7@pie.lan>
+References: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
+In-Reply-To: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 4 Jun 2025 21:57:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4yt2Rdu5-8QsDyXpLo5v8jHSDmBB0nBO+4-pKzfbYJHA@mail.gmail.com>
-X-Gm-Features: AX0GCFvFtnwLjh5Ih6ITY7Ya5PF5l-bEs8ErSYvVmN0nCXxUeNlxcWJrZ3JdK00
-Message-ID: <CAAhV-H4yt2Rdu5-8QsDyXpLo5v8jHSDmBB0nBO+4-pKzfbYJHA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/loongarch: laptop: Support backlight power control
-To: Yao Zi <ziyao@disroot.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Date: Wed, 4 Jun 2025 22:05:37 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvKA_KKer2m4iG2-t1TsphfY807WvqIwtlUIzYSRATglAOWgOM5PL3hSDQ
+Message-ID: <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: vDSO: correctly use asm parameters in syscall wrappers
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: WANG Xuerui <kernel@xen0n.name>, "Theodore Ts'o" <tytso@mit.edu>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 3:06=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+On Tue, Jun 3, 2025 at 7:49=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
 >
-> On Tue, Jun 03, 2025 at 12:16:57PM +0800, Huacai Chen wrote:
-> > On Sat, May 31, 2025 at 7:39=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrot=
-e:
-> > >
-> > > loongson_laptop_turn_{on,off}_backlight() are designed for controllin=
-g
-> > > power of the backlight, but they aren't really used in the driver
-> > > previously.
-> > >
-> > > Unify these two functions since they only differ in arguments passed =
-to
-> > > ACPI method, and wire up loongson_laptop_backlight_update() to update
-> > > power state of the backlight as well. Tested on TongFang L860-T2 3A50=
-00
-> > > laptop.
-> > >
-> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > ---
-> > >  drivers/platform/loongarch/loongson-laptop.c | 53 +++++++-----------=
---
-> > >  1 file changed, 19 insertions(+), 34 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/p=
-latform/loongarch/loongson-laptop.c
-> > > index 828bd62e3596..f01e53b1c84d 100644
-> > > --- a/drivers/platform/loongarch/loongson-laptop.c
-> > > +++ b/drivers/platform/loongarch/loongson-laptop.c
-> > > @@ -56,8 +56,6 @@ static struct input_dev *generic_inputdev;
-> > >  static acpi_handle hotkey_handle;
-> > >  static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
-> > >
-> > > -int loongson_laptop_turn_on_backlight(void);
-> > > -int loongson_laptop_turn_off_backlight(void);
-> > >  static int loongson_laptop_backlight_update(struct backlight_device =
-*bd);
-> > >
-> > >  /* 2. ACPI Helpers and device model */
-> > > @@ -354,6 +352,22 @@ static int ec_backlight_level(u8 level)
-> > >         return level;
-> > >  }
-> > >
-> > > +static int ec_backlight_set_power(bool state)
-> > > +{
-> > > +       int status;
-> > > +       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
-> > > +       struct acpi_object_list args =3D { 1, &arg0 };
-> > > +
-> > > +       arg0.integer.value =3D state;
-> > > +       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> > > +       if (ACPI_FAILURE(status)) {
-> > > +               pr_info("Loongson lvds error: 0x%x\n", status);
-> > > +               return -EIO;
-> > > +       }
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > >  static int loongson_laptop_backlight_update(struct backlight_device =
-*bd)
-> > >  {
-> > >         int lvl =3D ec_backlight_level(bd->props.brightness);
-> > > @@ -363,6 +377,8 @@ static int loongson_laptop_backlight_update(struc=
-t backlight_device *bd)
-> > >         if (ec_set_brightness(lvl))
-> > >                 return -EIO;
-> > >
-> > > +       ec_backlight_set_power(bd->props.power =3D=3D BACKLIGHT_POWER=
-_ON ? true : false);
-> > It is better to check the status before setting, because the EC
-> > firmware may not be as robust as needed, a checking can reduce
-> > interactions between kernel and EC.
-> >
-> > There is an example: dp_aux_backlight_update_status() in
-> > drivers/gpu/drm/display/drm_dp_helper.c.
+> The syscall wrappers use the "a0" register for two different register
+> variables, both the first argument and the return value. The "ret"
+> variable is used as both input and output while the argument register is
+> only used as input. Clang treats the conflicting input parameters as
+> undefined behaviour and optimizes away the argument assignment.
 >
-> It's reasonable and I'll take it.
+> The code seems to work by chance for the most part today but that may
+> change in the future. Specifically clock_gettime_fallback() fails with
+> clockids from 16 to 23, as implemented by the upcoming auxiliary clocks.
 >
-> > > +
-> > >         return 0;
-> > >  }
-> > >
-> > > @@ -394,6 +410,7 @@ static int laptop_backlight_register(void)
-> > >
-> > >         props.brightness =3D ec_get_brightness();
-> > >         props.max_brightness =3D status;
-> > > +       props.power =3D BACKLIGHT_POWER_ON;
-> > >         props.type =3D BACKLIGHT_PLATFORM;
-> > >
-> > >         backlight_device_register("loongson_laptop",
-> > > @@ -402,38 +419,6 @@ static int laptop_backlight_register(void)
-> > >         return 0;
-> > >  }
-> > >
-> > > -int loongson_laptop_turn_on_backlight(void)
-> > > -{
-> > > -       int status;
-> > > -       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
-> > > -       struct acpi_object_list args =3D { 1, &arg0 };
-> > > -
-> > > -       arg0.integer.value =3D 1;
-> > > -       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> > > -       if (ACPI_FAILURE(status)) {
-> > > -               pr_info("Loongson lvds error: 0x%x\n", status);
-> > > -               return -ENODEV;
-> > > -       }
-> > > -
-> > > -       return 0;
-> > > -}
-> > > -
-> > > -int loongson_laptop_turn_off_backlight(void)
-> > > -{
-> > > -       int status;
-> > > -       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
-> > > -       struct acpi_object_list args =3D { 1, &arg0 };
-> > > -
-> > > -       arg0.integer.value =3D 0;
-> > > -       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-> > > -       if (ACPI_FAILURE(status)) {
-> > > -               pr_info("Loongson lvds error: 0x%x\n", status);
-> > > -               return -ENODEV;
-> > > -       }
-> > > -
-> > > -       return 0;
-> > > -}
-> > I prefer to keep them, in downstream kernels there are users of them,
-> > I don't want to add them back if one day those users are upstream.
->
-> These two functions are mostly identical, and I think unifying them
-> together should be the right way to go. If this makes sense, users
-> introduced in the future should also adapt it, instead of keeping
-> redundant code in the current mainline kernel.
->
-> If there're new users of the API out of the loongson3_laptop module in
-> the future, it's still easy to rename ec_backlight_set_power() and
-> export it.
->
-> For these two points, I disagree on keeping these two symbols.
-OK, please add a check before communicating with EC, and then send V2
-as soon as possible.
+> Switch the "ret" register variable to a pure output, similar to the other
+> architectures' vDSO code. This works in both clang and GCC.
+Hmmm, at first the constraint is "=3Dr", during the progress of
+upstream, Xuerui suggested me to use "+r" instead [1].
+[1]  https://lore.kernel.org/linux-arch/5b14144a-9725-41db-7179-c059c41814c=
+f@xen0n.name/
 
 Huacai
 
 >
-> > Huacai
+> Link: https://lore.kernel.org/lkml/20250602102825-42aa84f0-23f1-4d10-89fc=
+-e8bbaffd291a@linutronix.de/
+> Link: https://lore.kernel.org/lkml/20250519082042.742926976@linutronix.de=
+/
+> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
+> Fixes: 18efd0b10e0f ("LoongArch: vDSO: Wire up getrandom() vDSO implement=
+ation")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  arch/loongarch/include/asm/vdso/getrandom.h    | 2 +-
+>  arch/loongarch/include/asm/vdso/gettimeofday.h | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 >
-> Thanks,
-> Yao Zi
+> diff --git a/arch/loongarch/include/asm/vdso/getrandom.h b/arch/loongarch=
+/include/asm/vdso/getrandom.h
+> index 48c43f55b039b42168698614d0479b7a872d20f3..a81724b69f291ee49dd1f46b1=
+2d6893fc18442b8 100644
+> --- a/arch/loongarch/include/asm/vdso/getrandom.h
+> +++ b/arch/loongarch/include/asm/vdso/getrandom.h
+> @@ -20,7 +20,7 @@ static __always_inline ssize_t getrandom_syscall(void *=
+_buffer, size_t _len, uns
 >
-> > > -
-> > >  static int __init event_init(struct generic_sub_driver *sub_driver)
-> > >  {
-> > >         int ret;
-> > > --
-> > > 2.49.0
-> > >
-> > >
-> >
+>         asm volatile(
+>         "      syscall 0\n"
+> -       : "+r" (ret)
+> +       : "=3Dr" (ret)
+>         : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
+>         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
+>           "memory");
+> diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loonga=
+rch/include/asm/vdso/gettimeofday.h
+> index 88cfcf13311630ed5f1a734d23a2bc3f65d79a88..f15503e3336ca1bdc9675ec6e=
+17bbb77abc35ef4 100644
+> --- a/arch/loongarch/include/asm/vdso/gettimeofday.h
+> +++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
+> @@ -25,7 +25,7 @@ static __always_inline long gettimeofday_fallback(
+>
+>         asm volatile(
+>         "       syscall 0\n"
+> -       : "+r" (ret)
+> +       : "=3Dr" (ret)
+>         : "r" (nr), "r" (tv), "r" (tz)
+>         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
+>           "$t8", "memory");
+> @@ -44,7 +44,7 @@ static __always_inline long clock_gettime_fallback(
+>
+>         asm volatile(
+>         "       syscall 0\n"
+> -       : "+r" (ret)
+> +       : "=3Dr" (ret)
+>         : "r" (nr), "r" (clkid), "r" (ts)
+>         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
+>           "$t8", "memory");
+> @@ -63,7 +63,7 @@ static __always_inline int clock_getres_fallback(
+>
+>         asm volatile(
+>         "       syscall 0\n"
+> -       : "+r" (ret)
+> +       : "=3Dr" (ret)
+>         : "r" (nr), "r" (clkid), "r" (ts)
+>         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
+>           "$t8", "memory");
+>
+> ---
+> base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
+> change-id: 20250603-loongarch-vdso-syscall-f585a99bea03
+>
+> Best regards,
+> --
+> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 >
