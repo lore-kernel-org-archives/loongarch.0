@@ -1,157 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E67E28F53F;
-	Wed,  4 Jun 2025 14:05:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5A72397B0
+	for <loongarch@lists.linux.dev>; Wed,  4 Jun 2025 14:11:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045952; cv=none; b=t50tOZu0ftmpvjlU5xIcBOwBYWktx9axzSXQ+f8DdEC6vSpdm38M0wOxsMjLVGyaAlPU1tvoecxORffrbVbqBMHzo9x37AZsZu4F17z6oY/2ET+/FLTD0uGL9+aT3iG9gzQ3SXzxZ+e3ONJVemcRYP8x4uQ6NvwZaypDPXr2SJA=
+	t=1749046275; cv=none; b=uwj0HtWrXRkkE4bkpHjMBTZ0j+PW+fViBn0PNSp8sZTvyOQQeLCa0ySVK8BvFC8zCEvvPBGU31cJ6+EplBIO1uRdGf+jVjUIx7H+gqiEvwyogfMS9hESLHjP/OitGovoPCI6NPgQ6rhttkFa4Cj4+y8KS6jy/Q9EeiM/UYBRoc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045952; c=relaxed/simple;
-	bh=IIEwGMNU/iJrUu7/3CwdVOUWTk7lAwMeHyQc/py9Ccg=;
+	s=arc-20240116; t=1749046275; c=relaxed/simple;
+	bh=cxwVxt7AXhTCwBVtm7LVh36MZ/2nhUco0/ReA/YOTOc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UPkMg4FOtMNv0UrQPYHkfA5YROY5kzo8s5otfIOLlnwdT/Pxd6+chJSrrKCihokwCorBZrGOZRHUY7f6iy6OVKEK4BUDIjdeTe/0/92hwGTzDBgsNBW578e3Ax0rCS9RBLx9+qR2o6CpFueZU1RabN2HiZKk95aG2WT2P1479D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXv44fZ0; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=h0bJPwKqV57UCB32VM06ZKxYHdnpCZ9uDdKCSZaaQfMB31RSeQzTa6fQlcF9a5JTH78bWmZfuWvgd4te0Q7dx+XK8W1bCEjp2pCT+Uk7SE1DsYTqE+8JvACVeB5NQVC6pOnpkzx602S9BpiQcHEDSR9/qGCavhpALjA0nNqT8tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iyGPXKDA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXv44fZ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6682C4CEE7;
-	Wed,  4 Jun 2025 14:05:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iyGPXKDA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECF26C4CEEF
+	for <loongarch@lists.linux.dev>; Wed,  4 Jun 2025 14:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749045951;
-	bh=IIEwGMNU/iJrUu7/3CwdVOUWTk7lAwMeHyQc/py9Ccg=;
+	s=k20201202; t=1749046275;
+	bh=cxwVxt7AXhTCwBVtm7LVh36MZ/2nhUco0/ReA/YOTOc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YXv44fZ0Sr4s/P77xwDWM3bl+et2NQKht5j2jXoEX7yG3Eb/UtkVmKaiHHWaUB9v8
-	 pJXXUkBke75VXdJPUmIfxipVu2+83CiMConF36hFMxRKyHRv0QCZA+JIwmG3dQRuVA
-	 8kZdxz6G/aiqVvfTX1Aq0GmkXa7fPXDY6Qt39+1VB7XnuKf6KyD28IGbCpp50cL2XD
-	 lsqvyCGCnbs5z+dx7GYJ6ZxRvM4Y+jmot4hjUu7Y2/vdmkEBUq/PdCfg8GdtunYAd2
-	 +WCBSbOFnVHpLgVnXQByT23u1jd31PlAqg5NZbDroRwqAgNwoduwYrZong1X+jdoQx
-	 PnsL1rGIH027A==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-602346b1997so11826169a12.3;
-        Wed, 04 Jun 2025 07:05:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUTfUsOcypZkcZxWZ9wpSGkAck8ILHQXSjJA2fAzewiphoQWX9tDq27N8vNCPdu8RPP3sVmUNZFl7tA@lists.linux.dev, AJvYcCVv1/rVMNUQkKR7xoGL8ZNQA4VTcXN7Jpdh0TdC+5+zqgQnt5QCGLq9rZf+gwS1vvGr7via@lists.linux.dev
-X-Gm-Message-State: AOJu0YyrQMFV8galdwVX4wR926HALFBORJdbgquVNCy1x2ivNLsMuCkz
-	Rwsq1XO8L827ChEUakOW5toGWweDKpsq5y1BB4b8pvg8ixb2SbIr63oXVJbkGzIMMfqdqd6tqr4
-	wM9uihDtEdpCpXCDmXZDzFdCsio6W4dE=
-X-Google-Smtp-Source: AGHT+IHzLrFJ0tDCiOZ2aUxsctyLKXzDo7JOd/wEZA10wfKlrAyYi5vIntUo8b7ssgCiiur5CYeoKuJbXK6hT8b9IDw=
-X-Received: by 2002:a05:6402:2351:b0:607:1973:2082 with SMTP id
- 4fb4d7f45d1cf-6071973209cmr498604a12.11.1749045950321; Wed, 04 Jun 2025
- 07:05:50 -0700 (PDT)
+	b=iyGPXKDAC7PlXIm2HDKSGNsrGkuuAEYgNFkPhCGMVprCnctbUTRbgpftE95f8rDUb
+	 ksyA7c5qh3B/1r+j6pFzZ52LkbRNmiHhHdJqYj6Nm0BIhWWtZrXy4rNff0uDsgmnFy
+	 cET4nm/HyW/wCuOrllsKQrhP86w8v5cRyccFBIkHHFJQOxRPHTUCnxyWy9dbgN85Dn
+	 6MuyXIkvOc4m2nhqePti1bswl/T2xA4uXUIi+QyIm1/IN8phCweSIArHBVaYghtsau
+	 uP/qunteaW/P4KvmbArOs+mKZ4nMIk2nXpuI1XIvJ7FCCpl9AMxjcuVVAt1AglbPFw
+	 3ETNHaqoLStLA==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6049431b409so12083973a12.3
+        for <loongarch@lists.linux.dev>; Wed, 04 Jun 2025 07:11:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0ur2iG7oOE9PqaB8ittNMugsm+xNUxpnvr0L6yx5Hj3vHjtCxNkh412fk+HVguP1B2jHGb/HCnqo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwVfxiEBjCkpyejrw2h8JjuNThrUBACrYYNNdi02sXrM5+1y8UJ
+	WIOU9A1fAxjaIuZnjB92TF6Hcn4voJg/koVh4z3d1P+rXTb8U4uAU29+wKNfqQj/gUhUIFR5jW6
+	3hP5OY3rrE/pl7K4LTHrifxlbVmcLo84=
+X-Google-Smtp-Source: AGHT+IG3rypmG89aVxKI+FXVftURLGFhsucH3kSLKFF5FCwocsYo859IxK5aLGNpBJzxGkYCyFuQY15TeWJrkZ2pdUA=
+X-Received: by 2002:a05:6402:4303:b0:607:f1c:bfed with SMTP id
+ 4fb4d7f45d1cf-6070f1cc298mr734029a12.12.1749046273473; Wed, 04 Jun 2025
+ 07:11:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
-In-Reply-To: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
+References: <20250604065647.113148-1-lijun01@kylinos.cn>
+In-Reply-To: <20250604065647.113148-1-lijun01@kylinos.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 4 Jun 2025 22:05:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvKA_KKer2m4iG2-t1TsphfY807WvqIwtlUIzYSRATglAOWgOM5PL3hSDQ
-Message-ID: <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: vDSO: correctly use asm parameters in syscall wrappers
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: WANG Xuerui <kernel@xen0n.name>, "Theodore Ts'o" <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
+Date: Wed, 4 Jun 2025 22:11:00 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5dmh8_rNNRAaFeFvjCtt0CCsqTxOujWFakU=RYakrpAA@mail.gmail.com>
+X-Gm-Features: AX0GCFsfee1klIWvJzxKKbOCEjksiHbw_y_wDLRu1XV1YZo_OsyS6SdQZR-JD9Q
+Message-ID: <CAAhV-H5dmh8_rNNRAaFeFvjCtt0CCsqTxOujWFakU=RYakrpAA@mail.gmail.com>
+Subject: Re: [PATCH v2] loongarch: kgdb: remove unnecessary init variable
+To: Li Jun <lijun01@kylinos.cn>
+Cc: si.yanteng@linux.dev, kernel@xen0n.name, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 7:49=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
+On Wed, Jun 4, 2025 at 2:57=E2=80=AFPM Li Jun <lijun01@kylinos.cn> wrote:
 >
-> The syscall wrappers use the "a0" register for two different register
-> variables, both the first argument and the return value. The "ret"
-> variable is used as both input and output while the argument register is
-> only used as input. Clang treats the conflicting input parameters as
-> undefined behaviour and optimizes away the argument assignment.
->
-> The code seems to work by chance for the most part today but that may
-> change in the future. Specifically clock_gettime_fallback() fails with
-> clockids from 16 to 23, as implemented by the upcoming auxiliary clocks.
->
-> Switch the "ret" register variable to a pure output, similar to the other
-> architectures' vDSO code. This works in both clang and GCC.
-Hmmm, at first the constraint is "=3Dr", during the progress of
-upstream, Xuerui suggested me to use "+r" instead [1].
-[1]  https://lore.kernel.org/linux-arch/5b14144a-9725-41db-7179-c059c41814c=
-f@xen0n.name/
+> The compiler generates initialization instructions,
+> which consume additional CPU cycles. the
+> get_step_address(regs, &addr) should assign a value
+> to 'error' before it is read.so the var don't need init
+> to 0.
+Why do you think the compiler generates initialization instructions,
+have you found any difference in the binary after your patch?
 
 Huacai
 
 >
-> Link: https://lore.kernel.org/lkml/20250602102825-42aa84f0-23f1-4d10-89fc=
--e8bbaffd291a@linutronix.de/
-> Link: https://lore.kernel.org/lkml/20250519082042.742926976@linutronix.de=
-/
-> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-> Fixes: 18efd0b10e0f ("LoongArch: vDSO: Wire up getrandom() vDSO implement=
-ation")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> Signed-off-by: Li Jun <lijun01@kylinos.cn>
 > ---
->  arch/loongarch/include/asm/vdso/getrandom.h    | 2 +-
->  arch/loongarch/include/asm/vdso/gettimeofday.h | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  arch/loongarch/kernel/kgdb.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >
-> diff --git a/arch/loongarch/include/asm/vdso/getrandom.h b/arch/loongarch=
-/include/asm/vdso/getrandom.h
-> index 48c43f55b039b42168698614d0479b7a872d20f3..a81724b69f291ee49dd1f46b1=
-2d6893fc18442b8 100644
-> --- a/arch/loongarch/include/asm/vdso/getrandom.h
-> +++ b/arch/loongarch/include/asm/vdso/getrandom.h
-> @@ -20,7 +20,7 @@ static __always_inline ssize_t getrandom_syscall(void *=
-_buffer, size_t _len, uns
+> diff --git a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb.c
+> index 7be5b4c0c900..df85d6a0dc74 100644
+> --- a/arch/loongarch/kernel/kgdb.c
+> +++ b/arch/loongarch/kernel/kgdb.c
+> @@ -379,10 +379,9 @@ static int get_step_address(struct pt_regs *regs, un=
+signed long *next_addr)
 >
->         asm volatile(
->         "      syscall 0\n"
-> -       : "+r" (ret)
-> +       : "=3Dr" (ret)
->         : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
->         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
->           "memory");
-> diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loonga=
-rch/include/asm/vdso/gettimeofday.h
-> index 88cfcf13311630ed5f1a734d23a2bc3f65d79a88..f15503e3336ca1bdc9675ec6e=
-17bbb77abc35ef4 100644
-> --- a/arch/loongarch/include/asm/vdso/gettimeofday.h
-> +++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
-> @@ -25,7 +25,7 @@ static __always_inline long gettimeofday_fallback(
+>  static int do_single_step(struct pt_regs *regs)
+>  {
+> -       int error =3D 0;
+>         unsigned long addr =3D 0; /* Determine where the target instructi=
+on will send us to */
+> +       int error =3D get_step_address(regs, &addr);
 >
->         asm volatile(
->         "       syscall 0\n"
-> -       : "+r" (ret)
-> +       : "=3Dr" (ret)
->         : "r" (nr), "r" (tv), "r" (tz)
->         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
->           "$t8", "memory");
-> @@ -44,7 +44,7 @@ static __always_inline long clock_gettime_fallback(
+> -       error =3D get_step_address(regs, &addr);
+>         if (error)
+>                 return error;
 >
->         asm volatile(
->         "       syscall 0\n"
-> -       : "+r" (ret)
-> +       : "=3Dr" (ret)
->         : "r" (nr), "r" (clkid), "r" (ts)
->         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
->           "$t8", "memory");
-> @@ -63,7 +63,7 @@ static __always_inline int clock_getres_fallback(
->
->         asm volatile(
->         "       syscall 0\n"
-> -       : "+r" (ret)
-> +       : "=3Dr" (ret)
->         : "r" (nr), "r" (clkid), "r" (ts)
->         : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
->           "$t8", "memory");
->
-> ---
-> base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
-> change-id: 20250603-loongarch-vdso-syscall-f585a99bea03
->
-> Best regards,
 > --
-> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> 2.25.1
+>
 >
