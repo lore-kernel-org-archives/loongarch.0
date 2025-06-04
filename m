@@ -1,156 +1,98 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592C04C97
-	for <loongarch@lists.linux.dev>; Wed,  4 Jun 2025 14:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253821DB546;
+	Wed,  4 Jun 2025 16:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749048453; cv=none; b=KKFpc9W+H8Bjn+4PzLOta+DSafxQmCQ6e0Ll6KyCyWTYJLnIWanYsEiRy9IykZP96uTIoqPXlDzD6UZYLIV000RdhRa/G4EEmjEHz9pDSuzOyPTNaUAWc1XP2tqw6EMBwZAnDrggDgT+UzCv3Hdzrq7XrqHnuslIDvTdabw9d0A=
+	t=1749055211; cv=none; b=kuXqlyim0odHoI2lNyvSLXfI6Zl4NLEH/cdJsKHmTvzS+JI+BAf0v2l0W78GOpSD2FvquJfxpBA+eYPBinbWxaSdcm/yzGmhoGmwK4923f8kOhv3Id00qOXzQL5iTEuO8VVTHGdEXBMIy9lxsRFuRUhSAYfI30b3sT0RMqpRBdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749048453; c=relaxed/simple;
-	bh=s794wOPYqmOh7ctoNUyErF6+1Cjz5YD1viu4ZG67VJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CiMg72PcYG6JC8U5YPYsinr3DSpCnirdkzuQ0wOXStn5yNjWTYDkn8eQPxo8HolmlgjLe98Z88sz5a8QAMgtdFDyIxa3ijVTdQBtX68H8jMcDsT0zJ9JU16Nua3RAwoIglGYwoXfxckiqqlIXwK1FCb4pI/9ZMJwjxoZW3hFDfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=T307lBYR; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1749055211; c=relaxed/simple;
+	bh=Z2ajJa3jqcL9eosQXVw90LfEQcomAMUhBxXUYrZ+pRk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DzSyVcxyozJzWWCMtb29UMpJxQ521LqVwQS42E9BbSEZ1kX7aC+w6qXJxOts4uXRIQlaiwk4CX1DPDUGlMT4yCceyDMjE9TOALildR074X5rw7KOkt+CaII13JFvJYD5KN5/w939XLWVrcrBQQfPXis2K9cXoX0DXYYjDeyVRpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=rlUTbXSG; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="T307lBYR"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 7B67E25B4D;
-	Wed,  4 Jun 2025 16:47:22 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id RreaCiUezlfL; Wed,  4 Jun 2025 16:47:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749048441; bh=s794wOPYqmOh7ctoNUyErF6+1Cjz5YD1viu4ZG67VJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=T307lBYRQTcYkHnp2ZEUgWq5m45CBUmBiHKIlJr6GlPmZhzr9eXYbYqSgI9qcpR02
-	 K/Zk4jx4VhlVeQ3bmSICTsxUkv1rSLLccFFKWnGTSGoBijsz0itN98J7Pf0rZqumPZ
-	 goDh9JE1DdcTK8/gfqhNUr2boSpAqjIk6gVqxVrnXLLobKH4QWBVa2XTQ2LRsGdC0c
-	 +a1IiNexXnEbBg89XR7hWb3bMY0v81Srw+/MHlWNmBdlVoftd6Tro+KU4AiZlDxLT4
-	 2qfCjJ4ij0RRO7kJ4y1ML2c2BjZNfUeAOHymok4j3Z//n10b3FSMAFSZPZ3Glib5IC
-	 0rS/TToWSo/eQ==
-Date: Wed, 4 Jun 2025 14:47:04 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform/loongarch: laptop: Get brightness setting
- from EC on probe
-Message-ID: <aEBcaDvEKZVO77FY@pie.lan>
-References: <20250531113851.21426-1-ziyao@disroot.org>
- <20250531113851.21426-2-ziyao@disroot.org>
- <CAAhV-H7pvaz5N0-EfvhDNHAXJtR13p9Xi5hfgDxOpeXi9zMbTQ@mail.gmail.com>
- <aD6Zz8L9WJRXvwaW@pie.lan>
- <CAAhV-H6j1OT9D8ZBtyEP=Mu5+m=t0ebUvuC=gVeNsoPizwK1TQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="rlUTbXSG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1749055199; bh=Z2ajJa3jqcL9eosQXVw90LfEQcomAMUhBxXUYrZ+pRk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rlUTbXSG4Q/CMfpm3kh5zEqXZbLVZFgjlx2DWFw2onvZNU5gbu41LEbtC4VnOTn/y
+	 kLz/mGTdxNxZlQl3yv3Pe48fI4iYGObu/WyNUS7VimW/Ed0KUPpfGilhq4T7SNi1pA
+	 oTvT52PIUJE7uWqYRUPn507LoQsVo7AtsfHH/InA=
+Received: from [IPV6:240e:b8f:949a:9000:aa4b:215a:c634:4370] (unknown [IPv6:240e:b8f:949a:9000:aa4b:215a:c634:4370])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id EFA376011F;
+	Thu,  5 Jun 2025 00:39:58 +0800 (CST)
+Message-ID: <edca541e-a2a7-4c26-bea7-15fd0b25597b@xen0n.name>
+Date: Thu, 5 Jun 2025 00:39:58 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: vDSO: correctly use asm parameters in syscall
+ wrappers
+To: Huacai Chen <chenhuacai@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Xi Ruoyao <xry111@xry111.site>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, stable@vger.kernel.org
+References: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
+ <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H6j1OT9D8ZBtyEP=Mu5+m=t0ebUvuC=gVeNsoPizwK1TQ@mail.gmail.com>
 
-On Wed, Jun 04, 2025 at 09:56:20PM +0800, Huacai Chen wrote:
-> On Tue, Jun 3, 2025 at 2:44 PM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > On Tue, Jun 03, 2025 at 12:11:48PM +0800, Huacai Chen wrote:
-> > > On Sat, May 31, 2025 at 7:39 PM Yao Zi <ziyao@disroot.org> wrote:
-> > > >
-> > > > Previously 1 is unconditionally taken as current brightness value. This
-> > > > causes problems since it's required to restore brightness settings on
-> > > > resumption, and a value that doesn't match EC's state before suspension
-> > > > will cause surprising changes of screen brightness.
-> > > laptop_backlight_register() isn't called at resuming, so I think your
-> > > problem has nothing to do with suspend (S3).
-> >
-> > It does have something to do with it. In loongson_hotkey_resume() which
-> > is called when leaving S3 (suspension), the brightness is restored
-> > according to props.brightness,
-> >
-> >         bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
-> >         if (bd) {
-> >                 loongson_laptop_backlight_update(bd) ?
-> >                 pr_warn("Loongson_backlight: resume brightness failed") :
-> >                 pr_info("Loongson_backlight: resume brightness %d\n", bd->props
-> > .brightness);
-> >         }
-> >
-> > and without this patch, props.brightness is always set to 1 when the
-> > driver probes, but actually (at least with the firmware on my laptop)
-> > the screen brightness is set to 80 instead of 1 on cold boot, IOW, a
-> > brightness value that doesn't match hardware state is set to
-> > props.brightness.
-> >
-> > On resumption, loongson_hotkey_resume() restores the brightness
-> > settings according to props.brightness. But as the value isn't what is
-> > used by hardware before suspension. the screen brightness will look very
-> > different (1 v.s. 80) comparing to the brightness before suspension.
-> >
-> > Some dmesg proves this as well, without this patch it says
-> >
-> >         loongson_laptop: Loongson_backlight: resume brightness 1
-> >
-> > but before suspension, reading
-> > /sys/class/backlight/loongson3_laptop/actual_brightness yields 80.
-> OK, that makes sense. But the commit message can still be improved, at
-> least replace suspension/resumption with suspend/resume. You can grep
-> them at Documentation/power.
+On 6/4/25 22:05, Huacai Chen wrote:
+> On Tue, Jun 3, 2025 at 7:49 PM Thomas Weißschuh
+> <thomas.weissschuh@linutronix.de> wrote:
+>>
+>> The syscall wrappers use the "a0" register for two different register
+>> variables, both the first argument and the return value. The "ret"
+>> variable is used as both input and output while the argument register is
+>> only used as input. Clang treats the conflicting input parameters as
+>> undefined behaviour and optimizes away the argument assignment.
+>>
+>> The code seems to work by chance for the most part today but that may
+>> change in the future. Specifically clock_gettime_fallback() fails with
+>> clockids from 16 to 23, as implemented by the upcoming auxiliary clocks.
+>>
+>> Switch the "ret" register variable to a pure output, similar to the other
+>> architectures' vDSO code. This works in both clang and GCC.
+> Hmmm, at first the constraint is "=r", during the progress of
+> upstream, Xuerui suggested me to use "+r" instead [1].
+> [1]  https://lore.kernel.org/linux-arch/5b14144a-9725-41db-7179-c059c41814cf@xen0n.name/
 
-Oops, thanks for the hint. Seems suspend/resume are wider used, and I
-will reword the commit message in v2 :)
+Oops, I've already completely forgotten! That said...
 
-> Huacai
+I didn't notice back then, that `ret` and the first parameter actually 
+shared the same manually allocated register, so I replied as if the two 
+shared one variable. If it were me to write the original code, I would 
+re-used `ret` for arg0 (with a comment explaining the a0 situation) so 
+that "+r" could be properly used there without UB.
 
-Regards,
-Yao Zi
+As for the current situation -- both this patch's approach or my 
+alternative above are OK to me. Feel free to take either; and have my 
+R-b tag if you send a v2.
 
-> >
-> > > But there is really a problem about hibernation (S4): the brightness
-> > > is 1 during booting, but when switching to the target kernel, the
-> > > brightness may jump to the old value.
-> > >
-> > > If the above case is what you meet, please update the commit message.
-> > >
-> > > Huacai
-> >
-> > Thanks,
-> > Yao Zi
-> >
-> > > >
-> > > > Let's get brightness from EC and take it as the current brightness on
-> > > > probe of the laptop driver to avoid the surprising behavior. Tested on
-> > > > TongFang L860-T2 3A5000 laptop.
-> > > >
-> > > > Cc: stable@vger.kernel.org
-> > > > Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
-> > > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > > ---
-> > > >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-> > > > index 99203584949d..828bd62e3596 100644
-> > > > --- a/drivers/platform/loongarch/loongson-laptop.c
-> > > > +++ b/drivers/platform/loongarch/loongson-laptop.c
-> > > > @@ -392,7 +392,7 @@ static int laptop_backlight_register(void)
-> > > >         if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
-> > > >                 return -EIO;
-> > > >
-> > > > -       props.brightness = 1;
-> > > > +       props.brightness = ec_get_brightness();
-> > > >         props.max_brightness = status;
-> > > >         props.type = BACKLIGHT_PLATFORM;
-> > > >
-> > > > --
-> > > > 2.49.0
-> > > >
-> > > >
-> 
+Reviewed-by: WANG Xuerui <git@xen0n.name>
+
+Thanks!
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
