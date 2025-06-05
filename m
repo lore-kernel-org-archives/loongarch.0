@@ -1,388 +1,193 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AD620C026
-	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 12:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC4717B50F
+	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 12:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749125576; cv=none; b=PHk7rR1nr/D1WGATRJR3xNqHsa363JtXbc/nUg89oBy/12mS72kmndmTtUNzFB3DWmmLeZipkzsUQogiNg6dcmrz2OYvOJY90/Dez287AcHwmpajgN5Djn9OCcEmRQTFZgvn6GI/Ig5jXlJuR8nEnRJBzLsrmUx+kWSBB+/s0xY=
+	t=1749126118; cv=none; b=cvF+XpJzIPvIJOgzsTp4HbJg8ISYzj/j2uUmNvInQf/5D2OT+i1hL7JVjG/HE67zKEM9MQlOJysUoxrNMSXzDjUsQRAvSniY7VzOnV2OS9bC8qB8G24w6K5PiZJRohzKmC9wfQXlb8BsgYJza6dAfNZqQ5ir9ffqQbV+C2+li1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749125576; c=relaxed/simple;
-	bh=21mcGr5CuLI+lsB2S43fewfJ2aOttCW6G+uPHFej7Do=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=RdIOthXKd1vDc7N5hkS2dbnq0krQERAkSTYQryQLbvY7ptw3JHf/44fu1fG7SEumWHfLAJB0rC3f+1P5Bdt0wxP8aFPBijTrdMWJ2mIadta5wNsGIrOOv/ze2alK/j4/URQdFsW5ClMEV2Z91VygpykIhxTnU3zIt5hGgBg4Vlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WprBXos/; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749126118; c=relaxed/simple;
+	bh=oSsJJAjBTEDg124lpxLjRBvX5VlHUZkVuOU/wVKlKtI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ml2hf2QH5xRj89BhDrABT+kn/VXjgvwTqUqUHaTX872315wAQCShAM3Z5ffiW8Zg0KJrT6i9W1a0Ys4yp4z02wqK71PyK2GeehsCcH9siOuXoQVE1AP0L/pk4dMOybO307OyCd8siraqdG5ca6pPoQ9ck54Rx7h8PCcw2pztWrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d9n7yWYl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WprBXos/"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749125570;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d9n7yWYl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749126115;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eCJkn2PLkOBoQ+g/YVc/8OYIcSE2y6YPjXDaWlpQP0U=;
-	b=WprBXos/8/QifUnZtQTRFFHHwiY+E+Li0C2h1xiLA+mYyTkVwnsDp4xT62PmY2WKaoPS3F
-	p+uYnrL8/SoTnHxynrtO+5HNPI6/GCdXuSTw2IrcV4skVqLGJw8mYqXJVYR9maitoI0jQ4
-	N1j1UfCbJJJI3dVf20HM6l9Y7SvTzjc=
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wldJrlgD5xSFvxqsPYQgEMgA0AgR4qOzKzhiKtc8NNY=;
+	b=d9n7yWYl/KnvznYlpyTgBrfB+Fg3koyQBn33fosbPdjlvZJjf54i5k+gxOvSQS0Jsjqn1H
+	Mke88CwupzxBmvr7k//bERoXgS1F3jQqV9Ex9qqbOwK5lEZWGmHgZtDIfHbopt4PM44nlD
+	5E604Mi18yZ5JFG6P6nlWY87mD2gYN0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-631-8cPA84gnP8Wqfl9kq0P_QQ-1; Thu, 05 Jun 2025 08:21:54 -0400
+X-MC-Unique: 8cPA84gnP8Wqfl9kq0P_QQ-1
+X-Mimecast-MFC-AGG-ID: 8cPA84gnP8Wqfl9kq0P_QQ_1749126113
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4fabcafecso361276f8f.0
+        for <loongarch@lists.linux.dev>; Thu, 05 Jun 2025 05:21:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749126113; x=1749730913;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wldJrlgD5xSFvxqsPYQgEMgA0AgR4qOzKzhiKtc8NNY=;
+        b=N1jj0c66mifOYqG+II3mQDIeQSrEOKkC2eB5zn0GhvsXtP7WVVeAMJUWSTflnf1N2P
+         7DbpURfb4bly9a15lYxRdHkEkHeolpd6u44O5mcWHUu1fiBwQlMgxuE9V3E2IHdxpjv0
+         5Ct6i2e4fHw3QS6Nh8xvBozxkvtk4IaFkNrZlWNZfO3hdSLf8P1HBWpwZ9ArRmDnzbMJ
+         3b2ju05jJj8qUYbgxpuDXdpUNMzt1/RRSSSap3ZUMgBOGxgXXJKj2D1hgEc/IpsH7Q7Q
+         w0Nf1T62kJ/bpoAc+gHVPhDXoH0WkAdfNEmGJ2osvWRIF2eEMOfBrwBOoK7J2egCAUeC
+         Nl+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVXYQu48w+fvKD4ITt0hXpHkwVMuTMG7h5uMpGim+tnxwssAunTqFoQe90McSVjBMqjFI27q6LRhic=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzlihrKyYdVhQzx6MTBAklFL3vo2Tsx2c+7OApCvBx+GmFwfTUS
+	JZ9F497qiXHbXSpiWHBOKJqBjxxoIc5Rqut5zc0OoeykCU5i0sijM4EoMNu/IL6fDEEQMtRWUjA
+	BRZYualb/cHySio+1BRcX4rL6suLj+iNL68IQLgUuU4zctXgfMJjU5w7v5W4eGQ==
+X-Gm-Gg: ASbGncv6XXSswhYcVvUSgunNGXni6ZNhD19TAj2iWkovhDfoRqthxt1INo/SsfD9jDL
+	iepfkA4GGPPHu4ELdo0mJKU/HerqK8s39niYFEKOjGrT2pn1gdePu1QpV2M6eZupFW7Zs3tRmtU
+	XAuKbOhrXajPFXJMrjHMOaefrE21d3uwRuwPFPTIOHmNn0d84kYsXG9nohxk7ak++Hh2Gdi7CyZ
+	j9bsLPr/cV4GLaDDIZO2ZLoTXg8W82j+kdG2iXDWEfG4Q8j94eWz76UipNVl7X6/6Wa/kvDuhyp
+	jK3cMSN8oOrL1PNGqvTdhpRcGG5XgPa4gzz734R5Dbosu2JwYWCtK7gz4W6y2lOxGpcnSyG0vGO
+	9dCksejdLVjXTU+/lenqbFtPgwB66CvUAfptR
+X-Received: by 2002:a05:6000:2411:b0:3a5:2ed2:118e with SMTP id ffacd0b85a97d-3a52ed213bbmr588077f8f.9.1749126112956;
+        Thu, 05 Jun 2025 05:21:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEqjyD+ON8FzosZudBIIk1cZ1N02kAPjk9ZRTcKJAP4iMjdx7JwYGTIDMl9lWAJcTgFebdUXw==
+X-Received: by 2002:a05:6000:2411:b0:3a5:2ed2:118e with SMTP id ffacd0b85a97d-3a52ed213bbmr588039f8f.9.1749126112497;
+        Thu, 05 Jun 2025 05:21:52 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2? (p200300d82f27ec004f4d0d38ba979aa2.dip0.t-ipconnect.de. [2003:d8:2f27:ec00:4f4d:d38:ba97:9aa2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a526057278sm2657445f8f.63.2025.06.05.05.21.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 05:21:52 -0700 (PDT)
+Message-ID: <897590f7-99a5-4053-8566-76623b929c7c@redhat.com>
+Date: Thu, 5 Jun 2025 14:21:50 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v2] mm/pagewalk: split walk_page_range_novma() into
- kernel/user parts
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <13b573c3-c432-43f5-b687-deb3f72cdce0@lucifer.local>
-Date: Thu, 5 Jun 2025 20:11:56 +0800
-Cc: Vlastimil Babka <vbabka@suse.cz>,
- Andrew Morton <akpm@linux-foundation.org>,
- Barry Song <baohua@kernel.org>,
- David Hildenbrand <david@redhat.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>,
- Oscar Salvador <osalvador@suse.de>,
- Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>,
- Jann Horn <jannh@google.com>,
- loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- linux-openrisc@vger.kernel.org,
- linux-riscv@lists.infradead.org,
- linux-mm@kvack.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E816127E-5BF6-4B00-AB7D-C151939A1236@linux.dev>
-References: <20250604141958.111300-1-lorenzo.stoakes@oracle.com>
- <536f5ffd-b4cf-4f35-970c-ad3a7593af2f@suse.cz>
- <5a06f383-7d01-4ea7-a010-013063770240@lucifer.local>
- <1AA4A4B3-AEBE-484A-8EE2-35A15035E748@linux.dev>
- <13b573c3-c432-43f5-b687-deb3f72cdce0@lucifer.local>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/12] mm: Remove redundant pXd_devmap calls
+To: Jason Gunthorpe <jgg@ziepe.ca>, Dan Williams <dan.j.williams@intel.com>
+Cc: Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
+ gerald.schaefer@linux.ibm.com, willy@infradead.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@groves.net
+References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <2ee5a64581d2c78445e5c4180d7eceed085825ca.1748500293.git-series.apopple@nvidia.com>
+ <6841026c50e57_249110022@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250605120909.GA44681@ziepe.ca>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250605120909.GA44681@ziepe.ca>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: gc4Q7hdJ9lwRE8IAwspNZroMXNn3lVx8QaF1l1rKp_o_1749126113
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 05.06.25 14:09, Jason Gunthorpe wrote:
+> On Wed, Jun 04, 2025 at 07:35:24PM -0700, Dan Williams wrote:
+> 
+>> If all dax pages are special, then vm_normal_page() should never find
+>> them and gup should fail.
+>>
+>> ...oh, but vm_normal_page_p[mu]d() is not used in the gup path, and
+>> 'special' is not set in the pte path.
+> 
+> That seems really suboptimal?? Why would pmd and pte be different?
+> 
+>> I think for any p[mu]d where p[mu]d_page() is ok to use should never set
+>> 'special', right?
+> 
+> There should be dedicated functions for installing pages and PFNs,
+> only the PFN one would set the special bit.
+> 
+> And certainly your tests *should* be failing as special entries should
+> never ever be converted to struct page.
+
+Worth reviewing [1] where I clean that up and describe the current 
+impact. ;)
+
+What's even worse about this pte_devmap()/pmd_devmap()/... shit (sorry! 
+but it's absolute shit) is that some pte_mkdev() set the pte special, 
+while others ... don't.
+
+E.g., loongarch
+
+static inline pte_t pte_mkdevmap(pte_t pte)	{ pte_val(pte) |= 
+_PAGE_DEVMAP; return pte; }
+
+I don't even know how it can (could) survive vm_normal_page().
 
 
+Of course, a wild (and different) mixture on pmd_mkdevmap() as well.
 
-> On Jun 5, 2025, at 17:56, Lorenzo Stoakes <lorenzo.stoakes@oracle.com> =
-wrote:
->=20
-> On Thu, Jun 05, 2025 at 05:42:16PM +0800, Muchun Song wrote:
->>=20
->>=20
->>> On Jun 5, 2025, at 17:24, Lorenzo Stoakes =
-<lorenzo.stoakes@oracle.com> wrote:
->>>=20
->>> On Thu, Jun 05, 2025 at 08:56:59AM +0200, Vlastimil Babka wrote:
->>>> On 6/4/25 16:19, Lorenzo Stoakes wrote:
->>>>> The walk_page_range_novma() function is rather confusing - it =
-supports two
->>>>> modes, one used often, the other used only for debugging.
->>>>>=20
->>>>> The first mode is the common case of traversal of kernel page =
-tables, which
->>>>> is what nearly all callers use this for.
->>>>>=20
->>>>> Secondly it provides an unusual debugging interface that allows =
-for the
->>>>> traversal of page tables in a userland range of memory even for =
-that memory
->>>>> which is not described by a VMA.
->>>>>=20
->>>>> It is far from certain that such page tables should even exist, =
-but perhaps
->>>>> this is precisely why it is useful as a debugging mechanism.
->>>>>=20
->>>>> As a result, this is utilised by ptdump only. Historically, things =
-were
->>>>> reversed - ptdump was the only user, and other parts of the kernel =
-evolved
->>>>> to use the kernel page table walking here.
->>>>>=20
->>>>> Since we have some complicated and confusing locking rules for the =
-novma
->>>>> case, it makes sense to separate the two usages into their own =
-functions.
->>>>>=20
->>>>> Doing this also provide self-documentation as to the intent of the =
-caller -
->>>>> are they doing something rather unusual or are they simply doing a =
-standard
->>>>> kernel page table walk?
->>>>>=20
->>>>> We therefore establish two separate functions - =
-walk_page_range_debug() for
->>>>> this single usage, and walk_kernel_page_table_range() for general =
-kernel
->>>>> page table walking.
->>>>>=20
->>>>> We additionally make walk_page_range_debug() internal to mm.
->>>>>=20
->>>>> Note that ptdump uses the precise same function for kernel walking =
-as a
->>>>=20
->>>> IMHO it's not clear at this point what "the precise same function" =
-means.
->>>>=20
->>>>> convenience, so we permit this but make it very explicit by having
->>>>> walk_page_range_novma() invoke walk_kernel_page_table_range() in =
-this case.
->>>>=20
->>>> ^ walk_page_range_debug()
->>>=20
->>> Oops will fix.
->>>=20
->>>>=20
->>>> Maybe this could be reworded in the sense (AFAIU) that
->>>> walk_page_range_debug() can be used for both user space page table =
-walking
->>>> or kernel depending on what mm is passed, so in the case of init_mm =
-it
->>>> invokes walk_kernel_page_table_range() internally.
->>>=20
->>> Sure.
->>>=20
->>>>=20
->>>>>=20
->>>>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->>>>> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->>>>> ---
->>>>> v2:
->>>>> * Renamed walk_page_range_novma() to walk_page_range_debug() as =
-per David.
->>>>> * Moved walk_page_range_debug() definition to mm/internal.h as per =
-Mike.
->>>>> * Renamed walk_page_range_kernel() to =
-walk_kernel_page_table_range() as
->>>>> per David.
->>>>>=20
->>>>> v1 resend:
->>>>> * Actually cc'd lists...
->>>>> * Fixed mistake in walk_page_range_novma() not handling kernel =
-mappings and
->>>>> update commit message to referene.
->>>>> * Added Mike's off-list Acked-by.
->>>>> * Fixed up comments as per Mike.
->>>>> * Add some historic flavour to the commit message as per Mike.
->>>>> =
-https://lore.kernel.org/all/20250603192213.182931-1-lorenzo.stoakes@oracle=
-.com/
->>>>>=20
->>>>> v1:
->>>>> (accidentally sent off-list due to error in scripting)
->>>>>=20
->>>>> arch/loongarch/mm/pageattr.c |  2 +-
->>>>> arch/openrisc/kernel/dma.c   |  4 +-
->>>>> arch/riscv/mm/pageattr.c     |  8 +--
->>>>> include/linux/pagewalk.h     |  7 ++-
->>>>> mm/hugetlb_vmemmap.c         |  2 +-
->>>>> mm/internal.h                |  4 ++
->>>>> mm/pagewalk.c                | 98 =
-++++++++++++++++++++++++------------
->>>>> mm/ptdump.c                  |  3 +-
->>>>> 8 files changed, 82 insertions(+), 46 deletions(-)
->>>>>=20
->>>>> diff --git a/arch/loongarch/mm/pageattr.c =
-b/arch/loongarch/mm/pageattr.c
->>>>> index 99165903908a..f5e910b68229 100644
->>>>> --- a/arch/loongarch/mm/pageattr.c
->>>>> +++ b/arch/loongarch/mm/pageattr.c
->>>>> @@ -118,7 +118,7 @@ static int __set_memory(unsigned long addr, =
-int numpages, pgprot_t set_mask, pgp
->>>>> return 0;
->>>>>=20
->>>>> mmap_write_lock(&init_mm);
->>>>> - ret =3D walk_page_range_novma(&init_mm, start, end, =
-&pageattr_ops, NULL, &masks);
->>>>> + ret =3D walk_kernel_page_table_range(start, end, &pageattr_ops, =
-NULL, &masks);
->>>>> mmap_write_unlock(&init_mm);
->>>>=20
->>>> You've removed init_mm from walk_page_range_novma() but I see most =
-callers
->>>> do the locking of init_mm immediately around it. This suggests a =
-version
->>>> handling that automatically? A bit complicated by the read/write
->>>> possibilities, so maybe not worth wrapping? Just a thought, as =
-David says ;)
->>>=20
->>> Most callers write lock interestingly, but then one read lock's, so =
-we can't
->>> just assume and would need to pass a boolean which would kind of =
-suck.
->>=20
->> Hi Lorenzo,
->>=20
->> Actually, the write lock introduced in commit 8782fb61cc848 to fix =
-the
->> race condition when walking user page tables can be replaced with a =
-read
->> lock. As explained in commit b123d09304d86, it is safe to walk kernel
->> page tables while holding the mmap read lock. The function name
->> `walk_kernel_page_table_range` clearly indicates its purpose: walking
->> kernel page tables. Thus, using a read lock internally is appropriate
->> and safe. Please correct me, if I am wrong.
->>=20
->> To further enhance robustness, it is better to add a WARN_ON check to
->> ensure that the address range passed to walk_kernel_page_table_range
->> is indeed within the kernel address space. This will help prevent any
->> accidental misuse and catch issues early.
->>=20
->=20
-> Hi Muchun,
->=20
-> Thanks for the information. I'll chase up this locking stuff in a
-> follow-up, if that's ok? As I want to get this refactoring landed =
-first
-> with the existing behaviour.
+So happy to see that go away.
 
-OK. Make sense.
+[1] https://lkml.kernel.org/r/20250603211634.2925015-1-david@redhat.com
 
->=20
-> I did wonder about doing a WARN_ON(), but I am concerned that perhaps =
-there
-> are some very odd architectures that place things in unusual =
-locations... I
-> guess this would be a addr >=3D TASK_SIZE check?
+-- 
+Cheers,
 
-I think so.
-
->=20
-> On the 'weirdness' front, Jann's opinion is that the debug code =
-shouldn't
-> even be walking page tables without VMAs in userspace anyway (and to =
-me -
-> unless there's some weird arch-specific stuff out there - I am also
-> perplexed by this).
->=20
-> So we should in theory just drop the ability to do this kind of =
-traversal
-> in general.
->=20
-> This is something I'll investigate...
->=20
-> There's also oddities like:
->=20
-> if (walk->mm =3D=3D &init_mm || addr >=3D TASK_SIZE)
-> 	pte =3D pte_offset_kernel(pmd, addr);
-> else
-> 	pte =3D pte_offset_map(pmd, addr);
->=20
-> In the walk_pte_range() function, which I feel is wrong - you should =
-pass
-> init_mm if you want to explore kernel page tables, so why are we doing =
-this
-> here?
-
-I guess it is because some users want to walk kernel address space but
-not mapped in init_mm (like efi_mm, see ptdump_efi_show()).
-
->=20
-> I wonder if it's for stuff like vsyscall which are ostensibly kernel
-> addresses but accessible in userspace... but then would we really want =
-to
-> walk the page tables for this?
->=20
-> This is stuff I want dig into a little bit.
->=20
-> But overall, would you mind if I defer the WARN_ON() and other such =
-stuff
-> to a follow up?
-
-No problem. It is up to you.
-
->=20
-> Just keen for us to firstly separate out the actual usages of these
-> functions very clearly, and thanks to Mike's great suggestion also =
-making
-> the debug usage entirely mm-internal.
->=20
-> This should lay a foundation for introducing further sanity to the =
-equation
-> here :)
->=20
-> I will properly look into the commits you mention in preparation for a
-> follow up though to be clear (your input is much appreciated! :)
-
-Thank you! I look forward to your follow-up and any further insights you
-might have.
-
-Thanks.
-
->=20
->> Muchun,
->> Thanks.
->=20
-> Cheers, Lorenzo
->=20
->>=20
->>>=20
->>> Also other walkers assume the caller has the lock so it's consistent =
-to
->>> keep it this way.
->>>=20
->>>>=20
->>>>>=20
->>>>> flush_tlb_kernel_range(start, end);
->>>>> diff --git a/arch/openrisc/kernel/dma.c =
-b/arch/openrisc/kernel/dma.c
->>>>> index 3a7b5baaa450..af932a4ad306 100644
->>>>> --- a/arch/openrisc/kernel/dma.c
->>>>> +++ b/arch/openrisc/kernel/dma.c
->>>>> @@ -72,7 +72,7 @@ void *arch_dma_set_uncached(void *cpu_addr, =
-size_t size)
->>>>> * them and setting the cache-inhibit bit.
->>>>> */
->>>>> mmap_write_lock(&init_mm);
->>>>> - error =3D walk_page_range_novma(&init_mm, va, va + size,
->>>>> + error =3D walk_kernel_page_table_range(va, va + size,
->>>>> &set_nocache_walk_ops, NULL, NULL);
->>>>> mmap_write_unlock(&init_mm);
->>>>>=20
->>>>> @@ -87,7 +87,7 @@ void arch_dma_clear_uncached(void *cpu_addr, =
-size_t size)
->>>>>=20
->>>>> mmap_write_lock(&init_mm);
->>>>> /* walk_page_range shouldn't be able to fail here */
->>>>> - WARN_ON(walk_page_range_novma(&init_mm, va, va + size,
->>>>> + WARN_ON(walk_kernel_page_table_range(va, va + size,
->>>>> &clear_nocache_walk_ops, NULL, NULL));
->>>>> mmap_write_unlock(&init_mm);
->>>>> }
->>>>> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
->>>>> index d815448758a1..3f76db3d2769 100644
->>>>> --- a/arch/riscv/mm/pageattr.c
->>>>> +++ b/arch/riscv/mm/pageattr.c
->>>>> @@ -299,7 +299,7 @@ static int __set_memory(unsigned long addr, =
-int numpages, pgprot_t set_mask,
->>>>> if (ret)
->>>>> goto unlock;
->>>>>=20
->>>>> - ret =3D walk_page_range_novma(&init_mm, lm_start, lm_end,
->>>>> + ret =3D walk_kernel_page_table_range(lm_start, lm_end,
->>>>>    &pageattr_ops, NULL, &masks);
->>>>=20
->>>> Note this and other places break the second line's arguments =
-alignment on
->>>> the opening bracket. Maybe it just shows it's a bit fragile =
-style...
->>>>=20
->>>>=20
->>>=20
->>> Yeah I know :) I know you won't believe this coming from me, but I =
-was
->>> trying to minimise the churn :P
-
+David / dhildenb
 
