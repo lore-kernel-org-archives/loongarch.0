@@ -1,105 +1,137 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A8601863E
-	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 01:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E833209
+	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 01:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749086227; cv=none; b=VwkzbAbPD9m6186vZFdYJZwJK/ZbT3YSRX1WFTgbYrsCTDniHkdUSrq4gdqBqCkUPNm87dZdrXqwRhoh2r73hBQYl55P+U7fZXLJKPOmriDvRlipW/cKUa6a4lKuTI3IeEp+32pYfEPfQxSx5jQI4e94fEZnv8uFbGUtJ4ZUAxo=
+	t=1749087066; cv=none; b=g51vYojFVhQT+HdvHvrBoyGNugfoWuMhGtyXjBBs9d2Ec6vR3LIZ0Pzl+15PIxl7d0/Peb5H7+ewaWN/+056Gl7Q7g6UI8xmOuRpbHM3UV9jitA0lQpPtjMZjU30cy2FsH7o6uyFt+SZGmSjGRbWl43b5qC3FDwTvAz0dwwtYfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749086227; c=relaxed/simple;
-	bh=NgleEF0GmAK56MefLtpSyUrGHQR1CKQpfNOU4qf2W0k=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=oIdyXvQcZz2DYAcGWwsrmO07B/DdzmflR7P/T0qkYZJJ639UpyrMTLGo0XlXOuwNmLu3NedcSBkk4enHdGvDbgtMjBzSAlcSqjBOlCBc8miRMyS/hWMaoKU4jwbUA+RWdgv2zT/tSv3682G2PUk3T96pdRyDH9PrNAxtlkV17Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8Bx12kH8EBosSsMAQ--.36498S3;
-	Thu, 05 Jun 2025 09:16:55 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMDxH+UF8EBoC2wKAQ--.33363S3;
-	Thu, 05 Jun 2025 09:16:55 +0800 (CST)
-Subject: Re: [PATCH] Loongarch:Fixed up panic cause by a NULL-pmd
-To: Yanteng Si <si.yanteng@linux.dev>, chenhuacai@kernel.org,
- kernel@xen0n.name, zhanghongchen@loongson.cn, wangming01@loongson.cn,
- peterx@redhat.com
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250526065512.13215-1-zhangtianyang@loongson.cn>
- <1876bf9a-a77d-40a5-bedd-643df939bfbf@linux.dev>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <93915902-0a91-921f-1953-b35f1742efb6@loongson.cn>
-Date: Thu, 5 Jun 2025 09:16:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1749087066; c=relaxed/simple;
+	bh=3G//e+dhPS/lYk4D2AQds+Y4zmeGJmBZavnsFtIKMgs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BRl3uC+YpZRzjCghUfhUQ5u95XPT3cy8Q8rcsfTer7Zm0BObxLtFV1p22y2nnaDYXp2YcGPz4QsvPt8yM8X2/LEf3F39U8qFxPnWPIoSmQr3ed3R8Z7IrsQmfQnZ9baXy8hpDN3T36DZZzttyGTiSp8KionSAnD44kgtfDUSVTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: b813550441ac11f0b29709d653e92f7d-20250605
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CHARSET, HR_CHARSET_NUM
+	HR_CTE_7B, HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE
+	HR_FROM_DIGIT_LEN, HR_FROM_NAME, HR_SJ_CHARSET, HR_SJ_DIGIT_LEN, HR_SJ_LANG
+	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
+	HR_SJ_WS, HR_TO_AS_FROM, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR, DN_TRUSTED
+	SRC_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, CIE_UNKNOWN, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI
+	AMN_C_BU, ABX_MISS_RDNS
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:076b440a-9b24-4053-af15-f2b88180922d,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.1.45,REQID:076b440a-9b24-4053-af15-f2b88180922d,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:6493067,CLOUDID:26d85edbd706f5381455e7b1cf81215c,BulkI
+	D:250605093054Q0RBFYVE,BulkQuantity:0,Recheck:0,SF:17|19|23|43|66|74|78|81
+	|82|83|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil
+	,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:
+	0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: b813550441ac11f0b29709d653e92f7d-20250605
+X-User: lijun01@kylinos.cn
+Received: from bogon [(106.121.188.19)] by mailgw.kylinos.cn
+	(envelope-from <lijun01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1603633153; Thu, 05 Jun 2025 09:30:52 +0800
+Message-ID: <b20179452023419872c5c7e4a85f13dd530b7928.camel@kylinos.cn>
+Subject: =?gb2312?Q?Re=A3=BA=5BPATCH?= v2] loongarch: kgdb: remove
+ unnecessary init variable
+From: lijun <lijun01@kylinos.cn>
+To: lijun01@kylinos.cn
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev
+Date: Thu, 05 Jun 2025 09:30:48 +0800
+In-Reply-To: <CAAhV-H5dmh8_rNNRAaFeFvjCtt0CCsqTxOujWFakU=RYakrpAA@mail.gmail.com>
+References: <20250604065647.113148-1-lijun01@kylinos.cn>
+	 <CAAhV-H5dmh8_rNNRAaFeFvjCtt0CCsqTxOujWFakU=RYakrpAA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2kord0k2.4.25.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1876bf9a-a77d-40a5-bedd-643df939bfbf@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMDxH+UF8EBoC2wKAQ--.33363S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFy8Cw13Cr18WFyUCFykWFX_yoW8Gw1rpF
-	yUJw4rGw4fC3yDX3W2vw4kZF4vya4Ik3Wkur10qFykZwn5Jr1jqFy29ryS9r4UAr4rtay0
-	qFWUtF90vr1UZagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXU
-	UUUU=
+Content-Transfer-Encoding: 7bit
 
-Hi, Yanteng
 
-在 2025/5/27 下午1:47, Yanteng Si 写道:
-> 在 5/26/25 2:55 PM, Tianyang Zhang 写道:
->> From: zhangtianyang <zhangtianyang@loongson.cn>
->>
->> Fixes: bd51834d1cf6 ("LoongArch: Return NULL from huge_pte_offset() 
->> for invalid PMD")
->> ERROR INFO:
->>
->> CPU 25 Unable to handle kernel paging request at virtual address 0x0
->>           ...
->>   Call Trace:
->>   [<900000000023c30c>] huge_pte_offset+0x3c/0x58
->>   [<900000000057fd4c>] hugetlb_follow_page_mask+0x74/0x438
->>   [<900000000051fee8>] __get_user_pages+0xe0/0x4c8
->>   [<9000000000522414>] faultin_page_range+0x84/0x380
->>   [<9000000000564e8c>] madvise_vma_behavior+0x534/0xa48
->>   [<900000000056689c>] do_madvise+0x1bc/0x3e8
->>   [<9000000000566df4>] sys_madvise+0x24/0x38
->>   [<90000000015b9e88>] do_syscall+0x78/0x98
->>   [<9000000000221f18>] handle_syscall+0xb8/0x158
->>
->
->> In some cases, pmd may be NULL and rely on NULL as the return value
->> for processing, so it is necessary to determine this situation here
->
-> Your description is a bit vague. Could you please specify
-> on which machines and in what scenarios this bug can be
-> reproduced? I believe such information should be included
-> in the commit message.
->
-> Thanks,
-> Yanteng
 
-Sorry for the late reply.
+#include<stdio.h>                                              #include
+<stdio.h>
+                                        
+int main(int argc, const char *argv[])     int main(int argc, const
+char *argv[])
+{                                                                      
+               {
+    int
+i=0;                                                                   
+  int i;
+                                        
+                                        
+    i =
+3;                                                                     
+    i = 3;
+    printf("i = %d\n",
+i);                                       printf("i = %d\n", i); 
+    return
+0;                                                              return
+0;
+}                                                                      
+              }                                      
+ endbr64                                                               
+   endbr64
+push   %rbp                                                           p
+ush   %rbp
+mov    %rsp,%rbp                                              mov    %r
+sp,%rbp
+sub    $0x20,%rsp                                                sub   
+ $0x20,%rsp
+mov    %edi,-0x14(%rbp)                               mov    %edi,-
+0x14(%rbp)
+mov    %rsi,-0x20(%rbp)                                mov    %rsi,-
+0x20(%rbp)
+movl   $0x0,-0x4(%rbp)                                  movl   $0x3,-
+0x4(%rbp)
+movl   $0x3,-0x4(%rbp)                                  mov    -
+0x4(%rbp),%eax
+mov    -0x4(%rbp),%eax                                mov    %eax,%esi
+mov    %eax,%esi                                              mov    $0
+x402004,%edi
+mov    $0x402004,%edi                                  mov    $0x0,%eax
+mov    $0x0,%eax                                               callq  4
+01040 <printf@plt>
+callq  401040 <printf@plt>
 
-I will provide more detailed information in the commit of the next patch
+if  gcc   -O3   test2.c -o a2.out, It is possible that the
+initialization is optimized by
+assigning values immediately after initialization
+endbr64 
+sub    $0x8,%rsp
+mov    $0x3,%edx
+mov    $0x402004,%esi
+xor    %eax,%eax
+mov    $0x1,%edi
+callq  401040 <__printf_chk@plt>
 
-Thanks
+----------------------------------------------->
+Why do you think the compiler generates initialization instructions,
+have you found any difference in the binary after your patch?
 
-Tianyang
+Huacai
+
+
 
