@@ -1,97 +1,124 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01C554769
-	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 07:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACAF1E89C;
+	Thu,  5 Jun 2025 07:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749108043; cv=none; b=fx66kGpQjc/TjjcAdzpI3T7DJt0ZbpbB42HXr4+VyaimGmjmetwlZKXallHyn05Mcvcd4tOp7PwGyLj6uR3iWcakvbgNtL6P0q2amkR4HV9I7ZnoFGLpMNLvW16A/opPHBeAKWic1HCs6issNWKk/VMXz0icPfFsAhqv80fEdwo=
+	t=1749109069; cv=none; b=dncsv0OjZEw5U0RSnx1SwcV1CNd93G5qrEu4/iuDgT16/mQe0+Oigp0JdCanYVk2hV2zXHVtVWpOQDifEGGhNeGeo0wA+N+Dbv5v1Lmb5jud6ius2YZqCVvphc5U2zM23w7GSDHoWVeKoWqYhUGR3e19AtMyCFWEz2cN2y8ySlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749108043; c=relaxed/simple;
-	bh=FA625NrqD4qvBQNaAhyUhXitr38lRtVRqZSGqy0z2c4=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mecpGLihHG/B1XDmLPl/1xmNNag8zfotePOxSZ6aKIDlxbnukz4z1mTkgCbdEI6e+RT6gm64YtbxMC2mJyEfTpwiQMurScKHw11USdxJAeJuQ6AHZOz4014MV3NCJPf5XZFBeqI+dL435jELEbyDtgDe+ILTQNpjfywohWvUyYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I2QMT+zM; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749109069; c=relaxed/simple;
+	bh=IaY5Lgr5VfZJ3xaAOEkb8FT8Ou/Vxrq/5JfjGJ8nIYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WN/nm7uO/RwXw4jHtK8mEpXYUmYB8zUXSG4ttM1wZSwJuabI3QwRUf1uAlZ0yd1kU55iT0N7S3ob0sCH1BrEKHZNGH9penIfy1nNytswqlgO/JA3L9Axb5yC6syxgnNCvOgfOV7VQQlIcypQlyds8tO//EG4mrt/x+se9M72xgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KZIMVyFo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iImNtzLO; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2QMT+zM"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso607781b3a.2
-        for <loongarch@lists.linux.dev>; Thu, 05 Jun 2025 00:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749108041; x=1749712841; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FA625NrqD4qvBQNaAhyUhXitr38lRtVRqZSGqy0z2c4=;
-        b=I2QMT+zMII9c35+ElYnxdESvj3zB1MoJBSVdp5lLDj4KSSkkW1USEZu80hV18T4vlI
-         tgqYBoIWNQAEH5ghfD2ZA6y6lB54lvvNWxjFfRLWB6o3Wd9cwoEuLaiLiRqRVfglaQZO
-         nBYDaclOoqb12s2oqXK3XqrYdGFXXfm8krDQNny/t0Hvb7Jbo0g8lW6usVXvV8b0AWtk
-         JEoWBCwt8fKIpWw+RKC4PQzbgd/BeNiabQ81/Sf6yNKSaLufImopGa1N8swf2AU1aGQd
-         2bDagUGuAZuDwAEXwddhe6sQB0t4RzdE+8R2+5AqzrErfEnhi6m5Tae5i3wDIqQKf7FC
-         asTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749108041; x=1749712841;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FA625NrqD4qvBQNaAhyUhXitr38lRtVRqZSGqy0z2c4=;
-        b=EkZ4UnRStN1n339myUXZVFYczlG/B3fickfPUvSJhCFhQDj/TMnUuNBYUGhSWDidSK
-         ET5wNjA8ve+Yeq9E9qVSM98gipZgDjFopc29d1EukNCBrZ9Zp2n1L7hHnaMfZLBqx6z8
-         DOX9vCUTDXT1UPuPARSTXWWkkfWM3QnhPedSWJOmzmvrzsA5yDVoHn0SVGjANQFFmUmL
-         rixwSTZAMhanqHVctHInabfftvH4eYlASjVfTzV+YWHD6rMW4nsgXIy5u5CWEyV7m50t
-         bC1UO6T2cfyK3rcDMjWh57XbEfdEg71KAaB8vglCTFGj9j4pOCVVdtBBe0yjIpdzM1x+
-         LlSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGwP169/tNKZkFlhC9bWcm/BeTrqVeZ5PXWTjtX18p704iRhKcJlQ1AgUB18YFN07Ywbj3+98kxjY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwdL8TKe+vWKwrYY6CEc3eMWBCFubFOu/WI6FIDQoAixb3S3Eoy
-	xpaXDKiDU1fx6OaYObJEXzDU8laXJJloLSnydMGG1pxqrc7ng3KdSepk
-X-Gm-Gg: ASbGnct/KVvyty/Tz91LWZIDUmTl8s8+XoTt9kV/bUoFp0DgL9HTcsJgiDH4jGawf4J
-	7DLRoaXIOl6jfMfAhjcI7rl5qMm3heyzFCYftUi9Vyo0b3PkbMD0u+O1r8nfhqYjwjG1zoz5aiF
-	48k/yYrOZq9eHWm2AIl1zsynoTmaf5qJL1p5Mbsbuvgqwl7XyBgF3Jv6IDbfNjjV/BaBrLkv1mG
-	d1igKG9Xx8T9K+tHCIag93ySVdGZj+8Il6q7tvjsovVcfZrChfPFFkgtaQavegiONvr8bepDyRA
-	/MVcRH2KqkTxrkuap0eCzH6oRvC2kpu/JITQunwl8InI7W+suL6W4SiYVwUM4XlT8OxkH9Pwb/5
-	fOU8Ubt/f0KuwWELQud95OUH9zqI+v2J/fw==
-X-Google-Smtp-Source: AGHT+IFD//RPz7ru1g21LutghSu3t+G8Yuhv3ZX4QuwTNEkZ18KvKr5lhdrA1j/AUPiBIQk/dzX11w==
-X-Received: by 2002:a05:6a00:853:b0:736:7270:4d18 with SMTP id d2e1a72fcca58-7480cf8b97amr7468180b3a.14.1749108041124;
-        Thu, 05 Jun 2025 00:20:41 -0700 (PDT)
-Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeab109sm12229223b3a.40.2025.06.05.00.20.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 00:20:40 -0700 (PDT)
-Date: Thu, 05 Jun 2025 16:20:22 +0900 (JST)
-Message-Id: <20250605.162022.1856520286549134654.fujita.tomonori@gmail.com>
-To: miguel.ojeda.sandonis@gmail.com
-Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, x86@kernel.org,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org,
- hpa@zytor.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, catalin.marinas@arm.com, will@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, tangyouling@loongson.cn,
- hejinyang@loongson.cn, yangtiezhu@loongson.cn, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
- aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org
-Subject: Re: [PATCH v6 0/4] rust: Add bug/warn abstractions
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <CANiq72=GXWj-aj1kPwnH=9mwR=GgrfJ4xsQUK36SFBRedk3oYg@mail.gmail.com>
-References: <20250502094537.231725-1-fujita.tomonori@gmail.com>
-	<CANiq72=GXWj-aj1kPwnH=9mwR=GgrfJ4xsQUK36SFBRedk3oYg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KZIMVyFo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iImNtzLO"
+Date: Thu, 5 Jun 2025 09:37:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749109066;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wF8eAipcjIt3omPev2NAmi21MfMoslaY24iFiYJBlIg=;
+	b=KZIMVyFoeYRQ5S5x7RTvkpWaJXFmfI2wDejc84O+mZOzUODMZG7ly5iS94G2CPZ26PGYt6
+	MBvU+boTcJg7Tc3ijw39zO1ZB1qgLUkemf76TWD+bFjCbdzcBb100LyBNDSW7eav59aQVz
+	SY6bL8yfR3DLuzWt5RT7s0BAOD6SJwUyjO0N1r5onnLVQYSrDGt6kt5EwcHxbLse27H4Ga
+	xWTHepnyyWQStXtTdb4tNmdHG4T7AYHYmWb6tijlVuySGDQt+LoqPy3lLOgK0G0RWhDdHh
+	fSI4j0286Lm1TTBd7hAtuECmtsRUOeWYjjDWSLGeVjxkzeW/ViwefbYqDMmSJw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749109066;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wF8eAipcjIt3omPev2NAmi21MfMoslaY24iFiYJBlIg=;
+	b=iImNtzLO6y1nqeyLtGMj/6dkFYnq6dZt1HzVON+HR4uNX52tOLr+vkVL4WfQqlG6QgvU4J
+	aJsRYJZs7bns+sDQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: vDSO: correctly use asm parameters in syscall
+ wrappers
+Message-ID: <20250605092735-bd76e803-e896-4d4c-a1f1-c30f8d321a9a@linutronix.de>
+References: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
+ <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
+ <5a5329feaab84acb91bbb4f48ea548b3fb4eab0f.camel@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5a5329feaab84acb91bbb4f48ea548b3fb4eab0f.camel@xry111.site>
 
-T24gVGh1LCA1IEp1biAyMDI1IDAzOjU2OjMxICswMjAwDQpNaWd1ZWwgT2plZGEgPG1pZ3VlbC5v
-amVkYS5zYW5kb25pc0BnbWFpbC5jb20+IHdyb3RlOg0KDQo+IE9uIEZyaSwgTWF5IDIsIDIwMjUg
-YXQgMTE6NDbigK9BTSBGVUpJVEEgVG9tb25vcmkNCj4gPGZ1aml0YS50b21vbm9yaUBnbWFpbC5j
-b20+IHdyb3RlOg0KPj4NCj4+IFRoaXMgcGF0Y2hzZXQgYWRkcyB3YXJuX29uIG1hY3JvIHdpdGgg
-dGhlIGJ1Zy93YXJuIGFic3RyYWN0aW9uIHRoYXQNCj4+IHV0aWxpemVzIHRoZSBrZXJuZWwncyBC
-VUcvV0FSTiBmZWF0dXJlIHZpYSBhc3NlbWJseS4NCj4gDQo+IFRoaXMgcGFzc2VkIG15IHVzdWFs
-IHRlc3RzIC0tIEkgd2lsbCB0YWtlIGEgYmV0dGVyIGxvb2sgYW5kIHBpY2sgaXQNCj4gZWFybHkg
-bmV4dCBjeWNsZS4NCg0KUGVyZmVjdCwgdGhhbmsgeW91IHNvIG11Y2ghDQoNCg==
+On Wed, Jun 04, 2025 at 10:30:55PM +0800, Xi Ruoyao wrote:
+> On Wed, 2025-06-04 at 22:05 +0800, Huacai Chen wrote:
+> > On Tue, Jun 3, 2025 at 7:49 PM Thomas Weißschuh
+> > <thomas.weissschuh@linutronix.de> wrote:
+> > > 
+> > > The syscall wrappers use the "a0" register for two different register
+> > > variables, both the first argument and the return value. The "ret"
+> > > variable is used as both input and output while the argument register is
+> > > only used as input. Clang treats the conflicting input parameters as
+> > > undefined behaviour and optimizes away the argument assignment.
+> > > 
+> > > The code seems to work by chance for the most part today but that may
+> > > change in the future. Specifically clock_gettime_fallback() fails with
+> > > clockids from 16 to 23, as implemented by the upcoming auxiliary clocks.
+> > > 
+> > > Switch the "ret" register variable to a pure output, similar to the other
+> > > architectures' vDSO code. This works in both clang and GCC.
+> > Hmmm, at first the constraint is "=r", during the progress of
+> > upstream, Xuerui suggested me to use "+r" instead [1].
+> > [1]  https://lore.kernel.org/linux-arch/5b14144a-9725-41db-7179-c059c41814cf@xen0n.name/
+> 
+> Based on the example at
+> https://gcc.gnu.org/onlinedocs/gcc/Local-Register-Variables.html:
+> 
+>    To force an operand into a register, create a local variable and specify
+>    the register name after the variable’s declaration. Then use the local
+>    variable for the asm operand and specify any constraint letter that
+>    matches the register:
+>    
+>    register int *p1 asm ("r0") = …;
+>    register int *p2 asm ("r1") = …;
+>    register int *result asm ("r0");
+>    asm ("sysint" : "=r" (result) : "0" (p1), "r" (p2));
+>    
+> I think this should actually be written
+> 
+>  	asm volatile(
+>  	"      syscall 0\n"
+> 	: "=r" (ret)
+>  	: "r" (nr), "0" (buffer), "r" (len), "r" (flags)
+>  	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
+> "$t8",
+>  	  "memory");
+> 
+> i.e. "=" should be used for the output operand 0, and "0" should be used
+> for the input operand 2 (buffer) to emphasis the same register as
+> operand 0 is used.
+
+I would have expected that matching constraints ("0") would only really make
+sense if the compiler selects the specific register to use. When the register is
+already selected manually it seems redundant.
+But my inline ASM knowledge is limited and this is a real example from the GCC
+docs, so it is probably more correct.
+On the other hand all the other vDSO implementations use "r" over "0" for the
+input operand 2 and I'd like to keep them consistent.
+
+
+Thomas
