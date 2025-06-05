@@ -1,112 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D113209
-	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 01:35:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80243209
+	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 01:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749087354; cv=none; b=aDfb+Ugw7K0v0ANbvxa7K/HbCGX8LVDXKICu/P4JXVrH+r0ffe5w+V3Z18jjOAmbjovWhK/xGEStji/DfTdGyK5u4dcNWJtWAUpetBK1ev8XAaC5o5k4Jvbi61YKdSyBiSQcThK+w7N+pm7T4372Lv3Z4ZBmXv/mwRbb5ez3mzk=
+	t=1749087438; cv=none; b=aZyMzIqlU+A39GMaQVnoYkESB0tFwcjIMtx4s1MTnB138PKgORRipPJHzaoRqPCO70hqxHlcp401jrZIOQffb8GVSeSO3pECdnqQyMnSkSRZNfCVrCWCuWWf1vEvJpu50pLL8ESCYuhwYRZbCxgLMR5RE0wEXEUlbKEtIjOWBwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749087354; c=relaxed/simple;
-	bh=4RXk8f8EkB/3oJ32sdPfocuVh+q/Yys+CY6YmDBvtLI=;
+	s=arc-20240116; t=1749087438; c=relaxed/simple;
+	bh=4ZINMyfoynZgpDjLlLLOSRRxWAs88FOaBVuLZX7UPSQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ueCHfJFDYkUU69qVb7/iiBOAjghYI65VtBn/qONbwFM0/1WkgJSh3m5YywUW61H6RyRk6y0aj4jRI8Xc8XLO37LmLGiOPWIGI30WICnfAK4QuD8rsOzjixsKU1eIOA1PQdcr/1h3X0eE5wM5FSqE79KE2EHh4AUKs4S+ztYo0k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/DaLJDm; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Mx5d1xl5QpYHP+wQOl4QjqCK3uUbGD/Eyz5SHuYNq08HUmzeFlrfViSnAiwdO+cJKoymWIDIwyCdnfQZ/qrPU90XBUbnmnldesJ6DHT6/HRkwB/WZtW2WHWDwPV4FJjUBo87zhJnYhCjfB8v3tgubJd7lVB3unyOU/J2wbUaH3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3PzM1dg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/DaLJDm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 354C6C4CEF1
-	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 01:35:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3PzM1dg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3908BC4CEE4
+	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 01:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749087354;
-	bh=4RXk8f8EkB/3oJ32sdPfocuVh+q/Yys+CY6YmDBvtLI=;
+	s=k20201202; t=1749087435;
+	bh=4ZINMyfoynZgpDjLlLLOSRRxWAs88FOaBVuLZX7UPSQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t/DaLJDm7Bbztq4ZSQgSfTbEQ2CeZyyEuXbb51PKmE6YxJ+DaiK87EIsb8tfnSB78
-	 VUMfRZ5JO2xKG76cEh+c263tK+vI4N/nLYfm0KdUKSVFLa49GTHtYEzMf5JAsdpIes
-	 Fw18uQPqoJ/Fk3sqXpY81rVtMJl5u6QuVacFLXL4x4cCt1nQQztJD8wGFGzs/U8w/k
-	 VL1cKwROIC4+A/DlSj3bLmJIHqZXXOajXPyxhnuqEOImpEoMvyzfxUeoeR+WZ3qXG3
-	 Bfw5uu9LJD2fmBdkWV2BafFx0syvqG2vpaUZu+Eui35C0cGBQdUWWEQwgbudZbAnog
-	 NTQ1eQf5KCTTA==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-602e203db66so732129a12.1
-        for <loongarch@lists.linux.dev>; Wed, 04 Jun 2025 18:35:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVR7NsX6DIjkicZfVqda7gsCzPcIfiSwdYvd3WwUwZLUB5O2+tWjjS67fiCT78f7LTQ81q7BRhh8dc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy3wGAq3fw1a332aSeYumUhUKarAwcH/qv9bPNleT7NftijNSVq
-	ksUsR/XO/tRgJjraXC1FJzzFMXP/xnFxgWBH4L80qjia1sQ0+SryOxx7a97H+HRePQejnV9x5r4
-	oiTWCJL8xZw5iisbqIWPZXGrXdc/0H/o=
-X-Google-Smtp-Source: AGHT+IH4UnRqhPWLuPo2FSLiR1pJcQVvNb1gSqgjVarPI/UAaFyvX1m2wjEm2/UyOAI7UXmspLHHTfnWNdDqdkF7A2E=
-X-Received: by 2002:a05:6402:1ecf:b0:5ec:c990:b578 with SMTP id
- 4fb4d7f45d1cf-606e9694034mr4945973a12.19.1749087352757; Wed, 04 Jun 2025
- 18:35:52 -0700 (PDT)
+	b=c3PzM1dg3pSa790kU18VDGSyIo6kbSsCrVHyBxAsufL+BwVmV+rxlH/UZFhjMV2xR
+	 i+nxeyvmuzWAQLtjsxCLAGcTkXLd1XC4n3o1Fc70WQAxCikbFwsvJe8XjCg9b19zNQ
+	 Dz0AFmtVz86UUtyp2PBhz4QdAkbBS9dwNg1xZMhZn5IAWhCZumBJ3xIjEScUilahbX
+	 vpRQQzLfSNax7unhPlKYt0rID1DGy/3jmRMf5lO+CpPoim6NHSe9+jKv/uQinirMEW
+	 8D4rlzFQYk9ETU9HmT6+nm4vQMalkEIqxTXHldaFjsmG5QPQZJYRUu1mYjN5keRV5K
+	 IKQ56TF5qwdjQ==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-602039559d8so825285a12.1
+        for <loongarch@lists.linux.dev>; Wed, 04 Jun 2025 18:37:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUEGnnMKv/FR+Deb2Lya3ya4vq8a8f5VdPkvCeUHcnzYO4rt8aVRnTGM4NzB/GF0vNAk7/xn+Yg2wE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzXt0Geo83YthjBgabtq5duyPT6IBbvGZVyEvLIxhxk1wUwWGwt
+	/Dj8QuGZKw733cP1fg0yjuCpq4pLRyjs+xl+fXxprZhwk+FtZCgGv335p0msqCbFiqFc69Zzd/l
+	baH+96NPl6CTncnXGf4DysIgMWVe/fJ8=
+X-Google-Smtp-Source: AGHT+IE0N8hzMr5k75/QQB3ko3ZNdAkatF2Jn8k/FqsN1FvEOXjmdGfcJAm5rxVrjVFgeKQaRLlS9Li9eReF5mcLa5g=
+X-Received: by 2002:a05:6402:27d0:b0:604:df97:7c2 with SMTP id
+ 4fb4d7f45d1cf-606e99a63c9mr4548616a12.2.1749087433803; Wed, 04 Jun 2025
+ 18:37:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250526065512.13215-1-zhangtianyang@loongson.cn>
- <1876bf9a-a77d-40a5-bedd-643df939bfbf@linux.dev> <93915902-0a91-921f-1953-b35f1742efb6@loongson.cn>
-In-Reply-To: <93915902-0a91-921f-1953-b35f1742efb6@loongson.cn>
+References: <20250604065647.113148-1-lijun01@kylinos.cn> <CAAhV-H5dmh8_rNNRAaFeFvjCtt0CCsqTxOujWFakU=RYakrpAA@mail.gmail.com>
+ <b20179452023419872c5c7e4a85f13dd530b7928.camel@kylinos.cn>
+In-Reply-To: <b20179452023419872c5c7e4a85f13dd530b7928.camel@kylinos.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 5 Jun 2025 09:35:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4_ERm8cZ-Xzeie2wkZKi5VVCT3qi5xeuRTYQvMYC=pTg@mail.gmail.com>
-X-Gm-Features: AX0GCFtdFyvzZPZ5giLq09aBpz7LpbU3m5nyunlEN9HUMd3phao4bf-Hy8Y02TE
-Message-ID: <CAAhV-H4_ERm8cZ-Xzeie2wkZKi5VVCT3qi5xeuRTYQvMYC=pTg@mail.gmail.com>
-Subject: Re: [PATCH] Loongarch:Fixed up panic cause by a NULL-pmd
-To: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: Yanteng Si <si.yanteng@linux.dev>, kernel@xen0n.name, zhanghongchen@loongson.cn, 
-	wangming01@loongson.cn, peterx@redhat.com, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Thu, 5 Jun 2025 09:37:03 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6QGoQSQGqpHyB_btMUXKsUMsWoM5NtMpjfYoGGjZ23_Q@mail.gmail.com>
+X-Gm-Features: AX0GCFsl3XRB_dck0SaDfxwCJAMeCtYKylqfgRTnDfEpGQHd-7XBVkCbZ4-Unx8
+Message-ID: <CAAhV-H6QGoQSQGqpHyB_btMUXKsUMsWoM5NtMpjfYoGGjZ23_Q@mail.gmail.com>
+Subject: Re: [PATCH v2] loongarch: kgdb: remove unnecessary init variable
+To: lijun <lijun01@kylinos.cn>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 9:17=E2=80=AFAM Tianyang Zhang <zhangtianyang@loongs=
-on.cn> wrote:
+On Thu, Jun 5, 2025 at 9:31=E2=80=AFAM lijun <lijun01@kylinos.cn> wrote:
 >
-> Hi, Yanteng
 >
-> =E5=9C=A8 2025/5/27 =E4=B8=8B=E5=8D=881:47, Yanteng Si =E5=86=99=E9=81=93=
-:
-> > =E5=9C=A8 5/26/25 2:55 PM, Tianyang Zhang =E5=86=99=E9=81=93:
-> >> From: zhangtianyang <zhangtianyang@loongson.cn>
-> >>
-> >> Fixes: bd51834d1cf6 ("LoongArch: Return NULL from huge_pte_offset()
-> >> for invalid PMD")
-> >> ERROR INFO:
-> >>
-> >> CPU 25 Unable to handle kernel paging request at virtual address 0x0
-> >>           ...
-> >>   Call Trace:
-> >>   [<900000000023c30c>] huge_pte_offset+0x3c/0x58
-> >>   [<900000000057fd4c>] hugetlb_follow_page_mask+0x74/0x438
-> >>   [<900000000051fee8>] __get_user_pages+0xe0/0x4c8
-> >>   [<9000000000522414>] faultin_page_range+0x84/0x380
-> >>   [<9000000000564e8c>] madvise_vma_behavior+0x534/0xa48
-> >>   [<900000000056689c>] do_madvise+0x1bc/0x3e8
-> >>   [<9000000000566df4>] sys_madvise+0x24/0x38
-> >>   [<90000000015b9e88>] do_syscall+0x78/0x98
-> >>   [<9000000000221f18>] handle_syscall+0xb8/0x158
-> >>
-> >
-> >> In some cases, pmd may be NULL and rely on NULL as the return value
-> >> for processing, so it is necessary to determine this situation here
-> >
-> > Your description is a bit vague. Could you please specify
-> > on which machines and in what scenarios this bug can be
-> > reproduced? I believe such information should be included
-> > in the commit message.
-> >
-> > Thanks,
-> > Yanteng
 >
-> Sorry for the late reply.
+> #include<stdio.h>                                              #include
+> <stdio.h>
 >
-> I will provide more detailed information in the commit of the next patch
-I think this bug is not machine-specific, just provide something about
-the test program.
+> int main(int argc, const char *argv[])     int main(int argc, const
+> char *argv[])
+> {
+>                {
+>     int
+> i=3D0;
+>   int i;
+>
+>
+>     i =3D
+> 3;
+>     i =3D 3;
+>     printf("i =3D %d\n",
+> i);                                       printf("i =3D %d\n", i);
+>     return
+> 0;                                                              return
+> 0;
+> }
+>               }
+>  endbr64
+>    endbr64
+> push   %rbp                                                           p
+> ush   %rbp
+> mov    %rsp,%rbp                                              mov    %r
+> sp,%rbp
+> sub    $0x20,%rsp                                                sub
+>  $0x20,%rsp
+> mov    %edi,-0x14(%rbp)                               mov    %edi,-
+> 0x14(%rbp)
+> mov    %rsi,-0x20(%rbp)                                mov    %rsi,-
+> 0x20(%rbp)
+> movl   $0x0,-0x4(%rbp)                                  movl   $0x3,-
+> 0x4(%rbp)
+> movl   $0x3,-0x4(%rbp)                                  mov    -
+> 0x4(%rbp),%eax
+> mov    -0x4(%rbp),%eax                                mov    %eax,%esi
+> mov    %eax,%esi                                              mov    $0
+> x402004,%edi
+> mov    $0x402004,%edi                                  mov    $0x0,%eax
+> mov    $0x0,%eax                                               callq  4
+> 01040 <printf@plt>
+> callq  401040 <printf@plt>
+>
+> if  gcc   -O3   test2.c -o a2.out, It is possible that the
+> initialization is optimized by
+> assigning values immediately after initialization
+> endbr64
+> sub    $0x8,%rsp
+> mov    $0x3,%edx
+> mov    $0x402004,%esi
+> xor    %eax,%eax
+> mov    $0x1,%edi
+> callq  401040 <__printf_chk@plt>
+The format is completely unreadable here:
+https://lore.kernel.org/loongarch/CAAhV-H5dmh8_rNNRAaFeFvjCtt0CCsqTxOujWFak=
+U=3DRYakrpAA@mail.gmail.com/T/#t
+
+And we are talking about the kernel of LoongArch, you provide a user
+program of x86?
 
 Huacai
 
 >
-> Thanks
+> ----------------------------------------------->
+> Why do you think the compiler generates initialization instructions,
+> have you found any difference in the binary after your patch?
 >
-> Tianyang
+> Huacai
+>
+>
+>
 >
