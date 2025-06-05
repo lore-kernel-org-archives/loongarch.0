@@ -1,144 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AA919E971;
-	Thu,  5 Jun 2025 11:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED4A1FFC6D
+	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 12:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749122335; cv=none; b=Th238j3xChZhCk7tPRaI5mJL2jwiuTYQjSvSKtdn3oBLnZITT0Mt4+j1qtaHQi567ZMmm4J+/aYJvaFsxlOMvTJnw40eT280jwUhrwjSTNJWRJ8Ch2DSJjl/luqpeOI8bd+PJoc/k+SGgZ3ich4vDi0YRTZLGhoABb286O3UXUw=
+	t=1749125361; cv=none; b=BMAM/pEQhML/Od/uuaWA0YPSBOMmDVST7nLUKmF7w15Ot1VpfhMZIlZ5r3MwZNFnv0J1D28tOu+8HrWMO7B2luhZI03r7qNb3vp1kqkHKkouABy05cNgL1wpkfJyHAuy0NyOml2GshgTM7vaSnxhVgyM2ydBEno0hBc6LqD9/Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749122335; c=relaxed/simple;
-	bh=sEF2Wh91g+2MAiwlPUrHuJSSHBGA3izZZAqjWgbw5vk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ADJK8t2JG0RmwirOoTpwYi8ukcVEOdqDJzKdhPp9WrHpJD9+FfKha/n1YINPv2hO5+qAwznlBZgadLRpmPfZpRn8iliAV7iTKJKV7e1GgGz5DhRpRfzBYivvBD6nXtogqARRZjTouMGRAoQS2+Sh9yKTFsY29dzzmpPcUypnBOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnaInRd9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749125361; c=relaxed/simple;
+	bh=68ST4wWru6aYFudYB/AR3+klXokvG7WPyNYVacGmxco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hbhSqqohQsUIQu7/iBdxUmwia8ps++LWIgDx+6AwoiCftjQ/c6vLs59znzMMmlcLPKCCt9c+T1sKzB1iBKyYD8gnsSTP6K6t6vTN2Ni7W0mmWHKgd2utftjYWb1Zrw7SoZ66abRC9+OTwAmFjcQjMhShlOW0pAt2WbvrwCxSh7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Afu7DXBU; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnaInRd9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23C7DC4CEEF;
-	Thu,  5 Jun 2025 11:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749122335;
-	bh=sEF2Wh91g+2MAiwlPUrHuJSSHBGA3izZZAqjWgbw5vk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nnaInRd9srmOfTHdxWD5f9eq81ZcmX83BJ7FI82YSPRwojBRZ4PBYy4vBKnkIrB3a
-	 WT6cQvaa8rzhz8cK4Zg64j/U7S0O0804nH4J2pyDMGfwvGO1CRw1TzlfzQYP5oixcD
-	 yduoW9hTv0PqncUMAghXjTwYKekK7+HST8UhGSVN6vcONWnuYSD86dtp5ju/gOH0el
-	 rM290P3ry7FMXYwmVYq8I7N50RY3ZT2beUV04fDLYwUD8rnzC7kS3+sgVw7s20u6P/
-	 Rv04LPevSRGSEhBLvRytmf47+rrNu6iJpJIHWmaPfHN3wE2+0Ubr0pThPPZ+EO0VXx
-	 G+TqdW6MkPPkA==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-604b9c53f6fso1673521a12.2;
-        Thu, 05 Jun 2025 04:18:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWigqsXaaElZ5U3YhqTrs4XZKHbdQzr6oAkJdIz1PP7kG/c5sCrEoO6hqlQ7n2At6XP8xstYvxH+wt7@lists.linux.dev, AJvYcCXIRD+BMWlXnwabXcji6kIKGwb6LTOeIGOv7mhVNwwmwlBijzg8zRzTudXA4zgGNFzqfBsu@lists.linux.dev
-X-Gm-Message-State: AOJu0YxtSkqf5whAyZp5NtF+kC0LEgPFWdL+0UeWU1PwEADQGj3B/5kN
-	+8KvFyJLzDu9/5tNayDqTQHrBbndSSN+4mme8+ix5v1zsqdRSux9X2lxIi8fdvpQr5zevXP7tTz
-	OxDIFOg556i9Q3P64OER+qognrWCVWtM=
-X-Google-Smtp-Source: AGHT+IGC5Decy1JDZOZPWzuYA+Z4FxX8IFqU5x0RGGVN+b3H9/e4EjYtTrXycJOoTxMxkeqG3JLtTqu/qlQohmyQy/Q=
-X-Received: by 2002:a17:907:3da3:b0:ad8:a41a:3cdc with SMTP id
- a640c23a62f3a-addf8c98fbbmr637680066b.2.1749122333746; Thu, 05 Jun 2025
- 04:18:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Afu7DXBU"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6face367320so8526146d6.3
+        for <loongarch@lists.linux.dev>; Thu, 05 Jun 2025 05:09:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1749125358; x=1749730158; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UNA1AqJPiuiUBzCeRC8bK1nu38f0qCHlYuwt9uDWl+g=;
+        b=Afu7DXBUbk+KXudiK9/tYWjWcqXhRZCHE5qtwkjzz1XvqZxbl+tq1SAMyVFCbgkkgK
+         k/3jpMpqLsQMPFGyyABvqBt+RmwlCe5Y6+YYOgXOxmjoM5/wtiFuacKIuEPJoIq00fhU
+         ziEEzNTeRIqth4LVNSYsOYF/9LN/9XJ7fHQOSYZTjpdS5VDZlOjLhhAbS1hgs18RW3sC
+         XvMukZSNn8m/LXX3T7WGAo3QiqFMrz2LJZO6oxvkoTQwiCKxKsxUq2uIP7cs5hfrum/G
+         qH8NIF86ZUGtRu0r2irOTbpFoCwh2/j2+M1Wo+ObX9422caFkb97MlPOzeYF/G7iu9Kp
+         Z2zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749125358; x=1749730158;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UNA1AqJPiuiUBzCeRC8bK1nu38f0qCHlYuwt9uDWl+g=;
+        b=ZzQ2FPq9IdHZoeJtiVwE+UAyRy88Em5HwVenV4dew8yZBK4nupwik3inQ8Xyyfk6ig
+         mFBIySyMkc7jcN2ESnZJEjm71cs+MzjQen0sjPver/bikC6cQPMiW0zQNdl9TQMgpTY0
+         XMP6Y+asOwTtIfKPvWvd7TqlxnAvVMdQ506tYcgOyF/TaLYmo2NuBDXXjcZtYxJ1JBvg
+         CrVXXb/2VdtPUkm+eanY4wQ/RsKk0UnOEYCuxbLxE2wF+QTgupipJHm14sYSLyI6NuNW
+         plyh/fz09F046rJL8z2mYK8Onj5V1kyUDu9z2i+ehtXndhjvGLcOYgbTUk25kT3PAX/M
+         iNpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKIYVkOOo/Fy/dGOHrM9chxlyiju64PHEFHwBwZx5vlRb5q6dPokEdudpEbXnpV3jdxiVezAAsa60=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxFUovxOQYh9u7sG3YBot3hqTpuFy+22CxIgjxV9wDhJ6Q45ji5
+	y5oLOuIzMe+bbkbyhxKC10XkbelbZxLQksTdJmf1zeBXZlZMFUtbL7TEVu6BKn+oSrk=
+X-Gm-Gg: ASbGncuGCaLHQZBF24cECNfCwC4nl6P4HhW+LnQ+ZbkKl9Tk+UBS+F/m3mD50Y5xx2i
+	Aj8NGp1H9NCgYqmvUffJn2pFac7gQWs7RNlPF021pGwuuzo6u3a+8go1j4zyt7wJvZ/4bzOS84g
+	++itYjSkhQ1Gzv4NUOzUNakqdrEKvfRneqOn7erM3DMuXcvoYIpE4wufmjRDsDDjIZhoONEXUbU
+	H/gGxsphteeNYmj/AK96EYMe65A78YmyyTn82k9zj/drctPr9ydwhaPy93jSzQdkBCQXqnE+UDR
+	UQTlmtNQnm7kkceJmDg07BzCWGWORMfG1DJ6C1chZCKFAu49KOrGuHca29Mm1S1WVz0YknuVDYC
+	u1KzQ2oSDz16oaDp6mmBcQF8dQlc=
+X-Google-Smtp-Source: AGHT+IGoKm/5U4/UM2uM64qO2HBitYJapsKbuDFJlmk9byEyE/W8ROsmev/IR9V9jeal6LfHAI1O8g==
+X-Received: by 2002:a05:6214:224d:b0:6fa:c512:c401 with SMTP id 6a1803df08f44-6faf70163f2mr115317766d6.37.1749125350351;
+        Thu, 05 Jun 2025 05:09:10 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d4c7d8sm120604836d6.36.2025.06.05.05.09.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 05:09:09 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uN9PB-00000000EdT-18gz;
+	Thu, 05 Jun 2025 09:09:09 -0300
+Date: Thu, 5 Jun 2025 09:09:09 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
+	gerald.schaefer@linux.ibm.com, willy@infradead.org,
+	david@redhat.com, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+	jhubbard@nvidia.com, hch@lst.de, zhang.lyra@gmail.com,
+	debug@rivosinc.com, bjorn@kernel.org, balbirs@nvidia.com,
+	lorenzo.stoakes@oracle.com, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-cxl@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, John@groves.net
+Subject: Re: [PATCH 07/12] mm: Remove redundant pXd_devmap calls
+Message-ID: <20250605120909.GA44681@ziepe.ca>
+References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <2ee5a64581d2c78445e5c4180d7eceed085825ca.1748500293.git-series.apopple@nvidia.com>
+ <6841026c50e57_249110022@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de>
- <CAAhV-H4Ba7DMV6AvGnvNBJ8FL_YcHjeeHYZWw2NG6JHL=X4PkQ@mail.gmail.com>
- <5a5329feaab84acb91bbb4f48ea548b3fb4eab0f.camel@xry111.site> <20250605092735-bd76e803-e896-4d4c-a1f1-c30f8d321a9a@linutronix.de>
-In-Reply-To: <20250605092735-bd76e803-e896-4d4c-a1f1-c30f8d321a9a@linutronix.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 5 Jun 2025 19:18:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H68vDzU7XPefDYG+MRMs560q8o2GhiqYRm1hsA+3DND3A@mail.gmail.com>
-X-Gm-Features: AX0GCFtDn_nikl0og6nMjd-vJWnNxYltI6wUf_W_Ll6MRRjnSmv1DM1kurWk8GI
-Message-ID: <CAAhV-H68vDzU7XPefDYG+MRMs560q8o2GhiqYRm1hsA+3DND3A@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: vDSO: correctly use asm parameters in syscall wrappers
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>, "Theodore Ts'o" <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6841026c50e57_249110022@dwillia2-xfh.jf.intel.com.notmuch>
 
-On Thu, Jun 5, 2025 at 3:37=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> On Wed, Jun 04, 2025 at 10:30:55PM +0800, Xi Ruoyao wrote:
-> > On Wed, 2025-06-04 at 22:05 +0800, Huacai Chen wrote:
-> > > On Tue, Jun 3, 2025 at 7:49=E2=80=AFPM Thomas Wei=C3=9Fschuh
-> > > <thomas.weissschuh@linutronix.de> wrote:
-> > > >
-> > > > The syscall wrappers use the "a0" register for two different regist=
-er
-> > > > variables, both the first argument and the return value. The "ret"
-> > > > variable is used as both input and output while the argument regist=
-er is
-> > > > only used as input. Clang treats the conflicting input parameters a=
-s
-> > > > undefined behaviour and optimizes away the argument assignment.
-> > > >
-> > > > The code seems to work by chance for the most part today but that m=
-ay
-> > > > change in the future. Specifically clock_gettime_fallback() fails w=
-ith
-> > > > clockids from 16 to 23, as implemented by the upcoming auxiliary cl=
-ocks.
-> > > >
-> > > > Switch the "ret" register variable to a pure output, similar to the=
- other
-> > > > architectures' vDSO code. This works in both clang and GCC.
-> > > Hmmm, at first the constraint is "=3Dr", during the progress of
-> > > upstream, Xuerui suggested me to use "+r" instead [1].
-> > > [1]  https://lore.kernel.org/linux-arch/5b14144a-9725-41db-7179-c059c=
-41814cf@xen0n.name/
-> >
-> > Based on the example at
-> > https://gcc.gnu.org/onlinedocs/gcc/Local-Register-Variables.html:
-> >
-> >    To force an operand into a register, create a local variable and spe=
-cify
-> >    the register name after the variable=E2=80=99s declaration. Then use=
- the local
-> >    variable for the asm operand and specify any constraint letter that
-> >    matches the register:
-> >
-> >    register int *p1 asm ("r0") =3D =E2=80=A6;
-> >    register int *p2 asm ("r1") =3D =E2=80=A6;
-> >    register int *result asm ("r0");
-> >    asm ("sysint" : "=3Dr" (result) : "0" (p1), "r" (p2));
-> >
-> > I think this should actually be written
-> >
-> >       asm volatile(
-> >       "      syscall 0\n"
-> >       : "=3Dr" (ret)
-> >       : "r" (nr), "0" (buffer), "r" (len), "r" (flags)
-> >       : "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7",
-> > "$t8",
-> >         "memory");
-> >
-> > i.e. "=3D" should be used for the output operand 0, and "0" should be u=
-sed
-> > for the input operand 2 (buffer) to emphasis the same register as
-> > operand 0 is used.
->
-> I would have expected that matching constraints ("0") would only really m=
-ake
-> sense if the compiler selects the specific register to use. When the regi=
-ster is
-> already selected manually it seems redundant.
-> But my inline ASM knowledge is limited and this is a real example from th=
-e GCC
-> docs, so it is probably more correct.
-> On the other hand all the other vDSO implementations use "r" over "0" for=
- the
-> input operand 2 and I'd like to keep them consistent.
-OK, if there are no objections, I will take this patch.
+On Wed, Jun 04, 2025 at 07:35:24PM -0700, Dan Williams wrote:
 
-Huacai
+> If all dax pages are special, then vm_normal_page() should never find
+> them and gup should fail.
+> 
+> ...oh, but vm_normal_page_p[mu]d() is not used in the gup path, and
+> 'special' is not set in the pte path.
 
->
->
-> Thomas
+That seems really suboptimal?? Why would pmd and pte be different?
+
+> I think for any p[mu]d where p[mu]d_page() is ok to use should never set
+> 'special', right?
+
+There should be dedicated functions for installing pages and PFNs,
+only the PFN one would set the special bit.
+
+And certainly your tests *should* be failing as special entries should
+never ever be converted to struct page.
+
+Jason
