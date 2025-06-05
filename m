@@ -1,134 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E821428EB
-	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 01:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD3C1AF0C1
+	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 01:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749088016; cv=none; b=DDXrrQ6JK3e4/izubO3bL121bQKjEtobjxFkUMF3ovXPFhyZOnfscSf5CVXBpEVEV8fMTDsOXi3DioDtTaRs3IwITCrK5bPV3atv/ccY+QpGFv0MJSWaq27VM5sHyyBNIx+hRvBYHa+wXeoF/MDYKcVeHmkF4bU4V1RutvR6S0k=
+	t=1749088606; cv=none; b=pExVrXvTZJEsLXUb7GQxJwy0d6lETT5T625UYg+cYbT49nNrJGmM+fzzi84Yzf5qQg4nN5qtgAb8xzgLB6mNR3KcOAn9hXDnprMN5rUhUFhyhnHqUChj814qC/07wDlr2GFjj0zkwvS4vDDwHdIV4dG9owGSPQVwDfDiaKcii3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749088016; c=relaxed/simple;
-	bh=94nMS3JarJ3RynIvCSJN4m8zMw7ZNwIHwU+zmrukaDY=;
+	s=arc-20240116; t=1749088606; c=relaxed/simple;
+	bh=hxHhCDDPHxwIzDJ0REZ0X+PrkWb9cpY+n8pdJBmfk4E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eP4VDPbEjKupgMx/RLxum6UqCy5cFQCKQrukHpA7E92ICQyTuv4n2Zbvm7rA/jwEEf5mwpOf+1UA8w8sO5+6QTMbKZKOjGWo7KsR3QbogufSE6hIE+P0qdkc+Lqx7x+RDVO2kn4nD4nrtGNhDCDnHGc7hdIr7F7b2sqGM5ERsPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ma3FV6ha; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=kpNjxkDCSmrtUxL6JAPXWd9RUQokecX98ZkVTQTSQ9O7Lq4ozTnOCP0X0Ng1MAaWrIdkqIkaeOit02H4B52KhnzAeRx5Pft/Naaf//WgoCP+TB6KFWlbxty0prpZpnZtpzdWZLgzqXvpEnjN9sh7Akl8lGb3eX2xytrmJgwqZWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jWKrLpj1; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ma3FV6ha"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66FF3C4CEEF
-	for <loongarch@lists.linux.dev>; Thu,  5 Jun 2025 01:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749088015;
-	bh=94nMS3JarJ3RynIvCSJN4m8zMw7ZNwIHwU+zmrukaDY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ma3FV6ha7mVUtwJQRoKzY2uA+tHW5AXUx4qx1ow/fuZxwTmIwINnQPRF1NWVFRkOR
-	 u8FcIJt182IUnTMxu2w8CS0hHvky8kUcagXkXcYEm3X9LaDGAeGJCWeom+Fziwliyn
-	 YIFf2iX1tGwsPaWmj3nXMacahIsjs+0x8D8ZPA+9/SXi1jje9MVJqOIWxBb+DRberM
-	 QzHKhmjYTQyRLVwj5bbCdfmX9e0kbwlcHyPcBtatWtTANmjL6egXpJ4xBgJPjNUWw8
-	 wYNBrh5yEPJpwikvDDyOgcwqC6qVttjYHRwNs6nBUPBi7gbHZ75FWDJniOF8y9XSK1
-	 jUGNblzZF8lAw==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-606741e8e7cso680494a12.1
-        for <loongarch@lists.linux.dev>; Wed, 04 Jun 2025 18:46:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXKJvGXpUjnFcDAGEQZUILcVRgH3185V2A8z7E1NYdh/iwDXl7YsOGJA99G/cPVIRN3NHjmVHXyUDw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx4HdgUen0THgNNpihK6ZcUU2/dNzluSFGX+aeZ/TPIT/+9Qrsw
-	fPM+Otl4xlNv/eQPG3AVZDMO7v4rwzPPBQI9P51df4WDLXmgk/SpxetUB+CHZA6uof7TzDXqN0n
-	EyHLO6sur5yVLZSZL+Hwu6texoxdSUgg=
-X-Google-Smtp-Source: AGHT+IGNOiblaZb0M/ess3SjuV53T29mUvH+/DnewE5AeFfZuPCi1Dezw79YjuWl4l7kX86qi9VZafB3M4ss+Xa7Gxw=
-X-Received: by 2002:a05:6402:d0d:b0:602:1216:fdde with SMTP id
- 4fb4d7f45d1cf-606ea16bc44mr4659033a12.14.1749088014010; Wed, 04 Jun 2025
- 18:46:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWKrLpj1"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-312efc384fcso61123a91.3
+        for <loongarch@lists.linux.dev>; Wed, 04 Jun 2025 18:56:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749088604; x=1749693404; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hxHhCDDPHxwIzDJ0REZ0X+PrkWb9cpY+n8pdJBmfk4E=;
+        b=jWKrLpj140UC1Px3q0oRQUXwZeQrhvkpJaUIT8vMzSmJ37Wa1YCw1mouWehafTSRn2
+         FgqdONDn5/G/VAZTS+U1MIYzwT3XLL4z55+cZO1AmrW3gRXjo8ckHsdSeL9wG8iPoHkT
+         c6OAHN8sGxYINWH9OimtwIqqm3uYpSmq4ddwVKCnR232RmLmxUc6oJs89bTorfOC/TLK
+         C6UlK4zPGJb1tVS1lJBs+AkfOCFvP9jt7q8tDO1Kfi3fE+Ot+Ta0XY6MIk35IYpIk2i0
+         mlUadIMYb4qZi0Xw/JaxO89yPLv+Gw7t/78KSPfRKUWg+B2Bo+ovrBTsP+nubchtfRPt
+         wZiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749088604; x=1749693404;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hxHhCDDPHxwIzDJ0REZ0X+PrkWb9cpY+n8pdJBmfk4E=;
+        b=sMmDnflTiZOQkVq+PE9RapTA1KDLPkWG9HZD99KAI96HaK65LStj5g32MglZ3U9FT3
+         IqnS5qyLQfyHo2GOHDM54vsPy8AKlLUitFSVhyR5bH6T5IMirpCKMjBCbqtT/JJWEdPg
+         9QYdbC/kLVQcL7vK+osxF2y1+NZpaQUCC9EUIFiULvqGxyTXB6JD6fESSBgRwCRz4/5b
+         iiH8pjRvRfSsNMsoe7zwWIl69np1/5WHCuOReGk5/FJ668OZFyKTIPprtK9u7F2vNCjT
+         EsS/1MY8UQ2GnUTzaVSdb+cYDkmO5ux+KSPHzC2vjyrru0xSDc3zR0eIBfOR5fW7YHVE
+         0xOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEtbJcttQrIgiZS6egEgjx0+trCxxT+X6QgNYxqmHaM285LEZbbB1zBlrV+t6J1sINIpGe2S15tls=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywwv7a6ANpvm6avNg0EWQT8O8PGsM0tLX+HglmsQ9wUnEcLef1z
+	+phOZmhAXtqiX5caTaDqtBd91Loim1E/lVNzdJRNm65djLuOAfFYYZlPu27LSiq8VwK9+qwqqlJ
+	9OQTt17TPxiRrMFiztnEyKDEIu4HOSdM=
+X-Gm-Gg: ASbGncvMbxrqLXVdzpvZqx7Aep3GrWHVRfPGL4jUTZV6lqhSrfQr5/FTH1utmM4QvWz
+	B7NFNh0DpREdjV6flJjtWAKGp2UjQVjRUqPzGCalODqIdzqeTyqBA3ZDFAvp2h6wcVzufb44Fe8
+	ewgkRbPbM5KErGDpWNvKZS75Yc+eMlKFqO
+X-Google-Smtp-Source: AGHT+IFHh37ON8OdKdzVBBFcxedCAlOOwXK4V/iC1EPOOjVJZxdYBvuNOsHpf8VVt21G19e5ASyjwRRmZcF7LJTAmMs=
+X-Received: by 2002:a17:90b:48c6:b0:30a:80bc:ad4 with SMTP id
+ 98e67ed59e1d1-3130cabf1f7mr2575310a91.0.1749088604483; Wed, 04 Jun 2025
+ 18:56:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250604065647.113148-1-lijun01@kylinos.cn> <CAAhV-H5dmh8_rNNRAaFeFvjCtt0CCsqTxOujWFakU=RYakrpAA@mail.gmail.com>
- <d6ef1b813bb63504adf34d28d61c6848b9a76221.camel@kylinos.cn>
-In-Reply-To: <d6ef1b813bb63504adf34d28d61c6848b9a76221.camel@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 5 Jun 2025 09:46:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6KVY=g4Q+_rvB_dyVhfxo9v8sfb3cCJF7qsj0sLNe7Hg@mail.gmail.com>
-X-Gm-Features: AX0GCFs726xwoOSeN77IVhyGIeBeNUjl_1MuidielWd8EG60-2Xts_kYpKzpDtM
-Message-ID: <CAAhV-H6KVY=g4Q+_rvB_dyVhfxo9v8sfb3cCJF7qsj0sLNe7Hg@mail.gmail.com>
-Subject: Re: [PATCH v2] loongarch: kgdb: remove unnecessary init variable
-To: lijun <lijun01@kylinos.cn>
-Cc: si.yanteng@linux.dev, kernel@xen0n.name, loongarch@lists.linux.dev
+References: <20250502094537.231725-1-fujita.tomonori@gmail.com>
+In-Reply-To: <20250502094537.231725-1-fujita.tomonori@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 5 Jun 2025 03:56:31 +0200
+X-Gm-Features: AX0GCFugcCm505NwwgN-68q9ZVnBp5bIOw8-paPBHPB9oCMtC5Zudgwp1svRBNU
+Message-ID: <CANiq72=GXWj-aj1kPwnH=9mwR=GgrfJ4xsQUK36SFBRedk3oYg@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] rust: Add bug/warn abstractions
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	x86@kernel.org, linux-riscv@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
+	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn, 
+	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com, 
+	tmgross@umich.edu, dakr@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 9:41=E2=80=AFAM lijun <lijun01@kylinos.cn> wrote:
+On Fri, May 2, 2025 at 11:46=E2=80=AFAM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
 >
->
-> //test2.c
-> #include<stdio.h>
->
-> int main(int argc, const char *argv[])
-> {
->     int
-> i=3D0;
->     i =3D 3;
->     printf("i =3D %d\n", i);
->     return 0;
-> }
-> push   %rbp
-> mov    %rsp,%rbp
-> sub    $0x20,%rsp
-> mov    %edi,-0x14(%rbp)
-> mov    %rsi,-0x20(%rbp)
-> movl   $0x0,-0x4(%rbp)
-> movl   $0x3,-0x4(%rbp)
-> mov    -0x4(%rbp),%eax
-> mov    %eax,%esi
-> mov    $0x402004,%edi
-> mov    $0x0,%eax
-> callq  401040 <printf@plt>
-> //test.c
-> #include<stdio.h>
->
-> int main(int argc, const char *argv[])
-> {
->     int i;
->     i =3D 3;
->     printf("i =3D %d\n", i);
->     return 0;
-> }
-> endbr64
-> push   %rbp
-> mov    %rsp,%rbp
-> sub    $0x20,%rsp
-> mov    %edi,-0x14(%rbp)
-> mov    %rsi,-0x20(%rbp)
-> movl   $0x3,-0x4(%rbp)
-> mov    -0x4(%rbp),%eax
-> mov    %eax,%esi
-> mov    $0x402004,%edi
-> mov    $0x0,%eax
-> callq  401040 <printf@plt>
->
-> It is possible that the initialization is optimized by assigning values
-> immediately after initialization
-> if gcc -O3 test2.c -o ao3.out
-> endbr64
-> sub    $0x8,%rsp
-> mov    $0x3,%edx
-> mov    $0x402004,%esi
-> xor    %eax,%eax
-> mov    $0x1,%edi
-> callq  401040 <__printf_chk@plt>
-Still a user program of x86, not the kernel of LoongArch.
+> This patchset adds warn_on macro with the bug/warn abstraction that
+> utilizes the kernel's BUG/WARN feature via assembly.
 
-And top posting is strictly forbidden in the kernel community which
-Yanteng has already pointed out. Don't do it again and again, and
-don't always only answer part of reviewers comments.
+This passed my usual tests -- I will take a better look and pick it
+early next cycle.
 
-Huacai
-
->
->
->
-> ----------------------------------->
-> Why do you think the compiler generates initialization instructions,
-> have you found any difference in the binary after your patch?
->
-> Huacai
->
+Cheers,
+Miguel
