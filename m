@@ -1,72 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFF8219A95;
-	Sat,  7 Jun 2025 23:47:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2E7E573
+	for <loongarch@lists.linux.dev>; Sun,  8 Jun 2025 07:35:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749340029; cv=none; b=K5kGQFJ9238INzLdGDjLe9LuPx32GggC7b1+1/lfDapEikW86Qya6cQHmCtfWzkQoyAIsVS7x1B5dKhne4Uc616fBjf+ECk1FraGHBNGyay5oFB5ZQrIcykO3s4sOAOMtrkwUNMF+ig2hRPKlZRkuOI507Tc1G92AcqubIl/ms8=
+	t=1749368131; cv=none; b=V3wW0bZREAluqTVVT5KSeZGQ73KvpXQ+OlMIbN/vWm/6jfcfijftctUcNsO+Mhc6lH8AAvvRc83XAehGWvcgpeERQbo6nBRN8C+7GoG09xoXelikkobH+ufWiJxFS5VYcpdKHNIV18B58nQKpkzEDqGw2GgE2rFP+yt2ZmR/So8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749340029; c=relaxed/simple;
-	bh=LLYBi6lLM9yrrhCbb5rR61lngl1sYzAS5pqk0JZQ3I0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sUpe3PYSdQhbTmbYCTae+0v7gRWNjAYmt46+BbQwm3yYJkRYGF4gqBcnQU4s4hAmaSMazds1vLrNItY4G/73iL1m1nBuRND8EsH5Gnag+mwK+VVgu99pkWfp3v6rFpExXZLRzXYvo0+nx+RmdxGixK5ZYbEXp7IOMi88kzF5yGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=jsPgU/cc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749368131; c=relaxed/simple;
+	bh=kFOysKXG8GqTo4p3fFuz9+4KW4EIctx32RHzxS6qN+U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Uqu/c1bDTYoB92laVcvT6aMX9u83hJ4uWQhPyfRLWrIQoO1l4oSCWeQl7a78umvx8GLHhtTh231gWQwkOyy5irKO2FKhXMeZprCKjlQPQtc3D6Hr+yZcNglMDYAMJD9phaGG5JHab48ZBlt8Xb1Un481VXxndwoNDbdwVTCPrlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pYVdAu0J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jsPgU/cc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FE6DC4CEE4;
-	Sat,  7 Jun 2025 23:47:07 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jsPgU/cc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1749340025;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9BLd3zVhm1uyr2zWfOpGUqAHdfaRE3TGpoHRN6aaMSk=;
-	b=jsPgU/ccygnXS60vh3VCJ8IeDnGtsomv+dciNUeunJ0SO8LqmCcTqPcJBkB2QFrLru1ll1
-	E9OF1lkNEqMRShrw2za9BAoJsJQKmF9rvzmtd3v/rLI1EduGNSPRtry+Kyl+tncxIkS+aK
-	UrU1VhYkP4pcQtnNoKmPvrZIA/DIb6Q=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 669734c3 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Sat, 7 Jun 2025 23:47:04 +0000 (UTC)
-Date: Sat, 7 Jun 2025 17:47:02 -0600
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org,
-	linux-arch@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 00/12] lib/crc: improve how arch-optimized code is
- integrated
-Message-ID: <aETPdvg8qXv18MDu@zx2c4.com>
-References: <20250607200454.73587-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pYVdAu0J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95A2EC4CEF2
+	for <loongarch@lists.linux.dev>; Sun,  8 Jun 2025 07:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749368130;
+	bh=kFOysKXG8GqTo4p3fFuz9+4KW4EIctx32RHzxS6qN+U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pYVdAu0JAuSLlkJBhgrHfhWdCkEE2K8yKsOkDOUTTil+d96yCCvSa+IX7+EqOOY+C
+	 zQRDypLyMfBgrToqv3etEFhsriXjkSbqSllccnRBkiBeasWVMdO5t7g9DHHafQdmSA
+	 BxxiEfSQ3sYZgBYhuFDXMCVYe+bpP4i1S4YYxIQFP84AxnfovXFOs4dE+OPi4M58tt
+	 cKaAnpqiCC6oPmArMgRKsRkiCFwL2gDkhoFuFjSQVpZhwIbOV+HZcfFJ76I5SQDLOd
+	 tweXFFnoNDTxgVhIUY7CHeocA+Zg3DWGjVtTaO3foYePZLoHCBIR/M0cqUyyed1dvG
+	 gPOFg9/CcJ29g==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-607c5715ef2so1256186a12.0
+        for <loongarch@lists.linux.dev>; Sun, 08 Jun 2025 00:35:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVksTi9TbBiQwNeIbdaC/xscjZAK9KaiZKb3t8TEy4QZ52jQnRjqJnDzmOgfQQrkB+5L2EvVebfxXw=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzkuj76+F8bIZcRVaQFnNIRDyLtsLvUtHd3/UX8e3dmRzDE4sHj
+	1pwN29mKL3x/DGrFnY+MsdhE6m87c00UscdjFjryZfaJcruLB/p66R99nkeu52XLnMSB9JuHzIe
+	AYgLkHngMbj5mbJNPYUha3lFgHX9VhDg=
+X-Google-Smtp-Source: AGHT+IGXHk1U6rfYExFO/mc0/QqUnhoSlT+XQ9nCDnVpXOz/KSZJJ+E759KnH9foQHa4JG334VcHcgsqPOhLN7knhkg=
+X-Received: by 2002:a05:6402:174d:b0:607:783e:5970 with SMTP id
+ 4fb4d7f45d1cf-607783e61fdmr5725488a12.8.1749368129125; Sun, 08 Jun 2025
+ 00:35:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250607200454.73587-1-ebiggers@kernel.org>
+References: <cover.1747276047.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1747276047.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 8 Jun 2025 15:35:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7kbuJfoUbD3XJVwpBZjcYtHZ6kWhFwu4HGjno6gkmSYA@mail.gmail.com>
+X-Gm-Features: AX0GCFtdqkmwOqP8bVELz2Njdxh0gmwMM1ltahpWIc_beMymoC73koIQh5ivYvo
+Message-ID: <CAAhV-H7kbuJfoUbD3XJVwpBZjcYtHZ6kWhFwu4HGjno6gkmSYA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] LoongArch: Add Loongson-2K0500 BMC support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	openipmi-developer@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 07, 2025 at 01:04:42PM -0700, Eric Biggers wrote:
-> Having arch-specific code outside arch/ was somewhat controversial when
-> Zinc proposed it back in 2018.  But I don't think the concerns are
-> warranted.  It's better from a technical perspective, as it enables the
-> improvements mentioned above.  This model is already successfully used
-> in other places in the kernel such as lib/raid6/.  The community of each
-> architecture still remains free to work on the code, even if it's not in
-> arch/.  At the time there was also a desire to put the library code in
-> the same files as the old-school crypto API, but that was a mistake; now
-> that the library is separate, that's no longer a constraint either.
+Hi, Binbin,
 
-I can't express how happy I am to see this revived. It's clearly the
-right way forward and makes it a lot simpler for us to dispatch to
-various arch implementations and also is organizationally simpler.
+I have some small comments, you can add "Reviewed-by: Huacai Chen
+<chenhuacai@loongson.cn>" after you make changes.
 
-Jason
+Huacai
+
+On Thu, May 15, 2025 at 10:32=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
+n> wrote:
+>
+> Hi all:
+>
+> This patch set introduces the Loongson-2K0500 BMC.
+>
+> It is a PCIe device present on servers similar to the Loongson-3C6000.
+> And it is a multifunctional device (MFD), such as display as a sub-functi=
+on
+> of it.
+>
+> For IPMI, according to the existing design, we use software simulation to
+> implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+>
+> Also since both host side and BMC side read and write kcs status, we use
+> fifo pointer to ensure data consistency.
+>
+> For the display, based on simpledrm, the resolution is read from a fixed
+> position in the BMC since the hardware does not support auto-detection
+> of the resolution. Of course, we will try to support multiple
+> resolutions later, through a vbios-like approach.
+>
+> Especially, for the BMC reset function, since the display will be
+> disconnected when BMC reset, we made a special treatment of re-push.
+>
+> Based on this, I will present it in four patches:
+> patch-1: BMC device PCI resource allocation.
+> patch-2: IPMI implementation
+> patch-3: display, based on simpledrm
+> patch-4: BMC reboot support
+>
+> Thanks.
+>
+> -------
+> V2:
+> - Drop ls2kdrm, use simpledrm instead.
+> Patch (1/3):
+>  - Use DEFINE_RES_MEM_NAMED/MFD_CELL_RES simplified code;
+>  - Add resolution fetching due to replacing the original display
+>    solution with simpledrm;
+>  - Add aperture_remove_conflicting_devices() to avoid efifb
+>    conflict with simpledrm.
+> Patch (3/3):
+>  - This part of the function, moved from the original ls2kdrm to mfd;
+>  - Use set_console to implement the Re-push display function.
+>
+> Link to V1:
+> https://lore.kernel.org/all/cover.1735550269.git.zhoubinbin@loongson.cn/
+>
+> Binbin Zhou (3):
+>   mfd: ls2kbmc: Introduce Loongson-2K BMC MFD Core driver
+>   ipmi: Add Loongson-2K BMC support
+>   mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+>
+>  drivers/char/ipmi/Makefile       |   1 +
+>  drivers/char/ipmi/ipmi_si.h      |   7 +
+>  drivers/char/ipmi/ipmi_si_intf.c |   3 +
+>  drivers/char/ipmi/ipmi_si_ls2k.c | 250 +++++++++++++++++++
+>  drivers/mfd/Kconfig              |  13 +
+>  drivers/mfd/Makefile             |   2 +
+>  drivers/mfd/ls2kbmc-mfd.c        | 398 +++++++++++++++++++++++++++++++
+>  7 files changed, 674 insertions(+)
+>  create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+>  create mode 100644 drivers/mfd/ls2kbmc-mfd.c
+>
+>
+> base-commit: 9f2b0c15b752bb940e2eb6737bee30fff96d96b6
+> --
+> 2.47.1
+>
+>
