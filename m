@@ -1,74 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADB22A1BA;
-	Sun,  8 Jun 2025 23:48:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5041AEAD0
+	for <loongarch@lists.linux.dev>; Mon,  9 Jun 2025 00:40:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749426520; cv=none; b=FE0qDwTrm3z/8JeenzmVFJVbV+MjMoo2J9XZhweMosvp43rTX+2yi8L6Aq0IlhkKcDLc+c2VTNpAEt8l2oJphtYTfk0Wu1fgtwwwySOgN9sG6+Vdkxn/NXpM7n6+XeXJylpkIYyIoLGlK/GRid1xJHryWjLLxNLcaBtz2sZMt6A=
+	t=1749429610; cv=none; b=G8FNACUnARCGgKRY7l70Z6/kth4+T3CWF7kLtCpAXiD1/ud5eEpPyRCPPRAe1EhdcPSqjhwCIHLgKn294ZqqrFAmLHqGBrc1O8KFPyLIMAqnpsXN+mIwBx2WdTrpRp3butj2ySpfdDckp/qVBlmfnVBjBSNnj1vmq5/iOIe0wWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749426520; c=relaxed/simple;
-	bh=PNJP4F4SM5CKWVi44F6XN3CvXe0mnkBMQtyo2ioWp6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ew85N6Pw8RXgCw+SlArvTUzyj3SXJAqqPDOtTNFN53EPyjr/ZC/G49MlZc74aZdw8vocPUZswrmUS5q2XiJ8qJIRruKbAMtPgU16mu6t9WovVDUQrtl908F1y0nOrTrQ7AKUxO3c1+CgtpvtHkH/ZkwUXDG82GzTJdclQwIk+Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOEtAeuZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749429610; c=relaxed/simple;
+	bh=AYQm7+/hFbcmGvpVK2s4F75RUgJ71pWFAycmHWnVxjA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZSzgua4CSfPfEuurv936hU34rYdtQr270KNR0Z8K+HaXjJwI96poTxjI094Tk1mS7HUUmSh5GbHI3SpK6zk5oSxTO2or/OaSizzKp/hs05OK4Lb2FedC1KtzFlbvUMicKEpRzJh2t0inTlTgqTcXP+M+nDrlT/eOo+6ZSJZ7wUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZ7gTOPF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOEtAeuZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECB5C4CEEE;
-	Sun,  8 Jun 2025 23:48:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZ7gTOPF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E18B9C4CEF3
+	for <loongarch@lists.linux.dev>; Mon,  9 Jun 2025 00:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749426519;
-	bh=PNJP4F4SM5CKWVi44F6XN3CvXe0mnkBMQtyo2ioWp6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JOEtAeuZjpWvk9z46QbzwFTvSH+ljw/hQKIzEhZJx7YF2EwgrcI3+lI1VVKscms0d
-	 m3qcoPnMMDVh4lKObwmfsWuGFAfWfD9VrvL51JeF8gEdf9j5e89zlEOEgaCwxiok5N
-	 /aXy/hTwK0fEa7Z/G4j2/UPMcbFCWgXgxCUhbLoCrXwDNwOBWfrQbnnk/HZXwh/U2/
-	 WnpIAIMFGu/oqqi+ROzvz89sXkm5O6vGwJ/PQ3JdxSPps11zhBrcyuDg/46eion+ad
-	 2/v4rAxctCfEtqWu0G117hIgv+MXBMm76WuvxTusmww2Scut4P917GLHnfL8cwD0i5
-	 36P1VSkTzVNzw==
-Date: Sun, 8 Jun 2025 16:48:17 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org,
-	linux-arch@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 00/12] lib/crc: improve how arch-optimized code is
- integrated
-Message-ID: <20250608234817.GG1259@sol>
-References: <20250607200454.73587-1-ebiggers@kernel.org>
- <aETPdvg8qXv18MDu@zx2c4.com>
+	s=k20201202; t=1749429609;
+	bh=AYQm7+/hFbcmGvpVK2s4F75RUgJ71pWFAycmHWnVxjA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OZ7gTOPFzFlEfwn3kFiXqhCwj9T2/oKA7LAKrIVi0ZxwToC0g3b0ZziWsiKddhfu7
+	 wX90ClfGZCGr+ya8BQwCsYuuYNkb8OfD1xUV8TBNDPGA+jvO7QWJ9V/zGletljKzaE
+	 ohWhm4fLwXrY35y23zyJPm+Pj1bC0/rn6B0+lpEiglS0NWTzNYxmYaTqEqr8tBVH8b
+	 a0dC9J02KRhXbuOINo8j4a2pBcxEHQr5m7nw4jlo11GR1aG9Tg71l/o1RnYwJ0NP7+
+	 U29/4EIytua5FBb/lJ1sj6g3RZg5ryVMtFd1/Gs3GxQ80YgOFC1ybu0yHENtmc8Yy1
+	 XPAoB0Bj+vtbw==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55324587a53so4562162e87.0
+        for <loongarch@lists.linux.dev>; Sun, 08 Jun 2025 17:40:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV7Q2Sar5I+U6hPu9iKQcRhQaGeyc6UGl89aWeGwR37LpT8ZkAkps4j9RUYVGuKUN1GFYpgbwvrkhM=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywh30Ttd9Pt528Zuu+aTUYF5grkYwOwbvw0/PGwJ7hJE4jrI4e9
+	e6Uq/6i1DSZZs33ATYlfKp66dE0RMDdZ6argWS1SAAvNlDstlzX0pjbOqwY+S1Fv327bFV5Yj0I
+	LtBSM2obdwQV3RPVbVjaq4EuCdfaXYyY=
+X-Google-Smtp-Source: AGHT+IGZroWKXmRyERdhKl/Z5gyx1d3GToM80Z6QzsO3n4nyocOiHOS/jpDdwx5gKtF7wLnd3Pr65HTbFL8f1LMpy48=
+X-Received: by 2002:a05:6512:1152:b0:553:2154:7bcc with SMTP id
+ 2adb3069b0e04-5535d92b41fmr4491488e87.20.1749429608640; Sun, 08 Jun 2025
+ 17:40:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aETPdvg8qXv18MDu@zx2c4.com>
+References: <20250608141509.157300-1-chenhuacai@loongson.cn>
+In-Reply-To: <20250608141509.157300-1-chenhuacai@loongson.cn>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 9 Jun 2025 09:39:31 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARQFBuUY2YzUnPuyEdTAVy=B91L5NyYGzhY-kAr3SYsRQ@mail.gmail.com>
+X-Gm-Features: AX0GCFuM40A9k8e2D3a-34RtMf0zB68mZ3ppfrFyJU-EHoMdxz9h0AFbVMKL7IM
+Message-ID: <CAK7LNARQFBuUY2YzUnPuyEdTAVy=B91L5NyYGzhY-kAr3SYsRQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fix build warnings about export.h
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: linux-kbuild@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	loongarch@lists.linux.dev, Guo Ren <guoren@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 07, 2025 at 05:47:02PM -0600, Jason A. Donenfeld wrote:
-> On Sat, Jun 07, 2025 at 01:04:42PM -0700, Eric Biggers wrote:
-> > Having arch-specific code outside arch/ was somewhat controversial when
-> > Zinc proposed it back in 2018.  But I don't think the concerns are
-> > warranted.  It's better from a technical perspective, as it enables the
-> > improvements mentioned above.  This model is already successfully used
-> > in other places in the kernel such as lib/raid6/.  The community of each
-> > architecture still remains free to work on the code, even if it's not in
-> > arch/.  At the time there was also a desire to put the library code in
-> > the same files as the old-school crypto API, but that was a mistake; now
-> > that the library is separate, that's no longer a constraint either.
-> 
-> I can't express how happy I am to see this revived. It's clearly the
-> right way forward and makes it a lot simpler for us to dispatch to
-> various arch implementations and also is organizationally simpler.
-> 
-> Jason
+On Sun, Jun 8, 2025 at 11:15=E2=80=AFPM Huacai Chen <chenhuacai@loongson.cn=
+> wrote:
+>
+> After commit a934a57a42f64a4 ("scripts/misc-check: check missing #include
+> <linux/export.h> when W=3D1") and 7d95680d64ac8e836c ("scripts/misc-check=
+:
+> check unnecessary #include <linux/export.h> when W=3D1"), we get some bui=
+ld
+> warnings with W=3D1:
+>
+> arch/loongarch/kernel/acpi.c: warning: EXPORT_SYMBOL() is used, but #incl=
+ude <linux/export.h> is missing
+> arch/loongarch/kernel/alternative.c: warning: EXPORT_SYMBOL() is used, bu=
+t #include <linux/export.h> is missing
+> arch/loongarch/kernel/kfpu.c: warning: EXPORT_SYMBOL() is used, but #incl=
+ude <linux/export.h> is missing
+> arch/loongarch/kernel/traps.c: warning: EXPORT_SYMBOL() is used, but #inc=
+lude <linux/export.h> is missing
+> arch/loongarch/kernel/unwind_guess.c: warning: EXPORT_SYMBOL() is used, b=
+ut #include <linux/export.h> is missing
+> arch/loongarch/kernel/unwind_orc.c: warning: EXPORT_SYMBOL() is used, but=
+ #include <linux/export.h> is missing
+> arch/loongarch/kernel/unwind_prologue.c: warning: EXPORT_SYMBOL() is used=
+, but #include <linux/export.h> is missing
+> arch/loongarch/lib/crc32-loongarch.c: warning: EXPORT_SYMBOL() is used, b=
+ut #include <linux/export.h> is missing
+> arch/loongarch/lib/csum.c: warning: EXPORT_SYMBOL() is used, but #include=
+ <linux/export.h> is missing
+> arch/loongarch/kernel/elf.c: warning: EXPORT_SYMBOL() is not used, but #i=
+nclude <linux/export.h> is present
+> arch/loongarch/kernel/paravirt.c: warning: EXPORT_SYMBOL() is not used, b=
+ut #include <linux/export.h> is present
+> arch/loongarch/pci/pci.c: warning: EXPORT_SYMBOL() is not used, but #incl=
+ude <linux/export.h> is present
+>
+> So fix these build warnings for LoongArch.
+>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  arch/loongarch/kernel/acpi.c            | 1 +
+>  arch/loongarch/kernel/alternative.c     | 1 +
+>  arch/loongarch/kernel/elf.c             | 1 -
+>  arch/loongarch/kernel/kfpu.c            | 1 +
+>  arch/loongarch/kernel/paravirt.c        | 1 -
+>  arch/loongarch/kernel/traps.c           | 1 +
+>  arch/loongarch/kernel/unwind_guess.c    | 1 +
+>  arch/loongarch/kernel/unwind_orc.c      | 3 ++-
+>  arch/loongarch/kernel/unwind_prologue.c | 1 +
+>  arch/loongarch/lib/crc32-loongarch.c    | 1 +
+>  arch/loongarch/lib/csum.c               | 1 +
+>  arch/loongarch/pci/pci.c                | 1 -
+>  12 files changed, 10 insertions(+), 4 deletions(-)
 
-Thanks!  Can I turn that into an Acked-by?
+Thank you for your contribution.
 
-- Eric
+Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
