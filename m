@@ -1,122 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5041AEAD0
-	for <loongarch@lists.linux.dev>; Mon,  9 Jun 2025 00:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B443E155342;
+	Mon,  9 Jun 2025 07:40:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749429610; cv=none; b=G8FNACUnARCGgKRY7l70Z6/kth4+T3CWF7kLtCpAXiD1/ud5eEpPyRCPPRAe1EhdcPSqjhwCIHLgKn294ZqqrFAmLHqGBrc1O8KFPyLIMAqnpsXN+mIwBx2WdTrpRp3butj2ySpfdDckp/qVBlmfnVBjBSNnj1vmq5/iOIe0wWM=
+	t=1749454845; cv=none; b=EG2cbr2UTdPN6PFh5WCtezTOKUc2gS3SuccV1ECncSUJZ4It4amoYj8zJYa0AAhK+kKCkzGFiybibvln39LVDY9BdJDceNO3o/2ZUoOlSwBgM+HqYoa+DkvCrBeQ/fEOzz7y/LVLrRTrx/1MgvRGcnS7H4J7Ciq04AHiOx+t6zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749429610; c=relaxed/simple;
-	bh=AYQm7+/hFbcmGvpVK2s4F75RUgJ71pWFAycmHWnVxjA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZSzgua4CSfPfEuurv936hU34rYdtQr270KNR0Z8K+HaXjJwI96poTxjI094Tk1mS7HUUmSh5GbHI3SpK6zk5oSxTO2or/OaSizzKp/hs05OK4Lb2FedC1KtzFlbvUMicKEpRzJh2t0inTlTgqTcXP+M+nDrlT/eOo+6ZSJZ7wUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZ7gTOPF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749454845; c=relaxed/simple;
+	bh=209nlqUCXw1v1f3VX0uAONXnvWEHs95NYNmSYw3A208=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hGqR0101xDAVE57UVjw+KYMrg3J/KU++28lIGogjp5NCOSkuxFZswbpF/WiIp6XSU7vuWkmhHNIyDnRi5Mwc+zjr8wvxhi8soPvi/YPQuQbcpe0V7awKXtmGP5ftmie2O+Ol6oA4w+EHeRzTxhgVibhv6sU5KctM4HbGwf7L4xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gY73dLvT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZ7gTOPF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E18B9C4CEF3
-	for <loongarch@lists.linux.dev>; Mon,  9 Jun 2025 00:40:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gY73dLvT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D454C4CEEB;
+	Mon,  9 Jun 2025 07:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749429609;
-	bh=AYQm7+/hFbcmGvpVK2s4F75RUgJ71pWFAycmHWnVxjA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OZ7gTOPFzFlEfwn3kFiXqhCwj9T2/oKA7LAKrIVi0ZxwToC0g3b0ZziWsiKddhfu7
-	 wX90ClfGZCGr+ya8BQwCsYuuYNkb8OfD1xUV8TBNDPGA+jvO7QWJ9V/zGletljKzaE
-	 ohWhm4fLwXrY35y23zyJPm+Pj1bC0/rn6B0+lpEiglS0NWTzNYxmYaTqEqr8tBVH8b
-	 a0dC9J02KRhXbuOINo8j4a2pBcxEHQr5m7nw4jlo11GR1aG9Tg71l/o1RnYwJ0NP7+
-	 U29/4EIytua5FBb/lJ1sj6g3RZg5ryVMtFd1/Gs3GxQ80YgOFC1ybu0yHENtmc8Yy1
-	 XPAoB0Bj+vtbw==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55324587a53so4562162e87.0
-        for <loongarch@lists.linux.dev>; Sun, 08 Jun 2025 17:40:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV7Q2Sar5I+U6hPu9iKQcRhQaGeyc6UGl89aWeGwR37LpT8ZkAkps4j9RUYVGuKUN1GFYpgbwvrkhM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywh30Ttd9Pt528Zuu+aTUYF5grkYwOwbvw0/PGwJ7hJE4jrI4e9
-	e6Uq/6i1DSZZs33ATYlfKp66dE0RMDdZ6argWS1SAAvNlDstlzX0pjbOqwY+S1Fv327bFV5Yj0I
-	LtBSM2obdwQV3RPVbVjaq4EuCdfaXYyY=
-X-Google-Smtp-Source: AGHT+IGZroWKXmRyERdhKl/Z5gyx1d3GToM80Z6QzsO3n4nyocOiHOS/jpDdwx5gKtF7wLnd3Pr65HTbFL8f1LMpy48=
-X-Received: by 2002:a05:6512:1152:b0:553:2154:7bcc with SMTP id
- 2adb3069b0e04-5535d92b41fmr4491488e87.20.1749429608640; Sun, 08 Jun 2025
- 17:40:08 -0700 (PDT)
+	s=k20201202; t=1749454845;
+	bh=209nlqUCXw1v1f3VX0uAONXnvWEHs95NYNmSYw3A208=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gY73dLvTuG20cJBz/uTBYeNpVArZbVpympdOLaTXmTkeunUr3SogtkPrwip9348ep
+	 GlTKa/1aKhnLBecgL6YOHGiyn6aWWyzDNjIomZXEgN5BhgUj0hO1mpCxdKv9aobqz4
+	 RnoBw1oQVRZdaapyQ1FXeBDESYqX3Q0OfYu1fpREr/8jdQi513Lp7mLf63c+XEToKH
+	 LYD8l/KcwV19regOTXQOVdkfp/yPLBBpzHKzu/sXfWel7SlgoHtargDiNocTs3CBSM
+	 6lBah99e7LOsXVUIFQVjuP75ksUm9JxSa89Qa+QLFdgswE9W8Py551smm+rsV6wroC
+	 3VMj1AV9M7FpQ==
+Date: Mon, 9 Jun 2025 09:40:40 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org,
+	linux-arch@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 00/12] lib/crc: improve how arch-optimized code is
+ integrated
+Message-ID: <aEaP-A21IB4ufbZT@gmail.com>
+References: <20250607200454.73587-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250608141509.157300-1-chenhuacai@loongson.cn>
-In-Reply-To: <20250608141509.157300-1-chenhuacai@loongson.cn>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 9 Jun 2025 09:39:31 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARQFBuUY2YzUnPuyEdTAVy=B91L5NyYGzhY-kAr3SYsRQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuM40A9k8e2D3a-34RtMf0zB68mZ3ppfrFyJU-EHoMdxz9h0AFbVMKL7IM
-Message-ID: <CAK7LNARQFBuUY2YzUnPuyEdTAVy=B91L5NyYGzhY-kAr3SYsRQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix build warnings about export.h
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: linux-kbuild@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
-	loongarch@lists.linux.dev, Guo Ren <guoren@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jun 8, 2025 at 11:15=E2=80=AFPM Huacai Chen <chenhuacai@loongson.cn=
-> wrote:
->
-> After commit a934a57a42f64a4 ("scripts/misc-check: check missing #include
-> <linux/export.h> when W=3D1") and 7d95680d64ac8e836c ("scripts/misc-check=
-:
-> check unnecessary #include <linux/export.h> when W=3D1"), we get some bui=
-ld
-> warnings with W=3D1:
->
-> arch/loongarch/kernel/acpi.c: warning: EXPORT_SYMBOL() is used, but #incl=
-ude <linux/export.h> is missing
-> arch/loongarch/kernel/alternative.c: warning: EXPORT_SYMBOL() is used, bu=
-t #include <linux/export.h> is missing
-> arch/loongarch/kernel/kfpu.c: warning: EXPORT_SYMBOL() is used, but #incl=
-ude <linux/export.h> is missing
-> arch/loongarch/kernel/traps.c: warning: EXPORT_SYMBOL() is used, but #inc=
-lude <linux/export.h> is missing
-> arch/loongarch/kernel/unwind_guess.c: warning: EXPORT_SYMBOL() is used, b=
-ut #include <linux/export.h> is missing
-> arch/loongarch/kernel/unwind_orc.c: warning: EXPORT_SYMBOL() is used, but=
- #include <linux/export.h> is missing
-> arch/loongarch/kernel/unwind_prologue.c: warning: EXPORT_SYMBOL() is used=
-, but #include <linux/export.h> is missing
-> arch/loongarch/lib/crc32-loongarch.c: warning: EXPORT_SYMBOL() is used, b=
-ut #include <linux/export.h> is missing
-> arch/loongarch/lib/csum.c: warning: EXPORT_SYMBOL() is used, but #include=
- <linux/export.h> is missing
-> arch/loongarch/kernel/elf.c: warning: EXPORT_SYMBOL() is not used, but #i=
-nclude <linux/export.h> is present
-> arch/loongarch/kernel/paravirt.c: warning: EXPORT_SYMBOL() is not used, b=
-ut #include <linux/export.h> is present
-> arch/loongarch/pci/pci.c: warning: EXPORT_SYMBOL() is not used, but #incl=
-ude <linux/export.h> is present
->
-> So fix these build warnings for LoongArch.
->
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/loongarch/kernel/acpi.c            | 1 +
->  arch/loongarch/kernel/alternative.c     | 1 +
->  arch/loongarch/kernel/elf.c             | 1 -
->  arch/loongarch/kernel/kfpu.c            | 1 +
->  arch/loongarch/kernel/paravirt.c        | 1 -
->  arch/loongarch/kernel/traps.c           | 1 +
->  arch/loongarch/kernel/unwind_guess.c    | 1 +
->  arch/loongarch/kernel/unwind_orc.c      | 3 ++-
->  arch/loongarch/kernel/unwind_prologue.c | 1 +
->  arch/loongarch/lib/crc32-loongarch.c    | 1 +
->  arch/loongarch/lib/csum.c               | 1 +
->  arch/loongarch/pci/pci.c                | 1 -
->  12 files changed, 10 insertions(+), 4 deletions(-)
-
-Thank you for your contribution.
-
-Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250607200454.73587-1-ebiggers@kernel.org>
 
 
+* Eric Biggers <ebiggers@kernel.org> wrote:
 
---=20
-Best Regards
-Masahiro Yamada
+> This series is also available at:
+> 
+>     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git lib-crc-arch-v2
+> 
+> This series improves how lib/crc supports arch-optimized code.  First,
+> instead of the arch-optimized CRC code being in arch/$(SRCARCH)/lib/, it
+> will now be in lib/crc/$(SRCARCH)/.  Second, the API functions (e.g.
+> crc32c()), arch-optimized functions (e.g. crc32c_arch()), and generic
+> functions (e.g. crc32c_base()) will now be part of a single module for
+> each CRC type, allowing better inlining and dead code elimination.  The
+> second change is made possible by the first.
+> 
+> As an example, consider CONFIG_CRC32=m on x86.  We'll now have just
+> crc32.ko instead of both crc32-x86.ko and crc32.ko.  The two modules
+> were already coupled together and always both got loaded together via
+> direct symbol dependency, so the separation provided no benefit.
+> 
+> Note: later I'd like to apply the same design to lib/crypto/ too, where
+> often the API functions are out-of-line so this will work even better.
+> In those cases, for each algorithm we currently have 3 modules all
+> coupled together, e.g. libsha256.ko, libsha256-generic.ko, and
+> sha256-x86.ko.  We should have just one, inline things properly, and
+> rely on the compiler's dead code elimination to decide the inclusion of
+> the generic code instead of manually setting it via kconfig.
+> 
+> Having arch-specific code outside arch/ was somewhat controversial when
+> Zinc proposed it back in 2018.  But I don't think the concerns are
+> warranted.  It's better from a technical perspective, as it enables the
+> improvements mentioned above.  This model is already successfully used
+> in other places in the kernel such as lib/raid6/.  The community of each
+> architecture still remains free to work on the code, even if it's not in
+> arch/.  At the time there was also a desire to put the library code in
+> the same files as the old-school crypto API, but that was a mistake; now
+> that the library is separate, that's no longer a constraint either.
+> 
+> Changed in v2:
+>    - Fixed build warning on architectures without any optimized CRC code
+>    - Fixed build warning in sparc/crc32.h by removing pr_fmt
+>    - Moved fallback definitions of crc32*_arch back into arch files
+>    - Remove ARCH_HAS_CRC* symbols at end of series instead of beginning,
+>      so that they're not removed until they're no longer being selected
+>    - Slightly improved some commit messages
+>    - Rebased onto other pending lib/crc changes
+> 
+> Eric Biggers (12):
+>   lib/crc: move files into lib/crc/
+>   lib/crc: prepare for arch-optimized code in subdirs of lib/crc/
+>   lib/crc/arm: migrate arm-optimized CRC code into lib/crc/
+>   lib/crc/arm64: migrate arm64-optimized CRC code into lib/crc/
+>   lib/crc/loongarch: migrate loongarch-optimized CRC code into lib/crc/
+>   lib/crc/mips: migrate mips-optimized CRC code into lib/crc/
+>   lib/crc/powerpc: migrate powerpc-optimized CRC code into lib/crc/
+>   lib/crc/riscv: migrate riscv-optimized CRC code into lib/crc/
+>   lib/crc/s390: migrate s390-optimized CRC code into lib/crc/
+>   lib/crc/sparc: migrate sparc-optimized CRC code into lib/crc/
+>   lib/crc/x86: migrate x86-optimized CRC code into lib/crc/
+>   lib/crc: remove ARCH_HAS_* kconfig symbols
+
+For the movement of the x86 bits:
+
+  Acked-by: Ingo Molnar <mingo@kernel.org>
+
+>  rename {arch/s390/lib => lib/crc/s390}/crc32be-vx.c (100%)
+>  rename {arch/s390/lib => lib/crc/s390}/crc32le-vx.c (100%)
+>  rename arch/sparc/lib/crc32.c => lib/crc/sparc/crc32.h (60%)
+>  rename {arch/sparc/lib => lib/crc/sparc}/crc32c_asm.S (100%)
+>  create mode 100644 lib/crc/tests/Makefile
+>  rename lib/{ => crc}/tests/crc_kunit.c (100%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc-pclmul-consts.h (100%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc-pclmul-template.S (100%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc-pclmul-template.h (100%)
+>  rename arch/x86/lib/crc-t10dif.c => lib/crc/x86/crc-t10dif.h (56%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc16-msb-pclmul.S (100%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc32-pclmul.S (100%)
+
+One small namespace suggestion: wouldn't it be better to move the arch 
+support code to lib/crc/arch/, instead of lib/crc/? That way any 
+generic code will stand out better and architecture directories don't 
+crowd out what is supposed to be generic code.
+
+Thanks,
+
+	Ingo
