@@ -1,99 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A378226161
-	for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 12:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E769128E56F
+	for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 12:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749556990; cv=none; b=accdPfhBfNe8YBEHBoYkukBtHuJ7GFg+sLQLrQ3nNX2wmdBzVvJOxGxscMybUMn7Rr/31MkXPex4V0idqjxOnV2D9hq+yF9tMxl/fucIfL8bRZUBTvLccFdsNESvmKt+8mseQ+9r4Mu9TNA2bacUyOTOrNgkBSHQmg9QJ29SkS4=
+	t=1749557286; cv=none; b=tk4VE8vBkuXdofcvNKrPAA0TiYJZgr2989FuM4qYuCgOgO2h0KdcSz/BIAEYLQg1DWQHk4ndHOgJthNzj3X43H/Xxhl2iAOWIT5TRde2LfeiRxQhNdYHk7/vMMf1pNCxI/h2jHNurvhMaqLMm5qhD7nMuPpaLE1QUHnMXlXW01Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749556990; c=relaxed/simple;
-	bh=QmWiAygvj8edZR+MhBol5WXAZW9ghl6ZqYJhUHNoB1Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a3ofoEFRF+Ny2lfCV6X/0qD1oryUBo+aqCQpNffr9eqzACS1HRwOSfhW/SUXgk46b5y0l75pGbk0tL5dBiA0rm7S+1cWgUK2oCDqUSoUMODCwxWZrR+xrsZkdWY8wMOn9pQHma4paI2nFBOq95mRnLmtShmwAaBkh6+0+fmJrrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L4840hl8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L4840hl8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A5FC4CEF3
-	for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 12:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749556990;
-	bh=QmWiAygvj8edZR+MhBol5WXAZW9ghl6ZqYJhUHNoB1Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=L4840hl8uQKdsxX9qnd5byyA7sAgQEdNhdt48OJX0fbDN6H/CUWUvrxJxcugSfCUv
-	 jFqBuPPvIxOb4HB+lFlUHsC7VxQxMIXTjBRyuK7zoTd8ufpiV5w/sa2JmkcWv+/KCU
-	 tyW//EV0/BVGetwgPPqqfm+qZTPAnALSnHoX0L6KPieWGY2Twn2usB/MQqn8onOk5p
-	 OiXXUa4H9D2PDTmtLHs3xh+Lmj2g7uscnSJaB5qSCVILYz7HTzoY76DwAgzNnGMGP8
-	 S4Mp1HVO7U5hinauqkAnNW/cZOeZTHcsmYYBJ00ncIQichhHyd6K1YNyCkB8YeEysT
-	 KLT+UFhQ1fQuw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60780d74bbaso5843386a12.0
-        for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 05:03:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXEqYjVT9nKMz0kujOA42EUvGqGGGEVZwQAWPxozHs7Cb0JaBx4oyddbbf2wcX6v4utFeJ1LCdbyf0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyZ/ZT2azMN8oREm77+QVzUp7hjy8WAw9XpGYzvnf4e8aCUjCBg
-	AcMsVe5RE1lLA8M4fOALeFTeHYa1dH9C0/4wFD6vYPBTwkXBnBaV5Ep9ckCr/c9zlED5zPHZ5V0
-	D70OJ5BpzeFUUeG04aYmtCzmrAUx3/7o=
-X-Google-Smtp-Source: AGHT+IFHCHL/ee2hFn9QEyn33ksXkw1BklvfIvjLzbDrvdjzzKtCaI+6os+z1UUnWFSFYHKinnnCWpQbo2OQNAi04jo=
-X-Received: by 2002:a05:6402:40c6:b0:602:a0:1f2c with SMTP id
- 4fb4d7f45d1cf-60818622f77mr2923922a12.9.1749556988625; Tue, 10 Jun 2025
- 05:03:08 -0700 (PDT)
+	s=arc-20240116; t=1749557286; c=relaxed/simple;
+	bh=ZzwZmuX1CS+0FiTnplkgygNLxQDbq90B2AuoJJnwJD4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dLRKUlSxIRPg0z1hYiniUvG62y+KGWMn/y969+W9VQm61mwnJXdBD88GvDN1Pr7lHarCcB5JuNWPsZsdqhFojh9aYqS8mlT8tzEtwpnZA8umngn4snML0oPt//p+Gk3eAzZs0F2sXuy8dSxRfWeQrltnQ4Qs0hwIQEj9qsQvgi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8CxaWohIEhopKgSAQ--.49138S3;
+	Tue, 10 Jun 2025 20:08:01 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMAxzMQbIEhoQ1gUAQ--.62619S3;
+	Tue, 10 Jun 2025 20:07:57 +0800 (CST)
+Subject: Re: [PATCH v4 0/2] Loongarch irq-redirect supprot
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org,
+ si.yanteng@linux.dev, tglx@linutronix.de, jiaxun.yang@flygoat.com,
+ peterz@infradead.org, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+ maobibo@loongson.cn, siyanteng@cqsoftware.com.cn, gaosong@loongson.cn,
+ yangtiezhu@loongson.cn, loongarch@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Super User <root@localhost.localdomain>
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+ <CAAhV-H5XB7sVf0UoUmXHDeTXA8tncJhV2LexLgc-Z1Hebsijtw@mail.gmail.com>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <91858552-2ccd-73af-1f5c-962682952a99@loongson.cn>
+Date: Tue, 10 Jun 2025 20:07:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250610115926.347845-1-zhoubinbin@loongson.cn>
-In-Reply-To: <20250610115926.347845-1-zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 10 Jun 2025 20:02:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Aq=GoJpY6KH9FQX_RcPfx0D9XUtjjVf=ZfxEdhj93mQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuMIhw27w0kkeHJL2qow9985_yOnSIrlzLWYAsJ60bLBiVLgnww5FP0JEM
-Message-ID: <CAAhV-H5Aq=GoJpY6KH9FQX_RcPfx0D9XUtjjVf=ZfxEdhj93mQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: loongson-64bit: Correct Loongson-7A2000 ACPI GPIO
- access mode
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-gpio@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H5XB7sVf0UoUmXHDeTXA8tncJhV2LexLgc-Z1Hebsijtw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxzMQbIEhoQ1gUAQ--.62619S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZFyDWry5XrW8Cw4DXw1xtFc_yoW5JF1DpF
+	WDuas0kF4rCrn7C3ZF9a40vrW5AFyxGrW2q3W2g343ur98uwnFvF10yFZ8uFn7Ga17tw10
+	9F15Xa4DWFn8AacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Hi, Huacai
 
-On Tue, Jun 10, 2025 at 7:59=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
+在 2025/6/10 下午7:54, Huacai Chen 写道:
+> Hi, Tianyang,
 >
-> According to the description of the Loongson-7A2000 ACPI GPIO register in
-> the manual, its access mode should be BIT_CTRL_MODE, otherwise there mayb=
-e
-> some unpredictable behavior.
+> Have you received my comments in V3?
+> https://lore.kernel.org/loongarch/20250523101833.17940-1-zhangtianyang@loongson.cn/T/#m2883f379ce7eb663f3f3eb4736bf9b071c7fd8ab
 >
-> Cc: stable@vger.kernel.org
-> Fixes: 44fe79020b91 ("gpio: loongson-64bit: Add more gpio chip support")
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  drivers/gpio/gpio-loongson-64bit.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loong=
-son-64bit.c
-> index 26227669f026..70a01c5b8ad1 100644
-> --- a/drivers/gpio/gpio-loongson-64bit.c
-> +++ b/drivers/gpio/gpio-loongson-64bit.c
-> @@ -268,7 +268,7 @@ static const struct loongson_gpio_chip_data loongson_=
-gpio_ls7a2000_data0 =3D {
->  /* LS7A2000 ACPI GPIO */
->  static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_data1=
- =3D {
->         .label =3D "ls7a2000_gpio",
-> -       .mode =3D BYTE_CTRL_MODE,
-> +       .mode =3D BIT_CTRL_MODE,
->         .conf_offset =3D 0x4,
->         .in_offset =3D 0x8,
->         .out_offset =3D 0x0,
->
-> base-commit: e0d4a0f1d066f14522049e827107a577444d9183
-> --
-> 2.47.1
->
+> Huacai
+
+Sorry, except for a slight network issue, I did not receive the email 
+mentioned above.
+
+I will reply to the email first and continue to modify this series of 
+patches
+
+Tianyang
+
+> On Tue, Jun 10, 2025 at 7:43 PM Tianyang Zhang
+> <zhangtianyang@loongson.cn> wrote:
+>> From: Super User <root@localhost.localdomain>
+>>
+>> This series of patches introduces support for interrupt-redirect
+>> controllers, and this hardware feature will be supported on 3C6000
+>> for the first time
+>>
+>> change log:
+>>          v0->v1:
+>>          1.Rename the model names in the document.
+>>          2.Adjust the code format.
+>>          3.Remove architecture - specific prefixes.
+>>          4.Refactor the initialization logic, and IR driver no longer set AVEC_ENABLE.
+>>          5.Enhance compatibility under certain configurations.
+>>
+>>          v1->v2:
+>>          1.Fixed an erroneous enabling issue.
+>>
+>>          v2->v3
+>>          1.Replace smp_call with address mapping to access registers
+>>          2.Fix some code style issues
+>>
+>>          v3->v4
+>>          1.Provide reasonable comments on the modifications made to IRQ_SET_MASK_OK_DONE
+>>          2.Replace meaningless empty functions with parent_mask/unmask/ack
+>>          3.Added and indeed released resources
+>>          4.Added judgment for data structure initialization completion to avoid duplicate creation during cpuhotplug
+>>          5.Fixed the code style and some unnecessary troubles
+>>
+>> Tianyang Zhang (2):
+>>    Docs/LoongArch: Add Advanced Extended-Redirect IRQ model description
+>>    irq/irq-loongarch-ir:Add Redirect irqchip support
+>>
+>>   .../arch/loongarch/irq-chip-model.rst         |  38 ++
+>>   .../zh_CN/arch/loongarch/irq-chip-model.rst   |  37 ++
+>>   arch/loongarch/include/asm/cpu-features.h     |   1 +
+>>   arch/loongarch/include/asm/cpu.h              |   2 +
+>>   arch/loongarch/include/asm/loongarch.h        |   6 +
+>>   arch/loongarch/kernel/cpu-probe.c             |   2 +
+>>   drivers/irqchip/Makefile                      |   2 +-
+>>   drivers/irqchip/irq-loongarch-avec.c          |  25 +-
+>>   drivers/irqchip/irq-loongarch-ir.c            | 562 ++++++++++++++++++
+>>   drivers/irqchip/irq-loongson.h                |  12 +
+>>   include/linux/cpuhotplug.h                    |   1 +
+>>   11 files changed, 674 insertions(+), 14 deletions(-)
+>>   create mode 100644 drivers/irqchip/irq-loongarch-ir.c
+>>
+>> --
+>> 2.41.0
+>>
+
