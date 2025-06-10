@@ -1,133 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0965728B40E
-	for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 09:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0338F28C012
+	for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 11:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547486; cv=none; b=o9dDS093vf5ht+VoM1aFsJZTV8QklChNCUbPE4fUSULXZgh0HmTViiLdlsUY0/e3xfQlYaTtBklGP4gN0R5gUGHYFZQDwlMJHXXITHNCUrYroApk0FjFpOl1VjzlIuNdsUA48oM9LTE3FoPvA/E/tJFwg7ba6Cb8X9eTXrXrNMg=
+	t=1749555780; cv=none; b=YpEBqmleLR1dnxxMTDY7iQj6t9Ef/fFFjzBKL3FvalFkyNBxQBdWcjBEHzLqD3MbCdQbKB+5n9mn8mKRAcRZ9yz8gPyvi0dwSPj7e2cR8Q6/sLPZVWsU1hcc4Xtu+jJ/rtdlMH62N5g9YIaO6JbiMxv2JQwF3J3a9hoT1BT7hE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547486; c=relaxed/simple;
-	bh=7O8pLwMtFMpTYlcRgT7szr1Viv9rchg8SjS1xi2PCaw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d1F4h2PsBGxT4ircSMItm4pX1xu1t4oQQKYmOeU7Iqsh8v8XcnxSd98G2exKavITvvKToTRAPp5+ShZepRtmfQ4dnC0qs8qkrRR44bKHzAXfS7Fpk0T0Uv5fJX9Ezs0/k/yphx7d8AIcma+AL0mcdh/IZN4jwTSVgOljX69rIWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wl5crjUA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wl5crjUA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D899C4CEEF
-	for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 09:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547485;
-	bh=7O8pLwMtFMpTYlcRgT7szr1Viv9rchg8SjS1xi2PCaw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Wl5crjUA0gjY5KSzbsAasQuZYkSzm9FB4lOTz4M+yAvPlYn44R3F+qZWntYPmDbdV
-	 CysNgT/7etE/2GjQ6hWXEzka3qusaH9EVnMm14WCvk9wBT0RKBF+ao70xH4AMdRqDz
-	 aRE7WW8M16ST7j3aNwXJGGHQjwqnS1OeDmQQ2j3Y7S5UQ9eQzpqxUFdonlqHWJIXJq
-	 IfNHeOHs5ghP70rRDK1c2s5LFlS86KK7fzSEnVQZN7wqsMft0KOlCP9xXxdBVhYN6k
-	 rdzFCJqDIbTBCmBxG1PH4nSPPNvalSpkBYkXR6MgR1phjPy/WVxVey7lzhyPfAvDuh
-	 EdIHqoc/QG9lg==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acbb85ce788so863399066b.3
-        for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 02:24:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVG/44+KHsOAZS+VaIGmBnEHgJP27ydWLHCll1/3X6kVjfLSPVsk7FhLGOS/DAxHCNxxGWgcZUCvdc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxj48E6/QA2qlNXvvdVc4h/JKUxf9FSw4yrOWGuqlNci9SDDU6S
-	b/qgeqUC4RRJdyPJWpu8UF3MRClVNREnrLNo+x6IW/hlLTwKIaQSljbPk/pBi5Il0hHzMyJx8It
-	AZpKbwTWx2vEIFPc0HDe/3hTOrUnuVlM=
-X-Google-Smtp-Source: AGHT+IHp9IrXPr6CUNbh1St5Hg3ial/rjt2FWdk+sYxhxJaYrSLty/M96Too05Y4+45YoU/INmTjI/uhZJoYsjtNpkM=
-X-Received: by 2002:a17:906:ef0d:b0:aca:d4f6:440d with SMTP id
- a640c23a62f3a-ade7ac572a4mr171877866b.17.1749547483079; Tue, 10 Jun 2025
- 02:24:43 -0700 (PDT)
+	s=arc-20240116; t=1749555780; c=relaxed/simple;
+	bh=RgJpcaN+67Db6QQGMO7Pjy7+uEp/KzAMBbtdlk0LQiw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DPFcJ1yuBgPHj9MttVPRXCCEWLSkVccnc0joBROvQAjKOxey2bRUsqbWNrrGRhQqURRifzkWr2V6amR8RD12ml5biy7wrPQgaeNZnKJU7PH9RbB+2xa+o+Wb3VSymzhZZuTp5kIfg0j7r69HwwE5A6CiSk+iYxKofGe9IYIcHVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8BxnmtAGkhoI6USAQ--.5339S3;
+	Tue, 10 Jun 2025 19:42:56 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMBx3MQ9Gkho108UAQ--.60866S2;
+	Tue, 10 Jun 2025 19:42:53 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	corbet@lwn.net,
+	alexs@kernel.org,
+	si.yanteng@linux.dev,
+	tglx@linutronix.de,
+	jiaxun.yang@flygoat.com,
+	peterz@infradead.org,
+	wangliupu@loongson.cn,
+	lvjianmin@loongson.cn,
+	maobibo@loongson.cn,
+	siyanteng@cqsoftware.com.cn,
+	gaosong@loongson.cn,
+	yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Super User <root@localhost.localdomain>
+Subject: [PATCH v4 0/2]  Loongarch irq-redirect supprot
+Date: Tue, 10 Jun 2025 19:42:50 +0800
+Message-Id: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250422234830.2840784-1-superm1@kernel.org> <20250422234830.2840784-3-superm1@kernel.org>
- <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 10 Jun 2025 17:24:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvyd2N-spvgVUDQiEXjOROXJ4rt5ErLp4PE6STdQ0GN935XFU-Ao7ctaOk
-Message-ID: <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mario Limonciello <superm1@kernel.org>, Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>, 
-	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBx3MQ9Gkho108UAQ--.60866S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CrW7Ww47KrykXF1kJFW8GrX_yoW8Cr15pF
+	Zru3sYyr4rCFZ3CF1kGa4UuryrXF4xG3y2q3W2q34fur13uryDZr10kFZ8ZFykGay7tw1I
+	gr4Fqa4UWas8AacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8_gA5UUUUU==
 
-On Tue, Jun 10, 2025 at 5:16=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Mario,
->
-> CC mips, loongarch
->
-> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrot=
-e:
-> > From: Mario Limonciello <mario.limonciello@amd.com>
-> >
-> > PIIX4 and compatible controllers are only for X86. As some headers are
-> > being moved into x86 specific headers PIIX4 won't compile on non-x86.
-> >
-> > Suggested-by: Ingo Molnar <mingo@kernel.org>
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->
-> Thanks for your patch, which is now commit 7e173eb82ae97175
-> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
-> in v6.16-rc1.
->
-> > --- a/drivers/i2c/busses/Kconfig
-> > +++ b/drivers/i2c/busses/Kconfig
-> > @@ -200,7 +200,7 @@ config I2C_ISMT
-> >
-> >  config I2C_PIIX4
-> >         tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broad=
-com/SMSC)"
-> > -       depends on PCI && HAS_IOPORT
-> > +       depends on PCI && HAS_IOPORT && X86
->
-> Are you sure this south-bridge is not used on non-x86 platforms?
-> It is enabled in several non-x86 defconfigs:
->
->     arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=3Dy
->     arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=3Dm
->     arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=3Dy
->     arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=3Dy
->
-> The loongarch and loongson entries are probably bogus, but I wouldn't
-> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
-Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
+From: Super User <root@localhost.localdomain>
 
-Huacai
+This series of patches introduces support for interrupt-redirect
+controllers, and this hardware feature will be supported on 3C6000
+for the first time
 
->
-> >         select I2C_SMBUS
-> >         help
-> >           If you say yes to this option, support will be included for t=
-he Intel
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
->
+change log:
+	v0->v1:
+	1.Rename the model names in the document.
+	2.Adjust the code format.
+	3.Remove architecture - specific prefixes.
+	4.Refactor the initialization logic, and IR driver no longer set AVEC_ENABLE.
+	5.Enhance compatibility under certain configurations.
+
+	v1->v2:
+	1.Fixed an erroneous enabling issue.
+
+	v2->v3
+	1.Replace smp_call with address mapping to access registers
+	2.Fix some code style issues
+
+	v3->v4
+	1.Provide reasonable comments on the modifications made to IRQ_SET_MASK_OK_DONE	
+	2.Replace meaningless empty functions with parent_mask/unmask/ack
+	3.Added and indeed released resources
+	4.Added judgment for data structure initialization completion to avoid duplicate creation during cpuhotplug
+	5.Fixed the code style and some unnecessary troubles
+
+Tianyang Zhang (2):
+  Docs/LoongArch: Add Advanced Extended-Redirect IRQ model description
+  irq/irq-loongarch-ir:Add Redirect irqchip support
+
+ .../arch/loongarch/irq-chip-model.rst         |  38 ++
+ .../zh_CN/arch/loongarch/irq-chip-model.rst   |  37 ++
+ arch/loongarch/include/asm/cpu-features.h     |   1 +
+ arch/loongarch/include/asm/cpu.h              |   2 +
+ arch/loongarch/include/asm/loongarch.h        |   6 +
+ arch/loongarch/kernel/cpu-probe.c             |   2 +
+ drivers/irqchip/Makefile                      |   2 +-
+ drivers/irqchip/irq-loongarch-avec.c          |  25 +-
+ drivers/irqchip/irq-loongarch-ir.c            | 562 ++++++++++++++++++
+ drivers/irqchip/irq-loongson.h                |  12 +
+ include/linux/cpuhotplug.h                    |   1 +
+ 11 files changed, 674 insertions(+), 14 deletions(-)
+ create mode 100644 drivers/irqchip/irq-loongarch-ir.c
+
+-- 
+2.41.0
+
