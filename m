@@ -1,173 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA061519BA;
-	Mon,  9 Jun 2025 22:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C246E28B4F4
+	for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 09:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749509989; cv=none; b=ZOPa2M06NoGk7s06kB8cZCvRq33J7SjKW4zuJ8o0BhVWQAx2ehJpfhfxd+6A7gokJvoOafdP9IWgYgDU+3gpXv55Ns99+nIfuKq/j1vhdOVJ2zRyVNuaKhuvrEZD6CmzuSZx6M4z7teVKtI7BuOfTtRTQu+z6qIMpeOw9vCWNEc=
+	t=1749547007; cv=none; b=BZELlxqQgnYkXhYxSbNY6fkagmHc0OKrQgvT4bNvag4g1p+yP8bKpZziCX8liOnROCPLimiNvi8N9Fr4piqRQYJaFBnY9THQwIxSGFqyyg5xxWKRjYPvQGX3rZHDw+o528kfDZJp03mc/1179eYuTJKwu2nhKvCxWY5AQCdoeSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749509989; c=relaxed/simple;
-	bh=U4vhsJXM46e+0Mfc4PBs3bseTa3h9UosBlHtozqeIf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B7JCme5vD0DNL+6n75FdM5qPiHxCgzKtZ/4pNt3j8hjwHqc1d2wsL3PoGSMdDsvfU0BFtxyQErKVNE9RQC2jNUkf54etvqASNiM+/Upd7+7TlZvYS57oDemdCNiCQLmE5vdGx7pVbf9ZV1qhUVIYc+YmYxu7Vc8u9U1z59GgC3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZ2q/LWi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZ2q/LWi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A46C4CEEB;
-	Mon,  9 Jun 2025 22:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749509988;
-	bh=U4vhsJXM46e+0Mfc4PBs3bseTa3h9UosBlHtozqeIf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bZ2q/LWijEpaEq00igAvU15ZFA2btFmPEoPv0oTqawn+MjrxKEc4/OqXy2N38kxpV
-	 AFvy2lrAzn2djDaUY1swfzB9EZ627MitJD6/avaXEMt58zpc+17thB5+o+L/NCFmXx
-	 Bbahqr8beEaE9JLR92svUSP/oo9HcH3K/MV2jUx5drdibhmczFNStuOfZD9lCWMysz
-	 P11+Cs72P7BkkpWfSW0Wc/UiWNcR1xk5ksNxTizKDn6BSr0mEtJF/ezlntceoWJxAz
-	 yys2b1O4D36HQh8H0QW/vQ0doPIIwaleXhHsMUSvkGTKjPZAQluFZIrFMruyPgxt0i
-	 IRxGum7RmzoYw==
-Date: Mon, 9 Jun 2025 15:59:26 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Julian Calaby <julian.calaby@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org,
-	linux-arch@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 00/12] lib/crc: improve how arch-optimized code is
- integrated
-Message-ID: <20250609225926.GE1255@sol>
-References: <20250607200454.73587-1-ebiggers@kernel.org>
- <CAGRGNgV_4X3O-qo3XFGexi9_JqJXK9Mf82=p8CQ4BoD3o-Hypw@mail.gmail.com>
- <20250609194845.GC1255@sol>
- <CAGRGNgXw5LcykjiRS3yteb0K8FmYtb9wp1CJPM+GCKAw7j4ktQ@mail.gmail.com>
+	s=arc-20240116; t=1749547007; c=relaxed/simple;
+	bh=T5SuRWpaGQwoZhvlpNpdBYid1/1wMrEkOat2uWnCvtI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ck3Ct6sbvu9e/jmSdsKZ7Y6wA+JIsNy3zVoP5KLayMI4olSXcpE1z1VBHays+/nJ3T2RMtojpq8pN8x9JuAOmrb0AKJYJugc1nogjIhDVYTnSPifJjVKW8g8nMUHOjSQlSfVBv5hUoLh/WCxborfIPOJuxWW8bEYXqE1jGY7EHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5311937292fso87712e0c.3
+        for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 02:16:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749547003; x=1750151803;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aXmJAjCM4QXrI8PFxZnnSaMVzam0rKL8btuAAYmyx5Y=;
+        b=jjDGw6ZMO+VMuxwScaTS0JmPJc0+k2kvAAzZAbeZYpNQgwsqaiDe8UehdpLjbMlA19
+         4Oj+ybSn/GeA1r6/ARw4riIMhc0GGTEqYQM5fmLvfzrFOWj82LEk/+o+nV+vpSrV0IfF
+         rGen31Q3scy5ygFhHsfNr4tsabaTSCsjVM2iVGnzYnuWP41TMG9SXIu736GsltVjSNgG
+         byeqi+8nEbIg7kcq7jVeraxAvP+zcAmzdQ9XZK/0MprVvUGipnwQemF+kL4I2Gcjhh6c
+         xC0M2zvJLLQ8hNDzct2F9T5byuX/yxIfK2NokfiUIWW2Zd1xc4EWICmlu2fmmm2DBeFW
+         SNUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWBve+eiWi3ceu8uKn7WizqWGvNMNkEAr0cFDtvUrbohlUdgaVtJVfrFZMVMF4EdrP7ltO8DlFEq10=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwFMLLHqdMEElVI3NgOm1ZHLo0WE2tvLbNdDqC/vxQqP4j5SUfK
+	Cc4/9CRX1BcapLxARvGjToy8TGDByU2lnI0i6MOdc88CcWsZp0bTB1P4tMt56sea
+X-Gm-Gg: ASbGncstWqvvh0/2PaLOk+s3thXq22QhQAco6M2BHiUfmM0UU8jk+jioPAnMQERsspU
+	BynF/M+PM+KhZkur14NKsiuJ8Qiz+vIvCip7g9VqeuPMyhRi6gXWPJZ+UDBg/rpRka2dOTcephc
+	QcOCzvL/LgkUFZJqCapnYzNcrqNih1jXglLn9h6G4KQ2qRwzqtqMlBwn1ljED4ljqe3bggyyhEs
+	AmsJUH53i5Ba8MavkUtJlE9dfp/tw1pZWwkNRvRl+ERdiWigKb3+KqNH4ZmElywoxc+QEHFkgev
+	lJJB1R2fDafj9fwODwqq2kXUI45+MZQTzcwJs83xBklPN83qjcPYiTYR8jmXoYlOgpAyA8hi9ER
+	Mx10Q5DgJ9A65jl3fZeFj41r6oBj7
+X-Google-Smtp-Source: AGHT+IHAsMRDcJcbO0slvA9gsx/fTtSs4KG9G0xW0xK/dOusrDQFFMans5cqlbjvOzDVcSF7a2Ufnw==
+X-Received: by 2002:a05:6122:828b:b0:523:e9d2:404d with SMTP id 71dfb90a1353d-530e48c7ddfmr13461163e0c.11.1749547002693;
+        Tue, 10 Jun 2025 02:16:42 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53113bf5b08sm944677e0c.23.2025.06.10.02.16.41
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 02:16:41 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5311d362528so20865e0c.0
+        for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 02:16:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWwXkyVeWrtaHTIsvKu19XcrnRcCklA0ojjE+PDzL1VQMu4UmweyTBb2nQptQL3A7mdb9rnSQJPbnc=@lists.linux.dev
+X-Received: by 2002:a05:6102:943:b0:4e6:ddd0:9702 with SMTP id
+ ada2fe7eead31-4e7729a3b75mr12821267137.15.1749547001193; Tue, 10 Jun 2025
+ 02:16:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGRGNgXw5LcykjiRS3yteb0K8FmYtb9wp1CJPM+GCKAw7j4ktQ@mail.gmail.com>
+References: <20250422234830.2840784-1-superm1@kernel.org> <20250422234830.2840784-3-superm1@kernel.org>
+In-Reply-To: <20250422234830.2840784-3-superm1@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 10 Jun 2025 11:16:29 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
+X-Gm-Features: AX0GCFv1stbSgApzqPSScCybuPZoPnTcTv0OURpXKeqUfK7lSULXavQbaabojaE
+Message-ID: <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>, 
+	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 10, 2025 at 08:36:39AM +1000, Julian Calaby wrote:
-> Hi Eric,
-> 
-> On Tue, Jun 10, 2025 at 5:49 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Mon, Jun 09, 2025 at 06:15:24PM +1000, Julian Calaby wrote:
-> > > Hi Eric,
-> > >
-> > > On Sun, Jun 8, 2025 at 6:07 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> > > >
-> > > > This series is also available at:
-> > > >
-> > > >     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git lib-crc-arch-v2
-> > > >
-> > > > This series improves how lib/crc supports arch-optimized code.  First,
-> > > > instead of the arch-optimized CRC code being in arch/$(SRCARCH)/lib/, it
-> > > > will now be in lib/crc/$(SRCARCH)/.  Second, the API functions (e.g.
-> > > > crc32c()), arch-optimized functions (e.g. crc32c_arch()), and generic
-> > > > functions (e.g. crc32c_base()) will now be part of a single module for
-> > > > each CRC type, allowing better inlining and dead code elimination.  The
-> > > > second change is made possible by the first.
-> > > >
-> > > > As an example, consider CONFIG_CRC32=m on x86.  We'll now have just
-> > > > crc32.ko instead of both crc32-x86.ko and crc32.ko.  The two modules
-> > > > were already coupled together and always both got loaded together via
-> > > > direct symbol dependency, so the separation provided no benefit.
-> > > >
-> > > > Note: later I'd like to apply the same design to lib/crypto/ too, where
-> > > > often the API functions are out-of-line so this will work even better.
-> > > > In those cases, for each algorithm we currently have 3 modules all
-> > > > coupled together, e.g. libsha256.ko, libsha256-generic.ko, and
-> > > > sha256-x86.ko.  We should have just one, inline things properly, and
-> > > > rely on the compiler's dead code elimination to decide the inclusion of
-> > > > the generic code instead of manually setting it via kconfig.
-> > > >
-> > > > Having arch-specific code outside arch/ was somewhat controversial when
-> > > > Zinc proposed it back in 2018.  But I don't think the concerns are
-> > > > warranted.  It's better from a technical perspective, as it enables the
-> > > > improvements mentioned above.  This model is already successfully used
-> > > > in other places in the kernel such as lib/raid6/.  The community of each
-> > > > architecture still remains free to work on the code, even if it's not in
-> > > > arch/.  At the time there was also a desire to put the library code in
-> > > > the same files as the old-school crypto API, but that was a mistake; now
-> > > > that the library is separate, that's no longer a constraint either.
-> > >
-> > > Quick question, and apologies if this has been covered elsewhere.
-> > >
-> > > Why not just use choice blocks in Kconfig to choose the compiled-in
-> > > crc32 variant instead of this somewhat indirect scheme?
-> > >
-> > > This would keep the dependencies grouped by arch and provide a single place to
-> > > choose whether the generic or arch-specific method is used.
-> >
-> > It's not clear exactly what you're suggesting, but it sounds like you're
-> > complaining about this:
-> >
-> >     config CRC32_ARCH
-> >             bool
-> >             depends on CRC32 && CRC_OPTIMIZATIONS
-> >             default y if ARM && KERNEL_MODE_NEON
-> >             default y if ARM64
-> >             default y if LOONGARCH
-> >             default y if MIPS && CPU_MIPSR6
-> >             default y if PPC64 && ALTIVEC
-> >             default y if RISCV && RISCV_ISA_ZBC
-> >             default y if S390
-> >             default y if SPARC64
-> >             default y if X86
-> 
-> I was suggesting something roughly like:
-> 
-> choice
->     prompt "CRC32 Variant"
->     depends on CRC32 && CRC_OPTIMIZATIONS
-> 
-> config CRC32_ARCH_ARM_NEON
->     bool "ARM NEON"
->     default y
->     depends ARM && KERNEL_MODE_NEON
-> 
-> ...
-> 
-> config CRC32_GENERIC
->     bool "Generic"
-> 
-> endchoice
-> 
-> > This patchset strikes a balance where the vast majority of the arch-specific CRC
-> > code is isolated in lib/crc/$(SRCARCH), and the exceptions are just
-> > lib/crc/Makefile and lib/crc/Kconfig.  I think these exceptions make sense,
-> > given that we're building a single module per CRC variant.  We'd have to go
-> > through some hoops to isolate the arch-specific Kconfig and Makefile snippets
-> > into per-arch files, which don't seem worth it here IMO.
-> 
-> I was only really concerned with the Kconfig structure, I was
-> expecting Kbuild to look roughly like this: (filenames are wrong)
-> 
-> crc32-y += crc32-base.o
-> crc32-$(CRC32_ARCH_ARM_NEON) += arch/arm/crc32-neon.o
-> ...
-> crc32-$(CRC32_GENERIC) += crc32-generic.o
-> 
-> but yeah, your proposal here has grown on me now that I think about it
-> and the only real "benefit" mine has is that architectures can display
-> choices for variants that have Kconfig-visible requirements, which
-> probably isn't that many so it wouldn't be useful in practice.
-> 
-> Thanks for answering my question,
+Hi Mario,
 
-The CRC32 implementation did used to be user-selectable, but that was already
-removed in v6.14 (except for the coarse-grained knob CONFIG_CRC_OPTIMIZATIONS
-that remains and can be disabled only when CONFIG_EXPERT=y) since the vast
-majority of users simply want the optimized CRC32 code enabled.  The fact that
-it wasn't just enabled by default was a longstanding bug.
+CC mips, loongarch
 
-- Eric
+On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> PIIX4 and compatible controllers are only for X86. As some headers are
+> being moved into x86 specific headers PIIX4 won't compile on non-x86.
+>
+> Suggested-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+
+Thanks for your patch, which is now commit 7e173eb82ae97175
+("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
+in v6.16-rc1.
+
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -200,7 +200,7 @@ config I2C_ISMT
+>
+>  config I2C_PIIX4
+>         tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
+> -       depends on PCI && HAS_IOPORT
+> +       depends on PCI && HAS_IOPORT && X86
+
+Are you sure this south-bridge is not used on non-x86 platforms?
+It is enabled in several non-x86 defconfigs:
+
+    arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
+    arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=m
+    arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=y
+    arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
+
+The loongarch and loongson entries are probably bogus, but I wouldn't
+be surprised if the SGI Onyx and Origin do use Intel south-bridges.
+
+>         select I2C_SMBUS
+>         help
+>           If you say yes to this option, support will be included for the Intel
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
