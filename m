@@ -1,138 +1,137 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E2E293443
-	for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 12:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A1529B8F5;
+	Tue, 10 Jun 2025 14:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560015; cv=none; b=nUcPxXO0RPz/Yiy0yngc9wRxsOZ6//tu2owSpvmEEh94B8bcJgFOXx+3lpb9yfIW77pigeTO+6JjpROMIW0pxAXzaFX0ndawQSe7LbaD1tXciAbVdNyuqqlOTTN8BKpc3QQxyQ1ugCla9MxRTQAQqwasx5+tHT9FWY6605OZiNw=
+	t=1749564754; cv=none; b=nqEu1+15qGZ96gdK+1Bx2YQm3hGMSBHIkK5XXEbsqrFBRA8LPTUNUR3YeY9XaZMDaVNpRbZJzk9Sos39yJgnrvjb5u+F3NsmQT4YvDYwXHPnl9ACxLSRlBjhwANbRBSxhqw3HpZP7rcHMtY1+89yIusoLDjYftcL+0jzUswD/P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560015; c=relaxed/simple;
-	bh=BdEOtlwKT5cm8r2CwV8DPp+MGOvYNyQWEEliBnZf68w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mBQtdnfCN00lvQxYLq9WgKFbpDqSawIvv52Cvj2CXOUpDuo+BOmsOkiGhq8aJiT4rJpzZmvIaQo+Fo2GdE+dKfyMMPq/cND5SQng1g9qjpItPN6dVp3xcchQ19XmJMhiFUOyoxH5R080xS31BH7/+IlioO+e0lo6Wh7Ud+w1qa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jYy5B0NZ; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749564754; c=relaxed/simple;
+	bh=eMKse3olgDDTdTVEulDHGZT76bFnjfTCsl3tj8Z5nvY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iIFUMSQ7mGeYiZkKdqhHrmuJlOtiVDOyvAnZ6HwGU1avlEkjcsGxhTp7hGdzgPUrtzjk1Ju6YxYRldLrkcFvl7+/77Wx6wSyoQavCNvYUQc5Mf2nDAI9Q+gPAe08OVIwxMyX7ZgAWPYp/UD/yKlzATdCqhuPYxUqviyLJuDeQOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDvadfL4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jYy5B0NZ"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-adb5cb6d8f1so864182466b.3
-        for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 05:53:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749560011; x=1750164811; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ua43JbNUP+RRPO3HRaTeqoeNTy0CSQSVsdia/VGFSEg=;
-        b=jYy5B0NZchIkzEsHEsQxuyuWaupyEgeyKkI2JpqUlatDoWZsIKM6x0C1X4zv5ta9mx
-         CB9ULpq6rcuunBG0+iW+rKV42MsxTGUYaW5tiSe77L2YVU42QGXTsZK0r5+J/GrqmaL7
-         8sRtyZcqqL+Y4vyi15djsQ5WBuRhTFKTbs+MZEfO9G6dJHRp1g0ugYXrG6CDjXlgIVek
-         /B8ZXCgrEhFA8NXd0c2uLsJ2ewBmMeTEkQPd5P0FIF5VdesM63n+tXoFduUO5i2l8eZT
-         PelWsToM1x18IhhmCMl63kOudZsotfuYhQIpgE9HNOIxtE04s9R0taI6CxQw0jwuGmH1
-         bDng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749560011; x=1750164811;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ua43JbNUP+RRPO3HRaTeqoeNTy0CSQSVsdia/VGFSEg=;
-        b=VOVwN1z0fBJxviRcJMHEARuW9tLHFVesDwIHpVfwm66PrbDi7pHPIbBzKim6i9lAM/
-         R1PSZAW/VMCETdKqSuNADuqSBkYBo18k4bFznbAi7NO2W00eD2hzrG2ZmbS1mmUYHhAU
-         +Gr1QKt8OFA9+sitk7L6fZ9rG3dmQGyQGsB7XBRNslKAoIHbrc1TjE9dK3TvI3IRBG0e
-         EYcN9TPkpVYYQXRn+v0vFkIA5hxFxIcR3oYQWNb+hNe8KWhb+2gJz19AMk3C6GbVPTIw
-         ohBqyVksV2Zc5zaEi7NLc8H4v9VPuqphBFG+2YJPCk9/4XBtt4f8nER9ldRTFQiziobQ
-         +fMg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3TEScPCMyplztbM4O5Egr/Bk8aEMWJlquzMaFA4gyhI8mV+KZR/LSPJGZA4ZmD029S6ftDD7pEAA=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxt5qa1JclhbR3yfyGh7g8G7rJKw1YyeLhof73xyxny8tzS8w/t
-	GpPqPNb/YKQGK+e8dDBntwuRujPbzEUskOjj/e7tLQxNgFTXKQcub3dFg5u0KPbGtN1YZkbsEp3
-	itk8Dy4aJNT2Rr/p1lPjwrjjh7TWjuKpl2L9tYnBklw==
-X-Gm-Gg: ASbGncuue/8ME6/kgYefd+ZEKLRVmlb290PDVZJvRC9qirTts3Av5f1A1CI5oQyb0zz
-	RusK3oqoG1gxz/Mo89TZaKGrNwOnQFwUx78qsBnU7+/Uffy8t42dRrcEg9S+04b64nIhTYTJ9Hw
-	Rd2tnLTKUUH6k6qTftJUnxC54XpAFtZbfOvqwbEJzXP7zJ
-X-Google-Smtp-Source: AGHT+IE0dnXtTd0cJKE4NbTH+mEK1zcSfNIzItd4LPIjOHRSwOojAZ1aIgIzoBnogv+j1Y6Xx9Qy218nbJLUy1UaMQg=
-X-Received: by 2002:a17:907:94c8:b0:ad8:91e4:a91c with SMTP id
- a640c23a62f3a-ade1aab9825mr1680318466b.29.1749560011469; Tue, 10 Jun 2025
- 05:53:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDvadfL4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5397BC4CEED;
+	Tue, 10 Jun 2025 14:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749564753;
+	bh=eMKse3olgDDTdTVEulDHGZT76bFnjfTCsl3tj8Z5nvY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iDvadfL44uEdOn0RtAKvFUzmjA3P8wkt05S4itlgj9uHWgynwMccowZQoFOu++QFD
+	 mcO3mvOL0NAsin3bQOp1h/ZCUlyHQ7oF95a6pd4BXFE848ngnZ/kbV4NzdmmP1wPDf
+	 +yJYT56/8HzKLHsFkoz4bVY/bh1bycU0oA9nM3IQe9O73TQETn9ejg5v9TbCXY7XlL
+	 j/uk/x99ebbbgoC8rj/LqcgfuDB2K4uUCu7+rBgVsN0GTiJWd1HAkRtT8HqrFPZXKN
+	 eyHu8r5vNhJXkO1hgX/cidteEiZ+OJRZGChy0yn/mmeNtajyWF7kIDt6PVFpJ3d8SS
+	 TgTABlY1obp+g==
+Message-ID: <24febda9-6360-459f-82d3-6fba9ed9be83@kernel.org>
+Date: Tue, 10 Jun 2025 07:12:31 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1746581751.git.zhoubinbin@loongson.cn> <704447268706b1b9f25bbe9d15459163d0ac3404.1746581751.git.zhoubinbin@loongson.cn>
- <CAPDyKFo4n=K5-SeKFpCm-0u4Bbk-E0XqUrx+KSK1yuZa35a7ug@mail.gmail.com> <CAMpQs4JCaUzJXgcQwiWOoJ0YAj=ORnyaK0dC3-GamV-cbyhNnA@mail.gmail.com>
-In-Reply-To: <CAMpQs4JCaUzJXgcQwiWOoJ0YAj=ORnyaK0dC3-GamV-cbyhNnA@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 10 Jun 2025 14:52:52 +0200
-X-Gm-Features: AX0GCFv5tUexuVjVKPNZfCscSU_1kpR3xlCvzeNqP1bE90dtiqOaTc7DD1DnFvo
-Message-ID: <CAPDyKFo5BjZsst=vXhU8Rv2HN-Ewy8vwnyFkZdo1-XCXX0_wsA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC
- controller driver
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-mmc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
+To: Huacai Chen <chenhuacai@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, linux-mips@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20250422234830.2840784-1-superm1@kernel.org>
+ <20250422234830.2840784-3-superm1@kernel.org>
+ <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
+ <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 3 Jun 2025 at 14:54, Binbin Zhou <zhoubb.aaron@gmail.com> wrote:
->
-> Hi Ulf:
->
-> Sorry for the late reply.
->
-> On Mon, May 19, 2025 at 7:17=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.o=
-rg> wrote:
-> >
-> > On Wed, 7 May 2025 at 09:28, Binbin Zhou <zhoubinbin@loongson.cn> wrote=
-:
-> > >
-> > > This patch describes the two MMC controllers of the Loongson-2K2000 S=
-oC,
-> > > one providing an eMMC interface and the other exporting an SD/SDIO
-> > > interface.
-> > >
-> > > Compared to the Loongson-2K1000's MMC controllers, their internals ar=
-e
-> > > similar, except that we use an internally exclusive DMA engine instea=
-d of
-> > > an externally shared APBDMA engine.
-> > >
-> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> >
-> > [...]
-> >
-> > > +
-> > > +static void ls2k2000_mmc_fix_cmd_interrupt(struct loongson2_mmc_host=
- *host,
-> > > +                                          struct mmc_command *cmd)
-> > > +{
-> > > +       int val;
-> > > +
-> > > +       if (cmd->opcode !=3D MMC_WRITE_BLOCK && cmd->opcode !=3D MMC_=
-WRITE_MULTIPLE_BLOCK)
-> > > +               return;
-> > > +
-> > > +       regmap_read_poll_timeout(host->regmap, LOONGSON2_MMC_REG_FSTS=
-, val,
-> > > +                                (val & LOONGSON2_MMC_FSTS_TXFULL), 0=
-, 500);
-> >
-> > Can you please elaborate on what goes on here?
->
-> This is a controller hardware issue. We need to wait until the Tx FIFO
-> full flag is set before sending the write command. Otherwise, a data
-> timeout will occur.
+On 6/10/2025 2:24 AM, Huacai Chen wrote:
+> On Tue, Jun 10, 2025 at 5:16 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>
+>> Hi Mario,
+>>
+>> CC mips, loongarch
+>>
+>> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrote:
+>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>
+>>> PIIX4 and compatible controllers are only for X86. As some headers are
+>>> being moved into x86 specific headers PIIX4 won't compile on non-x86.
+>>>
+>>> Suggested-by: Ingo Molnar <mingo@kernel.org>
+>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> Thanks for your patch, which is now commit 7e173eb82ae97175
+>> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
+>> in v6.16-rc1.
+>>
+>>> --- a/drivers/i2c/busses/Kconfig
+>>> +++ b/drivers/i2c/busses/Kconfig
+>>> @@ -200,7 +200,7 @@ config I2C_ISMT
+>>>
+>>>   config I2C_PIIX4
+>>>          tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
+>>> -       depends on PCI && HAS_IOPORT
+>>> +       depends on PCI && HAS_IOPORT && X86
+>>
+>> Are you sure this south-bridge is not used on non-x86 platforms?
+>> It is enabled in several non-x86 defconfigs:
+>>
+>>      arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
+>>      arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=m
+>>      arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=y
+>>      arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
+>>
+>> The loongarch and loongson entries are probably bogus, but I wouldn't
+>> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
+> Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
 
-Okay, thanks for clarifying. Please add a comment in the code about
-this as I think it useful to know.
+Well we could revert this patch, but it's going to be a compile failure 
+because of 624b0d5696a89b138408d385899dd35372db324b and other patches 
+that go on top of that.
 
-Moreover, I think we should have the value of the timeout specified in a de=
-fine.
+My current leaning is we make a dummy fch.h header for these archs with 
+#defines for 0.
 
-[...]
+Any thoughts?
 
-Kind regards
-Uffe
+> 
+> Huacai
+> 
+>>
+>>>          select I2C_SMBUS
+>>>          help
+>>>            If you say yes to this option, support will be included for the Intel
+>>
+>> Gr{oetje,eeting}s,
+>>
+>>                          Geert
+>>
+>> --
+>> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>>
+>> In personal conversations with technical people, I call myself a hacker. But
+>> when I'm talking to journalists I just say "programmer" or something like that.
+>>                                  -- Linus Torvalds
+>>
+
