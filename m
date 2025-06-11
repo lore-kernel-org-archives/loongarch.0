@@ -1,110 +1,80 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBEE227586
-	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 05:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AE9221708;
+	Wed, 11 Jun 2025 09:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749620207; cv=none; b=OELhF7TcbzxIkrio+wYq4AI5aeGSP/Co4NWq5nEe3Wg/UbN2t2124G6i8v3PQkHfAEzlHtCS0xJvOTnXlKpnNvbyQnfNt91u71oedlWtPu3+Dg0oelrv2pLMij1ZRKUBuveAMtiM8Kl792yYr9rObemSHxdUm6QCxbIKhJ/T/jw=
+	t=1749633836; cv=none; b=T9dQdChnRWuMLp23BncIUYbAhlx287gMY7LTCpUg9FlUFt2B7n0EWEklukOCPISvXI3imK4pWQa8psD6DIF5Hd2gXYpg1l+sZ7rNErKy2S8TWcOSYpGBNVEBRx/pwbbZRLqDZnUZ2WjLq9vprExhxszl+m9zem3Aap/Q+iKJ9kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749620207; c=relaxed/simple;
-	bh=/HowC9kFKFSbycgjpOeF3oDREZHhIxzYt6lJ4cBZjNI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dtoyUDr/HaLTdfMIcT3kJ86HLnt7eXzkkfj6nBJkpqBMkY9TNvxQAx8taVA6GUwL6UvOtUtDfpapFtUZDuLJSrhUTngJRX5+kGvpzE3+BbaMGgIJhaKjjCwlpAY8xYOsLYeVHdILYSmNcEeKZ+KewAvAQAx3fr6GuYCD2EMNU9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 0b087856468611f0b29709d653e92f7d-20250611
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_UNTRUSTED, SRC_UNTRUSTED, IP_LOWREP, SRC_LOWREP, DN_TRUSTED
-	SRC_TRUSTED, SA_EXISTED, SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS
-	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
-	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:1acf6f43-1cc6-4e0e-bd89-499e73413c62,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:5
-X-CID-INFO: VERSION:1.1.45,REQID:1acf6f43-1cc6-4e0e-bd89-499e73413c62,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:5
-X-CID-META: VersionHash:6493067,CLOUDID:715a3887ef34a629ff90b7f74980c6ac,BulkI
-	D:250611133640944RVAVP,BulkQuantity:0,Recheck:0,SF:17|19|25|38|45|66|78|81
-	|82|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS
-	:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,A
-	RC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 0b087856468611f0b29709d653e92f7d-20250611
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(223.104.40.103)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1664631378; Wed, 11 Jun 2025 13:36:37 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Chenghao Duan <duanchenghao@kylinos.cn>,
-	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH v1 5/5] LoongArch: BPF: Update the code to rename validate_code to validate_ctx.
-Date: Wed, 11 Jun 2025 13:36:25 +0800
-Message-Id: <20250611053625.352091-6-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250611053625.352091-1-duanchenghao@kylinos.cn>
-References: <20250611035952.111182-3-duanchenghao@kylinos.cn>
- <20250611053625.352091-1-duanchenghao@kylinos.cn>
+	s=arc-20240116; t=1749633836; c=relaxed/simple;
+	bh=qKs2rXCD0kRLf2iapx2r9Tgv95LwvPC2wN8BZQGoz3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jzU3uKXagsPlkHITPNTYVuPuWKGTNTsNUbGHtn/ZnuymNJK0QihEtW7/a72VaCZsnzNhUZr5/VQcBz/1JpmQyzXnOyv461ALDugSVWq0SmQxh/zYcnd32x2HbtxFpOA0JKpeXuAQ+YbD5aLjOxAP7hY+wc1Q0Zhb6QEWralnTUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=fIA1Ythm; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="fIA1Ythm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=5MvjPaR0xlmnGQTOLXVKPuHYfW/FxurPRTBaqohXJ/o=; b=fIA1YthmoTPvZEC40yWITQnVfn
+	lqFPz13KrKnFdT8nUh1UZc3ndvAgOfB9P7alUJPkx59jzIR2eFYFSIxbk7wTKRVUcep3NLJGJbmoN
+	uGYoAG/cheINwFVkH5mXWzALvlppYwvg5BwRxOaGBbUiodeJ/hfD8h8XDl7wBd7gRGTdRie0zgGve
+	4Grt9Qpp2opWJQ9T9eTU9JI60Ut+yCGz85qA6bcot7YyaFKL7lybgo1ubzAzPMvF45l0NBjMo8cFx
+	dCD05c77hmS6kcH04RuKnwWNk1IVMmDUHeHBz/PCpL+TWnxwiWPzKHDdpZ1vYJfHObHrSKHTgWxtI
+	au6EoLEw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uPHgT-00CJES-0p;
+	Wed, 11 Jun 2025 17:23:50 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 11 Jun 2025 17:23:49 +0800
+Date: Wed, 11 Jun 2025 17:23:49 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, jarkko@kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, davem@davemloft.net,
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v10 2/5] crypto: loongson - add Loongson RNG driver
+ support
+Message-ID: <aElLJY9MnkEQx935@gondor.apana.org.au>
+References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+ <20250528065944.4511-3-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528065944.4511-3-zhaoqunqin@loongson.cn>
 
-Update the code to rename validate_code to validate_ctx.
-validate_code is used to check the validity of code.
-validate_ctx is used to check both code validity and table entry
-correctness.
+On Wed, May 28, 2025 at 02:59:41PM +0800, Qunqin Zhao wrote:
+>
+> +	if (!rng_devices.is_init) {
+> +		ret = crypto_register_rng(&loongson_rng_alg);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "failed to register crypto(%d)\n", ret);
+> +			return ret;
+> +		}
+> +		INIT_LIST_HEAD(&rng_devices.list);
+> +		mutex_init(&rng_devices.lock);
+> +		rng_devices.is_init = true;
+> +	}
 
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
-Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
----
- arch/loongarch/net/bpf_jit.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+This doesn't look right.  What stops two devices from both entering
+this code path when is_init == false?
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index cdcb73f93..ee38a9824 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1177,6 +1177,14 @@ static int validate_code(struct jit_ctx *ctx)
- 			return -1;
- 	}
- 
-+	return 0;
-+}
-+
-+static int validate_ctx(struct jit_ctx *ctx)
-+{
-+	if (validate_code(ctx))
-+		return -1;
-+
- 	if (WARN_ON_ONCE(ctx->num_exentries != ctx->prog->aux->num_exentries))
- 		return -1;
- 
-@@ -1285,7 +1293,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	build_epilogue(&ctx);
- 
- 	/* 3. Extra pass to validate JITed code */
--	if (validate_code(&ctx)) {
-+	if (validate_ctx(&ctx)) {
- 		bpf_jit_binary_free(header);
- 		prog = orig_prog;
- 		goto out_offset;
+Cheers,
 -- 
-2.25.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
