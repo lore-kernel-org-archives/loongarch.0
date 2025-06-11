@@ -1,204 +1,91 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1222B18C002
-	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 00:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D1704A02
+	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 01:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749600661; cv=none; b=Fbxkve8B/SIYVz7zHxi7wxdmw0H67B/1/XDDKTn3blOR6qITnDXyWq6BKh6/0d1nAKtuKztWn7wCPRXmNZiHFbQqKgM0S55iPhyw8oBd3oxz4lqfm1hGTmIvy+KQrxkxjo0tikAj44/Fi5RKS6idrMNDGmJpUiAHZ8z2E86+wE8=
+	t=1749606421; cv=none; b=KQBSmV4w6YmHQKTTBpgDwaGcy7HOd3LEb37+PI+hzp0JCflBgjbXB5i/SHCe3rqQre+mKr5pXbsFDE7llUMsW4q1dsZg43c2ZwVmyXTQmMpu+KowPRoX2cqbn4xZ6yUJ8Zhoz0pFzj5BVuyhWbB5L1daJd1skKk4YyPJn1IIAjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749600661; c=relaxed/simple;
-	bh=AcY3H8bGfIWZWHawREnW4VSuG2ZvHv2SK1gbpEk3yi4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AwaRFHcGcP0VEwfTso6bDXgIc6I1G7+L/Nb7thrChf05V992yjbkpvSm6x8oCtVCY/fQkaSgpM+vro5jxDSJD0f4twBSsxCiq7bXK4tgRT/ZIn3y5vzwF8Qq2U3/aWdypmJjPWGxeFRy8My+D08z5C3xjZx/1rGPPIojl5KTfcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mIjnNA1Y; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIjnNA1Y"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742d077bdfaso8443484b3a.2
-        for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 17:10:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749600659; x=1750205459; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=t+Mj+r8r7UAjF4+0LNUZhsvI8NJHwfinPsCt24LIifo=;
-        b=mIjnNA1Y5FlpFTil0r0Nxbsgb3syuAF/n1BmDCYd0CLcyajTqm1ZdBKuWDmQ0ttAtm
-         Qy8l6z3nuJz85roHZ0s9uDmx4NQ0tWSMG7tG98tMqiavCQlWMJ32QWaEpeAjcLhfN0zX
-         WIwKSdRxHSCV8u87G7jh6Djcq+Oe769S4mvl6blJ4FFI5E68ZvKjahRVl0GLhMRCvwBu
-         N0IbCi8b0aKkquu3Z2spYJt/ck8aUtYwQOr0yrfLZi8KxgwDNzdN0I5b7BvtcfBDVREl
-         /iPVt5jhROBN62aNAQstFtS9aSLn+IZeOiUi8fyjmhuqhU0SEKLBHtj13JZZl3Tm6oIO
-         xMxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749600659; x=1750205459;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t+Mj+r8r7UAjF4+0LNUZhsvI8NJHwfinPsCt24LIifo=;
-        b=aqEMZ82eywMy49bMG7GkRPW7eBtqwH+MTgxnK8myXMAscMfa4E3g4ElaOpQVZEzbm6
-         7tHHKDrq/BVglquytUx07r9ZuLcgi5X/XDNZrK6qNUZoWd7gBom8Vt9NbR0u75HFbqkQ
-         Fzx6+VbSvtfe/5c/XgC00Lo17RMP/822YucipDsPu1RSWqoism+MA2LGM8vIoZ+Fel1t
-         M4iBnlzoflGbZxTaJ/vMjbXIjv6sbAE0QJaVczhhQWKgXsVAghJVYmIPeiLz4PQ13U9M
-         zzAOvwCTpZmipd/BZrmlDkuh6tIesUHnyeN0I1pp3VSqy+B0aqPgPWSPcTo62BRB7vrn
-         ly8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXdC82G2KHepXz1EbZFRJ+3yJ8RJWnWaD7F9jtAAjCf63A6PhRwRAE2r1eIJZHTJ2vSlOycJEn0AvQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwlpNeGhxnYoruyZjkIieN3xd68dzhRMQFy4/fBxPnITWgqj8Nz
-	2AuEWtSrxUWdUqyJOzQimOG0yYa8UN7fucMEFYMfvcIdexmtJBGa1Lg07GsSw96dG0xGjs8cF7t
-	e18D/Mg==
-X-Google-Smtp-Source: AGHT+IHdKstC+XlYUus8Wdm0HR7HPxHMBlUy5ahB8xm3L+Y1hmecIZTBPJ5vhN4Gi0qdwz1eVbXtQ9xfH68=
-X-Received: from pgam16.prod.google.com ([2002:a05:6a02:2b50:b0:b2f:6348:f715])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9012:b0:1f5:8f7f:8f19
- with SMTP id adf61e73a8af0-21f8663f76dmr1960513637.10.1749600659002; Tue, 10
- Jun 2025 17:10:59 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 17:10:42 -0700
-In-Reply-To: <20250611001042.170501-1-seanjc@google.com>
+	s=arc-20240116; t=1749606421; c=relaxed/simple;
+	bh=zcNwtPl3Bu4wOJoWI9YqomflrSwr11gYivs7PCI9B8E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pm1OfgrFr/1dZfW7Ie2VtnF+Q9Xn8PnlTIpPuNTWHT3KQ/t8urjzFb7UyOl0ALZ7eFMZjC+wlO8X2z14OURAbZlJa6iIp9zpB1Ep4kSdH5HCN6XpO2S1VaIjyoTj5xJh2at3LhUpWNRpSJEBdVrTxYvPt6+oE8HdsfjcVJYzMSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxnOIM4Ehom0ITAQ--.11958S3;
+	Wed, 11 Jun 2025 09:46:52 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMCx7MQL4Eho0EoVAQ--.65102S2;
+	Wed, 11 Jun 2025 09:46:52 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xianglai Li <lixianglai@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/9] LoongArch: KVM: INTC: Enhancement about eiointc emulation
+Date: Wed, 11 Jun 2025 09:46:42 +0800
+Message-Id: <20250611014651.3042734-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250611001042.170501-1-seanjc@google.com>
-X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250611001042.170501-9-seanjc@google.com>
-Subject: [PATCH 8/8] KVM: Standardize include paths across all architectures
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Anish Ghulati <aghulati@google.com>, Colton Lewis <coltonlewis@google.com>, 
-	Thomas Huth <thuth@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCx7MQL4Eho0EoVAQ--.65102S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Standardize KVM's include paths across all architectures by declaring
-the KVM-specific includes in the common Makefile.kvm.  Having common KVM
-"own" the included paths reduces the temptation to unnecessarily add
-virt/kvm to arch include paths, and conversely if allowing arch code to
-grab headers from virt/kvm becomes desirable, virt/kvm can be added to
-all architecture's include path with a single line update.
+This series fix five issues about kernel eiointc emulation list as
+follows:
+  1. The first patch fixes type forced assignment issue.
+  2. The second patch fixes interrupt route with physical cpu.
+  3. The third patch disables update property num_cpu and feature
+  4. The fourth patch adds validation check about num_cpu from user
+     space.
+  5. Overflow with array index when emulate register EIOINTC_ENABLE
+     writing operation.
 
-Having the common KVM makefile append to ccflags also provides a
-convenient location to append other things, e.g. KVM-specific #defines.
+Also there is code cleanup with kernel eiointc emulation.
 
-Note, this changes the behavior of s390 and PPC, as s390 and PPC
-previously overwrote ccflags-y instead of adding on.  There is no evidence
-that overwriting ccflags-y was necessary or even deliberate, as both s390
-and PPC switched to the overwrite behavior without so much as a passing
-mention when EXTRA_CFLAGS was replaced with ccflags-y (commit c73028a02887
-("s390: change to new flag variable") and commit 4108d9ba9091
-("powerpc/Makefiles: Change to new flag variables")).
-
-Acked-by: Anup Patel <anup@brainfault.org>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/arm64/kvm/Makefile   | 2 --
- arch/mips/kvm/Makefile    | 2 --
- arch/powerpc/kvm/Makefile | 2 --
- arch/riscv/kvm/Makefile   | 2 --
- arch/s390/kvm/Makefile    | 2 --
- arch/x86/kvm/Makefile     | 1 -
- virt/kvm/Makefile.kvm     | 2 ++
- 7 files changed, 2 insertions(+), 11 deletions(-)
+v2 ... v3:
+  1. Add prefix INTC: in title of every patch.
+  2. Fix array index overflow when emulate register EIOINTC_ENABLE
+     writing operation.
+  3. Add address alignment check with eiointc register access operation.
 
-diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-index 7c329e01c557..86035b311269 100644
---- a/arch/arm64/kvm/Makefile
-+++ b/arch/arm64/kvm/Makefile
-@@ -3,8 +3,6 @@
- # Makefile for Kernel-based Virtual Machine module
- #
- 
--ccflags-y += -I $(src)
--
- include $(srctree)/virt/kvm/Makefile.kvm
- 
- obj-$(CONFIG_KVM) += kvm.o
-diff --git a/arch/mips/kvm/Makefile b/arch/mips/kvm/Makefile
-index 96a7cd21b140..d198e1addea7 100644
---- a/arch/mips/kvm/Makefile
-+++ b/arch/mips/kvm/Makefile
-@@ -4,8 +4,6 @@
- 
- include $(srctree)/virt/kvm/Makefile.kvm
- 
--ccflags-y += -Iarch/mips/kvm
--
- kvm-$(CONFIG_CPU_HAS_MSA) += msa.o
- 
- kvm-y +=    mips.o emulate.o entry.o \
-diff --git a/arch/powerpc/kvm/Makefile b/arch/powerpc/kvm/Makefile
-index 1a575db2666e..6f12edd465df 100644
---- a/arch/powerpc/kvm/Makefile
-+++ b/arch/powerpc/kvm/Makefile
-@@ -3,8 +3,6 @@
- # Makefile for Kernel-based Virtual Machine module
- #
- 
--ccflags-y := -Iarch/powerpc/kvm
--
- include $(srctree)/virt/kvm/Makefile.kvm
- 
- common-objs-y += powerpc.o emulate_loadstore.o
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index 4e0bba91d284..dbe61a398cc8 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -3,8 +3,6 @@
- # Makefile for RISC-V KVM support
- #
- 
--ccflags-y += -I $(src)
--
- include $(srctree)/virt/kvm/Makefile.kvm
- 
- obj-$(CONFIG_KVM) += kvm.o
-diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
-index b742e08c036b..5cbcaa7f241a 100644
---- a/arch/s390/kvm/Makefile
-+++ b/arch/s390/kvm/Makefile
-@@ -5,8 +5,6 @@
- 
- include $(srctree)/virt/kvm/Makefile.kvm
- 
--ccflags-y := -Iarch/s390/kvm
--
- kvm-y += kvm-s390.o intercept.o interrupt.o priv.o sigp.o
- kvm-y += diag.o gaccess.o guestdbg.o vsie.o pv.o gmap-vsie.o
- 
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index a5d362c7b504..f78f11b582d2 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--ccflags-y += -I $(srctree)/arch/x86/kvm
- ccflags-$(CONFIG_KVM_WERROR) += -Werror
- 
- include $(srctree)/virt/kvm/Makefile.kvm
-diff --git a/virt/kvm/Makefile.kvm b/virt/kvm/Makefile.kvm
-index 724c89af78af..0e7ba49026fc 100644
---- a/virt/kvm/Makefile.kvm
-+++ b/virt/kvm/Makefile.kvm
-@@ -3,6 +3,8 @@
- # Makefile for Kernel-based Virtual Machine module
- #
- 
-+ccflags-y += -I$(src)
-+
- KVM ?= ../../../virt/kvm
- 
- kvm-y := $(KVM)/kvm_main.o $(KVM)/eventfd.o $(KVM)/binary_stats.o
+v1 ... v2:
+  1. Add extra fix in patch 3 and patch 4, add num_cpu validation check
+  2. Name of stat information keeps unchanged, only move it from VM stat
+     to vCPU stat.
+---
+
+Bibo Mao (9):
+  LoongArch: KVM: INTC: Fix interrupt route update with eiointc
+  LoongArch: KVM: INTC: Check interrupt route from physical cpu
+  LoongArch: KVM: INTC: Disable update property num_cpu and feature
+  LoongArch: KVM: INTC: Check validation of num_cpu from user space
+  LoongArch: KVM: INTC: Avoid overflow with array index
+  LoongArch: KVM: INTC: Use standard bitops API with eiointc
+  LoongArch: KVM: INTC: Remove unused parameter len
+  LoongArch: KVM: INTC: Add stat information with kernel irqchip
+  LoongArch: KVM: INTC: Add address alignment check
+
+ arch/loongarch/include/asm/kvm_host.h |  12 +-
+ arch/loongarch/kvm/intc/eiointc.c     | 167 +++++++++++++++-----------
+ arch/loongarch/kvm/intc/ipi.c         |  28 +----
+ arch/loongarch/kvm/intc/pch_pic.c     |   4 +-
+ arch/loongarch/kvm/vcpu.c             |   8 +-
+ 5 files changed, 117 insertions(+), 102 deletions(-)
+
+
+base-commit: aef17cb3d3c43854002956f24c24ec8e1a0e3546
 -- 
-2.50.0.rc0.642.g800a2b2222-goog
+2.39.3
 
