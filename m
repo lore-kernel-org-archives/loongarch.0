@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A1181C5D53
-	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 01:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C26F91448E0
+	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 01:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749606435; cv=none; b=i0nZqw2acwzx/1GbNnrfVq0STzwNe1MvcsC1KuqNnMaUfDKglBJtn0gd1wbcT0uFBZxIy39+0VsqFDZ7E9MwiBICRpmWLucgWx5J74AgbxzTncyFc3Bsl4T/FG3yKBzhLz/tR05wUWm8lV/WEx7Wb/7TaYdASNCA05bK953pX8E=
+	t=1749606605; cv=none; b=L9Tm0y+i6HchTO2kl4n4jcgSw0HTnKb7w+qjdCZF76sOYM9wBiaaIjenY/CbqHVPbiz8qm07quARcv4G90HupECSZrzyZwI/8JChBlgkFK26Km87uYlahGBfj8eXZwBKyCiV7hyT4J9aI2aGHbDjusYJhq9I8RGcLrAADEyZegw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749606435; c=relaxed/simple;
+	s=arc-20240116; t=1749606605; c=relaxed/simple;
 	bh=oKbfmTtc9yGOjWmt4vhFPEeeHjc4/0/VRxxExKFF9s0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gk9pbkpd4QIXOPy1uoBlBbyRCWwF0S7q5ivROcgFaOFwxXk8h1oSSIZfyGZCSO8cGDnu9EiLB+DzC+wteXzelbJOFMg7PEywRSKyoFAEwWc74Q7xM0CQ8xkfhv0I2WVvHl6Y7bO9WWs9S8b1RobP38jCU6GJTZ0pm36QsAfcvyk=
+	 MIME-Version; b=HsOFCssmHdalsEuRElbfcv6P/c2SG2GRxhwLBFYIIzHwjmoisADaLmOJMxdVip4ghC2vs9mjt+7MIYJEE3HYfhK/S0+MNuXCNLfKSbicv1PWTEEUOGgebcjr2dplIf0RU+xbFX/i2FBxJHGjXIgpPHoY9475x6DXTToJ00eCyWI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxjXIf4EhouUITAQ--.47176S3;
-	Wed, 11 Jun 2025 09:47:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxbKzK4Ehoz0MTAQ--.47518S3;
+	Wed, 11 Jun 2025 09:50:02 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMCx7MQL4Eho0EoVAQ--.65102S10;
-	Wed, 11 Jun 2025 09:47:11 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMBxHcXJ4EhoCEwVAQ--.64107S2;
+	Wed, 11 Jun 2025 09:50:01 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>,
@@ -26,8 +26,8 @@ Cc: kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
 Subject: [PATCH v3 8/9] LoongArch: KVM: INTC: Add stat information with kernel irqchip
-Date: Wed, 11 Jun 2025 09:46:50 +0800
-Message-Id: <20250611014651.3042734-9-maobibo@loongson.cn>
+Date: Wed, 11 Jun 2025 09:50:01 +0800
+Message-Id: <20250611015001.3042819-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20250611014651.3042734-1-maobibo@loongson.cn>
 References: <20250611014651.3042734-1-maobibo@loongson.cn>
@@ -38,7 +38,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx7MQL4Eho0EoVAQ--.65102S10
+X-CM-TRANSID:qMiowMBxHcXJ4EhoCEwVAQ--.64107S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
