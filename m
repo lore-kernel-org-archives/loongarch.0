@@ -1,36 +1,61 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD9813CA97
-	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 01:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AF31EA7E9
+	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 05:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749606708; cv=none; b=ukfFk7PZJt/xL/IWQrytA3X4F0OEbP28qK62Joj88bE+x6aRAIJiPUBHuMuZvR6ij4ojEf0xOB315PXb0fnW2eqAQvMH6hxmvOszCZ44FnHEML2DnSvpcc2iKjVPMvDIwXFmFN+NLqHYAUqMKUlzpPkYp5MjhneX3elPExtYTmE=
+	t=1749620200; cv=none; b=ZkuaWQ+ah5yLCi0XVMqHBhIOlYUniPwaF/UNxRQfdPXqdAJp29MZ3ifbNM5U8HOZbu6LIK1hznbV24y4HWnxjqhQ5p5+eGOiZSLUZBnEs3zR2mX1RwoTNN/Dt0d/ejaWxXjA5jLyananygOBEN7BEu4Zo2aLUnsfwRymidmGh4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749606708; c=relaxed/simple;
-	bh=WR+OC66bsWbh7oerKCupNJIST5tHLZ3Uqr/wnP0OJvs=;
+	s=arc-20240116; t=1749620200; c=relaxed/simple;
+	bh=rhu5cC4ghVBpa9vn/6ZN4Nc/bR6KUWlM03H+8o/sF60=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jNxGdcbDXybmRj1bMz5X+ybcSx8eVhC92H8oGNUJnAOuGqJ4/3zFAQR3Vl1qKioXlPiBWg+qNNDmb4t2EmZGi0xyQY3EoZ4XRZdROFkhn42vpemBqSaX/jG1oiwukJL8U50jAaTbCxFxc5MKve9ZLKqIvBZYuKmEZdSVnAcMSwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxLGsx4UhoKkQTAQ--.47397S3;
-	Wed, 11 Jun 2025 09:51:45 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMCxPscx4UhoikwVAQ--.2322S2;
-	Wed, 11 Jun 2025 09:51:45 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xianglai Li <lixianglai@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
+	 MIME-Version; b=UBIV1EauNwHD0c4F1IjaDbw8RvV5oE4Ht8hmyRhLEDqeXlKDzcqKMtvf41i9Wglb8UHTJfoJbzf5AUfnnYCZDuPgXGxdmNbF5JVAqNh/csB2O4LEpOk70P+NgJkTcMnxTPFKqiN7R314eqGuXqPVXUOCfxpqFhL0rh8VR3VHj6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 0609d7aa468611f0b29709d653e92f7d-20250611
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_LOWREP, SRC_LOWREP
+	DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_UNTRUSTED, SN_UNFAMILIAR
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:025eaa40-22f1-4416-8857-2450d067be6b,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.1.45,REQID:025eaa40-22f1-4416-8857-2450d067be6b,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:6493067,CLOUDID:55ab9264808ed9ccff8b7b59c523c8fc,BulkI
+	D:2506111336315M34QFLP,BulkQuantity:0,Recheck:0,SF:17|19|25|38|45|66|78|81
+	|82|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS
+	:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,A
+	RC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: 0609d7aa468611f0b29709d653e92f7d-20250611
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.104.40.103)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 959882847; Wed, 11 Jun 2025 13:36:28 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 9/9] LoongArch: KVM: INTC: Add address alignment check
-Date: Wed, 11 Jun 2025 09:51:45 +0800
-Message-Id: <20250611015145.3042884-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250611014651.3042734-1-maobibo@loongson.cn>
-References: <20250611014651.3042734-1-maobibo@loongson.cn>
+Cc: Chenghao Duan <duanchenghao@kylinos.cn>
+Subject: [PATCH v1 0/5] Support trampoline for LoongArch
+Date: Wed, 11 Jun 2025 13:36:20 +0800
+Message-Id: <20250611053625.352091-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250611035952.111182-3-duanchenghao@kylinos.cn>
+References: <20250611035952.111182-3-duanchenghao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,82 +63,37 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxPscx4UhoikwVAQ--.2322S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-IOCSR instruction supports 1/2/4/8 bytes access, the address should
-be naturally aligned with its access size. Here address alignment
-check is added in eiointc kernel emulation.
+v1: Support trampoline for LoongArch. The following feature tests
+have been completed:
+1. fentry
+2. fexit
+3. fmod_ret
 
-At the same time len must be 1/2/4/8 bytes from iocsr exit emulation
-function kvm_emu_iocsr(), remove the default case in switch case
-statements.
+TODO: The support for the struct_ops feature will be provided in
+subsequent patches.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/intc/eiointc.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+Chenghao Duan (4):
+  LoongArch: BPF: The operation commands needed to add a trampoline
+  LoongArch: BPF: Add bpf_arch_text_poke support for Loongarch
+  LoongArch: BPF: Add bpf trampoline support for Loongarch
+  LoongArch: BPF: Update the code to rename validate_code to
+    validate_ctx.
 
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index 8b0d9376eb54..4e9d12300cc4 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -311,6 +311,12 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 	}
- 
-+	/* len must be 1/2/4/8 from function kvm_emu_iocsr() */
-+	if (addr & (len - 1)) {
-+		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
-+		return -EINVAL;
-+	}
-+
- 	vcpu->stat.eiointc_read_exits++;
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (len) {
-@@ -323,12 +329,9 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
- 	case 4:
- 		ret = loongarch_eiointc_readl(vcpu, eiointc, addr, val);
- 		break;
--	case 8:
-+	default:
- 		ret = loongarch_eiointc_readq(vcpu, eiointc, addr, val);
- 		break;
--	default:
--		WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
--						__func__, addr, len);
- 	}
- 	spin_unlock_irqrestore(&eiointc->lock, flags);
- 
-@@ -682,6 +685,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 	}
- 
-+	if (addr & (len - 1)) {
-+		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
-+		return -EINVAL;
-+	}
-+
- 	vcpu->stat.eiointc_write_exits++;
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (len) {
-@@ -694,12 +702,9 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
- 	case 4:
- 		ret = loongarch_eiointc_writel(vcpu, eiointc, addr, val);
- 		break;
--	case 8:
-+	default:
- 		ret = loongarch_eiointc_writeq(vcpu, eiointc, addr, val);
- 		break;
--	default:
--		WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
--						__func__, addr, len);
- 	}
- 	spin_unlock_irqrestore(&eiointc->lock, flags);
- 
+George Guo (1):
+  LoongArch: Support fixmap
+
+ arch/loongarch/include/asm/fixmap.h |   2 +
+ arch/loongarch/include/asm/inst.h   |  19 ++
+ arch/loongarch/kernel/inst.c        |  85 +++++
+ arch/loongarch/kernel/setup.c       |   1 +
+ arch/loongarch/mm/init.c            | 111 ++++++-
+ arch/loongarch/net/bpf_jit.c        | 497 +++++++++++++++++++++++++++-
+ arch/loongarch/net/bpf_jit.h        |   6 +
+ 7 files changed, 714 insertions(+), 7 deletions(-)
+
+Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+
 -- 
-2.39.3
+2.25.1
 
