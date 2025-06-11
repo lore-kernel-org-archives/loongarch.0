@@ -1,20 +1,20 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1081EA7E9
-	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 05:36:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8E321A45D
+	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 05:36:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749620203; cv=none; b=HkEr4iHqvDdB205omIcLrycmL8lX1NSZvi/WhWECtcmUaKPr4MiwS8yOKYmmAE9OmWm4o8sInbrjP/7HpbMV0mWOx5IkzcQJUKdUxzTYC/f7hazdyC/RfZXaqfEz29O/9ZtCAcMmKgpiHRTALTJi+/glc6PqyffhjOV9twq7bS4=
+	t=1749620205; cv=none; b=okj9+OHkFObCKpX3cj6TQ2ibdtgtpg1Brzjgc/k1qSSVh4rRqk1ENzp0bb17oUJSDQ3trVsWgsH7A9D3TXgZ6CVIsi+yRcyRZGO1wDZUlOnxsTOxpD8HuAxcLX4od1g5oafz5khSJxL95PpfIeJLHURTPfYbdYjQoFjkn5x6WHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749620203; c=relaxed/simple;
-	bh=6hil3jme6RmuqIKWHKQsZ2pdj9ZHIGCX1CiT7H80zY0=;
+	s=arc-20240116; t=1749620205; c=relaxed/simple;
+	bh=5RwXiP9db3ZiMTTmqPZMvskn3c84oxlF0u3TQMV3CdY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=riQXv7BukvoUA+ap/MPmryq6CFkMhpYEOfHHB2snIRTDV0Co1MZvE75aRly5XtKkIOBXRlwQ3/FaFhqhWpqp4dCsyiVLSk98vS9i26pb4d4mmhDVF0wkVFB97LI3erc6LR5WqloRR3P3WX01nqO9Bf1j4L4FTYVkWCugpHuqSY0=
+	 MIME-Version; b=jzwluQujo27kKDxRJP/1GktLvyvYerAEJylNZ3jzlaXB9FkxekJundWZClhaavIqQGAeTxuwEHX8UFDhk38qgEJe/NJnfSAqu0A4pNoBheH7yl0GuWZdsfYY2URywECuLN6wKuqx4vRfYVrKU2tit6YS5of9WGwPFTzHZ60X9Sw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 09afac90468611f0b29709d653e92f7d-20250611
+X-UUID: 092a3808468611f0b29709d653e92f7d-20250611
 X-CTIC-Tags:
 	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B, HR_CTT_MISS
 	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
@@ -26,35 +26,34 @@ X-CTIC-Tags:
 	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
 	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:d0832168-f478-4a19-be73-fb229c5342f8,IP:10,
-	URL:0,TC:0,Content:0,EDM:-25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-20
-X-CID-INFO: VERSION:1.1.45,REQID:d0832168-f478-4a19-be73-fb229c5342f8,IP:10,UR
-	L:0,TC:0,Content:0,EDM:-25,RT:0,SF:-5,FILE:0,BULK:0,RULE:EDM_GE969F26,ACTI
-	ON:release,TS:-20
-X-CID-META: VersionHash:6493067,CLOUDID:7ee8bebc6a0d2c6ddbc33a2613e38ca8,BulkI
-	D:250611133637GVWAGH1C,BulkQuantity:0,Recheck:0,SF:17|19|25|38|45|66|78|81
-	|82|102,TC:nil,Content:0|50,EDM:1,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:
-	nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,AR
-	C:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 09afac90468611f0b29709d653e92f7d-20250611
+X-CID-O-INFO: VERSION:1.1.45,REQID:4f519acc-bb8a-436a-83e6-1b7c8d1a8648,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.1.45,REQID:4f519acc-bb8a-436a-83e6-1b7c8d1a8648,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:6493067,CLOUDID:dd49578951bb38abcaeae2c14f3778fd,BulkI
+	D:250611133637X39LCBZ6,BulkQuantity:0,Recheck:0,SF:17|19|25|38|45|66|78|81
+	|82|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS
+	:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,A
+	RC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
+X-UUID: 092a3808468611f0b29709d653e92f7d-20250611
 X-User: duanchenghao@kylinos.cn
 Received: from localhost.localdomain [(223.104.40.103)] by mailgw.kylinos.cn
 	(envelope-from <duanchenghao@kylinos.cn>)
 	(Generic MTA)
-	with ESMTP id 1249612687; Wed, 11 Jun 2025 13:36:35 +0800
+	with ESMTP id 227271751; Wed, 11 Jun 2025 13:36:34 +0800
 From: Chenghao Duan <duanchenghao@kylinos.cn>
 To: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Cc: Chenghao Duan <duanchenghao@kylinos.cn>,
-	George Guo <guodongtai@kylinos.cn>,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH v1 2/5] LoongArch: BPF: The operation commands needed to add a trampoline
-Date: Wed, 11 Jun 2025 13:36:22 +0800
-Message-Id: <20250611053625.352091-3-duanchenghao@kylinos.cn>
+Cc: George Guo <guodongtai@kylinos.cn>,
+	Chenghao Duan <duanchenghao@kylinos.cn>
+Subject: [PATCH v1 1/5] LoongArch: Support fixmap
+Date: Wed, 11 Jun 2025 13:36:21 +0800
+Message-Id: <20250611053625.352091-2-duanchenghao@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250611053625.352091-1-duanchenghao@kylinos.cn>
 References: <20250611035952.111182-3-duanchenghao@kylinos.cn>
@@ -67,177 +66,189 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add instrctions:
-emit_NOP
-emit_BREAK
+From: George Guo <guodongtai@kylinos.cn>
 
-Add branch jump function:
-larch_insn_gen_beq
-larch_insn_gen_bne
+Support fixmap for Loongarch.
 
-Add instruction copy function: larch_insn_text_copy
-The implementation of larch_insn_text_copy uses the fixmap
-FIX_TEXT_POKE0.
+In the functions patch_map and patch_unmap, __set_fixmap are used.
+Therefore, remove the __init identifier from these functions.
 
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/include/asm/inst.h | 19 +++++++
- arch/loongarch/kernel/inst.c      | 85 +++++++++++++++++++++++++++++++
- 2 files changed, 104 insertions(+)
+ arch/loongarch/include/asm/fixmap.h |   2 +
+ arch/loongarch/kernel/setup.c       |   1 +
+ arch/loongarch/mm/init.c            | 111 ++++++++++++++++++++++++++--
+ 3 files changed, 108 insertions(+), 6 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 3089785ca..dd6e07781 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction insn, struct pt_regs *regs);
- int larch_insn_read(void *addr, u32 *insnp);
- int larch_insn_write(void *addr, u32 insn);
- int larch_insn_patch_text(void *addr, u32 insn);
-+int larch_insn_text_copy(void *dst, void *src, size_t len);
+diff --git a/arch/loongarch/include/asm/fixmap.h b/arch/loongarch/include/asm/fixmap.h
+index d2e55ae55..b579ad2be 100644
+--- a/arch/loongarch/include/asm/fixmap.h
++++ b/arch/loongarch/include/asm/fixmap.h
+@@ -13,6 +13,7 @@
+ enum fixed_addresses {
+ 	FIX_HOLE,
+ 	FIX_EARLYCON_MEM_BASE,
++	FIX_TEXT_POKE0,
+ 	__end_of_fixed_addresses
+ };
  
- u32 larch_insn_gen_nop(void);
- u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
-@@ -511,6 +512,8 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
- u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
- u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
- u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-+u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-+u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
+@@ -20,6 +21,7 @@ enum fixed_addresses {
+ #define FIXADDR_START	(FIXADDR_TOP - FIXADDR_SIZE)
+ #define FIXMAP_PAGE_IO	PAGE_KERNEL_SUC
  
- static inline bool signed_imm_check(long val, unsigned int bit)
- {
-@@ -778,6 +781,22 @@ static inline void emit_##NAME(union loongarch_instruction *insn,	\
++void __init early_fixmap_init(void);
+ extern void __set_fixmap(enum fixed_addresses idx,
+ 			 phys_addr_t phys, pgprot_t flags);
  
- DEF_EMIT_REG3SA2_FORMAT(alsld, alsld_op)
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 56934fe58..368786952 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -597,6 +597,7 @@ void __init setup_arch(char **cmdline_p)
+ 	memblock_init();
+ 	pagetable_init();
+ 	bootcmdline_init(cmdline_p);
++	early_fixmap_init();
+ 	parse_early_param();
+ 	reserve_initrd_mem();
  
-+#define DEF_EMIT_NOP(NAME)						\
-+static inline void emit_##NAME(union loongarch_instruction *insn)	\
-+{									\
-+	insn->word = INSN_NOP;						\
-+}
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index 188b52bbb..68abb7bad 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -36,6 +36,109 @@
+ #include <asm/pgalloc.h>
+ #include <asm/tlb.h>
+ 
++#define SPAN_NR_ENTRIES(vstart, vend, shift) \
++	((((vend) - 1) >> (shift)) - ((vstart) >> (shift)) + 1)
 +
-+DEF_EMIT_NOP(NOP)
++#define NR_BM_PTE_TABLES \
++	SPAN_NR_ENTRIES(FIXADDR_START, FIXADDR_TOP, PMD_SHIFT)
++#define NR_BM_PMD_TABLES \
++	SPAN_NR_ENTRIES(FIXADDR_START, FIXADDR_TOP, PUD_SHIFT)
 +
-+#define DEF_EMIT_BREAK(NAME)						\
-+static inline void emit_##NAME(union loongarch_instruction *insn)	\
-+{									\
-+	insn->word = INSN_BREAK;					\
-+}
++static_assert(NR_BM_PMD_TABLES == 1);
 +
-+DEF_EMIT_BREAK(BREAK)
++#define __BM_TABLE_IDX(addr, shift) \
++	(((addr) >> (shift)) - (FIXADDR_START >> (shift)))
 +
- struct pt_regs;
- 
- void emulate_load_store_insn(struct pt_regs *regs, void __user *addr, unsigned int *pc);
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index 14d7d700b..a47dc3575 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -10,6 +10,33 @@
- 
- static DEFINE_RAW_SPINLOCK(patch_lock);
- 
-+static bool is_image_text(unsigned long addr)
++#define BM_PTE_TABLE_IDX(addr)	__BM_TABLE_IDX(addr, PMD_SHIFT)
++
++static pte_t bm_pte[NR_BM_PTE_TABLES][PTRS_PER_PTE] __page_aligned_bss;
++static pmd_t bm_pmd[PTRS_PER_PMD] __page_aligned_bss __maybe_unused;
++static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
++
++static inline pte_t *fixmap_pte(unsigned long addr)
 +{
-+	return core_kernel_text(addr);
++	return &bm_pte[BM_PTE_TABLE_IDX(addr)][pte_index(addr)];
 +}
 +
-+static void  *patch_map(void *addr, int fixmap)
++static void __init early_fixmap_init_pte(pmd_t *pmdp, unsigned long addr)
 +{
-+	unsigned long uintaddr = (uintptr_t)addr;
-+	bool image = is_image_text(uintaddr);
-+	struct page *page;
-+	phys_addr_t phys;
++	pmd_t pmd = READ_ONCE(*pmdp);
++	pte_t *ptep;
 +
-+	if (image)
-+		phys = __pa_symbol(addr);
-+	else {
-+		page = vmalloc_to_page(addr);
-+	phys = page_to_phys(page) + offset_in_page(addr);
++	if (!pmd_present(pmd)) {
++		ptep = bm_pte[BM_PTE_TABLE_IDX(addr)];
++		pmd_populate_kernel(&init_mm, pmdp, ptep);
++		kernel_pte_init(ptep);
 +	}
-+
-+	return (void *)set_fixmap_offset(fixmap, phys);
 +}
 +
-+static void patch_unmap(int fixmap)
++static void __init early_fixmap_init_pmd(pud_t *pudp, unsigned long addr,
++					 unsigned long end)
 +{
-+	clear_fixmap(fixmap);
++	unsigned long next;
++	pud_t pud = READ_ONCE(*pudp);
++	pmd_t *pmdp;
++
++	if (pud_none(pud))
++		pud_populate(&init_mm, pudp, bm_pmd);
++
++	pmdp = pmd_offset(pudp, addr);
++
++#ifndef __PAGETABLE_PMD_FOLDED
++	pmd_init(pmdp);
++#endif
++	do {
++		next = pmd_addr_end(addr, end);
++		early_fixmap_init_pte(pmdp, addr);
++	} while (pmdp++, addr = next, addr != end);
 +}
 +
- void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
- {
- 	unsigned long pc = regs->csr_era;
-@@ -218,6 +245,36 @@ int larch_insn_patch_text(void *addr, u32 insn)
- 	return ret;
++static void __init early_fixmap_init_pud(p4d_t *p4dp, unsigned long addr,
++					 unsigned long end)
++{
++	p4d_t p4d = READ_ONCE(*p4dp);
++	pud_t *pudp;
++
++#ifndef __PAGETABLE_PUD_FOLDED
++	if (CONFIG_PGTABLE_LEVELS > 3 && !p4d_none(p4d) &&
++	    p4d_phys(p4d) != __pa_symbol(bm_pud)) {
++		/*
++		 * We only end up here if the kernel mapping and the fixmap
++		 * share the top level pgd entry, which should only happen on
++		 * 16k/4 levels configurations.
++		 */
++		BUG_ON(!IS_ENABLED(CONFIG_PAGE_SIZE_16KB));
++	}
++#endif
++
++	if (p4d_none(p4d))
++		p4d_populate(&init_mm, p4dp, bm_pud);
++
++	pudp = pud_offset(p4dp, addr);
++
++#ifndef __PAGETABLE_PUD_FOLDED
++	pud_init(pudp);
++#endif
++	early_fixmap_init_pmd(pudp, addr, end);
++}
++
++/*
++ * The p*d_populate functions call virt_to_phys implicitly so they can't be used
++ * directly on kernel symbols (bm_p*d). This function is called too early to use
++ * lm_alias so __p*d_populate functions must be used to populate with the
++ * physical address from __pa_symbol.
++ */
++void __init early_fixmap_init(void)
++{
++	unsigned long addr = FIXADDR_START;
++	unsigned long end = FIXADDR_TOP;
++
++	pgd_t *pgdp = pgd_offset_k(addr);
++	p4d_t *p4dp = p4d_offset(pgdp, addr);
++
++	early_fixmap_init_pud(p4dp, addr, end);
++}
++
+ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
+ EXPORT_SYMBOL(empty_zero_page);
+ 
+@@ -209,7 +312,7 @@ pte_t * __init populate_kernel_pte(unsigned long addr)
+ 	return pte_offset_kernel(pmd, addr);
  }
  
-+int larch_insn_text_copy(void *dst, void *src, size_t len)
-+{
-+	unsigned long flags;
-+	size_t wlen = 0;
-+	size_t size;
-+	void *waddr;
-+	void *ptr;
-+	int ret = 0;
-+
-+	raw_spin_lock_irqsave(&patch_lock, flags);
-+	while (wlen < len) {
-+		ptr = dst + wlen;
-+		size = min_t(size_t, PAGE_SIZE - offset_in_page(ptr),
-+			     len - wlen);
-+
-+		waddr = patch_map(ptr, FIX_TEXT_POKE0);
-+		ret = copy_to_kernel_nofault(waddr, src + wlen, size);
-+		patch_unmap(FIX_TEXT_POKE0);
-+
-+		if (ret) {
-+			pr_err("%s: operation failed\n", __func__);
-+			break;
-+		}
-+		wlen += size;
-+	}
-+	raw_spin_unlock_irqrestore(&patch_lock, flags);
-+
-+	return ret;
-+}
-+
- u32 larch_insn_gen_nop(void)
+-void __init __set_fixmap(enum fixed_addresses idx,
++void __set_fixmap(enum fixed_addresses idx,
+ 			       phys_addr_t phys, pgprot_t flags)
  {
- 	return INSN_NOP;
-@@ -336,3 +393,31 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
+ 	unsigned long addr = __fix_to_virt(idx);
+@@ -217,11 +320,7 @@ void __init __set_fixmap(enum fixed_addresses idx,
  
- 	return insn.word;
- }
-+
-+u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-+{
-+	union loongarch_instruction insn;
-+
-+	if ((imm & 3) || imm < -SZ_128K || imm >= SZ_128K) {
-+		pr_warn("The generated beq instruction is out of range.\n");
-+		return INSN_BREAK;
-+	}
-+
-+	emit_beq(&insn, rd, rj, imm >> 2);
-+
-+	return insn.word;
-+}
-+
-+u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-+{
-+	union loongarch_instruction insn;
-+
-+	if ((imm & 3) || imm < -SZ_128K || imm >= SZ_128K) {
-+		pr_warn("The generated bne instruction is out of range.\n");
-+		return INSN_BREAK;
-+	}
-+
-+	emit_bne(&insn, rj, rd, imm >> 2);
-+
-+	return insn.word;
-+}
+ 	BUG_ON(idx <= FIX_HOLE || idx >= __end_of_fixed_addresses);
+ 
+-	ptep = populate_kernel_pte(addr);
+-	if (!pte_none(ptep_get(ptep))) {
+-		pte_ERROR(*ptep);
+-		return;
+-	}
++	ptep = fixmap_pte(addr);
+ 
+ 	if (pgprot_val(flags))
+ 		set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
 -- 
 2.25.1
 
