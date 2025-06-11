@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEF43C1F
-	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 00:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1222B18C002
+	for <loongarch@lists.linux.dev>; Wed, 11 Jun 2025 00:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749600659; cv=none; b=LvK1GGE2uhQQE0EEZ4f8Svxinewv54nPIcgG4CHkSCmLGDCVskTXT/tx7DG47XR388u5NeDuLC8J4wa7Jf34ZlCxd6AY5ciyLfatGTlR8CeA+w9VYdcCX4kgXC78RVgNKmT+PWSG415tg2udE8p5eOCQNFJJJk2rPGv0WW1FYUs=
+	t=1749600661; cv=none; b=Fbxkve8B/SIYVz7zHxi7wxdmw0H67B/1/XDDKTn3blOR6qITnDXyWq6BKh6/0d1nAKtuKztWn7wCPRXmNZiHFbQqKgM0S55iPhyw8oBd3oxz4lqfm1hGTmIvy+KQrxkxjo0tikAj44/Fi5RKS6idrMNDGmJpUiAHZ8z2E86+wE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749600659; c=relaxed/simple;
-	bh=KbvpWBmaAbSh8Vh7bcMGuAO93v+FYmozT636NWdRWts=;
+	s=arc-20240116; t=1749600661; c=relaxed/simple;
+	bh=AcY3H8bGfIWZWHawREnW4VSuG2ZvHv2SK1gbpEk3yi4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ETdvnhlhspLs4pN6QXDVWpMAbB+5nMiGHjDTidCX/FbGt2sviDDtkJJOsMdzvq473PF5gzN6SuqWafMoBi4mKm3IVrdSWSdz4OJmtyUSNzXbo/hkeV8cQHMVVxQtBgyO807q0am5iUvzwB4X7woOKG84iVJIm3zD0LRCOlHu2H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g5ESatST; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=AwaRFHcGcP0VEwfTso6bDXgIc6I1G7+L/Nb7thrChf05V992yjbkpvSm6x8oCtVCY/fQkaSgpM+vro5jxDSJD0f4twBSsxCiq7bXK4tgRT/ZIn3y5vzwF8Qq2U3/aWdypmJjPWGxeFRy8My+D08z5C3xjZx/1rGPPIojl5KTfcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mIjnNA1Y; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g5ESatST"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311d670ad35so5571752a91.3
-        for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 17:10:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIjnNA1Y"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742d077bdfaso8443484b3a.2
+        for <loongarch@lists.linux.dev>; Tue, 10 Jun 2025 17:10:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749600657; x=1750205457; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1749600659; x=1750205459; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=VlZgeHA644QawbjAzxLvevk+0CPgkFNL80WvPP4oWa8=;
-        b=g5ESatSTZF56SA9uYEqqsrlI6f6HowiaHMaQZluhZ/RJL1+bdmH5rU/5PdgRCZmloW
-         KZGdmmvvrPj8i0oME+6URI+pTsZYiQn/johUUgd7tz6bP8mSI4sI/AF0ram6WwE03N4S
-         peNfgmpPCggiTXwlK+biixl1PQUhJ09VRFUhCLTiQCNV6JkIJ9nDU6nsELSGwGaotLed
-         K2IGb8JBmdPZK1GmabDJNFKiM18FXH23Nstq/U01CawTQqOvlIk8uNJWuW9BYDeVRRO7
-         qs7KiNrjhMLk05omN+XwxY9smB/eM0tPBPAYy7nvkQtwbbp64eqLV4b2setXZ69sxcKX
-         pHcQ==
+        bh=t+Mj+r8r7UAjF4+0LNUZhsvI8NJHwfinPsCt24LIifo=;
+        b=mIjnNA1Y5FlpFTil0r0Nxbsgb3syuAF/n1BmDCYd0CLcyajTqm1ZdBKuWDmQ0ttAtm
+         Qy8l6z3nuJz85roHZ0s9uDmx4NQ0tWSMG7tG98tMqiavCQlWMJ32QWaEpeAjcLhfN0zX
+         WIwKSdRxHSCV8u87G7jh6Djcq+Oe769S4mvl6blJ4FFI5E68ZvKjahRVl0GLhMRCvwBu
+         N0IbCi8b0aKkquu3Z2spYJt/ck8aUtYwQOr0yrfLZi8KxgwDNzdN0I5b7BvtcfBDVREl
+         /iPVt5jhROBN62aNAQstFtS9aSLn+IZeOiUi8fyjmhuqhU0SEKLBHtj13JZZl3Tm6oIO
+         xMxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749600657; x=1750205457;
+        d=1e100.net; s=20230601; t=1749600659; x=1750205459;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VlZgeHA644QawbjAzxLvevk+0CPgkFNL80WvPP4oWa8=;
-        b=QfvQHbY585G8kuYqmQZTmGT/+YFJx3oSZRvAUIKQcCSJ2zAywJ8XEmxKaCzoeS1JlR
-         6EN3V7Y3tvcoBeuOWXzBXnKjEzPq/1UjBWqa33r6Dq7V363hs3MBbcDYrEke/n5EXOMj
-         y7mU20F7Dcnr6w9UF9USFKM2A2RvTkOYKdjf7WcKxA9LZ3zpyFZOwaOjN2yhXD1M1mhD
-         yCY73zoYpC8cfGSiRM5VKKdcbyW/FLTl//9Y/Lvq9HBtiy+I2nDN8kfvzPp5XRg6JlYr
-         1UFCyfMepyhZTgP4iVVyCOtJKKTLEG5qVYTjT0ZReUjQUaebYYAEQrhlGfDBKaMNfm8r
-         W5lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEMklmQBhSWbRIX/zX/KXqZz7G3Aww4RYiZag3axNzRjr9xWKdiyVGrPiatguHD+MkX0UHws84POs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw6u2+XOPes3aNaHSqso/wM5b4j4dQHN9mhtb0O68fS9HCp0yso
-	Kys3T03hxjasmE3Iqsrertl18FSfw2bYMjU3UMIunSdl/9djrkCaoCwp2Lk1F1ThyIrWCV8ghCL
-	TukOwWQ==
-X-Google-Smtp-Source: AGHT+IEo+A1iKKp/d15/c3Y8CK62vwTvYQUmq5gUOhKzuXVKftWt1+9sRfxp1GZ6dnQl+d5j2tHzGoYEsqQ=
-X-Received: from pjboh5.prod.google.com ([2002:a17:90b:3a45:b0:2fb:fa85:1678])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2643:b0:312:29e:9ec9
- with SMTP id 98e67ed59e1d1-313af1dd043mr2232849a91.24.1749600657225; Tue, 10
- Jun 2025 17:10:57 -0700 (PDT)
+        bh=t+Mj+r8r7UAjF4+0LNUZhsvI8NJHwfinPsCt24LIifo=;
+        b=aqEMZ82eywMy49bMG7GkRPW7eBtqwH+MTgxnK8myXMAscMfa4E3g4ElaOpQVZEzbm6
+         7tHHKDrq/BVglquytUx07r9ZuLcgi5X/XDNZrK6qNUZoWd7gBom8Vt9NbR0u75HFbqkQ
+         Fzx6+VbSvtfe/5c/XgC00Lo17RMP/822YucipDsPu1RSWqoism+MA2LGM8vIoZ+Fel1t
+         M4iBnlzoflGbZxTaJ/vMjbXIjv6sbAE0QJaVczhhQWKgXsVAghJVYmIPeiLz4PQ13U9M
+         zzAOvwCTpZmipd/BZrmlDkuh6tIesUHnyeN0I1pp3VSqy+B0aqPgPWSPcTo62BRB7vrn
+         ly8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXdC82G2KHepXz1EbZFRJ+3yJ8RJWnWaD7F9jtAAjCf63A6PhRwRAE2r1eIJZHTJ2vSlOycJEn0AvQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwlpNeGhxnYoruyZjkIieN3xd68dzhRMQFy4/fBxPnITWgqj8Nz
+	2AuEWtSrxUWdUqyJOzQimOG0yYa8UN7fucMEFYMfvcIdexmtJBGa1Lg07GsSw96dG0xGjs8cF7t
+	e18D/Mg==
+X-Google-Smtp-Source: AGHT+IHdKstC+XlYUus8Wdm0HR7HPxHMBlUy5ahB8xm3L+Y1hmecIZTBPJ5vhN4Gi0qdwz1eVbXtQ9xfH68=
+X-Received: from pgam16.prod.google.com ([2002:a05:6a02:2b50:b0:b2f:6348:f715])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9012:b0:1f5:8f7f:8f19
+ with SMTP id adf61e73a8af0-21f8663f76dmr1960513637.10.1749600659002; Tue, 10
+ Jun 2025 17:10:59 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 17:10:41 -0700
+Date: Tue, 10 Jun 2025 17:10:42 -0700
 In-Reply-To: <20250611001042.170501-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250611001042.170501-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250611001042.170501-8-seanjc@google.com>
-Subject: [PATCH 7/8] KVM: s390: Stop adding virt/kvm to the arch include path
+Message-ID: <20250611001042.170501-9-seanjc@google.com>
+Subject: [PATCH 8/8] KVM: Standardize include paths across all architectures
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -80,36 +80,125 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Thomas Huth <thuth@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Don't add virt/kvm to KVM s390's include path, the headers in virt/kvm are
-intended to be used only by other code in virt/kvm, i.e. are "private" to
-the core KVM code.  It's not clear that s390 *ever* included a header from
-virt/kvm, i.e. odds are good the "-Ivirt/kvm" was copied from a x86's
-Makefile when s390 support was first added.
+Standardize KVM's include paths across all architectures by declaring
+the KVM-specific includes in the common Makefile.kvm.  Having common KVM
+"own" the included paths reduces the temptation to unnecessarily add
+virt/kvm to arch include paths, and conversely if allowing arch code to
+grab headers from virt/kvm becomes desirable, virt/kvm can be added to
+all architecture's include path with a single line update.
 
-The only headers in virt/kvm at the time were the x86 specific ioapic.h,
-and iodev.h, neither of which shows up as an #include in the diff for the
-commit range 37817f2982d0f..e976a2b997fc4.
+Having the common KVM makefile append to ccflags also provides a
+convenient location to append other things, e.g. KVM-specific #defines.
 
-Acked-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
+Note, this changes the behavior of s390 and PPC, as s390 and PPC
+previously overwrote ccflags-y instead of adding on.  There is no evidence
+that overwriting ccflags-y was necessary or even deliberate, as both s390
+and PPC switched to the overwrite behavior without so much as a passing
+mention when EXTRA_CFLAGS was replaced with ccflags-y (commit c73028a02887
+("s390: change to new flag variable") and commit 4108d9ba9091
+("powerpc/Makefiles: Change to new flag variables")).
+
+Acked-by: Anup Patel <anup@brainfault.org>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/s390/kvm/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kvm/Makefile   | 2 --
+ arch/mips/kvm/Makefile    | 2 --
+ arch/powerpc/kvm/Makefile | 2 --
+ arch/riscv/kvm/Makefile   | 2 --
+ arch/s390/kvm/Makefile    | 2 --
+ arch/x86/kvm/Makefile     | 1 -
+ virt/kvm/Makefile.kvm     | 2 ++
+ 7 files changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
-index 9a723c48b05a..b742e08c036b 100644
---- a/arch/s390/kvm/Makefile
-+++ b/arch/s390/kvm/Makefile
-@@ -5,7 +5,7 @@
+diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+index 7c329e01c557..86035b311269 100644
+--- a/arch/arm64/kvm/Makefile
++++ b/arch/arm64/kvm/Makefile
+@@ -3,8 +3,6 @@
+ # Makefile for Kernel-based Virtual Machine module
+ #
+ 
+-ccflags-y += -I $(src)
+-
+ include $(srctree)/virt/kvm/Makefile.kvm
+ 
+ obj-$(CONFIG_KVM) += kvm.o
+diff --git a/arch/mips/kvm/Makefile b/arch/mips/kvm/Makefile
+index 96a7cd21b140..d198e1addea7 100644
+--- a/arch/mips/kvm/Makefile
++++ b/arch/mips/kvm/Makefile
+@@ -4,8 +4,6 @@
  
  include $(srctree)/virt/kvm/Makefile.kvm
  
--ccflags-y := -Ivirt/kvm -Iarch/s390/kvm
-+ccflags-y := -Iarch/s390/kvm
+-ccflags-y += -Iarch/mips/kvm
+-
+ kvm-$(CONFIG_CPU_HAS_MSA) += msa.o
  
+ kvm-y +=    mips.o emulate.o entry.o \
+diff --git a/arch/powerpc/kvm/Makefile b/arch/powerpc/kvm/Makefile
+index 1a575db2666e..6f12edd465df 100644
+--- a/arch/powerpc/kvm/Makefile
++++ b/arch/powerpc/kvm/Makefile
+@@ -3,8 +3,6 @@
+ # Makefile for Kernel-based Virtual Machine module
+ #
+ 
+-ccflags-y := -Iarch/powerpc/kvm
+-
+ include $(srctree)/virt/kvm/Makefile.kvm
+ 
+ common-objs-y += powerpc.o emulate_loadstore.o
+diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
+index 4e0bba91d284..dbe61a398cc8 100644
+--- a/arch/riscv/kvm/Makefile
++++ b/arch/riscv/kvm/Makefile
+@@ -3,8 +3,6 @@
+ # Makefile for RISC-V KVM support
+ #
+ 
+-ccflags-y += -I $(src)
+-
+ include $(srctree)/virt/kvm/Makefile.kvm
+ 
+ obj-$(CONFIG_KVM) += kvm.o
+diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
+index b742e08c036b..5cbcaa7f241a 100644
+--- a/arch/s390/kvm/Makefile
++++ b/arch/s390/kvm/Makefile
+@@ -5,8 +5,6 @@
+ 
+ include $(srctree)/virt/kvm/Makefile.kvm
+ 
+-ccflags-y := -Iarch/s390/kvm
+-
  kvm-y += kvm-s390.o intercept.o interrupt.o priv.o sigp.o
  kvm-y += diag.o gaccess.o guestdbg.o vsie.o pv.o gmap-vsie.o
+ 
+diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+index a5d362c7b504..f78f11b582d2 100644
+--- a/arch/x86/kvm/Makefile
++++ b/arch/x86/kvm/Makefile
+@@ -1,6 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-ccflags-y += -I $(srctree)/arch/x86/kvm
+ ccflags-$(CONFIG_KVM_WERROR) += -Werror
+ 
+ include $(srctree)/virt/kvm/Makefile.kvm
+diff --git a/virt/kvm/Makefile.kvm b/virt/kvm/Makefile.kvm
+index 724c89af78af..0e7ba49026fc 100644
+--- a/virt/kvm/Makefile.kvm
++++ b/virt/kvm/Makefile.kvm
+@@ -3,6 +3,8 @@
+ # Makefile for Kernel-based Virtual Machine module
+ #
+ 
++ccflags-y += -I$(src)
++
+ KVM ?= ../../../virt/kvm
+ 
+ kvm-y := $(KVM)/kvm_main.o $(KVM)/eventfd.o $(KVM)/binary_stats.o
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
