@@ -1,283 +1,199 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7302F4322
-	for <loongarch@lists.linux.dev>; Thu, 12 Jun 2025 12:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B441BA55
+	for <loongarch@lists.linux.dev>; Thu, 12 Jun 2025 12:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749731572; cv=none; b=i0IAZMLVG/8rCaarFM8cSfM8m9H7mnQcWuVP+nHivAAyp0WOZ1c0otxJqKHlwjdZqpbUVpTfhmegguvjVYXNqFE9daFL7ZaCQwj9BSztHTnAqYtDSB+cunaBNYA6pRW/imNqGmCcD+Bw3Zf239h4Loh2wXjcG6NERF2KW0lVozw=
+	t=1749732349; cv=none; b=IArcXorXI38QJxGXgJ3eqx8LMP5ztSWSn2q6pWZ0yyLLsHFzpmWwbDNCn49FdRG0SPbQLX2tJgAw4vKDXk4pzXGHROfpegU7FMkA5AiDXFF98hG/QscCyCmiHifHZozH1XSmaOQydamG1aF7AG8awu6IIoXUr5xb02ZN2neXWuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749731572; c=relaxed/simple;
-	bh=itbBKmiB/eRktu8WBvdJ+kWWBn0x1Ka/FQmExd/xG4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HruEBC4NTfikcq15H8UxtxzpVIkwjkhKphWnKzd9dJZzQnhxJq/SkMOih71tGehzxcBBK/znFuz8PEjM8GCV0TdzXAUKs0NYTEwCT+Dz03VIo29u8ZUx+wbN28cXEH2jeTw7R/d6Ma2wNgbY38DoohhayQtOCCF2/kndqLIm3l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ewd1w1R8; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749732349; c=relaxed/simple;
+	bh=HoLHGzQC+LhOVvQLSwKR9GEa2zUH1xYcB1f994eH/jw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ert9i+EYhF8DUNkPzLPcRhna/7WPb/duw3jtn8gRINIlq9F3mGz04i1B07OobPPUbQzWPX9RbLmoqssW0Q7VkUaiDrPGJ6TEKBn4D71WHJNMizVSB9kyppEXUDv7a7PAohXg2PCw3tEpo13tovQRrVTXXyvrOHxBtJ8ZqGOBkxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MAjVpe0i; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewd1w1R8"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-40a55314d06so214786b6e.1
-        for <loongarch@lists.linux.dev>; Thu, 12 Jun 2025 05:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749731570; x=1750336370; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F9R7HMfjVP5hLYp8NKZr2yd6p344TnKr8oqoOf0S4a4=;
-        b=ewd1w1R8Hw4Nrt8Y+iemtrnjjah0IE51Ld+yvNPuLm9BS+OLt9464XurlE2T4iXyF3
-         yuBXE2DZSQM3Hrf5qsSbO/9Yld9cx1lqviD2ZcKbnp5gE+2ZH7YQB7fNSBqF/SZIfPbT
-         mHdg4Cbrjp7ZySu6LkEUinVnQ/ewkMYP9bV/0ugTOc0CbKZvVsT5d9YU+pSpwx/SYhTQ
-         R8uaARpJQzbeGFHlTqXVQtQSDS5iAP+by0apLNyg4qblVVUwcJiFRdZn+N6Ekde7JaDP
-         NnxY2yPGVbb/RnwdDnFlARuyrrqekXXguC1eZatuhvYas85TAT4CsfQCeB6C4Rct7+4n
-         /wXw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MAjVpe0i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749732346;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=h1Uj5bKVq17uQh522HM2lfY2Qa1Wofw7MCwyR4moTpc=;
+	b=MAjVpe0i6gugETntChxu+dY+czlg5B9EryL09StnSh6qxd2R3XK5+r2p7ZbZ4kELFEIVhw
+	r0iRWIyoICCn0OsD4crGe+/EL2p3LId/sbNLdF08ehLRp2OASze8oLsqijXmOIkHS/iShP
+	CzSk7GQvrtwEGzD3v+3H3zL130+sbM0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-312-V0JoSY3HMh20UFl7WnfG_g-1; Thu, 12 Jun 2025 08:45:45 -0400
+X-MC-Unique: V0JoSY3HMh20UFl7WnfG_g-1
+X-Mimecast-MFC-AGG-ID: V0JoSY3HMh20UFl7WnfG_g_1749732344
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so5084535e9.3
+        for <loongarch@lists.linux.dev>; Thu, 12 Jun 2025 05:45:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749731570; x=1750336370;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F9R7HMfjVP5hLYp8NKZr2yd6p344TnKr8oqoOf0S4a4=;
-        b=FS/ThuG7yr5PBGPh7LimT4lxrNsKkd8l8Gi1sYj81c2cXs4vJHpNHiNWj95xNGTDkH
-         6Gg5Tu+FHhaRehrjmKcLCT5tHuNkjigtojiWaqaKCnc+J91gBYPL+EISIBGMXUOIfNwq
-         xX9LdFcALEwxReWQH3uCZwOxzxUy512L8AkAwMjVL+ePWOZTO8j9zFMklDndX1DggyOv
-         3SjCmQl6WDXkMN8q//mjxxlpR3xDzzBU/FXb3HN0EM73v/MRRbICJJ5yyow1O9MNBMgL
-         LMb3wUKqGYef0Aym6O2/FSIFx+jLR4ig//iAVJnTgnFm+yiLH+yAsI7Io3vHm5Z8mqaY
-         +iOA==
-X-Gm-Message-State: AOJu0YxIP7eJjcs9+W1RZx5tiaQfP3NrPVIxHxx26QDx1wFbghU95d04
-	W3Coe3yEV0wGHrf7c+oZlbIAiSdh97C2NDlsBIGngMCWGYSJNPl5XogqObE2SBxf0m564YvjHqr
-	HTvOK/8KrQMVjn+dPSaZu9WI+FrYtQGA=
-X-Gm-Gg: ASbGncupj8fnkxrGIBmmibo54sQWEs+rW/bYitMKUk/fmgnv88ksVFb4jMeDNSgKGx9
-	8jLAU1IXBV1WZJiakUb9sNOrR79e2gbpo8UrPoWreSsf38rjfQLFU3n9QCnMwvnWKGSuZijBDCp
-	wv8/8ELNE5OUpBXZb4Po28Sen1FQWDt/Dzv+reolaLdUg=
-X-Google-Smtp-Source: AGHT+IHuv2ZpMuCRDSAveCE4jogtHLyxPHM0rUIbzPy4eM1sexAaaYGtCyJMZDjU6N4B0lgUpVXG6VH99nFQdzPnGbY=
-X-Received: by 2002:a05:6808:1a1e:b0:408:f016:f985 with SMTP id
- 5614622812f47-40a66122091mr2072828b6e.17.1749731570159; Thu, 12 Jun 2025
- 05:32:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749732344; x=1750337144;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=h1Uj5bKVq17uQh522HM2lfY2Qa1Wofw7MCwyR4moTpc=;
+        b=Z2o3DY3rvKYTW86fsymUy9gw9qEo79KKhOrwsNtjNlZZ8zqfQVxgYFOrLKS9cYyPLH
+         6XZhNIyX7k97WLGq22PXuuF6FaUP1aVzi61shn/ehwN87ESbn3sanGycKdetIusP4UKc
+         CoshFcXkM2i1lIyAeJtObJIXU4yjOeSK7QX3kU+k648LHmB7hy+7VM9m4Ikw+kWUCwa8
+         r7SDbl3F+M+b1/c4OnkTm9c6pyQSwAVCJjPEpNkE6UpwAsmny+jwuHcpZgYuEZhp7Lxd
+         m5+cieIb3nqbx/2ktP/MKZr7Tmc3n2qzx1AuiZe04ubBGjwPG0PWX5wWk87jUlQm0KDQ
+         IY7A==
+X-Forwarded-Encrypted: i=1; AJvYcCX5laJb7wtWWwINCz7wHMLTIyzNt48RxJb0bJtscK1mDqcNz/ewOf6JxGwWFX3pPREiUd2yidDn07M=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx+cMAvjZiHVocGTZfNVnABNLr5A+yidlpe3nHLh2yAE6VG9jXV
+	5w9B5W2V8xY7htrY88NoWN674QPfJ3fuZb10Yf6I67QGBuFxfl0TEGLNIadFfgE3/rnmsoVq/V9
+	1bP74eb632vFcNk1dYB9cg6/GTZJYS7qUJqvwSkaR9yut/movQ+FWzri2CXj0MA==
+X-Gm-Gg: ASbGnct+Xkh84ayLmy1lDIwt0zRECMNObGCnfX6F4vNef+skcx2B/f9yVbe1hF6CrS6
+	RvMjvMo7qV3zGs2e8hg5EIB1khgyVw7K5UDHj/lbRwluoiKgN6aBr3YaGt3tldaegNHODoZ2z/f
+	BU0mhgNSYvCOwu4riwf7iFSJFGM6UzB55bdczDNGJqqb0DPLafG1MJV6lH3B9Wz8rhVRlhXuAqJ
+	+ECBBFcK03UChNhKihAFOHXGKRTYNQsMDW9mUwxLhXj3XlLmvbuu/DWa2pt9+xaEDcDnGhjWGqq
+	60Xjc0PhHQ6UoSohY/7N+vT7RmTJDXbtoG2Y8huKbeGos0KGQIPejLU9oARagO52LWN/iLU5RuA
+	e0l5hZSozbeoJVTPKHzxynanvUX8dq8Mucvt0VbbnRuGrfQsebg==
+X-Received: by 2002:a05:600c:1d9b:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-453248cafd1mr57469465e9.28.1749732344322;
+        Thu, 12 Jun 2025 05:45:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBhS3dap152ENPi3Y9aJXIykXlE/iZmdZzWOxrglxpuZ/Lv9Y9TZqjfdhHI97NDjzdY36Yxw==
+X-Received: by 2002:a05:600c:1d9b:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-453248cafd1mr57469025e9.28.1749732343893;
+        Thu, 12 Jun 2025 05:45:43 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea07e3sm19940355e9.9.2025.06.12.05.45.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 05:45:43 -0700 (PDT)
+Message-ID: <95b46a68-3461-4555-a168-df82d53efcf3@redhat.com>
+Date: Thu, 12 Jun 2025 14:45:41 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250611035952.111182-3-duanchenghao@kylinos.cn>
- <20250611053625.352091-1-duanchenghao@kylinos.cn> <20250611053625.352091-3-duanchenghao@kylinos.cn>
-In-Reply-To: <20250611053625.352091-3-duanchenghao@kylinos.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Thu, 12 Jun 2025 20:32:38 +0800
-X-Gm-Features: AX0GCFsyBjL1gdBLcBH_aPsGgs0omG8-ReQGZ7QXkuzQDU3gMwdsaT8Ij6pxv70
-Message-ID: <CAEyhmHQby6kGBRP8wQvKeL3fb1J_kpByBtYEWDY-3eOzRbhf0Q@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] LoongArch: BPF: The operation commands needed to
- add a trampoline
-To: Chenghao Duan <duanchenghao@kylinos.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	George Guo <guodongtai@kylinos.cn>, Youling Tang <tangyouling@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/pagewalk: split walk_page_range_novma() into
+ kernel/user parts
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Barry Song <baohua@kernel.org>, "Liam R . Howlett"
+ <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Jann Horn <jannh@google.com>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mm@kvack.org
+References: <20250605135104.90720-1-lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250605135104.90720-1-lorenzo.stoakes@oracle.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: WBDuBPFmXn-o1a_7YrY-0c0wHmgon-CtwP1eMT8y-ww_1749732344
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 1:37=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos=
-.cn> wrote:
->
-> Add instrctions:
-> emit_NOP
-> emit_BREAK
->
-> Add branch jump function:
-> larch_insn_gen_beq
-> larch_insn_gen_bne
->
-> Add instruction copy function: larch_insn_text_copy
-> The implementation of larch_insn_text_copy uses the fixmap
-> FIX_TEXT_POKE0.
->
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+On 05.06.25 15:51, Lorenzo Stoakes wrote:
+> The walk_page_range_novma() function is rather confusing - it supports two
+> modes, one used often, the other used only for debugging.
+> 
+> The first mode is the common case of traversal of kernel page tables, which
+> is what nearly all callers use this for.
+> 
+> Secondly it provides an unusual debugging interface that allows for the
+> traversal of page tables in a userland range of memory even for that memory
+> which is not described by a VMA.
+> 
+> It is far from certain that such page tables should even exist, but perhaps
+> this is precisely why it is useful as a debugging mechanism.
+> 
+> As a result, this is utilised by ptdump only. Historically, things were
+> reversed - ptdump was the only user, and other parts of the kernel evolved
+> to use the kernel page table walking here.
+> 
+> Since we have some complicated and confusing locking rules for the novma
+> case, it makes sense to separate the two usages into their own functions.
+> 
+> Doing this also provide self-documentation as to the intent of the caller -
+> are they doing something rather unusual or are they simply doing a standard
+> kernel page table walk?
+> 
+> We therefore establish two separate functions - walk_page_range_debug() for
+> this single usage, and walk_kernel_page_table_range() for general kernel
+> page table walking.
+> 
+> The walk_page_range_debug() function is currently used to traverse both
+> userland and kernel mappings, so we maintain this and in the case of kernel
+> mappings being traversed, we have walk_page_range_debug() invoke
+> walk_kernel_page_table_range() internally.
+> 
+> We additionally make walk_page_range_debug() internal to mm.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Acked-by: Qi Zheng <zhengqi.arch@bytedance.com>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 > ---
->  arch/loongarch/include/asm/inst.h | 19 +++++++
->  arch/loongarch/kernel/inst.c      | 85 +++++++++++++++++++++++++++++++
->  2 files changed, 104 insertions(+)
->
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
-sm/inst.h
-> index 3089785ca..dd6e07781 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction i=
-nsn, struct pt_regs *regs);
->  int larch_insn_read(void *addr, u32 *insnp);
->  int larch_insn_write(void *addr, u32 insn);
->  int larch_insn_patch_text(void *addr, u32 insn);
-> +int larch_insn_text_copy(void *dst, void *src, size_t len);
->
->  u32 larch_insn_gen_nop(void);
->  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
-> @@ -511,6 +512,8 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int =
-imm);
->  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
->  u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, =
-int imm);
->  u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, in=
-t imm);
-> +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
- imm);
-> +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
- imm);
->
->  static inline bool signed_imm_check(long val, unsigned int bit)
->  {
-> @@ -778,6 +781,22 @@ static inline void emit_##NAME(union loongarch_instr=
-uction *insn,  \
->
->  DEF_EMIT_REG3SA2_FORMAT(alsld, alsld_op)
->
-> +#define DEF_EMIT_NOP(NAME)                                             \
-> +static inline void emit_##NAME(union loongarch_instruction *insn)      \
-> +{                                                                      \
-> +       insn->word =3D INSN_NOP;                                         =
- \
-> +}
-> +
-> +DEF_EMIT_NOP(NOP)
-> +
 
-We have the following helpers in bpf_jit.h already:
-  * emit_nop
-  * emit_cond_jmp
-  * emit_uncond_jmp
+Acked-by: David Hildenbrand <david@redhat.com>
 
-These can be used directly.
+-- 
+Cheers,
 
-> +#define DEF_EMIT_BREAK(NAME)                                           \
-> +static inline void emit_##NAME(union loongarch_instruction *insn)      \
-> +{                                                                      \
-> +       insn->word =3D INSN_BREAK;                                       =
- \
-> +}
-> +
-> +DEF_EMIT_BREAK(BREAK)
-> +
->  struct pt_regs;
->
->  void emulate_load_store_insn(struct pt_regs *regs, void __user *addr, un=
-signed int *pc);
-> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-> index 14d7d700b..a47dc3575 100644
-> --- a/arch/loongarch/kernel/inst.c
-> +++ b/arch/loongarch/kernel/inst.c
-> @@ -10,6 +10,33 @@
->
->  static DEFINE_RAW_SPINLOCK(patch_lock);
->
-> +static bool is_image_text(unsigned long addr)
-> +{
-> +       return core_kernel_text(addr);
-> +}
-> +
-> +static void  *patch_map(void *addr, int fixmap)
+David / dhildenb
 
-                    ^ extra space here
-
-> +{
-> +       unsigned long uintaddr =3D (uintptr_t)addr;
-> +       bool image =3D is_image_text(uintaddr);
-> +       struct page *page;
-> +       phys_addr_t phys;
-> +
-> +       if (image)
-> +               phys =3D __pa_symbol(addr);
-> +       else {
-> +               page =3D vmalloc_to_page(addr);
-> +       phys =3D page_to_phys(page) + offset_in_page(addr);
-
-weird indentation, please fix.
-
-> +       }
-> +
-> +       return (void *)set_fixmap_offset(fixmap, phys);
-> +}
-> +
-> +static void patch_unmap(int fixmap)
-> +{
-> +       clear_fixmap(fixmap);
-> +}
-> +
->  void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
->  {
->         unsigned long pc =3D regs->csr_era;
-> @@ -218,6 +245,36 @@ int larch_insn_patch_text(void *addr, u32 insn)
->         return ret;
->  }
->
-> +int larch_insn_text_copy(void *dst, void *src, size_t len)
-> +{
-> +       unsigned long flags;
-> +       size_t wlen =3D 0;
-> +       size_t size;
-> +       void *waddr;
-> +       void *ptr;
-> +       int ret =3D 0;
-> +
-> +       raw_spin_lock_irqsave(&patch_lock, flags);
-> +       while (wlen < len) {
-> +               ptr =3D dst + wlen;
-> +               size =3D min_t(size_t, PAGE_SIZE - offset_in_page(ptr),
-> +                            len - wlen);
-> +
-> +               waddr =3D patch_map(ptr, FIX_TEXT_POKE0);
-> +               ret =3D copy_to_kernel_nofault(waddr, src + wlen, size);
-> +               patch_unmap(FIX_TEXT_POKE0);
-> +
-> +               if (ret) {
-> +                       pr_err("%s: operation failed\n", __func__);
-> +                       break;
-> +               }
-> +               wlen +=3D size;
-> +       }
-> +       raw_spin_unlock_irqrestore(&patch_lock, flags);
-> +
-> +       return ret;
-> +}
-> +
->  u32 larch_insn_gen_nop(void)
->  {
->         return INSN_NOP;
-> @@ -336,3 +393,31 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum =
-loongarch_gpr rj, int imm)
->
->         return insn.word;
->  }
-> +
-> +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
- imm)
-> +{
-> +       union loongarch_instruction insn;
-> +
-> +       if ((imm & 3) || imm < -SZ_128K || imm >=3D SZ_128K) {
-> +               pr_warn("The generated beq instruction is out of range.\n=
-");
-> +               return INSN_BREAK;
-> +       }
-> +
-> +       emit_beq(&insn, rd, rj, imm >> 2);
-> +
-> +       return insn.word;
-> +}
-> +
-> +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
- imm)
-> +{
-> +       union loongarch_instruction insn;
-> +
-> +       if ((imm & 3) || imm < -SZ_128K || imm >=3D SZ_128K) {
-> +               pr_warn("The generated bne instruction is out of range.\n=
-");
-> +               return INSN_BREAK;
-> +       }
-> +
-> +       emit_bne(&insn, rj, rd, imm >> 2);
-> +
-> +       return insn.word;
-> +}
-> --
-> 2.25.1
->
->
