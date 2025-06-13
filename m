@@ -1,232 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D2D191493
-	for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 13:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA632E11C3
+	for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 14:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822085; cv=none; b=KpsiCNPnSbhPLQR307/9BaK7XujFJ9IPV8fFEIyphumR4C3jMMLbnsJIJtqcAueJ2w/sf3W40uVzmhLuHMSr9PE/Z6uZFPJ+7uIyOaTgdoA9nYDXfFdJsM9VZf1oB+w7MwmZf4KpMXwT8Y5aRUme7JEacxUnZ1Hu7/AH8JPTxKY=
+	t=1749823334; cv=none; b=TgU2U58jn7B4Z8CaGDP2mQv1WosdLH9TZ+s67rkHgloouXwBHE6HU9NB40G4h5HyxKnQRzMYP2vny1BLGPF+D4xxIuv1PoJ2VKObHfrVJAS7BE43emdhKvjr8Rwa7zacTshTudow8nLWJnVF5CV1luJMXhKykAB/zU+lWMpEh6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822085; c=relaxed/simple;
-	bh=oBujyHW3fR3UArBsFd0eQdvuPTosgfHx6P9PRFKYox8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=UIK1DkP4qSw1RYkijxyf3XPlCtmVw+LiIa4JZ+nnUZG+ZYJJVeq8/noIUqtHFIlzonvFEYVewi1JvAFdU28/kbdLSOea8n6whlOf07UhjLNAjftUYf2vVsSxehwvIDuORlHbsf3jG0wZMfRMNRLkfpSJEBLSMsuLc0MaIKBASrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XDT5HH/7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749823334; c=relaxed/simple;
+	bh=27cCgN4Qgfm8dDPySwZrBGcQ4kQ9MtAZA0JJSq67OFs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bQbg1YVWaxd/NwSzcII569LlZLWZuIL7915IpTbSCvOH+9EFXN6msCyCM06aEqEvZq5tfLMpNAR86+Hp0KVyeMONz0zCBvRy6r7/q2g6hlWqkjPu/eubNiprteWddY5unKROdUP4tQhqFJ2djafaOxrr/zPMyuPrJY2XQBeX++w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QxpRHaJC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZdtaMejt; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XDT5HH/7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749822083;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QxpRHaJC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZdtaMejt"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749823331;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CurRk13BLi453FdNUVmvRv3/1kchAf7liLqepSAurz8=;
-	b=XDT5HH/7ua7nU1kJwJlxk187Y2L4g3gOrboX3gDcdr35Azd7JvcqaGnhGr/lxg8b/zaQIg
-	9rjV5EZNd6nzfCnUx9ZC55Ahx+GNtnRJsfR68XDnbR4fmVYAsCloKw6GebqvU4VlCTFhf0
-	uEo50v0G+kjJ3ucpJGrjgzEVT3GJkHo=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-230-bF7PLf1JMBaBnWrpyh6d1w-1; Fri, 13 Jun 2025 09:41:19 -0400
-X-MC-Unique: bF7PLf1JMBaBnWrpyh6d1w-1
-X-Mimecast-MFC-AGG-ID: bF7PLf1JMBaBnWrpyh6d1w_1749822079
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d399070cecso453648285a.3
-        for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 06:41:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749822079; x=1750426879;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CurRk13BLi453FdNUVmvRv3/1kchAf7liLqepSAurz8=;
-        b=C41VftEcEPDSowTOsSh/TFviy5jEfRvli4qq3y0S5HxoDgeQHqQcfBaDabiI7TD/pY
-         l3fR8fMV1hFd0gpSzXxIoV74u5n8miosNQ83AZGBwWeb+tOAYrTOMSoJCciFXUYmUgqL
-         EYno5d9/ISNBkykoSoMs3vI+jbUUiBSkq/IW6DNurmaFOWHd0zcH+SdvaOqzCx9xOEkX
-         u8eXSnLHHixs6gIoc8c7sLMKaQIS0rT+QPhQo4bW40D5NZ6AWQSdA/ZtCicfaBlzy9HP
-         G4mBwWXUdeS9rWcrO4Vt19lqEV0RWMFIbTr+NOO5CRK7L7p5bHcBRtgP0neoJOR+5dGr
-         p+nw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1uPo40C1ISsdq1YSrOYGELzSwJSB059C8iZ9lgfGXruj9GR4Hdr1iF30Q2xqvktifZ21nicJvu5Q=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx4X2THaBhP6K37A5ExqkArFzduUJ+qrMSUVzTjXorEnADyyFLj
-	t4dlevn4JbdV72dvWEw6uM2l01uQZQNh3cLiXMkMe7Aru7rKaQjUPS4qjKutSG2ObNmzBFwVla/
-	BADQNS5FeolJVq64574b6t1cda1XUxjHe4GjGYUeU7XiC3pE4SNBvpGct4R9Nkg==
-X-Gm-Gg: ASbGncueqGj7U0HJr+oP0m3w+SWBaiQhLci5TNAJJA4R0UGM2kkr4Vg81pp1VJeAPkb
-	Dx/ENEDNd4sev/QjDV4ZOQ7mTPfMpOyEGNOx3DMgssSXvSS0/QzMfiz8zDh11kucR4zheSaf7N5
-	+KF+vg5hld04sZnc8yT1YRZh4iIMltTau76KP5KcpZI1eEaZMVB5z5Gm7kimoyrQn53U3YOailr
-	LnAuHbejTLks0xdahXCLmJZUZ/TRkvqU+Di5QrWf3DvM2N66ZJ7eDYj147iilRzpeTZG2FZrwxF
-	RKr/IYBts5s=
-X-Received: by 2002:a05:620a:44d0:b0:7d2:27ff:2133 with SMTP id af79cd13be357-7d3bc3b0704mr463528585a.1.1749822079295;
-        Fri, 13 Jun 2025 06:41:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGmKoTuxvL7ffTQWjIUtdV/ylXkzGCctDnDjUG//mfabF7LSk4R8g8f8pkMatkvnCJNdWJBNQ==
-X-Received: by 2002:a05:620a:44d0:b0:7d2:27ff:2133 with SMTP id af79cd13be357-7d3bc3b0704mr463525385a.1.1749822078879;
-        Fri, 13 Jun 2025 06:41:18 -0700 (PDT)
-Received: from x1.com ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 06:41:18 -0700 (PDT)
-From: Peter Xu <peterx@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kvm@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>,
-	peterx@redhat.com,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org
-Subject: [PATCH 2/5] mm/hugetlb: Remove prepare_hugepage_range()
-Date: Fri, 13 Jun 2025 09:41:08 -0400
-Message-ID: <20250613134111.469884-3-peterx@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250613134111.469884-1-peterx@redhat.com>
-References: <20250613134111.469884-1-peterx@redhat.com>
+	bh=p6yLbGaAqKXjfS0WvcDA9G+lP7oBNZSeK5gSgxur2Uc=;
+	b=QxpRHaJCdPe7lz1UwNt4dK1l+9JhVUQb8heDWyc2otiF7NXESJsPAJcMT5xjSf2cOg9QD0
+	Qrk26CBxj1otzOsu5ZeN23jl4NK2e7PI42mFewsBQQUvv6kKLR37b3u2r8j5ezkDD6ZIiQ
+	Mv67c6JaRQ0Y6uajmqRsqb8YoKmkJ07G2PfuzHwhJ2Zwb6Gkb6yVlZPC3tZApEprLtZ7AA
+	KsythRCKjyI9bnLwQO+tqJ3jXffCLeuJwT+L3P1A3CeyFdADlVZXnFgS9BC0Lj2xr/H14w
+	9VpUqswNA1gNN1JoVVJ8FG7oYKtutO2VNN0CPXJQHFYJ+L4RRVJCSd0XEYHP7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749823331;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p6yLbGaAqKXjfS0WvcDA9G+lP7oBNZSeK5gSgxur2Uc=;
+	b=ZdtaMejt/2tlKWPR5Y3CvvojlvL3NtNtY2buu9XogiPe6c9CxLEFOgqqgBxNg0mRVfoYN0
+	W1uCQhE9UieXdZDQ==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Super User <root@localhost.localdomain>
+Subject: Re: [PATCH v4 0/2]  Loongarch irq-redirect supprot
+In-Reply-To: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+Date: Fri, 13 Jun 2025 16:02:10 +0200
+Message-ID: <87qzznivtp.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: XN2nWXedRFSWfvJkVSGPHLAKpLiYb5xvIPvasUn3fMA_1749822079
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain
 
-Only mips and loongarch implemented this API, however what it does was
-checking against stack overflow for either len or addr.  That's already
-done in arch's arch_get_unmapped_area*() functions, hence not needed.
+On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
+> From: Super User <root@localhost.localdomain>
 
-It means the whole API is pretty much obsolete at least now, remove it
-completely.
+That's a valid developer name :)
 
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Muchun Song <muchun.song@linux.dev>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: loongarch@lists.linux.dev
-Cc: linux-mips@vger.kernel.org
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/loongarch/include/asm/hugetlb.h | 14 --------------
- arch/mips/include/asm/hugetlb.h      | 14 --------------
- fs/hugetlbfs/inode.c                 |  8 ++------
- include/asm-generic/hugetlb.h        |  8 --------
- include/linux/hugetlb.h              |  6 ------
- 5 files changed, 2 insertions(+), 48 deletions(-)
+> This series of patches introduces support for interrupt-redirect
+> controllers, and this hardware feature will be supported on 3C6000
+> for the first time
+>
+> change log:
+> 	v3->v4
+> 	1.Provide reasonable comments on the modifications made to IRQ_SET_MASK_OK_DONE	
 
-diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
-index 4dc4b3e04225..ab68b594f889 100644
---- a/arch/loongarch/include/asm/hugetlb.h
-+++ b/arch/loongarch/include/asm/hugetlb.h
-@@ -10,20 +10,6 @@
- 
- uint64_t pmd_to_entrylo(unsigned long pmd_val);
- 
--#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
--static inline int prepare_hugepage_range(struct file *file,
--					 unsigned long addr,
--					 unsigned long len)
--{
--	unsigned long task_size = STACK_TOP;
--
--	if (len > task_size)
--		return -ENOMEM;
--	if (task_size - len < addr)
--		return -EINVAL;
--	return 0;
--}
--
- #define __HAVE_ARCH_HUGE_PTE_CLEAR
- static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
- 				  pte_t *ptep, unsigned long sz)
-diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
-index fbc71ddcf0f6..8c460ce01ffe 100644
---- a/arch/mips/include/asm/hugetlb.h
-+++ b/arch/mips/include/asm/hugetlb.h
-@@ -11,20 +11,6 @@
- 
- #include <asm/page.h>
- 
--#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
--static inline int prepare_hugepage_range(struct file *file,
--					 unsigned long addr,
--					 unsigned long len)
--{
--	unsigned long task_size = STACK_TOP;
--
--	if (len > task_size)
--		return -ENOMEM;
--	if (task_size - len < addr)
--		return -EINVAL;
--	return 0;
--}
--
- #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
- static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
- 					    unsigned long addr, pte_t *ptep,
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index fc03dd541b4d..32dff13463d2 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -179,12 +179,8 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
- 
- 	if (len & ~huge_page_mask(h))
- 		return -EINVAL;
--	if (flags & MAP_FIXED) {
--		if (addr & ~huge_page_mask(h))
--			return -EINVAL;
--		if (prepare_hugepage_range(file, addr, len))
--			return -EINVAL;
--	}
-+	if ((flags & MAP_FIXED) && (addr & ~huge_page_mask(h)))
-+		return -EINVAL;
- 	if (addr)
- 		addr0 = ALIGN(addr, huge_page_size(h));
- 
-diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
-index 3e0a8fe9b108..4bce4f07f44f 100644
---- a/include/asm-generic/hugetlb.h
-+++ b/include/asm-generic/hugetlb.h
-@@ -114,14 +114,6 @@ static inline int huge_pte_none_mostly(pte_t pte)
- }
- #endif
- 
--#ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
--static inline int prepare_hugepage_range(struct file *file,
--		unsigned long addr, unsigned long len)
--{
--	return 0;
--}
--#endif
--
- #ifndef __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
- static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
- 		unsigned long addr, pte_t *ptep)
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 42f374e828a2..85acdfdbe9f0 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -359,12 +359,6 @@ static inline void hugetlb_show_meminfo_node(int nid)
- {
- }
- 
--static inline int prepare_hugepage_range(struct file *file,
--				unsigned long addr, unsigned long len)
--{
--	return -EINVAL;
--}
--
- static inline void hugetlb_vma_lock_read(struct vm_area_struct *vma)
- {
- }
--- 
-2.49.0
+That's not really what I asked for:
 
+  "This change really wants to be seperate with a proper explanation and
+   not burried inside of this pile of changes."
+
+Emphasis on _seperate_, which translates to:
+
+  "Put it into a seperate patch with a proper changelog explaining this
+   modification and why it is correct."
+
+You still have burried this in the whole pile of unrelated changes.
+
+Thanks,
+
+        tglx
