@@ -1,344 +1,232 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13AA025B308
-	for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 06:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D2D191493
+	for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 13:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749797046; cv=none; b=BKl8o7fQGpLo4/NoBzQwscpxGcf59S3pYRNpt+9E4cwP0nCYk3s9dPymU+4JMUairtvmp03PEHlG7qPvodF/9qch49HsPTrjJjSQswPTYPFppGj3Z5cq2ebErQbX3S4FzHlYbYvFiiEYoGQf+5Yd+bJIdDm955JhGFu1L1Am0F8=
+	t=1749822085; cv=none; b=KpsiCNPnSbhPLQR307/9BaK7XujFJ9IPV8fFEIyphumR4C3jMMLbnsJIJtqcAueJ2w/sf3W40uVzmhLuHMSr9PE/Z6uZFPJ+7uIyOaTgdoA9nYDXfFdJsM9VZf1oB+w7MwmZf4KpMXwT8Y5aRUme7JEacxUnZ1Hu7/AH8JPTxKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749797046; c=relaxed/simple;
-	bh=PEKi0DGSwdKIODhslH3SRmuFPbO/SNtjwACOkygV81k=;
+	s=arc-20240116; t=1749822085; c=relaxed/simple;
+	bh=oBujyHW3fR3UArBsFd0eQdvuPTosgfHx6P9PRFKYox8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qK/j00c1WYc8PNommdaA4Dpl8u2nSCmE7e71H7Fik2hYtVg2n+JHvb+qYmaUF8GGyoopz543bvqlTXm3Mn9I8iiqHNXWiSrR+JLyZm+GshRBRyjW6JYXNbYPtjW8Yu3mNEcy5oslFfAZ0cHSRivDqb/wF1Ih0136gJ/d8B/ABDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.149])
-	by gateway (Coremail) with SMTP id _____8CxPuOxyEtopYwVAQ--.16628S3;
-	Fri, 13 Jun 2025 14:44:01 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.149])
-	by front1 (Coremail) with SMTP id qMiowMBx3MSlyEto29MYAQ--.8851S5;
-	Fri, 13 Jun 2025 14:43:57 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
+	 MIME-Version:content-type; b=UIK1DkP4qSw1RYkijxyf3XPlCtmVw+LiIa4JZ+nnUZG+ZYJJVeq8/noIUqtHFIlzonvFEYVewi1JvAFdU28/kbdLSOea8n6whlOf07UhjLNAjftUYf2vVsSxehwvIDuORlHbsf3jG0wZMfRMNRLkfpSJEBLSMsuLc0MaIKBASrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XDT5HH/7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XDT5HH/7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749822083;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CurRk13BLi453FdNUVmvRv3/1kchAf7liLqepSAurz8=;
+	b=XDT5HH/7ua7nU1kJwJlxk187Y2L4g3gOrboX3gDcdr35Azd7JvcqaGnhGr/lxg8b/zaQIg
+	9rjV5EZNd6nzfCnUx9ZC55Ahx+GNtnRJsfR68XDnbR4fmVYAsCloKw6GebqvU4VlCTFhf0
+	uEo50v0G+kjJ3ucpJGrjgzEVT3GJkHo=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-230-bF7PLf1JMBaBnWrpyh6d1w-1; Fri, 13 Jun 2025 09:41:19 -0400
+X-MC-Unique: bF7PLf1JMBaBnWrpyh6d1w-1
+X-Mimecast-MFC-AGG-ID: bF7PLf1JMBaBnWrpyh6d1w_1749822079
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d399070cecso453648285a.3
+        for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 06:41:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749822079; x=1750426879;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CurRk13BLi453FdNUVmvRv3/1kchAf7liLqepSAurz8=;
+        b=C41VftEcEPDSowTOsSh/TFviy5jEfRvli4qq3y0S5HxoDgeQHqQcfBaDabiI7TD/pY
+         l3fR8fMV1hFd0gpSzXxIoV74u5n8miosNQ83AZGBwWeb+tOAYrTOMSoJCciFXUYmUgqL
+         EYno5d9/ISNBkykoSoMs3vI+jbUUiBSkq/IW6DNurmaFOWHd0zcH+SdvaOqzCx9xOEkX
+         u8eXSnLHHixs6gIoc8c7sLMKaQIS0rT+QPhQo4bW40D5NZ6AWQSdA/ZtCicfaBlzy9HP
+         G4mBwWXUdeS9rWcrO4Vt19lqEV0RWMFIbTr+NOO5CRK7L7p5bHcBRtgP0neoJOR+5dGr
+         p+nw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1uPo40C1ISsdq1YSrOYGELzSwJSB059C8iZ9lgfGXruj9GR4Hdr1iF30Q2xqvktifZ21nicJvu5Q=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx4X2THaBhP6K37A5ExqkArFzduUJ+qrMSUVzTjXorEnADyyFLj
+	t4dlevn4JbdV72dvWEw6uM2l01uQZQNh3cLiXMkMe7Aru7rKaQjUPS4qjKutSG2ObNmzBFwVla/
+	BADQNS5FeolJVq64574b6t1cda1XUxjHe4GjGYUeU7XiC3pE4SNBvpGct4R9Nkg==
+X-Gm-Gg: ASbGncueqGj7U0HJr+oP0m3w+SWBaiQhLci5TNAJJA4R0UGM2kkr4Vg81pp1VJeAPkb
+	Dx/ENEDNd4sev/QjDV4ZOQ7mTPfMpOyEGNOx3DMgssSXvSS0/QzMfiz8zDh11kucR4zheSaf7N5
+	+KF+vg5hld04sZnc8yT1YRZh4iIMltTau76KP5KcpZI1eEaZMVB5z5Gm7kimoyrQn53U3YOailr
+	LnAuHbejTLks0xdahXCLmJZUZ/TRkvqU+Di5QrWf3DvM2N66ZJ7eDYj147iilRzpeTZG2FZrwxF
+	RKr/IYBts5s=
+X-Received: by 2002:a05:620a:44d0:b0:7d2:27ff:2133 with SMTP id af79cd13be357-7d3bc3b0704mr463528585a.1.1749822079295;
+        Fri, 13 Jun 2025 06:41:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmKoTuxvL7ffTQWjIUtdV/ylXkzGCctDnDjUG//mfabF7LSk4R8g8f8pkMatkvnCJNdWJBNQ==
+X-Received: by 2002:a05:620a:44d0:b0:7d2:27ff:2133 with SMTP id af79cd13be357-7d3bc3b0704mr463525385a.1.1749822078879;
+        Fri, 13 Jun 2025 06:41:18 -0700 (PDT)
+Received: from x1.com ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 06:41:18 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kvm@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Alex Mastro <amastro@fb.com>,
+	David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>,
+	peterx@redhat.com,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	jeffbai@aosc.io,
-	kexybiscuit@aosc.io,
-	wangyao@lemote.com,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: [PATCH v4 3/3] ipmi: Add Loongson-2K BMC support
-Date: Fri, 13 Jun 2025 14:43:41 +0800
-Message-ID: <705a60677e848449f414206ae56515c767c12d8c.1749731531.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1749731531.git.zhoubinbin@loongson.cn>
-References: <cover.1749731531.git.zhoubinbin@loongson.cn>
+	linux-mips@vger.kernel.org
+Subject: [PATCH 2/5] mm/hugetlb: Remove prepare_hugepage_range()
+Date: Fri, 13 Jun 2025 09:41:08 -0400
+Message-ID: <20250613134111.469884-3-peterx@redhat.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250613134111.469884-1-peterx@redhat.com>
+References: <20250613134111.469884-1-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: XN2nWXedRFSWfvJkVSGPHLAKpLiYb5xvIPvasUn3fMA_1749822079
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx3MSlyEto29MYAQ--.8851S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Ar1xAw48JrW5Gr15uF48uFX_yoW3uw1rp3
-	Waya43Cr48tF47K39rZryDWFyrCwnxW3Wrtr47W34ruFWj9w1vgrn2yaySyry7ta40q3y3
-	JrZxArW3WF13JwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1mii3UUUUU==
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-This patch adds Loongson-2K BMC IPMI support.
+Only mips and loongarch implemented this API, however what it does was
+checking against stack overflow for either len or addr.  That's already
+done in arch's arch_get_unmapped_area*() functions, hence not needed.
 
-According to the existing design, we use software simulation to
-implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+It means the whole API is pretty much obsolete at least now, remove it
+completely.
 
-Also since both host side and BMC side read and write kcs status, fifo flag
-is used to ensure data consistency.
-
-The single KCS message block is as follows:
-
-+-------------------------------------------------------------------------+
-|FIFO flags| KCS register data | CMD data | KCS version | WR REQ | WR ACK |
-+-------------------------------------------------------------------------+
-
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Muchun Song <muchun.song@linux.dev>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- drivers/char/ipmi/Makefile       |   1 +
- drivers/char/ipmi/ipmi_si.h      |   7 ++
- drivers/char/ipmi/ipmi_si_intf.c |   3 +
- drivers/char/ipmi/ipmi_si_ls2k.c | 189 +++++++++++++++++++++++++++++++
- 4 files changed, 200 insertions(+)
- create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+ arch/loongarch/include/asm/hugetlb.h | 14 --------------
+ arch/mips/include/asm/hugetlb.h      | 14 --------------
+ fs/hugetlbfs/inode.c                 |  8 ++------
+ include/asm-generic/hugetlb.h        |  8 --------
+ include/linux/hugetlb.h              |  6 ------
+ 5 files changed, 2 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
-index e0944547c9d0..17308dd6be20 100644
---- a/drivers/char/ipmi/Makefile
-+++ b/drivers/char/ipmi/Makefile
-@@ -8,6 +8,7 @@ ipmi_si-y := ipmi_si_intf.o ipmi_kcs_sm.o ipmi_smic_sm.o ipmi_bt_sm.o \
- 	ipmi_si_mem_io.o
- ipmi_si-$(CONFIG_HAS_IOPORT) += ipmi_si_port_io.o
- ipmi_si-$(CONFIG_PCI) += ipmi_si_pci.o
-+ipmi_si-$(CONFIG_MFD_LS2K_BMC) += ipmi_si_ls2k.o
- ipmi_si-$(CONFIG_PARISC) += ipmi_si_parisc.o
+diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+index 4dc4b3e04225..ab68b594f889 100644
+--- a/arch/loongarch/include/asm/hugetlb.h
++++ b/arch/loongarch/include/asm/hugetlb.h
+@@ -10,20 +10,6 @@
  
- obj-$(CONFIG_IPMI_HANDLER) += ipmi_msghandler.o
-diff --git a/drivers/char/ipmi/ipmi_si.h b/drivers/char/ipmi/ipmi_si.h
-index 508c3fd45877..f38ea4f4c891 100644
---- a/drivers/char/ipmi/ipmi_si.h
-+++ b/drivers/char/ipmi/ipmi_si.h
-@@ -101,6 +101,13 @@ void ipmi_si_pci_shutdown(void);
- static inline void ipmi_si_pci_init(void) { }
- static inline void ipmi_si_pci_shutdown(void) { }
+ uint64_t pmd_to_entrylo(unsigned long pmd_val);
+ 
+-#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-					 unsigned long addr,
+-					 unsigned long len)
+-{
+-	unsigned long task_size = STACK_TOP;
+-
+-	if (len > task_size)
+-		return -ENOMEM;
+-	if (task_size - len < addr)
+-		return -EINVAL;
+-	return 0;
+-}
+-
+ #define __HAVE_ARCH_HUGE_PTE_CLEAR
+ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 				  pte_t *ptep, unsigned long sz)
+diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
+index fbc71ddcf0f6..8c460ce01ffe 100644
+--- a/arch/mips/include/asm/hugetlb.h
++++ b/arch/mips/include/asm/hugetlb.h
+@@ -11,20 +11,6 @@
+ 
+ #include <asm/page.h>
+ 
+-#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-					 unsigned long addr,
+-					 unsigned long len)
+-{
+-	unsigned long task_size = STACK_TOP;
+-
+-	if (len > task_size)
+-		return -ENOMEM;
+-	if (task_size - len < addr)
+-		return -EINVAL;
+-	return 0;
+-}
+-
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 					    unsigned long addr, pte_t *ptep,
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index fc03dd541b4d..32dff13463d2 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -179,12 +179,8 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+ 
+ 	if (len & ~huge_page_mask(h))
+ 		return -EINVAL;
+-	if (flags & MAP_FIXED) {
+-		if (addr & ~huge_page_mask(h))
+-			return -EINVAL;
+-		if (prepare_hugepage_range(file, addr, len))
+-			return -EINVAL;
+-	}
++	if ((flags & MAP_FIXED) && (addr & ~huge_page_mask(h)))
++		return -EINVAL;
+ 	if (addr)
+ 		addr0 = ALIGN(addr, huge_page_size(h));
+ 
+diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
+index 3e0a8fe9b108..4bce4f07f44f 100644
+--- a/include/asm-generic/hugetlb.h
++++ b/include/asm-generic/hugetlb.h
+@@ -114,14 +114,6 @@ static inline int huge_pte_none_mostly(pte_t pte)
+ }
  #endif
-+#ifdef CONFIG_MFD_LS2K_BMC
-+void ipmi_si_ls2k_init(void);
-+void ipmi_si_ls2k_shutdown(void);
-+#else
-+static inline void ipmi_si_ls2k_init(void) { }
-+static inline void ipmi_si_ls2k_shutdown(void) { }
-+#endif
- #ifdef CONFIG_PARISC
- void ipmi_si_parisc_init(void);
- void ipmi_si_parisc_shutdown(void);
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index 7fe891783a37..c13d5132fffc 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -2120,6 +2120,8 @@ static int __init init_ipmi_si(void)
  
- 	ipmi_si_pci_init();
+-#ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-		unsigned long addr, unsigned long len)
+-{
+-	return 0;
+-}
+-#endif
+-
+ #ifndef __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
+ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 		unsigned long addr, pte_t *ptep)
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 42f374e828a2..85acdfdbe9f0 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -359,12 +359,6 @@ static inline void hugetlb_show_meminfo_node(int nid)
+ {
+ }
  
-+	ipmi_si_ls2k_init();
-+
- 	ipmi_si_parisc_init();
- 
- 	mutex_lock(&smi_infos_lock);
-@@ -2334,6 +2335,8 @@ static void cleanup_ipmi_si(void)
- 
- 	ipmi_si_pci_shutdown();
- 
-+	ipmi_si_ls2k_shutdown();
-+
- 	ipmi_si_parisc_shutdown();
- 
- 	ipmi_si_platform_shutdown();
-diff --git a/drivers/char/ipmi/ipmi_si_ls2k.c b/drivers/char/ipmi/ipmi_si_ls2k.c
-new file mode 100644
-index 000000000000..7b360056f9c5
---- /dev/null
-+++ b/drivers/char/ipmi/ipmi_si_ls2k.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Driver for Loongson-2K BMC IPMI
-+ *
-+ * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
-+ *
-+ * Authors:
-+ *	Chong Qiao <qiaochong@loongson.cn>
-+ *	Binbin Zhou <zhoubinbin@loongson.cn>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/types.h>
-+
-+#include "ipmi_si.h"
-+
-+#define LS2K_KCS_FIFO_IBFH	0x0
-+#define LS2K_KCS_FIFO_IBFT	0x1
-+#define LS2K_KCS_FIFO_OBFH	0x2
-+#define LS2K_KCS_FIFO_OBFT	0x3
-+
-+/* KCS registers */
-+#define LS2K_KCS_REG_STS	0x4
-+#define LS2K_KCS_REG_DATA_OUT	0x5
-+#define LS2K_KCS_REG_DATA_IN	0x6
-+#define LS2K_KCS_REG_CMD	0x8
-+
-+#define LS2K_KCS_CMD_DATA	0xa
-+#define LS2K_KCS_VERSION	0xb
-+#define LS2K_KCS_WR_REQ		0xc
-+#define LS2K_KCS_WR_ACK		0x10
-+
-+#define LS2K_KCS_STS_OBF	BIT(0)
-+#define LS2K_KCS_STS_IBF	BIT(1)
-+#define LS2K_KCS_STS_SMS_ATN	BIT(2)
-+#define LS2K_KCS_STS_CMD	BIT(3)
-+
-+#define LS2K_KCS_DATA_MASK	(LS2K_KCS_STS_OBF | LS2K_KCS_STS_IBF | LS2K_KCS_STS_CMD)
-+
-+static bool ls2k_registered;
-+
-+static unsigned char ls2k_mem_inb_v0(const struct si_sm_io *io, unsigned int offset)
-+{
-+	void __iomem *addr = io->addr;
-+	int reg_offset;
-+
-+	if (offset & BIT(0)) {
-+		reg_offset = LS2K_KCS_REG_STS;
-+	} else {
-+		writeb(readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_STS_OBF, addr + LS2K_KCS_REG_STS);
-+		reg_offset = LS2K_KCS_REG_DATA_OUT;
-+	}
-+
-+	return readb(addr + reg_offset);
-+}
-+
-+static unsigned char ls2k_mem_inb_v1(const struct si_sm_io *io, unsigned int offset)
-+{
-+	void __iomem *addr = io->addr;
-+	unsigned char inb = 0, cmd;
-+	bool obf, ibf;
-+
-+	obf = readb(addr + LS2K_KCS_FIFO_OBFH) ^ readb(addr + LS2K_KCS_FIFO_OBFT);
-+	ibf = readb(addr + LS2K_KCS_FIFO_IBFH) ^ readb(addr + LS2K_KCS_FIFO_IBFT);
-+	cmd = readb(addr + LS2K_KCS_CMD_DATA);
-+
-+	if (offset & BIT(0)) {
-+		inb = readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_DATA_MASK;
-+		inb |= FIELD_PREP(LS2K_KCS_STS_OBF, obf)
-+		    | FIELD_PREP(LS2K_KCS_STS_IBF, ibf)
-+		    | FIELD_PREP(LS2K_KCS_STS_CMD, cmd);
-+	} else {
-+		inb = readb(addr + LS2K_KCS_REG_DATA_OUT);
-+		writeb(readb(addr + LS2K_KCS_FIFO_OBFH), addr + LS2K_KCS_FIFO_OBFT);
-+	}
-+
-+	return inb;
-+}
-+
-+static void ls2k_mem_outb_v0(const struct si_sm_io *io, unsigned int offset,
-+			     unsigned char val)
-+{
-+	void __iomem *addr = io->addr;
-+	unsigned char sts = readb(addr + LS2K_KCS_REG_STS);
-+	int reg_offset;
-+
-+	if (sts & LS2K_KCS_STS_IBF)
-+		return;
-+
-+	if (offset & BIT(0)) {
-+		reg_offset = LS2K_KCS_REG_CMD;
-+		sts |= LS2K_KCS_STS_CMD;
-+	} else {
-+		reg_offset = LS2K_KCS_REG_DATA_IN;
-+		sts &= ~LS2K_KCS_STS_CMD;
-+	}
-+
-+	writew(val, addr + reg_offset);
-+	writeb(sts | LS2K_KCS_STS_IBF, addr + LS2K_KCS_REG_STS);
-+	writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ);
-+}
-+
-+static void ls2k_mem_outb_v1(const struct si_sm_io *io, unsigned int offset,
-+			     unsigned char val)
-+{
-+	void __iomem *addr = io->addr;
-+	unsigned char ibfh, ibft;
-+	int reg_offset;
-+
-+	ibfh = readb(addr + LS2K_KCS_FIFO_IBFH);
-+	ibft = readb(addr + LS2K_KCS_FIFO_IBFT);
-+
-+	if (ibfh ^ ibft)
-+		return;
-+
-+	reg_offset = (offset & BIT(0)) ? LS2K_KCS_REG_CMD : LS2K_KCS_REG_DATA_IN;
-+	writew(val, addr + reg_offset);
-+
-+	writeb(offset & BIT(0), addr + LS2K_KCS_CMD_DATA);
-+	writeb(!ibft, addr + LS2K_KCS_FIFO_IBFH);
-+	writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ);
-+}
-+
-+static void ls2k_mem_cleanup(struct si_sm_io *io)
-+{
-+	if (io->addr)
-+		iounmap(io->addr);
-+}
-+
-+static int ipmi_ls2k_mem_setup(struct si_sm_io *io)
-+{
-+	unsigned char version;
-+
-+	io->addr = ioremap(io->addr_data, io->regspacing);
-+	if (!io->addr)
-+		return -EIO;
-+
-+	version = readb(io->addr + LS2K_KCS_VERSION);
-+
-+	io->inputb = version ? ls2k_mem_inb_v1 : ls2k_mem_inb_v0;
-+	io->outputb = version ? ls2k_mem_outb_v1 : ls2k_mem_outb_v0;
-+	io->io_cleanup = ls2k_mem_cleanup;
-+
-+	return 0;
-+}
-+
-+static int ipmi_ls2k_probe(struct platform_device *pdev)
-+{
-+	struct si_sm_io io;
-+
-+	memset(&io, 0, sizeof(io));
-+
-+	io.si_info	= &ipmi_kcs_si_info;
-+	io.io_setup	= ipmi_ls2k_mem_setup;
-+	io.addr_data	= pdev->resource[0].start;
-+	io.regspacing	= resource_size(&pdev->resource[0]);
-+	io.dev		= &pdev->dev;
-+
-+	dev_dbg(&pdev->dev, "addr 0x%lx, spacing %d.\n", io.addr_data, io.regspacing);
-+
-+	return ipmi_si_add_smi(&io);
-+}
-+
-+static void ipmi_ls2k_remove(struct platform_device *pdev)
-+{
-+	ipmi_si_remove_by_dev(&pdev->dev);
-+}
-+
-+struct platform_driver ipmi_ls2k_platform_driver = {
-+	.driver = {
-+		.name = "ls2k-ipmi-si",
-+	},
-+	.probe	= ipmi_ls2k_probe,
-+	.remove	= ipmi_ls2k_remove,
-+};
-+
-+void ipmi_si_ls2k_init(void)
-+{
-+	platform_driver_register(&ipmi_ls2k_platform_driver);
-+	ls2k_registered = true;
-+}
-+
-+void ipmi_si_ls2k_shutdown(void)
-+{
-+	if (ls2k_registered)
-+		platform_driver_unregister(&ipmi_ls2k_platform_driver);
-+}
+-static inline int prepare_hugepage_range(struct file *file,
+-				unsigned long addr, unsigned long len)
+-{
+-	return -EINVAL;
+-}
+-
+ static inline void hugetlb_vma_lock_read(struct vm_area_struct *vma)
+ {
+ }
 -- 
-2.47.1
+2.49.0
 
