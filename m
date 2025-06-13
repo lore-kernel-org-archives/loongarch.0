@@ -1,91 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421492E11B5;
-	Fri, 13 Jun 2025 17:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A77122F76C
+	for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 18:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749834731; cv=none; b=HaGarC9OnRlElahiis/CeOXeRG8fW/rIKhZBKEUIAdGRqTym5G5gKACZjqtHuMoKRloU1ZYB3klLZh/p9sopyNQbW6tGzDPVq4J8i3D/wqNfflWjQNjPDgEdXi1p8VA+XhPqk38of2ZiBM/w5amX2EGTC5hfRautlYaDCJR7eSs=
+	t=1749837689; cv=none; b=pt6q/anCsTvSSfXQUHDFkwfJycbwkwXXiqdB3bMHRvEw1paCkc+qXk4DPoI7/kSjcO7SGmMSPB2W/oKOo66i02AiFQ5GJhSc5FDW04Zwm4KFe4fMIlURACvMoc6xu9H096sostzkxllHdpkJO/x198qC+/mKb1Kd67AGGxT3aYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749834731; c=relaxed/simple;
-	bh=MwLvd5PG7WoLPNV5X3+UTldK/899ju4MNdrqiosDJ9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y8B7u0E+bYv99iwsHQAe2TCbBucBkiL8Ku8BOQqcgsOMl0LMXE+c0EaGyvi32tNYCdRH3yUgFSth3InU1zlbD26fsacpbctsuTFDgzKpzzdIY5PBpM4jgxsXgDyCCyyEgIe7k11KEWVIL9s9Z8xPFGPLlhSDdgSIYwg+YkMGXpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhivCur+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749837689; c=relaxed/simple;
+	bh=Esw6ov3l8A5CaAtmTWBwTU2PX3RZ3hr0DfdZzU8Tu9A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V4MKgdSvC32ixSiUVKGwgyAxqneSTxuqVfMD/kA0BOEk0/Ynk8FDxswkSEKlsfEK6teAm6/hAmLx6LFQf7KGW7XDuEhaZMt4tGT230UfFLzmpbh0Ra5NXZRolVHE8kYhOj4hSdft96IDIyA0mlRFTES8kwRh9jOlTbU1G/fyg+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CrQtPWOt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhivCur+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43202C4CEEB;
-	Fri, 13 Jun 2025 17:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749834730;
-	bh=MwLvd5PG7WoLPNV5X3+UTldK/899ju4MNdrqiosDJ9I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BhivCur+l0uxRrXdj3m3GKjsKlQNT6CXQx3iCBvVkXSvE4m7EvCcVuRfY6gZB5DtI
-	 RrJabvRIGIr3L4g87xf0gTfQDs/DflrsqDAj5QlhN5vplNG9fEENywbAPzXW3gnNlq
-	 m+coGK+eBLQeJtsoxM3fU4c5Xpiy8kfmTbUODa1wg4jIDHjdtxdql01cyMgso0UG9q
-	 znLaUKdE+SbabPCvrEijY1od4XSYKiQECxgj+txYdWIoB7IUqgUD3yiEVggSkRo5Am
-	 oG2oDjLPd9qcjldUhG53BMbb8wG7cjW4jHsngIK0FAWMIuyciYpkyJRP9+ahUBrIUW
-	 mqv3dY3gjk5ZQ==
-Date: Fri, 13 Jun 2025 10:11:43 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org,
-	linux-arch@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 09/12] lib/crc/s390: migrate s390-optimized CRC code
- into lib/crc/
-Message-ID: <20250613171143.GB1284@sol>
-References: <20250607200454.73587-1-ebiggers@kernel.org>
- <20250607200454.73587-10-ebiggers@kernel.org>
- <aExLZaoBCg55rZWJ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CrQtPWOt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749837687;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Bsu+Wcnjd7wtWlxV8RLC0OdC2mEBW/GepWDmRtxUl30=;
+	b=CrQtPWOtUhKtetv1N1n7ZWH1cXpHLRbhrbA+PS7qG9ACgSCDqDZWgV4crPWDUGZ1wKz/17
+	WtAJs2RfU55TRE2O8Vnfb5YAAY9elx2vHRb64TsZjPwM5buNvHFzn8kzjCLpsTYhYTBCJj
+	kFARiHaF8WtKxxqAdpcSr8wNY3vSoM0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-213-FhCKpQQeNyu3N_MV5q2jMQ-1; Fri, 13 Jun 2025 14:01:22 -0400
+X-MC-Unique: FhCKpQQeNyu3N_MV5q2jMQ-1
+X-Mimecast-MFC-AGG-ID: FhCKpQQeNyu3N_MV5q2jMQ_1749837682
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451d2037f1eso16178595e9.0
+        for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 11:01:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749837681; x=1750442481;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Bsu+Wcnjd7wtWlxV8RLC0OdC2mEBW/GepWDmRtxUl30=;
+        b=oZOxfMfLVN5h/Fyy/nFbwgHJtwdG41aD1tnBPUJfUAT9eS4EX/qaoO7f3FEbqxHkZg
+         d9aW7NQDQi1EpF7GrKZ5dWmEe7VKC3ju4NQHrMYMTOO37HisRVZoBvSAojeCPM8Le2Md
+         fHFf1tAXhbTwxNqiTWxcMKZAPji+DoQPNqmOnJwJ8SWBXst9f7Xhj1Sfp6HGMC4SrriV
+         QR7ARpmPaF3s8h22w6fS09Pzu3lzajkuiYb93aMFhLINBpi1Qpvb+v+2CYmuKrlwQ4Cz
+         u4OT0mYBQH13KoqRPlDR8tsHwsjpxJdOBnWiKNmADSvu7VCg6cFCYC9q6N3EQBwQ38+l
+         hjAg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1iKhIiFwE4BVrr/XTCOH+4Nf9XG14Doig3MWL5VPTR7mPNdHHF1w22IeMYJHB+XhONNLgUrDip5k=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyCJ8qAeMMwCZRO/qqr/dDV1Hc65nWNlipjxVWBeS5HSWb5LNuz
+	Ic+S9TYSdt5rYFr8KUAbU5KlOXQZWeUZs6hoFnrsPOs4tShTdu966M0JU4SDk/3VLZX+aEr00cY
+	+AgTTL2nxciv/SF5tQYk7ptv/1w0c3yQqf3vxGQejs+5shHSLA72QmrWMrvg6mQ==
+X-Gm-Gg: ASbGnctyvz/ClSFvGhS8zjDOO/O+XxkEhCW9VuPbKA7JaOP7nFkXpgDYblYRguOWQzB
+	VpBMMW7GfjmSjzB6a+gQt9/ce/tmFGTRZHlP+GuLEYnnh97xvTsqBG2TjsrvxK35a3lZ0JHlMqk
+	stU8rpEc0bCS+VOro2yYf3/q3QB/9YDW+gTQUKKMz3GnT3DunIQQzVFmbwAA8aQ3TRVV6nVqYOM
+	kjS2HIgo/oMhjhCyDdmE8FNqOgCXdy1dN7xtcrE8slWen+29P4UjmlSFtxtxjhnZIP2h89ztOWo
+	/leSXhMo+xQZFuBqg6o1ZadAJ3p1ix5SrQCxNZwPS2q+HogpK4A2U7/HymblUBq5/Pb2ZFRZ1xm
+	7vwMyOZ5uA/74cKzLJkDvhFi2wZIABz7TT/JkBeYz9mzg/Yu6kA==
+X-Received: by 2002:a05:6000:2310:b0:3a4:eed9:755d with SMTP id ffacd0b85a97d-3a5723679c2mr776528f8f.3.1749837681564;
+        Fri, 13 Jun 2025 11:01:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEWRgs9/eOjv6Ni0Z0GgYf1+t6oOJ0Vg7B/D9l25oYMJ7KcIy5VjWpy1ryHHls/6YKXmWWXpA==
+X-Received: by 2002:a05:6000:2310:b0:3a4:eed9:755d with SMTP id ffacd0b85a97d-3a5723679c2mr776461f8f.3.1749837681034;
+        Fri, 13 Jun 2025 11:01:21 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f1a:3700:2982:b5f7:a04e:4cb4? (p200300d82f1a37002982b5f7a04e4cb4.dip0.t-ipconnect.de. [2003:d8:2f1a:3700:2982:b5f7:a04e:4cb4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b089c2sm3004716f8f.59.2025.06.13.11.01.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 11:01:20 -0700 (PDT)
+Message-ID: <e874aa09-0ab8-4d5e-80ed-515d53d794e1@redhat.com>
+Date: Fri, 13 Jun 2025 20:01:19 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aExLZaoBCg55rZWJ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] mm/hugetlb: Remove prepare_hugepage_range()
+To: Peter Xu <peterx@redhat.com>, Zi Yan <ziy@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Alex Mastro <amastro@fb.com>,
+ Nico Pache <npache@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-3-peterx@redhat.com>
+ <050B65EF-6A1E-44A8-87D5-152FA9A60641@nvidia.com> <aExQy6xMDc9Igm5v@x1.local>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aExQy6xMDc9Igm5v@x1.local>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: sNIANLH1W77JNP6J1EnYOeS7WSmIQVEYVImzZfZzGgs_1749837682
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 06:01:41PM +0200, Alexander Gordeev wrote:
-> On Sat, Jun 07, 2025 at 01:04:51PM -0700, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Move the s390-optimized CRC code from arch/s390/lib/crc* into its new
-> > location in lib/crc/s390/, and wire it up in the new way.  This new way
-> > of organizing the CRC code eliminates the need to artificially split the
-> > code for each CRC variant into separate arch and generic modules,
-> > enabling better inlining and dead code elimination.  For more details,
-> > see "lib/crc: prepare for arch-optimized code in subdirs of lib/crc/".
-> > 
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ...
 > 
-> Hi Eric,
+> But if we want to be super accurate, it's indeed different, in that the old
+> hugetlb code was checking stack top with STACK_TOP, which is
+> mips_stack_top() for MIPS: it's a value that might be slightly less than
+> TASK_SIZE..
 > 
-> With this series I am getting on s390:
-> 
-> alg: hash: skipping comparison tests for crc32c-s390 because crc32c-generic is unavailable
-> 
-> Thanks!
+> So strictly speaking, there's indeed a trivial difference on the oddity of
+> defining stack top, but my guess is nothing will be affected.  I can add
+> some explanation into the commit message in that case.
 
-I think that's actually from "crypto/crc32c: register only one shash_alg"
-(https://lore.kernel.org/linux-crypto/20250601224441.778374-3-ebiggers@kernel.org/),
-not the patch you replied to.
+Yeah, that would be good.
 
-Those self-test warnings are expected.  But I guess they are going to confuse
-people, so we should do something to make them go away.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-I think we should do what I've proposed for SHA-512: stop worrying about setting
-the cra_driver_name to something meaningful (which has never really worked
-anyway), instead just use *-lib, and update crypto/testmgr.c accordingly.
+-- 
+Cheers,
 
-I'll send out patches that do that.
+David / dhildenb
 
-- Eric
