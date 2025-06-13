@@ -1,116 +1,210 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7839E2E11CA
-	for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 16:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505401E871
+	for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 16:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830519; cv=none; b=H8NHZU+Djixoc4xAs2RuAJ6EWjIpW2jaDW+xGWFvvKnqXvwE+bEUJGkphpOzyMnU5+BBiFhs7KSQMMuJPbP1kLFD3Wo6GJy/kB1QQts5sYNyEPqZlJ93VC3W+VS1zd2K7lu0LzNPrCcc9mj1tzgmHrFFNgXtjBRNMskXWqc1ud0=
+	t=1749831893; cv=none; b=B3rTzunbEod8cGGOlxDKl6fLXhx+cBUnk801h39AW8zK7XgG1V35V1QD5yzsny/LaQdUtBVhywcF1oruA/5q5WlUC5vXvtZiCFXrW8ZUlTzOX+QkKMDTJcOlFScICPGSYGbjhnqGlSoPCgvVie3ArMCsbI315ZixuyQNGqc061g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830519; c=relaxed/simple;
-	bh=sP+WTByBn7c1i+cE70EYSmAqeZL2rfsXlCl547H8JHo=;
+	s=arc-20240116; t=1749831893; c=relaxed/simple;
+	bh=ezAPkeMmfcqGy1OO+aJ5oa0dXrm8ejKbGu1v5Dg5Cqk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tsWQyeJIj9YGjQzU4ySwo4hkcvWvrdK2xFOT2v1vD1l0QXmZrmf3GXoDms5djSWWtsQ1wnZ2q/eVm+53jK9HvYhi5R+lbYiFw3mHiWK2yK76bOICCTOfb33lm6u+KDvEUyyp2xbu3ik0e5PhZHFDCNOhrgaoTSOZ5Clzz3LBh64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Zhfihg3Q; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type:Content-Disposition; b=iJCn1vNq4eQIHU29iH0t2lwauG5xDzTVgObb3bz9Bq2yzfQvww/svt7HVww5KsHMjan0Esm4Aco2dxYsj9JuIO6NVxWJ+RLWNUhTsHsN1LFezbQbU70I43kVbudFGQui7mUhk/lZ5SBfETdtDEWwVrakkM7TNVFfLqQ1YaX4z1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MjhrZQsj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Zhfihg3Q"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55DATE0P029060;
-	Fri, 13 Jun 2025 16:01:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=dxMSfWlJLSP1Q2CznlmbgSk8Q0tBnI
-	ErVGASW4hTcD0=; b=Zhfihg3QYV80iCtJFIZNXzwNsO28/CBzBPA1NW4+cP5VWr
-	k5l0f/92cmSa5uH4HyGSN7MW6sSZu3gD2JREmvkY9IWiDksFl/haBc28Yev1eh2p
-	fR3cqw2RD+tVrXIr7ijzmVyteuDmhjWOR5YkS2N2qTSLKs3rs5KGToPoP9lOHn28
-	Zc0+P608Mn4Oofwq9OObNNP0q5WFKuFHs7VgiBgMYGALGpI5XLkpWYhrNGGVAIJg
-	CsvXGDatoWJVdD4D+XIN/bR1Z2kVnng6dv251wWZwQ5XqU8LCwiGj9YrhbE5Yqqs
-	c0WIsVuRjG1it6BmiiXjCc1Dtc3+1matXW8Zfx8g==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474dv8225n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 16:01:47 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55DFim5F019573;
-	Fri, 13 Jun 2025 16:01:46 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4752f2tec9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 16:01:45 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55DG1irx33227464
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Jun 2025 16:01:44 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3311620040;
-	Fri, 13 Jun 2025 16:01:44 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4533A20043;
-	Fri, 13 Jun 2025 16:01:43 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.111.81.121])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 13 Jun 2025 16:01:43 +0000 (GMT)
-Date: Fri, 13 Jun 2025 18:01:41 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org, linux-arch@vger.kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 09/12] lib/crc/s390: migrate s390-optimized CRC code
- into lib/crc/
-Message-ID: <aExLZaoBCg55rZWJ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250607200454.73587-1-ebiggers@kernel.org>
- <20250607200454.73587-10-ebiggers@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MjhrZQsj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749831890;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M6UPs3wZZzH8Vr1Vmqrw6Xud3sdfgHi+vy7XvS9r/Jo=;
+	b=MjhrZQsj/JkW5i8G8Or0WLQSxRLDCsZYmlOf9vVD0W81t4a5X5mXXvySGZkt+4kAXRvBAW
+	RmfkoV0mD8OCcGhPGKqq27bgsWYxVaa55IUCE1tSafze30NV3m30GYs7pVgFph3KdZ/npU
+	VRfXZx36vT6jGwGNiasBKCnOBIRBzv8=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-281-G7AXUMdZOHac4IgrjWpf1Q-1; Fri, 13 Jun 2025 12:24:49 -0400
+X-MC-Unique: G7AXUMdZOHac4IgrjWpf1Q-1
+X-Mimecast-MFC-AGG-ID: G7AXUMdZOHac4IgrjWpf1Q_1749831888
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a42c569a9aso54257751cf.0
+        for <loongarch@lists.linux.dev>; Fri, 13 Jun 2025 09:24:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749831888; x=1750436688;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M6UPs3wZZzH8Vr1Vmqrw6Xud3sdfgHi+vy7XvS9r/Jo=;
+        b=dp+mwhb+E97FIviIr0Ej03aHdw8etDyNWNOFj+t63Ki49d9BECg19it8ipOaUopyzU
+         oPWDhAY1ZaTt66RI4GekHtrzd7yEDiRlACiv8qNpM5HHqP8c8681WMEIoD1mw7fTl4HY
+         HhywA3Oz5nXLhoUBhpOP8OAx72mJrZ4FWkVZbTzyKu3GCUY9kwqezqBuK/WMgLnoaJIO
+         eY2hPxpccf5UOXD0zVyj8OGPKOd/XRoKMJltS2+e7dfUfVQhhdJaMI/7T8hGlNcWyWs4
+         MZjhrKDjxJ6sEQfly5imJQxigNRJHgbH97ww/gm6W2DwO8KzjB3e8CHaHccrLYjnEAij
+         cJJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1+dsWtBglykG9K+qVuT38c6EAegdJHzdlggPpDrkXsgsBIKHRS/MGsFPwVHtGFy5bi6oOI/v6U34=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwYh87snc3J174fqRZIL1q8CiPLsdKTiKS4OeRZEiup14oTTpy+
+	tu8gABbtSaUEpraYpJumxvSSVaffoArDCi9tkzbgqDgK+VFllBzYucyA2h2C1+W2aMe0xi+GYZ1
+	ZTGCoCw5n1PWMkDXWhrjT8szpCXGCmkui0pJGVQ2bHC7Y0K3BeNrVfcpeFnVGWw==
+X-Gm-Gg: ASbGncv2M384mCq/mnC9ZE5A4D6lSu2JKYZMUZ/AiqHv1ozx0Aqe5f87DgnPcngwwLd
+	rS7wd+EDJeNsHSpvJ4x/5NuBGk7fASA5dTTQ5USEPcgiN4UO2Y5SAXLitiJ/e47FMrmGEGPEPLl
+	3zeYcQzFpL175bSF4wmgeM+x5LEBbJhPXtMXkAU6mX24Mtlx+h5LdjFWAX9d08pRtJwFqTZJ9wj
+	QIFudfGZsb9rfmDXDjk/5DjYz7PzPo79u7O7nfyINnIlbOqG4C0nDf06XsGaeomeNZeiPjAi2Ud
+	sonsiy2VYW11Rw==
+X-Received: by 2002:a05:622a:44:b0:4a6:fa1f:46a5 with SMTP id d75a77b69052e-4a73b69e837mr6261661cf.2.1749831888560;
+        Fri, 13 Jun 2025 09:24:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGwE/aMkplM3bTE+98WG9z6ojodJYRohckJBl51t/zS9y9pPDUtOdEYutdKcOPE5vAqv+nUow==
+X-Received: by 2002:a05:622a:44:b0:4a6:fa1f:46a5 with SMTP id d75a77b69052e-4a73b69e837mr6261261cf.2.1749831888182;
+        Fri, 13 Jun 2025 09:24:48 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4cf7desm18773181cf.53.2025.06.13.09.24.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 09:24:47 -0700 (PDT)
+Date: Fri, 13 Jun 2025 12:24:43 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Alex Mastro <amastro@fb.com>,
+	David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org
+Subject: Re: [PATCH 2/5] mm/hugetlb: Remove prepare_hugepage_range()
+Message-ID: <aExQy6xMDc9Igm5v@x1.local>
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-3-peterx@redhat.com>
+ <050B65EF-6A1E-44A8-87D5-152FA9A60641@nvidia.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <050B65EF-6A1E-44A8-87D5-152FA9A60641@nvidia.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: SxbqD3qLoPTxJRDaFamb3VQ7ccJ86D-uIHQsL-oN3B0_1749831888
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250607200454.73587-10-ebiggers@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: oqxWeEseK0qommY-tA52lM8_yDgYBZ8b
-X-Proofpoint-GUID: oqxWeEseK0qommY-tA52lM8_yDgYBZ8b
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDExNSBTYWx0ZWRfX2SFXW8bIydO8 QijS4XnzPyWGv7hUAVPhEsrOB00xE8g+gtnZ5TKc3xm/6m22RAo7pWDdkAUOPF1K6LO6qJEf193 PxiDvBNjb2KojolH7uIG4xIF5aoOVAuWCvsnLPUnzUljRW/4dT+d6yR8TGdRxod4wQd7u9oXLyt
- 960X1pKDQBdkA9i2fSfl/dxiyGZuXG6X5RlU4ZS8JXRnJlDwSVv11Yh0NZ3so0jxjPrI/YVMcT2 6jW8eHHK29fMPvF4SWZi3ZgmFX9oL1/VYz01noMZpHwwtcEMmmSVoqdhzy0/dmzN0+Go88V0p57 Weg2+fyKZ+PNLuJB+wyFM7SDDMfP0OJ1UZqOon8sp39ETo2dKYj4MRErDeC122oOtE8J8jykSry
- lFdOt02pLQfhwmo1MyS48Be/xFyI96QJGhA1Fc1zghsJy38d3Mb+b7BSNKN7KQSA+ld6RejI
-X-Authority-Analysis: v=2.4 cv=CfMI5Krl c=1 sm=1 tr=0 ts=684c4b6b cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=1XWaLZrsAAAA:8 a=DtkNC_JpMhehFE-g-C8A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-13_01,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- phishscore=0 priorityscore=1501 clxscore=1011 impostorscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=403 adultscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506130115
 
-On Sat, Jun 07, 2025 at 01:04:51PM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Fri, Jun 13, 2025 at 11:13:50AM -0400, Zi Yan wrote:
+> On 13 Jun 2025, at 9:41, Peter Xu wrote:
 > 
-> Move the s390-optimized CRC code from arch/s390/lib/crc* into its new
-> location in lib/crc/s390/, and wire it up in the new way.  This new way
-> of organizing the CRC code eliminates the need to artificially split the
-> code for each CRC variant into separate arch and generic modules,
-> enabling better inlining and dead code elimination.  For more details,
-> see "lib/crc: prepare for arch-optimized code in subdirs of lib/crc/".
+> > Only mips and loongarch implemented this API, however what it does was
+> > checking against stack overflow for either len or addr.  That's already
+> > done in arch's arch_get_unmapped_area*() functions, hence not needed.
+> >
+> > It means the whole API is pretty much obsolete at least now, remove it
+> > completely.
+> >
+> > Cc: Huacai Chen <chenhuacai@kernel.org>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Muchun Song <muchun.song@linux.dev>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Cc: loongarch@lists.linux.dev
+> > Cc: linux-mips@vger.kernel.org
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > ---
+> >  arch/loongarch/include/asm/hugetlb.h | 14 --------------
+> >  arch/mips/include/asm/hugetlb.h      | 14 --------------
+> >  fs/hugetlbfs/inode.c                 |  8 ++------
+> >  include/asm-generic/hugetlb.h        |  8 --------
+> >  include/linux/hugetlb.h              |  6 ------
+> >  5 files changed, 2 insertions(+), 48 deletions(-)
+> >
+> > diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+> > index 4dc4b3e04225..ab68b594f889 100644
+> > --- a/arch/loongarch/include/asm/hugetlb.h
+> > +++ b/arch/loongarch/include/asm/hugetlb.h
+> > @@ -10,20 +10,6 @@
+> >
+> >  uint64_t pmd_to_entrylo(unsigned long pmd_val);
+> >
+> > -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+> > -static inline int prepare_hugepage_range(struct file *file,
+> > -					 unsigned long addr,
+> > -					 unsigned long len)
+> > -{
+> > -	unsigned long task_size = STACK_TOP;
+> > -
+> > -	if (len > task_size)
+> > -		return -ENOMEM;
+> > -	if (task_size - len < addr)
+> > -		return -EINVAL;
+> > -	return 0;
+> > -}
+> > -
+> >  #define __HAVE_ARCH_HUGE_PTE_CLEAR
+> >  static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+> >  				  pte_t *ptep, unsigned long sz)
+> > diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
+> > index fbc71ddcf0f6..8c460ce01ffe 100644
+> > --- a/arch/mips/include/asm/hugetlb.h
+> > +++ b/arch/mips/include/asm/hugetlb.h
+> > @@ -11,20 +11,6 @@
+> >
+> >  #include <asm/page.h>
+> >
+> > -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+> > -static inline int prepare_hugepage_range(struct file *file,
+> > -					 unsigned long addr,
+> > -					 unsigned long len)
+> > -{
+> > -	unsigned long task_size = STACK_TOP;
+> > -
+> > -	if (len > task_size)
+> > -		return -ENOMEM;
 > 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-...
+> arch_get_unmapped_area_topdown() has this check.
+> 
+> > -	if (task_size - len < addr)
+> > -		return -EINVAL;
+> 
+> For this one, arch_get_unmapped_area_topdown() instead will try to
+> provide a different addr if the check fails.
+> 
+> So this patch changes the original code behavior, right?
 
-Hi Eric,
+It almost shouldn't change.  Note that prepare_hugepage_range() is only
+used for MAP_FIXED before this patch:
 
-With this series I am getting on s390:
+hugetlb_get_unmapped_area():
+        if (flags & MAP_FIXED) {
+                if (addr & ~huge_page_mask(h))
+                        return -EINVAL;
+                if (prepare_hugepage_range(file, addr, len))
+                        return -EINVAL;
+        }
 
-alg: hash: skipping comparison tests for crc32c-s390 because crc32c-generic is unavailable
+Then for MAP_FIXED, on MIPS:
 
-Thanks!
+arch_get_unmapped_area_common():
+        ...
+	if (flags & MAP_FIXED) {
+		/* Even MAP_FIXED mappings must reside within TASK_SIZE */
+		if (TASK_SIZE - len < addr)
+			return -EINVAL;
+                ...
+        }
+
+But if we want to be super accurate, it's indeed different, in that the old
+hugetlb code was checking stack top with STACK_TOP, which is
+mips_stack_top() for MIPS: it's a value that might be slightly less than
+TASK_SIZE..
+
+So strictly speaking, there's indeed a trivial difference on the oddity of
+defining stack top, but my guess is nothing will be affected.  I can add
+some explanation into the commit message in that case.
+
+Thanks,
+
+-- 
+Peter Xu
+
