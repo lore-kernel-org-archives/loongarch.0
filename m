@@ -1,323 +1,391 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067032D5C8D
-	for <loongarch@lists.linux.dev>; Sat, 14 Jun 2025 13:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DC9E12DDA1;
+	Mon, 16 Jun 2025 01:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749909585; cv=none; b=RrYuPSIXhISO852cjMVqsZMZaQqT21aoRLTAAM+f22UqJ2L43XyuZsyy/1JqCXfywnI3CKuf/SmYRF06cjvrtX0K/1UIqMj7pUrJ4v+aRIk8KRVEwwtpi1YUhTwGR2V5/JsQrQaaHWXe2FeyorkTd7IQTwpl0uLZp0Kb/qJHNio=
+	t=1750036511; cv=none; b=QyQ1oXSsTtH7pu2W0OpFwNvBsPmC0OKJdERgE4HScdM/qJGuIzpneWi0zOp40VjrWp1psDlpWxH/C3lLTgSmp66MCUcZsjXLdFSllPgYyl7vxMrfBhSteK1n9frozk7RHeIXHu3m5WSW+Wz+VpQzq6HWfs+CEnPRp5mn3N3LvJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749909585; c=relaxed/simple;
-	bh=IpTklT/t6cRb761DDSQQa3pifnAhgtdO5g6UaiYauW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBoD0RDF4Gyj4dnVGO2zezfUNCfCGy7nhWlprrHmxJe2vn0DK92iBrRYgpXL/EY1jjvw9pYtdYMVE4yIRvv3HrRZW64mKV8Ysr+ec8k++j07KqXgFfk6IpnejEJwNPXgEmbP2xzNOsk94bpIlocivTu3J40+7abWhbUupMeyj0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=2d8R27Z7; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="2d8R27Z7"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2db9e29d3bcso1088144fac.1
-        for <loongarch@lists.linux.dev>; Sat, 14 Jun 2025 06:59:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1749909583; x=1750514383; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g0m+Fi2zvj6n2Dtqq2057AKu8Qy58XQ7T17PhQzdBtE=;
-        b=2d8R27Z7//CGS36m84urhDaa96m1iReN/3+nJxT8nvYDrsxqyKTjHs8g64NwGx/7Pp
-         1cSL8FjCGgzcE8PkFYR5nJMdeQfyAuCZwvQLUzEp11MOfHnRfKeq66RVJyUT19gMNiI4
-         PAGYizJrzf7Gif1U42hjOsut5aTVcPXUO0LKMg2sJjGfjO4uxgdFKoERIxz41wtgaZM2
-         Hm8LXvuHZrL0uR88vcJ70bfWh0/RdFi91qxUFinYEueMJ5kryu0uMEbdrDHbGnAR/7WY
-         gwaYcKqKfGljlLHlpdRZmWND58pH1gZGKEgn6mirCL+5xAgpyoaplhBhPZJ3zqh7qDaZ
-         8/dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749909583; x=1750514383;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g0m+Fi2zvj6n2Dtqq2057AKu8Qy58XQ7T17PhQzdBtE=;
-        b=jcybLIc8OF8hQ7dptDbnnUAtTk6mV3fUyXB5PMFEi5lPUVbQTOmB2DKNDArejRdmYl
-         irSW7V9nwBe0puS31So7erETWQ2Rlae/rKbyMqWgwjauQMrwyX5peTfZxlh5gaOgesOR
-         /kNg5CgnZmwhEeNEi26F1GZmQeXTtiKPDLXsaQhuA959/bAErJz/VKYg8mNEb+Qx8p5X
-         z3KICfcPVxJKalIti9ENVwTzam0jTWAoj69SdllQ7DxXACbrduHIGSFpzVJxDa5/c8Qa
-         j2Czo1qn2UD6B/iqKncXF+s0WjmUT30ff9ElNVxhMNKy14nOO4ri79w7GsCUd5v3tgzW
-         aWrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXcJwIVblQZjPHaDQl0viWfn7/iIjTpRB5VLYpkWJ3eez0A5zp4KRXKTPHstkTnGzLA60wY066SCxc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz7F2MWf20j385oJLr+EMRwQeGJfySTTnNaO4nLJSWUHEDg9tWY
-	2cnvs3ZK3tB7zWZ3hxm5GiBF7ywya9oXm47PEZHQhIdD4i/cKG7HhG0/xqSEbz3zl7E=
-X-Gm-Gg: ASbGncuZhYWlHjp+I3Vpwc5Zn4XWZiUj944kxuYUfKmeYpBtX/J7qb+A/eSq8AO7+Un
-	0sbvOoGravQJSlK9QhwAMV0AlInXhCUGJwrqvXTbESwZum21Eklr/jPYgYq4wVfGJJ9Tu3TpY/D
-	JgT8hTYB5zIZN6sjwGpnuyfX5eU8cymZ9guf5kJ/raAVi0LbCamuqDBFA/oGaH5bAtITbIiJWXM
-	SzK2dNFfVWmuO/1zxMIqPQW7NINNCww0VHLKE7JYA3o4m6gNobbDL50UKUzvL3tiutUEDmQIaiX
-	30a39u2xCFJDyEZotYqt5uSg4A0HwoTzdoiq+4kAbZsiOhkgPwMBio09tutjn1aA+A==
-X-Google-Smtp-Source: AGHT+IE7Ls/rlOjmSl7wXr5ILZZRY5ShsQdb8vNMhsyPqamNHKhk5KyXG9P4Ek7BnactAUWNaoezZA==
-X-Received: by 2002:a05:6870:8286:b0:2d6:b7b:a83 with SMTP id 586e51a60fabf-2eaf08dc205mr1836510fac.13.1749909582853;
-        Sat, 14 Jun 2025 06:59:42 -0700 (PDT)
-Received: from mail.minyard.net ([2001:470:b8f6:1b:f41f:8468:bca8:a5f7])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2eab897a367sm1147951fac.21.2025.06.14.06.59.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jun 2025 06:59:41 -0700 (PDT)
-Date: Sat, 14 Jun 2025 08:59:35 -0500
-From: Corey Minyard <corey@minyard.net>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
-	kexybiscuit@aosc.io, wangyao@lemote.com
-Subject: Re: [PATCH v4 0/3] LoongArch: Add Loongson-2K BMC support
-Message-ID: <aE2AR8rj9OEM8TcB@mail.minyard.net>
-Reply-To: corey@minyard.net
-References: <cover.1749731531.git.zhoubinbin@loongson.cn>
- <aEzFPdYEvbkaH_B5@mail.minyard.net>
- <CAMpQs4L66sXLdj6+ebMXcwq4i+XVi+AmwBbQSx0-EuULNJ5XeQ@mail.gmail.com>
- <aEzqbLHSB6phFNox@mail.minyard.net>
- <CAMpQs4L82x=OhLQJb96ZC4YfT_ZhHcU+zks2r0HMU0Y2fjwsbg@mail.gmail.com>
+	s=arc-20240116; t=1750036511; c=relaxed/simple;
+	bh=dvTGtxAknQfEoc4zbDY1V7wwkCrQM97z3Atd+/H9l4g=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QCV6/yKTdNlGnJrz8StKN7va/1iN+Ta20Unh1crc0QwtnDMCSTktGWzVr8Uh72XiE0kVgmIibxti4wPs343W12YdU5bmfcS1L+hNbveiYQCzmltWXfn484Y7zvxUkHS8hoTmZjIulYun0helwiGGhVqhapbU/nwKs/bkyVD0JRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxbKwRcE9ou2YXAQ--.54712S3;
+	Mon, 16 Jun 2025 09:14:57 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMDxH+UGcE9oJlYcAQ--.19628S3;
+	Mon, 16 Jun 2025 09:14:49 +0800 (CST)
+Subject: Re: [PATCH 4/8] KVM: Move include/kvm/iodev.h to include/linux as
+ kvm_iodev.h
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Anish Ghulati <aghulati@google.com>, Colton Lewis <coltonlewis@google.com>,
+ Thomas Huth <thuth@redhat.com>
+References: <20250611001042.170501-1-seanjc@google.com>
+ <20250611001042.170501-5-seanjc@google.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <50a32984-f2ed-249a-c055-81ad35e1fa51@loongson.cn>
+Date: Mon, 16 Jun 2025 09:13:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20250611001042.170501-5-seanjc@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpQs4L82x=OhLQJb96ZC4YfT_ZhHcU+zks2r0HMU0Y2fjwsbg@mail.gmail.com>
+X-CM-TRANSID:qMiowMDxH+UGcE9oJlYcAQ--.19628S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWfGr4rtr1fJrW8Cr1ktFW3XFc_yoWDAFWxpF
+	4DCF4kAr43Cr18JF9Fy3ZIvFyUXws5Kr1UKa4UuFWUAw1aqr1kXw4vkrn8tFn5Aayvqa10
+	gFWagF15Zw4UX3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4YLvDU
+	UUU
 
-On Sat, Jun 14, 2025 at 01:25:17PM +0800, Binbin Zhou wrote:
-> Hi Corey:
-> 
-> Thanks for your detailed suggestions.
-> 
-> On Sat, Jun 14, 2025 at 11:20 AM Corey Minyard <corey@minyard.net> wrote:
-> >
-> > On Sat, Jun 14, 2025 at 10:50:37AM +0800, Binbin Zhou wrote:
-> > > Hi Corey:
-> > >
-> > > On Sat, Jun 14, 2025 at 8:41 AM Corey Minyard <corey@minyard.net> wrote:
-> > > >
-> > > > On Fri, Jun 13, 2025 at 02:43:38PM +0800, Binbin Zhou wrote:
-> > > > > Hi all:
-> > > > >
-> > > > > This patch set introduces the Loongson-2K BMC.
-> > > > >
-> > > > > It is a PCIe device present on servers similar to the Loongson-3 CPUs.
-> > > > > And it is a multifunctional device (MFD), such as display as a sub-function
-> > > > > of it.
-> > > >
-> > > > I've asked this before, but I haven't gotten a answer, I don't think.
-> > > >
-> > > > Is this really a multi-function device?  Is there (or will there be)
-> > > > another driver that uses the MFD code?
-> > >
-> > > I am very sorry, I may have overlooked your previous question.
-> > >
-> > > And I also may not have a thorough understanding of multifunction devices.
-> > >
-> > > The Loongson-2K BMC device provides two functions: display and IPMI.
-> > > For display, we pass the simplefb_platform_data parameter and register
-> > > the simpledrm device, as shown in patch-1.
-> > >
-> > > Therefore, I think this should be considered a multifunction device.
-> >
-> > Ok, that's clear, thank you.
-> >
-> > However, that's not really very clear from the patches you have
-> > provided.  Particularly, the "bmc" in the name from patch 1 makes one
-> > think that it's only a bmc.
-> >
-> > The "bmc" name is also a little confusing; the devices with a "bmc" in
-> > the name are all the BMC side, but you are doing a host side device.
-> >
-> > If you look at most of the other MFDs, they have a "core" section then
-> > various other parts that use the core.  And possibly parts in other
-> > directories for individual functions.  I think you need to do the same
-> > design.  Have a "core" section that both the display and bmc use, then a
-> > separate display and bmc driver.
-> 
-> If it can be reconstructed in this way, it should be clearer.
-> 
-> However, there is a key point in my mind: if the display and IPMI are
-> separated into two parts, they should at least be able to be probed
-> separately, but in fact they belong to the same PCI-E device, just
-> allocated different resource intervals.
-> 
-> static struct pci_device_id ls2k_bmc_devices[] = {
->        { PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
->        { }
-> };
-> MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
-> 
-> I'm not sure if my understanding is correct?
 
-You are already doing this, it appears.  I spent a little time to learn
-how this works.  You are using the standard frame buffer driver, so no
-special driver is required there (per earlier discussions).  And you are
-registering it all as an MFD device, so the display buffer and IPMI
-interface will pick it up there.
 
-So from a design point of view this all looks good.
-
-The IPMI interface needs to be separately selectable from the main mfd
-device in the Kconfigs.  Add an IPMI_LS2K config in the IPMI section
-that enables the IPMI interface and selects MFD_LS2K_BMC.  And both
-configs need to be tristate, not bool, so they can be modules.
-
-I don't know if you want to make the display part so it can be enabled
-separately, I'm not sure how you would do that.  But that's not my
-concern, really.
-
-Thanks,
-
--corey
-
+On 2025/6/11 上午8:10, Sean Christopherson wrote:
+> Move iodev.h, the last remaining holdout in include/kvm, to the standard
+> include/linux directory as kvm_iodev.h and delete include/kvm.
 > 
-> >
-> > That way, you can use the display without the IPMI interface, or the
-> > IPMI interface without the display.
-> >
-> > I would like to see:
-> >
-> > * A core mfd device named ls2k-core.c that has the core functions.
-> >   It would have its own config item (MFD_LS2K) that would be
-> >   selected if either the display or IPMI device is enabled.
-> >
-> > * A separate display device in its own file with its own config item.
-> >   This isn't my area, so I'm not sure where this should go.
-> >
-> > * The IPMI device in the ipmi directory named ipmi_ls2k.c, again
-> >   with it's own config item (IPMI_LS2K).
-> >
-> > Does that make sense?  I don't want to make things too hard, but that's
-> > the way pretty much everything else is done on MFDs.
-> >
-> > Thanks,
-> >
-> > -corey
-> >
-> > >
-> > > >
-> > > > If nothing else is going to use this, then it's really not a
-> > > > multi-function device and all the code can go into the IPMI directory.
-> > > > That simplifies maintenance.
-> > > >
-> > > > If it is a multi-function device, then I want two separate Kconfig
-> > > > items, one for the MFD and one for the IPMI portion.  That way it's
-> > > > ready and you don't have to bother about the IPMI portion when
-> > > > adding the other device.
-> > > >
-> > > > All else looks good, I think.
-> > > >
-> > > > -corey
-> > > >
-> > > > >
-> > > > > For IPMI, according to the existing design, we use software simulation to
-> > > > > implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
-> > > > >
-> > > > > Also since both host side and BMC side read and write kcs status, we use
-> > > > > fifo pointer to ensure data consistency.
-> > > > >
-> > > > > For the display, based on simpledrm, the resolution is read from a fixed
-> > > > > position in the BMC since the hardware does not support auto-detection
-> > > > > of the resolution. Of course, we will try to support multiple
-> > > > > resolutions later, through a vbios-like approach.
-> > > > >
-> > > > > Especially, for the BMC reset function, since the display will be
-> > > > > disconnected when BMC reset, we made a special treatment of re-push.
-> > > > >
-> > > > > Based on this, I will present it in four patches:
-> > > > > patch-1: BMC device PCI resource allocation.
-> > > > > patch-2: BMC reset function support
-> > > > > patch-3: IPMI implementation
-> > > > >
-> > > > > Thanks.
-> > > > >
-> > > > > -------
-> > > > > V4:
-> > > > > - Add Reviewed-by tag;
-> > > > > - Change the order of the patches.
-> > > > > Patch (1/3):
-> > > > >   - Fix build warning by lkp: Kconfig tristate -> bool
-> > > > >     - https://lore.kernel.org/all/202505312022.QmFmGE1F-lkp@intel.com/
-> > > > >  - Update commit message;
-> > > > >  - Move MFD_LS2K_BMC after MFD_INTEL_M10_BMC_PMCI in Kconfig and
-> > > > >    Makefile.
-> > > > > Patch (2/3):
-> > > > >   - Remove unnecessary newlines;
-> > > > >   - Rename ls2k_bmc_check_pcie_connected() to
-> > > > >     ls2k_bmc_pcie_is_connected();
-> > > > >   - Update comment message.
-> > > > > Patch (3/3):
-> > > > >   - Remove unnecessary newlines.
-> > > > >
-> > > > > Link to V3:
-> > > > > https://lore.kernel.org/all/cover.1748505446.git.zhoubinbin@loongson.cn/
-> > > > >
-> > > > > V3:
-> > > > > Patch (1/3):
-> > > > >  - Drop "MFD" in title and comment;
-> > > > >  - Fromatting code;
-> > > > >  - Add clearer comments.
-> > > > > Patch (2/3):
-> > > > >  - Rebase linux-ipmi/next tree;
-> > > > >  - Use readx()/writex() to read and write IPMI data instead of structure
-> > > > >    pointer references;
-> > > > >  - CONFIG_LOONGARCH -> MFD_LS2K_BMC;
-> > > > >  - Drop unused output.
-> > > > > Patch (3/3):
-> > > > >  - Inline the ls2k_bmc_gpio_reset_handler() function to ls2k_bmc_pdata_initial();
-> > > > >  - Add clearer comments.
-> > > > >  - Use proper multi-line commentary as per the Coding Style documentation;
-> > > > >  - Define all magic numbers.
-> > > > >
-> > > > > Link to V2:
-> > > > > https://lore.kernel.org/all/cover.1747276047.git.zhoubinbin@loongson.cn/
-> > > > >
-> > > > > V2:
-> > > > > - Drop ls2kdrm, use simpledrm instead.
-> > > > > Patch (1/3):
-> > > > >  - Use DEFINE_RES_MEM_NAMED/MFD_CELL_RES simplified code;
-> > > > >  - Add resolution fetching due to replacing the original display
-> > > > >    solution with simpledrm;
-> > > > >  - Add aperture_remove_conflicting_devices() to avoid efifb
-> > > > >    conflict with simpledrm.
-> > > > > Patch (3/3):
-> > > > >  - This part of the function, moved from the original ls2kdrm to mfd;
-> > > > >  - Use set_console to implement the Re-push display function.
-> > > > >
-> > > > > Link to V1:
-> > > > > https://lore.kernel.org/all/cover.1735550269.git.zhoubinbin@loongson.cn/
-> > > > >
-> > > > > Binbin Zhou (3):
-> > > > >   mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
-> > > > >   mfd: ls2kbmc: Add Loongson-2K BMC reset function support
-> > > > >   ipmi: Add Loongson-2K BMC support
-> > > > >
-> > > > >  drivers/char/ipmi/Makefile       |   1 +
-> > > > >  drivers/char/ipmi/ipmi_si.h      |   7 +
-> > > > >  drivers/char/ipmi/ipmi_si_intf.c |   3 +
-> > > > >  drivers/char/ipmi/ipmi_si_ls2k.c | 189 ++++++++++++
-> > > > >  drivers/mfd/Kconfig              |  12 +
-> > > > >  drivers/mfd/Makefile             |   2 +
-> > > > >  drivers/mfd/ls2kbmc-mfd.c        | 485 +++++++++++++++++++++++++++++++
-> > > > >  7 files changed, 699 insertions(+)
-> > > > >  create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
-> > > > >  create mode 100644 drivers/mfd/ls2kbmc-mfd.c
-> > > > >
-> > > > >
-> > > > > base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
-> > > > > --
-> > > > > 2.47.1
-> > > > >
-> > >
-> > >
-> > > --
-> > > Thanks.
-> > > Binbin
+> Acked-by: Anup Patel <anup@brainfault.org>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   MAINTAINERS                                | 1 -
+>   arch/arm64/include/asm/kvm_vgic.h          | 2 +-
+>   arch/arm64/kvm/vgic/vgic-mmio-v2.c         | 2 +-
+>   arch/arm64/kvm/vgic/vgic-mmio-v3.c         | 2 +-
+>   arch/arm64/kvm/vgic/vgic-mmio.c            | 2 +-
+>   arch/loongarch/include/asm/kvm_eiointc.h   | 2 +-
+>   arch/loongarch/include/asm/kvm_ipi.h       | 2 +-
+>   arch/loongarch/include/asm/kvm_pch_pic.h   | 2 +-
+>   arch/mips/include/asm/kvm_host.h           | 3 +--
+>   arch/powerpc/kvm/mpic.c                    | 2 +-
+>   arch/riscv/kvm/aia_aplic.c                 | 2 +-
+>   arch/riscv/kvm/aia_imsic.c                 | 2 +-
+>   arch/x86/kvm/i8254.h                       | 2 +-
+>   arch/x86/kvm/ioapic.h                      | 2 +-
+>   arch/x86/kvm/irq.h                         | 2 +-
+>   arch/x86/kvm/lapic.h                       | 2 +-
+>   include/{kvm/iodev.h => linux/kvm_iodev.h} | 0
+>   virt/kvm/coalesced_mmio.c                  | 3 +--
+>   virt/kvm/eventfd.c                         | 2 +-
+>   virt/kvm/kvm_main.c                        | 3 +--
+>   20 files changed, 18 insertions(+), 22 deletions(-)
+>   rename include/{kvm/iodev.h => linux/kvm_iodev.h} (100%)
 > 
-> -- 
-> Thanks.
-> Binbin
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 10cf54c8f727..a2cd432273e5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13011,7 +13011,6 @@ W:	http://www.linux-kvm.org
+>   T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
+>   F:	Documentation/virt/kvm/
+>   F:	include/asm-generic/kvm*
+> -F:	include/kvm/iodev.h
+>   F:	include/linux/kvm*
+>   F:	include/trace/events/kvm.h
+>   F:	include/uapi/asm-generic/kvm*
+> diff --git a/arch/arm64/include/asm/kvm_vgic.h b/arch/arm64/include/asm/kvm_vgic.h
+> index 4a34f7f0a864..09d7f628fa3b 100644
+> --- a/arch/arm64/include/asm/kvm_vgic.h
+> +++ b/arch/arm64/include/asm/kvm_vgic.h
+> @@ -14,7 +14,7 @@
+>   #include <linux/static_key.h>
+>   #include <linux/types.h>
+>   #include <linux/xarray.h>
+> -#include <kvm/iodev.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/list.h>
+>   #include <linux/jump_label.h>
+>   
+> diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v2.c b/arch/arm64/kvm/vgic/vgic-mmio-v2.c
+> index d00c8a74fad6..889440a8b129 100644
+> --- a/arch/arm64/kvm/vgic/vgic-mmio-v2.c
+> +++ b/arch/arm64/kvm/vgic/vgic-mmio-v2.c
+> @@ -6,9 +6,9 @@
+>   #include <linux/irqchip/arm-gic.h>
+>   #include <linux/kvm.h>
+>   #include <linux/kvm_host.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/nospec.h>
+>   
+> -#include <kvm/iodev.h>
+>   #include <asm/kvm_vgic.h>
+>   
+>   #include "vgic.h"
+> diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+> index 505d4e389885..db95d3ccbd14 100644
+> --- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+> +++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+> @@ -7,8 +7,8 @@
+>   #include <linux/irqchip/arm-gic-v3.h>
+>   #include <linux/kvm.h>
+>   #include <linux/kvm_host.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/interrupt.h>
+> -#include <kvm/iodev.h>
+>   
+>   #include <asm/kvm_emulate.h>
+>   #include <asm/kvm_arm.h>
+> diff --git a/arch/arm64/kvm/vgic/vgic-mmio.c b/arch/arm64/kvm/vgic/vgic-mmio.c
+> index ec1b13abc728..de689e0e881f 100644
+> --- a/arch/arm64/kvm/vgic/vgic-mmio.c
+> +++ b/arch/arm64/kvm/vgic/vgic-mmio.c
+> @@ -9,7 +9,7 @@
+>   #include <linux/irq.h>
+>   #include <linux/kvm.h>
+>   #include <linux/kvm_host.h>
+> -#include <kvm/iodev.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <asm/kvm_arch_timer.h>
+>   #include <asm/kvm_vgic.h>
+>   
+> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch/include/asm/kvm_eiointc.h
+> index a3a40aba8acf..0049b0b79477 100644
+> --- a/arch/loongarch/include/asm/kvm_eiointc.h
+> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
+> @@ -6,7 +6,7 @@
+>   #ifndef __ASM_KVM_EIOINTC_H
+>   #define __ASM_KVM_EIOINTC_H
+>   
+> -#include <kvm/iodev.h>
+> +#include <linux/kvm_iodev.h>
+>   
+>   #define EIOINTC_IRQS			256
+>   #define EIOINTC_ROUTE_MAX_VCPUS		256
+> diff --git a/arch/loongarch/include/asm/kvm_ipi.h b/arch/loongarch/include/asm/kvm_ipi.h
+> index 060163dfb4a3..3956b230f087 100644
+> --- a/arch/loongarch/include/asm/kvm_ipi.h
+> +++ b/arch/loongarch/include/asm/kvm_ipi.h
+> @@ -6,7 +6,7 @@
+>   #ifndef __ASM_KVM_IPI_H
+>   #define __ASM_KVM_IPI_H
+>   
+> -#include <kvm/iodev.h>
+> +#include <linux/kvm_iodev.h>
+>   
+>   #define LARCH_INT_IPI			12
+>   
+> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/include/asm/kvm_pch_pic.h
+> index e6df6a4c1c70..4b37e3134e52 100644
+> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
+> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
+> @@ -6,7 +6,7 @@
+>   #ifndef __ASM_KVM_PCH_PIC_H
+>   #define __ASM_KVM_PCH_PIC_H
+>   
+> -#include <kvm/iodev.h>
+> +#include <linux/kvm_iodev.h>
+>   
+>   #define PCH_PIC_SIZE			0x3e8
+>   
+> diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
+> index c14b10821817..0d7dd89ca5bf 100644
+> --- a/arch/mips/include/asm/kvm_host.h
+> +++ b/arch/mips/include/asm/kvm_host.h
+> @@ -16,6 +16,7 @@
+>   #include <linux/interrupt.h>
+>   #include <linux/types.h>
+>   #include <linux/kvm.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/kvm_types.h>
+>   #include <linux/threads.h>
+>   #include <linux/spinlock.h>
+> @@ -24,8 +25,6 @@
+>   #include <asm/inst.h>
+>   #include <asm/mipsregs.h>
+>   
+> -#include <kvm/iodev.h>
+> -
+>   /* MIPS KVM register ids */
+>   #define MIPS_CP0_32(_R, _S)					\
+>   	(KVM_REG_MIPS_CP0 | KVM_REG_SIZE_U32 | (8 * (_R) + (_S)))
+> diff --git a/arch/powerpc/kvm/mpic.c b/arch/powerpc/kvm/mpic.c
+> index 23e9c2bd9f27..b25a03251544 100644
+> --- a/arch/powerpc/kvm/mpic.c
+> +++ b/arch/powerpc/kvm/mpic.c
+> @@ -26,6 +26,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/mutex.h>
+>   #include <linux/kvm_host.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/errno.h>
+>   #include <linux/fs.h>
+>   #include <linux/anon_inodes.h>
+> @@ -33,7 +34,6 @@
+>   #include <asm/mpic.h>
+>   #include <asm/kvm_para.h>
+>   #include <asm/kvm_ppc.h>
+> -#include <kvm/iodev.h>
+>   
+>   #define MAX_CPU     32
+>   #define MAX_SRC     256
+> diff --git a/arch/riscv/kvm/aia_aplic.c b/arch/riscv/kvm/aia_aplic.c
+> index f59d1c0c8c43..bf163724aec5 100644
+> --- a/arch/riscv/kvm/aia_aplic.c
+> +++ b/arch/riscv/kvm/aia_aplic.c
+> @@ -9,10 +9,10 @@
+>   
+>   #include <linux/irqchip/riscv-aplic.h>
+>   #include <linux/kvm_host.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/math.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/swab.h>
+> -#include <kvm/iodev.h>
+>   
+>   struct aplic_irq {
+>   	raw_spinlock_t lock;
+> diff --git a/arch/riscv/kvm/aia_imsic.c b/arch/riscv/kvm/aia_imsic.c
+> index 29ef9c2133a9..ae3c0807baa9 100644
+> --- a/arch/riscv/kvm/aia_imsic.c
+> +++ b/arch/riscv/kvm/aia_imsic.c
+> @@ -11,10 +11,10 @@
+>   #include <linux/bitmap.h>
+>   #include <linux/irqchip/riscv-imsic.h>
+>   #include <linux/kvm_host.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/math.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/swab.h>
+> -#include <kvm/iodev.h>
+>   #include <asm/csr.h>
+>   
+>   #define IMSIC_MAX_EIX	(IMSIC_MAX_ID / BITS_PER_TYPE(u64))
+> diff --git a/arch/x86/kvm/i8254.h b/arch/x86/kvm/i8254.h
+> index a768212ba821..4de7a0b88e4f 100644
+> --- a/arch/x86/kvm/i8254.h
+> +++ b/arch/x86/kvm/i8254.h
+> @@ -4,7 +4,7 @@
+>   
+>   #include <linux/kthread.h>
+>   
+> -#include <kvm/iodev.h>
+> +#include <linux/kvm_iodev.h>
+>   
+>   struct kvm_kpit_channel_state {
+>   	u32 count; /* can be 65536 */
+> diff --git a/arch/x86/kvm/ioapic.h b/arch/x86/kvm/ioapic.h
+> index aa8cb4ac0479..cb36c36affd3 100644
+> --- a/arch/x86/kvm/ioapic.h
+> +++ b/arch/x86/kvm/ioapic.h
+> @@ -3,7 +3,7 @@
+>   #define __KVM_IO_APIC_H
+>   
+>   #include <linux/kvm_host.h>
+> -#include <kvm/iodev.h>
+> +#include <linux/kvm_iodev.h>
+>   #include "irq.h"
+>   
+>   struct kvm;
+> diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
+> index 76d46b2f41dd..b21b03aa2ee7 100644
+> --- a/arch/x86/kvm/irq.h
+> +++ b/arch/x86/kvm/irq.h
+> @@ -13,9 +13,9 @@
+>   #include <linux/mm_types.h>
+>   #include <linux/hrtimer.h>
+>   #include <linux/kvm_host.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/spinlock.h>
+>   
+> -#include <kvm/iodev.h>
+>   #include "lapic.h"
+>   
+>   #define PIC_NUM_PINS 16
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index 4ce30db65828..43ffbded5f72 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -2,7 +2,7 @@
+>   #ifndef __KVM_X86_LAPIC_H
+>   #define __KVM_X86_LAPIC_H
+>   
+> -#include <kvm/iodev.h>
+> +#include <linux/kvm_iodev.h>
+>   
+>   #include <linux/kvm_host.h>
+>   
+> diff --git a/include/kvm/iodev.h b/include/linux/kvm_iodev.h
+> similarity index 100%
+> rename from include/kvm/iodev.h
+> rename to include/linux/kvm_iodev.h
+> diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
+> index 375d6285475e..d0f84e3611da 100644
+> --- a/virt/kvm/coalesced_mmio.c
+> +++ b/virt/kvm/coalesced_mmio.c
+> @@ -9,8 +9,7 @@
+>    *
+>    */
+>   
+> -#include <kvm/iodev.h>
+> -
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/kvm_host.h>
+>   #include <linux/slab.h>
+>   #include <linux/kvm.h>
+> diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+> index 11e5d1e3f12e..35786d59b233 100644
+> --- a/virt/kvm/eventfd.c
+> +++ b/virt/kvm/eventfd.c
+> @@ -26,7 +26,7 @@
+>   #include <linux/irqbypass.h>
+>   #include <trace/events/kvm.h>
+>   
+> -#include <kvm/iodev.h>
+> +#include <linux/kvm_iodev.h>
+>   
+>   #ifdef CONFIG_HAVE_KVM_IRQCHIP
+>   
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index eec82775c5bf..a401ba32ecaa 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -10,9 +10,8 @@
+>    *   Yaniv Kamay  <yaniv@qumranet.com>
+>    */
+>   
+> -#include <kvm/iodev.h>
+> -
+>   #include <linux/kvm_host.h>
+> +#include <linux/kvm_iodev.h>
+>   #include <linux/kvm.h>
+>   #include <linux/module.h>
+>   #include <linux/errno.h>
+> 
+About modification with LoongArch specific.
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+
