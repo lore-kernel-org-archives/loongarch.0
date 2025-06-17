@@ -1,137 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB41221FF5E;
-	Mon, 16 Jun 2025 23:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D8421DE3DB
+	for <loongarch@lists.linux.dev>; Tue, 17 Jun 2025 06:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750116237; cv=none; b=IhZHpuURgf5c6FBgPMqQEjZk2zj4dxlXfM+pT8bpmTmp+2+AwX0BxwrLKopWyXF00Ku46J2QTswc1sGXlzcb4+Zjbvv+l6QNHYwE34w6dL2UrHkOvtYjdNBHPPHC4oZk1pkNGbOoa2PdDL9A5SmhUF5zJgkYOcp2DIxzJIOg7lU=
+	t=1750141953; cv=none; b=fdT7EDN42DwgZ/9LC0SykYr3pscx5B3ueRpkkGbje9OqqTuwQfKaNAEgV7Z1y9lJFWhnKtMnbfAakVWtSY9R1N4g7aM7RZPWdKZrm9ZVmtalEk/YUQnlcZhmmCgUUvkrO1fXuYjBGF3aqoryCksEnyefR4EwT+g2xIfr1w+EHd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750116237; c=relaxed/simple;
-	bh=9oGmaMe+uzcsSsY7ftL58AxNBVK5Bb/mQeUx0vxOhdA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RlG9IV+ig4Vx8JZ1NLZxyAFI9JDuvehdsjuQXZCn8EMgGfbMiwzBS3O0m+iS0B3McGJXs3dkRCyL8qi7sGDK5ZH+DUKnIULdeYLKnBc71Tm5LQxCWFBd30tusNTJFMFpWA+LConeiQ1KOL6Qx94eTTq6akaasuAuoSqxecyUFdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqoxVGeh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqoxVGeh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CAB2C4CEEA;
-	Mon, 16 Jun 2025 23:23:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750116237;
-	bh=9oGmaMe+uzcsSsY7ftL58AxNBVK5Bb/mQeUx0vxOhdA=;
-	h=From:Date:Subject:To:Cc:From;
-	b=EqoxVGehertI4Mz/aBzh9Pw1jln4/63OAHAGuu+LzEgL7ayLvKz+ByVWTTB+/u3FC
-	 K41t60eO7XcpV3JWpFRBP+LWbbxvzEV8LhPg8dSQUo/Mr06lshUJCuL1m219MhdiDJ
-	 JN9lWuw+bGksVy29iJY15llxpYiVKrtJfFHEOqBdU6GWlwPLFshXJcxo7h7xyi0hLq
-	 TWN+2VzjqUE1uBY86z+uNK7kES/tDSj+eJ5BRFAZoCAGNco3jR7x3CFixA3p8SE2M7
-	 o8tyfc9aiNYwFJBehzwlrhs2twndvZ3NMUFt86pMei8bM0wY+krlnc4WRYgtRoC4m2
-	 +rdNxjw30RR6g==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Mon, 16 Jun 2025 16:23:40 -0700
-Subject: [PATCH] loongarch: Use '.ascii' instead of '.string' in
- __BUGVERBOSE_LOCATION
+	s=arc-20240116; t=1750141953; c=relaxed/simple;
+	bh=MQwvrsyatOU2v9XdcxbXbe/0dPzrutKdVRXMXMclAwA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fWIqwLWCtC9//P0hcWdw84jRaMpwuN+wfnM44G3YhO413pOBkkpwAis6j/4FRTmQr2fvRfzxRkB0PI7dCIGx96FHe4iYS0xl+Wui5axB0tMEUxoIV0F/Dn4rMTPTRCer+M1cVnqAOpaCeYqSmaDL9yklTC81dAeY2zj2WjWzm0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxzOLxC1FolTUYAQ--.55535S3;
+	Tue, 17 Jun 2025 14:32:17 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDx_MTnC1FoNwIeAQ--.23222S2;
+	Tue, 17 Jun 2025 14:32:10 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>,
+	bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] LoongArch, bpf: Set bpf_jit_bypass_spec_v1/v4()
+Date: Tue, 17 Jun 2025 14:32:06 +0800
+Message-ID: <20250617063206.24733-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAHunUGgC/x2N0QqDMAwAf0XybKCWWpi/MnzoYtRATUcKbiD++
- 8oeD467CyqbcIWpu8D4lCpFGwx9B7Qn3RhlaQze+dHFIWIuRbdktOMqX/wkU6SiC+Z8Hiip4us
- xhtV5CiEStMzbuJn/xXO+7x+1NQ5ucgAAAA==
-X-Change-ID: 20250616-loongarch-fix-warn-cond-llvm-ias-b954f02c446c
-To: Ingo Molnar <mingo@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3504; i=nathan@kernel.org;
- h=from:subject:message-id; bh=9oGmaMe+uzcsSsY7ftL58AxNBVK5Bb/mQeUx0vxOhdA=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDBkBy7st7RXPHs2tLfvzLKnmSWFhTNQKBZ5flzt4C2+qr
- F99Qiuro5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAEzk6yVGhnWyO+t3R559y7bl
- TcqPjvitDq+eb1ymvqmPR8PqZ2lG7jtGhhefl+lHdiyaKCpnL7m+W2Lpgk1LBM2dV51UthTuesE
- axQQA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDx_MTnC1FoNwIeAQ--.23222S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWrKF4kCrW8ury7AF1DtFWkGrX_yoW8JF17pr
+	W2kFnxArs8Xwn7JF43tayrZFW5JF1kGFy7WF129a4Fk3ZxX3WxXr1xK3s8GF4Yyr15XFy8
+	Wr95C34a9FykAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
 
-After commit 5d476f66e6ad ("bugs/LoongArch: Concatenate 'cond_str' with
-'__FILE__' in __BUG_ENTRY(), to extend WARN_ON/BUG_ON output"), building
-loongarch with clang's integrated assembler fails with:
+JITs can set bpf_jit_bypass_spec_v1/v4() if they want the verifier
+to skip analysis/patching for the respective vulnerability, it is
+safe to set both bpf_jit_bypass_spec_v1/v4(), because there is no
+speculation barrier instruction for LoongArch.
 
-  block/blk-throttle.c:205:2: error: unexpected token
-    205 |         WARN_ON_ONCE(!bio);
-        |         ^
-  include/asm-generic/bug.h:119:3: note: expanded from macro 'WARN_ON_ONCE'
-    119 |                 __WARN_FLAGS("["#condition"] ",                 \
-        |                 ^
-  arch/loongarch/include/asm/bug.h:47:2: note: expanded from macro '__WARN_FLAGS'
-     47 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
-        |         ^
-  arch/loongarch/include/asm/bug.h:42:23: note: expanded from macro '__BUG_FLAGS'
-     42 |         asm_inline volatile (__stringify(ASM_BUG_FLAGS(cond_str, flags)) extra);
-        |                              ^
-  ...
-  <inline asm>:1:134: note: instantiated into assembly here
-      1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "[""!bio""] " "block/blk-throttle.c"; .popsection; .long 10002b - .; .short 205; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: break 1;.pushsection .discard.annotate_insn,"M",@progbits,8
-        |                                                                                                                                             ^
-
-clang's integrated assembler only supports concatenating strings with
-'.ascii'. There was discussion of allowing '.string' / '.asciz' but it
-was decided against [1] because it was undesirable to match the behavior
-of released binutils at the time, where
-
-  .asciz "foo" "bar"
-
-was treated like
-
-  "foo\0bar\0"
-
-instead of the more intuitive to C programmers
-
-  "foobar\0"
-
-and diverging from that behavior was seen as risky and unnecessary. GNU
-binutils updated its handling of '.asciz' and '.string' to the more
-intuitive option in 2.36 [2] after this was brought up to them in
-passing.
-
-Convert LoongArch's __BUGVERBOSE_LOCATION from '.string' to '.ascii'
-with a manually added NUL, similar to commit 707f853d7fa3 ("module:
-Provide EXPORT_SYMBOL_GPL_FOR_MODULES() helper") for the same reason,
-which clears up the build error and results in no changes in output for
-builds with GNU binutils.
-
-Fixes: 5d476f66e6ad ("bugs/LoongArch: Concatenate 'cond_str' with '__FILE__' in __BUG_ENTRY(), to extend WARN_ON/BUG_ON output")
-Link: https://reviews.llvm.org/D91460#2398228 [1]
-Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=3d955acb36f483c05724181da5ffba46b1303c43 [2]
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Suggested-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/include/asm/bug.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
-index cad807b100ad..d090a5bec5eb 100644
---- a/arch/loongarch/include/asm/bug.h
-+++ b/arch/loongarch/include/asm/bug.h
-@@ -11,7 +11,7 @@
- #else
- #define __BUGVERBOSE_LOCATION(file, line)			\
- 		.pushsection .rodata.str, "aMS", @progbits, 1;	\
--	10002:	.string file;					\
-+	10002:	.ascii file "\0";				\
- 		.popsection;					\
- 								\
- 		.long 10002b - .;				\
+This is based on the latest bpf-next tree which contains the
+prototype and caller for bpf_jit_bypass_spec_v1/v4().
 
----
-base-commit: d298bb98d65f964288bb87feef014da1baafedda
-change-id: 20250616-loongarch-fix-warn-cond-llvm-ias-b954f02c446c
+By the way, it needs to update bpf-next tree before building
+on LoongArch:
 
-Best regards,
---  
-Nathan Chancellor <nathan@kernel.org>
+[Build Error Report] Implicit Function declaration for bpf-next tree
+https://lore.kernel.org/bpf/d602ae87-8bed-1633-d5b6-41c5bd8bbcdc@loongson.cn/
+
+ arch/loongarch/net/bpf_jit.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index fa1500d4aa3e..5de8f4c44700 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1359,3 +1359,13 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+ {
+ 	return true;
+ }
++
++bool bpf_jit_bypass_spec_v1(void)
++{
++	return true;
++}
++
++bool bpf_jit_bypass_spec_v4(void)
++{
++	return true;
++}
+-- 
+2.42.0
 
