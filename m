@@ -1,85 +1,126 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020142F2377
-	for <loongarch@lists.linux.dev>; Tue, 17 Jun 2025 16:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECADF136A
+	for <loongarch@lists.linux.dev>; Tue, 17 Jun 2025 19:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177630; cv=none; b=mtrwpkbHCgfi2QxEV1M6dlU2cSjkJsD2wbFa0oWBtdR8l71T41DoWJFK+pPXYgnk0bG1slsn0G80FLk99ohf/wYZ2u+vqHAakKKRuu4n1ceVyYkejoUvq5POKCHfat2wgpkwX9Po1WxdDncXONoy5KtzLhdFh8BIj8JcnqlGqf4=
+	t=1750189576; cv=none; b=sD2Hsl5YVP3R0lMYkO9VMpcDS0XF9cV4NT5AVpdEADqFUnDCS+wdTElQMeaUmwU8thiMHdRZd6Z7RjchbJBuaKxNB+vIvKgxQMevmWvSggcUStBjeZv7F5Q54tZVRKdttnWcFErt8F3HU3fd3926xVV5X8LFsm6hy2Vw9ekUDcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177630; c=relaxed/simple;
-	bh=4FbE9OETQQ7uPyNyavMW6wHUX4plr2tkY6TssAU8IkM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LBwazuLJRDEVBa6uUeqgtZ8iPg3p8DzwIoq9d8hXSACuVUy6emWLbSJ+BW5F2fEvWuhUk44W2cPq9rtCFFrvkqHIeNBjAoh1Ak3bol7Uc6javI2/l1LC2H1asCgUSgIY4try/Ghz4/q0X73sK0/VH0/M7rJrsnCRNZ0N9Wht1wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=loktY2pS; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1750189576; c=relaxed/simple;
+	bh=i9VT9MU1eV1jZusVXBnUaKR1q6jUkGire7MftlUt0tM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cSZQjy66P2nYOPv425XOTxM7pjiUmDe+7gXf+G5GZ+DWSpdgyFHqRY1F+QIXbR7tCMxS0DRN8W22Xp7jza4+W+ctb0UjFhq84pZuCaoJsNNXdUcmDmfrYm93lcuZMLh3N68H7SHYk+YD4J3CZ6SfwBJkEtHop1UJTUpgrS44X6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=gc7sbHgy; arc=none smtp.client-ip=131.188.11.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="loktY2pS"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 73C0E25BB1;
-	Tue, 17 Jun 2025 18:27:07 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id Y51BXOyX5mqV; Tue, 17 Jun 2025 18:27:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750177626; bh=4FbE9OETQQ7uPyNyavMW6wHUX4plr2tkY6TssAU8IkM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=loktY2pSx23cVg60wH7Lt/zp54BwkUZc+4xFveZpVeM+QYnDSUaWreCFaGXc/dczr
-	 cSd9LClTTATrIikHoi+eGQvd6dfq5xNWqxDsVWzOPOUVi5fJBQCT6A35smiL17Tw2H
-	 IiyOG+s2ZqduHA65EwNl7mUVgHGLp9xf/Cwob1LOxKawImNMjmewDkIVjePoiEL6QH
-	 73KkvN65mRooIzNez7n4YPZOerbvfZ3K6Po9/hMFm5HQcIZUbVEQia+R2O0rTbavLs
-	 R+7v136jrw0d9WGSfqb06xZbg8GpC9Lncb3d67CW+nHbjLT6P53OLZMDOBwmjkiMW+
-	 HmKwlab6oiSEw==
-From: Yao Zi <ziyao@disroot.org>
-To: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v2 8/8] LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
-Date: Tue, 17 Jun 2025 16:24:26 +0000
-Message-ID: <20250617162426.12629-9-ziyao@disroot.org>
-In-Reply-To: <20250617162426.12629-1-ziyao@disroot.org>
-References: <20250617162426.12629-1-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="gc7sbHgy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1750189564; bh=bmjUaNu902W4Vnz0nSIWioF+mc9zxOtXqhelb4K0/uk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From:To:CC:
+	 Subject;
+	b=gc7sbHgyLiegGVmE2Zn1Wn3DldzVxvLMeWsT9J0xbJnddnJfYwDFAEO1oEXPi8xi3
+	 suCiaT6WGnv/iS2HDxdUa1O6PPWTrb52RnuRvCd+PK1R1LwOXQQWi7LRPpkQ6b9Fd4
+	 04+OjFnUpM144evsVpDnbpaTghp6drwKoniJ3H19jhdnzi1o9JQR4ywRrLZAN0aDzH
+	 evzUuExysaIbiJLhkTpT4Ja1pLI1CUEtaPaA6OLdpRM35WG8nKErEzeyolQNO4fpYI
+	 3P9/fJ/Z3miC6Yt0+XQrpTIiAvAEdXD6LiWqvMeN1TOtwuO/hd2TiIGXl3geF+8zYk
+	 qobG9U6X24MsA==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bMHRc3qMgzPk6c;
+	Tue, 17 Jun 2025 21:46:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3605:d600:62fb:a084:d4d8:4e7e
+Received: from localhost (unknown [IPv6:2001:9e8:3605:d600:62fb:a084:d4d8:4e7e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX1+C3RkGdAmEaAKGq86i/+jmt+HKq4VH57I=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bMHRY3SzPzPjjf;
+	Tue, 17 Jun 2025 21:46:01 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Alexei Starovoitov <ast@kernel.org>,  Daniel Borkmann
+ <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>,  Hengqi Chen
+ <hengqi.chen@gmail.com>,  bpf@vger.kernel.org,  loongarch@lists.linux.dev,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next] LoongArch, bpf: Set bpf_jit_bypass_spec_v1/v4()
+In-Reply-To: <20250617063206.24733-1-yangtiezhu@loongson.cn> (Tiezhu Yang's
+	message of "Tue, 17 Jun 2025 14:32:06 +0800")
+References: <20250617063206.24733-1-yangtiezhu@loongson.cn>
+User-Agent: mu4e 1.12.8; emacs 30.1
+Date: Tue, 17 Jun 2025 21:46:00 +0200
+Message-ID: <87a5665eyv.fsf@fau.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The property isn't required anymore as the supply clock of UART0 has
-been described.
+Tiezhu Yang <yangtiezhu@loongson.cn> writes:
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts | 1 -
- 1 file changed, 1 deletion(-)
+> JITs can set bpf_jit_bypass_spec_v1/v4() if they want the verifier
+> to skip analysis/patching for the respective vulnerability, it is
+> safe to set both bpf_jit_bypass_spec_v1/v4(), because there is no
+> speculation barrier instruction for LoongArch.
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-index a033c086461f..1bdfff7fae92 100644
---- a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-@@ -40,6 +40,5 @@ linux,cma {
- };
- 
- &uart0 {
--	clock-frequency = <100000000>;
- 	status = "okay";
- };
--- 
-2.49.0
+Thank you for addressing this.
 
+Do you think it would be possible to give a more detailed reason for why
+Spectre v1/v4 do not affect LoongArch?
+
+Which exploits were tried (and failed) in [3]?
+
+At least from [1] it appears as if there is branch prediction (Figure 5.
+LA464 structure, Page 52) and thus also the potential for Spectre v1 (if
+there is no hardware countermeasure). For Spectre v4, [1] states
+"Supports access optimization techniques such as Non-blocking access and
+Load-Speculation" (Chapter 8. LA464 Processor Core). Based on that I
+would assume v4 mitigation might also be required.
+
+If there is no countermeasure (and no dedicated speculation barrier), it
+would probably be best to lower BPF_NOSPEC to ibar+dbar (leaving
+bpf_jit_bypass_spec_v1/v4=false) which might be good enough to make
+exploits much harder/impossible.
+
+[1] https://loongson.github.io/LoongArch-Documentation/Loongson-3A5000-usermanual-EN.pdf
+
+> Suggested-by: Luis Gerhorst <luis.gerhorst@fau.de>
+
+Just to clarify, I only suggested it assuming that LoongArch CPUs are
+not vulnerable (which I only assumed because of [2]).
+
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a6f6a95f2580
+
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index fa1500d4aa3e..5de8f4c44700 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1359,3 +1359,13 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+>  {
+>  	return true;
+>  }
+> +
+> +bool bpf_jit_bypass_spec_v1(void)
+> +{
+> +	return true;
+> +}
+> +
+> +bool bpf_jit_bypass_spec_v4(void)
+> +{
+> +	return true;
+> +}
+
+Looks as expected besides the unclarity regarding the countermeasure. In
+any case having these set to false (default) does not help if BPF_NOSPEC
+is not implemented, thus this is an improvement.
+
+Except for the stated reason:
+
+Acked-by: Luis Gerhorst <luis.gerhorst@fau.de>
