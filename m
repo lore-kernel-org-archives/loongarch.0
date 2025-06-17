@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47624294A0B
-	for <loongarch@lists.linux.dev>; Tue, 17 Jun 2025 09:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AF6296151
+	for <loongarch@lists.linux.dev>; Tue, 17 Jun 2025 09:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153063; cv=none; b=h5P/gZY6J83fdFSRR00ZkcdCi5UBDPM6YIaRQtFSUf+tLyEDfsCqY5BFTzGNWBBWJbGZQdp7yBXOWrfTRCbemeS88qkDlRZmEiReDi6ZmR6UqAvVIqjVwkmUTjiIvg50q3+/ZXKiaqeHpOxstVUHLTzpSPiAXGh/oFs7yRfVYYQ=
+	t=1750153478; cv=none; b=Y2SLc0TNlnzWJTq361L3S1BEgEGpGKoSd78E6i0PC0qYKaaUHgTlRMbk1yA2cy69J2rZcLLq8dpUiYZSs8APGwiFV0ODs1JNpY10fSHrrxYOIHpdD8z5FMYfslxwozKFo0QfQlJdksoHoKZmC/vnGZ8oeWMGK9herw8cVxTLu+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153063; c=relaxed/simple;
-	bh=4dKkLCw4bk4ek60+ugXGulWj9MacP7xMcntewdkIip0=;
+	s=arc-20240116; t=1750153478; c=relaxed/simple;
+	bh=SEIeerzS0thI+z5d6kA6cGgH8szp0nPEZ+WNtrQjWT8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mtXicV+a43N8F4PFeXm6bcUrKy1UyUTSCHakPs2+CaRRePnvKOXML9qVG4dbMqoYMSkdvjxVc1zOE1nkrn6PSaLKSboKuSkmn5e47FDWP6GkmKGJFpDEv9QrOOnTAIfGh5U0sSx0VuaO2EQY6+tIt2+JnZaf36KJajcUP+Bes4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PcsDhlyV; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=Dcg2ddK1ptLwfmoUgYwcYpRtnAV6Lxu4CwT+56I7C9j7d9xoH1KRQZnKC2SHB5f1Sxfz1ZyM0QDu3+z6Mn/7IXEFyxMQkk60AViBzk8pW1z/0Jc22apgsOVQ8AbBVHCrITG/PIHUHmVK+bjhtbTatU2SholEgHUF+z0t7p8cO8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HzkAvfQ5; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PcsDhlyV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HzkAvfQ5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750153061;
+	s=mimecast20190719; t=1750153475;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2tVggpdHRMe70SNIVLjgFowvBJ62eIYbXphR2T3zCDQ=;
-	b=PcsDhlyVvDorkmhP8uemET1+nb5ry+oepbX4PejvDmQD5bxIQk55Ka6kfk/Mv0rUhTDkQY
-	q8FlvuPFuEg2kAGzM7CjS6GWG4fpE1KRBayUfCg5uRjpFueEJtuPkIqNVfqW8AACRSJRCY
-	2ZwvWIGaoKqvcVOp7Yfl+uc7Dv0oZBY=
+	bh=sdEh9cEys/eVA2SD9wfMRib1+LZeWMxS5mffwDFqNgM=;
+	b=HzkAvfQ5MxcdicUALf8x+HJQ6rSnG6en5uVXFbpN5p7IIQg8wsyrYNKbvGRIfahqmatl66
+	bdDS32JdHJKsv+TlHV1MoFmk8t6EJwDoD1XHnrdkQ5k7lovxogAD7ftAczwnfDO7+nAEcm
+	F5e1O3jlh6AtTAu8gH/HK6fOh8tf/5o=
 Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
  [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-tNym9hx3NMCl63HFvRWMrg-1; Tue, 17 Jun 2025 05:37:36 -0400
-X-MC-Unique: tNym9hx3NMCl63HFvRWMrg-1
-X-Mimecast-MFC-AGG-ID: tNym9hx3NMCl63HFvRWMrg_1750153056
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450d57a0641so38922035e9.3
-        for <loongarch@lists.linux.dev>; Tue, 17 Jun 2025 02:37:36 -0700 (PDT)
+ us-mta-590-rQ4nGsWEM5em6bWfQgfiPw-1; Tue, 17 Jun 2025 05:44:34 -0400
+X-MC-Unique: rQ4nGsWEM5em6bWfQgfiPw-1
+X-Mimecast-MFC-AGG-ID: rQ4nGsWEM5em6bWfQgfiPw_1750153473
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4530c186394so23912795e9.0
+        for <loongarch@lists.linux.dev>; Tue, 17 Jun 2025 02:44:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750153055; x=1750757855;
+        d=1e100.net; s=20230601; t=1750153473; x=1750758273;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=2tVggpdHRMe70SNIVLjgFowvBJ62eIYbXphR2T3zCDQ=;
-        b=AVbXms+Jt1UbARB/STIEDOp2WuNN1XYHtaKejlNu/zMqKKSPwSfDL1KXFTmu1eGz69
-         mvWBtM/2KMn3ft6K74E/AHGNzNERQcrluszuPMd3+7wtd3nX52mt8fJXpySJ2n+ow2nn
-         Em7g+J1gHTC6mTmg9eZ6lZUc+JoeEZLy6V3IirOCgeMB3P3boa1G7AIitEv4f7sw2IzD
-         DCU7pHc8UWJWGxJoShwtIubWEjpa3lBwndhyt3cNk9XxiclgFJ6FOQDRT5ibfB0Y2cXr
-         9CMlIbuH1Br+jFRzrpSp7mmZtj9+JIE/NA6SIU/Kxh1VqCx5nEOvEvnNXlJV5SgRgmBA
-         J8SA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTkW80TqpSGhuQxg79gqD6REeIyGiTAt3lDa6cBHKF75VsC6o45ANvc2200SPxtHlrHM6RvF1boPE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxQxkumiKXt0NPcwJT3d+DyjBct8eq0xsqnNPJXvxffPpYbq8gb
-	Tw65I8FirAfXMZZ9p4hdWlxZAI4lxOkg552O7cisVOaX4aUOm1De0+AAFofJYTiEeFS1Xko1hrs
-	pnAn+lbrcPmfJw+7HB+U3OJ/urYZ9194NvfjhSR0gJU7/R7mwNxyepIaCbZDoCw==
-X-Gm-Gg: ASbGncsh/Id0ZMuMDijO462M2D6eZhzd6RsQlc1yMBhIHAV4cVc/87yCSm+DLX6bWDG
-	A5dxGhkhszVZuSmiziftdYupjh3AZwLkOWQtbYrXggFP+GIOlWNOQ23CTQypETmywGn/rGdXSel
-	SN6GtlOCVfNSA6TCZcfe40AOWDZ2dfrtp67GuqrHVhj4qDzLnyxHAtpJi9g3tiRDdcKGy15yApX
-	6nw83raVzCF4S3TZj4+/wSFGkjggYYtJMM6pBkv2YXWQX89ERW5lKQYP0LGeK0Yx/lXc1NkqpIU
-	rv9quE/7COl6n6W+XprMC1z6R+x1+onLI7jN1eNlkjvY5eQqXVG/QsBxgh+RH8Sd9aC8svXktkg
-	wS3Ek1Hmu5njpdUnapAqPrwWGzH+N+nLh3rQZG+nNPCzmG4c=
-X-Received: by 2002:a05:600c:3587:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-4533cad1aa0mr127694995e9.31.1750153055551;
-        Tue, 17 Jun 2025 02:37:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE33mK7aAFnuzBQX82pmdkrCA/cX+3l1nAlm3F6BLNfxNOkhwo9+uvgQ5HQNw5b5NLLg7ZP1w==
-X-Received: by 2002:a05:600c:3587:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-4533cad1aa0mr127694505e9.31.1750153055045;
-        Tue, 17 Jun 2025 02:37:35 -0700 (PDT)
+        bh=sdEh9cEys/eVA2SD9wfMRib1+LZeWMxS5mffwDFqNgM=;
+        b=mV7wMm+HcAS5gCL4dtT+Xi2vTI9ReDHrnCVF/MURLYiwwVp6qtDZYihfxWLfI/wG+o
+         /wEWRXBmZZrY79H26ZN1RpGL7SxpygecT0OuxMif89K0PUBRySZ8t7s3mAs9yLpC0iLg
+         CK91qJwBMaD8fH9eD6EUcycSxZgknU6R0LBIWU4fjXQDn3UaScgKEU6map2tIW0Ge2JJ
+         woYFzP9RGLReDcqDR4P13XAfcJ8a3WKbZ1jJdB1mvUH3DPeKZE+ygkYjj8F7nSHavwwA
+         KRGBgT7W8JLAjis1tI+UMEZkNeDLd6vvmVpt91q7PqA9LyjlTt/7jqdQkSZCGYiVEZwa
+         gNsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQrbo9C6oxTyba+xrpiROwtFEmVRP6pQVsX5yJYKjK4SKXoOatQ/4ZlgpVRjlCEr5Kum8ej+Zupeo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyTyXqLHqZjqRtR/enESzyODozkiuoBZo3FbQYB8cU7M2pHRLB5
+	ubXzyNzN6hJvYhqMBgOebEPPikrBybMqLpDsOqryeYM4UarLPmRJDy5fPAbUaFWMwZ4XdUbH9s/
+	oNEk8P0wM2XPSIk0RJOZTq6k+l3XanfHKI6mJWEseFYEDa+EQHeJkFJTc/bx/RA==
+X-Gm-Gg: ASbGncsND4fE1trs0eBEgarD7QcEU2GB8Q0HG+P844ElbRGrcb6PmeZsSvU7c4E3DsV
+	pDonMido42udtiwCs1JUohM7L3A7R1DZIndMBbWMH425YUHOQIblcWWdaeT11nKKzHkfC6mKH5l
+	Z6NwyAJwT5erwDBgnLk9OIopgLclrrFkxWQYQ+leW6D2q6i96GCoVRuW1cFBTSPoWl3ky4zsUtw
+	o1fFIYu0l/zM83SKdy/jQK3ZY1Wif4/e1UjdOufTgaTudbqhZQu1L0UNniwQU6hzOvXb8sYcwrv
+	U8k7dYLpc/I2lIXhkORXaTUiGRNE4FVKPnyI4WrGe1bMeCNrsT0yo5ry+cQAGMb1P3mMfAEk+jV
+	8peSgM+AadHnZHKw90ToQVfOtnwiUdok1o6qakZkHnqoCYNo=
+X-Received: by 2002:a05:6000:65a:b0:3a5:88e9:a54f with SMTP id ffacd0b85a97d-3a588e9a99bmr1291309f8f.1.1750153473094;
+        Tue, 17 Jun 2025 02:44:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHQpVd3mwZ+TEDjCXC20DL1F3MMRYh4Y/yZHPnb93a/Bf/b7RyUJmn1/nXnnPCK9NELoBd4w==
+X-Received: by 2002:a05:6000:65a:b0:3a5:88e9:a54f with SMTP id ffacd0b85a97d-3a588e9a99bmr1291288f8f.1.1750153472667;
+        Tue, 17 Jun 2025 02:44:32 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e224888sm172776835e9.1.2025.06.17.02.37.33
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b4b67bsm13257644f8f.83.2025.06.17.02.44.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 02:37:34 -0700 (PDT)
-Message-ID: <338a45b0-40dd-4c11-bbe8-a047559fb77c@redhat.com>
-Date: Tue, 17 Jun 2025 11:37:32 +0200
+        Tue, 17 Jun 2025 02:44:31 -0700 (PDT)
+Message-ID: <31bdbfcf-bbfa-46b7-a427-806d42d88cec@redhat.com>
+Date: Tue, 17 Jun 2025 11:44:30 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -75,8 +75,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/14] powerpc: Remove checks for devmap pages and
- PMDs/PUDs
+Subject: Re: [PATCH v2 08/14] mm/khugepaged: Remove redundant pmd_devmap()
+ check
 To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
 Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
  dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
@@ -90,7 +90,7 @@ Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
  linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
  m.szyprowski@samsung.com, Jason Gunthorpe <jgg@nvidia.com>
 References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
- <818b2fb2f2cf7450ecdd698f2fa019aed3be7b85.1750075065.git-series.apopple@nvidia.com>
+ <d4aa84277015fe21978232ed4ac91bd7270e9ee0.1750075065.git-series.apopple@nvidia.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -137,25 +137,32 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <818b2fb2f2cf7450ecdd698f2fa019aed3be7b85.1750075065.git-series.apopple@nvidia.com>
+In-Reply-To: <d4aa84277015fe21978232ed4ac91bd7270e9ee0.1750075065.git-series.apopple@nvidia.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 6j1oeyeDSLO5mcQE7OkQn6FeLODe6hDekdtgYJCb5qo_1750153056
+X-Mimecast-MFC-PROC-ID: WBSBv7CVqlAc0Cye6SXpihTMruKSX3YV_opiGJjOea0_1750153473
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 16.06.25 13:58, Alistair Popple wrote:
-> PFN_DEV no longer exists. This means no devmap PMDs or PUDs will be
-> created, so checking for them is redundant. Instead mappings of pages that
-> would have previously returned true for pXd_devmap() will return true for
-> pXd_trans_huge()
+> The only users of pmd_devmap were device dax and fs dax. The check for
+> pmd_devmap() in check_pmd_state() is therefore redundant as callers
+> explicitly check for is_zone_device_page(), so this check can be dropped.
 > 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Looking again, is this true?
+
+If we return "SCAN_SUCCEED", we assume there is a page table there that 
+we can map and walk.
+
+But I assume we can drop that check because nobody will ever set 
+pmd_devmap() anymore?
+
+So likely just the description+sibject of this patch should be adjusted.
+
+FWIW, I think check_pmd_state() should be changed to work on pmd_leaf() 
+etc, but that's something for another day.
 
 -- 
 Cheers,
