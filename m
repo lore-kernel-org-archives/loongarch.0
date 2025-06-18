@@ -1,177 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373D2149C6F
-	for <loongarch@lists.linux.dev>; Wed, 18 Jun 2025 09:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DA027FD58
+	for <loongarch@lists.linux.dev>; Wed, 18 Jun 2025 10:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750239071; cv=none; b=hAIjdwt0Sq2efzQyYUiYxerVRPmduVLW6FmCRtVFV8rrNspbBmiwiSDsj0jcinZjie/3Myd2PSWy5Ox7CnD7QwgEeECCKrV/k9iaKWQOMh1wRfNJooievxHnjwMtCUWSQRhDyTGV/zbVzdHn2KQncc2KiKpUGkynGGM5Wp9R5x0=
+	t=1750243868; cv=none; b=Vo203uw9toBsu3xWk12UyFIl698840RCFsA0jmrqep1BKKnq6nWqzBP74YAetds6AQHhUVyVHUblfdkgzLhOu8wjW/f2jPt6LXK6msIaL8jKKutWjGZ6k4RIIRi4z/FZLbsuSRgnlSqIxjWOtS2Dkq6Vhlfe2V8F986uj19Dn5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750239071; c=relaxed/simple;
-	bh=4DUmQNuK4KTUlCUIkhvb5/nFonNtmaZleGEiMulYcdg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=WIBEDaRqppIos9PvKbQreoQFP7/ywsb8ezKKEK7PirDd3CGHZ3YT/RAgcZV/Ehdhn35GKegIHP/hOxM3ZTrXDf7YK1TWnRuxR8T026hwy5IW8oiw6UixLk58I5mHPmoP5+k1lf4STZ77SWeqH+0qrXEtxdW13+r3BXr5TtT9OLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XEoayzWd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XEoayzWd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750239069;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DAAxpkDR64hsnaI9Udos0W7mCWFzGT/DUlyAtDcPHQM=;
-	b=XEoayzWd0rz0yWqCFABlUUnhoJgKAdBSWmvDI/UcVEyaXP5STsV3icp8GJctrB4OHTDshJ
-	JrId5ManVLCQZS+sKNdhDPAfXGTupn5GjsQbDYyA/N+pLutFNLQrZ5EAo69xUZjv7WL9HD
-	PpeD3S7MTGgnv9q5USm9jKdrP5ZB4tY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-683-HaZm0GX3NAyh2fL8M8aksA-1; Wed, 18 Jun 2025 05:31:06 -0400
-X-MC-Unique: HaZm0GX3NAyh2fL8M8aksA-1
-X-Mimecast-MFC-AGG-ID: HaZm0GX3NAyh2fL8M8aksA_1750239065
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d64026baso45500705e9.1
-        for <loongarch@lists.linux.dev>; Wed, 18 Jun 2025 02:31:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750239065; x=1750843865;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DAAxpkDR64hsnaI9Udos0W7mCWFzGT/DUlyAtDcPHQM=;
-        b=cZd2xZ34p962dZSLvNk6MZRb/FEHcUObNcNiewY7V6Em+XBeklmrxj/EsNjqJZlabx
-         wgSGgHT11s5bS8Skgv+q3dyoG+Xa4QXoubpg1KvL85CtPrsS3zKhFbInTEaugFMpESrN
-         xSx7M3EMfFL8DExRsClyP5hCWaLpqayP20LfEHo6mNvvK65unoAIH2S6G2EMtOGK7Eqx
-         +IyVYdxIrRwAiGP1K+TPkc84eSi5xsSL4IIQuiYq86P0UXQVbxupNwcGZ3tQtqaVT/Vt
-         GkOy8ZQZ0LrqCYirPZQbbnA4EUFm7MklSsCxZl9yKcMBRS58KYJdM3uUVVt/Bb29gYTr
-         Or4g==
-X-Forwarded-Encrypted: i=1; AJvYcCWlNpQ2QzUHV90RKXEfSEzOysSlZxQ93d2yXBZh20SxDQ23a/fX6eu6IGMQan3Yf5bpWsr0z9+0ewg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxZa4F07asese0MQSkipMQGRv9a1aITDu/Br8k8n0SmHr34A7+P
-	HOA0rgRqcGVFtgBx2zj7k86S8FQcEr/joFkOkbAc8edWhTJ5BjDJhNXxoCG7s5IhwCsO8GF6K/f
-	JdtOCmc6MY3852fkUYimZTyIqWOEHlaGt5aqS1V/nMjEk7ck6GQGFy0bunbgTMw==
-X-Gm-Gg: ASbGncsqsxkPBxERUc7DeKG1Ua2+PlBuV4vVGLasmvYuCaYpimC8r1M3e01Y0AWQP4F
-	mbKtZL11NPz1F+aineBoBFNnKWZqZszrf084KPKjMmC+tyDre7sLwnExzV+QPqZiQbovR8VLhjy
-	k/+s7j6dSlhPHvkV78ADjNHMtjoP3sTfcUgyFbWYnwxyv2ib96LhmqXKQ3W5QsFwhFj6PChQoDP
-	nY7wFoRVOPmR793klMkPRggsWzhl5s/AtT05owdS/J4A+rJkuu14IwBYvv1TyTzaPqWvVq4I/WR
-	B/ewfJnfuyGkOVrd2cDpxxxMTSjoZLGQm7f2bTwyZ1+try+K2SnsWaCNc27LgxO07EOSxlzE60X
-	8s9xk58KK3dVzibeS1+0M0r3BXAMns7yrxi0wX1EVjLVCQek=
-X-Received: by 2002:a05:600c:5396:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-4533cac8fdbmr151178345e9.29.1750239064916;
-        Wed, 18 Jun 2025 02:31:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGFE2lmgl3UBomQIO41tOZKwEtVJWCPsqqDyTr4SmltEOYbKotteA+xAeGqRpDK/3zaPP374g==
-X-Received: by 2002:a05:600c:5396:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-4533cac8fdbmr151178015e9.29.1750239064488;
-        Wed, 18 Jun 2025 02:31:04 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2d:2400:4052:3b5:fff9:4ed0? (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a73845sm16606417f8f.35.2025.06.18.02.31.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 02:31:04 -0700 (PDT)
-Message-ID: <051f769d-3a0e-409e-bd40-22000f10b986@redhat.com>
-Date: Wed, 18 Jun 2025 11:31:02 +0200
+	s=arc-20240116; t=1750243868; c=relaxed/simple;
+	bh=pN3Cg0hhjyHdv6qsmOBrfq83IGRJs1KdhdHWa+Px7Po=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ba0euVTFsKCguOaitE0PMOm5ipSAoT99OqRwnMnVo0t4gm9jTdPPqtV5CUdUmWlVyHknor2PZ54JgjMrA2hOYrMFcLpK2gCnEOXx1jLy4Swz8y9HyckGkoZa7EHg6zY1dzQXLGfZItukO/JJF1bTBbpi1Uxg46FNd5MkGbAJh/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 1b5226a64c3211f0b29709d653e92f7d-20250618
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, UD_TRUSTED, CIE_BAD
+	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
+	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:44c7f415-9be6-4c75-879b-321113e33dc4,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.45,REQID:44c7f415-9be6-4c75-879b-321113e33dc4,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:2110ddfd1014113b26c9cf422c4abbba,BulkI
+	D:25061818481170AOZS2Q,BulkQuantity:1,Recheck:0,SF:17|19|24|38|44|66|78|10
+	2,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT:nil,Bulk:40,QS:nil
+	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULS
+X-UUID: 1b5226a64c3211f0b29709d653e92f7d-20250618
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1631603179; Wed, 18 Jun 2025 18:50:53 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	yangtiezhu@loongson.cn,
+	hengqi.chen@gmail.com,
+	chenhuacai@kernel.org
+Cc: martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	guodongtai@kylinos.cn,
+	duanchenghao@kylinos.cn,
+	youling.tang@linux.dev,
+	jianghaoran@kylinos.cn
+Subject: [PATCH v2 0/4] Support trampoline for LoongArch
+Date: Wed, 18 Jun 2025 18:50:44 +0800
+Message-Id: <20250618105048.1510560-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/14] mm: Convert vmf_insert_mixed() from using
- pte_devmap to pte_special
-From: David Hildenbrand <david@redhat.com>
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
- dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
- balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
- m.szyprowski@samsung.com, Jason Gunthorpe <jgg@nvidia.com>
-References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
- <5c03174d2ea76f579e4675f5fab6277f5dd91be2.1750075065.git-series.apopple@nvidia.com>
- <1709a271-273b-4668-b813-648e5785e4e8@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <1709a271-273b-4668-b813-648e5785e4e8@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: _mCLyhViUIcCgMn_QizQmFLyDzusE0P8Ofssc7WuJg8_1750239065
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 17.06.25 11:49, David Hildenbrand wrote:
-> On 16.06.25 13:58, Alistair Popple wrote:
->> DAX no longer requires device PTEs as it always has a ZONE_DEVICE page
->> associated with the PTE that can be reference counted normally. Other users
->> of pte_devmap are drivers that set PFN_DEV when calling vmf_insert_mixed()
->> which ensures vm_normal_page() returns NULL for these entries.
->>
->> There is no reason to distinguish these pte_devmap users so in order to
->> free up a PTE bit use pte_special instead for entries created with
->> vmf_insert_mixed(). This will ensure vm_normal_page() will continue to
->> return NULL for these pages.
->>
->> Architectures that don't support pte_special also don't support pte_devmap
->> so those will continue to rely on pfn_valid() to determine if the page can
->> be mapped.
->>
->> Signed-off-by: Alistair Popple <apopple@nvidia.com>
->> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
->> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->> ---
+v2:
+1. Change the fixmap in the instruction copy function to set_memory_xxx.
 
-As Andrew notes offlined, there is no content here. I sent this by mistake
-after replying to patch#6 instead.
+2. Change the implementation method of the following code.
+	- arch_alloc_bpf_trampoline
+	- arch_free_bpf_trampoline
+	Use the BPF core's allocation and free functions.
+	
+	- bpf_arch_text_invalidate
+	Operate with the function larch_insn_text_copy that carries
+	memory attribute modifications.
+
+3. Correct the incorrect code formatting.
+
+-----------------------------------------------------------------------
+Historical Version:
+
+v1:
+Support trampoline for LoongArch. The following feature tests have been
+completed:
+	1. fentry
+	2. fexit
+	3. fmod_ret
+
+TODO: The support for the struct_ops feature will be provided in
+subsequent patches.
+
+URL for version v1:
+https://lore.kernel.org/all/20250611035952.111182-1-duanchenghao@kylinos.cn/
+-----------------------------------------------------------------------
+
+Chenghao Duan (4):
+  LoongArch: BPF: The operation commands needed to add a trampoline
+  LoongArch: BPF: Add bpf_arch_text_poke support for Loongarch
+  LoongArch: BPF: Add bpf trampoline support for Loongarch
+  LoongArch: BPF: Update the code to rename validate_code to
+    validate_ctx.
+
+ arch/loongarch/include/asm/inst.h |   3 +
+ arch/loongarch/kernel/inst.c      |  57 ++++
+ arch/loongarch/net/bpf_jit.c      | 490 +++++++++++++++++++++++++++++-
+ arch/loongarch/net/bpf_jit.h      |   6 +
+ 4 files changed, 555 insertions(+), 1 deletion(-)
 
 -- 
-Cheers,
-
-David / dhildenb
+2.43.0
 
