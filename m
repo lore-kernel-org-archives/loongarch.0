@@ -1,114 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1642927FD75
-	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 09:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FD97220F57
+	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 09:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750323781; cv=none; b=cPcaMfA4W64OpK+QO05T+DmalaqOdq46H1Mr3y4OoxRjllMgEO8gtSIx81HwH8lFkOGA6L7kKzI6g+FyMLfABWoczGzlb7mTOe7b/aL8SvkZrDoLub3iFVOijS2KvQfq1SC9/gN/RLzM4KudGJocV2PWO80g2um1IQwENfcLiXU=
+	t=1750326540; cv=none; b=LTYpeKNmQRhR5oB2EGc9YFwgVpTwoIB8+yj6gUmioXx8/F1mPn3QwSJQ+xfE8PkLUPFeAvXrx2r5txTsU1LjkAbUOphudXyoOAXPb4PqH1rF2wxo55V979xNCXoquy2Dr+K2KBgFBTgR5BeDizUYf1IiAxmPiHQs+ENjZIEEOog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750323781; c=relaxed/simple;
-	bh=2MpgnpETN30hIWP4oUrrnam/CZGRD3pdlPHARl+Rlxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YstiPEpcZChgGsJj7WXyYXoJ0VIKSfBqN0qczpqiQou93bduu39/zhc2Ewf+dq0BWpXyzHZnf3L3wLMd+Iy5vtYaJEBFBQ4QrW/91dV7TGt1y6IQB9WSpf9xoow8z+M6cZVUbqKCWxXGjRxLY0++m5ushHROgNaiUdC5nfWIDh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ca2Clzv6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ca2Clzv6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3235C4CEF0
-	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 09:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750323779;
-	bh=2MpgnpETN30hIWP4oUrrnam/CZGRD3pdlPHARl+Rlxk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ca2Clzv6y2qTL8zOzuK2HG1grncyKjUdACrWtHGk6JrPvmJCr8kr9la93CEdJMyFZ
-	 LXG1zUveZZVpoPV1Ri5UanlIUMy6q1qwl4DxuzBTi8pVTN87tCXVpRiYTOQzfP3gQP
-	 fPtFJmD4ubJolyw/JGU8ljEKh4B8kKW2gXx3gs3F5A6sp7uQrwmtt5zx8OAGOh86zk
-	 fDszTbdVXc48p+Sid12IBOzJKZDvUGQh+mlF9cRlndLm7sLUvmv//Cd8teq3w5amUh
-	 eyHpcBEYPlg+qyqB9ifrczNqFymr38sshik0bMpEJJUtx07ePDj5UvzAc+2BYtMWBg
-	 u9HErfh1CNiyA==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so777832a12.2
-        for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 02:02:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUG0aUvzsSFZQbL00eWg+x7f6Vp6aTAB98d/Ftue3zTtNzzTW7x6nQM98Ett81MbmX+tSLoAtTjH7Q=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxt0x3uAZ+295QMluZwDKWcBYkWousCCIGoEYAqP+S0lNnqxSjZ
-	5hMn/Al69Msn5qQfPuEbF9xotaurVVRuGW0T4MkaKiiIbeb1qiJ0f145Ekg/dv52EthkoxyEUy0
-	cAxz0tCNiGf8Hy3vpfj8fPtYghJyTZso=
-X-Google-Smtp-Source: AGHT+IHU2t65H/WSJAAf31vaV2JfeWemEmHkIfJZcXjpQJvot/8B04gIiUFgIR9cHmq9zj8EAvshhPokPD86/DAMoH0=
-X-Received: by 2002:a05:6402:34d3:b0:607:e83a:d698 with SMTP id
- 4fb4d7f45d1cf-608d0834080mr17871001a12.2.1750323778167; Thu, 19 Jun 2025
- 02:02:58 -0700 (PDT)
+	s=arc-20240116; t=1750326540; c=relaxed/simple;
+	bh=pQaQfvfkymPyxbo/McQRSxkUjty96tFS2NmlDh7MURs=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=SEqic/jkUgpTWOMnezzWfkEtM6pZvGHPceovtW8+1+jqB9XQ0HZFf7zEmetehCmCcJC/2j9reLaYJ/xs+SxKbiCu53RhJjrIednpCoq68jOOHlNHKxXtvCTc4b+q5Uz2lroAxtl7F74EODADpDmdn0mmc+/iWVvK/HdTcabm5yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxzOL93FNoCb4ZAQ--.58264S3;
+	Thu, 19 Jun 2025 17:48:46 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMBxLsf33FNoCe8gAQ--.38807S3;
+	Thu, 19 Jun 2025 17:48:41 +0800 (CST)
+Subject: Re: [PATCH v3 9/9] LoongArch: KVM: INTC: Add address alignment check
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250611014651.3042734-1-maobibo@loongson.cn>
+ <20250611015145.3042884-1-maobibo@loongson.cn>
+ <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <189ff8c8-2a34-770c-9a0f-8d99b46884dc@loongson.cn>
+Date: Thu, 19 Jun 2025 17:47:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250617162426.12629-1-ziyao@disroot.org>
-In-Reply-To: <20250617162426.12629-1-ziyao@disroot.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Jun 2025 17:02:48 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4dR3cd6g2+bGS1uLRKkpVVEjHY6Kd_QCYx4LuY71y6uA@mail.gmail.com>
-X-Gm-Features: AX0GCFtjs8_WZ5UK-Nxd53DwS9qeVOp0ND9KE0T_PbhGXDyWxYxLrMOHlefPrnY
-Message-ID: <CAAhV-H4dR3cd6g2+bGS1uLRKkpVVEjHY6Kd_QCYx4LuY71y6uA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/8] Add clock support for Loongson 2K0300 SoC
-To: Yao Zi <ziyao@disroot.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxLsf33FNoCe8gAQ--.38807S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr43Wry7uw43Kr1DXFy3Jrc_yoW5Ww48pr
+	WUAFs8ua1rZry7X3sxtwn0g3WjqwsYgF1UZry7tFWS9F4rZF17JryrC3yYvFyjka4ftF40
+	qF4Yqrn3uF45t3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwmhFDUUU
+	U
 
-Hi, Yao,
 
-I suggest dropping the last two patches temporarily, because:
-1, the last two should be merged via another tree.
-2, the last two depend on another series which hasn't been merged now,
-and can be squashed to that series.
 
-Huacai
+On 2025/6/19 下午4:47, Huacai Chen wrote:
+> Hi, Bibo,
+> 
+> On Wed, Jun 11, 2025 at 9:51 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> IOCSR instruction supports 1/2/4/8 bytes access, the address should
+>> be naturally aligned with its access size. Here address alignment
+>> check is added in eiointc kernel emulation.
+>>
+>> At the same time len must be 1/2/4/8 bytes from iocsr exit emulation
+>> function kvm_emu_iocsr(), remove the default case in switch case
+>> statements.
+> Robust code doesn't depend its callers do things right, so I suggest
+> keeping the default case, which means we just add the alignment check
+> here.
+ok, will keep the default case.
+> 
+> And I think this patch should also Cc stable and add a Fixes tag.
+ok, will add Cc stabe and Fixes tag.
 
-On Wed, Jun 18, 2025 at 12:25=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
->
-> This series adds support for Loongson 2K0300's clock controller.
-> Loongson 2 clock driver is prepared to support more clock variants and
-> its flexibility is improved. All clock hardwares except the output one
-> for GMAC module are then defined.
->
-> A clock tree dump could be obtained here[1]. This series depends on v3
-> of series "Initial support for CTCISZ Forever Pi"[2] to apply.
->
-> [1]: https://gist.github.com/ziyao233/160bb4693e7758b2a2a996d4510b7247
-> [2]: https://lore.kernel.org/all/20250523095408.25919-1-ziyao@disroot.org=
-/
->
-> Changed from v1:
-> - Fold loongson,ls2k0300-clk.yaml into loongson,ls2k-clk.yaml
-> - Include the new binding header in MAINTAINERS
-> - Link to v1: https://lore.kernel.org/all/20250523104552.32742-1-ziyao@di=
-sroot.org/
->
-> Yao Zi (8):
->   dt-bindings: clock: loongson2: Add Loongson 2K0300 compatible
->   clk: loongson2: Allow specifying clock flags for gate clock
->   clk: loongson2: Support scale clocks with an alternative mode
->   clk: loongson2: Allow zero divisors for dividers
->   clk: loongson2: Avoid hardcoding firmware name of the reference clock
->   clk: loongson2: Add clock definitions for Loongson 2K0300 SoC
->   LoongArch: dts: Add clock tree for Loongson 2K0300
->   LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
->
->  .../bindings/clock/loongson,ls2k-clk.yaml     |  26 +++-
->  MAINTAINERS                                   |   1 +
->  .../dts/loongson-2k0300-ctcisz-forever-pi.dts |   1 -
->  arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  17 ++-
->  drivers/clk/clk-loongson2.c                   | 124 +++++++++++++++---
->  .../dt-bindings/clock/loongson,ls2k0300-clk.h |  54 ++++++++
->  6 files changed, 193 insertions(+), 30 deletions(-)
->  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
->
-> --
-> 2.49.0
->
->
+Regards
+Bibo Mao
+> 
+> 
+> Huacai
+> 
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/kvm/intc/eiointc.c | 21 +++++++++++++--------
+>>   1 file changed, 13 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+>> index 8b0d9376eb54..4e9d12300cc4 100644
+>> --- a/arch/loongarch/kvm/intc/eiointc.c
+>> +++ b/arch/loongarch/kvm/intc/eiointc.c
+>> @@ -311,6 +311,12 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+>>                  return -EINVAL;
+>>          }
+>>
+>> +       /* len must be 1/2/4/8 from function kvm_emu_iocsr() */
+>> +       if (addr & (len - 1)) {
+>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>>          vcpu->stat.eiointc_read_exits++;
+>>          spin_lock_irqsave(&eiointc->lock, flags);
+>>          switch (len) {
+>> @@ -323,12 +329,9 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+>>          case 4:
+>>                  ret = loongarch_eiointc_readl(vcpu, eiointc, addr, val);
+>>                  break;
+>> -       case 8:
+>> +       default:
+>>                  ret = loongarch_eiointc_readq(vcpu, eiointc, addr, val);
+>>                  break;
+>> -       default:
+>> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
+>> -                                               __func__, addr, len);
+>>          }
+>>          spin_unlock_irqrestore(&eiointc->lock, flags);
+>>
+>> @@ -682,6 +685,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+>>                  return -EINVAL;
+>>          }
+>>
+>> +       if (addr & (len - 1)) {
+>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>>          vcpu->stat.eiointc_write_exits++;
+>>          spin_lock_irqsave(&eiointc->lock, flags);
+>>          switch (len) {
+>> @@ -694,12 +702,9 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+>>          case 4:
+>>                  ret = loongarch_eiointc_writel(vcpu, eiointc, addr, val);
+>>                  break;
+>> -       case 8:
+>> +       default:
+>>                  ret = loongarch_eiointc_writeq(vcpu, eiointc, addr, val);
+>>                  break;
+>> -       default:
+>> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
+>> -                                               __func__, addr, len);
+>>          }
+>>          spin_unlock_irqrestore(&eiointc->lock, flags);
+>>
+>> --
+>> 2.39.3
+>>
+
