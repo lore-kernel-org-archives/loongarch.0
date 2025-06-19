@@ -1,96 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866F78BFF
-	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 12:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F83B2F37
+	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 13:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750336113; cv=none; b=n+3mQkFxLzHSB4VD/KoUwxseA7Y/pgY4u9ZDRWGvUZHMFr0SWkjC8LhFsBLVCQZIEmZnLECi2YlP4vz4H0ghbzG669JR4bbTOysC0bYHguM/8+W6jvl7BtkAM4edf5F7Ixr5EUa4pKBB/IhrCOUkYyqUHsHgYrFBN2DYPygEuTw=
+	t=1750339054; cv=none; b=DO3A80AyS9zUiMiDYtEFrOZOUvC6JxotAQiV3SC9XfVx3tEZsf7Ra+vQf0gQciSq4EBaJKXfJFRehfWBkCd6Db/r2BhQjsJtAzvPx3hN+TSQxpPri3+QvDeOUkXUifLC3/udaxNUOTuIlNJTCaapmNoMQBW1Pve2OraMYPb+U7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750336113; c=relaxed/simple;
-	bh=46GNTyt/nzDUI7W+MZywcocDplL/2kIr21WdO4Sv9f0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pZh57cuZJQAfbaVecOsc5URP4UzGg1UdUN/xqPawg8I2nizCe7BhngvE0QAkhIEkaJ4Bbi32LwJyMNFBtOEdjLyOcCaC4K4QlqvX9dDi5OJ92FmoxEwPNnED9Sv8pX+ouKxocU4bmP9lewY5zCCpndSV6SUm9V+RDp4IIneQk4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i50bJxBb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750339054; c=relaxed/simple;
+	bh=dxcXKwEUj8sgXcUKb28ZiQzkgidZwqraHxlva4Jn0Cg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M5dteujRfNb68SDlgzhLw+qqNIouHJRRYZEBw1o7+dRX++EBUuL3d7f92qvjommOrriKt3zagLIko0JwxSclNPggQhA2b9pr+0vsct5d7Iw0M2I1F+hqV9k1kacSWmQ5NYv6RNsT7dThvl7sa9hAAZBRYSEBLZ3W7lup/95Px+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=kM/KoYs4; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i50bJxBb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BBC0C4CEEE
-	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 12:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750336113;
-	bh=46GNTyt/nzDUI7W+MZywcocDplL/2kIr21WdO4Sv9f0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=i50bJxBb3ciOFReU2hRo0Jm+1GasYM6SiUzjADPN//ef5khvo+Ge8snIjXAVbO4pB
-	 7lPo7e8MeatoIo6IktyGT2hSB/4Wg2zFmdUqopGWOB3t4Q6DCE9O4lSedOSKjVQr8d
-	 Y9UNVIQEldUq9OD26jRfhgW1wqVokR5FGzLB/GPZ6tTRIOMJuC0PuygmQoNBjR5gRV
-	 UgHkLAArUmpIiofiq1pRTuwEXUpwzTipUXn8P6R7r9Bv4KapZN1b3MUFSmGuPR9NDw
-	 zLRQ7qaA3z+j/XQHQgASuh5dNiH1WYczJYp5Ln5aBiWfYqbpEk0vhFGzxiotHVtuRF
-	 FYM39ksGCawkw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60794c43101so1049390a12.1
-        for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 05:28:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW5vxNCfNiERB+TTdeA/n6P0u1eCI2ZSUWSeuOh0mo02OgX5bLhlOhL9SbizULsk0QElU6BKcO/0LY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwL/u3uJdc/UroNFiWjOYHelGkZV7TqBMuqQWc0sL8tm5rN8Pe3
-	si/jBnKZmPoDhhsNlEr2aRYVyENj7YTa7g9VxGyJ9xfvP9nWIwvnthS0sshvatBlRtfxRJdTBcx
-	CpU6WkbeTHjmqdRbaEwhV0vRWz9tbmcg=
-X-Google-Smtp-Source: AGHT+IF85I8sP9z6G7vD5ObsF0vTNB/bVlYvJOso17+d+NgDAyNvURfjJO/e9qF6e8tKh/UFnQNS+dLD883osXpQs5Y=
-X-Received: by 2002:a05:6402:5186:b0:602:1216:fdde with SMTP id
- 4fb4d7f45d1cf-608d08b6bc1mr18737168a12.14.1750336111892; Thu, 19 Jun 2025
- 05:28:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="kM/KoYs4"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 5BA2925EBB;
+	Thu, 19 Jun 2025 15:17:31 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id E5OwfZ29gqk2; Thu, 19 Jun 2025 15:17:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1750339050; bh=dxcXKwEUj8sgXcUKb28ZiQzkgidZwqraHxlva4Jn0Cg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kM/KoYs4eRXoxD9wPSZnlO3gwu6ERpf18PsCulKGZJnbethKYhiYGZuCDv4qzhPRi
+	 d7nlpDRB5C7nzxFU8+ziAi15ImXo66IR69HGfk4srxBDisoObNf7Jppb4IT3DquhIs
+	 g6ckn6YELS3otT0mN9OWS0kFvQ7p7rwFSWjuSpfa6wJZYSqjIiNoTVyxq36kGjaEj5
+	 ct4aC1y7isC1Twhi+Vv9pjRjx/NAm2JxAWQrb40SngjmvFV7Xe8KSrbZeCePQ/ZaNr
+	 w8ZHw72cRI9koQnZ41f8nt5fHwLl15BvVkad+9k6+xap4pBxLXqhl11SI+3OXj+/ie
+	 n4UyQngXW87fw==
+Date: Thu, 19 Jun 2025 13:17:13 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH v2 0/8] Add clock support for Loongson 2K0300 SoC
+Message-ID: <aFQN2TSjT1IOvOt3@pie.lan>
+References: <20250617162426.12629-1-ziyao@disroot.org>
+ <CAAhV-H4dR3cd6g2+bGS1uLRKkpVVEjHY6Kd_QCYx4LuY71y6uA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250608141509.157300-1-chenhuacai@loongson.cn> <20250616185737.GA23807@google.com>
-In-Reply-To: <20250616185737.GA23807@google.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Jun 2025 20:28:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6z_56D-mcfqyD4-_TCZVvmjVb3ab0B8j_QF_Yy2X6FBw@mail.gmail.com>
-X-Gm-Features: AX0GCFurjQs-cBGWxoCsgFhwNLZ8-8cvY9M4iIDvSP0-Mv6LkTl-cMO38sqU-Dg
-Message-ID: <CAAhV-H6z_56D-mcfqyD4-_TCZVvmjVb3ab0B8j_QF_Yy2X6FBw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix build warnings about export.h
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Masahiro Yamada <masahiroy@kernel.org>, 
-	linux-kbuild@vger.kernel.org, loongarch@lists.linux.dev, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H4dR3cd6g2+bGS1uLRKkpVVEjHY6Kd_QCYx4LuY71y6uA@mail.gmail.com>
 
-Hi, Eric,
+On Thu, Jun 19, 2025 at 05:02:48PM +0800, Huacai Chen wrote:
+> Hi, Yao,
+> 
+> I suggest dropping the last two patches temporarily, because:
+> 1, the last two should be merged via another tree.
+> 2, the last two depend on another series which hasn't been merged now,
+> and can be squashed to that series.
 
-On Tue, Jun 17, 2025 at 2:57=E2=80=AFAM Eric Biggers <ebiggers@kernel.org> =
-wrote:
->
-> On Sun, Jun 08, 2025 at 10:15:09PM +0800, Huacai Chen wrote:
-> > diff --git a/arch/loongarch/lib/crc32-loongarch.c b/arch/loongarch/lib/=
-crc32-loongarch.c
-> > index b37cd8537b45..db22c2ec55e2 100644
-> > --- a/arch/loongarch/lib/crc32-loongarch.c
-> > +++ b/arch/loongarch/lib/crc32-loongarch.c
-> > @@ -11,6 +11,7 @@
+These are fair points, but I think including corresponding devicetree
+changes along with the binding patch helps review and proves the binding
+makes sense. it should be okay to merge only parts of a series, so I
+guess keeping the patches doesn't hurt, does it?
+
+By the way, do you prefer to wait until all fundamental drivers (clock,
+pinctrl, and reset) ready and merged, then merge the devicetree with all
+the three devices added? Or is it just fine to go part by part, with
+incremental changes to the devicetree?
+
+Best regards,
+Yao Zi
+
+> Huacai
+> 
+> On Wed, Jun 18, 2025 at 12:25 AM Yao Zi <ziyao@disroot.org> wrote:
 > >
-> >  #include <asm/cpu-features.h>
-> >  #include <linux/crc32.h>
-> > +#include <linux/export.h>
-> >  #include <linux/module.h>
-> >  #include <linux/unaligned.h>
->
-> You can drop the change to crc32-loongarch.c, as it would conflict with
-> https://lore.kernel.org/r/20250601224441.778374-8-ebiggers@kernel.org/ an=
-d
-> https://lore.kernel.org/r/20250612183852.114878-1-ebiggers@kernel.org/ wh=
-ich are
-> in crc-next for 6.17 and already handle this issue.
-Thank you for your suggestion. But I plan to merge this patch for
-6.16, while your commits are for 6.17, I can only keep it as is.
-
-However, the conflicts can be easily solved when Linus merges your
-code, or there is an alternative solution (if you want): update your
-patches when this one gets upstream.
-
-Huacai
-
->
-> - Eric
+> > This series adds support for Loongson 2K0300's clock controller.
+> > Loongson 2 clock driver is prepared to support more clock variants and
+> > its flexibility is improved. All clock hardwares except the output one
+> > for GMAC module are then defined.
+> >
+> > A clock tree dump could be obtained here[1]. This series depends on v3
+> > of series "Initial support for CTCISZ Forever Pi"[2] to apply.
+> >
+> > [1]: https://gist.github.com/ziyao233/160bb4693e7758b2a2a996d4510b7247
+> > [2]: https://lore.kernel.org/all/20250523095408.25919-1-ziyao@disroot.org/
+> >
+> > Changed from v1:
+> > - Fold loongson,ls2k0300-clk.yaml into loongson,ls2k-clk.yaml
+> > - Include the new binding header in MAINTAINERS
+> > - Link to v1: https://lore.kernel.org/all/20250523104552.32742-1-ziyao@disroot.org/
+> >
+> > Yao Zi (8):
+> >   dt-bindings: clock: loongson2: Add Loongson 2K0300 compatible
+> >   clk: loongson2: Allow specifying clock flags for gate clock
+> >   clk: loongson2: Support scale clocks with an alternative mode
+> >   clk: loongson2: Allow zero divisors for dividers
+> >   clk: loongson2: Avoid hardcoding firmware name of the reference clock
+> >   clk: loongson2: Add clock definitions for Loongson 2K0300 SoC
+> >   LoongArch: dts: Add clock tree for Loongson 2K0300
+> >   LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
+> >
+> >  .../bindings/clock/loongson,ls2k-clk.yaml     |  26 +++-
+> >  MAINTAINERS                                   |   1 +
+> >  .../dts/loongson-2k0300-ctcisz-forever-pi.dts |   1 -
+> >  arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  17 ++-
+> >  drivers/clk/clk-loongson2.c                   | 124 +++++++++++++++---
+> >  .../dt-bindings/clock/loongson,ls2k0300-clk.h |  54 ++++++++
+> >  6 files changed, 193 insertions(+), 30 deletions(-)
+> >  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
+> >
+> > --
+> > 2.49.0
+> >
+> >
