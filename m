@@ -1,450 +1,371 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DAB23ABAC
-	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 04:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6F87248F67
+	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 07:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750305794; cv=none; b=gHu5sg1xhnDwgiIXk92ZvPIZaXnZQpBzsVWylt8Al+alNbHRJQ+t/BJlvA+feTDbtkylZaErvqwVGtKjd5f2dsgB7Vs6KijH0YZwdFJ32flOnkkngQQ2KHSfe5FHIksanPh4XuOIddojJjaGX/M4TWcASA1nkfEexss91a3byGU=
+	t=1750317299; cv=none; b=eWymP/5+Yjx4kSV+464sBId1qwQTuMLavcU/OvwLybjzVc5ane/G1IQii2WtJEUnWMSqhWBlzXj7znXW9sRQDMQxe0dXcrId1egXGIQjbVkVahBfE9KEtSkOYl5jP39bKXYyj54/TfDJzAXrpLANCPwG+Xc61Ht+HvaGuu8M9DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750305794; c=relaxed/simple;
-	bh=tKyuzDhBr7lG55mAhl9+jS7QPbpkvkugmspZdlU8ivw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZEYO49f+lR9CbTm8gxP1G9wk5jpZ3oOHlc7jPAWQXSmO4bKpTVuYJNUNt/nBNUuk211OmwN4KXb/k5/RW6JdstEuQepTe7V7yTSHIWqZ1iXuDVqhBGf8XnTV54loUkwPmdWrvAXCnVoCkYEZUHnpRZ8jzqgbBldq3/ph99nKunw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1CqTEzI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1CqTEzI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F8AC4CEEA
-	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 04:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750305794;
-	bh=tKyuzDhBr7lG55mAhl9+jS7QPbpkvkugmspZdlU8ivw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=b1CqTEzIkXOapqoj/z+y5QfU9fREAQaPI0YUHFAtO6C+hiLLyvgAgx1XpXEiz9K0f
-	 CLoA4Of3vwEciTrvK3t9SryhF11mf2CdBsBDKoqjLaw5zg4wEIoH2tHGnqjE4oobxk
-	 63wLrjn/hd+Rxojq0IuqHFkg0RBpWfGGJpC0rTA6woa3dRqZDWt9Nxibri20MjE47o
-	 ORj2CqggozX3dkvn912yZIBBk0vqvbZ5sxVgRtoY2LXC/h7P8LfmfbACG/Xb4r7Of7
-	 JjDeOqBZaxlomyOemlITL96XCxGodiKT3XbAQzdc/nzxdLJSg0pWcOgm6fUIp/l4Wu
-	 nMSiJjI+ClMtw==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-606b6dbe316so540207a12.3
-        for <loongarch@lists.linux.dev>; Wed, 18 Jun 2025 21:03:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUTpN3Ap6gi+KtxuuZDMEIH9s3zDQH/pN6HxrfxfJkAyoHmSmowaocxmz5V57YeR9znnZ2UR8Bonko=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx5IZKZHNpMGHNCOiXEclov05wGu/wJcd8TO6K2K2rj+AUMOhE9
-	nIUiMMxYIFcJ5KziV3a/LiBe5g+xapSceO46hUtPF8vLHIVc72Ihn7vrp7+5ImqvUlbrOUHRt/q
-	yDmtAobtD5OgDTU7HXGPFSrjXeTWRimU=
-X-Google-Smtp-Source: AGHT+IFKoTxUhOg3TL8cMBy6ogC7FtnFnLf+q7snpzq2zLEY0a/aQAZYYND1cz/yOW6y3gEdYW01um5JoPUJKCawBFc=
-X-Received: by 2002:a05:6402:909:b0:607:19a6:9f1d with SMTP id
- 4fb4d7f45d1cf-608d08aa3d4mr17052300a12.14.1750305789646; Wed, 18 Jun 2025
- 21:03:09 -0700 (PDT)
+	s=arc-20240116; t=1750317299; c=relaxed/simple;
+	bh=Zq2xSoi9krA08q/eYDoaq3S9x2iXHUHzx9Ou9tVRU3w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oIkQggLEdkVShBA780DJqBf0uvkPYnYexKkiQKlhV94nzqyKhSXCbV3bYxoMT4KfblghxqOsKvOoycDGF6mEYGRIqfBg2dSerYHCAU5+irSu1vgclB5kvEH7ifawMew4xNyizGq0QHvkCQUoDlEN90QKEx+O7dDHgTl5VkqZsTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxlmntuFNo5KgZAQ--.58384S3;
+	Thu, 19 Jun 2025 15:14:53 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMBxLsfquFNok74gAQ--.38277S2;
+	Thu, 19 Jun 2025 15:14:50 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xianglai Li <lixianglai@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: KVM: INTC: Add IOCSR MISC register emulation
+Date: Thu, 19 Jun 2025 15:14:49 +0800
+Message-Id: <20250619071449.1714869-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1750216134.git.zhoubinbin@loongson.cn> <aa9cfb9707334cd2e56692397dd4f54c418262ce.1750216134.git.zhoubinbin@loongson.cn>
-In-Reply-To: <aa9cfb9707334cd2e56692397dd4f54c418262ce.1750216134.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Jun 2025 12:02:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5qHrfOApRBKinseMsZq7rS4QoznzzVFgjv8_EOivMW9w@mail.gmail.com>
-X-Gm-Features: AX0GCFtz9DuXpq35x6XtyOuzb-wO9AXlrgCChZu1XTkqNFo-58zpjpxuBUF7fOo
-Message-ID: <CAAhV-H5qHrfOApRBKinseMsZq7rS4QoznzzVFgjv8_EOivMW9w@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC
- controller driver
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-mmc@vger.kernel.org, wanghongliang@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxLsfquFNok74gAQ--.38277S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi, Binbin,
+IOCSR MISC register 0x420 controlls some features of eiointc, such as
+BIT 48 enables eiointc and BIT 49 set interrupt encoding mode.
 
-On Wed, Jun 18, 2025 at 4:08=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> This patch describes the two MMC controllers of the Loongson-2K2000 SoC,
-> one providing an eMMC interface and the other exporting an SD/SDIO
-> interface.
->
-> Compared to the Loongson-2K1000's MMC controllers, their internals are
-> similar, except that we use an internally exclusive DMA engine instead of
-> an externally shared APBDMA engine.
->
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  drivers/mmc/host/loongson2-mmc.c | 212 +++++++++++++++++++++++++++++++
->  1 file changed, 212 insertions(+)
->
-> diff --git a/drivers/mmc/host/loongson2-mmc.c b/drivers/mmc/host/loongson=
-2-mmc.c
-> index 872f5dc21b21..75144221a821 100644
-> --- a/drivers/mmc/host/loongson2-mmc.c
-> +++ b/drivers/mmc/host/loongson2-mmc.c
-> @@ -44,6 +44,18 @@
->  #define LOONGSON2_MMC_REG_DATA         0x40 /* Data Register */
->  #define LOONGSON2_MMC_REG_IEN          0x64 /* Interrupt Enable Register=
- */
->
-> +/* EMMC DLL Mode Registers */
-> +#define LOONGSON2_MMC_REG_DLLVAL       0xf0 /* DLL Master Lock-value Reg=
-ister */
-> +#define LOONGSON2_MMC_REG_DLLCTL       0xf4 /* DLL Control Register */
-> +#define LOONGSON2_MMC_REG_DELAY                0xf8 /* DLL Delayed Param=
-eter Register */
-> +#define LOONGSON2_MMC_REG_SEL          0xfc /* Bus Mode Selection Regist=
-er */
-> +
-> +/* Exclusive DMA R/W Registers */
-> +#define LOONGSON2_MMC_REG_WDMA_LO      0x400
-> +#define LOONGSON2_MMC_REG_WDMA_HI      0x404
-> +#define LOONGSON2_MMC_REG_RDMA_LO      0x800
-> +#define LOONGSON2_MMC_REG_RDMA_HI      0x804
-> +
->  /* Bitfields of control register */
->  #define LOONGSON2_MMC_CTL_ENCLK                BIT(0)
->  #define LOONGSON2_MMC_CTL_EXTCLK       BIT(1)
-> @@ -109,6 +121,9 @@
->  #define LOONGSON2_MMC_DSTS_RESUME      BIT(15)
->  #define LOONGSON2_MMC_DSTS_SUSPEND     BIT(16)
->
-> +/* Bitfields of FIFO Status Register */
-> +#define LOONGSON2_MMC_FSTS_TXFULL      BIT(11)
-> +
->  /* Bitfields of interrupt register */
->  #define LOONGSON2_MMC_INT_DFIN         BIT(0)
->  #define LOONGSON2_MMC_INT_DTIMEOUT     BIT(1)
-> @@ -136,6 +151,41 @@
->  #define LOONGSON2_MMC_IEN_ALL          GENMASK(9, 0)
->  #define LOONGSON2_MMC_INT_CLEAR                GENMASK(9, 0)
->
-> +/* Bitfields of DLL master lock-value register */
-> +#define LOONGSON2_MMC_DLLVAL_DONE      BIT(8)
-> +
-> +/* Bitfields of DLL control register */
-> +#define LOONGSON2_MMC_DLLCTL_TIME      GENMASK(7, 0)
-> +#define LOONGSON2_MMC_DLLCTL_INCRE     GENMASK(15, 8)
-> +#define LOONGSON2_MMC_DLLCTL_START     GENMASK(23, 16)
-> +#define LOONGSON2_MMC_DLLCTL_CLK_MODE  BIT(24)
-> +#define LOONGSON2_MMC_DLLCTL_START_BIT BIT(25)
-> +#define LOONGSON2_MMC_DLLCTL_TIME_BPASS        GENMASK(29, 26)
-> +
-> +#define LOONGSON2_MMC_DELAY_PAD                GENMASK(7, 0)
-> +#define LOONGSON2_MMC_DELAY_RD         GENMASK(15, 8)
-> +
-> +#define LOONGSON2_MMC_SEL_DATA         BIT(0)  /* 0: SDR, 1: DDR */
-> +#define LOONGSON2_MMC_SEL_BUS          BIT(0)  /* 0: EMMC, 1: SDIO */
-> +
-> +/* Internal dma controller registers */
-> +
-> +/* Bitfields of Global Configuration Register */
-> +#define LOONGSON2_MMC_DMA_64BIT_EN     BIT(0) /* 1: 64 bit support */
-> +#define LOONGSON2_MMC_DMA_UNCOHERENT_EN        BIT(1) /* 0: cache, 1: un=
-cache */
-> +#define LOONGSON2_MMC_DMA_ASK_VALID    BIT(2)
-> +#define LOONGSON2_MMC_DMA_START                BIT(3) /* DMA start opera=
-tion */
-> +#define LOONGSON2_MMC_DMA_STOP         BIT(4) /* DMA stop operation */
-> +#define LOONGSON2_MMC_DMA_CONFIG_MASK  GENMASK_ULL(4, 0) /* DMA controll=
-er config bits mask */
-> +
-> +/* Bitfields of ndesc_addr field of HW descriptor */
-> +#define LOONGSON2_MMC_DMA_DESC_EN      BIT(0) /*1: The next descriptor i=
-s valid */
-> +#define LOONGSON2_MMC_DMA_DESC_ADDR_LOW        GENMASK(31, 1)
-> +
-> +/* Bitfields of cmd field of HW descriptor */
-> +#define LOONGSON2_MMC_DMA_INT          BIT(1)  /* Enable DMA interrupts =
-*/
-> +#define LOONGSON2_MMC_DMA_DATA_DIR     BIT(12) /* 1: write to device, 0:=
- read from device */
-> +
->  /* Loongson-2K1000 SDIO2 DMA routing register */
->  #define LS2K1000_SDIO_DMA_MASK         GENMASK(17, 15)
->  #define LS2K1000_DMA0_CONF             0x0
-> @@ -180,6 +230,8 @@ struct loongson2_mmc_host {
->         struct resource *res;
->         struct clk *clk;
->         u64 rate;
-> +       void *sg_cpu;
-> +       dma_addr_t sg_dma;
->         int dma_complete;
->         struct dma_chan *chan;
->         int cmd_is_stop;
-> @@ -192,6 +244,7 @@ struct loongson2_mmc_host {
->  struct loongson2_mmc_pdata {
->         const struct regmap_config *regmap_config;
->         void (*reorder_cmd_data)(struct loongson2_mmc_host *host, struct =
-mmc_command *cmd);
-> +       void (*fix_data_timeout)(struct loongson2_mmc_host *host, struct =
-mmc_command *cmd);
->         int (*setting_dma)(struct loongson2_mmc_host *host, struct platfo=
-rm_device *pdev);
->         int (*prepare_dma)(struct loongson2_mmc_host *host, struct mmc_da=
-ta *data);
->         void (*release_dma)(struct loongson2_mmc_host *host, struct devic=
-e *dev);
-> @@ -282,6 +335,9 @@ static void loongson2_mmc_send_request(struct mmc_hos=
-t *mmc)
->                 return;
->         }
->
-> +       if (host->pdata->fix_data_timeout)
-> +               host->pdata->fix_data_timeout(host, cmd);
-> +
->         loongson2_mmc_send_command(host, cmd);
->
->         /* Fix deselect card */
-> @@ -426,6 +482,36 @@ static irqreturn_t loongson2_mmc_irq(int irq, void *=
-devid)
->         return IRQ_WAKE_THREAD;
->  }
->
-> +static void loongson2_mmc_dll_mode_init(struct loongson2_mmc_host *host)
-> +{
-> +       u32 val, pad_delay, delay, ret;
-> +
-> +       regmap_update_bits(host->regmap, LOONGSON2_MMC_REG_SEL,
-> +                          LOONGSON2_MMC_SEL_DATA, LOONGSON2_MMC_SEL_DATA=
-);
-> +
-> +       val =3D FIELD_PREP(LOONGSON2_MMC_DLLCTL_TIME, 0xc8)
-> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_INCRE, 0x1)
-> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_START, 0x1)
-> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_CLK_MODE, 0x1)
-> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_START_BIT, 0x1)
-> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_TIME_BPASS, 0xf);
-> +
-> +       regmap_write(host->regmap, LOONGSON2_MMC_REG_DLLCTL, val);
-> +
-> +       ret =3D regmap_read_poll_timeout(host->regmap, LOONGSON2_MMC_REG_=
-DLLVAL, val,
-> +                                      (val & LOONGSON2_MMC_DLLVAL_DONE),=
- 0, 4000);
-> +       if (ret < 0)
-> +               return;
-> +
-> +       regmap_read(host->regmap, LOONGSON2_MMC_REG_DLLVAL, &val);
-> +       pad_delay =3D FIELD_GET(GENMASK(7, 1), val);
-> +
-> +       delay =3D FIELD_PREP(LOONGSON2_MMC_DELAY_PAD, pad_delay)
-> +             | FIELD_PREP(LOONGSON2_MMC_DELAY_RD, pad_delay + 1);
-> +
-> +       regmap_write(host->regmap, LOONGSON2_MMC_REG_DELAY, delay);
-> +}
-> +
->  static void loongson2_mmc_set_clk(struct loongson2_mmc_host *host, struc=
-t mmc_ios *ios)
->  {
->         u32 pre;
-> @@ -438,6 +524,10 @@ static void loongson2_mmc_set_clk(struct loongson2_m=
-mc_host *host, struct mmc_io
->
->         regmap_update_bits(host->regmap, LOONGSON2_MMC_REG_CTL,
->                            LOONGSON2_MMC_CTL_ENCLK, LOONGSON2_MMC_CTL_ENC=
-LK);
-> +
-> +       /* EMMC DLL mode setting */
-> +       if (ios->timing =3D=3D MMC_TIMING_UHS_DDR50 || ios->timing =3D=3D=
- MMC_TIMING_MMC_DDR52)
-> +               loongson2_mmc_dll_mode_init(host);
->  }
->
->  static void loongson2_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *=
-ios)
-> @@ -655,6 +745,127 @@ static struct loongson2_mmc_pdata ls2k1000_mmc_pdat=
-a =3D {
->         .release_dma            =3D loongson2_mmc_release_external_dma,
->  };
->
-> +static const struct regmap_config ls2k2000_mmc_regmap_config =3D {
-> +       .reg_bits =3D 32,
-> +       .val_bits =3D 32,
-> +       .reg_stride =3D 4,
-> +       .max_register =3D LOONGSON2_MMC_REG_RDMA_HI,
-> +};
-> +
-> +static void ls2k2000_mmc_reorder_cmd_data(struct loongson2_mmc_host *hos=
-t,
-> +                                         struct mmc_command *cmd)
-> +{
-> +       struct scatterlist *sg;
-> +       u32 *data;
-> +       int i, j;
-> +
-> +       if (cmd->opcode !=3D SD_SWITCH || mmc_cmd_type(cmd) !=3D MMC_CMD_=
-ADTC)
-> +               return;
-> +
-> +       for_each_sg(cmd->data->sg, sg, cmd->data->sg_len, i) {
-> +               data =3D sg_virt(&sg[i]);
-> +               for (j =3D 0; j < (sg_dma_len(&sg[i]) / 4); j++)
-> +                       data[j] =3D bitrev8x4(data[j]);
-> +       }
-> +}
-> +
-> +/*
-> + * This is a controller hardware defect. Single/multiple block write com=
-mands
-> + * must be sent after the TX FULL flag is set, otherwise a data timeout =
-interrupt
-> + * will occur.
-> + */
-> +static void ls2k2000_mmc_fix_data_timeout(struct loongson2_mmc_host *hos=
-t,
-> +                                         struct mmc_command *cmd)
-> +{
-> +       int val;
-> +
-> +       if (cmd->opcode !=3D MMC_WRITE_BLOCK && cmd->opcode !=3D MMC_WRIT=
-E_MULTIPLE_BLOCK)
-> +               return;
-> +
-> +       regmap_read_poll_timeout(host->regmap, LOONGSON2_MMC_REG_FSTS, va=
-l,
-> +                                (val & LOONGSON2_MMC_FSTS_TXFULL), 0, 50=
-0);
-> +}
-> +
-> +static int loongson2_mmc_prepare_internal_dma(struct loongson2_mmc_host =
-*host,
-> +                                             struct mmc_data *data)
-> +{
-> +       struct loongson2_dma_desc *pdes =3D (struct loongson2_dma_desc *)=
-host->sg_cpu;
-> +       struct mmc_host *mmc =3D mmc_from_priv(host);
-> +       dma_addr_t next_desc =3D host->sg_dma;
-> +       struct scatterlist *sg;
-> +       int reg_lo, reg_hi;
-> +       u64 dma_order;
-> +       int i, ret;
-> +
-> +       ret =3D dma_map_sg(mmc_dev(mmc), data->sg, data->sg_len,
-> +                        mmc_get_dma_dir(data));
-> +       if (!ret)
-> +               return -ENOMEM;
-> +
-> +       for_each_sg(data->sg, sg, data->sg_len, i) {
-> +               pdes[i].len =3D sg_dma_len(&sg[i]) / 4;
-> +               pdes[i].step_len =3D 0;
-> +               pdes[i].step_times =3D 1;
-> +               pdes[i].mem_addr =3D lower_32_bits(sg_dma_address(&sg[i])=
-);
-> +               pdes[i].high_mem_addr =3D upper_32_bits(sg_dma_address(&s=
-g[i]));
-> +               pdes[i].apb_addr =3D host->res->start + LOONGSON2_MMC_REG=
-_DATA;
-> +               pdes[i].cmd =3D LOONGSON2_MMC_DMA_INT;
-> +
-> +               if (data->flags & MMC_DATA_READ) {
-> +                       reg_lo =3D LOONGSON2_MMC_REG_RDMA_LO;
-> +                       reg_hi =3D LOONGSON2_MMC_REG_RDMA_HI;
-> +               } else {
-> +                       pdes[i].cmd |=3D LOONGSON2_MMC_DMA_DATA_DIR;
-> +                       reg_lo =3D LOONGSON2_MMC_REG_WDMA_LO;
-> +                       reg_hi =3D LOONGSON2_MMC_REG_WDMA_HI;
-> +               }
-> +
-> +               next_desc +=3D sizeof(struct loongson2_dma_desc);
-> +               pdes[i].ndesc_addr =3D lower_32_bits(next_desc) |
-> +                                    LOONGSON2_MMC_DMA_DESC_EN;
-> +               pdes[i].high_ndesc_addr =3D upper_32_bits(next_desc);
-> +       }
-> +
-> +       /* Setting the last descriptor enable bit */
-> +       pdes[i - 1].ndesc_addr &=3D ~LOONGSON2_MMC_DMA_DESC_EN;
-> +
-> +       dma_order =3D (host->sg_dma & ~LOONGSON2_MMC_DMA_CONFIG_MASK) |
-> +                   LOONGSON2_MMC_DMA_64BIT_EN |
-> +                   LOONGSON2_MMC_DMA_START;
-> +
-> +       regmap_write(host->regmap, reg_hi, upper_32_bits(dma_order));
-> +       regmap_write(host->regmap, reg_lo, lower_32_bits(dma_order));
-> +
-> +       return 0;
-> +}
-> +
-> +static int loongson2_mmc_set_internal_dma(struct loongson2_mmc_host *hos=
-t,
-> +                                         struct platform_device *pdev)
-> +{
-> +       host->sg_cpu =3D dma_alloc_coherent(&pdev->dev, PAGE_SIZE,
-> +                                         &host->sg_dma, GFP_KERNEL);
-> +       if (!host->sg_cpu)
-> +               return -ENOMEM;
-> +
-> +       memset(host->sg_cpu, 0, PAGE_SIZE);
-> +       return 0;
-> +}
-> +
-> +static void loongson2_mmc_release_internal_dma(struct loongson2_mmc_host=
- *host,
-> +                                              struct device *dev)
-> +{
-> +       dma_free_coherent(dev, PAGE_SIZE, host->sg_cpu, host->sg_dma);
-> +}
-> +
-> +static struct loongson2_mmc_pdata ls2k2000_mmc_pdata =3D {
-> +       .regmap_config          =3D &ls2k2000_mmc_regmap_config,
-> +       .reorder_cmd_data       =3D ls2k2000_mmc_reorder_cmd_data,
-> +       .fix_data_timeout       =3D ls2k2000_mmc_fix_data_timeout,
-> +       .setting_dma            =3D loongson2_mmc_set_internal_dma,
-> +       .prepare_dma            =3D loongson2_mmc_prepare_internal_dma,
-> +       .release_dma            =3D loongson2_mmc_release_internal_dma,
-> +};
-From the whole series we get:
+When kernel irqchip is set, IOCSR MISC register should be emulated in
+kernel also. Here add IOCSR MISC register emulation in kernel side.
 
-+static struct loongson2_mmc_pdata ls2k0500_mmc_pdata =3D {
-+ .regmap_config =3D &ls2k1000_mmc_regmap_config,
-+ .reorder_cmd_data =3D loongson2_mmc_reorder_cmd_data,
-+ .setting_dma =3D ls2k0500_mmc_set_external_dma,
-+ .prepare_dma =3D loongson2_mmc_prepare_external_dma,
-+ .release_dma =3D loongson2_mmc_release_external_dma,
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+v1 ... v2:
+  1. Add separate file arch/loongarch/kvm/intc/misc.c for IOCSR MISC
+     register 0x420 emulation, since it controls feature about AVEC
+     irqchip also.
+
+  2. Define macro MISC_BASE as LOONGARCH_IOCSR_MISC_FUNC rather than
+     hard coded 0x420
+---
+ arch/loongarch/include/asm/kvm_eiointc.h |   2 +
+ arch/loongarch/include/asm/kvm_host.h    |   2 +
+ arch/loongarch/include/asm/kvm_misc.h    |  17 +++
+ arch/loongarch/include/asm/loongarch.h   |   1 +
+ arch/loongarch/kvm/Makefile              |   1 +
+ arch/loongarch/kvm/intc/eiointc.c        |  61 +++++++++++
+ arch/loongarch/kvm/intc/misc.c           | 125 +++++++++++++++++++++++
+ 7 files changed, 209 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/kvm_misc.h
+ create mode 100644 arch/loongarch/kvm/intc/misc.c
+
+diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch/include/asm/kvm_eiointc.h
+index a3a40aba8acf..2d1c183f2b1b 100644
+--- a/arch/loongarch/include/asm/kvm_eiointc.h
++++ b/arch/loongarch/include/asm/kvm_eiointc.h
+@@ -119,5 +119,7 @@ struct loongarch_eiointc {
+ 
+ int kvm_loongarch_register_eiointc_device(void);
+ void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level);
++int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value);
++int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value, unsigned long mask);
+ 
+ #endif /* __ASM_KVM_EIOINTC_H */
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index a3c4cc46c892..f463ec52d86c 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -132,6 +132,8 @@ struct kvm_arch {
+ 	struct loongarch_ipi *ipi;
+ 	struct loongarch_eiointc *eiointc;
+ 	struct loongarch_pch_pic *pch_pic;
++	struct kvm_io_device misc;
++	bool   misc_created;
+ };
+ 
+ #define CSR_MAX_NUMS		0x800
+diff --git a/arch/loongarch/include/asm/kvm_misc.h b/arch/loongarch/include/asm/kvm_misc.h
+new file mode 100644
+index 000000000000..621e4228dea2
+--- /dev/null
++++ b/arch/loongarch/include/asm/kvm_misc.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2025 Loongson Technology Corporation Limited
++ */
++
++#ifndef __ASM_KVM_MISC_H
++#define __ASM_KVM_MISC_H
++
++#include <asm/loongarch.h>
++
++#define MISC_BASE		LOONGARCH_IOCSR_MISC_FUNC
++#define MISC_SIZE		0x8
++
++int kvm_loongarch_create_misc(struct kvm *kvm);
++void kvm_loongarch_destroy_misc(struct kvm *kvm);
++
++#endif /* __ASM_KVM_MISC_H */
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index d84dac88a584..e30d330d497e 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -1141,6 +1141,7 @@
+ #define  IOCSR_MISC_FUNC_SOFT_INT	BIT_ULL(10)
+ #define  IOCSR_MISC_FUNC_TIMER_RESET	BIT_ULL(21)
+ #define  IOCSR_MISC_FUNC_EXT_IOI_EN	BIT_ULL(48)
++#define  IOCSR_MISC_FUNC_INT_ENCODE	BIT_ULL(49)
+ #define  IOCSR_MISC_FUNC_AVEC_EN	BIT_ULL(51)
+ 
+ #define LOONGARCH_IOCSR_CPUTEMP		0x428
+diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+index cb41d9265662..25fa3866613d 100644
+--- a/arch/loongarch/kvm/Makefile
++++ b/arch/loongarch/kvm/Makefile
+@@ -18,6 +18,7 @@ kvm-y += vcpu.o
+ kvm-y += vm.o
+ kvm-y += intc/ipi.o
+ kvm-y += intc/eiointc.o
++kvm-y += intc/misc.o
+ kvm-y += intc/pch_pic.o
+ kvm-y += irqfd.o
+ 
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index f39929d7bf8a..87d01521e92f 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <asm/kvm_eiointc.h>
++#include <asm/kvm_misc.h>
+ #include <asm/kvm_vcpu.h>
+ #include <linux/count_zeros.h>
+ 
+@@ -708,6 +709,56 @@ static const struct kvm_io_device_ops kvm_eiointc_ops = {
+ 	.write	= kvm_eiointc_write,
+ };
+ 
++int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value)
++{
++	unsigned long data, flags;
++	struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
++
++	if (!eiointc) {
++		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
++		return -EINVAL;
++	}
++
++	data = 0;
++	spin_lock_irqsave(&eiointc->lock, flags);
++	if (eiointc->status & BIT(EIOINTC_ENABLE))
++		data |= IOCSR_MISC_FUNC_EXT_IOI_EN;
++
++	if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
++		data |= IOCSR_MISC_FUNC_INT_ENCODE;
++	spin_unlock_irqrestore(&eiointc->lock, flags);
++
++	*value = data;
++	return 0;
++}
++
++int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value, unsigned long mask)
++{
++	struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
++	unsigned long old, flags;
++
++	if (!eiointc) {
++		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
++		return -EINVAL;
++	}
++
++	old = 0;
++	spin_lock_irqsave(&eiointc->lock, flags);
++	if (eiointc->status & BIT(EIOINTC_ENABLE))
++		old |= IOCSR_MISC_FUNC_EXT_IOI_EN;
++	if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
++		old |= IOCSR_MISC_FUNC_INT_ENCODE;
++
++	value |= (old & ~mask);
++	eiointc->status &= ~(BIT(EIOINTC_ENABLE_INT_ENCODE) | BIT(EIOINTC_ENABLE));
++	if (value & IOCSR_MISC_FUNC_INT_ENCODE)
++		eiointc->status |= BIT(EIOINTC_ENABLE_INT_ENCODE);
++	if (value & IOCSR_MISC_FUNC_EXT_IOI_EN)
++		eiointc->status |= BIT(EIOINTC_ENABLE);
++	spin_unlock_irqrestore(&eiointc->lock, flags);
++	return 0;
++}
++
+ static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
+ 				struct kvm_io_device *dev,
+ 				gpa_t addr, int len, void *val)
+@@ -993,6 +1044,15 @@ static int kvm_eiointc_create(struct kvm_device *dev, u32 type)
+ 		kfree(s);
+ 		return ret;
+ 	}
++
++	ret = kvm_loongarch_create_misc(kvm);
++	if (ret < 0) {
++		kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device);
++		kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device_vext);
++		kfree(s);
++		return ret;
++	}
++
+ 	kvm->arch.eiointc = s;
+ 
+ 	return 0;
+@@ -1010,6 +1070,7 @@ static void kvm_eiointc_destroy(struct kvm_device *dev)
+ 	eiointc = kvm->arch.eiointc;
+ 	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+ 	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_vext);
++	kvm_loongarch_destroy_misc(kvm);
+ 	kfree(eiointc);
+ }
+ 
+diff --git a/arch/loongarch/kvm/intc/misc.c b/arch/loongarch/kvm/intc/misc.c
+new file mode 100644
+index 000000000000..edee66afa36e
+--- /dev/null
++++ b/arch/loongarch/kvm/intc/misc.c
+@@ -0,0 +1,125 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2025 Loongson Technology Corporation Limited
++ */
++#include <asm/kvm_vcpu.h>
++#include <asm/kvm_eiointc.h>
++#include <asm/kvm_misc.h>
++
++static int kvm_misc_read(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
++			gpa_t addr, int len, void *val)
++{
++	unsigned long data;
++	unsigned int ret;
++
++	addr -= MISC_BASE;
++	if (addr & (len - 1)) {
++		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
++		return -EINVAL;
++	}
++
++	ret = kvm_eiointc_get_status(vcpu, &data);
++	if (ret)
++		return ret;
++
++	data = data >> ((addr & 7) * 8);
++	switch (len) {
++	case 1:
++		*(unsigned char *)val = (unsigned char)data;
++		break;
++
++	case 2:
++		*(unsigned short *)val = (unsigned short)data;
++		break;
++
++	case 4:
++		*(unsigned int *)val = (unsigned int)data;
++		break;
++
++	default:
++		*(unsigned long *)val = data;
++		break;
++	}
++
++	return 0;
++}
++
++static int kvm_misc_write(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
++		gpa_t addr, int len, const void *val)
++{
++	unsigned long data, mask;
++	unsigned int shift;
++
++	addr -= MISC_BASE;
++	if (addr & (len - 1)) {
++		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
++		return -EINVAL;
++	}
++
++	shift = (addr & 7) * 8;
++	switch (len) {
++	case 1:
++		data = *(unsigned char *)val;
++		mask = 0xFF;
++		mask = mask << shift;
++		data = data << shift;
++		break;
++
++	case 2:
++		data = *(unsigned short *)val;
++		mask = 0xFFFF;
++		mask = mask << shift;
++		data = data << shift;
++		break;
++
++	case 4:
++		data = *(unsigned int *)val;
++		mask = UINT_MAX;
++		mask = mask << shift;
++		data = data << shift;
++		break;
++
++	default:
++		data = *(unsigned long *)val;
++		mask = ULONG_MAX;
++		mask = mask << shift;
++		data = data << shift;
++		break;
++	}
++
++	return kvm_eiointc_update_status(vcpu, data, mask);
++}
++
++static const struct kvm_io_device_ops kvm_misc_ops = {
++	.read   = kvm_misc_read,
++	.write  = kvm_misc_write,
 +};
++
++int kvm_loongarch_create_misc(struct kvm *kvm)
++{
++	struct kvm_io_device *device;
++	int ret;
++
++	if (kvm->arch.misc_created)
++		return 0;
++
++	device = &kvm->arch.misc;
++	kvm_iodevice_init(device, &kvm_misc_ops);
++	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, MISC_BASE, MISC_SIZE, device);
++	if (ret < 0)
++		return ret;
++
++	kvm->arch.misc_created = true;
++	return 0;
++}
++
++void kvm_loongarch_destroy_misc(struct kvm *kvm)
++{
++	struct kvm_io_device *device;
++
++	if (kvm->arch.misc_created) {
++		device = &kvm->arch.misc;
++		kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
++		kvm->arch.misc_created = false;
++	}
++}
 
-+static struct loongson2_mmc_pdata ls2k1000_mmc_pdata =3D {
-+ .regmap_config =3D &ls2k1000_mmc_regmap_config,
-+ .reorder_cmd_data =3D loongson2_mmc_reorder_cmd_data,
-+ .setting_dma =3D ls2k1000_mmc_set_external_dma,
-+ .prepare_dma =3D loongson2_mmc_prepare_external_dma,
-+ .release_dma =3D loongson2_mmc_release_external_dma,
-+};
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+-- 
+2.39.3
 
-+static struct loongson2_mmc_pdata ls2k2000_mmc_pdata =3D {
-+ .regmap_config =3D &ls2k2000_mmc_regmap_config,
-+ .reorder_cmd_data =3D ls2k2000_mmc_reorder_cmd_data,
-+ .fix_data_timeout =3D ls2k2000_mmc_fix_data_timeout,
-+ .setting_dma =3D loongson2_mmc_set_internal_dma,
-+ .prepare_dma =3D loongson2_mmc_prepare_internal_dma,
-+ .release_dma =3D loongson2_mmc_release_internal_dma,
-+};
-
-The prefix of function names are confusing, can we rename them better?
-
-
-Huacai
-
-
-
-
-> +
->  static int loongson2_mmc_resource_request(struct platform_device *pdev,
->                                           struct loongson2_mmc_host *host=
-)
->  {
-> @@ -777,6 +988,7 @@ static void loongson2_mmc_remove(struct platform_devi=
-ce *pdev)
->  static const struct of_device_id loongson2_mmc_of_ids[] =3D {
->         { .compatible =3D "loongson,ls2k0500-mmc", .data =3D &ls2k0500_mm=
-c_pdata },
->         { .compatible =3D "loongson,ls2k1000-mmc", .data =3D &ls2k1000_mm=
-c_pdata },
-> +       { .compatible =3D "loongson,ls2k2000-mmc", .data =3D &ls2k2000_mm=
-c_pdata },
->         { },
->  };
->  MODULE_DEVICE_TABLE(of, loongson2_mmc_of_ids);
-> --
-> 2.47.1
->
->
