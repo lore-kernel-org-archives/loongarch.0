@@ -1,111 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF81321C9F2
-	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 15:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1A221FF42
+	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 15:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750346427; cv=none; b=c3K8/RE04FxZLQF3kU7kkyfaGHfW6MzhX4tby+4rjtPszl1wpEbDbnYLH3V6ViWZo83MAyD+kK/L3qVINAqN/skTl2qLSotB01u8p+cj/q4jLodyihiX1v96viihAOgId/HXStj8fG3SL3Xwu1bE370mf8LtZnm1w6zGoUp9Ef4=
+	t=1750346568; cv=none; b=bkuoELhrrvs3Nz4wq/fPgzUf8JfpOv09c9Bq3XROhvmTr6WvQSOwDdYkH+bwkjGHw39QMSWVPAtqXWseEzr57mujabUgIZmnQ+KEOvlSylIYhldrJ9VBOPGAVAk0OPM6B+40Sp4U+Q3x7ep1pjRYfBW63+X4/bY0fujJ+rc9YT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750346427; c=relaxed/simple;
-	bh=YYemg1DZbLYuOwEnTxXkp/8rM6iO4piNRQwhWzEsPyY=;
+	s=arc-20240116; t=1750346568; c=relaxed/simple;
+	bh=rq+ghcKxNrs62FsvQlCpMvvCarhKkja/qz7slFnCq6I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lFdhpm63dj67/58Y12jv2pQcJsLcT4SEGtMx/K+BEq1P+KaAcdS92mO2zxwBBtjzuRv73eDdwei/0dhFqlBpAVU+yfwSV6GJeyJl3BnTN1CXcuD5hk9NJuv1ZegaHdzK8IvWFetf0XoaQsGBmmTib86ew7uVTvF4IjFbjuKHbzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g6Cge1br; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=hM0expL39xylXSqDrCRaurD6/7Lja+ez5tD8Pl8dCdwh8IXpzKfmpgD8Dfx6napFyV4xvN0iSL0tVWrK1mq7QIz/oNjoVScl2BnL+rO+r40PvSVN5LTZLSkeH3KT6sALKRhyyaI4gusxyr7XQ4do3xUdPJNafB41lE376o1ryoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EMBqwIy+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g6Cge1br"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC82C4CEF0
-	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 15:20:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EMBqwIy+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A2A0C4CEEF
+	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 15:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750346427;
-	bh=YYemg1DZbLYuOwEnTxXkp/8rM6iO4piNRQwhWzEsPyY=;
+	s=k20201202; t=1750346568;
+	bh=rq+ghcKxNrs62FsvQlCpMvvCarhKkja/qz7slFnCq6I=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=g6Cge1br7gh3z3g/7NXWP+pIDxR0Y07FlnMCprV04fnZlHl9ztfOZ7Jed23XO+PwA
-	 YKPnTdVXfe+jqS/5fRxzvFGJJgXelgyJyVPUgCGoumCwvVLgHGPA8qgNLv6Eoal+zP
-	 naFQmYU3q55b/A1KPYDO9DinE2sCg6tp8GBI6xOGYK53wyYiyAKPi/TbZDFdA5sA+K
-	 5DARdyi30SsSAuDzSYgwrQ6XWpuBJ1SxBOTnpuHacevnZWf6yj22aubGWyIbeoY94O
-	 F8PiwN52uVLJIHJ+Hn8e8vGLdx773W+r7ou/e94Uly9UHLiiWJa2WjqPBDGPBa6lnp
-	 PmzFLFWpFV5IQ==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so1488326a12.2
-        for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 08:20:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUduaNeCbKCf/qaBct93ufCloMQjykueZx3FhOfkDfjm7E1wYDaBLo6hUXRpBKquskkEv0LxFVoYgc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzr+n0sow0cY84NFd+qyDUwsXn4FF5TJJqUVRK2ZX38/WDvuCdh
-	QnLh2Jj8/s4I59aDDuB24H5WJWSQLPZ2DIFf6pYBZK0Ml9Nj1Cq5CLrCUx0fF8NJxiS1TH7OH5R
-	YQnU0aPeB1MZDd2ycQ31AySdh9VCXGiU=
-X-Google-Smtp-Source: AGHT+IFXK+Qw9NgGm0hee492d8UUku0ecCMsOIPbbPeNge5/EfHtOghCJ2WTuf5yJT7m69zgr05or7oou+dMn0UFtOc=
-X-Received: by 2002:a50:d00a:0:b0:609:b5e0:598a with SMTP id
- 4fb4d7f45d1cf-609b5efa3c2mr5938805a12.24.1750346425944; Thu, 19 Jun 2025
- 08:20:25 -0700 (PDT)
+	b=EMBqwIy+fQ9VlRR7bhUDx6ckEJBSqONTc8CYZq0uW8Yl4ab3FAss6uo2cQaFv0t5c
+	 SWPk8FjGBiSSe9eQLJ0GVDZRCUPM5xJjK8SJWihJY6A5dfhLtO+bjNgr3kpcHY6uQb
+	 ugTqbkddvgNldeljl0pneNqo0m8tihLOV7RDL4aZTygBHMpKvz1dKvo8vi57dvMUYk
+	 GY26Re+MvY+fsqruBRbyWpRRm7PFl2HnnQHI85kEQIgvhFbH81dGPhszU8WYyR18RD
+	 7e//yffyfauemJ/DKaFClsnazXckAWUabR6y1wveCg/HppPiTSmU7UM6uBQ5YU6gD0
+	 acInc3Vb+Potw==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6097b404f58so1541317a12.3
+        for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 08:22:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWWrYLbJ60GGezjruqd7RpoGeLcylU61ZNdHXsQlS4Spr+qyHa1nsFjV9IP80/h0jPEg/x+rkrmfhQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyDZVJrGrTGZHQlb5pyPNfEoLvSFSvFPgs4zwIrcoEqq54Fwxvk
+	zxAi0AVlR0LgXWKdS0J7oLihaOwAumSXPnW1ZHOAxZ78d2sfjvSplkD2s/XVyTI9U2+UQgX8+A9
+	AHYlYEa8Aty9MG21cIeI5TnIpDYybQLA=
+X-Google-Smtp-Source: AGHT+IG/nVaw1Dd3P/rV+iYudn3yAh1q2QcxS+ABajA8MLwVBiiIdyOKKd2SPUD6PzptoWbW6ybrC2bmoVc4KB8ow50=
+X-Received: by 2002:a05:6402:7d2:b0:609:7e19:f12a with SMTP id
+ 4fb4d7f45d1cf-6097e19f7b7mr10598769a12.18.1750346566713; Thu, 19 Jun 2025
+ 08:22:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250617063206.24733-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20250617063206.24733-1-yangtiezhu@loongson.cn>
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn> <20250619025138.2854-5-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250619025138.2854-5-zhaoqunqin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Jun 2025 23:20:11 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6TeZpLyY19xBhVwZbQeH5gQyZZqw_xP2P9rgTyFOiHUw@mail.gmail.com>
-X-Gm-Features: AX0GCFuKQYqo1n7IN8eZ9SnbFz0JRivAai9Ek3n9r7iBcKd8_Yvi2GKDfv2Nfps
-Message-ID: <CAAhV-H6TeZpLyY19xBhVwZbQeH5gQyZZqw_xP2P9rgTyFOiHUw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] LoongArch, bpf: Set bpf_jit_bypass_spec_v1/v4()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>, bpf@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Thu, 19 Jun 2025 23:22:32 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5cSdK+x+rGhfE-V0oE9YgCedEP8QUWS0MK_xf5-VVCaQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvVc2smpbzQoDmnbdF2XK312RXTLCpY1CVWU0GqSFr_hjBBYM03PZfLgMk
+Message-ID: <CAAhV-H5cSdK+x+rGhfE-V0oE9YgCedEP8QUWS0MK_xf5-VVCaQ@mail.gmail.com>
+Subject: Re: [PATCH v11 4/4] MAINTAINERS: Add entry for Loongson Security
+ Engine drivers
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Queued for loongarch-next, thanks.
-
-
-Huacai
-
-On Tue, Jun 17, 2025 at 2:32=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+On Thu, Jun 19, 2025 at 10:53=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.c=
+n> wrote:
 >
-> JITs can set bpf_jit_bypass_spec_v1/v4() if they want the verifier
-> to skip analysis/patching for the respective vulnerability, it is
-> safe to set both bpf_jit_bypass_spec_v1/v4(), because there is no
-> speculation barrier instruction for LoongArch.
+> This patch adds an entry for Loongson Security Engine drivers in the
+> list of maintainers.
 >
-> Suggested-by: Luis Gerhorst <luis.gerhorst@fau.de>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+
+
 > ---
+>  MAINTAINERS | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >
-> This is based on the latest bpf-next tree which contains the
-> prototype and caller for bpf_jit_bypass_spec_v1/v4().
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3ecb44458..23d889bca 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14152,6 +14152,15 @@ S:     Maintained
+>  F:     Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+>  F:     drivers/pwm/pwm-loongson.c
 >
-> By the way, it needs to update bpf-next tree before building
-> on LoongArch:
->
-> [Build Error Report] Implicit Function declaration for bpf-next tree
-> https://lore.kernel.org/bpf/d602ae87-8bed-1633-d5b6-41c5bd8bbcdc@loongson=
-.cn/
->
->  arch/loongarch/net/bpf_jit.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index fa1500d4aa3e..5de8f4c44700 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1359,3 +1359,13 @@ bool bpf_jit_supports_subprog_tailcalls(void)
->  {
->         return true;
->  }
+> +LOONGSON SECURITY ENGINE DRIVERS
+> +M:     Qunqin Zhao <zhaoqunqin@loongson.cn>
+> +L:     linux-crypto@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/char/tpm_loongson.c
+> +F:     drivers/crypto/loongson/
+> +F:     drivers/mfd/loongson-se.c
+> +F:     include/linux/mfd/loongson-se.h
 > +
-> +bool bpf_jit_bypass_spec_v1(void)
-> +{
-> +       return true;
-> +}
-> +
-> +bool bpf_jit_bypass_spec_v4(void)
-> +{
-> +       return true;
-> +}
+>  LOONGSON-2 SOC SERIES CLOCK DRIVER
+>  M:     Yinbo Zhu <zhuyinbo@loongson.cn>
+>  L:     linux-clk@vger.kernel.org
 > --
-> 2.42.0
+> 2.45.2
 >
 >
