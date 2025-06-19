@@ -1,124 +1,174 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F83B2F37
-	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 13:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A5D1917CD
+	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 15:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750339054; cv=none; b=DO3A80AyS9zUiMiDYtEFrOZOUvC6JxotAQiV3SC9XfVx3tEZsf7Ra+vQf0gQciSq4EBaJKXfJFRehfWBkCd6Db/r2BhQjsJtAzvPx3hN+TSQxpPri3+QvDeOUkXUifLC3/udaxNUOTuIlNJTCaapmNoMQBW1Pve2OraMYPb+U7g=
+	t=1750346100; cv=none; b=P4FEvqUaqhkv806E49VSJ8fBElOum7ojXkyicrUdIdq+Pxx11T1po0LcfFNJ1dcUBr5D3PslTnjkd4UUrJTe0K++y6rK/jSR/XTKLyW/r0k0cBQZvvMhzixNc+S4rJ2yBYv3Xx/GZWDhu9R8F5cva4AOfq12JeIln0YAxjBJNyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750339054; c=relaxed/simple;
-	bh=dxcXKwEUj8sgXcUKb28ZiQzkgidZwqraHxlva4Jn0Cg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M5dteujRfNb68SDlgzhLw+qqNIouHJRRYZEBw1o7+dRX++EBUuL3d7f92qvjommOrriKt3zagLIko0JwxSclNPggQhA2b9pr+0vsct5d7Iw0M2I1F+hqV9k1kacSWmQ5NYv6RNsT7dThvl7sa9hAAZBRYSEBLZ3W7lup/95Px+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=kM/KoYs4; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1750346100; c=relaxed/simple;
+	bh=IBdeGa1U8TuUchxzsvRO7qA6eHVSDVNim0wcrdeNMfs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uTY0yQAASMFJHovOoUjPgKZpX4CTe7FOfh8eXAh6s06/qKxTVGdDsQ6C7DA11DAVvcoA7cWhU7Rr13su1hNntA73LIf/Cn4GNjeSlKkpinxUQdVH6A29wIRejbRDsEgd+oYYKCcLT7+e+VIZ9csmJhkn16Dg6vJ8cNrgFIJh040=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tAp3Q1YD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="kM/KoYs4"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 5BA2925EBB;
-	Thu, 19 Jun 2025 15:17:31 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id E5OwfZ29gqk2; Thu, 19 Jun 2025 15:17:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750339050; bh=dxcXKwEUj8sgXcUKb28ZiQzkgidZwqraHxlva4Jn0Cg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kM/KoYs4eRXoxD9wPSZnlO3gwu6ERpf18PsCulKGZJnbethKYhiYGZuCDv4qzhPRi
-	 d7nlpDRB5C7nzxFU8+ziAi15ImXo66IR69HGfk4srxBDisoObNf7Jppb4IT3DquhIs
-	 g6ckn6YELS3otT0mN9OWS0kFvQ7p7rwFSWjuSpfa6wJZYSqjIiNoTVyxq36kGjaEj5
-	 ct4aC1y7isC1Twhi+Vv9pjRjx/NAm2JxAWQrb40SngjmvFV7Xe8KSrbZeCePQ/ZaNr
-	 w8ZHw72cRI9koQnZ41f8nt5fHwLl15BvVkad+9k6+xap4pBxLXqhl11SI+3OXj+/ie
-	 n4UyQngXW87fw==
-Date: Thu, 19 Jun 2025 13:17:13 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH v2 0/8] Add clock support for Loongson 2K0300 SoC
-Message-ID: <aFQN2TSjT1IOvOt3@pie.lan>
-References: <20250617162426.12629-1-ziyao@disroot.org>
- <CAAhV-H4dR3cd6g2+bGS1uLRKkpVVEjHY6Kd_QCYx4LuY71y6uA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tAp3Q1YD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBF2FC4CEF1
+	for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 15:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750346099;
+	bh=IBdeGa1U8TuUchxzsvRO7qA6eHVSDVNim0wcrdeNMfs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tAp3Q1YD4q3hWJbIaPmd1JRDiEE4qw9qwmkL+A1U4eUGmkwrbAixlbOUT7G/7qCaf
+	 m/m6SP8PO+T20qlDAdTSoLDzV3agi9jx0/0zVdyNEyocO1d62tgOKDa6E01MPDA9Am
+	 6W6mw8zVcadEIVd7N05F7EZmvmH2xA08ePO0BZ/QP/wXKs1zHQKkIhjx0dhrmjlJVR
+	 kdTykr76XNtokqhgMJRa/vl+J0AsyfwC2810CkUfSOH73YV5JGaLs4OtPioW1XTQZV
+	 VVvhU1DuuaRBoCM4S0BLc3mkSjpCjfymPbV7pke5PH3QXtuMFSBCg5uIc5VLLYj3gZ
+	 UOho41MdvF7aA==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so1445901a12.1
+        for <loongarch@lists.linux.dev>; Thu, 19 Jun 2025 08:14:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjnMvbC7JUWK5gwYZ9vNNoxANitgjdRHkNY/fHnDtQQ5cAbDqJ9JUny7srUshQlk9TX31AZAsKDqk=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy5jNeprT8ybYCKM07AFR/d6UC6T7UJTrJqUGZPyI5YAtTd0+9G
+	hUs1pDI34ZEtBgkXn3XdzWuWt4cpy/6JZi43bODDfR8WhoxgEKSBo0hyQrbuWgk3GsKNkutHaZi
+	Sd5Cs3TyhNQdh83eQKMfQqOmf8iacmCE=
+X-Google-Smtp-Source: AGHT+IGNuewH/yn7Y6NsMIUk7rodKyLo9wuc+RDEaO77sr8hKurxZDoSPM8QxKQQYvi/GTNuqTayViX+Hq8SdzEozuw=
+X-Received: by 2002:a05:6402:1d4d:b0:607:ea0c:6590 with SMTP id
+ 4fb4d7f45d1cf-608d09e303cmr18529770a12.24.1750346098356; Thu, 19 Jun 2025
+ 08:14:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H4dR3cd6g2+bGS1uLRKkpVVEjHY6Kd_QCYx4LuY71y6uA@mail.gmail.com>
+References: <20250618105048.1510560-1-duanchenghao@kylinos.cn> <20250618105048.1510560-3-duanchenghao@kylinos.cn>
+In-Reply-To: <20250618105048.1510560-3-duanchenghao@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 19 Jun 2025 23:14:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H42ofJ_z1Pj4OVwpROzOODqdBMg+ChJ9ULguVkOfLQkkg@mail.gmail.com>
+X-Gm-Features: AX0GCFvCWmaDlT5i9aUgfnYqdGQK1YqVU2zM6ddnVh_qCXLgwqPBxd73dFXlSFc
+Message-ID: <CAAhV-H42ofJ_z1Pj4OVwpROzOODqdBMg+ChJ9ULguVkOfLQkkg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] LoongArch: BPF: Add bpf_arch_text_poke support for Loongarch
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	yangtiezhu@loongson.cn, hengqi.chen@gmail.com, martin.lau@linux.dev, 
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 05:02:48PM +0800, Huacai Chen wrote:
-> Hi, Yao,
-> 
-> I suggest dropping the last two patches temporarily, because:
-> 1, the last two should be merged via another tree.
-> 2, the last two depend on another series which hasn't been merged now,
-> and can be squashed to that series.
+Hi, Chenghao,
 
-These are fair points, but I think including corresponding devicetree
-changes along with the binding patch helps review and proves the binding
-makes sense. it should be okay to merge only parts of a series, so I
-guess keeping the patches doesn't hurt, does it?
+On Wed, Jun 18, 2025 at 6:51=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos=
+.cn> wrote:
+>
+> Implement the bpf_arch_text_poke function for the LoongArch
+> architecture. On LoongArch, since symbol addresses in the direct mapping
+> region cannot be reached via relative jump instructions from the paged
+> mapping region, we use the move_imm+jirl instruction pair as absolute
+> jump instructions. These require 2-5 instructions, so we reserve 5 NOP
+> instructions in the program as placeholders for function jumps.
+I think this patch is a preparation for the 3rd one, then I think
+bpf_arch_text_copy and bpf_arch_text_invalidate should also be moved
+here because they are the same class as bpf_arch_text_poke.
 
-By the way, do you prefer to wait until all fundamental drivers (clock,
-pinctrl, and reset) ready and merged, then merge the devicetree with all
-the three devices added? Or is it just fine to go part by part, with
-incremental changes to the devicetree?
 
-Best regards,
-Yao Zi
+Huacai
 
-> Huacai
-> 
-> On Wed, Jun 18, 2025 at 12:25 AM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > This series adds support for Loongson 2K0300's clock controller.
-> > Loongson 2 clock driver is prepared to support more clock variants and
-> > its flexibility is improved. All clock hardwares except the output one
-> > for GMAC module are then defined.
-> >
-> > A clock tree dump could be obtained here[1]. This series depends on v3
-> > of series "Initial support for CTCISZ Forever Pi"[2] to apply.
-> >
-> > [1]: https://gist.github.com/ziyao233/160bb4693e7758b2a2a996d4510b7247
-> > [2]: https://lore.kernel.org/all/20250523095408.25919-1-ziyao@disroot.org/
-> >
-> > Changed from v1:
-> > - Fold loongson,ls2k0300-clk.yaml into loongson,ls2k-clk.yaml
-> > - Include the new binding header in MAINTAINERS
-> > - Link to v1: https://lore.kernel.org/all/20250523104552.32742-1-ziyao@disroot.org/
-> >
-> > Yao Zi (8):
-> >   dt-bindings: clock: loongson2: Add Loongson 2K0300 compatible
-> >   clk: loongson2: Allow specifying clock flags for gate clock
-> >   clk: loongson2: Support scale clocks with an alternative mode
-> >   clk: loongson2: Allow zero divisors for dividers
-> >   clk: loongson2: Avoid hardcoding firmware name of the reference clock
-> >   clk: loongson2: Add clock definitions for Loongson 2K0300 SoC
-> >   LoongArch: dts: Add clock tree for Loongson 2K0300
-> >   LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
-> >
-> >  .../bindings/clock/loongson,ls2k-clk.yaml     |  26 +++-
-> >  MAINTAINERS                                   |   1 +
-> >  .../dts/loongson-2k0300-ctcisz-forever-pi.dts |   1 -
-> >  arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  17 ++-
-> >  drivers/clk/clk-loongson2.c                   | 124 +++++++++++++++---
-> >  .../dt-bindings/clock/loongson,ls2k0300-clk.h |  54 ++++++++
-> >  6 files changed, 193 insertions(+), 30 deletions(-)
-> >  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> >
-> > --
-> > 2.49.0
-> >
-> >
+>
+> Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> ---
+>  arch/loongarch/net/bpf_jit.c | 62 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index fa1500d4a..24332c596 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -4,6 +4,7 @@
+>   *
+>   * Copyright (C) 2022 Loongson Technology Corporation Limited
+>   */
+> +#include <linux/memory.h>
+>  #include "bpf_jit.h"
+>
+>  #define REG_TCC                LOONGARCH_GPR_A6
+> @@ -1359,3 +1360,64 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+>  {
+>         return true;
+>  }
+> +
+> +static int emit_jump_and_link(struct jit_ctx *ctx, u8 rd, u64 ip, u64 ta=
+rget)
+> +{
+> +       s64 offset =3D (s64)(target - ip);
+> +
+> +       if (offset && (offset >=3D -SZ_128M && offset < SZ_128M)) {
+> +               emit_insn(ctx, bl, offset >> 2);
+> +       } else {
+> +               move_imm(ctx, LOONGARCH_GPR_T1, target, false);
+> +               emit_insn(ctx, jirl, rd, LOONGARCH_GPR_T1, 0);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_=
+call)
+> +{
+> +       struct jit_ctx ctx;
+> +
+> +       ctx.idx =3D 0;
+> +       ctx.image =3D (union loongarch_instruction *)insns;
+> +
+> +       if (!target) {
+> +               emit_insn((&ctx), nop);
+> +               emit_insn((&ctx), nop);
+> +               return 0;
+> +       }
+> +
+> +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LOON=
+GARCH_GPR_ZERO,
+> +                                 (unsigned long)ip, (unsigned long)targe=
+t);
+> +}
+> +
+> +int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
+> +                      void *old_addr, void *new_addr)
+> +{
+> +       u32 old_insns[5] =3D {[0 ... 4] =3D INSN_NOP};
+> +       u32 new_insns[5] =3D {[0 ... 4] =3D INSN_NOP};
+> +       bool is_call =3D poke_type =3D=3D BPF_MOD_CALL;
+> +       int ret;
+> +
+> +       if (!is_kernel_text((unsigned long)ip) &&
+> +               !is_bpf_text_address((unsigned long)ip))
+> +               return -ENOTSUPP;
+> +
+> +       ret =3D gen_jump_or_nops(old_addr, ip, old_insns, is_call);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (memcmp(ip, old_insns, 5 * 4))
+> +               return -EFAULT;
+> +
+> +       ret =3D gen_jump_or_nops(new_addr, ip, new_insns, is_call);
+> +       if (ret)
+> +               return ret;
+> +
+> +       mutex_lock(&text_mutex);
+> +       if (memcmp(ip, new_insns, 5 * 4))
+> +               ret =3D larch_insn_text_copy(ip, new_insns, 5 * 4);
+> +       mutex_unlock(&text_mutex);
+> +       return ret;
+> +}
+> --
+> 2.43.0
+>
+>
