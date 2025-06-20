@@ -1,176 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFA5292936
-	for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 14:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F062EA737;
+	Fri, 20 Jun 2025 18:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430650; cv=none; b=mFWxPIix5eo7CKUL0C/nv4uL7EuDIzppkviSG02Lk7pe0jeufwFaqhwrALoKISPIobWa6Qfv+mtxuWYrMW87ckTeV+TC1yVlP9qjAR2Apgl7P8yg10ShOY6kE4SaCvkpfNdfM+AET0gBkMdxd/5DQLMFjJxoHJ5NbNRnYtR+sBg=
+	t=1750444441; cv=none; b=Xa2PA3HA3Z1Qo8bU9fcglgplIjMCKu+nFpo8f/weCTenP3lvqn+jRoRBnz1tSFS9G/0heNCHY0Wq4j5VoHQvMLsivrxtU7MeYGE8FndZHvgq8lEpo2cH/0F3dzZqCORU5myNp41XbVZJkyYUbMSaiKzxWblkthLWKwd9GCpC3VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430650; c=relaxed/simple;
-	bh=nEo1ZRZvkkP/cM6rUNrU1aJJ77SioFkxCfmnwoP1kdM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hF6JzN9dmdIDL5MKnml5QRrzJQQEMMTGVhR5FCvXA0rMwYXl0eS8S9OTVHRbaZ+4rdtHNjbhSzYv5pGaZ4zDjPWXC7HRcX5r41wmVmVJaPJJVM7K2+r3NtPQiku8v12/TIaO2Trpm+Zifuk8Txo7zKJDOae8P1vF1VVS/wcY+YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSx+zimo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750444441; c=relaxed/simple;
+	bh=9iYNcVBaPb4Hwav7FShaIAw0RUnIu6JSzpcwtAcLNMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pQU9kwUSM4g8mLe6GFfEqbiSPfWZopk7+yodlViLGog+lksQ6sgrK1oz4i/HAhgZZdCEP5l6ydCOYz5qyllAXOXPLNIP+KAGALSpAAp4jER1PI0CqjcSUHOsuIndWNISd5DjdlcCgzluWvQXYyDmmvZBp9WxThYpu7/VIika2/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bON0PG+W; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSx+zimo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 594FCC4AF09
-	for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 14:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750430650;
-	bh=nEo1ZRZvkkP/cM6rUNrU1aJJ77SioFkxCfmnwoP1kdM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NSx+zimoZCyFNyZu6KW/IjxfIKgaSadsrDdpcD5qVsKEqej2xGbaLKF229jT6iYi/
-	 N/jy0QF87sSa7SXwI4C2PNVSSGy4Rl/OqF7+PnjhLlv3mLIgnf9cCbu63KHXXki/Mf
-	 kAFCTNlbulB+UA7LLuyU9rkmMm3CVOUsquOQ4Dz3Ywtz/8Pn2Wjb1wnH+w2XQTpYDK
-	 Do/EI80QF9fFiHjEHQaSHvbyF6tDnh1/qbn6zMjAq0/7fDX2j1X7q/cwo0NPop51lh
-	 zZR3aQ5PSBoewuVUhyTttorHKQqXwkqsQ9FF1qyZdfNeGGVnySIDIiQKi6Fi5aKMzx
-	 TTgnnNIxge8KA==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so3259987a12.2
-        for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 07:44:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXDvOACWM4QZdt+U6PHXe3iXN1NgGW+aYkhCW1CdcLxzB5wqIqcylr1aFIRFw5ICPjUa1UkbDx6fpU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzaF1uNaUwKY3gByq6fCt+5WVxvCHj5Kbhg9VQDJZecqAobwBWj
-	Cjs+s1n43A8yYAVbdO42txCkOv+ZVTvjjjuhWrmyBClvvnuK0p6LJjHgOgIf1DqXpzcZylWVSR+
-	TO/O7bKIqYHXQEkFlXBvOJwfob6pxFYA=
-X-Google-Smtp-Source: AGHT+IHHbZjicZ3sFbJ4BxVo2WPXbTi7fbOErNmBPLm9Uddaz/xQuR0VLEpYetIBm7OsIaMZnqsSlAyT7lePeGLz64k=
-X-Received: by 2002:a05:6402:42c8:b0:604:bf4e:852d with SMTP id
- 4fb4d7f45d1cf-60a1cd2fac7mr2686937a12.12.1750430648800; Fri, 20 Jun 2025
- 07:44:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bON0PG+W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750444440; x=1781980440;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9iYNcVBaPb4Hwav7FShaIAw0RUnIu6JSzpcwtAcLNMM=;
+  b=bON0PG+WCm0K1xEj5MItQQMJKO0HpI7c/IU24RIB17Gv5Rbagsuc7gHL
+   hm9FEqMFnBxZAzCS+BL2o1y/0fRny0qUF4iOT/EnCghQau/8aoLKhQMEW
+   ZxG0T7JW1Q+bfbYBrP5aDT2Mu1DLKAuRi+pkHv8vA164Nld5M+v3Ku1S0
+   JQ2bKWH44y5vegR7Nz1PHKFAUOrjviCKWKvESDm2JJDRZxbQHK3DrlWaz
+   3qtrSFkVVS3ZBpngh8n1BnVBTVQPfyVi0pG9Juso+0oWj43hBi3YvO3x+
+   1zdhJHGpzCkk9ThXv+a9lf71etYt5ibzJjRG4ked6FWRuAy1/gfdM1LQo
+   g==;
+X-CSE-ConnectionGUID: NnIi/T+qTtCeInvDG4T9aw==
+X-CSE-MsgGUID: L+HSGqx5Se+LC2QrpFvy9Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52418276"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="52418276"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 11:33:59 -0700
+X-CSE-ConnectionGUID: KE/vH0clTAqEFqMxLdv6Nw==
+X-CSE-MsgGUID: xzV2Q7uAQQeGURIg7qUp5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="150779283"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 20 Jun 2025 11:33:56 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSgYj-000M42-1D;
+	Fri, 20 Jun 2025 18:33:53 +0000
+Date: Sat, 21 Jun 2025 02:33:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
+	kexybiscuit@aosc.io, wangyao@lemote.com,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: Re: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core
+ driver
+Message-ID: <202506210204.LVZc2VG2-lkp@intel.com>
+References: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250611014651.3042734-1-maobibo@loongson.cn> <20250611014651.3042734-5-maobibo@loongson.cn>
- <CAAhV-H7ehdkKwzsFNAaX+r5eXLknvskyXLPDKei2A55LoSiJMA@mail.gmail.com> <5f1b9068-2d3d-2f89-4f72-85b021537f58@loongson.cn>
-In-Reply-To: <5f1b9068-2d3d-2f89-4f72-85b021537f58@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 20 Jun 2025 22:43:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
-X-Gm-Features: Ac12FXw2U2SLyEPOk2oakF_Oj26FqKRq_batQU44_B8SUUMV9IcbFMjQDv_X0M4
-Message-ID: <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
-Subject: Re: [PATCH v3 4/9] LoongArch: KVM: INTC: Check validation of num_cpu
- from user space
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
 
-On Fri, Jun 20, 2025 at 9:43=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> On 2025/6/19 =E4=B8=8B=E5=8D=884:46, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Wed, Jun 11, 2025 at 9:47=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> The maximum supported cpu number is EIOINTC_ROUTE_MAX_VCPUS about
-> >> irqchip eiointc, here add validation about cpu number to avoid array
-> >> pointer overflow.
-> >>
-> >> Cc: stable@vger.kernel.org
-> >> Fixes: 1ad7efa552fd ("LoongArch: KVM: Add EIOINTC user mode read and w=
-rite functions")
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/kvm/intc/eiointc.c | 18 +++++++++++++-----
-> >>   1 file changed, 13 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/in=
-tc/eiointc.c
-> >> index b48511f903b5..ed80bf290755 100644
-> >> --- a/arch/loongarch/kvm/intc/eiointc.c
-> >> +++ b/arch/loongarch/kvm/intc/eiointc.c
-> >> @@ -798,7 +798,7 @@ static int kvm_eiointc_ctrl_access(struct kvm_devi=
-ce *dev,
-> >>          int ret =3D 0;
-> >>          unsigned long flags;
-> >>          unsigned long type =3D (unsigned long)attr->attr;
-> >> -       u32 i, start_irq;
-> >> +       u32 i, start_irq, val;
-> >>          void __user *data;
-> >>          struct loongarch_eiointc *s =3D dev->kvm->arch.eiointc;
-> >>
-> >> @@ -806,7 +806,12 @@ static int kvm_eiointc_ctrl_access(struct kvm_dev=
-ice *dev,
-> >>          spin_lock_irqsave(&s->lock, flags);
-> >>          switch (type) {
-> >>          case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_NUM_CPU:
-> >> -               if (copy_from_user(&s->num_cpu, data, 4))
-> >> +               if (copy_from_user(&val, data, 4) =3D=3D 0) {
-> >> +                       if (val < EIOINTC_ROUTE_MAX_VCPUS)
-> >> +                               s->num_cpu =3D val;
-> >> +                       else
-> >> +                               ret =3D -EINVAL;
-> > Maybe it is better to set s->num_cpu to EIOINTC_ROUTE_MAX_VCPUS (or
-> > other value) rather than keep it uninitialized. Because in other
-> > places we need to check s->num_cpu and an uninitialized value may
-> > cause undefined behavior.
-> There is error return value -EINVAL, VMM should stop running and exit
-> immediately if there is error return value with the ioctl command.
->
-> num_cpu is not uninitialized and it is zero by default. If VMM does not
-> care about the return value, VMM will fail to get coreisr information in
-> future.
-If you are sure you can keep it as is. Then please resend patch
-1,2,3,4,5,9 as a series because they are all bug fixes that should be
-merged as soon as possible. And in my own opinion, "INTC" can be
-dropped in the title.
+Hi Binbin,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 8ffcb7560b4a15faf821df95e3ab532b2b020f8c]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250620-100856
+base:   8ffcb7560b4a15faf821df95e3ab532b2b020f8c
+patch link:    https://lore.kernel.org/r/82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20250621/202506210204.LVZc2VG2-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250621/202506210204.LVZc2VG2-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506210204.LVZc2VG2-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+>> drivers/mfd/ls2k-bmc-core.c:152:1: warning: data definition has no type or storage class
+     152 | module_pci_driver(ls2k_bmc_driver);
+         | ^~~~~~~~~~~~~~~~~
+>> drivers/mfd/ls2k-bmc-core.c:152:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Wimplicit-int]
+>> drivers/mfd/ls2k-bmc-core.c:152:1: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
+>> drivers/mfd/ls2k-bmc-core.c:146:26: warning: 'ls2k_bmc_driver' defined but not used [-Wunused-variable]
+     146 | static struct pci_driver ls2k_bmc_driver = {
+         |                          ^~~~~~~~~~~~~~~
 
 
-Huacai
+vim +152 drivers/mfd/ls2k-bmc-core.c
 
->
-> Regards
-> Bibo Mao
-> >
-> >
-> > Huacai
-> >> +               } else
-> >>                          ret =3D -EFAULT;
-> >>                  break;
-> >>          case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_FEATURE:
-> >> @@ -835,7 +840,7 @@ static int kvm_eiointc_regs_access(struct kvm_devi=
-ce *dev,
-> >>                                          struct kvm_device_attr *attr,
-> >>                                          bool is_write)
-> >>   {
-> >> -       int addr, cpuid, offset, ret =3D 0;
-> >> +       int addr, cpu, offset, ret =3D 0;
-> >>          unsigned long flags;
-> >>          void *p =3D NULL;
-> >>          void __user *data;
-> >> @@ -843,7 +848,7 @@ static int kvm_eiointc_regs_access(struct kvm_devi=
-ce *dev,
-> >>
-> >>          s =3D dev->kvm->arch.eiointc;
-> >>          addr =3D attr->attr;
-> >> -       cpuid =3D addr >> 16;
-> >> +       cpu =3D addr >> 16;
-> >>          addr &=3D 0xffff;
-> >>          data =3D (void __user *)attr->addr;
-> >>          switch (addr) {
-> >> @@ -868,8 +873,11 @@ static int kvm_eiointc_regs_access(struct kvm_dev=
-ice *dev,
-> >>                  p =3D &s->isr.reg_u32[offset];
-> >>                  break;
-> >>          case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
-> >> +               if (cpu >=3D s->num_cpu)
-> >> +                       return -EINVAL;
-> >> +
-> >>                  offset =3D (addr - EIOINTC_COREISR_START) / 4;
-> >> -               p =3D &s->coreisr.reg_u32[cpuid][offset];
-> >> +               p =3D &s->coreisr.reg_u32[cpu][offset];
-> >>                  break;
-> >>          case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
-> >>                  offset =3D (addr - EIOINTC_COREMAP_START) / 4;
-> >> --
-> >> 2.39.3
-> >>
->
+   145	
+ > 146	static struct pci_driver ls2k_bmc_driver = {
+   147		.name = "ls2k-bmc",
+   148		.id_table = ls2k_bmc_devices,
+   149		.probe = ls2k_bmc_probe,
+   150		.remove = ls2k_bmc_remove,
+   151	};
+ > 152	module_pci_driver(ls2k_bmc_driver);
+   153	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
