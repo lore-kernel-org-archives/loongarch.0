@@ -1,161 +1,286 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0717C1BC41
-	for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 01:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFCF18828
+	for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 02:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750383813; cv=none; b=Q9rjj18R7D8KEr95XJneHWm/JS7yuPoIlPEURDlX6K3D33nYFPfFDm2FqaLLFVQx8hR8sCGk+ta8wXJpbmfYEXSZ2AnFESrHZBzIoG6QHh0Ox8wU3YpFZt0GfVxC73xGdoj8bEQl3wyW60+RGAqlJCshnpBcJ0Zm+g+x5vkVdx8=
+	t=1750385213; cv=none; b=OsIvh3UFIVUMoYsbisn9hBqIskyEvURk6/hbhB6m9wJKHsv9yhDbNL0/f/V74pLZ/gmqPUGE6aDIpP720t6M8iMyVvosH0QDWKOrYCmiK07bTDqvJ34wnXRL0UPMXP5yS6xttuwaUL2GtoYTzucgQPhwJW0pyv3Nq7OtUutOVhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750383813; c=relaxed/simple;
-	bh=zOswJx4rDMm0i1hayjKroOfpk7Su2D1HHPjfiTqZxQY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=TUtuuwif7V9DbMTS07pHLNzU+2hYViP56s5FI34DmEgayTbiZp8zsZCvE5bfT5iXYeZKOSy9TY9s4VxYbHezwCLG0HNjF14XdgwC7nowZk5myAt8hRPuUxjeEB1oscLpM/ahabT+QRDAkQ1cK1EAQ1KJ2OVVClJsiXtRPP1EEWY=
+	s=arc-20240116; t=1750385213; c=relaxed/simple;
+	bh=0IMNRrBwsUtPjrMBrN75aN4WtfKl9O+CUh4fg1LY/kU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LkeW97N16kObnTjdqQIgxXR1MarDM6A9LNwU4C/Fb7eiCwEOTeUV3sDMFsgmEVsj3e6/ZlXoZuWaxwfDnDn0qf8UjhCLpzg1zByt2V9UIaE+yA3K92NSX9JfaD1M35IOL6T4P8tMYWIyeRKWQyDUbQv1O5rs/5u8jti3b9Hx89w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxnOK_vFRoqCEaAQ--.24125S3;
-	Fri, 20 Jun 2025 09:43:28 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxPse9vFRoic0hAQ--.40170S3;
-	Fri, 20 Jun 2025 09:43:27 +0800 (CST)
-Subject: Re: [PATCH v3 4/9] LoongArch: KVM: INTC: Check validation of num_cpu
- from user space
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250611014651.3042734-1-maobibo@loongson.cn>
- <20250611014651.3042734-5-maobibo@loongson.cn>
- <CAAhV-H7ehdkKwzsFNAaX+r5eXLknvskyXLPDKei2A55LoSiJMA@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <5f1b9068-2d3d-2f89-4f72-85b021537f58@loongson.cn>
-Date: Fri, 20 Jun 2025 09:42:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [223.64.68.149])
+	by gateway (Coremail) with SMTP id _____8BxYa84wlRoUyMaAQ--.19583S3;
+	Fri, 20 Jun 2025 10:06:48 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.149])
+	by front1 (Coremail) with SMTP id qMiowMCx7MQuwlRodNIhAQ--.36930S3;
+	Fri, 20 Jun 2025 10:06:46 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	jeffbai@aosc.io,
+	kexybiscuit@aosc.io,
+	wangyao@lemote.com,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+Date: Fri, 20 Jun 2025 10:06:27 +0800
+Message-ID: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <cover.1750301674.git.zhoubinbin@loongson.cn>
+References: <cover.1750301674.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7ehdkKwzsFNAaX+r5eXLknvskyXLPDKei2A55LoSiJMA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxPse9vFRoic0hAQ--.40170S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxur4fCw47GryrCrWUAFW3CFX_yoW5ur4Upr
-	W8Aa98KFWFqryxWw1vqw1DGFyrKrn7WrySyry7KFya9rZ0qwn5CFyvkrZ0kFyak34rAF1I
-	vF4ay3W3uw1DtacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowMCx7MQuwlRodNIhAQ--.36930S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jw48JFyfXr47Jr1kGrWxGrX_yoW3GrWrp3
+	W8Aay5Crn5AF17Wa9xAr1UuFW3ua9av3y5JFW3Ww1a9an3Ca4DXw4ktFyYvF9rJFykKFy2
+	qF9xXr4xCan8JFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZU
-	UUUU=
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
+	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jzc_-UUUUU=
 
+The Loongson-2K Board Management Controller provides an PCIe interface
+to the host to access the feature implemented in the BMC.
 
+The BMC is assembled on a server similar to the server machine with
+Loongson-3 CPU. It supports multiple sub-devices like DRM and IPMI.
 
-On 2025/6/19 下午4:46, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Wed, Jun 11, 2025 at 9:47 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> The maximum supported cpu number is EIOINTC_ROUTE_MAX_VCPUS about
->> irqchip eiointc, here add validation about cpu number to avoid array
->> pointer overflow.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 1ad7efa552fd ("LoongArch: KVM: Add EIOINTC user mode read and write functions")
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/kvm/intc/eiointc.c | 18 +++++++++++++-----
->>   1 file changed, 13 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
->> index b48511f903b5..ed80bf290755 100644
->> --- a/arch/loongarch/kvm/intc/eiointc.c
->> +++ b/arch/loongarch/kvm/intc/eiointc.c
->> @@ -798,7 +798,7 @@ static int kvm_eiointc_ctrl_access(struct kvm_device *dev,
->>          int ret = 0;
->>          unsigned long flags;
->>          unsigned long type = (unsigned long)attr->attr;
->> -       u32 i, start_irq;
->> +       u32 i, start_irq, val;
->>          void __user *data;
->>          struct loongarch_eiointc *s = dev->kvm->arch.eiointc;
->>
->> @@ -806,7 +806,12 @@ static int kvm_eiointc_ctrl_access(struct kvm_device *dev,
->>          spin_lock_irqsave(&s->lock, flags);
->>          switch (type) {
->>          case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_NUM_CPU:
->> -               if (copy_from_user(&s->num_cpu, data, 4))
->> +               if (copy_from_user(&val, data, 4) == 0) {
->> +                       if (val < EIOINTC_ROUTE_MAX_VCPUS)
->> +                               s->num_cpu = val;
->> +                       else
->> +                               ret = -EINVAL;
-> Maybe it is better to set s->num_cpu to EIOINTC_ROUTE_MAX_VCPUS (or
-> other value) rather than keep it uninitialized. Because in other
-> places we need to check s->num_cpu and an uninitialized value may
-> cause undefined behavior.
-There is error return value -EINVAL, VMM should stop running and exit 
-immediately if there is error return value with the ioctl command.
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ drivers/mfd/Kconfig         |  11 +++
+ drivers/mfd/Makefile        |   2 +
+ drivers/mfd/ls2k-bmc-core.c | 156 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 169 insertions(+)
+ create mode 100644 drivers/mfd/ls2k-bmc-core.c
 
-num_cpu is not uninitialized and it is zero by default. If VMM does not 
-care about the return value, VMM will fail to get coreisr information in 
-future.
-
-Regards
-Bibo Mao
-> 
-> 
-> Huacai
->> +               } else
->>                          ret = -EFAULT;
->>                  break;
->>          case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_FEATURE:
->> @@ -835,7 +840,7 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
->>                                          struct kvm_device_attr *attr,
->>                                          bool is_write)
->>   {
->> -       int addr, cpuid, offset, ret = 0;
->> +       int addr, cpu, offset, ret = 0;
->>          unsigned long flags;
->>          void *p = NULL;
->>          void __user *data;
->> @@ -843,7 +848,7 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
->>
->>          s = dev->kvm->arch.eiointc;
->>          addr = attr->attr;
->> -       cpuid = addr >> 16;
->> +       cpu = addr >> 16;
->>          addr &= 0xffff;
->>          data = (void __user *)attr->addr;
->>          switch (addr) {
->> @@ -868,8 +873,11 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
->>                  p = &s->isr.reg_u32[offset];
->>                  break;
->>          case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
->> +               if (cpu >= s->num_cpu)
->> +                       return -EINVAL;
->> +
->>                  offset = (addr - EIOINTC_COREISR_START) / 4;
->> -               p = &s->coreisr.reg_u32[cpuid][offset];
->> +               p = &s->coreisr.reg_u32[cpu][offset];
->>                  break;
->>          case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
->>                  offset = (addr - EIOINTC_COREMAP_START) / 4;
->> --
->> 2.39.3
->>
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 96992af22565..a1081c4211b0 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -2389,6 +2389,18 @@ config MFD_INTEL_M10_BMC_PMCI
+ 	  additional drivers must be enabled in order to use the functionality
+ 	  of the device.
+ 
++config MFD_LS2K_BMC_CORE
++	bool "Loongson-2K Board Management Controller Support"
++	select MFD_CORE
++	help
++	  Say yes here to add support for the Loongson-2K BMC which is a Board
++	  Management Controller connected to the PCIe bus. The device supports
++	  multiple sub-devices like display and IPMI. This driver provides common
++	  support for accessing the devices.
++
++	  The display is enabled by default in the driver, while the IPMI interface
++	  is enabled independently through the IPMI_LS2K option in the IPMI section.
++
+ config MFD_QNAP_MCU
+ 	tristate "QNAP microcontroller unit core driver"
+ 	depends on SERIAL_DEV_BUS
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 5e5cc279af60..6bad54edca34 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -282,6 +282,8 @@ obj-$(CONFIG_MFD_INTEL_M10_BMC_CORE)   += intel-m10-bmc-core.o
+ obj-$(CONFIG_MFD_INTEL_M10_BMC_SPI)    += intel-m10-bmc-spi.o
+ obj-$(CONFIG_MFD_INTEL_M10_BMC_PMCI)   += intel-m10-bmc-pmci.o
+ 
++obj-$(CONFIG_MFD_LS2K_BMC_CORE)		+= ls2k-bmc-core.o
++
+ obj-$(CONFIG_MFD_ATC260X)	+= atc260x-core.o
+ obj-$(CONFIG_MFD_ATC260X_I2C)	+= atc260x-i2c.o
+ 
+diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
+new file mode 100644
+index 000000000000..9ee1edf286e7
+--- /dev/null
++++ b/drivers/mfd/ls2k-bmc-core.c
+@@ -0,0 +1,156 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Loongson-2K Board Management Controller (BMC) Core Driver.
++ *
++ * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
++ *
++ * Authors:
++ *	Chong Qiao <qiaochong@loongson.cn>
++ *	Binbin Zhou <zhoubinbin@loongson.cn>
++ */
++
++#include <linux/aperture.h>
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/pci_ids.h>
++#include <linux/platform_data/simplefb.h>
++#include <linux/platform_device.h>
++
++/* LS2K BMC resources */
++#define LS2K_DISPLAY_RES_START		(SZ_16M + SZ_2M)
++#define LS2K_IPMI_RES_SIZE		0x1C
++#define LS2K_IPMI0_RES_START		(SZ_16M + 0xF00000)
++#define LS2K_IPMI1_RES_START		(LS2K_IPMI0_RES_START + LS2K_IPMI_RES_SIZE)
++#define LS2K_IPMI2_RES_START		(LS2K_IPMI1_RES_START + LS2K_IPMI_RES_SIZE)
++#define LS2K_IPMI3_RES_START		(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
++#define LS2K_IPMI4_RES_START		(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
++
++static struct resource ls2k_display_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
++};
++
++static struct resource ls2k_ipmi0_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "ipmi0-res"),
++};
++
++static struct resource ls2k_ipmi1_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "ipmi1-res"),
++};
++
++static struct resource ls2k_ipmi2_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "ipmi2-res"),
++};
++
++static struct resource ls2k_ipmi3_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "ipmi3-res"),
++};
++
++static struct resource ls2k_ipmi4_resources[] = {
++	DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "ipmi4-res"),
++};
++
++static struct mfd_cell ls2k_bmc_cells[] = {
++	MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
++	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
++};
++
++/*
++ * Currently the Loongson-2K BMC hardware does not have an I2C interface to adapt to the
++ * resolution. We set the resolution by presetting "video=1280x1024-16@2M" to the BMC memory.
++ */
++static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
++{
++	char *mode;
++	int depth, ret;
++
++	/* The last 16M of PCI BAR0 is used to store the resolution string. */
++	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
++	if (!mode)
++		return -ENOMEM;
++
++	/* The resolution field starts with the flag "video=". */
++	if (!strncmp(mode, "video=", 6))
++		mode = mode + 6;
++
++	ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
++	if (ret)
++		return ret;
++
++	ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
++	if (ret)
++		return ret;
++
++	ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
++	if (ret)
++		return ret;
++
++	pd->stride = pd->width * depth / 8;
++	pd->format = depth == 32 ? "a8r8g8b8" : "r5g6b5";
++
++	return 0;
++}
++
++static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
++{
++	struct simplefb_platform_data pd;
++	resource_size_t base;
++	int ret;
++
++	ret = pci_enable_device(dev);
++	if (ret)
++		return ret;
++
++	ret = ls2k_bmc_parse_mode(dev, &pd);
++	if (ret)
++		goto disable_pci;
++
++	ls2k_bmc_cells[0].platform_data = &pd;
++	ls2k_bmc_cells[0].pdata_size = sizeof(pd);
++	base = dev->resource[0].start + LS2K_DISPLAY_RES_START;
++
++	/* Remove conflicting efifb device */
++	ret = aperture_remove_conflicting_devices(base, SZ_4M, "simple-framebuffer");
++	if (ret) {
++		dev_err(&dev->dev, "Failed to removed firmware framebuffers: %d\n", ret);
++		goto disable_pci;
++	}
++
++	return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
++				    ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_cells),
++				    &dev->resource[0], 0, NULL);
++
++disable_pci:
++	pci_disable_device(dev);
++	return ret;
++}
++
++static void ls2k_bmc_remove(struct pci_dev *dev)
++{
++	pci_disable_device(dev);
++}
++
++static struct pci_device_id ls2k_bmc_devices[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
++	{ }
++};
++MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
++
++static struct pci_driver ls2k_bmc_driver = {
++	.name = "ls2k-bmc",
++	.id_table = ls2k_bmc_devices,
++	.probe = ls2k_bmc_probe,
++	.remove = ls2k_bmc_remove,
++};
++module_pci_driver(ls2k_bmc_driver);
++
++MODULE_DESCRIPTION("Loongson-2K BMC Core driver");
++MODULE_AUTHOR("Loongson Technology Corporation Limited");
++MODULE_LICENSE("GPL");
+-- 
+2.47.1
 
