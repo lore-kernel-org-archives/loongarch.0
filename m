@@ -1,81 +1,67 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D026BFCE
-	for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 18:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDB5221273;
+	Fri, 20 Jun 2025 19:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750445214; cv=none; b=FL9vplw+58y4XPb8U6OMAJrttC+eQpmFrWMQAwD7aWOkh9GV9iz211mmcvYyFbIEoSYp28wva54ZjZi7w6UapoFd9GzrNvwOJqTNVYfVVPythoJhH7Ppbkf/u27VWxqsleB+r86T/NqbtTE6qRafZwF8L8nXsCA94tgCYMJ9pkY=
+	t=1750448168; cv=none; b=PvuoGe0yH4vnlpDjF6txm9HFEMbxklqcpFkkd24lmWxbzDV9zaB0GBVBppU3c7x1aqf9obwPnXC8s3ibmZ/KnU3zTjLQp29yG3qVXgcYEXOrpbWI6Pk+cKSapWo1mRTd/G5/yDc5nsj8pE9OGJtKNh+ha6gyC6Z2Yojnep4xFDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750445214; c=relaxed/simple;
-	bh=d/GlD2KP1uZD+1yoFhPJcFL2TMCqvOPZQ9p8ZBOmw+k=;
+	s=arc-20240116; t=1750448168; c=relaxed/simple;
+	bh=8U0ApAmF5qQnF/Hc87FkoU72bmbRHVKky63vgfV7N5s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HWQ8moOI+HmyuoKB+d7ThEaxUzJ4bwKul5uFq+7p61xtxh71v/50tK+RGcxvMNQUuUzQ1JgaBHkf+Jqc5tAdyLMXadQLVRc2UeprWbvsBZ8a2ACY1ROFc3yl/+uvgqWSMm4pfqDaJxQ70xp4gBxZISMt0UFOPF4TmY9nzAd1dpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=3OcFBS5V; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=G3wU7qvUhwtIoEZo0Q20DxYzIkjRI84CnFnxkGS81Low564MrzPKRg+k9GYOnVRe0CTP0LdcoQRls7/kls1Y+Omf1kWWiirIYzwEzgRIXMdKu4/cdwIFr4M5adjSy+Qq9/4bLGm9k2sjXhBR7Hjuzvlgt8WWnHnv8XN8SotyFDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CP5qdagT; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="3OcFBS5V"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-735a9e65471so1421938a34.1
-        for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 11:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1750445212; x=1751050012; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s8NHYIJCrgO6+UfKO/xAGNidF0eDJbqLbRizmGJ3qXI=;
-        b=3OcFBS5VFx5r0pgfATVemG1ghrOMYqNnbfdUBdBbQJzwjZbcx5gSEJnd7IGOktYts+
-         fRF+7ZhBL+vpXnMDbaYz/wGT83ChdKXrpRslPFp9xvYQK4TUp97aVk33xcElQ4Ixx27G
-         lVYaOHL8Pge5Q8X48gUNR+KHT+5+BXvO9xTBaP/7oQJ2WUJAMEKJqY7SDz4NwalqGxrq
-         4iYb8T0mBAtiz62FyZ4CNFBqZ2UrWY12JQThvEZRg2Fu+GDKdsQ+FKKCqKi4FeWK2DhG
-         HNpnQt8fVFzRIhDALr9COPkwK1gx3YzJPMA965UQpZu1/gf9Nx5a6XusSenpFsQF9yAe
-         alPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750445212; x=1751050012;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s8NHYIJCrgO6+UfKO/xAGNidF0eDJbqLbRizmGJ3qXI=;
-        b=kfRRX4rlogZH+2hOvkbHD62gFqTk3jwy6xpnIM39lAEbcNyB8sfpNdXAn2ceVwPK0Z
-         qfy9nzDN6H32+p7NYJh4KCHXlEoBDeBDQGsAj8fv9sD90VZ9i0yb5z9T51HO9ewEraaP
-         AB/0/WRcAFq/Vk6KgRuk+60Ev3lTHYOWh4ACg3PvibaY4L3ct9DDiVdjBypXJhtsRfOd
-         SHAv/T0+J/CmDNAl51JoVz1tr1YsG0M3HhAzMqoz7++ZI+PFBIJ10I+lQ4VtvkKFNKRa
-         AGeXh5m9rulvyWX6tFa1CB+JdU+T/RTKsjvSL7vINxFU5kKe0zYhnoI6dTGupSwthtDM
-         IAyg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5RoemIZXFzd+s5byPms68TOL9qdd6x+g15I0TJK8ijDgUZz2WVg6jb2gmZnQAFwKnuQ4IVgrXvwc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxDu2pmx45B0zW8bNwvLqQu1nM7yYEJctAwgLYYezqA7bCPvGBv
-	mtdd/3fj6LG148COWQgn8cl5FHnTXipX9KwZ8wS09MrRYmccYdwepAllQvQvYPkUYe0=
-X-Gm-Gg: ASbGncsj8/eEFJxY76wb/QcLwjxiRlTWQcPRGB0DvFGyhJdUzXDugM+dI2cOGnr1qsf
-	InlV3SWPytHeoRGc03a/ZBNf+Vj06fR/bM4a4NN629wcPnQTwP0V/7LN+2Nx03b++OzcR0UA0h9
-	+22Qrju7raBOKqTHcWgcuJ7s0fAwybzYUHlq6AvgySkZ6B/0r1P42xrEIdh9jtlT9hYzjSURjZn
-	jXa0RBHj8TCX3vdrD5TADbqMHVLMkb9RGPBqUfsqu2KhuuZrIgZ0UbyNJ96nUR+MQTGXhVf9zPS
-	5K41JbIQhJD1AM8GI5g2twgKw2foQUVoE8gL03AWfMOXCcOpT5AMxjwc2OzuF9bvb94IaSiBYto
-	=
-X-Google-Smtp-Source: AGHT+IGvXifjETCnN4g1olyDwWNAcDk+oFv5m2B4XET98iABiZega1zQLzY80woia5ktb/6ap2w1Cg==
-X-Received: by 2002:a05:6870:d288:b0:2ea:73fb:7850 with SMTP id 586e51a60fabf-2eeee4cb6b9mr2820332fac.24.1750445211862;
-        Fri, 20 Jun 2025 11:46:51 -0700 (PDT)
-Received: from mail.minyard.net ([2001:470:b8f6:1b:680:2e07:b628:1be4])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ee6655a2c7sm491389fac.17.2025.06.20.11.46.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 11:46:51 -0700 (PDT)
-Date: Fri, 20 Jun 2025 13:46:46 -0500
-From: Corey Minyard <corey@minyard.net>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CP5qdagT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750448166; x=1781984166;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8U0ApAmF5qQnF/Hc87FkoU72bmbRHVKky63vgfV7N5s=;
+  b=CP5qdagTc0T7bgp0IJObXGB+Vj/XkpcWXf7FHNdxUEodLgzNhYeRPzNT
+   Ck09YIeMmRcMAEN29XagNpbk3u7aHNVExsfDxTh/L6zER+MWEkbpUrQPD
+   FjXoDJ/f6OZdVGg7s0//pP+FTOhFMAH/icuriMVT3gp9S81oP2V0q+FUK
+   td9x9YhoDDIvUZLsyeC5322phJ6mQNwT/Qml/w08xeaF2G1h9EmjmG8oP
+   UOHWOUSaP+XeqooFehRbN/b5DTqM+pw3v8xWnAAuiqmFsVlh3mTNfZc2h
+   QnUp6YvsSvpD/4MNlUlI9aCFoUw9m03eiWtk86drBqWA32SGBcRsGJ4a1
+   g==;
+X-CSE-ConnectionGUID: l6a4kFSaSK+K/TXvefAwDw==
+X-CSE-MsgGUID: g2H2BtIGRiGf5RRwAFbpBA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63404317"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="63404317"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 12:36:06 -0700
+X-CSE-ConnectionGUID: NUv5Vzu4SV+K2m1kfwhYqQ==
+X-CSE-MsgGUID: +UYhgqZcTqKvo2GUGOcCZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="150423021"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 20 Jun 2025 12:36:03 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uShWq-000M6A-0I;
+	Fri, 20 Jun 2025 19:36:00 +0000
+Date: Sat, 21 Jun 2025 03:35:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
+	Corey Minyard <minyard@acm.org>
+Cc: oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
 	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
 	kexybiscuit@aosc.io, wangyao@lemote.com,
 	Chong Qiao <qiaochong@loongson.cn>
-Subject: Re: [PATCH v5 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core
- driver
-Message-ID: <aFWslonzXrSfTASW@mail.minyard.net>
-Reply-To: corey@minyard.net
-References: <cover.1750301674.git.zhoubinbin@loongson.cn>
- <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
+Subject: Re: [PATCH v5 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function
+ support
+Message-ID: <202506210343.XCHkzorp-lkp@intel.com>
+References: <174677c13e41140e19a62dd01b9502aaa7fae669.1750301674.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -84,227 +70,94 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <82cbc8558f15981e0953ab229d2afcc5501f982c.1750301674.git.zhoubinbin@loongson.cn>
+In-Reply-To: <174677c13e41140e19a62dd01b9502aaa7fae669.1750301674.git.zhoubinbin@loongson.cn>
 
-On Fri, Jun 20, 2025 at 10:06:27AM +0800, Binbin Zhou wrote:
-> The Loongson-2K Board Management Controller provides an PCIe interface
-> to the host to access the feature implemented in the BMC.
-> 
-> The BMC is assembled on a server similar to the server machine with
-> Loongson-3 CPU. It supports multiple sub-devices like DRM and IPMI.
-> 
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  drivers/mfd/Kconfig         |  11 +++
->  drivers/mfd/Makefile        |   2 +
->  drivers/mfd/ls2k-bmc-core.c | 156 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 169 insertions(+)
->  create mode 100644 drivers/mfd/ls2k-bmc-core.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 96992af22565..a1081c4211b0 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -2389,6 +2389,18 @@ config MFD_INTEL_M10_BMC_PMCI
->  	  additional drivers must be enabled in order to use the functionality
->  	  of the device.
->  
-> +config MFD_LS2K_BMC_CORE
-> +	bool "Loongson-2K Board Management Controller Support"
-> +	select MFD_CORE
+Hi Binbin,
 
-Also, from the recent bug report, this is missing a depends on PCI.
+kernel test robot noticed the following build errors:
 
-> +	help
-> +	  Say yes here to add support for the Loongson-2K BMC which is a Board
-> +	  Management Controller connected to the PCIe bus. The device supports
-> +	  multiple sub-devices like display and IPMI. This driver provides common
-> +	  support for accessing the devices.
-> +
-> +	  The display is enabled by default in the driver, while the IPMI interface
-> +	  is enabled independently through the IPMI_LS2K option in the IPMI section.
-> +
->  config MFD_QNAP_MCU
->  	tristate "QNAP microcontroller unit core driver"
->  	depends on SERIAL_DEV_BUS
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 5e5cc279af60..6bad54edca34 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -282,6 +282,8 @@ obj-$(CONFIG_MFD_INTEL_M10_BMC_CORE)   += intel-m10-bmc-core.o
->  obj-$(CONFIG_MFD_INTEL_M10_BMC_SPI)    += intel-m10-bmc-spi.o
->  obj-$(CONFIG_MFD_INTEL_M10_BMC_PMCI)   += intel-m10-bmc-pmci.o
->  
-> +obj-$(CONFIG_MFD_LS2K_BMC_CORE)		+= ls2k-bmc-core.o
-> +
->  obj-$(CONFIG_MFD_ATC260X)	+= atc260x-core.o
->  obj-$(CONFIG_MFD_ATC260X_I2C)	+= atc260x-i2c.o
->  
-> diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-> new file mode 100644
-> index 000000000000..9ee1edf286e7
-> --- /dev/null
-> +++ b/drivers/mfd/ls2k-bmc-core.c
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Loongson-2K Board Management Controller (BMC) Core Driver.
-> + *
-> + * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
-> + *
-> + * Authors:
-> + *	Chong Qiao <qiaochong@loongson.cn>
-> + *	Binbin Zhou <zhoubinbin@loongson.cn>
-> + */
-> +
-> +#include <linux/aperture.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_ids.h>
-> +#include <linux/platform_data/simplefb.h>
-> +#include <linux/platform_device.h>
-> +
-> +/* LS2K BMC resources */
-> +#define LS2K_DISPLAY_RES_START		(SZ_16M + SZ_2M)
-> +#define LS2K_IPMI_RES_SIZE		0x1C
-> +#define LS2K_IPMI0_RES_START		(SZ_16M + 0xF00000)
-> +#define LS2K_IPMI1_RES_START		(LS2K_IPMI0_RES_START + LS2K_IPMI_RES_SIZE)
-> +#define LS2K_IPMI2_RES_START		(LS2K_IPMI1_RES_START + LS2K_IPMI_RES_SIZE)
-> +#define LS2K_IPMI3_RES_START		(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
-> +#define LS2K_IPMI4_RES_START		(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
-> +
-> +static struct resource ls2k_display_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi0_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "ipmi0-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi1_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "ipmi1-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi2_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "ipmi2-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi3_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "ipmi3-res"),
-> +};
-> +
-> +static struct resource ls2k_ipmi4_resources[] = {
-> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "ipmi4-res"),
-> +};
-> +
-> +static struct mfd_cell ls2k_bmc_cells[] = {
-> +	MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
-> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
-> +};
-> +
-> +/*
-> + * Currently the Loongson-2K BMC hardware does not have an I2C interface to adapt to the
-> + * resolution. We set the resolution by presetting "video=1280x1024-16@2M" to the BMC memory.
-> + */
-> +static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
-> +{
-> +	char *mode;
-> +	int depth, ret;
-> +
-> +	/* The last 16M of PCI BAR0 is used to store the resolution string. */
-> +	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
-> +	if (!mode)
-> +		return -ENOMEM;
-> +
-> +	/* The resolution field starts with the flag "video=". */
-> +	if (!strncmp(mode, "video=", 6))
-> +		mode = mode + 6;
-> +
-> +	ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pd->stride = pd->width * depth / 8;
-> +	pd->format = depth == 32 ? "a8r8g8b8" : "r5g6b5";
-> +
-> +	return 0;
-> +}
-> +
-> +static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> +{
-> +	struct simplefb_platform_data pd;
-> +	resource_size_t base;
-> +	int ret;
-> +
-> +	ret = pci_enable_device(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ls2k_bmc_parse_mode(dev, &pd);
-> +	if (ret)
-> +		goto disable_pci;
-> +
-> +	ls2k_bmc_cells[0].platform_data = &pd;
-> +	ls2k_bmc_cells[0].pdata_size = sizeof(pd);
-> +	base = dev->resource[0].start + LS2K_DISPLAY_RES_START;
-> +
-> +	/* Remove conflicting efifb device */
-> +	ret = aperture_remove_conflicting_devices(base, SZ_4M, "simple-framebuffer");
-> +	if (ret) {
-> +		dev_err(&dev->dev, "Failed to removed firmware framebuffers: %d\n", ret);
-> +		goto disable_pci;
-> +	}
-> +
-> +	return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
-> +				    ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_cells),
-> +				    &dev->resource[0], 0, NULL);
-> +
-> +disable_pci:
-> +	pci_disable_device(dev);
-> +	return ret;
-> +}
-> +
-> +static void ls2k_bmc_remove(struct pci_dev *dev)
-> +{
-> +	pci_disable_device(dev);
-> +}
-> +
-> +static struct pci_device_id ls2k_bmc_devices[] = {
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
-> +
-> +static struct pci_driver ls2k_bmc_driver = {
-> +	.name = "ls2k-bmc",
-> +	.id_table = ls2k_bmc_devices,
-> +	.probe = ls2k_bmc_probe,
-> +	.remove = ls2k_bmc_remove,
-> +};
-> +module_pci_driver(ls2k_bmc_driver);
-> +
-> +MODULE_DESCRIPTION("Loongson-2K BMC Core driver");
-> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.47.1
-> 
+[auto build test ERROR on 8ffcb7560b4a15faf821df95e3ab532b2b020f8c]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250620-100856
+base:   8ffcb7560b4a15faf821df95e3ab532b2b020f8c
+patch link:    https://lore.kernel.org/r/174677c13e41140e19a62dd01b9502aaa7fae669.1750301674.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v5 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250621/202506210343.XCHkzorp-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250621/202506210343.XCHkzorp-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506210343.XCHkzorp-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/mfd/ls2k-bmc-core.c: In function 'ls2k_bmc_pcie_is_connected':
+>> drivers/mfd/ls2k-bmc-core.c:156:16: error: implicit declaration of function 'pci_iomap'; did you mean 'pcim_iomap'? [-Wimplicit-function-declaration]
+     156 |         base = pci_iomap(parent, 0, LS7A_PCI_CFG_SIZE);
+         |                ^~~~~~~~~
+         |                pcim_iomap
+>> drivers/mfd/ls2k-bmc-core.c:156:14: error: assignment to 'void *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     156 |         base = pci_iomap(parent, 0, LS7A_PCI_CFG_SIZE);
+         |              ^
+   In file included from include/linux/io.h:12,
+                    from include/linux/iopoll.h:14,
+                    from drivers/mfd/ls2k-bmc-core.c:17:
+>> arch/sh/include/asm/io.h:122:21: error: implicit declaration of function 'pci_iounmap'; did you mean 'pcim_iounmap'? [-Wimplicit-function-declaration]
+     122 | #define pci_iounmap pci_iounmap
+         |                     ^~~~~~~~~~~
+   drivers/mfd/ls2k-bmc-core.c:167:17: note: in expansion of macro 'pci_iounmap'
+     167 |                 pci_iounmap(parent, base);
+         |                 ^~~~~~~~~~~
+   drivers/mfd/ls2k-bmc-core.c: In function 'ls2k_bmc_pdata_initial':
+   drivers/mfd/ls2k-bmc-core.c:350:15: error: implicit declaration of function 'acpi_register_gsi' [-Wimplicit-function-declaration]
+     350 |         irq = acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW);
+         |               ^~~~~~~~~~~~~~~~~
+   drivers/mfd/ls2k-bmc-core.c:377:9: error: implicit declaration of function 'acpi_unregister_gsi'; did you mean 'arch_unregister_cpu'? [-Wimplicit-function-declaration]
+     377 |         acpi_unregister_gsi(gsi);
+         |         ^~~~~~~~~~~~~~~~~~~
+         |         arch_unregister_cpu
+   drivers/mfd/ls2k-bmc-core.c: At top level:
+   drivers/mfd/ls2k-bmc-core.c:481:1: warning: data definition has no type or storage class
+     481 | module_pci_driver(ls2k_bmc_driver);
+         | ^~~~~~~~~~~~~~~~~
+   drivers/mfd/ls2k-bmc-core.c:481:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Wimplicit-int]
+   drivers/mfd/ls2k-bmc-core.c:481:1: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
+   drivers/mfd/ls2k-bmc-core.c:475:26: warning: 'ls2k_bmc_driver' defined but not used [-Wunused-variable]
+     475 | static struct pci_driver ls2k_bmc_driver = {
+         |                          ^~~~~~~~~~~~~~~
+
+
+vim +156 drivers/mfd/ls2k-bmc-core.c
+
+   150	
+   151	static bool ls2k_bmc_pcie_is_connected(struct pci_dev *parent, struct ls2k_bmc_pdata *priv)
+   152	{
+   153		void __iomem *base;
+   154		int sts, ret;
+   155	
+ > 156		base = pci_iomap(parent, 0, LS7A_PCI_CFG_SIZE);
+   157		if (!base)
+   158			return false;
+   159	
+   160		writel(readl(base + LS7A_PCIE_PORT_CTL0) | LS2K_BMC_PCIE_LTSSM_ENABLE,
+   161		       base + LS7A_PCIE_PORT_CTL0);
+   162	
+   163		ret = readl_poll_timeout_atomic(base + LS7A_PCIE_PORT_STS1, sts,
+   164						(sts & LS2K_BMC_PCIE_LTSSM_STS) == LS2K_BMC_PCIE_CONNECTED,
+   165						LS2K_BMC_PCIE_DELAY_US, LS2K_BMC_PCIE_TIMEOUT_US);
+   166		if (ret) {
+   167			pci_iounmap(parent, base);
+   168			dev_err(priv->dev, "PCIE train failed status=0x%x\n", sts);
+   169			return false;
+   170		}
+   171	
+   172		pci_iounmap(parent, base);
+   173		return true;
+   174	}
+   175	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
