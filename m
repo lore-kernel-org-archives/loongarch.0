@@ -1,218 +1,176 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72ED028DF48
-	for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 14:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFA5292936
+	for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 14:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750428990; cv=none; b=gk6PjhYS330y6bkOGV1dlllZKfozRNMX3Dz9jHN2glpe5MSBQ6cmlsTovmbEKNGwbYin2dPSfeFK0Alp3f+gcwvKsQKC3WWF3W485RRvPb3srpEHQNipv3ptVuXR/q+FAiaq62ZUXW2yQ/bSs7li0Vrjyi/sA0ulSdC2bJGVMYo=
+	t=1750430650; cv=none; b=mFWxPIix5eo7CKUL0C/nv4uL7EuDIzppkviSG02Lk7pe0jeufwFaqhwrALoKISPIobWa6Qfv+mtxuWYrMW87ckTeV+TC1yVlP9qjAR2Apgl7P8yg10ShOY6kE4SaCvkpfNdfM+AET0gBkMdxd/5DQLMFjJxoHJ5NbNRnYtR+sBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750428990; c=relaxed/simple;
-	bh=0eYSql2La0KiT4uj53uL7zKSU2FoJXGT3qcpBAi5Qfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UTmKz7smoTUtIRz2rtm60dDmy0iw1EkYNGAlXyfXkuvxb+nF015u9h2phI80fN60C0NQzT/Rr+Xnb0rvFEmcQl+Xv89mdYZxds9sTeIq2hBgN/wVPf6shgXvnQuvoAVI+KkXVmjDmCdwLdIpk7w4sGdIyr7XPOgGF6HAtW+Ey+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=sPbfOQnt; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
+	s=arc-20240116; t=1750430650; c=relaxed/simple;
+	bh=nEo1ZRZvkkP/cM6rUNrU1aJJ77SioFkxCfmnwoP1kdM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hF6JzN9dmdIDL5MKnml5QRrzJQQEMMTGVhR5FCvXA0rMwYXl0eS8S9OTVHRbaZ+4rdtHNjbhSzYv5pGaZ4zDjPWXC7HRcX5r41wmVmVJaPJJVM7K2+r3NtPQiku8v12/TIaO2Trpm+Zifuk8Txo7zKJDOae8P1vF1VVS/wcY+YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSx+zimo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="sPbfOQnt"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-60f24b478e3so1016267eaf.3
-        for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 07:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1750428987; x=1751033787; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8aH+2cNmUyOyiYQl2KGLmPGobUxyHcHxzMcE4912J3o=;
-        b=sPbfOQnt3IO5MNv7OsTS+C3oC/nLirSlACF6nF3gW60W3lYsDSZACuOGvCIPC3XxWr
-         XlDNpPHwABrgOu8IuhK0iP2/68Rsa6G4mdRzcKMpT4dTDul+/P+UlFcuzspjwK9fS4yY
-         eJ7nqkCmTLCVIGyABQrTeirs+PNielkcpXGN8K5WQZTYmGVU6qcGITNld65TVI9K9+j0
-         MO0w2Gtxnr1pnm7oIX4PyROl3+Glh+n+riGlUjFIr0aGR9mbU66mD4wkz6I09OOQPtIU
-         XKNod91Qah37ZZm9Yiq5+4HUCkjald/0PNbRtW23bvCHENQJaioqH2vvR+0N0wBg6ilN
-         fWOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750428987; x=1751033787;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8aH+2cNmUyOyiYQl2KGLmPGobUxyHcHxzMcE4912J3o=;
-        b=WnsXogdy7waxxBsY60W+Zfu/phUSpbte1QLdBT0hA4VH+LJskennahFbttv82wt8XD
-         Dy0Q7tNEgKRoSaF7iFjMy2YyZVTfIpM6fvdBqa0dkthkBvpdA420Ht5cmMdQmh7s8hR5
-         rfKmF+VV+3KT+AThUKqkOOcjSBdsL27653cDmfWenI0Si3DpLLG8VmKxV+afJsvmN/jc
-         wKDwNtUzHnHAXKDcIpSNHy7tfaM/UWsSetxN8crg36Vt+mjSUt6aXLkuD8k49s/NCKIY
-         bUfZwRecvCpSizuO/xL3Ov4QIiQMWF8/z7FRhimEfXEHlO7bSJOGf+w5zEFeILHKGOsj
-         93Uw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmHdIDTMKI3NVMOJAaO2Y1VL+SB4cLy+Wc1ZzhmngEe49My8Pa822poIPwe0hvtpM6vEvF9W7GnJg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwcVajlH9pk4Y6IZiaPi+KcJmBDesGqtDi/OrkxCti1CBfIRtA4
-	aM/KG/aDWUzC8LX9Io/AXYPH+Em9ZUSnIFirsFFJ2I+NEGhP5LkK2EI/T+s6hBLmGpg=
-X-Gm-Gg: ASbGncv9+G9UoEWSp0njCsCvQ1j3VE1whlnpxloYqF+HUPNX5Uzx6NHzZqATDck+EZ4
-	HCw+nd7rH07O9jbkWCrpArPaJo3yM/rMXSiNOtJYX24rTofwaR2fbOME/bFehycle9RsN4qLrTm
-	0rIOE5VHJNEv5EBoKFsE34VCxqNhFuoZRhxet+c5+j2IFlEB+z4f0C/579QblGoTEQNH5bH/Ofz
-	Zqyh3uFFqx1elMWJqOBXGgawhOVFAYfStJOFSDXt2zpBiO268fPCgHbQ2F1dgJqZeD1LHvs4yxs
-	EdPmnLddhIZVx5jTLYhmoLlEvG372N6TQmoJPDttG5Xmd+irE9SyIh18hy1vYzvJ
-X-Google-Smtp-Source: AGHT+IEyVEKaYFNzOB5m3adjaYcIXuQfoB2jpkcttyrE7eoYNv7vcwBFuSg4LwGbxAoOYgodpWz8Vg==
-X-Received: by 2002:a05:6870:4584:b0:2bc:7d6f:fa85 with SMTP id 586e51a60fabf-2eedfc5d96emr2347233fac.16.1750428987163;
-        Fri, 20 Jun 2025 07:16:27 -0700 (PDT)
-Received: from mail.minyard.net ([2001:470:b8f6:1b:680:2e07:b628:1be4])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ee66559d90sm403237fac.12.2025.06.20.07.16.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 07:16:26 -0700 (PDT)
-Date: Fri, 20 Jun 2025 09:16:20 -0500
-From: Corey Minyard <corey@minyard.net>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
-	kexybiscuit@aosc.io, wangyao@lemote.com
-Subject: Re: [PATCH v5 0/3] LoongArch: Add Loongson-2K BMC support
-Message-ID: <aFVtNAY4u2gDiLDS@mail.minyard.net>
-Reply-To: corey@minyard.net
-References: <cover.1750301674.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSx+zimo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 594FCC4AF09
+	for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 14:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750430650;
+	bh=nEo1ZRZvkkP/cM6rUNrU1aJJ77SioFkxCfmnwoP1kdM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NSx+zimoZCyFNyZu6KW/IjxfIKgaSadsrDdpcD5qVsKEqej2xGbaLKF229jT6iYi/
+	 N/jy0QF87sSa7SXwI4C2PNVSSGy4Rl/OqF7+PnjhLlv3mLIgnf9cCbu63KHXXki/Mf
+	 kAFCTNlbulB+UA7LLuyU9rkmMm3CVOUsquOQ4Dz3Ywtz/8Pn2Wjb1wnH+w2XQTpYDK
+	 Do/EI80QF9fFiHjEHQaSHvbyF6tDnh1/qbn6zMjAq0/7fDX2j1X7q/cwo0NPop51lh
+	 zZR3aQ5PSBoewuVUhyTttorHKQqXwkqsQ9FF1qyZdfNeGGVnySIDIiQKi6Fi5aKMzx
+	 TTgnnNIxge8KA==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so3259987a12.2
+        for <loongarch@lists.linux.dev>; Fri, 20 Jun 2025 07:44:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXDvOACWM4QZdt+U6PHXe3iXN1NgGW+aYkhCW1CdcLxzB5wqIqcylr1aFIRFw5ICPjUa1UkbDx6fpU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzaF1uNaUwKY3gByq6fCt+5WVxvCHj5Kbhg9VQDJZecqAobwBWj
+	Cjs+s1n43A8yYAVbdO42txCkOv+ZVTvjjjuhWrmyBClvvnuK0p6LJjHgOgIf1DqXpzcZylWVSR+
+	TO/O7bKIqYHXQEkFlXBvOJwfob6pxFYA=
+X-Google-Smtp-Source: AGHT+IHHbZjicZ3sFbJ4BxVo2WPXbTi7fbOErNmBPLm9Uddaz/xQuR0VLEpYetIBm7OsIaMZnqsSlAyT7lePeGLz64k=
+X-Received: by 2002:a05:6402:42c8:b0:604:bf4e:852d with SMTP id
+ 4fb4d7f45d1cf-60a1cd2fac7mr2686937a12.12.1750430648800; Fri, 20 Jun 2025
+ 07:44:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1750301674.git.zhoubinbin@loongson.cn>
+References: <20250611014651.3042734-1-maobibo@loongson.cn> <20250611014651.3042734-5-maobibo@loongson.cn>
+ <CAAhV-H7ehdkKwzsFNAaX+r5eXLknvskyXLPDKei2A55LoSiJMA@mail.gmail.com> <5f1b9068-2d3d-2f89-4f72-85b021537f58@loongson.cn>
+In-Reply-To: <5f1b9068-2d3d-2f89-4f72-85b021537f58@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 20 Jun 2025 22:43:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
+X-Gm-Features: Ac12FXw2U2SLyEPOk2oakF_Oj26FqKRq_batQU44_B8SUUMV9IcbFMjQDv_X0M4
+Message-ID: <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
+Subject: Re: [PATCH v3 4/9] LoongArch: KVM: INTC: Check validation of num_cpu
+ from user space
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 10:06:26AM +0800, Binbin Zhou wrote:
-> Hi all:
-> 
-> This patch set introduces the Loongson-2K BMC.
-> 
-> It is a PCIe device present on servers similar to the Loongson-3 CPUs.
-> And it is a multifunctional device (MFD), such as display as a sub-function
-> of it.
-> 
-> For IPMI, according to the existing design, we use software simulation to
-> implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+On Fri, Jun 20, 2025 at 9:43=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+>
+>
+> On 2025/6/19 =E4=B8=8B=E5=8D=884:46, Huacai Chen wrote:
+> > Hi, Bibo,
+> >
+> > On Wed, Jun 11, 2025 at 9:47=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >> The maximum supported cpu number is EIOINTC_ROUTE_MAX_VCPUS about
+> >> irqchip eiointc, here add validation about cpu number to avoid array
+> >> pointer overflow.
+> >>
+> >> Cc: stable@vger.kernel.org
+> >> Fixes: 1ad7efa552fd ("LoongArch: KVM: Add EIOINTC user mode read and w=
+rite functions")
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>   arch/loongarch/kvm/intc/eiointc.c | 18 +++++++++++++-----
+> >>   1 file changed, 13 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/in=
+tc/eiointc.c
+> >> index b48511f903b5..ed80bf290755 100644
+> >> --- a/arch/loongarch/kvm/intc/eiointc.c
+> >> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> >> @@ -798,7 +798,7 @@ static int kvm_eiointc_ctrl_access(struct kvm_devi=
+ce *dev,
+> >>          int ret =3D 0;
+> >>          unsigned long flags;
+> >>          unsigned long type =3D (unsigned long)attr->attr;
+> >> -       u32 i, start_irq;
+> >> +       u32 i, start_irq, val;
+> >>          void __user *data;
+> >>          struct loongarch_eiointc *s =3D dev->kvm->arch.eiointc;
+> >>
+> >> @@ -806,7 +806,12 @@ static int kvm_eiointc_ctrl_access(struct kvm_dev=
+ice *dev,
+> >>          spin_lock_irqsave(&s->lock, flags);
+> >>          switch (type) {
+> >>          case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_NUM_CPU:
+> >> -               if (copy_from_user(&s->num_cpu, data, 4))
+> >> +               if (copy_from_user(&val, data, 4) =3D=3D 0) {
+> >> +                       if (val < EIOINTC_ROUTE_MAX_VCPUS)
+> >> +                               s->num_cpu =3D val;
+> >> +                       else
+> >> +                               ret =3D -EINVAL;
+> > Maybe it is better to set s->num_cpu to EIOINTC_ROUTE_MAX_VCPUS (or
+> > other value) rather than keep it uninitialized. Because in other
+> > places we need to check s->num_cpu and an uninitialized value may
+> > cause undefined behavior.
+> There is error return value -EINVAL, VMM should stop running and exit
+> immediately if there is error return value with the ioctl command.
+>
+> num_cpu is not uninitialized and it is zero by default. If VMM does not
+> care about the return value, VMM will fail to get coreisr information in
+> future.
+If you are sure you can keep it as is. Then please resend patch
+1,2,3,4,5,9 as a series because they are all bug fixes that should be
+merged as soon as possible. And in my own opinion, "INTC" can be
+dropped in the title.
 
-The IPMI portions look good to me.  You will need acks from the MFD
-maintainer and I can get it in through my tree, or I can give you:
 
-For IPMI portions:
-Acked-by: Corey Minyard <corey@minyard.net>
+Huacai
 
-and it could go in through the MFD tree.
-
-Thanks,
-
--corey
-
-> 
-> Also since both host side and BMC side read and write kcs status, we use
-> fifo pointer to ensure data consistency.
-> 
-> For the display, based on simpledrm, the resolution is read from a fixed
-> position in the BMC since the hardware does not support auto-detection
-> of the resolution. Of course, we will try to support multiple
-> resolutions later, through a vbios-like approach.
-> 
-> Especially, for the BMC reset function, since the display will be
-> disconnected when BMC reset, we made a special treatment of re-push.
-> 
-> Based on this, I will present it in four patches:
-> patch-1: BMC device PCI resource allocation.
-> patch-2: BMC reset function support
-> patch-3: IPMI implementation
-> 
-> Thanks.
-> 
-> -------
-> V5:
-> - Rebase on linux-ipmi/for-next branch.
-> - Rebase on linux-mfd/for-mfd-next branch.
-> Patch (1/3):
->  - Rename ls2kbmc-mfd.c to ls2k-bmc-core.c;
->  - Rename MFD_LS2K_BMC to MFD_LS2K_BMC_CORE and update its help text.
-> Patch (3/3):
->  - Add an IPMI_LS2K config in the IPMI section that enables the IPMI
->    interface and selects MFD_LS2K_BMC_CORE.
-> 
-> Link to V4:
-> https://lore.kernel.org/all/cover.1749731531.git.zhoubinbin@loongson.cn/
-> 
-> V4:
-> - Add Reviewed-by tag;
-> - Change the order of the patches.
-> Patch (1/3):
->   - Fix build warning by lkp: Kconfig tristate -> bool
->     - https://lore.kernel.org/all/202505312022.QmFmGE1F-lkp@intel.com/
->  - Update commit message;
->  - Move MFD_LS2K_BMC after MFD_INTEL_M10_BMC_PMCI in Kconfig and
->    Makefile.
-> Patch (2/3):
->   - Remove unnecessary newlines;
->   - Rename ls2k_bmc_check_pcie_connected() to
->     ls2k_bmc_pcie_is_connected();
->   - Update comment message.
-> Patch (3/3):
->   - Remove unnecessary newlines.
-> 
-> Link to V3:
-> https://lore.kernel.org/all/cover.1748505446.git.zhoubinbin@loongson.cn/
-> 
-> V3:
-> Patch (1/3):
->  - Drop "MFD" in title and comment;
->  - Fromatting code;
->  - Add clearer comments.
-> Patch (2/3):
->  - Rebase linux-ipmi/next tree;
->  - Use readx()/writex() to read and write IPMI data instead of structure
->    pointer references;
->  - CONFIG_LOONGARCH -> MFD_LS2K_BMC;
->  - Drop unused output.
-> Patch (3/3):
->  - Inline the ls2k_bmc_gpio_reset_handler() function to ls2k_bmc_pdata_initial();
->  - Add clearer comments.
->  - Use proper multi-line commentary as per the Coding Style documentation;
->  - Define all magic numbers.
-> 
-> Link to V2:
-> https://lore.kernel.org/all/cover.1747276047.git.zhoubinbin@loongson.cn/
-> 
-> V2:
-> - Drop ls2kdrm, use simpledrm instead.
-> Patch (1/3):
->  - Use DEFINE_RES_MEM_NAMED/MFD_CELL_RES simplified code;
->  - Add resolution fetching due to replacing the original display
->    solution with simpledrm; 
->  - Add aperture_remove_conflicting_devices() to avoid efifb
->    conflict with simpledrm.
-> Patch (3/3):
->  - This part of the function, moved from the original ls2kdrm to mfd;
->  - Use set_console to implement the Re-push display function.
-> 
-> Link to V1:
-> https://lore.kernel.org/all/cover.1735550269.git.zhoubinbin@loongson.cn/
-> 
-> Binbin Zhou (3):
->   mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
->   mfd: ls2kbmc: Add Loongson-2K BMC reset function support
->   ipmi: Add Loongson-2K BMC support
-> 
->  drivers/char/ipmi/Kconfig        |   7 +
->  drivers/char/ipmi/Makefile       |   1 +
->  drivers/char/ipmi/ipmi_si.h      |   7 +
->  drivers/char/ipmi/ipmi_si_intf.c |   4 +
->  drivers/char/ipmi/ipmi_si_ls2k.c | 189 ++++++++++++
->  drivers/mfd/Kconfig              |  11 +
->  drivers/mfd/Makefile             |   2 +
->  drivers/mfd/ls2k-bmc-core.c      | 485 +++++++++++++++++++++++++++++++
->  8 files changed, 706 insertions(+)
->  create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
->  create mode 100644 drivers/mfd/ls2k-bmc-core.c
-> 
-> 
-> base-commit: 8ffcb7560b4a15faf821df95e3ab532b2b020f8c
-> -- 
-> 2.47.1
-> 
+>
+> Regards
+> Bibo Mao
+> >
+> >
+> > Huacai
+> >> +               } else
+> >>                          ret =3D -EFAULT;
+> >>                  break;
+> >>          case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_FEATURE:
+> >> @@ -835,7 +840,7 @@ static int kvm_eiointc_regs_access(struct kvm_devi=
+ce *dev,
+> >>                                          struct kvm_device_attr *attr,
+> >>                                          bool is_write)
+> >>   {
+> >> -       int addr, cpuid, offset, ret =3D 0;
+> >> +       int addr, cpu, offset, ret =3D 0;
+> >>          unsigned long flags;
+> >>          void *p =3D NULL;
+> >>          void __user *data;
+> >> @@ -843,7 +848,7 @@ static int kvm_eiointc_regs_access(struct kvm_devi=
+ce *dev,
+> >>
+> >>          s =3D dev->kvm->arch.eiointc;
+> >>          addr =3D attr->attr;
+> >> -       cpuid =3D addr >> 16;
+> >> +       cpu =3D addr >> 16;
+> >>          addr &=3D 0xffff;
+> >>          data =3D (void __user *)attr->addr;
+> >>          switch (addr) {
+> >> @@ -868,8 +873,11 @@ static int kvm_eiointc_regs_access(struct kvm_dev=
+ice *dev,
+> >>                  p =3D &s->isr.reg_u32[offset];
+> >>                  break;
+> >>          case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
+> >> +               if (cpu >=3D s->num_cpu)
+> >> +                       return -EINVAL;
+> >> +
+> >>                  offset =3D (addr - EIOINTC_COREISR_START) / 4;
+> >> -               p =3D &s->coreisr.reg_u32[cpuid][offset];
+> >> +               p =3D &s->coreisr.reg_u32[cpu][offset];
+> >>                  break;
+> >>          case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
+> >>                  offset =3D (addr - EIOINTC_COREMAP_START) / 4;
+> >> --
+> >> 2.39.3
+> >>
+>
