@@ -1,131 +1,153 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3079D1F8690
-	for <loongarch@lists.linux.dev>; Mon, 23 Jun 2025 09:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE04218E9F
+	for <loongarch@lists.linux.dev>; Mon, 23 Jun 2025 11:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671239; cv=none; b=foZbBkTAqUDURcjXi2QePi+rVGuHK51gvfOG+e+NEi3lCc934Haf2yK+Ylc/xAdE4GZOL/1GR05kb+cmPsUqrVUnX5f0uY5uhB91RnIjdCH8y+ipl9JKxFdlrynb797QIP/NwUkodr+l+F3tHah5E5bzM/2IAi7Cn5Z6nkQBKu0=
+	t=1750677893; cv=none; b=gAxrV8I01HifOq9EcZ5JOftwPENk9dJJsVEPKbq8PdKaft1ilcvl6ybudP4wyROYPHe/Xiq1aqQIbsrcEWU6JnBPRnJdBdrT6mrZbR/K4eMt/URpJMnbgPHfxsIB+jPBnITyBgkQAL+QuPGpMkDKt2mjuEyZK6xt/ZxXZkXRIjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671239; c=relaxed/simple;
-	bh=KQQkkGa+FOJrfi+7O0ocknbs6Q+TgN71Lv+m1UTik/g=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=J/pK7XsmfXIheS+joJAoemUbW/CPb9xDKnVukwtoUA0ETJzZ9CX8IzC+hVXZLLRPg0DhU+OJj9IAQCP2E1wcRV8eDwVPsfNvdEOPiz09g4/GRkYqClUvl47W9KwjhcJaY0rVf/wgbkQGt5o9x8TDj/TblpWYgPOXHejjzQYwRKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8AxQK2BH1lotoobAQ--.45016S3;
-	Mon, 23 Jun 2025 17:33:53 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMBx3MR+H1lo9iwnAQ--.51623S3;
-	Mon, 23 Jun 2025 17:33:52 +0800 (CST)
-Subject: Re: [PATCH v4 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
- kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
- jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
- gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
- <20250610114252.21077-3-zhangtianyang@loongson.cn> <87o6uris6p.ffs@tglx>
- <9c60326b-f7bd-0b36-3bc5-0ad7d19690f1@loongson.cn> <87v7omooag.ffs@tglx>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <fceb603c-6072-2941-15d5-56c8a4b4c32c@loongson.cn>
-Date: Mon, 23 Jun 2025 17:33:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1750677893; c=relaxed/simple;
+	bh=P5Sl98y38xvSSFCfZCfnoyyg8/BK5OPvXyrI5MLUPNU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RIAYjE4WDyAZU0f32Mhrr2MAEl2D5dOoUhJ1FtPDVRiSxxkERhEzGeZi1XucViqXaaizSAi2dVhnY+k0pE3H+kCuJMgfr5bNAM292SP/Umr+bZ2ucFbzyKYFhhnK8CRc4e/jxsSX+M4Pc+tkX987CO6kTLdjf6BZvdukazsSM7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CAs4NmHW; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CAs4NmHW"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso3486336276.2
+        for <loongarch@lists.linux.dev>; Mon, 23 Jun 2025 04:24:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750677890; x=1751282690; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=S3F6ZEyg8xrhvs90KaNs4ZQkdGcaIaLATUUJxYt5iNs=;
+        b=CAs4NmHWWrfyBYsa8CfZF+QmhHjnf5mkfMnOa3Gxwz5/bzLNKPVWnSbypnJ/ZQc3u8
+         Fwp4vBw5CRZdATqnYMt3H3fzQonXQ76ZOWlPBpwugVn9dhcgD+sy513kgLhuBErPioDT
+         odRbj3KyQHiH3kX/pQn+TSN2168a6iL90lwLGEwAvOCC8rML1HnIh1drrX0hJ8xiLzwA
+         RuMz8tFMi0Zhi8Ppd72WePUGc1dPfr711BQYQFRTsRmGL8EEOLsjweeUEiUHkGCfG29x
+         l+3+2tR3/KfTUC1SEZ0DfNNbvHSqvPqTIvxmAwSQwFYiJoA2hdUYl6hVU1d3XffLjzV5
+         WFBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750677890; x=1751282690;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S3F6ZEyg8xrhvs90KaNs4ZQkdGcaIaLATUUJxYt5iNs=;
+        b=SKjbAg1hwoqFQljsWhv1HOceQcagQJqoR5Meusg96EgUyERFbG/56cFuNieKqNbzyg
+         Z/VZSZt/6hRkk54b4f0v7IzgF3HzEojxN0sM6vwxhg1vVYZYU6oHqs9RZYGQcEGQ4cVf
+         vAtXUzJDL44t3ilJAriAdShH6tzMl/TPCdwen6isErPpWcyK30Lvlt2zFO6IekHPl3Su
+         ksPHluk4m96JeU0nLo/6lVQzYoxqG+ivUy8WCphWX5+XPIimwRAXlNQweNHi4Elg715/
+         U+oRmq8QtQd3DYg19uAxG0iei4QFZ5JyXT+3rySBjXZA4xWoXBSAoPsUqYq3OmzmIqyK
+         vvmA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/e3hzcbVwbYOpEGCQfeEdV0Br+WK95w6zh8uKQJpnOW15koczxxODt90qwKP8es4m4y5XTlE9Cd0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwoRMoYaIZaFRd5fIdKRQB93kb0xmwslBWkRulXjGZCtCeR19rC
+	xmjq/cOk+DbrnPH5kafPovE9XCBk+LQZRLYGVLbzNWqsS0LP8NXauWTNVIvDXubreC9j4uR/BFq
+	TFPK+BKh08PlZuuT+qZ5QQuUIiWGycObs3uxzK1QshQ==
+X-Gm-Gg: ASbGncvjbBR91+YE/6XIkUA/jSJxob5IZIcSMPv3t8FSJ/zhxwXZShWQH2GiPVWZTdS
+	q0s+Bnd9QT6s9GC55q26701X0QzjhQBVh+ClBR9fxQ1Fvhoyu8AQKOzMozwjSfqogzm+fDoqpaW
+	gxhwYlfPb200L6jj9OhIS67V9nMX4/fhE5kEJk2jqUmoJ0
+X-Google-Smtp-Source: AGHT+IFBGQTkGwfG1sCUA1pxQDur/r09SkjVSlKnf4sftIQL2kU67dbH4LwgXNNxgqaZMbnr9M1AlBfGJTvOJn3cZQk=
+X-Received: by 2002:a05:6902:110b:b0:e84:2761:9e57 with SMTP id
+ 3f1490d57ef6-e842bc9cb1bmr15596380276.20.1750677890449; Mon, 23 Jun 2025
+ 04:24:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87v7omooag.ffs@tglx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMBx3MR+H1lo9iwnAQ--.51623S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tF1rur1fGFWDJr45Xw13Awc_yoW8CF47p3
-	93K3Wxta1vqr4I9r12vanFvF97KF4kJay3C34kGryjv34qqF1agFs7XrWFkF18urs7Xryj
-	vrWY9rWq9wn8XabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8uc_3UUUU
-	U==
+References: <cover.1750216134.git.zhoubinbin@loongson.cn> <aa9cfb9707334cd2e56692397dd4f54c418262ce.1750216134.git.zhoubinbin@loongson.cn>
+In-Reply-To: <aa9cfb9707334cd2e56692397dd4f54c418262ce.1750216134.git.zhoubinbin@loongson.cn>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 23 Jun 2025 13:24:13 +0200
+X-Gm-Features: AX0GCFtUkm2_qzcRRHn7M8CtdXK3QWv2eyxlNDa6aJAl_8XE--LnCn5KSCmtfA4
+Message-ID: <CAPDyKFocFfamgdB96xTCfBjLTFtgn2yrdZPTQZ0S5qW7Q2uvGg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC
+ controller driver
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-mmc@vger.kernel.org, wanghongliang@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Thomas
-
-在 2025/6/23 下午4:27, Thomas Gleixner 写道:
-> On Mon, Jun 23 2025 at 10:45, Tianyang Zhang wrote:
->> 在 2025/6/13 下午11:20, Thomas Gleixner 写道:
->>> On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
->>>
->>>> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
->>> Why is this before the barrier? The barrier does not do anything about
->>> this and you can simplify this. See below.
->>>
->>> And as there is no rmb() counterpart you want to explain that this is
->>> serializing against the hardware.
->>>> +	 */
->>>> +	wmb();
->>>> +
->>>> +	write_queue_tail(rqueue->node, tail);
->>> 	write_queue_tail(rqueue->node, (tail + 1) & INVALID_QUEUE_MASK);
->>>
->>> No?
->> The reason fo coding here is that during testing, it was found that a
->> barrier is needed between the update of temporary variable 'tail' and
->> the operation of register with 'write_queue_tail' , otherwise
->> write_queue_tail will probabilistically fail to obtain the correct
->> value.
-> How so?
+On Wed, 18 Jun 2025 at 10:08, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
 >
-> tail is the software managed part of the ringbuffer which is shared with
-> the hardware, right?
+> This patch describes the two MMC controllers of the Loongson-2K2000 SoC,
+> one providing an eMMC interface and the other exporting an SD/SDIO
+> interface.
 >
-> So even if the compiler would be allowed to reevalutate tail after the
-> barrier (it is NOT), then tail would still contain the same value as
-> before, no?
+> Compared to the Loongson-2K1000's MMC controllers, their internals are
+> similar, except that we use an internally exclusive DMA engine instead of
+> an externally shared APBDMA engine.
 >
-> The wmb() is required to ensure that the hardware can observe the full
-> write of the command _before_ it can observe the update to the tail
-> index.
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  drivers/mmc/host/loongson2-mmc.c | 212 +++++++++++++++++++++++++++++++
+>  1 file changed, 212 insertions(+)
 >
-> Anything else is voodoo.
->
-> Thanks,
->
->          tglx
+> diff --git a/drivers/mmc/host/loongson2-mmc.c b/drivers/mmc/host/loongson2-mmc.c
+> index 872f5dc21b21..75144221a821 100644
+> --- a/drivers/mmc/host/loongson2-mmc.c
+> +++ b/drivers/mmc/host/loongson2-mmc.c
 
-In my previous understanding, tail'value is actually a part of 'full 
-write of the command '.
+[...]
 
-We must ensure that tail is updated to the correct value first, and then 
-write this value
+> +static void loongson2_mmc_dll_mode_init(struct loongson2_mmc_host *host)
+> +{
+> +       u32 val, pad_delay, delay, ret;
+> +
+> +       regmap_update_bits(host->regmap, LOONGSON2_MMC_REG_SEL,
+> +                          LOONGSON2_MMC_SEL_DATA, LOONGSON2_MMC_SEL_DATA);
+> +
+> +       val = FIELD_PREP(LOONGSON2_MMC_DLLCTL_TIME, 0xc8)
+> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_INCRE, 0x1)
+> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_START, 0x1)
+> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_CLK_MODE, 0x1)
+> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_START_BIT, 0x1)
+> +           | FIELD_PREP(LOONGSON2_MMC_DLLCTL_TIME_BPASS, 0xf);
+> +
+> +       regmap_write(host->regmap, LOONGSON2_MMC_REG_DLLCTL, val);
+> +
+> +       ret = regmap_read_poll_timeout(host->regmap, LOONGSON2_MMC_REG_DLLVAL, val,
+> +                                      (val & LOONGSON2_MMC_DLLVAL_DONE), 0, 4000);
 
-into the register (perhaps by adding wmb in write_queue_tail ).
+Please use a define to specify the 4000us timeout.
 
-In other words, this is originally to prevent the write register 
-instruction from being executed
+> +       if (ret < 0)
+> +               return;
+> +
+> +       regmap_read(host->regmap, LOONGSON2_MMC_REG_DLLVAL, &val);
+> +       pad_delay = FIELD_GET(GENMASK(7, 1), val);
+> +
+> +       delay = FIELD_PREP(LOONGSON2_MMC_DELAY_PAD, pad_delay)
+> +             | FIELD_PREP(LOONGSON2_MMC_DELAY_RD, pad_delay + 1);
+> +
+> +       regmap_write(host->regmap, LOONGSON2_MMC_REG_DELAY, delay);
+> +}
 
-out of order before updating tail.
+[...]
 
-The above is just my personal understanding
+> +/*
+> + * This is a controller hardware defect. Single/multiple block write commands
+> + * must be sent after the TX FULL flag is set, otherwise a data timeout interrupt
+> + * will occur.
+> + */
+> +static void ls2k2000_mmc_fix_data_timeout(struct loongson2_mmc_host *host,
+> +                                         struct mmc_command *cmd)
+> +{
+> +       int val;
+> +
+> +       if (cmd->opcode != MMC_WRITE_BLOCK && cmd->opcode != MMC_WRITE_MULTIPLE_BLOCK)
+> +               return;
+> +
+> +       regmap_read_poll_timeout(host->regmap, LOONGSON2_MMC_REG_FSTS, val,
+> +                                (val & LOONGSON2_MMC_FSTS_TXFULL), 0, 500);
 
-Thanks
+Ditto.
 
-Tianyang
+[...]
 
-
+Kind regards
+Uffe
