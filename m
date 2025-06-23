@@ -1,88 +1,174 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B922580E1
-	for <loongarch@lists.linux.dev>; Mon, 23 Jun 2025 15:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8A52D12F4
+	for <loongarch@lists.linux.dev>; Mon, 23 Jun 2025 20:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691314; cv=none; b=J08mNRgm55wVYKCchJDS4R8oaUzQNPq/DpJtCoN1tvfRwNWmyncO56p1b7PqnezcW6rAEYmhOc1W6JcrdDRldpwqfem+zM7WfSExBIsA18wjNEfc8Jpqb4nQ7WkSAhYldlwbeG7OAS0vSONuUYvXybSiLWXUVGtNHyBk++X7jjM=
+	t=1750709136; cv=none; b=K31O3nWp0D7B5QohKJWnDHInm8zbdz/w9U4SorOHObyzDqkNloshIJUjefDYyEXmPHG3rfBKhgAXe5O2+LzxB8sBpfSSm0oxmtgpbjMEpqHluV/TzDpMztbLigwLRdC4uhqmpmXMmrkMajmsJsmBn+PiAehC6hnr4pJefdqRi9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691314; c=relaxed/simple;
-	bh=a71/2Ue33rw39RNd+lnzupReDwpTHqZ0pqweFgks0U8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tYqctci64gZIYgIhissc2Y1On7H0ECgDgHCGTCYQNG1+3r4Eb3+Ghkp88AQnF3k2b89E8y0Kd7GWD2FsMeTsRkm08bhSxnfg33uJjxOGaCznF88PaMNf+jtpgVp3yO4bHtjbS3N5dL0HeIK+tZ4dhSiTdcHfolyJKAQisShsy44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=G7dTtAD4; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1750709136; c=relaxed/simple;
+	bh=D8uHjK24h11d4qSJcEP4C96xsm8K+FoZ8/horBvHnf8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OHAToZ9YQ8Wys7z9IOLo/NMiGIF0eczXa1KnoWJZZO/04bQMMZuqoPuhxCfGVseeMwwty0nJgEhvLZZQeteU7hGC6JzPQs9CrP6Mtqbh1naf08PxxBPcZ8D8HLSlKn8QUtw7s/PSrsYPm1E3oM5m/UMDMlZqgSrwaN/xZWEgbr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FeK0768e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mp/3JIaa; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="G7dTtAD4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1750690805;
-	bh=jLvrxNOLfc3fbfwBKLMN+s9XeJSBspgyoztJCta+7KA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=G7dTtAD4paR3Aidw88ZgTEGiysPNxyQQXKctAEaPLfZxvlwHO7cGpnWKpdUBnWpAM
-	 6vzcFS99bQeYkfMVlW0g+8hNJ5v1ucv0o4Eh6B74fR+25YwgjNdBgmMEQbCu0Lbr98
-	 Glur/qvFbunCzQHlj4derg77OyhNbX1HLyIOm8rA=
-Received: from [IPv6:2409:8a4c:e21:5211::e90] (unknown [IPv6:2409:8a4c:e21:5211::e90])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A708A65F62;
-	Mon, 23 Jun 2025 10:59:58 -0400 (EDT)
-Message-ID: <9246b226e356ea0db044a592fed8853dd593f7f7.camel@xry111.site>
-Subject: Re: [PATCH] cpufreq: loongson3: Support older SMC firmware
-From: Xi Ruoyao <xry111@xry111.site>
-To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, "Rafael J. Wysocki" <rafael@kernel.org>, Viresh
- Kumar	 <viresh.kumar@linaro.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Mingcong Bai <jeffbai@aosc.io>, 
- Kexy Biscuit <kexybiscuit@aosc.io>, loongarch@lists.linux.dev,
- linux-pm@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Mon, 23 Jun 2025 22:59:50 +0800
-In-Reply-To: <20250623123321.5622-1-ziyao@disroot.org>
-References: <20250623123321.5622-1-ziyao@disroot.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FeK0768e";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mp/3JIaa"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750709132;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eMM6QwCsCKxnWFFi+r7c6XK6N7v8X1dMyHwbTGK2fn0=;
+	b=FeK0768eH/1WBYabmyCN/mg4CIMYw60exRcAJ3J3y0LuEVW+9pVUf+SpuCWD3AnKUCRN55
+	jeTl5yzGkZanoqeyjxLrSl2dRPPCtuzWnCdw64hpUAsstc2zuqJnr9GjsvC/Jpzu+pHILb
+	45EeFp36YmkC6mGU11yBI3Pjkx7rCxU6iJzd1wiuUVkb1gnN4vfbrOyta/lw2mERRfj3lu
+	JDK/OT+zU5wP2CHXZdAOHQJbfjqnEjG6Eo36uq5KDZypRHpOUPkpD0YXnZHSQGgJE+Orfj
+	IlYZ/4AHOxTCGmOB44GgsZAGDx06bYZXj8S326flTPnZMxXC7VC6z90KLvjdfg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750709132;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eMM6QwCsCKxnWFFi+r7c6XK6N7v8X1dMyHwbTGK2fn0=;
+	b=mp/3JIaavtG/Tx0bjkqXU3kT7YAWlNr6GVGZjS0cIpIzgrzsyT4hvL4PFc9edpg5JhQL+q
+	dllKV1wj5PlG3fDg==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+In-Reply-To: <fceb603c-6072-2941-15d5-56c8a4b4c32c@loongson.cn>
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+ <20250610114252.21077-3-zhangtianyang@loongson.cn> <87o6uris6p.ffs@tglx>
+ <9c60326b-f7bd-0b36-3bc5-0ad7d19690f1@loongson.cn> <87v7omooag.ffs@tglx>
+ <fceb603c-6072-2941-15d5-56c8a4b4c32c@loongson.cn>
+Date: Mon, 23 Jun 2025 22:05:31 +0200
+Message-ID: <87jz52nrzo.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-06-23 at 12:33 +0000, Yao Zi wrote:
+On Mon, Jun 23 2025 at 17:33, Tianyang Zhang wrote:
+> =E5=9C=A8 2025/6/23 =E4=B8=8B=E5=8D=884:27, Thomas Gleixner =E5=86=99=E9=
+=81=93:
+>> tail is the software managed part of the ringbuffer which is shared with
+>> the hardware, right?
+>>
+>> So even if the compiler would be allowed to reevalutate tail after the
+>> barrier (it is NOT), then tail would still contain the same value as
+>> before, no?
+>>
+>> The wmb() is required to ensure that the hardware can observe the full
+>> write of the command _before_ it can observe the update to the tail
+>> index.
+>>
+>> Anything else is voodoo.
+>>
+>> Thanks,
+>>
+>>          tglx
+>
+> In my previous understanding, tail'value is actually a part of 'full=20
+> write of the command '.
 
-/* snip */
+Of course. The hardware observes the tail value. If it is not updated
+then the command is not executed. But these are two distinct things:
 
-> -static struct cpufreq_driver loongson3_cpufreq_driver =3D {
-> +static struct cpufreq_driver loongson3_cpufreq_smc0_driver =3D {
-> =C2=A0	.name =3D "loongson3",
+The invalidate command is written to a location in the command buffer
+which is determined by tail:
 
-How about using different names for the drivers?
+	inv_addr =3D (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct i=
+rde_inv_cmd));
+	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
 
-> =C2=A0	.flags =3D CPUFREQ_CONST_LOOPS,
-> -	.init =3D loongson3_cpufreq_cpu_init,
-> +	.init =3D loongson3_cpufreq_cpu_smc0_init,
-> =C2=A0	.exit =3D loongson3_cpufreq_cpu_exit,
-> =C2=A0	.online =3D loongson3_cpufreq_cpu_online,
-> =C2=A0	.offline =3D loongson3_cpufreq_cpu_offline,
-> -	.get =3D loongson3_cpufreq_get,
-> -	.target_index =3D loongson3_cpufreq_target,
-> +	.target_index =3D loongson3_cpufreq_smc0_target,
-> +	.verify =3D cpufreq_generic_frequency_table_verify,
-> +	.suspend =3D cpufreq_generic_suspend,
-> +};
-> +
-> +static struct cpufreq_driver loongson3_cpufreq_smc1_driver =3D {
-> +	.name =3D "loongson3",
+requeue::base points to an array of invalidate commands. The array
+size is INVALID_QUEUE_SIZE. tail is the position in the array to which
+the software writes the next command. tail is software managed and
+written to a completely different location via write_queue_tail(...):
 
-Tested on a 3A6000 laptop with the schedutil policy.  On idle one core
-is at 2000MHz and other cores are at 250MHz, when building the kernel
-all cores are at 2000MHz.
+static phys_addr_t redirect_reg_base =3D 0x1fe00000;
 
-Tested-by: Xi Ruoyao <xry111@xry111.site>
+#define REDIRECT_REG_BASE(reg, node) \
+	(UNCACHE_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | =
+(reg))
+#define	redirect_reg_queue_tail(node)	REDIRECT_REG_BASE(LOONGARCH_IOCSR_RED=
+IRECT_CQT, (node))
+#define read_queue_tail(node)		(*((u32 *)(redirect_reg_queue_tail(node))))
+#define write_queue_tail(node, val)	(*((u32 *)(redirect_reg_queue_tail(node=
+))) =3D (val))
 
---=20
-Xi Ruoyao <xry111@xry111.site>
+The hardware maintains the head index. It's the last command index the
+hardware processed. When the hardware observes that head !=3D tail then it
+processes the next entry and after completion it updates head with the
+next index. This repeats until head =3D=3D tail.
+
+> We must ensure that tail is updated to the correct value first, and
+> then write this value into the register (perhaps by adding wmb in
+> write_queue_tail ).
+
+No. The local variable 'tail' is purely local to the CPU and the
+invalidation hardware does not even know that it exists.
+
+There are two things which are relevant to the hardware:
+
+   1) command is written to the hardware visible array at index of tail
+
+   2) hardware visible tail memory (register) is updated to tail + 1
+
+The memory barrier is required to prevent that #2 is written to the
+hardware _before_ #1 completed and is fully visible to the hardware.
+
+> In other words, this is originally to prevent the write register=20
+> instruction from being executed out of order before updating tail.
+
+No. The barrier is solely for the above #1 vs. #2 ordering.
+
+There is a difference between program flow ordering and memory ordering.
+
+The hardware _CANNOT_ execute the write _before_ the value it writes is
+computed. That's enforced by program flow order.
+
+So it's always guaranteed that the CPU executes
+
+   tail + 1
+
+_before_ executing the write to the register because that's a program
+order dependency.
+
+If that would not be guaranteed, then your CPU would have more serious
+problems than this piece of code. It simply would not even survive the
+first five instructions in the boot loader.
+
+But what's not guaranteed is that consecutive writes become visible to
+other parts of the system (other CPUs, the invalidation hardware, ....)
+in the same consecutive order.
+
+To ensure that ordering you need a WMB(). If you would have CPU to CPU
+communication then you would need a RMB() on the reader side to ensure
+that the command is not read before the tail. In your case the hardware
+side takes care of that.
+
+> The above is just my personal understanding
+
+Which might need some slight adjustments :)
+
+Thanks,
+
+        tglx
+
+
