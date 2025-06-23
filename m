@@ -1,90 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA2F148827
-	for <loongarch@lists.linux.dev>; Sun, 22 Jun 2025 13:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EDA74C7F
+	for <loongarch@lists.linux.dev>; Mon, 23 Jun 2025 01:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750597917; cv=none; b=lbAu+LEC/EmkiD4t7pgWlIqYVKEzc/yoAjaggOKAqSKtCx76mMAWh+Aq63Om9B6jVzEXvTuUZC96LEGBNPuoItD+xlSBMObVbRewFtJ3ykFrrCBcPmOyOh5gNXwo2BKmUpnXBvO/QJrqPTyyRFDUXUt3bwGOxXsXvoDQXCg7Wlo=
+	t=1750641268; cv=none; b=gQ/GLmAgIcYhLfCfH6IwIaRR6R3IgQr/tkemZNe8MP6I40OhAjedRvI3cjTzmpzdKl9RyZ4pVDJcmYahCoWRTTwK9ETIRZ/stqjmkhW/Cz1jnIg3Cjdm4FvjpCRx6Sx++RUABL9TELmgD8QIq9GXBtS0BuZMCIeJ8hcBYKRyirM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750597917; c=relaxed/simple;
-	bh=iFTfBogO7Ou6dRiZk4dXS5Xfb9kUSJe7BRtNpxUsngQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AE6ARbwwSmYill8ncQ+xXmV1mNZ5bB+3gJ0sMMEZhw8+qWqFsf2yMhB+KcCnnW324e0j7BfNT4266rwkRSeJUNdAeqfNlFPPJfZ8f3YEBS6ok8UvzjUCki85HalUGxWUEIN2+KVtUqr0gNi+uFCCId/n8ozRrf1SeBgSqdzRmrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ktbrle9t; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ktbrle9t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39EA7C4CEF1
-	for <loongarch@lists.linux.dev>; Sun, 22 Jun 2025 13:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750597917;
-	bh=iFTfBogO7Ou6dRiZk4dXS5Xfb9kUSJe7BRtNpxUsngQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ktbrle9tgQ0Yh/RcyjFd4TYWZaFmKdCVBAEFkwa7BfUSGEdBFDxZuz+VVCrVwucSG
-	 mj+LXayg2pbut5kZ9Hl5KYktVrKosVVhiWUlLGY1sYKbsCS4nvpPAEuM354mFZyY8b
-	 at4PlTfECuJi0BpJsyByBsmO3FJPAUp3YIV5x+zy3Cd9f/JBPeiyacksF5K8ieW8hW
-	 5vOdu0TvXPTyBq93nKnOLq6HbgRGPxkme6AT9QF8zt38rYR5e5ga0qKezpcyc8Oq6e
-	 Wd4D9d/1QXfHZq3anZawevsTPISu7E9e6oudLK3gtOyMNhKJVm5XheEqaXIGoP/bGE
-	 Wb9ZOL2jjix/A==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso5227286a12.2
-        for <loongarch@lists.linux.dev>; Sun, 22 Jun 2025 06:11:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWKCWCBODRcfBZtG2qGsHiTVqSY8gkTR7Mac0dGvpQLdK4uk4SkU/DV866dE4jPf9R9hOrbdb/KObk=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyw2p/Mqh/LoqFM534gbGekl+/Z3v9+DF1pXTO39CnijGGcuJgh
-	1PnRNQ7tP9dNsD3F0pM+5U8SJ1j48xkF8220+iu0gkqjOvkaxN5tCU2wiji3VfoBsQHaySDNJ6k
-	tZbzuElfXhKzrO2cwugjrjXXi6VxWWWY=
-X-Google-Smtp-Source: AGHT+IGp9Zdaokzz3FwUEoyQYdRXVh7NwJHpk8jxjbFMKjmQdM6VeSLuT3NcA4XIzfjMQ4yJApFLtG9aPRAplFTZyCk=
-X-Received: by 2002:a05:6402:35cb:b0:607:1984:5009 with SMTP id
- 4fb4d7f45d1cf-60a1d167699mr8209874a12.20.1750597915758; Sun, 22 Jun 2025
- 06:11:55 -0700 (PDT)
+	s=arc-20240116; t=1750641268; c=relaxed/simple;
+	bh=7ULXjxBT15KMqSaHyqu0hXJQEiICOMQf/UAcK91OmgA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=XhaLIOXDqs698YLX1CseraRagswjQbQuu65ymtyL7Mi+UyAI+vO2MUimldUGG4hYsolZyP6B0DjNFENmSA6nGjn1uIbb1aZDZLFxARRIX9L8xzFRZakPXNKL7xtW+dALG600aFYeljrhhANNtdi3dHXL5UehUgkgz+z79iYllIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Cxqmppqlho31gbAQ--.20922S3;
+	Mon, 23 Jun 2025 09:14:17 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMCxbsVkqlhoqo4mAQ--.54823S3;
+	Mon, 23 Jun 2025 09:14:15 +0800 (CST)
+Subject: Re: [PATCH v4 0/2] Loongarch irq-redirect supprot
+To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Super User <root@localhost.localdomain>
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+ <87qzznivtp.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <10014657-8756-f31a-c3b4-f175b764346c@loongson.cn>
+Date: Mon, 23 Jun 2025 09:13:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250622110148.3108758-1-chenhuacai@loongson.cn> <2025062206-roundish-thumb-a20e@gregkh>
-In-Reply-To: <2025062206-roundish-thumb-a20e@gregkh>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 22 Jun 2025 21:11:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
-X-Gm-Features: AX0GCFs3ooE5xKM6IATv-GyKY4DmnLVVqYAEs6tbglCMyQwyFvGaUkVD3I9PD14
-Message-ID: <CAAhV-H4S=z5O0+pq-x9X4-VjYsJQVxib+V-35g50WeaivryHLA@mail.gmail.com>
-Subject: Re: [PATCH for 6.1/6.6] platform/loongarch: laptop: Fix build error
- due to backport
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, ziyao@disroot.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87qzznivtp.ffs@tglx>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCxbsVkqlhoqo4mAQ--.54823S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKryrZr4fAFyxuryrWr4Dtrc_yoWDuFg_ur
+	1xtwn8AF1UZrWxZr4S9F43Grs7Za1xurWUtFWvq34jq34rJa4DCF4q9ryS9an8XF43Jrnx
+	Xr90vr15t3sF9osvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUU
+	U==
 
-On Sun, Jun 22, 2025 at 9:10=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Jun 22, 2025 at 07:01:48PM +0800, Huacai Chen wrote:
-> > In 6.1/6.6 there is no BACKLIGHT_POWER_ON definition so a build error
-> > occurs due to recently backport:
-> >
-> >   CC      drivers/platform/loongarch/loongson-laptop.o
-> > drivers/platform/loongarch/loongson-laptop.c: In function 'laptop_backl=
-ight_register':
-> > drivers/platform/loongarch/loongson-laptop.c:428:23: error: 'BACKLIGHT_=
-POWER_ON' undeclared (first use in this function)
-> >   428 |         props.power =3D BACKLIGHT_POWER_ON;
-> >       |                       ^~~~~~~~~~~~~~~~~~
-> >
-> > Use FB_BLANK_UNBLANK instead which has the same meaning.
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  drivers/platform/loongarch/loongson-laptop.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> What commit id is this fixing?
+Hi, Thomas
 
-commit 53c762b47f726e4079a1f06f684bce2fc0d56fba upstream.
+ÔÚ 2025/6/13 ÏÂÎç10:02, Thomas Gleixner Ð´µÀ:
+> On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
+>> From: Super User <root@localhost.localdomain>
+> That's a valid developer name :)
+Sorry , it's a realy stupid fault.....
+>
+>> This series of patches introduces support for interrupt-redirect
+>> controllers, and this hardware feature will be supported on 3C6000
+>> for the first time
+>>
+>> change log:
+>> 	v3->v4
+>> 	1.Provide reasonable comments on the modifications made to IRQ_SET_MASK_OK_DONE	
+> That's not really what I asked for:
+>
+>    "This change really wants to be seperate with a proper explanation and
+>     not burried inside of this pile of changes."
+>
+> Emphasis on _seperate_, which translates to:
+>
+>    "Put it into a seperate patch with a proper changelog explaining this
+>     modification and why it is correct."
+>
+> You still have burried this in the whole pile of unrelated changes.
+>
+> Thanks,
+>
+>          tglx
 
->
-> thanks,
->
-> greg k-h
+Okay, I thought it was just a dissatisfaction with the "inclusion" of 
+some changes. I will try to modify it here
+
+
+Tianyang
+
