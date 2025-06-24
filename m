@@ -1,394 +1,242 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBBBE28DF01
-	for <loongarch@lists.linux.dev>; Tue, 24 Jun 2025 11:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5AE28E607
+	for <loongarch@lists.linux.dev>; Tue, 24 Jun 2025 12:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750766333; cv=none; b=bpNyqFgrpXnzGyKOI4eFdiAvKsAtXj4qWo7qhyXoMpUujrXMNq2A/V89/zbGUNS53yrAT2eNc7S6dBV7v0dJfeTXaXLtH7Isa/VnT/b+NSMXkeVbOPApeKtH3lnUYOVZyOGLY1upFI5lG1RS0WnvnWDcQzo2HHYsElkH1Vtj4Z8=
+	t=1750766956; cv=none; b=IjiQt8QPQ6y+SUPdm+0ge6kmYnL73pZz03mDFrSygeZjphsJI4yKEFabji3AQFiqcajUZWgBz0qxsi5qkT6cGl7/Ms0e2b6ChgDlkKJb8Id17ffeGhkBFwXMyfunLilOdOqvUPXnHdsu9gOKM1Pa9xid/nShOdy9La0tolgpGbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750766333; c=relaxed/simple;
-	bh=jVGbRTu4V7EjyJJMWcr7VZtgN2esZc+ljiC1QayrL28=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h+kQTdQU6YmSQCQo4t26b3sYk7ADop5RnB46/3Jx/14wMJ+z31YT3QeVr8YQgBUze3NHQkgX6StdfjTj+57xklLSb3hcMkerVGP7L3YqKjxIgSVwDNowBZq2oPnxO3smzj/34zrX8se4DorzdqsjTfKmTbL1J0KrgLydXZnG8BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.149])
-	by gateway (Coremail) with SMTP id _____8BxLHL6klpoezocAQ--.28536S3;
-	Tue, 24 Jun 2025 19:58:50 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.149])
-	by front1 (Coremail) with SMTP id qMiowMCx_cb3klporMAoAQ--.62427S2;
-	Tue, 24 Jun 2025 19:58:49 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	wanghongliang@loongson.cn,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v4 4/4] mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC controller driver
-Date: Tue, 24 Jun 2025 19:58:40 +0800
-Message-ID: <1df46b976abd36003bd553ad8a039e5c97369df0.1750765495.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1750765495.git.zhoubinbin@loongson.cn>
-References: <cover.1750765495.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1750766956; c=relaxed/simple;
+	bh=/vAqvIEqJPIi0Da0SxWzNOxYlkISJ45iZrs1A/XX4sQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oXdW+TPOYXtw8kspudmQwsATXLvLVogBSTMN7N37mLg4NZfYxRYJcRg8s+dK5eUmCBVynw2k8Mh76g6XfgNoeIII3bp3iFD1pmuF2UdxmgNHnLklhBQa5/iC2VVNCaOrrPkdxZS/fWc3PAO7oWpp126tarmdzvOUhWAhbYI1wd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjKp9ENB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjKp9ENB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ED4FC4CEF5
+	for <loongarch@lists.linux.dev>; Tue, 24 Jun 2025 12:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750766956;
+	bh=/vAqvIEqJPIi0Da0SxWzNOxYlkISJ45iZrs1A/XX4sQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YjKp9ENB80dSE47uAe2UMoR15d4+qFJrSpCmManquFuhtQabx4Jj37DnElEFqDyF7
+	 pQ3/Q+2vfinH5iCyatHNsenznD07gKqCF5gEeyaV5PZ2ELgrhy5cxp5H7fGB44VBSA
+	 SfUKRSU3+pWkKYnNv1d12BKx1VbBQGp/0iZaST6vN2wT6vnu2R0EEPdvS6aznCYPAO
+	 v6BArlObt8uwaXxYaiHjzNzS63MFz1APnx9CNjEhPI5saCaGW3hLfAACsMN4ArFYzY
+	 RNSuGu0R0MOK6mvoAxmgHnUxUfgjOIgdEp1TF3HDvWX2M9vogpRnmA5g3CueU/WUC1
+	 8ODFhjq4xEGFQ==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6070293103cso9713831a12.0
+        for <loongarch@lists.linux.dev>; Tue, 24 Jun 2025 05:09:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUafZ1KdX/3t8l4LT1jyY60XY+P8lhmOEPLtYuY81ZX2y2LTrcoRxVILlsdqysQAxqhbNoI7vNZb6E=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx0lEbq7A30U9rUzRErvAyXkSbL0gl22Fhf1jEBZMnIDFVuKRE5
+	xZeckt+KsMtx3Lnwed+vofpZginyZPCTQFM/GlJNcjmEfW9yDVjJQnpWETtphIVmCn/o4H6Ag20
+	9yMtm99XHYbWwgpHVxtH2vRitrd6mv9A=
+X-Google-Smtp-Source: AGHT+IEveyCryxR0Z96AZhwmOCgZi8eKVX7D3TPLzSH1SnTfi0MTzrer7b/f9zklQ8gZxs+eyrySxOrrhUkPfF0fehU=
+X-Received: by 2002:a05:6402:1eca:b0:60c:3c23:2950 with SMTP id
+ 4fb4d7f45d1cf-60c3c232b00mr1090202a12.8.1750766954698; Tue, 24 Jun 2025
+ 05:09:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx_cb3klporMAoAQ--.62427S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3ur45Cw17Cr18GFykAr47GFX_yoWkuFy5pF
-	yUA3y3KrW5tF4Sgry0qFWUury3ZrWaqryakFZrWw15Zw17tw18uw1DGFyfXFy5KrykGFyx
-	Za1Du3yDuanrXwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+References: <20250528104032.1237415-1-jianghaoran@kylinos.cn>
+ <CAEyhmHTg3xNMBrSxXQj96pvfD83t6_RHRT_GGtbBzOpAKztDpw@mail.gmail.com> <68ec5a7f3cc63dc19397b3ce0649716e0fac8d49.camel@kylinos.cn>
+In-Reply-To: <68ec5a7f3cc63dc19397b3ce0649716e0fac8d49.camel@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 24 Jun 2025 20:09:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5NrGb9ofaKdqUQ3Qc6RK3c=Ngy6KsxX2GaOqUb0SQRdw@mail.gmail.com>
+X-Gm-Features: AX0GCFtD9EvAyNu7eh4iPlep1b-5L2uW3s302vwNzQO9z7kJzBC_8U1UEiAYI6I
+Message-ID: <CAAhV-H5NrGb9ofaKdqUQ3Qc6RK3c=Ngy6KsxX2GaOqUb0SQRdw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Optimize the calculation method of
+ jmp_offset in the emit_bpf_tail_call function
+To: jianghaoran <jianghaoran@kylinos.cn>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel@xen0n.name, yangtiezhu@loongson.cn, 
+	haoluo@google.com, jolsa@kernel.org, sdf@fomichev.me, kpsingh@kernel.org, 
+	john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org, 
+	eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, 
+	daniel@iogearbox.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch describes the two MMC controllers of the Loongson-2K2000 SoC,
-one providing an eMMC interface and the other exporting an SD/SDIO
-interface.
+Hi, Haoran,
 
-Compared to the Loongson-2K1000's MMC controllers, their internals are
-similar, except that we use an internally exclusive DMA engine instead of
-an externally shared APBDMA engine.
+On Fri, May 30, 2025 at 9:22=E2=80=AFAM jianghaoran <jianghaoran@kylinos.cn=
+> wrote:
+>
+>
+>
+>
+>
+> =E5=9C=A8 2025-05-29=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:02 +0800=EF=
+=BC=8CHengqi Chen=E5=86=99=E9=81=93=EF=BC=9A
+> > Hi Haoran,
+> >
+> > On Wed, May 28, 2025 at 6:40=E2=80=AFPM Haoran Jiang <
+> > jianghaoran@kylinos.cn
+> > > wrote:
+> > > For a ebpf subprog JIT=EF=BC=8Cthe last call bpf_int_jit_compile
+> > > function will
+> > > directly enter the skip_init_ctx process. At this point,
+> > > out_offset =3D -1,
+> > > the jmp_offset in emit_bpf_tail_call is calculated
+> > > by #define jmp_offset (out_offset - (cur_offset)) is a negative
+> > > number,
+> > > which does not meet expectations.The final generated assembly
+> > > as follow.
+> > >
+> > > 54:     bgeu            $a2, $t1, -8        # 0x0000004c
+> > > 58:     addi.d          $a6, $s5, -1
+> > > 5c:     bltz            $a6, -16            # 0x0000004c
+> > > 60:     alsl.d          $t2, $a2, $a1, 0x3
+> > > 64:     ld.d            $t2, $t2, 264
+> > > 68:     beq             $t2, $zero, -28     # 0x0000004c
+> > >
+> > > Before apply this patch, the follow test case will reveal soft
+> > > lock issues.
+> > >
+> > > cd tools/testing/selftests/bpf/
+> > > ./test_progs --allow=3Dtailcalls/tailcall_bpf2bpf_1
+> > >
+> > > dmesg:
+> > > watchdog: BUG: soft lockup - CPU#2 stuck for 26s!
+> > > [test_progs:25056]
+> > >
+> >
+> > This is a known issue. Does this change pass all tailcall tests ?
+> > If not, please refer to the tailcall hierarchy patchset([1]).
+> > We should address it once and for all. Thanks.
+Do you mean you will update this patch?
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/mmc/host/loongson2-mmc.c | 231 +++++++++++++++++++++++++++++++
- 1 file changed, 231 insertions(+)
+Huacai
 
-diff --git a/drivers/mmc/host/loongson2-mmc.c b/drivers/mmc/host/loongson2-mmc.c
-index 567a1b8c57c4..515ccf834f0a 100644
---- a/drivers/mmc/host/loongson2-mmc.c
-+++ b/drivers/mmc/host/loongson2-mmc.c
-@@ -44,6 +44,18 @@
- #define LOONGSON2_MMC_REG_DATA		0x40 /* Data Register */
- #define LOONGSON2_MMC_REG_IEN		0x64 /* Interrupt Enable Register */
- 
-+/* EMMC DLL Mode Registers */
-+#define LOONGSON2_MMC_REG_DLLVAL	0xf0 /* DLL Master Lock-value Register */
-+#define LOONGSON2_MMC_REG_DLLCTL	0xf4 /* DLL Control Register */
-+#define LOONGSON2_MMC_REG_DELAY		0xf8 /* DLL Delayed Parameter Register */
-+#define LOONGSON2_MMC_REG_SEL		0xfc /* Bus Mode Selection Register */
-+
-+/* Exclusive DMA R/W Registers */
-+#define LOONGSON2_MMC_REG_WDMA_LO	0x400
-+#define LOONGSON2_MMC_REG_WDMA_HI	0x404
-+#define LOONGSON2_MMC_REG_RDMA_LO	0x800
-+#define LOONGSON2_MMC_REG_RDMA_HI	0x804
-+
- /* Bitfields of control register */
- #define LOONGSON2_MMC_CTL_ENCLK		BIT(0)
- #define LOONGSON2_MMC_CTL_EXTCLK	BIT(1)
-@@ -109,6 +121,9 @@
- #define LOONGSON2_MMC_DSTS_RESUME	BIT(15)
- #define LOONGSON2_MMC_DSTS_SUSPEND	BIT(16)
- 
-+/* Bitfields of FIFO Status Register */
-+#define LOONGSON2_MMC_FSTS_TXFULL	BIT(11)
-+
- /* Bitfields of interrupt register */
- #define LOONGSON2_MMC_INT_DFIN		BIT(0)
- #define LOONGSON2_MMC_INT_DTIMEOUT	BIT(1)
-@@ -136,6 +151,44 @@
- #define LOONGSON2_MMC_IEN_ALL		GENMASK(9, 0)
- #define LOONGSON2_MMC_INT_CLEAR		GENMASK(9, 0)
- 
-+/* Bitfields of DLL master lock-value register */
-+#define LOONGSON2_MMC_DLLVAL_DONE	BIT(8)
-+
-+/* Bitfields of DLL control register */
-+#define LOONGSON2_MMC_DLLCTL_TIME	GENMASK(7, 0)
-+#define LOONGSON2_MMC_DLLCTL_INCRE	GENMASK(15, 8)
-+#define LOONGSON2_MMC_DLLCTL_START	GENMASK(23, 16)
-+#define LOONGSON2_MMC_DLLCTL_CLK_MODE	BIT(24)
-+#define LOONGSON2_MMC_DLLCTL_START_BIT	BIT(25)
-+#define LOONGSON2_MMC_DLLCTL_TIME_BPASS	GENMASK(29, 26)
-+
-+#define LOONGSON2_MMC_DELAY_PAD		GENMASK(7, 0)
-+#define LOONGSON2_MMC_DELAY_RD		GENMASK(15, 8)
-+
-+#define LOONGSON2_MMC_SEL_DATA		BIT(0)	/* 0: SDR, 1: DDR */
-+#define LOONGSON2_MMC_SEL_BUS		BIT(0)	/* 0: EMMC, 1: SDIO */
-+
-+/* Internal dma controller registers */
-+
-+/* Bitfields of Global Configuration Register */
-+#define LOONGSON2_MMC_DMA_64BIT_EN	BIT(0) /* 1: 64 bit support */
-+#define LOONGSON2_MMC_DMA_UNCOHERENT_EN	BIT(1) /* 0: cache, 1: uncache */
-+#define LOONGSON2_MMC_DMA_ASK_VALID	BIT(2)
-+#define LOONGSON2_MMC_DMA_START		BIT(3) /* DMA start operation */
-+#define LOONGSON2_MMC_DMA_STOP		BIT(4) /* DMA stop operation */
-+#define LOONGSON2_MMC_DMA_CONFIG_MASK	GENMASK_ULL(4, 0) /* DMA controller config bits mask */
-+
-+/* Bitfields of ndesc_addr field of HW descriptor */
-+#define LOONGSON2_MMC_DMA_DESC_EN	BIT(0) /*1: The next descriptor is valid */
-+#define LOONGSON2_MMC_DMA_DESC_ADDR_LOW	GENMASK(31, 1)
-+
-+/* Bitfields of cmd field of HW descriptor */
-+#define LOONGSON2_MMC_DMA_INT		BIT(1)	/* Enable DMA interrupts */
-+#define LOONGSON2_MMC_DMA_DATA_DIR	BIT(12) /* 1: write to device, 0: read from device */
-+
-+#define LOONGSON2_MMC_DLLVAL_TIMEOUT_US		4000
-+#define LOONGSON2_MMC_TXFULL_TIMEOUT_US		500
-+
- /* Loongson-2K1000 SDIO2 DMA routing register */
- #define LS2K1000_SDIO_DMA_MASK		GENMASK(17, 15)
- #define LS2K1000_DMA0_CONF		0x0
-@@ -159,6 +212,20 @@ enum loongson2_mmc_state {
- 	STATE_XFERFINISH_RSPFIN,
- };
- 
-+struct loongson2_dma_desc {
-+	u32 ndesc_addr;
-+	u32 mem_addr;
-+	u32 apb_addr;
-+	u32 len;
-+	u32 step_len;
-+	u32 step_times;
-+	u32 cmd;
-+	u32 stats;
-+	u32 high_ndesc_addr;
-+	u32 high_mem_addr;
-+	u32 reserved[2];
-+} __packed;
-+
- struct loongson2_mmc_host {
- 	struct device *dev;
- 	struct mmc_request *mrq;
-@@ -166,6 +233,8 @@ struct loongson2_mmc_host {
- 	struct resource *res;
- 	struct clk *clk;
- 	u32 current_clk;
-+	void *sg_cpu;
-+	dma_addr_t sg_dma;
- 	int dma_complete;
- 	struct dma_chan *chan;
- 	int cmd_is_stop;
-@@ -178,6 +247,7 @@ struct loongson2_mmc_host {
- struct loongson2_mmc_pdata {
- 	const struct regmap_config *regmap_config;
- 	void (*reorder_cmd_data)(struct loongson2_mmc_host *host, struct mmc_command *cmd);
-+	void (*fix_data_timeout)(struct loongson2_mmc_host *host, struct mmc_command *cmd);
- 	int (*setting_dma)(struct loongson2_mmc_host *host, struct platform_device *pdev);
- 	int (*prepare_dma)(struct loongson2_mmc_host *host, struct mmc_data *data);
- 	void (*release_dma)(struct loongson2_mmc_host *host, struct device *dev);
-@@ -268,6 +338,9 @@ static void loongson2_mmc_send_request(struct mmc_host *mmc)
- 		return;
- 	}
- 
-+	if (host->pdata->fix_data_timeout)
-+		host->pdata->fix_data_timeout(host, cmd);
-+
- 	loongson2_mmc_send_command(host, cmd);
- 
- 	/* Fix deselect card */
-@@ -410,6 +483,37 @@ static irqreturn_t loongson2_mmc_irq(int irq, void *devid)
- 	return IRQ_WAKE_THREAD;
- }
- 
-+static void loongson2_mmc_dll_mode_init(struct loongson2_mmc_host *host)
-+{
-+	u32 val, pad_delay, delay, ret;
-+
-+	regmap_update_bits(host->regmap, LOONGSON2_MMC_REG_SEL,
-+			   LOONGSON2_MMC_SEL_DATA, LOONGSON2_MMC_SEL_DATA);
-+
-+	val = FIELD_PREP(LOONGSON2_MMC_DLLCTL_TIME, 0xc8)
-+	    | FIELD_PREP(LOONGSON2_MMC_DLLCTL_INCRE, 0x1)
-+	    | FIELD_PREP(LOONGSON2_MMC_DLLCTL_START, 0x1)
-+	    | FIELD_PREP(LOONGSON2_MMC_DLLCTL_CLK_MODE, 0x1)
-+	    | FIELD_PREP(LOONGSON2_MMC_DLLCTL_START_BIT, 0x1)
-+	    | FIELD_PREP(LOONGSON2_MMC_DLLCTL_TIME_BPASS, 0xf);
-+
-+	regmap_write(host->regmap, LOONGSON2_MMC_REG_DLLCTL, val);
-+
-+	ret = regmap_read_poll_timeout(host->regmap, LOONGSON2_MMC_REG_DLLVAL, val,
-+				       (val & LOONGSON2_MMC_DLLVAL_DONE), 0,
-+				       LOONGSON2_MMC_DLLVAL_TIMEOUT_US);
-+	if (ret < 0)
-+		return;
-+
-+	regmap_read(host->regmap, LOONGSON2_MMC_REG_DLLVAL, &val);
-+	pad_delay = FIELD_GET(GENMASK(7, 1), val);
-+
-+	delay = FIELD_PREP(LOONGSON2_MMC_DELAY_PAD, pad_delay)
-+	      | FIELD_PREP(LOONGSON2_MMC_DELAY_RD, pad_delay + 1);
-+
-+	regmap_write(host->regmap, LOONGSON2_MMC_REG_DELAY, delay);
-+}
-+
- static void loongson2_mmc_set_clk(struct loongson2_mmc_host *host, struct mmc_ios *ios)
- {
- 	u32 pre;
-@@ -422,6 +526,10 @@ static void loongson2_mmc_set_clk(struct loongson2_mmc_host *host, struct mmc_io
- 
- 	regmap_update_bits(host->regmap, LOONGSON2_MMC_REG_CTL,
- 			   LOONGSON2_MMC_CTL_ENCLK, LOONGSON2_MMC_CTL_ENCLK);
-+
-+	/* EMMC DLL mode setting */
-+	if (ios->timing == MMC_TIMING_UHS_DDR50 || ios->timing == MMC_TIMING_MMC_DDR52)
-+		loongson2_mmc_dll_mode_init(host);
- }
- 
- static void loongson2_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
-@@ -634,6 +742,128 @@ static struct loongson2_mmc_pdata ls2k1000_mmc_pdata = {
- 	.release_dma		= loongson2_mmc_release_external_dma,
- };
- 
-+static const struct regmap_config ls2k2000_mmc_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = LOONGSON2_MMC_REG_RDMA_HI,
-+};
-+
-+static void ls2k2000_mmc_reorder_cmd_data(struct loongson2_mmc_host *host,
-+					  struct mmc_command *cmd)
-+{
-+	struct scatterlist *sg;
-+	u32 *data;
-+	int i, j;
-+
-+	if (cmd->opcode != SD_SWITCH || mmc_cmd_type(cmd) != MMC_CMD_ADTC)
-+		return;
-+
-+	for_each_sg(cmd->data->sg, sg, cmd->data->sg_len, i) {
-+		data = sg_virt(&sg[i]);
-+		for (j = 0; j < (sg_dma_len(&sg[i]) / 4); j++)
-+			data[j] = bitrev8x4(data[j]);
-+	}
-+}
-+
-+/*
-+ * This is a controller hardware defect. Single/multiple block write commands
-+ * must be sent after the TX FULL flag is set, otherwise a data timeout interrupt
-+ * will occur.
-+ */
-+static void ls2k2000_mmc_fix_data_timeout(struct loongson2_mmc_host *host,
-+					  struct mmc_command *cmd)
-+{
-+	int val;
-+
-+	if (cmd->opcode != MMC_WRITE_BLOCK && cmd->opcode != MMC_WRITE_MULTIPLE_BLOCK)
-+		return;
-+
-+	regmap_read_poll_timeout(host->regmap, LOONGSON2_MMC_REG_FSTS, val,
-+				 (val & LOONGSON2_MMC_FSTS_TXFULL), 0,
-+				 LOONGSON2_MMC_TXFULL_TIMEOUT_US);
-+}
-+
-+static int loongson2_mmc_prepare_internal_dma(struct loongson2_mmc_host *host,
-+					      struct mmc_data *data)
-+{
-+	struct loongson2_dma_desc *pdes = (struct loongson2_dma_desc *)host->sg_cpu;
-+	struct mmc_host *mmc = mmc_from_priv(host);
-+	dma_addr_t next_desc = host->sg_dma;
-+	struct scatterlist *sg;
-+	int reg_lo, reg_hi;
-+	u64 dma_order;
-+	int i, ret;
-+
-+	ret = dma_map_sg(mmc_dev(mmc), data->sg, data->sg_len,
-+			 mmc_get_dma_dir(data));
-+	if (!ret)
-+		return -ENOMEM;
-+
-+	for_each_sg(data->sg, sg, data->sg_len, i) {
-+		pdes[i].len = sg_dma_len(&sg[i]) / 4;
-+		pdes[i].step_len = 0;
-+		pdes[i].step_times = 1;
-+		pdes[i].mem_addr = lower_32_bits(sg_dma_address(&sg[i]));
-+		pdes[i].high_mem_addr = upper_32_bits(sg_dma_address(&sg[i]));
-+		pdes[i].apb_addr = host->res->start + LOONGSON2_MMC_REG_DATA;
-+		pdes[i].cmd = LOONGSON2_MMC_DMA_INT;
-+
-+		if (data->flags & MMC_DATA_READ) {
-+			reg_lo = LOONGSON2_MMC_REG_RDMA_LO;
-+			reg_hi = LOONGSON2_MMC_REG_RDMA_HI;
-+		} else {
-+			pdes[i].cmd |= LOONGSON2_MMC_DMA_DATA_DIR;
-+			reg_lo = LOONGSON2_MMC_REG_WDMA_LO;
-+			reg_hi = LOONGSON2_MMC_REG_WDMA_HI;
-+		}
-+
-+		next_desc += sizeof(struct loongson2_dma_desc);
-+		pdes[i].ndesc_addr = lower_32_bits(next_desc) |
-+				     LOONGSON2_MMC_DMA_DESC_EN;
-+		pdes[i].high_ndesc_addr = upper_32_bits(next_desc);
-+	}
-+
-+	/* Setting the last descriptor enable bit */
-+	pdes[i - 1].ndesc_addr &= ~LOONGSON2_MMC_DMA_DESC_EN;
-+
-+	dma_order = (host->sg_dma & ~LOONGSON2_MMC_DMA_CONFIG_MASK) |
-+		    LOONGSON2_MMC_DMA_64BIT_EN |
-+		    LOONGSON2_MMC_DMA_START;
-+
-+	regmap_write(host->regmap, reg_hi, upper_32_bits(dma_order));
-+	regmap_write(host->regmap, reg_lo, lower_32_bits(dma_order));
-+
-+	return 0;
-+}
-+
-+static int loongson2_mmc_set_internal_dma(struct loongson2_mmc_host *host,
-+					  struct platform_device *pdev)
-+{
-+	host->sg_cpu = dma_alloc_coherent(&pdev->dev, PAGE_SIZE,
-+					  &host->sg_dma, GFP_KERNEL);
-+	if (!host->sg_cpu)
-+		return -ENOMEM;
-+
-+	memset(host->sg_cpu, 0, PAGE_SIZE);
-+	return 0;
-+}
-+
-+static void loongson2_mmc_release_internal_dma(struct loongson2_mmc_host *host,
-+					       struct device *dev)
-+{
-+	dma_free_coherent(dev, PAGE_SIZE, host->sg_cpu, host->sg_dma);
-+}
-+
-+static struct loongson2_mmc_pdata ls2k2000_mmc_pdata = {
-+	.regmap_config		= &ls2k2000_mmc_regmap_config,
-+	.reorder_cmd_data	= ls2k2000_mmc_reorder_cmd_data,
-+	.fix_data_timeout	= ls2k2000_mmc_fix_data_timeout,
-+	.setting_dma		= loongson2_mmc_set_internal_dma,
-+	.prepare_dma		= loongson2_mmc_prepare_internal_dma,
-+	.release_dma		= loongson2_mmc_release_internal_dma,
-+};
-+
- static int loongson2_mmc_resource_request(struct platform_device *pdev,
- 					  struct loongson2_mmc_host *host)
- {
-@@ -756,6 +986,7 @@ static void loongson2_mmc_remove(struct platform_device *pdev)
- static const struct of_device_id loongson2_mmc_of_ids[] = {
- 	{ .compatible = "loongson,ls2k0500-mmc", .data = &ls2k0500_mmc_pdata },
- 	{ .compatible = "loongson,ls2k1000-mmc", .data = &ls2k1000_mmc_pdata },
-+	{ .compatible = "loongson,ls2k2000-mmc", .data = &ls2k2000_mmc_pdata },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, loongson2_mmc_of_ids);
--- 
-2.47.1
-
+> >
+> >   [1]:
+> > https://lore.kernel.org/bpf/20240714123902.32305-1-hffilwlqm@gmail.com/
+> >
+> > Thanks,I'll keep looking into these patches.
+> > > Signed-off-by: Haoran Jiang <
+> > > jianghaoran@kylinos.cn
+> > > >
+> > > ---
+> > >  arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
+> > >  1 file changed, 9 insertions(+), 19 deletions(-)
+> > >
+> > > diff --git a/arch/loongarch/net/bpf_jit.c
+> > > b/arch/loongarch/net/bpf_jit.c
+> > > index fa1500d4aa3e..d85490e7de89 100644
+> > > --- a/arch/loongarch/net/bpf_jit.c
+> > > +++ b/arch/loongarch/net/bpf_jit.c
+> > > @@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
+> > >         return true;
+> > >  }
+> > >
+> > > -/* initialized on the first pass of build_body() */
+> > > -static int out_offset =3D -1;
+> > > -static int emit_bpf_tail_call(struct jit_ctx *ctx)
+> > > +static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
+> > >  {
+> > >         int off;
+> > >         u8 tcc =3D tail_call_reg(ctx);
+> > > @@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >         u8 t2 =3D LOONGARCH_GPR_T2;
+> > >         u8 t3 =3D LOONGARCH_GPR_T3;
+> > >         const int idx0 =3D ctx->idx;
+> > > -
+> > > -#define cur_offset (ctx->idx - idx0)
+> > > -#define jmp_offset (out_offset - (cur_offset))
+> > > +       int tc_ninsn =3D 0;
+> > > +       int jmp_offset =3D 0;
+> > >
+> > >         /*
+> > >          * a0: &ctx
+> > > @@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >          * if (index >=3D array->map.max_entries)
+> > >          *       goto out;
+> > >          */
+> > > +       tc_ninsn =3D insn ? ctx->offset[insn+1] - ctx-
+> > > >offset[insn] :
+> > > +               ctx->offset[0];
+> > >         off =3D offsetof(struct bpf_array, map.max_entries);
+> > >         emit_insn(ctx, ldwu, t1, a1, off);
+> > > +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
+> > >         /* bgeu $a2, $t1, jmp_offset */
+> > >         if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset)
+> > > < 0)
+> > >                 goto toofar;
+> > > @@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >          *       goto out;
+> > >          */
+> > >         emit_insn(ctx, addid, REG_TCC, tcc, -1);
+> > > +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
+> > >         if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC,
+> > > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+> > >                 goto toofar;
+> > >
+> > > @@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >         emit_insn(ctx, alsld, t2, a2, a1, 2);
+> > >         off =3D offsetof(struct bpf_array, ptrs);
+> > >         emit_insn(ctx, ldd, t2, t2, off);
+> > > +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
+> > >         /* beq $t2, $zero, jmp_offset */
+> > >         if (emit_tailcall_jmp(ctx, BPF_JEQ, t2,
+> > > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+> > >                 goto toofar;
+> > > @@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >         emit_insn(ctx, ldd, t3, t2, off);
+> > >         __build_epilogue(ctx, true);
+> > >
+> > > -       /* out: */
+> > > -       if (out_offset =3D=3D -1)
+> > > -               out_offset =3D cur_offset;
+> > > -       if (cur_offset !=3D out_offset) {
+> > > -               pr_err_once("tail_call out_offset =3D %d,
+> > > expected %d!\n",
+> > > -                           cur_offset, out_offset);
+> > > -               return -1;
+> > > -       }
+> > > -
+> > >         return 0;
+> > >
+> > >  toofar:
+> > >         pr_info_once("tail_call: jump too far\n");
+> > >         return -1;
+> > > -#undef cur_offset
+> > > -#undef jmp_offset
+> > >  }
+> > >
+> > >  static void emit_atomic(const struct bpf_insn *insn, struct
+> > > jit_ctx *ctx)
+> > > @@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn
+> > > *insn, struct jit_ctx *ctx, bool ext
+> > >         /* tail call */
+> > >         case BPF_JMP | BPF_TAIL_CALL:
+> > >                 mark_tail_call(ctx);
+> > > -               if (emit_bpf_tail_call(ctx) < 0)
+> > > +               if (emit_bpf_tail_call(i, ctx) < 0)
+> > >                         return -EINVAL;
+> > >                 break;
+> > >
+> > > @@ -1342,7 +1333,6 @@ struct bpf_prog
+> > > *bpf_int_jit_compile(struct bpf_prog *prog)
+> > >         if (tmp_blinded)
+> > >                 bpf_jit_prog_release_other(prog, prog =3D=3D
+> > > orig_prog ? tmp : orig_prog);
+> > >
+> > > -       out_offset =3D -1;
+> > >
+> > >         return prog;
+> > >
+> > > --
+> > > 2.43.0
+> > >
+>
+>
