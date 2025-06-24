@@ -1,36 +1,40 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEF341DB346
-	for <loongarch@lists.linux.dev>; Tue, 24 Jun 2025 08:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7401224B1F
+	for <loongarch@lists.linux.dev>; Tue, 24 Jun 2025 11:58:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753141; cv=none; b=RFEIuNB7QCeRTTafXkXGXSEwC7jYvOEQj9q1w269XvCyJPKm0v/XahLcRBto31lz/RMsRza8CEyOMQuVUWLDg1TaWbgXb3cMJMC6Ywf5p6KbFOdjMow6DxxXMtAvfyPy6Z9cG4FRV49zhXN6trC52JfLBbOev9tSoum5h9lSNrs=
+	t=1750766314; cv=none; b=kymxA8UNCP8I3bMSMjC/d7Mk+iXAsFrDTOD9hHeLll/SlUkGn3Q7a18BhZY6GmGz6IVpFK9CgLV37RkkA0DUhf/eeOgROzinUT/kKCaEgtf99tMNSW2UVIm0ofhwxBRwMwskEEVyL7Gm/CC30+4NXrqAjp7Tq8eN6kPq/hYtVtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753141; c=relaxed/simple;
-	bh=z34k/rz5oU4KRhHSyCwlYWpvC4hE0GFChAVXhYLHPqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uPHWo7mTXyIVGPCJWFLtko3WM4KwXDPViAHWTFamkdR6bMnHv0ddYi9vfBjSu9h7QMy0KuBTZQCqM88U5T3Z82zV71tFyo10wkmXW8IQS2uRGRFdfaF1N8TH5bx4L0PnVb6/TPB0V8kV199XFiyUV8Oll905VTBUEjcYsTDN5Ws=
+	s=arc-20240116; t=1750766314; c=relaxed/simple;
+	bh=rGp24HhF+1pOwu85qNC5bnROKkUUy/fG4sK7Cs5MWX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OFshVBhy4Vb3LTlsbHqNLcojXYpTqcLqvqdZn47ZwFb2TCvR8ajvwu1x0xryNF1JC92s96aggqWhey438a/1/5O3mE5XwLbumPptutssLLWARsK3xD+Bnl4MHMFrqx1QBCdL2lWNsO53SJYo02kXE/km5EmWDYuSaBQ3JJd/Ycw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.207.111.194])
-	by gateway (Coremail) with SMTP id _____8Axx2ltX1poxhYcAQ--.28730S3;
-	Tue, 24 Jun 2025 16:18:53 +0800 (CST)
-Received: from ubuntu.. (unknown [111.207.111.194])
-	by front1 (Coremail) with SMTP id qMiowMCxbsVsX1po5oYoAQ--.60731S2;
-	Tue, 24 Jun 2025 16:18:53 +0800 (CST)
-From: Ming Wang <wangming01@loongson.cn>
-To: Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-efi@vger.kernel.org,
+Received: from loongson.cn (unknown [223.64.68.149])
+	by gateway (Coremail) with SMTP id _____8BxrnLjklpoMzocAQ--.64243S3;
+	Tue, 24 Jun 2025 19:58:27 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.149])
+	by front1 (Coremail) with SMTP id qMiowMDxu8TcklpohsAoAQ--.53899S2;
+	Tue, 24 Jun 2025 19:58:24 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: lixuefeng@loongson.cn,
-	chenhuacai@loongson.cn,
-	gaojuxin@loongson.cn
-Subject: [PATCH] efi/loongarch: Reserve EFI memory map region
-Date: Tue, 24 Jun 2025 16:18:52 +0800
-Message-ID: <20250624081852.1563985-1-wangming01@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	devicetree@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	wanghongliang@loongson.cn,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v4 0/4] LoongArch: Introduce the Loongson-2K MMC host controller driver
+Date: Tue, 24 Jun 2025 19:58:09 +0800
+Message-ID: <cover.1750765495.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,79 +42,113 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxbsVsX1po5oYoAQ--.60731S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAgEDEmhZ3+0IvAAAsl
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF1kuF1rCr4UXr48Aw4UWrX_yoW8Kr17p3
-	4xAr4kKrs5AFn3X34xG3y8uF45ua93K34fWF9Iyr909ws8AF1xZr4ftFyY9ay2qr4kGw1j
-	gFn8Ca4Iva1DJabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowMDxu8TcklpohsAoAQ--.53899S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF13WF4kXFWxJF15uw18Xrc_yoW5AF1kpa
+	98u343Gr4UKr45Ars3Gay8Cr15u345Xr9rGFsxGw18Wa98u34UZ3sYkFWY9FW3urW8Wry7
+	Zr95ua1F9a4UCrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8bTm3UU
-	UUU==
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU83UUUUUUUU==
 
-The EFI memory map at 'boot_memmap' is crucial for kdump to understand
-the primary kernel's memory layout. This memory region, typically part
-of EFI Boot Services (BS) data, can be overwritten after ExitBootServices
-if not explicitly preserved by the kernel.
+Hi all:
 
-This commit addresses this by:
-1. Calling memblock_reserve() to reserve the entire physical region
-   occupied by the EFI memory map (header + descriptors). This prevents
-   the primary kernel from reallocating and corrupting this area.
-2. Setting the EFI_PRESERVE_BS_REGIONS flag in efi.flags. This indicates
-   that efforts have been made to preserve critical BS data regions,
-   which can be useful for other kernel subsystems or debugging.
+This patchset introduce the MMC host controller on Loongson-2K series
+CPUs.
 
-These changes ensure the original EFI memory map data remains intact,
-improving kdump reliability and potentially aiding other EFI-related
-functionalities that might rely on preserved BS data.
+They are similar, except for the interface characteristics and the use of
+DMA engine, specifically, the Loongson-2K0500/Loongson-2K1000 use an
+externally shared APBDMA engine, while the Loongson-2K2000 uses an
+internally exclusive DMA.
 
-Signed-off-by: Ming Wang <wangming01@loongson.cn>
----
- arch/loongarch/kernel/efi.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Based on this, I'm splitting the driver into two patches.
 
-diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
-index de21e72759ee..98b1f0c030fc 100644
---- a/arch/loongarch/kernel/efi.c
-+++ b/arch/loongarch/kernel/efi.c
-@@ -135,6 +135,7 @@ void __init efi_init(void)
- 	tbl = early_memremap_ro(boot_memmap, sizeof(*tbl));
- 	if (tbl) {
- 		struct efi_memory_map_data data;
-+		phys_addr_t reserve_size = sizeof(*tbl) + tbl->map_size;
- 
- 		data.phys_map		= boot_memmap + sizeof(*tbl);
- 		data.size		= tbl->map_size;
-@@ -144,6 +145,18 @@ void __init efi_init(void)
- 		if (efi_memmap_init_early(&data) < 0)
- 			panic("Unable to map EFI memory map.\n");
- 
-+		/*
-+		 * Reserve the physical memory region occupied by the EFI
-+		 * memory map table (header + descriptors). This is crucial
-+		 * for kdump, as the kdump kernel relies on this original
-+		 * memmap passed by the bootloader. Without reservation,
-+		 * this region could be overwritten by the primary kernel.
-+		 * Also, set the EFI_PRESERVE_BS_REGIONS flag to indicate that
-+		 * critical boot services data regions like this are preserved.
-+		 */
-+		memblock_reserve((phys_addr_t)boot_memmap, reserve_size);
-+		set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
-+
- 		early_memunmap(tbl, sizeof(*tbl));
- 	}
- 
+List of the patchset:
+Patch1: bindings for Loongson-2K0500/Loongson-2K1000;
+Patch2: driver for MMC controller using externally shared APBDMA engine;
+Patch3: bindings for Loongson-2K2000;
+Patch4: driver for MMC controller using internally exclusive DMA.
+
+Thanks.
+
+-------
+V4:
+patch(2/4):
+ - Code formatting;
+ - Fix lkp error
+    https://lore.kernel.org/all/202506202031.TNchn822-lkp@intel.com/
+patch(4/4):
+ - Rename function names:
+	ls2k1000_mmc_regmap_config -> ls2k0500_mmc_regmap_config
+	loongson2_mmc_reorder_cmd_data -> ls2k0500_mmc_reorder_cmd_data
+	loongson2_mmc_set_internal_dma -> ls2k2000_mmc_set_internal_dma
+ - Use macro definitions for magic numbers.
+
+Link to V3:
+https://lore.kernel.org/all/cover.1750216134.git.zhoubinbin@loongson.cn/
+
+V3:
+patch(1/4):
+ - Rename dt-binding file as loongson,ls2k0500-mmc.yaml.
+patch(2/4):
+ - Fix lkp error;
+    https://lore.kernel.org/all/202505130918.uanOGxju-lkp@intel.com/
+ - Add regulators support for ios ops;
+ - Add ack_sdio_irq() callback;
+ - Add MMC_CAP2_SDIO_IRQ_NOTHREAD flag;
+patch(3/4):
+ - Add Ack-by tag.
+patch(4/4):
+ - Update commit for fix_data_timeout().
+
+Link to V2:
+https://lore.kernel.org/all/cover.1746581751.git.zhoubinbin@loongson.cn/
+
+V2:
+patch(1/4):
+ - Add reg define for each reg entry.
+
+patch(2/4):
+ - Put all code in the c-file;
+ - Use mmc_from_priv() instead of host->mmc;
+ - Use sdio_signal_irq() instead of mmc_signal_sdio_irq();
+ - Use devm_mmc_alloc_host() instead of mmc_alloc_host();
+ - Use mmc_regulator_get_supply();
+
+patch(4/4):
+ - Add fix_cmd_interrupt function which is needed by Loongson-2K2000.
+
+Link to V1:
+https://lore.kernel.org/linux-mmc/cover.1744273956.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (4):
+  dt-bindings: mmc: Add Loongson-2K SD/SDIO/eMMC controller binding
+  mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
+  dt-bindings: mmc: loongson,ls2k0500-mmc: Add compatible for
+    Loongson-2K2000
+  mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC controller driver
+
+ .../bindings/mmc/loongson,ls2k0500-mmc.yaml   |  112 ++
+ MAINTAINERS                                   |    7 +
+ drivers/mmc/host/Kconfig                      |   13 +
+ drivers/mmc/host/Makefile                     |    1 +
+ drivers/mmc/host/loongson2-mmc.c              | 1029 +++++++++++++++++
+ 5 files changed, 1162 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/loongson,ls2k0500-mmc.yaml
+ create mode 100644 drivers/mmc/host/loongson2-mmc.c
+
+
+base-commit: f5c755ef810009b85350884c483705bd04365370
 -- 
-2.43.0
+2.47.1
 
