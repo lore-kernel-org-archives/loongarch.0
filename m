@@ -1,174 +1,178 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8A52D12F4
-	for <loongarch@lists.linux.dev>; Mon, 23 Jun 2025 20:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3A9B1946DF
+	for <loongarch@lists.linux.dev>; Tue, 24 Jun 2025 01:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750709136; cv=none; b=K31O3nWp0D7B5QohKJWnDHInm8zbdz/w9U4SorOHObyzDqkNloshIJUjefDYyEXmPHG3rfBKhgAXe5O2+LzxB8sBpfSSm0oxmtgpbjMEpqHluV/TzDpMztbLigwLRdC4uhqmpmXMmrkMajmsJsmBn+PiAehC6hnr4pJefdqRi9k=
+	t=1750729210; cv=none; b=S6GGsu4G/6D/Z724xQ4WGZ/RRTuF8IpVKQ7gRfgjVOYyJZsU93K8vWww3Iz0gVA22qGHlb4Sr5U4a2+mc3SabCe9FyFWZJYHpdAhT/9e4tatylvsquEciQXa2r1V2ADVXLLtu5CLWj0PJJgl3WC4cLyyhDLLE5IyGjcZX4AMUcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750709136; c=relaxed/simple;
-	bh=D8uHjK24h11d4qSJcEP4C96xsm8K+FoZ8/horBvHnf8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OHAToZ9YQ8Wys7z9IOLo/NMiGIF0eczXa1KnoWJZZO/04bQMMZuqoPuhxCfGVseeMwwty0nJgEhvLZZQeteU7hGC6JzPQs9CrP6Mtqbh1naf08PxxBPcZ8D8HLSlKn8QUtw7s/PSrsYPm1E3oM5m/UMDMlZqgSrwaN/xZWEgbr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FeK0768e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mp/3JIaa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FeK0768e";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mp/3JIaa"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750709132;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eMM6QwCsCKxnWFFi+r7c6XK6N7v8X1dMyHwbTGK2fn0=;
-	b=FeK0768eH/1WBYabmyCN/mg4CIMYw60exRcAJ3J3y0LuEVW+9pVUf+SpuCWD3AnKUCRN55
-	jeTl5yzGkZanoqeyjxLrSl2dRPPCtuzWnCdw64hpUAsstc2zuqJnr9GjsvC/Jpzu+pHILb
-	45EeFp36YmkC6mGU11yBI3Pjkx7rCxU6iJzd1wiuUVkb1gnN4vfbrOyta/lw2mERRfj3lu
-	JDK/OT+zU5wP2CHXZdAOHQJbfjqnEjG6Eo36uq5KDZypRHpOUPkpD0YXnZHSQGgJE+Orfj
-	IlYZ/4AHOxTCGmOB44GgsZAGDx06bYZXj8S326flTPnZMxXC7VC6z90KLvjdfg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750709132;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eMM6QwCsCKxnWFFi+r7c6XK6N7v8X1dMyHwbTGK2fn0=;
-	b=mp/3JIaavtG/Tx0bjkqXU3kT7YAWlNr6GVGZjS0cIpIzgrzsyT4hvL4PFc9edpg5JhQL+q
-	dllKV1wj5PlG3fDg==
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+	s=arc-20240116; t=1750729210; c=relaxed/simple;
+	bh=pgiPJLvvmTflKzjDY7E5OaH4sV2YGQ0u+axBomTRsOw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=lsK+X0EQLxxrpMkX9GsxpnkUlfLyInrveG/3no8RFRj+lKh4bty231TN7K7NPvZvZ9HkFWlLySekdaaxL0ElcKuE3wQL7qs0fgQ73NDSyDmnekXjqPVHz2HLiEzrnmMV+DhrzgV7wcX//RIrc7ZACFYYl3ogreCTp8DCdHd56A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8AxmnHuAVpos_obAQ--.62838S3;
+	Tue, 24 Jun 2025 09:39:58 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMAxzxvqAVpoby8oAQ--.3360S3;
+	Tue, 24 Jun 2025 09:39:56 +0800 (CST)
+Subject: Re: [PATCH v4 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
  kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
  jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
  lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
  gaosong@loongson.cn, yangtiezhu@loongson.cn
 Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-In-Reply-To: <fceb603c-6072-2941-15d5-56c8a4b4c32c@loongson.cn>
 References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
  <20250610114252.21077-3-zhangtianyang@loongson.cn> <87o6uris6p.ffs@tglx>
  <9c60326b-f7bd-0b36-3bc5-0ad7d19690f1@loongson.cn> <87v7omooag.ffs@tglx>
- <fceb603c-6072-2941-15d5-56c8a4b4c32c@loongson.cn>
-Date: Mon, 23 Jun 2025 22:05:31 +0200
-Message-ID: <87jz52nrzo.ffs@tglx>
+ <fceb603c-6072-2941-15d5-56c8a4b4c32c@loongson.cn> <87jz52nrzo.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <a8f2ec4d-2616-17dc-320b-b7ac5ca99255@loongson.cn>
+Date: Tue, 24 Jun 2025 09:39:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87jz52nrzo.ffs@tglx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxzxvqAVpoby8oAQ--.3360S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWFW3ZF1xAF13Ary3XryxZwc_yoWrCw13pF
+	W8K3WxK3ykta1I934Iva1kZa47tw4kKFW5Gr95GFyvy3s0qF1xuF40qFW5Za48Xrs7Zr1j
+	vFZ0vrWq9F98ZabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
-On Mon, Jun 23 2025 at 17:33, Tianyang Zhang wrote:
-> =E5=9C=A8 2025/6/23 =E4=B8=8B=E5=8D=884:27, Thomas Gleixner =E5=86=99=E9=
-=81=93:
->> tail is the software managed part of the ringbuffer which is shared with
->> the hardware, right?
->>
->> So even if the compiler would be allowed to reevalutate tail after the
->> barrier (it is NOT), then tail would still contain the same value as
->> before, no?
->>
->> The wmb() is required to ensure that the hardware can observe the full
->> write of the command _before_ it can observe the update to the tail
->> index.
->>
->> Anything else is voodoo.
->>
->> Thanks,
->>
->>          tglx
+Hi, Thomas
+
+在 2025/6/24 上午4:05, Thomas Gleixner 写道:
+> On Mon, Jun 23 2025 at 17:33, Tianyang Zhang wrote:
+>> 在 2025/6/23 下午4:27, Thomas Gleixner 写道:
+>>> tail is the software managed part of the ringbuffer which is shared with
+>>> the hardware, right?
+>>>
+>>> So even if the compiler would be allowed to reevalutate tail after the
+>>> barrier (it is NOT), then tail would still contain the same value as
+>>> before, no?
+>>>
+>>> The wmb() is required to ensure that the hardware can observe the full
+>>> write of the command _before_ it can observe the update to the tail
+>>> index.
+>>>
+>>> Anything else is voodoo.
+>>>
+>>> Thanks,
+>>>
+>>>           tglx
+>> In my previous understanding, tail'value is actually a part of 'full
+>> write of the command '.
+> Of course. The hardware observes the tail value. If it is not updated
+> then the command is not executed. But these are two distinct things:
 >
-> In my previous understanding, tail'value is actually a part of 'full=20
-> write of the command '.
+> The invalidate command is written to a location in the command buffer
+> which is determined by tail:
+>
+> 	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
+> 	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+>
+> requeue::base points to an array of invalidate commands. The array
+> size is INVALID_QUEUE_SIZE. tail is the position in the array to which
+> the software writes the next command. tail is software managed and
+> written to a completely different location via write_queue_tail(...):
+>
+> static phys_addr_t redirect_reg_base = 0x1fe00000;
+>
+> #define REDIRECT_REG_BASE(reg, node) \
+> 	(UNCACHE_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | (reg))
+> #define	redirect_reg_queue_tail(node)	REDIRECT_REG_BASE(LOONGARCH_IOCSR_REDIRECT_CQT, (node))
+> #define read_queue_tail(node)		(*((u32 *)(redirect_reg_queue_tail(node))))
+> #define write_queue_tail(node, val)	(*((u32 *)(redirect_reg_queue_tail(node))) = (val))
+>
+> The hardware maintains the head index. It's the last command index the
+> hardware processed. When the hardware observes that head != tail then it
+> processes the next entry and after completion it updates head with the
+> next index. This repeats until head == tail.
+>
+>> We must ensure that tail is updated to the correct value first, and
+>> then write this value into the register (perhaps by adding wmb in
+>> write_queue_tail ).
+> No. The local variable 'tail' is purely local to the CPU and the
+> invalidation hardware does not even know that it exists.
+>
+> There are two things which are relevant to the hardware:
+>
+>     1) command is written to the hardware visible array at index of tail
+>
+>     2) hardware visible tail memory (register) is updated to tail + 1
+>
+> The memory barrier is required to prevent that #2 is written to the
+> hardware _before_ #1 completed and is fully visible to the hardware.
+>
+>> In other words, this is originally to prevent the write register
+>> instruction from being executed out of order before updating tail.
+> No. The barrier is solely for the above #1 vs. #2 ordering.
+>
+> There is a difference between program flow ordering and memory ordering.
+>
+> The hardware _CANNOT_ execute the write _before_ the value it writes is
+> computed. That's enforced by program flow order.
+>
+> So it's always guaranteed that the CPU executes
+>
+>     tail + 1
+>
+> _before_ executing the write to the register because that's a program
+> order dependency.
+>
+> If that would not be guaranteed, then your CPU would have more serious
+> problems than this piece of code. It simply would not even survive the
+> first five instructions in the boot loader.
+>
+> But what's not guaranteed is that consecutive writes become visible to
+> other parts of the system (other CPUs, the invalidation hardware, ....)
+> in the same consecutive order.
+>
+> To ensure that ordering you need a WMB(). If you would have CPU to CPU
+> communication then you would need a RMB() on the reader side to ensure
+> that the command is not read before the tail. In your case the hardware
+> side takes care of that.
+>
+>> The above is just my personal understanding
+> Which might need some slight adjustments :)
+>
+> Thanks,
+>
+>          tglx
 
-Of course. The hardware observes the tail value. If it is not updated
-then the command is not executed. But these are two distinct things:
+Hmm... it seems I confused program-flow-ordering and memory-ordering .
 
-The invalidate command is written to a location in the command buffer
-which is determined by tail:
+my understanding of the previous issue may not have been right.
 
-	inv_addr =3D (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct i=
-rde_inv_cmd));
-	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+Your reply has taught me a great deal, truly appreciate it
 
-requeue::base points to an array of invalidate commands. The array
-size is INVALID_QUEUE_SIZE. tail is the position in the array to which
-the software writes the next command. tail is software managed and
-written to a completely different location via write_queue_tail(...):
+Thank you very much
 
-static phys_addr_t redirect_reg_base =3D 0x1fe00000;
-
-#define REDIRECT_REG_BASE(reg, node) \
-	(UNCACHE_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | =
-(reg))
-#define	redirect_reg_queue_tail(node)	REDIRECT_REG_BASE(LOONGARCH_IOCSR_RED=
-IRECT_CQT, (node))
-#define read_queue_tail(node)		(*((u32 *)(redirect_reg_queue_tail(node))))
-#define write_queue_tail(node, val)	(*((u32 *)(redirect_reg_queue_tail(node=
-))) =3D (val))
-
-The hardware maintains the head index. It's the last command index the
-hardware processed. When the hardware observes that head !=3D tail then it
-processes the next entry and after completion it updates head with the
-next index. This repeats until head =3D=3D tail.
-
-> We must ensure that tail is updated to the correct value first, and
-> then write this value into the register (perhaps by adding wmb in
-> write_queue_tail ).
-
-No. The local variable 'tail' is purely local to the CPU and the
-invalidation hardware does not even know that it exists.
-
-There are two things which are relevant to the hardware:
-
-   1) command is written to the hardware visible array at index of tail
-
-   2) hardware visible tail memory (register) is updated to tail + 1
-
-The memory barrier is required to prevent that #2 is written to the
-hardware _before_ #1 completed and is fully visible to the hardware.
-
-> In other words, this is originally to prevent the write register=20
-> instruction from being executed out of order before updating tail.
-
-No. The barrier is solely for the above #1 vs. #2 ordering.
-
-There is a difference between program flow ordering and memory ordering.
-
-The hardware _CANNOT_ execute the write _before_ the value it writes is
-computed. That's enforced by program flow order.
-
-So it's always guaranteed that the CPU executes
-
-   tail + 1
-
-_before_ executing the write to the register because that's a program
-order dependency.
-
-If that would not be guaranteed, then your CPU would have more serious
-problems than this piece of code. It simply would not even survive the
-first five instructions in the boot loader.
-
-But what's not guaranteed is that consecutive writes become visible to
-other parts of the system (other CPUs, the invalidation hardware, ....)
-in the same consecutive order.
-
-To ensure that ordering you need a WMB(). If you would have CPU to CPU
-communication then you would need a RMB() on the reader side to ensure
-that the command is not read before the tail. In your case the hardware
-side takes care of that.
-
-> The above is just my personal understanding
-
-Which might need some slight adjustments :)
-
-Thanks,
-
-        tglx
-
+Tianyang
 
