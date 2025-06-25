@@ -1,128 +1,236 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1A225B30D
-	for <loongarch@lists.linux.dev>; Wed, 25 Jun 2025 12:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB9F25BEF6;
+	Wed, 25 Jun 2025 13:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750855867; cv=none; b=aMIyUMZEZoRTOLSHsB3cQKybskpT7ILSNcfqm3DGA8Bfn4+rWbcbsDmgD7lpwkOJmDpMqS13VjMKzYL+oGmWybJmCOiMu70g/Fesw8cgPfZoeNeAuwLS1+yp6tOzFaCp2nDgXTO4HDj+Ec6wNCI8Lq/eEdd6Dx9E2etQ0Te9vbg=
+	t=1750858853; cv=none; b=kEJyzV2jdHkHkmWjDDQuxXadH0QHnsubdJc7lmaevU3rxs60x0p1Rw09u4Ovx2qnJWPLWsYc555udZc4oBt8L5RzbDJ5jaoiFvIr7gvMKbMfiDUzrapPTTSxECe5xFTxbBNwY44Khg0lsXMPtjFDRtxwkVnL0mVxvU4G4XOefp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750855867; c=relaxed/simple;
-	bh=CRwRhM1MtMEUcOGQgquJfle4LDepcccXWla+ZKxsdwI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jwaLVQdzNktI9jxw4zSlN1ssmyfwEVLDTp+vu9rxeHWi2rmC6uold47bGSXwLcaW0lfRraDEItjhpz/zF9MqgpsUhnpimE+nrf/BRTZqfyOuhkQqwlCiSdgq/VkJw1sfV5dG/zEh8tLxq5rb8DSEPKNakH5WPPtnNXkPwETRLCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bHfv7kpM; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750858853; c=relaxed/simple;
+	bh=0BchKjLyRBkFRqX96Fuj4zCxKm7E+GMGBD5eE6UQ4t0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sqepq35Eqa9cINqOxB+CSRvgpCMTT0QffUHHDQfl1RvTkOilUOvTe4y6zr22cC7IyJ2DNYuepEQa1NWQS8Ffi6fLJ2vj13pQR/7BGlGtTykYyVcbnH3EvUHVLjUoiAH0Zhhyoyya+Gi0tfRMWHOM4pZ1y7svuMTUgHaORY+hNnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCDhGoUY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHfv7kpM"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553b544e7b4so6815021e87.3
-        for <loongarch@lists.linux.dev>; Wed, 25 Jun 2025 05:51:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750855864; x=1751460664; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CRwRhM1MtMEUcOGQgquJfle4LDepcccXWla+ZKxsdwI=;
-        b=bHfv7kpMHNosFfNa8tBjhzhtAsx2decO8samIqKuV51dse86E+ax3MRXXTq7aP4gcO
-         QSSyBG5ZnfQVsGkERWYwA3k599NCXqKWzzOgO2kE8uEHdP9hbMkb5GFhcqGwpY6qfy01
-         2mt8KeVWk/M7+bU8eZHO6SG7xDrg6NWwE2E0/WQO3Xk1RQHfwtaC+LSEAtvbJlBmuGQK
-         F7xwSWMCLGiZ8nb+9iI66kVQYqIH3//cR+kIU7kHPc1CMUnU/YbaqbcflKA0erwyQKCC
-         75najJaiSjF5FIGP8T0xcm3qIx5PGlVszp21NIJMLNOzGp6IFCj/7iaUObssrnh949vQ
-         VKcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750855864; x=1751460664;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CRwRhM1MtMEUcOGQgquJfle4LDepcccXWla+ZKxsdwI=;
-        b=OMYNwY7QwSErNuyits/iVeBj1QDJd+Agh8Hjfha3ggepkJVmzJGQ+jgZULEX0kGKAg
-         eCxePGnqB0QTtFb/wIFi9QxMvcq1eOAMABl8G3GwSU19Opfv8yUHyHzje3kFVnC225pi
-         DLqFKE2zr16zC2RmuZB55cH6GB8y7h3bfe6yhVvBfmApi4iDVlHYZPE1lrNlxtvvQVgm
-         vK2Q+ggVJoZCSBtwcvbP/DNVvXM0iezRHwQsv6TNHgzISEFU4VWf6o9i6fYszppG9uV/
-         ccDUWJ6aAHMmrMHsDPfAA035wtqV/ymAy2T7rXmK7yKHRHdnY0ST5Dc84QEZ/aPo7w2C
-         ZiSA==
-X-Forwarded-Encrypted: i=1; AJvYcCV77jtc6MRW03Hnv0ESSwwmM9NIlh4tBH0a7/Ws1cB4KrXDETIXRl1NJc1TptZ9D7n/V0VvJtZf5zs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzqO0DPqjna8ndKQ2UtisdaF0Gy25Rc8sh9i+RV5VB0IfbVkPjv
-	bO/MLBsjhFItkLxHeyi3c+jm/lozT1YoTKCwZppcDHiC5udxaQVLr8Bcyk0J2EeBFl2iWic1eRK
-	Db//oneEgRsMomJXxQlS3+dCdddXScpA=
-X-Gm-Gg: ASbGncumk3cecDykE0py+1y3J1ClwnRBhBUwd5F/oRsUXodbIg8DAXPdcz+k9QSiCHU
-	XqnLoAsOQQI9giwyKAeZkvN6bb63me/hyPLqk14sQ21j2+uDScfwvCLPlSAqEjOxcxtMLX7esQu
-	twVESm9qOUmHBKVO+H3+NEXI+VMJ8dKpvJBv9QQy5Afw==
-X-Google-Smtp-Source: AGHT+IH4AdTi7obPWXsCps0Kqqd3RJ5D/he3Lezfcy1G4Eg5fA0HGJmj1VDSyHt6qyIqHAybfxlMpWZQjVgI2Xx3Mto=
-X-Received: by 2002:a05:6512:4011:b0:553:297b:3d45 with SMTP id
- 2adb3069b0e04-554fde58124mr1020525e87.43.1750855863865; Wed, 25 Jun 2025
- 05:51:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCDhGoUY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D61C4CEEA;
+	Wed, 25 Jun 2025 13:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750858852;
+	bh=0BchKjLyRBkFRqX96Fuj4zCxKm7E+GMGBD5eE6UQ4t0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CCDhGoUYOj4Q2XJXSiZHL7FQ/JvNUqRyk6y6yUzIj9sFg1DGmwO1PgbaUB6mifKYH
+	 XvOgNAhcqVFL6AbiV+eXmK2QStNlspOI/ndi7/bRYVGvDHzVRl2MXmI3VWH7D38g4t
+	 4JSP3gdXS6i4MHmXgWK9OFkkKuo811H9IfjOpeXoVZ+VUD3Q8rtwHkF/zPh3Sa7ejH
+	 dEz2PLp7kKGeJ0RJj0xGri580gpkhQWQhSCUZ8M5nIbypcmDnqcjQiMLBhGJaFZuiU
+	 ysoU79Q8YA8flK1cMkOCMecf5qHuIJzFyYdu9o28CND3sq7V5JU5NQU9jmjwB5VnL4
+	 DWFgyulHl6ueA==
+Date: Wed, 25 Jun 2025 14:40:47 +0100
+From: Lee Jones <lee@kernel.org>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Qunqin Zhao <zhaoqunqin@loongson.cn>, herbert@gondor.apana.org.au,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	davem@davemloft.net, linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
+Message-ID: <20250625134047.GX795775@google.com>
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
+ <20250619025138.2854-4-zhaoqunqin@loongson.cn>
+ <aFs2RDOeOKvWUN2L@kernel.org>
+ <20250625080527.GN795775@google.com>
+ <aFvhorr3kZSuzVpv@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250625095224.118679-1-snovitoll@gmail.com> <20250625095224.118679-3-snovitoll@gmail.com>
- <750b6617-7abf-4adc-b3e6-6194ff10c547@csgroup.eu> <81a8b60be5b99ecd9b322d188738016376aff4aa.camel@sipsolutions.net>
-In-Reply-To: <81a8b60be5b99ecd9b322d188738016376aff4aa.camel@sipsolutions.net>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Wed, 25 Jun 2025 17:50:46 +0500
-X-Gm-Features: Ac12FXwt1iee6Yaba3PMavifTn-RFaMv0HhE7s3qnJv0p52DgpRl1n7RcMDkzZs
-Message-ID: <CACzwLxgCH6KuVDRS3d9MrmA=wY_rMA6R5TPB_v37BkD8-A9yuw@mail.gmail.com>
-Subject: Re: [PATCH 2/9] kasan: replace kasan_arch_is_ready with kasan_enabled
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, ryabinin.a.a@gmail.com, glider@google.com, 
-	andreyknvl@gmail.com, dvyukov@google.com, vincenzo.frascino@arm.com, 
-	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
-	kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, richard@nod.at, 
-	anton.ivanov@cambridgegreys.com, dave.hansen@linux.intel.com, luto@kernel.org, 
-	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	x86@kernel.org, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
-	akpm@linux-foundation.org, guoweikang.kernel@gmail.com, geert@linux-m68k.org, 
-	rppt@kernel.org, tiwei.btw@antgroup.com, richard.weiyang@gmail.com, 
-	benjamin.berg@intel.com, kevin.brodsky@arm.com, kasan-dev@googlegroups.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFvhorr3kZSuzVpv@kernel.org>
 
-On Wed, Jun 25, 2025 at 5:24=E2=80=AFPM Johannes Berg <johannes@sipsolution=
-s.net> wrote:
->
-> On Wed, 2025-06-25 at 12:27 +0200, Christophe Leroy wrote:
-> >
-> > Le 25/06/2025 =C3=A0 11:52, Sabyrzhan Tasbolatov a =C3=A9crit :
-> > > Replace the existing kasan_arch_is_ready() calls with kasan_enabled()=
-.
-> > > Drop checks where the caller is already under kasan_enabled() conditi=
-on.
-> >
-> > If I understand correctly, it means that KASAN won't work anymore
-> > between patch 2 and 9, because until the arch calls kasan_init_generic(=
-)
-> > kasan_enabled() will return false.
-> >
-> > The transition should be smooth and your series should remain bisectabl=
-e.
-> >
-> > Or am I missing something ?
-> >
->
-> Seems right to me, it won't work for architectures that define
-> kasan_arch_is_ready themselves I think?
->
-> But since they have to literally #define it, could #ifdef on that
-> temporarily?
+On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
 
-Thanks for catching it. You're right. I need to change the order of patches=
- :
+> On Wed, Jun 25, 2025 at 09:05:27AM +0100, Lee Jones wrote:
+> > On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
+> > 
+> > > On Thu, Jun 19, 2025 at 10:51:37AM +0800, Qunqin Zhao wrote:
+> > > > Loongson Security Engine supports random number generation, hash,
+> > > > symmetric encryption and asymmetric encryption. Based on these
+> > > > encryption functions, TPM2 have been implemented in the Loongson
+> > > > Security Engine firmware. This driver is responsible for copying data
+> > > > into the memory visible to the firmware and receiving data from the
+> > > > firmware.
+> > > > 
+> > > > Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > > Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > > Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> > > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > ---
+> > > >  drivers/char/tpm/Kconfig        |  9 ++++
+> > > >  drivers/char/tpm/Makefile       |  1 +
+> > > >  drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++++++++++++++
+> > > >  3 files changed, 94 insertions(+)
+> > > >  create mode 100644 drivers/char/tpm/tpm_loongson.c
+> > > > 
+> > > > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> > > > index dddd702b2..ba3924eb1 100644
+> > > > --- a/drivers/char/tpm/Kconfig
+> > > > +++ b/drivers/char/tpm/Kconfig
+> > > > @@ -189,6 +189,15 @@ config TCG_IBMVTPM
+> > > >  	  will be accessible from within Linux.  To compile this driver
+> > > >  	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+> > > >  
+> > > > +config TCG_LOONGSON
+> > > > +	tristate "Loongson TPM Interface"
+> > > > +	depends on MFD_LOONGSON_SE
+> > > > +	help
+> > > > +	  If you want to make Loongson TPM support available, say Yes and
+> > > > +	  it will be accessible from within Linux. To compile this
+> > > > +	  driver as a module, choose M here; the module will be called
+> > > > +	  tpm_loongson.
+> > > > +
+> > > >  config TCG_XEN
+> > > >  	tristate "XEN TPM Interface"
+> > > >  	depends on TCG_TPM && XEN
+> > > > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> > > > index 9de1b3ea3..5b5cdc0d3 100644
+> > > > --- a/drivers/char/tpm/Makefile
+> > > > +++ b/drivers/char/tpm/Makefile
+> > > > @@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+> > > >  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+> > > >  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> > > >  obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
+> > > > +obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
+> > > > diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
+> > > > new file mode 100644
+> > > > index 000000000..5cbdb37f8
+> > > > --- /dev/null
+> > > > +++ b/drivers/char/tpm/tpm_loongson.c
+> > > > @@ -0,0 +1,84 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> > > > +
+> > > > +#include <linux/device.h>
+> > > > +#include <linux/mfd/loongson-se.h>
+> > > > +#include <linux/platform_device.h>
+> > > > +#include <linux/wait.h>
+> > > > +
+> > > > +#include "tpm.h"
+> > > > +
+> > > > +struct tpm_loongson_cmd {
+> > > > +	u32 cmd_id;
+> > > > +	u32 data_off;
+> > > > +	u32 data_len;
+> > > > +	u32 pad[5];
+> > > > +};
+> > > > +
+> > > > +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> > > > +{
+> > > > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> > > > +	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+> > > > +
+> > > > +	if (cmd_ret->data_len > count)
+> > > > +		return -EIO;
+> > > > +
+> > > > +	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+> > > > +
+> > > > +	return cmd_ret->data_len;
+> > > > +}
+> > > > +
+> > > > +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> > > > +{
+> > > > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> > > > +	struct tpm_loongson_cmd *cmd = tpm_engine->command;
+> > > > +
+> > > > +	if (count > tpm_engine->buffer_size)
+> > > > +		return -E2BIG;
+> > > > +
+> > > > +	cmd->data_len = count;
+> > > > +	memcpy(tpm_engine->data_buffer, buf, count);
+> > > > +
+> > > > +	return loongson_se_send_engine_cmd(tpm_engine);
+> > > > +}
+> > > > +
+> > > > +static const struct tpm_class_ops tpm_loongson_ops = {
+> > > > +	.flags = TPM_OPS_AUTO_STARTUP,
+> > > > +	.recv = tpm_loongson_recv,
+> > > > +	.send = tpm_loongson_send,
+> > > > +};
+> > > > +
+> > > > +static int tpm_loongson_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +	struct loongson_se_engine *tpm_engine;
+> > > > +	struct device *dev = &pdev->dev;
+> > > > +	struct tpm_loongson_cmd *cmd;
+> > > > +	struct tpm_chip *chip;
+> > > > +
+> > > > +	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
+> > > > +	if (!tpm_engine)
+> > > > +		return -ENODEV;
+> > > > +	cmd = tpm_engine->command;
+> > > > +	cmd->cmd_id = SE_CMD_TPM;
+> > > > +	cmd->data_off = tpm_engine->buffer_off;
+> > > > +
+> > > > +	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+> > > > +	if (IS_ERR(chip))
+> > > > +		return PTR_ERR(chip);
+> > > > +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+> > > > +	dev_set_drvdata(&chip->dev, tpm_engine);
+> > > > +
+> > > > +	return tpm_chip_register(chip);
+> > > > +}
+> > > > +
+> > > > +static struct platform_driver tpm_loongson = {
+> > > > +	.probe   = tpm_loongson_probe,
+> > > > +	.driver  = {
+> > > > +		.name  = "loongson-tpm",
+> > > 
+> > > This patch looks otherwise great but I'd prefer here tho use
+> > > "tpm_loongson_probe" for the value of the name field.
+> > 
+> > Where does this stipulation come from?  No other driver does this [0].
+> > driver.name should be a nicely formatted, human readable string
+> > describing the name of the device.  Not a function name.
+> 
+> What defines "human-readable" here? I see both as somewhat the
+> same level of "readability" ;-)
+> 
+> > 
+> > [0] git grep -A15 "static struct platform_driver" | grep ".name = .*probe"
+> 
+> What I'm getting:
+> 
+> $ git grep -l -e platform_driver_register --or -e module_platform_driver
+> drivers/char/tpm | xargs git grep "\.name"
+> drivers/char/tpm/tpm_atmel.c:           .name = "tpm_atmel",
+> drivers/char/tpm/tpm_ftpm_tee.c:                .name = "ftpm-tee",
+> drivers/char/tpm/tpm_ftpm_tee.c:                .name           =
+> "optee-ftpm",
+> drivers/char/tpm/tpm_nsc.c:             .name    = "tpm_nsc",
+> drivers/char/tpm/tpm_svsm.c:            .name = "tpm-svsm",
+> drivers/char/tpm/tpm_tis.c:     .name = "tpm_tis",
+> drivers/char/tpm/tpm_tis.c:             .name           = "tpm_tis",
+> drivers/char/tpm/tpm_tis_synquacer.c:           .name           =
+> "tpm_tis_synquacer",
+> 
+> Do you consider e.g, "tpm_tis" as "less human-readable".
+> 
+> I don't necessarily fight against the name chosen. Your arguments
+> just plain no make sense, so I just merely want to understand this.
+> That's all.
 
-- kasan: unify static kasan_flag_enabled across modes
+In 64% of cases '-' is preferred to '_' for device names.
 
-, then we should apply arch specific changes
-where we call kasan_init_generic in kasan_init.
+Human readable is probably a bit of a stretch in this context, so I'll
+retract that part of the statement.  However, we should be using device
+names, not names of functions which remain meaningless (which is what I
+really meant by 'readable') to the user.  Where else do you see the
+.probe() function name being used as a device name?
 
-- kasan: replace kasan_arch_is_ready with kasan_enabled
-
->
-> johannes
+-- 
+Lee Jones [李琼斯]
