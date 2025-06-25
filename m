@@ -1,95 +1,198 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6D210785
-	for <loongarch@lists.linux.dev>; Wed, 25 Jun 2025 03:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9CA17A2F8;
+	Wed, 25 Jun 2025 08:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750823295; cv=none; b=HjDBExO4UcF+4eQNxC7aMA+bztUjZfAg8AQvJhHJv30O28Fn69ee6hj/9BDVSrGhIXpdYMLakY6NnEanbxy3BDEEmTaNVR4tclOz8WWHScQz3WFNGu9TnEF2Zb0dpIZPYJ9D0bYHJdX/aaIXQFO7vc7EWoVXZepFKvzUvN6SxnM=
+	t=1750838733; cv=none; b=PbEuX5vAGkN3BbkI17eim/Bia3iKrcnMSLR6dMwfcrt8KZpBq0BnDHzLQfwYogdQMknMYmiivmydTCVBpAjosKB9TLKYNoGIa7EfJkA+RAxiQJOrhx3CHyVtUKXDKe35xp7YUFbj18dbgFPfA6P/WJ16jSRCGEzJNbZCDall71A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750823295; c=relaxed/simple;
-	bh=Otk52K2UkGgNNbsfo3Tw+wT8D1C0VqHYBREnFKHZXdY=;
+	s=arc-20240116; t=1750838733; c=relaxed/simple;
+	bh=aFMZBNy3/VRl880erNtl5opyOHksS+udQxCFuFgNaxU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hMBPGd/DIDNJZwMCTfNfPX/XmUCF6x8yHJkOuQToBmdgvRR1+XXDlndRMDbCpt2CiQoeERWpSJcLz/Bp7r8R1UDYPmaxQPJAHu90uB9O6WSeF9o5EmmlvgL9PEObdNwxFTNLeIWKEx/sOs48B3WzZzL2h56tePHssw8eP6L+v2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Vu66G7A1; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=jeJlk7LmagRaEuJdwxS5zobnH0DIodj3USDe5fTlsJS1A8jQ1n2JN6Nc8I2vVx9/icRm2pF+EESxfuXhEEZ/3e2501IkjT3P8dXZmt4dYsK9Ci5OC7hwUvl84qDfrSAqHyvzVyi7D9ELfnkzlJFUB2r8QZMbZ3uPTdk9HJyeBSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRKEbPeK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Vu66G7A1"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 48398206BD;
-	Wed, 25 Jun 2025 05:48:05 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id b7gxHv5344jB; Wed, 25 Jun 2025 05:48:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750823283; bh=Otk52K2UkGgNNbsfo3Tw+wT8D1C0VqHYBREnFKHZXdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Vu66G7A1MauCIThE3FLEUGylkmIO/BxPgVEv36LVLfofHUhmW7DKcv9OMGJvYf3kA
-	 90phhj8O7Y/sMbINhNjl2LkRVK8EOmAgdoDzvh2OwuwVDwVqOe9LHnw4y25j4tJFX9
-	 Se1YQiArrVaJBtqQbIz/9IWoLJ22ODbFvmqRlfCLv/lVee6g+1xHsnU3IfbHEYTGfo
-	 iapSQyYzCAOamera+WXhhwZX2I16jUHMTA5hS/TJZWReOO5q1wLLJ5ErEbMr5xgsVs
-	 HEG9BCoUPLqcQQNH9K8KuWtC3Fl1et/V3GMe1hsI9GHliYTJBVP8jLnzhBHN3k5yX7
-	 uDrxzZp91z5xA==
-Date: Wed, 25 Jun 2025 03:47:47 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>, loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: loongson3: Support older SMC firmware
-Message-ID: <aFtxYwgZDbYy_EMb@pie>
-References: <20250623123321.5622-1-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRKEbPeK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48974C4CEEA;
+	Wed, 25 Jun 2025 08:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750838732;
+	bh=aFMZBNy3/VRl880erNtl5opyOHksS+udQxCFuFgNaxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hRKEbPeK1kwVm+G+hspXLeZ8xLB+3tMDsuA08YEYENPK1HySl0Vhm0NYzCNBZyv9J
+	 V+6Cf6I1sxRdXMrkn6JxVaaCBh2tq/li/ti5kZrMeawfDg2SAA4mxNcPqtC4bj1c+V
+	 2O++TTxJLqXy3dGCsq5DeBWHbotd26bF9JixcD0KxlQ0Ou+0zcf5dDGIi992xbHd/6
+	 xE5W4TRJhwJt4VE+QPuNiDXgfV/UtM75t04uNiAHwxKKo/znEIuvNv8Z2zUDHccnAI
+	 sdSQuHZEeIWBw74b/2OKHNiLQzmJPYk1PT31U+3qd3cXyWkOQYkX5C0QksPghp4Wyb
+	 DSpBt1Xj8zq6w==
+Date: Wed, 25 Jun 2025 09:05:27 +0100
+From: Lee Jones <lee@kernel.org>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Qunqin Zhao <zhaoqunqin@loongson.cn>, herbert@gondor.apana.org.au,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	davem@davemloft.net, linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
+Message-ID: <20250625080527.GN795775@google.com>
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
+ <20250619025138.2854-4-zhaoqunqin@loongson.cn>
+ <aFs2RDOeOKvWUN2L@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250623123321.5622-1-ziyao@disroot.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFs2RDOeOKvWUN2L@kernel.org>
 
-On Mon, Jun 23, 2025 at 12:33:21PM +0000, Yao Zi wrote:
-> SMC firmware found on many on-market LoongArch devices implement a
-> different ABI than what has been implemented in the current upstream
-> driver. They significantly differ in the following ways:
+On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
+
+> On Thu, Jun 19, 2025 at 10:51:37AM +0800, Qunqin Zhao wrote:
+> > Loongson Security Engine supports random number generation, hash,
+> > symmetric encryption and asymmetric encryption. Based on these
+> > encryption functions, TPM2 have been implemented in the Loongson
+> > Security Engine firmware. This driver is responsible for copying data
+> > into the memory visible to the firmware and receiving data from the
+> > firmware.
+> > 
+> > Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> > Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> > Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  drivers/char/tpm/Kconfig        |  9 ++++
+> >  drivers/char/tpm/Makefile       |  1 +
+> >  drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++++++++++++++
+> >  3 files changed, 94 insertions(+)
+> >  create mode 100644 drivers/char/tpm/tpm_loongson.c
+> > 
+> > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> > index dddd702b2..ba3924eb1 100644
+> > --- a/drivers/char/tpm/Kconfig
+> > +++ b/drivers/char/tpm/Kconfig
+> > @@ -189,6 +189,15 @@ config TCG_IBMVTPM
+> >  	  will be accessible from within Linux.  To compile this driver
+> >  	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+> >  
+> > +config TCG_LOONGSON
+> > +	tristate "Loongson TPM Interface"
+> > +	depends on MFD_LOONGSON_SE
+> > +	help
+> > +	  If you want to make Loongson TPM support available, say Yes and
+> > +	  it will be accessible from within Linux. To compile this
+> > +	  driver as a module, choose M here; the module will be called
+> > +	  tpm_loongson.
+> > +
+> >  config TCG_XEN
+> >  	tristate "XEN TPM Interface"
+> >  	depends on TCG_TPM && XEN
+> > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> > index 9de1b3ea3..5b5cdc0d3 100644
+> > --- a/drivers/char/tpm/Makefile
+> > +++ b/drivers/char/tpm/Makefile
+> > @@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+> >  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+> >  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> >  obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
+> > +obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
+> > diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
+> > new file mode 100644
+> > index 000000000..5cbdb37f8
+> > --- /dev/null
+> > +++ b/drivers/char/tpm/tpm_loongson.c
+> > @@ -0,0 +1,84 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/mfd/loongson-se.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/wait.h>
+> > +
+> > +#include "tpm.h"
+> > +
+> > +struct tpm_loongson_cmd {
+> > +	u32 cmd_id;
+> > +	u32 data_off;
+> > +	u32 data_len;
+> > +	u32 pad[5];
+> > +};
+> > +
+> > +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> > +{
+> > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> > +	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+> > +
+> > +	if (cmd_ret->data_len > count)
+> > +		return -EIO;
+> > +
+> > +	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+> > +
+> > +	return cmd_ret->data_len;
+> > +}
+> > +
+> > +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> > +{
+> > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> > +	struct tpm_loongson_cmd *cmd = tpm_engine->command;
+> > +
+> > +	if (count > tpm_engine->buffer_size)
+> > +		return -E2BIG;
+> > +
+> > +	cmd->data_len = count;
+> > +	memcpy(tpm_engine->data_buffer, buf, count);
+> > +
+> > +	return loongson_se_send_engine_cmd(tpm_engine);
+> > +}
+> > +
+> > +static const struct tpm_class_ops tpm_loongson_ops = {
+> > +	.flags = TPM_OPS_AUTO_STARTUP,
+> > +	.recv = tpm_loongson_recv,
+> > +	.send = tpm_loongson_send,
+> > +};
+> > +
+> > +static int tpm_loongson_probe(struct platform_device *pdev)
+> > +{
+> > +	struct loongson_se_engine *tpm_engine;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct tpm_loongson_cmd *cmd;
+> > +	struct tpm_chip *chip;
+> > +
+> > +	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
+> > +	if (!tpm_engine)
+> > +		return -ENODEV;
+> > +	cmd = tpm_engine->command;
+> > +	cmd->cmd_id = SE_CMD_TPM;
+> > +	cmd->data_off = tpm_engine->buffer_off;
+> > +
+> > +	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+> > +	if (IS_ERR(chip))
+> > +		return PTR_ERR(chip);
+> > +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+> > +	dev_set_drvdata(&chip->dev, tpm_engine);
+> > +
+> > +	return tpm_chip_register(chip);
+> > +}
+> > +
+> > +static struct platform_driver tpm_loongson = {
+> > +	.probe   = tpm_loongson_probe,
+> > +	.driver  = {
+> > +		.name  = "loongson-tpm",
 > 
-> - CMD_GET_VERSION returns 0.
-> - There is no known SMC call to obtain corresponding frequencies for
->   each frequency level. The frequency table must therefore be calculated
->   with CPU clock frequency from scratch.
-> - There is no known SMC call to obtain the current frequency level.
-> - The main processor must determine the set of cores able to run at
->   boost frequency and enable boosting manually.
-> - SMC call response format may vary between commands.
-> 
-> This patch adds support for the SMC firmware found on these devices,
-> which I denoted as "SMC-0" in the driver. Boost support is omitted,
-> since determination of cores able to boost requires the driver to couple
-> tightly with micro-architecture details.
-> 
-> For coexistence, I prefixed all SMC-call constants with their SMC
-> versions, and introduced "SMC-0"-specific initialization and
-> frequency-level-setup rountines.
-> 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> This patch looks otherwise great but I'd prefer here tho use
+> "tpm_loongson_probe" for the value of the name field.
 
-While self-testing the patch on a 3A5000 workstation, I observed the
-processor cannot run stably at the low frequency levels, it's required
-to keep it above half of the maximum frequency for stability.
+Where does this stipulation come from?  No other driver does this [0].
+driver.name should be a nicely formatted, human readable string
+describing the name of the device.  Not a function name.
 
-This type of instability seems to depend on the silicon or firmware
-revision, my 3A5000 laptop, Tongfang L860-T2, could run stably at any
-frequency level allowed by the SMC firmware. And with the driver it
-gains extra 30 minutes of battery life when idle, which looks valuable
-to me.
+[0] git grep -A15 "static struct platform_driver" | grep ".name = .*probe"
 
-To avoid breaking existing users, I'll disable SMCv0 frequency scaling
-by default and add a module parameter to enable it in v2.
-
-Regards,
-Yao Zi
+-- 
+Lee Jones [李琼斯]
