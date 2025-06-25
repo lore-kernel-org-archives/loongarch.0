@@ -1,61 +1,63 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01FB30749E
-	for <loongarch@lists.linux.dev>; Wed, 25 Jun 2025 09:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5650E284686
+	for <loongarch@lists.linux.dev>; Wed, 25 Jun 2025 09:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750845165; cv=none; b=i2Nri0SHRmiHoOAFaxAPhGj8KmszqurTrbtQno5eOuXUTrN0I6RHqAj0FYj3AOUPxTXP19rNldR5JdOYjwZY+Oo22AeqCJf0YrbqRPtCg0VQ9Og1TXJEVYTLEPExAS0GZl7/y3+Ca4748za+M564mC1QvxQAeDLo1o9LB7JiMko=
+	t=1750845175; cv=none; b=uj3QFNYF80PUBLdya+4BdIkox3Xov71sv4hNX4W6OhgLCwQyH6e6VOLdIBkJRwbBTiNUyOd+xUpFoqpwP9Z1TdvkXKfsaUvmi8jycOlAWAZEXVe+sV4w9DbLU/qs0mblRShB+chV6WSxK7POdzjSBiKGuplrvQIUq/BPByDzFxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750845165; c=relaxed/simple;
-	bh=ayHAWnJ4zAM8Uxay2AHX7vMtSuGiCPetlz8IAlBI+nE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X21QHTr0B5gPLZXEcjWnTFbo1TKBk94YRioViwnBr0uVpRc58SR+JtFmWKfQBphtKeCvXXpjcnm1jhi12Hasc4iytIUJSOfytLgkFfpxWTrd6RL6clufFYQ5Wu2/lkXJvjDlEUTSgbObnCDrJACrwy9nrOYRYEsxWb7adHuiUXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZiUKg6Qi; arc=none smtp.client-ip=209.85.208.177
+	s=arc-20240116; t=1750845175; c=relaxed/simple;
+	bh=K343I3qAoPHAanfNFChAhUARVvZ/YL0WcDDqgni6Tx4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hvcA5BOizHUmnh6SyF9GXboNdilT6khFdQWr+5D9kyfwL6UgH9oxoWgPnkZXC7Nbb9kdsXFjHm/1RyboSkpIsspAMKzrbFxlCNYfORlVO24d6O8XNnfcjt25YP77Euzn4Zq2HAgoeBjqL3Ty/cT/AZ+K/ODEyu1VD8Xp3RtZh2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I9Oa+Sl3; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiUKg6Qi"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32b31afa781so50555191fa.3
-        for <loongarch@lists.linux.dev>; Wed, 25 Jun 2025 02:52:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I9Oa+Sl3"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32ca160b4bcso16441891fa.3
+        for <loongarch@lists.linux.dev>; Wed, 25 Jun 2025 02:52:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750845162; x=1751449962; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7imy3yTxK1noZpQDmXpRegf9/Y5dUmZKs6ukLVxlc1E=;
-        b=ZiUKg6Qi4EGwq9t/YF5fpH8rBii3+tu3T4EXV1DfFFOetOkMkObOLXA0jYaEhp8zLt
-         +zc4dNndxFz5qhtiIorcdjFHss4HdMsmGnHmWObeGoArTGQcwg7dcFa5LWcw2tIREGAU
-         1L8Hzr7UhDl78iBGTdmcpoGvx/ggw+kI5qUBUQeLaykDkaYcQMFSr8Z0k+AQ/QenCsVT
-         L7cHUG4XBc+pzatXMD6GIrDvNy+bRBj5mNJRjBPcJ/xWpgJj4EXAW8xgmOuPHl6vMXse
-         8aGg0m3zajRJlFH5XB/87q0k6EI0EWm+AA9hSlEp+0pnpZC/qI5jrxgZ2jmq1OvikjEJ
-         zVcA==
+        d=gmail.com; s=20230601; t=1750845171; x=1751449971; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U6SFM5Ezspiku172UK6Utmx+P9PfAPP964pKgViV7lo=;
+        b=I9Oa+Sl3dvcQ7EBSagc8SeTybRKPaT4cBFhQFsKZswG7n0d7mzE3Ri01QkS+0fdHy3
+         MRzgK5hL+dq4a3IxEcMbEu+P16+ywZzSQEilyfsyucM5j4BMlpY3TOXvRhKhFNmoy2O+
+         USdBez1t6izIP03b/WnmkNjsKXU+bBPqlB0QjtwF/Mj/vBsKZY6yk+/YiQHYjq1pC77L
+         dri3j8hPOEGXz4I3fBsL9Byzanlltlzo/R55w0XvxW3E0Y1bDC94hw/tvXx7/oZdjwsd
+         8N0yqlK1X/iHGC2ZtdCHHA8xDJSXNwlltXBHbgpYsu1B9EEHRz0cZZXHtAkgtEf1UvdJ
+         6WPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750845162; x=1751449962;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7imy3yTxK1noZpQDmXpRegf9/Y5dUmZKs6ukLVxlc1E=;
-        b=NyWA3/kL9UV0Q/wd1QS7csavLjvW1x6IjBc2O17QhmT21jkMUu2Uh2IROAITY5e2L9
-         cM7Bt8uXMcI+SqnDtKaalIRw5nmhNmrEj03+G9qiIUDr7t2q8FkzD9yqIJbNo18JWTJX
-         yYzFNgyLkbQzepBiCS4+rRcpzKHXlDaA5V8KLPZXstHGeN/agMoe8PmSpZel2PT/QHXV
-         AmmgVhoDIxNnssRngP/VJE5MWKGX9iMSOP/Ljk0DOk2u3OD+C1ivHJU+zboAuKxRjst/
-         Co0lRrZsR/Uc9yHPrQkmliy/M71oBQ1nEtEPC1QBYGOlR8SMZ0Krdbc+SrKuJq02cLCr
-         gMRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEGrMDD7Zz2fWEnNRhhf5kWHS1FeS8W/UnSDzWgJCOawe2LnxXZTtRQfTyW6R7s5hGXbE6NinyTo4=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy8cNuBLdPmswvXeMhqNpEeL8dt7XnBt3RWbTSI5KcgLwy1vK2u
-	pWogRGLjdQs9AlTXcw1f/k1xjPIA34vX+6EdRkTz9lCSneOH9rTjNggX
-X-Gm-Gg: ASbGncufVWj3lxYkJeYLTpR2mfmeYmDMqiOu26LmpVPTiIkRCsspmF2lDFtQBHPirJK
-	0I6uTKf08KxafnfXEwaDvttWKb5g/rZLlNh3ncmvTz0hSvI+4GTqPAMEhVgPDbKp3WzZcqiK29q
-	2dCwSP8t3pM5tDK87Q5tUTxhH6iC1JzSblwf/ky3XZHuXapoAUbbL/743OwBxnl+nQRh5eaHr/J
-	QIV2SIL8+FtDh5vVv8aYD3wK9x1UFHeVoj27Ec+3UaEAMfxNQtNO3HKdnLNde61L+kAg1L/SnK8
-	zM9W4BFYOPlOuEiV/2PqpIi1DEgzUHTrcYN++7qC2t0iS757R9xbrDj4uitpNcUAqSrjD0wx5NS
-	KmMzFlUkNndSZKbVCAz+hvprlqJHFng==
-X-Google-Smtp-Source: AGHT+IH5ApOZ+lbBvE2ggWIBLKt7ZlvSOrm/LIiyhhxX4cx6KdoLX4TpLfXvTX3dCD4pGEuZuPz4ow==
-X-Received: by 2002:a2e:be03:0:b0:32b:3879:ce7f with SMTP id 38308e7fff4ca-32cc63451f0mr7075061fa.0.1750845161589;
-        Wed, 25 Jun 2025 02:52:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750845171; x=1751449971;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U6SFM5Ezspiku172UK6Utmx+P9PfAPP964pKgViV7lo=;
+        b=jIBQ2DKIf2XLtbbuCUUwxZEXHpZzhc0Q1o8VnJGVmon5JzUFMJQGHvC0Jb4cplfGre
+         /LhJ2RgZP2+BcGF50QiJOiLmXihZeNBho16mrv8SsbvG5mn30Bw9fxYxLoqarFXRd21z
+         gdYWsAWfWUXj33dtQnbuTLiauEeXHn7BO/UVOB1Op1irKDw9/NzwtVxFhP9W8vjFzjW4
+         fVvv1DCoyoSh5t9uf/cpiwGPVa0ZoLim+/vmD0fU4lWQKpaPpPOoMLG1egPe10joVOQu
+         7fwug2u0/vxGcDqyZb2LhKzc5kF9/weGoJWCFFcGk+rn3DiG4LMgG+tzqiuWEWUmH02O
+         evTA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4+HU1V+/HlJP0Qeocbf2ScyfY2bj2tT8rqT7eod0Wmh9d3rMXnJKzU61tkSZVmSpyg6bhf6Q7A+Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwcTFr0bFwnr5zEyMqdksVSuWXGWSjQW4W5dLOGZnpdG+prhyuq
+	neSZv+xTW7yTpfuKsEtQls5d3OBQU7T3lWj0xEAjxG6VwwL3ctM3yqj7
+X-Gm-Gg: ASbGnctm18MIQnOmgOldl+wSiA0ngGP1T2whDVwE5XO3XjKp9CHuckCf2zu0AieQCg3
+	VhGUIUuUfT3u2ETdZ6B5ZB4YEHuC/5mA5rzVKGg8dHQMT56wZz3OQuCtbim/7a/tExVi4tA7ifI
+	yXFpKvHjyTlAfGGtW/Th1rghF/ORtMWm1nRQKvEwdH/Jy/PyDQq2hQmmRFPEUF38J1XJIQcS274
+	eB9n5rh61UnBkzoZ+SDFRsWOeb6RwS7OeUK6hlhMT0SVhBEbLfmbre9MxrPAneYDj8LsHoqPqjM
+	kzxpRiQLiH/E7bDOac94oisr9aLlt8sGSevCQJwLOBvl3dj0J5HOl6c/jkQAFJ6jqaq5zL09Hjs
+	MGRqamKvmmajUTNrDG3CfXjUfmEAYKQ==
+X-Google-Smtp-Source: AGHT+IEfwLa2l5GETasrkBN6s16G3uwHStgfCUXGV9Vb0lViqA4Rs63c7NBMXwsuNAY9/KPq3s8gww==
+X-Received: by 2002:a05:651c:f03:b0:32b:93fa:2c0b with SMTP id 38308e7fff4ca-32cc64d280emr4286261fa.11.1750845171079;
+        Wed, 25 Jun 2025 02:52:51 -0700 (PDT)
 Received: from localhost.localdomain (2.135.54.165.dynamic.telecom.kz. [2.135.54.165])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b980a36c0sm19311851fa.62.2025.06.25.02.52.36
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b980a36c0sm19311851fa.62.2025.06.25.02.52.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 02:52:41 -0700 (PDT)
+        Wed, 25 Jun 2025 02:52:50 -0700 (PDT)
 From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
 To: ryabinin.a.a@gmail.com,
 	glider@google.com,
@@ -105,124 +107,178 @@ Cc: guoweikang.kernel@gmail.com,
 	linux-um@lists.infradead.org,
 	linux-mm@kvack.org,
 	snovitoll@gmail.com
-Subject: [PATCH 0/9] kasan: unify kasan_arch_is_ready with kasan_enabled
-Date: Wed, 25 Jun 2025 14:52:15 +0500
-Message-Id: <20250625095224.118679-1-snovitoll@gmail.com>
+Subject: [PATCH 1/9] kasan: unify static kasan_flag_enabled across modes
+Date: Wed, 25 Jun 2025 14:52:16 +0500
+Message-Id: <20250625095224.118679-2-snovitoll@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250625095224.118679-1-snovitoll@gmail.com>
+References: <20250625095224.118679-1-snovitoll@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch series unifies the kasan_arch_is_ready() and kasan_enabled()
-interfaces by extending the existing kasan_enabled() infrastructure to
-work consistently across all KASAN modes (Generic, SW_TAGS, HW_TAGS).
+Historically the fast-path static key `kasan_flag_enabled` existed
+only for `CONFIG_KASAN_HW_TAGS`. Generic and SW_TAGS either relied on
+`kasan_arch_is_ready()` or evaluated KASAN checks unconditionally.
+As a result every architecture had to toggle a private flag
+in its `kasan_init()`.
 
-Currently, kasan_enabled() only works for HW_TAGS mode using a static key,
-while other modes either return IS_ENABLED(CONFIG_KASAN) (compile-time
-constant) or rely on architecture-specific kasan_arch_is_ready()
-implementations with custom static keys and global variables.
+This patch turns the flag into a single global runtime predicate that
+is built for every `CONFIG_KASAN` mode and adds a helper that flips
+the key once KASAN is ready.
 
-This leads to:
-- Code duplication across architectures  
-- Inconsistent runtime behavior between KASAN modes
-- Architecture-specific readiness tracking
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218315
+Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+---
+ include/linux/kasan-enabled.h | 22 ++++++++++++++++------
+ include/linux/kasan.h         |  6 ++++++
+ mm/kasan/common.c             |  7 +++++++
+ mm/kasan/generic.c            | 11 +++++++++++
+ mm/kasan/hw_tags.c            |  7 -------
+ mm/kasan/sw_tags.c            |  2 ++
+ 6 files changed, 42 insertions(+), 13 deletions(-)
 
-After this series:
-- All KASAN modes use the same kasan_flag_enabled static key
-- Consistent runtime enable/disable behavior across modes
-- Simplified architecture code with unified kasan_init_generic() calls
-- Elimination of arch specific kasan_arch_is_ready() implementations
-- Unified vmalloc integration using kasan_enabled() checks
-
-This addresses the bugzilla issue [1] about making
-kasan_flag_enabled and kasan_enabled() work for Generic mode,
-and extends it to provide true unification across all modes.
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=217049
-
-=== Current mainline KUnit status
-
-To see if there is any regression, I've tested first on the following
-commit 739a6c93cc75 ("Merge tag 'nfsd-6.16-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux").
-
-Tested via compiling a kernel with CONFIG_KASAN_KUNIT_TEST and running
-QEMU VM. There are failing tests in SW_TAGS and GENERIC modes in arm64:
-
-arm64 CONFIG_KASAN_HW_TAGS:
-	# kasan: pass:62 fail:0 skip:13 total:75
-	# Totals: pass:62 fail:0 skip:13 total:75
-	ok 1 kasan
-
-arm64 CONFIG_KASAN_SW_TAGS=y:
-	# kasan: pass:65 fail:1 skip:9 total:75
-	# Totals: pass:65 fail:1 skip:9 total:75
-	not ok 1 kasan
-	# kasan_strings: EXPECTATION FAILED at mm/kasan/kasan_test_c.c:1598
-	KASAN failure expected in "strscpy(ptr, src + KASAN_GRANULE_SIZE, KASAN_GRANULE_SIZE)", but none occurred
-
-arm64 CONFIG_KASAN_GENERIC=y, CONFIG_KASAN_OUTLINE=y:
-	# kasan: pass:61 fail:1 skip:13 total:75
-	# Totals: pass:61 fail:1 skip:13 total:75
-	not ok 1 kasan
-	# same failure as above
-
-x86_64 CONFIG_KASAN_GENERIC=y:
-	# kasan: pass:58 fail:0 skip:17 total:75
-	# Totals: pass:58 fail:0 skip:17 total:75
-	ok 1 kasan
-
-=== Testing with the patches:
-
-* arm64  (GENERIC, HW_TAGS, SW_TAGS): no regression, same above results.
-* x86_64 (GENERIC): no regression, no errors
-
-=== NB
-
-I haven't tested on the following arch. due to the absence of qemu-system-
-support on those arch on my machine. So I defer this to relevant arch
-people to test KASAN initialization:
-- loongarch
-- s390
-- um
-- xtensa
-- powerpc
-
-Sabyrzhan Tasbolatov (9):
-  kasan: unify static kasan_flag_enabled across modes
-  kasan: replace kasan_arch_is_ready with kasan_enabled
-  kasan/arm64: call kasan_init_generic in kasan_init
-  kasan/xtensa: call kasan_init_generic in kasan_init
-  kasan/loongarch: call kasan_init_generic in kasan_init
-  kasan/um: call kasan_init_generic in kasan_init
-  kasan/x86: call kasan_init_generic in kasan_init
-  kasan/s390: call kasan_init_generic in kasan_init
-  kasan/powerpc: call kasan_init_generic in kasan_init
-
- arch/arm64/mm/kasan_init.c             |  4 +---
- arch/loongarch/include/asm/kasan.h     |  7 -------
- arch/loongarch/mm/kasan_init.c         |  7 ++-----
- arch/powerpc/include/asm/kasan.h       | 14 --------------
- arch/powerpc/mm/kasan/init_book3s_64.c |  6 +-----
- arch/s390/kernel/early.c               |  2 +-
- arch/um/include/asm/kasan.h            |  5 -----
- arch/um/kernel/mem.c                   |  4 ++--
- arch/x86/mm/kasan_init_64.c            |  2 +-
- arch/xtensa/mm/kasan_init.c            |  2 +-
- include/linux/kasan-enabled.h          | 22 ++++++++++++++++------
- include/linux/kasan.h                  |  6 ++++++
- mm/kasan/common.c                      | 15 +++++++++++----
- mm/kasan/generic.c                     | 17 ++++++++++++++---
- mm/kasan/hw_tags.c                     |  7 -------
- mm/kasan/kasan.h                       |  6 ------
- mm/kasan/shadow.c                      | 15 +++------------
- mm/kasan/sw_tags.c                     |  2 ++
- 18 files changed, 61 insertions(+), 82 deletions(-)
-
+diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
+index 6f612d69ea0c..2436eb45cfee 100644
+--- a/include/linux/kasan-enabled.h
++++ b/include/linux/kasan-enabled.h
+@@ -4,8 +4,12 @@
+ 
+ #include <linux/static_key.h>
+ 
+-#ifdef CONFIG_KASAN_HW_TAGS
++#ifdef CONFIG_KASAN
+ 
++/*
++ * Global runtime flag. Starts ‘false’; switched to ‘true’ by
++ * the appropriate kasan_init_*() once KASAN is fully initialized.
++ */
+ DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
+ 
+ static __always_inline bool kasan_enabled(void)
+@@ -13,18 +17,24 @@ static __always_inline bool kasan_enabled(void)
+ 	return static_branch_likely(&kasan_flag_enabled);
+ }
+ 
+-static inline bool kasan_hw_tags_enabled(void)
++#else /* !CONFIG_KASAN */
++
++static __always_inline bool kasan_enabled(void)
+ {
+-	return kasan_enabled();
++	return false;
+ }
+ 
+-#else /* CONFIG_KASAN_HW_TAGS */
++#endif /* CONFIG_KASAN */
+ 
+-static inline bool kasan_enabled(void)
++#ifdef CONFIG_KASAN_HW_TAGS
++
++static inline bool kasan_hw_tags_enabled(void)
+ {
+-	return IS_ENABLED(CONFIG_KASAN);
++	return kasan_enabled();
+ }
+ 
++#else /* !CONFIG_KASAN_HW_TAGS */
++
+ static inline bool kasan_hw_tags_enabled(void)
+ {
+ 	return false;
+diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+index 890011071f2b..51a8293d1af6 100644
+--- a/include/linux/kasan.h
++++ b/include/linux/kasan.h
+@@ -543,6 +543,12 @@ void kasan_report_async(void);
+ 
+ #endif /* CONFIG_KASAN_HW_TAGS */
+ 
++#ifdef CONFIG_KASAN_GENERIC
++void __init kasan_init_generic(void);
++#else
++static inline void kasan_init_generic(void) { }
++#endif
++
+ #ifdef CONFIG_KASAN_SW_TAGS
+ void __init kasan_init_sw_tags(void);
+ #else
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index ed4873e18c75..525194da25fa 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -32,6 +32,13 @@
+ #include "kasan.h"
+ #include "../slab.h"
+ 
++/*
++ * Definition of the unified static key declared in kasan-enabled.h.
++ * This provides consistent runtime enable/disable across all KASAN modes.
++ */
++DEFINE_STATIC_KEY_FALSE(kasan_flag_enabled);
++EXPORT_SYMBOL(kasan_flag_enabled);
++
+ struct slab *kasan_addr_to_slab(const void *addr)
+ {
+ 	if (virt_addr_valid(addr))
+diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+index d54e89f8c3e7..32c432df24aa 100644
+--- a/mm/kasan/generic.c
++++ b/mm/kasan/generic.c
+@@ -36,6 +36,17 @@
+ #include "kasan.h"
+ #include "../slab.h"
+ 
++/*
++ * Initialize Generic KASAN and enable runtime checks.
++ * This should be called from arch kasan_init() once shadow memory is ready.
++ */
++void __init kasan_init_generic(void)
++{
++	static_branch_enable(&kasan_flag_enabled);
++
++	pr_info("KernelAddressSanitizer initialized (generic)\n");
++}
++
+ /*
+  * All functions below always inlined so compiler could
+  * perform better optimizations in each of __asan_loadX/__assn_storeX
+diff --git a/mm/kasan/hw_tags.c b/mm/kasan/hw_tags.c
+index 9a6927394b54..8e819fc4a260 100644
+--- a/mm/kasan/hw_tags.c
++++ b/mm/kasan/hw_tags.c
+@@ -45,13 +45,6 @@ static enum kasan_arg kasan_arg __ro_after_init;
+ static enum kasan_arg_mode kasan_arg_mode __ro_after_init;
+ static enum kasan_arg_vmalloc kasan_arg_vmalloc __initdata;
+ 
+-/*
+- * Whether KASAN is enabled at all.
+- * The value remains false until KASAN is initialized by kasan_init_hw_tags().
+- */
+-DEFINE_STATIC_KEY_FALSE(kasan_flag_enabled);
+-EXPORT_SYMBOL(kasan_flag_enabled);
+-
+ /*
+  * Whether the selected mode is synchronous, asynchronous, or asymmetric.
+  * Defaults to KASAN_MODE_SYNC.
+diff --git a/mm/kasan/sw_tags.c b/mm/kasan/sw_tags.c
+index b9382b5b6a37..525bc91e2fcd 100644
+--- a/mm/kasan/sw_tags.c
++++ b/mm/kasan/sw_tags.c
+@@ -45,6 +45,8 @@ void __init kasan_init_sw_tags(void)
+ 
+ 	kasan_init_tags();
+ 
++	static_branch_enable(&kasan_flag_enabled);
++
+ 	pr_info("KernelAddressSanitizer initialized (sw-tags, stacktrace=%s)\n",
+ 		str_on_off(kasan_stack_collection_enabled()));
+ }
 -- 
 2.34.1
 
