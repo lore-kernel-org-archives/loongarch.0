@@ -1,39 +1,39 @@
 Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1CF52BDC1C
-	for <loongarch@lists.linux.dev>; Wed, 25 Jun 2025 10:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FF252BE7A6
+	for <loongarch@lists.linux.dev>; Wed, 25 Jun 2025 10:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750848641; cv=none; b=lmCH7ThJ/SOUS0BWsokDlgPIKuNcoqYcTYjzNz+vOaxYshaQMwaxEVEN9zXTmo1Ij9j2xWo0l7yih/RYMilAA/rVoXI4mwDZjTaaEt20Xgyo1yg9M3KME+BhnsRXNX0k3WmgLznKAuTxdqY43KmdJN2bOjODx0Gs8JPe5pB9PPQ=
+	t=1750848645; cv=none; b=YKjJTswKxODfLejgXEZfc3zL2vzYNcO1Vf6Dx+yx+qVwLgXsAH0hFYvI+Hzi/pxsAi/xn2AEgtiuKN1LxHIqP8mewz40iDrFabAxqIF0D2+kCH4eqAu/md6Vu2l21LGADyDi0CPbYKHzTYvk6g+i00XAFfGVvw9zJPWOWe02V78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750848641; c=relaxed/simple;
-	bh=aekhGqf6P/O199m3eOaLFTaZxD8oT2lv9cl8d0b7XDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sLc3hT77szxxMRPC+UNVz3hDu0objR65YtneSacdhlCw2R9BG9znDBHfejrGZtlVER4YbDi8cpQTRAXWJvlfbVF4neR0quXccVeQhOiIPXm8Oi+lyyNQY2sYNBu5ATQKGDE3b9a3nE3bF9myqnPxRpIhuij+F2fYrLkSeNr+Vmw=
+	s=arc-20240116; t=1750848645; c=relaxed/simple;
+	bh=ApxE6M1Ke6N9jdaZibKhAIInp2ndrZn6PPTj4Ntr1CE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=in2jbXn1VDlWjhqTJPqvFiOl9d90eLqzpzVkYJNAdMhWChPPBmQ6RWNyui9I1E1slEmkzs2ATE9eQPIdHt0vlZ2nY7iLC2V6dmyb4cqR/qDm5iHPJ0hvuwChPJhKqzQLaWYAaVMkeLfnX6Lr3Jqk4QQrC3qFBnn77zfkfZnpsBM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bRynq72Rpz9vCc;
-	Wed, 25 Jun 2025 12:33:03 +0200 (CEST)
+	by localhost (Postfix) with ESMTP id 4bRyfz3MTKz9vBt;
+	Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
 	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Wkd8VwLop-3S; Wed, 25 Jun 2025 12:33:03 +0200 (CEST)
+	with ESMTP id p2o-Y-FdKUAQ; Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bRynq5zBhz9vDF;
-	Wed, 25 Jun 2025 12:33:03 +0200 (CEST)
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bRyfz2RdKz9vBC;
+	Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id C1DE58B7B7;
-	Wed, 25 Jun 2025 12:33:03 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 435058B7B7;
+	Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 3S-OpwLkq4z3; Wed, 25 Jun 2025 12:33:03 +0200 (CEST)
+	with ESMTP id vvosXbHhLt2e; Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
 Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id EAC428B7A7;
-	Wed, 25 Jun 2025 12:33:01 +0200 (CEST)
-Message-ID: <4d568111-9615-4fba-884a-f2ae629776fe@csgroup.eu>
-Date: Wed, 25 Jun 2025 12:33:01 +0200
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0BC418B7A7;
+	Wed, 25 Jun 2025 12:27:04 +0200 (CEST)
+Message-ID: <750b6617-7abf-4adc-b3e6-6194ff10c547@csgroup.eu>
+Date: Wed, 25 Jun 2025 12:27:04 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,7 +41,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] kasan/powerpc: call kasan_init_generic in kasan_init
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH 2/9] kasan: replace kasan_arch_is_ready with kasan_enabled
 To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
  glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
  vincenzo.frascino@arm.com, catalin.marinas@arm.com, will@kernel.org,
@@ -60,24 +61,25 @@ Cc: guoweikang.kernel@gmail.com, geert@linux-m68k.org, rppt@kernel.org,
  loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
  linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
 References: <20250625095224.118679-1-snovitoll@gmail.com>
- <20250625095224.118679-10-snovitoll@gmail.com>
+ <20250625095224.118679-3-snovitoll@gmail.com>
 Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250625095224.118679-10-snovitoll@gmail.com>
+In-Reply-To: <20250625095224.118679-3-snovitoll@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
 Le 25/06/2025 à 11:52, Sabyrzhan Tasbolatov a écrit :
-> Call kasan_init_generic() which enables the static flag
-> to mark generic KASAN initialized, otherwise it's an inline stub.
-> Also prints the banner from the single place.
+> Replace the existing kasan_arch_is_ready() calls with kasan_enabled().
+> Drop checks where the caller is already under kasan_enabled() condition.
 
-What about:
+If I understand correctly, it means that KASAN won't work anymore 
+between patch 2 and 9, because until the arch calls kasan_init_generic() 
+kasan_enabled() will return false.
 
-arch/powerpc/mm/kasan/init_32.c:void __init kasan_init(void)
-arch/powerpc/mm/kasan/init_book3e_64.c:void __init kasan_init(void)
+The transition should be smooth and your series should remain bisectable.
+
+Or am I missing something ?
 
 Christophe
 
