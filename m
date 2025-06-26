@@ -1,130 +1,312 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBF42E11B1
-	for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 12:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB588201017
+	for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 12:48:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750941275; cv=none; b=WhJS0Yks4ea6T241Mm3IDPHLY3MGM0NvLFaJWsxMrR2qvGUC4R2HHDl18PbjS6BBSuMHemQKkWuw5IMqjhU8vBvB5UOFO2/svffdID5oucxLF/gkthz4NBuCRrHblY6gsDMYbTJLG9/+MsOA6w9vYXQslMT/hpm3hh3jNhZwiKc=
+	t=1750942133; cv=none; b=PTJMKEVj/Kp2ae+8IlyRrg8XEZWAYlmJgmk3aWVWTNP3xUcgRYOElo0NMNc4TnGSEpK4f/iDuyu8jA0cGVE29Uf558HsPC+WCsyrAjBw06aM8NIIMu83ugCD/lBpyr33vfdYL5Eu9MCPtfs6YkdyUYlmQR35CzGQPnuXtorDiUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750941275; c=relaxed/simple;
-	bh=hcQ6uyRoZdEeGK6Ue+aMRUyXS514RKes3MWuq/gg04A=;
+	s=arc-20240116; t=1750942133; c=relaxed/simple;
+	bh=GBR2+0OFYN1ZObHhvIHvnH034PkknP6dXVPJKHAFliY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dV9pSHZ0Hq0F6AF6MsrfpIOCKbPU+rab5wGT6Vu3XWkRBQjcjyrkKjRqglaAfG9pvoImgnQZr+pavHWDcqNETxs8+aROooxyexY0BeDRyDZE2VcCRZ5hQinjrJev0prtJxElhckXCPFSbPdUE/ct/6XOVAsYtVMIHK/Lajb/KyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3qKMOTo; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=uEMKxCOM227SkGXdCQnqL84IfklBmzks9W/PPWO/d/J21kvjx+DrYD/7BPMKrbVRjS+W5o1vOI4bwJsC/Suu/aoX4BndtuscNiaL7DwyLrEtlFwyIysjWWe//x9t8+ijHznEutvky5VulqlCfFhEf0ee9KIMmkmOaMlY/wDVsZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LHn4Bk3o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3qKMOTo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C72E5C4CEF0
-	for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 12:34:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHn4Bk3o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89B6BC4CEEE
+	for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 12:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750941274;
-	bh=hcQ6uyRoZdEeGK6Ue+aMRUyXS514RKes3MWuq/gg04A=;
+	s=k20201202; t=1750942133;
+	bh=GBR2+0OFYN1ZObHhvIHvnH034PkknP6dXVPJKHAFliY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=P3qKMOToBvXmZ18EDXVLHHbD8r9WYfa9DQyIULHWBxyCGqq+gp6LmU3bJVgbPVHYy
-	 ACyskFizMsRsnOeAEq8Lq6avpvQ7GptTWTYwlZun1KTg0kzLjueVIePmLuGx6AzoIW
-	 0J+vq1kRjkh7ShIBmTcOjS7/jeymDKE48rZrNJFtBAJsIm0+wiSMRjeUnDzpdGAUMA
-	 EgSaycyxf0PJ6us6EoylKTGidAGvQPKYvYOiIyAt2cCT+y02qZUyNZxu/bQ5q8Tsw+
-	 LypZ/mZIDNfd2VpxsBZbDCThvWPoLGji6TKbnF9ZoPIjzSp8fIyluGRBhPdz+PHK05
-	 TBzFjvsvItlKg==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60bf5a08729so1808238a12.0
-        for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 05:34:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUBzNkRSJYzyhuXBajWR12qFzoEmXf3i19E7Fdah1iuuAYrKfjXAdmAOsOM5tKpHALUEaTIzEmQzts=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyW4gJ01PCwi0omVvJBNFDWIKpJqfp7r6pnZb4341EwRgDusYAw
-	pEawpZ6zWteEpaGDWGOG3pOMs6176XqVryCo7o8hp+M+sAp7bADSUH8/STaCwMkrOjrJVcOiS6P
-	xi1wDOwpCDcXY+tASyACt+7RvUgr5chA=
-X-Google-Smtp-Source: AGHT+IHWYEFD7FhNFKe3vMe2MLiQzW6HtnNAGBb2VkYvPZzV8A//gU2qepXD36L8XdzwuDTZK3mZkCULBCl9iXk/ViI=
-X-Received: by 2002:a05:6402:26c3:b0:606:eb8e:d975 with SMTP id
- 4fb4d7f45d1cf-60c4d10f679mr6018333a12.0.1750941273373; Thu, 26 Jun 2025
- 05:34:33 -0700 (PDT)
+	b=LHn4Bk3ovVRMZ6P5ps+8nxc1HkM3GvD5D+YpTxvtZAbblU8XqIAMTBOZ/sc6DlpvR
+	 c3PcAUQIGABFbnIS7kaC/KWP5ICNMfQ4Cpe6hod0KW0KDY8156MnQso7MzfQHSdXbn
+	 DcohcdW/cnNCRKOjxmDDc+gsElTA1ge3VIyIlS1NXwl9qrv161iB5HlyrrdGNONjrZ
+	 HUiC7qDhbMLZ68SXkz+EVI9PKf6xQ7XYM0yZIqyN1kN/a/NrtgdFzpRYcbenGI9adL
+	 yhJ9fbT/wy7pXYYwwiGyZ9rRUQ8XDgCARAJ3n5W3DEXGtmH0Z0lof5537oWEGnWOwE
+	 n+BAGFglB4wBQ==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so1737669a12.3
+        for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 05:48:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV4+DYoOLUQU2AJPZbGRR50KkUsQvv0NSVU/y8CQuaYvySH0Xw30QRLcjaNuANEC/IUxVqrs/Wbz9k=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxi7mbeI+arG1JK96GjSYJH2H4/Hd9+WmVKQwtN20qCtBbjVm5v
+	JVCmcm5xKTh3lCJI7UVngg22jeKvGKDm35lALnNDWHuQyEcEl1PjOuCc+CUfeQHI2B7tikPB3Xu
+	mmcNvoJdiXkxkATh/p23yRdd/R9ZUQmE=
+X-Google-Smtp-Source: AGHT+IG241ireDSwccz0E1Aketjghy187dnSlteXhMqy5mR3RyzT/SQgU6uQGbbjvwWfQLW80GsRT42xbOMpmIrhHsQ=
+X-Received: by 2002:a05:6402:3513:b0:608:4945:ca47 with SMTP id
+ 4fb4d7f45d1cf-60c6698f22dmr3303398a12.17.1750942132056; Thu, 26 Jun 2025
+ 05:48:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250624081852.1563985-1-wangming01@loongson.cn>
-In-Reply-To: <20250624081852.1563985-1-wangming01@loongson.cn>
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn> <20250619025138.2854-4-zhaoqunqin@loongson.cn>
+ <aFs2RDOeOKvWUN2L@kernel.org> <20250625080527.GN795775@google.com>
+ <aFvhorr3kZSuzVpv@kernel.org> <20250625134047.GX795775@google.com>
+ <aFwsIs6ri3HZictC@kernel.org> <20250626103030.GA10134@google.com> <aF0oHDVQKVfGZNV2@kernel.org>
+In-Reply-To: <aF0oHDVQKVfGZNV2@kernel.org>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 26 Jun 2025 20:34:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5xc_Lp2=71goHF1nT4gHoavVKHPLuXRykU=7EMPS_QfQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwYs6C6bmyJVDxgUYr-kMO9to9KHAfTEDDKscaPoHTt09w5r3dn5a7lmCg
-Message-ID: <CAAhV-H5xc_Lp2=71goHF1nT4gHoavVKHPLuXRykU=7EMPS_QfQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/loongarch: Reserve EFI memory map region
-To: Ming Wang <wangming01@loongson.cn>
-Cc: Ard Biesheuvel <ardb@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-efi@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
+Date: Thu, 26 Jun 2025 20:48:35 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7nyKHS70BGh7nwjuGwSWayCbUY=1-zWMU4N3bJZtH1gQ@mail.gmail.com>
+X-Gm-Features: Ac12FXyKHwBO2MzQTxDMQ09xuJXSBLQFTQuAYHXcZc2O_q5wOUNjfptrkg3vMvc
+Message-ID: <CAAhV-H7nyKHS70BGh7nwjuGwSWayCbUY=1-zWMU4N3bJZtH1gQ@mail.gmail.com>
+Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Qunqin Zhao <zhaoqunqin@loongson.cn>, herbert@gondor.apana.org.au, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, Yinggang Gu <guyinggang@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied with some modifications, thanks.
+On Thu, Jun 26, 2025 at 6:59=E2=80=AFPM Jarkko Sakkinen <jarkko@kernel.org>=
+ wrote:
+>
+> On Thu, Jun 26, 2025 at 11:30:30AM +0100, Lee Jones wrote:
+> > On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
+> >
+> > > On Wed, Jun 25, 2025 at 02:40:47PM +0100, Lee Jones wrote:
+> > > > On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
+> > > >
+> > > > > On Wed, Jun 25, 2025 at 09:05:27AM +0100, Lee Jones wrote:
+> > > > > > On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
+> > > > > >
+> > > > > > > On Thu, Jun 19, 2025 at 10:51:37AM +0800, Qunqin Zhao wrote:
+> > > > > > > > Loongson Security Engine supports random number generation,=
+ hash,
+> > > > > > > > symmetric encryption and asymmetric encryption. Based on th=
+ese
+> > > > > > > > encryption functions, TPM2 have been implemented in the Loo=
+ngson
+> > > > > > > > Security Engine firmware. This driver is responsible for co=
+pying data
+> > > > > > > > into the memory visible to the firmware and receiving data =
+from the
+> > > > > > > > firmware.
+> > > > > > > >
+> > > > > > > > Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > > > > > > Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > > > > > > Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> > > > > > > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > > > > ---
+> > > > > > > >  drivers/char/tpm/Kconfig        |  9 ++++
+> > > > > > > >  drivers/char/tpm/Makefile       |  1 +
+> > > > > > > >  drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++=
+++++++++++++
+> > > > > > > >  3 files changed, 94 insertions(+)
+> > > > > > > >  create mode 100644 drivers/char/tpm/tpm_loongson.c
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kc=
+onfig
+> > > > > > > > index dddd702b2..ba3924eb1 100644
+> > > > > > > > --- a/drivers/char/tpm/Kconfig
+> > > > > > > > +++ b/drivers/char/tpm/Kconfig
+> > > > > > > > @@ -189,6 +189,15 @@ config TCG_IBMVTPM
+> > > > > > > >     will be accessible from within Linux.  To compile this =
+driver
+> > > > > > > >     as a module, choose M here; the module will be called t=
+pm_ibmvtpm.
+> > > > > > > >
+> > > > > > > > +config TCG_LOONGSON
+> > > > > > > > + tristate "Loongson TPM Interface"
+> > > > > > > > + depends on MFD_LOONGSON_SE
+> > > > > > > > + help
+> > > > > > > > +   If you want to make Loongson TPM support available, say=
+ Yes and
+> > > > > > > > +   it will be accessible from within Linux. To compile thi=
+s
+> > > > > > > > +   driver as a module, choose M here; the module will be c=
+alled
+> > > > > > > > +   tpm_loongson.
+> > > > > > > > +
+> > > > > > > >  config TCG_XEN
+> > > > > > > >   tristate "XEN TPM Interface"
+> > > > > > > >   depends on TCG_TPM && XEN
+> > > > > > > > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/M=
+akefile
+> > > > > > > > index 9de1b3ea3..5b5cdc0d3 100644
+> > > > > > > > --- a/drivers/char/tpm/Makefile
+> > > > > > > > +++ b/drivers/char/tpm/Makefile
+> > > > > > > > @@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) +=3D tpm_cr=
+b_ffa.o
+> > > > > > > >  obj-$(CONFIG_TCG_VTPM_PROXY) +=3D tpm_vtpm_proxy.o
+> > > > > > > >  obj-$(CONFIG_TCG_FTPM_TEE) +=3D tpm_ftpm_tee.o
+> > > > > > > >  obj-$(CONFIG_TCG_SVSM) +=3D tpm_svsm.o
+> > > > > > > > +obj-$(CONFIG_TCG_LOONGSON) +=3D tpm_loongson.o
+> > > > > > > > diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char=
+/tpm/tpm_loongson.c
+> > > > > > > > new file mode 100644
+> > > > > > > > index 000000000..5cbdb37f8
+> > > > > > > > --- /dev/null
+> > > > > > > > +++ b/drivers/char/tpm/tpm_loongson.c
+> > > > > > > > @@ -0,0 +1,84 @@
+> > > > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > > > +/* Copyright (c) 2025 Loongson Technology Corporation Limi=
+ted. */
+> > > > > > > > +
+> > > > > > > > +#include <linux/device.h>
+> > > > > > > > +#include <linux/mfd/loongson-se.h>
+> > > > > > > > +#include <linux/platform_device.h>
+> > > > > > > > +#include <linux/wait.h>
+> > > > > > > > +
+> > > > > > > > +#include "tpm.h"
+> > > > > > > > +
+> > > > > > > > +struct tpm_loongson_cmd {
+> > > > > > > > + u32 cmd_id;
+> > > > > > > > + u32 data_off;
+> > > > > > > > + u32 data_len;
+> > > > > > > > + u32 pad[5];
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *bu=
+f, size_t count)
+> > > > > > > > +{
+> > > > > > > > + struct loongson_se_engine *tpm_engine =3D dev_get_drvdata=
+(&chip->dev);
+> > > > > > > > + struct tpm_loongson_cmd *cmd_ret =3D tpm_engine->command_=
+ret;
+> > > > > > > > +
+> > > > > > > > + if (cmd_ret->data_len > count)
+> > > > > > > > +         return -EIO;
+> > > > > > > > +
+> > > > > > > > + memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+> > > > > > > > +
+> > > > > > > > + return cmd_ret->data_len;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static int tpm_loongson_send(struct tpm_chip *chip, u8 *bu=
+f, size_t count)
+> > > > > > > > +{
+> > > > > > > > + struct loongson_se_engine *tpm_engine =3D dev_get_drvdata=
+(&chip->dev);
+> > > > > > > > + struct tpm_loongson_cmd *cmd =3D tpm_engine->command;
+> > > > > > > > +
+> > > > > > > > + if (count > tpm_engine->buffer_size)
+> > > > > > > > +         return -E2BIG;
+> > > > > > > > +
+> > > > > > > > + cmd->data_len =3D count;
+> > > > > > > > + memcpy(tpm_engine->data_buffer, buf, count);
+> > > > > > > > +
+> > > > > > > > + return loongson_se_send_engine_cmd(tpm_engine);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static const struct tpm_class_ops tpm_loongson_ops =3D {
+> > > > > > > > + .flags =3D TPM_OPS_AUTO_STARTUP,
+> > > > > > > > + .recv =3D tpm_loongson_recv,
+> > > > > > > > + .send =3D tpm_loongson_send,
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +static int tpm_loongson_probe(struct platform_device *pdev=
+)
+> > > > > > > > +{
+> > > > > > > > + struct loongson_se_engine *tpm_engine;
+> > > > > > > > + struct device *dev =3D &pdev->dev;
+> > > > > > > > + struct tpm_loongson_cmd *cmd;
+> > > > > > > > + struct tpm_chip *chip;
+> > > > > > > > +
+> > > > > > > > + tpm_engine =3D loongson_se_init_engine(dev->parent, SE_EN=
+GINE_TPM);
+> > > > > > > > + if (!tpm_engine)
+> > > > > > > > +         return -ENODEV;
+> > > > > > > > + cmd =3D tpm_engine->command;
+> > > > > > > > + cmd->cmd_id =3D SE_CMD_TPM;
+> > > > > > > > + cmd->data_off =3D tpm_engine->buffer_off;
+> > > > > > > > +
+> > > > > > > > + chip =3D tpmm_chip_alloc(dev, &tpm_loongson_ops);
+> > > > > > > > + if (IS_ERR(chip))
+> > > > > > > > +         return PTR_ERR(chip);
+> > > > > > > > + chip->flags =3D TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+> > > > > > > > + dev_set_drvdata(&chip->dev, tpm_engine);
+> > > > > > > > +
+> > > > > > > > + return tpm_chip_register(chip);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static struct platform_driver tpm_loongson =3D {
+> > > > > > > > + .probe   =3D tpm_loongson_probe,
+> > > > > > > > + .driver  =3D {
+> > > > > > > > +         .name  =3D "loongson-tpm",
+> > > > > > >
+> > > > > > > This patch looks otherwise great but I'd prefer here tho use
+> > > > > > > "tpm_loongson_probe" for the value of the name field.
+> > > > > >
+> > > > > > Where does this stipulation come from?  No other driver does th=
+is [0].
+> > > > > > driver.name should be a nicely formatted, human readable string
+> > > > > > describing the name of the device.  Not a function name.
+> > > > >
+> > > > > What defines "human-readable" here? I see both as somewhat the
+> > > > > same level of "readability" ;-)
+> > > > >
+> > > > > >
+> > > > > > [0] git grep -A15 "static struct platform_driver" | grep ".name=
+ =3D .*probe"
+> > > > >
+> > > > > What I'm getting:
+> > > > >
+> > > > > $ git grep -l -e platform_driver_register --or -e module_platform=
+_driver
+> > > > > drivers/char/tpm | xargs git grep "\.name"
+> > > > > drivers/char/tpm/tpm_atmel.c:           .name =3D "tpm_atmel",
+> > > > > drivers/char/tpm/tpm_ftpm_tee.c:                .name =3D "ftpm-t=
+ee",
+> > > > > drivers/char/tpm/tpm_ftpm_tee.c:                .name           =
+=3D
+> > > > > "optee-ftpm",
+> > > > > drivers/char/tpm/tpm_nsc.c:             .name    =3D "tpm_nsc",
+> > > > > drivers/char/tpm/tpm_svsm.c:            .name =3D "tpm-svsm",
+> > > > > drivers/char/tpm/tpm_tis.c:     .name =3D "tpm_tis",
+> > > > > drivers/char/tpm/tpm_tis.c:             .name           =3D "tpm_=
+tis",
+> > > > > drivers/char/tpm/tpm_tis_synquacer.c:           .name           =
+=3D
+> > > > > "tpm_tis_synquacer",
+> > > > >
+> > > > > Do you consider e.g, "tpm_tis" as "less human-readable".
+> > > > >
+> > > > > I don't necessarily fight against the name chosen. Your arguments
+> > > > > just plain no make sense, so I just merely want to understand thi=
+s.
+> > > > > That's all.
+> > > >
+> > > > In 64% of cases '-' is preferred to '_' for device names.
+> > > >
+> > > > Human readable is probably a bit of a stretch in this context, so I=
+'ll
+> > > > retract that part of the statement.  However, we should be using de=
+vice
+> > > > names, not names of functions which remain meaningless (which is wh=
+at I
+> > > > really meant by 'readable') to the user.  Where else do you see the
+> > > > .probe() function name being used as a device name?
+> > >
+> > > Oops now I see what you mean. I meant to write "tpm_loongson", i.e.
+> > > matching tpm_tis, tpm_crb etc. Sorry my bad.
+> >
+> > Ah, gotcha.  No worries.
+> >
+> > "tpm_loongson" wouldn't be my preference, but is acceptable.
+>
+> It's more like that I'm worried about coherency. There's now bunch
+> of convention (looking at grep). So I need to pick one and not
+> increase chaos further :-) tpm_* is the preference as it is still
+> dominating convention.
+But there is another coherency, you can see this in the 1st patch:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
-it/commit/?h=3Dloongarch-next&id=3D39503fc84b4ea94f2bedca481de5e225e0df729d
++static const struct mfd_cell engines[] =3D {
++ { .name =3D "loongson-rng" },
++ { .name =3D "loongson-tpm" },
++};
 
 Huacai
 
-On Tue, Jun 24, 2025 at 4:19=E2=80=AFPM Ming Wang <wangming01@loongson.cn> =
-wrote:
 >
-> The EFI memory map at 'boot_memmap' is crucial for kdump to understand
-> the primary kernel's memory layout. This memory region, typically part
-> of EFI Boot Services (BS) data, can be overwritten after ExitBootServices
-> if not explicitly preserved by the kernel.
 >
-> This commit addresses this by:
-> 1. Calling memblock_reserve() to reserve the entire physical region
->    occupied by the EFI memory map (header + descriptors). This prevents
->    the primary kernel from reallocating and corrupting this area.
-> 2. Setting the EFI_PRESERVE_BS_REGIONS flag in efi.flags. This indicates
->    that efforts have been made to preserve critical BS data regions,
->    which can be useful for other kernel subsystems or debugging.
+> >
+> > --
+> > Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
 >
-> These changes ensure the original EFI memory map data remains intact,
-> improving kdump reliability and potentially aiding other EFI-related
-> functionalities that might rely on preserved BS data.
->
-> Signed-off-by: Ming Wang <wangming01@loongson.cn>
-> ---
->  arch/loongarch/kernel/efi.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
-> index de21e72759ee..98b1f0c030fc 100644
-> --- a/arch/loongarch/kernel/efi.c
-> +++ b/arch/loongarch/kernel/efi.c
-> @@ -135,6 +135,7 @@ void __init efi_init(void)
->         tbl =3D early_memremap_ro(boot_memmap, sizeof(*tbl));
->         if (tbl) {
->                 struct efi_memory_map_data data;
-> +               phys_addr_t reserve_size =3D sizeof(*tbl) + tbl->map_size=
-;
->
->                 data.phys_map           =3D boot_memmap + sizeof(*tbl);
->                 data.size               =3D tbl->map_size;
-> @@ -144,6 +145,18 @@ void __init efi_init(void)
->                 if (efi_memmap_init_early(&data) < 0)
->                         panic("Unable to map EFI memory map.\n");
->
-> +               /*
-> +                * Reserve the physical memory region occupied by the EFI
-> +                * memory map table (header + descriptors). This is cruci=
-al
-> +                * for kdump, as the kdump kernel relies on this original
-> +                * memmap passed by the bootloader. Without reservation,
-> +                * this region could be overwritten by the primary kernel=
-.
-> +                * Also, set the EFI_PRESERVE_BS_REGIONS flag to indicate=
- that
-> +                * critical boot services data regions like this are pres=
-erved.
-> +                */
-> +               memblock_reserve((phys_addr_t)boot_memmap, reserve_size);
-> +               set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
-> +
->                 early_memunmap(tbl, sizeof(*tbl));
->         }
->
-> --
-> 2.43.0
+> BR, Jarkko
 >
