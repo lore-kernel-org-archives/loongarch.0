@@ -1,236 +1,173 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE271EA7CC
-	for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 03:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F46A2BFC65
+	for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 09:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750910077; cv=none; b=DSxZzROvhg/NNx9Xt0VQqsJBzgUYJoQpZ34DIP7UHZfcQgC7oIPirUYv762HV3BtHvoWfVDEs/CUbHyj+PukuyPeJa78XyxQKFkssSkwpJ4v+FJLEfjIcUy1rh+j0m8q9J7LxrKFSdD/QSiI0Tu2aaLDlSan5JRWZa9CU/hOwys=
+	t=1750930286; cv=none; b=vFp8F9XhLGkERN4ulhZXBwHTW9pcxejzf8KxxTo/aD13gU+vfLUA++sdjuu71YN9VUSOEgEUfeLPib9IQtSaIB2OfRTQE8c+w5a/WJCaP9PPUbKApaR2UrAkcdSJWPzietuBZuoDQEmsYUnkSVKGH7QvAPR8D/QUgA23PHc8eSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750910077; c=relaxed/simple;
-	bh=W69Sh8U89J7pQtIt0QufN1Tq/U+T0/SmKCjwqwczS5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PRBSSb4UONoQrT8iw7hvtOp22vi9dWEk3uAg8xQmaBKsMa8233UpY3c0FEMbrEvvM9Z4RPInKLtdkd6jcllsjm94NjJklc51BQiNLUCHV5BUULOT0s9OXFAM0CSRtC+peRfWITOoXuyCPhFrUNu3pZkcVJ5gCJwuzikVAhYooBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 41cb6cd8524111f0b29709d653e92f7d-20250626
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT
-	HR_TO_DOMAIN_COUNT, HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
-	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
-	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:c2cb00be-2c47-4fa5-bfe6-0d7233a87b8a,IP:0,U
-	RL:0,TC:0,Content:6,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:1
-X-CID-INFO: VERSION:1.1.45,REQID:c2cb00be-2c47-4fa5-bfe6-0d7233a87b8a,IP:0,URL
-	:0,TC:0,Content:6,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:1
-X-CID-META: VersionHash:6493067,CLOUDID:1dff51c8eff28d8923e87fb0fe31e4c9,BulkI
-	D:250626093924HZVC9G85,BulkQuantity:2,Recheck:0,SF:17|19|64|66|78|80|81|82
-	|83|102|841,TC:nil,Content:4|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:4
-	0,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE
-	:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: 41cb6cd8524111f0b29709d653e92f7d-20250626
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1415082984; Thu, 26 Jun 2025 11:54:27 +0800
-Date: Thu, 26 Jun 2025 11:54:24 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
-	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
-	jianghaoran@kylinos.cn, Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH v2 1/4] LoongArch: BPF: The operation commands needed to
- add a trampoline
-Message-ID: <20250626035424.GA436557@chenghao-pc>
-References: <20250618105048.1510560-1-duanchenghao@kylinos.cn>
- <20250618105048.1510560-2-duanchenghao@kylinos.cn>
- <CAEyhmHTA+6RdD4CbQuMn2E887Z3E6RudJQb3Wnmqosj1ozrXPw@mail.gmail.com>
+	s=arc-20240116; t=1750930286; c=relaxed/simple;
+	bh=ekv2eO6oe4yBEEcGx/v664SW1vBsIAVNXe/2ysde03Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n40brPWjCbmlvthR+07wZ1fQqX5wT81ZpzahNi53JzA6zhrXjKblFIImEjIxflhyNdFZdfOEdtwv1DmYkJnkEDMmnGOwLli2UpKfvbU3MEScuJ7SOGlmFnSadEL4OrVpp8WrfIvV69NXwFQ3R/q9mRis/KMJQGn1wIejWKinSwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JUafneKZ; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUafneKZ"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553bcf41440so805582e87.3
+        for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 02:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750930283; x=1751535083; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iuFmqpRengejqXGMt8z0krXQLsPU94kcoziX8PACH+I=;
+        b=JUafneKZqpz6uVVLqmBAjHTYhblOJispS4UZcJNZ6ULb4AQJJ/7Gf13116utHM1ozJ
+         j0i1n+BMIlimGmvhD0vMklmlShzGgEQHdcZYQcKa58zhRp8RCZeCmhe4Oups8/Ryv3Bn
+         gDjzSwpN+L7GHESLG7Hva24w3teBLPbWxAQhJlgOmcoHlksUgKhmKLKbKc0VzF2Au6AS
+         q+VeEFmooVrXVhTFSHaLTM5RWQZVmWlSifehHfdEd83ToerJkECd2mq5PnEmSmqkw5as
+         axmdQ445IelLA/28tXlk6QLhpcemb/rULQr4vUdNuw8mLJbLpYj+3ITKWzd11og9cZYt
+         isgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750930283; x=1751535083;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iuFmqpRengejqXGMt8z0krXQLsPU94kcoziX8PACH+I=;
+        b=v8a6y3XaXwbQjGHDw9DpZqeHy+YtmeMxot9HJ7U1PBAwtCZ3PZm1iGuwBahRKqxhiW
+         I+kKRIkNMMcPjaQ7jlhGFqHVW2NzbdAZ6urbF92VTC+N03ZLaaz99KgbntAPfFF0TCxG
+         G1lqPoADRrDP7WgSkglUuPq7jHb8gRvqtmFEnq3DscmaesINiOoez8eXjhnJZoCAlvAm
+         qJW7awIkxvOcokwnZ8pUwwuXvl9Xp2DhMUSmDjwa2Y1a8axepvfVPiHUCcFLAH7B3+GN
+         5Awf8fVgzA7GULJaoexhRPaVjPyAzkM2ihN2lX57aTIgEN2ZqoAlUdG9sl45bPx1XuF2
+         x5kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSJchiw4iep5ZyMnIV2xoiUZJu/wxHMMVI8QnDG2lnboHmuQZx+dS8tMB2iIxZPxHPUwl01ajWfuQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyeQxx4N1zAdI9NjQk772Oq/yUsR5nUlfKmTepy0sEasOmzqpIN
+	oMNwGc6M7nyFldzEqO45U62H00oNkvT5Y/3xsyUaXDqD9qUSBvLJMzwGvNMhngHDdHqJuU5DsDz
+	8ANrHwJu2BaNfOM2qyoZt2YeFDc3NUvw=
+X-Gm-Gg: ASbGncu7kJwgsTrEu6/uiYPwcE/kxIUrzPXqDyv1bn34ZEYaEE/VxuByIXXRPT2Y64n
+	g4s/xmpE/GESLvMCllJN9m7UhAIzfKFACBDa91CrvhdTjFiroHHXo9XDkWvMww0B5KMajjlixzx
+	DyBFK7q5cWH84BflNDt0lHDoYStO/noIuuZ7JMG/y9OOE3GrTUSwkk
+X-Google-Smtp-Source: AGHT+IHKD9vv7E6n80MsMeNjpJwBWGKsDmTjk3A0J3+cAywyuJ59mQfEiaL2YVTpTIc2tcdraTY+Dh5qWDg83RmXaIY=
+X-Received: by 2002:a05:6512:1150:b0:553:36b7:7b14 with SMTP id
+ 2adb3069b0e04-554fdf96ec2mr2102615e87.37.1750930282937; Thu, 26 Jun 2025
+ 02:31:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEyhmHTA+6RdD4CbQuMn2E887Z3E6RudJQb3Wnmqosj1ozrXPw@mail.gmail.com>
+References: <20250625095224.118679-1-snovitoll@gmail.com> <20250625095224.118679-2-snovitoll@gmail.com>
+ <db30beb6-a331-46b7-92a3-1ee7782e317a@csgroup.eu>
+In-Reply-To: <db30beb6-a331-46b7-92a3-1ee7782e317a@csgroup.eu>
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Date: Thu, 26 Jun 2025 14:31:05 +0500
+X-Gm-Features: Ac12FXyxTyp0b2hD3uhdVzbeUTYpXnyKRANJYa2mQoNch15i1MQX1xBLZECmC3k
+Message-ID: <CACzwLxj3KWdy-mBu-te1OFf2FZ8eTp5CieYswF5NVY4qPWD93Q@mail.gmail.com>
+Subject: Re: [PATCH 1/9] kasan: unify static kasan_flag_enabled across modes
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com, 
+	dvyukov@google.com, vincenzo.frascino@arm.com, catalin.marinas@arm.com, 
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, hca@linux.ibm.com, 
+	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
+	svens@linux.ibm.com, richard@nod.at, anton.ivanov@cambridgegreys.com, 
+	johannes@sipsolutions.net, dave.hansen@linux.intel.com, luto@kernel.org, 
+	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	x86@kernel.org, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
+	akpm@linux-foundation.org, guoweikang.kernel@gmail.com, geert@linux-m68k.org, 
+	rppt@kernel.org, tiwei.btw@antgroup.com, richard.weiyang@gmail.com, 
+	benjamin.berg@intel.com, kevin.brodsky@arm.com, kasan-dev@googlegroups.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 09:39:04AM +0800, Hengqi Chen wrote:
-> On Wed, Jun 18, 2025 at 6:51 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+On Wed, Jun 25, 2025 at 3:35=E2=80=AFPM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+>
+>
+> Le 25/06/2025 =C3=A0 11:52, Sabyrzhan Tasbolatov a =C3=A9crit :
+> > Historically the fast-path static key `kasan_flag_enabled` existed
+> > only for `CONFIG_KASAN_HW_TAGS`. Generic and SW_TAGS either relied on
+> > `kasan_arch_is_ready()` or evaluated KASAN checks unconditionally.
+> > As a result every architecture had to toggle a private flag
+> > in its `kasan_init()`.
 > >
-> > Add branch jump function:
-> > larch_insn_gen_beq
-> > larch_insn_gen_bne
-> >
-> > Add instruction copy function: larch_insn_text_copy
-> >
-> 
-> Please rewrite the commit message properly.
-> These functions are generic, so you can drop the `BPF` prefix from subject line.
-> 
-Okay, I will make the changes in the next version.
+> > This patch turns the flag into a single global runtime predicate that
+> > is built for every `CONFIG_KASAN` mode and adds a helper that flips
+> > the key once KASAN is ready.
+>
+> Shouldn't kasan_init_generic() also perform the following line to reduce
+> even more code duplication between architectures ?
+>
+>         init_task.kasan_depth =3D 0;
 
-> > Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > Co-developed-by: Youling Tang <tangyouling@kylinos.cn>
-> > Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> > ---
-> >  arch/loongarch/include/asm/inst.h |  3 ++
-> >  arch/loongarch/kernel/inst.c      | 57 +++++++++++++++++++++++++++++++
-> >  2 files changed, 60 insertions(+)
-> >
-> > diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-> > index 3089785ca..88bb73e46 100644
-> > --- a/arch/loongarch/include/asm/inst.h
-> > +++ b/arch/loongarch/include/asm/inst.h
-> > @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction insn, struct pt_regs *regs);
-> >  int larch_insn_read(void *addr, u32 *insnp);
-> >  int larch_insn_write(void *addr, u32 insn);
-> >  int larch_insn_patch_text(void *addr, u32 insn);
-> > +int larch_insn_text_copy(void *dst, void *src, size_t len);
-> >
-> >  u32 larch_insn_gen_nop(void);
-> >  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
-> > @@ -511,6 +512,8 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
-> >  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
-> >  u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-> >  u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-> > +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-> > +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-> >
-> >  static inline bool signed_imm_check(long val, unsigned int bit)
-> >  {
-> > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-> > index 14d7d700b..7423b0772 100644
-> > --- a/arch/loongarch/kernel/inst.c
-> > +++ b/arch/loongarch/kernel/inst.c
-> > @@ -4,6 +4,7 @@
-> >   */
-> >  #include <linux/sizes.h>
-> >  #include <linux/uaccess.h>
-> > +#include <linux/set_memory.h>
-> >
-> >  #include <asm/cacheflush.h>
-> >  #include <asm/inst.h>
-> > @@ -218,6 +219,34 @@ int larch_insn_patch_text(void *addr, u32 insn)
-> >         return ret;
-> >  }
-> >
-> > +int larch_insn_text_copy(void *dst, void *src, size_t len)
-> > +{
-> > +       unsigned long flags;
-> 
-> Initialize flags ?
+I've tried to introduce a new function kasan_mark_ready() to gather
+all arch duplicated code in one place:
 
-To be precise, it saves the IRQ (Interrupt Request) status. My
-understanding is that it involves passing parameters between the lock
-and unlock operations.
+In mm/kasan/common.c:
 
-> 
-> > +       size_t wlen = 0;
-> > +       size_t size;
-> > +       void *ptr;
-> > +       int ret = 0;
-> > +
-> > +       set_memory_rw((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
-> > +       raw_spin_lock_irqsave(&patch_lock, flags);
-> > +       while (wlen < len) {
-> > +               ptr = dst + wlen;
-> > +               size = min_t(size_t, PAGE_SIZE - offset_in_page(ptr),
-> > +                            len - wlen);
-> > +
-> > +               ret = copy_to_kernel_nofault(ptr, src + wlen, size);
-> 
-> I am not familiar with this mm thing, but looking at other callsites
-> of copy_to_kernel_nofault(),
-> it seems like you can do this copy cross page boundaries.
-> 
+void __init kasan_mark_ready(void)
+{
+        /* Enable error reporting */
+        init_task.kasan_depth =3D 0;
+        /* Mark KASAN as ready */
+        static_branch_enable(&kasan_flag_enabled);
+}
 
-I didn't understand your point. May I ask if there's any issue with
-using it this way?
+So we could've called it
+in mm/kasan/generic.c:
+void __init kasan_init_generic(void)
+{
+        kasan_mark_ready();
+        pr_info("KernelAddressSanitizer initialized (generic)\n");
+}
 
-> > +               if (ret) {
-> > +                       pr_err("%s: operation failed\n", __func__);
-> > +                       break;
-> > +               }
-> > +               wlen += size;
-> > +       }
-> > +       raw_spin_unlock_irqrestore(&patch_lock, flags);
-> > +       set_memory_rox((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
-> > +
-> 
-> Do we need flush_icache_range() here ?
-> 
+in mm/kasan/sw_tags.c:
+void __init kasan_init_sw_tags(void)
+{
+...
+        kasan_mark_ready();
+        pr_info("KernelAddressSanitizer initialized ..");
+}
 
-I understand it is necessary. After all, the trampoline code needs to
-be fetched by the PC (Program Counter) for instruction fetching, and
-flushing the I-cache (Instruction Cache) is required for the code to
-go through the I-cache.
+in mm/kasan/hw_tags.c:
+void __init kasan_init_hw_tags(void)
+{
+...
+        kasan_mark_ready();
+        pr_info("KernelAddressSanitizer initialized ..");
+}
 
-> > +       return ret;
-> > +}
-> > +
-> >  u32 larch_insn_gen_nop(void)
-> >  {
-> >         return INSN_NOP;
-> > @@ -336,3 +365,31 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-> >
-> >         return insn.word;
-> >  }
-> > +
-> > +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-> > +{
-> > +       union loongarch_instruction insn;
-> > +
-> > +       if ((imm & 3) || imm < -SZ_128K || imm >= SZ_128K) {
-> > +               pr_warn("The generated beq instruction is out of range.\n");
-> > +               return INSN_BREAK;
-> > +       }
-> > +
-> > +       emit_beq(&insn, rd, rj, imm >> 2);
-> > +
-> 
-> This does NOT match emit_beq's signature, should be:
->     emit_beq(&insn, rj, rd, imm >> 2);
+But it works only for CONFIG_KASAN_GENERIC mode,
+when arch code calls kasan_init(), for example, arm64:
 
-Okay, I will make the changes and conduct testing in the next version.
+void __init kasan_init(void)
+{
+        kasan_init_shadow();
+        kasan_init_generic();
+}
 
-> 
-> > +       return insn.word;
-> > +}
-> > +
-> > +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-> > +{
-> > +       union loongarch_instruction insn;
-> > +
-> > +       if ((imm & 3) || imm < -SZ_128K || imm >= SZ_128K) {
-> > +               pr_warn("The generated bne instruction is out of range.\n");
-> > +               return INSN_BREAK;
-> > +       }
-> > +
-> > +       emit_bne(&insn, rj, rd, imm >> 2);
-> > +
-> > +       return insn.word;
-> > +}
-> > --
-> > 2.43.0
-> >
+And for HW_TAGS, SW_TAGS it won't work.
+Fails during compiling:
+mm/kasan/common.c:45:12: error: no member named 'kasan_depth' in
+'struct task_struct'
+   45 |         init_task.kasan_depth =3D 0;
+
+because kasan_init_sw_tags(), kasan_init_hw_tags() are called
+once on CPU boot. For arm64, where these KASAN modes are supported,
+both functions are called in smp_prepare_boot_cpu().
+
+So I guess, every arch kasan_init() has to set in kasan_init()
+       init_task.kasan_depth =3D 0;
+to enable error messages before switching KASAN readiness
+via enabling kasan_flag_enabled key.
+
+>
+> Christophe
+>
