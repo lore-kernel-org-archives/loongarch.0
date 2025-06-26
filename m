@@ -1,169 +1,166 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C04A3215191
-	for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 11:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F152DCC1D
+	for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 12:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750936843; cv=none; b=O6tBxts6DyGl3R7Cmyt8+aLyb2cQzWe85RRomAYwoay2BbVF90eSOnyjz+sforZs9nRwLUSxg4KvFw4YbAPNZlfo0+v8b4mirFyxZmxP+fl5IjbhXM36fwC8R/WQ4af/dbjqYpq1+RxFVnicleYXqlk4mBnUBWrd7WM676zubM4=
+	t=1750941055; cv=none; b=b4bbeK0M3/GJJl4Ifx+bxWa+0P0/j02V+/6l2T6FBWPZbBBmCi1TFtfthJw8drm4zwLPxQpNuIjZxZq/ulayYCgRp54zAvJ7S4WgYRDt8sXjeCVUFGRyYcATYTXbxIGI3/Fh/1lK+QfGlLMCyJmzFDQQiSonwJsAcLwvqMk9JgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750936843; c=relaxed/simple;
-	bh=C4f7VtU2IxWUn/+6CtPz+hcR/TxIpvkTdAdow77mhkk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tx368kOZt3mkXWup/h3V0PtwyLs2WOA0JKS8nkPLHNrxswkWqL1RirLJcL0fMkvwVHfuCBizS+qJ2RM+FCbNGAmElpPsAUOVFCjeHF5SQMOkI9q5FJe1+KVeeFevoC6YQOG6TWTiuGZ4nygtfizyurMX09t6bIZX3OJVmQfI9+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bSbB02K49z9vGJ;
-	Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id uDQegORpF3hS; Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bSbB017ZFz9vGH;
-	Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1B36F8B7B7;
-	Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 1FFBuvr_5nqx; Thu, 26 Jun 2025 12:52:39 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8F3C38B7A7;
-	Thu, 26 Jun 2025 12:52:37 +0200 (CEST)
-Message-ID: <3b6ff3a9-6b88-4a28-a0fd-31f31ae3e84b@csgroup.eu>
-Date: Thu, 26 Jun 2025 12:52:37 +0200
+	s=arc-20240116; t=1750941055; c=relaxed/simple;
+	bh=Tcuj9liMYKxMkRvp81H+oER4dm3a08kA2i8lcMgGi1o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RChq5UFW+QjRjJ3Zko6tzV4TgK2KxPpskD92zXTD6nkRWO6p3KfCRE44i4NJ3TES+9DTcSzELEpQGv7BDDQA6s2tc7nh/GVkW21uLk8mArWG+mcg93uPu7Fzu9lhQvQynsnVHAaIcxUIDli63N3ufftxVP7T7raXJq6Z7Eo02e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AFdvFmGz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AFdvFmGz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE6BC4CEF0
+	for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 12:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750941054;
+	bh=Tcuj9liMYKxMkRvp81H+oER4dm3a08kA2i8lcMgGi1o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AFdvFmGzLMJjZXxDjZV/m01zQTuxCUKxLXf0Gg84qB9aK2KhYYiKcdc+mUHnLphwh
+	 pY1p04inasnEKd5nBA2oVSnGZoOP+WRuTkRVo1dfqk01FfhtM56sUQedMdg3NRVSt0
+	 BlzHUtz4HOTNryNTvoWFwB+cIcvzVAiFSiIj8heUxirAbQWxQ8DlIMrokAZtRf76Ql
+	 rrscEOcxyO+r2P+8fR6bsb/j6Nvfcvquv6N6t7HPBMFOWrrIZ27KXcA58zCYtOfCWl
+	 UcdwBYo13JyBVy9NWin6/ulhdNf+E2T3on7horUyivOGmqSn4IPA9dZUUk5b7tIWRH
+	 1LMqAm1Mc3MWQ==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60c5b8ee2d9so1908165a12.2
+        for <loongarch@lists.linux.dev>; Thu, 26 Jun 2025 05:30:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV0K3ldtw9BDfpEmjroVCAzH5dJw/mwLWvUjd6WmlfplVUHmYyvRzAohT08oCaB+3NvXM5WBNe9Zk4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywsz4ZbqxjBnn7bj4trONQu2/F0uvCZSJTQLVIEteHgLsRl9NRA
+	wRE8GKuRKOXpmu1+3taTBVdipUSk3UCCHzmf3HngsQvMJqe74WKHtqZE5uggReLCU8VXPHds7qd
+	Dl4RsDmOeTiLDAlWi/VuMi1ahS4ORiv0=
+X-Google-Smtp-Source: AGHT+IGB1r0RULOVkDK+7jbmAQV6m/K9tlzxxAPjyOT0QbB5tXfeb9acQUc0hgS9pLNBlMdu72qPEKROtVEjnWhhHgs=
+X-Received: by 2002:a05:6402:3513:b0:608:4945:ca47 with SMTP id
+ 4fb4d7f45d1cf-60c6698f22dmr3238889a12.17.1750941053172; Thu, 26 Jun 2025
+ 05:30:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] kasan/powerpc: call kasan_init_generic in kasan_init
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
- glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
- vincenzo.frascino@arm.com, catalin.marinas@arm.com, will@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, hca@linux.ibm.com, gor@linux.ibm.com,
- agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
- richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
- hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
- akpm@linux-foundation.org
-Cc: guoweikang.kernel@gmail.com, geert@linux-m68k.org, rppt@kernel.org,
- tiwei.btw@antgroup.com, richard.weiyang@gmail.com, benjamin.berg@intel.com,
- kevin.brodsky@arm.com, kasan-dev@googlegroups.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
-References: <20250625095224.118679-1-snovitoll@gmail.com>
- <20250625095224.118679-10-snovitoll@gmail.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250625095224.118679-10-snovitoll@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <cover.1750765495.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1750765495.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 26 Jun 2025 20:30:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6f9CWGkAJVM45Wir1PYTZaL-tDq4m=5=zazvPzqNSa5A@mail.gmail.com>
+X-Gm-Features: Ac12FXzVVRuUM40OXySAmf7n49eft0EfQfUP6aqZIGlcvt6H_OodNRlHwWbaJQg
+Message-ID: <CAAhV-H6f9CWGkAJVM45Wir1PYTZaL-tDq4m=5=zazvPzqNSa5A@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] LoongArch: Introduce the Loongson-2K MMC host
+ controller driver
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, wanghongliang@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Binbin,
 
+On Tue, Jun 24, 2025 at 7:58=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
+>
+> Hi all:
+>
+> This patchset introduce the MMC host controller on Loongson-2K series
+> CPUs.
+>
+> They are similar, except for the interface characteristics and the use of
+> DMA engine, specifically, the Loongson-2K0500/Loongson-2K1000 use an
+> externally shared APBDMA engine, while the Loongson-2K2000 uses an
+> internally exclusive DMA.
+>
+> Based on this, I'm splitting the driver into two patches.
+>
+> List of the patchset:
+> Patch1: bindings for Loongson-2K0500/Loongson-2K1000;
+> Patch2: driver for MMC controller using externally shared APBDMA engine;
+> Patch3: bindings for Loongson-2K2000;
+> Patch4: driver for MMC controller using internally exclusive DMA.
+>
+> Thanks.
+>
+> -------
+> V4:
+> patch(2/4):
+>  - Code formatting;
+>  - Fix lkp error
+>     https://lore.kernel.org/all/202506202031.TNchn822-lkp@intel.com/
+> patch(4/4):
+>  - Rename function names:
+>         ls2k1000_mmc_regmap_config -> ls2k0500_mmc_regmap_config
+In Patch-1 there is still ls2k1000_mmc_regmap_config(), others look good to=
+ me.
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-Le 25/06/2025 à 11:52, Sabyrzhan Tasbolatov a écrit :
-> Call kasan_init_generic() which enables the static flag
-> to mark generic KASAN initialized, otherwise it's an inline stub.
-> Also prints the banner from the single place.
-> 
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218315
-> Fixes: 55d77bae7342 ("kasan: fix Oops due to missing calls to kasan_arch_is_ready()")
-> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-> ---
->   arch/powerpc/include/asm/kasan.h       | 14 --------------
->   arch/powerpc/mm/kasan/init_book3s_64.c |  6 +-----
->   2 files changed, 1 insertion(+), 19 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-> index b5bbb94c51f..23a06fbec72 100644
-> --- a/arch/powerpc/include/asm/kasan.h
-> +++ b/arch/powerpc/include/asm/kasan.h
-> @@ -52,20 +52,6 @@
->   
->   #endif
->   
-> -#ifdef CONFIG_KASAN
+Huacai
 
-The above #ifdef must remain, at the moment I get:
-
-   CC      arch/powerpc/kernel/asm-offsets.s
-In file included from ./arch/powerpc/include/asm/nohash/32/pgtable.h:65,
-                  from ./arch/powerpc/include/asm/nohash/pgtable.h:13,
-                  from ./arch/powerpc/include/asm/pgtable.h:20,
-                  from ./include/linux/pgtable.h:6,
-                  from ./arch/powerpc/include/asm/kup.h:43,
-                  from ./arch/powerpc/include/asm/uaccess.h:8,
-                  from ./include/linux/uaccess.h:12,
-                  from ./include/linux/sched/task.h:13,
-                  from ./include/linux/sched/signal.h:9,
-                  from ./include/linux/rcuwait.h:6,
-                  from ./include/linux/percpu-rwsem.h:7,
-                  from ./include/linux/fs.h:34,
-                  from ./include/linux/compat.h:17,
-                  from arch/powerpc/kernel/asm-offsets.c:12:
-./arch/powerpc/include/asm/kasan.h:70:2: error: #endif without #if
-  #endif
-   ^~~~~
-In file included from ./include/linux/kasan.h:21,
-                  from ./include/linux/slab.h:260,
-                  from ./include/linux/fs.h:46,
-                  from ./include/linux/compat.h:17,
-                  from arch/powerpc/kernel/asm-offsets.c:12:
-./arch/powerpc/include/asm/kasan.h:70:2: error: #endif without #if
-  #endif
-   ^~~~~
-make[2]: *** [scripts/Makefile.build:182: 
-arch/powerpc/kernel/asm-offsets.s] Error 1
-
-
-> -#ifdef CONFIG_PPC_BOOK3S_64
-> -DECLARE_STATIC_KEY_FALSE(powerpc_kasan_enabled_key);
-> -
-> -static __always_inline bool kasan_arch_is_ready(void)
-> -{
-> -	if (static_branch_likely(&powerpc_kasan_enabled_key))
-> -		return true;
-> -	return false;
-> -}
-> -
-> -#define kasan_arch_is_ready kasan_arch_is_ready
-> -#endif
-> -
->   void kasan_early_init(void);
->   void kasan_mmu_init(void);
->   void kasan_init(void);
-> diff --git a/arch/powerpc/mm/kasan/init_book3s_64.c b/arch/powerpc/mm/kasan/init_book3s_64.c
-> index 7d959544c07..dcafa641804 100644
-> --- a/arch/powerpc/mm/kasan/init_book3s_64.c
-> +++ b/arch/powerpc/mm/kasan/init_book3s_64.c
-> @@ -19,8 +19,6 @@
->   #include <linux/memblock.h>
->   #include <asm/pgalloc.h>
->   
-> -DEFINE_STATIC_KEY_FALSE(powerpc_kasan_enabled_key);
-> -
->   static void __init kasan_init_phys_region(void *start, void *end)
->   {
->   	unsigned long k_start, k_end, k_cur;
-> @@ -92,11 +90,9 @@ void __init kasan_init(void)
->   	 */
->   	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
->   
-> -	static_branch_inc(&powerpc_kasan_enabled_key);
-> -
->   	/* Enable error messages */
->   	init_task.kasan_depth = 0;
-> -	pr_info("KASAN init done\n");
-> +	kasan_init_generic();
->   }
->   
->   void __init kasan_early_init(void) { }
-
+>         loongson2_mmc_reorder_cmd_data -> ls2k0500_mmc_reorder_cmd_data
+>         loongson2_mmc_set_internal_dma -> ls2k2000_mmc_set_internal_dma
+>  - Use macro definitions for magic numbers.
+>
+> Link to V3:
+> https://lore.kernel.org/all/cover.1750216134.git.zhoubinbin@loongson.cn/
+>
+> V3:
+> patch(1/4):
+>  - Rename dt-binding file as loongson,ls2k0500-mmc.yaml.
+> patch(2/4):
+>  - Fix lkp error;
+>     https://lore.kernel.org/all/202505130918.uanOGxju-lkp@intel.com/
+>  - Add regulators support for ios ops;
+>  - Add ack_sdio_irq() callback;
+>  - Add MMC_CAP2_SDIO_IRQ_NOTHREAD flag;
+> patch(3/4):
+>  - Add Ack-by tag.
+> patch(4/4):
+>  - Update commit for fix_data_timeout().
+>
+> Link to V2:
+> https://lore.kernel.org/all/cover.1746581751.git.zhoubinbin@loongson.cn/
+>
+> V2:
+> patch(1/4):
+>  - Add reg define for each reg entry.
+>
+> patch(2/4):
+>  - Put all code in the c-file;
+>  - Use mmc_from_priv() instead of host->mmc;
+>  - Use sdio_signal_irq() instead of mmc_signal_sdio_irq();
+>  - Use devm_mmc_alloc_host() instead of mmc_alloc_host();
+>  - Use mmc_regulator_get_supply();
+>
+> patch(4/4):
+>  - Add fix_cmd_interrupt function which is needed by Loongson-2K2000.
+>
+> Link to V1:
+> https://lore.kernel.org/linux-mmc/cover.1744273956.git.zhoubinbin@loongso=
+n.cn/
+>
+> Binbin Zhou (4):
+>   dt-bindings: mmc: Add Loongson-2K SD/SDIO/eMMC controller binding
+>   mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
+>   dt-bindings: mmc: loongson,ls2k0500-mmc: Add compatible for
+>     Loongson-2K2000
+>   mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC controller driver
+>
+>  .../bindings/mmc/loongson,ls2k0500-mmc.yaml   |  112 ++
+>  MAINTAINERS                                   |    7 +
+>  drivers/mmc/host/Kconfig                      |   13 +
+>  drivers/mmc/host/Makefile                     |    1 +
+>  drivers/mmc/host/loongson2-mmc.c              | 1029 +++++++++++++++++
+>  5 files changed, 1162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/loongson,ls2k05=
+00-mmc.yaml
+>  create mode 100644 drivers/mmc/host/loongson2-mmc.c
+>
+>
+> base-commit: f5c755ef810009b85350884c483705bd04365370
+> --
+> 2.47.1
+>
