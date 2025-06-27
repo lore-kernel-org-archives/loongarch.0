@@ -1,234 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232111DFCB
-	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 16:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0600221CFF4;
+	Fri, 27 Jun 2025 20:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751040435; cv=none; b=Eq2vDqwesrZi2owRW8QMIdqEE3GpnTtQrZzxrc5UGDu81LImJh2AjJsXSRb1l4HIencupG3KkDpPIl7rjru2wrVo8cpyexsJPHyuyhnU05gj2DvYBRB0tgtc+D9JsvAUYFn7FArmEo1BwBUQqtwJ9LBUr4s5P186hZZVWisPK80=
+	t=1751055985; cv=none; b=HG0zBcmdwLncZO0ILGw/BgAtdD+iwyPWQvEOYMhx899GloyTHMq1aaAlge1MLHJD+lo34vNt/jN+MA4APL6B+nqpzuflh0JcsWzPh+EmocGyFsJGKnKULW4YfaDsYFnRwPufDVsBO8paRp7jkRuqWAbgpH1/ZOWMLGHYxx7Gg4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751040435; c=relaxed/simple;
-	bh=Tdpe6JDS+rR3v1xR5w42iqwYeD9PI+17P546Ndy04J8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=bINOZtUojP6Wl2Jf8Y5RZrMXCN3Ql5xABn90sMffgn7KmS2RRis2dErIZgCZ4s9G3FRVxG6lkBghBXdil2sbG0llWIzAh6VQ/+lzR/HsNHYdFlY/rBxQvb0XlXTWf4bceDhJKctYfPpBBl5x3DURwx2y7WJI7Ol6IoIv/P5GCWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CNt2hQl7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751055985; c=relaxed/simple;
+	bh=xiXaILIEtvdfMijC9n0nmMDCB4bsijR8COa326qvLUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2aVzcdE8i9LY0Nwb+Tce/s+YU7Jmuzsyp2ZP+XcNuImR6Bplx9tH2GeuUdpmXeRcZi+/KrWbHZMhHHhFqHgNOIhqEzUiJ6OG2SZfgbE7S0YM9lGk76/hSlYlZxaH+Ar+5WNCGYFmKqhULTROtVf5FaVQo4SZa/qzxif1Sl4HOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZmoX9n2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CNt2hQl7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751040433;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/xy96KI8UDKszt96CyDW7op5ryIeAmzp/OyFji+BJh8=;
-	b=CNt2hQl7R/RBmWrCRx0OAbktNHeMefRDbZIifZdhUxdz1ReVud6UJeuU3ssuXm0/1E0wmo
-	h/J+sOGmPfe5WqU5q2HffyaPEKRn7JYUVL8yF69fRyj0+aEGahdCFy6UTRTDi4cmRPdfKt
-	WKHGS8NtDlZJjmE4GMdk4mobY7JetiU=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680-_evg9jiTO9u2VQnjAfLqPA-1; Fri, 27 Jun 2025 12:07:12 -0400
-X-MC-Unique: _evg9jiTO9u2VQnjAfLqPA-1
-X-Mimecast-MFC-AGG-ID: _evg9jiTO9u2VQnjAfLqPA_1751040431
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fabb9286f9so50673456d6.1
-        for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 09:07:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751040431; x=1751645231;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/xy96KI8UDKszt96CyDW7op5ryIeAmzp/OyFji+BJh8=;
-        b=wGZcXwEvgzJFE5ZoLJA5KKTNKZ8O2XrKJV8a4UPrZnQJuf3vnEtjVQCDWH/B8U6g+t
-         RM08LBorpxM8VkYlsWK+e7P84o+y7QuneWV3AabX63JAwHHhAFvfi580GJZ8s9f4l6WP
-         tQFnCyfgxqs4ESJ82vHIjj2kaLSD5ue/LG7d+TBI0dpq4RR8eKbqYY0llR7lSPLoFAcn
-         UDcLOKGcbG3bpRVyeRJ/ktu0weQIKFDLnIOYxtevCH8GzEUMAxSB8QbIi/gowrF9ngf5
-         RFEQ+SkZvgZ3EzFHSbi2gaJsc1nFpC4Aupm85VXE1F9M9v9GBpECs+Doxo+7170ySyDb
-         HjKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwU3eGO7guGD91Bu4GaFvjRpYL4haMH4GD2Z10NULqqDDShL02bngxAn8ND0iUAiRUMIRnd/5bD3E=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxtR5ytuwj/u5JXLprBvuUcWt2QVxsjmcob7L57d8uWaGctoj9Q
-	8aLVEkFOu0Wrv6EUClMRl8HwvN5Lc08qXBbo+spM43UEUqw/mkTzYiaDxb7lwB0GTX0Vy6osCQD
-	fQw3fnvkWLVOT/HrXre7TdmucA22/tHP17GgAr4ML/C2i1UvjukURDNizo1gRtA==
-X-Gm-Gg: ASbGncvId9pcFzZIHytg6HePVReD/zmWjtiCnVlyzpcwP7l1Zj9FdHFtR3tIAnCC8Oa
-	0HStPshb65U6QchwQaF6tlZEy5qLGZIsS61dCjTmK9ysoF3LyhhCziO8BBFKtOL4lWBRCm95Zok
-	hK9R07cdm+vTE3CreLrjUh57JdaFxp3Ytwhpn+PknGcoB++K0W0/9RCPeYaPxd8q43AheIOcUE5
-	60HzHvVWO3AsE2ntoVTebVdKbHxtgnfgp+6Fd0yKhYPWpebhz9FcvDSW8tqQYw21dWVqR3RtEye
-	uhQWdNErlaI=
-X-Received: by 2002:a05:6214:405:b0:6fd:24:b0e0 with SMTP id 6a1803df08f44-7000252f09fmr61586366d6.6.1751040431141;
-        Fri, 27 Jun 2025 09:07:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGpI3B+sCb86YFp8sTXjrVwNo2dAmF8TVfkL08aeMHEOdDuhipHJHbQBBG3CZhrBLuzvp45Qw==
-X-Received: by 2002:a05:6214:405:b0:6fd:24:b0e0 with SMTP id 6a1803df08f44-7000252f09fmr61585916d6.6.1751040430641;
-        Fri, 27 Jun 2025 09:07:10 -0700 (PDT)
-Received: from x1.com ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd76e74372sm22805016d6.0.2025.06.27.09.07.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 09:07:10 -0700 (PDT)
-From: Peter Xu <peterx@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	peterx@redhat.com,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZmoX9n2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C797C4CEE3;
+	Fri, 27 Jun 2025 20:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751055984;
+	bh=xiXaILIEtvdfMijC9n0nmMDCB4bsijR8COa326qvLUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PZmoX9n2SxjvsVU0mt0+IyyHnt4zsT02TnmrAcUyPxzY41tnk/I3tkc4hMIUH6BM7
+	 b/PgpUGBNgPUr9/Yf1FlQZ6TssuhvMh/uLaThLaYP2fL5LVH0fhhNVv3IHqCYwI9A8
+	 fkEplNXulb3BJOWdzILpJ9WswhUw5RXjn7p5qNHmaD1pF0TDQoLWGX8Qo+7gyIJmQY
+	 pEd8LB5xo/iMEScxyrZzeJpOnngDVbDxgukHze4KI0SGef1bQiDGhkSER77s0eH9C6
+	 jNg+hp5BXLMZGUedEE7Uy7BwPIP1zIPbzLnUS6o4ewGXqtey5ePfbGIy0tbbv6PGkE
+	 vtfDLiLPSrEYw==
+Date: Fri, 27 Jun 2025 15:26:23 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: devicetree@vger.kernel.org, wanghongliang@loongson.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	David Hildenbrand <david@redhat.com>
-Subject: [PATCH] mm/hugetlb: Remove prepare_hugepage_range()
-Date: Fri, 27 Jun 2025 12:07:07 -0400
-Message-ID: <20250627160707.2124580-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 1/4] dt-bindings: mmc: Add Loongson-2K SD/SDIO/eMMC
+ controller binding
+Message-ID: <175105598309.27283.7574752844130118767.robh@kernel.org>
+References: <cover.1750765495.git.zhoubinbin@loongson.cn>
+ <949c55be120a806ea3d74b47fa2cc96ced2905fc.1750765495.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: nPbkjNnK-FO5p6UDw1EtjmoibfaPB4rqZoBTpRbeA7s_1751040431
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <949c55be120a806ea3d74b47fa2cc96ced2905fc.1750765495.git.zhoubinbin@loongson.cn>
 
-Only mips and loongarch implemented this API, however what it does was
-checking against stack overflow for either len or addr.  That's already
-done in arch's arch_get_unmapped_area*() functions, even though it may not
-be 100% identical checks.
 
-For example, for both of the architectures, there will be a trivial
-difference on how stack top was defined.  The old code uses STACK_TOP which
-may be slightly smaller than TASK_SIZE on either of them, but the hope is
-that shouldn't be a problem.
+On Tue, 24 Jun 2025 19:58:10 +0800, Binbin Zhou wrote:
+> Add the Loongson-2K SoC's SD/SDIO/eMMC controller binding with DT schema
+> format using json-schema.
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  .../bindings/mmc/loongson,ls2k0500-mmc.yaml   | 69 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 ++
+>  2 files changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/loongson,ls2k0500-mmc.yaml
+> 
 
-It means the whole API is pretty much obsolete at least now, remove it
-completely.
-
-Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Muchun Song <muchun.song@linux.dev>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: loongarch@lists.linux.dev
-Cc: linux-mips@vger.kernel.org
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/loongarch/include/asm/hugetlb.h | 14 --------------
- arch/mips/include/asm/hugetlb.h      | 14 --------------
- fs/hugetlbfs/inode.c                 |  8 ++------
- include/asm-generic/hugetlb.h        |  8 --------
- include/linux/hugetlb.h              |  6 ------
- 5 files changed, 2 insertions(+), 48 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
-index 4dc4b3e04225..ab68b594f889 100644
---- a/arch/loongarch/include/asm/hugetlb.h
-+++ b/arch/loongarch/include/asm/hugetlb.h
-@@ -10,20 +10,6 @@
- 
- uint64_t pmd_to_entrylo(unsigned long pmd_val);
- 
--#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
--static inline int prepare_hugepage_range(struct file *file,
--					 unsigned long addr,
--					 unsigned long len)
--{
--	unsigned long task_size = STACK_TOP;
--
--	if (len > task_size)
--		return -ENOMEM;
--	if (task_size - len < addr)
--		return -EINVAL;
--	return 0;
--}
--
- #define __HAVE_ARCH_HUGE_PTE_CLEAR
- static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
- 				  pte_t *ptep, unsigned long sz)
-diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
-index fbc71ddcf0f6..8c460ce01ffe 100644
---- a/arch/mips/include/asm/hugetlb.h
-+++ b/arch/mips/include/asm/hugetlb.h
-@@ -11,20 +11,6 @@
- 
- #include <asm/page.h>
- 
--#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
--static inline int prepare_hugepage_range(struct file *file,
--					 unsigned long addr,
--					 unsigned long len)
--{
--	unsigned long task_size = STACK_TOP;
--
--	if (len > task_size)
--		return -ENOMEM;
--	if (task_size - len < addr)
--		return -EINVAL;
--	return 0;
--}
--
- #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
- static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
- 					    unsigned long addr, pte_t *ptep,
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 00b2d1a032fd..81a6acddd690 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -179,12 +179,8 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
- 
- 	if (len & ~huge_page_mask(h))
- 		return -EINVAL;
--	if (flags & MAP_FIXED) {
--		if (addr & ~huge_page_mask(h))
--			return -EINVAL;
--		if (prepare_hugepage_range(file, addr, len))
--			return -EINVAL;
--	}
-+	if ((flags & MAP_FIXED) && (addr & ~huge_page_mask(h)))
-+		return -EINVAL;
- 	if (addr)
- 		addr0 = ALIGN(addr, huge_page_size(h));
- 
-diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
-index 3e0a8fe9b108..4bce4f07f44f 100644
---- a/include/asm-generic/hugetlb.h
-+++ b/include/asm-generic/hugetlb.h
-@@ -114,14 +114,6 @@ static inline int huge_pte_none_mostly(pte_t pte)
- }
- #endif
- 
--#ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
--static inline int prepare_hugepage_range(struct file *file,
--		unsigned long addr, unsigned long len)
--{
--	return 0;
--}
--#endif
--
- #ifndef __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
- static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
- 		unsigned long addr, pte_t *ptep)
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index c6c87eae4a8d..474de8e2a8f2 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -359,12 +359,6 @@ static inline void hugetlb_show_meminfo_node(int nid)
- {
- }
- 
--static inline int prepare_hugepage_range(struct file *file,
--				unsigned long addr, unsigned long len)
--{
--	return -EINVAL;
--}
--
- static inline void hugetlb_vma_lock_read(struct vm_area_struct *vma)
- {
- }
--- 
-2.49.0
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
