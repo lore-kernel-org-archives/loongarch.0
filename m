@@ -1,198 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6623A293C4C
-	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 09:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D21CE294A11
+	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 09:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015102; cv=none; b=MKyi3qKmKjJxgfXXgyxFK0OKTsNsOA8YjhBdkXE7JFKcIyNmzFFSCWbgvyfDJ4mIb/jy7KQbIqjqL9JTLMT1lUp0nMyfRsX4ipjGikcGogRt2nq69E1QZuaqqbqvgrFm2CsDaBZ3lu1RW7IVXgAq9QTp1c5k4eaypwrK6SEGMKM=
+	t=1751015115; cv=none; b=UqWIuoMOXvAAN6DHIIx+9n00X1uFDGZj1ui6atwoGhsQK7+wH2fLp16HkS/taTOTOM0NK+2molaR5vQg871QZAwl20ZOvCqoa+dHmV8WQiQnE0pxp5wxAgQJUTZoKP6hHMpFvd2qyUkhnd+GLOCvu4PJrcFh41Zr7iY/+XQhg/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015102; c=relaxed/simple;
-	bh=HyUpfkwo3OLd9F0gZisf9Z3XogUbFl8HwK9Z7M+FwCo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QNSCJ1+EaTmVyVLABeUCCbniDZ4emnmIphj4ifbgoEQN7v5ioxwwaX7bFoCbXGwDUusv+QH1cANhIKXPtnhvHfRXM154ax5xuC9wnunUdgo3RFNsT72r/ZYVJHgyK1GP4lKdmcs0z4G2r1QnjjGLa/oe33x2RruSRVaH94QY/5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HqoUKrlK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HqoUKrlK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D18CC4CEE3
-	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 09:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751015102;
-	bh=HyUpfkwo3OLd9F0gZisf9Z3XogUbFl8HwK9Z7M+FwCo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HqoUKrlKjcfaJqFAofZK786sma14dwU5R04TptjlEqpZ/4e3ExMBYXB6YhycGvRpx
-	 Pyh7DGH+4ar+rr+pprsEn3EudrSVJjMFFLgQgdsDYQtZN7TwdaEUHWIlak1FcHygod
-	 6l1WOtlXRnFg7J+O0QDMAC+83Wgl4xM/R148Nk/X7RIoTowU5NiWqh00GuMsQOxyZo
-	 PQeuN2XQndJZIQrYJ4yFwSRg5zTM01+gRZm+lPFyJ6WybcoHO6lHa70Cw2He+4zrRA
-	 VHFoRT8vNmBUq69/86BFb59sxucw6M08V2aNQf2a1giVHLa9P9F3KjeQihszaWiFXl
-	 Kize/olNRWPAA==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-adb4e36904bso391699066b.1
-        for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 02:05:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWTudrg8sgjMuvOBM++WLgbEwxrzU6JfiELO36ltfY2uT48qBSxrPqmP4RnElia9yTiE2OSJdE2ka4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzXV2lBXN39lSUyQcroyOOK5BNZc3l3aYSgrvkVONiOBoPidAhx
-	G0oRP9KygKk6NF24WBPtUxRkkYab002MNCGqBTfPm2+B2m52Bp4gbb/x/lzAYS414AXx40Qsh5i
-	lU0btD6SwxeDoKLukrpqvFIwfANWu5sI=
-X-Google-Smtp-Source: AGHT+IEvosZjZ8qlQI1TWdzY2BFBdYwwyYkTxohXHwdPQMGg4r1HAszF45OOoljF6JDYZKXjqfGGh3254k6sM/7UHS4=
-X-Received: by 2002:a17:907:7f14:b0:ae0:c561:b806 with SMTP id
- a640c23a62f3a-ae3500f276fmr205995466b.37.1751015100598; Fri, 27 Jun 2025
- 02:05:00 -0700 (PDT)
+	s=arc-20240116; t=1751015115; c=relaxed/simple;
+	bh=G6D8VhvAz8OaikcjLILwf6y5ICJUOgJt9byBOEzD1jI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=btq8ULhsIlaAKNFWWUS60ZUAWzZcyNsnLwlsHsJTesSjyUmPAMarKx4j18+S2qLnuJZayxmLgWXnRZFAMSOJUlOkOOnfhnuawZyR59P0zRmtrInCfH7rXHhmP5AZTjOoW15Dcffp0T1vp55LPAEhQP0cNs4Br9xmHXhzZSOA7G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Cx_eLFXl5oQTIeAQ--.26432S3;
+	Fri, 27 Jun 2025 17:05:09 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJCxM+TEXl5ovCsAAA--.1247S2;
+	Fri, 27 Jun 2025 17:05:08 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xianglai Li <lixianglai@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] LoongArch: KVM: Fixes with eiointc emulation
+Date: Fri, 27 Jun 2025 17:05:01 +0800
+Message-Id: <20250627090507.808319-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250611014651.3042734-1-maobibo@loongson.cn> <20250611014651.3042734-5-maobibo@loongson.cn>
- <CAAhV-H7ehdkKwzsFNAaX+r5eXLknvskyXLPDKei2A55LoSiJMA@mail.gmail.com>
- <5f1b9068-2d3d-2f89-4f72-85b021537f58@loongson.cn> <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
- <d197255b-9165-adc5-8ba1-a6d96579fc38@loongson.cn>
-In-Reply-To: <d197255b-9165-adc5-8ba1-a6d96579fc38@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 27 Jun 2025 17:04:48 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6bqQHQfVn7xiiMU5mxWSpMjPzs2JiJcgkuzFdEPEqUtw@mail.gmail.com>
-X-Gm-Features: Ac12FXwovi1RrlIs6G8wabZYte5B612Jb13CsPcMfGkALjhwcNHkppZDmFR3oDs
-Message-ID: <CAAhV-H6bqQHQfVn7xiiMU5mxWSpMjPzs2JiJcgkuzFdEPEqUtw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/9] LoongArch: KVM: INTC: Check validation of num_cpu
- from user space
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxM+TEXl5ovCsAAA--.1247S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Fri, Jun 27, 2025 at 3:44=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> On 2025/6/20 =E4=B8=8B=E5=8D=8810:43, Huacai Chen wrote:
-> > On Fri, Jun 20, 2025 at 9:43=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >>
-> >>
-> >> On 2025/6/19 =E4=B8=8B=E5=8D=884:46, Huacai Chen wrote:
-> >>> Hi, Bibo,
-> >>>
-> >>> On Wed, Jun 11, 2025 at 9:47=E2=80=AFAM Bibo Mao <maobibo@loongson.cn=
-> wrote:
-> >>>>
-> >>>> The maximum supported cpu number is EIOINTC_ROUTE_MAX_VCPUS about
-> >>>> irqchip eiointc, here add validation about cpu number to avoid array
-> >>>> pointer overflow.
-> >>>>
-> >>>> Cc: stable@vger.kernel.org
-> >>>> Fixes: 1ad7efa552fd ("LoongArch: KVM: Add EIOINTC user mode read and=
- write functions")
-> >>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>> ---
-> >>>>    arch/loongarch/kvm/intc/eiointc.c | 18 +++++++++++++-----
-> >>>>    1 file changed, 13 insertions(+), 5 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/=
-intc/eiointc.c
-> >>>> index b48511f903b5..ed80bf290755 100644
-> >>>> --- a/arch/loongarch/kvm/intc/eiointc.c
-> >>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
-> >>>> @@ -798,7 +798,7 @@ static int kvm_eiointc_ctrl_access(struct kvm_de=
-vice *dev,
-> >>>>           int ret =3D 0;
-> >>>>           unsigned long flags;
-> >>>>           unsigned long type =3D (unsigned long)attr->attr;
-> >>>> -       u32 i, start_irq;
-> >>>> +       u32 i, start_irq, val;
-> >>>>           void __user *data;
-> >>>>           struct loongarch_eiointc *s =3D dev->kvm->arch.eiointc;
-> >>>>
-> >>>> @@ -806,7 +806,12 @@ static int kvm_eiointc_ctrl_access(struct kvm_d=
-evice *dev,
-> >>>>           spin_lock_irqsave(&s->lock, flags);
-> >>>>           switch (type) {
-> >>>>           case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_NUM_CPU:
-> >>>> -               if (copy_from_user(&s->num_cpu, data, 4))
-> >>>> +               if (copy_from_user(&val, data, 4) =3D=3D 0) {
-> >>>> +                       if (val < EIOINTC_ROUTE_MAX_VCPUS)
-> >>>> +                               s->num_cpu =3D val;
-> >>>> +                       else
-> >>>> +                               ret =3D -EINVAL;
-> >>> Maybe it is better to set s->num_cpu to EIOINTC_ROUTE_MAX_VCPUS (or
-> >>> other value) rather than keep it uninitialized. Because in other
-> >>> places we need to check s->num_cpu and an uninitialized value may
-> >>> cause undefined behavior.
-> >> There is error return value -EINVAL, VMM should stop running and exit
-> >> immediately if there is error return value with the ioctl command.
-> >>
-> >> num_cpu is not uninitialized and it is zero by default. If VMM does no=
-t
-> >> care about the return value, VMM will fail to get coreisr information =
-in
-> >> future.
-> > If you are sure you can keep it as is. Then please resend patch
-> > 1,2,3,4,5,9 as a series because they are all bug fixes that should be
-> > merged as soon as possible. And in my own opinion, "INTC" can be
-> > dropped in the title.
-> Ok, will do in this way.
-Not needed now, patches have been applied.
+This series fix five issues about kernel eiointc emulation list as
+follows:
+  1. The first patch fixes type forced assignment issue.
+  2. The second patch fixes interrupt route with physical cpu.
+  3. The third patch disables update property num_cpu and feature
+  4. The fourth patch adds validation check about num_cpu from user
+     space.
+  5. Overflow with array index when emulate register EIOINTC_ENABLE
+     writing operation.
+  6. The sixth patch adds address alignment check
+  
+---
+v3 ... v4:
+  1. Remove patch about enhancement and only keep bugfix relative
+     patches.
+  2. Remove INTC indication in the patch title.
+  3. With access size, keep default case unchanged besides 1/2/4/8 since
+     here all patches are bugfix
+  4. Firstly check return value of copy_from_user() with error path,
+     keep the same order with old patch in patch 4.
+
+v2 ... v3:
+  1. Add prefix INTC: in title of every patch.
+  2. Fix array index overflow when emulate register EIOINTC_ENABLE
+     writing operation.
+  3. Add address alignment check with eiointc register access operation.
+
+v1 ... v2:
+  1. Add extra fix in patch 3 and patch 4, add num_cpu validation check
+  2. Name of stat information keeps unchanged, only move it from VM stat
+     to vCPU stat.
+---
+Bibo Mao (6):
+  LoongArch: KVM: Fix interrupt route update with eiointc
+  LoongArch: KVM: Check interrupt route from physical cpu
+  LoongArch: KVM: Disable update property num_cpu and feature
+  LoongArch: KVM: Check validation of num_cpu from user space
+  LoongArch: KVM: Avoid overflow with array index
+  LoongArch: KVM: Add address alignment check
+
+ arch/loongarch/kvm/intc/eiointc.c | 96 ++++++++++++++++++++++---------
+ 1 file changed, 68 insertions(+), 28 deletions(-)
 
 
-Huacai
+base-commit: f02769e7f272d6f42b9767f066c5a99afd2338f3
+-- 
+2.39.3
 
->
-> Regards
-> Bibo Mao
-> >
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>>
-> >>>
-> >>> Huacai
-> >>>> +               } else
-> >>>>                           ret =3D -EFAULT;
-> >>>>                   break;
-> >>>>           case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_FEATURE:
-> >>>> @@ -835,7 +840,7 @@ static int kvm_eiointc_regs_access(struct kvm_de=
-vice *dev,
-> >>>>                                           struct kvm_device_attr *at=
-tr,
-> >>>>                                           bool is_write)
-> >>>>    {
-> >>>> -       int addr, cpuid, offset, ret =3D 0;
-> >>>> +       int addr, cpu, offset, ret =3D 0;
-> >>>>           unsigned long flags;
-> >>>>           void *p =3D NULL;
-> >>>>           void __user *data;
-> >>>> @@ -843,7 +848,7 @@ static int kvm_eiointc_regs_access(struct kvm_de=
-vice *dev,
-> >>>>
-> >>>>           s =3D dev->kvm->arch.eiointc;
-> >>>>           addr =3D attr->attr;
-> >>>> -       cpuid =3D addr >> 16;
-> >>>> +       cpu =3D addr >> 16;
-> >>>>           addr &=3D 0xffff;
-> >>>>           data =3D (void __user *)attr->addr;
-> >>>>           switch (addr) {
-> >>>> @@ -868,8 +873,11 @@ static int kvm_eiointc_regs_access(struct kvm_d=
-evice *dev,
-> >>>>                   p =3D &s->isr.reg_u32[offset];
-> >>>>                   break;
-> >>>>           case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
-> >>>> +               if (cpu >=3D s->num_cpu)
-> >>>> +                       return -EINVAL;
-> >>>> +
-> >>>>                   offset =3D (addr - EIOINTC_COREISR_START) / 4;
-> >>>> -               p =3D &s->coreisr.reg_u32[cpuid][offset];
-> >>>> +               p =3D &s->coreisr.reg_u32[cpu][offset];
-> >>>>                   break;
-> >>>>           case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
-> >>>>                   offset =3D (addr - EIOINTC_COREMAP_START) / 4;
-> >>>> --
-> >>>> 2.39.3
-> >>>>
-> >>
->
->
