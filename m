@@ -1,89 +1,104 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A883229552A
-	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 09:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225FC2951D2
+	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 10:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015118; cv=none; b=snC9yqaBTLm8LhkAHYWqP7cVDGDdVq/HF/5zPJjI6KG8NRtnT8vSCsdA97domepNu1LHbntbE2G9b0HLceVeTitVBW677DLgAVIwc4poDXB2044lGH0cijCmMvJExL2EA9a24VHlu1WPDgPAYi4TAaRNERRv1jzRMrCRHx5x1ws=
+	t=1751019359; cv=none; b=Iuz2j7N7txsGR8pjLPR0vThMruJgotvbLAuh7+hHX2Cfv2q2YEMKsJ1gLrYVXNbRvPTzdaOrrviInuQQInR0C0sfNDDBt/HWqgeron0aZSuwwCc8MsGaQMPcUkLOejv9pxHELgDav9ViWakcGHhyF96KfIJlYVQGTUW5RiVjYZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015118; c=relaxed/simple;
-	bh=9DFt5yBIByc8A5fTofoeJFiaxrEmzDqhpsfJB8V5+8g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tDOGNhUbHQcqTlwnZUWK4e4uVGScmQpTOmkj8O58FetyEes08W4ahH+weKTgyiLEx4TqimzlDzit97aJ6x+/qCji0UcZ8bwecPOcoUIqD3Tp4b2pH12Jte9iUTlWuvLCp2UtAKp5Lb8oERJkd3grjs5UoukCQq+ZvwO+y8cjRbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxnOLKXl5oVTIeAQ--.31463S3;
-	Fri, 27 Jun 2025 17:05:14 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJCxM+TEXl5ovCsAAA--.1247S8;
-	Fri, 27 Jun 2025 17:05:14 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xianglai Li <lixianglai@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v4 6/6] LoongArch: KVM: Add address alignment check
-Date: Fri, 27 Jun 2025 17:05:07 +0800
-Message-Id: <20250627090507.808319-7-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250627090507.808319-1-maobibo@loongson.cn>
-References: <20250627090507.808319-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1751019359; c=relaxed/simple;
+	bh=3s6q/x000fxdjTd8nipUwFWpBcy6fLFPtzHW1ADaES8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fhAily4XV08BLCRzWQ12AbSc+i3nGNj/piPCnJIQr6ptqXWRYEP8Czt7Ylc/t8wIrfInBKz5Y5Bz+xxUbqtb9U3dWW5bA3Vl6+zRGHN6Wr/Ko1i5pt7bKE5CoIl2qjbvqES1lJUepKdStgjjheW4reIXruXcfbDKkJM3XF6EDlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnhnTgEo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnhnTgEo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC7DAC4CEE3
+	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 10:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751019359;
+	bh=3s6q/x000fxdjTd8nipUwFWpBcy6fLFPtzHW1ADaES8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tnhnTgEoCUVtmDaHRWJU/1Hn/S2PMjvOoZDeIQ6We3xo1I3Qrbj9qsK/+5GbQNx65
+	 H0aZDYLAvG3HmDDaHLeyPpwzl+/rTchbLjTGfuG6oLTVnYKydKVEX8XUcLDUJXc51Z
+	 lGZCr12WwxZwvqk1yUCDRx2GI0GGLq46v5mMztLbfpDFIOQXj7ax9UfD9Uz6IfdXqK
+	 aPnfUJ1npAwsypLnjLZBobK7BkIAwBacWsSeyFHyDGnlnBxqPSf8G0vYLqBg9kN+kr
+	 7pCwayqp0Ikrfdkm3PTl3dvD9ZYP9rljQzzpy95zWMFZPIZx9SRWbtTYXibFMx5OPC
+	 GEyqnE0r78hKQ==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60c79bedc19so2363435a12.3
+        for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 03:15:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW67qng2XIHvyLlaw6bmVc9b1qhQ2hCpB+Q+EGRSt6qZtu9QkZxghIMCDC9keBsQHWzPsgQkX3th+s=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw+370wyq2cRWf4jtMHoCgfEh5gdoW+YVwRRV9dya5JE9q0xpbA
+	AEOpibwSGmji8lhe2r68qzFocZGB16/+cJh9KKkT4MvW7gE46sLq/qD/Pf1H368f2ywUeReHAUp
+	QygA2ru7UPAI/XME2Jdte0zd0cDgaE4I=
+X-Google-Smtp-Source: AGHT+IEC0RlMZ0dBSk+i/oRcQH/9JIC09lTKPfqTuntyMRorx+R8qqxJK7/9jgwr4DviueaaQI2nTlixyx18/q/CnoY=
+X-Received: by 2002:aa7:d98f:0:b0:60c:42ce:27e2 with SMTP id
+ 4fb4d7f45d1cf-60c88ec2ademr1766441a12.30.1751019357555; Fri, 27 Jun 2025
+ 03:15:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxM+TEXl5ovCsAAA--.1247S8
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn> <20250619025138.2854-4-zhaoqunqin@loongson.cn>
+ <aFs2RDOeOKvWUN2L@kernel.org> <20250625080527.GN795775@google.com>
+ <aFvhorr3kZSuzVpv@kernel.org> <20250625134047.GX795775@google.com>
+ <aFwsIs6ri3HZictC@kernel.org> <20250626103030.GA10134@google.com>
+ <aF0oHDVQKVfGZNV2@kernel.org> <CAAhV-H7nyKHS70BGh7nwjuGwSWayCbUY=1-zWMU4N3bJZtH1gQ@mail.gmail.com>
+ <aF2Rn0R4AlopEwz8@kernel.org> <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
+In-Reply-To: <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 27 Jun 2025 18:15:45 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5JkzOOq-1pJFXmGLLtXmrDEErfTfvcQUe-9bzCJ9znWA@mail.gmail.com>
+X-Gm-Features: Ac12FXzDlC7jJ5hahCiQAD4Tlirbeiu71uFZpCn5cbdTSSpq6MQ0DvfKW-Bp0ag
+Message-ID: <CAAhV-H5JkzOOq-1pJFXmGLLtXmrDEErfTfvcQUe-9bzCJ9znWA@mail.gmail.com>
+Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Lee Jones <lee@kernel.org>, herbert@gondor.apana.org.au, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, Yinggang Gu <guyinggang@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-IOCSR instruction supports 1/2/4/8 bytes access, the address should
-be naturally aligned with its access size. Here address alignment
-checking is added in eiointc kernel emulation.
+On Fri, Jun 27, 2025 at 2:47=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
+>
+>
+> =E5=9C=A8 2025/6/27 =E4=B8=8A=E5=8D=882:29, Jarkko Sakkinen =E5=86=99=E9=
+=81=93:
+> > On Thu, Jun 26, 2025 at 08:48:35PM +0800, Huacai Chen wrote:
+> >> But there is another coherency, you can see this in the 1st patch:
+> >>
+> >> +static const struct mfd_cell engines[] =3D {
+> >> + { .name =3D "loongson-rng" },
+> >> + { .name =3D "loongson-tpm" },
+> >> +};
+> > I thought already after ffa driver from ARM that I need to fix up
+> > the naming a bit before it explodes. Thus, I'll stick to this.
+> >
+> > And e.g., I could easily find DRM driver with opposite order.
+> Next revision:
+>
+> +static const struct mfd_cell engines[] =3D {
+> +       { .name =3D "loongson-rng" },
+> +       { .name =3D "tpm_loongson" },
+> +};
+> Then
+> "loongson-rng" can match MFD and Crypto subsystem naming convention.
+> "tpm_loongson" can match TPM subsystem naming convention.
+If possible, I prefer the old names.
 
-Cc: stable@vger.kernel.org
-Fixes: 3956a52bc05b ("LoongArch: KVM: Add EIOINTC read and write functions")
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/intc/eiointc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Huacai
 
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index d54fe805bf6e..fab5cf52779c 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -316,6 +316,11 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 	}
- 
-+	if (addr & (len - 1)) {
-+		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
-+		return -EINVAL;
-+	}
-+
- 	vcpu->kvm->stat.eiointc_read_exits++;
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (len) {
-@@ -687,6 +692,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 	}
- 
-+	if (addr & (len - 1)) {
-+		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
-+		return -EINVAL;
-+	}
-+
- 	vcpu->kvm->stat.eiointc_write_exits++;
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (len) {
--- 
-2.39.3
-
+>
+>
+> Thanks,
+> Qunqin
+>
+> >> Huacai
+> > BR, Jarkko
+>
