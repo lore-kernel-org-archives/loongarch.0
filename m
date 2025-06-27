@@ -1,154 +1,234 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEB829DB6E
-	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 11:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232111DFCB
+	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 16:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751025195; cv=none; b=cJZp1UIssBm1jtamJBG8TF2k9MJI+40EqBHa8g41xdRrlhICd8ZFJ+S8Q+Z+EQ/kOFS8xLDZlAZZ9th4RkbbL11/bybSIgcFR0mKcoHNQzt2aV9czoAzGwZD/q1ptxgCUxeDh+XbDeD3XoUtq3sKJPZyAAu7Oib7bfjqvsSoxhg=
+	t=1751040435; cv=none; b=Eq2vDqwesrZi2owRW8QMIdqEE3GpnTtQrZzxrc5UGDu81LImJh2AjJsXSRb1l4HIencupG3KkDpPIl7rjru2wrVo8cpyexsJPHyuyhnU05gj2DvYBRB0tgtc+D9JsvAUYFn7FArmEo1BwBUQqtwJ9LBUr4s5P186hZZVWisPK80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751025195; c=relaxed/simple;
-	bh=WDJRIiBgDgF7nDs2mDyrrymo6t/hxdkYyNXPPcQgJdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ScPrwqDDDz9rtKXGs4dgK6gK5Z0uRQIZctmDaevWn/ouImoteNe1OuF4KYZszZpg9fwMOGh9MkUDnZphPYft/Qyp2OMTZwiPiN1bNdvfL5GkzWvgr+kJB91OStV1kfV1dzIVaA7nfIBp4ZLv/WjKIautzI8F5IesnUvmUd0efh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HfwYnDCM; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1751040435; c=relaxed/simple;
+	bh=Tdpe6JDS+rR3v1xR5w42iqwYeD9PI+17P546Ndy04J8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=bINOZtUojP6Wl2Jf8Y5RZrMXCN3Ql5xABn90sMffgn7KmS2RRis2dErIZgCZ4s9G3FRVxG6lkBghBXdil2sbG0llWIzAh6VQ/+lzR/HsNHYdFlY/rBxQvb0XlXTWf4bceDhJKctYfPpBBl5x3DURwx2y7WJI7Ol6IoIv/P5GCWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CNt2hQl7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HfwYnDCM"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 64AE920E95;
-	Fri, 27 Jun 2025 13:53:05 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id UBsMN3Dr0E-0; Fri, 27 Jun 2025 13:53:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1751025184; bh=WDJRIiBgDgF7nDs2mDyrrymo6t/hxdkYyNXPPcQgJdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HfwYnDCM1zsRY9Rm5LKXfpBahJetXii9aCQ3SpmgsNOt52jkgYBgpW9KMr2a3Pl91
-	 Ft5M0wynRpI3oKb0kFohouxh6gsAf5MRN8Wh9aLaSGRcMSwtygLK5OkmWZbTCHiGyr
-	 Ndhxb0DK3mzSaAquh3+JPYbNeA0Ofhrst6C4Y8dpjf+Ns0NIR9OjHUUwYdtTAKaae2
-	 5BCe2y0DayXrjs7eeA/GdfzxNlyrk9Vsg4yjN6RxHcRHkSuWj4TaFAMP1yNO0NOgey
-	 JMHrPAkVZjLhdqbCZnBhELF6YNAJU1MUVAyk7/qd5R9OTrQpT75gt57FF0hInGF4UE
-	 LAGD4/R4lDHNA==
-Date: Fri, 27 Jun 2025 11:52:41 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CNt2hQl7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751040433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/xy96KI8UDKszt96CyDW7op5ryIeAmzp/OyFji+BJh8=;
+	b=CNt2hQl7R/RBmWrCRx0OAbktNHeMefRDbZIifZdhUxdz1ReVud6UJeuU3ssuXm0/1E0wmo
+	h/J+sOGmPfe5WqU5q2HffyaPEKRn7JYUVL8yF69fRyj0+aEGahdCFy6UTRTDi4cmRPdfKt
+	WKHGS8NtDlZJjmE4GMdk4mobY7JetiU=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-680-_evg9jiTO9u2VQnjAfLqPA-1; Fri, 27 Jun 2025 12:07:12 -0400
+X-MC-Unique: _evg9jiTO9u2VQnjAfLqPA-1
+X-Mimecast-MFC-AGG-ID: _evg9jiTO9u2VQnjAfLqPA_1751040431
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fabb9286f9so50673456d6.1
+        for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 09:07:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751040431; x=1751645231;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/xy96KI8UDKszt96CyDW7op5ryIeAmzp/OyFji+BJh8=;
+        b=wGZcXwEvgzJFE5ZoLJA5KKTNKZ8O2XrKJV8a4UPrZnQJuf3vnEtjVQCDWH/B8U6g+t
+         RM08LBorpxM8VkYlsWK+e7P84o+y7QuneWV3AabX63JAwHHhAFvfi580GJZ8s9f4l6WP
+         tQFnCyfgxqs4ESJ82vHIjj2kaLSD5ue/LG7d+TBI0dpq4RR8eKbqYY0llR7lSPLoFAcn
+         UDcLOKGcbG3bpRVyeRJ/ktu0weQIKFDLnIOYxtevCH8GzEUMAxSB8QbIi/gowrF9ngf5
+         RFEQ+SkZvgZ3EzFHSbi2gaJsc1nFpC4Aupm85VXE1F9M9v9GBpECs+Doxo+7170ySyDb
+         HjKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwU3eGO7guGD91Bu4GaFvjRpYL4haMH4GD2Z10NULqqDDShL02bngxAn8ND0iUAiRUMIRnd/5bD3E=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxtR5ytuwj/u5JXLprBvuUcWt2QVxsjmcob7L57d8uWaGctoj9Q
+	8aLVEkFOu0Wrv6EUClMRl8HwvN5Lc08qXBbo+spM43UEUqw/mkTzYiaDxb7lwB0GTX0Vy6osCQD
+	fQw3fnvkWLVOT/HrXre7TdmucA22/tHP17GgAr4ML/C2i1UvjukURDNizo1gRtA==
+X-Gm-Gg: ASbGncvId9pcFzZIHytg6HePVReD/zmWjtiCnVlyzpcwP7l1Zj9FdHFtR3tIAnCC8Oa
+	0HStPshb65U6QchwQaF6tlZEy5qLGZIsS61dCjTmK9ysoF3LyhhCziO8BBFKtOL4lWBRCm95Zok
+	hK9R07cdm+vTE3CreLrjUh57JdaFxp3Ytwhpn+PknGcoB++K0W0/9RCPeYaPxd8q43AheIOcUE5
+	60HzHvVWO3AsE2ntoVTebVdKbHxtgnfgp+6Fd0yKhYPWpebhz9FcvDSW8tqQYw21dWVqR3RtEye
+	uhQWdNErlaI=
+X-Received: by 2002:a05:6214:405:b0:6fd:24:b0e0 with SMTP id 6a1803df08f44-7000252f09fmr61586366d6.6.1751040431141;
+        Fri, 27 Jun 2025 09:07:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpI3B+sCb86YFp8sTXjrVwNo2dAmF8TVfkL08aeMHEOdDuhipHJHbQBBG3CZhrBLuzvp45Qw==
+X-Received: by 2002:a05:6214:405:b0:6fd:24:b0e0 with SMTP id 6a1803df08f44-7000252f09fmr61585916d6.6.1751040430641;
+        Fri, 27 Jun 2025 09:07:10 -0700 (PDT)
+Received: from x1.com ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd76e74372sm22805016d6.0.2025.06.27.09.07.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 09:07:10 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	peterx@redhat.com,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH v2 1/8] dt-bindings: clock: loongson2: Add Loongson
- 2K0300 compatible
-Message-ID: <aF6FtaNB6XgkvUX7@pie>
-References: <20250617162426.12629-1-ziyao@disroot.org>
- <20250617162426.12629-2-ziyao@disroot.org>
- <20250627-gay-sepia-reindeer-2fde2a@krzk-bin>
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	David Hildenbrand <david@redhat.com>
+Subject: [PATCH] mm/hugetlb: Remove prepare_hugepage_range()
+Date: Fri, 27 Jun 2025 12:07:07 -0400
+Message-ID: <20250627160707.2124580-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627-gay-sepia-reindeer-2fde2a@krzk-bin>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: nPbkjNnK-FO5p6UDw1EtjmoibfaPB4rqZoBTpRbeA7s_1751040431
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Fri, Jun 27, 2025 at 10:03:53AM +0200, Krzysztof Kozlowski wrote:
-> On Tue, Jun 17, 2025 at 04:24:19PM +0000, Yao Zi wrote:
-> > Document the clock controller shipped in Loongson 2K0300 SoC, which
-> > generates various clock signals for SoC peripherals.
-> > 
-> > Differing from previous generations of SoCs, 2K0300 requires a 120MHz
-> > external clock input, and a separate dt-binding header is used for
-> > cleanness.
-> > 
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  .../bindings/clock/loongson,ls2k-clk.yaml     | 26 ++++++---
-> >  MAINTAINERS                                   |  1 +
-> >  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
-> >  3 files changed, 75 insertions(+), 6 deletions(-)
-> >  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> > index 4f79cdb417ab..3e0a894cfb2f 100644
-> > --- a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> > +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> > @@ -16,6 +16,7 @@ description: |
-> >  properties:
-> >    compatible:
-> >      enum:
-> > +      - loongson,ls2k0300-clk
-> >        - loongson,ls2k0500-clk
-> >        - loongson,ls2k-clk  # This is for Loongson-2K1000
-> >        - loongson,ls2k2000-clk
-> > @@ -24,19 +25,32 @@ properties:
-> >      maxItems: 1
-> >  
-> >    clocks:
-> > -    items:
-> > -      - description: 100m ref
-> > +    maxItems: 1
-> >  
-> > -  clock-names:
-> > -    items:
-> > -      - const: ref_100m
-> > +  clock-names: true
-> 
-> No. How does this implement my comment?
+Only mips and loongarch implemented this API, however what it does was
+checking against stack overflow for either len or addr.  That's already
+done in arch's arch_get_unmapped_area*() functions, even though it may not
+be 100% identical checks.
 
-I'm sorry that I forgot about the suggestion of dropping clock-names for
-the new compatible.
+For example, for both of the architectures, there will be a trivial
+difference on how stack top was defined.  The old code uses STACK_TOP which
+may be slightly smaller than TASK_SIZE on either of them, but the hope is
+that shouldn't be a problem.
 
-Is it acceptable to remove the description of clocks property, keep
-clock-names property as-is, and use an allOf block to disallow
-clocks-names for the new 2K0300 compatible? Thanks for your explanation.
+It means the whole API is pretty much obsolete at least now, remove it
+completely.
 
-> It makes no sense, why 100m even appeared here. I already objected last
-> time!
-> 
-> 
-> >  
-> >    '#clock-cells':
-> >      const: 1
-> >      description:
-> >        The clock consumer should specify the desired clock by having the clock
-> >        ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
-> > -      for the full list of Loongson-2 SoC clock IDs.
-> > +      and include/dt-bindings/clock/loongson,ls2k0300-clk.h for the full list of
-> > +      Loongson-2 SoC clock IDs.
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: loongson,ls2k0300-clk
-> > +    then:
-> > +      properties:
-> > +        clock-names:
-> > +          const: ref_120m
-> 
-> NAK, stop doing this pattern. You already got comment on this.
+Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Muchun Song <muchun.song@linux.dev>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/loongarch/include/asm/hugetlb.h | 14 --------------
+ arch/mips/include/asm/hugetlb.h      | 14 --------------
+ fs/hugetlbfs/inode.c                 |  8 ++------
+ include/asm-generic/hugetlb.h        |  8 --------
+ include/linux/hugetlb.h              |  6 ------
+ 5 files changed, 2 insertions(+), 48 deletions(-)
 
-Oops, I missed the comment about dropping the frequency (or the full
-clock-names property) from clock-names when writing v2, and I've decided
-to drop the clock-names property completely for the 2K0300 compatible.
+diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+index 4dc4b3e04225..ab68b594f889 100644
+--- a/arch/loongarch/include/asm/hugetlb.h
++++ b/arch/loongarch/include/asm/hugetlb.h
+@@ -10,20 +10,6 @@
+ 
+ uint64_t pmd_to_entrylo(unsigned long pmd_val);
+ 
+-#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-					 unsigned long addr,
+-					 unsigned long len)
+-{
+-	unsigned long task_size = STACK_TOP;
+-
+-	if (len > task_size)
+-		return -ENOMEM;
+-	if (task_size - len < addr)
+-		return -EINVAL;
+-	return 0;
+-}
+-
+ #define __HAVE_ARCH_HUGE_PTE_CLEAR
+ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 				  pte_t *ptep, unsigned long sz)
+diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
+index fbc71ddcf0f6..8c460ce01ffe 100644
+--- a/arch/mips/include/asm/hugetlb.h
++++ b/arch/mips/include/asm/hugetlb.h
+@@ -11,20 +11,6 @@
+ 
+ #include <asm/page.h>
+ 
+-#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-					 unsigned long addr,
+-					 unsigned long len)
+-{
+-	unsigned long task_size = STACK_TOP;
+-
+-	if (len > task_size)
+-		return -ENOMEM;
+-	if (task_size - len < addr)
+-		return -EINVAL;
+-	return 0;
+-}
+-
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 					    unsigned long addr, pte_t *ptep,
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 00b2d1a032fd..81a6acddd690 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -179,12 +179,8 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+ 
+ 	if (len & ~huge_page_mask(h))
+ 		return -EINVAL;
+-	if (flags & MAP_FIXED) {
+-		if (addr & ~huge_page_mask(h))
+-			return -EINVAL;
+-		if (prepare_hugepage_range(file, addr, len))
+-			return -EINVAL;
+-	}
++	if ((flags & MAP_FIXED) && (addr & ~huge_page_mask(h)))
++		return -EINVAL;
+ 	if (addr)
+ 		addr0 = ALIGN(addr, huge_page_size(h));
+ 
+diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
+index 3e0a8fe9b108..4bce4f07f44f 100644
+--- a/include/asm-generic/hugetlb.h
++++ b/include/asm-generic/hugetlb.h
+@@ -114,14 +114,6 @@ static inline int huge_pte_none_mostly(pte_t pte)
+ }
+ #endif
+ 
+-#ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-		unsigned long addr, unsigned long len)
+-{
+-	return 0;
+-}
+-#endif
+-
+ #ifndef __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
+ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 		unsigned long addr, pte_t *ptep)
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index c6c87eae4a8d..474de8e2a8f2 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -359,12 +359,6 @@ static inline void hugetlb_show_meminfo_node(int nid)
+ {
+ }
+ 
+-static inline int prepare_hugepage_range(struct file *file,
+-				unsigned long addr, unsigned long len)
+-{
+-	return -EINVAL;
+-}
+-
+ static inline void hugetlb_vma_lock_read(struct vm_area_struct *vma)
+ {
+ }
+-- 
+2.49.0
 
-Sorry again for my mistake.
-
-> Best regards,
-> Krzysztof
-> 
-> 
-
-Best regards,
-Yao Zi
