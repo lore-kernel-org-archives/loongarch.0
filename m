@@ -1,104 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225FC2951D2
-	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 10:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEB829DB6E
+	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 11:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019359; cv=none; b=Iuz2j7N7txsGR8pjLPR0vThMruJgotvbLAuh7+hHX2Cfv2q2YEMKsJ1gLrYVXNbRvPTzdaOrrviInuQQInR0C0sfNDDBt/HWqgeron0aZSuwwCc8MsGaQMPcUkLOejv9pxHELgDav9ViWakcGHhyF96KfIJlYVQGTUW5RiVjYZo=
+	t=1751025195; cv=none; b=cJZp1UIssBm1jtamJBG8TF2k9MJI+40EqBHa8g41xdRrlhICd8ZFJ+S8Q+Z+EQ/kOFS8xLDZlAZZ9th4RkbbL11/bybSIgcFR0mKcoHNQzt2aV9czoAzGwZD/q1ptxgCUxeDh+XbDeD3XoUtq3sKJPZyAAu7Oib7bfjqvsSoxhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019359; c=relaxed/simple;
-	bh=3s6q/x000fxdjTd8nipUwFWpBcy6fLFPtzHW1ADaES8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fhAily4XV08BLCRzWQ12AbSc+i3nGNj/piPCnJIQr6ptqXWRYEP8Czt7Ylc/t8wIrfInBKz5Y5Bz+xxUbqtb9U3dWW5bA3Vl6+zRGHN6Wr/Ko1i5pt7bKE5CoIl2qjbvqES1lJUepKdStgjjheW4reIXruXcfbDKkJM3XF6EDlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnhnTgEo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751025195; c=relaxed/simple;
+	bh=WDJRIiBgDgF7nDs2mDyrrymo6t/hxdkYyNXPPcQgJdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ScPrwqDDDz9rtKXGs4dgK6gK5Z0uRQIZctmDaevWn/ouImoteNe1OuF4KYZszZpg9fwMOGh9MkUDnZphPYft/Qyp2OMTZwiPiN1bNdvfL5GkzWvgr+kJB91OStV1kfV1dzIVaA7nfIBp4ZLv/WjKIautzI8F5IesnUvmUd0efh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HfwYnDCM; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnhnTgEo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC7DAC4CEE3
-	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 10:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751019359;
-	bh=3s6q/x000fxdjTd8nipUwFWpBcy6fLFPtzHW1ADaES8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tnhnTgEoCUVtmDaHRWJU/1Hn/S2PMjvOoZDeIQ6We3xo1I3Qrbj9qsK/+5GbQNx65
-	 H0aZDYLAvG3HmDDaHLeyPpwzl+/rTchbLjTGfuG6oLTVnYKydKVEX8XUcLDUJXc51Z
-	 lGZCr12WwxZwvqk1yUCDRx2GI0GGLq46v5mMztLbfpDFIOQXj7ax9UfD9Uz6IfdXqK
-	 aPnfUJ1npAwsypLnjLZBobK7BkIAwBacWsSeyFHyDGnlnBxqPSf8G0vYLqBg9kN+kr
-	 7pCwayqp0Ikrfdkm3PTl3dvD9ZYP9rljQzzpy95zWMFZPIZx9SRWbtTYXibFMx5OPC
-	 GEyqnE0r78hKQ==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60c79bedc19so2363435a12.3
-        for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 03:15:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW67qng2XIHvyLlaw6bmVc9b1qhQ2hCpB+Q+EGRSt6qZtu9QkZxghIMCDC9keBsQHWzPsgQkX3th+s=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw+370wyq2cRWf4jtMHoCgfEh5gdoW+YVwRRV9dya5JE9q0xpbA
-	AEOpibwSGmji8lhe2r68qzFocZGB16/+cJh9KKkT4MvW7gE46sLq/qD/Pf1H368f2ywUeReHAUp
-	QygA2ru7UPAI/XME2Jdte0zd0cDgaE4I=
-X-Google-Smtp-Source: AGHT+IEC0RlMZ0dBSk+i/oRcQH/9JIC09lTKPfqTuntyMRorx+R8qqxJK7/9jgwr4DviueaaQI2nTlixyx18/q/CnoY=
-X-Received: by 2002:aa7:d98f:0:b0:60c:42ce:27e2 with SMTP id
- 4fb4d7f45d1cf-60c88ec2ademr1766441a12.30.1751019357555; Fri, 27 Jun 2025
- 03:15:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HfwYnDCM"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 64AE920E95;
+	Fri, 27 Jun 2025 13:53:05 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id UBsMN3Dr0E-0; Fri, 27 Jun 2025 13:53:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1751025184; bh=WDJRIiBgDgF7nDs2mDyrrymo6t/hxdkYyNXPPcQgJdQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HfwYnDCM1zsRY9Rm5LKXfpBahJetXii9aCQ3SpmgsNOt52jkgYBgpW9KMr2a3Pl91
+	 Ft5M0wynRpI3oKb0kFohouxh6gsAf5MRN8Wh9aLaSGRcMSwtygLK5OkmWZbTCHiGyr
+	 Ndhxb0DK3mzSaAquh3+JPYbNeA0Ofhrst6C4Y8dpjf+Ns0NIR9OjHUUwYdtTAKaae2
+	 5BCe2y0DayXrjs7eeA/GdfzxNlyrk9Vsg4yjN6RxHcRHkSuWj4TaFAMP1yNO0NOgey
+	 JMHrPAkVZjLhdqbCZnBhELF6YNAJU1MUVAyk7/qd5R9OTrQpT75gt57FF0hInGF4UE
+	 LAGD4/R4lDHNA==
+Date: Fri, 27 Jun 2025 11:52:41 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH v2 1/8] dt-bindings: clock: loongson2: Add Loongson
+ 2K0300 compatible
+Message-ID: <aF6FtaNB6XgkvUX7@pie>
+References: <20250617162426.12629-1-ziyao@disroot.org>
+ <20250617162426.12629-2-ziyao@disroot.org>
+ <20250627-gay-sepia-reindeer-2fde2a@krzk-bin>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250619025138.2854-1-zhaoqunqin@loongson.cn> <20250619025138.2854-4-zhaoqunqin@loongson.cn>
- <aFs2RDOeOKvWUN2L@kernel.org> <20250625080527.GN795775@google.com>
- <aFvhorr3kZSuzVpv@kernel.org> <20250625134047.GX795775@google.com>
- <aFwsIs6ri3HZictC@kernel.org> <20250626103030.GA10134@google.com>
- <aF0oHDVQKVfGZNV2@kernel.org> <CAAhV-H7nyKHS70BGh7nwjuGwSWayCbUY=1-zWMU4N3bJZtH1gQ@mail.gmail.com>
- <aF2Rn0R4AlopEwz8@kernel.org> <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
-In-Reply-To: <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 27 Jun 2025 18:15:45 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5JkzOOq-1pJFXmGLLtXmrDEErfTfvcQUe-9bzCJ9znWA@mail.gmail.com>
-X-Gm-Features: Ac12FXzDlC7jJ5hahCiQAD4Tlirbeiu71uFZpCn5cbdTSSpq6MQ0DvfKW-Bp0ag
-Message-ID: <CAAhV-H5JkzOOq-1pJFXmGLLtXmrDEErfTfvcQUe-9bzCJ9znWA@mail.gmail.com>
-Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, Lee Jones <lee@kernel.org>, herbert@gondor.apana.org.au, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
-	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org, Yinggang Gu <guyinggang@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627-gay-sepia-reindeer-2fde2a@krzk-bin>
 
-On Fri, Jun 27, 2025 at 2:47=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
-> wrote:
->
->
-> =E5=9C=A8 2025/6/27 =E4=B8=8A=E5=8D=882:29, Jarkko Sakkinen =E5=86=99=E9=
-=81=93:
-> > On Thu, Jun 26, 2025 at 08:48:35PM +0800, Huacai Chen wrote:
-> >> But there is another coherency, you can see this in the 1st patch:
-> >>
-> >> +static const struct mfd_cell engines[] =3D {
-> >> + { .name =3D "loongson-rng" },
-> >> + { .name =3D "loongson-tpm" },
-> >> +};
-> > I thought already after ffa driver from ARM that I need to fix up
-> > the naming a bit before it explodes. Thus, I'll stick to this.
-> >
-> > And e.g., I could easily find DRM driver with opposite order.
-> Next revision:
->
-> +static const struct mfd_cell engines[] =3D {
-> +       { .name =3D "loongson-rng" },
-> +       { .name =3D "tpm_loongson" },
-> +};
-> Then
-> "loongson-rng" can match MFD and Crypto subsystem naming convention.
-> "tpm_loongson" can match TPM subsystem naming convention.
-If possible, I prefer the old names.
+On Fri, Jun 27, 2025 at 10:03:53AM +0200, Krzysztof Kozlowski wrote:
+> On Tue, Jun 17, 2025 at 04:24:19PM +0000, Yao Zi wrote:
+> > Document the clock controller shipped in Loongson 2K0300 SoC, which
+> > generates various clock signals for SoC peripherals.
+> > 
+> > Differing from previous generations of SoCs, 2K0300 requires a 120MHz
+> > external clock input, and a separate dt-binding header is used for
+> > cleanness.
+> > 
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  .../bindings/clock/loongson,ls2k-clk.yaml     | 26 ++++++---
+> >  MAINTAINERS                                   |  1 +
+> >  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
+> >  3 files changed, 75 insertions(+), 6 deletions(-)
+> >  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+> > index 4f79cdb417ab..3e0a894cfb2f 100644
+> > --- a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+> > +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+> > @@ -16,6 +16,7 @@ description: |
+> >  properties:
+> >    compatible:
+> >      enum:
+> > +      - loongson,ls2k0300-clk
+> >        - loongson,ls2k0500-clk
+> >        - loongson,ls2k-clk  # This is for Loongson-2K1000
+> >        - loongson,ls2k2000-clk
+> > @@ -24,19 +25,32 @@ properties:
+> >      maxItems: 1
+> >  
+> >    clocks:
+> > -    items:
+> > -      - description: 100m ref
+> > +    maxItems: 1
+> >  
+> > -  clock-names:
+> > -    items:
+> > -      - const: ref_100m
+> > +  clock-names: true
+> 
+> No. How does this implement my comment?
 
-Huacai
+I'm sorry that I forgot about the suggestion of dropping clock-names for
+the new compatible.
 
->
->
-> Thanks,
-> Qunqin
->
-> >> Huacai
-> > BR, Jarkko
->
+Is it acceptable to remove the description of clocks property, keep
+clock-names property as-is, and use an allOf block to disallow
+clocks-names for the new 2K0300 compatible? Thanks for your explanation.
+
+> It makes no sense, why 100m even appeared here. I already objected last
+> time!
+> 
+> 
+> >  
+> >    '#clock-cells':
+> >      const: 1
+> >      description:
+> >        The clock consumer should specify the desired clock by having the clock
+> >        ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
+> > -      for the full list of Loongson-2 SoC clock IDs.
+> > +      and include/dt-bindings/clock/loongson,ls2k0300-clk.h for the full list of
+> > +      Loongson-2 SoC clock IDs.
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: loongson,ls2k0300-clk
+> > +    then:
+> > +      properties:
+> > +        clock-names:
+> > +          const: ref_120m
+> 
+> NAK, stop doing this pattern. You already got comment on this.
+
+Oops, I missed the comment about dropping the frequency (or the full
+clock-names property) from clock-names when writing v2, and I've decided
+to drop the clock-names property completely for the 2K0300 compatible.
+
+Sorry again for my mistake.
+
+> Best regards,
+> Krzysztof
+> 
+> 
+
+Best regards,
+Yao Zi
