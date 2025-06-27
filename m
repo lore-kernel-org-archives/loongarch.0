@@ -1,41 +1,39 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32AFE323E
-	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 06:47:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 324BE1D5154
+	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 07:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751006846; cv=none; b=cNBNjVBkPB4Gvatra4HVEDTs+iAdkTG/lp6Hjah6QF/hZA5l2y3aHwLLiVidMB1N3X7elUyb2JbqfZW1HEDLUg6aHdQuHzbEi4OWhu1k8sHe1dtIsmzzxlaRyiIpc5GUoaixUIvimDOk88DP32b/FHIJkaUujyhPcg2iwDRcTMg=
+	t=1751010277; cv=none; b=FpRrw1vOmyDuN/cHcDqcq6CIwKJ+stNISbHysJCc8pAtb26nPfKpnc3EIrrPNjBXSi4Futbit7NlUW0mbrPgOX7wu8ospPjyuwVo20h44MKgFhrH4fFZ2SsReSMT3YWAOOEYbCDvWRx0VRh2vqvPol5fm6yXEyUcd0M1ODGqzEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751006846; c=relaxed/simple;
-	bh=YdDjLHd/fBPgvr7y93fqf+nWxku2PSXueKPC9DfCgJM=;
+	s=arc-20240116; t=1751010277; c=relaxed/simple;
+	bh=jXG93fc3rFPQgN+mMO0U62dZxXk94xTclsVcEKGc8Wo=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=lt/QGQq/nO+9nAwyFDxN1X/cxd6jftKWSCqNqiI6jLDAIx3kJw15vz3hTvjeZp0ho6BTOVwkyesZ2kdmYO2FOr+Li6F94NrPrApIYFb41F0q6A2D8ABSqh9MpNjrqfXg0/Gdkk79JRSREYtpeuQFS9nL4wC+mu9eYEYR9MlrvII=
+	 In-Reply-To:Content-Type; b=DEz7xn3ZghVehN+kyttdSJzohCivEwciyNXeh6+Ake2WmPPnPcMfvsAEb3rztIh1arjiSJPmeGe8qRTN0HNFk3C2wwFXbBpegYxM1YSxWSRb6/h8ECo0nLUgWfDHAdZ3XC+4Enyhb+wFMoyp1UCgUGTlYJiIf2kqIiKw3WojmXw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8CxTOJ0Pl5oyB8eAQ--.26002S3;
-	Fri, 27 Jun 2025 14:47:16 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowJAxz8NwPl5oLgsAAA--.15S2;
-	Fri, 27 Jun 2025 14:47:14 +0800 (CST)
-Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
-To: Jarkko Sakkinen <jarkko@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- Lee Jones <lee@kernel.org>, herbert@gondor.apana.org.au
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
- <20250619025138.2854-4-zhaoqunqin@loongson.cn> <aFs2RDOeOKvWUN2L@kernel.org>
- <20250625080527.GN795775@google.com> <aFvhorr3kZSuzVpv@kernel.org>
- <20250625134047.GX795775@google.com> <aFwsIs6ri3HZictC@kernel.org>
- <20250626103030.GA10134@google.com> <aF0oHDVQKVfGZNV2@kernel.org>
- <CAAhV-H7nyKHS70BGh7nwjuGwSWayCbUY=1-zWMU4N3bJZtH1gQ@mail.gmail.com>
- <aF2Rn0R4AlopEwz8@kernel.org>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
-Date: Fri, 27 Jun 2025 14:46:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxQK_gS15o9CceAQ--.32217S3;
+	Fri, 27 Jun 2025 15:44:32 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxZOTXS15o8BgAAA--.645S3;
+	Fri, 27 Jun 2025 15:44:31 +0800 (CST)
+Subject: Re: [PATCH v3 4/9] LoongArch: KVM: INTC: Check validation of num_cpu
+ from user space
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250611014651.3042734-1-maobibo@loongson.cn>
+ <20250611014651.3042734-5-maobibo@loongson.cn>
+ <CAAhV-H7ehdkKwzsFNAaX+r5eXLknvskyXLPDKei2A55LoSiJMA@mail.gmail.com>
+ <5f1b9068-2d3d-2f89-4f72-85b021537f58@loongson.cn>
+ <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <d197255b-9165-adc5-8ba1-a6d96579fc38@loongson.cn>
+Date: Fri, 27 Jun 2025 15:42:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -43,57 +41,141 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <aF2Rn0R4AlopEwz8@kernel.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-CM-TRANSID:qMiowJAxz8NwPl5oLgsAAA--.15S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruF47Xr1kGrWfZr4DtryktFc_yoW3ZrXEka
-	yxtF1kZr13Jr97tayagr1xAFn7XayqqasI9340vrs7XayFyF9Ykw4qkwn7CFyUXrn5Jrn8
-	GF4fXrW8Cr1SvosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbDxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1l
-	Yx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
-	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-	cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxZOTXS15o8BgAAA--.645S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJFWrKF1DurWxAr4rWFy8Zwc_yoWrXrykpr
+	W8AFs8CF4rXryxGrn2qwn8GFnxtrn7Wrn7Xr17Ka4a9rZ0qFn3GFykArWjkF1Fk34rCF10
+	vFWayay3u3WDt3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jnUUUU
+	UUUU=
 
 
-ÔÚ 2025/6/27 ÉÏÎç2:29, Jarkko Sakkinen Ð´µÀ:
-> On Thu, Jun 26, 2025 at 08:48:35PM +0800, Huacai Chen wrote:
->> But there is another coherency, you can see this in the 1st patch:
+
+On 2025/6/20 ä¸‹åˆ10:43, Huacai Chen wrote:
+> On Fri, Jun 20, 2025 at 9:43â€¯AM Bibo Mao <maobibo@loongson.cn> wrote:
 >>
->> +static const struct mfd_cell engines[] = {
->> + { .name = "loongson-rng" },
->> + { .name = "loongson-tpm" },
->> +};
-> I thought already after ffa driver from ARM that I need to fix up
-> the naming a bit before it explodes. Thus, I'll stick to this.
->
-> And e.g., I could easily find DRM driver with opposite order.
-Next revision:
+>>
+>>
+>> On 2025/6/19 ä¸‹åˆ4:46, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Wed, Jun 11, 2025 at 9:47â€¯AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> The maximum supported cpu number is EIOINTC_ROUTE_MAX_VCPUS about
+>>>> irqchip eiointc, here add validation about cpu number to avoid array
+>>>> pointer overflow.
+>>>>
+>>>> Cc: stable@vger.kernel.org
+>>>> Fixes: 1ad7efa552fd ("LoongArch: KVM: Add EIOINTC user mode read and write functions")
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/kvm/intc/eiointc.c | 18 +++++++++++++-----
+>>>>    1 file changed, 13 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+>>>> index b48511f903b5..ed80bf290755 100644
+>>>> --- a/arch/loongarch/kvm/intc/eiointc.c
+>>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
+>>>> @@ -798,7 +798,7 @@ static int kvm_eiointc_ctrl_access(struct kvm_device *dev,
+>>>>           int ret = 0;
+>>>>           unsigned long flags;
+>>>>           unsigned long type = (unsigned long)attr->attr;
+>>>> -       u32 i, start_irq;
+>>>> +       u32 i, start_irq, val;
+>>>>           void __user *data;
+>>>>           struct loongarch_eiointc *s = dev->kvm->arch.eiointc;
+>>>>
+>>>> @@ -806,7 +806,12 @@ static int kvm_eiointc_ctrl_access(struct kvm_device *dev,
+>>>>           spin_lock_irqsave(&s->lock, flags);
+>>>>           switch (type) {
+>>>>           case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_NUM_CPU:
+>>>> -               if (copy_from_user(&s->num_cpu, data, 4))
+>>>> +               if (copy_from_user(&val, data, 4) == 0) {
+>>>> +                       if (val < EIOINTC_ROUTE_MAX_VCPUS)
+>>>> +                               s->num_cpu = val;
+>>>> +                       else
+>>>> +                               ret = -EINVAL;
+>>> Maybe it is better to set s->num_cpu to EIOINTC_ROUTE_MAX_VCPUS (or
+>>> other value) rather than keep it uninitialized. Because in other
+>>> places we need to check s->num_cpu and an uninitialized value may
+>>> cause undefined behavior.
+>> There is error return value -EINVAL, VMM should stop running and exit
+>> immediately if there is error return value with the ioctl command.
+>>
+>> num_cpu is not uninitialized and it is zero by default. If VMM does not
+>> care about the return value, VMM will fail to get coreisr information in
+>> future.
+> If you are sure you can keep it as is. Then please resend patch
+> 1,2,3,4,5,9 as a series because they are all bug fixes that should be
+> merged as soon as possible. And in my own opinion, "INTC" can be
+> dropped in the title.
+Ok, will do in this way.
 
-+static const struct mfd_cell engines[] = {
-+	{ .name = "loongson-rng" },
-+	{ .name = "tpm_loongson" },
-+};
-Then
-"loongson-rng" can match MFD and Crypto subsystem naming convention.
-"tpm_loongson" can match TPM subsystem naming convention.
-
-
-Thanks,
-Qunqin
-
->> Huacai
-> BR, Jarkko
+Regards
+Bibo Mao
+> 
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>> Huacai
+>>>> +               } else
+>>>>                           ret = -EFAULT;
+>>>>                   break;
+>>>>           case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_FEATURE:
+>>>> @@ -835,7 +840,7 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
+>>>>                                           struct kvm_device_attr *attr,
+>>>>                                           bool is_write)
+>>>>    {
+>>>> -       int addr, cpuid, offset, ret = 0;
+>>>> +       int addr, cpu, offset, ret = 0;
+>>>>           unsigned long flags;
+>>>>           void *p = NULL;
+>>>>           void __user *data;
+>>>> @@ -843,7 +848,7 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
+>>>>
+>>>>           s = dev->kvm->arch.eiointc;
+>>>>           addr = attr->attr;
+>>>> -       cpuid = addr >> 16;
+>>>> +       cpu = addr >> 16;
+>>>>           addr &= 0xffff;
+>>>>           data = (void __user *)attr->addr;
+>>>>           switch (addr) {
+>>>> @@ -868,8 +873,11 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
+>>>>                   p = &s->isr.reg_u32[offset];
+>>>>                   break;
+>>>>           case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
+>>>> +               if (cpu >= s->num_cpu)
+>>>> +                       return -EINVAL;
+>>>> +
+>>>>                   offset = (addr - EIOINTC_COREISR_START) / 4;
+>>>> -               p = &s->coreisr.reg_u32[cpuid][offset];
+>>>> +               p = &s->coreisr.reg_u32[cpu][offset];
+>>>>                   break;
+>>>>           case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
+>>>>                   offset = (addr - EIOINTC_COREMAP_START) / 4;
+>>>> --
+>>>> 2.39.3
+>>>>
+>>
 
