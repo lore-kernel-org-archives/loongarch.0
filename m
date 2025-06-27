@@ -1,181 +1,125 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 324BE1D5154
-	for <loongarch@lists.linux.dev>; Fri, 27 Jun 2025 07:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9CB21A421;
+	Fri, 27 Jun 2025 08:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751010277; cv=none; b=FpRrw1vOmyDuN/cHcDqcq6CIwKJ+stNISbHysJCc8pAtb26nPfKpnc3EIrrPNjBXSi4Futbit7NlUW0mbrPgOX7wu8ospPjyuwVo20h44MKgFhrH4fFZ2SsReSMT3YWAOOEYbCDvWRx0VRh2vqvPol5fm6yXEyUcd0M1ODGqzEk=
+	t=1751011437; cv=none; b=ThesSFdiJSeYTjFZdS1pBkNCy9g/zaudpvpsvwMMGNfx8wU30/j2+44cn1MUYW9KFlgMyoplU9Dh7063ESCs68yyRzI6rf7mYZu/obiQmqUrq8wjBhPI5cqlUsUwt98EVUPF7595i9qtY27lj6A/nD47siQW2DlRvvIl7tcKwLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751010277; c=relaxed/simple;
-	bh=jXG93fc3rFPQgN+mMO0U62dZxXk94xTclsVcEKGc8Wo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DEz7xn3ZghVehN+kyttdSJzohCivEwciyNXeh6+Ake2WmPPnPcMfvsAEb3rztIh1arjiSJPmeGe8qRTN0HNFk3C2wwFXbBpegYxM1YSxWSRb6/h8ECo0nLUgWfDHAdZ3XC+4Enyhb+wFMoyp1UCgUGTlYJiIf2kqIiKw3WojmXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxQK_gS15o9CceAQ--.32217S3;
-	Fri, 27 Jun 2025 15:44:32 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxZOTXS15o8BgAAA--.645S3;
-	Fri, 27 Jun 2025 15:44:31 +0800 (CST)
-Subject: Re: [PATCH v3 4/9] LoongArch: KVM: INTC: Check validation of num_cpu
- from user space
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250611014651.3042734-1-maobibo@loongson.cn>
- <20250611014651.3042734-5-maobibo@loongson.cn>
- <CAAhV-H7ehdkKwzsFNAaX+r5eXLknvskyXLPDKei2A55LoSiJMA@mail.gmail.com>
- <5f1b9068-2d3d-2f89-4f72-85b021537f58@loongson.cn>
- <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <d197255b-9165-adc5-8ba1-a6d96579fc38@loongson.cn>
-Date: Fri, 27 Jun 2025 15:42:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1751011437; c=relaxed/simple;
+	bh=DR0iURhckp5XfzMvSk4LgMuAnciQyHbp2E9NxNgrSgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UpxIhiAxeu9VHkW1Hj+D1Ws/YlIw/60vkckBAvZY1e/BVdttSYJ2ngKRpcbFMOn/B8JvNpkCK4cz6cb3VoSUlAJPU+eipaeMAtRMeDrJ54aCPThyrN+392xXXT0G2H+esLwvqxVpZwc3jepeoMvTarbm3cN/TFXeqVC/p0rT/po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKdPvAM1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKdPvAM1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 674EEC4CEE3;
+	Fri, 27 Jun 2025 08:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751011437;
+	bh=DR0iURhckp5XfzMvSk4LgMuAnciQyHbp2E9NxNgrSgc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tKdPvAM1SwN5SgSDdLEEOTC9vk+owg/oWIwcT5dP3WpUetyEuoQJKkYwXDxEENE5d
+	 vhX35a6Tlr+PsBjbSwQsd2vHWBj8o5AXfAvF6Sq2OmK/2ncWANrWkVK2HkzAzb7WBJ
+	 H5K2MrlZgoLw0qghldvzWZPN+SagJ80l+TdWZmIVhMAUL5LqYKCxZrRtpFgIFQ8cWy
+	 UMBU9QnzwkCqklZecwcMC2WZ15qgXZTNPAOvDzoocBmoqHWN2G0PW3bXLW0TBaVAcK
+	 WZzAqZI1E3ygtO0naX4bqMfIPaEcZttCIt1lTS6SjItT1jt9sGcuJ9sDt306SR7Kkh
+	 5RztUAAts5Fpg==
+Date: Fri, 27 Jun 2025 10:03:53 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH v2 1/8] dt-bindings: clock: loongson2: Add Loongson
+ 2K0300 compatible
+Message-ID: <20250627-gay-sepia-reindeer-2fde2a@krzk-bin>
+References: <20250617162426.12629-1-ziyao@disroot.org>
+ <20250617162426.12629-2-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxZOTXS15o8BgAAA--.645S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJFWrKF1DurWxAr4rWFy8Zwc_yoWrXrykpr
-	W8AFs8CF4rXryxGrn2qwn8GFnxtrn7Wrn7Xr17Ka4a9rZ0qFn3GFykArWjkF1Fk34rCF10
-	vFWayay3u3WDt3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jnUUUU
-	UUUU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250617162426.12629-2-ziyao@disroot.org>
 
-
-
-On 2025/6/20 下午10:43, Huacai Chen wrote:
-> On Fri, Jun 20, 2025 at 9:43 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/6/19 下午4:46, Huacai Chen wrote:
->>> Hi, Bibo,
->>>
->>> On Wed, Jun 11, 2025 at 9:47 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> The maximum supported cpu number is EIOINTC_ROUTE_MAX_VCPUS about
->>>> irqchip eiointc, here add validation about cpu number to avoid array
->>>> pointer overflow.
->>>>
->>>> Cc: stable@vger.kernel.org
->>>> Fixes: 1ad7efa552fd ("LoongArch: KVM: Add EIOINTC user mode read and write functions")
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>    arch/loongarch/kvm/intc/eiointc.c | 18 +++++++++++++-----
->>>>    1 file changed, 13 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
->>>> index b48511f903b5..ed80bf290755 100644
->>>> --- a/arch/loongarch/kvm/intc/eiointc.c
->>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
->>>> @@ -798,7 +798,7 @@ static int kvm_eiointc_ctrl_access(struct kvm_device *dev,
->>>>           int ret = 0;
->>>>           unsigned long flags;
->>>>           unsigned long type = (unsigned long)attr->attr;
->>>> -       u32 i, start_irq;
->>>> +       u32 i, start_irq, val;
->>>>           void __user *data;
->>>>           struct loongarch_eiointc *s = dev->kvm->arch.eiointc;
->>>>
->>>> @@ -806,7 +806,12 @@ static int kvm_eiointc_ctrl_access(struct kvm_device *dev,
->>>>           spin_lock_irqsave(&s->lock, flags);
->>>>           switch (type) {
->>>>           case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_NUM_CPU:
->>>> -               if (copy_from_user(&s->num_cpu, data, 4))
->>>> +               if (copy_from_user(&val, data, 4) == 0) {
->>>> +                       if (val < EIOINTC_ROUTE_MAX_VCPUS)
->>>> +                               s->num_cpu = val;
->>>> +                       else
->>>> +                               ret = -EINVAL;
->>> Maybe it is better to set s->num_cpu to EIOINTC_ROUTE_MAX_VCPUS (or
->>> other value) rather than keep it uninitialized. Because in other
->>> places we need to check s->num_cpu and an uninitialized value may
->>> cause undefined behavior.
->> There is error return value -EINVAL, VMM should stop running and exit
->> immediately if there is error return value with the ioctl command.
->>
->> num_cpu is not uninitialized and it is zero by default. If VMM does not
->> care about the return value, VMM will fail to get coreisr information in
->> future.
-> If you are sure you can keep it as is. Then please resend patch
-> 1,2,3,4,5,9 as a series because they are all bug fixes that should be
-> merged as soon as possible. And in my own opinion, "INTC" can be
-> dropped in the title.
-Ok, will do in this way.
-
-Regards
-Bibo Mao
+On Tue, Jun 17, 2025 at 04:24:19PM +0000, Yao Zi wrote:
+> Document the clock controller shipped in Loongson 2K0300 SoC, which
+> generates various clock signals for SoC peripherals.
 > 
+> Differing from previous generations of SoCs, 2K0300 requires a 120MHz
+> external clock input, and a separate dt-binding header is used for
+> cleanness.
 > 
-> Huacai
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  .../bindings/clock/loongson,ls2k-clk.yaml     | 26 ++++++---
+>  MAINTAINERS                                   |  1 +
+>  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
+>  3 files changed, 75 insertions(+), 6 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
 > 
->>
->> Regards
->> Bibo Mao
->>>
->>>
->>> Huacai
->>>> +               } else
->>>>                           ret = -EFAULT;
->>>>                   break;
->>>>           case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_FEATURE:
->>>> @@ -835,7 +840,7 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
->>>>                                           struct kvm_device_attr *attr,
->>>>                                           bool is_write)
->>>>    {
->>>> -       int addr, cpuid, offset, ret = 0;
->>>> +       int addr, cpu, offset, ret = 0;
->>>>           unsigned long flags;
->>>>           void *p = NULL;
->>>>           void __user *data;
->>>> @@ -843,7 +848,7 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
->>>>
->>>>           s = dev->kvm->arch.eiointc;
->>>>           addr = attr->attr;
->>>> -       cpuid = addr >> 16;
->>>> +       cpu = addr >> 16;
->>>>           addr &= 0xffff;
->>>>           data = (void __user *)attr->addr;
->>>>           switch (addr) {
->>>> @@ -868,8 +873,11 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
->>>>                   p = &s->isr.reg_u32[offset];
->>>>                   break;
->>>>           case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
->>>> +               if (cpu >= s->num_cpu)
->>>> +                       return -EINVAL;
->>>> +
->>>>                   offset = (addr - EIOINTC_COREISR_START) / 4;
->>>> -               p = &s->coreisr.reg_u32[cpuid][offset];
->>>> +               p = &s->coreisr.reg_u32[cpu][offset];
->>>>                   break;
->>>>           case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
->>>>                   offset = (addr - EIOINTC_COREMAP_START) / 4;
->>>> --
->>>> 2.39.3
->>>>
->>
+> diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+> index 4f79cdb417ab..3e0a894cfb2f 100644
+> --- a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+> +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+> @@ -16,6 +16,7 @@ description: |
+>  properties:
+>    compatible:
+>      enum:
+> +      - loongson,ls2k0300-clk
+>        - loongson,ls2k0500-clk
+>        - loongson,ls2k-clk  # This is for Loongson-2K1000
+>        - loongson,ls2k2000-clk
+> @@ -24,19 +25,32 @@ properties:
+>      maxItems: 1
+>  
+>    clocks:
+> -    items:
+> -      - description: 100m ref
+> +    maxItems: 1
+>  
+> -  clock-names:
+> -    items:
+> -      - const: ref_100m
+> +  clock-names: true
+
+No. How does this implement my comment?
+
+It makes no sense, why 100m even appeared here. I already objected last
+time!
+
+
+>  
+>    '#clock-cells':
+>      const: 1
+>      description:
+>        The clock consumer should specify the desired clock by having the clock
+>        ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
+> -      for the full list of Loongson-2 SoC clock IDs.
+> +      and include/dt-bindings/clock/loongson,ls2k0300-clk.h for the full list of
+> +      Loongson-2 SoC clock IDs.
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: loongson,ls2k0300-clk
+> +    then:
+> +      properties:
+> +        clock-names:
+> +          const: ref_120m
+
+NAK, stop doing this pattern. You already got comment on this.
+
+Best regards,
+Krzysztof
 
