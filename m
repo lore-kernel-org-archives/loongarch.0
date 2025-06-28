@@ -1,143 +1,154 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9799B1A727D
-	for <loongarch@lists.linux.dev>; Sat, 28 Jun 2025 10:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D0F1F17EB;
+	Sat, 28 Jun 2025 10:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751107075; cv=none; b=T4jr+5r2DNPiVB54UAuIDxcU/3FXSshgQ7GgBtvXiOU9xr6zNrIIpq7MDFw3D4Ugoqv0A5LDp5ohr7o5Qv9YZs6ZxpOnnOyoCKovruPSAXcvEf7Jxg8TcCxs7zDqZxW0Q+eKWSh4QRP2orvjmXUFO/Zuoq53Vt4lWsTb/cwl2n8=
+	t=1751108222; cv=none; b=tHw2JiFi6CB+GcnqmxrfM5zsagTdywyMXn9CfD0eoyk/wviDTXTKMcw6OQqbh9L6HYASil59C9uK8wRIxv1A3OWVC1BF8NmGh5LfnTSJ9jW/6sF+fXbflwJ4A4yqZ52pbF3O/3/TLh6Kc273sPp5ETQlpwQoSlL8rfULDMJDrXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751107075; c=relaxed/simple;
-	bh=lcdY5/4igis1D06o50sZUMdu2ySz2CbfqGSKDk9HFPg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J4vdDnxyOQ7INwl6f7Mpo9rOeZqitBFAgZnPYuVo9zRx/g6VytX5LK+w0vY+llpsq1q8Y+zW3Q48FBjp8YZykaWaGWHkrXT2TGTQSIKThSYnXHYS6YBYF+ma5N/6yaSLr9M93SOaCfYKBpl8Ol5YmWTNGl2yKTgPgjNkqOsOt3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.149])
-	by gateway (Coremail) with SMTP id _____8AxWXH2xV9oJd0eAQ--.3285S3;
-	Sat, 28 Jun 2025 18:37:42 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.149])
-	by front1 (Coremail) with SMTP id qMiowJCxrsPsxV9oHkQBAA--.706S2;
-	Sat, 28 Jun 2025 18:37:41 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.16-rc4
-Date: Sat, 28 Jun 2025 18:37:19 +0800
-Message-ID: <20250628103719.3741195-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1751108222; c=relaxed/simple;
+	bh=WW5Xm1iyi3UCGUGi1nrA70AfDCSuOC/overmp2OZ2oI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kHXtBI3WOm4sN+FqHgTW5WPpwwYzA3TjBn6GLbX2LdhJXer4BOttOD3QMXcRZcwLeBCYfGl1NwksrBxsRZJkri4xTHPxt1aAJeERpu+B+60j05nZO59b9F/mI64hHyqbjGDcSm6k+XTP5rOmf6VCseRzO17rOP51So8+pAmdhcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z2iGa//f; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2iGa//f"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453643020bdso26032505e9.1;
+        Sat, 28 Jun 2025 03:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751108219; x=1751713019; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WW5Xm1iyi3UCGUGi1nrA70AfDCSuOC/overmp2OZ2oI=;
+        b=Z2iGa//fH+2CbRvGev+dS+kaUIgvfPIQWcsOjX05PKYW09qu61Y/gqh101yPKuo9os
+         tUMnPd7FjphSdSHAl5GrRYLmwUmdqkq+dTEsEqymEbU5/doUnxnuCwkVsTvV3CTOTpF/
+         XJUHNRVpHMRrP60IY6fATAB9yre7kfvguW+xlgDdKG9tJ8nvOoA2XvKvsYGxFv1hSKcE
+         Cy9MjB3nxZjt29ANhFqP6WzfWZVkiiTRUK4teblj0OFOIk0Kv8EiQUN4+EwaHZgm871z
+         nNicEYBDX7j2cmrmGh7AeXZW5J9fARAfq1MwzGH64AkK4azG0jIyXSgy1xf0S8piGzU6
+         ktnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751108219; x=1751713019;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WW5Xm1iyi3UCGUGi1nrA70AfDCSuOC/overmp2OZ2oI=;
+        b=AROWtt+HOCyJcd6Fb8HmblC1Ag3mb36vsAcz5e0N9IsRMgtujVhs2adgpriTM3IlDZ
+         pmvtVbRPhtRmrF+K4L0sUCqG4N0vjUg60aC4XAU1c9RtHbdHmbw+hBVfuHf8UtgAzUQo
+         vw7imtIknRXUVBA86JKsb+GhodRc7OFuhbOkHiVLRTLhpuaAM1UjWa/47jK58TCtPFtJ
+         igZGKEXVupILWIR+9uKgp+HB1V2B53arXMGv/yAzUrlchrjxYiKZcN8EsQoN+LQp7pnF
+         Nj/JUNgTfxAhXdA7PQgNIYVikL9KuNKQb570fpFkGNI6wz6D74Ir3POWE8fHwoEvIcew
+         FmEw==
+X-Forwarded-Encrypted: i=1; AJvYcCU56NsvHXMwm1ds3IrpiClW9WbI5wIlfmf/vCo12zYRuwEQtk4BIgfNo2Sjxm1fQpVhoc0mfNQKz13p@lists.linux.dev, AJvYcCWFxPFg6txhsXW75MTus5xPBSvMto/cXggE5AV+Jl8OsZf49MYXohxhj5fPkSGsx26j31t6@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy+4B502aw/wmdq8WDi/PWfrhmr9qebSyg1A1Th9N4R0gTC1BBN
+	e2TjPwb4dzEwisqJZGWmaGuHaJ627/f7GCz7ryFmvyXDbYGpFs204LU8bTVWuaxNc4EvMkAY2kL
+	98fbsVQLbE0vtMIA7/UAMWxf9ttJVSrQ=
+X-Gm-Gg: ASbGnctUAHJ4WOMEpY3zgKBavVFJ1Ze4tdJYfgnNPEyRqNt4lbX9VJAJMO3hXgY+E33
+	ucIvgHAOyke6pUIBuvm/Cx0uRWiGJPOAJVTKjz6lVBF7SMh9Ya6yAVQUPMWNtZIlDq0t4+H4opI
+	VPRHBZtYZ4xldbRYTMkQAcl2OjhlI3fgOrLcDqGTWC0BVQNCox2qfOXVU8
+X-Google-Smtp-Source: AGHT+IGAGkRhQdbRpH6HhS1J+gxMpfj97HGV7cZaVPURx7gE9Aj/9LEPZdgznOP2vFFz/ZEWLwEewnTNwxfxlbsYcE0=
+X-Received: by 2002:adf:a1cb:0:b0:3a5:3b14:1ba3 with SMTP id
+ ffacd0b85a97d-3a90b8c99bdmr4338216f8f.49.1751108219175; Sat, 28 Jun 2025
+ 03:56:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxrsPsxV9oHkQBAA--.706S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCF48KF4xWr43uFy3Kr4rJFc_yoWrJFWUpF
-	9xCrn7GF4rGr93Arnrt3s8ur1DJr1xCw1aq3Wa9ry8CF4avw1UZr1ktrykXFyUtayrJry0
-	gF1rGws0qF48JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
+References: <20250626153147.145312-1-snovitoll@gmail.com>
+In-Reply-To: <20250626153147.145312-1-snovitoll@gmail.com>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Sat, 28 Jun 2025 12:56:46 +0200
+X-Gm-Features: Ac12FXzas27xdNkixqmlGojlaGpK_Gh1QoVs4xiB8K_jsjOjMmn0UG8i3tUlU1Q
+Message-ID: <CA+fCnZfAtKWx=+to=XQBREhou=Snb0Yms4D8GNGaxE+BQUYm4A@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] kasan: unify kasan_arch_is_ready with kasan_enabled
+To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Cc: ryabinin.a.a@gmail.com, glider@google.com, dvyukov@google.com, 
+	vincenzo.frascino@arm.com, linux@armlinux.org.uk, catalin.marinas@arm.com, 
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	christophe.leroy@csgroup.eu, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com, gor@linux.ibm.com, 
+	agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com, 
+	richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, 
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, 
+	hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
+	akpm@linux-foundation.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
+	morbo@google.com, justinstitt@google.com, arnd@arndb.de, rppt@kernel.org, 
+	geert@linux-m68k.org, mcgrof@kernel.org, guoweikang.kernel@gmail.com, 
+	tiwei.btw@antgroup.com, kevin.brodsky@arm.com, benjamin.berg@intel.com, 
+	kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
+On Thu, Jun 26, 2025 at 5:32=E2=80=AFPM Sabyrzhan Tasbolatov
+<snovitoll@gmail.com> wrote:
+>
+> This patch series unifies the kasan_arch_is_ready() and kasan_enabled()
+> interfaces by extending the existing kasan_enabled() infrastructure to
+> work consistently across all KASAN modes (Generic, SW_TAGS, HW_TAGS).
+>
+> Currently, kasan_enabled() only works for HW_TAGS mode using a static key=
+,
+> while other modes either return IS_ENABLED(CONFIG_KASAN) (compile-time
+> constant) or rely on architecture-specific kasan_arch_is_ready()
+> implementations with custom static keys and global variables.
+>
+> This leads to:
+> - Code duplication across architectures
+> - Inconsistent runtime behavior between KASAN modes
+> - Architecture-specific readiness tracking
+>
+> After this series:
+> - All KASAN modes use the same kasan_flag_enabled static key
+> - Consistent runtime enable/disable behavior across modes
+> - Simplified architecture code with unified kasan_init_generic() calls
+> - Elimination of arch specific kasan_arch_is_ready() implementations
+> - Unified vmalloc integration using kasan_enabled() checks
+>
+> This addresses the bugzilla issue [1] about making
+> kasan_flag_enabled and kasan_enabled() work for Generic mode,
+> and extends it to provide true unification across all modes.
+>
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D217049
 
-  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
+Hi Sabyrzhan,
 
-are available in the Git repository at:
+Thank you for working on this!
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.16-1
+One aspect that is missing from the patches is moving the
+kasan_arch_is_ready() calls into the include/linux/kasan.h (this is
+not explicitly mentioned in the issue, but this is what the "adding
+__wrappers" part is about).
 
-for you to fetch changes up to 955853cf83657faa58572ef3f08b44f0f88885c1:
+Another thing that needs careful consideration is whether it's
+possible to combine kasan_arch_is_ready() and kasan_enabled() into the
+same check logically at all. There's one issue mentioned in [1]:
 
-  LoongArch: KVM: Disable updating of "num_cpu" and "feature" (2025-06-27 18:27:44 +0800)
+> In kasan_cache_create() we unconditionally allocate a metadata buffer,
+> but the kasan_init_slab_obj() call to initialise it is guarded by
+> kasan_enabled(). But later parts of the code only check the presence of
+> the buffer before using it, so bad things happen if kasan_enabled()
+> later turns on (I was getting some error about invalid lock state).
 
-----------------------------------------------------------------
-LoongArch fixes for v6.16-rc4
+And there might be other callbacks that should be executed even before
+kasan_init_...() completes. But then for the HW_TAGS mode, if
+kasan_enabled() is off, then we don't want to execute any callbacks.
 
-Replace __ASSEMBLY__ with __ASSEMBLER__ in headers like others, fix
-build warnings about export.h, reserve the EFI memory map region for
-kdump, handle __init vs inline mismatches, and fix some bugs about KVM.
-----------------------------------------------------------------
-Bibo Mao (6):
-      LoongArch: KVM: Avoid overflow with array index
-      LoongArch: KVM: Add address alignment check for IOCSR emulation
-      LoongArch: KVM: Fix interrupt route update with EIOINTC
-      LoongArch: KVM: Check interrupt route from physical CPU
-      LoongArch: KVM: Check validity of "num_cpu" from user space
-      LoongArch: KVM: Disable updating of "num_cpu" and "feature"
+So maybe we do actually need a separate static key for
+kasan_arch_is_ready(). But even if so, it still makes sense to move
+kasan_arch_is_ready() into the __wrappers for the affected callbacks.
 
-Huacai Chen (1):
-      LoongArch: Fix build warnings about export.h
+Thanks!
 
-Kees Cook (1):
-      LoongArch: Handle KCOV __init vs inline mismatches
-
-Ming Wang (1):
-      LoongArch: Reserve the EFI memory map region
-
-Thomas Huth (1):
-      LoongArch: Replace __ASSEMBLY__ with __ASSEMBLER__ in headers
-
- arch/loongarch/include/asm/addrspace.h         |  8 +--
- arch/loongarch/include/asm/alternative-asm.h   |  4 +-
- arch/loongarch/include/asm/alternative.h       |  4 +-
- arch/loongarch/include/asm/asm-extable.h       |  6 +-
- arch/loongarch/include/asm/asm.h               |  8 +--
- arch/loongarch/include/asm/cpu.h               |  4 +-
- arch/loongarch/include/asm/ftrace.h            |  4 +-
- arch/loongarch/include/asm/gpr-num.h           |  6 +-
- arch/loongarch/include/asm/irqflags.h          |  4 +-
- arch/loongarch/include/asm/jump_label.h        |  4 +-
- arch/loongarch/include/asm/kasan.h             |  2 +-
- arch/loongarch/include/asm/loongarch.h         | 16 ++---
- arch/loongarch/include/asm/orc_types.h         |  4 +-
- arch/loongarch/include/asm/page.h              |  4 +-
- arch/loongarch/include/asm/pgtable-bits.h      |  4 +-
- arch/loongarch/include/asm/pgtable.h           |  4 +-
- arch/loongarch/include/asm/prefetch.h          |  2 +-
- arch/loongarch/include/asm/smp.h               |  2 +-
- arch/loongarch/include/asm/thread_info.h       |  4 +-
- arch/loongarch/include/asm/types.h             |  2 +-
- arch/loongarch/include/asm/unwind_hints.h      |  6 +-
- arch/loongarch/include/asm/vdso/arch_data.h    |  4 +-
- arch/loongarch/include/asm/vdso/getrandom.h    |  4 +-
- arch/loongarch/include/asm/vdso/gettimeofday.h |  4 +-
- arch/loongarch/include/asm/vdso/processor.h    |  4 +-
- arch/loongarch/include/asm/vdso/vdso.h         |  4 +-
- arch/loongarch/include/asm/vdso/vsyscall.h     |  4 +-
- arch/loongarch/kernel/acpi.c                   |  1 +
- arch/loongarch/kernel/alternative.c            |  1 +
- arch/loongarch/kernel/efi.c                    | 12 ++++
- arch/loongarch/kernel/elf.c                    |  1 -
- arch/loongarch/kernel/kfpu.c                   |  1 +
- arch/loongarch/kernel/paravirt.c               |  1 -
- arch/loongarch/kernel/time.c                   |  2 +-
- arch/loongarch/kernel/traps.c                  |  1 +
- arch/loongarch/kernel/unwind_guess.c           |  1 +
- arch/loongarch/kernel/unwind_orc.c             |  3 +-
- arch/loongarch/kernel/unwind_prologue.c        |  1 +
- arch/loongarch/kvm/intc/eiointc.c              | 89 ++++++++++++++++++--------
- arch/loongarch/lib/crc32-loongarch.c           |  1 +
- arch/loongarch/lib/csum.c                      |  1 +
- arch/loongarch/mm/ioremap.c                    |  4 +-
- arch/loongarch/pci/pci.c                       |  1 -
- tools/arch/loongarch/include/asm/orc_types.h   |  4 +-
- 44 files changed, 151 insertions(+), 100 deletions(-)
-
+[1] https://lore.kernel.org/linux-mm/CA+fCnZf7JqTH46C7oG2Wk9NnLU7hgiVDEK0EA=
+8RAtyr-KgkHdg@mail.gmail.com/
