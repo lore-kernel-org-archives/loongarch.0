@@ -1,63 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658BE22F77E;
-	Sat, 28 Jun 2025 22:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C534132103;
+	Sun, 29 Jun 2025 04:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751149181; cv=none; b=Ho41jpe8a13uTJO4Oc6BRRpDpu2Hg/SPRE+LkHrb+7eD57sNRfjDOoHZqAjkO1Xlwcb5X++O3Dht0Vve0P/DBYTYETbcYkPuuS7ew3YlxpW0nffVVZOO21wUQH0JOrcHhXdzZk3aaug8NgAyOOHZzqQ4B5Ra9rS7lEcE9TiJKg8=
+	t=1751169611; cv=none; b=pf42b4YMb+8I3fhhd2OpC563VRA0g2pQNge27PL009Ya0mwf4qK8Nqm5gEBeQCxH+vfVJ76BJmEIS+2P9KNCyyHSzOTfzSmqDJ6ikRPB9T84rdtKuO1nMRrYEmWmFRM1gFxj6cPCeIhWg7H8EQ2DV03De8s40G8bqMWyfpNuDxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751149181; c=relaxed/simple;
-	bh=4NUL35LaKl6ZAfqGvSCgdE63CSkio/ZuGChZ0iaqzwc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=UpuVP1EsDE/Y13I4RUV57Q09u2HOMvF4F5iwqtFPFtJQilqPgmiUZ8JQwoVNy3XedSC/wc2Q+bhsRCIiXKZQINwTbLu9afPr8BMWrH7sT/Pk488tsScgypEtwrcmCES4zj667qV2HG166kIjEBMQ9nvpH80s8yXdCxZrXwrVHh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHzg1iXR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751169611; c=relaxed/simple;
+	bh=RtuVDtq5TbL+hnwE4gaBOAo6wkj6IpQ3jNVvsLNBk3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R7EbLlzMZv6uBqefr+uYeTneGtBA5ad05YoAhUOapL9g2tK+oI2AmFR4UddvYIfZLKudxeGDMlYszFGKbxY1PXnyVmo1l2eFIPhymx0njYEWsZq4/A2KQHizbR9zmVHFMbigtbmGFjeOjKiwJqonQ+ceR/WT6Kj3zyC8ryhhDmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfPB0sg4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHzg1iXR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DBBDC4CEEA;
-	Sat, 28 Jun 2025 22:19:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfPB0sg4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24B5C4CEF2;
+	Sun, 29 Jun 2025 04:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751149181;
-	bh=4NUL35LaKl6ZAfqGvSCgdE63CSkio/ZuGChZ0iaqzwc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=nHzg1iXRnlBCOcmflDqvmHhSB1YGf9y4C3XwEbKs1vcyxhmt6sokP5H6pVBuzJjZ4
-	 NwCveuzH5LBj1y4NiaX0+zedRvrycZiQHeKl+SuZKuOR7+YhP4e61l4aKfSLfTQj1M
-	 An/de0mAhIm8QMsnaeofr0bhMgLrH+OWkP+g5oN2oVybzAtGX1i4RwZxiR1mdDfkZY
-	 f1VvxA+Kbrvl080Pcqa87Z0j345wLMstwMAFU981odqdKTT5bXWKGV4KTDWrjJrhX5
-	 uLyvOLHN6J38UNSjAiZtajWJvp+4tfGWlXH9080x+qTcHZefBVN1OLY88Br57dINpE
-	 jABHep/ApkNjQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3420538111CE;
-	Sat, 28 Jun 2025 22:20:08 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.16-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250628103719.3741195-1-chenhuacai@loongson.cn>
-References: <20250628103719.3741195-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250628103719.3741195-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.16-1
-X-PR-Tracked-Commit-Id: 955853cf83657faa58572ef3f08b44f0f88885c1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3a3de75a68ff8d52466980c4cfb2c16192d5e4e7
-Message-Id: <175114920694.2297926.6533989769598451375.pr-tracker-bot@kernel.org>
-Date: Sat, 28 Jun 2025 22:20:06 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=k20201202; t=1751169610;
+	bh=RtuVDtq5TbL+hnwE4gaBOAo6wkj6IpQ3jNVvsLNBk3Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rfPB0sg45h7QvAgZEBxNN42rt0eKRMEDZ1eEu4anMnMRV86K0HQZbbrMl5wp5JavF
+	 CgEysQZqhFLldV1L8zZ1+m6r53UL1b0mdrmoBHgm4qQigZT2ZRUt6grk2alt2P8mwL
+	 laMQ28nA+E149XMBZYFyRABfHh0Hilo0K6qi3JZ46FvemDp8YcC4u4FdZJOLaCebzB
+	 ghlTqYVGAxYHi5Nx2O53QoWyi+RddLbbAQklnjxHaETn6i2SOGA/o7d+el0ahNqBWy
+	 h5Mk+pPuXaOBpYfaYFBQ5Q13ZtvtyMJiY5SMMLdA6SnrVxv9qPjWf8vYsqGnwOiVDn
+	 5+Q1rl0ZZMUKA==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so1693174a12.3;
+        Sat, 28 Jun 2025 21:00:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWUCiFCzklhFQd6qxwaQv4W5vVwfyot/pBK2hZ2Y7EMW3DvFdYOzIC1sEyPOo3X9P/pMZU6SAIdMyAD@lists.linux.dev, AJvYcCXXJJ6IH1O0B4xx8yVNsaZMNemTKFw0fceMlk7ThZ6CjMXc1A7n8CXb8C+7MRVayve+AIbz@lists.linux.dev
+X-Gm-Message-State: AOJu0YzOtUk4q9YZAoSa3DmWYZsEfl2bT4sdWMgMVJqvPuc++jDNjP1A
+	zDT31N6sFnYzWvwzWV/xO61ouAAi0eo7hjTaJsguuDbqr8/FJ1TzZbyZO61TR1UvtfIEkw1fYlk
+	8s+6pJnp4LzE8xzi4JX7QlyOYX6IN8bk=
+X-Google-Smtp-Source: AGHT+IFR/X+IzRKZMjPiV32fxsRrid/bGycZmXS/rLsmY57Hptnpj7ONhqDFkQgH8k1KZspKRjCXf2EVJcJiCOy+T2c=
+X-Received: by 2002:a05:6402:234f:b0:607:f558:e328 with SMTP id
+ 4fb4d7f45d1cf-60c88d94602mr7225092a12.5.1751169609355; Sat, 28 Jun 2025
+ 21:00:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org>
+In-Reply-To: <20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 29 Jun 2025 11:59:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5BEe2FtKwh+SMNAKeKadhf4ALHb0nTFa5e_BBY1TOWCg@mail.gmail.com>
+X-Gm-Features: Ac12FXxNJf3BIzs56rRkKoMLlQSE1OBvRLxUScISL38AA34e-NfDxLH47hRFN_4
+Message-ID: <CAAhV-H5BEe2FtKwh+SMNAKeKadhf4ALHb0nTFa5e_BBY1TOWCg@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: Use '.ascii' instead of '.string' in __BUGVERBOSE_LOCATION
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Sat, 28 Jun 2025 18:37:19 +0800:
+On Tue, Jun 17, 2025 at 7:23=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
+>
+> After commit 5d476f66e6ad ("bugs/LoongArch: Concatenate 'cond_str' with
+> '__FILE__' in __BUG_ENTRY(), to extend WARN_ON/BUG_ON output"), building
+> loongarch with clang's integrated assembler fails with:
+>
+>   block/blk-throttle.c:205:2: error: unexpected token
+>     205 |         WARN_ON_ONCE(!bio);
+>         |         ^
+>   include/asm-generic/bug.h:119:3: note: expanded from macro 'WARN_ON_ONC=
+E'
+>     119 |                 __WARN_FLAGS("["#condition"] ",                =
+ \
+>         |                 ^
+>   arch/loongarch/include/asm/bug.h:47:2: note: expanded from macro '__WAR=
+N_FLAGS'
+>      47 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags), ANNOTATE=
+_REACHABLE(10001b));\
+>         |         ^
+>   arch/loongarch/include/asm/bug.h:42:23: note: expanded from macro '__BU=
+G_FLAGS'
+>      42 |         asm_inline volatile (__stringify(ASM_BUG_FLAGS(cond_str=
+, flags)) extra);
+>         |                              ^
+>   ...
+>   <inline asm>:1:134: note: instantiated into assembly here
+>       1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long =
+10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "=
+[""!bio""] " "block/blk-throttle.c"; .popsection; .long 10002b - .; .short =
+205; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: break 1;.=
+pushsection .discard.annotate_insn,"M",@progbits,8
+>         |                                                                =
+                                                                           =
+  ^
+>
+> clang's integrated assembler only supports concatenating strings with
+> '.ascii'. There was discussion of allowing '.string' / '.asciz' but it
+> was decided against [1] because it was undesirable to match the behavior
+> of released binutils at the time, where
+>
+>   .asciz "foo" "bar"
+>
+> was treated like
+>
+>   "foo\0bar\0"
+>
+> instead of the more intuitive to C programmers
+>
+>   "foobar\0"
+>
+> and diverging from that behavior was seen as risky and unnecessary. GNU
+> binutils updated its handling of '.asciz' and '.string' to the more
+> intuitive option in 2.36 [2] after this was brought up to them in
+> passing.
+>
+> Convert LoongArch's __BUGVERBOSE_LOCATION from '.string' to '.ascii'
+> with a manually added NUL, similar to commit 707f853d7fa3 ("module:
+> Provide EXPORT_SYMBOL_GPL_FOR_MODULES() helper") for the same reason,
+> which clears up the build error and results in no changes in output for
+> builds with GNU binutils.
+>
+> Fixes: 5d476f66e6ad ("bugs/LoongArch: Concatenate 'cond_str' with '__FILE=
+__' in __BUG_ENTRY(), to extend WARN_ON/BUG_ON output")
+5d476f66e6ad is not in upstream, so I prefer squash this patch to 5d476f66e=
+6ad.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.16-1
+Huacai
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3a3de75a68ff8d52466980c4cfb2c16192d5e4e7
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> Link: https://reviews.llvm.org/D91460#2398228 [1]
+> Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3D3d9=
+55acb36f483c05724181da5ffba46b1303c43 [2]
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
+>  arch/loongarch/include/asm/bug.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/as=
+m/bug.h
+> index cad807b100ad..d090a5bec5eb 100644
+> --- a/arch/loongarch/include/asm/bug.h
+> +++ b/arch/loongarch/include/asm/bug.h
+> @@ -11,7 +11,7 @@
+>  #else
+>  #define __BUGVERBOSE_LOCATION(file, line)                      \
+>                 .pushsection .rodata.str, "aMS", @progbits, 1;  \
+> -       10002:  .string file;                                   \
+> +       10002:  .ascii file "\0";                               \
+>                 .popsection;                                    \
+>                                                                 \
+>                 .long 10002b - .;                               \
+>
+> ---
+> base-commit: d298bb98d65f964288bb87feef014da1baafedda
+> change-id: 20250616-loongarch-fix-warn-cond-llvm-ias-b954f02c446c
+>
+> Best regards,
+> --
+> Nathan Chancellor <nathan@kernel.org>
+>
