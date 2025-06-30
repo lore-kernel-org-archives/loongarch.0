@@ -1,194 +1,423 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90A7420FA9C
-	for <loongarch@lists.linux.dev>; Mon, 30 Jun 2025 07:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CBC21B191
+	for <loongarch@lists.linux.dev>; Mon, 30 Jun 2025 08:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268582; cv=none; b=GH/WVeMospII6VJomRF9W/kpQndjlOs0itz0xNYQ6BTBs5QgKZmBIqpxrSrroeDKftr8gy7KT4wnFPLV/iIHuJ/GMNEPGy6KDdUPnNeAMW6Po2Jzud7Beyv3RfdrlofK7mBH/tItSQQXnHIjOkkfdP3wXUNdmufPkCO07TYYbW0=
+	t=1751270668; cv=none; b=bGERMZLZvH7fO2naprwK023+QBKajFggELjkZlG26SnbMzK05CmEpGJcp3aIyqj9a40A+JYERIBdRhhJTKBq5C9Un6RcvdsOBCQLR0IaZJ5+OHwwOX4RDH13cjWT/Lai8y0W7xqSTcE4MDSe9tH9UvHKC2tPPE43NdtxwnHzm8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268582; c=relaxed/simple;
-	bh=a0h2GHTo3K13Mw0AUJepxxnoHiBa6c5feuRAOj5bqrc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FOMDKnz7r7PcZDijzrJAizaKf0GoG2+ik4EvzkQsEaoS/mNnGhAKva6hPDzD72WOp2z9ymJg4UJG4rxaubR/1tiSc6uawau+Bo6YskF+Nnjq3MRAWNO8YtpyK1Tg4LIlRVu62fmF0HD+ioP+pSkQ22C52d+UTTgF5R9YmtZ95r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D663F152B;
-	Mon, 30 Jun 2025 00:29:22 -0700 (PDT)
-Received: from [10.163.37.132] (unknown [10.163.37.132])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 800EF3F6A8;
-	Mon, 30 Jun 2025 00:29:34 -0700 (PDT)
-Message-ID: <4f8b7ac8-7dcd-4cc9-a97f-4d6ab573e83a@arm.com>
-Date: Mon, 30 Jun 2025 12:59:31 +0530
+	s=arc-20240116; t=1751270668; c=relaxed/simple;
+	bh=bwchRmcLVbZYLZGHfdDl6K19HLcH2bDZCDHH2eaUt34=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X8KtZiwtwmDGbBc84iugIX6fe5uliEJeU0wCYh9A2AeLkYS9CAuObMPuaZcHkAiLWL1i7CTp6kFw4XmCxXU7ZCTTJXK5k+Ddj+04sCyN8BMZW4u0slm4xyrwQXGxGw9wlNDI648mHIDIdpRH3MQYsBkj7KCLZQZoXb6nlcGX2Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjFyH3wW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjFyH3wW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1211C4CEE3
+	for <loongarch@lists.linux.dev>; Mon, 30 Jun 2025 08:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751270667;
+	bh=bwchRmcLVbZYLZGHfdDl6K19HLcH2bDZCDHH2eaUt34=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AjFyH3wWyGhc00UmXWf/Baghr444XwrDHmaZNwUt2B5oJAD9XJ9p6rWTP9Uf+mXUy
+	 XT6HYoLBjhuDCMyf5JQkvkzyIZzRMdEn33rpS8bVI/3XQjZ/gujtmDsuImDsku1gtk
+	 8M9KBZH/xeBFtbaSPoCvVI8+QsiLNIen9FuflgdrgYMMRXsgITLgO7Zzg3ulEUg62M
+	 6zAkkvbNFNxQP8M90e/Sk7/XqChjbT0sAfUl2bbfDBD3GrBnq4eUA4d8uG8b4tmTRQ
+	 in9EX2JtthhCdNUxGdTST6chzGxTX3LmCjkrgxSd4ZdcGtb4rBMs3/o3gROTNxDJJd
+	 P7tfxJM7tTlTA==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60c01b983b6so7641617a12.0
+        for <loongarch@lists.linux.dev>; Mon, 30 Jun 2025 01:04:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV2fgVREgnkIXiDTlytkzc6+OMPVM0EsqBuX+XXUDF4flsnCPhOcuVOSbqSKrqDAac6TjQaReVFdQw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwIxhlHTWx/8NK9v6ui7ANPPkEdgCGkDrEZtebe6z8Kt/U/Qj8M
+	p3iV+Pw4AdAKEzhTcR93Clf+oUU+elGMOEerlJuIMnsBhVB7Y9G0gNFKc3gPa336o75363muCyH
+	jRfAqLc1ULY+mF2o9xihYVNoBqfuHwcA=
+X-Google-Smtp-Source: AGHT+IHvs0BPl27zV28ojmMXtogxYdBLQpI0Nb2lzudY4Dal6psVvwXmOrDtSymaTj8NC9aMyua2eiATokD9CrBpBhw=
+X-Received: by 2002:a05:6402:34cd:b0:60c:6a8d:8511 with SMTP id
+ 4fb4d7f45d1cf-60c6a8d89c8mr13781147a12.12.1751270666189; Mon, 30 Jun 2025
+ 01:04:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: Remove prepare_hugepage_range()
-To: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- Jason Gunthorpe <jgg@nvidia.com>, David Hildenbrand <david@redhat.com>
-References: <20250627160707.2124580-1-peterx@redhat.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250627160707.2124580-1-peterx@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250619071449.1714869-1-maobibo@loongson.cn>
+In-Reply-To: <20250619071449.1714869-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 30 Jun 2025 16:04:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
+X-Gm-Features: Ac12FXzXFS8OKvbl7bkuwM5E_l_CPBg3TGydOuvuMTVVQgYvoLr_GH3pLufkJ4o
+Message-ID: <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: KVM: INTC: Add IOCSR MISC register emulation
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27/06/25 9:37 PM, Peter Xu wrote:
-> Only mips and loongarch implemented this API, however what it does was
-> checking against stack overflow for either len or addr.  That's already
-> done in arch's arch_get_unmapped_area*() functions, even though it may not
-> be 100% identical checks.
-> 
-> For example, for both of the architectures, there will be a trivial
-> difference on how stack top was defined.  The old code uses STACK_TOP which
-> may be slightly smaller than TASK_SIZE on either of them, but the hope is
-> that shouldn't be a problem.
-> 
-> It means the whole API is pretty much obsolete at least now, remove it
-> completely.
+Hi, Bibo,
 
-Agreed, this API is now redundant.
-
-> 
-> Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Muchun Song <muchun.song@linux.dev>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: loongarch@lists.linux.dev
-> Cc: linux-mips@vger.kernel.org
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
+On Thu, Jun 19, 2025 at 3:15=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> IOCSR MISC register 0x420 controlls some features of eiointc, such as
+> BIT 48 enables eiointc and BIT 49 set interrupt encoding mode.
+>
+> When kernel irqchip is set, IOCSR MISC register should be emulated in
+> kernel also. Here add IOCSR MISC register emulation in kernel side.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  arch/loongarch/include/asm/hugetlb.h | 14 --------------
->  arch/mips/include/asm/hugetlb.h      | 14 --------------
->  fs/hugetlbfs/inode.c                 |  8 ++------
->  include/asm-generic/hugetlb.h        |  8 --------
->  include/linux/hugetlb.h              |  6 ------
->  5 files changed, 2 insertions(+), 48 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
-> index 4dc4b3e04225..ab68b594f889 100644
-> --- a/arch/loongarch/include/asm/hugetlb.h
-> +++ b/arch/loongarch/include/asm/hugetlb.h
-> @@ -10,20 +10,6 @@
->  
->  uint64_t pmd_to_entrylo(unsigned long pmd_val);
->  
-> -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> -static inline int prepare_hugepage_range(struct file *file,
-> -					 unsigned long addr,
-> -					 unsigned long len)
-> -{
-> -	unsigned long task_size = STACK_TOP;
-> -
-> -	if (len > task_size)
-> -		return -ENOMEM;
-> -	if (task_size - len < addr)
-> -		return -EINVAL;
-> -	return 0;
-> -}
-> -
->  #define __HAVE_ARCH_HUGE_PTE_CLEAR
->  static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
->  				  pte_t *ptep, unsigned long sz)
-> diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
-> index fbc71ddcf0f6..8c460ce01ffe 100644
-> --- a/arch/mips/include/asm/hugetlb.h
-> +++ b/arch/mips/include/asm/hugetlb.h
-> @@ -11,20 +11,6 @@
->  
->  #include <asm/page.h>
->  
-> -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> -static inline int prepare_hugepage_range(struct file *file,
-> -					 unsigned long addr,
-> -					 unsigned long len)
-> -{
-> -	unsigned long task_size = STACK_TOP;
-> -
-> -	if (len > task_size)
-> -		return -ENOMEM;
-> -	if (task_size - len < addr)
-> -		return -EINVAL;
-> -	return 0;
-> -}
-> -
->  #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
->  static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
->  					    unsigned long addr, pte_t *ptep,
-> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-> index 00b2d1a032fd..81a6acddd690 100644
-> --- a/fs/hugetlbfs/inode.c
-> +++ b/fs/hugetlbfs/inode.c
-> @@ -179,12 +179,8 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
->  
->  	if (len & ~huge_page_mask(h))
->  		return -EINVAL;
-> -	if (flags & MAP_FIXED) {
-> -		if (addr & ~huge_page_mask(h))
-> -			return -EINVAL;
-> -		if (prepare_hugepage_range(file, addr, len))
-> -			return -EINVAL;
-> -	}
-> +	if ((flags & MAP_FIXED) && (addr & ~huge_page_mask(h)))
-> +		return -EINVAL;
->  	if (addr)
->  		addr0 = ALIGN(addr, huge_page_size(h));
->  
-> diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
-> index 3e0a8fe9b108..4bce4f07f44f 100644
-> --- a/include/asm-generic/hugetlb.h
-> +++ b/include/asm-generic/hugetlb.h
-> @@ -114,14 +114,6 @@ static inline int huge_pte_none_mostly(pte_t pte)
->  }
->  #endif
->  
-> -#ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> -static inline int prepare_hugepage_range(struct file *file,
-> -		unsigned long addr, unsigned long len)
-> -{
-> -	return 0;
-> -}
-> -#endif
-> -
->  #ifndef __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
->  static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
->  		unsigned long addr, pte_t *ptep)
-> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> index c6c87eae4a8d..474de8e2a8f2 100644
-> --- a/include/linux/hugetlb.h
-> +++ b/include/linux/hugetlb.h
-> @@ -359,12 +359,6 @@ static inline void hugetlb_show_meminfo_node(int nid)
->  {
->  }
->  
-> -static inline int prepare_hugepage_range(struct file *file,
-> -				unsigned long addr, unsigned long len)
-> -{
-> -	return -EINVAL;
-> -}
-> -
->  static inline void hugetlb_vma_lock_read(struct vm_area_struct *vma)
->  {
->  }
+> v1 ... v2:
+>   1. Add separate file arch/loongarch/kvm/intc/misc.c for IOCSR MISC
+>      register 0x420 emulation, since it controls feature about AVEC
+>      irqchip also.
+I found we can decouple the misc register and EIOINTC in addition:
+1, Move misc.c out of intc directory;
+2, Call kvm_loongarch_create_misc() in kvm_arch_init_vm();
+3, Call kvm_loongarch_destroy_misc() in kvm_arch_destroy_vm();
+4, Then maybe misc_created can be removed.
 
-A small nit - there is a now stale in code comment still referring
-to prepare_hugepage_range() in hugetlbfs_file_mmap().
+At last you can make this patch and others from another series to be a
+new series.
 
-Otherwise LGTM.
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Huacai
+
+>
+>   2. Define macro MISC_BASE as LOONGARCH_IOCSR_MISC_FUNC rather than
+>      hard coded 0x420
+> ---
+>  arch/loongarch/include/asm/kvm_eiointc.h |   2 +
+>  arch/loongarch/include/asm/kvm_host.h    |   2 +
+>  arch/loongarch/include/asm/kvm_misc.h    |  17 +++
+>  arch/loongarch/include/asm/loongarch.h   |   1 +
+>  arch/loongarch/kvm/Makefile              |   1 +
+>  arch/loongarch/kvm/intc/eiointc.c        |  61 +++++++++++
+>  arch/loongarch/kvm/intc/misc.c           | 125 +++++++++++++++++++++++
+>  7 files changed, 209 insertions(+)
+>  create mode 100644 arch/loongarch/include/asm/kvm_misc.h
+>  create mode 100644 arch/loongarch/kvm/intc/misc.c
+>
+> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch/in=
+clude/asm/kvm_eiointc.h
+> index a3a40aba8acf..2d1c183f2b1b 100644
+> --- a/arch/loongarch/include/asm/kvm_eiointc.h
+> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
+> @@ -119,5 +119,7 @@ struct loongarch_eiointc {
+>
+>  int kvm_loongarch_register_eiointc_device(void);
+>  void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level);
+> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value);
+> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value=
+, unsigned long mask);
+>
+>  #endif /* __ASM_KVM_EIOINTC_H */
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
+de/asm/kvm_host.h
+> index a3c4cc46c892..f463ec52d86c 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -132,6 +132,8 @@ struct kvm_arch {
+>         struct loongarch_ipi *ipi;
+>         struct loongarch_eiointc *eiointc;
+>         struct loongarch_pch_pic *pch_pic;
+> +       struct kvm_io_device misc;
+> +       bool   misc_created;
+>  };
+>
+>  #define CSR_MAX_NUMS           0x800
+> diff --git a/arch/loongarch/include/asm/kvm_misc.h b/arch/loongarch/inclu=
+de/asm/kvm_misc.h
+> new file mode 100644
+> index 000000000000..621e4228dea2
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/kvm_misc.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+> + */
+> +
+> +#ifndef __ASM_KVM_MISC_H
+> +#define __ASM_KVM_MISC_H
+> +
+> +#include <asm/loongarch.h>
+> +
+> +#define MISC_BASE              LOONGARCH_IOCSR_MISC_FUNC
+> +#define MISC_SIZE              0x8
+> +
+> +int kvm_loongarch_create_misc(struct kvm *kvm);
+> +void kvm_loongarch_destroy_misc(struct kvm *kvm);
+> +
+> +#endif /* __ASM_KVM_MISC_H */
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
+ude/asm/loongarch.h
+> index d84dac88a584..e30d330d497e 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -1141,6 +1141,7 @@
+>  #define  IOCSR_MISC_FUNC_SOFT_INT      BIT_ULL(10)
+>  #define  IOCSR_MISC_FUNC_TIMER_RESET   BIT_ULL(21)
+>  #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
+> +#define  IOCSR_MISC_FUNC_INT_ENCODE    BIT_ULL(49)
+>  #define  IOCSR_MISC_FUNC_AVEC_EN       BIT_ULL(51)
+>
+>  #define LOONGARCH_IOCSR_CPUTEMP                0x428
+> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+> index cb41d9265662..25fa3866613d 100644
+> --- a/arch/loongarch/kvm/Makefile
+> +++ b/arch/loongarch/kvm/Makefile
+> @@ -18,6 +18,7 @@ kvm-y +=3D vcpu.o
+>  kvm-y +=3D vm.o
+>  kvm-y +=3D intc/ipi.o
+>  kvm-y +=3D intc/eiointc.o
+> +kvm-y +=3D intc/misc.o
+>  kvm-y +=3D intc/pch_pic.o
+>  kvm-y +=3D irqfd.o
+>
+> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/=
+eiointc.c
+> index f39929d7bf8a..87d01521e92f 100644
+> --- a/arch/loongarch/kvm/intc/eiointc.c
+> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> @@ -4,6 +4,7 @@
+>   */
+>
+>  #include <asm/kvm_eiointc.h>
+> +#include <asm/kvm_misc.h>
+>  #include <asm/kvm_vcpu.h>
+>  #include <linux/count_zeros.h>
+>
+> @@ -708,6 +709,56 @@ static const struct kvm_io_device_ops kvm_eiointc_op=
+s =3D {
+>         .write  =3D kvm_eiointc_write,
+>  };
+>
+> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value)
+> +{
+> +       unsigned long data, flags;
+> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
+> +
+> +       if (!eiointc) {
+> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> +               return -EINVAL;
+> +       }
+> +
+> +       data =3D 0;
+> +       spin_lock_irqsave(&eiointc->lock, flags);
+> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+> +               data |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
+> +
+> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+> +               data |=3D IOCSR_MISC_FUNC_INT_ENCODE;
+> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+> +
+> +       *value =3D data;
+> +       return 0;
+> +}
+> +
+> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value=
+, unsigned long mask)
+> +{
+> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
+> +       unsigned long old, flags;
+> +
+> +       if (!eiointc) {
+> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> +               return -EINVAL;
+> +       }
+> +
+> +       old =3D 0;
+> +       spin_lock_irqsave(&eiointc->lock, flags);
+> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+> +               old |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
+> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+> +               old |=3D IOCSR_MISC_FUNC_INT_ENCODE;
+> +
+> +       value |=3D (old & ~mask);
+> +       eiointc->status &=3D ~(BIT(EIOINTC_ENABLE_INT_ENCODE) | BIT(EIOIN=
+TC_ENABLE));
+> +       if (value & IOCSR_MISC_FUNC_INT_ENCODE)
+> +               eiointc->status |=3D BIT(EIOINTC_ENABLE_INT_ENCODE);
+> +       if (value & IOCSR_MISC_FUNC_EXT_IOI_EN)
+> +               eiointc->status |=3D BIT(EIOINTC_ENABLE);
+> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+> +       return 0;
+> +}
+> +
+>  static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
+>                                 struct kvm_io_device *dev,
+>                                 gpa_t addr, int len, void *val)
+> @@ -993,6 +1044,15 @@ static int kvm_eiointc_create(struct kvm_device *de=
+v, u32 type)
+>                 kfree(s);
+>                 return ret;
+>         }
+> +
+> +       ret =3D kvm_loongarch_create_misc(kvm);
+> +       if (ret < 0) {
+> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device)=
+;
+> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device_=
+vext);
+> +               kfree(s);
+> +               return ret;
+> +       }
+> +
+>         kvm->arch.eiointc =3D s;
+>
+>         return 0;
+> @@ -1010,6 +1070,7 @@ static void kvm_eiointc_destroy(struct kvm_device *=
+dev)
+>         eiointc =3D kvm->arch.eiointc;
+>         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+>         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_ve=
+xt);
+> +       kvm_loongarch_destroy_misc(kvm);
+>         kfree(eiointc);
+>  }
+>
+> diff --git a/arch/loongarch/kvm/intc/misc.c b/arch/loongarch/kvm/intc/mis=
+c.c
+> new file mode 100644
+> index 000000000000..edee66afa36e
+> --- /dev/null
+> +++ b/arch/loongarch/kvm/intc/misc.c
+> @@ -0,0 +1,125 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+> + */
+> +#include <asm/kvm_vcpu.h>
+> +#include <asm/kvm_eiointc.h>
+> +#include <asm/kvm_misc.h>
+> +
+> +static int kvm_misc_read(struct kvm_vcpu *vcpu, struct kvm_io_device *de=
+v,
+> +                       gpa_t addr, int len, void *val)
+> +{
+> +       unsigned long data;
+> +       unsigned int ret;
+> +
+> +       addr -=3D MISC_BASE;
+> +       if (addr & (len - 1)) {
+> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> +               return -EINVAL;
+> +       }
+> +
+> +       ret =3D kvm_eiointc_get_status(vcpu, &data);
+> +       if (ret)
+> +               return ret;
+> +
+> +       data =3D data >> ((addr & 7) * 8);
+> +       switch (len) {
+> +       case 1:
+> +               *(unsigned char *)val =3D (unsigned char)data;
+> +               break;
+> +
+> +       case 2:
+> +               *(unsigned short *)val =3D (unsigned short)data;
+> +               break;
+> +
+> +       case 4:
+> +               *(unsigned int *)val =3D (unsigned int)data;
+> +               break;
+> +
+> +       default:
+> +               *(unsigned long *)val =3D data;
+> +               break;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int kvm_misc_write(struct kvm_vcpu *vcpu, struct kvm_io_device *d=
+ev,
+> +               gpa_t addr, int len, const void *val)
+> +{
+> +       unsigned long data, mask;
+> +       unsigned int shift;
+> +
+> +       addr -=3D MISC_BASE;
+> +       if (addr & (len - 1)) {
+> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> +               return -EINVAL;
+> +       }
+> +
+> +       shift =3D (addr & 7) * 8;
+> +       switch (len) {
+> +       case 1:
+> +               data =3D *(unsigned char *)val;
+> +               mask =3D 0xFF;
+> +               mask =3D mask << shift;
+> +               data =3D data << shift;
+> +               break;
+> +
+> +       case 2:
+> +               data =3D *(unsigned short *)val;
+> +               mask =3D 0xFFFF;
+> +               mask =3D mask << shift;
+> +               data =3D data << shift;
+> +               break;
+> +
+> +       case 4:
+> +               data =3D *(unsigned int *)val;
+> +               mask =3D UINT_MAX;
+> +               mask =3D mask << shift;
+> +               data =3D data << shift;
+> +               break;
+> +
+> +       default:
+> +               data =3D *(unsigned long *)val;
+> +               mask =3D ULONG_MAX;
+> +               mask =3D mask << shift;
+> +               data =3D data << shift;
+> +               break;
+> +       }
+> +
+> +       return kvm_eiointc_update_status(vcpu, data, mask);
+> +}
+> +
+> +static const struct kvm_io_device_ops kvm_misc_ops =3D {
+> +       .read   =3D kvm_misc_read,
+> +       .write  =3D kvm_misc_write,
+> +};
+> +
+> +int kvm_loongarch_create_misc(struct kvm *kvm)
+> +{
+> +       struct kvm_io_device *device;
+> +       int ret;
+> +
+> +       if (kvm->arch.misc_created)
+> +               return 0;
+> +
+> +       device =3D &kvm->arch.misc;
+> +       kvm_iodevice_init(device, &kvm_misc_ops);
+> +       ret =3D kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, MISC_BASE, MI=
+SC_SIZE, device);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       kvm->arch.misc_created =3D true;
+> +       return 0;
+> +}
+> +
+> +void kvm_loongarch_destroy_misc(struct kvm *kvm)
+> +{
+> +       struct kvm_io_device *device;
+> +
+> +       if (kvm->arch.misc_created) {
+> +               device =3D &kvm->arch.misc;
+> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
+> +               kvm->arch.misc_created =3D false;
+> +       }
+> +}
+>
+> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+> --
+> 2.39.3
+>
