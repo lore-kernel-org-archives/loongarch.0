@@ -1,366 +1,196 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948C413D539
-	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 03:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF3E1FBEB9
+	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 07:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751339712; cv=none; b=WVE6bcAvGXBPqezc7yy5XxCa2EK41mB5rIzU0/XEhhnPYZWLwBHxFq9uu6RGilZIrm7V+j59Z1Hp6X33CnaDQ/+p6HkCqrtF6WqCyYh8Mu4tW/JJWHYHGPe7xaldtTKVVb82+U4kkF1aQpNl6SK2CYP17F04SPY8mqH7RRPsOag=
+	t=1751355695; cv=none; b=O3SRT2E//69Km0YOmd6AbEWxYUST+uRuFdqw3/sQuvJmAIxSnvTWxHrbNva2aeG8qr2rvt2k8a3YJRTxaGPx5DTrGJtsRDJLbHAsvqSYDMaQHM8kODWBqML9OySZYU8kBkDy4AKsJeKtYxq6FzEc1G9ODc4/L8xzjDySa3HCICw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751339712; c=relaxed/simple;
-	bh=tndzeMyq5dz/RYZHGbtxODFdk4Tju5gEzo5gmm3ZCLM=;
+	s=arc-20240116; t=1751355695; c=relaxed/simple;
+	bh=4haYlpXI5Ixcum997fl2z6nwrGcuYNAvbh9OqGw7pCg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iPT7UYwNdew+PfpRgSYlCqs/Qq2QdBI232eeU+G1GsGVmLdGLkiN5RHcRRDbMt6cuJFcE+Nyq5mbvi/quOryvssjSskdlmsn/0rTU1bKxvxL+zHcRw7skkHIBrabKJSUxX+IiaARSPavhsn5zh3qOwH/BSS4yMSE/TcaqYOpLzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxLOK6UmNoNVAgAQ--.29533S3;
-	Tue, 01 Jul 2025 11:15:06 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJCxocK4UmNo7GcEAA--.27349S6;
-	Tue, 01 Jul 2025 11:15:06 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xianglai Li <lixianglai@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 13/13] LoongArch: KVM: Use generic interface loongarch_eiointc_write()
-Date: Tue,  1 Jul 2025 11:15:04 +0800
-Message-Id: <20250701031504.1233777-5-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250701031504.1233777-1-maobibo@loongson.cn>
-References: <20250701030842.1136519-1-maobibo@loongson.cn>
- <20250701031504.1233777-1-maobibo@loongson.cn>
+	 MIME-Version:Content-Type; b=a95klRN07wLkoEBtBjaFi/YKbY7FisjwSdIQ0eS5GUB556TvK68gd2Rij0oyYgDxXoQyCIGCZ9p0PAxPGSXKl/x3BUp/UlIPa9YGauCpjelG+V4UctMkSjMgGgVPKfHqdHlUFSSZHyBST73IvUhU1xHWPw1QDZg5vO7L4MZJwbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: c8e1adc0564e11f0b29709d653e92f7d-20250701
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:d23aef4b-56b7-45ee-a979-c4da4c92d77f,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-INFO: VERSION:1.1.45,REQID:d23aef4b-56b7-45ee-a979-c4da4c92d77f,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:a082fe2bff325c0fff079771e45ba4bb,BulkI
+	D:25070115412683HV5K8N,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
+	|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:ni
+	l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:
+	0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: c8e1adc0564e11f0b29709d653e92f7d-20250701
+X-User: jianghaoran@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.13)] by mailgw.kylinos.cn
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 920105118; Tue, 01 Jul 2025 15:41:22 +0800
+From: Haoran Jiang <jianghaoran@kylinos.cn>
+To: loongarch@lists.linux.dev
+Cc: bpf@vger.kernel.org,
+	kernel@xen0n.name,
+	chenhuacai@kernel.org,
+	hengqi.chen@gmail.com,
+	yangtiezhu@loongson.cn,
+	jolsa@kernel.org,
+	haoluo@google.com,
+	sdf@fomichev.me,
+	kpsingh@kernel.org,
+	john.fastabend@gmail.com,
+	yonghong.song@linux.dev,
+	song@kernel.org,
+	eddyz87@gmail.com,
+	martin.lau@linux.dev,
+	andrii@kernel.org,
+	daniel@iogearbox.net,
+	ast@kernel.org
+Subject: [PATCH 1/2] LoongArch: BPF: Optimize the calculation method of jmp_offset in the emit_bpf_tail_call function
+Date: Tue,  1 Jul 2025 15:41:09 +0800
+Message-Id: <20250701074110.525363-2-jianghaoran@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250701074110.525363-1-jianghaoran@kylinos.cn>
+References: <20250701074110.525363-1-jianghaoran@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxocK4UmNo7GcEAA--.27349S6
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-With all eiointc iocsr register write operation with 1/2/4/8 bytes
-size, generic function loongarch_eiointc_write() is used here. And
-function loongarch_eiointc_writeb(), loongarch_eiointc_writew(),
-loongarch_eiointc_writel() are removed.
+For a ebpf subprog JIT，the last call bpf_int_jit_compile function will
+directly enter the skip_init_ctx process. At this point, out_offset = -1,
+the jmp_offset in emit_bpf_tail_call is calculated
+by #define jmp_offset (out_offset - (cur_offset)) is a negative number,
+which does not meet expectations.The final generated assembly as follow.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+54:	bgeu        	$a2, $t1, -8	    # 0x0000004c
+58:	addi.d      	$a6, $s5, -1
+5c:	bltz        	$a6, -16	    # 0x0000004c
+60:	alsl.d      	$t2, $a2, $a1, 0x3
+64:	ld.d        	$t2, $t2, 264
+68:	beq         	$t2, $zero, -28	    # 0x0000004c
+
+Before apply this patch, the follow test case will reveal soft lock issues.
+
+cd tools/testing/selftests/bpf/
+./test_progs --allow=tailcalls/tailcall_bpf2bpf_1
+
+dmesg:
+watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [test_progs:25056]
+
+Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
 ---
- arch/loongarch/kvm/intc/eiointc.c | 277 +-----------------------------
- 1 file changed, 6 insertions(+), 271 deletions(-)
+ arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
+ 1 file changed, 9 insertions(+), 19 deletions(-)
 
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index 105764c1a735..3a059f10575b 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -111,25 +111,6 @@ void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level)
- 	spin_unlock_irqrestore(&s->lock, flags);
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index fa1500d4aa3e..d85490e7de89 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
+ 	return true;
  }
  
--static inline void eiointc_enable_irq(struct kvm_vcpu *vcpu,
--		struct loongarch_eiointc *s, int index, u8 mask, int level)
--{
--	u8 val;
--	int irq;
--
--	val = mask & s->isr.reg_u8[index];
--	irq = ffs(val);
--	while (irq != 0) {
--		/*
--		 * enable bit change from 0 to 1,
--		 * need to update irq by pending bits
--		 */
--		eiointc_update_irq(s, irq - 1 + index * 8, level);
--		val &= ~BIT(irq - 1);
--		irq = ffs(val);
--	}
--}
--
- static int loongarch_eiointc_read(struct kvm_vcpu *vcpu, struct loongarch_eiointc *s,
- 				gpa_t addr, unsigned long *val)
+-/* initialized on the first pass of build_body() */
+-static int out_offset = -1;
+-static int emit_bpf_tail_call(struct jit_ctx *ctx)
++static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
  {
-@@ -218,255 +199,6 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+ 	int off;
+ 	u8 tcc = tail_call_reg(ctx);
+@@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	u8 t2 = LOONGARCH_GPR_T2;
+ 	u8 t3 = LOONGARCH_GPR_T3;
+ 	const int idx0 = ctx->idx;
+-
+-#define cur_offset (ctx->idx - idx0)
+-#define jmp_offset (out_offset - (cur_offset))
++	int tc_ninsn = 0;
++	int jmp_offset = 0;
+ 
+ 	/*
+ 	 * a0: &ctx
+@@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	 * if (index >= array->map.max_entries)
+ 	 *	 goto out;
+ 	 */
++	tc_ninsn = insn ? ctx->offset[insn+1] - ctx->offset[insn] :
++		ctx->offset[0];
+ 	off = offsetof(struct bpf_array, map.max_entries);
+ 	emit_insn(ctx, ldwu, t1, a1, off);
++	jmp_offset = tc_ninsn - (ctx->idx - idx0);
+ 	/* bgeu $a2, $t1, jmp_offset */
+ 	if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset) < 0)
+ 		goto toofar;
+@@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	 *	 goto out;
+ 	 */
+ 	emit_insn(ctx, addid, REG_TCC, tcc, -1);
++	jmp_offset = tc_ninsn - (ctx->idx - idx0);
+ 	if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+ 		goto toofar;
+ 
+@@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	emit_insn(ctx, alsld, t2, a2, a1, 2);
+ 	off = offsetof(struct bpf_array, ptrs);
+ 	emit_insn(ctx, ldd, t2, t2, off);
++	jmp_offset = tc_ninsn - (ctx->idx - idx0);
+ 	/* beq $t2, $zero, jmp_offset */
+ 	if (emit_tailcall_jmp(ctx, BPF_JEQ, t2, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+ 		goto toofar;
+@@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	emit_insn(ctx, ldd, t3, t2, off);
+ 	__build_epilogue(ctx, true);
+ 
+-	/* out: */
+-	if (out_offset == -1)
+-		out_offset = cur_offset;
+-	if (cur_offset != out_offset) {
+-		pr_err_once("tail_call out_offset = %d, expected %d!\n",
+-			    cur_offset, out_offset);
+-		return -1;
+-	}
+-
  	return 0;
+ 
+ toofar:
+ 	pr_info_once("tail_call: jump too far\n");
+ 	return -1;
+-#undef cur_offset
+-#undef jmp_offset
  }
  
--static int loongarch_eiointc_writeb(struct kvm_vcpu *vcpu,
--				struct loongarch_eiointc *s,
--				gpa_t addr, const void *val)
--{
--	int index, irq, bits, ret = 0;
--	u8 cpu;
--	u8 data, old_data;
--	u8 coreisr, old_coreisr;
--	gpa_t offset;
--
--	data = *(u8 *)val;
--	offset = addr - EIOINTC_BASE;
--
--	switch (offset) {
--	case EIOINTC_NODETYPE_START ... EIOINTC_NODETYPE_END:
--		index = (offset - EIOINTC_NODETYPE_START);
--		s->nodetype.reg_u8[index] = data;
--		break;
--	case EIOINTC_IPMAP_START ... EIOINTC_IPMAP_END:
--		/*
--		 * ipmap cannot be set at runtime, can be set only at the beginning
--		 * of irqchip driver, need not update upper irq level
--		 */
--		index = (offset - EIOINTC_IPMAP_START);
--		s->ipmap.reg_u8[index] = data;
--		break;
--	case EIOINTC_ENABLE_START ... EIOINTC_ENABLE_END:
--		index = (offset - EIOINTC_ENABLE_START);
--		old_data = s->enable.reg_u8[index];
--		s->enable.reg_u8[index] = data;
--		/*
--		 * 1: enable irq.
--		 * update irq when isr is set.
--		 */
--		data = s->enable.reg_u8[index] & ~old_data & s->isr.reg_u8[index];
--		eiointc_enable_irq(vcpu, s, index, data, 1);
--		/*
--		 * 0: disable irq.
--		 * update irq when isr is set.
--		 */
--		data = ~s->enable.reg_u8[index] & old_data & s->isr.reg_u8[index];
--		eiointc_enable_irq(vcpu, s, index, data, 0);
--		break;
--	case EIOINTC_BOUNCE_START ... EIOINTC_BOUNCE_END:
--		/* do not emulate hw bounced irq routing */
--		index = offset - EIOINTC_BOUNCE_START;
--		s->bounce.reg_u8[index] = data;
--		break;
--	case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
--		index = (offset - EIOINTC_COREISR_START);
--		/* use attrs to get current cpu index */
--		cpu = vcpu->vcpu_id;
--		coreisr = data;
--		old_coreisr = s->coreisr.reg_u8[cpu][index];
--		/* write 1 to clear interrupt */
--		s->coreisr.reg_u8[cpu][index] = old_coreisr & ~coreisr;
--		coreisr &= old_coreisr;
--		bits = sizeof(data) * 8;
--		irq = find_first_bit((void *)&coreisr, bits);
--		while (irq < bits) {
--			eiointc_update_irq(s, irq + index * bits, 0);
--			bitmap_clear((void *)&coreisr, irq, 1);
--			irq = find_first_bit((void *)&coreisr, bits);
--		}
--		break;
--	case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
--		irq = offset - EIOINTC_COREMAP_START;
--		index = irq;
--		s->coremap.reg_u8[index] = data;
--		eiointc_update_sw_coremap(s, irq, data, sizeof(data), true);
--		break;
--	default:
--		ret = -EINVAL;
--		break;
--	}
--
--	return ret;
--}
--
--static int loongarch_eiointc_writew(struct kvm_vcpu *vcpu,
--				struct loongarch_eiointc *s,
--				gpa_t addr, const void *val)
--{
--	int i, index, irq, bits, ret = 0;
--	u8 cpu;
--	u16 data, old_data;
--	u16 coreisr, old_coreisr;
--	gpa_t offset;
--
--	data = *(u16 *)val;
--	offset = addr - EIOINTC_BASE;
--
--	switch (offset) {
--	case EIOINTC_NODETYPE_START ... EIOINTC_NODETYPE_END:
--		index = (offset - EIOINTC_NODETYPE_START) >> 1;
--		s->nodetype.reg_u16[index] = data;
--		break;
--	case EIOINTC_IPMAP_START ... EIOINTC_IPMAP_END:
--		/*
--		 * ipmap cannot be set at runtime, can be set only at the beginning
--		 * of irqchip driver, need not update upper irq level
--		 */
--		index = (offset - EIOINTC_IPMAP_START) >> 1;
--		s->ipmap.reg_u16[index] = data;
--		break;
--	case EIOINTC_ENABLE_START ... EIOINTC_ENABLE_END:
--		index = (offset - EIOINTC_ENABLE_START) >> 1;
--		old_data = s->enable.reg_u16[index];
--		s->enable.reg_u16[index] = data;
--		/*
--		 * 1: enable irq.
--		 * update irq when isr is set.
--		 */
--		data = s->enable.reg_u16[index] & ~old_data & s->isr.reg_u16[index];
--		for (i = 0; i < sizeof(data); i++) {
--			u8 mask = (data >> (i * 8)) & 0xff;
--			eiointc_enable_irq(vcpu, s, index * 2 + i, mask, 1);
--		}
--		/*
--		 * 0: disable irq.
--		 * update irq when isr is set.
--		 */
--		data = ~s->enable.reg_u16[index] & old_data & s->isr.reg_u16[index];
--		for (i = 0; i < sizeof(data); i++) {
--			u8 mask = (data >> (i * 8)) & 0xff;
--			eiointc_enable_irq(vcpu, s, index * 2 + i, mask, 0);
--		}
--		break;
--	case EIOINTC_BOUNCE_START ... EIOINTC_BOUNCE_END:
--		/* do not emulate hw bounced irq routing */
--		index = (offset - EIOINTC_BOUNCE_START) >> 1;
--		s->bounce.reg_u16[index] = data;
--		break;
--	case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
--		index = (offset - EIOINTC_COREISR_START) >> 1;
--		/* use attrs to get current cpu index */
--		cpu = vcpu->vcpu_id;
--		coreisr = data;
--		old_coreisr = s->coreisr.reg_u16[cpu][index];
--		/* write 1 to clear interrupt */
--		s->coreisr.reg_u16[cpu][index] = old_coreisr & ~coreisr;
--		coreisr &= old_coreisr;
--		bits = sizeof(data) * 8;
--		irq = find_first_bit((void *)&coreisr, bits);
--		while (irq < bits) {
--			eiointc_update_irq(s, irq + index * bits, 0);
--			bitmap_clear((void *)&coreisr, irq, 1);
--			irq = find_first_bit((void *)&coreisr, bits);
--		}
--		break;
--	case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
--		irq = offset - EIOINTC_COREMAP_START;
--		index = irq >> 1;
--		s->coremap.reg_u16[index] = data;
--		eiointc_update_sw_coremap(s, irq, data, sizeof(data), true);
--		break;
--	default:
--		ret = -EINVAL;
--		break;
--	}
--
--	return ret;
--}
--
--static int loongarch_eiointc_writel(struct kvm_vcpu *vcpu,
--				struct loongarch_eiointc *s,
--				gpa_t addr, const void *val)
--{
--	int i, index, irq, bits, ret = 0;
--	u8 cpu;
--	u32 data, old_data;
--	u32 coreisr, old_coreisr;
--	gpa_t offset;
--
--	data = *(u32 *)val;
--	offset = addr - EIOINTC_BASE;
--
--	switch (offset) {
--	case EIOINTC_NODETYPE_START ... EIOINTC_NODETYPE_END:
--		index = (offset - EIOINTC_NODETYPE_START) >> 2;
--		s->nodetype.reg_u32[index] = data;
--		break;
--	case EIOINTC_IPMAP_START ... EIOINTC_IPMAP_END:
--		/*
--		 * ipmap cannot be set at runtime, can be set only at the beginning
--		 * of irqchip driver, need not update upper irq level
--		 */
--		index = (offset - EIOINTC_IPMAP_START) >> 2;
--		s->ipmap.reg_u32[index] = data;
--		break;
--	case EIOINTC_ENABLE_START ... EIOINTC_ENABLE_END:
--		index = (offset - EIOINTC_ENABLE_START) >> 2;
--		old_data = s->enable.reg_u32[index];
--		s->enable.reg_u32[index] = data;
--		/*
--		 * 1: enable irq.
--		 * update irq when isr is set.
--		 */
--		data = s->enable.reg_u32[index] & ~old_data & s->isr.reg_u32[index];
--		for (i = 0; i < sizeof(data); i++) {
--			u8 mask = (data >> (i * 8)) & 0xff;
--			eiointc_enable_irq(vcpu, s, index * 4 + i, mask, 1);
--		}
--		/*
--		 * 0: disable irq.
--		 * update irq when isr is set.
--		 */
--		data = ~s->enable.reg_u32[index] & old_data & s->isr.reg_u32[index];
--		for (i = 0; i < sizeof(data); i++) {
--			u8 mask = (data >> (i * 8)) & 0xff;
--			eiointc_enable_irq(vcpu, s, index * 4 + i, mask, 0);
--		}
--		break;
--	case EIOINTC_BOUNCE_START ... EIOINTC_BOUNCE_END:
--		/* do not emulate hw bounced irq routing */
--		index = (offset - EIOINTC_BOUNCE_START) >> 2;
--		s->bounce.reg_u32[index] = data;
--		break;
--	case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
--		index = (offset - EIOINTC_COREISR_START) >> 2;
--		/* use attrs to get current cpu index */
--		cpu = vcpu->vcpu_id;
--		coreisr = data;
--		old_coreisr = s->coreisr.reg_u32[cpu][index];
--		/* write 1 to clear interrupt */
--		s->coreisr.reg_u32[cpu][index] = old_coreisr & ~coreisr;
--		coreisr &= old_coreisr;
--		bits = sizeof(data) * 8;
--		irq = find_first_bit((void *)&coreisr, bits);
--		while (irq < bits) {
--			eiointc_update_irq(s, irq + index * bits, 0);
--			bitmap_clear((void *)&coreisr, irq, 1);
--			irq = find_first_bit((void *)&coreisr, bits);
--		}
--		break;
--	case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
--		irq = offset - EIOINTC_COREMAP_START;
--		index = irq >> 2;
--		s->coremap.reg_u32[index] = data;
--		eiointc_update_sw_coremap(s, irq, data, sizeof(data), true);
--		break;
--	default:
--		ret = -EINVAL;
--		break;
--	}
--
--	return ret;
--}
--
- static int loongarch_eiointc_write(struct kvm_vcpu *vcpu,
- 				struct loongarch_eiointc *s,
- 				gpa_t addr, u64 value, u64 field_mask)
-@@ -577,13 +309,16 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (len) {
- 	case 1:
--		ret = loongarch_eiointc_writeb(vcpu, eiointc, addr, val);
-+		value = *(unsigned char *)val;
-+		ret = loongarch_eiointc_write(vcpu, eiointc, addr, value, 0xFF);
+ static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
+@@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	/* tail call */
+ 	case BPF_JMP | BPF_TAIL_CALL:
+ 		mark_tail_call(ctx);
+-		if (emit_bpf_tail_call(ctx) < 0)
++		if (emit_bpf_tail_call(i, ctx) < 0)
+ 			return -EINVAL;
  		break;
- 	case 2:
--		ret = loongarch_eiointc_writew(vcpu, eiointc, addr, val);
-+		value = *(unsigned short *)val;
-+		ret = loongarch_eiointc_write(vcpu, eiointc, addr, value, USHRT_MAX);
- 		break;
- 	case 4:
--		ret = loongarch_eiointc_writel(vcpu, eiointc, addr, val);
-+		value = *(unsigned int *)val;
-+		ret = loongarch_eiointc_write(vcpu, eiointc, addr, value, UINT_MAX);
- 		break;
- 	default:
- 		value = *(unsigned long *)val;
+ 
+@@ -1342,7 +1333,6 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	if (tmp_blinded)
+ 		bpf_jit_prog_release_other(prog, prog == orig_prog ? tmp : orig_prog);
+ 
+-	out_offset = -1;
+ 
+ 	return prog;
+ 
 -- 
-2.39.3
+2.43.0
 
