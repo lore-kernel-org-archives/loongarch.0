@@ -1,450 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1275E26A0EB
-	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 09:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D13270578;
+	Tue,  1 Jul 2025 10:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751361631; cv=none; b=gVV2TpG/2Ndtw0JMKD8J1zhPOVe0trcc1hBm0hmrJ1AQkJofWUXBHRMXqpbxuqC7uf3fccjL8dpkVz+0ibLozCePdh1aFz498qio2O+iwAkTEFNsCoE4AKv+jHKwFDcMyBB5zOJpiNQhY/A6KUyo39Yb+sJ7pnVOUK5lzGcvoxA=
+	t=1751365003; cv=none; b=C7AlLPqCXFUkrkUoc2R2hTSRC57fU2YpzLNAoFR4muuRqnK5PHqJg7Xiel0ThYZ9XNWexj8W6DKyeo8EwM77U0AjGUZhFmMF9tSKMU9I7OWrmU0auXDNQ9s7cSNOP7KYophzVMEgurg4mNYT0DcRI4Mke5s8yj5zEDXzViQPS6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751361631; c=relaxed/simple;
-	bh=YR1Mo0lU1rxR/+syUdZNzkPffefGUf+scFGq7Mf+1uc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Br7iw03dCyhtuOoL+Gj5xiBOQSmg6XbiH+YiBQ9H1eF42HQETauWIurhdoq/eK+3Qm4/nSvGIojRPLkmHh9gEdwH7+9NU90vDKIKCAe8hYt0vy76ZP6RlW+sGYRlwWOFZVONtitPamXOq9f8F0/7S9/GpAJrdqOrb1sRRny8I0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAsT/MPj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751365003; c=relaxed/simple;
+	bh=pvtwyK4zAmi/n19gYPRfHfJsdYlQsYr97DzypdGQHVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qoDakvPVQxmAT7E+sZ/FNe9+Dp8xSOuFpnEBPLVGGsCJFFvtcxYP5CBMxcgCElNrFDkNGlCS9D+sESR3WZAm3DhqkPnmuMB2P2d7NgXrCb6l+44zrm+NsT+uS97azx+i+/sdW+myNY1IrTpOZtFQDKGzU2xUr0tqMXYCsXYcBss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PjDoYwjt; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAsT/MPj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA55C4CEEB
-	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 09:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751361630;
-	bh=YR1Mo0lU1rxR/+syUdZNzkPffefGUf+scFGq7Mf+1uc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uAsT/MPjtGHsZBuY79JLbmspdiGCZcfK3asQXDMopSuU1jXRSRvICaeubRIJjIrcL
-	 JmpIBqSulZHF/uGJn6BKKEMKG/mKDsMru28dJ8tVuIeZqyZp5E3hqTe6lSerKFXmXI
-	 u5VmCzU2sBscM3Boy5v5e9eKORnu273JyBqh9Hd+mApYVAir6CmaGE/J7GLCg2jYBH
-	 XCrSQIKQ78KdviflYamyspRPfiDyKvA9pPX26Z9JIlyeHyVy3uXdJ8S3VXCsB4UPoc
-	 5MQHuP4Mfzd0taHd1Yr1zND9Gk4FoW2wgUk6S6JevtQyIyDkz72nwPSWiSgJ7roWGM
-	 OLreQA3Mjy7RQ==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60c5b8ee2d9so11916701a12.2
-        for <loongarch@lists.linux.dev>; Tue, 01 Jul 2025 02:20:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXxAhsQfXNCVI9YZOPNigwl9G8RTsMBNCJtCP0jjyNziMj6ijkh6fdkUx5mCAilt1RaPRKgb/PcXa0=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx69QTOdmMMYCPo75NcSGiC5gc6CBN2t54alIYv8LbM/4IZdQrr
-	WlLjGWY5W3vydj0/sq4zijyGNiOxopqYeKX/IlrO09/Ek6D4ktnRdnjBCwH47+868A1jcxpbH9V
-	d4zjvPvbGh+1RcgGo5SXhsaUDEg8dHW4=
-X-Google-Smtp-Source: AGHT+IFTaALBKe0BGAY7PpBeqvRGaILY1Js74zrJWRWAb4vRnQt+8dyODJRs1wEKxDI/3NSwpGgVJN+CnJ4Ho6Gm9bQ=
-X-Received: by 2002:a05:6402:3511:b0:604:a19a:d84b with SMTP id
- 4fb4d7f45d1cf-60c88b3e36emr15064170a12.5.1751361628990; Tue, 01 Jul 2025
- 02:20:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PjDoYwjt"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5616feQ9015295;
+	Tue, 1 Jul 2025 10:15:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=bI5gCu
+	bobaT76ILZ7nxLCeAprDNwZM108vGmis92vfw=; b=PjDoYwjtYkSnDRugC3E/Hv
+	o51v3h2eqLbh9PbKCz24WznV4ZvLaYp6Jd8agA71iKB5BcxaWfNXDxx/GBRMKaW3
+	3zwQRfDGD1wbtMpiFA30+yJ0p2Dz70v8RKSPdvUI6qypZ6CrGufrf+7IIFEUHjpn
+	VmkbQl7a8Y3LA2aHvCqH/jproxX7Zk8z+3ExVJMJr0374lAG/InCZaGor60RhO/n
+	pZkHKDq5PA9Rrp9xR6ocRlUp4mDAsxk77EVa6HUg/PlWw41EfjilnF4bkr92n46Q
+	F8/88KcMiADFeGk8H7HpkIgzcddU+eeOqjJiJQCQdUedp0LGnNlGkuTdVNCZIoJA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830pmab-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Jul 2025 10:15:48 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 561A93Md010712;
+	Tue, 1 Jul 2025 10:15:47 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830pma6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Jul 2025 10:15:47 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56173CoY032320;
+	Tue, 1 Jul 2025 10:15:45 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47ju40j8xb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Jul 2025 10:15:45 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 561AFfZk21365030
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 1 Jul 2025 10:15:41 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4405320040;
+	Tue,  1 Jul 2025 10:15:41 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 32B5D20075;
+	Tue,  1 Jul 2025 10:15:39 +0000 (GMT)
+Received: from osiris (unknown [9.111.81.242])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  1 Jul 2025 10:15:39 +0000 (GMT)
+Date: Tue, 1 Jul 2025 12:15:37 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
+        glider@google.com, dvyukov@google.com, vincenzo.frascino@arm.com,
+        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+        chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
+        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        alex@ghiti.fr, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        akpm@linux-foundation.org, nathan@kernel.org,
+        nick.desaulniers+lkml@gmail.com, morbo@google.com,
+        justinstitt@google.com, arnd@arndb.de, rppt@kernel.org,
+        geert@linux-m68k.org, mcgrof@kernel.org, guoweikang.kernel@gmail.com,
+        tiwei.btw@antgroup.com, kevin.brodsky@arm.com, benjamin.berg@intel.com,
+        kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-mm@kvack.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 00/11] kasan: unify kasan_arch_is_ready with
+ kasan_enabled
+Message-ID: <20250701101537.10162Aa0-hca@linux.ibm.com>
+References: <20250626153147.145312-1-snovitoll@gmail.com>
+ <CA+fCnZfAtKWx=+to=XQBREhou=Snb0Yms4D8GNGaxE+BQUYm4A@mail.gmail.com>
+ <CACzwLxgsVkn98VDPpmm7pKcbvu87UBwPgYJmLfKixu4-x+yjSA@mail.gmail.com>
+ <CA+fCnZcGyTECP15VMSPh+duLmxNe=ApHfOnbAY3NqtFHZvceZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250619071449.1714869-1-maobibo@loongson.cn> <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
- <31541826-2802-32e0-f8f0-f717e1c02d74@loongson.cn>
-In-Reply-To: <31541826-2802-32e0-f8f0-f717e1c02d74@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 1 Jul 2025 17:20:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Pzw0uuoK3DfyNz=GMzk+9od-hm2NGqGa44C+=E-cufA@mail.gmail.com>
-X-Gm-Features: Ac12FXxO7IM7_gzKdKUT3B_Q3FosFvdYIYxjsxiCf5LIhsVmWTs_CR1GoJBbg-E
-Message-ID: <CAAhV-H6Pzw0uuoK3DfyNz=GMzk+9od-hm2NGqGa44C+=E-cufA@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: KVM: INTC: Add IOCSR MISC register emulation
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+fCnZcGyTECP15VMSPh+duLmxNe=ApHfOnbAY3NqtFHZvceZw@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: qu16htFmviN0JHs_Lk2UXggpRHKamSL3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA1OCBTYWx0ZWRfX1+8afvt373Lc kWdnunbPz6C9f/GOHjl4ZrQKHABgOATpMhlNHzlwXmovxD7qpB0NHRzjO1rBP3TCrzWp9aDgeMZ BRGyDtucaQptfKRiB1Ir1UEiA/DnvvId+/noIpRKGxbqodALAZAM/OouyWSCdZn9Br55SUFY1mF
+ /QElD3fMWDED/2Up/bE3bdkQFp0y4l0tbOgz/r1X+BYJtzifCAp1d8Rjiv1rqAaxBvj1uWPWfAv gRsEeOrKai0th89ONMoXzLZtwQ+ZFabmyQx6rICdTSFHm+Cjr3wa4WzluId4DM526gzf4NqEHxp T9u38OW/UmDyf8gxdR/KVtrZKshh0EQP4/y/BFKLU+IB3+JEAkKDZdFyiBgBhMsxkkHSKm2H012
+ aLNkwLyaNoCYreQzuUSpD2tKUqxrMT5HjvgLBKo4Yoqu8W0zpbow/WbwFXvshhrHRfN8RYzo
+X-Authority-Analysis: v=2.4 cv=MOlgmNZl c=1 sm=1 tr=0 ts=6863b554 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=jBQngTtrd59FM_Ge02gA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: HLwv3VLvA_zkneOazGXOaA6Q1nuISU0B
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 mlxlogscore=906 spamscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010058
 
-On Mon, Jun 30, 2025 at 4:44=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> On 2025/6/30 =E4=B8=8B=E5=8D=884:04, Huacai Chen wrote:
-> > Hi, Bibo,
+> > > Another thing that needs careful consideration is whether it's
+> > > possible to combine kasan_arch_is_ready() and kasan_enabled() into the
+> > > same check logically at all. There's one issue mentioned in [1]:
 > >
-> > On Thu, Jun 19, 2025 at 3:15=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> IOCSR MISC register 0x420 controlls some features of eiointc, such as
-> >> BIT 48 enables eiointc and BIT 49 set interrupt encoding mode.
-> >>
-> >> When kernel irqchip is set, IOCSR MISC register should be emulated in
-> >> kernel also. Here add IOCSR MISC register emulation in kernel side.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >> v1 ... v2:
-> >>    1. Add separate file arch/loongarch/kvm/intc/misc.c for IOCSR MISC
-> >>       register 0x420 emulation, since it controls feature about AVEC
-> >>       irqchip also.
-> > I found we can decouple the misc register and EIOINTC in addition:
-> > 1, Move misc.c out of intc directory;
-> > 2, Call kvm_loongarch_create_misc() in kvm_arch_init_vm();
-> > 3, Call kvm_loongarch_destroy_misc() in kvm_arch_destroy_vm();
-> > 4, Then maybe misc_created can be removed.
-> Now irqchip in kernel is optional, the same with misc register. Misc
-> register will be emulated in user VMM if kernel-irqchip option is off.
->
-> There is no way to detect kernel-irqchip option when function
-> kvm_arch_init_vm() is called, and kvm_loongarch_create_misc() needs be
-> dynamically called from ioctl command.
-Can we use  kvm_arch_irqchip_in_kernel() to detect?
+> > Hello,
+> > I've removed kasan_arch_is_ready() at all in this series:
+> > [PATCH v2 11/11] kasan: replace kasan_arch_is_ready with kasan_enabled
+> >
+> > Is it not what's expected by unification?
+> 
+> I guess the issue description diverged a bit from what needs to be
+> done, sorry about that.
+> 
+> The core 2 things I wanted to address with the unification are:
+> 
+> 1. Avoid spraying kasan_arch_is_ready() throughout the KASAN
+> implementation and move these checks into include/linux/kasan.h (and
+> add __wrappers when required).
+> 
+> 2. Avoid architectures redefining the same kasan_enabled global
+> variable/static key.
+> 
+> Initially, I thought that s/kasan_arch_is_ready/kasan_enabled + simply
+> moving the calls into affected include/linux/kasan.h functions would
+> be enough. But then, based on [1], turns out it's not that simple.
+> 
+> So now, I think we likely still need two separate checks/flags:
+> kasan_enabled() that controls whether KASAN is enabled at all and
+> kasan_arch_is_ready() that gets turned on by kasan_init() when shadow
+> is initialized (should we rename it to kasan_shadow_initialized()?).
+> But then we can still move kasan_arch_is_ready() into
+> include/linux/kasan.h and use the proper combination of checks for
+> each affected function before calling __wrappers. And we can still
+> remove the duplicated flags/keys code from the arch code.
 
+FWIW, as Alexander Gordeev already mentioned: this series breaks s390,
+since the static_branch_enable() call in kasan_init_generic() is now
+called way too early, and it isn't necessary at all. Which, as far as
+I understand, may be the case for other architectures as well. s390
+sets up the required KASAN mappings in the decompressor and can start
+with KASAN enabled nearly from the beginning.
 
-Huacai
+So something like below on top of this series would address
+that. Given that this series is about to be reworked this is just for
+illustration :)
 
->
-> Regards
-> Bibo Mao
-> >
-> > At last you can make this patch and others from another series to be a
-> > new series.
-> >
-> >
-> > Huacai
-> >
-> >>
-> >>    2. Define macro MISC_BASE as LOONGARCH_IOCSR_MISC_FUNC rather than
-> >>       hard coded 0x420
-> >> ---
-> >>   arch/loongarch/include/asm/kvm_eiointc.h |   2 +
-> >>   arch/loongarch/include/asm/kvm_host.h    |   2 +
-> >>   arch/loongarch/include/asm/kvm_misc.h    |  17 +++
-> >>   arch/loongarch/include/asm/loongarch.h   |   1 +
-> >>   arch/loongarch/kvm/Makefile              |   1 +
-> >>   arch/loongarch/kvm/intc/eiointc.c        |  61 +++++++++++
-> >>   arch/loongarch/kvm/intc/misc.c           | 125 +++++++++++++++++++++=
-++
-> >>   7 files changed, 209 insertions(+)
-> >>   create mode 100644 arch/loongarch/include/asm/kvm_misc.h
-> >>   create mode 100644 arch/loongarch/kvm/intc/misc.c
-> >>
-> >> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch=
-/include/asm/kvm_eiointc.h
-> >> index a3a40aba8acf..2d1c183f2b1b 100644
-> >> --- a/arch/loongarch/include/asm/kvm_eiointc.h
-> >> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
-> >> @@ -119,5 +119,7 @@ struct loongarch_eiointc {
-> >>
-> >>   int kvm_loongarch_register_eiointc_device(void);
-> >>   void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level=
-);
-> >> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *valu=
-e);
-> >> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long va=
-lue, unsigned long mask);
-> >>
-> >>   #endif /* __ASM_KVM_EIOINTC_H */
-> >> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/in=
-clude/asm/kvm_host.h
-> >> index a3c4cc46c892..f463ec52d86c 100644
-> >> --- a/arch/loongarch/include/asm/kvm_host.h
-> >> +++ b/arch/loongarch/include/asm/kvm_host.h
-> >> @@ -132,6 +132,8 @@ struct kvm_arch {
-> >>          struct loongarch_ipi *ipi;
-> >>          struct loongarch_eiointc *eiointc;
-> >>          struct loongarch_pch_pic *pch_pic;
-> >> +       struct kvm_io_device misc;
-> >> +       bool   misc_created;
-> >>   };
-> >>
-> >>   #define CSR_MAX_NUMS           0x800
-> >> diff --git a/arch/loongarch/include/asm/kvm_misc.h b/arch/loongarch/in=
-clude/asm/kvm_misc.h
-> >> new file mode 100644
-> >> index 000000000000..621e4228dea2
-> >> --- /dev/null
-> >> +++ b/arch/loongarch/include/asm/kvm_misc.h
-> >> @@ -0,0 +1,17 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> +/*
-> >> + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> >> + */
-> >> +
-> >> +#ifndef __ASM_KVM_MISC_H
-> >> +#define __ASM_KVM_MISC_H
-> >> +
-> >> +#include <asm/loongarch.h>
-> >> +
-> >> +#define MISC_BASE              LOONGARCH_IOCSR_MISC_FUNC
-> >> +#define MISC_SIZE              0x8
-> >> +
-> >> +int kvm_loongarch_create_misc(struct kvm *kvm);
-> >> +void kvm_loongarch_destroy_misc(struct kvm *kvm);
-> >> +
-> >> +#endif /* __ASM_KVM_MISC_H */
-> >> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/i=
-nclude/asm/loongarch.h
-> >> index d84dac88a584..e30d330d497e 100644
-> >> --- a/arch/loongarch/include/asm/loongarch.h
-> >> +++ b/arch/loongarch/include/asm/loongarch.h
-> >> @@ -1141,6 +1141,7 @@
-> >>   #define  IOCSR_MISC_FUNC_SOFT_INT      BIT_ULL(10)
-> >>   #define  IOCSR_MISC_FUNC_TIMER_RESET   BIT_ULL(21)
-> >>   #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
-> >> +#define  IOCSR_MISC_FUNC_INT_ENCODE    BIT_ULL(49)
-> >>   #define  IOCSR_MISC_FUNC_AVEC_EN       BIT_ULL(51)
-> >>
-> >>   #define LOONGARCH_IOCSR_CPUTEMP                0x428
-> >> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-> >> index cb41d9265662..25fa3866613d 100644
-> >> --- a/arch/loongarch/kvm/Makefile
-> >> +++ b/arch/loongarch/kvm/Makefile
-> >> @@ -18,6 +18,7 @@ kvm-y +=3D vcpu.o
-> >>   kvm-y +=3D vm.o
-> >>   kvm-y +=3D intc/ipi.o
-> >>   kvm-y +=3D intc/eiointc.o
-> >> +kvm-y +=3D intc/misc.o
-> >>   kvm-y +=3D intc/pch_pic.o
-> >>   kvm-y +=3D irqfd.o
-> >>
-> >> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/in=
-tc/eiointc.c
-> >> index f39929d7bf8a..87d01521e92f 100644
-> >> --- a/arch/loongarch/kvm/intc/eiointc.c
-> >> +++ b/arch/loongarch/kvm/intc/eiointc.c
-> >> @@ -4,6 +4,7 @@
-> >>    */
-> >>
-> >>   #include <asm/kvm_eiointc.h>
-> >> +#include <asm/kvm_misc.h>
-> >>   #include <asm/kvm_vcpu.h>
-> >>   #include <linux/count_zeros.h>
-> >>
-> >> @@ -708,6 +709,56 @@ static const struct kvm_io_device_ops kvm_eiointc=
-_ops =3D {
-> >>          .write  =3D kvm_eiointc_write,
-> >>   };
-> >>
-> >> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *valu=
-e)
-> >> +{
-> >> +       unsigned long data, flags;
-> >> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
-> >> +
-> >> +       if (!eiointc) {
-> >> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
-> >> +               return -EINVAL;
-> >> +       }
-> >> +
-> >> +       data =3D 0;
-> >> +       spin_lock_irqsave(&eiointc->lock, flags);
-> >> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
-> >> +               data |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
-> >> +
-> >> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
-> >> +               data |=3D IOCSR_MISC_FUNC_INT_ENCODE;
-> >> +       spin_unlock_irqrestore(&eiointc->lock, flags);
-> >> +
-> >> +       *value =3D data;
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long va=
-lue, unsigned long mask)
-> >> +{
-> >> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
-> >> +       unsigned long old, flags;
-> >> +
-> >> +       if (!eiointc) {
-> >> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
-> >> +               return -EINVAL;
-> >> +       }
-> >> +
-> >> +       old =3D 0;
-> >> +       spin_lock_irqsave(&eiointc->lock, flags);
-> >> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
-> >> +               old |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
-> >> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
-> >> +               old |=3D IOCSR_MISC_FUNC_INT_ENCODE;
-> >> +
-> >> +       value |=3D (old & ~mask);
-> >> +       eiointc->status &=3D ~(BIT(EIOINTC_ENABLE_INT_ENCODE) | BIT(EI=
-OINTC_ENABLE));
-> >> +       if (value & IOCSR_MISC_FUNC_INT_ENCODE)
-> >> +               eiointc->status |=3D BIT(EIOINTC_ENABLE_INT_ENCODE);
-> >> +       if (value & IOCSR_MISC_FUNC_EXT_IOI_EN)
-> >> +               eiointc->status |=3D BIT(EIOINTC_ENABLE);
-> >> +       spin_unlock_irqrestore(&eiointc->lock, flags);
-> >> +       return 0;
-> >> +}
-> >> +
-> >>   static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
-> >>                                  struct kvm_io_device *dev,
-> >>                                  gpa_t addr, int len, void *val)
-> >> @@ -993,6 +1044,15 @@ static int kvm_eiointc_create(struct kvm_device =
-*dev, u32 type)
-> >>                  kfree(s);
-> >>                  return ret;
-> >>          }
-> >> +
-> >> +       ret =3D kvm_loongarch_create_misc(kvm);
-> >> +       if (ret < 0) {
-> >> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->devi=
-ce);
-> >> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->devi=
-ce_vext);
-> >> +               kfree(s);
-> >> +               return ret;
-> >> +       }
-> >> +
-> >>          kvm->arch.eiointc =3D s;
-> >>
-> >>          return 0;
-> >> @@ -1010,6 +1070,7 @@ static void kvm_eiointc_destroy(struct kvm_devic=
-e *dev)
-> >>          eiointc =3D kvm->arch.eiointc;
-> >>          kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->devic=
-e);
-> >>          kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->devic=
-e_vext);
-> >> +       kvm_loongarch_destroy_misc(kvm);
-> >>          kfree(eiointc);
-> >>   }
-> >>
-> >> diff --git a/arch/loongarch/kvm/intc/misc.c b/arch/loongarch/kvm/intc/=
-misc.c
-> >> new file mode 100644
-> >> index 000000000000..edee66afa36e
-> >> --- /dev/null
-> >> +++ b/arch/loongarch/kvm/intc/misc.c
-> >> @@ -0,0 +1,125 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> >> + */
-> >> +#include <asm/kvm_vcpu.h>
-> >> +#include <asm/kvm_eiointc.h>
-> >> +#include <asm/kvm_misc.h>
-> >> +
-> >> +static int kvm_misc_read(struct kvm_vcpu *vcpu, struct kvm_io_device =
-*dev,
-> >> +                       gpa_t addr, int len, void *val)
-> >> +{
-> >> +       unsigned long data;
-> >> +       unsigned int ret;
-> >> +
-> >> +       addr -=3D MISC_BASE;
-> >> +       if (addr & (len - 1)) {
-> >> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", =
-__func__, addr, len);
-> >> +               return -EINVAL;
-> >> +       }
-> >> +
-> >> +       ret =3D kvm_eiointc_get_status(vcpu, &data);
-> >> +       if (ret)
-> >> +               return ret;
-> >> +
-> >> +       data =3D data >> ((addr & 7) * 8);
-> >> +       switch (len) {
-> >> +       case 1:
-> >> +               *(unsigned char *)val =3D (unsigned char)data;
-> >> +               break;
-> >> +
-> >> +       case 2:
-> >> +               *(unsigned short *)val =3D (unsigned short)data;
-> >> +               break;
-> >> +
-> >> +       case 4:
-> >> +               *(unsigned int *)val =3D (unsigned int)data;
-> >> +               break;
-> >> +
-> >> +       default:
-> >> +               *(unsigned long *)val =3D data;
-> >> +               break;
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static int kvm_misc_write(struct kvm_vcpu *vcpu, struct kvm_io_device=
- *dev,
-> >> +               gpa_t addr, int len, const void *val)
-> >> +{
-> >> +       unsigned long data, mask;
-> >> +       unsigned int shift;
-> >> +
-> >> +       addr -=3D MISC_BASE;
-> >> +       if (addr & (len - 1)) {
-> >> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", =
-__func__, addr, len);
-> >> +               return -EINVAL;
-> >> +       }
-> >> +
-> >> +       shift =3D (addr & 7) * 8;
-> >> +       switch (len) {
-> >> +       case 1:
-> >> +               data =3D *(unsigned char *)val;
-> >> +               mask =3D 0xFF;
-> >> +               mask =3D mask << shift;
-> >> +               data =3D data << shift;
-> >> +               break;
-> >> +
-> >> +       case 2:
-> >> +               data =3D *(unsigned short *)val;
-> >> +               mask =3D 0xFFFF;
-> >> +               mask =3D mask << shift;
-> >> +               data =3D data << shift;
-> >> +               break;
-> >> +
-> >> +       case 4:
-> >> +               data =3D *(unsigned int *)val;
-> >> +               mask =3D UINT_MAX;
-> >> +               mask =3D mask << shift;
-> >> +               data =3D data << shift;
-> >> +               break;
-> >> +
-> >> +       default:
-> >> +               data =3D *(unsigned long *)val;
-> >> +               mask =3D ULONG_MAX;
-> >> +               mask =3D mask << shift;
-> >> +               data =3D data << shift;
-> >> +               break;
-> >> +       }
-> >> +
-> >> +       return kvm_eiointc_update_status(vcpu, data, mask);
-> >> +}
-> >> +
-> >> +static const struct kvm_io_device_ops kvm_misc_ops =3D {
-> >> +       .read   =3D kvm_misc_read,
-> >> +       .write  =3D kvm_misc_write,
-> >> +};
-> >> +
-> >> +int kvm_loongarch_create_misc(struct kvm *kvm)
-> >> +{
-> >> +       struct kvm_io_device *device;
-> >> +       int ret;
-> >> +
-> >> +       if (kvm->arch.misc_created)
-> >> +               return 0;
-> >> +
-> >> +       device =3D &kvm->arch.misc;
-> >> +       kvm_iodevice_init(device, &kvm_misc_ops);
-> >> +       ret =3D kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, MISC_BASE,=
- MISC_SIZE, device);
-> >> +       if (ret < 0)
-> >> +               return ret;
-> >> +
-> >> +       kvm->arch.misc_created =3D true;
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +void kvm_loongarch_destroy_misc(struct kvm *kvm)
-> >> +{
-> >> +       struct kvm_io_device *device;
-> >> +
-> >> +       if (kvm->arch.misc_created) {
-> >> +               device =3D &kvm->arch.misc;
-> >> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
-> >> +               kvm->arch.misc_created =3D false;
-> >> +       }
-> >> +}
-> >>
-> >> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
-> >> --
-> >> 2.39.3
-> >>
->
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 0c16dc443e2f..c2f51ac39a91 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -172,6 +172,7 @@ config S390
+ 	select HAVE_ARCH_JUMP_LABEL
+ 	select HAVE_ARCH_JUMP_LABEL_RELATIVE
+ 	select HAVE_ARCH_KASAN
++	select HAVE_ARCH_KASAN_EARLY
+ 	select HAVE_ARCH_KASAN_VMALLOC
+ 	select HAVE_ARCH_KCSAN
+ 	select HAVE_ARCH_KMSAN
+diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
+index 2436eb45cfee..049270a2269f 100644
+--- a/include/linux/kasan-enabled.h
++++ b/include/linux/kasan-enabled.h
+@@ -10,7 +10,11 @@
+  * Global runtime flag. Starts ‘false’; switched to ‘true’ by
+  * the appropriate kasan_init_*() once KASAN is fully initialized.
+  */
++#ifdef CONFIG_HAVE_ARCH_KASAN_EARLY
++DECLARE_STATIC_KEY_TRUE(kasan_flag_enabled);
++#else
+ DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
++#endif
+ 
+ static __always_inline bool kasan_enabled(void)
+ {
+diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+index f82889a830fa..1407374e83b9 100644
+--- a/lib/Kconfig.kasan
++++ b/lib/Kconfig.kasan
+@@ -4,6 +4,13 @@
+ config HAVE_ARCH_KASAN
+ 	bool
+ 
++config HAVE_ARCH_KASAN_EARLY
++	bool
++	help
++	  Architectures should select this if KASAN mappings are setup in
++	  the decompressor and when the kernel can run very early with
++	  KASAN enabled.
++
+ config HAVE_ARCH_KASAN_SW_TAGS
+ 	bool
+ 
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index 0f3648335a6b..2aae0ce659b4 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -36,7 +36,11 @@
+  * Definition of the unified static key declared in kasan-enabled.h.
+  * This provides consistent runtime enable/disable across all KASAN modes.
+  */
++#ifdef CONFIG_HAVE_ARCH_KASAN_EARLY
++DEFINE_STATIC_KEY_TRUE(kasan_flag_enabled);
++#else
+ DEFINE_STATIC_KEY_FALSE(kasan_flag_enabled);
++#endif
+ EXPORT_SYMBOL(kasan_flag_enabled);
+ 
+ struct slab *kasan_addr_to_slab(const void *addr)
+diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+index a3b112868be7..455376d5f1c3 100644
+--- a/mm/kasan/generic.c
++++ b/mm/kasan/generic.c
+@@ -42,7 +42,8 @@
+  */
+ void __init kasan_init_generic(void)
+ {
+-	static_branch_enable(&kasan_flag_enabled);
++	if (!IS_ENABLED(CONFIG_HAVE_ARCH_KASAN_EARLY))
++		static_branch_enable(&kasan_flag_enabled);
+ 
+ 	pr_info("KernelAddressSanitizer initialized (generic)\n");
+ }
