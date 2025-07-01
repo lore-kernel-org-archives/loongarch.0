@@ -1,132 +1,450 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C3B239E82
-	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 09:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1275E26A0EB
+	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 09:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751360707; cv=none; b=skHkjVacv6doi5hRk1MZZeATjLnDqR8Jw5b/lmrkakP6tHyDiU/VPc8oLrlUL4HXYQow98aycbzCRXPLIQv9KI8pxBQzu/k5/x+OU4RQntKnuXlMGsCHq7IwvtvaK0xhgbS3XITPaACmdHOQf9WVtW2cE8ql+YgV0wkY+Gr594U=
+	t=1751361631; cv=none; b=gVV2TpG/2Ndtw0JMKD8J1zhPOVe0trcc1hBm0hmrJ1AQkJofWUXBHRMXqpbxuqC7uf3fccjL8dpkVz+0ibLozCePdh1aFz498qio2O+iwAkTEFNsCoE4AKv+jHKwFDcMyBB5zOJpiNQhY/A6KUyo39Yb+sJ7pnVOUK5lzGcvoxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751360707; c=relaxed/simple;
-	bh=LwXvsYpbCwAEWR7ekcunMqFll7qnOILlUBlJbEUhCeY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HhSw2VviHTNmmiefGAZh9bYWWMbCvpxi6RpGFsyikSM2BOJ5X+TORj2wYOfG8zpyKtCBsjC6ftOAbH7e9vxUGbCH5Oi1fg0I3Wj7kv4NSOnDHtV/iW5kgmS59oJUkQOpYxNdkEA/lWDL5g0ggymq3lT07JbL9L3RudLGkdLX8WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.207.111.194])
-	by gateway (Coremail) with SMTP id _____8AxHHK0pGNotXcgAQ--.5199S3;
-	Tue, 01 Jul 2025 17:04:52 +0800 (CST)
-Received: from ubuntu.. (unknown [111.207.111.194])
-	by front1 (Coremail) with SMTP id qMiowJCxM+SxpGNo0LEEAA--.29147S2;
-	Tue, 01 Jul 2025 17:04:50 +0800 (CST)
-From: Ming Wang <wangming01@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Guo Weikang <guoweikang.kernel@gmail.com>,
-	Ming Wang <wangming01@loongson.cn>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Usama Arif <usamaarif642@gmail.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: lixuefeng@loongson.cn,
-	chenhuacai@loongson.cn,
-	gaojuxin@loongson.cn
-Subject: [PATCH] LoongArch: Support mem=SIZE kernel parameter
-Date: Tue,  1 Jul 2025 17:04:49 +0800
-Message-ID: <20250701090449.2426151-1-wangming01@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1751361631; c=relaxed/simple;
+	bh=YR1Mo0lU1rxR/+syUdZNzkPffefGUf+scFGq7Mf+1uc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Br7iw03dCyhtuOoL+Gj5xiBOQSmg6XbiH+YiBQ9H1eF42HQETauWIurhdoq/eK+3Qm4/nSvGIojRPLkmHh9gEdwH7+9NU90vDKIKCAe8hYt0vy76ZP6RlW+sGYRlwWOFZVONtitPamXOq9f8F0/7S9/GpAJrdqOrb1sRRny8I0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAsT/MPj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAsT/MPj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA55C4CEEB
+	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 09:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751361630;
+	bh=YR1Mo0lU1rxR/+syUdZNzkPffefGUf+scFGq7Mf+1uc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uAsT/MPjtGHsZBuY79JLbmspdiGCZcfK3asQXDMopSuU1jXRSRvICaeubRIJjIrcL
+	 JmpIBqSulZHF/uGJn6BKKEMKG/mKDsMru28dJ8tVuIeZqyZp5E3hqTe6lSerKFXmXI
+	 u5VmCzU2sBscM3Boy5v5e9eKORnu273JyBqh9Hd+mApYVAir6CmaGE/J7GLCg2jYBH
+	 XCrSQIKQ78KdviflYamyspRPfiDyKvA9pPX26Z9JIlyeHyVy3uXdJ8S3VXCsB4UPoc
+	 5MQHuP4Mfzd0taHd1Yr1zND9Gk4FoW2wgUk6S6JevtQyIyDkz72nwPSWiSgJ7roWGM
+	 OLreQA3Mjy7RQ==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60c5b8ee2d9so11916701a12.2
+        for <loongarch@lists.linux.dev>; Tue, 01 Jul 2025 02:20:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXxAhsQfXNCVI9YZOPNigwl9G8RTsMBNCJtCP0jjyNziMj6ijkh6fdkUx5mCAilt1RaPRKgb/PcXa0=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx69QTOdmMMYCPo75NcSGiC5gc6CBN2t54alIYv8LbM/4IZdQrr
+	WlLjGWY5W3vydj0/sq4zijyGNiOxopqYeKX/IlrO09/Ek6D4ktnRdnjBCwH47+868A1jcxpbH9V
+	d4zjvPvbGh+1RcgGo5SXhsaUDEg8dHW4=
+X-Google-Smtp-Source: AGHT+IFTaALBKe0BGAY7PpBeqvRGaILY1Js74zrJWRWAb4vRnQt+8dyODJRs1wEKxDI/3NSwpGgVJN+CnJ4Ho6Gm9bQ=
+X-Received: by 2002:a05:6402:3511:b0:604:a19a:d84b with SMTP id
+ 4fb4d7f45d1cf-60c88b3e36emr15064170a12.5.1751361628990; Tue, 01 Jul 2025
+ 02:20:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxM+SxpGNo0LEEAA--.29147S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAQEKEmhjeJ0EVQAAsn
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ar17JF4DCryUWryrArW7Jrc_yoW8Kryrp3
-	4xCrs3trs5Kas7u397Kwn3Wry5Awn3Ga4xWFyakw1rCF15Jr1UAw1Iq3WavFy7X3yIqrWI
-	qFs5tFy29a1DZ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAaw2AFwI0_Jrv_JF1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij2
-	8IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8gBMtUUUUU==
+References: <20250619071449.1714869-1-maobibo@loongson.cn> <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
+ <31541826-2802-32e0-f8f0-f717e1c02d74@loongson.cn>
+In-Reply-To: <31541826-2802-32e0-f8f0-f717e1c02d74@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 1 Jul 2025 17:20:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Pzw0uuoK3DfyNz=GMzk+9od-hm2NGqGa44C+=E-cufA@mail.gmail.com>
+X-Gm-Features: Ac12FXxO7IM7_gzKdKUT3B_Q3FosFvdYIYxjsxiCf5LIhsVmWTs_CR1GoJBbg-E
+Message-ID: <CAAhV-H6Pzw0uuoK3DfyNz=GMzk+9od-hm2NGqGa44C+=E-cufA@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: KVM: INTC: Add IOCSR MISC register emulation
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The LoongArch mem= parameter parser was previously limited to the
-mem=SIZE@START format. This was inconvenient for the common use case
-of simply capping the total system memory, as it forced users to
-manually specify a start address. It was also inconsistent with the
-behavior on other architectures.
+On Mon, Jun 30, 2025 at 4:44=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+>
+>
+> On 2025/6/30 =E4=B8=8B=E5=8D=884:04, Huacai Chen wrote:
+> > Hi, Bibo,
+> >
+> > On Thu, Jun 19, 2025 at 3:15=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >> IOCSR MISC register 0x420 controlls some features of eiointc, such as
+> >> BIT 48 enables eiointc and BIT 49 set interrupt encoding mode.
+> >>
+> >> When kernel irqchip is set, IOCSR MISC register should be emulated in
+> >> kernel also. Here add IOCSR MISC register emulation in kernel side.
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >> v1 ... v2:
+> >>    1. Add separate file arch/loongarch/kvm/intc/misc.c for IOCSR MISC
+> >>       register 0x420 emulation, since it controls feature about AVEC
+> >>       irqchip also.
+> > I found we can decouple the misc register and EIOINTC in addition:
+> > 1, Move misc.c out of intc directory;
+> > 2, Call kvm_loongarch_create_misc() in kvm_arch_init_vm();
+> > 3, Call kvm_loongarch_destroy_misc() in kvm_arch_destroy_vm();
+> > 4, Then maybe misc_created can be removed.
+> Now irqchip in kernel is optional, the same with misc register. Misc
+> register will be emulated in user VMM if kernel-irqchip option is off.
+>
+> There is no way to detect kernel-irqchip option when function
+> kvm_arch_init_vm() is called, and kvm_loongarch_create_misc() needs be
+> dynamically called from ioctl command.
+Can we use  kvm_arch_irqchip_in_kernel() to detect?
 
-This patch enhances the parser in early_parse_mem() to also support the
-more user-friendly mem=SIZE format. The implementation now checks for
-the presence of the '@' symbol to determine the user's intent:
 
-- If mem=SIZE is provided (no '@'), the kernel now calls
-  memblock_enforce_memory_limit(). This trims memory from the top down
-  to the specified size.
-- If mem=SIZE@START is used, the original behavior is retained for
-  backward compatibility. This allows for defining specific memory
-  banks.
+Huacai
 
-This change introduces an important usage rule reflected in the code's
-comments: the mem=SIZE format should only be specified once on the
-kernel command line. It acts as a single, global cap on total memory. In
-contrast, the mem=SIZE@START format can be used multiple times to
-define several distinct memory regions.
-
-Signed-off-by: Ming Wang <wangming01@loongson.cn>
----
- arch/loongarch/kernel/setup.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index b99fbb388fe0..af59ba180dc2 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
- 		return -EINVAL;
- 	}
- 
-+	start = 0;
-+	size = memparse(p, &p);
-+	if (*p == '@')	/* Every mem=... should contain '@' */
-+		start = memparse(p + 1, &p);
-+	else {			/* Only one mem=... is allowed if no '@' */
-+		usermem = 1;
-+		memblock_enforce_memory_limit(size);
-+		return 0;
-+	}
-+
- 	/*
- 	 * If a user specifies memory size, we
- 	 * blow away any automatically generated
-@@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
- 		memblock_remove(memblock_start_of_DRAM(),
- 			memblock_end_of_DRAM() - memblock_start_of_DRAM());
- 	}
--	start = 0;
--	size = memparse(p, &p);
--	if (*p == '@')
--		start = memparse(p + 1, &p);
--	else {
--		pr_err("Invalid format!\n");
--		return -EINVAL;
--	}
- 
- 	if (!IS_ENABLED(CONFIG_NUMA))
- 		memblock_add(start, size);
--- 
-2.43.0
-
+>
+> Regards
+> Bibo Mao
+> >
+> > At last you can make this patch and others from another series to be a
+> > new series.
+> >
+> >
+> > Huacai
+> >
+> >>
+> >>    2. Define macro MISC_BASE as LOONGARCH_IOCSR_MISC_FUNC rather than
+> >>       hard coded 0x420
+> >> ---
+> >>   arch/loongarch/include/asm/kvm_eiointc.h |   2 +
+> >>   arch/loongarch/include/asm/kvm_host.h    |   2 +
+> >>   arch/loongarch/include/asm/kvm_misc.h    |  17 +++
+> >>   arch/loongarch/include/asm/loongarch.h   |   1 +
+> >>   arch/loongarch/kvm/Makefile              |   1 +
+> >>   arch/loongarch/kvm/intc/eiointc.c        |  61 +++++++++++
+> >>   arch/loongarch/kvm/intc/misc.c           | 125 +++++++++++++++++++++=
+++
+> >>   7 files changed, 209 insertions(+)
+> >>   create mode 100644 arch/loongarch/include/asm/kvm_misc.h
+> >>   create mode 100644 arch/loongarch/kvm/intc/misc.c
+> >>
+> >> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch=
+/include/asm/kvm_eiointc.h
+> >> index a3a40aba8acf..2d1c183f2b1b 100644
+> >> --- a/arch/loongarch/include/asm/kvm_eiointc.h
+> >> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
+> >> @@ -119,5 +119,7 @@ struct loongarch_eiointc {
+> >>
+> >>   int kvm_loongarch_register_eiointc_device(void);
+> >>   void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level=
+);
+> >> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *valu=
+e);
+> >> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long va=
+lue, unsigned long mask);
+> >>
+> >>   #endif /* __ASM_KVM_EIOINTC_H */
+> >> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/in=
+clude/asm/kvm_host.h
+> >> index a3c4cc46c892..f463ec52d86c 100644
+> >> --- a/arch/loongarch/include/asm/kvm_host.h
+> >> +++ b/arch/loongarch/include/asm/kvm_host.h
+> >> @@ -132,6 +132,8 @@ struct kvm_arch {
+> >>          struct loongarch_ipi *ipi;
+> >>          struct loongarch_eiointc *eiointc;
+> >>          struct loongarch_pch_pic *pch_pic;
+> >> +       struct kvm_io_device misc;
+> >> +       bool   misc_created;
+> >>   };
+> >>
+> >>   #define CSR_MAX_NUMS           0x800
+> >> diff --git a/arch/loongarch/include/asm/kvm_misc.h b/arch/loongarch/in=
+clude/asm/kvm_misc.h
+> >> new file mode 100644
+> >> index 000000000000..621e4228dea2
+> >> --- /dev/null
+> >> +++ b/arch/loongarch/include/asm/kvm_misc.h
+> >> @@ -0,0 +1,17 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +/*
+> >> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+> >> + */
+> >> +
+> >> +#ifndef __ASM_KVM_MISC_H
+> >> +#define __ASM_KVM_MISC_H
+> >> +
+> >> +#include <asm/loongarch.h>
+> >> +
+> >> +#define MISC_BASE              LOONGARCH_IOCSR_MISC_FUNC
+> >> +#define MISC_SIZE              0x8
+> >> +
+> >> +int kvm_loongarch_create_misc(struct kvm *kvm);
+> >> +void kvm_loongarch_destroy_misc(struct kvm *kvm);
+> >> +
+> >> +#endif /* __ASM_KVM_MISC_H */
+> >> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/i=
+nclude/asm/loongarch.h
+> >> index d84dac88a584..e30d330d497e 100644
+> >> --- a/arch/loongarch/include/asm/loongarch.h
+> >> +++ b/arch/loongarch/include/asm/loongarch.h
+> >> @@ -1141,6 +1141,7 @@
+> >>   #define  IOCSR_MISC_FUNC_SOFT_INT      BIT_ULL(10)
+> >>   #define  IOCSR_MISC_FUNC_TIMER_RESET   BIT_ULL(21)
+> >>   #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
+> >> +#define  IOCSR_MISC_FUNC_INT_ENCODE    BIT_ULL(49)
+> >>   #define  IOCSR_MISC_FUNC_AVEC_EN       BIT_ULL(51)
+> >>
+> >>   #define LOONGARCH_IOCSR_CPUTEMP                0x428
+> >> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+> >> index cb41d9265662..25fa3866613d 100644
+> >> --- a/arch/loongarch/kvm/Makefile
+> >> +++ b/arch/loongarch/kvm/Makefile
+> >> @@ -18,6 +18,7 @@ kvm-y +=3D vcpu.o
+> >>   kvm-y +=3D vm.o
+> >>   kvm-y +=3D intc/ipi.o
+> >>   kvm-y +=3D intc/eiointc.o
+> >> +kvm-y +=3D intc/misc.o
+> >>   kvm-y +=3D intc/pch_pic.o
+> >>   kvm-y +=3D irqfd.o
+> >>
+> >> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/in=
+tc/eiointc.c
+> >> index f39929d7bf8a..87d01521e92f 100644
+> >> --- a/arch/loongarch/kvm/intc/eiointc.c
+> >> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> >> @@ -4,6 +4,7 @@
+> >>    */
+> >>
+> >>   #include <asm/kvm_eiointc.h>
+> >> +#include <asm/kvm_misc.h>
+> >>   #include <asm/kvm_vcpu.h>
+> >>   #include <linux/count_zeros.h>
+> >>
+> >> @@ -708,6 +709,56 @@ static const struct kvm_io_device_ops kvm_eiointc=
+_ops =3D {
+> >>          .write  =3D kvm_eiointc_write,
+> >>   };
+> >>
+> >> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *valu=
+e)
+> >> +{
+> >> +       unsigned long data, flags;
+> >> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
+> >> +
+> >> +       if (!eiointc) {
+> >> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> >> +               return -EINVAL;
+> >> +       }
+> >> +
+> >> +       data =3D 0;
+> >> +       spin_lock_irqsave(&eiointc->lock, flags);
+> >> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+> >> +               data |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
+> >> +
+> >> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+> >> +               data |=3D IOCSR_MISC_FUNC_INT_ENCODE;
+> >> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+> >> +
+> >> +       *value =3D data;
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long va=
+lue, unsigned long mask)
+> >> +{
+> >> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
+> >> +       unsigned long old, flags;
+> >> +
+> >> +       if (!eiointc) {
+> >> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> >> +               return -EINVAL;
+> >> +       }
+> >> +
+> >> +       old =3D 0;
+> >> +       spin_lock_irqsave(&eiointc->lock, flags);
+> >> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+> >> +               old |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
+> >> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+> >> +               old |=3D IOCSR_MISC_FUNC_INT_ENCODE;
+> >> +
+> >> +       value |=3D (old & ~mask);
+> >> +       eiointc->status &=3D ~(BIT(EIOINTC_ENABLE_INT_ENCODE) | BIT(EI=
+OINTC_ENABLE));
+> >> +       if (value & IOCSR_MISC_FUNC_INT_ENCODE)
+> >> +               eiointc->status |=3D BIT(EIOINTC_ENABLE_INT_ENCODE);
+> >> +       if (value & IOCSR_MISC_FUNC_EXT_IOI_EN)
+> >> +               eiointc->status |=3D BIT(EIOINTC_ENABLE);
+> >> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+> >> +       return 0;
+> >> +}
+> >> +
+> >>   static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
+> >>                                  struct kvm_io_device *dev,
+> >>                                  gpa_t addr, int len, void *val)
+> >> @@ -993,6 +1044,15 @@ static int kvm_eiointc_create(struct kvm_device =
+*dev, u32 type)
+> >>                  kfree(s);
+> >>                  return ret;
+> >>          }
+> >> +
+> >> +       ret =3D kvm_loongarch_create_misc(kvm);
+> >> +       if (ret < 0) {
+> >> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->devi=
+ce);
+> >> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->devi=
+ce_vext);
+> >> +               kfree(s);
+> >> +               return ret;
+> >> +       }
+> >> +
+> >>          kvm->arch.eiointc =3D s;
+> >>
+> >>          return 0;
+> >> @@ -1010,6 +1070,7 @@ static void kvm_eiointc_destroy(struct kvm_devic=
+e *dev)
+> >>          eiointc =3D kvm->arch.eiointc;
+> >>          kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->devic=
+e);
+> >>          kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->devic=
+e_vext);
+> >> +       kvm_loongarch_destroy_misc(kvm);
+> >>          kfree(eiointc);
+> >>   }
+> >>
+> >> diff --git a/arch/loongarch/kvm/intc/misc.c b/arch/loongarch/kvm/intc/=
+misc.c
+> >> new file mode 100644
+> >> index 000000000000..edee66afa36e
+> >> --- /dev/null
+> >> +++ b/arch/loongarch/kvm/intc/misc.c
+> >> @@ -0,0 +1,125 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+> >> + */
+> >> +#include <asm/kvm_vcpu.h>
+> >> +#include <asm/kvm_eiointc.h>
+> >> +#include <asm/kvm_misc.h>
+> >> +
+> >> +static int kvm_misc_read(struct kvm_vcpu *vcpu, struct kvm_io_device =
+*dev,
+> >> +                       gpa_t addr, int len, void *val)
+> >> +{
+> >> +       unsigned long data;
+> >> +       unsigned int ret;
+> >> +
+> >> +       addr -=3D MISC_BASE;
+> >> +       if (addr & (len - 1)) {
+> >> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", =
+__func__, addr, len);
+> >> +               return -EINVAL;
+> >> +       }
+> >> +
+> >> +       ret =3D kvm_eiointc_get_status(vcpu, &data);
+> >> +       if (ret)
+> >> +               return ret;
+> >> +
+> >> +       data =3D data >> ((addr & 7) * 8);
+> >> +       switch (len) {
+> >> +       case 1:
+> >> +               *(unsigned char *)val =3D (unsigned char)data;
+> >> +               break;
+> >> +
+> >> +       case 2:
+> >> +               *(unsigned short *)val =3D (unsigned short)data;
+> >> +               break;
+> >> +
+> >> +       case 4:
+> >> +               *(unsigned int *)val =3D (unsigned int)data;
+> >> +               break;
+> >> +
+> >> +       default:
+> >> +               *(unsigned long *)val =3D data;
+> >> +               break;
+> >> +       }
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +static int kvm_misc_write(struct kvm_vcpu *vcpu, struct kvm_io_device=
+ *dev,
+> >> +               gpa_t addr, int len, const void *val)
+> >> +{
+> >> +       unsigned long data, mask;
+> >> +       unsigned int shift;
+> >> +
+> >> +       addr -=3D MISC_BASE;
+> >> +       if (addr & (len - 1)) {
+> >> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", =
+__func__, addr, len);
+> >> +               return -EINVAL;
+> >> +       }
+> >> +
+> >> +       shift =3D (addr & 7) * 8;
+> >> +       switch (len) {
+> >> +       case 1:
+> >> +               data =3D *(unsigned char *)val;
+> >> +               mask =3D 0xFF;
+> >> +               mask =3D mask << shift;
+> >> +               data =3D data << shift;
+> >> +               break;
+> >> +
+> >> +       case 2:
+> >> +               data =3D *(unsigned short *)val;
+> >> +               mask =3D 0xFFFF;
+> >> +               mask =3D mask << shift;
+> >> +               data =3D data << shift;
+> >> +               break;
+> >> +
+> >> +       case 4:
+> >> +               data =3D *(unsigned int *)val;
+> >> +               mask =3D UINT_MAX;
+> >> +               mask =3D mask << shift;
+> >> +               data =3D data << shift;
+> >> +               break;
+> >> +
+> >> +       default:
+> >> +               data =3D *(unsigned long *)val;
+> >> +               mask =3D ULONG_MAX;
+> >> +               mask =3D mask << shift;
+> >> +               data =3D data << shift;
+> >> +               break;
+> >> +       }
+> >> +
+> >> +       return kvm_eiointc_update_status(vcpu, data, mask);
+> >> +}
+> >> +
+> >> +static const struct kvm_io_device_ops kvm_misc_ops =3D {
+> >> +       .read   =3D kvm_misc_read,
+> >> +       .write  =3D kvm_misc_write,
+> >> +};
+> >> +
+> >> +int kvm_loongarch_create_misc(struct kvm *kvm)
+> >> +{
+> >> +       struct kvm_io_device *device;
+> >> +       int ret;
+> >> +
+> >> +       if (kvm->arch.misc_created)
+> >> +               return 0;
+> >> +
+> >> +       device =3D &kvm->arch.misc;
+> >> +       kvm_iodevice_init(device, &kvm_misc_ops);
+> >> +       ret =3D kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, MISC_BASE,=
+ MISC_SIZE, device);
+> >> +       if (ret < 0)
+> >> +               return ret;
+> >> +
+> >> +       kvm->arch.misc_created =3D true;
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +void kvm_loongarch_destroy_misc(struct kvm *kvm)
+> >> +{
+> >> +       struct kvm_io_device *device;
+> >> +
+> >> +       if (kvm->arch.misc_created) {
+> >> +               device =3D &kvm->arch.misc;
+> >> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
+> >> +               kvm->arch.misc_created =3D false;
+> >> +       }
+> >> +}
+> >>
+> >> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+> >> --
+> >> 2.39.3
+> >>
+>
