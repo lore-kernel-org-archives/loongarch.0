@@ -1,41 +1,39 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF3E1FBEB9
-	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 07:41:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0355C25E813
+	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 07:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355695; cv=none; b=O3SRT2E//69Km0YOmd6AbEWxYUST+uRuFdqw3/sQuvJmAIxSnvTWxHrbNva2aeG8qr2rvt2k8a3YJRTxaGPx5DTrGJtsRDJLbHAsvqSYDMaQHM8kODWBqML9OySZYU8kBkDy4AKsJeKtYxq6FzEc1G9ODc4/L8xzjDySa3HCICw=
+	t=1751355698; cv=none; b=YStwlP90ihgEZjlHq627ULkarH4tvSd7vNtBWKIAWrbwCFscj2SsQDj6frGGJhxQGd2ynUaHzhXcG9drywM7+WUFAcpXeluOwu8Ni5AVz6r6Rih7fU8WAKYbJLDPea3sqTu7GbkZfNJmn6s6ibBev2WpW9lyk9lYTS0DeU0g+qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355695; c=relaxed/simple;
-	bh=4haYlpXI5Ixcum997fl2z6nwrGcuYNAvbh9OqGw7pCg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a95klRN07wLkoEBtBjaFi/YKbY7FisjwSdIQ0eS5GUB556TvK68gd2Rij0oyYgDxXoQyCIGCZ9p0PAxPGSXKl/x3BUp/UlIPa9YGauCpjelG+V4UctMkSjMgGgVPKfHqdHlUFSSZHyBST73IvUhU1xHWPw1QDZg5vO7L4MZJwbo=
+	s=arc-20240116; t=1751355698; c=relaxed/simple;
+	bh=YbkPdGfqTBwdTprJLWqbfukX7ZXp55n2cOX848G+puw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=AVUWWWERHqoZudIEH34lrpZ1Ujdlwf3C+m/7N1Op0OaHURRA93d9ri3LFb79yWcc+y0/K9BJD/K4J2oOMlD/OYUY7r92aDgB5S+sp+TcRWUU+mSwXWhHEocl3n4sEZWOrc057k0PwuVfSPUXQfRdm+EAFD7qmlxf/cKe8AXP0nA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c8e1adc0564e11f0b29709d653e92f7d-20250701
+X-UUID: c50e2638564e11f0b29709d653e92f7d-20250701
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:d23aef4b-56b7-45ee-a979-c4da4c92d77f,IP:15,
+X-CID-O-INFO: VERSION:1.1.45,REQID:af71147b-0b5b-435b-bbf9-2823b9009360,IP:15,
 	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
 	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.45,REQID:d23aef4b-56b7-45ee-a979-c4da4c92d77f,IP:15,UR
+X-CID-INFO: VERSION:1.1.45,REQID:af71147b-0b5b-435b-bbf9-2823b9009360,IP:15,UR
 	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
 	:release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:a082fe2bff325c0fff079771e45ba4bb,BulkI
-	D:25070115412683HV5K8N,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
-	|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:ni
-	l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:
-	0
+X-CID-META: VersionHash:6493067,CLOUDID:4358672e0ed4c095b59b28f5ae483877,BulkI
+	D:250701154120I4EG90VN,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|102,T
+	C:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: c8e1adc0564e11f0b29709d653e92f7d-20250701
+X-UUID: c50e2638564e11f0b29709d653e92f7d-20250701
 X-User: jianghaoran@kylinos.cn
 Received: from localhost.localdomain [(39.156.73.13)] by mailgw.kylinos.cn
 	(envelope-from <jianghaoran@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 920105118; Tue, 01 Jul 2025 15:41:22 +0800
+	with ESMTP id 547445234; Tue, 01 Jul 2025 15:41:16 +0800
 From: Haoran Jiang <jianghaoran@kylinos.cn>
 To: loongarch@lists.linux.dev
 Cc: bpf@vger.kernel.org,
@@ -55,12 +53,10 @@ Cc: bpf@vger.kernel.org,
 	andrii@kernel.org,
 	daniel@iogearbox.net,
 	ast@kernel.org
-Subject: [PATCH 1/2] LoongArch: BPF: Optimize the calculation method of jmp_offset in the emit_bpf_tail_call function
-Date: Tue,  1 Jul 2025 15:41:09 +0800
-Message-Id: <20250701074110.525363-2-jianghaoran@kylinos.cn>
+Subject: [PATCH 0/2] Fix two tailcall-related issues
+Date: Tue,  1 Jul 2025 15:41:08 +0800
+Message-Id: <20250701074110.525363-1-jianghaoran@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250701074110.525363-1-jianghaoran@kylinos.cn>
-References: <20250701074110.525363-1-jianghaoran@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -70,127 +66,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-For a ebpf subprog JIT，the last call bpf_int_jit_compile function will
-directly enter the skip_init_ctx process. At this point, out_offset = -1,
-the jmp_offset in emit_bpf_tail_call is calculated
-by #define jmp_offset (out_offset - (cur_offset)) is a negative number,
-which does not meet expectations.The final generated assembly as follow.
+1,Fix the jmp_offset calculation error in the emit_bpf_tail_call function.
+2,Fix the issue that MAX_TAIL_CALL_CNT limit bypass in hybrid tailcall and BPF-to-BPF call
 
-54:	bgeu        	$a2, $t1, -8	    # 0x0000004c
-58:	addi.d      	$a6, $s5, -1
-5c:	bltz        	$a6, -16	    # 0x0000004c
-60:	alsl.d      	$t2, $a2, $a1, 0x3
-64:	ld.d        	$t2, $t2, 264
-68:	beq         	$t2, $zero, -28	    # 0x0000004c
+After applying this patch, testing results are as follows:
 
-Before apply this patch, the follow test case will reveal soft lock issues.
+./test_progs --allow=tailcalls/tailcall_bpf2bpf_hierarchy_1
+413/18  tailcalls/tailcall_bpf2bpf_hierarchy_1:OK
+413     tailcalls:OK
+Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
 
-cd tools/testing/selftests/bpf/
-./test_progs --allow=tailcalls/tailcall_bpf2bpf_1
+./test_progs --allow=tailcalls/tailcall_bpf2bpf_hierarchy_2
+413/23  tailcalls/tailcall_bpf2bpf_hierarchy_2:OK
+413     tailcalls:OK
+Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
 
-dmesg:
-watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [test_progs:25056]
+./test_progs --allow=tailcalls/tailcall_bpf2bpf_hierarchy_3
+413/24  tailcalls/tailcall_bpf2bpf_hierarchy_3:OK
+413     tailcalls:OK
+Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
 
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
----
- arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
- 1 file changed, 9 insertions(+), 19 deletions(-)
+Haoran Jiang (2):
+  LoongArch: BPF: Optimize the calculation method of jmp_offset in the
+    emit_bpf_tail_call function
+  LoongArch: BPF: Fix tailcall hierarchy
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index fa1500d4aa3e..d85490e7de89 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
- 	return true;
- }
- 
--/* initialized on the first pass of build_body() */
--static int out_offset = -1;
--static int emit_bpf_tail_call(struct jit_ctx *ctx)
-+static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
- {
- 	int off;
- 	u8 tcc = tail_call_reg(ctx);
-@@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	u8 t2 = LOONGARCH_GPR_T2;
- 	u8 t3 = LOONGARCH_GPR_T3;
- 	const int idx0 = ctx->idx;
--
--#define cur_offset (ctx->idx - idx0)
--#define jmp_offset (out_offset - (cur_offset))
-+	int tc_ninsn = 0;
-+	int jmp_offset = 0;
- 
- 	/*
- 	 * a0: &ctx
-@@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	 * if (index >= array->map.max_entries)
- 	 *	 goto out;
- 	 */
-+	tc_ninsn = insn ? ctx->offset[insn+1] - ctx->offset[insn] :
-+		ctx->offset[0];
- 	off = offsetof(struct bpf_array, map.max_entries);
- 	emit_insn(ctx, ldwu, t1, a1, off);
-+	jmp_offset = tc_ninsn - (ctx->idx - idx0);
- 	/* bgeu $a2, $t1, jmp_offset */
- 	if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset) < 0)
- 		goto toofar;
-@@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	 *	 goto out;
- 	 */
- 	emit_insn(ctx, addid, REG_TCC, tcc, -1);
-+	jmp_offset = tc_ninsn - (ctx->idx - idx0);
- 	if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
- 		goto toofar;
- 
-@@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	emit_insn(ctx, alsld, t2, a2, a1, 2);
- 	off = offsetof(struct bpf_array, ptrs);
- 	emit_insn(ctx, ldd, t2, t2, off);
-+	jmp_offset = tc_ninsn - (ctx->idx - idx0);
- 	/* beq $t2, $zero, jmp_offset */
- 	if (emit_tailcall_jmp(ctx, BPF_JEQ, t2, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
- 		goto toofar;
-@@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	emit_insn(ctx, ldd, t3, t2, off);
- 	__build_epilogue(ctx, true);
- 
--	/* out: */
--	if (out_offset == -1)
--		out_offset = cur_offset;
--	if (cur_offset != out_offset) {
--		pr_err_once("tail_call out_offset = %d, expected %d!\n",
--			    cur_offset, out_offset);
--		return -1;
--	}
--
- 	return 0;
- 
- toofar:
- 	pr_info_once("tail_call: jump too far\n");
- 	return -1;
--#undef cur_offset
--#undef jmp_offset
- }
- 
- static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
-@@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 	/* tail call */
- 	case BPF_JMP | BPF_TAIL_CALL:
- 		mark_tail_call(ctx);
--		if (emit_bpf_tail_call(ctx) < 0)
-+		if (emit_bpf_tail_call(i, ctx) < 0)
- 			return -EINVAL;
- 		break;
- 
-@@ -1342,7 +1333,6 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	if (tmp_blinded)
- 		bpf_jit_prog_release_other(prog, prog == orig_prog ? tmp : orig_prog);
- 
--	out_offset = -1;
- 
- 	return prog;
- 
+ arch/loongarch/net/bpf_jit.c | 140 ++++++++++++++++++++---------------
+ 1 file changed, 80 insertions(+), 60 deletions(-)
+
 -- 
 2.43.0
 
