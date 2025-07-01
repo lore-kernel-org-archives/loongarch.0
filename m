@@ -1,92 +1,37 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0E8275B19
-	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 13:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42F1278741
+	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 13:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378196; cv=none; b=rbbe1W1yp4U1FG980YMDJI4llXN5Mfx+Ay7WfQVF7eK5vewN+oJ2hfidjF8FU0C+fDLHH4j3/ekssClsQzTpvxBWqybtTYdge259i7lfKgoUUWmExkP4L+Q4Pd6TSfb+goyDUgI2EbwgU9Kt3q7uOX8XOM+45BCSpk6b9T8Hvn0=
+	t=1751378208; cv=none; b=UIDlllaLkCLM25hx6+opSuOKFEUmWYfsXzjFc7M3LodaBGXjLCrtnundd2JlPYVSGYMBxH8IzFJIesZk8XjcGwehB9DEq2LVZNh1ZOfGnvnDbcrzqaeXqPAytcAsJn5fDFVX74/cnTzx3PIH9x9rgMsW++stPwut7Eb0SkpCOjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378196; c=relaxed/simple;
-	bh=OjzN30GIiPcplOAaeYUjDuVVavt00lwj5wf5fyxHSgE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hCjUhNlpOp+5G4Rpsg+7XNo5V/3hT+jckl75ilm5IAE0bnRT5YWFbJ3aDM/DZbtgoz9PX6H7l9qLde/feC2Vn+Gs0eWh9yxVvbIhA8qj2e4sRPzMg3vqqxkJH7Zxucpd29VXOA3QRgZEkKtDG3QyhM/wwtudzCIfr7u80kcaHIw=
+	s=arc-20240116; t=1751378208; c=relaxed/simple;
+	bh=ytq/9fww8AXTLVMYocd4pAESXZABk52E6oaAbFgnIrc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gKUbVMWqJKchXJQpAv91vqy+H72wAI7AAXfxO07w+I5hi7VjDSncgNH8OBFagNne4N7J27RK4IdpdoTIdyKLR1Ny95ov98fNziKQa+i1JuNI7m6WCayEnO8+SA9GiIHyD9fXEDCS62M44q4YlrL6I/gThMpgNINQbrlf2GUnbhQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C6151515;
-	Tue,  1 Jul 2025 06:56:18 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D1292E8E;
+	Tue,  1 Jul 2025 06:56:31 -0700 (PDT)
 Received: from e133380.cambridge.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE12C3F58B;
-	Tue,  1 Jul 2025 06:56:23 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2716D3F58B;
+	Tue,  1 Jul 2025 06:56:45 -0700 (PDT)
 From: Dave Martin <Dave.Martin@arm.com>
 To: linux-kernel@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chris Zankel <chris@zankel.net>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonas Bonn <jonas@southpole.se>,
-	Kees Cook <kees@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Rich Felker <dalias@libc.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>,
-	Stafford Horne <shorne@gmail.com>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Vineet Gupta <vgupta@kernel.org>,
+Cc: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH 00/23] binfmt_elf,arch/*: Use elf.h for coredump note names
-Date: Tue,  1 Jul 2025 14:55:53 +0100
-Message-Id: <20250701135616.29630-1-Dave.Martin@arm.com>
+	Oleg Nesterov <oleg@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>,
+	loongarch@lists.linux.dev
+Subject: [PATCH 09/23] LoongArch: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+Date: Tue,  1 Jul 2025 14:56:02 +0100
+Message-Id: <20250701135616.29630-10-Dave.Martin@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250701135616.29630-1-Dave.Martin@arm.com>
+References: <20250701135616.29630-1-Dave.Martin@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -95,143 +40,96 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series aims to clean up an aspect of coredump generation:
+Instead of having the core code guess the note name for each regset,
+use USER_REGSET_NOTE_TYPE() to pick the correct name from elf.h.
 
-ELF coredumps contain a set of notes describing the state of machine
-registers and other information about the dumped process.
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: loongarch@lists.linux.dev
+---
+ arch/loongarch/kernel/ptrace.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Notes are identified by a numeric identifier n_type and a "name"
-string, although this terminology is somewhat misleading.  Officially,
-the "name" of a note is really an "originator" or namespace identifier
-that indicates how to interpret n_type [1], although in practice it is
-often used more loosely.
-
-Either way, each kind of note needs _both_ a specific "name" string and
-a specific n_type to identify it robustly.
-
-To centralise this knowledge in one place and avoid the need for ad-hoc
-code to guess the correct name for a given note, commit 7da8e4ad4df0
-("elf: Define note name macros") [2] added an explicit NN_<foo> #define
-in elf.h to give the name corresponding to each named note type
-NT_<foo>.
-
-Now that the note name for each note is specified explicitly, the
-remaining guesswork for determining the note name for common and
-arch-specific regsets in ELF core dumps can be eliminated.
-
-This series aims to do just that:
-
- * Patch 2 adds a user_regset field to specify the note name, and a
-   helper macro to populate it correctly alongside the note type.
-
- * Patch 3 ports away the ad-hoc note names in the common coredump
-   code.
-
- * Patches 4-22 make the arch-specific changes.  (This is pretty
-   mechanical for most arches.)
-
- * The final patch adds a WARN() when no note name is specified,
-   and simplifies the fallback guess.  This should only be applied
-   when all arches have ported across.
-
-See the individual patches for details.
-
-
-Testing:
-
- * x86, arm64: Booted in a VM and triggered a core dump with no WARN(),
-   and verified that the dumped notes are the same.
-
- * arm: Build-tested only (for now).
-
- * Other arches: not tested yet
-
-Any help with testing is appreciated.  If the following generates the
-same notes (as dumped by readelf -n core) and doesn't trigger a WARN,
-then we are probably good.
-
-$ sleep 60 &
-$ kill -QUIT $!
-
-(Register content might differ between runs, but it should be safe to
-ignore that -- this series only deals with the note names and types.)
-
-Cheers
----Dave
-
-
-[1] System V Application Binary Interface, Edition 4.1,
-Section 5 (Program Loading and Dynamic Linking) -> "Note Section"
-
-https://refspecs.linuxfoundation.org/elf/gabi41.pdf
-
-[2] elf: Define note name macros
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/uapi/linux/elf.h?id=7da8e4ad4df0dd12f37357af62ce1b63e75ae2e6
-
-
-Dave Martin (23):
-  regset: Fix kerneldoc for struct regset_get() in user_regset
-  regset: Add explicit core note name in struct user_regset
-  binfmt_elf: Dump non-arch notes with strictly matching name and type
-  ARC: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-  ARM: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-  arm64: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  csky: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-  hexagon: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  LoongArch: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  m68k: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-  MIPS: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-  nios2: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  openrisc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  parisc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  powerpc/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  riscv: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  s390/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-  sh: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-  sparc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  x86/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-  um: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-  xtensa: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
-    names
-  binfmt_elf: Warn on missing or suspicious regset note names
-
- arch/arc/kernel/ptrace.c                 |  4 +-
- arch/arm/kernel/ptrace.c                 |  6 +-
- arch/arm64/kernel/ptrace.c               | 52 ++++++++---------
- arch/csky/kernel/ptrace.c                |  4 +-
- arch/hexagon/kernel/ptrace.c             |  2 +-
- arch/loongarch/kernel/ptrace.c           | 16 ++---
- arch/m68k/kernel/ptrace.c                |  4 +-
- arch/mips/kernel/ptrace.c                | 20 +++----
- arch/nios2/kernel/ptrace.c               |  2 +-
- arch/openrisc/kernel/ptrace.c            |  4 +-
- arch/parisc/kernel/ptrace.c              |  8 +--
- arch/powerpc/kernel/ptrace/ptrace-view.c | 74 ++++++++++++------------
- arch/riscv/kernel/ptrace.c               | 12 ++--
- arch/s390/kernel/ptrace.c                | 42 +++++++-------
- arch/sh/kernel/ptrace_32.c               |  4 +-
- arch/sparc/kernel/ptrace_32.c            |  4 +-
- arch/sparc/kernel/ptrace_64.c            |  8 +--
- arch/x86/kernel/ptrace.c                 | 22 +++----
- arch/x86/um/ptrace.c                     | 10 ++--
- arch/xtensa/kernel/ptrace.c              |  4 +-
- fs/binfmt_elf.c                          | 36 +++++++-----
- fs/binfmt_elf_fdpic.c                    | 17 +++---
- include/linux/regset.h                   | 12 +++-
- 23 files changed, 194 insertions(+), 173 deletions(-)
-
-
-base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+index 5e2402cfcab0..8edd0954e55a 100644
+--- a/arch/loongarch/kernel/ptrace.c
++++ b/arch/loongarch/kernel/ptrace.c
+@@ -864,7 +864,7 @@ enum loongarch_regset {
+ 
+ static const struct user_regset loongarch64_regsets[] = {
+ 	[REGSET_GPR] = {
+-		.core_note_type	= NT_PRSTATUS,
++		USER_REGSET_NOTE_TYPE(PRSTATUS),
+ 		.n		= ELF_NGREG,
+ 		.size		= sizeof(elf_greg_t),
+ 		.align		= sizeof(elf_greg_t),
+@@ -872,7 +872,7 @@ static const struct user_regset loongarch64_regsets[] = {
+ 		.set		= gpr_set,
+ 	},
+ 	[REGSET_FPR] = {
+-		.core_note_type	= NT_PRFPREG,
++		USER_REGSET_NOTE_TYPE(PRFPREG),
+ 		.n		= ELF_NFPREG,
+ 		.size		= sizeof(elf_fpreg_t),
+ 		.align		= sizeof(elf_fpreg_t),
+@@ -880,7 +880,7 @@ static const struct user_regset loongarch64_regsets[] = {
+ 		.set		= fpr_set,
+ 	},
+ 	[REGSET_CPUCFG] = {
+-		.core_note_type	= NT_LOONGARCH_CPUCFG,
++		USER_REGSET_NOTE_TYPE(LOONGARCH_CPUCFG),
+ 		.n		= 64,
+ 		.size		= sizeof(u32),
+ 		.align		= sizeof(u32),
+@@ -889,7 +889,7 @@ static const struct user_regset loongarch64_regsets[] = {
+ 	},
+ #ifdef CONFIG_CPU_HAS_LSX
+ 	[REGSET_LSX] = {
+-		.core_note_type	= NT_LOONGARCH_LSX,
++		USER_REGSET_NOTE_TYPE(LOONGARCH_LSX),
+ 		.n		= NUM_FPU_REGS,
+ 		.size		= 16,
+ 		.align		= 16,
+@@ -899,7 +899,7 @@ static const struct user_regset loongarch64_regsets[] = {
+ #endif
+ #ifdef CONFIG_CPU_HAS_LASX
+ 	[REGSET_LASX] = {
+-		.core_note_type	= NT_LOONGARCH_LASX,
++		USER_REGSET_NOTE_TYPE(LOONGARCH_LASX),
+ 		.n		= NUM_FPU_REGS,
+ 		.size		= 32,
+ 		.align		= 32,
+@@ -909,7 +909,7 @@ static const struct user_regset loongarch64_regsets[] = {
+ #endif
+ #ifdef CONFIG_CPU_HAS_LBT
+ 	[REGSET_LBT] = {
+-		.core_note_type	= NT_LOONGARCH_LBT,
++		USER_REGSET_NOTE_TYPE(LOONGARCH_LBT),
+ 		.n		= 5,
+ 		.size		= sizeof(u64),
+ 		.align		= sizeof(u64),
+@@ -919,7 +919,7 @@ static const struct user_regset loongarch64_regsets[] = {
+ #endif
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+ 	[REGSET_HW_BREAK] = {
+-		.core_note_type = NT_LOONGARCH_HW_BREAK,
++		USER_REGSET_NOTE_TYPE(LOONGARCH_HW_BREAK),
+ 		.n = sizeof(struct user_watch_state_v2) / sizeof(u32),
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
+@@ -927,7 +927,7 @@ static const struct user_regset loongarch64_regsets[] = {
+ 		.set = hw_break_set,
+ 	},
+ 	[REGSET_HW_WATCH] = {
+-		.core_note_type = NT_LOONGARCH_HW_WATCH,
++		USER_REGSET_NOTE_TYPE(LOONGARCH_HW_WATCH),
+ 		.n = sizeof(struct user_watch_state_v2) / sizeof(u32),
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
 -- 
 2.34.1
 
