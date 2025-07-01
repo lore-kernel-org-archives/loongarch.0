@@ -1,311 +1,132 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCC925CC42
-	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 07:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C3B239E82
+	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 09:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355702; cv=none; b=KVTvC2dozRyu+iFgefEE+kk2WQqdGfOon2ktGY4FW0VTDclQXkYo7qfxYdZrJ9PJ5w0zml+gHz/m0DxRpfi31UJqQQk/73xuFRVHNRIIkIfMLXNxxO7kRB7q5agp8u+7x99HBkVgz5AFPv+7FKo9ohbK0TqPEijSUUMCeJmDI0k=
+	t=1751360707; cv=none; b=skHkjVacv6doi5hRk1MZZeATjLnDqR8Jw5b/lmrkakP6tHyDiU/VPc8oLrlUL4HXYQow98aycbzCRXPLIQv9KI8pxBQzu/k5/x+OU4RQntKnuXlMGsCHq7IwvtvaK0xhgbS3XITPaACmdHOQf9WVtW2cE8ql+YgV0wkY+Gr594U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355702; c=relaxed/simple;
-	bh=/icwVoL+PPlRBVD4J9KDnX6kDbFmfkyVGQx0PswyE98=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mZQ0NcVKmKSnu4kgLGG/Klgl7EvjLCPqZ8djcBi25A/LjMawlQk821UzxuQeoB5hs6/KiMdkZ6C37k2nKiLhV9/wuAPdKBhXxabvspyygHvJTdx2OXKaqWrjznkmog2ztMTfj0g4dyz+G2zPj2aFca+iVzvXxJ8BMnM35epwHJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: ce425c24564e11f0b29709d653e92f7d-20250701
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:36cb74c5-8989-4cd4-a39f-5d9b73412cf4,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.45,REQID:36cb74c5-8989-4cd4-a39f-5d9b73412cf4,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:b1216b2c1c2ed01883b7a66e9d5945aa,BulkI
-	D:250701154135SNLJKL50,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
-	|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:ni
-	l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:
-	0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: ce425c24564e11f0b29709d653e92f7d-20250701
-X-User: jianghaoran@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.13)] by mailgw.kylinos.cn
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 160592336; Tue, 01 Jul 2025 15:41:31 +0800
-From: Haoran Jiang <jianghaoran@kylinos.cn>
-To: loongarch@lists.linux.dev
-Cc: bpf@vger.kernel.org,
-	kernel@xen0n.name,
-	chenhuacai@kernel.org,
-	hengqi.chen@gmail.com,
-	yangtiezhu@loongson.cn,
-	jolsa@kernel.org,
-	haoluo@google.com,
-	sdf@fomichev.me,
-	kpsingh@kernel.org,
-	john.fastabend@gmail.com,
-	yonghong.song@linux.dev,
-	song@kernel.org,
-	eddyz87@gmail.com,
-	martin.lau@linux.dev,
-	andrii@kernel.org,
-	daniel@iogearbox.net,
-	ast@kernel.org
-Subject: [PATCH 2/2] LoongArch: BPF: Fix tailcall hierarchy
-Date: Tue,  1 Jul 2025 15:41:10 +0800
-Message-Id: <20250701074110.525363-3-jianghaoran@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250701074110.525363-1-jianghaoran@kylinos.cn>
-References: <20250701074110.525363-1-jianghaoran@kylinos.cn>
+	s=arc-20240116; t=1751360707; c=relaxed/simple;
+	bh=LwXvsYpbCwAEWR7ekcunMqFll7qnOILlUBlJbEUhCeY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HhSw2VviHTNmmiefGAZh9bYWWMbCvpxi6RpGFsyikSM2BOJ5X+TORj2wYOfG8zpyKtCBsjC6ftOAbH7e9vxUGbCH5Oi1fg0I3Wj7kv4NSOnDHtV/iW5kgmS59oJUkQOpYxNdkEA/lWDL5g0ggymq3lT07JbL9L3RudLGkdLX8WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.207.111.194])
+	by gateway (Coremail) with SMTP id _____8AxHHK0pGNotXcgAQ--.5199S3;
+	Tue, 01 Jul 2025 17:04:52 +0800 (CST)
+Received: from ubuntu.. (unknown [111.207.111.194])
+	by front1 (Coremail) with SMTP id qMiowJCxM+SxpGNo0LEEAA--.29147S2;
+	Tue, 01 Jul 2025 17:04:50 +0800 (CST)
+From: Ming Wang <wangming01@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Guo Weikang <guoweikang.kernel@gmail.com>,
+	Ming Wang <wangming01@loongson.cn>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Usama Arif <usamaarif642@gmail.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: lixuefeng@loongson.cn,
+	chenhuacai@loongson.cn,
+	gaojuxin@loongson.cn
+Subject: [PATCH] LoongArch: Support mem=SIZE kernel parameter
+Date: Tue,  1 Jul 2025 17:04:49 +0800
+Message-ID: <20250701090449.2426151-1-wangming01@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxM+SxpGNo0LEEAA--.29147S2
+X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAQEKEmhjeJ0EVQAAsn
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ar17JF4DCryUWryrArW7Jrc_yoW8Kryrp3
+	4xCrs3trs5Kas7u397Kwn3Wry5Awn3Ga4xWFyakw1rCF15Jr1UAw1Iq3WavFy7X3yIqrWI
+	qFs5tFy29a1DZ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAaw2AFwI0_Jrv_JF1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij2
+	8IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8gBMtUUUUU==
 
-In specific use cases combining tailcalls and BPF-to-BPF calls，
-MAX_TAIL_CALL_CNT won't work because of missing tail_call_cnt
-back-propagation from callee to caller。This patch fixes this
-tailcall issue caused by abusing the tailcall in bpf2bpf feature
-on LoongArch like the way of "bpf, x64: Fix tailcall hierarchy".
+The LoongArch mem= parameter parser was previously limited to the
+mem=SIZE@START format. This was inconvenient for the common use case
+of simply capping the total system memory, as it forced users to
+manually specify a start address. It was also inconsistent with the
+behavior on other architectures.
 
-push tail_call_cnt_ptr and tail_call_cnt into the stack,
-tail_call_cnt_ptr is passed between tailcall and bpf2bpf,
-uses tail_call_cnt_ptr to increment tail_call_cnt.
+This patch enhances the parser in early_parse_mem() to also support the
+more user-friendly mem=SIZE format. The implementation now checks for
+the presence of the '@' symbol to determine the user's intent:
 
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+- If mem=SIZE is provided (no '@'), the kernel now calls
+  memblock_enforce_memory_limit(). This trims memory from the top down
+  to the specified size.
+- If mem=SIZE@START is used, the original behavior is retained for
+  backward compatibility. This allows for defining specific memory
+  banks.
+
+This change introduces an important usage rule reflected in the code's
+comments: the mem=SIZE format should only be specified once on the
+kernel command line. It acts as a single, global cap on total memory. In
+contrast, the mem=SIZE@START format can be used multiple times to
+define several distinct memory regions.
+
+Signed-off-by: Ming Wang <wangming01@loongson.cn>
 ---
- arch/loongarch/net/bpf_jit.c | 112 ++++++++++++++++++++++-------------
- 1 file changed, 71 insertions(+), 41 deletions(-)
+ arch/loongarch/kernel/setup.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index d85490e7de89..ba409e598b94 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -12,6 +12,9 @@
- #define SAVE_RA		BIT(0)
- #define SAVE_TCC	BIT(1)
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index b99fbb388fe0..af59ba180dc2 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
+ 		return -EINVAL;
+ 	}
  
-+#define BPF_TAIL_CALL_CNT_PTR_STACK_OFF(stack) (round_up(stack, 16) - 80)
-+
-+
- static const int regmap[] = {
- 	/* return value from in-kernel function, and exit value for eBPF program */
- 	[BPF_REG_0] = LOONGARCH_GPR_A5,
-@@ -32,32 +35,37 @@ static const int regmap[] = {
- 	[BPF_REG_AX] = LOONGARCH_GPR_T0,
- };
- 
--static void mark_call(struct jit_ctx *ctx)
-+static void prepare_bpf_tail_call_cnt(struct jit_ctx *ctx, int *store_offset)
- {
--	ctx->flags |= SAVE_RA;
--}
-+	const struct bpf_prog *prog = ctx->prog;
-+	const bool is_main_prog = !bpf_is_subprog(prog);
- 
--static void mark_tail_call(struct jit_ctx *ctx)
--{
--	ctx->flags |= SAVE_TCC;
--}
-+	if (is_main_prog) {
-+		emit_insn(ctx, addid, LOONGARCH_GPR_T3, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
-+		*store_offset -= sizeof(long);
- 
--static bool seen_call(struct jit_ctx *ctx)
--{
--	return (ctx->flags & SAVE_RA);
--}
-+		emit_tailcall_jmp(ctx, BPF_JGT, REG_TCC, LOONGARCH_GPR_T3, 4);
- 
--static bool seen_tail_call(struct jit_ctx *ctx)
--{
--	return (ctx->flags & SAVE_TCC);
--}
-+		/* If REG_TCC < MAX_TAIL_CALL_CNT, push REG_TCC into stack */
-+		emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
- 
--static u8 tail_call_reg(struct jit_ctx *ctx)
--{
--	if (seen_call(ctx))
--		return TCC_SAVED;
-+		/* Calculate the pointer to REG_TCC in the stack and assign it to REG_TCC */
-+		emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-+
-+		emit_uncond_jmp(ctx, 2);
-+
-+		emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
- 
--	return REG_TCC;
-+		*store_offset -= sizeof(long);
-+		emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-+
-+	} else {
-+		*store_offset -= sizeof(long);
-+		emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-+
-+		*store_offset -= sizeof(long);
-+		emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
++	start = 0;
++	size = memparse(p, &p);
++	if (*p == '@')	/* Every mem=... should contain '@' */
++		start = memparse(p + 1, &p);
++	else {			/* Only one mem=... is allowed if no '@' */
++		usermem = 1;
++		memblock_enforce_memory_limit(size);
++		return 0;
 +	}
- }
- 
- /*
-@@ -80,6 +88,10 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
-  *                            |           $s4           |
-  *                            +-------------------------+
-  *                            |           $s5           |
-+ *                            +-------------------------+
-+ *                            |          reg_tcc        |
-+ *                            +-------------------------+
-+ *                            |          reg_tcc_ptr    |
-  *                            +-------------------------+ <--BPF_REG_FP
-  *                            |  prog->aux->stack_depth |
-  *                            |        (optional)       |
-@@ -89,21 +101,24 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
- static void build_prologue(struct jit_ctx *ctx)
- {
- 	int stack_adjust = 0, store_offset, bpf_stack_adjust;
-+	const struct bpf_prog *prog = ctx->prog;
-+	const bool is_main_prog = !bpf_is_subprog(prog);
- 
- 	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
- 
--	/* To store ra, fp, s0, s1, s2, s3, s4 and s5. */
--	stack_adjust += sizeof(long) * 8;
-+	/* To store ra, fp, s0, s1, s2, s3, s4, s5, reg_tcc and reg_tcc_ptr */
-+	stack_adjust += sizeof(long) * 10;
- 
- 	stack_adjust = round_up(stack_adjust, 16);
- 	stack_adjust += bpf_stack_adjust;
- 
++
  	/*
--	 * First instruction initializes the tail call count (TCC).
--	 * On tail call we skip this instruction, and the TCC is
-+	 * First instruction initializes the tail call count (TCC) register
-+	 * to zero. On tail call we skip this instruction, and the TCC is
- 	 * passed in REG_TCC from the caller.
- 	 */
--	emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
-+	if (is_main_prog)
-+		emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_ZERO, 0);
+ 	 * If a user specifies memory size, we
+ 	 * blow away any automatically generated
+@@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
+ 		memblock_remove(memblock_start_of_DRAM(),
+ 			memblock_end_of_DRAM() - memblock_start_of_DRAM());
+ 	}
+-	start = 0;
+-	size = memparse(p, &p);
+-	if (*p == '@')
+-		start = memparse(p + 1, &p);
+-	else {
+-		pr_err("Invalid format!\n");
+-		return -EINVAL;
+-	}
  
- 	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_adjust);
- 
-@@ -131,20 +146,13 @@ static void build_prologue(struct jit_ctx *ctx)
- 	store_offset -= sizeof(long);
- 	emit_insn(ctx, std, LOONGARCH_GPR_S5, LOONGARCH_GPR_SP, store_offset);
- 
-+	prepare_bpf_tail_call_cnt(ctx, &store_offset);
-+
- 	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_adjust);
- 
- 	if (bpf_stack_adjust)
- 		emit_insn(ctx, addid, regmap[BPF_REG_FP], LOONGARCH_GPR_SP, bpf_stack_adjust);
- 
--	/*
--	 * Program contains calls and tail calls, so REG_TCC need
--	 * to be saved across calls.
--	 */
--	if (seen_tail_call(ctx) && seen_call(ctx))
--		move_reg(ctx, TCC_SAVED, REG_TCC);
--	else
--		emit_insn(ctx, nop);
--
- 	ctx->stack_size = stack_adjust;
- }
- 
-@@ -177,6 +185,17 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
- 	load_offset -= sizeof(long);
- 	emit_insn(ctx, ldd, LOONGARCH_GPR_S5, LOONGARCH_GPR_SP, load_offset);
- 
-+	/*
-+	 *  When push into the stack, follow the order of tcc then tcc_ptr.
-+	 *  When pop from the stack, first pop tcc_ptr followed by tcc
-+	 */
-+	load_offset -= 2*sizeof(long);
-+	emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, load_offset);
-+
-+	/* pop tcc_ptr to REG_TCC */
-+	load_offset += sizeof(long);
-+	emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, load_offset);
-+
- 	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_adjust);
- 
- 	if (!is_tail_call) {
-@@ -211,7 +230,8 @@ bool bpf_jit_supports_far_kfunc_call(void)
- static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
- {
- 	int off;
--	u8 tcc = tail_call_reg(ctx);
-+	int tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
-+
- 	u8 a1 = LOONGARCH_GPR_A1;
- 	u8 a2 = LOONGARCH_GPR_A2;
- 	u8 t1 = LOONGARCH_GPR_T1;
-@@ -239,12 +259,17 @@ static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
- 		goto toofar;
- 
- 	/*
--	 * if (--TCC < 0)
--	 *	 goto out;
-+	 * if ((*tcc_ptr)++ >= MAX_TAIL_CALL_CNT)
-+	 *      goto out;
- 	 */
--	emit_insn(ctx, addid, REG_TCC, tcc, -1);
-+	emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
-+	emit_insn(ctx, ldd, t3, REG_TCC, 0);
-+	emit_insn(ctx, addid, t3, t3, 1);
-+	emit_insn(ctx, std, t3, REG_TCC, 0);
-+	emit_insn(ctx, addid, t2, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
-+
- 	jmp_offset = tc_ninsn - (ctx->idx - idx0);
--	if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
-+	if (emit_tailcall_jmp(ctx, BPF_JSGT, t3, t2, jmp_offset) < 0)
- 		goto toofar;
- 
- 	/*
-@@ -464,6 +489,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 	const s16 off = insn->off;
- 	const s32 imm = insn->imm;
- 	const bool is32 = BPF_CLASS(insn->code) == BPF_ALU || BPF_CLASS(insn->code) == BPF_JMP32;
-+	int tcc_ptr_off;
- 
- 	switch (code) {
- 	/* dst = src */
-@@ -890,12 +916,17 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 
- 	/* function call */
- 	case BPF_JMP | BPF_CALL:
--		mark_call(ctx);
- 		ret = bpf_jit_get_func_addr(ctx->prog, insn, extra_pass,
- 					    &func_addr, &func_addr_fixed);
- 		if (ret < 0)
- 			return ret;
- 
-+		if (insn->src_reg == BPF_PSEUDO_CALL) {
-+			tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
-+			emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
-+		}
-+
-+
- 		move_addr(ctx, t1, func_addr);
- 		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
- 
-@@ -906,7 +937,6 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 
- 	/* tail call */
- 	case BPF_JMP | BPF_TAIL_CALL:
--		mark_tail_call(ctx);
- 		if (emit_bpf_tail_call(i, ctx) < 0)
- 			return -EINVAL;
- 		break;
+ 	if (!IS_ENABLED(CONFIG_NUMA))
+ 		memblock_add(start, size);
 -- 
 2.43.0
 
