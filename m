@@ -1,45 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD7E1C700C;
-	Wed,  2 Jul 2025 15:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01806101DE;
+	Wed,  2 Jul 2025 16:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469518; cv=none; b=GGQzmQRl2zquWLL1qB6lDkmDwGGcxN6ZTSIBvuABKEqOpgmLWkjSsZ/Wgug23530wSnJ2V+/pdBtmYb+s6l9KNqxGGd6NBorif1Ol8WaLTFA7C2iG3Wj1KB06BZt8OVAbWKHmf5kIUqvGJaCOvJ/kuJQLTrYz27KZM1eJW+ba/4=
+	t=1751473404; cv=none; b=THwd+z+TNi4dICT/q5+yjqrGHm6oQdM93bNHe7dGPIa8zlhUxTUtwb0NFwFyMt6nEOqs4S7HNPA+7CYoCf+WDcAsSlRmcBOhW/xV5BwrfeBNGY6nbOHs/3i1CtjgOzXS7ehUwLmIwTYYz1zPaIcTzM3PJKg7new5BmJdwH5vnFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469518; c=relaxed/simple;
-	bh=oF9g4X7KgjS/c6li8VSN+63EDU68bK9gdw5MKEWVQ8M=;
+	s=arc-20240116; t=1751473404; c=relaxed/simple;
+	bh=fYVUHcGXuXgCgpqOkZIAJT1XR4RaxdGG0zliMP2efjM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvS+R5Jfr3BRHGoLirG9lm9oHalCKxwYPP3m+eER3lJ+LN8koDHJ5Hm22oaeLYbbWMWyielc0OmZJFV1QSZZw5poMTQls62qwm0Tx1kZMEs37u/z9liXBYxKtFrWqqmO9VYprBV3wajl5IMJnaB2rvYoyIoxKPEpKb7U5ov2HLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTcgQomD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q3pCXGpt5GdjcJQmnAN1/meEotBhGQQfE2amRK80b868j9Liy3fTbF5kMx4TLSUasAnqs+7uPO3CV4YqjPBBtX2OeFUDCyYExSjgJ2gJxXfRHaEH8D9m7EZvTND2sT5wqMQv3vEMsg+JfMN/OD11eSaKhOCEFEZIb+MJgs2pg78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsGEZ2Ce; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTcgQomD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612DCC4CEE7;
-	Wed,  2 Jul 2025 15:18:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsGEZ2Ce"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3ED8C4CEE7;
+	Wed,  2 Jul 2025 16:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751469517;
-	bh=oF9g4X7KgjS/c6li8VSN+63EDU68bK9gdw5MKEWVQ8M=;
+	s=k20201202; t=1751473403;
+	bh=fYVUHcGXuXgCgpqOkZIAJT1XR4RaxdGG0zliMP2efjM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uTcgQomDunwklFtclIOdvGA6h5WV7hjLjzpfSE/47Lm0NDsfZ/e6H5Na7YUt/9kUJ
-	 xRj7Qo3LJqsRhQlUKSyBEhw9z598o5Xx2P4YnLE0jUpot9PGwu7VEsHeaIuIuHdVba
-	 wfCwscvLH36Z5IelO2prPUuQJsVDplP+6zZuW0+dgg6Idqqr1s6FLTNlpArGe6faG/
-	 TKkle3LootKUBy/Qy3cDhcU91124hAgF8ccB5StwokBbcaenomPDWcrgR/Z4FQxjjl
-	 txvLHTFYOnP8dKigV1QVSV/grqikO++0NUdBfN6NveIvK2T1y7af2ASW0tRAe7alCc
-	 l6Cw+Dw85j1fQ==
-Date: Wed, 2 Jul 2025 16:18:32 +0100
+	b=RsGEZ2Ceh+RsllyA1Uv4oQdkpwdt0S2EPdURLWB1uNlzdx9d0dusMscw3dW/aknlj
+	 COs92Rquf2x6maGv0YQEBRqzcFQG2Bky2wEMh0uAXrUS3Cu9w5Nmc785pYCRmNBHhN
+	 GpiMnUClAKWDGj6kJ6zQCGtivXPzfUf3BPjjGOH2aRcbcCsiC6Y2xb6kp837g9EVw4
+	 qGtE+dKJ4dKBqxLJJJD+OjtA6VDYkNRrOruXD5+pS6jEFYX4E4VMM8HSe49EXFvpuI
+	 CZv48pZGEOSsGc2YejCZgBlzjIpbGt06TuWzsIi4z8sbsjcZcuTbdS7iBZ9qV95f4h
+	 XTfGYDIstc/kw==
+Date: Wed, 2 Jul 2025 17:23:18 +0100
 From: Lee Jones <lee@kernel.org>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: herbert@gondor.apana.org.au, jarkko@kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	davem@davemloft.net, linux-crypto@vger.kernel.org,
-	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v11 1/4] mfd: Add support for Loongson Security Engine
- chip controller
-Message-ID: <20250702151832.GT10134@google.com>
-References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
- <20250619025138.2854-2-zhaoqunqin@loongson.cn>
+To: kernel test robot <lkp@intel.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Corey Minyard <minyard@acm.org>, oe-kbuild-all@lists.linux.dev,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
+	kexybiscuit@aosc.io, wangyao@lemote.com,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: Re: [PATCH v6 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function
+ support
+Message-ID: <20250702162318.GZ10134@google.com>
+References: <78b06d1c7ae0677868e0c7498b589af163313c8d.1750939357.git.zhoubinbin@loongson.cn>
+ <202507021011.sDAHGinj-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,32 +52,41 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250619025138.2854-2-zhaoqunqin@loongson.cn>
+In-Reply-To: <202507021011.sDAHGinj-lkp@intel.com>
 
-On Thu, 19 Jun 2025, Qunqin Zhao wrote:
+On Wed, 02 Jul 2025, kernel test robot wrote:
 
-> Loongson Security Engine chip supports RNG, SM2, SM3 and SM4 accelerator
-> engines. This is the base driver for other specific engine drivers.
+> Hi Binbin,
 > 
-> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/mfd/Kconfig             |  11 ++
->  drivers/mfd/Makefile            |   2 +
->  drivers/mfd/loongson-se.c       | 253 ++++++++++++++++++++++++++++++++
->  include/linux/mfd/loongson-se.h |  53 +++++++
->  4 files changed, 319 insertions(+)
->  create mode 100644 drivers/mfd/loongson-se.c
->  create mode 100644 include/linux/mfd/loongson-se.h
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on 3d77b3cc7cc8115d89fa14eaf601e56372953484]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250626-203353
+> base:   3d77b3cc7cc8115d89fa14eaf601e56372953484
+> patch link:    https://lore.kernel.org/r/78b06d1c7ae0677868e0c7498b589af163313c8d.1750939357.git.zhoubinbin%40loongson.cn
+> patch subject: [PATCH v6 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+> config: sparc64-allmodconfig (https://download.01.org/0day-ci/archive/20250702/202507021011.sDAHGinj-lkp@intel.com/config)
+> compiler: sparc64-linux-gcc (GCC) 15.1.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250702/202507021011.sDAHGinj-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202507021011.sDAHGinj-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/mfd/ls2k-bmc-core.c: In function 'ls2k_bmc_pdata_initial':
+> >> drivers/mfd/ls2k-bmc-core.c:349:15: error: implicit declaration of function 'acpi_register_gsi' [-Wimplicit-function-declaration]
+>      349 |         irq = acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW);
+>          |               ^~~~~~~~~~~~~~~~~
+> >> drivers/mfd/ls2k-bmc-core.c:376:9: error: implicit declaration of function 'acpi_unregister_gsi'; did you mean 'arch_unregister_cpu'? [-Wimplicit-function-declaration]
+>      376 |         acpi_unregister_gsi(gsi);
+>          |         ^~~~~~~~~~~~~~~~~~~
+>          |         arch_unregister_cpu
 
-This looks okay to me now.
-
-Let me know when you have all of the other Acks.  Unless we decided
-otherwise, this whole set should be merged via one subsystem (usually
-MFD).  Once tested and merged, I can send out a pull-request for other
-maintainers to pull from if they so wish.
+Is this error valid?
 
 -- 
 Lee Jones [李琼斯]
