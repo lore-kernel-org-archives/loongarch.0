@@ -1,132 +1,80 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster6-host10-snip4-1.eps.apple.com [57.103.67.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8109F221F37
-	for <loongarch@lists.linux.dev>; Wed,  2 Jul 2025 11:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD7E1C700C;
+	Wed,  2 Jul 2025 15:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751454049; cv=none; b=Zfq0aRA7xqf1QTTpATFN2Tr36yKsg6tSByReERT0bpnIaU77vhCtVzTiPSJB6dDH7ohJqrdmi5OwJuY/zU/v451b7R5GqDtVKNAS+oTma8ch+Rq93sTMyGRiQzqsiurrhQzu+ipsWiAuyLLrfqokDau0deBGNQ6xT+0BxjQqpp4=
+	t=1751469518; cv=none; b=GGQzmQRl2zquWLL1qB6lDkmDwGGcxN6ZTSIBvuABKEqOpgmLWkjSsZ/Wgug23530wSnJ2V+/pdBtmYb+s6l9KNqxGGd6NBorif1Ol8WaLTFA7C2iG3Wj1KB06BZt8OVAbWKHmf5kIUqvGJaCOvJ/kuJQLTrYz27KZM1eJW+ba/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751454049; c=relaxed/simple;
-	bh=EDpCE0FsRsP957sJiS4v86/d+16D13uGqgBiODpWyzM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Qa3kpbRGDxlIZHeHelwCBRkk22qKR+U8/v+vaw/WrONnOSn/B416ssHXPF4pktSwmjIbNgvI8giM7/3tw7qcvyVw9vHpZVmARAPB8gt781q/RxQnFTWyHA4dIIbM8sX+J04zUf4SM2wmrXoFAyNJIRIbPf9yiQ1qEQ0EEb/fO5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=a5F3CSt7; arc=none smtp.client-ip=57.103.67.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1751469518; c=relaxed/simple;
+	bh=oF9g4X7KgjS/c6li8VSN+63EDU68bK9gdw5MKEWVQ8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rvS+R5Jfr3BRHGoLirG9lm9oHalCKxwYPP3m+eER3lJ+LN8koDHJ5Hm22oaeLYbbWMWyielc0OmZJFV1QSZZw5poMTQls62qwm0Tx1kZMEs37u/z9liXBYxKtFrWqqmO9VYprBV3wajl5IMJnaB2rvYoyIoxKPEpKb7U5ov2HLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTcgQomD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="a5F3CSt7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=l0grrrQpY81N/VQL7J2F9njJr7ho5zRKX+wKppU/wMo=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:x-icloud-hme;
-	b=a5F3CSt7ew6T8OhTqenJH92raFtftvMdFQmN3s2DgK2Qx13hcJ7mAGdSQBiTDSSmm
-	 tpoXs96I0wSTtSHxTkLtwBBVmKIPFkwWTx1ra9A+FOPrUSi/voo7hoboeJcVEiUC+a
-	 Qwg7IJDWEJ93V0394ZH5FYyIOeQevrc0E4bYQOSaxpGLvUJBfHjsLbACBzFFCKxFSe
-	 O5Fs8RR8WhBPW4eVo/C4z800MOOYbrAiz0Av5/Je1UVawI0K2CYsmv4BQvNml93MrP
-	 amcQGuXsavcp/sewtrfbIZmdrAYN+3ysA12uzjuGMlClCJYJCnt7BnKIbqIN6hGq1k
-	 zIiP3td/GciiQ==
-Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id 628A818000AF;
-	Wed,  2 Jul 2025 11:00:45 +0000 (UTC)
-Received: from dedsec-amd0.tail874668.ts.net (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 4AA1D18006F0;
-	Wed,  2 Jul 2025 11:00:39 +0000 (UTC)
-From: Yulong Han <wheatfox17@icloud.com>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	zhaotianrui@loongson.cn,
-	maobibo@loongson.cn,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Yulong Han <wheatfox17@icloud.com>
-Subject: [PATCH] LoongArch: KVM: Add tracepoints for CPUCFG and CSR emulation exits
-Date: Wed,  2 Jul 2025 18:59:22 +0800
-Message-Id: <20250702105922.1035771-1-wheatfox17@icloud.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTcgQomD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612DCC4CEE7;
+	Wed,  2 Jul 2025 15:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751469517;
+	bh=oF9g4X7KgjS/c6li8VSN+63EDU68bK9gdw5MKEWVQ8M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uTcgQomDunwklFtclIOdvGA6h5WV7hjLjzpfSE/47Lm0NDsfZ/e6H5Na7YUt/9kUJ
+	 xRj7Qo3LJqsRhQlUKSyBEhw9z598o5Xx2P4YnLE0jUpot9PGwu7VEsHeaIuIuHdVba
+	 wfCwscvLH36Z5IelO2prPUuQJsVDplP+6zZuW0+dgg6Idqqr1s6FLTNlpArGe6faG/
+	 TKkle3LootKUBy/Qy3cDhcU91124hAgF8ccB5StwokBbcaenomPDWcrgR/Z4FQxjjl
+	 txvLHTFYOnP8dKigV1QVSV/grqikO++0NUdBfN6NveIvK2T1y7af2ASW0tRAe7alCc
+	 l6Cw+Dw85j1fQ==
+Date: Wed, 2 Jul 2025 16:18:32 +0100
+From: Lee Jones <lee@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: herbert@gondor.apana.org.au, jarkko@kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	davem@davemloft.net, linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v11 1/4] mfd: Add support for Loongson Security Engine
+ chip controller
+Message-ID: <20250702151832.GT10134@google.com>
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
+ <20250619025138.2854-2-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: SKFNO0ti4yqAUpAxixOhYuM9w5Zvmb_K
-X-Proofpoint-GUID: SKFNO0ti4yqAUpAxixOhYuM9w5Zvmb_K
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA4OSBTYWx0ZWRfXzm30iI/d+ldT
- kUpGlbB7KyFewJao7eMN0ZtECEyHIbwIsJGXAL+ZT2Tkeb5YtirFgi8e9XxnbRsc8P3QUlaJn2j
- bfBs3AdNw1sDpqo99bscHDnIDTsawymTopXW40QvoZ2aKWjpDpZOm9+fGzX+/6pyQ10TTI4G7zF
- oRkSlfy5neL8arokSxlGcXSN8ZmGMy5OBZ9iXqPpSphXIdhUIlR5k8upyQh7CyVKy0ZIYTSSiW0
- 9efDoPMpN87n9PY3Wh4S7p6INlNwtwcDiuCFNZShGJlfcaCnGKzzwKDqGDqFgSr02hxdtyEX8=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0
- malwarescore=0 mlxscore=0 bulkscore=0 clxscore=1011 spamscore=0
- mlxlogscore=742 suspectscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.22.0-2506060001 definitions=main-2507020089
+In-Reply-To: <20250619025138.2854-2-zhaoqunqin@loongson.cn>
 
-This patch adds tracepoints to track KVM exits caused by CPUCFG 
-and CSR emulation. Note that IOCSR emulation tracing is already
-covered by the generic trace_kvm_iocsr().
+On Thu, 19 Jun 2025, Qunqin Zhao wrote:
 
-Signed-off-by: Yulong Han <wheatfox17@icloud.com>
----
- arch/loongarch/kvm/exit.c  |  2 ++
- arch/loongarch/kvm/trace.h | 14 +++++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+> Loongson Security Engine chip supports RNG, SM2, SM3 and SM4 accelerator
+> engines. This is the base driver for other specific engine drivers.
+> 
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/mfd/Kconfig             |  11 ++
+>  drivers/mfd/Makefile            |   2 +
+>  drivers/mfd/loongson-se.c       | 253 ++++++++++++++++++++++++++++++++
+>  include/linux/mfd/loongson-se.h |  53 +++++++
+>  4 files changed, 319 insertions(+)
+>  create mode 100644 drivers/mfd/loongson-se.c
+>  create mode 100644 include/linux/mfd/loongson-se.h
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index fa52251b3bf1c..6a47a23ae9cd6 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -289,9 +289,11 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
- 	er = EMULATE_FAIL;
- 	switch (((inst.word >> 24) & 0xff)) {
- 	case 0x0: /* CPUCFG GSPR */
-+		trace_kvm_exit_cpucfg(vcpu, KVM_TRACE_EXIT_CPUCFG);
- 		er = kvm_emu_cpucfg(vcpu, inst);
- 		break;
- 	case 0x4: /* CSR{RD,WR,XCHG} GSPR */
-+		trace_kvm_exit_csr(vcpu, KVM_TRACE_EXIT_CSR);
- 		er = kvm_handle_csr(vcpu, inst);
- 		break;
- 	case 0x6: /* Cache, Idle and IOCSR GSPR */
-diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
-index 1783397b1bc88..145514dab6d5b 100644
---- a/arch/loongarch/kvm/trace.h
-+++ b/arch/loongarch/kvm/trace.h
-@@ -46,11 +46,15 @@ DEFINE_EVENT(kvm_transition, kvm_out,
- /* Further exit reasons */
- #define KVM_TRACE_EXIT_IDLE		64
- #define KVM_TRACE_EXIT_CACHE		65
-+#define KVM_TRACE_EXIT_CPUCFG		66
-+#define KVM_TRACE_EXIT_CSR		67
- 
- /* Tracepoints for VM exits */
- #define kvm_trace_symbol_exit_types			\
- 	{ KVM_TRACE_EXIT_IDLE,		"IDLE" },	\
--	{ KVM_TRACE_EXIT_CACHE,		"CACHE" }
-+	{ KVM_TRACE_EXIT_CACHE,		"CACHE" },	\
-+	{ KVM_TRACE_EXIT_CPUCFG,	"CPUCFG" },	\
-+	{ KVM_TRACE_EXIT_CSR,		"CSR" }
- 
- DECLARE_EVENT_CLASS(kvm_exit,
- 	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
-@@ -82,6 +86,14 @@ DEFINE_EVENT(kvm_exit, kvm_exit_cache,
- 	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
- 	     TP_ARGS(vcpu, reason));
- 
-+DEFINE_EVENT(kvm_exit, kvm_exit_cpucfg,
-+	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
-+	     TP_ARGS(vcpu, reason));
-+
-+DEFINE_EVENT(kvm_exit, kvm_exit_csr,
-+	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
-+	     TP_ARGS(vcpu, reason));
-+
- DEFINE_EVENT(kvm_exit, kvm_exit,
- 	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
- 	     TP_ARGS(vcpu, reason));
+This looks okay to me now.
+
+Let me know when you have all of the other Acks.  Unless we decided
+otherwise, this whole set should be merged via one subsystem (usually
+MFD).  Once tested and merged, I can send out a pull-request for other
+maintainers to pull from if they so wish.
+
 -- 
-2.39.5
-
+Lee Jones [李琼斯]
