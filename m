@@ -1,135 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42F1278741
-	for <loongarch@lists.linux.dev>; Tue,  1 Jul 2025 13:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BFD18D656
+	for <loongarch@lists.linux.dev>; Wed,  2 Jul 2025 02:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378208; cv=none; b=UIDlllaLkCLM25hx6+opSuOKFEUmWYfsXzjFc7M3LodaBGXjLCrtnundd2JlPYVSGYMBxH8IzFJIesZk8XjcGwehB9DEq2LVZNh1ZOfGnvnDbcrzqaeXqPAytcAsJn5fDFVX74/cnTzx3PIH9x9rgMsW++stPwut7Eb0SkpCOjU=
+	t=1751422318; cv=none; b=AZd8/F4pMGpdhSRiV9gVk+sagrDB0SiteVQNqT4FOPpLKaX07G9JYfeD5GEPAjBz3tZJ1EdbkamIrk9S4DQ3r9mI9/8TrEQH0zfW+Hf/enTpW06xNOWve5tY5YQSHt7oVYMiGziQbfcf2iKXljZLG+MSnLZrtGJ+Uf2+7DNk6OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378208; c=relaxed/simple;
-	bh=ytq/9fww8AXTLVMYocd4pAESXZABk52E6oaAbFgnIrc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gKUbVMWqJKchXJQpAv91vqy+H72wAI7AAXfxO07w+I5hi7VjDSncgNH8OBFagNne4N7J27RK4IdpdoTIdyKLR1Ny95ov98fNziKQa+i1JuNI7m6WCayEnO8+SA9GiIHyD9fXEDCS62M44q4YlrL6I/gThMpgNINQbrlf2GUnbhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D1292E8E;
-	Tue,  1 Jul 2025 06:56:31 -0700 (PDT)
-Received: from e133380.cambridge.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2716D3F58B;
-	Tue,  1 Jul 2025 06:56:45 -0700 (PDT)
-From: Dave Martin <Dave.Martin@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	loongarch@lists.linux.dev
-Subject: [PATCH 09/23] LoongArch: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-Date: Tue,  1 Jul 2025 14:56:02 +0100
-Message-Id: <20250701135616.29630-10-Dave.Martin@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250701135616.29630-1-Dave.Martin@arm.com>
-References: <20250701135616.29630-1-Dave.Martin@arm.com>
+	s=arc-20240116; t=1751422318; c=relaxed/simple;
+	bh=oK1Shwu4Lk05/QEqU2lnVfOho5aeA6R+7xSGIYM5wck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bwPwMR6waDTdzoOV7Xn//P2K6wXEVXzQxdaXls54h9dJzh2+rm/xO/h0Hi6ZW5FUEAYc4UF0V7UrLZ5h0gf7LFkp65NWXUcLnGA4+/VdUqeuJbHWGArE8YEaUCVUolQxatAc6zClJyeEc99d/pX43UqcQz50KMFQzcHlP8KsxE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=awnVcTwi; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="awnVcTwi"
+Message-ID: <0561da2c-a4d7-49bb-8394-930f10880610@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751422314;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=44R59HWijpEJxOJR76qd3Y0z7tg9JtGI0wJfTjFw3So=;
+	b=awnVcTwiZOD+NS68d0yzctO3ap+VvoitOCfZcBxGLAXq4+6NaL0AQroj8lB9t1LI4ceed7
+	GFjbfckKg/pPmIEyzML8g+J0SdkexYUYVrlfXpXCa0h9UZSj9xzpZEMAnkJRAvxWvNIrrw
+	Lmm3f6A4lg5Ze29PsyqRsiHTZrwoL1g=
+Date: Wed, 2 Jul 2025 10:11:48 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Subject: Re: [PATCH] LoongArch: Support mem=SIZE kernel parameter
+To: Ming Wang <wangming01@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>,
+ Bibo Mao <maobibo@loongson.cn>, Hari Bathini <hbathini@linux.ibm.com>,
+ Guo Weikang <guoweikang.kernel@gmail.com>,
+ Sourabh Jain <sourabhjain@linux.ibm.com>, Usama Arif
+ <usamaarif642@gmail.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Cc: lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
+References: <20250701090449.2426151-1-wangming01@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250701090449.2426151-1-wangming01@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Instead of having the core code guess the note name for each regset,
-use USER_REGSET_NOTE_TYPE() to pick the correct name from elf.h.
+在 7/1/25 5:04 PM, Ming Wang 写道:
+> The LoongArch mem= parameter parser was previously limited to the
+> mem=SIZE@START format. This was inconvenient for the common use case
+> of simply capping the total system memory, as it forced users to
+> manually specify a start address. It was also inconsistent with the
+> behavior on other architectures.
+> 
+> This patch enhances the parser in early_parse_mem() to also support the
+> more user-friendly mem=SIZE format. The implementation now checks for
+> the presence of the '@' symbol to determine the user's intent:
+> 
+> - If mem=SIZE is provided (no '@'), the kernel now calls
+>    memblock_enforce_memory_limit(). This trims memory from the top down
+>    to the specified size.
+> - If mem=SIZE@START is used, the original behavior is retained for
+>    backward compatibility. This allows for defining specific memory
+>    banks.
+> 
+> This change introduces an important usage rule reflected in the code's
+> comments: the mem=SIZE format should only be specified once on the
+> kernel command line. It acts as a single, global cap on total memory. In
+> contrast, the mem=SIZE@START format can be used multiple times to
+> define several distinct memory regions.
+> 
+> Signed-off-by: Ming Wang <wangming01@loongson.cn>
+> ---
+>   arch/loongarch/kernel/setup.c | 18 ++++++++++--------
+>   1 file changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> index b99fbb388fe0..af59ba180dc2 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
+>   		return -EINVAL;
+>   	}
+>   
+> +	start = 0;
+> +	size = memparse(p, &p);
+> +	if (*p == '@')	/* Every mem=... should contain '@' */
+> +		start = memparse(p + 1, &p);
+> +	else {			/* Only one mem=... is allowed if no '@' */
+> +		usermem = 1;
+> +		memblock_enforce_memory_limit(size);
+> +		return 0;
+> +	}
+> +
+>   	/*
+>   	 * If a user specifies memory size, we
+>   	 * blow away any automatically generated
+> @@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
+>   		memblock_remove(memblock_start_of_DRAM(),
+>   			memblock_end_of_DRAM() - memblock_start_of_DRAM());
+>   	}
+> -	start = 0;
+> -	size = memparse(p, &p);
+> -	if (*p == '@')
+> -		start = memparse(p + 1, &p);
+> -	else {
+> -		pr_err("Invalid format!\n");
+> -		return -EINVAL;
+> -	}
+I don't understand. Isn't it better to modify the else{} directly here?
 
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Akihiko Odaki <akihiko.odaki@daynix.com>
-Cc: loongarch@lists.linux.dev
----
- arch/loongarch/kernel/ptrace.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-index 5e2402cfcab0..8edd0954e55a 100644
---- a/arch/loongarch/kernel/ptrace.c
-+++ b/arch/loongarch/kernel/ptrace.c
-@@ -864,7 +864,7 @@ enum loongarch_regset {
- 
- static const struct user_regset loongarch64_regsets[] = {
- 	[REGSET_GPR] = {
--		.core_note_type	= NT_PRSTATUS,
-+		USER_REGSET_NOTE_TYPE(PRSTATUS),
- 		.n		= ELF_NGREG,
- 		.size		= sizeof(elf_greg_t),
- 		.align		= sizeof(elf_greg_t),
-@@ -872,7 +872,7 @@ static const struct user_regset loongarch64_regsets[] = {
- 		.set		= gpr_set,
- 	},
- 	[REGSET_FPR] = {
--		.core_note_type	= NT_PRFPREG,
-+		USER_REGSET_NOTE_TYPE(PRFPREG),
- 		.n		= ELF_NFPREG,
- 		.size		= sizeof(elf_fpreg_t),
- 		.align		= sizeof(elf_fpreg_t),
-@@ -880,7 +880,7 @@ static const struct user_regset loongarch64_regsets[] = {
- 		.set		= fpr_set,
- 	},
- 	[REGSET_CPUCFG] = {
--		.core_note_type	= NT_LOONGARCH_CPUCFG,
-+		USER_REGSET_NOTE_TYPE(LOONGARCH_CPUCFG),
- 		.n		= 64,
- 		.size		= sizeof(u32),
- 		.align		= sizeof(u32),
-@@ -889,7 +889,7 @@ static const struct user_regset loongarch64_regsets[] = {
- 	},
- #ifdef CONFIG_CPU_HAS_LSX
- 	[REGSET_LSX] = {
--		.core_note_type	= NT_LOONGARCH_LSX,
-+		USER_REGSET_NOTE_TYPE(LOONGARCH_LSX),
- 		.n		= NUM_FPU_REGS,
- 		.size		= 16,
- 		.align		= 16,
-@@ -899,7 +899,7 @@ static const struct user_regset loongarch64_regsets[] = {
- #endif
- #ifdef CONFIG_CPU_HAS_LASX
- 	[REGSET_LASX] = {
--		.core_note_type	= NT_LOONGARCH_LASX,
-+		USER_REGSET_NOTE_TYPE(LOONGARCH_LASX),
- 		.n		= NUM_FPU_REGS,
- 		.size		= 32,
- 		.align		= 32,
-@@ -909,7 +909,7 @@ static const struct user_regset loongarch64_regsets[] = {
- #endif
- #ifdef CONFIG_CPU_HAS_LBT
- 	[REGSET_LBT] = {
--		.core_note_type	= NT_LOONGARCH_LBT,
-+		USER_REGSET_NOTE_TYPE(LOONGARCH_LBT),
- 		.n		= 5,
- 		.size		= sizeof(u64),
- 		.align		= sizeof(u64),
-@@ -919,7 +919,7 @@ static const struct user_regset loongarch64_regsets[] = {
- #endif
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
- 	[REGSET_HW_BREAK] = {
--		.core_note_type = NT_LOONGARCH_HW_BREAK,
-+		USER_REGSET_NOTE_TYPE(LOONGARCH_HW_BREAK),
- 		.n = sizeof(struct user_watch_state_v2) / sizeof(u32),
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
-@@ -927,7 +927,7 @@ static const struct user_regset loongarch64_regsets[] = {
- 		.set = hw_break_set,
- 	},
- 	[REGSET_HW_WATCH] = {
--		.core_note_type = NT_LOONGARCH_HW_WATCH,
-+		USER_REGSET_NOTE_TYPE(LOONGARCH_HW_WATCH),
- 		.n = sizeof(struct user_watch_state_v2) / sizeof(u32),
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
--- 
-2.34.1
+Thanks,
+Yanteng
 
