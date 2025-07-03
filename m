@@ -1,191 +1,141 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F17481A26B
-	for <loongarch@lists.linux.dev>; Thu,  3 Jul 2025 01:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE4613A258;
+	Thu,  3 Jul 2025 02:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751506633; cv=none; b=clHFlbJ1Ge0HCZWF4MK24FHX8yYvReSuo0uWrCwPJkIqGwp/Wt1P3uicAdQyayZ0YGMt87MGCURUKcoK0YLY5QtkfH3jpPx4cy5I/bfQhT26u9R5VuUbm9vCqcBFWRuJlpXABKdm266mza7S0pfKh+Pwi6Rqau3eRB5BukznVko=
+	t=1751508462; cv=none; b=M4fGFrprOIW59ZYpT9l2Apny84JrtDNDkqRCoE1iKJ6G+FndDgq9sHaB7OIKSizwuSEa0RVprkBvAqjZKOUHiUpPQM4mNZaZMUEX7i43v0UortO29nqJZzCtkNsZ9duSEGpzYJJvd+uFor6ttuHeMk0FuM5TLOS+9/itU6HhXw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751506633; c=relaxed/simple;
-	bh=Ee5Fyo6w6kdEAg0hZRjAAbgrXjQSbQVsGiyzoE0XRZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nxOjasYJgANvcGmjgnhv5eLs14rPOPD/6HtiL68BUpYXyNkMpP0iKMc7P1b1TKFEkIKbeYpZgpJDu5oDQbbR2tlzQt1vWZX8n1LrVc8BH2P3SlYQdySRGwFCb82jIw/9Dn9iyjC9uLXk59iM9De5a4uV8S840arwQZwW/PNLSH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.207.111.194])
-	by gateway (Coremail) with SMTP id _____8Ax3eK73mVo7I4hAQ--.34779S3;
-	Thu, 03 Jul 2025 09:36:59 +0800 (CST)
-Received: from [10.180.13.127] (unknown [111.207.111.194])
-	by front1 (Coremail) with SMTP id qMiowJDxL8K63mVovo8HAA--.86S2;
-	Thu, 03 Jul 2025 09:36:58 +0800 (CST)
-Message-ID: <e89f6ce6-d9f4-4744-b6a6-9a82412795a0@loongson.cn>
-Date: Thu, 3 Jul 2025 09:36:58 +0800
+	s=arc-20240116; t=1751508462; c=relaxed/simple;
+	bh=24G3epBX1KBvYzJEf8cy04InC7gA20oodLz2dmjVIc0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QFeaYznc9PK2q12mgn99l7OZKRu/JdxC6UXLU+Xq+N/DgVxqjhLCPtOIN8sGZUi4kkt+5bfmNqPSrEC7IN+6F7iAlFRkLFpP78tp/DwDJybnvFJNLiCWbDk8xePe7UrYXnNbTMpJnQKSUjyCMx7zKWxvm16bRvGTfeHyUnjlsnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S2J4ujdR; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2J4ujdR"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60cc11b34f6so836571a12.0;
+        Wed, 02 Jul 2025 19:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751508459; x=1752113259; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UzkypJTa2aDOnGhEUSNksvIYvW5r2jEVvJtvSkexsCs=;
+        b=S2J4ujdRG81IqmSbnVSz7P+rhftjwHCxZB3Ok7k/Y9pcU3HGocv475GEuyBG7EwYVY
+         egI4XD6o/sANoGrofRUQs3wddtP9qd4EF0s15qIOeXGfDGNch0LW85YPgiyqBoyT48bE
+         qH0uDTfxStT4lcVF6Nxn/ye5Da/QIxPD1Q/g1/B2FasD2xPU9NUNotw3Ab5Oq+Gug+jR
+         2VOpFNvyTxMgzWqmJYIsZ8rUMY7dUfgGXqEun2ts2vWXLSQFc6J8WsDT3qobDxajr3pH
+         Sc/jraSPcqVGvqiytnhHwSCVXc4gowuyqYHB9srgFrApU6ERz3tB8XeTDufHybcB5LER
+         DjjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751508459; x=1752113259;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UzkypJTa2aDOnGhEUSNksvIYvW5r2jEVvJtvSkexsCs=;
+        b=B1FUuh6h9h8FFfPsPAPtXkJYp0uOsA4Kpg38HvNl5oRa2/tQiaX4xczW9XTWKGlDY4
+         2mhXYu8LVSGp/VSHYS3MUTPFDW9+CD452axXhOGO5KFnlkHejZLgy5MoCZ3xzsMJWni9
+         SS9rgZKBlxLw2OxeEtoOuUqN18NHVAEkrez1/fg5k0FhkLm8LN11MZW7Q+BxAJncD7eW
+         zZMiof5ZbRchTzUmMoiwYEbbTF+dkU2xPWlm+JcBwBtvfTbszYIBjwwHFqsbiftdji9c
+         Cc+T5kRVUywYoI2v5MLavchlQ2s9yoS03Km/RZIu5feaf48H6M7a/8tJgQRnytpco1YQ
+         B6PA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFIBd688Y8YvEgbbpgtOWxyo+qxWHKNBdCgtpOofbwF+MBW/AGDs6uFIQj0b1VF9jQKpK2tB6oCQA=@lists.linux.dev, AJvYcCX18MhfBFGwYQf2MKeM1lsceMchsCekJk1pW07A8AgPp8V2jxlxB8UKbgh486DkIKD8/sQiuJr3ZDft95LCAQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxijaKC77TMktKp8Wbz9/vlj6LjcTXpV5tx61HTTzkdfJ9Wx0lS
+	b0QhvR6cgwzLjO1cNqVRPiWtbPH0O6PE+cTWPFZPnnSeNI2DRejF2Nm3Fr1h9l0zktky1tYnXJA
+	E1eb5+JuKz4Q1+3ZfZHSrCBtjJTwof5E=
+X-Gm-Gg: ASbGncuB8ZdIR52ERibIIeCwCgBxd3Q2I1ter9m9r+ue5UhJEl2Y6HO7kfg1nbwXSHc
+	EfJEXpn7CvXa3jpwYeBli6AQlePKwzsDAhBc6kjSDoaq8vdqD92gFDYAGRpfJuCVT2X8M8HAyd+
+	ACfjqobNYDwoDn6m0PQjxu35eG/z1HfOk8pfCX2JtVVQ==
+X-Google-Smtp-Source: AGHT+IF218GiZpeI/D+rXXzILlAv1cDE70/cS0aOmmY37xRfNjnVhepbNq4j1eM5FlQuPv33Nwb46LfderGxoJgZ+S8=
+X-Received: by 2002:a17:907:1c97:b0:ae3:c777:6e5e with SMTP id
+ a640c23a62f3a-ae3dd25aca9mr88160166b.19.1751508458811; Wed, 02 Jul 2025
+ 19:07:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] LoongArch: Support mem=SIZE kernel parameter
-To: Yanteng Si <si.yanteng@linux.dev>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>,
- Bibo Mao <maobibo@loongson.cn>, Hari Bathini <hbathini@linux.ibm.com>,
- Guo Weikang <guoweikang.kernel@gmail.com>,
- Sourabh Jain <sourabhjain@linux.ibm.com>, Usama Arif
- <usamaarif642@gmail.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Cc: lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
-References: <20250701090449.2426151-1-wangming01@loongson.cn>
- <0561da2c-a4d7-49bb-8394-930f10880610@linux.dev>
-Content-Language: en-US
-From: Ming Wang <wangming01@loongson.cn>
-In-Reply-To: <0561da2c-a4d7-49bb-8394-930f10880610@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxL8K63mVovo8HAA--.86S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAQEMEmhkyh0U7AAAs9
-X-Coremail-Antispam: 1Uk129KBj93XoW3XF1DXF17Gr4DKw13Wr1xJFc_yoW7XrWrpF
-	1kAw15trZ8GFn7Ww1xCwn8XryrAw1rJa4UWr1UuF15AF15Ar1Igr40qr1q9FyUGr4xXr42
-	qr1Utr9rZa1DAFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Cb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20x
-	vEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
-	4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-	WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-	wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
-	k0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j
-	6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5miiUUUUU=
+References: <78b06d1c7ae0677868e0c7498b589af163313c8d.1750939357.git.zhoubinbin@loongson.cn>
+ <202507021011.sDAHGinj-lkp@intel.com> <20250702162318.GZ10134@google.com>
+In-Reply-To: <20250702162318.GZ10134@google.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Thu, 3 Jul 2025 10:07:26 +0800
+X-Gm-Features: Ac12FXxvQYgSR_pb1CaQhAd5356-n99IGXBSgkWflU0a6alpsxti5PcQ-gLfDuE
+Message-ID: <CAMpQs4+hrJ8B4wZRmCH2T7wLAwnmD8_WH2OpNLWH64AbanZ-pw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+To: Lee Jones <lee@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Corey Minyard <minyard@acm.org>, oe-kbuild-all@lists.linux.dev, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io, 
+	kexybiscuit@aosc.io, wangyao@lemote.com, Chong Qiao <qiaochong@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Yanteng,
+Hi Lee:
 
-Thanks for reviewing the patch and for your insightful question.
+On Thu, Jul 3, 2025 at 12:23=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
+>
+> On Wed, 02 Jul 2025, kernel test robot wrote:
+>
+> > Hi Binbin,
+> >
+> > kernel test robot noticed the following build errors:
+> >
+> > [auto build test ERROR on 3d77b3cc7cc8115d89fa14eaf601e56372953484]
+> >
+> > url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-=
+ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250626-203353
+> > base:   3d77b3cc7cc8115d89fa14eaf601e56372953484
+> > patch link:    https://lore.kernel.org/r/78b06d1c7ae0677868e0c7498b589a=
+f163313c8d.1750939357.git.zhoubinbin%40loongson.cn
+> > patch subject: [PATCH v6 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset f=
+unction support
+> > config: sparc64-allmodconfig (https://download.01.org/0day-ci/archive/2=
+0250702/202507021011.sDAHGinj-lkp@intel.com/config)
+> > compiler: sparc64-linux-gcc (GCC) 15.1.0
+> > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arc=
+hive/20250702/202507021011.sDAHGinj-lkp@intel.com/reproduce)
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
+rsion of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202507021011.sDAHGinj-l=
+kp@intel.com/
+> >
+> > All errors (new ones prefixed by >>):
+> >
+> >    drivers/mfd/ls2k-bmc-core.c: In function 'ls2k_bmc_pdata_initial':
+> > >> drivers/mfd/ls2k-bmc-core.c:349:15: error: implicit declaration of f=
+unction 'acpi_register_gsi' [-Wimplicit-function-declaration]
+> >      349 |         irq =3D acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSI=
+TIVE, ACPI_ACTIVE_LOW);
+> >          |               ^~~~~~~~~~~~~~~~~
+> > >> drivers/mfd/ls2k-bmc-core.c:376:9: error: implicit declaration of fu=
+nction 'acpi_unregister_gsi'; did you mean 'arch_unregister_cpu'? [-Wimplic=
+it-function-declaration]
+> >      376 |         acpi_unregister_gsi(gsi);
+> >          |         ^~~~~~~~~~~~~~~~~~~
+> >          |         arch_unregister_cpu
+>
+> Is this error valid?
 
-On 7/2/25 10:11, Yanteng Si wrote:
-> 在 7/1/25 5:04 PM, Ming Wang 写道:
->> The LoongArch mem= parameter parser was previously limited to the
->> mem=SIZE@START format. This was inconvenient for the common use case
->> of simply capping the total system memory, as it forced users to
->> manually specify a start address. It was also inconsistent with the
->> behavior on other architectures.
->>
->> This patch enhances the parser in early_parse_mem() to also support the
->> more user-friendly mem=SIZE format. The implementation now checks for
->> the presence of the '@' symbol to determine the user's intent:
->>
->> - If mem=SIZE is provided (no '@'), the kernel now calls
->>    memblock_enforce_memory_limit(). This trims memory from the top down
->>    to the specified size.
->> - If mem=SIZE@START is used, the original behavior is retained for
->>    backward compatibility. This allows for defining specific memory
->>    banks.
->>
->> This change introduces an important usage rule reflected in the code's
->> comments: the mem=SIZE format should only be specified once on the
->> kernel command line. It acts as a single, global cap on total memory. In
->> contrast, the mem=SIZE@START format can be used multiple times to
->> define several distinct memory regions.
->>
->> Signed-off-by: Ming Wang <wangming01@loongson.cn>
->> ---
->>   arch/loongarch/kernel/setup.c | 18 ++++++++++--------
->>   1 file changed, 10 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/ 
->> setup.c
->> index b99fbb388fe0..af59ba180dc2 100644
->> --- a/arch/loongarch/kernel/setup.c
->> +++ b/arch/loongarch/kernel/setup.c
->> @@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
->>           return -EINVAL;
->>       }
->> +    start = 0;
->> +    size = memparse(p, &p);
->> +    if (*p == '@')    /* Every mem=... should contain '@' */
->> +        start = memparse(p + 1, &p);
->> +    else {            /* Only one mem=... is allowed if no '@' */
->> +        usermem = 1;
->> +        memblock_enforce_memory_limit(size);
->> +        return 0;
->> +    }
->> +
->>       /*
->>        * If a user specifies memory size, we
->>        * blow away any automatically generated
->> @@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
->>           memblock_remove(memblock_start_of_DRAM(),
->>               memblock_end_of_DRAM() - memblock_start_of_DRAM());
->>       }
->> -    start = 0;
->> -    size = memparse(p, &p);
->> -    if (*p == '@')
->> -        start = memparse(p + 1, &p);
->> -    else {
->> -        pr_err("Invalid format!\n");
->> -        return -EINVAL;
->> -    }
-> I don't understand. Isn't it better to modify the else{} directly here?
-> 
-You've raised a very good point. The reason for moving the parsing logic 
-to the top, rather than just modifying the original else block, is to 
-handle the fundamentally different behaviors required for mem=SIZE 
-versus mem=SIZE@START. The key lies in thisexisting block of code which 
-handles the mem=SIZE@START case:
+Emm...
 
-```
-/*
-* If a user specifies memory size, we
-* blow away any automatically generated
-* size.
-*/
-if (usermem == 0) {
-	usermem = 1;
-	memblock_remove(memblock_start_of_DRAM(),
-			memblock_end_of_DRAM() - memblock_start_of_DRAM());
-}
-```
+This error does exist if ACPI_GENERIC_GSI is not selected.
+I will add this dependency in the next version.
 
-This code is destructive. As the comment says, it "blows away" the 
-entire memory map discovered from the firmware (UEFI/ACPI). After this 
-call, memblock is essentially empty, waiting for new regions to be added 
-via memblock_add(). This is the correct behavior for mem=SIZE@START.
+depends on PCI && ACPI_GENERIC_GSI
 
-However, the new mem=SIZE functionality is meant to be non-destructive. 
-It should take the existing firmware-provided memory map and simply trim 
-it down to the desired size. The function 
-memblock_enforce_memory_limit() is designed for this purpose—it operates 
-on the current state of memblock.
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
 
-If we were to keep the parsing logic at the end and only modify the else 
-block, the destructive memblock_remove() call would have already 
-executed for both cases. By that point, calling 
-memblock_enforce_memory_limit() would be meaningless, as there would be 
-no memory regions left in memblock to limit.
-
-Therefore, the patch moves the parsing logic to the very beginning to 
-create a clean separation:
-1. It first checks if the format is mem=SIZE (no '@').
-2. If it is, it performs the non-destructive limit on the intact memory 
-map and returns immediately, completely bypassing the destructive 
-memblock_remove() logic.
-3. If the format is mem=SIZE@START, it falls through to the original 
-destructive path as before.
-
-I hope this explanation clarifies why the code structure was changed 
-this way. It's crucial to ensure the non-destructive path is handled 
-before any memory map information is lost.
-
-Best regards,
-Ming
-
-
-> Thanks,
-> Yanteng
-> 
-
+--=20
+Thanks.
+Binbin
