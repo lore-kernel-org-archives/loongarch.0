@@ -1,58 +1,40 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E031F20E314
-	for <loongarch@lists.linux.dev>; Fri,  4 Jul 2025 05:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04548288526
+	for <loongarch@lists.linux.dev>; Fri,  4 Jul 2025 09:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751608403; cv=none; b=SUoM+YXcBgGIl3gfqekMS13VYTMxuQClO1Dvv6+y9Ug8Itu5lPT6DYMGfFxbHHV3FKipb3IiHudrIGcKP+M2MgJyWTWmJRl6oM50btgx+ZL9y/DrRMu3QZwEJPaQ7EcdgaWFX+7Wg5T/vPaqJv6si1zA/5aiy9buyO/mpKtKW9Q=
+	t=1751620904; cv=none; b=hBKU3pX2+OiNwqnvfj4SKLf1xSYgI/Srf00JEOg6oIwskLJHX6P2igfjSPXdrOvTVtJ9BY+/vOelY2IAeV8RkJ0tDrTONGZIBIcMojiJRYqalDngR1x9ZDEc9kjtAiffE2XQFaRCrQAS7oCohTg1OXmBLS0HqaOukk2PfpeK7ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751608403; c=relaxed/simple;
-	bh=jgEXT8fYe2Y2QTug74CbjKJ3+y9lQkj+xtT41ZFnaW8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LSDIMO1etjHhob7iSvQl8TdI4fY08XPAkgFgiDEoeYxSg4uhPSoY6z0iQD8BC2ePSKPBRulCknTUD/Ngb0XnlmAG66ppvhmK3yDrwQTkJU4toQekbzrJUtCT+e3dVzwhHaOv+Da6DA+dKjyaRIVdXINNTYGlqZCi1VoBgiBs9CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 2c07e45c589b11f0b29709d653e92f7d-20250704
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:6dcc7f53-85e6-4411-ac67-9789e5393235,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.45,REQID:6dcc7f53-85e6-4411-ac67-9789e5393235,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:976dd741281dd8707e4a238e7fffc18a,BulkI
-	D:250704135314VXWHIXIU,BulkQuantity:0,Recheck:0,SF:17|19|24|44|64|66|78|80
-	|81|82|83|102|841,TC:nil,Content:0|51,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,B
-	ulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR
-	:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 2c07e45c589b11f0b29709d653e92f7d-20250704
-X-User: jianghaoran@kylinos.cn
-Received: from [172.30.70.211] [(39.156.73.13)] by mailgw.kylinos.cn
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 2026487818; Fri, 04 Jul 2025 13:53:13 +0800
-Message-ID: <d61697244565d2c423fdd965decc4fcd0a3a8f74.camel@kylinos.cn>
-Subject: =?gb2312?Q?=BB=D8=B8=B4=A3=BA=5BPATCH?= 0/2] Fix two
- tailcall-related issues
-From: jianghaoran <jianghaoran@kylinos.cn>
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, kernel@xen0n.name, 
- chenhuacai@kernel.org, yangtiezhu@loongson.cn, jolsa@kernel.org,
- haoluo@google.com,  sdf@fomichev.me, kpsingh@kernel.org,
- john.fastabend@gmail.com,  yonghong.song@linux.dev, song@kernel.org,
- eddyz87@gmail.com, martin.lau@linux.dev,  andrii@kernel.org,
- daniel@iogearbox.net, ast@kernel.org
-Date: Fri, 04 Jul 2025 13:52:47 +0800
-In-Reply-To: <CAEyhmHSzfMr0J4t7v7cC7roTfybJRqHF_iumFMCYm_iqzJkGOQ@mail.gmail.com>
-References: <20250701074110.525363-1-jianghaoran@kylinos.cn>
-	 <CAEyhmHSzfMr0J4t7v7cC7roTfybJRqHF_iumFMCYm_iqzJkGOQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2kord0k2.4.25.1 
+	s=arc-20240116; t=1751620904; c=relaxed/simple;
+	bh=HCJ1JhHK2fE04lwNglZ4+F99ZO4+HoM5uxWQBbcNcLQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wx6+0uvdrsuCtb5ykADkRxJMXLQoGrTfOGtFLa88F8DpCBrqR2EFTSUg2KBGwBQSNHutzkeJk3dmIEkJOajA246GCxdzWnDVK8fL/bTbroyCEHAL6rwGMab+5qxyZY5uhn70jt/qxiqQoIGWhjfImfe5h3wC48gLOb4e3vCmBAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.149])
+	by gateway (Coremail) with SMTP id _____8AxaeEbnWdosVAiAQ--.31361S3;
+	Fri, 04 Jul 2025 17:21:31 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.149])
+	by front1 (Coremail) with SMTP id qMiowJAxT+YTnWdobxoJAA--.53746S2;
+	Fri, 04 Jul 2025 17:21:25 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	jeffbai@aosc.io,
+	kexybiscuit@aosc.io,
+	wangyao@lemote.com,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v7 0/3] LoongArch: Add Loongson-2K BMC support
+Date: Fri,  4 Jul 2025 17:21:10 +0800
+Message-ID: <cover.1751617911.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -60,78 +42,162 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxT+YTnWdobxoJAA--.53746S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJF13CF1fuw1DKFW3Kw1kXrc_yoWrKr1Dpa
+	15urs8Crn8KF17J393Cw1fuFyYqa95Ja4Sgr17Aw15uF4UCa4jyrWrKa13XFyUAF4kKryI
+	qrsayr1fKa45Z3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUc9a9UUUUU
+
+Hi all:
+
+This patch set introduces the Loongson-2K BMC.
+
+It is a PCIe device present on servers similar to the Loongson-3 CPUs.
+And it is a multifunctional device (MFD), such as display as a sub-function
+of it.
+
+For IPMI, according to the existing design, we use software simulation to
+implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+
+Also since both host side and BMC side read and write kcs status, we use
+fifo pointer to ensure data consistency.
+
+For the display, based on simpledrm, the resolution is read from a fixed
+position in the BMC since the hardware does not support auto-detection
+of the resolution. Of course, we will try to support multiple
+resolutions later, through a vbios-like approach.
+
+Especially, for the BMC reset function, since the display will be
+disconnected when BMC reset, we made a special treatment of re-push.
+
+Based on this, I will present it in four patches:
+patch-1: BMC basic function support, such as display with simpledrm;
+patch-2: BMC reset function support;
+patch-3: IPMI implementation.
+
+Thanks.
+
+-------
+V7:
+Patch (1/3):
+  - Fix build warning by lkp: Add depend on ACPI_GENERIC_GSI
+    - https://lore.kernel.org/all/202507021011.sDAHGinj-lkp@intel.com/
+
+Link to V6:
+https://lore.kernel.org/all/cover.1750939357.git.zhoubinbin@loongson.cn/
+
+V6:
+- Add Acked-by tag from Corey, thanks;
+Patch (1/3):
+  - Fix build warning by lkp: Add depend on PCI
+    - https://lore.kernel.org/all/202506210204.LVZc2VG2-lkp@intel.com/
+    - https://lore.kernel.org/all/202506210231.ZWWNhofU-lkp@intel.com/
+    - https://lore.kernel.org/all/202506210652.ipUFDU5B-lkp@intel.com/
+    - https://lore.kernel.org/all/202506210343.XCHkzorp-lkp@intel.com/
+
+Link to V5:
+https://lore.kernel.org/all/cover.1750301674.git.zhoubinbin@loongson.cn/
+
+V5:
+Patch (1/3):
+ - Rename ls2kbmc-mfd.c to ls2k-bmc-core.c;
+ - Rename MFD_LS2K_BMC to MFD_LS2K_BMC_CORE and update its help text.
+Patch (3/3):
+ - Add an IPMI_LS2K config in the IPMI section that enables the IPMI
+   interface and selects MFD_LS2K_BMC_CORE.
+
+Link to V4:
+https://lore.kernel.org/all/cover.1749731531.git.zhoubinbin@loongson.cn/
+
+V4:
+- Add Reviewed-by tag;
+- Change the order of the patches.
+Patch (1/3):
+  - Fix build warning by lkp: Kconfig tristate -> bool
+    - https://lore.kernel.org/all/202505312022.QmFmGE1F-lkp@intel.com/
+ - Update commit message;
+ - Move MFD_LS2K_BMC after MFD_INTEL_M10_BMC_PMCI in Kconfig and
+   Makefile.
+Patch (2/3):
+  - Remove unnecessary newlines;
+  - Rename ls2k_bmc_check_pcie_connected() to
+    ls2k_bmc_pcie_is_connected();
+  - Update comment message.
+Patch (3/3):
+  - Remove unnecessary newlines.
+
+Link to V3:
+https://lore.kernel.org/all/cover.1748505446.git.zhoubinbin@loongson.cn/
+
+V3:
+Patch (1/3):
+ - Drop "MFD" in title and comment;
+ - Fromatting code;
+ - Add clearer comments.
+Patch (2/3):
+ - Rebase linux-ipmi/next tree;
+ - Use readx()/writex() to read and write IPMI data instead of structure
+   pointer references;
+ - CONFIG_LOONGARCH -> MFD_LS2K_BMC;
+ - Drop unused output.
+Patch (3/3):
+ - Inline the ls2k_bmc_gpio_reset_handler() function to ls2k_bmc_pdata_initial();
+ - Add clearer comments.
+ - Use proper multi-line commentary as per the Coding Style documentation;
+ - Define all magic numbers.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1747276047.git.zhoubinbin@loongson.cn/
+
+V2:
+- Drop ls2kdrm, use simpledrm instead.
+Patch (1/3):
+ - Use DEFINE_RES_MEM_NAMED/MFD_CELL_RES simplified code;
+ - Add resolution fetching due to replacing the original display
+   solution with simpledrm; 
+ - Add aperture_remove_conflicting_devices() to avoid efifb
+   conflict with simpledrm.
+Patch (3/3):
+ - This part of the function, moved from the original ls2kdrm to mfd;
+ - Use set_console to implement the Re-push display function.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1735550269.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (3):
+  mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+  mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+  ipmi: Add Loongson-2K BMC support
+
+ MAINTAINERS                      |   7 +
+ drivers/char/ipmi/Kconfig        |   7 +
+ drivers/char/ipmi/Makefile       |   1 +
+ drivers/char/ipmi/ipmi_si.h      |   7 +
+ drivers/char/ipmi/ipmi_si_intf.c |   4 +
+ drivers/char/ipmi/ipmi_si_ls2k.c | 189 ++++++++++++
+ drivers/mfd/Kconfig              |  13 +
+ drivers/mfd/Makefile             |   2 +
+ drivers/mfd/ls2k-bmc-core.c      | 484 +++++++++++++++++++++++++++++++
+ 9 files changed, 714 insertions(+)
+ create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+ create mode 100644 drivers/mfd/ls2k-bmc-core.c
 
 
-
-
-
-在 2025-07-03星期四的 20:31 +0800，Hengqi Chen写道：
-> On Tue, Jul 1, 2025 at 3:41 PM Haoran Jiang <
-> jianghaoran@kylinos.cn
-> > wrote:
-> > 1,Fix the jmp_offset calculation error in the
-> > emit_bpf_tail_call function.
-> > 2,Fix the issue that MAX_TAIL_CALL_CNT limit bypass in hybrid
-> > tailcall and BPF-to-BPF call
-> > 
-> > After applying this patch, testing results are as follows:
-> > 
-> > ./test_progs --allow=tailcalls/tailcall_bpf2bpf_hierarchy_1
-> > 413/18  tailcalls/tailcall_bpf2bpf_hierarchy_1:OK
-> > 413     tailcalls:OK
-> > Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-> > 
-> > ./test_progs --allow=tailcalls/tailcall_bpf2bpf_hierarchy_2
-> > 413/23  tailcalls/tailcall_bpf2bpf_hierarchy_2:OK
-> > 413     tailcalls:OK
-> > Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-> > 
-> > ./test_progs --allow=tailcalls/tailcall_bpf2bpf_hierarchy_3
-> > 413/24  tailcalls/tailcall_bpf2bpf_hierarchy_3:OK
-> > 413     tailcalls:OK
-> > Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-> > 
-> 
-> Thanks for the fixes. Will review this series soon.
-> BTW, do you test other tailcall test cases ?
-> 
-> Cheers,
-> ---
-> Hengqi
-> 
-
-tailcall_1/tailcall_2/tailcall_3/tailcall_4/tailcall_5/tailcall_6/t
-ailcall_bpf2bpf_1/tailcall_bpf2bpf_2/tailcall_bpf2bpf_3/tailcall_bp
-f2bpf_4/tailcall_bpf2bpf_5/tailcall_bpf2bpf_6
-/tailcall_bpf2bpf_hierarchy_1/tailcall_bpf2bpf_hierarchy_2/tailcall
-_bpf2bpf_hierarchy_3/tailcall_failure
-These test cases passed
-
-tailcall_bpf2bpf_fentry/tailcall_bpf2bpf_fexit/tailcall_bpf2bpf_fen
-try_fexit/tailcall_bpf2bpf_fentry_entry/tailcall_bpf2bpf_hierarchy_
-fentry/tailcall_bpf2bpf_hierarchy_fexit
-/tailcall_bpf2bpf_hierarchy_fentry_fexit/tailcall_bpf2bpf_hierarchy
-_fentry_entry/tailcall_freplace/tailcall_bpf2bpf_freplace
-These test cases depend on the trampoline capability, which is
-currently under review in the Linux kernel.
-
-These two patches are relatively independent. Could we prioritize
-reviewing the fixes above first? 
-Trampoline-dependent changes will be implemented after
-trampoline  is merged.
-
-thanks
-
-> 
-> > Haoran Jiang (2):
-> >   LoongArch: BPF: Optimize the calculation method of jmp_offset in the
-> >     emit_bpf_tail_call function
-> >   LoongArch: BPF: Fix tailcall hierarchy
-> > 
-> >  arch/loongarch/net/bpf_jit.c | 140 ++++++++++++++++++++---------------
-> >  1 file changed, 80 insertions(+), 60 deletions(-)
-> > 
-> > --
-> > 2.43.0
-> > 
+base-commit: 2e8185c0f214d45cdbc20ee4e6796c561ba66c55
+-- 
+2.47.1
 
