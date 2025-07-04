@@ -1,121 +1,137 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4678B38384
-	for <loongarch@lists.linux.dev>; Thu,  3 Jul 2025 12:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E031F20E314
+	for <loongarch@lists.linux.dev>; Fri,  4 Jul 2025 05:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545923; cv=none; b=SYTPp87tyjCXJmnhrArtRtoB5YHWH08A3COD4mcFAzRfgc/Wg4crhzeAJ2gG68/tq4/ibNH3xznDKDMBkl+c2eBEgmARyUGviCJ7fe3mQBqBaidyrwH+Ogc5tDYhElEh+yXF7uQmoa091i08h73gnIHy3ZmXOcP+j3q8orFaF0E=
+	t=1751608403; cv=none; b=SUoM+YXcBgGIl3gfqekMS13VYTMxuQClO1Dvv6+y9Ug8Itu5lPT6DYMGfFxbHHV3FKipb3IiHudrIGcKP+M2MgJyWTWmJRl6oM50btgx+ZL9y/DrRMu3QZwEJPaQ7EcdgaWFX+7Wg5T/vPaqJv6si1zA/5aiy9buyO/mpKtKW9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545923; c=relaxed/simple;
-	bh=S4J99fobTBLE1mv7fNytEpG9fmSZtcD/mHmVfzYtlyE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RMSUYWzhtpqHY2MwpUOW3kohcY6da0K7GQm2+UWpxsYUzrCaDh9s6rEMNM+dQ4EOSHMfW7oClPtw/qjRA2ZeK8WXkBXrX2+IEMqrXBuzi48MGqQ1X2SKl6qhAFloAGAwKOvvP0yMzfFwfpDw1td+uIrhI8zWuknFCobOLymPiPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IDstoUk3; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IDstoUk3"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-4067ac8f6cdso3949362b6e.2
-        for <loongarch@lists.linux.dev>; Thu, 03 Jul 2025 05:32:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751545921; x=1752150721; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gQhKbDgttLDPzwjksoiTuICCO43hP51+1t35DHSJJzk=;
-        b=IDstoUk3BLvglMOJ9IdJY63/fR3V/MBKsaM2F1jfblFiYhu1p7B7yJcXKZ1FDyV5PA
-         kj6fE7sv80KWBZpI6lXvGxd9pOfhbl5KpOms+lfQw83orgr+Alf9sf3uznVowNRjcToA
-         Qqp7xKIOyXFO0NUvmy2FLpPJNfl6PheEazPqXkMNqUdsm+TYT71k9IBTK4NffN89+F7K
-         K43EPVHmzHTeu4/jJxLdUE70bFDWlchPHCo4WQfyucZTt9dv4MEhLG+38JMIS6WZ1GUR
-         xQrIXPvXiCzSndIs0W5bFY1/F9O61kq4gfvCAYeFjSJCFIkbwvR1mRGl77bxD/FvkPB5
-         w3SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545921; x=1752150721;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gQhKbDgttLDPzwjksoiTuICCO43hP51+1t35DHSJJzk=;
-        b=nZlfr4LQ/rUTtV2AyxACdXBKWxWjnVqARIx/Qxnwf21S/evQITpzkmZGafrVVnjBc5
-         RIcgHjuhiSXH0d/CEMLsNR+0DyZXQMEJuMuKhc/jcREWqYvpvwrQj4hbkyZNPfklObt7
-         Uqfbp/WP31bC2aQvw1d2BKc4YsPSiBGsBo/iqsY+CZnwgd7/NYNb0y0+zD8FpUKyCvZh
-         H8uz3t6D5vTElPml4kEV/gKHcuAG+SD76FKJdSyOXgJBWFZ7yRSiqSGjL/oZ6MC0BcBr
-         h1TqmlEzXinpJJAVLvQttRDTP9dsBF3nn/038eien00xXEn4yPLVVLXGZaxV6dCuC46t
-         XtwA==
-X-Gm-Message-State: AOJu0YwYzJeDW/qG1dHHv9poAADVdMfvMGmXWDky/MI7f1oQX+NZNIus
-	MsHsy0g7SH/Vw4e3NDeYtZYUFuQltdrU25Ql+VAVA92YxxES/ylp2VirMYG00cmSnLqwZQ8WYtS
-	EM0TMc1104SIoGCaVfcMToYBGg1JiRKs=
-X-Gm-Gg: ASbGncte8ZJeHK14MmmrExYOdZHqo1rQmDkFCiZWbnV58nfA8eyh0HntnHYeFq/Ja81
-	COHhHZIrMYdx7MSVhse0J++fuemSRyEg2XAdAH0ksKCbXFoeaEVtlHGzB5FH6f2LcGPX3MuZUTe
-	tg+V/XmCeXA149IHo+BtD4x0ewcpZW1AGlNZQoLvixuKgIG2rvEEmMlQ==
-X-Google-Smtp-Source: AGHT+IHKgh3LV0M1b1DI8XB7Kt26yf3bzmbWqoLaHD9ywjP2Z87i/kydkVEv0FPDtA2B1qW1o+7wGN53vA5wbK1o1BM=
-X-Received: by 2002:a05:6808:1708:b0:406:72ad:bb6b with SMTP id
- 5614622812f47-40b8932e380mr4527700b6e.37.1751545921313; Thu, 03 Jul 2025
- 05:32:01 -0700 (PDT)
+	s=arc-20240116; t=1751608403; c=relaxed/simple;
+	bh=jgEXT8fYe2Y2QTug74CbjKJ3+y9lQkj+xtT41ZFnaW8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LSDIMO1etjHhob7iSvQl8TdI4fY08XPAkgFgiDEoeYxSg4uhPSoY6z0iQD8BC2ePSKPBRulCknTUD/Ngb0XnlmAG66ppvhmK3yDrwQTkJU4toQekbzrJUtCT+e3dVzwhHaOv+Da6DA+dKjyaRIVdXINNTYGlqZCi1VoBgiBs9CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 2c07e45c589b11f0b29709d653e92f7d-20250704
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:6dcc7f53-85e6-4411-ac67-9789e5393235,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-INFO: VERSION:1.1.45,REQID:6dcc7f53-85e6-4411-ac67-9789e5393235,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:976dd741281dd8707e4a238e7fffc18a,BulkI
+	D:250704135314VXWHIXIU,BulkQuantity:0,Recheck:0,SF:17|19|24|44|64|66|78|80
+	|81|82|83|102|841,TC:nil,Content:0|51,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,B
+	ulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR
+	:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 2c07e45c589b11f0b29709d653e92f7d-20250704
+X-User: jianghaoran@kylinos.cn
+Received: from [172.30.70.211] [(39.156.73.13)] by mailgw.kylinos.cn
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 2026487818; Fri, 04 Jul 2025 13:53:13 +0800
+Message-ID: <d61697244565d2c423fdd965decc4fcd0a3a8f74.camel@kylinos.cn>
+Subject: =?gb2312?Q?=BB=D8=B8=B4=A3=BA=5BPATCH?= 0/2] Fix two
+ tailcall-related issues
+From: jianghaoran <jianghaoran@kylinos.cn>
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, kernel@xen0n.name, 
+ chenhuacai@kernel.org, yangtiezhu@loongson.cn, jolsa@kernel.org,
+ haoluo@google.com,  sdf@fomichev.me, kpsingh@kernel.org,
+ john.fastabend@gmail.com,  yonghong.song@linux.dev, song@kernel.org,
+ eddyz87@gmail.com, martin.lau@linux.dev,  andrii@kernel.org,
+ daniel@iogearbox.net, ast@kernel.org
+Date: Fri, 04 Jul 2025 13:52:47 +0800
+In-Reply-To: <CAEyhmHSzfMr0J4t7v7cC7roTfybJRqHF_iumFMCYm_iqzJkGOQ@mail.gmail.com>
+References: <20250701074110.525363-1-jianghaoran@kylinos.cn>
+	 <CAEyhmHSzfMr0J4t7v7cC7roTfybJRqHF_iumFMCYm_iqzJkGOQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2kord0k2.4.25.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250701074110.525363-1-jianghaoran@kylinos.cn>
-In-Reply-To: <20250701074110.525363-1-jianghaoran@kylinos.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Thu, 3 Jul 2025 20:31:50 +0800
-X-Gm-Features: Ac12FXzvOvSPQVT9LYj0iv4FoFZsh-_TM9rl_-KtrPi7ZPAloYrcp2RmxBqM7-M
-Message-ID: <CAEyhmHSzfMr0J4t7v7cC7roTfybJRqHF_iumFMCYm_iqzJkGOQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Fix two tailcall-related issues
-To: Haoran Jiang <jianghaoran@kylinos.cn>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, kernel@xen0n.name, 
-	chenhuacai@kernel.org, yangtiezhu@loongson.cn, jolsa@kernel.org, 
-	haoluo@google.com, sdf@fomichev.me, kpsingh@kernel.org, 
-	john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org, 
-	eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, 
-	daniel@iogearbox.net, ast@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 1, 2025 at 3:41=E2=80=AFPM Haoran Jiang <jianghaoran@kylinos.cn=
-> wrote:
->
-> 1,Fix the jmp_offset calculation error in the emit_bpf_tail_call function=
-.
-> 2,Fix the issue that MAX_TAIL_CALL_CNT limit bypass in hybrid tailcall an=
-d BPF-to-BPF call
->
-> After applying this patch, testing results are as follows:
->
-> ./test_progs --allow=3Dtailcalls/tailcall_bpf2bpf_hierarchy_1
-> 413/18  tailcalls/tailcall_bpf2bpf_hierarchy_1:OK
-> 413     tailcalls:OK
-> Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
->
-> ./test_progs --allow=3Dtailcalls/tailcall_bpf2bpf_hierarchy_2
-> 413/23  tailcalls/tailcall_bpf2bpf_hierarchy_2:OK
-> 413     tailcalls:OK
-> Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
->
-> ./test_progs --allow=3Dtailcalls/tailcall_bpf2bpf_hierarchy_3
-> 413/24  tailcalls/tailcall_bpf2bpf_hierarchy_3:OK
-> 413     tailcalls:OK
-> Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
->
 
-Thanks for the fixes. Will review this series soon.
-BTW, do you test other tailcall test cases ?
 
-Cheers,
----
-Hengqi
 
-> Haoran Jiang (2):
->   LoongArch: BPF: Optimize the calculation method of jmp_offset in the
->     emit_bpf_tail_call function
->   LoongArch: BPF: Fix tailcall hierarchy
->
->  arch/loongarch/net/bpf_jit.c | 140 ++++++++++++++++++++---------------
->  1 file changed, 80 insertions(+), 60 deletions(-)
->
-> --
-> 2.43.0
->
+
+在 2025-07-03星期四的 20:31 +0800，Hengqi Chen写道：
+> On Tue, Jul 1, 2025 at 3:41 PM Haoran Jiang <
+> jianghaoran@kylinos.cn
+> > wrote:
+> > 1,Fix the jmp_offset calculation error in the
+> > emit_bpf_tail_call function.
+> > 2,Fix the issue that MAX_TAIL_CALL_CNT limit bypass in hybrid
+> > tailcall and BPF-to-BPF call
+> > 
+> > After applying this patch, testing results are as follows:
+> > 
+> > ./test_progs --allow=tailcalls/tailcall_bpf2bpf_hierarchy_1
+> > 413/18  tailcalls/tailcall_bpf2bpf_hierarchy_1:OK
+> > 413     tailcalls:OK
+> > Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+> > 
+> > ./test_progs --allow=tailcalls/tailcall_bpf2bpf_hierarchy_2
+> > 413/23  tailcalls/tailcall_bpf2bpf_hierarchy_2:OK
+> > 413     tailcalls:OK
+> > Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+> > 
+> > ./test_progs --allow=tailcalls/tailcall_bpf2bpf_hierarchy_3
+> > 413/24  tailcalls/tailcall_bpf2bpf_hierarchy_3:OK
+> > 413     tailcalls:OK
+> > Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+> > 
+> 
+> Thanks for the fixes. Will review this series soon.
+> BTW, do you test other tailcall test cases ?
+> 
+> Cheers,
+> ---
+> Hengqi
+> 
+
+tailcall_1/tailcall_2/tailcall_3/tailcall_4/tailcall_5/tailcall_6/t
+ailcall_bpf2bpf_1/tailcall_bpf2bpf_2/tailcall_bpf2bpf_3/tailcall_bp
+f2bpf_4/tailcall_bpf2bpf_5/tailcall_bpf2bpf_6
+/tailcall_bpf2bpf_hierarchy_1/tailcall_bpf2bpf_hierarchy_2/tailcall
+_bpf2bpf_hierarchy_3/tailcall_failure
+These test cases passed
+
+tailcall_bpf2bpf_fentry/tailcall_bpf2bpf_fexit/tailcall_bpf2bpf_fen
+try_fexit/tailcall_bpf2bpf_fentry_entry/tailcall_bpf2bpf_hierarchy_
+fentry/tailcall_bpf2bpf_hierarchy_fexit
+/tailcall_bpf2bpf_hierarchy_fentry_fexit/tailcall_bpf2bpf_hierarchy
+_fentry_entry/tailcall_freplace/tailcall_bpf2bpf_freplace
+These test cases depend on the trampoline capability, which is
+currently under review in the Linux kernel.
+
+These two patches are relatively independent. Could we prioritize
+reviewing the fixes above first? 
+Trampoline-dependent changes will be implemented after
+trampoline  is merged.
+
+thanks
+
+> 
+> > Haoran Jiang (2):
+> >   LoongArch: BPF: Optimize the calculation method of jmp_offset in the
+> >     emit_bpf_tail_call function
+> >   LoongArch: BPF: Fix tailcall hierarchy
+> > 
+> >  arch/loongarch/net/bpf_jit.c | 140 ++++++++++++++++++++---------------
+> >  1 file changed, 80 insertions(+), 60 deletions(-)
+> > 
+> > --
+> > 2.43.0
+> > 
+
