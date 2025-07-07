@@ -1,237 +1,191 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2086.outbound.protection.outlook.com [40.107.212.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28FE2701BA
-	for <loongarch@lists.linux.dev>; Mon,  7 Jul 2025 12:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751891367; cv=none; b=WmWKUEww/vm7HLu9DHoVOSbzhPwQQb3vcHA+Xia9RwNESa65ncE/geouH8zhWSpCX2mm95eR6WAVfXl0pS8aYV+4rrEwkkaKfS2SSrQfpkFxpBAtpppf5nl54nLATbMj+CdK/Noro0mDGSTM/kZyNoN2iOTGrNK9EtwnFxr/RVQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751891367; c=relaxed/simple;
-	bh=WYSDGwcHg8OIX9RqBrjunz46B6TPjO4W/Djpib6fDDk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aIvkcXA873nMFcZibHSaAmooSkfPApFbRaZYU25TLuGeLPiK1UOHUNEy7USseXwGjEvqnXs+8PMFAkP+yhUdLqVZw0GXmCaQj6UV9HGUUGOAWOUWpJj+SjfpiaNYsaVpX3o3Adms9aruigS0PaA9K9i1Y1xYvzIo4QXQDrtTdGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UnbdCH2O; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E706012C544
+	for <loongarch@lists.linux.dev>; Mon,  7 Jul 2025 22:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751926333; cv=fail; b=Y7DQ0aS0K2tpCfpV82UQyHg/DBOg2zrivJqD79lc9ZrAD53p59fg/6epB36NBmXsWTt0eLmgXrS71qElzIOz4D/cuD0NMCEoQVJ4guHn9A3l1jPuXdtgpewYJaAORzIq06gUUjcE6KJM0oKsxAPCqoSKI/DR16KNf50a5CJf7hI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751926333; c=relaxed/simple;
+	bh=xQ7CvLItDciqoLrCg/DXBsgODy9v17vL7NmZXX644Ok=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GIlGQ8tTvx96ZEZbUr0gzC1mrNl8rrpd8pnPcHQ6Bn/DBVGv+bMIZZIrNssJY/CMWJBpaGeVR7Tbxn8tBhpQMve3MVTCSGhevagPnd8EjyGevghDR6d6A/u4PiYVp/KLb5GFRthGS/4H4KrlM+iB0vOTe00L3MtEw4A3RcMTMUs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=S2ocvJnb; arc=fail smtp.client-ip=40.107.212.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnbdCH2O"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-4080548891fso718260b6e.3
-        for <loongarch@lists.linux.dev>; Mon, 07 Jul 2025 05:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751891365; x=1752496165; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ig/s/402eBoi7g31vR2xi+h6kTIDzXfOUp6ly6hWS6k=;
-        b=UnbdCH2OA14IHqvT/I8DBM5wOhFSfKgverV+nwhcz7ue4QfXhlY83AXSPobzqjyYsu
-         OWneILHtlBPfXYM6wwTxOg4Wnt8foulP/6ky5CTobjKho/KtvrGUWdk92AcrtRIUwL/R
-         rDLMyfuJ4SYfohwjU+UqZ0PqD9OdDvo88yZqp2/AMnsPS4NE075i/zaZYVHsRMx7tj2p
-         nZFNQ/Og8EmQggWY+3KBiweUKZHb+Y9Ky1vfs1UYbOohKGqI8iXXd7Jsfi+avcV9OhMD
-         e5z8LuyeWMvLJ6wCwAKEcM5ARCzVuOGn0dXuQ9b7Nv9kqTp8ZoukqAjv51MVwBl8+9P/
-         1hag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751891365; x=1752496165;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ig/s/402eBoi7g31vR2xi+h6kTIDzXfOUp6ly6hWS6k=;
-        b=cjbRV9s+Zjj9+d/7JsibTbwKoqU4l5xwhNAO8v+oIhJsKSgQkXicko0xXtznm0aDrl
-         zIGVljXF8KZVRfpuX1ZVCZOaevZGSAXQOBEjp4ZOVmm3IVtAnT9uHulLkBpng6GzWVnS
-         a4cDr8Cfdk8WirpXBM6QH5hNJbk+QTBfPR1nFjsfXajaafpozF1SEHNe09s+RHwR0iOk
-         GsASAd1aNnfx7yJM9i3G+FRYzvkxf3YCBZtCa2asLDAOugZ7ZYgwRs8ZLuH82JTWv0Hu
-         jGmhyDSoaYZutAcQHTV1Kt8f5vZTeTN03etx6v+POWtYNDCd96mtJngHycflarZ0KIgR
-         aRDA==
-X-Gm-Message-State: AOJu0YwugiNwBU+pmtHMqRYLd4gAeHytoUxL3L8uUH/IY/pPeajA+P/F
-	pYwbEGuKeiGrRqassrEz/UgAUCRwjp/SHo593US493eTfK5p9OkZs0e6ltkSdGth7BwSQnjVwK5
-	Icp+uD5uDYlOQ/sA++sUUNWln1CTe7F4=
-X-Gm-Gg: ASbGncscEXVrtR+vGQieT1JdJifKNK/0uFR73q8A2XMR3rTb7IibUwMJCF6gpyocBLQ
-	bdBNz6gB8CeHxGLGsm1mUe8Pk6geTticuEKb6UYVgrEoUu746uLmxJc7yeaoTkULvHDYR94NfNN
-	0lXqOVhN7tJN006n5FutX9/FXZVYK+pYky8Rsn2ZxOoHkV0HZxyS0QLQ==
-X-Google-Smtp-Source: AGHT+IGjfbQXlcJdq6AfiTlJ2NtKQiElCO5wah47zgCs/xYCdc0Zw/03owgiiwuBoYblryFIg18K7zcqobSt34X01/Q=
-X-Received: by 2002:a05:6808:6f88:b0:3fa:daa:dd8e with SMTP id
- 5614622812f47-40d2da09d3dmr7539597b6e.35.1751891364669; Mon, 07 Jul 2025
- 05:29:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="S2ocvJnb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ps99uXRUNssF2fNgT8G44MY+9eQ4oAzrL3tUzyDwjzQx0GPSvZnudkflRSuGVSDSn/vVxEi5kLJIBXfbufMCTSNjJQJJ2msvxlpXxvAYHBibA92lrgEZ4Lu6Ofyjz4508fj3e1YrY7mi0H7v3DgTBhDilVHHWLOiXuEPx3DvPcf3glXeiS8kUcEOb7PrS4Xsi5tHOkz2bFDBBQLBkHrRIr0paLUMZWItUbQxUBps3yxoTEsK7Qvhb6H/+0xS4UCIlBf5BrUvNK65Tu5nwA/EKF14r9PUCqBXRSQQ0zGoCz2YlLjsi3viWxBeu9MUa11vr+h5s/rDkE15NUR2B3JIUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RG+bG/7vAEDE2MAHqhMkkO5R/8g+KoRHAoRdE+RLcss=;
+ b=ply8EFkPhRFNDxwV3+yvRfdQymaUvUPQqyooQEWSKKVRoxTRcq/dadoUekP0bLWt9BBB1sd7MpGfmxyYVavDb8jZzOhUv01ktogJYUO+Opoq4xR756mEWjX9FHfM8eBPm/jkoS8dNw+t0JeikPGyr7/Coe3ln5d9kDXZ84tqKSDU1iVByVR9knIWlNN4Mxs0G0PkraCgiSm0uNRT8cFXkxWNF3sT7qRZO1YKmGh4+Vw3BENAhAbtKi/AZnJztot5DzT2hCcwx7N9ubHrUGrCfBqepbbnGvLVhWYqB27B8vQ8cak4rTRR3drKoTlVdn2GCiStbaSSyg5Swcjs6E3yzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RG+bG/7vAEDE2MAHqhMkkO5R/8g+KoRHAoRdE+RLcss=;
+ b=S2ocvJnbybn5Q8I6vzEWTWZGZStL4cU9zDXAPyRmEk2zGvkQ2LId9yPgiqkl4nfb/3yqIG6jpoftyFnRysggr95ynKvQHT/V1PMhILRGSKcJ+HGWNoagnupRxD2HGbsL3JrcgmgiTrTmJXhSZTVgWM3FPSU7uvH5Q6kHCDh9sBY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com (2603:10b6:408:118::14)
+ by IA0PPF44635DB8D.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bcc) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Mon, 7 Jul
+ 2025 22:12:09 +0000
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::9269:317f:e85:cf81]) by BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::9269:317f:e85:cf81%7]) with mapi id 15.20.8901.024; Mon, 7 Jul 2025
+ 22:12:08 +0000
+Message-ID: <56e7ec54-9820-4e02-be97-2a9e1dedd117@amd.com>
+Date: Mon, 7 Jul 2025 18:12:06 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amdkfd: enable kfd on LoongArch systems
+To: Han Gao <rabenda.cn@gmail.com>, Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+References: <2b83380bf64a424b9cb902a20a244c3e106c4bb8.1751702072.git.rabenda.cn@gmail.com>
+Content-Language: en-US
+From: Felix Kuehling <felix.kuehling@amd.com>
+Organization: AMD Inc.
+In-Reply-To: <2b83380bf64a424b9cb902a20a244c3e106c4bb8.1751702072.git.rabenda.cn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YT3PR01CA0139.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:83::31) To BN9PR12MB5115.namprd12.prod.outlook.com
+ (2603:10b6:408:118::14)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250701074110.525363-1-jianghaoran@kylinos.cn> <20250701074110.525363-2-jianghaoran@kylinos.cn>
-In-Reply-To: <20250701074110.525363-2-jianghaoran@kylinos.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Mon, 7 Jul 2025 20:29:13 +0800
-X-Gm-Features: Ac12FXwPd8kVr1FDuARL12nl8c9dis4nb2dsaGqxOiCMrdxxHqaLk974QGA6lb0
-Message-ID: <CAEyhmHSambz-UR8Aa1jRz+EuF8kH6=46HW18b56pAZTB7MoZVw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] LoongArch: BPF: Optimize the calculation method of
- jmp_offset in the emit_bpf_tail_call function
-To: Haoran Jiang <jianghaoran@kylinos.cn>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, kernel@xen0n.name, 
-	chenhuacai@kernel.org, yangtiezhu@loongson.cn, jolsa@kernel.org, 
-	haoluo@google.com, sdf@fomichev.me, kpsingh@kernel.org, 
-	john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org, 
-	eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, 
-	daniel@iogearbox.net, ast@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5115:EE_|IA0PPF44635DB8D:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d6059f4-7ea3-4e36-9852-08ddbda3509c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OXB2SGVSOWVLSWFnbEJONGRTZjdYdVJVT1doZm96VHU1U09DWWVxcldNVm1J?=
+ =?utf-8?B?RlRCMDBvbG9CajZsT0MwdFgvbkhBUnBxTVdVbXlqa0pZdTJOUkhlcHkwVUJF?=
+ =?utf-8?B?eUc0Yld2ZlNNNlpFcFRLTEE3a1B4U0pleXo5T1cvU08rZlVqQ29XVTluTWZI?=
+ =?utf-8?B?dFBvRU5ERmR2TURYNmNLN3B3WHVvV3ZrTEtsNUhYeEtVMTNJRzl5UnpBVGI3?=
+ =?utf-8?B?WVZHbUNYekthUzBzdUVOa0hBeG9DNS81TTVBL3g3Qk9GS2FLbXFEUkJtdTJx?=
+ =?utf-8?B?NVdTd1BwZUpxN1lRRWZFdEYyT25qa1c0U1pmRGp4cGxCSit1ZTBJcFlGeWxI?=
+ =?utf-8?B?UFpBQTgxR0E3N21RNlpaOVplc1VDZSthNFZGMzFBUlh0SUF4R0trSVpxNzhU?=
+ =?utf-8?B?bnFCemREZXN6Y3YyNERTL3JJeVJlUkU0OE55Mlg5dElBVFRpWDlyeFR6bUhG?=
+ =?utf-8?B?R3NVbmVLWGl6UzREUG5ud2pXeHQxTlJ1RU43U3ZtS0o0bDQwTm1ET1lFcyt5?=
+ =?utf-8?B?TXRKNUEyS3NURWYyZXU2T2FSckx4b25vcjFuNzV3VGVnRi9YZ1l3enZhSXJE?=
+ =?utf-8?B?blRaNXVFR2tBNXl6TWJNMmFYRnUrVDhIZEl0dGk4QlNycnFjaFpHTE8rV29Z?=
+ =?utf-8?B?ZHU2Y0FqMTd2SVFCci9obXJsL3pWSnNoQUptZWRwbWVSK3VxcGNwSTU4OUJJ?=
+ =?utf-8?B?NHZNTmVQZk1JSVZVM0s4ekN4Z0UwZmlhbEtIVkxnRE0wSWx2RGUzWEdVZThQ?=
+ =?utf-8?B?YnpGRlozcGhFcW5xNFJTazBQU0xpUzJvazU1SEs3ZnRPUXkya2lZekFwNUFT?=
+ =?utf-8?B?bjFEK0JOUmxxNkV0anlmcW9zMzkzaEVkcE91ZDlpci9iblRFdS80WXJTMUlI?=
+ =?utf-8?B?NHdoWjVUM0Q2VitxZ2l3U0dVSGNQNFpnSC9kdUZzMVNqWU1VWnZDa1NPOEc3?=
+ =?utf-8?B?OFhyQnY3NkRPcDZ4UTE1U24wV2p4Sm9xdUR6MWxrOHpDNHlqNFNwMC9JVTJI?=
+ =?utf-8?B?NzV0Y01UMHg5MWRwYUoxc0NoTHJ5a0ZGdzF0QmZac0FRaFIvUmVLVnhkaFRR?=
+ =?utf-8?B?NlhWRTNrYzhzMlc5eFREYWVnNzBkTmYxa01YdTFleEw1QXRSN2xUdUdzVTlM?=
+ =?utf-8?B?cm1xN1FvRHNLNzk4d1Bua1g5enFkdXEzZ1dxU05HNjM5dy9QUURuejJRRjhF?=
+ =?utf-8?B?VGNSK3JoT2pRS2FMdmJiSGd0d2lVZUZRQ0ZZd3JYcWIrQmRsNjdrSEpIU0RB?=
+ =?utf-8?B?dFBrVXlmekFmOUdYRUpHeXU2SVptUXhkUjFOYTN4VUJsYXAyakdpZ2NNdzZy?=
+ =?utf-8?B?SlJyZ1VFWS8rYStxUHJEbEFoMHVQclRWTVJsR2FQTFRUWEdheE9NSEVQcEZ5?=
+ =?utf-8?B?a3llbzN3VWZ1dm1JbWhLQnUvRjRDcTByL3ljL1BpdnB3ZXlvZ2twZStUTE5k?=
+ =?utf-8?B?RWIzc3lNMEhBVS9Bd1M4TnZvZzhxNFdWUW50S3VGMlJqYzNyTGMzS2tZTldX?=
+ =?utf-8?B?UmRNR2M1OWFNNWdwZTYxc0dGTEg1VjJEZnZUYk13YkN2R2lTYWNHeEEvUEZG?=
+ =?utf-8?B?QUkyakpGUkZob0hMVzdOWlpYNzc1QTJzTzQ3U1lVSTE5Z1VYVFJSUWJMcWJ1?=
+ =?utf-8?B?K0VTT3FMejJ4OStKK0cwTldNVW84T1pSQ2xqU1FPTmpWbUtsTGYreGpQTldH?=
+ =?utf-8?B?dkVQSmJBMGF1QnpDYmpzN2RqSnJpWlhrdnRwMVZOR0owb1I5QUtsTUQ3dnRl?=
+ =?utf-8?B?amFzWEg4KzB0dEdnUkV3SEpTZVJRbnZPRCtYUXo1NmQvcTFEdHZuY25WTlF1?=
+ =?utf-8?B?blUxQ2xtYkk5czkzWElmZnNuTEUyMUpUV3krV0liSStTeDhMUkNvczZQbUZo?=
+ =?utf-8?B?Q1g1bytaYWJXL0U4azZ0bndLSVlmWkN6TFdlclRZU1pZRlhxVnBJYlFMWUN4?=
+ =?utf-8?Q?94GUaHlEdn0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5115.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MXd5WVpVMUEzVzNvVGNXeis1Wnk1bXVvQytFL1h6TXdXVEZuWjFKSmJyQmNV?=
+ =?utf-8?B?SmpVU3VHMUg4bEFVNnU1MlZDK2lmZEIxRk8zb25ka1B2TE4xbS9KUm1mTUNM?=
+ =?utf-8?B?eE5yRG4rQ2prUEtVbm5WWmxRZ2xaSHZqT0hlaXpVWDZDalkvdk9KM0FNMm03?=
+ =?utf-8?B?RHI3YVZEL003Y3hsdVZRYUo2M0Z0MUVWN1BoT1piUkt3Zm1pS3FOankxazI5?=
+ =?utf-8?B?SUVJaEFpakZrZmgwMTVZSmZvN1hkS1lGVTM1bWIwMWVSL08rWmxKOXFpZDA1?=
+ =?utf-8?B?Z3VoMVZjUC9ZaFhCOVdGWDluc2Z6M0tuRWpVdzV1L202cnJqQmk2SllOQmYy?=
+ =?utf-8?B?RzdaMDVqM004NlMveVdZQjVnQU5mSlpieU1IYnlRZXpsWkhaVmZtWGhNODBP?=
+ =?utf-8?B?cU9lajlVZmpkdTZuMUhkMEw3a0FEQ2QvSDNIVjBmZW1KSlM0ZTdnYmIzZTRa?=
+ =?utf-8?B?bWFaOUF2bDZ5bTV6ZjdIazd4N0pQekJ1K0ZXNk1FQm96Y3NHQWgzd1VYbU9h?=
+ =?utf-8?B?TDdkbFpPandhSGY4ZHhia3F3cVRYNVlVZVAvbk9zZXFxMllQZG5PbEZHa2w4?=
+ =?utf-8?B?U1MvN2RSSnFvZ25RejlyeU8waVoveXdmdGhmbTRMZllBemliK1l1WUpEYjAz?=
+ =?utf-8?B?aFBLOWF6YlM3L1pQMDlRMS9iMmpEeEFTOUFhWFN6SFBrT0Q5ZnZzaXlOMHVB?=
+ =?utf-8?B?UXpTRmlmUnd4YngxS1pseTlQRFB1WUdvOWJZbzJpb3BkNUpaWUFQTmRyM2Zr?=
+ =?utf-8?B?bDl3RDdhYklieTFtam11WHY1WU13ckh0czRoSjNOVEEyelBScGIzZ1VHTTJu?=
+ =?utf-8?B?ZEhqV21EUktzc3NEbS8rbTc1TlYvK1RrRncvckYzUXNmZHh2QmtMYkVLRGtY?=
+ =?utf-8?B?am5XbFJqbE1jL2ZaQ0ppU0kvbkhZVGZsdVNsMnNtL09zSjZaMVRXWnBMemc3?=
+ =?utf-8?B?NEdEVE8xYTZJcU9DSXErK1Q3c3BJbWt2U01oYVp0Uk9zWkw2ek9FUEZiR3Ny?=
+ =?utf-8?B?ZXZvYkNEQjNqRkNSMml6MThuZ2J3MDJjR2NTRGZzN2FobE96M1diNmJNQzBt?=
+ =?utf-8?B?RDF1UGN3NkZIZkZBcXJhWUdXTS9zcnZ3N3AzekJoZ2JKN3JCL1NUT0dTcDVo?=
+ =?utf-8?B?S25hbU9XQmd6eDc5ZncwYk1NakVNQ0tQTm5iQWV4d2dHK2xuYkY3dUIyS2Fp?=
+ =?utf-8?B?MzQ4SS9NZTJiekE0SzU3WVlmY0lRajhJMkxDOUNxdmVYZW9NdDVCOTBubGFR?=
+ =?utf-8?B?SS9nM2xsRmVvc2RGT3B1c2R5MVJLSVdUL0xOeWRmTWxSbnRxMng3V0VaTkxQ?=
+ =?utf-8?B?dDlXR21SZTFTaHkybEM5UUZYWitaRW9CelphNjR3Mm9zRHBSM1VPKzRGaHhW?=
+ =?utf-8?B?aDZqMjhZNGxBSlhFNkJZVnRFTWR1SkFEbm9PRDZZNm9OU0t3dC9vd0NWS3o3?=
+ =?utf-8?B?VlNlY2JibWJOMEtBVmtpQmRuT1U5QjdxbjBXcy8vZG5VdVI5RGluL3NtVjRW?=
+ =?utf-8?B?YWFlZk0wd0ZXOVV0VHJsQkpKbkpSVWxTWVFkd1BXTXB1d1V4bkNaaW1rVVM2?=
+ =?utf-8?B?Vno1SDZzbHZnQnN3bWIxb1o1dzUwUjlrajZwMG01SFM5N29jMFQvMVVINjBu?=
+ =?utf-8?B?SFVQTi9LNnBjNStVdWY4dE9WYzVTNUZiNkxLblY2a2g4ZHRXZi9EMTdaUEFj?=
+ =?utf-8?B?V3N4UE1aWE56VmJtb2VtYndBYnQyUHN0SWNhOTV6M0Z2MGJXRmlwbWVYZHd3?=
+ =?utf-8?B?akVqS1FHckJQVlRXQWVROHcvQ0ZoSVRQRUpBUTdNT2pYTnRZSUd3c1VBaWpi?=
+ =?utf-8?B?Tmswb3EwNHFtYnlYZ3VDQVAra20ybm5LUmF2UXNKdGtGL1pEeW1MNU03M2JS?=
+ =?utf-8?B?WDhJc0NOaS95OTgxZHNlcUZ0d0lQRWVCVXdTaEcxYlRQbVlubE43SjMyZmV3?=
+ =?utf-8?B?alNQTytxdEpPajJ4OWdNRWVMOHArekFKbmREYnhLcnlXcE5PZ3FqTXJZRzB6?=
+ =?utf-8?B?K1VFL29vTGpmYkRuRUNteUg0RG1mSlQ4RGdwSU1DSTZybkFhcmhYb2g4NUdx?=
+ =?utf-8?B?WGQrejBTYWs3bEcweVY0dlRxSml0SGJ2YSs5QnZraVRBU1hHM2FGbkxOdERK?=
+ =?utf-8?Q?YK7AtOygCkQcR8lpsop5reisp?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d6059f4-7ea3-4e36-9852-08ddbda3509c
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5115.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 22:12:08.8155
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pft65jYuWEyq+IWCKWyQlyGC+3X0Ye+ImzvU2R7UHO6GYsDSqgJVyR3qjfs4znEbcVJF4OYQZzUHB4dw1HpMfw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF44635DB8D
 
-Hi Haoran,
-
-On Tue, Jul 1, 2025 at 3:41=E2=80=AFPM Haoran Jiang <jianghaoran@kylinos.cn=
-> wrote:
+On 2025-07-05 04:05, Han Gao wrote:
+> KFD has been confirmed that can run on LoongArch systems.
+> It's necessary to support CONFIG_HSA_AMD on LoongArch.
 >
-> For a ebpf subprog JIT=EF=BC=8Cthe last call bpf_int_jit_compile function=
- will
-> directly enter the skip_init_ctx process. At this point, out_offset =3D -=
-1,
-> the jmp_offset in emit_bpf_tail_call is calculated
-> by #define jmp_offset (out_offset - (cur_offset)) is a negative number,
-> which does not meet expectations.The final generated assembly as follow.
->
-
-OK, so this can be rephrased as:
-The extra pass of bpf_int_jit_compile() skips JIT context initialization wh=
-ich
-essentially skips offset calculation leaving out_offset =3D -1 ...
-
-> 54:     bgeu            $a2, $t1, -8        # 0x0000004c
-> 58:     addi.d          $a6, $s5, -1
-> 5c:     bltz            $a6, -16            # 0x0000004c
-> 60:     alsl.d          $t2, $a2, $a1, 0x3
-> 64:     ld.d            $t2, $t2, 264
-> 68:     beq             $t2, $zero, -28     # 0x0000004c
->
-> Before apply this patch, the follow test case will reveal soft lock issue=
-s.
->
-> cd tools/testing/selftests/bpf/
-> ./test_progs --allow=3Dtailcalls/tailcall_bpf2bpf_1
->
-> dmesg:
-> watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [test_progs:25056]
->
-
-Add a Fixes tag.
-
-> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
 > ---
->  arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
->  1 file changed, 9 insertions(+), 19 deletions(-)
+>   drivers/gpu/drm/amd/amdkfd/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index fa1500d4aa3e..d85490e7de89 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
->         return true;
->  }
->
-> -/* initialized on the first pass of build_body() */
-> -static int out_offset =3D -1;
-> -static int emit_bpf_tail_call(struct jit_ctx *ctx)
-> +static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
->  {
+> diff --git a/drivers/gpu/drm/amd/amdkfd/Kconfig b/drivers/gpu/drm/amd/amdkfd/Kconfig
+> index 62e88e5362e9..b2387d529bf0 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/Kconfig
+> +++ b/drivers/gpu/drm/amd/amdkfd/Kconfig
+> @@ -5,7 +5,7 @@
+>   
+>   config HSA_AMD
+>   	bool "HSA kernel driver for AMD GPU devices"
+> -	depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64 || (RISCV && 64BIT))
+> +	depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64 || (RISCV && 64BIT) || LOONGARCH)
 
-Make ctx the first argument ?
+Is LOONGARCH always 64-bit? If not, please make this (LOONGARCH && 64BIT).
 
->         int off;
->         u8 tcc =3D tail_call_reg(ctx);
-> @@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->         u8 t2 =3D LOONGARCH_GPR_T2;
->         u8 t3 =3D LOONGARCH_GPR_T3;
->         const int idx0 =3D ctx->idx;
-> -
-> -#define cur_offset (ctx->idx - idx0)
-> -#define jmp_offset (out_offset - (cur_offset))
+Other than that, I have no objections to applying this patch.
 
-Reuse this jmp_offset macro, so that you don't have to repeat it 3
-times below, WDYT ?
+Regards,
+   Felix
 
-> +       int tc_ninsn =3D 0;
-> +       int jmp_offset =3D 0;
->
->         /*
->          * a0: &ctx
-> @@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->          * if (index >=3D array->map.max_entries)
->          *       goto out;
->          */
-> +       tc_ninsn =3D insn ? ctx->offset[insn+1] - ctx->offset[insn] :
-> +               ctx->offset[0];
->         off =3D offsetof(struct bpf_array, map.max_entries);
->         emit_insn(ctx, ldwu, t1, a1, off);
-> +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
->         /* bgeu $a2, $t1, jmp_offset */
->         if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset) < 0)
->                 goto toofar;
-> @@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->          *       goto out;
->          */
->         emit_insn(ctx, addid, REG_TCC, tcc, -1);
-> +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
->         if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC, LOONGARCH_GPR_ZERO,=
- jmp_offset) < 0)
->                 goto toofar;
->
-> @@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->         emit_insn(ctx, alsld, t2, a2, a1, 2);
->         off =3D offsetof(struct bpf_array, ptrs);
->         emit_insn(ctx, ldd, t2, t2, off);
-> +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
->         /* beq $t2, $zero, jmp_offset */
->         if (emit_tailcall_jmp(ctx, BPF_JEQ, t2, LOONGARCH_GPR_ZERO, jmp_o=
-ffset) < 0)
->                 goto toofar;
-> @@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
->         emit_insn(ctx, ldd, t3, t2, off);
->         __build_epilogue(ctx, true);
->
-> -       /* out: */
-> -       if (out_offset =3D=3D -1)
-> -               out_offset =3D cur_offset;
-> -       if (cur_offset !=3D out_offset) {
-> -               pr_err_once("tail_call out_offset =3D %d, expected %d!\n"=
-,
-> -                           cur_offset, out_offset);
-> -               return -1;
-> -       }
-> -
->         return 0;
->
->  toofar:
->         pr_info_once("tail_call: jump too far\n");
->         return -1;
-> -#undef cur_offset
-> -#undef jmp_offset
->  }
->
->  static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx=
-)
-> @@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn *insn, st=
-ruct jit_ctx *ctx, bool ext
->         /* tail call */
->         case BPF_JMP | BPF_TAIL_CALL:
->                 mark_tail_call(ctx);
-> -               if (emit_bpf_tail_call(ctx) < 0)
-> +               if (emit_bpf_tail_call(i, ctx) < 0)
->                         return -EINVAL;
->                 break;
->
-> @@ -1342,7 +1333,6 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_pro=
-g *prog)
->         if (tmp_blinded)
->                 bpf_jit_prog_release_other(prog, prog =3D=3D orig_prog ? =
-tmp : orig_prog);
->
-> -       out_offset =3D -1;
->
->         return prog;
->
-> --
-> 2.43.0
->
 
-Cheers,
----
-Hengqi
+>   	select HMM_MIRROR
+>   	select MMU_NOTIFIER
+>   	select DRM_AMDGPU_USERPTR
