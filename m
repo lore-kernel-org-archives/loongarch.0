@@ -1,170 +1,127 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7F117D7
-	for <loongarch@lists.linux.dev>; Mon,  7 Jul 2025 02:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B2871E48A
+	for <loongarch@lists.linux.dev>; Mon,  7 Jul 2025 03:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751855650; cv=none; b=RERZsv2aMK4FLeXsqvsuXXUa2+xvHuUvSIELbf7ib4qFn8WLd4pAHdG4d0rH7v8+FKON3dKIEgZ4fkXcxgKBijdwbuLAT/yLQXjs7G94XmLnmpDNPLB1jF4/iM6kmV/lCDMUqobCfF03mw6QvYA0CcUSlho8EQ2RNUK1x8VkOtU=
+	t=1751859032; cv=none; b=Cs6iWPnjdPzxDirqK1ELGmXe1OFrHWUQkpCSPfbGheLe5nnwn2G/PYy3m/7ipq5ObKrlL5g6+VDa+hBvw0DPeACMvg4VEv6qqe7GkslJle/f1G/Zo8kSzgvNh64IpG4JqE/Q0H3EZXpjitcuJDC7ZkNetEOqht6CHqbLY04J/Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751855650; c=relaxed/simple;
-	bh=nVWtJ2pwpgHwfEVgi3VsH5d4JHY4Z3H2osyztStCp4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RWvz/Hme5IOE76ZNj9MDiKAPnPLILON1dUDZXK4+GOlL/CP5LizSIkUwd9JMaVrN+7psZSUhy5DytELgcPwvoYeeh/Jv31Tzdrhc3qqJHMCXf9HsV9FiZORKwnGc4o8m0RexWtYsi2jUEc6Fm6YaquN+0ZWoXAjoqo7WZ6TRiQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KC3qIZyb; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KC3qIZyb"
-Message-ID: <ac47ba40-0b5e-4273-af7a-a34086ae4a80@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751855644;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nVWtJ2pwpgHwfEVgi3VsH5d4JHY4Z3H2osyztStCp4Y=;
-	b=KC3qIZybjr7t2gHu6+oHYKLSbVc0J/VxAjWOmRMPaYQXYpxqRy04NDl0FWLGWM5ZkDm++D
-	OPAt0sBnrl7xKZXGcC2cmXgX0Nt6ZoWeRuaZPIWhWcLlTAaAu8DyynrwOOmnmfhtjqY6kj
-	2HwGvemc75GIWp6LPQKpIv4QnmUjF/U=
-Date: Mon, 7 Jul 2025 10:33:53 +0800
+	s=arc-20240116; t=1751859032; c=relaxed/simple;
+	bh=jcllR5P8q4bLzpLytl+VWfbXYNskCJm/L07jIzv8ark=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=tdrAXXFbsSr3zktGmT5DC/IrSjeJOajEWDymQWP8+KfZeW1ZWMnmm4sIi/yRCpAVqN4Xe9bIJ4NalSneBCWH8gPZscwgr5TrcRNF/NtHAu3o+EnC9WYti+ubDpjVdpdvOBXj5Apw/rzPHk8cjXDNI4oSZW9x+ObbxlYeT9CFhyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxLHJMP2toQEcjAQ--.41705S3;
+	Mon, 07 Jul 2025 11:30:20 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDxQ+RJP2toGVYMAA--.6511S3;
+	Mon, 07 Jul 2025 11:30:19 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Add tracepoints for CPUCFG and CSR
+ emulation exits
+To: Yulong Han <wheatfox17@icloud.com>, chenhuacai@kernel.org
+Cc: kernel@xen0n.name, zhaotianrui@loongson.cn, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250702105922.1035771-1-wheatfox17@icloud.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <9e9b54fe-4762-f128-a53f-1a92d160a5b7@loongson.cn>
+Date: Mon, 7 Jul 2025 11:28:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH] LoongArch: Support mem=SIZE kernel parameter
-To: Ming Wang <wangming01@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>,
- Bibo Mao <maobibo@loongson.cn>, Hari Bathini <hbathini@linux.ibm.com>,
- Guo Weikang <guoweikang.kernel@gmail.com>,
- Sourabh Jain <sourabhjain@linux.ibm.com>, Usama Arif
- <usamaarif642@gmail.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Cc: lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
-References: <20250701090449.2426151-1-wangming01@loongson.cn>
- <0561da2c-a4d7-49bb-8394-930f10880610@linux.dev>
- <e89f6ce6-d9f4-4744-b6a6-9a82412795a0@loongson.cn>
+In-Reply-To: <20250702105922.1035771-1-wheatfox17@icloud.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <e89f6ce6-d9f4-4744-b6a6-9a82412795a0@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJDxQ+RJP2toGVYMAA--.6511S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7AF47ZF15uw4DJw13Kw17urX_yoW5JFWfpr
+	1vvws0gw4rKrySvwsFqws5WrsxAwsagry7XF9xCFWYvr4IqryrJFy8KrWDuF18KwnY9a4I
+	qF95u3WqkF4qq3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
+	VUUUUUU==
 
+On 2025/7/2 下午6:59, Yulong Han wrote:
+> This patch adds tracepoints to track KVM exits caused by CPUCFG
+> and CSR emulation. Note that IOCSR emulation tracing is already
+> covered by the generic trace_kvm_iocsr().
+> 
+> Signed-off-by: Yulong Han <wheatfox17@icloud.com>
+> ---
+>   arch/loongarch/kvm/exit.c  |  2 ++
+>   arch/loongarch/kvm/trace.h | 14 +++++++++++++-
+>   2 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index fa52251b3bf1c..6a47a23ae9cd6 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -289,9 +289,11 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
+>   	er = EMULATE_FAIL;
+>   	switch (((inst.word >> 24) & 0xff)) {
+>   	case 0x0: /* CPUCFG GSPR */
+> +		trace_kvm_exit_cpucfg(vcpu, KVM_TRACE_EXIT_CPUCFG);
+>   		er = kvm_emu_cpucfg(vcpu, inst);
+>   		break;
+>   	case 0x4: /* CSR{RD,WR,XCHG} GSPR */
+> +		trace_kvm_exit_csr(vcpu, KVM_TRACE_EXIT_CSR);
+>   		er = kvm_handle_csr(vcpu, inst);
+>   		break;
+>   	case 0x6: /* Cache, Idle and IOCSR GSPR */
+> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+> index 1783397b1bc88..145514dab6d5b 100644
+> --- a/arch/loongarch/kvm/trace.h
+> +++ b/arch/loongarch/kvm/trace.h
+> @@ -46,11 +46,15 @@ DEFINE_EVENT(kvm_transition, kvm_out,
+>   /* Further exit reasons */
+>   #define KVM_TRACE_EXIT_IDLE		64
+>   #define KVM_TRACE_EXIT_CACHE		65
+> +#define KVM_TRACE_EXIT_CPUCFG		66
+> +#define KVM_TRACE_EXIT_CSR		67
+>   
+>   /* Tracepoints for VM exits */
+>   #define kvm_trace_symbol_exit_types			\
+>   	{ KVM_TRACE_EXIT_IDLE,		"IDLE" },	\
+> -	{ KVM_TRACE_EXIT_CACHE,		"CACHE" }
+> +	{ KVM_TRACE_EXIT_CACHE,		"CACHE" },	\
+> +	{ KVM_TRACE_EXIT_CPUCFG,	"CPUCFG" },	\
+> +	{ KVM_TRACE_EXIT_CSR,		"CSR" }
+>   
+>   DECLARE_EVENT_CLASS(kvm_exit,
+>   	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+> @@ -82,6 +86,14 @@ DEFINE_EVENT(kvm_exit, kvm_exit_cache,
+>   	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+>   	     TP_ARGS(vcpu, reason));
+>   
+> +DEFINE_EVENT(kvm_exit, kvm_exit_cpucfg,
+> +	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+> +	     TP_ARGS(vcpu, reason));
+> +
+> +DEFINE_EVENT(kvm_exit, kvm_exit_csr,
+> +	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+> +	     TP_ARGS(vcpu, reason));
+> +
+>   DEFINE_EVENT(kvm_exit, kvm_exit,
+>   	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+>   	     TP_ARGS(vcpu, reason));
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-在 7/3/25 9:36 AM, Ming Wang 写道:
-> Hi Yanteng,
->
-> Thanks for reviewing the patch and for your insightful question.
->
-> On 7/2/25 10:11, Yanteng Si wrote:
->> 在 7/1/25 5:04 PM, Ming Wang 写道:
->>> The LoongArch mem= parameter parser was previously limited to the
->>> mem=SIZE@START format. This was inconvenient for the common use case
->>> of simply capping the total system memory, as it forced users to
->>> manually specify a start address. It was also inconsistent with the
->>> behavior on other architectures.
->>>
->>> This patch enhances the parser in early_parse_mem() to also support the
->>> more user-friendly mem=SIZE format. The implementation now checks for
->>> the presence of the '@' symbol to determine the user's intent:
->>>
->>> - If mem=SIZE is provided (no '@'), the kernel now calls
->>>    memblock_enforce_memory_limit(). This trims memory from the top down
->>>    to the specified size.
->>> - If mem=SIZE@START is used, the original behavior is retained for
->>>    backward compatibility. This allows for defining specific memory
->>>    banks.
->>>
->>> This change introduces an important usage rule reflected in the code's
->>> comments: the mem=SIZE format should only be specified once on the
->>> kernel command line. It acts as a single, global cap on total memory. In
->>> contrast, the mem=SIZE@START format can be used multiple times to
->>> define several distinct memory regions.
->>>
->>> Signed-off-by: Ming Wang <wangming01@loongson.cn>
->>> ---
->>>   arch/loongarch/kernel/setup.c | 18 ++++++++++--------
->>>   1 file changed, 10 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/ setup.c
->>> index b99fbb388fe0..af59ba180dc2 100644
->>> --- a/arch/loongarch/kernel/setup.c
->>> +++ b/arch/loongarch/kernel/setup.c
->>> @@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
->>>           return -EINVAL;
->>>       }
->>> +    start = 0;
->>> +    size = memparse(p, &p);
->>> +    if (*p == '@')    /* Every mem=... should contain '@' */
->>> +        start = memparse(p + 1, &p);
->>> +    else {            /* Only one mem=... is allowed if no '@' */
->>> +        usermem = 1;
->>> +        memblock_enforce_memory_limit(size);
->>> +        return 0;
->>> +    }
->>> +
->>>       /*
->>>        * If a user specifies memory size, we
->>>        * blow away any automatically generated
->>> @@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
->>>           memblock_remove(memblock_start_of_DRAM(),
->>>               memblock_end_of_DRAM() - memblock_start_of_DRAM());
->>>       }
->>> -    start = 0;
->>> -    size = memparse(p, &p);
->>> -    if (*p == '@')
->>> -        start = memparse(p + 1, &p);
->>> -    else {
->>> -        pr_err("Invalid format!\n");
->>> -        return -EINVAL;
->>> -    }
->> I don't understand. Isn't it better to modify the else{} directly here?
->>
-> You've raised a very good point. The reason for moving the parsing logic to the top, rather than just modifying the original else block, is to handle the fundamentally different behaviors required for mem=SIZE versus mem=SIZE@START. The key lies in thisexisting block of code which handles the mem=SIZE@START case:
->
-> ```
-> /*
-> * If a user specifies memory size, we
-> * blow away any automatically generated
-> * size.
-> */
-> if (usermem == 0) {
->     usermem = 1;
->     memblock_remove(memblock_start_of_DRAM(),
->             memblock_end_of_DRAM() - memblock_start_of_DRAM());
-> }
-> ```
->
-> This code is destructive. As the comment says, it "blows away" the entire memory map discovered from the firmware (UEFI/ACPI). After this call, memblock is essentially empty, waiting for new regions to be added via memblock_add(). This is the correct behavior for mem=SIZE@START.
->
-> However, the new mem=SIZE functionality is meant to be non-destructive. It should take the existing firmware-provided memory map and simply trim it down to the desired size. The function memblock_enforce_memory_limit() is designed for this purpose—it operates on the current state of memblock.
->
-> If we were to keep the parsing logic at the end and only modify the else block, the destructive memblock_remove() call would have already executed for both cases. By that point, calling memblock_enforce_memory_limit() would be meaningless, as there would be no memory regions left in memblock to limit.
->
-> Therefore, the patch moves the parsing logic to the very beginning to create a clean separation:
-> 1. It first checks if the format is mem=SIZE (no '@').
-> 2. If it is, it performs the non-destructive limit on the intact memory map and returns immediately, completely bypassing the destructive memblock_remove() logic.
-> 3. If the format is mem=SIZE@START, it falls through to the original destructive path as before.
-
-I have an idea: what if we move the destructive code into the if block?
-
-
-Thanks,
-
-Yanteng
-
->
-> I hope this explanation clarifies why the code structure was changed this way. It's crucial to ensure the non-destructive path is handled before any memory map information is lost.
->
-> Best regards,
-> Ming
->
->
->> Thanks,
->> Yanteng
->>
->
