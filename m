@@ -1,162 +1,170 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BDB2AD00
-	for <loongarch@lists.linux.dev>; Sat,  5 Jul 2025 14:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7F117D7
+	for <loongarch@lists.linux.dev>; Mon,  7 Jul 2025 02:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751724373; cv=none; b=ouRUq/R3qahuuADXwFoqnfvHpmDwvrna8JP1CcygtC4rkX40iAXTSKSqZrRerOfHj94q0oDH89ZtUIZ9dmcX6aWgObRdwqWmOVl9aMIlS6f6m/zBBcu6wMDZ9VKNfYKgAqEt4wbwKQSKmf6jx7398TgKdaPFOSv3q307VPfsX30=
+	t=1751855650; cv=none; b=RERZsv2aMK4FLeXsqvsuXXUa2+xvHuUvSIELbf7ib4qFn8WLd4pAHdG4d0rH7v8+FKON3dKIEgZ4fkXcxgKBijdwbuLAT/yLQXjs7G94XmLnmpDNPLB1jF4/iM6kmV/lCDMUqobCfF03mw6QvYA0CcUSlho8EQ2RNUK1x8VkOtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751724373; c=relaxed/simple;
-	bh=/HOVbTYQCHsMdDDq7gBoIFw9FEg0lNKVNqIBp1PBLtY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=M4i3fHS9LkInCyKzHHXYIkrbgWuO7vQjTtfilec6pmIDJxjm/IfUDQTqZhyLBzgs7XTgL+lqas2+G5i+xYqYLW7AaVIaTb2QjWRNL4xU6HsyhdRY7NtmzBZHeBpGqitMgPltpzEW0+chp1nFtTNu46zXB3h/kMtCEk7OZNwjHTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=zY2LkYgW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EuISihaT; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1751855650; c=relaxed/simple;
+	bh=nVWtJ2pwpgHwfEVgi3VsH5d4JHY4Z3H2osyztStCp4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RWvz/Hme5IOE76ZNj9MDiKAPnPLILON1dUDZXK4+GOlL/CP5LizSIkUwd9JMaVrN+7psZSUhy5DytELgcPwvoYeeh/Jv31Tzdrhc3qqJHMCXf9HsV9FiZORKwnGc4o8m0RexWtYsi2jUEc6Fm6YaquN+0ZWoXAjoqo7WZ6TRiQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KC3qIZyb; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="zY2LkYgW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EuISihaT"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 6984E1D00027;
-	Sat,  5 Jul 2025 10:06:09 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-06.internal (MEProxy); Sat, 05 Jul 2025 10:06:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1751724369;
-	 x=1751810769; bh=o984k9J9qiUodd3G7z/DU89+EKzgqyct3JlnGKUqBiI=; b=
-	zY2LkYgWo3jpfb6k0dqCLz4MdXLNJAdE84WX18+dtYBrw0kBjpi122YbhDFYd57h
-	JwnNcoe+9vQo5i6qwlXM/VxjwLCXTEa+Js0odv5xO+05APf44IWd6FqFzV52A76x
-	GBdUn10zMOPvLlqVbXHHdmWDnA7LVisuxji2U56vGVg1D3yyOjwvPtTBK62QRRBs
-	U9XlDAInqk+S5vf7L+g4OpS72e8t//BCXRU5x3hT5W+rhdj8vTTFYsVYm8NWLYEQ
-	xyNzdR2d0QC5j9iDHoeyQt321DDWs9TOpf/MJKtCoJKCd9RK/hrFxJh5Y887ui07
-	TU9vX5dw8wIKByWLS7JnqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751724369; x=
-	1751810769; bh=o984k9J9qiUodd3G7z/DU89+EKzgqyct3JlnGKUqBiI=; b=E
-	uISihaTJzQxzqKwmUybA0iC++QT7LUqeDGwxq72NQyyLPk4Ndwf2cvqnelWZ2CWB
-	aXyMSNj2vLjRK+vD4vZwLnzO2wY1zlz4Pgz189ECx4PB6AMO2DzYNV7l+vk4rFs6
-	K50WtGUGdZu2nIVTgxlSG4svIsRWl2gplJK74Z7VuO64zmjqz94yKOvqT9PtXhZN
-	vjaMyIRjbm/SGx0NMYB9c6dIn8OoIBIX2tAOwoBSLAIpt8pPODLuZiYclB4MIsID
-	gGUsX268e1CgTMV9pLEovDofDfpfiFwIrKjaQ3WwKPLsIUJkmlCNqC9T4iu3DYHD
-	qENkgRYiBJp5l/PV6QBRg==
-X-ME-Sender: <xms:UDFpaDdhab2qtFffBA-bwhs_34a22IrVbEvCQRa0wcXc0E7qDlaHVQ>
-    <xme:UDFpaJPq3-uGSTQ85qsLW6MJFnlHnZao05IOm8HfU6u-yprTgd-FCosWU8H9-gFd1
-    QKKJIwTwDIBI-oHGKs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddviedvfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdflihgrgihu
-    nhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeejheefuddvtdfggfdvffekteehhfelgfdvvedvkeeuffefkeeh
-    heegvefhveetjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphht
-    thhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgvfhhfsggrihesrg
-    hoshgtrdhiohdprhgtphhtthhopehkvgighigsihhstghuihhtsegrohhstgdrihhopdhr
-    tghpthhtohepiihihigrohesughishhrohhothdrohhrghdprhgtphhtthhopehlihhnmh
-    hqtddtieesghhmrghilhdrtghomhdprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishhtshdrlhhinh
-    hugidruggvvhdprhgtphhtthhopeifrghnghhhohhnghhlihgrnhhgsehlohhonhhgshho
-    nhdrtghnpdhrtghpthhtohepiihhohhusghinhgsihhnsehlohhonhhgshhonhdrtghnpd
-    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:UDFpaMhK-0uC48R8vYz30WIhmQl4YjkZJVwk9-0ED0lYFPIaNrkpJg>
-    <xmx:UDFpaE_zccSm5KIQg7BTF35eB10DEsjXNC539zrv6r8g-oN5-qzM4A>
-    <xmx:UDFpaPtWNRCAAFs2LcNSY04EXHXcIr_JaO-N1ZQG0VjcBu9P3i9qzA>
-    <xmx:UDFpaDEnJi0Is6LBEV2yUUtv7UskjtnefpJaA2x9Ni-h-zXrQ2HAPw>
-    <xmx:UTFpaHP8-W0if7kYC_1HYWggIyq5OD0IZTYGv4c00ysGof-QmtaLp3o0>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 113B12CE0078; Sat,  5 Jul 2025 10:06:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KC3qIZyb"
+Message-ID: <ac47ba40-0b5e-4273-af7a-a34086ae4a80@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751855644;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nVWtJ2pwpgHwfEVgi3VsH5d4JHY4Z3H2osyztStCp4Y=;
+	b=KC3qIZybjr7t2gHu6+oHYKLSbVc0J/VxAjWOmRMPaYQXYpxqRy04NDl0FWLGWM5ZkDm++D
+	OPAt0sBnrl7xKZXGcC2cmXgX0Nt6ZoWeRuaZPIWhWcLlTAaAu8DyynrwOOmnmfhtjqY6kj
+	2HwGvemc75GIWp6LPQKpIv4QnmUjF/U=
+Date: Mon, 7 Jul 2025 10:33:53 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: T5b65cb83a3eb81e4
-Date: Sat, 05 Jul 2025 15:05:47 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Yao Zi" <ziyao@disroot.org>, "Huacai Chen" <chenhuacai@kernel.org>,
- "Xuerui Wang" <kernel@xen0n.name>, "Miaoqian Lin" <linmq006@gmail.com>,
- "Hongliang Wang" <wanghongliang@loongson.cn>,
- "Binbin Zhou" <zhoubinbin@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- "Mingcong Bai" <jeffbai@aosc.io>, "Kexy Biscuit" <kexybiscuit@aosc.io>
-Message-Id: <2ad0ae43-0331-4860-8f39-34ebfe02cae8@app.fastmail.com>
-In-Reply-To: <20250705125710.59994-1-ziyao@disroot.org>
-References: <20250705125710.59994-1-ziyao@disroot.org>
-Subject: Re: [PATCH] LoongArch: Avoid in-place string operation on FDT content
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] LoongArch: Support mem=SIZE kernel parameter
+To: Ming Wang <wangming01@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>,
+ Bibo Mao <maobibo@loongson.cn>, Hari Bathini <hbathini@linux.ibm.com>,
+ Guo Weikang <guoweikang.kernel@gmail.com>,
+ Sourabh Jain <sourabhjain@linux.ibm.com>, Usama Arif
+ <usamaarif642@gmail.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Cc: lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
+References: <20250701090449.2426151-1-wangming01@loongson.cn>
+ <0561da2c-a4d7-49bb-8394-930f10880610@linux.dev>
+ <e89f6ce6-d9f4-4744-b6a6-9a82412795a0@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <e89f6ce6-d9f4-4744-b6a6-9a82412795a0@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
-
-=E5=9C=A82025=E5=B9=B47=E6=9C=885=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8B=E5=
-=8D=881:57=EF=BC=8CYao Zi=E5=86=99=E9=81=93=EF=BC=9A
-> In init_cpu_fullname, a constant pointer to model property is retrieve=
-d.
-> It's later modified by the strsep function, which is illegal and
-> corrupts kernel's FDT copy. This is shown by dmesg,
+在 7/3/25 9:36 AM, Ming Wang 写道:
+> Hi Yanteng,
 >
-> 	OF: fdt: not creating '/sys/firmware/fdt': CRC check failed
+> Thanks for reviewing the patch and for your insightful question.
 >
-> Create a mutable copy of the model property and do in-place operations
-> on it instead. loongson_sysconf.cpuname lives across the kernel
-> lifetime, thus manually releasing isn't necessary.
+> On 7/2/25 10:11, Yanteng Si wrote:
+>> 在 7/1/25 5:04 PM, Ming Wang 写道:
+>>> The LoongArch mem= parameter parser was previously limited to the
+>>> mem=SIZE@START format. This was inconvenient for the common use case
+>>> of simply capping the total system memory, as it forced users to
+>>> manually specify a start address. It was also inconsistent with the
+>>> behavior on other architectures.
+>>>
+>>> This patch enhances the parser in early_parse_mem() to also support the
+>>> more user-friendly mem=SIZE format. The implementation now checks for
+>>> the presence of the '@' symbol to determine the user's intent:
+>>>
+>>> - If mem=SIZE is provided (no '@'), the kernel now calls
+>>>    memblock_enforce_memory_limit(). This trims memory from the top down
+>>>    to the specified size.
+>>> - If mem=SIZE@START is used, the original behavior is retained for
+>>>    backward compatibility. This allows for defining specific memory
+>>>    banks.
+>>>
+>>> This change introduces an important usage rule reflected in the code's
+>>> comments: the mem=SIZE format should only be specified once on the
+>>> kernel command line. It acts as a single, global cap on total memory. In
+>>> contrast, the mem=SIZE@START format can be used multiple times to
+>>> define several distinct memory regions.
+>>>
+>>> Signed-off-by: Ming Wang <wangming01@loongson.cn>
+>>> ---
+>>>   arch/loongarch/kernel/setup.c | 18 ++++++++++--------
+>>>   1 file changed, 10 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/ setup.c
+>>> index b99fbb388fe0..af59ba180dc2 100644
+>>> --- a/arch/loongarch/kernel/setup.c
+>>> +++ b/arch/loongarch/kernel/setup.c
+>>> @@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
+>>>           return -EINVAL;
+>>>       }
+>>> +    start = 0;
+>>> +    size = memparse(p, &p);
+>>> +    if (*p == '@')    /* Every mem=... should contain '@' */
+>>> +        start = memparse(p + 1, &p);
+>>> +    else {            /* Only one mem=... is allowed if no '@' */
+>>> +        usermem = 1;
+>>> +        memblock_enforce_memory_limit(size);
+>>> +        return 0;
+>>> +    }
+>>> +
+>>>       /*
+>>>        * If a user specifies memory size, we
+>>>        * blow away any automatically generated
+>>> @@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
+>>>           memblock_remove(memblock_start_of_DRAM(),
+>>>               memblock_end_of_DRAM() - memblock_start_of_DRAM());
+>>>       }
+>>> -    start = 0;
+>>> -    size = memparse(p, &p);
+>>> -    if (*p == '@')
+>>> -        start = memparse(p + 1, &p);
+>>> -    else {
+>>> -        pr_err("Invalid format!\n");
+>>> -        return -EINVAL;
+>>> -    }
+>> I don't understand. Isn't it better to modify the else{} directly here?
+>>
+> You've raised a very good point. The reason for moving the parsing logic to the top, rather than just modifying the original else block, is to handle the fundamentally different behaviors required for mem=SIZE versus mem=SIZE@START. The key lies in thisexisting block of code which handles the mem=SIZE@START case:
 >
-> Also move of_node_put() for the root node after the usage of its
-> property, since of_node_put() decreases the reference counter thus usa=
-ge
-> after the call is unsafe.
+> ```
+> /*
+> * If a user specifies memory size, we
+> * blow away any automatically generated
+> * size.
+> */
+> if (usermem == 0) {
+>     usermem = 1;
+>     memblock_remove(memblock_start_of_DRAM(),
+>             memblock_end_of_DRAM() - memblock_start_of_DRAM());
+> }
+> ```
 >
-> Fixes: 44a01f1f726a ("LoongArch: Parsing CPU-related information from =
-DTS")
+> This code is destructive. As the comment says, it "blows away" the entire memory map discovered from the firmware (UEFI/ACPI). After this call, memblock is essentially empty, waiting for new regions to be added via memblock_add(). This is the correct behavior for mem=SIZE@START.
+>
+> However, the new mem=SIZE functionality is meant to be non-destructive. It should take the existing firmware-provided memory map and simply trim it down to the desired size. The function memblock_enforce_memory_limit() is designed for this purpose—it operates on the current state of memblock.
+>
+> If we were to keep the parsing logic at the end and only modify the else block, the destructive memblock_remove() call would have already executed for both cases. By that point, calling memblock_enforce_memory_limit() would be meaningless, as there would be no memory regions left in memblock to limit.
+>
+> Therefore, the patch moves the parsing logic to the very beginning to create a clean separation:
+> 1. It first checks if the format is mem=SIZE (no '@').
+> 2. If it is, it performs the non-destructive limit on the intact memory map and returns immediately, completely bypassing the destructive memblock_remove() logic.
+> 3. If the format is mem=SIZE@START, it falls through to the original destructive path as before.
 
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+I have an idea: what if we move the destructive code into the if block?
 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  arch/loongarch/kernel/env.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+
+Thanks,
+
+Yanteng
+
 >
-> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-> index 27144de5c5fe..fba141472ab9 100644
-> --- a/arch/loongarch/kernel/env.c
-> +++ b/arch/loongarch/kernel/env.c
-> @@ -40,15 +40,18 @@ void __init init_environ(void)
->  static int __init init_cpu_fullname(void)
->  {
->  	struct device_node *root;
-> +	const char *model;
->  	int cpu, ret;
-> -	char *model;
-> +	char *tmp;
->=20
->  	/* Parsing cpuname from DTS model property */
->  	root =3D of_find_node_by_path("/");
-> -	ret =3D of_property_read_string(root, "model", (const char **)&model=
-);
-> +	ret =3D of_property_read_string(root, "model", &model);
-> +	if (ret =3D=3D 0) {
-> +		tmp =3D kstrdup(model, GFP_KERNEL);
-> +		loongson_sysconf.cpuname =3D strsep(&tmp, " ");
-> +	}
->  	of_node_put(root);
-> -	if (ret =3D=3D 0)
-> -		loongson_sysconf.cpuname =3D strsep(&model, " ");
->=20
->  	if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname,=20
-> "Loongson", 8)) {
->  		for (cpu =3D 0; cpu < NR_CPUS; cpu++)
-> --=20
-> 2.49.0
-
---=20
-- Jiaxun
+> I hope this explanation clarifies why the code structure was changed this way. It's crucial to ensure the non-destructive path is handled before any memory map information is lost.
+>
+> Best regards,
+> Ming
+>
+>
+>> Thanks,
+>> Yanteng
+>>
+>
