@@ -1,178 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4DB26CE2D
-	for <loongarch@lists.linux.dev>; Tue,  8 Jul 2025 11:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C03C1EA84
+	for <loongarch@lists.linux.dev>; Tue,  8 Jul 2025 12:38:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751974650; cv=none; b=dQTYX9l1+NBZwKNcmcbMfsuGvJMHkqyz1K3Mp2eNDGkWJ5zvI07yFsIFh/iu2eVw6WaepGebGc3bWY9/+2167QOgwyHmF4jrT7k+klNvBUtpMyWUUTd+rovWQitxBGRTi/bXz530S1taY75pRQAHUoGmWDpHsTmVRRVdHkhPb3g=
+	t=1751978293; cv=none; b=cAvSBh1g/PnNNvIT23Qw6Qpf9nfmm1jWBGX3d2VOxe8HJwdvFgPXwmGjoY2XN333jNMVycjTGcbdRh/oOegKUUc4ZybOJLi9Zug255UnJrPQwFefNiRHwexmVXFWG2s72Qpm/GOodlTwE5CdkABP7FXsYXEdm6i2Gm29ZcsGe/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751974650; c=relaxed/simple;
-	bh=Jd1T3sx5/KDM7mM/Zz9GYUL0ia9E2nQPf9lXHvRXZmg=;
+	s=arc-20240116; t=1751978293; c=relaxed/simple;
+	bh=AhfLrfRSsw07jfs1UMghYWvNtaARBvBzBANLf+ADqbg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kvlEOsq9kjotYniE6DKqrWXaPWbY1vYX9BWcbdTbAupMpmBzo9JPqJPOVdA/JrRPvMrzjYb1s6w5P2qzUwWYCPfjPiASTUd7u89pY9M3lRVR7U7JcewGjd5qknmSGT1I6i7y4LWHbrECSxVndA838VsNsUM7Wb4+RxfYZIbqWEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8nq7PEA; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=ibFIkUmvOyPgELTT6KMIaKklO99NN1txJpkPn2G4DWDJwWsGXDbcsgKqSXqN1pTVjntpZun7XgLiMeHBvjFLRZTUcC3zU4bCqZ1SNjKpxuGYKFhpHEncYT8a8tOU33PPyE9+yYa+bXsx6HwXw1HeJ2nRhoabUQkk0jnDSPbwKRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3LAL1r2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8nq7PEA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15F4AC4CEF0
-	for <loongarch@lists.linux.dev>; Tue,  8 Jul 2025 11:37:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3LAL1r2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD0BBC4CEF7
+	for <loongarch@lists.linux.dev>; Tue,  8 Jul 2025 12:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751974650;
-	bh=Jd1T3sx5/KDM7mM/Zz9GYUL0ia9E2nQPf9lXHvRXZmg=;
+	s=k20201202; t=1751978292;
+	bh=AhfLrfRSsw07jfs1UMghYWvNtaARBvBzBANLf+ADqbg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F8nq7PEAruPGzsKz4P4NPY8fjlO12G267D+JfaTOJBlY9Sdy7wsx7gC8260kkay+s
-	 tWzPO2AFi7VgsHZQFuMTUIUB2mOlg4eLLcL1dGT+3O8jKRSOtepBQ50xTYvyVIV+dA
-	 tq2+iW1AyJQ3DPbGaAHWr8v6s4r+shU6M9vCbysNwPP98wgn91/lSxRqp/gyEmXrYd
-	 hEx55u5kpcsnUIVyciA+so3Imi2MRuaol3VWpP1b7hniyGrvJxxOOL/TT3ssfmPABK
-	 2jumotIZ4n9V/NqtlR6USayOsUh8wfkG14ZjSTr1zqhT5Nd65oQnqvoNvFuVM+CiOp
-	 BJwIOmG1igKmA==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so7687742a12.2
-        for <loongarch@lists.linux.dev>; Tue, 08 Jul 2025 04:37:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXQWoOA1mBkSRjWcEXO3xKwBM4uYVGvgCI+mUrsZHgY2eooQlI9rSOl9vkWvwso3CwvSy382xJoOJs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxDM8iiudqk3ySCSo2GlNaUTYuxauhTCH+9HsGiOZBJ+OpgDVK5
-	qwLN5cMD5mwlcMM70lHlBZdFY8vlHyx/TIjr3Um/nF70wrwqR72wSxweMTp5UZ1JCh8BEDV2Id/
-	g9GDK4JSJUtNSqsD3IlyHDgBZZy9+hU8=
-X-Google-Smtp-Source: AGHT+IEMgxD68DfBMaanXG5eeXbGOXoBXXlNeYuvtnHciJwKTyhTsZrPo9HwnqIJqhWKZ9LIePES093KoEtz6FDlvYM=
-X-Received: by 2002:a05:6402:3591:b0:609:b5e0:598a with SMTP id
- 4fb4d7f45d1cf-60fd3491e75mr13553204a12.24.1751974648555; Tue, 08 Jul 2025
- 04:37:28 -0700 (PDT)
+	b=D3LAL1r2IQNaXOtgQ5ed2uKeMQ40nsP5HBvdSPk7sEJ6FOmYUnDR+cuU5x/qbiWxc
+	 0fenAV2MrRxIo2JZIhEWbqRWJuykYXxkK1Gy0loz6m/6KSeuczbj89xQoihXuErFnw
+	 MuMF5I8Bsz9DWXXoVhadIjjCfx4nprfWoNOLZpn+vG+HIM2niR/nMru+ZRFqtdTjSc
+	 zFR3d3ZpIp0Q909FMk6XWUz2hLB9kJJYiA8ZyRgjpykT5eOfGBZWLElIKqjP7OBpbu
+	 7j00LMhcqN1L5sCwSDfA9IcuH0tt+LQa8fBfJwcP6WhayNPmmx0UjaBCOAySVE5MCy
+	 X3Dsq43lol3fg==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so8517916a12.3
+        for <loongarch@lists.linux.dev>; Tue, 08 Jul 2025 05:38:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWCcLbCSciba7r7XgZc+mwFBsQNo8CLScswhvwFydqUME1m/xmG0gepzTGIKJWs00mt01xlTOPXELI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwVwvSK/ADA0Td+igLUse+au2mT26obKxvvruGigNARviCZDyX1
+	yAARd06xnNG3ptArnbvCJcuIWlHZn4aaeM3dwwWnxYw+1yJ72taHAuExPXgXsw9X2HuM6Q5CQ4K
+	u4qNWVVtMNrPSEfe4x+Ddj5/pX85lqPE=
+X-Google-Smtp-Source: AGHT+IEg6DcN7sOADspPkyLt/BiUHO7yYnlLZqsqf6OEBfWwWugUQ+XFSABwG9zYT/xF2Gu5Hjwrn4svYRMYNOnf6uQ=
+X-Received: by 2002:a05:6402:5245:b0:604:a19a:d84b with SMTP id
+ 4fb4d7f45d1cf-6104adc0e26mr2323268a12.5.1751978291201; Tue, 08 Jul 2025
+ 05:38:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1750765495.git.zhoubinbin@loongson.cn> <CAPDyKFrYYdhrctvwJ=VdTRHYSLSO_MjGKfasP53muVbe1+=0ag@mail.gmail.com>
-In-Reply-To: <CAPDyKFrYYdhrctvwJ=VdTRHYSLSO_MjGKfasP53muVbe1+=0ag@mail.gmail.com>
+References: <20250705125710.59994-1-ziyao@disroot.org> <2ad0ae43-0331-4860-8f39-34ebfe02cae8@app.fastmail.com>
+In-Reply-To: <2ad0ae43-0331-4860-8f39-34ebfe02cae8@app.fastmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 8 Jul 2025 19:36:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5_iokrgA+efG5A9PEfCiQ-Wh2AhssnTXMzmJPE3RPtUQ@mail.gmail.com>
-X-Gm-Features: Ac12FXy7BnhlcEeIQ7dGegd_kOusW7rEMktXmQkFWtnZ5nNqQpKNzizLE72fA9E
-Message-ID: <CAAhV-H5_iokrgA+efG5A9PEfCiQ-Wh2AhssnTXMzmJPE3RPtUQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] LoongArch: Introduce the Loongson-2K MMC host
- controller driver
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, wanghongliang@loongson.cn
+Date: Tue, 8 Jul 2025 20:37:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6QFUSRQsLRsR7HvB658qefcv64QyGUsTu_5p5hiW5KwQ@mail.gmail.com>
+X-Gm-Features: Ac12FXxtbqaf65AsS2ykC9MhpbszG-NX-Sr0H-qx1cFY-FHrF-BqyI2DUxDeD_E
+Message-ID: <CAAhV-H6QFUSRQsLRsR7HvB658qefcv64QyGUsTu_5p5hiW5KwQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Avoid in-place string operation on FDT content
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Yao Zi <ziyao@disroot.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Miaoqian Lin <linmq006@gmail.com>, Hongliang Wang <wanghongliang@loongson.cn>, 
+	Binbin Zhou <zhoubinbin@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Mingcong Bai <jeffbai@aosc.io>, 
+	Kexy Biscuit <kexybiscuit@aosc.io>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 3, 2025 at 8:20=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org>=
- wrote:
->
-> On Tue, 24 Jun 2025 at 13:58, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
-> >
-> > Hi all:
-> >
-> > This patchset introduce the MMC host controller on Loongson-2K series
-> > CPUs.
-> >
-> > They are similar, except for the interface characteristics and the use =
-of
-> > DMA engine, specifically, the Loongson-2K0500/Loongson-2K1000 use an
-> > externally shared APBDMA engine, while the Loongson-2K2000 uses an
-> > internally exclusive DMA.
-> >
-> > Based on this, I'm splitting the driver into two patches.
-> >
-> > List of the patchset:
-> > Patch1: bindings for Loongson-2K0500/Loongson-2K1000;
-> > Patch2: driver for MMC controller using externally shared APBDMA engine=
-;
-> > Patch3: bindings for Loongson-2K2000;
-> > Patch4: driver for MMC controller using internally exclusive DMA.
-> >
-> > Thanks.
-> >
-> > -------
-> > V4:
-> > patch(2/4):
-> >  - Code formatting;
-> >  - Fix lkp error
-> >     https://lore.kernel.org/all/202506202031.TNchn822-lkp@intel.com/
-> > patch(4/4):
-> >  - Rename function names:
-> >         ls2k1000_mmc_regmap_config -> ls2k0500_mmc_regmap_config
-> >         loongson2_mmc_reorder_cmd_data -> ls2k0500_mmc_reorder_cmd_data
-> >         loongson2_mmc_set_internal_dma -> ls2k2000_mmc_set_internal_dma
-> >  - Use macro definitions for magic numbers.
-> >
-> > Link to V3:
-> > https://lore.kernel.org/all/cover.1750216134.git.zhoubinbin@loongson.cn=
-/
-> >
-> > V3:
-> > patch(1/4):
-> >  - Rename dt-binding file as loongson,ls2k0500-mmc.yaml.
-> > patch(2/4):
-> >  - Fix lkp error;
-> >     https://lore.kernel.org/all/202505130918.uanOGxju-lkp@intel.com/
-> >  - Add regulators support for ios ops;
-> >  - Add ack_sdio_irq() callback;
-> >  - Add MMC_CAP2_SDIO_IRQ_NOTHREAD flag;
-> > patch(3/4):
-> >  - Add Ack-by tag.
-> > patch(4/4):
-> >  - Update commit for fix_data_timeout().
-> >
-> > Link to V2:
-> > https://lore.kernel.org/all/cover.1746581751.git.zhoubinbin@loongson.cn=
-/
-> >
-> > V2:
-> > patch(1/4):
-> >  - Add reg define for each reg entry.
-> >
-> > patch(2/4):
-> >  - Put all code in the c-file;
-> >  - Use mmc_from_priv() instead of host->mmc;
-> >  - Use sdio_signal_irq() instead of mmc_signal_sdio_irq();
-> >  - Use devm_mmc_alloc_host() instead of mmc_alloc_host();
-> >  - Use mmc_regulator_get_supply();
-> >
-> > patch(4/4):
-> >  - Add fix_cmd_interrupt function which is needed by Loongson-2K2000.
-> >
-> > Link to V1:
-> > https://lore.kernel.org/linux-mmc/cover.1744273956.git.zhoubinbin@loong=
-son.cn/
-> >
-> > Binbin Zhou (4):
-> >   dt-bindings: mmc: Add Loongson-2K SD/SDIO/eMMC controller binding
-> >   mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
-> >   dt-bindings: mmc: loongson,ls2k0500-mmc: Add compatible for
-> >     Loongson-2K2000
-> >   mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC controller driver
-> >
-> >  .../bindings/mmc/loongson,ls2k0500-mmc.yaml   |  112 ++
-> >  MAINTAINERS                                   |    7 +
-> >  drivers/mmc/host/Kconfig                      |   13 +
-> >  drivers/mmc/host/Makefile                     |    1 +
-> >  drivers/mmc/host/loongson2-mmc.c              | 1029 +++++++++++++++++
-> >  5 files changed, 1162 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/loongson,ls2k=
-0500-mmc.yaml
-> >  create mode 100644 drivers/mmc/host/loongson2-mmc.c
-> >
-> >
-> > base-commit: f5c755ef810009b85350884c483705bd04365370
-> > --
-> > 2.47.1
-> >
-> >
->
-> The series applied for next, thanks!
->
-> Note, I am leaving you to address/discuss Huacai's comment on patch1
-> as a new patch on top.
-Hmmm, if possible, I prefer Binbin to send a clean v5 with that
-modification. Or you modify it by yourself when applying.
+Applied, thanks.
 
 Huacai
 
+On Sat, Jul 5, 2025 at 10:06=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.co=
+m> wrote:
 >
-> Kind regards
-> Uffe
+>
+>
+> =E5=9C=A82025=E5=B9=B47=E6=9C=885=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8B=E5=
+=8D=881:57=EF=BC=8CYao Zi=E5=86=99=E9=81=93=EF=BC=9A
+> > In init_cpu_fullname, a constant pointer to model property is retrieved=
+.
+> > It's later modified by the strsep function, which is illegal and
+> > corrupts kernel's FDT copy. This is shown by dmesg,
+> >
+> >       OF: fdt: not creating '/sys/firmware/fdt': CRC check failed
+> >
+> > Create a mutable copy of the model property and do in-place operations
+> > on it instead. loongson_sysconf.cpuname lives across the kernel
+> > lifetime, thus manually releasing isn't necessary.
+> >
+> > Also move of_node_put() for the root node after the usage of its
+> > property, since of_node_put() decreases the reference counter thus usag=
+e
+> > after the call is unsafe.
+> >
+> > Fixes: 44a01f1f726a ("LoongArch: Parsing CPU-related information from D=
+TS")
+>
+> Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  arch/loongarch/kernel/env.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+> > index 27144de5c5fe..fba141472ab9 100644
+> > --- a/arch/loongarch/kernel/env.c
+> > +++ b/arch/loongarch/kernel/env.c
+> > @@ -40,15 +40,18 @@ void __init init_environ(void)
+> >  static int __init init_cpu_fullname(void)
+> >  {
+> >       struct device_node *root;
+> > +     const char *model;
+> >       int cpu, ret;
+> > -     char *model;
+> > +     char *tmp;
+> >
+> >       /* Parsing cpuname from DTS model property */
+> >       root =3D of_find_node_by_path("/");
+> > -     ret =3D of_property_read_string(root, "model", (const char **)&mo=
+del);
+> > +     ret =3D of_property_read_string(root, "model", &model);
+> > +     if (ret =3D=3D 0) {
+> > +             tmp =3D kstrdup(model, GFP_KERNEL);
+> > +             loongson_sysconf.cpuname =3D strsep(&tmp, " ");
+> > +     }
+> >       of_node_put(root);
+> > -     if (ret =3D=3D 0)
+> > -             loongson_sysconf.cpuname =3D strsep(&model, " ");
+> >
+> >       if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname=
+,
+> > "Loongson", 8)) {
+> >               for (cpu =3D 0; cpu < NR_CPUS; cpu++)
+> > --
+> > 2.49.0
+>
+> --
+> - Jiaxun
