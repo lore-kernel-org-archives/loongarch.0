@@ -1,170 +1,178 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83AD2594B9
-	for <loongarch@lists.linux.dev>; Tue,  8 Jul 2025 07:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4DB26CE2D
+	for <loongarch@lists.linux.dev>; Tue,  8 Jul 2025 11:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751959150; cv=none; b=b71TtyfcCpPeCGnNaOXLJlDXg3ALhMxVJ79iO9b9+wH6tBEm9AmlxsgdGJC7pA/lyYLcth3SHGZR55U/CQzv7BbabQ8hnqjdoThp2CaNPJrefahCxNT5anr65nDHaG+Re2FSzKi9VrA5ofURV1l+EpR36CYkRHQn2O6VXg8TxRA=
+	t=1751974650; cv=none; b=dQTYX9l1+NBZwKNcmcbMfsuGvJMHkqyz1K3Mp2eNDGkWJ5zvI07yFsIFh/iu2eVw6WaepGebGc3bWY9/+2167QOgwyHmF4jrT7k+klNvBUtpMyWUUTd+rovWQitxBGRTi/bXz530S1taY75pRQAHUoGmWDpHsTmVRRVdHkhPb3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751959150; c=relaxed/simple;
-	bh=1fogLxGnYTWy1MX44JdrHuDQqNNPGSk0SdHEiSS8m0E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OmxcObPdZodh+qYsieHTrCb/BnYn5MWY+M0jTdHa81o9l3E7PvHA++jb5Oww1/aR9YPY1FJ2uofXhuTTnq8a5QiuHqTWKDgaOYmLOgEUOJanPDEYdgM7N8UAbkB0ZODb2VbpMje4r5TO2FUHIIPybOKHIW6PdzmOL3IIgUF1gR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d11fd4585bcb11f0b29709d653e92f7d-20250708
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:904e6c6a-4b4b-471e-95f8-453c448955c5,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.45,REQID:904e6c6a-4b4b-471e-95f8-453c448955c5,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:f4701ff831626eedbab9373fb1fa2546,BulkI
-	D:2507081519023TLD5WU0,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
-	|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:ni
-	l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:
-	0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: d11fd4585bcb11f0b29709d653e92f7d-20250708
-X-User: jianghaoran@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.13)] by mailgw.kylinos.cn
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 183489347; Tue, 08 Jul 2025 15:18:59 +0800
-From: Haoran Jiang <jianghaoran@kylinos.cn>
-To: loongarch@lists.linux.dev
-Cc: bpf@vger.kernel.org,
-	kernel@xen0n.name,
-	chenhuacai@kernel.org,
-	hengqi.chen@gmail.com,
-	yangtiezhu@loongson.cn,
-	jolsa@kernel.org,
-	haoluo@google.com,
-	sdf@fomichev.me,
-	kpsingh@kernel.org,
-	john.fastabend@gmail.com,
-	yonghong.song@linux.dev,
-	song@kernel.org,
-	eddyz87@gmail.com,
-	martin.lau@linux.dev,
-	andrii@kernel.org,
-	daniel@iogearbox.net,
-	ast@kernel.org
-Subject: [PATCH v2 1/2] LoongArch: BPF: Optimize the calculation method of jmp_offset in the emit_bpf_tail_call function
-Date: Tue,  8 Jul 2025 15:18:39 +0800
-Message-Id: <20250708071840.556686-2-jianghaoran@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250708071840.556686-1-jianghaoran@kylinos.cn>
-References: <20250708071840.556686-1-jianghaoran@kylinos.cn>
+	s=arc-20240116; t=1751974650; c=relaxed/simple;
+	bh=Jd1T3sx5/KDM7mM/Zz9GYUL0ia9E2nQPf9lXHvRXZmg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kvlEOsq9kjotYniE6DKqrWXaPWbY1vYX9BWcbdTbAupMpmBzo9JPqJPOVdA/JrRPvMrzjYb1s6w5P2qzUwWYCPfjPiASTUd7u89pY9M3lRVR7U7JcewGjd5qknmSGT1I6i7y4LWHbrECSxVndA838VsNsUM7Wb4+RxfYZIbqWEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8nq7PEA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8nq7PEA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15F4AC4CEF0
+	for <loongarch@lists.linux.dev>; Tue,  8 Jul 2025 11:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751974650;
+	bh=Jd1T3sx5/KDM7mM/Zz9GYUL0ia9E2nQPf9lXHvRXZmg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=F8nq7PEAruPGzsKz4P4NPY8fjlO12G267D+JfaTOJBlY9Sdy7wsx7gC8260kkay+s
+	 tWzPO2AFi7VgsHZQFuMTUIUB2mOlg4eLLcL1dGT+3O8jKRSOtepBQ50xTYvyVIV+dA
+	 tq2+iW1AyJQ3DPbGaAHWr8v6s4r+shU6M9vCbysNwPP98wgn91/lSxRqp/gyEmXrYd
+	 hEx55u5kpcsnUIVyciA+so3Imi2MRuaol3VWpP1b7hniyGrvJxxOOL/TT3ssfmPABK
+	 2jumotIZ4n9V/NqtlR6USayOsUh8wfkG14ZjSTr1zqhT5Nd65oQnqvoNvFuVM+CiOp
+	 BJwIOmG1igKmA==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so7687742a12.2
+        for <loongarch@lists.linux.dev>; Tue, 08 Jul 2025 04:37:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXQWoOA1mBkSRjWcEXO3xKwBM4uYVGvgCI+mUrsZHgY2eooQlI9rSOl9vkWvwso3CwvSy382xJoOJs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxDM8iiudqk3ySCSo2GlNaUTYuxauhTCH+9HsGiOZBJ+OpgDVK5
+	qwLN5cMD5mwlcMM70lHlBZdFY8vlHyx/TIjr3Um/nF70wrwqR72wSxweMTp5UZ1JCh8BEDV2Id/
+	g9GDK4JSJUtNSqsD3IlyHDgBZZy9+hU8=
+X-Google-Smtp-Source: AGHT+IEMgxD68DfBMaanXG5eeXbGOXoBXXlNeYuvtnHciJwKTyhTsZrPo9HwnqIJqhWKZ9LIePES093KoEtz6FDlvYM=
+X-Received: by 2002:a05:6402:3591:b0:609:b5e0:598a with SMTP id
+ 4fb4d7f45d1cf-60fd3491e75mr13553204a12.24.1751974648555; Tue, 08 Jul 2025
+ 04:37:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1750765495.git.zhoubinbin@loongson.cn> <CAPDyKFrYYdhrctvwJ=VdTRHYSLSO_MjGKfasP53muVbe1+=0ag@mail.gmail.com>
+In-Reply-To: <CAPDyKFrYYdhrctvwJ=VdTRHYSLSO_MjGKfasP53muVbe1+=0ag@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 8 Jul 2025 19:36:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5_iokrgA+efG5A9PEfCiQ-Wh2AhssnTXMzmJPE3RPtUQ@mail.gmail.com>
+X-Gm-Features: Ac12FXy7BnhlcEeIQ7dGegd_kOusW7rEMktXmQkFWtnZ5nNqQpKNzizLE72fA9E
+Message-ID: <CAAhV-H5_iokrgA+efG5A9PEfCiQ-Wh2AhssnTXMzmJPE3RPtUQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] LoongArch: Introduce the Loongson-2K MMC host
+ controller driver
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, wanghongliang@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The extra pass of bpf_int_jit_compile() skips JIT context initialization
-which essentially skips offset calculation leaving out_offset = -1,
-the jmp_offset in emit_bpf_tail_call is calculated
-by #define jmp_offset (out_offset - (cur_offset)) is a negative number,
-which does not meet expectations.The final generated assembly as follow.
+On Thu, Jul 3, 2025 at 8:20=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org>=
+ wrote:
+>
+> On Tue, 24 Jun 2025 at 13:58, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+> >
+> > Hi all:
+> >
+> > This patchset introduce the MMC host controller on Loongson-2K series
+> > CPUs.
+> >
+> > They are similar, except for the interface characteristics and the use =
+of
+> > DMA engine, specifically, the Loongson-2K0500/Loongson-2K1000 use an
+> > externally shared APBDMA engine, while the Loongson-2K2000 uses an
+> > internally exclusive DMA.
+> >
+> > Based on this, I'm splitting the driver into two patches.
+> >
+> > List of the patchset:
+> > Patch1: bindings for Loongson-2K0500/Loongson-2K1000;
+> > Patch2: driver for MMC controller using externally shared APBDMA engine=
+;
+> > Patch3: bindings for Loongson-2K2000;
+> > Patch4: driver for MMC controller using internally exclusive DMA.
+> >
+> > Thanks.
+> >
+> > -------
+> > V4:
+> > patch(2/4):
+> >  - Code formatting;
+> >  - Fix lkp error
+> >     https://lore.kernel.org/all/202506202031.TNchn822-lkp@intel.com/
+> > patch(4/4):
+> >  - Rename function names:
+> >         ls2k1000_mmc_regmap_config -> ls2k0500_mmc_regmap_config
+> >         loongson2_mmc_reorder_cmd_data -> ls2k0500_mmc_reorder_cmd_data
+> >         loongson2_mmc_set_internal_dma -> ls2k2000_mmc_set_internal_dma
+> >  - Use macro definitions for magic numbers.
+> >
+> > Link to V3:
+> > https://lore.kernel.org/all/cover.1750216134.git.zhoubinbin@loongson.cn=
+/
+> >
+> > V3:
+> > patch(1/4):
+> >  - Rename dt-binding file as loongson,ls2k0500-mmc.yaml.
+> > patch(2/4):
+> >  - Fix lkp error;
+> >     https://lore.kernel.org/all/202505130918.uanOGxju-lkp@intel.com/
+> >  - Add regulators support for ios ops;
+> >  - Add ack_sdio_irq() callback;
+> >  - Add MMC_CAP2_SDIO_IRQ_NOTHREAD flag;
+> > patch(3/4):
+> >  - Add Ack-by tag.
+> > patch(4/4):
+> >  - Update commit for fix_data_timeout().
+> >
+> > Link to V2:
+> > https://lore.kernel.org/all/cover.1746581751.git.zhoubinbin@loongson.cn=
+/
+> >
+> > V2:
+> > patch(1/4):
+> >  - Add reg define for each reg entry.
+> >
+> > patch(2/4):
+> >  - Put all code in the c-file;
+> >  - Use mmc_from_priv() instead of host->mmc;
+> >  - Use sdio_signal_irq() instead of mmc_signal_sdio_irq();
+> >  - Use devm_mmc_alloc_host() instead of mmc_alloc_host();
+> >  - Use mmc_regulator_get_supply();
+> >
+> > patch(4/4):
+> >  - Add fix_cmd_interrupt function which is needed by Loongson-2K2000.
+> >
+> > Link to V1:
+> > https://lore.kernel.org/linux-mmc/cover.1744273956.git.zhoubinbin@loong=
+son.cn/
+> >
+> > Binbin Zhou (4):
+> >   dt-bindings: mmc: Add Loongson-2K SD/SDIO/eMMC controller binding
+> >   mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
+> >   dt-bindings: mmc: loongson,ls2k0500-mmc: Add compatible for
+> >     Loongson-2K2000
+> >   mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC controller driver
+> >
+> >  .../bindings/mmc/loongson,ls2k0500-mmc.yaml   |  112 ++
+> >  MAINTAINERS                                   |    7 +
+> >  drivers/mmc/host/Kconfig                      |   13 +
+> >  drivers/mmc/host/Makefile                     |    1 +
+> >  drivers/mmc/host/loongson2-mmc.c              | 1029 +++++++++++++++++
+> >  5 files changed, 1162 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/loongson,ls2k=
+0500-mmc.yaml
+> >  create mode 100644 drivers/mmc/host/loongson2-mmc.c
+> >
+> >
+> > base-commit: f5c755ef810009b85350884c483705bd04365370
+> > --
+> > 2.47.1
+> >
+> >
+>
+> The series applied for next, thanks!
+>
+> Note, I am leaving you to address/discuss Huacai's comment on patch1
+> as a new patch on top.
+Hmmm, if possible, I prefer Binbin to send a clean v5 with that
+modification. Or you modify it by yourself when applying.
 
-54:	bgeu        	$a2, $t1, -8	    # 0x0000004c
-58:	addi.d      	$a6, $s5, -1
-5c:	bltz        	$a6, -16	    # 0x0000004c
-60:	alsl.d      	$t2, $a2, $a1, 0x3
-64:	ld.d        	$t2, $t2, 264
-68:	beq         	$t2, $zero, -28	    # 0x0000004c
+Huacai
 
-Before apply this patch, the follow test case will reveal soft lock issues.
-
-cd tools/testing/selftests/bpf/
-./test_progs --allow=tailcalls/tailcall_bpf2bpf_1
-
-dmesg:
-watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [test_progs:25056]
-
-Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
----
- arch/loongarch/net/bpf_jit.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index fa1500d4aa3e..5061bfc978f2 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
- 	return true;
- }
- 
--/* initialized on the first pass of build_body() */
--static int out_offset = -1;
--static int emit_bpf_tail_call(struct jit_ctx *ctx)
-+static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
- {
- 	int off;
- 	u8 tcc = tail_call_reg(ctx);
-@@ -220,9 +218,10 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	u8 t2 = LOONGARCH_GPR_T2;
- 	u8 t3 = LOONGARCH_GPR_T3;
- 	const int idx0 = ctx->idx;
-+	int tc_ninsn = 0;
- 
- #define cur_offset (ctx->idx - idx0)
--#define jmp_offset (out_offset - (cur_offset))
-+#define jmp_offset (tc_ninsn - (cur_offset))
- 
- 	/*
- 	 * a0: &ctx
-@@ -232,6 +231,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	 * if (index >= array->map.max_entries)
- 	 *	 goto out;
- 	 */
-+	tc_ninsn = insn ? ctx->offset[insn+1] - ctx->offset[insn] :
-+		ctx->offset[0];
- 	off = offsetof(struct bpf_array, map.max_entries);
- 	emit_insn(ctx, ldwu, t1, a1, off);
- 	/* bgeu $a2, $t1, jmp_offset */
-@@ -263,15 +264,6 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
- 	emit_insn(ctx, ldd, t3, t2, off);
- 	__build_epilogue(ctx, true);
- 
--	/* out: */
--	if (out_offset == -1)
--		out_offset = cur_offset;
--	if (cur_offset != out_offset) {
--		pr_err_once("tail_call out_offset = %d, expected %d!\n",
--			    cur_offset, out_offset);
--		return -1;
--	}
--
- 	return 0;
- 
- toofar:
-@@ -916,7 +908,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 	/* tail call */
- 	case BPF_JMP | BPF_TAIL_CALL:
- 		mark_tail_call(ctx);
--		if (emit_bpf_tail_call(ctx) < 0)
-+		if (emit_bpf_tail_call(ctx, i) < 0)
- 			return -EINVAL;
- 		break;
- 
-@@ -1342,7 +1334,6 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	if (tmp_blinded)
- 		bpf_jit_prog_release_other(prog, prog == orig_prog ? tmp : orig_prog);
- 
--	out_offset = -1;
- 
- 	return prog;
- 
--- 
-2.43.0
-
+>
+> Kind regards
+> Uffe
