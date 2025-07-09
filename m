@@ -1,110 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D23B2D3EC1
-	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 15:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3072156F4A;
+	Wed,  9 Jul 2025 17:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752074610; cv=none; b=Uja3Kqimy8jCRUCcCyAd8sNEsS84WAzhbY2cjfQyf+6a9gLtNTuykd6ksKMdjd1kcCsBP0XKfE6ShmchKTuxtM+/jQ9DZOhf4vHLKx8Ost/80yrf04ki+Hv/Jm9BqtSYOcp8uynwskq2t9O3a6gaQl5e2DvIpyCZjKplwR7t+2s=
+	t=1752081604; cv=none; b=utb+Imh05mXod1uswMnZSHmCJtIUq/VMIz3bBEs9Ykoszx4nojIypIeYpNqdPCiUxqV2BT5q+gCs2tEuMz8u1x/mDNWK5WNZEgv4AbHyryUB8jHxoElJWaFUprRPDv3IlQc2mEhEV1/IB7NHZkWMkbqaaWu2CpfP+xEL9BqvFKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752074610; c=relaxed/simple;
-	bh=zF7zUZo4oyIfGlJULyHtOWF7n/UOTmrSOecmFDx0BoE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=onNsZwZn5LLN2y+PCWx8ib7arc92vGYu6XrGv9ltS+0L8kevpRlcjRY/cHX82G/moqUQyAPF6I66BRdLQjdBt+KXcWPCvQN4mRXfPvC/VtGckQRsqlz/xA1+h0ZCByXUZEMzWCPddSuk3RqTDnSIfYQeHjhoeHXqPfN5mYDKScc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uf1yeEHi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752081604; c=relaxed/simple;
+	bh=K15coVbUq4k5YO1LhyiQD1STXDhuD3lAUmzmXi1CD3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QtsineCb+DQpI08acFPfXrvSyZK5Mj1JhblwqFJJGqRcFGt5V58TEjhbmlDUL6owMti5q5QEb3OtuN1Cy9g8VQLfnxsoONWsXGiclnEWzBcBwnR0ZH/O1WmWRV6l7o4I/G6obYOpIKUQUxcFqaJxTp+fBCUOYG7PJyuyYUSZlkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bF6Pag4R; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uf1yeEHi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43AFAC4CEF7
-	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 15:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752074610;
-	bh=zF7zUZo4oyIfGlJULyHtOWF7n/UOTmrSOecmFDx0BoE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Uf1yeEHik2aWc0YkbhH+tQVzi2oQhfbsEKbDGyDLHT0DSfZCrl3AhlRxUcZmSEgO8
-	 KSOOkEFSd6yLgybq7PZBFbujX3/cjab/3vwNDGTJPQ2JtQSE/cKBLog0Bp70Q31bO0
-	 RSx8cXCnAIQ86lXNCyuRd9mIFxexYC749BCECjpEb9i9Dq8JOj2IlKLgzuY6t28H1L
-	 uUWf8zgGxy1SCXaDQXjkPOel5mfF7JG174ERyhWjZsV/2t/qGYROTKkz0LZTGBxdcG
-	 emgVIgnmTXnCdwMnvZipm1gJdQukJGrVB/jMQwhvZkf239dmb9Z1naI8fyBygSR/PT
-	 8mciu9+Yh+JIw==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60c60f7eeaaso8660837a12.0
-        for <loongarch@lists.linux.dev>; Wed, 09 Jul 2025 08:23:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVR2K7yNsAj10auttHVAKrChrV3exHJIO/dDQaPWbbhHBZRgkqD/YO9CnEGq1l1IJHalarwoIwQpaE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwJxX7O7fCm/rgh968SkdCIk+PhneT8IHdYL5ZbpLlK3lsF4yTi
-	RmqSFTlGcyJfWk1Jyv8MFTREUcXaL0tpQBu3kFm+ds5CCd910+5GozzipXPFjQ0v7pl7wGH6Xvu
-	MCWWcCwbzPlwCk0wGTNymHU5o9D30QLc=
-X-Google-Smtp-Source: AGHT+IFRc6KIPeIaTMgPSKSHBeOiMQSXV6QtwyTjMyRju61upfaitdwA2JeGkExFRNlEYZnT+5a44EPyZtE1No/SoLc=
-X-Received: by 2002:a05:6402:1d51:b0:607:32e8:652 with SMTP id
- 4fb4d7f45d1cf-611a6e20969mr2685377a12.19.1752074608783; Wed, 09 Jul 2025
- 08:23:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bF6Pag4R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752081602; x=1783617602;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=K15coVbUq4k5YO1LhyiQD1STXDhuD3lAUmzmXi1CD3M=;
+  b=bF6Pag4RTL60ghrRKnIhz/BPr9zPOdmQ6ttfrM/FZY6B5DustvkMsHcu
+   ytf3ppCAj6EbwvWDKBEH5CGaH14vdOxLwL3409AIVwmtc+iK4kwzNx3Ad
+   iZYgI68c324Jfqjm+wbeiVXsoiCenDH9Scy7et1X4FlBamLnRqe9gsqnO
+   L5mmVsTYd7f5LmXOoAcHqqVA8Ho+kE8BWerRKgkECIT4TvDZqJJqgWgiu
+   1QkPe3Oxafhtz8PxRUad5QSktWBgkm21O+kH1Y7rpu2F6lgYqfk9yD3fK
+   JLw0nTcOwe1blAre8rcKNmaYNiUTxlTUxIte8G7z29en2cOr5ipISerz+
+   A==;
+X-CSE-ConnectionGUID: PGQfbOEhRp+S+zfeoW7gxA==
+X-CSE-MsgGUID: lL4u5F82QbeWtikFqujmNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11489"; a="65804713"
+X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
+   d="scan'208";a="65804713"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 10:20:02 -0700
+X-CSE-ConnectionGUID: vSW8DNRFTWGF6nHkoYHjIw==
+X-CSE-MsgGUID: HrO1BL03TfOGbKFygymHHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
+   d="scan'208";a="155247055"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 09 Jul 2025 10:19:56 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uZYSX-0003oJ-2m;
+	Wed, 09 Jul 2025 17:19:53 +0000
+Date: Thu, 10 Jul 2025 01:19:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chenghao Duan <duanchenghao@kylinos.cn>, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, yangtiezhu@loongson.cn,
+	hengqi.chen@gmail.com, chenhuacai@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, martin.lau@linux.dev, eddyz87@gmail.com,
+	song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+	jolsa@kernel.org, kernel@xen0n.name, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, bpf@vger.kernel.org,
+	guodongtai@kylinos.cn, duanchenghao@kylinos.cn,
+	youling.tang@linux.dev, jianghaoran@kylinos.cn
+Subject: Re: [PATCH v3 5/5] LoongArch: BPF: Add bpf trampoline support for
+ Loongarch
+Message-ID: <202507100034.wXofj6VX-lkp@intel.com>
+References: <20250709055029.723243-6-duanchenghao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250709055029.723243-1-duanchenghao@kylinos.cn> <20250709055029.723243-4-duanchenghao@kylinos.cn>
-In-Reply-To: <20250709055029.723243-4-duanchenghao@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 9 Jul 2025 23:23:12 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6bKrnDpVouriAoMUN5i26G6a+UuOGMyEj5h9kJGd6qnQ@mail.gmail.com>
-X-Gm-Features: Ac12FXyKw1YlQ-8ZaRt610FTtjuYkLfHQZ0sgZr9IxwIob4HevdQCXQrASehvIY
-Message-ID: <CAAhV-H6bKrnDpVouriAoMUN5i26G6a+UuOGMyEj5h9kJGd6qnQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] LoongArch: BPF: Add EXECMEM_BPF memory to execmem subsystem
-To: Chenghao Duan <duanchenghao@kylinos.cn>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	yangtiezhu@loongson.cn, hengqi.chen@gmail.com, martin.lau@linux.dev, 
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250709055029.723243-6-duanchenghao@kylinos.cn>
 
-Hi, Chenghao,
+Hi Chenghao,
 
-On Wed, Jul 9, 2025 at 1:50=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos.=
-cn> wrote:
->
-> The bpf_jit_alloc_exec function serves as the core mechanism for BPF
-> memory allocation, invoking execmem_alloc(EXECMEM_BPF, size) to
-> allocate memory. This change explicitly designates the allocation space
-> for EXECMEM_BPF.
-Without this patch, BPF JIT is allocated from MODULES region; with
-this patch, BPF JIT will be allocated from VMALLOC region. However,
-BPF JIT is similar to modules that the target of direct branch
-instruction is limited, so it should also be allocated from the
-MODULES region.
+kernel test robot noticed the following build warnings:
 
-So, it is better to drop this patch.
+[auto build test WARNING on bpf-next/net]
+[also build test WARNING on bpf-next/master bpf/master linus/master v6.16-rc5 next-20250709]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Chenghao-Duan/LoongArch-Add-the-function-to-generate-the-beq-and-bne-assembly-instructions/20250709-135350
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git net
+patch link:    https://lore.kernel.org/r/20250709055029.723243-6-duanchenghao%40kylinos.cn
+patch subject: [PATCH v3 5/5] LoongArch: BPF: Add bpf trampoline support for Loongarch
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20250710/202507100034.wXofj6VX-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 01c97b4953e87ae455bd4c41e3de3f0f0f29c61c)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250710/202507100034.wXofj6VX-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507100034.wXofj6VX-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> arch/loongarch/net/bpf_jit.c:1411:6: warning: variable 'ip' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+    1411 |         if (addr && ctx->image && ctx->ro_image)
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/net/bpf_jit.c:1414:51: note: uninitialized use occurs here
+    1414 |         return emit_jump_and_link(ctx, LOONGARCH_GPR_RA, ip, addr);
+         |                                                          ^~
+   arch/loongarch/net/bpf_jit.c:1411:2: note: remove the 'if' if its condition is always true
+    1411 |         if (addr && ctx->image && ctx->ro_image)
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1412 |                 ip = (u64)(ctx->image + ctx->idx);
+>> arch/loongarch/net/bpf_jit.c:1411:6: warning: variable 'ip' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+    1411 |         if (addr && ctx->image && ctx->ro_image)
+         |             ^~~~~~~~~~~~~~~~~~
+   arch/loongarch/net/bpf_jit.c:1414:51: note: uninitialized use occurs here
+    1414 |         return emit_jump_and_link(ctx, LOONGARCH_GPR_RA, ip, addr);
+         |                                                          ^~
+   arch/loongarch/net/bpf_jit.c:1411:6: note: remove the '&&' if its condition is always true
+    1411 |         if (addr && ctx->image && ctx->ro_image)
+         |             ^~~~~~~~~~~~~~~~~~~~~
+>> arch/loongarch/net/bpf_jit.c:1411:6: warning: variable 'ip' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+    1411 |         if (addr && ctx->image && ctx->ro_image)
+         |             ^~~~
+   arch/loongarch/net/bpf_jit.c:1414:51: note: uninitialized use occurs here
+    1414 |         return emit_jump_and_link(ctx, LOONGARCH_GPR_RA, ip, addr);
+         |                                                          ^~
+   arch/loongarch/net/bpf_jit.c:1411:6: note: remove the '&&' if its condition is always true
+    1411 |         if (addr && ctx->image && ctx->ro_image)
+         |             ^~~~~~~
+   arch/loongarch/net/bpf_jit.c:1409:8: note: initialize the variable 'ip' to silence this warning
+    1409 |         u64 ip;
+         |               ^
+         |                = 0
+   3 warnings generated.
 
 
-Huacai
+vim +1411 arch/loongarch/net/bpf_jit.c
 
->
-> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> ---
->  arch/loongarch/mm/init.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-> index c3e4586a7..07cedd9ee 100644
-> --- a/arch/loongarch/mm/init.c
-> +++ b/arch/loongarch/mm/init.c
-> @@ -239,6 +239,12 @@ struct execmem_info __init *execmem_arch_setup(void)
->                                 .pgprot =3D PAGE_KERNEL,
->                                 .alignment =3D 1,
->                         },
-> +                       [EXECMEM_BPF] =3D {
-> +                               .start  =3D VMALLOC_START,
-> +                               .end    =3D VMALLOC_END,
-> +                               .pgprot =3D PAGE_KERNEL,
-> +                               .alignment =3D PAGE_SIZE,
-> +                       },
->                 },
->         };
->
-> --
-> 2.43.0
->
->
+  1406	
+  1407	static int emit_call(struct jit_ctx *ctx, u64 addr)
+  1408	{
+  1409		u64 ip;
+  1410	
+> 1411		if (addr && ctx->image && ctx->ro_image)
+  1412			ip = (u64)(ctx->image + ctx->idx);
+  1413	
+  1414		return emit_jump_and_link(ctx, LOONGARCH_GPR_RA, ip, addr);
+  1415	}
+  1416	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
