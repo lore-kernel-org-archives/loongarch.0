@@ -1,245 +1,117 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057912AD22;
-	Wed,  9 Jul 2025 06:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E4EAD24
+	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 06:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752041314; cv=none; b=cwsFZQUZV5CblH8tTNod3uaQ40uNMSgruxffgBTz2GRHGYpNOigL+rkOfyEEzmh33XJG2IRuT9MkyBGi2SeYJ5A063GDOfJD+DRWjVPR0RgU7DrHVVdIWUWnXgcm+WFoxBZEP4fwhwyuXghA2EzqfR6AB6CqaL6VJgQEV3YM09U=
+	t=1752042854; cv=none; b=TBqU4Nal3Wv0+V4KkI6lpx5DcI+P9TZjEMDfyGksM3tWleNbvQK3eXJgjMQdRGXSaygPORxqAOOb/uEykNLYsFOOOAX3hwExcKyM/8w0OXL37VswmDbgasK7MUxo8GW8C7svJ75ucvSytWystkBHSKLWeghaWw68N+oH3fOEwnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752041314; c=relaxed/simple;
-	bh=EN5ByLBGywGLTiCp1bK3fyTglM7Zbn5pwSVlzcDFN2s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qaNfHBZdmVn+C4/k3T/460yBMv7DwsBMD9TOjx+u6sH7+2bVSxV4IT2F3DWonM3Ft/0HDeppBUcB5ht+1KAstHjw9Xw6ySrtnGJHqOh9sp1v7EBzyUZ8IsDWLrSGDK7toMYn5JISjwnY/2yyY5ZzOeDbQcNtETk5G7KDR+yjtl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=P+9TWd4x reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1752042854; c=relaxed/simple;
+	bh=DMmKdH2LlUyDyDEWJ3r3ROcYn+v5xI+1H76HITCAuGw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KKGiEJ98ofWOp8n+CO4Ox8hu26e+d+O9V5LIh9mson+chgwpldl0QvkMO645D5aBism6YN6HfFoGunly+iUcP7Fq/+Tj/nWiBP9uFxXnSFDzLEcJ69YJTd6ZuEnxFIPwcpY71UM+ocgPnoSypgpwlABxLMKTZHXDvUjeQfhG8U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bmmVJRcq; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="P+9TWd4x"
-Received: from [157.82.206.39] ([157.82.206.39])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 56955rZV065688
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 9 Jul 2025 14:05:53 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=4clTUl4sMeFn+3+ZKeZuCK2i1/1ZYbUuPzsuXuco86k=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=Message-ID:Date:Subject:To:From;
-        s=rs20250326; t=1752037554; v=1;
-        b=P+9TWd4xgbOJt4IAGxHHsFZCUP5mU2LruCqB6XvGSTxPuNiG88lEdFqKSI5e8GV9
-         IZQ027gIzqE6R884yIAbqFDeeb+QV4d98ETFvdXUnoX+FYopiMFnNscVsB2zI9Wa
-         2l2RcZyKqEBQDUjGZTaMI0r6Rf5IedBu6hCBpXk/895FEVdR2zQg58ehwJmyxgfF
-         XT9yXnMK/B98pfOeSBYxC5A9B18qaCU6AclyvtM00Ovo46CMOeuPcCCb07Ssut/I
-         yGZrAOC9hnteaFT0HuEm66QoaIAFlJenYdCL8L9SlWdVr/Lxm01+5vFw0NVbVwNR
-         jKgFire83dealgPIcgL8rg==
-Message-ID: <36c0213c-6b14-4ad2-969e-3d8e356bb680@rsg.ci.i.u-tokyo.ac.jp>
-Date: Wed, 9 Jul 2025 14:05:53 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmmVJRcq"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-53140c33563so4505993e0c.3
+        for <loongarch@lists.linux.dev>; Tue, 08 Jul 2025 23:34:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752042852; x=1752647652; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y9aod6BXjQrO5vyW4mRKpBJMwKOe6N1K/J0C4KFxzP4=;
+        b=bmmVJRcqAoKKitRcj82f0LWuEdlbhs2KyM6GYB4Su+83gwHAHtvja3RvWRGeBzcjAw
+         qVxN9nlprvUS6LrQb5ie31QYtLhGUOqhXggvn5CCOMExjhw6G3Qg1Yy82//Y8IjgbV3j
+         jU9p3/6CE8yd6+FA7+98hHEyV1PmrchopynhB8peOB59j3+rBHOpsH8arULeP659iXS0
+         xAHhHVXeuQAhfn3axdFg6gbwzeCAMnH/dOTUij3Z1v1GXR1tBaKfbZ6Q2IRH3h+OK71/
+         x/HEpNqiAr5b6A+PDg5GPYXQLA1QCzqjcgPV3wpLqor/0Fs4/kD6v+hRGzmRZVQbX8FX
+         CUWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752042852; x=1752647652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y9aod6BXjQrO5vyW4mRKpBJMwKOe6N1K/J0C4KFxzP4=;
+        b=klHnO2GrWiU1laaj72kqIIH3nF65GRO29GWtYt9W6vdqCAKe2jdnLNp5UQFwbuN1jC
+         +jANLBDercI9MTNR+QZg9cG0JzGX2cWbfi1Y1bOmJ5sohSKClvNyAzAVecXZK/hGGyiR
+         5doax43XDErr08OC0r76tI0s5YBggA0sRnweyv64s9f9eAQkPo4iTvdv9VcKBEa+pnTV
+         N+3AkAYJgngZ0JnIm3LlcskdfEe4Tj34nqLojUXsM6wD4U7cJQIdksJFUIqmFv7HsKvS
+         gYnkDHM9AfQ7delr9IqDyrIf41CRPppdTLEaK3azCRyxsvBqBt3OBJSHyEmZBLe/UF3Y
+         1umQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7rtq5sTMzm2gX2J2cL2TE/hvfyMHDFIg2y6/bp62iKnCKuBbD0WK2Fb8VhTNVHJOlybN+k19smHQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyOuBVMHRXSb2z9O+JWTENfz0i74ZgOOTt7PoEcYYP2gXTARI3v
+	bGWFyIRoydFSX1NYcy+3jexojgwCidmRao58stG9MGAQ3TvF7g4C96ijc061ngrpdCEhkMjUTH6
+	W2xUUqEhnyfzZbR0s5kdpoO+qPYA0Oxs=
+X-Gm-Gg: ASbGncsYEe2XuR4Sv/nBCfi+Iekv92xLRm48zRTLYcuJuZ2Le5U6RArkqIBFEp0eUT1
+	Sg9sehR/Xun1j+hp5xYNSYAFdd6tsU1euM8kILZ3pyBQjjwBVhfpyg1OFjnAlzRMWMqMki2qfi+
+	9yqHZWBlTi6TYtgpHpnyxpMqWGxKdcDev9fMABfYUwYA==
+X-Google-Smtp-Source: AGHT+IGzn/x16pDQ53vI1j1ojRFLBVig/bMF+fcC23ilzSsODhT507fDhgyOaAudI+CHcvleaZ8z6iN2Q55SLHQEmyU=
+X-Received: by 2002:a05:6122:80aa:b0:531:20dc:924 with SMTP id
+ 71dfb90a1353d-535d7443235mr586641e0c.11.1752042851298; Tue, 08 Jul 2025
+ 23:34:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/23] binfmt_elf,arch/*: Use elf.h for coredump note
- names
-To: Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, "H. Peter Anvin"
- <hpa@zytor.com>,
-        "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexandre Ghiti <alex@ghiti.fr>, Andreas Larsson <andreas@gaisler.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Chris Zankel <chris@zankel.net>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dinh Nguyen
- <dinguyen@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Jonas Bonn <jonas@southpole.se>, Kees Cook <kees@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Max Filippov
- <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley
- <paul.walmsley@sifive.com>,
-        Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
-References: <20250701135616.29630-1-Dave.Martin@arm.com>
-Content-Language: en-US
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <20250701135616.29630-1-Dave.Martin@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <2b83380bf64a424b9cb902a20a244c3e106c4bb8.1751702072.git.rabenda.cn@gmail.com>
+ <56e7ec54-9820-4e02-be97-2a9e1dedd117@amd.com>
+In-Reply-To: <56e7ec54-9820-4e02-be97-2a9e1dedd117@amd.com>
+From: Han Gao <rabenda.cn@gmail.com>
+Date: Wed, 9 Jul 2025 14:34:00 +0800
+X-Gm-Features: Ac12FXxapUUsFofuo853oFqC-peo6coLRLtZLPkqC5w7REiJr3Q5hyQm71Fknlc
+Message-ID: <CAAT7Ki-pg+E83xMCmES+VMWFthGuLMTzKdSbDak0OEMR6kfL0w@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdkfd: enable kfd on LoongArch systems
+To: Felix Kuehling <felix.kuehling@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/07/01 22:55, Dave Martin wrote:
-> This series aims to clean up an aspect of coredump generation:
-> 
-> ELF coredumps contain a set of notes describing the state of machine
-> registers and other information about the dumped process.
-> 
-> Notes are identified by a numeric identifier n_type and a "name"
-> string, although this terminology is somewhat misleading.  Officially,
-> the "name" of a note is really an "originator" or namespace identifier
-> that indicates how to interpret n_type [1], although in practice it is
-> often used more loosely.
-> 
-> Either way, each kind of note needs _both_ a specific "name" string and
-> a specific n_type to identify it robustly.
-> 
-> To centralise this knowledge in one place and avoid the need for ad-hoc
-> code to guess the correct name for a given note, commit 7da8e4ad4df0
-> ("elf: Define note name macros") [2] added an explicit NN_<foo> #define
-> in elf.h to give the name corresponding to each named note type
-> NT_<foo>.
-> 
-> Now that the note name for each note is specified explicitly, the
-> remaining guesswork for determining the note name for common and
-> arch-specific regsets in ELF core dumps can be eliminated.
-> 
-> This series aims to do just that:
-> 
->   * Patch 2 adds a user_regset field to specify the note name, and a
->     helper macro to populate it correctly alongside the note type.
-> 
->   * Patch 3 ports away the ad-hoc note names in the common coredump
->     code.
-> 
->   * Patches 4-22 make the arch-specific changes.  (This is pretty
->     mechanical for most arches.)
-> 
->   * The final patch adds a WARN() when no note name is specified,
->     and simplifies the fallback guess.  This should only be applied
->     when all arches have ported across.
-> 
-> See the individual patches for details.
-> 
-> 
-> Testing:
-> 
->   * x86, arm64: Booted in a VM and triggered a core dump with no WARN(),
->     and verified that the dumped notes are the same.
-> 
->   * arm: Build-tested only (for now).
-> 
->   * Other arches: not tested yet
-> 
-> Any help with testing is appreciated.  If the following generates the
-> same notes (as dumped by readelf -n core) and doesn't trigger a WARN,
-> then we are probably good.
-> 
-> $ sleep 60 &
-> $ kill -QUIT $!
-> 
-> (Register content might differ between runs, but it should be safe to
-> ignore that -- this series only deals with the note names and types.)
-> 
-> Cheers
-> ---Dave
-> 
-> 
-> [1] System V Application Binary Interface, Edition 4.1,
-> Section 5 (Program Loading and Dynamic Linking) -> "Note Section"
-> 
-> https://refspecs.linuxfoundation.org/elf/gabi41.pdf
-> 
-> [2] elf: Define note name macros
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/uapi/linux/elf.h?id=7da8e4ad4df0dd12f37357af62ce1b63e75ae2e6
-> 
-> 
-> Dave Martin (23):
->    regset: Fix kerneldoc for struct regset_get() in user_regset
->    regset: Add explicit core note name in struct user_regset
->    binfmt_elf: Dump non-arch notes with strictly matching name and type
->    ARC: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
->    ARM: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
->    arm64: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    csky: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
->    hexagon: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    LoongArch: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    m68k: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
->    MIPS: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
->    nios2: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    openrisc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    parisc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    powerpc/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    riscv: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    s390/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
->    sh: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
->    sparc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    x86/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
->    um: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
->    xtensa: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note
->      names
->    binfmt_elf: Warn on missing or suspicious regset note names
-> 
->   arch/arc/kernel/ptrace.c                 |  4 +-
->   arch/arm/kernel/ptrace.c                 |  6 +-
->   arch/arm64/kernel/ptrace.c               | 52 ++++++++---------
->   arch/csky/kernel/ptrace.c                |  4 +-
->   arch/hexagon/kernel/ptrace.c             |  2 +-
->   arch/loongarch/kernel/ptrace.c           | 16 ++---
->   arch/m68k/kernel/ptrace.c                |  4 +-
->   arch/mips/kernel/ptrace.c                | 20 +++----
->   arch/nios2/kernel/ptrace.c               |  2 +-
->   arch/openrisc/kernel/ptrace.c            |  4 +-
->   arch/parisc/kernel/ptrace.c              |  8 +--
->   arch/powerpc/kernel/ptrace/ptrace-view.c | 74 ++++++++++++------------
->   arch/riscv/kernel/ptrace.c               | 12 ++--
->   arch/s390/kernel/ptrace.c                | 42 +++++++-------
->   arch/sh/kernel/ptrace_32.c               |  4 +-
->   arch/sparc/kernel/ptrace_32.c            |  4 +-
->   arch/sparc/kernel/ptrace_64.c            |  8 +--
->   arch/x86/kernel/ptrace.c                 | 22 +++----
->   arch/x86/um/ptrace.c                     | 10 ++--
->   arch/xtensa/kernel/ptrace.c              |  4 +-
->   fs/binfmt_elf.c                          | 36 +++++++-----
->   fs/binfmt_elf_fdpic.c                    | 17 +++---
->   include/linux/regset.h                   | 12 +++-
->   23 files changed, 194 insertions(+), 173 deletions(-)
-> 
-> 
-> base-commit: 86731a2a651e58953fc949573895f2fa6d456841
-
-For the whole series:
-Reviewed-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-
-Regards,
-Akihiko Odaki
+On Tue, Jul 8, 2025 at 6:12=E2=80=AFAM Felix Kuehling <felix.kuehling@amd.c=
+om> wrote:
+>
+> On 2025-07-05 04:05, Han Gao wrote:
+> > KFD has been confirmed that can run on LoongArch systems.
+> > It's necessary to support CONFIG_HSA_AMD on LoongArch.
+> >
+> > Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+> > ---
+> >   drivers/gpu/drm/amd/amdkfd/Kconfig | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdkfd/Kconfig b/drivers/gpu/drm/amd/a=
+mdkfd/Kconfig
+> > index 62e88e5362e9..b2387d529bf0 100644
+> > --- a/drivers/gpu/drm/amd/amdkfd/Kconfig
+> > +++ b/drivers/gpu/drm/amd/amdkfd/Kconfig
+> > @@ -5,7 +5,7 @@
+> >
+> >   config HSA_AMD
+> >       bool "HSA kernel driver for AMD GPU devices"
+> > -     depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64 || (RISCV && 6=
+4BIT))
+> > +     depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64 || (RISCV && 6=
+4BIT) || LOONGARCH)
+>
+> Is LOONGARCH always 64-bit? If not, please make this (LOONGARCH && 64BIT)=
+.
+Got it, will submit v2 later.
+>
+> Other than that, I have no objections to applying this patch.
+>
+> Regards,
+>    Felix
+>
+>
+> >       select HMM_MIRROR
+> >       select MMU_NOTIFIER
+> >       select DRM_AMDGPU_USERPTR
