@@ -1,484 +1,463 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C78D26B778
-	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 09:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88744284688
+	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 09:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752051631; cv=none; b=oHqJDNYDRqb5OlT+Cun4H3W7D3EISxMpbH1tu4nFEeeKH2qHmBKHebbdp19bbMHYuulstgIZwVFf8R1fY2OfPy71bgkumrc+hSlWalgicJIe3Lu+One8727znudTr1wpAnLnfM8YlCbWvc/V4oSDyFj0FqcigFQ/qARYCPdsMgE=
+	t=1752052315; cv=none; b=pkAYzkthe5UtbQzPFbBQ+K1Y9mqYXTmiJLevB0MKMRMsZL5KjMdFgalJ+lBTCMPw7A3+1IkIsIdrJW5gi88OImYXXh1AtLNYDWCVR2jVA31npRev7HQwGrSSaGEelVcFmEeTzY6BuiDvSFi+zEgg7qXb59pzRg0VVxJN6qVMw+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752051631; c=relaxed/simple;
-	bh=3W8qVVfy1m1dAB50xQSGfq2umDoRwSj8QNVsyWSaMUA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oFARYK6zbyI6YaTbM0j4RjLwA7YfY/X2dfzMoJFG7RkUjLqGVv8gA6HqpVRVV/Bk+Eu3mLCPNtwil36X2u0dTZT1utya2iMyw9cvuuEU1MQ/H61vhQkpz1KyBRw8HLVmDMjJLdmUDMnhNiMDHWrgQ1KOxselPRVluqyHvXmthlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmIp3yeK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmIp3yeK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC50AC4CEF0
-	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 09:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752051631;
-	bh=3W8qVVfy1m1dAB50xQSGfq2umDoRwSj8QNVsyWSaMUA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QmIp3yeKPc/YFNhrxbX/JjnynYjAQVoXG8P/a13V/yPdEvYSpEEEkDXcHbEUDEYLl
-	 gdc1vXNcvhNSw2htLaAtVvqoanyptCEZpKiwNw4xc0FNTHawcwxKnZmdqhu9lCyygx
-	 pS5Mrd+jkuHJF9F4FZElk1HBvCLWUPlYpX4cJWo6ytxdJlYq+DMZRgAtiSW/1TgtiI
-	 0VaAdQMtkQA45e+LFyV6UypHl2gZRxK5wFrJMFj4Eyrt0asphQO/sDhI7bag3L3Pr7
-	 lZdWgILFM8QiahTgbBccY2tokIqgFrpXEZeNM+O3qRZ1+zCWpC+bRp3R3Ku1hqL+0j
-	 R03OsvV7hEt1g==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6097d144923so1542138a12.1
-        for <loongarch@lists.linux.dev>; Wed, 09 Jul 2025 02:00:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVnshGx186dqElxwn4pTw8jGtuvUXWqP6R5MgGiZcIlu0/AQiQ/r3+JTCvHun3h3nC/cJyrvaKS+kg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyT/zpYUw4GotwIawDbUCGtICUbk7L2gKJ0Ol54rVcmBeCcPwT/
-	tl1+sEcALawtVWSTCvSut/2k/ptJaKSlkXnL5Nn1kkG9DDMzru0sUcYTF0TwuCi62sbTUqXopIa
-	O7COHBtk4jvkEh9kGD0DPYHstRcdkMZQ=
-X-Google-Smtp-Source: AGHT+IE0bwBdL9EgKGkkC/fjIoquOEEZDiQWP4vbQEMxFBTWIZrB4zSK1TG6WDEk/eEVsy8uQmVmDXlJaRSIJb5uVU0=
-X-Received: by 2002:a05:6402:51d3:b0:60f:c32a:834 with SMTP id
- 4fb4d7f45d1cf-6104bf2097amr5135170a12.5.1752051629320; Wed, 09 Jul 2025
- 02:00:29 -0700 (PDT)
+	s=arc-20240116; t=1752052315; c=relaxed/simple;
+	bh=ZG4gEwl6Js36fqNwK1HbYzqgkKbFHoEWddM9tjniC04=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=DoSsUEX49AaWhFw4bE3jGksQ/EuFpfT9A/snOp8qeKcTVBw7WUeIHYkGkKJiv8RxtqOuKhtiWTTCaadNVsoH2+Y8lse4687lBYfArmMQzramV93NckgbMaCXtzWh2QatQi7mTx93AldtXQrIC92FYQ0KfG6ENVVYvAbNTTh9TyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxbWtUMm5ocjUlAQ--.13384S3;
+	Wed, 09 Jul 2025 17:11:48 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJAxT+ZQMm5oo7wPAA--.25184S3;
+	Wed, 09 Jul 2025 17:11:46 +0800 (CST)
+Subject: Re: [PATCH v2] LoongArch: KVM: INTC: Add IOCSR MISC register
+ emulation
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250619071449.1714869-1-maobibo@loongson.cn>
+ <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
+ <31541826-2802-32e0-f8f0-f717e1c02d74@loongson.cn>
+ <CAAhV-H6Pzw0uuoK3DfyNz=GMzk+9od-hm2NGqGa44C+=E-cufA@mail.gmail.com>
+ <2688b612-3ace-b1d2-b9d1-dd35d35919c5@loongson.cn>
+ <CAAhV-H41WOLU6ae-iWKLnuUtSXgq4DogEUYS49ndmERauuPgXA@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <2a573488-34ca-24c5-f165-658964b6f897@loongson.cn>
+Date: Wed, 9 Jul 2025 17:10:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250619071449.1714869-1-maobibo@loongson.cn> <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
- <31541826-2802-32e0-f8f0-f717e1c02d74@loongson.cn> <CAAhV-H6Pzw0uuoK3DfyNz=GMzk+9od-hm2NGqGa44C+=E-cufA@mail.gmail.com>
- <2688b612-3ace-b1d2-b9d1-dd35d35919c5@loongson.cn>
-In-Reply-To: <2688b612-3ace-b1d2-b9d1-dd35d35919c5@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 9 Jul 2025 16:59:39 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H41WOLU6ae-iWKLnuUtSXgq4DogEUYS49ndmERauuPgXA@mail.gmail.com>
-X-Gm-Features: Ac12FXxnwcoZqkjF75xsIwlgRNuGnLMKAkVUGn2wVl4wq9fB7gfPzF7t2Wd19s4
-Message-ID: <CAAhV-H41WOLU6ae-iWKLnuUtSXgq4DogEUYS49ndmERauuPgXA@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: KVM: INTC: Add IOCSR MISC register emulation
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H41WOLU6ae-iWKLnuUtSXgq4DogEUYS49ndmERauuPgXA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxT+ZQMm5oo7wPAA--.25184S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9fXoW3Cr4rKw48JF47Ar1xWFykWFX_yoW8GFyUZo
+	W3JF1xtF18Xr1UJr15J34qqryjyw18Kr4UA34UAwsxJr1Uta47Ar1UGr15JF43K3WkJr47
+	Ga47Xr18ZFW7Xwn5l-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUYg7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
+	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU8czVUUUUUU==
 
-On Tue, Jul 1, 2025 at 7:40=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2025/7/1 =E4=B8=8B=E5=8D=885:20, Huacai Chen wrote:
-> > On Mon, Jun 30, 2025 at 4:44=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >>
-> >>
-> >> On 2025/6/30 =E4=B8=8B=E5=8D=884:04, Huacai Chen wrote:
-> >>> Hi, Bibo,
-> >>>
-> >>> On Thu, Jun 19, 2025 at 3:15=E2=80=AFPM Bibo Mao <maobibo@loongson.cn=
-> wrote:
-> >>>>
-> >>>> IOCSR MISC register 0x420 controlls some features of eiointc, such a=
-s
-> >>>> BIT 48 enables eiointc and BIT 49 set interrupt encoding mode.
-> >>>>
-> >>>> When kernel irqchip is set, IOCSR MISC register should be emulated i=
-n
-> >>>> kernel also. Here add IOCSR MISC register emulation in kernel side.
-> >>>>
-> >>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>> ---
-> >>>> v1 ... v2:
-> >>>>     1. Add separate file arch/loongarch/kvm/intc/misc.c for IOCSR MI=
-SC
-> >>>>        register 0x420 emulation, since it controls feature about AVE=
-C
-> >>>>        irqchip also.
-> >>> I found we can decouple the misc register and EIOINTC in addition:
-> >>> 1, Move misc.c out of intc directory;
-> >>> 2, Call kvm_loongarch_create_misc() in kvm_arch_init_vm();
-> >>> 3, Call kvm_loongarch_destroy_misc() in kvm_arch_destroy_vm();
-> >>> 4, Then maybe misc_created can be removed.
-> >> Now irqchip in kernel is optional, the same with misc register. Misc
-> >> register will be emulated in user VMM if kernel-irqchip option is off.
-> >>
-> >> There is no way to detect kernel-irqchip option when function
-> >> kvm_arch_init_vm() is called, and kvm_loongarch_create_misc() needs be
-> >> dynamically called from ioctl command.
-> > Can we use  kvm_arch_irqchip_in_kernel() to detect?
-> No, it can not be used. kvm_arch_irqchip_in_kernel() is usable only when
-> irqchip is created in kernel, however kvm_arch_init_vm() is called when
-> VM is created.
->
-> VM is created always before kernel irqchip is created. So
-> kvm_arch_irqchip_in_kernel() will return false if it is called in
-> kvm_arch_init_vm().
-What will happen if call kvm_loongarch_create_misc() in
-kvm_arch_init_vm() unconditionally?
 
-Huacai
->
-> Regards
-> Bibo Mao
-> >
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>>
-> >>> At last you can make this patch and others from another series to be =
-a
-> >>> new series.
-> >>>
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>>     2. Define macro MISC_BASE as LOONGARCH_IOCSR_MISC_FUNC rather th=
-an
-> >>>>        hard coded 0x420
-> >>>> ---
-> >>>>    arch/loongarch/include/asm/kvm_eiointc.h |   2 +
-> >>>>    arch/loongarch/include/asm/kvm_host.h    |   2 +
-> >>>>    arch/loongarch/include/asm/kvm_misc.h    |  17 +++
-> >>>>    arch/loongarch/include/asm/loongarch.h   |   1 +
-> >>>>    arch/loongarch/kvm/Makefile              |   1 +
-> >>>>    arch/loongarch/kvm/intc/eiointc.c        |  61 +++++++++++
-> >>>>    arch/loongarch/kvm/intc/misc.c           | 125 ++++++++++++++++++=
-+++++
-> >>>>    7 files changed, 209 insertions(+)
-> >>>>    create mode 100644 arch/loongarch/include/asm/kvm_misc.h
-> >>>>    create mode 100644 arch/loongarch/kvm/intc/misc.c
-> >>>>
-> >>>> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongar=
-ch/include/asm/kvm_eiointc.h
-> >>>> index a3a40aba8acf..2d1c183f2b1b 100644
-> >>>> --- a/arch/loongarch/include/asm/kvm_eiointc.h
-> >>>> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
-> >>>> @@ -119,5 +119,7 @@ struct loongarch_eiointc {
-> >>>>
-> >>>>    int kvm_loongarch_register_eiointc_device(void);
-> >>>>    void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int le=
-vel);
-> >>>> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *va=
-lue);
-> >>>> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long =
-value, unsigned long mask);
-> >>>>
-> >>>>    #endif /* __ASM_KVM_EIOINTC_H */
-> >>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/=
-include/asm/kvm_host.h
-> >>>> index a3c4cc46c892..f463ec52d86c 100644
-> >>>> --- a/arch/loongarch/include/asm/kvm_host.h
-> >>>> +++ b/arch/loongarch/include/asm/kvm_host.h
-> >>>> @@ -132,6 +132,8 @@ struct kvm_arch {
-> >>>>           struct loongarch_ipi *ipi;
-> >>>>           struct loongarch_eiointc *eiointc;
-> >>>>           struct loongarch_pch_pic *pch_pic;
-> >>>> +       struct kvm_io_device misc;
-> >>>> +       bool   misc_created;
-> >>>>    };
-> >>>>
-> >>>>    #define CSR_MAX_NUMS           0x800
-> >>>> diff --git a/arch/loongarch/include/asm/kvm_misc.h b/arch/loongarch/=
-include/asm/kvm_misc.h
-> >>>> new file mode 100644
-> >>>> index 000000000000..621e4228dea2
-> >>>> --- /dev/null
-> >>>> +++ b/arch/loongarch/include/asm/kvm_misc.h
-> >>>> @@ -0,0 +1,17 @@
-> >>>> +/* SPDX-License-Identifier: GPL-2.0 */
-> >>>> +/*
-> >>>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> >>>> + */
-> >>>> +
-> >>>> +#ifndef __ASM_KVM_MISC_H
-> >>>> +#define __ASM_KVM_MISC_H
-> >>>> +
-> >>>> +#include <asm/loongarch.h>
-> >>>> +
-> >>>> +#define MISC_BASE              LOONGARCH_IOCSR_MISC_FUNC
-> >>>> +#define MISC_SIZE              0x8
-> >>>> +
-> >>>> +int kvm_loongarch_create_misc(struct kvm *kvm);
-> >>>> +void kvm_loongarch_destroy_misc(struct kvm *kvm);
-> >>>> +
-> >>>> +#endif /* __ASM_KVM_MISC_H */
-> >>>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch=
-/include/asm/loongarch.h
-> >>>> index d84dac88a584..e30d330d497e 100644
-> >>>> --- a/arch/loongarch/include/asm/loongarch.h
-> >>>> +++ b/arch/loongarch/include/asm/loongarch.h
-> >>>> @@ -1141,6 +1141,7 @@
-> >>>>    #define  IOCSR_MISC_FUNC_SOFT_INT      BIT_ULL(10)
-> >>>>    #define  IOCSR_MISC_FUNC_TIMER_RESET   BIT_ULL(21)
-> >>>>    #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
-> >>>> +#define  IOCSR_MISC_FUNC_INT_ENCODE    BIT_ULL(49)
-> >>>>    #define  IOCSR_MISC_FUNC_AVEC_EN       BIT_ULL(51)
-> >>>>
-> >>>>    #define LOONGARCH_IOCSR_CPUTEMP                0x428
-> >>>> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefi=
-le
-> >>>> index cb41d9265662..25fa3866613d 100644
-> >>>> --- a/arch/loongarch/kvm/Makefile
-> >>>> +++ b/arch/loongarch/kvm/Makefile
-> >>>> @@ -18,6 +18,7 @@ kvm-y +=3D vcpu.o
-> >>>>    kvm-y +=3D vm.o
-> >>>>    kvm-y +=3D intc/ipi.o
-> >>>>    kvm-y +=3D intc/eiointc.o
-> >>>> +kvm-y +=3D intc/misc.o
-> >>>>    kvm-y +=3D intc/pch_pic.o
-> >>>>    kvm-y +=3D irqfd.o
-> >>>>
-> >>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/=
-intc/eiointc.c
-> >>>> index f39929d7bf8a..87d01521e92f 100644
-> >>>> --- a/arch/loongarch/kvm/intc/eiointc.c
-> >>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
-> >>>> @@ -4,6 +4,7 @@
-> >>>>     */
-> >>>>
-> >>>>    #include <asm/kvm_eiointc.h>
-> >>>> +#include <asm/kvm_misc.h>
-> >>>>    #include <asm/kvm_vcpu.h>
-> >>>>    #include <linux/count_zeros.h>
-> >>>>
-> >>>> @@ -708,6 +709,56 @@ static const struct kvm_io_device_ops kvm_eioin=
-tc_ops =3D {
-> >>>>           .write  =3D kvm_eiointc_write,
-> >>>>    };
-> >>>>
-> >>>> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *va=
-lue)
-> >>>> +{
-> >>>> +       unsigned long data, flags;
-> >>>> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eioint=
-c;
-> >>>> +
-> >>>> +       if (!eiointc) {
-> >>>> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__=
-);
-> >>>> +               return -EINVAL;
-> >>>> +       }
-> >>>> +
-> >>>> +       data =3D 0;
-> >>>> +       spin_lock_irqsave(&eiointc->lock, flags);
-> >>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
-> >>>> +               data |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
-> >>>> +
-> >>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
-> >>>> +               data |=3D IOCSR_MISC_FUNC_INT_ENCODE;
-> >>>> +       spin_unlock_irqrestore(&eiointc->lock, flags);
-> >>>> +
-> >>>> +       *value =3D data;
-> >>>> +       return 0;
-> >>>> +}
-> >>>> +
-> >>>> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long =
-value, unsigned long mask)
-> >>>> +{
-> >>>> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eioint=
-c;
-> >>>> +       unsigned long old, flags;
-> >>>> +
-> >>>> +       if (!eiointc) {
-> >>>> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__=
-);
-> >>>> +               return -EINVAL;
-> >>>> +       }
-> >>>> +
-> >>>> +       old =3D 0;
-> >>>> +       spin_lock_irqsave(&eiointc->lock, flags);
-> >>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
-> >>>> +               old |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
-> >>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
-> >>>> +               old |=3D IOCSR_MISC_FUNC_INT_ENCODE;
-> >>>> +
-> >>>> +       value |=3D (old & ~mask);
-> >>>> +       eiointc->status &=3D ~(BIT(EIOINTC_ENABLE_INT_ENCODE) | BIT(=
-EIOINTC_ENABLE));
-> >>>> +       if (value & IOCSR_MISC_FUNC_INT_ENCODE)
-> >>>> +               eiointc->status |=3D BIT(EIOINTC_ENABLE_INT_ENCODE);
-> >>>> +       if (value & IOCSR_MISC_FUNC_EXT_IOI_EN)
-> >>>> +               eiointc->status |=3D BIT(EIOINTC_ENABLE);
-> >>>> +       spin_unlock_irqrestore(&eiointc->lock, flags);
-> >>>> +       return 0;
-> >>>> +}
-> >>>> +
-> >>>>    static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
-> >>>>                                   struct kvm_io_device *dev,
-> >>>>                                   gpa_t addr, int len, void *val)
-> >>>> @@ -993,6 +1044,15 @@ static int kvm_eiointc_create(struct kvm_devic=
-e *dev, u32 type)
-> >>>>                   kfree(s);
-> >>>>                   return ret;
-> >>>>           }
-> >>>> +
-> >>>> +       ret =3D kvm_loongarch_create_misc(kvm);
-> >>>> +       if (ret < 0) {
-> >>>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->de=
-vice);
-> >>>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->de=
-vice_vext);
-> >>>> +               kfree(s);
-> >>>> +               return ret;
-> >>>> +       }
-> >>>> +
-> >>>>           kvm->arch.eiointc =3D s;
-> >>>>
-> >>>>           return 0;
-> >>>> @@ -1010,6 +1070,7 @@ static void kvm_eiointc_destroy(struct kvm_dev=
-ice *dev)
-> >>>>           eiointc =3D kvm->arch.eiointc;
-> >>>>           kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->de=
-vice);
-> >>>>           kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->de=
-vice_vext);
-> >>>> +       kvm_loongarch_destroy_misc(kvm);
-> >>>>           kfree(eiointc);
-> >>>>    }
-> >>>>
-> >>>> diff --git a/arch/loongarch/kvm/intc/misc.c b/arch/loongarch/kvm/int=
-c/misc.c
-> >>>> new file mode 100644
-> >>>> index 000000000000..edee66afa36e
-> >>>> --- /dev/null
-> >>>> +++ b/arch/loongarch/kvm/intc/misc.c
-> >>>> @@ -0,0 +1,125 @@
-> >>>> +// SPDX-License-Identifier: GPL-2.0
-> >>>> +/*
-> >>>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> >>>> + */
-> >>>> +#include <asm/kvm_vcpu.h>
-> >>>> +#include <asm/kvm_eiointc.h>
-> >>>> +#include <asm/kvm_misc.h>
-> >>>> +
-> >>>> +static int kvm_misc_read(struct kvm_vcpu *vcpu, struct kvm_io_devic=
-e *dev,
-> >>>> +                       gpa_t addr, int len, void *val)
-> >>>> +{
-> >>>> +       unsigned long data;
-> >>>> +       unsigned int ret;
-> >>>> +
-> >>>> +       addr -=3D MISC_BASE;
-> >>>> +       if (addr & (len - 1)) {
-> >>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n"=
-, __func__, addr, len);
-> >>>> +               return -EINVAL;
-> >>>> +       }
-> >>>> +
-> >>>> +       ret =3D kvm_eiointc_get_status(vcpu, &data);
-> >>>> +       if (ret)
-> >>>> +               return ret;
-> >>>> +
-> >>>> +       data =3D data >> ((addr & 7) * 8);
-> >>>> +       switch (len) {
-> >>>> +       case 1:
-> >>>> +               *(unsigned char *)val =3D (unsigned char)data;
-> >>>> +               break;
-> >>>> +
-> >>>> +       case 2:
-> >>>> +               *(unsigned short *)val =3D (unsigned short)data;
-> >>>> +               break;
-> >>>> +
-> >>>> +       case 4:
-> >>>> +               *(unsigned int *)val =3D (unsigned int)data;
-> >>>> +               break;
-> >>>> +
-> >>>> +       default:
-> >>>> +               *(unsigned long *)val =3D data;
-> >>>> +               break;
-> >>>> +       }
-> >>>> +
-> >>>> +       return 0;
-> >>>> +}
-> >>>> +
-> >>>> +static int kvm_misc_write(struct kvm_vcpu *vcpu, struct kvm_io_devi=
-ce *dev,
-> >>>> +               gpa_t addr, int len, const void *val)
-> >>>> +{
-> >>>> +       unsigned long data, mask;
-> >>>> +       unsigned int shift;
-> >>>> +
-> >>>> +       addr -=3D MISC_BASE;
-> >>>> +       if (addr & (len - 1)) {
-> >>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n"=
-, __func__, addr, len);
-> >>>> +               return -EINVAL;
-> >>>> +       }
-> >>>> +
-> >>>> +       shift =3D (addr & 7) * 8;
-> >>>> +       switch (len) {
-> >>>> +       case 1:
-> >>>> +               data =3D *(unsigned char *)val;
-> >>>> +               mask =3D 0xFF;
-> >>>> +               mask =3D mask << shift;
-> >>>> +               data =3D data << shift;
-> >>>> +               break;
-> >>>> +
-> >>>> +       case 2:
-> >>>> +               data =3D *(unsigned short *)val;
-> >>>> +               mask =3D 0xFFFF;
-> >>>> +               mask =3D mask << shift;
-> >>>> +               data =3D data << shift;
-> >>>> +               break;
-> >>>> +
-> >>>> +       case 4:
-> >>>> +               data =3D *(unsigned int *)val;
-> >>>> +               mask =3D UINT_MAX;
-> >>>> +               mask =3D mask << shift;
-> >>>> +               data =3D data << shift;
-> >>>> +               break;
-> >>>> +
-> >>>> +       default:
-> >>>> +               data =3D *(unsigned long *)val;
-> >>>> +               mask =3D ULONG_MAX;
-> >>>> +               mask =3D mask << shift;
-> >>>> +               data =3D data << shift;
-> >>>> +               break;
-> >>>> +       }
-> >>>> +
-> >>>> +       return kvm_eiointc_update_status(vcpu, data, mask);
-> >>>> +}
-> >>>> +
-> >>>> +static const struct kvm_io_device_ops kvm_misc_ops =3D {
-> >>>> +       .read   =3D kvm_misc_read,
-> >>>> +       .write  =3D kvm_misc_write,
-> >>>> +};
-> >>>> +
-> >>>> +int kvm_loongarch_create_misc(struct kvm *kvm)
-> >>>> +{
-> >>>> +       struct kvm_io_device *device;
-> >>>> +       int ret;
-> >>>> +
-> >>>> +       if (kvm->arch.misc_created)
-> >>>> +               return 0;
-> >>>> +
-> >>>> +       device =3D &kvm->arch.misc;
-> >>>> +       kvm_iodevice_init(device, &kvm_misc_ops);
-> >>>> +       ret =3D kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, MISC_BAS=
-E, MISC_SIZE, device);
-> >>>> +       if (ret < 0)
-> >>>> +               return ret;
-> >>>> +
-> >>>> +       kvm->arch.misc_created =3D true;
-> >>>> +       return 0;
-> >>>> +}
-> >>>> +
-> >>>> +void kvm_loongarch_destroy_misc(struct kvm *kvm)
-> >>>> +{
-> >>>> +       struct kvm_io_device *device;
-> >>>> +
-> >>>> +       if (kvm->arch.misc_created) {
-> >>>> +               device =3D &kvm->arch.misc;
-> >>>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device=
-);
-> >>>> +               kvm->arch.misc_created =3D false;
-> >>>> +       }
-> >>>> +}
-> >>>>
-> >>>> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
-> >>>> --
-> >>>> 2.39.3
-> >>>>
-> >>
->
+
+On 2025/7/9 下午4:59, Huacai Chen wrote:
+> On Tue, Jul 1, 2025 at 7:40 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/7/1 下午5:20, Huacai Chen wrote:
+>>> On Mon, Jun 30, 2025 at 4:44 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2025/6/30 下午4:04, Huacai Chen wrote:
+>>>>> Hi, Bibo,
+>>>>>
+>>>>> On Thu, Jun 19, 2025 at 3:15 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> IOCSR MISC register 0x420 controlls some features of eiointc, such as
+>>>>>> BIT 48 enables eiointc and BIT 49 set interrupt encoding mode.
+>>>>>>
+>>>>>> When kernel irqchip is set, IOCSR MISC register should be emulated in
+>>>>>> kernel also. Here add IOCSR MISC register emulation in kernel side.
+>>>>>>
+>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>> ---
+>>>>>> v1 ... v2:
+>>>>>>      1. Add separate file arch/loongarch/kvm/intc/misc.c for IOCSR MISC
+>>>>>>         register 0x420 emulation, since it controls feature about AVEC
+>>>>>>         irqchip also.
+>>>>> I found we can decouple the misc register and EIOINTC in addition:
+>>>>> 1, Move misc.c out of intc directory;
+>>>>> 2, Call kvm_loongarch_create_misc() in kvm_arch_init_vm();
+>>>>> 3, Call kvm_loongarch_destroy_misc() in kvm_arch_destroy_vm();
+>>>>> 4, Then maybe misc_created can be removed.
+>>>> Now irqchip in kernel is optional, the same with misc register. Misc
+>>>> register will be emulated in user VMM if kernel-irqchip option is off.
+>>>>
+>>>> There is no way to detect kernel-irqchip option when function
+>>>> kvm_arch_init_vm() is called, and kvm_loongarch_create_misc() needs be
+>>>> dynamically called from ioctl command.
+>>> Can we use  kvm_arch_irqchip_in_kernel() to detect?
+>> No, it can not be used. kvm_arch_irqchip_in_kernel() is usable only when
+>> irqchip is created in kernel, however kvm_arch_init_vm() is called when
+>> VM is created.
+>>
+>> VM is created always before kernel irqchip is created. So
+>> kvm_arch_irqchip_in_kernel() will return false if it is called in
+>> kvm_arch_init_vm().
+> What will happen if call kvm_loongarch_create_misc() in
+> kvm_arch_init_vm() unconditionally?
+If IOCSR misc is emualted in kernel unconditionally, however eiointc is 
+emulated in qemu. How does kernel misc emulate eiointc enabling command?
+
+I really doubt whether you really understand KVM, please do not give 
+comments so easily if you do not understand.
+
+Regards
+Bibo Mao
+> 
+> Huacai
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>> At last you can make this patch and others from another series to be a
+>>>>> new series.
+>>>>>
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>>      2. Define macro MISC_BASE as LOONGARCH_IOCSR_MISC_FUNC rather than
+>>>>>>         hard coded 0x420
+>>>>>> ---
+>>>>>>     arch/loongarch/include/asm/kvm_eiointc.h |   2 +
+>>>>>>     arch/loongarch/include/asm/kvm_host.h    |   2 +
+>>>>>>     arch/loongarch/include/asm/kvm_misc.h    |  17 +++
+>>>>>>     arch/loongarch/include/asm/loongarch.h   |   1 +
+>>>>>>     arch/loongarch/kvm/Makefile              |   1 +
+>>>>>>     arch/loongarch/kvm/intc/eiointc.c        |  61 +++++++++++
+>>>>>>     arch/loongarch/kvm/intc/misc.c           | 125 +++++++++++++++++++++++
+>>>>>>     7 files changed, 209 insertions(+)
+>>>>>>     create mode 100644 arch/loongarch/include/asm/kvm_misc.h
+>>>>>>     create mode 100644 arch/loongarch/kvm/intc/misc.c
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch/include/asm/kvm_eiointc.h
+>>>>>> index a3a40aba8acf..2d1c183f2b1b 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_eiointc.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
+>>>>>> @@ -119,5 +119,7 @@ struct loongarch_eiointc {
+>>>>>>
+>>>>>>     int kvm_loongarch_register_eiointc_device(void);
+>>>>>>     void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level);
+>>>>>> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value);
+>>>>>> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value, unsigned long mask);
+>>>>>>
+>>>>>>     #endif /* __ASM_KVM_EIOINTC_H */
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>>>>>> index a3c4cc46c892..f463ec52d86c 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_host.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>>>>>> @@ -132,6 +132,8 @@ struct kvm_arch {
+>>>>>>            struct loongarch_ipi *ipi;
+>>>>>>            struct loongarch_eiointc *eiointc;
+>>>>>>            struct loongarch_pch_pic *pch_pic;
+>>>>>> +       struct kvm_io_device misc;
+>>>>>> +       bool   misc_created;
+>>>>>>     };
+>>>>>>
+>>>>>>     #define CSR_MAX_NUMS           0x800
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_misc.h b/arch/loongarch/include/asm/kvm_misc.h
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..621e4228dea2
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_misc.h
+>>>>>> @@ -0,0 +1,17 @@
+>>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>>>> +/*
+>>>>>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+>>>>>> + */
+>>>>>> +
+>>>>>> +#ifndef __ASM_KVM_MISC_H
+>>>>>> +#define __ASM_KVM_MISC_H
+>>>>>> +
+>>>>>> +#include <asm/loongarch.h>
+>>>>>> +
+>>>>>> +#define MISC_BASE              LOONGARCH_IOCSR_MISC_FUNC
+>>>>>> +#define MISC_SIZE              0x8
+>>>>>> +
+>>>>>> +int kvm_loongarch_create_misc(struct kvm *kvm);
+>>>>>> +void kvm_loongarch_destroy_misc(struct kvm *kvm);
+>>>>>> +
+>>>>>> +#endif /* __ASM_KVM_MISC_H */
+>>>>>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+>>>>>> index d84dac88a584..e30d330d497e 100644
+>>>>>> --- a/arch/loongarch/include/asm/loongarch.h
+>>>>>> +++ b/arch/loongarch/include/asm/loongarch.h
+>>>>>> @@ -1141,6 +1141,7 @@
+>>>>>>     #define  IOCSR_MISC_FUNC_SOFT_INT      BIT_ULL(10)
+>>>>>>     #define  IOCSR_MISC_FUNC_TIMER_RESET   BIT_ULL(21)
+>>>>>>     #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
+>>>>>> +#define  IOCSR_MISC_FUNC_INT_ENCODE    BIT_ULL(49)
+>>>>>>     #define  IOCSR_MISC_FUNC_AVEC_EN       BIT_ULL(51)
+>>>>>>
+>>>>>>     #define LOONGARCH_IOCSR_CPUTEMP                0x428
+>>>>>> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+>>>>>> index cb41d9265662..25fa3866613d 100644
+>>>>>> --- a/arch/loongarch/kvm/Makefile
+>>>>>> +++ b/arch/loongarch/kvm/Makefile
+>>>>>> @@ -18,6 +18,7 @@ kvm-y += vcpu.o
+>>>>>>     kvm-y += vm.o
+>>>>>>     kvm-y += intc/ipi.o
+>>>>>>     kvm-y += intc/eiointc.o
+>>>>>> +kvm-y += intc/misc.o
+>>>>>>     kvm-y += intc/pch_pic.o
+>>>>>>     kvm-y += irqfd.o
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+>>>>>> index f39929d7bf8a..87d01521e92f 100644
+>>>>>> --- a/arch/loongarch/kvm/intc/eiointc.c
+>>>>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
+>>>>>> @@ -4,6 +4,7 @@
+>>>>>>      */
+>>>>>>
+>>>>>>     #include <asm/kvm_eiointc.h>
+>>>>>> +#include <asm/kvm_misc.h>
+>>>>>>     #include <asm/kvm_vcpu.h>
+>>>>>>     #include <linux/count_zeros.h>
+>>>>>>
+>>>>>> @@ -708,6 +709,56 @@ static const struct kvm_io_device_ops kvm_eiointc_ops = {
+>>>>>>            .write  = kvm_eiointc_write,
+>>>>>>     };
+>>>>>>
+>>>>>> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value)
+>>>>>> +{
+>>>>>> +       unsigned long data, flags;
+>>>>>> +       struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
+>>>>>> +
+>>>>>> +       if (!eiointc) {
+>>>>>> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+>>>>>> +               return -EINVAL;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       data = 0;
+>>>>>> +       spin_lock_irqsave(&eiointc->lock, flags);
+>>>>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+>>>>>> +               data |= IOCSR_MISC_FUNC_EXT_IOI_EN;
+>>>>>> +
+>>>>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+>>>>>> +               data |= IOCSR_MISC_FUNC_INT_ENCODE;
+>>>>>> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+>>>>>> +
+>>>>>> +       *value = data;
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value, unsigned long mask)
+>>>>>> +{
+>>>>>> +       struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
+>>>>>> +       unsigned long old, flags;
+>>>>>> +
+>>>>>> +       if (!eiointc) {
+>>>>>> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+>>>>>> +               return -EINVAL;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       old = 0;
+>>>>>> +       spin_lock_irqsave(&eiointc->lock, flags);
+>>>>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+>>>>>> +               old |= IOCSR_MISC_FUNC_EXT_IOI_EN;
+>>>>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+>>>>>> +               old |= IOCSR_MISC_FUNC_INT_ENCODE;
+>>>>>> +
+>>>>>> +       value |= (old & ~mask);
+>>>>>> +       eiointc->status &= ~(BIT(EIOINTC_ENABLE_INT_ENCODE) | BIT(EIOINTC_ENABLE));
+>>>>>> +       if (value & IOCSR_MISC_FUNC_INT_ENCODE)
+>>>>>> +               eiointc->status |= BIT(EIOINTC_ENABLE_INT_ENCODE);
+>>>>>> +       if (value & IOCSR_MISC_FUNC_EXT_IOI_EN)
+>>>>>> +               eiointc->status |= BIT(EIOINTC_ENABLE);
+>>>>>> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>>     static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
+>>>>>>                                    struct kvm_io_device *dev,
+>>>>>>                                    gpa_t addr, int len, void *val)
+>>>>>> @@ -993,6 +1044,15 @@ static int kvm_eiointc_create(struct kvm_device *dev, u32 type)
+>>>>>>                    kfree(s);
+>>>>>>                    return ret;
+>>>>>>            }
+>>>>>> +
+>>>>>> +       ret = kvm_loongarch_create_misc(kvm);
+>>>>>> +       if (ret < 0) {
+>>>>>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device);
+>>>>>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device_vext);
+>>>>>> +               kfree(s);
+>>>>>> +               return ret;
+>>>>>> +       }
+>>>>>> +
+>>>>>>            kvm->arch.eiointc = s;
+>>>>>>
+>>>>>>            return 0;
+>>>>>> @@ -1010,6 +1070,7 @@ static void kvm_eiointc_destroy(struct kvm_device *dev)
+>>>>>>            eiointc = kvm->arch.eiointc;
+>>>>>>            kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+>>>>>>            kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_vext);
+>>>>>> +       kvm_loongarch_destroy_misc(kvm);
+>>>>>>            kfree(eiointc);
+>>>>>>     }
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/kvm/intc/misc.c b/arch/loongarch/kvm/intc/misc.c
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..edee66afa36e
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/loongarch/kvm/intc/misc.c
+>>>>>> @@ -0,0 +1,125 @@
+>>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>>> +/*
+>>>>>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+>>>>>> + */
+>>>>>> +#include <asm/kvm_vcpu.h>
+>>>>>> +#include <asm/kvm_eiointc.h>
+>>>>>> +#include <asm/kvm_misc.h>
+>>>>>> +
+>>>>>> +static int kvm_misc_read(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
+>>>>>> +                       gpa_t addr, int len, void *val)
+>>>>>> +{
+>>>>>> +       unsigned long data;
+>>>>>> +       unsigned int ret;
+>>>>>> +
+>>>>>> +       addr -= MISC_BASE;
+>>>>>> +       if (addr & (len - 1)) {
+>>>>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+>>>>>> +               return -EINVAL;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       ret = kvm_eiointc_get_status(vcpu, &data);
+>>>>>> +       if (ret)
+>>>>>> +               return ret;
+>>>>>> +
+>>>>>> +       data = data >> ((addr & 7) * 8);
+>>>>>> +       switch (len) {
+>>>>>> +       case 1:
+>>>>>> +               *(unsigned char *)val = (unsigned char)data;
+>>>>>> +               break;
+>>>>>> +
+>>>>>> +       case 2:
+>>>>>> +               *(unsigned short *)val = (unsigned short)data;
+>>>>>> +               break;
+>>>>>> +
+>>>>>> +       case 4:
+>>>>>> +               *(unsigned int *)val = (unsigned int)data;
+>>>>>> +               break;
+>>>>>> +
+>>>>>> +       default:
+>>>>>> +               *(unsigned long *)val = data;
+>>>>>> +               break;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int kvm_misc_write(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
+>>>>>> +               gpa_t addr, int len, const void *val)
+>>>>>> +{
+>>>>>> +       unsigned long data, mask;
+>>>>>> +       unsigned int shift;
+>>>>>> +
+>>>>>> +       addr -= MISC_BASE;
+>>>>>> +       if (addr & (len - 1)) {
+>>>>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+>>>>>> +               return -EINVAL;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       shift = (addr & 7) * 8;
+>>>>>> +       switch (len) {
+>>>>>> +       case 1:
+>>>>>> +               data = *(unsigned char *)val;
+>>>>>> +               mask = 0xFF;
+>>>>>> +               mask = mask << shift;
+>>>>>> +               data = data << shift;
+>>>>>> +               break;
+>>>>>> +
+>>>>>> +       case 2:
+>>>>>> +               data = *(unsigned short *)val;
+>>>>>> +               mask = 0xFFFF;
+>>>>>> +               mask = mask << shift;
+>>>>>> +               data = data << shift;
+>>>>>> +               break;
+>>>>>> +
+>>>>>> +       case 4:
+>>>>>> +               data = *(unsigned int *)val;
+>>>>>> +               mask = UINT_MAX;
+>>>>>> +               mask = mask << shift;
+>>>>>> +               data = data << shift;
+>>>>>> +               break;
+>>>>>> +
+>>>>>> +       default:
+>>>>>> +               data = *(unsigned long *)val;
+>>>>>> +               mask = ULONG_MAX;
+>>>>>> +               mask = mask << shift;
+>>>>>> +               data = data << shift;
+>>>>>> +               break;
+>>>>>> +       }
+>>>>>> +
+>>>>>> +       return kvm_eiointc_update_status(vcpu, data, mask);
+>>>>>> +}
+>>>>>> +
+>>>>>> +static const struct kvm_io_device_ops kvm_misc_ops = {
+>>>>>> +       .read   = kvm_misc_read,
+>>>>>> +       .write  = kvm_misc_write,
+>>>>>> +};
+>>>>>> +
+>>>>>> +int kvm_loongarch_create_misc(struct kvm *kvm)
+>>>>>> +{
+>>>>>> +       struct kvm_io_device *device;
+>>>>>> +       int ret;
+>>>>>> +
+>>>>>> +       if (kvm->arch.misc_created)
+>>>>>> +               return 0;
+>>>>>> +
+>>>>>> +       device = &kvm->arch.misc;
+>>>>>> +       kvm_iodevice_init(device, &kvm_misc_ops);
+>>>>>> +       ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, MISC_BASE, MISC_SIZE, device);
+>>>>>> +       if (ret < 0)
+>>>>>> +               return ret;
+>>>>>> +
+>>>>>> +       kvm->arch.misc_created = true;
+>>>>>> +       return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +void kvm_loongarch_destroy_misc(struct kvm *kvm)
+>>>>>> +{
+>>>>>> +       struct kvm_io_device *device;
+>>>>>> +
+>>>>>> +       if (kvm->arch.misc_created) {
+>>>>>> +               device = &kvm->arch.misc;
+>>>>>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
+>>>>>> +               kvm->arch.misc_created = false;
+>>>>>> +       }
+>>>>>> +}
+>>>>>>
+>>>>>> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+>>>>>> --
+>>>>>> 2.39.3
+>>>>>>
+>>>>
+>>
+
