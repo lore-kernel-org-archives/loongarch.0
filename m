@@ -1,463 +1,203 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88744284688
-	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 09:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E009F259CBC
+	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 10:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752052315; cv=none; b=pkAYzkthe5UtbQzPFbBQ+K1Y9mqYXTmiJLevB0MKMRMsZL5KjMdFgalJ+lBTCMPw7A3+1IkIsIdrJW5gi88OImYXXh1AtLNYDWCVR2jVA31npRev7HQwGrSSaGEelVcFmEeTzY6BuiDvSFi+zEgg7qXb59pzRg0VVxJN6qVMw+E=
+	t=1752057387; cv=none; b=AkToAV0AIzjJa5UeJ0tSM0U5vVKa/Z+VMT7aRV0LHXzTWlmn6ZJq6pY6DWflIcuAYWjgpf0U0d6OWKb7MsjnIXpzKFii5jBSrwA+IGnQEqLEtYZEq/O3pdVU9p1LNpAk0qnulPVHwUsFKgrk/gDkdJWz8UdHsUP685hCb7RrVc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752052315; c=relaxed/simple;
-	bh=ZG4gEwl6Js36fqNwK1HbYzqgkKbFHoEWddM9tjniC04=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DoSsUEX49AaWhFw4bE3jGksQ/EuFpfT9A/snOp8qeKcTVBw7WUeIHYkGkKJiv8RxtqOuKhtiWTTCaadNVsoH2+Y8lse4687lBYfArmMQzramV93NckgbMaCXtzWh2QatQi7mTx93AldtXQrIC92FYQ0KfG6ENVVYvAbNTTh9TyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxbWtUMm5ocjUlAQ--.13384S3;
-	Wed, 09 Jul 2025 17:11:48 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxT+ZQMm5oo7wPAA--.25184S3;
-	Wed, 09 Jul 2025 17:11:46 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: KVM: INTC: Add IOCSR MISC register
- emulation
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250619071449.1714869-1-maobibo@loongson.cn>
- <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
- <31541826-2802-32e0-f8f0-f717e1c02d74@loongson.cn>
- <CAAhV-H6Pzw0uuoK3DfyNz=GMzk+9od-hm2NGqGa44C+=E-cufA@mail.gmail.com>
- <2688b612-3ace-b1d2-b9d1-dd35d35919c5@loongson.cn>
- <CAAhV-H41WOLU6ae-iWKLnuUtSXgq4DogEUYS49ndmERauuPgXA@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <2a573488-34ca-24c5-f165-658964b6f897@loongson.cn>
-Date: Wed, 9 Jul 2025 17:10:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1752057387; c=relaxed/simple;
+	bh=mBiq3LdEFkT8yAGmpY7VY+ypmr1/6AhCyqWSdeCtF3g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KG2K8bBmT8Fbn/L8w9T0dReN31WLB5LaqVvKIHsxEi+gKh5ZO7sjTT9izb/c1l9efu9v/g8JpkJ3b3ukChu+vO8ruaspfWYcpbOLV3asusbrkojwTo/ZVz/5gTAuiLSC2bYSYh2Iwz5ajZ+InCXYAyPuvJKFB657CHLE6+AMIQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iiGHKCVb; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iiGHKCVb"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-714078015edso48159647b3.2
+        for <loongarch@lists.linux.dev>; Wed, 09 Jul 2025 03:36:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1752057384; x=1752662184; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0p9u4plpxbVFh6lI2RB4vHEjyRIuK37OQFSWTJvPBhE=;
+        b=iiGHKCVb0CJDjHWD+WnBspTpVyjaBb7z+Ke5TmIXNX1hNNjfLynwaVDh0Y8L5Gq6Il
+         ekV7rz9Io3zBAAyDjGpyxftFDvu9kPB+ScJTsOcI2QDu018m3nggjAkjIbtC4x99Kr2o
+         AbppIL6hmFTnvkrANHRyRNug/ZT1V20hzfo+UUisgWWomPTReHR0MGzd+bOzv/S6GSIS
+         a/VcgGLotENyBZNI7Uj6806CcFV6pyy2eWqubLGAX0Fr/0lZBD2BOvO1s3ALfI86EknU
+         5E92cqjgGfe7xsWCh5GbrgxCBQa+CNfBnISDnmnqH+PCnCQvHwiZJwjQswZQ4pntvWsT
+         12Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752057384; x=1752662184;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0p9u4plpxbVFh6lI2RB4vHEjyRIuK37OQFSWTJvPBhE=;
+        b=DUT/DNlAvK8tZ9moBoIKSGM19WRab1TkA0LXVahoP0LT/I2CbAdtjuqTi9lmT70qhW
+         uafIQPZHU5ZI2gEBRJWFqmTp96BaTyov9rKhc+FrwWOQQfWpivILk3CnhbNhL7IvQHBa
+         xXhS/sMbLV16jRlHYKjyqLzQCOVvZ279BPkIx8wVjofvDyg1cjfz+r1mPlPSC9ruOT3E
+         mw1v+x/xG/jHEK0AYS2Yci0MQOPCm5IlNtGKwXdojZAUxIGmTPVWGhv4hssuRBugZ+AH
+         xWcbfssg9Q7ddjp+inMhjfoVEPpyettFAJBL819EnWJlABf2DDwIdpZejk9ffECLxjFu
+         r/Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYzMCy8LQZQCx/QhDsqax9E0giVPYI51rnFk8f9a/NsciM8Nhk/T3Am7x+y9Lq5MthQWhwxdkbpuo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxXhuktk+F22xCSmbXa9bb0LZN7iXmDe9dmmtB5X6KhyRmh7AXT
+	81w8Kg7bnvQhfU//WESm5n+O4zXAvlcNAUr/W94Y713OqFBRHN8x/JvFahIj1iieWsSqAglh9vU
+	JmS+P7+3/TB70/P809EmVfYGSI0UApW98jtMw2lxc0Q==
+X-Gm-Gg: ASbGncscl3M76gxY6QweZy75vuOg1p2Mfpg1PWbMrz5R36GEoSe9mRksqdclvy1GbQ3
+	BUcFdZxdkQRkJ4myiBq3FcG5oU7vWIYhPUdCJQ2LEcP5vkLnblWbY5WadMXlcKydBUl/OwkOpqG
+	FLqUT86HjKtg2GaHcT1mz83LkYvvIPl65s+x7NJvzc4j/H
+X-Google-Smtp-Source: AGHT+IE83XXdAl+aWVQg+Tc9AgySBYO9LqjNqiDZMc/oFmg29Li6jivhx7YjZSQgp9l/oFfbXq07gAyjA/zaDQ6XS9Y=
+X-Received: by 2002:a05:690c:708e:b0:70e:7a67:b4c5 with SMTP id
+ 00721157ae682-717b1a17b03mr28925717b3.36.1752057383758; Wed, 09 Jul 2025
+ 03:36:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H41WOLU6ae-iWKLnuUtSXgq4DogEUYS49ndmERauuPgXA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxT+ZQMm5oo7wPAA--.25184S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3Cr4rKw48JF47Ar1xWFykWFX_yoW8GFyUZo
-	W3JF1xtF18Xr1UJr15J34qqryjyw18Kr4UA34UAwsxJr1Uta47Ar1UGr15JF43K3WkJr47
-	Ga47Xr18ZFW7Xwn5l-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYg7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8czVUUUUUU==
+References: <cover.1750765495.git.zhoubinbin@loongson.cn> <CAPDyKFrYYdhrctvwJ=VdTRHYSLSO_MjGKfasP53muVbe1+=0ag@mail.gmail.com>
+ <CAAhV-H5_iokrgA+efG5A9PEfCiQ-Wh2AhssnTXMzmJPE3RPtUQ@mail.gmail.com>
+In-Reply-To: <CAAhV-H5_iokrgA+efG5A9PEfCiQ-Wh2AhssnTXMzmJPE3RPtUQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 9 Jul 2025 12:35:47 +0200
+X-Gm-Features: Ac12FXwAkwnffI0MhMh9MuqyGN1IKBhd3sj0L-DBUX9H5dvO2DwXdx3NbqUnn3U
+Message-ID: <CAPDyKFqL6a=KJ50TPcUpnj7HKdYz9oN8+2B2XP7FMTEYpUbUaA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] LoongArch: Introduce the Loongson-2K MMC host
+ controller driver
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, wanghongliang@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, 8 Jul 2025 at 13:37, Huacai Chen <chenhuacai@kernel.org> wrote:
+>
+> On Thu, Jul 3, 2025 at 8:20=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.or=
+g> wrote:
+> >
+> > On Tue, 24 Jun 2025 at 13:58, Binbin Zhou <zhoubinbin@loongson.cn> wrot=
+e:
+> > >
+> > > Hi all:
+> > >
+> > > This patchset introduce the MMC host controller on Loongson-2K series
+> > > CPUs.
+> > >
+> > > They are similar, except for the interface characteristics and the us=
+e of
+> > > DMA engine, specifically, the Loongson-2K0500/Loongson-2K1000 use an
+> > > externally shared APBDMA engine, while the Loongson-2K2000 uses an
+> > > internally exclusive DMA.
+> > >
+> > > Based on this, I'm splitting the driver into two patches.
+> > >
+> > > List of the patchset:
+> > > Patch1: bindings for Loongson-2K0500/Loongson-2K1000;
+> > > Patch2: driver for MMC controller using externally shared APBDMA engi=
+ne;
+> > > Patch3: bindings for Loongson-2K2000;
+> > > Patch4: driver for MMC controller using internally exclusive DMA.
+> > >
+> > > Thanks.
+> > >
+> > > -------
+> > > V4:
+> > > patch(2/4):
+> > >  - Code formatting;
+> > >  - Fix lkp error
+> > >     https://lore.kernel.org/all/202506202031.TNchn822-lkp@intel.com/
+> > > patch(4/4):
+> > >  - Rename function names:
+> > >         ls2k1000_mmc_regmap_config -> ls2k0500_mmc_regmap_config
+> > >         loongson2_mmc_reorder_cmd_data -> ls2k0500_mmc_reorder_cmd_da=
+ta
+> > >         loongson2_mmc_set_internal_dma -> ls2k2000_mmc_set_internal_d=
+ma
+> > >  - Use macro definitions for magic numbers.
+> > >
+> > > Link to V3:
+> > > https://lore.kernel.org/all/cover.1750216134.git.zhoubinbin@loongson.=
+cn/
+> > >
+> > > V3:
+> > > patch(1/4):
+> > >  - Rename dt-binding file as loongson,ls2k0500-mmc.yaml.
+> > > patch(2/4):
+> > >  - Fix lkp error;
+> > >     https://lore.kernel.org/all/202505130918.uanOGxju-lkp@intel.com/
+> > >  - Add regulators support for ios ops;
+> > >  - Add ack_sdio_irq() callback;
+> > >  - Add MMC_CAP2_SDIO_IRQ_NOTHREAD flag;
+> > > patch(3/4):
+> > >  - Add Ack-by tag.
+> > > patch(4/4):
+> > >  - Update commit for fix_data_timeout().
+> > >
+> > > Link to V2:
+> > > https://lore.kernel.org/all/cover.1746581751.git.zhoubinbin@loongson.=
+cn/
+> > >
+> > > V2:
+> > > patch(1/4):
+> > >  - Add reg define for each reg entry.
+> > >
+> > > patch(2/4):
+> > >  - Put all code in the c-file;
+> > >  - Use mmc_from_priv() instead of host->mmc;
+> > >  - Use sdio_signal_irq() instead of mmc_signal_sdio_irq();
+> > >  - Use devm_mmc_alloc_host() instead of mmc_alloc_host();
+> > >  - Use mmc_regulator_get_supply();
+> > >
+> > > patch(4/4):
+> > >  - Add fix_cmd_interrupt function which is needed by Loongson-2K2000.
+> > >
+> > > Link to V1:
+> > > https://lore.kernel.org/linux-mmc/cover.1744273956.git.zhoubinbin@loo=
+ngson.cn/
+> > >
+> > > Binbin Zhou (4):
+> > >   dt-bindings: mmc: Add Loongson-2K SD/SDIO/eMMC controller binding
+> > >   mmc: loongson2: Add Loongson-2K SD/SDIO controller driver
+> > >   dt-bindings: mmc: loongson,ls2k0500-mmc: Add compatible for
+> > >     Loongson-2K2000
+> > >   mmc: loongson2: Add Loongson-2K2000 SD/SDIO/eMMC controller driver
+> > >
+> > >  .../bindings/mmc/loongson,ls2k0500-mmc.yaml   |  112 ++
+> > >  MAINTAINERS                                   |    7 +
+> > >  drivers/mmc/host/Kconfig                      |   13 +
+> > >  drivers/mmc/host/Makefile                     |    1 +
+> > >  drivers/mmc/host/loongson2-mmc.c              | 1029 +++++++++++++++=
+++
+> > >  5 files changed, 1162 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mmc/loongson,ls=
+2k0500-mmc.yaml
+> > >  create mode 100644 drivers/mmc/host/loongson2-mmc.c
+> > >
+> > >
+> > > base-commit: f5c755ef810009b85350884c483705bd04365370
+> > > --
+> > > 2.47.1
+> > >
+> > >
+> >
+> > The series applied for next, thanks!
+> >
+> > Note, I am leaving you to address/discuss Huacai's comment on patch1
+> > as a new patch on top.
+> Hmmm, if possible, I prefer Binbin to send a clean v5 with that
+> modification. Or you modify it by yourself when applying.
 
+Sorry, the patch has already been applied and I didn't think a
+variable rename was that big of a deal.
 
-On 2025/7/9 下午4:59, Huacai Chen wrote:
-> On Tue, Jul 1, 2025 at 7:40 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/7/1 下午5:20, Huacai Chen wrote:
->>> On Mon, Jun 30, 2025 at 4:44 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>>
->>>>
->>>> On 2025/6/30 下午4:04, Huacai Chen wrote:
->>>>> Hi, Bibo,
->>>>>
->>>>> On Thu, Jun 19, 2025 at 3:15 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>>>
->>>>>> IOCSR MISC register 0x420 controlls some features of eiointc, such as
->>>>>> BIT 48 enables eiointc and BIT 49 set interrupt encoding mode.
->>>>>>
->>>>>> When kernel irqchip is set, IOCSR MISC register should be emulated in
->>>>>> kernel also. Here add IOCSR MISC register emulation in kernel side.
->>>>>>
->>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>>>> ---
->>>>>> v1 ... v2:
->>>>>>      1. Add separate file arch/loongarch/kvm/intc/misc.c for IOCSR MISC
->>>>>>         register 0x420 emulation, since it controls feature about AVEC
->>>>>>         irqchip also.
->>>>> I found we can decouple the misc register and EIOINTC in addition:
->>>>> 1, Move misc.c out of intc directory;
->>>>> 2, Call kvm_loongarch_create_misc() in kvm_arch_init_vm();
->>>>> 3, Call kvm_loongarch_destroy_misc() in kvm_arch_destroy_vm();
->>>>> 4, Then maybe misc_created can be removed.
->>>> Now irqchip in kernel is optional, the same with misc register. Misc
->>>> register will be emulated in user VMM if kernel-irqchip option is off.
->>>>
->>>> There is no way to detect kernel-irqchip option when function
->>>> kvm_arch_init_vm() is called, and kvm_loongarch_create_misc() needs be
->>>> dynamically called from ioctl command.
->>> Can we use  kvm_arch_irqchip_in_kernel() to detect?
->> No, it can not be used. kvm_arch_irqchip_in_kernel() is usable only when
->> irqchip is created in kernel, however kvm_arch_init_vm() is called when
->> VM is created.
->>
->> VM is created always before kernel irqchip is created. So
->> kvm_arch_irqchip_in_kernel() will return false if it is called in
->> kvm_arch_init_vm().
-> What will happen if call kvm_loongarch_create_misc() in
-> kvm_arch_init_vm() unconditionally?
-If IOCSR misc is emualted in kernel unconditionally, however eiointc is 
-emulated in qemu. How does kernel misc emulate eiointc enabling command?
+Please just post a patch on top and I will happily apply it.
 
-I really doubt whether you really understand KVM, please do not give 
-comments so easily if you do not understand.
-
-Regards
-Bibo Mao
-> 
-> Huacai
->>
->> Regards
->> Bibo Mao
->>>
->>>
->>> Huacai
->>>
->>>>
->>>> Regards
->>>> Bibo Mao
->>>>>
->>>>> At last you can make this patch and others from another series to be a
->>>>> new series.
->>>>>
->>>>>
->>>>> Huacai
->>>>>
->>>>>>
->>>>>>      2. Define macro MISC_BASE as LOONGARCH_IOCSR_MISC_FUNC rather than
->>>>>>         hard coded 0x420
->>>>>> ---
->>>>>>     arch/loongarch/include/asm/kvm_eiointc.h |   2 +
->>>>>>     arch/loongarch/include/asm/kvm_host.h    |   2 +
->>>>>>     arch/loongarch/include/asm/kvm_misc.h    |  17 +++
->>>>>>     arch/loongarch/include/asm/loongarch.h   |   1 +
->>>>>>     arch/loongarch/kvm/Makefile              |   1 +
->>>>>>     arch/loongarch/kvm/intc/eiointc.c        |  61 +++++++++++
->>>>>>     arch/loongarch/kvm/intc/misc.c           | 125 +++++++++++++++++++++++
->>>>>>     7 files changed, 209 insertions(+)
->>>>>>     create mode 100644 arch/loongarch/include/asm/kvm_misc.h
->>>>>>     create mode 100644 arch/loongarch/kvm/intc/misc.c
->>>>>>
->>>>>> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch/include/asm/kvm_eiointc.h
->>>>>> index a3a40aba8acf..2d1c183f2b1b 100644
->>>>>> --- a/arch/loongarch/include/asm/kvm_eiointc.h
->>>>>> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
->>>>>> @@ -119,5 +119,7 @@ struct loongarch_eiointc {
->>>>>>
->>>>>>     int kvm_loongarch_register_eiointc_device(void);
->>>>>>     void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level);
->>>>>> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value);
->>>>>> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value, unsigned long mask);
->>>>>>
->>>>>>     #endif /* __ASM_KVM_EIOINTC_H */
->>>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
->>>>>> index a3c4cc46c892..f463ec52d86c 100644
->>>>>> --- a/arch/loongarch/include/asm/kvm_host.h
->>>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
->>>>>> @@ -132,6 +132,8 @@ struct kvm_arch {
->>>>>>            struct loongarch_ipi *ipi;
->>>>>>            struct loongarch_eiointc *eiointc;
->>>>>>            struct loongarch_pch_pic *pch_pic;
->>>>>> +       struct kvm_io_device misc;
->>>>>> +       bool   misc_created;
->>>>>>     };
->>>>>>
->>>>>>     #define CSR_MAX_NUMS           0x800
->>>>>> diff --git a/arch/loongarch/include/asm/kvm_misc.h b/arch/loongarch/include/asm/kvm_misc.h
->>>>>> new file mode 100644
->>>>>> index 000000000000..621e4228dea2
->>>>>> --- /dev/null
->>>>>> +++ b/arch/loongarch/include/asm/kvm_misc.h
->>>>>> @@ -0,0 +1,17 @@
->>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>>>> +/*
->>>>>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
->>>>>> + */
->>>>>> +
->>>>>> +#ifndef __ASM_KVM_MISC_H
->>>>>> +#define __ASM_KVM_MISC_H
->>>>>> +
->>>>>> +#include <asm/loongarch.h>
->>>>>> +
->>>>>> +#define MISC_BASE              LOONGARCH_IOCSR_MISC_FUNC
->>>>>> +#define MISC_SIZE              0x8
->>>>>> +
->>>>>> +int kvm_loongarch_create_misc(struct kvm *kvm);
->>>>>> +void kvm_loongarch_destroy_misc(struct kvm *kvm);
->>>>>> +
->>>>>> +#endif /* __ASM_KVM_MISC_H */
->>>>>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
->>>>>> index d84dac88a584..e30d330d497e 100644
->>>>>> --- a/arch/loongarch/include/asm/loongarch.h
->>>>>> +++ b/arch/loongarch/include/asm/loongarch.h
->>>>>> @@ -1141,6 +1141,7 @@
->>>>>>     #define  IOCSR_MISC_FUNC_SOFT_INT      BIT_ULL(10)
->>>>>>     #define  IOCSR_MISC_FUNC_TIMER_RESET   BIT_ULL(21)
->>>>>>     #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
->>>>>> +#define  IOCSR_MISC_FUNC_INT_ENCODE    BIT_ULL(49)
->>>>>>     #define  IOCSR_MISC_FUNC_AVEC_EN       BIT_ULL(51)
->>>>>>
->>>>>>     #define LOONGARCH_IOCSR_CPUTEMP                0x428
->>>>>> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
->>>>>> index cb41d9265662..25fa3866613d 100644
->>>>>> --- a/arch/loongarch/kvm/Makefile
->>>>>> +++ b/arch/loongarch/kvm/Makefile
->>>>>> @@ -18,6 +18,7 @@ kvm-y += vcpu.o
->>>>>>     kvm-y += vm.o
->>>>>>     kvm-y += intc/ipi.o
->>>>>>     kvm-y += intc/eiointc.o
->>>>>> +kvm-y += intc/misc.o
->>>>>>     kvm-y += intc/pch_pic.o
->>>>>>     kvm-y += irqfd.o
->>>>>>
->>>>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
->>>>>> index f39929d7bf8a..87d01521e92f 100644
->>>>>> --- a/arch/loongarch/kvm/intc/eiointc.c
->>>>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
->>>>>> @@ -4,6 +4,7 @@
->>>>>>      */
->>>>>>
->>>>>>     #include <asm/kvm_eiointc.h>
->>>>>> +#include <asm/kvm_misc.h>
->>>>>>     #include <asm/kvm_vcpu.h>
->>>>>>     #include <linux/count_zeros.h>
->>>>>>
->>>>>> @@ -708,6 +709,56 @@ static const struct kvm_io_device_ops kvm_eiointc_ops = {
->>>>>>            .write  = kvm_eiointc_write,
->>>>>>     };
->>>>>>
->>>>>> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value)
->>>>>> +{
->>>>>> +       unsigned long data, flags;
->>>>>> +       struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
->>>>>> +
->>>>>> +       if (!eiointc) {
->>>>>> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
->>>>>> +               return -EINVAL;
->>>>>> +       }
->>>>>> +
->>>>>> +       data = 0;
->>>>>> +       spin_lock_irqsave(&eiointc->lock, flags);
->>>>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
->>>>>> +               data |= IOCSR_MISC_FUNC_EXT_IOI_EN;
->>>>>> +
->>>>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
->>>>>> +               data |= IOCSR_MISC_FUNC_INT_ENCODE;
->>>>>> +       spin_unlock_irqrestore(&eiointc->lock, flags);
->>>>>> +
->>>>>> +       *value = data;
->>>>>> +       return 0;
->>>>>> +}
->>>>>> +
->>>>>> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value, unsigned long mask)
->>>>>> +{
->>>>>> +       struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
->>>>>> +       unsigned long old, flags;
->>>>>> +
->>>>>> +       if (!eiointc) {
->>>>>> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
->>>>>> +               return -EINVAL;
->>>>>> +       }
->>>>>> +
->>>>>> +       old = 0;
->>>>>> +       spin_lock_irqsave(&eiointc->lock, flags);
->>>>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
->>>>>> +               old |= IOCSR_MISC_FUNC_EXT_IOI_EN;
->>>>>> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
->>>>>> +               old |= IOCSR_MISC_FUNC_INT_ENCODE;
->>>>>> +
->>>>>> +       value |= (old & ~mask);
->>>>>> +       eiointc->status &= ~(BIT(EIOINTC_ENABLE_INT_ENCODE) | BIT(EIOINTC_ENABLE));
->>>>>> +       if (value & IOCSR_MISC_FUNC_INT_ENCODE)
->>>>>> +               eiointc->status |= BIT(EIOINTC_ENABLE_INT_ENCODE);
->>>>>> +       if (value & IOCSR_MISC_FUNC_EXT_IOI_EN)
->>>>>> +               eiointc->status |= BIT(EIOINTC_ENABLE);
->>>>>> +       spin_unlock_irqrestore(&eiointc->lock, flags);
->>>>>> +       return 0;
->>>>>> +}
->>>>>> +
->>>>>>     static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
->>>>>>                                    struct kvm_io_device *dev,
->>>>>>                                    gpa_t addr, int len, void *val)
->>>>>> @@ -993,6 +1044,15 @@ static int kvm_eiointc_create(struct kvm_device *dev, u32 type)
->>>>>>                    kfree(s);
->>>>>>                    return ret;
->>>>>>            }
->>>>>> +
->>>>>> +       ret = kvm_loongarch_create_misc(kvm);
->>>>>> +       if (ret < 0) {
->>>>>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device);
->>>>>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device_vext);
->>>>>> +               kfree(s);
->>>>>> +               return ret;
->>>>>> +       }
->>>>>> +
->>>>>>            kvm->arch.eiointc = s;
->>>>>>
->>>>>>            return 0;
->>>>>> @@ -1010,6 +1070,7 @@ static void kvm_eiointc_destroy(struct kvm_device *dev)
->>>>>>            eiointc = kvm->arch.eiointc;
->>>>>>            kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
->>>>>>            kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_vext);
->>>>>> +       kvm_loongarch_destroy_misc(kvm);
->>>>>>            kfree(eiointc);
->>>>>>     }
->>>>>>
->>>>>> diff --git a/arch/loongarch/kvm/intc/misc.c b/arch/loongarch/kvm/intc/misc.c
->>>>>> new file mode 100644
->>>>>> index 000000000000..edee66afa36e
->>>>>> --- /dev/null
->>>>>> +++ b/arch/loongarch/kvm/intc/misc.c
->>>>>> @@ -0,0 +1,125 @@
->>>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>>> +/*
->>>>>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
->>>>>> + */
->>>>>> +#include <asm/kvm_vcpu.h>
->>>>>> +#include <asm/kvm_eiointc.h>
->>>>>> +#include <asm/kvm_misc.h>
->>>>>> +
->>>>>> +static int kvm_misc_read(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
->>>>>> +                       gpa_t addr, int len, void *val)
->>>>>> +{
->>>>>> +       unsigned long data;
->>>>>> +       unsigned int ret;
->>>>>> +
->>>>>> +       addr -= MISC_BASE;
->>>>>> +       if (addr & (len - 1)) {
->>>>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
->>>>>> +               return -EINVAL;
->>>>>> +       }
->>>>>> +
->>>>>> +       ret = kvm_eiointc_get_status(vcpu, &data);
->>>>>> +       if (ret)
->>>>>> +               return ret;
->>>>>> +
->>>>>> +       data = data >> ((addr & 7) * 8);
->>>>>> +       switch (len) {
->>>>>> +       case 1:
->>>>>> +               *(unsigned char *)val = (unsigned char)data;
->>>>>> +               break;
->>>>>> +
->>>>>> +       case 2:
->>>>>> +               *(unsigned short *)val = (unsigned short)data;
->>>>>> +               break;
->>>>>> +
->>>>>> +       case 4:
->>>>>> +               *(unsigned int *)val = (unsigned int)data;
->>>>>> +               break;
->>>>>> +
->>>>>> +       default:
->>>>>> +               *(unsigned long *)val = data;
->>>>>> +               break;
->>>>>> +       }
->>>>>> +
->>>>>> +       return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static int kvm_misc_write(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
->>>>>> +               gpa_t addr, int len, const void *val)
->>>>>> +{
->>>>>> +       unsigned long data, mask;
->>>>>> +       unsigned int shift;
->>>>>> +
->>>>>> +       addr -= MISC_BASE;
->>>>>> +       if (addr & (len - 1)) {
->>>>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
->>>>>> +               return -EINVAL;
->>>>>> +       }
->>>>>> +
->>>>>> +       shift = (addr & 7) * 8;
->>>>>> +       switch (len) {
->>>>>> +       case 1:
->>>>>> +               data = *(unsigned char *)val;
->>>>>> +               mask = 0xFF;
->>>>>> +               mask = mask << shift;
->>>>>> +               data = data << shift;
->>>>>> +               break;
->>>>>> +
->>>>>> +       case 2:
->>>>>> +               data = *(unsigned short *)val;
->>>>>> +               mask = 0xFFFF;
->>>>>> +               mask = mask << shift;
->>>>>> +               data = data << shift;
->>>>>> +               break;
->>>>>> +
->>>>>> +       case 4:
->>>>>> +               data = *(unsigned int *)val;
->>>>>> +               mask = UINT_MAX;
->>>>>> +               mask = mask << shift;
->>>>>> +               data = data << shift;
->>>>>> +               break;
->>>>>> +
->>>>>> +       default:
->>>>>> +               data = *(unsigned long *)val;
->>>>>> +               mask = ULONG_MAX;
->>>>>> +               mask = mask << shift;
->>>>>> +               data = data << shift;
->>>>>> +               break;
->>>>>> +       }
->>>>>> +
->>>>>> +       return kvm_eiointc_update_status(vcpu, data, mask);
->>>>>> +}
->>>>>> +
->>>>>> +static const struct kvm_io_device_ops kvm_misc_ops = {
->>>>>> +       .read   = kvm_misc_read,
->>>>>> +       .write  = kvm_misc_write,
->>>>>> +};
->>>>>> +
->>>>>> +int kvm_loongarch_create_misc(struct kvm *kvm)
->>>>>> +{
->>>>>> +       struct kvm_io_device *device;
->>>>>> +       int ret;
->>>>>> +
->>>>>> +       if (kvm->arch.misc_created)
->>>>>> +               return 0;
->>>>>> +
->>>>>> +       device = &kvm->arch.misc;
->>>>>> +       kvm_iodevice_init(device, &kvm_misc_ops);
->>>>>> +       ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, MISC_BASE, MISC_SIZE, device);
->>>>>> +       if (ret < 0)
->>>>>> +               return ret;
->>>>>> +
->>>>>> +       kvm->arch.misc_created = true;
->>>>>> +       return 0;
->>>>>> +}
->>>>>> +
->>>>>> +void kvm_loongarch_destroy_misc(struct kvm *kvm)
->>>>>> +{
->>>>>> +       struct kvm_io_device *device;
->>>>>> +
->>>>>> +       if (kvm->arch.misc_created) {
->>>>>> +               device = &kvm->arch.misc;
->>>>>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
->>>>>> +               kvm->arch.misc_created = false;
->>>>>> +       }
->>>>>> +}
->>>>>>
->>>>>> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
->>>>>> --
->>>>>> 2.39.3
->>>>>>
->>>>
->>
-
+Kind regards
+Uffe
