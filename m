@@ -1,117 +1,134 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E4EAD24
-	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 06:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D7E221FCB
+	for <loongarch@lists.linux.dev>; Wed,  9 Jul 2025 08:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752042854; cv=none; b=TBqU4Nal3Wv0+V4KkI6lpx5DcI+P9TZjEMDfyGksM3tWleNbvQK3eXJgjMQdRGXSaygPORxqAOOb/uEykNLYsFOOOAX3hwExcKyM/8w0OXL37VswmDbgasK7MUxo8GW8C7svJ75ucvSytWystkBHSKLWeghaWw68N+oH3fOEwnE=
+	t=1752048161; cv=none; b=Xzy+MbE5TBPb6cRC0h1S016tI+jhALky7SrLbXuN9rTSo1jFhnlNCuNP0V0EpTSypcydLsnPb9hJ/XmZjDf93HgrqGKVsNMh3/9UlAuj1DirikI/dRp6f47XWXL7o5LSqNdNx2CklUgOARmO0hBha2Mq5XqxFL6furNGs7t1n+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752042854; c=relaxed/simple;
-	bh=DMmKdH2LlUyDyDEWJ3r3ROcYn+v5xI+1H76HITCAuGw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KKGiEJ98ofWOp8n+CO4Ox8hu26e+d+O9V5LIh9mson+chgwpldl0QvkMO645D5aBism6YN6HfFoGunly+iUcP7Fq/+Tj/nWiBP9uFxXnSFDzLEcJ69YJTd6ZuEnxFIPwcpY71UM+ocgPnoSypgpwlABxLMKTZHXDvUjeQfhG8U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bmmVJRcq; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmmVJRcq"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-53140c33563so4505993e0c.3
-        for <loongarch@lists.linux.dev>; Tue, 08 Jul 2025 23:34:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752042852; x=1752647652; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y9aod6BXjQrO5vyW4mRKpBJMwKOe6N1K/J0C4KFxzP4=;
-        b=bmmVJRcqAoKKitRcj82f0LWuEdlbhs2KyM6GYB4Su+83gwHAHtvja3RvWRGeBzcjAw
-         qVxN9nlprvUS6LrQb5ie31QYtLhGUOqhXggvn5CCOMExjhw6G3Qg1Yy82//Y8IjgbV3j
-         jU9p3/6CE8yd6+FA7+98hHEyV1PmrchopynhB8peOB59j3+rBHOpsH8arULeP659iXS0
-         xAHhHVXeuQAhfn3axdFg6gbwzeCAMnH/dOTUij3Z1v1GXR1tBaKfbZ6Q2IRH3h+OK71/
-         x/HEpNqiAr5b6A+PDg5GPYXQLA1QCzqjcgPV3wpLqor/0Fs4/kD6v+hRGzmRZVQbX8FX
-         CUWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752042852; x=1752647652;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y9aod6BXjQrO5vyW4mRKpBJMwKOe6N1K/J0C4KFxzP4=;
-        b=klHnO2GrWiU1laaj72kqIIH3nF65GRO29GWtYt9W6vdqCAKe2jdnLNp5UQFwbuN1jC
-         +jANLBDercI9MTNR+QZg9cG0JzGX2cWbfi1Y1bOmJ5sohSKClvNyAzAVecXZK/hGGyiR
-         5doax43XDErr08OC0r76tI0s5YBggA0sRnweyv64s9f9eAQkPo4iTvdv9VcKBEa+pnTV
-         N+3AkAYJgngZ0JnIm3LlcskdfEe4Tj34nqLojUXsM6wD4U7cJQIdksJFUIqmFv7HsKvS
-         gYnkDHM9AfQ7delr9IqDyrIf41CRPppdTLEaK3azCRyxsvBqBt3OBJSHyEmZBLe/UF3Y
-         1umQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7rtq5sTMzm2gX2J2cL2TE/hvfyMHDFIg2y6/bp62iKnCKuBbD0WK2Fb8VhTNVHJOlybN+k19smHQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyOuBVMHRXSb2z9O+JWTENfz0i74ZgOOTt7PoEcYYP2gXTARI3v
-	bGWFyIRoydFSX1NYcy+3jexojgwCidmRao58stG9MGAQ3TvF7g4C96ijc061ngrpdCEhkMjUTH6
-	W2xUUqEhnyfzZbR0s5kdpoO+qPYA0Oxs=
-X-Gm-Gg: ASbGncsYEe2XuR4Sv/nBCfi+Iekv92xLRm48zRTLYcuJuZ2Le5U6RArkqIBFEp0eUT1
-	Sg9sehR/Xun1j+hp5xYNSYAFdd6tsU1euM8kILZ3pyBQjjwBVhfpyg1OFjnAlzRMWMqMki2qfi+
-	9yqHZWBlTi6TYtgpHpnyxpMqWGxKdcDev9fMABfYUwYA==
-X-Google-Smtp-Source: AGHT+IGzn/x16pDQ53vI1j1ojRFLBVig/bMF+fcC23ilzSsODhT507fDhgyOaAudI+CHcvleaZ8z6iN2Q55SLHQEmyU=
-X-Received: by 2002:a05:6122:80aa:b0:531:20dc:924 with SMTP id
- 71dfb90a1353d-535d7443235mr586641e0c.11.1752042851298; Tue, 08 Jul 2025
- 23:34:11 -0700 (PDT)
+	s=arc-20240116; t=1752048161; c=relaxed/simple;
+	bh=x1bsEwS/nk/wakvnnYWRljMmzdrRQq5PzkcTVa0j/jo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FztlzhuaZOnXmAgoS/aEOyagt4TIeSE91sdrcRqsp8Hvn0661fPLfP/yQAEkO6HvfFYWzEBsXJhwFdEU1It26N9MmaU0OmsQVU2scFsBTditsw3nVmsuc9LzyJhsog6ZKALFUZGvf0G77Di6tfL25KJLymGwicZQ74zDA/CXNRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxG6wdIm5oYiklAQ--.38585S3;
+	Wed, 09 Jul 2025 16:02:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBxpeQZIm5oS6cPAA--.24964S8;
+	Wed, 09 Jul 2025 16:02:36 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xianglai Li <lixianglai@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 6/8] LoongArch: KVM: Remove some unnecessary local variables
+Date: Wed,  9 Jul 2025 16:02:31 +0800
+Message-Id: <20250709080233.3948503-7-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20250709080233.3948503-1-maobibo@loongson.cn>
+References: <20250709080233.3948503-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <2b83380bf64a424b9cb902a20a244c3e106c4bb8.1751702072.git.rabenda.cn@gmail.com>
- <56e7ec54-9820-4e02-be97-2a9e1dedd117@amd.com>
-In-Reply-To: <56e7ec54-9820-4e02-be97-2a9e1dedd117@amd.com>
-From: Han Gao <rabenda.cn@gmail.com>
-Date: Wed, 9 Jul 2025 14:34:00 +0800
-X-Gm-Features: Ac12FXxapUUsFofuo853oFqC-peo6coLRLtZLPkqC5w7REiJr3Q5hyQm71Fknlc
-Message-ID: <CAAT7Ki-pg+E83xMCmES+VMWFthGuLMTzKdSbDak0OEMR6kfL0w@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdkfd: enable kfd on LoongArch systems
-To: Felix Kuehling <felix.kuehling@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxpeQZIm5oS6cPAA--.24964S8
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Tue, Jul 8, 2025 at 6:12=E2=80=AFAM Felix Kuehling <felix.kuehling@amd.c=
-om> wrote:
->
-> On 2025-07-05 04:05, Han Gao wrote:
-> > KFD has been confirmed that can run on LoongArch systems.
-> > It's necessary to support CONFIG_HSA_AMD on LoongArch.
-> >
-> > Signed-off-by: Han Gao <rabenda.cn@gmail.com>
-> > ---
-> >   drivers/gpu/drm/amd/amdkfd/Kconfig | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdkfd/Kconfig b/drivers/gpu/drm/amd/a=
-mdkfd/Kconfig
-> > index 62e88e5362e9..b2387d529bf0 100644
-> > --- a/drivers/gpu/drm/amd/amdkfd/Kconfig
-> > +++ b/drivers/gpu/drm/amd/amdkfd/Kconfig
-> > @@ -5,7 +5,7 @@
-> >
-> >   config HSA_AMD
-> >       bool "HSA kernel driver for AMD GPU devices"
-> > -     depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64 || (RISCV && 6=
-4BIT))
-> > +     depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64 || (RISCV && 6=
-4BIT) || LOONGARCH)
->
-> Is LOONGARCH always 64-bit? If not, please make this (LOONGARCH && 64BIT)=
-.
-Got it, will submit v2 later.
->
-> Other than that, I have no objections to applying this patch.
->
-> Regards,
->    Felix
->
->
-> >       select HMM_MIRROR
-> >       select MMU_NOTIFIER
-> >       select DRM_AMDGPU_USERPTR
+Local variable coreisr and old_coreisr is replaced with data and
+old_data, and the latter is widely used in other places.
+
+Also local variable offset is removed and addr is used directly.
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/intc/eiointc.c | 31 ++++++++++++++-----------------
+ 1 file changed, 14 insertions(+), 17 deletions(-)
+
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index 3e8dc844be76..bed5f7bdc8b4 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -474,15 +474,13 @@ static int loongarch_eiointc_writeq(struct kvm_vcpu *vcpu,
+ 	int i, index, irq, bits, ret = 0;
+ 	u8 cpu;
+ 	u64 data, old_data;
+-	u64 coreisr, old_coreisr;
+-	gpa_t offset;
+ 
+ 	data = *(u64 *)val;
+-	offset = addr - EIOINTC_BASE;
++	addr -= EIOINTC_BASE;
+ 
+-	switch (offset) {
++	switch (addr) {
+ 	case EIOINTC_NODETYPE_START ... EIOINTC_NODETYPE_END:
+-		index = (offset - EIOINTC_NODETYPE_START) >> 3;
++		index = (addr - EIOINTC_NODETYPE_START) >> 3;
+ 		s->nodetype.reg_u64[index] = data;
+ 		break;
+ 	case EIOINTC_IPMAP_START ... EIOINTC_IPMAP_END:
+@@ -490,11 +488,11 @@ static int loongarch_eiointc_writeq(struct kvm_vcpu *vcpu,
+ 		 * ipmap cannot be set at runtime, can be set only at the beginning
+ 		 * of irqchip driver, need not update upper irq level
+ 		 */
+-		index = (offset - EIOINTC_IPMAP_START) >> 3;
++		index = (addr - EIOINTC_IPMAP_START) >> 3;
+ 		s->ipmap.reg_u64 = data;
+ 		break;
+ 	case EIOINTC_ENABLE_START ... EIOINTC_ENABLE_END:
+-		index = (offset - EIOINTC_ENABLE_START) >> 3;
++		index = (addr - EIOINTC_ENABLE_START) >> 3;
+ 		old_data = s->enable.reg_u64[index];
+ 		s->enable.reg_u64[index] = data;
+ 		/*
+@@ -518,28 +516,27 @@ static int loongarch_eiointc_writeq(struct kvm_vcpu *vcpu,
+ 		break;
+ 	case EIOINTC_BOUNCE_START ... EIOINTC_BOUNCE_END:
+ 		/* do not emulate hw bounced irq routing */
+-		index = (offset - EIOINTC_BOUNCE_START) >> 3;
++		index = (addr - EIOINTC_BOUNCE_START) >> 3;
+ 		s->bounce.reg_u64[index] = data;
+ 		break;
+ 	case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
+-		index = (offset - EIOINTC_COREISR_START) >> 3;
++		index = (addr - EIOINTC_COREISR_START) >> 3;
+ 		/* use attrs to get current cpu index */
+ 		cpu = vcpu->vcpu_id;
+-		coreisr = data;
+-		old_coreisr = s->coreisr.reg_u64[cpu][index];
++		old_data = s->coreisr.reg_u64[cpu][index];
+ 		/* write 1 to clear interrupt */
+-		s->coreisr.reg_u64[cpu][index] = old_coreisr & ~coreisr;
+-		coreisr &= old_coreisr;
++		s->coreisr.reg_u64[cpu][index] = old_data & ~data;
++		data &= old_data;
+ 		bits = sizeof(data) * 8;
+-		irq = find_first_bit((void *)&coreisr, bits);
++		irq = find_first_bit((void *)&data, bits);
+ 		while (irq < bits) {
+ 			eiointc_update_irq(s, irq + index * bits, 0);
+-			bitmap_clear((void *)&coreisr, irq, 1);
+-			irq = find_first_bit((void *)&coreisr, bits);
++			bitmap_clear((void *)&data, irq, 1);
++			irq = find_first_bit((void *)&data, bits);
+ 		}
+ 		break;
+ 	case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
+-		irq = offset - EIOINTC_COREMAP_START;
++		irq = addr - EIOINTC_COREMAP_START;
+ 		index = irq >> 3;
+ 		s->coremap.reg_u64[index] = data;
+ 		eiointc_update_sw_coremap(s, irq, data, sizeof(data), true);
+-- 
+2.39.3
+
