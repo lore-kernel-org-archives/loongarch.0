@@ -1,258 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647AD206F27
-	for <loongarch@lists.linux.dev>; Thu, 10 Jul 2025 04:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90A5288C27
+	for <loongarch@lists.linux.dev>; Thu, 10 Jul 2025 07:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752121708; cv=none; b=G5qHf0Xw/xfpFoZZtEa701gTN+05ARENp2ARaYN7Iape6n9ET2VWzvFkU68KNZafCgukGDZknLzkdgl0GF5+C8JhMTHj6qMyXkIY2VqPZBl+9EthiHtOKTjG5rxrDzXqVwLu1twvRMqgssSj3ZiH/VDJi/amMj1TElbRKYJPUO4=
+	t=1752132236; cv=none; b=XecWTdlk/f0siECePnqExsnD6kg9FZvv6lwNQiVATnFIi1IBFIPdLRtfDJX/wFK7fWobnb1Od9+dOBGF7MDK6J1rMrVD889dn+IbsnlslI737mVSQzR6DJcTKg95Ht/UbaYtrF3h+1zleYWBX6zdWqrwceKrDnC9D9ZAeOqf5OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752121708; c=relaxed/simple;
-	bh=IQGVYlYJYQOjMZdgS87ps0oaa3pWH4qQKt7nLK4PZkc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FiIPyGgryeZNb+wZoxR96nVsuu0mqB0UAxnTI83fWw2H3+PKjecEq/BA96ADSJlbBWcVLMV/9Jc1K+5f1aduhF5AZUYADTbHhuPca/hebjbwi59A8nOurTX868KG1pwSwkftlqsoO1ZUYBaDAri+FIan/h32aaU96QCi1oIgwYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GLwZDpOi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GLwZDpOi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 041DBC4CEF5
-	for <loongarch@lists.linux.dev>; Thu, 10 Jul 2025 04:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752121708;
-	bh=IQGVYlYJYQOjMZdgS87ps0oaa3pWH4qQKt7nLK4PZkc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GLwZDpOiWhaJgSaqUbs+/fFiG0AUQUZopEJTfZE0lBqFEhdf1wQLWxdH3QadWvmmG
-	 A0IJTqSr2ln8W8LZ8zhzNWKn9EjCzhOkZ3kQXec/LM4lDRv27hSsWXlUiSigRRjLk7
-	 0YEs4eiuvcjUZ36QFELBwnm3Rta3XuBFD6xEfZyBtgcv5BDM+U3rlrtuJsdyPrOAk1
-	 oiVwYYoJpVRKQlrzBxkzF4kVpv5iefMylsG42vtNi6t+0sgdvUyhVRa9ZI40NgJsj+
-	 b4grmYV4AIMYpm7mCT66aHsyzJ3UmJjdqUABA68+1wEjRypxGs0SQjkbSi/+uDqwEp
-	 IHCnwBcOGw65Q==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60cc11b34f6so2767664a12.0
-        for <loongarch@lists.linux.dev>; Wed, 09 Jul 2025 21:28:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXgfflSuO0bGjmWdzM348WtBP10EF9X6bg+TEqVbZRnBh0WQkGXRB40VOkd3lLGnMXiXyd/zbcircM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxMFnHu2uPc4QpyqTwkDgi3G7m4p6ZBosG7YBjTOIjqNqWjwo/6
-	HnB093GoX1kLbaqJ7HTYifiemeQ9S5XhoNY7ldNU/DeJvXMKemoYm/lzl5V+ahgTX/cYxWAXCdn
-	hlFFtJEvlwMAA86TMFPtg6JKo/jWl+pY=
-X-Google-Smtp-Source: AGHT+IGrtabaa82rPnczwQFvKJkjAGG16UDRnoTRWYQNUvwzpw8MjTGuh90o3PxeLBe+xtnrJw3mUDIJr7OiDeggHtY=
-X-Received: by 2002:a05:6402:2816:b0:608:199e:df25 with SMTP id
- 4fb4d7f45d1cf-611c1cb6f1emr1442937a12.2.1752121706427; Wed, 09 Jul 2025
- 21:28:26 -0700 (PDT)
+	s=arc-20240116; t=1752132236; c=relaxed/simple;
+	bh=3vkiv57mP9xfFhVaGyv56KfVZIbDJpCAnb1c0mx3LKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aEBbrZCz+2ThyMBdQpd5u7NMtAIK9F+x4YjyfENFYx46WD3p7GaAKP8hjZz8epQHFBmU+k+oDe678XACUpbxOmxLPeB0N2dchDcXaX1vQYToObCrgNz5cfbIyYMvbIMe8p7LxQjAkhOcWmCutmSX0L/gkvxoGCMtHCoCixlEBas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: d01e447e5d5e11f0b29709d653e92f7d-20250710
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:42077a11-c60b-4522-a5ba-6b2e9012c48c,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.45,REQID:42077a11-c60b-4522-a5ba-6b2e9012c48c,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:85fad4899d1e4b836f56ae973c67bf77,BulkI
+	D:250709232349WQEXQ1X6,BulkQuantity:2,Recheck:0,SF:17|19|24|44|64|66|78|80
+	|81|82|83|102|841,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,B
+	ulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
+	0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: d01e447e5d5e11f0b29709d653e92f7d-20250710
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 241051403; Thu, 10 Jul 2025 15:23:44 +0800
+Date: Thu, 10 Jul 2025 15:23:37 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	yangtiezhu@loongson.cn, hengqi.chen@gmail.com, martin.lau@linux.dev,
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
+	jianghaoran@kylinos.cn
+Subject: Re: [PATCH v3 3/5] LoongArch: BPF: Add EXECMEM_BPF memory to execmem
+ subsystem
+Message-ID: <20250710072337.GA839477@chenghao-pc>
+References: <20250709055029.723243-1-duanchenghao@kylinos.cn>
+ <20250709055029.723243-4-duanchenghao@kylinos.cn>
+ <CAAhV-H6bKrnDpVouriAoMUN5i26G6a+UuOGMyEj5h9kJGd6qnQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250701090449.2426151-1-wangming01@loongson.cn>
- <0561da2c-a4d7-49bb-8394-930f10880610@linux.dev> <e89f6ce6-d9f4-4744-b6a6-9a82412795a0@loongson.cn>
- <ac47ba40-0b5e-4273-af7a-a34086ae4a80@linux.dev> <d2097a44-bd1a-47b3-bf1a-d2b9d241fa5c@loongson.cn>
-In-Reply-To: <d2097a44-bd1a-47b3-bf1a-d2b9d241fa5c@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 10 Jul 2025 12:28:14 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4p4_HncS5jc29c1yEFG-zqmxZ_DLXwTxjsT-t7kh8WRQ@mail.gmail.com>
-X-Gm-Features: Ac12FXy7AgWh0z0EA3_gaEQoBl4gXufQug1w1PJfjCIA42XS4zw_VQSnSReRlfQ
-Message-ID: <CAAhV-H4p4_HncS5jc29c1yEFG-zqmxZ_DLXwTxjsT-t7kh8WRQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Support mem=SIZE kernel parameter
-To: Ming Wang <wangming01@loongson.cn>
-Cc: Yanteng Si <si.yanteng@linux.dev>, WANG Xuerui <kernel@xen0n.name>, 
-	Andrew Morton <akpm@linux-foundation.org>, Bibo Mao <maobibo@loongson.cn>, 
-	Hari Bathini <hbathini@linux.ibm.com>, Guo Weikang <guoweikang.kernel@gmail.com>, 
-	Sourabh Jain <sourabhjain@linux.ibm.com>, Usama Arif <usamaarif642@gmail.com>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H6bKrnDpVouriAoMUN5i26G6a+UuOGMyEj5h9kJGd6qnQ@mail.gmail.com>
 
-On Mon, Jul 7, 2025 at 6:03=E2=80=AFPM Ming Wang <wangming01@loongson.cn> w=
-rote:
->
-> Hi Yanteng, Huacai,
->
-> =E5=9C=A8 2025/7/7 10:33, Yanteng Si =E5=86=99=E9=81=93:
+On Wed, Jul 09, 2025 at 11:23:12PM +0800, Huacai Chen wrote:
+> Hi, Chenghao,
+> 
+> On Wed, Jul 9, 2025 at 1:50 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
 > >
-> > =E5=9C=A8 7/3/25 9:36 AM, Ming Wang =E5=86=99=E9=81=93:
-> >> Hi Yanteng,
-> >>
-> >> Thanks for reviewing the patch and for your insightful question.
-> >>
-> >> On 7/2/25 10:11, Yanteng Si wrote:
-> >>> =E5=9C=A8 7/1/25 5:04 PM, Ming Wang =E5=86=99=E9=81=93:
-> >>>> The LoongArch mem=3D parameter parser was previously limited to the
-> >>>> mem=3DSIZE@START format. This was inconvenient for the common use ca=
-se
-> >>>> of simply capping the total system memory, as it forced users to
-> >>>> manually specify a start address. It was also inconsistent with the
-> >>>> behavior on other architectures.
-> >>>>
-> >>>> This patch enhances the parser in early_parse_mem() to also support =
-the
-> >>>> more user-friendly mem=3DSIZE format. The implementation now checks =
-for
-> >>>> the presence of the '@' symbol to determine the user's intent:
-> >>>>
-> >>>> - If mem=3DSIZE is provided (no '@'), the kernel now calls
-> >>>>    memblock_enforce_memory_limit(). This trims memory from the top d=
-own
-> >>>>    to the specified size.
-> >>>> - If mem=3DSIZE@START is used, the original behavior is retained for
-> >>>>    backward compatibility. This allows for defining specific memory
-> >>>>    banks.
-> >>>>
-> >>>> This change introduces an important usage rule reflected in the code=
-'s
-> >>>> comments: the mem=3DSIZE format should only be specified once on the
-> >>>> kernel command line. It acts as a single, global cap on total
-> >>>> memory. In
-> >>>> contrast, the mem=3DSIZE@START format can be used multiple times to
-> >>>> define several distinct memory regions.
-> >>>>
-> >>>> Signed-off-by: Ming Wang <wangming01@loongson.cn>
-> >>>> ---
-> >>>>   arch/loongarch/kernel/setup.c | 18 ++++++++++--------
-> >>>>   1 file changed, 10 insertions(+), 8 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/
-> >>>> setup.c
-> >>>> index b99fbb388fe0..af59ba180dc2 100644
-> >>>> --- a/arch/loongarch/kernel/setup.c
-> >>>> +++ b/arch/loongarch/kernel/setup.c
-> >>>> @@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
-> >>>>           return -EINVAL;
-> >>>>       }
-> >>>> +    start =3D 0;
-> >>>> +    size =3D memparse(p, &p);
-> >>>> +    if (*p =3D=3D '@')    /* Every mem=3D... should contain '@' */
-> >>>> +        start =3D memparse(p + 1, &p);
-> >>>> +    else {            /* Only one mem=3D... is allowed if no '@' */
-> >>>> +        usermem =3D 1;
-> >>>> +        memblock_enforce_memory_limit(size);
-> >>>> +        return 0;
-> >>>> +    }
-> >>>> +
-> >>>>       /*
-> >>>>        * If a user specifies memory size, we
-> >>>>        * blow away any automatically generated
-> >>>> @@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
-> >>>>           memblock_remove(memblock_start_of_DRAM(),
-> >>>>               memblock_end_of_DRAM() - memblock_start_of_DRAM());
-> >>>>       }
-> >>>> -    start =3D 0;
-> >>>> -    size =3D memparse(p, &p);
-> >>>> -    if (*p =3D=3D '@')
-> >>>> -        start =3D memparse(p + 1, &p);
-> >>>> -    else {
-> >>>> -        pr_err("Invalid format!\n");
-> >>>> -        return -EINVAL;
-> >>>> -    }
-> >>> I don't understand. Isn't it better to modify the else{} directly her=
-e?
-> >>>
-> >> You've raised a very good point. The reason for moving the parsing
-> >> logic to the top, rather than just modifying the original else block,
-> >> is to handle the fundamentally different behaviors required for
-> >> mem=3DSIZE versus mem=3DSIZE@START. The key lies in thisexisting block=
- of
-> >> code which handles the mem=3DSIZE@START case:
-> >>
-> >> ```
-> >> /*
-> >> * If a user specifies memory size, we
-> >> * blow away any automatically generated
-> >> * size.
-> >> */
-> >> if (usermem =3D=3D 0) {
-> >>     usermem =3D 1;
-> >>     memblock_remove(memblock_start_of_DRAM(),
-> >>             memblock_end_of_DRAM() - memblock_start_of_DRAM());
-> >> }
-> >> ```
-> >>
-> >> This code is destructive. As the comment says, it "blows away" the
-> >> entire memory map discovered from the firmware (UEFI/ACPI). After this
-> >> call, memblock is essentially empty, waiting for new regions to be
-> >> added via memblock_add(). This is the correct behavior for
-> >> mem=3DSIZE@START.
-> >>
-> >> However, the new mem=3DSIZE functionality is meant to be non-
-> >> destructive. It should take the existing firmware-provided memory map
-> >> and simply trim it down to the desired size. The function
-> >> memblock_enforce_memory_limit() is designed for this purpose=E2=80=94i=
-t
-> >> operates on the current state of memblock.
-> >>
-> >> If we were to keep the parsing logic at the end and only modify the
-> >> else block, the destructive memblock_remove() call would have already
-> >> executed for both cases. By that point, calling
-> >> memblock_enforce_memory_limit() would be meaningless, as there would
-> >> be no memory regions left in memblock to limit.
-> >>
-> >> Therefore, the patch moves the parsing logic to the very beginning to
-> >> create a clean separation:
-> >> 1. It first checks if the format is mem=3DSIZE (no '@').
-> >> 2. If it is, it performs the non-destructive limit on the intact
-> >> memory map and returns immediately, completely bypassing the
-> >> destructive memblock_remove() logic.
-> >> 3. If the format is mem=3DSIZE@START, it falls through to the original
-> >> destructive path as before.
-> >
-> > I have an idea: what if we move the destructive code into the if block?
->
-> @Yanteng,
-> That's an excellent suggestion. You are right. Moving the destructive
-> memblock_remove() logic inside the if (*p =3D=3D '@') block is indeed a m=
-uch
-> cleaner way to structure the code. It improves readability by making the
-> logic for each case self-contained within a direct if/else structure.
->
-> @Huacai,
-> Yanteng proposed a great improvement to the patch structure.
->
-> ```
-> static int __init early_parse_mem(char *p)
-> {
->      // ...
->      size =3D memparse(p, &p);
->      if (*p =3D=3D '@') {
->          // Handle 'mem=3DSIZE@START'
->          // The destructive memblock_remove() goes here.
->          // ...
->          // memblock_add_node()
->      } else {
->          // Handle 'mem=3DSIZE'
->          // The non-destructive memblock_enforce_memory_limit() goes here=
-.
->      }
->      return 0;
-> }
-> ```
->
-> Before I send out a v2, I'd like to ask for your opinion on this
-> proposed change as well. Do you agree that this revised structure is the
-> better approach?
-Nested if conditions make the logic unclear, so I prefer the current patch.
+> > The bpf_jit_alloc_exec function serves as the core mechanism for BPF
+> > memory allocation, invoking execmem_alloc(EXECMEM_BPF, size) to
+> > allocate memory. This change explicitly designates the allocation space
+> > for EXECMEM_BPF.
+> Without this patch, BPF JIT is allocated from MODULES region; with
+> this patch, BPF JIT will be allocated from VMALLOC region. However,
+> BPF JIT is similar to modules that the target of direct branch
+> instruction is limited, so it should also be allocated from the
+> MODULES region.
+> 
+> So, it is better to drop this patch.
+> 
+> 
+> Huacai
 
-Huacai
+Dear Chen,
 
->
-> Best regards,
-> Ming
->
+I understand your technical considerations. Whether to keep or remove
+the current patch has no impact on trampoline, so we can drop this
+patch.
+
+Chenghao
+
+> 
+> >
+> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> > ---
+> >  arch/loongarch/mm/init.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> > index c3e4586a7..07cedd9ee 100644
+> > --- a/arch/loongarch/mm/init.c
+> > +++ b/arch/loongarch/mm/init.c
+> > @@ -239,6 +239,12 @@ struct execmem_info __init *execmem_arch_setup(void)
+> >                                 .pgprot = PAGE_KERNEL,
+> >                                 .alignment = 1,
+> >                         },
+> > +                       [EXECMEM_BPF] = {
+> > +                               .start  = VMALLOC_START,
+> > +                               .end    = VMALLOC_END,
+> > +                               .pgprot = PAGE_KERNEL,
+> > +                               .alignment = PAGE_SIZE,
+> > +                       },
+> >                 },
+> >         };
+> >
+> > --
+> > 2.43.0
 > >
 > >
-> > Thanks,
-> >
-> > Yanteng
-> >
-> >>
-> >> I hope this explanation clarifies why the code structure was changed
-> >> this way. It's crucial to ensure the non-destructive path is handled
-> >> before any memory map information is lost.
-> >>
-> >> Best regards,
-> >> Ming
-> >>
-> >>
-> >>> Thanks,
-> >>> Yanteng
-> >>>
-> >>
->
