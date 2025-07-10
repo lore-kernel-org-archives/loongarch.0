@@ -1,64 +1,49 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ECC28B50A
-	for <loongarch@lists.linux.dev>; Thu, 10 Jul 2025 08:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538CA289361;
+	Thu, 10 Jul 2025 09:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752134712; cv=none; b=vCp4A4n/qdYIVf9WW6Bi73AEnMHM9PrIcj+DK4NZtypvETrH41j+c+Jhd7uDWtCIaLZHDvgL2zmhUV2XC1B5NPCVH8hC0BmWn0yhqWTlwP0lEECqzOLoeiH0dZ+77RY7t8ooBBolhaL/XTp2Y/NQyO+jqDw6ptyJOxoivOzHqtA=
+	t=1752141395; cv=none; b=NHiJiObo3qhEyRX97NDyklzZ4f4QlmGqCzuF/npyt1MZ3jA8cVFYl9SMi+7pYO+bQ8++hX4Z1r3tjV+Dt8ZPQjL0fV1KN1xgzNVcJw+hPIQ6JkWBpVKhssBQ3BFaDT68CGJessDlhSnoSBEsatgCzGM9gfiEcAxz8piJQEARaeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752134712; c=relaxed/simple;
-	bh=Tb+EZ3y9aDFDsG7+Ypy7vKnnwnWsBm1co3MUaTtU8p4=;
+	s=arc-20240116; t=1752141395; c=relaxed/simple;
+	bh=sTi69w/mvnFptUvlqnK1ihadm1CzXakPo1pjhglo3Pk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DtOFdcehD4YXx0yVXAK22jimkh9Y+24ZK1Q0dqORPmLTdCFwYQ3D7R8+XbEqfqR9aeVLcTZUdvd+dcc3QCM3FTZQB6+x0AX5KNtKvQ/HbtjXSkkPp/rqQJw0fDdyN8cHAiEA7YSWTbxOHBbqRudtIy4MDvOm/1PGeTeMog2WmGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 937e9f185d6411f0b29709d653e92f7d-20250710
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
-	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, UD_TRUSTED
-	CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_COMM, GTI_C_CI
-	GTI_FG_IC, GTI_FG_IT, GTI_RG_INFO, GTI_C_BU, AMN_T1
-	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:e188e7e1-5ab0-4d64-9b1f-319da79ebbd8,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.45,REQID:e188e7e1-5ab0-4d64-9b1f-319da79ebbd8,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:af62fd4597cf0ba483307bfac09743a7,BulkI
-	D:250710012009YX0W5DW6,BulkQuantity:3,Recheck:0,SF:17|19|24|44|64|66|78|80
-	|81|82|83|102|841,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:1,File:nil,RT:nil,B
-	ulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
-	0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
-	TF_CID_SPAM_ULS
-X-UUID: 937e9f185d6411f0b29709d653e92f7d-20250710
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1953034910; Thu, 10 Jul 2025 16:05:00 +0800
-Date: Thu, 10 Jul 2025 16:04:56 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Vincent Li <vincent.mc.li@gmail.com>
-Cc: yangtiezhu@loongson.cn, hengqi.chen@gmail.com, chenhuacai@kernel.org,
-	kernel@xen0n.name, loongarch@lists.linux.dev, guodongtai@kylinos.cn,
-	jianghaoran@kylinos.cn
-Subject: Re: [PATCH v3 5/5] LoongArch: BPF: Add bpf trampoline support for
- Loongarch
-Message-ID: <20250710080456.GB839477@chenghao-pc>
-References: <20250709055029.723243-1-duanchenghao@kylinos.cn>
- <20250709055029.723243-6-duanchenghao@kylinos.cn>
- <CAK3+h2zyhKYjRNV+25pngfrtPQdKe6gJFbkmanBx_9Fp+C8VYw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QKw1rtnv0KvMQHQSN1kGvTMymmZrHY8wdC6QBwaw7PQV6VFrZdfmwyi3OZXN0k3yugCQkBGRZq+PTBpNdtFHyuaEfefu105ez/HZHHr2I816xAx4g0Gz4QWtUSCfhhU6iLAvqSMeMiPkMMOtN/qh27ToTGEpa9J7SGTkx8++p94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBocuiTz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBocuiTz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63C04C4CEE3;
+	Thu, 10 Jul 2025 09:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752141394;
+	bh=sTi69w/mvnFptUvlqnK1ihadm1CzXakPo1pjhglo3Pk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jBocuiTz5M2+7Oar6fiuzuh2L4AMf2Utd3jF80osqVjy3Km29pY8NKy+YyVC9EBi3
+	 pVwljKQl3bRn/ul7HsaZrGyBtPN3ETStXaGTqd/lEW7qH8qI3u0QIdkL4oRShOEHLG
+	 BJT69FlbxJfPTSW/laJvAf6dc9DEz+mzIgJ9hUFB3Pipo6hVIVv6NQsbZSosyIcGc+
+	 /EbcinV1mwrR6f8yKW3PoM5/lUSLsQz1zWDbgt9x3zI3clFjtklQS+l0QJtpfOdsWy
+	 abUQ+UkeJqekDuIIvm3VDZhEgToHgeVgiTHhgBh7yRHZPr24lI/r5EatP+P/TfgCEn
+	 LSKbsHW2J6oNA==
+Date: Thu, 10 Jul 2025 10:56:29 +0100
+From: Lee Jones <lee@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Corey Minyard <minyard@acm.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
+	kexybiscuit@aosc.io, wangyao@lemote.com,
+	Chong Qiao <qiaochong@loongson.cn>,
+	Corey Minyard <corey@minyard.net>
+Subject: Re: [PATCH v7 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core
+ driver
+Message-ID: <20250710095629.GH1431498@google.com>
+References: <cover.1751617911.git.zhoubinbin@loongson.cn>
+ <2252dbc3970264371278182ebaf7669fe77d33a2.1751617911.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,495 +53,255 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK3+h2zyhKYjRNV+25pngfrtPQdKe6gJFbkmanBx_9Fp+C8VYw@mail.gmail.com>
+In-Reply-To: <2252dbc3970264371278182ebaf7669fe77d33a2.1751617911.git.zhoubinbin@loongson.cn>
 
-On Wed, Jul 09, 2025 at 12:08:27PM -0700, Vincent Li wrote:
-> Hi Chenghao,
+On Fri, 04 Jul 2025, Binbin Zhou wrote:
+
+> The Loongson-2K Board Management Controller provides an PCIe interface
+> to the host to access the feature implemented in the BMC.
 > 
-> I removed many email recipients for my question because I don't want
-> to bother others, so you could  reply to this and not CC others who
-> may not want to be bothered.  Thanks for working on this BPF
-> trampoline feature for loongarch, I have been waiting for the bpf
-> trampoline feature for loongarch for a long time.
+> The BMC is assembled on a server similar to the server machine with
+> Loongson-3 CPU. It supports multiple sub-devices like DRM and IPMI.
 > 
+> Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> Acked-by: Corey Minyard <corey@minyard.net>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  MAINTAINERS                 |   6 ++
+>  drivers/mfd/Kconfig         |  13 +++
+>  drivers/mfd/Makefile        |   2 +
+>  drivers/mfd/ls2k-bmc-core.c | 156 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 177 insertions(+)
+>  create mode 100644 drivers/mfd/ls2k-bmc-core.c
 > 
-> On Tue, Jul 8, 2025 at 10:52 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> >
-> > BPF trampoline is the critical infrastructure of the BPF subsystem, acting
-> > as a mediator between kernel functions and BPF programs. Numerous important
-> > features, such as using BPF program for zero overhead kernel introspection,
-> > rely on this key component.
-> >
-> > The related tests have passed, Including the following technical points:
-> > 1. fentry
-> > 2. fmod_ret
-> > 3. fexit
-> >
-> 
-> My firewall project https://github.com/vincentmli/loongfire relies on
-> https://github.com/xdp-project/xdp-tools/tree/main/lib/libxdp which
-> relies on "BPF program extension" to attach multiple XDP program to
-> one single network interface. Now I can't attach multiple XDP programs
-> to one network interface through libxdp so I use bpf tail call as a
-> workaround.  I am not a kernel developer and not  familiar with the
-> kernel code so I am not sure if the "BPF program extension" is
-> automatically supported after bpf trampoline is supported for
-> loongarch, could you shed some light on this? thanks!
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0d053c45f7f9..4eb0f7b69d35 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14199,6 +14199,12 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+>  F:	drivers/thermal/loongson2_thermal.c
+>  
+> +LOONGSON-2K Board Management Controller (BMC) DRIVER
+> +M:	Binbin Zhou <zhoubinbin@loongson.cn>
+> +M:	Chong Qiao <qiaochong@loongson.cn>
+> +S:	Maintained
+> +F:	drivers/mfd/ls2k-bmc-core.c
+> +
+>  LOONGSON EDAC DRIVER
+>  M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
+>  L:	linux-edac@vger.kernel.org
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index c635790afa75..47cc8ea9d2ef 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -2400,6 +2400,19 @@ config MFD_INTEL_M10_BMC_PMCI
+>  	  additional drivers must be enabled in order to use the functionality
+>  	  of the device.
+>  
+> +config MFD_LS2K_BMC_CORE
+> +	bool "Loongson-2K Board Management Controller Support"
+> +	depends on PCI && ACPI_GENERIC_GSI
+> +	select MFD_CORE
+> +	help
+> +	  Say yes here to add support for the Loongson-2K BMC which is a Board
+> +	  Management Controller connected to the PCIe bus. The device supports
+> +	  multiple sub-devices like display and IPMI. This driver provides common
+> +	  support for accessing the devices.
+> +
+> +	  The display is enabled by default in the driver, while the IPMI interface
+> +	  is enabled independently through the IPMI_LS2K option in the IPMI section.
+> +
+>  config MFD_QNAP_MCU
+>  	tristate "QNAP microcontroller unit core driver"
+>  	depends on SERIAL_DEV_BUS
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index ca351cb0ddcc..675b4ec6ef4c 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -284,6 +284,8 @@ obj-$(CONFIG_MFD_INTEL_M10_BMC_CORE)   += intel-m10-bmc-core.o
+>  obj-$(CONFIG_MFD_INTEL_M10_BMC_SPI)    += intel-m10-bmc-spi.o
+>  obj-$(CONFIG_MFD_INTEL_M10_BMC_PMCI)   += intel-m10-bmc-pmci.o
+>  
+> +obj-$(CONFIG_MFD_LS2K_BMC_CORE)		+= ls2k-bmc-core.o
+> +
+>  obj-$(CONFIG_MFD_ATC260X)	+= atc260x-core.o
+>  obj-$(CONFIG_MFD_ATC260X_I2C)	+= atc260x-i2c.o
+>  
+> diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
+> new file mode 100644
+> index 000000000000..50d560a4611c
+> --- /dev/null
+> +++ b/drivers/mfd/ls2k-bmc-core.c
+> @@ -0,0 +1,156 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Loongson-2K Board Management Controller (BMC) Core Driver.
+> + *
+> + * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
+> + *
+> + * Authors:
+> + *	Chong Qiao <qiaochong@loongson.cn>
+> + *	Binbin Zhou <zhoubinbin@loongson.cn>
+> + */
+> +
+> +#include <linux/aperture.h>
+> +#include <linux/errno.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci_ids.h>
+> +#include <linux/platform_data/simplefb.h>
+> +#include <linux/platform_device.h>
+> +
+> +/* LS2K BMC resources */
+> +#define LS2K_DISPLAY_RES_START		(SZ_16M + SZ_2M)
+> +#define LS2K_IPMI_RES_SIZE		0x1C
+> +#define LS2K_IPMI0_RES_START		(SZ_16M + 0xF00000)
+> +#define LS2K_IPMI1_RES_START		(LS2K_IPMI0_RES_START + LS2K_IPMI_RES_SIZE)
+> +#define LS2K_IPMI2_RES_START		(LS2K_IPMI1_RES_START + LS2K_IPMI_RES_SIZE)
+> +#define LS2K_IPMI3_RES_START		(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
+> +#define LS2K_IPMI4_RES_START		(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
+> +
+> +static struct resource ls2k_display_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi0_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "ipmi0-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi1_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "ipmi1-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi2_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "ipmi2-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi3_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "ipmi3-res"),
+> +};
+> +
+> +static struct resource ls2k_ipmi4_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "ipmi4-res"),
+> +};
+> +
+> +static struct mfd_cell ls2k_bmc_cells[] = {
+> +	MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
+> +	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
+> +};
+> +
+> +/*
+> + * Currently the Loongson-2K BMC hardware does not have an I2C interface to adapt to the
+> + * resolution. We set the resolution by presetting "video=1280x1024-16@2M" to the BMC memory.
+> + */
+> +static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
+> +{
+> +	char *mode;
+> +	int depth, ret;
+> +
+> +	/* The last 16M of PCI BAR0 is used to store the resolution string. */
+> +	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
+> +	if (!mode)
+> +		return -ENOMEM;
+> +
+> +	/* The resolution field starts with the flag "video=". */
+> +	if (!strncmp(mode, "video=", 6))
+> +		mode = mode + 6;
+> +
+> +	ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pd->stride = pd->width * depth / 8;
+> +	pd->format = depth == 32 ? "a8r8g8b8" : "r5g6b5";
+> +
+> +	return 0;
+> +}
+> +
+> +static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> +{
+> +	struct simplefb_platform_data pd;
+> +	resource_size_t base;
+> +	int ret;
+> +
+> +	ret = pci_enable_device(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ls2k_bmc_parse_mode(dev, &pd);
+> +	if (ret)
+> +		goto disable_pci;
+> +
+> +	ls2k_bmc_cells[0].platform_data = &pd;
+> +	ls2k_bmc_cells[0].pdata_size = sizeof(pd);
+
+This is fragile.
+
+Please identify the elements in ls2k_bmc_cells and use it to index here.
+
+See: `static struct mfd_cell as3711_subdevs`
+
+> +	base = dev->resource[0].start + LS2K_DISPLAY_RES_START;
+> +
+> +	/* Remove conflicting efifb device */
+> +	ret = aperture_remove_conflicting_devices(base, SZ_4M, "simple-framebuffer");
+> +	if (ret) {
+> +		dev_err(&dev->dev, "Failed to removed firmware framebuffers: %d\n", ret);
+> +		goto disable_pci;
+> +	}
+> +
+> +	return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
+> +				    ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_cells),
+> +				    &dev->resource[0], 0, NULL);
+> +
+> +disable_pci:
+> +	pci_disable_device(dev);
+> +	return ret;
+> +}
+> +
+> +static void ls2k_bmc_remove(struct pci_dev *dev)
+> +{
+> +	pci_disable_device(dev);
+> +}
+> +
+> +static struct pci_device_id ls2k_bmc_devices[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
+> +
+> +static struct pci_driver ls2k_bmc_driver = {
+> +	.name = "ls2k-bmc",
+> +	.id_table = ls2k_bmc_devices,
+> +	.probe = ls2k_bmc_probe,
+> +	.remove = ls2k_bmc_remove,
+> +};
+> +module_pci_driver(ls2k_bmc_driver);
+> +
+> +MODULE_DESCRIPTION("Loongson-2K Board Management Controller (BMC) Core driver");
+> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.47.1
 > 
 
-Hi Vincent,
-
-I sincerely apologize, but I'm not quite sure about the specific
-scenarios where the "BPF Program Extension" you mentioned is applied.
-The trampoline feature allows multiple BPF programs to be attached to
-the fentry/fexit points of kernel functions at runtime. I'm not sure if
-this aligns with your technical approach.
-
-Chenghao
-
-> > Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> > ---
-> >  arch/loongarch/net/bpf_jit.c | 391 +++++++++++++++++++++++++++++++++++
-> >  arch/loongarch/net/bpf_jit.h |   6 +
-> >  2 files changed, 397 insertions(+)
-> >
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> > index 9cb01f0b0..6820558af 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -7,6 +7,10 @@
-> >  #include <linux/memory.h>
-> >  #include "bpf_jit.h"
-> >
-> > +#define LOONGARCH_MAX_REG_ARGS 8
-> > +#define LOONGARCH_FENTRY_NINSNS 2
-> > +#define LOONGARCH_FENTRY_NBYTES (LOONGARCH_FENTRY_NINSNS * 4)
-> > +
-> >  #define REG_TCC                LOONGARCH_GPR_A6
-> >  #define TCC_SAVED      LOONGARCH_GPR_S5
-> >
-> > @@ -1400,6 +1404,16 @@ static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_call)
-> >                                   (unsigned long)ip, (unsigned long)target);
-> >  }
-> >
-> > +static int emit_call(struct jit_ctx *ctx, u64 addr)
-> > +{
-> > +       u64 ip;
-> > +
-> > +       if (addr && ctx->image && ctx->ro_image)
-> > +               ip = (u64)(ctx->image + ctx->idx);
-> > +
-> > +       return emit_jump_and_link(ctx, LOONGARCH_GPR_RA, ip, addr);
-> > +}
-> > +
-> >  int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
-> >                        void *old_addr, void *new_addr)
-> >  {
-> > @@ -1457,3 +1471,380 @@ void *bpf_arch_text_copy(void *dst, void *src, size_t len)
-> >
-> >         return dst;
-> >  }
-> > +
-> > +static void store_args(struct jit_ctx *ctx, int nargs, int args_off)
-> > +{
-> > +       int i;
-> > +
-> > +       for (i = 0; i < nargs; i++) {
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_off);
-> > +               args_off -= 8;
-> > +       }
-> > +}
-> > +
-> > +static void restore_args(struct jit_ctx *ctx, int nargs, int args_off)
-> > +{
-> > +       int i;
-> > +
-> > +       for (i = 0; i < nargs; i++) {
-> > +               emit_insn(ctx, ldd, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_off);
-> > +               args_off -= 8;
-> > +       }
-> > +}
-> > +
-> > +static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
-> > +                          int args_off, int retval_off,
-> > +                          int run_ctx_off, bool save_ret)
-> > +{
-> > +       int ret;
-> > +       u32 *branch;
-> > +       struct bpf_prog *p = l->link.prog;
-> > +       int cookie_off = offsetof(struct bpf_tramp_run_ctx, bpf_cookie);
-> > +
-> > +       if (l->cookie) {
-> > +               move_imm(ctx, LOONGARCH_GPR_T1, l->cookie, false);
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -run_ctx_off + cookie_off);
-> > +       } else {
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP,
-> > +                         -run_ctx_off + cookie_off);
-> > +       }
-> > +
-> > +       /* arg1: prog */
-> > +       move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, false);
-> > +       /* arg2: &run_ctx */
-> > +       emit_insn(ctx, addid, LOONGARCH_GPR_A1, LOONGARCH_GPR_FP, -run_ctx_off);
-> > +       ret = emit_call(ctx, (const u64)bpf_trampoline_enter(p));
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       /* store prog start time */
-> > +       move_reg(ctx, LOONGARCH_GPR_S1, LOONGARCH_GPR_A0);
-> > +
-> > +       /* if (__bpf_prog_enter(prog) == 0)
-> > +        *      goto skip_exec_of_prog;
-> > +        *
-> > +        */
-> > +       branch = (u32 *)ctx->image + ctx->idx;
-> > +       /* nop reserved for conditional jump */
-> > +       emit_insn(ctx, nop);
-> > +
-> > +       /* arg1: &args_off */
-> > +       emit_insn(ctx, addid, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -args_off);
-> > +       if (!p->jited)
-> > +               move_imm(ctx, LOONGARCH_GPR_A1, (const s64)p->insnsi, false);
-> > +       ret = emit_call(ctx, (const u64)p->bpf_func);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       if (save_ret) {
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-> > +               emit_insn(ctx, std, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-> > +       }
-> > +
-> > +       /* update branch with beqz */
-> > +       if (ctx->image) {
-> > +               int offset = (void *)(&ctx->image[ctx->idx]) - (void *)branch;
-> > +               *branch = larch_insn_gen_beq(LOONGARCH_GPR_A0, LOONGARCH_GPR_ZERO, offset);
-> > +       }
-> > +
-> > +       /* arg1: prog */
-> > +       move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, false);
-> > +       /* arg2: prog start time */
-> > +       move_reg(ctx, LOONGARCH_GPR_A1, LOONGARCH_GPR_S1);
-> > +       /* arg3: &run_ctx */
-> > +       emit_insn(ctx, addid, LOONGARCH_GPR_A2, LOONGARCH_GPR_FP, -run_ctx_off);
-> > +       ret = emit_call(ctx, (const u64)bpf_trampoline_exit(p));
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static void invoke_bpf_mod_ret(struct jit_ctx *ctx, struct bpf_tramp_links *tl,
-> > +                              int args_off, int retval_off, int run_ctx_off, u32 **branches)
-> > +{
-> > +       int i;
-> > +
-> > +       emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -retval_off);
-> > +       for (i = 0; i < tl->nr_links; i++) {
-> > +               invoke_bpf_prog(ctx, tl->links[i], args_off, retval_off,
-> > +                               run_ctx_off, true);
-> > +               emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -retval_off);
-> > +               branches[i] = (u32 *)ctx->image + ctx->idx;
-> > +               emit_insn(ctx, nop);
-> > +       }
-> > +}
-> > +
-> > +u64 bpf_jit_alloc_exec_limit(void)
-> > +{
-> > +       return VMALLOC_END - VMALLOC_START;
-> > +}
-> > +
-> > +void *arch_alloc_bpf_trampoline(unsigned int size)
-> > +{
-> > +       return bpf_prog_pack_alloc(size, jit_fill_hole);
-> > +}
-> > +
-> > +void arch_free_bpf_trampoline(void *image, unsigned int size)
-> > +{
-> > +       bpf_prog_pack_free(image, size);
-> > +}
-> > +
-> > +static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
-> > +                                        const struct btf_func_model *m,
-> > +                                        struct bpf_tramp_links *tlinks,
-> > +                                        void *func_addr, u32 flags)
-> > +{
-> > +       int i;
-> > +       int stack_size = 0, nargs = 0;
-> > +       int retval_off, args_off, nargs_off, ip_off, run_ctx_off, sreg_off;
-> > +       struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
-> > +       struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
-> > +       struct bpf_tramp_links *fmod_ret = &tlinks[BPF_TRAMP_MODIFY_RETURN];
-> > +       int ret, save_ret;
-> > +       void *orig_call = func_addr;
-> > +       u32 **branches = NULL;
-> > +
-> > +       if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIFY))
-> > +               return -ENOTSUPP;
-> > +
-> > +       /*
-> > +        * FP + 8       [ RA to parent func ] return address to parent
-> > +        *                    function
-> > +        * FP + 0       [ FP of parent func ] frame pointer of parent
-> > +        *                    function
-> > +        * FP - 8       [ T0 to traced func ] return address of traced
-> > +        *                    function
-> > +        * FP - 16      [ FP of traced func ] frame pointer of traced
-> > +        *                    function
-> > +        *
-> > +        * FP - retval_off  [ return value      ] BPF_TRAMP_F_CALL_ORIG or
-> > +        *                    BPF_TRAMP_F_RET_FENTRY_RET
-> > +        *                  [ argN              ]
-> > +        *                  [ ...               ]
-> > +        * FP - args_off    [ arg1              ]
-> > +        *
-> > +        * FP - nargs_off   [ regs count        ]
-> > +        *
-> > +        * FP - ip_off      [ traced func   ] BPF_TRAMP_F_IP_ARG
-> > +        *
-> > +        * FP - run_ctx_off [ bpf_tramp_run_ctx ]
-> > +        *
-> > +        * FP - sreg_off    [ callee saved reg  ]
-> > +        *
-> > +        */
-> > +
-> > +       if (m->nr_args > LOONGARCH_MAX_REG_ARGS)
-> > +               return -ENOTSUPP;
-> > +
-> > +       if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIFY))
-> > +               return -ENOTSUPP;
-> > +
-> > +       stack_size = 0;
-> > +
-> > +       /* room of trampoline frame to store return address and frame pointer */
-> > +       stack_size += 16;
-> > +
-> > +       save_ret = flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_FENTRY_RET);
-> > +       if (save_ret) {
-> > +               /* Save BPF R0 and A0 */
-> > +               stack_size += 16;
-> > +               retval_off = stack_size;
-> > +       }
-> > +
-> > +       /* room of trampoline frame to store args */
-> > +       nargs = m->nr_args;
-> > +       stack_size += nargs * 8;
-> > +       args_off = stack_size;
-> > +
-> > +       /* room of trampoline frame to store args number */
-> > +       stack_size += 8;
-> > +       nargs_off = stack_size;
-> > +
-> > +       /* room of trampoline frame to store ip address */
-> > +       if (flags & BPF_TRAMP_F_IP_ARG) {
-> > +               stack_size += 8;
-> > +               ip_off = stack_size;
-> > +       }
-> > +
-> > +       /* room of trampoline frame to store struct bpf_tramp_run_ctx */
-> > +       stack_size += round_up(sizeof(struct bpf_tramp_run_ctx), 8);
-> > +       run_ctx_off = stack_size;
-> > +
-> > +       stack_size += 8;
-> > +       sreg_off = stack_size;
-> > +
-> > +       stack_size = round_up(stack_size, 16);
-> > +
-> > +       /* For the trampoline called from function entry */
-> > +       /* RA and FP for parent function*/
-> > +       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
-> > +       emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> > +       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> > +       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
-> > +
-> > +       /* RA and FP for traced function*/
-> > +       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-> > +       emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-> > +       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-> > +       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-> > +
-> > +       /* callee saved register S1 to pass start time */
-> > +       emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-> > +
-> > +       /* store ip address of the traced function */
-> > +       if (flags & BPF_TRAMP_F_IP_ARG) {
-> > +               move_imm(ctx, LOONGARCH_GPR_T1, (const s64)func_addr, false);
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -ip_off);
-> > +       }
-> > +
-> > +       /* store nargs number*/
-> > +       move_imm(ctx, LOONGARCH_GPR_T1, nargs, false);
-> > +       emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -nargs_off);
-> > +
-> > +       store_args(ctx, nargs, args_off);
-> > +
-> > +       /* To traced function */
-> > +       orig_call += LOONGARCH_FENTRY_NBYTES;
-> > +       if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> > +               move_imm(ctx, LOONGARCH_GPR_A0, (const s64)im, false);
-> > +               ret = emit_call(ctx, (const u64)__bpf_tramp_enter);
-> > +               if (ret)
-> > +                       return ret;
-> > +       }
-> > +
-> > +       for (i = 0; i < fentry->nr_links; i++) {
-> > +               ret = invoke_bpf_prog(ctx, fentry->links[i], args_off, retval_off,
-> > +                                     run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY_RET);
-> > +               if (ret)
-> > +                       return ret;
-> > +       }
-> > +       if (fmod_ret->nr_links) {
-> > +               branches  = kcalloc(fmod_ret->nr_links, sizeof(u32 *), GFP_KERNEL);
-> > +               if (!branches)
-> > +                       return -ENOMEM;
-> > +
-> > +               invoke_bpf_mod_ret(ctx, fmod_ret, args_off, retval_off,
-> > +                                  run_ctx_off, branches);
-> > +       }
-> > +
-> > +       if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> > +               restore_args(ctx, m->nr_args, args_off);
-> > +               ret = emit_call(ctx, (const u64)orig_call);
-> > +               if (ret)
-> > +                       goto out;
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-> > +               emit_insn(ctx, std, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-> > +               im->ip_after_call = ctx->ro_image + ctx->idx;
-> > +               /* Reserve space for the move_imm + jirl instruction */
-> > +               emit_insn(ctx, nop);
-> > +               emit_insn(ctx, nop);
-> > +               emit_insn(ctx, nop);
-> > +               emit_insn(ctx, nop);
-> > +               emit_insn(ctx, nop);
-> > +       }
-> > +
-> > +       for (i = 0; ctx->image && i < fmod_ret->nr_links; i++) {
-> > +               int offset = (void *)(&ctx->image[ctx->idx]) - (void *)branches[i];
-> > +               *branches[i] = larch_insn_gen_bne(LOONGARCH_GPR_T1, LOONGARCH_GPR_ZERO, offset);
-> > +       }
-> > +
-> > +       for (i = 0; i < fexit->nr_links; i++) {
-> > +               ret = invoke_bpf_prog(ctx, fexit->links[i], args_off, retval_off,
-> > +                                     run_ctx_off, false);
-> > +               if (ret)
-> > +                       goto out;
-> > +       }
-> > +
-> > +       if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> > +               im->ip_epilogue = ctx->ro_image + ctx->idx;
-> > +               move_imm(ctx, LOONGARCH_GPR_A0, (const s64)im, false);
-> > +               ret = emit_call(ctx, (const u64)__bpf_tramp_exit);
-> > +               if (ret)
-> > +                       goto out;
-> > +       }
-> > +
-> > +       if (flags & BPF_TRAMP_F_RESTORE_REGS)
-> > +               restore_args(ctx, m->nr_args, args_off);
-> > +
-> > +       if (save_ret) {
-> > +               emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-> > +               emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-> > +       }
-> > +
-> > +       emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-> > +
-> > +       /* trampoline called from function entry */
-> > +       emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-> > +       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-> > +       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-> > +
-> > +       emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> > +       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> > +       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
-> > +
-> > +       if (flags & BPF_TRAMP_F_SKIP_FRAME)
-> > +               /* return to parent function */
-> > +               emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
-> > +       else
-> > +               /* return to traced function */
-> > +               emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-> > +
-> > +       ret = ctx->idx;
-> > +out:
-> > +       kfree(branches);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *ro_image,
-> > +                               void *ro_image_end, const struct btf_func_model *m,
-> > +                               u32 flags, struct bpf_tramp_links *tlinks,
-> > +                               void *func_addr)
-> > +{
-> > +       int ret;
-> > +       void *image, *tmp;
-> > +       u32 size = ro_image_end - ro_image;
-> > +
-> > +       image = kvmalloc(size, GFP_KERNEL);
-> > +       if (!image)
-> > +               return -ENOMEM;
-> > +
-> > +       struct jit_ctx ctx = {
-> > +               .image = (union loongarch_instruction *)image,
-> > +               .ro_image = (union loongarch_instruction *)ro_image,
-> > +               .idx = 0,
-> > +       };
-> > +
-> > +       jit_fill_hole(image, (unsigned int)(ro_image_end - ro_image));
-> > +       ret = __arch_prepare_bpf_trampoline(&ctx, im, m, tlinks, func_addr, flags);
-> > +       if (ret > 0 && validate_code(&ctx) < 0) {
-> > +               ret = -EINVAL;
-> > +               goto out;
-> > +       }
-> > +
-> > +       tmp = bpf_arch_text_copy(ro_image, image, size);
-> > +       if (IS_ERR(tmp)) {
-> > +               ret = PTR_ERR(tmp);
-> > +               goto out;
-> > +       }
-> > +
-> > +       bpf_flush_icache(ro_image, ro_image_end);
-> > +out:
-> > +       kvfree(image);
-> > +       return ret < 0 ? ret : size;
-> > +}
-> > +
-> > +int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
-> > +                            struct bpf_tramp_links *tlinks, void *func_addr)
-> > +{
-> > +       struct bpf_tramp_image im;
-> > +       struct jit_ctx ctx;
-> > +       int ret;
-> > +
-> > +       ctx.image = NULL;
-> > +       ctx.idx = 0;
-> > +
-> > +       ret = __arch_prepare_bpf_trampoline(&ctx, &im, m, tlinks, func_addr, flags);
-> > +
-> > +       /* Page align */
-> > +       return ret < 0 ? ret : round_up(ret * LOONGARCH_INSN_SIZE, PAGE_SIZE);
-> > +}
-> > diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-> > index f9c569f53..5697158fd 100644
-> > --- a/arch/loongarch/net/bpf_jit.h
-> > +++ b/arch/loongarch/net/bpf_jit.h
-> > @@ -18,6 +18,7 @@ struct jit_ctx {
-> >         u32 *offset;
-> >         int num_exentries;
-> >         union loongarch_instruction *image;
-> > +       union loongarch_instruction *ro_image;
-> >         u32 stack_size;
-> >  };
-> >
-> > @@ -308,3 +309,8 @@ static inline int emit_tailcall_jmp(struct jit_ctx *ctx, u8 cond, enum loongarch
-> >
-> >         return -EINVAL;
-> >  }
-> > +
-> > +static inline void bpf_flush_icache(void *start, void *end)
-> > +{
-> > +       flush_icache_range((unsigned long)start, (unsigned long)end);
-> > +}
-> > --
-> > 2.43.0
-> >
-> >
+-- 
+Lee Jones [李琼斯]
