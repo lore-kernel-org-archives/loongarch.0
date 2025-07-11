@@ -1,188 +1,419 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9BE225D7
-	for <loongarch@lists.linux.dev>; Fri, 11 Jul 2025 02:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3331F4CA1
+	for <loongarch@lists.linux.dev>; Fri, 11 Jul 2025 07:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752201088; cv=none; b=k3gGYhEckBoLm9zTI6mdDBAwi03rgnckC9o16DBO009sXKLfpYpAswpT0p+Q1Eu3u+SK8yMi3Uq8/1l0KJAyN0TJEWUz+0U5W2t1b73ZR5hTxURyLgf5C0X67pHz+z5dig4rYUXWIKxNZaO3JiwppK9fzEK3Vpek5q0riuKLEBE=
+	t=1752218267; cv=none; b=i16ZOPtGZjJSqUmQicsboa6JdtSXz9/xtBisM6Oo8XUV6VQhgkMoxakZcCqIy8Kg6gExGLotEnAl4VWpnxloa3XCNMnYapO84Pu5CXChS7UELI892A1rXVleEt870XY3aDpoJ/jEoEK9yXb4BFHXOvDXpfmPfZz5ZcBx8y0Pe1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752201088; c=relaxed/simple;
-	bh=1H7MhhPsRYIi3B2WvPg7/QFrezoDYvrrBJBrddaWH/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFw1bQxSaXmidxgXYPQAWxoljpEd0WzWPxc/ZdHXUDZfkybxwnd/qPmTpcjZwX4mQsuxyZZTnOrejimpxKoEEei2qG+LGnfPqZdIuoXVLbmKzSwKMvzZwEndfb8dPmlNYiqTJsGL6PGCjztKMgwmZJEDweh6B5rOxMpJ2epv3Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=e65/0Cdq; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1752218267; c=relaxed/simple;
+	bh=dU4Vxam6tmkoZD8X1nSniMjs5bLfpB3d6bX1PPf30bA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PF3bpsQO+siRF40iskd9qjhy/aRSryZIkl6YUEsnABeFVfMUC0FWxWSWPsY+UwtvQzzgPU7Qpw3wfNxrDXzM18dEKmyEgCDLtDI1p9B/la0dgI9lxN70DomYbtc3lxRP9egJUyesaom6fjWOoLTRqjQ+Jjb/mnQbmFO3wezk30s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ge3p5Tw7; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="e65/0Cdq"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id A796B207A3;
-	Fri, 11 Jul 2025 04:31:23 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id nd2XZagNVK2w; Fri, 11 Jul 2025 04:31:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1752201082; bh=1H7MhhPsRYIi3B2WvPg7/QFrezoDYvrrBJBrddaWH/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=e65/0CdqgXBqH3SXxJ+7OS9YEV2xg+rDLMIRey+xXyVv6EHaA+T14aue9BeiEIBi8
-	 uoGa7TyaiUR8IcPQVeGGHZFtuJiyyGL7S1m9DQVcPo81uV0ZEgAFWEly/3sTI0k53i
-	 v8/5PquQTmb82voUxyrnoYxf0H53FfNdzUUNAMreVowKw7qaK9kK6YwC8tPUerbub3
-	 uvSagapy8Gy33k63uVANzdDSiju5rr4gRAZ1qTzo1Q0pAN7qVC9plxLPPiYZelnhkd
-	 BQKoiViszZYTS37UsY1w3cpZKty5JBM0m9eS2jt3LsCJZVegL/YGJ56pLHyhE1W7mz
-	 KqsgN3jYbJI6w==
-Date: Fri, 11 Jul 2025 02:31:07 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH v2 1/8] dt-bindings: clock: loongson2: Add Loongson
- 2K0300 compatible
-Message-ID: <aHB3Wvu-CVlYzhU7@pie.lan>
-References: <20250617162426.12629-1-ziyao@disroot.org>
- <20250617162426.12629-2-ziyao@disroot.org>
- <20250627-gay-sepia-reindeer-2fde2a@krzk-bin>
- <aF6FtaNB6XgkvUX7@pie>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ge3p5Tw7"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae361e8ec32so315010366b.3
+        for <loongarch@lists.linux.dev>; Fri, 11 Jul 2025 00:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752218263; x=1752823063; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IWRc5pUaNh1O18bIqLW+j9CFRqzEifECzt47ktcRodQ=;
+        b=ge3p5Tw74HIK2570cdVlKJs4IkUSd3bs7TExoLf9WbuM1HK0BkuMrSrY6nX4SabqZt
+         6M0R8nANLk5sZGNfBM3I9W2CItNAqGTUJuqgIAfGxqEpa7qpeXi/skOWk85qv5qoqpc8
+         a82Z5i+KV1rWE8bzyhitZ+NmM8FdV2+9R+ov5qOdBe089sBoeSe2h8flwT1juaXlzPpA
+         9r1/V6rv5JX6LiXH8HloajshYu1jJD7wGwaOzXvBrW/hyGJ0NIMzu9zUBNb5znaIPtGQ
+         zkChfun83I9TZimuTy3wL8juWyVQLqOAeliLQWr+sfB1EFii9zUpaAjTAH32Hj+w0gTc
+         PhwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752218263; x=1752823063;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IWRc5pUaNh1O18bIqLW+j9CFRqzEifECzt47ktcRodQ=;
+        b=wsBdx53jPLlDrEPZ+os1WxguJPAR29KwgxAaWK8Xs3S4nTq6G85fzRsDYcq4AuOUCC
+         yGN3DBRCD2ZMILxGg1Ku+8vV8XWBljucq1EUvFlkoQpZ12bwVsTxaG/1rEGig/16Alap
+         IkfbBgi0dgqQZrgUXVXQ0109jdlYM1pUhS481VYxKs7xK0J1Tv2juDowq9KZ4w1vhXwo
+         HcWYElELXryykczgHjzO5HRtCyo6lx8wd3PInRshFWukheDnE3YYrmI0R4Z1oSP5KJa7
+         tLyK/6iCC+ixmuv6YyFShR0TrTLTN1KGPup2FqSbK7VNUWyRQTf8Ky8+nFUTGOejAFZe
+         uHhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPeNEw8EVUNvk/SrPmDYyDMxGg2UQRY8+xKkahb73Lwnva2vMpWiGy0+wg7i6Kxj9q2lSBMz32PiI=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy4K2oDg+/V0G7IJySvktrBMSi5feVn7zuXpX5cfCOq+SDgV38l
+	oP14kaxxQ01qKVgWvMSxWk8K/gc6jrqXxEraS1BO1pdA83F7LGWiLbOTqDgYqos93LeoQqsJrDD
+	3vja5Icno4yXqSB7cb4Sg8SodEEXOhew=
+X-Gm-Gg: ASbGncvC5ZxjDcrqnT60Ez4xUleUyH5eV56Jjl5fOJtCYKAoDFB+13bOG9RcUHEtNwg
+	IW1Qpxj0dqO2hINIE1crxiY8pu0TcGCMz8aCguq8XCDWB1DSjne6gs++Y1fEMgBU5VUS2h6Z/Hd
+	GxYg8I7IjWAp4m0zWhVlf1VZoTkXlKjpE0Wav6WjZYv3M0FDWKeJqpy68L5PUUEHxF93xRJSFBX
+	n4iog==
+X-Google-Smtp-Source: AGHT+IHpIX9V+TL1u6+R9yWg+ZCeKBpZavHgn72lKb+rrxX31vfCXHH6f7B8zJ2+gniGek6+ENa85LfXb8mZT1E9/nI=
+X-Received: by 2002:a17:907:7b85:b0:ad5:5210:749c with SMTP id
+ a640c23a62f3a-ae70114a7d3mr144281366b.22.1752218262693; Fri, 11 Jul 2025
+ 00:17:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF6FtaNB6XgkvUX7@pie>
+References: <cover.1751617911.git.zhoubinbin@loongson.cn> <2252dbc3970264371278182ebaf7669fe77d33a2.1751617911.git.zhoubinbin@loongson.cn>
+ <20250710095629.GH1431498@google.com>
+In-Reply-To: <20250710095629.GH1431498@google.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Fri, 11 Jul 2025 15:17:29 +0800
+X-Gm-Features: Ac12FXyIj0PwTUdVcCo8GXPss6ZgMJPK6x5QPnR5rXAlwgg3Tj8tn_RVWkZ4FUQ
+Message-ID: <CAMpQs4JccEmMAguB92jQriwD65Ra+hQKMZnjAsWhNOKhN_Om7A@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+To: Lee Jones <lee@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io, 
+	kexybiscuit@aosc.io, wangyao@lemote.com, Chong Qiao <qiaochong@loongson.cn>, 
+	Corey Minyard <corey@minyard.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 11:52:41AM +0000, Yao Zi wrote:
-> On Fri, Jun 27, 2025 at 10:03:53AM +0200, Krzysztof Kozlowski wrote:
-> > On Tue, Jun 17, 2025 at 04:24:19PM +0000, Yao Zi wrote:
-> > > Document the clock controller shipped in Loongson 2K0300 SoC, which
-> > > generates various clock signals for SoC peripherals.
-> > > 
-> > > Differing from previous generations of SoCs, 2K0300 requires a 120MHz
-> > > external clock input, and a separate dt-binding header is used for
-> > > cleanness.
-> > > 
-> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > ---
-> > >  .../bindings/clock/loongson,ls2k-clk.yaml     | 26 ++++++---
-> > >  MAINTAINERS                                   |  1 +
-> > >  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
-> > >  3 files changed, 75 insertions(+), 6 deletions(-)
-> > >  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> > > index 4f79cdb417ab..3e0a894cfb2f 100644
-> > > --- a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> > > +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> > > @@ -16,6 +16,7 @@ description: |
-> > >  properties:
-> > >    compatible:
-> > >      enum:
-> > > +      - loongson,ls2k0300-clk
-> > >        - loongson,ls2k0500-clk
-> > >        - loongson,ls2k-clk  # This is for Loongson-2K1000
-> > >        - loongson,ls2k2000-clk
-> > > @@ -24,19 +25,32 @@ properties:
-> > >      maxItems: 1
-> > >  
-> > >    clocks:
-> > > -    items:
-> > > -      - description: 100m ref
-> > > +    maxItems: 1
-> > >  
-> > > -  clock-names:
-> > > -    items:
-> > > -      - const: ref_100m
-> > > +  clock-names: true
-> > 
-> > No. How does this implement my comment?
+Hi Lee:
 
-Hi Krzysztof,
+Thanks for your review.
 
-> I'm sorry that I forgot about the suggestion of dropping clock-names for
-> the new compatible.
-> 
-> Is it acceptable to remove the description of clocks property, keep
-> clock-names property as-is, and use an allOf block to disallow
-> clocks-names for the new 2K0300 compatible? Thanks for your explanation.
+On Thu, Jul 10, 2025 at 5:56=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
+>
+> On Fri, 04 Jul 2025, Binbin Zhou wrote:
+>
+> > The Loongson-2K Board Management Controller provides an PCIe interface
+> > to the host to access the feature implemented in the BMC.
+> >
+> > The BMC is assembled on a server similar to the server machine with
+> > Loongson-3 CPU. It supports multiple sub-devices like DRM and IPMI.
+> >
+> > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+> > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+> > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > Acked-by: Corey Minyard <corey@minyard.net>
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  MAINTAINERS                 |   6 ++
+> >  drivers/mfd/Kconfig         |  13 +++
+> >  drivers/mfd/Makefile        |   2 +
+> >  drivers/mfd/ls2k-bmc-core.c | 156 ++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 177 insertions(+)
+> >  create mode 100644 drivers/mfd/ls2k-bmc-core.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 0d053c45f7f9..4eb0f7b69d35 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14199,6 +14199,12 @@ S:   Maintained
+> >  F:   Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.y=
+aml
+> >  F:   drivers/thermal/loongson2_thermal.c
+> >
+> > +LOONGSON-2K Board Management Controller (BMC) DRIVER
+> > +M:   Binbin Zhou <zhoubinbin@loongson.cn>
+> > +M:   Chong Qiao <qiaochong@loongson.cn>
+> > +S:   Maintained
+> > +F:   drivers/mfd/ls2k-bmc-core.c
+> > +
+> >  LOONGSON EDAC DRIVER
+> >  M:   Zhao Qunqin <zhaoqunqin@loongson.cn>
+> >  L:   linux-edac@vger.kernel.org
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index c635790afa75..47cc8ea9d2ef 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -2400,6 +2400,19 @@ config MFD_INTEL_M10_BMC_PMCI
+> >         additional drivers must be enabled in order to use the function=
+ality
+> >         of the device.
+> >
+> > +config MFD_LS2K_BMC_CORE
+> > +     bool "Loongson-2K Board Management Controller Support"
+> > +     depends on PCI && ACPI_GENERIC_GSI
+> > +     select MFD_CORE
+> > +     help
+> > +       Say yes here to add support for the Loongson-2K BMC which is a =
+Board
+> > +       Management Controller connected to the PCIe bus. The device sup=
+ports
+> > +       multiple sub-devices like display and IPMI. This driver provide=
+s common
+> > +       support for accessing the devices.
+> > +
+> > +       The display is enabled by default in the driver, while the IPMI=
+ interface
+> > +       is enabled independently through the IPMI_LS2K option in the IP=
+MI section.
+> > +
+> >  config MFD_QNAP_MCU
+> >       tristate "QNAP microcontroller unit core driver"
+> >       depends on SERIAL_DEV_BUS
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index ca351cb0ddcc..675b4ec6ef4c 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -284,6 +284,8 @@ obj-$(CONFIG_MFD_INTEL_M10_BMC_CORE)   +=3D intel-m=
+10-bmc-core.o
+> >  obj-$(CONFIG_MFD_INTEL_M10_BMC_SPI)    +=3D intel-m10-bmc-spi.o
+> >  obj-$(CONFIG_MFD_INTEL_M10_BMC_PMCI)   +=3D intel-m10-bmc-pmci.o
+> >
+> > +obj-$(CONFIG_MFD_LS2K_BMC_CORE)              +=3D ls2k-bmc-core.o
+> > +
+> >  obj-$(CONFIG_MFD_ATC260X)    +=3D atc260x-core.o
+> >  obj-$(CONFIG_MFD_ATC260X_I2C)        +=3D atc260x-i2c.o
+> >
+> > diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
+> > new file mode 100644
+> > index 000000000000..50d560a4611c
+> > --- /dev/null
+> > +++ b/drivers/mfd/ls2k-bmc-core.c
+> > @@ -0,0 +1,156 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Loongson-2K Board Management Controller (BMC) Core Driver.
+> > + *
+> > + * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
+> > + *
+> > + * Authors:
+> > + *   Chong Qiao <qiaochong@loongson.cn>
+> > + *   Binbin Zhou <zhoubinbin@loongson.cn>
+> > + */
+> > +
+> > +#include <linux/aperture.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/init.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/mfd/core.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/pci_ids.h>
+> > +#include <linux/platform_data/simplefb.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +/* LS2K BMC resources */
+> > +#define LS2K_DISPLAY_RES_START               (SZ_16M + SZ_2M)
+> > +#define LS2K_IPMI_RES_SIZE           0x1C
+> > +#define LS2K_IPMI0_RES_START         (SZ_16M + 0xF00000)
+> > +#define LS2K_IPMI1_RES_START         (LS2K_IPMI0_RES_START + LS2K_IPMI=
+_RES_SIZE)
+> > +#define LS2K_IPMI2_RES_START         (LS2K_IPMI1_RES_START + LS2K_IPMI=
+_RES_SIZE)
+> > +#define LS2K_IPMI3_RES_START         (LS2K_IPMI2_RES_START + LS2K_IPMI=
+_RES_SIZE)
+> > +#define LS2K_IPMI4_RES_START         (LS2K_IPMI3_RES_START + LS2K_IPMI=
+_RES_SIZE)
+> > +
+> > +static struct resource ls2k_display_resources[] =3D {
+> > +     DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-re=
+s"),
+> > +};
+> > +
+> > +static struct resource ls2k_ipmi0_resources[] =3D {
+> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "i=
+pmi0-res"),
+> > +};
+> > +
+> > +static struct resource ls2k_ipmi1_resources[] =3D {
+> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "i=
+pmi1-res"),
+> > +};
+> > +
+> > +static struct resource ls2k_ipmi2_resources[] =3D {
+> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "i=
+pmi2-res"),
+> > +};
+> > +
+> > +static struct resource ls2k_ipmi3_resources[] =3D {
+> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "i=
+pmi3-res"),
+> > +};
+> > +
+> > +static struct resource ls2k_ipmi4_resources[] =3D {
+> > +     DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "i=
+pmi4-res"),
+> > +};
+> > +
+> > +static struct mfd_cell ls2k_bmc_cells[] =3D {
+> > +     MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
+> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
+> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
+> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
+> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
+> > +     MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
+> > +};
+> > +
+> > +/*
+> > + * Currently the Loongson-2K BMC hardware does not have an I2C interfa=
+ce to adapt to the
+> > + * resolution. We set the resolution by presetting "video=3D1280x1024-=
+16@2M" to the BMC memory.
+> > + */
+> > +static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_p=
+latform_data *pd)
+> > +{
+> > +     char *mode;
+> > +     int depth, ret;
+> > +
+> > +     /* The last 16M of PCI BAR0 is used to store the resolution strin=
+g. */
+> > +     mode =3D devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + S=
+Z_16M, SZ_16M);
+> > +     if (!mode)
+> > +             return -ENOMEM;
+> > +
+> > +     /* The resolution field starts with the flag "video=3D". */
+> > +     if (!strncmp(mode, "video=3D", 6))
+> > +             mode =3D mode + 6;
+> > +
+> > +     ret =3D kstrtoint(strsep(&mode, "x"), 10, &pd->width);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D kstrtoint(strsep(&mode, "-"), 10, &pd->height);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D kstrtoint(strsep(&mode, "@"), 10, &depth);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     pd->stride =3D pd->width * depth / 8;
+> > +     pd->format =3D depth =3D=3D 32 ? "a8r8g8b8" : "r5g6b5";
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device=
+_id *id)
+> > +{
+> > +     struct simplefb_platform_data pd;
+> > +     resource_size_t base;
+> > +     int ret;
+> > +
+> > +     ret =3D pci_enable_device(dev);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D ls2k_bmc_parse_mode(dev, &pd);
+> > +     if (ret)
+> > +             goto disable_pci;
+> > +
+> > +     ls2k_bmc_cells[0].platform_data =3D &pd;
+> > +     ls2k_bmc_cells[0].pdata_size =3D sizeof(pd);
+>
+> This is fragile.
+>
+> Please identify the elements in ls2k_bmc_cells and use it to index here.
+>
+> See: `static struct mfd_cell as3711_subdevs`
 
-Could you please provide some further comments on this? The schema will
-look like,
+How about this:
 
-	clocks:
-	  maxItems: 1
+enum {
+        LS2K_BMC_DISPLAY,
+        LS2k_BMC_IPMI0,
+        LS2k_BMC_IPMI1,
+        LS2k_BMC_IPMI2,
+        LS2k_BMC_IPMI3,
+        LS2k_BMC_IPMI4,
+};
 
-	clock-names:
-	  items:
-	    - const: ref_100m
+static struct mfd_cell ls2k_bmc_cells[] =3D {
+        [LS2K_BMC_DISPLAY] =3D {
+                .name =3D "simple-framebuffer",
+                .num_resources =3D ARRAY_SIZE(ls2k_display_resources),
+                .resources =3D ls2k_display_resources
+        },
+        [LS2k_BMC_IPMI0] =3D {
+                .name =3D "ls2k-ipmi-si",
+                .num_resources =3D ARRAY_SIZE(ls2k_ipmi0_resources),
+                .resources =3D ls2k_ipmi0_resources
+        },
+        [LS2k_BMC_IPMI1] =3D {
+                .name =3D "ls2k-ipmi-si",
+                .num_resources =3D ARRAY_SIZE(ls2k_ipmi1_resources),
+                .resources =3D ls2k_ipmi1_resources
+        },
+        [LS2k_BMC_IPMI2] =3D {
+                .name =3D "ls2k-ipmi-si",
+                .num_resources =3D ARRAY_SIZE(ls2k_ipmi2_resources),
+                .resources =3D ls2k_ipmi2_resources
+        },
+        [LS2k_BMC_IPMI3] =3D {
+                .name =3D "ls2k-ipmi-si",
+                .num_resources =3D ARRAY_SIZE(ls2k_ipmi3_resources),
+                .resources =3D ls2k_ipmi3_resources
+        },
+        [LS2k_BMC_IPMI4] =3D {
+                .name =3D "ls2k-ipmi-si",
+                .num_resources =3D ARRAY_SIZE(ls2k_ipmi4_resources),
+                .resources =3D ls2k_ipmi4_resources
+        },
+};
 
-	...
+and
 
-	allOf:
-	  - if:
-	      properties:
-	        compatible:
-	          contains:
-	            const: loongson,ls2k0300-clk
-	    then:
-	      properties:
-	        clock-names: false
-	    else:
-	      required:
-	        - clock-names
+        ls2k_bmc_cells[LS2K_BMC_DISPLAY].platform_data =3D &pd;
+        ls2k_bmc_cells[LS2K_BMC_DISPLAY].pdata_size =3D sizeof(pd);
 
-Thanks for your time and suggestion.
+>
+> > +     base =3D dev->resource[0].start + LS2K_DISPLAY_RES_START;
+> > +
+> > +     /* Remove conflicting efifb device */
+> > +     ret =3D aperture_remove_conflicting_devices(base, SZ_4M, "simple-=
+framebuffer");
+> > +     if (ret) {
+> > +             dev_err(&dev->dev, "Failed to removed firmware framebuffe=
+rs: %d\n", ret);
+> > +             goto disable_pci;
+> > +     }
+> > +
+> > +     return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
+> > +                                 ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_c=
+ells),
+> > +                                 &dev->resource[0], 0, NULL);
+> > +
+> > +disable_pci:
+> > +     pci_disable_device(dev);
+> > +     return ret;
+> > +}
+> > +
+> > +static void ls2k_bmc_remove(struct pci_dev *dev)
+> > +{
+> > +     pci_disable_device(dev);
+> > +}
+> > +
+> > +static struct pci_device_id ls2k_bmc_devices[] =3D {
+> > +     { PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
+> > +     { }
+> > +};
+> > +MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
+> > +
+> > +static struct pci_driver ls2k_bmc_driver =3D {
+> > +     .name =3D "ls2k-bmc",
+> > +     .id_table =3D ls2k_bmc_devices,
+> > +     .probe =3D ls2k_bmc_probe,
+> > +     .remove =3D ls2k_bmc_remove,
+> > +};
+> > +module_pci_driver(ls2k_bmc_driver);
+> > +
+> > +MODULE_DESCRIPTION("Loongson-2K Board Management Controller (BMC) Core=
+ driver");
+> > +MODULE_AUTHOR("Loongson Technology Corporation Limited");
+> > +MODULE_LICENSE("GPL");
+> > --
+> > 2.47.1
+> >
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
 
-> > It makes no sense, why 100m even appeared here. I already objected last
-> > time!
-> > 
-> > >  
-> > >    '#clock-cells':
-> > >      const: 1
-> > >      description:
-> > >        The clock consumer should specify the desired clock by having the clock
-> > >        ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
-> > > -      for the full list of Loongson-2 SoC clock IDs.
-> > > +      and include/dt-bindings/clock/loongson,ls2k0300-clk.h for the full list of
-> > > +      Loongson-2 SoC clock IDs.
-> > > +
-> > > +allOf:
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          contains:
-> > > +            const: loongson,ls2k0300-clk
-> > > +    then:
-> > > +      properties:
-> > > +        clock-names:
-> > > +          const: ref_120m
-> > 
-> > NAK, stop doing this pattern. You already got comment on this.
-> 
-> Oops, I missed the comment about dropping the frequency (or the full
-> clock-names property) from clock-names when writing v2, and I've decided
-> to drop the clock-names property completely for the 2K0300 compatible.
-> 
-> Sorry again for my mistake.
-> 
-> > Best regards,
-> > Krzysztof
-> > 
-> > 
-> 
-> Best regards,
-> Yao Zi
-> 
 
-Regards,
-Yao Zi
+--
+Thanks.
+Binbin
