@@ -1,111 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9218018C034
-	for <loongarch@lists.linux.dev>; Mon, 14 Jul 2025 06:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CE7A1E1DE7
+	for <loongarch@lists.linux.dev>; Mon, 14 Jul 2025 06:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752474861; cv=none; b=qc6tJmpXn/36LW+PYFf7P23J4jnVWUWSoI2+69nGXvADNqbCgHTVNk/TqUtBsKyx9zkNu2vrjAkEEK43piyLv8+6ieerHZ8FlqyIjfX9RckSqKtq6h1zoZOTil3ulCZQ1a2jsWjk2HkaxsH0qvUFNt23wk1R+PANue3O+fV4kGc=
+	t=1752475561; cv=none; b=dC8eIuu5wj2WFodh5CsQrmKqWaC2lpdS8PzY7W1xxgnhwlT2g0R0T0+T5ThwIEhh0I8sYdMyZQ4WI+1W8QLAZSnEM/g7//Rp/urJfRHeVb0DPNZweAIPIvlfclL8XfjzzNcJqVLLTb0kwe92GBpKnR4cyxGEIrwLRS1yf2BKgiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752474861; c=relaxed/simple;
-	bh=ynfzJ9dsAps2aTd6f/tPXnxcet4bhZr25ybz3JfD7/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZN+RsKju3clmFmITox9EOV57K+rXtVajyeLf0Ux5YzmQWJ/zZMLfqmFQByoNN7CYmI0iy5Jx54hizodbS2/rClQn7o2aPWoT+uXrUPoLfXBn3CDb9VXXy9FQr7qQxo5y9++ymUkLiZQ1PciJWgHdk8vGtNKIdtZmMb04UHvD8u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEJvLVQk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEJvLVQk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39874C4CEF8
-	for <loongarch@lists.linux.dev>; Mon, 14 Jul 2025 06:34:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752474861;
-	bh=ynfzJ9dsAps2aTd6f/tPXnxcet4bhZr25ybz3JfD7/o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kEJvLVQkjY7hRn/K87feYU0o9wfLcoFoQapbEzji/H3oVgosLIR+n/zpshU8j5xPx
-	 cnTymersGd/N+1mHqJ3BKGWRQrcT85aRPAwcP/faI8e5poEh4ZkWHMwaVBKocHO+rc
-	 dLlEMs5vxTbWhanxYLW+okfeFmBQsBMdx563LZdcvTyj2iv+aiVsVXtnqPaTwDI3J5
-	 Ad4wSY0s6HRoT9uqxSgF5lXh8e2IN8+z1k96CRC4nfbcNwzS/6YDJxQqc+sBU8hMEi
-	 vOLX3wP8hDRXfWv7ELSL3IU03zRlrE1pWJntsOZb60EXxyqcIuI5/EbVfSlwDO+8oX
-	 OGL6/yKjUUb0A==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32b43846e8cso28435141fa.0
-        for <loongarch@lists.linux.dev>; Sun, 13 Jul 2025 23:34:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVufrNnBb9fNm7IuZmdwH1n5ileBOj6SvA1V2W0+zR0DzKihNSGojFcyFzZ4i6FX/B04PH+FpkozsE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyzRWGChqqbaVrlglBXQa3fBcbIkfOseM+KPh+LJS9Z9NZZeKfD
-	DJb2UFuZTwVIXYHhZXSiTBJdUZSzR61bM4asUAp/G23tbEVYzZTIuMWF4MZlyrRd6jVOWlKF9t5
-	hxr9adjTqqm3HWFd6kZ+A3yXkaBgXYRA=
-X-Google-Smtp-Source: AGHT+IEy4x7iRPRFME+dpdQyQI1jtmLIqNYRLMk1ojNaRg715rzBCM8Q86llYRAXa+twgNvvkR8qSO1icXiwfjuZzv0=
-X-Received: by 2002:a2e:a7ca:0:b0:32b:80e1:300d with SMTP id
- 38308e7fff4ca-33053186d88mr35999851fa.0.1752474859585; Sun, 13 Jul 2025
- 23:34:19 -0700 (PDT)
+	s=arc-20240116; t=1752475561; c=relaxed/simple;
+	bh=2yLBHHfIXcwnrcPUkQ9+ntrLxK2ykujzNXpH5Tv9H9Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hf2TnJBPm+9lvKtzNJLrSclqIWLsFGN+PSxhcVSQw9PEw0uzJOTvnx4wubXY8j+W1Ir7ZrHLG0hI7d99uNlbbsB4/DXGCmJ/ym1KVMP6OCipooVf6nhTdpzqnmh8tk4CXMhp5D+l5dLvDezOstjzGUXGbSgDon+6zsCNs+EZh+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.193])
+	by gateway (Coremail) with SMTP id _____8DxbKyjp3RoiwspAQ--.20618S3;
+	Mon, 14 Jul 2025 14:45:55 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.193])
+	by front1 (Coremail) with SMTP id qMiowJCxM+Sfp3RoSXUWAA--.57377S2;
+	Mon, 14 Jul 2025 14:45:54 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-gpio@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] gpio: loongson-64bit: Add loongson gpio irq support
+Date: Mon, 14 Jul 2025 14:45:42 +0800
+Message-ID: <20250714064542.2276247-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250714060843.4029171-5-ardb+git@google.com> <20250714060843.4029171-6-ardb+git@google.com>
- <dade7d17-d45d-455e-a43c-01e9ea95c3b4@gmail.com> <CAMj1kXETDd+19i+awMx1v1sE4RXhF-r2a-mTa3rWfus5s4HMmw@mail.gmail.com>
- <f538a1b9-6a7c-474f-af2a-d87c35b82fc5@gmail.com>
-In-Reply-To: <f538a1b9-6a7c-474f-af2a-d87c35b82fc5@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 14 Jul 2025 16:34:08 +1000
-X-Gmail-Original-Message-ID: <CAMj1kXGG0Mi+AT7ZeoHLTDhVbbahP-PLRgY1=aSZMVQEgWz5sQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzYFywZb16ZKDUVBGm4_KFbnsnrDO10Xk4vWwqGRcRLn5B3XWIM87WiCT4
-Message-ID: <CAMj1kXGG0Mi+AT7ZeoHLTDhVbbahP-PLRgY1=aSZMVQEgWz5sQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] efi-rtc: Remove wakeup functionality
-To: Demi Marie Obenour <demiobenour@gmail.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, Feng Tang <feng.tang@linux.alibaba.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Juergen Gross <jgross@suse.com>, 
-	Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Bibo Mao <maobibo@loongson.cn>, linux-rtc@vger.kernel.org, linux-efi@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, x86@kernel.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxM+Sfp3RoSXUWAA--.57377S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WrWxtF17AFWxWFWUJw45CFX_yoW5Jry5pF
+	ZFvw1Yqr4fJF47u39rZayDAFyUC3s0yrsFkFW2kwn3Jr9xtw1UXFWayFyY9anIyry5AF15
+	ZFWFgF47W3WDArcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
 
-On Mon, 14 Jul 2025 at 16:22, Demi Marie Obenour <demiobenour@gmail.com> wrote:
->
-> On 7/14/25 02:19, Ard Biesheuvel wrote:
-> > On Mon, 14 Jul 2025 at 16:13, Demi Marie Obenour <demiobenour@gmail.com> wrote:
-> >>
-> >> On 7/14/25 02:08, Ard Biesheuvel wrote:
-> >>> From: Ard Biesheuvel <ardb@kernel.org>
-> >>>
-> >>> The EFI rtc driver is used by non-x86 architectures only, and exposes
-> >>> the get/set wakeup time functionality provided by the underlying
-> >>> platform. This is usually broken on most platforms, and not widely used
-> >>> to begin with [if at all], so let's just remove it.
-> >> systemd uses the underlying functionality: a timer can wake the system up.
-> >> I have no idea if that is implemented in terms of this function, though.
-> >
-> > To be clear, you are referring to wake from poweroff at some date/time
-> > in the future, right?
->
-> Yes.
->
-> > This change does not remove this functionality from the RTC subsystem,
-> > it just ceases to expose it on non-x86 EFI platforms that claim to
-> > support it.
->
-> Do these platforms generally expose the functionality in a different way?
+Add the interrupt enable register offset (inten_offset) so that GPIO
+interrupts can be enabled normally.
 
-On x86, the CMOS rtc is manipulated directly (and this is officially
-condoned by the EFI spec).
+According to the latest interface specifications, the definition of GPIO
+interrupts in ACPI is similar to that in FDT. The GPIO interrupts are
+listed one by one according to the GPIO number, and the corresponding
+interrupt number can be obtained directly through the GPIO number
+specified by the consumer.
 
-On non-x86, this functionality rarely works, which is really the point
-of this series.
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ drivers/gpio/gpio-loongson-64bit.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> If not, systemd should probably document that the functionality is
-> non-portable if it doesn't do that already.
+diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
+index 26227669f026..d5b2ad848519 100644
+--- a/drivers/gpio/gpio-loongson-64bit.c
++++ b/drivers/gpio/gpio-loongson-64bit.c
+@@ -222,6 +222,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data0 = {
+ 	.conf_offset = 0x0,
+ 	.in_offset = 0xc,
+ 	.out_offset = 0x8,
++	.inten_offset = 0x14,
+ };
+ 
+ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
+@@ -230,6 +231,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
+ 	.conf_offset = 0x0,
+ 	.in_offset = 0x20,
+ 	.out_offset = 0x10,
++	.inten_offset = 0x30,
+ };
+ 
+ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data2 = {
+@@ -246,6 +248,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls3a5000_data = {
+ 	.conf_offset = 0x0,
+ 	.in_offset = 0xc,
+ 	.out_offset = 0x8,
++	.inten_offset = 0x14,
+ };
+ 
+ static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
+@@ -254,6 +257,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
+ 	.conf_offset = 0x800,
+ 	.in_offset = 0xa00,
+ 	.out_offset = 0x900,
++	.inten_offset = 0xb00,
+ };
+ 
+ /* LS7A2000 chipset GPIO */
+@@ -263,6 +267,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_data0 = {
+ 	.conf_offset = 0x800,
+ 	.in_offset = 0xa00,
+ 	.out_offset = 0x900,
++	.inten_offset = 0xb00,
+ };
+ 
+ /* LS7A2000 ACPI GPIO */
+@@ -281,6 +286,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls3a6000_data = {
+ 	.conf_offset = 0x0,
+ 	.in_offset = 0xc,
+ 	.out_offset = 0x8,
++	.inten_offset = 0x14,
+ };
+ 
+ static const struct of_device_id loongson_gpio_of_match[] = {
 
-Not sure what you mean by non-portable. This functionality should be
-exposed in a generic manner (using the RTC subsystem interfaces), but
-only if it can be relied upon. On x86, the RTC subsystem will use the
-rtc-cmos driver, which implements the wakeup routines in terms of port
-I/O.
+base-commit: e502df58b5e3767c00e887744b6eff43b7fde3ea
+-- 
+2.47.1
 
-If removing this functionality altogether from the EFI rtc driver is a
-problem, perhaps it would be better to implement an allowlist based
-solution that does not attempt to access the runtime services by
-default.
