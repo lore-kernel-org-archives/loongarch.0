@@ -1,36 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CE7A1E1DE7
-	for <loongarch@lists.linux.dev>; Mon, 14 Jul 2025 06:45:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2039E22A1E6
+	for <loongarch@lists.linux.dev>; Mon, 14 Jul 2025 07:04:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752475561; cv=none; b=dC8eIuu5wj2WFodh5CsQrmKqWaC2lpdS8PzY7W1xxgnhwlT2g0R0T0+T5ThwIEhh0I8sYdMyZQ4WI+1W8QLAZSnEM/g7//Rp/urJfRHeVb0DPNZweAIPIvlfclL8XfjzzNcJqVLLTb0kwe92GBpKnR4cyxGEIrwLRS1yf2BKgiQ=
+	t=1752476698; cv=none; b=RmuI7EeDLqfXdpu66OU7jlQQNLDbsEDMC+j+vIr8joMBbxPWsN09UExOprup+OqCcbZU+8sqYsX+f5SMtZTaCUm88p4lfyRT/vao00YntpHl1BYSb58lEZSEtoyo3MQStUtNrfm54zweIORiUtIzriNPxg+tSHscCnWSd07Xqd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752475561; c=relaxed/simple;
-	bh=2yLBHHfIXcwnrcPUkQ9+ntrLxK2ykujzNXpH5Tv9H9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hf2TnJBPm+9lvKtzNJLrSclqIWLsFGN+PSxhcVSQw9PEw0uzJOTvnx4wubXY8j+W1Ir7ZrHLG0hI7d99uNlbbsB4/DXGCmJ/ym1KVMP6OCipooVf6nhTdpzqnmh8tk4CXMhp5D+l5dLvDezOstjzGUXGbSgDon+6zsCNs+EZh+Y=
+	s=arc-20240116; t=1752476698; c=relaxed/simple;
+	bh=cToq3o3HlGCMSYHZ2d6IQRVOA5a0EC+VOiw+pnCaSKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZZ/bu+aUWyNtF0k/o/SaEslagEKAqWBCzruTg3RKSdczXy5PG2C12DSoqxE6euM+XEejwQfdO1S7HHPC0whbAOy2LRuXMnmTJqFzq/YuM29Mr6d3Uy4pXDpwrQvpUYP2/SoYW4nU8A7C1lhRdVL440L7ZVEj2dtmHgINSAUJaNw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.193])
-	by gateway (Coremail) with SMTP id _____8DxbKyjp3RoiwspAQ--.20618S3;
-	Mon, 14 Jul 2025 14:45:55 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxCeEUrHRo6Q4pAQ--.44683S3;
+	Mon, 14 Jul 2025 15:04:52 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.193])
-	by front1 (Coremail) with SMTP id qMiowJCxM+Sfp3RoSXUWAA--.57377S2;
-	Mon, 14 Jul 2025 14:45:54 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
+	by front1 (Coremail) with SMTP id qMiowJAx_8EPrHRo4HoWAA--.4569S2;
+	Mon, 14 Jul 2025 15:04:52 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH] gpio: loongson-64bit: Add loongson gpio irq support
-Date: Mon, 14 Jul 2025 14:45:42 +0800
-Message-ID: <20250714064542.2276247-1-zhoubinbin@loongson.cn>
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: Make relocate_new_kernel_size be a .quad value
+Date: Mon, 14 Jul 2025 15:04:38 +0800
+Message-ID: <20250714070438.2399153-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -39,94 +38,50 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxM+Sfp3RoSXUWAA--.57377S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WrWxtF17AFWxWFWUJw45CFX_yoW5Jry5pF
-	ZFvw1Yqr4fJF47u39rZayDAFyUC3s0yrsFkFW2kwn3Jr9xtw1UXFWayFyY9anIyry5AF15
-	ZFWFgF47W3WDArcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
+X-CM-TRANSID:qMiowJAx_8EPrHRo4HoWAA--.4569S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GrWfWF17Ar18GFy5XryDXFc_yoWktrX_KF
+	yxJws8Gr4UJF4jywn0vwsavr1Ygw15Jas5Cw1kX3yxJasxArWjyr45Xan5uwsIkr4kGrWY
+	qw1DGFsayr42qosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2DUUUUUUU
 
-Add the interrupt enable register offset (inten_offset) so that GPIO
-interrupts can be enabled normally.
+Now relocate_new_kernel_size is a .long value, which means 32bit, so its
+high 32bit is undefined. This causes memcpy((void *)reboot_code_buffer,
+relocate_new_kernel, relocate_new_kernel_size) in machine_kexec_prepare()
+access out of range memories in some cases, and then end up with an ADE
+exception.
 
-According to the latest interface specifications, the definition of GPIO
-interrupts in ACPI is similar to that in FDT. The GPIO interrupts are
-listed one by one according to the GPIO number, and the corresponding
-interrupt number can be obtained directly through the GPIO number
-specified by the consumer.
+So make relocate_new_kernel_size be a .quad value, which means 64bit, to
+avoid such errors.
 
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/gpio/gpio-loongson-64bit.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/loongarch/kernel/relocate_kernel.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
-index 26227669f026..d5b2ad848519 100644
---- a/drivers/gpio/gpio-loongson-64bit.c
-+++ b/drivers/gpio/gpio-loongson-64bit.c
-@@ -222,6 +222,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data0 = {
- 	.conf_offset = 0x0,
- 	.in_offset = 0xc,
- 	.out_offset = 0x8,
-+	.inten_offset = 0x14,
- };
+diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
+index 84e6de2fd973..8b5140ac9ea1 100644
+--- a/arch/loongarch/kernel/relocate_kernel.S
++++ b/arch/loongarch/kernel/relocate_kernel.S
+@@ -109,4 +109,4 @@ SYM_CODE_END(kexec_smp_wait)
+ relocate_new_kernel_end:
  
- static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
-@@ -230,6 +231,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
- 	.conf_offset = 0x0,
- 	.in_offset = 0x20,
- 	.out_offset = 0x10,
-+	.inten_offset = 0x30,
- };
- 
- static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data2 = {
-@@ -246,6 +248,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls3a5000_data = {
- 	.conf_offset = 0x0,
- 	.in_offset = 0xc,
- 	.out_offset = 0x8,
-+	.inten_offset = 0x14,
- };
- 
- static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
-@@ -254,6 +257,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
- 	.conf_offset = 0x800,
- 	.in_offset = 0xa00,
- 	.out_offset = 0x900,
-+	.inten_offset = 0xb00,
- };
- 
- /* LS7A2000 chipset GPIO */
-@@ -263,6 +267,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_data0 = {
- 	.conf_offset = 0x800,
- 	.in_offset = 0xa00,
- 	.out_offset = 0x900,
-+	.inten_offset = 0xb00,
- };
- 
- /* LS7A2000 ACPI GPIO */
-@@ -281,6 +286,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls3a6000_data = {
- 	.conf_offset = 0x0,
- 	.in_offset = 0xc,
- 	.out_offset = 0x8,
-+	.inten_offset = 0x14,
- };
- 
- static const struct of_device_id loongson_gpio_of_match[] = {
-
-base-commit: e502df58b5e3767c00e887744b6eff43b7fde3ea
+ 	.section ".data"
+-SYM_DATA(relocate_new_kernel_size, .long relocate_new_kernel_end - relocate_new_kernel)
++SYM_DATA(relocate_new_kernel_size, .quad relocate_new_kernel_end - relocate_new_kernel)
 -- 
 2.47.1
 
