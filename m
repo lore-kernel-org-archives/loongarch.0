@@ -1,107 +1,178 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5C72D323F
-	for <loongarch@lists.linux.dev>; Tue, 15 Jul 2025 03:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952C91E5018
+	for <loongarch@lists.linux.dev>; Tue, 15 Jul 2025 05:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752550169; cv=none; b=m1BX6+SnPVd5WciEwqp0tF2WR3xEnd+rINgip/Jhy2LeNE2gINcAOXCb3aLkVfz+/vatsYa2qV2PpzVpAvTdUSl5MtFhbaom3xEhnv0vLvlRNYDFm8busGIQHvzXKVe+VQbdKFX9wdP2Lmw4e+Rh+MAdOI6wcS/FSVnvwj5mbSc=
+	t=1752557840; cv=none; b=BkjkvlFmc7ipMRdreq/sefIL+nfspa10FQRKJubaWeQN0irHvJFtLGMuhXvx3S68KnzmMQYLqzE+jEud7mGZFcQAKfrRDPQ9SwQzmEuUd8acTAPul035h45Q1tT5BfslTeedT8K6Wr9lrTy6PGmRAvMvtCRdx/HQ57/hCkxk5eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752550169; c=relaxed/simple;
-	bh=ieqd6xCHgI1ZHPQbWmrk7Nb+/qzuOEd8qzdDp3KdSmg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BpRxscc8KFZWoUV63G4fHY3mctV/X0JzLO1r4sexI1bOU6Mvp8b/L3Vc/lcFULiqorKZtdU8RH+qLZR8hVliNiWMiDmfSedvHXWtom2b6gvGqS3MZD4EplSBV0ec/7QWBEj34uPZVnKLqibJSF5WIIPOnzHhZKS8la9BDWfD7B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1H6MnsW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752557840; c=relaxed/simple;
+	bh=6J3hCrPuy++HUhp2ZStrBO9vMI6jCI0BvgNUFtgBHOI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V2aReAtwNHQlYSU87Y84psucLvrdkSN1qRLdXnddAuZVm28YmtzffoiSKJ6qgj2rjs5bvXnVmgCgHkyPuELj6L4PHfUErH3Pd0FjCFiQ6538zZMPOQj3YfxcVkOUhmqFxdvUmtnJ/tOzwSkca3a1WROOH6WDgwkMtC1DCWTaXuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OD3WsebZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1H6MnsW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C40A2C4CEFA
-	for <loongarch@lists.linux.dev>; Tue, 15 Jul 2025 03:29:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OD3WsebZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12609C4CEF4;
+	Tue, 15 Jul 2025 05:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752550168;
-	bh=ieqd6xCHgI1ZHPQbWmrk7Nb+/qzuOEd8qzdDp3KdSmg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=b1H6MnsWja4+R/HGgp9tU9geJmQM3bS+T64RZtg6NFD+ynaIvQfKgLfZf9wFIQMFw
-	 IEpBUdkrm3FNoiP0THEolt5J0qPGPi+XaiYUIKpViM0PEydXydu69aXClbW1kC0xKD
-	 7JUh792Zp8v8r6oGDOmlPdLygPejN/QbXadKp3Cbs1EmM7s5hknoWmpnwwmetGDygw
-	 T6eNIrkIRciU2Utnv1UBAZfPOojItTM8l0pnhPXGWHQIvXh4uX/WDMl8i8a/k/dKSg
-	 yyRO3jqQ4zi0F9Ugl6CU4fuIXbAGo/rYgZLFmgVhaPTku1dFREHd6pT5oKhurk/jP+
-	 JytHwh6zZkQAg==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso5529217e87.0
-        for <loongarch@lists.linux.dev>; Mon, 14 Jul 2025 20:29:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUn/HI13GZhzT90gHjlIjibF3y7sBWsHmcej0L3GCz9yur7NXXcuE/NljUg0E2oQ6CYJwQyS1FBfGo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyv2RIzdbaj4Oq035ConNTeyPbGZRNOG9UJuAvx62McSzkNYCub
-	E3Nc569cPFyQ/Jpzq+Uaxo9yfJTeUi9+uCkB50UPvcAThojwfltOXNiMtt1dxBt543mbImVlw3t
-	bED9mqZ/tV04uGuLQWHhINbyxYqFRQsw=
-X-Google-Smtp-Source: AGHT+IFIz1rDkWifGEuRDAIW8VnNdmTc2Z0VIxz+qevBW3febeLf9zJqzx1t6qVV2NjD4iuG6fjmMDCJiXdzlUbsY78=
-X-Received: by 2002:a05:6512:39c3:b0:553:2fec:b139 with SMTP id
- 2adb3069b0e04-55a044ec444mr5090549e87.24.1752550166947; Mon, 14 Jul 2025
- 20:29:26 -0700 (PDT)
+	s=k20201202; t=1752557840;
+	bh=6J3hCrPuy++HUhp2ZStrBO9vMI6jCI0BvgNUFtgBHOI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OD3WsebZ74BNCweLXWK6ZDpiy1GYCnmXu2xh27/ENvLdsLSkrLFQ6mR5l1mP+HUMG
+	 MShniYJqNM1s31wMmQw8FxDkHjit4SvfyoI6wUc1GOv+6z5AyvmnmyD6drAojuQ7np
+	 fOs0Zsj44GMv/NBf25ahV1vQZSouQi2ASuXroB6TqmINioyqTPuLu3wfF4V0KxSSjK
+	 0PR45/X7hWdpadu6p9W0SgtO5vmgSyqWPe258S/Buu2TrZcJGDDU9K/fmM8I4Uoql0
+	 Hu69E3heOIAt/PsIe2m0WLAzWWr5PZ0Gr/ihpETockVthBQZ9NoB8xkXw0f93zawy2
+	 SFMRROjblWu6w==
+From: Kees Cook <kees@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	Dave Martin <Dave.Martin@arm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chris Zankel <chris@zankel.net>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonas Bonn <jonas@southpole.se>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Rich Felker <dalias@libc.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH 00/23] binfmt_elf,arch/*: Use elf.h for coredump note names
+Date: Mon, 14 Jul 2025 22:37:11 -0700
+Message-Id: <175255782864.3413694.2008555655056311560.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250701135616.29630-1-Dave.Martin@arm.com>
+References: <20250701135616.29630-1-Dave.Martin@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250714060843.4029171-5-ardb+git@google.com> <422e2a72-972f-41f4-a0b3-d69a6cb0c2e2@canonical.com>
-In-Reply-To: <422e2a72-972f-41f4-a0b3-d69a6cb0c2e2@canonical.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 15 Jul 2025 13:29:15 +1000
-X-Gmail-Original-Message-ID: <CAMj1kXEXpBF8hPaVMU0sDgNysYT66MDRmr3JHO4Lg1sJB_Yteg@mail.gmail.com>
-X-Gm-Features: Ac12FXyPeU_gWXO9-8if9ZFnLW7qkSAVnhXpIQ13tyFhKHPmacdG9H_jV_FpMvQ
-Message-ID: <CAMj1kXEXpBF8hPaVMU0sDgNysYT66MDRmr3JHO4Lg1sJB_Yteg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] Remove unused EFI runtime APIs
-To: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org, 
-	Feng Tang <feng.tang@linux.alibaba.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Juergen Gross <jgross@suse.com>, 
-	Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Bibo Mao <maobibo@loongson.cn>, linux-rtc@vger.kernel.org, linux-efi@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, x86@kernel.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 14 Jul 2025 at 18:11, Heinrich Schuchardt
-<heinrich.schuchardt@canonical.com> wrote:
->
-> On 7/14/25 08:08, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Using EFI runtime services to program the RTC to wake up the system is
-> > supported in theory, but rarely works in practice. Fortunately, this
-> > functionality is rarely [if ever] used to begin with so we can just drop
-> > it. (Note that the EFI rtc driver is not used by x86, which programs the
-> > CMOS rtc directly)
->
-> The main problem I see with firmware offering access to the RTC via UEFI
-> services is that two different drivers, the firmware one and the Linux
-> one might be trying to access the same busses or registers which might
-> lead to unexpected results.
->
-> Recently there was a discussion in the RISC-V technical group for the
-> server platform specification where the same issue was discussed
-> concerning SetTime().
->
-> As a UEFI firmware should not care which operating system is booted, it
-> should be up to the OS to disable EFI access to the RTC if it has native
-> access.
->
-> Could we disable all the EFI services for the RTC in Linux dynamically
-> when an RTC driver is successfully probed?
->
+On Tue, 01 Jul 2025 14:55:53 +0100, Dave Martin wrote:
+> This series aims to clean up an aspect of coredump generation:
+> 
+> ELF coredumps contain a set of notes describing the state of machine
+> registers and other information about the dumped process.
+> 
+> Notes are identified by a numeric identifier n_type and a "name"
+> string, although this terminology is somewhat misleading.  Officially,
+> the "name" of a note is really an "originator" or namespace identifier
+> that indicates how to interpret n_type [1], although in practice it is
+> often used more loosely.
+> 
+> [...]
 
-I don't think this would be the right way to do it.
+Applied to for-next/execve, thanks!
 
-It also depends on whether ACPI or DT is being used to describe the
-platform to the OS.
+[01/23] regset: Fix kerneldoc for struct regset_get() in user_regset
+        https://git.kernel.org/kees/c/6fd9e1aa0784
+[02/23] regset: Add explicit core note name in struct user_regset
+        https://git.kernel.org/kees/c/85a7f9cbf8a8
+[03/23] binfmt_elf: Dump non-arch notes with strictly matching name and type
+        https://git.kernel.org/kees/c/9674a1be4dd5
+[04/23] ARC: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/237dc8d79627
+[05/23] ARM: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/49b849d11cd1
+[06/23] arm64: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/87b0d081dc98
+[07/23] csky: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/2c2fb861fc59
+[08/23] hexagon: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/55821111b1b3
+[09/23] LoongArch: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/1260e3b13584
+[10/23] m68k: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/e572168e8d2a
+[11/23] MIPS: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/18bd88faa246
+[12/23] nios2: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/8368cd0e4636
+[13/23] openrisc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/10cd957a895f
+[14/23] parisc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/92acdd819b5d
+[15/23] powerpc/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/307035acefbd
+[16/23] riscv: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/c9502cc7bef5
+[17/23] s390/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/d6a883cb40fc
+[18/23] sh: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/afe74eecd88f
+[19/23] sparc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/c9d4cb25e94e
+[20/23] x86/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/3de0414dec7b
+[21/23] um: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/40d3a88594b5
+[22/23] xtensa: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+        https://git.kernel.org/kees/c/cb32fb722f4b
+[23/23] binfmt_elf: Warn on missing or suspicious regset note names
+        https://git.kernel.org/kees/c/a55128d392e8
 
-ACPI does not support describing the RTC device, so it should provide
-the EFI services.
+Take care,
 
-DT can describe the RTC device directly, so I think it is acceptable
-for such firmware to mark all RTC routines unsupported in the RT_PROP
-table, and just expose the RTC device directly.
+-- 
+Kees Cook
 
-The OS shouldn't have to reason about these things: it is up to the
-platform to describe itself unambiguously.
