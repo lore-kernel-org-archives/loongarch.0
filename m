@@ -1,127 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0855186294
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 03:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7698E1F473C
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 04:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752637944; cv=none; b=WvI6ySC+niOAiU5dxBp9+qM2z6F1hScYr07wqHOL7Svde8fHwwye+hJBWTHQeulA7WHlBMMoSPrBPAJt/1Ie1/onl3+3N4wMRgaloGtTh4WmWgdrNWc46sPzOlhKpKDrqwmz8FMOuGXfyxiTbAtqki5W094TTc6GfBXm0MToZGU=
+	t=1752640766; cv=none; b=hVbfdEJlQNY3aRQ8+vFE/lpzA5M0LC1uKFAXq8dT6h7y+sePeDK9tHWB1cl1qIwVz4N+woxSQsnuhPmIggdFJjv2LW5wNiG5N3P/2rN4FwQ85XqIvWarxl636SL0n5ebwBcW7vNGL01nG4XLg78tx6IgpnB+eMHe0lmlvjqF52s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752637944; c=relaxed/simple;
-	bh=kbKYP37k7zLxmRSGbkuGEEJMcz1AsBvMEBjt1v4DxZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XYsaNYDcoUTZaE05TaZfZqqhWvcJ5+EMK3BVXEo9Lnk3Dtpy+1oWQogyQRFjFb/pEqU7xOTZjc+TNxGGuot8ONDn4W0RLqXTObcgTQnEMWA37f6hnWacB5qyMRbv6P1nY4DwW+GhVP6Cjdcbmj5YVEyNgEMzpqxE45ghq5v2Gaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnbyNZ/u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnbyNZ/u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88011C4CEFF
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 03:52:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752637943;
-	bh=kbKYP37k7zLxmRSGbkuGEEJMcz1AsBvMEBjt1v4DxZE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fnbyNZ/uofGXdgO7Yr2YWSNB67zbnOFOQ+pTadx543mwEWroEHJc4Ic64pAA3Z/11
-	 UGhzH/VIGx0r+EL5bHdyNhfO5qenQAGqdqQXc4sMTG4jO0oHJB6QDFPWPfsXbCmZlH
-	 WLBqi80urwpHRK2uEhCd3hCdgh6UPIlGy7x1ES23qXjUPSoX9k+ltIj0Bj+U9ncrzV
-	 77QMIdVHowgEY/FSjC0zrhqNhEDFdeSB2r9kmK+gvSIfE4jKLfBHdQ6Ootdl1piht0
-	 uqH/qfLzgFHH1RUJtKWlIjdcG5PtZLDK0INZv9ODqbHmZUtQvuXb2pJVrnQ+w0d2FI
-	 XTSf8/KvR6vrg==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553e5df44f8so5490823e87.3
-        for <loongarch@lists.linux.dev>; Tue, 15 Jul 2025 20:52:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUkb/f73DZoLpCvCW1SL0uAAhe+71tyMzkpqR+cnebc0KGr8tXZ1XQ1NXbDKBwxiIzV1F/crD7j/8M=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwLWQFHKBfmLK9ZfVE6aWTC9d1iYTU91UuBpvjMDZMLDf1uQs0s
-	Zh0YpL6EJe6oRYCig6FcaPGzZkx3qxs7uVFpi4Z9+dnfK5p1rFkRZVWtTxyuw267pt890oYA9ud
-	L6pefYMRhnxVWmz2RAHu8ToBe3KqLw6w=
-X-Google-Smtp-Source: AGHT+IGsx+1eBRK7VlvwwK4lrn2tedS/8CBhSaETgUda6ZBIDw8ZzbYDB45sUI1HO8Bko2rjpL9ZJH4DB6I0F9C6dzg=
-X-Received: by 2002:a05:6512:3416:b0:553:ae05:9c48 with SMTP id
- 2adb3069b0e04-55a23fa8c7amr357898e87.45.1752637941719; Tue, 15 Jul 2025
- 20:52:21 -0700 (PDT)
+	s=arc-20240116; t=1752640766; c=relaxed/simple;
+	bh=7HDOCBc6V6kKoG+jOtt6yyv5DEob+bLWWJqp9Btf4n0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tyf/mXdFH14z44h4JGLhGzG1/FLtTDzUnG5c4K2ue7kM5n5QIxGBOQDrEsd/1TES4UAmg+CyRYaK9/ASiruM8o69OUvEPAsvlPxIUi9Qi3dgD1ElMCa9U9TNCRFPrBeBSvw9JxDcoWbkfZrleFLAjmel9vUNlMQcyFeNVJT72YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxWXH3LHdoleoqAQ--.24102S3;
+	Wed, 16 Jul 2025 12:39:20 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxVOTzLHdonVQZAA--.5847S2;
+	Wed, 16 Jul 2025 12:39:16 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>,
+	bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] LoongArch: BPF: Add struct ops support for trampoline
+Date: Wed, 16 Jul 2025 12:39:15 +0800
+Message-ID: <20250716043915.15034-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250714060843.4029171-5-ardb+git@google.com> <422e2a72-972f-41f4-a0b3-d69a6cb0c2e2@canonical.com>
- <CAMj1kXEXpBF8hPaVMU0sDgNysYT66MDRmr3JHO4Lg1sJB_Yteg@mail.gmail.com> <aHZsohPoxLYML___@sunil-laptop>
-In-Reply-To: <aHZsohPoxLYML___@sunil-laptop>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 16 Jul 2025 13:52:09 +1000
-X-Gmail-Original-Message-ID: <CAMj1kXF+AP-3hKb8vJQ3oCoPxmEG=udexNCxMLvGE_KHCKcZxw@mail.gmail.com>
-X-Gm-Features: Ac12FXyJHyI8FNCWondq-usX0O9Wq8IR0GvzToxJvHq2L_BDfrGw4oT1HSN0fVw
-Message-ID: <CAMj1kXF+AP-3hKb8vJQ3oCoPxmEG=udexNCxMLvGE_KHCKcZxw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] Remove unused EFI runtime APIs
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, Ard Biesheuvel <ardb+git@google.com>, 
-	linux-arm-kernel@lists.infradead.org, Feng Tang <feng.tang@linux.alibaba.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Juergen Gross <jgross@suse.com>, 
-	Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Bibo Mao <maobibo@loongson.cn>, 
-	linux-rtc@vger.kernel.org, linux-efi@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, x86@kernel.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxVOTzLHdonVQZAA--.5847S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtrWxKry3XryDJrWkCFyxtFc_yoWxGFy3pr
+	yqkF48CFyUK3W2gF4kJr1j9r1rXFsakasxKayUJrZ5KrZxZFyrWF1UKr13WFW3X3WDZryx
+	uwnYyw4vvF1xArcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUUU==
 
-On Wed, 16 Jul 2025 at 00:58, Sunil V L <sunilvl@ventanamicro.com> wrote:
->
-> On Tue, Jul 15, 2025 at 01:29:15PM +1000, Ard Biesheuvel wrote:
-> > On Mon, 14 Jul 2025 at 18:11, Heinrich Schuchardt
-> > <heinrich.schuchardt@canonical.com> wrote:
-> > >
-> > > On 7/14/25 08:08, Ard Biesheuvel wrote:
-> > > > From: Ard Biesheuvel <ardb@kernel.org>
-> > > >
-> > > > Using EFI runtime services to program the RTC to wake up the system is
-> > > > supported in theory, but rarely works in practice. Fortunately, this
-> > > > functionality is rarely [if ever] used to begin with so we can just drop
-> > > > it. (Note that the EFI rtc driver is not used by x86, which programs the
-> > > > CMOS rtc directly)
-> > >
-> > > The main problem I see with firmware offering access to the RTC via UEFI
-> > > services is that two different drivers, the firmware one and the Linux
-> > > one might be trying to access the same busses or registers which might
-> > > lead to unexpected results.
-> > >
-> > > Recently there was a discussion in the RISC-V technical group for the
-> > > server platform specification where the same issue was discussed
-> > > concerning SetTime().
-> > >
-> > > As a UEFI firmware should not care which operating system is booted, it
-> > > should be up to the OS to disable EFI access to the RTC if it has native
-> > > access.
-> > >
-> > > Could we disable all the EFI services for the RTC in Linux dynamically
-> > > when an RTC driver is successfully probed?
-> > >
-> >
-> > I don't think this would be the right way to do it.
-> >
-> > It also depends on whether ACPI or DT is being used to describe the
-> > platform to the OS.
-> >
-> > ACPI does not support describing the RTC device, so it should provide
-> > the EFI services.
-> >
-> Hi Ard,
-> IIUC, TAD is defined for this purpose, right?
-> https://uefi.org/specs/ACPI/6.6/09_ACPI_Defined_Devices_and_Device_Specific_Objects.html#time-and-alarm-device
->
-> > DT can describe the RTC device directly, so I think it is acceptable
-> > for such firmware to mark all RTC routines unsupported in the RT_PROP
-> > table, and just expose the RTC device directly.
-> >
-> > The OS shouldn't have to reason about these things: it is up to the
-> > platform to describe itself unambiguously.
->
-> I agree. But I think even with ACPI, EFI GetTime/SetTime can return
-> unsupported if there is a TAD exposed with proper _GRT/_SRT and _GCP.
->
+Use BPF_TRAMP_F_INDIRECT flag to detect struct ops and emit proper
+prologue and epilogue for this case.
 
-Thanks for the pointer. This device did not exist yet when I last
-looked at this stuff.
+With this patch, all of the struct_ops related testcases (except
+struct_ops_multi_pages) passed on LoongArch.
 
-So it seems like TAD is a suitable way for exposing a RTC to the OS
-without the need for a hardware specific driver. However, the existing
-Linux driver does not appear to support get/set time, and is not
-hooked up to the RTC subsystem [yet].
+The testcase struct_ops_multi_pages failed is because the actual
+image_pages_cnt is 40 which is bigger than MAX_TRAMP_IMAGE_PAGES.
+
+Before:
+
+  $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
+  ...
+  WATCHDOG: test case struct_ops_module/struct_ops_load executes for 10 seconds...
+
+After:
+
+  $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
+  ...
+  #15      bad_struct_ops:OK
+  ...
+  #399     struct_ops_autocreate:OK
+  ...
+  #400     struct_ops_kptr_return:OK
+  ...
+  #401     struct_ops_maybe_null:OK
+  ...
+  #402     struct_ops_module:OK
+  ...
+  #404     struct_ops_no_cfi:OK
+  ...
+  #405     struct_ops_private_stack:SKIP
+  ...
+  #406     struct_ops_refcounted:OK
+  Summary: 8/25 PASSED, 3 SKIPPED, 0 FAILED
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+This is a RFC patch, based on 6.16-rc6 and the following series:
+
+[PATCH v3 0/5] Support trampoline for LoongArch
+https://lore.kernel.org/loongarch/20250709055029.723243-1-duanchenghao@kylinos.cn/
+
+ arch/loongarch/net/bpf_jit.c | 71 ++++++++++++++++++++++++------------
+ 1 file changed, 47 insertions(+), 24 deletions(-)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 6820558afce5..7663b84a4ff1 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1599,6 +1599,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
+ 	struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
+ 	struct bpf_tramp_links *fmod_ret = &tlinks[BPF_TRAMP_MODIFY_RETURN];
++	bool is_struct_ops = flags & BPF_TRAMP_F_INDIRECT;
+ 	int ret, save_ret;
+ 	void *orig_call = func_addr;
+ 	u32 **branches = NULL;
+@@ -1674,18 +1675,31 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 
+ 	stack_size = round_up(stack_size, 16);
+ 
+-	/* For the trampoline called from function entry */
+-	/* RA and FP for parent function*/
+-	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
+-	emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
+-	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
+-	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
+-
+-	/* RA and FP for traced function*/
+-	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
+-	emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
+-	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
+-	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
++	if (!is_struct_ops) {
++		/*
++		 * For the trampoline called from function entry,
++		 * the frame of traced function and the frame of
++		 * trampoline need to be considered.
++		 */
++		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
++		emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
++		emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
++		emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
++
++		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
++		emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
++		emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
++		emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
++	} else {
++		/*
++		 * For the trampoline called directly, just handle
++		 * the frame of trampoline.
++		 */
++		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
++		emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, stack_size - 8);
++		emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
++		emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
++	}
+ 
+ 	/* callee saved register S1 to pass start time */
+ 	emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
+@@ -1772,21 +1786,30 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 
+ 	emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
+ 
+-	/* trampoline called from function entry */
+-	emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
+-	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
+-	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
++	if (!is_struct_ops) {
++		/* trampoline called from function entry */
++		emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
++		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
++		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
++
++		emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
++		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
++		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
+ 
+-	emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
+-	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
+-	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
++		if (flags & BPF_TRAMP_F_SKIP_FRAME)
++			/* return to parent function */
++			emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
++		else
++			/* return to traced function */
++			emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
++	} else {
++		/* trampoline called directly */
++		emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, stack_size - 8);
++		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
++		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
+ 
+-	if (flags & BPF_TRAMP_F_SKIP_FRAME)
+-		/* return to parent function */
+ 		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
+-	else
+-		/* return to traced function */
+-		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
++	}
+ 
+ 	ret = ctx->idx;
+ out:
+-- 
+2.42.0
+
