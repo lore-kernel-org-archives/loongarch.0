@@ -1,133 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AD62F4317
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 10:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C551A1DDC0F
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 11:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752661195; cv=none; b=h2MOdVljB/5115FYhfOHNSlLWbx8P+i7V3t1FRjUMbppUOixA78PTRGM16Zb4BreMnyv1JuXKpzYO89jcbWZHGTMmChl0U01w0mPskABCX7SFDSmlJR9zwFXr0R8fUBgthEgOf2LVcNgTBxLcN7LVciZ39Rf6kjEvHo6g+qYO0U=
+	t=1752665647; cv=none; b=jxDKowJ6bu9PWwSMSmu3EcXJ8gE914ZA8tyFc+CCvtOrCGyRjmObJn3winKzZoaxdIt3I7AZq6QVkCnZV9OxyXx/TeckaBHFql3P9dCvAjvOOeO/SwcLqhWvXuxdxbFWvgliGd7LECnUVcu5LbmOF8C5xvXe8rXV6p1wI+fGUqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752661195; c=relaxed/simple;
-	bh=8kJXGogC+xtdCvbe6QsC3MjM2fHwl2vl79nSR9/Gos8=;
+	s=arc-20240116; t=1752665647; c=relaxed/simple;
+	bh=KWyn0SNq2GNipqxpl7WVzEfJ1H93KzyTOZdOdF3jxY4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Swi1xD5/shmSS37ArjfIqGGUvNUGjBhfOaT2GLX8yGPM+wPdxoyfksxmBAMWFmKrePdS07o8moAda+O2+X64iFB8r6dOBmCGc46/z0hUGoSXS/TPTknTav6kqOkfGEUkFU8fSlbhYnBoju6PvQnmRkOCVcGtZh+t94AExsl5lGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfuLaJ/+; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=hZjcHh474udHB4bMeFckL7SUX69l5Z6D13jLBCsMZ/lpD6RGK5vfUnxuOVqgxTWCYbVFKqY+U2z4dNFTGlfpbsFJvC7cHD8f2fZ8P+7GeO0stsubR6/MA7D2hmjB6TYqBfOMn0jIid4H6ccpuNPz37TdnKt9uoclrO034zL57Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dj7neCW+; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfuLaJ/+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94180C4CEF1
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 10:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752661194;
-	bh=8kJXGogC+xtdCvbe6QsC3MjM2fHwl2vl79nSR9/Gos8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GfuLaJ/+AOvSNpOsqhDdfXD+K8c2pJd6/CpflJsmMGXmwFT0+C5SW9vvcKSfkqf2Z
-	 gG4cXCHWpmn2UwZhQ+JzgH7N9Xu8tAciCrSYhCtxLGF4LDmCnJY4aXoJPWyGgxWsud
-	 EJ+O5XiYpl2/TDvGKVKtz4HsGEa0HiagZjmH0LBfC1yNyES3X+w743LPLL2J2q8h/q
-	 A+eS2c7nC17dFMisVww5y6YrhuP9cDJKLr9PDxaQdI5XFFWlH4Q9gxQZoVbhMfZ1iJ
-	 pqbVuwRtkaiIaPEpFq3m1cxa5lFID22T6Of4dLH0/3cuBpRs+1waStPQcCURHjjaNL
-	 29Ckx8rACeA2g==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60bfcada295so10031462a12.1
-        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 03:19:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUV2nW6j6DLLiUUqFU6OMAE0doLC2mWXb/WuUNR1+RVdL0vWoNPp8JuEQtYGekWw+E8EybNPjKpVKQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yye9X4s+/7D8lNYr2fSEspHGlzQHdJAu3bz9sJswPpQ3AYaxXIN
-	muvuOl+h67+Kg4i6TXE813SVm+WQSPgOCTkJqSPwBFWZ7Vkcp7WlTTY86srJWXZywQKoKSMudPk
-	YYj6qR8MvFybylLqZIAL5j+6ZE6oqUq8=
-X-Google-Smtp-Source: AGHT+IGLf5F9ZG/NbE6Kve8ltdtbhY1XiBDXCOYdVJpmYYdvFJQIqMrlvYIypc/8SJSdFnawU6v27XpLcqd5fjLTl9c=
-X-Received: by 2002:a05:6402:348a:b0:606:df70:7aa2 with SMTP id
- 4fb4d7f45d1cf-61285bf41c5mr1880418a12.31.1752661193141; Wed, 16 Jul 2025
- 03:19:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj7neCW+"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6159e23a6dbso276725eaf.3
+        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 04:34:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752665645; x=1753270445; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vAcVyiKfBCpz2acqj/YrO+QxAOg+5ZsQwlmATYrqxAY=;
+        b=Dj7neCW+M5GZy2fXq9O0+Aw9d6Rgx47/pyKKH1BUxX4+K1cuGGW8ljysjK9mbVgofV
+         xG5X7VM4PL0UN6uV6zUReOhSPLSSGF6osT30HahD8isBEfNaCcz1HvE9oNarYaPUvIqe
+         TBAmqucxb774Na8gDl/ChKEBpC5osBDI7xg7UaGWOjtFRFN9PK6bSnVVgqf0xJh2ev9d
+         p5ryde5rVDjlSjUZ12Mclx55h7lxQqBeAScgGXqakScAQ0+VG9uhGZBKjDLN7bLWvFen
+         RaO4ytY+T5orgr81UjoI4dU6BjFhyG8NwkHaMeuoGA9u8ZGM735HAP4EiG1LSc5vtJNz
+         XlnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752665645; x=1753270445;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vAcVyiKfBCpz2acqj/YrO+QxAOg+5ZsQwlmATYrqxAY=;
+        b=XRJsycIoljgK+wTEJOEuCF9IG26Z2Be452OUCk66XTD+ZOCknLv5QSIzJhvitz4IJ9
+         pkm3Xa5GKVJSjOknDtnQXtMe3zlLHPoi40tH75QQDkKNHVJVF4BFKH0z+qReP3nOPCid
+         tRUcc3NwDcl/w5hGeG+dPH7c/B9tF0PTEU+aj0Sfr3RTwEhRk6big+OoWe+yaF8yuo0W
+         s41Z3dXH6dwlTj1zWcwscBBZ2Cxd4jdSy5YozpP23cm2iI/Xy7HLuKwWgYX2HRIcLS5/
+         kjIKvuLmELxAqGuav2nS+nfK8hJAc5ZghsBgQQQpYOlOoRGABa18hrEcuhai+qDa9KsH
+         qIZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV87HMeXmsdmBMyOo1TJ1b0H4Hr3L7qQjW/qf40nl+ZvRv5J05wyNz+OYCQ4+5Ld8Nj1xnZxnUbFdU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzqK38yoaSn6vCJyQFDbatQYuvuCZtOxSOd0VKL9ePY7kti56Jj
+	6sUm5rNv+xfI5/BAIjslAImt9+xl4YengJhC+FCqbWDC6X1YgqPXJKJyX6cKf0JrUvwinyBgu3C
+	x3a3kLs7u4fGvx8zSF2AYqRp68xeNxcw=
+X-Gm-Gg: ASbGncu61HkVG0ZvWEz+X5WRDrXR7dwH0hrVSKgxdYUKHaU+C8SLnl88KyQtTeQQ+78
+	Omhl3bINbN8SGHyqfC+CJ6ypwJsWvjHV7NGfCkiZBtJKXGWOIFLTbSskMLN95cdRpzXNU2IGmSn
+	hheFSCs/uAfMcyTpjGTkt7QcyWggoYjhxR8VkwFpql3BOQNtbTqm2pwP8FcUh+KCSqU8StEDqhc
+	XlTCBo=
+X-Google-Smtp-Source: AGHT+IHjUVB8DeJdmYYw68fY49A7S/gg5agMGiXYQe6PaBXLkFDQIAda+1U9vHi8M4p8rSdTkAvaO5Tapl1Fhp1drXM=
+X-Received: by 2002:a05:6808:7003:b0:41b:3d20:a094 with SMTP id
+ 5614622812f47-41d049968dbmr1654821b6e.25.1752665644606; Wed, 16 Jul 2025
+ 04:34:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250709080233.3948503-1-maobibo@loongson.cn>
-In-Reply-To: <20250709080233.3948503-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 16 Jul 2025 18:19:41 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5x_V8CjX=Keb0k5+5zFtqh01MBWEo_hTFwwge-01jT9Q@mail.gmail.com>
-X-Gm-Features: Ac12FXwd2qxljM80M1yo635HrTRXipUsmKiKsDP_pvPFX0beAQYXth9PLs0uqjU
-Message-ID: <CAAhV-H5x_V8CjX=Keb0k5+5zFtqh01MBWEo_hTFwwge-01jT9Q@mail.gmail.com>
-Subject: Re: [PATCH v6 0/8] LoongArch: KVM: Enhancement with eiointc emulation
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250709055029.723243-1-duanchenghao@kylinos.cn> <20250709055029.723243-2-duanchenghao@kylinos.cn>
+In-Reply-To: <20250709055029.723243-2-duanchenghao@kylinos.cn>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Wed, 16 Jul 2025 19:33:51 +0800
+X-Gm-Features: Ac12FXweD0Sx1J-1wZxPububLXCVBHc4Mt7YozKGWOCrJj4wKvG6dPBm5LpT0qo
+Message-ID: <CAEyhmHSB32tPYbUKqqxFWQqnyDGcNPQsCqBKGdNRrn+U+jMimw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] LoongArch: Add the function to generate the beq
+ and bne assembly instructions.
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn, 
+	Youling Tang <tangyouling@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied with some modifications. E.g., Patch6 removes offset, and
-Patch8 adds it back, so I combine these two.
-
-Since the code is a little different, it is better to test it again [1].
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongs=
-on.git/log/?h=3Dloongarch-kvm
-
-
-
-Huacai
-
-On Wed, Jul 9, 2025 at 4:02=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
-:
+On Wed, Jul 9, 2025 at 1:50=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos.=
+cn> wrote:
 >
-> This series add generic eiointc 8 bytes access interface, so that 1/2/4/8
-> bytes access can use the generic 8 bytes access interface. It reduce
-> about 500 lines redundant code and make eiointc emulation driver
-> simpler than ever.
+> Add branch jump function:
+> larch_insn_gen_beq
+> larch_insn_gen_bne
 >
+
+Please drop the period from subject line.
+The commit message is kind of vague...
+
+Maybe:
+    LoongArch: Add larch_insn_gen_{beq,bne} helpers
+
+    Add larch_insn_gen_beq() and larch_insn_gen_bne() helpers
+    which will be used in BPF trampoline implementation.
+
+
+> Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Co-developed-by: Youling Tang <tangyouling@kylinos.cn>
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
 > ---
-> v5 ... v6:
->   1. Merge previous patch 5 & 6 into one, patch 7 & 10 into into one and
->      patch 12 and patch 13 into one.
->   2. Use sign extension with destination register for IOCSRRD.{B/H/W}
->      kernel emulation.
+>  arch/loongarch/include/asm/inst.h |  2 ++
+>  arch/loongarch/kernel/inst.c      | 28 ++++++++++++++++++++++++++++
+>  2 files changed, 30 insertions(+)
 >
-> v4 ... v5
->   1. Rebase patch on latest kernel where bugfix of eiointc has been
->      merged.
->   2. Add generic eiointc 8 bytes access interface, 1/2/4/8 bytes access
->      uses generic 8 bytes access interface.
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
+sm/inst.h
+> index 3089785ca..2ae96a35d 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -511,6 +511,8 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int =
+imm);
+>  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
+>  u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, =
+int imm);
+>  u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, in=
+t imm);
+> +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
+ imm);
+> +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
+ imm);
 >
-> v3 ... v4:
->   1. Remove patch about enhancement and only keep bugfix relative
->      patches.
->   2. Remove INTC indication in the patch title.
->   3. With access size, keep default case unchanged besides 1/2/4/8 since
->      here all patches are bugfix
->   4. Firstly check return value of copy_from_user() with error path,
->      keep the same order with old patch in patch 4.
+>  static inline bool signed_imm_check(long val, unsigned int bit)
+>  {
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index 14d7d700b..674e3b322 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -336,3 +336,31 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum =
+loongarch_gpr rj, int imm)
 >
-> v2 ... v3:
->   1. Add prefix INTC: in title of every patch.
->   2. Fix array index overflow when emulate register EIOINTC_ENABLE
->      writing operation.
->   3. Add address alignment check with eiointc register access operation.
->
-> v1 ... v2:
->   1. Add extra fix in patch 3 and patch 4, add num_cpu validation check
->   2. Name of stat information keeps unchanged, only move it from VM stat
->      to vCPU stat.
-> ---
-> Bibo Mao (8):
->   LoongArch: KVM: Use standard bitops API with eiointc
->   LoongArch: KVM: Remove unused parameter len
->   LoongArch: KVM: Add stat information with kernel irqchip
->   LoongArch: KVM: Remove never called default case statement
->   LoongArch: KVM: Use generic function loongarch_eiointc_read()
->   LoongArch: KVM: Remove some unnecessary local variables
->   LoongArch: KVM: Replace eiointc_enable_irq() with eiointc_update_irq()
->   LoongArch: KVM: Add generic function loongarch_eiointc_write()
->
->  arch/loongarch/include/asm/kvm_host.h |  12 +-
->  arch/loongarch/kvm/intc/eiointc.c     | 558 ++++----------------------
->  arch/loongarch/kvm/intc/ipi.c         |  28 +-
->  arch/loongarch/kvm/intc/pch_pic.c     |   4 +-
->  arch/loongarch/kvm/vcpu.c             |   8 +-
->  5 files changed, 102 insertions(+), 508 deletions(-)
->
->
-> base-commit: 733923397fd95405a48f165c9b1fbc8c4b0a4681
+>         return insn.word;
+>  }
+> +
+> +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
+ imm)
+> +{
+> +       union loongarch_instruction insn;
+> +
+> +       if ((imm & 3) || imm < -SZ_128K || imm >=3D SZ_128K) {
+> +               pr_warn("The generated beq instruction is out of range.\n=
+");
+> +               return INSN_BREAK;
+> +       }
+> +
+> +       emit_beq(&insn, rj, rd, imm >> 2);
+> +
+> +       return insn.word;
+> +}
+> +
+> +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
+ imm)
+> +{
+> +       union loongarch_instruction insn;
+> +
+> +       if ((imm & 3) || imm < -SZ_128K || imm >=3D SZ_128K) {
+> +               pr_warn("The generated bne instruction is out of range.\n=
+");
+> +               return INSN_BREAK;
+> +       }
+> +
+> +       emit_bne(&insn, rj, rd, imm >> 2);
+> +
+> +       return insn.word;
+> +}
 > --
-> 2.39.3
+> 2.43.0
 >
