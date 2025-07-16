@@ -1,258 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA5D1922C0
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 04:42:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FF025393E
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 04:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752640958; cv=none; b=plZREXGHtv8cVsxEj16WSq5VhusAo936rMc+YrtiUxYhLhyj1U9E7NDdRBbjhKEYi+xPOwOSsY1styzRODHko3hDThCztAEAEXh3Izgc+zRYbCia6/CVlr92AXbsr1BK44VTk/vz6pxIavuC8l5Yq3Uzwk+x4GDkOO0J+xdrWAg=
+	t=1752641010; cv=none; b=mWYgPBEzv3mcvvCbL2+R2Yj1ha09mGj4iLzSNIb3L03yY2jCeG7UP8sN/uVi1cR2BQIqqF0/28iyRRwGcLTbuRvmipcrpb5aP+lzPC6mddEbSCXCO1QEsY6xaUTOT+iG9SOKOTWJp1rDKzCuzzSnrsBkOC4+PO4iUt63EF+WkbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752640958; c=relaxed/simple;
-	bh=1pR1E55zun5lglAmSHkjS2gCrBlSJFSmYM9iinOmiZY=;
+	s=arc-20240116; t=1752641010; c=relaxed/simple;
+	bh=zwB4EjVhaGmCzUl5B4SCz6jWqAHvNe6rLsTwWNK4olg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EIVREB52Txk2sxZqlooKnGScIq36wccPvDTy0ybJWibUNLBZG86OqXVHoiqX6+oKsXkA9sf1S1LaPPB1jex/O7QjWTeaOjfPGh4XDmvAClIz+IgJkxhmTJDPjm72GUf/sC+sRyWYvg4fI1EGI2chG+AIiX9EqONow27amumKjDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KhqpdT7/; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=nkLTcvk5gE7ICV4boV4HudpUVzKLd9DRAZh6rH9QH6FUWtkmVLIWRXslKvfGtzhMRBZYvWX2nLYcW3IdU7VCkcXdEgOSlmKG4FY1s8EODLci69vfBMkdXBLKfLQ5RmqZ9WvdZC+Vk17S+1A8osHEjmZLABbdBDKOvtfQ2NAAMWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jEjC93v6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KhqpdT7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB5EC4CEF0
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 04:42:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jEjC93v6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D79EC4CEF8
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 04:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752640956;
-	bh=1pR1E55zun5lglAmSHkjS2gCrBlSJFSmYM9iinOmiZY=;
+	s=k20201202; t=1752641010;
+	bh=zwB4EjVhaGmCzUl5B4SCz6jWqAHvNe6rLsTwWNK4olg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KhqpdT7/1lFai7hkzu2pPXjxJFklNqeRbrb4j7hZSJ//qpqkf3+a7ZOzSE2nmCLps
-	 HLo7C1MOzETP3m1XuwLxK3lObCZ3DBk2dvsBXm6zYme3sbr669oJhC54kOyZVUdfsH
-	 GBq/oXA016qD4f52ALgB2re8aQcxugRVR+rycoeVt/YnRb+f+SkH45fKQ35FUQZAh9
-	 DxVDrjUcAsbCSwv9z/5XY3ZNQqeMP1lIqASDbXh9tosprmLcHmPU4vtahkh9ed2jJ3
-	 26pyOJGSXPHUaGM5nydpMZ663AYasZHxQOCAVcdu7MySL3PkvwHK4hhHwxNgeTryGA
-	 iNPJ87KNFw9qw==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60c01b983b6so1128916a12.0
-        for <loongarch@lists.linux.dev>; Tue, 15 Jul 2025 21:42:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW23YjoeigoiWKpS8CaQCWDxVknAkvVAi30zqq5I3FftoMgmjFrFvezVi3vXn8hK8O18+pw7EF9e6Q=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxKQ9+a4uwu/QNgzR5AnmoAZG4jNSzFrLIioi+n4wVO8hxMX1ZZ
-	Ch759b2nAA+RmOrarUczbyNWuNSXxdbfkvwJqOgWNxVoYWep993LgwWAIP2FuYAv3Q/gFTnmaHC
-	+mTM9n6B6uQRBZTWjUW1c0zJXcgXBn5M=
-X-Google-Smtp-Source: AGHT+IEZNW+n00+K7uVNM+OZwoDDbXDoMNYRzuhptwtAjZOOG063z2K3qGwwJAmw+El0tyGOntyvygHR815Q4+7Y7Us=
-X-Received: by 2002:a05:6402:1ed1:b0:601:470b:6d47 with SMTP id
- 4fb4d7f45d1cf-61282b2a14amr1535459a12.1.1752640954706; Tue, 15 Jul 2025
- 21:42:34 -0700 (PDT)
+	b=jEjC93v6Jt8RzgQUuC7aBRFsirlWknsvl/IZ0Zh2AD2FEhcHo3ezUm9MVSRepF4NI
+	 ALBXuzGBToN5XhyBA/6xffk3Om9EzQGM2bcNh6BaGUKSZPtaM9ZvZeVOAvSrs5emCk
+	 dl3MYJO5piqt7Ri8ShWSRKRpxsSkCsBwoQr4U8IPDlZEpcvYlMMwqcF92fuqhL0/4r
+	 dU5BfjacM5318QgIKXq4R5y9jyLoexHBUJRAhbyLkdaZ27gYL1TsbQGiyxDCJfG0tT
+	 OxgrKzh3lO1YViyN/bh11cmxcHcigCyNdF9KinBsNACyodnwXM6ZnGF4rnvhJijCqQ
+	 HwP9bR6PK2o0w==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so11594228a12.1
+        for <loongarch@lists.linux.dev>; Tue, 15 Jul 2025 21:43:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUiFV075oXurKlMZCLvNkT6m1xeSvEWge6Of78MAQCOzsYgprGRXJUEID5cdUZroqhMVVJNhrNFVGU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxxtrzoEqHx9XqY5Ckwyo0Q0+Sn7HW0GcnV8CCRIvJfbU59MJrw
+	eahbsLBWTnhFCCvYGr07NMpCOv0hEiB4hC0iZmU9OKmywceCgW9tAIRek/jn7b9s4TAgY1XSfGv
+	dTDGF6n4j0ZLtv6wfZBdu8EBa0aSOiaQ=
+X-Google-Smtp-Source: AGHT+IGeE+if8Ayb0ICa+ec73Rjvr/DANiAwMLEAUbemzHM+pI0fSLh5p4fkDBTdx5OyuBtATeyOPBfm4N4WGQj5di4=
+X-Received: by 2002:a05:6402:34d6:b0:608:6754:ec67 with SMTP id
+ 4fb4d7f45d1cf-61285bf3730mr1035681a12.30.1752641009015; Tue, 15 Jul 2025
+ 21:43:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250716043915.15034-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20250716043915.15034-1-yangtiezhu@loongson.cn>
+References: <20250714064542.2276247-1-zhoubinbin@loongson.cn>
+In-Reply-To: <20250714064542.2276247-1-zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 16 Jul 2025 12:42:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5yPPcU03MGenKDH=sUTkmMPnsGj13zkLA1h-uHVMcHOQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzj3GhQNWPXapF0gcLr8457R1lphz5A9CDkZWOdOqbXfOy88UTG6EOYEEQ
-Message-ID: <CAAhV-H5yPPcU03MGenKDH=sUTkmMPnsGj13zkLA1h-uHVMcHOQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] LoongArch: BPF: Add struct ops support for trampoline
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>, bpf@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Wed, 16 Jul 2025 12:43:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Pjbza1cAwjBDbUo+=r0Om3CkX6f7K2tWhgaWkQpVqGw@mail.gmail.com>
+X-Gm-Features: Ac12FXxhAE9VbIwEVo1EYDrMHOHDVPu806Tbuv8tKeVIwSSgB_xzla3Sy5CmiR0
+Message-ID: <CAAhV-H5Pjbza1cAwjBDbUo+=r0Om3CkX6f7K2tWhgaWkQpVqGw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: loongson-64bit: Add loongson gpio irq support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-gpio@vger.kernel.org, 
+	Xi Ruoyao <xry111@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Tiezhu,
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-I hope this patch can be squashed to V4 of chenghao's patchset, as a
-co-developer.
-
-Huacai
-
-On Wed, Jul 16, 2025 at 12:39=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
+On Mon, Jul 14, 2025 at 2:46=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
 >
-> Use BPF_TRAMP_F_INDIRECT flag to detect struct ops and emit proper
-> prologue and epilogue for this case.
+> Add the interrupt enable register offset (inten_offset) so that GPIO
+> interrupts can be enabled normally.
 >
-> With this patch, all of the struct_ops related testcases (except
-> struct_ops_multi_pages) passed on LoongArch.
+> According to the latest interface specifications, the definition of GPIO
+> interrupts in ACPI is similar to that in FDT. The GPIO interrupts are
+> listed one by one according to the GPIO number, and the corresponding
+> interrupt number can be obtained directly through the GPIO number
+> specified by the consumer.
 >
-> The testcase struct_ops_multi_pages failed is because the actual
-> image_pages_cnt is 40 which is bigger than MAX_TRAMP_IMAGE_PAGES.
->
-> Before:
->
->   $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
->   ...
->   WATCHDOG: test case struct_ops_module/struct_ops_load executes for 10 s=
-econds...
->
-> After:
->
->   $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
->   ...
->   #15      bad_struct_ops:OK
->   ...
->   #399     struct_ops_autocreate:OK
->   ...
->   #400     struct_ops_kptr_return:OK
->   ...
->   #401     struct_ops_maybe_null:OK
->   ...
->   #402     struct_ops_module:OK
->   ...
->   #404     struct_ops_no_cfi:OK
->   ...
->   #405     struct_ops_private_stack:SKIP
->   ...
->   #406     struct_ops_refcounted:OK
->   Summary: 8/25 PASSED, 3 SKIPPED, 0 FAILED
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
+>  drivers/gpio/gpio-loongson-64bit.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> This is a RFC patch, based on 6.16-rc6 and the following series:
+> diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loong=
+son-64bit.c
+> index 26227669f026..d5b2ad848519 100644
+> --- a/drivers/gpio/gpio-loongson-64bit.c
+> +++ b/drivers/gpio/gpio-loongson-64bit.c
+> @@ -222,6 +222,7 @@ static const struct loongson_gpio_chip_data loongson_=
+gpio_ls2k2000_data0 =3D {
+>         .conf_offset =3D 0x0,
+>         .in_offset =3D 0xc,
+>         .out_offset =3D 0x8,
+> +       .inten_offset =3D 0x14,
+>  };
 >
-> [PATCH v3 0/5] Support trampoline for LoongArch
-> https://lore.kernel.org/loongarch/20250709055029.723243-1-duanchenghao@ky=
-linos.cn/
+>  static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1=
+ =3D {
+> @@ -230,6 +231,7 @@ static const struct loongson_gpio_chip_data loongson_=
+gpio_ls2k2000_data1 =3D {
+>         .conf_offset =3D 0x0,
+>         .in_offset =3D 0x20,
+>         .out_offset =3D 0x10,
+> +       .inten_offset =3D 0x30,
+>  };
 >
->  arch/loongarch/net/bpf_jit.c | 71 ++++++++++++++++++++++++------------
->  1 file changed, 47 insertions(+), 24 deletions(-)
+>  static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data2=
+ =3D {
+> @@ -246,6 +248,7 @@ static const struct loongson_gpio_chip_data loongson_=
+gpio_ls3a5000_data =3D {
+>         .conf_offset =3D 0x0,
+>         .in_offset =3D 0xc,
+>         .out_offset =3D 0x8,
+> +       .inten_offset =3D 0x14,
+>  };
 >
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 6820558afce5..7663b84a4ff1 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1599,6 +1599,7 @@ static int __arch_prepare_bpf_trampoline(struct jit=
-_ctx *ctx, struct bpf_tramp_i
->         struct bpf_tramp_links *fentry =3D &tlinks[BPF_TRAMP_FENTRY];
->         struct bpf_tramp_links *fexit =3D &tlinks[BPF_TRAMP_FEXIT];
->         struct bpf_tramp_links *fmod_ret =3D &tlinks[BPF_TRAMP_MODIFY_RET=
-URN];
-> +       bool is_struct_ops =3D flags & BPF_TRAMP_F_INDIRECT;
->         int ret, save_ret;
->         void *orig_call =3D func_addr;
->         u32 **branches =3D NULL;
-> @@ -1674,18 +1675,31 @@ static int __arch_prepare_bpf_trampoline(struct j=
-it_ctx *ctx, struct bpf_tramp_i
+>  static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data =3D =
+{
+> @@ -254,6 +257,7 @@ static const struct loongson_gpio_chip_data loongson_=
+gpio_ls7a_data =3D {
+>         .conf_offset =3D 0x800,
+>         .in_offset =3D 0xa00,
+>         .out_offset =3D 0x900,
+> +       .inten_offset =3D 0xb00,
+>  };
 >
->         stack_size =3D round_up(stack_size, 16);
+>  /* LS7A2000 chipset GPIO */
+> @@ -263,6 +267,7 @@ static const struct loongson_gpio_chip_data loongson_=
+gpio_ls7a2000_data0 =3D {
+>         .conf_offset =3D 0x800,
+>         .in_offset =3D 0xa00,
+>         .out_offset =3D 0x900,
+> +       .inten_offset =3D 0xb00,
+>  };
 >
-> -       /* For the trampoline called from function entry */
-> -       /* RA and FP for parent function*/
-> -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
-> -       emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> -       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> -       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
-> -
-> -       /* RA and FP for traced function*/
-> -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_=
-size);
-> -       emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_siz=
-e - 8);
-> -       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_siz=
-e - 16);
-> -       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_s=
-ize);
-> +       if (!is_struct_ops) {
-> +               /*
-> +                * For the trampoline called from function entry,
-> +                * the frame of traced function and the frame of
-> +                * trampoline need to be considered.
-> +                */
-> +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP,=
- -16);
-> +               emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8=
-);
-> +               emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0=
-);
-> +               emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP,=
- 16);
-> +
-> +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP,=
- -stack_size);
-> +               emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, s=
-tack_size - 8);
-> +               emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, s=
-tack_size - 16);
-> +               emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP,=
- stack_size);
-> +       } else {
-> +               /*
-> +                * For the trampoline called directly, just handle
-> +                * the frame of trampoline.
-> +                */
-> +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP,=
- -stack_size);
-> +               emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, s=
-tack_size - 8);
-> +               emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, s=
-tack_size - 16);
-> +               emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP,=
- stack_size);
-> +       }
+>  /* LS7A2000 ACPI GPIO */
+> @@ -281,6 +286,7 @@ static const struct loongson_gpio_chip_data loongson_=
+gpio_ls3a6000_data =3D {
+>         .conf_offset =3D 0x0,
+>         .in_offset =3D 0xc,
+>         .out_offset =3D 0x8,
+> +       .inten_offset =3D 0x14,
+>  };
 >
->         /* callee saved register S1 to pass start time */
->         emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off=
-);
-> @@ -1772,21 +1786,30 @@ static int __arch_prepare_bpf_trampoline(struct j=
-it_ctx *ctx, struct bpf_tramp_i
+>  static const struct of_device_id loongson_gpio_of_match[] =3D {
 >
->         emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off=
-);
->
-> -       /* trampoline called from function entry */
-> -       emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_siz=
-e - 8);
-> -       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_siz=
-e - 16);
-> -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_s=
-ize);
-> +       if (!is_struct_ops) {
-> +               /* trampoline called from function entry */
-> +               emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, s=
-tack_size - 8);
-> +               emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, s=
-tack_size - 16);
-> +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP,=
- stack_size);
-> +
-> +               emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8=
-);
-> +               emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0=
-);
-> +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP,=
- 16);
->
-> -       emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> -       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
-> +               if (flags & BPF_TRAMP_F_SKIP_FRAME)
-> +                       /* return to parent function */
-> +                       emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARC=
-H_GPR_RA, 0);
-> +               else
-> +                       /* return to traced function */
-> +                       emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARC=
-H_GPR_T0, 0);
-> +       } else {
-> +               /* trampoline called directly */
-> +               emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, s=
-tack_size - 8);
-> +               emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, s=
-tack_size - 16);
-> +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP,=
- stack_size);
->
-> -       if (flags & BPF_TRAMP_F_SKIP_FRAME)
-> -               /* return to parent function */
->                 emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA=
-, 0);
-> -       else
-> -               /* return to traced function */
-> -               emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0=
-, 0);
-> +       }
->
->         ret =3D ctx->idx;
->  out:
+> base-commit: e502df58b5e3767c00e887744b6eff43b7fde3ea
 > --
-> 2.42.0
+> 2.47.1
 >
