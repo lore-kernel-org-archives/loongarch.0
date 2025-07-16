@@ -1,114 +1,134 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010A7233149
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 09:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F7F27144B
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 09:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752657451; cv=none; b=t/PdS4XFwvwcBLflceyGFpeMT3n0qyyr0piJT2qRtd41+eC+xx3QPImf3xcz3u6bC20HU+evhjaAy6BkQ6n8dLRj2O/jXTOvXbzoMfvibfWbh1RGpKmLOsFgGfpMNr+mhlUvOh2/2YSRAnWUM1TrysKWOmcxhgVd9fqkzOQbcBs=
+	t=1752658082; cv=none; b=XKC2mrzi8t9NGA+EjJPl/5/d3mHDLHrzHxUlGviEDBZJ+SEbhkrPw+IZNC6YZ9/+16e2UWcaHMpx/pA7ltAR6GjtjBzV4iJIru1R55Qr9Gc9rtRrdVPPvRKoG3vphlBD1rP9gyl6Yf2J44a+xvRG8lu3J5QPzSdk3++NpXkQB04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752657451; c=relaxed/simple;
-	bh=B8pIb3//fnjXonWNeyZLRydupO9ewvyQuQ9hPCmNGiU=;
+	s=arc-20240116; t=1752658082; c=relaxed/simple;
+	bh=/ooNibycT6Ptl/l+d9wY9QftFzDnh8lZ2fneZVt1FJg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cEdZSrrQH/5cCdZdfxbjPVI7Jzj8Tv6nlZQMbqmu4ZuJZILdHxYrp/XbWachgm/jpMTRTmgvYqVOpL5kF9iT8gyYBT0DByrCwuX+F/wIMJynq7zAjqsviTwnmACveaYi1P50g+JlyW0YDTgDsUB9agZ8Vm58fIrsh3kl7FPyD20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z2wKkDYN; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=lqFq3UQOiRQLcJXHc/IkIlHh6z2jzS41tM6spA4b787dpwAp5cxfcLvnZChkzxDEBQPsYwjv2KgG7ZnsLqtWnj2yiCr1EjN8HWReBBjGQR7SG+0D3HZj+u5EyCv4pKsuSnYwqZjfhg4Ga/IO/jpt5KdpPqRmJoFfetLgCWhgQng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LWQQgYbw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2wKkDYN"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60c01f70092so10611431a12.3
-        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 02:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752657448; x=1753262248; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B8pIb3//fnjXonWNeyZLRydupO9ewvyQuQ9hPCmNGiU=;
-        b=Z2wKkDYNgxyaU6VHckqq/k9V7MAzgnDeooauDUMxN2LkdZayUAlgbM8MqKnB5apT07
-         xnkKwsROJ29HDUhdTwrk3rsRfCcuawgq+iD+/w60fqdSfD4UoNno8YrdlENEVvgYvRmT
-         VSlrfBWy/YFRxw5WTG0DCMwvrIrEsWhcCqo87yvfn34FChwQKr8TDZTh1g1f7aoiCr4w
-         I1G1PHCtS2/AU1V3gbklaB0rpi9U2GvOhKcnw3/SX00/gGCU/svSjr2jewdC03zLD6zq
-         6zl+S9DPgM7mQ+KLdVLOKn2O8Hu61TeZZJbiub3V0t5DjeXlcacYEJeQhJAAJVws5KGl
-         Xi/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752657448; x=1753262248;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B8pIb3//fnjXonWNeyZLRydupO9ewvyQuQ9hPCmNGiU=;
-        b=E6pFvBg2d3BSmGK92vTy9tnLaPEAo7O0MuFY1kV4OX09LrUdFgmzRHZZm2sK+HiHtl
-         Y6JMhPsjTIihyxPD4qZ8wO5pXWM6iu+gqbB1bGXP2/XMQ98JZLa/oAXlqObXSYx7jMxQ
-         4hkn9ByEre5s6vREkkdfA90YT7YxN3NmT9tcEL1bsGc0Hn8eAbSLs35QZKTlOOMa7jVp
-         kp2igdsK33sWS9NHOXcuYX2yWnf7t00NVY3bE27Vvoe9vEzDnJGqHb0Wv0WdxLLLAKBX
-         7D6e3uHPpC+FW9f5OG7MgdkWk7rMZB22xO4YlSgj8meHKITRUoPTpzIGlbXQdE58/2PJ
-         O21g==
-X-Forwarded-Encrypted: i=1; AJvYcCVOHoMWADJdVcYvssHQpgLh+7i7OZLeeXAact/Sy8xK8cYyhyNlSZWLQdA6RxFLdUST237aBHd/R6s=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzgqpnBeOAzpQJp9xlEA0Fstsrmq4cBf1WRrtNkRnxk3Hw+rVQD
-	tk0Cijp2cAU5ePSxx6RBjyxks5ekGjZhuQ8Eqgk86bVA1e7yd4VPZfjXENPjLO+4PxFin3/vGnw
-	Q3iCyzfkfTps+1+E/K2hHMD/mIiMXll8D2iKzZFE=
-X-Gm-Gg: ASbGncu2FdylaDBjuIJsnRRktymq8PUZZRMI/anUfRcJCRRYt/2HA/lJ8+0jtntYki7
-	aK0vtBifNL3mIDuyFoiwfcE981iHWnKoHpUofYckAgKR4pF6Of/EDQmDLQ6RSQFuk1iMama4u9j
-	45yB3lXwPZB+h/ZWM5yo1iXf57XLFUcASId9NlF5MHtjDLu6zYCmNJyrWf/a52tZFN0X7K2ZPfc
-	WJ1mNNg
-X-Google-Smtp-Source: AGHT+IHQDAzi45aRhCZnxl1bC8eDi6W6RNajDVCN3Gjrqf87+jCiAKUbzSzwiO0Qcc94Sy1m+4uuh6ImB3fwdzOZTFA=
-X-Received: by 2002:a17:907:a709:b0:ae3:d5f2:393a with SMTP id
- a640c23a62f3a-ae9c9b218b0mr259553766b.44.1752657447367; Wed, 16 Jul 2025
- 02:17:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LWQQgYbw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEBE5C4CEF7
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 09:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752658081;
+	bh=/ooNibycT6Ptl/l+d9wY9QftFzDnh8lZ2fneZVt1FJg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LWQQgYbw74g1N9ak3YE5xW4qWaeR1NmJdowSCUL1bmSKkkeJGvvHB0XzLb0NN2n/e
+	 PSB4+yGl88CRni4hGmDRT9fJ360DSm/jHWF8hEQtTIIBtn1IaRob6t96XPjX+caLv3
+	 5K0HieqTvR6LjZD+hRL9XwC57pBapOSfnHBIunUv4gQzNwJ87k/UENP5rTyeKMdwUe
+	 kouQiU1yiLzM+a+mdOYoPYd/eNgZoCEwC2U4/tbuu7iFVz3YZ3kBF+Tx6fYP7Dyb33
+	 mzOzFiaZj34iK2N9ywAHzCNcDIJ3isEx8haCKQKkdV8lfKdw0wnWmg2usKO8VL3s5p
+	 nrVbieQc1PLOg==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60dffae17f3so9939506a12.1
+        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 02:28:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWPM/LQpEfzuS1RVlDNDsL6t3WaXepNSaaOGdrjMy+J/rTKKgAEAa3ggWwyKycZ+bcfjMQ11KBmNRM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwN0qt9zrmx7jdJKyS4WM6zeM0CZHMTUQnHqLxHFZ0ejBS08uVf
+	ULBa4hbqcCmTz59hk+fsKD5dr+UfJEq9WxGkHbQtkZA+g+KRV5f+yIzcg9Lcvh8bTu22hqkzirm
+	GP5M2XdYg9L2zoSW9jY/8B8+t7HF5k4I=
+X-Google-Smtp-Source: AGHT+IE3+olCTWk70P4IwLbkQxcU5HqWybKxI8NHr0VQQ7alAGumsr+W1LKSTysDG5mfqU3m9HTc3rO/ag112PxRcww=
+X-Received: by 2002:a05:6402:254f:b0:607:f558:e328 with SMTP id
+ 4fb4d7f45d1cf-6128592c9c1mr1586433a12.5.1752658080243; Wed, 16 Jul 2025
+ 02:28:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250714064542.2276247-1-zhoubinbin@loongson.cn> <CAMRc=Mch5d3=vbRqCohh8viPpp_dTOd8iQBD1fEQVeZrRJD90w@mail.gmail.com>
-In-Reply-To: <CAMRc=Mch5d3=vbRqCohh8viPpp_dTOd8iQBD1fEQVeZrRJD90w@mail.gmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 16 Jul 2025 17:17:13 +0800
-X-Gm-Features: Ac12FXyLyRSH1E7-pxNtloxl8fOa7MDzIIBKW0_IRyi9AZAxHf-xeiYdWRW6Rbo
-Message-ID: <CAMpQs4LcD3+gN54WUwHSU4vKgO=mWGiiZ5b_PCr7HZYWbLORwg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: loongson-64bit: Add loongson gpio irq support
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Linus Walleij <linus.walleij@linaro.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	Xi Ruoyao <xry111@xry111.site>
+References: <20250702105922.1035771-1-wheatfox17@icloud.com> <9e9b54fe-4762-f128-a53f-1a92d160a5b7@loongson.cn>
+In-Reply-To: <9e9b54fe-4762-f128-a53f-1a92d160a5b7@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 16 Jul 2025 17:27:49 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6B7Nd4jqVO-wM9JRgf0cqfhPMZwMM6kzcf0wdBC+RUcA@mail.gmail.com>
+X-Gm-Features: Ac12FXzKrhACmL1IlFIBdPr7sv-aWNl5P4xDx2j6WE03-C5BgTbnN1goNn5F1-8
+Message-ID: <CAAhV-H6B7Nd4jqVO-wM9JRgf0cqfhPMZwMM6kzcf0wdBC+RUcA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Add tracepoints for CPUCFG and CSR
+ emulation exits
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Yulong Han <wheatfox17@icloud.com>, kernel@xen0n.name, zhaotianrui@loongson.cn, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Bartosz:
+Applied, thanks.
 
-Thanks for your reply.
 
-On Wed, Jul 16, 2025 at 5:01=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+Huacai
+
+On Mon, Jul 7, 2025 at 11:30=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
 >
-> On Mon, Jul 14, 2025 at 8:45=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.=
-cn> wrote:
+> On 2025/7/2 =E4=B8=8B=E5=8D=886:59, Yulong Han wrote:
+> > This patch adds tracepoints to track KVM exits caused by CPUCFG
+> > and CSR emulation. Note that IOCSR emulation tracing is already
+> > covered by the generic trace_kvm_iocsr().
 > >
-> > Add the interrupt enable register offset (inten_offset) so that GPIO
-> > interrupts can be enabled normally.
-> >
-> > According to the latest interface specifications, the definition of GPI=
-O
-> > interrupts in ACPI is similar to that in FDT. The GPIO interrupts are
-> > listed one by one according to the GPIO number, and the corresponding
-> > interrupt number can be obtained directly through the GPIO number
-> > specified by the consumer.
-> >
-> > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > Signed-off-by: Yulong Han <wheatfox17@icloud.com>
 > > ---
+> >   arch/loongarch/kvm/exit.c  |  2 ++
+> >   arch/loongarch/kvm/trace.h | 14 +++++++++++++-
+> >   2 files changed, 15 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> > index fa52251b3bf1c..6a47a23ae9cd6 100644
+> > --- a/arch/loongarch/kvm/exit.c
+> > +++ b/arch/loongarch/kvm/exit.c
+> > @@ -289,9 +289,11 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *v=
+cpu)
+> >       er =3D EMULATE_FAIL;
+> >       switch (((inst.word >> 24) & 0xff)) {
+> >       case 0x0: /* CPUCFG GSPR */
+> > +             trace_kvm_exit_cpucfg(vcpu, KVM_TRACE_EXIT_CPUCFG);
+> >               er =3D kvm_emu_cpucfg(vcpu, inst);
+> >               break;
+> >       case 0x4: /* CSR{RD,WR,XCHG} GSPR */
+> > +             trace_kvm_exit_csr(vcpu, KVM_TRACE_EXIT_CSR);
+> >               er =3D kvm_handle_csr(vcpu, inst);
+> >               break;
+> >       case 0x6: /* Cache, Idle and IOCSR GSPR */
+> > diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+> > index 1783397b1bc88..145514dab6d5b 100644
+> > --- a/arch/loongarch/kvm/trace.h
+> > +++ b/arch/loongarch/kvm/trace.h
+> > @@ -46,11 +46,15 @@ DEFINE_EVENT(kvm_transition, kvm_out,
+> >   /* Further exit reasons */
+> >   #define KVM_TRACE_EXIT_IDLE         64
+> >   #define KVM_TRACE_EXIT_CACHE                65
+> > +#define KVM_TRACE_EXIT_CPUCFG                66
+> > +#define KVM_TRACE_EXIT_CSR           67
+> >
+> >   /* Tracepoints for VM exits */
+> >   #define kvm_trace_symbol_exit_types                 \
+> >       { KVM_TRACE_EXIT_IDLE,          "IDLE" },       \
+> > -     { KVM_TRACE_EXIT_CACHE,         "CACHE" }
+> > +     { KVM_TRACE_EXIT_CACHE,         "CACHE" },      \
+> > +     { KVM_TRACE_EXIT_CPUCFG,        "CPUCFG" },     \
+> > +     { KVM_TRACE_EXIT_CSR,           "CSR" }
+> >
+> >   DECLARE_EVENT_CLASS(kvm_exit,
+> >           TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+> > @@ -82,6 +86,14 @@ DEFINE_EVENT(kvm_exit, kvm_exit_cache,
+> >            TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+> >            TP_ARGS(vcpu, reason));
+> >
+> > +DEFINE_EVENT(kvm_exit, kvm_exit_cpucfg,
+> > +          TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+> > +          TP_ARGS(vcpu, reason));
+> > +
+> > +DEFINE_EVENT(kvm_exit, kvm_exit_csr,
+> > +          TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+> > +          TP_ARGS(vcpu, reason));
+> > +
+> >   DEFINE_EVENT(kvm_exit, kvm_exit,
+> >            TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
+> >            TP_ARGS(vcpu, reason));
+> >
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 >
-> Seems like the message should say: "Extend loongson gpio irq support"
-> or "Add loongson gpio irq support for mode models"? The driver already
-> supports interrupts, you just seem to extend the support. Tell me if
-> I'm right and I can amend the message when applying.
-
-Yes, you are right, there should be "Extend loongson gpio irq support".
->
-> Bart
-
-
---=20
-Thanks.
-Binbin
