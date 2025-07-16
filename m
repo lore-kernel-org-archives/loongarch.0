@@ -1,75 +1,81 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC63B1DF26B
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 05:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA2D198E8C
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 06:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752642610; cv=none; b=schVp18PAUPq8m4FRS0FojoyC7UWvo/mUmLcgxYcayHtWBSqQkCJTS0/97MfmNG3lQ0fQx449qBjYQAMpLr68MDzPsGtlvDDn65CKz3xEW8ElPkQwFNBe/kuzcX3ARNEKMY1WY90CW9yv5/dB42SW6BvSsgdIRZymTeMEetfpPE=
+	t=1752646993; cv=none; b=Du/UjxTIJLfmkOjqYkjXCxXVVzYeGYva9tPbWGA8V5gJcuBro/qtnOjngqebrIdlEPiohAFk7iWNEv1P2hjX+tmO5S4jrH9a8VIT54YAWjEv1AmGeeJ1XaeLUZTbEoLLRBJhDXgcmXNgxMZiGKbHoEe0Z5gzm8D4EiV5xql/IWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752642610; c=relaxed/simple;
-	bh=FSVZXZ0piEv9K/0SMye10YrMFNijterWjh/iy8IQ7fs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=O1e2LVYu1+p4EwVbaz7PPkjIfAXnPaoT5+6MzMlmoKyCTWQSLf9y7k8WGzf9l/fo5ycw+eDGfobUvhcWJxK8YBGRAl4jpymretaSLOIU/zYiOgFCB6gCZKan13spvH7yPGwsuNquGrx7sIadNMQXohUu7CKSaz0r/y1Y62buRBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxqmorNHdoPPAqAQ--.48131S3;
-	Wed, 16 Jul 2025 13:10:03 +0800 (CST)
-Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxQ+QqNHdoeFsZAA--.5851S3;
-	Wed, 16 Jul 2025 13:10:03 +0800 (CST)
-Subject: Re: [RFC PATCH] LoongArch: BPF: Add struct ops support for trampoline
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Hengqi Chen <hengqi.chen@gmail.com>, bpf@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250716043915.15034-1-yangtiezhu@loongson.cn>
- <CAAhV-H5yPPcU03MGenKDH=sUTkmMPnsGj13zkLA1h-uHVMcHOQ@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <cd190c8a-a7b9-53de-d363-c3d695fe3191@loongson.cn>
-Date: Wed, 16 Jul 2025 13:10:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1752646993; c=relaxed/simple;
+	bh=Y5uVXVyPMMACYibIROdIlKUi17CwACMmbkg9TUVyo9I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cNzgreVSSVF+zAfP6+fe3PT4VNgsOM5Dd+8RZkds1biKLygRfBg0dBBwMipLhXc+yIAug3JRO1vqsT5SQuFEKWESpp6klvnqSw2fGqPLCsduNF73+sNqFYzDGs3SXazVdc0s02TX6lKQNerb5uNkk9tA8R5C8bDUUE/1d7UWEZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUW2CmGx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUW2CmGx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC8A9C4CEF8
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 06:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752646992;
+	bh=Y5uVXVyPMMACYibIROdIlKUi17CwACMmbkg9TUVyo9I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eUW2CmGx/xFvxqLsTED7kJn+c1DNylVPFqNSki9nAX3q6WyFhA7A7qSVN7Q4JvN4Y
+	 ytj5mL5s9r7jTLLZZpz2/L43i8YZeeYdDU94Z5PjNdtcfNCrvR9zAMyAp4GhhdqOGX
+	 N0Qz+opwZgy/cxAvOpvSog3Lk2yFqRUiytcZy+EtXlwZ5JOjTFlg0/CSqgNcOLBvDh
+	 7FXjxd98pNCtaFQXRq6feKvoYQ7Y/AW8y+aw3D3ILZcNNdQXX0qloaPrnKYxMFLi2b
+	 mDZhVWc1hGDgYMKtN4DHrNIM7qJ3qZ6VfdspozVqcXhXNA4d8+bo4xX4Zqj7XT/I1K
+	 JNx0EKP+bg5bQ==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so10365370a12.3
+        for <loongarch@lists.linux.dev>; Tue, 15 Jul 2025 23:23:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX4LK4zA6Vb4zqR7a1x9Mg10u9pD+/Ud8YGVnq1e72fjje+XkwoFOy6FU5D93nuuB/KDpyikAp8pWQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzzFYFsVCULXxNLJqWWlm/TB2cOCF7toHLeyd/i4FXXIqdjsuwl
+	MSCZJl750xmYRtoVyigEgQprsebU8va12B0eVMETFq2zBIuo/t8vOJAzKRQNjE+76sORv9SkNT7
+	yuEdm6QaXHnSoK0kOUrulhVlTTuD1pbQ=
+X-Google-Smtp-Source: AGHT+IHkOqANW0HF9RVzQ81ncUpQtyJXlc2ePfhQR0yLzIQEZR36C9rl+xosZo6zt0eh/hJoK+xs4X/LRnAYQzeCtTA=
+X-Received: by 2002:a05:6402:2755:b0:609:9115:60f8 with SMTP id
+ 4fb4d7f45d1cf-61285be4399mr1051377a12.21.1752646991218; Tue, 15 Jul 2025
+ 23:23:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5yPPcU03MGenKDH=sUTkmMPnsGj13zkLA1h-uHVMcHOQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxQ+QqNHdoeFsZAA--.5851S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E
-	14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
-	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBI
-	daVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
+References: <20250716043915.15034-1-yangtiezhu@loongson.cn>
+ <CAAhV-H5yPPcU03MGenKDH=sUTkmMPnsGj13zkLA1h-uHVMcHOQ@mail.gmail.com> <cd190c8a-a7b9-53de-d363-c3d695fe3191@loongson.cn>
+In-Reply-To: <cd190c8a-a7b9-53de-d363-c3d695fe3191@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 16 Jul 2025 14:22:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Ar0=enpFwPeJzu2rcp=-QopySYQuntL9KDv9Nc=+mQg@mail.gmail.com>
+X-Gm-Features: Ac12FXxzs7JQs2RvbrAF90p0piA3re-uZkEFJq5zc8i9njC300-2r7fDTxOf9JE
+Message-ID: <CAAhV-H4Ar0=enpFwPeJzu2rcp=-QopySYQuntL9KDv9Nc=+mQg@mail.gmail.com>
+Subject: Re: [RFC PATCH] LoongArch: BPF: Add struct ops support for trampoline
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>, bpf@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/7/16 下午12:42, Huacai Chen wrote:
-> Hi, Tiezhu,
-> 
-> I hope this patch can be squashed to V4 of chenghao's patchset, as a
-> co-developer.
+On Wed, Jul 16, 2025 at 1:10=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> On 2025/7/16 =E4=B8=8B=E5=8D=8812:42, Huacai Chen wrote:
+> > Hi, Tiezhu,
+> >
+> > I hope this patch can be squashed to V4 of chenghao's patchset, as a
+> > co-developer.
+>
+> No, do not squash, just add it as the last patch if necessary.
+>
+> I think keep it as a single patch is proper due to it is an
+> additional independent feature and the log can be clear.
+OK, then put this as the last patch of chenghao's V4.
 
-No, do not squash, just add it as the last patch if necessary.
-
-I think keep it as a single patch is proper due to it is an
-additional independent feature and the log can be clear.
-
-Thanks,
-Tiezhu
-
+Huacai
+>
+> Thanks,
+> Tiezhu
+>
+>
