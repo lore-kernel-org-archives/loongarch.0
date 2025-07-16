@@ -1,109 +1,170 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201A12EF664
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 09:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6189F2F3647
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 10:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752658471; cv=none; b=oFjP/pIn6IQ/zcNwvOo6zLIJCbiM0FMyLFeMe9msBvc0pq/wm89AsMnTyX5avp2xR46z6KkeubPEfsGphofd4EE5BmNZ9hTZ0/yUqwBWhbZXWhsjn9sKWkWR0ys4kjBwWI32zJn6AeF447KIgASQOTsAvvS68eDKq8DH7ziv3cE=
+	t=1752660556; cv=none; b=SKNcUI022j3hKwjAj99K4aU3saFygOnu5XjDt0HOEdmMUQ87abyyB+j4fv8bnO/rbYMWUZoFsRzs0R7/ROQvyV7K43VBK0XR0UyX67d+u2hA9b7QHyf/RueXm4l0XQ5QUBvj+RAbp3DXyhAxcl7QSUFvVeTG4X5cVS9g8OHmIjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752658471; c=relaxed/simple;
-	bh=Q5vaseOVMicvKjKhJ1PcLGMQRqy2eYGoRNUY8CbcxBE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qhm1o1wUuxEnfM7C+E/Srh3HaxPSAYS7jCsOLdv9P+PW9qamOP/gNm5y8xeCQlN+FwdRcVevPYnhqLBqCzmkqvxqmaYrZh+52CV7URtQ/enLmrAchMoD0VNmvOivstaqngvyI8KDMQQsG2X4LAZnw/cLBZ2PUp7kmVNop3dRltc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=J7bhKkc8; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1752660556; c=relaxed/simple;
+	bh=/VEjuhpOm4mcfJFH+WMwCKqtBLq/M4iABFtKjrJ49AU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IZoi5pZuMcMiLay2OdIozlLW7vmNKIu7V4jfsopM8M4HxKgZIcxH8cprROhztc4xtG9ndgRjI+//X4P0AgML1o5op2Pxsyzc0e2klZ/PUD+LBNyIROkfxdi7bF27vijWz6sMGOsl2/FFcttACtlBXPPUF3oipaH0XIieWwxdbVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nqsVZRZR; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="J7bhKkc8"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4538bc52a8dso47773205e9.2
-        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 02:34:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nqsVZRZR"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-708d90aa8f9so58553777b3.3
+        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 03:09:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752658467; x=1753263267; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vR1kEx5MpapX5QiqbMmlgDd5/xNfubElkSwNGlcT7SU=;
-        b=J7bhKkc84eb7bcnM+/DN6f/w71RJeBGv+U0IDjnhs494PdKANguqUt9wCjOsXiUk9+
-         RgmdoGwe880hB1l+xc38MO9P3SroEB+9L9lZ6p8CxdOA3NvSXuljychEiSRUV6iVtzxL
-         ylm3tkZqTMAweGp5FLFFBJMtBAptC5dFYlU/HTkP9BuhyGMEwXaxRHU0AO/9HBBeZeya
-         05+Km7LjXUOtIawn98rHS1WlyLm4kRjApvXfrOuS8lqifjzr2H82xPnPZH6qsr9e1ZVQ
-         /Y0/BqcjAEtGZn6xwRp2WksMGToeF4lHDPL4VYwtTI+tdR6c6oP0zeKWe4416O8qAiuy
-         ywng==
+        d=linaro.org; s=google; t=1752660553; x=1753265353; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OnBWYwfo8wiUCGNtHhjPaLy845d6kgQBixwcMR4fh74=;
+        b=nqsVZRZRQzy4GUrJILH4pcdfO+CQMtle6UcrjsPVsmZMeTU/PJb/W4Okc5NSkU3NxU
+         AFB9ceYgOZ/LzKVxeEnO1HN/slXh0PXKv54ZfvfK88bAaHtiQLPFy0TPYwLxcOjnu9XU
+         2qGTa2V58dCloh51o51A9UyHfG9PHKHWANv2S1dfPncwnZCKiMfQLNUHNtdPhrzz9RqG
+         QXBFkROuJ8PgIr/Ag8ysc86dbhmqtd64QZGE/1OiRFXkxw0Snwtzokzbu3vc4I85VbzI
+         gL5Uoyw+Zne+T4Sgv7/RBx5/UFg9TRDLYmq2d+J9Ui8FParUYOTwXsAIsmkfsxxE+K2c
+         2r1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752658467; x=1753263267;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vR1kEx5MpapX5QiqbMmlgDd5/xNfubElkSwNGlcT7SU=;
-        b=WDDH84cBMiEDIcPJCv8r92N4KWAi30yfxlMTLE+HIFbxn/G8EkTuMVebP7EhGYubwb
-         hQmdrLi4rwUrW6HfNd+VKaPtdJLKg7/bgn9DStbbS3DBgy6jML4VIJ4zQeKP/A+ZxZ2O
-         bngmeRb7r3zSDetXNbtE2uyyj4ezANXUEgvzpNb68AZLYkua2eBd0sNSFEgywp6xzDoF
-         mQPSci26dBmrJco3zfGjcu5gfh9h0i8xG1Dw5hHFz+8GnS8Z95jzEtDLZOJUCpHz6pCh
-         djLvD/M1YoRwZvdINTqhG3b8UjzXYLPy98C9DeH9Da7I3/95CwDUVoOyyK3X4OZFOBx2
-         tfWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUt8w3DQN/JMHUkrTIgJMSyZ64Pe9rU/SGmwlTSCodj+soe2fG8wNSEyceelziDi6AV+0BTp53+5a8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw3SCxgLMTFudRh+GLeiourSD48mStnLuS5tr/mTRqwGs+GV5Lh
-	7jJHHDWaeh9q571YoTn3A9YId9wtbZdSi3hIat+bnaHRKF7/0DONH3fYwXHbFZH0Qcg=
-X-Gm-Gg: ASbGnctRR97ko34dL2IfDkNi8DAaUHsLXMz372O6RSvS3xTar+LkZPuA7sedZRblzHF
-	PVH7Ni8pyFQ/mLIbqPY5+WnFQpWgKHDiUtt45/rxM+25hawligbzXgCLC2DiilSA04LNG+wdHAd
-	g9ayS55Vj3oXDtxF2Fkv2T3HnUBREo6Agxv0ki9NT5kD6nAYgfchOVqZvToUHJAvje1GdWLp+5w
-	5rkJMEFO5fZ23APM0Uj6/eYz5ao5XlQ3KthTVwYtiE5fYms/QEfN+qDbwokxWo/K+MZssfBuY+B
-	iemUGphkL2TkL3Zb7cLxPAvw9CTfdc5gDA3kSpa00geHhtqvMbaaG0PsxTXJzUFUvWF+U6nQTAW
-	m0voJbU3hbWkiJg/A6WiYI9A=
-X-Google-Smtp-Source: AGHT+IFGBjF281E0tPFetmhFR4EVWxWxpTuFGQ7+pIU175wapos6MK+1PLaWqFhEzeIF6rpsAbFwiw==
-X-Received: by 2002:a05:600c:8b08:b0:456:d25:e41f with SMTP id 5b1f17b1804b1-4562e03bdb0mr17600755e9.7.1752658467236;
-        Wed, 16 Jul 2025 02:34:27 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:e8b9:11d7:19c9:41b2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e8027f9sm15511895e9.14.2025.07.16.02.34.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jul 2025 02:34:26 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH] gpio: loongson-64bit: Add loongson gpio irq support
-Date: Wed, 16 Jul 2025 11:34:25 +0200
-Message-ID: <175265846346.17224.4425884504505052017.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250714064542.2276247-1-zhoubinbin@loongson.cn>
-References: <20250714064542.2276247-1-zhoubinbin@loongson.cn>
+        d=1e100.net; s=20230601; t=1752660553; x=1753265353;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OnBWYwfo8wiUCGNtHhjPaLy845d6kgQBixwcMR4fh74=;
+        b=TPtJF+7riXQbuv8ScmIwQf2DuemP7w3GoLJ56KR/zYSrVxEwskGrU6Nq+vY5s6TP6y
+         zNjJFhfHSteW1wKbcTTupVHKUhlJNm0i5s0nxqcL/oR0ERJMfIp/1rxp/Nn6tTy+bfUr
+         gPR5S7+9ND1oIhP61m0aM1hHvMZ1byE5HZ/I595IEhTrKzJT0M76zKzG5K83D0KKZA4M
+         PweBIiTj3NZ1M/FNhFO97b7FveyOujFouHtWb1v1gkM9neumCbguCFHQS3txg3vCE19l
+         /jSnM0wuObRxNyIQnoAz3b5vbtfJ8X4K9I7PRCtDl+K2aETowROuXu1NRbLvO7xdUfRK
+         Ym2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUEI86S9ODQ5m2flJvoLRlnid+MKZxNPM4laN4tANWw/Nijx0ruxki9uBsehAerO7K0B8M4cGLogdE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwQO8Rd+p6n+1Yu6rWY4jrGLoFquEKOc+ky+Ak1XZic/6GiPRHw
+	yDG+I3FXntdNY1eoAPjSSzfdO+M528n/sHLcCbBMmW0T5+sN9MjhOETgfc0opwhTNue7hCGX5QI
+	EP0EucN08SDKjegpdLrPQkha3ZpkDZWfU4gKCZz7ivw==
+X-Gm-Gg: ASbGncsbwKYe3memkNKpcn+kiKFqHOP7YJNxC8VvNQ4TDUAr+NRULhK+D6zg0Ss1tVe
+	64Pv9GxSdjUMZd8eG5GXzW+9Z7aV3u/aBx02yyU42r9VyaT25uGSae0B63Yg1lTZHZT2zyNZ/o1
+	WwoVOKp2ry9vka4V4tgn4j1WmS+gbOuS7o+wYoUoi+KMa6Dw2PvqsBV6QoYdPSS3mBlm05j/wbp
+	DXFRs+z
+X-Google-Smtp-Source: AGHT+IGy3dipAywy/v3t7OOYtOeDboI5JlqIw7qcFV8Y/WnPRMS48rXs5U9ysQX+XZc7N3+MilbgU45XI/TSY+C1E/k=
+X-Received: by 2002:a05:690c:9b0a:b0:6ef:652b:91cf with SMTP id
+ 00721157ae682-7183515bc8fmr34066097b3.27.1752660553188; Wed, 16 Jul 2025
+ 03:09:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250716064421.3823418-1-zhoubinbin@loongson.cn>
+In-Reply-To: <20250716064421.3823418-1-zhoubinbin@loongson.cn>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 16 Jul 2025 12:08:37 +0200
+X-Gm-Features: Ac12FXxmbFb81p4o8_4QaHZmiOqrSxmwLRGTgDmrXWuWmSI0XGrHlo7coapF_Kk
+Message-ID: <CAPDyKFrxVYaH+bxLSaXL3VjsPAdBEtxHk=PonT659GmVnc+n5A@mail.gmail.com>
+Subject: Re: [PATCH] mmc: loongson2: Unify the function prefixes for loongson2_mmc_pdata
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-mmc@vger.kernel.org, wanghongliang@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, 16 Jul 2025 at 08:44, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+>
+> The function prefixes for loongson2_mmc_pdata follow two naming
+> conventions: SoC-based and DMA-based.
+>
+> First, DMA-based prefixes are the preferred choice, as they clearly
+> highlight differences, such as prepare_dma; however, for functions
+> related to SoC, such as reorder_cmd_data, it is agreed to use the
+> smallest SoC name as the fallback prefix, such as ls2k0500.
+>
+> No functional change intended.
+>
+> Suggested-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
 
 
-On Mon, 14 Jul 2025 14:45:42 +0800, Binbin Zhou wrote:
-> Add the interrupt enable register offset (inten_offset) so that GPIO
-> interrupts can be enabled normally.
-> 
-> According to the latest interface specifications, the definition of GPIO
-> interrupts in ACPI is similar to that in FDT. The GPIO interrupts are
-> listed one by one according to the GPIO number, and the corresponding
-> interrupt number can be obtained directly through the GPIO number
-> specified by the consumer.
-> 
-> [...]
-
-Applied, thanks!
-
-[1/1] gpio: loongson-64bit: Add loongson gpio irq support
-      https://git.kernel.org/brgl/linux/c/27cb8f702eb789f97f7a8bd5a91d76c65a937b2f
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/mmc/host/loongson2-mmc.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/mmc/host/loongson2-mmc.c b/drivers/mmc/host/loongson2-mmc.c
+> index ba6bb8fd5535..27499f36477c 100644
+> --- a/drivers/mmc/host/loongson2-mmc.c
+> +++ b/drivers/mmc/host/loongson2-mmc.c
+> @@ -594,7 +594,7 @@ static struct mmc_host_ops loongson2_mmc_ops = {
+>         .ack_sdio_irq   = loongson2_mmc_ack_sdio_irq,
+>  };
+>
+> -static const struct regmap_config ls2k1000_mmc_regmap_config = {
+> +static const struct regmap_config ls2k0500_mmc_regmap_config = {
+>         .reg_bits = 32,
+>         .val_bits = 32,
+>         .reg_stride = 4,
+> @@ -610,8 +610,8 @@ static int loongson2_reorder_cmd_list[] = { SD_APP_SEND_SCR, SD_APP_SEND_NUM_WR_
+>   * However sdio controller will send these datas in usual data format,
+>   * so we need to adjust these datas to a protocol consistent byte order.
+>   */
+> -static void loongson2_mmc_reorder_cmd_data(struct loongson2_mmc_host *host,
+> -                                          struct mmc_command *cmd)
+> +static void ls2k0500_mmc_reorder_cmd_data(struct loongson2_mmc_host *host,
+> +                                         struct mmc_command *cmd)
+>  {
+>         struct scatterlist *sg;
+>         u32 *data;
+> @@ -704,8 +704,8 @@ static int ls2k0500_mmc_set_external_dma(struct loongson2_mmc_host *host,
+>  }
+>
+>  static struct loongson2_mmc_pdata ls2k0500_mmc_pdata = {
+> -       .regmap_config          = &ls2k1000_mmc_regmap_config,
+> -       .reorder_cmd_data       = loongson2_mmc_reorder_cmd_data,
+> +       .regmap_config          = &ls2k0500_mmc_regmap_config,
+> +       .reorder_cmd_data       = ls2k0500_mmc_reorder_cmd_data,
+>         .setting_dma            = ls2k0500_mmc_set_external_dma,
+>         .prepare_dma            = loongson2_mmc_prepare_external_dma,
+>         .release_dma            = loongson2_mmc_release_external_dma,
+> @@ -736,8 +736,8 @@ static int ls2k1000_mmc_set_external_dma(struct loongson2_mmc_host *host,
+>  }
+>
+>  static struct loongson2_mmc_pdata ls2k1000_mmc_pdata = {
+> -       .regmap_config          = &ls2k1000_mmc_regmap_config,
+> -       .reorder_cmd_data       = loongson2_mmc_reorder_cmd_data,
+> +       .regmap_config          = &ls2k0500_mmc_regmap_config,
+> +       .reorder_cmd_data       = ls2k0500_mmc_reorder_cmd_data,
+>         .setting_dma            = ls2k1000_mmc_set_external_dma,
+>         .prepare_dma            = loongson2_mmc_prepare_external_dma,
+>         .release_dma            = loongson2_mmc_release_external_dma,
+> @@ -838,8 +838,8 @@ static int loongson2_mmc_prepare_internal_dma(struct loongson2_mmc_host *host,
+>         return 0;
+>  }
+>
+> -static int loongson2_mmc_set_internal_dma(struct loongson2_mmc_host *host,
+> -                                         struct platform_device *pdev)
+> +static int ls2k2000_mmc_set_internal_dma(struct loongson2_mmc_host *host,
+> +                                        struct platform_device *pdev)
+>  {
+>         host->sg_cpu = dma_alloc_coherent(&pdev->dev, PAGE_SIZE,
+>                                           &host->sg_dma, GFP_KERNEL);
+> @@ -860,7 +860,7 @@ static struct loongson2_mmc_pdata ls2k2000_mmc_pdata = {
+>         .regmap_config          = &ls2k2000_mmc_regmap_config,
+>         .reorder_cmd_data       = ls2k2000_mmc_reorder_cmd_data,
+>         .fix_data_timeout       = ls2k2000_mmc_fix_data_timeout,
+> -       .setting_dma            = loongson2_mmc_set_internal_dma,
+> +       .setting_dma            = ls2k2000_mmc_set_internal_dma,
+>         .prepare_dma            = loongson2_mmc_prepare_internal_dma,
+>         .release_dma            = loongson2_mmc_release_internal_dma,
+>  };
+>
+> base-commit: 4ad9e44c76b301e786eb4cdab890eac8c7eebd42
+> --
+> 2.47.3
+>
