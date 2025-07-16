@@ -1,152 +1,124 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685912F5C24
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 16:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A603262FDD
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 17:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752685181; cv=none; b=hEuhzNY8i9EnIgumQJphv9teLsAxQptJzyfcKQwaCh8kOglg1PZaDGMAulSkUKPzOEErtEJmljAKGYN1o+syJJmTUHkAow3m40SgmnWmJQ328HSIz2A62YkM3y9F7OrJH+hMjZjlTEgJtdV+kBdCWL0wMb/lSElQNy2CRcyLkao=
+	t=1752688744; cv=none; b=Fnt0nG1DKujHXr2altU4sfDVU/iXMcAukw/c1HDkCr0ihWzwFotRKsLaxzkFDbyys452laRmLlfukzJbzM5qbpKt82Gvz+KYfRSSQzoYa4bLj6A98ClmFQuyYBRmWmqEkJ+M85KLalVv40xT+Nf1W05BT6vRft+Bb1vD1XQT6h0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752685181; c=relaxed/simple;
-	bh=jkQQvNZpPH/2J4kpelJXhxOtCO/DZFsC1y0v/zswi7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=axco5meBWmjMIfu0x8M3mXvDcdpnnOO29QENYmhyftXnQQH3A0o5OKXEURFth27I+V+EDBDURuoRQIOivy2gNEPmc2rYyVbMJuwU7h58UyHOOC+K+HXLECe3tgISe6MpQ0reBQrikbzlDn/UwXyM+4seMan8PatCYeSnyh7aFD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KXkWvO5u; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752688744; c=relaxed/simple;
+	bh=r9Q0Jz62s1sQSj+wQwDHRUQ0P8PP5NzmnViN0MYn520=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f9mpDP8B1T4MiESG9rgQylhhffq2lkvIhXNra0dN6pAMKMTD496G3DDAzOMuLmGDA3dk7MKRMK4Qw/RzoNTV/Zpx0sZ0MQaqYeaRKseL+Lzc/x3Qosi5cgKLCok53xSh/b6SftUdOV5xto48gMKq9MlM2DofsJYqvczmsKweSDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=nRf9s6BL; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXkWvO5u"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23508d30142so650055ad.0
-        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 09:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752685176; x=1753289976; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OiTrVurstj4F40PIZ+iGX0tIb5qeeGwqEUAH7aRWxJ4=;
-        b=KXkWvO5uvlTudNzGD/jR+1L+XYmG/7Sj+rjPnI6J0u4Shdl8G6oxy/xA4A0RYFUSsJ
-         RGzq2nI0+ip7YECNGqjSKABcbqtAym5XlrKhhsrgbxad9BWX1eiRS9+AaC83WLOE/fnW
-         8nJCn2z4j3J3rT9sQcV9zoS9QSrEVBqCBqodbz9Ol+qmX8gLlypL35dzjcLcE1fA8Btv
-         HIDWEZWIQUhF+u2P8QH2mED5g3P8C/Eq9XDmHfWLgF+b09n0LYW3iH8lWaGfOuV3OjIR
-         TYLWePWeuZMzmoNQS4rVF/5rXQQP/V4qoswrNBJZMBoL0uYPF7GfjPHQK76wZ4ZSI/Qh
-         4xFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752685176; x=1753289976;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OiTrVurstj4F40PIZ+iGX0tIb5qeeGwqEUAH7aRWxJ4=;
-        b=MnR3I3swY4PR0dgok28n6POykRWIWxidrstFg2KLOJ5tbCfM5ENvfglgoRObSG02KH
-         mAqihXhW5mZmEH0feMS246H7Hbl8PFx9egwkE5Z8y/xsix9KscV2E/VbHEWv9uRFKiq4
-         apd05hLc3BDOysZIuHYG8zVCJ1Neqv/XDb9MGCXo5ZicKzvhB4q4n1tvbe0ckpmn6LxN
-         nzLoB2xC5RpRhoi2qGkcx0Zs0B4mplsJv2Uzwc8fByUSvhH2jciT73IuPNXOSzKoAn+M
-         dEEE3tYWT5LYMkUUzk5ISru+JCgdS5l0rqZ1LkFOKot5NfsiyOb3Oh+s1vnBC4vComie
-         XqLg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4DVSLlqnVplwvV4y8bEno8+wob4RhnRm72+jJSf2rP5U2PT3S6ys/r7Frt9GSk83rvIibhnLVAz8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwU2IqTNjGYu6b62YeBX6nUL7FGyru2KjMHLz4Nab9bHfv8PcCQ
-	amMwOr1BVv7VdO3GWI3TLov6p9R1bnzgvcZYwmboFXN2zhsXLS17iWy7
-X-Gm-Gg: ASbGnctX2jiGOfoiJRIqw0vot2JmahD41xCjB6sZj5nNh5HJPaxWrDyhaXRmuRU2WLH
-	BeuhWPE1Lfe/flPd/oPmg1Kwny3EL1pTRpU4aj7MvCHk7E+J+Vm9ixX0vZ68AWFZBao/nopLs7V
-	eXa+VuI4aXW5HG0Yj6RQ2wMa38u1cAUpAtOyHHXQSVJIU4/zhHp1riUS6aF87kxeHRY3MmpYO5R
-	00n8dxE8ppW56d3q4pEtVMW1VUpjSZdN6JAZClr4orX4f+aXGLImxyqFP8rSeddAiULRZshRAVk
-	SPi9jkgfn5EAMLU21OH1Y0gCLtSq1BI+7fuBMw9FOnpVuOD2UivTj7SRNKijzEIRz3GOAFlLylP
-	nHouvw1UmkAT/EkZEkU2b6edopu6U5sxx
-X-Google-Smtp-Source: AGHT+IHDYGJSrqWvIYrXwA07rTPdrVHz0PpU4aL14ZgPQu+1ebjCr22oq2dQrQ5tz6hMocZpkjvvZA==
-X-Received: by 2002:a17:902:ef08:b0:23d:d9ae:3b56 with SMTP id d9443c01a7336-23e256b7467mr54372765ad.22.1752685175538;
-        Wed, 16 Jul 2025 09:59:35 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23de432278csm132614785ad.121.2025.07.16.09.59.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jul 2025 09:59:35 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="nRf9s6BL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=j/rIFur3u1rTJo3mQ89YHapN8kPR0kc82DFGfxLgJOY=; b=nRf9s6BLgyLZd19Zq0n8/XzeaT
+	LdIYLNiW4z4oi4MA3w2BCBek25oSOrhZ8XcpzyleTM/5SuM2dnCE8X2IN1fY4XF02MN0u0o/w7o+/
+	BXK5tT7Nngm6VEQKAzarLu64KjC1zHm0osARGnNBRaSOJzAQTBVqTSgVCUR5io769aa33pkqg0Klq
+	UjjCl8EoyWky+K3kmjxhwmz+159ClWBAoAk+GeDtMb/6pA/oHGkodOfSrEn4YCwUGtQ02pz9D/Oym
+	S4R+vEsvs+G9YBBJckDetnAWXJTk+T1i0vJw0SDz0Cd6j6QJIV/W8Xmfday5WtRq/NdxL7Nikft3h
+	+JKcvcMg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49400)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uc6Nh-0008HA-0J;
+	Wed, 16 Jul 2025 18:57:25 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uc6NT-0001JC-1H;
+	Wed, 16 Jul 2025 18:57:11 +0100
+Date: Wed, 16 Jul 2025 18:57:11 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH 1/2] LoongArch: KVM: rework kvm_send_pv_ipi()
-Date: Wed, 16 Jul 2025 12:59:26 -0400
-Message-ID: <20250716165929.22386-2-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250716165929.22386-1-yury.norov@gmail.com>
-References: <20250716165929.22386-1-yury.norov@gmail.com>
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.osdn.me>, Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	linux-arch@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org
+Subject: Re: [PATCH 1/1] uapi/termios: remove struct ktermios from uapi
+ headers
+Message-ID: <aHfn9z9_oIVgNGgx@shell.armlinux.org.uk>
+References: <20250716164735.170713-1-hpa@zytor.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250716164735.170713-1-hpa@zytor.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+On Wed, Jul 16, 2025 at 09:47:32AM -0700, H. Peter Anvin wrote:
+> diff --git a/arch/arm/include/asm/ktermios.h b/arch/arm/include/asm/ktermios.h
+> new file mode 100644
+> index 000000000000..4320921a82a9
+> --- /dev/null
+> +++ b/arch/arm/include/asm/ktermios.h
+> @@ -0,0 +1 @@
+> +#include <asm-generic/ktermios.h>
 
-The function in fact traverses a "bitmap" stored in GPR regs A1 and A2,
-but does it in a non-obvious way by creating a single-word bitmap twice.
+Isn't this what arch/arm/include/asm/Kbuild's generic-y is for?
 
-This patch switches the function to create a single 2-word bitmap, and
-also employs for_each_set_bit() macro, as it helps to drop most of
-housekeeping code.
+Ditto for other arches.
 
-While there, convert the function to return void to not confuse readers
-with unchecked result.
-
-Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
----
- arch/loongarch/kvm/exit.c | 31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
-
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index fa52251b3bf1..359afa909cee 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -821,32 +821,25 @@ static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu, int ecode)
- 	return RESUME_GUEST;
- }
- 
--static int kvm_send_pv_ipi(struct kvm_vcpu *vcpu)
-+static void kvm_send_pv_ipi(struct kvm_vcpu *vcpu)
- {
--	unsigned int min, cpu, i;
--	unsigned long ipi_bitmap;
-+	DECLARE_BITMAP(ipi_bitmap, BITS_PER_LONG * 2) = {
-+		kvm_read_reg(vcpu, LOONGARCH_GPR_A1),
-+		kvm_read_reg(vcpu, LOONGARCH_GPR_A2)
-+	};
-+	unsigned int min, cpu;
- 	struct kvm_vcpu *dest;
- 
- 	min = kvm_read_reg(vcpu, LOONGARCH_GPR_A3);
--	for (i = 0; i < 2; i++, min += BITS_PER_LONG) {
--		ipi_bitmap = kvm_read_reg(vcpu, LOONGARCH_GPR_A1 + i);
--		if (!ipi_bitmap)
-+	for_each_set_bit(cpu, ipi_bitmap, BITS_PER_LONG * 2) {
-+		dest = kvm_get_vcpu_by_cpuid(vcpu->kvm, cpu + min);
-+		if (!dest)
- 			continue;
- 
--		cpu = find_first_bit((void *)&ipi_bitmap, BITS_PER_LONG);
--		while (cpu < BITS_PER_LONG) {
--			dest = kvm_get_vcpu_by_cpuid(vcpu->kvm, cpu + min);
--			cpu = find_next_bit((void *)&ipi_bitmap, BITS_PER_LONG, cpu + 1);
--			if (!dest)
--				continue;
--
--			/* Send SWI0 to dest vcpu to emulate IPI interrupt */
--			kvm_queue_irq(dest, INT_SWI0);
--			kvm_vcpu_kick(dest);
--		}
-+		/* Send SWI0 to dest vcpu to emulate IPI interrupt */
-+		kvm_queue_irq(dest, INT_SWI0);
-+		kvm_vcpu_kick(dest);
- 	}
--
--	return 0;
- }
- 
- /*
 -- 
-2.43.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
