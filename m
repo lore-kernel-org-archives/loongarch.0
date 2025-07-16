@@ -1,170 +1,133 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6189F2F3647
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 10:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AD62F4317
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 10:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752660556; cv=none; b=SKNcUI022j3hKwjAj99K4aU3saFygOnu5XjDt0HOEdmMUQ87abyyB+j4fv8bnO/rbYMWUZoFsRzs0R7/ROQvyV7K43VBK0XR0UyX67d+u2hA9b7QHyf/RueXm4l0XQ5QUBvj+RAbp3DXyhAxcl7QSUFvVeTG4X5cVS9g8OHmIjE=
+	t=1752661195; cv=none; b=h2MOdVljB/5115FYhfOHNSlLWbx8P+i7V3t1FRjUMbppUOixA78PTRGM16Zb4BreMnyv1JuXKpzYO89jcbWZHGTMmChl0U01w0mPskABCX7SFDSmlJR9zwFXr0R8fUBgthEgOf2LVcNgTBxLcN7LVciZ39Rf6kjEvHo6g+qYO0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752660556; c=relaxed/simple;
-	bh=/VEjuhpOm4mcfJFH+WMwCKqtBLq/M4iABFtKjrJ49AU=;
+	s=arc-20240116; t=1752661195; c=relaxed/simple;
+	bh=8kJXGogC+xtdCvbe6QsC3MjM2fHwl2vl79nSR9/Gos8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IZoi5pZuMcMiLay2OdIozlLW7vmNKIu7V4jfsopM8M4HxKgZIcxH8cprROhztc4xtG9ndgRjI+//X4P0AgML1o5op2Pxsyzc0e2klZ/PUD+LBNyIROkfxdi7bF27vijWz6sMGOsl2/FFcttACtlBXPPUF3oipaH0XIieWwxdbVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nqsVZRZR; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=Swi1xD5/shmSS37ArjfIqGGUvNUGjBhfOaT2GLX8yGPM+wPdxoyfksxmBAMWFmKrePdS07o8moAda+O2+X64iFB8r6dOBmCGc46/z0hUGoSXS/TPTknTav6kqOkfGEUkFU8fSlbhYnBoju6PvQnmRkOCVcGtZh+t94AExsl5lGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfuLaJ/+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nqsVZRZR"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-708d90aa8f9so58553777b3.3
-        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 03:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752660553; x=1753265353; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OnBWYwfo8wiUCGNtHhjPaLy845d6kgQBixwcMR4fh74=;
-        b=nqsVZRZRQzy4GUrJILH4pcdfO+CQMtle6UcrjsPVsmZMeTU/PJb/W4Okc5NSkU3NxU
-         AFB9ceYgOZ/LzKVxeEnO1HN/slXh0PXKv54ZfvfK88bAaHtiQLPFy0TPYwLxcOjnu9XU
-         2qGTa2V58dCloh51o51A9UyHfG9PHKHWANv2S1dfPncwnZCKiMfQLNUHNtdPhrzz9RqG
-         QXBFkROuJ8PgIr/Ag8ysc86dbhmqtd64QZGE/1OiRFXkxw0Snwtzokzbu3vc4I85VbzI
-         gL5Uoyw+Zne+T4Sgv7/RBx5/UFg9TRDLYmq2d+J9Ui8FParUYOTwXsAIsmkfsxxE+K2c
-         2r1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752660553; x=1753265353;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OnBWYwfo8wiUCGNtHhjPaLy845d6kgQBixwcMR4fh74=;
-        b=TPtJF+7riXQbuv8ScmIwQf2DuemP7w3GoLJ56KR/zYSrVxEwskGrU6Nq+vY5s6TP6y
-         zNjJFhfHSteW1wKbcTTupVHKUhlJNm0i5s0nxqcL/oR0ERJMfIp/1rxp/Nn6tTy+bfUr
-         gPR5S7+9ND1oIhP61m0aM1hHvMZ1byE5HZ/I595IEhTrKzJT0M76zKzG5K83D0KKZA4M
-         PweBIiTj3NZ1M/FNhFO97b7FveyOujFouHtWb1v1gkM9neumCbguCFHQS3txg3vCE19l
-         /jSnM0wuObRxNyIQnoAz3b5vbtfJ8X4K9I7PRCtDl+K2aETowROuXu1NRbLvO7xdUfRK
-         Ym2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUEI86S9ODQ5m2flJvoLRlnid+MKZxNPM4laN4tANWw/Nijx0ruxki9uBsehAerO7K0B8M4cGLogdE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwQO8Rd+p6n+1Yu6rWY4jrGLoFquEKOc+ky+Ak1XZic/6GiPRHw
-	yDG+I3FXntdNY1eoAPjSSzfdO+M528n/sHLcCbBMmW0T5+sN9MjhOETgfc0opwhTNue7hCGX5QI
-	EP0EucN08SDKjegpdLrPQkha3ZpkDZWfU4gKCZz7ivw==
-X-Gm-Gg: ASbGncsbwKYe3memkNKpcn+kiKFqHOP7YJNxC8VvNQ4TDUAr+NRULhK+D6zg0Ss1tVe
-	64Pv9GxSdjUMZd8eG5GXzW+9Z7aV3u/aBx02yyU42r9VyaT25uGSae0B63Yg1lTZHZT2zyNZ/o1
-	WwoVOKp2ry9vka4V4tgn4j1WmS+gbOuS7o+wYoUoi+KMa6Dw2PvqsBV6QoYdPSS3mBlm05j/wbp
-	DXFRs+z
-X-Google-Smtp-Source: AGHT+IGy3dipAywy/v3t7OOYtOeDboI5JlqIw7qcFV8Y/WnPRMS48rXs5U9ysQX+XZc7N3+MilbgU45XI/TSY+C1E/k=
-X-Received: by 2002:a05:690c:9b0a:b0:6ef:652b:91cf with SMTP id
- 00721157ae682-7183515bc8fmr34066097b3.27.1752660553188; Wed, 16 Jul 2025
- 03:09:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfuLaJ/+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94180C4CEF1
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 10:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752661194;
+	bh=8kJXGogC+xtdCvbe6QsC3MjM2fHwl2vl79nSR9/Gos8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GfuLaJ/+AOvSNpOsqhDdfXD+K8c2pJd6/CpflJsmMGXmwFT0+C5SW9vvcKSfkqf2Z
+	 gG4cXCHWpmn2UwZhQ+JzgH7N9Xu8tAciCrSYhCtxLGF4LDmCnJY4aXoJPWyGgxWsud
+	 EJ+O5XiYpl2/TDvGKVKtz4HsGEa0HiagZjmH0LBfC1yNyES3X+w743LPLL2J2q8h/q
+	 A+eS2c7nC17dFMisVww5y6YrhuP9cDJKLr9PDxaQdI5XFFWlH4Q9gxQZoVbhMfZ1iJ
+	 pqbVuwRtkaiIaPEpFq3m1cxa5lFID22T6Of4dLH0/3cuBpRs+1waStPQcCURHjjaNL
+	 29Ckx8rACeA2g==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60bfcada295so10031462a12.1
+        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 03:19:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUV2nW6j6DLLiUUqFU6OMAE0doLC2mWXb/WuUNR1+RVdL0vWoNPp8JuEQtYGekWw+E8EybNPjKpVKQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yye9X4s+/7D8lNYr2fSEspHGlzQHdJAu3bz9sJswPpQ3AYaxXIN
+	muvuOl+h67+Kg4i6TXE813SVm+WQSPgOCTkJqSPwBFWZ7Vkcp7WlTTY86srJWXZywQKoKSMudPk
+	YYj6qR8MvFybylLqZIAL5j+6ZE6oqUq8=
+X-Google-Smtp-Source: AGHT+IGLf5F9ZG/NbE6Kve8ltdtbhY1XiBDXCOYdVJpmYYdvFJQIqMrlvYIypc/8SJSdFnawU6v27XpLcqd5fjLTl9c=
+X-Received: by 2002:a05:6402:348a:b0:606:df70:7aa2 with SMTP id
+ 4fb4d7f45d1cf-61285bf41c5mr1880418a12.31.1752661193141; Wed, 16 Jul 2025
+ 03:19:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250716064421.3823418-1-zhoubinbin@loongson.cn>
-In-Reply-To: <20250716064421.3823418-1-zhoubinbin@loongson.cn>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 16 Jul 2025 12:08:37 +0200
-X-Gm-Features: Ac12FXxmbFb81p4o8_4QaHZmiOqrSxmwLRGTgDmrXWuWmSI0XGrHlo7coapF_Kk
-Message-ID: <CAPDyKFrxVYaH+bxLSaXL3VjsPAdBEtxHk=PonT659GmVnc+n5A@mail.gmail.com>
-Subject: Re: [PATCH] mmc: loongson2: Unify the function prefixes for loongson2_mmc_pdata
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-mmc@vger.kernel.org, wanghongliang@loongson.cn
+References: <20250709080233.3948503-1-maobibo@loongson.cn>
+In-Reply-To: <20250709080233.3948503-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 16 Jul 2025 18:19:41 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5x_V8CjX=Keb0k5+5zFtqh01MBWEo_hTFwwge-01jT9Q@mail.gmail.com>
+X-Gm-Features: Ac12FXwd2qxljM80M1yo635HrTRXipUsmKiKsDP_pvPFX0beAQYXth9PLs0uqjU
+Message-ID: <CAAhV-H5x_V8CjX=Keb0k5+5zFtqh01MBWEo_hTFwwge-01jT9Q@mail.gmail.com>
+Subject: Re: [PATCH v6 0/8] LoongArch: KVM: Enhancement with eiointc emulation
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 16 Jul 2025 at 08:44, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+Applied with some modifications. E.g., Patch6 removes offset, and
+Patch8 adds it back, so I combine these two.
+
+Since the code is a little different, it is better to test it again [1].
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongs=
+on.git/log/?h=3Dloongarch-kvm
+
+
+
+Huacai
+
+On Wed, Jul 9, 2025 at 4:02=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
 >
-> The function prefixes for loongson2_mmc_pdata follow two naming
-> conventions: SoC-based and DMA-based.
+> This series add generic eiointc 8 bytes access interface, so that 1/2/4/8
+> bytes access can use the generic 8 bytes access interface. It reduce
+> about 500 lines redundant code and make eiointc emulation driver
+> simpler than ever.
 >
-> First, DMA-based prefixes are the preferred choice, as they clearly
-> highlight differences, such as prepare_dma; however, for functions
-> related to SoC, such as reorder_cmd_data, it is agreed to use the
-> smallest SoC name as the fallback prefix, such as ls2k0500.
->
-> No functional change intended.
->
-> Suggested-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
-
 > ---
->  drivers/mmc/host/loongson2-mmc.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+> v5 ... v6:
+>   1. Merge previous patch 5 & 6 into one, patch 7 & 10 into into one and
+>      patch 12 and patch 13 into one.
+>   2. Use sign extension with destination register for IOCSRRD.{B/H/W}
+>      kernel emulation.
 >
-> diff --git a/drivers/mmc/host/loongson2-mmc.c b/drivers/mmc/host/loongson2-mmc.c
-> index ba6bb8fd5535..27499f36477c 100644
-> --- a/drivers/mmc/host/loongson2-mmc.c
-> +++ b/drivers/mmc/host/loongson2-mmc.c
-> @@ -594,7 +594,7 @@ static struct mmc_host_ops loongson2_mmc_ops = {
->         .ack_sdio_irq   = loongson2_mmc_ack_sdio_irq,
->  };
+> v4 ... v5
+>   1. Rebase patch on latest kernel where bugfix of eiointc has been
+>      merged.
+>   2. Add generic eiointc 8 bytes access interface, 1/2/4/8 bytes access
+>      uses generic 8 bytes access interface.
 >
-> -static const struct regmap_config ls2k1000_mmc_regmap_config = {
-> +static const struct regmap_config ls2k0500_mmc_regmap_config = {
->         .reg_bits = 32,
->         .val_bits = 32,
->         .reg_stride = 4,
-> @@ -610,8 +610,8 @@ static int loongson2_reorder_cmd_list[] = { SD_APP_SEND_SCR, SD_APP_SEND_NUM_WR_
->   * However sdio controller will send these datas in usual data format,
->   * so we need to adjust these datas to a protocol consistent byte order.
->   */
-> -static void loongson2_mmc_reorder_cmd_data(struct loongson2_mmc_host *host,
-> -                                          struct mmc_command *cmd)
-> +static void ls2k0500_mmc_reorder_cmd_data(struct loongson2_mmc_host *host,
-> +                                         struct mmc_command *cmd)
->  {
->         struct scatterlist *sg;
->         u32 *data;
-> @@ -704,8 +704,8 @@ static int ls2k0500_mmc_set_external_dma(struct loongson2_mmc_host *host,
->  }
+> v3 ... v4:
+>   1. Remove patch about enhancement and only keep bugfix relative
+>      patches.
+>   2. Remove INTC indication in the patch title.
+>   3. With access size, keep default case unchanged besides 1/2/4/8 since
+>      here all patches are bugfix
+>   4. Firstly check return value of copy_from_user() with error path,
+>      keep the same order with old patch in patch 4.
 >
->  static struct loongson2_mmc_pdata ls2k0500_mmc_pdata = {
-> -       .regmap_config          = &ls2k1000_mmc_regmap_config,
-> -       .reorder_cmd_data       = loongson2_mmc_reorder_cmd_data,
-> +       .regmap_config          = &ls2k0500_mmc_regmap_config,
-> +       .reorder_cmd_data       = ls2k0500_mmc_reorder_cmd_data,
->         .setting_dma            = ls2k0500_mmc_set_external_dma,
->         .prepare_dma            = loongson2_mmc_prepare_external_dma,
->         .release_dma            = loongson2_mmc_release_external_dma,
-> @@ -736,8 +736,8 @@ static int ls2k1000_mmc_set_external_dma(struct loongson2_mmc_host *host,
->  }
+> v2 ... v3:
+>   1. Add prefix INTC: in title of every patch.
+>   2. Fix array index overflow when emulate register EIOINTC_ENABLE
+>      writing operation.
+>   3. Add address alignment check with eiointc register access operation.
 >
->  static struct loongson2_mmc_pdata ls2k1000_mmc_pdata = {
-> -       .regmap_config          = &ls2k1000_mmc_regmap_config,
-> -       .reorder_cmd_data       = loongson2_mmc_reorder_cmd_data,
-> +       .regmap_config          = &ls2k0500_mmc_regmap_config,
-> +       .reorder_cmd_data       = ls2k0500_mmc_reorder_cmd_data,
->         .setting_dma            = ls2k1000_mmc_set_external_dma,
->         .prepare_dma            = loongson2_mmc_prepare_external_dma,
->         .release_dma            = loongson2_mmc_release_external_dma,
-> @@ -838,8 +838,8 @@ static int loongson2_mmc_prepare_internal_dma(struct loongson2_mmc_host *host,
->         return 0;
->  }
+> v1 ... v2:
+>   1. Add extra fix in patch 3 and patch 4, add num_cpu validation check
+>   2. Name of stat information keeps unchanged, only move it from VM stat
+>      to vCPU stat.
+> ---
+> Bibo Mao (8):
+>   LoongArch: KVM: Use standard bitops API with eiointc
+>   LoongArch: KVM: Remove unused parameter len
+>   LoongArch: KVM: Add stat information with kernel irqchip
+>   LoongArch: KVM: Remove never called default case statement
+>   LoongArch: KVM: Use generic function loongarch_eiointc_read()
+>   LoongArch: KVM: Remove some unnecessary local variables
+>   LoongArch: KVM: Replace eiointc_enable_irq() with eiointc_update_irq()
+>   LoongArch: KVM: Add generic function loongarch_eiointc_write()
 >
-> -static int loongson2_mmc_set_internal_dma(struct loongson2_mmc_host *host,
-> -                                         struct platform_device *pdev)
-> +static int ls2k2000_mmc_set_internal_dma(struct loongson2_mmc_host *host,
-> +                                        struct platform_device *pdev)
->  {
->         host->sg_cpu = dma_alloc_coherent(&pdev->dev, PAGE_SIZE,
->                                           &host->sg_dma, GFP_KERNEL);
-> @@ -860,7 +860,7 @@ static struct loongson2_mmc_pdata ls2k2000_mmc_pdata = {
->         .regmap_config          = &ls2k2000_mmc_regmap_config,
->         .reorder_cmd_data       = ls2k2000_mmc_reorder_cmd_data,
->         .fix_data_timeout       = ls2k2000_mmc_fix_data_timeout,
-> -       .setting_dma            = loongson2_mmc_set_internal_dma,
-> +       .setting_dma            = ls2k2000_mmc_set_internal_dma,
->         .prepare_dma            = loongson2_mmc_prepare_internal_dma,
->         .release_dma            = loongson2_mmc_release_internal_dma,
->  };
+>  arch/loongarch/include/asm/kvm_host.h |  12 +-
+>  arch/loongarch/kvm/intc/eiointc.c     | 558 ++++----------------------
+>  arch/loongarch/kvm/intc/ipi.c         |  28 +-
+>  arch/loongarch/kvm/intc/pch_pic.c     |   4 +-
+>  arch/loongarch/kvm/vcpu.c             |   8 +-
+>  5 files changed, 102 insertions(+), 508 deletions(-)
 >
-> base-commit: 4ad9e44c76b301e786eb4cdab890eac8c7eebd42
+>
+> base-commit: 733923397fd95405a48f165c9b1fbc8c4b0a4681
 > --
-> 2.47.3
+> 2.39.3
 >
