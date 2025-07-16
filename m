@@ -1,122 +1,163 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA79E289346
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 07:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0582EAB78
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 08:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752649381; cv=none; b=EjijMdPH/1AgyfdtWi2rme7tOZEBbHghhF4Z8A8dALORO1ybKBwVjSsSQezYEPwSqtFizANKKqFWazQXrFwYZH58X6JYESC0mlIHMbyhLXnMqqhHTB/byDbDEKpJuUGaW2ClPoj2jJgneoIEPxk0a4TxfuHfre7U2KWwklPUrhs=
+	t=1752654297; cv=none; b=fdfQ2VEDqT86UqqVsQ9MHLneRf1nNyVdVi5JvSOeLwPzOM8glOY0iUbqFUZmMOq4zZKNPZJK18r5aBzA30f2DfhODDXFr5J2GpFmLmKYKxNHX+htpx3/9RHlKbN2+UyjDWNDGGghD4gL1eUqUVrTTLZlZZ8JXNYFTHg2J1oQ8Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752649381; c=relaxed/simple;
-	bh=JrDdmDazemyu6/6F25kPPNyzjuVa+2wySlOW3Q4baOQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TquW2Z6sr3AlX0S4YHs/a6EpUsBOqTuzw7KZARwsQzxpFM0yg+M8uj9r6sdEqNkVGA0dKt4Gi5lDe9CoCN+nuDnrr6tbsyKv9EdftFn7jWdtfoF0GxCEylN2CnOAeP4olyFbXad8uOtoKb7cdRFAzx1lURLsV4ZbvI1suW9dthA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.193])
-	by gateway (Coremail) with SMTP id _____8DxjXKgTndoKgMrAQ--.23701S3;
-	Wed, 16 Jul 2025 15:02:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.193])
-	by front1 (Coremail) with SMTP id qMiowJCxocKbTndoBnYZAA--.5577S4;
-	Wed, 16 Jul 2025 15:02:55 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 3/3] LoongArch: dts: Add eMMC/sdio controller support to Loongson-2K2000
-Date: Wed, 16 Jul 2025 15:02:43 +0800
-Message-ID: <20250716070243.3846100-3-zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20250716070243.3846100-1-zhoubinbin@loongson.cn>
-References: <20250716070243.3846100-1-zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1752654297; c=relaxed/simple;
+	bh=5F5b4fQbQLDyYyfIEIjAfQDxg56N9/W74sAYPQK/zB4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xq8xn4I8muj0pZpG9QEqch7WMgieZLOUkd2IlJUGjP/7jkyujg+RZ82aWhCWfn53a6cyUZKoPizN6o604Eh2gMn/s39IwKB5j9NFxHRknPMJq7+SI3gg2zuryjkEWJgjrV35hiTHvawoKvV7tPWyJqzgvNjEDC4ufzK134jKEps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGEyBh88; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGEyBh88"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D998C4AF0C
+	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 08:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752654296;
+	bh=5F5b4fQbQLDyYyfIEIjAfQDxg56N9/W74sAYPQK/zB4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nGEyBh88AK50mOHxIfC25bflLxgZzU2jjJd/yQqQphnbDuWD3KYpdCuZ3c8YEM1xr
+	 DQPjU0PVBI2jhhjNYlu8X2H4eSSkwEK/Z1510P9LHr6kgQafr91T04Iu6o78Y6k6Wq
+	 gPrG1Z2c76YVQmzaTVUuaDgQGPjxAlqsNUdr4mHuQIH0+qx9nbva07REvrhVKh2c5q
+	 CVHr8U0n9w7KSWtKPRlolAUEzVKQxOwpN2FarQuPu8+JL/odDTKrz3M2yfuqNdkmOT
+	 9UJnVqwknr1urfRvwrWKTVCGfZALfqzchrQ95J9/scwRr8e0sgUMFgeOQ0eUyDShWv
+	 fO2dFdMBduelg==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60c9d8a169bso11247300a12.1
+        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 01:24:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWbmRtqdN28W0C0SYBR6scp4pB0Gy+XkjRTqHIOaY0unx9LjYy1mTxDBd7953i49EDpjR9xs5w7nPE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzml4uvjO6wawt3Mfn3wkpCOMJsRhHPT2212CUHNEPZuKcX9s7n
+	Oca9E/d6c3DfNB3oFv7We9ypE82HcXq54HUCqP6TmOHHUjRhZOehYEm5roifJ5W4yvzCr1dtZuc
+	Kb52E+jga8jnt8Yy/HIqn3uvHJrd/wB4=
+X-Google-Smtp-Source: AGHT+IHGVlHEqQxiKOfEg4bAyxr/SOOjmk4blZy7uPzLm1I80XbLCZjS2e8NhKu0qq5UTzK5vk4tm4mfgYgOnhd0C5w=
+X-Received: by 2002:a05:6402:2341:b0:607:e3ec:f8ea with SMTP id
+ 4fb4d7f45d1cf-6128591955amr1521159a12.6.1752654295062; Wed, 16 Jul 2025
+ 01:24:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxocKbTndoBnYZAA--.5577S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrWxXw45JF47Gr48ZrW7KFX_yoW8Aw17pa
-	sruwsxKrW8Wr1Sgr98JrWUGrn5AFWkGF9rWanxCFWUGanFvw1jvr18JF9aqF18Ww4rX3yI
-	qrn5G343KF4UXabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
-	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
+References: <20250716064421.3823418-1-zhoubinbin@loongson.cn>
+In-Reply-To: <20250716064421.3823418-1-zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 16 Jul 2025 16:24:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H41eXF=z+-KNYEkXSAh89mN4WM75duvfvcqFGrXAtY4Fw@mail.gmail.com>
+X-Gm-Features: Ac12FXxfcGvrEgUGmrFc8GhoBshxF9qG9p3jrmb88Gy8-AEpS63Oof7f33xfc7Q
+Message-ID: <CAAhV-H41eXF=z+-KNYEkXSAh89mN4WM75duvfvcqFGrXAtY4Fw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: loongson2: Unify the function prefixes for loongson2_mmc_pdata
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-mmc@vger.kernel.org, wanghongliang@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Loongson-2K2000 integrates one eMMC controller and one SDIO controller.
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-The module is supported now, enable it.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- .../loongarch/boot/dts/loongson-2k2000-ref.dts | 10 ++++++++++
- arch/loongarch/boot/dts/loongson-2k2000.dtsi   | 18 ++++++++++++++++++
- 2 files changed, 28 insertions(+)
-
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-index ea9e6985d0e9..3c6b12220386 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-@@ -39,6 +39,16 @@ linux,cma {
- 	};
- };
- 
-+&emmc {
-+	status = "okay";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-hs200-1_8v;
-+	no-sd;
-+	no-sdio;
-+};
-+
- &sata {
- 	status = "okay";
- };
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-index 9e0411f2754c..00cc485b753b 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-@@ -259,6 +259,24 @@ uart0: serial@1fe001e0 {
- 			status = "disabled";
- 		};
- 
-+		emmc: mmc@79990000 {
-+			compatible = "loongson,ls2k2000-mmc";
-+			reg = <0x0 0x79990000 0x0 0x1000>;
-+			interrupt-parent = <&pic>;
-+			interrupts = <51 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_EMMC_CLK>;
-+			status = "disabled";
-+		};
-+
-+		mmc@79991000 {
-+			compatible = "loongson,ls2k2000-mmc";
-+			reg = <0x0 0x79991000 0x0 0x1000>;
-+			interrupt-parent = <&pic>;
-+			interrupts = <50 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_EMMC_CLK>;
-+			status = "disabled";
-+		};
-+
- 		pcie@1a000000 {
- 			compatible = "loongson,ls2k-pci";
- 			reg = <0x0 0x1a000000 0x0 0x02000000>,
--- 
-2.47.3
-
+On Wed, Jul 16, 2025 at 2:44=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
+>
+> The function prefixes for loongson2_mmc_pdata follow two naming
+> conventions: SoC-based and DMA-based.
+>
+> First, DMA-based prefixes are the preferred choice, as they clearly
+> highlight differences, such as prepare_dma; however, for functions
+> related to SoC, such as reorder_cmd_data, it is agreed to use the
+> smallest SoC name as the fallback prefix, such as ls2k0500.
+>
+> No functional change intended.
+>
+> Suggested-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  drivers/mmc/host/loongson2-mmc.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/mmc/host/loongson2-mmc.c b/drivers/mmc/host/loongson=
+2-mmc.c
+> index ba6bb8fd5535..27499f36477c 100644
+> --- a/drivers/mmc/host/loongson2-mmc.c
+> +++ b/drivers/mmc/host/loongson2-mmc.c
+> @@ -594,7 +594,7 @@ static struct mmc_host_ops loongson2_mmc_ops =3D {
+>         .ack_sdio_irq   =3D loongson2_mmc_ack_sdio_irq,
+>  };
+>
+> -static const struct regmap_config ls2k1000_mmc_regmap_config =3D {
+> +static const struct regmap_config ls2k0500_mmc_regmap_config =3D {
+>         .reg_bits =3D 32,
+>         .val_bits =3D 32,
+>         .reg_stride =3D 4,
+> @@ -610,8 +610,8 @@ static int loongson2_reorder_cmd_list[] =3D { SD_APP_=
+SEND_SCR, SD_APP_SEND_NUM_WR_
+>   * However sdio controller will send these datas in usual data format,
+>   * so we need to adjust these datas to a protocol consistent byte order.
+>   */
+> -static void loongson2_mmc_reorder_cmd_data(struct loongson2_mmc_host *ho=
+st,
+> -                                          struct mmc_command *cmd)
+> +static void ls2k0500_mmc_reorder_cmd_data(struct loongson2_mmc_host *hos=
+t,
+> +                                         struct mmc_command *cmd)
+>  {
+>         struct scatterlist *sg;
+>         u32 *data;
+> @@ -704,8 +704,8 @@ static int ls2k0500_mmc_set_external_dma(struct loong=
+son2_mmc_host *host,
+>  }
+>
+>  static struct loongson2_mmc_pdata ls2k0500_mmc_pdata =3D {
+> -       .regmap_config          =3D &ls2k1000_mmc_regmap_config,
+> -       .reorder_cmd_data       =3D loongson2_mmc_reorder_cmd_data,
+> +       .regmap_config          =3D &ls2k0500_mmc_regmap_config,
+> +       .reorder_cmd_data       =3D ls2k0500_mmc_reorder_cmd_data,
+>         .setting_dma            =3D ls2k0500_mmc_set_external_dma,
+>         .prepare_dma            =3D loongson2_mmc_prepare_external_dma,
+>         .release_dma            =3D loongson2_mmc_release_external_dma,
+> @@ -736,8 +736,8 @@ static int ls2k1000_mmc_set_external_dma(struct loong=
+son2_mmc_host *host,
+>  }
+>
+>  static struct loongson2_mmc_pdata ls2k1000_mmc_pdata =3D {
+> -       .regmap_config          =3D &ls2k1000_mmc_regmap_config,
+> -       .reorder_cmd_data       =3D loongson2_mmc_reorder_cmd_data,
+> +       .regmap_config          =3D &ls2k0500_mmc_regmap_config,
+> +       .reorder_cmd_data       =3D ls2k0500_mmc_reorder_cmd_data,
+>         .setting_dma            =3D ls2k1000_mmc_set_external_dma,
+>         .prepare_dma            =3D loongson2_mmc_prepare_external_dma,
+>         .release_dma            =3D loongson2_mmc_release_external_dma,
+> @@ -838,8 +838,8 @@ static int loongson2_mmc_prepare_internal_dma(struct =
+loongson2_mmc_host *host,
+>         return 0;
+>  }
+>
+> -static int loongson2_mmc_set_internal_dma(struct loongson2_mmc_host *hos=
+t,
+> -                                         struct platform_device *pdev)
+> +static int ls2k2000_mmc_set_internal_dma(struct loongson2_mmc_host *host=
+,
+> +                                        struct platform_device *pdev)
+>  {
+>         host->sg_cpu =3D dma_alloc_coherent(&pdev->dev, PAGE_SIZE,
+>                                           &host->sg_dma, GFP_KERNEL);
+> @@ -860,7 +860,7 @@ static struct loongson2_mmc_pdata ls2k2000_mmc_pdata =
+=3D {
+>         .regmap_config          =3D &ls2k2000_mmc_regmap_config,
+>         .reorder_cmd_data       =3D ls2k2000_mmc_reorder_cmd_data,
+>         .fix_data_timeout       =3D ls2k2000_mmc_fix_data_timeout,
+> -       .setting_dma            =3D loongson2_mmc_set_internal_dma,
+> +       .setting_dma            =3D ls2k2000_mmc_set_internal_dma,
+>         .prepare_dma            =3D loongson2_mmc_prepare_internal_dma,
+>         .release_dma            =3D loongson2_mmc_release_internal_dma,
+>  };
+>
+> base-commit: 4ad9e44c76b301e786eb4cdab890eac8c7eebd42
+> --
+> 2.47.3
+>
+>
