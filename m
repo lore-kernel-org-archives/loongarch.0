@@ -1,84 +1,112 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F351C84BD
-	for <loongarch@lists.linux.dev>; Thu, 17 Jul 2025 15:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5762F2FCE27
+	for <loongarch@lists.linux.dev>; Thu, 17 Jul 2025 17:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752765184; cv=none; b=daWc5Z+ppIeLsxYALuRKxfHOXkyTZoFDW4NaDNDgRDtHcZyYhi55qm9nY2wxP+ARjtBBHFkaGHENoHscLY7cgvkRycWz0TsuJ5h7TlbRXjJmF2EU2ZBX7AivCso727TbOeW+VFATMJt0wFe564qWu/5aQpSjUP7UcDuvbvuArS8=
+	t=1752771623; cv=none; b=JN7//YgQGXYq+jDo+Vk1Crdng5l/Q5mu/JO160zIidBq68enyZyWSk89pO7KJktXAbpWAoBuSZVkMiJUEIMqoMqnh7/Tqva7MMh4tln7WGRD0sR0Xi0b+DmoYDx9f1oGqA8BTtLFg6FpHEQgtHR0iwrxjrN1V83KQpat4TTseNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752765184; c=relaxed/simple;
-	bh=Mpj7UKAXGClUHCGECxliUtcDd+uw/+26GpVFAnbn+IQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=dOoWK7ydaAgyKrEK/aetqorRedpUeWz2B9JP2HOSIaoarjAw940+nwPvsXNGAs85yn4g2nrx5bYOB0YZmG1CQaYWCr7jdWyItSBRC2UwqxzlpLlYR1m0BY5Fe1RmMMBvQahmeFWBzp1OrBUs3dSTu4St0xWGe2ugE9E5e+pTID8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrwRwIr5; arc=none smtp.client-ip=209.85.161.53
+	s=arc-20240116; t=1752771623; c=relaxed/simple;
+	bh=SAWw6lgzY5ROkNWwrQz4wZc9ERv9Xj/v4mmxpUmi5e4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=N5mwKTc2grZeuILzGcr8UFDYEe0w86nkkWSFd50Af0mO3jqRWNIfIPOpWSb88tiqZddeVvQnP43PqQ9AH+9+AK6xYrAFvEn4w3MZwbBjxWaPZBcoVUM859C76H8Ht/1QoaWRcYeBueuXkWGQB9Mv3ZgD9lU9JeJBkP+rNYLziTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cIlsIdzn; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrwRwIr5"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-61598534619so512465eaf.2
-        for <loongarch@lists.linux.dev>; Thu, 17 Jul 2025 08:13:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIlsIdzn"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4ab9ba884c6so14107681cf.0
+        for <loongarch@lists.linux.dev>; Thu, 17 Jul 2025 10:00:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752765182; x=1753369982; darn=lists.linux.dev;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=O3awApQZB6dc8BKUfAxblHgYrS7r+gffWVbscfIY7CA=;
-        b=JrwRwIr5RELfyEEhuvw9qF7WIKaxnGu1BaDopcxIxFRY5H70gNVlzPDmz2CkCfEjBU
-         WdMx48wURby3ow4wNKQj5TrfVGro4WyQh4HHrUB8GXoaB2TrM+ORY9xmhIKP6iTB5iua
-         nzXcpMYqiQ567i3BaN7cFnDiHPCYfSHGa5eG8Aus20SwkpXjqQtKiFHvHrTg8xl9DFN4
-         Iuw/aG13st9+BU1LSWry/EI4q1RA+DjFGUzEhP5IWUVk6QWl+Orr3fC4kDjfN+1bbMly
-         QQbF7gF/Acs3nj/GIM1vRYKjNzXR+vw4jMweBQxrS2BVltJmHwlRJoFbmNtJnHG7KOXZ
-         OuCQ==
+        d=gmail.com; s=20230601; t=1752771621; x=1753376421; darn=lists.linux.dev;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k9kzQuihJGQzW5bY9t0XpRipYthadJPZ9uSaFG+9YpQ=;
+        b=cIlsIdznnF9BGTFHQKZ2Enc7CG6LjUhq87Ze8lJ7y6dD4WGt2wHcY5IrFRi0ad3Ioo
+         0PurGn+w25xfhDrhq7U51WzAXfgVKGlgAiMK6vVbjiuyCS/gCCfICaf1bAiVHjfiE422
+         gLD9bq2kaRON1jFVEiLe67JdOGZIPz4o08Yx3vdc63fEgEXzoIozhAa43/QNvCbzFbDE
+         wfgtZZveyJ5JlJORUeNrCoqiKFgy8zaU3XoJCr9kAkOxZJRvFn5FOc0X1D6cG7r0ZPyc
+         19aY2bk75M5iFiZD5a41HrMXFWwz2LbPc8wX1ZxYo1lT/0zw1t1u8kmRLdu4Zlu/hV1f
+         wYBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752765182; x=1753369982;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O3awApQZB6dc8BKUfAxblHgYrS7r+gffWVbscfIY7CA=;
-        b=W1IZi0ZL8Bbtk60O+XdGT3L8/JRsOobSZfmvJd/AmHhSMk6IWRB2x4PYTIq2iDcAo8
-         bHR/057wof9xsgZCxHngxveQdkVjEbH1RSTbx3I9VNZritMchIgFAezpmoEsd0rnJB/l
-         F7LP3YMoyJTht/VE3GLYzbuRgj4isfO70djcaGNAiE2FSfnvl9g7iFWDj5wZeMLGvLoK
-         6sWRSfIJKp455xA0gai9YhMYch1Fk83WdsIgTBFlDH/siwsW7Q8p8PsBAphq/ios98qE
-         CoNJPtqkOJ3ggJN7xt9FAXUK597kr4YLBoWbnPOW4m3uL1s13NiwLX7EPRC7q9/tQsS5
-         K98Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXilqdFjg/TRN89AyOzNnZHy6z8fjIOGMtc6C6Sjd0KmSNa5LRxNIS+4PQpaBXH76Vn+fZNUAdNC4M=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxbbhLziztl6UJOwgoivHCVNczcv4vQ5/aZqt1BGJe8who4IA7V
-	jCly1tuZ/eyfTnmaAdKvQw4zImh0uqj8K0prVp/hFGHRG0BdmgmFpJI3yTmNW7dJ5tjGdx0EO02
-	qR8YXc4tiXcSvlB5qj6TJFoj+oPp5bfE=
-X-Gm-Gg: ASbGnctwi7wYhzXdF9TvNSdYgYQlUW04RmC/6VWiqomhy/jzR9B9H+NVVQ3JxyBYl3g
-	eWpEQZguBv4wqGZ/mb+8cqstdIRBooOOpMxzPtJKLxrKjUlYQA5kriJLJJ+NJv5yr1chf6+oL+U
-	t7HZ8uUmxA5muoYMxDXMJHLSfCjQPRnW1ZfKKybGh/BqjV/PHXcY4C1tE1pEk5+Pb+pCOJVdsYU
-	VdeaaI=
-X-Google-Smtp-Source: AGHT+IEXpi4bK5GnD7ZsP35qFoSBot5FRm03qGPIRbq9G3i4NdC4YXAdosTTz/QdvhX7GuQXzaXUtzYfG8M+XO/1fkI=
-X-Received: by 2002:a05:6820:c087:b0:615:ac59:7613 with SMTP id
- 006d021491bc7-615ac59804amr2044420eaf.5.1752765177338; Thu, 17 Jul 2025
- 08:12:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752771621; x=1753376421;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k9kzQuihJGQzW5bY9t0XpRipYthadJPZ9uSaFG+9YpQ=;
+        b=nengJcBscw7hxNqaLY/xWEYtKDhWsvSLFjUC5E6AjsXElCZa74wFbEHcBuxNOQHkxT
+         ZoG1qyZTtUM6SRmZzUmRvCctm6NCjN3hFMZkfpWQ+4e2Kp8kLaqD17/1Shs44CCfJUUj
+         tSgsMch0lAIrRjYCkB/lnE03vSM5P1CaxhOCWWUmGPjqAGwnPtnENuUYR9b3Oz6hHhkJ
+         CjrfMy925+E2zenV57Hvihe1p4CWuemfXQEVcUAoh0cSzNI2A4tDlQaAvGXSgAN/8Hg9
+         HhkBbqtS7VRL4Qt+fOiVYYx/uqBME76Q2b/ViWdVfXgwf2YqJYMLUfWqvroLTXtkcvpN
+         5rHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVC51YqqCPcuycuPnoyzBI/PJ5ARPlyD6vUAEv/FAoHg3YRjV5lll44IADefsqq6SjIaQtuz4V26dA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyPAfmuszeleWvjYrkIXps2wfmzXJbuyRysKkwHmjUOHdAxDSEj
+	CcRtaNhRsABMy7Dnd2c8Wn9fMsILPWzssUON7Rihe/CeD/HM8PpZh019Uq7TcS0tUf/Fpef3TNB
+	jlsdlp5TWLy5t4kacbtSwkuElAPoi3Lg=
+X-Gm-Gg: ASbGnctMENpDYtDSHE3oF1zpdM7sKjyKgtSu3aVNHD0wDxG9Cx3Hb4pFy7Gc882vHGm
+	uh3X10p1vQur+7ODVos5ExU1v54Hj9yxHNueKoyv7595bL0QX5KjPFZYjjllA5/NikGUgeWzFwA
+	C3zhqfgHkmr4U/lQtoPi8scvXPG8Jaq2t3XgnNNzhInpcI57lRLkbNL2teTbwffSXnlKIORp/B7
+	ylCFz0=
+X-Google-Smtp-Source: AGHT+IGNxL4iJOOwvkEbESHl8JaWIeIaBFt9BgoxEp6N+bj2QJapDq2hBkb/aDLJjzXEC++cZgirtPSkklaivBUp9bM=
+X-Received: by 2002:a05:622a:558f:b0:4ab:5b16:fa90 with SMTP id
+ d75a77b69052e-4aba258dc6bmr63301431cf.12.1752771621104; Thu, 17 Jul 2025
+ 10:00:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <CAK3+h2z9ByGD5wnk0=C=vML-OTv_22jZr2dn3u1O4Bs5V-YceA@mail.gmail.com>
+In-Reply-To: <CAK3+h2z9ByGD5wnk0=C=vML-OTv_22jZr2dn3u1O4Bs5V-YceA@mail.gmail.com>
 From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 17 Jul 2025 08:12:46 -0700
-X-Gm-Features: Ac12FXwFjMLHAidOb_oFxOFjbV-54BPr5DYym0a8Qr3VcpTRkhlFALqDAsqSU_k
-Message-ID: <CAK3+h2z9ByGD5wnk0=C=vML-OTv_22jZr2dn3u1O4Bs5V-YceA@mail.gmail.com>
-Subject: loongarch *ip in bpf_arch_text_poke() missing 5 NOP
+Date: Thu, 17 Jul 2025 10:00:09 -0700
+X-Gm-Features: Ac12FXyl8ooH6TkGFfrt3po8ALsMrb11ceIsN2b7vWNuCX3LP52bFLairGHlJns
+Message-ID: <CAK3+h2ybn=0fx2fNOerW1Ngy5fC9WX2NRNLOhGnRh_wRr5sghg@mail.gmail.com>
+Subject: Re: loongarch *ip in bpf_arch_text_poke() missing 5 NOP
 To: Chenghao Duan <duanchenghao@kylinos.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
 	Huacai Chen <chenhuacai@kernel.org>, kernel@xen0n.name, loongarch@lists.linux.dev, 
 	guodongtai@kylinos.cn, jianghaoran@kylinos.cn, 
 	Tiezhu Yang <yangtiezhu@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi folks,
+On Thu, Jul 17, 2025 at 8:12=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.com=
+> wrote:
+>
+> Hi folks,
+>
+> Open a new email thread to investigate why  *ip passed to
+> bpf_arch_text_poke() missing 5 NOP. from what I observed, in x86, the
+> *ip already include 5 NOP when passed to bpf_arch_text_poke(), but in
+> loongarch, the *ip is missing 5 NOP when passed to bpf_arch_text_poke,
+> which result in -EFAULT in bpf_arch_text_poke() when memcmp(ip,
+> old_insns, 5 * 4) in loongarch bpf trampoline patch series. I wonder
+> if the loongarch bpf jit build_prologue() missed adding 5 NOP? x86_64
+> emit_prologue() adds 5 NOP, what do you think?
+>
+> Thanks
+>
+> Vincent
 
-Open a new email thread to investigate why  *ip passed to
-bpf_arch_text_poke() missing 5 NOP. from what I observed, in x86, the
-*ip already include 5 NOP when passed to bpf_arch_text_poke(), but in
-loongarch, the *ip is missing 5 NOP when passed to bpf_arch_text_poke,
-which result in -EFAULT in bpf_arch_text_poke() when memcmp(ip,
-old_insns, 5 * 4) in loongarch bpf trampoline patch series. I wonder
-if the loongarch bpf jit build_prologue() missed adding 5 NOP? x86_64
-emit_prologue() adds 5 NOP, what do you think?
+I applied a rough patch below which added 5 NOP in build_prologue, it
+seems to have solved the multi XDP program attachment issue, but it
+also caused kernel lockup right after the program was attached, I had
+to hard reset the power to reboot :)
 
-Thanks
 
-Vincent
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 6820558afce5..66b00e265a73 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -93,6 +93,10 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
+  */
+ static void build_prologue(struct jit_ctx *ctx)
+ {
++       /* Emit 5 NOPs for later text patching */
++       for (int i =3D 0; i < 5; i++) {
++               emit_insn(ctx, nop);  // 0x03400000
++       }
