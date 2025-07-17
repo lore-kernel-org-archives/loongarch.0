@@ -1,1162 +1,386 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990A2B660
-	for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 22:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4C21799F;
+	Thu, 17 Jul 2025 00:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752704149; cv=none; b=irR2qySLqJUkJ4Cavtk6Wyih4R4jb+s8EY0uqczHGtFcysDexsoZZNrglGnvkJFd6Yh5SCToI1hrOGg1xilgorWewThiQjwI0YhJelc1U+SjkuHRi7lHh5fPoZY910hbAW/bcx07YX0YLPgKY6Hy6wr19Jgr/Xl7oGsbg4KOiTQ=
+	t=1752713366; cv=none; b=mP7J4aGHzS0Qq0L3YJnnbiqab3+dJKiz0X4H4LozK2Gur88GN1uvgqknYTi9+SEC5ZjpSvidJx7kZnL4IGNBitecMfJHJRWPzGc2gwZB0YrXg5VZboMG6cNFivby0888FI1y8ak55RvgDJQ5hw/oSeA9hfRlsFXK5Ik50iARfYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752704149; c=relaxed/simple;
-	bh=/PBfokhWEnMTuBhDP/gzC2HfipQiAvi0QudFi0c4dls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m4LKP1N+xRDarD/P9lscAN/gzdrI2mEfs/xtzQhJ+Kia/8KoscCXIQtY1nEHrE33n+4cjnSx3MTk7+ZhOAITAinbxBRtP+RrBCy7dMj+oU9OaiaeFn8OuCCjt9fKPTXjRjnFrbqR+wm1UxeN4wrF0/v77jn/Ff6+uhX7zImygDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mc83Y3xc; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752713366; c=relaxed/simple;
+	bh=1zat0F1s/18Hl6/2ocHtQ1upOvrSzchh54HCKQD1zsg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JcC4TTyR58qqkoqQqTEZlEZEbWCaNM5h5A1/emwzhnAqorjlhxpXiI7xiRL1vpWkJLCGABsvXyTOMRc/MQX9HEKdbPDX2ykTdg6Uh7USS6zHj3Lg7CLPFxJVaj8KfQbsmbf+hsQddPPEVWAT+rS+JujfcmzsmfDU+So7+kEBkNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YQYt3Cjo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mc83Y3xc"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4ab60e97cf8so5286861cf.0
-        for <loongarch@lists.linux.dev>; Wed, 16 Jul 2025 15:15:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752704143; x=1753308943; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TZGxRc7IMQ47R37+GtAw/vT5WcQtguHQSnfUVcra3vI=;
-        b=mc83Y3xcJfcdJC+i39zgTdncQ691cgLaQCEJQ8akqJBwuxnd4smwtUzQT1BstAXSy0
-         nu+XOkqwv+YKbGDj9aKbJmEDaONicHHOy6NJtr6Wa25OhWN8MR/sG6X8nqByNmmYDG4O
-         K1dYlP1c3OAUQsEaGDb1vd3L9K7OzTDJCxhm+KV51dH/UaO3c/RPLzA4U2U+yX/qyU1B
-         ivpAQ//MEpwZmlt2eTta703dYfT9LEy6b8hoHcdRoNRafhnPWxgpy/9aeYT1RuYBG7fu
-         48LqlHuhN84u9Q33MoVWaa5ciGiJLZQNlkGGq34MgIO2DLPYyT7RacYee+EKqkXG/Ze7
-         bVPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752704143; x=1753308943;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TZGxRc7IMQ47R37+GtAw/vT5WcQtguHQSnfUVcra3vI=;
-        b=sVUaks62RehTRvgV7E2calC39nBTC/kaXkj09QDy14ZPQHKmQxO7bgzeYvFYFqZRAw
-         NUb8Rsd51h9otuMuf89GtWnLnW4KhV/+C55rmnm+nNSjHqd3Y6W5npLSoscs6fx/sp3d
-         3kqlXJPmCUYZIXndcP/v0BtWauvKucc6PPI7DDGaMmm6UYgMPeeRdGiSkgghIhBokXmi
-         hgWi0sThL0CB/NWpyxBSE+uD0HAluX2v6CQmzUcrfEhmUIYvamGeP13capcW0/t9K6cY
-         nKnKvVSVOcvdE8tEN/jA72fUTOWB9O9vbCXIIIQhieA4unYgPB5PQEFKX5nXLzGcwMq2
-         5dNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMViadoO+1mZKW2XdmYomIAz3XCz4raARvPDTJU6glux61jWrPg5dJZdNHsxsAZ2AkCZlUqthEy28=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx/IhRT86juUku2sHcwsZ+BruEjyjxMihmafRUhL89lnZwE9DAt
-	yhaJsgvLgQEjZLjt/pqcdq8ZedcvXsP3ynVF6IAoJY0PsOrGhqYST9YgHWEDNajpFuvMTR17PhI
-	72e/bt2jOiJUs9+rjr5aoD27aYc1Wql4=
-X-Gm-Gg: ASbGncthKV3ic1VUBORT8QDk/fBlIi6S8z8LvVLXoDqX6qYCYHfmHXvJnh10HcTfkNb
-	xVYRpBDiBsmzA38lDC0mYJyg94aGfRh5w74V+cHQHu1csMYaUj8v93GMEzV0Nery1ochVC7ULbi
-	nZsVh3j9dHXPNFHLVxfLTPCVX+8hnMUZWjWY4f/2aH/pJ5PljfG3R04jkS0zJG9pY0UyVRomWDN
-	22nXJw=
-X-Google-Smtp-Source: AGHT+IFsnF8z44GSyk+1q2oqEVV5jHjlZGnXkUyGDtX0vTwFFAQCnlQnMGpc1p6YSlOOpPekAsx/TR8u03U9HZuqdJA=
-X-Received: by 2002:a05:622a:7b12:b0:4a9:91b7:6b88 with SMTP id
- d75a77b69052e-4ab93c6f807mr60846391cf.11.1752704143015; Wed, 16 Jul 2025
- 15:15:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YQYt3Cjo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8056EC4CEE7;
+	Thu, 17 Jul 2025 00:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752713365;
+	bh=1zat0F1s/18Hl6/2ocHtQ1upOvrSzchh54HCKQD1zsg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=YQYt3CjoWNF2bDAB44JG5w2JJflDqqQz74m572lHFomyUTVpDmTlrUeL+MWRaX1H8
+	 GsaRykzAiCXYLodeAK/Y9DOy4kQg6jRYq0zLZVjsuKv9PFCCaDBnuFL9RaLloL2pT4
+	 rqKLHFRH8p8OKLb1L1gbdpnfAWFpD6noelYK0i6/ciViVXEVwFERdj5finzMDpIwJ7
+	 BzfM/RuuVYps9E717LmpZZbg4zWklYG7LS7JA5n2PVj9deMQe73gUDZMESo5FURONO
+	 bbr97v7aVRzUe9NIgXrZPpALddz4opx7GVFOYQVI40wKvAJ4pyH20sQKair4vMk5/Z
+	 g9CigBDtFZzdQ==
+Date: Wed, 16 Jul 2025 17:49:22 -0700 (PDT)
+From: Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
+To: Ard Biesheuvel <ardb+git@google.com>
+cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+    Ard Biesheuvel <ardb@kernel.org>, 
+    Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, 
+    Feng Tang <feng.tang@linux.alibaba.com>, 
+    Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+    Juergen Gross <jgross@suse.com>, 
+    Stefano Stabellini <sstabellini@kernel.org>, 
+    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+    Sunil V L <sunilvl@ventanamicro.com>, Bibo Mao <maobibo@loongson.cn>, 
+    linux-rtc@vger.kernel.org, linux-efi@vger.kernel.org, 
+    xen-devel@lists.xenproject.org, x86@kernel.org, 
+    linux-riscv@lists.infradead.org, loongarch@lists.linux.dev
+Subject: Re: [RFC PATCH 3/3] efi: Remove support for pointless, unused EFI
+ services
+In-Reply-To: <20250714060843.4029171-8-ardb+git@google.com>
+Message-ID: <alpine.DEB.2.22.394.2507161749090.15546@ubuntu-linux-20-04-desktop>
+References: <20250714060843.4029171-5-ardb+git@google.com> <20250714060843.4029171-8-ardb+git@google.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250709055029.723243-1-duanchenghao@kylinos.cn>
- <20250709055029.723243-6-duanchenghao@kylinos.cn> <CAK3+h2zyhKYjRNV+25pngfrtPQdKe6gJFbkmanBx_9Fp+C8VYw@mail.gmail.com>
- <20250710080456.GB839477@chenghao-pc> <CAK3+h2yc6m1c-EpwK+Lmrb9eV7ZbU1ibJHVzygqjc6QjQid7cQ@mail.gmail.com>
- <CAK3+h2yhB3_v8m-5Q0ePDfhH-h1=hK9aCqsN7BHk8NEcwaas5Q@mail.gmail.com>
- <CAK3+h2xZ6yh7N0abu5DP_ftaiE1gQEy8qVi-VvrePssc5+m=eQ@mail.gmail.com>
- <CAK3+h2zPQ+tcFzWzZt8g3TPhaK+7kDnfJQYiDOFMq-K0FqsbTA@mail.gmail.com>
- <CAK3+h2z1iM9m5yyMBNBOO9WcgidW1FKQ+EPVsrM5BRzh5myEPA@mail.gmail.com> <CAK3+h2yNfMLHw4x9xi5QKCMKDkkZCa24r-AmMhTe+gCpfpV=Lg@mail.gmail.com>
-In-Reply-To: <CAK3+h2yNfMLHw4x9xi5QKCMKDkkZCa24r-AmMhTe+gCpfpV=Lg@mail.gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Wed, 16 Jul 2025 15:15:31 -0700
-X-Gm-Features: Ac12FXzVctzJ7jwodUEj_2hoJWkl28O5kJEjHFlyU4n9CEiyRiS_87hVosYq-GY
-Message-ID: <CAK3+h2ym=DawnPnp2Zwx3HKNt7eXO4uxAd+KnQBUPbPdcqSMvg@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] LoongArch: BPF: Add bpf trampoline support for Loongarch
-To: Chenghao Duan <duanchenghao@kylinos.cn>
-Cc: yangtiezhu@loongson.cn, hengqi.chen@gmail.com, chenhuacai@kernel.org, 
-	kernel@xen0n.name, loongarch@lists.linux.dev, guodongtai@kylinos.cn, 
-	jianghaoran@kylinos.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Jul 16, 2025 at 8:35=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.com=
-> wrote:
->
-> On Wed, Jul 16, 2025 at 7:51=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.c=
-om> wrote:
-> >
-> > On Tue, Jul 15, 2025 at 8:11=E2=80=AFPM Vincent Li <vincent.mc.li@gmail=
-.com> wrote:
-> > >
-> > > On Tue, Jul 15, 2025 at 2:54=E2=80=AFPM Vincent Li <vincent.mc.li@gma=
-il.com> wrote:
-> > > >
-> > > > On Tue, Jul 15, 2025 at 2:19=E2=80=AFPM Vincent Li <vincent.mc.li@g=
-mail.com> wrote:
-> > > > >
-> > > > > On Thu, Jul 10, 2025 at 8:03=E2=80=AFAM Vincent Li <vincent.mc.li=
-@gmail.com> wrote:
-> > > > > >
-> > > > > > On Thu, Jul 10, 2025 at 1:05=E2=80=AFAM Chenghao Duan <duanchen=
-ghao@kylinos.cn> wrote:
-> > > > > > >
-> > > > > > > On Wed, Jul 09, 2025 at 12:08:27PM -0700, Vincent Li wrote:
-> > > > > > > > Hi Chenghao,
-> > > > > > > >
-> > > > > > > > I removed many email recipients for my question because I d=
-on't want
-> > > > > > > > to bother others, so you could  reply to this and not CC ot=
-hers who
-> > > > > > > > may not want to be bothered.  Thanks for working on this BP=
-F
-> > > > > > > > trampoline feature for loongarch, I have been waiting for t=
-he bpf
-> > > > > > > > trampoline feature for loongarch for a long time.
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > On Tue, Jul 8, 2025 at 10:52=E2=80=AFPM Chenghao Duan <duan=
-chenghao@kylinos.cn> wrote:
-> > > > > > > > >
-> > > > > > > > > BPF trampoline is the critical infrastructure of the BPF =
-subsystem, acting
-> > > > > > > > > as a mediator between kernel functions and BPF programs. =
-Numerous important
-> > > > > > > > > features, such as using BPF program for zero overhead ker=
-nel introspection,
-> > > > > > > > > rely on this key component.
-> > > > > > > > >
-> > > > > > > > > The related tests have passed, Including the following te=
-chnical points:
-> > > > > > > > > 1. fentry
-> > > > > > > > > 2. fmod_ret
-> > > > > > > > > 3. fexit
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > My firewall project https://github.com/vincentmli/loongfire=
- relies on
-> > > > > > > > https://github.com/xdp-project/xdp-tools/tree/main/lib/libx=
-dp which
-> > > > > > > > relies on "BPF program extension" to attach multiple XDP pr=
-ogram to
-> > > > > > > > one single network interface. Now I can't attach multiple X=
-DP programs
-> > > > > > > > to one network interface through libxdp so I use bpf tail c=
-all as a
-> > > > > > > > workaround.  I am not a kernel developer and not  familiar =
-with the
-> > > > > > > > kernel code so I am not sure if the "BPF program extension"=
- is
-> > > > > > > > automatically supported after bpf trampoline is supported f=
-or
-> > > > > > > > loongarch, could you shed some light on this? thanks!
-> > > > > > > >
-> > > > > > >
-> > > > > > > Hi Vincent,
-> > > > > > >
-> > > > > > > I sincerely apologize, but I'm not quite sure about the speci=
-fic
-> > > > > > > scenarios where the "BPF Program Extension" you mentioned is =
-applied.
-> > > > > > > The trampoline feature allows multiple BPF programs to be att=
-ached to
-> > > > > > > the fentry/fexit points of kernel functions at runtime. I'm n=
-ot sure if
-> > > > > > > this aligns with your technical approach.
-> > > > > > >
-> > > > > > > Chenghao
-> > > > > > >
-> > > > > >
-> > > > > > Thanks for the feedback, the
-> > > > > > https://github.com/xdp-project/xdp-tools/tree/main/lib/libxdp h=
-as
-> > > > > > section
-> > > > > > Kernel and BPF program feature compatibility.
-> > > > > >
-> > > > > > "The ability to attach multiple BPF programs to a single interf=
-ace
-> > > > > > relies on the kernel =E2=80=9CBPF program extension=E2=80=9D fe=
-ature which was
-> > > > > > introduced by commit be8704ff07d2 (=E2=80=9Cbpf: Introduce dyna=
-mic program
-> > > > > > extensions=E2=80=9D) in the upstream kernel and first appeared =
-in kernel
-> > > > > > release 5.6. To incrementally attach multiple programs, a furth=
-er
-> > > > > > refinement added by commit 4a1e7c0c63e0 (=E2=80=9Cbpf: Support =
-attaching
-> > > > > > freplace programs to multiple attach points=E2=80=9D) is needed=
-; this first
-> > > > > > appeared in the upstream kernel version 5.10. The functionality=
- relies
-> > > > > > on the =E2=80=9CBPF trampolines=E2=80=9D feature which is unfor=
-tunately only available
-> > > > > > on the x86_64 architecture. In other words, kernels before 5.6 =
-can
-> > > > > > only attach a single XDP program to each interface, kernels 5.6=
-+ can
-> > > > > > attach multiple programs if they are all attached at the same t=
-ime,
-> > > > > > and kernels 5.10 have full support for XDP multiprog on x86_64.=
- On
-> > > > > > other architectures, only a single program can be attached to e=
-ach
-> > > > > > interface."
-> > > > > >
-> > > > > > According to the above mentioned commit and  paragraph, I think=
- =E2=80=9CBPF
-> > > > > > program extension=E2=80=9D should be  supported if the architec=
-ture supports
-> > > > > > trampoline, when libxdp author wrote the above paragraph, proba=
-bly
-> > > > > > only X86_64 architecture supported BPF trampolines at that time=
-. I
-> > > > > > will be glad to help testing that when loongarch BPF trampoline
-> > > > > > feature is supported :)
-> > > > > >
-> > > > >
-> > > > > I applied the patches on top of 6.16.0-rc6 on my local loongarch
-> > > > > machine, then tried to run xdp-filter program from xdp-tools proj=
-ect,
-> > > > > it looks not working with xdp-tools libxdp, got "Bad address" err=
-or:
-> > > > >
-> > > > > ./xdp-filter/xdp-filter load -m skb -vvv lo
-> > > > >
-> > > > >  libxdp: Loaded XDP program xdp_pass, got fd 22
-> > > > >  libxdp: Duplicated fd 22 to 23 for prog xdp_pass
-> > > > >  libxdp: Failed to attach test program to dispatcher: Bad address=
- <=3D=3D=3D=3D
-> > > > >  libxdp: Compatibility check for dispatcher program failed: Bad a=
-ddress
-> > > > >  libxdp: Falling back to loading single prog without dispatcher
-> > > > >  libxdp: Checking for kernel frags support
-> > > > >  libxdp: Loading XDP program 'xdp-dispatcher.o' from embedded obj=
-ect file
-> > > > >
-> > > > > the error is from xdp-tools lib/libxdp/libxdp.c
-> > > > >
-> > > > >         bpf_program__set_type(test_prog->bpf_prog, BPF_PROG_TYPE_=
-EXT);
-> > > > >         bpf_program__set_expected_attach_type(test_prog->bpf_prog=
-, 0);
-> > > > >         err =3D xdp_program__load(test_prog);
-> > > > >         if (err) {
-> > > > >                 char buf[100] =3D {};
-> > > > >                 libxdp_strerror(err, buf, sizeof(buf));
-> > > > >                 pr_debug("Failed to load program %s: %s\n",
-> > > > >                         xdp_program__name(test_prog), buf);
-> > > > >                 goto out;
-> > > > >         }
-> > > > >
-> > > > >         test_prog->link_fd =3D bpf_raw_tracepoint_open(NULL, test=
-_prog->prog_fd);
-> > > > >         if (test_prog->link_fd < 0) {
-> > > > >                 err =3D -errno;
-> > > > >                 pr_debug("Failed to attach test program to dispat=
-cher:
-> > > > > %s\n",  <=3D=3D=3D=3D=3D=3Derror Bad address
-> > > > >                          strerror(-err));
-> > > > >                 goto out;
-> > > > >         }
-> > > > >
-> > > >
-> > > > here is strace:
-> > > >
-> > > > 2754  write(2, "libxdp: Duplicated fd 22 to 23 for prog xdp_pass\n"=
-, 49) =3D 49
-> > > > 2754  bpf(BPF_RAW_TRACEPOINT_OPEN, {raw_tracepoint=3D{name=3DNULL,
-> > > > prog_fd=3D23}}, 24) =3D -1 EFAULT (Bad address)
-> > > > 2754  write(2, " ", 1)                  =3D 1
-> > > > 2754  write(2, "libxdp: Failed to attach test program to dispatcher=
-:
-> > > > Bad address\n", 65) =3D 65
-> > > >
-> > >
-> > > Sorry to make more noise, if I understand the code right, bpf syscall
-> > > of BPF_RAW_TRACEPOINT_OPEN code path looks like below, and it
-> > > eventually may call bpf_arch_text_poke() which would invoke the
-> > > loongarch bpf_arch_text_poke().  raw tracepoint could rely on the bpf
-> > > trampoline. I wonder if there is a way to print out the kernel stack
-> > > trace when executing xdp-filter command.
-> > >
-> > >
-> > > static int __sys_bpf(enum bpf_cmd cmd, bpfptr_t uattr, unsigned int s=
-ize)
-> > > {
-> > >         union bpf_attr attr;
-> > >         int err;
-> > > ...
-> > >         case BPF_RAW_TRACEPOINT_OPEN:
-> > >                 err =3D bpf_raw_tracepoint_open(&attr); <=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >                 break;
-> > > ...
-> > > }
-> > >
-> > > static int bpf_raw_tracepoint_open(const union bpf_attr *attr)
-> > > {
-> > >         struct bpf_prog *prog;
-> > >         void __user *tp_name;
-> > >         __u64 cookie;
-> > > ...
-> > >         fd =3D bpf_raw_tp_link_attach(prog, tp_name, cookie); <=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >                 bpf_prog_put(prog);
-> > > ...
-> > > }
-> > >
-> > > static int bpf_raw_tp_link_attach(struct bpf_prog *prog,
-> > >                                   const char __user *user_tp_name, u6=
-4 cookie)
-> > > {
-> > >         struct bpf_link_primer link_primer;
-> > >         struct bpf_raw_tp_link *link;
-> > >         struct bpf_raw_event_map *btp;
-> > >         const char *tp_name;
-> > >         char buf[128];
-> > >         int err;
-> > >
-> > >         switch (prog->type) {
-> > >         case BPF_PROG_TYPE_TRACING:
-> > >         case BPF_PROG_TYPE_EXT: <=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >         case BPF_PROG_TYPE_LSM:
-> > >                 if (user_tp_name)
-> > >                         /* The attach point for this category of prog=
-rams
-> > >                          * should be specified via btf_id during prog=
-ram load.
-> > >                          */
-> > >                         return -EINVAL;
-> > >                 if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
-> > >                     prog->expected_attach_type =3D=3D BPF_TRACE_RAW_T=
-P) {
-> > >                         tp_name =3D prog->aux->attach_func_name;
-> > >                         break;
-> > >                 }
-> > >                 return bpf_tracing_prog_attach(prog, 0, 0, 0);
-> > > <=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > ...
-> > > }
-> > >
-> > >
-> > > static int bpf_tracing_prog_attach(struct bpf_prog *prog,
-> > >                                    int tgt_prog_fd,
-> > >                                    u32 btf_id,
-> > >                                    u64 bpf_cookie)
-> > > {
-> > >
-> > >
-> > >        err =3D bpf_trampoline_link_prog(&link->link, tr, tgt_prog);
-> > >
-> > > }
-> > >
-> > > int bpf_trampoline_link_prog(struct bpf_tramp_link *link,
-> > >                              struct bpf_trampoline *tr,
-> > >                              struct bpf_prog *tgt_prog)
-> > > {
-> > >         int err;
-> > >
-> > >         mutex_lock(&tr->mutex);
-> > >         err =3D __bpf_trampoline_link_prog(link, tr, tgt_prog);
-> > >         mutex_unlock(&tr->mutex);
-> > >         return err;
-> > > }
-> > >
-> > > static int __bpf_trampoline_link_prog(struct bpf_tramp_link *link,
-> > >                                       struct bpf_trampoline *tr,
-> > >                                       struct bpf_prog *tgt_prog)
-> > > {
-> > >         enum bpf_tramp_prog_type kind;
-> > >         struct bpf_tramp_link *link_exiting;
-> > >         int err =3D 0;
-> > >         int cnt =3D 0, i;
-> > >
-> > >         kind =3D bpf_attach_type_to_tramp(link->link.prog);
-> > >         if (tr->extension_prog)
-> > >                 /* cannot attach fentry/fexit if extension prog is at=
-tached.
-> > >                  * cannot overwrite extension prog either.
-> > >                  */
-> > >                 return -EBUSY;
-> > >
-> > >         for (i =3D 0; i < BPF_TRAMP_MAX; i++)
-> > >                 cnt +=3D tr->progs_cnt[i];
-> > >
-> > >         if (kind =3D=3D BPF_TRAMP_REPLACE) { <=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> > >                 /* Cannot attach extension if fentry/fexit are in use=
-. */
-> > >                 if (cnt)
-> > >                         return -EBUSY;
-> > >                 err =3D bpf_freplace_check_tgt_prog(tgt_prog);
-> > >                 if (err)
-> > >                         return err;
-> > >                 tr->extension_prog =3D link->link.prog;
-> > >                 return bpf_arch_text_poke(tr->func.addr, BPF_MOD_JUMP=
-, NULL,
-> > >                                           link->link.prog->bpf_func);
-> > > <=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >         }
-> > >
-> > > ...
-> > > }
-> > >
-> >
-> > To continue the fun of hacking :), to find a good use of this patch
-> > series to test out fentry, DeepSeek helped me  come up with the
-> > following method to fentry the bpf_trampoline_link_prog().
-> >
-> > SEC("fentry/bpf_trampoline_link_prog")
-> > int BPF_PROG(trace_trampoline_link,
-> >             struct bpf_tramp_link *link,
-> >             struct bpf_trampoline *tr,
-> >             struct bpf_prog *tgt_prog)
-> > {
-> >     enum bpf_tramp_prog_type kind =3D BPF_TRAMP_MAX;
-> >     const char *kind_str =3D "UNKNOWN";
-> >     char prog_name[16] =3D {0};
-> >     bool has_prog_name =3D false;
-> >
-> >     if (link && link->link.prog) {
-> >         // Get program name if available
-> >         if (link->link.prog->aux) {
-> >             bpf_probe_read_kernel_str(prog_name, sizeof(prog_name),
-> >                                     link->link.prog->aux->name);
-> >             has_prog_name =3D true;
-> >         }
-> >
-> >         // Determine kind
-> >         switch (link->link.prog->expected_attach_type) {
-> >             case BPF_TRACE_FENTRY:
-> >                 kind =3D BPF_TRAMP_FENTRY;
-> >                 kind_str =3D "FENTRY";
-> >                 break;
-> >             case BPF_TRACE_FEXIT:
-> >                 kind =3D BPF_TRAMP_FEXIT;
-> >                 kind_str =3D "FEXIT";
-> >                 break;
-> >             case BPF_MODIFY_RETURN:
-> >                 kind =3D BPF_TRAMP_MODIFY_RETURN;
-> >                 kind_str =3D "MODIFY_RETURN";
-> >                 break;
-> >             default:
-> >                 if (link->link.prog->type =3D=3D BPF_PROG_TYPE_EXT) {
-> >                     kind =3D BPF_TRAMP_REPLACE;
-> >                     kind_str =3D "REPLACE";
-> >                 }
-> >                 break;
-> >         }
-> >     }
-> >
-> >     bpf_printk("__bpf_trampoline_link_prog: kind=3D%d (%s) prog=3D%s",
-> >                kind,
-> >                kind_str,
-> >                has_prog_name ? prog_name : "N/A");
-> >
-> >     return 0;
-> > }
-> >
-> > It confirms the xdp_pass program is set to  BPF_PROG_TYPE_EXT as
-> > expected and kind is BPF_TRAMP_REPLACE and bpf_arch_text_poke() would
-> > be invoked when I run 'xdp-filter load -m skb lo'
-> >
-> > [root@fedora c]# cat /sys/kernel/debug/tracing/trace_pipe
-> >            <...>-10081   [003] ...11 64926.801233: bpf_trace_printk:
-> > __bpf_trampoline_link_prog: kind=3D4 (REPLACE) prog=3Dxdp_pass
-> >
-> >
->
-> I think I found where the error coming from, now I used fentry on the
-> bpf_arch_text_poke()
->
-> SEC("fentry/bpf_arch_text_poke")
-> int BPF_PROG(trace_text_poke_entry, void *ip, enum bpf_text_poke_type t,
->              void *old_addr, void *new_addr)
-> {
->     bpf_printk("bpf_arch_text_poke INVOKED: ip=3D%pS, type=3D%d, old=3D%p=
-S, new=3D%pS",
->                ip, t, old_addr, new_addr);
->     return 0;
-> }
->
-> SEC("fexit/bpf_arch_text_poke")
-> int BPF_PROG(trace_text_poke_exit,
->              void *ip, enum bpf_text_poke_type t,
->              void *old_addr, void *new_addr,
->              int retval)  // <-- Return value is automatically passed
-> as last arg
-> {
->     bpf_printk("bpf_arch_text_poke RETURNED: %d (ip=3D%pS)", retval, ip);
->     return 0;
-> }
->
-> it prints:
-> [root@fedora c]# cat /sys/kernel/debug/tracing/trace_pipe
->            <...>-10426   [001] ...11 67878.110342: bpf_trace_printk:
-> bpf_arch_text_poke INVOKED:
-> ip=3Dbpf_prog_3b185187f1855c4c_xdp_pass+0x0/0x60, type=3D1, old=3D0x0,
-> new=3Dbpf_prog_3b185187f1855c4c_xdp_pass+0x0/0x60
->            <...>-10426   [001] ...11 67878.110350: bpf_trace_printk:
-> bpf_arch_text_poke RETURNED: -14
-> (ip=3Dbpf_prog_3b185187f1855c4c_xdp_pass+0x0/0x60)
->
-> the error code -14 (-EFAULT) is  likely from line 1434 from this patch
-> series I applied
->
-> 1417 int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
-> 1418                        void *old_addr, void *new_addr)
-> 1419 {
-> 1420         u32 old_insns[5] =3D {[0 ... 4] =3D INSN_NOP};
-> 1421         u32 new_insns[5] =3D {[0 ... 4] =3D INSN_NOP};
-> 1422         bool is_call =3D poke_type =3D=3D BPF_MOD_CALL;
-> 1423         int ret;
-> 1424
-> 1425         if (!is_kernel_text((unsigned long)ip) &&
-> 1426                 !is_bpf_text_address((unsigned long)ip))
-> 1427                 return -ENOTSUPP;
-> 1428
-> 1429         ret =3D gen_jump_or_nops(old_addr, ip, old_insns, is_call);
-> 1430         if (ret)
-> 1431                 return ret;
-> 1432
-> 1433         if (memcmp(ip, old_insns, 5 * 4))
-> 1434                 return -EFAULT;
-> 1435
-> 1436         ret =3D gen_jump_or_nops(new_addr, ip, new_insns, is_call);
-> 1437         if (ret)
-> 1438                 return ret;
-> 1439
-> 1440         mutex_lock(&text_mutex);
-> 1441         if (memcmp(ip, new_insns, 5 * 4))
-> 1442                 ret =3D larch_insn_text_copy(ip, new_insns, 5 * 4);
-> 1443         mutex_unlock(&text_mutex);
-> 1444         return ret;
-> 1445 }
->
+On Mon, 14 Jul 2025, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> The get/set wakeup time EFI runtime services are often broken, and
+> rarely if ever used in practice. But the GetNextHighMonoCount() EFI
+> runtime services really takes the cake for most pointless API in the
+> history of computing.
+> 
+> So let's stop exposing them in Linux, hopefully removing the urge some
+> folks seem to feel to test these APIs, and send emails around when they
+> don't work.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-in case it helps, I added following diff to print out the ip,
-old_insns before and after ret =3D gen_jump_or_nops(old_addr, ip,
-old_insns, is_call);
-ip and old_insns do not match before and after
+For drivers/xen/efi.c:
 
- [   48.611736] INITIAL: ip [0x02c0840a 0x02ff0063 0x29c0e061
-0x29c0c076 0x29c0a077]
-[   48.611743] INITIAL: old_insns [0x03400000 0x03400000 0x03400000
-0x03400000 0x03400000]
-[   48.611745] POST_GEN: old_insns [0x03400000 0x03400000 0x03400000
-0x03400000 0x03400000]
-[   48.611747] POST_GEN: ip [0x02c0840a 0x02ff0063 0x29c0e061
-0x29c0c076 0x29c0a077]
+Acked-by: Stefano Stabellini <sstabellini@kernel.org>
 
-diff below:
 
-@@ -1426,10 +1432,26 @@ int bpf_arch_text_poke(void *ip, enum
-bpf_text_poke_type poke_type,
-                !is_bpf_text_address((unsigned long)ip))
-                return -ENOTSUPP;
-
-+       /* DEBUG: Print initial state */
-+        pr_info("INITIAL: ip [0x%08x 0x%08x 0x%08x 0x%08x 0x%08x]\n",
-+               ((u32 *)ip)[0], ((u32 *)ip)[1], ((u32 *)ip)[2],
-+               ((u32 *)ip)[3], ((u32 *)ip)[4]);
-+        pr_info("INITIAL: old_insns [0x%08x 0x%08x 0x%08x 0x%08x 0x%08x]\n=
-",
-+               old_insns[0], old_insns[1], old_insns[2],
-+               old_insns[3], old_insns[4]);
-+
-        ret =3D gen_jump_or_nops(old_addr, ip, old_insns, is_call);
-        if (ret)
-                return ret;
-
-+        /* DEBUG: Print post-gen_jump_or_nops */
-+        pr_info("POST_GEN: old_insns [0x%08x 0x%08x 0x%08x 0x%08x 0x%08x]\=
-n",
-+               old_insns[0], old_insns[1], old_insns[2],
-+               old_insns[3], old_insns[4]);
-+        pr_info("POST_GEN: ip [0x%08x 0x%08x 0x%08x 0x%08x 0x%08x]\n",
-+               ((u32 *)ip)[0], ((u32 *)ip)[1], ((u32 *)ip)[2],
-+               ((u32 *)ip)[3], ((u32 *)ip)[4]);
-+
-
-> > >
-> > >
-> > > > deepseek says the  bpf syscall raw tracepoint name should not be NU=
-LL,
-> > > > something related to raw tracepoint?
-> > > >
-> > > >
-> > > > > xdp-tools/libxdp is a popular project to attach multiple XDP prog=
-rams
-> > > > > to a single network interface, packaged in mainstream Linux
-> > > > > distributions, so it would be nice to get the loongarch kernel bp=
-f
-> > > > > trampoline working with xdp-tools/libxdp :).
-> > > > >
-> > > > > > > > > Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> > > > > > > > > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > > > > > > > > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> > > > > > > > > ---
-> > > > > > > > >  arch/loongarch/net/bpf_jit.c | 391 +++++++++++++++++++++=
-++++++++++++++
-> > > > > > > > >  arch/loongarch/net/bpf_jit.h |   6 +
-> > > > > > > > >  2 files changed, 397 insertions(+)
-> > > > > > > > >
-> > > > > > > > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarc=
-h/net/bpf_jit.c
-> > > > > > > > > index 9cb01f0b0..6820558af 100644
-> > > > > > > > > --- a/arch/loongarch/net/bpf_jit.c
-> > > > > > > > > +++ b/arch/loongarch/net/bpf_jit.c
-> > > > > > > > > @@ -7,6 +7,10 @@
-> > > > > > > > >  #include <linux/memory.h>
-> > > > > > > > >  #include "bpf_jit.h"
-> > > > > > > > >
-> > > > > > > > > +#define LOONGARCH_MAX_REG_ARGS 8
-> > > > > > > > > +#define LOONGARCH_FENTRY_NINSNS 2
-> > > > > > > > > +#define LOONGARCH_FENTRY_NBYTES (LOONGARCH_FENTRY_NINSNS=
- * 4)
-> > > > > > > > > +
-> > > > > > > > >  #define REG_TCC                LOONGARCH_GPR_A6
-> > > > > > > > >  #define TCC_SAVED      LOONGARCH_GPR_S5
-> > > > > > > > >
-> > > > > > > > > @@ -1400,6 +1404,16 @@ static int gen_jump_or_nops(void *=
-target, void *ip, u32 *insns, bool is_call)
-> > > > > > > > >                                   (unsigned long)ip, (uns=
-igned long)target);
-> > > > > > > > >  }
-> > > > > > > > >
-> > > > > > > > > +static int emit_call(struct jit_ctx *ctx, u64 addr)
-> > > > > > > > > +{
-> > > > > > > > > +       u64 ip;
-> > > > > > > > > +
-> > > > > > > > > +       if (addr && ctx->image && ctx->ro_image)
-> > > > > > > > > +               ip =3D (u64)(ctx->image + ctx->idx);
-> > > > > > > > > +
-> > > > > > > > > +       return emit_jump_and_link(ctx, LOONGARCH_GPR_RA, =
-ip, addr);
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > >  int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type=
- poke_type,
-> > > > > > > > >                        void *old_addr, void *new_addr)
-> > > > > > > > >  {
-> > > > > > > > > @@ -1457,3 +1471,380 @@ void *bpf_arch_text_copy(void *ds=
-t, void *src, size_t len)
-> > > > > > > > >
-> > > > > > > > >         return dst;
-> > > > > > > > >  }
-> > > > > > > > > +
-> > > > > > > > > +static void store_args(struct jit_ctx *ctx, int nargs, i=
-nt args_off)
-> > > > > > > > > +{
-> > > > > > > > > +       int i;
-> > > > > > > > > +
-> > > > > > > > > +       for (i =3D 0; i < nargs; i++) {
-> > > > > > > > > +               emit_insn(ctx, std, LOONGARCH_GPR_A0 + i,=
- LOONGARCH_GPR_FP, -args_off);
-> > > > > > > > > +               args_off -=3D 8;
-> > > > > > > > > +       }
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +static void restore_args(struct jit_ctx *ctx, int nargs,=
- int args_off)
-> > > > > > > > > +{
-> > > > > > > > > +       int i;
-> > > > > > > > > +
-> > > > > > > > > +       for (i =3D 0; i < nargs; i++) {
-> > > > > > > > > +               emit_insn(ctx, ldd, LOONGARCH_GPR_A0 + i,=
- LOONGARCH_GPR_FP, -args_off);
-> > > > > > > > > +               args_off -=3D 8;
-> > > > > > > > > +       }
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +static int invoke_bpf_prog(struct jit_ctx *ctx, struct b=
-pf_tramp_link *l,
-> > > > > > > > > +                          int args_off, int retval_off,
-> > > > > > > > > +                          int run_ctx_off, bool save_ret=
-)
-> > > > > > > > > +{
-> > > > > > > > > +       int ret;
-> > > > > > > > > +       u32 *branch;
-> > > > > > > > > +       struct bpf_prog *p =3D l->link.prog;
-> > > > > > > > > +       int cookie_off =3D offsetof(struct bpf_tramp_run_=
-ctx, bpf_cookie);
-> > > > > > > > > +
-> > > > > > > > > +       if (l->cookie) {
-> > > > > > > > > +               move_imm(ctx, LOONGARCH_GPR_T1, l->cookie=
-, false);
-> > > > > > > > > +               emit_insn(ctx, std, LOONGARCH_GPR_T1, LOO=
-NGARCH_GPR_FP, -run_ctx_off + cookie_off);
-> > > > > > > > > +       } else {
-> > > > > > > > > +               emit_insn(ctx, std, LOONGARCH_GPR_ZERO, L=
-OONGARCH_GPR_FP,
-> > > > > > > > > +                         -run_ctx_off + cookie_off);
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       /* arg1: prog */
-> > > > > > > > > +       move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, fal=
-se);
-> > > > > > > > > +       /* arg2: &run_ctx */
-> > > > > > > > > +       emit_insn(ctx, addid, LOONGARCH_GPR_A1, LOONGARCH=
-_GPR_FP, -run_ctx_off);
-> > > > > > > > > +       ret =3D emit_call(ctx, (const u64)bpf_trampoline_=
-enter(p));
-> > > > > > > > > +       if (ret)
-> > > > > > > > > +               return ret;
-> > > > > > > > > +
-> > > > > > > > > +       /* store prog start time */
-> > > > > > > > > +       move_reg(ctx, LOONGARCH_GPR_S1, LOONGARCH_GPR_A0)=
-;
-> > > > > > > > > +
-> > > > > > > > > +       /* if (__bpf_prog_enter(prog) =3D=3D 0)
-> > > > > > > > > +        *      goto skip_exec_of_prog;
-> > > > > > > > > +        *
-> > > > > > > > > +        */
-> > > > > > > > > +       branch =3D (u32 *)ctx->image + ctx->idx;
-> > > > > > > > > +       /* nop reserved for conditional jump */
-> > > > > > > > > +       emit_insn(ctx, nop);
-> > > > > > > > > +
-> > > > > > > > > +       /* arg1: &args_off */
-> > > > > > > > > +       emit_insn(ctx, addid, LOONGARCH_GPR_A0, LOONGARCH=
-_GPR_FP, -args_off);
-> > > > > > > > > +       if (!p->jited)
-> > > > > > > > > +               move_imm(ctx, LOONGARCH_GPR_A1, (const s6=
-4)p->insnsi, false);
-> > > > > > > > > +       ret =3D emit_call(ctx, (const u64)p->bpf_func);
-> > > > > > > > > +       if (ret)
-> > > > > > > > > +               return ret;
-> > > > > > > > > +
-> > > > > > > > > +       if (save_ret) {
-> > > > > > > > > +               emit_insn(ctx, std, LOONGARCH_GPR_A0, LOO=
-NGARCH_GPR_FP, -retval_off);
-> > > > > > > > > +               emit_insn(ctx, std, regmap[BPF_REG_0], LO=
-ONGARCH_GPR_FP, -(retval_off - 8));
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       /* update branch with beqz */
-> > > > > > > > > +       if (ctx->image) {
-> > > > > > > > > +               int offset =3D (void *)(&ctx->image[ctx->=
-idx]) - (void *)branch;
-> > > > > > > > > +               *branch =3D larch_insn_gen_beq(LOONGARCH_=
-GPR_A0, LOONGARCH_GPR_ZERO, offset);
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       /* arg1: prog */
-> > > > > > > > > +       move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, fal=
-se);
-> > > > > > > > > +       /* arg2: prog start time */
-> > > > > > > > > +       move_reg(ctx, LOONGARCH_GPR_A1, LOONGARCH_GPR_S1)=
-;
-> > > > > > > > > +       /* arg3: &run_ctx */
-> > > > > > > > > +       emit_insn(ctx, addid, LOONGARCH_GPR_A2, LOONGARCH=
-_GPR_FP, -run_ctx_off);
-> > > > > > > > > +       ret =3D emit_call(ctx, (const u64)bpf_trampoline_=
-exit(p));
-> > > > > > > > > +
-> > > > > > > > > +       return ret;
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +static void invoke_bpf_mod_ret(struct jit_ctx *ctx, stru=
-ct bpf_tramp_links *tl,
-> > > > > > > > > +                              int args_off, int retval_o=
-ff, int run_ctx_off, u32 **branches)
-> > > > > > > > > +{
-> > > > > > > > > +       int i;
-> > > > > > > > > +
-> > > > > > > > > +       emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH=
-_GPR_FP, -retval_off);
-> > > > > > > > > +       for (i =3D 0; i < tl->nr_links; i++) {
-> > > > > > > > > +               invoke_bpf_prog(ctx, tl->links[i], args_o=
-ff, retval_off,
-> > > > > > > > > +                               run_ctx_off, true);
-> > > > > > > > > +               emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOO=
-NGARCH_GPR_FP, -retval_off);
-> > > > > > > > > +               branches[i] =3D (u32 *)ctx->image + ctx->=
-idx;
-> > > > > > > > > +               emit_insn(ctx, nop);
-> > > > > > > > > +       }
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +u64 bpf_jit_alloc_exec_limit(void)
-> > > > > > > > > +{
-> > > > > > > > > +       return VMALLOC_END - VMALLOC_START;
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +void *arch_alloc_bpf_trampoline(unsigned int size)
-> > > > > > > > > +{
-> > > > > > > > > +       return bpf_prog_pack_alloc(size, jit_fill_hole);
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +void arch_free_bpf_trampoline(void *image, unsigned int =
-size)
-> > > > > > > > > +{
-> > > > > > > > > +       bpf_prog_pack_free(image, size);
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +static int __arch_prepare_bpf_trampoline(struct jit_ctx =
-*ctx, struct bpf_tramp_image *im,
-> > > > > > > > > +                                        const struct btf=
-_func_model *m,
-> > > > > > > > > +                                        struct bpf_tramp=
-_links *tlinks,
-> > > > > > > > > +                                        void *func_addr,=
- u32 flags)
-> > > > > > > > > +{
-> > > > > > > > > +       int i;
-> > > > > > > > > +       int stack_size =3D 0, nargs =3D 0;
-> > > > > > > > > +       int retval_off, args_off, nargs_off, ip_off, run_=
-ctx_off, sreg_off;
-> > > > > > > > > +       struct bpf_tramp_links *fentry =3D &tlinks[BPF_TR=
-AMP_FENTRY];
-> > > > > > > > > +       struct bpf_tramp_links *fexit =3D &tlinks[BPF_TRA=
-MP_FEXIT];
-> > > > > > > > > +       struct bpf_tramp_links *fmod_ret =3D &tlinks[BPF_=
-TRAMP_MODIFY_RETURN];
-> > > > > > > > > +       int ret, save_ret;
-> > > > > > > > > +       void *orig_call =3D func_addr;
-> > > > > > > > > +       u32 **branches =3D NULL;
-> > > > > > > > > +
-> > > > > > > > > +       if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F=
-_SHARE_IPMODIFY))
-> > > > > > > > > +               return -ENOTSUPP;
-> > > > > > > > > +
-> > > > > > > > > +       /*
-> > > > > > > > > +        * FP + 8       [ RA to parent func ] return addr=
-ess to parent
-> > > > > > > > > +        *                    function
-> > > > > > > > > +        * FP + 0       [ FP of parent func ] frame point=
-er of parent
-> > > > > > > > > +        *                    function
-> > > > > > > > > +        * FP - 8       [ T0 to traced func ] return addr=
-ess of traced
-> > > > > > > > > +        *                    function
-> > > > > > > > > +        * FP - 16      [ FP of traced func ] frame point=
-er of traced
-> > > > > > > > > +        *                    function
-> > > > > > > > > +        *
-> > > > > > > > > +        * FP - retval_off  [ return value      ] BPF_TRA=
-MP_F_CALL_ORIG or
-> > > > > > > > > +        *                    BPF_TRAMP_F_RET_FENTRY_RET
-> > > > > > > > > +        *                  [ argN              ]
-> > > > > > > > > +        *                  [ ...               ]
-> > > > > > > > > +        * FP - args_off    [ arg1              ]
-> > > > > > > > > +        *
-> > > > > > > > > +        * FP - nargs_off   [ regs count        ]
-> > > > > > > > > +        *
-> > > > > > > > > +        * FP - ip_off      [ traced func   ] BPF_TRAMP_F=
-_IP_ARG
-> > > > > > > > > +        *
-> > > > > > > > > +        * FP - run_ctx_off [ bpf_tramp_run_ctx ]
-> > > > > > > > > +        *
-> > > > > > > > > +        * FP - sreg_off    [ callee saved reg  ]
-> > > > > > > > > +        *
-> > > > > > > > > +        */
-> > > > > > > > > +
-> > > > > > > > > +       if (m->nr_args > LOONGARCH_MAX_REG_ARGS)
-> > > > > > > > > +               return -ENOTSUPP;
-> > > > > > > > > +
-> > > > > > > > > +       if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F=
-_SHARE_IPMODIFY))
-> > > > > > > > > +               return -ENOTSUPP;
-> > > > > > > > > +
-> > > > > > > > > +       stack_size =3D 0;
-> > > > > > > > > +
-> > > > > > > > > +       /* room of trampoline frame to store return addre=
-ss and frame pointer */
-> > > > > > > > > +       stack_size +=3D 16;
-> > > > > > > > > +
-> > > > > > > > > +       save_ret =3D flags & (BPF_TRAMP_F_CALL_ORIG | BPF=
-_TRAMP_F_RET_FENTRY_RET);
-> > > > > > > > > +       if (save_ret) {
-> > > > > > > > > +               /* Save BPF R0 and A0 */
-> > > > > > > > > +               stack_size +=3D 16;
-> > > > > > > > > +               retval_off =3D stack_size;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       /* room of trampoline frame to store args */
-> > > > > > > > > +       nargs =3D m->nr_args;
-> > > > > > > > > +       stack_size +=3D nargs * 8;
-> > > > > > > > > +       args_off =3D stack_size;
-> > > > > > > > > +
-> > > > > > > > > +       /* room of trampoline frame to store args number =
-*/
-> > > > > > > > > +       stack_size +=3D 8;
-> > > > > > > > > +       nargs_off =3D stack_size;
-> > > > > > > > > +
-> > > > > > > > > +       /* room of trampoline frame to store ip address *=
-/
-> > > > > > > > > +       if (flags & BPF_TRAMP_F_IP_ARG) {
-> > > > > > > > > +               stack_size +=3D 8;
-> > > > > > > > > +               ip_off =3D stack_size;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       /* room of trampoline frame to store struct bpf_t=
-ramp_run_ctx */
-> > > > > > > > > +       stack_size +=3D round_up(sizeof(struct bpf_tramp_=
-run_ctx), 8);
-> > > > > > > > > +       run_ctx_off =3D stack_size;
-> > > > > > > > > +
-> > > > > > > > > +       stack_size +=3D 8;
-> > > > > > > > > +       sreg_off =3D stack_size;
-> > > > > > > > > +
-> > > > > > > > > +       stack_size =3D round_up(stack_size, 16);
-> > > > > > > > > +
-> > > > > > > > > +       /* For the trampoline called from function entry =
-*/
-> > > > > > > > > +       /* RA and FP for parent function*/
-> > > > > > > > > +       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH=
-_GPR_SP, -16);
-> > > > > > > > > +       emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_G=
-PR_SP, 8);
-> > > > > > > > > +       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_G=
-PR_SP, 0);
-> > > > > > > > > +       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH=
-_GPR_SP, 16);
-> > > > > > > > > +
-> > > > > > > > > +       /* RA and FP for traced function*/
-> > > > > > > > > +       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH=
-_GPR_SP, -stack_size);
-> > > > > > > > > +       emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_G=
-PR_SP, stack_size - 8);
-> > > > > > > > > +       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_G=
-PR_SP, stack_size - 16);
-> > > > > > > > > +       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH=
-_GPR_SP, stack_size);
-> > > > > > > > > +
-> > > > > > > > > +       /* callee saved register S1 to pass start time */
-> > > > > > > > > +       emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_G=
-PR_FP, -sreg_off);
-> > > > > > > > > +
-> > > > > > > > > +       /* store ip address of the traced function */
-> > > > > > > > > +       if (flags & BPF_TRAMP_F_IP_ARG) {
-> > > > > > > > > +               move_imm(ctx, LOONGARCH_GPR_T1, (const s6=
-4)func_addr, false);
-> > > > > > > > > +               emit_insn(ctx, std, LOONGARCH_GPR_T1, LOO=
-NGARCH_GPR_FP, -ip_off);
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       /* store nargs number*/
-> > > > > > > > > +       move_imm(ctx, LOONGARCH_GPR_T1, nargs, false);
-> > > > > > > > > +       emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_G=
-PR_FP, -nargs_off);
-> > > > > > > > > +
-> > > > > > > > > +       store_args(ctx, nargs, args_off);
-> > > > > > > > > +
-> > > > > > > > > +       /* To traced function */
-> > > > > > > > > +       orig_call +=3D LOONGARCH_FENTRY_NBYTES;
-> > > > > > > > > +       if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> > > > > > > > > +               move_imm(ctx, LOONGARCH_GPR_A0, (const s6=
-4)im, false);
-> > > > > > > > > +               ret =3D emit_call(ctx, (const u64)__bpf_t=
-ramp_enter);
-> > > > > > > > > +               if (ret)
-> > > > > > > > > +                       return ret;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       for (i =3D 0; i < fentry->nr_links; i++) {
-> > > > > > > > > +               ret =3D invoke_bpf_prog(ctx, fentry->link=
-s[i], args_off, retval_off,
-> > > > > > > > > +                                     run_ctx_off, flags =
-& BPF_TRAMP_F_RET_FENTRY_RET);
-> > > > > > > > > +               if (ret)
-> > > > > > > > > +                       return ret;
-> > > > > > > > > +       }
-> > > > > > > > > +       if (fmod_ret->nr_links) {
-> > > > > > > > > +               branches  =3D kcalloc(fmod_ret->nr_links,=
- sizeof(u32 *), GFP_KERNEL);
-> > > > > > > > > +               if (!branches)
-> > > > > > > > > +                       return -ENOMEM;
-> > > > > > > > > +
-> > > > > > > > > +               invoke_bpf_mod_ret(ctx, fmod_ret, args_of=
-f, retval_off,
-> > > > > > > > > +                                  run_ctx_off, branches)=
-;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> > > > > > > > > +               restore_args(ctx, m->nr_args, args_off);
-> > > > > > > > > +               ret =3D emit_call(ctx, (const u64)orig_ca=
-ll);
-> > > > > > > > > +               if (ret)
-> > > > > > > > > +                       goto out;
-> > > > > > > > > +               emit_insn(ctx, std, LOONGARCH_GPR_A0, LOO=
-NGARCH_GPR_FP, -retval_off);
-> > > > > > > > > +               emit_insn(ctx, std, regmap[BPF_REG_0], LO=
-ONGARCH_GPR_FP, -(retval_off - 8));
-> > > > > > > > > +               im->ip_after_call =3D ctx->ro_image + ctx=
-->idx;
-> > > > > > > > > +               /* Reserve space for the move_imm + jirl =
-instruction */
-> > > > > > > > > +               emit_insn(ctx, nop);
-> > > > > > > > > +               emit_insn(ctx, nop);
-> > > > > > > > > +               emit_insn(ctx, nop);
-> > > > > > > > > +               emit_insn(ctx, nop);
-> > > > > > > > > +               emit_insn(ctx, nop);
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       for (i =3D 0; ctx->image && i < fmod_ret->nr_link=
-s; i++) {
-> > > > > > > > > +               int offset =3D (void *)(&ctx->image[ctx->=
-idx]) - (void *)branches[i];
-> > > > > > > > > +               *branches[i] =3D larch_insn_gen_bne(LOONG=
-ARCH_GPR_T1, LOONGARCH_GPR_ZERO, offset);
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       for (i =3D 0; i < fexit->nr_links; i++) {
-> > > > > > > > > +               ret =3D invoke_bpf_prog(ctx, fexit->links=
-[i], args_off, retval_off,
-> > > > > > > > > +                                     run_ctx_off, false)=
-;
-> > > > > > > > > +               if (ret)
-> > > > > > > > > +                       goto out;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> > > > > > > > > +               im->ip_epilogue =3D ctx->ro_image + ctx->=
-idx;
-> > > > > > > > > +               move_imm(ctx, LOONGARCH_GPR_A0, (const s6=
-4)im, false);
-> > > > > > > > > +               ret =3D emit_call(ctx, (const u64)__bpf_t=
-ramp_exit);
-> > > > > > > > > +               if (ret)
-> > > > > > > > > +                       goto out;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       if (flags & BPF_TRAMP_F_RESTORE_REGS)
-> > > > > > > > > +               restore_args(ctx, m->nr_args, args_off);
-> > > > > > > > > +
-> > > > > > > > > +       if (save_ret) {
-> > > > > > > > > +               emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOO=
-NGARCH_GPR_FP, -retval_off);
-> > > > > > > > > +               emit_insn(ctx, ldd, regmap[BPF_REG_0], LO=
-ONGARCH_GPR_FP, -(retval_off - 8));
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_G=
-PR_FP, -sreg_off);
-> > > > > > > > > +
-> > > > > > > > > +       /* trampoline called from function entry */
-> > > > > > > > > +       emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_G=
-PR_SP, stack_size - 8);
-> > > > > > > > > +       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_G=
-PR_SP, stack_size - 16);
-> > > > > > > > > +       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH=
-_GPR_SP, stack_size);
-> > > > > > > > > +
-> > > > > > > > > +       emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_G=
-PR_SP, 8);
-> > > > > > > > > +       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_G=
-PR_SP, 0);
-> > > > > > > > > +       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH=
-_GPR_SP, 16);
-> > > > > > > > > +
-> > > > > > > > > +       if (flags & BPF_TRAMP_F_SKIP_FRAME)
-> > > > > > > > > +               /* return to parent function */
-> > > > > > > > > +               emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, =
-LOONGARCH_GPR_RA, 0);
-> > > > > > > > > +       else
-> > > > > > > > > +               /* return to traced function */
-> > > > > > > > > +               emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, =
-LOONGARCH_GPR_T0, 0);
-> > > > > > > > > +
-> > > > > > > > > +       ret =3D ctx->idx;
-> > > > > > > > > +out:
-> > > > > > > > > +       kfree(branches);
-> > > > > > > > > +
-> > > > > > > > > +       return ret;
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +int arch_prepare_bpf_trampoline(struct bpf_tramp_image *=
-im, void *ro_image,
-> > > > > > > > > +                               void *ro_image_end, const=
- struct btf_func_model *m,
-> > > > > > > > > +                               u32 flags, struct bpf_tra=
-mp_links *tlinks,
-> > > > > > > > > +                               void *func_addr)
-> > > > > > > > > +{
-> > > > > > > > > +       int ret;
-> > > > > > > > > +       void *image, *tmp;
-> > > > > > > > > +       u32 size =3D ro_image_end - ro_image;
-> > > > > > > > > +
-> > > > > > > > > +       image =3D kvmalloc(size, GFP_KERNEL);
-> > > > > > > > > +       if (!image)
-> > > > > > > > > +               return -ENOMEM;
-> > > > > > > > > +
-> > > > > > > > > +       struct jit_ctx ctx =3D {
-> > > > > > > > > +               .image =3D (union loongarch_instruction *=
-)image,
-> > > > > > > > > +               .ro_image =3D (union loongarch_instructio=
-n *)ro_image,
-> > > > > > > > > +               .idx =3D 0,
-> > > > > > > > > +       };
-> > > > > > > > > +
-> > > > > > > > > +       jit_fill_hole(image, (unsigned int)(ro_image_end =
-- ro_image));
-> > > > > > > > > +       ret =3D __arch_prepare_bpf_trampoline(&ctx, im, m=
-, tlinks, func_addr, flags);
-> > > > > > > > > +       if (ret > 0 && validate_code(&ctx) < 0) {
-> > > > > > > > > +               ret =3D -EINVAL;
-> > > > > > > > > +               goto out;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       tmp =3D bpf_arch_text_copy(ro_image, image, size)=
-;
-> > > > > > > > > +       if (IS_ERR(tmp)) {
-> > > > > > > > > +               ret =3D PTR_ERR(tmp);
-> > > > > > > > > +               goto out;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       bpf_flush_icache(ro_image, ro_image_end);
-> > > > > > > > > +out:
-> > > > > > > > > +       kvfree(image);
-> > > > > > > > > +       return ret < 0 ? ret : size;
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +int arch_bpf_trampoline_size(const struct btf_func_model=
- *m, u32 flags,
-> > > > > > > > > +                            struct bpf_tramp_links *tlin=
-ks, void *func_addr)
-> > > > > > > > > +{
-> > > > > > > > > +       struct bpf_tramp_image im;
-> > > > > > > > > +       struct jit_ctx ctx;
-> > > > > > > > > +       int ret;
-> > > > > > > > > +
-> > > > > > > > > +       ctx.image =3D NULL;
-> > > > > > > > > +       ctx.idx =3D 0;
-> > > > > > > > > +
-> > > > > > > > > +       ret =3D __arch_prepare_bpf_trampoline(&ctx, &im, =
-m, tlinks, func_addr, flags);
-> > > > > > > > > +
-> > > > > > > > > +       /* Page align */
-> > > > > > > > > +       return ret < 0 ? ret : round_up(ret * LOONGARCH_I=
-NSN_SIZE, PAGE_SIZE);
-> > > > > > > > > +}
-> > > > > > > > > diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarc=
-h/net/bpf_jit.h
-> > > > > > > > > index f9c569f53..5697158fd 100644
-> > > > > > > > > --- a/arch/loongarch/net/bpf_jit.h
-> > > > > > > > > +++ b/arch/loongarch/net/bpf_jit.h
-> > > > > > > > > @@ -18,6 +18,7 @@ struct jit_ctx {
-> > > > > > > > >         u32 *offset;
-> > > > > > > > >         int num_exentries;
-> > > > > > > > >         union loongarch_instruction *image;
-> > > > > > > > > +       union loongarch_instruction *ro_image;
-> > > > > > > > >         u32 stack_size;
-> > > > > > > > >  };
-> > > > > > > > >
-> > > > > > > > > @@ -308,3 +309,8 @@ static inline int emit_tailcall_jmp(s=
-truct jit_ctx *ctx, u8 cond, enum loongarch
-> > > > > > > > >
-> > > > > > > > >         return -EINVAL;
-> > > > > > > > >  }
-> > > > > > > > > +
-> > > > > > > > > +static inline void bpf_flush_icache(void *start, void *e=
-nd)
-> > > > > > > > > +{
-> > > > > > > > > +       flush_icache_range((unsigned long)start, (unsigne=
-d long)end);
-> > > > > > > > > +}
-> > > > > > > > > --
-> > > > > > > > > 2.43.0
-> > > > > > > > >
-> > > > > > > > >
+> ---
+>  arch/x86/platform/efi/efi_64.c          | 22 -------
+>  drivers/firmware/efi/runtime-wrappers.c | 68 --------------------
+>  drivers/xen/efi.c                       | 56 ----------------
+>  include/linux/efi.h                     |  6 --
+>  4 files changed, 152 deletions(-)
+> 
+> diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+> index e7e8f77f77f8..0207937ab39d 100644
+> --- a/arch/x86/platform/efi/efi_64.c
+> +++ b/arch/x86/platform/efi/efi_64.c
+> @@ -540,19 +540,6 @@ static efi_status_t efi_thunk_set_time(efi_time_t *tm)
+>  	return EFI_UNSUPPORTED;
+>  }
+>  
+> -static efi_status_t
+> -efi_thunk_get_wakeup_time(efi_bool_t *enabled, efi_bool_t *pending,
+> -			  efi_time_t *tm)
+> -{
+> -	return EFI_UNSUPPORTED;
+> -}
+> -
+> -static efi_status_t
+> -efi_thunk_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
+> -{
+> -	return EFI_UNSUPPORTED;
+> -}
+> -
+>  static unsigned long efi_name_size(efi_char16_t *name)
+>  {
+>  	return ucs2_strsize(name, EFI_VAR_NAME_LEN) + 1;
+> @@ -681,12 +668,6 @@ efi_thunk_get_next_variable(unsigned long *name_size,
+>  	return status;
+>  }
+>  
+> -static efi_status_t
+> -efi_thunk_get_next_high_mono_count(u32 *count)
+> -{
+> -	return EFI_UNSUPPORTED;
+> -}
+> -
+>  static void
+>  efi_thunk_reset_system(int reset_type, efi_status_t status,
+>  		       unsigned long data_size, efi_char16_t *data)
+> @@ -788,13 +769,10 @@ void __init efi_thunk_runtime_setup(void)
+>  
+>  	efi.get_time = efi_thunk_get_time;
+>  	efi.set_time = efi_thunk_set_time;
+> -	efi.get_wakeup_time = efi_thunk_get_wakeup_time;
+> -	efi.set_wakeup_time = efi_thunk_set_wakeup_time;
+>  	efi.get_variable = efi_thunk_get_variable;
+>  	efi.get_next_variable = efi_thunk_get_next_variable;
+>  	efi.set_variable = efi_thunk_set_variable;
+>  	efi.set_variable_nonblocking = efi_thunk_set_variable_nonblocking;
+> -	efi.get_next_high_mono_count = efi_thunk_get_next_high_mono_count;
+>  	efi.reset_system = efi_thunk_reset_system;
+>  	efi.query_variable_info = efi_thunk_query_variable_info;
+>  	efi.query_variable_info_nonblocking = efi_thunk_query_variable_info_nonblocking;
+> diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
+> index 708b777857d3..2b66efb5ffef 100644
+> --- a/drivers/firmware/efi/runtime-wrappers.c
+> +++ b/drivers/firmware/efi/runtime-wrappers.c
+> @@ -52,17 +52,6 @@ union efi_rts_args {
+>  		efi_time_t	*time;
+>  	} SET_TIME;
+>  
+> -	struct {
+> -		efi_bool_t	*enabled;
+> -		efi_bool_t	*pending;
+> -		efi_time_t	*time;
+> -	} GET_WAKEUP_TIME;
+> -
+> -	struct {
+> -		efi_bool_t	enable;
+> -		efi_time_t	*time;
+> -	} SET_WAKEUP_TIME;
+> -
+>  	struct {
+>  		efi_char16_t	*name;
+>  		efi_guid_t	*vendor;
+> @@ -92,10 +81,6 @@ union efi_rts_args {
+>  		u64		*max_variable_size;
+>  	} QUERY_VARIABLE_INFO;
+>  
+> -	struct {
+> -		u32		*high_count;
+> -	} GET_NEXT_HIGH_MONO_COUNT;
+> -
+>  	struct {
+>  		efi_capsule_header_t **capsules;
+>  		unsigned long	count;
+> @@ -232,17 +217,6 @@ static void __nocfi efi_call_rts(struct work_struct *work)
+>  		status = efi_call_virt(set_time,
+>  				       args->SET_TIME.time);
+>  		break;
+> -	case EFI_GET_WAKEUP_TIME:
+> -		status = efi_call_virt(get_wakeup_time,
+> -				       args->GET_WAKEUP_TIME.enabled,
+> -				       args->GET_WAKEUP_TIME.pending,
+> -				       args->GET_WAKEUP_TIME.time);
+> -		break;
+> -	case EFI_SET_WAKEUP_TIME:
+> -		status = efi_call_virt(set_wakeup_time,
+> -				       args->SET_WAKEUP_TIME.enable,
+> -				       args->SET_WAKEUP_TIME.time);
+> -		break;
+>  	case EFI_GET_VARIABLE:
+>  		status = efi_call_virt(get_variable,
+>  				       args->GET_VARIABLE.name,
+> @@ -272,10 +246,6 @@ static void __nocfi efi_call_rts(struct work_struct *work)
+>  				       args->QUERY_VARIABLE_INFO.remaining_space,
+>  				       args->QUERY_VARIABLE_INFO.max_variable_size);
+>  		break;
+> -	case EFI_GET_NEXT_HIGH_MONO_COUNT:
+> -		status = efi_call_virt(get_next_high_mono_count,
+> -				       args->GET_NEXT_HIGH_MONO_COUNT.high_count);
+> -		break;
+>  	case EFI_UPDATE_CAPSULE:
+>  		status = efi_call_virt(update_capsule,
+>  				       args->UPDATE_CAPSULE.capsules,
+> @@ -366,30 +336,6 @@ static efi_status_t virt_efi_set_time(efi_time_t *tm)
+>  	return status;
+>  }
+>  
+> -static efi_status_t virt_efi_get_wakeup_time(efi_bool_t *enabled,
+> -					     efi_bool_t *pending,
+> -					     efi_time_t *tm)
+> -{
+> -	efi_status_t status;
+> -
+> -	if (down_interruptible(&efi_runtime_lock))
+> -		return EFI_ABORTED;
+> -	status = efi_queue_work(GET_WAKEUP_TIME, enabled, pending, tm);
+> -	up(&efi_runtime_lock);
+> -	return status;
+> -}
+> -
+> -static efi_status_t virt_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
+> -{
+> -	efi_status_t status;
+> -
+> -	if (down_interruptible(&efi_runtime_lock))
+> -		return EFI_ABORTED;
+> -	status = efi_queue_work(SET_WAKEUP_TIME, enabled, tm);
+> -	up(&efi_runtime_lock);
+> -	return status;
+> -}
+> -
+>  static efi_status_t virt_efi_get_variable(efi_char16_t *name,
+>  					  efi_guid_t *vendor,
+>  					  u32 *attr,
+> @@ -488,17 +434,6 @@ virt_efi_query_variable_info_nb(u32 attr, u64 *storage_space,
+>  	return status;
+>  }
+>  
+> -static efi_status_t virt_efi_get_next_high_mono_count(u32 *count)
+> -{
+> -	efi_status_t status;
+> -
+> -	if (down_interruptible(&efi_runtime_lock))
+> -		return EFI_ABORTED;
+> -	status = efi_queue_work(GET_NEXT_HIGH_MONO_COUNT, count);
+> -	up(&efi_runtime_lock);
+> -	return status;
+> -}
+> -
+>  static void __nocfi
+>  virt_efi_reset_system(int reset_type, efi_status_t status,
+>  		      unsigned long data_size, efi_char16_t *data)
+> @@ -556,13 +491,10 @@ void __init efi_native_runtime_setup(void)
+>  {
+>  	efi.get_time			    = virt_efi_get_time;
+>  	efi.set_time			    = virt_efi_set_time;
+> -	efi.get_wakeup_time		    = virt_efi_get_wakeup_time;
+> -	efi.set_wakeup_time		    = virt_efi_set_wakeup_time;
+>  	efi.get_variable		    = virt_efi_get_variable;
+>  	efi.get_next_variable		    = virt_efi_get_next_variable;
+>  	efi.set_variable		    = virt_efi_set_variable;
+>  	efi.set_variable_nonblocking	    = virt_efi_set_variable_nb;
+> -	efi.get_next_high_mono_count	    = virt_efi_get_next_high_mono_count;
+>  	efi.reset_system 		    = virt_efi_reset_system;
+>  	efi.query_variable_info		    = virt_efi_query_variable_info;
+>  	efi.query_variable_info_nonblocking = virt_efi_query_variable_info_nb;
+> diff --git a/drivers/xen/efi.c b/drivers/xen/efi.c
+> index fb321cd6415a..baccf2d90af0 100644
+> --- a/drivers/xen/efi.c
+> +++ b/drivers/xen/efi.c
+> @@ -76,47 +76,6 @@ static efi_status_t xen_efi_set_time(efi_time_t *tm)
+>  	return efi_data(op).status;
+>  }
+>  
+> -static efi_status_t xen_efi_get_wakeup_time(efi_bool_t *enabled,
+> -					    efi_bool_t *pending,
+> -					    efi_time_t *tm)
+> -{
+> -	struct xen_platform_op op = INIT_EFI_OP(get_wakeup_time);
+> -
+> -	if (HYPERVISOR_platform_op(&op) < 0)
+> -		return EFI_UNSUPPORTED;
+> -
+> -	if (tm) {
+> -		BUILD_BUG_ON(sizeof(*tm) != sizeof(efi_data(op).u.get_wakeup_time));
+> -		memcpy(tm, &efi_data(op).u.get_wakeup_time, sizeof(*tm));
+> -	}
+> -
+> -	if (enabled)
+> -		*enabled = !!(efi_data(op).misc & XEN_EFI_GET_WAKEUP_TIME_ENABLED);
+> -
+> -	if (pending)
+> -		*pending = !!(efi_data(op).misc & XEN_EFI_GET_WAKEUP_TIME_PENDING);
+> -
+> -	return efi_data(op).status;
+> -}
+> -
+> -static efi_status_t xen_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
+> -{
+> -	struct xen_platform_op op = INIT_EFI_OP(set_wakeup_time);
+> -
+> -	BUILD_BUG_ON(sizeof(*tm) != sizeof(efi_data(op).u.set_wakeup_time));
+> -	if (enabled)
+> -		efi_data(op).misc = XEN_EFI_SET_WAKEUP_TIME_ENABLE;
+> -	if (tm)
+> -		memcpy(&efi_data(op).u.set_wakeup_time, tm, sizeof(*tm));
+> -	else
+> -		efi_data(op).misc |= XEN_EFI_SET_WAKEUP_TIME_ENABLE_ONLY;
+> -
+> -	if (HYPERVISOR_platform_op(&op) < 0)
+> -		return EFI_UNSUPPORTED;
+> -
+> -	return efi_data(op).status;
+> -}
+> -
+>  static efi_status_t xen_efi_get_variable(efi_char16_t *name, efi_guid_t *vendor,
+>  					 u32 *attr, unsigned long *data_size,
+>  					 void *data)
+> @@ -204,18 +163,6 @@ static efi_status_t xen_efi_query_variable_info(u32 attr, u64 *storage_space,
+>  	return efi_data(op).status;
+>  }
+>  
+> -static efi_status_t xen_efi_get_next_high_mono_count(u32 *count)
+> -{
+> -	struct xen_platform_op op = INIT_EFI_OP(get_next_high_monotonic_count);
+> -
+> -	if (HYPERVISOR_platform_op(&op) < 0)
+> -		return EFI_UNSUPPORTED;
+> -
+> -	*count = efi_data(op).misc;
+> -
+> -	return efi_data(op).status;
+> -}
+> -
+>  static efi_status_t xen_efi_update_capsule(efi_capsule_header_t **capsules,
+>  				unsigned long count, unsigned long sg_list)
+>  {
+> @@ -280,8 +227,6 @@ void __init xen_efi_runtime_setup(void)
+>  {
+>  	efi.get_time			= xen_efi_get_time;
+>  	efi.set_time			= xen_efi_set_time;
+> -	efi.get_wakeup_time		= xen_efi_get_wakeup_time;
+> -	efi.set_wakeup_time		= xen_efi_set_wakeup_time;
+>  	efi.get_variable		= xen_efi_get_variable;
+>  	efi.get_next_variable		= xen_efi_get_next_variable;
+>  	efi.set_variable		= xen_efi_set_variable;
+> @@ -290,7 +235,6 @@ void __init xen_efi_runtime_setup(void)
+>  	efi.query_variable_info_nonblocking = xen_efi_query_variable_info;
+>  	efi.update_capsule		= xen_efi_update_capsule;
+>  	efi.query_capsule_caps		= xen_efi_query_capsule_caps;
+> -	efi.get_next_high_mono_count	= xen_efi_get_next_high_mono_count;
+>  	efi.reset_system		= xen_efi_reset_system;
+>  }
+>  
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index 50db7df0efab..516afdc8a49d 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -650,8 +650,6 @@ extern struct efi {
+>  
+>  	efi_get_time_t			*get_time;
+>  	efi_set_time_t			*set_time;
+> -	efi_get_wakeup_time_t		*get_wakeup_time;
+> -	efi_set_wakeup_time_t		*set_wakeup_time;
+>  	efi_get_variable_t		*get_variable;
+>  	efi_get_next_variable_t		*get_next_variable;
+>  	efi_set_variable_t		*set_variable;
+> @@ -660,7 +658,6 @@ extern struct efi {
+>  	efi_query_variable_info_t	*query_variable_info_nonblocking;
+>  	efi_update_capsule_t		*update_capsule;
+>  	efi_query_capsule_caps_t	*query_capsule_caps;
+> -	efi_get_next_high_mono_count_t	*get_next_high_mono_count;
+>  	efi_reset_system_t		*reset_system;
+>  
+>  	struct efi_memory_map		memmap;
+> @@ -1235,13 +1232,10 @@ enum efi_rts_ids {
+>  	EFI_NONE,
+>  	EFI_GET_TIME,
+>  	EFI_SET_TIME,
+> -	EFI_GET_WAKEUP_TIME,
+> -	EFI_SET_WAKEUP_TIME,
+>  	EFI_GET_VARIABLE,
+>  	EFI_GET_NEXT_VARIABLE,
+>  	EFI_SET_VARIABLE,
+>  	EFI_QUERY_VARIABLE_INFO,
+> -	EFI_GET_NEXT_HIGH_MONO_COUNT,
+>  	EFI_RESET_SYSTEM,
+>  	EFI_UPDATE_CAPSULE,
+>  	EFI_QUERY_CAPSULE_CAPS,
+> -- 
+> 2.50.0.727.gbf7dc18ff4-goog
+> 
