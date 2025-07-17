@@ -1,144 +1,269 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B8ED21C16D
-	for <loongarch@lists.linux.dev>; Thu, 17 Jul 2025 07:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F1E28936D
+	for <loongarch@lists.linux.dev>; Thu, 17 Jul 2025 09:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752736614; cv=none; b=eZnUVtE2tUy9/LgxObv4wIy6n+8G0PiMIoPlDWPIfxsBkSBlAYGawul9AD36JrplLOdoemhtN17A8E50daMlftlttQxryU8W4dY2sYZbn4j/uXNa5GTrGmKoWIYi9C4Pdn7+ObVVupkaDIdIiVzu+83aFrt2/whNjrPHpTPCXWw=
+	t=1752744480; cv=none; b=iidiN82jGMXT3bLVJzMRvk79VfK1sr6jCK35MTfJx/sxl+oK0/YdSuo6gTQEhX+KHJRM2LeBCFsZe618eca59oxQy9SnmqZZhwhVw1H7ILoaZRpDLwm/vXwf/BRzQQTZ2kQDaTXoZG8cNHDdZY6zJOOZLFHUAwV/A4qmnbI7AG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752736614; c=relaxed/simple;
-	bh=WklU54y6lya8nGklziuxsA67cNF/uMKTCUH871Bjzvg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=GjTqXJfx/nu4SUpsN6r04fZP30PwfZylvfDhaccsfLtBbFoaIwvr3DtoY/7zdrTSwODXEIpZlZ5FS9hpAWFUfl6ZGq16qkUw0yW/XoBZvRJJ9MQ0dd66W5psz1O4lBNluI0GmZIqR2hZUci0HXHho9+tio2+FO0enPc7Y5lYzko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxNHBWo3hot+wrAQ--.24668S3;
-	Thu, 17 Jul 2025 15:16:39 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxVORQo3hofLQaAA--.12371S3;
-	Thu, 17 Jul 2025 15:16:35 +0800 (CST)
-Subject: Re: [PATCH v6 0/8] LoongArch: KVM: Enhancement with eiointc emulation
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250709080233.3948503-1-maobibo@loongson.cn>
- <CAAhV-H5x_V8CjX=Keb0k5+5zFtqh01MBWEo_hTFwwge-01jT9Q@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <4cdb6cf7-2293-04e3-57b3-9ad4fd07ac9e@loongson.cn>
-Date: Thu, 17 Jul 2025 15:14:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1752744480; c=relaxed/simple;
+	bh=Nrisv3iac5Recw38a/vS83zFuPswes47Cx0toVADSMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EJ/DGuOpya4TuU841ltapOXD1dq+PJQpcsN+DzvALlS3VGCtYgY51L378b96lwXGALwme0KNgUQyeOolHb+K4+tZGmLM79tJ4w49/UFzICPe/OHu1ghMxf857TO919B6V2XTximDuyCOoXtPYY6D2h1Tk3ca/DFDhsVFm8MaiB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4eb8d16462f011f0b29709d653e92f7d-20250717
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:a8815af1-44b1-431a-a3bd-1bc6723159eb,IP:0,U
+	RL:0,TC:0,Content:6,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:6
+X-CID-META: VersionHash:6493067,CLOUDID:660a48c29affd680738ca3e315efb49c,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:4|50,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 4eb8d16462f011f0b29709d653e92f7d-20250717
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1185094994; Thu, 17 Jul 2025 17:27:50 +0800
+Date: Thu, 17 Jul 2025 17:27:46 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
+	jianghaoran@kylinos.cn
+Subject: Re: [PATCH v3 4/5] LoongArch: BPF: Add bpf_arch_xxxxx support for
+ Loongarch
+Message-ID: <20250717092746.GA993901@chenghao-pc>
+References: <20250709055029.723243-1-duanchenghao@kylinos.cn>
+ <20250709055029.723243-5-duanchenghao@kylinos.cn>
+ <CAEyhmHS__fqHS8Bpg7+4apO7OuXG1sP3miCcAMT+Y3uU0+_xjg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5x_V8CjX=Keb0k5+5zFtqh01MBWEo_hTFwwge-01jT9Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxVORQo3hofLQaAA--.12371S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxArWxXryUAry7KFyUZF13GFX_yoW5Ary7pF
-	WfC3ZakF45Gr48Gas2ga47WFy8Z3ZrZryxtrn0grW09FyDZrnIv3yFvw10kFyUC395Gr1I
-	qa18Xwn5ZFyUAacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZU
-	UUUU=
+In-Reply-To: <CAEyhmHS__fqHS8Bpg7+4apO7OuXG1sP3miCcAMT+Y3uU0+_xjg@mail.gmail.com>
 
+On Wed, Jul 16, 2025 at 08:21:59PM +0800, Hengqi Chen wrote:
+> On Wed, Jul 9, 2025 at 1:50 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+> >
+> > Implement the functions of bpf_arch_text_poke, bpf_arch_text_copy, and
+> > bpf_arch_text_invalidate on the LoongArch architecture.
+> >
+> > On LoongArch, since symbol addresses in the direct mapping
+> > region cannot be reached via relative jump instructions from the paged
+> > mapping region, we use the move_imm+jirl instruction pair as absolute
+> > jump instructions. These require 2-5 instructions, so we reserve 5 NOP
+> > instructions in the program as placeholders for function jumps.
+> >
+> > Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> > ---
+> >  arch/loongarch/include/asm/inst.h |  1 +
+> >  arch/loongarch/kernel/inst.c      | 32 +++++++++++
+> >  arch/loongarch/net/bpf_jit.c      | 90 +++++++++++++++++++++++++++++++
+> >  3 files changed, 123 insertions(+)
+> >
+> > diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> > index 2ae96a35d..88bb73e46 100644
+> > --- a/arch/loongarch/include/asm/inst.h
+> > +++ b/arch/loongarch/include/asm/inst.h
+> > @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction insn, struct pt_regs *regs);
+> >  int larch_insn_read(void *addr, u32 *insnp);
+> >  int larch_insn_write(void *addr, u32 insn);
+> >  int larch_insn_patch_text(void *addr, u32 insn);
+> > +int larch_insn_text_copy(void *dst, void *src, size_t len);
+> >
+> >  u32 larch_insn_gen_nop(void);
+> >  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
+> > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> > index 674e3b322..8d6594968 100644
+> > --- a/arch/loongarch/kernel/inst.c
+> > +++ b/arch/loongarch/kernel/inst.c
+> > @@ -4,6 +4,7 @@
+> >   */
+> >  #include <linux/sizes.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/set_memory.h>
+> >
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/inst.h>
+> > @@ -218,6 +219,37 @@ int larch_insn_patch_text(void *addr, u32 insn)
+> >         return ret;
+> >  }
+> >
+> > +int larch_insn_text_copy(void *dst, void *src, size_t len)
+> > +{
+> > +       unsigned long flags;
+> > +       size_t wlen = 0;
+> > +       size_t size;
+> > +       void *ptr;
+> > +       int ret = 0;
+> > +
+> > +       set_memory_rw((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
+> > +       raw_spin_lock_irqsave(&patch_lock, flags);
+> > +       while (wlen < len) {
+> > +               ptr = dst + wlen;
+> > +               size = min_t(size_t, PAGE_SIZE - offset_in_page(ptr),
+> > +                            len - wlen);
+> > +
+> > +               ret = copy_to_kernel_nofault(ptr, src + wlen, size);
+> > +               if (ret) {
+> > +                       pr_err("%s: operation failed\n", __func__);
+> > +                       break;
+> > +               }
+> > +               wlen += size;
+> > +       }
+> 
+> Again, why do you do copy_to_kernel_nofault() in a loop ?
 
+The while loop processes all sizes. I referred to how ARM64 and
+RISC-V64 handle this using loops as well.
 
-On 2025/7/16 下午6:19, Huacai Chen wrote:
-> Applied with some modifications. E.g., Patch6 removes offset, and
-> Patch8 adds it back, so I combine these two.
-> 
-> Since the code is a little different, it is better to test it again [1].
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-kvm
-It works well with basic VM operations.
-Also looks good from code review side.
+> This larch_insn_text_copy() can be part of the first patch like
+> larch_insn_gen_{beq,bne}. WDYT ?
 
-Regards
-Bibo Mao
-> 
-> 
-> 
-> Huacai
-> 
-> On Wed, Jul 9, 2025 at 4:02 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> This series add generic eiointc 8 bytes access interface, so that 1/2/4/8
->> bytes access can use the generic 8 bytes access interface. It reduce
->> about 500 lines redundant code and make eiointc emulation driver
->> simpler than ever.
->>
->> ---
->> v5 ... v6:
->>    1. Merge previous patch 5 & 6 into one, patch 7 & 10 into into one and
->>       patch 12 and patch 13 into one.
->>    2. Use sign extension with destination register for IOCSRRD.{B/H/W}
->>       kernel emulation.
->>
->> v4 ... v5
->>    1. Rebase patch on latest kernel where bugfix of eiointc has been
->>       merged.
->>    2. Add generic eiointc 8 bytes access interface, 1/2/4/8 bytes access
->>       uses generic 8 bytes access interface.
->>
->> v3 ... v4:
->>    1. Remove patch about enhancement and only keep bugfix relative
->>       patches.
->>    2. Remove INTC indication in the patch title.
->>    3. With access size, keep default case unchanged besides 1/2/4/8 since
->>       here all patches are bugfix
->>    4. Firstly check return value of copy_from_user() with error path,
->>       keep the same order with old patch in patch 4.
->>
->> v2 ... v3:
->>    1. Add prefix INTC: in title of every patch.
->>    2. Fix array index overflow when emulate register EIOINTC_ENABLE
->>       writing operation.
->>    3. Add address alignment check with eiointc register access operation.
->>
->> v1 ... v2:
->>    1. Add extra fix in patch 3 and patch 4, add num_cpu validation check
->>    2. Name of stat information keeps unchanged, only move it from VM stat
->>       to vCPU stat.
->> ---
->> Bibo Mao (8):
->>    LoongArch: KVM: Use standard bitops API with eiointc
->>    LoongArch: KVM: Remove unused parameter len
->>    LoongArch: KVM: Add stat information with kernel irqchip
->>    LoongArch: KVM: Remove never called default case statement
->>    LoongArch: KVM: Use generic function loongarch_eiointc_read()
->>    LoongArch: KVM: Remove some unnecessary local variables
->>    LoongArch: KVM: Replace eiointc_enable_irq() with eiointc_update_irq()
->>    LoongArch: KVM: Add generic function loongarch_eiointc_write()
->>
->>   arch/loongarch/include/asm/kvm_host.h |  12 +-
->>   arch/loongarch/kvm/intc/eiointc.c     | 558 ++++----------------------
->>   arch/loongarch/kvm/intc/ipi.c         |  28 +-
->>   arch/loongarch/kvm/intc/pch_pic.c     |   4 +-
->>   arch/loongarch/kvm/vcpu.c             |   8 +-
->>   5 files changed, 102 insertions(+), 508 deletions(-)
->>
->>
->> base-commit: 733923397fd95405a48f165c9b1fbc8c4b0a4681
->> --
->> 2.39.3
->>
+From my perspective, it is acceptable to include both
+larch_insn_text_copy and larch_insn_gen_{beq,bne} in the same patch,
+or place them in the bpf_arch_xxxx patch. larch_insn_text_copy is
+solely used for BPF; the application scope of larch_insn_gen_{beq,bne}
+is not limited to BPF.
 
+> 
+> > +       raw_spin_unlock_irqrestore(&patch_lock, flags);
+> > +       set_memory_rox((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
+> > +
+> > +       if (!ret)
+> > +               flush_icache_range((unsigned long)dst, (unsigned long)dst + len);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> >  u32 larch_insn_gen_nop(void)
+> >  {
+> >         return INSN_NOP;
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> > index 7032f11d3..9cb01f0b0 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -4,6 +4,7 @@
+> >   *
+> >   * Copyright (C) 2022 Loongson Technology Corporation Limited
+> >   */
+> > +#include <linux/memory.h>
+> >  #include "bpf_jit.h"
+> >
+> >  #define REG_TCC                LOONGARCH_GPR_A6
+> > @@ -1367,3 +1368,92 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+> >  {
+> >         return true;
+> >  }
+> > +
+> > +static int emit_jump_and_link(struct jit_ctx *ctx, u8 rd, u64 ip, u64 target)
+> > +{
+> > +       s64 offset = (s64)(target - ip);
+> > +
+> > +       if (offset && (offset >= -SZ_128M && offset < SZ_128M)) {
+> > +               emit_insn(ctx, bl, offset >> 2);
+> > +       } else {
+> > +               move_imm(ctx, LOONGARCH_GPR_T1, target, false);
+> > +               emit_insn(ctx, jirl, rd, LOONGARCH_GPR_T1, 0);
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_call)
+> > +{
+> > +       struct jit_ctx ctx;
+> > +
+> > +       ctx.idx = 0;
+> > +       ctx.image = (union loongarch_instruction *)insns;
+> > +
+> > +       if (!target) {
+> > +               emit_insn((&ctx), nop);
+> > +               emit_insn((&ctx), nop);
+> > +               return 0;
+> > +       }
+> > +
+> > +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LOONGARCH_GPR_ZERO,
+> > +                                 (unsigned long)ip, (unsigned long)target);
+> > +}
+> > +
+> > +int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
+> > +                      void *old_addr, void *new_addr)
+> > +{
+> > +       u32 old_insns[5] = {[0 ... 4] = INSN_NOP};
+> > +       u32 new_insns[5] = {[0 ... 4] = INSN_NOP};
+> > +       bool is_call = poke_type == BPF_MOD_CALL;
+> > +       int ret;
+> > +
+> > +       if (!is_kernel_text((unsigned long)ip) &&
+> > +               !is_bpf_text_address((unsigned long)ip))
+> > +               return -ENOTSUPP;
+> > +
+> > +       ret = gen_jump_or_nops(old_addr, ip, old_insns, is_call);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       if (memcmp(ip, old_insns, 5 * 4))
+> > +               return -EFAULT;
+> > +
+> > +       ret = gen_jump_or_nops(new_addr, ip, new_insns, is_call);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       mutex_lock(&text_mutex);
+> > +       if (memcmp(ip, new_insns, 5 * 4))
+> > +               ret = larch_insn_text_copy(ip, new_insns, 5 * 4);
+> > +       mutex_unlock(&text_mutex);
+> > +       return ret;
+> > +}
+> > +
+> > +int bpf_arch_text_invalidate(void *dst, size_t len)
+> > +{
+> > +       int i;
+> > +       int ret = 0;
+> > +       u32 *inst;
+> > +
+> > +       inst = kvmalloc(len, GFP_KERNEL);
+> > +       if (!inst)
+> > +               return -ENOMEM;
+> > +
+> > +       for (i = 0; i < (len/sizeof(u32)); i++)
+> > +               inst[i] = INSN_BREAK;
+> > +
+> > +       if (larch_insn_text_copy(dst, inst, len))
+> > +               ret = -EINVAL;
+> > +
+> > +       kvfree(inst);
+> > +       return ret;
+> > +}
+> > +
+> > +void *bpf_arch_text_copy(void *dst, void *src, size_t len)
+> > +{
+> > +       if (larch_insn_text_copy(dst, src, len))
+> > +               return ERR_PTR(-EINVAL);
+> > +
+> > +       return dst;
+> > +}
+> > --
+> > 2.43.0
+> >
