@@ -1,33 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54F167DA93
-	for <loongarch@lists.linux.dev>; Fri, 18 Jul 2025 02:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B351B1AA1D9
+	for <loongarch@lists.linux.dev>; Fri, 18 Jul 2025 02:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752805652; cv=none; b=C6F89XC8BfY2dMkB5Evh7aKSTi46vLa4+xr3dk5i46WgSdx0K6Yj+oezwjHvvfH6BWiRrukOKLeWtSkoWULj04vCSdqwQHAi59h1NDhOrx9dOqwQDz7UMxM+2BkFPYHUuV2g1c0PAcU97jqsnA/92G8eOPhA2chiipfgF/1b4zw=
+	t=1752806326; cv=none; b=kjRo2MDjaPkcn7kShmpF3MIknCpjCkYBzc63HuMv2k0jqSz2JX8nUxA8HuuacXSCSr5RS0FRkTc9g/5pjrRjPdRCrSRvtQT60fvfWk82S/vzLBBsdESIyLCqn+UqGX9ntKVLBzkoqyYYWGZfBeCcrTDCtytYi8juDsOhbvqDu10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752805652; c=relaxed/simple;
-	bh=ftURKMxGNqYyR2he5weADE6SNvzMQrh7e4/H/8Bxh0Y=;
+	s=arc-20240116; t=1752806326; c=relaxed/simple;
+	bh=YZcLFfsFSR5FdKJhywtA6fwgWDEvD/NUMszA99XaFuE=;
 	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ETroXJUq4GciUM5Pjqq9zryxJBVbxuvkfjOBCiVYv7aAyLv+BorXupuhz4SFvwLJBo/avXsP19WhWyZZND1bLfE/wc9LgNzHrXTWN1S5ZYZU24DE1SMlVlT500Y/MozECkbfBs8W2cPweFqPIx8UcALp2rup5PGpJ4LLbUj1ZhE=
+	 In-Reply-To:Content-Type; b=ZmAfsaL2txtFEB/2koZzUOgT/hx+zJPOGnlaNDqFOIcem+3HYNSFEuJme/ev9NX79sBOv4dK3wYNz20+9DKXu3VfsNhY6+5/qltDkk4EWGwVX7kil9mlnDfWolA5irbbIwlnajm4E3DGboE8kkBOdpUbwVs3FSf19xL7S88xVzk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Axx2kMsXloM50sAQ--.57346S3;
-	Fri, 18 Jul 2025 10:27:24 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxCeGws3lo8p4sAQ--.50949S3;
+	Fri, 18 Jul 2025 10:38:40 +0800 (CST)
 Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCxdOQKsXloJcEbAA--.17119S3;
-	Fri, 18 Jul 2025 10:27:24 +0800 (CST)
-Subject: Re: [PATCH 1/2] LoongArch: KVM: rework kvm_send_pv_ipi()
+	by front1 (Coremail) with SMTP id qMiowJAxT+aus3lo5sMbAA--.16638S3;
+	Fri, 18 Jul 2025 10:38:40 +0800 (CST)
+Subject: Re: [PATCH 2/2] LoongArch: KVM:: simplify kvm_deliver_intr()
 To: Yury Norov <yury.norov@gmail.com>, Tianrui Zhao
  <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
  WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
  loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <20250716165929.22386-1-yury.norov@gmail.com>
- <20250716165929.22386-2-yury.norov@gmail.com>
+ <20250716165929.22386-3-yury.norov@gmail.com>
 From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <a70dba22-c18e-3b28-6d2e-1eb7a4688a1d@loongson.cn>
-Date: Fri, 18 Jul 2025 10:25:43 +0800
+Message-ID: <3b5ad9c2-23ad-4f3b-412a-fe6c1a4c855a@loongson.cn>
+Date: Fri, 18 Jul 2025 10:37:00 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -36,99 +36,87 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250716165929.22386-2-yury.norov@gmail.com>
+In-Reply-To: <20250716165929.22386-3-yury.norov@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxdOQKsXloJcEbAA--.17119S3
+X-CM-TRANSID:qMiowJAxT+aus3lo5sMbAA--.16638S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CFWUZw1UWF4kJr1xKF4UAwc_yoW8Kry8pw
-	4fCw4agr45GF13Gwn0qayvqF47XF4kKFn3ZrZ7Ja95Wrn0qFn5Xr40kF95Ja4fKa4rAF4S
-	vFy5t3sI9a1DJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7CFWUGFW8XrWrtF47CrW3urX_yoW8AF4rp3
+	yrC347Zr4rGr17K3s0qan5XF4jqrWkKFs2yrZrC34fKr1aqF1qvFy8CrykXFy7Ca97G3yf
+	Xr1Sk348ua4DXrbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
 	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
 	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
 	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7Cj
 	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1wL
-	05UUUUU==
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU82g
+	43UUUUU==
 
 
 
 On 2025/7/17 上午12:59, Yury Norov wrote:
 > From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
 > 
-> The function in fact traverses a "bitmap" stored in GPR regs A1 and A2,
-> but does it in a non-obvious way by creating a single-word bitmap twice.
-> 
-> This patch switches the function to create a single 2-word bitmap, and
-> also employs for_each_set_bit() macro, as it helps to drop most of
-> housekeeping code.
-> 
-> While there, convert the function to return void to not confuse readers
-> with unchecked result.
+> The function opencodes for_each_set_bit() macro, which makes it bulky.
+> Using the proper API makes all the housekeeping code going away.
 > 
 > Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
 > ---
->   arch/loongarch/kvm/exit.c | 31 ++++++++++++-------------------
->   1 file changed, 12 insertions(+), 19 deletions(-)
+>   arch/loongarch/kvm/interrupt.c | 25 ++++---------------------
+>   1 file changed, 4 insertions(+), 21 deletions(-)
 > 
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> index fa52251b3bf1..359afa909cee 100644
-> --- a/arch/loongarch/kvm/exit.c
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -821,32 +821,25 @@ static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu, int ecode)
->   	return RESUME_GUEST;
->   }
+> diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
+> index 4c3f22de4b40..8462083f0301 100644
+> --- a/arch/loongarch/kvm/interrupt.c
+> +++ b/arch/loongarch/kvm/interrupt.c
+> @@ -83,28 +83,11 @@ void kvm_deliver_intr(struct kvm_vcpu *vcpu)
+>   	unsigned long *pending = &vcpu->arch.irq_pending;
+>   	unsigned long *pending_clr = &vcpu->arch.irq_clear;
 >   
-> -static int kvm_send_pv_ipi(struct kvm_vcpu *vcpu)
-> +static void kvm_send_pv_ipi(struct kvm_vcpu *vcpu)
->   {
-> -	unsigned int min, cpu, i;
-> -	unsigned long ipi_bitmap;
-> +	DECLARE_BITMAP(ipi_bitmap, BITS_PER_LONG * 2) = {
-> +		kvm_read_reg(vcpu, LOONGARCH_GPR_A1),
-> +		kvm_read_reg(vcpu, LOONGARCH_GPR_A2)
-> +	};
-> +	unsigned int min, cpu;
->   	struct kvm_vcpu *dest;
->   
->   	min = kvm_read_reg(vcpu, LOONGARCH_GPR_A3);
-> -	for (i = 0; i < 2; i++, min += BITS_PER_LONG) {
-> -		ipi_bitmap = kvm_read_reg(vcpu, LOONGARCH_GPR_A1 + i);
-> -		if (!ipi_bitmap)
-> +	for_each_set_bit(cpu, ipi_bitmap, BITS_PER_LONG * 2) {
-> +		dest = kvm_get_vcpu_by_cpuid(vcpu->kvm, cpu + min);
-> +		if (!dest)
->   			continue;
->   
-> -		cpu = find_first_bit((void *)&ipi_bitmap, BITS_PER_LONG);
-> -		while (cpu < BITS_PER_LONG) {
-> -			dest = kvm_get_vcpu_by_cpuid(vcpu->kvm, cpu + min);
-> -			cpu = find_next_bit((void *)&ipi_bitmap, BITS_PER_LONG, cpu + 1);
-> -			if (!dest)
-> -				continue;
+> -	if (!(*pending) && !(*pending_clr))
+> -		return;
 > -
-> -			/* Send SWI0 to dest vcpu to emulate IPI interrupt */
-> -			kvm_queue_irq(dest, INT_SWI0);
-> -			kvm_vcpu_kick(dest);
+> -	if (*pending_clr) {
+> -		priority = __ffs(*pending_clr);
+> -		while (priority <= INT_IPI) {
+> -			kvm_irq_clear(vcpu, priority);
+> -			priority = find_next_bit(pending_clr,
+> -					BITS_PER_BYTE * sizeof(*pending_clr),
+> -					priority + 1);
 > -		}
-> +		/* Send SWI0 to dest vcpu to emulate IPI interrupt */
-> +		kvm_queue_irq(dest, INT_SWI0);
-> +		kvm_vcpu_kick(dest);
->   	}
-> -
-> -	return 0;
+> -	}
+> +	for_each_set_bit(priority, pending_clr, INT_IPI + 1)
+> +		kvm_irq_clear(vcpu, priority);
+>   
+> -	if (*pending) {
+> -		priority = __ffs(*pending);
+> -		while (priority <= INT_IPI) {
+> -			kvm_irq_deliver(vcpu, priority);
+> -			priority = find_next_bit(pending,
+> -					BITS_PER_BYTE * sizeof(*pending),
+> -					priority + 1);
+> -		}
+> -	}
+> +	for_each_set_bit(priority, pending, INT_IPI + 1)
+> +		kvm_irq_deliver(vcpu, priority);
 >   }
 >   
->   /*
+>   int kvm_pending_timer(struct kvm_vcpu *vcpu)
 > 
+Hi Yury,
+
+Thanks for your patch. And it looks good to me.
+
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+
+Regards
+Bibo Mao
 
