@@ -1,127 +1,140 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E828292B5C
-	for <loongarch@lists.linux.dev>; Fri, 18 Jul 2025 08:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483E3221297
+	for <loongarch@lists.linux.dev>; Fri, 18 Jul 2025 12:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752825953; cv=none; b=LShXIVK29ecQLgcKsSSLD6tKjv+Op4EanRy+F4n5cmjgH8R6qwumNdLitc5crVBX9fzJ0HbP1ilCIUQBaqIqRlgRFtZt4PrbMsjdOaBfAzE+EYkKH5RsPy5loirXdIawJY6Iwfo5vHHrxKBnJW0Zoyai9PH96EyjFu08dW/4Cac=
+	t=1752842312; cv=none; b=MWltmNElAlFEEPYQE15uc3HvX1N/cvqD2yVLavjMz9ZXGSSVAwXVAFX3VXRrdE+1gPnp3Sn23Nhn9T6aIyJKMcPLZPVPINS7nZCSTITjaKOn8j8L3UmuTdO5nxKdN8scn92SFvCv+Rv/6BDBcWlFFCPsy1s/FzKRVgJ2XFg8QcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752825953; c=relaxed/simple;
-	bh=ICkx4RQog4OKxJFuHNw5QWQDaxZatIGPBHQ0QRAHuic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jqPkJfy4+ruPVKpuwEwnnmxkI0paNwGsbFAjiYy4m9oP5gFHFI3M6WCtsJkWcYKVtLA01nFmD/2PoKkEhPbuOE00ZDqujnSBSX1T3XSZ2HnjOlx/mm+f0wJ7py3SGdRDJGRgZacA6xWWAyknsyl5lAM/19yQYnCHVnAOG1W1w4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QiGuFMQm; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752842312; c=relaxed/simple;
+	bh=qJGabvaVAxVV1UGOMUcFloFEqAz/n/6K5TXGIBHwEGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HbSGhrwLD00TzB4luz3qm99LPB20rTFvFjQa2GhQS4S7NksfWdazOfPiRUseHwrXgFHm7Yrkr0zVp10h53xJzps0dg1igFJxUgvBJlfyajVvihYLspIKL7P2W7aWYUcwRYDxdkzMPWoefEZ3tXd+jePm8+GpXRfJDJjA36qYO1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=URKeXKJu; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QiGuFMQm"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32b5931037eso13738651fa.2
-        for <loongarch@lists.linux.dev>; Fri, 18 Jul 2025 01:05:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752825950; x=1753430750; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mE5OlSABnLgWhYl6SAq4PjOG8cGD+M3libfM2kaqTAg=;
-        b=QiGuFMQmTr00kOO5080yLKa7X4sPwROFkuA3Tkg7wasnFuXTdmqDnX9/7Caej5XmAq
-         rJK8kbmwbNzVDgwZTTU+mXuEeUTQDJIfeGpxKmKrgCnPYzVhLVbD6JupjNvT3aP5Pyax
-         Em1x+3WoRSsJxsuXtgVv9l7xZdIhaRNW8TAJIc/HSaVeZvbixVuSgO6czq0MXjBmNLq6
-         T7nMWPj4B0rlPChRSML2wU3vfWF62W4khToLG2TblnxvfJNDqMgWRmFmDsCkUsedBHB4
-         2kaofcpHRQg46wBlLJcnE7FtihO8c+VGwsmvJTPCVOIka+Xe12cS9xgLzhHBgJ5/2FbC
-         xSRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752825950; x=1753430750;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mE5OlSABnLgWhYl6SAq4PjOG8cGD+M3libfM2kaqTAg=;
-        b=ICbYHcDeWMgMe/41vGohxCficVeGHRGlglEXyeE2+Mo9qEddUjVFAuSplqDPtXjCNU
-         q+kxcmsYmMwWUX9HcL3Ym2F8VxovYvIxpUSOMSwSbNsknOJiUjKXaRJQSa3TuB3w+xOs
-         DJzdOglN02wAuSKNya6xVASP0f1QKYLD7pNTlMC1RiYtE6r7c63Ev93lM5jetiC2ei15
-         q+HymahZS0gm4eKzu6Oi58XUFdio1TVKykuKyGrizzaSnaJGvocisjj0HhtFsW3nj0SJ
-         YrgxcEsndC4JrmvjFkzhcuvW6I1YKxrkbkXgu6HWrwxvPsDfv/A1BDN/GOn/35vD++Jm
-         0KbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWbgeZMh6J4tbzDwmwpqnqTcVmBVwzYo2tpIogWzYCw+fObSYG8bHBj1GJCMZZSfqpWUvcTzRlwBgg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwwcupeBtVIBE+FDHeO0dtZwBZizbHhlwD5M0I+rNjkz5wJ+7gO
-	Qi+40mTKHTaDovXBE1TV/2e444BaolyR868ohn4Ob9KUdmYtx4hIht+V7+9hm0DWAUU0PaBLIpy
-	zPggoq4+zq9YiXGUtca4Wf2ETKJhAQuk=
-X-Gm-Gg: ASbGncs2sKF8Mkvx61/7W1N9qDxozJC+t1afCY/6nvgyH8kB1vBtDuwTjgRy3GKN6zv
-	mskZz35f4bdVJ2Eiwg2RuN3GNPeJwO5yAyl8ajF7XaRgH9ZRPVW23Dus4L7BcXBnWzSH82BPUKT
-	9WnEmjDa0R+xLwP6al9CKchJg9DJMlk82wxyq87DnxmECvBJnti8XyKEHE7K5Hw1/GqznZoPLtS
-	Lc+T2M=
-X-Google-Smtp-Source: AGHT+IHyLMKDBrDr7Srvy/Ikd0HaWMaoK7ylFo11Rc1uD9JBuJ8oBsq1gin5zNroA8IEeJqMbuI/vDPTs3/MNmSKtdw=
-X-Received: by 2002:a2e:80d4:0:b0:32b:755e:6cd7 with SMTP id
- 38308e7fff4ca-3308e56e179mr28488571fa.32.1752825949700; Fri, 18 Jul 2025
- 01:05:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="URKeXKJu"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56I8Vqmq024126;
+	Fri, 18 Jul 2025 12:38:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=AJ7Yc9S8ybUjsYZ6mEaq1yLAIUmrbN
+	SGYdtADWMsG68=; b=URKeXKJunyhD1+j06LLJVhu9nrCnwkh/iFkJ+KqLceutkJ
+	lH6azZ0lpfqejdykiNA3ZxSbHRAY7I1Oe2ofzfG5FzAI81cs8IAywk1t82gctF96
+	/o3jbVwuMc5cil0FbQWACOQ5ZiQG4vV2etuzyQz7URfPR/nrPJQf1DZhlXuVKOJN
+	NxJh8+4yqJ/OcK6D3BIv27rMR7G4j3h0s8vutnVnqpzJ4Q5oCFJu277PfekDn5LD
+	Ri6rCWReLXVlipONFhPvQw1CmFlhUlr0AiE4bsbADWqh1oin2aa3yJuOHm08spDj
+	aZMThCv5XUcYajgl9Ap22Ps1QEW4jLA4rijDIR9Q==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47y07txh9t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Jul 2025 12:38:18 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 56ICcIx9012599;
+	Fri, 18 Jul 2025 12:38:18 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47y07txh9p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Jul 2025 12:38:18 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56I9BoEl025987;
+	Fri, 18 Jul 2025 12:38:17 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47v31q18vh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Jul 2025 12:38:16 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56ICcEjA53543262
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 18 Jul 2025 12:38:15 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E2E4A2004B;
+	Fri, 18 Jul 2025 12:38:14 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B69C620043;
+	Fri, 18 Jul 2025 12:38:13 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.87.132.117])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 18 Jul 2025 12:38:13 +0000 (GMT)
+Date: Fri, 18 Jul 2025 14:38:12 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Cc: hca@linux.ibm.com, christophe.leroy@csgroup.eu, andreyknvl@gmail.com,
+        akpm@linux-foundation.org, ryabinin.a.a@gmail.com, glider@google.com,
+        dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v3 10/12] kasan/s390: call kasan_init_generic in
+ kasan_init
+Message-ID: <8412bf39-8235-4abb-ae35-db6029a605b3-agordeev@linux.ibm.com>
+References: <20250717142732.292822-1-snovitoll@gmail.com>
+ <20250717142732.292822-11-snovitoll@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250717142732.292822-1-snovitoll@gmail.com> <20250717142732.292822-2-snovitoll@gmail.com>
- <20250717151048.bb6124bea54a31cd2b41faaf@linux-foundation.org>
-In-Reply-To: <20250717151048.bb6124bea54a31cd2b41faaf@linux-foundation.org>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Fri, 18 Jul 2025 13:05:32 +0500
-X-Gm-Features: Ac12FXz9YqNA1eFVik-g2DCaFm9kQISkxpcsj01QS2Zo6EkvjPY09aiUDIQMxqs
-Message-ID: <CACzwLxgyd9yd3ah=LK93Bn7SwAy7H1Hhi=ncFzZYUs+6YGEqvg@mail.gmail.com>
-Subject: Re: [PATCH v3 01/12] lib/kasan: introduce CONFIG_ARCH_DEFER_KASAN option
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: hca@linux.ibm.com, christophe.leroy@csgroup.eu, andreyknvl@gmail.com, 
-	agordeev@linux.ibm.com, ryabinin.a.a@gmail.com, glider@google.com, 
-	dvyukov@google.com, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-mm@kvack.org, 
-	Peter Zijlstra <peterz@infradead.org>, Johannes Berg <johannes@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250717142732.292822-11-snovitoll@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: mdxNuC1xCFhuxtIpSH9TZqP6KhLLlotA
+X-Proofpoint-GUID: vIORyTF4ypaBonjC46BtYf4jbJ2mxKDQ
+X-Authority-Analysis: v=2.4 cv=d/v1yQjE c=1 sm=1 tr=0 ts=687a403b cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=VnNF1IyMAAAA:8 a=cM5Q7b1H7_XZ2lFhe3QA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE4MDA5NSBTYWx0ZWRfXwYseivfKqS1x J8WeqMyeE4+9+fwXyYNzZbOhx8wQEU+BxVKA5pL924Piu0WwYnZ0ds8Gg6cLrfaUCEmqngt+K2h v0iQpTIsCHidE0ZLR0UHnsBWuH3UYoIGkKH5HBy3pVo4QZasuFlmAgru0z1FY/j8NsXwfkpXZxf
+ P46pOLu6NzYfd/QSa1kpO8S7p+tsd29lPZD2iYUmkG34IGk5n0wysprtNon/KZ0ojmcC9eLbIuy IJZ06FnAowNYqChDKS5euUgyI5PN9bMJlP6hA85NQeYAk9U5yWGraX/LIaWr6M8JtPEGSrTaRm/ 97uHxnx4L8KCPt+hyzHTf8w8bwvZvsP8xkv54H22+2e+so4ZRLAKAvDB9IiTB51ufI4/jZQUx39
+ cC7c3CC6MUmnD00YlyhwGtbDdUSPCITIRC25vIbBO7x884VH8097j8NcoFOgTL8icQ3rTJvo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-18_02,2025-07-17_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=984
+ suspectscore=0 spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507180095
 
-On Fri, Jul 18, 2025 at 3:10=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Thu, 17 Jul 2025 19:27:21 +0500 Sabyrzhan Tasbolatov <snovitoll@gmail.=
-com> wrote:
->
-> > Introduce CONFIG_ARCH_DEFER_KASAN to identify architectures that need
-> > to defer KASAN initialization until shadow memory is properly set up.
-> >
-> > Some architectures (like PowerPC with radix MMU) need to set up their
-> > shadow memory mappings before KASAN can be safely enabled, while others
-> > (like s390, x86, arm) can enable KASAN much earlier or even from the
-> > beginning.
-> >
-> > This option allows us to:
-> > 1. Use static keys only where needed (avoiding overhead)
-> > 2. Use compile-time constants for arch that don't need runtime checks
-> > 3. Maintain optimal performance for both scenarios
-> >
-> > Architectures that need deferred KASAN should select this option.
-> > Architectures that can enable KASAN early will get compile-time
-> > optimizations instead of runtime checks.
->
-> Looks nice and appears quite mature.  I'm reluctant to add it to mm.git
-> during -rc6, especially given the lack of formal review and ack tags.
->
-> But but but, that's what the mm-new branch is for.  I guess I'll add it
-> to get some additional exposure, but whether I'll advance it into
-> mm-unstable/linux-next for this cycle is unclear.
->
-> What do you (and others) think?
+On Thu, Jul 17, 2025 at 07:27:30PM +0500, Sabyrzhan Tasbolatov wrote:
+> Call kasan_init_generic() which handles Generic KASAN initialization
+> and prints the banner. Since s390 doesn't select ARCH_DEFER_KASAN,
+> kasan_enable() will be a no-op, and kasan_enabled() will return
+> IS_ENABLED(CONFIG_KASAN) for optimal compile-time behavior.
+> 
+> s390 sets up KASAN mappings in the decompressor and can run with KASAN
+> enabled from very early, so it doesn't need runtime control.
+> 
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217049
+> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+> ---
+>  arch/s390/kernel/early.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
+> index 54cf0923050..7ada1324f6a 100644
+> --- a/arch/s390/kernel/early.c
+> +++ b/arch/s390/kernel/early.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/kernel.h>
+>  #include <asm/asm-extable.h>
+>  #include <linux/memblock.h>
+> +#include <linux/kasan.h>
+>  #include <asm/access-regs.h>
+>  #include <asm/asm-offsets.h>
+>  #include <asm/machine.h>
+> @@ -65,7 +66,7 @@ static void __init kasan_early_init(void)
+>  {
+>  #ifdef CONFIG_KASAN
+>  	init_task.kasan_depth = 0;
+> -	pr_info("KernelAddressSanitizer initialized\n");
+> +	kasan_init_generic();
+>  #endif
+>  }
 
-Thanks for the positive feedback!
-Adding it to mm-new for additional exposure would be great.
-Given the complexity of this cross-architecture change,
-I think of taking the conservative approach of:
-1. mm-new branch for exposure and review collection
-2. Advancing to mm-unstable/linux-next only after we get proper acks from
-    KASAN maintainers/reviewers, at least.
-
-The series has been thoroughly tested by me - compiled all affected arch an=
-d
-ran QEMU on arm64, x86 with KUnits.
-
-+ Forgot to add in CC Johannes Berg, Peter Zijlstra who commented in v1.
-https://lore.kernel.org/all/20250625095224.118679-1-snovitoll@gmail.com/
+Acked-by: Alexander Gordeev <agordeev@linux.ibm.com>
