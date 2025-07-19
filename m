@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33E421B18B;
-	Sat, 19 Jul 2025 06:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF0172629;
+	Sat, 19 Jul 2025 12:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752907965; cv=none; b=GtagsNOEqY2n+jaMpFUEvdzU/ev/wH5DI7Wtt89e6EHqYgLrUugcbg+PKHLgEJ5dGso2cFk5g5wHLh/L96NomTOgszfedyXWWkHVT88/nNjhIkbPLXoUKaajAIslPnIbcbjnskMiLzjydSdALpiulN9Igev/ehprk5zKKMcaqsE=
+	t=1752926978; cv=none; b=tW8V+Ya8tJXW1lIRkNdMBJvgo7BgtZ1VTNBJ7xnfoe4FjVkRNitGess1ZYj95VwpTfUtMJ/xly1DRIow5gJwhYqnSVR3bZg4b2bt50bxYm83DLAwpes9LvroSqnpuViiLzM4+4UEjnBmgRFWtRUtEuhiNYIMc7A/bwWNGtwSLEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752907965; c=relaxed/simple;
-	bh=6OH2X3Wst3e0vy94IdDlrw8pEvX7FDKjFs7Y/qkgnGA=;
+	s=arc-20240116; t=1752926978; c=relaxed/simple;
+	bh=fn8YKQ7uo24LYlUXF5nhxlSDkHFZ7BfRQEgFvald5DQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iR1tO3V0DCKrJUv/OwbqUopLhS0y70sFi4zXFmVqxGa/1vkRaLozZc6mrQCGbx1Au2ayrA4TBzgvH62IelkZNe9KGIXRsnugLUx1hV/Q2VxXqhtIyP6qHbHAojmVd3fVGLh//1aaYFJEX0B4asCOGnsoOe6t/Mt07UINQfHZZCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xKbO697j; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=idH7h9am3IeJa3hlEzP4gzqlmUD1W5LwKoaYR7WAiqe7Z53a77Bis+TTuz354K7qA8IbbVR+G2Ukh1KTPRJD++UKrsm5xy2BSgGL9ryDePplX9zwejjD+g7Hnn23jZAHeHgYqt4MmcB8HuDUEXlzYOoxBYkBWOa9gdhAc4rU8TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gbzfNgO+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xKbO697j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D7EAC4CEE3;
-	Sat, 19 Jul 2025 06:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1752907965;
-	bh=6OH2X3Wst3e0vy94IdDlrw8pEvX7FDKjFs7Y/qkgnGA=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gbzfNgO+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25EBBC4CEE3;
+	Sat, 19 Jul 2025 12:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752926978;
+	bh=fn8YKQ7uo24LYlUXF5nhxlSDkHFZ7BfRQEgFvald5DQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xKbO697jatzdRrok3rYuTBbyv8uR0uNOxEioC1xrZuTZJNDfY9ulx1P0yONafeWyS
-	 AQntVtchLzGHw9/6TbYdhlZFHgCGrMFLVe22um6xdMjrqZ5867cidTVu/m90RtpCV5
-	 ZbC3nSzJqX3/m1/V4xxVP6s321IisGi081KQRfis=
-Date: Sat, 19 Jul 2025 08:52:41 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] syscore: Pass context data to callbacks
-Message-ID: <2025071919-patience-cattishly-cf7c@gregkh>
-References: <20250717103241.2806798-1-thierry.reding@gmail.com>
- <2025071716-phoney-object-1648@gregkh>
- <rzbzah5iigz25jtxyqadnitkzkazxsaxntajhlfrfdslyioevk@pylcjkfh5n42>
+	b=gbzfNgO+gNc1/m/rzqJxptbWswW03Ne9ZkgRQ0blpJoai+V27hkVFiPDRAiLrTO2d
+	 VFTQY3lW1U4rDOa2wX6Tm7+9+gL6HJtVnllzgaq+SCr+RaiPGKsPVRMVDnJvV5XTzP
+	 asaUG9tufPYhStkZv3WcbzcLi5qZjFtEft1Va+1XRJdZ1KTKj2uGw1JvT14YZNpwOg
+	 Y5FJfSNVGidE0uW13wZdFlPpxA2L/uUK4gavstmt6hf3Ql3oxhbm+bIT5fDNt/btvi
+	 XRNy8ancv6qUcf5VKRsCDab7rYGt8z3YhLWzGkp/44wT17uMEJbDZdp2EaM/+Ph6RC
+	 o2B6OQ8mhieew==
+Date: Sat, 19 Jul 2025 15:09:34 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	davem@davemloft.net, linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v12 3/4] tpm: Add a driver for Loongson TPM device
+Message-ID: <aHuK_pY2Ap4B7JWZ@kernel.org>
+References: <20250705072045.1067-1-zhaoqunqin@loongson.cn>
+ <20250705072045.1067-4-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,114 +47,153 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <rzbzah5iigz25jtxyqadnitkzkazxsaxntajhlfrfdslyioevk@pylcjkfh5n42>
+In-Reply-To: <20250705072045.1067-4-zhaoqunqin@loongson.cn>
 
-On Fri, Jul 18, 2025 at 03:49:37PM +0200, Thierry Reding wrote:
-> On Thu, Jul 17, 2025 at 02:11:41PM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, Jul 17, 2025 at 12:32:34PM +0200, Thierry Reding wrote:
-> > > From: Thierry Reding <treding@nvidia.com>
-> > > 
-> > > Hi,
-> > > 
-> > > Something that's been bugging me over the years is how some drivers have
-> > > had to adopt file-scoped variables to pass data into something like the
-> > > syscore operations. This is often harmless, but usually leads to drivers
-> > > not being able to deal with multiple instances, or additional frameworks
-> > > or data structures needing to be created to handle multiple instances.
-> > > 
-> > > This series proposes to "objectify" struct syscore_ops by passing a
-> > > pointer to struct syscore_ops to the syscore callbacks. Implementations
-> > > of these callbacks can then make use of container_of() to get access to
-> > > contextual data that struct syscore_ops was embedded in. This elegantly
-> > > avoids the need for file-scoped, singleton variables, by tying syscore
-> > > to individual instances.
-> > > 
-> > > Patch 1 contains the bulk of these changes. It's fairly intrusive
-> > > because it does the conversion of the function signature all in one
-> > > patch. An alternative would've been to introduce new callbacks such that
-> > > these changes could be staged in. However, the amount of changes here
-> > > are not quite numerous enough to justify that, in my opinion, and
-> > > syscore isn't very frequently used, so the risk of another user getting
-> > > added while this is merged is rather small. All in all I think merging
-> > > this in one go is the simplest way.
-> > 
-> > All at once is good, I like the idea, but:
-> > 
-> > > Patches 2-7 are conversions of some existing drivers to take advantage
-> > > of this new parameter and tie the code to per-instance data.
-> > 
-> > That's great, but none of these conversions actually get rid of the
-> > global structure, so what actually was helped here other than the churn
-> > of this "potentially" allowing the global data variables from being
-> > removed in the future?
-> > 
-> > So how does this actually help?
+On Sat, Jul 05, 2025 at 03:20:44PM +0800, Qunqin Zhao wrote:
+> Loongson Security Engine supports random number generation, hash,
+> symmetric encryption and asymmetric encryption. Based on these
+> encryption functions, TPM2 have been implemented in the Loongson
+> Security Engine firmware. This driver is responsible for copying data
+> into the memory visible to the firmware and receiving data from the
+> firmware.
 > 
-> Thanks for pointing this out and letting me look at it again. Most of
-> these actually do get rid of the global data variables. The MIPS patch
-> doesn't because I forgot, but the __alchemy_pci_ctx is no longer used
-> after the patch (except where it's initialized to the ctx variable, but
-> that's no longer needed now). I've updated that patch.
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/char/tpm/Kconfig        |  9 ++++
+>  drivers/char/tpm/Makefile       |  1 +
+>  drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++++++++++++++
+>  3 files changed, 94 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_loongson.c
 > 
-> The Ingenic TCU patch gets rid of it, and so do the clk/mvebu and
-> irq-imx-gpcv2 patches. The two exceptions where it wasn't possible to
-> get rid of the global data variables are mvebu-mbus and Tegra PMC, in
-> both cases because there is other functionality that relies on the
-> global variable. The bits that make it very difficult to remove these
-> entirely is that they export functions that are called without context
-> from other parts of code.
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index dddd702b2..ba3924eb1 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -189,6 +189,15 @@ config TCG_IBMVTPM
+>  	  will be accessible from within Linux.  To compile this driver
+>  	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+>  
+> +config TCG_LOONGSON
+> +	tristate "Loongson TPM Interface"
+> +	depends on MFD_LOONGSON_SE
+> +	help
+> +	  If you want to make Loongson TPM support available, say Yes and
+> +	  it will be accessible from within Linux. To compile this
+> +	  driver as a module, choose M here; the module will be called
+> +	  tpm_loongson.
+> +
+>  config TCG_XEN
+>  	tristate "XEN TPM Interface"
+>  	depends on TCG_TPM && XEN
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 9de1b3ea3..5b5cdc0d3 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+>  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+>  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+>  obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
+> +obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
+> diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
+> new file mode 100644
+> index 000000000..a4ec23639
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_loongson.c
+> @@ -0,0 +1,84 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mfd/loongson-se.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/wait.h>
+> +
+> +#include "tpm.h"
+> +
+> +struct tpm_loongson_cmd {
+> +	u32 cmd_id;
+> +	u32 data_off;
+> +	u32 data_len;
+> +	u32 pad[5];
+> +};
+> +
+> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> +	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+> +
+> +	if (cmd_ret->data_len > count)
+> +		return -EIO;
+> +
+> +	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+> +
+> +	return cmd_ret->data_len;
+> +}
+> +
+> +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> +	struct tpm_loongson_cmd *cmd = tpm_engine->command;
+> +
+> +	if (count > tpm_engine->buffer_size)
+> +		return -E2BIG;
+> +
+> +	cmd->data_len = count;
+> +	memcpy(tpm_engine->data_buffer, buf, count);
+> +
+> +	return loongson_se_send_engine_cmd(tpm_engine);
+> +}
+> +
+> +static const struct tpm_class_ops tpm_loongson_ops = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+> +	.recv = tpm_loongson_recv,
+> +	.send = tpm_loongson_send,
+> +};
+> +
+> +static int tpm_loongson_probe(struct platform_device *pdev)
+> +{
+> +	struct loongson_se_engine *tpm_engine;
+> +	struct device *dev = &pdev->dev;
+> +	struct tpm_loongson_cmd *cmd;
+> +	struct tpm_chip *chip;
+> +
+> +	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
+> +	if (!tpm_engine)
+> +		return -ENODEV;
+> +	cmd = tpm_engine->command;
+> +	cmd->cmd_id = SE_CMD_TPM;
+> +	cmd->data_off = tpm_engine->buffer_off;
+> +
+> +	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+> +	dev_set_drvdata(&chip->dev, tpm_engine);
+> +
+> +	return tpm_chip_register(chip);
+> +}
+> +
+> +static struct platform_driver tpm_loongson = {
+> +	.probe   = tpm_loongson_probe,
+> +	.driver  = {
+> +		.name  = "tpm_loongson",
+> +	},
+> +};
+> +module_platform_driver(tpm_loongson);
+> +
+> +MODULE_ALIAS("platform:tpm_loongson");
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("Loongson TPM driver");
+> -- 
+> 2.45.2
+> 
 
-Ah, I must have looked at the wrong examples in the patch series, sorry.
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-> I have a fairly large series on top of this that converts the Tegra PMC
-> driver to move away from this as much as possible. It's not possible to
-> do on 32-bit ARM because there is some low-level CPU code that needs to
-> call into this function. However, the goal is to at least make the PMC
-> driver data completely instance-specific on 64-bit ARM so that we can
-> support multiple instances eventually.
-> 
-> Maybe something similar could be done for mvebu-bus, but I'm not sure
-> it's worth it. Typically for these cases you need some form of context
-> in order to replace the global data. On Tegra we do have that in many
-> cases (via DT phandle references), but I'm not familiar enough with
-> mvebu to know if something similar exists.
-> 
-> My goal with this series is to get this a bit more established so that
-> people don't use the lack of context in syscore as an excuse for not
-> properly encapsulating things. These usually tend to go hand in hand,
-> where people end up using a global data variable for syscore and since
-> they can't get around that one, they keep using it for a bunch of other
-> shortcuts.
+Can you take this through loongson tree? It's highly unlikely to
+conflict with anything.
 
-I agree, I overall like this change, just expected to see more global
-structures being able to be removed.
-
-> > Also, small nit, make the function pointers const please :)
-> 
-> I originally tried that. Unfortunately, the struct syscore_ops contains
-> a struct list_head to add it to the global list of structures. I suppose
-> I could move the function pointers into a different structure and make
-> pointers to that const, something like this:
-> 
-> 	struct syscore;
-> 
-> 	struct syscore_ops {
-> 		int (*suspend)(struct syscore *syscore);
-> 		void (*resume)(struct syscore *syscore);
-> 		void (*shutdown)(struct syscore *syscore);
-> 	};
-> 
-> 	struct syscore {
-> 		const struct syscore_ops *ops;
-> 		struct list_head node;
-> 	};
-> 
-> Is that what you had in mind?
-
-I missed the list_head, so yes, this would be better, but don't pass
-back the syscore structure, how about just a void * instead, making the
-whole container_of() stuff go away?
-
-thanks,
-
-greg k-h
+BR, Jarkko
