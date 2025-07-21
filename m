@@ -1,469 +1,318 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBA521766A
-	for <loongarch@lists.linux.dev>; Mon, 21 Jul 2025 02:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046D735971
+	for <loongarch@lists.linux.dev>; Mon, 21 Jul 2025 07:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753064811; cv=none; b=cQIY/9/Po4+GRzEoxLQKCrqslUqqUPutuLgRx5qsEsPtNUdvDgkNCj1o6l7lUdC0G/BFN/pbL/iLybL+4WI129BzU0uVaX4I+bgmnMEHqJsbjX4TWP1ZwHytAcjeFW1vBvOwlBGAoW8ajVmPpmKF5bOO41TTjQqlsmF5OqSdZms=
+	t=1753084772; cv=none; b=tyMMeIWMPcFN8b8f/wzKjZ7mKPpqHcA7CEqF2Lg/W79HgjzFME7eAnXUsIOo7F6DUd/IbVgquTIxXSooMcEI1u6xmLpVzd0inzW7B88VKlv6ByNioPIRGuPouxBCs6stQCaKb3RYNUYSokQc61VOCbncsDeCzEEW9E84IEzA4qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753064811; c=relaxed/simple;
-	bh=bMjGgEysVE/rfK99VJhgpvx7HHTPp5oDGIsOIUCYUY4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DKIWoZ9q9RyoL3BvEkUhZdCZ5RxEyU1Jxaf2ipbi533neJj0Xo9MaNhYWfb2gz9PdePKhSgXbhnRkqVXVKxC5xFdvO0gwnRG//vgCbRgg4giWHRsQWh157rZKUT8gGAFh0brrczY6v9awKIZzGLnCDHEF6npnu0aRLjhgKvkLJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VD1QDR0Y; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VD1QDR0Y"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ae0dffaa8b2so768255266b.0
-        for <loongarch@lists.linux.dev>; Sun, 20 Jul 2025 19:26:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753064808; x=1753669608; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZGjc1nW4Cc5OITZmD2N+edfXPrO51/K5Xg0OJMciG/w=;
-        b=VD1QDR0Y/2/GYUJ1VTeRRGdKlcRLuBTekSbn6dAnNlDS15kctxX0+Vme9N4GTL4xtE
-         OysWiwYvTDbhjsK3z0n9Se6wmh9VrmVdOPXJNdRuztACXChqW0UgeRs4A7kDZkUdr2uX
-         ellun6yuypNjwR9BQzx2Ykt4/7RLdYHGAAcrYzOAhtiFjuWo6M6GgWmy3bU0T5KI7kMg
-         whyX31bjg340EtZeRt0gbn+foGUe2K8nj0J7u03jiEii9KDz0LSl4NPHklDiFBrk1Ipm
-         wbRzlafGJDrrOjKH11j9VVNs+ovHZki0Yho6/CBDMvGtqZcH0GxTmUYwgSPVTEGFE/Fp
-         IJ+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753064808; x=1753669608;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZGjc1nW4Cc5OITZmD2N+edfXPrO51/K5Xg0OJMciG/w=;
-        b=PaWvon1fuME5iU+m7dX4KL7xuOe4D5fmchl09kEvPZZ5e9AjGOYJqckxeAqbkrWXWk
-         OQXP6rRSAWLPFd1TZ8zfoqBBco1JED1In03r4W7XSHvBwtrfcB0RcOJUlQO+9H1cWnRx
-         dPU4W2vlW9a1CJ5hYiqthvYEjSxZe/KwftHGyPQUTP1lEnUfH25Tmm/3SrM2q+6Bc9pX
-         1iKiz0BC/lUHf/GujMqJP9vRr6H4IMSif4nxrUsrweiHy1mMMnphSeCJd2aOKWn9QNhq
-         3MlEAzo2eG+5L4OtWUKiGmSwrDIlN5X9fJK6VAf27h5HpPZueD7L6nCCgrty4FqTgvHQ
-         Tz7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWhtBKbKXzO+ZBWZJN/qJ9NjPLVQH7WnRRw6MnxInObL0jH2gCKCwh0IawGl0WPGcK3IDOXC+KgMh4=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw1F3LMTxdsQxhLBqOjP3xIU4hpUnueS8BMmvss7JZh4d7d+2FQ
-	gipZh0IO2NHFjHFpl0rxtkK/2XOkwYzv/KnUU7JItWuCBUa8kOO2r3FZcFh/XNmmWBpFZum4Idz
-	vx38j+Ivb4f4bi5d0l7UG5f3X78ANrv4=
-X-Gm-Gg: ASbGncsr7akem49+3C6iETIQLeoxsUDW+rFrdygU/BoRBfcK0CpS+Vlp+v4Wyzs5vpL
-	AeuDW5gU2j7w+SPPtHk2mvW0NFvCpHTmBfFqBLYW8p6QmHgYBzw10QDtSaqCL63XaHF/Bj5v5Na
-	87adGD/mK152MElZo481dmC1BG8mIu0Bz8p2JZo+LzHpYWLgh40DKAfXP3hzpsVNraKrnnsv5Uf
-	V/89ogW
-X-Google-Smtp-Source: AGHT+IEDUpT1Xx78AIPWL67dEpB4eIxQ3fz+bPuxIr06g5xZjwgMHVXt6Q1sCExWH2uKTKJ4HrLfyHm0JwtP3nM6emU=
-X-Received: by 2002:a17:907:6d0d:b0:aca:c507:a4e8 with SMTP id
- a640c23a62f3a-aec4fad6584mr1391532166b.21.1753064807357; Sun, 20 Jul 2025
- 19:26:47 -0700 (PDT)
+	s=arc-20240116; t=1753084772; c=relaxed/simple;
+	bh=dCKyaPuMdmxVthC9fq2PvFaRriA546vr8fuuezJD5aA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NRi7VeLBZdA/HPHGIhk5TPW2DnEkV28ZyGGy/QrCsdZ/fkgE19FM9h/MBgoro4AOfDVKmC3gxaFyUY73GTAMwmB6fOXnTHjrLul+LRvgyvUg9W27LJ7gpU8+Mk12wzxnV9Sf6CjccbxratqUc74CVh9SsVrMKPPFdtm/5qFT4KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 9bf5b12a660811f0b29709d653e92f7d-20250721
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:7b406206-964a-4c4b-ab5f-f800871faf3b,IP:0,U
+	RL:0,TC:0,Content:8,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:8
+X-CID-META: VersionHash:6493067,CLOUDID:0a3659fc6bb702fa72899da2be79adf2,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:4|50,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 9bf5b12a660811f0b29709d653e92f7d-20250721
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1961975670; Mon, 21 Jul 2025 15:59:21 +0800
+Date: Mon, 21 Jul 2025 15:59:17 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
+	jianghaoran@kylinos.cn
+Subject: Re: [PATCH v3 4/5] LoongArch: BPF: Add bpf_arch_xxxxx support for
+ Loongarch
+Message-ID: <20250721075917.GA264612@chenghao-pc>
+References: <20250709055029.723243-1-duanchenghao@kylinos.cn>
+ <20250709055029.723243-5-duanchenghao@kylinos.cn>
+ <CAEyhmHS__fqHS8Bpg7+4apO7OuXG1sP3miCcAMT+Y3uU0+_xjg@mail.gmail.com>
+ <20250717092746.GA993901@chenghao-pc>
+ <CAEyhmHTpJ0OKbW1QEFV+XMxCC9kL2eSwKMkk7=YyLprjNxc8iA@mail.gmail.com>
+ <20250718021658.GA203872@chenghao-pc>
+ <CAEyhmHRL0FFwSqyir9DcKm24_k1idX02CtwFStwBL-Fxc2ukMQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1751617911.git.zhoubinbin@loongson.cn> <f4c546b0160294296c98b6b12b0ab1d2000dd44c.1751617911.git.zhoubinbin@loongson.cn>
- <20250710100323.GI1431498@google.com> <CAMpQs4LQME7oO8i2FWgUsAQqwThcp=R3jubPGqZ1Vr-pvEHvoA@mail.gmail.com>
- <20250718135246.GH11056@google.com>
-In-Reply-To: <20250718135246.GH11056@google.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Mon, 21 Jul 2025 10:26:35 +0800
-X-Gm-Features: Ac12FXxc2WjqZLXTQmDSK-50UX7FqHu8oM08yXDRNBdDN4rEogJ0JrBAyxDI7jY
-Message-ID: <CAMpQs4+AOc2bkOFSWW_hX-+akyRT9vTBb6mFJGKpjt9fSsF7MQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
-To: Lee Jones <lee@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io, 
-	kexybiscuit@aosc.io, wangyao@lemote.com, Chong Qiao <qiaochong@loongson.cn>, 
-	Corey Minyard <corey@minyard.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEyhmHRL0FFwSqyir9DcKm24_k1idX02CtwFStwBL-Fxc2ukMQ@mail.gmail.com>
 
-Hi Lee:
+On Mon, Jul 21, 2025 at 09:38:47AM +0800, Hengqi Chen wrote:
+> On Fri, Jul 18, 2025 at 10:17 AM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+> >
+> > On Thu, Jul 17, 2025 at 06:12:55PM +0800, Hengqi Chen wrote:
+> > > On Thu, Jul 17, 2025 at 5:27 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+> > > >
+> > > > On Wed, Jul 16, 2025 at 08:21:59PM +0800, Hengqi Chen wrote:
+> > > > > On Wed, Jul 9, 2025 at 1:50 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+> > > > > >
+> > > > > > Implement the functions of bpf_arch_text_poke, bpf_arch_text_copy, and
+> > > > > > bpf_arch_text_invalidate on the LoongArch architecture.
+> > > > > >
+> > > > > > On LoongArch, since symbol addresses in the direct mapping
+> > > > > > region cannot be reached via relative jump instructions from the paged
+> > > > > > mapping region, we use the move_imm+jirl instruction pair as absolute
+> > > > > > jump instructions. These require 2-5 instructions, so we reserve 5 NOP
+> > > > > > instructions in the program as placeholders for function jumps.
+> > > > > >
+> > > > > > Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> > > > > > Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> > > > > > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> > > > > > ---
+> > > > > >  arch/loongarch/include/asm/inst.h |  1 +
+> > > > > >  arch/loongarch/kernel/inst.c      | 32 +++++++++++
+> > > > > >  arch/loongarch/net/bpf_jit.c      | 90 +++++++++++++++++++++++++++++++
+> > > > > >  3 files changed, 123 insertions(+)
+> > > > > >
+> > > > > > diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> > > > > > index 2ae96a35d..88bb73e46 100644
+> > > > > > --- a/arch/loongarch/include/asm/inst.h
+> > > > > > +++ b/arch/loongarch/include/asm/inst.h
+> > > > > > @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction insn, struct pt_regs *regs);
+> > > > > >  int larch_insn_read(void *addr, u32 *insnp);
+> > > > > >  int larch_insn_write(void *addr, u32 insn);
+> > > > > >  int larch_insn_patch_text(void *addr, u32 insn);
+> > > > > > +int larch_insn_text_copy(void *dst, void *src, size_t len);
+> > > > > >
+> > > > > >  u32 larch_insn_gen_nop(void);
+> > > > > >  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
+> > > > > > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> > > > > > index 674e3b322..8d6594968 100644
+> > > > > > --- a/arch/loongarch/kernel/inst.c
+> > > > > > +++ b/arch/loongarch/kernel/inst.c
+> > > > > > @@ -4,6 +4,7 @@
+> > > > > >   */
+> > > > > >  #include <linux/sizes.h>
+> > > > > >  #include <linux/uaccess.h>
+> > > > > > +#include <linux/set_memory.h>
+> > > > > >
+> > > > > >  #include <asm/cacheflush.h>
+> > > > > >  #include <asm/inst.h>
+> > > > > > @@ -218,6 +219,37 @@ int larch_insn_patch_text(void *addr, u32 insn)
+> > > > > >         return ret;
+> > > > > >  }
+> > > > > >
+> > > > > > +int larch_insn_text_copy(void *dst, void *src, size_t len)
+> > > > > > +{
+> > > > > > +       unsigned long flags;
+> > > > > > +       size_t wlen = 0;
+> > > > > > +       size_t size;
+> > > > > > +       void *ptr;
+> > > > > > +       int ret = 0;
+> > > > > > +
+> > > > > > +       set_memory_rw((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
+> > > > > > +       raw_spin_lock_irqsave(&patch_lock, flags);
+> > > > > > +       while (wlen < len) {
+> > > > > > +               ptr = dst + wlen;
+> > > > > > +               size = min_t(size_t, PAGE_SIZE - offset_in_page(ptr),
+> > > > > > +                            len - wlen);
+> > > > > > +
+> > > > > > +               ret = copy_to_kernel_nofault(ptr, src + wlen, size);
+> > > > > > +               if (ret) {
+> > > > > > +                       pr_err("%s: operation failed\n", __func__);
+> > > > > > +                       break;
+> > > > > > +               }
+> > > > > > +               wlen += size;
+> > > > > > +       }
+> > > > >
+> > > > > Again, why do you do copy_to_kernel_nofault() in a loop ?
+> > > >
+> > > > The while loop processes all sizes. I referred to how ARM64 and
+> > > > RISC-V64 handle this using loops as well.
+> > >
+> > > Any pointers ?
+> >
+> > I didn't understand what you meant.
+> >
+> 
+> It's your responsibility to explain why we need a loop here, not mine.
+> I checked every callsite of copy_to_kernel_nofault(), no one uses a loop.
+> 
 
-Thanks for your reply.
+I referred to ARM and RISC-V. ARM copies a maximum length of PAGE_SIZE
+each time, while RISC-V copies a maximum length of PAGE_SIZE*2 each time.
+ARM and RISC-V use loops because Fixmap can map PAGE_SIZE at a time.
 
+arm64: arch/arm64/kernel/patching.c	__text_poke
+riscv: arch/riscv/kernel/patch.c	atch_insn_write
 
-On Fri, Jul 18, 2025 at 9:52=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> On Fri, 11 Jul 2025, Binbin Zhou wrote:
->
-> > Hi Lee:
-> >
-> > Thanks for your review.
-> >
-> > On Thu, Jul 10, 2025 at 6:03=E2=80=AFPM Lee Jones <lee@kernel.org> wrot=
-e:
-> > >
-> > > On Fri, 04 Jul 2025, Binbin Zhou wrote:
-> > >
-> > > > Since the display is a sub-function of the Loongson-2K BMC, when th=
-e
-> > > > BMC reset, the entire BMC PCIe is disconnected, including the displ=
-ay
-> > > > which is interrupted.
-> > > >
-> > > > Quick overview of the entire LS2K BMC reset process:
-> > > >
-> > > > There are two types of reset methods: soft reset (BMC-initiated reb=
-oot
-> > > > of IPMI reset command) and BMC watchdog reset (watchdog timeout).
-> > > >
-> > > > First, regardless of the method, an interrupt is generated (PCIe in=
-terrupt
-> > > > for soft reset/GPIO interrupt for watchdog reset);
-> > > >
-> > > > Second, during the interrupt process, the system enters bmc_reset_w=
-ork,
-> > > > clears the bus/IO/mem resources of the LS7A PCI-E bridge, waits for=
- the BMC
-> > > > reset to begin, then restores the parent device's PCI configuration=
- space,
-> > > > waits for the BMC reset to complete, and finally restores the BMC P=
-CI
-> > > > configuration space.
-> > > >
-> > > > Display restoration occurs last.
-> > > >
-> > > > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-> > > > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> > > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > Acked-by: Corey Minyard <corey@minyard.net>
-> > > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > > > ---
-> > > >  drivers/mfd/ls2k-bmc-core.c | 328 ++++++++++++++++++++++++++++++++=
-++++
-> > > >  1 file changed, 328 insertions(+)
-> > > >
-> > > > diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-cor=
-e.c
-> > > > index 50d560a4611c..1ae673f6a196 100644
-> > > > --- a/drivers/mfd/ls2k-bmc-core.c
-> > > > +++ b/drivers/mfd/ls2k-bmc-core.c
-> > > > @@ -10,8 +10,12 @@
-> > > >   */
-> > > >
-> > > >  #include <linux/aperture.h>
-> > > > +#include <linux/bitfield.h>
-> > > > +#include <linux/delay.h>
-> > > >  #include <linux/errno.h>
-> > > >  #include <linux/init.h>
-> > > > +#include <linux/iopoll.h>
-> > > > +#include <linux/kbd_kern.h>
-> > > >  #include <linux/kernel.h>
-> > > >  #include <linux/mfd/core.h>
-> > > >  #include <linux/module.h>
-> > > > @@ -19,6 +23,8 @@
-> > > >  #include <linux/pci_ids.h>
-> > > >  #include <linux/platform_data/simplefb.h>
-> > > >  #include <linux/platform_device.h>
-> > > > +#include <linux/stop_machine.h>
-> > > > +#include <linux/vt_kern.h>
-> > > >
-> > > >  /* LS2K BMC resources */
-> > > >  #define LS2K_DISPLAY_RES_START               (SZ_16M + SZ_2M)
-> > > > @@ -29,6 +35,48 @@
-> > > >  #define LS2K_IPMI3_RES_START         (LS2K_IPMI2_RES_START + LS2K_=
-IPMI_RES_SIZE)
-> > > >  #define LS2K_IPMI4_RES_START         (LS2K_IPMI3_RES_START + LS2K_=
-IPMI_RES_SIZE)
-> > > >
-> > > > +#define LS7A_PCI_CFG_SIZE            0x100
-> > > > +
-> > > > +/* LS7A bridge registers */
-> > > > +#define LS7A_PCIE_PORT_CTL0          0x0
-> > > > +#define LS7A_PCIE_PORT_STS1          0xC
-> > > > +#define LS7A_GEN2_CTL                        0x80C
-> > > > +#define LS7A_SYMBOL_TIMER            0x71C
-> > > > +
-> > > > +/* Bits of LS7A_PCIE_PORT_CTL0 */
-> > > > +#define LS2K_BMC_PCIE_LTSSM_ENABLE   BIT(3)
-> > > > +
-> > > > +/* Bits of LS7A_PCIE_PORT_STS1 */
-> > > > +#define LS2K_BMC_PCIE_LTSSM_STS              GENMASK(5, 0)
-> > > > +#define LS2K_BMC_PCIE_CONNECTED              0x11
-> > > > +
-> > > > +#define LS2K_BMC_PCIE_DELAY_US               1000
-> > > > +#define LS2K_BMC_PCIE_TIMEOUT_US     1000000
-> > > > +
-> > > > +/* Bits of LS7A_GEN2_CTL */
-> > > > +#define LS7A_GEN2_SPEED_CHANG                BIT(17)
-> > > > +#define LS7A_CONF_PHY_TX             BIT(18)
-> > > > +
-> > > > +/* Bits of LS7A_SYMBOL_TIMER */
-> > > > +#define LS7A_MASK_LEN_MATCH          BIT(26)
-> > > > +
-> > > > +/* Interval between interruptions */
-> > > > +#define LS2K_BMC_INT_INTERVAL                (60 * HZ)
-> > > > +
-> > > > +/* Maximum time to wait for U-Boot and DDR to be ready with ms. */
-> > > > +#define LS2K_BMC_RESET_WAIT_TIME     10000
-> > > > +
-> > > > +/* It's an experience value */
-> > > > +#define LS7A_BAR0_CHECK_MAX_TIMES    2000
-> > > > +
-> > > > +#define LS2K_BMC_RESET_GPIO          14
-> > > > +#define LOONGSON_GPIO_REG_BASE               0x1FE00500
-> > > > +#define LOONGSON_GPIO_REG_SIZE               0x18
-> > > > +#define LOONGSON_GPIO_OEN            0x0
-> > > > +#define LOONGSON_GPIO_FUNC           0x4
-> > > > +#define LOONGSON_GPIO_INTPOL         0x10
-> > > > +#define LOONGSON_GPIO_INTEN          0x14
-> > > > +
-> > > >  static struct resource ls2k_display_resources[] =3D {
-> > > >       DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledr=
-m-res"),
-> > > >  };
-> > > > @@ -62,6 +110,273 @@ static struct mfd_cell ls2k_bmc_cells[] =3D {
-> > > >       MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
-> > > >  };
-> > > >
-> > > > +/* Index of the BMC PCI configuration space to be restored at BMC =
-reset. */
-> > > > +struct ls2k_bmc_pci_data {
-> > > > +     u32 pci_command;
-> > > > +     u32 base_address0;
-> > > > +     u32 interrupt_line;
-> > > > +};
-> > > > +
-> > > > +/* Index of the parent PCI configuration space to be restored at B=
-MC reset. */
-> > > > +struct ls2k_bmc_bridge_pci_data {
-> > > > +     u32 pci_command;
-> > > > +     u32 base_address[6];
-> > > > +     u32 rom_addreess;
-> > > > +     u32 interrupt_line;
-> > > > +     u32 msi_hi;
-> > > > +     u32 msi_lo;
-> > > > +     u32 devctl;
-> > > > +     u32 linkcap;
-> > > > +     u32 linkctl_sts;
-> > > > +     u32 symbol_timer;
-> > > > +     u32 gen2_ctrl;
-> > > > +};
-> > > > +
-> > > > +struct ls2k_bmc_pdata {
-> > > > +     struct device *dev;
-> > > > +     struct work_struct bmc_reset_work;
-> > > > +     struct ls2k_bmc_pci_data bmc_pci_data;
-> > > > +     struct ls2k_bmc_bridge_pci_data bridge_pci_data;
-> > > > +};
-> > > > +
-> > > > +static bool ls2k_bmc_bar0_addr_is_set(struct pci_dev *ppdev)
-> > >
-> > > Nit: This is usually called pdev.
-> >
-> > OK.
->
-> Snip things you agree with please.
->
-> [...]
->
-> > > > +static void ls2k_bmc_events_fn(struct work_struct *work)
-> > > > +{
-> > > > +     struct ls2k_bmc_pdata *priv =3D container_of(work, struct ls2=
-k_bmc_pdata, bmc_reset_work);
-> > > > +
-> > > > +     /*
-> > > > +      * The PCI-E is lost when the BMC resets, at which point acce=
-ss to the PCI-E
-> > > > +      * from other CPUs is suspended to prevent a crash.
-> > > > +      */
-> > > > +     stop_machine(ls2k_bmc_recover_pci_data, priv, NULL);
-> > > > +
-> > > > +#ifdef CONFIG_VT
-> > >
-> > > #ifery in C-files is generally frowned upon.
-> > >
-> > > Is the any pieces of run-time data you can use instead?
-> > >
-> > > Or a stub which culminated in a no-op if !CONFIG_VT?
-> >
-> > Emm, I'm not sure if I understand correctly, but is the following way s=
-uitable?
-> >
-> >         if (IS_ENABLED(CONFIG_VT))
->
-> It's better than #if, but even better would be a stub in a header file.
+Although the internal implementation of copy_to_kernel_nofault also uses
+a loop and employs store word instructions for copying, I've retained
+the approach of processing each page individually. This is because I'm
+concerned that misalignment might lead to other hidden issues.
 
-Hmm... The declarations for vt_move_to_console()/set_console() are in
-two VT-related header files [1]. Adding the relevant stub functions
-involves the VT subsystem, which does not seem to be relevant to the
-subject of our patch set.
-Therefore, I think the above modification is more suitable for us.
+Currently, the tests show that not using a loop works fine, but I've
+kept this method as a precaution.
 
-[1]:
-vt_move_to_console:
-https://elixir.bootlin.com/linux/v6.15/source/include/linux/vt_kern.h#L141
-set_console: https://elixir.bootlin.com/linux/v6.15/source/include/linux/kb=
-d_kern.h#L69
-
->
-> >                 /* Re-push the display due to previous PCI-E loss. */
-> >                 set_console(vt_move_to_console(MAX_NR_CONSOLES - 1, 1))=
-;
-> >
 > > >
-> > > > +     /* Re-push the display due to previous PCI-E loss. */
-> > > > +     set_console(vt_move_to_console(MAX_NR_CONSOLES - 1, 1));
-> > > > +#endif
-> > > > +}
-> > > > +
-> > > > +static irqreturn_t ls2k_bmc_interrupt(int irq, void *arg)
-> > > > +{
-> > > > +     struct ls2k_bmc_pdata *priv =3D arg;
-> > > > +     static unsigned long last_jiffies;
-> > > > +
-> > > > +     if (system_state !=3D SYSTEM_RUNNING)
-> > > > +             return IRQ_HANDLED;
-> > > > +
-> > > > +     /* Skip interrupt in LS2K_BMC_INT_INTERVAL */
-> > > > +     if (time_after(jiffies, last_jiffies + LS2K_BMC_INT_INTERVAL)=
-) {
-> > > > +             schedule_work(&priv->bmc_reset_work);
-> > > > +             last_jiffies =3D jiffies;
-> > > > +     }
-> > > > +
-> > > > +     return IRQ_HANDLED;
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * Saves the BMC parent device (LS7A) and its own PCI configuratio=
-n space registers
-> > > > + * that need to be restored after BMC reset.
-> > > > + */
-> > > > +static void ls2k_bmc_save_pci_data(struct pci_dev *pdev, struct ls=
-2k_bmc_pdata *priv)
-> > > > +{
-> > > > +     struct pci_dev *parent =3D pdev->bus->self;
-> > > > +     int base, i =3D 0;
-> > > > +
-> > > > +     pci_read_config_dword(parent, PCI_COMMAND, &priv->bridge_pci_=
-data.pci_command);
-> > > > +
-> > > > +     for (base =3D PCI_BASE_ADDRESS_0; base <=3D PCI_BASE_ADDRESS_=
-5; base +=3D 4, i++)
-> > > > +             pci_read_config_dword(parent, base, &priv->bridge_pci=
-_data.base_address[i]);
-> > > > +
-> > > > +     pci_read_config_dword(parent, PCI_ROM_ADDRESS, &priv->bridge_=
-pci_data.rom_addreess);
-> > > > +     pci_read_config_dword(parent, PCI_INTERRUPT_LINE, &priv->brid=
-ge_pci_data.interrupt_line);
-> > > > +
-> > > > +     pci_read_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRE=
-SS_LO,
-> > > > +                           &priv->bridge_pci_data.msi_lo);
-> > > > +     pci_read_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRE=
-SS_HI,
-> > > > +                           &priv->bridge_pci_data.msi_hi);
-> > > > +
-> > > > +     pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_DEVC=
-TL,
-> > > > +                           &priv->bridge_pci_data.devctl);
-> > > > +     pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKC=
-AP,
-> > > > +                           &priv->bridge_pci_data.linkcap);
-> > > > +     pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKC=
-TL,
-> > > > +                           &priv->bridge_pci_data.linkctl_sts);
-> > > > +
-> > > > +     pci_read_config_dword(parent, LS7A_GEN2_CTL, &priv->bridge_pc=
-i_data.gen2_ctrl);
-> > > > +     priv->bridge_pci_data.gen2_ctrl |=3D FIELD_PREP(LS7A_GEN2_SPE=
-ED_CHANG, 0x1)
-> > > > +                                     | FIELD_PREP(LS7A_CONF_PHY_TX=
-, 0x0);
-> > > > +
-> > > > +     pci_read_config_dword(parent, LS7A_SYMBOL_TIMER, &priv->bridg=
-e_pci_data.symbol_timer);
-> > > > +     priv->bridge_pci_data.symbol_timer |=3D LS7A_MASK_LEN_MATCH;
-> > > > +
-> > > > +     pci_read_config_dword(pdev, PCI_COMMAND, &priv->bmc_pci_data.=
-pci_command);
-> > > > +     pci_read_config_dword(pdev, PCI_BASE_ADDRESS_0, &priv->bmc_pc=
-i_data.base_address0);
-> > > > +     pci_read_config_dword(pdev, PCI_INTERRUPT_LINE, &priv->bmc_pc=
-i_data.interrupt_line);
-> > > > +}
-> > > > +
-> > > > +static int ls2k_bmc_pdata_initial(struct pci_dev *pdev, struct ls2=
-k_bmc_pdata *priv)
-> > > > +{
-> > > > +     int gsi =3D 16 + (LS2K_BMC_RESET_GPIO & 7);
-> > > > +     void __iomem *gpio_base;
-> > > > +     int irq, ret;
-> > > > +
-> > > > +     ls2k_bmc_save_pci_data(pdev, priv);
-> > > > +
-> > > > +     INIT_WORK(&priv->bmc_reset_work, ls2k_bmc_events_fn);
-> > > > +
-> > > > +     ret =3D devm_request_irq(&pdev->dev, pdev->irq, ls2k_bmc_inte=
-rrupt,
-> > > > +                            IRQF_SHARED | IRQF_TRIGGER_FALLING, "l=
-s2kbmc pcie", priv);
-> > > > +     if (ret) {
-> > > > +             dev_err(priv->dev, "LS2KBMC PCI-E request_irq(%d) fai=
-led\n", pdev->irq);
-> > >
-> > > Please don't use function names in error messages.
-> > >
-> > > Make them human readable inclusive of non-kernel engineers.
-> >
-> > How about:
-> >
-> > dev_err(ddata->dev, "Failed to request LS2KBMC PCI-E IRQ %d.\n", pdev->=
-irq);
-> >
-> > also, the error message regarding GPIO IRQ is as follows:
-> >
-> > dev_err(ddata->dev, "Failed to request LS2KBMC GPIO IRQ %d.\n", irq);
->
-> Yes, much better.
->
-> [...]
->
-> > > > +     priv =3D devm_kzalloc(&dev->dev, sizeof(*priv), GFP_KERNEL);
-> > > > +     if (IS_ERR(priv)) {
-> > > > +             ret =3D -ENOMEM;
-> > > > +             goto disable_pci;
-> > > > +     }
-> > > > +
-> > > > +     priv->dev =3D &dev->dev;
-> > > > +
-> > > > +     ret =3D ls2k_bmc_pdata_initial(dev, priv);
-> > >
-> > > priv (ddata) already contains dev - you don't need both.
-> >
-> > Yes, we just pass priv(ddata), and
-> >
-> > struct pci_dev *pdev =3D to_pci_dev(ddata->dev);
->
-> I would pass dev ... hold on, where do you store priv for reuse?
-
-Sorry, I am not entirely sure I understand your question. It does not
-appear that priv needs to be reused.
->
-> > > > +     if (ret)
-> > > > +             goto disable_pci;
-> > > > +
-> > > >       ret =3D ls2k_bmc_parse_mode(dev, &pd);
-> > > >       if (ret)
-> > > >               goto disable_pci;
-> > > > --
-> > > > 2.47.1
+> > > >
+> > > > > This larch_insn_text_copy() can be part of the first patch like
+> > > > > larch_insn_gen_{beq,bne}. WDYT ?
+> > > >
+> > > > From my perspective, it is acceptable to include both
+> > > > larch_insn_text_copy and larch_insn_gen_{beq,bne} in the same patch,
+> > > > or place them in the bpf_arch_xxxx patch. larch_insn_text_copy is
+> > > > solely used for BPF; the application scope of larch_insn_gen_{beq,bne}
+> > > > is not limited to BPF.
 > > > >
 > > >
-> > > --
-> > > Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> > > The implementation of larch_insn_text_copy() seems generic.
 > >
-> > --
-> > Thanks.
-> > Binbin
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> > The use of larch_insn_text_copy() requires page_size alignment.
+> > Currently, only the size of the trampoline is page-aligned.
+> >
+> 
+> Then clearly document it.
 
---
-Thanks.
-Binbin
+Okay, I will provide an explanation in the next version of the commit.
+
+> 
+> > >
+> > > > >
+> > > > > > +       raw_spin_unlock_irqrestore(&patch_lock, flags);
+> > > > > > +       set_memory_rox((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
+> > > > > > +
+> > > > > > +       if (!ret)
+> > > > > > +               flush_icache_range((unsigned long)dst, (unsigned long)dst + len);
+> > > > > > +
+> > > > > > +       return ret;
+> > > > > > +}
+> > > > > > +
+> > > > > >  u32 larch_insn_gen_nop(void)
+> > > > > >  {
+> > > > > >         return INSN_NOP;
+> > > > > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> > > > > > index 7032f11d3..9cb01f0b0 100644
+> > > > > > --- a/arch/loongarch/net/bpf_jit.c
+> > > > > > +++ b/arch/loongarch/net/bpf_jit.c
+> > > > > > @@ -4,6 +4,7 @@
+> > > > > >   *
+> > > > > >   * Copyright (C) 2022 Loongson Technology Corporation Limited
+> > > > > >   */
+> > > > > > +#include <linux/memory.h>
+> > > > > >  #include "bpf_jit.h"
+> > > > > >
+> > > > > >  #define REG_TCC                LOONGARCH_GPR_A6
+> > > > > > @@ -1367,3 +1368,92 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+> > > > > >  {
+> > > > > >         return true;
+> > > > > >  }
+> > > > > > +
+> > > > > > +static int emit_jump_and_link(struct jit_ctx *ctx, u8 rd, u64 ip, u64 target)
+> > > > > > +{
+> > > > > > +       s64 offset = (s64)(target - ip);
+> > > > > > +
+> > > > > > +       if (offset && (offset >= -SZ_128M && offset < SZ_128M)) {
+> > > > > > +               emit_insn(ctx, bl, offset >> 2);
+> > > > > > +       } else {
+> > > > > > +               move_imm(ctx, LOONGARCH_GPR_T1, target, false);
+> > > > > > +               emit_insn(ctx, jirl, rd, LOONGARCH_GPR_T1, 0);
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       return 0;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_call)
+> > > > > > +{
+> > > > > > +       struct jit_ctx ctx;
+> > > > > > +
+> > > > > > +       ctx.idx = 0;
+> > > > > > +       ctx.image = (union loongarch_instruction *)insns;
+> > > > > > +
+> > > > > > +       if (!target) {
+> > > > > > +               emit_insn((&ctx), nop);
+> > > > > > +               emit_insn((&ctx), nop);
+> > > > > > +               return 0;
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LOONGARCH_GPR_ZERO,
+> > > > > > +                                 (unsigned long)ip, (unsigned long)target);
+> > > > > > +}
+> > > > > > +
+> > > > > > +int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
+> > > > > > +                      void *old_addr, void *new_addr)
+> > > > > > +{
+> > > > > > +       u32 old_insns[5] = {[0 ... 4] = INSN_NOP};
+> > > > > > +       u32 new_insns[5] = {[0 ... 4] = INSN_NOP};
+> > > > > > +       bool is_call = poke_type == BPF_MOD_CALL;
+> > > > > > +       int ret;
+> > > > > > +
+> > > > > > +       if (!is_kernel_text((unsigned long)ip) &&
+> > > > > > +               !is_bpf_text_address((unsigned long)ip))
+> > > > > > +               return -ENOTSUPP;
+> > > > > > +
+> > > > > > +       ret = gen_jump_or_nops(old_addr, ip, old_insns, is_call);
+> > > > > > +       if (ret)
+> > > > > > +               return ret;
+> > > > > > +
+> > > > > > +       if (memcmp(ip, old_insns, 5 * 4))
+> > > > > > +               return -EFAULT;
+> > > > > > +
+> > > > > > +       ret = gen_jump_or_nops(new_addr, ip, new_insns, is_call);
+> > > > > > +       if (ret)
+> > > > > > +               return ret;
+> > > > > > +
+> > > > > > +       mutex_lock(&text_mutex);
+> > > > > > +       if (memcmp(ip, new_insns, 5 * 4))
+> > > > > > +               ret = larch_insn_text_copy(ip, new_insns, 5 * 4);
+> > > > > > +       mutex_unlock(&text_mutex);
+> > > > > > +       return ret;
+> > > > > > +}
+> > > > > > +
+> > > > > > +int bpf_arch_text_invalidate(void *dst, size_t len)
+> > > > > > +{
+> > > > > > +       int i;
+> > > > > > +       int ret = 0;
+> > > > > > +       u32 *inst;
+> > > > > > +
+> > > > > > +       inst = kvmalloc(len, GFP_KERNEL);
+> > > > > > +       if (!inst)
+> > > > > > +               return -ENOMEM;
+> > > > > > +
+> > > > > > +       for (i = 0; i < (len/sizeof(u32)); i++)
+> > > > > > +               inst[i] = INSN_BREAK;
+> > > > > > +
+> > > > > > +       if (larch_insn_text_copy(dst, inst, len))
+> > > > > > +               ret = -EINVAL;
+> > > > > > +
+> > > > > > +       kvfree(inst);
+> > > > > > +       return ret;
+> > > > > > +}
+> > > > > > +
+> > > > > > +void *bpf_arch_text_copy(void *dst, void *src, size_t len)
+> > > > > > +{
+> > > > > > +       if (larch_insn_text_copy(dst, src, len))
+> > > > > > +               return ERR_PTR(-EINVAL);
+> > > > > > +
+> > > > > > +       return dst;
+> > > > > > +}
+> > > > > > --
+> > > > > > 2.43.0
+> > > > > >
