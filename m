@@ -1,201 +1,115 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE94D19DF62
-	for <loongarch@lists.linux.dev>; Mon, 21 Jul 2025 09:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D1CDDBC;
+	Mon, 21 Jul 2025 19:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753089178; cv=none; b=DcubjSZ8COsUNXiJ169rqz4AqTksYjds1fS0HufSueHsfzEpTyX1NYdndUEI1AzNtwOSmIfOfuNzkkJpcGrTedxkOXJ0g9KKdijaZomaDNCuttpIPPGp1EWPKBXuO4duxq4h3ioLuVQoNe9CK9qur9ErlpqE7VTG7tFGWLLoAgQ=
+	t=1753125616; cv=none; b=iDxJ1B47zFHzdboP2bymWVKjTqeGP8FzpTydbpw8o6q2hEye953gACIiGb+tSMylsIeROyZ1B/NYALLbKFuRphZc0kE3UAdC5A1cvuHjMhQ4skKc/ktsfdU6JZD69F3D776NRj4rjouPZdmdyfovsd1EMB0vajfKoRuYJJos4Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753089178; c=relaxed/simple;
-	bh=X5IuqxopbgrZ/xk/4Rm96XqTv5uL59yd4KWknf5JCvY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bQaViAP5EPOc0KBQy6biQG2sXIjDs1ER5bav7CIvjLxWN0RRQNBV3FZYdQpNBtOOA/vXxHAJzRROM3e837AbcAr50eGbYWr8QecXcdYHl1G/uzpxM94PojYujfjTOMEr8OG2NY0z/qUsVjnyp5OK5++yRDLvu/cnN8cYSqHoY7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxaWqSBH5oWbQuAQ--.33437S3;
-	Mon, 21 Jul 2025 17:12:50 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBxzsGRBH5oOfofAA--.9767S2;
-	Mon, 21 Jul 2025 17:12:49 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Xi Ruoyao <xry111@xry111.site>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Implement physical address with ELF program header
-Date: Mon, 21 Jul 2025 17:12:48 +0800
-Message-Id: <20250721091248.3896152-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1753125616; c=relaxed/simple;
+	bh=xhtisyzoBwlNkJmQTCOxXemXyPJVKO0cr138G02nRhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oERhk1uorxrZ3EcPzTdFxyeHjiE52pp2/1K06SJxg+BC8vQad2Me2A0FmPQBzpxmpGzQB2J/UDKyOvUkP/n25GjaBmJISVPeyY9AfAwPUIGWEptnoJ30lEvx5me3+BJLpnogTTLf5BV9NmJLawteFwD4X4LWTEz4UqkGfBpXbVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mDWcs8/F; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mDWcs8/F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753125615; x=1784661615;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xhtisyzoBwlNkJmQTCOxXemXyPJVKO0cr138G02nRhs=;
+  b=mDWcs8/FkL8N1dbVPMqGcU56H+Yumi756YkiM0Ybq0Gz9/jEKOt6HsIM
+   UIqZ5Ng3Pmz3Tt40+A5+5jLssHi33E+0UclucUnX+QIhadpCyEFHfTSOW
+   y2gI5+6YYKkxa97M8U9NjKcUPIIVqGddlkbX9O+XGhkEvWPEv3W40p1Kg
+   qHpIuSXrLBdROiuAeV5k69D+NIXTteBFIXlc5bTXEcG+a2f2dGiqTBicZ
+   N60E5XLhlVYBNEm5ts1V22ZagciZepVFJr4JdQeXGXs1fVHQSD5LPG0Je
+   /McRwItST08HDJEVcQRy6ZXeMibYKCtBg5DipAHStj193b+xEBOKyZvso
+   A==;
+X-CSE-ConnectionGUID: 5myzru4VSZSDpHCFT71Fbw==
+X-CSE-MsgGUID: pj0uPxKVRvuIXvpxl7rbTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="59011201"
+X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
+   d="scan'208";a="59011201"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 12:20:11 -0700
+X-CSE-ConnectionGUID: hO1DNSXTSjCb4IeSVxltNg==
+X-CSE-MsgGUID: xMZ/FCWPSF+/+cH+xkHUgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
+   d="scan'208";a="189905963"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 21 Jul 2025 12:20:09 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1udw3S-000H6H-12;
+	Mon, 21 Jul 2025 19:20:06 +0000
+Date: Tue, 22 Jul 2025 03:19:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	WANG Xuerui <kernel@xen0n.name>, Xi Ruoyao <xry111@xry111.site>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] LoongArch: Implement physical address with ELF
+ program header
+Message-ID: <202507220309.mDl9W32Y-lkp@intel.com>
+References: <20250721091248.3896152-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxzsGRBH5oOfofAA--.9767S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250721091248.3896152-1-maobibo@loongson.cn>
 
-With structure elf64_phdr, field p_paddr is physical address of the
-segment. And it is convenient for qemu to calculate the physical
-address when directly boot ELF kernel image.
+Hi Bibo,
 
-Otherwise QEMU needs convert virtual address p_vaddr into physical
-address, the conversion logic assumes that DMW method is used where
-48 bit physical address is supported. However with direct MMU mapping
-method with start address from 0xFFFF800000000000, only 47 bit physical
-address is supported. QEMU cannot assume the kernel behavior at kernel
-loading stage.
+kernel test robot noticed the following build errors:
 
-Here add physical address indication in ELF program header, it is
-convenient to get physical kernel loading address.
+[auto build test ERROR on 89be9a83ccf1f88522317ce02f854f30d6115c41]
 
-Here is output with command readelf -l vmlinux with patch:
-  Elf file type is EXEC (Executable file)
-  Entry point 0x90000000015f5000
-  There are 2 program headers, starting at offset 64
-  Program Headers:
-    Type           Offset             VirtAddr           PhysAddr
-                   FileSiz            MemSiz              Flags  Align
-    LOAD           0x0000000000010000 0x9000000000200000 0x0000000000200000
-                   0x000000000293b000 0x0000000002a79b98  RWE    0x10000
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-Implement-physical-address-with-ELF-program-header/20250721-171418
+base:   89be9a83ccf1f88522317ce02f854f30d6115c41
+patch link:    https://lore.kernel.org/r/20250721091248.3896152-1-maobibo%40loongson.cn
+patch subject: [PATCH v2] LoongArch: Implement physical address with ELF program header
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20250722/202507220309.mDl9W32Y-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 853c343b45b3e83cc5eeef5a52fc8cc9d8a09252)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250722/202507220309.mDl9W32Y-lkp@intel.com/reproduce)
 
-And output with command readelf -l vmlinux without the patch:
-  Elf file type is EXEC (Executable file)
-  Entry point 0x90000000015f5000
-  There are 2 program headers, starting at offset 64
-  Program Headers:
-    Type           Offset             VirtAddr           PhysAddr
-                   FileSiz            MemSiz              Flags  Align
-    LOAD           0x0000000000010000 0x9000000000200000 0x9000000000200000
-                   0x000000000293b000 0x0000000002a79b98  RWE    0x10000
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507220309.mDl9W32Y-lkp@intel.com/
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
-v1 ... v2:
-  1. Set LOAD_OFFSET with PAGE_OFFSET rather than CACHE_BASE, since it
-     is generic with PAGE_OFFSET.
-  2. Add AT information with missing edata_padding section. 
----
- arch/loongarch/kernel/vmlinux.lds.S | 36 +++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+All errors (new ones prefixed by >>):
 
-diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-index 08ea921cdec1..8ce6b0d948f4 100644
---- a/arch/loongarch/kernel/vmlinux.lds.S
-+++ b/arch/loongarch/kernel/vmlinux.lds.S
-@@ -3,10 +3,12 @@
- #include <asm/asm-offsets.h>
- #include <asm/thread_info.h>
- #include <asm/orc_lookup.h>
-+#include <asm/addrspace.h>
- 
- #define PAGE_SIZE _PAGE_SIZE
- #define RO_EXCEPTION_TABLE_ALIGN	4
- #define PHYSADDR_MASK			0xffffffffffff /* 48-bit */
-+#define LOAD_OFFSET			PAGE_OFFSET
- 
- /*
-  * Put .bss..swapper_pg_dir as the first thing in .bss. This will
-@@ -42,7 +44,7 @@ SECTIONS
- 
- 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
- 	_stext = .;
--	.text : {
-+	.text : AT(ADDR(.text) - LOAD_OFFSET) {
- 		TEXT_TEXT
- 		SCHED_TEXT
- 		LOCK_TEXT
-@@ -60,7 +62,7 @@ SECTIONS
- 	__inittext_begin = .;
- 
- 	INIT_TEXT_SECTION(PAGE_SIZE)
--	.exit.text : {
-+	.exit.text : AT(ADDR(.exit.text) - LOAD_OFFSET) {
- 		EXIT_TEXT
- 	}
- 
-@@ -82,7 +84,7 @@ SECTIONS
- 	}
- 
- 	INIT_DATA_SECTION(16)
--	.exit.data : {
-+	.exit.data : AT(ADDR(.exit.data) - LOAD_OFFSET) {
- 		EXIT_DATA
- 	}
- 
-@@ -90,7 +92,7 @@ SECTIONS
- 	PERCPU_SECTION(1 << CONFIG_L1_CACHE_SHIFT)
- #endif
- 
--	.init.bss : {
-+	.init.bss : AT(ADDR(.init.bss) - LOAD_OFFSET) {
- 		*(.init.bss)
- 	}
- 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
-@@ -101,27 +103,34 @@ SECTIONS
- 	_sdata = .;
- 	RO_DATA(4096)
- 
--	.got : ALIGN(16) { *(.got) }
--	.plt : ALIGN(16) { *(.plt) }
--	.got.plt : ALIGN(16) { *(.got.plt) }
-+	. =  ALIGN(16);
-+	.got : AT(ADDR(.got) - LOAD_OFFSET) { *(.got) }
-+	. =  ALIGN(16);
-+	.plt : AT(ADDR(.plt) - LOAD_OFFSET) { *(.plt) }
-+	. =  ALIGN(16);
-+	.got.plt : AT(ADDR(.got.plt) - LOAD_OFFSET) { *(.got.plt) }
- 
- 	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
- 
--	.rela.dyn : ALIGN(8) {
-+	. = ALIGN(8);
-+	.rela.dyn : AT(ADDR(.rela.dyn) - LOAD_OFFSET) {
- 		__rela_dyn_begin = .;
- 		 *(.rela.dyn) *(.rela*)
- 		__rela_dyn_end = .;
- 	}
- 
- #ifdef CONFIG_RELR
--	.relr.dyn : ALIGN(8) {
-+	. = ALIGN(8);
-+	.relr.dyn : AT(ADDR(.relr.dyn) - LOAD_OFFSET) {
- 		__relr_dyn_begin = .;
- 		 *(.relr.dyn)
- 		__relr_dyn_end = .;
- 	}
- #endif
- 
--	.data.rel : { *(.data.rel*) }
-+	.data.rel : AT(ADDR(.data.rel) - LOAD_OFFSET) {
-+		*(.data.rel*)
-+	}
- 
- #ifdef CONFIG_RELOCATABLE
- 	. = ALIGN(8);
-@@ -134,10 +143,13 @@ SECTIONS
- 
- 	ORC_UNWIND_TABLE
- 
--	.sdata : {
-+	.sdata : AT(ADDR(.sdata) - LOAD_OFFSET) {
- 		*(.sdata)
- 	}
--	.edata_padding : { BYTE(0); . = ALIGN(PECOFF_FILE_ALIGN); }
-+	.edata_padding : AT(ADDR(.edata_padding) - LOAD_OFFSET) {
-+		BYTE(0);
-+		. = ALIGN(PECOFF_FILE_ALIGN);
-+	}
- 	_edata =  .;
- 
- 	BSS_SECTION(0, SZ_64K, 8)
+>> ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:15: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:18: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:33: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:34: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:41: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:46: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:47: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:50: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
+   ld.lld: error: too many errors emitted, stopping now (use --error-limit=0 to see all errors)
 
-base-commit: 89be9a83ccf1f88522317ce02f854f30d6115c41
 -- 
-2.39.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
