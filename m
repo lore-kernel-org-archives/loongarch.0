@@ -1,145 +1,96 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E822EBDD8
-	for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 14:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEFF2ECE9D;
+	Tue, 22 Jul 2025 14:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753193369; cv=none; b=HxbIp+gbBZa/fMoRcP2Hjku3y5QAqTK7rKg5rJT+pMSwsdDgScHQRNBPKP6Qf5/FfjbZbf16ne0ZY665me5TEuQQu6fLCmntOMf5fJbhb3YJwkcYHkIQxyPG2o8aXzSd5QsEJDmz5dGM0mn2ui0+Ca3D3sEJSnvqAaf5pzgNoT0=
+	t=1753193783; cv=none; b=AmwJsljSeXGz776vrM/WNbC9b3ExERVN5wbz6icxkc1gaU/ISEhwtehR+GJXWDk+x9xafLbobajNgd9SeI3qOtWQFD1RvjVCDhBQJ24bogHAmpbkcrgxAbMVPv+fTloCmjyXVy8NIkunMmrx0R1NIetuKGCyV7j+RxGZfjn2Vt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753193369; c=relaxed/simple;
-	bh=USZCbimKAI5U38SQkb+cFApM81Y/jORMtvbYcAo1IlE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sIEWeatXrg1rLT+biKLkv2pOOSswVg44lzKpsM+ysT4MP+YD//1YPcpSFvESsTv8H+PBjOs5S3O4eDRxkPgKzQ8Mt1bQxGvnHV3YBL/jdp0fJMlXneL+TE8SALauTqNdCM2Lsc/gQFvEe5gfTsjj8dc4vMywcBNqH/XG8WfmhFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkM1lVkg; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753193783; c=relaxed/simple;
+	bh=lvlIsTL0552lQuywV3G4MsYNUlFAfmcSfSeYBIIh/yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9Jra0yhnYPvg42YUGwLAUwjRVqgZOPGb0IzhAVvhdgzdTo/pbt2tZvQXK7nW14HfRI1Dly5Ib8X6PvFYoUaUmr8H6pl1Z3bOYLN9NfeGKrILHop8pTcacYWbVIieGBkVbNPHUDJYQFlCBA9qFxmheO1S0X4wH92I8r7jPVyJQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ei5JrRZT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkM1lVkg"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32ce252c3acso25101161fa.1
-        for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 07:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753193365; x=1753798165; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z72Y4lywtzmWJK50j4gaS5KcylDNvYHYQchCkK6Shzo=;
-        b=GkM1lVkgERLZWiUAmWLOboyYNmqKJjwOLCxKccqn+zKGpfBnbeLUkVVGFveQmNQRjz
-         1O4zgVt6mxoASi56vXCnuKg/gTUkSa5zKB2aHmjXrUGfvN6R0262Qj9zfsLYQuHVCn1F
-         QjB1Iat3yiZSJtuiawD89YYRS6On3RbQzoBZIBJrBNojCugmUzehNXYvT1aD3pUzqnH2
-         lZBMkIq8NB7eBjOy1o7vaMzLlTcHOHq80t+1NpqdmSOBjev+Gytr8CTf1ICwOpLVTFy9
-         r+SX0sJIZDe9gRVOzCN5hFToTomf5hxNjUy+zlcrDN/nR5oFoEfVibJK6uAJK3Ss2pkL
-         Mf+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753193365; x=1753798165;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z72Y4lywtzmWJK50j4gaS5KcylDNvYHYQchCkK6Shzo=;
-        b=LFN6zCc0sx9ZUGzSS6qbc8YH992ZIKTCxe1FowYHhl6BMZbaSOLiguJB/fzitZwLCA
-         ZXViSFLdnuTAs3k/fTAwz1MUxQsu6qTKgbQAaLtOOFjPFEQYlXCneeTu6HW9q+hQHG91
-         SBHE+w0uUdtYIx+kSpFbHXABylUzEwENC7hYBq8kop7cQEKMJQ8Tab1E7kQt7a14pI7M
-         IkGcGuAm+E6g8ybIpi6x2E3EhmMmQa0ngCJHzTffwMolvKrg8vpjI1giU2Ij/EJYuklV
-         vaRd3MR4gOfrrFt3FM0xjLT25ryRUQHE8Tvqd/NIh+61pVNM/eOyzidEWAsolX6GDRq0
-         XYBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVH6wquscVnyxIU7HStjgSzm2TzvfNdEO2aL+NSgBBzPAbJLcb4jdCDN6i5nwLundvVbyAAZkKjfzo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzystJ3yXlvvooYkgMn+VcWU1aE7+5llgrTcLBPozfwfNkPmNCf
-	abnFecBvmfPNAPg7qSSOEBB8bEd3Pq9JVQdl7+qQ5MaQu5ioI/188u9emIcRIphS6VeFJ6dKWNr
-	7N7vhvlNCr04kQ7cXBkRzDAhpDoSg4Sk=
-X-Gm-Gg: ASbGncscei49B9Vetsw7zl/ne27k3a0n79V2ovnFNJPKPXzNUIi+rWstj5m/1bk1RF7
-	gghQ2P81H3FGD8U/X3mylcDT+8OUCYZpHiGXeIlcIVAJfi4YXZmxwV9axOOp6LyqS8px+O4eyxd
-	zt6hFtrbo/A6/nlRFB4pfZmzFvyHBps7Zh0Lb4G1vq56wZIYjshTuqGeZEaJEG+3NL9MhTmXpNy
-	D5cbXM=
-X-Google-Smtp-Source: AGHT+IHxVK00NMC1GHSpVq/sT2EfSuq7omX6wX24xSvgGhrc9yg0F8isqB5neLuF1et0yPorDOiVEfN1u9rtptu/xSU=
-X-Received: by 2002:a05:651c:4110:b0:32a:885b:d0f with SMTP id
- 38308e7fff4ca-3308f5e2852mr36383791fa.24.1753193364861; Tue, 22 Jul 2025
- 07:09:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ei5JrRZT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B386DC4CEEB;
+	Tue, 22 Jul 2025 14:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1753193783;
+	bh=lvlIsTL0552lQuywV3G4MsYNUlFAfmcSfSeYBIIh/yY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ei5JrRZTyN4C5B/4kFm4mwRhz+yqyweq7Xu0VMe2JC6B36JyEJjvIhc0YpT2ob8/3
+	 uIgaSeOb/sndGFzmsiBkJyC+aljVAtzdyWS/X4+aylan5gA6gM89fmmOlI1Hv+6l5T
+	 FMUDpu5MUXtgb06TpotvnTRYwnOAeo49xyDNAkks=
+Date: Tue, 22 Jul 2025 16:08:09 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] syscore: Pass context data to callbacks
+Message-ID: <2025072218-decipher-spree-327d@gregkh>
+References: <20250717103241.2806798-1-thierry.reding@gmail.com>
+ <2025071716-phoney-object-1648@gregkh>
+ <rzbzah5iigz25jtxyqadnitkzkazxsaxntajhlfrfdslyioevk@pylcjkfh5n42>
+ <2025071919-patience-cattishly-cf7c@gregkh>
+ <l54i36uk33je744w4f47tehdopk5dsjotvozfv5b2hehmxrwpq@eins7awyq4dy>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250717142732.292822-1-snovitoll@gmail.com> <20250717142732.292822-8-snovitoll@gmail.com>
- <c8b0be89-6c89-46ed-87c3-8905b6ccbbeb@gmail.com>
-In-Reply-To: <c8b0be89-6c89-46ed-87c3-8905b6ccbbeb@gmail.com>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Tue, 22 Jul 2025 19:09:07 +0500
-X-Gm-Features: Ac12FXxpDsEYsUfFuRK9xdlLStcuqGTW4Nrf9JrgjFdTiyEs4CW8gE7SGsQYdo4
-Message-ID: <CACzwLxgjKz-bc1w4SvGu-EeoMvK9Dh=2WpB-A_zC-u7H38QqVg@mail.gmail.com>
-Subject: Re: [PATCH v3 07/12] kasan/loongarch: select ARCH_DEFER_KASAN and
- call kasan_init_generic
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: hca@linux.ibm.com, christophe.leroy@csgroup.eu, andreyknvl@gmail.com, 
-	agordeev@linux.ibm.com, akpm@linux-foundation.org, glider@google.com, 
-	dvyukov@google.com, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <l54i36uk33je744w4f47tehdopk5dsjotvozfv5b2hehmxrwpq@eins7awyq4dy>
 
-On Tue, Jul 22, 2025 at 4:00=E2=80=AFAM Andrey Ryabinin <ryabinin.a.a@gmail=
-.com> wrote:
->
->
->
-> On 7/17/25 4:27 PM, Sabyrzhan Tasbolatov wrote:
->
-> > diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/includ=
-e/asm/kasan.h
-> > index 62f139a9c87..0e50e5b5e05 100644
-> > --- a/arch/loongarch/include/asm/kasan.h
-> > +++ b/arch/loongarch/include/asm/kasan.h
-> > @@ -66,7 +66,6 @@
-> >  #define XKPRANGE_WC_SHADOW_OFFSET    (KASAN_SHADOW_START + XKPRANGE_WC=
-_KASAN_OFFSET)
-> >  #define XKVRANGE_VC_SHADOW_OFFSET    (KASAN_SHADOW_START + XKVRANGE_VC=
-_KASAN_OFFSET)
-> >
-> > -extern bool kasan_early_stage;
-> >  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
-> >
-> >  #define kasan_mem_to_shadow kasan_mem_to_shadow
-> > @@ -75,12 +74,6 @@ void *kasan_mem_to_shadow(const void *addr);
-> >  #define kasan_shadow_to_mem kasan_shadow_to_mem
-> >  const void *kasan_shadow_to_mem(const void *shadow_addr);
-> >
-> > -#define kasan_arch_is_ready kasan_arch_is_ready
-> > -static __always_inline bool kasan_arch_is_ready(void)
-> > -{
-> > -     return !kasan_early_stage;
-> > -}
-> > -
-> >  #define addr_has_metadata addr_has_metadata
-> >  static __always_inline bool addr_has_metadata(const void *addr)
-> >  {
-> > diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_i=
-nit.c
-> > index d2681272d8f..cf8315f9119 100644
-> > --- a/arch/loongarch/mm/kasan_init.c
-> > +++ b/arch/loongarch/mm/kasan_init.c
-> > @@ -40,11 +40,9 @@ static pgd_t kasan_pg_dir[PTRS_PER_PGD] __initdata _=
-_aligned(PAGE_SIZE);
-> >  #define __pte_none(early, pte) (early ? pte_none(pte) : \
-> >  ((pte_val(pte) & _PFN_MASK) =3D=3D (unsigned long)__pa(kasan_early_sha=
-dow_page)))
-> >
-> > -bool kasan_early_stage =3D true;
-> > -
-> >  void *kasan_mem_to_shadow(const void *addr)
-> >  {
-> > -     if (!kasan_arch_is_ready()) {
-> > +     if (!kasan_enabled()) {
->
-> This doesn't make sense, !kasan_enabled() is compile-time check which is =
-always false here.
+On Tue, Jul 22, 2025 at 03:56:40PM +0200, Thierry Reding wrote:
+> On Sat, Jul 19, 2025 at 08:52:41AM +0200, Greg Kroah-Hartman wrote:
+> > On Fri, Jul 18, 2025 at 03:49:37PM +0200, Thierry Reding wrote:
+> > > On Thu, Jul 17, 2025 at 02:11:41PM +0200, Greg Kroah-Hartman wrote:
+> > > > On Thu, Jul 17, 2025 at 12:32:34PM +0200, Thierry Reding wrote:
+> [...]
+> > > 	struct syscore;
+> > > 
+> > > 	struct syscore_ops {
+> > > 		int (*suspend)(struct syscore *syscore);
+> > > 		void (*resume)(struct syscore *syscore);
+> > > 		void (*shutdown)(struct syscore *syscore);
+> > > 	};
+> > > 
+> > > 	struct syscore {
+> > > 		const struct syscore_ops *ops;
+> > > 		struct list_head node;
+> > > 	};
+> > > 
+> > > Is that what you had in mind?
+> > 
+> > I missed the list_head, so yes, this would be better, but don't pass
+> > back the syscore structure, how about just a void * instead, making the
+> > whole container_of() stuff go away?
+> 
+> Yeah, that's a possibility. I personally don't like passing the void *
+> around because it's easier to make mistakes that way. I also find it
+> unintuitive because it doesn't immediately show you what the functions
+> expect.
+> 
+> My understanding is that the container_of() should get optimized away
+> most of the time, so there aren't any obvious downsides that I can see.
 
-I should've used `!kasan_shadow_initialized()` check here which provides
-the needed runtime behavior that kasan_early_stage used to provide.
-Will do in v4. Thanks!
+container_of() is just pointer math, but a cast is even faster :)
 
->
-> >               return (void *)(kasan_early_shadow_page);
-> >       } else {
-> >               unsigned long maddr =3D (unsigned long)addr;
+> But I don't feel very strongly, so if you have a strong preference for
+> void pointers, I can do that.
+
+That's what you really want to have here, it's a syscore data type
+thing, that the callback wants to reference.  Just like a irqrequest_t
+function passes back a void * that the handler "knows" how to deal with
+properly.
+
+thanks,
+
+greg k-h
