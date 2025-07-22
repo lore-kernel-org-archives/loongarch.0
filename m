@@ -1,157 +1,116 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2798EAC6;
-	Tue, 22 Jul 2025 09:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BBDC2D46A1
+	for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 09:10:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753175249; cv=none; b=oYmv4j3y80W680HfTleeTgyOpMqKXKrSBSQiug6Qme5TBD2TpnhoPoHzTBy0VwIMgU9e4dQdZCMkGtfj4SHpjBi42o2J6A+7uok/a7MtetYs9KjNe072knqZeryXkmtALHKz+QYzUNvencHz1mMqADunpYOX+uSVO8lBKel4BNg=
+	t=1753175452; cv=none; b=R3zOIzgNNnbv7ZzueHXcKl6i3VadjY5FhNBYZqpgkgEge+wEk5tk+OLZA+Q/FW+XJedDJuCOCNWzBb+9KeKD0/gbPOJGwmM8SYiVlq4C2rl9+irs+0ezTc1WFSajz/azq2G73fFFFCvQVvlf+tu2d4KlN+/RlbBzhrZxRT/zN8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753175249; c=relaxed/simple;
-	bh=uu7YEV+sBYy0lZ9HJM6cHIKZrL33VDKt+RK+6r+PsbI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=TYpgD5YC4TsDbx10Gn6V03FeMc4bSVuoEQgg1QR57GJjDa5qoOD3x02+M5rAvA+8O/Yv7B/skSSlzZLdwZ2pRzWN8URyT3kv1AHV4F0o09C1zaTfpOnc2bi3dLEgm9suRic7bYno9297xVo09decH3Sn75w61no4c/wmM9p0F2Q=
+	s=arc-20240116; t=1753175452; c=relaxed/simple;
+	bh=mVjKQgZfplp8Rbpz5r9JMrSON999RaUKNUbVPI2VShI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D5PBXfQQ9j6CR5NXRx8TkVGz7Dx+fawFEE9qipgfTfyVSJHp97TBDs7bkKJAURPq27iwzqSspUyjK4bYQzwAl+BDRo5XYzWf1F3hHv7TJa6yOo15cNUBaRylK1IEENAKJOsI56Gy5ppq+CefwEdIOD8lE6lA24wTNYX/O8+PGYo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxjazDVH9oZX4vAQ--.63058S3;
-	Tue, 22 Jul 2025 17:07:15 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxE+S4VH9ohbEhAA--.44151S3;
-	Tue, 22 Jul 2025 17:07:06 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: Implement physical address with ELF program
- header
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
- oe-kbuild-all@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>,
- Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250721091248.3896152-1-maobibo@loongson.cn>
- <202507220309.mDl9W32Y-lkp@intel.com>
- <7a5789f1-d6a5-3892-98c1-2c4b8515459d@loongson.cn>
- <CAAhV-H74EpbKsPpc_ToGqP6LKx04z+Dvyuw52u-1A4nQ-wr6WQ@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <d6b6aaa8-06f2-1b0d-5ebc-e7a71a20dd7a@loongson.cn>
-Date: Tue, 22 Jul 2025 17:05:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [223.64.68.193])
+	by gateway (Coremail) with SMTP id _____8BxnnOXVX9oEX8vAQ--.61104S3;
+	Tue, 22 Jul 2025 17:10:47 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.193])
+	by front1 (Coremail) with SMTP id qMiowJAxQMKUVX9oprIhAA--.38699S2;
+	Tue, 22 Jul 2025 17:10:46 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v1 0/8] mtd: rawnand: loongson: Add Loongson-2K nand controller support
+Date: Tue, 22 Jul 2025 17:10:31 +0800
+Message-ID: <cover.1753166096.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H74EpbKsPpc_ToGqP6LKx04z+Dvyuw52u-1A4nQ-wr6WQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxE+S4VH9ohbEhAA--.44151S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXw1xGw4kAF4UZFW8JF13GFX_yoWrZw43pr
-	n5AayqqF4UKr93X34DKFn0gw1qqrnxWr42qa98J3WfCFy7XF18Z3s7Gr9ruasFq34UK3W0
-	gFyrGayjya4Ut3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJAxQMKUVX9oprIhAA--.38699S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJr17ZF4fXF47KF4DGryfGrX_yoW8ZF4Upa
+	ya93y3GF1DJFW3AF909a48Cr4rZFyfJ3srJwsxW348C39rX345XryjyF1rtFWxurWSqryU
+	ZFyfGF4xGF4DGFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU24So
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14
+	v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2BT5
 	DUUUU
 
+Hi all:
+
+This patchset adds support for the Loongson-2K0500/Loongson-2K1000 NAND
+controllers, which are similar to the Loongson-1C NAND controller.
+
+They support a maximum capacity of 16GB FLASH per chip, with a maximum
+page size of 8KB. The chip supports up to 4 chip selects and 4 RDY signals.
+
+The key difference between the Loongson-2K NAND controllers is that the
+Loongson-2K1000 explicitly configures the DMA controller routing, while
+the Loongson-2K0500 defaults to using APBDMA0.
+
+Summary of the patchset:
+Ptach 1-2: Rename all prefixes from ls1x to loongson
+Patch 3: Add 6-byte NAND ID reading
+Patch 4: Add chip select support
+Patch 5-6: Add Loongson-2K0500 NAND controller support
+Patch 7-8: Add Loongson-2K1000 NAND controller support
+
+Thanks.
+
+Binbin Zhou (7):
+  mtd: rawnand: loongson1: Rename the prefix from ls1x to loongson
+  mtd: rawnand: loongson: Rename loongson1 to loongson
+  mtd: rawnand: loongson: Add nand chip select support
+  dt-bindings: mtd: loongson,ls1b-nand-controller: Document the
+    Loongson-2K0500 NAND controller
+  mtd: rawnand: loongson: Add Loongson-2K0500 NAND controller support
+  dt-bindings: mtd: loongson,ls1b-nand-controller: Document the
+    Loongson-2K1000 NAND controller
+  mtd: rawnand: loongson: Add Loongson-2K1000 NAND controller support
+
+Keguang Zhang (1):
+  mtd: rawnand: loongson: Add 6-byte NAND ID reading support
+
+ .../mtd/loongson,ls1b-nand-controller.yaml    |   64 +-
+ MAINTAINERS                                   |    2 +-
+ drivers/mtd/nand/raw/Kconfig                  |    8 +-
+ drivers/mtd/nand/raw/Makefile                 |    2 +-
+ .../mtd/nand/raw/loongson-nand-controller.c   | 1032 +++++++++++++++++
+ .../mtd/nand/raw/loongson1-nand-controller.c  |  836 -------------
+ 6 files changed, 1096 insertions(+), 848 deletions(-)
+ create mode 100644 drivers/mtd/nand/raw/loongson-nand-controller.c
+ delete mode 100644 drivers/mtd/nand/raw/loongson1-nand-controller.c
 
 
-On 2025/7/22 下午12:58, Huacai Chen wrote:
-> On Tue, Jul 22, 2025 at 9:33 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> Oops, it is the obvious compile issue. And I am messed with parallel
->> tasks and do not notice this, what I test is old kernel.
->>
->> Regards
->> Bibo Mao
-> Add this part to the patch is enough.
-> 
-> diff --git a/arch/loongarch/include/asm/addrspace.h
-> b/arch/loongarch/include/asm/addrspace.h
-> index fe198b473f84..babcc1c6c820 100644
-> --- a/arch/loongarch/include/asm/addrspace.h
-> +++ b/arch/loongarch/include/asm/addrspace.h
-> @@ -18,11 +18,20 @@
->   /*
->    * This gives the physical RAM offset.
->    */
-> -#ifndef __ASSEMBLER__
-> +#ifdef __ASSEMBLER__
-> +
-> +#ifndef PHYS_OFFSET
-> +#define PHYS_OFFSET    0
-> +#endif
-> +
-> +#else
-> +
->   #ifndef PHYS_OFFSET
->   #define PHYS_OFFSET    _UL(0)
->   #endif
-> +
->   extern unsigned long vm_map_base;
-> +
->   #endif /* __ASSEMBLER__ */
-> 
->   #ifndef IO_BASE
-sure, will do in this way.
-
-Regards
-Bibo Mao
-> 
->>
->> On 2025/7/22 上午3:19, kernel test robot wrote:
->>> Hi Bibo,
->>>
->>> kernel test robot noticed the following build errors:
->>>
->>> [auto build test ERROR on 89be9a83ccf1f88522317ce02f854f30d6115c41]
->>>
->>> url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-Implement-physical-address-with-ELF-program-header/20250721-171418
->>> base:   89be9a83ccf1f88522317ce02f854f30d6115c41
->>> patch link:    https://lore.kernel.org/r/20250721091248.3896152-1-maobibo%40loongson.cn
->>> patch subject: [PATCH v2] LoongArch: Implement physical address with ELF program header
->>> config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20250722/202507220309.mDl9W32Y-lkp@intel.com/config)
->>> compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 853c343b45b3e83cc5eeef5a52fc8cc9d8a09252)
->>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250722/202507220309.mDl9W32Y-lkp@intel.com/reproduce)
->>>
->>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>> the same patch/commit), kindly add following tags
->>> | Reported-by: kernel test robot <lkp@intel.com>
->>> | Closes: https://lore.kernel.org/oe-kbuild-all/202507220309.mDl9W32Y-lkp@intel.com/
->>>
->>> All errors (new ones prefixed by >>):
->>>
->>>>> ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:15: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:18: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:33: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:34: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:41: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:46: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:47: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:50: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: ./arch/loongarch/kernel/vmlinux.lds:57: symbol not found: PHYS_OFFSET
->>>      ld.lld: error: too many errors emitted, stopping now (use --error-limit=0 to see all errors)
->>>
->>
+base-commit: 9358bdb9f9f54d94ceafc650deffefd737d19fdd
+-- 
+2.47.3
 
