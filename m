@@ -1,150 +1,145 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E7A28C5D5
-	for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 13:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E822EBDD8
+	for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 14:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753192607; cv=none; b=NHgYNDIXocef2GFVWgmWwPKLEQLA2OL7YwrNGQ1xWLX6l3W131Ty1daRCVrpfrfBFdIuUDGG0MJhY5OyG6dHFNNoE99simoxzqSbyxfXM6HQz1nbnmWdFDAUGMLascr21VRhyGEXLE0qPyAikVYJRghpAb84X+eZIddI9+7/JSQ=
+	t=1753193369; cv=none; b=HxbIp+gbBZa/fMoRcP2Hjku3y5QAqTK7rKg5rJT+pMSwsdDgScHQRNBPKP6Qf5/FfjbZbf16ne0ZY665me5TEuQQu6fLCmntOMf5fJbhb3YJwkcYHkIQxyPG2o8aXzSd5QsEJDmz5dGM0mn2ui0+Ca3D3sEJSnvqAaf5pzgNoT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753192607; c=relaxed/simple;
-	bh=kYYGasiChIGrOp2WfdbyJu8FXaB5dOTDpOSPPXTmqKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7FwVppWki13yRGh+j6oqvDfObmvYJXgGR4dpwVg/n5mpSvqagvnbeN+ORDJ2iWBkxnJmlQxSskxSiJ7JkuoMuYQKtFy7cPoCTFh8ntvZ1/rCQ128JITL0GvVAv7Zg6W4iaG9PHSkfKDCPuAkAJO4GN4TNpF7oYFbFDEw6u92MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsHznXJk; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1753193369; c=relaxed/simple;
+	bh=USZCbimKAI5U38SQkb+cFApM81Y/jORMtvbYcAo1IlE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sIEWeatXrg1rLT+biKLkv2pOOSswVg44lzKpsM+ysT4MP+YD//1YPcpSFvESsTv8H+PBjOs5S3O4eDRxkPgKzQ8Mt1bQxGvnHV3YBL/jdp0fJMlXneL+TE8SALauTqNdCM2Lsc/gQFvEe5gfTsjj8dc4vMywcBNqH/XG8WfmhFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkM1lVkg; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsHznXJk"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45610582d07so43416415e9.0
-        for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 06:56:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkM1lVkg"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32ce252c3acso25101161fa.1
+        for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 07:09:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753192604; x=1753797404; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=juq2LsaB2ZlgXJfLDxNWAXy+l+g+CamQA/55GYnNXGQ=;
-        b=PsHznXJkAVxpNdbTp6EbzSbgU+T5rGAOkmgrUuxsVZbdvyLUKoZggjIvO0lc+vc3tW
-         CAO77OdcvgxkEJL2HRNmzUzLeB1zy4K4UEf5v4wUCnMdghVwLeFdlJoFax3b/Ac25Giz
-         bIFsP1ihvqgDj6lv7VH7rDWEDfJlInG0cTmv6B9UdQFapM/GD5bia8FNFTwf46vBlSpi
-         r6slMaYkEFHYEg+Hemlo/4i20GKabHwZZihAfa4t3yncCBsR097BRHGD3xEh8vxFSW5N
-         atFdorxeup/WGOSPJkgWcAUpMcxKLwoQlzmfBETpYD7xlUFeVxRc3ZDP74wXht/oW2OD
-         U4+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753192604; x=1753797404;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1753193365; x=1753798165; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=juq2LsaB2ZlgXJfLDxNWAXy+l+g+CamQA/55GYnNXGQ=;
-        b=AagLTdaiyiTWIXNGdytpSzpM3Xf/XJajmPNrzmo9laijKsRnmti4hovodtuRx07JhP
-         kdkYZ8q74woTB0WnkXfCpXr21SpijQadOxsDMKhwZmSXfGeJ9fCxhQ/bxPbD3qncWcu/
-         YwQkn7TUjWbvXWsfjjZVigyK9G2teTZPiQDlEIo6lCuFy0DCVH8ctlHLLZZ2vERKatqG
-         i5WMvaVDi1wKwJx8NSWXk6yO6R+7dGOoGnIFdpZBxaZ+cNcs7y07XjqliZxhz1gF4i/u
-         TQjmdTX0zJK0IpkEcKj70GXp1EVeMV7Q1yZNYNEzTBjyBmoD+nrYBoBoZ4glhbOdVV+K
-         fFUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJlMNQC7ue4j7bZ/krfxtBoxxjAuwOzaVaEkXOIGSvVHr65gZJivmvqpzOYXraKYZCENw+SGUkR1U=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxWLIngG+ss83s6XDzE0Lbxje92H2GiyI5NFI4IgCtdXKIzLMnm
-	VfIC8eiL6AtUUmmePTktFjR8gNNW8AM4ogjwT/AIzVB3p2WrNWNwBuMc
-X-Gm-Gg: ASbGncsu0MbKleIS28WlU6u7v4KYhL82Qy2Az1h9utYKnQ0XlM17RtiqQyl9yk9uLUj
-	VkI6ADH19mbcSWju/1aVpnK3lv9M9iCNKPpv60w9Pmyqm3ykHfnXIVSnnO6GepUd09PIRo0Q/6y
-	Y2/tdFVE/nRPk/xLV8IZe8Zgq69KfhVEP4ABkEbPzy51y/+7DDmtJZ812exr0tFYKAgVQ65rvyE
-	WL06+0zsqDhGjKN72VEMsKQIOfURFRKLR0jx2LWE9CdLbzvRYs1KKtNtu0NMmNsN51aHseDYapf
-	v3mhNGR0zEq3mYcLu0/LwfcFDSGxC/XYzYYXGNLJXQY93Ck3nmoXeOv0/d26gOiIsp9EeI1Xob9
-	xjDWOflHnBglTQAN7wg1rp+CvVPvLw1FDPqG70rNxZ/9LGwaMR3PpAB9OriunB8fJLL+ApymgmQ
-	pSyhR67J2q
-X-Google-Smtp-Source: AGHT+IEXfV5AQDvaaCQOegEyKdsH0umt5I9YjBYWNMUwcatDOEmZLLM8MRQ3Lk0kGHyWW+MsfUSbDg==
-X-Received: by 2002:a05:600c:c16d:b0:442:dc75:5625 with SMTP id 5b1f17b1804b1-456352d0b70mr190106725e9.5.1753192603600;
-        Tue, 22 Jul 2025 06:56:43 -0700 (PDT)
-Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e7f2d4fsm197624025e9.4.2025.07.22.06.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Jul 2025 06:56:42 -0700 (PDT)
-Date: Tue, 22 Jul 2025 15:56:40 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] syscore: Pass context data to callbacks
-Message-ID: <l54i36uk33je744w4f47tehdopk5dsjotvozfv5b2hehmxrwpq@eins7awyq4dy>
-References: <20250717103241.2806798-1-thierry.reding@gmail.com>
- <2025071716-phoney-object-1648@gregkh>
- <rzbzah5iigz25jtxyqadnitkzkazxsaxntajhlfrfdslyioevk@pylcjkfh5n42>
- <2025071919-patience-cattishly-cf7c@gregkh>
+        bh=Z72Y4lywtzmWJK50j4gaS5KcylDNvYHYQchCkK6Shzo=;
+        b=GkM1lVkgERLZWiUAmWLOboyYNmqKJjwOLCxKccqn+zKGpfBnbeLUkVVGFveQmNQRjz
+         1O4zgVt6mxoASi56vXCnuKg/gTUkSa5zKB2aHmjXrUGfvN6R0262Qj9zfsLYQuHVCn1F
+         QjB1Iat3yiZSJtuiawD89YYRS6On3RbQzoBZIBJrBNojCugmUzehNXYvT1aD3pUzqnH2
+         lZBMkIq8NB7eBjOy1o7vaMzLlTcHOHq80t+1NpqdmSOBjev+Gytr8CTf1ICwOpLVTFy9
+         r+SX0sJIZDe9gRVOzCN5hFToTomf5hxNjUy+zlcrDN/nR5oFoEfVibJK6uAJK3Ss2pkL
+         Mf+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753193365; x=1753798165;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z72Y4lywtzmWJK50j4gaS5KcylDNvYHYQchCkK6Shzo=;
+        b=LFN6zCc0sx9ZUGzSS6qbc8YH992ZIKTCxe1FowYHhl6BMZbaSOLiguJB/fzitZwLCA
+         ZXViSFLdnuTAs3k/fTAwz1MUxQsu6qTKgbQAaLtOOFjPFEQYlXCneeTu6HW9q+hQHG91
+         SBHE+w0uUdtYIx+kSpFbHXABylUzEwENC7hYBq8kop7cQEKMJQ8Tab1E7kQt7a14pI7M
+         IkGcGuAm+E6g8ybIpi6x2E3EhmMmQa0ngCJHzTffwMolvKrg8vpjI1giU2Ij/EJYuklV
+         vaRd3MR4gOfrrFt3FM0xjLT25ryRUQHE8Tvqd/NIh+61pVNM/eOyzidEWAsolX6GDRq0
+         XYBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVH6wquscVnyxIU7HStjgSzm2TzvfNdEO2aL+NSgBBzPAbJLcb4jdCDN6i5nwLundvVbyAAZkKjfzo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzystJ3yXlvvooYkgMn+VcWU1aE7+5llgrTcLBPozfwfNkPmNCf
+	abnFecBvmfPNAPg7qSSOEBB8bEd3Pq9JVQdl7+qQ5MaQu5ioI/188u9emIcRIphS6VeFJ6dKWNr
+	7N7vhvlNCr04kQ7cXBkRzDAhpDoSg4Sk=
+X-Gm-Gg: ASbGncscei49B9Vetsw7zl/ne27k3a0n79V2ovnFNJPKPXzNUIi+rWstj5m/1bk1RF7
+	gghQ2P81H3FGD8U/X3mylcDT+8OUCYZpHiGXeIlcIVAJfi4YXZmxwV9axOOp6LyqS8px+O4eyxd
+	zt6hFtrbo/A6/nlRFB4pfZmzFvyHBps7Zh0Lb4G1vq56wZIYjshTuqGeZEaJEG+3NL9MhTmXpNy
+	D5cbXM=
+X-Google-Smtp-Source: AGHT+IHxVK00NMC1GHSpVq/sT2EfSuq7omX6wX24xSvgGhrc9yg0F8isqB5neLuF1et0yPorDOiVEfN1u9rtptu/xSU=
+X-Received: by 2002:a05:651c:4110:b0:32a:885b:d0f with SMTP id
+ 38308e7fff4ca-3308f5e2852mr36383791fa.24.1753193364861; Tue, 22 Jul 2025
+ 07:09:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sm7baow4ljogvsjb"
-Content-Disposition: inline
-In-Reply-To: <2025071919-patience-cattishly-cf7c@gregkh>
-
-
---sm7baow4ljogvsjb
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250717142732.292822-1-snovitoll@gmail.com> <20250717142732.292822-8-snovitoll@gmail.com>
+ <c8b0be89-6c89-46ed-87c3-8905b6ccbbeb@gmail.com>
+In-Reply-To: <c8b0be89-6c89-46ed-87c3-8905b6ccbbeb@gmail.com>
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Date: Tue, 22 Jul 2025 19:09:07 +0500
+X-Gm-Features: Ac12FXxpDsEYsUfFuRK9xdlLStcuqGTW4Nrf9JrgjFdTiyEs4CW8gE7SGsQYdo4
+Message-ID: <CACzwLxgjKz-bc1w4SvGu-EeoMvK9Dh=2WpB-A_zC-u7H38QqVg@mail.gmail.com>
+Subject: Re: [PATCH v3 07/12] kasan/loongarch: select ARCH_DEFER_KASAN and
+ call kasan_init_generic
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: hca@linux.ibm.com, christophe.leroy@csgroup.eu, andreyknvl@gmail.com, 
+	agordeev@linux.ibm.com, akpm@linux-foundation.org, glider@google.com, 
+	dvyukov@google.com, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 0/7] syscore: Pass context data to callbacks
-MIME-Version: 1.0
 
-On Sat, Jul 19, 2025 at 08:52:41AM +0200, Greg Kroah-Hartman wrote:
-> On Fri, Jul 18, 2025 at 03:49:37PM +0200, Thierry Reding wrote:
-> > On Thu, Jul 17, 2025 at 02:11:41PM +0200, Greg Kroah-Hartman wrote:
-> > > On Thu, Jul 17, 2025 at 12:32:34PM +0200, Thierry Reding wrote:
-[...]
-> > 	struct syscore;
-> >=20
-> > 	struct syscore_ops {
-> > 		int (*suspend)(struct syscore *syscore);
-> > 		void (*resume)(struct syscore *syscore);
-> > 		void (*shutdown)(struct syscore *syscore);
-> > 	};
-> >=20
-> > 	struct syscore {
-> > 		const struct syscore_ops *ops;
-> > 		struct list_head node;
-> > 	};
-> >=20
-> > Is that what you had in mind?
->=20
-> I missed the list_head, so yes, this would be better, but don't pass
-> back the syscore structure, how about just a void * instead, making the
-> whole container_of() stuff go away?
+On Tue, Jul 22, 2025 at 4:00=E2=80=AFAM Andrey Ryabinin <ryabinin.a.a@gmail=
+.com> wrote:
+>
+>
+>
+> On 7/17/25 4:27 PM, Sabyrzhan Tasbolatov wrote:
+>
+> > diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/includ=
+e/asm/kasan.h
+> > index 62f139a9c87..0e50e5b5e05 100644
+> > --- a/arch/loongarch/include/asm/kasan.h
+> > +++ b/arch/loongarch/include/asm/kasan.h
+> > @@ -66,7 +66,6 @@
+> >  #define XKPRANGE_WC_SHADOW_OFFSET    (KASAN_SHADOW_START + XKPRANGE_WC=
+_KASAN_OFFSET)
+> >  #define XKVRANGE_VC_SHADOW_OFFSET    (KASAN_SHADOW_START + XKVRANGE_VC=
+_KASAN_OFFSET)
+> >
+> > -extern bool kasan_early_stage;
+> >  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
+> >
+> >  #define kasan_mem_to_shadow kasan_mem_to_shadow
+> > @@ -75,12 +74,6 @@ void *kasan_mem_to_shadow(const void *addr);
+> >  #define kasan_shadow_to_mem kasan_shadow_to_mem
+> >  const void *kasan_shadow_to_mem(const void *shadow_addr);
+> >
+> > -#define kasan_arch_is_ready kasan_arch_is_ready
+> > -static __always_inline bool kasan_arch_is_ready(void)
+> > -{
+> > -     return !kasan_early_stage;
+> > -}
+> > -
+> >  #define addr_has_metadata addr_has_metadata
+> >  static __always_inline bool addr_has_metadata(const void *addr)
+> >  {
+> > diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_i=
+nit.c
+> > index d2681272d8f..cf8315f9119 100644
+> > --- a/arch/loongarch/mm/kasan_init.c
+> > +++ b/arch/loongarch/mm/kasan_init.c
+> > @@ -40,11 +40,9 @@ static pgd_t kasan_pg_dir[PTRS_PER_PGD] __initdata _=
+_aligned(PAGE_SIZE);
+> >  #define __pte_none(early, pte) (early ? pte_none(pte) : \
+> >  ((pte_val(pte) & _PFN_MASK) =3D=3D (unsigned long)__pa(kasan_early_sha=
+dow_page)))
+> >
+> > -bool kasan_early_stage =3D true;
+> > -
+> >  void *kasan_mem_to_shadow(const void *addr)
+> >  {
+> > -     if (!kasan_arch_is_ready()) {
+> > +     if (!kasan_enabled()) {
+>
+> This doesn't make sense, !kasan_enabled() is compile-time check which is =
+always false here.
 
-Yeah, that's a possibility. I personally don't like passing the void *
-around because it's easier to make mistakes that way. I also find it
-unintuitive because it doesn't immediately show you what the functions
-expect.
+I should've used `!kasan_shadow_initialized()` check here which provides
+the needed runtime behavior that kasan_early_stage used to provide.
+Will do in v4. Thanks!
 
-My understanding is that the container_of() should get optimized away
-most of the time, so there aren't any obvious downsides that I can see.
-
-But I don't feel very strongly, so if you have a strong preference for
-void pointers, I can do that.
-
-Thierry
-
---sm7baow4ljogvsjb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmh/mJUACgkQ3SOs138+
-s6FyzhAAq8z/gI18SVH4qmKTQkcFaPuXBegHTP2dgId1CA1dad3cmBj4tcAz1+Ng
-liio3geyWrxKqZSJTrQOYYYloM4s9UhkY3AvXvDB+L4/DZC/HBgAGnL5dMKte/WQ
-sNUniNOWw1gW2tluO+vi9saSGE4Test34XaIWpBaItJYO9uhuiAC57jJw9Uutl0h
-wkjvwyxaOXSleKiCSwlnSBx31PCz7k5nhb8pIeptnxbxw+Q7+IsDzK/cH2PrV979
-7AzVNifmqUfpO9Xy0FsSrYU0SrUCM7I8WU6elGSeuswDL7+Mlsh9kn/KfVyL86ed
-0jP2iQRyzteg2ATh6dQJLM7KEPK8DnGZqaLDLJlzn3af7Mv5MvRGO1cx7dVGhcTA
-ADto5YN6dKXC63ijHppnQ2xjZ725T1zuVpj1z5OTlXpKtlGvYiIejh+B5tjFMMrr
-zTNbjIBbykgIZXvIvn52ttFRDrLgpnh2mQPzI8VWp9Bv0DaBH6Q1jfxUlWXQiSaQ
-bWrFys6N7IBy5+o83FiAGZvQ//IFZhyF8T/6HD+6OuoX26vTOa5vwrPgs5qru2/s
-T5iJf9UOqnHAuzssCGk2OZcqcVn17seSpXcJScckVPt/HhegIgcgxoVTCOBQ0K7J
-xUhlsns/ZnbEGVKtLr2T/t7UTeCDZIkqo0pEloVCu9UGfeAI16c=
-=Cczj
------END PGP SIGNATURE-----
-
---sm7baow4ljogvsjb--
+>
+> >               return (void *)(kasan_early_shadow_page);
+> >       } else {
+> >               unsigned long maddr =3D (unsigned long)addr;
