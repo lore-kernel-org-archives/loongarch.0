@@ -1,59 +1,37 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5231DC9BB
-	for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 09:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E06F128A1D5
+	for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 11:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753178178; cv=none; b=qwfQzAJ59diNkBNuKTW8GISP3ENih6F/QKMbsBv4dYkpwiST6K1j524irnHM8muATLEI523MHtS06Pj3KmAL9thSMqWqFvNJtUcWVdBfOaoPQ3ibhTVB3UPH/i6GNfBfcOKwAMjtaVOBoSwwjmxDautxYk0hKhXxAqXKYm6RdQg=
+	t=1753185496; cv=none; b=tTN+nzROB9P7CxhtE0CuDCh3ENG6g0pRu5YTloUm7eETyzAEycC+pp+/rE2chDB+N9duehZg2xa7+CmjlCEa6SiQkZZDR3g+2vl8z5MOD87s43QA5XdqvtuZKib0mzPgCG6TkvkQhWyWwMpdWm9R12xVC2PcQttn8mYxbB7QXbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753178178; c=relaxed/simple;
-	bh=8acYdWSy8IwiLJ8qNR4vQIJxvCDC6B+3b4BTNe7r+UE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AnEZOBR/zDDQEgx/4/LMTQ/ETiKwqCOfsMXiUvUdORbzJx+MANXfW/tqA1Wk+nQ6OAR9RLxCqtYjXC6JJioY4qY/bl3nddetXEo/FY5SrQb7wm1Mh4yuP63SCVjzeZLyQr31IksqfsERGHx5/r923El40WY4duJ1UG24Rw7I9n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 16cf197a66e211f0b29709d653e92f7d-20250722
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:3c84ddd1-8059-41fd-971e-f95099eabcbd,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-40,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-30
-X-CID-INFO: VERSION:1.1.45,REQID:3c84ddd1-8059-41fd-971e-f95099eabcbd,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-40,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-30
-X-CID-META: VersionHash:6493067,CLOUDID:302a8bc955d86b4e8a03b7e70e1855a6,BulkI
-	D:250722175611VU6VV3PW,BulkQuantity:0,Recheck:0,SF:10|24|44|64|66|78|80|81
-	|82|83|102|841,TC:nil,Content:0|51,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk
-	:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,
-	BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSI
-X-UUID: 16cf197a66e211f0b29709d653e92f7d-20250722
-X-User: jianghaoran@kylinos.cn
-Received: from [192.168.31.67] [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1141057818; Tue, 22 Jul 2025 17:56:07 +0800
-Message-ID: <3c024e7868bd0b80afcac1e56ce3589e1306711b.camel@kylinos.cn>
-Subject: =?gb2312?Q?re=A3=BA=5BPATCH?= v2 2/2] LoongArch: BPF: Fix tailcall
- hierarchy
-From: jianghaoran <jianghaoran@kylinos.cn>
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, kernel@xen0n.name, 
- chenhuacai@kernel.org, yangtiezhu@loongson.cn, jolsa@kernel.org,
- haoluo@google.com,  sdf@fomichev.me, kpsingh@kernel.org,
- john.fastabend@gmail.com,  yonghong.song@linux.dev, song@kernel.org,
- eddyz87@gmail.com, martin.lau@linux.dev,  andrii@kernel.org,
- daniel@iogearbox.net, ast@kernel.org
-Date: Tue, 22 Jul 2025 17:56:03 +0800
-In-Reply-To: <CAEyhmHTSw-DKj+TLOwfKuSvvTq2cXRackaRCZDiK7ymh-jvpog@mail.gmail.com>
-References: <20250708071840.556686-1-jianghaoran@kylinos.cn>
-	 <20250708071840.556686-3-jianghaoran@kylinos.cn>
-	 <CAEyhmHTSw-DKj+TLOwfKuSvvTq2cXRackaRCZDiK7ymh-jvpog@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2kord0k2.4.25.1 
+	s=arc-20240116; t=1753185496; c=relaxed/simple;
+	bh=FYFNJZU/pShI/0xENZjgDKpYDZJS22uxFteKyrwwyQY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IIaq0KNylRtbcacV/BFrhjwrVAlwfuwmYEnV0HxIaJSqySADWQOsTs7plIgkdBTUvBWS5DyzQHKxLmcirha/jok+BsGjlDvlypH4ibaApGk1zjftBMiyiCFBdj2ETu8hbl6w0T3P0XAlUo4NGDNGf9Najs0P+QdGt/S7vmtZCNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.45])
+	by gateway (Coremail) with SMTP id _____8BxjaxpfH9o5JIvAQ--.63217S3;
+	Tue, 22 Jul 2025 19:56:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.45])
+	by front1 (Coremail) with SMTP id qMiowJDxscJlfH9oBdYhAA--.19687S2;
+	Tue, 22 Jul 2025 19:56:25 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch KVM changes for v6.17
+Date: Tue, 22 Jul 2025 19:56:09 +0800
+Message-ID: <20250722115609.3754289-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -61,277 +39,70 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxscJlfH9oBdYhAA--.19687S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CFWrZF1kCw4DKFW3Kr4fCrX_yoW8ZrWxpr
+	13urnrJFs8GrZ5Jryqq343uwnrAFn7CryxXF4UKFW8ur4UZr1UXry8Xrn3JFy5C3yrJry0
+	vr1rGw1jqF1UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUrNtxDUUUU
 
+The following changes since commit 89be9a83ccf1f88522317ce02f854f30d6115c41:
 
+  Linux 6.16-rc7 (2025-07-20 15:18:33 -0700)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.17
 
-在 2025-07-16星期三的 10:28 +0800，Hengqi Chen写道：
-> On Tue, Jul 8, 2025 at 3:19 PM Haoran Jiang <
-> jianghaoran@kylinos.cn
-> > wrote:
-> > In specific use cases combining tailcalls and BPF-to-BPF calls，
-> > MAX_TAIL_CALL_CNT won't work because of missing tail_call_cnt
-> > back-propagation from callee to caller。This patch fixes this
-> > tailcall issue caused by abusing the tailcall in bpf2bpf
-> > feature
-> > on LoongArch like the way of "bpf, x64: Fix tailcall
-> > hierarchy".
-> > 
-> > push tail_call_cnt_ptr and tail_call_cnt into the stack,
-> > tail_call_cnt_ptr is passed between tailcall and bpf2bpf,
-> > uses tail_call_cnt_ptr to increment tail_call_cnt.
-> > 
-> > Fixes: bb035ef0cc91 ("LoongArch: BPF: Support mixing bpf2bpf
-> > and tailcalls")
-> > Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> > Signed-off-by: Haoran Jiang <
-> > jianghaoran@kylinos.cn
-> > >
-> > ---
-> >  arch/loongarch/net/bpf_jit.c | 112 +++++++++++++++++++++----
-> > ----------
-> >  1 file changed, 68 insertions(+), 44 deletions(-)
-> > 
-> > diff --git a/arch/loongarch/net/bpf_jit.c
-> > b/arch/loongarch/net/bpf_jit.c
-> > index 5061bfc978f2..45f804b7c556 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -7,10 +7,9 @@
-> >  #include "bpf_jit.h"
-> > 
-> >  #define REG_TCC                LOONGARCH_GPR_A6
-> > -#define TCC_SAVED      LOONGARCH_GPR_S5
-> > 
-> > -#define SAVE_RA                BIT(0)
-> > -#define SAVE_TCC       BIT(1)
-> > +#define BPF_TAIL_CALL_CNT_PTR_STACK_OFF(stack)
-> > (round_up(stack, 16) - 80)
-> > +
-> > 
-> >  static const int regmap[] = {
-> >         /* return value from in-kernel function, and exit value
-> > for eBPF program */
-> > @@ -32,32 +31,37 @@ static const int regmap[] = {
-> >         [BPF_REG_AX] = LOONGARCH_GPR_T0,
-> >  };
-> > 
-> > -static void mark_call(struct jit_ctx *ctx)
-> > +static void prepare_bpf_tail_call_cnt(struct jit_ctx *ctx, int
-> > *store_offset)
-> 
-> Consider adding more comments(e.g. pseudocode) for
-> prepare_bpf_tail_call_cnt().
-> Assembly is hard to read. (At least for me :))
-> 
+for you to fetch changes up to 36d09b96d3e79518e2be31fc7960cc694702afb8:
 
-I will improve the comment information in the next version.
-> 
-> >  {
-> > -       ctx->flags |= SAVE_RA;
-> > -}
-> > +       const struct bpf_prog *prog = ctx->prog;
-> > +       const bool is_main_prog = !bpf_is_subprog(prog);
-> > 
-> > -static void mark_tail_call(struct jit_ctx *ctx)
-> > -{
-> > -       ctx->flags |= SAVE_TCC;
-> > -}
-> > +       if (is_main_prog) {
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_T3, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
-> > +               *store_offset -= sizeof(long);
-> > 
-> > -static bool seen_call(struct jit_ctx *ctx)
-> > -{
-> > -       return (ctx->flags & SAVE_RA);
-> > -}
-> > +               emit_tailcall_jmp(ctx, BPF_JGT, REG_TCC, LOONGARCH_GPR_T3, 4);
-> 
-> Why emit_tailcall_jmp() here ? Shouldn't this be emit_cond_jmp() ?
+  LoongArch: KVM: Add tracepoints for CPUCFG and CSR emulation exits (2025-07-21 09:26:35 +0800)
 
-It's more appropriate to use emit_cond_jmp here.
-> 
-> > 
-> > -static bool seen_tail_call(struct jit_ctx *ctx)
-> > -{
-> > -       return (ctx->flags & SAVE_TCC);
-> > -}
-> > +               /* If REG_TCC < MAX_TAIL_CALL_CNT, push REG_TCC into stack */
-> > +               emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-> > 
-> > -static u8 tail_call_reg(struct jit_ctx *ctx)
-> > -{
-> > -       if (seen_call(ctx))
-> > -               return TCC_SAVED;
-> > +               /* Calculate the pointer to REG_TCC in the stack and assign it to REG_TCC */
-> > +               emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-> > +
-> > +               emit_uncond_jmp(ctx, 2);
-> > +
-> > +               emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-> > 
-> > -       return REG_TCC;
-> > +               *store_offset -= sizeof(long);
-> > +               emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-> > +
-> > +       } else {
-> > +               *store_offset -= sizeof(long);
-> > +               emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-> > +
-> > +               *store_offset -= sizeof(long);
-> > +               emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-> > +       }
-> >  }
-> > 
-> >  /*
-> > @@ -80,6 +84,10 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
-> >   *                            |           $s4           |
-> >   *                            +-------------------------+
-> >   *                            |           $s5           |
-> > + *                            +-------------------------+
-> > + *                            |          reg_tcc        |
-> > + *                            +-------------------------+
-> > + *                            |          reg_tcc_ptr    |
-> >   *                            +-------------------------+ <--BPF_REG_FP
-> >   *                            |  prog->aux->stack_depth |
-> >   *                            |        (optional)       |
-> > @@ -89,21 +97,24 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
-> >  static void build_prologue(struct jit_ctx *ctx)
-> >  {
-> >         int stack_adjust = 0, store_offset, bpf_stack_adjust;
-> > +       const struct bpf_prog *prog = ctx->prog;
-> > +       const bool is_main_prog = !bpf_is_subprog(prog);
-> > 
-> >         bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
-> > 
-> > -       /* To store ra, fp, s0, s1, s2, s3, s4 and s5. */
-> > -       stack_adjust += sizeof(long) * 8;
-> > +       /* To store ra, fp, s0, s1, s2, s3, s4, s5, reg_tcc and reg_tcc_ptr */
-> > +       stack_adjust += sizeof(long) * 10;
-> > 
-> >         stack_adjust = round_up(stack_adjust, 16);
-> >         stack_adjust += bpf_stack_adjust;
-> > 
-> >         /*
-> > -        * First instruction initializes the tail call count (TCC).
-> > -        * On tail call we skip this instruction, and the TCC is
-> > +        * First instruction initializes the tail call count (TCC) register
-> > +        * to zero. On tail call we skip this instruction, and the TCC is
-> >          * passed in REG_TCC from the caller.
-> >          */
-> > -       emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
-> > +       if (is_main_prog)
-> > +               emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_ZERO, 0);
-> > 
-> >         emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_adjust);
-> > 
-> > @@ -131,20 +142,13 @@ static void build_prologue(struct jit_ctx *ctx)
-> >         store_offset -= sizeof(long);
-> >         emit_insn(ctx, std, LOONGARCH_GPR_S5, LOONGARCH_GPR_SP, store_offset);
-> > 
-> > +       prepare_bpf_tail_call_cnt(ctx, &store_offset);
-> > +
-> >         emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_adjust);
-> > 
-> >         if (bpf_stack_adjust)
-> >                 emit_insn(ctx, addid, regmap[BPF_REG_FP], LOONGARCH_GPR_SP, bpf_stack_adjust);
-> > 
-> > -       /*
-> > -        * Program contains calls and tail calls, so REG_TCC need
-> > -        * to be saved across calls.
-> > -        */
-> > -       if (seen_tail_call(ctx) && seen_call(ctx))
-> > -               move_reg(ctx, TCC_SAVED, REG_TCC);
-> > -       else
-> > -               emit_insn(ctx, nop);
-> > -
-> >         ctx->stack_size = stack_adjust;
-> >  }
-> > 
-> > @@ -177,6 +181,17 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
-> >         load_offset -= sizeof(long);
-> >         emit_insn(ctx, ldd, LOONGARCH_GPR_S5, LOONGARCH_GPR_SP, load_offset);
-> > 
-> > +       /*
-> > +        *  When push into the stack, follow the order of tcc then tcc_ptr.
-> > +        *  When pop from the stack, first pop tcc_ptr followed by tcc
-> > +        */
-> > +       load_offset -= 2*sizeof(long);
-> > +       emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, load_offset);
-> > +
-> > +       /* pop tcc_ptr to REG_TCC */
-> > +       load_offset += sizeof(long);
-> > +       emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, load_offset);
-> > +
-> >         emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_adjust);
-> > 
-> >         if (!is_tail_call) {
-> > @@ -211,7 +226,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
-> >  static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
-> >  {
-> >         int off;
-> > -       u8 tcc = tail_call_reg(ctx);
-> > +       int tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
-> >         u8 a1 = LOONGARCH_GPR_A1;
-> >         u8 a2 = LOONGARCH_GPR_A2;
-> >         u8 t1 = LOONGARCH_GPR_T1;
-> > @@ -240,11 +255,15 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
-> >                 goto toofar;
-> > 
-> >         /*
-> > -        * if (--TCC < 0)
-> > -        *       goto out;
-> > +        * if ((*tcc_ptr)++ >= MAX_TAIL_CALL_CNT)
-> > +        *      goto out;
-> >          */
-> > -       emit_insn(ctx, addid, REG_TCC, tcc, -1);
-> > -       if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
-> > +       emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
-> > +       emit_insn(ctx, ldd, t3, REG_TCC, 0);
-> > +       emit_insn(ctx, addid, t3, t3, 1);
-> > +       emit_insn(ctx, std, t3, REG_TCC, 0);
-> > +       emit_insn(ctx, addid, t2, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
-> > +       if (emit_tailcall_jmp(ctx, BPF_JSGT, t3, t2, jmp_offset) < 0)
-> >                 goto toofar;
-> > 
-> >         /*
-> > @@ -465,6 +484,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
-> >         const s16 off = insn->off;
-> >         const s32 imm = insn->imm;
-> >         const bool is32 = BPF_CLASS(insn->code) == BPF_ALU || BPF_CLASS(insn->code) == BPF_JMP32;
-> > +       int tcc_ptr_off;
-> > 
-> >         switch (code) {
-> >         /* dst = src */
-> > @@ -891,12 +911,17 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
-> > 
-> >         /* function call */
-> >         case BPF_JMP | BPF_CALL:
-> > -               mark_call(ctx);
-> >                 ret = bpf_jit_get_func_addr(ctx->prog, insn, extra_pass,
-> >                                             &func_addr, &func_addr_fixed);
-> >                 if (ret < 0)
-> >                         return ret;
-> > 
-> > +               if (insn->src_reg == BPF_PSEUDO_CALL) {
-> > +                       tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
-> > +                       emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
-> > +               }
-> > +
-> > +
-> >                 move_addr(ctx, t1, func_addr);
-> >                 emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
-> > 
-> > @@ -907,7 +932,6 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
-> > 
-> >         /* tail call */
-> >         case BPF_JMP | BPF_TAIL_CALL:
-> > -               mark_tail_call(ctx);
-> >                 if (emit_bpf_tail_call(ctx, i) < 0)
-> >                         return -EINVAL;
-> >                 break;
-> > --
-> > 2.43.0
-> > 
+----------------------------------------------------------------
+LoongArch KVM changes for v6.17
+
+1. Simplify some KVM routines.
+2. Enhance in-kernel irqchip emulation.
+3. Add stat information with kernel irqchip.
+4. Add tracepoints for CPUCFG and CSR emulation exits.
+
+----------------------------------------------------------------
+Bibo Mao (8):
+      LoongArch: KVM: Remove unnecessary local variable
+      LoongArch: KVM: Remove unused parameter len
+      LoongArch: KVM: Remove never called default case statement
+      LoongArch: KVM: Use standard bitops API with eiointc
+      LoongArch: KVM: Use generic function loongarch_eiointc_read()
+      LoongArch: KVM: Use generic function loongarch_eiointc_write()
+      LoongArch: KVM: Replace eiointc_enable_irq() with eiointc_update_irq()
+      LoongArch: KVM: Add stat information with kernel irqchip
+
+Yulong Han (1):
+      LoongArch: KVM: Add tracepoints for CPUCFG and CSR emulation exits
+
+Yury Norov (NVIDIA) (2):
+      LoongArch: KVM: Rework kvm_send_pv_ipi()
+      LoongArch: KVM: Simplify kvm_deliver_intr()
+
+ arch/loongarch/include/asm/kvm_host.h |  12 +-
+ arch/loongarch/kvm/exit.c             |  33 +-
+ arch/loongarch/kvm/intc/eiointc.c     | 553 +++++-----------------------------
+ arch/loongarch/kvm/intc/ipi.c         |  28 +-
+ arch/loongarch/kvm/intc/pch_pic.c     |   4 +-
+ arch/loongarch/kvm/interrupt.c        |  25 +-
+ arch/loongarch/kvm/trace.h            |  14 +-
+ arch/loongarch/kvm/vcpu.c             |   8 +-
+ 8 files changed, 132 insertions(+), 545 deletions(-)
 
