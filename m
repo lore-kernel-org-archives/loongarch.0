@@ -1,108 +1,157 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E06F128A1D5
-	for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 11:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5A8242D8F
+	for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 13:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753185496; cv=none; b=tTN+nzROB9P7CxhtE0CuDCh3ENG6g0pRu5YTloUm7eETyzAEycC+pp+/rE2chDB+N9duehZg2xa7+CmjlCEa6SiQkZZDR3g+2vl8z5MOD87s43QA5XdqvtuZKib0mzPgCG6TkvkQhWyWwMpdWm9R12xVC2PcQttn8mYxbB7QXbg=
+	t=1753192029; cv=none; b=KCUuRUXZYplEilL+1ZeGm55X6HnZfQS7X0DgEMK4kvvAj9Sv9t+0CHxet83Rsymld3+bVs1TJVCokLzCDyfOA/PE7Hebv0Io+w1iMOaF7GaLqtL0EBbcK/BOCltFAlIPxRj5/x/11BTsq1/tjGEULKxrl1PIM1edYkd31nozraU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753185496; c=relaxed/simple;
-	bh=FYFNJZU/pShI/0xENZjgDKpYDZJS22uxFteKyrwwyQY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IIaq0KNylRtbcacV/BFrhjwrVAlwfuwmYEnV0HxIaJSqySADWQOsTs7plIgkdBTUvBWS5DyzQHKxLmcirha/jok+BsGjlDvlypH4ibaApGk1zjftBMiyiCFBdj2ETu8hbl6w0T3P0XAlUo4NGDNGf9Najs0P+QdGt/S7vmtZCNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.45])
-	by gateway (Coremail) with SMTP id _____8BxjaxpfH9o5JIvAQ--.63217S3;
-	Tue, 22 Jul 2025 19:56:25 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.69.45])
-	by front1 (Coremail) with SMTP id qMiowJDxscJlfH9oBdYhAA--.19687S2;
-	Tue, 22 Jul 2025 19:56:25 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch KVM changes for v6.17
-Date: Tue, 22 Jul 2025 19:56:09 +0800
-Message-ID: <20250722115609.3754289-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1753192029; c=relaxed/simple;
+	bh=/38O0a49Nl2fkTlWe1aq3jycEaW+CNYGPJk/1tyUWAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BDV1tA5C/z+j/yoQ9Wk/BYeXrr0oRJByEOAKXPbjzf8/UrFB3Dp7YV0hnhIBG8rTuDjJVX5tYJYlW1tBSqmfumho2W4K70ENa/EoAlNyLi2muS2hQLXFfk2864q5fifr6qlLhThYN2x6DHnytiQR4o1VCGfBWblMiE6523TlInI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id C75BE58B89;
+	Tue, 22 Jul 2025 13:47:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id AC81C6000D;
+	Tue, 22 Jul 2025 13:47:02 +0000 (UTC)
+Date: Tue, 22 Jul 2025 09:47:34 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of generic
+ code
+Message-ID: <20250722094734.4920545b@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxscJlfH9oBdYhAA--.19687S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CFWrZF1kCw4DKFW3Kr4fCrX_yoW8ZrWxpr
-	13urnrJFs8GrZ5Jryqq343uwnrAFn7CryxXF4UKFW8ur4UZr1UXry8Xrn3JFy5C3yrJry0
-	vr1rGw1jqF1UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUrNtxDUUUU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: AC81C6000D
+X-Stat-Signature: cw9yqkxp4a9wi4qx7s15fa4muzpkrsub
+X-Rspamd-Server: rspamout02
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19Ftd3lTtUwfr1yCBrITaCewJ6P8z9IiT8=
+X-HE-Tag: 1753192022-163098
+X-HE-Meta: U2FsdGVkX18UudbkKX+QbAnANaDsrraKoCAGN0Lnp3uc5eXpMlEczEIXMfJqpNJEW6W28wkkInmqYbCTquD3lSySI/TdMScCFNpcDA6Prz87YKiQ2wapK0t4gTKUEsY4eXq7OqUf66t3r/d6GKFWmCFsWfSEkbFvxjSx2+/j1XdHbBDkcVOfvIY+A9EkCMq29qqpvWkHg2OvB9Q5xTnx73vow8z20Vrd5kA+ecU75As4FHttw1oa80dkkcmhbbO9821uGtG8uueLbV37GNFHXJhFNmItj0SV/DIsAcrNFSZ/z17VShqfeVFrDD2u1LXurkJdTz9/Z3YjEBXCiBdU8oZF425hvig5nsQpHE8KRbqaG8bum/OGBADwgxPFnDsb
 
-The following changes since commit 89be9a83ccf1f88522317ce02f854f30d6115c41:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-  Linux 6.16-rc7 (2025-07-20 15:18:33 -0700)
+The tracepoint kvm_iocsr is only used by the loongarch architecture. As
+trace events can take up to 5K of memory, move this tracepoint into the
+loongarch specific tracing file so that it doesn't waste memory for all
+other architectures.
 
-are available in the Git repository at:
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ arch/loongarch/kvm/trace.h | 35 +++++++++++++++++++++++++++++++++++
+ include/trace/events/kvm.h | 35 -----------------------------------
+ 2 files changed, 35 insertions(+), 35 deletions(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.17
-
-for you to fetch changes up to 36d09b96d3e79518e2be31fc7960cc694702afb8:
-
-  LoongArch: KVM: Add tracepoints for CPUCFG and CSR emulation exits (2025-07-21 09:26:35 +0800)
-
-----------------------------------------------------------------
-LoongArch KVM changes for v6.17
-
-1. Simplify some KVM routines.
-2. Enhance in-kernel irqchip emulation.
-3. Add stat information with kernel irqchip.
-4. Add tracepoints for CPUCFG and CSR emulation exits.
-
-----------------------------------------------------------------
-Bibo Mao (8):
-      LoongArch: KVM: Remove unnecessary local variable
-      LoongArch: KVM: Remove unused parameter len
-      LoongArch: KVM: Remove never called default case statement
-      LoongArch: KVM: Use standard bitops API with eiointc
-      LoongArch: KVM: Use generic function loongarch_eiointc_read()
-      LoongArch: KVM: Use generic function loongarch_eiointc_write()
-      LoongArch: KVM: Replace eiointc_enable_irq() with eiointc_update_irq()
-      LoongArch: KVM: Add stat information with kernel irqchip
-
-Yulong Han (1):
-      LoongArch: KVM: Add tracepoints for CPUCFG and CSR emulation exits
-
-Yury Norov (NVIDIA) (2):
-      LoongArch: KVM: Rework kvm_send_pv_ipi()
-      LoongArch: KVM: Simplify kvm_deliver_intr()
-
- arch/loongarch/include/asm/kvm_host.h |  12 +-
- arch/loongarch/kvm/exit.c             |  33 +-
- arch/loongarch/kvm/intc/eiointc.c     | 553 +++++-----------------------------
- arch/loongarch/kvm/intc/ipi.c         |  28 +-
- arch/loongarch/kvm/intc/pch_pic.c     |   4 +-
- arch/loongarch/kvm/interrupt.c        |  25 +-
- arch/loongarch/kvm/trace.h            |  14 +-
- arch/loongarch/kvm/vcpu.c             |   8 +-
- 8 files changed, 132 insertions(+), 545 deletions(-)
+diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+index 145514dab6d5..d73dea8afb74 100644
+--- a/arch/loongarch/kvm/trace.h
++++ b/arch/loongarch/kvm/trace.h
+@@ -115,6 +115,41 @@ TRACE_EVENT(kvm_exit_gspr,
+ 			__entry->inst_word)
+ );
+ 
++#define KVM_TRACE_IOCSR_READ_UNSATISFIED 0
++#define KVM_TRACE_IOCSR_READ 1
++#define KVM_TRACE_IOCSR_WRITE 2
++
++#define kvm_trace_symbol_iocsr \
++	{ KVM_TRACE_IOCSR_READ_UNSATISFIED, "unsatisfied-read" }, \
++	{ KVM_TRACE_IOCSR_READ, "read" }, \
++	{ KVM_TRACE_IOCSR_WRITE, "write" }
++
++TRACE_EVENT(kvm_iocsr,
++	TP_PROTO(int type, int len, u64 gpa, void *val),
++	TP_ARGS(type, len, gpa, val),
++
++	TP_STRUCT__entry(
++		__field(	u32,	type	)
++		__field(	u32,	len	)
++		__field(	u64,	gpa	)
++		__field(	u64,	val	)
++	),
++
++	TP_fast_assign(
++		__entry->type		= type;
++		__entry->len		= len;
++		__entry->gpa		= gpa;
++		__entry->val		= 0;
++		if (val)
++			memcpy(&__entry->val, val,
++			       min_t(u32, sizeof(__entry->val), len));
++	),
++
++	TP_printk("iocsr %s len %u gpa 0x%llx val 0x%llx",
++		  __print_symbolic(__entry->type, kvm_trace_symbol_iocsr),
++		  __entry->len, __entry->gpa, __entry->val)
++);
++
+ #define KVM_TRACE_AUX_SAVE		0
+ #define KVM_TRACE_AUX_RESTORE		1
+ #define KVM_TRACE_AUX_ENABLE		2
+diff --git a/include/trace/events/kvm.h b/include/trace/events/kvm.h
+index 8b7252b8d751..b282e3a86769 100644
+--- a/include/trace/events/kvm.h
++++ b/include/trace/events/kvm.h
+@@ -156,41 +156,6 @@ TRACE_EVENT(kvm_mmio,
+ 		  __entry->len, __entry->gpa, __entry->val)
+ );
+ 
+-#define KVM_TRACE_IOCSR_READ_UNSATISFIED 0
+-#define KVM_TRACE_IOCSR_READ 1
+-#define KVM_TRACE_IOCSR_WRITE 2
+-
+-#define kvm_trace_symbol_iocsr \
+-	{ KVM_TRACE_IOCSR_READ_UNSATISFIED, "unsatisfied-read" }, \
+-	{ KVM_TRACE_IOCSR_READ, "read" }, \
+-	{ KVM_TRACE_IOCSR_WRITE, "write" }
+-
+-TRACE_EVENT(kvm_iocsr,
+-	TP_PROTO(int type, int len, u64 gpa, void *val),
+-	TP_ARGS(type, len, gpa, val),
+-
+-	TP_STRUCT__entry(
+-		__field(	u32,	type	)
+-		__field(	u32,	len	)
+-		__field(	u64,	gpa	)
+-		__field(	u64,	val	)
+-	),
+-
+-	TP_fast_assign(
+-		__entry->type		= type;
+-		__entry->len		= len;
+-		__entry->gpa		= gpa;
+-		__entry->val		= 0;
+-		if (val)
+-			memcpy(&__entry->val, val,
+-			       min_t(u32, sizeof(__entry->val), len));
+-	),
+-
+-	TP_printk("iocsr %s len %u gpa 0x%llx val 0x%llx",
+-		  __print_symbolic(__entry->type, kvm_trace_symbol_iocsr),
+-		  __entry->len, __entry->gpa, __entry->val)
+-);
+-
+ #define kvm_fpu_load_symbol	\
+ 	{0, "unload"},		\
+ 	{1, "load"}
+-- 
+2.47.2
 
