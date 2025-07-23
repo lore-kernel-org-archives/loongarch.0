@@ -1,134 +1,185 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24111288524
-	for <loongarch@lists.linux.dev>; Wed, 23 Jul 2025 09:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795EA2E0924
+	for <loongarch@lists.linux.dev>; Wed, 23 Jul 2025 11:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753264338; cv=none; b=FRC/6wFFNR0zTIt2XRRavMFso+RwY+ZM7GoWVN5HpHvkjk/1TnsWchKijfLQf7ydEXHNGUEMcdvVzGZlo/BimfDGQ5ZXrpl5v+fdvjc/cSBYABWdEwLT4aYj9pcRIsjLSq21uJ8/KxW6zExT2RCsevuEgnbUwDlkO0DaSRuq9mw=
+	t=1753270044; cv=none; b=Wr1exv4SUQQf1xCgcZGEn6teWVWuXr8q5qE+ofvqKvyDI9eEiRyT3nsjCsC6WNF/PQeLzzsBUg6Uz5kgSEaaWtrTDaYxLU7QZLKiBQHa/xJ1W1AIKAsNKtZh8ggTh6PLKRlJ3y13OkYc0Zjzq2Bk+C9pfsi9vm5wr5uksf6KppU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753264338; c=relaxed/simple;
-	bh=N/dbalNatsU+qJPlZyF8dzo8wixIe5QIEqdKyRkmytU=;
+	s=arc-20240116; t=1753270044; c=relaxed/simple;
+	bh=hD86L6FsrlkjppEeAolQw2+wF9G9eL2p4jeufpqBKxk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T5TPqthmNoTnpWyeSFj5AeapZ6XhOOR1MMVwwlNme/G1qAex+5i1dPlqt0YAmgovhHOKpIjONrhE78i6MkhkfJNjx8FGmLKrBiLjOTdFbgAOSqHrL51nk7wqiqa8ng2CnJ/1ToF/UH0Zx0b2x6QNFru+WJkrRYcAsEgBI3g1Ixc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FiXM17cJ; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Nz8Oxckp0BymRRHH2osrDZkMaSbERMMag4ODDRUdsSQsxNqAJ1VzOofgVZX0usn2MwTThYtH2eVSN/4Q+jJfHacwTaQe7/1sX6jpJ9MlThFh/Y1Mqiv9bGhQHswPY1wvUnNcQf5uEbc2nmcdTdKXAyBqKy3ab0iC8z2/APK5Kfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gna5kEEQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiXM17cJ"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-31306794b30so294961a91.2
-        for <loongarch@lists.linux.dev>; Wed, 23 Jul 2025 02:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753264336; x=1753869136; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V+/dV0S/yM5ebUUQww27WfFYh9svGL82SiTI5/e7B7U=;
-        b=FiXM17cJbcCIVuZ99hWZZ3IDfWaNfv/IwcbF9+56mLl/hFiSePqdkw5ECu9vVBPzcg
-         CdJ3B8IT0IuEyA+uCguqqUhrH22jR+WPCn9WsMDT1zxBEZlIqg1WdWR7dipyF/70AkfC
-         TOG3jaUdvxSxtw408iSu1NHxzub5SZm0QR9WLt1nc7Xtcb3NnmsUnyrm8JmNUt+8NTzu
-         3NYfCQdSrns70G4X7SBQ268YhOVioqwOVV8ouZZHEtierm7BKQQGqjMfkbmwsA/oD5/r
-         SiEqdanbsoA0FncrnqXEIExAwR2KS4pFRbVFJ4MjywBds0YnHQe9DqSyZLuq2soobi2c
-         lRKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753264336; x=1753869136;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V+/dV0S/yM5ebUUQww27WfFYh9svGL82SiTI5/e7B7U=;
-        b=ODso1ipBcDceGFFGVBA4Xq1zdcAeX9yWGq0LJLoMjFXBjk56uRhOTjqP75FJJIyOSR
-         4sHhye5mjrcJP8aoV/6mXW87lgo1BCng4zShQDwanVWmfwCk/lesk6U48DgvfpO8gC7Y
-         ArQWvltdft+JLI3Lysqah1631f4uzpKkbsCusgALKeWZcznf95aLZ0mSDV6mXhXXj+3A
-         ggQ8t02lnckLX/OoFRoKZjSdpjAwWY+UR+tGxjFSdoDO0apnAIzQuSFh32GQWmsq2krj
-         +IT2kVmiLi+/y61AP0OHeHoXNGrGq4lRB5UbvHdpzoffiJ2BL9dFP4d2HvQRS0sqT7zg
-         8QtA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAWhlAux+r2f8UKeTRxbqQHtswKWWLRbvJDvzvNukCFdQD3izDFVtDbN5cM6iNhAkfkWXAaLI1k7g=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyA4nUrKZUBv7CdFzo4oOecYDmUn7vmZD2ozluWzK7rDD2MX7TK
-	K/tHESYEp2/CVKbikCxuSSmKeUrXzERhg3coKNyseFg9HRRwpPWFLdjjFWsCJXUkYiKlovNVUpT
-	GcZY9YXuONdSqyyUAbV5chKIHH1HpjuM=
-X-Gm-Gg: ASbGncuR8yrhWNkFjmJJOhROAeYI0xLs2dYndJhEoZi5PVblwbLAL9zrZyX5mXmPQqo
-	6v+SBM3vnZ0SeGIhRwjjS65E10IMV1wHCVjRloZ13O3eb0qKQXexEVobJ/nEIFLRdxh6bT7HhCR
-	LroYe+JGABCzY/0Gn5OIwUiGt060UVWY7Un5cmwdL6k4D+mG0If1qmj3xj8OzJl2k31XVL7TaPt
-	Ed+VVmq
-X-Google-Smtp-Source: AGHT+IF5yp3x1uoUnaGZMoJBe+fzYcdYddNENz2TuSijJoibHeDm9sWJWjMzhPHdSfVi3F/pn5nO7IChbp80rUU+c7Q=
-X-Received: by 2002:a17:90b:4a47:b0:312:e76f:520f with SMTP id
- 98e67ed59e1d1-31e5088598emr1376264a91.8.1753264336236; Wed, 23 Jul 2025
- 02:52:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gna5kEEQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 021D6C4CEE7
+	for <loongarch@lists.linux.dev>; Wed, 23 Jul 2025 11:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753270044;
+	bh=hD86L6FsrlkjppEeAolQw2+wF9G9eL2p4jeufpqBKxk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gna5kEEQO0FOgZEpDT/57P3FtgjTpO2uSn7YtKJvIt8uQQR2K96rr5I5udfJm84c7
+	 hUCixUBGhFeFewlQZl5ImSC12rQ066qMf33T+t3KnfWw+hieP3bmovSIvdSeAyro8T
+	 rDAvE+1zTwuK+7PZStdlqwoxksDnTVrcewtIfj0R90Lk/7OxSRV5htQPL9mATKUKqn
+	 FNwWYdXoTMs9ewijIHqVuJHpbLeK6rcl8FxiEfKc5PDZ3OLEg2jRWi7e2qpVcLBpwt
+	 iwQTgypKrgsoWPbsVBwEt0XAYFokUpVjX2z6qSPVn+usBpJA0Qs7v+HL/XzcT/azs+
+	 7u/n5xDVV9aNQ==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-61594007beeso2228420eaf.3
+        for <loongarch@lists.linux.dev>; Wed, 23 Jul 2025 04:27:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWyKuBDc0NNehw5Qjg7tt2h1MlX/lvWSpZNaYOecFyO/IVPC3OeQYFtfIhkGBLAMtD5UjB3vz5J+B8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzdk4FWD5nwIUamT5lK8ijDfbiH0oSg4tpQK5fVPeEJggnLwe+6
+	HDdTje8J5c1QUmZo8rMcUsf2sj4H8VdEv8FweXKZQ7ivRTYydBnmB8/w1LqBg5x52DTuV/CV6ff
+	exckbZjrEK4r5kkz6tFTIQUnNcgMXl70=
+X-Google-Smtp-Source: AGHT+IFBBrTSzcKsgRsjEmVEi3AQj37BeFlkMYzSpLg5VvEYvowlyBOnql/yOqAWuu2WwDYjxLgaMwyjRGbr4TyyCQA=
+X-Received: by 2002:a05:6820:1792:b0:615:d742:6672 with SMTP id
+ 006d021491bc7-6187d90ed5dmr1918110eaf.8.1753270043105; Wed, 23 Jul 2025
+ 04:27:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250502094537.231725-1-fujita.tomonori@gmail.com>
- <CANiq72=Hr5rg7tYta8aUoxt8hOPjR2ik5_-xMWZwacr63=-7KA@mail.gmail.com> <20250723.152042.1300024463910400.fujita.tomonori@gmail.com>
-In-Reply-To: <20250723.152042.1300024463910400.fujita.tomonori@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 23 Jul 2025 11:52:04 +0200
-X-Gm-Features: Ac12FXzZ5eWdKPVCRlnoxNrP6D3TFPlJaL8XzNsPkRFhVqP5xsNvOO-4LiDYGFY
-Message-ID: <CANiq72nLQkJo8voGONJBEgE8st7=A4RW7VP+W++SVCWse49n=Q@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] rust: Add bug/warn abstractions
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	x86@kernel.org, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
-	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn, 
-	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com, 
-	tmgross@umich.edu, dakr@kernel.org
+References: <20250717103241.2806798-1-thierry.reding@gmail.com>
+ <2025071716-phoney-object-1648@gregkh> <rzbzah5iigz25jtxyqadnitkzkazxsaxntajhlfrfdslyioevk@pylcjkfh5n42>
+ <2025071919-patience-cattishly-cf7c@gregkh> <l54i36uk33je744w4f47tehdopk5dsjotvozfv5b2hehmxrwpq@eins7awyq4dy>
+ <2025072218-decipher-spree-327d@gregkh> <awvdox3bgabbc42aamezlg33k4cje6y75qoxn7ruh3nhd4qv5n@u3spdahehad4>
+In-Reply-To: <awvdox3bgabbc42aamezlg33k4cje6y75qoxn7ruh3nhd4qv5n@u3spdahehad4>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 23 Jul 2025 13:27:09 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iYBOephv29sj0DSKZVyF3JLBsoUCckhTbGcbYHUUhYyQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzC6e4YCoK78tnnsrW1OvCOkcpvLKri7HC2f5clbN5j5h64RJlwkH_QRPE
+Message-ID: <CAJZ5v0iYBOephv29sj0DSKZVyF3JLBsoUCckhTbGcbYHUUhYyQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] syscore: Pass context data to callbacks
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 23, 2025 at 8:21=E2=80=AFAM FUJITA Tomonori
-<fujita.tomonori@gmail.com> wrote:
+On Wed, Jul 23, 2025 at 11:01=E2=80=AFAM Thierry Reding
+<thierry.reding@gmail.com> wrote:
 >
-> The patch for arm64? I tried to minimize changes to the original code
-> so not intentional.
+> On Tue, Jul 22, 2025 at 04:08:09PM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Jul 22, 2025 at 03:56:40PM +0200, Thierry Reding wrote:
+> > > On Sat, Jul 19, 2025 at 08:52:41AM +0200, Greg Kroah-Hartman wrote:
+> > > > On Fri, Jul 18, 2025 at 03:49:37PM +0200, Thierry Reding wrote:
+> > > > > On Thu, Jul 17, 2025 at 02:11:41PM +0200, Greg Kroah-Hartman wrot=
+e:
+> > > > > > On Thu, Jul 17, 2025 at 12:32:34PM +0200, Thierry Reding wrote:
+> > > [...]
+> > > > >         struct syscore;
+> > > > >
+> > > > >         struct syscore_ops {
+> > > > >                 int (*suspend)(struct syscore *syscore);
+> > > > >                 void (*resume)(struct syscore *syscore);
+> > > > >                 void (*shutdown)(struct syscore *syscore);
+> > > > >         };
+> > > > >
+> > > > >         struct syscore {
+> > > > >                 const struct syscore_ops *ops;
+> > > > >                 struct list_head node;
+> > > > >         };
+> > > > >
+> > > > > Is that what you had in mind?
+> > > >
+> > > > I missed the list_head, so yes, this would be better, but don't pas=
+s
+> > > > back the syscore structure, how about just a void * instead, making=
+ the
+> > > > whole container_of() stuff go away?
+> > >
+> > > Yeah, that's a possibility. I personally don't like passing the void =
+*
+> > > around because it's easier to make mistakes that way. I also find it
+> > > unintuitive because it doesn't immediately show you what the function=
+s
+> > > expect.
+> > >
+> > > My understanding is that the container_of() should get optimized away
+> > > most of the time, so there aren't any obvious downsides that I can se=
+e.
+> >
+> > container_of() is just pointer math, but a cast is even faster :)
+> >
+> > > But I don't feel very strongly, so if you have a strong preference fo=
+r
+> > > void pointers, I can do that.
+> >
+> > That's what you really want to have here, it's a syscore data type
+> > thing, that the callback wants to reference.  Just like a irqrequest_t
+> > function passes back a void * that the handler "knows" how to deal with
+> > properly.
+>
+> IRQ handlers are different, though, because you pass the void * data
+> when you register the interrupt. That void * then gets stored and passed
+> to the handler when the interrupt is processed.
+>
+> We'd have to change it to something like this:
+>
+>         struct syscore_ops {
+>                 /* parameters now changed to driver-specific data */
+>                 int (*suspend)(void *data);
+>                 void (*resume)(void *data);
+>                 void (*shutdown)(void *data);
+>         };
+>
+>         struct syscore {
+>                 const struct syscore_ops *ops;
+>                 struct list_head node;
+>                 /* NEW driver-specific data */
+>                 void *data;
+>         };
 
-The riscv one, i.e. from the range diff:
+I like this more than the original, but I would do
 
-    @@ arch/riscv/include/asm/bug.h: typedef u32 bug_insn_t;
-                "2:\n\t"                                        \
-     -                  __BUG_ENTRY "\n\t"                      \
-     -                  ".org 2b + %3\n\t"                      \
-    --                  ".popsection"                           \
-     +          __BUG_ENTRY(file, line, flags) "\n\t"           \
-     +                  ".org 2b + " size "\n\t"                \
-    -+                  ".popsection\n"                         \
-    +                   ".popsection"                           \
-     +
-     +#define __BUG_FLAGS(flags)                                        \
-     +do {                                                              \
+struct syscore_ops_ops {
+                 int (*suspend)(void *data);
+                 void (*resume)(void *data);
+                 void (*shutdown)(void *data);
+};
 
-If you look into the `.popsection` line, your patch adds a newline,
-but I guess it was not intentional. In x86 there is a newline after
-the directive, but there we have `extra` afterwards.
+struct syscore_ops {
+                 struct list_head node;
+                 const struct syscore_ops_ops *ops;
+                 void *data;
+};
 
-(I noticed since I went to expand the macros in a dummy file, given it
-can be something tricky to spot differences in the normal diff, but it
-is visible in the normal diff.)
+and change register_syscore_ops() to take three arguments, the struct
+syscore_ops pointer, the (constified) struct syscore_ops_ops one, and
+the (void *) data one.
 
-> Yeah, I followed the original code style.
+Note that it is not necessary to change the signature of
+unregister_syscore_ops() in this case.
 
-And here I meant (i.e. the first part of that paragraph) that:
+> It ends up increasing the syscore structure's size, about 33%, though
+> given that there aren't a lot of these that's probably negligible.
 
-    -                    "\t.org 2b+%c1\n"                                 =
- \
+That's not a problem IMV.
 
-now generated those two spaces around it:
+> What I think is a bit more unnatural about it in this case is that we
+> embed the struct syscore into some driver-private data anyway so that
+> it becomes per instance, and then we have a circular reference:
+>
+>         foo->syscore.ops =3D &foo_syscore_ops;
+>         foo->syscore.data =3D foo;
 
-    +       "\t.org 2b + " size "\n"                                       =
- \
+That depends because "data" need not be "foo" in all cases, but also
+see above.  If the initialization of struct syscore_ops is all done by
+register_syscore_ops(), it doesn't look circular any more.
 
-> I've just tested rust-next. Looks like all arches (x86, riscv, and
-> arm64) works as expected.
+> Which looks kind of weird. Alternatively I suppose we could completely
+> rework it and make register_syscore_ops() allocate struct syscore, and
+> hide the internals from drivers completely:
+>
+>         err =3D register_syscore(&foo_syscore_ops, foo);
+>
+> With that it may be problematic that register_syscore() can now fail.
 
-Thanks a lot!
-
-Cheers,
-Miguel
+Yes, that might be a problem.
