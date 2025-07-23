@@ -1,166 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DE65223;
-	Wed, 23 Jul 2025 04:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D712318C91F
+	for <loongarch@lists.linux.dev>; Wed, 23 Jul 2025 06:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753246403; cv=none; b=T84n9Hf5yuByqjJsqc0iTAA+WFFmLRgbko02iOXbZGBucrmyTh0b3ixqGdzHVoxbMpwSf328QpxxH53xuTkkW6K60MTahWvofHTw5kvaQUhVFqSq7p+21FtIJd9IagvSnYE0gScTggB0dgqhRV2g2uq5x9PCDVI7YYuBc2kAY5s=
+	t=1753251663; cv=none; b=X8ERwpb26ZniM7/f1QZtnf53xcQx69u7FrVjlUGoDZk5PqOG1+qmuo/9olvmCN+qLPV7Bu3+gCZSTK315qmzn6n/AdWVu6QBM6l63HesvObZlXNPFBX86tVQfYPBqWVO3HATx62eQd6CV6tCFB/d1PrR7Vxc7cw8Z2dCKvEHjUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753246403; c=relaxed/simple;
-	bh=6960Oe+ygdAUIT8IES+usufPt7vUmG+j/++rDLnHJ+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q0LsmiERHwg51yel0rZznNYk+32KpBqWPo9sGl0BGNSq3/PYnkhl+58stm5sCglfLekiEnddGDlb2QA4IbxiYUe2n0KUM82doRjxeWFtnS9gj/0oBYkcsxSvAalIerCZ8mtnn22//FajCaGA6fQi9a1ztIqkuhqHoNvBneqm1jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qeO14F3r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753251663; c=relaxed/simple;
+	bh=dOYO8tpnU06dNy4P4TYEwSAL4PiOkzLs2WaCif6tl8Q=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=WGJdLFVsmg0odbJWPFcLsQeQ9k1bE0C02hi5SXzAFqKwP8BU23QJI1sPSEq1Dn2rAla/0wJHl4fyvKklYmEHVoeN6yIGo09ast3vwClcBrGtpTYoPWZU4RKnCPAipXlGpJN4RNvChi4kbweZWX2PNwUibKqha8XkPdpNsHNSPPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iq7rrzYQ; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qeO14F3r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF643C4CEE7;
-	Wed, 23 Jul 2025 04:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753246403;
-	bh=6960Oe+ygdAUIT8IES+usufPt7vUmG+j/++rDLnHJ+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qeO14F3rVsqV0udR9lCnw+pfDYgncDn+cJKtQKtaSl+fse3rOEBbpJClTzvUmOTFZ
-	 gOmRNs3ADYf/X70gphZHrXQQfyjTort5XJGf+YIHo0OxUoEdsCdQq8DGlUeLQF1OCW
-	 fmbLPp0ngcXUKtcNhOTeS79D7Nzf5BCFhNJrffOapSSX1uJnqaww9gmq1zzTb6VWwj
-	 JZCz4S7w+zda6Z2DotA0Xg1Fb7TS/cG4/8z76HdCpGyC8QRRp5nztwRf6e2YdECdEC
-	 w1XrmaviZFDWACnk4zI5qimuNzdxdiSKhneGRZpDfN5ggzJlYAIQ5UAHWogBd3uPKr
-	 irPKyrvnl+QHA==
-Date: Tue, 22 Jul 2025 23:53:22 -0500
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v1 7/8] dt-bindings: mtd: loongson,ls1b-nand-controller:
- Document the Loongson-2K1000 NAND controller
-Message-ID: <20250723045322.GA1226341-robh@kernel.org>
-References: <cover.1753166096.git.zhoubinbin@loongson.cn>
- <ed625518c752738cb7e24f6d4b7fb9b62a609880.1753166096.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iq7rrzYQ"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-74af4af04fdso433062b3a.1
+        for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 23:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753251661; x=1753856461; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uTJIJErGkkgE26dleTTxRjWov2b7YHYQZlVlu/+KP64=;
+        b=Iq7rrzYQrjq4OztJNot8TQuzeG9m7e9Oi+iOGid9hmVrpqU21B7Y1IDKZThzVNvpSS
+         o53toby1fbNJl89hPohrFHEeFtl42GgFEnWjEDtGvbqmrQ2FTKaEJp1m6/abBZW1PL+V
+         IPJ48zpepkY20d8xHO6fugs+sEDeXyl6jlk+7uSfpfKhfYryBv4dMO7OUd17gPLEDGIQ
+         fBueaLErOHw2TxJ0eJB1mb1VoR2TrOQBE3obx8xde/m9mmxmiozo6N7aR3b7K8BpcWxD
+         Fp1KRnsc5HRP4Iu9cVScFc1ll3DA5QhD0e3BZysSXse1k+PwdXCKqzqpGeYOgDJ3oLTJ
+         Q2ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753251661; x=1753856461;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uTJIJErGkkgE26dleTTxRjWov2b7YHYQZlVlu/+KP64=;
+        b=cC4ObOkawf95WGwLGY0xq4sZ/cSw7mNKU9E3TuHWflpaqWJDPyIJmQW5WeLGWeYqMw
+         uQ+T2MMkmZOdH7blcT3PLELoZLxwy3/S7jckqYSGH8CB0kJmG78HIZLSPZ6xyiUb/TMb
+         TO+h2nTPt81PdQZRP3xMODFbn4oviH3qTfOxeYEWtee2ui0XoFY3Be2vJhMGxobxeygo
+         KX45q5RocO1u6fzt69pImYWTnvOqKdzkouWgOYiroWXHOJDAll3yD9hxrzcmvEVzxM+h
+         T0hjXJWx6Iw03hiWLl0eP1PmNFi2CVHzclV3pnBOC0MHXYPPqoJgsXOmUtFOtpOdW1UX
+         QRLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHuW0wt+7OpxZZoX9aR577+SkA3C7umLA7pF9OQNWiKO3SQqYIgEyIB7e/dH5A6SGUIL4BuqlMj6k=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwIMGZYK1SzgFvTyT5yhJeL3JVJ4A0GvW0PKDgcuY9wfF/O39dR
+	C6jQNUfcCkUC7X8p3cMn3rvoXVS9wWlkLgaMiFkvpnkrJ8CNxyr2kPi+
+X-Gm-Gg: ASbGncvmq/OfpygsCI54FmnZbfXf539t2msFsw5FZk0KggU5ZWUdntQUxHiaQV3FXxC
+	TdpweIZHwgz+6qNHqUDxrPUKQ288+jOyxaKeMPLR1eqeRJNGOfmTWzscihlICd3biF7Ahju8YKL
+	YFqTgrvX4qdpK8P/rIYBHQponWeFG7+w7d2RqJ3T8p3mPTqyzvq9R0eOZmHmv+PR1tWjCdUwAvw
+	raTrPXAWnawS+cJ49epFLQISXZj/aX+GVkuyIIDv8MYGHR8YR8tafMZCm3YArzadymqrJQ/Y9Wr
+	kDc/349DyHAxeeI9NgecSsv8VHrD4gqEUacptYrJ9zE0cMxdlF6+4hovv3HHdueSUWj3M6E3jf5
+	N87ttg4N5q+DeD5lFiMAyGgiL7oE6gt2RqYbgAcDJmFJD+PywQ4C4lG0QN+R9JH3EXqQ1K1ZRbR
+	IvAn5o6W5K59E=
+X-Google-Smtp-Source: AGHT+IGCxo7rpM1rfk9awKmH6T4kvUglH+Vv6jkf+KqhCJfICKASDS6UxOL8YDc9W4DbQD/ruOaxfA==
+X-Received: by 2002:a05:6a21:1fc3:b0:225:ba92:447d with SMTP id adf61e73a8af0-23d48dbeaf4mr3003123637.9.1753251660919;
+        Tue, 22 Jul 2025 23:21:00 -0700 (PDT)
+Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-759cb67901csm8977248b3a.100.2025.07.22.23.20.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Jul 2025 23:21:00 -0700 (PDT)
+Date: Wed, 23 Jul 2025 15:20:42 +0900 (JST)
+Message-Id: <20250723.152042.1300024463910400.fujita.tomonori@gmail.com>
+To: miguel.ojeda.sandonis@gmail.com
+Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, x86@kernel.org,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org,
+ hpa@zytor.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, tangyouling@loongson.cn,
+ hejinyang@loongson.cn, yangtiezhu@loongson.cn, ojeda@kernel.org,
+ alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+ aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org
+Subject: Re: [PATCH v6 0/4] rust: Add bug/warn abstractions
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <CANiq72=Hr5rg7tYta8aUoxt8hOPjR2ik5_-xMWZwacr63=-7KA@mail.gmail.com>
+References: <20250502094537.231725-1-fujita.tomonori@gmail.com>
+	<CANiq72=Hr5rg7tYta8aUoxt8hOPjR2ik5_-xMWZwacr63=-7KA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed625518c752738cb7e24f6d4b7fb9b62a609880.1753166096.git.zhoubinbin@loongson.cn>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 22, 2025 at 05:11:06PM +0800, Binbin Zhou wrote:
-> Add new compatible for the Loongson-2K NAND controller used for
-> Loongson-2K1000 SoC.
+On Wed, 23 Jul 2025 02:48:20 +0200
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
+
+>> This patchset adds warn_on macro with the bug/warn abstraction that
+>> utilizes the kernel's BUG/WARN feature via assembly.
 > 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../mtd/loongson,ls1b-nand-controller.yaml    | 58 +++++++++++++++++--
->  1 file changed, 54 insertions(+), 4 deletions(-)
+> Ok, let's move forward with this.
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-controller.yaml b/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-controller.yaml
-> index 4ec2b5d1e89d..07a0d9b40fdd 100644
-> --- a/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-controller.yaml
-> @@ -26,18 +26,19 @@ properties:
->            - loongson,ls1b-nand-controller
->            - loongson,ls1c-nand-controller
->            - loongson,ls2k0500-nand-controller
-> +          - loongson,ls2k1000-nand-controller
->        - items:
->            - enum:
->                - loongson,ls1a-nand-controller
->            - const: loongson,ls1b-nand-controller
->  
->    reg:
-> -    maxItems: 2
-> +    minItems: 2
-> +    maxItems: 3
->  
->    reg-names:
-> -    items:
-> -      - const: nand
-> -      - const: nand-dma
+> I took a look at the first three patches and compared the expanded
+> output for the existing macros, to make sure we (hopefully) don't
+> break anything else.
 
-Keep the list and add dma-config here and 'minItems: 2'
+Thanks a lot!
 
-> +    minItems: 2
-> +    maxItems: 3
->  
->    dmas:
->      maxItems: 1
-> @@ -54,6 +55,32 @@ required:
->  
->  unevaluatedProperties: false
->  
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - loongson,ls2k1000-nand-controller
-> +
-> +then:
-> +  properties:
-> +    reg:
-> +      minItems: 3
-> +    reg-names:
-> +      items:
-> +        - const: nand
-> +        - const: nand-dma
-> +        - const: dma-config
+> It seems OK, I only noticed a removed newline. Was that intentional?
 
-And just 'minItems: 3' here
+The patch for arm64? I tried to minimize changes to the original code
+so not intentional.
 
-> +
-> +else:
-> +  properties:
-> +    reg:
-> +      maxItems: 2
-> +    reg-names:
-> +      items:
-> +        - const: nand
-> +        - const: nand-dma
-
-And 'maxItems: 2' here.
-
-> +
->  examples:
->    - |
->      nand-controller@1fe78000 {
-> @@ -72,3 +99,26 @@ examples:
->              nand-ecc-algo = "hamming";
->          };
->      };
-> +
-> +  - |
-> +    nand-controller@1fe26000 {
-> +        compatible = "loongson,ls2k1000-nand-controller";
-> +        reg = <0x1fe26000 0x24>,
-> +              <0x1fe26040 0x4>,
-> +              <0x1fe00438 0x8>;
-> +        reg-names = "nand", "nand-dma", "dma-config";
-> +        dmas = <&apbdma0 0>;
-> +        dma-names = "rxtx";
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        nand@0 {
-> +            reg = <0>;
-> +            label = "ls2k1000-nand";
-> +            nand-use-soft-ecc-engine;
-> +            nand-ecc-algo = "bch";
-> +            nand-ecc-strength = <8>;
-> +            nand-ecc-step-size = <512>;
-> +        };
-> +    };
-> -- 
-> 2.47.3
+> There was also a bad parameter name, but that was not hurting anything
+> since it was unused.
 > 
+> (For the x86 one could be closer removing a couple spaces, but it
+> should not matter and other x86 files format it that way, so I didn't
+> change it. I also noticed unexpected spaces used for aligning the
+> macro, but it turned out it was in the original already, so I left it
+> also unchanged.)
+
+Yeah, I followed the original code style.
+
+> Then I found a few more bits on the last patch.
+> 
+> Tomo, could you please double-check you are OK with all the changes,
+> and please run the tests you did back then on `rust-next` again for
+> all arches, given it has been a while since you posted it (plus I did
+> a few changes on top, after all)? I would appreciate it, thanks in
+> advance!
+
+I've just tested rust-next. Looks like all arches (x86, riscv, and
+arm64) works as expected.
+
+> To be clear, I didn't re-check every single thing/combination, but
+> hopefully what I caught helps. Since there are no users anyway (of the
+> last patch) right now, it should be fairly safe.
+> 
+> Applied to `rust-next` -- thanks everyone!
+> 
+>     [ Fixed typo in macro parameter name. - Miguel ]
+> 
+>     [ Remove ending newline in `ARCH_WARN_ASM` content to be closer to the
+>       original. - Miguel ]
+> 
+>     [ Avoid evaluating the condition twice (a good idea in general,
+>       but it also matches the C side). Simplify with `as_char_ptr()`
+>       to avoid a cast. Cast to `ffi` integer types for
+>       `warn_slowpath_fmt`. Avoid cast for `null()`. - Miguel ]
+> 
+
+All the changes look good.
+
+Thanks!
