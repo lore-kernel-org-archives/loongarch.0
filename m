@@ -1,219 +1,390 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BE9251792
-	for <loongarch@lists.linux.dev>; Wed, 23 Jul 2025 06:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFE6276059;
+	Wed, 23 Jul 2025 07:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753253819; cv=none; b=J0EZmegRuRo102U/i9C1JjfVW/8ZEmgMUZe9qrjqewWWQRT6piT/obulTqG9Qbb0OdXqhgUj3cQEfkAW3nGhMXp55oztUyhkBnLQQLJp8X3U6A2q2tlM0gLRmr7zo5JqdiyT0SIVFnviD/irW9StolupLOj2TmhkEFkKGYPHmpc=
+	t=1753255891; cv=none; b=bp4lH0ftfbteYNO8Q37Cx75OeC0Plw0HfWvOBmCIcJVKrdi/XPOMaKM8ENAMszLM2r4poxaNC+gNi/ohdhks4ZdZog5FNcd7d+V+t+MIcLpZr0GzJPAcrCltwFNn9CWD3HWx+neq5ETt4PgKaSaB+p5YMeD52CxZMCBcqHHB7wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753253819; c=relaxed/simple;
-	bh=xdtI84WqemnjJgMeGyNiVI1yA4JLbAfIPNi/WDgsKYA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TUs7S37+m8qHri+GVqhu0IEIfZpzEyAEsRKDBYtN7KbWI7swinaGBNJa5YPjXmGbaXBVeh31ravtB4sc1x7Bt3ivAWYu8nHoHr6+2bCNrY/PYxMYgETuly1kEruwWqpbmPByoH55OebrJIxJBafTjT7oh2hf5SdU5oHrPRZWagg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=guRYAP4f; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753255891; c=relaxed/simple;
+	bh=ZcT4NEz2f3ZqgROt6cawMZvUsZcWp6q9FVEPB/ui/QQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qbj/0OTQ89G9jE4vn0Fvwvz+8CIIPw57K/ECQwJBOO9GOw2uOCdOvextfO3QgH5DCR3vW8JcA5WzFDENrRXd+84+MuS1WaFSQJAMS2PWvuMI0XOihWv4LFAesvIIEoquW6yzcdxRKYs/ld/iq5Q40DF3VUjFn4MhSv3/8gKsaKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6+wOLig; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guRYAP4f"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ae0b2ead33cso110002966b.0
-        for <loongarch@lists.linux.dev>; Tue, 22 Jul 2025 23:56:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753253816; x=1753858616; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mzGs50sMtqAdEdsyGgv1T8F/fASfIs0YpLyjWXfuibc=;
-        b=guRYAP4fOCVIjt+n1QNb1+1Xcn82wWbbBQ8lvUXFQFzHv6oeJfddcecfAdklgTpL5g
-         ephj/ik72VUNpxc07oSYiADY1k39Q3Vlef589yRlpl3tLcR+riWb1W6up4feB3rlXWb8
-         RMlIbfcZrNcjaBo5MEqCiFSjj9lMPM1RTQni7WFVdDmv/Yt4Cvu9itam9RGsl81afCQn
-         qELVirNZrEeVtvZ8sZ+wAj/h4MqruZ8Jkverzr2y9Lzr66z4Q6FPdPNkmi9OV3xNkcx5
-         ufCYKH/XYpouHLoCmQA4V+zws7x1YIvuF/bukGBjEarmT9ErRASqYZvW0d7R1mWV/VBl
-         vbyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753253816; x=1753858616;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mzGs50sMtqAdEdsyGgv1T8F/fASfIs0YpLyjWXfuibc=;
-        b=AH/4rG6cUbMGzUAxNXMYjywDpmaFmKyNguPjkON96EFZ1qs8rEccRcJCZbd4aF7HCR
-         YdnA+zGzExs4PwINLEQ62HGTgzQi83ltd1EwAcKyTSKBs2TDgmFwb3fvReZ/Jl/QxL/2
-         tLYvWEP+bMHHNQUBW+PhH0AJAASZCQugzABrn+aJfcwr1BLpZaCqr5riyYVvjLM/CmK7
-         v6eJzuBbQl9R7b/ezAetCAusY6DsM7F1w0+KIbu5WaVU65YI7WSvLQ6b1ZPcPdxyqcVy
-         58xR/k1rgeLneUmfNjmOI8dJR/E6aMetrUQNqbssN+mFmjyMnl9u/TFB7C89oGmPtU5+
-         cv2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUN/bkEawlI3PYgnZWhZC6sEDDRWfrW35LTwzgl17XhRgvNfnOqZLMg3mzBhsDweDRy9S9P0dEYoeA=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy4/ieVsgKSUFM+8RGhZCrMwzjItVp+RDz0JT7MN6ru9295N+kx
-	9nS5mFCHa0aTVOQkprzRHZ2ukxZBlOzMk9ck8i7xKuioQU7ph8GrAWWqM07q15tn4eiYLb80WNg
-	qviI5oOhzXxWb6qm9X+DnnH6P5O0M0zM=
-X-Gm-Gg: ASbGncszG1MLcGUmGNY0n8BCs4C481WYaU9oAJMQsbBdyYwMaSCgEhLeCSy1p75+RP3
-	O8vtX5DlRzJyPeqfzPW2YD5v5VGoDdJJU83p6Z6KwSAkTuCW4Ke/7uKnMzt9EX11EXfyiExuVsA
-	Z1YfGYJpzZVSyQOJCgeitGlxltXJBo0WFteC5NuCOqupBQJSTO3Ce5MUFVaYcnPuqi4PciBfZ3G
-	Xe5PRsX
-X-Google-Smtp-Source: AGHT+IHtfZqjBEsPm3jiweUvUgdfmqxEA1/NrYjUcBbEteu7UTNuOkN8so+Y9soZLgns8FwUWGBF/PDOw0pVHGFgS2Q=
-X-Received: by 2002:a17:907:9704:b0:acb:37ae:619c with SMTP id
- a640c23a62f3a-af2f48b0b3fmr184201766b.15.1753253815516; Tue, 22 Jul 2025
- 23:56:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6+wOLig"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A14C4CEF4;
+	Wed, 23 Jul 2025 07:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753255891;
+	bh=ZcT4NEz2f3ZqgROt6cawMZvUsZcWp6q9FVEPB/ui/QQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U6+wOLigE0kHMrkZ65PNCaXdNK9qUL5lB0UiJS97mMupafqUgcoMEGanOTt7gcXUe
+	 6v9M46NS0k21Z3QGhRMZOOq3bjscM3c3eVE4xyx+TjtlCETvLito5XRoX90fbPgV3P
+	 dZgsjrCOj/Fg/8how8xaiZ5UMtoczpCgD5cnt2kFEEq/JtUdL+PpDsjwGnQoqlVo28
+	 Kr38JsDaS8jKShqH+mDmbDDQwsJzcbAku6nMbjPvmsDSLOLGgWhTaSk0kIEvxYXnSA
+	 bjXQUoJrZ4NY6dXQz00hcXTW6TqNAhQa0+zPyQIqKVWcZuP5jCSGFc2AvMefOCxLVf
+	 sSPlfxIvCigBg==
+Date: Wed, 23 Jul 2025 08:31:25 +0100
+From: Lee Jones <lee@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Corey Minyard <minyard@acm.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
+	kexybiscuit@aosc.io, wangyao@lemote.com,
+	Chong Qiao <qiaochong@loongson.cn>,
+	Corey Minyard <corey@minyard.net>
+Subject: Re: [PATCH v7 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function
+ support
+Message-ID: <20250723073125.GL11056@google.com>
+References: <cover.1751617911.git.zhoubinbin@loongson.cn>
+ <f4c546b0160294296c98b6b12b0ab1d2000dd44c.1751617911.git.zhoubinbin@loongson.cn>
+ <20250710100323.GI1431498@google.com>
+ <CAMpQs4LQME7oO8i2FWgUsAQqwThcp=R3jubPGqZ1Vr-pvEHvoA@mail.gmail.com>
+ <20250718135246.GH11056@google.com>
+ <CAMpQs4+AOc2bkOFSWW_hX-+akyRT9vTBb6mFJGKpjt9fSsF7MQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1753166096.git.zhoubinbin@loongson.cn> <ed625518c752738cb7e24f6d4b7fb9b62a609880.1753166096.git.zhoubinbin@loongson.cn>
- <20250723045322.GA1226341-robh@kernel.org>
-In-Reply-To: <20250723045322.GA1226341-robh@kernel.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 23 Jul 2025 14:56:43 +0800
-X-Gm-Features: Ac12FXwj_V_rXm0G-f1xcp_U8ADbgodmKUhlQGp8z4NF7NnsLXFcURgUjYOstVM
-Message-ID: <CAMpQs4K2saB_Cyn03btZdc4ePa-U6G2ots3AtiNoy8UHrBY7OA@mail.gmail.com>
-Subject: Re: [PATCH v1 7/8] dt-bindings: mtd: loongson,ls1b-nand-controller:
- Document the Loongson-2K1000 NAND controller
-To: Rob Herring <robh@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Keguang Zhang <keguang.zhang@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4+AOc2bkOFSWW_hX-+akyRT9vTBb6mFJGKpjt9fSsF7MQ@mail.gmail.com>
 
-Hi Rob:
+On Mon, 21 Jul 2025, Binbin Zhou wrote:
 
-Thanks for your review.
-
-On Wed, Jul 23, 2025 at 12:53=E2=80=AFPM Rob Herring <robh@kernel.org> wrot=
-e:
->
-> On Tue, Jul 22, 2025 at 05:11:06PM +0800, Binbin Zhou wrote:
-> > Add new compatible for the Loongson-2K NAND controller used for
-> > Loongson-2K1000 SoC.
+> Hi Lee:
+> 
+> Thanks for your reply.
+> 
+> 
+> On Fri, Jul 18, 2025 at 9:52 PM Lee Jones <lee@kernel.org> wrote:
 > >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  .../mtd/loongson,ls1b-nand-controller.yaml    | 58 +++++++++++++++++--
-> >  1 file changed, 54 insertions(+), 4 deletions(-)
+> > On Fri, 11 Jul 2025, Binbin Zhou wrote:
 > >
-> > diff --git a/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-c=
-ontroller.yaml b/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-c=
-ontroller.yaml
-> > index 4ec2b5d1e89d..07a0d9b40fdd 100644
-> > --- a/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-controll=
-er.yaml
-> > +++ b/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-controll=
-er.yaml
-> > @@ -26,18 +26,19 @@ properties:
-> >            - loongson,ls1b-nand-controller
-> >            - loongson,ls1c-nand-controller
-> >            - loongson,ls2k0500-nand-controller
-> > +          - loongson,ls2k1000-nand-controller
-> >        - items:
-> >            - enum:
-> >                - loongson,ls1a-nand-controller
-> >            - const: loongson,ls1b-nand-controller
+> > > Hi Lee:
+> > >
+> > > Thanks for your review.
+> > >
+> > > On Thu, Jul 10, 2025 at 6:03 PM Lee Jones <lee@kernel.org> wrote:
+> > > >
+> > > > On Fri, 04 Jul 2025, Binbin Zhou wrote:
+> > > >
+> > > > > Since the display is a sub-function of the Loongson-2K BMC, when the
+> > > > > BMC reset, the entire BMC PCIe is disconnected, including the display
+> > > > > which is interrupted.
+> > > > >
+> > > > > Quick overview of the entire LS2K BMC reset process:
+> > > > >
+> > > > > There are two types of reset methods: soft reset (BMC-initiated reboot
+> > > > > of IPMI reset command) and BMC watchdog reset (watchdog timeout).
+> > > > >
+> > > > > First, regardless of the method, an interrupt is generated (PCIe interrupt
+> > > > > for soft reset/GPIO interrupt for watchdog reset);
+> > > > >
+> > > > > Second, during the interrupt process, the system enters bmc_reset_work,
+> > > > > clears the bus/IO/mem resources of the LS7A PCI-E bridge, waits for the BMC
+> > > > > reset to begin, then restores the parent device's PCI configuration space,
+> > > > > waits for the BMC reset to complete, and finally restores the BMC PCI
+> > > > > configuration space.
+> > > > >
+> > > > > Display restoration occurs last.
+> > > > >
+> > > > > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+> > > > > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+> > > > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > Acked-by: Corey Minyard <corey@minyard.net>
+> > > > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > > > ---
+> > > > >  drivers/mfd/ls2k-bmc-core.c | 328 ++++++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 328 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
+> > > > > index 50d560a4611c..1ae673f6a196 100644
+> > > > > --- a/drivers/mfd/ls2k-bmc-core.c
+> > > > > +++ b/drivers/mfd/ls2k-bmc-core.c
+> > > > > @@ -10,8 +10,12 @@
+> > > > >   */
+> > > > >
+> > > > >  #include <linux/aperture.h>
+> > > > > +#include <linux/bitfield.h>
+> > > > > +#include <linux/delay.h>
+> > > > >  #include <linux/errno.h>
+> > > > >  #include <linux/init.h>
+> > > > > +#include <linux/iopoll.h>
+> > > > > +#include <linux/kbd_kern.h>
+> > > > >  #include <linux/kernel.h>
+> > > > >  #include <linux/mfd/core.h>
+> > > > >  #include <linux/module.h>
+> > > > > @@ -19,6 +23,8 @@
+> > > > >  #include <linux/pci_ids.h>
+> > > > >  #include <linux/platform_data/simplefb.h>
+> > > > >  #include <linux/platform_device.h>
+> > > > > +#include <linux/stop_machine.h>
+> > > > > +#include <linux/vt_kern.h>
+> > > > >
+> > > > >  /* LS2K BMC resources */
+> > > > >  #define LS2K_DISPLAY_RES_START               (SZ_16M + SZ_2M)
+> > > > > @@ -29,6 +35,48 @@
+> > > > >  #define LS2K_IPMI3_RES_START         (LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
+> > > > >  #define LS2K_IPMI4_RES_START         (LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
+> > > > >
+> > > > > +#define LS7A_PCI_CFG_SIZE            0x100
+> > > > > +
+> > > > > +/* LS7A bridge registers */
+> > > > > +#define LS7A_PCIE_PORT_CTL0          0x0
+> > > > > +#define LS7A_PCIE_PORT_STS1          0xC
+> > > > > +#define LS7A_GEN2_CTL                        0x80C
+> > > > > +#define LS7A_SYMBOL_TIMER            0x71C
+> > > > > +
+> > > > > +/* Bits of LS7A_PCIE_PORT_CTL0 */
+> > > > > +#define LS2K_BMC_PCIE_LTSSM_ENABLE   BIT(3)
+> > > > > +
+> > > > > +/* Bits of LS7A_PCIE_PORT_STS1 */
+> > > > > +#define LS2K_BMC_PCIE_LTSSM_STS              GENMASK(5, 0)
+> > > > > +#define LS2K_BMC_PCIE_CONNECTED              0x11
+> > > > > +
+> > > > > +#define LS2K_BMC_PCIE_DELAY_US               1000
+> > > > > +#define LS2K_BMC_PCIE_TIMEOUT_US     1000000
+> > > > > +
+> > > > > +/* Bits of LS7A_GEN2_CTL */
+> > > > > +#define LS7A_GEN2_SPEED_CHANG                BIT(17)
+> > > > > +#define LS7A_CONF_PHY_TX             BIT(18)
+> > > > > +
+> > > > > +/* Bits of LS7A_SYMBOL_TIMER */
+> > > > > +#define LS7A_MASK_LEN_MATCH          BIT(26)
+> > > > > +
+> > > > > +/* Interval between interruptions */
+> > > > > +#define LS2K_BMC_INT_INTERVAL                (60 * HZ)
+> > > > > +
+> > > > > +/* Maximum time to wait for U-Boot and DDR to be ready with ms. */
+> > > > > +#define LS2K_BMC_RESET_WAIT_TIME     10000
+> > > > > +
+> > > > > +/* It's an experience value */
+> > > > > +#define LS7A_BAR0_CHECK_MAX_TIMES    2000
+> > > > > +
+> > > > > +#define LS2K_BMC_RESET_GPIO          14
+> > > > > +#define LOONGSON_GPIO_REG_BASE               0x1FE00500
+> > > > > +#define LOONGSON_GPIO_REG_SIZE               0x18
+> > > > > +#define LOONGSON_GPIO_OEN            0x0
+> > > > > +#define LOONGSON_GPIO_FUNC           0x4
+> > > > > +#define LOONGSON_GPIO_INTPOL         0x10
+> > > > > +#define LOONGSON_GPIO_INTEN          0x14
+> > > > > +
+> > > > >  static struct resource ls2k_display_resources[] = {
+> > > > >       DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
+> > > > >  };
+> > > > > @@ -62,6 +110,273 @@ static struct mfd_cell ls2k_bmc_cells[] = {
+> > > > >       MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
+> > > > >  };
+> > > > >
+> > > > > +/* Index of the BMC PCI configuration space to be restored at BMC reset. */
+> > > > > +struct ls2k_bmc_pci_data {
+> > > > > +     u32 pci_command;
+> > > > > +     u32 base_address0;
+> > > > > +     u32 interrupt_line;
+> > > > > +};
+> > > > > +
+> > > > > +/* Index of the parent PCI configuration space to be restored at BMC reset. */
+> > > > > +struct ls2k_bmc_bridge_pci_data {
+> > > > > +     u32 pci_command;
+> > > > > +     u32 base_address[6];
+> > > > > +     u32 rom_addreess;
+> > > > > +     u32 interrupt_line;
+> > > > > +     u32 msi_hi;
+> > > > > +     u32 msi_lo;
+> > > > > +     u32 devctl;
+> > > > > +     u32 linkcap;
+> > > > > +     u32 linkctl_sts;
+> > > > > +     u32 symbol_timer;
+> > > > > +     u32 gen2_ctrl;
+> > > > > +};
+> > > > > +
+> > > > > +struct ls2k_bmc_pdata {
+> > > > > +     struct device *dev;
+> > > > > +     struct work_struct bmc_reset_work;
+> > > > > +     struct ls2k_bmc_pci_data bmc_pci_data;
+> > > > > +     struct ls2k_bmc_bridge_pci_data bridge_pci_data;
+> > > > > +};
+> > > > > +
+> > > > > +static bool ls2k_bmc_bar0_addr_is_set(struct pci_dev *ppdev)
+> > > >
+> > > > Nit: This is usually called pdev.
+> > >
+> > > OK.
 > >
-> >    reg:
-> > -    maxItems: 2
-> > +    minItems: 2
-> > +    maxItems: 3
+> > Snip things you agree with please.
 > >
-> >    reg-names:
-> > -    items:
-> > -      - const: nand
-> > -      - const: nand-dma
->
-> Keep the list and add dma-config here and 'minItems: 2'
+> > [...]
+> >
+> > > > > +static void ls2k_bmc_events_fn(struct work_struct *work)
+> > > > > +{
+> > > > > +     struct ls2k_bmc_pdata *priv = container_of(work, struct ls2k_bmc_pdata, bmc_reset_work);
+> > > > > +
+> > > > > +     /*
+> > > > > +      * The PCI-E is lost when the BMC resets, at which point access to the PCI-E
+> > > > > +      * from other CPUs is suspended to prevent a crash.
+> > > > > +      */
+> > > > > +     stop_machine(ls2k_bmc_recover_pci_data, priv, NULL);
+> > > > > +
+> > > > > +#ifdef CONFIG_VT
+> > > >
+> > > > #ifery in C-files is generally frowned upon.
+> > > >
+> > > > Is the any pieces of run-time data you can use instead?
+> > > >
+> > > > Or a stub which culminated in a no-op if !CONFIG_VT?
+> > >
+> > > Emm, I'm not sure if I understand correctly, but is the following way suitable?
+> > >
+> > >         if (IS_ENABLED(CONFIG_VT))
+> >
+> > It's better than #if, but even better would be a stub in a header file.
+> 
+> Hmm... The declarations for vt_move_to_console()/set_console() are in
+> two VT-related header files [1]. Adding the relevant stub functions
+> involves the VT subsystem, which does not seem to be relevant to the
+> subject of our patch set.
+> Therefore, I think the above modification is more suitable for us.
 
-OK, It will be rewritten as follows:
+All of the subsystems in the kernel are open source, last time I checked. :)
 
-  reg-names:
-    minItems: 2
-    items:
-      - const: nand
-      - const: nand-dma
-      - const: dma-config
+But okay, I won't insist on it.
 
->
-> > +    minItems: 2
-> > +    maxItems: 3
+> [1]:
+> vt_move_to_console:
+> https://elixir.bootlin.com/linux/v6.15/source/include/linux/vt_kern.h#L141
+> set_console: https://elixir.bootlin.com/linux/v6.15/source/include/linux/kbd_kern.h#L69
+> 
 > >
-> >    dmas:
-> >      maxItems: 1
-> > @@ -54,6 +55,32 @@ required:
+> > >                 /* Re-push the display due to previous PCI-E loss. */
+> > >                 set_console(vt_move_to_console(MAX_NR_CONSOLES - 1, 1));
+> > >
+> > > >
+> > > > > +     /* Re-push the display due to previous PCI-E loss. */
+> > > > > +     set_console(vt_move_to_console(MAX_NR_CONSOLES - 1, 1));
+> > > > > +#endif
+> > > > > +}
+> > > > > +
+> > > > > +static irqreturn_t ls2k_bmc_interrupt(int irq, void *arg)
+> > > > > +{
+> > > > > +     struct ls2k_bmc_pdata *priv = arg;
+> > > > > +     static unsigned long last_jiffies;
+> > > > > +
+> > > > > +     if (system_state != SYSTEM_RUNNING)
+> > > > > +             return IRQ_HANDLED;
+> > > > > +
+> > > > > +     /* Skip interrupt in LS2K_BMC_INT_INTERVAL */
+> > > > > +     if (time_after(jiffies, last_jiffies + LS2K_BMC_INT_INTERVAL)) {
+> > > > > +             schedule_work(&priv->bmc_reset_work);
+> > > > > +             last_jiffies = jiffies;
+> > > > > +     }
+> > > > > +
+> > > > > +     return IRQ_HANDLED;
+> > > > > +}
+> > > > > +
+> > > > > +/*
+> > > > > + * Saves the BMC parent device (LS7A) and its own PCI configuration space registers
+> > > > > + * that need to be restored after BMC reset.
+> > > > > + */
+> > > > > +static void ls2k_bmc_save_pci_data(struct pci_dev *pdev, struct ls2k_bmc_pdata *priv)
+> > > > > +{
+> > > > > +     struct pci_dev *parent = pdev->bus->self;
+> > > > > +     int base, i = 0;
+> > > > > +
+> > > > > +     pci_read_config_dword(parent, PCI_COMMAND, &priv->bridge_pci_data.pci_command);
+> > > > > +
+> > > > > +     for (base = PCI_BASE_ADDRESS_0; base <= PCI_BASE_ADDRESS_5; base += 4, i++)
+> > > > > +             pci_read_config_dword(parent, base, &priv->bridge_pci_data.base_address[i]);
+> > > > > +
+> > > > > +     pci_read_config_dword(parent, PCI_ROM_ADDRESS, &priv->bridge_pci_data.rom_addreess);
+> > > > > +     pci_read_config_dword(parent, PCI_INTERRUPT_LINE, &priv->bridge_pci_data.interrupt_line);
+> > > > > +
+> > > > > +     pci_read_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_LO,
+> > > > > +                           &priv->bridge_pci_data.msi_lo);
+> > > > > +     pci_read_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_HI,
+> > > > > +                           &priv->bridge_pci_data.msi_hi);
+> > > > > +
+> > > > > +     pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_DEVCTL,
+> > > > > +                           &priv->bridge_pci_data.devctl);
+> > > > > +     pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCAP,
+> > > > > +                           &priv->bridge_pci_data.linkcap);
+> > > > > +     pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCTL,
+> > > > > +                           &priv->bridge_pci_data.linkctl_sts);
+> > > > > +
+> > > > > +     pci_read_config_dword(parent, LS7A_GEN2_CTL, &priv->bridge_pci_data.gen2_ctrl);
+> > > > > +     priv->bridge_pci_data.gen2_ctrl |= FIELD_PREP(LS7A_GEN2_SPEED_CHANG, 0x1)
+> > > > > +                                     | FIELD_PREP(LS7A_CONF_PHY_TX, 0x0);
+> > > > > +
+> > > > > +     pci_read_config_dword(parent, LS7A_SYMBOL_TIMER, &priv->bridge_pci_data.symbol_timer);
+> > > > > +     priv->bridge_pci_data.symbol_timer |= LS7A_MASK_LEN_MATCH;
+> > > > > +
+> > > > > +     pci_read_config_dword(pdev, PCI_COMMAND, &priv->bmc_pci_data.pci_command);
+> > > > > +     pci_read_config_dword(pdev, PCI_BASE_ADDRESS_0, &priv->bmc_pci_data.base_address0);
+> > > > > +     pci_read_config_dword(pdev, PCI_INTERRUPT_LINE, &priv->bmc_pci_data.interrupt_line);
+> > > > > +}
+> > > > > +
+> > > > > +static int ls2k_bmc_pdata_initial(struct pci_dev *pdev, struct ls2k_bmc_pdata *priv)
+> > > > > +{
+> > > > > +     int gsi = 16 + (LS2K_BMC_RESET_GPIO & 7);
+> > > > > +     void __iomem *gpio_base;
+> > > > > +     int irq, ret;
+> > > > > +
+> > > > > +     ls2k_bmc_save_pci_data(pdev, priv);
+> > > > > +
+> > > > > +     INIT_WORK(&priv->bmc_reset_work, ls2k_bmc_events_fn);
+> > > > > +
+> > > > > +     ret = devm_request_irq(&pdev->dev, pdev->irq, ls2k_bmc_interrupt,
+> > > > > +                            IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kbmc pcie", priv);
+> > > > > +     if (ret) {
+> > > > > +             dev_err(priv->dev, "LS2KBMC PCI-E request_irq(%d) failed\n", pdev->irq);
+> > > >
+> > > > Please don't use function names in error messages.
+> > > >
+> > > > Make them human readable inclusive of non-kernel engineers.
+> > >
+> > > How about:
+> > >
+> > > dev_err(ddata->dev, "Failed to request LS2KBMC PCI-E IRQ %d.\n", pdev->irq);
+> > >
+> > > also, the error message regarding GPIO IRQ is as follows:
+> > >
+> > > dev_err(ddata->dev, "Failed to request LS2KBMC GPIO IRQ %d.\n", irq);
 > >
-> >  unevaluatedProperties: false
+> > Yes, much better.
 > >
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        enum:
-> > +          - loongson,ls2k1000-nand-controller
-> > +
-> > +then:
-> > +  properties:
-> > +    reg:
-> > +      minItems: 3
-> > +    reg-names:
-> > +      items:
-> > +        - const: nand
-> > +        - const: nand-dma
-> > +        - const: dma-config
->
-> And just 'minItems: 3' here
-
-OK...
->
-> > +
-> > +else:
-> > +  properties:
-> > +    reg:
-> > +      maxItems: 2
-> > +    reg-names:
-> > +      items:
-> > +        - const: nand
-> > +        - const: nand-dma
->
-> And 'maxItems: 2' here.
-
-OK...
->
-> > +
-> >  examples:
-> >    - |
-> >      nand-controller@1fe78000 {
-> > @@ -72,3 +99,26 @@ examples:
-> >              nand-ecc-algo =3D "hamming";
-> >          };
-> >      };
-> > +
-> > +  - |
-> > +    nand-controller@1fe26000 {
-> > +        compatible =3D "loongson,ls2k1000-nand-controller";
-> > +        reg =3D <0x1fe26000 0x24>,
-> > +              <0x1fe26040 0x4>,
-> > +              <0x1fe00438 0x8>;
-> > +        reg-names =3D "nand", "nand-dma", "dma-config";
-> > +        dmas =3D <&apbdma0 0>;
-> > +        dma-names =3D "rxtx";
-> > +
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        nand@0 {
-> > +            reg =3D <0>;
-> > +            label =3D "ls2k1000-nand";
-> > +            nand-use-soft-ecc-engine;
-> > +            nand-ecc-algo =3D "bch";
-> > +            nand-ecc-strength =3D <8>;
-> > +            nand-ecc-step-size =3D <512>;
-> > +        };
-> > +    };
-> > --
-> > 2.47.3
+> > [...]
 > >
+> > > > > +     priv = devm_kzalloc(&dev->dev, sizeof(*priv), GFP_KERNEL);
+> > > > > +     if (IS_ERR(priv)) {
+> > > > > +             ret = -ENOMEM;
+> > > > > +             goto disable_pci;
+> > > > > +     }
+> > > > > +
+> > > > > +     priv->dev = &dev->dev;
+> > > > > +
+> > > > > +     ret = ls2k_bmc_pdata_initial(dev, priv);
+> > > >
+> > > > priv (ddata) already contains dev - you don't need both.
+> > >
+> > > Yes, we just pass priv(ddata), and
+> > >
+> > > struct pci_dev *pdev = to_pci_dev(ddata->dev);
+> >
+> > I would pass dev ... hold on, where do you store priv for reuse?
+> 
+> Sorry, I am not entirely sure I understand your question. It does not
+> appear that priv needs to be reused.
 
---
-Thanks.
-Binbin
+Then why does it exist at all?
+
+-- 
+Lee Jones [李琼斯]
