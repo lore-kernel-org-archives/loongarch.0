@@ -1,200 +1,177 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B25244698
-	for <loongarch@lists.linux.dev>; Wed, 23 Jul 2025 17:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D70C1607AB
+	for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 01:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753292001; cv=none; b=TQIepIcIUKuB7+MZeQuD5Pz5IQXczGr1voKMBIxHMyoThEkdQJU9KnpoB2I3zx8losLTcFmn1LqUmZM/XR6BTq0VOkldG10vedIcdZQbjX57dt6sPNv6P+vdWTnHBiXQEMIXC9UPqAl8NN1VwOOZ5V+MhSVzmKE4CtrSEqVsfCc=
+	t=1753321290; cv=none; b=sk29Ue0d45VHRfpCLMN0f2ABoQNCbIMbfTeqdnzPQIjzCR1NYAKN5Jl49Qac98t8SmD7IY6S2j4h93wHYsBASq69e8FzAz7g9LdFQQufEftL5qsnReTuHenFTJHHf8lzXYptH6I48W0PNGLyHUuO9a0ljLDr91+QyFuyWu/9QFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753292001; c=relaxed/simple;
-	bh=C2VlGrQRcLA6KNMLUWn4frGY1BGHzl2OatrBQFPkZDY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fQCNyjQejHQgFGUy8yzBQ8q1Zd6SNunR7WVCDKADgNhsDTKwIBZ/+bBRGuXZupzoigWPWZjxS/4rN/FTvWlJe1ne7ZNPjNWwpzQY+HmuOayh5uwJZNEyKoi8rgNU4rWNx207YE734rNxLM1y7oSQyLSVQdeqPRaEO0oa7mgBlIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/INoLx9; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/INoLx9"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-558f50c0202so7434e87.0
-        for <loongarch@lists.linux.dev>; Wed, 23 Jul 2025 10:33:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753291998; x=1753896798; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KBM3XOa1GXkPG7AU5j/kIOwYcdf4HqHkAm2pQZ3zu3U=;
-        b=X/INoLx9UUt5HIVBTwcvIcWrw29/kqyUm5crHPVxgHNfmg07XdSUgz6sxmD9EnK0MF
-         4tNY22FGRhyoT2z6RMXLK/9cxaBAjc+8GEDc8TToz0rgoaeftYp46Fjpgm5KqA4MZ1UT
-         6KkZKFpbsuHo0D5KFQlaZU6zZ3TM4rOogCyGvMol3VRLEj5JektNjzubtEAyNKf3OFSA
-         tRG81LAHtNFglPViUO1oxIIiRE13WWsV88H8pByOrFC5/bN5FNMQDNR8orqYSgVb+Xk9
-         Bz++QkvTIPXVsEUOdPNDtRT3ESNvW1jEAMNwSAwK79Azzcqv49w8kWS8yiD9Xjgncr8j
-         it0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753291998; x=1753896798;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KBM3XOa1GXkPG7AU5j/kIOwYcdf4HqHkAm2pQZ3zu3U=;
-        b=TsOq1R9cqajcaaODo48sHsy5SU9Uqbb4OZTiDdFUNcVEchsuShxiz9SjA5cU5oWZsn
-         feA8/VBuW3oJSlESaRvOIxjS1OXHP/I8jLSS7cWFm4IUrACA+TnYCjuwiQK0VKVL90Ni
-         1N2yiKwXOtiSwckAJ+tnoVAtYM9VqHMQc3z+46dakvcNvLDUp7XDuRzng9iBrUsh9arL
-         NY1XirepwFzYjwQNFmH2OOGve+GW0fPfHstkeQLlCKKF1+GwrFd/rrN3dS3yBnO6Aa7G
-         neqdkVt/PkGjXBzNSxPLUIzPefFxpfJp87GzyBhWzHZgGkxQ2iph9hh9+FP4KIGY2F5K
-         2Tpw==
-X-Forwarded-Encrypted: i=1; AJvYcCX0BoVINcvjqD3frwMUtvLoohJ+gg64zWm07mVuZrkwKpq+bPXFk+lNkrYUe47ac6b4sOTeXTIjMBE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzFT1mZQLYtFwFLU3oNf8+hu4WTK9hfDiFdLVcVOkmtptmX6/44
-	zvj+rm5YZGo62qqt4P6LtWR907hO5EZQwq88AqJuMclQliO9tKb8LwXq
-X-Gm-Gg: ASbGnctz84ZmfiNmcDT7HFIVr7DbSIrfsN8C8VI7f+Zw11g/ArL8xcvRYBSM19gEwQc
-	yrco4Cb5yr8UucKlmtqow31iuLL3FZmO2kq7yy7T4YK/Eq+53DipV5zSdzVb2+4DA6uZsxgmR5Z
-	Y0jL9/jzysU6JKDDkQf2L+EMJfEQQhvny/AIALCz/Q0KPGrLFY9qWWO0mttj+QB1fCd+mQofnXf
-	fAjdSwcWNOgS20f+GHBDWqyOtLX02uIpcoMYxVTEddlUzoun0jHEv/3f2BZb+kMWSPJV40xyzyO
-	GXlCc+aBTpj60lKYDAcytgzoH4A6so+z/qr8+COAEmYmIujd3/o0rczAs/5icv+nHwW4MIHbptS
-	2Y1fUxfqbxjBzCu7/vkj4SdAO5wBn+RSL+3KqF0k=
-X-Google-Smtp-Source: AGHT+IEhfKgja72kmMEVu8mg+y0GPA2wBPQGXBF9w7fJkfAZVikcQ8zyKptW1cZk85GIYWtzdxftWQ==
-X-Received: by 2002:a05:6512:3c8b:b0:553:24b4:6492 with SMTP id 2adb3069b0e04-55a5132157emr458860e87.5.1753291997236;
-        Wed, 23 Jul 2025 10:33:17 -0700 (PDT)
-Received: from [10.214.35.248] ([80.93.240.68])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55a31aac980sm2396014e87.74.2025.07.23.10.33.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Jul 2025 10:33:16 -0700 (PDT)
-Message-ID: <f7051d82-559f-420d-a766-6126ba2ed5ab@gmail.com>
-Date: Wed, 23 Jul 2025 19:32:51 +0200
+	s=arc-20240116; t=1753321290; c=relaxed/simple;
+	bh=1BXpZI4scZTyVma5PgiR4xOt+Q2ng527W4S4xuCME2Y=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PVdjCbnTLKx4GvJ1C3Wkx2VmSDdurms7cqmeIczb6JxvW86RdEhmCQMf1gcEIw+YOC2uoj3RKPcT2eziRbrBPZFvMbNKc8pCv0NRzjU+3iA5CCkrI9IG0ytWiQjt/trqcehfUGFASdu618dT2LLI8yNjTK44JhfMv5tycoA4AT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cx_eJDj4FoGcswAQ--.58460S3;
+	Thu, 24 Jul 2025 09:41:23 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxocJAj4FotAYkAA--.53925S3;
+	Thu, 24 Jul 2025 09:41:22 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of generic
+ code
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20250722094734.4920545b@gandalf.local.home>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
+Date: Thu, 24 Jul 2025 09:39:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/12] kasan: unify kasan_arch_is_ready() and remove
- arch-specific implementations
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Cc: hca@linux.ibm.com, christophe.leroy@csgroup.eu, andreyknvl@gmail.com,
- agordeev@linux.ibm.com, akpm@linux-foundation.org, glider@google.com,
- dvyukov@google.com, kasan-dev@googlegroups.com,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
-References: <20250717142732.292822-1-snovitoll@gmail.com>
- <f10f3599-509d-4455-94a3-fcbeeffd8219@gmail.com>
- <CACzwLxjD0oXGGm2dkDdXjX0sxoNC2asQbjigkDWGCn48bitxSw@mail.gmail.com>
+In-Reply-To: <20250722094734.4920545b@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-In-Reply-To: <CACzwLxjD0oXGGm2dkDdXjX0sxoNC2asQbjigkDWGCn48bitxSw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxocJAj4FotAYkAA--.53925S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAr43urW3Kr17Cr4Uuw4xXwc_yoW5uF4kpF
+	17ArZIgr4xKrs7A34fZwn5Krsxu3s5uFy7t3srWrWkCF48Ar4rGr1qvrWkt3sIy3sYka4x
+	tF1vvryUGayUZ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zw
+	Z7UUUUU==
 
 
 
-On 7/22/25 8:21 PM, Sabyrzhan Tasbolatov wrote:
-> On Tue, Jul 22, 2025 at 3:59 AM Andrey Ryabinin <ryabinin.a.a@gmail.com> wrote:
->>
->>
->>
->> On 7/17/25 4:27 PM, Sabyrzhan Tasbolatov wrote:
->>
->>> === Testing with patches
->>>
->>> Testing in v3:
->>>
->>> - Compiled every affected arch with no errors:
->>>
->>> $ make CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \
->>>       OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf \
->>>       HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar HOSTLD=ld.lld \
->>>       ARCH=$ARCH
->>>
->>> $ clang --version
->>> ClangBuiltLinux clang version 19.1.4
->>> Target: x86_64-unknown-linux-gnu
->>> Thread model: posix
->>>
->>> - make ARCH=um produces the warning during compiling:
->>>       MODPOST Module.symvers
->>>       WARNING: modpost: vmlinux: section mismatch in reference: \
->>>               kasan_init+0x43 (section: .ltext) -> \
->>>               kasan_init_generic (section: .init.text)
->>>
->>> AFAIU, it's due to the code in arch/um/kernel/mem.c, where kasan_init()
->>> is placed in own section ".kasan_init", which calls kasan_init_generic()
->>> which is marked with "__init".
->>>
->>> - Booting via qemu-system- and running KUnit tests:
->>>
->>> * arm64  (GENERIC, HW_TAGS, SW_TAGS): no regression, same above results.
->>> * x86_64 (GENERIC): no regression, no errors
->>>
->>
->> It would be interesting to see whether ARCH_DEFER_KASAN=y arches work.
->> These series add static key into __asan_load*()/_store*() which are called
->> from everywhere, including the code patching static branches during the switch.
->>
->> I have suspicion that the code patching static branches during static key switch
->> might not be prepared to the fact the current CPU might try to execute this static
->> branch in the middle of switch.
+On 2025/7/22 下午9:47, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> AFAIU, you're referring to this function in mm/kasan/generic.c:
+> The tracepoint kvm_iocsr is only used by the loongarch architecture. As
+> trace events can take up to 5K of memory, move this tracepoint into the
+> loongarch specific tracing file so that it doesn't waste memory for all
+> other architectures.
 > 
-> static __always_inline bool check_region_inline(const void *addr,
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>   arch/loongarch/kvm/trace.h | 35 +++++++++++++++++++++++++++++++++++
+>   include/trace/events/kvm.h | 35 -----------------------------------
+>   2 files changed, 35 insertions(+), 35 deletions(-)
 > 
->       size_t size, bool write,
+> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+> index 145514dab6d5..d73dea8afb74 100644
+> --- a/arch/loongarch/kvm/trace.h
+> +++ b/arch/loongarch/kvm/trace.h
+> @@ -115,6 +115,41 @@ TRACE_EVENT(kvm_exit_gspr,
+>   			__entry->inst_word)
+>   );
+>   
+> +#define KVM_TRACE_IOCSR_READ_UNSATISFIED 0
+> +#define KVM_TRACE_IOCSR_READ 1
+> +#define KVM_TRACE_IOCSR_WRITE 2
+> +
+> +#define kvm_trace_symbol_iocsr \
+> +	{ KVM_TRACE_IOCSR_READ_UNSATISFIED, "unsatisfied-read" }, \
+> +	{ KVM_TRACE_IOCSR_READ, "read" }, \
+> +	{ KVM_TRACE_IOCSR_WRITE, "write" }
+> +
+> +TRACE_EVENT(kvm_iocsr,
+> +	TP_PROTO(int type, int len, u64 gpa, void *val),
+> +	TP_ARGS(type, len, gpa, val),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(	u32,	type	)
+> +		__field(	u32,	len	)
+> +		__field(	u64,	gpa	)
+> +		__field(	u64,	val	)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->type		= type;
+> +		__entry->len		= len;
+> +		__entry->gpa		= gpa;
+> +		__entry->val		= 0;
+> +		if (val)
+> +			memcpy(&__entry->val, val,
+> +			       min_t(u32, sizeof(__entry->val), len));
+> +	),
+> +
+> +	TP_printk("iocsr %s len %u gpa 0x%llx val 0x%llx",
+> +		  __print_symbolic(__entry->type, kvm_trace_symbol_iocsr),
+> +		  __entry->len, __entry->gpa, __entry->val)
+> +);
+> +
+>   #define KVM_TRACE_AUX_SAVE		0
+>   #define KVM_TRACE_AUX_RESTORE		1
+>   #define KVM_TRACE_AUX_ENABLE		2
+> diff --git a/include/trace/events/kvm.h b/include/trace/events/kvm.h
+> index 8b7252b8d751..b282e3a86769 100644
+> --- a/include/trace/events/kvm.h
+> +++ b/include/trace/events/kvm.h
+> @@ -156,41 +156,6 @@ TRACE_EVENT(kvm_mmio,
+>   		  __entry->len, __entry->gpa, __entry->val)
+>   );
+>   
+> -#define KVM_TRACE_IOCSR_READ_UNSATISFIED 0
+> -#define KVM_TRACE_IOCSR_READ 1
+> -#define KVM_TRACE_IOCSR_WRITE 2
+> -
+> -#define kvm_trace_symbol_iocsr \
+> -	{ KVM_TRACE_IOCSR_READ_UNSATISFIED, "unsatisfied-read" }, \
+> -	{ KVM_TRACE_IOCSR_READ, "read" }, \
+> -	{ KVM_TRACE_IOCSR_WRITE, "write" }
+> -
+> -TRACE_EVENT(kvm_iocsr,
+> -	TP_PROTO(int type, int len, u64 gpa, void *val),
+> -	TP_ARGS(type, len, gpa, val),
+> -
+> -	TP_STRUCT__entry(
+> -		__field(	u32,	type	)
+> -		__field(	u32,	len	)
+> -		__field(	u64,	gpa	)
+> -		__field(	u64,	val	)
+> -	),
+> -
+> -	TP_fast_assign(
+> -		__entry->type		= type;
+> -		__entry->len		= len;
+> -		__entry->gpa		= gpa;
+> -		__entry->val		= 0;
+> -		if (val)
+> -			memcpy(&__entry->val, val,
+> -			       min_t(u32, sizeof(__entry->val), len));
+> -	),
+> -
+> -	TP_printk("iocsr %s len %u gpa 0x%llx val 0x%llx",
+> -		  __print_symbolic(__entry->type, kvm_trace_symbol_iocsr),
+> -		  __entry->len, __entry->gpa, __entry->val)
+> -);
+> -
+>   #define kvm_fpu_load_symbol	\
+>   	{0, "unload"},		\
+>   	{1, "load"}
 > 
->       unsigned long ret_ip)
-> {
->         if (!kasan_shadow_initialized())
->                 return true;
-> ...
-> }
-> 
-> and particularly, to architectures that selects ARCH_DEFER_KASAN=y, which are
-> loongarch, powerpc, um. So when these arch try to enable the static key:
-> 
-> 1. static_branch_enable(&kasan_flag_enabled) called
-> 2. Kernel patches code - changes jump instructions
-> 3. Code patching involves memory writes
-> 4. Memory writes can trigger any KASAN wrapper function
-> 5. Wrapper calls kasan_shadow_initialized()
-> 6. kasan_shadow_initialized() calls static_branch_likely(&kasan_flag_enabled)
-> 7. This reads the static key being patched --- this is the potential issue?
-> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-
-Yes, that's right.
-
-
-> The current runtime check is following in tis v3 patch series:
-> 
-> #ifdef CONFIG_ARCH_DEFER_KASAN
-> ...
-> static __always_inline bool kasan_shadow_initialized(void)
-> {
->         return static_branch_likely(&kasan_flag_enabled);
-> }
-> ...
-> #endif
-> 
-> I wonder, if I should add some protection only for KASAN_GENERIC,
-> where check_region_inline() is called (or for all KASAN modes?):
-> 
-> #ifdef CONFIG_ARCH_DEFER_KASAN
-> ...
-> static __always_inline bool kasan_shadow_initialized(void)
-> {
->         /* Avoid recursion (?) during static key patching */
->         if (static_key_count(&kasan_flag_enabled.key) < 0)
->                 return false;
->         return static_branch_likely(&kasan_flag_enabled);
-> }
-> ...
-> #endif
-> 
-> Please suggest where the issue is and if I understood the problem.
-
-I don't know if it's a real problem or not. I'm just pointing out that we might
-have tricky use case here and maybe that's a problem, because nobody had such use
-case in mind. But maybe it's just fine.
-I think we just need to boot test it, to see if this works.
-
-> I might try to run QEMU on powerpc with KUnits to see if I see any logs.
-powerpc used static key same way before your patches, so powerpc should be fine.
