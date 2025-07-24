@@ -1,231 +1,190 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F202DCF41
-	for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 14:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F054264A74
+	for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 15:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753366934; cv=none; b=dykYjas/Cu6at3E1BnjtXrA79kkVwC0xd5uER8w8mrEiVbyYShKvYRGVgyvFnapv7inDDesNAJLAbYxxuVaySk9dYZcr/o7svUUdC1ofaDGVq51bBKxu79WI+4fSe1Y4k7nITLbDUm0Doi6Tltfaf8FQfHDNyn3NuRIVzhDhgNY=
+	t=1753371049; cv=none; b=cTrfoCsNOssNeQ02fEMKxcowBKCuynEd56xbugFKiC2XMR3FJ6XMnQAcSzFvE9oLVpSjudXsnuRyHGMBPT9z5NN7xYexSK3x9uJ4JJMUqO4b8jiEgtq13uyBq/GGgumS8fRWJfEwf1R880FKUWWM3RToEi2kERMt3TU/XVUNSIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753366934; c=relaxed/simple;
-	bh=0ryDMNeP26zjUmSpubUCBH2owgldoHEksLkFZqoF6Pk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e5u5X8Nr8ZspWTZLQSMSahcWI8gMIAoUQ80SaahyTa7BM6cv/khQf3rGMg+gSeDEvn/SAblFpS+bwsagpPk3e3/L+etqwoJSWAynpERBD25uzcMHn46dFKpV/9L2fxR5k+siSBG2h3pEQVuDd1CGNE2fgd5gB3lzfjoOFtQj48Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 93deb6ba689911f0b29709d653e92f7d-20250724
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
-	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:9d876e86-2e65-4fcf-892f-de0b556ba897,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:1
-X-CID-INFO: VERSION:1.1.45,REQID:9d876e86-2e65-4fcf-892f-de0b556ba897,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:1
-X-CID-META: VersionHash:6493067,CLOUDID:4cd8bb18e87096945995bb35b0809fa0,BulkI
-	D:250724222207IKOVVR9L,BulkQuantity:0,Recheck:0,SF:17|19|24|38|43|66|74|78
-	|81|82|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil
-	,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:
-	0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 93deb6ba689911f0b29709d653e92f7d-20250724
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 656998136; Thu, 24 Jul 2025 22:22:06 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	yangtiezhu@loongson.cn,
-	hengqi.chen@gmail.com,
-	chenhuacai@kernel.org
-Cc: martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	kernel@xen0n.name,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	guodongtai@kylinos.cn,
-	duanchenghao@kylinos.cn,
-	youling.tang@linux.dev,
-	jianghaoran@kylinos.cn,
-	vincent.mc.li@gmail.com
-Subject: [PATCH v4 5/5] LoongArch: BPF: Add struct ops support for trampoline
-Date: Thu, 24 Jul 2025 22:19:29 +0800
-Message-Id: <20250724141929.691853-6-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250724141929.691853-1-duanchenghao@kylinos.cn>
-References: <20250724141929.691853-1-duanchenghao@kylinos.cn>
+	s=arc-20240116; t=1753371049; c=relaxed/simple;
+	bh=s6n0+4J3j3E/bwSmPKHNNlPN0uXRfALwz6qCZuavh+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c0FRVgPwoTYM2AFJix7+46mr00iSCU/S8EREOGux1yH3eJmxMxujVUxEN6pizwtZf5sTGEu8FI7Gb/GN0siRF6UZlmfwUKPq+npUf0zHb8n8+sPIp7BfpVrkfoKotEPZaDRILRlaDXRM7QuavtvKCOEo8bxlbIGvR3Vku0QX4iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R15zXXK+; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R15zXXK+"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4ab61ecc1e8so9675911cf.1
+        for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 08:30:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753371047; x=1753975847; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bns7Kk0Rpa4pq4zt0eqAHfJ1qsmgjPeI84GDNp5EYCw=;
+        b=R15zXXK+d6Otyqo9h7uF/8EiflAoAq/r4RKGorTAEqM2rDiM2pTBINNUG89AYicJUo
+         NrQdRv6iWfO7KoBTepSBvFYAagPBQJL7LB+Hhyu4BNtamF8XdXowbo9+OF16ZRPUcx8u
+         XHP/wrg34XtYk2cO5jB6EiPVHWsI4TI5JlJtAnCfVxwAPHMR6s6bZv1DgDXZem8iz6FR
+         JPoB/ojghZKkwmo0Zj/UanCaGGOg+ifqCUVTVCpNgP/EWMhhD0d6swMz784lu5RDvhCY
+         4OvcuJynj3J7ia+amaaD15fsnt9a+o6jRHMQH8FgXt/plKJNuvlBall1VZP+OdLhuTxa
+         dKgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753371047; x=1753975847;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bns7Kk0Rpa4pq4zt0eqAHfJ1qsmgjPeI84GDNp5EYCw=;
+        b=pbkeWhMUROiT8ZJ9oWRmPyt9LFXbFVuTlYnHo0aRbfGRyL/hnDMFlGy6U2uH5BI2zm
+         5aFimkanmiNSfTJ7EupFMhGSdydWXWcrXKpa2bdi7MFOi7x8EsXLw3wxUQMQFeQuFIEM
+         XoMHsGM0j/i+6s9e/Xfyu1BrH6CbJqXdweOXyla7FJSONK2jRWkcFb3gngjtSSQ2qmiN
+         alN7shUtLyEKGickKFtt6okkZijSqlES2Osom+s0/PMhBFc4bN+PhAS4icEos4EfLTdP
+         Kk5J4AM+Q6u6iweEaFZbA/BROwCSfGVC6zZQUYWmf9Wngx0V9FzD2A0o57wh/yjVaO54
+         km5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWWw/HUF+ZSWQhbchv2WgV66Nfb1UtBwvR/EBv+CIaThKi1aBHeRnUkChewoD3621ZVreY8tKsSlgg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw/UFME5oH1tNr9B4DLoxC0rHw2S9eExThI5uTbrldpODuVi3Xr
+	FH/2MajWWQnACx7Lrf8U9EZdytdgfYuFjf5wmc8uN8aM/OaopxV46ENH6ymrivUetkwCG1LX/p1
+	czSWUQ82R6q5uDL2soN2GkPu/UWHmenE9Fn/U
+X-Gm-Gg: ASbGnctJeXeeL5gDHrE4yCjy9tvdfvR7NWzdu0qUDd7zQQoxiNiSezdgFo6BtQASnKi
+	fuug/hLcm2Ir5642plOCoz53A8XG2AgRbYdzF046ArBAdU97hi/uIuNFLs9zzwoId86oJSh1i4M
+	TBt19biN4dC+4/Knn7jy+alroy21yKIwLtH6IzVSPShucU2qUamt4CjAEum4pHAK40CmQjW3bJy
+	zZlzR0=
+X-Google-Smtp-Source: AGHT+IFneajSujJFQ97vJcxifdOb9B3fL1wtrAniITfCV3VYjoOZ3QlmTUWuT4bgBenSgy2Gnd2jFCXUqEkPtzVI9bw=
+X-Received: by 2002:a05:622a:10e:b0:4ab:5429:f961 with SMTP id
+ d75a77b69052e-4ae6df467a1mr98689901cf.35.1753371046736; Thu, 24 Jul 2025
+ 08:30:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250724141929.691853-1-duanchenghao@kylinos.cn>
+In-Reply-To: <20250724141929.691853-1-duanchenghao@kylinos.cn>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Thu, 24 Jul 2025 08:30:35 -0700
+X-Gm-Features: Ac12FXzYVMc9LtJ5ub-Hay_uu6iwvZYf5WJFpfcdpSQsl15oaprz3hONyJyeCuw
+Message-ID: <CAK3+h2zirm6cV2tAbd38RSYSF3=B1qZ+9jm_GZPsAPrMtaozmg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] Support trampoline for LoongArch
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	yangtiezhu@loongson.cn, hengqi.chen@gmail.com, chenhuacai@kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+On Thu, Jul 24, 2025 at 7:19=E2=80=AFAM Chenghao Duan <duanchenghao@kylinos=
+.cn> wrote:
+>
+> v4:
+> 1. Delete the #3 patch of version V3.
+>
+> 2. Add 5 NOP instructions in build_prologue().
+>    Reserve space for the move_imm + jirl instruction.
+>
+> 3. Differentiate between direct jumps and ftrace jumps of trampoline:
+>    direct jumps skip 5 instructions.
+>    ftrace jumps skip 2 instructions.
+>
+> 4. Remove the generation of BL jump instructions in emit_jump_and_link().
+>    After the trampoline ends, it will jump to the specified register.
+>    The BL instruction writes PC+4 to r1 instead of allowing the
+>    specification of rd.
+>
+> -----------------------------------------------------------------------
+> Historical Version:
+> v3:
+> 1. Patch 0003 adds EXECMEM_BPF memory type to the execmem subsystem.
+>
+> 2. Align the size calculated by arch_bpf_trampoline_size to page
+> boundaries.
+>
+> 3. Add the flush icache operation to larch_insn_text_copy.
+>
+> 4. Unify the implementation of bpf_arch_xxx into the patch
+> "0004-LoongArch-BPF-Add-bpf_arch_xxxxx-support-for-Loong.patch".
+>
+> 5. Change the patch order. Move the patch
+> "0002-LoongArch-BPF-Update-the-code-to-rename-validate_.patch" before
+> "0005-LoongArch-BPF-Add-bpf-trampoline-support-for-Loon.patch".
+>
+> URL for version v3:
+> https://lore.kernel.org/all/20250709055029.723243-1-duanchenghao@kylinos.=
+cn/
+> ---------
+> v2:
+> 1. Change the fixmap in the instruction copy function to set_memory_xxx.
+>
+> 2. Change the implementation method of the following code.
+>         - arch_alloc_bpf_trampoline
+>         - arch_free_bpf_trampoline
+>         Use the BPF core's allocation and free functions.
+>
+>         - bpf_arch_text_invalidate
+>         Operate with the function larch_insn_text_copy that carries
+>         memory attribute modifications.
+>
+> 3. Correct the incorrect code formatting.
+>
+> URL for version v2:
+> https://lore.kernel.org/all/20250618105048.1510560-1-duanchenghao@kylinos=
+.cn/
+> ---------
+> v1:
+> Support trampoline for LoongArch. The following feature tests have been
+> completed:
+>         1. fentry
+>         2. fexit
+>         3. fmod_ret
+>
+> TODO: The support for the struct_ops feature will be provided in
+> subsequent patches.
+>
+> URL for version v1:
+> https://lore.kernel.org/all/20250611035952.111182-1-duanchenghao@kylinos.=
+cn/
+> -----------------------------------------------------------------------
+>
+> Chenghao Duan (4):
+>   LoongArch: Add larch_insn_gen_{beq,bne} helpers
+>   LoongArch: BPF: Update the code to rename validate_code to
+>     validate_ctx
+>   LoongArch: BPF: Add bpf_arch_xxxxx support for Loongarch
+>   LoongArch: BPF: Add bpf trampoline support for Loongarch
+>
+> Tiezhu Yang (1):
+>   LoongArch: BPF: Add struct ops support for trampoline
+>
+>  arch/loongarch/include/asm/inst.h |   3 +
+>  arch/loongarch/kernel/inst.c      |  60 ++++
+>  arch/loongarch/net/bpf_jit.c      | 521 +++++++++++++++++++++++++++++-
+>  arch/loongarch/net/bpf_jit.h      |   6 +
+>  4 files changed, 589 insertions(+), 1 deletion(-)
+>
+> --
+> 2.25.1
+>
 
-Use BPF_TRAMP_F_INDIRECT flag to detect struct ops and emit proper
-prologue and epilogue for this case.
+Tested the whole patch series and it resolved the xdp-tool xdp-filter issue
 
-With this patch, all of the struct_ops related testcases (except
-struct_ops_multi_pages) passed on LoongArch.
+[root@fedora ~]# xdp-loader status
+CURRENT XDP PROGRAM STATUS:
 
-The testcase struct_ops_multi_pages failed is because the actual
-image_pages_cnt is 40 which is bigger than MAX_TRAMP_IMAGE_PAGES.
+Interface        Prio  Program name      Mode     ID   Tag
+  Chain actions
+---------------------------------------------------------------------------=
+-----------
+lo                     xdp_dispatcher    skb      53   4d7e87c0d30db711
+ =3D>              10     xdpfilt_alw_all           62
+320c53c06933a8fa  XDP_PASS
+dummy0                 <No XDP program loaded!>
+sit0                   <No XDP program loaded!>
+enp0s3f0               <No XDP program loaded!>
+wlp3s0                 <No XDP program loaded!>
 
-Before:
-
-  $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
-  ...
-  WATCHDOG: test case struct_ops_module/struct_ops_load executes for 10 seconds...
-
-After:
-
-  $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
-  ...
-  #15      bad_struct_ops:OK
-  ...
-  #399     struct_ops_autocreate:OK
-  ...
-  #400     struct_ops_kptr_return:OK
-  ...
-  #401     struct_ops_maybe_null:OK
-  ...
-  #402     struct_ops_module:OK
-  ...
-  #404     struct_ops_no_cfi:OK
-  ...
-  #405     struct_ops_private_stack:SKIP
-  ...
-  #406     struct_ops_refcounted:OK
-  Summary: 8/25 PASSED, 3 SKIPPED, 0 FAILED
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/net/bpf_jit.c | 71 ++++++++++++++++++++++++------------
- 1 file changed, 47 insertions(+), 24 deletions(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index ac5ce3a28..6a84fb104 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1603,6 +1603,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 	struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
- 	struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
- 	struct bpf_tramp_links *fmod_ret = &tlinks[BPF_TRAMP_MODIFY_RETURN];
-+	bool is_struct_ops = flags & BPF_TRAMP_F_INDIRECT;
- 	int ret, save_ret;
- 	void *orig_call = func_addr;
- 	u32 **branches = NULL;
-@@ -1678,18 +1679,31 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 
- 	stack_size = round_up(stack_size, 16);
- 
--	/* For the trampoline called from function entry */
--	/* RA and FP for parent function*/
--	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
--	emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
--	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
--	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
--
--	/* RA and FP for traced function*/
--	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
--	emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
--	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
--	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-+	if (!is_struct_ops) {
-+		/*
-+		 * For the trampoline called from function entry,
-+		 * the frame of traced function and the frame of
-+		 * trampoline need to be considered.
-+		 */
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
-+		emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-+		emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
-+
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-+		emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-+		emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-+	} else {
-+		/*
-+		 * For the trampoline called directly, just handle
-+		 * the frame of trampoline.
-+		 */
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-+		emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, stack_size - 8);
-+		emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-+	}
- 
- 	/* callee saved register S1 to pass start time */
- 	emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-@@ -1779,21 +1793,30 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 
- 	emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
- 
--	/* trampoline called from function entry */
--	emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
--	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
--	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-+	if (!is_struct_ops) {
-+		/* trampoline called from function entry */
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-+
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
- 
--	emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
--	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
--	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
-+		if (flags & BPF_TRAMP_F_SKIP_FRAME)
-+			/* return to parent function */
-+			emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
-+		else
-+			/* return to traced function */
-+			emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-+	} else {
-+		/* trampoline called directly */
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, stack_size - 8);
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
- 
--	if (flags & BPF_TRAMP_F_SKIP_FRAME)
--		/* return to parent function */
- 		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
--	else
--		/* return to traced function */
--		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-+	}
- 
- 	ret = ctx->idx;
- out:
--- 
-2.25.1
-
+you can add Tested-by: Vincent Li <vincent.mc.li@gmail.com>
