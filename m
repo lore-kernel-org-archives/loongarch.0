@@ -1,92 +1,96 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A3501534EC
-	for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 01:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966F82BE641
+	for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 11:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753321906; cv=none; b=ifqF73jkGZ5apQ0KunH2n+m48/aACniGDY1K2DrQmcZSfFX8ca/wRkVlHWDBj51Y+TZBE7aMsRThlTeWcbbetrHp3n7T4+OjuaAU6j9RKJDSn7n3neky2xJywnH43CFjGwJ4XKl6IAl3zOkq0c+bIDBGkJea5KUWBtcVtFaaMn0=
+	t=1753358217; cv=none; b=CI0WMPxfzzCS8gfxzygPy5qYdCo526uo9NuBA+sXLnQzhTQNqNUw3qMBgnRqC0iwGz3BvoN4QL+x89swrWm0icjMkEEcBvjqdAgTDR8aEt38VZLSHY09u2Ag9wLWPcNevCPtv+tQJw95pukqcLqJ9ewsX1gRFIVifGEzFNtEthk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753321906; c=relaxed/simple;
-	bh=5gFsPbAXW59mepTuWRnPPsjYPaC7EOK30HvNtYThJGM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XA6BL7xqQfpSghy11BxyJp1AZshItzmIPAjyeb744zhlMh1BCLNun0ZVPwrKaplOnubpdYZ9qy+PcO9KtRxKgT1aPF7OBYZEUC3Gwot+6/OJ3Frt2AifgPisTquhHZGVWH7zPq89VJNlRW72xFxftz3v8lUJ7vv1HRpDWVQv+n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxnOKtkYFoYswwAQ--.63396S3;
-	Thu, 24 Jul 2025 09:51:41 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxzsGrkYFoSQkkAA--.28881S3;
-	Thu, 24 Jul 2025 09:51:41 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of generic
- code
-To: Steven Rostedt <rostedt@goodmis.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-References: <20250722094734.4920545b@gandalf.local.home>
- <2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
- <20250723214659.064b5d4a@gandalf.local.home>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
-Date: Thu, 24 Jul 2025 09:49:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1753358217; c=relaxed/simple;
+	bh=UbnLPvlzvaF+TASrvQ8CvSyZzrgpblIXwom2xhrfV3w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IekphqaWKxDdjCFSxrhyd74nYunndzwjA5JM1M/cfJPx8TeAGzauSEWVlZxFBtSvILg4Mk09WfHB181d4lOTUZPqggNdo7fde5rR+47Shk6x6624KuipisVvVqa3JGcXX8tktMpIAQzyeNQjTHljUB4/oizKvpKpFslCQQxhipU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O+B52w/E; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O+B52w/E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3966CC4AF09
+	for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 11:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753358217;
+	bh=UbnLPvlzvaF+TASrvQ8CvSyZzrgpblIXwom2xhrfV3w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=O+B52w/ETUfu8M3TbhhmtQI4auBK/DIqAXLehkKPeIzJZceUdaIMxnchkcAGo3BCL
+	 qyNaX/RK4vJjIepty7runayUuhdbjpnNeVymdMYsgbGFf3wqxVDebd0nnm7z9ndq0H
+	 H3QKmjpAaAHZt0a135Uka+4lJqOXO9/K6AoyYKoyCi7TFOBkYdT8rRtV7KMMhoskFO
+	 0SCpi/CPt3Yvwq/Ao8W+MQ9oHqoDjD6tLafEiOWB8DhNooTvtb+0HlKJnw1DpWSvI9
+	 9hBIFFqvBGxOW4An2DoHrj4ppsSLymhvfa+5St3IUdEs/TmOtZG7sRN3c5PWpGNiPZ
+	 0aNa1E7OIUxdQ==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-608acb0a27fso1585383a12.0
+        for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 04:56:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXo42qwXqZ6X2AvVh6ZYz1xpawkrAflMIAQ0woH2Azx5JfNLaZxJPUnLl1Vn9YGJ9uDQsSkAfbaygA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzEp0vd/lsBPPjxLhBLzk7tH87UPWBGgVuvyHAqJ2SZwkcsJmiq
+	dT62ehSepwctOkSbYaiqVyz2wC0xDnpD8rgTYXfDYlJK3h4jc4GWth8/TTNmyGuQJF3+4aRwVwm
+	JfXEMj4npbjV7qTv2JaFepwWEkcEGs9Y=
+X-Google-Smtp-Source: AGHT+IHyudkQ+ID0bU15SK7aT9+KIcppMZFHtN6CrQ6Dtu9svcp+0ZZ1xB7ZVtW72pZg9dG9fKgoM+SEjXsylHLj50I=
+X-Received: by 2002:a05:6402:1d52:b0:5f7:f55a:e5e1 with SMTP id
+ 4fb4d7f45d1cf-6149b596728mr5451665a12.24.1753358215740; Thu, 24 Jul 2025
+ 04:56:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250723214659.064b5d4a@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxzsGrkYFoSQkkAA--.28881S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
-	CVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x07j0dgAUUUUU=
+References: <20250722094734.4920545b@gandalf.local.home> <2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
+ <20250723214659.064b5d4a@gandalf.local.home> <15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
+In-Reply-To: <15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 24 Jul 2025 19:56:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com>
+X-Gm-Features: Ac12FXyEIVNP2UDQDr7DKqNUOZbuTtFEVDCtic-VwJB5VQ3JEknFoA6_p-1cdZw
+Message-ID: <CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of generic code
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jul 24, 2025 at 9:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+>
+>
+> On 2025/7/24 =E4=B8=8A=E5=8D=889:46, Steven Rostedt wrote:
+> > On Thu, 24 Jul 2025 09:39:40 +0800
+> > Bibo Mao <maobibo@loongson.cn> wrote:
+> >
+> >>>    #define kvm_fpu_load_symbol      \
+> >>>     {0, "unload"},          \
+> >>>     {1, "load"}
+> >>>
+> >> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> >
+> > Thanks,
+> >
+> > Should this go through the loongarch tree or should I take it?
+> Huacai,
+>
+> What is your point about this?
+I will take it, thanks.
 
+Huacai
 
-On 2025/7/24 上午9:46, Steven Rostedt wrote:
-> On Thu, 24 Jul 2025 09:39:40 +0800
-> Bibo Mao <maobibo@loongson.cn> wrote:
-> 
->>>    #define kvm_fpu_load_symbol	\
->>>    	{0, "unload"},		\
->>>    	{1, "load"}
->>>    
->> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> 
-> Thanks,
-> 
-> Should this go through the loongarch tree or should I take it?
-Huacai,
-
-What is your point about this?
-
-Regards
-Bibo Mao
-> 
-> Either way works for me.
-> 
-> -- Steve
-> 
-
+>
+> Regards
+> Bibo Mao
+> >
+> > Either way works for me.
+> >
+> > -- Steve
+> >
+>
