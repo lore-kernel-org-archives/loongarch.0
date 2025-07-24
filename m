@@ -1,68 +1,169 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE192D6638
-	for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 13:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D53B2DE706
+	for <loongarch@lists.linux.dev>; Thu, 24 Jul 2025 14:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753363494; cv=none; b=rbmvi7vpS1Bsvk+389n1PT5+7hA2ydtTe6FvKX2Kzdr2GEAPwz3pYk9CbxbdkvccDZ3RvYNdZKw8F4+F2TGM3ZUPT2vMpWEGndu4LInNALx7YY/AGyYMGc1pkOADlPgXiQ/UFQXe3uBTDlLQuLMXocjdbvrJdToGGJA7/GTlo4Q=
+	t=1753366800; cv=none; b=c3b+YJj7AhlR5UFqeXa6B+IyZGxvLCFFeaMufm1hYLwv6txWd71bWZc6XT1Zs0GljDV6lJq8VOPa27cBCqZ58nUzd8CGatQ6t7JtOLwALlF8WUv+VsC4Kt98qwsaF1ADT0Zx7coMRub2IheUJT//NBGYpfhQF97QSaxYdzOZkZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753363494; c=relaxed/simple;
-	bh=T0NQMfH/DqrpVZn61hgP3A1tKXJJh/zk0upUoo9/olU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BGL8eOBd62QseHStQWgbQjUhDmjAxzI6l84pugzq0swfAzaXx4BvWAqwsyBdiI7hkWRu7g95BYQ44bxi9pG9bqQfkcIoM7BeCN7EMlC9VcKgcseCuQo6bnPmjXyGqjqBNC7OZgIG4W/ubPOqBIrJsQ+ZdI6snICfjZsVs/f8pXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id B2CBA57998;
-	Thu, 24 Jul 2025 13:24:50 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 862D820027;
-	Thu, 24 Jul 2025 13:24:48 +0000 (UTC)
-Date: Thu, 24 Jul 2025 09:24:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Bibo Mao <maobibo@loongson.cn>, LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of
- generic code
-Message-ID: <20250724092448.4e84a589@batman.local.home>
-In-Reply-To: <CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com>
-References: <20250722094734.4920545b@gandalf.local.home>
-	<2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
-	<20250723214659.064b5d4a@gandalf.local.home>
-	<15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
-	<CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1753366800; c=relaxed/simple;
+	bh=cyNGn80dJeZfZultJSI+UWEA3LsJ5S1jp5k1NmwyC4Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QVOLJkLzP5U+1z4uoSvr1kHmaXb/iisAuXoaML3mIvF4gN7gSkVstpukpgm8fE/UIJB9ZfVnnEvRh1Wkz6OOclYo/J9o9Jwd5+R+EA5obqJMwY2YGJcIJkGjN0BxKm7SNGt/dBfiXw8ML+U6XDH0kXOeoMkIZcTGd/eIS3u1sw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 416f20fe689911f0b29709d653e92f7d-20250724
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
+	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:e9160da6-4f30-4dc1-b2e6-749d6bf6be2b,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:1
+X-CID-INFO: VERSION:1.1.45,REQID:e9160da6-4f30-4dc1-b2e6-749d6bf6be2b,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:1
+X-CID-META: VersionHash:6493067,CLOUDID:5741ceabb9e06da0fd2c031729edb951,BulkI
+	D:250724221949QB0CY0WY,BulkQuantity:0,Recheck:0,SF:17|19|24|38|43|66|74|78
+	|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT:nil,Bulk:nil,QS
+	:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,A
+	RC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULS
+X-UUID: 416f20fe689911f0b29709d653e92f7d-20250724
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1997826696; Thu, 24 Jul 2025 22:19:48 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	yangtiezhu@loongson.cn,
+	hengqi.chen@gmail.com,
+	chenhuacai@kernel.org
+Cc: martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	guodongtai@kylinos.cn,
+	duanchenghao@kylinos.cn,
+	youling.tang@linux.dev,
+	jianghaoran@kylinos.cn,
+	vincent.mc.li@gmail.com
+Subject: [PATCH v4 0/5] Support trampoline for LoongArch
+Date: Thu, 24 Jul 2025 22:19:24 +0800
+Message-Id: <20250724141929.691853-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: fsfq8fom3zkmdm9cdzbnigwb7rn7crff
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 862D820027
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX185VQoLRm2vHT9R8dOyJNENrA6l4lO0Hn8=
-X-HE-Tag: 1753363488-726373
-X-HE-Meta: U2FsdGVkX1/2c1GOg2tcWnG2jdUemls9M8cVSFYKczaUEjC/q8AVOj0+I1EaJa1zGAru4N2VRbp6kPuVtaXrjRsBPYiReIutr9e/nimNwRf9tFn2cTbWfqJazdFSrE1wEaWMB32p27VQ9AfcmbYT6ODMFZpyNXvb8ToR8QsdFxdFXStDla55hnSA7S9KQiZYRDbcxGx2CmQLdqHSiN2wcfQAcLoZXXEyqZHFNa+zLEd2ZE0ksbsJk97OeVkyuKQEA9ZBJmhx8kIZOOsRP/8hMePRZNWH5BR3wgn0E6GmNc1h69TrTntsBdt4AskxGwYhMdZr7ppp9s1SjbOs6hHv75EPs7Fbpkv0TrrVCPLNAMjUSajsXnnzCA==
+Content-Transfer-Encoding: 8bit
 
-On Thu, 24 Jul 2025 19:56:42 +0800
-Huacai Chen <chenhuacai@kernel.org> wrote:
+v4:
+1. Delete the #3 patch of version V3.
 
-> > > Should this go through the loongarch tree or should I take it?  
-> > Huacai,
-> >
-> > What is your point about this?  
-> I will take it, thanks.
+2. Add 5 NOP instructions in build_prologue().
+   Reserve space for the move_imm + jirl instruction.
 
-Great! Thanks Huacai and Bibo,
+3. Differentiate between direct jumps and ftrace jumps of trampoline:
+   direct jumps skip 5 instructions.
+   ftrace jumps skip 2 instructions.
 
--- Steve
+4. Remove the generation of BL jump instructions in emit_jump_and_link().
+   After the trampoline ends, it will jump to the specified register.
+   The BL instruction writes PC+4 to r1 instead of allowing the
+   specification of rd.
+
+-----------------------------------------------------------------------
+Historical Version:
+v3:
+1. Patch 0003 adds EXECMEM_BPF memory type to the execmem subsystem.
+
+2. Align the size calculated by arch_bpf_trampoline_size to page
+boundaries.
+
+3. Add the flush icache operation to larch_insn_text_copy.
+
+4. Unify the implementation of bpf_arch_xxx into the patch
+"0004-LoongArch-BPF-Add-bpf_arch_xxxxx-support-for-Loong.patch".
+
+5. Change the patch order. Move the patch
+"0002-LoongArch-BPF-Update-the-code-to-rename-validate_.patch" before
+"0005-LoongArch-BPF-Add-bpf-trampoline-support-for-Loon.patch".
+
+URL for version v3:
+https://lore.kernel.org/all/20250709055029.723243-1-duanchenghao@kylinos.cn/
+---------
+v2:
+1. Change the fixmap in the instruction copy function to set_memory_xxx.
+
+2. Change the implementation method of the following code.
+	- arch_alloc_bpf_trampoline
+	- arch_free_bpf_trampoline
+	Use the BPF core's allocation and free functions.
+
+	- bpf_arch_text_invalidate
+	Operate with the function larch_insn_text_copy that carries
+	memory attribute modifications.
+
+3. Correct the incorrect code formatting.
+
+URL for version v2:
+https://lore.kernel.org/all/20250618105048.1510560-1-duanchenghao@kylinos.cn/
+---------
+v1:
+Support trampoline for LoongArch. The following feature tests have been
+completed:
+	1. fentry
+	2. fexit
+	3. fmod_ret
+
+TODO: The support for the struct_ops feature will be provided in
+subsequent patches.
+
+URL for version v1:
+https://lore.kernel.org/all/20250611035952.111182-1-duanchenghao@kylinos.cn/
+-----------------------------------------------------------------------
+
+Chenghao Duan (4):
+  LoongArch: Add larch_insn_gen_{beq,bne} helpers
+  LoongArch: BPF: Update the code to rename validate_code to
+    validate_ctx
+  LoongArch: BPF: Add bpf_arch_xxxxx support for Loongarch
+  LoongArch: BPF: Add bpf trampoline support for Loongarch
+
+Tiezhu Yang (1):
+  LoongArch: BPF: Add struct ops support for trampoline
+
+ arch/loongarch/include/asm/inst.h |   3 +
+ arch/loongarch/kernel/inst.c      |  60 ++++
+ arch/loongarch/net/bpf_jit.c      | 521 +++++++++++++++++++++++++++++-
+ arch/loongarch/net/bpf_jit.h      |   6 +
+ 4 files changed, 589 insertions(+), 1 deletion(-)
+
+-- 
+2.25.1
+
