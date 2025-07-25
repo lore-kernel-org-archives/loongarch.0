@@ -1,34 +1,49 @@
-Received: from mail-m49211.qiye.163.com (mail-m49211.qiye.163.com [45.254.49.211])
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43982E4271
-	for <loongarch@lists.linux.dev>; Fri, 25 Jul 2025 10:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E77A1172A
+	for <loongarch@lists.linux.dev>; Fri, 25 Jul 2025 13:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753440107; cv=none; b=UiQ+svZmnAUq0LRiQjeYeeANA+YDJSzDA5C/FX2/ZLUpvQhC+DEVTBlAV0tMPq+ut1G9+zdNGdWcdXGirHgkFw5ftrdzLjX9r448i3wRsKtjMUAwm1gozFG2tRSVFLrAPdpTRGckeNz8zDdwJgC0cVw2GUeN4MX8OQl9ZQONJxE=
+	t=1753450236; cv=none; b=Y8UE3vaKPe/ZkrzJeNo2XSQ1WfzFQXOdxXlvU+jB7vtQ7q1ep2C0K8P91vBSlD3b3gXtag/8nCT4uzJXXRB2m39wX0zR/AEWpj6rWQIL6g3fL5SXv+/IziP8X4O+PVlmdJvsgn8zqIFdi8UaF3QJfuYKvnr6GV6U+fML1w2AkUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753440107; c=relaxed/simple;
-	bh=1vbxAAExUSchHvlLUOW5iVTIwrqOEjIPtieLi0+jq0E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U1Q7vA12vVlqs9PsY+gR+X258sEBs5NmhUxV6RPfGSOnnGvUHtJV67lry7CNBIHmsLkNo60RYUehOAApjfS6eXaHUp0iZ99KbXcL745SCT9OHe0cj4X2JoJCe86wxITU+iCkF73Itr58FaSUeT79OwRvgF6Jn8gWhg8zHwMmNMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cqsoftware.com.cn; spf=pass smtp.mailfrom=cqsoftware.com.cn; dkim=pass (1024-bit key) header.d=cqsoftware.com.cn header.i=@cqsoftware.com.cn header.b=cwS8hPRY; arc=none smtp.client-ip=45.254.49.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cqsoftware.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cqsoftware.com.cn
+	s=arc-20240116; t=1753450236; c=relaxed/simple;
+	bh=AFsV0usjt86lovH5mvsK/2BeBPrgAG25O/0Mf8BwRF0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mLNomR1pidO5SVVodNUH2z6MBux32NnHyzGcbdKc5Z9uq/76C9uMUfc6BcIpXou7iO6RtMqkzfMhIBCl/TINKSa8ev07p/lY3YQfEUy5h+07jXvLFwmqmNPgqtruVk6swpZygvcir0rVd0EfTgrI5GRd2xMi9mWzJ+HvFu2nRSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=h2m7zhlu; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cqsoftware.com.cn header.i=@cqsoftware.com.cn header.b="cwS8hPRY"
-Received: from fedora (unknown [123.149.0.135])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1d429d39f;
-	Fri, 25 Jul 2025 18:36:25 +0800 (GMT+08:00)
-From: Yanteng Si <siyanteng@cqsoftware.com.cn>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="h2m7zhlu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1753450206;
+	bh=O8wzE8tH/Y17Uk4jPlIamrwz3jhcPfWByFA+NtEuEl4=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=h2m7zhluj/vC0iZca6HjrkqSn9X8JWd7yC/lSoW2QQzzyMwP5F1DsDMt5MHJgfa1i
+	 KkvosWeFwtpPwKmO03nKpYOEOnNDBIo+I+2M6/vPUeUXpsvWnUphQKUZBmOwwj0XOK
+	 fGxuiLpQSMIj0nrLN/rIunzFLk27nW+HLeU6WpzA=
+X-QQ-mid: zesmtpgz9t1753450170t5bc23faa
+X-QQ-Originating-IP: sHW5lqbKDHnR5SkWwRvRC8NqCmHqjs5kNCy4ePgYHqM=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 25 Jul 2025 21:29:28 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 12710551630611873458
+EX-QQ-RecipientCnt: 8
+From: Wentao Guan <guanwentao@uniontech.com>
 To: chenhuacai@kernel.org
 Cc: kernel@xen0n.name,
-	jiaxun.yang@flygoat.com,
-	yijun@loongson.cn,
+	xry111@xry111.site,
 	loongarch@lists.linux.dev,
-	Yanteng Si <siyanteng@cqsoftware.com.cn>
-Subject: [PATCH] LoongArch: CSR: Complete KSave registers definition
-Date: Fri, 25 Jul 2025 18:36:24 +0800
-Message-ID: <20250725103624.69247-1-siyanteng@cqsoftware.com.cn>
-X-Mailer: git-send-email 2.50.1
+	linux-kernel@vger.kernel.org,
+	wangyuli@uniontech.com,
+	zhanjun@uniontech.com,
+	Wentao Guan <guanwentao@uniontech.com>
+Subject: [PATCH] LoongArch: vDSO: remove -nostdlib complier flag
+Date: Fri, 25 Jul 2025 21:26:51 +0800
+Message-Id: <20250725132651.1974717-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,50 +51,48 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a984127d2e809d0kunmccdf28922da9f2
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCH05IVkMZSkpPTkoeS08fTlYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSUhVSk9CVUtVSkhOWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
-	VKQktLWQY+
-DKIM-Signature: a=rsa-sha256;
-	b=cwS8hPRYGzTKo68BJ7be28z3rT5NUZeegN64VB1ezDiUIo8zgqkumfXAfMtdQ8g8RyUSpK7y7wk7wnSZo30SvhgCR2Y9TfDl0MU9yNRl5K1uNmG1zmLNU48p9fJezf/NWkjng0bqphz45Wwko5O3A0WLTED+Tdj6/xMcGjHD+Jk=; s=default; c=relaxed/relaxed; d=cqsoftware.com.cn; v=1;
-	bh=9xywI/IMePEKsyHKYKjIdD9k1xyFW2wD3nF7u9KR9Nc=;
-	h=date:mime-version:subject:message-id:from;
-X-HMAIL-Slblob-Mailprops: v1_kTakW7JjryuX/AmUDtQem47Z52fK+j1LWbpW6afoOeN+YgjM11cnKSwn63sNx7clOjSwjl1DVFF5GhG9Lx3EtUUhpOl9T77/vr5tACyOmzkY83QAFrGlDU9NsVDCfwV5g3jwwLMLA8qQ6ZQ0VO4fqm85P5Pxed5jzjuwXLBHqQtlwKQa53b/O6Sa0nWv6+kAq+e9rhynN7B/1U0mpsVhZANe1ZTKbJBrMP3BAWa79oFKEPymWUee/bdIZF6VFLRBNWqpL0EGYts4XITP3E+IsA==
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
+X-QQ-XMAILINFO: NAtipnnbTPeayADMvfoNCP7BWo7l63XJ11w3FPknwaXtBwYP6U20U/wm
+	sVMu6DW+48C392BBt/4gSX971WYxOwW1qzjZEuR3G11p6ztJ3X1CgCJblpF7MHvj3Z5f67v
+	ZXcvQgNzJfUjNFxkijdITu6ZD6A1D3id9Of3XHYD+K5ZUd/Fb3YxChoilCFhwrIYCx63wLX
+	D4f4c0k+HAuj72ygUiuQ+RB0+zY+Qjf2DQrkKcbFTVXAkELYLJxl7r6MAkmyOY3Jbrj9z/I
+	61MOhUwHsQvy6r4YBEVhxCG4UNDcvGjdJhZ3GhYGnnFrzp+nrsMjJuYb9dVpCNoKHPgAQZu
+	goQwzKizL2QK66PP2+CRZ39+FYCIALCmR6/UenScSzIoLnphu1/kIZsDAN7gL1eJMthlp0Y
+	xDaN/eFLjzvyiS4fOm/V9hd6bNqYtlC+vXATdCB1nk0mxW9W66YR3p8luHJgXAvGqKE+lNZ
+	WGEhPot/lNyrAKPdMJhBl1YAyjmL+WgOZjGyrCogbVgsfC06UmtyM0wkkM7XYYyc9oMjdx8
+	22huSlKodN4cIsa6Putrz5i9j/PqkCjyy052HtdE3EGuohlIAdgSzJHmL4Zq7KFG0n7fZRR
+	Nz6DFUskpcrSMXbyxV4ddxHXq188XPl11mS3ThFr627rX0eVXV9dgHopyzzWj5MyjId2EfP
+	YTBIHTXupod+tWjeR7uCf3wXPWCkGadeJkMUnQuMAyHGe4RNPkVBhKM513kroJWF9Reqymp
+	9jjtKnd7zohVBmxz1v33tdz7uiQfY01IqL7fbPLgBmK4abiwuEeMYFUab9T51sJUkzYhYh5
+	fSkVaPG927WfH7k8A3VNMxe22Q7MNy2p7X6+HQ0dVKZWKfJV0nKyx27jQBZELkxtiHMj6TY
+	EtTKa5A1W8ZccfqF+SWtbhRa6trjoiiotLry4iUnitzPkYm437oj/zNBDgf3/9ZCwCpxHnQ
+	McW+6mKaufkZ6O0rosjRkSf9yZXp4R5uz8S8QLmpibEkoomypbP2k67b/tLCtTvcg6MFj8u
+	lFODj5svxSSU71fBpL+Oc+qq2Uce8ESA+kp9GRwUQT5pe5RR5d
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 
-According to the "LoongArch Reference Manual Volume 1: Basic
-Architecture", the KSave registers (SAVE0-SAVE15) are defined
-in section 7.4.16 "Data Save (SAVE)" and listed in Table 7-1
-"Control and Status Registers Overview". These registers occupy
-CSR addresses 0x30 to 0x3F, with 16 registers in total.
+It is clear to remove the -nostdlib for ld, it is similar to commit
+bdbf2038fbf4 ("MIPS: VDSO: remove -nostdlib compiler flag").
 
-This patch complete the definitions of KS9 to KS15 to match the
-architecture specification.
-
-Signed-off-by: Yanteng Si <siyanteng@cqsoftware.com.cn>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
 ---
- arch/loongarch/include/asm/loongarch.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/loongarch/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index a0994d226eff..09dfd7eb406e 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -451,6 +451,13 @@
- #define LOONGARCH_CSR_KS6		0x36
- #define LOONGARCH_CSR_KS7		0x37
- #define LOONGARCH_CSR_KS8		0x38
-+#define LOONGARCH_CSR_KS9		0x39
-+#define LOONGARCH_CSR_KS10		0x3a
-+#define LOONGARCH_CSR_KS11		0x3b
-+#define LOONGARCH_CSR_KS12		0x3c
-+#define LOONGARCH_CSR_KS13		0x3d
-+#define LOONGARCH_CSR_KS14		0x3e
-+#define LOONGARCH_CSR_KS15		0x3f
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index ccd2c5e135c6..d8316f993482 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -36,7 +36,7 @@ endif
  
- /* Exception allocated KS0, KS1 and KS2 statically */
- #define EXCEPTION_KS0			LOONGARCH_CSR_KS0
+ # VDSO linker flags.
+ ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+-	$(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared --build-id -T
++	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
+ 
+ #
+ # Shared build commands.
 -- 
-2.50.1
+2.20.1
 
