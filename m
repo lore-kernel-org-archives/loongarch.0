@@ -1,301 +1,231 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F12A1F790F
-	for <loongarch@lists.linux.dev>; Sat, 26 Jul 2025 07:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22367288C93;
+	Sat, 26 Jul 2025 19:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753513556; cv=none; b=GgyHWVnAzgBTTYtKTRbWeRlYbspOnK7jwtfmLHXjazH48cM1Lgze4fW/TVTIHEOVKgY/+i0zLE36dXQWOmuXrLIoBxieGWa/IKdKXnKv2P9tOuJ+EXKE2KRoV0yAcDZJzcbxlpIKy4okoYf5oJDQbeI713fR52IB0hGndsMjzWA=
+	t=1753557258; cv=none; b=JKCn9l+1W8dF/KigZfmG5Ti5LwbPT11hqsSDQH4JqiIpEy7FP+Q4uILf6KbcwhhCXCoI+uQkg1+1ztO1D2AdVGgOBPUX45Jl6hpGsl8jQqNAdQJzus04XsDCIOr+6iAhOZgiLTiRcZaoG8jGJ0T6fPqfHSb7aTfhrLwEw1pL7FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753513556; c=relaxed/simple;
-	bh=iMLOG1TLsp617YE0ZKwoqjSE4WMgddafpxWT/XuYUAw=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=V5TL1r+vcMCc33ArQeP6tYOWm3iAd2i4kZ3GyqKgM+7t0NNU0HWoMHZ856MPyWytimQD+XEoO9ga1Jna2S89BYrhNKalJ0ui/Dn12Ydlk787nikQd53Q8aR3hr7ZjAM66ji5iH4sZeqvaQDn4JZ6zAr2+fS7k6NDGwLv+imZ0TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8AxDGtIfoRoyGcyAQ--.36327S3;
-	Sat, 26 Jul 2025 15:05:44 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowJCxrsNEfoRo8IcnAA--.23180S2;
-	Sat, 26 Jul 2025 15:05:43 +0800 (CST)
-Subject: Re: [PATCH v12 3/4] tpm: Add a driver for Loongson TPM device
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-References: <20250705072045.1067-1-zhaoqunqin@loongson.cn>
- <20250705072045.1067-4-zhaoqunqin@loongson.cn>
- <4uhbqaq6obk626r6dk27opaksuwezizx5bpq4eacqjogrdk6as@sinmwzhfjrsn>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <322d4564-b188-64b9-13b3-7a91d3887643@loongson.cn>
-Date: Sat, 26 Jul 2025 15:05:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1753557258; c=relaxed/simple;
+	bh=dCCYcb3UvTArvkXljVmXdw7tO+ynw48FiObqCacVNUU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aYDXF/b0nE3UYFOQtVtfy335NKfGFjqpOtAentaBAXM3bNGQU8T0+4SBU5kdrNEKYRnji0rOUsX+TvAnps4CYP9gu+R7nupQ6bGNltVLZvQye3QnB2W1AlPPcxudqFIAAA0+boK4LOib4s9hyyxy2rQynp/z0qNakIo1KZhFvnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=kwWvBdgx; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="kwWvBdgx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=XWUou2efvAlWAEjRwH8gexVt2F0I9SXQQfpMgUqKfjY=; b=kwWvBdgxftZfz0jSRoSqBlUyl/
+	C2oVF4AJ/EVFdHW6v0tyzHklJoqm55c1tThbAyRFAhmWQ5V8R93VC1lXZd5YgJ0N8QKb2vNdS3zW3
+	6+wVkN/BJSBoxWXX0s34LMWp7mijS+fNsTc7akeL80FapKf23lC/JoEe+3Jf0QQZ5eM2qCuV94dFT
+	Gir614J1ByOHVk2RC0Ry9CkKlma4XLH00wQRGGSqPQFQAv91PwnNS5dnqZrjAC19P2hP7QLEjsOXm
+	7jyk86LOPORBmWhmx6Tz3K/6q4Qc9R1eGdI9EZsMMPlbWxLx/ovFIdefalJ2Xa0SvCR2ZE4kkn6pm
+	4OUEUDbQ==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1ufkLL-000PkK-24;
+	Sat, 26 Jul 2025 21:14:03 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy05.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1ufkLK-0001eW-1Z;
+	Sat, 26 Jul 2025 21:14:02 +0200
+Message-ID: <dbba4e43-c32d-4430-b3e5-7711f24ea4e3@iogearbox.net>
+Date: Sat, 26 Jul 2025 21:14:00 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <4uhbqaq6obk626r6dk27opaksuwezizx5bpq4eacqjogrdk6as@sinmwzhfjrsn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/5] Support trampoline for LoongArch
+To: Chenghao Duan <duanchenghao@kylinos.cn>,
+ Vincent Li <vincent.mc.li@gmail.com>
+Cc: ast@kernel.org, andrii@kernel.org, yangtiezhu@loongson.cn,
+ hengqi.chen@gmail.com, chenhuacai@kernel.org, martin.lau@linux.dev,
+ eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+ john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
+ jianghaoran@kylinos.cn
+References: <20250724141929.691853-1-duanchenghao@kylinos.cn>
+ <CAK3+h2zirm6cV2tAbd38RSYSF3=B1qZ+9jm_GZPsAPrMtaozmg@mail.gmail.com>
+ <20250725101857.GA20688@chenghao-pc>
+Content-Language: en-US
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ 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
+In-Reply-To: <20250725101857.GA20688@chenghao-pc>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJCxrsNEfoRo8IcnAA--.23180S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3XF1rWr4kWw1UtF4ktFW7WrX_yoWfJrW7pF
-	Z5AayUCrW5Jr18Grs8trW5ZFy3ZryrJa4DKan7Xa47AF1qyw1FgryUXrnFgr47Ar4kGr1j
-	qrWkWrs7uF15urXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27711/Sat Jul 26 10:35:43 2025)
 
-
-在 2025/7/7 下午5:48, Stefano Garzarella 写道:
-> On Sat, Jul 05, 2025 at 03:20:44PM +0800, Qunqin Zhao wrote:
->> Loongson Security Engine supports random number generation, hash,
->> symmetric encryption and asymmetric encryption. Based on these
->> encryption functions, TPM2 have been implemented in the Loongson
->> Security Engine firmware. This driver is responsible for copying data
->> into the memory visible to the firmware and receiving data from the
->> firmware.
+On 7/25/25 12:18 PM, Chenghao Duan wrote:
+> On Thu, Jul 24, 2025 at 08:30:35AM -0700, Vincent Li wrote:
+>> On Thu, Jul 24, 2025 at 7:19 AM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+>>>
+>>> v4:
+>>> 1. Delete the #3 patch of version V3.
+>>>
+>>> 2. Add 5 NOP instructions in build_prologue().
+>>>     Reserve space for the move_imm + jirl instruction.
+>>>
+>>> 3. Differentiate between direct jumps and ftrace jumps of trampoline:
+>>>     direct jumps skip 5 instructions.
+>>>     ftrace jumps skip 2 instructions.
+>>>
+>>> 4. Remove the generation of BL jump instructions in emit_jump_and_link().
+>>>     After the trampoline ends, it will jump to the specified register.
+>>>     The BL instruction writes PC+4 to r1 instead of allowing the
+>>>     specification of rd.
+>>>
+>>> -----------------------------------------------------------------------
+>>> Historical Version:
+>>> v3:
+>>> 1. Patch 0003 adds EXECMEM_BPF memory type to the execmem subsystem.
+>>>
+>>> 2. Align the size calculated by arch_bpf_trampoline_size to page
+>>> boundaries.
+>>>
+>>> 3. Add the flush icache operation to larch_insn_text_copy.
+>>>
+>>> 4. Unify the implementation of bpf_arch_xxx into the patch
+>>> "0004-LoongArch-BPF-Add-bpf_arch_xxxxx-support-for-Loong.patch".
+>>>
+>>> 5. Change the patch order. Move the patch
+>>> "0002-LoongArch-BPF-Update-the-code-to-rename-validate_.patch" before
+>>> "0005-LoongArch-BPF-Add-bpf-trampoline-support-for-Loon.patch".
+>>>
+>>> URL for version v3:
+>>> https://lore.kernel.org/all/20250709055029.723243-1-duanchenghao@kylinos.cn/
+>>> ---------
+>>> v2:
+>>> 1. Change the fixmap in the instruction copy function to set_memory_xxx.
+>>>
+>>> 2. Change the implementation method of the following code.
+>>>          - arch_alloc_bpf_trampoline
+>>>          - arch_free_bpf_trampoline
+>>>          Use the BPF core's allocation and free functions.
+>>>
+>>>          - bpf_arch_text_invalidate
+>>>          Operate with the function larch_insn_text_copy that carries
+>>>          memory attribute modifications.
+>>>
+>>> 3. Correct the incorrect code formatting.
+>>>
+>>> URL for version v2:
+>>> https://lore.kernel.org/all/20250618105048.1510560-1-duanchenghao@kylinos.cn/
+>>> ---------
+>>> v1:
+>>> Support trampoline for LoongArch. The following feature tests have been
+>>> completed:
+>>>          1. fentry
+>>>          2. fexit
+>>>          3. fmod_ret
+>>>
+>>> TODO: The support for the struct_ops feature will be provided in
+>>> subsequent patches.
+>>>
+>>> URL for version v1:
+>>> https://lore.kernel.org/all/20250611035952.111182-1-duanchenghao@kylinos.cn/
+>>> -----------------------------------------------------------------------
+>>>
+>>> Chenghao Duan (4):
+>>>    LoongArch: Add larch_insn_gen_{beq,bne} helpers
+>>>    LoongArch: BPF: Update the code to rename validate_code to
+>>>      validate_ctx
+>>>    LoongArch: BPF: Add bpf_arch_xxxxx support for Loongarch
+>>>    LoongArch: BPF: Add bpf trampoline support for Loongarch
+>>>
+>>> Tiezhu Yang (1):
+>>>    LoongArch: BPF: Add struct ops support for trampoline
+>>>
+>>>   arch/loongarch/include/asm/inst.h |   3 +
+>>>   arch/loongarch/kernel/inst.c      |  60 ++++
+>>>   arch/loongarch/net/bpf_jit.c      | 521 +++++++++++++++++++++++++++++-
+>>>   arch/loongarch/net/bpf_jit.h      |   6 +
+>>>   4 files changed, 589 insertions(+), 1 deletion(-)
+>>>
+>>> --
+>>> 2.25.1
+>>>
 >>
->> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
->> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
->> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
->> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->> ---
->> drivers/char/tpm/Kconfig        |  9 ++++
->> drivers/char/tpm/Makefile       |  1 +
->> drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++++++++++++++
->> 3 files changed, 94 insertions(+)
->> create mode 100644 drivers/char/tpm/tpm_loongson.c
->
-> TPM_CHIP_FLAG_SYNC support is now merged in linux-tpmdd/next tree, so 
-> IMHO this driver can also set it and implement a synchronous send() in 
-> this way (untested):
->
-> diff --git a/drivers/char/tpm/tpm_loongson.c 
-> b/drivers/char/tpm/tpm_loongson.c
-
-Thank you very much, but I prefer send()+recv().
-
-Qunqin.
-
-> index a4ec23639911..0e8eb8cee13c 100644
-> --- a/drivers/char/tpm/tpm_loongson.c
-> +++ b/drivers/char/tpm/tpm_loongson.c
-> @@ -15,36 +15,35 @@ struct tpm_loongson_cmd {
->      u32 pad[5];
->  };
->
-> -static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t 
-> count)
-> +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t 
-> bufsiz,
-> +                 size_t cmd_len)
->  {
->      struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-> -    struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
-> -
-> -    if (cmd_ret->data_len > count)
-> -        return -EIO;
-> +    struct tpm_loongson_cmd *cmd = tpm_engine->command;
-> +    struct tpm_loongson_cmd *cmd_ret;
-> +    int ret;
->
-> -    memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
-> +    if (cmd_len > tpm_engine->buffer_size)
-> +        return -E2BIG;
->
-> -    return cmd_ret->data_len;
-> -}
-> +    cmd->data_len = cmd_len;
-> +    memcpy(tpm_engine->data_buffer, buf, cmd_len);
->
-> -static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t 
-> count)
-> -{
-> -    struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-> -    struct tpm_loongson_cmd *cmd = tpm_engine->command;
-> +    ret = loongson_se_send_engine_cmd(tpm_engine);
-> +    if (ret)
-> +        return ret;
->
-> -    if (count > tpm_engine->buffer_size)
-> -        return -E2BIG;
-> +    cmd_ret = tpm_engine->command_ret;
-> +    if (cmd_ret->data_len > bufsiz)
-> +        return -EIO;
->
-> -    cmd->data_len = count;
-> -    memcpy(tpm_engine->data_buffer, buf, count);
-> +    memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
->
-> -    return loongson_se_send_engine_cmd(tpm_engine);
-> +    return cmd_ret->data_len;
->  }
->
->  static const struct tpm_class_ops tpm_loongson_ops = {
->      .flags = TPM_OPS_AUTO_STARTUP,
-> -    .recv = tpm_loongson_recv,
->      .send = tpm_loongson_send,
->  };
->
-> @@ -65,7 +64,7 @@ static int tpm_loongson_probe(struct platform_device 
-> *pdev)
->      chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
->      if (IS_ERR(chip))
->          return PTR_ERR(chip);
-> -    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
-> +    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_SYNC;
->      dev_set_drvdata(&chip->dev, tpm_engine);
->
->      return tpm_chip_register(chip);
->
-> Thanks,
-> Stefano
->
+>> Tested the whole patch series and it resolved the xdp-tool xdp-filter issue
 >>
->> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
->> index dddd702b2..ba3924eb1 100644
->> --- a/drivers/char/tpm/Kconfig
->> +++ b/drivers/char/tpm/Kconfig
->> @@ -189,6 +189,15 @@ config TCG_IBMVTPM
->>       will be accessible from within Linux.  To compile this driver
->>       as a module, choose M here; the module will be called tpm_ibmvtpm.
+>> [root@fedora ~]# xdp-loader status
+>> CURRENT XDP PROGRAM STATUS:
 >>
->> +config TCG_LOONGSON
->> +    tristate "Loongson TPM Interface"
->> +    depends on MFD_LOONGSON_SE
->> +    help
->> +      If you want to make Loongson TPM support available, say Yes and
->> +      it will be accessible from within Linux. To compile this
->> +      driver as a module, choose M here; the module will be called
->> +      tpm_loongson.
->> +
->> config TCG_XEN
->>     tristate "XEN TPM Interface"
->>     depends on TCG_TPM && XEN
->> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
->> index 9de1b3ea3..5b5cdc0d3 100644
->> --- a/drivers/char/tpm/Makefile
->> +++ b/drivers/char/tpm/Makefile
->> @@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
->> obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
->> obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
->> obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
->> +obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
->> diff --git a/drivers/char/tpm/tpm_loongson.c 
->> b/drivers/char/tpm/tpm_loongson.c
->> new file mode 100644
->> index 000000000..a4ec23639
->> --- /dev/null
->> +++ b/drivers/char/tpm/tpm_loongson.c
->> @@ -0,0 +1,84 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
->> +
->> +#include <linux/device.h>
->> +#include <linux/mfd/loongson-se.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/wait.h>
->> +
->> +#include "tpm.h"
->> +
->> +struct tpm_loongson_cmd {
->> +    u32 cmd_id;
->> +    u32 data_off;
->> +    u32 data_len;
->> +    u32 pad[5];
->> +};
->> +
->> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t 
->> count)
->> +{
->> +    struct loongson_se_engine *tpm_engine = 
->> dev_get_drvdata(&chip->dev);
->> +    struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
->> +
->> +    if (cmd_ret->data_len > count)
->> +        return -EIO;
->> +
->> +    memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
->> +
->> +    return cmd_ret->data_len;
->> +}
->> +
->> +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t 
->> count)
->> +{
->> +    struct loongson_se_engine *tpm_engine = 
->> dev_get_drvdata(&chip->dev);
->> +    struct tpm_loongson_cmd *cmd = tpm_engine->command;
->> +
->> +    if (count > tpm_engine->buffer_size)
->> +        return -E2BIG;
->> +
->> +    cmd->data_len = count;
->> +    memcpy(tpm_engine->data_buffer, buf, count);
->> +
->> +    return loongson_se_send_engine_cmd(tpm_engine);
->> +}
->> +
->> +static const struct tpm_class_ops tpm_loongson_ops = {
->> +    .flags = TPM_OPS_AUTO_STARTUP,
->> +    .recv = tpm_loongson_recv,
->> +    .send = tpm_loongson_send,
->> +};
->> +
->> +static int tpm_loongson_probe(struct platform_device *pdev)
->> +{
->> +    struct loongson_se_engine *tpm_engine;
->> +    struct device *dev = &pdev->dev;
->> +    struct tpm_loongson_cmd *cmd;
->> +    struct tpm_chip *chip;
->> +
->> +    tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
->> +    if (!tpm_engine)
->> +        return -ENODEV;
->> +    cmd = tpm_engine->command;
->> +    cmd->cmd_id = SE_CMD_TPM;
->> +    cmd->data_off = tpm_engine->buffer_off;
->> +
->> +    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
->> +    if (IS_ERR(chip))
->> +        return PTR_ERR(chip);
->> +    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
->> +    dev_set_drvdata(&chip->dev, tpm_engine);
->> +
->> +    return tpm_chip_register(chip);
->> +}
->> +
->> +static struct platform_driver tpm_loongson = {
->> +    .probe   = tpm_loongson_probe,
->> +    .driver  = {
->> +        .name  = "tpm_loongson",
->> +    },
->> +};
->> +module_platform_driver(tpm_loongson);
->> +
->> +MODULE_ALIAS("platform:tpm_loongson");
->> +MODULE_LICENSE("GPL");
->> +MODULE_DESCRIPTION("Loongson TPM driver");
->> -- 
->> 2.45.2
+>> Interface        Prio  Program name      Mode     ID   Tag
+>>    Chain actions
+>> --------------------------------------------------------------------------------------
+>> lo                     xdp_dispatcher    skb      53   4d7e87c0d30db711
+>>   =>              10     xdpfilt_alw_all           62
+>> 320c53c06933a8fa  XDP_PASS
+>> dummy0                 <No XDP program loaded!>
+>> sit0                   <No XDP program loaded!>
+>> enp0s3f0               <No XDP program loaded!>
+>> wlp3s0                 <No XDP program loaded!>
 >>
->>
+>> you can add Tested-by: Vincent Li <vincent.mc.li@gmail.com>
+> 
+> Hi Vincent,
+> 
+> Okay, thank you very much for your support. The existing patch has
+> included "Tested-by: Vincent Li vincent.mc.li@gmail.com".
 
+Huacai, I presume you'll route this series to Linus, correct?
+
+Thanks,
+Daniel
