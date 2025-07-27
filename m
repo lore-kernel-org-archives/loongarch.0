@@ -1,186 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82521EFFB7
-	for <loongarch@lists.linux.dev>; Sat, 26 Jul 2025 21:39:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B327413AF2;
+	Sun, 27 Jul 2025 01:00:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753565960; cv=none; b=VwWjo9MSYHwKXyXwEKhHOq5zssQYeitfpvZFhwP3WUqEVy2vY4PaOK7A8K8luzExpphJB4dv35aDihMveBcwD5OL+KpZeNI12Z68JickmSTAuihRPOqTzWuVFkN3yMiR99SRcglTzsRLL32KVZchsidzIaRosGpszqdHRogNzqw=
+	t=1753578051; cv=none; b=P15xlYB/VF6XHMzoPWxKITAtUzkIi3GioNtN+k6eujbl4DxF8tyTe6lsp+KklPj1eXaGPDC0LRL8pOLrMEOUoRdJA0aO95ElvJcHI+h36VslLf9eVt/ubg8+DmELMEd7OB9C9gM630UNwH15tUghu50W8lx7jUJ8eujR60XwCpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753565960; c=relaxed/simple;
-	bh=bE8gOgUvTZi4vI0lg9qUYLnf/GEXOkxooNHihx3vuJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sViptphsbtCzE8SKLfIJgzJV9ngfX64UL7KKfN5NimZ2KBY8OC9s2W+WEax+xpCi1iiIIswSCUZskshjNOEs0zZrgD1rUUTH17DQEpvxyfg2AOsM2vyw3CSmdJztZnfVTSBvRW6d82tojadMe9qkFtDif3bpJ9LTo9CBmocSl8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHrb3axi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753578051; c=relaxed/simple;
+	bh=i04joahZ7AlXGF/TYePnuX2oiqMpq4D4TwWOHYF//Ac=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lsWCdQ7jv+S5fblPPBkki2pnVUA7JmxgRr8kVLDSMXKJ0f6Y8LtvyfXnhnIgHagQ5+ekWeuFLWIIDkWJ0tJLszzyPBHnFDo0egtAjhTBlrjtDRwV2zBdo2SkDSUXbvNN6PwiftpLNEc4h4W02zGhplPAOKzOckYCO4TVzwtej8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ae1MjPUZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHrb3axi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D8BEC4CEED;
-	Sat, 26 Jul 2025 21:39:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ae1MjPUZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9F68C4CEED;
+	Sun, 27 Jul 2025 01:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753565960;
-	bh=bE8gOgUvTZi4vI0lg9qUYLnf/GEXOkxooNHihx3vuJw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=XHrb3axiSsGzIoF2z2Ix7pQjSMf1Hy42ar894fKLOABDtiMSiJhU7EOw7iJrgd6tB
-	 IbaRdb5qeWEpZin3fRvADFhKWu6rwXZK251hn0vmJbDMaGw9ALbzwGt5jlO4g1Ev/5
-	 38kyT5jk9ILeJA/C732uod/apU+rxyQj7EYgW1D/FfLwRv3xciKcU+EEYDtA1K1HQw
-	 89qGLSJb5I1UF5EVZNysHbVA4poyaagUpDWiSn+7w1Wkxrul3aS8xbgWpQmDVmq97o
-	 1XX7DFiDUydJ2ZJduymhDp4XdKL9MxP2XYT1rwFJYEc0IFFTjUHBVSjh8qB39SdIcg
-	 FmVRs5hgMDysg==
-Date: Sat, 26 Jul 2025 14:39:20 -0700
-From: Kees Cook <kees@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Chris Zankel <chris@zankel.net>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	David Hildenbrand <david@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Dishank Jogi <dishank.jogi@siqol.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonas Bonn <jonas@southpole.se>, Kees Cook <kees@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-um@lists.infradead.org, loongarch@lists.linux.dev,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Richard Weinberger <richard@nod.at>, Rich Felker <dalias@libc.org>,
-	Russell King <linux@armlinux.org.uk>, sparclinux@vger.kernel.org,
-	Stafford Horne <shorne@gmail.com>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>,
-	x86@kernel.org, Yin Fengwei <fengwei_yin@linux.alibaba.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [GIT PULL] execve updates for v6.17
-Message-ID: <202507261437.F2079B3B7@keescook>
+	s=k20201202; t=1753578051;
+	bh=i04joahZ7AlXGF/TYePnuX2oiqMpq4D4TwWOHYF//Ac=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Ae1MjPUZLc9E5viz7ZJ3lHJaqmHt0f1OmsK5o5DOi5OmHQtWlvck2OCHuKHBWUSer
+	 CdygWA4v0OCmd3ToI16uJ6XdDjZZH53QW/RfB82f1vX96OXes34slei/LQqvM4+KcV
+	 q5/CEBXRoAubZMzCJThSFSzW6wZmmh5PRxXNqg0CLqc7vaiSE5wOjzo5p+ehwev477
+	 H0P5K05TbW0QEOw9nQGqrbYrLmIqJJMh++NqYYdTUX+r0YDp2pVwHspY/af6lbYc6N
+	 zi6ghsvSlEG9ULL9E41qOk/Qsa8k++o+nbC9Cbim2sTHMLgB2c1AfNHKGB1QVgMIgG
+	 2t1jP/GqbckWQ==
+Message-ID: <c4bf63161e13ce1b51a288b1fd0f3fb0b1170f22.camel@kernel.org>
+Subject: Re: [PATCH v4 0/5] Support trampoline for LoongArch
+From: Geliang Tang <geliang@kernel.org>
+To: Chenghao Duan <duanchenghao@kylinos.cn>, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, yangtiezhu@loongson.cn, 
+	hengqi.chen@gmail.com, chenhuacai@kernel.org
+Cc: martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, 	guodongtai@kylinos.cn, youling.tang@linux.dev,
+ jianghaoran@kylinos.cn, 	vincent.mc.li@gmail.com
+Date: Sun, 27 Jul 2025 09:00:43 +0800
+In-Reply-To: <20250724141929.691853-1-duanchenghao@kylinos.cn>
+References: <20250724141929.691853-1-duanchenghao@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+Hi Chenghao, Huacai, Tuezhu,
 
-Please pull these execve updates for v6.17. Note that while the REGSET
-macro changes touch all the architectures, they are fairly mechanical
-and have been in linux-next for almost the entire development window.
+I first discovered this Loongarch BPF trampoline issue when debugging
+MPTCP BPF selftests on a Loongarch machine last June (see my commit
+eef0532e900c "selftests/bpf: Null checks for links in bpf_tcp_ca"), and
+reported it to Huachui. Tiezhu and I started implementing BPF
+trampoline last June. I also called on more Chinese kernel engineers to
+participate in the development of the Loongarch BPF trampoline at the
+openEuler Developer Day 2024 and CLSF 2024 conferences. Although this
+work was finally handed over to Chenghao, it is also necessary to
+mention me as the reporter and our early developers in the commit log.
 
-Thanks!
+Thanks,
+-Geliang
 
--Kees
-
-The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
-
-  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.17
-
-for you to fetch changes up to 7f71195c15dcf5f34c4c7f056603659374e3a525:
-
-  fork: reorder function qualifiers for copy_clone_args_from_user (2025-07-17 16:37:05 -0700)
-
-----------------------------------------------------------------
-execve updates for v6.17
-
-- Introduce regular REGSET note macros arch-wide (Dave Martin)
-
-- Remove arbitrary 4K limitation of program header size (Yin Fengwei)
-
-- Reorder function qualifiers for copy_clone_args_from_user() (Dishank Jogi)
-
-----------------------------------------------------------------
-Dave Martin (23):
-      regset: Fix kerneldoc for struct regset_get() in user_regset
-      regset: Add explicit core note name in struct user_regset
-      binfmt_elf: Dump non-arch notes with strictly matching name and type
-      ARC: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      ARM: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      arm64: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      csky: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      hexagon: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      LoongArch: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      m68k: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      MIPS: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      nios2: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      openrisc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      parisc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      powerpc/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      riscv: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      s390/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      sh: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      sparc: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      x86/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      um: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      xtensa: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-      binfmt_elf: Warn on missing or suspicious regset note names
-
-Dishank Jogi (1):
-      fork: reorder function qualifiers for copy_clone_args_from_user
-
-Yin Fengwei (1):
-      binfmt_elf: remove the 4k limitation of program header size
-
- include/linux/regset.h                   | 12 +++++-
- arch/arc/kernel/ptrace.c                 |  4 +-
- arch/arm/kernel/ptrace.c                 |  6 +--
- arch/arm64/kernel/ptrace.c               | 52 +++++++++++-----------
- arch/csky/kernel/ptrace.c                |  4 +-
- arch/hexagon/kernel/ptrace.c             |  2 +-
- arch/loongarch/kernel/ptrace.c           | 16 +++----
- arch/m68k/kernel/ptrace.c                |  4 +-
- arch/mips/kernel/ptrace.c                | 20 ++++-----
- arch/nios2/kernel/ptrace.c               |  2 +-
- arch/openrisc/kernel/ptrace.c            |  4 +-
- arch/parisc/kernel/ptrace.c              |  8 ++--
- arch/powerpc/kernel/ptrace/ptrace-view.c | 74 ++++++++++++++++----------------
- arch/riscv/kernel/ptrace.c               | 12 +++---
- arch/s390/kernel/ptrace.c                | 42 +++++++++---------
- arch/sh/kernel/ptrace_32.c               |  4 +-
- arch/sparc/kernel/ptrace_32.c            |  4 +-
- arch/sparc/kernel/ptrace_64.c            |  8 ++--
- arch/x86/kernel/ptrace.c                 | 22 +++++-----
- arch/x86/um/ptrace.c                     | 10 ++---
- arch/xtensa/kernel/ptrace.c              |  4 +-
- fs/binfmt_elf.c                          | 38 ++++++++++------
- fs/binfmt_elf_fdpic.c                    | 17 ++++----
- kernel/fork.c                            |  2 +-
- 24 files changed, 196 insertions(+), 175 deletions(-)
-
--- 
-Kees Cook
+On Thu, 2025-07-24 at 22:19 +0800, Chenghao Duan wrote:
+> v4:
+> 1. Delete the #3 patch of version V3.
+> 
+> 2. Add 5 NOP instructions in build_prologue().
+>    Reserve space for the move_imm + jirl instruction.
+> 
+> 3. Differentiate between direct jumps and ftrace jumps of trampoline:
+>    direct jumps skip 5 instructions.
+>    ftrace jumps skip 2 instructions.
+> 
+> 4. Remove the generation of BL jump instructions in
+> emit_jump_and_link().
+>    After the trampoline ends, it will jump to the specified register.
+>    The BL instruction writes PC+4 to r1 instead of allowing the
+>    specification of rd.
+> 
+> ---------------------------------------------------------------------
+> --
+> Historical Version:
+> v3:
+> 1. Patch 0003 adds EXECMEM_BPF memory type to the execmem subsystem.
+> 
+> 2. Align the size calculated by arch_bpf_trampoline_size to page
+> boundaries.
+> 
+> 3. Add the flush icache operation to larch_insn_text_copy.
+> 
+> 4. Unify the implementation of bpf_arch_xxx into the patch
+> "0004-LoongArch-BPF-Add-bpf_arch_xxxxx-support-for-Loong.patch".
+> 
+> 5. Change the patch order. Move the patch
+> "0002-LoongArch-BPF-Update-the-code-to-rename-validate_.patch" before
+> "0005-LoongArch-BPF-Add-bpf-trampoline-support-for-Loon.patch".
+> 
+> URL for version v3:
+> https://lore.kernel.org/all/20250709055029.723243-1-duanchenghao@kylinos.cn/
+> ---------
+> v2:
+> 1. Change the fixmap in the instruction copy function to
+> set_memory_xxx.
+> 
+> 2. Change the implementation method of the following code.
+> 	- arch_alloc_bpf_trampoline
+> 	- arch_free_bpf_trampoline
+> 	Use the BPF core's allocation and free functions.
+> 
+> 	- bpf_arch_text_invalidate
+> 	Operate with the function larch_insn_text_copy that carries
+> 	memory attribute modifications.
+> 
+> 3. Correct the incorrect code formatting.
+> 
+> URL for version v2:
+> https://lore.kernel.org/all/20250618105048.1510560-1-duanchenghao@kylinos.cn/
+> ---------
+> v1:
+> Support trampoline for LoongArch. The following feature tests have
+> been
+> completed:
+> 	1. fentry
+> 	2. fexit
+> 	3. fmod_ret
+> 
+> TODO: The support for the struct_ops feature will be provided in
+> subsequent patches.
+> 
+> URL for version v1:
+> https://lore.kernel.org/all/20250611035952.111182-1-duanchenghao@kylinos.cn/
+> ---------------------------------------------------------------------
+> --
+> 
+> Chenghao Duan (4):
+>   LoongArch: Add larch_insn_gen_{beq,bne} helpers
+>   LoongArch: BPF: Update the code to rename validate_code to
+>     validate_ctx
+>   LoongArch: BPF: Add bpf_arch_xxxxx support for Loongarch
+>   LoongArch: BPF: Add bpf trampoline support for Loongarch
+> 
+> Tiezhu Yang (1):
+>   LoongArch: BPF: Add struct ops support for trampoline
+> 
+>  arch/loongarch/include/asm/inst.h |   3 +
+>  arch/loongarch/kernel/inst.c      |  60 ++++
+>  arch/loongarch/net/bpf_jit.c      | 521
+> +++++++++++++++++++++++++++++-
+>  arch/loongarch/net/bpf_jit.h      |   6 +
+>  4 files changed, 589 insertions(+), 1 deletion(-)
