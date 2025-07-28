@@ -1,317 +1,326 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978251D130E
-	for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 10:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A864A33
+	for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 13:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753700335; cv=none; b=C3+0QN1dquUhLt1DCsuh8BKfZa18ybJOEpRF9yy2r5zi3dKhXYaOSgYNCQMaVX0vCQ217/eb1LqsWV2pSh99vlE2qaGVGgLF3YmT8eLmK3ueJoM9VfkxpcWrfgys84H4WWaT0UYN0VAR2BGL7jyDCYQvlSz6ovWvdm2lXn1qSDw=
+	t=1753707616; cv=none; b=Oo/WgAigPAtFO4kmF3pYiu+mRrOnKrW2KkSUQPOFypalKTv+m7flIhaLmhZdPV4UmrHSwngaBCDinZPodnus8usOY8EfNtz5Mk9c1U2Eh3s0WE/FUHPlD6jFxV6XV64HaxTiR/7EUtzMtk7aHrTnMO4xuKUNO6MH/Q5LKyS04B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753700335; c=relaxed/simple;
-	bh=PJx5QFJu4D/LZBoDqRYRjZDFXuO2cYXXjGixhwMsXMc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UrMSMXmnE0ZxBubbwtEsOIFKlvvIPFxX3DL4GnGbWOKgN/FB5nm9eDv9cYFUt1mOIiFsX2VCzFjF66N2lE7qh3pkLvmvY1RimiXA6qmhGikDkuwnJ2pTRMcQMNfM2X49j4SlAxdPL4bxsrHwuCIbiT68aJBW3pVdKgEg7EGM58Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkwT9E7C; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkwT9E7C"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-41bc2668f85so2538048b6e.2
-        for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 03:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753700333; x=1754305133; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eDEJIKTxjQ+aMs9QZUcVbyCxKMaauKOrQlNqFqKUv+Q=;
-        b=WkwT9E7C9X6ON1DARw+iXSbxGYcT9kblp/3J03oMg+J5erCn8WFaiQri3U7TjpY/Ao
-         v9PLPv5+oHKnlVxk+gXB1zhWHw4eR0wZ/Iy++mpzKfPisaUZG6owY5+se9ott1o556MH
-         NwfnKjDSEfLfr8uM+B3C1NP8IazI5I+duPknBcIMdc1Lg2Kws/SYp3MLDMjUs3Upym9Q
-         CuurPJXfufJHGLPjGctxvQPIF2ZYWU2TVe2Olx8tkkwvMygUYnn3lRnaQJTx4KiVq2od
-         3EegZzMZjGWDXpjP70UUZwYgUqZIDk/Dxp8wM0VsC3G6tHMTfE4EUr7ESrzYo37gCYuZ
-         jv5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753700333; x=1754305133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eDEJIKTxjQ+aMs9QZUcVbyCxKMaauKOrQlNqFqKUv+Q=;
-        b=ddGrjBnQFqwODR3vkjiYF/qCDpI3m60JTaaW/xx9TKf7u/jMn/g9RO933Zj6WzJVHo
-         k8r2JIGq3wWkGZ+scj6rA4eevTaXsjNejxTjOO5e2b1f3aaP3KhfMR8BgH1zhN6DQvwL
-         9BwOWxrjn/saYhdhM25mHcQHaU6Ik7u+OhiK6+AvEhgzbfFYp+oXMiyIlCvAvYylmD98
-         lsoQzl4uBCzdI057uv1wCq+CiXSXzCrzNG/qhTXikCkp4CuCzsyRVAxbxTqC9m9RR8my
-         j8DEjlgFAR1D/ZSgQxnsKqrzH22dJ/4R1CK8Xm9y0hsz6cInKv1c5oj4cR3wEpZSHlrl
-         9IxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWlNV8NqcVtaUmRLS/O5iwG9RpqP4JQkAtnd1SOqJvoODFz1lJ8J348fsM8i+7CwXVoWzp+umG+WYo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyD9nr9T13T8vv+U5GmB2UE8SoTVczDyTwAjeIG5kkmtwFZgL23
-	vsHNTF5USpjsLJhI6Pc+YOmSKvNxce7eKRCl2x6TghDH94N2fLxOb6c9dXa4VlSFbAE/HLgJdDL
-	wqsJB58On+npf5/ixEIN5TCul7g/tEwM=
-X-Gm-Gg: ASbGncsBaEH6KNE20FQWDZw23C1SRqgjCcViDr++Vi95paoTuhxQFO68YLZgN2W9Sij
-	PZ5I2LdFg4/5wwCiBePgbDBMb2D/EWwLyLM84enEPLFtGLSG0EQdXom3TauZZ0RpsbO+nzpnWSE
-	OIieb2ODn2UvJDQEscI6zMtxYXs4hUXNNwSEKdMYwGzk1Vm02/LuBT1Z1OoZJQD3tYeOJXvMYwt
-	qhe/tg=
-X-Google-Smtp-Source: AGHT+IGpUAIuaI/QMGskND7VYzAO96CE8mnJtwOJyCoN9XAfCpbJjoFiBQK5I0m0bWthNQwudSVYkrlN95R2xNODggQ=
-X-Received: by 2002:a05:6808:13d6:b0:41c:4d35:c1c2 with SMTP id
- 5614622812f47-42bb77d78aamr5784172b6e.11.1753700332574; Mon, 28 Jul 2025
- 03:58:52 -0700 (PDT)
+	s=arc-20240116; t=1753707616; c=relaxed/simple;
+	bh=DlYCEKDtDh0DnKbrp4IPzsLeQlsdlD1wyM+xD7uMpu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADGGVNIzOWd19AI1neShZu+7owOWOFRwNlCSfcMwZxl5LUumCSoWaiVGlU740merIRowPqqokGO+AGCYE8dKGeXFYrLq6MOv+llySRzwA4MsX1b2JDY+vsHY2kQcKdYzY/7GTYcvfSKnh+OTZy9X/WOQBAglUgdUNIjyfmiW25E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: c661f9286bb211f0b29709d653e92f7d-20250728
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
+	DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI
+	AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:2d6abe41-8cbd-4f2f-a551-d86b80dae557,IP:10,
+	URL:0,TC:0,Content:9,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:14
+X-CID-INFO: VERSION:1.1.45,REQID:2d6abe41-8cbd-4f2f-a551-d86b80dae557,IP:10,UR
+	L:0,TC:0,Content:9,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:14
+X-CID-META: VersionHash:6493067,CLOUDID:59e4b8029e56e93a67df1883ccf2387d,BulkI
+	D:250728103101KH33AOP9,BulkQuantity:6,Recheck:0,SF:17|19|23|43|64|66|74|78
+	|80|81|82|83|102|841,TC:nil,Content:4|50,EDM:-3,IP:-2,URL:0,File:nil,RT:ni
+	l,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,B
+	RR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: c661f9286bb211f0b29709d653e92f7d-20250728
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(39.144.190.111)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1021292728; Mon, 28 Jul 2025 21:00:02 +0800
+Date: Mon, 28 Jul 2025 20:59:56 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
+	jianghaoran@kylinos.cn, vincent.mc.li@gmail.com
+Subject: Re: [PATCH v4 3/5] LoongArch: BPF: Add bpf_arch_xxxxx support for
+ Loongarch
+Message-ID: <20250728125956.GA1439240@chenghao-pc>
+References: <20250724141929.691853-1-duanchenghao@kylinos.cn>
+ <20250724141929.691853-4-duanchenghao@kylinos.cn>
+ <CAEyhmHQAAE_a7X4UWHVsKq3hp2jd4LRDP31kOjL_E-bz9coqYw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250724141929.691853-1-duanchenghao@kylinos.cn> <20250724141929.691853-4-duanchenghao@kylinos.cn>
-In-Reply-To: <20250724141929.691853-4-duanchenghao@kylinos.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Mon, 28 Jul 2025 18:58:41 +0800
-X-Gm-Features: Ac12FXyGftQxSZt7TbOWZ5dGm2PuD9KdlQWwA3g-Yhu287iIO8pn3G1CvgOw6Xk
-Message-ID: <CAEyhmHQAAE_a7X4UWHVsKq3hp2jd4LRDP31kOjL_E-bz9coqYw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] LoongArch: BPF: Add bpf_arch_xxxxx support for Loongarch
-To: Chenghao Duan <duanchenghao@kylinos.cn>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn, 
-	vincent.mc.li@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEyhmHQAAE_a7X4UWHVsKq3hp2jd4LRDP31kOjL_E-bz9coqYw@mail.gmail.com>
 
-On Thu, Jul 24, 2025 at 10:21=E2=80=AFPM Chenghao Duan <duanchenghao@kylino=
-s.cn> wrote:
->
-> Implement the functions of bpf_arch_text_poke, bpf_arch_text_copy, and
-> bpf_arch_text_invalidate on the LoongArch architecture.
->
-> On LoongArch, since symbol addresses in the direct mapping
-> region cannot be reached via relative jump instructions from the paged
-> mapping region, we use the move_imm+jirl instruction pair as absolute
-> jump instructions. These require 2-5 instructions, so we reserve 5 NOP
-> instructions in the program as placeholders for function jumps.
->
-> larch_insn_text_copy is solely used for BPF. The use of
-> larch_insn_text_copy() requires page_size alignment. Currently, only
-> the size of the trampoline is page-aligned.
->
+On Mon, Jul 28, 2025 at 06:58:41PM +0800, Hengqi Chen wrote:
+> On Thu, Jul 24, 2025 at 10:21 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+> >
+> > Implement the functions of bpf_arch_text_poke, bpf_arch_text_copy, and
+> > bpf_arch_text_invalidate on the LoongArch architecture.
+> >
+> > On LoongArch, since symbol addresses in the direct mapping
+> > region cannot be reached via relative jump instructions from the paged
+> > mapping region, we use the move_imm+jirl instruction pair as absolute
+> > jump instructions. These require 2-5 instructions, so we reserve 5 NOP
+> > instructions in the program as placeholders for function jumps.
+> >
+> > larch_insn_text_copy is solely used for BPF. The use of
+> > larch_insn_text_copy() requires page_size alignment. Currently, only
+> > the size of the trampoline is page-aligned.
+> >
+> 
+> The subject line seems kind of casual, bpf_arch_xxxxx ?
 
-The subject line seems kind of casual, bpf_arch_xxxxx ?
+Here is the modified commit log. Please take a look.
 
-> Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> Reviewed-by: Hengqi Chen <hengqi.chen@gmail.com>
-> Reviewed-by: Huacai Chen <chenhuacai@kernel.org>
+LoongArch: BPF: Implement dynamic code modification support
 
-I didn't leave a Reviewed-by tag last time, no ?
+This commit adds the necessary infrastructure for BPF dynamic code
+modification on LoongArch architecture:
+1. Implement bpf_arch_text_poke() for runtime instruction patching.
+2. Add bpf_arch_text_copy() for instruction block copying.
+3. Create bpf_arch_text_invalidate() for code invalidation.
 
-> ---
->  arch/loongarch/include/asm/inst.h |  1 +
->  arch/loongarch/kernel/inst.c      | 32 ++++++++++
->  arch/loongarch/net/bpf_jit.c      | 97 +++++++++++++++++++++++++++++++
->  3 files changed, 130 insertions(+)
->
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
-sm/inst.h
-> index 2ae96a35d..88bb73e46 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction i=
-nsn, struct pt_regs *regs);
->  int larch_insn_read(void *addr, u32 *insnp);
->  int larch_insn_write(void *addr, u32 insn);
->  int larch_insn_patch_text(void *addr, u32 insn);
-> +int larch_insn_text_copy(void *dst, void *src, size_t len);
->
->  u32 larch_insn_gen_nop(void);
->  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
-> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-> index 674e3b322..8d6594968 100644
-> --- a/arch/loongarch/kernel/inst.c
-> +++ b/arch/loongarch/kernel/inst.c
-> @@ -4,6 +4,7 @@
->   */
->  #include <linux/sizes.h>
->  #include <linux/uaccess.h>
-> +#include <linux/set_memory.h>
->
->  #include <asm/cacheflush.h>
->  #include <asm/inst.h>
-> @@ -218,6 +219,37 @@ int larch_insn_patch_text(void *addr, u32 insn)
->         return ret;
->  }
->
-> +int larch_insn_text_copy(void *dst, void *src, size_t len)
-> +{
-> +       unsigned long flags;
-> +       size_t wlen =3D 0;
-> +       size_t size;
-> +       void *ptr;
-> +       int ret =3D 0;
-> +
-> +       set_memory_rw((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE=
-_SIZE);
-> +       raw_spin_lock_irqsave(&patch_lock, flags);
-> +       while (wlen < len) {
-> +               ptr =3D dst + wlen;
-> +               size =3D min_t(size_t, PAGE_SIZE - offset_in_page(ptr),
-> +                            len - wlen);
-> +
-> +               ret =3D copy_to_kernel_nofault(ptr, src + wlen, size);
-> +               if (ret) {
-> +                       pr_err("%s: operation failed\n", __func__);
-> +                       break;
-> +               }
-> +               wlen +=3D size;
-> +       }
-> +       raw_spin_unlock_irqrestore(&patch_lock, flags);
-> +       set_memory_rox((unsigned long)dst, round_up(len, PAGE_SIZE) / PAG=
-E_SIZE);
-> +
-> +       if (!ret)
-> +               flush_icache_range((unsigned long)dst, (unsigned long)dst=
- + len);
-> +
-> +       return ret;
-> +}
-> +
->  u32 larch_insn_gen_nop(void)
->  {
->         return INSN_NOP;
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 7032f11d3..86504e710 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -4,8 +4,12 @@
->   *
->   * Copyright (C) 2022 Loongson Technology Corporation Limited
->   */
-> +#include <linux/memory.h>
->  #include "bpf_jit.h"
->
-> +#define LOONGARCH_LONG_JUMP_NINSNS 5
-> +#define LOONGARCH_LONG_JUMP_NBYTES (LOONGARCH_LONG_JUMP_NINSNS * 4)
-> +
->  #define REG_TCC                LOONGARCH_GPR_A6
->  #define TCC_SAVED      LOONGARCH_GPR_S5
->
-> @@ -88,6 +92,7 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
->   */
->  static void build_prologue(struct jit_ctx *ctx)
->  {
-> +       int i;
->         int stack_adjust =3D 0, store_offset, bpf_stack_adjust;
->
->         bpf_stack_adjust =3D round_up(ctx->prog->aux->stack_depth, 16);
-> @@ -98,6 +103,10 @@ static void build_prologue(struct jit_ctx *ctx)
->         stack_adjust =3D round_up(stack_adjust, 16);
->         stack_adjust +=3D bpf_stack_adjust;
->
-> +       /* Reserve space for the move_imm + jirl instruction */
-> +       for (i =3D 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
-> +               emit_insn(ctx, nop);
-> +
->         /*
->          * First instruction initializes the tail call count (TCC).
->          * On tail call we skip this instruction, and the TCC is
-> @@ -1367,3 +1376,91 @@ bool bpf_jit_supports_subprog_tailcalls(void)
->  {
->         return true;
->  }
-> +
-> +static int emit_jump_and_link(struct jit_ctx *ctx, u8 rd, u64 target)
-> +{
-> +       if (!target) {
-> +               pr_err("bpf_jit: jump target address is error\n");
-> +               return -EFAULT;
-> +       }
-> +
-> +       move_imm(ctx, LOONGARCH_GPR_T1, target, false);
-> +       emit_insn(ctx, jirl, rd, LOONGARCH_GPR_T1, 0);
-> +
-> +       return 0;
-> +}
-> +
-> +static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_=
-call)
-> +{
-> +       struct jit_ctx ctx;
-> +
-> +       ctx.idx =3D 0;
-> +       ctx.image =3D (union loongarch_instruction *)insns;
-> +
-> +       if (!target) {
-> +               emit_insn((&ctx), nop);
-> +               emit_insn((&ctx), nop);
-> +               return 0;
-> +       }
-> +
-> +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LOON=
-GARCH_GPR_ZERO,
-> +                                 (unsigned long)target);
-> +}
-> +
-> +int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
-> +                      void *old_addr, void *new_addr)
-> +{
-> +       u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
-_NOP};
-> +       u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
-_NOP};
-> +       bool is_call =3D poke_type =3D=3D BPF_MOD_CALL;
-> +       int ret;
-> +
-> +       if (!is_kernel_text((unsigned long)ip) &&
-> +               !is_bpf_text_address((unsigned long)ip))
-> +               return -ENOTSUPP;
-> +
-> +       ret =3D gen_jump_or_nops(old_addr, ip, old_insns, is_call);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (memcmp(ip, old_insns, LOONGARCH_LONG_JUMP_NBYTES))
-> +               return -EFAULT;
-> +
-> +       ret =3D gen_jump_or_nops(new_addr, ip, new_insns, is_call);
-> +       if (ret)
-> +               return ret;
-> +
-> +       mutex_lock(&text_mutex);
-> +       if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
-> +               ret =3D larch_insn_text_copy(ip, new_insns, LOONGARCH_LON=
-G_JUMP_NBYTES);
-> +       mutex_unlock(&text_mutex);
-> +       return ret;
-> +}
-> +
-> +int bpf_arch_text_invalidate(void *dst, size_t len)
-> +{
-> +       int i;
-> +       int ret =3D 0;
-> +       u32 *inst;
-> +
-> +       inst =3D kvmalloc(len, GFP_KERNEL);
-> +       if (!inst)
-> +               return -ENOMEM;
-> +
-> +       for (i =3D 0; i < (len/sizeof(u32)); i++)
-> +               inst[i] =3D INSN_BREAK;
-> +
-> +       if (larch_insn_text_copy(dst, inst, len))
-> +               ret =3D -EINVAL;
-> +
-> +       kvfree(inst);
-> +       return ret;
-> +}
-> +
-> +void *bpf_arch_text_copy(void *dst, void *src, size_t len)
-> +{
-> +       if (larch_insn_text_copy(dst, src, len))
-> +               return ERR_PTR(-EINVAL);
-> +
-> +       return dst;
-> +}
-> --
-> 2.25.1
->
+On LoongArch, since symbol addresses in the direct mapping
+region cannot be reached via relative jump instructions from the paged
+mapping region, we use the move_imm+jirl instruction pair as absolute
+jump instructions. These require 2-5 instructions, so we reserve 5 NOP
+instructions in the program as placeholders for function jumps.
+
+arch_insn_text_copy is solely used for BPF. The use of
+larch_insn_text_copy() requires page_size alignment. Currently, only
+the size of the trampoline is page-aligned.
+
+> 
+> > Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> > Reviewed-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > Reviewed-by: Huacai Chen <chenhuacai@kernel.org>
+> 
+> I didn't leave a Reviewed-by tag last time, no ?
+
+I added this. If there are any mistakes, please correct them.
+
+> 
+> > ---
+> >  arch/loongarch/include/asm/inst.h |  1 +
+> >  arch/loongarch/kernel/inst.c      | 32 ++++++++++
+> >  arch/loongarch/net/bpf_jit.c      | 97 +++++++++++++++++++++++++++++++
+> >  3 files changed, 130 insertions(+)
+> >
+> > diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> > index 2ae96a35d..88bb73e46 100644
+> > --- a/arch/loongarch/include/asm/inst.h
+> > +++ b/arch/loongarch/include/asm/inst.h
+> > @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction insn, struct pt_regs *regs);
+> >  int larch_insn_read(void *addr, u32 *insnp);
+> >  int larch_insn_write(void *addr, u32 insn);
+> >  int larch_insn_patch_text(void *addr, u32 insn);
+> > +int larch_insn_text_copy(void *dst, void *src, size_t len);
+> >
+> >  u32 larch_insn_gen_nop(void);
+> >  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
+> > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> > index 674e3b322..8d6594968 100644
+> > --- a/arch/loongarch/kernel/inst.c
+> > +++ b/arch/loongarch/kernel/inst.c
+> > @@ -4,6 +4,7 @@
+> >   */
+> >  #include <linux/sizes.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/set_memory.h>
+> >
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/inst.h>
+> > @@ -218,6 +219,37 @@ int larch_insn_patch_text(void *addr, u32 insn)
+> >         return ret;
+> >  }
+> >
+> > +int larch_insn_text_copy(void *dst, void *src, size_t len)
+> > +{
+> > +       unsigned long flags;
+> > +       size_t wlen = 0;
+> > +       size_t size;
+> > +       void *ptr;
+> > +       int ret = 0;
+> > +
+> > +       set_memory_rw((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
+> > +       raw_spin_lock_irqsave(&patch_lock, flags);
+> > +       while (wlen < len) {
+> > +               ptr = dst + wlen;
+> > +               size = min_t(size_t, PAGE_SIZE - offset_in_page(ptr),
+> > +                            len - wlen);
+> > +
+> > +               ret = copy_to_kernel_nofault(ptr, src + wlen, size);
+> > +               if (ret) {
+> > +                       pr_err("%s: operation failed\n", __func__);
+> > +                       break;
+> > +               }
+> > +               wlen += size;
+> > +       }
+> > +       raw_spin_unlock_irqrestore(&patch_lock, flags);
+> > +       set_memory_rox((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
+> > +
+> > +       if (!ret)
+> > +               flush_icache_range((unsigned long)dst, (unsigned long)dst + len);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> >  u32 larch_insn_gen_nop(void)
+> >  {
+> >         return INSN_NOP;
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> > index 7032f11d3..86504e710 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -4,8 +4,12 @@
+> >   *
+> >   * Copyright (C) 2022 Loongson Technology Corporation Limited
+> >   */
+> > +#include <linux/memory.h>
+> >  #include "bpf_jit.h"
+> >
+> > +#define LOONGARCH_LONG_JUMP_NINSNS 5
+> > +#define LOONGARCH_LONG_JUMP_NBYTES (LOONGARCH_LONG_JUMP_NINSNS * 4)
+> > +
+> >  #define REG_TCC                LOONGARCH_GPR_A6
+> >  #define TCC_SAVED      LOONGARCH_GPR_S5
+> >
+> > @@ -88,6 +92,7 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
+> >   */
+> >  static void build_prologue(struct jit_ctx *ctx)
+> >  {
+> > +       int i;
+> >         int stack_adjust = 0, store_offset, bpf_stack_adjust;
+> >
+> >         bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
+> > @@ -98,6 +103,10 @@ static void build_prologue(struct jit_ctx *ctx)
+> >         stack_adjust = round_up(stack_adjust, 16);
+> >         stack_adjust += bpf_stack_adjust;
+> >
+> > +       /* Reserve space for the move_imm + jirl instruction */
+> > +       for (i = 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
+> > +               emit_insn(ctx, nop);
+> > +
+> >         /*
+> >          * First instruction initializes the tail call count (TCC).
+> >          * On tail call we skip this instruction, and the TCC is
+> > @@ -1367,3 +1376,91 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+> >  {
+> >         return true;
+> >  }
+> > +
+> > +static int emit_jump_and_link(struct jit_ctx *ctx, u8 rd, u64 target)
+> > +{
+> > +       if (!target) {
+> > +               pr_err("bpf_jit: jump target address is error\n");
+> > +               return -EFAULT;
+> > +       }
+> > +
+> > +       move_imm(ctx, LOONGARCH_GPR_T1, target, false);
+> > +       emit_insn(ctx, jirl, rd, LOONGARCH_GPR_T1, 0);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_call)
+> > +{
+> > +       struct jit_ctx ctx;
+> > +
+> > +       ctx.idx = 0;
+> > +       ctx.image = (union loongarch_instruction *)insns;
+> > +
+> > +       if (!target) {
+> > +               emit_insn((&ctx), nop);
+> > +               emit_insn((&ctx), nop);
+> > +               return 0;
+> > +       }
+> > +
+> > +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LOONGARCH_GPR_ZERO,
+> > +                                 (unsigned long)target);
+> > +}
+> > +
+> > +int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
+> > +                      void *old_addr, void *new_addr)
+> > +{
+> > +       u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
+> > +       u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
+> > +       bool is_call = poke_type == BPF_MOD_CALL;
+> > +       int ret;
+> > +
+> > +       if (!is_kernel_text((unsigned long)ip) &&
+> > +               !is_bpf_text_address((unsigned long)ip))
+> > +               return -ENOTSUPP;
+> > +
+> > +       ret = gen_jump_or_nops(old_addr, ip, old_insns, is_call);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       if (memcmp(ip, old_insns, LOONGARCH_LONG_JUMP_NBYTES))
+> > +               return -EFAULT;
+> > +
+> > +       ret = gen_jump_or_nops(new_addr, ip, new_insns, is_call);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       mutex_lock(&text_mutex);
+> > +       if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
+> > +               ret = larch_insn_text_copy(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES);
+> > +       mutex_unlock(&text_mutex);
+> > +       return ret;
+> > +}
+> > +
+> > +int bpf_arch_text_invalidate(void *dst, size_t len)
+> > +{
+> > +       int i;
+> > +       int ret = 0;
+> > +       u32 *inst;
+> > +
+> > +       inst = kvmalloc(len, GFP_KERNEL);
+> > +       if (!inst)
+> > +               return -ENOMEM;
+> > +
+> > +       for (i = 0; i < (len/sizeof(u32)); i++)
+> > +               inst[i] = INSN_BREAK;
+> > +
+> > +       if (larch_insn_text_copy(dst, inst, len))
+> > +               ret = -EINVAL;
+> > +
+> > +       kvfree(inst);
+> > +       return ret;
+> > +}
+> > +
+> > +void *bpf_arch_text_copy(void *dst, void *src, size_t len)
+> > +{
+> > +       if (larch_insn_text_copy(dst, src, len))
+> > +               return ERR_PTR(-EINVAL);
+> > +
+> > +       return dst;
+> > +}
+> > --
+> > 2.25.1
+> >
