@@ -1,179 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25138111A8
-	for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 02:42:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717B72459D2
+	for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 10:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753670578; cv=none; b=l1/5QW3jXRr2kl1FRPyTTiLfUiIzrQN4J3IFMcfDGJUDmozhJfENfdy1fE0MuajSBw963ZFU0GHodlzsXaNVDchL/lGXbfCmR1J3/mZhi8AYqT8cBgvgskpBDTaN3RCf4LvxedHxhOoeMj38AtJvmJBRhNFo+1/XdRwjNGgeT9A=
+	t=1753697418; cv=none; b=qHLaWAccTWRp5XDcVDGZIFf2Jg99xo6YeBAzK5vlDzZ9q9ylnOe3KNARWM66sKQe5vW2zUSYLm1XA00GeRTtShhs+Bn02j+a0n53QS42VlQTyNOSpdmPLacF/dr7jMBcGLTWMWNpk8rl7gXEI8sgelInxtNbD4oHSRnL3PjS6CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753670578; c=relaxed/simple;
-	bh=+ZFXkLf61aLkfibNILDeIzWrO9OCofPYG73YDnpuTgM=;
+	s=arc-20240116; t=1753697418; c=relaxed/simple;
+	bh=kTZsx80FlUs2XdqbHTMxBeKFNESUIZGy4QlnzEVaAtw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P3pOXSzYIsUVoHdGHm5YpQ6ZtMRMXfgnGc8siHOj4jMpPpd9V8IKUVXjYPKcD74VKhgcFCGfUD0g4XSkKMflEr55r4mFGOoPPoF1ZfsaAR6knbB7GlPYDtJALJ1pPZV5aFNNGBZn8TVDeU15ObheiEcqxvhqWojjlNGp6qp2Zrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6DcBs3W; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=IeL9jE/MXBzs/Qijw/woRce8eDBE7brFSndwJ18ngImsbdOuGK5KPGWL9j4QgO6KH20wKB6+efzCtTQrwY7qw+0RfY40gpp50LCMQ1uA5Lh2ICdvZesW/k1TMNK8x55WLNtpGrJmy7tXLw3LNFQxjQ/95PQcOwZnqhJM3xcAEy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIMfEX/n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6DcBs3W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAE13C4CEFE
-	for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 02:42:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIMfEX/n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 105B3C4CEF8
+	for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 10:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753670577;
-	bh=+ZFXkLf61aLkfibNILDeIzWrO9OCofPYG73YDnpuTgM=;
+	s=k20201202; t=1753697418;
+	bh=kTZsx80FlUs2XdqbHTMxBeKFNESUIZGy4QlnzEVaAtw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F6DcBs3Wpqfm/cGFxQUJEGUwMDIzbAaCJ/yX0eBfmSobqng+GqCCO7pXfkuGUn6FB
-	 HYelZkqfFZQQI3C//ORpzasxUhO+0JZWcZS5WaKwXMdSV5A0ZfQ8BpevTe12TJQZZt
-	 0uwLpHqzgKSbma9GoIKWbuyolcXlgHbYfj/XrxxARYJYfkkiloNY0QWK4j+sdnXan7
-	 ppxY/OxVOAou9dEsGYPWpKPc4Mg4MvAI7NHHKrQskGm/wcx/EwhbB/BKN92WLQBmOJ
-	 bZoyrNmncS7+5M7y/5iF9cFuPe0OPJdTEZUp2ct8qkiuAbmCCZGRXJt50+AfrOzqGZ
-	 MhVboyQSosvOQ==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-61543f03958so422901a12.0
-        for <loongarch@lists.linux.dev>; Sun, 27 Jul 2025 19:42:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUpq8d/8p1DvT46yNrH+HJSYIPu7cGMAyn4yLoJ/L3ihM1hm7acnTpVo5yhwwKk2JIPqhXpZ6gGE3A=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw1QjdT+rVokqijYDmfbJX5pZUp6ydX8NJ2JkcMUrEdvEARx3TP
-	uDEsyIy2nsmJ3u4qv0WE9+v9ARrFg2lzaDGpM+AXoL+rx8InigRR53n4Jphili9ytDbf15kb/bv
-	bZj9WdObDcJKS2R/ZnxisfMuHEM/V7to=
-X-Google-Smtp-Source: AGHT+IHndJ+0yahCGSN8pkWQx7GixFZRTGUFgRMI6PGyIdHt+uIOCB4oJ9hM+wyRpr22uFUEABlyiFCvIn9LOv3YE10=
-X-Received: by 2002:a17:907:3d0d:b0:ae2:60ba:da91 with SMTP id
- a640c23a62f3a-af61ca99878mr1194111166b.15.1753670576128; Sun, 27 Jul 2025
- 19:42:56 -0700 (PDT)
+	b=KIMfEX/nzmoJjwhTLDureSIt/hao4fF90I3OenED5h0ThRGmxHkHqcO8fwaQSzwYY
+	 eXW0OHSEVf8qiHkcjzFuLByG6F3ia2erZXl7G09aTMLEiJEq51MI+nYwNsxyhrGsD1
+	 vo5goitMtvNp6hg6tzVz5tW853jc7YShOgff2j0ideSHOROBhHDHwoAmNX/WOdV+C3
+	 Nfl9EFdr+Ws6e4fJbJZCNUWzHTIazr7ttVXhbOFbL2QAzpZPlAvZV2q1wXDQJ7ZYfD
+	 Thyu4SRd6Y9OP4t5DYsezTETWb7v6Gpk4mVkcJdP9ghS8e4EQzZHqY/fPCXgFIqa4Y
+	 CUhAiu8MMWVEg==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6152faff57eso1751386a12.1
+        for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 03:10:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWCpXC7KqQP0hDxxi9O5UmvM6P+P8OED9B8DNTi0yXBpYhqUse/ecyrOq+Zz1asJlY3SCChchqTVn8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwKa9krYqbmZlcRdon6pc3HSyC3LUJjhCaut3o4YLOTAb/pPnUQ
+	ggyoC8ZYhFgiriEpxT/vZFsP+FbH2Ts7YMFjXp/WrMbBIjplCd6VmCrLKaMeNfD+V5b5M1ccgjU
+	Ur2RdyvLD/qHi9W1HxBQj7qkyS0Jt0/M=
+X-Google-Smtp-Source: AGHT+IHUaX3PxhMevkSYPtyJWPakuO1UaEacEmkrv1dTcaqmysbetgIt4+vk2d/eIsNJiiM5eK+ANDRhD1IMVmixkZ4=
+X-Received: by 2002:a05:6402:26c6:b0:615:37ed:b255 with SMTP id
+ 4fb4d7f45d1cf-61537edb3b8mr3241149a12.30.1753697416585; Mon, 28 Jul 2025
+ 03:10:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250724141929.691853-1-duanchenghao@kylinos.cn> <c4bf63161e13ce1b51a288b1fd0f3fb0b1170f22.camel@kernel.org>
-In-Reply-To: <c4bf63161e13ce1b51a288b1fd0f3fb0b1170f22.camel@kernel.org>
+References: <20250725102307.1026434-1-jianghaoran@kylinos.cn> <61c20b77-b664-46dd-8555-9142f6d647da@iogearbox.net>
+In-Reply-To: <61c20b77-b664-46dd-8555-9142f6d647da@iogearbox.net>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 28 Jul 2025 10:42:45 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H67QrAOf=u2onBO-13m8grVn8PxMaF+huxK5tQTWWHUsA@mail.gmail.com>
-X-Gm-Features: Ac12FXw6DsLQatIhv84ndR_uR-p0z2VH5B2EE3ZtCtDioi3KHw1nxBErgy4wb4E
-Message-ID: <CAAhV-H67QrAOf=u2onBO-13m8grVn8PxMaF+huxK5tQTWWHUsA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] Support trampoline for LoongArch
-To: Geliang Tang <geliang@kernel.org>
-Cc: Chenghao Duan <duanchenghao@kylinos.cn>, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, yangtiezhu@loongson.cn, hengqi.chen@gmail.com, 
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn, 
-	vincent.mc.li@gmail.com
+Date: Mon, 28 Jul 2025 18:10:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6M7pjcLPf535vYHvaTaHVNb1VOh1aim5CmwVmQfdKeBg@mail.gmail.com>
+X-Gm-Features: Ac12FXzisr3sRYaRo_PTKjaK62aJlBziZJowpDQWfjQ0USyELFmiMVNgzHtFL8M
+Message-ID: <CAAhV-H6M7pjcLPf535vYHvaTaHVNb1VOh1aim5CmwVmQfdKeBg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] Fix two tailcall-related issues
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Haoran Jiang <jianghaoran@kylinos.cn>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	kernel@xen0n.name, hengqi.chen@gmail.com, yangtiezhu@loongson.cn, 
+	jolsa@kernel.org, haoluo@google.com, sdf@fomichev.me, kpsingh@kernel.org, 
+	john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org, 
+	eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, ast@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jul 27, 2025 at 9:00=E2=80=AFAM Geliang Tang <geliang@kernel.org> w=
-rote:
+On Sun, Jul 27, 2025 at 3:19=E2=80=AFAM Daniel Borkmann <daniel@iogearbox.n=
+et> wrote:
 >
-> Hi Chenghao, Huacai, Tuezhu,
+> On 7/25/25 12:23 PM, Haoran Jiang wrote:
+> > v4:
+> > 1,There is a conflict when merging these two patches on the basis of th=
+e trampoline series patches, resolve the conflict issue
+> [...]
+> > Haoran Jiang (2):
+> >    LoongArch: BPF: Fix jump offset calculation in tailcall
+> >    LoongArch: BPF: Fix tailcall hierarchy
+> >
+> >   arch/loongarch/net/bpf_jit.c | 181 +++++++++++++++++++++++-----------=
+-
+> >   1 file changed, 119 insertions(+), 62 deletions(-)
 >
-> I first discovered this Loongarch BPF trampoline issue when debugging
-> MPTCP BPF selftests on a Loongarch machine last June (see my commit
-> eef0532e900c "selftests/bpf: Null checks for links in bpf_tcp_ca"), and
-> reported it to Huachui. Tiezhu and I started implementing BPF
-> trampoline last June. I also called on more Chinese kernel engineers to
-> participate in the development of the Loongarch BPF trampoline at the
-> openEuler Developer Day 2024 and CLSF 2024 conferences. Although this
-> work was finally handed over to Chenghao, it is also necessary to
-> mention me as the reporter and our early developers in the commit log.
-Thank you for reminding me, since the 3rd patch need to be fixed,
-chenghao can do that as soon as possible, then adjust the SOB together
-in V5.
+> Same here, I presume Huacai will pick these up.
+Yes, I will do.
 
 Huacai
-
 >
 > Thanks,
-> -Geliang
->
-> On Thu, 2025-07-24 at 22:19 +0800, Chenghao Duan wrote:
-> > v4:
-> > 1. Delete the #3 patch of version V3.
-> >
-> > 2. Add 5 NOP instructions in build_prologue().
-> >    Reserve space for the move_imm + jirl instruction.
-> >
-> > 3. Differentiate between direct jumps and ftrace jumps of trampoline:
-> >    direct jumps skip 5 instructions.
-> >    ftrace jumps skip 2 instructions.
-> >
-> > 4. Remove the generation of BL jump instructions in
-> > emit_jump_and_link().
-> >    After the trampoline ends, it will jump to the specified register.
-> >    The BL instruction writes PC+4 to r1 instead of allowing the
-> >    specification of rd.
-> >
-> > ---------------------------------------------------------------------
-> > --
-> > Historical Version:
-> > v3:
-> > 1. Patch 0003 adds EXECMEM_BPF memory type to the execmem subsystem.
-> >
-> > 2. Align the size calculated by arch_bpf_trampoline_size to page
-> > boundaries.
-> >
-> > 3. Add the flush icache operation to larch_insn_text_copy.
-> >
-> > 4. Unify the implementation of bpf_arch_xxx into the patch
-> > "0004-LoongArch-BPF-Add-bpf_arch_xxxxx-support-for-Loong.patch".
-> >
-> > 5. Change the patch order. Move the patch
-> > "0002-LoongArch-BPF-Update-the-code-to-rename-validate_.patch" before
-> > "0005-LoongArch-BPF-Add-bpf-trampoline-support-for-Loon.patch".
-> >
-> > URL for version v3:
-> > https://lore.kernel.org/all/20250709055029.723243-1-duanchenghao@kylino=
-s.cn/
-> > ---------
-> > v2:
-> > 1. Change the fixmap in the instruction copy function to
-> > set_memory_xxx.
-> >
-> > 2. Change the implementation method of the following code.
-> >       - arch_alloc_bpf_trampoline
-> >       - arch_free_bpf_trampoline
-> >       Use the BPF core's allocation and free functions.
-> >
-> >       - bpf_arch_text_invalidate
-> >       Operate with the function larch_insn_text_copy that carries
-> >       memory attribute modifications.
-> >
-> > 3. Correct the incorrect code formatting.
-> >
-> > URL for version v2:
-> > https://lore.kernel.org/all/20250618105048.1510560-1-duanchenghao@kylin=
-os.cn/
-> > ---------
-> > v1:
-> > Support trampoline for LoongArch. The following feature tests have
-> > been
-> > completed:
-> >       1. fentry
-> >       2. fexit
-> >       3. fmod_ret
-> >
-> > TODO: The support for the struct_ops feature will be provided in
-> > subsequent patches.
-> >
-> > URL for version v1:
-> > https://lore.kernel.org/all/20250611035952.111182-1-duanchenghao@kylino=
-s.cn/
-> > ---------------------------------------------------------------------
-> > --
-> >
-> > Chenghao Duan (4):
-> >   LoongArch: Add larch_insn_gen_{beq,bne} helpers
-> >   LoongArch: BPF: Update the code to rename validate_code to
-> >     validate_ctx
-> >   LoongArch: BPF: Add bpf_arch_xxxxx support for Loongarch
-> >   LoongArch: BPF: Add bpf trampoline support for Loongarch
-> >
-> > Tiezhu Yang (1):
-> >   LoongArch: BPF: Add struct ops support for trampoline
-> >
-> >  arch/loongarch/include/asm/inst.h |   3 +
-> >  arch/loongarch/kernel/inst.c      |  60 ++++
-> >  arch/loongarch/net/bpf_jit.c      | 521
-> > +++++++++++++++++++++++++++++-
-> >  arch/loongarch/net/bpf_jit.h      |   6 +
-> >  4 files changed, 589 insertions(+), 1 deletion(-)
+> Daniel
