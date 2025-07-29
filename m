@@ -1,276 +1,317 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A254EC4
-	for <loongarch@lists.linux.dev>; Tue, 29 Jul 2025 02:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3A628F51A
+	for <loongarch@lists.linux.dev>; Tue, 29 Jul 2025 11:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753756348; cv=none; b=E5uqd0moinBrXfi5I2IfH5UpGNCSCWwDY+fSAArGfpICZniK8UX+/GLJVjkBIF61dAXxy8KfbWZDD/whaH/k0z5KG1AnyvoinJ5mpfKyoH+TaUC3eJb9k8KQaYIwCxv36PMCx1Gh1N+aex/NKyzMIUfmeotHnCzMoCbvzHC2kIM=
+	t=1753790224; cv=none; b=Rcl1/GuyGFMn0zm8iWO8+go7dReYBzODfHvm6bDms3Kd2jiFLBSu1Jq4+cgQ054fY/TKaaQXIETmP3JnvWOON9tXpNFTVeyRMK/OHzhP7+XGqo/mge/0Gb78u3GQCJ4VNaNyQ5SFBeXeYKf+o7xPAmhH31kasQ3CRyLHV0Rg8PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753756348; c=relaxed/simple;
-	bh=214Vu1ffBPktU4zJw5q/QLdFJzJeBpd2SMM/1kZ9pWQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c4aFaZ0mZ2PXL7qV5AbxSVsMjLiPpHCdM/RCj8mkAd7SYZMfXddKR3xtSIc2m5ga744YO9ZWAubwX5DiBP//RLfhXWTg2pVMJSjeO6D4LKPbtxtx2JwOW7tGnXB7XJbFgP/S7vGiJ/ktsMAnlwVaWW28fpnjqqrNe8xa7KdqMwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fy7hg/7M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fy7hg/7M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1555C4CEF8
-	for <loongarch@lists.linux.dev>; Tue, 29 Jul 2025 02:32:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753756347;
-	bh=214Vu1ffBPktU4zJw5q/QLdFJzJeBpd2SMM/1kZ9pWQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fy7hg/7Mm7/J/YtYfwuifdrBycJz/UpxBygCZf96Y4jheBIOERyB2ScM+kvwDbG8O
-	 33cJdivo4K7u1AF5p56STlkhgpPb3R44GDUpF5EtHzNjKDmnj486bXm1D589JxYyN2
-	 1x6ruENy3/6qFfewjAsQmqKsJ9yfzsggYfnCdxpzUXOTj9VWoJ75/hX7vQ6JcenEsN
-	 dMvxgcqPSX/F9kNTepcdQSzUXatveEQMwNQAu0i5r07bOvuFBAd3hzwFC/zA5gR3D/
-	 6DI8Ih5rZTNBTw36mZDgCZlt4iP7uQFEH0fGrx6tcPPDyfge1TBPxQxXGMs5FxSJyx
-	 gW/uuT5KK21kg==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6156a162537so533142a12.2
-        for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 19:32:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXXNtU09tDoPY9giwp1yTkKefWPEf7eSNRsD8LYODzpCuUwAeCrjwDHE5499ZPTcMUI+zM18TS84Hk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwgOoirTHYbIm9Fb5uFUwvNv9rHg3GsljMaWxz0aDVFWJGIJy7T
-	0o6dSHTNp7FKJ06VLx/GRzVgBzwmHCqErtrhPqCbZcnaxWZ4iVjv6vtUo9FXYqCMbIGmCbcc1CO
-	DlijJNZm7xfy70VueIMtS895UPmQApto=
-X-Google-Smtp-Source: AGHT+IEyEgYXOlcJ/KxzsomCUTVUYXaylTxijnzLbrmtPgJGNNZcU+mGa2UAU09R42mZXbpSQUNxyFdtL6I7QjIU1ww=
-X-Received: by 2002:a05:6402:4602:20b0:608:f493:871c with SMTP id
- 4fb4d7f45d1cf-614f1d1feccmr9538648a12.14.1753756346458; Mon, 28 Jul 2025
- 19:32:26 -0700 (PDT)
+	s=arc-20240116; t=1753790224; c=relaxed/simple;
+	bh=sgBWE9aRoVb2GUaP6hlYxqwMo2c5HnxPRxEthjGG4JQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pHMaTFjLiirq8FfWGTywhVRC5E/SsgR0FXD1/oaLm5smahJ4aohJZBDJ+P1l9Y04dzXq7440z1VDHhJ+O+Xzx5FgnQwnrZ4TLpwhwulIRE48Z6OhjMFsHi59fENXRHk67FIysRwUJ2m1Z37jZcew0bpyP9l73DoaMU/0VHjqNkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 195775fc6c7311f0b29709d653e92f7d-20250729
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:f757bc24-5074-47c4-83e1-596935bb0909,IP:15,
+	URL:0,TC:0,Content:9,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:15
+X-CID-INFO: VERSION:1.1.45,REQID:f757bc24-5074-47c4-83e1-596935bb0909,IP:15,UR
+	L:0,TC:0,Content:9,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:15
+X-CID-META: VersionHash:6493067,CLOUDID:43c9a2aa86b11cb7553a8327b43a864f,BulkI
+	D:250728103101KH33AOP9,BulkQuantity:10,Recheck:0,SF:17|19|24|43|64|66|74|7
+	8|80|81|82|83|102|841,TC:nil,Content:4|50,EDM:-3,IP:-2,URL:0,File:nil,RT:n
+	il,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,
+	BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_OBB,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,
+	TF_CID_SPAM_FSD
+X-UUID: 195775fc6c7311f0b29709d653e92f7d-20250729
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 712775828; Tue, 29 Jul 2025 19:56:45 +0800
+Date: Tue, 29 Jul 2025 19:56:20 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
+	jianghaoran@kylinos.cn, vincent.mc.li@gmail.com
+Subject: Re: [PATCH v4 3/5] LoongArch: BPF: Add bpf_arch_xxxxx support for
+ Loongarch
+Message-ID: <20250729115620.GA1584398@chenghao-pc>
+References: <20250724141929.691853-1-duanchenghao@kylinos.cn>
+ <20250724141929.691853-4-duanchenghao@kylinos.cn>
+ <CAEyhmHREKJ7WQ+SYiGTX+zypeZYcUdPNKtHu6cPxqb1wid7TtQ@mail.gmail.com>
+ <20250728132125.GB1439240@chenghao-pc>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250724141929.691853-1-duanchenghao@kylinos.cn>
- <20250724141929.691853-6-duanchenghao@kylinos.cn> <CAEyhmHQKBQbidX_SpUF1ZPv7vkkhSR_UuRvxznyb6y5GYQS3qw@mail.gmail.com>
- <20250728133418.GC1439240@chenghao-pc>
-In-Reply-To: <20250728133418.GC1439240@chenghao-pc>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 29 Jul 2025 10:32:13 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H40rAPvVRMMQTkxmOsT3yu6V+CL3MC2gi3jvsXZtOzdkw@mail.gmail.com>
-X-Gm-Features: Ac12FXy7VhLUHjowAVkwszWoXXaUHctXHhAGiZ_PSv1z0L7OmXLEW1lwXO_c9K4
-Message-ID: <CAAhV-H40rAPvVRMMQTkxmOsT3yu6V+CL3MC2gi3jvsXZtOzdkw@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] LoongArch: BPF: Add struct ops support for trampoline
-To: Chenghao Duan <duanchenghao@kylinos.cn>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, yangtiezhu@loongson.cn, martin.lau@linux.dev, 
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn, 
-	vincent.mc.li@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250728132125.GB1439240@chenghao-pc>
 
-On Mon, Jul 28, 2025 at 9:34=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos=
-.cn> wrote:
->
-> On Mon, Jul 28, 2025 at 06:55:52PM +0800, Hengqi Chen wrote:
-> > On Thu, Jul 24, 2025 at 10:22=E2=80=AFPM Chenghao Duan <duanchenghao@ky=
-linos.cn> wrote:
+On Mon, Jul 28, 2025 at 09:21:52PM +0800, Chenghao Duan wrote:
+> On Mon, Jul 28, 2025 at 06:47:03PM +0800, Hengqi Chen wrote:
+> > On Thu, Jul 24, 2025 at 10:21 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
 > > >
-> > > From: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > Implement the functions of bpf_arch_text_poke, bpf_arch_text_copy, and
+> > > bpf_arch_text_invalidate on the LoongArch architecture.
 > > >
-> > > Use BPF_TRAMP_F_INDIRECT flag to detect struct ops and emit proper
-> > > prologue and epilogue for this case.
+> > > On LoongArch, since symbol addresses in the direct mapping
+> > > region cannot be reached via relative jump instructions from the paged
+> > > mapping region, we use the move_imm+jirl instruction pair as absolute
+> > > jump instructions. These require 2-5 instructions, so we reserve 5 NOP
+> > > instructions in the program as placeholders for function jumps.
 > > >
-> > > With this patch, all of the struct_ops related testcases (except
-> > > struct_ops_multi_pages) passed on LoongArch.
+> > > larch_insn_text_copy is solely used for BPF. The use of
+> > > larch_insn_text_copy() requires page_size alignment. Currently, only
+> > > the size of the trampoline is page-aligned.
 > > >
-> > > The testcase struct_ops_multi_pages failed is because the actual
-> > > image_pages_cnt is 40 which is bigger than MAX_TRAMP_IMAGE_PAGES.
-> > >
-> > > Before:
-> > >
-> > >   $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
-> > >   ...
-> > >   WATCHDOG: test case struct_ops_module/struct_ops_load executes for =
-10 seconds...
-> > >
-> > > After:
-> > >
-> > >   $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
-> > >   ...
-> > >   #15      bad_struct_ops:OK
-> > >   ...
-> > >   #399     struct_ops_autocreate:OK
-> > >   ...
-> > >   #400     struct_ops_kptr_return:OK
-> > >   ...
-> > >   #401     struct_ops_maybe_null:OK
-> > >   ...
-> > >   #402     struct_ops_module:OK
-> > >   ...
-> > >   #404     struct_ops_no_cfi:OK
-> > >   ...
-> > >   #405     struct_ops_private_stack:SKIP
-> > >   ...
-> > >   #406     struct_ops_refcounted:OK
-> > >   Summary: 8/25 PASSED, 3 SKIPPED, 0 FAILED
-> > >
-> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> > > Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> > > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> > > Reviewed-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > > Reviewed-by: Huacai Chen <chenhuacai@kernel.org>
 > > > ---
-> > >  arch/loongarch/net/bpf_jit.c | 71 ++++++++++++++++++++++++----------=
---
-> > >  1 file changed, 47 insertions(+), 24 deletions(-)
+> > >  arch/loongarch/include/asm/inst.h |  1 +
+> > >  arch/loongarch/kernel/inst.c      | 32 ++++++++++
+> > >  arch/loongarch/net/bpf_jit.c      | 97 +++++++++++++++++++++++++++++++
+> > >  3 files changed, 130 insertions(+)
 > > >
-> > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_ji=
-t.c
-> > > index ac5ce3a28..6a84fb104 100644
+> > > diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> > > index 2ae96a35d..88bb73e46 100644
+> > > --- a/arch/loongarch/include/asm/inst.h
+> > > +++ b/arch/loongarch/include/asm/inst.h
+> > > @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction insn, struct pt_regs *regs);
+> > >  int larch_insn_read(void *addr, u32 *insnp);
+> > >  int larch_insn_write(void *addr, u32 insn);
+> > >  int larch_insn_patch_text(void *addr, u32 insn);
+> > > +int larch_insn_text_copy(void *dst, void *src, size_t len);
+> > >
+> > >  u32 larch_insn_gen_nop(void);
+> > >  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
+> > > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> > > index 674e3b322..8d6594968 100644
+> > > --- a/arch/loongarch/kernel/inst.c
+> > > +++ b/arch/loongarch/kernel/inst.c
+> > > @@ -4,6 +4,7 @@
+> > >   */
+> > >  #include <linux/sizes.h>
+> > >  #include <linux/uaccess.h>
+> > > +#include <linux/set_memory.h>
+> > >
+> > >  #include <asm/cacheflush.h>
+> > >  #include <asm/inst.h>
+> > > @@ -218,6 +219,37 @@ int larch_insn_patch_text(void *addr, u32 insn)
+> > >         return ret;
+> > >  }
+> > >
+> > > +int larch_insn_text_copy(void *dst, void *src, size_t len)
+> > > +{
+> > > +       unsigned long flags;
+> > > +       size_t wlen = 0;
+> > > +       size_t size;
+> > > +       void *ptr;
+> > > +       int ret = 0;
+> > > +
+> > > +       set_memory_rw((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
+> > > +       raw_spin_lock_irqsave(&patch_lock, flags);
+> > > +       while (wlen < len) {
+> > > +               ptr = dst + wlen;
+> > > +               size = min_t(size_t, PAGE_SIZE - offset_in_page(ptr),
+> > > +                            len - wlen);
+> > > +
+> > > +               ret = copy_to_kernel_nofault(ptr, src + wlen, size);
+> > > +               if (ret) {
+> > > +                       pr_err("%s: operation failed\n", __func__);
+> > > +                       break;
+> > > +               }
+> > > +               wlen += size;
+> > > +       }
+> > > +       raw_spin_unlock_irqrestore(&patch_lock, flags);
+> > > +       set_memory_rox((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
+> > > +
+> > > +       if (!ret)
+> > > +               flush_icache_range((unsigned long)dst, (unsigned long)dst + len);
+> > > +
+> > > +       return ret;
+> > > +}
+> > > +
+> > >  u32 larch_insn_gen_nop(void)
+> > >  {
+> > >         return INSN_NOP;
+> > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> > > index 7032f11d3..86504e710 100644
 > > > --- a/arch/loongarch/net/bpf_jit.c
 > > > +++ b/arch/loongarch/net/bpf_jit.c
-> > > @@ -1603,6 +1603,7 @@ static int __arch_prepare_bpf_trampoline(struct=
- jit_ctx *ctx, struct bpf_tramp_i
-> > >         struct bpf_tramp_links *fentry =3D &tlinks[BPF_TRAMP_FENTRY];
-> > >         struct bpf_tramp_links *fexit =3D &tlinks[BPF_TRAMP_FEXIT];
-> > >         struct bpf_tramp_links *fmod_ret =3D &tlinks[BPF_TRAMP_MODIFY=
-_RETURN];
-> > > +       bool is_struct_ops =3D flags & BPF_TRAMP_F_INDIRECT;
-> > >         int ret, save_ret;
-> > >         void *orig_call =3D func_addr;
-> > >         u32 **branches =3D NULL;
-> > > @@ -1678,18 +1679,31 @@ static int __arch_prepare_bpf_trampoline(stru=
-ct jit_ctx *ctx, struct bpf_tramp_i
+> > > @@ -4,8 +4,12 @@
+> > >   *
+> > >   * Copyright (C) 2022 Loongson Technology Corporation Limited
+> > >   */
+> > > +#include <linux/memory.h>
+> > >  #include "bpf_jit.h"
 > > >
-> > >         stack_size =3D round_up(stack_size, 16);
-> > >
-> > > -       /* For the trampoline called from function entry */
-> > > -       /* RA and FP for parent function*/
-> > > -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16=
-);
-> > > -       emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> > > -       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> > > -       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16)=
-;
-> > > -
-> > > -       /* RA and FP for traced function*/
-> > > -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -st=
-ack_size);
-> > > -       emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack=
-_size - 8);
-> > > -       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack=
-_size - 16);
-> > > -       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, sta=
-ck_size);
-> > > +       if (!is_struct_ops) {
-> > > +               /*
-> > > +                * For the trampoline called from function entry,
-> > > +                * the frame of traced function and the frame of
-> > > +                * trampoline need to be considered.
-> > > +                */
-> > > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR=
-_SP, -16);
-> > > +               emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_S=
-P, 8);
-> > > +               emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_S=
-P, 0);
-> > > +               emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR=
-_SP, 16);
+> > > +#define LOONGARCH_LONG_JUMP_NINSNS 5
+> > > +#define LOONGARCH_LONG_JUMP_NBYTES (LOONGARCH_LONG_JUMP_NINSNS * 4)
 > > > +
-> > > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR=
-_SP, -stack_size);
-> > > +               emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_S=
-P, stack_size - 8);
-> > > +               emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_S=
-P, stack_size - 16);
-> > > +               emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR=
-_SP, stack_size);
-> > > +       } else {
-> > > +               /*
-> > > +                * For the trampoline called directly, just handle
-> > > +                * the frame of trampoline.
-> > > +                */
-> > > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR=
-_SP, -stack_size);
-> > > +               emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_S=
-P, stack_size - 8);
-> > > +               emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_S=
-P, stack_size - 16);
-> > > +               emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR=
-_SP, stack_size);
-> > > +       }
+> > >  #define REG_TCC                LOONGARCH_GPR_A6
+> > >  #define TCC_SAVED      LOONGARCH_GPR_S5
 > > >
-> >
-> > The diff removes code added in patch 4/5, this should be squashed to
-> > the trampoline patch if possible.
->
-> This patch was provided by Tiezhu Yang, and there was a discussion about
-> it at the time.
-> https://lore.kernel.org/all/cd190c8a-a7b9-53de-d363-c3d695fe3191@loongson=
-.cn/
-From my opinion I also prefer to squash.
-
-Huacai
-
->
-> >
-> > >         /* callee saved register S1 to pass start time */
-> > >         emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg=
-_off);
-> > > @@ -1779,21 +1793,30 @@ static int __arch_prepare_bpf_trampoline(stru=
-ct jit_ctx *ctx, struct bpf_tramp_i
+> > > @@ -88,6 +92,7 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
+> > >   */
+> > >  static void build_prologue(struct jit_ctx *ctx)
+> > >  {
+> > > +       int i;
+> > >         int stack_adjust = 0, store_offset, bpf_stack_adjust;
 > > >
-> > >         emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg=
-_off);
+> > >         bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
+> > > @@ -98,6 +103,10 @@ static void build_prologue(struct jit_ctx *ctx)
+> > >         stack_adjust = round_up(stack_adjust, 16);
+> > >         stack_adjust += bpf_stack_adjust;
 > > >
-> > > -       /* trampoline called from function entry */
-> > > -       emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack=
-_size - 8);
-> > > -       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack=
-_size - 16);
-> > > -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, sta=
-ck_size);
-> > > +       if (!is_struct_ops) {
-> > > +               /* trampoline called from function entry */
-> > > +               emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_S=
-P, stack_size - 8);
-> > > +               emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_S=
-P, stack_size - 16);
-> > > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR=
-_SP, stack_size);
+> > > +       /* Reserve space for the move_imm + jirl instruction */
+> > > +       for (i = 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
+> > > +               emit_insn(ctx, nop);
 > > > +
-> > > +               emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_S=
-P, 8);
-> > > +               emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_S=
-P, 0);
-> > > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR=
-_SP, 16);
-> > >
-> > > -       emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> > > -       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> > > -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16)=
-;
-> > > +               if (flags & BPF_TRAMP_F_SKIP_FRAME)
-> > > +                       /* return to parent function */
-> > > +                       emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOON=
-GARCH_GPR_RA, 0);
-> > > +               else
-> > > +                       /* return to traced function */
-> > > +                       emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOON=
-GARCH_GPR_T0, 0);
-> > > +       } else {
-> > > +               /* trampoline called directly */
-> > > +               emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_S=
-P, stack_size - 8);
-> > > +               emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_S=
-P, stack_size - 16);
-> > > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR=
-_SP, stack_size);
-> > >
-> > > -       if (flags & BPF_TRAMP_F_SKIP_FRAME)
-> > > -               /* return to parent function */
-> > >                 emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GP=
-R_RA, 0);
-> > > -       else
-> > > -               /* return to traced function */
-> > > -               emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GP=
-R_T0, 0);
+> > >         /*
+> > >          * First instruction initializes the tail call count (TCC).
+> > >          * On tail call we skip this instruction, and the TCC is
+> > > @@ -1367,3 +1376,91 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+> > >  {
+> > >         return true;
+> > >  }
+> > > +
+> > > +static int emit_jump_and_link(struct jit_ctx *ctx, u8 rd, u64 target)
+> > > +{
+> > > +       if (!target) {
+> > > +               pr_err("bpf_jit: jump target address is error\n");
+> > 
+> > is error ? is NULL ?
+> 
+> What I mean is: This is an illegal target address.
+> 
+> > 
+> > > +               return -EFAULT;
 > > > +       }
-> > >
-> > >         ret =3D ctx->idx;
-> > >  out:
+> > > +
+> > > +       move_imm(ctx, LOONGARCH_GPR_T1, target, false);
+> > > +       emit_insn(ctx, jirl, rd, LOONGARCH_GPR_T1, 0);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_call)
+> > > +{
+> > > +       struct jit_ctx ctx;
+> > > +
+> > > +       ctx.idx = 0;
+> > > +       ctx.image = (union loongarch_instruction *)insns;
+> > > +
+> > > +       if (!target) {
+> > > +               emit_insn((&ctx), nop);
+> > > +               emit_insn((&ctx), nop);
+> > > +               return 0;
+> > > +       }
+> > > +
+> > > +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LOONGARCH_GPR_ZERO,
+> > > +                                 (unsigned long)target);
+> > > +}
+> > > +
+> > > +int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
+> > > +                      void *old_addr, void *new_addr)
+> > > +{
+> > > +       u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
+> > > +       u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
+> > > +       bool is_call = poke_type == BPF_MOD_CALL;
+> > > +       int ret;
+> > > +
+> > > +       if (!is_kernel_text((unsigned long)ip) &&
+> > > +               !is_bpf_text_address((unsigned long)ip))
+> > > +               return -ENOTSUPP;
+> > > +
+> > > +       ret = gen_jump_or_nops(old_addr, ip, old_insns, is_call);
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       if (memcmp(ip, old_insns, LOONGARCH_LONG_JUMP_NBYTES))
+> > > +               return -EFAULT;
+> > > +
+> > > +       ret = gen_jump_or_nops(new_addr, ip, new_insns, is_call);
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       mutex_lock(&text_mutex);
+> > > +       if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
+> > > +               ret = larch_insn_text_copy(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES);
+> > > +       mutex_unlock(&text_mutex);
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +int bpf_arch_text_invalidate(void *dst, size_t len)
+> > > +{
+> > > +       int i;
+> > > +       int ret = 0;
+> > > +       u32 *inst;
+> > > +
+> > > +       inst = kvmalloc(len, GFP_KERNEL);
+> > > +       if (!inst)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       for (i = 0; i < (len/sizeof(u32)); i++)
+> > > +               inst[i] = INSN_BREAK;
+> > > +
+> > > +       if (larch_insn_text_copy(dst, inst, len))
+> > 
+> > Do we need text_mutex here and below for larch_insn_text_copy() ?
+> 
+> As a matter of fact, my use of text_mutex is modeled after the arm64
+> code. Arm64 also only adds text_mutex to bpf_arch_text_poke. Therefore,
+> I have only added text_mutex to bpf_arch_text_poke as well.
+> 
+> In the next version of the code, I will try to add text_mutex to all
+> contexts where larch_insn_text_copy is used and conduct tests accordingly.
+
+Adding text_mutex tests in all contexts of larch_insn_text_copy passed.
+
+> > 
+> > > +               ret = -EINVAL;
+> > > +
+> > > +       kvfree(inst);
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +void *bpf_arch_text_copy(void *dst, void *src, size_t len)
+> > > +{
+> > > +       if (larch_insn_text_copy(dst, src, len))
+> > > +               return ERR_PTR(-EINVAL);
+> > > +
+> > > +       return dst;
+> > > +}
 > > > --
 > > > 2.25.1
 > > >
