@@ -1,233 +1,65 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB19622DFBA
-	for <loongarch@lists.linux.dev>; Mon, 28 Jul 2025 13:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34961A4F12
+	for <loongarch@lists.linux.dev>; Tue, 29 Jul 2025 01:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753709687; cv=none; b=uaiOrZ77dNFTZyhTKTwC86dwhEI5WRViIlwq8NrKrBXcrmZGZjOuGKuTbdLVmV0eCTPrgHSAFiw7ggrIbsSXak97/FCtbXKiqgZ4aM9s+WOcebqPzISYyxaxLIhxKxVmnwyHNu4W26aMlIz0OIq5bXVtjAiOauzcwMbIcfqpv/Y=
+	t=1753751496; cv=none; b=RVpD+xGwXaZxurLmjchsBAqEqWExB29AytC+MKATHC3dkrWJfm+XLk8hquTlGPVQrzm8ez3C/PAOfOWiSghsacnHXw70RFlcBKY1e6FO+fhcIeI1rKCGCubn5Puh04Od3Wyuhnb7oBLlukmN8xrqV8qqHgmD5P95WYT4tyUtIS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753709687; c=relaxed/simple;
-	bh=HFiRHNWsiAoYlJWsIjn8YxO5pOlUaNue7idFdNNkSDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Utg8rMPzCJ5uHah1ESTWdtZ5KwLpCuk1UfNf4L9MZF+jr6oOc1Ls/yrFLhMPsQsDyYcMZrdU/bhL3L+UUvR12/q1Ey0PRoOZPijRrsiis0rgC1wtBhU89/c6xoZc21m9h0o+/H25aveRZpB/tZeCshli8b+OD4wNK9YNK3S9UWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 9b3a38286bb711f0b29709d653e92f7d-20250728
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
-	DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS
-	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS
-	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI
-	AMN_C_BU, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:dc3ef287-03d7-4fe9-96e5-01525c80a00d,IP:10,
-	URL:0,TC:0,Content:9,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:14
-X-CID-INFO: VERSION:1.1.45,REQID:dc3ef287-03d7-4fe9-96e5-01525c80a00d,IP:10,UR
-	L:0,TC:0,Content:9,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:14
-X-CID-META: VersionHash:6493067,CLOUDID:9fc57bb33eeb64b8006299c9fdabc025,BulkI
-	D:250728185608MS8GWG5L,BulkQuantity:2,Recheck:0,SF:17|19|23|43|64|66|74|78
-	|80|81|82|83|102|841,TC:nil,Content:4|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT
-	:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:
-	0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: 9b3a38286bb711f0b29709d653e92f7d-20250728
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(39.144.190.111)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1752925043; Mon, 28 Jul 2025 21:34:37 +0800
-Date: Mon, 28 Jul 2025 21:34:18 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
-	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
-	jianghaoran@kylinos.cn, vincent.mc.li@gmail.com
-Subject: Re: [PATCH v4 5/5] LoongArch: BPF: Add struct ops support for
- trampoline
-Message-ID: <20250728133418.GC1439240@chenghao-pc>
-References: <20250724141929.691853-1-duanchenghao@kylinos.cn>
- <20250724141929.691853-6-duanchenghao@kylinos.cn>
- <CAEyhmHQKBQbidX_SpUF1ZPv7vkkhSR_UuRvxznyb6y5GYQS3qw@mail.gmail.com>
+	s=arc-20240116; t=1753751496; c=relaxed/simple;
+	bh=8ZaxoHBTEhVL12axKf/WX+LwUM3Y/BFGh5lAMOgD5zg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=UTZZzhhFFmnHGy8MNxOlmms2pMURZYHdtKvwv0UpDYQU9lfj91GU3qIo4VDYcJfmG7+q2m2wUqDlVojK1TpJEpnTKKEb0HGqAlcx6jaBYhXwgwTaadWEtTRJRkhB8dzbDVX+NLY4i40IC+gcGsZ92xznkGXwsdEYHgAT+pMfZ24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYacduDB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYacduDB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A19EC4CEEF;
+	Tue, 29 Jul 2025 01:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753751496;
+	bh=8ZaxoHBTEhVL12axKf/WX+LwUM3Y/BFGh5lAMOgD5zg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=VYacduDBsz15Xg+SgB5nuf2LLCwR/ZQLnHAeY89QssQwJkwueQk+gOc3P9X3M8ERc
+	 StQHaCIjU+ApLe7jJ1kkQ1SZSrlnoE0XfZBTw8Yh+roL1ES9ZIfl3oMlPK7Nd5vIme
+	 keZEIUjTWzO7k+Xn5laz3kmccx4u/wXUQCxvKazPAkCcbgCoN5asGQOK49wsxNUWzg
+	 4V8Tr4vXYS3H1wOaKUIe57TRZzvYstxc8p2ZRo6fWA+RbWlSndzB3fEL4aGd9Fgn3b
+	 ZBNnQvFR6RJKhSTgEfjDhuJgvmCxPS2qK55MY85inxik6zCKjNO7RH2cHI8IhVIhst
+	 yOtThARlrGBsA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34A0C383BF5F;
+	Tue, 29 Jul 2025 01:11:54 +0000 (UTC)
+Subject: Re: [GIT PULL] execve updates for v6.17
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <202507261437.F2079B3B7@keescook>
+References: <202507261437.F2079B3B7@keescook>
+X-PR-Tracked-List-Id: <linux-sh.vger.kernel.org>
+X-PR-Tracked-Message-Id: <202507261437.F2079B3B7@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.17
+X-PR-Tracked-Commit-Id: 7f71195c15dcf5f34c4c7f056603659374e3a525
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d900c4ce638d707f09c7e5c2afa71e035c0bb33d
+Message-Id: <175375151288.918485.7118599213274098690.pr-tracker-bot@kernel.org>
+Date: Tue, 29 Jul 2025 01:11:52 +0000
+To: Kees Cook <kees@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Akihiko Odaki <akihiko.odaki@daynix.com>, Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>, Albert Ou <aou@eecs.berkeley.edu>, Alexander Gordeev <agordeev@linux.ibm.com>, Alexandre Ghiti <alex@ghiti.fr>, Andreas Larsson <andreas@gaisler.com>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Chris Zankel <chris@zankel.net>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Martin <Dave.Martin@arm.com>, David Hildenbrand <david@redhat.com>, "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, Dishank Jogi <dishank.jogi@siqol.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, "H. Peter Anvin" <hpa@
+ zytor.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Johannes Berg <johannes@sipsolutions.net>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonas Bonn <jonas@southpole.se>, Kees Cook <kees@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, loongarch@lists.linux.dev, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Oleg Nesterov
+  <oleg@redhat.com>, Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Richard Weinberger <richard@nod.at>, Rich Felker <dalias@libc.org>, Russell King <linux@armlinux.org.uk>, sparclinux@vger.kernel.org, Stafford Horne <shorne@gmail.com>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Sven Schnelle <svens@linux.ibm.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>, x86@kernel.org, Yin Fengwei <fengwei_yin@linux.alibaba.com>, Yoshinori Sato <ysato@users.sourceforge.jp>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEyhmHQKBQbidX_SpUF1ZPv7vkkhSR_UuRvxznyb6y5GYQS3qw@mail.gmail.com>
 
-On Mon, Jul 28, 2025 at 06:55:52PM +0800, Hengqi Chen wrote:
-> On Thu, Jul 24, 2025 at 10:22 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> >
-> > From: Tiezhu Yang <yangtiezhu@loongson.cn>
-> >
-> > Use BPF_TRAMP_F_INDIRECT flag to detect struct ops and emit proper
-> > prologue and epilogue for this case.
-> >
-> > With this patch, all of the struct_ops related testcases (except
-> > struct_ops_multi_pages) passed on LoongArch.
-> >
-> > The testcase struct_ops_multi_pages failed is because the actual
-> > image_pages_cnt is 40 which is bigger than MAX_TRAMP_IMAGE_PAGES.
-> >
-> > Before:
-> >
-> >   $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
-> >   ...
-> >   WATCHDOG: test case struct_ops_module/struct_ops_load executes for 10 seconds...
-> >
-> > After:
-> >
-> >   $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
-> >   ...
-> >   #15      bad_struct_ops:OK
-> >   ...
-> >   #399     struct_ops_autocreate:OK
-> >   ...
-> >   #400     struct_ops_kptr_return:OK
-> >   ...
-> >   #401     struct_ops_maybe_null:OK
-> >   ...
-> >   #402     struct_ops_module:OK
-> >   ...
-> >   #404     struct_ops_no_cfi:OK
-> >   ...
-> >   #405     struct_ops_private_stack:SKIP
-> >   ...
-> >   #406     struct_ops_refcounted:OK
-> >   Summary: 8/25 PASSED, 3 SKIPPED, 0 FAILED
-> >
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
-> >  arch/loongarch/net/bpf_jit.c | 71 ++++++++++++++++++++++++------------
-> >  1 file changed, 47 insertions(+), 24 deletions(-)
-> >
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> > index ac5ce3a28..6a84fb104 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -1603,6 +1603,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
-> >         struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
-> >         struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
-> >         struct bpf_tramp_links *fmod_ret = &tlinks[BPF_TRAMP_MODIFY_RETURN];
-> > +       bool is_struct_ops = flags & BPF_TRAMP_F_INDIRECT;
-> >         int ret, save_ret;
-> >         void *orig_call = func_addr;
-> >         u32 **branches = NULL;
-> > @@ -1678,18 +1679,31 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
-> >
-> >         stack_size = round_up(stack_size, 16);
-> >
-> > -       /* For the trampoline called from function entry */
-> > -       /* RA and FP for parent function*/
-> > -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
-> > -       emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> > -       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> > -       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
-> > -
-> > -       /* RA and FP for traced function*/
-> > -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-> > -       emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-> > -       emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-> > -       emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-> > +       if (!is_struct_ops) {
-> > +               /*
-> > +                * For the trampoline called from function entry,
-> > +                * the frame of traced function and the frame of
-> > +                * trampoline need to be considered.
-> > +                */
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
-> > +
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-> > +       } else {
-> > +               /*
-> > +                * For the trampoline called directly, just handle
-> > +                * the frame of trampoline.
-> > +                */
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, stack_size - 8);
-> > +               emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-> > +       }
-> >
-> 
-> The diff removes code added in patch 4/5, this should be squashed to
-> the trampoline patch if possible.
+The pull request you sent on Sat, 26 Jul 2025 14:39:20 -0700:
 
-This patch was provided by Tiezhu Yang, and there was a discussion about
-it at the time.
-https://lore.kernel.org/all/cd190c8a-a7b9-53de-d363-c3d695fe3191@loongson.cn/
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.17
 
-> 
-> >         /* callee saved register S1 to pass start time */
-> >         emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-> > @@ -1779,21 +1793,30 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
-> >
-> >         emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-> >
-> > -       /* trampoline called from function entry */
-> > -       emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-> > -       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-> > -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-> > +       if (!is_struct_ops) {
-> > +               /* trampoline called from function entry */
-> > +               emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-> > +               emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-> > +
-> > +               emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> > +               emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
-> >
-> > -       emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-> > -       emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> > -       emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
-> > +               if (flags & BPF_TRAMP_F_SKIP_FRAME)
-> > +                       /* return to parent function */
-> > +                       emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
-> > +               else
-> > +                       /* return to traced function */
-> > +                       emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-> > +       } else {
-> > +               /* trampoline called directly */
-> > +               emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, stack_size - 8);
-> > +               emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-> > +               emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-> >
-> > -       if (flags & BPF_TRAMP_F_SKIP_FRAME)
-> > -               /* return to parent function */
-> >                 emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
-> > -       else
-> > -               /* return to traced function */
-> > -               emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-> > +       }
-> >
-> >         ret = ctx->idx;
-> >  out:
-> > --
-> > 2.25.1
-> >
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d900c4ce638d707f09c7e5c2afa71e035c0bb33d
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
