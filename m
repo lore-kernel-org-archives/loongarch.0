@@ -1,110 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BDE287508
-	for <loongarch@lists.linux.dev>; Wed, 30 Jul 2025 07:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D0C12B94
+	for <loongarch@lists.linux.dev>; Wed, 30 Jul 2025 08:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753860340; cv=none; b=OEV4yieWzEoj5PCVCPz11Am7ILQPsSI2zXtBwNmVUu0vVhMqWC+JYvC5qmmY749VxdnuEJp28ouWUq3elnOHZz4JwmBtHnUgJPx19Fo6C0/nBU3h+EnyVobiH93WFhIejUaaDTLiMTKQ0yVU3B0OQ6AsBbabnuXtmfj9dxmJx8g=
+	t=1753864566; cv=none; b=sqhSc83Cr8sJaKBkglfM9TypLd7w/sN2XjUzPKqYuV+io3c5bqHbAT+gPYHmg3k82yW2zY39NEFhTd3iGY5NAY4v5OrdnqI908q+DJNbvdCAcsrGoWhoAtJcTO0RR0Smy5y5Ag4WgRRCzmkfuEaOgvWagY0gG+VKlfcJx1Zv5Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753860340; c=relaxed/simple;
-	bh=Y9XFarX5wXXNKvJxA/fXi0azVyJUgSnXVji4kBRB5cY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ldwmxNNLc9AKJ5Oa07f+rSuuifhfMWkqnLidWWr5wjVMLbuEgJsOW97QyY4GOy5MtgBkJFjbxk+7GvRFhbTTvtOKm/iahOuxrmsx8DfENYKUbH3wc9Bg1vaiSXR4wJZhHXtt8pqRJ6OyzCnC0kI2RYfOxVWwW9QpAHsPxqvPjlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELLXMByr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753864566; c=relaxed/simple;
+	bh=c+k8ONlCVl0YlsBPaNzTX1J6x5OFKSYydymyWHpvq30=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gFNJI0KUOGgY4MF46d6kZLIJwBRlkiPCRARU0OWev75vjrq9Axl23LU30dqQeByEV4Xn6CGUej2TkfZKKZWMGhnnDlgOQ1w5AwdMtWRKuo+8w7ZKXHr2H1IpHzb7Hm5nRszsJ4QOLqQuRW3uexHNhyPBcCs1iq+ow9OXbvdLAu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=D1xUyxUX; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELLXMByr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B79EC4CEF8
-	for <loongarch@lists.linux.dev>; Wed, 30 Jul 2025 07:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753860340;
-	bh=Y9XFarX5wXXNKvJxA/fXi0azVyJUgSnXVji4kBRB5cY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ELLXMByr4YAahWcnGSP/EQnA4R7r0vPw43xvouZpqmOezpZPXGHFBKXzqq/TiY2I7
-	 RsZNO1pJPp24JOJgb7JIX/HdxUtc2KDJetSOoKhG0DA5ef1LiLKr1VaI7zQ3RoJPae
-	 f6+QtWTETlB9RGLpaIwyh4D83VoLtkTBKt5yx0/ivwjmV8oOdNeIIO2ixxv5Ii12AD
-	 4fcmZMYU2KAAZOa6S1e+s+YND4YvAK3XVJLCk+Voc3dsKWEdzIz7nPyJ+4zRVOIihy
-	 uBWA7xW+RV12xBgDXpwtLkrGzU8uF9vwuP9mEeXDJvpK7faOdm2ymmGk/ry+Paf8TO
-	 7wYLGw2KBYeTA==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb5ec407b1so1072117566b.1
-        for <loongarch@lists.linux.dev>; Wed, 30 Jul 2025 00:25:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW8FWTXh7Jfi40TizVLQcAZo7uQzxG+0YbdX7R1e3PSiJIyF0vilyeCZHKcJFApZvOTqarf2ROu+jE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyyFp/A8X9kZt5QqM1qv3T9W1MAhk8Zs0b4IC45iB/h1WYVjwfA
-	gALO0Hzg3JKkol9i1Bt3gYqzLtc84h5KQ04LYIE5C0ul6bpIC/ihD2JFxVNdg5A32CsSISr0t/M
-	dSgHobdUP9rm4uOxGLsDomZZnzvv8nWE=
-X-Google-Smtp-Source: AGHT+IHfx8mKPIPw4DGi+8OUuv0oDgiPhPEzstduqNiwAErqxgRZHzgOO+heKkKMFkDBKwiWlU26BO4/PB4WCy6+M/I=
-X-Received: by 2002:a17:907:7e9c:b0:adf:f8f4:2001 with SMTP id
- a640c23a62f3a-af8fda2a3bfmr257723566b.49.1753860338770; Wed, 30 Jul 2025
- 00:25:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="D1xUyxUX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1753864524;
+	bh=YC6hIh6daElSEWcJOptBsxGltV0bwJXNkuclAwgKbEE=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=D1xUyxUXG/Z3wJfWktX6Mbz7zFoBjbH8gd4RkDVqnvKtRoTSgPpgItTNWCA5t7RF2
+	 EiA9yXu5hpgyf4VqS0CR6DpJ5JQiBY7pT90FwfJzVlEyNUYg4g0d2VfqJ5eT2fITKo
+	 EplWTCYzDQn4Cf96tUoXczkMEjpBxaBjm6JfnMBU=
+X-QQ-mid: esmtpsz11t1753864513tfe28bc21
+X-QQ-Originating-IP: WkhFEtYTQiJsJmhHi9An8eHYrDqIWOL6j/xQn/KkwSs=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 30 Jul 2025 16:35:11 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 107627054575511903
+EX-QQ-RecipientCnt: 8
+From: Wentao Guan <guanwentao@uniontech.com>
+To: chenhuacai@kernel.org
+Cc: siyanteng@cqsoftware.com.cn,
+	xry111@xry111.site,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	wangyuli@uniontech.com,
+	zhanjun@uniontech.com,
+	Wentao Guan <guanwentao@uniontech.com>
+Subject: [PATCH v2] LoongArch: vDSO: remove -nostdlib complier flag
+Date: Wed, 30 Jul 2025 16:32:31 +0800
+Message-Id: <20250730083231.3027631-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250725132651.1974717-1-guanwentao@uniontech.com> <fd349fb6-be25-440e-932e-b15b6daedeee@linux.dev>
-In-Reply-To: <fd349fb6-be25-440e-932e-b15b6daedeee@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 30 Jul 2025 15:25:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5hbNS7_8v2zBjmOA+_M_My-7S3aN94S7QnvQq1adB5gA@mail.gmail.com>
-X-Gm-Features: Ac12FXxAaXf0R9-BiE4dd9fMPQqf6n0QDcrY1yJ3z7UeSm5VQF8ZhoAYRGakRBQ
-Message-ID: <CAAhV-H5hbNS7_8v2zBjmOA+_M_My-7S3aN94S7QnvQq1adB5gA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: vDSO: remove -nostdlib complier flag
-To: Yanteng Si <si.yanteng@linux.dev>
-Cc: Wentao Guan <guanwentao@uniontech.com>, kernel@xen0n.name, xry111@xry111.site, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	wangyuli@uniontech.com, zhanjun@uniontech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
+X-QQ-XMAILINFO: NImvdRhE6fHp97mAHgu5A8fmyWLBqIsNT+1lWRP+IhYULBg1kouY7vWn
+	b1agaV0x/bds+sOEaW+XU8N0Xr/p+FpYv+OJqH57xTRr4HkxLGUXxaZPFw9pUoaDcX2OMAS
+	AUs3jkZPSoelYRPtkSv14B4cgXh+VejhjaUfG0b+0ZKCJT7w6nP2lMGUpUmKlAxj1v+bQ/P
+	ghFAytoK5sHekCKY6+w32FASRK2BS98kT7Tx2UQP8VbkkHD4aOyPZQiTvw8m4tapsvdX4f8
+	F7BptBCqfZFo7AfArtWjrHIibB1SdVQVuWVrpDt8yOznQ9//kYV/9tB1n72TYFoTQlppNEn
+	d69/x/7VzmmxcKWdcwuq7BCNsoS2913PxLWIvF1t2braVBWHdlryOvt8wYrVLyliOTSrw+i
+	zHzQmaC5YytF14sKNGyUt5ZeRZ+mFn3z9QSIosxdVQ0CR8SCBjlYRhHqR15zC0GYUjFqMUk
+	3RbPOHUHdtGkLBBbGW1Oo8DVPKJs8xq9VpyhcybTwgfiJKs78W3wpSpVwbsoLIcufR4rHDC
+	LyyvsZtfC85fqneU/api7dOFlW7Kn8/UPb6q8ebQ7sDa+GUmqbcvyjoQAeIBWc65Ml3wa56
+	rnPgmgNfQyWokPzWF6puVMgLBcj8oiWO+5g8dTr/MUEOOU6gujAE1m+wna0ldRSFvbv+d0y
+	xcnBog6nqW6DSmYoGwEY+aS6oPduLQWK/n3IFfYQ0+k8jfkPdtWDUd0y+RH1dDEVDnx6lJq
+	GZ68+L8CwO38Emd4kxCVB6VZWC1XQryqqJmmM+CazUnb+kVZeFuBnda9FTdmVCSJEff6zCS
+	xs8eujnEXxfeqy4xeK9rOghuZNg2u4ZnoCAcqauCST6NnocnBIR5Oyh/ASHspGYKUkQU6uQ
+	jdR6hD8FV6lcYcF/JmVeEQiC1euxRIH/V+BjzZPrBdcawzNYF7gxriHl8DOoTDaOn5KcNxM
+	TsEbAUUi4KkBgBsY8N6uz3XxYKvgMoHSdtMFmxyuH7iWTQM9YBPdiQ49Hev5El+l+zG3tL3
+	Dnc8VdMz5RqEXtwjq4XG0su6dz5D5BNipF222Amf1ODsNRS33TJjizkhgIVvk=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-On Wed, Jul 30, 2025 at 9:54=E2=80=AFAM Yanteng Si <si.yanteng@linux.dev> w=
-rote:
->
-> =E5=9C=A8 7/25/25 9:26 PM, Wentao Guan =E5=86=99=E9=81=93:
-> > It is clear to remove the -nostdlib for ld, it is similar to commit
-> > bdbf2038fbf4 ("MIPS: VDSO: remove -nostdlib compiler flag").
-> >
-> > Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> Since MIPS has removed this, we should remove it too. In fact, other arch=
-itectures also use $(LD).
->
->        fe00e50b2db8 ("ARM: 8858/1: vdso: use $(LD) instead of $(CC) to li=
-nk VDSO")
->        691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to link VDS=
-O")
->        2ff906994b6c ("MIPS: VDSO: Use $(LD) instead of $(CC) to link VDSO=
-")
->        2b2a25845d53 ("s390/vdso: Use $(LD) instead of $(CC) to link vDSO"=
-)
->
-> If Huacai is willing to apply this patch, I suggest supplementing the com=
-mit message.
-It is better to send V2.
+Since $(LD) is directly used, hence -nostdlib is unneeded,
+MIPS has removed this, we should remove it too.
+bdbf2038fbf4 ("MIPS: VDSO: remove -nostdlib compiler flag").
 
-Huacai
+In fact, other architectures also use $(LD).
+fe00e50b2db8 ("ARM: 8858/1: vdso: use $(LD) instead of $(CC) to link VDSO")
+691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to link VDSO")
+2ff906994b6c ("MIPS: VDSO: Use $(LD) instead of $(CC) to link VDSO")
+2b2a25845d53 ("s390/vdso: Use $(LD) instead of $(CC) to link vDSO")
 
->
->
-> Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cn>
->
-> Thanks,
-> Yanteng
-> > ---
-> >   arch/loongarch/vdso/Makefile | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefil=
-e
-> > index ccd2c5e135c6..d8316f993482 100644
-> > --- a/arch/loongarch/vdso/Makefile
-> > +++ b/arch/loongarch/vdso/Makefile
-> > @@ -36,7 +36,7 @@ endif
-> >
-> >   # VDSO linker flags.
-> >   ldflags-y :=3D -Bsymbolic --no-undefined -soname=3Dlinux-vdso.so.1 \
-> > -     $(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared --build-id -T
-> > +     $(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
-> >
-> >   #
-> >   # Shared build commands.
->
+Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cn>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+
+------
+Changes in v2:
+	- apply commit msg edit suggestion by Yanteng Si
+------
+---
+ arch/loongarch/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index ccd2c5e135c6..d8316f993482 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -36,7 +36,7 @@ endif
+ 
+ # VDSO linker flags.
+ ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+-	$(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared --build-id -T
++	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
+ 
+ #
+ # Shared build commands.
+-- 
+2.20.1
+
