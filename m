@@ -1,49 +1,80 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D0C12B94
-	for <loongarch@lists.linux.dev>; Wed, 30 Jul 2025 08:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9E1299A90
+	for <loongarch@lists.linux.dev>; Wed, 30 Jul 2025 13:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753864566; cv=none; b=sqhSc83Cr8sJaKBkglfM9TypLd7w/sN2XjUzPKqYuV+io3c5bqHbAT+gPYHmg3k82yW2zY39NEFhTd3iGY5NAY4v5OrdnqI908q+DJNbvdCAcsrGoWhoAtJcTO0RR0Smy5y5Ag4WgRRCzmkfuEaOgvWagY0gG+VKlfcJx1Zv5Ag=
+	t=1753881213; cv=none; b=FmooBuD3bIuUMBc+ClSjYLm6ERVBPBXMSvcBzbdlMkE6sE+Ue72XVClLgBhWKFjcmH0OFvqe6BSofiN86AuL1wqa/HFPmB9XRIKPj5xmaIZsiYRnE8wfs2etvSArMsmlbV1f00zTFX7A3SqeDHUWZUgUMpkIV8Q2GCjAouibn7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753864566; c=relaxed/simple;
-	bh=c+k8ONlCVl0YlsBPaNzTX1J6x5OFKSYydymyWHpvq30=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gFNJI0KUOGgY4MF46d6kZLIJwBRlkiPCRARU0OWev75vjrq9Axl23LU30dqQeByEV4Xn6CGUej2TkfZKKZWMGhnnDlgOQ1w5AwdMtWRKuo+8w7ZKXHr2H1IpHzb7Hm5nRszsJ4QOLqQuRW3uexHNhyPBcCs1iq+ow9OXbvdLAu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=D1xUyxUX; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="D1xUyxUX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1753864524;
-	bh=YC6hIh6daElSEWcJOptBsxGltV0bwJXNkuclAwgKbEE=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=D1xUyxUXG/Z3wJfWktX6Mbz7zFoBjbH8gd4RkDVqnvKtRoTSgPpgItTNWCA5t7RF2
-	 EiA9yXu5hpgyf4VqS0CR6DpJ5JQiBY7pT90FwfJzVlEyNUYg4g0d2VfqJ5eT2fITKo
-	 EplWTCYzDQn4Cf96tUoXczkMEjpBxaBjm6JfnMBU=
-X-QQ-mid: esmtpsz11t1753864513tfe28bc21
-X-QQ-Originating-IP: WkhFEtYTQiJsJmhHi9An8eHYrDqIWOL6j/xQn/KkwSs=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 30 Jul 2025 16:35:11 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 107627054575511903
-EX-QQ-RecipientCnt: 8
-From: Wentao Guan <guanwentao@uniontech.com>
-To: chenhuacai@kernel.org
-Cc: siyanteng@cqsoftware.com.cn,
-	xry111@xry111.site,
+	s=arc-20240116; t=1753881213; c=relaxed/simple;
+	bh=vgI8/UvzyAKC5Q5lXfryK7d++m3DCames1QnpSfa/9M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mYSMx2WThu0FdtIFKXafdclmhIPuFHgJqNeHD/sBiaUnxZthnlqbd3Rwu028Kxoe1CyjOE6v52lNoEltU2pBSniJ9RgnkQvzV+1WLPp2ndth6fHC8QlXDir/Mqv0v+f/kwG2CnBCG4WisbhImfSZyqaz9ZNqHBQG/O/HhzUKjX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: f395e1126d4611f0b29709d653e92f7d-20250730
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_FG_IT, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:01f75f64-c9be-4200-bf23-27dc2c453b57,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-INFO: VERSION:1.1.45,REQID:01f75f64-c9be-4200-bf23-27dc2c453b57,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:6c0bea7a29a686be811efbae13ebf183,BulkI
+	D:250730211316EUH3H1Z8,BulkQuantity:0,Recheck:0,SF:17|19|24|38|44|66|78|10
+	2,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:ni
+	l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:
+	0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,
+	TF_CID_SPAM_FSD
+X-UUID: f395e1126d4611f0b29709d653e92f7d-20250730
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1600813722; Wed, 30 Jul 2025 21:13:15 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	yangtiezhu@loongson.cn,
+	hengqi.chen@gmail.com,
+	chenhuacai@kernel.org
+Cc: martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	kernel@xen0n.name,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	wangyuli@uniontech.com,
-	zhanjun@uniontech.com,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH v2] LoongArch: vDSO: remove -nostdlib complier flag
-Date: Wed, 30 Jul 2025 16:32:31 +0800
-Message-Id: <20250730083231.3027631-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	bpf@vger.kernel.org,
+	guodongtai@kylinos.cn,
+	duanchenghao@kylinos.cn,
+	youling.tang@linux.dev,
+	jianghaoran@kylinos.cn,
+	vincent.mc.li@gmail.com,
+	geliang@kernel.org
+Subject: [PATCH v5 0/5] Support trampoline for LoongArch
+Date: Wed, 30 Jul 2025 21:12:52 +0800
+Message-Id: <20250730131257.124153-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -51,61 +82,100 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: NImvdRhE6fHp97mAHgu5A8fmyWLBqIsNT+1lWRP+IhYULBg1kouY7vWn
-	b1agaV0x/bds+sOEaW+XU8N0Xr/p+FpYv+OJqH57xTRr4HkxLGUXxaZPFw9pUoaDcX2OMAS
-	AUs3jkZPSoelYRPtkSv14B4cgXh+VejhjaUfG0b+0ZKCJT7w6nP2lMGUpUmKlAxj1v+bQ/P
-	ghFAytoK5sHekCKY6+w32FASRK2BS98kT7Tx2UQP8VbkkHD4aOyPZQiTvw8m4tapsvdX4f8
-	F7BptBCqfZFo7AfArtWjrHIibB1SdVQVuWVrpDt8yOznQ9//kYV/9tB1n72TYFoTQlppNEn
-	d69/x/7VzmmxcKWdcwuq7BCNsoS2913PxLWIvF1t2braVBWHdlryOvt8wYrVLyliOTSrw+i
-	zHzQmaC5YytF14sKNGyUt5ZeRZ+mFn3z9QSIosxdVQ0CR8SCBjlYRhHqR15zC0GYUjFqMUk
-	3RbPOHUHdtGkLBBbGW1Oo8DVPKJs8xq9VpyhcybTwgfiJKs78W3wpSpVwbsoLIcufR4rHDC
-	LyyvsZtfC85fqneU/api7dOFlW7Kn8/UPb6q8ebQ7sDa+GUmqbcvyjoQAeIBWc65Ml3wa56
-	rnPgmgNfQyWokPzWF6puVMgLBcj8oiWO+5g8dTr/MUEOOU6gujAE1m+wna0ldRSFvbv+d0y
-	xcnBog6nqW6DSmYoGwEY+aS6oPduLQWK/n3IFfYQ0+k8jfkPdtWDUd0y+RH1dDEVDnx6lJq
-	GZ68+L8CwO38Emd4kxCVB6VZWC1XQryqqJmmM+CazUnb+kVZeFuBnda9FTdmVCSJEff6zCS
-	xs8eujnEXxfeqy4xeK9rOghuZNg2u4ZnoCAcqauCST6NnocnBIR5Oyh/ASHspGYKUkQU6uQ
-	jdR6hD8FV6lcYcF/JmVeEQiC1euxRIH/V+BjzZPrBdcawzNYF7gxriHl8DOoTDaOn5KcNxM
-	TsEbAUUi4KkBgBsY8N6uz3XxYKvgMoHSdtMFmxyuH7iWTQM9YBPdiQ49Hev5El+l+zG3tL3
-	Dnc8VdMz5RqEXtwjq4XG0su6dz5D5BNipF222Amf1ODsNRS33TJjizkhgIVvk=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
 
-Since $(LD) is directly used, hence -nostdlib is unneeded,
-MIPS has removed this, we should remove it too.
-bdbf2038fbf4 ("MIPS: VDSO: remove -nostdlib compiler flag").
+v5:
+1. Modify the internal implementation of larch_insn_text_copy by
+   removing the while loop processing. There is a while loop inside
+   copy_to_kernel_nofault that handles and copies all data.
 
-In fact, other architectures also use $(LD).
-fe00e50b2db8 ("ARM: 8858/1: vdso: use $(LD) instead of $(CC) to link VDSO")
-691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to link VDSO")
-2ff906994b6c ("MIPS: VDSO: Use $(LD) instead of $(CC) to link VDSO")
-2b2a25845d53 ("s390/vdso: Use $(LD) instead of $(CC) to link vDSO")
+2. text_mutex has been added to all usage contexts of
+larch_insn_text_copy, and the relevant tests have passed.
 
-Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cn>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+-----------------------------------------------------------------------
+Historical Version:
+v4:
+1. Delete the #3 patch of version V3.
 
-------
-Changes in v2:
-	- apply commit msg edit suggestion by Yanteng Si
-------
----
- arch/loongarch/vdso/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+2. Add 5 NOP instructions in build_prologue().
+   Reserve space for the move_imm + jirl instruction.
 
-diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index ccd2c5e135c6..d8316f993482 100644
---- a/arch/loongarch/vdso/Makefile
-+++ b/arch/loongarch/vdso/Makefile
-@@ -36,7 +36,7 @@ endif
- 
- # VDSO linker flags.
- ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
--	$(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared --build-id -T
-+	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
- 
- #
- # Shared build commands.
+3. Differentiate between direct jumps and ftrace jumps of trampoline:
+   direct jumps skip 5 instructions.
+   ftrace jumps skip 2 instructions.
+
+4. Remove the generation of BL jump instructions in emit_jump_and_link().
+   After the trampoline ends, it will jump to the specified register.
+   The BL instruction writes PC+4 to r1 instead of allowing the
+   specification of rd.
+
+URL for version v4:
+https://lore.kernel.org/all/20250724141929.691853-1-duanchenghao@kylinos.cn/
+---------
+v3:
+1. Patch 0003 adds EXECMEM_BPF memory type to the execmem subsystem.
+
+2. Align the size calculated by arch_bpf_trampoline_size to page
+boundaries.
+
+3. Add the flush icache operation to larch_insn_text_copy.
+
+4. Unify the implementation of bpf_arch_xxx into the patch
+"0004-LoongArch-BPF-Add-bpf_arch_xxxxx-support-for-Loong.patch".
+
+5. Change the patch order. Move the patch
+"0002-LoongArch-BPF-Update-the-code-to-rename-validate_.patch" before
+"0005-LoongArch-BPF-Add-bpf-trampoline-support-for-Loon.patch".
+
+URL for version v3:
+https://lore.kernel.org/all/20250709055029.723243-1-duanchenghao@kylinos.cn/
+---------
+v2:
+1. Change the fixmap in the instruction copy function to set_memory_xxx.
+
+2. Change the implementation method of the following code.
+	- arch_alloc_bpf_trampoline
+	- arch_free_bpf_trampoline
+	Use the BPF core's allocation and free functions.
+
+	- bpf_arch_text_invalidate
+	Operate with the function larch_insn_text_copy that carries
+	memory attribute modifications.
+
+3. Correct the incorrect code formatting.
+
+URL for version v2:
+https://lore.kernel.org/all/20250618105048.1510560-1-duanchenghao@kylinos.cn/
+---------
+v1:
+Support trampoline for LoongArch. The following feature tests have been
+completed:
+	1. fentry
+	2. fexit
+	3. fmod_ret
+
+TODO: The support for the struct_ops feature will be provided in
+subsequent patches.
+
+URL for version v1:
+https://lore.kernel.org/all/20250611035952.111182-1-duanchenghao@kylinos.cn/
+-----------------------------------------------------------------------
+
+Chenghao Duan (4):
+  LoongArch: Add larch_insn_gen_{beq,bne} helpers
+  LoongArch: BPF: Update the code to rename validate_code to
+    validate_ctx
+  LoongArch: BPF: Implement dynamic code modification support
+  LoongArch: BPF: Add bpf trampoline support for Loongarch
+
+Tiezhu Yang (1):
+  LoongArch: BPF: Add struct ops support for trampoline
+
+ arch/loongarch/include/asm/inst.h |   3 +
+ arch/loongarch/kernel/inst.c      |  54 +++
+ arch/loongarch/net/bpf_jit.c      | 527 +++++++++++++++++++++++++++++-
+ arch/loongarch/net/bpf_jit.h      |   6 +
+ 4 files changed, 589 insertions(+), 1 deletion(-)
+
 -- 
-2.20.1
+2.25.1
 
