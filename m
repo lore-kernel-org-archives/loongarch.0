@@ -1,85 +1,108 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CECB23A578
-	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 02:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCA4239E78
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 03:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753929031; cv=none; b=CpVCaM3An+4aMgQErUo4hTCEu3Y7Ly0qNTbOpbuiCAe5s4dj8GlRQgV29pp4Z3Ps/2vXvrVL6rpQLuKRGeIyBecRjoaTKqkimUiFYssld2rE+IvwDlAg2hFJoNzlLV1iAbzAhBYccdc+z32K/N/MS1aQXp83VRFdiZAXNz0JVjE=
+	t=1753930806; cv=none; b=anx+2nju9d8IXZQXY3HV3f4ZwWxK+YJWcpknOLfP8uOGOYJqdFiHiWZdog8+xzTNeIao4+JWKGYCCF2690eaL78A5AJsdR3WzcGHSyWRxUa8Rpvk9TawWUCTM79cxL6d/GLGys5doOSr3gE/BAAw2tj5jyTdI4c6dWX6wiFBX0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753929031; c=relaxed/simple;
-	bh=WXtX3eKHJBxlucYmmqLR64PhJA6HcWf6gkWb0smL0oc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lk7wln3SCWYvEN7CiQ+/ZydqKuK7hx9nunnCOSXlMyyvL59JyAremfjF1M2dHVu3EMG4k8/24HcrbweTqp9Kgrzbl6u3Tt59z4WWdZgAuIJCZz5eG7UuY95RZfQ7qgCLofPpR8/4O+AoN3BWZcqyIZrHaVSSOq4sZI3BbttIAS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 4f2319366db611f0b29709d653e92f7d-20250731
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:276455f0-f68b-4ea5-8df2-a6fe12529ece,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:6
-X-CID-INFO: VERSION:1.1.45,REQID:276455f0-f68b-4ea5-8df2-a6fe12529ece,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:6
-X-CID-META: VersionHash:6493067,CLOUDID:94de684a21d748a2aa6767a278d8fe90,BulkI
-	D:250731102951I0I94QDZ,BulkQuantity:1,Recheck:0,SF:17|19|24|45|64|66|78|80
-	|81|82|83|102|841,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT:ni
-	l,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,B
-	RR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULS,
-	TF_CID_SPAM_SNR
-X-UUID: 4f2319366db611f0b29709d653e92f7d-20250731
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(116.128.244.171)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1326998802; Thu, 31 Jul 2025 10:30:22 +0800
-Date: Thu, 31 Jul 2025 10:29:58 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Vincent Li <vincent.mc.li@gmail.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev
-Subject: Re: bpf selftest build error - undeclared function
- 'bpf_qdisc_skb_drop'
-Message-ID: <20250731022958.GA190477@chenghao-pc>
-References: <CAK3+h2z3Zx+0KbVcRbLuz_-LhBwov9Bmvp9HdumbaN5GYtovFg@mail.gmail.com>
+	s=arc-20240116; t=1753930806; c=relaxed/simple;
+	bh=HXC9MCVkyvhgMnTzNEg55m++ZiQFz54yccXLQOfkFiE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ekz/G93B0Kqs8zwTgYM+U9sIayuj/wo2mV0OPmUSk+hMlm0X4k1h8/EB5oOfg1xaJI30Pcy9l3Fp+QWi2DAgZ1lMPdVPBfpwIhYm6hrBgJbkrbq38s6ubz2sECCxbancJR162LwfS/GPiGr/HO4Tu7nrbyDsGzDdV3TRlF+r030=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q2TyaWrU; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2TyaWrU"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4ab93f24dc3so7808211cf.0
+        for <loongarch@lists.linux.dev>; Wed, 30 Jul 2025 20:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753930803; x=1754535603; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aoPoRMZiwTeRoOjMbpU9tQn9vtdJG8I5pJUXUxu+VQY=;
+        b=Q2TyaWrU55NfZsJH2nt31s7b5wVNrSsiLqgyKzWl6Bdtq4b+r1By5/tO8PA71TDwGJ
+         nVkdkRyvrpIno92iqNX6c6d6SUvIbQc9QDM/PaudzWQ2ZoUKMzAlx9DRaqBd6m+9viy2
+         BWq0enej3l/2IOcaPLA5zky0YSEzx3RDASm1iDxMq5uRmOurYmXV6M2If2JcI4ykJvv1
+         6wt0RCgJSdskLbHgA8G1TyXxVt/HokRZkLunczBBNLTYMGljqmbx6VifY7Tb2oHpm6/a
+         g9ddddZQiH0zJS9dt9trbGYRZWgbG/Yz4gdQTZzXD//fredOE8bLoo7YIOjPG7CVQDUu
+         FJ7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753930803; x=1754535603;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aoPoRMZiwTeRoOjMbpU9tQn9vtdJG8I5pJUXUxu+VQY=;
+        b=JztomTkZZckW76VzWYmWNW+iI39ZY6Lrh2hH7zDd6zMua4wKV9Zp07zpZRY5UrmwUZ
+         RRzHNJ9y+Nc91n9LxPvXF1IFlFpkBgiMVFsXEtherR51+OZXBh8JVety7j18QKvwsR0N
+         opkE21+o0BsG95BM84MA/dfK8ZbTjbJiu53brtLd5COaVCdGaLXkANpe78x+3agzuVb1
+         M96GmEEgRhMrIfUv+whWSMgwvy2rG5uLIyG8FuLKJ8HuTlFbYIDhQfcfdkL1no8Mfn99
+         9ALZYo3LX4Qe+YGpmeDBWXZEx9Ov7Th/ypSJIu1CTQaqy5HaFPoXqjngBOTuLik2R1B2
+         SdaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXh0GYCXaFUQCAbo3f4DbXZ+/thHZ2dSYBJkIiHLzIwDhqD+nrIT6ZGT7qfOZ+Iudp0G409Z8j6eK0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwoV8WWQQCKJk059p9zoM06GQUz9+REmENs/m0uDrAx0LsBNCH+
+	fvnZKAskp2fTSgAbPS5ZXZIn+K0yysricsoJvjB8tEx7F0Gon64ED3iBlb4cB0VC4uBJTJ5suyQ
+	Hpn1PSfBYcJbbejGMfr8le/iaPdwJold7jw==
+X-Gm-Gg: ASbGncuDBkXOeDUt+5NXR7zHePmHjih54azS762YYdTBl/5bjXuCfQyBLL7RQB1O3X3
+	ebvFCKXaBRY0npCysiiPtD0owyEl5aYHbgMpY0y2FVQg2gDGBi1uM/RQT+0ez2UihkMTTzQW3zP
+	ECxeV46e+mUjOyX/i8gOZ+injiJXjOsEBd3a3KPd6AQKPUh2b/EEye5Mk957akPOrCP/Va67rTL
+	mnqUjo=
+X-Google-Smtp-Source: AGHT+IG82hN1YqXVAMcA2kZfRsFVW1wgJ69dLTz1mcq34HdQatSUE7yL1yXsPKQzRIc1hzPmXMa99NNlIiNAJV5LI9s=
+X-Received: by 2002:a05:622a:5806:b0:4ab:825b:fc4d with SMTP id
+ d75a77b69052e-4aeecc9980cmr29190441cf.8.1753930803239; Wed, 30 Jul 2025
+ 20:00:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK3+h2z3Zx+0KbVcRbLuz_-LhBwov9Bmvp9HdumbaN5GYtovFg@mail.gmail.com>
+References: <CAK3+h2z3Zx+0KbVcRbLuz_-LhBwov9Bmvp9HdumbaN5GYtovFg@mail.gmail.com>
+ <0fe044d3-f36a-d7a7-3ce3-237da83eaea2@loongson.cn>
+In-Reply-To: <0fe044d3-f36a-d7a7-3ce3-237da83eaea2@loongson.cn>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Wed, 30 Jul 2025 19:59:52 -0700
+X-Gm-Features: Ac12FXxhkia1vti2HTvZ7VWj0Bwvhy2lDZP_665FQpmfMypNyvRYhIG2JygLgiE
+Message-ID: <CAK3+h2xe+7kzbu0TxfyLv0+cnE_p0WHVtgCYeqG2BJYtvuFVCQ@mail.gmail.com>
+Subject: Re: bpf selftest build error - undeclared function 'bpf_qdisc_skb_drop'
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Chenghao Duan <duanchenghao@kylinos.cn>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 30, 2025 at 07:21:52PM -0700, Vincent Li wrote:
-> Hi Tiezhu and Chenghao,
-> 
-> While attempting to test the bpf trampoline patches on loongarch on
-> top of https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git,
->  I ran into bpf selftest build error irrelevant to the bpf trampoline
-> 
->   CLNG-BPF [test_progs] bpf_qdisc_fail__incompl_ops.bpf.o
-> progs/bpf_qdisc_fail__incompl_ops.c:13:2: error: call to undeclared
-> function 'bpf_qdisc_skb_drop'; ISO C99 and later do not support
-> implicit function declarations [-Wimplicit-function-declaration]
->    13 |         bpf_qdisc_skb_drop(skb, to_free);
->       |         ^
-> 
-> I am on Fedora 38 ( I should have updated to newer Fedora :)) with
-> clang version 18.1.0rc, not sure if it is related, wonder if you guys
-> have run into similar issues.
-> 
-> Vincent
+On Wed, Jul 30, 2025 at 7:30=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> On 2025/7/31 =E4=B8=8A=E5=8D=8810:21, Vincent Li wrote:
+> > Hi Tiezhu and Chenghao,
+> >
+> > While attempting to test the bpf trampoline patches on loongarch on
+> > top of https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.g=
+it,
+> >   I ran into bpf selftest build error irrelevant to the bpf trampoline
+> >
+> >    CLNG-BPF [test_progs] bpf_qdisc_fail__incompl_ops.bpf.o
+> > progs/bpf_qdisc_fail__incompl_ops.c:13:2: error: call to undeclared
+> > function 'bpf_qdisc_skb_drop'; ISO C99 and later do not support
+> > implicit function declarations [-Wimplicit-function-declaration]
+> >     13 |         bpf_qdisc_skb_drop(skb, to_free);
+> >        |         ^
+>
+> Please enable CONFIG_NET_SCH_BPF.
+>
 
-Hi Vincent,
+indeed I am missing it, will enable it, thanks a lot!
 
-Yes, I have encountered a similar issue. My approach is to temporarily
-block or comment out the test code that is unrelated to the trampoline
-test.
-
-Chenghao
+> net/sched/bpf_qdisc.c
+> bpf_qdisc_skb_drop()
+>
+> net/sched/Makefile
+> obj-$(CONFIG_NET_SCH_BPF)       +=3D bpf_qdisc.o
+>
+> Thanks,
+> Tiezhu
+>
+>
