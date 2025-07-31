@@ -1,134 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330442C08A0
-	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 11:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFBC12BE059
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 11:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753960670; cv=none; b=llSic3FJ2CJ6jmnfx1eMvPTJttUYIyH14GSu0OIcvoeq4vZslXmL92UrOPUFSQIycSsf/lLjLY7cdAnTGVY3+93bcIEjEQTdxjtU5GmnG4XscgywCFmupYtnD/5bf/JRddpqc7cCg5TLyjpd7L5HTrmdEvs1EaGiLLrdFHBoQKY=
+	t=1753961177; cv=none; b=IkuVnQujIUsg1Ih/HWKHpWkt2hJ7cCbzbxKAN6hMmyaTEvWb1u8BX4lnV5Cty+YDrS7wa792mg0tUKM9eSc5uKmOyWqNVkKYI2pMNPT0b1960z6wUEIGGT+vjun5B9ceY9P+wM+aRbAPM09V1iSdzGPRz+jPHi2u3vw8JIDce84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753960670; c=relaxed/simple;
-	bh=YWu/J1z9qSPzIdGl7WaiOwtxEhLqY1keFDoxQ7nsjR8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l5GMtlym+EPvcizKlN2n+U6rTNrxMQPRw1Nivn06GYjHLvi6UlGSWdZJdLL8Wutv+FNsvAvusaCugwiXHTYEj88CzV1cj8oSNozdcV/na2KQJnEnvJJkQVrmNwZ8DpWJ/OTXsHOtZ5iFYzGhDWDvdg7+bz72jbWsuk/zPmdhe0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkJriubR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkJriubR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE986C4CEEF
-	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 11:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753960669;
-	bh=YWu/J1z9qSPzIdGl7WaiOwtxEhLqY1keFDoxQ7nsjR8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MkJriubRuCPKQUv+FKFPxsSVndYbGpCI7v3xZsL4YAuuEythF4YUJWkQepa71VuyQ
-	 D4vgGKmEmnW2NyLqjbX2uCMCRs6cF/kPpwaDUg2wIYyOa+Yin+85Oc1kZVFU6eOKRG
-	 vy2C+hAmk7Q+YDD1avMfD8QW9XAJBVaIX4gOiG/So59qtW3TKTujSVoh9y8C55ZdlH
-	 xH2EFV30oIlkw7cKB0ems/12X/vY+3f3zM0M1DsfQuOXQfA4xbcFF91X/W74KuEaGx
-	 N6aeSuzU9cX9y78KNqxuRsVW7Ryx3JXBk67V3FX+9xKPpXArAGuJpsyJHUZsYH3Wq5
-	 E4iJLJPB9dIkg==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-61557997574so1097507a12.3
-        for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 04:17:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVCpdN7S6ry9ZdQCxCOd203UhuqxjOpaxWh7gf5A0a34k940al7DL7Jlvob58Sn9Wcgj7M40YIEFSo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxuYhAP0iMYJqshHXPqh0ztCNMfZjZ6/eowYbBQ5TrS/b4hDIQ4
-	kkdDp3E4pRfRPWqCgq/ezWCfZrmHUyNWvMJlz91ODfQf2oyB/BP3KRdTtJ06xLUTPtxczd7IedG
-	KxdyMeKFhj4sWATvELqUSeGVa9CrWCPg=
-X-Google-Smtp-Source: AGHT+IEvztrvw0d6qmKf0xUerykCRVZo6PrnLWfPxQoZmA2VWnhPTMPLGX2eIvduq+3yFR5DyHb2R4kk2GarE+6kEdE=
-X-Received: by 2002:a05:6402:24c3:b0:5fc:9979:78f7 with SMTP id
- 4fb4d7f45d1cf-61586ee81ccmr6795038a12.14.1753960668331; Thu, 31 Jul 2025
- 04:17:48 -0700 (PDT)
+	s=arc-20240116; t=1753961177; c=relaxed/simple;
+	bh=S48CgpWZHaB5oVhimlLTvU+OcBZXvcIO2aF5mZSrlI8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=c4iM3cRFYqGtuMN1FWKMsbF2MFNk3A7/iSVHY9TPgPD0QpbSn+JOwhnYNWAXE2XAjoBR9hIkW8I3e0x95YRU8SW2/P4BNJAdRHvX/KT9Xm/AceQMCZRDdYwU3Abohc6i7l9t91N8VhyfL5ya/IoAFByaB9NFnxsqCcHXGcHqmQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxLHLQUotooOs1AQ--.7390S3;
+	Thu, 31 Jul 2025 19:26:08 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDx_8PNUototGEvAA--.39900S3;
+	Thu, 31 Jul 2025 19:26:07 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Access mailbox directly in mail_send()
+To: Yanteng Si <si.yanteng@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Xianglai Li <lixianglai@loongson.cn>
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250731075907.189847-1-maobibo@loongson.cn>
+ <3fdcce8e-dff6-4871-82b3-571144a26c51@linux.dev>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <6793e1a8-00f6-c653-3a8a-5943c0471bb1@loongson.cn>
+Date: Thu, 31 Jul 2025 19:24:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250731091109.16901-1-tiwai@suse.de> <20250731091109.16901-3-tiwai@suse.de>
- <CAAhV-H6uDytXrsWv43uxNic9PH=ed1M3=29LTqCoYxzNdESkfw@mail.gmail.com> <878qk4snpk.wl-tiwai@suse.de>
-In-Reply-To: <878qk4snpk.wl-tiwai@suse.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 31 Jul 2025 19:17:36 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4qUDrjnOE059vH_+4Rxj85vwAadqGHDwH8tTbhiD+FNA@mail.gmail.com>
-X-Gm-Features: Ac12FXwSCo2_9pBjrOhlio-SRoCtC_xxyQEm9XhUPWLdimEgCwezg8-JxwzBWCg
-Message-ID: <CAAhV-H4qUDrjnOE059vH_+4Rxj85vwAadqGHDwH8tTbhiD+FNA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] LoongArch: Update HD-audio codec configs
-To: Takashi Iwai <tiwai@suse.de>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3fdcce8e-dff6-4871-82b3-571144a26c51@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDx_8PNUototGEvAA--.39900S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr1fKF1DAFWfZryUuF45Arc_yoW8KrWUpr
+	ykJrWDJFW5GFn3WrWDtwn8XFy5Xw1kta4Dtr10qFW5ArW5Kr1FqF1UXr9a9r17Ww4xJr1I
+	qF1UGrsxZr1UJwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALU
+	UUUU=
 
-On Thu, Jul 31, 2025 at 5:40=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wrote:
->
-> On Thu, 31 Jul 2025 11:33:38 +0200,
-> Huacai Chen wrote:
-> >
-> > On Thu, Jul 31, 2025 at 5:11=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wr=
-ote:
-> > >
-> > > The HD-audio codec driver configs have been updated again the drivers
-> > > got split with different kconfigs.
-> > I'm sorry for making noise, but is SND_HDA_INTEL_HDMI_SILENT_STREAM
-> > needed for common use? If yes, I also prefer it be enabled.
->
-> It's better to be disabled, IMO.
-> (And this config hasn't been changed at all.)
-OK.
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->
->
-> Takashi
->
-> >
-> > Huacai
-> >
-> > >
-> > > Enable all Realtek HD-audio codecs and HDMI codecs (except for
-> > > NVIDIA_MCP and TEGRA) per request.
-> > >
-> > > Fixes: 1d8dd982c409 ("ALSA: hda/realtek: Enable drivers as default")
-> > > Fixes: 81231ad173d8 ("ALSA: hda/hdmi: Enable drivers as default")
-> > > Cc: loongarch@lists.linux.dev
-> > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> > > ---
-> > > v1->v2: enable all Realtek codecs and most of HDMI codecs
-> > >
-> > > The changes are only in sound.git tree, so I'll pick up this there, t=
-oo
-> > >
-> > >  arch/loongarch/configs/loongson3_defconfig | 15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > >
-> > > diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loonga=
-rch/configs/loongson3_defconfig
-> > > index 0d59af6007b7..7993020ffebb 100644
-> > > --- a/arch/loongarch/configs/loongson3_defconfig
-> > > +++ b/arch/loongarch/configs/loongson3_defconfig
-> > > @@ -784,8 +784,23 @@ CONFIG_SND_HDA_HWDEP=3Dy
-> > >  CONFIG_SND_HDA_INPUT_BEEP=3Dy
-> > >  CONFIG_SND_HDA_PATCH_LOADER=3Dy
-> > >  CONFIG_SND_HDA_CODEC_REALTEK=3Dy
-> > > +CONFIG_SND_HDA_CODEC_REALTEK_LIB=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC260=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC262=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC268=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC269=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC662=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC680=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC861=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC861VD=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC880=3Dy
-> > > +CONFIG_SND_HDA_CODEC_ALC882=3Dy
-> > >  CONFIG_SND_HDA_CODEC_SIGMATEL=3Dy
-> > >  CONFIG_SND_HDA_CODEC_HDMI=3Dy
-> > > +CONFIG_SND_HDA_CODEC_HDMI_GENERIC=3Dy
-> > > +CONFIG_SND_HDA_CODEC_HDMI_INTEL=3Dy
-> > > +CONFIG_SND_HDA_CODEC_HDMI_ATI=3Dy
-> > > +CONFIG_SND_HDA_CODEC_HDMI_NVIDIA=3Dy
-> > >  CONFIG_SND_HDA_CODEC_CONEXANT=3Dy
-> > >  CONFIG_SND_USB_AUDIO=3Dm
-> > >  CONFIG_SND_SOC=3Dm
-> > > --
-> > > 2.50.1
-> > >
-> > >
+
+On 2025/7/31 下午5:30, Yanteng Si wrote:
+> 在 7/31/25 3:59 PM, Bibo Mao 写道:
+>> With function mail_send(), it is to write mailbox of other VCPUs.
+>> Existing simple APIs read_mailbox/write_mailbox can be used directly
+>> rather than send command on IOCSR address.
+> Hmm, that's indeed a feasible approach. However, I'm
+> curious: what is the purpose of designing IOCSR in
+> LoongArch? Is it merely to make things "complicated"?
+
+I am not chip designer -:). MMIO address space is ok from my side, 
+however I do not know how to solve multi-chip problem with MMIO method.
+
+Regards
+Bibo Mao
+> 
+> Thanks,
+> Yanteng
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/kvm/intc/ipi.c | 16 +++++++++++++---
+>>   1 file changed, 13 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kvm/intc/ipi.c 
+>> b/arch/loongarch/kvm/intc/ipi.c
+>> index fe734dc062ed..832b2d4aa2ef 100644
+>> --- a/arch/loongarch/kvm/intc/ipi.c
+>> +++ b/arch/loongarch/kvm/intc/ipi.c
+>> @@ -134,7 +134,8 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, 
+>> gpa_t addr, uint64_t data)
+>>   static int mail_send(struct kvm *kvm, uint64_t data)
+>>   {
+>> -    int cpu, mailbox, offset;
+>> +    int i, cpu, mailbox, offset;
+>> +    uint32_t val = 0, mask = 0;
+>>       struct kvm_vcpu *vcpu;
+>>       cpu = ((data & 0xffffffff) >> 16) & 0x3ff;
+>> @@ -144,9 +145,18 @@ static int mail_send(struct kvm *kvm, uint64_t data)
+>>           return -EINVAL;
+>>       }
+>>       mailbox = ((data & 0xffffffff) >> 2) & 0x7;
+>> -    offset = IOCSR_IPI_BASE + IOCSR_IPI_BUF_20 + mailbox * 4;
+>> +    offset = IOCSR_IPI_BUF_20 + mailbox * 4;
+>> +    if ((data >> 27) & 0xf) {
+>> +        val = read_mailbox(vcpu, offset, 4);
+>> +        for (i = 0; i < 4; i++)
+>> +            if (data & (BIT(27 + i)))
+>> +                mask |= (0xff << (i * 8));
+>> +        val &= mask;
+>> +    }
+>> -    return send_ipi_data(vcpu, offset, data);
+>> +    val |= ((uint32_t)(data >> 32) & ~mask);
+>> +    write_mailbox(vcpu, offset, val, 4);
+>> +    return 0;
+>>   }
+>>   static int any_send(struct kvm *kvm, uint64_t data)
+>>
+>> base-commit: 038d61fd642278bab63ee8ef722c50d10ab01e8f
+> 
+
