@@ -1,104 +1,95 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.154.197.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA73187326
-	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 09:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B852206B2
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 09:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.154.197.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753954255; cv=none; b=K+1uvFBXhOcmxe7DA9zwQBjKBB64U6zBROuuJX2Lo7fY1N6SOXkk54urH04HVqwbYR/2qI3tsakl84r460R5EPPwjUVNNWJw8mDH3hLvL/vDrZxk+2eRL4olAT5dR7/QjWercq42JE95g42hJjxXGjg/R4UMUz9Lji0VcSTjrEo=
+	t=1753954282; cv=none; b=D3oRcBcsdE9X1yPz5tuYfLsiq0+BXHX+gDlhjkRZj01Gj7ty0xEJNCA8EDsto1eR6pHjY0xQ5iJpzMZnsc0H7lKCU/wpCH8wicNwM7/gxdODDF1bKhjq+5ompVWdupLg3Jx+25Ybeu8DaI8r0yJIBlTtPHBMtkN4Da8OO3PCxdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753954255; c=relaxed/simple;
-	bh=4tE2WjY+0AeAp150zPfzh+nEP16nO0mT6tjtlWBbuqU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rePDXXJiIGUYSZD1xiuc59TkFN5ZIAd9X6e3WOmIS0mVER0rN8kArUdro+f5fk6vvGH+48Z44iPRG2Vowh8dGC9NLhZ1SZu5m9YwPBtRpbKiaODVHxK696tZJLEYMkbw2pWKcI8kQyEHh+FCkoR8iatfv2j4E56wZWK/ZlPKPqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jHmOE71w; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1753954282; c=relaxed/simple;
+	bh=+4UFIb11PcuMQKSx8oTsCEXmWQmy0KqA/BRL69pqq6U=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=Z70E08sIUJI9wrXvNOmK0I6PpuP4t2vk0BGNawapPhWGdJq/sWInaK/XNGiOuOUVbPAu23CT2mKImEep3GGrtGJH1/e1uOEy3rMx0KwnM1uClplFefpzggPFNelUsetbJUbA1DiiQjsD1RBp0PPMq+uR5zv4/B9NGVQUnwyqwBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=NaaP26FL; arc=none smtp.client-ip=43.154.197.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jHmOE71w"
-Message-ID: <3fdcce8e-dff6-4871-82b3-571144a26c51@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1753954251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jPrBl2r6pRDQ+LFfaDIU8edcuVYOLpK/ppfQY1GooFs=;
-	b=jHmOE71wedMi8BDQij8w5hXeT5C4FB9qVB5UjhslTeYSKgwTjf7FcV+W+2DOt0Fla4szWV
-	ZDqgIY0ut54YAYxh6ELEV3yeXYRk4M3xDJQ24NegYh1W8v1+Xq0CrgNImkOPI6rXe+XNAi
-	zz6NfzW7iD16KekU5wq3uvWKSA9QvNs=
-Date: Thu, 31 Jul 2025 17:30:32 +0800
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="NaaP26FL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1753954229;
+	bh=+4UFIb11PcuMQKSx8oTsCEXmWQmy0KqA/BRL69pqq6U=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=NaaP26FLobMu+sh6wIqi7qxgLIuPnzB4CRrzFhFCX4Tf2MVJLX7xo1p2diG3vXLXb
+	 zB1ka4NfZa/KimgxtR0lIWDrmQjDa6TebZXqAQGpQsaEIUhAHwvmLf9RX3lGCWUyN2
+	 PkT+2oWR1vK021EQpNUbnC88HJmVQtxhRooS9f40=
+EX-QQ-RecipientCnt: 6
+X-QQ-GoodBg: 2
+X-QQ-SSF: 00400000000000F0
+X-QQ-FEAT: D4aqtcRDiqST8P4pfj07qGG6ZowgZlQrBrKFg+dHp6U=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: 9w57OOO5FF5cXB6+6BHQCQz7t5/qQaujCSyd1aXWj3o=
+X-QQ-STYLE: 
+X-QQ-mid: lv3sz3a-6t1753954225tc6a4d04b
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?WWFudGVuZyBTaQ==?=" <siyanteng@cqsoftware.com.cn>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
+Cc: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?amlheHVuLnlhbmc=?=" <jiaxun.yang@flygoat.com>, "=?utf-8?B?eWlqdW4=?=" <yijun@loongson.cn>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?WWFudGVuZyBTaQ==?=" <siyanteng@cqsoftware.com.cn>
+Subject: Re:[PATCH] LoongArch: CSR: Complete KSave registers definition
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Subject: Re: [PATCH] LoongArch: KVM: Access mailbox directly in mail_send()
-To: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Xianglai Li <lixianglai@loongson.cn>
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250731075907.189847-1-maobibo@loongson.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250731075907.189847-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Thu, 31 Jul 2025 09:30:24 +0000
+X-Priority: 3
+Message-ID: <tencent_561EDC7155FE49AB4553AF12@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <20250725103624.69247-1-siyanteng@cqsoftware.com.cn>
+In-Reply-To: <20250725103624.69247-1-siyanteng@cqsoftware.com.cn>
+X-QQ-ReplyHash: 3597567530
+X-BIZMAIL-ID: 6575991458928444153
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Thu, 31 Jul 2025 17:30:26 +0800 (CST)
+Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NRN3UPsLzYKVL1qhsBQSr50EyNQYDiw2qz7GEauZTHXq+XoZdantdjA4
+	xSrkBUhJcIAZqJJQ2JNkJdfO5HevBnKssLn84xjrrZqEi6rYY2Z9go07q0EREvUWCPSDsrz
+	Rbr8idehjud7zCV7NWyddttW+gqHbWCysKFSsTbT7oQukopqAzqL8JsgjrL1aDbiTPz7tdT
+	7cGbHFAHenAkD3O3M8q9V+P9qgEBTyGJixndlV+n3OSVALTxNuHYvKDK0xwIWiXnEsmrzPE
+	Fb81/lOYE+oFBTmPW1JsyUxG/Tui4m/yntwLvpuOOQ8CySTOTXUmHuDervFe9SfFI0lP1Gs
+	RPe1sHtTIgD+WVFEVCiIKokAEOA0bz+bxCuzObGuz7xR/hSxOAiN4rPhndrTHcNob6fgOlG
+	hdNYTvm7OEWgJuCOPGqC8OW+8KiyCWeYdYD80klB6M0ywsJTAi8LRQvhW8bG9EMM77OkrpR
+	r34JlHqvQ4n4gS72lC+r9+f+qCBfMns/uqhkxudC8ri84i6Xl5JwVl4M8tueEqbBjDmsxlF
+	lxOpGL3uxiP3hjhsYyeuFplCcLsbKUhdCNMmWvq+9EuEg6FpjrgSBKP+33mtjuEKsAeTyUz
+	tSYdrdGgi9CGkqiEs6l/5EmGOL/jzw9U7hupFF8X9/67eiji3rBZGyszLq/MSiiolPe1fXX
+	KTuyHBZ6gz0VUdOYT+r5+c4lC8rLTc9yNTXJ5s+2iMDJ2tGmNZREd6fbePIe9Ulxgm2ovVb
+	w3hUXWMiEOk30+9ut/8k0Y98dPyob3uhSZ3SRmkkTTKn36zmkSs4jwGLREngG395AWseJz4
+	Ym1Eh16aoInKEq3YqJmI63hQaXKeI4b08gvoVr4+rqsRvVFj9+0Yw/9RJV8jZB35Ojojy1f
+	CwmJgZNWXEfdfOR+EOWx09QvLIm+GNDQau9UkDVNnv6PSa7eqji8IFRLCtAtDMapLpwRdCW
+	sCn3aJnIfVOXu0EIODSd4t7JswcmnOoUToJvnbftMVGMcmhoDfZbiDOuwWaGwfuE2Or+c8R
+	qSB/C9u1Jf35u06b94FA+iaOmg/KSlsTPv4Pn7lw==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-在 7/31/25 3:59 PM, Bibo Mao 写道:
-> With function mail_send(), it is to write mailbox of other VCPUs.
-> Existing simple APIs read_mailbox/write_mailbox can be used directly
-> rather than send command on IOCSR address.
-Hmm, that's indeed a feasible approach. However, I'm
-curious: what is the purpose of designing IOCSR in
-LoongArch? Is it merely to make things "complicated"?
-
-Thanks,
-Yanteng
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->   arch/loongarch/kvm/intc/ipi.c | 16 +++++++++++++---
->   1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-> index fe734dc062ed..832b2d4aa2ef 100644
-> --- a/arch/loongarch/kvm/intc/ipi.c
-> +++ b/arch/loongarch/kvm/intc/ipi.c
-> @@ -134,7 +134,8 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, gpa_t addr, uint64_t data)
->   
->   static int mail_send(struct kvm *kvm, uint64_t data)
->   {
-> -	int cpu, mailbox, offset;
-> +	int i, cpu, mailbox, offset;
-> +	uint32_t val = 0, mask = 0;
->   	struct kvm_vcpu *vcpu;
->   
->   	cpu = ((data & 0xffffffff) >> 16) & 0x3ff;
-> @@ -144,9 +145,18 @@ static int mail_send(struct kvm *kvm, uint64_t data)
->   		return -EINVAL;
->   	}
->   	mailbox = ((data & 0xffffffff) >> 2) & 0x7;
-> -	offset = IOCSR_IPI_BASE + IOCSR_IPI_BUF_20 + mailbox * 4;
-> +	offset = IOCSR_IPI_BUF_20 + mailbox * 4;
-> +	if ((data >> 27) & 0xf) {
-> +		val = read_mailbox(vcpu, offset, 4);
-> +		for (i = 0; i < 4; i++)
-> +			if (data & (BIT(27 + i)))
-> +				mask |= (0xff << (i * 8));
-> +		val &= mask;
-> +	}
->   
-> -	return send_ipi_data(vcpu, offset, data);
-> +	val |= ((uint32_t)(data >> 32) & ~mask);
-> +	write_mailbox(vcpu, offset, val, 4);
-> +	return 0;
->   }
->   
->   static int any_send(struct kvm *kvm, uint64_t data)
-> 
-> base-commit: 038d61fd642278bab63ee8ef722c50d10ab01e8f
+SGVsbG8gWWFudGVuZzoNCg0KQXMgdGhlIG1hbnVhbCBzYXkgYmVsb3csIA0KIlRoZSBtaW5p
+bXVtIG51bWJlciBvZiBkYXRhIHNhdmUgcmVnaXN0ZXJzIGlzIDEsIGFuZCB0aGUgbWF4aW11
+bSBudW1iZXIgaXMgMTYuIg0KSSBzZWFyY2ggdGhlIHByZWZpeCBwYXR0ZXJuICJMT09OR0FS
+Q0hfQ1NSX0tTIiBpbiB2Ni4xNiBrZXJuZWwgc291cmNlLA0KdGhlIEtTMC1LUzcgaGFzIGJl
+ZW4gdXNlZCwgaWYgaGFyZHdhcmUgc3VwcG9ydCBpdCwgYWRkIGl0IGxvb2sgb2suDQo8Qnkg
+dGhlIHdheSwgdGhlIEtTOCBkZWZpbmVkIGlzIHN0cmFuZ2UsIGl0IGRlZmluZWQgYnV0IG5v
+dCB1c2VkLCBpIGRvbmB0IGtub3cgd2h5Lj4NCg0KTm90ZSB0aGF0IGFzIG1hbnVhbCB2MS4x
+MCB2NC4yLjEgc2F5Og0KIldoZW4gYSBDU1IgYWNjZXNzIGluc3RydWN0aW9uIGFjY2Vzc2Vz
+IGEgQ1NSIHRoYXQgDQppcyBub3QgZGVmaW5lZCBpbiB0aGUgYXJjaGl0ZWN0dXJlIG9yIG5v
+dCBpbXBsZW1lbnRlZCBpbiBoYXJkd2FyZSwgDQp0aGUgcmVhZCBvcGVyYXRpb24gcmV0dXJu
+cyBhbiBhbGwgMCB2YWx1ZXMgYW5kIA0KdGhlIHdyaXRlIG9wZXJhdGlvbiBkb2VzIG5vdCBt
+b2RpZnkgYW55IHNvZnR3YXJlLXZpc2libGUgc3RhdGUgb2YgdGhlIHByb2Nlc3Nvci4iDQpS
+ZXZpZXdlZC1ieTogV2VudGFvIEd1YW4gPGd1YW53ZW50YW9AdW5pb250ZWNoLmNvbT4NCg0K
+QlJzDQpXZW50YW8gR3Vhbg==
 
