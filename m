@@ -1,81 +1,134 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1850B187FEC
-	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 09:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330442C08A0
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 11:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753955162; cv=none; b=YKVHZGCpxnJPyH3CO2oXJSd7ZPlxbngiwdivmW+t+jHTsQwMADkn+vO2hTTK8wp4nu70EN/EcE3dMDzxtB2FOP/cFMUzEpVz/MRrYLQ0nM94fj+QGYyVV3q32QBkuq2lqqeLaKSkEQ9UwtSxZFvInKOHRQQ5304MZIjZgr9F0wA=
+	t=1753960670; cv=none; b=llSic3FJ2CJ6jmnfx1eMvPTJttUYIyH14GSu0OIcvoeq4vZslXmL92UrOPUFSQIycSsf/lLjLY7cdAnTGVY3+93bcIEjEQTdxjtU5GmnG4XscgywCFmupYtnD/5bf/JRddpqc7cCg5TLyjpd7L5HTrmdEvs1EaGiLLrdFHBoQKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753955162; c=relaxed/simple;
-	bh=uEG7vPwYLQv7+Cue9ZWWOxMjQqafe3uVJU7R6AySpNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JD6KZw0r2s0YeJhEnXKHbgGWsy5tCEtwNnhWbXyzY+Npz26Q0tQ8oQ17EoqyB4Lepf4iCbGfnhVZCVjbxgLVHpCfb+b/qJ731UGdZW6Bp+4N+cRnB1TVTsmpLFZm1tJxTDnF9kh3GjAGr89BpVYfsZgx/+76zLh3sh6DUT9A9ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sLhHZEW8; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1753960670; c=relaxed/simple;
+	bh=YWu/J1z9qSPzIdGl7WaiOwtxEhLqY1keFDoxQ7nsjR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l5GMtlym+EPvcizKlN2n+U6rTNrxMQPRw1Nivn06GYjHLvi6UlGSWdZJdLL8Wutv+FNsvAvusaCugwiXHTYEj88CzV1cj8oSNozdcV/na2KQJnEnvJJkQVrmNwZ8DpWJ/OTXsHOtZ5iFYzGhDWDvdg7+bz72jbWsuk/zPmdhe0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkJriubR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sLhHZEW8"
-Message-ID: <c6cfc254-9cde-4b9c-9126-1144fdece7c6@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1753955156;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pWuNqdtjYQOErQoAJ2sGFU3TBdHfvq1Q3mLRhSIkbO8=;
-	b=sLhHZEW8vLNqqEQUy7SNmRpt2VMmSr3cGrdVyLBGQIw/j6kkDKTTccm30p/NJuYGs1NDMu
-	FtSBsCGKhjbM3rttO1mXexf9BDlhOVXJffyH8gG0eIdC9zybgDn1YMYx1aFwynT/Sp0gfs
-	yQILs23bOigXKcioFoD+qq0yHdt/8Qk=
-Date: Thu, 31 Jul 2025 17:45:49 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkJriubR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE986C4CEEF
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 11:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753960669;
+	bh=YWu/J1z9qSPzIdGl7WaiOwtxEhLqY1keFDoxQ7nsjR8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MkJriubRuCPKQUv+FKFPxsSVndYbGpCI7v3xZsL4YAuuEythF4YUJWkQepa71VuyQ
+	 D4vgGKmEmnW2NyLqjbX2uCMCRs6cF/kPpwaDUg2wIYyOa+Yin+85Oc1kZVFU6eOKRG
+	 vy2C+hAmk7Q+YDD1avMfD8QW9XAJBVaIX4gOiG/So59qtW3TKTujSVoh9y8C55ZdlH
+	 xH2EFV30oIlkw7cKB0ems/12X/vY+3f3zM0M1DsfQuOXQfA4xbcFF91X/W74KuEaGx
+	 N6aeSuzU9cX9y78KNqxuRsVW7Ryx3JXBk67V3FX+9xKPpXArAGuJpsyJHUZsYH3Wq5
+	 E4iJLJPB9dIkg==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-61557997574so1097507a12.3
+        for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 04:17:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVCpdN7S6ry9ZdQCxCOd203UhuqxjOpaxWh7gf5A0a34k940al7DL7Jlvob58Sn9Wcgj7M40YIEFSo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxuYhAP0iMYJqshHXPqh0ztCNMfZjZ6/eowYbBQ5TrS/b4hDIQ4
+	kkdDp3E4pRfRPWqCgq/ezWCfZrmHUyNWvMJlz91ODfQf2oyB/BP3KRdTtJ06xLUTPtxczd7IedG
+	KxdyMeKFhj4sWATvELqUSeGVa9CrWCPg=
+X-Google-Smtp-Source: AGHT+IEvztrvw0d6qmKf0xUerykCRVZo6PrnLWfPxQoZmA2VWnhPTMPLGX2eIvduq+3yFR5DyHb2R4kk2GarE+6kEdE=
+X-Received: by 2002:a05:6402:24c3:b0:5fc:9979:78f7 with SMTP id
+ 4fb4d7f45d1cf-61586ee81ccmr6795038a12.14.1753960668331; Thu, 31 Jul 2025
+ 04:17:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: Re:[PATCH] LoongArch: CSR: Complete KSave registers definition
-To: Wentao Guan <guanwentao@uniontech.com>,
- Yanteng Si <siyanteng@cqsoftware.com.cn>, chenhuacai <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, "jiaxun.yang" <jiaxun.yang@flygoat.com>,
- yijun <yijun@loongson.cn>, loongarch <loongarch@lists.linux.dev>
-References: <20250725103624.69247-1-siyanteng@cqsoftware.com.cn>
- <tencent_561EDC7155FE49AB4553AF12@qq.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <tencent_561EDC7155FE49AB4553AF12@qq.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250731091109.16901-1-tiwai@suse.de> <20250731091109.16901-3-tiwai@suse.de>
+ <CAAhV-H6uDytXrsWv43uxNic9PH=ed1M3=29LTqCoYxzNdESkfw@mail.gmail.com> <878qk4snpk.wl-tiwai@suse.de>
+In-Reply-To: <878qk4snpk.wl-tiwai@suse.de>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 31 Jul 2025 19:17:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4qUDrjnOE059vH_+4Rxj85vwAadqGHDwH8tTbhiD+FNA@mail.gmail.com>
+X-Gm-Features: Ac12FXwSCo2_9pBjrOhlio-SRoCtC_xxyQEm9XhUPWLdimEgCwezg8-JxwzBWCg
+Message-ID: <CAAhV-H4qUDrjnOE059vH_+4Rxj85vwAadqGHDwH8tTbhiD+FNA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] LoongArch: Update HD-audio codec configs
+To: Takashi Iwai <tiwai@suse.de>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-在 7/31/25 5:30 PM, Wentao Guan 写道:
-> Hello Yanteng:
-> 
-> As the manual say below,
-> "The minimum number of data save registers is 1, and the maximum number is 16."
-> I search the prefix pattern "LOONGARCH_CSR_KS" in v6.16 kernel source,
-> the KS0-KS7 has been used, if hardware support it, add it look ok.
-> <By the way, the KS8 defined is strange, it defined but not used, i don`t know why.>
-> 
-> Note that as manual v1.10 v4.2.1 say:
-> "When a CSR access instruction accesses a CSR that
-> is not defined in the architecture or not implemented in hardware,
-> the read operation returns an all 0 values and
-> the write operation does not modify any software-visible state of the processor."
-I understand your concern. Actually, we can obtain it
-from CSR.PRCFG1.SAVENum, which is clearly stated in the manual.
+On Thu, Jul 31, 2025 at 5:40=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wrote:
+>
+> On Thu, 31 Jul 2025 11:33:38 +0200,
+> Huacai Chen wrote:
+> >
+> > On Thu, Jul 31, 2025 at 5:11=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wr=
+ote:
+> > >
+> > > The HD-audio codec driver configs have been updated again the drivers
+> > > got split with different kconfigs.
+> > I'm sorry for making noise, but is SND_HDA_INTEL_HDMI_SILENT_STREAM
+> > needed for common use? If yes, I also prefer it be enabled.
+>
+> It's better to be disabled, IMO.
+> (And this config hasn't been changed at all.)
+OK.
 
-
-> Reviewed-by: Wentao Guan <guanwentao@uniontech.com>
-
-Thanks for your review!
-
-
-Thanks,
-Yanteng
-
-> 
-> BRs
-> Wentao Guan
-
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+>
+>
+> Takashi
+>
+> >
+> > Huacai
+> >
+> > >
+> > > Enable all Realtek HD-audio codecs and HDMI codecs (except for
+> > > NVIDIA_MCP and TEGRA) per request.
+> > >
+> > > Fixes: 1d8dd982c409 ("ALSA: hda/realtek: Enable drivers as default")
+> > > Fixes: 81231ad173d8 ("ALSA: hda/hdmi: Enable drivers as default")
+> > > Cc: loongarch@lists.linux.dev
+> > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > ---
+> > > v1->v2: enable all Realtek codecs and most of HDMI codecs
+> > >
+> > > The changes are only in sound.git tree, so I'll pick up this there, t=
+oo
+> > >
+> > >  arch/loongarch/configs/loongson3_defconfig | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > >
+> > > diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loonga=
+rch/configs/loongson3_defconfig
+> > > index 0d59af6007b7..7993020ffebb 100644
+> > > --- a/arch/loongarch/configs/loongson3_defconfig
+> > > +++ b/arch/loongarch/configs/loongson3_defconfig
+> > > @@ -784,8 +784,23 @@ CONFIG_SND_HDA_HWDEP=3Dy
+> > >  CONFIG_SND_HDA_INPUT_BEEP=3Dy
+> > >  CONFIG_SND_HDA_PATCH_LOADER=3Dy
+> > >  CONFIG_SND_HDA_CODEC_REALTEK=3Dy
+> > > +CONFIG_SND_HDA_CODEC_REALTEK_LIB=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC260=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC262=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC268=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC269=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC662=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC680=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC861=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC861VD=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC880=3Dy
+> > > +CONFIG_SND_HDA_CODEC_ALC882=3Dy
+> > >  CONFIG_SND_HDA_CODEC_SIGMATEL=3Dy
+> > >  CONFIG_SND_HDA_CODEC_HDMI=3Dy
+> > > +CONFIG_SND_HDA_CODEC_HDMI_GENERIC=3Dy
+> > > +CONFIG_SND_HDA_CODEC_HDMI_INTEL=3Dy
+> > > +CONFIG_SND_HDA_CODEC_HDMI_ATI=3Dy
+> > > +CONFIG_SND_HDA_CODEC_HDMI_NVIDIA=3Dy
+> > >  CONFIG_SND_HDA_CODEC_CONEXANT=3Dy
+> > >  CONFIG_SND_USB_AUDIO=3Dm
+> > >  CONFIG_SND_SOC=3Dm
+> > > --
+> > > 2.50.1
+> > >
+> > >
