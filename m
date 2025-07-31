@@ -1,232 +1,164 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BDEA921
-	for <loongarch@lists.linux.dev>; Wed, 30 Jul 2025 13:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6163595A
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 01:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753881219; cv=none; b=MFsc8asvBfFm6ERFC2rzo50xZnne3INXsTDx5rMuuAwW99juIKeNrClf/7QTY3W8xdBga0+WBoRX4xa7K6mcdc2V91Pke9xSzJ3B00d+6jhv1r6K/DsiFkTy5zEh/qt+LlpCc3t8Q/+Jbmj8Bgrb5dQXWTV46m9CVqdkfqxQ9iQ=
+	t=1753926081; cv=none; b=aI0dKUTg4khmHnmVAVz+ARKHkAjBgUX/qg2mNeJY+mCWyBRRsQ/NYVauoAGlEFDBQJVk31dqZ3DuF3D6qzyKqwqi4JFiJGH/8BdHEgZuCqWB1JxNAdJ9muRv6vdCy/fWLDSjIIt6eXTqejOWtCgWJYcgQReW2tfmPv+JipYiQfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753881219; c=relaxed/simple;
-	bh=s2SFJKdX9ENPtxVodS2TvRTGzN4XABBgJcW6wnXoGtQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pZlyUw/uKkHDNvaNMRJiYBeGIes7sN0CEatonWfpYJCS6P64Fz2f2XeGZcMFmRalCPSu2SqFmKTcuO7gEKIXlB5QYp/qtI3Io6sR/W1mSEdltTNMAet/7a5H+gs26SibOt2vjWjjWbr0Jejb2TzmiMxjFvjS7E0IJY2AXWeRprQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: fd59ff1c6d4611f0b29709d653e92f7d-20250730
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
-	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:f50ad0ef-3db2-421d-bf79-3f952d5904d6,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.45,REQID:f50ad0ef-3db2-421d-bf79-3f952d5904d6,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:f6e644fb00daaf355476098d584512f5,BulkI
-	D:250730211334BS297NHW,BulkQuantity:0,Recheck:0,SF:17|19|24|38|44|66|78|81
-	|82|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS
-	:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,A
-	RC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: fd59ff1c6d4611f0b29709d653e92f7d-20250730
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 2002870157; Wed, 30 Jul 2025 21:13:31 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	yangtiezhu@loongson.cn,
-	hengqi.chen@gmail.com,
-	chenhuacai@kernel.org
-Cc: martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	kernel@xen0n.name,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	guodongtai@kylinos.cn,
-	duanchenghao@kylinos.cn,
-	youling.tang@linux.dev,
-	jianghaoran@kylinos.cn,
-	vincent.mc.li@gmail.com,
-	geliang@kernel.org
-Subject: [PATCH v5 5/5] LoongArch: BPF: Add struct ops support for trampoline
-Date: Wed, 30 Jul 2025 21:12:57 +0800
-Message-Id: <20250730131257.124153-6-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250730131257.124153-1-duanchenghao@kylinos.cn>
-References: <20250730131257.124153-1-duanchenghao@kylinos.cn>
+	s=arc-20240116; t=1753926081; c=relaxed/simple;
+	bh=tdhLpmgh+j5ElD6i+pbMjfeZfwTGuAl+Bo5yjdqEWDo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FnnI6VLQrwq3fiqI/NYZmAFLyDCdehkHl3wjHTs3FRKO5AVY1lc1ZaGJ6ecs+smmXY5qIULCVy3em73OeWbnJs2/u2c4VlI9BCcDCejdsV+srqK1rehR7Qa/zvTSX+MIkVzbUVLg29ncbODKyrc+OtCsKwKjQLl2+SFV2+wJXpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a6IUzwws; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6IUzwws"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2ea34731c5dso510437fac.0
+        for <loongarch@lists.linux.dev>; Wed, 30 Jul 2025 18:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753926078; x=1754530878; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fW77B+NyilRLW9+EkEB0yd2VhBMeDvYnsChu9AayKN8=;
+        b=a6IUzwws14JrhlP9fO8JABzR2I0NXqWY2Oxv22icj6zbdF6H+ty3/xPQwAmjqrWP6B
+         SlgvKizJZcbM2toeQDneRWhrYioYblUGZa2uVTAirVu2TQxHkBYA9IhEV+AQcgPVmLOT
+         s9ZcNHh4qEXACUAD2P6g2tT/e2axTdHr7nYvrHyQ3JXV/dWmH9YyEK9/xioxgEreAxHN
+         92WRWg6nfPiuTDielroDZBlq1c0OMWwrZtOdPbWtoPDgYkrw73ZtnEspmh45iEr3NHXI
+         OnGXEJddWm3bWv7xzcMVGOasukeB7hrUfYw77VPms1QB1BANnpvMViIJ1aKlE4RVDiKg
+         yRpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753926078; x=1754530878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fW77B+NyilRLW9+EkEB0yd2VhBMeDvYnsChu9AayKN8=;
+        b=GUzNqnxbB0twmupUVo8/xJUvUiywZqDRE/OH9p5pydAp0saMSy+zkEIc0ci5ulCjRH
+         L96H0yfG76/P369DqhTtA3ehavks4dQoRuVphn+7xP9E+zm4K+2+XMkxoAGi7jTlK5mT
+         6NGlKZZ6IOqtdtSVBPAj+wNtpXI2vxhJLiQwQEz7SJXkzdIy6zUG/RVAAGPUKyoLF9Sh
+         eulx2h8IvcVnTFIz7+9FRy8hC3eAIHKsHdGrNy5Nxh/9KREtQOVd6sH6yxnnF/1Zkaw8
+         OwUoRizHbgYC1bsB+hPWSvrx8uk0SFBBeHi22HyyXl8My7vTi52lwR9ONtfql7Fht9wa
+         lcrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKVhlg6fGgfNVFoJ+CTnvWUppGbEvYmH6n4rJyXLw6Xan65IoTrZ03KEhCBfsKvNgloTL4cTcnI0Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzAj7tgoKhoEUbdxRGP/It57K31y0VlRgXDvIU4mI87HX0YoQRf
+	OQZlYBWEUAeuEslfW2pbd7RtZ4dDp3E2WVkIqgLL5txcWes2XV9eCwBwvwfT8LE3EbNva0uVrGQ
+	cSUpdybVMzTeFTL/vLkcRREg8aySpQdg=
+X-Gm-Gg: ASbGncs8zQ8CFdMagMoq2cLpnkhQTqEpKBZVjkKOeR5+mU4pEZpQVRZAJ+F/XCpvYPr
+	nxlR7QpEt8wBtna9gB8BP/HL2GYfOfiZ0e+DNUNK43qolQgLMmlAdMl1J5xc51UGa3h82PBgBdM
+	qtpzvsJdVoLvc0GX3RpWfveekcrKGkk1xUv+8+LqPj7HBZwxZfRmb0X2+r/T6ZK9BLm4ry5l/Xz
+	PbZDkl0pANOa7BG2w==
+X-Google-Smtp-Source: AGHT+IGrwETmgwM/eaomky8/DWT5UsMd/7GLoLVGdUW9DDENQdNs73QE10nEsfnkG9YeUG3EETFAYGo5/JXi9CTKOeo=
+X-Received: by 2002:a05:6808:306d:b0:433:577c:cd3a with SMTP id
+ 5614622812f47-433577cd705mr91843b6e.3.1753926077634; Wed, 30 Jul 2025
+ 18:41:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250730131257.124153-1-duanchenghao@kylinos.cn> <20250730131257.124153-2-duanchenghao@kylinos.cn>
+In-Reply-To: <20250730131257.124153-2-duanchenghao@kylinos.cn>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Thu, 31 Jul 2025 09:41:05 +0800
+X-Gm-Features: Ac12FXwfHcYZyp7QvEszP3wp-X7El4czn0VKEBooVZAqU3sLFiaLx6SKAVVgtCs
+Message-ID: <CAEyhmHRUn1_ot5LzZ1ir9hLVJsnBW8j-jFDX7-VwsOTtWAG+1A@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] LoongArch: Add larch_insn_gen_{beq,bne} helpers
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn, 
+	vincent.mc.li@gmail.com, geliang@kernel.org, 
+	Youling Tang <tangyouling@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+On Wed, Jul 30, 2025 at 9:13=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos=
+.cn> wrote:
+>
+> Add larch_insn_gen_beq() and larch_insn_gen_bne() helpers which will
+> be used in BPF trampoline implementation.
+>
 
-Use BPF_TRAMP_F_INDIRECT flag to detect struct ops and emit proper
-prologue and epilogue for this case.
+Reviewed-by: Hengqi Chen <hengqi.chen@gmail.com>
 
-With this patch, all of the struct_ops related testcases (except
-struct_ops_multi_pages) passed on LoongArch.
-
-The testcase struct_ops_multi_pages failed is because the actual
-image_pages_cnt is 40 which is bigger than MAX_TRAMP_IMAGE_PAGES.
-
-Before:
-
-  $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
-  ...
-  WATCHDOG: test case struct_ops_module/struct_ops_load executes for 10 seconds...
-
-After:
-
-  $ sudo ./test_progs -t struct_ops -d struct_ops_multi_pages
-  ...
-  #15      bad_struct_ops:OK
-  ...
-  #399     struct_ops_autocreate:OK
-  ...
-  #400     struct_ops_kptr_return:OK
-  ...
-  #401     struct_ops_maybe_null:OK
-  ...
-  #402     struct_ops_module:OK
-  ...
-  #404     struct_ops_no_cfi:OK
-  ...
-  #405     struct_ops_private_stack:SKIP
-  ...
-  #406     struct_ops_refcounted:OK
-  Summary: 8/25 PASSED, 3 SKIPPED, 0 FAILED
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/net/bpf_jit.c | 71 ++++++++++++++++++++++++------------
- 1 file changed, 47 insertions(+), 24 deletions(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index eddf582e4..725c2d5ee 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1610,6 +1610,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 	struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
- 	struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
- 	struct bpf_tramp_links *fmod_ret = &tlinks[BPF_TRAMP_MODIFY_RETURN];
-+	bool is_struct_ops = flags & BPF_TRAMP_F_INDIRECT;
- 	int ret, save_ret;
- 	void *orig_call = func_addr;
- 	u32 **branches = NULL;
-@@ -1685,18 +1686,31 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 
- 	stack_size = round_up(stack_size, 16);
- 
--	/* For the trampoline called from function entry */
--	/* RA and FP for parent function*/
--	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
--	emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
--	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
--	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
--
--	/* RA and FP for traced function*/
--	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
--	emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
--	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
--	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-+	if (!is_struct_ops) {
-+		/*
-+		 * For the trampoline called from function entry,
-+		 * the frame of traced function and the frame of
-+		 * trampoline need to be considered.
-+		 */
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
-+		emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-+		emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
-+
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-+		emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-+		emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-+	} else {
-+		/*
-+		 * For the trampoline called directly, just handle
-+		 * the frame of trampoline.
-+		 */
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-+		emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, stack_size - 8);
-+		emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-+	}
- 
- 	/* callee saved register S1 to pass start time */
- 	emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-@@ -1786,21 +1800,30 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 
- 	emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
- 
--	/* trampoline called from function entry */
--	emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
--	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
--	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-+	if (!is_struct_ops) {
-+		/* trampoline called from function entry */
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-+
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
- 
--	emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
--	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
--	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
-+		if (flags & BPF_TRAMP_F_SKIP_FRAME)
-+			/* return to parent function */
-+			emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
-+		else
-+			/* return to traced function */
-+			emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-+	} else {
-+		/* trampoline called directly */
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, stack_size - 8);
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
- 
--	if (flags & BPF_TRAMP_F_SKIP_FRAME)
--		/* return to parent function */
- 		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
--	else
--		/* return to traced function */
--		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-+	}
- 
- 	ret = ctx->idx;
- out:
--- 
-2.25.1
-
+> Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Co-developed-by: Youling Tang <tangyouling@kylinos.cn>
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> ---
+>  arch/loongarch/include/asm/inst.h |  2 ++
+>  arch/loongarch/kernel/inst.c      | 28 ++++++++++++++++++++++++++++
+>  2 files changed, 30 insertions(+)
+>
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
+sm/inst.h
+> index 3089785ca..2ae96a35d 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -511,6 +511,8 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int =
+imm);
+>  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
+>  u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, =
+int imm);
+>  u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, in=
+t imm);
+> +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
+ imm);
+> +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
+ imm);
+>
+>  static inline bool signed_imm_check(long val, unsigned int bit)
+>  {
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index 14d7d700b..674e3b322 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -336,3 +336,31 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum =
+loongarch_gpr rj, int imm)
+>
+>         return insn.word;
+>  }
+> +
+> +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
+ imm)
+> +{
+> +       union loongarch_instruction insn;
+> +
+> +       if ((imm & 3) || imm < -SZ_128K || imm >=3D SZ_128K) {
+> +               pr_warn("The generated beq instruction is out of range.\n=
+");
+> +               return INSN_BREAK;
+> +       }
+> +
+> +       emit_beq(&insn, rj, rd, imm >> 2);
+> +
+> +       return insn.word;
+> +}
+> +
+> +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int=
+ imm)
+> +{
+> +       union loongarch_instruction insn;
+> +
+> +       if ((imm & 3) || imm < -SZ_128K || imm >=3D SZ_128K) {
+> +               pr_warn("The generated bne instruction is out of range.\n=
+");
+> +               return INSN_BREAK;
+> +       }
+> +
+> +       emit_bne(&insn, rj, rd, imm >> 2);
+> +
+> +       return insn.word;
+> +}
+> --
+> 2.25.1
+>
