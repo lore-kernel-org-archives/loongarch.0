@@ -1,91 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB12295531
-	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 07:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EC81F1522
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 07:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753945942; cv=none; b=LqZRYNmkHgUvxrxE/eO4TpgCQ+2tSvc+m4Q24aa4EiFOF0faXnfjlHdF08SUrsOiDuJhpM60Q4l7Ty0RUd8Dl0hkaDAL3aeddPSjtoTIqMJyFVbmi+Y3c8m8GDa0WMFIaFTGEJprdJp/5vWZg+ZxmHxlmFkdkJsKFgsPdAFr4xU=
+	t=1753946265; cv=none; b=i73eW1/VX3rOzzVN+wB0GI7JZkrxHrg2rUeb7+xG1OxSIm9VMBYJgPhKzJYVKn1R249Pv4eS6eTpN/AutKcDmfOb87lvkP0kIegVZzAeKpVkvLCrkYgJ/qmjbigYRgqK5dTVcN9+aeNpsHg/Mw7wa0RuF1SpQYwOaBirmyGRX6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753945942; c=relaxed/simple;
-	bh=a+xHukzxRgs/rss8W96lyEJe35XG0W1n2bm7t0wj9dU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RFQv8FOfEn6k3fCqP3gkyTYgYJunvjmiZy43l4ZSxy+p0QfIJCT7P/m7tG2ns6Xdx4M95z9a2gdEu1mY1y3DmRSSeNCVT5CcHvGJAKYVXYURDID7+N5LQtEaZSoHDuLpctgFaTuXgSsNS7Fu6cL4Ml/uFRah7h2Tp8fPz4BxFAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ettOLP3j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753946265; c=relaxed/simple;
+	bh=XhYZ+9qu63rJGO0+QusQX5MALTCF4ivx1NDh8kfwvb4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j+0YehiqGs3yogAXpZ1DU0ekUy2aSMhp+AdlRGyDKDq0+XV8omp78NMdB/RaZI69V8/aweiRmpVRU/zeo1u1IDra+E8g+eFqxZHdPetsYlbnfmAoCMJWKjp9F1JrXVtw2l9a0XYjG6vTrdiUWlBU+fFbvZk+cQS1gLZaQRs0FSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Dx0ZP54W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1O9v+dI6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Dx0ZP54W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1O9v+dI6; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ettOLP3j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EC46C4CEEF
-	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 07:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753945941;
-	bh=a+xHukzxRgs/rss8W96lyEJe35XG0W1n2bm7t0wj9dU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ettOLP3jvJDV/uESWDMyDHAe7eaHWg7VHfowVCMvy8CIXtK+KaSnpMTlVnzUV1xaw
-	 1qcCSojDtflYSFQwbEXeeBjK6fTzsjymng+7+2xN1JOrEwv2n1QLrtKLk0rZZxqOaB
-	 eS36cD5KqJb9tupZ2jJM1Ncmzfi2jeanNi4aYIMzv2Qx83lQmSp6b7XN8PRFcVbYfx
-	 cWi2JZm3jQNDzO0UerPLlni9JDcBeTTYb2fme1K+wyw16tKN8Sm5FcZKId4/n5Rwk5
-	 QPCwrrbdZE2AkKDO85smosRqJ+Y56llRMqGzHNd6Y+B2G3evn8vvACnG8PWQAeAPGH
-	 rJosnmIxhQjQQ==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ae401ebcbc4so10473666b.1
-        for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 00:12:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW9fAQrgpJeFEoakjQ9brdOswHJ9QP6sJgiVkXvOUV9VX9GHFcgr7On31uxfQdfL4GCLDgyICSCnzY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwEKAe3lCQAGlySbeof6RsSAYqqzdtC8/hBfnj/HVLPkfAxIJiH
-	gxm66/tBcbUbXYXhNmlC2HM/hsEacfjyqDV/ZGyx55CVNa7HGgSFyaE8cPxwOVAosT9HZCejfSs
-	Bml5heNX+PLX9TCdxraUS51+mLLOyl4M=
-X-Google-Smtp-Source: AGHT+IH0P2lLYOyvOQx/GU1OTqxpktOyFDmxeoT9gk4gipfEZfCNP+byqLnd2/DhVEg4bNwecB0IeZcFujbLdfOQFUw=
-X-Received: by 2002:a17:907:86a6:b0:aeb:3df1:2e75 with SMTP id
- a640c23a62f3a-af8fd9b9e59mr685307966b.46.1753945940115; Thu, 31 Jul 2025
- 00:12:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Dx0ZP54W";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1O9v+dI6";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Dx0ZP54W";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1O9v+dI6"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1BEE521B51;
+	Thu, 31 Jul 2025 07:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1753946262; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eB0kmbLCMq1EwC5ZFQi619+FWDMNBXnYYxgR2C8x77E=;
+	b=Dx0ZP54WXAoQsk0yPdZhSI6ofAUxfHLEYYT3/QrIUbgnLxfm6AI0u3LU+TvUfzoq3A2bxx
+	2pJzUq7hftnD+pRgFw2eoMhIWWt1MIXUYhsBZaEQlYkdmYJG8fnNPGzFs2ZA2vP6CRVXPf
+	rWnqN+FioPCb4ORR6rwdRxoUW7oZMIE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1753946262;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eB0kmbLCMq1EwC5ZFQi619+FWDMNBXnYYxgR2C8x77E=;
+	b=1O9v+dI6PL7Viloy5J9UNuMVXl59E0712hf+cNIeW7ePEp+ZkTS653MGWopDOjNTxp0Uvt
+	KG2Il/4eFMctRYAA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1753946262; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eB0kmbLCMq1EwC5ZFQi619+FWDMNBXnYYxgR2C8x77E=;
+	b=Dx0ZP54WXAoQsk0yPdZhSI6ofAUxfHLEYYT3/QrIUbgnLxfm6AI0u3LU+TvUfzoq3A2bxx
+	2pJzUq7hftnD+pRgFw2eoMhIWWt1MIXUYhsBZaEQlYkdmYJG8fnNPGzFs2ZA2vP6CRVXPf
+	rWnqN+FioPCb4ORR6rwdRxoUW7oZMIE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1753946262;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eB0kmbLCMq1EwC5ZFQi619+FWDMNBXnYYxgR2C8x77E=;
+	b=1O9v+dI6PL7Viloy5J9UNuMVXl59E0712hf+cNIeW7ePEp+ZkTS653MGWopDOjNTxp0Uvt
+	KG2Il/4eFMctRYAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E26C513A43;
+	Thu, 31 Jul 2025 07:17:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EqppNZUYi2h7bQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 31 Jul 2025 07:17:41 +0000
+Date: Thu, 31 Jul 2025 09:17:41 +0200
+Message-ID: <87seicsuay.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH 2/3] LoongArch: Update HD-audio codec configs
+In-Reply-To: <CAAhV-H5TC0jYbqu2M0CXEJ+80Svonrg8VHOF-ygb=ff7kWHX6g@mail.gmail.com>
+References: <20250731064813.1622-1-tiwai@suse.de>
+	<20250731064813.1622-3-tiwai@suse.de>
+	<CAAhV-H5p6-oHtbbo_9P8oZJogZTxgeY2cmc0usuefZBmE-4buA@mail.gmail.com>
+	<87wm7osurw.wl-tiwai@suse.de>
+	<CAAhV-H5TC0jYbqu2M0CXEJ+80Svonrg8VHOF-ygb=ff7kWHX6g@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20250731064813.1622-1-tiwai@suse.de> <20250731064813.1622-3-tiwai@suse.de>
- <CAAhV-H5p6-oHtbbo_9P8oZJogZTxgeY2cmc0usuefZBmE-4buA@mail.gmail.com> <87wm7osurw.wl-tiwai@suse.de>
-In-Reply-To: <87wm7osurw.wl-tiwai@suse.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 31 Jul 2025 15:12:06 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5TC0jYbqu2M0CXEJ+80Svonrg8VHOF-ygb=ff7kWHX6g@mail.gmail.com>
-X-Gm-Features: Ac12FXycyuppluWyhvn7X-gl_son17HRBqi4ZmcvmcdEtiT5O4L4UwNb47BU84E
-Message-ID: <CAAhV-H5TC0jYbqu2M0CXEJ+80Svonrg8VHOF-ygb=ff7kWHX6g@mail.gmail.com>
-Subject: Re: [PATCH 2/3] LoongArch: Update HD-audio codec configs
-To: Takashi Iwai <tiwai@suse.de>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -3.30
 
-On Thu, Jul 31, 2025 at 3:07=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wrote:
->
-> On Thu, 31 Jul 2025 09:05:04 +0200,
-> Huacai Chen wrote:
+On Thu, 31 Jul 2025 09:12:06 +0200,
+Huacai Chen wrote:
+> 
+> On Thu, Jul 31, 2025 at 3:07 PM Takashi Iwai <tiwai@suse.de> wrote:
 > >
-> > Hi, Takashi,
+> > On Thu, 31 Jul 2025 09:05:04 +0200,
+> > Huacai Chen wrote:
+> > >
+> > > Hi, Takashi,
+> > >
+> > > On Thu, Jul 31, 2025 at 2:49 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > > >
+> > > > The HD-audio codec driver configs have been updated again the drivers
+> > > > got split with different kconfigs.  Add the missing items.
+> > > >
+> > > > Fixes: 1d8dd982c409 ("ALSA: hda/realtek: Enable drivers as default")
+> > > > Fixes: 81231ad173d8 ("ALSA: hda/hdmi: Enable drivers as default")
+> > > > Cc: loongarch@lists.linux.dev
+> > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > I prefer to select all Realtek/HDMI codecs (except
+> > > CONFIG_SND_HDA_CODEC_HDMI_NVIDIA_MCP and
+> > > CONFIG_SND_HDA_CODEC_HDMI_TEGRA).
 > >
-> > On Thu, Jul 31, 2025 at 2:49=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wr=
-ote:
-> > >
-> > > The HD-audio codec driver configs have been updated again the drivers
-> > > got split with different kconfigs.  Add the missing items.
-> > >
-> > > Fixes: 1d8dd982c409 ("ALSA: hda/realtek: Enable drivers as default")
-> > > Fixes: 81231ad173d8 ("ALSA: hda/hdmi: Enable drivers as default")
-> > > Cc: loongarch@lists.linux.dev
-> > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> > I prefer to select all Realtek/HDMI codecs (except
-> > CONFIG_SND_HDA_CODEC_HDMI_NVIDIA_MCP and
-> > CONFIG_SND_HDA_CODEC_HDMI_TEGRA).
->
-> OK, I'll refresh later.
-Also for the MIPS/loongson, thanks. :)
+> > OK, I'll refresh later.
+> Also for the MIPS/loongson, thanks. :)
 
-Huacai
+OK.
 
->
->
-> thanks,
->
-> Takashi
->
+arch/mips/configs/loongson2k_defconfig has no selection of HDMI
+codecs.  I don't need to select HDMI codec drivers there, right?
+
+
+Takashi
