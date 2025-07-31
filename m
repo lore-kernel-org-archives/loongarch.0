@@ -1,95 +1,116 @@
-Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.154.197.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B852206B2
-	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 09:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.154.197.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695132206B2
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 09:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753954282; cv=none; b=D3oRcBcsdE9X1yPz5tuYfLsiq0+BXHX+gDlhjkRZj01Gj7ty0xEJNCA8EDsto1eR6pHjY0xQ5iJpzMZnsc0H7lKCU/wpCH8wicNwM7/gxdODDF1bKhjq+5ompVWdupLg3Jx+25Ybeu8DaI8r0yJIBlTtPHBMtkN4Da8OO3PCxdk=
+	t=1753954431; cv=none; b=oJP4IAW7SUcIIF70hKu+94ld+IpsvRwOkzoeP2Sd2xGbsQkTYd7z+A7r9RoSruso5kLWlfGWEaCgPHfMgZdA0h5S+fvvdzTAfT8SVGz8wjpMvW6tguKsAtFvBBAhydEl51SwRtXgTWeJ84DDiEdAD/sOC3S85ZkMW+/Tl8An+R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753954282; c=relaxed/simple;
-	bh=+4UFIb11PcuMQKSx8oTsCEXmWQmy0KqA/BRL69pqq6U=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=Z70E08sIUJI9wrXvNOmK0I6PpuP4t2vk0BGNawapPhWGdJq/sWInaK/XNGiOuOUVbPAu23CT2mKImEep3GGrtGJH1/e1uOEy3rMx0KwnM1uClplFefpzggPFNelUsetbJUbA1DiiQjsD1RBp0PPMq+uR5zv4/B9NGVQUnwyqwBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=NaaP26FL; arc=none smtp.client-ip=43.154.197.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1753954431; c=relaxed/simple;
+	bh=3Po5tHY8wyiv0YK9aucd+EfDUJHpZK5a1SS7q68vnLg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HJA4aId04sLJEqJH5yTqYNsA1+nVWp/nXnPhYGJQEWIHVnQ8LhXnqYShN95QR/GTBZSEwTJgLH13stoTeCawkB4NnlWJhpAzdd3NO+hcQmx8s+7wIzYsPsK9s+mzUUjbuixY7S2pHtjaIkgmMUQ9luNRGHIR+PhJ6o5T57Yr59w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OfUYCM0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="NaaP26FL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1753954229;
-	bh=+4UFIb11PcuMQKSx8oTsCEXmWQmy0KqA/BRL69pqq6U=;
-	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=NaaP26FLobMu+sh6wIqi7qxgLIuPnzB4CRrzFhFCX4Tf2MVJLX7xo1p2diG3vXLXb
-	 zB1ka4NfZa/KimgxtR0lIWDrmQjDa6TebZXqAQGpQsaEIUhAHwvmLf9RX3lGCWUyN2
-	 PkT+2oWR1vK021EQpNUbnC88HJmVQtxhRooS9f40=
-EX-QQ-RecipientCnt: 6
-X-QQ-GoodBg: 2
-X-QQ-SSF: 00400000000000F0
-X-QQ-FEAT: D4aqtcRDiqST8P4pfj07qGG6ZowgZlQrBrKFg+dHp6U=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: 9w57OOO5FF5cXB6+6BHQCQz7t5/qQaujCSyd1aXWj3o=
-X-QQ-STYLE: 
-X-QQ-mid: lv3sz3a-6t1753954225tc6a4d04b
-From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?WWFudGVuZyBTaQ==?=" <siyanteng@cqsoftware.com.cn>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
-Cc: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?amlheHVuLnlhbmc=?=" <jiaxun.yang@flygoat.com>, "=?utf-8?B?eWlqdW4=?=" <yijun@loongson.cn>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?WWFudGVuZyBTaQ==?=" <siyanteng@cqsoftware.com.cn>
-Subject: Re:[PATCH] LoongArch: CSR: Complete KSave registers definition
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OfUYCM0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F48AC4CEEF
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 09:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753954431;
+	bh=3Po5tHY8wyiv0YK9aucd+EfDUJHpZK5a1SS7q68vnLg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OfUYCM0DSsszsG3g9EODqft28MhI0bNcO4hBZR5UPovhaBWN0DJRFjpJb3L02S5Im
+	 PWdY8c8rDe3NMv36Nw+gglz16AAEt2VtukfVgCC0enSlrCCuzoFuvxo+R+B/8WThiE
+	 kx4MIMXDaDZM05vgKWs3txq7dHUdRtan7q5+JLyhgNbxkyiRbzB2vqz4LOenhjen4Y
+	 QbC/vrBNcIBR2A6UHcY5igncji24fMMFWijGnwtgc/soZQgFfwkbLcaExCkX+ICyI1
+	 l4NBzK6KjpFxG6zoZ0NdtbjhVdiLsT1ovu4CM9oatIRGIyRuhY3C9zMLfPL5i7f+dA
+	 nvy+ByP0nnuew==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so320574a12.2
+        for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 02:33:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU/L/w+3u7UkW5RMCNcRwb5/770cXrm53yG6IlGiz08RMtjTVYY4OR06yUwQ0welsU/KaiqNOhWOcA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwHVEtfdWiuwlhxOg9RMmyUe3j62kdSxhAYUQbG3Odf9ZDL66MR
+	nZF3Ag58ywjuz6hwBP4qLYXoYgJ563RHDoSWDSFpZD3aNxo5QYZ+w7RbtWIYLO8P+U35ncMF+nx
+	BHs920Frshl8vXQhoXyd2Tr6EabLZr6E=
+X-Google-Smtp-Source: AGHT+IFpmRkfc0sDZTQd2YRkLR11vNPRxlOCCU/3GXiQpX362B+CoYeol5yvnHniEzFD98M+WuD53WHNgOFZc330ozo=
+X-Received: by 2002:aa7:d9cc:0:b0:615:4d3a:9330 with SMTP id
+ 4fb4d7f45d1cf-61586f1e61amr5714287a12.14.1753954429645; Thu, 31 Jul 2025
+ 02:33:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Thu, 31 Jul 2025 09:30:24 +0000
-X-Priority: 3
-Message-ID: <tencent_561EDC7155FE49AB4553AF12@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <20250725103624.69247-1-siyanteng@cqsoftware.com.cn>
-In-Reply-To: <20250725103624.69247-1-siyanteng@cqsoftware.com.cn>
-X-QQ-ReplyHash: 3597567530
-X-BIZMAIL-ID: 6575991458928444153
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Thu, 31 Jul 2025 17:30:26 +0800 (CST)
-Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NRN3UPsLzYKVL1qhsBQSr50EyNQYDiw2qz7GEauZTHXq+XoZdantdjA4
-	xSrkBUhJcIAZqJJQ2JNkJdfO5HevBnKssLn84xjrrZqEi6rYY2Z9go07q0EREvUWCPSDsrz
-	Rbr8idehjud7zCV7NWyddttW+gqHbWCysKFSsTbT7oQukopqAzqL8JsgjrL1aDbiTPz7tdT
-	7cGbHFAHenAkD3O3M8q9V+P9qgEBTyGJixndlV+n3OSVALTxNuHYvKDK0xwIWiXnEsmrzPE
-	Fb81/lOYE+oFBTmPW1JsyUxG/Tui4m/yntwLvpuOOQ8CySTOTXUmHuDervFe9SfFI0lP1Gs
-	RPe1sHtTIgD+WVFEVCiIKokAEOA0bz+bxCuzObGuz7xR/hSxOAiN4rPhndrTHcNob6fgOlG
-	hdNYTvm7OEWgJuCOPGqC8OW+8KiyCWeYdYD80klB6M0ywsJTAi8LRQvhW8bG9EMM77OkrpR
-	r34JlHqvQ4n4gS72lC+r9+f+qCBfMns/uqhkxudC8ri84i6Xl5JwVl4M8tueEqbBjDmsxlF
-	lxOpGL3uxiP3hjhsYyeuFplCcLsbKUhdCNMmWvq+9EuEg6FpjrgSBKP+33mtjuEKsAeTyUz
-	tSYdrdGgi9CGkqiEs6l/5EmGOL/jzw9U7hupFF8X9/67eiji3rBZGyszLq/MSiiolPe1fXX
-	KTuyHBZ6gz0VUdOYT+r5+c4lC8rLTc9yNTXJ5s+2iMDJ2tGmNZREd6fbePIe9Ulxgm2ovVb
-	w3hUXWMiEOk30+9ut/8k0Y98dPyob3uhSZ3SRmkkTTKn36zmkSs4jwGLREngG395AWseJz4
-	Ym1Eh16aoInKEq3YqJmI63hQaXKeI4b08gvoVr4+rqsRvVFj9+0Yw/9RJV8jZB35Ojojy1f
-	CwmJgZNWXEfdfOR+EOWx09QvLIm+GNDQau9UkDVNnv6PSa7eqji8IFRLCtAtDMapLpwRdCW
-	sCn3aJnIfVOXu0EIODSd4t7JswcmnOoUToJvnbftMVGMcmhoDfZbiDOuwWaGwfuE2Or+c8R
-	qSB/C9u1Jf35u06b94FA+iaOmg/KSlsTPv4Pn7lw==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+References: <20250731091109.16901-1-tiwai@suse.de> <20250731091109.16901-3-tiwai@suse.de>
+In-Reply-To: <20250731091109.16901-3-tiwai@suse.de>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 31 Jul 2025 17:33:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6uDytXrsWv43uxNic9PH=ed1M3=29LTqCoYxzNdESkfw@mail.gmail.com>
+X-Gm-Features: Ac12FXxenkxSHPDvVtvVV3LnqeNQPfWYDzIG90vtnWDotY17M1HmFmclI8OUeBA
+Message-ID: <CAAhV-H6uDytXrsWv43uxNic9PH=ed1M3=29LTqCoYxzNdESkfw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] LoongArch: Update HD-audio codec configs
+To: Takashi Iwai <tiwai@suse.de>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGVsbG8gWWFudGVuZzoNCg0KQXMgdGhlIG1hbnVhbCBzYXkgYmVsb3csIA0KIlRoZSBtaW5p
-bXVtIG51bWJlciBvZiBkYXRhIHNhdmUgcmVnaXN0ZXJzIGlzIDEsIGFuZCB0aGUgbWF4aW11
-bSBudW1iZXIgaXMgMTYuIg0KSSBzZWFyY2ggdGhlIHByZWZpeCBwYXR0ZXJuICJMT09OR0FS
-Q0hfQ1NSX0tTIiBpbiB2Ni4xNiBrZXJuZWwgc291cmNlLA0KdGhlIEtTMC1LUzcgaGFzIGJl
-ZW4gdXNlZCwgaWYgaGFyZHdhcmUgc3VwcG9ydCBpdCwgYWRkIGl0IGxvb2sgb2suDQo8Qnkg
-dGhlIHdheSwgdGhlIEtTOCBkZWZpbmVkIGlzIHN0cmFuZ2UsIGl0IGRlZmluZWQgYnV0IG5v
-dCB1c2VkLCBpIGRvbmB0IGtub3cgd2h5Lj4NCg0KTm90ZSB0aGF0IGFzIG1hbnVhbCB2MS4x
-MCB2NC4yLjEgc2F5Og0KIldoZW4gYSBDU1IgYWNjZXNzIGluc3RydWN0aW9uIGFjY2Vzc2Vz
-IGEgQ1NSIHRoYXQgDQppcyBub3QgZGVmaW5lZCBpbiB0aGUgYXJjaGl0ZWN0dXJlIG9yIG5v
-dCBpbXBsZW1lbnRlZCBpbiBoYXJkd2FyZSwgDQp0aGUgcmVhZCBvcGVyYXRpb24gcmV0dXJu
-cyBhbiBhbGwgMCB2YWx1ZXMgYW5kIA0KdGhlIHdyaXRlIG9wZXJhdGlvbiBkb2VzIG5vdCBt
-b2RpZnkgYW55IHNvZnR3YXJlLXZpc2libGUgc3RhdGUgb2YgdGhlIHByb2Nlc3Nvci4iDQpS
-ZXZpZXdlZC1ieTogV2VudGFvIEd1YW4gPGd1YW53ZW50YW9AdW5pb250ZWNoLmNvbT4NCg0K
-QlJzDQpXZW50YW8gR3Vhbg==
+On Thu, Jul 31, 2025 at 5:11=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wrote:
+>
+> The HD-audio codec driver configs have been updated again the drivers
+> got split with different kconfigs.
+I'm sorry for making noise, but is SND_HDA_INTEL_HDMI_SILENT_STREAM
+needed for common use? If yes, I also prefer it be enabled.
 
+Huacai
+
+>
+> Enable all Realtek HD-audio codecs and HDMI codecs (except for
+> NVIDIA_MCP and TEGRA) per request.
+>
+> Fixes: 1d8dd982c409 ("ALSA: hda/realtek: Enable drivers as default")
+> Fixes: 81231ad173d8 ("ALSA: hda/hdmi: Enable drivers as default")
+> Cc: loongarch@lists.linux.dev
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> ---
+> v1->v2: enable all Realtek codecs and most of HDMI codecs
+>
+> The changes are only in sound.git tree, so I'll pick up this there, too
+>
+>  arch/loongarch/configs/loongson3_defconfig | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/=
+configs/loongson3_defconfig
+> index 0d59af6007b7..7993020ffebb 100644
+> --- a/arch/loongarch/configs/loongson3_defconfig
+> +++ b/arch/loongarch/configs/loongson3_defconfig
+> @@ -784,8 +784,23 @@ CONFIG_SND_HDA_HWDEP=3Dy
+>  CONFIG_SND_HDA_INPUT_BEEP=3Dy
+>  CONFIG_SND_HDA_PATCH_LOADER=3Dy
+>  CONFIG_SND_HDA_CODEC_REALTEK=3Dy
+> +CONFIG_SND_HDA_CODEC_REALTEK_LIB=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC260=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC262=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC268=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC269=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC662=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC680=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC861=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC861VD=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC880=3Dy
+> +CONFIG_SND_HDA_CODEC_ALC882=3Dy
+>  CONFIG_SND_HDA_CODEC_SIGMATEL=3Dy
+>  CONFIG_SND_HDA_CODEC_HDMI=3Dy
+> +CONFIG_SND_HDA_CODEC_HDMI_GENERIC=3Dy
+> +CONFIG_SND_HDA_CODEC_HDMI_INTEL=3Dy
+> +CONFIG_SND_HDA_CODEC_HDMI_ATI=3Dy
+> +CONFIG_SND_HDA_CODEC_HDMI_NVIDIA=3Dy
+>  CONFIG_SND_HDA_CODEC_CONEXANT=3Dy
+>  CONFIG_SND_USB_AUDIO=3Dm
+>  CONFIG_SND_SOC=3Dm
+> --
+> 2.50.1
+>
+>
