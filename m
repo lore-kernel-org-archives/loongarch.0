@@ -1,85 +1,85 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 107C223643E
-	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 02:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CECB23A578
+	for <loongarch@lists.linux.dev>; Thu, 31 Jul 2025 02:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753929003; cv=none; b=pLBgTs6+H2G55EqtslhC8Z+oSIWm8XrOp8otlBvzX2ozJbGxlFOb+I1tk9Rd1cN7Na5sdF4z+zTMLzdx4z1rj6P0O7LgBWSP5gQuFgbH1SliMHDDo0pD3rsBG/jjgm9zvqTTFJRrv1FmIhe8pvFnQpZwUmLEKYrb3j24ohU3igM=
+	t=1753929031; cv=none; b=CpVCaM3An+4aMgQErUo4hTCEu3Y7Ly0qNTbOpbuiCAe5s4dj8GlRQgV29pp4Z3Ps/2vXvrVL6rpQLuKRGeIyBecRjoaTKqkimUiFYssld2rE+IvwDlAg2hFJoNzlLV1iAbzAhBYccdc+z32K/N/MS1aQXp83VRFdiZAXNz0JVjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753929003; c=relaxed/simple;
-	bh=rCuSpTGnsvHcj24lVJMV3BUvZWXicvV+Sdo/ybFRY5U=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=N5wJ855UAbY83vaVHcGOC6u7iSP6ED/g92MyyBkvIUSiD5ZmvjavvE3SniWw6+bXogQKcxRoPCICbzUtdB63BvMWpJJAplPdbjwo8OKWMo1WtGXYqT9X81JZjRD1b1YHZ6V+4b5ZTSq8z5uGq2o5aBAtn1VE56wXzuvVB4m6k0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxJHAb1Ypo0p41AQ--.452S3;
-	Thu, 31 Jul 2025 10:29:47 +0800 (CST)
-Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxE+QY1Ypo7bcuAA--.37610S3;
-	Thu, 31 Jul 2025 10:29:45 +0800 (CST)
+	s=arc-20240116; t=1753929031; c=relaxed/simple;
+	bh=WXtX3eKHJBxlucYmmqLR64PhJA6HcWf6gkWb0smL0oc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lk7wln3SCWYvEN7CiQ+/ZydqKuK7hx9nunnCOSXlMyyvL59JyAremfjF1M2dHVu3EMG4k8/24HcrbweTqp9Kgrzbl6u3Tt59z4WWdZgAuIJCZz5eG7UuY95RZfQ7qgCLofPpR8/4O+AoN3BWZcqyIZrHaVSSOq4sZI3BbttIAS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4f2319366db611f0b29709d653e92f7d-20250731
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:276455f0-f68b-4ea5-8df2-a6fe12529ece,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:6
+X-CID-INFO: VERSION:1.1.45,REQID:276455f0-f68b-4ea5-8df2-a6fe12529ece,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:6
+X-CID-META: VersionHash:6493067,CLOUDID:94de684a21d748a2aa6767a278d8fe90,BulkI
+	D:250731102951I0I94QDZ,BulkQuantity:1,Recheck:0,SF:17|19|24|45|64|66|78|80
+	|81|82|83|102|841,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT:ni
+	l,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,B
+	RR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULS,
+	TF_CID_SPAM_SNR
+X-UUID: 4f2319366db611f0b29709d653e92f7d-20250731
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1326998802; Thu, 31 Jul 2025 10:30:22 +0800
+Date: Thu, 31 Jul 2025 10:29:58 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Vincent Li <vincent.mc.li@gmail.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev
 Subject: Re: bpf selftest build error - undeclared function
  'bpf_qdisc_skb_drop'
-To: Vincent Li <vincent.mc.li@gmail.com>,
- Chenghao Duan <duanchenghao@kylinos.cn>, loongarch@lists.linux.dev
+Message-ID: <20250731022958.GA190477@chenghao-pc>
 References: <CAK3+h2z3Zx+0KbVcRbLuz_-LhBwov9Bmvp9HdumbaN5GYtovFg@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <0fe044d3-f36a-d7a7-3ce3-237da83eaea2@loongson.cn>
-Date: Thu, 31 Jul 2025 10:29:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 In-Reply-To: <CAK3+h2z3Zx+0KbVcRbLuz_-LhBwov9Bmvp9HdumbaN5GYtovFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxE+QY1Ypo7bcuAA--.37610S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XFyrGr1kWFWxuF1DJF1rXwc_yoW3uFcE9r
-	n3W3Wqyw4rXw48Jw129F1fZr93GrySvFyFyw48trZ3A345u3yDtw1YgFZ5ZrWkAw43Waya
-	yFnavFs8ArW29osvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqW
-	UUUUU
 
-On 2025/7/31 上午10:21, Vincent Li wrote:
+On Wed, Jul 30, 2025 at 07:21:52PM -0700, Vincent Li wrote:
 > Hi Tiezhu and Chenghao,
 > 
 > While attempting to test the bpf trampoline patches on loongarch on
 > top of https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git,
->   I ran into bpf selftest build error irrelevant to the bpf trampoline
+>  I ran into bpf selftest build error irrelevant to the bpf trampoline
 > 
->    CLNG-BPF [test_progs] bpf_qdisc_fail__incompl_ops.bpf.o
+>   CLNG-BPF [test_progs] bpf_qdisc_fail__incompl_ops.bpf.o
 > progs/bpf_qdisc_fail__incompl_ops.c:13:2: error: call to undeclared
 > function 'bpf_qdisc_skb_drop'; ISO C99 and later do not support
 > implicit function declarations [-Wimplicit-function-declaration]
->     13 |         bpf_qdisc_skb_drop(skb, to_free);
->        |         ^
+>    13 |         bpf_qdisc_skb_drop(skb, to_free);
+>       |         ^
+> 
+> I am on Fedora 38 ( I should have updated to newer Fedora :)) with
+> clang version 18.1.0rc, not sure if it is related, wonder if you guys
+> have run into similar issues.
+> 
+> Vincent
 
-Please enable CONFIG_NET_SCH_BPF.
+Hi Vincent,
 
-net/sched/bpf_qdisc.c
-bpf_qdisc_skb_drop()
+Yes, I have encountered a similar issue. My approach is to temporarily
+block or comment out the test code that is unrelated to the trampoline
+test.
 
-net/sched/Makefile
-obj-$(CONFIG_NET_SCH_BPF)	+= bpf_qdisc.o
-
-Thanks,
-Tiezhu
-
+Chenghao
