@@ -1,101 +1,130 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADF7FE571
-	for <loongarch@lists.linux.dev>; Sat,  2 Aug 2025 09:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271E0149DF0
+	for <loongarch@lists.linux.dev>; Sat,  2 Aug 2025 13:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754126360; cv=none; b=TgMxfZ7nplqGS2hDqZcTj3TXiQf25SN/A0itFFZpygQ1YNUsZFnbGB+mJefhCrXgKb/w03dOqmk7Ei5FhYnfcJmVkJ/erpOgrjfjR3zxqRbQ6Ff6AYT9gi5VKpkcbnsIpWareiYyntlgrZ8PVhDQUnJ/L8Pay/A5xjdeMTi5VRI=
+	t=1754142830; cv=none; b=Omjlt1Yf4BGv1m/42H2JuO5+ie2+laGKzAAcYfu/GRZglz8zNI+u5h5KqR61hASkd7cp7Q2G55DbKMzDfRcocBOkNiLZnzPF16I6BGcz4tLosjbQvMfoHlvaSzWReqxarw3dkUBHwn+Fty1AKTUkA7+la3AAl09Zs/qqH0meSRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754126360; c=relaxed/simple;
-	bh=QHPiuFf9FIAvZsIXnfqQ7FZaiuJZqVnyac5isXKsqfc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WAVv2JQt9K1LGLx10bZtykYp6QvNjGEUUROBWCXYK1m6yv4GbFjXqUEMmvgXYTYJhlc9MO6xn/iUPIEZg43QNjR1m7F81jKPkp6HIUFBXAxPuLtmhiqcg2yTHzDZFvECfpCeW1PffZUvSg5k/zFBcdjldseKRxe8ztgpqtB5N+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxaWoM2I1ogkE3AQ--.47941S3;
-	Sat, 02 Aug 2025 17:19:08 +0800 (CST)
-Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxH8IJ2I1o0jIyAA--.64402S3;
-	Sat, 02 Aug 2025 17:19:06 +0800 (CST)
-Subject: Re: [PATCH v5 0/5] Support trampoline for LoongArch
-To: Vincent Li <vincent.mc.li@gmail.com>,
- Chenghao Duan <duanchenghao@kylinos.cn>
-Cc: hengqi.chen@gmail.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev, guodongtai@kylinos.cn, youling.tang@linux.dev,
- jianghaoran@kylinos.cn, geliang@kernel.org
-References: <20250730131257.124153-1-duanchenghao@kylinos.cn>
- <CAK3+h2wG-++Np7e-CZMbdjkL9tbuRi4bx+DP4RzLvJqu_+UY8A@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <84789726-18a6-b46f-3ece-f887599ccf4a@loongson.cn>
-Date: Sat, 2 Aug 2025 17:19:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1754142830; c=relaxed/simple;
+	bh=Ld3Ra23KIpuSA6JRFN1Ne+M3MCVkpEDn9b835RvPNMI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cwT3NOSpFq+r6bMYd+Pr9dAvIbFvIFOOmceTV7bOjJqvdtWvycS2QVsRSmQXFT2Ly7S5kSknaBAfRTt+FiOP+HMHcv2KzEyLr4tC0mYfZ8o8c4+wVSPO+9+tCRSPACBhAeMkK7m+nFya8ZZu9uZyuJ1QupQcS/EE/I2sCFMSX3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ugws3JXT; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ugws3JXT"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4ab5e2ae630so23236731cf.3
+        for <loongarch@lists.linux.dev>; Sat, 02 Aug 2025 06:53:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754142827; x=1754747627; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jz7xdrrD45l/3xnqZOB8jhE8CYqKF5KgB+lJGaSRpW4=;
+        b=Ugws3JXTEXRh8oJ5EZEzBFKFagmXf9hThL53pXXWZhQwZPShY1oeUw9JZZe1VxfYM7
+         e0qKmppPw3TqfeQfiwZd9ypLVbTciOwrHsA2tlz8jy94XEjWxKJdhD/cKKy7S4Zp4U9Y
+         22MQ/7RkEARJiHjoSs4n7tDWCo3inbxVbI1JUSe3bryrEy7SaGteO5KMvAi6c3tdMlm5
+         YuGcx/jm5KKLJEUmCNgLYbBVpQMC4VtNOTJ1wuEKAMIdnxz4+LnzYcEkU8wn6Av4tk3V
+         B+4F8ZlWwsGwMjq2nO46GNqqHmxhv4rCBLXcLWoATVbf9AnzQWnmSMCwJoh17ZGXczt7
+         R4QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754142827; x=1754747627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jz7xdrrD45l/3xnqZOB8jhE8CYqKF5KgB+lJGaSRpW4=;
+        b=OcZgAgRHKOwaUTRePNEyG8HRB74vQMD7s5cDQ5qbPeKcoux95a2zdHGCQDI9CAhK8V
+         X0UvE1pbKvn5yjJIl0nGbTFcFFrHCQ4Ej0//ts4tvIsKR8VL1ziQCbbfGbxAhJboTUhJ
+         FifEMcIYvaWHrdi6W4TJIqAfmOJt4X5ls7dvLER3gWbFXwY2CuiQAsnHhnaCqnNmibo1
+         MUqXK9rpILSpeWMGBXKoAaYMBaeblAcd8EEJ2IuhCCnF9ASWEJ9tWknEGwtEnf6YVk4R
+         cp4MgQQwVSyzSV4sg0lBhRcafKEilL5r3pckTm3/iGy3WcG4q4cK5GOuJJiDpPQy6Mgq
+         bfWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXxd0BEOQKV+wBkk3kodDmdgXuWaiRvE9yOnnQgCx0RDpSVvnXkwxn6JrjK2YGmmCTK19VI6H2j0PA=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz9GLxgySNYYA/K1CaLYZKVZIZOOLTqznXAXlgiwbN9n17OKso2
+	QBDWTJBF/afxs8oh14EeLPvuOrqOEKYHH8Gyptv0MhRmnE6jNXrd4/2MAmjgeE7ObY4apIJnWn3
+	9TLICPuoicQth84NDmkQc0tYvI7uEW+Y=
+X-Gm-Gg: ASbGncvr8O7y4lJS+9DlMwBlRBYqUOwvDPdBd1EHlIa7afcdoV0/s8xfHumWxSc/dut
+	YoAmphAs2MaB2eVQ0pvX9ukJTJpucyCrU8osHJxnZx37JbAxBft+iy/n3LkvDW/xzjRNgnQgQu7
+	+MTFUjratxUqhlgxyNyIT2oT4jZ3hHZp0pQTRqgEVIJD36NeE0QEQ8sDnPXCQVTJOqe9eMUunUj
+	bZ+RFE=
+X-Google-Smtp-Source: AGHT+IE11LAzvqrdQXxiyZ9Ykheypkp7N+G+uzGNvGCzpqbRG0l7ORd2InUTNnfBd+A2SFlWMg+EF8886rMuNltS7jk=
+X-Received: by 2002:ac8:594d:0:b0:4a4:2fad:7cdd with SMTP id
+ d75a77b69052e-4af109cc72amr54695161cf.24.1754142826857; Sat, 02 Aug 2025
+ 06:53:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAK3+h2wG-++Np7e-CZMbdjkL9tbuRi4bx+DP4RzLvJqu_+UY8A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxH8IJ2I1o0jIyAA--.64402S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKw47WF4DuF4xXFy3CFW8Xwc_yoWkAwc_Jr
-	ZrK3Wjkr4jqF47uF4Iqr4rX39rC3yrWr1kJr18WF9xX3yxKFW3Jrn7Gr129w4YqFn3GrZF
-	va1kCFW7Zr1a9osvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUba8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8VwZ7UUUUU==
+References: <20250730131257.124153-1-duanchenghao@kylinos.cn>
+ <CAK3+h2wG-++Np7e-CZMbdjkL9tbuRi4bx+DP4RzLvJqu_+UY8A@mail.gmail.com> <84789726-18a6-b46f-3ece-f887599ccf4a@loongson.cn>
+In-Reply-To: <84789726-18a6-b46f-3ece-f887599ccf4a@loongson.cn>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Sat, 2 Aug 2025 06:53:36 -0700
+X-Gm-Features: Ac12FXzbawJXB94dfv3RJGAddS2YA0O_7ZiLoCdAnnAmBFGjFPvS7IR2hGkBZAA
+Message-ID: <CAK3+h2x4MWR677UPTdAGX8jUg7EC_iweCKh8S1FMWSVVVsO8oA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/5] Support trampoline for LoongArch
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Chenghao Duan <duanchenghao@kylinos.cn>, hengqi.chen@gmail.com, chenhuacai@kernel.org, 
+	kernel@xen0n.name, loongarch@lists.linux.dev, guodongtai@kylinos.cn, 
+	youling.tang@linux.dev, jianghaoran@kylinos.cn, geliang@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/8/1 下午1:21, Vincent Li wrote:
-> Hi Chenghao,
-> 
-> I trimmed the email recipients only to the loongarch mailing list and
-> folks who might pay attention to this, I personally don't like to
-> bother other people who may not be interested in this :). Folks let me
-> know if this  is not ok. anyway, please check my bpf selftest result
-> inline.  The fentry_attach_stress results in kernel lockup.
+On Sat, Aug 2, 2025 at 2:19=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn>=
+ wrote:
+>
+> On 2025/8/1 =E4=B8=8B=E5=8D=881:21, Vincent Li wrote:
+> > Hi Chenghao,
+> >
+> > I trimmed the email recipients only to the loongarch mailing list and
+> > folks who might pay attention to this, I personally don't like to
+> > bother other people who may not be interested in this :). Folks let me
+> > know if this  is not ok. anyway, please check my bpf selftest result
+> > inline.  The fentry_attach_stress results in kernel lockup.
+>
+> It passed on my test environment.
+>
+>    $ sudo ./test_progs -a fentry_attach_stress
+>    #104     fentry_attach_stress:OK
+>    Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+>
+> I used loongson3_defconfig and the following additional configs:
+>
+> CONFIG_KPROBES=3Dy
+> CONFIG_FUNCTION_ERROR_INJECTION=3Dy
+> CONFIG_TEST_BPF=3Dm
+> CONFIG_FTRACE=3Dy
+> CONFIG_FUNCTION_TRACER=3Dy
+> CONFIG_DYNAMIC_FTRACE=3Dy
+> CONFIG_FPROBE=3Dy
+> CONFIG_FTRACE_SYSCALLS=3Dy
+> CONFIG_BPF_KPROBE_OVERRIDE=3Dy
+> CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=3Dy
+> CONFIG_DEBUG_INFO_BTF=3Dy
+> CONFIG_NET_SCH_BPF=3Dy
+> CONFIG_BPF_LSM=3Dy
+> CONFIG_BPF_UNPRIV_DEFAULT_OFF=3Dn
+> CONFIG_ARCH_STRICT_ALIGN=3Dn
+>
+> I am not sure whether it is related with configs, you can test it again.
+>
 
-It passed on my test environment.
+Have you tried to run the same  fentry_attach_stress multiple times or
+in a loop like while true; do ./test_progs -a fentry_attach_stress;
+sleep 1; done
+the lockup happens intermittently, sometime it PASSED, sometime kernel
+locks up. I merged the tools/testing/selftests/bpf/config with my
+original config by
+./scripts/kconfig/merge_config.sh -y .config
+tools/testing/selftests/bpf/config. my config seems including
+everything  you listed above except CONFIG_ARCH_STRICT_ALIGN not set,
+here is my config https://www.bpfire.net/download/loongfire/config.txt
 
-   $ sudo ./test_progs -a fentry_attach_stress
-   #104     fentry_attach_stress:OK
-   Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-
-I used loongson3_defconfig and the following additional configs:
-
-CONFIG_KPROBES=y
-CONFIG_FUNCTION_ERROR_INJECTION=y
-CONFIG_TEST_BPF=m
-CONFIG_FTRACE=y
-CONFIG_FUNCTION_TRACER=y
-CONFIG_DYNAMIC_FTRACE=y
-CONFIG_FPROBE=y
-CONFIG_FTRACE_SYSCALLS=y
-CONFIG_BPF_KPROBE_OVERRIDE=y
-CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
-CONFIG_DEBUG_INFO_BTF=y
-CONFIG_NET_SCH_BPF=y
-CONFIG_BPF_LSM=y
-CONFIG_BPF_UNPRIV_DEFAULT_OFF=n
-CONFIG_ARCH_STRICT_ALIGN=n
-
-I am not sure whether it is related with configs, you can test it again.
-
-Thanks,
-Tiezhu
-
+> Thanks,
+> Tiezhu
+>
