@@ -1,382 +1,318 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B33FBA3D
-	for <loongarch@lists.linux.dev>; Mon,  4 Aug 2025 02:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7574D15E97
+	for <loongarch@lists.linux.dev>; Mon,  4 Aug 2025 02:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754273587; cv=none; b=YnILMyNf6tMuJYts8vVyjXhpeFSapVlOkvbkNBJ3BaQ8cmjtjgf1rJpVwqL9JgaxZdUfhCNqY8kGlG91a7OVcRMWLP5zf6u2ynO1PgxTOtJ27h3VfkJhWe052ERQLRpifvlaai3hRXWIF6WXIhZP5h0mD2w9W8h6Xbkc6chWbpk=
+	t=1754274297; cv=none; b=O/VB2g1IGA0bJ0ZhLwxtCsCcQNWpw6l+4ugncXKYvQBBcFDMeU4QTVFspNUjrroOPJVg7Ndh9UiMHf7U6Z05O0naFUbH90nbfu7C7Dn1ziavvHpI1+S/yYFalyR4MiuKPTG5iFqs4aCy9ZB1sUeQNGsbf2CdYR58HabT8M0IOGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754273587; c=relaxed/simple;
-	bh=HYYaxc5GbvN9oyD6w2RvDpoeB3waIihjOvK0IJwCFAc=;
+	s=arc-20240116; t=1754274297; c=relaxed/simple;
+	bh=vIoLQAriU9QLyBP+GEsvN1SPVlN57wrfxtqM44gQ6uA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VjUKdVrLPMRG78x+YjRNCWpYJPom8mZ8zynH64rU7+WdXv5JImm0gpOM+uOtlTA3pe8ssUHwzjk1EoNvjdoY42DUb1oeSRH8LIzG8ygXuzSFDP5p7nlGBbasniIKlPdNA2TvX6ATp7gTGgv3g9bxcWuKAULiI2FYrT4tGXJ7Z/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LqvrJCzt; arc=none smtp.client-ip=209.85.160.46
+	 To:Cc:Content-Type; b=ZfQ5NB3uWJt3Juv8mnvV1iVQAGeIjvJw1KP4QDiJlE0lu8vP2ajS58ZZwovAJ1Jdx59I8XFm3g0FSYBAdxmYpGBU2U5oTrCKCErDWMmXmtNC0PsifVuyWxdFvNXjya2jT5yZSK9eHx/i7d5b8VDULAS+WEdUkzQ2M73bIR5C7UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LWW4CjRF; arc=none smtp.client-ip=209.85.167.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqvrJCzt"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-30b6c230808so268696fac.3
-        for <loongarch@lists.linux.dev>; Sun, 03 Aug 2025 19:13:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWW4CjRF"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-433f42c9fe3so1080160b6e.1
+        for <loongarch@lists.linux.dev>; Sun, 03 Aug 2025 19:24:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754273584; x=1754878384; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1754274294; x=1754879094; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=958JgoMI9jI3IZwW0oMtBPmHOsqns1AF4dq8ZF70zQ0=;
-        b=LqvrJCztyx9OYvbmM52Rpd6Gwvp4FNzRCQtHNriejDk8NRgruDUcNHZT/PmjUhgFoS
-         w2Udpv7k2f0oRXpv391Hp50QZ8W3YeNOZi8hY5Oxay8D5I68UtYb4u7rnYORJe96axCq
-         aqwl7cFiIH1TJykJhB1cAiemlQTrx+beWbiGGuhqCiKFEy31pt/9ApEwa4mx4Zq6FclG
-         m0CMuws6pQ0mMoiztYHg7Smkc+7wnN7fQEoAbsuYg0wHqzN/VBcRAbKLnQaNNzXjomzw
-         I4a93Ub5nBpftkL1cauCVqU/v0VcWQKU56aCJNoGFf1Y0nuDrs8Z3p5LHMhCHwbMgDEg
-         KIAg==
+        bh=BnRa1JA/UK/K7tosARzyACz2l637qczjgSNLiyAn2po=;
+        b=LWW4CjRFWqXD9UpPs7J3xuwmrCbao6yZcfilUilA+tdrPMXxAtDXYIxec90h8VOT0p
+         Tz/j+wiPKvqT2+sWVg5ZM1fD+I31saCu3F6qcsmOmwOPEi2UKhGnQDWAJdcg9z6oVWj2
+         /U3z+0UD1+fIHt9sqSPHvEVgXM1hnaClUhzDY2/Nu8DcX8oxOLmA0Q7KumwXraX4kWvG
+         ucv/Du6tU2/F4O53NZ+CdJJO2pr9KTnEQWyO7CtnOxamK5gBHQCIv+ySNG+mFsaC4jRn
+         7ghx6me8/XEgXPEbukmRMjhqR4dgGY5BHdmkjYtTZLt0K9U8B/mEKNz4lVG6HgOXvkRF
+         82dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754273584; x=1754878384;
+        d=1e100.net; s=20230601; t=1754274294; x=1754879094;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=958JgoMI9jI3IZwW0oMtBPmHOsqns1AF4dq8ZF70zQ0=;
-        b=GpFh9hRpnIhmkU3GN9C8YobL4l7LIPKPhkhgGxaj1SseVD+g79cwYNqNQ0oTd0z0qs
-         r5YMxb3dd486EYokOSkP8hzwFfJahcKKL8rsbzDzExxqgsUYTKGWPRUU2hG7NIObx9BJ
-         66WZ5I+m10kCfMeruakFi1gvZL3y2O9d98CS/Wrn5Y7X/HQI86JlGBEnaltFbbIMvPGj
-         wO8xi2Xj0B4ESZ1KIQq9Jvnk1Uwk1xRgCWwwkgUIpEKAx6d0CY2at26M4SU/SdBrKAtr
-         8wJciuvpjqtndjJnjc9EZ+JKnQMPlIGAXiFn+R5k6N+leV2XOfEda+BgLv4fORBRnMMA
-         F7qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+gVZFb0hKJVX/EAgKWv+C70jyFLhw7p9X+BK4v1y1MEfd24hgc/6J3rdVHXLH4YE8PqWJ4vjitZE=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxeu2fWGTaFL7ddtapgtATFFCuYRf3D3tNjO54AUcydjwcL/iqy
-	ZCUseY9nS7uvPt8Uj4xhwVa1NYfA2pzIUBEnQvs69vJBRYjLFflCriHy6N+K/9XSDJwSNDlO9Tv
-	EI6AHTqQu5Zt4Xl/QPbJmXF88WpMkoa8=
-X-Gm-Gg: ASbGnct6C3iI5cEPfQHD4YTVYKO8x/R72fbTy5H9T3YRSzq8K0y+pJwdx8muSQ03Gd1
-	mtSopZnMe+r33eb0TDTWLlUffRN5g/6vETiyYvO4A8w7GMfOi45topSMW6ZeR+XntOuHuQMqWWD
-	O6Owz6PP5vIqejTkY0z37oEj9/lloMmsst5y+CvlBBZAwFiD6hakGtXx9TIkbDlWXglNorM74rt
-	dKOmiw=
-X-Google-Smtp-Source: AGHT+IE8trfwtFiz72lP+Nngd8l3bAttwXfNhzPYD5rWQUaOImok0wPG/JlhOe5HVNrVq27Hq0/IFiglfcGWd9Aj4tA=
-X-Received: by 2002:a05:6808:178e:b0:434:ee4:b95b with SMTP id
- 5614622812f47-4340ee4c557mr597069b6e.39.1754273584402; Sun, 03 Aug 2025
- 19:13:04 -0700 (PDT)
+        bh=BnRa1JA/UK/K7tosARzyACz2l637qczjgSNLiyAn2po=;
+        b=Mzw2Ycc9GiG6gXYm6LBuVr2guYpEQIOQuj1oQbA66/J7fYDcnsW19K8TQk5qW5A8OZ
+         Q6PALBS+fzTMCaWycsQ4P4B8p4G/7UOcJRn999845luDXzAb1QDHrn2OGsQ/RcFrpVaj
+         e49frczupewHonbomrBYtR4+AaEFAyMzMS1qF2cdIiBnYj+y6qX8UxSYwzA+S/lvk/zx
+         C5+GW01pvcFA82IOWrKq2+s56z7mQWhObFHVc/vP9dEW0h8CdXjxXa0u29n6picuVRrg
+         Gn3QaxGewWdPY/UPhqCKB9nBVAtaweap7k9mfqHYbOJZY6IGXbHPLAj84q/SCtC1Yp+Y
+         fqCA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrRWD0bd2sE6X90ZgScnc5MqWaahbcfEiom57CElapSDmRZb78zVrVgwkUfS8UphaFa9+vdxiqMQk=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzwj8WvL9dlx5qmMFvSsqTSlniexsYWtsLqK90XBR8/OtNbP+r7
+	Hx3L2HqcYk0YU7RCcKy/MLBHmBCSlv+4iVGi1bF9hQwAteLBt+/Ina/n3varKizkOCc7b8DXaQc
+	LogzXuaLKBAMh3kViuPHJO3tiAv8vW9c=
+X-Gm-Gg: ASbGncsFVMN7HYQ83+NmVUU2JaB3nm9U0IZDkIs+IpbadvgOKf5VQi1E5oyFwASYZEN
+	MRRaqaO8qFJwg4REJb5oE8Z7WHqRBZlbq2JJmtwT47F0ZcFW2kKfLemUPZY5Uk0onZDewqXeVJs
+	WzKdSb7JYOLF/O4r1czwI5QCM4EdIxYVOmsxt7L+B7AtinjFt+v79t9I8ppmSkJAsIN8e8JtLz/
+	uYQcag=
+X-Google-Smtp-Source: AGHT+IHhH1YIlg21cr4MIGPuqerm1W25W6/jSAdfR4y9B8Edf1oakdGia3Vc0Pk46NXYA8Hkr1xOm7gYnffSPLFPPZ0=
+X-Received: by 2002:a05:6808:1910:b0:433:ff53:1b7e with SMTP id
+ 5614622812f47-433ff532639mr2765208b6e.11.1754274294309; Sun, 03 Aug 2025
+ 19:24:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250730131257.124153-1-duanchenghao@kylinos.cn>
- <CAK3+h2wG-++Np7e-CZMbdjkL9tbuRi4bx+DP4RzLvJqu_+UY8A@mail.gmail.com>
- <84789726-18a6-b46f-3ece-f887599ccf4a@loongson.cn> <CAK3+h2x4MWR677UPTdAGX8jUg7EC_iweCKh8S1FMWSVVVsO8oA@mail.gmail.com>
- <CAK3+h2y-7h=D5NaO=v8u7HaoHQ+MdhAvsH4drpZxypbr+ABodg@mail.gmail.com>
- <CAK3+h2zFRQNcjf_B+4yORbGp85bXAUSGX-VWt3kR1ZJomkhtHQ@mail.gmail.com>
- <CAAhV-H5K3r2-r8S8-qd5amZOV5x7JO9MHjVQbyfO9yXuGxJt6g@mail.gmail.com> <CAK3+h2xNgN87GqDMKwy9Bk2eV5zGY3Typ-e3CY0SafURfU7DLQ@mail.gmail.com>
-In-Reply-To: <CAK3+h2xNgN87GqDMKwy9Bk2eV5zGY3Typ-e3CY0SafURfU7DLQ@mail.gmail.com>
+References: <20250730131257.124153-1-duanchenghao@kylinos.cn> <20250730131257.124153-4-duanchenghao@kylinos.cn>
+In-Reply-To: <20250730131257.124153-4-duanchenghao@kylinos.cn>
 From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Mon, 4 Aug 2025 10:12:53 +0800
-X-Gm-Features: Ac12FXwqtC1i5E5yiHv6PJQIvqKQd5Ir0lGBTUWo7d8dO6iF_KbH_fPLSTWeZnw
-Message-ID: <CAEyhmHQj+W-yDSJf=gDJRnL-OctD__mMa_pXu-udxe5v90mr8A@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] Support trampoline for LoongArch
-To: Vincent Li <vincent.mc.li@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Chenghao Duan <duanchenghao@kylinos.cn>, kernel@xen0n.name, loongarch@lists.linux.dev, 
+Date: Mon, 4 Aug 2025 10:24:43 +0800
+X-Gm-Features: Ac12FXw54_4HRJNzwKhuZVYGpesI_S2zavu44x_15b5aAywWy_Y1r58SRvoBSUo
+Message-ID: <CAEyhmHQOeKmQZnq9RvaPANdLfcsAJX=xU+nL+p4=sPwcYPOfGw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] LoongArch: BPF: Implement dynamic code
+ modification support
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
 	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn, 
-	geliang@kernel.org
+	vincent.mc.li@gmail.com, geliang@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 3, 2025 at 11:25=E2=80=AFPM Vincent Li <vincent.mc.li@gmail.com=
-> wrote:
+On Wed, Jul 30, 2025 at 9:13=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos=
+.cn> wrote:
 >
-> On Sun, Aug 3, 2025 at 7:11=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
-> >
-> > On Sat, Aug 2, 2025 at 11:52=E2=80=AFPM Vincent Li <vincent.mc.li@gmail=
-.com> wrote:
-> > >
-> > > On Sat, Aug 2, 2025 at 7:47=E2=80=AFAM Vincent Li <vincent.mc.li@gmai=
-l.com> wrote:
-> > > >
-> > > > On Sat, Aug 2, 2025 at 6:53=E2=80=AFAM Vincent Li <vincent.mc.li@gm=
-ail.com> wrote:
-> > > > >
-> > > > > On Sat, Aug 2, 2025 at 2:19=E2=80=AFAM Tiezhu Yang <yangtiezhu@lo=
-ongson.cn> wrote:
-> > > > > >
-> > > > > > On 2025/8/1 =E4=B8=8B=E5=8D=881:21, Vincent Li wrote:
-> > > > > > > Hi Chenghao,
-> > > > > > >
-> > > > > > > I trimmed the email recipients only to the loongarch mailing =
-list and
-> > > > > > > folks who might pay attention to this, I personally don't lik=
-e to
-> > > > > > > bother other people who may not be interested in this :). Fol=
-ks let me
-> > > > > > > know if this  is not ok. anyway, please check my bpf selftest=
- result
-> > > > > > > inline.  The fentry_attach_stress results in kernel lockup.
-> > > > > >
-> > > > > > It passed on my test environment.
-> > > > > >
-> > > > > >    $ sudo ./test_progs -a fentry_attach_stress
-> > > > > >    #104     fentry_attach_stress:OK
-> > > > > >    Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > > > > >
-> > > > > > I used loongson3_defconfig and the following additional configs=
-:
-> > > > > >
-> > > > > > CONFIG_KPROBES=3Dy
-> > > > > > CONFIG_FUNCTION_ERROR_INJECTION=3Dy
-> > > > > > CONFIG_TEST_BPF=3Dm
-> > > > > > CONFIG_FTRACE=3Dy
-> > > > > > CONFIG_FUNCTION_TRACER=3Dy
-> > > > > > CONFIG_DYNAMIC_FTRACE=3Dy
-> > > > > > CONFIG_FPROBE=3Dy
-> > > > > > CONFIG_FTRACE_SYSCALLS=3Dy
-> > > > > > CONFIG_BPF_KPROBE_OVERRIDE=3Dy
-> > > > > > CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=3Dy
-> > > > > > CONFIG_DEBUG_INFO_BTF=3Dy
-> > > > > > CONFIG_NET_SCH_BPF=3Dy
-> > > > > > CONFIG_BPF_LSM=3Dy
-> > > > > > CONFIG_BPF_UNPRIV_DEFAULT_OFF=3Dn
-> > > > > > CONFIG_ARCH_STRICT_ALIGN=3Dn
-> > > > > >
-> > > > > > I am not sure whether it is related with configs, you can test =
-it again.
-> > > > > >
-> > > >
-> > > > I did:
-> > > >   cp arch/loongarch/configs/loongson3_defconfig .config
-> > > >   ./scripts/kconfig/merge_config.sh -y .config config-tiezhu(your a=
-bove config)
-> > > > indeed I could not reproduce the lockup, even run the test in a loo=
-p.
-> > > > it seems to be related to the kernel config I use, maybe you could =
-try
-> > > > my kernel config?
-> > > >
-> > > > [root@fedora bpf]# while true; do ./test_progs -a
-> > > > fentry_attach_stress; sleep 1; done
-> > > > #105     fentry_attach_stress:OK
-> > > > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > > > #105     fentry_attach_stress:OK
-> > > > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > > >
-> > > > #105     fentry_attach_stress:OK
-> > > > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > > > #105     fentry_attach_stress:OK
-> > > > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > > > #105     fentry_attach_stress:OK
-> > > > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > > > #105     fentry_attach_stress:OK
-> > > > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > > > #105     fentry_attach_stress:OK
-> > > >
-> > >
-> > > while checking dmesg with your nolockup config, I see following log:
-> > >
-> > > [ 3469.410821] Hardware name: Loongson
-> > > Loongson-3A6000-7A2000-NUC/Loongson-3A6000-7A2000-NUC, BIOS
-> > > Loongson-UDK2018-V4.0.05759-stable202405 07/12/24 15:49:14
-> > > [ 3469.410824] pc 90000002456d4880 ra 90000000060885f4 tp
-> > > 90000002975d8000 sp 90000002975dbc10
-> > > [ 3469.410826] a0 0000000000000000 a1 ffff8000128f0048 a2
-> > > 00007ffff1c02638 a3 0000000000000000
-> > > [ 3469.410828] a4 00007ffff1c02680 a5 00007ffff0ce0f20 a6
-> > > 00007ffff0ce0f20 a7 0000000000000118
-> > > [ 3469.410830] t0 ffff80000338dd44 t1 90000002456d4880 t2
-> > > d665bdcea9f14eb9 t3 90000001dc9c1000
-> > > [ 3469.410832] t4 90000001dea99670 t5 0000000000000000 t6
-> > > 0000000000000000 t7 0000000000000000
-> > > [ 3469.410834] t8 000000000000000f u0 000000000000000a s9
-> > > 90000002975dbec0 s0 90000002975dbc70
-> > > [ 3469.410836] s1 0000000000000000 s2 90000000076a5000 s3
-> > > 0000000000000000 s4 ffff8000128f0000
-> > > [ 3469.410838] s5 0000000000000000 s6 0000000000000000 s7
-> > > 0000000000000050 s8 fffffffffffffdf4
-> > > [ 3469.410840]    ra: 90000000060885f4 __bpf_prog_test_run_raw_tp+0x6=
-c/0x108
-> > > [ 3469.410848]   ERA: 90000002456d4880 0x90000002456d4880
-> > > [ 3469.410851]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC =
--WE)
-> > > [ 3469.410860]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-> > > [ 3469.410865]  EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
-> > > [ 3469.410870]  ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
-> > > [ 3469.410875] ESTAT: 000d0000 [INE] (IS=3D ECode=3D13 EsubCode=3D0)
-> > > [ 3469.410878]  PRID: 0014d000 (Loongson-64bit, Loongson-3A6000)
-> > > [ 3469.410880] Modules linked in: bpf_testmod(O) tls nft_fib_inet
-> > > nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
-> > > nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack
-> > > nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink cmac
-> > > algif_hash algif_skcipher af_alg bnep vfat fat rtw88_8821ce
-> > > rtw88_8821c rtw88_pci rtw88_core mac80211 btusb libarc4 btrtl btbcm
-> > > btmtk btintel cfg80211 bluetooth sha3_generic kvm jitterentropy_rng
-> > > drbg ecdh_generic ecc loongson3_cpufreq spi_loongson_pci rfkill
-> > > spi_loongson_core uio_pdrv_genirq uio lm75 fuse efi_pstore pstore zra=
-m
-> > > 842_decompress 842_compress lz4hc_compress lz4_compress uas
-> > > usb_storage efivarfs [last unloaded: bpf_testmod(O)]
-> > > [ 3469.410946] Process test_progs (pid: 37338,
-> > > threadinfo=3D00000000760120b6, task=3D00000000620daecd)
-> > > [ 3469.410950] Stack : 0000000000000000 0000000000000000
-> > > 0000000000000000 d665bdcea9f14eb9
-> > > [ 3469.410956]         000000000000000f 0000000000000000
-> > > 90000002975dbc70 90000000076a5000
-> > > [ 3469.410961]         00007ffff1c02638 ffff8000128f0000
-> > > 90000002975dbd90 900000000608ab28
-> > > [ 3469.410966]         ffff8000128f0000 0000000000000000
-> > > 0000000000000000 d665bdcea9f14eb9
-> > > [ 3469.410971]         0000000000000000 90000000076a5000
-> > > 90000002975dbd90 00007ffff1c02638
-> > > [ 3469.410976]         0000000000000000 000000000000000a
-> > > ffff8000128f0000 9000000004f21328
-> > > [ 3469.410981]         0000000000000000 9000000004e554c0
-> > > 0000000000000000 900000010f6a4240
-> > > [ 3469.410986]         0000000129e18000 ffffffff00003500
-> > > 0000000000000000 0000000000000000
-> > > [ 3469.410990]         0000000000000000 0000000000000000
-> > > 0000000000000000 d665bdcea9f14eb9
-> > > [ 3469.410995]         0000000000000001 00007ffff1c03040
-> > > 0000000000000000 0000000000000002
-> > > [ 3469.411000]         ...
-> > > [ 3469.411002] Call Trace:
-> > > [ 3469.411005] [<9000000004d11fb8>] handle_syscall+0xb8/0x158
-> > >
-> > > [ 3469.411012] Code: 4c2e0031  31465341  00323731 <00000000> 00000000
-> > > 975d8000  90000002  00000003  00402040
-> > >
-> > > [ 3469.411024] ---[ end trace 0000000000000000 ]---
-> > >
-> > > here is the relevant config diff between your nolockup config and my
-> > > lockup config that I suspect your nolockup config didn't cause kernel
-> > > lockup
-> > >
-> > > diff -u config-nolockup config-lockup
-> > >
-> > > # Debug Oops, Lockups and Hangs
-> > >  #
-> > > -# CONFIG_PANIC_ON_OOPS is not set
-> > > -CONFIG_PANIC_ON_OOPS_VALUE=3D0
-> > > +CONFIG_PANIC_ON_OOPS=3Dy
-> > > +CONFIG_PANIC_ON_OOPS_VALUE=3D1
-> > >  CONFIG_PANIC_TIMEOUT=3D0
-> > > -# CONFIG_SOFTLOCKUP_DETECTOR is not set
-> > > +CONFIG_LOCKUP_DETECTOR=3Dy
-> > > +CONFIG_SOFTLOCKUP_DETECTOR=3Dy
-> > > +CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=3Dy
-> > >  CONFIG_HAVE_HARDLOCKUP_DETECTOR_BUDDY=3Dy
-> > > -# CONFIG_HARDLOCKUP_DETECTOR is not set
-> > > -# CONFIG_DETECT_HUNG_TASK is not set
-> > > -# CONFIG_WQ_WATCHDOG is not set
-> > > -# CONFIG_WQ_CPU_INTENSIVE_REPORT is not set
-> > > +CONFIG_HARDLOCKUP_DETECTOR=3Dy
-> > > +# CONFIG_HARDLOCKUP_DETECTOR_PERF is not set
-> > > +CONFIG_HARDLOCKUP_DETECTOR_BUDDY=3Dy
-> > > +# CONFIG_HARDLOCKUP_DETECTOR_ARCH is not set
-> > > +CONFIG_HARDLOCKUP_DETECTOR_COUNTS_HRTIMER=3Dy
-> > > +CONFIG_BOOTPARAM_HARDLOCKUP_PANIC=3Dy
-> > > +CONFIG_DETECT_HUNG_TASK=3Dy
-> > > +CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=3D120
-> > > +CONFIG_BOOTPARAM_HUNG_TASK_PANIC=3Dy
-> > > +CONFIG_DETECT_HUNG_TASK_BLOCKER=3Dy
-> > > +CONFIG_WQ_WATCHDOG=3Dy
-> > > +CONFIG_WQ_CPU_INTENSIVE_REPORT=3Dy
-> > >  # CONFIG_TEST_LOCKUP is not set
-> > >  # end of Debug Oops, Lockups and Hangs
-> > Hi, Vincent,
-> >
-> > I have applied all BPF patches with some small modifications. Can you
-> > test it again?
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-lo=
-ongson.git/log/?h=3Dloongarch-next
-> >
-> > Huacai
-> >
-> I see you applied the tail call bug patches, I thought about applying
-> tail call patches just in case, but I am not sure the
-> fentry_attach_stress involves tail call count bugs. I tried your
-> loongarch-next branch anyway, but the lockup still happens when I run
-> fentry_attach_stress in a while loop. I am not sure if this particular
-> test should block the merge of bpf trampoline patches, it looks to be
-> an extreme and rare case, maybe track it as a bug report and fix it
-> later after merge? just my two cents :)
+> This commit adds support for BPF dynamic code modification on the
+> LoongArch architecture.:
+> 1. Implement bpf_arch_text_poke() for runtime instruction patching.
+> 2. Add bpf_arch_text_copy() for instruction block copying.
+> 3. Create bpf_arch_text_invalidate() for code invalidation.
 >
+> On LoongArch, since symbol addresses in the direct mapping
+> region cannot be reached via relative jump instructions from the paged
+> mapping region, we use the move_imm+jirl instruction pair as absolute
+> jump instructions. These require 2-5 instructions, so we reserve 5 NOP
+> instructions in the program as placeholders for function jumps.
+>
+> larch_insn_text_copy is solely used for BPF. The use of
+> larch_insn_text_copy() requires page_size alignment. Currently, only
+> the size of the trampoline is page-aligned.
+>
+> Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> ---
+>  arch/loongarch/include/asm/inst.h |   1 +
+>  arch/loongarch/kernel/inst.c      |  27 ++++++++
+>  arch/loongarch/net/bpf_jit.c      | 104 ++++++++++++++++++++++++++++++
+>  3 files changed, 132 insertions(+)
+>
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
+sm/inst.h
+> index 2ae96a35d..88bb73e46 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction i=
+nsn, struct pt_regs *regs);
+>  int larch_insn_read(void *addr, u32 *insnp);
+>  int larch_insn_write(void *addr, u32 insn);
+>  int larch_insn_patch_text(void *addr, u32 insn);
+> +int larch_insn_text_copy(void *dst, void *src, size_t len);
+>
+>  u32 larch_insn_gen_nop(void);
+>  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index 674e3b322..7df63a950 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -4,6 +4,7 @@
+>   */
+>  #include <linux/sizes.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/set_memory.h>
+>
+>  #include <asm/cacheflush.h>
+>  #include <asm/inst.h>
+> @@ -218,6 +219,32 @@ int larch_insn_patch_text(void *addr, u32 insn)
+>         return ret;
+>  }
+>
+> +int larch_insn_text_copy(void *dst, void *src, size_t len)
+> +{
+> +       int ret;
+> +       unsigned long flags;
+> +       unsigned long dst_start, dst_end, dst_len;
+> +
+> +       dst_start =3D round_down((unsigned long)dst, PAGE_SIZE);
+> +       dst_end =3D round_up((unsigned long)dst + len, PAGE_SIZE);
+> +       dst_len =3D dst_end - dst_start;
+> +
+> +       set_memory_rw(dst_start, dst_len / PAGE_SIZE);
+> +       raw_spin_lock_irqsave(&patch_lock, flags);
+> +
+> +       ret =3D copy_to_kernel_nofault(dst, src, len);
+> +       if (ret)
+> +               pr_err("%s: operation failed\n", __func__);
+> +
+> +       raw_spin_unlock_irqrestore(&patch_lock, flags);
+> +       set_memory_rox(dst_start, dst_len / PAGE_SIZE);
+> +
+> +       if (!ret)
+> +               flush_icache_range((unsigned long)dst, (unsigned long)dst=
+ + len);
+> +
+> +       return ret;
+> +}
+> +
+>  u32 larch_insn_gen_nop(void)
+>  {
+>         return INSN_NOP;
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 7032f11d3..5e6ae7e0e 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -4,8 +4,12 @@
+>   *
+>   * Copyright (C) 2022 Loongson Technology Corporation Limited
+>   */
+> +#include <linux/memory.h>
+>  #include "bpf_jit.h"
+>
+> +#define LOONGARCH_LONG_JUMP_NINSNS 5
+> +#define LOONGARCH_LONG_JUMP_NBYTES (LOONGARCH_LONG_JUMP_NINSNS * 4)
+> +
+>  #define REG_TCC                LOONGARCH_GPR_A6
+>  #define TCC_SAVED      LOONGARCH_GPR_S5
+>
+> @@ -88,6 +92,7 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
+>   */
+>  static void build_prologue(struct jit_ctx *ctx)
+>  {
+> +       int i;
+>         int stack_adjust =3D 0, store_offset, bpf_stack_adjust;
+>
+>         bpf_stack_adjust =3D round_up(ctx->prog->aux->stack_depth, 16);
+> @@ -98,6 +103,10 @@ static void build_prologue(struct jit_ctx *ctx)
+>         stack_adjust =3D round_up(stack_adjust, 16);
+>         stack_adjust +=3D bpf_stack_adjust;
+>
+> +       /* Reserve space for the move_imm + jirl instruction */
+> +       for (i =3D 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
+> +               emit_insn(ctx, nop);
+> +
+>         /*
+>          * First instruction initializes the tail call count (TCC).
+>          * On tail call we skip this instruction, and the TCC is
+> @@ -1367,3 +1376,98 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+>  {
+>         return true;
+>  }
+> +
+> +static int emit_jump_and_link(struct jit_ctx *ctx, u8 rd, u64 target)
+> +{
+> +       if (!target) {
+> +               pr_err("bpf_jit: jump target address is error\n");
+> +               return -EFAULT;
+> +       }
+> +
+> +       move_imm(ctx, LOONGARCH_GPR_T1, target, false);
+> +       emit_insn(ctx, jirl, rd, LOONGARCH_GPR_T1, 0);
+> +
+> +       return 0;
+> +}
+> +
+> +static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_=
+call)
+> +{
+> +       struct jit_ctx ctx;
+> +
+> +       ctx.idx =3D 0;
+> +       ctx.image =3D (union loongarch_instruction *)insns;
+> +
+> +       if (!target) {
+> +               emit_insn((&ctx), nop);
+> +               emit_insn((&ctx), nop);
+> +               return 0;
+> +       }
+> +
+> +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LOON=
+GARCH_GPR_ZERO,
+> +                                 (unsigned long)target);
+> +}
+> +
+> +int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
+> +                      void *old_addr, void *new_addr)
+> +{
+> +       u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
+_NOP};
+> +       u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
+_NOP};
+> +       bool is_call =3D poke_type =3D=3D BPF_MOD_CALL;
+> +       int ret;
+> +
+> +       if (!is_kernel_text((unsigned long)ip) &&
+> +               !is_bpf_text_address((unsigned long)ip))
+> +               return -ENOTSUPP;
+> +
+> +       ret =3D gen_jump_or_nops(old_addr, ip, old_insns, is_call);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (memcmp(ip, old_insns, LOONGARCH_LONG_JUMP_NBYTES))
+> +               return -EFAULT;
+> +
+> +       ret =3D gen_jump_or_nops(new_addr, ip, new_insns, is_call);
+> +       if (ret)
+> +               return ret;
+> +
+> +       mutex_lock(&text_mutex);
+> +       if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
+> +               ret =3D larch_insn_text_copy(ip, new_insns, LOONGARCH_LON=
+G_JUMP_NBYTES);
+> +       mutex_unlock(&text_mutex);
 
-I think this violates the community rules. And could be a disaster in
-production.
+The text_mutex and patch_lock inside larch_insn_text_copy() ONLY
+prevent concurrent modifications.
+You may need stop_machine() to prevent concurrent modifications/executions.
 
-> [root@fedora ~]# cd /usr/src/linux-loongson/
-> [root@fedora linux-loongson]# git branch
-> * loongarch-next
->   master
-> [root@fedora linux-loongson]# uname -a
-> Linux fedora 6.16.0+ #1 SMP PREEMPT_DYNAMIC Sun Aug  3 08:01:34 PDT
-> 2025 loongarch64 GNU/Linux
+> +       return ret;
+> +}
+> +
+> +int bpf_arch_text_invalidate(void *dst, size_t len)
+> +{
+> +       int i;
+> +       int ret =3D 0;
+> +       u32 *inst;
+> +
+> +       inst =3D kvmalloc(len, GFP_KERNEL);
+> +       if (!inst)
+> +               return -ENOMEM;
+> +
+> +       for (i =3D 0; i < (len/sizeof(u32)); i++)
+> +               inst[i] =3D INSN_BREAK;
+> +
+> +       mutex_lock(&text_mutex);
+> +       if (larch_insn_text_copy(dst, inst, len))
+> +               ret =3D -EINVAL;
+> +       mutex_unlock(&text_mutex);
+> +
+> +       kvfree(inst);
+> +       return ret;
+> +}
+> +
+> +void *bpf_arch_text_copy(void *dst, void *src, size_t len)
+> +{
+> +       int ret;
+> +
+> +       mutex_lock(&text_mutex);
+> +       ret =3D larch_insn_text_copy(dst, src, len);
+> +       mutex_unlock(&text_mutex);
+> +       if (ret)
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       return dst;
+> +}
+> --
+> 2.25.1
 >
-> [root@fedora linux-loongson]# cd tools/testing/selftests/bpf/
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> [root@fedora bpf]# ./test_progs -a fentry_attach_stress
-> #107     fentry_attach_stress:OK
-> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
->
-> [root@fedora bpf]# while true; do ./test_progs -a
-> fentry_attach_stress; sleep 5; done
-> client_loop: send disconnect: Broken pipe
->
-> > >
-> > > > >
-> > > > > Have you tried to run the same  fentry_attach_stress multiple tim=
-es or
-> > > > > in a loop like while true; do ./test_progs -a fentry_attach_stres=
-s;
-> > > > > sleep 1; done
-> > > > > the lockup happens intermittently, sometime it PASSED, sometime k=
-ernel
-> > > > > locks up. I merged the tools/testing/selftests/bpf/config with my
-> > > > > original config by
-> > > > > ./scripts/kconfig/merge_config.sh -y .config
-> > > > > tools/testing/selftests/bpf/config. my config seems including
-> > > > > everything  you listed above except CONFIG_ARCH_STRICT_ALIGN not =
-set,
-> > > > > here is my config https://www.bpfire.net/download/loongfire/confi=
-g.txt
-> > > > >
-> > > > > > Thanks,
-> > > > > > Tiezhu
-> > > > > >
