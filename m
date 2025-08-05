@@ -1,124 +1,316 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4C8BA927;
-	Tue,  5 Aug 2025 02:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6A71E9B3A
+	for <loongarch@lists.linux.dev>; Tue,  5 Aug 2025 04:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754361699; cv=none; b=tZNkE1P8E3TpDrPQ8GHI+TUM/2uxrLIsazr3JJK7MIrJ346dWNJMxG1O+nxaRd3i2kNv/WYmZgWle1L4G7uZ000IGybPOrfP65iAeXtwI6hYUQbtw+iS4Hm4fgkJBWC58AKLSzshsR0nEiPY+k1hy8nmzBSQdIXykOQqOAydMPA=
+	t=1754367017; cv=none; b=jEeXSeNr9gL0k0H0wjCK8jSMaoR7+eJJDZulLF8bhK15Pr4R7eDjU81tR82b1jVku1eaQUYNaQooQYgqsxUz3kFGkuB87sIoNARQ7Kb72UsuLUuiY5V5UXLH+IDjFXD0XzpYbwMYmurb8HdUX4c/EtD8Wo6exEI/weNtd6Jbh4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754361699; c=relaxed/simple;
-	bh=K6NfsFMXpi+7WkJDWs0pz65H58+JBsRTHdwan/dGbTw=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WhFr/gp/ekW/buSST7c9GEvDjc3j3/x6BYOdqo9mKMwSkHEnta6CQzN75PMKLRbguWe1Ej9gp6BjrR/Q1XL2YJzU4qF1DLGamD9RIUlJCglvDBBIOwMJcaVwUlwKTyc+B5zf+s0PHxwB3xBTmzC3iuIBReiBlNd3JR6Jq9K/uIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxquBXb5FoKrA4AQ--.6114S3;
-	Tue, 05 Aug 2025 10:41:27 +0800 (CST)
-Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxpeRWb5FoRoI2AA--.5838S3;
-	Tue, 05 Aug 2025 10:41:27 +0800 (CST)
-Subject: Re: objtool warnings "sibling call from callable instruction with
- modified stack frame" with CONFIG_LTO_CLANG_THIN
-To: Nathan Chancellor <nathan@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- WANG Rui <wangrui@loongson.cn>
-Cc: loongarch@lists.linux.dev, llvm@lists.linux.dev
-References: <20250731175655.GA1455142@ax162>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <fa51cd09-8a53-04c1-3bfd-e63d4e603975@loongson.cn>
-Date: Tue, 5 Aug 2025 10:41:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1754367017; c=relaxed/simple;
+	bh=64P8pSgWRTEQfuAptx9GYG4bN1DE4P+iylnftchW8Dk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=isbPXl7FN1y+rbycskKJkE6+285k3AwxkPwqvKONfyThoe7e5seKzposPHm6Eg1IzdLb3RJIBp36JI3aig7XDRx6Zy8RWi4OlhNiddPZEMAyZrq1Mb5Q0etpoVfareQePZGZvIscaRQ6XZboS5mVtUsW6E62DNbnDCjyCAPyLvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQc5omiK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQc5omiK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0050CC4CEF8
+	for <loongarch@lists.linux.dev>; Tue,  5 Aug 2025 04:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754367017;
+	bh=64P8pSgWRTEQfuAptx9GYG4bN1DE4P+iylnftchW8Dk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KQc5omiKKrrFCPFfxkOCKcP9Tjw0AwYD0W/VcP6iYlA5zlQogHbMHwhsxVq7zvEWH
+	 5NnvMpPrjOKsmGMQ1dXgk9D4aoga4Hy6STgn6n1VnmN93/UVQx+CapuZje2ZUhIU84
+	 4wV67CSlFkP8316sdFso0uJsAFUEpicbyYaMQKAnbjRMSY8ip0UxiJ/o9nECvpX2OU
+	 a70OIyppCqVp+FymgTIOujkqKpNvMUukVwE0X5JuTC/5v4uxFn2X++eND3kcLP7N+1
+	 AocxH4jLvooePHLV+Jk6dPfxRIHSKhgyfjNY2iaCHC2+KkSRXl8Vle0B2+MVRzkgnc
+	 72MbiSFZiSC9A==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-61557997574so7715598a12.3
+        for <loongarch@lists.linux.dev>; Mon, 04 Aug 2025 21:10:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWXGqaLzmBtaEk6aTsls6/k4spwBlRuIK1DJ061e9BVwKJIDfC0wUysYjWKWjrtY5V7cfXm4DI+qqU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyemV+9L7qVbYotHCcTUSbGRTB6z76L7prZieznssUFsZXC0Gez
+	//Rc/3ulAr6ad8AoTvPOryeRlqI0SGnYrgh4UXCyAfjASDdeuEG5DyzCa8158dU+KqM0wLD2UBL
+	srElngtzjqw+dUw03Xj8f3lXokWsKyhA=
+X-Google-Smtp-Source: AGHT+IFFdGalkzEDOhiMqtySgAjMgg9p+qGKfo/qw4KsE/XtJQIeY6lgS3iyyM262Zz1WGqIcPLLmlKJrB5Jb5T27+E=
+X-Received: by 2002:a05:6402:3513:b0:612:b552:5a4d with SMTP id
+ 4fb4d7f45d1cf-615e6f5193fmr10341888a12.17.1754367015478; Mon, 04 Aug 2025
+ 21:10:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250731175655.GA1455142@ax162>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpeRWb5FoRoI2AA--.5838S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFWruw4xXw1kZFWrCw4rWFX_yoW8KrWDpF
-	sxCrZ8Jrs5Grn7K3s7Ja17trZ0k39rGw15XFy7KFyUZF4DXr1Ivr40gFZFga45Xws3JrWI
-	qryfKa9xJF4qyacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25Ef
-	UUUUU
+References: <20250730131257.124153-1-duanchenghao@kylinos.cn>
+ <20250730131257.124153-4-duanchenghao@kylinos.cn> <CAEyhmHTE8yd0-N5YkMvJScv+Dsw3sAvgyZt8h1sd1=rzaCoTwQ@mail.gmail.com>
+In-Reply-To: <CAEyhmHTE8yd0-N5YkMvJScv+Dsw3sAvgyZt8h1sd1=rzaCoTwQ@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 5 Aug 2025 12:10:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H55VoFdK8B-PBhYfzHAOQJLnOxLUZGZyHqqdvt=5K3Zhg@mail.gmail.com>
+X-Gm-Features: Ac12FXyzsU_qg2XlgmRI5NlJB2DhVAs82VKcpEOI79jGgaztykcOv6GwsUIaeak
+Message-ID: <CAAhV-H55VoFdK8B-PBhYfzHAOQJLnOxLUZGZyHqqdvt=5K3Zhg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] LoongArch: BPF: Implement dynamic code
+ modification support
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Chenghao Duan <duanchenghao@kylinos.cn>, ast@kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, yangtiezhu@loongson.cn, martin.lau@linux.dev, 
+	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn, 
+	vincent.mc.li@gmail.com, geliang@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/8/1 上午1:56, Nathan Chancellor wrote:
-> Hi LoongArch folks,
-> 
-> The kernel test robot recently generated several reports when building
-> with LLVM that appear to be related (the "warning: objtool:" reports):
+On Mon, Aug 4, 2025 at 10:02=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> On Wed, Jul 30, 2025 at 9:13=E2=80=AFPM Chenghao Duan <duanchenghao@kylin=
+os.cn> wrote:
+> >
+> > This commit adds support for BPF dynamic code modification on the
+> > LoongArch architecture.:
+> > 1. Implement bpf_arch_text_poke() for runtime instruction patching.
+> > 2. Add bpf_arch_text_copy() for instruction block copying.
+> > 3. Create bpf_arch_text_invalidate() for code invalidation.
+> >
+> > On LoongArch, since symbol addresses in the direct mapping
+> > region cannot be reached via relative jump instructions from the paged
+> > mapping region, we use the move_imm+jirl instruction pair as absolute
+> > jump instructions. These require 2-5 instructions, so we reserve 5 NOP
+> > instructions in the program as placeholders for function jumps.
+> >
+> > larch_insn_text_copy is solely used for BPF. The use of
+> > larch_insn_text_copy() requires page_size alignment. Currently, only
+> > the size of the trampoline is page-aligned.
+> >
+> > Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> > ---
+> >  arch/loongarch/include/asm/inst.h |   1 +
+> >  arch/loongarch/kernel/inst.c      |  27 ++++++++
+> >  arch/loongarch/net/bpf_jit.c      | 104 ++++++++++++++++++++++++++++++
+> >  3 files changed, 132 insertions(+)
+> >
+> > diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include=
+/asm/inst.h
+> > index 2ae96a35d..88bb73e46 100644
+> > --- a/arch/loongarch/include/asm/inst.h
+> > +++ b/arch/loongarch/include/asm/inst.h
+> > @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction=
+ insn, struct pt_regs *regs);
+> >  int larch_insn_read(void *addr, u32 *insnp);
+> >  int larch_insn_write(void *addr, u32 insn);
+> >  int larch_insn_patch_text(void *addr, u32 insn);
+> > +int larch_insn_text_copy(void *dst, void *src, size_t len);
+> >
+> >  u32 larch_insn_gen_nop(void);
+> >  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
+> > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.=
+c
+> > index 674e3b322..7df63a950 100644
+> > --- a/arch/loongarch/kernel/inst.c
+> > +++ b/arch/loongarch/kernel/inst.c
+> > @@ -4,6 +4,7 @@
+> >   */
+> >  #include <linux/sizes.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/set_memory.h>
+> >
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/inst.h>
+> > @@ -218,6 +219,32 @@ int larch_insn_patch_text(void *addr, u32 insn)
+> >         return ret;
+> >  }
+> >
+> > +int larch_insn_text_copy(void *dst, void *src, size_t len)
+> > +{
+> > +       int ret;
+> > +       unsigned long flags;
+> > +       unsigned long dst_start, dst_end, dst_len;
+> > +
+> > +       dst_start =3D round_down((unsigned long)dst, PAGE_SIZE);
+> > +       dst_end =3D round_up((unsigned long)dst + len, PAGE_SIZE);
+> > +       dst_len =3D dst_end - dst_start;
+> > +
+> > +       set_memory_rw(dst_start, dst_len / PAGE_SIZE);
+> > +       raw_spin_lock_irqsave(&patch_lock, flags);
+> > +
+> > +       ret =3D copy_to_kernel_nofault(dst, src, len);
+> > +       if (ret)
+> > +               pr_err("%s: operation failed\n", __func__);
+> > +
+> > +       raw_spin_unlock_irqrestore(&patch_lock, flags);
+> > +       set_memory_rox(dst_start, dst_len / PAGE_SIZE);
+> > +
+> > +       if (!ret)
+> > +               flush_icache_range((unsigned long)dst, (unsigned long)d=
+st + len);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> >  u32 larch_insn_gen_nop(void)
+> >  {
+> >         return INSN_NOP;
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
+c
+> > index 7032f11d3..5e6ae7e0e 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -4,8 +4,12 @@
+> >   *
+> >   * Copyright (C) 2022 Loongson Technology Corporation Limited
+> >   */
+> > +#include <linux/memory.h>
+> >  #include "bpf_jit.h"
+> >
+> > +#define LOONGARCH_LONG_JUMP_NINSNS 5
+> > +#define LOONGARCH_LONG_JUMP_NBYTES (LOONGARCH_LONG_JUMP_NINSNS * 4)
+> > +
+> >  #define REG_TCC                LOONGARCH_GPR_A6
+> >  #define TCC_SAVED      LOONGARCH_GPR_S5
+> >
+> > @@ -88,6 +92,7 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
+> >   */
+> >  static void build_prologue(struct jit_ctx *ctx)
+> >  {
+> > +       int i;
+> >         int stack_adjust =3D 0, store_offset, bpf_stack_adjust;
+> >
+> >         bpf_stack_adjust =3D round_up(ctx->prog->aux->stack_depth, 16);
+> > @@ -98,6 +103,10 @@ static void build_prologue(struct jit_ctx *ctx)
+> >         stack_adjust =3D round_up(stack_adjust, 16);
+> >         stack_adjust +=3D bpf_stack_adjust;
+> >
+> > +       /* Reserve space for the move_imm + jirl instruction */
+> > +       for (i =3D 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
+> > +               emit_insn(ctx, nop);
+> > +
+> >         /*
+> >          * First instruction initializes the tail call count (TCC).
+> >          * On tail call we skip this instruction, and the TCC is
+> > @@ -1367,3 +1376,98 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+> >  {
+> >         return true;
+> >  }
+> > +
+> > +static int emit_jump_and_link(struct jit_ctx *ctx, u8 rd, u64 target)
+> > +{
+> > +       if (!target) {
+> > +               pr_err("bpf_jit: jump target address is error\n");
+> > +               return -EFAULT;
+> > +       }
+> > +
+> > +       move_imm(ctx, LOONGARCH_GPR_T1, target, false);
+> > +       emit_insn(ctx, jirl, rd, LOONGARCH_GPR_T1, 0);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool i=
+s_call)
+> > +{
+> > +       struct jit_ctx ctx;
+> > +
+> > +       ctx.idx =3D 0;
+> > +       ctx.image =3D (union loongarch_instruction *)insns;
+> > +
+> > +       if (!target) {
+> > +               emit_insn((&ctx), nop);
+> > +               emit_insn((&ctx), nop);
+>
+> There should be 5 nops, no ?
+Chenghao,
 
-...
+We have already fixed the concurrent problem, now this is the only
+issue, please reply tas soon as possible.
 
-> x86_64 does not see these objtool warnings when LTO is enabled, is this
-> a backend issue or does objtool need to account for something that LLVM
-> does yet GCC does not?
+Huacai
 
-I can reproduce this problem.
-
-After a quick look, objdump and readelf shows that there is no generated
-relocation section '.rela.discard.tablejump_annotate' for the table jump
-instruction when compiling with optimization config LTO_CLANG_THIN, thus
-objtool can not know that what is the actual destination address for the
-dynamic jump instruction jirl.
-
-It needs to do something on the LLVM side to make sure that there is the
-relocation section '.rela.discard.tablejump_annotate' if LTO is enabled,
-but it seems not so easy.
-
-I disscussed with Wang Rui offline and he suggested that we should ensure
-it is aware of linker with LTO, '--loongarch-annotate-tablejump' needs to
-be passed via '-mllvm' to ld.lld.
-
-For the above reasons, in order to maintain downward compatibility for the
-current older LLVM compiler, it is safe to do the following changes in the
-kernel Makefile for now:
-
------8<-----
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index b0703a4e02a2..6cdbcbbe730e 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -103,6 +103,12 @@ KBUILD_CFLAGS                      += $(call 
-cc-option,-mthin-add-sub) $(call cc-option,-Wa$(comma)
-  ifdef CONFIG_OBJTOOL
-  ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
-  KBUILD_CFLAGS                  += -mannotate-tablejump
-+# The annotate-tablejump option can not be passed to LLVM backend when 
-LTO is enabled.
-+# Ensure it is aware of linker with LTO, 
-'--loongarch-annotate-tablejump' needs to be
-+# passed via '-mllvm' to ld.lld.
-+ifdef CONFIG_LTO_CLANG
-+KBUILD_LDFLAGS                 += -mllvm --loongarch-annotate-tablejump
-+endif
-  else
-  KBUILD_CFLAGS                  += -fno-jump-tables # keep 
-compatibility with older compilers
-  endif
-
-With the above changes, there are still some other objtool warnings
-and build errors if the config LTO_CLANG_THIN is set, maybe it needs
-to adjust the objtool code too, I will take some time to analysis.
-
-Thanks,
-Tiezhu
-
+>
+> > +               return 0;
+> > +       }
+> > +
+> > +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LO=
+ONGARCH_GPR_ZERO,
+> > +                                 (unsigned long)target);
+> > +}
+> > +
+> > +int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
+> > +                      void *old_addr, void *new_addr)
+> > +{
+> > +       u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D IN=
+SN_NOP};
+> > +       u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D IN=
+SN_NOP};
+> > +       bool is_call =3D poke_type =3D=3D BPF_MOD_CALL;
+> > +       int ret;
+> > +
+> > +       if (!is_kernel_text((unsigned long)ip) &&
+> > +               !is_bpf_text_address((unsigned long)ip))
+> > +               return -ENOTSUPP;
+> > +
+> > +       ret =3D gen_jump_or_nops(old_addr, ip, old_insns, is_call);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       if (memcmp(ip, old_insns, LOONGARCH_LONG_JUMP_NBYTES))
+> > +               return -EFAULT;
+> > +
+> > +       ret =3D gen_jump_or_nops(new_addr, ip, new_insns, is_call);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       mutex_lock(&text_mutex);
+> > +       if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
+> > +               ret =3D larch_insn_text_copy(ip, new_insns, LOONGARCH_L=
+ONG_JUMP_NBYTES);
+> > +       mutex_unlock(&text_mutex);
+> > +       return ret;
+> > +}
+> > +
+> > +int bpf_arch_text_invalidate(void *dst, size_t len)
+> > +{
+> > +       int i;
+> > +       int ret =3D 0;
+> > +       u32 *inst;
+> > +
+> > +       inst =3D kvmalloc(len, GFP_KERNEL);
+> > +       if (!inst)
+> > +               return -ENOMEM;
+> > +
+> > +       for (i =3D 0; i < (len/sizeof(u32)); i++)
+> > +               inst[i] =3D INSN_BREAK;
+> > +
+> > +       mutex_lock(&text_mutex);
+> > +       if (larch_insn_text_copy(dst, inst, len))
+> > +               ret =3D -EINVAL;
+> > +       mutex_unlock(&text_mutex);
+> > +
+> > +       kvfree(inst);
+> > +       return ret;
+> > +}
+> > +
+> > +void *bpf_arch_text_copy(void *dst, void *src, size_t len)
+> > +{
+> > +       int ret;
+> > +
+> > +       mutex_lock(&text_mutex);
+> > +       ret =3D larch_insn_text_copy(dst, src, len);
+> > +       mutex_unlock(&text_mutex);
+> > +       if (ret)
+> > +               return ERR_PTR(-EINVAL);
+> > +
+> > +       return dst;
+> > +}
+> > --
+>
+> bpf_arch_text_invalidate() and bpf_arch_text_copy() is not related to
+> BPF trampoline, right ?
+>
+> > 2.25.1
+> >
