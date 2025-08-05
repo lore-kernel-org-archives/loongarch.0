@@ -1,405 +1,197 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C168F275847
-	for <loongarch@lists.linux.dev>; Tue,  5 Aug 2025 13:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1C12797A5
+	for <loongarch@lists.linux.dev>; Tue,  5 Aug 2025 14:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754401352; cv=none; b=SfMMPuccT6X+f9yyNHOPq03A57VIRyqsjK4HcAa+qh+0EPhE+aafGjLphbMRddaDI1ahSO/FGv9UU2gqvxogcWwU8FEpRipD3WOejJauwqD6r8PsVc+F8Nll59qvQ8KFRUr312Ft7/DO9MVDw5xAEqzvMb9/3j7HmaLjaN1jxfI=
+	t=1754403992; cv=none; b=sxiH90trbb6zHmfuPxVe6VQiFaI4hQhG5fAVthZ6/EDbs6OHJin8g1GNSDK2uWvQJcJCl9yK1SGMj8+XC6wWI7qfMTCee9Wm70KF29Hg08rI/9tHdYKo8iQW46PHBccZiY948MyOGbQMAAzoJsURkLucwchVdAYPUyGohCVxytg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754401352; c=relaxed/simple;
-	bh=jiWRZlu30KCgc0bW1cXmyzwwH+9OjcHfP9ALGv6NbW8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MQ6YAS6INKZkWgg+Ps2NKpWZIHKN4y985Euo/p70np5xIUrHIHMWO0+NLxXSteJUyx5GC80vWsgtqH2Zl6TZ1zYNnpsHDfuOMXlf/WtxTMOJzeaOFoxmQWsjWa/YTAmi75sj8eSmgO8pVeX9JJT67XbFPOye5mq1qsaWm9JT1Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DYKWF2y6; arc=none smtp.client-ip=209.85.160.176
+	s=arc-20240116; t=1754403992; c=relaxed/simple;
+	bh=kWK6iKFWIFYyFTWQkZuVDSZkdVcbDsC/lAMrEgHer1Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oZpf3HQDXmvnOeJrnIl9zjS8VYH5U4flr3RdW7ZR31bQnyqYrK7SvLXSmfTtIqOoxu8IYijGzf22JrCPzyNOH960XklSHnTX0vMdvdu9bA2vx9uvTEdU0sPqgFim2MzW1p/YzCPs3y1PEy6tBIZRRBhJ2mJsFs5nQOq/DfRItlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PuE+IwfT; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYKWF2y6"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4b070e57254so17638201cf.3
-        for <loongarch@lists.linux.dev>; Tue, 05 Aug 2025 06:42:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PuE+IwfT"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-55b9a3e69d3so4044598e87.0
+        for <loongarch@lists.linux.dev>; Tue, 05 Aug 2025 07:26:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754401350; x=1755006150; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9tqW6prf2C3KdFtzF3A5CcH40D2BcXOPzZkaGzsQogs=;
-        b=DYKWF2y6cD+7fm2roLlXXbKk42GBbfVIkgRtLVtrnjKLRlCGmsQRSdHQfAvxfQ8sk1
-         NFmu/JCBG1jaK1YpPlPHuLE/tJFrhO8PeCv+3JGO2GjVB3Xp4lmmVDB09Ka3yDaBz1UN
-         /7Jk4sPu4Ll2ptahHnNBjjwwv0q8AFSqF1DWRm/f56A3H4GADa3UY8BhJ23E/+qdfyBJ
-         pgihleeUWKjl2JEhmsdJh5jCe7ua0XCEvI9FA5ed7UvMn8BerRtaDi7GMXoDPyXN4YNi
-         ZaBWhiV6eh25c8gy/WyV85J8daPBwNBcpdsSXiV4h5wEdnI+yh6nEirmI7BQEzSdzSk8
-         mKuQ==
+        d=gmail.com; s=20230601; t=1754403988; x=1755008788; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pksKKRBtO31JVCyUig2REP3M3oI0Y/m5ILEfob1JeTo=;
+        b=PuE+IwfTKWDI97roYruFEo46xZPTYVjuqnRmgvtOhHpHz5Rqiaq+YJKEGMHDKIyQq4
+         vIlAmZEgJ153AuQta34nfJ6ERDuQHKe7e9biV8zMxxmFeQk8pV6eOtXmE199kUwAvmrF
+         71M5bErlLRJsotc5yWZCPhgMQQaeZqK1rC+IWQ+C53ZVTK67khZ+62NgUfhpMf1DtQIN
+         +Su6L6VL/rwTEuaqmOSrjZjR6Uf4FhR9og0uh9s4HiGiHqRgB/5RUqyxhrWpJTyfkVCA
+         zNXR085QtHGeEoY6UYXyMNHF1U+RrjyOMK3QSfBLffSluHAYQGVOEvS6C5p53yZCxOkc
+         HOrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754401350; x=1755006150;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9tqW6prf2C3KdFtzF3A5CcH40D2BcXOPzZkaGzsQogs=;
-        b=J+RaSpeCz5IFNNIKnSaI17HIMnGmUENxmfsyxHU6LHZtBKjn4AiC+LZ0bATUoUGqUk
-         eOKltjOeXkEQ1QOCKMsIxDlHsbNG7XJb2BoimMuwpYkIjZb9yDvCJmtacGX1Lva4aS+3
-         FEbkaeiXpSGSVJWJvVBu/dod3sWs+gSJPxPDBC5HvKyu7B+HwA/KPlOdhde1llFUQuiI
-         67w7Yc+GuKQS1KLLlccjoHnMYyuSnKCAQ50ryklyeldiwOoruXK7b5q2hilUVZloYmXy
-         x8I640SnK/v49akLvs07NK7josyqNT4i3FsvQM9Fq92Te83nd/BOJrqr1RIHMrNvw/lj
-         tqTw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8wWsfAyDZlNct5a4g3xAVXncTG+KN1CNv0w7IOerSawkMIzPnPpo3i3Lao+FYVHsBM2OetK83wV0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzVBVidSFjvs/rsv94iJiEI3q5+Er605MC2TFSDdfVPKAm0PvHW
-	qoAoCuPkwsIHxIJCjZQ6JOVpD3l/S1+fRoOoCZwSKg8vbAvD0jDv8eKlSG5/K2JG5V+31sQiiuz
-	jGsh1c9prPYg5PvvwUeaoCQ32n96mbrE=
-X-Gm-Gg: ASbGncvGO7+qPURRsfNIS6nWK6hqjBAg/7cIRB7Nh21EROUTjkQRwB4dg3K5so4tlCp
-	EONdle3JVC2NiHIHrwNHFG0+L4YqdaU1WS7UEk9wKyF9NjIF1/DcOM/7s4XeSGrPPG32yT71+BJ
-	0eBNIdjPpDEuBea0rHOSKDpNkBtyHU1YpstkOP1ImAX41LLI3u6odZImKdtiRCCETqgTtK9ZO/d
-	GqaNyU=
-X-Google-Smtp-Source: AGHT+IGrQcY12vRWP7gowk1Nks+lt6a2YGRtJlkkMeGyN7pv8Ai/zBG8ooVw/Sp4UQnK+kFf4YCyfypD3T99/Sp8qPQ=
-X-Received: by 2002:a05:622a:648:b0:4b0:7e88:8cd3 with SMTP id
- d75a77b69052e-4b07e889188mr49195961cf.34.1754401349437; Tue, 05 Aug 2025
- 06:42:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1754403988; x=1755008788;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pksKKRBtO31JVCyUig2REP3M3oI0Y/m5ILEfob1JeTo=;
+        b=e4vsZi4xnPQuRwz6O8uHWsamR0Fb+oRaxCQ+bIXXtrSAUWJMBN7kVDUpDSV/fzSDFC
+         uDxH58RoUG4St0wf+ujK4gEky+29kNLPYmx+naolVLuzqOwu5Cz5Gc6U8wT+vMHWQtSu
+         uVbrk/LyT2sdBO15sBWkZEkBdymV34QfGr1sR0q7TNWerQBbN8E76D3RmDPT3CUgbl/2
+         L7cQg4vwDkxxhTv1XP02scsMZW6V4gYNBARFfSNFFc0fiIBWy718cL9nLqaIWQE6zPhu
+         ysXBDfqQGK3MkZZ5ESTBt9wN9kn7smMMmKcYIw7qkUBvIc7yVpy9HIIJ05rHawpQOV1X
+         0ngQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV27IhkMFoKVnESOrnZFkiDk98se0Y9TG0D5WsWJeRHCYGj3PVx5fnzOaaJJwFndeJOce1uWdrhHYo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwN2iHOoV9YmzNqol7j/FXC7rSIHd8dITgvxnwCwi87Kj699IK/
+	Yr9OCkwmkr+V/1tp4hzAijvXLueax8ie8H/cGTasnhD3IfPAnjS8CLs5
+X-Gm-Gg: ASbGncti7sqQ40JymBSPwMPDQ8BZrV7ROlnCHtZjUn5ycx3HwKvrLZ93003DY+QUJP3
+	6Am2HED3ImpdykPsblKiye9nQvEXZOBDPhcQchYGzao2y0ddNe4722GFbacDPbreyoMUT4Vm4/X
+	75wDmJG+evLzgBDSC5x3uWYpxL8ki8o995dSXosVt+Cpd67WWY8SvhWJbf76sIaXW2NrYmlrCOQ
+	odZk1IORvjrjzJ8hBbjSZSdhMU+s1v6xz8N6gKT3o/lKrxMkP+bDq7U46bjs/M1U7ZhkZ0DJx35
+	9+DeLyKQcqIeDjGa5Y4Gqcf8wkpKi+p0Q7VDMviT4PHRf1BCcX6MtWiX+0rYngHo2CBd1oI68Cs
+	dJQ4g1VbC8GJiijWAYoeTbl0sxSlJXRcb+INJS5+8tpMSjKakxTrUKxhI5rcz0BBPrfIvoQ==
+X-Google-Smtp-Source: AGHT+IGy1WhFbslChqIwW3zDEXwo6CDb6xK1zgNUQQFWNlekigvy4oRcbBK1ihRZGuO8OayIKRf+qA==
+X-Received: by 2002:a05:6512:39cc:b0:55b:9647:8e7b with SMTP id 2adb3069b0e04-55b97b75a15mr4601956e87.43.1754403988090;
+        Tue, 05 Aug 2025 07:26:28 -0700 (PDT)
+Received: from localhost.localdomain (178.90.89.143.dynamic.telecom.kz. [178.90.89.143])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55b889a290fsm1976379e87.54.2025.08.05.07.26.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Aug 2025 07:26:27 -0700 (PDT)
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+To: ryabinin.a.a@gmail.com,
+	hca@linux.ibm.com,
+	christophe.leroy@csgroup.eu,
+	andreyknvl@gmail.com,
+	agordeev@linux.ibm.com,
+	akpm@linux-foundation.org,
+	zhangqing@loongson.cn,
+	chenhuacai@loongson.cn,
+	trishalfonso@google.com,
+	davidgow@google.com
+Cc: glider@google.com,
+	dvyukov@google.com,
+	kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-mm@kvack.org,
+	snovitoll@gmail.com
+Subject: [PATCH v4 0/9] kasan: unify kasan_arch_is_ready() and remove arch-specific implementations
+Date: Tue,  5 Aug 2025 19:26:13 +0500
+Message-Id: <20250805142622.560992-1-snovitoll@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250730131257.124153-1-duanchenghao@kylinos.cn>
- <20250730131257.124153-4-duanchenghao@kylinos.cn> <CAEyhmHTE8yd0-N5YkMvJScv+Dsw3sAvgyZt8h1sd1=rzaCoTwQ@mail.gmail.com>
- <CAAhV-H55VoFdK8B-PBhYfzHAOQJLnOxLUZGZyHqqdvt=5K3Zhg@mail.gmail.com>
- <20250805063014.GA543627@chenghao-pc> <CAAhV-H4W6z2CRBJ2VDsKTmmGNS+NmfH4aZCRB6K9+XQ4i3vPCA@mail.gmail.com>
-In-Reply-To: <CAAhV-H4W6z2CRBJ2VDsKTmmGNS+NmfH4aZCRB6K9+XQ4i3vPCA@mail.gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Tue, 5 Aug 2025 06:42:17 -0700
-X-Gm-Features: Ac12FXxGXbn8ATQiQdyqqOFnSullYE9xAtYRrrJlWDYEI3JCfvaDdXd3edk3VY8
-Message-ID: <CAK3+h2wGeVFuzpUroiPcOGt9Tu76fV=aZMFy6yxub8MOF569YQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] LoongArch: BPF: Implement dynamic code
- modification support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Chenghao Duan <duanchenghao@kylinos.cn>, Hengqi Chen <hengqi.chen@gmail.com>, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, yangtiezhu@loongson.cn, 
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn, 
-	geliang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 5, 2025 at 4:13=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org> =
-wrote:
->
-> On Tue, Aug 5, 2025 at 2:30=E2=80=AFPM Chenghao Duan <duanchenghao@kylino=
-s.cn> wrote:
-> >
-> > On Tue, Aug 05, 2025 at 12:10:05PM +0800, Huacai Chen wrote:
-> > > On Mon, Aug 4, 2025 at 10:02=E2=80=AFAM Hengqi Chen <hengqi.chen@gmai=
-l.com> wrote:
-> > > >
-> > > > On Wed, Jul 30, 2025 at 9:13=E2=80=AFPM Chenghao Duan <duanchenghao=
-@kylinos.cn> wrote:
-> > > > >
-> > > > > This commit adds support for BPF dynamic code modification on the
-> > > > > LoongArch architecture.:
-> > > > > 1. Implement bpf_arch_text_poke() for runtime instruction patchin=
-g.
-> > > > > 2. Add bpf_arch_text_copy() for instruction block copying.
-> > > > > 3. Create bpf_arch_text_invalidate() for code invalidation.
-> > > > >
-> > > > > On LoongArch, since symbol addresses in the direct mapping
-> > > > > region cannot be reached via relative jump instructions from the =
-paged
-> > > > > mapping region, we use the move_imm+jirl instruction pair as abso=
-lute
-> > > > > jump instructions. These require 2-5 instructions, so we reserve =
-5 NOP
-> > > > > instructions in the program as placeholders for function jumps.
-> > > > >
-> > > > > larch_insn_text_copy is solely used for BPF. The use of
-> > > > > larch_insn_text_copy() requires page_size alignment. Currently, o=
-nly
-> > > > > the size of the trampoline is page-aligned.
-> > > > >
-> > > > > Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> > > > > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > > > > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> > > > > ---
-> > > > >  arch/loongarch/include/asm/inst.h |   1 +
-> > > > >  arch/loongarch/kernel/inst.c      |  27 ++++++++
-> > > > >  arch/loongarch/net/bpf_jit.c      | 104 ++++++++++++++++++++++++=
-++++++
-> > > > >  3 files changed, 132 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/i=
-nclude/asm/inst.h
-> > > > > index 2ae96a35d..88bb73e46 100644
-> > > > > --- a/arch/loongarch/include/asm/inst.h
-> > > > > +++ b/arch/loongarch/include/asm/inst.h
-> > > > > @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instr=
-uction insn, struct pt_regs *regs);
-> > > > >  int larch_insn_read(void *addr, u32 *insnp);
-> > > > >  int larch_insn_write(void *addr, u32 insn);
-> > > > >  int larch_insn_patch_text(void *addr, u32 insn);
-> > > > > +int larch_insn_text_copy(void *dst, void *src, size_t len);
-> > > > >
-> > > > >  u32 larch_insn_gen_nop(void);
-> > > > >  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
-> > > > > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel=
-/inst.c
-> > > > > index 674e3b322..7df63a950 100644
-> > > > > --- a/arch/loongarch/kernel/inst.c
-> > > > > +++ b/arch/loongarch/kernel/inst.c
-> > > > > @@ -4,6 +4,7 @@
-> > > > >   */
-> > > > >  #include <linux/sizes.h>
-> > > > >  #include <linux/uaccess.h>
-> > > > > +#include <linux/set_memory.h>
-> > > > >
-> > > > >  #include <asm/cacheflush.h>
-> > > > >  #include <asm/inst.h>
-> > > > > @@ -218,6 +219,32 @@ int larch_insn_patch_text(void *addr, u32 in=
-sn)
-> > > > >         return ret;
-> > > > >  }
-> > > > >
-> > > > > +int larch_insn_text_copy(void *dst, void *src, size_t len)
-> > > > > +{
-> > > > > +       int ret;
-> > > > > +       unsigned long flags;
-> > > > > +       unsigned long dst_start, dst_end, dst_len;
-> > > > > +
-> > > > > +       dst_start =3D round_down((unsigned long)dst, PAGE_SIZE);
-> > > > > +       dst_end =3D round_up((unsigned long)dst + len, PAGE_SIZE)=
-;
-> > > > > +       dst_len =3D dst_end - dst_start;
-> > > > > +
-> > > > > +       set_memory_rw(dst_start, dst_len / PAGE_SIZE);
-> > > > > +       raw_spin_lock_irqsave(&patch_lock, flags);
-> > > > > +
-> > > > > +       ret =3D copy_to_kernel_nofault(dst, src, len);
-> > > > > +       if (ret)
-> > > > > +               pr_err("%s: operation failed\n", __func__);
-> > > > > +
-> > > > > +       raw_spin_unlock_irqrestore(&patch_lock, flags);
-> > > > > +       set_memory_rox(dst_start, dst_len / PAGE_SIZE);
-> > > > > +
-> > > > > +       if (!ret)
-> > > > > +               flush_icache_range((unsigned long)dst, (unsigned =
-long)dst + len);
-> > > > > +
-> > > > > +       return ret;
-> > > > > +}
-> > > > > +
-> > > > >  u32 larch_insn_gen_nop(void)
-> > > > >  {
-> > > > >         return INSN_NOP;
-> > > > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bp=
-f_jit.c
-> > > > > index 7032f11d3..5e6ae7e0e 100644
-> > > > > --- a/arch/loongarch/net/bpf_jit.c
-> > > > > +++ b/arch/loongarch/net/bpf_jit.c
-> > > > > @@ -4,8 +4,12 @@
-> > > > >   *
-> > > > >   * Copyright (C) 2022 Loongson Technology Corporation Limited
-> > > > >   */
-> > > > > +#include <linux/memory.h>
-> > > > >  #include "bpf_jit.h"
-> > > > >
-> > > > > +#define LOONGARCH_LONG_JUMP_NINSNS 5
-> > > > > +#define LOONGARCH_LONG_JUMP_NBYTES (LOONGARCH_LONG_JUMP_NINSNS *=
- 4)
-> > > > > +
-> > > > >  #define REG_TCC                LOONGARCH_GPR_A6
-> > > > >  #define TCC_SAVED      LOONGARCH_GPR_S5
-> > > > >
-> > > > > @@ -88,6 +92,7 @@ static u8 tail_call_reg(struct jit_ctx *ctx)
-> > > > >   */
-> > > > >  static void build_prologue(struct jit_ctx *ctx)
-> > > > >  {
-> > > > > +       int i;
-> > > > >         int stack_adjust =3D 0, store_offset, bpf_stack_adjust;
-> > > > >
-> > > > >         bpf_stack_adjust =3D round_up(ctx->prog->aux->stack_depth=
-, 16);
-> > > > > @@ -98,6 +103,10 @@ static void build_prologue(struct jit_ctx *ct=
-x)
-> > > > >         stack_adjust =3D round_up(stack_adjust, 16);
-> > > > >         stack_adjust +=3D bpf_stack_adjust;
-> > > > >
-> > > > > +       /* Reserve space for the move_imm + jirl instruction */
-> > > > > +       for (i =3D 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
-> > > > > +               emit_insn(ctx, nop);
-> > > > > +
-> > > > >         /*
-> > > > >          * First instruction initializes the tail call count (TCC=
-).
-> > > > >          * On tail call we skip this instruction, and the TCC is
-> > > > > @@ -1367,3 +1376,98 @@ bool bpf_jit_supports_subprog_tailcalls(vo=
-id)
-> > > > >  {
-> > > > >         return true;
-> > > > >  }
-> > > > > +
-> > > > > +static int emit_jump_and_link(struct jit_ctx *ctx, u8 rd, u64 ta=
-rget)
-> > > > > +{
-> > > > > +       if (!target) {
-> > > > > +               pr_err("bpf_jit: jump target address is error\n")=
-;
-> > > > > +               return -EFAULT;
-> > > > > +       }
-> > > > > +
-> > > > > +       move_imm(ctx, LOONGARCH_GPR_T1, target, false);
-> > > > > +       emit_insn(ctx, jirl, rd, LOONGARCH_GPR_T1, 0);
-> > > > > +
-> > > > > +       return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int gen_jump_or_nops(void *target, void *ip, u32 *insns, =
-bool is_call)
-> > > > > +{
-> > > > > +       struct jit_ctx ctx;
-> > > > > +
-> > > > > +       ctx.idx =3D 0;
-> > > > > +       ctx.image =3D (union loongarch_instruction *)insns;
-> > > > > +
-> > > > > +       if (!target) {
-> > > > > +               emit_insn((&ctx), nop);
-> > > > > +               emit_insn((&ctx), nop);
-> > > >
-> > > > There should be 5 nops, no ?
-> > > Chenghao,
-> > >
-> > > We have already fixed the concurrent problem, now this is the only
-> > > issue, please reply tas soon as possible.
-> > >
-> > > Huacai
-> >
-> > Hi Hengqi & Huacai,
-> >
-> > I'm sorry I just saw the email.
-> > This position can be configured with 5 NOP instructions, and I have
-> > tested it successfully.
-> OK, now loongarch-next [1] has integrated all needed changes, you and
-> Vincent can test to see if everything is OK.
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loon=
-gson.git/log/?h=3Dloongarch-next
->
+This patch series addresses the fragmentation in KASAN initialization
+across architectures by introducing a unified approach that eliminates
+duplicate static keys and arch-specific kasan_arch_is_ready()
+implementations.
 
-Tested-by: Vincent Li <vincent.mc.li@gmail.com>
+The core issue is that different architectures have inconsistent approaches
+to KASAN readiness tracking:
+- PowerPC, LoongArch, and UML arch, each implement own kasan_arch_is_ready()
+- Only HW_TAGS mode had a unified static key (kasan_flag_enabled)
+- Generic and SW_TAGS modes relied on arch-specific solutions
+  or always-on behavior
 
-> Huacai
->
-> >
-> > sudo ./test_progs -a fentry_test/fentry
-> > sudo ./test_progs -a fexit_test/fexit
-> > sudo ./test_progs -a fentry_fexit
-> > sudo ./test_progs -a modify_return
-> > sudo ./test_progs -a fexit_sleep
-> > sudo ./test_progs -a test_overhead
-> > sudo ./test_progs -a trampoline_count
-> > sudo ./test_progs -a fexit_bpf2bpf
-> >
-> > if (!target) {
-> >         int i;
-> >         for (i =3D 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
-> >                 emit_insn((&ctx), nop);
-> >         return 0;
-> > }
-> >
-> >
-> > Chenghao
-> >
-> > >
-> > > >
-> > > > > +               return 0;
-> > > > > +       }
-> > > > > +
-> > > > > +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T=
-0 : LOONGARCH_GPR_ZERO,
-> > > > > +                                 (unsigned long)target);
-> > > > > +}
-> > > > > +
-> > > > > +int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_ty=
-pe,
-> > > > > +                      void *old_addr, void *new_addr)
-> > > > > +{
-> > > > > +       u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =
-=3D INSN_NOP};
-> > > > > +       u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =
-=3D INSN_NOP};
-> > > > > +       bool is_call =3D poke_type =3D=3D BPF_MOD_CALL;
-> > > > > +       int ret;
-> > > > > +
-> > > > > +       if (!is_kernel_text((unsigned long)ip) &&
-> > > > > +               !is_bpf_text_address((unsigned long)ip))
-> > > > > +               return -ENOTSUPP;
-> > > > > +
-> > > > > +       ret =3D gen_jump_or_nops(old_addr, ip, old_insns, is_call=
-);
-> > > > > +       if (ret)
-> > > > > +               return ret;
-> > > > > +
-> > > > > +       if (memcmp(ip, old_insns, LOONGARCH_LONG_JUMP_NBYTES))
-> > > > > +               return -EFAULT;
-> > > > > +
-> > > > > +       ret =3D gen_jump_or_nops(new_addr, ip, new_insns, is_call=
-);
-> > > > > +       if (ret)
-> > > > > +               return ret;
-> > > > > +
-> > > > > +       mutex_lock(&text_mutex);
-> > > > > +       if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
-> > > > > +               ret =3D larch_insn_text_copy(ip, new_insns, LOONG=
-ARCH_LONG_JUMP_NBYTES);
-> > > > > +       mutex_unlock(&text_mutex);
-> > > > > +       return ret;
-> > > > > +}
-> > > > > +
-> > > > > +int bpf_arch_text_invalidate(void *dst, size_t len)
-> > > > > +{
-> > > > > +       int i;
-> > > > > +       int ret =3D 0;
-> > > > > +       u32 *inst;
-> > > > > +
-> > > > > +       inst =3D kvmalloc(len, GFP_KERNEL);
-> > > > > +       if (!inst)
-> > > > > +               return -ENOMEM;
-> > > > > +
-> > > > > +       for (i =3D 0; i < (len/sizeof(u32)); i++)
-> > > > > +               inst[i] =3D INSN_BREAK;
-> > > > > +
-> > > > > +       mutex_lock(&text_mutex);
-> > > > > +       if (larch_insn_text_copy(dst, inst, len))
-> > > > > +               ret =3D -EINVAL;
-> > > > > +       mutex_unlock(&text_mutex);
-> > > > > +
-> > > > > +       kvfree(inst);
-> > > > > +       return ret;
-> > > > > +}
-> > > > > +
-> > > > > +void *bpf_arch_text_copy(void *dst, void *src, size_t len)
-> > > > > +{
-> > > > > +       int ret;
-> > > > > +
-> > > > > +       mutex_lock(&text_mutex);
-> > > > > +       ret =3D larch_insn_text_copy(dst, src, len);
-> > > > > +       mutex_unlock(&text_mutex);
-> > > > > +       if (ret)
-> > > > > +               return ERR_PTR(-EINVAL);
-> > > > > +
-> > > > > +       return dst;
-> > > > > +}
-> > > > > --
-> > > >
-> > > > bpf_arch_text_invalidate() and bpf_arch_text_copy() is not related =
-to
-> > > > BPF trampoline, right ?
-> >
-> > From the perspective of BPF core source code calls, the two functions
-> > bpf_arch_text_invalidate() and bpf_arch_text_copy() are not only used f=
-or
-> > trampolines.
-> >
-> > > >
-> > > > > 2.25.1
-> > > > >
-> >
+This series implements two-level approach:
+1. kasan_enabled() - compile-time check for KASAN configuration
+2. kasan_shadow_initialized() - runtime check for shadow memory readiness
+
+Changes in v4:
+- Unified patches where ARCH_DEFER_KASAN is introduced and used
+  in the KASAN code (Andrey Ryabinin)
+- Fixed kasan_enable() for HW_TAGS mode (Andrey Ryabinin)
+- Replaced !kasan_enabled() with !kasan_shadow_initialized() in
+  loongarch which selects ARCH_DEFER_KASAN (Andrey Ryabinin)
+- Addressed the issue in UML arch, where kasan_init_generic() is
+  called before jump_label_init() (Andrey Ryabinin)
+
+Adding in TO additional recipients who developed KASAN in LoongArch, UML.
+
+Tested on:
+- powerpc - selects ARCH_DEFER_KASAN
+Built ppc64_defconfig (PPC_BOOK3S_64) - OK
+Booted via qemu-system-ppc64 - OK
+
+- um - selects ARCH_DEFER_KASAN
+Built defconfig with KASAN_INLINE - OK
+Built defconfig with STATIC_LINK && KASAN_OUTLINE - OK
+Booted ./linux - OK
+
+- loongarch - selects ARCH_DEFER_KASAN
+Built defconfig with KASAN_GENERIC - OK
+Haven't tested the boot. Asking Loongarch developers to verify - N/A
+But should be good, since Loongarch does not have specific "kasan_init()"
+call like UML does. It selects ARCH_DEFER_KASAN and calls kasan_init()
+in the end of setup_arch() after jump_label_init().
+
+- arm64
+Built defconfig, kvm_guest.config with HW_TAGS, SW_TAGS, GENERIC - OK
+KASAN_KUNIT_TEST - OK
+Booted via qemu-system-arm64 - OK
+
+- x86_64
+Built defconfig, kvm_guest.config with KASAN_GENERIC - OK
+KASAN_KUNIT_TEST - OK
+Booted via qemu-system-x86 - OK
+
+- s390, riscv, xtensa, arm
+Built defconfig with KASAN_GENERIC - OK
+
+Previous v3 thread: https://lore.kernel.org/all/20250717142732.292822-1-snovitoll@gmail.com/
+Previous v2 thread: https://lore.kernel.org/all/20250626153147.145312-1-snovitoll@gmail.com/
+
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217049
+
+Sabyrzhan Tasbolatov (9):
+  kasan: introduce ARCH_DEFER_KASAN and unify static key across modes
+  kasan/powerpc: select ARCH_DEFER_KASAN and call kasan_init_generic
+  kasan/arm,arm64: call kasan_init_generic in kasan_init
+  kasan/xtensa: call kasan_init_generic in kasan_init
+  kasan/loongarch: select ARCH_DEFER_KASAN and call kasan_init_generic
+  kasan/um: select ARCH_DEFER_KASAN and call kasan_init_generic
+  kasan/x86: call kasan_init_generic in kasan_init
+  kasan/s390: call kasan_init_generic in kasan_init
+  kasan/riscv: call kasan_init_generic in kasan_init
+
+ arch/arm/mm/kasan_init.c               |  2 +-
+ arch/arm64/mm/kasan_init.c             |  4 +--
+ arch/loongarch/Kconfig                 |  1 +
+ arch/loongarch/include/asm/kasan.h     |  7 -----
+ arch/loongarch/mm/kasan_init.c         |  8 ++---
+ arch/powerpc/Kconfig                   |  1 +
+ arch/powerpc/include/asm/kasan.h       | 12 --------
+ arch/powerpc/mm/kasan/init_32.c        |  2 +-
+ arch/powerpc/mm/kasan/init_book3e_64.c |  2 +-
+ arch/powerpc/mm/kasan/init_book3s_64.c |  6 +---
+ arch/riscv/mm/kasan_init.c             |  1 +
+ arch/s390/kernel/early.c               |  3 +-
+ arch/um/Kconfig                        |  1 +
+ arch/um/include/asm/kasan.h            |  5 ---
+ arch/um/kernel/mem.c                   | 12 ++++++--
+ arch/x86/mm/kasan_init_64.c            |  2 +-
+ arch/xtensa/mm/kasan_init.c            |  2 +-
+ include/linux/kasan-enabled.h          | 36 +++++++++++++++++-----
+ include/linux/kasan.h                  | 42 ++++++++++++++++++++------
+ lib/Kconfig.kasan                      |  8 +++++
+ mm/kasan/common.c                      | 18 +++++++----
+ mm/kasan/generic.c                     | 23 ++++++++------
+ mm/kasan/hw_tags.c                     |  9 +-----
+ mm/kasan/kasan.h                       | 36 ++++++++++++++++------
+ mm/kasan/shadow.c                      | 32 +++++---------------
+ mm/kasan/sw_tags.c                     |  4 ++-
+ mm/kasan/tags.c                        |  2 +-
+ 27 files changed, 157 insertions(+), 124 deletions(-)
+
+-- 
+2.34.1
+
