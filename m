@@ -1,85 +1,90 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC092263F3C
-	for <loongarch@lists.linux.dev>; Tue,  5 Aug 2025 15:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D0C27874A
+	for <loongarch@lists.linux.dev>; Tue,  5 Aug 2025 16:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754406346; cv=none; b=bakmox6DHu4JBrSG93bCfcQVkRSojDTPYOJarHdoFPpLpYN5vEgh8vfACNCV4fCh0HkQer71koClAN2Ppv0pcMDyHNzw1EE72wL1IewWoFX6FqqcbzY6kqXbbsuUDjBC82HABGT1P8aonsqyYwn3sebVzklmXD27Sc880gwiS/Y=
+	t=1754410010; cv=none; b=ricukrizYtmUjbRV9dDVUcWVbY3O0M/oIifRSl+XuWJ2UcGCKaFMAOnBsuQNAhSZonkapH+HbprmE4U0Hl0JQMtqXXd3faoqhMkdGLRjqVrWUsTUn7apren8D0BtVVaV3GBimypXxz4QMubVRh5Gn/zUPLFK7xRpbBQHOyYl1ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754406346; c=relaxed/simple;
-	bh=81PMYlqM/y1cobIvGWv6NmLT8uHoL246gy0zJP1C1Hk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R8yP1n3xSFB9foMuwViHfOfKg5CynotoY89b6DE+gbrLa5v51koMFHvT5YT3Qq7SkH87JTzTaK/9wDopvSQDJxb1HdCYScedIKpD9LtD+XqddMArjvI78bB6yR90kdCXgY0gM9sxh/anqiphhqZdrW5pVJbzGuopDVoXEX04H9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=gx5mqEmL; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="gx5mqEmL"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 4D785204DA;
-	Tue,  5 Aug 2025 17:05:43 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id Wv6F2cCIqU_R; Tue,  5 Aug 2025 17:05:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1754406342; bh=81PMYlqM/y1cobIvGWv6NmLT8uHoL246gy0zJP1C1Hk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gx5mqEmLGTRTCB8WYMPylE4e1nEcEm6yYwA5XL6b1xbrYLzSwrf9TYrccQENl/2iR
-	 0mRQ9MinmqsNus88RQ/b3s0kxKUo6u+1mAdCyDB+VtBWk2YQWacpZa4OoGRYyvbnwO
-	 vyIwL2K25PzWkP5RFLhM//JvG/VEZeJ8hlvrTE6Do6eu+coE3Lcq1JTonAisfYodRN
-	 Hu78ICP2j0adzyFj87Yq0Lwehw7dU4GQxmOUCsH02jGdIvaOyxTRF0rN2jqlLTj4qu
-	 a6I6R2QB5NV5wo7QxrmVZUTjicHeIf/mJbyWEkbEhx/CAGnJu6PopZyZgQgsXFN9Id
-	 oLRyc1zhbrhUA==
-From: Yao Zi <ziyao@disroot.org>
-To: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v3 8/8] LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
-Date: Tue,  5 Aug 2025 15:01:47 +0000
-Message-ID: <20250805150147.25909-9-ziyao@disroot.org>
-In-Reply-To: <20250805150147.25909-1-ziyao@disroot.org>
-References: <20250805150147.25909-1-ziyao@disroot.org>
+	s=arc-20240116; t=1754410010; c=relaxed/simple;
+	bh=faz98SV8LWsJSVKbZq1Fc5HyCEH83h54RAFw1fSHnqA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G/assivdtwg+WLgF+VJL5tnouooFs7sLTDb7cUKwh0/vorTVWJAKA8NJBsDmkGvw3ro+3FxbnhQgtF3Qp0eoOgAIj7Tu6L+4XxKS+IxXj8oR6B1LljDfG+iI/4pp7yGjlsre332QB/raru66GVc8TsHFnuSlXVfYpnjSp4V8+ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 417DE44427;
+	Tue,  5 Aug 2025 16:06:42 +0000 (UTC)
+Message-ID: <20c1e656-512e-4424-9d4e-176af18bb7d6@ghiti.fr>
+Date: Tue, 5 Aug 2025 18:06:41 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 9/9] kasan/riscv: call kasan_init_generic in kasan_init
+To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
+ hca@linux.ibm.com, christophe.leroy@csgroup.eu, andreyknvl@gmail.com,
+ agordeev@linux.ibm.com, akpm@linux-foundation.org, zhangqing@loongson.cn,
+ chenhuacai@loongson.cn, trishalfonso@google.com, davidgow@google.com
+Cc: glider@google.com, dvyukov@google.com, kasan-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
+References: <20250805142622.560992-1-snovitoll@gmail.com>
+ <20250805142622.560992-10-snovitoll@gmail.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250805142622.560992-10-snovitoll@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudehiedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhephffhuddtveegleeggeefledtudfhudelvdetudfhgeffffeigffgkeethfejudejnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvvddruddtudgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepshhnohhvihhtohhllhesghhmrghilhdrtghomhdprhgtphhtthhopehrhigrsghinhhinhdrrgdrrgesghhmrghilhdrtghomhdprhgtphhtthhopehhtggrsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtoheptghhrhhishhtohhphhgvrdhlvghrohihsegtshhgrhhouhhprdgvuhdprhgtphhtthhopegrnhgurhgvhihknhhvlhesghhmrghilhdrtghomhdprhgtphhtthhopegrghhorhguvggvvheslhhin
+ hhugidrihgsmhdrtghomhdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepiihhrghnghhqihhngheslhhoohhnghhsohhnrdgtnh
+X-GND-Sasl: alex@ghiti.fr
 
-The property isn't required anymore as the supply clock of UART0 has
-been described.
+Hi Sabyrzhan,
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts | 1 -
- 1 file changed, 1 deletion(-)
+On 8/5/25 16:26, Sabyrzhan Tasbolatov wrote:
+> Call kasan_init_generic() which handles Generic KASAN initialization
+> and prints the banner. Since riscv doesn't select ARCH_DEFER_KASAN,
+> kasan_enable() will be a no-op, and kasan_enabled() will return
+> IS_ENABLED(CONFIG_KASAN) for optimal compile-time behavior.
+>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217049
+> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+> ---
+>   arch/riscv/mm/kasan_init.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/riscv/mm/kasan_init.c b/arch/riscv/mm/kasan_init.c
+> index 41c635d6aca..ba2709b1eec 100644
+> --- a/arch/riscv/mm/kasan_init.c
+> +++ b/arch/riscv/mm/kasan_init.c
+> @@ -530,6 +530,7 @@ void __init kasan_init(void)
+>   
+>   	memset(kasan_early_shadow_page, KASAN_SHADOW_INIT, PAGE_SIZE);
+>   	init_task.kasan_depth = 0;
+> +	kasan_init_generic();
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-index a033c086461f..1bdfff7fae92 100644
---- a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-@@ -40,6 +40,5 @@ linux,cma {
- };
- 
- &uart0 {
--	clock-frequency = <100000000>;
- 	status = "okay";
- };
--- 
-2.50.1
 
+This is right before actually setting the new mapping to the mmu (which 
+is done below by setting a register called SATP). It does not seem to be 
+a problem though, just wanted to let you know.
+
+It boots fine with defconfig + kasan inline so:
+
+Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
+
+>   
+>   	csr_write(CSR_SATP, PFN_DOWN(__pa(swapper_pg_dir)) | satp_mode);
+>   	local_flush_tlb_all();
