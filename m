@@ -1,57 +1,57 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21382BE632
-	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C1E2D9EF9
+	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510309; cv=none; b=t2Tgi7mJWLwh6Ak0nux8bT9SQxpbQiaMZKdmtYafFTpNXLRVDqvrlgOUaUWp43IaLvCaU0cyKvXMysY5wkcUZf+tR9kAM6uLwBqv8r8bP9oBi8IZkDHVJwEt36oO/3ZRXo0jcDy6sVPS1lh54hfEe2jijJ2x2EExjpYWZx1RpYs=
+	t=1754510309; cv=none; b=A2+T2FwHEFXHdtUu7mMdb4k7Dtel+/lCLduA6RnOoPQLFa33+M9m1pcSnj2iQ3nnqQH/NxqpUJlqYjvBYQl+J7JWsk1Y4d7WXQA95veFBO5PzM5GMDkGgRhhojYBe7hFua7XL9G10V9p3FB+vOqMEHtkAr0EV6E1d6n0M55ZDkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1754510309; c=relaxed/simple;
-	bh=ukS/hePPonycrg9r313f+paqDEVzP34VnPUrCOh2p4I=;
+	bh=BfJD/1Qs0KzM5Cij/W0LAx626YykgL14nn6y0sZD13E=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bYXpP/uHmXTV59ZgSjoVIIDfqGAulx4ezz5j0rBYO9T4yam8VPnhkPYBi7fqHHg/X5nsSYb7SHOtgL/L2a55nJNdsOxY089LTilD4uCpB8zAzCLijIckoSlpSfEf3APIogmebmXMpoohF/Tt1dCRVN+SdZihQOLf0xWs3BBGKu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uqtojkb0; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=jilu3AezYrmc2rkXkwQdpT5kzthXzfnodVGPpMU4lgdF/Nj0v9HisW5gu/bvCyEX0zVayAcCyP2/iE7SBCTk52T9oBoLlnhf1en+0s9VwNIKEvKAvsTqVwUba0FZZsoCbDHKb3cZeiOFDNE7gGJey3Dk/KLbafnExDL5/5wxvrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WvzsgDfO; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uqtojkb0"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-76bcf2cac36so317092b3a.0
-        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:58:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WvzsgDfO"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31332dc2b59so326935a91.0
+        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:58:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510304; x=1755115104; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1754510305; x=1755115105; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=aHvZdAUvNaaZFmbhTqFilDj1JXSRU8dLYlLgEZc/oCw=;
-        b=uqtojkb0LTOG0Jn0B9hKo64qCJY0zEZMsvO62ndVkqCg9D61RklTBf73Y4ZZqt3fp4
-         0TmjEiyFu5Asc2WpHAehrYYQ2po+jNKC8l6XYUHEGVSqQglFpeWF4lkI249xDkSdu+WU
-         JtOa2eta/7Vl6FteFKfQYsMKnh6imC9L9BBu4Zjb1ztu6iFvdRkgtlvLkXynT2Unb7tn
-         mcqZNgKuyHPqosv3EeJUR30z1AV1y2YdJMaf/e34lGQsRWFtCzccvYHDAqbTJyo3orsT
-         j8Ca3v4EShudppGJ5aKHpmPZmUNZ79EY7QxWMc41hsFWgOKiurWsy8Aro+Zstb2pi59j
-         10QA==
+        bh=I4KPqQMNJiob4xQ680shjgCKcMsOL7wxmLpd2hZ8prQ=;
+        b=WvzsgDfOMcERqT5gBr3NqbrO7jkBMTkNo9ZGJP0+4uYc2wpXMLaeKJASb5obgVPr+j
+         cvLwZ4ZMhrcq2IkfiyImXiqZwxcK1ljMlyvhpixM9ClP/HHCEzG9uwZ/EBPoFwAVjcvc
+         I1c+1DjR2dfY/DoguQXNX62i9N0VSy2VFEuKy3kCZB66tYqWOzjUiXa6HfkKsCPt4j3X
+         1OSbTiPSRDlq3bymUflxFo+zI5g0cdcMitU4jH2TgBxJff8NP3l6gaoE65IVvB42+p3/
+         i8jW0sx6n5xAxTTfvRMIkC50ievdLFy1Xk2AXeh1Jzqp65H6ym1i3Q63r6ZsWHiFzbf4
+         xdrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510304; x=1755115104;
+        d=1e100.net; s=20230601; t=1754510305; x=1755115105;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aHvZdAUvNaaZFmbhTqFilDj1JXSRU8dLYlLgEZc/oCw=;
-        b=MZYkS5o31PgU6zqixy8wSB6f5ZyT6Pp2WQoCabVPyVZ1xZPQFuBOMd0/7ey7JU3HtG
-         kVQZU6SmCEs5c1KriUTS7MXY7xwqD9RPRotjUNL46PKJ0lIoOvrGaiKIRByq7D2tSGA5
-         f0F6/xGu4Bq0pLpueXV9IduxeiW/xUGWTrbF7CSkGg5njybGvlLpXnGq+sztfU2ULuVi
-         HAnXNa4B3phP5ae1KY1pPYEFiG7L36V1o2XsW4uL/365ekShXS39kzpHLBsiDZZFQNTq
-         U4K2YQKwNRrz48xKb+uenJm0TpOWMPUNfRlNOkx0UoVGdUFkEW3/HsszpjjISvvAYGRo
-         ipxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXg9NNRYxasGU6KSWs3O1Sl1rq+uZMN4FLpcde89peZ1kXV5G/qGKHKnYdDoeuqNR5rLEixvVE8Qok=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwG9jJJJuKn0SF4t2yjb6zCMumgSiPCQ0OVOcFtPEdn09FFZDj1
-	9FzXVddrGd58jb30u1Oc/s0TNZFKVYL3115G6ZfsNrvZ+3J3jCQttHtP//Vn818JaLYJZoM6XaK
-	EMgio9A==
-X-Google-Smtp-Source: AGHT+IGfcxFcqE+WO40f0G1jJJ785vOiC3NUhX/6TGZEyq4CvV1J0auJAX6NhvanreP79iKSuzsragVBkJw=
-X-Received: from pfvf15.prod.google.com ([2002:a05:6a00:1acf:b0:746:3162:8be1])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:999f:b0:220:78b9:f849
- with SMTP id adf61e73a8af0-240331272admr5902393637.24.1754510303927; Wed, 06
- Aug 2025 12:58:23 -0700 (PDT)
+        bh=I4KPqQMNJiob4xQ680shjgCKcMsOL7wxmLpd2hZ8prQ=;
+        b=hzdsLrBZzq3gPE7zqApidJdmAP04Op0q7ORfJQb2SbTTlbozRodf8PvqhZRh30sqx3
+         8T1vab0zO4g5sgpRh6KerMe8DWTfd0nhKQxrCoobMFNeomB8hFf3ZftBI/tntVw7HhHs
+         f6XC6zL6nmzWqygg6kDW/RM2F/GxNvy40YrcwEkJz6E4zqz9XZT+KypyEqsPPSblwkmS
+         ovaTKA8pL5Ls7dKtEO5xyLIdKKRWkeHuwPDArc2cDV+dOPdziZKtD8nxBR4TSpTplH4i
+         9cST7Ah3o24VDIw/IxhbmT1yRMuFKgL7AS7vL08oOUjjxRf91+S8EnlTdmuVN+zLjBhY
+         AT+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUopH9VrmFQrn4xyJP2GtLuFIVY0OPuFKWSUOMyVl5NRvBc/rqAuINje3kk5rf+WawsjGG+QpCudNE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw+2hg9oO/JmSrxOYCT10M4SsjOxAD4hquTUCzc46GvFEM8se0Z
+	Ks8cm1NjGD4oW6x7sru7GPyZiMBWRt8vQWwr/xQiUDQd6dIbsEbxZ4JBaBs6vmiC2tHLhloq6lh
+	A+1y1VQ==
+X-Google-Smtp-Source: AGHT+IEv/lsCJTvAMTt82qYQ74YEmuDhqDy/AIKEkMbUihLXDbLqrOMm3UgmKM47ElROS0wMJkdtmjAP5S0=
+X-Received: from pjbsn13.prod.google.com ([2002:a17:90b:2e8d:b0:30a:31eb:ec8e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:554e:b0:31e:ff97:75a1
+ with SMTP id 98e67ed59e1d1-32166c19241mr5583048a91.3.1754510305634; Wed, 06
+ Aug 2025 12:58:25 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:56:52 -0700
+Date: Wed,  6 Aug 2025 12:56:53 -0700
 In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250806195706.1650976-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-31-seanjc@google.com>
-Subject: [PATCH v5 30/44] KVM: x86/pmu: Move initialization of valid PMCs
- bitmask to common x86
+Message-ID: <20250806195706.1650976-32-seanjc@google.com>
+Subject: [PATCH v5 31/44] KVM: x86/pmu: Restrict GLOBAL_{CTRL,STATUS}, fixed
+ PMCs, and PEBS to PMU v2+
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -82,62 +82,88 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move all initialization of all_valid_pmc_idx to common code, as the logic
-is 100% common to Intel and AMD, and KVM heavily relies on Intel and AMD
-having the same semantics.  E.g. the fact that AMD doesn't support fixed
-counters doesn't allow KVM to use all_valid_pmc_idx[63:32] for other
-purposes.
+Restrict support for GLOBAL_CTRL, GLOBAL_STATUS, fixed PMCs, and PEBS to
+v2 or later vPMUs.  The SDM explicitly states that GLOBAL_{CTRL,STATUS} and
+fixed counters were introduced with PMU v2, and PEBS has hard dependencies
+on fixed counters and the bitmap MSR layouts established by PMU v2.
 
+Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/pmu.c           | 4 ++++
- arch/x86/kvm/svm/pmu.c       | 1 -
- arch/x86/kvm/vmx/pmu_intel.c | 5 -----
- 3 files changed, 4 insertions(+), 6 deletions(-)
+ arch/x86/kvm/vmx/pmu_intel.c | 51 ++++++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index a4fe0e76df79..4246e1d2cfcc 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -932,6 +932,10 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
- 		if (kvm_vcpu_has_mediated_pmu(vcpu))
- 			kvm_pmu_call(write_global_ctrl)(pmu->global_ctrl);
- 	}
-+
-+	bitmap_set(pmu->all_valid_pmc_idx, 0, pmu->nr_arch_gp_counters);
-+	bitmap_set(pmu->all_valid_pmc_idx, KVM_FIXED_PMC_BASE_IDX,
-+		   pmu->nr_arch_fixed_counters);
- }
- 
- void kvm_pmu_init(struct kvm_vcpu *vcpu)
-diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-index b777c3743304..9ffd44a5d474 100644
---- a/arch/x86/kvm/svm/pmu.c
-+++ b/arch/x86/kvm/svm/pmu.c
-@@ -209,7 +209,6 @@ static void amd_pmu_refresh(struct kvm_vcpu *vcpu)
- 	/* not applicable to AMD; but clean them to prevent any fall out */
- 	pmu->counter_bitmask[KVM_PMC_FIXED] = 0;
- 	pmu->nr_arch_fixed_counters = 0;
--	bitmap_set(pmu->all_valid_pmc_idx, 0, pmu->nr_arch_gp_counters);
- }
- 
- static void amd_pmu_init(struct kvm_vcpu *vcpu)
 diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 6352d029298c..1de94a39ca18 100644
+index 1de94a39ca18..779b4e64acac 100644
 --- a/arch/x86/kvm/vmx/pmu_intel.c
 +++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -579,11 +579,6 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 		pmu->raw_event_mask |= (HSW_IN_TX|HSW_IN_TX_CHECKPOINTED);
+@@ -541,16 +541,33 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 				      kvm_pmu_cap.events_mask_len);
+ 	pmu->available_event_types = ~entry->ebx & (BIT_ULL(eax.split.mask_length) - 1);
+ 
+-	if (pmu->version == 1) {
+-		pmu->nr_arch_fixed_counters = 0;
+-	} else {
+-		pmu->nr_arch_fixed_counters = min_t(int, edx.split.num_counters_fixed,
+-						    kvm_pmu_cap.num_counters_fixed);
+-		edx.split.bit_width_fixed = min_t(int, edx.split.bit_width_fixed,
+-						  kvm_pmu_cap.bit_width_fixed);
+-		pmu->counter_bitmask[KVM_PMC_FIXED] = BIT_ULL(edx.split.bit_width_fixed) - 1;
++	entry = kvm_find_cpuid_entry_index(vcpu, 7, 0);
++	if (entry &&
++	    (boot_cpu_has(X86_FEATURE_HLE) || boot_cpu_has(X86_FEATURE_RTM)) &&
++	    (entry->ebx & (X86_FEATURE_HLE|X86_FEATURE_RTM))) {
++		pmu->reserved_bits ^= HSW_IN_TX;
++		pmu->raw_event_mask |= (HSW_IN_TX|HSW_IN_TX_CHECKPOINTED);
  	}
  
--	bitmap_set(pmu->all_valid_pmc_idx,
--		0, pmu->nr_arch_gp_counters);
--	bitmap_set(pmu->all_valid_pmc_idx,
--		INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
++	perf_capabilities = vcpu_get_perf_capabilities(vcpu);
++	if (intel_pmu_lbr_is_compatible(vcpu) &&
++	    (perf_capabilities & PERF_CAP_LBR_FMT))
++		memcpy(&lbr_desc->records, &vmx_lbr_caps, sizeof(vmx_lbr_caps));
++	else
++		lbr_desc->records.nr = 0;
++
++	if (lbr_desc->records.nr)
++		bitmap_set(pmu->all_valid_pmc_idx, INTEL_PMC_IDX_FIXED_VLBR, 1);
++
++	if (pmu->version == 1)
++		return;
++
++	pmu->nr_arch_fixed_counters = min_t(int, edx.split.num_counters_fixed,
++					    kvm_pmu_cap.num_counters_fixed);
++	edx.split.bit_width_fixed = min_t(int, edx.split.bit_width_fixed,
++					  kvm_pmu_cap.bit_width_fixed);
++	pmu->counter_bitmask[KVM_PMC_FIXED] = BIT_ULL(edx.split.bit_width_fixed) - 1;
++
+ 	intel_pmu_enable_fixed_counter_bits(pmu, INTEL_FIXED_0_KERNEL |
+ 						 INTEL_FIXED_0_USER |
+ 						 INTEL_FIXED_0_ENABLE_PMI);
+@@ -571,24 +588,6 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 		pmu->global_status_rsvd &=
+ 				~MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI;
+ 
+-	entry = kvm_find_cpuid_entry_index(vcpu, 7, 0);
+-	if (entry &&
+-	    (boot_cpu_has(X86_FEATURE_HLE) || boot_cpu_has(X86_FEATURE_RTM)) &&
+-	    (entry->ebx & (X86_FEATURE_HLE|X86_FEATURE_RTM))) {
+-		pmu->reserved_bits ^= HSW_IN_TX;
+-		pmu->raw_event_mask |= (HSW_IN_TX|HSW_IN_TX_CHECKPOINTED);
+-	}
 -
- 	perf_capabilities = vcpu_get_perf_capabilities(vcpu);
- 	if (intel_pmu_lbr_is_compatible(vcpu) &&
- 	    (perf_capabilities & PERF_CAP_LBR_FMT))
+-	perf_capabilities = vcpu_get_perf_capabilities(vcpu);
+-	if (intel_pmu_lbr_is_compatible(vcpu) &&
+-	    (perf_capabilities & PERF_CAP_LBR_FMT))
+-		memcpy(&lbr_desc->records, &vmx_lbr_caps, sizeof(vmx_lbr_caps));
+-	else
+-		lbr_desc->records.nr = 0;
+-
+-	if (lbr_desc->records.nr)
+-		bitmap_set(pmu->all_valid_pmc_idx, INTEL_PMC_IDX_FIXED_VLBR, 1);
+-
+ 	if (perf_capabilities & PERF_CAP_PEBS_FORMAT) {
+ 		if (perf_capabilities & PERF_CAP_PEBS_BASELINE) {
+ 			pmu->pebs_enable_rsvd = counter_rsvd;
 -- 
 2.50.1.565.gc32cd1483b-goog
 
