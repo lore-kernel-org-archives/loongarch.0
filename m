@@ -1,337 +1,296 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D661400C
-	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83A42BD5BC
+	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754509922; cv=none; b=qQ6eGYUlIBc8+Hgc9lsOy00lEU+mrN73a2Ep0Ja9rUY3bwd/ZCUrNNGyf6u0tkIn4y2dDQluoZh3vKsZOsOw2bemEPdY7LiLItqW+JFBT4vUEMHvDsMut8pnRHtGJcm9WxB19BetW+YHcxSTPvnj7orJ7pqFnRfwuQ7PjxboxMM=
+	t=1754510251; cv=none; b=lqO421Bj89rMm+WSRfEIiEFomgPrVDjnCbRav8ztdhhwRnJ93cMiKvwX6A0rylywTCmqVdQSrAGvlj8LUwWH/k+ncY8tiHnRNhGgTim06NWM81No2vdF7PUS3kU8cNc80IYPRG3xBGNh5DkED5NCdgDnjvlpBCUztE8Cbo67A1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754509922; c=relaxed/simple;
-	bh=OsNLdYEDPWVAYqJM7OPgFhWCLz6bTVMGHKwDcqf2sWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fAt9VsiHqSfSr8w5duY9BLC5hNZJ5+pyJKq1219BMb9SWd0dAmRWjFwW/KACdjfM4gvfBYIxXgww1QrF+YjcuZQG+8XQ7xKRSJ7atLWAiMOlHIBaNqOqevDorJrbDJLwj3y/MkBU2YZ+CN4qvzdcek0/tlal6ATUhxQGSdfCKn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h/lDroUp; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754510251; c=relaxed/simple;
+	bh=7ItWeP68jXOqxjRGL8UcVyhL0v+vsphGfvNRONop5fg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=cN9g2TNT8uGpjDPhIUugxn7JB/hSqeYOh9NVecvOtJF/XwrM9fgu7ePkG7AkNI9NknKjYSF06lxQNUdX6EKfvv+OSCF4Aefvl4MXSMBWvxvFq3XsO8vjeN6GK8xGlsI/hKeTXSBDClfR9X5MClw9/Qt/cRXbTn38i5DAoQWeWh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K1Ru927o; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/lDroUp"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7e665fd4e90so1452185a.2
-        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:52:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K1Ru927o"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b31ca4b6a8eso119237a12.1
+        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:57:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754509919; x=1755114719; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jOJUufvksrkNMkhUfUMzFksoWwIudiaNrjydPYTPe/E=;
-        b=h/lDroUp5pHDuS0rOE5e6iLy7AXLgzyVZdzq7Hb398y/pyGjh1qqUt9LqrSib+JWHr
-         OyMTIj+2shTQpYL4EA2Hh2Uac2YJQ6IAo2bFLXTNSYJXQGhgRTh/4uCdMVOopzSzb/Mo
-         XNDBBNRJ45CerIP3c6qOggQWxex5f2B8czCCZ6Z/JIYOKPQGJBmIbjc6kajhq1SlxC0j
-         lB4RThrbo5IjTta6vvDXwtoJUx5HZflXuM/IY2XSAewrWDX+75N/Z8h0pS/6OJaGmelH
-         X4Rc7ZSJOCrfiyIUuK8xZBNr9Z80rpTPHiYe9F9HihcrDJFIX090QSSFlVxSOpVwE3PF
-         yiDw==
+        d=google.com; s=20230601; t=1754510249; x=1755115049; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YiSAi80MlZj2ytBXJIndfL/QD0SGw7awSa7/LhzXfd4=;
+        b=K1Ru927oEPHeatf+KTN6QGJQJqSuvgK7gHF8+taq7miPjpV5rRmlwY/dx536inReD7
+         TTTUGMCe6xhbObOSqCiJAgfWRQgymdXLVL2H4m2LrH6h/Ga/9ZEU7RxFRUbkAxP6U7t9
+         M5QEGN5AVTrG6+oEm6whREvbHBX1t54P6g33CjYh3optZOvK46htk8qrdr66d35kkz8u
+         pAiap5FdeKup7B8ZkVrTU9mEaHCXd5LSf8/27/zjU+YHrSDmjUzsHTzs2FsPuT8MMGZH
+         HL98KJcUgaCrYP0ZqC1/EK/SNHLVKqNk7z7b8knBo3pULEYroHsFWiIDYb1pbeo+JzJ3
+         aBjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754509919; x=1755114719;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1754510249; x=1755115049;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jOJUufvksrkNMkhUfUMzFksoWwIudiaNrjydPYTPe/E=;
-        b=RYcoeMB02be+RTTXhPsL2mGb5J7eLFsNFA1Ek0q9974tT7td3kEN4tqZCo4rdspjMM
-         GEPVL9me1U2UGwzaBQmP1UBCV5SzIRHIs7HjRxNDoYwZ8uKf79I9ydNKOhLopObIKZzk
-         AbXWsNZE4vtA7zhwwySbocS4iQ8s1i8BTCK+mLD6H0s5C1JFCiXa9lurOOncH5KFZFmQ
-         8fHeHslT+tePRhmAzKuaA1veV/Kgw6QZGPeZ6FLM0Y25mGn/g+HPjGZ5Kp2a+3l5AHrB
-         ciSDwZt6dCfFL3yKqKsKTIV/BuNPclJq2xtQ2lLyFCKVTMnnZ/dq2YfhppbYb6594C8q
-         5URQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvid8XNNK8CTqy2SaKS/5wJ16kwn8vdSA23c7gFXrif+lE4NNQOYYUJG5tYYysL5s4F1MqqpWR0vI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyhm7HXdY8/vundbOkSaiFVYYb719HxQk7DLubOEC3rehjDbroI
-	u8AoKsLDPCmfVzyU6wYXUBluePAmAoauMyR25UNU2LTE1IUt6kB2CrT2
-X-Gm-Gg: ASbGnctXTXmcBUnpIWLQwGo+wYwmL4evvNMUhZ+QaQLh50EGxbgPGFqS3PPxkVc4Irm
-	WLqZqQ6/Q/CihGe9xi97FgNP0rLU7xf5uR404O1pcXoVKPpk9H0HyQxgq2wTz8lsy9RsIe/ZcCL
-	qtCMsTZoB9AvoHHSQhv2idLxuEAnRypQ6SIYdR5bUyp+DxcZL/YqiUwQJ/DJUoIPLAOdcJm7Js0
-	SFOZl6zB08UIwhdfB2iwlPBgJhsn7qZNjH4YpFWo4alZEy4goVduWxCOEANo23vIJZ0RLflO93e
-	R0UxmjZzd57nXMNYzHjx5OwrGkTCsry1PTq03FMki92c/smA+1/k/hibtGzStUUQvSG5N36pKn7
-	lTrf05PTj4nl+O+FJ3hOy+qf7bitC+fSSpnYJm8wTlb6lMrThlkv2iv0ZI2J1ZYopDSHh
-X-Google-Smtp-Source: AGHT+IFmzUMSDyUQoeXjvqgYHBfr+pQThJ0xtd5NGlSxIHAVfwgMAAXU9ZJsjUzM039DpZsjSBydog==
-X-Received: by 2002:a05:620a:1a04:b0:7e2:6be2:38eb with SMTP id af79cd13be357-7e814d64573mr316228785a.4.1754509919359;
-        Wed, 06 Aug 2025 12:51:59 -0700 (PDT)
-Received: from [192.168.0.18] (cable-94-189-140-132.dynamic.sbb.rs. [94.189.140.132])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e67f5c55a2sm866617085a.36.2025.08.06.12.51.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Aug 2025 12:51:58 -0700 (PDT)
-Message-ID: <dd25cb14-5df1-4b2c-bff7-0ca901dfd824@gmail.com>
-Date: Wed, 6 Aug 2025 21:51:07 +0200
+        bh=YiSAi80MlZj2ytBXJIndfL/QD0SGw7awSa7/LhzXfd4=;
+        b=bUQRQmt7MRQo/FskI0+tEUnOz0WfzxFPXQddtCAPlAXxa4YymykMiMbssU82XU+EsA
+         xulxCX51J5BLxqoqi35bHvdUvm9xa/zty3ab9siP0pXGi8jw+S6UO6JE0feyZidWhanh
+         23oDcdGnKxGjmKoM8wv0H+B8/g4tso1FmbbYxMBACN6CGkmGK+rvv8k20TcYw8Fzu6Uk
+         0Unuxa2wtRtStViy2UfgwwZuap+4Ni0DmbNNw5rF4qYPcSKAdf47ZAXhFqgg5A5aJ0+X
+         fAPk+AVvyx43pukejGk0UEp6vNCr2BcEpbUSeAm83xThqDhWWCxJ6nxHJ6bo2FndJZP7
+         MOxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfzi4ud67cjIEgYxTfw+F4jD1D+MdKM0lBu0WGOsYt3R74cPLZw6wlJAyE4J0vedyxQ/GNQ/z7RZ4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz1PVHdPkWh5IQZvlmHG0KIUOAI2IWUD0hwO/lQproMOk6gttZp
+	aD9a1B54PgRXCID58+W+0Qq9/u2ekrJeYLcpggIgFPT7SRK6MF2l/ljb7TtOpMnoU46xixM7PCV
+	ldvfkkA==
+X-Google-Smtp-Source: AGHT+IEiZF4ZVXP/srLo4kntXv21eK34Ewron2VGf18IaFFGcm86hQQPlcpG9BeCZl+mVxBNNadcXtcYKE4=
+X-Received: from pjoa3.prod.google.com ([2002:a17:90a:8c03:b0:312:14e5:174b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e7c2:b0:31c:15d9:8aa
+ with SMTP id 98e67ed59e1d1-32166cd17a9mr5063314a91.34.1754510248842; Wed, 06
+ Aug 2025 12:57:28 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Wed,  6 Aug 2025 12:56:22 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/9] kasan: introduce ARCH_DEFER_KASAN and unify static
- key across modes
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Cc: hca@linux.ibm.com, christophe.leroy@csgroup.eu, andreyknvl@gmail.com,
- agordeev@linux.ibm.com, akpm@linux-foundation.org, zhangqing@loongson.cn,
- chenhuacai@loongson.cn, trishalfonso@google.com, davidgow@google.com,
- glider@google.com, dvyukov@google.com, kasan-dev@googlegroups.com,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
-References: <20250805142622.560992-1-snovitoll@gmail.com>
- <20250805142622.560992-2-snovitoll@gmail.com>
- <5a73e633-a374-47f2-a1e1-680e24d9f260@gmail.com>
- <CACzwLxg=zC-82sY6f-z0VOnmbpN2E8tQxe7RyOnynpbJEFP+NA@mail.gmail.com>
-Content-Language: en-US
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-In-Reply-To: <CACzwLxg=zC-82sY6f-z0VOnmbpN2E8tQxe7RyOnynpbJEFP+NA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
+Message-ID: <20250806195706.1650976-1-seanjc@google.com>
+Subject: [PATCH v5 00/44] KVM: x86: Add support for mediated vPMUs
+From: Sean Christopherson <seanjc@google.com>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, 
+	Yongwei Ma <yongwei.ma@intel.com>, Mingwei Zhang <mizhang@google.com>, 
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+
+This series is based on the fastpath+PMU cleanups series[*] (which is based on
+kvm/queue), but the non-KVM changes apply cleanly on v6.16 or Linus' tree.
+I.e. if you only care about the perf changes, I would just apply on whatever
+branch is convenient and stop when you hit the KVM changes.
+
+My hope/plan is that the perf changes will go through the tip tree with a
+stable tag/branch, and the KVM changes will go the kvm-x86 tree.
+
+Non-x86 KVM folks, y'all are getting Cc'd due to minor changes in "KVM: Add a
+simplified wrapper for registering perf callbacks".
+
+The full set is also available at:
+
+  https://github.com/sean-jc/linux.git tags/mediated-vpmu-v5
+
+Add support for mediated vPMUs in KVM x86, where "mediated" aligns with the
+standard definition of intercepting control operations (e.g. event selectors),
+while allowing the guest to perform data operations (e.g. read PMCs, toggle
+counters on/off) without KVM getting involed.
+
+For an in-depth description of the what and why, please see the cover letter
+from the original RFC:
+
+  https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com
+
+All KVM tests pass (or fail the same before and after), and I've manually
+verified MSR/PMC are passed through as expected, but I haven't done much at all
+to actually utilize the PMU in a guest.  I'll be amazed if I didn't make at
+least one major goof.
+
+Similarly, I tried to address all feedback, but there are many, many changes
+relative to v4.  If I missed something, I apologize in advance.
+
+In other words, please thoroughly review and test.
+
+[*] https://lore.kernel.org/all/20250805190526.1453366-1-seanjc@google.com
+
+v5:
+ - Add a patch to call security_perf_event_free() from __free_event()
+   instead of _free_event() (necessitated by the __cleanup() changes).
+ - Add CONFIG_PERF_GUEST_MEDIATED_PMU to guard the new perf functionality.
+ - Ensure the PMU is fully disabled in perf_{load,put}_guest_context() when
+   when switching between guest and host context. [Kan, Namhyung]
+ - Route the new system IRQ, PERF_GUEST_MEDIATED_PMI_VECTOR, through perf,
+   not KVM, and play nice with FRED.
+ - Rename and combine perf_{guest,host}_{enter,exit}() to a single set of
+   APIs, perf_{load,put}_guest_context().
+ - Rename perf_{get,put}_mediated_pmu() to perf_{create,release}_mediated_pmu()
+   to (hopefully) better differentiate them from perf_{load,put}_guest_context().
+ - Change the param to the load/put APIs from "u32 guest_lvtpc" to
+   "unsigned long data" to decouple arch code as much as possible.  E.g. if
+   a non-x86 arch were to ever support a mediated vPMU, @data could be used
+   to pass a pointer to a struct.
+ - Use pmu->version to detect if a vCPU has a mediated PMU.
+ - Use a kvm_x86_ops hook to check for mediated PMU support.
+ - Cull "passthrough" from as many places as I could find.
+ - Improve the changelog/documentation related to RDPMC interception.
+ - Check harware capabilities, not KVM capabilities, when calculating
+   MSR and RDPMC intercepts.
+ - Rework intercept (re)calculation to use a request and the existing (well,
+   will be existing as of 6.17-rc1) vendor hooks for recalculating intercepts.
+ - Always read PERF_GLOBAL_CTRL on VM-Exit if writes weren't intercepted while
+   running the vCPU.
+ - Call setup_vmcs_config() before kvm_x86_vendor_init() so that the golden
+   VMCS configuration is known before kvm_init_pmu_capability() is called.
+ - Keep as much refresh/init code in common x86 as possible.
+ - Context switch PMCs and event selectors in common x86, not vendor code.
+ - Bail from the VM-Exit fastpath if the guest is counting instructions
+   retired and the mediated PMU is enabled (because guest state hasn't yet
+   been synchronized with hardware).
+ - Don't require an userspace to opt-in via KVM_CAP_PMU_CAPABILITY, and instead
+   automatically "create" a mediated PMU on the first KVM_CREATE_VCPU call if
+   the VM has an in-kernel local APIC.
+ - Add entries in kernel-parameters.txt for the PMU params.
+ - Add a patch to elide PMC writes when possible.
+ - Many more fixups and tweaks...
+
+v4:
+ - https://lore.kernel.org/all/20250324173121.1275209-1-mizhang@google.com
+ - Rebase whole patchset on 6.14-rc3 base.
+ - Address Peter's comments on Perf part.
+ - Address Sean's comments on KVM part.
+   * Change key word "passthrough" to "mediated" in all patches
+   * Change static enabling to user space dynamic enabling via KVM_CAP_PMU_CAPABILITY.
+   * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
+     save/retore list support for GLOBAL_CTRL, thus the support of mediated
+     vPMU is constrained to SapphireRapids and later CPUs on Intel side.
+   * Merge some small changes into a single patch.
+ - Address Sandipan's comment on invalid pmu pointer.
+ - Add back "eventsel_hw" and "fixed_ctr_ctrl_hw" to avoid to directly
+   manipulate pmc->eventsel and pmu->fixed_ctr_ctrl.
+
+v3: https://lore.kernel.org/all/20240801045907.4010984-1-mizhang@google.com
+v2: https://lore.kernel.org/all/20240506053020.3911940-1-mizhang@google.com
+v1: https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com
+
+Dapeng Mi (15):
+  KVM: x86/pmu: Start stubbing in mediated PMU support
+  KVM: x86/pmu: Implement Intel mediated PMU requirements and
+    constraints
+  KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
+  KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
+  KVM: VMX: Add helpers to toggle/change a bit in VMCS execution
+    controls
+  KVM: x86/pmu: Disable RDPMC interception for compatible mediated vPMU
+  KVM: x86/pmu: Load/save GLOBAL_CTRL via entry/exit fields for mediated
+    PMU
+  KVM: x86/pmu: Use BIT_ULL() instead of open coded equivalents
+  KVM: x86/pmu: Disable interception of select PMU MSRs for mediated
+    vPMUs
+  KVM: x86/pmu: Bypass perf checks when emulating mediated PMU counter
+    accesses
+  KVM: x86/pmu: Reprogram mediated PMU event selectors on event filter
+    updates
+  KVM: x86/pmu: Load/put mediated PMU context when entering/exiting
+    guest
+  KVM: x86/pmu: Handle emulated instruction for mediated vPMU
+  KVM: nVMX: Add macros to simplify nested MSR interception setting
+  KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
+
+Kan Liang (7):
+  perf: Skip pmu_ctx based on event_type
+  perf: Add generic exclude_guest support
+  perf: Add APIs to create/release mediated guest vPMUs
+  perf: Clean up perf ctx time
+  perf: Add a EVENT_GUEST flag
+  perf: Add APIs to load/put guest mediated PMU context
+  perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
+
+Mingwei Zhang (3):
+  perf/x86/core: Plumb mediated PMU capability from x86_pmu to
+    x86_pmu_cap
+  KVM: x86/pmu: Introduce eventsel_hw to prepare for pmu event filtering
+  KVM: nVMX: Disable PMU MSR interception as appropriate while running
+    L2
+
+Sandipan Das (3):
+  perf/x86/core: Do not set bit width for unavailable counters
+  perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
+  KVM: x86/pmu: Always stuff GuestOnly=1,HostOnly=0 for mediated PMCs on
+    AMD
+
+Sean Christopherson (15):
+  perf: Move security_perf_event_free() call to __free_event()
+  perf: core/x86: Register a new vector for handling mediated guest PMIs
+  perf/x86: Switch LVTPC to/from mediated PMI vector on guest load/put
+    context
+  KVM: VMX: Setup canonical VMCS config prior to kvm_x86_vendor_init()
+  KVM: SVM: Check pmu->version, not enable_pmu, when getting PMC MSRs
+  KVM: Add a simplified wrapper for registering perf callbacks
+  KVM: x86/pmu: Snapshot host (i.e. perf's) reported PMU capabilities
+  KVM: x86/pmu: Implement AMD mediated PMU requirements
+  KVM: x86: Rework KVM_REQ_MSR_FILTER_CHANGED into a generic
+    RECALC_INTERCEPTS
+  KVM: x86: Use KVM_REQ_RECALC_INTERCEPTS to react to CPUID updates
+  KVM: x86/pmu: Move initialization of valid PMCs bitmask to common x86
+  KVM: x86/pmu: Restrict GLOBAL_{CTRL,STATUS}, fixed PMCs, and PEBS to
+    PMU v2+
+  KVM: x86/pmu: Disallow emulation in the fastpath if mediated PMCs are
+    active
+  KVM: nSVM: Disable PMU MSR interception as appropriate while running
+    L2
+  KVM: x86/pmu: Elide WRMSRs when loading guest PMCs if values already
+    match
+
+Xiong Zhang (1):
+  KVM: x86/pmu: Register PMI handler for mediated vPMU
+
+ .../admin-guide/kernel-parameters.txt         |  49 ++
+ arch/arm64/kvm/arm.c                          |   2 +-
+ arch/loongarch/kvm/main.c                     |   2 +-
+ arch/riscv/kvm/main.c                         |   2 +-
+ arch/x86/entry/entry_fred.c                   |   1 +
+ arch/x86/events/amd/core.c                    |   2 +
+ arch/x86/events/core.c                        |  32 +-
+ arch/x86/events/intel/core.c                  |   5 +
+ arch/x86/include/asm/hardirq.h                |   3 +
+ arch/x86/include/asm/idtentry.h               |   6 +
+ arch/x86/include/asm/irq_vectors.h            |   4 +-
+ arch/x86/include/asm/kvm-x86-ops.h            |   2 +-
+ arch/x86/include/asm/kvm-x86-pmu-ops.h        |   4 +
+ arch/x86/include/asm/kvm_host.h               |   7 +-
+ arch/x86/include/asm/msr-index.h              |  17 +-
+ arch/x86/include/asm/perf_event.h             |   1 +
+ arch/x86/include/asm/vmx.h                    |   1 +
+ arch/x86/kernel/idt.c                         |   3 +
+ arch/x86/kernel/irq.c                         |  19 +
+ arch/x86/kvm/Kconfig                          |   1 +
+ arch/x86/kvm/cpuid.c                          |   2 +
+ arch/x86/kvm/pmu.c                            | 272 ++++++++-
+ arch/x86/kvm/pmu.h                            |  37 +-
+ arch/x86/kvm/svm/nested.c                     |  18 +-
+ arch/x86/kvm/svm/pmu.c                        |  51 +-
+ arch/x86/kvm/svm/svm.c                        |  54 +-
+ arch/x86/kvm/vmx/capabilities.h               |  11 +-
+ arch/x86/kvm/vmx/main.c                       |  14 +-
+ arch/x86/kvm/vmx/nested.c                     |  65 ++-
+ arch/x86/kvm/vmx/pmu_intel.c                  | 169 ++++--
+ arch/x86/kvm/vmx/pmu_intel.h                  |  15 +
+ arch/x86/kvm/vmx/vmx.c                        | 143 +++--
+ arch/x86/kvm/vmx/vmx.h                        |  11 +-
+ arch/x86/kvm/vmx/x86_ops.h                    |   2 +-
+ arch/x86/kvm/x86.c                            |  69 ++-
+ arch/x86/kvm/x86.h                            |   1 +
+ include/linux/kvm_host.h                      |  11 +-
+ include/linux/perf_event.h                    |  38 +-
+ init/Kconfig                                  |   4 +
+ kernel/events/core.c                          | 521 ++++++++++++++----
+ .../beauty/arch/x86/include/asm/irq_vectors.h |   3 +-
+ virt/kvm/kvm_main.c                           |   6 +-
+ 42 files changed, 1385 insertions(+), 295 deletions(-)
 
 
-
-On 8/6/25 4:15 PM, Sabyrzhan Tasbolatov wrote:
-> On Wed, Aug 6, 2025 at 6:35 PM Andrey Ryabinin <ryabinin.a.a@gmail.com> wrote:
->>
->>
->>
->> On 8/5/25 4:26 PM, Sabyrzhan Tasbolatov wrote:
->>> Introduce CONFIG_ARCH_DEFER_KASAN to identify architectures that need
->>> to defer KASAN initialization until shadow memory is properly set up,
->>> and unify the static key infrastructure across all KASAN modes.
->>>
->>> Some architectures (like PowerPC with radix MMU) need to set up their
->>> shadow memory mappings before KASAN can be safely enabled, while others
->>> (like s390, x86, arm) can enable KASAN much earlier or even from the
->>> beginning.
->>>
->>> Historically, the runtime static key kasan_flag_enabled existed only for
->>> CONFIG_KASAN_HW_TAGS mode. Generic and SW_TAGS modes either relied on
->>> architecture-specific kasan_arch_is_ready() implementations or evaluated
->>> KASAN checks unconditionally, leading to code duplication.
->>>
->>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217049
->>> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
->>> ---
->>> Changes in v4:
->>> - Fixed HW_TAGS static key functionality (was broken in v3)
->>
->> I don't think it fixed. Before you patch kasan_enabled() esentially
->> worked like this:
->>
->>  if (IS_ENABLED(CONFIG_KASAN_HW_TAGS))
->>         return static_branch_likely(&kasan_flag_enabled);
->>  else
->>         return IS_ENABLED(CONFIG_KASAN);
->>
->> Now it's just IS_ENABLED(CONFIG_KASAN);
-> 
-> In v4 it is:
-> 
->         #if defined(CONFIG_ARCH_DEFER_KASAN) || defined(CONFIG_KASAN_HW_TAGS)
->         static __always_inline bool kasan_shadow_initialized(void)
->         {
->                 return static_branch_likely(&kasan_flag_enabled);
->         }
->         #else
->         static __always_inline bool kasan_shadow_initialized(void)
->         {
->                 return kasan_enabled(); // which is IS_ENABLED(CONFIG_KASAN);
->         }
->         #endif
-> 
-> So for HW_TAGS, KASAN is enabled in kasan_init_hw_tags().
-
-You are referring to  kasan_shadow_initialized(), but I was talking about kasan_enabled() specifically.
-E.g. your patch changes behavior for kasan_init_slab_obj() which doesn't use kasan_shadow_initialized()
- (in the case of HW_TAGS=y && kasan_flag_enabled = false) :
-
-static __always_inline void * __must_check kasan_init_slab_obj(
-                                struct kmem_cache *cache, const void *object)
-{
-        if (kasan_enabled())
-                return __kasan_init_slab_obj(cache, object);
-        return (void *)object;
-}
-
-
-
->>> +#if defined(CONFIG_ARCH_DEFER_KASAN) || defined(CONFIG_KASAN_HW_TAGS)
->>> +/*
->>> + * Global runtime flag for KASAN modes that need runtime control.
->>> + * Used by ARCH_DEFER_KASAN architectures and HW_TAGS mode.
->>> + */
->>>  DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
->>>
->>> -static __always_inline bool kasan_enabled(void)
->>> +/*
->>> + * Runtime control for shadow memory initialization or HW_TAGS mode.
->>> + * Uses static key for architectures that need deferred KASAN or HW_TAGS.
->>> + */
->>> +static __always_inline bool kasan_shadow_initialized(void)
->>
->> Don't rename it, just leave as is - kasan_enabled().
->> It's better name, shorter and you don't need to convert call sites, so
->> there is less chance of mistakes due to unchanged kasan_enabled() -> kasan_shadow_initialized().
-> 
-> I actually had the only check "kasan_enabled()" in v2, but went to
-> double check approach in v3
-> after this comment:
-> https://lore.kernel.org/all/CA+fCnZcGyTECP15VMSPh+duLmxNe=ApHfOnbAY3NqtFHZvceZw@mail.gmail.com/
-
-AFAIU the comment suggest that we need two checks/flags, one in kasan_enabled() which checks
-whether kasan was enabled via cmdline (currently only for HW_TAGS)
- and one in kasan_arch_is_ready()(or kasan_shadow_initialized()) which checks if arch initialized KASAN.
-And this not what v3/v4 does. v4 basically  have one check, just under different name. 
-
-Separate checks might be needed if we have code paths that need 'kasan_arch_is_ready() && !kasan_enabled()'
-and vise versa '!kasan_arch_is_ready() && kasan_enabled()'.
-
-From the top of my head, I can't say if we have such cases.
-
-> 
-> Ok, we will have the **only** check kasan_enabled() then in
-> kasan-enabled.h which
-> 
->         #if defined(CONFIG_ARCH_DEFER_KASAN) || defined(CONFIG_KASAN_HW_TAGS)
->         static __always_inline bool kasan_enabled(void)
->         {
->                 return static_branch_likely(&kasan_flag_enabled);
->         }
->         #else
->         static inline bool kasan_enabled(void)
->         {
->                 return IS_ENABLED(CONFIG_KASAN);
->         }
-> 
-> And will remove kasan_arch_is_ready (current kasan_shadow_initialized in v4).
-> 
-> So it is the single place to check if KASAN is enabled for all arch
-> and internal KASAN code.
-> Same behavior is in the current mainline code but only for HW_TAGS.
-> 
-> Is this correct?
-> 
-
-Yep, that's what I meant.
-
->>
->>
->>>  {
->>>       return static_branch_likely(&kasan_flag_enabled);
->>>  }
->>>
->>> -static inline bool kasan_hw_tags_enabled(void)
->>> +static inline void kasan_enable(void)
->>> +{
->>> +     static_branch_enable(&kasan_flag_enabled);
->>> +}
->>> +#else
->>> +/* For architectures that can enable KASAN early, use compile-time check. */
->>> +static __always_inline bool kasan_shadow_initialized(void)
->>>  {
->>>       return kasan_enabled();
->>>  }
->>>
->>
->> ...
->>
->>>
->>>  void kasan_populate_early_vm_area_shadow(void *start, unsigned long size);
->>> -int kasan_populate_vmalloc(unsigned long addr, unsigned long size);
->>> -void kasan_release_vmalloc(unsigned long start, unsigned long end,
->>> +
->>> +int __kasan_populate_vmalloc(unsigned long addr, unsigned long size);
->>> +static inline int kasan_populate_vmalloc(unsigned long addr, unsigned long size)
->>> +{
->>> +     if (!kasan_shadow_initialized())
->>> +             return 0;
->>
->>
->> What's the point of moving these checks to header?
->> Leave it in C, it's easier to grep and navigate code this way.
-> 
-> Andrey Konovalov had comments [1] to avoid checks in C
-> by moving them to headers under __wrappers.
-> 
-> : 1. Avoid spraying kasan_arch_is_ready() throughout the KASAN
-> : implementation and move these checks into include/linux/kasan.h (and
-> : add __wrappers when required).
-> 
-> [1] https://lore.kernel.org/all/CA+fCnZcGyTECP15VMSPh+duLmxNe=ApHfOnbAY3NqtFHZvceZw@mail.gmail.com/
-> 
-
-I think Andrey K. meant cases when we have multiple implementations of one function for each mode.
-In such case it makes sense to merge multiple kasan_arch_is_ready() checks into one in the header.
-But in case like with kasan_populate_vmalloc() we have only one implementation so I don't see any
-value in adding wrapper/moving to header. 
-
->>
->>
->>> +     return __kasan_populate_vmalloc(addr, size);
->>> +}
->>> +
->>> +void __kasan_release_vmalloc(unsigned long start, unsigned long end,
->>>                          unsigned long free_region_start,
->>>                          unsigned long free_region_end,
->>>                          unsigned long flags);
->>> +static inline void kasan_release_vmalloc(unsigned long start,
->>> +                        unsigned long end,
->>> +                        unsigned long free_region_start,
->>> +                        unsigned long free_region_end,
->>> +                        unsigned long flags)
->>> +{
->>> +     if (kasan_shadow_initialized())
->>> +             __kasan_release_vmalloc(start, end, free_region_start,
->>> +                        free_region_end, flags);
->>> +}
->>>
->>
->> ...> @@ -250,7 +259,7 @@ static inline void poison_slab_object(struct kmem_cache *cache, void *object,
->>>  bool __kasan_slab_pre_free(struct kmem_cache *cache, void *object,
->>>                               unsigned long ip)
->>>  {
->>> -     if (!kasan_arch_is_ready() || is_kfence_address(object))
->>> +     if (is_kfence_address(object))
->>>               return false;
->>>       return check_slab_allocation(cache, object, ip);
->>>  }
->>> @@ -258,7 +267,7 @@ bool __kasan_slab_pre_free(struct kmem_cache *cache, void *object,
->>>  bool __kasan_slab_free(struct kmem_cache *cache, void *object, bool init,
->>>                      bool still_accessible)
->>>  {
->>> -     if (!kasan_arch_is_ready() || is_kfence_address(object))
->>> +     if (is_kfence_address(object))
->>>               return false;
->>>
->>>       poison_slab_object(cache, object, init, still_accessible);
->>> @@ -282,9 +291,6 @@ bool __kasan_slab_free(struct kmem_cache *cache, void *object, bool init,
->>>
->>>  static inline bool check_page_allocation(void *ptr, unsigned long ip)
->>>  {
->>> -     if (!kasan_arch_is_ready())
->>> -             return false;
->>> -
->>
->>
->> Well, you can't do this yet, because no arch using ARCH_DEFER_KASAN yet, so this breaks
->> bisectability.
->> Leave it, and remove with separate patch only when there are no users left.
-> 
-> Will do in v5 at the end of patch series.
-> 
->>
->>>       if (ptr != page_address(virt_to_head_page(ptr))) {
->>>               kasan_report_invalid_free(ptr, ip, KASAN_REPORT_INVALID_FREE);
->>>               return true;
->>> @@ -511,7 +517,7 @@ bool __kasan_mempool_poison_object(void *ptr, unsigned long ip)
->>>               return true;
->>>       }
->>>
->>> -     if (is_kfence_address(ptr) || !kasan_arch_is_ready())
->>> +     if (is_kfence_address(ptr))
->>>               return true;
->>>
->>>       slab = folio_slab(folio);
->>
->>
+base-commit: 53d61a43a7973f812caa08fa922b607574befef4
+-- 
+2.50.1.565.gc32cd1483b-goog
 
