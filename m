@@ -1,57 +1,57 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFF42D374C
-	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276922D3233
+	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510279; cv=none; b=pdAlvesNM4b8+Vjd1h6FcTkKUMLeGm74UNRgKV4mUpaD8uQSAMFqK3+BYZq1h/zh3lPSWTWGVtJ22xuahxaq/c22FudtXNC89/3pEs2/4dxMLRB/xEBV+xAintbM1pwp/EFigKgEhrsf9t3fb8w+J4prZqqX1v8ISTKnDq8lNOE=
+	t=1754510279; cv=none; b=cxdD5DUoG6KlG6a50WAmZG3iFEmCaD//yGkJ/jAztxRLoP1DWAb3avYX3R/h8tC2i90WD6sVnfdqwxpt6goRatlO82VkPDUw6NuUZ6MUf7vT8prWT0r4L8BFSfdQyHV/tp3ngIey/nYMWpIAXlZ5BgGr1ybMJqTb1UsgBd+MXaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1754510279; c=relaxed/simple;
-	bh=Wn/70g/zhO0dUDFH5wZEa7RcDliEFiv6OnJtKAjielc=;
+	bh=C4TXme1dQYfX3HBX2bRS9WhICMNyLXZykAhB0txM4zg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MY/WiGXUvKnOFAM/XZgEy4oETSkIVwwQD8VvhU3So7GQInoknUVksjiYLUI0GPl/MJJ6FdUIkoTetU02UFCZfWcaNVU7DxBp/9PtegXN+Q9oR5MD+t7tfax7uCKhljH4Sx7YPqFniyXasWerbU+rSwuLUwsTM8Ug5XmZK+zExgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=35rxhghr; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=soUxEULkE1OyVw+rrOnDL3hY0eVC8GbYo8/YYMJakIJNTAGtFZnGy8VJ1ZgZZiot19vnh+5RmIzsMQEG4AIbwMb93XZ51hHQvHszF1l8qK+PWbw+0R/b9DpRnpzIItKQzRjH96CGRoY6LnlzYQSMqTXwRs4YRh1QsAH2WmrNGuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=spJa5HkR; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="35rxhghr"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-240b9c0bddcso1712255ad.2
-        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:57:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="spJa5HkR"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2424aaa9840so2087225ad.1
+        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:57:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510276; x=1755115076; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1754510274; x=1755115074; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=kcswufqwZeiVbOah5oR7VRWteUmksZlp7f05xG34s+k=;
-        b=35rxhghrLqkafPNX5TVnpKo+37Zsd4sHTNvCOB0Pndu2e+d+BzdTnMUjRe/wALTk3w
-         qZnkw9Jl7msP7Yw3L8YnuAleOwOaKaRjVwMKkDUFlZrh21kk80fP3jtRfNYIDcZhASQQ
-         NAzZBOemgUO9lAI0p1Y6msRGzDLXr0pPEGrtzm/HfrZFrdG1KQoZWCaOBL2o7MzbM+PT
-         6rgv1FwQXFYMTROeu1kF85/KG6DkR+CnIIE9jrJZwtftwDA8PTvF3VXBAmqo7dhQe3Z2
-         L2bSfaRs1HGHIYHQmrDRdAOemoIVsRum5qHAJsAKzc7xB6xVSX0SCVZZqNiFjlxl4owM
-         0v3g==
+        bh=0uQwWV7lYMOxBil53zyDkn96gfX2tt2/DqWsDrl/9hs=;
+        b=spJa5HkRX150Anbjukr2CIgUit9TA/a0Z3w9iKc2S+x8ck1U+qvqZcP/tw+RDe3Svk
+         AbprKdXABTTjWVmrFEWI1ylE/o2uMIIBjcSywR4dkSAYUN0YkH4YFPgk01xq7dSAV5Wc
+         ACsqRjiI5Fiu3QBxxTSLaVmtQz6dgRThqoUZLwN5UC2sAhVNxuv3ynLHz1mGHwbmt43g
+         5SJRwcR+CEbt4FZwWeq2RMXoGP3xgYTxIvscB7FzCBuhjFWy4/EuQXnRGr7MV0Gjwoyk
+         YHlIy06j3dTijX4yV0nUzTYIfeEaj6hW7UEqPHd1aepJ7dLcIsYderTaIUVHqkzi2d5U
+         +wWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510276; x=1755115076;
+        d=1e100.net; s=20230601; t=1754510274; x=1755115074;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kcswufqwZeiVbOah5oR7VRWteUmksZlp7f05xG34s+k=;
-        b=Mtz0GmEucIahgswS3HTK0oycwyZpCPsvD17kkhC43MyepDj7sj7wU6+rVYUtJecu/N
-         eoB3Xn7556619kYvflwNdQiZ4eDyx2coWqe++YWyXArJaygSNo32UzyiByNwi2+fQ2Gr
-         YIKbjKUPMB0BdatFLOEIWZEda5CmgbJEj6hDaZ70TcVEelC43xzpjIiUIsdYp4x3kK4v
-         wrAY9EBs/ix1+MKZIWMWGbJF96S5TA2e8e32I4rVw02Q1QuGp+T6oLU0op/41vW8H635
-         boCjnDNfJljGvd1QtSpXgk/u2ZombGYZVAfCBXS96X4llsnyWLw4d9eE5zF/sAKTXDdC
-         FLDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVo3IEYjJcaUEYmVEcb5ID5c3rHMpexjlBKOSsV9EomTz2q8gikTg1TFV26lwN5QjedgJwKyx/IF60=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxJtjCUcGxLnbebGSWzQPCyQllyeQhlCyl1Cwlu/RYzjurrncv5
-	+7OxzVPiLM4Q7NVXRwpmiS8pC0NKCy1JQHR8LoLd2gYZ+abSV1OlkWl6N2CDeKZ4e7CHBU/oHzN
-	Jb7Q2+A==
-X-Google-Smtp-Source: AGHT+IE/UqkBVmIsYHo+3//+Db76eNFThoPapPb1lJatPNoq0GTt8I/qj7Zd+31YDzfBkj++w1pCOc8gls4=
-X-Received: from pjbnd14.prod.google.com ([2002:a17:90b:4cce:b0:31f:2a78:943])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ec8e:b0:235:ef67:b5a0
- with SMTP id d9443c01a7336-242a0b3e6f7mr55163055ad.36.1754510276193; Wed, 06
- Aug 2025 12:57:56 -0700 (PDT)
+        bh=0uQwWV7lYMOxBil53zyDkn96gfX2tt2/DqWsDrl/9hs=;
+        b=knI67Kq/s9QqmCOHLkLxJNWFWpO4jGsptbMT8fuFT8iFDccEQTiq83UHy/W8b8dg9O
+         5s+nokvi9e9VyQs3RT0ocxHnDF3kEKkr6aB1vzNdcdUwYRryIpcbplWibDxwIAMdmHqI
+         6OzPfGecEn8cMdlEeXM7Tu7UqKPd+9jl08vBAc8tJMeDHZQDgLB9ccWAt5v+Kka0RNiD
+         9f5eHpuciIfy2GXNIXjRhK+AROoQkTRhBMQYpsIo7JWa9gonKSMA6XTNBVaWoRvMXb+u
+         S0F/ajZbBd22XQpyqCsnWBOEqWFuFJ2TxvJTLNyxwPh2fCaSl5onOtA/iwS69IDuRBqK
+         W8nw==
+X-Forwarded-Encrypted: i=1; AJvYcCX3CMTSRJgQJQAS7SibdSx+C6oKfWY3xv0efWjxZW3hTcgsbgdIx7I2AQTOxzgMryH1YFCr3VBr/HQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxHX+LdunLNESBwXo+Sq+JrSqEYyvAMVyNnos+ECwMHBtPIBb9N
+	wCoZF7opaKHNdPf3eB8MWqQ7rOHucVP9liQMtWKNyAzVMZxbuKO5WuFRYIBniZ/VfL0pyzx1F/T
+	DoiNVvg==
+X-Google-Smtp-Source: AGHT+IGH2b2xUlwmCehGLeN80BLd5ICkd9hx9VxyJMjC6VJA8pJue1wqM8eYOcrMqHKsQHTGrwNwqHX4jyM=
+X-Received: from plkh12.prod.google.com ([2002:a17:903:19ec:b0:240:9ca:fc49])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce05:b0:240:49d1:6347
+ with SMTP id d9443c01a7336-2429f30b512mr54270245ad.35.1754510274358; Wed, 06
+ Aug 2025 12:57:54 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:56:37 -0700
+Date: Wed,  6 Aug 2025 12:56:36 -0700
 In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250806195706.1650976-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-16-seanjc@google.com>
-Subject: [PATCH v5 15/44] KVM: SVM: Check pmu->version, not enable_pmu, when
- getting PMC MSRs
+Message-ID: <20250806195706.1650976-15-seanjc@google.com>
+Subject: [PATCH v5 14/44] KVM: VMX: Setup canonical VMCS config prior to kvm_x86_vendor_init()
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -82,40 +81,55 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Gate access to PMC MSRs based on pmu->version, not on kvm->arch.enable_pmu,
-to more accurately reflect KVM's behavior.  This is a glorified nop, as
-pmu->version and pmu->nr_arch_gp_counters can only be non-zero if
-amd_pmu_refresh() is reached, kvm_pmu_refresh() invokes amd_pmu_refresh()
-if and only if kvm->arch.enable_pmu is true, and amd_pmu_refresh() forces
-pmu->version to be 1 or 2.
+Setup the golden VMCS config during vmx_init(), before the call to
+kvm_x86_vendor_init(), instead of waiting until the callback to do
+hardware setup.  setup_vmcs_config() only touches VMX state, i.e. doesn't
+poke anything in kvm.ko, and has no runtime dependencies beyond
+hv_init_evmcs().
 
-I.e. the following holds true:
-
-  !pmu->nr_arch_gp_counters || kvm->arch.enable_pmu == (pmu->version > 0)
-
-and so the only way for amd_pmu_get_pmc() to return a non-NULL value is if
-both kvm->arch.enable_pmu and pmu->version evaluate to true.
-
-No real functional change intended.
+Setting the VMCS config early on will allow referencing VMCS and VMX
+capabilities at any point during setup, e.g. to check for PERF_GLOBAL_CTRL
+save/load support during mediated PMU initialization.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-index 288f7f2a46f2..7b8577f3c57a 100644
---- a/arch/x86/kvm/svm/pmu.c
-+++ b/arch/x86/kvm/svm/pmu.c
-@@ -41,7 +41,7 @@ static inline struct kvm_pmc *get_gp_pmc_amd(struct kvm_pmu *pmu, u32 msr,
- 	struct kvm_vcpu *vcpu = pmu_to_vcpu(pmu);
- 	unsigned int idx;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 95765db52992..ed10013dac95 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -8335,8 +8335,6 @@ __init int vmx_hardware_setup(void)
  
--	if (!vcpu->kvm->arch.enable_pmu)
-+	if (!pmu->version)
- 		return NULL;
+ 	vmx_setup_user_return_msrs();
  
- 	switch (msr) {
+-	if (setup_vmcs_config(&vmcs_config, &vmx_capability) < 0)
+-		return -EIO;
+ 
+ 	if (boot_cpu_has(X86_FEATURE_NX))
+ 		kvm_enable_efer_bits(EFER_NX);
+@@ -8560,11 +8558,18 @@ int __init vmx_init(void)
+ 		return -EOPNOTSUPP;
+ 
+ 	/*
+-	 * Note, hv_init_evmcs() touches only VMX knobs, i.e. there's nothing
+-	 * to unwind if a later step fails.
++	 * Note, VMCS and eVMCS configuration only touch VMX knobs/variables,
++	 * i.e. there's nothing to unwind if a later step fails.
+ 	 */
+ 	hv_init_evmcs();
+ 
++	/*
++	 * Parse the VMCS config and VMX capabilities before anything else, so
++	 * that the information is available to all setup flows.
++	 */
++	if (setup_vmcs_config(&vmcs_config, &vmx_capability) < 0)
++		return -EIO;
++
+ 	r = kvm_x86_vendor_init(&vt_init_ops);
+ 	if (r)
+ 		return r;
 -- 
 2.50.1.565.gc32cd1483b-goog
 
