@@ -1,171 +1,271 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59E428B50A
-	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 12:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F6428B516
+	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 13:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754483442; cv=none; b=HoLBAk528Cgf1Ss3wH8xaWDoG0rBmWhJXAkPiuufsbSUUFFuc61C6J+bEEccuS3sT9CxyUUdEOXhyAvJxtQgo2M7MTpw7PWIVkTSJgMTrr/x4WkVr/nfGNt869B4ybn+a2AeO+RE/ZNAuiuvg2I83vawx9vGN0DsnQ56S1Gbn+I=
+	t=1754487308; cv=none; b=FDdWv7LLrK+pnbfMc/jvRmq7UE2igqQ2Wp/Y94Lt3reUqTu+gTEt/bNy29tWv+RGJ7kH1QA/FPeOTEnfTetYoHyPAj/e9UsR795dM0t+58UcOaqrU/8//NDOOoTXBxMCju5fI11w2VetQmHSpB6fpsYVVfVK3NuqXVn1udLGxYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754483442; c=relaxed/simple;
-	bh=mSYUh+T5LKyYNPZakKmsiXm0B30JrcVYTIzk5jrro4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Geu+Bq8iQTTc1L9OjZ6NRVTo+nlKoOpJWHnWQEKfyx+D1oBArBFH72dvXc1kzhkZF002Hv19D3q6pBx2kf6tD03IvOZ9MjxJvCcAsMhaVWfXE0SWqjEORAiXovovyDl/i7ofwVAaYwDzW+1/E9k2Spoxt7n9s87/Q5piBGz7GFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=EW9Iebdd; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1754487308; c=relaxed/simple;
+	bh=4pdWS84KRZO1SXuKgGgyD1aaqPQhqa/LVwQApBfPiyk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C7Yj6F8X5tL6hzN9EMZgPwIablReKYCmpnHWtekEW5rZKdA+NStw5RHMzLhSC7B7/QqzsOx6toMMYbRinihR2zdTbsZEKENZ7gB9Eo97YUstmMJp1NMRcBbLzVjH5P1GDJzbGi3NohX8gj6lKk7qyRpgv87EPlKkjX0KGrb1f/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R37H9WYG; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="EW9Iebdd"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 08CFA2578E;
-	Wed,  6 Aug 2025 14:30:37 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 4fCJ_2J-kINn; Wed,  6 Aug 2025 14:30:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1754483435; bh=mSYUh+T5LKyYNPZakKmsiXm0B30JrcVYTIzk5jrro4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=EW9IebddAIj6oJPaTxR3Luvi4SbR+tvpbpNMG4Xj3dp25aspX/Uy9BxH+402f6UaE
-	 Amy73reDlzOr7ogRTw8hdC/8nYocyT3fwYS+06foQVMca4qzGcPv+r6gTDSJjq8yz5
-	 tJV4IHOyYZ7bKOn8tYLXdDXN17B1zEDlrypVJamaeuPwrYTvvXz0zFPdRgZqsq9qTQ
-	 e+IDPelK0nsSE42p4lWLeL2Ak0pOe6Wb8lLl6P2tNp9n67rluJtdgfLWrUUqP6gBAj
-	 5eDP4HJNC/5YmisBT/FaBKOGvN8G1XNZSshtDlFdLxQ1aJU7arFmE+fxRQzStfjDJV
-	 yF3dYv5OFCsQg==
-Date: Wed, 6 Aug 2025 12:30:18 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH v3 1/8] dt-bindings: clock: loongson2: Add Loongson
- 2K0300 compatible
-Message-ID: <aJNK2uI4HTIV99vz@pie>
-References: <20250805150147.25909-1-ziyao@disroot.org>
- <20250805150147.25909-2-ziyao@disroot.org>
- <CAAhV-H6fDjVFX_gyT3m39j09RWFu4O89FVdEumyV-dzUnU9Wig@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R37H9WYG"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55ba2644bdaso562222e87.0
+        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 06:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754487304; x=1755092104; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GkBywKSK+jarcaDEWkMpZ6690o3qyLvHV2Ljs5N+BnY=;
+        b=R37H9WYGGzcst0uq9tcKOiFF25KCRMvWsM05lQL/ro9b+knqfx9b6fYtJ2vGs9F98o
+         50uWjYD6mNc2NLqs6qbpg6QAWj9ti6tnBJLtn2Bg8DE8sZYs3bu2kWGx/sIVgWeNCM9w
+         qJt/bmwtq+QQSKLlXDAhRsLFhichFz9dkjyF1iSFklq/MZYiTey9K5Q87lA/kpunZScg
+         rGG/oxgsZBkRdb1l9nY9v0BXrCC4gAG/7aeeht+Db8Z5IiJxtK4gXfcHgMaCS+iuoouQ
+         BxzqW9G2KLnFXUKVvNTglMSSzJCWoRenKC5XbqmSvbJlZ7u6N/YbRkJlzuo6td/IY60S
+         Leaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754487304; x=1755092104;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GkBywKSK+jarcaDEWkMpZ6690o3qyLvHV2Ljs5N+BnY=;
+        b=P0HN0rC6HyBx8RttSG7waM3n1ZuZhqGd/kdrqSb2RfsV65Z2cKjK6b7lMosRzrSo7C
+         Sviili2EMndEpbsP9NsuZJ5bTLq984ymYq48aYCUAWNJtuwRstEwMDhuqyIHCnOb648J
+         v+eDMQjjRnDhRitgOCpam99g/8Y1xYoKGZGOaw+fRIMH9lNkfGCeKa926KzktQcDsvcv
+         pZoe6OdvYKPPQilDgPPpXsZ+h6e/R65Ra7xyPFDq8VYe5f41KgyV8Xsuo/KReNJHf21/
+         KryAg0xOGCuXU7wXgVNTUdFQv/PTw6Qrrw7aR1aBkKF5EyMzeSaoMHoipfum0gvpPYXN
+         Xd8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXfYKigm/AkX2GBCmR7VaEicQjtX5jtaQsJ3Cpu1P6z8zZ2raR09re2lQpp1ZZZsB/j112m3CzFWU0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwfujvkIBg4209EibTvOQz8Nd2E/HrBL3pyCQhsxvSPtz9g46l6
+	SETpTTOKFyHFwZrrYzAI9mrVb62/0UCMfF5UtIsxOZKKjHOkV1INe+fa
+X-Gm-Gg: ASbGncstHopYFkiX0SjLDLd6m5Wr9liVCQ5a/yBJt9J+3Sfb+f9yiknxgENP2Kxe9EL
+	bALL1C/HnRDRq0lwKTd9TsCUkKxprBY+iOu4aC3IBBui7URDCM1y8RJLOhZBM8IpHm09uvwvMRE
+	IeEC5i+qbYHT9VXYmjA8/MHY4GI+HsGNSqdDrGICwUm13VekK1u1to0OblPdMh3FbEdbK0A3mqI
+	IUh/qwba5n1s5daYrkG6NLP3ZcJd79FlBvrIXrsuLB841g5vL7CXuTO2eKiLh2eo4+QvoK+CvtF
+	mxnprTuhRJBojvy8FosC68WW3Z+Uah8dgrncssqmVAgN5Hue8aoVfw2q+XpeVmECD/ZSev/PlMK
+	MMPWFgiRUmVrqxApY+28E9rLTNgDB
+X-Google-Smtp-Source: AGHT+IG/+xV14jPScIlu8zUGGDD+ajQ7/dFSreWgfNZ5pS9U8lvRiqBw989XNjNOSP9y7GWZ8ScIMA==
+X-Received: by 2002:a05:6512:ad1:b0:55a:4d9e:6536 with SMTP id 2adb3069b0e04-55caf2f956dmr417291e87.2.1754487304191;
+        Wed, 06 Aug 2025 06:35:04 -0700 (PDT)
+Received: from [10.214.35.248] ([80.93.240.68])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55b8899ebd2sm2302283e87.42.2025.08.06.06.35.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Aug 2025 06:35:03 -0700 (PDT)
+Message-ID: <5a73e633-a374-47f2-a1e1-680e24d9f260@gmail.com>
+Date: Wed, 6 Aug 2025 15:34:15 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H6fDjVFX_gyT3m39j09RWFu4O89FVdEumyV-dzUnU9Wig@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/9] kasan: introduce ARCH_DEFER_KASAN and unify static
+ key across modes
+To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, hca@linux.ibm.com,
+ christophe.leroy@csgroup.eu, andreyknvl@gmail.com, agordeev@linux.ibm.com,
+ akpm@linux-foundation.org, zhangqing@loongson.cn, chenhuacai@loongson.cn,
+ trishalfonso@google.com, davidgow@google.com
+Cc: glider@google.com, dvyukov@google.com, kasan-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
+References: <20250805142622.560992-1-snovitoll@gmail.com>
+ <20250805142622.560992-2-snovitoll@gmail.com>
+Content-Language: en-US
+From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+In-Reply-To: <20250805142622.560992-2-snovitoll@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Aug 06, 2025 at 04:36:50PM +0800, Huacai Chen wrote:
-> On Tue, Aug 5, 2025 at 11:03 PM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > Document the clock controller shipped in Loongson 2K0300 SoC, which
-> > generates various clock signals for SoC peripherals.
-> >
-> > Differing from previous generations of SoCs, 2K0300 requires a 120MHz
-> > external clock input, and a separate dt-binding header is used for
-> > cleanness.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  .../bindings/clock/loongson,ls2k-clk.yaml     | 21 ++++++--
-> >  MAINTAINERS                                   |  1 +
-> >  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
-> >  3 files changed, 72 insertions(+), 4 deletions(-)
-> >  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> >
+
+
+On 8/5/25 4:26 PM, Sabyrzhan Tasbolatov wrote:
+> Introduce CONFIG_ARCH_DEFER_KASAN to identify architectures that need
+> to defer KASAN initialization until shadow memory is properly set up,
+> and unify the static key infrastructure across all KASAN modes.
+> 
+> Some architectures (like PowerPC with radix MMU) need to set up their
+> shadow memory mappings before KASAN can be safely enabled, while others
+> (like s390, x86, arm) can enable KASAN much earlier or even from the
+> beginning.
+> 
+> Historically, the runtime static key kasan_flag_enabled existed only for
+> CONFIG_KASAN_HW_TAGS mode. Generic and SW_TAGS modes either relied on
+> architecture-specific kasan_arch_is_ready() implementations or evaluated
+> KASAN checks unconditionally, leading to code duplication.
+> 
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217049
+> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+> ---
+> Changes in v4:
+> - Fixed HW_TAGS static key functionality (was broken in v3)
+
+I don't think it fixed. Before you patch kasan_enabled() esentially
+worked like this:
+
+ if (IS_ENABLED(CONFIG_KASAN_HW_TAGS))
+        return static_branch_likely(&kasan_flag_enabled);
+ else
+        return IS_ENABLED(CONFIG_KASAN);
+
+Now it's just IS_ENABLED(CONFIG_KASAN);
+
+And there are bunch of kasan_enabled() calls left whose behavior changed for
+no reason.
+
+
+> - Merged configuration and implementation for atomicity
+> ---
+>  include/linux/kasan-enabled.h | 36 +++++++++++++++++++++++-------
+>  include/linux/kasan.h         | 42 +++++++++++++++++++++++++++--------
+>  lib/Kconfig.kasan             |  8 +++++++
+>  mm/kasan/common.c             | 18 ++++++++++-----
+>  mm/kasan/generic.c            | 23 +++++++++++--------
+>  mm/kasan/hw_tags.c            |  9 +-------
+>  mm/kasan/kasan.h              | 36 +++++++++++++++++++++---------
+>  mm/kasan/shadow.c             | 32 ++++++--------------------
+>  mm/kasan/sw_tags.c            |  4 +++-
+>  mm/kasan/tags.c               |  2 +-
+>  10 files changed, 133 insertions(+), 77 deletions(-)
+> 
+> diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
+> index 6f612d69ea0..52a3909f032 100644
+> --- a/include/linux/kasan-enabled.h
+> +++ b/include/linux/kasan-enabled.h
+> @@ -4,32 +4,52 @@
+>  
+>  #include <linux/static_key.h>
+>  
+> -#ifdef CONFIG_KASAN_HW_TAGS
+> +/* Controls whether KASAN is enabled at all (compile-time check). */
+> +static __always_inline bool kasan_enabled(void)
+> +{
+> +	return IS_ENABLED(CONFIG_KASAN);
+> +}
+>  
+> +#if defined(CONFIG_ARCH_DEFER_KASAN) || defined(CONFIG_KASAN_HW_TAGS)
+> +/*
+> + * Global runtime flag for KASAN modes that need runtime control.
+> + * Used by ARCH_DEFER_KASAN architectures and HW_TAGS mode.
+> + */
+>  DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
+>  
+> -static __always_inline bool kasan_enabled(void)
+> +/*
+> + * Runtime control for shadow memory initialization or HW_TAGS mode.
+> + * Uses static key for architectures that need deferred KASAN or HW_TAGS.
+> + */
+> +static __always_inline bool kasan_shadow_initialized(void)
+
+Don't rename it, just leave as is - kasan_enabled().
+It's better name, shorter and you don't need to convert call sites, so
+there is less chance of mistakes due to unchanged kasan_enabled() -> kasan_shadow_initialized().
+
+
+>  {
+>  	return static_branch_likely(&kasan_flag_enabled);
+>  }
+>  
+> -static inline bool kasan_hw_tags_enabled(void)
+> +static inline void kasan_enable(void)
+> +{
+> +	static_branch_enable(&kasan_flag_enabled);
+> +}
+> +#else
+> +/* For architectures that can enable KASAN early, use compile-time check. */
+> +static __always_inline bool kasan_shadow_initialized(void)
+>  {
+>  	return kasan_enabled();
+>  }
+>  
 
 ...
 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 4912b8a83bbb..7960e65d7dfc 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -14365,6 +14365,7 @@ S:      Maintained
-> >  F:     Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> >  F:     drivers/clk/clk-loongson2.c
-> >  F:     include/dt-bindings/clock/loongson,ls2k-clk.h
-> > +F:     include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> I think ls2k0300-clk.h can be merged into ls2k-clk.h
+>  
+>  void kasan_populate_early_vm_area_shadow(void *start, unsigned long size);
+> -int kasan_populate_vmalloc(unsigned long addr, unsigned long size);
+> -void kasan_release_vmalloc(unsigned long start, unsigned long end,
+> +
+> +int __kasan_populate_vmalloc(unsigned long addr, unsigned long size);
+> +static inline int kasan_populate_vmalloc(unsigned long addr, unsigned long size)
+> +{
+> +	if (!kasan_shadow_initialized())
+> +		return 0;
 
-Honestly I think a separate header makes the purpose more clear, and
-follows the convention that name of binding header matches the
-compatible, but I'm willing to change if you really consider merging
-them together is better and dt-binding maintainer agrees on this.
 
-> Huacai
+What's the point of moving these checks to header?
+Leave it in C, it's easier to grep and navigate code this way.
 
-Thanks,
-Yao Zi
 
-> >
-> >  LOONGSON SPI DRIVER
-> >  M:     Yinbo Zhu <zhuyinbo@loongson.cn>
-> > diff --git a/include/dt-bindings/clock/loongson,ls2k0300-clk.h b/include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> > new file mode 100644
-> > index 000000000000..5e8f7b2f33f2
-> > --- /dev/null
-> > +++ b/include/dt-bindings/clock/loongson,ls2k0300-clk.h
-> > @@ -0,0 +1,54 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-> > +/*
-> > + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-> > + */
-> > +#ifndef _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
-> > +#define _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
-> > +
-> > +/* Derivied from REFCLK */
-> > +#define LS2K0300_CLK_STABLE                    0
-> > +#define LS2K0300_PLL_NODE                      1
-> > +#define LS2K0300_PLL_DDR                       2
-> > +#define LS2K0300_PLL_PIX                       3
-> > +#define LS2K0300_CLK_THSENS                    4
-> > +
-> > +/* Derived from PLL_NODE */
-> > +#define LS2K0300_CLK_NODE_DIV                  5
-> > +#define LS2K0300_CLK_NODE_PLL_GATE             6
-> > +#define LS2K0300_CLK_NODE_SCALE                        7
-> > +#define LS2K0300_CLK_NODE_GATE                 8
-> > +#define LS2K0300_CLK_GMAC_DIV                  9
-> > +#define LS2K0300_CLK_GMAC_GATE                 10
-> > +#define LS2K0300_CLK_I2S_DIV                   11
-> > +#define LS2K0300_CLK_I2S_SCALE                 12
-> > +#define LS2K0300_CLK_I2S_GATE                  13
-> > +
-> > +/* Derived from PLL_DDR */
-> > +#define LS2K0300_CLK_DDR_DIV                   14
-> > +#define LS2K0300_CLK_DDR_GATE                  15
-> > +#define LS2K0300_CLK_NET_DIV                   16
-> > +#define LS2K0300_CLK_NET_GATE                  17
-> > +#define LS2K0300_CLK_DEV_DIV                   18
-> > +#define LS2K0300_CLK_DEV_GATE                  19
-> > +
-> > +/* Derived from PLL_PIX */
-> > +#define LS2K0300_CLK_PIX_DIV                   20
-> > +#define LS2K0300_CLK_PIX_PLL_GATE              21
-> > +#define LS2K0300_CLK_PIX_SCALE                 22
-> > +#define LS2K0300_CLK_PIX_GATE                  23
-> > +#define LS2K0300_CLK_GMACBP_DIV                        24
-> > +#define LS2K0300_CLK_GMACBP_GATE               25
-> > +
-> > +/* Derived from CLK_DEV */
-> > +#define LS2K0300_CLK_USB_SCALE                 26
-> > +#define LS2K0300_CLK_USB_GATE                  27
-> > +#define LS2K0300_CLK_APB_SCALE                 28
-> > +#define LS2K0300_CLK_APB_GATE                  29
-> > +#define LS2K0300_CLK_BOOT_SCALE                        30
-> > +#define LS2K0300_CLK_BOOT_GATE                 31
-> > +#define LS2K0300_CLK_SDIO_SCALE                        32
-> > +#define LS2K0300_CLK_SDIO_GATE                 33
-> > +
-> > +#define LS2K0300_CLK_GMAC_IN                   34
-> > +
-> > +#endif // _DT_BINDINGS_CLK_LOONGSON_LS2K300_H_
-> > --
-> > 2.50.1
-> >
-> 
+> +	return __kasan_populate_vmalloc(addr, size);
+> +}
+> +
+> +void __kasan_release_vmalloc(unsigned long start, unsigned long end,
+>  			   unsigned long free_region_start,
+>  			   unsigned long free_region_end,
+>  			   unsigned long flags);
+> +static inline void kasan_release_vmalloc(unsigned long start,
+> +			   unsigned long end,
+> +			   unsigned long free_region_start,
+> +			   unsigned long free_region_end,
+> +			   unsigned long flags)
+> +{
+> +	if (kasan_shadow_initialized())
+> +		__kasan_release_vmalloc(start, end, free_region_start,
+> +			   free_region_end, flags);
+> +}
+>  
+
+...> @@ -250,7 +259,7 @@ static inline void poison_slab_object(struct kmem_cache *cache, void *object,
+>  bool __kasan_slab_pre_free(struct kmem_cache *cache, void *object,
+>  				unsigned long ip)
+>  {
+> -	if (!kasan_arch_is_ready() || is_kfence_address(object))
+> +	if (is_kfence_address(object))
+>  		return false;
+>  	return check_slab_allocation(cache, object, ip);
+>  }
+> @@ -258,7 +267,7 @@ bool __kasan_slab_pre_free(struct kmem_cache *cache, void *object,
+>  bool __kasan_slab_free(struct kmem_cache *cache, void *object, bool init,
+>  		       bool still_accessible)
+>  {
+> -	if (!kasan_arch_is_ready() || is_kfence_address(object))
+> +	if (is_kfence_address(object))
+>  		return false;
+>  
+>  	poison_slab_object(cache, object, init, still_accessible);
+> @@ -282,9 +291,6 @@ bool __kasan_slab_free(struct kmem_cache *cache, void *object, bool init,
+>  
+>  static inline bool check_page_allocation(void *ptr, unsigned long ip)
+>  {
+> -	if (!kasan_arch_is_ready())
+> -		return false;
+> -
+
+
+Well, you can't do this yet, because no arch using ARCH_DEFER_KASAN yet, so this breaks
+bisectability.
+Leave it, and remove with separate patch only when there are no users left.
+
+>  	if (ptr != page_address(virt_to_head_page(ptr))) {
+>  		kasan_report_invalid_free(ptr, ip, KASAN_REPORT_INVALID_FREE);
+>  		return true;
+> @@ -511,7 +517,7 @@ bool __kasan_mempool_poison_object(void *ptr, unsigned long ip)
+>  		return true;
+>  	}
+>  
+> -	if (is_kfence_address(ptr) || !kasan_arch_is_ready())
+> +	if (is_kfence_address(ptr))
+>  		return true;
+>  
+>  	slab = folio_slab(folio);
+
+
