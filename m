@@ -1,57 +1,57 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264272E174B
-	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631C92E0B71
+	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510327; cv=none; b=Eqj2DuV3JBKLo/CGwoLnvvxAkzoHxg/0BOrzSj1GDN6M8Dk6AMjRd1gkDbJPd6jOYHLwA3CMVaXcZuwO627v7abVn2BYigac9d5oMUQY2XWBYRUnOMl2S834l5ZvFUBarpOKv7ognt76jzR24105upeATWq126Nn1FUQpp6cq4A=
+	t=1754510328; cv=none; b=GQR2AGWDsJvC8+XJPRdcqxndM/QOuiF3ztg9ZJt+ATMF5Wh65GgwbNSJ5NnHSRa5vnov+ttDXivGXbRLwvrDLAk6Yk06g5IZuyXId1yqMvkelS9QmE5T8hryCjyHV1lACa2pqidHcOJP4J2kamSVvTt05AyR07f+JICoNEvQ168=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754510327; c=relaxed/simple;
-	bh=mktiJzkM34N6Zf3/nCj8gPSMPc22J/Q3PSgyAnIfDJg=;
+	s=arc-20240116; t=1754510328; c=relaxed/simple;
+	bh=xxEMYMafoH1hCuYfyuUxc0eXfBZ4HMKS++5sGsaBrpM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BqA1qbteb7Eil2N/rya3qdHrSoKfcE4xL056pa0T5Vk92ybso/hsSrTV2iGEfoUFisML9qOuIwibeutjxLeAiqiaz42zPNgT7FzH+1dLv9pv1koi+OZAhYxpUcsGTLhWCAHTQTai3YEzqMBgDXCRrX2ZxPDWu1Ozfhp1otR2ZVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hHGSnOd+; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=X93nabLY/4y/GHE6ulXYOkPrX/iokQdIEm+2I/BxRqeNVqfOttZil0qWhVOputhVYFG4DlLGxSBoCLSTt+XEzgeHgvLOKJialVsMHQOTJWiH+RQ78uZmuS8r9EnA5bCdoFK23paeD3o2vOVFPg5XJ/xZvwN6O85Psp/bfu67Mp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aQC3Fks1; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hHGSnOd+"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2fcbd76b61so240451a12.3
-        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:58:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aQC3Fks1"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313d6d671ffso303259a91.2
+        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:58:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510324; x=1755115124; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1754510323; x=1755115123; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=aIwiS3b08lZbnfZBzBRHsRLYuS/hl5WgYmD0pyHBLVw=;
-        b=hHGSnOd+j/SOegJZTXk2aSb2Y09L9Jy3ja6FOFQc93ixxwvBVvr8mUeC5nSpSE02on
-         C4PE4ADG7aOhkIyI/pLvL/nqD/jRtUf6NsSaLmHB4aZdzQHLLWU/oUj0/jOBTtIJwUCs
-         ZcjegzI2639dZop7MmzRkn/8PIR48ZzwXB5gutK3skS0Gxn911etSQQnnlTZzxl7b2xl
-         VI8EBqLUq17trBGDM/rV7mJp01oe8sVJLewK6DhEma5vMwp2ixuUzNLzxiP+eFVXnRop
-         ca1xSm3JPoLac8h5m9WWtmivP7+264Hkt5l5UNzes5ibBbbTcvcl7xfYKfBMtsysT7Kp
-         V5mg==
+        bh=AqSoz/ys0/nDwriVLA2HvcSasFXIo2nt11bZwmhw7W4=;
+        b=aQC3Fks1GIQFmCJACRIe2fTk5//LbEJZF5ZNGbgQNizH7mgmEwsj7WXt9IdKoJZBiM
+         dnim8ORhZmewD4dFBLuxUxELCufQFJBdh8uDBA6fM41qpvyjJJDxN0DWQH03UISkH8pw
+         +ioo20p9aFNKHWsCjxPDdQhusEPNB7/3AL0nqgzy6WNQ9kGZGFIhXv50iGlXEQ1RnY1z
+         hqWUpgcXgvxQUsXEjtbKppEdCrbP6r2kcMEXG3ILHaU72Nv5ULbReVGgneqEbNOjm/S8
+         uhQ0cyHRRGJ55JHcKLASG0mu3vZgdGtxVqnRqHxGrImjblrYF+2WiqKUSrcsTurS7S7v
+         Sy8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510324; x=1755115124;
+        d=1e100.net; s=20230601; t=1754510323; x=1755115123;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aIwiS3b08lZbnfZBzBRHsRLYuS/hl5WgYmD0pyHBLVw=;
-        b=RHtO/m8cDsYRpvDVOoohYASbtPKQyQprNavQp4EMl58NAlBZQ2tcgUJTML+FLVezdZ
-         UC2bQ+fWm/1LMX0MGpv4OAIgC9fn614ndhI7Az9t/h8OxJJMDfwD0+yRX+XDsRxyrn8R
-         Wq3Si8nqXtwWQ8py5S5szgTTVjxlYcTK7ly6kihvd+YabCTBVvEVu13mss/m9b8RffXX
-         rh2d4ReeF6ZN9eB9DaMQEHsHIl92pXz3zo5M7uUKQem3udtkM13kl9gZjENU+2DjzaAp
-         X3zN1NDUyewQk0NxA3gaGRJKftnDL9u8Fwv1PNO/t6yuzSKIm6GLqOw1xxezM/JINwdP
-         zZNA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3PfLezuenHunuwz41ymW3zBQO3j/w7k9HK8sqcBbMdJYBO4HVdD4LeZKLqhtdK7sEFBvGjIZKuZ0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzQSvPQcmLAMZb0cUKQfkvo1O0fT9mnehzUIqpeFEwdwbkAzlGN
-	rR7XT1IchOAw2O28bkbXpiBnBKYGlNBXgflQIvRuaJJwRKqPYwQJxP3pCVYH1v9RUtVuDcj4LII
-	+Lctkiw==
-X-Google-Smtp-Source: AGHT+IEQR+T9dam/zfnLIV/i5izf3PHRRWb6ka2239rbCk7AqXY3VxMNYGaiVe7zhD28m3tT7rq7DHc261E=
-X-Received: from pjzd15.prod.google.com ([2002:a17:90a:e28f:b0:312:151d:c818])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f645:b0:240:150e:57ba
- with SMTP id d9443c01a7336-242a0a90e7amr55806795ad.3.1754510324526; Wed, 06
- Aug 2025 12:58:44 -0700 (PDT)
+        bh=AqSoz/ys0/nDwriVLA2HvcSasFXIo2nt11bZwmhw7W4=;
+        b=SY34trmfPQ38yKRN6r0RyguLCqCcOnZKvEbAy+zfYrF8VasaCLWnJYerDCgLMKFyMV
+         5yXhXCWOl4aFJgumAIApmvDnLTJyAJUme0tC5Q102LDH+JV996b+EAk1E3fOEl1HqXkp
+         lIGaQJH9U07wL1nzC04kAoys+St4zBxqLOXDZ9XCA7JJ+hUIN9AFjU+3R4k73q4usDXJ
+         FzQAXWAgV397hAwupm0nitTYmqvtofoA2nmgnneIy6JEBR9kfDG2iLD3XRYfgT9Mt19p
+         tNoxY2/P7YT/KwdNyPmFt6mndxcETLtCXgoTkvSkILBy06KYLgAyPZJFFIcYdSE7YmzB
+         c3Og==
+X-Forwarded-Encrypted: i=1; AJvYcCWCniBNaljFtbgO28YBbalOi9ectMSwjbCbGcNY9EGU3LhDHlxBRp6M7C5bRlZlxyIsamdIqVi7+4c=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyafV04wdgjbiOqSfbLpFfGlqJhqOTLH5jFpUXAuv2PUp35FYCG
+	pR5mzgfsLfTFjW9iPPQ8S04DKBtqaUmvrTAzGf6ZQs/OPr9a19/99KLmvowlwB1HSzqRzi+dEwi
+	PPHLG7A==
+X-Google-Smtp-Source: AGHT+IFhegW1gGR7UHrSJevPOd3ITDk2k4F1jYjU8AgzTqj6JmCrtpCZa2eEdv34H9OVmz6MG3yGyWC8HfY=
+X-Received: from pjbsx14.prod.google.com ([2002:a17:90b:2cce:b0:311:c197:70a4])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c09:b0:31e:3bbc:e9e6
+ with SMTP id 98e67ed59e1d1-3217638fd88mr438488a91.19.1754510322909; Wed, 06
+ Aug 2025 12:58:42 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:57:04 -0700
+Date: Wed,  6 Aug 2025 12:57:03 -0700
 In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250806195706.1650976-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-43-seanjc@google.com>
-Subject: [PATCH v5 42/44] KVM: nSVM: Disable PMU MSR interception as
+Message-ID: <20250806195706.1650976-42-seanjc@google.com>
+Subject: [PATCH v5 41/44] KVM: nVMX: Disable PMU MSR interception as
  appropriate while running L2
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
@@ -82,53 +82,69 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add MSRs that might be passed through to L1 when running with a mediated
-PMU to the nested SVM's set of to-be-merged MSR indices, i.e. disable
-interception of PMU MSRs when running L2 if both KVM (L0) and L1 disable
-interception.  There is no need for KVM to interpose on such MSR accesses,
-e.g. if L1 exposes a mediated PMU (or equivalent) to L2.
+From: Mingwei Zhang <mizhang@google.com>
 
+Merge KVM's PMU MSR interception bitmaps with those of L1, i.e. merge the
+bitmaps of vmcs01 and vmcs12, e.g. so that KVM doesn't interpose on MSR
+accesses unnecessarily if L1 exposes a mediated PMU (or equivalent) to L2.
+
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+[sean: rewrite changelog and comment, omit MSRs that are always intercepted]
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/nested.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/nested.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index b7fd2e869998..de2b9db2d0ba 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -194,7 +194,7 @@ void recalc_intercepts(struct vcpu_svm *svm)
-  * Hardcode the capacity of the array based on the maximum number of _offsets_.
-  * MSRs are batched together, so there are fewer offsets than MSRs.
-  */
--static int nested_svm_msrpm_merge_offsets[7] __ro_after_init;
-+static int nested_svm_msrpm_merge_offsets[10] __ro_after_init;
- static int nested_svm_nr_msrpm_merge_offsets __ro_after_init;
- typedef unsigned long nsvm_msrpm_merge_t;
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 47f1f0c7d3a7..b986a6fb684c 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -627,6 +627,34 @@ static inline void nested_vmx_set_intercept_for_msr(struct vcpu_vmx *vmx,
+ #define nested_vmx_merge_msr_bitmaps_rw(msr) \
+ 	nested_vmx_merge_msr_bitmaps(msr, MSR_TYPE_RW)
  
-@@ -222,6 +222,22 @@ int __init nested_svm_init_msrpm_merge_offsets(void)
- 		MSR_IA32_LASTBRANCHTOIP,
- 		MSR_IA32_LASTINTFROMIP,
- 		MSR_IA32_LASTINTTOIP,
++static void nested_vmx_merge_pmu_msr_bitmaps(struct kvm_vcpu *vcpu,
++					     unsigned long *msr_bitmap_l1,
++					     unsigned long *msr_bitmap_l0)
++{
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
++	int i;
 +
-+		MSR_K7_PERFCTR0,
-+		MSR_K7_PERFCTR1,
-+		MSR_K7_PERFCTR2,
-+		MSR_K7_PERFCTR3,
-+		MSR_F15H_PERF_CTR0,
-+		MSR_F15H_PERF_CTR1,
-+		MSR_F15H_PERF_CTR2,
-+		MSR_F15H_PERF_CTR3,
-+		MSR_F15H_PERF_CTR4,
-+		MSR_F15H_PERF_CTR5,
++	/*
++	 * Skip the merges if the vCPU doesn't have a mediated PMU MSR, i.e. if
++	 * none of the MSRs can possibly be passed through to L1.
++	 */
++	if (!kvm_vcpu_has_mediated_pmu(vcpu))
++		return;
 +
-+		MSR_AMD64_PERF_CNTR_GLOBAL_CTL,
-+		MSR_AMD64_PERF_CNTR_GLOBAL_STATUS,
-+		MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR,
-+		MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET,
- 	};
- 	int i, j;
++	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
++		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PERFCTR0 + i);
++		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PMC0 + i);
++	}
++
++	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
++		nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_FIXED_CTR0 + i);
++
++	nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_GLOBAL_CTRL);
++	nested_vmx_merge_msr_bitmaps_read(MSR_CORE_PERF_GLOBAL_STATUS);
++	nested_vmx_merge_msr_bitmaps_write(MSR_CORE_PERF_GLOBAL_OVF_CTRL);
++}
++
+ /*
+  * Merge L0's and L1's MSR bitmap, return false to indicate that
+  * we do not use the hardware.
+@@ -724,6 +752,8 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
+ 	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
+ 					 MSR_IA32_MPERF, MSR_TYPE_R);
  
++	nested_vmx_merge_pmu_msr_bitmaps(vcpu, msr_bitmap_l1, msr_bitmap_l0);
++
+ 	kvm_vcpu_unmap(vcpu, &map);
+ 
+ 	vmx->nested.force_msr_bitmap_recalc = false;
 -- 
 2.50.1.565.gc32cd1483b-goog
 
