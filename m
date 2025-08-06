@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631C92E0B71
-	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22492E03E0
+	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510328; cv=none; b=GQR2AGWDsJvC8+XJPRdcqxndM/QOuiF3ztg9ZJt+ATMF5Wh65GgwbNSJ5NnHSRa5vnov+ttDXivGXbRLwvrDLAk6Yk06g5IZuyXId1yqMvkelS9QmE5T8hryCjyHV1lACa2pqidHcOJP4J2kamSVvTt05AyR07f+JICoNEvQ168=
+	t=1754510330; cv=none; b=gmFISbgIJuUTn2XS2DeFaD08S8F9jwvjFAWZA6b7rSZiwF/eFKTFhknDwOIn35IOJj8NLQuCU8k6jk7cUIb46Z3ixNIyJNjvEhqGacq6wG+aLGON0/BdhkNhssEavr2HcZtgPkyL66s3m87vIlq6zWHfeh9O2DvlMyoqifZIyoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754510328; c=relaxed/simple;
-	bh=xxEMYMafoH1hCuYfyuUxc0eXfBZ4HMKS++5sGsaBrpM=;
+	s=arc-20240116; t=1754510330; c=relaxed/simple;
+	bh=GASA5Z6faQfJd1EfEj5uOcxIVuCY+8w72a3NGzWBljs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=X93nabLY/4y/GHE6ulXYOkPrX/iokQdIEm+2I/BxRqeNVqfOttZil0qWhVOputhVYFG4DlLGxSBoCLSTt+XEzgeHgvLOKJialVsMHQOTJWiH+RQ78uZmuS8r9EnA5bCdoFK23paeD3o2vOVFPg5XJ/xZvwN6O85Psp/bfu67Mp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aQC3Fks1; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=e789pIxEb1NTes8ZmJnJl/SCvGtA/3SBhCnVrbczmzdc+tQuPyXUwmltESfvFq4TlognMS+bDJ2DHSoTFlmpHvwn3G2/yhsp9kZhHQPov+9bVaPHFGX/OxYgIOdGASHfvxX9xwpf+Tnyb4N5MQfTqRm3teDhwxfKjuri9cH5W54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BYIxEics; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aQC3Fks1"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313d6d671ffso303259a91.2
-        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:58:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BYIxEics"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31edd69d754so283763a91.1
+        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:58:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510323; x=1755115123; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1754510326; x=1755115126; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=AqSoz/ys0/nDwriVLA2HvcSasFXIo2nt11bZwmhw7W4=;
-        b=aQC3Fks1GIQFmCJACRIe2fTk5//LbEJZF5ZNGbgQNizH7mgmEwsj7WXt9IdKoJZBiM
-         dnim8ORhZmewD4dFBLuxUxELCufQFJBdh8uDBA6fM41qpvyjJJDxN0DWQH03UISkH8pw
-         +ioo20p9aFNKHWsCjxPDdQhusEPNB7/3AL0nqgzy6WNQ9kGZGFIhXv50iGlXEQ1RnY1z
-         hqWUpgcXgvxQUsXEjtbKppEdCrbP6r2kcMEXG3ILHaU72Nv5ULbReVGgneqEbNOjm/S8
-         uhQ0cyHRRGJ55JHcKLASG0mu3vZgdGtxVqnRqHxGrImjblrYF+2WiqKUSrcsTurS7S7v
-         Sy8Q==
+        bh=w80ZA8rn05ntQihJcNwz1pv2hia2ecTvLpbk0Bz9WXc=;
+        b=BYIxEicsAqKYE1iaH9JC6NqIGuUyrbLjbi/BTyzra4iwm+FXKTCowODRrEAAH0X249
+         SzPcQND1LgOFWPRxQQRkUnPc+/A+EeQ4DqkmxGVwwxmn9jD893QaU7hz5s8FlZwEugyp
+         NiIxooA9DTo8pmB7bV5OtoOOKnFmvp1TsRbVGqA0Dp+brBo4BwRYxP3t71AKnsYFk2q0
+         kKBWFzzbrdeCp9WiFEWE3tE2BPdmD+FTzXy/PitzqZKBGa1k/i4J7Q0Gsw5LlBpi1hVr
+         8DO/p/vkcTl0oFFXCOrr402hgl3TE8MWVu0JlmRyYGteKJbMOjROBSo6YuiqENUEg4FF
+         HxJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510323; x=1755115123;
+        d=1e100.net; s=20230601; t=1754510326; x=1755115126;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AqSoz/ys0/nDwriVLA2HvcSasFXIo2nt11bZwmhw7W4=;
-        b=SY34trmfPQ38yKRN6r0RyguLCqCcOnZKvEbAy+zfYrF8VasaCLWnJYerDCgLMKFyMV
-         5yXhXCWOl4aFJgumAIApmvDnLTJyAJUme0tC5Q102LDH+JV996b+EAk1E3fOEl1HqXkp
-         lIGaQJH9U07wL1nzC04kAoys+St4zBxqLOXDZ9XCA7JJ+hUIN9AFjU+3R4k73q4usDXJ
-         FzQAXWAgV397hAwupm0nitTYmqvtofoA2nmgnneIy6JEBR9kfDG2iLD3XRYfgT9Mt19p
-         tNoxY2/P7YT/KwdNyPmFt6mndxcETLtCXgoTkvSkILBy06KYLgAyPZJFFIcYdSE7YmzB
-         c3Og==
-X-Forwarded-Encrypted: i=1; AJvYcCWCniBNaljFtbgO28YBbalOi9ectMSwjbCbGcNY9EGU3LhDHlxBRp6M7C5bRlZlxyIsamdIqVi7+4c=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyafV04wdgjbiOqSfbLpFfGlqJhqOTLH5jFpUXAuv2PUp35FYCG
-	pR5mzgfsLfTFjW9iPPQ8S04DKBtqaUmvrTAzGf6ZQs/OPr9a19/99KLmvowlwB1HSzqRzi+dEwi
-	PPHLG7A==
-X-Google-Smtp-Source: AGHT+IFhegW1gGR7UHrSJevPOd3ITDk2k4F1jYjU8AgzTqj6JmCrtpCZa2eEdv34H9OVmz6MG3yGyWC8HfY=
-X-Received: from pjbsx14.prod.google.com ([2002:a17:90b:2cce:b0:311:c197:70a4])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c09:b0:31e:3bbc:e9e6
- with SMTP id 98e67ed59e1d1-3217638fd88mr438488a91.19.1754510322909; Wed, 06
- Aug 2025 12:58:42 -0700 (PDT)
+        bh=w80ZA8rn05ntQihJcNwz1pv2hia2ecTvLpbk0Bz9WXc=;
+        b=uh1PrsOYgtQJZEccWI2eBqGzVewwE7kJp/ztKg9gPQuIETf00s+TL8/auPp5dNcnki
+         8C39YclCQlKtRk4CWlyBjwLY1ts4tjEDco79IzBJVsCGxN2/niIZJ4GIvGSYpRJzFmWW
+         mQ1VvcBqKsoSArfpULHyBIJhVYai0+cGmUROHIZzaoYiQ5fwfTLiaQN4zCFScRr4YTuq
+         xQPYibPLdi/GLADrR+6PNBtThVYQFScLeiJRrJvlrBzVxysnLkUtM5ax0yRZLelur1zR
+         G3n8FJgFyi9NBCxrFng9XAVvPj03foG/zrbV0PMmSKdi9w/AC2v48q7pWHoJIwU7zwIS
+         Z1Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVj8+nGF+pRpu8/NhN2pz8a+zaTBkLFC+L4xHxJTyLVbn73IvUz0PMWBpPf1yigvIGs6snPN0YeSx0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwicH7H7/ClYKSeOhpASaFKwjENSFysDvFgp6O/12ANWBlqXhNb
+	t5Fx39jjEr5c7zVMvNdECqz7IuJq0b6kLkp5W+r+PguH01vWjNnSJlWuz/+oHZBx4sO2ggLz1nt
+	u6uDhrg==
+X-Google-Smtp-Source: AGHT+IEfElow/kZ7u4L92aZnG23Q7FLbrDYX2HxfWcS+XU7qHvCNVpRcocJ/y0Y5Vl+7RC7W7jz29DD5/48=
+X-Received: from pjbdy8.prod.google.com ([2002:a17:90b:6c8:b0:321:6ddc:33a0])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2750:b0:321:157a:ee73
+ with SMTP id 98e67ed59e1d1-32166e27ab1mr4925727a91.6.1754510326195; Wed, 06
+ Aug 2025 12:58:46 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:57:03 -0700
+Date: Wed,  6 Aug 2025 12:57:05 -0700
 In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250806195706.1650976-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-42-seanjc@google.com>
-Subject: [PATCH v5 41/44] KVM: nVMX: Disable PMU MSR interception as
- appropriate while running L2
+Message-ID: <20250806195706.1650976-44-seanjc@google.com>
+Subject: [PATCH v5 43/44] KVM: x86/pmu: Expose enable_mediated_pmu parameter
+ to user space
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -82,69 +82,118 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Mingwei Zhang <mizhang@google.com>
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Merge KVM's PMU MSR interception bitmaps with those of L1, i.e. merge the
-bitmaps of vmcs01 and vmcs12, e.g. so that KVM doesn't interpose on MSR
-accesses unnecessarily if L1 exposes a mediated PMU (or equivalent) to L2.
+Expose enable_mediated_pmu parameter to user space, i.e. allow userspace
+to enable/disable mediated vPMU support.
 
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
-Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Document the mediated versus perf-based behavior as part of the
+kernel-parameters.txt entry, and opportunistically add an entry for the
+core enable_pmu param as well.
+
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-[sean: rewrite changelog and comment, omit MSRs that are always intercepted]
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Co-developed-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/vmx/nested.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ .../admin-guide/kernel-parameters.txt         | 49 +++++++++++++++++++
+ arch/x86/kvm/svm/svm.c                        |  2 +
+ arch/x86/kvm/vmx/vmx.c                        |  2 +
+ 3 files changed, 53 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 47f1f0c7d3a7..b986a6fb684c 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -627,6 +627,34 @@ static inline void nested_vmx_set_intercept_for_msr(struct vcpu_vmx *vmx,
- #define nested_vmx_merge_msr_bitmaps_rw(msr) \
- 	nested_vmx_merge_msr_bitmaps(msr, MSR_TYPE_RW)
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 07e22ba5bfe3..12a96493de9a 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2840,6 +2840,26 @@
  
-+static void nested_vmx_merge_pmu_msr_bitmaps(struct kvm_vcpu *vcpu,
-+					     unsigned long *msr_bitmap_l1,
-+					     unsigned long *msr_bitmap_l0)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	int i;
-+
-+	/*
-+	 * Skip the merges if the vCPU doesn't have a mediated PMU MSR, i.e. if
-+	 * none of the MSRs can possibly be passed through to L1.
-+	 */
-+	if (!kvm_vcpu_has_mediated_pmu(vcpu))
-+		return;
-+
-+	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-+		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PERFCTR0 + i);
-+		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PMC0 + i);
-+	}
-+
-+	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
-+		nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_FIXED_CTR0 + i);
-+
-+	nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_GLOBAL_CTRL);
-+	nested_vmx_merge_msr_bitmaps_read(MSR_CORE_PERF_GLOBAL_STATUS);
-+	nested_vmx_merge_msr_bitmaps_write(MSR_CORE_PERF_GLOBAL_OVF_CTRL);
-+}
-+
- /*
-  * Merge L0's and L1's MSR bitmap, return false to indicate that
-  * we do not use the hardware.
-@@ -724,6 +752,8 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
- 	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
- 					 MSR_IA32_MPERF, MSR_TYPE_R);
+ 			Default is Y (on).
  
-+	nested_vmx_merge_pmu_msr_bitmaps(vcpu, msr_bitmap_l1, msr_bitmap_l0);
++	kvm.enable_pmu=[KVM,X86]
++			If enabled, KVM will virtualize PMU functionality based
++			on the virtual CPU model defined by userspace.  This
++			can be overridden on a per-VM basis via
++			KVM_CAP_PMU_CAPABILITY.
 +
- 	kvm_vcpu_unmap(vcpu, &map);
++			If disabled, KVM will not virtualize PMU functionality,
++			e.g. MSRs, PMCs, PMIs, etc., even if userspace defines
++			a virtual CPU model that contains PMU assets.
++
++			Note, KVM's vPMU support implicitly requires running
++			with an in-kernel local APIC, e.g. to deliver PMIs to
++			the guest.  Running without an in-kernel local APIC is
++			not supported, though KVM will allow such a combination
++			(with severely degraded functionality).
++
++			See also enable_mediated_pmu.
++
++			Default is Y (on).
++
+ 	kvm.enable_virt_at_load=[KVM,ARM64,LOONGARCH,MIPS,RISCV,X86]
+ 			If enabled, KVM will enable virtualization in hardware
+ 			when KVM is loaded, and disable virtualization when KVM
+@@ -2886,6 +2906,35 @@
+ 			If the value is 0 (the default), KVM will pick a period based
+ 			on the ratio, such that a page is zapped after 1 hour on average.
  
- 	vmx->nested.force_msr_bitmap_recalc = false;
++	kvm-{amd,intel}.enable_mediated_pmu=[KVM,AMD,INTEL]
++			If enabled, KVM will provide a mediated virtual PMU,
++			instead of the default perf-based virtual PMU (if
++			kvm.enable_pmu is true and PMU is enumerated via the
++			virtual CPU model).
++
++			With a perf-based vPMU, KVM operates as a user of perf,
++			i.e. emulates guest PMU counters using perf events.
++			KVM-created perf events are managed by perf as regular
++			(guest-only) events, e.g. are scheduled in/out, contend
++			for hardware resources, etc.  Using a perf-based vPMU
++			allows guest and host usage of the PMU to co-exist, but
++			incurs non-trivial overhead and can result in silently
++			dropped guest events (due to resource contention).
++
++			With a mediated vPMU, hardware PMU state is context
++			switched around the world switch to/from the guest.
++			KVM mediates which events the guest can utilize, but
++			gives the guest direct access to all other PMU assets
++			when possible (KVM may intercept some accesses if the
++			virtual CPU model provides a subset of hardware PMU
++			functionality).  Using a mediated vPMU significantly
++			reduces PMU virtualization overhead and eliminates lost
++			guest events, but is mutually exclusive with using perf
++			to profile KVM guests and adds latency to most VM-Exits
++			(to context switch PMU state).
++
++			Default is N (off).
++
+ 	kvm-amd.nested=	[KVM,AMD] Control nested virtualization feature in
+ 			KVM/SVM. Default is 1 (enabled).
+ 
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index ca6f453cc160..2797c3ab7854 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -178,6 +178,8 @@ module_param(intercept_smi, bool, 0444);
+ bool vnmi = true;
+ module_param(vnmi, bool, 0444);
+ 
++module_param(enable_mediated_pmu, bool, 0444);
++
+ static bool svm_gp_erratum_intercept = true;
+ 
+ static u8 rsm_ins_bytes[] = "\x0f\xaa";
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 85bd82d41f94..4a4691beba55 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -151,6 +151,8 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
+ extern bool __read_mostly allow_smaller_maxphyaddr;
+ module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
+ 
++module_param(enable_mediated_pmu, bool, 0444);
++
+ #define KVM_VM_CR0_ALWAYS_OFF (X86_CR0_NW | X86_CR0_CD)
+ #define KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST X86_CR0_NE
+ #define KVM_VM_CR0_ALWAYS_ON				\
 -- 
 2.50.1.565.gc32cd1483b-goog
 
