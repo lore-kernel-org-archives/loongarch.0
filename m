@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345EC2D8764
-	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944962D8777
+	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510303; cv=none; b=A+ZK0daFxeZvcHWZ7Pz2MUto+CgbH0pusL4ga1RtVohEwSE0DZ2/y+PPMws7nzjUHR59Qg38XiLI2a4wafu/vMpMJYzj3xpjJMnosy35gywMkuNmMc5OKtFhR/FzM4rn7woLn8/oFNELjwhuOrjRJ1x1zHmDolo5ztexbIVyLPs=
+	t=1754510302; cv=none; b=oKxDmAxzWhZBCSMJoZfGYIE5HpgPQZqpxrGlEuVGUo0RKY/pNSlvEmIKipYVVwvi25K1FdDwPx8AWCMmfupTZRp3u79AXRCm9Z8HTFT+6rSyGdHJ356Jdr5d8e5Ckoc8igrhDjv+u3Qr+8eAmQkOB7BnRufBMu0eV4VN3Pb/DOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754510303; c=relaxed/simple;
-	bh=meRueoJoecSOLM6U35RVopVJ4WkffubPgWqswgDoiXc=;
+	s=arc-20240116; t=1754510302; c=relaxed/simple;
+	bh=jAkcPQi41ZRUiWgI9bcgpSonHu4bIB2ojvxbKVROfG0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Cu1Wsxupj5LcATQ5FLJYCGyEJl9oSpPNamgMLr20Emp9zsTC+dMx3k3DTG9iA5peksgaatfDkcwg0V72VCJ7txJ11iiMrUTRiu+UT+64cwC/A/QgXA3bQozovv5AyGIqRTWK1FFZM24FRWoQACnfjJI4TYxh+G3Qcv6Vqiflyw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UQg1wTmO; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=ijob+LKnLRYPWJHQogPwLzo+aZ8dmXPOKfz4bHvVMPAchvN9J8nfNNfo8QvOVJcqPK0qAxDlDh2IhlLP0QlVDUplcxIi+F+rjOQADkzdAVpCZuQ/Ld4F+FF+e0fyB8PYvcpnT4DVz60G4XSKl+1M2fgb7mAeb6fh8Opoqe+qghI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oF9bSfLX; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UQg1wTmO"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31effad1358so223902a91.1
-        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:58:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oF9bSfLX"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b421b03d498so121497a12.3
+        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:58:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510299; x=1755115099; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1754510297; x=1755115097; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=YQRjFPIG4PmR+HjiezlmfcX2mvV34MtTdW3Bam7UEwE=;
-        b=UQg1wTmOp2xicS9bRaIHCVUBzKF2bljp0ejSlZntFnPwIepJMhitHp+d1Ioi8oq3cd
-         Gm+bH7MqLXA0eX57uDh8WXoL17EA2Mzb2VN88XOh9L1DVLgwZTzVNe6NS9KX87I33M1+
-         kbGEUKHIDDdMR2n5SvCg2NBs6p+qRkkoYzbUj6nKHdVpSxR/qzudVoigesT500FVrprJ
-         XFOMDENCmM+YuVWxonAEGMpBrNu7orVPM0uIdflOKUoroUNlXI0jJkeHz5qzqMvG3Iz0
-         O1+XuSwCdKh8fEx35LO1sN8V+FIMBUjEx8iO69POnt31uzLExBpIgUs/84GsOEqq+8NW
-         I+Sg==
+        bh=z6mRW3QO5+v30hMhQPo0nMlPZQjpAzxmFKtx3JiIrDs=;
+        b=oF9bSfLX+pAE0mhkQh1/Ai9AV/sHhxfTeqliryyaQLu3SkB2IfSiR6G888rcdHXcMZ
+         k09XqOgZUyTJP2Z2uWhap6FuM/4PMmzzg8RDqtuwrAu87VxuipruKI/V6esgh41FM4/y
+         zpc6xrxLkr0IkL2RBvYic+OBPErvtJcoFTP//Ara/gsdTJs9nXKORmAHbhHbywJsHL3P
+         BrPmttYawfvleXcCKl4U7lpsDxEmY9Uez/e0EZKwOayUtHX+wEJOLw++Ub5aCjT7q4Bc
+         8FgyLu2HQVKg/zuMO6RclDu45gPBdS8Yr7yZfjOidnryjZKa8WDvdT/qZ9fXKfF7btkd
+         aLcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510299; x=1755115099;
+        d=1e100.net; s=20230601; t=1754510297; x=1755115097;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YQRjFPIG4PmR+HjiezlmfcX2mvV34MtTdW3Bam7UEwE=;
-        b=bRa2G6REluiswQ/UOejylIFaAjOSdgnmt/FN494VdvnO1AkJq7AHW58TtXeWzHL4f1
-         yF4C8fSSaoWJnRgsAM23oZmVeu/pflvEGWa34CQDAwWOjBcXAddQLR+nMJogJeRfXjII
-         CUmGnqkp3vpl5vHnCt6pWfgDl5iJ5HczXO7lcKeYAj3YzUr+xxbkygeV+1ArkoA+UPaW
-         Sqy4QQX0NCpXIyjYDU3OzxaHUL67FH/lp3Hv9EmvQrX630yFliJ5NNmEVnZrlirxsutq
-         DyJ9mRHH11JK5+E7QJ+RMXSeh0N9a50O2Hb+Zq9aqsSr79+42H9xECiD+9ViMOHDq0Qm
-         Tewg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOz+zrCT+iUAVXLfPJkZAPnSR1bQdNAOvUOByYWHiCG35I5pkxqSdSjTejR1cZ3bBy9ClXiAq2myc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzloZBsy+KRhtUFMeehy/HCleiWrwOxXO+g6gVefXfHQMJciPOK
-	AmRzXvXIegJksyScHRSD8hT47KfuyT7dROeFZrG1QDDA7VeZhZM50AjCR8qv8ZkQ5UKpFGA5wus
-	5jIbVnQ==
-X-Google-Smtp-Source: AGHT+IEEL8MMMXuPjd0UTQ7B+xCdzayxBbFfQWod4bTn8hh+ljNhk+I3PdaJAFaKAxfSi5B+qkz2qkDbG+c=
-X-Received: from pjbqb13.prod.google.com ([2002:a17:90b:280d:b0:31f:61fc:b283])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:390f:b0:314:2cd2:595d
- with SMTP id 98e67ed59e1d1-321755de480mr997552a91.8.1754510298596; Wed, 06
- Aug 2025 12:58:18 -0700 (PDT)
+        bh=z6mRW3QO5+v30hMhQPo0nMlPZQjpAzxmFKtx3JiIrDs=;
+        b=Y3+vyJRrrBCKwt2hoNEAaLDshzxkVzS2qBr6ttNUTsAgj8VIjq/xJxNkS5ZXFMNQYL
+         RYzVBW7izj2c7IQ1eg53Dd+CBzcfhsJJ7JBdaay/L8R66edwfPGuovwycnRTuGY0fZYu
+         w8wLecIoQo4g8Wcw0NtqKF/jHg/Tf9SEeSh7oKTnRAf8k8JbjMN4x11z6JdMD6DoNjwb
+         Ct2F85yTDok7JHX+im6mkjAYwz0RIFen4ltP20Ga8MOWGduWtuEnQb9/c7ruDr7f3HAg
+         XiO89WpGJRMjCQUZLRs5WKfWkPdJjI5UG+62IY3inENqeeUaRfNowZzAVdhxRMrs92m8
+         lLAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlp2RHVki8E30CIM+dVPUF+yXT2JBRXYPjRKsdV5YwA7rN10CT5cGUApG00vMPiZvNCUeSEwR0zY8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwLhrICPbW9DN8kMtPlq29oW4V74rlirzz897BKjpmyaoGJ206L
+	h2u4XwvCjSWQJXb4/aYJcwmx0HwyL+7sXLt03IIDv8aAv+KiJOLD6H0yLimunCc5y6/ljD4jVNb
+	32G6NaQ==
+X-Google-Smtp-Source: AGHT+IF1L5jDO3EJUjPLOXu/s6M1eVdU0dJDtzEbPUmRbyNFn2oUqefjt3C97kWpA7IvjzuPBYgNpNpIe1I=
+X-Received: from pgbcv5.prod.google.com ([2002:a05:6a02:4205:b0:b42:49c8:5488])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:548d:b0:23f:faa0:2c27
+ with SMTP id adf61e73a8af0-240330367c3mr5937028637.20.1754510296766; Wed, 06
+ Aug 2025 12:58:16 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:56:49 -0700
+Date: Wed,  6 Aug 2025 12:56:48 -0700
 In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250806195706.1650976-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-28-seanjc@google.com>
-Subject: [PATCH v5 27/44] KVM: x86/pmu: Disable RDPMC interception for
- compatible mediated vPMU
+Message-ID: <20250806195706.1650976-27-seanjc@google.com>
+Subject: [PATCH v5 26/44] KVM: VMX: Add helpers to toggle/change a bit in VMCS
+ execution controls
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -84,127 +84,72 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Disable RDPMC interception for vCPUs with a mediated vPMU that is
-compatible with the host PMU, i.e. that doesn't require KVM emulation of
-RDPMC to honor the guest's vCPU model.  With a mediated vPMU, all guest
-state accessible via RDPMC is loaded into hardware while the guest is
-running.
+Expand the VMCS controls builder macros to generate helpers to change a
+bit to the desired value, and use the new helpers when toggling APICv
+related controls.
 
-Adust RDPMC interception only for non-TDX guests, as the TDX module is
-responsible for managing RDPMC intercepts based on the TD configuration.
+No functional change intended.
 
-Co-developed-by: Mingwei Zhang <mizhang@google.com>
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
-Co-developed-by: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
+[sean: rewrite changelog]
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/pmu.c     | 26 ++++++++++++++++++++++++++
- arch/x86/kvm/pmu.h     |  1 +
- arch/x86/kvm/svm/svm.c |  5 +++++
- arch/x86/kvm/vmx/vmx.c |  7 +++++++
- arch/x86/kvm/x86.c     |  1 +
- 5 files changed, 40 insertions(+)
+ arch/x86/kvm/vmx/vmx.c | 20 +++++++-------------
+ arch/x86/kvm/vmx/vmx.h |  8 ++++++++
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 680523e9d11e..674f42d083a9 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -712,6 +712,32 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
- 	return 0;
- }
- 
-+bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+
-+	if (!kvm_vcpu_has_mediated_pmu(vcpu))
-+		return true;
-+
-+	/*
-+	 * VMware allows access to these Pseduo-PMCs even when read via RDPMC
-+	 * in Ring3 when CR4.PCE=0.
-+	 */
-+	if (enable_vmware_backdoor)
-+		return true;
-+
-+	/*
-+	 * Note!  Check *host* PMU capabilities, not KVM's PMU capabilities, as
-+	 * KVM's capabilities are constrained based on KVM support, i.e. KVM's
-+	 * capabilities themselves may be a subset of hardware capabilities.
-+	 */
-+	return pmu->nr_arch_gp_counters != kvm_host_pmu.num_counters_gp ||
-+	       pmu->nr_arch_fixed_counters != kvm_host_pmu.num_counters_fixed ||
-+	       pmu->counter_bitmask[KVM_PMC_GP] != (BIT_ULL(kvm_host_pmu.bit_width_gp) - 1) ||
-+	       pmu->counter_bitmask[KVM_PMC_FIXED] != (BIT_ULL(kvm_host_pmu.bit_width_fixed) - 1);
-+}
-+EXPORT_SYMBOL_GPL(kvm_need_rdpmc_intercept);
-+
- void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu)
- {
- 	if (lapic_in_kernel(vcpu)) {
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index e038bce76b9e..6b95e81c078c 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -238,6 +238,7 @@ void kvm_pmu_instruction_retired(struct kvm_vcpu *vcpu);
- void kvm_pmu_branch_retired(struct kvm_vcpu *vcpu);
- 
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
-+bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu);
- 
- extern struct kvm_pmu_ops intel_pmu_ops;
- extern struct kvm_pmu_ops amd_pmu_ops;
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index ef7dffc54dca..2d42962b47aa 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1075,6 +1075,11 @@ static void svm_recalc_instruction_intercepts(struct kvm_vcpu *vcpu)
- 			svm->vmcb->control.virt_ext |= VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK;
- 		}
- 	}
-+
-+	if (kvm_need_rdpmc_intercept(vcpu))
-+		svm_set_intercept(svm, INTERCEPT_RDPMC);
-+	else
-+		svm_clr_intercept(svm, INTERCEPT_RDPMC);
- }
- 
- static void svm_recalc_intercepts(struct kvm_vcpu *vcpu)
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index baea4a9cf74f..2f7db32710e3 100644
+index 6094de4855d6..baea4a9cf74f 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4121,8 +4121,15 @@ static void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
- 	 */
+@@ -4356,19 +4356,13 @@ void vmx_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
+ 
+ 	pin_controls_set(vmx, vmx_pin_based_exec_ctrl(vmx));
+ 
+-	if (kvm_vcpu_apicv_active(vcpu)) {
+-		secondary_exec_controls_setbit(vmx,
+-					       SECONDARY_EXEC_APIC_REGISTER_VIRT |
+-					       SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY);
+-		if (enable_ipiv)
+-			tertiary_exec_controls_setbit(vmx, TERTIARY_EXEC_IPI_VIRT);
+-	} else {
+-		secondary_exec_controls_clearbit(vmx,
+-						 SECONDARY_EXEC_APIC_REGISTER_VIRT |
+-						 SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY);
+-		if (enable_ipiv)
+-			tertiary_exec_controls_clearbit(vmx, TERTIARY_EXEC_IPI_VIRT);
+-	}
++	secondary_exec_controls_changebit(vmx,
++					  SECONDARY_EXEC_APIC_REGISTER_VIRT |
++					  SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY,
++					  kvm_vcpu_apicv_active(vcpu));
++	if (enable_ipiv)
++		tertiary_exec_controls_changebit(vmx, TERTIARY_EXEC_IPI_VIRT,
++						 kvm_vcpu_apicv_active(vcpu));
+ 
+ 	vmx_update_msr_bitmap_x2apic(vcpu);
  }
- 
-+static void vmx_recalc_instruction_intercepts(struct kvm_vcpu *vcpu)
-+{
-+	exec_controls_changebit(to_vmx(vcpu), CPU_BASED_RDPMC_EXITING,
-+				kvm_need_rdpmc_intercept(vcpu));
-+}
-+
- void vmx_recalc_intercepts(struct kvm_vcpu *vcpu)
- {
-+	vmx_recalc_instruction_intercepts(vcpu);
- 	vmx_recalc_msr_intercepts(vcpu);
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index d3389baf3ab3..a4e5bcd1d023 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -608,6 +608,14 @@ static __always_inline void lname##_controls_clearbit(struct vcpu_vmx *vmx, u##b
+ {												\
+ 	BUILD_BUG_ON(!(val & (KVM_REQUIRED_VMX_##uname | KVM_OPTIONAL_VMX_##uname)));		\
+ 	lname##_controls_set(vmx, lname##_controls_get(vmx) & ~val);				\
++}												\
++static __always_inline void lname##_controls_changebit(struct vcpu_vmx *vmx, u##bits val,	\
++						       bool set)				\
++{												\
++	if (set)										\
++		lname##_controls_setbit(vmx, val);						\
++	else											\
++		lname##_controls_clearbit(vmx, val);						\
  }
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 69f5d9deb75f..b8014435c988 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3793,6 +3793,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 
- 		vcpu->arch.perf_capabilities = data;
- 		kvm_pmu_refresh(vcpu);
-+		kvm_make_request(KVM_REQ_RECALC_INTERCEPTS, vcpu);
- 		break;
- 	case MSR_IA32_PRED_CMD: {
- 		u64 reserved_bits = ~(PRED_CMD_IBPB | PRED_CMD_SBPB);
+ BUILD_CONTROLS_SHADOW(vm_entry, VM_ENTRY_CONTROLS, 32)
+ BUILD_CONTROLS_SHADOW(vm_exit, VM_EXIT_CONTROLS, 32)
 -- 
 2.50.1.565.gc32cd1483b-goog
 
