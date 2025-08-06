@@ -1,57 +1,57 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276922D3233
-	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4D82D3ECA
+	for <loongarch@lists.linux.dev>; Wed,  6 Aug 2025 19:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510279; cv=none; b=cxdD5DUoG6KlG6a50WAmZG3iFEmCaD//yGkJ/jAztxRLoP1DWAb3avYX3R/h8tC2i90WD6sVnfdqwxpt6goRatlO82VkPDUw6NuUZ6MUf7vT8prWT0r4L8BFSfdQyHV/tp3ngIey/nYMWpIAXlZ5BgGr1ybMJqTb1UsgBd+MXaY=
+	t=1754510281; cv=none; b=Vb8UVNeXYJnTHaWJzGnnW3CtC7uFekC1XwWzvMRuSdVfu0Bcnr+qZ56pRCyliqU4ktIn/v3KhZWGWKTD4/fW1AORzFD1AYuGnuXQ/Vi5gUdlYkLJSSxPEN5aXN5DDLEOygWx+GGfJShZHjlkJKxdzBx2/SxYgG3gTeGTjtC9WuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754510279; c=relaxed/simple;
-	bh=C4TXme1dQYfX3HBX2bRS9WhICMNyLXZykAhB0txM4zg=;
+	s=arc-20240116; t=1754510281; c=relaxed/simple;
+	bh=S2PXduPc6MjaQTDHugYUZGj6hH4KjT2QfQWxoS/aD0c=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=soUxEULkE1OyVw+rrOnDL3hY0eVC8GbYo8/YYMJakIJNTAGtFZnGy8VJ1ZgZZiot19vnh+5RmIzsMQEG4AIbwMb93XZ51hHQvHszF1l8qK+PWbw+0R/b9DpRnpzIItKQzRjH96CGRoY6LnlzYQSMqTXwRs4YRh1QsAH2WmrNGuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=spJa5HkR; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=Z4pDeR3fIkEKXvK7iG+sOzNQmoJXaFcP9TU+TzRwMQkROPEy4sp2YgFupeM22QbfksbXDay0vGoAxdQNB1sukTUk5dJ6O4IyHSnzVzr0CpdxcQM/RtaIg3hCg2sDOJpcmCwdXOCVVZprrf3SbY7ktP5BlNdAzBAO9PM/i5tDbp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L4BhS+4Y; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="spJa5HkR"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2424aaa9840so2087225ad.1
-        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:57:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L4BhS+4Y"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-315af08594fso334490a91.2
+        for <loongarch@lists.linux.dev>; Wed, 06 Aug 2025 12:57:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510274; x=1755115074; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1754510278; x=1755115078; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=0uQwWV7lYMOxBil53zyDkn96gfX2tt2/DqWsDrl/9hs=;
-        b=spJa5HkRX150Anbjukr2CIgUit9TA/a0Z3w9iKc2S+x8ck1U+qvqZcP/tw+RDe3Svk
-         AbprKdXABTTjWVmrFEWI1ylE/o2uMIIBjcSywR4dkSAYUN0YkH4YFPgk01xq7dSAV5Wc
-         ACsqRjiI5Fiu3QBxxTSLaVmtQz6dgRThqoUZLwN5UC2sAhVNxuv3ynLHz1mGHwbmt43g
-         5SJRwcR+CEbt4FZwWeq2RMXoGP3xgYTxIvscB7FzCBuhjFWy4/EuQXnRGr7MV0Gjwoyk
-         YHlIy06j3dTijX4yV0nUzTYIfeEaj6hW7UEqPHd1aepJ7dLcIsYderTaIUVHqkzi2d5U
-         +wWQ==
+        bh=JPhdbzRHNYwbPflarjN5FFRR+xgGKTfGx/VQdQ/Orqk=;
+        b=L4BhS+4YoGK4e3Z44Uzx0oWqANgxwTW4sUspwdy31uViV7C8JOQJKt+4rGYBWRZI3L
+         J83NYLzyCGQKuYoh5c9/MnJttsujh3BlurBqJuD1xVOWx5mJZ/VNiDzK/jUmLPFXqI7f
+         jsZkxp3PecARuAhd1FhqxIAxSY7vz8nhTZR5ukhx8vwH0Cs1f0G/2l0V0dMytD2kvo/0
+         3SAArC5wP2GAwl9h7DmEs4r++iQ6GHBelYnRiGibY7tWTIY/OSQnErzhsbQLaDemN9jV
+         hyobk5EZTNxZ76d+g31hEOgZi9n8Pi0rrj7A/aeUVJFjPRaR0VvLO7qtiN1EfK8vF674
+         wYLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510274; x=1755115074;
+        d=1e100.net; s=20230601; t=1754510278; x=1755115078;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0uQwWV7lYMOxBil53zyDkn96gfX2tt2/DqWsDrl/9hs=;
-        b=knI67Kq/s9QqmCOHLkLxJNWFWpO4jGsptbMT8fuFT8iFDccEQTiq83UHy/W8b8dg9O
-         5s+nokvi9e9VyQs3RT0ocxHnDF3kEKkr6aB1vzNdcdUwYRryIpcbplWibDxwIAMdmHqI
-         6OzPfGecEn8cMdlEeXM7Tu7UqKPd+9jl08vBAc8tJMeDHZQDgLB9ccWAt5v+Kka0RNiD
-         9f5eHpuciIfy2GXNIXjRhK+AROoQkTRhBMQYpsIo7JWa9gonKSMA6XTNBVaWoRvMXb+u
-         S0F/ajZbBd22XQpyqCsnWBOEqWFuFJ2TxvJTLNyxwPh2fCaSl5onOtA/iwS69IDuRBqK
-         W8nw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3CMTSRJgQJQAS7SibdSx+C6oKfWY3xv0efWjxZW3hTcgsbgdIx7I2AQTOxzgMryH1YFCr3VBr/HQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxHX+LdunLNESBwXo+Sq+JrSqEYyvAMVyNnos+ECwMHBtPIBb9N
-	wCoZF7opaKHNdPf3eB8MWqQ7rOHucVP9liQMtWKNyAzVMZxbuKO5WuFRYIBniZ/VfL0pyzx1F/T
-	DoiNVvg==
-X-Google-Smtp-Source: AGHT+IGH2b2xUlwmCehGLeN80BLd5ICkd9hx9VxyJMjC6VJA8pJue1wqM8eYOcrMqHKsQHTGrwNwqHX4jyM=
-X-Received: from plkh12.prod.google.com ([2002:a17:903:19ec:b0:240:9ca:fc49])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce05:b0:240:49d1:6347
- with SMTP id d9443c01a7336-2429f30b512mr54270245ad.35.1754510274358; Wed, 06
- Aug 2025 12:57:54 -0700 (PDT)
+        bh=JPhdbzRHNYwbPflarjN5FFRR+xgGKTfGx/VQdQ/Orqk=;
+        b=RAcbvHzSRob/zSMFtdpSv10mAzt5jWgu/CAnWN0jELrEjGWk56F8O2WclZsMbeOwV7
+         VSVryyXVFp0+jFlMAXeLsCbTJdrvTzTwJciEOmxj2w0izoWgINw1AATI7xsH972RxyTF
+         Pe4a1D3qVNxP46M5dNexBRAFsUh59zfAyMZ76DBI1VSYdMct2vb0OP6Fn4xUqYAzftNA
+         ChTxi3U3Q1YaG7QbVQ+sbkQEhEQFiGIc5Ze6+BIuJMtVOvE6cURc/mgyWMHSpQV1Usy1
+         s80pg1hkF3Ezkmeqk1zwLeV21idKP+ZB8mW22rorC1guq3uqW9QpTGid62WC5RWTfm23
+         /YaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfO5qR8EGBEbXmz6y2Kijz2pUVwrP+28EMjOS8Ckus2KTf5Va/LohAG3xHoG+JtsExA2ceaegB2i0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzHSKOmN2+1D5cFKtI+l4ay5jaTA+/FFejEAYP1JGCnv3BsCZRf
+	QQ9GMB1t8Jh+8GC0y3SJ/bKo31mW6wV2f+0D3J9Hde4dJxKsAF2z+TjuwWqKDVcHt33HAQ/GU87
+	i0yix5w==
+X-Google-Smtp-Source: AGHT+IFSe1FbjsND/XiMAlJbwSv08tGHE8p8b2tGPxUBNGb/T59D+jgsyqvY56UbSdKD1Cfbmzp8QhdLT3k=
+X-Received: from pjzj16.prod.google.com ([2002:a17:90a:eb10:b0:313:274d:3007])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2c86:b0:312:ffdc:42b2
+ with SMTP id 98e67ed59e1d1-32167541295mr4635514a91.23.1754510278028; Wed, 06
+ Aug 2025 12:57:58 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:56:36 -0700
+Date: Wed,  6 Aug 2025 12:56:38 -0700
 In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250806195706.1650976-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-15-seanjc@google.com>
-Subject: [PATCH v5 14/44] KVM: VMX: Setup canonical VMCS config prior to kvm_x86_vendor_init()
+Message-ID: <20250806195706.1650976-17-seanjc@google.com>
+Subject: [PATCH v5 16/44] KVM: Add a simplified wrapper for registering perf callbacks
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -81,55 +81,115 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Setup the golden VMCS config during vmx_init(), before the call to
-kvm_x86_vendor_init(), instead of waiting until the callback to do
-hardware setup.  setup_vmcs_config() only touches VMX state, i.e. doesn't
-poke anything in kvm.ko, and has no runtime dependencies beyond
-hv_init_evmcs().
+Add a parameter-less API for registering perf callbacks in anticipation of
+introducing another x86-only parameter for handling mediated PMU PMIs.
 
-Setting the VMCS config early on will allow referencing VMCS and VMX
-capabilities at any point during setup, e.g. to check for PERF_GLOBAL_CTRL
-save/load support during mediated PMU initialization.
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/arm64/kvm/arm.c      |  2 +-
+ arch/loongarch/kvm/main.c |  2 +-
+ arch/riscv/kvm/main.c     |  2 +-
+ arch/x86/kvm/x86.c        |  2 +-
+ include/linux/kvm_host.h  | 11 +++++++++--
+ virt/kvm/kvm_main.c       |  5 +++--
+ 6 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 95765db52992..ed10013dac95 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -8335,8 +8335,6 @@ __init int vmx_hardware_setup(void)
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 888f7c7abf54..6c604b5214f2 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -2328,7 +2328,7 @@ static int __init init_subsystems(void)
+ 	if (err)
+ 		goto out;
  
- 	vmx_setup_user_return_msrs();
+-	kvm_register_perf_callbacks(NULL);
++	kvm_register_perf_callbacks();
  
--	if (setup_vmcs_config(&vmcs_config, &vmx_capability) < 0)
--		return -EIO;
+ out:
+ 	if (err)
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index 80ea63d465b8..f62326fe29fa 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -394,7 +394,7 @@ static int kvm_loongarch_env_init(void)
+ 	}
  
- 	if (boot_cpu_has(X86_FEATURE_NX))
- 		kvm_enable_efer_bits(EFER_NX);
-@@ -8560,11 +8558,18 @@ int __init vmx_init(void)
- 		return -EOPNOTSUPP;
+ 	kvm_init_gcsr_flag();
+-	kvm_register_perf_callbacks(NULL);
++	kvm_register_perf_callbacks();
  
- 	/*
--	 * Note, hv_init_evmcs() touches only VMX knobs, i.e. there's nothing
--	 * to unwind if a later step fails.
-+	 * Note, VMCS and eVMCS configuration only touch VMX knobs/variables,
-+	 * i.e. there's nothing to unwind if a later step fails.
- 	 */
- 	hv_init_evmcs();
+ 	/* Register LoongArch IPI interrupt controller interface. */
+ 	ret = kvm_loongarch_register_ipi_device();
+diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
+index 67c876de74ef..cbe842c2f615 100644
+--- a/arch/riscv/kvm/main.c
++++ b/arch/riscv/kvm/main.c
+@@ -159,7 +159,7 @@ static int __init riscv_kvm_init(void)
+ 		kvm_info("AIA available with %d guest external interrupts\n",
+ 			 kvm_riscv_aia_nr_hgei);
  
-+	/*
-+	 * Parse the VMCS config and VMX capabilities before anything else, so
-+	 * that the information is available to all setup flows.
-+	 */
-+	if (setup_vmcs_config(&vmcs_config, &vmx_capability) < 0)
-+		return -EIO;
+-	kvm_register_perf_callbacks(NULL);
++	kvm_register_perf_callbacks();
+ 
+ 	rc = kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
+ 	if (rc) {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5af2c5aed0f2..d80bbd5e0859 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9689,7 +9689,7 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+ 		set_hv_tscchange_cb(kvm_hyperv_tsc_notifier);
+ #endif
+ 
+-	kvm_register_perf_callbacks(ops->handle_intel_pt_intr);
++	__kvm_register_perf_callbacks(ops->handle_intel_pt_intr, NULL);
+ 
+ 	if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled)
+ 		kvm_caps.supported_vm_types |= BIT(KVM_X86_SW_PROTECTED_VM);
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 15656b7fba6c..20c50eaa0089 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1731,10 +1731,17 @@ static inline bool kvm_arch_intc_initialized(struct kvm *kvm)
+ #ifdef CONFIG_GUEST_PERF_EVENTS
+ unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu);
+ 
+-void kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void));
++void __kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void),
++				   void (*mediated_pmi_handler)(void));
 +
- 	r = kvm_x86_vendor_init(&vt_init_ops);
- 	if (r)
- 		return r;
++static inline void kvm_register_perf_callbacks(void)
++{
++	__kvm_register_perf_callbacks(NULL, NULL);
++}
++
+ void kvm_unregister_perf_callbacks(void);
+ #else
+-static inline void kvm_register_perf_callbacks(void *ign) {}
++static inline void kvm_register_perf_callbacks(void) {}
+ static inline void kvm_unregister_perf_callbacks(void) {}
+ #endif /* CONFIG_GUEST_PERF_EVENTS */
+ 
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index ecafab2e17d9..d477a7fda0ae 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -6429,10 +6429,11 @@ static struct perf_guest_info_callbacks kvm_guest_cbs = {
+ 	.handle_mediated_pmi	= NULL,
+ };
+ 
+-void kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void))
++void __kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void),
++				   void (*mediated_pmi_handler)(void))
+ {
+ 	kvm_guest_cbs.handle_intel_pt_intr = pt_intr_handler;
+-	kvm_guest_cbs.handle_mediated_pmi = NULL;
++	kvm_guest_cbs.handle_mediated_pmi = mediated_pmi_handler;
+ 
+ 	perf_register_guest_info_callbacks(&kvm_guest_cbs);
+ }
 -- 
 2.50.1.565.gc32cd1483b-goog
 
