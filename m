@@ -1,202 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB72820126A
-	for <loongarch@lists.linux.dev>; Thu,  7 Aug 2025 11:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2295CDF1
+	for <loongarch@lists.linux.dev>; Thu,  7 Aug 2025 19:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754565705; cv=none; b=dszuXblTc41cYEdB/kkSpz3BZW7d0/S0u3VDvFYZBblXAUsFUI7JqjpT1mjs/bCPpp+em5o3EJ2+qACjzsWIb6r3T+ToPxAKvZwflq58fAS9890hCzfwavdFJgnHhOhtuWmpq3EJKX2UUF0hFYe9LnVZTPC5nfwQN2kn1Z3BrpE=
+	t=1754595624; cv=none; b=sg6bVUlV68X4D3D8MHxNKmnniMugbY+HRSVKOqcAfzsyGyfJcv42zKs/i0rHpcqLdYcGNgf+prmxR4R0JWo1nLic7gUgFDHRkJEGb6M8I+WCZ80qKqq4qPWCe83xq71C/dsqyp4+YDwJKpdiMxDbedO4JyHEQHfG1NA7Zb289wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754565705; c=relaxed/simple;
-	bh=/las3HdJgz8rwTGq/wNsnsw26iQZJlW8oUc5CdAFHfM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z5QIR0Q6IRaVRCfGiFJVQuQ/Z4JI8ZFvec0mGjcBi59aWCocG2BPFD6uy2tUe15Q+2DccNpaVlDYta5bpZuv+5JgxAItU9A5jjf+b4DDbMuZd/shPK2JeZSH3pdx+THGQX+6wmYQ9y3azCa4A29EVPkUubg4NpbMnyVHvHGNMZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kobhMgmx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754595624; c=relaxed/simple;
+	bh=SNgRUuXsM+/JAIsgLn5lkTKNqSnmIVr4NG3YvOWD4gg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W1tiJR2ShR20AdOSZsTJ9mm2EhTkCrDsNuZ/ntFNz2ZOUUjbqf4E1e5c4gBXA5cOKRB5reUdtcPlzji/EvRQFEVZDRHiMH3FXfkBaQMacn/McVnNbZyQ6E65o2laqFByZP+pEDFoElpxF05WLy5dtZnsYNzLiO19tkA6cDNiHgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XRDocfgE; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kobhMgmx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC8FC4CEFA
-	for <loongarch@lists.linux.dev>; Thu,  7 Aug 2025 11:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754565705;
-	bh=/las3HdJgz8rwTGq/wNsnsw26iQZJlW8oUc5CdAFHfM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kobhMgmxCWKZLfpPF5/y7XQng0KRgyH6crByNET3AmHdsvppuXxtvh8H3J1YE3R77
-	 K/cS4unf8WFyviLTbc+Tjshcfv4N0k0iU/kniq9t8JDS7J+R/Efz4NbmqWEu2uzJZ8
-	 WSvw6m1F0tj70itsaXdIODn/WAG2onH4PrIA2D7LpXK252EUAtNF+ZouaSWFuTdZVI
-	 34yqEZSIR23B+1xxFINuUIcGxipxQsUjaEerRFqp8l16KEPoMnOyDm3iZKLrwHnkcA
-	 UqvoiPQ/VyFcLRAnsU78mYtnauz/xYUJOcvwbUKNqL902IXlDs7Qtk8Vs2M/7l1o7h
-	 urw/l6xWyYZZw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6154d14d6b7so913397a12.2
-        for <loongarch@lists.linux.dev>; Thu, 07 Aug 2025 04:21:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWTG1UJcQ5FjWvhslPb1pDZrPb3jry0AKritWQHSNqY5e19Z8zd3wCDljZilUraVbOI/j1yv8X//AM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwcviwZg8ycp1a5r0cMoFS0dTM7OOP5p6HLqrffD0gE0igDacd3
-	i7mKfd7/5+vBf8kAaO8/hkDG0LkKkeoVU1ObcTX6gIrk+XiQNAIjfv/nj8snUJ3F+o9QT/hjvuG
-	ukkYTqL/KiSSBkOZKEULJYHhUARc3RnE=
-X-Google-Smtp-Source: AGHT+IEfl589p0gAcsrL69GC50qs9HZoBbEWHsgSm2HvYXdNGvUj2cS1/ojsVQt++9broqx+mdKSRVRtORf9GJEvEYM=
-X-Received: by 2002:a05:6402:3486:b0:617:c895:cc93 with SMTP id
- 4fb4d7f45d1cf-617c895d2c3mr1022748a12.14.1754565703955; Thu, 07 Aug 2025
- 04:21:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRDocfgE"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-55b975b459aso1309403e87.3
+        for <loongarch@lists.linux.dev>; Thu, 07 Aug 2025 12:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754595619; x=1755200419; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZxujgbgbPZueP+pnQ5s6H3MUryeO1an975QxEYXuWHk=;
+        b=XRDocfgEM+HdD/FtpayKHOQcsTeXFMCBBxFO9KQRjgt4skphIrvvu6JdExzQm32UyA
+         087tgA98X8gRTAQxtjmUnVns6jv4ucSvOEiAQfiuica9Rt56HyZOOVOwOyoll1zK9u7n
+         dPZlewKESI38n4ERPCSJEcchTKrS1j44khoC7o95Ismwtdp+jALTdaGb/MIPS/B9Tb16
+         tCDpgHnZ4iOVP6O2sUFLI3Yzyw2FrPqoT0UXOJuhmr0/LyEDdQdql+4CRovIkSOiu6c0
+         PM+Qfj16BRElsIPtp62JX696rtCO8n2RpshwMqsvOvLFMA15AGeFGmK0kvx93BCXmgNR
+         Owiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754595619; x=1755200419;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZxujgbgbPZueP+pnQ5s6H3MUryeO1an975QxEYXuWHk=;
+        b=Js8DdHEMXEvtC1vPiLrEZpcM5TjW94XO8NZLlhJESQJLt3BkQKkJe/m8K2zz+DDGo9
+         eGDrvW5j4qFQnrfTECgs1Cn5JVwfNmvaEoEjfPdo9iOq1iG9TikfZy23hQgKqGFGiLCx
+         q49DcDsD3xgrJTlDehVSfP7obdfhBCj6CQFtAaZp5FHT5dZaaWEhd985hDGiRJLAcrNl
+         gwjsHjXjjpyfRMlAPGbdA9F3raAmyyLYDD1J37Y55rQDRuYubezhCRCnip7/SrkKFrXi
+         5Cl/icIRTy3dliU37qZPhhOFfVoFuOz8QMs93U8itLFtSL/o/LNeMCO08gsjo8tuJdKk
+         ooKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHF+Fbl1ElFKxI1IZ/6jtYiVt+/f3cM4YjfFrqekDeeYUIvfWxqpNZ2+GgVqRDYUOLwp+a6fTW9I4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx27vV69kqu8VbCcH1wXtXMWcyIydzKw2Whdal3Ax3WwPwrG4o9
+	YmGdp35qMM1rxQp5wnywbmv5OAcyiUsG7hhoA8IlJWPlwd7KHRje6Esy
+X-Gm-Gg: ASbGncuyaOIhGWpNUtlcarfjrkI2Rc0bMnAenIGE1imn1DxkjFnkkP3law+mnO2P/Pw
+	kszlah6joWvmwpaS2IyIkCGsjwP/swZshJutzY49EFK141lZY9IKcFHJV88T52NdMSnigb9bIQS
+	Jj+b8eMla0N8UVdhT2HTFh35GnwDvPUJRt9Wga5MjBcrU8RfbgDw0KAR3qU5ToYw5xm4DHv5oEU
+	nMXqLKma4essDFdO26hxy5xQigMibkXM1mFywcRQlXjma2mvzOEIy0/Ia8hIkWN5t8FqAn6lyDy
+	v/c8VZWjtp/BpIac1atrKDahHjPl4z6SY8g/ZSLsHbDnTH8yugd41b1//WLP3+TWHIOXlbU9HXx
+	CVbQ1ntyx78P5vmwxS+qNadeImcz3EyHqCLseXmhspiZaPgR4kCRRpQvnDMcqUogbtLPF1Q==
+X-Google-Smtp-Source: AGHT+IE3k4ZwCdWcT+X+hcq7vhHbrmZfaduJaslrnOP/WdlfOXcdLd8Kfq+JS+ZAkrsMnQsJjZ39NA==
+X-Received: by 2002:a05:6512:3d09:b0:55b:57e8:16c4 with SMTP id 2adb3069b0e04-55cc012c003mr7357e87.30.1754595619107;
+        Thu, 07 Aug 2025 12:40:19 -0700 (PDT)
+Received: from localhost.localdomain (178.90.89.143.dynamic.telecom.kz. [178.90.89.143])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55b88c98c2asm2793570e87.77.2025.08.07.12.40.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Aug 2025 12:40:18 -0700 (PDT)
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+To: ryabinin.a.a@gmail.com,
+	bhe@redhat.com,
+	hca@linux.ibm.com,
+	christophe.leroy@csgroup.eu,
+	andreyknvl@gmail.com,
+	akpm@linux-foundation.org,
+	zhangqing@loongson.cn,
+	chenhuacai@loongson.cn,
+	davidgow@google.co,
+	glider@google.com,
+	dvyukov@google.com
+Cc: alex@ghiti.fr,
+	agordeev@linux.ibm.com,
+	vincenzo.frascino@arm.com,
+	elver@google.com,
+	kasan-dev@googlegroups.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-mm@kvack.org,
+	snovitoll@gmail.com
+Subject: [PATCH v5 0/2] kasan: unify kasan_enabled() and remove arch-specific implementations
+Date: Fri,  8 Aug 2025 00:40:10 +0500
+Message-Id: <20250807194012.631367-1-snovitoll@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250805150147.25909-1-ziyao@disroot.org> <20250805150147.25909-7-ziyao@disroot.org>
-In-Reply-To: <20250805150147.25909-7-ziyao@disroot.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 7 Aug 2025 19:21:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4=A=BaHsAKmTiS62gE6XQLD4rnYmU6snDFt1S0uMHr6A@mail.gmail.com>
-X-Gm-Features: Ac12FXxtKvbs-PZAXQ75JhId8jhPeM716oPQ_ai_smjUQTo4Hj6YHjdaaiHGjNI
-Message-ID: <CAAhV-H4=A=BaHsAKmTiS62gE6XQLD4rnYmU6snDFt1S0uMHr6A@mail.gmail.com>
-Subject: Re: [PATCH v3 6/8] clk: loongson2: Add clock definitions for Loongson
- 2K0300 SoC
-To: Yao Zi <ziyao@disroot.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Yao,
+This patch series addresses the fragmentation in KASAN initialization
+across architectures by introducing a unified approach that eliminates
+duplicate static keys and arch-specific kasan_arch_is_ready()
+implementations.
 
-On Tue, Aug 5, 2025 at 11:05=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
->
-> The clock controller of Loongson 2K0300 consists of three PLLs, requires
-> an 120MHz external reference clock to function, and generates clocks in
-> various frequencies for SoC peripherals.
->
-> Clock definitions for previous SoC generations could be reused for most
-> clock hardwares. There're two gates marked as critical, clk_node_gate
-> and clk_boot_gate, which supply the CPU cores and the system
-> configuration bus. Disabling them leads to a SoC hang.
->
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  drivers/clk/clk-loongson2.c | 48 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->
-> diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
-> index 52a9f1c2794a..1d210a7683ea 100644
-> --- a/drivers/clk/clk-loongson2.c
-> +++ b/drivers/clk/clk-loongson2.c
-> @@ -12,6 +12,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include <dt-bindings/clock/loongson,ls2k-clk.h>
-> +#include <dt-bindings/clock/loongson,ls2k0300-clk.h>
->
->  enum loongson2_clk_type {
->         CLK_TYPE_PLL,
-> @@ -137,6 +138,52 @@ struct loongson2_clk_board_info {
->                 .fixed_rate     =3D _rate,                        \
->         }
->
-> +static const struct loongson2_clk_board_info ls2k0300_clks[] =3D {
-> +       /* Reference Clock */
-> +       CLK_PLL(LS2K0300_PLL_NODE, "pll_node",   0x00, 15, 9, 8, 7),
-> +       CLK_PLL(LS2K0300_PLL_DDR,  "pll_ddr",    0x08, 15, 9, 8, 7),
-> +       CLK_PLL(LS2K0300_PLL_PIX,  "pll_pix",    0x10, 15, 9, 8, 7),
-> +       CLK_FIXED(LS2K0300_CLK_STABLE, "clk_stable", NULL, 100000000),
-> +       CLK_FIXED(LS2K0300_CLK_THSENS, "clk_thsens", NULL, 10000000),
-> +       /* Node PLL */
-> +       CLK_DIV(LS2K0300_CLK_NODE_DIV, "clk_node_div", "pll_node", 0x00, =
-24, 7),
-> +       CLK_DIV(LS2K0300_CLK_GMAC_DIV, "clk_gmac_div", "pll_node", 0x04, =
-0, 7),
-> +       CLK_DIV(LS2K0300_CLK_I2S_DIV,  "clk_i2s_div",  "pll_node", 0x04, =
-8, 7),
-> +       CLK_GATE(LS2K0300_CLK_NODE_PLL_GATE,   "clk_node_pll_gate", "clk_=
-node_div", 0x00, 0),
-> +       CLK_GATE(LS2K0300_CLK_GMAC_GATE,       "clk_gmac_gate",     "clk_=
-gmac_div", 0x00, 1),
-> +       CLK_GATE(LS2K0300_CLK_I2S_GATE,        "clk_i2s_gate",      "clk_=
-i2s_div", 0x00, 2),
-> +       CLK_GATE_FLAGS(LS2K0300_CLK_NODE_GATE, "clk_node_gate",     "clk_=
-node_scale",
-> +                      0x24, 0, CLK_IS_CRITICAL),
-There is no 80 chars limit now, so feel free to define a clock in one line.
+The core issue is that different architectures have inconsistent approaches
+to KASAN readiness tracking:
+- PowerPC, LoongArch, and UML arch, each implement own kasan_arch_is_ready()
+- Only HW_TAGS mode had a unified static key (kasan_flag_enabled)
+- Generic and SW_TAGS modes relied on arch-specific solutions
+  or always-on behavior
 
-> +       CLK_SCALE_MODE(LS2K0300_CLK_NODE_SCALE,    "clk_node_scale",    "=
-clk_node_pll_gate",
-> +                      0x20, 0, 3, 3),
-The same.
+Changes in v5:
+- Unified patches where arch (powerpc, UML, loongarch) selects
+  ARCH_DEFER_KASAN in the first patch not to break
+  bisectability. So in v5 we have 2 patches now in the series instead of 9.
+- Removed kasan_arch_is_ready completely as there is no user
+- Removed __wrappers in v4, left only those where it's necessary
+  due to different implementations
 
-> +       /* DDR PLL */
-> +       CLK_DIV(LS2K0300_CLK_DDR_DIV, "clk_ddr_div", "pll_ddr", 0x08, 24,=
- 7),
-> +       CLK_DIV(LS2K0300_CLK_NET_DIV, "clk_net_div", "pll_ddr", 0x0c, 0, =
-7),
-> +       CLK_DIV(LS2K0300_CLK_DEV_DIV, "clk_dev_div", "pll_ddr", 0x0c, 8, =
-7),
-> +       CLK_GATE(LS2K0300_CLK_NET_GATE,         "clk_net_gate", "clk_net_=
-div", 0x08, 1),
-> +       CLK_GATE(LS2K0300_CLK_DEV_GATE,         "clk_dev_gate", "clk_dev_=
-div", 0x08, 2),
-> +       CLK_GATE_FLAGS(LS2K0300_CLK_DDR_GATE,   "clk_ddr_gate", "clk_ddr_=
-div",
-> +                      0x08, 0, CLK_IS_CRITICAL),
-The same.
+Tested on:
+- powerpc - selects ARCH_DEFER_KASAN
+Built ppc64_defconfig (PPC_BOOK3S_64) - OK
+Booted via qemu-system-ppc64 - OK
 
-> +       /* PIX PLL */
-> +       CLK_DIV(LS2K0300_CLK_PIX_DIV,    "clk_pix_div",    "pll_pix", 0x1=
-0, 24, 7),
-> +       CLK_DIV(LS2K0300_CLK_GMACBP_DIV, "clk_gmacbp_div", "pll_pix", 0x1=
-4, 0, 7),
-> +       CLK_GATE(LS2K0300_CLK_PIX_PLL_GATE, "clk_pix_pll_gate", "clk_pix_=
-div", 0x10, 0),
-> +       CLK_GATE(LS2K0300_CLK_PIX_GATE,     "clk_pix_gate",     "clk_pix_=
-scale", 0x24, 6),
-> +       CLK_GATE(LS2K0300_CLK_GMACBP_GATE,  "clk_gmacbp_gate",  "clk_gmac=
-bp_div", 0x10, 1),
-> +       CLK_SCALE_MODE(LS2K0300_CLK_PIX_SCALE,  "clk_pix_scale",        "=
-clk_pix_pll_gate",
-> +                      0x20, 4, 3, 7),
-The same.
+I have not tested in v4 powerpc without KASAN enabled.
 
-> +       /* clk_dev_gate */
-> +       CLK_DIV(LS2K0300_CLK_SDIO_SCALE, "clk_sdio_scale", "clk_dev_gate"=
-, 0x20, 24, 4),
-> +       CLK_GATE(LS2K0300_CLK_USB_GATE,  "clk_usb_gate",        "clk_usb_=
-scale", 0x24, 2),
-> +       CLK_GATE(LS2K0300_CLK_SDIO_GATE, "clk_sdio_gate",       "clk_sdio=
-_scale", 0x24, 4),
-> +       CLK_GATE(LS2K0300_CLK_APB_GATE,  "clk_apb_gate",        "clk_apb_=
-scale", 0x24, 3),
-> +       CLK_GATE_FLAGS(LS2K0300_CLK_BOOT_GATE, "clk_boot_gate", "clk_boot=
-_scale",
-> +                      0x24, 1, CLK_IS_CRITICAL),
-The same.
+In v4 arch/powerpc/Kconfig it was:
+	select ARCH_DEFER_KASAN			if PPC_RADIX_MMU
 
-Huacai
+and compiling with ppc64_defconfig caused:
+  lib/stackdepot.o:(__jump_table+0x8): undefined reference to `kasan_flag_enabled'
 
-> +       CLK_SCALE_MODE(LS2K0300_CLK_USB_SCALE,  "clk_usb_scale",  "clk_de=
-v_gate", 0x20, 12, 3, 15),
-> +       CLK_SCALE_MODE(LS2K0300_CLK_APB_SCALE,  "clk_apb_scale",  "clk_de=
-v_gate", 0x20, 16, 3, 19),
-> +       CLK_SCALE_MODE(LS2K0300_CLK_BOOT_SCALE, "clk_boot_scale", "clk_de=
-v_gate", 0x20, 8, 3, 11),
-> +};
-> +
->  static const struct loongson2_clk_board_info ls2k0500_clks[] =3D {
->         CLK_PLL(LOONGSON2_NODE_PLL,   "pll_node", 0,    16, 8, 8, 6),
->         CLK_PLL(LOONGSON2_DDR_PLL,    "pll_ddr",  0x8,  16, 8, 8, 6),
-> @@ -393,6 +440,7 @@ static int loongson2_clk_probe(struct platform_device=
- *pdev)
->  }
->
->  static const struct of_device_id loongson2_clk_match_table[] =3D {
-> +       { .compatible =3D "loongson,ls2k0300-clk", .data =3D &ls2k0300_cl=
-ks },
->         { .compatible =3D "loongson,ls2k0500-clk", .data =3D &ls2k0500_cl=
-ks },
->         { .compatible =3D "loongson,ls2k-clk", .data =3D &ls2k1000_clks }=
-,
->         { .compatible =3D "loongson,ls2k2000-clk", .data =3D &ls2k2000_cl=
-ks },
-> --
-> 2.50.1
->
+I have fixed it in v5 via adding KASAN condition:
+	select ARCH_DEFER_KASAN			if KASAN && PPC_RADIX_MMU
+
+- um - selects ARCH_DEFER_KASAN
+
+KASAN_GENERIC && KASAN_INLINE && STATIC_LINK
+	Before:
+		In file included from mm/kasan/common.c:32:
+		mm/kasan/kasan.h:550:2: error: #error kasan_arch_is_ready only works in KASAN generic outline mode!
+		550 | #error kasan_arch_is_ready only works in KASAN generic outline mode
+
+	After (with auto-selected ARCH_DEFER_KASAN):
+		./arch/um/include/asm/kasan.h:29:2: error: #error UML does not work in KASAN_INLINE mode with STATIC_LINK enabled!
+		29 | #error UML does not work in KASAN_INLINE mode with STATIC_LINK enabled!
+
+KASAN_GENERIC && KASAN_OUTLINE && STATIC_LINK && 
+	Before:
+		./linux boots.
+
+	After (with auto-selected ARCH_DEFER_KASAN):
+		./linux boots.
+
+KASAN_GENERIC && KASAN_OUTLINE && !STATIC_LINK
+	Before:
+		./linux boots
+
+	After (with auto-disabled !ARCH_DEFER_KASAN):
+		./linux boots
+
+- loongarch - selects ARCH_DEFER_KASAN
+Built defconfig with KASAN_GENERIC - OK
+Haven't tested the boot. Asking Loongarch developers to verify - N/A
+But should be good, since Loongarch does not have specific "kasan_init()"
+call like UML does. It selects ARCH_DEFER_KASAN and calls kasan_init()
+in the end of setup_arch() after jump_label_init().
+
+Previous v4 thread: https://lore.kernel.org/all/20250805142622.560992-1-snovitoll@gmail.com/
+Previous v3 thread: https://lore.kernel.org/all/20250717142732.292822-1-snovitoll@gmail.com/
+Previous v2 thread: https://lore.kernel.org/all/20250626153147.145312-1-snovitoll@gmail.com/
+
+Sabyrzhan Tasbolatov (2):
+  kasan: introduce ARCH_DEFER_KASAN and unify static key across modes
+  kasan: call kasan_init_generic in kasan_init
+
+ arch/arm/mm/kasan_init.c               |  2 +-
+ arch/arm64/mm/kasan_init.c             |  4 +---
+ arch/loongarch/Kconfig                 |  1 +
+ arch/loongarch/include/asm/kasan.h     |  7 ------
+ arch/loongarch/mm/kasan_init.c         |  8 +++----
+ arch/powerpc/Kconfig                   |  1 +
+ arch/powerpc/include/asm/kasan.h       | 12 ----------
+ arch/powerpc/mm/kasan/init_32.c        |  2 +-
+ arch/powerpc/mm/kasan/init_book3e_64.c |  2 +-
+ arch/powerpc/mm/kasan/init_book3s_64.c |  6 +----
+ arch/riscv/mm/kasan_init.c             |  1 +
+ arch/s390/kernel/early.c               |  3 ++-
+ arch/um/Kconfig                        |  1 +
+ arch/um/include/asm/kasan.h            |  5 ++--
+ arch/um/kernel/mem.c                   | 10 ++++++--
+ arch/x86/mm/kasan_init_64.c            |  2 +-
+ arch/xtensa/mm/kasan_init.c            |  2 +-
+ include/linux/kasan-enabled.h          | 32 ++++++++++++++++++--------
+ include/linux/kasan.h                  |  6 +++++
+ lib/Kconfig.kasan                      |  8 +++++++
+ mm/kasan/common.c                      | 17 ++++++++++----
+ mm/kasan/generic.c                     | 19 +++++++++++----
+ mm/kasan/hw_tags.c                     |  9 +-------
+ mm/kasan/kasan.h                       |  8 ++++++-
+ mm/kasan/shadow.c                      | 12 +++++-----
+ mm/kasan/sw_tags.c                     |  1 +
+ mm/kasan/tags.c                        |  2 +-
+ 27 files changed, 107 insertions(+), 76 deletions(-)
+
+-- 
+2.34.1
+
