@@ -1,80 +1,63 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F801A316E
-	for <loongarch@lists.linux.dev>; Fri,  8 Aug 2025 03:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817361C84BD;
+	Fri,  8 Aug 2025 03:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754623497; cv=none; b=oYKNrRpYrgwSoKdPataCK5HqSXIiVaJnvwoFKWz5gB8UWsvztrI/iyr1y9GXzkfn8LrMrbBzEux64cS9cxhlWHjUGoSDVcRaO5VlzkH7fBqAXPDklIawXGIOP48IJACOUEZscndkuqdFGPtI0Yd145c0a6sfvpTiQP9q3AqGp0g=
+	t=1754625575; cv=none; b=EZEHzaLyI94Sc7JWPzGKjuLDqpaYUhO2+gjeOCdBaQEm+NR3V5yrvT4d85n/U2sfWxN7DWxowBD4otqReUr8p5cv/METwiyea91hpQwJbXJtwWFXbIibRBKBFvnElWqRTBeCqMIr9luX4psD0R6m7gRjjiZdBd5OAyaU7jWSJqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754623497; c=relaxed/simple;
-	bh=v8GDNEIi9lbn81vS4caFfixjtkJApabqQOseMwgckDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tG/gafYNp2OZXiX4/f5bMC/N7W4YcJ7ttGinLZ4Nt0VOKVzJijw87yB3oeNiHZvGhPYQf+cOczy5to0+GAwh4PSwr3Ulw5u7ywCBKou7Sav12lHIQMUwU6Lpc120rCe+oiNMmMfwAueE00ElowCNPLK4OR2HG/ztt9HIGbVwHTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=RW6fqMkb; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1754625575; c=relaxed/simple;
+	bh=I//qqkkeAqFH5kQS6Zl4OQTgherWupMRZ5zHtI3l5Wk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=cCkADzb67QhxhLSO9JTksAecQunhMeIaRd9jGpX/NdXlD9zwQZrw8NCHXtAlzuP3SFJ/DmZ1YSHmGWAnUJQLCovm7QoEUjIuu9x6fzfImfe26Q2oHBMayDpkCzRIYG+SNQ/c7TACcfJyYSM5xiDCLa3255oXznGOWMpejw5YjwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ATOZTkJn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="RW6fqMkb"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 3BF6425F86;
-	Fri,  8 Aug 2025 05:24:54 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id fsKhSEmxzj7b; Fri,  8 Aug 2025 05:24:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1754623493; bh=v8GDNEIi9lbn81vS4caFfixjtkJApabqQOseMwgckDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RW6fqMkboQybaKy7Qm/nQdYWJRQTRFevKW1s8cIPAScv0IGVjkaLcyRqR4q3sOwpw
-	 zXqzeEiZh7MlaHK22rrG43FrfUWhdO2QWpKE4+nVRSFxF9CAsIMoDeV5/u55DVTmOh
-	 NhosSsURdngta1JAtKynrQ9yExSutJBLz5cEXVeCHuceMAhFq9cD9waCWBF8nrilbT
-	 Of6qxMB0E0HxewaDbvD2whIe0usVwbdPBHHQK1WTe9E6bSXyk1IYW3S0c63WOxU0OB
-	 iqCXm05oGPiXqqgG05AjdBX+VyLTgAy/xDX6YUTN5XLi2ceDtpA9NkXkogBPAxRZ5Q
-	 5Go+8XIlx6pAw==
-Date: Fri, 8 Aug 2025 03:24:44 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH v3 3/8] clk: loongson2: Support scale clocks with an
- alternative mode
-Message-ID: <aJVt_DHt0snAHnY6@pie>
-References: <20250805150147.25909-1-ziyao@disroot.org>
- <20250805150147.25909-4-ziyao@disroot.org>
- <CAAhV-H59x+KGJ8Jr4bDG7EG78aFSN=Rn7ZbkroPwHw-YPTf49Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ATOZTkJn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 547D1C4CEF0;
+	Fri,  8 Aug 2025 03:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754625575;
+	bh=I//qqkkeAqFH5kQS6Zl4OQTgherWupMRZ5zHtI3l5Wk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ATOZTkJnXdQf5v6JlXQL77b4dgpAoiJQGAvCkw2Fe9vfbUGi2AcajSg6bTChHNhHQ
+	 stqCd8SLPUyXUod04oMekc3QcrjZkWALJcVGD4Hr/Xvm1Tgz7e1AUVoX2A9jX0Fk28
+	 JbN+/snmOsSKnWMf6GY5MZkvz06sZLXytUIMJZtp2fWopOyHdb7sUHE+5Xl6ZQZ+dI
+	 CLhHMfPlzo7TOW66tULs+IFBYbmF9D2jTkMqbmsJuP24WQyyaneS59wyclF6z2U9nv
+	 ZWU+6vDq+TUZl14NHv/6jr1DeHPrBp9hfMKBBc2WOOMDCIYlcWAkUyxVF3Q0pC+k5n
+	 cylDY0pJoC1wQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADC1383BF4E;
+	Fri,  8 Aug 2025 03:59:49 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v6.17
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250807083051.178877-1-chenhuacai@loongson.cn>
+References: <20250807083051.178877-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250807083051.178877-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.17
+X-PR-Tracked-Commit-Id: d35ec48fa6c8fe0cfa4a03155109fec7677911d4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 83affacd18cc225f538e532c6e667d26b3ec69fd
+Message-Id: <175462558844.3795225.7100911394873215243.pr-tracker-bot@kernel.org>
+Date: Fri, 08 Aug 2025 03:59:48 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhV-H59x+KGJ8Jr4bDG7EG78aFSN=Rn7ZbkroPwHw-YPTf49Q@mail.gmail.com>
 
-On Thu, Aug 07, 2025 at 07:18:33PM +0800, Huacai Chen wrote:
-> Hi, Yao,
-> 
-> Can the subject line use "clk: loongson2: Allow ..." like Patch-2 and Patch-4?
+The pull request you sent on Thu,  7 Aug 2025 16:30:50 +0800:
 
-Sorry, I don't get the point of rewording the subject... do you think
-this looks more consistent?
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.17
 
-I'd like to keep the original subject since scale clocks with
-alternative operation mode are a relateively large feature, while PATCH
-2 and 4 only introduces one member or appends a new flag.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/83affacd18cc225f538e532c6e667d26b3ec69fd
 
-To be honest, actually I don't really see a meaningful reason for
-rewording...
+Thank you!
 
-> Huacai
-
-Best regards,
-Yao Zi
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
