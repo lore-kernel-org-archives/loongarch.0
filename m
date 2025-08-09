@@ -1,184 +1,84 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E2991DE3D6
-	for <loongarch@lists.linux.dev>; Fri,  8 Aug 2025 17:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E291DA4E
+	for <loongarch@lists.linux.dev>; Sat,  9 Aug 2025 03:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754673637; cv=none; b=IM5uCw+dGeNDKnX+sLcjU7sNdn8EeNMBWCNcuVz973BPMfn3S79nAlDc2zBggF+NAL1H8yAN9jDuYrE1Fw1VXIOsB3OBXe5JU7nvbZvwzTk47ihW5Re/Nx9ow32vpiExPKwdU+kGfKq1z8I1v4MM3jHbtxt1OOFE3BOmvH4duRs=
+	t=1754708630; cv=none; b=fkoOV3OcWMm2bK2Y71Ibzq9yBlc8xywOAe61KsoxYr4qNPirTCdvIJwsEfgzb/O3WPbefufn7gXoVQbtWXPZAVbPAZsaDmzQBQNW/dg9RZY86rHbVvENooUjb9yf9mIkOigJLT3cZJFAaDS0T4rVGhhYrfu/eOhNGzdJ4yYo6JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754673637; c=relaxed/simple;
-	bh=iD7fszDVOfvNGAR45L+YflGQxZ3kkSiCUF5Sy7HR4T8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GWf77OHZD+nYpv56UWeojKTaOIduQuqesZ2xm2+YpcU0dIRXFD1mQF6B2qqeBTAn45Zkj6Okb8aMyykCBWnSD1g3XygmqNgEbiw+si1nmgrva5g4jzqPpisv91TsUkNjPk26VfbpfKovB4DcaojHqVzxrVbLcHhkjRUQ4Qfflww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4bz9NX4Hmyz9sSb;
-	Fri,  8 Aug 2025 19:03:56 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 4LtEzBBocysS; Fri,  8 Aug 2025 19:03:56 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4bz9NX36z3z9sSZ;
-	Fri,  8 Aug 2025 19:03:56 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 55AF68B770;
-	Fri,  8 Aug 2025 19:03:56 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id Z2c0fwWGRIPg; Fri,  8 Aug 2025 19:03:56 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 20F878B763;
-	Fri,  8 Aug 2025 19:03:55 +0200 (CEST)
-Message-ID: <af677847-e625-43d7-8750-b2ce4ba9626c@csgroup.eu>
-Date: Fri, 8 Aug 2025 19:03:54 +0200
+	s=arc-20240116; t=1754708630; c=relaxed/simple;
+	bh=w/hiiEN694cJ8YcCBliv6sgeqcW+9CbJaFQ2lcRTGZU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WSH+cL3NYzu28aeQA7ks61nC7lTWob10UYxRKod/eStpk6ZAz03tk0yu8zbIb7mn8oTgRZaDZ7YWGAwVKdC70+1nzUq70Iqr8bd5yaRm2CTdHlyBt4Fl/j1mHBZSU7H7V+80Bg/k8eGJZo0An/EizURoUMtnF/Q+TdJnnMjZFZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnqyXCm0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnqyXCm0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 365D3C4CEED
+	for <loongarch@lists.linux.dev>; Sat,  9 Aug 2025 03:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754708630;
+	bh=w/hiiEN694cJ8YcCBliv6sgeqcW+9CbJaFQ2lcRTGZU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OnqyXCm0bmS99iYG7Qk6WFBCjWDOWFnXFH1ACFi2BxwPVR/72YkdxS01F7WkKE+TC
+	 7PGvBQFvLVHNiI1Ed28zZQDdD2t5Q3jNwCV08qxQHp0Isa7YmSTQhvQuWTw/Eji3YR
+	 xhgIyhmQ8iU1ddXcrfThtLGsiYMbCTHuBVqFWgxp5G0lt0aZDgFgbpYm6swk4/3Yog
+	 lyJmHOFQhcMqIuuMK8viKmCgijVVOAmV03xqyH8t8RLB4XtnQcunePDKu9YbKGFC0l
+	 SWbEXZRV66J4YlOM/Ea3jiyUkO+YF9N//6k1398l8SoEkmrlNrh47MVvj0+J91fvWZ
+	 cfgj8et32ZFLg==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so4858519a12.2
+        for <loongarch@lists.linux.dev>; Fri, 08 Aug 2025 20:03:50 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyXGSNmpk6yPGc6kaw9CNkx+o3U+F9MoWW0eWlddU5yy0AABYBd
+	kkovpxdj/Qm8YbXI+k22KiGhnf9fWjTieqTSfKVOWvqJ5hM8e0kxdUWMdGWOsZSIc3XI+Sp95Wx
+	w9em2J5ketH8BHqJGTBpF6GCVANbZ+4E=
+X-Google-Smtp-Source: AGHT+IE5OuFSjoJkfoTs2liUUMg7RYFX9E7JrR0ISz/dA1b6608iMi6x9HauCFJsnxawEcAuDA5Op7vm6IzcXZCUFE0=
+X-Received: by 2002:a05:6402:2751:b0:617:b662:2272 with SMTP id
+ 4fb4d7f45d1cf-617e2f0725amr4010732a12.33.1754708628829; Fri, 08 Aug 2025
+ 20:03:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/2] kasan: introduce ARCH_DEFER_KASAN and unify static
- key across modes
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Cc: ryabinin.a.a@gmail.com, bhe@redhat.com, hca@linux.ibm.com,
- andreyknvl@gmail.com, akpm@linux-foundation.org, zhangqing@loongson.cn,
- chenhuacai@loongson.cn, davidgow@google.co, glider@google.com,
- dvyukov@google.com, alex@ghiti.fr, agordeev@linux.ibm.com,
- vincenzo.frascino@arm.com, elver@google.com, kasan-dev@googlegroups.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-um@lists.infradead.org, linux-mm@kvack.org
-References: <20250807194012.631367-1-snovitoll@gmail.com>
- <20250807194012.631367-2-snovitoll@gmail.com>
- <22872a3f-85dc-4740-b605-ba80b5a3b1bc@csgroup.eu>
- <CACzwLxjnofD0EsxrtgbG3svXHL+TpYcio4B67SCY9Mi3C-jdsQ@mail.gmail.com>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <CACzwLxjnofD0EsxrtgbG3svXHL+TpYcio4B67SCY9Mi3C-jdsQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAK3+h2x_N-UnQqz_=bQOK9vB8fxEU=4YQ3YwCpnMNW4i5uBkQg@mail.gmail.com>
+In-Reply-To: <CAK3+h2x_N-UnQqz_=bQOK9vB8fxEU=4YQ3YwCpnMNW4i5uBkQg@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 9 Aug 2025 11:03:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7wOZUJfn4pP2bV0G8Hnt2AfXt1ZL-eY5FFnQs4XF8g8Q@mail.gmail.com>
+X-Gm-Features: Ac12FXx8ovkril7uOgtGMAYQgDm3tz2zJsRsEpr-hPXGZRQcsi91jzEMVfz6OSk
+Message-ID: <CAAhV-H7wOZUJfn4pP2bV0G8Hnt2AfXt1ZL-eY5FFnQs4XF8g8Q@mail.gmail.com>
+Subject: Re: kernel lockup on bpf selftests module_attach
+To: Vincent Li <vincent.mc.li@gmail.com>
+Cc: loongarch@lists.linux.dev, Hengqi Chen <hengqi.chen@gmail.com>, 
+	Chenghao Duan <duanchenghao@kylinos.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Vincent,
 
+On Sat, Aug 9, 2025 at 12:53=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.com=
+> wrote:
+>
+> Hi Folks,
+>
+> Hengqi mentioned offline that the loongarch kernel locked up when
+> running full bpf selftests, so I went ahead and ran make run_tests to
+> perform full bpf selftest, I observed lockup too. It appears the
+> lockup happens when running module_attach test which includes testing
+> on fentry so this could be related to the trampoline patch series. for
+> example, if I just run ./test_progs -t module_attach, the kernel
+> lockup immediately.
+Is this a regression caused by the latest trampoline patches? Or in
+another word, Does vanilla 6.16 has this problem?
 
-Le 08/08/2025 à 17:33, Sabyrzhan Tasbolatov a écrit :
-> On Fri, Aug 8, 2025 at 10:03 AM Christophe Leroy
-> <christophe.leroy@csgroup.eu> wrote:
->>
->>
->>
->> Le 07/08/2025 à 21:40, Sabyrzhan Tasbolatov a écrit :
->>> Introduce CONFIG_ARCH_DEFER_KASAN to identify architectures [1] that need
->>> to defer KASAN initialization until shadow memory is properly set up,
->>> and unify the static key infrastructure across all KASAN modes.
->>
->> That probably desserves more details, maybe copy in informations from
->> the top of cover letter.
->>
->> I think there should also be some exeplanations about
->> kasan_arch_is_ready() becoming kasan_enabled(), and also why
->> kasan_arch_is_ready() completely disappear from mm/kasan/common.c
->> without being replaced by kasan_enabled().
->>
->>>
->>> [1] PowerPC, UML, LoongArch selects ARCH_DEFER_KASAN.
->>>
->>> Closes: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D217049&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cfe4f5a759ad6452b047408ddd691024a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638902640503259176%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=UM4uvQihJdeWwcC6DIiJXbn4wGsrijjRcHc55uCMErI%3D&reserved=0
->>> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
->>> ---
->>> Changes in v5:
->>> - Unified patches where arch (powerpc, UML, loongarch) selects
->>>     ARCH_DEFER_KASAN in the first patch not to break
->>>     bisectability
->>> - Removed kasan_arch_is_ready completely as there is no user
->>> - Removed __wrappers in v4, left only those where it's necessary
->>>     due to different implementations
->>>
->>> Changes in v4:
->>> - Fixed HW_TAGS static key functionality (was broken in v3)
->>> - Merged configuration and implementation for atomicity
->>> ---
->>>    arch/loongarch/Kconfig                 |  1 +
->>>    arch/loongarch/include/asm/kasan.h     |  7 ------
->>>    arch/loongarch/mm/kasan_init.c         |  8 +++----
->>>    arch/powerpc/Kconfig                   |  1 +
->>>    arch/powerpc/include/asm/kasan.h       | 12 ----------
->>>    arch/powerpc/mm/kasan/init_32.c        |  2 +-
->>>    arch/powerpc/mm/kasan/init_book3e_64.c |  2 +-
->>>    arch/powerpc/mm/kasan/init_book3s_64.c |  6 +----
->>>    arch/um/Kconfig                        |  1 +
->>>    arch/um/include/asm/kasan.h            |  5 ++--
->>>    arch/um/kernel/mem.c                   | 10 ++++++--
->>>    include/linux/kasan-enabled.h          | 32 ++++++++++++++++++--------
->>>    include/linux/kasan.h                  |  6 +++++
->>>    lib/Kconfig.kasan                      |  8 +++++++
->>>    mm/kasan/common.c                      | 17 ++++++++++----
->>>    mm/kasan/generic.c                     | 19 +++++++++++----
->>>    mm/kasan/hw_tags.c                     |  9 +-------
->>>    mm/kasan/kasan.h                       |  8 ++++++-
->>>    mm/kasan/shadow.c                      | 12 +++++-----
->>>    mm/kasan/sw_tags.c                     |  1 +
->>>    mm/kasan/tags.c                        |  2 +-
->>>    21 files changed, 100 insertions(+), 69 deletions(-)
->>>
->>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->>> index f0abc38c40a..cd64b2bc12d 100644
->>> --- a/arch/loongarch/Kconfig
->>> +++ b/arch/loongarch/Kconfig
->>> @@ -9,6 +9,7 @@ config LOONGARCH
->>>        select ACPI_PPTT if ACPI
->>>        select ACPI_SYSTEM_POWER_STATES_SUPPORT if ACPI
->>>        select ARCH_BINFMT_ELF_STATE
->>> +     select ARCH_DEFER_KASAN if KASAN
->>
->> Instead of adding 'if KASAN' in all users, you could do in two steps:
->>
->> Add a symbol ARCH_NEEDS_DEFER_KASAN.
->>
->> +config ARCH_NEEDS_DEFER_KASAN
->> +       bool
->>
->> And then:
->>
->> +config ARCH_DEFER_KASAN
->> +       def_bool
->> +       depends on KASAN
->> +       depends on ARCH_DEFER_KASAN
->> +       help
->> +         Architectures should select this if they need to defer KASAN
->> +         initialization until shadow memory is properly set up. This
->> +         enables runtime control via static keys. Otherwise, KASAN uses
->> +         compile-time constants for better performance.
->>
-> 
-> Actually, I don't see the benefits from this option. Sorry, have just
-> revisited this again.
-> With the new symbol, arch (PowerPC, UML, LoongArch) still needs select
-> 2 options:
-> 
-> select ARCH_NEEDS_DEFER_KASAN
-> select ARCH_DEFER_KASAN
+Huacai
 
-Sorry, my mistake, ARCH_DEFER_KASAN has to be 'def_bool y'. Missing the 
-'y'. That way it is automatically set to 'y' as long as KASAN and 
-ARCH_NEEDS_DEFER_KASAN are selected. Should be:
-
-config ARCH_DEFER_KASAN
-	def_bool y
-	depends on KASAN
-	depends on ARCH_NEEDS_DEFER_KASAN
-
-
-> 
-> and the oneline with `if` condition is cleaner.
-> select ARCH_DEFER_KASAN if KASAN
-> 
-
-I don't think so because it requires all architectures to add 'if KASAN' 
-which is not convenient.
-
-Christophe
+>
+> A side note, if I put the module_attach test in
+> tools/testing/selftests/bpf/DENYLIST to skip the module_attach test,
+> the module_attach test is not skipped.
+>
+> Thanks
+>
+> Vincent
