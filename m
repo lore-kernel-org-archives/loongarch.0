@@ -1,236 +1,218 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6971B3937
-	for <loongarch@lists.linux.dev>; Sat,  9 Aug 2025 19:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDE31DFD8F
+	for <loongarch@lists.linux.dev>; Sat,  9 Aug 2025 23:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754766715; cv=none; b=LFu+rPSnKMHSPYADSrLltle/F7qJbBwvUZsi8C1WHlfWynDwEN6+MbeXnIgpRFPgU4wlNsFeTZnabReQrNaOmbfkVGvaGFL33gKHfIyTD6TFEGB1GQ25xNkz8SxGftCmlnO6V72xV/eO93DyHongLmC+JBB3aH9Xk3YTq3aJ03I=
+	t=1754780583; cv=none; b=dIGyH/se+cl3FsQ2QJeGeJKs9z/XFOn0Lxu3rlzkFAeslz7mJ63/7Vx2TOSqLWQUnSHjwct6jrtaNe1KYVBw6H6FNK/Vr8egXM645p4NbDn4eluAK4eC1psGlW19fgQRig7g6vdkVGjXrcUjDjxzS2Lt9txExjHghVj3BhRoy5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754766715; c=relaxed/simple;
-	bh=5YPMc099e9uCbP2aasb7HL3eBpSYPy2UWG7Bpea6OK8=;
+	s=arc-20240116; t=1754780583; c=relaxed/simple;
+	bh=st/eweHiwV92mUXCvAGpIiPGkvX3rErOBfHnwy2GSps=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ukAoJxbxUjeIbz9MyL59+EMAlQv+McK7rNXeohOCzra4DohTjNJhctWKvIWq85MzGeynYJunNFckIrEMm7HBpMT70UWJ0YsjFR5basxQOgJlQJuzHYJgo6WdVtb5uqC0GaZV/sLr/dkNQtBUVUiG7ft4lhwCjy/UHyQnxadQMcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SwpstQui; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=u1AOEGdLVJCZ5OQoH4VGADtZqqhhkOwMlhPRAcrpTF38jSL3QUqxqlJWgmyAuFpx5iwxK+5A4NSLSBDtiJPMiKzsVzPTpswpIXBfvmAeHRFGtEwZ213WxtNHLH5WosMwWpLt4seUfGoEtwBuONusEn8HrEkGRNnHS7ljI4746M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhkQpTou; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwpstQui"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4b06d162789so36540311cf.2
-        for <loongarch@lists.linux.dev>; Sat, 09 Aug 2025 12:11:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754766713; x=1755371513; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3V6eBYxSdgYaB2lp9sNM5N0NalSVYrbAQ5RTYRmvkTA=;
-        b=SwpstQui9xBRP4GoQURTG+am0GQBsBXBE7h4XTS1wc3ApCMUcp+0zbnALrbctUjrSv
-         +VVkxKLdIuUIOVBjnQwvUPtT3D0A8gySXMHAJ4qF+/mLQUQvfPHXbUeKjGrACrRQ+3OC
-         F7GvdjDYx5ig1AozcybYPovbf74swEcYqK4DNF+pgcZxrW5omqoh6tlM1kIBw7ykvL5J
-         WyK0LeUuiBpX1OWjr/XrX+tkbvzzF1DvYoMXXUTBXTuDVu8fp9d+yp3YMV6B1rqcJegO
-         lZ9xn3eSWoaAr52YGrqVUf3XWhX3KnVbqyxaprs53uKazJZhz5saIr/gHBtW9W1+SkBH
-         LJiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754766713; x=1755371513;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3V6eBYxSdgYaB2lp9sNM5N0NalSVYrbAQ5RTYRmvkTA=;
-        b=qU3aawdVkZRR81i3azU1HDhp1JvHzzcXOaERFXhF356zbDTdoH/+mDlUbgJbvXmeOq
-         k2yHHASmVj0hof4jUST/vzuE36lxMnj5zz9YlMK/ZSvkEveKJyOiGRcNMHJcw4J9GG2Y
-         EOsuf1p7H2S3v74cGwUDOGlvH3x0iMrPvdQHpYxKk9ghLMTFnVvlPKz3lkBuYf2vyjqe
-         op2NhbmbktEGJvadgvxFAY05xiDeu5tLboyFkUrSLBH9ABmrtlajFmiMsb0Fcr2J01KR
-         aWvJUMdbwGPA1OoX6NvG67GSlTwuF0LgZ/repmvFD9VA3lHAqVfmIkBBtlq7UVGzpiAJ
-         haHQ==
-X-Gm-Message-State: AOJu0YzBMhmzu3fuJW8IHU9Ms9V7VdiIP+iWQrGZccat38+8YAm3AlnR
-	kNV5wFVC9/+JSTraUQXO+VHbZe/K4S/J5QkNQfXxmQWPQAXtDsw8eswMV8lJJHdc7dZWobOSko/
-	RLZZGVGJpcIumK2FGH8SrTMRQWaTEdnI=
-X-Gm-Gg: ASbGnctWalXJD8dozBXAL6bI7o1lK0/4GSpFek3KPIw1ad0gRS93XQotG1kih++M7km
-	Qfd/GJBlGeF+0npGSgn9H8Dj0DnvD+j4McVBNq10f8OcknQiCnAB77RGeUv1ImoC55fEhuab66p
-	QXzMuPZ09UqJfk+LZ2dxmSvFXGl1E/U9oiCXmpPu2SuVpGZsziPN17anBBfo/sg4qdZ/+b+2LRJ
-	heDlI/zwC9Zg6VIcw==
-X-Google-Smtp-Source: AGHT+IHa77DmA8J9yT5RTfuSE3tZxvftwFK7fzX8GZ5KKLnx1OZtphfWKFUHxp3e3Kwpl2T+8GplfxiE8S+A/TIiGbs=
-X-Received: by 2002:a05:622a:58c6:b0:4af:1554:794 with SMTP id
- d75a77b69052e-4b0aed4faebmr118175811cf.45.1754766712899; Sat, 09 Aug 2025
- 12:11:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhkQpTou"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF731C4CEFA
+	for <loongarch@lists.linux.dev>; Sat,  9 Aug 2025 23:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754780583;
+	bh=st/eweHiwV92mUXCvAGpIiPGkvX3rErOBfHnwy2GSps=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NhkQpTou8reSM51IS+2E4WNb4pJgZFOq/hiUQIN0TiElPNcMp+LS6vjXxnv71d4GX
+	 CZ8daBgABogz2YQMbScCOF/d8NbeFW758Rd7zV2ByVOhKuIt2kltfkzhwnHxif1Tm3
+	 9VQYogOHuqRGA+YDMuekUicwZt+o5UA5FCbCY72jizCTMxVBRyJyfTrP9oh0MGmZAQ
+	 N2g5GZu8o3juqPBxT6HV374BnxqpEcyNfGmE1jlFN7gDhQzD2Qsv20tH/QBo+X9vRE
+	 9t/LN5bDUAIJ4uIwGiW0lkf2p8zzdxxw28/w7CukWqdthBfNDALjDtlGDEGzwidSC5
+	 bfV52PDqTIPVQ==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3325cb38a78so28491171fa.3
+        for <loongarch@lists.linux.dev>; Sat, 09 Aug 2025 16:03:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSr76q8FmI96XjYbzNQuGrdcMB3gMMLRhfNyiaDmikL2sd3jjVuEjgXK9PqwvSa6iLqs7AszkJI+s=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzKesIFBYF4wNXuQt2y5O4Y7MERP1kOV2pJA0h3zWQ+DLRj+RRU
+	SvEKfPqEQtAXKFuuNQMqyLpm8GQVBOe6+wvvXYJuasguC7uWBXJI9Zri7NjP0HISMtfHDqlhVKh
+	475ZZAQijbdEneDRUXWsaQG3rT74H5m8=
+X-Google-Smtp-Source: AGHT+IHacj93S4TAyJS2Y33dq5fDEf3fw3H8pVieqGYKOrts0lqIXyoZID+Z9tXd8YeI87NlNCl9WjBC2eK/6u6auvE=
+X-Received: by 2002:a05:651c:3799:b0:32a:7270:5c29 with SMTP id
+ 38308e7fff4ca-333a213e262mr13218821fa.2.1754780581250; Sat, 09 Aug 2025
+ 16:03:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAK3+h2x_N-UnQqz_=bQOK9vB8fxEU=4YQ3YwCpnMNW4i5uBkQg@mail.gmail.com>
- <CAAhV-H7wOZUJfn4pP2bV0G8Hnt2AfXt1ZL-eY5FFnQs4XF8g8Q@mail.gmail.com>
- <CAK3+h2y003+3Ts+5PjVaxhYc8KM74B+3mSJ-hCt+Gmmta8Rbww@mail.gmail.com>
- <CAK3+h2zSSW2EF88twhRNTG-QjsuX3ZeR+a8GVh80hOD50mdE6w@mail.gmail.com> <CAAhV-H7QEidF7piHYJ0ZZD5FRp11ytBq+Q2YvpfZUPvS_BHTgQ@mail.gmail.com>
-In-Reply-To: <CAAhV-H7QEidF7piHYJ0ZZD5FRp11ytBq+Q2YvpfZUPvS_BHTgQ@mail.gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Sat, 9 Aug 2025 12:11:41 -0700
-X-Gm-Features: Ac12FXzev_i9JRPVIZOSwAMAZmfpTcNGA3hLVIE_9re4E_vLH9HCqVT-VdyWGv4
-Message-ID: <CAK3+h2zq5ePgh5YDrMpb4GRsN-3kO=1AM4C057EZkB4OVRpKpw@mail.gmail.com>
-Subject: Re: kernel lockup on bpf selftests module_attach
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Hengqi Chen <hengqi.chen@gmail.com>, 
-	Chenghao Duan <duanchenghao@kylinos.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <20250714060843.4029171-5-ardb+git@google.com> <20250714060843.4029171-6-ardb+git@google.com>
+ <20250803010449df1f5cfb@mail.local>
+In-Reply-To: <20250803010449df1f5cfb@mail.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 10 Aug 2025 09:02:49 +1000
+X-Gmail-Original-Message-ID: <CAMj1kXGQyLXwk9Bq24xhPPsB1nO9RcSkvh=0p8aNP=Q=Az8V7w@mail.gmail.com>
+X-Gm-Features: Ac12FXyxSfM9EC_oe23LQ4fW6u1l84sRZB4iGnVNSBFl1E9opWCoKNhC-oXMcUQ
+Message-ID: <CAMj1kXGQyLXwk9Bq24xhPPsB1nO9RcSkvh=0p8aNP=Q=Az8V7w@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] efi-rtc: Remove wakeup functionality
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, Feng Tang <feng.tang@linux.alibaba.com>, 
+	Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Bibo Mao <maobibo@loongson.cn>, linux-rtc@vger.kernel.org, linux-efi@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, x86@kernel.org, 
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 8, 2025 at 11:03=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
+On Sun, 3 Aug 2025 at 11:05, Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
 >
-> Hi, Chenghao,
+> Hello,
 >
-> Please take a look.
+> Apart from the topic that should be "rtc: efi:...", I'm ready to apply
+> this patch.
 >
-> Huacai
->
-I reverted loongson-next branch  tailcall count fix patches, struct
-ops trampoline patch, keep the rest of trampoline patches,
-module_attach test experienced the same issue, so definitely
-trampoline patches issue.
 
-> On Sat, Aug 9, 2025 at 1:03=E2=80=AFPM Vincent Li <vincent.mc.li@gmail.co=
-m> wrote:
+Thanks, please go ahead.
+
+> On 14/07/2025 08:08:45+0200, Ard Biesheuvel wrote:
+> > From: Ard Biesheuvel <ardb@kernel.org>
 > >
-> > On Fri, Aug 8, 2025 at 8:48=E2=80=AFPM Vincent Li <vincent.mc.li@gmail.=
-com> wrote:
-> > >
-> > > On Fri, Aug 8, 2025 at 8:03=E2=80=AFPM Huacai Chen <chenhuacai@kernel=
-.org> wrote:
-> > > >
-> > > > Hi, Vincent,
-> > > >
-> > > > On Sat, Aug 9, 2025 at 12:53=E2=80=AFAM Vincent Li <vincent.mc.li@g=
-mail.com> wrote:
-> > > > >
-> > > > > Hi Folks,
-> > > > >
-> > > > > Hengqi mentioned offline that the loongarch kernel locked up when
-> > > > > running full bpf selftests, so I went ahead and ran make run_test=
-s to
-> > > > > perform full bpf selftest, I observed lockup too. It appears the
-> > > > > lockup happens when running module_attach test which includes tes=
-ting
-> > > > > on fentry so this could be related to the trampoline patch series=
-. for
-> > > > > example, if I just run ./test_progs -t module_attach, the kernel
-> > > > > lockup immediately.
-> > > > Is this a regression caused by the latest trampoline patches? Or in
-> > > > another word, Does vanilla 6.16 has this problem?
-> > > >
-> > >
-> > > I suspect this is caused by the latest trampoline patches because the
-> > > module_attach is to test the fentry feature for kernel module
-> > > functions, I believe Changhao and I only tested the fentry feature fo=
-r
-> > > non-module kernel functions. I can try kernel without the trampoline
-> > > patches and will let you know the result.
-> > >
+> > The EFI rtc driver is used by non-x86 architectures only, and exposes
+> > the get/set wakeup time functionality provided by the underlying
+> > platform. This is usually broken on most platforms, and not widely used
+> > to begin with [if at all], so let's just remove it.
 > >
-> > I reverted  trampoline patches from loongarch-next branch and run
-> > ./test_progs -t module_attach simply just errors out with the fentry
-> > feature not supported
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> >  drivers/rtc/rtc-efi.c | 76 +-------------------
+> >  1 file changed, 2 insertions(+), 74 deletions(-)
 > >
-> > [root@fedora bpf]# ./test_progs -t module_attach
-> > test_module_attach:PASS:skel_open 0 nsec
-> > test_module_attach:PASS:set_attach_target 0 nsec
-> > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > test_module_attach:PASS:skel_load 0 nsec
-> > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
-> > libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
-> > test_module_attach:FAIL:skel_attach skeleton attach failed: -524
-> > #205     module_attach:FAIL
+> > diff --git a/drivers/rtc/rtc-efi.c b/drivers/rtc/rtc-efi.c
+> > index fa8bf82df948..b4f44999ef0f 100644
+> > --- a/drivers/rtc/rtc-efi.c
+> > +++ b/drivers/rtc/rtc-efi.c
+> > @@ -112,48 +112,6 @@ convert_from_efi_time(efi_time_t *eft, struct rtc_time *wtime)
+> >       return true;
+> >  }
 > >
-> > All error logs:
-> > test_module_attach:PASS:skel_open 0 nsec
-> > test_module_attach:PASS:set_attach_target 0 nsec
-> > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > test_module_attach:PASS:skel_load 0 nsec
-> > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
-> > libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
-> > test_module_attach:FAIL:skel_attach skeleton attach failed: -524
-> > #205     module_attach:FAIL
-> > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+> > -static int efi_read_alarm(struct device *dev, struct rtc_wkalrm *wkalrm)
+> > -{
+> > -     efi_time_t eft;
+> > -     efi_status_t status;
+> > -
+> > -     /*
+> > -      * As of EFI v1.10, this call always returns an unsupported status
+> > -      */
+> > -     status = efi.get_wakeup_time((efi_bool_t *)&wkalrm->enabled,
+> > -                                  (efi_bool_t *)&wkalrm->pending, &eft);
+> > -
+> > -     if (status != EFI_SUCCESS)
+> > -             return -EINVAL;
+> > -
+> > -     if (!convert_from_efi_time(&eft, &wkalrm->time))
+> > -             return -EIO;
+> > -
+> > -     return rtc_valid_tm(&wkalrm->time);
+> > -}
+> > -
+> > -static int efi_set_alarm(struct device *dev, struct rtc_wkalrm *wkalrm)
+> > -{
+> > -     efi_time_t eft;
+> > -     efi_status_t status;
+> > -
+> > -     convert_to_efi_time(&wkalrm->time, &eft);
+> > -
+> > -     /*
+> > -      * XXX Fixme:
+> > -      * As of EFI 0.92 with the firmware I have on my
+> > -      * machine this call does not seem to work quite
+> > -      * right
+> > -      *
+> > -      * As of v1.10, this call always returns an unsupported status
+> > -      */
+> > -     status = efi.set_wakeup_time((efi_bool_t)wkalrm->enabled, &eft);
+> > -
+> > -     dev_warn(dev, "write status is %d\n", (int)status);
+> > -
+> > -     return status == EFI_SUCCESS ? 0 : -EINVAL;
+> > -}
+> > -
+> >  static int efi_read_time(struct device *dev, struct rtc_time *tm)
+> >  {
+> >       efi_status_t status;
+> > @@ -188,17 +146,13 @@ static int efi_set_time(struct device *dev, struct rtc_time *tm)
 > >
-> > I also tested loongarch-next branch with the trampoline patch series
-> > with no lockup kernel config so I can run dmesg to check kernel error
-> > log,  ./test_progs -t module_attach result in below kernel log:
+> >  static int efi_procfs(struct device *dev, struct seq_file *seq)
+> >  {
+> > -     efi_time_t        eft, alm;
+> > +     efi_time_t        eft;
+> >       efi_time_cap_t    cap;
+> > -     efi_bool_t        enabled, pending;
+> > -     struct rtc_device *rtc = dev_get_drvdata(dev);
 > >
-> > [  417.429954] bpf_testmod: loading out-of-tree module taints kernel.
-> > [  419.728620] CPU 70475748 Unable to handle kernel paging request at
-> > virtual address 0000000800000024, era =3D=3D 90000000041d5854, ra =3D=
-=3D
-> > 90000000041d5848
-> > [  419.728629] Oops[#1]:
-> > [  419.728632] CPU 70475748 Unable to handle kernel paging request at
-> > virtual address 0000000000000018, era =3D=3D 9000000005750268, ra =3D=
-=3D
-> > 9000000004163938
-> > [  441.305370] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> > [  441.305380] rcu:     5-...0: (29 ticks this GP)
-> > idle=3Deb74/1/0x4000000000000000 softirq=3D72377/72379 fqs=3D2599
-> > [  441.305386] rcu:     (detected by 4, t=3D5252 jiffies, g=3D60333, q=
-=3D186 ncpus=3D8)
-> > [  441.305390] Sending NMI from CPU 4 to CPUs 5:
-> > [  451.305494] rcu: rcu_preempt kthread starved for 2499 jiffies!
-> > g60333 f0x0 RCU_GP_DOING_FQS(6) ->state=3D0x0 ->cpu=3D1
-> > [  451.305500] rcu:     Unless rcu_preempt kthread gets sufficient CPU
-> > time, OOM is now expected behavior.
-> > [  451.305502] rcu: RCU grace-period kthread stack dump:
-> > [  451.305504] task:rcu_preempt     state:R stack:0     pid:15
-> > tgid:15    ppid:2      task_flags:0x208040 flags:0x00000800
-> > [  451.305510] Stack : 9000000100467e80 0000000000000402
-> > 0000000000000010 90000001003b0680
-> > [  451.305519]         90000000058e0000 0000000000000000
-> > 0000000000000040 9000000006c2dfd0
-> > [  451.305526]         900000000578c9b0 0000000000000001
-> > 9000000006b21000 0000000000000005
-> > [  451.305533]         00000001000093a8 00000001000093a8
-> > 0000000000000000 0000000000000004
-> > [  451.305540]         90000000058f04e0 0000000000000000
-> > 0000000000000002 b793724be1dfb2b8
-> > [  451.305547]         00000001000093a9 b793724be1dfb2b8
-> > 000000000000003f 9000000006c2dfd0
-> > [  451.305554]         9000000006c30c18 0000000000000005
-> > 9000000006b0e000 9000000006b21000
-> > [  451.305560]         9000000100453c98 90000001003aff80
-> > 9000000006c31140 900000000578c9b0
-> > [  451.305567]         00000001000093a8 9000000005794d3c
-> > 00000000000000b4 0000000000000000
-> > [  451.305574]         90000000024021b8 00000001000093a8
-> > 9000000004284f20 000000000a400001
-> > [  451.305581]         ...
-> > [  451.305584] Call Trace:
-> > [  451.305586] [<900000000578b868>] __schedule+0x410/0x1520
-> > [  451.305595] [<900000000578c9ac>] schedule+0x34/0x190
-> > [  451.305599] [<9000000005794d38>] schedule_timeout+0x98/0x140
-> > [  451.305604] [<9000000004258f40>] rcu_gp_fqs_loop+0x5f8/0x868
-> > [  451.305609] [<900000000425d358>] rcu_gp_kthread+0x260/0x2e0
-> > [  451.305614] [<90000000041be704>] kthread+0x144/0x238
-> > [  451.305619] [<9000000005787b60>] ret_from_kernel_thread+0x28/0xc8
-> > [  451.305624] [<90000000041620e4>] ret_from_kernel_thread_asm+0xc/0x88
+> >       memset(&eft, 0, sizeof(eft));
+> > -     memset(&alm, 0, sizeof(alm));
+> >       memset(&cap, 0, sizeof(cap));
 > >
-> > [  451.305630] rcu: Stack dump where RCU GP kthread last ran:
-> > [  451.305633] Sending NMI from CPU 4 to CPUs 1:
-> > [  451.305636] NMI backtrace for cpu 1 skipped: idling at idle_exit+0x0=
-/0x4
-> > [  451.306655] rcu: INFO: rcu_preempt detected expedited stalls on
-> > CPUs/tasks: { 5-...D } 7298 jiffies s: 853 root: 0x20/.
-> > [  451.306665] rcu: blocking rcu_node structures (internal RCU debug):
-> > [  451.306669] Sending NMI from CPU 6 to CPUs 5:
-> > [  451.306672] Unable to send backtrace IPI to CPU5 - perhaps it hung?
+> >       efi.get_time(&eft, &cap);
+> > -     efi.get_wakeup_time(&enabled, &pending, &alm);
 > >
-> > So related to trampoline patches for sure unless I am missing something=
-.
+> >       seq_printf(seq,
+> >                  "Time\t\t: %u:%u:%u.%09u\n"
+> > @@ -214,26 +168,6 @@ static int efi_procfs(struct device *dev, struct seq_file *seq)
+> >               /* XXX fixme: convert to string? */
+> >               seq_printf(seq, "Timezone\t: %u\n", eft.timezone);
 > >
-> > > > Huacai
-> > > >
-> > > > >
-> > > > > A side note, if I put the module_attach test in
-> > > > > tools/testing/selftests/bpf/DENYLIST to skip the module_attach te=
-st,
-> > > > > the module_attach test is not skipped.
-> > > > >
-> > > > > Thanks
-> > > > >
-> > > > > Vincent
+> > -     if (test_bit(RTC_FEATURE_ALARM, rtc->features)) {
+> > -             seq_printf(seq,
+> > -                        "Alarm Time\t: %u:%u:%u.%09u\n"
+> > -                        "Alarm Date\t: %u-%u-%u\n"
+> > -                        "Alarm Daylight\t: %u\n"
+> > -                        "Enabled\t\t: %s\n"
+> > -                        "Pending\t\t: %s\n",
+> > -                        alm.hour, alm.minute, alm.second, alm.nanosecond,
+> > -                        alm.year, alm.month, alm.day,
+> > -                        alm.daylight,
+> > -                        enabled == 1 ? "yes" : "no",
+> > -                        pending == 1 ? "yes" : "no");
+> > -
+> > -             if (alm.timezone == EFI_UNSPECIFIED_TIMEZONE)
+> > -                     seq_puts(seq, "Timezone\t: unspecified\n");
+> > -             else
+> > -                     /* XXX fixme: convert to string? */
+> > -                     seq_printf(seq, "Timezone\t: %u\n", alm.timezone);
+> > -     }
+> > -
+> >       /*
+> >        * now prints the capabilities
+> >        */
+> > @@ -249,8 +183,6 @@ static int efi_procfs(struct device *dev, struct seq_file *seq)
+> >  static const struct rtc_class_ops efi_rtc_ops = {
+> >       .read_time      = efi_read_time,
+> >       .set_time       = efi_set_time,
+> > -     .read_alarm     = efi_read_alarm,
+> > -     .set_alarm      = efi_set_alarm,
+> >       .proc           = efi_procfs,
+> >  };
+> >
+> > @@ -271,11 +203,7 @@ static int __init efi_rtc_probe(struct platform_device *dev)
+> >       platform_set_drvdata(dev, rtc);
+> >
+> >       rtc->ops = &efi_rtc_ops;
+> > -     clear_bit(RTC_FEATURE_UPDATE_INTERRUPT, rtc->features);
+> > -     if (efi_rt_services_supported(EFI_RT_SUPPORTED_WAKEUP_SERVICES))
+> > -             set_bit(RTC_FEATURE_ALARM_WAKEUP_ONLY, rtc->features);
+> > -     else
+> > -             clear_bit(RTC_FEATURE_ALARM, rtc->features);
+> > +     clear_bit(RTC_FEATURE_ALARM, rtc->features);
+> >
+> >       device_init_wakeup(&dev->dev, true);
+> >
+> > --
+> > 2.50.0.727.gbf7dc18ff4-goog
+> >
+>
+> --
+> Alexandre Belloni, co-owner and COO, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
