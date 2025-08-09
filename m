@@ -1,58 +1,58 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35E6AD51
-	for <loongarch@lists.linux.dev>; Sat,  9 Aug 2025 03:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4411DA3D
+	for <loongarch@lists.linux.dev>; Sat,  9 Aug 2025 05:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754711303; cv=none; b=DbG5lNXZWnw0oSf4uTirPzPjsC2uxUb1Su24xTnfnjyrt+3XqI1rBkrYwMplLyYibnhFbag90NCxBByYbHAg7Oi6LKHO+ElqAjGlX5gFJVpTiAzRV0OeJhFkVetUrGEyGDBSoHJseEYFoPKssh1c0XxRPketgSkA0X1ManzFr+U=
+	t=1754715835; cv=none; b=BCLnF57gUq0v4caKOXQHS02OtyvsvIhpe6ORjIF76vrEyULne3nt+6K6frgsNxaMHAlQiZgumaEVBGwyRWUZaYxcIfTgxJEkq4Gp/Kl7k/eUrsy+0b8O6i9xphWZG/D072J0okVWSbvrC1JV4YzcnYvzElgmD4ltb9NZfi02Tu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754711303; c=relaxed/simple;
-	bh=LUHN7UPLAjCxzVHX7/GMQQ5Ox0/CqPZVW05hi6VANp4=;
+	s=arc-20240116; t=1754715835; c=relaxed/simple;
+	bh=1Pn0t/8/qkFDT1RXyqOdQHIiOXgVG9g8kKYjOkZHcdE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ChfXLBHGKK3/Tr855W0wuksucDz/Gk6dO/BfWYAG4yNjPBoSEdmZH2sLStgM/kvl3e2ewOPlx3PnFzUOkTUfKkYugXTZIzFii1wKv1MgkE+6v2GAp5k7u90FlGFHrJb77Fb948Azx+yixkYcLlfZUOKR6gMc1j/0w8/dgdjjFQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UrkOllBA; arc=none smtp.client-ip=209.85.160.182
+	 To:Cc:Content-Type; b=i8Zxxt16AulQyuS2SY4pHmm0GGcyiVhJz3/qPxIGuiNYLWiQ6jOQarubRL04b12XNihgjG0yNMvvK6IqLhqViDFHKnCEDegEmYeyuTADkt5puVVLfwLu43wat59942vYzUMjfZnt2P3VfVkCU9VBL9DvRLs9WjOccPWF4Cg7CEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lvtb6LQZ; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrkOllBA"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4af123c6fc4so27283361cf.0
-        for <loongarch@lists.linux.dev>; Fri, 08 Aug 2025 20:48:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvtb6LQZ"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4b07d2136c0so24224291cf.3
+        for <loongarch@lists.linux.dev>; Fri, 08 Aug 2025 22:03:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754711299; x=1755316099; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1754715832; x=1755320632; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LUHN7UPLAjCxzVHX7/GMQQ5Ox0/CqPZVW05hi6VANp4=;
-        b=UrkOllBAPu4hnwQ6zMuTB3FiKh4Bi6H7nAPBdHYkfExHEqEUdf1c/KjJNBdu0CqMin
-         5gEgxAs25fEYQrLk59o2j59MtwoAzTVrvYZavSxfb6DERJlLd1q9hzmPocikAUgu3vHT
-         82XOyHTp1BTfzJQzMg4EPIWvzGekgQpp3rTpkibynYUz89QYRmqd21oZgZZBPJxFfToj
-         slursAS7khH58oX7cXndgVd2yRlH2qVtnBZjdPiqiwITmq2mSnOQhiHt/E0ismod4Chi
-         nbtHk99lqLP3VGUGWiPSGBlK8fSdRyRiESU2DnVasIQ/jaeSAcMuqNG6XdjBQ8s5VQlo
-         ic8Q==
+        bh=isWgObb80p7SFwtWrva+DptugftnWfdbkmq/qS5G9n8=;
+        b=lvtb6LQZJlUDxhzf95BGKsRzMqkGm6vjNWGI2IA9uG8gMLEQ43Wg8WstqmCJn6ikz9
+         CaWRkSD3rR8zW/at7m5dmqWuUfSgcg6e/TNbo4FW5N5JdgaHXyUFo+qg1+WRu8HIZDW5
+         nJroBiIOoWcVKBUplZc11MqjlqH2OoYcLkNCF0KtWNIf6wZ27q6BEiyNwupmOEkRvb89
+         T56YvYjcft4wnsoQVo/e9ZvSWLLfetRZDNirl2AZ1yljhahrTeSNjNc3+XcxQRWhKJlD
+         X8hgteMbNEhdRU+s/Oci6MDv3lu5e1zdxZqr+S7pm4nvBYWyne6XxsCajKaPMGExK3pD
+         ebYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754711299; x=1755316099;
+        d=1e100.net; s=20230601; t=1754715832; x=1755320632;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LUHN7UPLAjCxzVHX7/GMQQ5Ox0/CqPZVW05hi6VANp4=;
-        b=WNU6TCQqeNNFdA5RYMFj3PQLUayiSkcr3hyUsXh80IqAln++KXy5aBaJqPr2/xvfsb
-         EJeGUZ6HR3LcFhxG+yQMr8wxqMgGMm67wriPanbPP3TnQkULjbqI+1byt4LiJtfk6vZD
-         C9TswxFqv4Bg73KtTkJRKeWd6C5CjafefmgMarcC5XjQDW+97ox2eD47p0zLFu99eiuM
-         mxtfzJFDqDMydkyEGxPzoMtkdESOFGEwHGzozl7wkj28/1cb9uOUyCZnczvt4Al9IV2e
-         q0jFSR1NIx8sFDOcqtK0EQQBSzLyRtaMoX7Lppa5WpG+a60LJEojCdPj073GfxYDPxXa
-         KlIg==
-X-Gm-Message-State: AOJu0Yx3Hs/Gu+Z9SZjV/gQq+Q74PqUz8OUx6wMW0EMG0YBymo8TVgT0
-	zkjoed49mDVSp/BqowOPypgnTjfFF1r0jc5oB8IjWpjsToS3uGZbRHpTSoSQuUQ+n1ckvCO8hR/
-	z5mzdT5XMzbzQGKLZe+hcCx1E8RDpLBw=
-X-Gm-Gg: ASbGncv0fzhV6ex7ZGbpORophuQd1K8lKmoTvYLrUpKSZ/xTTh0WYrlkruUUT5CsG/x
-	MmUtTADx0ynUziOuxD7uA/+bDxCJtq3Hw/y7iziempDTTd8Xr5bGUKjpPs0WpXKHRkR7iWvtlhD
-	xWfBc8apEyNQjOB6VUtAOzoHU7qt+dk2R9xZy8yL6hAFRjBOT0XXfYHFW+JoDuhBiywH+ue5L1m
-	bec0wM=
-X-Google-Smtp-Source: AGHT+IFfxr4KQtXnxBq7DqwrXUj/8Fi2Ej0ntsSzbU0kx87ueUxb2wJYmgoUbOHp19inxmgizpsd8OZKtibZWBuzC9k=
-X-Received: by 2002:a05:622a:408d:b0:4ab:3fda:ccad with SMTP id
- d75a77b69052e-4b0aec5dad8mr67191901cf.8.1754711298590; Fri, 08 Aug 2025
- 20:48:18 -0700 (PDT)
+        bh=isWgObb80p7SFwtWrva+DptugftnWfdbkmq/qS5G9n8=;
+        b=BVbq+8dIISEygmRzTwrtyfH7/XokTXFdiMSIwsgnpBSlOpeq37RZWEja9JiRVEWBK1
+         6Q9yT3H8o0A+fY8POKJiOUeSDe6U0K0Vh88wAQtbUwupVFX4S4PiCEkJnCTRu2sOti2p
+         AseZSHMd29zOZDkdY9LsCG2TuhRwLFfVoyuQdOheaQ5A1EGmVbkpEcHEKKZKAjVwm+er
+         eN7vOeOn8NV3gA1p7EUu/pKpbCg8vBAGs7ZFSS/AMOuf2cTDuZ1gIbiwvmhF4gpCq1oU
+         l4RbLJLZgqSH0eH2+FcydTBPMzkjvFE4LmSiUWWAEA10g8cFdeHR2F6Rf9u5H8jO4x3F
+         qwNw==
+X-Gm-Message-State: AOJu0YwQ5XVfV2RoR+uhDg/TMFZxr8UHI3tTNp8Fy51+4t/ACg95EHsb
+	KkuBNWNEDARJwZaQ36Edxhc3UuAQwnyIpyghgnjKgRB4ErnecVeKCLS+i/svfGslR+5Lzl88kBW
+	uo9dPpg/n/hi8FXIgCa4gLps/+i2PXkfr+nLn
+X-Gm-Gg: ASbGncvPK/7f79k369u8zURClnc5Kd9AieWu5w/WKapxgON7jwDoVkYlKB2wsf2PKsy
+	LSb5mwVJ4ISPg4qjLtmDEAMSI2v+m9OPlCIpPDqmXlYQKuv2VPp7Iu/eQgH0yqSyyYZCStPctvr
+	bHbSV/5xC2w3+WtRHNE47k/LSM+3HZE8ufDTvGBpe7wqdoChzJftUVtxXb7V73RaNy01BiLv8h4
+	VBKE9o=
+X-Google-Smtp-Source: AGHT+IFdnpqk1X3n5dhNgWIeGfqnRUOOAq2wneYSmsfnCdRbIPRt5dEuU3x5sivtv9lxexLNcZVtYnUZ0oheLFc71xc=
+X-Received: by 2002:ac8:7d0e:0:b0:4af:1765:8a1b with SMTP id
+ d75a77b69052e-4b0aecfda02mr66779941cf.4.1754715832219; Fri, 08 Aug 2025
+ 22:03:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -60,12 +60,12 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <CAK3+h2x_N-UnQqz_=bQOK9vB8fxEU=4YQ3YwCpnMNW4i5uBkQg@mail.gmail.com>
- <CAAhV-H7wOZUJfn4pP2bV0G8Hnt2AfXt1ZL-eY5FFnQs4XF8g8Q@mail.gmail.com>
-In-Reply-To: <CAAhV-H7wOZUJfn4pP2bV0G8Hnt2AfXt1ZL-eY5FFnQs4XF8g8Q@mail.gmail.com>
+ <CAAhV-H7wOZUJfn4pP2bV0G8Hnt2AfXt1ZL-eY5FFnQs4XF8g8Q@mail.gmail.com> <CAK3+h2y003+3Ts+5PjVaxhYc8KM74B+3mSJ-hCt+Gmmta8Rbww@mail.gmail.com>
+In-Reply-To: <CAK3+h2y003+3Ts+5PjVaxhYc8KM74B+3mSJ-hCt+Gmmta8Rbww@mail.gmail.com>
 From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Fri, 8 Aug 2025 20:48:07 -0700
-X-Gm-Features: Ac12FXzupgRUVxMQ61lRRwglIKh6JHhoYx5_60JO7Udbufzrf2-x0YH4tCVidjY
-Message-ID: <CAK3+h2y003+3Ts+5PjVaxhYc8KM74B+3mSJ-hCt+Gmmta8Rbww@mail.gmail.com>
+Date: Fri, 8 Aug 2025 22:03:41 -0700
+X-Gm-Features: Ac12FXzKnzo_cMoiqj9wRZ7QbE4GUnUNyk28MKZrO--s-nzFs1QaMht6Jixxbhc
+Message-ID: <CAK3+h2zSSW2EF88twhRNTG-QjsuX3ZeR+a8GVh80hOD50mdE6w@mail.gmail.com>
 Subject: Re: kernel lockup on bpf selftests module_attach
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev, Hengqi Chen <hengqi.chen@gmail.com>, 
@@ -73,40 +73,137 @@ Cc: loongarch@lists.linux.dev, Hengqi Chen <hengqi.chen@gmail.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 8, 2025 at 8:03=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
-wrote:
+On Fri, Aug 8, 2025 at 8:48=E2=80=AFPM Vincent Li <vincent.mc.li@gmail.com>=
+ wrote:
 >
-> Hi, Vincent,
+> On Fri, Aug 8, 2025 at 8:03=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
+> wrote:
+> >
+> > Hi, Vincent,
+> >
+> > On Sat, Aug 9, 2025 at 12:53=E2=80=AFAM Vincent Li <vincent.mc.li@gmail=
+.com> wrote:
+> > >
+> > > Hi Folks,
+> > >
+> > > Hengqi mentioned offline that the loongarch kernel locked up when
+> > > running full bpf selftests, so I went ahead and ran make run_tests to
+> > > perform full bpf selftest, I observed lockup too. It appears the
+> > > lockup happens when running module_attach test which includes testing
+> > > on fentry so this could be related to the trampoline patch series. fo=
+r
+> > > example, if I just run ./test_progs -t module_attach, the kernel
+> > > lockup immediately.
+> > Is this a regression caused by the latest trampoline patches? Or in
+> > another word, Does vanilla 6.16 has this problem?
+> >
 >
-> On Sat, Aug 9, 2025 at 12:53=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.c=
-om> wrote:
-> >
-> > Hi Folks,
-> >
-> > Hengqi mentioned offline that the loongarch kernel locked up when
-> > running full bpf selftests, so I went ahead and ran make run_tests to
-> > perform full bpf selftest, I observed lockup too. It appears the
-> > lockup happens when running module_attach test which includes testing
-> > on fentry so this could be related to the trampoline patch series. for
-> > example, if I just run ./test_progs -t module_attach, the kernel
-> > lockup immediately.
-> Is this a regression caused by the latest trampoline patches? Or in
-> another word, Does vanilla 6.16 has this problem?
+> I suspect this is caused by the latest trampoline patches because the
+> module_attach is to test the fentry feature for kernel module
+> functions, I believe Changhao and I only tested the fentry feature for
+> non-module kernel functions. I can try kernel without the trampoline
+> patches and will let you know the result.
 >
 
-I suspect this is caused by the latest trampoline patches because the
-module_attach is to test the fentry feature for kernel module
-functions, I believe Changhao and I only tested the fentry feature for
-non-module kernel functions. I can try kernel without the trampoline
-patches and will let you know the result.
+I reverted  trampoline patches from loongarch-next branch and run
+./test_progs -t module_attach simply just errors out with the fentry
+feature not supported
 
-> Huacai
->
+[root@fedora bpf]# ./test_progs -t module_attach
+test_module_attach:PASS:skel_open 0 nsec
+test_module_attach:PASS:set_attach_target 0 nsec
+test_module_attach:PASS:set_attach_target_explicit 0 nsec
+test_module_attach:PASS:skel_load 0 nsec
+libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
+libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
+test_module_attach:FAIL:skel_attach skeleton attach failed: -524
+#205     module_attach:FAIL
+
+All error logs:
+test_module_attach:PASS:skel_open 0 nsec
+test_module_attach:PASS:set_attach_target 0 nsec
+test_module_attach:PASS:set_attach_target_explicit 0 nsec
+test_module_attach:PASS:skel_load 0 nsec
+libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
+libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
+test_module_attach:FAIL:skel_attach skeleton attach failed: -524
+#205     module_attach:FAIL
+Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+
+I also tested loongarch-next branch with the trampoline patch series
+with no lockup kernel config so I can run dmesg to check kernel error
+log,  ./test_progs -t module_attach result in below kernel log:
+
+[  417.429954] bpf_testmod: loading out-of-tree module taints kernel.
+[  419.728620] CPU 70475748 Unable to handle kernel paging request at
+virtual address 0000000800000024, era =3D=3D 90000000041d5854, ra =3D=3D
+90000000041d5848
+[  419.728629] Oops[#1]:
+[  419.728632] CPU 70475748 Unable to handle kernel paging request at
+virtual address 0000000000000018, era =3D=3D 9000000005750268, ra =3D=3D
+9000000004163938
+[  441.305370] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+[  441.305380] rcu:     5-...0: (29 ticks this GP)
+idle=3Deb74/1/0x4000000000000000 softirq=3D72377/72379 fqs=3D2599
+[  441.305386] rcu:     (detected by 4, t=3D5252 jiffies, g=3D60333, q=3D18=
+6 ncpus=3D8)
+[  441.305390] Sending NMI from CPU 4 to CPUs 5:
+[  451.305494] rcu: rcu_preempt kthread starved for 2499 jiffies!
+g60333 f0x0 RCU_GP_DOING_FQS(6) ->state=3D0x0 ->cpu=3D1
+[  451.305500] rcu:     Unless rcu_preempt kthread gets sufficient CPU
+time, OOM is now expected behavior.
+[  451.305502] rcu: RCU grace-period kthread stack dump:
+[  451.305504] task:rcu_preempt     state:R stack:0     pid:15
+tgid:15    ppid:2      task_flags:0x208040 flags:0x00000800
+[  451.305510] Stack : 9000000100467e80 0000000000000402
+0000000000000010 90000001003b0680
+[  451.305519]         90000000058e0000 0000000000000000
+0000000000000040 9000000006c2dfd0
+[  451.305526]         900000000578c9b0 0000000000000001
+9000000006b21000 0000000000000005
+[  451.305533]         00000001000093a8 00000001000093a8
+0000000000000000 0000000000000004
+[  451.305540]         90000000058f04e0 0000000000000000
+0000000000000002 b793724be1dfb2b8
+[  451.305547]         00000001000093a9 b793724be1dfb2b8
+000000000000003f 9000000006c2dfd0
+[  451.305554]         9000000006c30c18 0000000000000005
+9000000006b0e000 9000000006b21000
+[  451.305560]         9000000100453c98 90000001003aff80
+9000000006c31140 900000000578c9b0
+[  451.305567]         00000001000093a8 9000000005794d3c
+00000000000000b4 0000000000000000
+[  451.305574]         90000000024021b8 00000001000093a8
+9000000004284f20 000000000a400001
+[  451.305581]         ...
+[  451.305584] Call Trace:
+[  451.305586] [<900000000578b868>] __schedule+0x410/0x1520
+[  451.305595] [<900000000578c9ac>] schedule+0x34/0x190
+[  451.305599] [<9000000005794d38>] schedule_timeout+0x98/0x140
+[  451.305604] [<9000000004258f40>] rcu_gp_fqs_loop+0x5f8/0x868
+[  451.305609] [<900000000425d358>] rcu_gp_kthread+0x260/0x2e0
+[  451.305614] [<90000000041be704>] kthread+0x144/0x238
+[  451.305619] [<9000000005787b60>] ret_from_kernel_thread+0x28/0xc8
+[  451.305624] [<90000000041620e4>] ret_from_kernel_thread_asm+0xc/0x88
+
+[  451.305630] rcu: Stack dump where RCU GP kthread last ran:
+[  451.305633] Sending NMI from CPU 4 to CPUs 1:
+[  451.305636] NMI backtrace for cpu 1 skipped: idling at idle_exit+0x0/0x4
+[  451.306655] rcu: INFO: rcu_preempt detected expedited stalls on
+CPUs/tasks: { 5-...D } 7298 jiffies s: 853 root: 0x20/.
+[  451.306665] rcu: blocking rcu_node structures (internal RCU debug):
+[  451.306669] Sending NMI from CPU 6 to CPUs 5:
+[  451.306672] Unable to send backtrace IPI to CPU5 - perhaps it hung?
+
+So related to trampoline patches for sure unless I am missing something.
+
+> > Huacai
 > >
-> > A side note, if I put the module_attach test in
-> > tools/testing/selftests/bpf/DENYLIST to skip the module_attach test,
-> > the module_attach test is not skipped.
-> >
-> > Thanks
-> >
-> > Vincent
+> > >
+> > > A side note, if I put the module_attach test in
+> > > tools/testing/selftests/bpf/DENYLIST to skip the module_attach test,
+> > > the module_attach test is not skipped.
+> > >
+> > > Thanks
+> > >
+> > > Vincent
