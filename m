@@ -1,218 +1,269 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDE31DFD8F
-	for <loongarch@lists.linux.dev>; Sat,  9 Aug 2025 23:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A3F21B9C5
+	for <loongarch@lists.linux.dev>; Sun, 10 Aug 2025 07:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754780583; cv=none; b=dIGyH/se+cl3FsQ2QJeGeJKs9z/XFOn0Lxu3rlzkFAeslz7mJ63/7Vx2TOSqLWQUnSHjwct6jrtaNe1KYVBw6H6FNK/Vr8egXM645p4NbDn4eluAK4eC1psGlW19fgQRig7g6vdkVGjXrcUjDjxzS2Lt9txExjHghVj3BhRoy5Q=
+	t=1754810452; cv=none; b=JcQ2xVOrpcCT8+hXGdJrheWoYm1DD0bx2rlnMMOxP9TW1K64fR4erKUWK4OCOd8+OdG5aOKWkEJTKkvQbPVfp0omjOrw1AcXg65GqkR0nk6JudVi4XsHcQ6hxQszfXbkP0tTOXQeZsQH6pemohJICvSkMtUwwqKVEwot7k8ver8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754780583; c=relaxed/simple;
-	bh=st/eweHiwV92mUXCvAGpIiPGkvX3rErOBfHnwy2GSps=;
+	s=arc-20240116; t=1754810452; c=relaxed/simple;
+	bh=scfy66HRB7KvLXp7opCve0WZSjDyLXKK8JYRci2APzU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u1AOEGdLVJCZ5OQoH4VGADtZqqhhkOwMlhPRAcrpTF38jSL3QUqxqlJWgmyAuFpx5iwxK+5A4NSLSBDtiJPMiKzsVzPTpswpIXBfvmAeHRFGtEwZ213WxtNHLH5WosMwWpLt4seUfGoEtwBuONusEn8HrEkGRNnHS7ljI4746M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhkQpTou; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=VyUcS56LVDtLcz/Bpo+E3H+f/FB2DtKj6DXJaJz5tZHdJ79rfUNsT8PBMdPZW8Iuh1tDEkJsLWh236kith+OqxF8JsWJOlhNnWGSS1v8DRkJ9ftoAk/UNwPuEko6i4Qf7so+03rDm4Qe20+zLGq38gVIR/hmfNCqVNS3+drAavo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gcSwTec7; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhkQpTou"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF731C4CEFA
-	for <loongarch@lists.linux.dev>; Sat,  9 Aug 2025 23:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754780583;
-	bh=st/eweHiwV92mUXCvAGpIiPGkvX3rErOBfHnwy2GSps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NhkQpTou8reSM51IS+2E4WNb4pJgZFOq/hiUQIN0TiElPNcMp+LS6vjXxnv71d4GX
-	 CZ8daBgABogz2YQMbScCOF/d8NbeFW758Rd7zV2ByVOhKuIt2kltfkzhwnHxif1Tm3
-	 9VQYogOHuqRGA+YDMuekUicwZt+o5UA5FCbCY72jizCTMxVBRyJyfTrP9oh0MGmZAQ
-	 N2g5GZu8o3juqPBxT6HV374BnxqpEcyNfGmE1jlFN7gDhQzD2Qsv20tH/QBo+X9vRE
-	 9t/LN5bDUAIJ4uIwGiW0lkf2p8zzdxxw28/w7CukWqdthBfNDALjDtlGDEGzwidSC5
-	 bfV52PDqTIPVQ==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3325cb38a78so28491171fa.3
-        for <loongarch@lists.linux.dev>; Sat, 09 Aug 2025 16:03:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSr76q8FmI96XjYbzNQuGrdcMB3gMMLRhfNyiaDmikL2sd3jjVuEjgXK9PqwvSa6iLqs7AszkJI+s=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzKesIFBYF4wNXuQt2y5O4Y7MERP1kOV2pJA0h3zWQ+DLRj+RRU
-	SvEKfPqEQtAXKFuuNQMqyLpm8GQVBOe6+wvvXYJuasguC7uWBXJI9Zri7NjP0HISMtfHDqlhVKh
-	475ZZAQijbdEneDRUXWsaQG3rT74H5m8=
-X-Google-Smtp-Source: AGHT+IHacj93S4TAyJS2Y33dq5fDEf3fw3H8pVieqGYKOrts0lqIXyoZID+Z9tXd8YeI87NlNCl9WjBC2eK/6u6auvE=
-X-Received: by 2002:a05:651c:3799:b0:32a:7270:5c29 with SMTP id
- 38308e7fff4ca-333a213e262mr13218821fa.2.1754780581250; Sat, 09 Aug 2025
- 16:03:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcSwTec7"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-33229f67729so30505331fa.1
+        for <loongarch@lists.linux.dev>; Sun, 10 Aug 2025 00:20:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754810449; x=1755415249; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EpwULXc7N4PVrAxnhzJUCLFsDhMEPa8K20pRMtf9QU4=;
+        b=gcSwTec77KyGPmfXk7wKvyNrro/nDH4CfJSkJLEHeqM+q20mPfXspzYwStl3uTxy41
+         OiVoAIVbhi9BpbiCMGBYJgA7P7liMFus2BMlI8b5K4wdcoEjKAbYbyn6HydXnbMLvpt3
+         DAMwcAsch1k+rCiwzyQJ/SN4Exk+fyP/Q6o1sR7GSIGO+YG2JXVjg7WRcKANUklMyQAC
+         GFQ1hlXlMgPu0DZ+q4JHDea3SOzwJGHDUBBpIRmwVWaOcxPWSQbQMcrCVWFHJ5rDAThp
+         bfQ+abazrX+o5rBt53zCMkbKLYt+XFaSYrjOnj487bnvKEKe+si3nZq1tvDW4LFkSqfh
+         TMeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754810449; x=1755415249;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EpwULXc7N4PVrAxnhzJUCLFsDhMEPa8K20pRMtf9QU4=;
+        b=lFlVKqTFAYh678ywMykoPCqbMaNX+zvx1i1ly0kgdIW1JXltNFE7oMx5eVjCZgMKdi
+         UcI2G+KThyftcrluyfoUsMC8QM4uJz8FHf4X8j9XdtOlg8qQxDuuu44f/mRtSbdF14n/
+         pQAHtzQ+FQiHmTUdyenSlStAydJv/1BqKZ4sfQM+jVQjzdmhzlWiKxUTDdmraecdwJoP
+         qws6o2Ke4mxHx/9GbaZwFdydRemuGlBYoW9r3b+UTA9/JVjc7pA6J2klMY8s8udSCU42
+         ikFMCjGziGKKYKD79FGkTPTbLDnh+CwulbfOmXaBoHCeQnEkEv8jQCuD+ThZzbJSeO1c
+         mNOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWk8KPO0vlAF1qku7Ti6LRSyVOAoVLXO83HezmBJUaO94IfYHrASYH9qBQdVqhwdh9KOam5kkrGE8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YytJ94XLb0wxaBti8xmM4SoGYA1x91s39E07P3sDMsF+lzrofgr
+	kEtNb0fo3gDYzZeR1VEldqIo+6YDdwD+FF9TrTLUGWhymgvMnIkkZgxQBXOP+zJrgTSTIRz17MZ
+	+P29LVnNVzVwxYCAGxxqibIgNoVzrRg0=
+X-Gm-Gg: ASbGnct1VUknwKr8s986I85IqHdorUQYir1KML1Hag0a46vsxJWiQl6mBZkkGvFv6cB
+	lpZCCZ6g7/jZeiEmZNvv+dju7kahpdcvSB4S+IPTYOyaPTou+fsp6CLO3e7Wizv/WO0B0Z+x0j0
+	rU7Va6Ir8Olbhi108mUKQ0jdkhnsprEz4iGE7G7JLqYZfoIDe4MVG9EFGGIiymZ1rSXC9TZxGQa
+	sQVzYXkXaBnK5QkUj9iNzDXKZVuUOpJwQHEzrc=
+X-Google-Smtp-Source: AGHT+IEATVB+zShs5UtXixRak2GiQ/zc6xtl1NlPiWHkLLcdmonSWNJDigg98acT6MlYwLuyv4giEoaQ9ZJ5gULbnFg=
+X-Received: by 2002:a2e:96cc:0:b0:32f:425b:3278 with SMTP id
+ 38308e7fff4ca-333a22ede04mr18232851fa.25.1754810448509; Sun, 10 Aug 2025
+ 00:20:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250714060843.4029171-5-ardb+git@google.com> <20250714060843.4029171-6-ardb+git@google.com>
- <20250803010449df1f5cfb@mail.local>
-In-Reply-To: <20250803010449df1f5cfb@mail.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sun, 10 Aug 2025 09:02:49 +1000
-X-Gmail-Original-Message-ID: <CAMj1kXGQyLXwk9Bq24xhPPsB1nO9RcSkvh=0p8aNP=Q=Az8V7w@mail.gmail.com>
-X-Gm-Features: Ac12FXyxSfM9EC_oe23LQ4fW6u1l84sRZB4iGnVNSBFl1E9opWCoKNhC-oXMcUQ
-Message-ID: <CAMj1kXGQyLXwk9Bq24xhPPsB1nO9RcSkvh=0p8aNP=Q=Az8V7w@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] efi-rtc: Remove wakeup functionality
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, Feng Tang <feng.tang@linux.alibaba.com>, 
-	Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Bibo Mao <maobibo@loongson.cn>, linux-rtc@vger.kernel.org, linux-efi@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, x86@kernel.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev
+References: <20250807194012.631367-1-snovitoll@gmail.com> <20250807194012.631367-2-snovitoll@gmail.com>
+ <22872a3f-85dc-4740-b605-ba80b5a3b1bc@csgroup.eu> <CACzwLxjnofD0EsxrtgbG3svXHL+TpYcio4B67SCY9Mi3C-jdsQ@mail.gmail.com>
+ <af677847-e625-43d7-8750-b2ce4ba9626c@csgroup.eu>
+In-Reply-To: <af677847-e625-43d7-8750-b2ce4ba9626c@csgroup.eu>
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Date: Sun, 10 Aug 2025 12:20:31 +0500
+X-Gm-Features: Ac12FXxZS7GKPiKLVRILyIcM2smc0R0yETsf0Ytt07yeIUtr59o1Bn8VVZobpbU
+Message-ID: <CACzwLxjr+Z+xUj-936rcWDSqEwfUP7bRB1xcqZQKGE7ux-gEXQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] kasan: introduce ARCH_DEFER_KASAN and unify static
+ key across modes
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: ryabinin.a.a@gmail.com, bhe@redhat.com, hca@linux.ibm.com, 
+	andreyknvl@gmail.com, akpm@linux-foundation.org, zhangqing@loongson.cn, 
+	chenhuacai@loongson.cn, davidgow@google.co, glider@google.com, 
+	dvyukov@google.com, alex@ghiti.fr, agordeev@linux.ibm.com, 
+	vincenzo.frascino@arm.com, elver@google.com, kasan-dev@googlegroups.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 3 Aug 2025 at 11:05, Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
+On Fri, Aug 8, 2025 at 10:03=E2=80=AFPM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
 >
-> Hello,
 >
-> Apart from the topic that should be "rtc: efi:...", I'm ready to apply
-> this patch.
 >
+> Le 08/08/2025 =C3=A0 17:33, Sabyrzhan Tasbolatov a =C3=A9crit :
+> > On Fri, Aug 8, 2025 at 10:03=E2=80=AFAM Christophe Leroy
+> > <christophe.leroy@csgroup.eu> wrote:
+> >>
+> >>
+> >>
+> >> Le 07/08/2025 =C3=A0 21:40, Sabyrzhan Tasbolatov a =C3=A9crit :
+> >>> Introduce CONFIG_ARCH_DEFER_KASAN to identify architectures [1] that =
+need
+> >>> to defer KASAN initialization until shadow memory is properly set up,
+> >>> and unify the static key infrastructure across all KASAN modes.
+> >>
+> >> That probably desserves more details, maybe copy in informations from
+> >> the top of cover letter.
+> >>
+> >> I think there should also be some exeplanations about
+> >> kasan_arch_is_ready() becoming kasan_enabled(), and also why
+> >> kasan_arch_is_ready() completely disappear from mm/kasan/common.c
+> >> without being replaced by kasan_enabled().
+> >>
+> >>>
+> >>> [1] PowerPC, UML, LoongArch selects ARCH_DEFER_KASAN.
+> >>>
+> >>> Closes: https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3=
+A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D217049&data=3D05%7C02%7Cch=
+ristophe.leroy%40csgroup.eu%7Cfe4f5a759ad6452b047408ddd691024a%7C8b87af7d86=
+474dc78df45f69a2011bb5%7C0%7C0%7C638902640503259176%7CUnknown%7CTWFpbGZsb3d=
+8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbC=
+IsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DUM4uvQihJdeWwcC6DIiJXbn4wGsrijjRcHc=
+55uCMErI%3D&reserved=3D0
+> >>> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+> >>> ---
+> >>> Changes in v5:
+> >>> - Unified patches where arch (powerpc, UML, loongarch) selects
+> >>>     ARCH_DEFER_KASAN in the first patch not to break
+> >>>     bisectability
+> >>> - Removed kasan_arch_is_ready completely as there is no user
+> >>> - Removed __wrappers in v4, left only those where it's necessary
+> >>>     due to different implementations
+> >>>
+> >>> Changes in v4:
+> >>> - Fixed HW_TAGS static key functionality (was broken in v3)
+> >>> - Merged configuration and implementation for atomicity
+> >>> ---
+> >>>    arch/loongarch/Kconfig                 |  1 +
+> >>>    arch/loongarch/include/asm/kasan.h     |  7 ------
+> >>>    arch/loongarch/mm/kasan_init.c         |  8 +++----
+> >>>    arch/powerpc/Kconfig                   |  1 +
+> >>>    arch/powerpc/include/asm/kasan.h       | 12 ----------
+> >>>    arch/powerpc/mm/kasan/init_32.c        |  2 +-
+> >>>    arch/powerpc/mm/kasan/init_book3e_64.c |  2 +-
+> >>>    arch/powerpc/mm/kasan/init_book3s_64.c |  6 +----
+> >>>    arch/um/Kconfig                        |  1 +
+> >>>    arch/um/include/asm/kasan.h            |  5 ++--
+> >>>    arch/um/kernel/mem.c                   | 10 ++++++--
+> >>>    include/linux/kasan-enabled.h          | 32 ++++++++++++++++++----=
+----
+> >>>    include/linux/kasan.h                  |  6 +++++
+> >>>    lib/Kconfig.kasan                      |  8 +++++++
+> >>>    mm/kasan/common.c                      | 17 ++++++++++----
+> >>>    mm/kasan/generic.c                     | 19 +++++++++++----
+> >>>    mm/kasan/hw_tags.c                     |  9 +-------
+> >>>    mm/kasan/kasan.h                       |  8 ++++++-
+> >>>    mm/kasan/shadow.c                      | 12 +++++-----
+> >>>    mm/kasan/sw_tags.c                     |  1 +
+> >>>    mm/kasan/tags.c                        |  2 +-
+> >>>    21 files changed, 100 insertions(+), 69 deletions(-)
+> >>>
+> >>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> >>> index f0abc38c40a..cd64b2bc12d 100644
+> >>> --- a/arch/loongarch/Kconfig
+> >>> +++ b/arch/loongarch/Kconfig
+> >>> @@ -9,6 +9,7 @@ config LOONGARCH
+> >>>        select ACPI_PPTT if ACPI
+> >>>        select ACPI_SYSTEM_POWER_STATES_SUPPORT if ACPI
+> >>>        select ARCH_BINFMT_ELF_STATE
+> >>> +     select ARCH_DEFER_KASAN if KASAN
+> >>
+> >> Instead of adding 'if KASAN' in all users, you could do in two steps:
+> >>
+> >> Add a symbol ARCH_NEEDS_DEFER_KASAN.
+> >>
+> >> +config ARCH_NEEDS_DEFER_KASAN
+> >> +       bool
+> >>
+> >> And then:
+> >>
+> >> +config ARCH_DEFER_KASAN
+> >> +       def_bool
+> >> +       depends on KASAN
+> >> +       depends on ARCH_DEFER_KASAN
+> >> +       help
+> >> +         Architectures should select this if they need to defer KASAN
+> >> +         initialization until shadow memory is properly set up. This
+> >> +         enables runtime control via static keys. Otherwise, KASAN us=
+es
+> >> +         compile-time constants for better performance.
+> >>
+> >
+> > Actually, I don't see the benefits from this option. Sorry, have just
+> > revisited this again.
+> > With the new symbol, arch (PowerPC, UML, LoongArch) still needs select
+> > 2 options:
+> >
+> > select ARCH_NEEDS_DEFER_KASAN
+> > select ARCH_DEFER_KASAN
+>
+> Sorry, my mistake, ARCH_DEFER_KASAN has to be 'def_bool y'. Missing the
+> 'y'. That way it is automatically set to 'y' as long as KASAN and
+> ARCH_NEEDS_DEFER_KASAN are selected. Should be:
+>
+> config ARCH_DEFER_KASAN
+>         def_bool y
+>         depends on KASAN
+>         depends on ARCH_NEEDS_DEFER_KASAN
+>
+>
+> >
+> > and the oneline with `if` condition is cleaner.
+> > select ARCH_DEFER_KASAN if KASAN
 
-Thanks, please go ahead.
+Hello,
 
-> On 14/07/2025 08:08:45+0200, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > The EFI rtc driver is used by non-x86 architectures only, and exposes
-> > the get/set wakeup time functionality provided by the underlying
-> > platform. This is usually broken on most platforms, and not widely used
-> > to begin with [if at all], so let's just remove it.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  drivers/rtc/rtc-efi.c | 76 +-------------------
-> >  1 file changed, 2 insertions(+), 74 deletions(-)
-> >
-> > diff --git a/drivers/rtc/rtc-efi.c b/drivers/rtc/rtc-efi.c
-> > index fa8bf82df948..b4f44999ef0f 100644
-> > --- a/drivers/rtc/rtc-efi.c
-> > +++ b/drivers/rtc/rtc-efi.c
-> > @@ -112,48 +112,6 @@ convert_from_efi_time(efi_time_t *eft, struct rtc_time *wtime)
-> >       return true;
-> >  }
-> >
-> > -static int efi_read_alarm(struct device *dev, struct rtc_wkalrm *wkalrm)
-> > -{
-> > -     efi_time_t eft;
-> > -     efi_status_t status;
-> > -
-> > -     /*
-> > -      * As of EFI v1.10, this call always returns an unsupported status
-> > -      */
-> > -     status = efi.get_wakeup_time((efi_bool_t *)&wkalrm->enabled,
-> > -                                  (efi_bool_t *)&wkalrm->pending, &eft);
-> > -
-> > -     if (status != EFI_SUCCESS)
-> > -             return -EINVAL;
-> > -
-> > -     if (!convert_from_efi_time(&eft, &wkalrm->time))
-> > -             return -EIO;
-> > -
-> > -     return rtc_valid_tm(&wkalrm->time);
-> > -}
-> > -
-> > -static int efi_set_alarm(struct device *dev, struct rtc_wkalrm *wkalrm)
-> > -{
-> > -     efi_time_t eft;
-> > -     efi_status_t status;
-> > -
-> > -     convert_to_efi_time(&wkalrm->time, &eft);
-> > -
-> > -     /*
-> > -      * XXX Fixme:
-> > -      * As of EFI 0.92 with the firmware I have on my
-> > -      * machine this call does not seem to work quite
-> > -      * right
-> > -      *
-> > -      * As of v1.10, this call always returns an unsupported status
-> > -      */
-> > -     status = efi.set_wakeup_time((efi_bool_t)wkalrm->enabled, &eft);
-> > -
-> > -     dev_warn(dev, "write status is %d\n", (int)status);
-> > -
-> > -     return status == EFI_SUCCESS ? 0 : -EINVAL;
-> > -}
-> > -
-> >  static int efi_read_time(struct device *dev, struct rtc_time *tm)
-> >  {
-> >       efi_status_t status;
-> > @@ -188,17 +146,13 @@ static int efi_set_time(struct device *dev, struct rtc_time *tm)
-> >
-> >  static int efi_procfs(struct device *dev, struct seq_file *seq)
-> >  {
-> > -     efi_time_t        eft, alm;
-> > +     efi_time_t        eft;
-> >       efi_time_cap_t    cap;
-> > -     efi_bool_t        enabled, pending;
-> > -     struct rtc_device *rtc = dev_get_drvdata(dev);
-> >
-> >       memset(&eft, 0, sizeof(eft));
-> > -     memset(&alm, 0, sizeof(alm));
-> >       memset(&cap, 0, sizeof(cap));
-> >
-> >       efi.get_time(&eft, &cap);
-> > -     efi.get_wakeup_time(&enabled, &pending, &alm);
-> >
-> >       seq_printf(seq,
-> >                  "Time\t\t: %u:%u:%u.%09u\n"
-> > @@ -214,26 +168,6 @@ static int efi_procfs(struct device *dev, struct seq_file *seq)
-> >               /* XXX fixme: convert to string? */
-> >               seq_printf(seq, "Timezone\t: %u\n", eft.timezone);
-> >
-> > -     if (test_bit(RTC_FEATURE_ALARM, rtc->features)) {
-> > -             seq_printf(seq,
-> > -                        "Alarm Time\t: %u:%u:%u.%09u\n"
-> > -                        "Alarm Date\t: %u-%u-%u\n"
-> > -                        "Alarm Daylight\t: %u\n"
-> > -                        "Enabled\t\t: %s\n"
-> > -                        "Pending\t\t: %s\n",
-> > -                        alm.hour, alm.minute, alm.second, alm.nanosecond,
-> > -                        alm.year, alm.month, alm.day,
-> > -                        alm.daylight,
-> > -                        enabled == 1 ? "yes" : "no",
-> > -                        pending == 1 ? "yes" : "no");
-> > -
-> > -             if (alm.timezone == EFI_UNSPECIFIED_TIMEZONE)
-> > -                     seq_puts(seq, "Timezone\t: unspecified\n");
-> > -             else
-> > -                     /* XXX fixme: convert to string? */
-> > -                     seq_printf(seq, "Timezone\t: %u\n", alm.timezone);
-> > -     }
-> > -
-> >       /*
-> >        * now prints the capabilities
-> >        */
-> > @@ -249,8 +183,6 @@ static int efi_procfs(struct device *dev, struct seq_file *seq)
-> >  static const struct rtc_class_ops efi_rtc_ops = {
-> >       .read_time      = efi_read_time,
-> >       .set_time       = efi_set_time,
-> > -     .read_alarm     = efi_read_alarm,
-> > -     .set_alarm      = efi_set_alarm,
-> >       .proc           = efi_procfs,
-> >  };
-> >
-> > @@ -271,11 +203,7 @@ static int __init efi_rtc_probe(struct platform_device *dev)
-> >       platform_set_drvdata(dev, rtc);
-> >
-> >       rtc->ops = &efi_rtc_ops;
-> > -     clear_bit(RTC_FEATURE_UPDATE_INTERRUPT, rtc->features);
-> > -     if (efi_rt_services_supported(EFI_RT_SUPPORTED_WAKEUP_SERVICES))
-> > -             set_bit(RTC_FEATURE_ALARM_WAKEUP_ONLY, rtc->features);
-> > -     else
-> > -             clear_bit(RTC_FEATURE_ALARM, rtc->features);
-> > +     clear_bit(RTC_FEATURE_ALARM, rtc->features);
-> >
-> >       device_init_wakeup(&dev->dev, true);
-> >
-> > --
-> > 2.50.0.727.gbf7dc18ff4-goog
+Have just had a chance to test this.
+
+lib/Kconfig.kasan:
+        config ARCH_NEEDS_DEFER_KASAN
+                bool
+
+        config ARCH_DEFER_KASAN
+                def_bool y
+                depends on KASAN
+                depends on ARCH_NEEDS_DEFER_KASAN
+
+It works for UML defconfig where arch/um/Kconfig is:
+
+config UML
+        bool
+        default y
+        select ARCH_NEEDS_DEFER_KASAN
+        select ARCH_DEFER_KASAN if STATIC_LINK
+
+But it prints warnings for PowerPC, LoongArch:
+
+config LOONGARCH
+        bool
+        ...
+        select ARCH_NEEDS_DEFER_KASAN
+        select ARCH_DEFER_KASAN
+
+$ make defconfig ARCH=3Dloongarch
+*** Default configuration is based on 'loongson3_defconfig'
+
+WARNING: unmet direct dependencies detected for ARCH_DEFER_KASAN
+  Depends on [n]: KASAN [=3Dn] && ARCH_NEEDS_DEFER_KASAN [=3Dy]
+  Selected by [y]:
+  - LOONGARCH [=3Dy]
+
+
+config PPC
+        bool
+        default y
+        select ARCH_DEFER_KASAN if PPC_RADIX_MMU
+        select ARCH_NEEDS_DEFER_KASAN
+
+$ make ppc64_defconfig
+
+WARNING: unmet direct dependencies detected for ARCH_DEFER_KASAN
+  Depends on [n]: KASAN [=3Dn] && ARCH_NEEDS_DEFER_KASAN [=3Dy]
+  Selected by [y]:
+  - PPC [=3Dy] && PPC_RADIX_MMU [=3Dy]
+
+
 > >
 >
-> --
-> Alexandre Belloni, co-owner and COO, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> I don't think so because it requires all architectures to add 'if KASAN'
+> which is not convenient.
 >
+> Christophe
