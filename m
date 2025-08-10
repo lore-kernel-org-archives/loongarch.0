@@ -1,291 +1,216 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5A91F949
-	for <loongarch@lists.linux.dev>; Sun, 10 Aug 2025 07:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D47822126D
+	for <loongarch@lists.linux.dev>; Sun, 10 Aug 2025 12:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754811150; cv=none; b=h9Lq2jUs+utt/WMa59NHAS4qR8HTTT6Ht4ysixBYVUwlxsmRvwyGZvLptim7uJRVJ8QUfZcmraw0Ytgcu7gvVCLcHdgbm/lFDavruyk/cRFPZ/Cg6Le8SaXU9GRZ4PDqx+/nczgZelDpTtoNrAIg8BcmRFD+iJA9zyhrrH7es6k=
+	t=1754830683; cv=none; b=JwLaRZ0z1Fz1fHDpTAtoHpVJ8/+qeic4MyHqO47I1BCU0fvAIqPwnrbWPIIuDfBqWmhcbtP+wls9ZJNcqDGAOwnQ2Uc9RNOCHxoM+TBV3H+dLw0nzlMnw9DMhQ9IAh8g8IoQpKbcxGRdI6RgxBB0uMu9SfDG8ckdk46Jq/6TBTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754811150; c=relaxed/simple;
-	bh=k+5Y5DIWW+k7nAVqGwj4LUDFaTh1BhxGyeX9b2Dhj60=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nDcfrkKkruwKAPmCBzgK06r5C8eojMlqWkJknY8z+X23b+5L2bONIUo8SxFI/Ag273O7aa9kaS1r4uRiYckVO5Bw5ZVwHpJUkbyHvJBezrehYLDwnkhQqXGJT2X44yuC1WW6SMTOJ+ArT0s0wwNk6+pg7YhIj0UZtZ1sd+zRg3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BjnTgymq; arc=none smtp.client-ip=209.85.167.52
+	s=arc-20240116; t=1754830683; c=relaxed/simple;
+	bh=EhLsZojnCpTP6DR0ZKTrGtcX/QnBRFrvIOrMtYcrMLQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W4ZYZ+NKcNL+oHiXQ3oFA8U4Wwqm7OxlFyXVMkg7wjz1PBNyXjHC5x+KPpgtYvzowHv/ikE5BpUNIrrRyGMmNHxoyJUQFQkz1i6iu6cMfK21sQwTH4PpVRo3UndDNpDYVCxGpfxMPqQaMcnpvhh38zQXGtxcdz+I9UECdCW1NPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nMVC0IRF; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjnTgymq"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55b93104888so4356309e87.1
-        for <loongarch@lists.linux.dev>; Sun, 10 Aug 2025 00:32:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMVC0IRF"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55b88369530so3762225e87.0
+        for <loongarch@lists.linux.dev>; Sun, 10 Aug 2025 05:58:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754811147; x=1755415947; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=to3a2j5jgrrDRsoCDy9JGxvNqhRLdP/C+mURmWO4ysI=;
-        b=BjnTgymqWPA4vtoKZlLk3FKoXOKLBGqZUnrV8h3RaZLG8Nt2JpCzdpw5ywPXt1sNWB
-         roCUCP9CA+OPb5PAYKedEeioHVl1L0ymI4PhpkyQLoyU9eqVlXI2rYnRUbMlOe4GQd5y
-         WVUYHQLAZuhRCIlcPwwOFPXZuz8rE80glaD/BaaTK78Z1B690hoCt+L/DbWmcufcYuiG
-         hbZWgqgnY1jSrmVwPBSbLGfQSFJafDeeajUTRiAPdgaJGgwd08QA3cc/jecolqRgeuzL
-         D2iHWTmN5MgyrNDhcqScqRsvCvpoGTPQcotWkv0Gp5x7NO9kuDczaJXhzDUbWm28t7ES
-         9mdg==
+        d=gmail.com; s=20230601; t=1754830680; x=1755435480; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fLpTR6tAuSk7MmdRr1bx3cY7Ji1Fi9DhOlpvPdNYklM=;
+        b=nMVC0IRFdBRJRaJWXH1qU72+LVpBlxgJW6/TONt4VIsWlxTtWZ3zkhenKJIJscAnnp
+         JqnqqQv46AZeVTox3cNOkQCzNqNx6z7HUms1YjP7/wawGVNMao0pcxCbhc9/zk55cS6w
+         bsQNkaDl65y79Znjwri9dHvX2yPxsvvJRK5OABqc2I8O6V6Jpe+jjUMPfsbpu7Ho8zjJ
+         pfJQvrDbrllgkL+9w5TSvwLqRbLhLewwPRuq0P4J4N+ddbKA06IcWn9mC7XU2OOytU+v
+         KMiZiqzXmzGY6DnWpqTS8Tu2l+3aD4Jvww45rpZoQ0/ifOiYU5UrtENn0pHxmx8SimTS
+         rFag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754811147; x=1755415947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=to3a2j5jgrrDRsoCDy9JGxvNqhRLdP/C+mURmWO4ysI=;
-        b=eWX/CkYuCCS3KJ9IyNb2LQY91awTSBDBkxQSCuxAFyxv/dxQBiMvi1vkAz2sz8cLuq
-         Qw168mZZ5fZVKFLxobw9oidFIkt8PokcmEdDFlOAvDv7bG4HzerbtcDisgAQ6wA/+jr6
-         1Jm780+BvV3JrbFl4zK6N7mDyISEoNc+i9wmJkRXV+uW5y/NTvKFm/VyUXG9k5y++5jh
-         eGIA5WjkEa00FeSYA/SHzU320zMEgmkXALHJK6zKJ0pg+3HIEUZ3hUG1yIYqwDqxTigf
-         ynavEbzsBznColbDc+6Tps9t+qVNfRFvK3HNbQEnJjhAjFBp95VYI3qX9m57qj7WuK4X
-         XfhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/t4kkbSqq3rMf/V0VBPzxs09v2bst9dkLDeXd2RuBq1yWQwiPK9sX5uD4SBbLgM1ziGMKAxJjIHg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxCZrA68MgpApSqLkiHukLAoOcsVQJLp48hvI6eFo6uby2ZRIT1
-	B/9U9+fO81D+d7pFZ3Jk67/vpg/OOQI6MgfpmxhjYXgSlY6VPqtLQ7v4deyuBOZFDw0I2D4IvA9
-	HsfvXcAc/UDO3Y5jRkNEiyxQMeei3txQ=
-X-Gm-Gg: ASbGncvnJ/T3d0ZWUdBsc93o9PK2t6Qyts86LwHEoT+8OE1XNo0W3JMXnOJLyA2Z4v5
-	Kwkcfnm69Ff0TxrslgOfDt1Vr9uTOt+P2AYMNLu0PPGXm0Wxb8EvfV3WdOYobhRPA6AHlWB7HCm
-	Y6nO6Odg1z24EpWmcANhSRQYJsuWqSg0GuBx0G6f7NOBoiOzKXQqa5peJLP228eKSz8xXIewAQA
-	PkoKI4QwjjVvtDSdhm5jGaQLaP6tniaIDd3JwkHsSB6JwHcdQ==
-X-Google-Smtp-Source: AGHT+IHSiW6flEmK0NWVDywJ0JDvDzDflYl3FPZq6Arom7yJiee4WZtdkHowtUkS6j3k/g3AhngqPPQBa36CQfXo8jE=
-X-Received: by 2002:a05:6512:1052:b0:553:2480:2308 with SMTP id
- 2adb3069b0e04-55cc00eb7eemr2065404e87.21.1754811146600; Sun, 10 Aug 2025
- 00:32:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1754830680; x=1755435480;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fLpTR6tAuSk7MmdRr1bx3cY7Ji1Fi9DhOlpvPdNYklM=;
+        b=oJ0a8LAW+Uxq0OyIVNCfbJb0u06WQv+4jSqKPH2Das9YOz3UCr/bJ+OrXbSppjqLc3
+         YGKVd/yypcohID8O5Q/6om8YjBLA9ptEbts2YV9Mi+wo4Gpct9VRg+nU39w6Clpcxbv3
+         LrkWDQu+yApCPn5O2tL4qnkWpplXSguoZc+UsqMl45Avk7IkJlMQShwRfxvm5+lq2tms
+         WDEHemRmB0q3jqzR8FJXZqhjQH5SGTDfnrFZKEsf0nPqXyI84TDP+9y+gP1JvUCQcNsq
+         YwGuBL4vLqLKjz7+3k3c6gfFDhGrTNOexQU2fCIYHVuTjYS5m0TQ1eAEXysPsWIHYhKZ
+         R0xg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXUn8eJrFSfUf1blXJZmp/H1gE/OMc/H7kKYmIdw7hgWfwiOGtpiGqlB6G0FXS7351DEmv2uJ77yg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzxPwr0m1DztiZwOhFEyKUmTr+l3wdqt2B5KNVnLTruaUOB123F
+	JV2ic6M5zCBefZ7FBnPYzk8eyfmomy0ArWFbUTwSg+yYGr8BC1Ndgt9E
+X-Gm-Gg: ASbGncussQmMYe0lkAe3hrykHSDgDu7S9FeitbiJdHvdrEsBi5W/TnWaK00Vqy3FSel
+	Hhca8NkTowbopMFZ/DJ64p/Hh6/0FXnZhCpyp/3TImiTNmDmAxGvorSEAzFb8Py12LpSy+f8+2f
+	5Y38VN6zV+pH0JFlS0sgqGyPpHxQjrJDmfWU0peb9XfqYysitll9iltlIyN0rTKL/yoV2z4QlAt
+	6fZeUbYQ8h0iKaTclRwG+EOWfGef/ZC5ROFQNt8Wn+impGvQzLiVPhinU6TiqJEc7ngep7QFNNX
+	51g+S5yqpL8xeqq6drfDBcAQPjw8gV+FTd2QtWuxb5xR8J6VwMKjPLNqxSTyp4e/VaHOwHPVO24
+	x4z1LfC18XK7fnwRDIBeLSE/nO0yZyzcwNKIPog==
+X-Google-Smtp-Source: AGHT+IGP/4+VH4qZJqmI6pqOQcdamwMMjmUjwyAr9JTcQGvwe1pb2iGdV8kKhr91VYx69eEOJbHKcQ==
+X-Received: by 2002:a05:6512:2313:b0:55b:8397:cffd with SMTP id 2adb3069b0e04-55cc00ada77mr2589766e87.9.1754830679327;
+        Sun, 10 Aug 2025 05:57:59 -0700 (PDT)
+Received: from localhost.localdomain ([2a03:32c0:2e:37dd:bfc4:9fdc:ddc6:5962])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55b88c9908esm3804561e87.76.2025.08.10.05.57.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Aug 2025 05:57:58 -0700 (PDT)
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+To: ryabinin.a.a@gmail.com,
+	christophe.leroy@csgroup.eu,
+	bhe@redhat.com,
+	hca@linux.ibm.com,
+	andreyknvl@gmail.com,
+	akpm@linux-foundation.org,
+	zhangqing@loongson.cn,
+	chenhuacai@loongson.cn,
+	davidgow@google.com,
+	glider@google.com,
+	dvyukov@google.com,
+	alexghiti@rivosinc.com
+Cc: alex@ghiti.fr,
+	agordeev@linux.ibm.com,
+	vincenzo.frascino@arm.com,
+	elver@google.com,
+	kasan-dev@googlegroups.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-mm@kvack.org,
+	snovitoll@gmail.com
+Subject: [PATCH v6 0/2] kasan: unify kasan_enabled() and remove arch-specific implementations
+Date: Sun, 10 Aug 2025 17:57:44 +0500
+Message-Id: <20250810125746.1105476-1-snovitoll@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250807194012.631367-1-snovitoll@gmail.com> <20250807194012.631367-2-snovitoll@gmail.com>
- <22872a3f-85dc-4740-b605-ba80b5a3b1bc@csgroup.eu> <CACzwLxjnofD0EsxrtgbG3svXHL+TpYcio4B67SCY9Mi3C-jdsQ@mail.gmail.com>
- <af677847-e625-43d7-8750-b2ce4ba9626c@csgroup.eu> <CACzwLxjr+Z+xUj-936rcWDSqEwfUP7bRB1xcqZQKGE7ux-gEXQ@mail.gmail.com>
-In-Reply-To: <CACzwLxjr+Z+xUj-936rcWDSqEwfUP7bRB1xcqZQKGE7ux-gEXQ@mail.gmail.com>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Sun, 10 Aug 2025 12:32:08 +0500
-X-Gm-Features: Ac12FXzPCnTCatZw8a7ccc080L84VXsdNPtKeE-8RXfhfS3owZfq0geCNjkMt-Q
-Message-ID: <CACzwLxi5AKT_81ej4AZ1ztsncBDY4jDJCyWboF0X9-kiH_=NMA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] kasan: introduce ARCH_DEFER_KASAN and unify static
- key across modes
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: ryabinin.a.a@gmail.com, bhe@redhat.com, hca@linux.ibm.com, 
-	andreyknvl@gmail.com, akpm@linux-foundation.org, zhangqing@loongson.cn, 
-	chenhuacai@loongson.cn, glider@google.com, dvyukov@google.com, alex@ghiti.fr, 
-	agordeev@linux.ibm.com, vincenzo.frascino@arm.com, elver@google.com, 
-	kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org, 
-	davidgow@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Aug 10, 2025 at 12:20=E2=80=AFPM Sabyrzhan Tasbolatov
-<snovitoll@gmail.com> wrote:
->
-> On Fri, Aug 8, 2025 at 10:03=E2=80=AFPM Christophe Leroy
-> <christophe.leroy@csgroup.eu> wrote:
-> >
-> >
-> >
-> > Le 08/08/2025 =C3=A0 17:33, Sabyrzhan Tasbolatov a =C3=A9crit :
-> > > On Fri, Aug 8, 2025 at 10:03=E2=80=AFAM Christophe Leroy
-> > > <christophe.leroy@csgroup.eu> wrote:
-> > >>
-> > >>
-> > >>
-> > >> Le 07/08/2025 =C3=A0 21:40, Sabyrzhan Tasbolatov a =C3=A9crit :
-> > >>> Introduce CONFIG_ARCH_DEFER_KASAN to identify architectures [1] tha=
-t need
-> > >>> to defer KASAN initialization until shadow memory is properly set u=
-p,
-> > >>> and unify the static key infrastructure across all KASAN modes.
-> > >>
-> > >> That probably desserves more details, maybe copy in informations fro=
-m
-> > >> the top of cover letter.
-> > >>
-> > >> I think there should also be some exeplanations about
-> > >> kasan_arch_is_ready() becoming kasan_enabled(), and also why
-> > >> kasan_arch_is_ready() completely disappear from mm/kasan/common.c
-> > >> without being replaced by kasan_enabled().
-> > >>
-> > >>>
-> > >>> [1] PowerPC, UML, LoongArch selects ARCH_DEFER_KASAN.
-> > >>>
-> > >>> Closes: https://eur01.safelinks.protection.outlook.com/?url=3Dhttps=
-%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D217049&data=3D05%7C02%7C=
-christophe.leroy%40csgroup.eu%7Cfe4f5a759ad6452b047408ddd691024a%7C8b87af7d=
-86474dc78df45f69a2011bb5%7C0%7C0%7C638902640503259176%7CUnknown%7CTWFpbGZsb=
-3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFp=
-bCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DUM4uvQihJdeWwcC6DIiJXbn4wGsrijjRc=
-Hc55uCMErI%3D&reserved=3D0
-> > >>> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-> > >>> ---
-> > >>> Changes in v5:
-> > >>> - Unified patches where arch (powerpc, UML, loongarch) selects
-> > >>>     ARCH_DEFER_KASAN in the first patch not to break
-> > >>>     bisectability
-> > >>> - Removed kasan_arch_is_ready completely as there is no user
-> > >>> - Removed __wrappers in v4, left only those where it's necessary
-> > >>>     due to different implementations
-> > >>>
-> > >>> Changes in v4:
-> > >>> - Fixed HW_TAGS static key functionality (was broken in v3)
-> > >>> - Merged configuration and implementation for atomicity
-> > >>> ---
-> > >>>    arch/loongarch/Kconfig                 |  1 +
-> > >>>    arch/loongarch/include/asm/kasan.h     |  7 ------
-> > >>>    arch/loongarch/mm/kasan_init.c         |  8 +++----
-> > >>>    arch/powerpc/Kconfig                   |  1 +
-> > >>>    arch/powerpc/include/asm/kasan.h       | 12 ----------
-> > >>>    arch/powerpc/mm/kasan/init_32.c        |  2 +-
-> > >>>    arch/powerpc/mm/kasan/init_book3e_64.c |  2 +-
-> > >>>    arch/powerpc/mm/kasan/init_book3s_64.c |  6 +----
-> > >>>    arch/um/Kconfig                        |  1 +
-> > >>>    arch/um/include/asm/kasan.h            |  5 ++--
-> > >>>    arch/um/kernel/mem.c                   | 10 ++++++--
-> > >>>    include/linux/kasan-enabled.h          | 32 ++++++++++++++++++--=
-------
-> > >>>    include/linux/kasan.h                  |  6 +++++
-> > >>>    lib/Kconfig.kasan                      |  8 +++++++
-> > >>>    mm/kasan/common.c                      | 17 ++++++++++----
-> > >>>    mm/kasan/generic.c                     | 19 +++++++++++----
-> > >>>    mm/kasan/hw_tags.c                     |  9 +-------
-> > >>>    mm/kasan/kasan.h                       |  8 ++++++-
-> > >>>    mm/kasan/shadow.c                      | 12 +++++-----
-> > >>>    mm/kasan/sw_tags.c                     |  1 +
-> > >>>    mm/kasan/tags.c                        |  2 +-
-> > >>>    21 files changed, 100 insertions(+), 69 deletions(-)
-> > >>>
-> > >>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > >>> index f0abc38c40a..cd64b2bc12d 100644
-> > >>> --- a/arch/loongarch/Kconfig
-> > >>> +++ b/arch/loongarch/Kconfig
-> > >>> @@ -9,6 +9,7 @@ config LOONGARCH
-> > >>>        select ACPI_PPTT if ACPI
-> > >>>        select ACPI_SYSTEM_POWER_STATES_SUPPORT if ACPI
-> > >>>        select ARCH_BINFMT_ELF_STATE
-> > >>> +     select ARCH_DEFER_KASAN if KASAN
-> > >>
-> > >> Instead of adding 'if KASAN' in all users, you could do in two steps=
-:
-> > >>
-> > >> Add a symbol ARCH_NEEDS_DEFER_KASAN.
-> > >>
-> > >> +config ARCH_NEEDS_DEFER_KASAN
-> > >> +       bool
-> > >>
-> > >> And then:
-> > >>
-> > >> +config ARCH_DEFER_KASAN
-> > >> +       def_bool
-> > >> +       depends on KASAN
-> > >> +       depends on ARCH_DEFER_KASAN
-> > >> +       help
-> > >> +         Architectures should select this if they need to defer KAS=
-AN
-> > >> +         initialization until shadow memory is properly set up. Thi=
-s
-> > >> +         enables runtime control via static keys. Otherwise, KASAN =
-uses
-> > >> +         compile-time constants for better performance.
-> > >>
-> > >
-> > > Actually, I don't see the benefits from this option. Sorry, have just
-> > > revisited this again.
-> > > With the new symbol, arch (PowerPC, UML, LoongArch) still needs selec=
-t
-> > > 2 options:
-> > >
-> > > select ARCH_NEEDS_DEFER_KASAN
-> > > select ARCH_DEFER_KASAN
-> >
-> > Sorry, my mistake, ARCH_DEFER_KASAN has to be 'def_bool y'. Missing the
-> > 'y'. That way it is automatically set to 'y' as long as KASAN and
-> > ARCH_NEEDS_DEFER_KASAN are selected. Should be:
-> >
-> > config ARCH_DEFER_KASAN
-> >         def_bool y
-> >         depends on KASAN
-> >         depends on ARCH_NEEDS_DEFER_KASAN
-> >
-> >
-> > >
-> > > and the oneline with `if` condition is cleaner.
-> > > select ARCH_DEFER_KASAN if KASAN
->
-> Hello,
->
-> Have just had a chance to test this.
->
-> lib/Kconfig.kasan:
->         config ARCH_NEEDS_DEFER_KASAN
->                 bool
->
->         config ARCH_DEFER_KASAN
->                 def_bool y
->                 depends on KASAN
->                 depends on ARCH_NEEDS_DEFER_KASAN
+This patch series addresses the fragmentation in KASAN initialization
+across architectures by introducing a unified approach that eliminates
+duplicate static keys and arch-specific kasan_arch_is_ready()
+implementations.
 
-Setting Kconfig.kasan without KASAN works fine for 3 arch that selects
-ARCH_DEFER_KASAN:
+The core issue is that different architectures have inconsistent approaches
+to KASAN readiness tracking:
+- PowerPC, LoongArch, and UML arch, each implement own kasan_arch_is_ready()
+- Only HW_TAGS mode had a unified static key (kasan_flag_enabled)
+- Generic and SW_TAGS modes relied on arch-specific solutions
+  or always-on behavior
 
-config ARCH_DEFER_KASAN
-       def_bool y
-       depends on ARCH_NEEDS_DEFER_KASAN
+Changes in v6:
+- Call kasan_init_generic() in arch/riscv _after_ local_flush_tlb_all()
+- Added more details in git commit message
+- Fixed commenting format per coding style in UML (Christophe Leroy)
+- Changed exporting to GPL for kasan_flag_enabled (Christophe Leroy)
+- Converted ARCH_DEFER_KASAN to def_bool depending on KASAN to avoid
+        arch users to have `if KASAN` condition (Christophe Leroy)
+- Forgot to add __init for kasan_init in UML
 
-Going to send v6 soon.
+Changes in v5:
+- Unified patches where arch (powerpc, UML, loongarch) selects
+  ARCH_DEFER_KASAN in the first patch not to break
+  bisectability. So in v5 we have 2 patches now in the series instead of 9.
+- Removed kasan_arch_is_ready completely as there is no user
+- Removed __wrappers in v4, left only those where it's necessary
+  due to different implementations
 
-P.S.: Fixed email of David Gow.
+Tested on:
+- powerpc - selects ARCH_DEFER_KASAN
+Built ppc64_defconfig (PPC_BOOK3S_64) - OK
+Booted via qemu-system-ppc64 - OK
 
->
-> It works for UML defconfig where arch/um/Kconfig is:
->
-> config UML
->         bool
->         default y
->         select ARCH_NEEDS_DEFER_KASAN
->         select ARCH_DEFER_KASAN if STATIC_LINK
->
-> But it prints warnings for PowerPC, LoongArch:
->
-> config LOONGARCH
->         bool
->         ...
->         select ARCH_NEEDS_DEFER_KASAN
->         select ARCH_DEFER_KASAN
->
-> $ make defconfig ARCH=3Dloongarch
-> *** Default configuration is based on 'loongson3_defconfig'
->
-> WARNING: unmet direct dependencies detected for ARCH_DEFER_KASAN
->   Depends on [n]: KASAN [=3Dn] && ARCH_NEEDS_DEFER_KASAN [=3Dy]
->   Selected by [y]:
->   - LOONGARCH [=3Dy]
->
->
-> config PPC
->         bool
->         default y
->         select ARCH_DEFER_KASAN if PPC_RADIX_MMU
->         select ARCH_NEEDS_DEFER_KASAN
->
-> $ make ppc64_defconfig
->
-> WARNING: unmet direct dependencies detected for ARCH_DEFER_KASAN
->   Depends on [n]: KASAN [=3Dn] && ARCH_NEEDS_DEFER_KASAN [=3Dy]
->   Selected by [y]:
->   - PPC [=3Dy] && PPC_RADIX_MMU [=3Dy]
->
->
-> > >
-> >
-> > I don't think so because it requires all architectures to add 'if KASAN=
-'
-> > which is not convenient.
-> >
-> > Christophe
+I have not tested in v4 powerpc without KASAN enabled.
+
+In v4 arch/powerpc/Kconfig it was:
+	select ARCH_DEFER_KASAN			if PPC_RADIX_MMU
+
+and compiling with ppc64_defconfig caused:
+  lib/stackdepot.o:(__jump_table+0x8): undefined reference to `kasan_flag_enabled'
+
+I have fixed it in v5 via adding KASAN condition:
+	select ARCH_DEFER_KASAN			if KASAN && PPC_RADIX_MMU
+
+- um - selects ARCH_DEFER_KASAN
+
+KASAN_GENERIC && KASAN_INLINE && STATIC_LINK
+	Before:
+		In file included from mm/kasan/common.c:32:
+		mm/kasan/kasan.h:550:2: error: #error kasan_arch_is_ready only works in KASAN generic outline mode!
+		550 | #error kasan_arch_is_ready only works in KASAN generic outline mode
+
+	After (with auto-selected ARCH_DEFER_KASAN):
+		./arch/um/include/asm/kasan.h:29:2: error: #error UML does not work in KASAN_INLINE mode with STATIC_LINK enabled!
+		29 | #error UML does not work in KASAN_INLINE mode with STATIC_LINK enabled!
+
+KASAN_GENERIC && KASAN_OUTLINE && STATIC_LINK && 
+	Before:
+		./linux boots.
+
+	After (with auto-selected ARCH_DEFER_KASAN):
+		./linux boots.
+
+KASAN_GENERIC && KASAN_OUTLINE && !STATIC_LINK
+	Before:
+		./linux boots
+
+	After (with auto-disabled !ARCH_DEFER_KASAN):
+		./linux boots
+
+- loongarch - selects ARCH_DEFER_KASAN
+Built defconfig with KASAN_GENERIC - OK
+Haven't tested the boot. Asking Loongarch developers to verify - N/A
+But should be good, since Loongarch does not have specific "kasan_init()"
+call like UML does. It selects ARCH_DEFER_KASAN and calls kasan_init()
+in the end of setup_arch() after jump_label_init().
+
+Previous v5 thread: https://lore.kernel.org/all/20250807194012.631367-1-snovitoll@gmail.com/
+Previous v4 thread: https://lore.kernel.org/all/20250805142622.560992-1-snovitoll@gmail.com/
+Previous v3 thread: https://lore.kernel.org/all/20250717142732.292822-1-snovitoll@gmail.com/
+Previous v2 thread: https://lore.kernel.org/all/20250626153147.145312-1-snovitoll@gmail.com/
+
+Sabyrzhan Tasbolatov (2):
+  kasan: introduce ARCH_DEFER_KASAN and unify static key across modes
+  kasan: call kasan_init_generic in kasan_init
+
+ arch/arm/mm/kasan_init.c               |  2 +-
+ arch/arm64/mm/kasan_init.c             |  4 +---
+ arch/loongarch/Kconfig                 |  1 +
+ arch/loongarch/include/asm/kasan.h     |  7 ------
+ arch/loongarch/mm/kasan_init.c         |  8 +++----
+ arch/powerpc/Kconfig                   |  1 +
+ arch/powerpc/include/asm/kasan.h       | 12 ----------
+ arch/powerpc/mm/kasan/init_32.c        |  2 +-
+ arch/powerpc/mm/kasan/init_book3e_64.c |  2 +-
+ arch/powerpc/mm/kasan/init_book3s_64.c |  6 +----
+ arch/riscv/mm/kasan_init.c             |  1 +
+ arch/s390/kernel/early.c               |  3 ++-
+ arch/um/Kconfig                        |  1 +
+ arch/um/include/asm/kasan.h            |  5 ++--
+ arch/um/kernel/mem.c                   | 13 ++++++++---
+ arch/x86/mm/kasan_init_64.c            |  2 +-
+ arch/xtensa/mm/kasan_init.c            |  2 +-
+ include/linux/kasan-enabled.h          | 32 ++++++++++++++++++--------
+ include/linux/kasan.h                  |  6 +++++
+ lib/Kconfig.kasan                      | 12 ++++++++++
+ mm/kasan/common.c                      | 17 ++++++++++----
+ mm/kasan/generic.c                     | 19 +++++++++++----
+ mm/kasan/hw_tags.c                     |  9 +-------
+ mm/kasan/kasan.h                       |  8 ++++++-
+ mm/kasan/shadow.c                      | 12 +++++-----
+ mm/kasan/sw_tags.c                     |  1 +
+ mm/kasan/tags.c                        |  2 +-
+ 27 files changed, 113 insertions(+), 77 deletions(-)
+
+-- 
+2.34.1
+
