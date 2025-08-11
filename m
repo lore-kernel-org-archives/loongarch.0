@@ -1,32 +1,32 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D232DCF5A
-	for <loongarch@lists.linux.dev>; Mon, 11 Aug 2025 09:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0902DFA3E
+	for <loongarch@lists.linux.dev>; Mon, 11 Aug 2025 09:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754904505; cv=none; b=bo2scT49DJ5Xjxp0roydfJTbaJNL0QCcddpaGTvvS19dRyDzP7k6jtlt5qXHgTtRSSTS8W0/r6l76XWmZ9b27qluboPXJlP36ztn2Iu0SYUiX7qx3tPGRI1LqaUx6II3tbD9q+N6I7TyF1S7j+fbEpUAXrhXdpPpxgNQLwxi5aA=
+	t=1754904506; cv=none; b=UVyW/tUqgmO3UsT+72gFA5TZbq3NgUc4EgC+18u7exsQo7U9Oi5YsGOmzMCcMP5uMOnLXSK6CXmHWl5mELkNhcacIuZ69Qet7kiRFRPBrLi07xucoybQkBi+Wad2oCDHK56+aHk0XRY4r0hkIyGC7s5+A4lxBd32wHiN1oVyDq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754904505; c=relaxed/simple;
-	bh=TWmefRoC55W7AVicXj3J/cV4CdEcntC6RZQ0S5QOBSE=;
+	s=arc-20240116; t=1754904506; c=relaxed/simple;
+	bh=ogHVg2U4TnYZRN5gWBDUmmchrxO84Cc7oayXPA2f7zE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sJlOiBcKc+cEoD7DH2Roky0aUB7dyOxQoBRZ6xKxYA1nthKBPz6QX+sVVIMYQwkY82XAkscPXGrno2XMeq7bmAHQSy4fhCup82D8wtzGb28V+80LEo4YERzf4IeSFJaZwPLWHvMeP+vvIzpIlv3HAJyh1ppdcCQmMjnSqQ0sjjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l5eXt6ER; arc=none smtp.client-ip=95.215.58.189
+	 MIME-Version; b=LZoD3DIF+KvlPIOmtTxV8HBjm08a85X0+agn89fLrVSvQ5fLt0PNm6OWs4LAnJw6f7I157++gJYdQKqpp/C9BUC6xBtaU/baiueyepShTSsfpBI8vGV3SWt3Fasoz3SoC35TbI6yoMcDSrOUa7jmvhT5ss61iyvxx9sqBmExPU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BGP3zFfN; arc=none smtp.client-ip=95.215.58.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l5eXt6ER"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BGP3zFfN"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754904500;
+	t=1754904502;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=S1fZPuz6xxyXns5V9c+B6pAeL+oN23MEikk16JZKk2w=;
-	b=l5eXt6ERjCvzJ8rIOVvwNo2eM+PByJrlb98f/pBGcJB+DEWL0eNzEhSLrTUENgw/fAdPcW
-	QC3tSk+dlAuXPU7LBzHcKZRN+IQklsx2sp0txteBTwTVrpj5apV3vayiheuAjFrr2oJXMR
-	AidcjYtm3kXBxgm2xWBZ7UlRXbHxiGg=
+	bh=bptUG6+6W2TjiSNT88rR5MzDy6r8MtSXxrLcyKgaTpk=;
+	b=BGP3zFfNqnFS8+fpFseO1BHiuuPXajlLtT/byV8ZH/dAlGG12DovvVEOyLyVFPBzOLr4he
+	ZRiw+HgQ5QfS5E9OfmDEtHKiLwpOFWruToeC6/vvh2sr+A7INlnAyj415vCp8/J6baigZb
+	MEbSrUnG6tPvCIGJb3um4O7MI749nfY=
 From: Youling Tang <youling.tang@linux.dev>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Xuerui <kernel@xen0n.name>,
@@ -36,9 +36,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	linux-kernel@vger.kernel.org,
 	youling.tang@linux.dev,
 	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH 3/6] LoongArch/kexec_file: Add initrd loading
-Date: Mon, 11 Aug 2025 17:26:56 +0800
-Message-Id: <20250811092659.14903-4-youling.tang@linux.dev>
+Subject: [PATCH 4/6] LoongArch/kexec_file: Add crash dump support
+Date: Mon, 11 Aug 2025 17:26:57 +0800
+Message-Id: <20250811092659.14903-5-youling.tang@linux.dev>
 In-Reply-To: <20250811092659.14903-1-youling.tang@linux.dev>
 References: <20250811092659.14903-1-youling.tang@linux.dev>
 Precedence: bulk
@@ -52,103 +52,127 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Youling Tang <tangyouling@kylinos.cn>
 
-Add inird loading support and pass it to the second kernel via the
-cmdline 'initrd=start,size'.
+Enabling crash dump (kdump) includes:
+- prepare contents of ELF header of a core dump file, /proc/vmcore,
+  using crash_prepare_elf64_headers().
+- add "elfcorehdr=size@start" to command line.
 
 Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 ---
- arch/loongarch/kernel/machine_kexec_file.c | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+ arch/loongarch/kernel/machine_kexec_file.c | 93 ++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
 diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index bc91ae0afa4c..e1240644f529 100644
+index e1240644f529..06def654cc09 100644
 --- a/arch/loongarch/kernel/machine_kexec_file.c
 +++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -34,13 +34,84 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+@@ -34,6 +34,63 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
  	return kexec_image_post_load_cleanup_default(image);
  }
  
-+/* Adds the "initrd=start,size" command line parameter to command line. */
-+static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmplen,
-+				char *modified_cmdline, unsigned long initrd)
-+{
-+	int initrd_strlen;
++#ifdef CONFIG_CRASH_DUMP
 +
-+	initrd_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "initrd=0x%lx,0x%lx ",
-+		initrd, image->initrd_buf_len);
-+	*cmdline_tmplen += initrd_strlen;
++static int prepare_elf_headers(void **addr, unsigned long *sz)
++{
++	struct crash_mem *cmem;
++	unsigned int nr_ranges;
++	int ret;
++	u64 i;
++	phys_addr_t start, end;
++
++	nr_ranges = 2; /* for exclusion of crashkernel region */
++	for_each_mem_range(i, &start, &end)
++		nr_ranges++;
++
++	cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
++	if (!cmem)
++		return -ENOMEM;
++
++	cmem->max_nr_ranges = nr_ranges;
++	cmem->nr_ranges = 0;
++	for_each_mem_range(i, &start, &end) {
++		cmem->ranges[cmem->nr_ranges].start = start;
++		cmem->ranges[cmem->nr_ranges].end = end - 1;
++		cmem->nr_ranges++;
++	}
++
++	/* Exclude crashkernel region */
++	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
++	if (ret)
++		goto out;
++
++	if (crashk_low_res.end) {
++		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
++		if (ret)
++			goto out;
++	}
++
++	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
++
++out:
++	kfree(cmem);
++	return ret;
 +}
 +
-+/*
-+ * Tries to add the initrd to the image. If it is not possible to find
-+ * valid locations, this function will undo changes to the image and return non
-+ * zero.
-+ */
- int load_other_segments(struct kimage *image,
- 			unsigned long kernel_load_addr,
- 			unsigned long kernel_size,
- 			char *initrd, unsigned long initrd_len,
- 			char *cmdline, unsigned long cmdline_len)
- {
-+	struct kexec_buf kbuf;
-+	unsigned long orig_segments = image->nr_segments;
-+	char *modified_cmdline = NULL;
-+	unsigned long cmdline_tmplen = 0;
-+	unsigned long initrd_load_addr = 0;
-+	int ret = 0;
++/* Adds the "elfcorehdr=size@start" command line parameter to command line. */
++static void cmdline_add_elfcorehdr(struct kimage *image, unsigned long *cmdline_tmplen,
++				char *modified_cmdline, unsigned long elfcorehdr_sz)
++{
++	int elfcorehdr_strlen = 0;
 +
++	elfcorehdr_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "elfcorehdr=0x%lx@0x%lx ",
++		elfcorehdr_sz, image->elf_load_addr);
++	*cmdline_tmplen += elfcorehdr_strlen;
++}
 +
-+	kbuf.image = image;
-+	/* not allocate anything below the kernel */
-+	kbuf.buf_min = kernel_load_addr + kernel_size;
++#endif
 +
-+	modified_cmdline = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
-+	if (!modified_cmdline)
-+		return -EINVAL;
+ /* Adds the "initrd=start,size" command line parameter to command line. */
+ static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmplen,
+ 				char *modified_cmdline, unsigned long initrd)
+@@ -75,6 +132,42 @@ int load_other_segments(struct kimage *image,
+ 	/* Ensure it's nul terminated */
+ 	modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
+ 
++#ifdef CONFIG_CRASH_DUMP
++	/* load elf core header */
++	void *headers;
++	unsigned long headers_sz;
++	if (image->type == KEXEC_TYPE_CRASH) {
++		ret = prepare_elf_headers(&headers, &headers_sz);
++		if (ret) {
++			pr_err("Preparing elf core header failed\n");
++			goto out_err;
++		}
 +
-+	/* Ensure it's nul terminated */
-+	modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
-+
-+	/* load initrd */
-+	if (initrd) {
-+		kbuf.buffer = initrd;
-+		kbuf.bufsz = initrd_len;
++		kbuf.buffer = headers;
++		kbuf.bufsz = headers_sz;
 +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+		kbuf.memsz = initrd_len;
-+		kbuf.buf_align = 0;
-+		/* within 1GB-aligned window of up to 32GB in size */
-+		kbuf.buf_max = round_down(kernel_load_addr, SZ_1G)
-+						+ (unsigned long)SZ_1G * 32;
-+		kbuf.top_down = false;
++		kbuf.memsz = headers_sz;
++		kbuf.buf_align = SZ_64K; /* largest supported page size */
++		kbuf.buf_max = ULONG_MAX;
++		kbuf.top_down = true;
 +
 +		ret = kexec_add_buffer(&kbuf);
-+		if (ret)
++		if (ret) {
++			vfree(headers);
 +			goto out_err;
-+		initrd_load_addr = kbuf.mem;
++		}
++		image->elf_headers = headers;
++		image->elf_load_addr = kbuf.mem;
++		image->elf_headers_sz = headers_sz;
 +
-+		kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+			      initrd_load_addr, kbuf.bufsz, kbuf.memsz);
++		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
 +
-+		/* Add the initrd=start,size parameter to the command line */
-+		cmdline_add_initrd(image, &cmdline_tmplen, modified_cmdline, initrd_load_addr);
++		/* Add the elfcorehdr=size@start parameter to the command line */
++		cmdline_add_elfcorehdr(image, &cmdline_tmplen, modified_cmdline, headers_sz);
 +	}
++#endif
 +
-+	if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
-+		pr_err("Appending kdump cmdline exceeds cmdline size\n");
-+		ret = -EINVAL;
-+		goto out_err;
-+	}
-+	memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len);
-+	cmdline = modified_cmdline;
- 	image->arch.cmdline_ptr = (unsigned long)cmdline;
- 
- 	return 0;
-+
-+out_err:
-+	image->nr_segments = orig_segments;
-+	kfree(modified_cmdline);
-+	return ret;
- }
+ 	/* load initrd */
+ 	if (initrd) {
+ 		kbuf.buffer = initrd;
 -- 
 2.34.1
 
