@@ -1,84 +1,179 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05B0757C9F
-	for <loongarch@lists.linux.dev>; Mon, 11 Aug 2025 03:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53C741F4628
+	for <loongarch@lists.linux.dev>; Mon, 11 Aug 2025 05:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754882340; cv=none; b=Vd0QgH+3iK9elamI9vVzKoU5GrIkjjMYMiigH4W1QJ6+dI7aUtUjerYI1HN/Xk9LnJvuC0v+8moj5cEDqQlAg06RjTJwZrWoevQcFcxxS74d17utQPhFSI//u3irZhx2IE3wXkfbxUfmw7WszBDoJ+u8MFFyoFMWB5JvEfoH4Gk=
+	t=1754891437; cv=none; b=Xm4dTdnbnppt9ssnKWDpfOrAxecRcgErxI12zoJavqiCV1Dxi2HJByoznTH+8RJV7NDOwaa8cclOrNx10w08v8MZ0LO7HNtG6baFuutUObiMbYZsXnEXF2Bk23zQEpd9X356UbWHhUvNFrb24Rv2sTQqwwW9MaDCd6DY8wWZWT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754882340; c=relaxed/simple;
-	bh=dXP9lLZtsM7Eml06bZKAtBCOHfRmonm1yc9CSB0UGyw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Pa61c6xEoJ1bTJWjzV95ponAdX6WXpQp0MJ8gUoJ+wKn2cxfN4+cF8sfCaKBLdOACbYj2AjOmnSmtFrXsJadRKXojxMvJ7SxuAMe6Mb6MEfMLLIoO3Hfmjf5OVPa0qZd87hYXYY/ejHoTxSw7sCNwUVk50NM8MLOB0iYZMw14IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxPuMeYZlo9SQ+AQ--.17198S3;
-	Mon, 11 Aug 2025 11:18:54 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by front1 (Coremail) with SMTP id qMiowJCxH8IdYZloy9FBAA--.60913S2;
-	Mon, 11 Aug 2025 11:18:53 +0800 (CST)
-From: Song Gao <gaosong@loongson.cn>
-To: maobibo@loongson.cn,
-	zhaotianrui@loongson.cn,
-	chenhuacai@kernel.org,
-	lixianglai@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Use kvm_get_vcpu_by_id() instead of  kvm_get_vcpu()
-Date: Mon, 11 Aug 2025 10:55:44 +0800
-Message-Id: <20250811025544.458422-1-gaosong@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+	s=arc-20240116; t=1754891437; c=relaxed/simple;
+	bh=W8N+9T3GwRiE6nS55sm/L2P+TWEETv7v1ISfhrS0rjA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O7fX5yjpatJD4PXkWgTYeBW3rLc5lun4EcSGNOvvG1eeayXWwcxYFAZQ7w+0cX5t+H3DdhYgECCPS/1HmY9r/EoNWlhKDhqdZwmkojig16HTRgU82m3zqtrOEqNRqPOHqs6QWJz17HYNcxXnTueReFWn1E8Fkwa89vpZMUVDQBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4c0k2w2kRcz9sSL;
+	Mon, 11 Aug 2025 07:39:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 3Mxf0H61E1tl; Mon, 11 Aug 2025 07:39:04 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4c0k2w1bMnz9sSK;
+	Mon, 11 Aug 2025 07:39:04 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 199008B764;
+	Mon, 11 Aug 2025 07:39:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id bIxmuQ19phXS; Mon, 11 Aug 2025 07:39:03 +0200 (CEST)
+Received: from [10.25.207.160] (unknown [10.25.207.160])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id BAC418B763;
+	Mon, 11 Aug 2025 07:39:03 +0200 (CEST)
+Message-ID: <b8345cfe-0bde-44cd-b9b7-9a946ff8fc36@csgroup.eu>
+Date: Mon, 11 Aug 2025 07:39:03 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/2] kasan: call kasan_init_generic in kasan_init
+To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
+ bhe@redhat.com, hca@linux.ibm.com, andreyknvl@gmail.com,
+ akpm@linux-foundation.org, zhangqing@loongson.cn, chenhuacai@loongson.cn,
+ davidgow@google.com, glider@google.com, dvyukov@google.com,
+ alexghiti@rivosinc.com
+Cc: alex@ghiti.fr, agordeev@linux.ibm.com, vincenzo.frascino@arm.com,
+ elver@google.com, kasan-dev@googlegroups.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-mm@kvack.org
+References: <20250810125746.1105476-1-snovitoll@gmail.com>
+ <20250810125746.1105476-3-snovitoll@gmail.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Content-Language: fr-FR
+In-Reply-To: <20250810125746.1105476-3-snovitoll@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxH8IdYZloy9FBAA--.60913S2
-X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Use kvm_get_vcpu() may can't get vcpu context, use kvm_get_vcpu_by_id()
-instead of kvm_get_vcpu().
 
-Signed-off-by: Song Gao <gaosong@loongson.cn>
----
- arch/loongarch/kvm/intc/eiointc.c | 5 ++++-
- arch/loongarch/kvm/intc/ipi.c     | 2 +-
- 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index a3a12af9ecbf..5180da91d2e6 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -45,7 +45,10 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
- 	}
- 
- 	cpu = s->sw_coremap[irq];
--	vcpu = kvm_get_vcpu(s->kvm, cpu);
-+	vcpu = kvm_get_vcpu_by_id(s->kvm, cpu);
-+	if (unlikely(vcpu == NULL)) {
-+		return;
-+	}
- 	if (level) {
- 		/* if not enable return false */
- 		if (!test_bit(irq, (unsigned long *)s->enable.reg_u32))
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-index e658d5b37c04..0348a83a7ed7 100644
---- a/arch/loongarch/kvm/intc/ipi.c
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -298,7 +298,7 @@ static int kvm_ipi_regs_access(struct kvm_device *dev,
- 	cpu = (attr->attr >> 16) & 0x3ff;
- 	addr = attr->attr & 0xff;
- 
--	vcpu = kvm_get_vcpu(dev->kvm, cpu);
-+	vcpu = kvm_get_vcpu_by_id(dev->kvm, cpu);
- 	if (unlikely(vcpu == NULL)) {
- 		kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
- 		return -EINVAL;
--- 
-2.39.3
+Le 10/08/2025 à 14:57, Sabyrzhan Tasbolatov a écrit :
+> Call kasan_init_generic() which handles Generic KASAN initialization.
+> For architectures that do not select ARCH_DEFER_KASAN,
+> this will be a no-op for the runtime flag but will
+> print the initialization banner.
+> 
+> For SW_TAGS and HW_TAGS modes, their respective init functions will
+> handle the flag enabling, if they are enabled/implemented.
+> 
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217049
+> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+> Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com> # riscv
+> Acked-by: Alexander Gordeev <agordeev@linux.ibm.com> # s390
+
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+
+> ---
+> Changes in v6:
+> - Call kasan_init_generic() in arch/riscv _after_ local_flush_tlb_all()
+> ---
+>   arch/arm/mm/kasan_init.c    | 2 +-
+>   arch/arm64/mm/kasan_init.c  | 4 +---
+>   arch/riscv/mm/kasan_init.c  | 1 +
+>   arch/s390/kernel/early.c    | 3 ++-
+>   arch/x86/mm/kasan_init_64.c | 2 +-
+>   arch/xtensa/mm/kasan_init.c | 2 +-
+>   6 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/mm/kasan_init.c b/arch/arm/mm/kasan_init.c
+> index 111d4f703136..c6625e808bf8 100644
+> --- a/arch/arm/mm/kasan_init.c
+> +++ b/arch/arm/mm/kasan_init.c
+> @@ -300,6 +300,6 @@ void __init kasan_init(void)
+>   	local_flush_tlb_all();
+>   
+>   	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
+> -	pr_info("Kernel address sanitizer initialized\n");
+>   	init_task.kasan_depth = 0;
+> +	kasan_init_generic();
+>   }
+> diff --git a/arch/arm64/mm/kasan_init.c b/arch/arm64/mm/kasan_init.c
+> index d541ce45daeb..abeb81bf6ebd 100644
+> --- a/arch/arm64/mm/kasan_init.c
+> +++ b/arch/arm64/mm/kasan_init.c
+> @@ -399,14 +399,12 @@ void __init kasan_init(void)
+>   {
+>   	kasan_init_shadow();
+>   	kasan_init_depth();
+> -#if defined(CONFIG_KASAN_GENERIC)
+> +	kasan_init_generic();
+>   	/*
+>   	 * Generic KASAN is now fully initialized.
+>   	 * Software and Hardware Tag-Based modes still require
+>   	 * kasan_init_sw_tags() and kasan_init_hw_tags() correspondingly.
+>   	 */
+> -	pr_info("KernelAddressSanitizer initialized (generic)\n");
+> -#endif
+>   }
+>   
+>   #endif /* CONFIG_KASAN_GENERIC || CONFIG_KASAN_SW_TAGS */
+> diff --git a/arch/riscv/mm/kasan_init.c b/arch/riscv/mm/kasan_init.c
+> index 41c635d6aca4..c4a2a9e5586e 100644
+> --- a/arch/riscv/mm/kasan_init.c
+> +++ b/arch/riscv/mm/kasan_init.c
+> @@ -533,4 +533,5 @@ void __init kasan_init(void)
+>   
+>   	csr_write(CSR_SATP, PFN_DOWN(__pa(swapper_pg_dir)) | satp_mode);
+>   	local_flush_tlb_all();
+> +	kasan_init_generic();
+>   }
+> diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
+> index 9adfbdd377dc..544e5403dd91 100644
+> --- a/arch/s390/kernel/early.c
+> +++ b/arch/s390/kernel/early.c
+> @@ -21,6 +21,7 @@
+>   #include <linux/kernel.h>
+>   #include <asm/asm-extable.h>
+>   #include <linux/memblock.h>
+> +#include <linux/kasan.h>
+>   #include <asm/access-regs.h>
+>   #include <asm/asm-offsets.h>
+>   #include <asm/machine.h>
+> @@ -65,7 +66,7 @@ static void __init kasan_early_init(void)
+>   {
+>   #ifdef CONFIG_KASAN
+>   	init_task.kasan_depth = 0;
+> -	pr_info("KernelAddressSanitizer initialized\n");
+> +	kasan_init_generic();
+>   #endif
+>   }
+>   
+> diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
+> index 0539efd0d216..998b6010d6d3 100644
+> --- a/arch/x86/mm/kasan_init_64.c
+> +++ b/arch/x86/mm/kasan_init_64.c
+> @@ -451,5 +451,5 @@ void __init kasan_init(void)
+>   	__flush_tlb_all();
+>   
+>   	init_task.kasan_depth = 0;
+> -	pr_info("KernelAddressSanitizer initialized\n");
+> +	kasan_init_generic();
+>   }
+> diff --git a/arch/xtensa/mm/kasan_init.c b/arch/xtensa/mm/kasan_init.c
+> index f39c4d83173a..0524b9ed5e63 100644
+> --- a/arch/xtensa/mm/kasan_init.c
+> +++ b/arch/xtensa/mm/kasan_init.c
+> @@ -94,5 +94,5 @@ void __init kasan_init(void)
+>   
+>   	/* At this point kasan is fully initialized. Enable error messages. */
+>   	current->kasan_depth = 0;
+> -	pr_info("KernelAddressSanitizer initialized\n");
+> +	kasan_init_generic();
+>   }
 
