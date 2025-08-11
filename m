@@ -1,158 +1,298 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F5D243968
-	for <loongarch@lists.linux.dev>; Mon, 11 Aug 2025 16:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675DD2580D2
+	for <loongarch@lists.linux.dev>; Mon, 11 Aug 2025 17:09:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754930376; cv=none; b=RQD7kbZmaNAEGpHZOB7Alq9OVrf82OYhbycm0w86pE1JSVL58C9xSOdN3W0MnKvizWRun3F78vaLbfR7a/RYMlB7LOJEvKHUUIJcMsVpVgWQGdhQhNqath3JI2MJ/bBGYvyKiSPJW03metbgsf7nkAkSEuHIdFvIuwsTZaaWHvQ=
+	t=1754932149; cv=none; b=j0ykkYWEPxaXiD2KP50WitSDVRvoRC0WAo6SWhEhIGQvFXqoekhoc4wN/cZkpxyhiqtvarLuZIvFv6KjRvmGGqBhf1Nf/9RA0gju/IF9fZc7t2NABUj/tckRtFkSwa1Eu6PnJjxIWkJB2qRn+4QyLVnybt6wFwNbOEe4sW8hoC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754930376; c=relaxed/simple;
-	bh=CImX2ZC8/O9nTsmiCTmo3jTXIWUuTcllD4/cgqtt4O4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cr2TLyn2rAW5gJWdABrQPrj+cFBfwUByOxzXXOkMO27p/bvf02BdS0n64BUojaFsBL6XC2mRKswTAkFprBTbNns10V3obFVGei0fncllYmunXViJKcpCXRjz7l/OmCRJeve43JwDeEm13dGAOOMcsx59SBV4IWYokBEz0SakRdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=dF/VohVw; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1754932149; c=relaxed/simple;
+	bh=fiqNW/iR9qCKHprF3oK6zQCfVI1mPKazrm5svXl7oM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QSSxgj0KJLzpAs+AgfktrbMgYEfV+zgI7L0K+cNgzPhVwtZ3lHX2pEbUAZYbtblhmQwGiQcwiGDmlr4yxGA4XEdRnV2GSGxNHvryMbaisARz+3yIhfqgwbQTj0WbELZmu2nAbftbILctRMGkHfGwNFrv6BVLRUlcHdXwS8Pz7Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=RxtL5WGr; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="dF/VohVw"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="RxtL5WGr"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 3570725D17;
-	Mon, 11 Aug 2025 18:39:33 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 1F6E425F79;
+	Mon, 11 Aug 2025 19:09:05 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id n-X6d5Lyl1oP; Mon, 11 Aug 2025 18:39:32 +0200 (CEST)
+ id q5y_AmtIzRja; Mon, 11 Aug 2025 19:09:04 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1754930372; bh=CImX2ZC8/O9nTsmiCTmo3jTXIWUuTcllD4/cgqtt4O4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dF/VohVwEOAaJpnwJCQGUkpI32kKHPEXLvENEaO66IUsFCiirmwoBOD1Gx8hU8vOK
-	 RKI70kZ7QX8kA+TTPdEMQ4YOot113K9edUgmAaztQfxQ+T1hleTVex8C0MChv4uVBA
-	 F01kdFjxaSPqUoI30qDUj/PGT75HjEvsIcy6g49gExXweiR8c46V0qccrAA/9FGfID
-	 kqFOgE7U+mcGbRn/41QrQiWR4fhdNRVg+k1DTRLr7VCqmZkdWUPLaXUw43B9u4wbch
-	 jmmnaHtF1T5ZbY3U2kSzfXiPxoXVTJaaNJzwtHW9VFpBFGhwMWgvwayrjwJ/CwcXke
-	 u401OEmB+DZRQ==
+	t=1754932000; bh=fiqNW/iR9qCKHprF3oK6zQCfVI1mPKazrm5svXl7oM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RxtL5WGrHK8P26FbuUNzQfeYUPcsZXpVZpbrmKoSvkz3QSd95+G19A/Gm9H3+v6tg
+	 dRR0PdWp+datoqA+sIrcOAsIGTFJ9204Q+ghyCNcwOqnKnQHf4k55mnqpBHNcqBc4S
+	 oX1gSCZedNDG9xCp1a+slHAjKDZXmAxLsdff2sCHpJ9ktWLKgQg9PQxJYFJJPItPzO
+	 34a+eY6h1AS4YB4jpA6FL2V6EFQOuniTz/7hMs79p3NT7ijsr88KGO3L3iiwr6pAJD
+	 2NCTpHiav6HqR1AYzgteHjFWNpaZj5Ke/tVTbQb+fVXGSLXEHSTC90KMXl0uWh789i
+	 tRcnUmW7mOECA==
+Date: Mon, 11 Aug 2025 17:06:22 +0000
 From: Yao Zi <ziyao@disroot.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH 3/3] LoongArch: dts: Add pinctrl configuration for Loongson 2K0300
-Date: Mon, 11 Aug 2025 16:37:50 +0000
-Message-ID: <20250811163749.47028-5-ziyao@disroot.org>
-In-Reply-To: <20250811163749.47028-2-ziyao@disroot.org>
-References: <20250811163749.47028-2-ziyao@disroot.org>
+To: Youling Tang <youling.tang@linux.dev>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+Subject: Re: [PATCH 2/6] LoongArch: Add kexec_file support
+Message-ID: <aJojDiHWi8cgvA2W@pie>
+References: <20250811092659.14903-1-youling.tang@linux.dev>
+ <20250811092659.14903-3-youling.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250811092659.14903-3-youling.tang@linux.dev>
 
-Describe the pin controller for Loongson 2K0300 SoC. As default settings
-for the existing UARTs, pinctrls are added and multiplexed to pins taken
-corresponding UART as main functionaility.
+On Mon, Aug 11, 2025 at 05:26:55PM +0800, Youling Tang wrote:
+> From: Youling Tang <tangyouling@kylinos.cn>
+> 
+> This patch adds support for kexec_file on LoongArch.
+> 
+> The image_load() as two parts:
+> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
+> - the second part loads other segments (eg: initrd, cmdline)
+> 
+> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
+> but ELF format is not supported.
+> 
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> ---
+>  arch/loongarch/Kconfig                     |   8 ++
+>  arch/loongarch/include/asm/image.h         |  18 ++++
+>  arch/loongarch/include/asm/kexec.h         |  12 +++
+>  arch/loongarch/kernel/Makefile             |   1 +
+>  arch/loongarch/kernel/kexec_image.c        | 112 +++++++++++++++++++++
+>  arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
+>  arch/loongarch/kernel/machine_kexec_file.c |  46 +++++++++
+>  7 files changed, 219 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/loongarch/kernel/kexec_image.c
+>  create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/loongarch/boot/dts/loongson-2k0300.dtsi | 39 ++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+...
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-index d909a4eca312..a8ad8bd43f5d 100644
---- a/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-@@ -9,6 +9,8 @@
- #include <dt-bindings/clock/loongson,ls2k0300-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- 
-+#define PINMUX(pin, func)	(((pin) << 8) | func)
-+
- / {
- 	compatible = "loongson,ls2k0300";
- 	#address-cells = <2>;
-@@ -55,6 +57,35 @@ clk: clock-controller@16000400 {
- 			#clock-cells = <1>;
- 		};
- 
-+		pinctrl: pinctrl@16000490 {
-+			compatible = "loongson,ls2k0300-pinctrl";
-+			reg = <0x0 0x16000490 0x0 0x20>,
-+			      <0x0 0x16000110 0x0 0x4>;
-+			reg-names = "mux", "drive";
-+
-+			func-uart {
-+				uart0_pins: uart0-pins {
-+					pinmux = <PINMUX(40, 0x3)>,
-+						 <PINMUX(41, 0x3)>;
-+				};
-+
-+				uart1_pins: uart1-pins {
-+					pinmux = <PINMUX(42, 0x3)>,
-+						 <PINMUX(43, 0x3)>;
-+				};
-+
-+				uart2_pins: uart2-pins {
-+					pinmux = <PINMUX(44, 0x3)>,
-+						 <PINMUX(45, 0x3)>;
-+				};
-+
-+				uart3_pins: uart3-pins {
-+					pinmux = <PINMUX(46, 0x3)>,
-+						 <PINMUX(47, 0x3)>;
-+				};
-+			};
-+		};
-+
- 		liointc0: interrupt-controller@16001400 {
- 			compatible = "loongson,liointc-2.0";
- 			reg = <0x0 0x16001400 0x0 0x40>,
-@@ -100,6 +131,8 @@ uart0: serial@16100000 {
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins>;
- 			status = "disabled";
- 		};
- 
-@@ -109,6 +142,8 @@ uart1: serial@16100400 {
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart1_pins>;
- 			status = "disabled";
- 		};
- 
-@@ -118,6 +153,8 @@ uart2: serial@16100800 {
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_pins>;
- 			status = "disabled";
- 		};
- 
-@@ -127,6 +164,8 @@ uart3: serial@16100c00 {
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart3_pins>;
- 			status = "disabled";
- 		};
- 
--- 
-2.50.1
+> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
+> index 1f090736e71d..829e1ecb1f5d 100644
+> --- a/arch/loongarch/include/asm/image.h
+> +++ b/arch/loongarch/include/asm/image.h
+> @@ -36,5 +36,23 @@ struct loongarch_image_header {
+>  	uint32_t pe_header;
+>  };
+>  
+> +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
+> +static const uint8_t loongarch_pe_machtype[6] = {'P', 'E', 0x0, 0x0, 0x64, 0x62};
 
+loongarch_pe_machtype isn't used at all.
+
+> +
+> +/**
+> + * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
+> + *
+> + * Returns non-zero if 'MZ' signature is found.
+> + */
+> +
+> +static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
+> +{
+> +	if (!h)
+> +		return 0;
+> +
+> +	return (h->pe_sig[0] == loongarch_image_pe_sig[0]
+> +		&& h->pe_sig[1] == loongarch_image_pe_sig[1]);
+
+This could be simplified with a memcmp(). Also, this check isn't strict
+enough: PE files for any architectures, and even legacy MS-DOS COM
+executables all start with "MZ".
+
+> +}
+> +
+>  #endif /* __ASSEMBLY__ */
+>  #endif /* __ASM_IMAGE_H */
+
+...
+
+> diff --git a/arch/loongarch/kernel/kexec_image.c b/arch/loongarch/kernel/kexec_image.c
+> new file mode 100644
+> index 000000000000..fdd1845b4e2e
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/kexec_image.c
+> @@ -0,0 +1,112 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Kexec image loader for LoongArch
+> +
+> + * Author: Youling Tang <tangyouling@kylinos.cn>
+> + * Copyright (C) 2025 KylinSoft Corporation.
+> + */
+> +
+> +#define pr_fmt(fmt)	"kexec_file(Image): " fmt
+> +
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/kernel.h>
+> +#include <linux/kexec.h>
+> +#include <linux/pe.h>
+> +#include <linux/string.h>
+> +#include <asm/byteorder.h>
+> +#include <asm/cpufeature.h>
+> +#include <asm/image.h>
+> +
+> +static int image_probe(const char *kernel_buf, unsigned long kernel_len)
+> +{
+> +	const struct loongarch_image_header *h =
+> +		(const struct loongarch_image_header *)(kernel_buf);
+
+Parentheses around "kernel_buf" are unnecessary.
+
+> +	if (!h || (kernel_len < sizeof(*h))) {
+
+Comparisons have higher priority than logic operations, so this pair of
+parentheses is redundant, too.
+
+> +		pr_err("No loongarch image header.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!loongarch_header_check_pe_sig(h)) {
+> +		pr_err("Bad loongarch PE image header.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void *image_load(struct kimage *image,
+> +				char *kernel, unsigned long kernel_len,
+> +				char *initrd, unsigned long initrd_len,
+> +				char *cmdline, unsigned long cmdline_len)
+> +{
+> +	struct loongarch_image_header *h;
+> +	struct kexec_buf kbuf;
+> +	unsigned long text_offset, kernel_segment_number;
+> +	struct kexec_segment *kernel_segment;
+> +	int ret;
+> +
+> +	h = (struct loongarch_image_header *)kernel;
+> +	if (!h->image_size)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	/* Load the kernel */
+> +	kbuf.image = image;
+> +	kbuf.buf_min = 0;
+> +	kbuf.buf_max = ULONG_MAX;
+> +	kbuf.top_down = false;
+> +
+> +	kbuf.buffer = kernel;
+> +	kbuf.bufsz = kernel_len;
+> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> +	kbuf.memsz = le64_to_cpu(h->image_size);
+> +	text_offset = le64_to_cpu(h->text_offset);
+> +	kbuf.buf_align = SZ_2M;
+
+I think this aligment is unnecessary for relocatable LoongArch kernels:
+it should be enough to align to the page size. See also my comments
+below.
+
+> +	kernel_segment_number = image->nr_segments;
+> +
+> +	/*
+> +	 * The location of the kernel segment may make it impossible to satisfy
+> +	 * the other segment requirements, so we try repeatedly to find a
+> +	 * location that will work.
+> +	 */
+> +	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
+> +		/* Try to load additional data */
+> +		kernel_segment = &image->segment[kernel_segment_number];
+> +		ret = load_other_segments(image, kernel_segment->mem,
+> +					  kernel_segment->memsz, initrd,
+> +					  initrd_len, cmdline, cmdline_len);
+> +		if (!ret)
+> +			break;
+> +
+> +		/*
+> +		 * We couldn't find space for the other segments; erase the
+> +		 * kernel segment and try the next available hole.
+> +		 */
+> +		image->nr_segments -= 1;
+> +		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> +	}
+> +
+> +	if (ret) {
+> +		pr_err("Could not find any suitable kernel location!");
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	kernel_segment = &image->segment[kernel_segment_number];
+> +
+> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
+> +	image->start = kernel_segment->mem + h->kernel_entry - text_offset;
+
+A non-relocatable loongarch kernel cannot be loaded to arbitrary
+address. Thus this loading function seems to only work for relocatable
+kernels, maybe it's better to leave a comment indicating the limitation.
+
+For now, we don't seem to have a way to find out whether the kernel is
+relocatable (for example, a flag in kernel image header), so it's
+impossible to point out whether the loaded kernel boots fine with
+arbitrary loading address...
+
+> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +		      kernel_segment->mem, kbuf.bufsz,
+> +		      kernel_segment->memsz);
+> +
+> +	return NULL;
+> +}
+> +
+> +const struct kexec_file_ops kexec_image_ops = {
+> +	.probe = image_probe,
+> +	.load = image_load,
+> +};
+> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+> index f9381800e291..008f43e26120 100644
+> --- a/arch/loongarch/kernel/machine_kexec.c
+> +++ b/arch/loongarch/kernel/machine_kexec.c
+> @@ -70,18 +70,28 @@ int machine_kexec_prepare(struct kimage *kimage)
+
+...
+
+> -	if (!kimage->arch.cmdline_ptr) {
+> -		pr_err("Command line not included in the provided image\n");
+> -		return -EINVAL;
+> +		if (!kimage->arch.cmdline_ptr) {
+> +			pr_err("Command line not included in the provided image\n");
+> +			return -EINVAL;
+> +		}
+>  	}
+>  
+>  	/* kexec/kdump need a safe page to save reboot_code_buffer */
+> @@ -288,7 +298,8 @@ void machine_kexec(struct kimage *image)
+>  	local_irq_disable();
+>  
+>  	pr_notice("EFI boot flag 0x%lx\n", efi_boot);
+> -	pr_notice("Command line at 0x%lx\n", cmdline_ptr);
+> +	pr_notice("Command line addr at 0x%lx\n", cmdline_ptr);
+> +	pr_notice("Command line at %s\n", (char *)cmdline_ptr);
+
+The printed message doesn't match meaning of the pointer: you're
+printing the content of cmdline_ptr, instead of its address, thus
+"Command line at" sounds confusing to me.
+
+Furthermore, this chunk isn't related to "support for kexec_file", I
+think it's better to separate it into another patch (or even another
+series).
+
+>  	pr_notice("System table at 0x%lx\n", systable_ptr);
+>  	pr_notice("We will call new kernel at 0x%lx\n", start_addr);
+>  	pr_notice("Bye ...\n");
+
+Best regards,
+Yao Zi
