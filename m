@@ -1,47 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421CF2D3ED6;
-	Tue, 12 Aug 2025 05:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423B22D640A;
+	Tue, 12 Aug 2025 05:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754977480; cv=none; b=XMXYXW6/8kZkH9nBHtoXt3v6LUDts5Stgc2np2E+JBoEY9+A2gB7OIlPeypnZVRfwAT4F8khfyRVd0CXPMSknOkpfdl+LDD+byeqZmrSpJWtPKioIVNYtaPKe+1LCm+uHVwJmecVTdYd+pkf8FoHDomeE2hTj7RUcnuuW5kyUSM=
+	t=1754977480; cv=none; b=JMUbVYUB5DYCIglcOoMaHz1789KJPwQwksbSkzj6sXkEuaI5QsdXwWe+KUQzE7bb2zqnHqd21wrAeuV52IY8RLPnpWzc+h5RHQmVJtjD36eB6qwblOeE7iExD2PYv1R/tr11i8bcSoHDClkOjOG7q/1Qju8UzRmD1SXdOHLA37c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1754977480; c=relaxed/simple;
-	bh=1uMAsIGnLSAarJHPAhyn1ZCQ7+laGQoWKQA2Xxq0mGY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=q4OjySxJh+8+grWbOZyPH29d7eOZvySW7igzlp5r3cr2VxJSZar1XC3uyX1bLoa0FcuZJWK4a6QwLhicvY5hoxXN5zKSggIGAcY5ZZpVFvn5IBjCkA5NRnCNfmHclis6HD/I7u4ODpZCJUh+PAukz0zOm2GPlxUPkH/kGDhAiOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wFb0RLzj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qsESN/r8; arc=none smtp.client-ip=193.142.43.55
+	bh=sDpXnmBm5KPtwZhOpphGdEN7DYn98pmvrlCD54kPOyk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KDgRd4t5g6Papwy2H+ZmfaRqbH+p9kYMoniy1Xf9sdJQj8jBAqiY2DeynSauq7h1zXfRYxYyZbUqG642l42b74EmwjOmyAsZfSAACtCeZK1eVtdfXLptrMhzgDrKKCQ2LwsuRIKuk51F9WvAvuvm4KCSeya3YX9Cv+JlXtDxiA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s12TFd7/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1xZIjm9+; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wFb0RLzj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qsESN/r8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s12TFd7/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1xZIjm9+"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754977471;
+	s=2020; t=1754977470;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1fbs+jreI++pzzR3zWEjWTxnX9u6RnqE0RQf6GOU1NY=;
-	b=wFb0RLzjRR+m6XuM7TOWlo2yvCJnPhA+25xIrhYVyQU7vW3qK3ogLB5/FoNBtbGXFhaQKY
-	pr4aI4RliMtnnHAuihu1YwOpPa1YAFE6NNdNYTDGqtqXIgkvCGwOYClR54N7bodbqmR8ib
-	3FR59W6tTyZySeu5nec68ShzfSWdVtepYdrHKuUMyY5PDvLGMSfolpeOUlC1s249oPH+6P
-	/nNoPZTWkgEcLEgiFvoUsib1/knAtoR53VJtqoUm2UIq7TEvFyRcp1/WlztCfeuCCPyn1R
-	c9ok2s6GcRDtHFeAJPnrNr3pTIJwl25pnQginm0asRgcm/Y3wFJdfZ+h1y1MIA==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=we+MV6CKFDKB3+12vM9P1VJPX4SvAjkcslQ93yTTcGw=;
+	b=s12TFd7/GLX46A/G/+ECg+vpcMIUu0jowZ+SXwxJhxDEsbG2Hk35x8v41vFM9k2Z6++tsZ
+	wOtHuHp8ijmTygwaNTx5/PxJl0C+PgVmopiqAYeFmyp93fiK/W5LuEbOsh3IyEHTsumXei
+	i6tmk/KqRX9b+fFm1uMDLY5pyDp5iNUz+97nooXxtzabAVuLTdOGAwSvyTWcI7khghsSLE
+	bdXXXK8T2K95P4cnyN2lV0/O0LrMoPZgp2MK6ZFO1mlvjPQFPMcdSkak5L9lDmVY5EFNW5
+	a/A3FtNlNwOAu9xQb3LgvY1NyNxolVCEeOfvRv+8gK4bJAO7/0Oi4JyTYshi3A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754977471;
+	s=2020e; t=1754977470;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1fbs+jreI++pzzR3zWEjWTxnX9u6RnqE0RQf6GOU1NY=;
-	b=qsESN/r84WX54Bw78PaDXL3DZH9tinqCzw/9z447eYrhrk5rauDW2NqzQLxz4cWxfapa1Y
-	nlSHAbkBNOdd0fAw==
-Date: Tue, 12 Aug 2025 07:44:15 +0200
-Subject: [PATCH v4 02/24] x86/elf, um/x86/elf: Move relocation constants to
- UAPI
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=we+MV6CKFDKB3+12vM9P1VJPX4SvAjkcslQ93yTTcGw=;
+	b=1xZIjm9+RbXypIoRNrLytkIGg05FC3Q9oFSLlRkVe8Czn4YJK0dWQqTugq0BBK8RrgRbhf
+	1YCXBpgKwYxPOoBg==
+Subject: [PATCH v4 00/24] vdso: Reject absolute relocations during build
+Date: Tue, 12 Aug 2025 07:44:13 +0200
+Message-Id: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,9 +47,11 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250812-vdso-absolute-reloc-v4-2-61a8b615e5ec@linutronix.de>
-References: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
-In-Reply-To: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAK3UmmgC/23NTQrCMBCG4auUrI0kk7RpXXkPcZGfqQ2URpI2K
+ NK7GwVRpMv3g3nmQRJGj4kcqgeJmH3yYSohdxWxg54uSL0rTYBBzSS0NLsUqDYpjMuMNOIYLNU
+ ADXTCctVwUi6vEXt/e6unc+nBpznE+/tJ5q/143WbXuaU0a5VmunecWbq4+inZY5h8re9Q/IyM
+ /w4gm07UJwae2uFsdJAs+WIr9Nwvu2I4kjVdsopoVpp/p11XZ/4YfWZSgEAAA==
+X-Change-ID: 20250428-vdso-absolute-reloc-a226293c1761
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
  Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
@@ -92,173 +91,111 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Arnaldo Carvalho de Melo <acme@redhat.com>, 
  Alexandre Ghiti <alexghiti@rivosinc.com>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1754977469; l=6035;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1754977469; l=4542;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=1uMAsIGnLSAarJHPAhyn1ZCQ7+laGQoWKQA2Xxq0mGY=;
- b=LSso+CtnXCvSqq7w3arcGFjj/9JO1wvGscYCVoeDZOhj/IpFN3GTrmCLD7/dVw71XSDOqEtKb
- ryK7StfnfXPByrB7+MMfsCwMUX3kib3KkE19P5uuPZjIm2SN2cxtCaS
+ bh=sDpXnmBm5KPtwZhOpphGdEN7DYn98pmvrlCD54kPOyk=;
+ b=F8W0Goo6R91Iz0mLdbkaVEXEi6NqkHjpz8K4uOJrCpNewCuaYX7400FmNfqyauYk9G9vfxPln
+ QO8tldIHen+Dtqsaw7111LfaE5FavUHmtVgedZWUvqMPyN9fiN2z4ak
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-These constants are useful for cross-platform userspace, for example to
-process ELF files during kernel cross-compilation.
+The compiler can emit absolute relocations in vDSO code,
+which are invalid in vDSO code.
+Detect them at compile-time.
 
-Move them from the kernel-private architecture-specific header to the UAPI.
+libc elf.h is missing some of the relocation constants,
+so make user of the kernels own UAPI headers instead.
+
+Kbuild and Rust folks: This contains custom definitions of hostprog
+bindgen and rust library commands.
+These are currently only defined inside the subsystem directory.
+Let me know if they should go into scripts/Makefile.host.
+
+This will conflict with my SPARC64 generic vDSO patches [0].
+If both end up being applied at the same time, please leave out commit 
+'vdso/vdsocheck: Drop the transitional kconfig option' from this series.
+
+[0] https://lore.kernel.org/lkml/20250724-vdso-sparc64-generic-2-v1-0-e376a3bd24d1@linutronix.de/
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- arch/x86/include/asm/elf.h | 34 ----------------------------------
- arch/x86/um/asm/elf.h      | 33 ---------------------------------
- include/uapi/linux/elf-r.h | 34 ++++++++++++++++++++++++++++++++++
- 3 files changed, 34 insertions(+), 67 deletions(-)
+Changes in v4:
+- Replace the inline shell logic with a dedicated build-time tool
+- Link to v3: https://lore.kernel.org/r/20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de
 
-diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-index 6c8fdc96be7e8bd33919d9b56ae8a8a68f4b0c3f..a2538561a84b8dae0479c43238f6f297fe88924b 100644
---- a/arch/x86/include/asm/elf.h
-+++ b/arch/x86/include/asm/elf.h
-@@ -22,19 +22,6 @@ typedef struct user_i387_struct elf_fpregset_t;
- 
- #ifdef __i386__
- 
--#define R_386_NONE	0
--#define R_386_32	1
--#define R_386_PC32	2
--#define R_386_GOT32	3
--#define R_386_PLT32	4
--#define R_386_COPY	5
--#define R_386_GLOB_DAT	6
--#define R_386_JMP_SLOT	7
--#define R_386_RELATIVE	8
--#define R_386_GOTOFF	9
--#define R_386_GOTPC	10
--#define R_386_NUM	11
--
- /*
-  * These are used to set parameters in the core dumps.
-  */
-@@ -44,27 +31,6 @@ typedef struct user_i387_struct elf_fpregset_t;
- 
- #else
- 
--/* x86-64 relocation types */
--#define R_X86_64_NONE		0	/* No reloc */
--#define R_X86_64_64		1	/* Direct 64 bit  */
--#define R_X86_64_PC32		2	/* PC relative 32 bit signed */
--#define R_X86_64_GOT32		3	/* 32 bit GOT entry */
--#define R_X86_64_PLT32		4	/* 32 bit PLT address */
--#define R_X86_64_COPY		5	/* Copy symbol at runtime */
--#define R_X86_64_GLOB_DAT	6	/* Create GOT entry */
--#define R_X86_64_JUMP_SLOT	7	/* Create PLT entry */
--#define R_X86_64_RELATIVE	8	/* Adjust by program base */
--#define R_X86_64_GOTPCREL	9	/* 32 bit signed pc relative offset to GOT */
--#define R_X86_64_GOTPCRELX	41
--#define R_X86_64_REX_GOTPCRELX	42
--#define R_X86_64_32		10	/* Direct 32 bit zero extended */
--#define R_X86_64_32S		11	/* Direct 32 bit sign extended */
--#define R_X86_64_16		12	/* Direct 16 bit zero extended */
--#define R_X86_64_PC16		13	/* 16 bit sign extended pc relative */
--#define R_X86_64_8		14	/* Direct 8 bit sign extended  */
--#define R_X86_64_PC8		15	/* 8 bit sign extended pc relative */
--#define R_X86_64_PC64		24	/* Place relative 64-bit signed */
--
- /*
-  * These are used to set parameters in the core dumps.
-  */
-diff --git a/arch/x86/um/asm/elf.h b/arch/x86/um/asm/elf.h
-index 62ed5d68a9788ffbf9dd0b4ebbe2caad4ac7a7c6..2e79193f396cda854ab4f17af2cd5b15c1e078cd 100644
---- a/arch/x86/um/asm/elf.h
-+++ b/arch/x86/um/asm/elf.h
-@@ -12,19 +12,6 @@
- 
- #ifdef CONFIG_X86_32
- 
--#define R_386_NONE	0
--#define R_386_32	1
--#define R_386_PC32	2
--#define R_386_GOT32	3
--#define R_386_PLT32	4
--#define R_386_COPY	5
--#define R_386_GLOB_DAT	6
--#define R_386_JMP_SLOT	7
--#define R_386_RELATIVE	8
--#define R_386_GOTOFF	9
--#define R_386_GOTPC	10
--#define R_386_NUM	11
--
- /*
-  * This is used to ensure we don't load something for the wrong architecture.
-  */
-@@ -100,26 +87,6 @@ do {								\
- 
- #else
- 
--/* x86-64 relocation types, taken from asm-x86_64/elf.h */
--#define R_X86_64_NONE		0	/* No reloc */
--#define R_X86_64_64		1	/* Direct 64 bit  */
--#define R_X86_64_PC32		2	/* PC relative 32 bit signed */
--#define R_X86_64_GOT32		3	/* 32 bit GOT entry */
--#define R_X86_64_PLT32		4	/* 32 bit PLT address */
--#define R_X86_64_COPY		5	/* Copy symbol at runtime */
--#define R_X86_64_GLOB_DAT	6	/* Create GOT entry */
--#define R_X86_64_JUMP_SLOT	7	/* Create PLT entry */
--#define R_X86_64_RELATIVE	8	/* Adjust by program base */
--#define R_X86_64_GOTPCREL	9	/* 32 bit signed pc relative
--					   offset to GOT */
--#define R_X86_64_32		10	/* Direct 32 bit zero extended */
--#define R_X86_64_32S		11	/* Direct 32 bit sign extended */
--#define R_X86_64_16		12	/* Direct 16 bit zero extended */
--#define R_X86_64_PC16		13	/* 16 bit sign extended pc relative */
--#define R_X86_64_8		14	/* Direct 8 bit sign extended  */
--#define R_X86_64_PC8		15	/* 8 bit sign extended pc relative */
--#define R_X86_64_PC64		24	/* Place relative 64-bit signed */
--
- /*
-  * This is used to ensure we don't load something for the wrong architecture.
-  */
-diff --git a/include/uapi/linux/elf-r.h b/include/uapi/linux/elf-r.h
-index 2c382c8a4807f394a3ccabf39a81e9e9b6f7ea45..45a160ecf40570f3ac916344be363d7e74908ea6 100644
---- a/include/uapi/linux/elf-r.h
-+++ b/include/uapi/linux/elf-r.h
-@@ -2,4 +2,38 @@
- #ifndef _UAPI_LINUX_ELF_R_H
- #define _UAPI_LINUX_ELF_R_H
- 
-+/* i386 relocation types */
-+#define R_386_NONE	0
-+#define R_386_32	1
-+#define R_386_PC32	2
-+#define R_386_GOT32	3
-+#define R_386_PLT32	4
-+#define R_386_COPY	5
-+#define R_386_GLOB_DAT	6
-+#define R_386_JMP_SLOT	7
-+#define R_386_RELATIVE	8
-+#define R_386_GOTOFF	9
-+#define R_386_GOTPC	10
-+#define R_386_NUM	11
-+
-+/* x86-64 relocation types */
-+#define R_X86_64_NONE		0	/* No reloc */
-+#define R_X86_64_64		1	/* Direct 64 bit  */
-+#define R_X86_64_PC32		2	/* PC relative 32 bit signed */
-+#define R_X86_64_GOT32		3	/* 32 bit GOT entry */
-+#define R_X86_64_PLT32		4	/* 32 bit PLT address */
-+#define R_X86_64_COPY		5	/* Copy symbol at runtime */
-+#define R_X86_64_GLOB_DAT	6	/* Create GOT entry */
-+#define R_X86_64_JUMP_SLOT	7	/* Create PLT entry */
-+#define R_X86_64_RELATIVE	8	/* Adjust by program base */
-+#define R_X86_64_GOTPCREL	9	/* 32 bit signed pc relative
-+					   offset to GOT */
-+#define R_X86_64_32		10	/* Direct 32 bit zero extended */
-+#define R_X86_64_32S		11	/* Direct 32 bit sign extended */
-+#define R_X86_64_16		12	/* Direct 16 bit zero extended */
-+#define R_X86_64_PC16		13	/* 16 bit sign extended pc relative */
-+#define R_X86_64_8		14	/* Direct 8 bit sign extended  */
-+#define R_X86_64_PC8		15	/* 8 bit sign extended pc relative */
-+#define R_X86_64_PC64		24	/* Place relative 64-bit signed */
-+
- #endif /* _UAPI_LINUX_ELF_R_H */
+Changes in v3:
+- Drop already applied bugfix for arm64
+- Disable LTO for the riscv vDSO, as it is incompatible
+- Link to v2: https://lore.kernel.org/r/20250430-vdso-absolute-reloc-v2-0-5efcc3bc4b26@linutronix.de
 
+Changes in v2:
+- Link to openend (invalid) GCC bug containing more explanations
+- Refine commit messages
+- Don't fail on commit absolute relocations in debug info
+- Link to v1: https://lore.kernel.org/r/20250429-vdso-absolute-reloc-v1-0-987a0afd10b5@linutronix.de
+
+---
+Thomas Weißschuh (24):
+      elf, uapi: Add a header for relocation constants
+      x86/elf, um/x86/elf: Move relocation constants to UAPI
+      ARM: elf: Move relocation constants to UAPI
+      arm64: elf: Move relocation constants to UAPI
+      powerpc/elf: Move relocation constants to UAPI
+      riscv: elf: Move relocation constants to UAPI
+      LoongArch: Move relocation constants to UAPI
+      s390/elf: Move relocation constants to UAPI
+      MIPS: ELF: Move relocation constants to UAPI
+      tools headers UAPI: Sync ELF headers with the kernel sources
+      vdso: Add the vdsocheck tool
+      x86/vdso: Enable the vdsocheck tool
+      ARM: vdso: Enable the vdsocheck tool
+      arm64: vdso: Enable the vdsocheck tool
+      powerpc/elf: Add 32-bit REL16 relocation definitions
+      powerpc/vdso: Enable the vdsocheck tool
+      riscv: vdso: Deduplicate CFLAGS_REMOVE_* variables
+      riscv: vdso: Disable LTO for the vDSO
+      riscv: vdso: Enable the vdsocheck tool
+      LoongArch: vDSO: Enable the vdsocheck tool
+      s390/vdso: Enable the vdsocheck tool
+      MIPS: ELF: Add more PC-relative relocation definitions
+      MIPS: vdso: Enable the vdsocheck tool
+      vdso/vdsocheck: Drop the transitional kconfig option
+
+ arch/arm/include/asm/elf.h          |  24 --
+ arch/arm/vdso/Makefile              |   4 +-
+ arch/arm64/include/asm/elf.h        |  55 ----
+ arch/arm64/kernel/vdso/Makefile     |   4 +-
+ arch/loongarch/include/asm/elf.h    | 100 ------
+ arch/loongarch/vdso/Makefile        |   4 +-
+ arch/mips/include/asm/elf.h         |  53 ---
+ arch/mips/vdso/Makefile             |   8 +-
+ arch/powerpc/include/uapi/asm/elf.h | 201 ------------
+ arch/powerpc/kernel/vdso/Makefile   |   4 +-
+ arch/riscv/include/uapi/asm/elf.h   |  66 ----
+ arch/riscv/kernel/vdso/Makefile     |  11 +-
+ arch/s390/include/asm/elf.h         |  83 -----
+ arch/s390/kernel/vdso32/Makefile    |   4 +-
+ arch/s390/kernel/vdso64/Makefile    |   4 +-
+ arch/x86/entry/vdso/Makefile        |   6 +-
+ arch/x86/include/asm/elf.h          |  34 --
+ arch/x86/um/asm/elf.h               |  33 --
+ include/uapi/linux/elf-r.h          | 631 ++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/elf.h            |   1 +
+ lib/vdso/Makefile                   |   2 +
+ lib/vdso/Makefile.include           |  17 +
+ lib/vdso/check/.gitignore           |   3 +
+ lib/vdso/check/Makefile             |  28 ++
+ lib/vdso/check/elf.rs               | 488 ++++++++++++++++++++++++++++
+ lib/vdso/check/vdsocheck.rs         | 279 ++++++++++++++++
+ tools/include/uapi/linux/elf-em.h   |  71 ++++
+ tools/include/uapi/linux/elf-r.h    | 631 ++++++++++++++++++++++++++++++++++++
+ tools/include/uapi/linux/elf.h      | 112 ++++++-
+ 29 files changed, 2277 insertions(+), 684 deletions(-)
+---
+base-commit: 5180c6526acc9f1cb58f8b11fba67583c22e0854
+change-id: 20250428-vdso-absolute-reloc-a226293c1761
+
+Best regards,
 -- 
-2.50.1
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
