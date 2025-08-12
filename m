@@ -1,110 +1,178 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BBA9283FE2
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 13:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B83D28852D
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 13:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755005253; cv=none; b=KZa6Uxc+l4z9T/e4oCSPW12lCwhqvacq6SEPNaIiJrZa3wGwFRnwTdfmii4CLWLAAeUXco2B1RwRLLjWQR9TJByCw6sFZeyoMAgYx0c8Yhe8L4Z6z1f0PYT2mkhqNmGzoRZH+oifJzg2iFxuuO0MUl2EkWa6+V+GPCREIv26Gwg=
+	t=1755005968; cv=none; b=lj62Jg+B1gt0vnHzRsmf416FQXmRE+oBK3o3pOyKJE7tyksrWCjAEq1sT1Y18Jmm+4y1MSo8CYwoBqPGMfrhyKykF13nY/9/SJBWJKmiCGkEfiMJuyl0Ctxaqc/TiUQXW9nx9EEUf34lrgoHRurYQvJGMQ0NlfNqFglRijoy+Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755005253; c=relaxed/simple;
-	bh=YZ09Id6v7EjDAgnRDASiWJGhvIAMhXex9LIsQ5F9RnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UEgYZdHnLfzOj40v6GwWafbCcGuO5xxlITaUUp6++Hwz4fT+RK4satXBTEc5tW85EXJr3rhCvRANRwkfZh3fP4jqUVz8MyTzqxcLX95GBCzXuSj0WtofmszY1l5osmx5ZaiP8eoinkRgnMsMbjfICg3As3/lDXIlVBBc3yHm69Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axx2k6QZtoJvg+AQ--.19352S3;
-	Tue, 12 Aug 2025 21:27:22 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxdOQ0QZtoOLVGAA--.6029S4;
-	Tue, 12 Aug 2025 21:27:22 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] LoongArch: Pass annotate-tablejump option if LTO is enabled
-Date: Tue, 12 Aug 2025 21:27:16 +0800
-Message-ID: <20250812132716.1465-3-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250812132716.1465-1-yangtiezhu@loongson.cn>
-References: <20250812132716.1465-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1755005968; c=relaxed/simple;
+	bh=v3lEPLSOgQrqB4nhnBSAczkf4aDGSxez+os4FxE4r6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fM6ykmIR6L59qvSSsaY5+5iaeeHmv/beUo5mIIDMF2WEDQYf1hg/Wb8a0yWbOipPQ4ZRFve11ZcyZiRc71qAvYeRbq9KwE9as/ugThXYpVOAbl+j9n6lQJ5BJJdMFAmrL2BVYL+TEQkNIdWXCASj0FRsXPRIvF5hFFU4kV755EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KDTLkC4U; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDTLkC4U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755005965;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DxjcecEI7phcRYjWyLkZSnGEJwCBjNTRZZccT/msDU8=;
+	b=KDTLkC4UeDYZx98A7Bs0g6wIxZ3tgZbAn4sVnRtM8LRDTkZxZoiwKlLqmX7OFTpU2/h7Yy
+	aWhVj3VshYlsnnX/m008+xFqaB3paWSFb5vuQuBl5pbeLiMU7LbXCO16cXgprXGlSCWdY5
+	gR1eUe9giFHe+aitW29WMIitrhCTKnQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-553-FY5fxrhNOyqPzbOI5L33kw-1; Tue,
+ 12 Aug 2025 09:39:22 -0400
+X-MC-Unique: FY5fxrhNOyqPzbOI5L33kw-1
+X-Mimecast-MFC-AGG-ID: FY5fxrhNOyqPzbOI5L33kw_1755005958
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5149919560B3;
+	Tue, 12 Aug 2025 13:39:17 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.156])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F8A819560AB;
+	Tue, 12 Aug 2025 13:39:15 +0000 (UTC)
+Date: Tue, 12 Aug 2025 21:39:11 +0800
+From: Baoquan He <bhe@redhat.com>
+To: linux-mm@kvack.org, alexghiti@rivosinc.com, agordeev@linux.ibm.com,
+	linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, christophe.leroy@csgroup.eu,
+	x86@kernel.org, chris@zankel.net, jcmvbkbc@gmail.com,
+	linux-um@lists.infradead.org
+Cc: ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
+	dvyukov@google.com, vincenzo.frascino@arm.com,
+	akpm@linux-foundation.org, kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	sj@kernel.org, lorenzo.stoakes@oracle.com, elver@google.com,
+	snovitoll@gmail.com
+Subject: Re: [PATCH v2 00/12] mm/kasan: make kasan=on|off work for all three
+ modes
+Message-ID: <aJtD/8beAEHtm2/6@MiWiFi-R3L-srv>
+References: <20250812124941.69508-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxdOQ0QZtoOLVGAA--.6029S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AryrKr4rCw4xZry5ZF18Zwc_yoW8Kr1kp3
-	9xCFZYqFs5Xrn7Kr9rJ3y2gr98KrZxK3W7WFyay348AwsxXa12vr10qF9FqFyrZws5XrWI
-	qrZ3KrZ8KF4DCacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5l1kUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250812124941.69508-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist
-many objtool warnings "sibling call from callable instruction with
-modified stack frame".
+Forgot adding related ARCH mailing list or people to CC, add them.
 
-For this special case, the related object file shows that there is
-no generated relocation section '.rela.discard.tablejump_annotate'
-for the table jump instruction jirl, thus objtool can not know that
-what is the actual destination address.
-
-It needs to do something on the LLVM side to make sure that there is
-the relocation section '.rela.discard.tablejump_annotate' if LTO is
-enabled, but in order to maintain compatibility for the current LLVM
-compiler, this can be done in the kernel Makefile for now. Ensure it
-is aware of linker with LTO, '--loongarch-annotate-tablejump' needs
-to be passed via '-mllvm' to ld.lld.
-
-Note that it should also pass the compiler option -mannotate-tablejump
-rather than only pass '-mllvm --loongarch-annotate-tablejump' to ld.lld
-if LTO is enabled, otherwise there are no jump info for some table jump
-instructions.
-
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/loongarch/20250731175655.GA1455142@ax162/
-Fixes: e20ab7d454ee ("LoongArch: Enable jump table for objtool")
-Co-developed-by: WANG Rui <wangrui@loongson.cn>
-Signed-off-by: WANG Rui <wangrui@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index b0703a4e02a2..6cdbcbbe730e 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -103,6 +103,12 @@ KBUILD_CFLAGS			+= $(call cc-option,-mthin-add-sub) $(call cc-option,-Wa$(comma)
- ifdef CONFIG_OBJTOOL
- ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
- KBUILD_CFLAGS			+= -mannotate-tablejump
-+# The annotate-tablejump option can not be passed to LLVM backend when LTO is enabled.
-+# Ensure it is aware of linker with LTO, '--loongarch-annotate-tablejump' needs to be
-+# passed via '-mllvm' to ld.lld.
-+ifdef CONFIG_LTO_CLANG
-+KBUILD_LDFLAGS			+= -mllvm --loongarch-annotate-tablejump
-+endif
- else
- KBUILD_CFLAGS			+= -fno-jump-tables # keep compatibility with older compilers
- endif
--- 
-2.42.0
+On 08/12/25 at 08:49pm, Baoquan He wrote:
+> Currently only hw_tags mode of kasan can be enabled or disabled with
+> kernel parameter kasan=on|off for built kernel. For kasan generic and
+> sw_tags mode, there's no way to disable them once kernel is built.
+> This is not convenient sometime, e.g in system kdump is configured.
+> When the 1st kernel has KASAN enabled and crash triggered to switch to
+> kdump kernel, the generic or sw_tags mode will cost much extra memory
+> for kasan shadow while in fact it's meaningless to have kasan in kdump
+> kernel.
+> 
+> So this patchset moves the kasan=on|off out of hw_tags scope and into
+> common code to make it visible in generic and sw_tags mode too. Then we
+> can add kasan=off in kdump kernel to reduce the unneeded meomry cost for
+> kasan.
+> 
+> Changelog:
+> ====
+> v1->v2:
+> - Add __ro_after_init for __ro_after_init, and remove redundant blank
+>   lines in mm/kasan/common.c. Thanks to Marco.
+> - Fix a code bug in <linux/kasan-enabled.h> when CONFIG_KASAN is unset,
+>   this is found out by SeongJae and Lorenzo, and also reported by LKP
+>   report, thanks to them.
+> - Add a missing kasan_enabled() checking in kasan_report(). This will
+>   cause below KASAN report info even though kasan=off is set:
+>      ==================================================================
+>      BUG: KASAN: stack-out-of-bounds in tick_program_event+0x130/0x150
+>      Read of size 4 at addr ffff00005f747778 by task swapper/0/1
+>      
+>      CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.16.0+ #8 PREEMPT(voluntary) 
+>      Hardware name: GIGABYTE R272-P30-JG/MP32-AR0-JG, BIOS F31n (SCP: 2.10.20220810) 09/30/2022
+>      Call trace:
+>       show_stack+0x30/0x90 (C)
+>       dump_stack_lvl+0x7c/0xa0
+>       print_address_description.constprop.0+0x90/0x310
+>       print_report+0x104/0x1f0
+>       kasan_report+0xc8/0x110
+>       __asan_report_load4_noabort+0x20/0x30
+>       tick_program_event+0x130/0x150
+>       ......snip...
+>      ==================================================================
+> 
+> - Add jump_label_init() calling before kasan_init() in setup_arch() in these
+>   architectures: xtensa, arm. Because they currenly rely on
+>   jump_label_init() in main() which is a little late. Then the early static
+>   key kasan_flag_enabled in kasan_init() won't work.
+> 
+> - In UML architecture, change to enable kasan_flag_enabled in arch_mm_preinit()
+>   because kasan_init() is enabled before main(), there's no chance to operate
+>   on static key in kasan_init().
+> 
+> Test:
+> =====
+> In v1, I took test on x86_64 for generic mode, and on arm64 for
+> generic, sw_tags and hw_tags mode. All of them works well.
+> 
+> In v2, I only tested on arm64 for generic, sw_tags and hw_tags mode, it
+> works. For powerpc, I got a BOOK3S/64 machine, while it says
+> 'KASAN not enabled as it requires radix' and KASAN is disabled. Will
+> look for other POWER machine to test this.
+> ====
+> 
+> Baoquan He (12):
+>   mm/kasan: add conditional checks in functions to return directly if
+>     kasan is disabled
+>   mm/kasan: move kasan= code to common place
+>   mm/kasan/sw_tags: don't initialize kasan if it's disabled
+>   arch/arm: don't initialize kasan if it's disabled
+>   arch/arm64: don't initialize kasan if it's disabled
+>   arch/loongarch: don't initialize kasan if it's disabled
+>   arch/powerpc: don't initialize kasan if it's disabled
+>   arch/riscv: don't initialize kasan if it's disabled
+>   arch/x86: don't initialize kasan if it's disabled
+>   arch/xtensa: don't initialize kasan if it's disabled
+>   arch/um: don't initialize kasan if it's disabled
+>   mm/kasan: make kasan=on|off take effect for all three modes
+> 
+>  arch/arm/kernel/setup.c                |  6 +++++
+>  arch/arm/mm/kasan_init.c               |  6 +++++
+>  arch/arm64/mm/kasan_init.c             |  7 ++++++
+>  arch/loongarch/mm/kasan_init.c         |  5 ++++
+>  arch/powerpc/mm/kasan/init_32.c        |  8 +++++-
+>  arch/powerpc/mm/kasan/init_book3e_64.c |  6 +++++
+>  arch/powerpc/mm/kasan/init_book3s_64.c |  6 +++++
+>  arch/riscv/mm/kasan_init.c             |  6 +++++
+>  arch/um/kernel/mem.c                   |  6 +++++
+>  arch/x86/mm/kasan_init_64.c            |  6 +++++
+>  arch/xtensa/kernel/setup.c             |  1 +
+>  arch/xtensa/mm/kasan_init.c            |  6 +++++
+>  include/linux/kasan-enabled.h          | 18 ++++++-------
+>  mm/kasan/common.c                      | 25 ++++++++++++++++++
+>  mm/kasan/generic.c                     | 20 +++++++++++++--
+>  mm/kasan/hw_tags.c                     | 35 ++------------------------
+>  mm/kasan/init.c                        |  6 +++++
+>  mm/kasan/quarantine.c                  |  3 +++
+>  mm/kasan/report.c                      |  4 ++-
+>  mm/kasan/shadow.c                      | 23 ++++++++++++++++-
+>  mm/kasan/sw_tags.c                     |  9 +++++++
+>  21 files changed, 165 insertions(+), 47 deletions(-)
+> 
+> -- 
+> 2.41.0
+> 
 
