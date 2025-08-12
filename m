@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763342E284E;
-	Tue, 12 Aug 2025 05:44:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFAE2D3EF6;
+	Tue, 12 Aug 2025 05:44:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754977482; cv=none; b=EviGvwplLHyVudC+BzE2cg+vYUv9Vz7MelAr0IfdKYRnckRVOrpX1T611TFyy1wCRtwQKoppp/qT2vqSox1YcfEBN6Q1LSymO8OPTlZ6lo6vHltjlACkbFGDyi/dEPIytFNCSk+y1OyBXmresN8WWjVjRtzW8hcbMrJ0M8a1PsE=
+	t=1754977483; cv=none; b=LL+sL9/eJxjkp/z/0PNEPT95+8a9GXMnGBRrQzkhcnMrXcSJy4V40YBpf0G9d7ec/52wO2f/at4+CIdf2fZ7Vh+Hzoq0m00tzh6iTB0N4nmJbCHag4mKxBrQpTlqRCj+XzxYaZXbe/bXgeyTD7ZzpwA2QCc6EZqjQBuG1wbmp1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754977482; c=relaxed/simple;
-	bh=HzT2SYHSNRm4ZtRujeJaJIJT/indjE0TyRY6RtPSNtQ=;
+	s=arc-20240116; t=1754977483; c=relaxed/simple;
+	bh=URWumLq5cEfF9wP67bk+ZcYfaIdTPXBTgCA3fiF+CgA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=euWFC6lQ0fv2fS8gOkd0jaaRPaYGnCAr5ZH//a0qW6EtFA9ybEt8EOnY0pQKKkiYvcSafgMOuo538B5unaNwAfE14kMBUx0mwhrErnQMNIUXaT3qxQ8TrPgkCFVLKCqYpy13NF7J4vAwYmUURvxfeih4uZqwys9eFbY1ySFKJW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LKiTWvfb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4TwJQtL0; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=WltcZXHOODqIZJfA42UALVSLnVbqTBOjGxxMS8ZuvZUlq7JmR25+NY4NLjzs7PgTISEdQR9WbbZVEB+YtfXkEVpzb4RTdTMrYASAkd/3LsWxjXqIf/o2keILXvtOCgVrGVzcWuUGU5XhYAngJ1R4zMgYiUfLeHb/jSweG8F4stM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B1kpGRDy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XsxRG5no; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LKiTWvfb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4TwJQtL0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B1kpGRDy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XsxRG5no"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754977472;
+	s=2020; t=1754977475;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dkZKFkMLET6nFcPB2WNffaOSCveGBK/DoVsJr+6leSI=;
-	b=LKiTWvfbe4sMF2JqJpsl5CRdkfSHca9QAI6VsemqVTqROhwCEorsYpYPKmr+pCeUzczBPL
-	lHiLvd6vhjMW+nDOKYD8HJiFnADn8FYNXoy3PLssT7rxID6/ofIv5S6BU93tu/BjTQ3zFZ
-	f+21QfpLHJ+20Cv6mZbG6zxNBKvj7HT/hFCAA3DjqZwewTsOPEzPa95cGSRO7jioU6muIg
-	r+AfsplYFpXa1HtHFAkSc/u3FYPvQslQo5BqvTx3yjG40NQJEXQgELqm3Y/R91vyPu6YFj
-	lnGELQzhXrNx6pRaRRbu8P9vTDjg6NfngtEE3BLPdXDCaAsI48w14NVifsW7gQ==
+	bh=bfNfmAZ2eWXIcM3gW1RToAS2jXuE+ttAWjtBaA8JivY=;
+	b=B1kpGRDy3pua7bopWb/954oKgIRuc3FpjRcj8N8/0woGocR6MrlC63NTftBUFibKS/AICQ
+	0l4yLvJDAUL9O9Iv8brOnKZbuEK46aY74M50FME3ez3Pqc0JNVP0cah4ZO+nwmJK1ZETG+
+	ahGQ2eL4oYMmBUubBb7TW5qooKJgC0dBGwDMZsgzk0S+hvVfKZybnmYIkMpJmtsWOmDXE/
+	7A3+CPHb6uwJ43WFXviOiwG4lW30wI8rFjFt/MBD45XXy8SmYdbOVBvgbqsdc9GpTPAv4z
+	YPBooaL0o00WA384eonGN+yemrymWJ8qP4EH0Mydpotgh3etmFhObcSWEnpSWw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754977472;
+	s=2020e; t=1754977475;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dkZKFkMLET6nFcPB2WNffaOSCveGBK/DoVsJr+6leSI=;
-	b=4TwJQtL0DH1Y8FEY0nXw5JLyqTIDve3EQ5RM8bs+Izei6SC/5r+S+kSlkbwlcwESU+Bzxx
-	vL69R3DfS2dxTZAg==
-Date: Tue, 12 Aug 2025 07:44:17 +0200
-Subject: [PATCH v4 04/24] arm64: elf: Move relocation constants to UAPI
+	bh=bfNfmAZ2eWXIcM3gW1RToAS2jXuE+ttAWjtBaA8JivY=;
+	b=XsxRG5noqNi3QHUb3PsJMNnR3h1efFABfuNPsU4Tp4BzgulPHL9P4+dkMiySHq2nPf5wzI
+	aGxuMRcC3js1Y5AQ==
+Date: Tue, 12 Aug 2025 07:44:22 +0200
+Subject: [PATCH v4 09/24] MIPS: ELF: Move relocation constants to UAPI
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250812-vdso-absolute-reloc-v4-4-61a8b615e5ec@linutronix.de>
+Message-Id: <20250812-vdso-absolute-reloc-v4-9-61a8b615e5ec@linutronix.de>
 References: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
 In-Reply-To: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -91,11 +91,11 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Arnaldo Carvalho de Melo <acme@redhat.com>, 
  Alexandre Ghiti <alexghiti@rivosinc.com>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1754977469; l=4444;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1754977469; l=4434;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=HzT2SYHSNRm4ZtRujeJaJIJT/indjE0TyRY6RtPSNtQ=;
- b=S9P2n5/cBPWTmkH8+DZZ91/PGYQizVg5PAYegpw8TUQhE90iFtIunP8BCI0PJECMORxxw1wn5
- kPEmqcrLaUdCEdmy5grg/+JQY5xzBpIU7jPXrEa9kA+HChds1EvqNqF
+ bh=URWumLq5cEfF9wP67bk+ZcYfaIdTPXBTgCA3fiF+CgA=;
+ b=L2h7+F73PT6iolsNxcu6S1mxeLogHfAutUNfzT1g4xN2qS8cRMLW7GI8H7DLrsC8VYfYYOVEW
+ 2yK3W8sGTl1CqHowhCCS2gkuE5kLBohKQe3c+i9dq+/6IUgTR2HRtCc
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
@@ -106,134 +106,135 @@ Move them from the kernel-private architecture-specific header to the UAPI.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- arch/arm64/include/asm/elf.h | 54 --------------------------------------------
- include/uapi/linux/elf-r.h   | 52 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 52 insertions(+), 54 deletions(-)
+ arch/mips/include/asm/elf.h | 53 --------------------------------------------
+ include/uapi/linux/elf-r.h  | 54 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 54 insertions(+), 53 deletions(-)
 
-diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-index 8efcfe7efe0c70c59b9b81f93ac9c1442bc7656a..a14b88fb485e60f89332f0c6b58ed929eb6600b6 100644
---- a/arch/arm64/include/asm/elf.h
-+++ b/arch/arm64/include/asm/elf.h
-@@ -13,60 +13,6 @@
- #include <asm/ptrace.h>
- #include <asm/user.h>
+diff --git a/arch/mips/include/asm/elf.h b/arch/mips/include/asm/elf.h
+index dc8d2863752cfd5e8e2cbd750276f9463e0c32b8..347e12584beebbb5a7290efae3310b01220bbe0a 100644
+--- a/arch/mips/include/asm/elf.h
++++ b/arch/mips/include/asm/elf.h
+@@ -70,59 +70,6 @@
+ #define DT_MIPS_HIPAGENO	0x70000014
+ #define DT_MIPS_RLD_MAP		0x70000016
  
+-#define R_MIPS_NONE		0
+-#define R_MIPS_16		1
+-#define R_MIPS_32		2
+-#define R_MIPS_REL32		3
+-#define R_MIPS_26		4
+-#define R_MIPS_HI16		5
+-#define R_MIPS_LO16		6
+-#define R_MIPS_GPREL16		7
+-#define R_MIPS_LITERAL		8
+-#define R_MIPS_GOT16		9
+-#define R_MIPS_PC16		10
+-#define R_MIPS_CALL16		11
+-#define R_MIPS_GPREL32		12
+-/* The remaining relocs are defined on Irix, although they are not
+-   in the MIPS ELF ABI.	 */
+-#define R_MIPS_UNUSED1		13
+-#define R_MIPS_UNUSED2		14
+-#define R_MIPS_UNUSED3		15
+-#define R_MIPS_SHIFT5		16
+-#define R_MIPS_SHIFT6		17
+-#define R_MIPS_64		18
+-#define R_MIPS_GOT_DISP		19
+-#define R_MIPS_GOT_PAGE		20
+-#define R_MIPS_GOT_OFST		21
 -/*
-- * AArch64 static relocation types.
+- * The following two relocation types are specified in the MIPS ABI
+- * conformance guide version 1.2 but not yet in the psABI.
 - */
+-#define R_MIPS_GOTHI16		22
+-#define R_MIPS_GOTLO16		23
+-#define R_MIPS_SUB		24
+-#define R_MIPS_INSERT_A		25
+-#define R_MIPS_INSERT_B		26
+-#define R_MIPS_DELETE		27
+-#define R_MIPS_HIGHER		28
+-#define R_MIPS_HIGHEST		29
+-/*
+- * The following two relocation types are specified in the MIPS ABI
+- * conformance guide version 1.2 but not yet in the psABI.
+- */
+-#define R_MIPS_CALLHI16		30
+-#define R_MIPS_CALLLO16		31
+-/*
+- * Introduced for MIPSr6.
+- */
+-#define R_MIPS_PC21_S2		60
+-#define R_MIPS_PC26_S2		61
+-/*
+- * This range is reserved for vendor specific relocations.
+- */
+-#define R_MIPS_LOVENDOR		100
+-#define R_MIPS_HIVENDOR		127
 -
--/* Miscellaneous. */
--#define R_AARCH64_NONE			256
--
--/* Data. */
--#define R_AARCH64_ABS64			257
--#define R_AARCH64_ABS32			258
--#define R_AARCH64_ABS16			259
--#define R_AARCH64_PREL64		260
--#define R_AARCH64_PREL32		261
--#define R_AARCH64_PREL16		262
--
--/* Instructions. */
--#define R_AARCH64_MOVW_UABS_G0		263
--#define R_AARCH64_MOVW_UABS_G0_NC	264
--#define R_AARCH64_MOVW_UABS_G1		265
--#define R_AARCH64_MOVW_UABS_G1_NC	266
--#define R_AARCH64_MOVW_UABS_G2		267
--#define R_AARCH64_MOVW_UABS_G2_NC	268
--#define R_AARCH64_MOVW_UABS_G3		269
--
--#define R_AARCH64_MOVW_SABS_G0		270
--#define R_AARCH64_MOVW_SABS_G1		271
--#define R_AARCH64_MOVW_SABS_G2		272
--
--#define R_AARCH64_LD_PREL_LO19		273
--#define R_AARCH64_ADR_PREL_LO21		274
--#define R_AARCH64_ADR_PREL_PG_HI21	275
--#define R_AARCH64_ADR_PREL_PG_HI21_NC	276
--#define R_AARCH64_ADD_ABS_LO12_NC	277
--#define R_AARCH64_LDST8_ABS_LO12_NC	278
--
--#define R_AARCH64_TSTBR14		279
--#define R_AARCH64_CONDBR19		280
--#define R_AARCH64_JUMP26		282
--#define R_AARCH64_CALL26		283
--#define R_AARCH64_LDST16_ABS_LO12_NC	284
--#define R_AARCH64_LDST32_ABS_LO12_NC	285
--#define R_AARCH64_LDST64_ABS_LO12_NC	286
--#define R_AARCH64_LDST128_ABS_LO12_NC	299
--
--#define R_AARCH64_MOVW_PREL_G0		287
--#define R_AARCH64_MOVW_PREL_G0_NC	288
--#define R_AARCH64_MOVW_PREL_G1		289
--#define R_AARCH64_MOVW_PREL_G1_NC	290
--#define R_AARCH64_MOVW_PREL_G2		291
--#define R_AARCH64_MOVW_PREL_G2_NC	292
--#define R_AARCH64_MOVW_PREL_G3		293
--
--#define R_AARCH64_RELATIVE		1027
--
- /*
-  * These are used to set parameters in the core dumps.
-  */
+ #define SHN_MIPS_ACCOMON	0xff00		/* Allocated common symbols */
+ #define SHN_MIPS_TEXT		0xff01		/* Allocated test symbols.  */
+ #define SHN_MIPS_DATA		0xff02		/* Allocated data symbols.  */
 diff --git a/include/uapi/linux/elf-r.h b/include/uapi/linux/elf-r.h
-index 001884641e7703146f91e2dd96fb5a2bbfc7a324..cf931fc05afa1825aa9737a4e6259ec0da678d3a 100644
+index c1309a63a7dc4495f22e3d8b51d3f97ab5809190..78085d26f4ab27a003fde65c8e981f575f411758 100644
 --- a/include/uapi/linux/elf-r.h
 +++ b/include/uapi/linux/elf-r.h
-@@ -61,4 +61,56 @@
- #define R_ARM_THM_MOVW_PREL_NC	49
- #define R_ARM_THM_MOVT_PREL	50
+@@ -563,4 +563,58 @@
+ /* Keep this the last entry.  */
+ #define R_390_NUM	61
  
-+/* AArch64 static relocation types */
-+
-+/* Miscellaneous. */
-+#define R_AARCH64_NONE			256
-+
-+/* Data. */
-+#define R_AARCH64_ABS64			257
-+#define R_AARCH64_ABS32			258
-+#define R_AARCH64_ABS16			259
-+#define R_AARCH64_PREL64		260
-+#define R_AARCH64_PREL32		261
-+#define R_AARCH64_PREL16		262
-+
-+/* Instructions. */
-+#define R_AARCH64_MOVW_UABS_G0		263
-+#define R_AARCH64_MOVW_UABS_G0_NC	264
-+#define R_AARCH64_MOVW_UABS_G1		265
-+#define R_AARCH64_MOVW_UABS_G1_NC	266
-+#define R_AARCH64_MOVW_UABS_G2		267
-+#define R_AARCH64_MOVW_UABS_G2_NC	268
-+#define R_AARCH64_MOVW_UABS_G3		269
-+
-+#define R_AARCH64_MOVW_SABS_G0		270
-+#define R_AARCH64_MOVW_SABS_G1		271
-+#define R_AARCH64_MOVW_SABS_G2		272
-+
-+#define R_AARCH64_LD_PREL_LO19		273
-+#define R_AARCH64_ADR_PREL_LO21		274
-+#define R_AARCH64_ADR_PREL_PG_HI21	275
-+#define R_AARCH64_ADR_PREL_PG_HI21_NC	276
-+#define R_AARCH64_ADD_ABS_LO12_NC	277
-+#define R_AARCH64_LDST8_ABS_LO12_NC	278
-+
-+#define R_AARCH64_TSTBR14		279
-+#define R_AARCH64_CONDBR19		280
-+#define R_AARCH64_JUMP26		282
-+#define R_AARCH64_CALL26		283
-+#define R_AARCH64_LDST16_ABS_LO12_NC	284
-+#define R_AARCH64_LDST32_ABS_LO12_NC	285
-+#define R_AARCH64_LDST64_ABS_LO12_NC	286
-+#define R_AARCH64_LDST128_ABS_LO12_NC	299
-+
-+#define R_AARCH64_MOVW_PREL_G0		287
-+#define R_AARCH64_MOVW_PREL_G0_NC	288
-+#define R_AARCH64_MOVW_PREL_G1		289
-+#define R_AARCH64_MOVW_PREL_G1_NC	290
-+#define R_AARCH64_MOVW_PREL_G2		291
-+#define R_AARCH64_MOVW_PREL_G2_NC	292
-+#define R_AARCH64_MOVW_PREL_G3		293
-+
-+#define R_AARCH64_RELATIVE		1027
++/* MIPS relocations defined by the ABIs */
++#define R_MIPS_NONE		0
++#define R_MIPS_16		1
++#define R_MIPS_32		2
++#define R_MIPS_REL32		3
++#define R_MIPS_26		4
++#define R_MIPS_HI16		5
++#define R_MIPS_LO16		6
++#define R_MIPS_GPREL16		7
++#define R_MIPS_LITERAL		8
++#define R_MIPS_GOT16		9
++#define R_MIPS_PC16		10
++#define R_MIPS_CALL16		11
++#define R_MIPS_GPREL32		12
++/* The remaining relocs are defined on Irix, although they are not
++   in the MIPS ELF ABI.	 */
++#define R_MIPS_UNUSED1		13
++#define R_MIPS_UNUSED2		14
++#define R_MIPS_UNUSED3		15
++#define R_MIPS_SHIFT5		16
++#define R_MIPS_SHIFT6		17
++#define R_MIPS_64		18
++#define R_MIPS_GOT_DISP		19
++#define R_MIPS_GOT_PAGE		20
++#define R_MIPS_GOT_OFST		21
++/*
++ * The following two relocation types are specified in the MIPS ABI
++ * conformance guide version 1.2 but not yet in the psABI.
++ */
++#define R_MIPS_GOTHI16		22
++#define R_MIPS_GOTLO16		23
++#define R_MIPS_SUB		24
++#define R_MIPS_INSERT_A		25
++#define R_MIPS_INSERT_B		26
++#define R_MIPS_DELETE		27
++#define R_MIPS_HIGHER		28
++#define R_MIPS_HIGHEST		29
++/*
++ * The following two relocation types are specified in the MIPS ABI
++ * conformance guide version 1.2 but not yet in the psABI.
++ */
++#define R_MIPS_CALLHI16		30
++#define R_MIPS_CALLLO16		31
++/*
++ * Introduced for MIPSr6.
++ */
++#define R_MIPS_PC21_S2		60
++#define R_MIPS_PC26_S2		61
++/*
++ * This range is reserved for vendor specific relocations.
++ */
++#define R_MIPS_LOVENDOR		100
++#define R_MIPS_HIVENDOR		127
 +
  #endif /* _UAPI_LINUX_ELF_R_H */
 
