@@ -1,122 +1,185 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118BA2ED145;
-	Tue, 12 Aug 2025 11:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34421273FD
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 11:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754996869; cv=none; b=O7mI/dMe7vZiiqWRmYDabkkscnBdGoDkziEE0wMwcSlIQwc5LT8qpLjPsFdeGP3UBHH7KSX5Kyw0J83lXoSd8RE75LC2v9Ir3Ntt5HacqBgCTnWCndxmqRk+0aoOF53vK6NJorNMbaQeejGZ79Otiyde2mzHDsGaX9r+tUiF6tU=
+	t=1754997488; cv=none; b=SCQ/j5gQk3qneTqp+ldxb/o3dPDPlJLBXLuu24lXkjLvgqtKQsQ/DAym6jIwlKSobTZVX9wOa1ktop31iRjF1RDtEQxwgfgboPgUaHJwICs8+YqRW4QmzsWRHWofDGFjVDKk+TqXAGcjtcTYykSn6R5/gB5RsB/xwmEnMlleOUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754996869; c=relaxed/simple;
-	bh=mM1oIijYsTieBVXwDdbk88e2RvtyWnf8BqoF2nILFwk=;
+	s=arc-20240116; t=1754997488; c=relaxed/simple;
+	bh=7Vnu2SAXizOmganWVnq92MoEZwyQR7h6ks3qm8nNdWo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MXt6qnyaqM9oTWgDY7v3lowa9uqIxKYzDTiOooTT/gBfW65Y2gC0DAjruZppDAHuZNtfZ/fMzxwqiridGaawPw2HZRDQPHP9wVYVHUyK/B6qsqNGM8Rm6LmjzGczHh1OB2r6zGNvRDYbJcbfBSZn5kEFQosLNkDrMSJaxd7kp7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YHNg7rhT; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=fuS34WlZlXv05aDpH1B5uB4PAuCihk6bUSCPDb7/iUojXuu3yUx8wRmNLzBEB5SWYObuSsd31LGJpuW4wOXk6L6/N7wXCst82i0itSgRTDUVe5P/I3NoC2FmcskHXqgQtgV33F6IGVO1BM8nMTcW6f6TDnmNZ1LTD3Hs2rQvwdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndZFhlCD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHNg7rhT"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-242fdfec998so1097695ad.1;
-        Tue, 12 Aug 2025 04:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754996867; x=1755601667; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mM1oIijYsTieBVXwDdbk88e2RvtyWnf8BqoF2nILFwk=;
-        b=YHNg7rhTvWwmwBQxbBrlSmpapElbHqaODmGdhJ0HL0Sq7Bhun/zu5G6spfNu/N3v03
-         mx9eGYTFSZhEO0Y3IQMbkpy9xQSR+/yYBXZox7HOlQcldkEZEak2VTQ7g4exgS20jZfC
-         4IQjusyjgyuKCbN52wEZxUZGYush4IZ7Hbw6YBKq/VwSHJhGcWgd63DW2QhTtWeGk7uq
-         wc5QpAFnDCFCQon/GJ00h8p7rBhjcP/BCFpEZ5Lcu0TxMrGobCwnp3uE6HEpTf9e3Rb/
-         hZIIruiDZDyxQXPgcl3BFXAAnqQbiIHwU/ToB/e1ebdC8mg6/ENO4v0tWbGnGPtGhq3J
-         FlkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754996867; x=1755601667;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mM1oIijYsTieBVXwDdbk88e2RvtyWnf8BqoF2nILFwk=;
-        b=a+l7bl5i9mtuUsPO8YGWzrSH1b1TwFgwebEkU5LXyYKNJitCjqMuBkw+Exvoes1A4S
-         Y2in6yGds+dFsh46lJG3g2Wlceq5t9iYz7Er18iwBPbZoWXoHCLbd23izBaSaIEw9kvd
-         76wFCeBktCmCs4uCgO4+0YbsRGlRv9ICyUxiSyt4/jsCwQu8to6olWUEYC5JG5oH0zU+
-         HKit2aafB+bB70DD4Ea/K9CvaLCqrdSBIci0tMwNK0c3QIBfxY5geCk5vvf2Bq5EOn9H
-         5vNNj8GuaiqDrjuaNh2FNlgnDR+FregvQbBBJdWvL9d9duxZpHg6R+qTcoMVmQQZve9U
-         7wJA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/iO67iRFBcHD+sg99xkRGuBx0nRgBpeIK6J+4pHENJCWAm/Vxj9Hkxm8Dd63y6LKReCwX@lists.linux.dev, AJvYcCVzg124B/3jIYmiVmBU1xoXEr/p50nsUunbe7E270bTEQNbV7G82iMVtrsG1Y3tS5JxsyCG+bJlwYr4@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz4+TUbmjaBxdDt0O1Z2ou79UVfcKdL911bDAPUN1B98rM757LH
-	5VV0a3812bgWcajEAMrpyyppSNzNHWjVrZtZVbFg3utR3GL0Hpu0oYpH7hxOxerFNMCUt3xMVfI
-	/lbO2nse41Uwby8IRK7m5xqt0xmfgOHY=
-X-Gm-Gg: ASbGncsyGZ8n+S/qL+eSzENu5JP1Ug2yEP+eTDBFEO+sgCwp2zRPr3QUr2s7Vw/t/Q/
-	3o7o9mHXNO5Iw2a5mz4PzozSz+a7iSg8p9Mfw74Bw0tRW44/QlEYx9vLvH87aULz6I/aA2pR8mk
-	rNfcg3X5FHZYI1Z5QXpDSviYISwnJ4/IN9ExyCFsgOz0RPrX1qIRbpXjI1SbH4AQO3Ko9vzsIWG
-	cehSj6LnXtpAK30NOM=
-X-Google-Smtp-Source: AGHT+IGLTgav5Ly0pJQ7DxONlyuqSGpB75/R07ZLvB4KvAdVZt2KEevtP/u+Z9PPdrxzblYTwfgzUXYmCR2PQbfj+a0=
-X-Received: by 2002:a17:903:1a70:b0:240:5c13:979a with SMTP id
- d9443c01a7336-24306da5537mr4831165ad.9.1754996867136; Tue, 12 Aug 2025
- 04:07:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndZFhlCD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D82E9C4CEF9
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 11:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754997487;
+	bh=7Vnu2SAXizOmganWVnq92MoEZwyQR7h6ks3qm8nNdWo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ndZFhlCDbClRwYa2X+fO4oAfoeXoMO97pSPJobpfEJCjmAhTO9gqFTrSc/CE1RADa
+	 yyr+cVaqcvDz0KuuRG1QuWYzBwZ5e1cx0gMwya5tD0RaKNMWHA36s1MV3578raJW9t
+	 1J/cxF+V7XWR57kpXylFQZ4wP5t7ge0NnxGuVGarf4AJauJ4SIFT7WdQ6Fpg9otAg9
+	 Dng+brjO8ym0AxWEHL5bkjBrTfxSIcu58a0owHzw0af6ob9/Pie1CbhJz/6Eq3sdy1
+	 F9s92ORCt27TdUJSFoogXgAQ9W54D9z8f+SVz7duragXzhg+Yn4OaiZ6vP5F8lj+sR
+	 4QckBZy1x8c+Q==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-af96d097df5so969726966b.3
+        for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 04:18:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVUSVfWqU1uSCyTA5PHytybPluGsIu5kbSp96uUd35aZkbFCAc/sSNl+Dh9YeKZ2dqELV4VIZCi/Jg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwkDMtN2n4UVKegcip+vXnTPvBzcc41Ej4zGlWLORlHEgM2bg1X
+	6fXYLjKwLmo2u5AvfAjpnjVkBCeDrgJBCnvNVPi8gekAQnSXbD8MQBR3Bjhr4JtvA+3vvLfNi/d
+	dLvtuWOM0u5CIvOzfuLXGUQB8Yhz+4Kw=
+X-Google-Smtp-Source: AGHT+IFuln70EdbDCna43QEHC6Ua/glTqjvL9GOMUm7zyBpwQ4o6B64vtc/Kbnzs92VwvbE3JLPNV28gP92hgGWvtgM=
+X-Received: by 2002:a17:906:4795:b0:af9:2bb9:ea36 with SMTP id
+ a640c23a62f3a-afa1dfa0adcmr279535666b.7.1754997486345; Tue, 12 Aug 2025
+ 04:18:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
-In-Reply-To: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 12 Aug 2025 13:07:34 +0200
-X-Gm-Features: Ac12FXz75fv-5GwEH7lTNJ0yhooMj6nwQ9IaaKPBS7pSI2ZcZDdB8Ex-5Z7LxRg
-Message-ID: <CANiq72nV62c8cVBzke73OH-sfLdgerDBGrLKTmT83+OQtK6PjA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/24] vdso: Reject absolute relocations during build
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Kees Cook <kees@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-mm@kvack.org, linux-um@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
-	linux-mips@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, Jan Stancek <jstancek@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Alexandre Ghiti <alexghiti@rivosinc.com>
+References: <20250812090056.771379-1-lixianglai@loongson.cn>
+In-Reply-To: <20250812090056.771379-1-lixianglai@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 12 Aug 2025 19:17:53 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7pXxFR8PnAOv8CirotXUSPgbb7AEsHU0VGh_YMFFoyJA@mail.gmail.com>
+X-Gm-Features: Ac12FXzwfoTd-Kc8DAHocCaNJA3fNCOmt3H_v7Qkr8thQcnqDtgu6VuaX6Z3oCg
+Message-ID: <CAAhV-H7pXxFR8PnAOv8CirotXUSPgbb7AEsHU0VGh_YMFFoyJA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: time: Fix the issue of high cpu usage of vcpu
+ threads in virtual machines
+To: Xianglai Li <lixianglai@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Bibo Mao <maobibo@loongson.cn>, 
+	Song Gao <gaosong@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 12, 2025 at 7:44=E2=80=AFAM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
+Hi, Xianglai,
+
+There is something that can be improved.
+
+On Tue, Aug 12, 2025 at 5:24=E2=80=AFPM Xianglai Li <lixianglai@loongson.cn=
+> wrote:
 >
-> Kbuild and Rust folks: This contains custom definitions of hostprog
-> bindgen and rust library commands.
-> These are currently only defined inside the subsystem directory.
-> Let me know if they should go into scripts/Makefile.host.
+> When the cpu is offline, the timer under loongarch is not correctly close=
+d,
+> resulting in an excessively high cpu usage rate of the offline vcpu threa=
+d
+> in the virtual machine.
+>
+> To correctly close the timer, we have made the following modifications:
+>
+> Register the cpu hotplug timer start event for loongarch.This event will
+> be called to close the timer when the cpu is offline.
+>
+> Clear the timer interrupt when the timer is turned off
+>
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> ---
+>  arch/loongarch/kernel/time.c | 20 ++++++++++++++++++++
+>  include/linux/cpuhotplug.h   |  1 +
+>  2 files changed, 21 insertions(+)
+>
+> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+> index 367906b10f81..4daa11512eba 100644
+> --- a/arch/loongarch/kernel/time.c
+> +++ b/arch/loongarch/kernel/time.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sched_clock.h>
+>  #include <linux/spinlock.h>
+> +#include <linux/cpu.h>
+>
+>  #include <asm/cpu-features.h>
+>  #include <asm/loongarch.h>
+> @@ -86,6 +87,9 @@ static int constant_set_state_shutdown(struct clock_eve=
+nt_device *evt)
+>         timer_config &=3D ~CSR_TCFG_EN;
+>         csr_write64(timer_config, LOONGARCH_CSR_TCFG);
+>
+> +       /* Clear Timer Interrupt */
+> +       write_csr_tintclear(CSR_TINTCLR_TI);
+> +
+>         raw_spin_unlock(&state_lock);
+>
+>         return 0;
+> @@ -208,8 +212,17 @@ int __init constant_clocksource_init(void)
+>         return res;
+>  }
+>
+> +static int arch_timer_dying_cpu(unsigned int cpu)
+We can use arch_timer_dying() for short. And then add an
+arch_timer_starting() like this:
 
-Glad to see more Rust host progs :)
+static int arch_timer_starting(unsigned int cpu)
+{
+        set_csr_ecfg(ECFGF_TIMER);
 
-Keeping them local may be a bit easier initially to land, I guess
-(e.g. no docs), and then we can generalize when needed later.
+        return 0;
+}
 
-By the way, for consistency with elsewhere, probably we want
-`HOSTRUSTLIB` -> `HOSTRUSTC L`. Though I am thinking to remove the `L`
-anyway since eventually a lot of code will be "lib".
+Though ECFGF_TIMER may be enabled in other places, for syntax we need it he=
+re.
 
-Cheers,
-Miguel
+> +{
+> +       constant_set_state_shutdown(NULL);
+> +
+> +       return 0;
+> +}
+> +
+>  void __init time_init(void)
+>  {
+> +       int err;
+> +
+>         if (!cpu_has_cpucfg)
+>                 const_clock_freq =3D cpu_clock_freq;
+>         else
+> @@ -220,4 +233,11 @@ void __init time_init(void)
+>         constant_clockevent_init();
+>         constant_clocksource_init();
+>         pv_time_init();
+> +
+> +       err =3D cpuhp_setup_state_nocalls(CPUHP_AP_LOONGARCH_ARCH_TIMER_S=
+TARTING,
+> +                                       "loongarch/timer:starting",
+> +                                       NULL, arch_timer_dying_cpu);
+Then we need use cpuhp_setup_state() here, because we have a startup
+function now.
+
+And "loongarch/timer:starting" should be
+"clockevents/loongarch/timer:starting" like others.
+
+And the whole should be moved to the last of
+constant_clockevent_init() because it is clockevent specific.
+
+> +       if (err)
+> +               pr_info("cpu hotplug event register failed");
+This is not so useful, because the error isn't fatal.
+
+
+Huacai
+
+> +
+>  }
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index edfa61d80702..6606c1546afc 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -159,6 +159,7 @@ enum cpuhp_state {
+>         CPUHP_AP_PERF_ARM_STARTING,
+>         CPUHP_AP_PERF_RISCV_STARTING,
+>         CPUHP_AP_ARM_L2X0_STARTING,
+> +       CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
+>         CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
+>         CPUHP_AP_ARM_ARCH_TIMER_STARTING,
+>         CPUHP_AP_ARM_ARCH_TIMER_EVTSTRM_STARTING,
+>
+> base-commit: 53e760d8949895390e256e723e7ee46618310361
+> --
+> 2.39.1
+>
