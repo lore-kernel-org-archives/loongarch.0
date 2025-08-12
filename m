@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6E22E541B;
-	Tue, 12 Aug 2025 05:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8CC2E5409;
+	Tue, 12 Aug 2025 05:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754977487; cv=none; b=Z0eM/4BXsybLL1HaO3/Yngx2IvHruIHKcIfvsn1PgmeKlGqmlW9Rb0Ybhasg4zckJhSBbynGsUvfNKZ3o6hK3LLNzKXf3QPaPpg3zwE20c3QUzPQqiLACjmXesGapuJNgRl5tJ24YP26Mrua0wZFNvbff94l5MMD+Z8DO20n6gE=
+	t=1754977487; cv=none; b=Evn2N/9VZ160MIce0Zh42+U0VLy62/ujkcrUNJkrNP85ReuoLtqwLtpfNOoZV4yGN3uQF6rbbVdai0IEFL0OxzfTmwKqfQMr1Sk1667haRYTPsC5rih7q0tnEdIQ/1j5VnxMKCjjkAItHdWQeVAplbvfgZBe8SYWZpGelyH1H8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1754977487; c=relaxed/simple;
-	bh=ny+/mk92QdWvHIPM7pRuV3n2ghhYt3d8gWmZQ0OBRe4=;
+	bh=n05how22sEnufdxrM4828i2NNT++aNc+IpUgzqX7ohk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HHZ42cNJh1uAbjJSo19YaCtDNLAmT+VkqJ4YquMTytxiW94MHI1QyFTftdel2XGvnYgygM3DffIk/1xv9HHNDTCYh2/JtFHoBbcbIoMQ4lJsQu/UI88362bFXjfseiWQLeYd42AqNTUbQgMyW6DMsPZfkD4SiIfeX8AzPRG7OiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mLjsKlYQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dt2jUDtK; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=qqQrskr+DoCcfJm6QzBaEBM7+l3U5vGnoVme9BtAnu9m3U8aTlBOKu5h4V8nNABlPPbTVdW4jz01gmT8BGj8IqQbU5NVCPb7u/VEWc10/67WTieANK9jNpweRPlfwtlQPCprq6ncOX4b+6jvmJPHnr2x8R7nJgBRsRc9TBpBUn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=17d1f5te; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AnyzdISP; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mLjsKlYQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dt2jUDtK"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="17d1f5te";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AnyzdISP"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754977476;
+	s=2020; t=1754977472;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RN97XE6hq4h6w5B+XqqRkUL6Oa3s/oZNOsBBeDOPqXk=;
-	b=mLjsKlYQewBg1qvOIfA7m9lY8m6wQ0I2osKbix3ki74IDpLfpzNserKG5oCub6NYuXURne
-	qs1TBw7xX632hfRCj6cziv4OFZV6Tpts3AQCOfe9mYai/R/2LIH8n5MLAvKQfXjd7+jFVl
-	M8e8TWWJq+5Vfn+oLXstahf5dz3Ejblp55Ho1VRqVwPoVX8inlAw+aVv2kyc/KVCchlDzr
-	h9k+Ams00b4uzzsDgpFU01xLdxXFz4wMGVnkUcv2R0Sts3QQZkNEjZKID7vGCmpsOXJIxQ
-	FuvpWU044Xe3xaAWtcLhr5hagM8RZ/gLjvC0lh8DhxSE+2hWp4w2K7HAKexzzQ==
+	bh=O/qXdYtuegbf1kl5O2TCqH5+73vhTlXMdIZfEuJ+F/k=;
+	b=17d1f5te+/cYBYYWcDFI2wtdn9xCozU1IkOSYgkcb8wwg8BvllCjsWrJlWBsegHjcXWWT3
+	JW7rnq6dzPdI1jfRRI4Ba8bFhvLYvh9a04yrwZlE0U9F9P1g5DfUWBM5uQTfMy6OxNdcAu
+	Ezv+Cec9cudmfQ0tnoqRpOuEOQYz8/Fu29PDNf1QXEPO1wdM/PtQrsAsWDNEgSygSdMCUe
+	Bhv3EbU1D2p+VZpyHFp4vo3+ifKQlo03GgriBzPwA/5lzqXv/pzM14a5dDSFK7iZBTkibz
+	8j+KrfAUXszZVTX8OjrMunhc06qTDe59Yplj8hJ/hsxVmkOQjUn1TaTGGsLJtA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754977476;
+	s=2020e; t=1754977472;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RN97XE6hq4h6w5B+XqqRkUL6Oa3s/oZNOsBBeDOPqXk=;
-	b=dt2jUDtKfQwK8Kol+FEYKBxQdjjYtFl4hwNGokoib37bY2IkgdTZ8RbP/Oq8n6eG8TUY4O
-	b7Xcni87IN2XoQCQ==
-Date: Tue, 12 Aug 2025 07:44:24 +0200
-Subject: [PATCH v4 11/24] vdso: Add the vdsocheck tool
+	bh=O/qXdYtuegbf1kl5O2TCqH5+73vhTlXMdIZfEuJ+F/k=;
+	b=AnyzdISPaKFp+y6n7TGUqk/HejZjbkZ6cHuOvZNDIlkCerQgYuGgZsZTvKifvm6DRPWK2N
+	1LTEcv+LjMlE2fAw==
+Date: Tue, 12 Aug 2025 07:44:18 +0200
+Subject: [PATCH v4 05/24] powerpc/elf: Move relocation constants to UAPI
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250812-vdso-absolute-reloc-v4-11-61a8b615e5ec@linutronix.de>
+Message-Id: <20250812-vdso-absolute-reloc-v4-5-61a8b615e5ec@linutronix.de>
 References: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
 In-Reply-To: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -91,795 +91,452 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Arnaldo Carvalho de Melo <acme@redhat.com>, 
  Alexandre Ghiti <alexghiti@rivosinc.com>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1754977469; l=26811;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1754977469; l=22362;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=ny+/mk92QdWvHIPM7pRuV3n2ghhYt3d8gWmZQ0OBRe4=;
- b=LEH7+qv4ZL2gVqA/q2OcFKWniIM9KvHufZwuL5Ev0iRm0/AuwCBW95e7p2iNhi1wkvc8kD+7N
- HIjIGytoXVRBRL8mkHvYbnxeljJZ9FcczxWn4bVR0NlJiXk77Z3VLSc
+ bh=n05how22sEnufdxrM4828i2NNT++aNc+IpUgzqX7ohk=;
+ b=oI7oXoKhdlE0kZzRJI6qcV4/RnB44Z/ZCa4X/gEW6kb9109rpAZpDJ0BKApz4EG+rn/9CHAf0
+ Su5Yu4Vq3eLBG8aD7k5rSdis0I/EPi+x5UmtzvVYaSHcJ1OnGDZMsF/
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-All vDSO code needs to be completely position independent. Symbol
-references are marked as hidden so the compiler emits PC-relative
-relocations. However there are cases where the compiler may still
-emit absolute relocations, as they are valid in regular PIC DSO code.
-These would be resolved by the linker and will break at runtime.
-This has been observed on arm64, see commit 0c314cda9325 ("arm64: vdso:
-Work around invalid absolute relocations from GCC")
+These constants are useful for cross-platform userspace, for example to
+process ELF files during kernel cross-compilation.
 
-Introduce a tool to check for absolute relocations during the build,
-as the current inline-shell logic is not expressive enough.
-The check is done on the object files as the relocations will not exist
-anymore in the final DSO. As there is no extension point for the
-compilation of each object file, perform the validation in vdso_check.
+Move them from the kernel-private architecture-specific header to the UAPI.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- lib/vdso/Kconfig            |   6 +
- lib/vdso/Makefile           |   2 +
- lib/vdso/Makefile.include   |  17 ++
- lib/vdso/check/.gitignore   |   3 +
- lib/vdso/check/Makefile     |  28 +++
- lib/vdso/check/elf.rs       | 488 ++++++++++++++++++++++++++++++++++++++++++++
- lib/vdso/check/vdsocheck.rs | 154 ++++++++++++++
- 7 files changed, 698 insertions(+)
+ arch/powerpc/include/uapi/asm/elf.h | 201 ------------------------------------
+ include/uapi/linux/elf-r.h          | 201 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 201 insertions(+), 201 deletions(-)
 
-diff --git a/lib/vdso/Kconfig b/lib/vdso/Kconfig
-index 45df764b49ad62479e6456e00c053e46131936a3..b461e2be6db80eae957c8e0a1ab573a85d78fd15 100644
---- a/lib/vdso/Kconfig
-+++ b/lib/vdso/Kconfig
-@@ -48,3 +48,9 @@ config GENERIC_VDSO_DATA_STORE
- 	bool
- 	help
- 	  Selected by architectures that use the generic vDSO data store.
-+
-+config HAVE_VDSOCHECK
-+	bool
-+	help
-+	  Selected for architectures that are supported by the 'vdsocheck' progam.
-+	  Only transitional.
-diff --git a/lib/vdso/Makefile b/lib/vdso/Makefile
-index aedd40aaa950c86f1454d095d9d46992b0cc0abd..861ca416f9b3343645542f9fd1bd020c5da057b5 100644
---- a/lib/vdso/Makefile
-+++ b/lib/vdso/Makefile
-@@ -1,3 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
+diff --git a/arch/powerpc/include/uapi/asm/elf.h b/arch/powerpc/include/uapi/asm/elf.h
+index a5377f494fa316f62821a27ce1c32fede4c0507d..aba921b8249a2654be2a78c879c9ef236a017b57 100644
+--- a/arch/powerpc/include/uapi/asm/elf.h
++++ b/arch/powerpc/include/uapi/asm/elf.h
+@@ -17,78 +17,6 @@
+ #include <asm/cputable.h>
+ #include <asm/auxvec.h>
  
-+obj-y += check/
-+
- obj-$(CONFIG_GENERIC_VDSO_DATA_STORE) += datastore.o
-diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
-index cedbf15f80874d4bb27c097244bc5b11272f261c..759fe41b48f658c399f54aa7d54a3dfeb07e5c9c 100644
---- a/lib/vdso/Makefile.include
-+++ b/lib/vdso/Makefile.include
-@@ -6,6 +6,15 @@ GENERIC_VDSO_DIR := $(dir $(GENERIC_VDSO_MK_PATH))
- c-gettimeofday-$(CONFIG_GENERIC_GETTIMEOFDAY) := $(addprefix $(GENERIC_VDSO_DIR), gettimeofday.c)
- c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrandom.c)
+-/* PowerPC relocations defined by the ABIs */
+-#define R_PPC_NONE		0
+-#define R_PPC_ADDR32		1	/* 32bit absolute address */
+-#define R_PPC_ADDR24		2	/* 26bit address, 2 bits ignored.  */
+-#define R_PPC_ADDR16		3	/* 16bit absolute address */
+-#define R_PPC_ADDR16_LO		4	/* lower 16bit of absolute address */
+-#define R_PPC_ADDR16_HI		5	/* high 16bit of absolute address */
+-#define R_PPC_ADDR16_HA		6	/* adjusted high 16bit */
+-#define R_PPC_ADDR14		7	/* 16bit address, 2 bits ignored */
+-#define R_PPC_ADDR14_BRTAKEN	8
+-#define R_PPC_ADDR14_BRNTAKEN	9
+-#define R_PPC_REL24		10	/* PC relative 26 bit */
+-#define R_PPC_REL14		11	/* PC relative 16 bit */
+-#define R_PPC_REL14_BRTAKEN	12
+-#define R_PPC_REL14_BRNTAKEN	13
+-#define R_PPC_GOT16		14
+-#define R_PPC_GOT16_LO		15
+-#define R_PPC_GOT16_HI		16
+-#define R_PPC_GOT16_HA		17
+-#define R_PPC_PLTREL24		18
+-#define R_PPC_COPY		19
+-#define R_PPC_GLOB_DAT		20
+-#define R_PPC_JMP_SLOT		21
+-#define R_PPC_RELATIVE		22
+-#define R_PPC_LOCAL24PC		23
+-#define R_PPC_UADDR32		24
+-#define R_PPC_UADDR16		25
+-#define R_PPC_REL32		26
+-#define R_PPC_PLT32		27
+-#define R_PPC_PLTREL32		28
+-#define R_PPC_PLT16_LO		29
+-#define R_PPC_PLT16_HI		30
+-#define R_PPC_PLT16_HA		31
+-#define R_PPC_SDAREL16		32
+-#define R_PPC_SECTOFF		33
+-#define R_PPC_SECTOFF_LO	34
+-#define R_PPC_SECTOFF_HI	35
+-#define R_PPC_SECTOFF_HA	36
+-
+-/* PowerPC relocations defined for the TLS access ABI.  */
+-#define R_PPC_TLS		67 /* none	(sym+add)@tls */
+-#define R_PPC_DTPMOD32		68 /* word32	(sym+add)@dtpmod */
+-#define R_PPC_TPREL16		69 /* half16*	(sym+add)@tprel */
+-#define R_PPC_TPREL16_LO	70 /* half16	(sym+add)@tprel@l */
+-#define R_PPC_TPREL16_HI	71 /* half16	(sym+add)@tprel@h */
+-#define R_PPC_TPREL16_HA	72 /* half16	(sym+add)@tprel@ha */
+-#define R_PPC_TPREL32		73 /* word32	(sym+add)@tprel */
+-#define R_PPC_DTPREL16		74 /* half16*	(sym+add)@dtprel */
+-#define R_PPC_DTPREL16_LO	75 /* half16	(sym+add)@dtprel@l */
+-#define R_PPC_DTPREL16_HI	76 /* half16	(sym+add)@dtprel@h */
+-#define R_PPC_DTPREL16_HA	77 /* half16	(sym+add)@dtprel@ha */
+-#define R_PPC_DTPREL32		78 /* word32	(sym+add)@dtprel */
+-#define R_PPC_GOT_TLSGD16	79 /* half16*	(sym+add)@got@tlsgd */
+-#define R_PPC_GOT_TLSGD16_LO	80 /* half16	(sym+add)@got@tlsgd@l */
+-#define R_PPC_GOT_TLSGD16_HI	81 /* half16	(sym+add)@got@tlsgd@h */
+-#define R_PPC_GOT_TLSGD16_HA	82 /* half16	(sym+add)@got@tlsgd@ha */
+-#define R_PPC_GOT_TLSLD16	83 /* half16*	(sym+add)@got@tlsld */
+-#define R_PPC_GOT_TLSLD16_LO	84 /* half16	(sym+add)@got@tlsld@l */
+-#define R_PPC_GOT_TLSLD16_HI	85 /* half16	(sym+add)@got@tlsld@h */
+-#define R_PPC_GOT_TLSLD16_HA	86 /* half16	(sym+add)@got@tlsld@ha */
+-#define R_PPC_GOT_TPREL16	87 /* half16*	(sym+add)@got@tprel */
+-#define R_PPC_GOT_TPREL16_LO	88 /* half16	(sym+add)@got@tprel@l */
+-#define R_PPC_GOT_TPREL16_HI	89 /* half16	(sym+add)@got@tprel@h */
+-#define R_PPC_GOT_TPREL16_HA	90 /* half16	(sym+add)@got@tprel@ha */
+-#define R_PPC_GOT_DTPREL16	91 /* half16*	(sym+add)@got@dtprel */
+-#define R_PPC_GOT_DTPREL16_LO	92 /* half16*	(sym+add)@got@dtprel@l */
+-#define R_PPC_GOT_DTPREL16_HI	93 /* half16*	(sym+add)@got@dtprel@h */
+-#define R_PPC_GOT_DTPREL16_HA	94 /* half16*	(sym+add)@got@dtprel@ha */
+-
+-/* keep this the last entry. */
+-#define R_PPC_NUM		95
+-
  
-+ifeq ($(CONFIG_RUST_IS_AVAILABLE)$(CONFIG_HAVE_VDSOCHECK),yy)
-+vdsocheck := lib/vdso/check/vdsocheck
-+
-+$(vdsocheck): FORCE
-+	$(Q)$(MAKE) $(build)=lib/vdso/check vdsocheck
-+else
-+vdsocheck :=
-+endif
-+
- # This cmd checks that the vdso library does not contain dynamic relocations.
- # It has to be called after the linking of the vdso library and requires it
- # as a parameter.
-@@ -13,6 +22,14 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrand
- # As a workaround for some GNU ld ports which produce unneeded R_*_NONE
- # dynamic relocations, ignore R_*_NONE.
- quiet_cmd_vdso_check = VDSOCHK $@
-+ifneq ($(vdsocheck),)
-+      cmd_vdso_check = $(vdsocheck) $(filter %.o, $(real-prereqs)) $@
-+else
-       cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_\w*_"; \
- 		       then (echo >&2 "$@: dynamic relocations are not supported"; \
- 			     rm -f $@; /bin/false); fi
-+endif
-+
-+# Variant of cmd_ld which does not try to link the vdsocheck tool.
-+quiet_cmd_ld_vdso = VDSOLD $@
-+      cmd_ld_vdso = $(LD) $(ld_flags) $(filter-out $(vdsocheck), $(real-prereqs)) -o $@
-diff --git a/lib/vdso/check/.gitignore b/lib/vdso/check/.gitignore
-new file mode 100644
-index 0000000000000000000000000000000000000000..751be38f11f2147b3fd369539a8913d16546b07c
---- /dev/null
-+++ b/lib/vdso/check/.gitignore
-@@ -0,0 +1,3 @@
-+/bindings.rs
-+/libbindings.rlib
-+/vdsocheck
-diff --git a/lib/vdso/check/Makefile b/lib/vdso/check/Makefile
-new file mode 100644
-index 0000000000000000000000000000000000000000..052997e9ece5c09c6caa15e637455ced1405676f
---- /dev/null
-+++ b/lib/vdso/check/Makefile
-@@ -0,0 +1,28 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+quiet_cmd_host_bindgen = HOSTBINDGEN $@
-+      cmd_host_bindgen = $(BINDGEN) $< -o $@ --depfile $(depfile) -- $(HOSTBINDGEN_FLAGS)
-+
-+quiet_cmd_host_rustlib = HOSTRUSTLIB $@
-+      cmd_host_rustlib = \
-+	$(HOSTRUSTC) $(hostrust_flags) \
-+		--emit=dep-info=$(depfile) --emit=link=$@ \
-+		--crate-type rlib \
-+		--crate-name $(patsubst %.rlib,%,$(notdir $@)) $<
-+
-+$(obj)/bindings.rs: HOSTBINDGEN_FLAGS := -I$(srctree)/tools/include/uapi
-+$(obj)/bindings.rs: $(srctree)/tools/include/uapi/linux/elf.h FORCE
-+	$(call if_changed_dep,host_bindgen)
-+
-+HOSTRUSTFLAGS_libbindings := -Awarnings
-+$(obj)/libbindings.rlib: $(obj)/bindings.rs FORCE
-+	$(call if_changed_dep,host_rustlib)
-+
-+targets += bindings.rs libbindings.rlib
-+
-+hostprogs += vdsocheck
-+vdsocheck-rust := y
-+HOSTRUSTFLAGS_vdsocheck := --extern bindings=$(obj)/libbindings.rlib
-+$(obj)/vdsocheck: $(obj)/libbindings.rlib
-+
-+vdsocheck: $(obj)/vdsocheck
-diff --git a/lib/vdso/check/elf.rs b/lib/vdso/check/elf.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..66e8ab3497aaa9b17a99182a3179273df8845a79
---- /dev/null
-+++ b/lib/vdso/check/elf.rs
-@@ -0,0 +1,488 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+use std::fmt;
-+use std::iter::Iterator;
-+use std::result::Result;
-+use std::str;
-+
-+use ::bindings;
-+
-+#[derive(Debug, Copy, Clone)]
-+enum ByteOrder {
-+    LittleEndian,
-+    BigEndian,
-+}
-+
-+trait ToCpu {
-+    fn to_cpu(self, byteorder: ByteOrder) -> Self;
-+}
-+
-+macro_rules! declare_to_cpu {
-+    ($t:ty) => {
-+        impl ToCpu for $t {
-+            fn to_cpu(self, byteorder: ByteOrder) -> Self {
-+                match byteorder {
-+                    ByteOrder::LittleEndian => Self::from_le(self),
-+                    ByteOrder::BigEndian => Self::from_be(self),
-+                }
-+            }
-+        }
-+    };
-+}
-+
-+declare_to_cpu!(u16);
-+declare_to_cpu!(u32);
-+declare_to_cpu!(u64);
-+
-+#[derive(Debug, Copy, Clone)]
-+enum Class {
-+    Elf32,
-+    Elf64,
-+}
-+
-+enum ClassAlternative<T32, T64> {
-+    Elf32(T32),
-+    Elf64(T64),
-+}
-+
-+#[derive(Debug)]
-+pub(crate) enum ParseError {
-+    InvalidFileMagic([u8; 4]),
-+    InvalidFileClass(u32),
-+    InvalidFileByteOrder(u32),
-+    InvalidSectionSize,
-+    MissingStringTable,
-+    StrtabIndexOutOfRange,
-+    IndexOutOfRange,
-+    StrtabInvalidData(str::Utf8Error),
-+}
-+
-+pub(crate) type ParseResult<T> = Result<T, ParseError>;
-+
-+impl fmt::Display for ParseError {
-+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-+        match self {
-+            ParseError::InvalidFileMagic(m) => write!(f, "Invalid ELF magic {:?}", m),
-+            ParseError::InvalidFileClass(c) => write!(f, "Invalid ELF class {}", c),
-+            ParseError::InvalidFileByteOrder(b) => write!(f, "Invalid ELF byteorder {}", b),
-+            ParseError::InvalidSectionSize => write!(f, "Invalid ELF section size"),
-+            ParseError::MissingStringTable => write!(f, "Missing string table"),
-+            ParseError::IndexOutOfRange => write!(f, "Index out of range"),
-+            ParseError::StrtabIndexOutOfRange => write!(f, "String table index out of range"),
-+            ParseError::StrtabInvalidData(e) => write!(f, "Invalid data in string table: {}", e),
-+        }
-+    }
-+}
-+
-+fn read_from_bytes<T>(data: &[u8]) -> ParseResult<T> {
-+    if data.len() < std::mem::size_of::<T>() {
-+        Err(ParseError::IndexOutOfRange)?
-+    }
-+    let ptr = data.as_ptr() as *const T;
-+    let t: T = unsafe { std::ptr::read_unaligned(ptr) };
-+    Ok(t)
-+}
-+
-+fn get_data_subslice(data: &[u8], offset: u64, size: u64) -> ParseResult<&[u8]> {
-+    let start: usize = offset.try_into().map_err(|_| ParseError::IndexOutOfRange)?;
-+    let size: usize = size.try_into().map_err(|_| ParseError::IndexOutOfRange)?;
-+    let end = start.checked_add(size).ok_or(ParseError::IndexOutOfRange)?;
-+
-+    Ok(&data[start..end])
-+}
-+
-+/// Representation of a complete ELF file.
-+#[derive(Debug)]
-+pub(crate) struct File<'a> {
-+    byteorder: ByteOrder,
-+    class: Class,
-+    pub type_: u16,
-+    pub machine: u16,
-+    pub data: &'a [u8],
-+    section_headers: SectionInfo<'a>,
-+    section_names: StrtabSection<'a>,
-+}
-+
-+impl<'a> File<'a> {
-+    pub(crate) fn new_from_bytes(data: &'a [u8]) -> Result<Self, ParseError> {
-+        const ELF_MAGIC: [u8; 4] = [
-+            bindings::ELFMAG0 as u8,
-+            bindings::ELFMAG1 as u8,
-+            bindings::ELFMAG2 as u8,
-+            bindings::ELFMAG3 as u8,
-+        ];
-+        let ehdr: bindings::elf32_hdr = read_from_bytes(data)?;
-+
-+        let magic = [
-+            ehdr.e_ident[bindings::EI_MAG0 as usize],
-+            ehdr.e_ident[bindings::EI_MAG1 as usize],
-+            ehdr.e_ident[bindings::EI_MAG2 as usize],
-+            ehdr.e_ident[bindings::EI_MAG3 as usize],
-+        ];
-+
-+        if magic != ELF_MAGIC {
-+            return Err(ParseError::InvalidFileMagic(magic));
-+        }
-+
-+        let class = match ehdr.e_ident[bindings::EI_CLASS as usize] as u32 {
-+            bindings::ELFCLASS32 => Class::Elf32,
-+            bindings::ELFCLASS64 => Class::Elf64,
-+            c => return Err(ParseError::InvalidFileClass(c)),
-+        };
-+
-+        let byteorder = match ehdr.e_ident[bindings::EI_DATA as usize] as u32 {
-+            bindings::ELFDATA2LSB => ByteOrder::LittleEndian,
-+            bindings::ELFDATA2MSB => ByteOrder::BigEndian,
-+            b => return Err(ParseError::InvalidFileByteOrder(b)),
-+        };
-+
-+        let (type_, machine, shnum, shoff, shentsize, shstrndx) = match class {
-+            Class::Elf32 => {
-+                let ehdr: bindings::elf32_hdr = read_from_bytes(data)?;
-+                (
-+                    ehdr.e_type.to_cpu(byteorder),
-+                    ehdr.e_machine.to_cpu(byteorder),
-+                    ehdr.e_shnum.to_cpu(byteorder),
-+                    ehdr.e_shoff.to_cpu(byteorder).into(),
-+                    ehdr.e_shentsize.to_cpu(byteorder),
-+                    ehdr.e_shstrndx.to_cpu(byteorder),
-+                )
-+            }
-+            Class::Elf64 => {
-+                let ehdr: bindings::elf64_hdr = read_from_bytes(data)?;
-+                (
-+                    ehdr.e_type.to_cpu(byteorder),
-+                    ehdr.e_machine.to_cpu(byteorder),
-+                    ehdr.e_shnum.to_cpu(byteorder),
-+                    ehdr.e_shoff.to_cpu(byteorder),
-+                    ehdr.e_shentsize.to_cpu(byteorder),
-+                    ehdr.e_shstrndx.to_cpu(byteorder),
-+                )
-+            }
-+        };
-+
-+        let section_headers = SectionInfo {
-+            byteorder,
-+            class,
-+            entsize: shentsize.into(),
-+            data: get_data_subslice(data, shoff, u64::from(shnum) * u64::from(shentsize))?,
-+            name: "<section headers>",
-+        };
-+
-+        let string_table = SectionHeaderIterator::new(&section_headers, data)?
-+            .nth(shstrndx.into())
-+            .ok_or(ParseError::MissingStringTable)??;
-+
-+        let section_names = StrtabSection(SectionInfo {
-+            name: "<section header names>",
-+            byteorder,
-+            class,
-+            data: string_table.data,
-+            entsize: string_table.entsize,
-+        });
-+
-+        Ok(File {
-+            byteorder,
-+            class,
-+            type_,
-+            machine,
-+            section_headers,
-+            section_names,
-+            data,
-+        })
-+    }
-+
-+    pub(crate) fn sections(&self) -> ParseResult<SectionIterator<'_>> {
-+        Ok(SectionIterator {
-+            file: self,
-+            section_headers: SectionHeaderIterator::new(&self.section_headers, self.data)?,
-+        })
-+    }
-+}
-+
-+/// High-level representation of an ELF section.
-+#[derive(Clone, Debug)]
-+pub(crate) struct SectionInfo<'a> {
-+    byteorder: ByteOrder,
-+    class: Class,
-+    pub name: &'a str,
-+    entsize: u64,
-+    pub data: &'a [u8],
-+}
-+
-+/// Typed high-level iterator over all sections in a `File`.
-+#[derive(Debug)]
-+pub(crate) enum Section<'a> {
-+    Null(SectionInfo<'a>),
-+    Rel(RelSection<'a>),
-+    Rela(RelaSection<'a>),
-+    Strtab(StrtabSection<'a>),
-+    Unknown(SectionInfo<'a>),
-+}
-+
-+impl<'a> Section<'a> {
-+    pub(crate) fn info(&'a self) -> &'a SectionInfo<'a> {
-+        match self {
-+            Section::Null(info) | Section::Unknown(info) => info,
-+            Section::Rel(rel) => &rel.0,
-+            Section::Rela(rela) => &rela.0,
-+            Section::Strtab(strtab) => &strtab.0,
-+        }
-+    }
-+}
-+
-+pub(crate) struct SectionIterator<'a> {
-+    file: &'a File<'a>,
-+    section_headers: SectionHeaderIterator<'a, 'a>,
-+}
-+
-+impl<'a> Iterator for SectionIterator<'a> {
-+    type Item = ParseResult<Section<'a>>;
-+
-+    fn next(&mut self) -> Option<Self::Item> {
-+        self.section_headers.next().map(|header| {
-+            let header = header?;
-+            let info = SectionInfo {
-+                byteorder: self.file.byteorder,
-+                class: self.file.class,
-+                name: self.file.section_names.entry(header.name)?,
-+                entsize: header.entsize,
-+                data: header.data,
-+            };
-+
-+            Ok(match header.type_ {
-+                bindings::SHT_NULL => Section::Null(info),
-+                bindings::SHT_RELA => Section::Rela(RelaSection(info)),
-+                bindings::SHT_REL => Section::Rel(RelSection(info)),
-+                bindings::SHT_STRTAB => Section::Strtab(StrtabSection(info)),
-+                _ => Section::Unknown(info),
-+            })
-+        })
-+    }
-+}
-+
-+/// Iterator over a section of data containing instances of type `T`.
-+struct SectionEntityIterator<'a, T> {
-+    data: &'a [u8],
-+    byteorder: ByteOrder,
-+    _phantom: std::marker::PhantomData<T>,
-+}
-+
-+impl<'a, T> SectionEntityIterator<'a, T> {
-+    const ENTITY_SIZE: usize = std::mem::size_of::<T>();
-+
-+    fn new(section: &'a SectionInfo<'a>) -> ParseResult<Self> {
-+        let data = section.data;
-+
-+        if section.entsize != Self::ENTITY_SIZE as u64 {
-+            Err(ParseError::InvalidSectionSize)
-+        } else if data.len().is_multiple_of(Self::ENTITY_SIZE) {
-+            Ok(Self {
-+                data,
-+                byteorder: section.byteorder,
-+                _phantom: std::marker::PhantomData,
-+            })
-+        } else {
-+            Err(ParseError::InvalidSectionSize)
-+        }
-+    }
-+}
-+
-+impl<'a, T> Iterator for SectionEntityIterator<'a, T> {
-+    type Item = T;
-+
-+    fn next(&mut self) -> Option<Self::Item> {
-+        if self.data.len() != 0 {
-+            let ptr = self.data.as_ptr() as *const T;
-+            let entity: T = unsafe { std::ptr::read_unaligned(ptr) };
-+            self.data = &self.data[Self::ENTITY_SIZE..];
-+            Some(entity)
-+        } else {
-+            None
-+        }
-+    }
-+}
-+
-+/// Class-independent representation of an entry in a section header table.
-+#[derive(Debug)]
-+struct SectionHeader<'a> {
-+    name: u32,
-+    type_: u32,
-+    entsize: u64,
-+    data: &'a [u8],
-+}
-+
-+/// Iterator over the section header table.
-+struct SectionHeaderIterator<'f: 'a, 'a>(
-+    ClassAlternative<
-+        SectionEntityIterator<'a, bindings::elf32_shdr>,
-+        SectionEntityIterator<'a, bindings::elf64_shdr>,
-+    >,
-+    &'f [u8],
-+);
-+
-+impl<'f: 'a, 'a> SectionHeaderIterator<'f, 'a> {
-+    fn new(section: &'a SectionInfo<'a>, file_data: &'f [u8]) -> ParseResult<Self> {
-+        Ok(Self(
-+            match section.class {
-+                Class::Elf32 => ClassAlternative::Elf32(SectionEntityIterator::new(section)?),
-+                Class::Elf64 => ClassAlternative::Elf64(SectionEntityIterator::new(section)?),
-+            },
-+            file_data,
-+        ))
-+    }
-+}
-+
-+impl<'f: 'a, 'a> Iterator for SectionHeaderIterator<'f, 'a> {
-+    type Item = ParseResult<SectionHeader<'f>>;
-+
-+    fn next(&mut self) -> Option<Self::Item> {
-+        let file_data = self.1;
-+
-+        match &mut self.0 {
-+            ClassAlternative::Elf32(iter) => iter.next().map(|n| {
-+                Ok(SectionHeader {
-+                    name: n.sh_name.to_cpu(iter.byteorder).into(),
-+                    type_: n.sh_type.to_cpu(iter.byteorder).into(),
-+                    entsize: n.sh_entsize.to_cpu(iter.byteorder).into(),
-+                    data: get_data_subslice(
-+                        file_data,
-+                        n.sh_offset.to_cpu(iter.byteorder).into(),
-+                        n.sh_size.to_cpu(iter.byteorder).into(),
-+                    )?,
-+                })
-+            }),
-+            ClassAlternative::Elf64(iter) => iter.next().map(|n| {
-+                Ok(SectionHeader {
-+                    name: n.sh_name.to_cpu(iter.byteorder).into(),
-+                    type_: n.sh_type.to_cpu(iter.byteorder).into(),
-+                    entsize: n.sh_entsize.to_cpu(iter.byteorder).into(),
-+                    data: get_data_subslice(
-+                        file_data,
-+                        n.sh_offset.to_cpu(iter.byteorder).into(),
-+                        n.sh_size.to_cpu(iter.byteorder).into(),
-+                    )?,
-+                })
-+            }),
-+        }
-+    }
-+}
-+
-+/// High-level interface to a SHT_STRTAB string table.
-+#[derive(Debug)]
-+pub(crate) struct StrtabSection<'a>(SectionInfo<'a>);
-+
-+impl<'a> StrtabSection<'a> {
-+    pub(crate) fn entry(&'a self, index: u32) -> ParseResult<&'a str> {
-+        let data = self.0.data;
-+        let index = index as usize;
-+
-+        if index >= data.len() {
-+            Err(ParseError::StrtabIndexOutOfRange)
-+        } else {
-+            let len = data[index..]
-+                .iter()
-+                .position(|b| *b == 0x00)
-+                .ok_or(ParseError::StrtabIndexOutOfRange)?;
-+            let s = std::str::from_utf8(&data[index..index + len])
-+                .map_err(|e| ParseError::StrtabInvalidData(e))?;
-+            Ok(s)
-+        }
-+    }
-+}
-+
-+/// High-level interface to a SHT_REL relocation table.
-+#[derive(Debug)]
-+pub(crate) struct RelSection<'a>(SectionInfo<'a>);
-+
-+impl<'a> RelSection<'a> {
-+    pub(crate) fn entries(&'a self) -> ParseResult<RelSectionIterator<'a>> {
-+        RelSectionIterator::new(&self.0)
-+    }
-+}
-+
-+#[derive(Debug)]
-+pub(crate) struct Rel {
-+    pub type_: u32,
-+}
-+
-+pub(crate) struct RelSectionIterator<'a>(
-+    ClassAlternative<
-+        SectionEntityIterator<'a, bindings::elf32_rel>,
-+        SectionEntityIterator<'a, bindings::elf64_rel>,
-+    >,
-+);
-+
-+impl<'a> RelSectionIterator<'a> {
-+    fn new(section: &'a SectionInfo<'a>) -> ParseResult<Self> {
-+        Ok(Self(match section.class {
-+            Class::Elf32 => ClassAlternative::Elf32(SectionEntityIterator::new(section)?),
-+            Class::Elf64 => ClassAlternative::Elf64(SectionEntityIterator::new(section)?),
-+        }))
-+    }
-+}
-+
-+impl<'a> Iterator for RelSectionIterator<'a> {
-+    type Item = Rel;
-+
-+    fn next(&mut self) -> Option<Self::Item> {
-+        match &mut self.0 {
-+            ClassAlternative::Elf32(iter) => iter.next().map(|n| {
-+                let type_ = n.r_info.to_cpu(iter.byteorder) & 0xff;
-+                Self::Item { type_ }
-+            }),
-+            ClassAlternative::Elf64(iter) => iter.next().map(|n| {
-+                let type_ = n.r_info.to_cpu(iter.byteorder) as u32;
-+                Self::Item { type_ }
-+            }),
-+        }
-+    }
-+}
-+
-+/// High-level interface to a SHT_RELA relocation table.
-+#[derive(Debug)]
-+pub(crate) struct RelaSection<'a>(SectionInfo<'a>);
-+
-+impl<'a> RelaSection<'a> {
-+    pub(crate) fn entries(&'a self) -> ParseResult<RelaSectionIterator<'a>> {
-+        RelaSectionIterator::new(&self.0)
-+    }
-+}
-+
-+#[derive(Debug)]
-+pub(crate) struct Rela {
-+    pub type_: u32,
-+}
-+
-+pub(crate) struct RelaSectionIterator<'a>(
-+    ClassAlternative<
-+        SectionEntityIterator<'a, bindings::elf32_rela>,
-+        SectionEntityIterator<'a, bindings::elf64_rela>,
-+    >,
-+);
-+
-+impl<'a> RelaSectionIterator<'a> {
-+    fn new(section: &'a SectionInfo<'a>) -> ParseResult<Self> {
-+        Ok(Self(match section.class {
-+            Class::Elf32 => ClassAlternative::Elf32(SectionEntityIterator::new(section)?),
-+            Class::Elf64 => ClassAlternative::Elf64(SectionEntityIterator::new(section)?),
-+        }))
-+    }
-+}
-+
-+impl<'a> Iterator for RelaSectionIterator<'a> {
-+    type Item = Rela;
-+
-+    fn next(&mut self) -> Option<Self::Item> {
-+        match &mut self.0 {
-+            ClassAlternative::Elf32(iter) => iter.next().map(|n| {
-+                let type_ = n.r_info.to_cpu(iter.byteorder) & 0xff;
-+                Self::Item { type_ }
-+            }),
-+            ClassAlternative::Elf64(iter) => iter.next().map(|n| {
-+                let type_ = n.r_info.to_cpu(iter.byteorder) as u32;
-+                Self::Item { type_ }
-+            }),
-+        }
-+    }
-+}
-diff --git a/lib/vdso/check/vdsocheck.rs b/lib/vdso/check/vdsocheck.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..3c421100a91740ce3735edfbc9837ef49f55d8f8
---- /dev/null
-+++ b/lib/vdso/check/vdsocheck.rs
-@@ -0,0 +1,154 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! vDSO build-time validation
-+//!
-+//! Check that the vDSO library does not contain dynamic relocations.
-+
-+use std::fmt;
-+use std::fs;
-+use std::option::Option;
-+use std::process;
-+
-+use ::bindings;
-+
-+mod elf;
-+
-+struct AllowedRelocations<'a> {
-+    ignored_object_file_sections: Option<&'a [&'a str]>,
-+    in_object_file: &'a [u32],
-+}
-+
-+impl<'a> AllowedRelocations<'a> {
-+    fn is_ignored_section(&self, section: &elf::Section<'_>) -> bool {
-+        let name = section.info().name;
-+
-+        if name.starts_with(".rel.debug_") || name.starts_with(".rela.debug_") {
-+            true
-+        } else if let Some(ignored_object_file_sections) = self.ignored_object_file_sections {
-+            ignored_object_file_sections.contains(&name)
-+        } else {
-+            false
-+        }
-+    }
-+}
-+
-+fn allowed_relocations_for_machine(machine: u16) -> Option<AllowedRelocations<'static>> {
-+    match machine as u32 {
-+        _ => None,
-+    }
-+}
-+
-+#[derive(Debug)]
-+enum ValidationError<'a> {
-+    ParseError(elf::ParseError),
-+    UnsupportedArchitecture(u16),
-+    UnrecognizedElfFileType(u32),
-+    UnexpectedSection(elf::Section<'a>),
-+    InvalidRelocation(elf::Section<'a>, u32),
-+}
-+
-+impl<'a> From<elf::ParseError> for ValidationError<'a> {
-+    fn from(parse_error: elf::ParseError) -> Self {
-+        Self::ParseError(parse_error)
-+    }
-+}
-+
-+impl fmt::Display for ValidationError<'_> {
-+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-+        match self {
-+            ValidationError::ParseError(e) => write!(f, "Parsing error: {}", e),
-+            ValidationError::UnsupportedArchitecture(n) => {
-+                write!(f, "Unsupported ELF architecture {}", n)
-+            }
-+            ValidationError::UnrecognizedElfFileType(t) => {
-+                write!(f, "Unrecognized ELF file type {}", t)
-+            }
-+            ValidationError::UnexpectedSection(ref s) => {
-+                write!(f, "Unexpected section '{}'", s.info().name)
-+            }
-+            ValidationError::InvalidRelocation(ref s, t) => {
-+                write!(f, "Invalid relocation {} in section '{}'", t, s.info().name)
-+            }
-+        }
-+    }
-+}
-+
-+type ValidationResult<'a> = Result<(), ValidationError<'a>>;
-+
-+fn validate_linked_dso<'a>(file: &'a elf::File<'a>) -> ValidationResult<'a> {
-+    for section in file.sections()? {
-+        let section = section?;
-+
-+        /* No relocations are allowed */
-+        match section {
-+            elf::Section::Rel(_) | elf::Section::Rela(_) => {
-+                return Err(ValidationError::UnexpectedSection(section))
-+            }
-+            _ => {}
-+        }
-+    }
-+
-+    Ok(())
-+}
-+
-+fn validate_object_file<'a>(file: &'a elf::File<'a>) -> ValidationResult<'a> {
-+    let allowed_relocs = allowed_relocations_for_machine(file.machine)
-+        .ok_or(ValidationError::UnsupportedArchitecture(file.machine))?;
-+
-+    for section in file.sections()? {
-+        let section = section?;
-+
-+        if allowed_relocs.is_ignored_section(&section) {
-+            continue;
-+        }
-+
-+        match section {
-+            elf::Section::Rel(ref rel) => {
-+                for entry in rel.entries()? {
-+                    if !allowed_relocs.in_object_file.contains(&entry.type_) {
-+                        return Err(ValidationError::InvalidRelocation(section, entry.type_));
-+                    }
-+                }
-+            }
-+            elf::Section::Rela(ref rela) => {
-+                for entry in rela.entries()? {
-+                    if !allowed_relocs.in_object_file.contains(&entry.type_) {
-+                        return Err(ValidationError::InvalidRelocation(section, entry.type_));
-+                    }
-+                }
-+            }
-+            _ => {}
-+        };
-+    }
-+
-+    Ok(())
-+}
-+
-+fn main() {
-+    let mut args = std::env::args_os();
-+
-+    let program_name = args.next().unwrap_or("vdsocheck".into());
-+
-+    for path in args {
-+        let data = fs::read(&path).unwrap_or_else(|err| {
-+            println!("{}: {}: {}", program_name.display(), path.display(), err);
-+            process::exit(1);
-+        });
-+
-+        let file = elf::File::new_from_bytes(&data).unwrap_or_else(|err| {
-+            println!("{}: {}: {}", program_name.display(), path.display(), err);
-+            process::exit(2);
-+        });
-+
-+        let result = match file.type_ as u32 {
-+            bindings::ET_DYN => validate_linked_dso(&file),
-+            bindings::ET_REL => validate_object_file(&file),
-+            t => Err(ValidationError::UnrecognizedElfFileType(t)),
-+        };
-+
-+        result.unwrap_or_else(|err| {
-+            println!("{}: {}: {}", program_name.display(), path.display(), err);
-+            process::exit(3);
-+        });
-+    }
-+}
+ #define ELF_NGREG	48	/* includes nip, msr, lr, etc. */
+ #define ELF_NFPREG	33	/* includes fpscr */
+@@ -166,133 +94,4 @@ typedef elf_vrreg_t elf_vrregset_t32[ELF_NVRREG32];
+ typedef elf_fpreg_t elf_vsrreghalf_t32[ELF_NVSRHALFREG];
+ #endif
+ 
+-/* PowerPC64 relocations defined by the ABIs */
+-#define R_PPC64_NONE    R_PPC_NONE
+-#define R_PPC64_ADDR32  R_PPC_ADDR32  /* 32bit absolute address.  */
+-#define R_PPC64_ADDR24  R_PPC_ADDR24  /* 26bit address, word aligned.  */
+-#define R_PPC64_ADDR16  R_PPC_ADDR16  /* 16bit absolute address. */
+-#define R_PPC64_ADDR16_LO R_PPC_ADDR16_LO /* lower 16bits of abs. address.  */
+-#define R_PPC64_ADDR16_HI R_PPC_ADDR16_HI /* high 16bits of abs. address. */
+-#define R_PPC64_ADDR16_HA R_PPC_ADDR16_HA /* adjusted high 16bits.  */
+-#define R_PPC64_ADDR14 R_PPC_ADDR14   /* 16bit address, word aligned.  */
+-#define R_PPC64_ADDR14_BRTAKEN  R_PPC_ADDR14_BRTAKEN
+-#define R_PPC64_ADDR14_BRNTAKEN R_PPC_ADDR14_BRNTAKEN
+-#define R_PPC64_REL24   R_PPC_REL24 /* PC relative 26 bit, word aligned.  */
+-#define R_PPC64_REL14   R_PPC_REL14 /* PC relative 16 bit. */
+-#define R_PPC64_REL14_BRTAKEN   R_PPC_REL14_BRTAKEN
+-#define R_PPC64_REL14_BRNTAKEN  R_PPC_REL14_BRNTAKEN
+-#define R_PPC64_GOT16     R_PPC_GOT16
+-#define R_PPC64_GOT16_LO  R_PPC_GOT16_LO
+-#define R_PPC64_GOT16_HI  R_PPC_GOT16_HI
+-#define R_PPC64_GOT16_HA  R_PPC_GOT16_HA
+-
+-#define R_PPC64_COPY      R_PPC_COPY
+-#define R_PPC64_GLOB_DAT  R_PPC_GLOB_DAT
+-#define R_PPC64_JMP_SLOT  R_PPC_JMP_SLOT
+-#define R_PPC64_RELATIVE  R_PPC_RELATIVE
+-
+-#define R_PPC64_UADDR32   R_PPC_UADDR32
+-#define R_PPC64_UADDR16   R_PPC_UADDR16
+-#define R_PPC64_REL32     R_PPC_REL32
+-#define R_PPC64_PLT32     R_PPC_PLT32
+-#define R_PPC64_PLTREL32  R_PPC_PLTREL32
+-#define R_PPC64_PLT16_LO  R_PPC_PLT16_LO
+-#define R_PPC64_PLT16_HI  R_PPC_PLT16_HI
+-#define R_PPC64_PLT16_HA  R_PPC_PLT16_HA
+-
+-#define R_PPC64_SECTOFF     R_PPC_SECTOFF
+-#define R_PPC64_SECTOFF_LO  R_PPC_SECTOFF_LO
+-#define R_PPC64_SECTOFF_HI  R_PPC_SECTOFF_HI
+-#define R_PPC64_SECTOFF_HA  R_PPC_SECTOFF_HA
+-#define R_PPC64_ADDR30          37  /* word30 (S + A - P) >> 2.  */
+-#define R_PPC64_ADDR64          38  /* doubleword64 S + A.  */
+-#define R_PPC64_ADDR16_HIGHER   39  /* half16 #higher(S + A).  */
+-#define R_PPC64_ADDR16_HIGHERA  40  /* half16 #highera(S + A).  */
+-#define R_PPC64_ADDR16_HIGHEST  41  /* half16 #highest(S + A).  */
+-#define R_PPC64_ADDR16_HIGHESTA 42  /* half16 #highesta(S + A). */
+-#define R_PPC64_UADDR64     43  /* doubleword64 S + A.  */
+-#define R_PPC64_REL64       44  /* doubleword64 S + A - P.  */
+-#define R_PPC64_PLT64       45  /* doubleword64 L + A.  */
+-#define R_PPC64_PLTREL64    46  /* doubleword64 L + A - P.  */
+-#define R_PPC64_TOC16       47  /* half16* S + A - .TOC.  */
+-#define R_PPC64_TOC16_LO    48  /* half16 #lo(S + A - .TOC.).  */
+-#define R_PPC64_TOC16_HI    49  /* half16 #hi(S + A - .TOC.).  */
+-#define R_PPC64_TOC16_HA    50  /* half16 #ha(S + A - .TOC.).  */
+-#define R_PPC64_TOC         51  /* doubleword64 .TOC. */
+-#define R_PPC64_PLTGOT16    52  /* half16* M + A.  */
+-#define R_PPC64_PLTGOT16_LO 53  /* half16 #lo(M + A).  */
+-#define R_PPC64_PLTGOT16_HI 54  /* half16 #hi(M + A).  */
+-#define R_PPC64_PLTGOT16_HA 55  /* half16 #ha(M + A).  */
+-
+-#define R_PPC64_ADDR16_DS      56 /* half16ds* (S + A) >> 2.  */
+-#define R_PPC64_ADDR16_LO_DS   57 /* half16ds  #lo(S + A) >> 2.  */
+-#define R_PPC64_GOT16_DS       58 /* half16ds* (G + A) >> 2.  */
+-#define R_PPC64_GOT16_LO_DS    59 /* half16ds  #lo(G + A) >> 2.  */
+-#define R_PPC64_PLT16_LO_DS    60 /* half16ds  #lo(L + A) >> 2.  */
+-#define R_PPC64_SECTOFF_DS     61 /* half16ds* (R + A) >> 2.  */
+-#define R_PPC64_SECTOFF_LO_DS  62 /* half16ds  #lo(R + A) >> 2.  */
+-#define R_PPC64_TOC16_DS       63 /* half16ds* (S + A - .TOC.) >> 2.  */
+-#define R_PPC64_TOC16_LO_DS    64 /* half16ds  #lo(S + A - .TOC.) >> 2.  */
+-#define R_PPC64_PLTGOT16_DS    65 /* half16ds* (M + A) >> 2.  */
+-#define R_PPC64_PLTGOT16_LO_DS 66 /* half16ds  #lo(M + A) >> 2.  */
+-
+-/* PowerPC64 relocations defined for the TLS access ABI.  */
+-#define R_PPC64_TLS		67 /* none	(sym+add)@tls */
+-#define R_PPC64_DTPMOD64	68 /* doubleword64 (sym+add)@dtpmod */
+-#define R_PPC64_TPREL16		69 /* half16*	(sym+add)@tprel */
+-#define R_PPC64_TPREL16_LO	70 /* half16	(sym+add)@tprel@l */
+-#define R_PPC64_TPREL16_HI	71 /* half16	(sym+add)@tprel@h */
+-#define R_PPC64_TPREL16_HA	72 /* half16	(sym+add)@tprel@ha */
+-#define R_PPC64_TPREL64		73 /* doubleword64 (sym+add)@tprel */
+-#define R_PPC64_DTPREL16	74 /* half16*	(sym+add)@dtprel */
+-#define R_PPC64_DTPREL16_LO	75 /* half16	(sym+add)@dtprel@l */
+-#define R_PPC64_DTPREL16_HI	76 /* half16	(sym+add)@dtprel@h */
+-#define R_PPC64_DTPREL16_HA	77 /* half16	(sym+add)@dtprel@ha */
+-#define R_PPC64_DTPREL64	78 /* doubleword64 (sym+add)@dtprel */
+-#define R_PPC64_GOT_TLSGD16	79 /* half16*	(sym+add)@got@tlsgd */
+-#define R_PPC64_GOT_TLSGD16_LO	80 /* half16	(sym+add)@got@tlsgd@l */
+-#define R_PPC64_GOT_TLSGD16_HI	81 /* half16	(sym+add)@got@tlsgd@h */
+-#define R_PPC64_GOT_TLSGD16_HA	82 /* half16	(sym+add)@got@tlsgd@ha */
+-#define R_PPC64_GOT_TLSLD16	83 /* half16*	(sym+add)@got@tlsld */
+-#define R_PPC64_GOT_TLSLD16_LO	84 /* half16	(sym+add)@got@tlsld@l */
+-#define R_PPC64_GOT_TLSLD16_HI	85 /* half16	(sym+add)@got@tlsld@h */
+-#define R_PPC64_GOT_TLSLD16_HA	86 /* half16	(sym+add)@got@tlsld@ha */
+-#define R_PPC64_GOT_TPREL16_DS	87 /* half16ds*	(sym+add)@got@tprel */
+-#define R_PPC64_GOT_TPREL16_LO_DS 88 /* half16ds (sym+add)@got@tprel@l */
+-#define R_PPC64_GOT_TPREL16_HI	89 /* half16	(sym+add)@got@tprel@h */
+-#define R_PPC64_GOT_TPREL16_HA	90 /* half16	(sym+add)@got@tprel@ha */
+-#define R_PPC64_GOT_DTPREL16_DS	91 /* half16ds*	(sym+add)@got@dtprel */
+-#define R_PPC64_GOT_DTPREL16_LO_DS 92 /* half16ds (sym+add)@got@dtprel@l */
+-#define R_PPC64_GOT_DTPREL16_HI	93 /* half16	(sym+add)@got@dtprel@h */
+-#define R_PPC64_GOT_DTPREL16_HA	94 /* half16	(sym+add)@got@dtprel@ha */
+-#define R_PPC64_TPREL16_DS	95 /* half16ds*	(sym+add)@tprel */
+-#define R_PPC64_TPREL16_LO_DS	96 /* half16ds	(sym+add)@tprel@l */
+-#define R_PPC64_TPREL16_HIGHER	97 /* half16	(sym+add)@tprel@higher */
+-#define R_PPC64_TPREL16_HIGHERA	98 /* half16	(sym+add)@tprel@highera */
+-#define R_PPC64_TPREL16_HIGHEST	99 /* half16	(sym+add)@tprel@highest */
+-#define R_PPC64_TPREL16_HIGHESTA 100 /* half16	(sym+add)@tprel@highesta */
+-#define R_PPC64_DTPREL16_DS	101 /* half16ds* (sym+add)@dtprel */
+-#define R_PPC64_DTPREL16_LO_DS	102 /* half16ds	(sym+add)@dtprel@l */
+-#define R_PPC64_DTPREL16_HIGHER	103 /* half16	(sym+add)@dtprel@higher */
+-#define R_PPC64_DTPREL16_HIGHERA 104 /* half16	(sym+add)@dtprel@highera */
+-#define R_PPC64_DTPREL16_HIGHEST 105 /* half16	(sym+add)@dtprel@highest */
+-#define R_PPC64_DTPREL16_HIGHESTA 106 /* half16	(sym+add)@dtprel@highesta */
+-#define R_PPC64_TLSGD		107
+-#define R_PPC64_TLSLD		108
+-#define R_PPC64_TOCSAVE		109
+-
+-#define R_PPC64_REL24_NOTOC	116
+-#define R_PPC64_ENTRY		118
+-
+-#define R_PPC64_PCREL34		132
+-#define R_PPC64_GOT_PCREL34	133
+-
+-#define R_PPC64_REL16		249
+-#define R_PPC64_REL16_LO	250
+-#define R_PPC64_REL16_HI	251
+-#define R_PPC64_REL16_HA	252
+-
+-/* Keep this the last entry.  */
+-#define R_PPC64_NUM		253
+-
+ #endif /* _UAPI_ASM_POWERPC_ELF_H */
+diff --git a/include/uapi/linux/elf-r.h b/include/uapi/linux/elf-r.h
+index cf931fc05afa1825aa9737a4e6259ec0da678d3a..0d0dfaa7c724d5f0230e5b7b9b713d8587030637 100644
+--- a/include/uapi/linux/elf-r.h
++++ b/include/uapi/linux/elf-r.h
+@@ -113,4 +113,205 @@
+ 
+ #define R_AARCH64_RELATIVE		1027
+ 
++/* PowerPC relocations defined by the ABIs */
++#define R_PPC_NONE		0
++#define R_PPC_ADDR32		1	/* 32bit absolute address */
++#define R_PPC_ADDR24		2	/* 26bit address, 2 bits ignored.  */
++#define R_PPC_ADDR16		3	/* 16bit absolute address */
++#define R_PPC_ADDR16_LO		4	/* lower 16bit of absolute address */
++#define R_PPC_ADDR16_HI		5	/* high 16bit of absolute address */
++#define R_PPC_ADDR16_HA		6	/* adjusted high 16bit */
++#define R_PPC_ADDR14		7	/* 16bit address, 2 bits ignored */
++#define R_PPC_ADDR14_BRTAKEN	8
++#define R_PPC_ADDR14_BRNTAKEN	9
++#define R_PPC_REL24		10	/* PC relative 26 bit */
++#define R_PPC_REL14		11	/* PC relative 16 bit */
++#define R_PPC_REL14_BRTAKEN	12
++#define R_PPC_REL14_BRNTAKEN	13
++#define R_PPC_GOT16		14
++#define R_PPC_GOT16_LO		15
++#define R_PPC_GOT16_HI		16
++#define R_PPC_GOT16_HA		17
++#define R_PPC_PLTREL24		18
++#define R_PPC_COPY		19
++#define R_PPC_GLOB_DAT		20
++#define R_PPC_JMP_SLOT		21
++#define R_PPC_RELATIVE		22
++#define R_PPC_LOCAL24PC		23
++#define R_PPC_UADDR32		24
++#define R_PPC_UADDR16		25
++#define R_PPC_REL32		26
++#define R_PPC_PLT32		27
++#define R_PPC_PLTREL32		28
++#define R_PPC_PLT16_LO		29
++#define R_PPC_PLT16_HI		30
++#define R_PPC_PLT16_HA		31
++#define R_PPC_SDAREL16		32
++#define R_PPC_SECTOFF		33
++#define R_PPC_SECTOFF_LO	34
++#define R_PPC_SECTOFF_HI	35
++#define R_PPC_SECTOFF_HA	36
++
++/* PowerPC relocations defined for the TLS access ABI.  */
++#define R_PPC_TLS		67 /* none	(sym+add)@tls */
++#define R_PPC_DTPMOD32		68 /* word32	(sym+add)@dtpmod */
++#define R_PPC_TPREL16		69 /* half16*	(sym+add)@tprel */
++#define R_PPC_TPREL16_LO	70 /* half16	(sym+add)@tprel@l */
++#define R_PPC_TPREL16_HI	71 /* half16	(sym+add)@tprel@h */
++#define R_PPC_TPREL16_HA	72 /* half16	(sym+add)@tprel@ha */
++#define R_PPC_TPREL32		73 /* word32	(sym+add)@tprel */
++#define R_PPC_DTPREL16		74 /* half16*	(sym+add)@dtprel */
++#define R_PPC_DTPREL16_LO	75 /* half16	(sym+add)@dtprel@l */
++#define R_PPC_DTPREL16_HI	76 /* half16	(sym+add)@dtprel@h */
++#define R_PPC_DTPREL16_HA	77 /* half16	(sym+add)@dtprel@ha */
++#define R_PPC_DTPREL32		78 /* word32	(sym+add)@dtprel */
++#define R_PPC_GOT_TLSGD16	79 /* half16*	(sym+add)@got@tlsgd */
++#define R_PPC_GOT_TLSGD16_LO	80 /* half16	(sym+add)@got@tlsgd@l */
++#define R_PPC_GOT_TLSGD16_HI	81 /* half16	(sym+add)@got@tlsgd@h */
++#define R_PPC_GOT_TLSGD16_HA	82 /* half16	(sym+add)@got@tlsgd@ha */
++#define R_PPC_GOT_TLSLD16	83 /* half16*	(sym+add)@got@tlsld */
++#define R_PPC_GOT_TLSLD16_LO	84 /* half16	(sym+add)@got@tlsld@l */
++#define R_PPC_GOT_TLSLD16_HI	85 /* half16	(sym+add)@got@tlsld@h */
++#define R_PPC_GOT_TLSLD16_HA	86 /* half16	(sym+add)@got@tlsld@ha */
++#define R_PPC_GOT_TPREL16	87 /* half16*	(sym+add)@got@tprel */
++#define R_PPC_GOT_TPREL16_LO	88 /* half16	(sym+add)@got@tprel@l */
++#define R_PPC_GOT_TPREL16_HI	89 /* half16	(sym+add)@got@tprel@h */
++#define R_PPC_GOT_TPREL16_HA	90 /* half16	(sym+add)@got@tprel@ha */
++#define R_PPC_GOT_DTPREL16	91 /* half16*	(sym+add)@got@dtprel */
++#define R_PPC_GOT_DTPREL16_LO	92 /* half16*	(sym+add)@got@dtprel@l */
++#define R_PPC_GOT_DTPREL16_HI	93 /* half16*	(sym+add)@got@dtprel@h */
++#define R_PPC_GOT_DTPREL16_HA	94 /* half16*	(sym+add)@got@dtprel@ha */
++
++/* keep this the last entry. */
++#define R_PPC_NUM		95
++
++/* PowerPC64 relocations defined by the ABIs */
++#define R_PPC64_NONE    R_PPC_NONE
++#define R_PPC64_ADDR32  R_PPC_ADDR32  /* 32bit absolute address.  */
++#define R_PPC64_ADDR24  R_PPC_ADDR24  /* 26bit address, word aligned.  */
++#define R_PPC64_ADDR16  R_PPC_ADDR16  /* 16bit absolute address. */
++#define R_PPC64_ADDR16_LO R_PPC_ADDR16_LO /* lower 16bits of abs. address.  */
++#define R_PPC64_ADDR16_HI R_PPC_ADDR16_HI /* high 16bits of abs. address. */
++#define R_PPC64_ADDR16_HA R_PPC_ADDR16_HA /* adjusted high 16bits.  */
++#define R_PPC64_ADDR14 R_PPC_ADDR14   /* 16bit address, word aligned.  */
++#define R_PPC64_ADDR14_BRTAKEN  R_PPC_ADDR14_BRTAKEN
++#define R_PPC64_ADDR14_BRNTAKEN R_PPC_ADDR14_BRNTAKEN
++#define R_PPC64_REL24   R_PPC_REL24 /* PC relative 26 bit, word aligned.  */
++#define R_PPC64_REL14   R_PPC_REL14 /* PC relative 16 bit. */
++#define R_PPC64_REL14_BRTAKEN   R_PPC_REL14_BRTAKEN
++#define R_PPC64_REL14_BRNTAKEN  R_PPC_REL14_BRNTAKEN
++#define R_PPC64_GOT16     R_PPC_GOT16
++#define R_PPC64_GOT16_LO  R_PPC_GOT16_LO
++#define R_PPC64_GOT16_HI  R_PPC_GOT16_HI
++#define R_PPC64_GOT16_HA  R_PPC_GOT16_HA
++
++#define R_PPC64_COPY      R_PPC_COPY
++#define R_PPC64_GLOB_DAT  R_PPC_GLOB_DAT
++#define R_PPC64_JMP_SLOT  R_PPC_JMP_SLOT
++#define R_PPC64_RELATIVE  R_PPC_RELATIVE
++
++#define R_PPC64_UADDR32   R_PPC_UADDR32
++#define R_PPC64_UADDR16   R_PPC_UADDR16
++#define R_PPC64_REL32     R_PPC_REL32
++#define R_PPC64_PLT32     R_PPC_PLT32
++#define R_PPC64_PLTREL32  R_PPC_PLTREL32
++#define R_PPC64_PLT16_LO  R_PPC_PLT16_LO
++#define R_PPC64_PLT16_HI  R_PPC_PLT16_HI
++#define R_PPC64_PLT16_HA  R_PPC_PLT16_HA
++
++#define R_PPC64_SECTOFF     R_PPC_SECTOFF
++#define R_PPC64_SECTOFF_LO  R_PPC_SECTOFF_LO
++#define R_PPC64_SECTOFF_HI  R_PPC_SECTOFF_HI
++#define R_PPC64_SECTOFF_HA  R_PPC_SECTOFF_HA
++#define R_PPC64_ADDR30          37  /* word30 (S + A - P) >> 2.  */
++#define R_PPC64_ADDR64          38  /* doubleword64 S + A.  */
++#define R_PPC64_ADDR16_HIGHER   39  /* half16 #higher(S + A).  */
++#define R_PPC64_ADDR16_HIGHERA  40  /* half16 #highera(S + A).  */
++#define R_PPC64_ADDR16_HIGHEST  41  /* half16 #highest(S + A).  */
++#define R_PPC64_ADDR16_HIGHESTA 42  /* half16 #highesta(S + A). */
++#define R_PPC64_UADDR64     43  /* doubleword64 S + A.  */
++#define R_PPC64_REL64       44  /* doubleword64 S + A - P.  */
++#define R_PPC64_PLT64       45  /* doubleword64 L + A.  */
++#define R_PPC64_PLTREL64    46  /* doubleword64 L + A - P.  */
++#define R_PPC64_TOC16       47  /* half16* S + A - .TOC.  */
++#define R_PPC64_TOC16_LO    48  /* half16 #lo(S + A - .TOC.).  */
++#define R_PPC64_TOC16_HI    49  /* half16 #hi(S + A - .TOC.).  */
++#define R_PPC64_TOC16_HA    50  /* half16 #ha(S + A - .TOC.).  */
++#define R_PPC64_TOC         51  /* doubleword64 .TOC. */
++#define R_PPC64_PLTGOT16    52  /* half16* M + A.  */
++#define R_PPC64_PLTGOT16_LO 53  /* half16 #lo(M + A).  */
++#define R_PPC64_PLTGOT16_HI 54  /* half16 #hi(M + A).  */
++#define R_PPC64_PLTGOT16_HA 55  /* half16 #ha(M + A).  */
++
++#define R_PPC64_ADDR16_DS      56 /* half16ds* (S + A) >> 2.  */
++#define R_PPC64_ADDR16_LO_DS   57 /* half16ds  #lo(S + A) >> 2.  */
++#define R_PPC64_GOT16_DS       58 /* half16ds* (G + A) >> 2.  */
++#define R_PPC64_GOT16_LO_DS    59 /* half16ds  #lo(G + A) >> 2.  */
++#define R_PPC64_PLT16_LO_DS    60 /* half16ds  #lo(L + A) >> 2.  */
++#define R_PPC64_SECTOFF_DS     61 /* half16ds* (R + A) >> 2.  */
++#define R_PPC64_SECTOFF_LO_DS  62 /* half16ds  #lo(R + A) >> 2.  */
++#define R_PPC64_TOC16_DS       63 /* half16ds* (S + A - .TOC.) >> 2.  */
++#define R_PPC64_TOC16_LO_DS    64 /* half16ds  #lo(S + A - .TOC.) >> 2.  */
++#define R_PPC64_PLTGOT16_DS    65 /* half16ds* (M + A) >> 2.  */
++#define R_PPC64_PLTGOT16_LO_DS 66 /* half16ds  #lo(M + A) >> 2.  */
++
++/* PowerPC64 relocations defined for the TLS access ABI.  */
++#define R_PPC64_TLS		67 /* none	(sym+add)@tls */
++#define R_PPC64_DTPMOD64	68 /* doubleword64 (sym+add)@dtpmod */
++#define R_PPC64_TPREL16		69 /* half16*	(sym+add)@tprel */
++#define R_PPC64_TPREL16_LO	70 /* half16	(sym+add)@tprel@l */
++#define R_PPC64_TPREL16_HI	71 /* half16	(sym+add)@tprel@h */
++#define R_PPC64_TPREL16_HA	72 /* half16	(sym+add)@tprel@ha */
++#define R_PPC64_TPREL64		73 /* doubleword64 (sym+add)@tprel */
++#define R_PPC64_DTPREL16	74 /* half16*	(sym+add)@dtprel */
++#define R_PPC64_DTPREL16_LO	75 /* half16	(sym+add)@dtprel@l */
++#define R_PPC64_DTPREL16_HI	76 /* half16	(sym+add)@dtprel@h */
++#define R_PPC64_DTPREL16_HA	77 /* half16	(sym+add)@dtprel@ha */
++#define R_PPC64_DTPREL64	78 /* doubleword64 (sym+add)@dtprel */
++#define R_PPC64_GOT_TLSGD16	79 /* half16*	(sym+add)@got@tlsgd */
++#define R_PPC64_GOT_TLSGD16_LO	80 /* half16	(sym+add)@got@tlsgd@l */
++#define R_PPC64_GOT_TLSGD16_HI	81 /* half16	(sym+add)@got@tlsgd@h */
++#define R_PPC64_GOT_TLSGD16_HA	82 /* half16	(sym+add)@got@tlsgd@ha */
++#define R_PPC64_GOT_TLSLD16	83 /* half16*	(sym+add)@got@tlsld */
++#define R_PPC64_GOT_TLSLD16_LO	84 /* half16	(sym+add)@got@tlsld@l */
++#define R_PPC64_GOT_TLSLD16_HI	85 /* half16	(sym+add)@got@tlsld@h */
++#define R_PPC64_GOT_TLSLD16_HA	86 /* half16	(sym+add)@got@tlsld@ha */
++#define R_PPC64_GOT_TPREL16_DS	87 /* half16ds*	(sym+add)@got@tprel */
++#define R_PPC64_GOT_TPREL16_LO_DS 88 /* half16ds (sym+add)@got@tprel@l */
++#define R_PPC64_GOT_TPREL16_HI	89 /* half16	(sym+add)@got@tprel@h */
++#define R_PPC64_GOT_TPREL16_HA	90 /* half16	(sym+add)@got@tprel@ha */
++#define R_PPC64_GOT_DTPREL16_DS	91 /* half16ds*	(sym+add)@got@dtprel */
++#define R_PPC64_GOT_DTPREL16_LO_DS 92 /* half16ds (sym+add)@got@dtprel@l */
++#define R_PPC64_GOT_DTPREL16_HI	93 /* half16	(sym+add)@got@dtprel@h */
++#define R_PPC64_GOT_DTPREL16_HA	94 /* half16	(sym+add)@got@dtprel@ha */
++#define R_PPC64_TPREL16_DS	95 /* half16ds*	(sym+add)@tprel */
++#define R_PPC64_TPREL16_LO_DS	96 /* half16ds	(sym+add)@tprel@l */
++#define R_PPC64_TPREL16_HIGHER	97 /* half16	(sym+add)@tprel@higher */
++#define R_PPC64_TPREL16_HIGHERA	98 /* half16	(sym+add)@tprel@highera */
++#define R_PPC64_TPREL16_HIGHEST	99 /* half16	(sym+add)@tprel@highest */
++#define R_PPC64_TPREL16_HIGHESTA 100 /* half16	(sym+add)@tprel@highesta */
++#define R_PPC64_DTPREL16_DS	101 /* half16ds* (sym+add)@dtprel */
++#define R_PPC64_DTPREL16_LO_DS	102 /* half16ds	(sym+add)@dtprel@l */
++#define R_PPC64_DTPREL16_HIGHER	103 /* half16	(sym+add)@dtprel@higher */
++#define R_PPC64_DTPREL16_HIGHERA 104 /* half16	(sym+add)@dtprel@highera */
++#define R_PPC64_DTPREL16_HIGHEST 105 /* half16	(sym+add)@dtprel@highest */
++#define R_PPC64_DTPREL16_HIGHESTA 106 /* half16	(sym+add)@dtprel@highesta */
++#define R_PPC64_TLSGD		107
++#define R_PPC64_TLSLD		108
++#define R_PPC64_TOCSAVE		109
++
++#define R_PPC64_REL24_NOTOC	116
++#define R_PPC64_ENTRY		118
++
++#define R_PPC64_PCREL34		132
++#define R_PPC64_GOT_PCREL34	133
++
++#define R_PPC64_REL16		249
++#define R_PPC64_REL16_LO	250
++#define R_PPC64_REL16_HI	251
++#define R_PPC64_REL16_HA	252
++
++/* Keep this the last entry.  */
++#define R_PPC64_NUM		253
++
+ #endif /* _UAPI_LINUX_ELF_R_H */
 
 -- 
 2.50.1
