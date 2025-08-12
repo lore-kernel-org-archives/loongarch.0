@@ -1,179 +1,164 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D5C2E9728
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 09:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA3C02E7641
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 10:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754991810; cv=none; b=iLf0DZHTWZ6GCU4iu5WUyJfbbUmTmknZmxuvVMsh9kcqEhhEVHhr104wcWIXmHFL6UzjmGk4sP/w4Kf4yRu5qQXc0wZQUtkXYRr7OjcbmBkEK8pRVh79br3aFUOxyWQM0Z7Vfj7AIci+Tf+nvfo0wkuVpQbT5t6wDtNxD5n210Q=
+	t=1754995850; cv=none; b=rQTwGiLZ3UPFW5503h8OyZ9RZ+rPHSHaHwwaT/qjnXo3Ld7lzmqZMcX0crvo+PABJWGr9eAhUpSlcQxQPfr2fJVxjFUoFnSdM1KF5X65QSUDYz3w0zUUw9VnUV6xFoS7PwYQb8AsjcEqN5uVdr3aBcfsdntWUb/HvdSbgElQXhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754991810; c=relaxed/simple;
-	bh=VoQtnN8TVNFZ35OF82gYJyQyCQWCWSyi54UG/5Pr244=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bEDep4oFysKeR/FTY/GCOv3I3eeNnkNygA3atFq0xJ3mMP9XGzHIDYtSaVyPRrJ0pohSLJIQ1yowmE67wC7Di6g95tO+o6aYaMUTF2dtjfB71jNJR0BhAXkV8w7+aFFx1LvKFR5mtDd56gJKWO91VkqB0UX0QtEJjIlPrP4Zyk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=c2tx00vQ; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="c2tx00vQ"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 31DAF2588F;
-	Tue, 12 Aug 2025 11:43:26 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id JUhdKEmfHZPA; Tue, 12 Aug 2025 11:43:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1754991805; bh=VoQtnN8TVNFZ35OF82gYJyQyCQWCWSyi54UG/5Pr244=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=c2tx00vQAKJGnzvzuLEMjpjeoaNpI1Lx0c3Y8cYCtqN4lEKdCwFGNrqXbwho96cDr
-	 De1FkMyLuefVDZ+EHP+/XKNmUy4XwSfPWGEiUj93BWfM8qh+seZfrg7OLRBKdPtyho
-	 4xOzvuxmCq4q8r348zHFgM9DXNb1lhhU+ALeaggJj6kTqFkH06UOrLRRFxk6VbWsCj
-	 DUqEitM07Olvng7ttQyjj6AkbsX8m+F+Oc/nN0EuOqWpP+mKScI++CAojssp9JPQli
-	 bbNjTsLkTOQd6peyhyYtg9f+LfX6Uczqd3MoJV8BVGu3raF2pAoBrESbufbZwQR9ey
-	 qHp4TQ/TBwk3g==
-Date: Tue, 12 Aug 2025 09:43:13 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Youling Tang <youling.tang@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH 2/6] LoongArch: Add kexec_file support
-Message-ID: <aJsGg8__ppyBrkfL@pie>
-References: <20250811092659.14903-1-youling.tang@linux.dev>
- <20250811092659.14903-3-youling.tang@linux.dev>
- <aJojDiHWi8cgvA2W@pie>
- <6de97571-7ef0-4bbd-b55f-5ad41898a6ec@linux.dev>
- <af866071-81c1-44d5-ae02-273d6e9c04d4@linux.dev>
+	s=arc-20240116; t=1754995850; c=relaxed/simple;
+	bh=kPnB99pQiUhV3Oo0icKYUmjWyuqBMOn8KUPUwJ75h4M=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=qPV3d39KCC+KxoWo6H1eWNh3gFUMcr/zPS/2Q76h83mgW5lDN2p7RX+kmm3t5F2e2KrlnXw///ZXJks8QiEzBdOqwuxuhsnNHc28kHO1rQrT9t1341kTQPKy6oN4sINFMGtHUF6NWpXl7YELqfF/xCo9tBYuV4ugvVgO3mbzEbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxCeGDHJtopu4+AQ--.12794S3;
+	Tue, 12 Aug 2025 18:50:43 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxM+R_HJto02lGAA--.3184S3;
+	Tue, 12 Aug 2025 18:50:42 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: time: Fix the issue of high cpu usage of vcpu
+ threads in virtual machines
+To: Xianglai Li <lixianglai@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+ Song Gao <gaosong@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250812090056.771379-1-lixianglai@loongson.cn>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <f271abd3-e1b6-0968-abf8-6f1b74e21f65@loongson.cn>
+Date: Tue, 12 Aug 2025 18:48:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20250812090056.771379-1-lixianglai@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <af866071-81c1-44d5-ae02-273d6e9c04d4@linux.dev>
+X-CM-TRANSID:qMiowJCxM+R_HJto02lGAA--.3184S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWF47trWDtFy3Zr48JF4fZwc_yoW5Cw1kpr
+	WDCFs3trWFkrn29w1ay3sFvF13Ww4kGr42vasrWF17Ar9rZFyrWF4kKr98tF15Wa97Zw42
+	93W09rsIkayqqrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUU
+	U
 
-On Tue, Aug 12, 2025 at 03:06:23PM +0800, Youling Tang wrote:
-> On 2025/8/12 14:15, Youling Tang wrote:
-> > Hi, Yao
-> > On 2025/8/12 01:06, Yao Zi wrote:
-> > > On Mon, Aug 11, 2025 at 05:26:55PM +0800, Youling Tang wrote:
-> > > > From: Youling Tang <tangyouling@kylinos.cn>
-> > > > 
-> > > > This patch adds support for kexec_file on LoongArch.
-> > > > 
-> > > > The image_load() as two parts:
-> > > > - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
-> > > > - the second part loads other segments (eg: initrd, cmdline)
-> > > > 
-> > > > Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images
-> > > > are supported,
-> > > > but ELF format is not supported.
-> > > > 
-> > > > Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> > > > ---
-> > > >   arch/loongarch/Kconfig                     |   8 ++
-> > > >   arch/loongarch/include/asm/image.h         |  18 ++++
-> > > >   arch/loongarch/include/asm/kexec.h         |  12 +++
-> > > >   arch/loongarch/kernel/Makefile             |   1 +
-> > > >   arch/loongarch/kernel/kexec_image.c        | 112
-> > > > +++++++++++++++++++++
-> > > >   arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
-> > > >   arch/loongarch/kernel/machine_kexec_file.c |  46 +++++++++
-> > > >   7 files changed, 219 insertions(+), 11 deletions(-)
-> > > >   create mode 100644 arch/loongarch/kernel/kexec_image.c
-> > > >   create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
 
-...
 
-> > > > diff --git a/arch/loongarch/kernel/kexec_image.c
-> > > > b/arch/loongarch/kernel/kexec_image.c
-> > > > new file mode 100644
-> > > > index 000000000000..fdd1845b4e2e
-> > > > --- /dev/null
-> > > > +++ b/arch/loongarch/kernel/kexec_image.c
+On 2025/8/12 ä¸‹åˆ5:00, Xianglai Li wrote:
+> When the cpu is offline, the timer under loongarch is not correctly closed,
+> resulting in an excessively high cpu usage rate of the offline vcpu thread
+> in the virtual machine.
+> 
+> To correctly close the timer, we have made the following modifications:
+> 
+> Register the cpu hotplug timer start event for loongarch.This event will
+> be called to close the timer when the cpu is offline.
+> 
+> Clear the timer interrupt when the timer is turned off
+During timer is turned off, timer interrupt may be arriving. Here adding 
+EOI with timer after disabling it so that there is no pending timer 
+interrupt when offline cpu is halted state.
+> 
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> ---
+>   arch/loongarch/kernel/time.c | 20 ++++++++++++++++++++
+>   include/linux/cpuhotplug.h   |  1 +
+>   2 files changed, 21 insertions(+)
+> 
+> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+> index 367906b10f81..4daa11512eba 100644
+> --- a/arch/loongarch/kernel/time.c
+> +++ b/arch/loongarch/kernel/time.c
+> @@ -12,6 +12,7 @@
+>   #include <linux/kernel.h>
+>   #include <linux/sched_clock.h>
+>   #include <linux/spinlock.h>
+> +#include <linux/cpu.h>
+>   
+>   #include <asm/cpu-features.h>
+>   #include <asm/loongarch.h>
+> @@ -86,6 +87,9 @@ static int constant_set_state_shutdown(struct clock_event_device *evt)
+>   	timer_config &= ~CSR_TCFG_EN;
+>   	csr_write64(timer_config, LOONGARCH_CSR_TCFG);
+>   
+> +	/* Clear Timer Interrupt */
+> +	write_csr_tintclear(CSR_TINTCLR_TI);
+> +
+>   	raw_spin_unlock(&state_lock);
+>   
+>   	return 0;
+> @@ -208,8 +212,17 @@ int __init constant_clocksource_init(void)
+>   	return res;
+>   }
+>   
+> +static int arch_timer_dying_cpu(unsigned int cpu)
+> +{
+NULL is a little strange here, how about something like this?
 
-...
+         struct clock_event_device *evt;
 
-> > > > +    /*
-> > > > +     * The location of the kernel segment may make it
-> > > > impossible to satisfy
-> > > > +     * the other segment requirements, so we try repeatedly to find a
-> > > > +     * location that will work.
-> > > > +     */
-> > > > +    while ((ret = kexec_add_buffer(&kbuf)) == 0) {
-> > > > +        /* Try to load additional data */
-> > > > +        kernel_segment = &image->segment[kernel_segment_number];
-> > > > +        ret = load_other_segments(image, kernel_segment->mem,
-> > > > +                      kernel_segment->memsz, initrd,
-> > > > +                      initrd_len, cmdline, cmdline_len);
-> > > > +        if (!ret)
-> > > > +            break;
-> > > > +
-> > > > +        /*
-> > > > +         * We couldn't find space for the other segments; erase the
-> > > > +         * kernel segment and try the next available hole.
-> > > > +         */
-> > > > +        image->nr_segments -= 1;
-> > > > +        kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
-> > > > +        kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> > > > +    }
-> > > > +
-> > > > +    if (ret) {
-> > > > +        pr_err("Could not find any suitable kernel location!");
-> > > > +        return ERR_PTR(ret);
-> > > > +    }
-> > > > +
-> > > > +    kernel_segment = &image->segment[kernel_segment_number];
-> > > > +
-> > > > +    /* Make sure the second kernel jumps to the correct
-> > > > "kernel_entry". */
-> > > > +    image->start = kernel_segment->mem + h->kernel_entry -
-> > > > text_offset;
-> > > A non-relocatable loongarch kernel cannot be loaded to arbitrary
-> > > address. Thus this loading function seems to only work for relocatable
-> > > kernels, maybe it's better to leave a comment indicating the limitation.
-> > > 
-> > > For now, we don't seem to have a way to find out whether the kernel is
-> > > relocatable (for example, a flag in kernel image header), so it's
-> > > impossible to point out whether the loaded kernel boots fine with
-> > > arbitrary loading address...
-> > LoongArch enables the relocation of the kernel when the kdump
-> > feature is enabled.
-> > 
-> > config ARCH_SELECTS_CRASH_DUMP
-> >         def_bool y
-> >         depends on CRASH_DUMP
-> >         select RELOCATABLE
-> > 
+         evt = this_cpu_ptr(constant_clockevent_device);
+         constant_set_state_shutdown(evt);
 
-This only means the currently-running kernel is relocatable, not the one
-being exec'ed, right?
+Regards
+Bibo Mao
 
-> When enabling KEXEC_FILE, the RELOCATABLE configuration should
-> also be enabled. Both kexec and kdump require this.
+> +	constant_set_state_shutdown(NULL);
+> +
+> +	return 0;
+> +}
+> +
+>   void __init time_init(void)
+>   {
+> +	int err;
+> +
+>   	if (!cpu_has_cpucfg)
+>   		const_clock_freq = cpu_clock_freq;
+>   	else
+> @@ -220,4 +233,11 @@ void __init time_init(void)
+>   	constant_clockevent_init();
+>   	constant_clocksource_init();
+>   	pv_time_init();
+> +
+> +	err = cpuhp_setup_state_nocalls(CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
+> +					"loongarch/timer:starting",
+> +					NULL, arch_timer_dying_cpu);
+> +	if (err)
+> +		pr_info("cpu hotplug event register failed");
+> +
+>   }
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index edfa61d80702..6606c1546afc 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -159,6 +159,7 @@ enum cpuhp_state {
+>   	CPUHP_AP_PERF_ARM_STARTING,
+>   	CPUHP_AP_PERF_RISCV_STARTING,
+>   	CPUHP_AP_ARM_L2X0_STARTING,
+> +	CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
+>   	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
+>   	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
+>   	CPUHP_AP_ARM_ARCH_TIMER_EVTSTRM_STARTING,
+> 
+> base-commit: 53e760d8949895390e256e723e7ee46618310361
+> 
 
-I'm not sure whether you're talking about the running kernel or the one
-that is going to be exec'ed. This method of kernel loading requires the
-exec'ed kernel being relocatable, not the currently running one.
-
-And I think it's totally reasonable to use KEXEC_FILE for non-crash-dump
-purpose, for example, linuxboot. It'll be confusing to the user if the
-system just hangs after booting a non-relocatable kernel, which is hard
-to debug.
-
-Thus IMHO we should ideally refuse to load non-relocatable kernels, or
-add a FIXME comment to indicate the situation that it's impossible to
-determine whether the exec'ed image is relocatable.
-
-> Youling.
-> > After enabling the relocation, LoongArch is the PIE kernel. For
-> > more details, please refer to commit d8da19fbdedd ("LoongArch:
-> > Add support for kernel relocation")
-
-Best regards.
-Yao Zi
