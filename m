@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFAE2D3EF6;
-	Tue, 12 Aug 2025 05:44:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546422E4257;
+	Tue, 12 Aug 2025 05:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754977483; cv=none; b=LL+sL9/eJxjkp/z/0PNEPT95+8a9GXMnGBRrQzkhcnMrXcSJy4V40YBpf0G9d7ec/52wO2f/at4+CIdf2fZ7Vh+Hzoq0m00tzh6iTB0N4nmJbCHag4mKxBrQpTlqRCj+XzxYaZXbe/bXgeyTD7ZzpwA2QCc6EZqjQBuG1wbmp1g=
+	t=1754977484; cv=none; b=jz1QL8w7mpf3gnlUC/KwKRkE3/0bBCbRUauYzTSAymCrGmylchlAX4rQaUdI3G2FySKcJDe+byJbPTLhY2VAS2LI68CH6Rgu/hzNTy78Aj4N+H/ACvqeJH7/lJpKJvZjYutZpVyoAv6n+TigKGokcfxEGZvrkSoo2PB01dEj8OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754977483; c=relaxed/simple;
-	bh=URWumLq5cEfF9wP67bk+ZcYfaIdTPXBTgCA3fiF+CgA=;
+	s=arc-20240116; t=1754977484; c=relaxed/simple;
+	bh=JvVhNnXqLZi9Urcv3cUqECDYuPaTssZzAN5WZwS9T8c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WltcZXHOODqIZJfA42UALVSLnVbqTBOjGxxMS8ZuvZUlq7JmR25+NY4NLjzs7PgTISEdQR9WbbZVEB+YtfXkEVpzb4RTdTMrYASAkd/3LsWxjXqIf/o2keILXvtOCgVrGVzcWuUGU5XhYAngJ1R4zMgYiUfLeHb/jSweG8F4stM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B1kpGRDy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XsxRG5no; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=rNwxsczmOwB58GbO6+MvLvxeYbsXgGUTthU1WW+hi6rLrFgQuchafRRhaiThG6c5s+ZiE/SsbxvxeepfkfV+iYbG+XFgZ76EznJvDRtC0+9pEPTTJdzC1NJbnT18VWbd9utcPQTs4Hspb+ZvBR8SJua9LAMWILFXIZ7JKXu/YSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xmdZdIHs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p9LomzCh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B1kpGRDy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XsxRG5no"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xmdZdIHs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p9LomzCh"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754977475;
+	s=2020; t=1754977473;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bfNfmAZ2eWXIcM3gW1RToAS2jXuE+ttAWjtBaA8JivY=;
-	b=B1kpGRDy3pua7bopWb/954oKgIRuc3FpjRcj8N8/0woGocR6MrlC63NTftBUFibKS/AICQ
-	0l4yLvJDAUL9O9Iv8brOnKZbuEK46aY74M50FME3ez3Pqc0JNVP0cah4ZO+nwmJK1ZETG+
-	ahGQ2eL4oYMmBUubBb7TW5qooKJgC0dBGwDMZsgzk0S+hvVfKZybnmYIkMpJmtsWOmDXE/
-	7A3+CPHb6uwJ43WFXviOiwG4lW30wI8rFjFt/MBD45XXy8SmYdbOVBvgbqsdc9GpTPAv4z
-	YPBooaL0o00WA384eonGN+yemrymWJ8qP4EH0Mydpotgh3etmFhObcSWEnpSWw==
+	bh=xLFF7RcTXEh7J++8oRFtDMgib541QPR3j3iTPRakVR4=;
+	b=xmdZdIHsWwP/TxhfVFisseNTc/0hbdZicN0qfGKNGeNlzKewzVkXv5sdA4lM27FEH7QMYE
+	4QKhLUaNxvKkExW0VFtSrE4t0q9FrVpd4/cBeivIZBP5fi3pj0Q2Y7QMvLbWQkr6+n1wo9
+	jFox27nxR//Pwo5WgItwK6Jj3DT4yo/xZpgFYRbQd4kP0McfvtHYIMbAHq/4T8kPOxsiTN
+	MYSLVKmQvoc0cVXaSB+H07FPBTnFfNQJ4YoXXoiC+NBV0aOeKZ5CttUwtasDbWQyh/Mby2
+	CBKsQ8v4MYuZI2Y6GLTDGq3dYFUTYHoJSpVxJD8nQwTQhoAHmOkryjb4sNqxLg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754977475;
+	s=2020e; t=1754977473;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bfNfmAZ2eWXIcM3gW1RToAS2jXuE+ttAWjtBaA8JivY=;
-	b=XsxRG5noqNi3QHUb3PsJMNnR3h1efFABfuNPsU4Tp4BzgulPHL9P4+dkMiySHq2nPf5wzI
-	aGxuMRcC3js1Y5AQ==
-Date: Tue, 12 Aug 2025 07:44:22 +0200
-Subject: [PATCH v4 09/24] MIPS: ELF: Move relocation constants to UAPI
+	bh=xLFF7RcTXEh7J++8oRFtDMgib541QPR3j3iTPRakVR4=;
+	b=p9LomzChEORTxM1tlQ8Uf6LNOyTc69rJSBAcj7cgFyKnXKqJPsVlZUyH8jeP2NLLcC3ZbB
+	bztzjjgIw+CLksCA==
+Date: Tue, 12 Aug 2025 07:44:19 +0200
+Subject: [PATCH v4 06/24] riscv: elf: Move relocation constants to UAPI
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250812-vdso-absolute-reloc-v4-9-61a8b615e5ec@linutronix.de>
+Message-Id: <20250812-vdso-absolute-reloc-v4-6-61a8b615e5ec@linutronix.de>
 References: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
 In-Reply-To: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -91,11 +91,11 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Arnaldo Carvalho de Melo <acme@redhat.com>, 
  Alexandre Ghiti <alexghiti@rivosinc.com>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1754977469; l=4434;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1754977469; l=5027;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=URWumLq5cEfF9wP67bk+ZcYfaIdTPXBTgCA3fiF+CgA=;
- b=L2h7+F73PT6iolsNxcu6S1mxeLogHfAutUNfzT1g4xN2qS8cRMLW7GI8H7DLrsC8VYfYYOVEW
- 2yK3W8sGTl1CqHowhCCS2gkuE5kLBohKQe3c+i9dq+/6IUgTR2HRtCc
+ bh=JvVhNnXqLZi9Urcv3cUqECDYuPaTssZzAN5WZwS9T8c=;
+ b=cptfkIfZYzK20UK+A4ARj+d2phq5mEEoCRFgWfpV+I4Wc+7KlP2R8hpKDZkDsX1BB87WWP8wh
+ BGrov+RrHd1CwtMXd0tfU3+rXk87A3z6hSUldor6cipygzbxcVGxdE+
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
@@ -106,135 +106,158 @@ Move them from the kernel-private architecture-specific header to the UAPI.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- arch/mips/include/asm/elf.h | 53 --------------------------------------------
- include/uapi/linux/elf-r.h  | 54 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+), 53 deletions(-)
+ arch/riscv/include/uapi/asm/elf.h | 66 ---------------------------------------
+ include/uapi/linux/elf-r.h        | 66 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 66 deletions(-)
 
-diff --git a/arch/mips/include/asm/elf.h b/arch/mips/include/asm/elf.h
-index dc8d2863752cfd5e8e2cbd750276f9463e0c32b8..347e12584beebbb5a7290efae3310b01220bbe0a 100644
---- a/arch/mips/include/asm/elf.h
-+++ b/arch/mips/include/asm/elf.h
-@@ -70,59 +70,6 @@
- #define DT_MIPS_HIPAGENO	0x70000014
- #define DT_MIPS_RLD_MAP		0x70000016
+diff --git a/arch/riscv/include/uapi/asm/elf.h b/arch/riscv/include/uapi/asm/elf.h
+index 11a71b8533d5759ec724a8359d0ffa2a4f2e976d..05cf74a4a53579006a9cef1ed1dbff81d0e50c87 100644
+--- a/arch/riscv/include/uapi/asm/elf.h
++++ b/arch/riscv/include/uapi/asm/elf.h
+@@ -32,70 +32,4 @@ typedef union __riscv_fp_state elf_fpregset_t;
+ #define ELF_RISCV_R_TYPE(r_info)	ELF32_R_TYPE(r_info)
+ #endif
  
--#define R_MIPS_NONE		0
--#define R_MIPS_16		1
--#define R_MIPS_32		2
--#define R_MIPS_REL32		3
--#define R_MIPS_26		4
--#define R_MIPS_HI16		5
--#define R_MIPS_LO16		6
--#define R_MIPS_GPREL16		7
--#define R_MIPS_LITERAL		8
--#define R_MIPS_GOT16		9
--#define R_MIPS_PC16		10
--#define R_MIPS_CALL16		11
--#define R_MIPS_GPREL32		12
--/* The remaining relocs are defined on Irix, although they are not
--   in the MIPS ELF ABI.	 */
--#define R_MIPS_UNUSED1		13
--#define R_MIPS_UNUSED2		14
--#define R_MIPS_UNUSED3		15
--#define R_MIPS_SHIFT5		16
--#define R_MIPS_SHIFT6		17
--#define R_MIPS_64		18
--#define R_MIPS_GOT_DISP		19
--#define R_MIPS_GOT_PAGE		20
--#define R_MIPS_GOT_OFST		21
 -/*
-- * The following two relocation types are specified in the MIPS ABI
-- * conformance guide version 1.2 but not yet in the psABI.
+- * RISC-V relocation types
 - */
--#define R_MIPS_GOTHI16		22
--#define R_MIPS_GOTLO16		23
--#define R_MIPS_SUB		24
--#define R_MIPS_INSERT_A		25
--#define R_MIPS_INSERT_B		26
--#define R_MIPS_DELETE		27
--#define R_MIPS_HIGHER		28
--#define R_MIPS_HIGHEST		29
--/*
-- * The following two relocation types are specified in the MIPS ABI
-- * conformance guide version 1.2 but not yet in the psABI.
-- */
--#define R_MIPS_CALLHI16		30
--#define R_MIPS_CALLLO16		31
--/*
-- * Introduced for MIPSr6.
-- */
--#define R_MIPS_PC21_S2		60
--#define R_MIPS_PC26_S2		61
--/*
-- * This range is reserved for vendor specific relocations.
-- */
--#define R_MIPS_LOVENDOR		100
--#define R_MIPS_HIVENDOR		127
 -
- #define SHN_MIPS_ACCOMON	0xff00		/* Allocated common symbols */
- #define SHN_MIPS_TEXT		0xff01		/* Allocated test symbols.  */
- #define SHN_MIPS_DATA		0xff02		/* Allocated data symbols.  */
+-/* Relocation types used by the dynamic linker */
+-#define R_RISCV_NONE		0
+-#define R_RISCV_32		1
+-#define R_RISCV_64		2
+-#define R_RISCV_RELATIVE	3
+-#define R_RISCV_COPY		4
+-#define R_RISCV_JUMP_SLOT	5
+-#define R_RISCV_TLS_DTPMOD32	6
+-#define R_RISCV_TLS_DTPMOD64	7
+-#define R_RISCV_TLS_DTPREL32	8
+-#define R_RISCV_TLS_DTPREL64	9
+-#define R_RISCV_TLS_TPREL32	10
+-#define R_RISCV_TLS_TPREL64	11
+-#define R_RISCV_IRELATIVE	58
+-
+-/* Relocation types not used by the dynamic linker */
+-#define R_RISCV_BRANCH		16
+-#define R_RISCV_JAL		17
+-#define R_RISCV_CALL		18
+-#define R_RISCV_CALL_PLT	19
+-#define R_RISCV_GOT_HI20	20
+-#define R_RISCV_TLS_GOT_HI20	21
+-#define R_RISCV_TLS_GD_HI20	22
+-#define R_RISCV_PCREL_HI20	23
+-#define R_RISCV_PCREL_LO12_I	24
+-#define R_RISCV_PCREL_LO12_S	25
+-#define R_RISCV_HI20		26
+-#define R_RISCV_LO12_I		27
+-#define R_RISCV_LO12_S		28
+-#define R_RISCV_TPREL_HI20	29
+-#define R_RISCV_TPREL_LO12_I	30
+-#define R_RISCV_TPREL_LO12_S	31
+-#define R_RISCV_TPREL_ADD	32
+-#define R_RISCV_ADD8		33
+-#define R_RISCV_ADD16		34
+-#define R_RISCV_ADD32		35
+-#define R_RISCV_ADD64		36
+-#define R_RISCV_SUB8		37
+-#define R_RISCV_SUB16		38
+-#define R_RISCV_SUB32		39
+-#define R_RISCV_SUB64		40
+-#define R_RISCV_GNU_VTINHERIT	41
+-#define R_RISCV_GNU_VTENTRY	42
+-#define R_RISCV_ALIGN		43
+-#define R_RISCV_RVC_BRANCH	44
+-#define R_RISCV_RVC_JUMP	45
+-#define R_RISCV_GPREL_I		47
+-#define R_RISCV_GPREL_S		48
+-#define R_RISCV_TPREL_I		49
+-#define R_RISCV_TPREL_S		50
+-#define R_RISCV_RELAX		51
+-#define R_RISCV_SUB6		52
+-#define R_RISCV_SET6		53
+-#define R_RISCV_SET8		54
+-#define R_RISCV_SET16		55
+-#define R_RISCV_SET32		56
+-#define R_RISCV_32_PCREL	57
+-#define R_RISCV_PLT32		59
+-#define R_RISCV_SET_ULEB128	60
+-#define R_RISCV_SUB_ULEB128	61
+-
+-
+ #endif /* _UAPI_ASM_RISCV_ELF_H */
 diff --git a/include/uapi/linux/elf-r.h b/include/uapi/linux/elf-r.h
-index c1309a63a7dc4495f22e3d8b51d3f97ab5809190..78085d26f4ab27a003fde65c8e981f575f411758 100644
+index 0d0dfaa7c724d5f0230e5b7b9b713d8587030637..02e420c255df67f8f7e4bc3165f808b9935f5b1c 100644
 --- a/include/uapi/linux/elf-r.h
 +++ b/include/uapi/linux/elf-r.h
-@@ -563,4 +563,58 @@
+@@ -314,4 +314,70 @@
  /* Keep this the last entry.  */
- #define R_390_NUM	61
+ #define R_PPC64_NUM		253
  
-+/* MIPS relocations defined by the ABIs */
-+#define R_MIPS_NONE		0
-+#define R_MIPS_16		1
-+#define R_MIPS_32		2
-+#define R_MIPS_REL32		3
-+#define R_MIPS_26		4
-+#define R_MIPS_HI16		5
-+#define R_MIPS_LO16		6
-+#define R_MIPS_GPREL16		7
-+#define R_MIPS_LITERAL		8
-+#define R_MIPS_GOT16		9
-+#define R_MIPS_PC16		10
-+#define R_MIPS_CALL16		11
-+#define R_MIPS_GPREL32		12
-+/* The remaining relocs are defined on Irix, although they are not
-+   in the MIPS ELF ABI.	 */
-+#define R_MIPS_UNUSED1		13
-+#define R_MIPS_UNUSED2		14
-+#define R_MIPS_UNUSED3		15
-+#define R_MIPS_SHIFT5		16
-+#define R_MIPS_SHIFT6		17
-+#define R_MIPS_64		18
-+#define R_MIPS_GOT_DISP		19
-+#define R_MIPS_GOT_PAGE		20
-+#define R_MIPS_GOT_OFST		21
++
 +/*
-+ * The following two relocation types are specified in the MIPS ABI
-+ * conformance guide version 1.2 but not yet in the psABI.
++ * RISC-V relocation types
 + */
-+#define R_MIPS_GOTHI16		22
-+#define R_MIPS_GOTLO16		23
-+#define R_MIPS_SUB		24
-+#define R_MIPS_INSERT_A		25
-+#define R_MIPS_INSERT_B		26
-+#define R_MIPS_DELETE		27
-+#define R_MIPS_HIGHER		28
-+#define R_MIPS_HIGHEST		29
-+/*
-+ * The following two relocation types are specified in the MIPS ABI
-+ * conformance guide version 1.2 but not yet in the psABI.
-+ */
-+#define R_MIPS_CALLHI16		30
-+#define R_MIPS_CALLLO16		31
-+/*
-+ * Introduced for MIPSr6.
-+ */
-+#define R_MIPS_PC21_S2		60
-+#define R_MIPS_PC26_S2		61
-+/*
-+ * This range is reserved for vendor specific relocations.
-+ */
-+#define R_MIPS_LOVENDOR		100
-+#define R_MIPS_HIVENDOR		127
++
++/* Relocation types used by the dynamic linker */
++#define R_RISCV_NONE		0
++#define R_RISCV_32		1
++#define R_RISCV_64		2
++#define R_RISCV_RELATIVE	3
++#define R_RISCV_COPY		4
++#define R_RISCV_JUMP_SLOT	5
++#define R_RISCV_TLS_DTPMOD32	6
++#define R_RISCV_TLS_DTPMOD64	7
++#define R_RISCV_TLS_DTPREL32	8
++#define R_RISCV_TLS_DTPREL64	9
++#define R_RISCV_TLS_TPREL32	10
++#define R_RISCV_TLS_TPREL64	11
++#define R_RISCV_IRELATIVE	58
++
++/* Relocation types not used by the dynamic linker */
++#define R_RISCV_BRANCH		16
++#define R_RISCV_JAL		17
++#define R_RISCV_CALL		18
++#define R_RISCV_CALL_PLT	19
++#define R_RISCV_GOT_HI20	20
++#define R_RISCV_TLS_GOT_HI20	21
++#define R_RISCV_TLS_GD_HI20	22
++#define R_RISCV_PCREL_HI20	23
++#define R_RISCV_PCREL_LO12_I	24
++#define R_RISCV_PCREL_LO12_S	25
++#define R_RISCV_HI20		26
++#define R_RISCV_LO12_I		27
++#define R_RISCV_LO12_S		28
++#define R_RISCV_TPREL_HI20	29
++#define R_RISCV_TPREL_LO12_I	30
++#define R_RISCV_TPREL_LO12_S	31
++#define R_RISCV_TPREL_ADD	32
++#define R_RISCV_ADD8		33
++#define R_RISCV_ADD16		34
++#define R_RISCV_ADD32		35
++#define R_RISCV_ADD64		36
++#define R_RISCV_SUB8		37
++#define R_RISCV_SUB16		38
++#define R_RISCV_SUB32		39
++#define R_RISCV_SUB64		40
++#define R_RISCV_GNU_VTINHERIT	41
++#define R_RISCV_GNU_VTENTRY	42
++#define R_RISCV_ALIGN		43
++#define R_RISCV_RVC_BRANCH	44
++#define R_RISCV_RVC_JUMP	45
++#define R_RISCV_GPREL_I		47
++#define R_RISCV_GPREL_S		48
++#define R_RISCV_TPREL_I		49
++#define R_RISCV_TPREL_S		50
++#define R_RISCV_RELAX		51
++#define R_RISCV_SUB6		52
++#define R_RISCV_SET6		53
++#define R_RISCV_SET8		54
++#define R_RISCV_SET16		55
++#define R_RISCV_SET32		56
++#define R_RISCV_32_PCREL	57
++#define R_RISCV_PLT32		59
++#define R_RISCV_SET_ULEB128	60
++#define R_RISCV_SUB_ULEB128	61
 +
  #endif /* _UAPI_LINUX_ELF_R_H */
 
