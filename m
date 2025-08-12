@@ -1,224 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2EE2586DA
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 13:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B81625949A
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 13:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755004088; cv=none; b=BOSCmH6LR4m7tIKj4GLJ4HeshUP1QM+oZTXtnenYslB0QLn3irexL10/gb5uwjZic/bGxzO6Txzkvls95MRxHML0/DQNoonrn+BAhJC2Eb5+xxJuZr/HXBNEG+b4z7PDpTASTFPzeysrUXFAcEO+XgTN2mmgEfkvHueSnkdoeoo=
+	t=1755004197; cv=none; b=ilnDH1ASUxUO9cqic/ZLNo9TndpzCEg7Ks2rzTfPT/TwFclWRICPxsN3AiRFmUP5f5YAAFsBVAtZIycg1pgCse8WTj8ITe7baVUGFtwY8vRmq0RGEaJC9XFHfh63qFHDAXevvAgYJ6zo62kHi7GBnYU2MwX4nXhsS5aJiRGLYZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755004088; c=relaxed/simple;
-	bh=ENhWohJdXUUS1MTKMDzA+YV47rv2W52JUPatF4v3k3A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fCJ4JObx9TptcSigHwWV8z7T1O+l8Zayq3k0BTchWN196IAc/SmqXDFTMbceQac/DaRqgfJq9H2BoqwMUoM1oE0eA+CsdXgUXdpt/C30u5UG6FDHSsMIMt1j3Z4U/rv9O1DPhrNchMeluADQp1GRzhSwvz/3BApI5LM4yO8bUs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M29NhZ/i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755004197; c=relaxed/simple;
+	bh=OhSFzyX49hT+emcatqYo/zwzamB0yKt6RKZcAg89LO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=QAU4OzwAOYQqWtbFvVQYkZSxaFYveXHbm4QqnUzlqEjwqQHWQ5aV3ypt7k/q5Qpf6Es3mH1W14cy+rXOnfJH2PXl9P5AueKA/r+DY85gvoiW+RRkCUG0q0F6FLh/oUgPIMlLC3PDivQIYiiDOZrkjW13jj4bQbfSnC7v9KG4z8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FI4H7F/C; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M29NhZ/i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1464CC4CEF6
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 13:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755004088;
-	bh=ENhWohJdXUUS1MTKMDzA+YV47rv2W52JUPatF4v3k3A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M29NhZ/i88MJ4kLTiJe5o5anL94vD05MhPgXB9incJoLT8Daq1yC9kuH8YbTjpdqJ
-	 bYeDcwkutQUNa4Vcy2Q7+Ae766dekpT9iK5mHRAyXb1RGWLBq12dQvSaP/8AL6N5NN
-	 jNICy+Exy7jTpB5EsAKUwppVS7uV+HVZShKFjbAskDx3sqp6XaZnv+exiRfTCKEvRU
-	 fBprfDbNAMxs0dFtrSi+af/HD0RQj5gfoAQuTe1Z3A6oSNiEP9lfbyl2MTmhz+ipfM
-	 DRj4dOQMvJfE6K1a3gAr5JPEZuAsOjp70B6om17fZDwpenozOXdvTUROuu6+2cy0Sc
-	 +jqqIRT9SZ03A==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-61521cd7be2so7578693a12.3
-        for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 06:08:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV8yKgU5V+F6jaHWUVrctC29LYJqW580mf1K37wtuq51eun8TrTafsayoJisUNmDNlVyGn4HYXGrs8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwM5UUuy+VUZ01fyK8JHqrKh8j3P8Y4d3ijuJsvkhpDyX4dWWs+
-	vVeXSWJPCTU9IajIuiFuBZjt198sw1nvL6RWGaxmrvyOrG7bAl64H0+Wy72XxiJSnVmsqXaDvZL
-	jm/9dXksUjoQTtv7cKxl8E860pnA20aY=
-X-Google-Smtp-Source: AGHT+IFudGAnAFNiT6SjRp7L6THpqvsswlm2XoTOBcXgnG826IQRjdWdOaRmSDIzP6PFrFKdc346NTBYaqIUnwW3j4g=
-X-Received: by 2002:a05:6402:13c4:b0:617:ddc1:ddf4 with SMTP id
- 4fb4d7f45d1cf-617e2bc5edfmr14149378a12.14.1755004086575; Tue, 12 Aug 2025
- 06:08:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FI4H7F/C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755004195;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/cuxRnTF/+sbokXrks651YRr5s4tLHJAN7bhV7Yv7fM=;
+	b=FI4H7F/CAR29cyBJxMXRA3e9PZKQhk8cnaAppHl3K3h4SBk/XcveNqZEDyiquxjamRYhfj
+	KjRh6ORF2idEVKd1clvTRchVg0p38lUyMAEsO4Fo70sZ56y5zIhy+jKGgP2aftQNLY5yKU
+	rqMAtttX0q4YNbyzuQJ+edFAXOnJKhw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-524-SArAZdPZOtigwjx2dT9jhA-1; Tue,
+ 12 Aug 2025 09:09:49 -0400
+X-MC-Unique: SArAZdPZOtigwjx2dT9jhA-1
+X-Mimecast-MFC-AGG-ID: SArAZdPZOtigwjx2dT9jhA_1755004186
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87D20180036F;
+	Tue, 12 Aug 2025 13:09:45 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.156])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7BEA8195608F;
+	Tue, 12 Aug 2025 13:09:36 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-mm@kvack.org
+Cc: snovitoll@gmail.com,
+	ryabinin.a.a@gmail.com,
+	christophe.leroy@csgroup.eu,
+	hca@linux.ibm.com,
+	andreyknvl@gmail.com,
+	akpm@linux-foundation.org,
+	chenhuacai@loongson.cn,
+	davidgow@google.com,
+	glider@google.com,
+	dvyukov@google.com,
+	alexghiti@rivosinc.com,
+	kasan-dev@googlegroups.com,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-um@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	agordeev@linux.ibm.com,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH 0/4] mm/kasan: remove kasan_arch_is_ready()
+Date: Tue, 12 Aug 2025 21:09:29 +0800
+Message-ID: <20250812130933.71593-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250812090056.771379-1-lixianglai@loongson.cn>
- <CAAhV-H7pXxFR8PnAOv8CirotXUSPgbb7AEsHU0VGh_YMFFoyJA@mail.gmail.com> <da4311b0-7e8e-647a-260f-1733878cf394@loongson.cn>
-In-Reply-To: <da4311b0-7e8e-647a-260f-1733878cf394@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 12 Aug 2025 21:07:53 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7uhvZeZ9L40AWuRN7t4JAFLNDj4YUOZ_K-oPrCcnpEjA@mail.gmail.com>
-X-Gm-Features: Ac12FXz4ArCfTVS2xsBmacHl-EbcS_6v8wbSGA2j9iZLcyhYLOzDDTQrG_ys3Xg
-Message-ID: <CAAhV-H7uhvZeZ9L40AWuRN7t4JAFLNDj4YUOZ_K-oPrCcnpEjA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: time: Fix the issue of high cpu usage of vcpu
- threads in virtual machines
-To: lixianglai <lixianglai@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Bibo Mao <maobibo@loongson.cn>, 
-	Song Gao <gaosong@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, Aug 12, 2025 at 8:50=E2=80=AFPM lixianglai <lixianglai@loongson.cn>=
- wrote:
->
->
->
-> Hi Huacai Chen:
-> > Hi, Xianglai,
-> >
-> > There is something that can be improved.
-> >
-> > On Tue, Aug 12, 2025 at 5:24=E2=80=AFPM Xianglai Li <lixianglai@loongso=
-n.cn> wrote:
-> >> When the cpu is offline, the timer under loongarch is not correctly cl=
-osed,
-> >> resulting in an excessively high cpu usage rate of the offline vcpu th=
-read
-> >> in the virtual machine.
-> >>
-> >> To correctly close the timer, we have made the following modifications=
-:
-> >>
-> >> Register the cpu hotplug timer start event for loongarch.This event wi=
-ll
-> >> be called to close the timer when the cpu is offline.
-> >>
-> >> Clear the timer interrupt when the timer is turned off
-> >>
-> >> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-> >> ---
-> >>   arch/loongarch/kernel/time.c | 20 ++++++++++++++++++++
-> >>   include/linux/cpuhotplug.h   |  1 +
-> >>   2 files changed, 21 insertions(+)
-> >>
-> >> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time=
-.c
-> >> index 367906b10f81..4daa11512eba 100644
-> >> --- a/arch/loongarch/kernel/time.c
-> >> +++ b/arch/loongarch/kernel/time.c
-> >> @@ -12,6 +12,7 @@
-> >>   #include <linux/kernel.h>
-> >>   #include <linux/sched_clock.h>
-> >>   #include <linux/spinlock.h>
-> >> +#include <linux/cpu.h>
-> >>
-> >>   #include <asm/cpu-features.h>
-> >>   #include <asm/loongarch.h>
-> >> @@ -86,6 +87,9 @@ static int constant_set_state_shutdown(struct clock_=
-event_device *evt)
-> >>          timer_config &=3D ~CSR_TCFG_EN;
-> >>          csr_write64(timer_config, LOONGARCH_CSR_TCFG);
-> >>
-> >> +       /* Clear Timer Interrupt */
-> >> +       write_csr_tintclear(CSR_TINTCLR_TI);
-> >> +
-> >>          raw_spin_unlock(&state_lock);
-> >>
-> >>          return 0;
-> >> @@ -208,8 +212,17 @@ int __init constant_clocksource_init(void)
-> >>          return res;
-> >>   }
-> >>
-> >> +static int arch_timer_dying_cpu(unsigned int cpu)
-> > We can use arch_timer_dying() for short. And then add an
-> > arch_timer_starting() like this:
-> >
-> > static int arch_timer_starting(unsigned int cpu)
-> > {
-> >          set_csr_ecfg(ECFGF_TIMER);
-> >
-> >          return 0;
-> > }
-> >
-> > Though ECFGF_TIMER may be enabled in other places, for syntax we need i=
-t here.
-> >
-> >> +{
-> >> +       constant_set_state_shutdown(NULL);
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >>   void __init time_init(void)
-> >>   {
-> >> +       int err;
-> >> +
-> >>          if (!cpu_has_cpucfg)
-> >>                  const_clock_freq =3D cpu_clock_freq;
-> >>          else
-> >> @@ -220,4 +233,11 @@ void __init time_init(void)
-> >>          constant_clockevent_init();
-> >>          constant_clocksource_init();
-> >>          pv_time_init();
-> >> +
-> >> +       err =3D cpuhp_setup_state_nocalls(CPUHP_AP_LOONGARCH_ARCH_TIME=
-R_STARTING,
-> >> +                                       "loongarch/timer:starting",
-> >> +                                       NULL, arch_timer_dying_cpu);
-> > Then we need use cpuhp_setup_state() here, because we have a startup
-> > function now.
-> >
-> > And "loongarch/timer:starting" should be
-> > "clockevents/loongarch/timer:starting" like others.
-> >
-> > And the whole should be moved to the last of
-> > constant_clockevent_init() because it is clockevent specific.
->
-> like this?
->
-> @@ -164,6 +182,10 @@ int constant_clockevent_init(void)
->
->          timer_irq_installed =3D 1;
->
-> +       cpuhp_setup_state(CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
-> +                         "clockevents/loongarch/timer:starting",
-> +                         arch_timer_starting, arch_timer_dying_cpu);
-> +
->          sync_counter();
->
->
-> I was wondering whether it should be placed before or after the
-> "timer_irq_installed" judgment
-Should be after "timer_irq_installed" because we only need to run once.
+These are made on top of below patchset in which all functional functions
+will be skipped if kasan is disabled by checking kasan_enabled(). With
+the changes, kasan_arch_is_ready() can be easily cleaned up to simplify
+code.
 
-The best place is after pr_info("Constant clock event device register\n");
+[PATCH v2 00/12] mm/kasan: make kasan=on|off work for all three modes
+https://lore.kernel.org/all/20250812124941.69508-1-bhe@redhat.com/T/#u
 
-And there is another question:
-Should we move "write_csr_tintclear(CSR_TINTCLR_TI)" from
-constant_set_state_shutdown() to arch_timer_dying()?
+The 1st three patches are from Sabyrzhan Tasbolatov's patchset. After
+clean up the kasan_arch_is_ready() definition in loongarch, power and UM, 
+we can simply remove kasan_arch_is_ready() checking in mm/kasan since
+all the checking has been covered by kasan_enabled().
 
+[PATCH v6 0/2] kasan: unify kasan_enabled() and remove arch-specific implementations
+https://lore.kernel.org/all/20250810125746.1105476-1-snovitoll@gmail.com/T/#u
 
-Huacai
+Test:
+======
+I have tested the effect of this patchset on loongarch, power and UM.
+Will try to find machine to do testing.
 
->
->
-> >> +       if (err)
-> >> +               pr_info("cpu hotplug event register failed");
-> > This is not so useful, because the error isn't fatal.
-> >
-> >
-> > Huacai
-> >
-> >> +
-> >>   }
-> >> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> >> index edfa61d80702..6606c1546afc 100644
-> >> --- a/include/linux/cpuhotplug.h
-> >> +++ b/include/linux/cpuhotplug.h
-> >> @@ -159,6 +159,7 @@ enum cpuhp_state {
-> >>          CPUHP_AP_PERF_ARM_STARTING,
-> >>          CPUHP_AP_PERF_RISCV_STARTING,
-> >>          CPUHP_AP_ARM_L2X0_STARTING,
-> >> +       CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
-> >>          CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
-> >>          CPUHP_AP_ARM_ARCH_TIMER_STARTING,
-> >>          CPUHP_AP_ARM_ARCH_TIMER_EVTSTRM_STARTING,
-> >>
-> >> base-commit: 53e760d8949895390e256e723e7ee46618310361
-> >> --
-> >> 2.39.1
-> >>
->
->
+Baoquan He (1):
+  mm/kasan: remove kasan_arch_is_ready()
+
+Sabyrzhan Tasbolatov (3):
+  arch/loongarch: remove kasan_arch_is_ready()
+  arch/powerpc: remove kasan_arch_is_ready()
+  arch/um: remove kasan_arch_is_ready()
+
+ arch/loongarch/include/asm/kasan.h     |  7 -------
+ arch/loongarch/mm/kasan_init.c         | 10 +++-------
+ arch/powerpc/include/asm/kasan.h       | 13 -------------
+ arch/powerpc/mm/kasan/init_book3s_64.c |  4 ----
+ arch/um/include/asm/kasan.h            |  5 ++---
+ arch/um/kernel/mem.c                   |  6 +++++-
+ mm/kasan/common.c                      |  9 +++------
+ mm/kasan/generic.c                     |  9 ---------
+ mm/kasan/kasan.h                       |  6 ------
+ mm/kasan/shadow.c                      | 18 ------------------
+ 10 files changed, 13 insertions(+), 74 deletions(-)
+
+-- 
+2.41.0
+
