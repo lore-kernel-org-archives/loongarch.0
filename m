@@ -1,206 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07650311C17
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 03:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCF7169AE6
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 04:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754967850; cv=none; b=EyKQbAVouGmoDVCRxjoLdS0sY5iQJuk9K6bKOZKUHRyAQzC8tQThdvE2laQCUihSH5ibLp1EsJjoUbYoPJBQwLTka3poOkXEix8n2rx1mf1x3Sv3oFtbD/1Ju2+8XF71AhRj0OKHHX7dairBJNn6hr034/hWq6PuYyIUKydIdqg=
+	t=1754971575; cv=none; b=d9ePayvRs2x6xhmYc2bzHFxhKqkNFc5qITvh4if+JUghSU0qdmYcltcm53q7zyYY+BhWeVxauzIYqZhvuVbfVcMWwT1J3VR3w1Akwm0o8uPdwpGODOL/oHgp6w1CtchnvaTB+QpLwMMkjVXsxOLCOEBTdWJqGPpNIjN1xcaW/0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754967850; c=relaxed/simple;
-	bh=JZcssSDwXvkq47K2QFU0GKFjCEkGDp3/xk6/4k4s/jU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=byjed6IEWK3t9/DDx6u4En55iZiLXz4ktLvhhfP1Ugvzglrb9j7pTxJus4SklwG5rYKJKW6fzhRdbqfk4XAANYMNgsNhwhAyoP+SyHxnwttZQnTqsQ2zgHIHkMW26U8uZvM53yPASFEl89RFlkMKpRtZG+nJQAoxI2q7aVdK/yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bcc+nNl/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754971575; c=relaxed/simple;
+	bh=p8t6k+6GXovC5uDxdFfBS/FvVWKNaHn6GXxjO/8jQDM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VZ7Yk1a/9+qHfbcgcj93bIzrI/JTi56+LVziRo4+ozH2K/ILroeLg6/I4pFQWclesnp3ERFj1lQkno1xL3bj1O4x2N38siZwOZo0302Ldkem8QdyzV8sq4mradCw2UQ18nwnsPsG1rynWUcQu94WxEa6lwxWZ5NKF/oqrb2nXZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qhuHlinE; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bcc+nNl/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93BDFC4CEF9
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 03:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754967849;
-	bh=JZcssSDwXvkq47K2QFU0GKFjCEkGDp3/xk6/4k4s/jU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Bcc+nNl/qbetm1EZdjaM2ELnQC1FlhvVLukQYTaHhMzeA7lc2qmxtKaxwXW4KEMVP
-	 qjQaSSkwMxNH2iDhAGFlaali1B8cJIJXPRwHmKlwE/XFLnIVokJzfN4TLlQo2vo802
-	 St1R9EbdDkYrYRvJrn75iUn7WFtOrU8cXuoVqhyiu/1HC7nCk8JVbfjB1h70A8HAEe
-	 SBXiagSWNU+ZVPCPGXyj/dMTIE0BvoILlA1/WileNZmO/6mdapuGEniaRIU4q28hSp
-	 ZJWVDGhViLRz7y+gQRaRAcU7ZmYlXo9Aj+gkcqjFdOBRe7hDlCyKaBQCqE3tzjH+Rp
-	 lq4I9xFcJet+w==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so8902497a12.2
-        for <loongarch@lists.linux.dev>; Mon, 11 Aug 2025 20:04:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWqF74VkbFiDMTb17di9DITRKT7vUhjqK+w9GOm1/oAgbLDal7bLWxYRSFseO/RlnS6vhyWaM6TW0A=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxZfpr4TRTONc0qRhAizpTE9GWNdMTYyy7GuxUVUsj7RkIRvoCV
-	PJJtqK5diZzlOzeT9je0CQ3gHoOKQSdHeaqqqn/waU8es8s8Xu0uxZfT/WwABMOv834st0cexMp
-	pT4OVlVg8x1Hdtvo9RVj/k1iOK6iICpo=
-X-Google-Smtp-Source: AGHT+IEpJwbYH7nvlbwIEAKaW6ujz8pkWtW42xhS+xF8oiKPPlaUkSCWoy63SJWAR2gGIT1pakCRMbPUvsHqGJRiLT0=
-X-Received: by 2002:a50:8ad8:0:b0:618:1250:ac54 with SMTP id
- 4fb4d7f45d1cf-6184ecc363amr837963a12.21.1754967848164; Mon, 11 Aug 2025
- 20:04:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qhuHlinE"
+Message-ID: <0767b8fe-7c04-4e73-9235-ee326ee058cc@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1754971570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gBKYKsRpkFn4IgKj6ShKVJvxeOJHa9l2mWxrzZCMV7Q=;
+	b=qhuHlinEYuRlBDjMI4MbGx0/KxiYdhdqOPfLP0oqsPpOj0jhFjA54EiI3M8GXC6Pk8EVb2
+	/qR3qQmpSiB5bweQlDPHRe22e6PYfTC+EImtk1BWutMGnco8opavqMnN7zPSLplYoArMLo
+	oySeWvOUlkHDpU7+xZL/bAN7td1TSM8=
+Date: Tue, 12 Aug 2025 12:05:30 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250811092659.14903-1-youling.tang@linux.dev>
- <20250811092659.14903-4-youling.tang@linux.dev> <CAAhV-H4Sf=74-ni=qUkg3doC4iLrVt=m2bCYCgfmVC0WLNhiDQ@mail.gmail.com>
- <15fdef37-f380-4b5c-85bb-24482e883dcc@linux.dev>
-In-Reply-To: <15fdef37-f380-4b5c-85bb-24482e883dcc@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 12 Aug 2025 11:03:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4_9r=dG=mDU-s2thbv8agoso51U0kHXtx15gxt_wZwVw@mail.gmail.com>
-X-Gm-Features: Ac12FXzivR9jQD2OLx7jwFn4TBUMS53K4UxBkvWIv0r6F9WVP2OGUGDgDn1X83E
-Message-ID: <CAAhV-H4_9r=dG=mDU-s2thbv8agoso51U0kHXtx15gxt_wZwVw@mail.gmail.com>
 Subject: Re: [PATCH 3/6] LoongArch/kexec_file: Add initrd loading
-To: Youling Tang <youling.tang@linux.dev>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Youling Tang <tangyouling@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+References: <20250811092659.14903-1-youling.tang@linux.dev>
+ <20250811092659.14903-4-youling.tang@linux.dev> <aJovKIKFqX6xi9ra@pie>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <aJovKIKFqX6xi9ra@pie>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Aug 12, 2025 at 10:38=E2=80=AFAM Youling Tang <youling.tang@linux.d=
-ev> wrote:
+Hi, Yao
+On 2025/8/12 01:58, Yao Zi wrote:
+> On Mon, Aug 11, 2025 at 05:26:56PM +0800, Youling Tang wrote:
+>> From: Youling Tang <tangyouling@kylinos.cn>
+>>
+>> Add inird loading support and pass it to the second kernel via the
+>> cmdline 'initrd=start,size'.
+> I think This won't work if the exec'ed kernel enables
+> CONFIG_CMDLINE_FORCE. Is it possible to mimic libstub's behavior of
+> installing a configuration table LINUX_EFI_INITRD_MEDIA_GUID?
+The command line passed by kexec to the second kernel has no effect if
+CONFIG_CMDLINE_FORCE is enabled, which is not quite suitable for the
+kexec scenario.
+
+Currently, the initrd, elfcorehdr, and mem parameters will all be passed
+through the command line to maintain consistency with the implementation
+behavior of kexec-tools. It is possible that the content of systab will
+be modified in the future and some parts will be integrated into systab
+(the current cmdline mode will be better compatible with the elf kernel).
 >
-> Hi, Huacai
-> On 2025/8/11 22:12, Huacai Chen wrote:
-> > Hi, Youling,
-> >
-> > On Mon, Aug 11, 2025 at 5:28=E2=80=AFPM Youling Tang <youling.tang@linu=
-x.dev> wrote:
-> >> From: Youling Tang <tangyouling@kylinos.cn>
-> >>
-> >> Add inird loading support and pass it to the second kernel via the
-> >> cmdline 'initrd=3Dstart,size'.
-> > I think Patch-3 and Patch-5 should be merged into Patch-2.
-> Not all cases require loading initrd, so Patch-2 is a runnable basic patc=
-h.
-> Separating it into different patches makes it easier to understand and
-> review the code.
-Unnecessary, without separating the code is clear enough.
-
+>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+>> ---
+>>   arch/loongarch/kernel/machine_kexec_file.c | 71 ++++++++++++++++++++++
+>>   1 file changed, 71 insertions(+)
+>>
+>> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+>> index bc91ae0afa4c..e1240644f529 100644
+>> --- a/arch/loongarch/kernel/machine_kexec_file.c
+>> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+>> @@ -34,13 +34,84 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>>   	return kexec_image_post_load_cleanup_default(image);
+>>   }
+>>   
+>> +/* Adds the "initrd=start,size" command line parameter to command line. */
+>> +static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmplen,
+>> +				char *modified_cmdline, unsigned long initrd)
+>> +{
+>> +	int initrd_strlen;
+>> +
+>> +	initrd_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "initrd=0x%lx,0x%lx ",
+> modified_cmdline is allocated as COMMAND_LINE_SIZE bytes, thus I think
+> it's possible to overflow the buffer.
+At this point, modified_cmdline can clearly know that it only stores
+the additional commands we add (initrd,mem,elfcorehdr), and will not
+exceed COMMAND_LINE_SIZE.
 >
-> Patch-5 coming out separately can better illustrate the role of "mem"
-> parameters in capturing the kernel.
-Emm, Patch-5 should be squashed to Patch-4, not Patch-2.
-
-Huacai
-
+>> +		initrd, image->initrd_buf_len);
+>> +	*cmdline_tmplen += initrd_strlen;
+>> +}
+>> +
+>> +/*
+>> + * Tries to add the initrd to the image. If it is not possible to find
+>> + * valid locations, this function will undo changes to the image and return non
+>> + * zero.
+>> + */
+>>   int load_other_segments(struct kimage *image,
+>>   			unsigned long kernel_load_addr,
+>>   			unsigned long kernel_size,
+>>   			char *initrd, unsigned long initrd_len,
+>>   			char *cmdline, unsigned long cmdline_len)
+>>   {
+>> +	struct kexec_buf kbuf;
+>> +	unsigned long orig_segments = image->nr_segments;
+>> +	char *modified_cmdline = NULL;
+>> +	unsigned long cmdline_tmplen = 0;
+>> +	unsigned long initrd_load_addr = 0;
+>> +	int ret = 0;
+>> +
+>> +
+>> +	kbuf.image = image;
+>> +	/* not allocate anything below the kernel */
+>> +	kbuf.buf_min = kernel_load_addr + kernel_size;
+>> +
+>> +	modified_cmdline = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
+>> +	if (!modified_cmdline)
+>> +		return -EINVAL;
+>> +
+>> +	/* Ensure it's nul terminated */
+>> +	modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
+>> +
+>> +	/* load initrd */
+>> +	if (initrd) {
+>> +		kbuf.buffer = initrd;
+>> +		kbuf.bufsz = initrd_len;
+>> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> +		kbuf.memsz = initrd_len;
+>> +		kbuf.buf_align = 0;
+>> +		/* within 1GB-aligned window of up to 32GB in size */
+>> +		kbuf.buf_max = round_down(kernel_load_addr, SZ_1G)
+>> +						+ (unsigned long)SZ_1G * 32;
+>> +		kbuf.top_down = false;
+>> +
+>> +		ret = kexec_add_buffer(&kbuf);
+>> +		if (ret)
+>> +			goto out_err;
+>> +		initrd_load_addr = kbuf.mem;
+>> +
+>> +		kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>> +			      initrd_load_addr, kbuf.bufsz, kbuf.memsz);
+>> +
+>> +		/* Add the initrd=start,size parameter to the command line */
+>> +		cmdline_add_initrd(image, &cmdline_tmplen, modified_cmdline, initrd_load_addr);
+>> +	}
+>> +
+>> +	if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
+> It's too later to check for overflowing here, where the data after
+> modified_cmdline may already be overwritten.
+At this point, we append the original command line to modified_cmdline,
+so it is appropriate to determine whether the command line length exceeds
+the limit.
 >
-> Youling.
-> >
-> > Huacai
-> >
-> >> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> >> ---
-> >>   arch/loongarch/kernel/machine_kexec_file.c | 71 ++++++++++++++++++++=
-++
-> >>   1 file changed, 71 insertions(+)
-> >>
-> >> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongar=
-ch/kernel/machine_kexec_file.c
-> >> index bc91ae0afa4c..e1240644f529 100644
-> >> --- a/arch/loongarch/kernel/machine_kexec_file.c
-> >> +++ b/arch/loongarch/kernel/machine_kexec_file.c
-> >> @@ -34,13 +34,84 @@ int arch_kimage_file_post_load_cleanup(struct kima=
-ge *image)
-> >>          return kexec_image_post_load_cleanup_default(image);
-> >>   }
-> >>
-> >> +/* Adds the "initrd=3Dstart,size" command line parameter to command l=
-ine. */
-> >> +static void cmdline_add_initrd(struct kimage *image, unsigned long *c=
-mdline_tmplen,
-> >> +                               char *modified_cmdline, unsigned long =
-initrd)
-> >> +{
-> >> +       int initrd_strlen;
-> >> +
-> >> +       initrd_strlen =3D sprintf(modified_cmdline + (*cmdline_tmplen)=
-, "initrd=3D0x%lx,0x%lx ",
-> >> +               initrd, image->initrd_buf_len);
-> >> +       *cmdline_tmplen +=3D initrd_strlen;
-> >> +}
-> >> +
-> >> +/*
-> >> + * Tries to add the initrd to the image. If it is not possible to fin=
-d
-> >> + * valid locations, this function will undo changes to the image and =
-return non
-> >> + * zero.
-> >> + */
-> >>   int load_other_segments(struct kimage *image,
-> >>                          unsigned long kernel_load_addr,
-> >>                          unsigned long kernel_size,
-> >>                          char *initrd, unsigned long initrd_len,
-> >>                          char *cmdline, unsigned long cmdline_len)
-> >>   {
-> >> +       struct kexec_buf kbuf;
-> >> +       unsigned long orig_segments =3D image->nr_segments;
-> >> +       char *modified_cmdline =3D NULL;
-> >> +       unsigned long cmdline_tmplen =3D 0;
-> >> +       unsigned long initrd_load_addr =3D 0;
-> >> +       int ret =3D 0;
-> >> +
-> >> +
-> >> +       kbuf.image =3D image;
-> >> +       /* not allocate anything below the kernel */
-> >> +       kbuf.buf_min =3D kernel_load_addr + kernel_size;
-> >> +
-> >> +       modified_cmdline =3D kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
-> >> +       if (!modified_cmdline)
-> >> +               return -EINVAL;
-> >> +
-> >> +       /* Ensure it's nul terminated */
-> >> +       modified_cmdline[COMMAND_LINE_SIZE - 1] =3D '\0';
-> >> +
-> >> +       /* load initrd */
-> >> +       if (initrd) {
-> >> +               kbuf.buffer =3D initrd;
-> >> +               kbuf.bufsz =3D initrd_len;
-> >> +               kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
-> >> +               kbuf.memsz =3D initrd_len;
-> >> +               kbuf.buf_align =3D 0;
-> >> +               /* within 1GB-aligned window of up to 32GB in size */
-> >> +               kbuf.buf_max =3D round_down(kernel_load_addr, SZ_1G)
-> >> +                                               + (unsigned long)SZ_1G=
- * 32;
-> >> +               kbuf.top_down =3D false;
-> >> +
-> >> +               ret =3D kexec_add_buffer(&kbuf);
-> >> +               if (ret)
-> >> +                       goto out_err;
-> >> +               initrd_load_addr =3D kbuf.mem;
-> >> +
-> >> +               kexec_dprintk("Loaded initrd at 0x%lx bufsz=3D0x%lx me=
-msz=3D0x%lx\n",
-> >> +                             initrd_load_addr, kbuf.bufsz, kbuf.memsz=
-);
-> >> +
-> >> +               /* Add the initrd=3Dstart,size parameter to the comman=
-d line */
-> >> +               cmdline_add_initrd(image, &cmdline_tmplen, modified_cm=
-dline, initrd_load_addr);
-> >> +       }
-> >> +
-> >> +       if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
-> >> +               pr_err("Appending kdump cmdline exceeds cmdline size\n=
-");
-> >> +               ret =3D -EINVAL;
-> >> +               goto out_err;
-> >> +       }
-> >> +       memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len=
-);
-> >> +       cmdline =3D modified_cmdline;
-> >>          image->arch.cmdline_ptr =3D (unsigned long)cmdline;
-> >>
-> >>          return 0;
-> >> +
-> >> +out_err:
-> >> +       image->nr_segments =3D orig_segments;
-> >> +       kfree(modified_cmdline);
-> >> +       return ret;
-> >>   }
-> >> --
-> >> 2.34.1
-> >>
+>> +		pr_err("Appending kdump cmdline exceeds cmdline size\n");
+> I think load_other_segments could be invoked without kdump involved. If
+> that's correct, this message is inaccurate.
+Yes, it should be corrected.
+
+
+Thanks,
+Youling.
+>
+>> +		ret = -EINVAL;
+>> +		goto out_err;
+>> +	}
+> Regards,
+> Yao Zi
+>
+>> +	memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len);
+>> +	cmdline = modified_cmdline;
+>>   	image->arch.cmdline_ptr = (unsigned long)cmdline;
+>>   
+>>   	return 0;
+>> +
+>> +out_err:
+>> +	image->nr_segments = orig_segments;
+>> +	kfree(modified_cmdline);
+>> +	return ret;
+>>   }
+>> -- 
+>> 2.34.1
+>>
+>>
