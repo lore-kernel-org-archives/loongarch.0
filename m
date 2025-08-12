@@ -1,151 +1,302 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5F029BDA4;
-	Tue, 12 Aug 2025 05:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C05615383A
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 06:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754977501; cv=none; b=h5JI7Lfs4eVYtEm3u720YUfMvfbQokbvVQcgxyu18q1AGplhz5Tp9iS2yQ1/qi8VL98+T12BuWcgkIaml41AB2h7ya9x0I6SISA4Q9AYoA/EU5PnBm9R0w7Fxdi/iZKa7mSWGRGVpYKC9Fh3nZGqFgM1U2CBN8OXEWvBL6fUo1I=
+	t=1754979365; cv=none; b=ZhXSlrwbvluInaQPyqwEwJ9SGMYLvugxhatj6rQ8t5aLWRDf3rqLPMUhX0PPd/RmNnI1x+T2VJ7tK9ottgzzjDOPaFIKbybZk0sUew3uZ8ylv4JQqgGH9rz3vHiCVpNHfij7yNMaIc2sujeUGd2S8EdKx4iXSzZP2TEyRIJx+6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754977501; c=relaxed/simple;
-	bh=XgLT+HRfIExEaxGQakA0kG9YYMgwqfszT+N1NJLYmAY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=g+q/0HveeKCwqoHRg/MVC04BlskXanrt6kRU8uVYrGqwo9GnoNW+4wJloBWWFq8lYpcyz9z/6YxvyT/buBxdz26TnyQik0jmlKTMWlbyRu565lTNnIR8D6V67cibxSAFzeV2hWENQsERpSH2gKdVRE8B/i+5/ccdYApNGAowRRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gVUd2BKN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E3zfUlZM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1754979365; c=relaxed/simple;
+	bh=UBgZc0gbbIXVBiFZNdSDMzCIkXeE7fHrfF7LLYhV3gQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MzaxWbwAPqsH0pdTEP9P0kQ7NGto9h6KoG4zoyCPnXzvPW+yDggry0vIwGawa8vR50TanEt8p4e1ghP+ZSd5MX8LLLEeZysouG6GvipRWAL8N5zLVX93UyClI7JXi21gNYGdmOYyU9DJiv/PH3bCrnUCPiUB2YEkCDNggAgXI80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mb3H/tVW; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gVUd2BKN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E3zfUlZM"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754977483;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mb3H/tVW"
+Message-ID: <6de97571-7ef0-4bbd-b55f-5ad41898a6ec@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1754979359;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4Ohsn0uRwU+hqw8smnbWosllb5/RpGYnB9VEAvO1A/o=;
-	b=gVUd2BKNRu49lqg4NSeZ4pKy2oD1HLdzTFOjP5wa3OkUArCPejQi3q6nUUr2hwWVlPH2Kd
-	CpxufrleSj5IZe8RVpKM1ltFMzRJO9obwhqsMGuapaXgAqGhXqHAW1SITBjzjuIFxYogme
-	VHW9rhxA7fc8nsd57iZTz0NzWxS4qCvj0HR7XdalckB95CeAtDcPREEN4EOpD8wSUEK1Fj
-	JpEDuofzGC0RATmSZcEZf8c/4R+6SxzYN4hGrvSuM267wDyFyN3n0HVqzoxPKY02BuyYgJ
-	Z9VulQJw/Kd9S+FCzxMpZgWlnADluI2ZtXqh+SyfPfSKvhoitMn+YWd5L9OT6A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754977483;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4Ohsn0uRwU+hqw8smnbWosllb5/RpGYnB9VEAvO1A/o=;
-	b=E3zfUlZMz5EWlnuWD04WRwJZzaIYqsb9Hq174OOh7rbwH0by1UeqdRfVLVDKyXeX8pZQ9r
-	AHYbNMgU+lq97wCQ==
-Date: Tue, 12 Aug 2025 07:44:37 +0200
-Subject: [PATCH v4 24/24] vdso/vdsocheck: Drop the transitional kconfig
- option
+	bh=v2gTpUJPUXvo+zC/3w7+1UJ07KaE1bkVttXQvFeeqeY=;
+	b=mb3H/tVWq//a1igtQxsEAHJWv0y+bRdUerzjxr+nURYRzjnt5c7SfShRJdAdoGDZCO+Uso
+	TchAHi4rro/RURbAc3ZGxGD0H1bHztQwxm5TrGW0Pt8xFFN+WYXw27ME5nc6lulfMn0zzK
+	VgcyHFGUDauKxBSbIv7kWOF92P9rCUs=
+Date: Tue, 12 Aug 2025 14:15:19 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Subject: Re: [PATCH 2/6] LoongArch: Add kexec_file support
+To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+References: <20250811092659.14903-1-youling.tang@linux.dev>
+ <20250811092659.14903-3-youling.tang@linux.dev> <aJojDiHWi8cgvA2W@pie>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <aJojDiHWi8cgvA2W@pie>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250812-vdso-absolute-reloc-v4-24-61a8b615e5ec@linutronix.de>
-References: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
-In-Reply-To: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Kees Cook <kees@kernel.org>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>, 
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
- Johannes Berg <johannes@sipsolutions.net>, 
- Russell King <linux@armlinux.org.uk>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Nicolas Schier <nicolas.schier@linux.dev>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, linux-mm@kvack.org, linux-um@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
- loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
- linux-mips@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, Jan Stancek <jstancek@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@redhat.com>, 
- Alexandre Ghiti <alexghiti@rivosinc.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1754977469; l=1638;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=XgLT+HRfIExEaxGQakA0kG9YYMgwqfszT+N1NJLYmAY=;
- b=1I1jQfDAIUdxhhr5poZTNsBtXG7kI9OeSFZyV1uG5GiskTP3f4x0XtJf5y22KDovg2SDqYoC/
- 1/LS9SuRW0lC44pibDwoRDG1rIxAT00dk7cwwtQfK+pJ8Esyu7dhqf4
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+X-Migadu-Flow: FLOW_OUT
 
-All users of the generic vDSO are now using the vdsocheck tool.
+Hi, Yao
+On 2025/8/12 01:06, Yao Zi wrote:
+> On Mon, Aug 11, 2025 at 05:26:55PM +0800, Youling Tang wrote:
+>> From: Youling Tang <tangyouling@kylinos.cn>
+>>
+>> This patch adds support for kexec_file on LoongArch.
+>>
+>> The image_load() as two parts:
+>> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
+>> - the second part loads other segments (eg: initrd, cmdline)
+>>
+>> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
+>> but ELF format is not supported.
+>>
+>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+>> ---
+>>   arch/loongarch/Kconfig                     |   8 ++
+>>   arch/loongarch/include/asm/image.h         |  18 ++++
+>>   arch/loongarch/include/asm/kexec.h         |  12 +++
+>>   arch/loongarch/kernel/Makefile             |   1 +
+>>   arch/loongarch/kernel/kexec_image.c        | 112 +++++++++++++++++++++
+>>   arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
+>>   arch/loongarch/kernel/machine_kexec_file.c |  46 +++++++++
+>>   7 files changed, 219 insertions(+), 11 deletions(-)
+>>   create mode 100644 arch/loongarch/kernel/kexec_image.c
+>>   create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+> ...
+>
+>> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
+>> index 1f090736e71d..829e1ecb1f5d 100644
+>> --- a/arch/loongarch/include/asm/image.h
+>> +++ b/arch/loongarch/include/asm/image.h
+>> @@ -36,5 +36,23 @@ struct loongarch_image_header {
+>>   	uint32_t pe_header;
+>>   };
+>>   
+>> +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
+>> +static const uint8_t loongarch_pe_machtype[6] = {'P', 'E', 0x0, 0x0, 0x64, 0x62};
+> loongarch_pe_machtype isn't used at all.
+It will be removed.
+>
+>> +
+>> +/**
+>> + * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
+>> + *
+>> + * Returns non-zero if 'MZ' signature is found.
+>> + */
+>> +
+>> +static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
+>> +{
+>> +	if (!h)
+>> +		return 0;
+>> +
+>> +	return (h->pe_sig[0] == loongarch_image_pe_sig[0]
+>> +		&& h->pe_sig[1] == loongarch_image_pe_sig[1]);
+> This could be simplified with a memcmp(). Also, this check isn't strict
+> enough: PE files for any architectures, and even legacy MS-DOS COM
+> executables all start with "MZ".
+>
+>> +}
+>> +
+>>   #endif /* __ASSEMBLY__ */
+>>   #endif /* __ASM_IMAGE_H */
+> ...
+>
+>> diff --git a/arch/loongarch/kernel/kexec_image.c b/arch/loongarch/kernel/kexec_image.c
+>> new file mode 100644
+>> index 000000000000..fdd1845b4e2e
+>> --- /dev/null
+>> +++ b/arch/loongarch/kernel/kexec_image.c
+>> @@ -0,0 +1,112 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Kexec image loader for LoongArch
+>> +
+>> + * Author: Youling Tang <tangyouling@kylinos.cn>
+>> + * Copyright (C) 2025 KylinSoft Corporation.
+>> + */
+>> +
+>> +#define pr_fmt(fmt)	"kexec_file(Image): " fmt
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/kexec.h>
+>> +#include <linux/pe.h>
+>> +#include <linux/string.h>
+>> +#include <asm/byteorder.h>
+>> +#include <asm/cpufeature.h>
+>> +#include <asm/image.h>
+>> +
+>> +static int image_probe(const char *kernel_buf, unsigned long kernel_len)
+>> +{
+>> +	const struct loongarch_image_header *h =
+>> +		(const struct loongarch_image_header *)(kernel_buf);
+> Parentheses around "kernel_buf" are unnecessary.
+It will be removed.
+>
+>> +	if (!h || (kernel_len < sizeof(*h))) {
+> Comparisons have higher priority than logic operations, so this pair of
+> parentheses is redundant, too.
+Yes, but the parentheses will be retained for greater readability.
+>
+>> +		pr_err("No loongarch image header.\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (!loongarch_header_check_pe_sig(h)) {
+>> +		pr_err("Bad loongarch PE image header.\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void *image_load(struct kimage *image,
+>> +				char *kernel, unsigned long kernel_len,
+>> +				char *initrd, unsigned long initrd_len,
+>> +				char *cmdline, unsigned long cmdline_len)
+>> +{
+>> +	struct loongarch_image_header *h;
+>> +	struct kexec_buf kbuf;
+>> +	unsigned long text_offset, kernel_segment_number;
+>> +	struct kexec_segment *kernel_segment;
+>> +	int ret;
+>> +
+>> +	h = (struct loongarch_image_header *)kernel;
+>> +	if (!h->image_size)
+>> +		return ERR_PTR(-EINVAL);
+>> +
+>> +	/* Load the kernel */
+>> +	kbuf.image = image;
+>> +	kbuf.buf_min = 0;
+>> +	kbuf.buf_max = ULONG_MAX;
+>> +	kbuf.top_down = false;
+>> +
+>> +	kbuf.buffer = kernel;
+>> +	kbuf.bufsz = kernel_len;
+>> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> +	kbuf.memsz = le64_to_cpu(h->image_size);
+>> +	text_offset = le64_to_cpu(h->text_offset);
+>> +	kbuf.buf_align = SZ_2M;
+> I think this aligment is unnecessary for relocatable LoongArch kernels:
+> it should be enough to align to the page size. See also my comments
+> below.
+>
+>> +	kernel_segment_number = image->nr_segments;
+>> +
+>> +	/*
+>> +	 * The location of the kernel segment may make it impossible to satisfy
+>> +	 * the other segment requirements, so we try repeatedly to find a
+>> +	 * location that will work.
+>> +	 */
+>> +	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
+>> +		/* Try to load additional data */
+>> +		kernel_segment = &image->segment[kernel_segment_number];
+>> +		ret = load_other_segments(image, kernel_segment->mem,
+>> +					  kernel_segment->memsz, initrd,
+>> +					  initrd_len, cmdline, cmdline_len);
+>> +		if (!ret)
+>> +			break;
+>> +
+>> +		/*
+>> +		 * We couldn't find space for the other segments; erase the
+>> +		 * kernel segment and try the next available hole.
+>> +		 */
+>> +		image->nr_segments -= 1;
+>> +		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+>> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> +	}
+>> +
+>> +	if (ret) {
+>> +		pr_err("Could not find any suitable kernel location!");
+>> +		return ERR_PTR(ret);
+>> +	}
+>> +
+>> +	kernel_segment = &image->segment[kernel_segment_number];
+>> +
+>> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
+>> +	image->start = kernel_segment->mem + h->kernel_entry - text_offset;
+> A non-relocatable loongarch kernel cannot be loaded to arbitrary
+> address. Thus this loading function seems to only work for relocatable
+> kernels, maybe it's better to leave a comment indicating the limitation.
+>
+> For now, we don't seem to have a way to find out whether the kernel is
+> relocatable (for example, a flag in kernel image header), so it's
+> impossible to point out whether the loaded kernel boots fine with
+> arbitrary loading address...
+LoongArch enables the relocation of the kernel when the kdump
+feature is enabled.
 
-Remove the now unnecessary kconfig option.
+config ARCH_SELECTS_CRASH_DUMP
+         def_bool y
+         depends on CRASH_DUMP
+         select RELOCATABLE
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- lib/vdso/Kconfig          | 14 --------------
- lib/vdso/Makefile.include |  2 +-
- 2 files changed, 1 insertion(+), 15 deletions(-)
+After enabling the relocation, LoongArch is the PIE kernel. For
+more details, please refer to commit d8da19fbdedd ("LoongArch:
+Add support for kernel relocation")
+>> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>> +		      kernel_segment->mem, kbuf.bufsz,
+>> +		      kernel_segment->memsz);
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +const struct kexec_file_ops kexec_image_ops = {
+>> +	.probe = image_probe,
+>> +	.load = image_load,
+>> +};
+>> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+>> index f9381800e291..008f43e26120 100644
+>> --- a/arch/loongarch/kernel/machine_kexec.c
+>> +++ b/arch/loongarch/kernel/machine_kexec.c
+>> @@ -70,18 +70,28 @@ int machine_kexec_prepare(struct kimage *kimage)
+> ...
+>
+>> -	if (!kimage->arch.cmdline_ptr) {
+>> -		pr_err("Command line not included in the provided image\n");
+>> -		return -EINVAL;
+>> +		if (!kimage->arch.cmdline_ptr) {
+>> +			pr_err("Command line not included in the provided image\n");
+>> +			return -EINVAL;
+>> +		}
+>>   	}
+>>   
+>>   	/* kexec/kdump need a safe page to save reboot_code_buffer */
+>> @@ -288,7 +298,8 @@ void machine_kexec(struct kimage *image)
+>>   	local_irq_disable();
+>>   
+>>   	pr_notice("EFI boot flag 0x%lx\n", efi_boot);
+>> -	pr_notice("Command line at 0x%lx\n", cmdline_ptr);
+>> +	pr_notice("Command line addr at 0x%lx\n", cmdline_ptr);
+>> +	pr_notice("Command line at %s\n", (char *)cmdline_ptr);
+> The printed message doesn't match meaning of the pointer: you're
+> printing the content of cmdline_ptr, instead of its address, thus
+> "Command line at" sounds confusing to me.
+I will correct it.
 
-diff --git a/lib/vdso/Kconfig b/lib/vdso/Kconfig
-index 567ac937a9c3084fd5669e1b890b667af8a2f12d..45df764b49ad62479e6456e00c053e46131936a3 100644
---- a/lib/vdso/Kconfig
-+++ b/lib/vdso/Kconfig
-@@ -48,17 +48,3 @@ config GENERIC_VDSO_DATA_STORE
- 	bool
- 	help
- 	  Selected by architectures that use the generic vDSO data store.
--
--config HAVE_VDSOCHECK
--	bool
--	default y if X86
--	default y if ARM
--	default y if ARM64
--	default y if PPC
--	default y if RISCV
--	default y if LOONGARCH
--	default y if S390
--	default y if MIPS
--	help
--	  Selected for architectures that are supported by the 'vdsocheck' progam.
--	  Only transitional.
-diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
-index 759fe41b48f658c399f54aa7d54a3dfeb07e5c9c..a5621b1d6ab51fde3fdab6e72309d51943939860 100644
---- a/lib/vdso/Makefile.include
-+++ b/lib/vdso/Makefile.include
-@@ -6,7 +6,7 @@ GENERIC_VDSO_DIR := $(dir $(GENERIC_VDSO_MK_PATH))
- c-gettimeofday-$(CONFIG_GENERIC_GETTIMEOFDAY) := $(addprefix $(GENERIC_VDSO_DIR), gettimeofday.c)
- c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrandom.c)
- 
--ifeq ($(CONFIG_RUST_IS_AVAILABLE)$(CONFIG_HAVE_VDSOCHECK),yy)
-+ifdef CONFIG_RUST_IS_AVAILABLE
- vdsocheck := lib/vdso/check/vdsocheck
- 
- $(vdsocheck): FORCE
-
--- 
-2.50.1
-
+Thanks,
+Youling.
+>
+> Furthermore, this chunk isn't related to "support for kexec_file", I
+> think it's better to separate it into another patch (or even another
+> series).
+>
+>>   	pr_notice("System table at 0x%lx\n", systable_ptr);
+>>   	pr_notice("We will call new kernel at 0x%lx\n", start_addr);
+>>   	pr_notice("Bye ...\n");
+> Best regards,
+> Yao Zi
