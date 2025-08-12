@@ -1,102 +1,170 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BDC2D29C3
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 02:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B512C311C02
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 02:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754964413; cv=none; b=Nkpg1mIwTaz+GE7qgJH7f8LCZjBJKb3q9RU3kn0SdM/dzJnkLRKNX72or8rhC1mFXqzHT4KVYuiopFPSnT0HidC3r37C35rLPvbLeZZZkAXa2SH7VhiMGlw4HsMcaP7KVw3Ui+3atE5Cwv/PPfqjDuAdH2iZF44rn1+PvRzv0xk=
+	t=1754966333; cv=none; b=kHzbT4yLNw6/tVyYKt44k4rubZbF9PS9RfMAIEYB29VY0npFhOtFYzX9BjIv8zORCpSCZoYIsYpP5kz6EZhAyCttiL37nNQxB5VsndiOPSEHNfFQwRjfOeadhHvkrOs/qNTwk0u/ZCy2bux0xVmTt7w83jxLxbaRJxkbvHZqBPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754964413; c=relaxed/simple;
-	bh=Q4Z3qXVn3J42JB4Mt5A9yNqNBJp506Y4Xw/nPFcjBzg=;
+	s=arc-20240116; t=1754966333; c=relaxed/simple;
+	bh=JYIAJ9fc1rJwUZC6IIh/QZHDIZ/HKFpG9Nny0OS/gG8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dkX/Fbf5AIBXKeQQfTLnlYGMHA5S0En+Jb4OLbD7ub8En76rFaOGMUasbQW74soaA1rH3csBcYEKLSLV2vcALTA3+2fIEFs8UppBS/gVd5f2i/rt86w7OWNxt3DIPG9OZJbSvvse6uAW31Ce0u9JyKwKsa0YXkHHlMaNiJx6+n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DoHPqktM; arc=none smtp.client-ip=95.215.58.173
+	 In-Reply-To:Content-Type; b=nD9J9MipAio6esjmnbR0A1E1FyxPdrAar8lLSpXomuZAc66czsYJpPnTxbVrBOI4tO4/TCGGqRx/5Y+RejYo6okgpMBAqaBiCq2l5UzcNbykM6JmIAw01BlHy2OOKpssVxNpagWlTFvlDZFejbmIJe0I/fcZ5K7IFuS+Pdq1sEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ozjxrm75; arc=none smtp.client-ip=95.215.58.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DoHPqktM"
-Message-ID: <ed67c8bd-9e79-47c7-9186-910b530a191c@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ozjxrm75"
+Message-ID: <15fdef37-f380-4b5c-85bb-24482e883dcc@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754964408;
+	t=1754966327;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Yb/42nEJ2muvgQ6lHP6YmjzEIJNGbje0iFA6wKFEZGI=;
-	b=DoHPqktM0aPB4n3AoOiG1up3ZkRzWty4W+nNKrOxLXLVrlZGsjqBjruYe121OlVLz//lUU
-	RBCayvb/D6083F02bS2koJX41z6kK3V0hHh5aB3ksOLkB+oUrVitNdJd+We9JjbNBShijh
-	EjPLHv/xotIxI7NLXz1GtVU5I3nRMRw=
-Date: Tue, 12 Aug 2025 10:06:17 +0800
+	bh=+V6JNn1qTclk48lL6vZFHUSkocWBaeAf2PNn/YVMcWo=;
+	b=Ozjxrm75yxPx1BIPykdr+lWI04fhVMMGxHIm1EP3iR0ODmrvMKkAwitPgr8eNsEibYwjw7
+	ENdHH61wWWA0lwkKDzTh7EBfdRJF5ij86bwcNIVOIOh8DQQbF5rLjFLk+o74pavqvtb/5i
+	8RXwAriihep/XeC2IFajtYOj7Ko768s=
+Date: Tue, 12 Aug 2025 10:38:04 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH] LoongArch: KVM: Use kvm_get_vcpu_by_id() instead of
- kvm_get_vcpu()
-To: Song Gao <gaosong@loongson.cn>, maobibo@loongson.cn,
- zhaotianrui@loongson.cn, chenhuacai@kernel.org, lixianglai@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250811025544.458422-1-gaosong@loongson.cn>
+Subject: Re: [PATCH 3/6] LoongArch/kexec_file: Add initrd loading
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+References: <20250811092659.14903-1-youling.tang@linux.dev>
+ <20250811092659.14903-4-youling.tang@linux.dev>
+ <CAAhV-H4Sf=74-ni=qUkg3doC4iLrVt=m2bCYCgfmVC0WLNhiDQ@mail.gmail.com>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250811025544.458422-1-gaosong@loongson.cn>
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <CAAhV-H4Sf=74-ni=qUkg3doC4iLrVt=m2bCYCgfmVC0WLNhiDQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-在 8/11/25 10:55 AM, Song Gao 写道:
-> Use kvm_get_vcpu() may can't get vcpu context, use kvm_get_vcpu_by_id()
-> instead of kvm_get_vcpu().
-Since using kvm_get_vcpu() may fail to retrieve the vcpu context,
-kvm_get_vcpu_by_id() should be used instead.
+Hi, Huacai
+On 2025/8/11 22:12, Huacai Chen wrote:
+> Hi, Youling,
+>
+> On Mon, Aug 11, 2025 at 5:28 PM Youling Tang <youling.tang@linux.dev> wrote:
+>> From: Youling Tang <tangyouling@kylinos.cn>
+>>
+>> Add inird loading support and pass it to the second kernel via the
+>> cmdline 'initrd=start,size'.
+> I think Patch-3 and Patch-5 should be merged into Patch-2.
+Not all cases require loading initrd, so Patch-2 is a runnable basic patch.
+Separating it into different patches makes it easier to understand and
+review the code.
 
-Under this premise, and under the premise of making revisions
-in accordance with Bibo's and Huacai's suggestions，pick up my tag in v2.
+Patch-5 coming out separately can better illustrate the role of "mem"
+parameters in capturing the kernel.
 
-Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cm>
-
-Additionally, do we need a fixes tag?
-
-Thanks,
-Yanteng
-> 
-> Signed-off-by: Song Gao <gaosong@loongson.cn>
-> ---
->   arch/loongarch/kvm/intc/eiointc.c | 5 ++++-
->   arch/loongarch/kvm/intc/ipi.c     | 2 +-
->   2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-> index a3a12af9ecbf..5180da91d2e6 100644
-> --- a/arch/loongarch/kvm/intc/eiointc.c
-> +++ b/arch/loongarch/kvm/intc/eiointc.c
-> @@ -45,7 +45,10 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
->   	}
->   
->   	cpu = s->sw_coremap[irq];
-> -	vcpu = kvm_get_vcpu(s->kvm, cpu);
-> +	vcpu = kvm_get_vcpu_by_id(s->kvm, cpu);
-> +	if (unlikely(vcpu == NULL)) {
-> +		return;
-> +	}
->   	if (level) {
->   		/* if not enable return false */
->   		if (!test_bit(irq, (unsigned long *)s->enable.reg_u32))
-> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-> index e658d5b37c04..0348a83a7ed7 100644
-> --- a/arch/loongarch/kvm/intc/ipi.c
-> +++ b/arch/loongarch/kvm/intc/ipi.c
-> @@ -298,7 +298,7 @@ static int kvm_ipi_regs_access(struct kvm_device *dev,
->   	cpu = (attr->attr >> 16) & 0x3ff;
->   	addr = attr->attr & 0xff;
->   
-> -	vcpu = kvm_get_vcpu(dev->kvm, cpu);
-> +	vcpu = kvm_get_vcpu_by_id(dev->kvm, cpu);
->   	if (unlikely(vcpu == NULL)) {
->   		kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
->   		return -EINVAL;
-
+Youling.
+>
+> Huacai
+>
+>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+>> ---
+>>   arch/loongarch/kernel/machine_kexec_file.c | 71 ++++++++++++++++++++++
+>>   1 file changed, 71 insertions(+)
+>>
+>> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+>> index bc91ae0afa4c..e1240644f529 100644
+>> --- a/arch/loongarch/kernel/machine_kexec_file.c
+>> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+>> @@ -34,13 +34,84 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>>          return kexec_image_post_load_cleanup_default(image);
+>>   }
+>>
+>> +/* Adds the "initrd=start,size" command line parameter to command line. */
+>> +static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmplen,
+>> +                               char *modified_cmdline, unsigned long initrd)
+>> +{
+>> +       int initrd_strlen;
+>> +
+>> +       initrd_strlen = sprintf(modified_cmdline + (*cmdline_tmplen), "initrd=0x%lx,0x%lx ",
+>> +               initrd, image->initrd_buf_len);
+>> +       *cmdline_tmplen += initrd_strlen;
+>> +}
+>> +
+>> +/*
+>> + * Tries to add the initrd to the image. If it is not possible to find
+>> + * valid locations, this function will undo changes to the image and return non
+>> + * zero.
+>> + */
+>>   int load_other_segments(struct kimage *image,
+>>                          unsigned long kernel_load_addr,
+>>                          unsigned long kernel_size,
+>>                          char *initrd, unsigned long initrd_len,
+>>                          char *cmdline, unsigned long cmdline_len)
+>>   {
+>> +       struct kexec_buf kbuf;
+>> +       unsigned long orig_segments = image->nr_segments;
+>> +       char *modified_cmdline = NULL;
+>> +       unsigned long cmdline_tmplen = 0;
+>> +       unsigned long initrd_load_addr = 0;
+>> +       int ret = 0;
+>> +
+>> +
+>> +       kbuf.image = image;
+>> +       /* not allocate anything below the kernel */
+>> +       kbuf.buf_min = kernel_load_addr + kernel_size;
+>> +
+>> +       modified_cmdline = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
+>> +       if (!modified_cmdline)
+>> +               return -EINVAL;
+>> +
+>> +       /* Ensure it's nul terminated */
+>> +       modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
+>> +
+>> +       /* load initrd */
+>> +       if (initrd) {
+>> +               kbuf.buffer = initrd;
+>> +               kbuf.bufsz = initrd_len;
+>> +               kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> +               kbuf.memsz = initrd_len;
+>> +               kbuf.buf_align = 0;
+>> +               /* within 1GB-aligned window of up to 32GB in size */
+>> +               kbuf.buf_max = round_down(kernel_load_addr, SZ_1G)
+>> +                                               + (unsigned long)SZ_1G * 32;
+>> +               kbuf.top_down = false;
+>> +
+>> +               ret = kexec_add_buffer(&kbuf);
+>> +               if (ret)
+>> +                       goto out_err;
+>> +               initrd_load_addr = kbuf.mem;
+>> +
+>> +               kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>> +                             initrd_load_addr, kbuf.bufsz, kbuf.memsz);
+>> +
+>> +               /* Add the initrd=start,size parameter to the command line */
+>> +               cmdline_add_initrd(image, &cmdline_tmplen, modified_cmdline, initrd_load_addr);
+>> +       }
+>> +
+>> +       if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
+>> +               pr_err("Appending kdump cmdline exceeds cmdline size\n");
+>> +               ret = -EINVAL;
+>> +               goto out_err;
+>> +       }
+>> +       memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len);
+>> +       cmdline = modified_cmdline;
+>>          image->arch.cmdline_ptr = (unsigned long)cmdline;
+>>
+>>          return 0;
+>> +
+>> +out_err:
+>> +       image->nr_segments = orig_segments;
+>> +       kfree(modified_cmdline);
+>> +       return ret;
+>>   }
+>> --
+>> 2.34.1
+>>
