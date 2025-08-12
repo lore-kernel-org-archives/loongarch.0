@@ -1,136 +1,142 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D1C2D9EE3
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 01:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35906212B05
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 01:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754963183; cv=none; b=KqcQ/gIsepZLxlpXPvh7bG9nUHQyMg1j3WYR2moeSXFrijVQjuBYpmixwrbyKftM6oTMTWioKfzsxNN3U3EBmTzKR4N0IVfI9v8g59d3M1CvsNurfrmZk0J2c8KoiHSntQWNPn3hXxgrnXzkC43/NMscxruwbWPUpwtb3CRSnqw=
+	t=1754963424; cv=none; b=DywpCyiDxgm0I/kGWcjGq86Iz60QWZD2bef+7gmSC5aORkWNZaPJ7gFHPSmEWCg+H+r0d46LN3pWN5t0U66WhG9NtaUusTRQW4dRUpuM5zv03o2jp+PIswVvCesbn9l90E3+7Iua6545olwjZ51wM0fj8GAnTLaM9Z/F7QOX7ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754963183; c=relaxed/simple;
-	bh=NgumnPkAJTRAFscuaIVCaroO0OwDgnOyT2oZmvnvPqM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LpT9XMyajxFkEtUmJvaoOqj+lCDkCjkgGd6+SUmRi37Zt0PrQGoc/gUk4X6bChqiZgI9X+0PrVh9Eo/LWMzRBCW+6EY2SkCU1cSopQMUqUWafGReSKbiw/p5mj8HqEc8T/uFMlZyciV7SMNuiy8HPUf0V6AqB/aNfON1A+1jUq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eCUQbA1O; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCUQbA1O"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-afa15bc3651so165004866b.2
-        for <loongarch@lists.linux.dev>; Mon, 11 Aug 2025 18:46:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754963180; x=1755567980; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WYaz1/uT9oyZjCyu9oVfjnYhAs3G+DnESiLkCTuz8Uc=;
-        b=eCUQbA1O9PgpSjXddCyN3RW8T9f7P09yoePA0YQb1wdLrSjJTnu7n/wys1YY2PuA/i
-         G87SQA7ggKzQiQxEQXUTxwsIZ5gPEKV+i2whydxujS07m2w/YpIWYPLilYYbAVqBfqB0
-         APm7Ap6gzG9Rd3XWKRRsO0VWWItCtm+N0QoObURgeXNfkZYfpHFABXD2gYvFSwzz/XKr
-         Hj/Z/smmYEtNzWokuvB0eL4I/gvo4LKcBx5Vj4GUDgv/xl2qQH49d9qlUOjt1tRjOP1i
-         5gScBwJAFsIAFc3hyzPKSm8c8UdHTzKu1RVhnmgm93GCRZX1STtLIIB7RB5kdJWhKPEG
-         wiPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754963180; x=1755567980;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WYaz1/uT9oyZjCyu9oVfjnYhAs3G+DnESiLkCTuz8Uc=;
-        b=BYSCC9P6HpZhQYj2Bu0Zwz+dGhXLeiipnIbc8FXgNJcAkAY+O/LdT9T9PulgZzukRY
-         jdzE9EfsAzD32sYCvgTog+CLipaqwQCyl/HRgpF0N4Bo2G8hvr4W9FXJY9sOvrV3hiPy
-         9JXP7vC3+4rPhhehbqBykL5/XJQtMBqZ6fS0pmlTHyaAJ8AG/qhdWfDa8Nn/KekF0gzD
-         9dkBBpON6tVkvzZMquMoFc45ngirkBcGolDxuxFUMGGeUtuQntf3Vr/eqTqt2UBHBE1y
-         kKCSMj0w1Tzi7ZjmXOqphPGU5Nz35ce0mYybQr3ea3cQYHWe9ggk/EMfRsofRjeBJIoB
-         m7aA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+ZqInzzohgri4FXaBaQjxHyIDtLUyos5oipsW46Rdy1FxV5Nw/mBCSerC8DnM0MmpWuWgHqNMmo0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzNUbttVYVntsghPXk4TxKCrRXPGDUyvwmGHQdg9XSntDzygfrP
-	KxFIw850IkFOVMa9BSjvO4xcJEhzuA9X6XBUb2PbJ9vNFiCxFFiKUdA0+NH7Yiepdkp96cwWi6b
-	zFbbiT+5iVwWtrIfuksED7YfJ7ooIYfg=
-X-Gm-Gg: ASbGncsm/WKzq986VtrP6j53yOImA5Ik4/K+8I68hyoXJmjTE4C1YrTzvPbsf8EI8jU
-	S9oE7dbGptlysMFzdR/SUF9bsRSKwj/QzmkpCaosEMg5+mwMcZQFoO8wLnfdArY31dSm5qJr06I
-	70owCpTc1ug4sDcCuF3Ln0HkHN82ogfCM7wg4FSufCb6ENAqqAdH6e+yfqy3d7tj7NmoorbFmAK
-	/BReuU=
-X-Google-Smtp-Source: AGHT+IGgBsPd0ik++HxOLBsaEV8zW5o8TFHwtEZ/G5uBZxwRtTAQ1Zhq97IMhlh4+r1CKAUkXGwVqxKI7eSRs6med2s=
-X-Received: by 2002:a17:907:72c5:b0:ace:d710:a8d1 with SMTP id
- a640c23a62f3a-afa1e087ebdmr143285266b.24.1754963179717; Mon, 11 Aug 2025
- 18:46:19 -0700 (PDT)
+	s=arc-20240116; t=1754963424; c=relaxed/simple;
+	bh=oW6UYWXXJQaXAymB2yds6ngAX7JBvTAjsPnr9QZmFVI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=SChLOdCAO6uEDp+ve/NjVGq9upO0gbSolbhKnZWEqIPrzACpamnsNM0Tffkch96mrTbEnTD8xgv5xQ4CP37ZCVIhETMTTlCnFP3JDOL/KFJopUdXljtLaZSBFKfk2TnRkDtQuyqYP9vQe7JP9wBawHjiNsEZvppwHlT0YxeGdH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxLHLZnZpopMI+AQ--.19058S3;
+	Tue, 12 Aug 2025 09:50:17 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxM+TWnZpo45ZFAA--.65022S3;
+	Tue, 12 Aug 2025 09:50:17 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Use kvm_get_vcpu_by_id() instead of
+ kvm_get_vcpu()
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Song Gao <gaosong@loongson.cn>, zhaotianrui@loongson.cn,
+ lixianglai@loongson.cn, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250811025544.458422-1-gaosong@loongson.cn>
+ <c5f2a6d5-d793-94f0-8d8c-5cc5b7d142b8@loongson.cn>
+ <CAAhV-H5BAN68S5uYkSKwnU2yatoz-w5aGFak-ivMWwJkeZLjWg@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <be6b436c-66d0-f966-10cf-205cb4aedfef@loongson.cn>
+Date: Tue, 12 Aug 2025 09:48:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1754890670.git.zhoubinbin@loongson.cn> <89732d64415077ecd9f74c5853c542e62c0dfe26.1754890670.git.zhoubinbin@loongson.cn>
- <aJox6R9eCZ5vSc7H@pie>
-In-Reply-To: <aJox6R9eCZ5vSc7H@pie>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 12 Aug 2025 09:46:07 +0800
-X-Gm-Features: Ac12FXz0ARLdniv0c7AvZGZa7aD_nYfFRofkgvyicNZC2-pOKF37F5dYWwU43vI
-Message-ID: <CAMpQs4+3iAYWkDKf67=+0wXSgZmg+fC7p5kFst0fushpWscuaA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/8] mtd: rawnand: loongson: Add Loongson-2K0500 NAND
- controller support
-To: Yao Zi <ziyao@disroot.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-HI Yao:
-
-Thanks for your reply.
-
-On Tue, Aug 12, 2025 at 2:09=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
->
-> On Mon, Aug 11, 2025 at 02:03:13PM +0800, Binbin Zhou wrote:
-> > The Loongson-2K0500 NAND controller is similar to the Loongson-1C.
-> >
-> > It supports a maximum capacity of 16GB FLASH per chip with a maximum
-> > page size of 8KB, and it supports up to 4 chip selects and 4 RDY
-> > signals.
-> >
-> > Its DMA controller is defaulted to APBDMA0.
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  drivers/mtd/nand/raw/Kconfig                  |  2 +-
-> >  .../mtd/nand/raw/loongson-nand-controller.c   | 55 ++++++++++++++++++-
-> >  2 files changed, 54 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfi=
-g
-> > index d9e3f13666ac..7b0c5d06aa95 100644
-> > --- a/drivers/mtd/nand/raw/Kconfig
-> > +++ b/drivers/mtd/nand/raw/Kconfig
-> > @@ -464,7 +464,7 @@ config MTD_NAND_NUVOTON_MA35
-> >
-> >  config MTD_NAND_LOONGSON
-> >       tristate "Loongson NAND controller"
-> > -     depends on LOONGSON1_APB_DMA || COMPILE_TEST
-> > +     depends on LOONGSON1_APB_DMA || LOONGSON2_APB_DMA || COMPILE_TEST
->
-> Why is this dependency necessary? I think the DMA operations are done
-> through DMAengine API, and thus the consumer decouples with the DMA
-> provider. If so, I think the depends line should be removed, instead of
-> extended.
-
-This is an existing execution dependency. Although there is no
-guarantee that it will work with other DMA engines in the future, only
-this combination has been tested and proven to be correct at present.
-Therefore, I would still like to retain this dependency.
->
-> Regards,
-> Yao Zi
->
-> >       select REGMAP_MMIO
-> >       help
-> >         Enables support for NAND controller on Loongson family chips.
+In-Reply-To: <CAAhV-H5BAN68S5uYkSKwnU2yatoz-w5aGFak-ivMWwJkeZLjWg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxM+TWnZpo45ZFAA--.65022S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr1xJry3XFWUZrW7WrWxuFX_yoW5GF48pF
+	W3CF1qvFs5Kry7G34jqFn8ZF1jyr95tr1IgFn3tFyYkrnIqF18AFy8Zr909Fy0k34xGF40
+	qr1fKa1a9a1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXU
+	UUUU=
 
 
---=20
-Thanks.
-Binbin
+
+On 2025/8/11 下午9:23, Huacai Chen wrote:
+> On Mon, Aug 11, 2025 at 6:53 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/8/11 上午10:55, Song Gao wrote:
+>>> Use kvm_get_vcpu() may can't get vcpu context, use kvm_get_vcpu_by_id()
+>>> instead of kvm_get_vcpu().
+>>>
+>>> Signed-off-by: Song Gao <gaosong@loongson.cn>
+>>> ---
+>>>    arch/loongarch/kvm/intc/eiointc.c | 5 ++++-
+>>>    arch/loongarch/kvm/intc/ipi.c     | 2 +-
+>>>    2 files changed, 5 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+>>> index a3a12af9ecbf..5180da91d2e6 100644
+>>> --- a/arch/loongarch/kvm/intc/eiointc.c
+>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
+>>> @@ -45,7 +45,10 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
+>>>        }
+>>>
+>>>        cpu = s->sw_coremap[irq];
+>>> -     vcpu = kvm_get_vcpu(s->kvm, cpu);
+>>> +     vcpu = kvm_get_vcpu_by_id(s->kvm, cpu);
+>>> +     if (unlikely(vcpu == NULL)) {
+>>> +             return;
+>>> +     }
+>> Brace {} is unnecessary with kernel coding style :), just something like
+>> this:
+>>          if (unlikely(vcpu == NULL))
+>>                  return;
+>>
+>> The other looks good to me.
+> Maybe add a print statement the same as kvm_ipi_regs_access()?
+Both are ok for me now.
+
+In future there may be change with return value and printk message with 
+in-kernel MMIO/IOCSR read/write emulation.
+
+About return value there should be -EOPNOTSUPP if addr is not in range 
+of device, it will transfer the emulation to user space VMM. Other value 
+such as -EINVAL should be supported, and should not transfer to VMM 
+since the address is in range of device.
+
+About printk message I have no idea now, it may cause lots of noise 
+message in host because of bad guest kernel, however abnormal behavior 
+should be recorded anyway.
+
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>        if (level) {
+>>>                /* if not enable return false */
+>>>                if (!test_bit(irq, (unsigned long *)s->enable.reg_u32))
+>>> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+>>> index e658d5b37c04..0348a83a7ed7 100644
+>>> --- a/arch/loongarch/kvm/intc/ipi.c
+>>> +++ b/arch/loongarch/kvm/intc/ipi.c
+>>> @@ -298,7 +298,7 @@ static int kvm_ipi_regs_access(struct kvm_device *dev,
+>>>        cpu = (attr->attr >> 16) & 0x3ff;
+>>>        addr = attr->attr & 0xff;
+>>>
+>>> -     vcpu = kvm_get_vcpu(dev->kvm, cpu);
+>>> +     vcpu = kvm_get_vcpu_by_id(dev->kvm, cpu);
+>>>        if (unlikely(vcpu == NULL)) {
+>>>                kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
+>>>                return -EINVAL;
+>>>
+>>
+
