@@ -1,179 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464DE2ECD37
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 11:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C3C62EB5D5
+	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 11:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754997703; cv=none; b=n+sqZbtTKt7qxvkBsz2ifEdTPbBnuztWThDuhEeOLwQn70uzpqzz0yMvj6wehatp0rsVw5fpV9bHNzDngwtDnsTymtYBfxyEsDhI/SRbJ8zmXz/YsioCiY/IFp9wTXpCN78k8fXp/rLiFYFACsZeYje1zh8xcQ7cyi3ZuonkUoM=
+	t=1754999997; cv=none; b=JyJUhzcgJ11LVIzmr6zkcDtoa+4UAw8BYlCT52V01anWQm4A8vPGCQXavrUo30J+QSKVaF+09n4seCg0AZGAxVPn4D/sTQHuTC/Z4fPfQZTuyD2DKdgfQ/UEhb6tBaeUI6JhVK3aFy0VKADpS9lMFWrZwdAQZjx7qCADa6/XdCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754997703; c=relaxed/simple;
-	bh=QpSx0vVwmunATald4q+nbzkGiZccZAod5vd2t8eYlus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PFps9QbfdkqXuX6yLqewtcFKB7QV3HT6+1gZv78R0AKAyJmcbLZyccWYvaCXFM0+r/tgdnD19mAuDHfZTzdJBn8bCCynjPVpufbi3rFbokT0/VfQjX7NDA63stft+Erl8xlX4NmuCzSxzZ8D3g2gYGXJuh83p+mcs4QsH6H1HFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sVghQ63g; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sVghQ63g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5CD7C4CEF0
-	for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 11:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754997702;
-	bh=QpSx0vVwmunATald4q+nbzkGiZccZAod5vd2t8eYlus=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sVghQ63g0pOc4RU3v/vQpXOA4pS/Pgtqu8A1awAiyaNcn1qABdXF8ALLpgKgTp7ER
-	 LMKa9aA+IOSgwF31vn2RzSOVQj1ugIGsMuiZoSF+cF0DFO/Vt53uOUYrsl+r8mkAj1
-	 zXiJXYKBt8s08kuTgnY/sJmM2BW7VbWk+A4VxPG+9MaEp8HSeYBExTmXJXthB7UqS8
-	 L1eh/KXC9Mi8Qo6eO6bqNUDV4WOPshEWTz9oa4MHPYI5sqck3UaHj2ASWCS0tiNzcc
-	 Bc/G6cgr1bUPGX+CXoHt0AViQth5eKvgInuFoHfirYOHfWizGsFfBLab4jymMIBTvJ
-	 +/UfCEwWoJ0Rg==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-615c29fc31eso10175906a12.0
-        for <loongarch@lists.linux.dev>; Tue, 12 Aug 2025 04:21:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWYc4w3aaSnXYjorZBIPwArNqD++/D5na0qg6S5JTVWjjfcp+B45QSkWXjzaVKozpe7f7qQm3SaUy4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyuhDmivz40884w5rlyJnZsqCm8TrbxcbJ+8l7UAXMJbDLCoH6D
-	jf9blEyZxAOMS99nL8tWW/enm8VEmh9E5QRhZCCifxtWlRK3fI8gQJmXBVIMYCucxGGFR9fRJm2
-	tR8MDcs5ePiegHiJw1VDC/9ARp+uWHgI=
-X-Google-Smtp-Source: AGHT+IFY/od7koJy5dTouxPiA9x5+/+fmDNGhnExgJDsA2/upYVkDKf+le9JjNuHT5zycG6IxanvaebNxSaC6aN0nbY=
-X-Received: by 2002:aa7:da50:0:b0:617:fe86:6bff with SMTP id
- 4fb4d7f45d1cf-6184eb3596emr1766781a12.8.1754997701412; Tue, 12 Aug 2025
- 04:21:41 -0700 (PDT)
+	s=arc-20240116; t=1754999997; c=relaxed/simple;
+	bh=03z7Cyoq9SDJzbs2BPUxa3foPXw00v94rt7eOwqmcxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ePAnpHE+n0mltma7cK544RGAt8rq3PWnZrebXECk1QzR3t3CPOas77vqc5dzbMhSB5jrEHwnt4bUHuULIStZK5g1JbpuhVyy6hOtOKsGlGsEEh/QQEN2MX12O//v4y6e61VNY8f4MmCRLWG5HB+qSrlD8GDf0x3527QTxs1pARM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.45])
+	by gateway (Coremail) with SMTP id _____8BxJHC2LJtofPI+AQ--.12875S3;
+	Tue, 12 Aug 2025 19:59:50 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.45])
+	by front1 (Coremail) with SMTP id qMiowJDx_8OvLJtodotGAA--.3774S2;
+	Tue, 12 Aug 2025 19:59:46 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	jeffbai@aosc.io,
+	kexybiscuit@aosc.io,
+	wangyao@lemote.com,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v9 0/3] LoongArch: Add Loongson-2K BMC support
+Date: Tue, 12 Aug 2025 19:59:32 +0800
+Message-ID: <cover.1754999365.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250812090056.771379-1-lixianglai@loongson.cn> <f271abd3-e1b6-0968-abf8-6f1b74e21f65@loongson.cn>
-In-Reply-To: <f271abd3-e1b6-0968-abf8-6f1b74e21f65@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 12 Aug 2025 19:21:28 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H72TWAwxV5bcHMej_8=cH1GxJVJxKMASWpPXVcq++FUWg@mail.gmail.com>
-X-Gm-Features: Ac12FXx9ex-QfAOCcoFmUNWnDdRgUyz_kPrVvH4euA-XDaC-zbaXP6m02_F_F1Y
-Message-ID: <CAAhV-H72TWAwxV5bcHMej_8=cH1GxJVJxKMASWpPXVcq++FUWg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: time: Fix the issue of high cpu usage of vcpu
- threads in virtual machines
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Xianglai Li <lixianglai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Song Gao <gaosong@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDx_8OvLJtodotGAA--.3774S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxuFyxtFyxZF1fuF47Wr15Awc_yoW7Ar1Upa
+	15ursxCr1DKF1xJrZ3Aw1fuFyYga95Ja4SgF17A345ZF4UCa40yryFka13XFy7AF4kKryI
+	qrsayF1Ska45u3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
+	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
+	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
+	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
+	0xZFpf9x07jepB-UUUUU=
 
-On Tue, Aug 12, 2025 at 6:50=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> On 2025/8/12 =E4=B8=8B=E5=8D=885:00, Xianglai Li wrote:
-> > When the cpu is offline, the timer under loongarch is not correctly clo=
-sed,
-> > resulting in an excessively high cpu usage rate of the offline vcpu thr=
-ead
-> > in the virtual machine.
-> >
-> > To correctly close the timer, we have made the following modifications:
-> >
-> > Register the cpu hotplug timer start event for loongarch.This event wil=
-l
-> > be called to close the timer when the cpu is offline.
-> >
-> > Clear the timer interrupt when the timer is turned off
-> During timer is turned off, timer interrupt may be arriving. Here adding
-> EOI with timer after disabling it so that there is no pending timer
-> interrupt when offline cpu is halted state.
-> >
-> > Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-> > ---
-> >   arch/loongarch/kernel/time.c | 20 ++++++++++++++++++++
-> >   include/linux/cpuhotplug.h   |  1 +
-> >   2 files changed, 21 insertions(+)
-> >
-> > diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.=
-c
-> > index 367906b10f81..4daa11512eba 100644
-> > --- a/arch/loongarch/kernel/time.c
-> > +++ b/arch/loongarch/kernel/time.c
-> > @@ -12,6 +12,7 @@
-> >   #include <linux/kernel.h>
-> >   #include <linux/sched_clock.h>
-> >   #include <linux/spinlock.h>
-> > +#include <linux/cpu.h>
-> >
-> >   #include <asm/cpu-features.h>
-> >   #include <asm/loongarch.h>
-> > @@ -86,6 +87,9 @@ static int constant_set_state_shutdown(struct clock_e=
-vent_device *evt)
-> >       timer_config &=3D ~CSR_TCFG_EN;
-> >       csr_write64(timer_config, LOONGARCH_CSR_TCFG);
-> >
-> > +     /* Clear Timer Interrupt */
-> > +     write_csr_tintclear(CSR_TINTCLR_TI);
-> > +
-> >       raw_spin_unlock(&state_lock);
-> >
-> >       return 0;
-> > @@ -208,8 +212,17 @@ int __init constant_clocksource_init(void)
-> >       return res;
-> >   }
-> >
-> > +static int arch_timer_dying_cpu(unsigned int cpu)
-> > +{
-> NULL is a little strange here, how about something like this?
->
->          struct clock_event_device *evt;
->
->          evt =3D this_cpu_ptr(constant_clockevent_device);
->          constant_set_state_shutdown(evt);
-Both OK for me, if really needed, we can use
-constant_set_state_shutdown(this_cpu_ptr(constant_clockevent_device))
-for short.
+Hi all:
+
+This patchset introduces the Loongson-2K BMC.
+
+It is a PCIe device present on servers similar to the Loongson-3 CPUs.
+And it is a multifunctional device (MFD), such as display as a sub-function
+of it.
+
+For IPMI, according to the existing design, we use software simulation to
+implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+
+Also since both host side and BMC side read and write kcs status, we use
+fifo pointer to ensure data consistency.
+
+For the display, based on simpledrm, the resolution is read from a fixed
+position in the BMC since the hardware does not support auto-detection
+of the resolution. Of course, we will try to support multiple
+resolutions later, through a vbios-like approach.
+
+Especially, for the BMC reset function, since the display will be
+disconnected when BMC reset, we made a special treatment of re-push.
+
+Based on this, I will present it in four patches:
+patch-1: BMC device PCI resource allocation.
+patch-2: BMC reset function support
+patch-3: IPMI implementation
+
+Thanks.
+
+-------
+V9:
+Patch (2/3):
+ - PCIE -> PCI-E in dev_err();
+ - Separate the read from the write;
+
+Link to V8:
+https://lore.kernel.org/all/cover.1752548073.git.zhoubinbin@loongson.cn/
+
+V8:
+Patch (1/3):
+ - Similar to as3711_subdevs, identify elements in ls2k_bmc_cells.
+
+Patch (2/3):
+ - Rename variables using usual names, such as `priv` -> `ddata`;
+ - Use if statements instead of #ifery;
+ - Rewrite the error message to ensure it is easy to understand;
+ - ls2k_bmc_pdata_initial(dev, priv); -> ls2k_bmc_pdata_initial(priv);
+
+Link to V7:
+https://lore.kernel.org/all/cover.1751617911.git.zhoubinbin@loongson.cn/
+
+V7:
+Patch (1/3):
+  - Fix build warning by lkp: Add depend on ACPI_GENERIC_GSI
+    - https://lore.kernel.org/all/202507021011.sDAHGinj-lkp@intel.com/
+
+Link to V6:
+https://lore.kernel.org/all/cover.1750939357.git.zhoubinbin@loongson.cn/
+
+V6:
+- Add Acked-by tag from Corey, thanks;
+Patch (1/3):
+  - Fix build warning by lkp: Add depend on PCI
+    - https://lore.kernel.org/all/202506210204.LVZc2VG2-lkp@intel.com/
+    - https://lore.kernel.org/all/202506210231.ZWWNhofU-lkp@intel.com/
+    - https://lore.kernel.org/all/202506210652.ipUFDU5B-lkp@intel.com/
+    - https://lore.kernel.org/all/202506210343.XCHkzorp-lkp@intel.com/
+
+Link to V5:
+https://lore.kernel.org/all/cover.1750301674.git.zhoubinbin@loongson.cn/
+
+V5:
+Patch (1/3):
+ - Rename ls2kbmc-mfd.c to ls2k-bmc-core.c;
+ - Rename MFD_LS2K_BMC to MFD_LS2K_BMC_CORE and update its help text.
+Patch (3/3):
+ - Add an IPMI_LS2K config in the IPMI section that enables the IPMI
+   interface and selects MFD_LS2K_BMC_CORE.
+
+Link to V4:
+https://lore.kernel.org/all/cover.1749731531.git.zhoubinbin@loongson.cn/
+
+V4:
+- Add Reviewed-by tag;
+- Change the order of the patches.
+Patch (1/3):
+  - Fix build warning by lkp: Kconfig tristate -> bool
+    - https://lore.kernel.org/all/202505312022.QmFmGE1F-lkp@intel.com/
+ - Update commit message;
+ - Move MFD_LS2K_BMC after MFD_INTEL_M10_BMC_PMCI in Kconfig and
+   Makefile.
+Patch (2/3):
+  - Remove unnecessary newlines;
+  - Rename ls2k_bmc_check_pcie_connected() to
+    ls2k_bmc_pcie_is_connected();
+  - Update comment message.
+Patch (3/3):
+  - Remove unnecessary newlines.
+
+Link to V3:
+https://lore.kernel.org/all/cover.1748505446.git.zhoubinbin@loongson.cn/
+
+V3:
+Patch (1/3):
+ - Drop "MFD" in title and comment;
+ - Fromatting code;
+ - Add clearer comments.
+Patch (2/3):
+ - Rebase linux-ipmi/next tree;
+ - Use readx()/writex() to read and write IPMI data instead of structure
+   pointer references;
+ - CONFIG_LOONGARCH -> MFD_LS2K_BMC;
+ - Drop unused output.
+Patch (3/3):
+ - Inline the ls2k_bmc_gpio_reset_handler() function to ls2k_bmc_pdata_initial();
+ - Add clearer comments.
+ - Use proper multi-line commentary as per the Coding Style documentation;
+ - Define all magic numbers.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1747276047.git.zhoubinbin@loongson.cn/
+
+V2:
+- Drop ls2kdrm, use simpledrm instead.
+Patch (1/3):
+ - Use DEFINE_RES_MEM_NAMED/MFD_CELL_RES simplified code;
+ - Add resolution fetching due to replacing the original display
+   solution with simpledrm; 
+ - Add aperture_remove_conflicting_devices() to avoid efifb
+   conflict with simpledrm.
+Patch (3/3):
+ - This part of the function, moved from the original ls2kdrm to mfd;
+ - Use set_console to implement the Re-push display function.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1735550269.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (3):
+  mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+  mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+  ipmi: Add Loongson-2K BMC support
+
+ MAINTAINERS                      |   7 +
+ drivers/char/ipmi/Kconfig        |   7 +
+ drivers/char/ipmi/Makefile       |   1 +
+ drivers/char/ipmi/ipmi_si.h      |   7 +
+ drivers/char/ipmi/ipmi_si_intf.c |   4 +
+ drivers/char/ipmi/ipmi_si_ls2k.c | 189 +++++++++++
+ drivers/mfd/Kconfig              |  13 +
+ drivers/mfd/Makefile             |   2 +
+ drivers/mfd/ls2k-bmc-core.c      | 525 +++++++++++++++++++++++++++++++
+ 9 files changed, 755 insertions(+)
+ create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+ create mode 100644 drivers/mfd/ls2k-bmc-core.c
 
 
-Huacai
+base-commit: 006aa8f57f55dd5bf68c4ada1e0d3f4e59027d71
+-- 
+2.47.3
 
->
-> Regards
-> Bibo Mao
->
-> > +     constant_set_state_shutdown(NULL);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >   void __init time_init(void)
-> >   {
-> > +     int err;
-> > +
-> >       if (!cpu_has_cpucfg)
-> >               const_clock_freq =3D cpu_clock_freq;
-> >       else
-> > @@ -220,4 +233,11 @@ void __init time_init(void)
-> >       constant_clockevent_init();
-> >       constant_clocksource_init();
-> >       pv_time_init();
-> > +
-> > +     err =3D cpuhp_setup_state_nocalls(CPUHP_AP_LOONGARCH_ARCH_TIMER_S=
-TARTING,
-> > +                                     "loongarch/timer:starting",
-> > +                                     NULL, arch_timer_dying_cpu);
-> > +     if (err)
-> > +             pr_info("cpu hotplug event register failed");
-> > +
-> >   }
-> > diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> > index edfa61d80702..6606c1546afc 100644
-> > --- a/include/linux/cpuhotplug.h
-> > +++ b/include/linux/cpuhotplug.h
-> > @@ -159,6 +159,7 @@ enum cpuhp_state {
-> >       CPUHP_AP_PERF_ARM_STARTING,
-> >       CPUHP_AP_PERF_RISCV_STARTING,
-> >       CPUHP_AP_ARM_L2X0_STARTING,
-> > +     CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
-> >       CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
-> >       CPUHP_AP_ARM_ARCH_TIMER_STARTING,
-> >       CPUHP_AP_ARM_ARCH_TIMER_EVTSTRM_STARTING,
-> >
-> > base-commit: 53e760d8949895390e256e723e7ee46618310361
-> >
->
->
