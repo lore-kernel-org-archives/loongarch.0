@@ -1,215 +1,111 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A1627F003
-	for <loongarch@lists.linux.dev>; Wed, 13 Aug 2025 03:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CA02C21E3;
+	Wed, 13 Aug 2025 08:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755055807; cv=none; b=BBq2MlPZSmUchqYjKH+wDwkzT9S2pDewlFLrbRZKILUAsBUYaUpWO9or0YvL1c+d/pmCY4XFYhrwZvTH3mobkTUwraZ50DaT7VYVuo/dQdVl0FNdF9AY4sPjfrcZ4AWsHKlLx3QEa3gDyAtNlYF94sGUH9HYXaINqa+v5RkHhS8=
+	t=1755072968; cv=none; b=Up/Vi/MQ2ic8h02iuhgbVoZceW6WCbuIerErgpv+6k8tlE7W5f4B4mIvDbkIyZcfWGDYptbH8RWOy2wBdQW+xDvTCVTn4bo5KuGPVFwFTrWZJOVdGZhYpffriyAQT1aRSbNPWFBtp1O4sCu3i53B85XICY6+rrXfZzLZ0+z+tXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755055807; c=relaxed/simple;
-	bh=EpC1PWK0QNP1EdR5yDUCeYLD2Y1efS+n85zghXKneKA=;
+	s=arc-20240116; t=1755072968; c=relaxed/simple;
+	bh=qLk7KTbjb9ze2aC5zK7QVoAdhOj3IvIDiRP14d2KdAE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lc8ioDn3MePkCnG+NpYBRFRbxK/Hcr75VkigakbnUTxdgOGZ1nb03X3jTmrejq6fGaGKGYzMv6IuUjWx/vS5KJfdykTdQcSqUd3vufXS7kbB4m06+Pgaox9+nubWD8/S5ajV1wHtpGNy9px4bCzg0ES/0/o4IB5w3eGKGuVwt/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=gPYubN//; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=hortiraxeFtIBlhaLKLKfEEzJn3lu3DeetG23uNMPdOO8cbXhdV4KclU4IZaxZBingC4SRmO50Cf+QsWjAX16zsTtfK2gONBVaienq6IIPmDrbjgs4tT8XIPgoXW9LMw9Ub3ijyCwSfUDwW2dn4wZJUG3s9sXzutk8xNnqA9FO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t3ZaanvF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E1zvWv48; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="gPYubN//"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id F3A4525BB1;
-	Wed, 13 Aug 2025 05:24:42 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id wN79A9bzqULE; Wed, 13 Aug 2025 05:24:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1755055482; bh=EpC1PWK0QNP1EdR5yDUCeYLD2Y1efS+n85zghXKneKA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gPYubN//e9XqID6gKvy0mwwT86JVPqCGYfpQWizbt4+ljNgm4pAFW6Ou88IFg3EcM
-	 dkxMYXVyVkhCz/n621Dwfedy3RZSfb4n/ABydqhm9nmdsA1ALvUJ2m+dsvn5kwy+rW
-	 bBzh93SckyPmoSGs+KXBzkgvbcf9flIdXx0W9Y6ebs1WYOAU9X3LE8sOjSs4mKUqmq
-	 ebGxAB2UmuA5Lp2tWprIv3rTYzGOdBMH7O15L0bbUllVVUCAIG2uoXhujgJXVjG3bY
-	 UDc+JiIKU5KuYm48TcwwYf9QePtesjzh5xGPzfWuU7Pp96yJ/dy45cgnzSH/xtV6gF
-	 fjK9UYCOvGXwQ==
-Date: Wed, 13 Aug 2025 03:24:27 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Youling Tang <youling.tang@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH 2/6] LoongArch: Add kexec_file support
-Message-ID: <aJwFa8x5BQMouB1y@pie>
-References: <20250811092659.14903-1-youling.tang@linux.dev>
- <20250811092659.14903-3-youling.tang@linux.dev>
- <aJojDiHWi8cgvA2W@pie>
- <6de97571-7ef0-4bbd-b55f-5ad41898a6ec@linux.dev>
- <af866071-81c1-44d5-ae02-273d6e9c04d4@linux.dev>
- <aJsGg8__ppyBrkfL@pie>
- <27513334-3086-4353-bf6c-fdee082a8ce8@linux.dev>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t3ZaanvF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E1zvWv48"
+Date: Wed, 13 Aug 2025 10:16:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1755072965;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vgBW8b/WLrVQq0BHMU+zEk/Lyyfrm6a/mGbcYhX7PWw=;
+	b=t3ZaanvFJHTW1l1H2nSwoa1VFh8EVFo/BJn0UMRG7bq78PXYOpzqMO9UGefI5UiLZP7nNe
+	J1FX1/E5cqcFOVpKvUjolk1j8zY71ykS0B7X6UJ1jM73mZGhOMT+2RFDhdp4Y1WmHG3lB8
+	fhvgGlk/PFabS5Cn+w3uMjkgmqVzkQuRRvX4xJrjg/8hJ+0j7jOT/qLXJIWkp6a9jfxObj
+	LUOs4JziO5PF87uDbwzJHBzRMHIM1CkGRGPGIwWfVdP7ckTLMMlHtUDzc+O5vxoBEjlmG7
+	1skI/bKKNj/R2CTmQujVy01wAp2WhS97QfxNvozWzsRXygdxqvZz7+ZCEZyixQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1755072965;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vgBW8b/WLrVQq0BHMU+zEk/Lyyfrm6a/mGbcYhX7PWw=;
+	b=E1zvWv48KJJ+SOu4RstGU/Hts0jpCLaRVEpYFntAu8DSCAbOKCuCF3vYrHswu5Uo/Nk8OK
+	GMt5eI9bpKssCIDA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-mm@kvack.org, linux-um@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, Jan Stancek <jstancek@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: Re: [PATCH v4 00/24] vdso: Reject absolute relocations during build
+Message-ID: <20250813101305-04911850-2375-4be5-9a06-ced21de3ca22@linutronix.de>
+References: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
+ <CANiq72nV62c8cVBzke73OH-sfLdgerDBGrLKTmT83+OQtK6PjA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <27513334-3086-4353-bf6c-fdee082a8ce8@linux.dev>
+In-Reply-To: <CANiq72nV62c8cVBzke73OH-sfLdgerDBGrLKTmT83+OQtK6PjA@mail.gmail.com>
 
-On Wed, Aug 13, 2025 at 10:18:12AM +0800, Youling Tang wrote:
-> Hi, Yao
-> On 2025/8/12 17:43, Yao Zi wrote:
-> > On Tue, Aug 12, 2025 at 03:06:23PM +0800, Youling Tang wrote:
-> > > On 2025/8/12 14:15, Youling Tang wrote:
-> > > > Hi, Yao
-> > > > On 2025/8/12 01:06, Yao Zi wrote:
-> > > > > On Mon, Aug 11, 2025 at 05:26:55PM +0800, Youling Tang wrote:
-> > > > > > From: Youling Tang <tangyouling@kylinos.cn>
-> > > > > > 
-> > > > > > This patch adds support for kexec_file on LoongArch.
-> > > > > > 
-> > > > > > The image_load() as two parts:
-> > > > > > - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
-> > > > > > - the second part loads other segments (eg: initrd, cmdline)
-> > > > > > 
-> > > > > > Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images
-> > > > > > are supported,
-> > > > > > but ELF format is not supported.
-> > > > > > 
-> > > > > > Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> > > > > > ---
-> > > > > >    arch/loongarch/Kconfig                     |   8 ++
-> > > > > >    arch/loongarch/include/asm/image.h         |  18 ++++
-> > > > > >    arch/loongarch/include/asm/kexec.h         |  12 +++
-> > > > > >    arch/loongarch/kernel/Makefile             |   1 +
-> > > > > >    arch/loongarch/kernel/kexec_image.c        | 112
-> > > > > > +++++++++++++++++++++
-> > > > > >    arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
-> > > > > >    arch/loongarch/kernel/machine_kexec_file.c |  46 +++++++++
-> > > > > >    7 files changed, 219 insertions(+), 11 deletions(-)
-> > > > > >    create mode 100644 arch/loongarch/kernel/kexec_image.c
-> > > > > >    create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
-> > ...
-> > 
-> > > > > > diff --git a/arch/loongarch/kernel/kexec_image.c
-> > > > > > b/arch/loongarch/kernel/kexec_image.c
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..fdd1845b4e2e
-> > > > > > --- /dev/null
-> > > > > > +++ b/arch/loongarch/kernel/kexec_image.c
-> > ...
-> > 
-> > > > > > +    /*
-> > > > > > +     * The location of the kernel segment may make it
-> > > > > > impossible to satisfy
-> > > > > > +     * the other segment requirements, so we try repeatedly to find a
-> > > > > > +     * location that will work.
-> > > > > > +     */
-> > > > > > +    while ((ret = kexec_add_buffer(&kbuf)) == 0) {
-> > > > > > +        /* Try to load additional data */
-> > > > > > +        kernel_segment = &image->segment[kernel_segment_number];
-> > > > > > +        ret = load_other_segments(image, kernel_segment->mem,
-> > > > > > +                      kernel_segment->memsz, initrd,
-> > > > > > +                      initrd_len, cmdline, cmdline_len);
-> > > > > > +        if (!ret)
-> > > > > > +            break;
-> > > > > > +
-> > > > > > +        /*
-> > > > > > +         * We couldn't find space for the other segments; erase the
-> > > > > > +         * kernel segment and try the next available hole.
-> > > > > > +         */
-> > > > > > +        image->nr_segments -= 1;
-> > > > > > +        kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
-> > > > > > +        kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> > > > > > +    }
-> > > > > > +
-> > > > > > +    if (ret) {
-> > > > > > +        pr_err("Could not find any suitable kernel location!");
-> > > > > > +        return ERR_PTR(ret);
-> > > > > > +    }
-> > > > > > +
-> > > > > > +    kernel_segment = &image->segment[kernel_segment_number];
-> > > > > > +
-> > > > > > +    /* Make sure the second kernel jumps to the correct
-> > > > > > "kernel_entry". */
-> > > > > > +    image->start = kernel_segment->mem + h->kernel_entry -
-> > > > > > text_offset;
-> > > > > A non-relocatable loongarch kernel cannot be loaded to arbitrary
-> > > > > address. Thus this loading function seems to only work for relocatable
-> > > > > kernels, maybe it's better to leave a comment indicating the limitation.
-> > > > > 
-> > > > > For now, we don't seem to have a way to find out whether the kernel is
-> > > > > relocatable (for example, a flag in kernel image header), so it's
-> > > > > impossible to point out whether the loaded kernel boots fine with
-> > > > > arbitrary loading address...
-> > > > LoongArch enables the relocation of the kernel when the kdump
-> > > > feature is enabled.
-> > > > 
-> > > > config ARCH_SELECTS_CRASH_DUMP
-> > > >          def_bool y
-> > > >          depends on CRASH_DUMP
-> > > >          select RELOCATABLE
-> > > > 
-> > This only means the currently-running kernel is relocatable, not the one
-> > being exec'ed, right?
-> No.
-> > > When enabling KEXEC_FILE, the RELOCATABLE configuration should
-> > > also be enabled. Both kexec and kdump require this.
-> > I'm not sure whether you're talking about the running kernel or the one
-> > that is going to be exec'ed. This method of kernel loading requires the
-> > exec'ed kernel being relocatable, not the currently running one.
-> > 
-> > And I think it's totally reasonable to use KEXEC_FILE for non-crash-dump
-> > purpose, for example, linuxboot. It'll be confusing to the user if the
-> > system just hangs after booting a non-relocatable kernel, which is hard
-> > to debug.
-> > 
-> > Thus IMHO we should ideally refuse to load non-relocatable kernels, or
-> > add a FIXME comment to indicate the situation that it's impossible to
-> > determine whether the exec'ed image is relocatable.
-> The first kernel and the second kernel are generally the same kernel
-> (the same image).
-
-This isn't true. There're real-world cases using kexec-file to load and
-boot an unrelated kernel image. Please refer to petitboot[1] and
-linuxboot[2] which uses kexec to act as a bootloader.
-
-> When KEXEC_FILE is enabled and RELOCATEABLE
-> is enabled by default, it has been forcibly guaranteed that both the
-> first kernel and the second kernel are relocatable kernels regardless
-> of kexec/kdump operations.
-
-This cannot be guaranteed since the first and second kernel could be
-completely unrelated. Please see my previous comment.
-
-> Unless the second kernel it loads is an older version of the kernel (the
-> older version of the kernel does not use the default configuration, with
-> CONFIG_KEXEC enabled but CONFIG_CRASH_DUMP disabled,
-
-> this is not acorrect usage).
-
-This may be incorrect for kdump's use case, but kexec-file isn't only
-meant to be used with kdump: it just loads an arbitrary kernel image and
-executes it, no matter whether it's for capturing a dump, booting a
-newer or older kernel, or etc, and there's no guarantee about features
-enabled in the second kernel. It's incorrect to assume the user only
-loads relocatable images with kexec-file.
-
-> Thanks,
-> Youling.
-> > > Youling.
-> > > > After enabling the relocation, LoongArch is the PIE kernel. For
-> > > > more details, please refer to commit d8da19fbdedd ("LoongArch:
-> > > > Add support for kernel relocation")
-> > Best regards.
-> > Yao Zi
+On Tue, Aug 12, 2025 at 01:07:34PM +0200, Miguel Ojeda wrote:
+> On Tue, Aug 12, 2025 at 7:44â€¯AM Thomas WeiÃŸschuh
+> <thomas.weissschuh@linutronix.de> wrote:
+> >
+> > Kbuild and Rust folks: This contains custom definitions of hostprog
+> > bindgen and rust library commands.
+> > These are currently only defined inside the subsystem directory.
+> > Let me know if they should go into scripts/Makefile.host.
 > 
+> Glad to see more Rust host progs :)
+> 
+> Keeping them local may be a bit easier initially to land, I guess
+> (e.g. no docs), and then we can generalize when needed later.
 
-Thanks,
-Yao Zi
+I'm happy to do the docs etc. I only wanted to avoid doing all that work,
+only for it to stay a subsystem-local solution.
 
-[1]: https://github.com/open-power/petitboot
-[2]: https://github.com/linuxboot/linuxboot
+Also it would be nice to have a Kconfig symbol, RUSTC_CAN_LINK or similar,
+which indicates that the rust compiler can build host programs.
+
+> By the way, for consistency with elsewhere, probably we want
+> `HOSTRUSTLIB` -> `HOSTRUSTC L`. Though I am thinking to remove the `L`
+> anyway since eventually a lot of code will be "lib".
+
+Ack.
