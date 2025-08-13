@@ -1,202 +1,228 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076932C0F6F
-	for <loongarch@lists.linux.dev>; Wed, 13 Aug 2025 01:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF07249E5
+	for <loongarch@lists.linux.dev>; Wed, 13 Aug 2025 01:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755047744; cv=none; b=Tslr7jx/S+KRrs8mmZFjSZM4k8dPaXiz+QQZq3pfaRYpRimAx7igb9vVAW7msbT8Nk1z1Ozp8jUvtEjEnJh4/JO+Im1y6qkaZ3GsENJOLwETLwYXwB7LvxpmRXz9ckkiRDSSreJQujNWFnuAOur30s60x8aPz5DwYzZC/aO71As=
+	t=1755049284; cv=none; b=Es7x3nSRnQXiITmrCnSxqbXHPFqAsB8Y9OBmoKO+OxvN0EyLVqn23Bd1VlHvADABjayVJd5tNjZVXqsxUi920pzuok2HH/g4w8adKKhcURK9al+DCfPnHCEJ8vcV4x5B6d6Rt43qjKj+v6+vXy+pzeEkLZRvIAzNX7ALD6SRYno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755047744; c=relaxed/simple;
-	bh=mIHDhenSS2rK9fFxe9YHYNVPOvVSR+Di9OA20vX79Gc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OzmWxZs5EBt8WtKC/CvE+o8dfieoj9uUFJsn6fcFIr2lZwuXgnsrAKsbGOKULld0Ec+rIA2VesgtoGhIR/qbJhraEsBCNLOAn3VXinCLd4/APcvkRZXmxIoKndJh3WDMWzyWXaLFFCCyUE9fi6ts40y20tbkwyebs7yzgUJS2+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QYMA4CQi; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QYMA4CQi"
-Message-ID: <7d716798-7cfc-4564-b9a4-32d9f692f037@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755047738;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mIHDhenSS2rK9fFxe9YHYNVPOvVSR+Di9OA20vX79Gc=;
-	b=QYMA4CQiKvCQZgyVr8Uld9xX8glKnItlf06DgAY0nLUelMeBTF58qAfPJlE3+O60jvhVLC
-	h7qrpUyPI5buV1fYyJ1Mx1IONosvVOVF5gtyYWd+Z6lfdCGHDUyj951jierfmkEH3EhHVj
-	Lu6TexGvwNLaRv+4xsPITj344tRyDiw=
-Date: Wed, 13 Aug 2025 09:15:31 +0800
+	s=arc-20240116; t=1755049284; c=relaxed/simple;
+	bh=kw8408HuwYLqZ5Gs1QhHwXIggsYHzqYnO5HxaEkSCAo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jULx8soGHpGHndw7q5Qy09TpWVmViE5XXs+3Hd3upjj14YazF3YbXgG6WpAoGjgCQ7iDZhOtGAlS40FC5ulOZKIYFGYQWffzMZj8eh/rwCDmWFggJHRhw1cFsLN5uhk7G9qyIHhzSf+aUIAcb2Vnp0yGe+TBHlJKEql8eX9YXzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.126])
+	by gateway (Coremail) with SMTP id _____8Bx22o57Ztobis_AQ--.19415S3;
+	Wed, 13 Aug 2025 09:41:13 +0800 (CST)
+Received: from [10.20.42.126] (unknown [10.20.42.126])
+	by front1 (Coremail) with SMTP id qMiowJCxdOQv7ZtoCf5HAA--.11751S3;
+	Wed, 13 Aug 2025 09:41:11 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: time: Fix the issue of high cpu usage of vcpu
+ threads in virtual machines
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>,
+ Peter Zijlstra <peterz@infradead.org>, Bibo Mao <maobibo@loongson.cn>,
+ Song Gao <gaosong@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250812090056.771379-1-lixianglai@loongson.cn>
+ <CAAhV-H7pXxFR8PnAOv8CirotXUSPgbb7AEsHU0VGh_YMFFoyJA@mail.gmail.com>
+ <da4311b0-7e8e-647a-260f-1733878cf394@loongson.cn>
+ <CAAhV-H7uhvZeZ9L40AWuRN7t4JAFLNDj4YUOZ_K-oPrCcnpEjA@mail.gmail.com>
+From: lixianglai <lixianglai@loongson.cn>
+Message-ID: <13a54d23-24c2-8e59-77ac-900a63cd38ef@loongson.cn>
+Date: Wed, 13 Aug 2025 09:39:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/6] LoongArch: Add kexec_file support
-To: Youling Tang <youling.tang@linux.dev>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-References: <20250811092659.14903-1-youling.tang@linux.dev>
- <20250811092659.14903-3-youling.tang@linux.dev>
- <CAAhV-H55n=v+ztBc8UgK339kuhg3LKvcOQu+jhpVrbvO3zf3=g@mail.gmail.com>
- <9760e574-3eb0-46b2-bccd-916f73b9c39e@linux.dev>
- <ce63aa14-11a5-4b2c-bfbc-8465b7065197@linux.dev>
- <ef249b61-f37e-4b72-9610-7f114564988a@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <ef249b61-f37e-4b72-9610-7f114564988a@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <CAAhV-H7uhvZeZ9L40AWuRN7t4JAFLNDj4YUOZ_K-oPrCcnpEjA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Language: en-US
+X-CM-TRANSID:qMiowJCxdOQv7ZtoCf5HAA--.11751S3
+X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKrWUXr45uw13Jr1xKr45Jwc_yoW7WF1Dpr
+	WDCFs8Krs5Kr1avw1aq3sFvF9xKw4kGr12vF93Gr17Ar9FvF93WF48tryq9FyrGFWDuF40
+	vw10qws3uFWDtrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUU
+	U
 
-
-在 8/12/25 5:32 PM, Youling Tang 写道:
-> Hi, Yanteng
-> On 2025/8/12 09:53, Yanteng Si wrote:
->> 在 8/12/25 9:21 AM, Youling Tang 写道:
->>> Hi, Huacai
->>> On 2025/8/11 22:07, Huacai Chen wrote:
->>>> Hi, Youling,
->>>>
->>>> On Mon, Aug 11, 2025 at 5:28 PM Youling Tang <youling.tang@linux.dev> wrote:
->>>>> From: Youling Tang <tangyouling@kylinos.cn>
->>>>>
->>>>> This patch adds support for kexec_file on LoongArch.
->>>>>
->>>>> The image_load() as two parts:
->>>>> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
->>>>> - the second part loads other segments (eg: initrd, cmdline)
->>>>>
->>>>> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
->>>>> but ELF format is not supported.
->>>>>
->>>>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
->>>>> ---
->>>>>   arch/loongarch/Kconfig                     |   8 ++
->>>>>   arch/loongarch/include/asm/image.h         |  18 ++++
->>>>>   arch/loongarch/include/asm/kexec.h         |  12 +++
->>>>>   arch/loongarch/kernel/Makefile             |   1 +
->>>>>   arch/loongarch/kernel/kexec_image.c        | 112 +++++++++++++++++++++
->>>>>   arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
->>>>>   arch/loongarch/kernel/machine_kexec_file.c |  46 +++++++++
->>>>>   7 files changed, 219 insertions(+), 11 deletions(-)
->>>>>   create mode 100644 arch/loongarch/kernel/kexec_image.c
->>>>>   create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
->>>>>
->>>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->>>>> index f0abc38c40ac..fd50c83f7827 100644
->>>>> --- a/arch/loongarch/Kconfig
->>>>> +++ b/arch/loongarch/Kconfig
->>>>> @@ -625,6 +625,14 @@ config CPU_HAS_PREFETCH
->>>>>   config ARCH_SUPPORTS_KEXEC
->>>>>          def_bool y
->>>>>
->>>>> +config ARCH_SUPPORTS_KEXEC_FILE
->>>>> +       def_bool 64BIT
->>>>> +
->>>>> +config ARCH_SELECTS_KEXEC_FILE
->>>>> +       def_bool y
->>>>> +       depends on KEXEC_FILE
->>>>> +       select HAVE_IMA_KEXEC if IMA
->>>>> +
->>>>>   config ARCH_SUPPORTS_CRASH_DUMP
->>>>>          def_bool y
->>>>>
->>>>> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
->>>>> index 1f090736e71d..829e1ecb1f5d 100644
->>>>> --- a/arch/loongarch/include/asm/image.h
->>>>> +++ b/arch/loongarch/include/asm/image.h
->>>>> @@ -36,5 +36,23 @@ struct loongarch_image_header {
->>>>>          uint32_t pe_header;
->>>>>   };
->>>>>
->>>>> +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
->>>>> +static const uint8_t loongarch_pe_machtype[6] = {'P', 'E', 0x0, 0x0, 0x64, 0x62};
->>>>> +
->>>>> +/**
->>>>> + * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
->>>>> + *
->>>>> + * Returns non-zero if 'MZ' signature is found.
->>>>> + */
->>>>> +
->>>>> +static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
->>>>> +{
->>>>> +       if (!h)
->>>>> +               return 0;
->>>>> +
->>>>> +       return (h->pe_sig[0] == loongarch_image_pe_sig[0]
->>>>> +               && h->pe_sig[1] == loongarch_image_pe_sig[1]);
->>>>> +}
->>>>> +
->>>>>   #endif /* __ASSEMBLY__ */
->>>>>   #endif /* __ASM_IMAGE_H */
->>>>> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
->>>>> index cf95cd3eb2de..3ef8517a3670 100644
->>>>> --- a/arch/loongarch/include/asm/kexec.h
->>>>> +++ b/arch/loongarch/include/asm/kexec.h
->>>>> @@ -41,6 +41,18 @@ struct kimage_arch {
->>>>>          unsigned long systable_ptr;
->>>>>   };
->>>>>
->>>>> +#ifdef CONFIG_KEXEC_FILE
->>>>> +extern const struct kexec_file_ops kexec_image_ops;
->>>>> +
->>>>> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
->>>>> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
->>>>> +
->>>>> +extern int load_other_segments(struct kimage *image,
->>>>> +               unsigned long kernel_load_addr, unsigned long kernel_size,
->>>>> +               char *initrd, unsigned long initrd_len,
->>>>> +               char *cmdline, unsigned long cmdline_len);
->>>> I think the RISC-V naming "load_extra_segments" is better.
->>> This name is also fine, but I prefer it to be consistent with
->>> that in kexec-tools.
->> I have looked at the code of kexec-tools, and it seems that you referenced a great deal of ARM code when implementing the LoongArch part.
+Hi Huacai Chen:
+> On Tue, Aug 12, 2025 at 8:50 PM lixianglai <lixianglai@loongson.cn> wrote:
 >>
 >>
+>> Hi Huacai Chen:
+>>> Hi, Xianglai,
+>>>
+>>> There is something that can be improved.
+>>>
+>>> On Tue, Aug 12, 2025 at 5:24 PM Xianglai Li <lixianglai@loongson.cn> wrote:
+>>>> When the cpu is offline, the timer under loongarch is not correctly closed,
+>>>> resulting in an excessively high cpu usage rate of the offline vcpu thread
+>>>> in the virtual machine.
 >>>>
->>>>> +#endif
->>>>> +
->>>>>   typedef void (*do_kexec_t)(unsigned long efi_boot,
->>>>>                             unsigned long cmdline_ptr,
->>>>>                             unsigned long systable_ptr,
->>>>> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
->>>>> index 6f5a4574a911..bd9405ee3888 100644
->>>>> --- a/arch/loongarch/kernel/Makefile
->>>>> +++ b/arch/loongarch/kernel/Makefile
->>>>> @@ -62,6 +62,7 @@ obj-$(CONFIG_MAGIC_SYSRQ)     += sysrq.o
->>>>>   obj-$(CONFIG_RELOCATABLE)      += relocate.o
->>>>>
->>>>>   obj-$(CONFIG_KEXEC_CORE)       += machine_kexec.o relocate_kernel.o
->>>>> +obj-$(CONFIG_KEXEC_FILE)       += machine_kexec_file.o kexec_image.o
->>>> We only support the efi format, so we don't need to split a
->>>> kexec_image.c like RISC-V, just put everything into
->>>> machine_kexec_file.c is OK.
->>> I hope it is separated and consistent with other architectures.
->>> For instance, arm64 only supports one type.
->> The ARM64 architecture has a long history, and we shouldn't be constrained by it.
-> Support for kexec_elf.c in ELF format may be considered for
-> addition in the future.
+>>>> To correctly close the timer, we have made the following modifications:
+>>>>
+>>>> Register the cpu hotplug timer start event for loongarch.This event will
+>>>> be called to close the timer when the cpu is offline.
+>>>>
+>>>> Clear the timer interrupt when the timer is turned off
+>>>>
+>>>> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/kernel/time.c | 20 ++++++++++++++++++++
+>>>>    include/linux/cpuhotplug.h   |  1 +
+>>>>    2 files changed, 21 insertions(+)
+>>>>
+>>>> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+>>>> index 367906b10f81..4daa11512eba 100644
+>>>> --- a/arch/loongarch/kernel/time.c
+>>>> +++ b/arch/loongarch/kernel/time.c
+>>>> @@ -12,6 +12,7 @@
+>>>>    #include <linux/kernel.h>
+>>>>    #include <linux/sched_clock.h>
+>>>>    #include <linux/spinlock.h>
+>>>> +#include <linux/cpu.h>
+>>>>
+>>>>    #include <asm/cpu-features.h>
+>>>>    #include <asm/loongarch.h>
+>>>> @@ -86,6 +87,9 @@ static int constant_set_state_shutdown(struct clock_event_device *evt)
+>>>>           timer_config &= ~CSR_TCFG_EN;
+>>>>           csr_write64(timer_config, LOONGARCH_CSR_TCFG);
+>>>>
+>>>> +       /* Clear Timer Interrupt */
+>>>> +       write_csr_tintclear(CSR_TINTCLR_TI);
+>>>> +
+>>>>           raw_spin_unlock(&state_lock);
+>>>>
+>>>>           return 0;
+>>>> @@ -208,8 +212,17 @@ int __init constant_clocksource_init(void)
+>>>>           return res;
+>>>>    }
+>>>>
+>>>> +static int arch_timer_dying_cpu(unsigned int cpu)
+>>> We can use arch_timer_dying() for short. And then add an
+>>> arch_timer_starting() like this:
+>>>
+>>> static int arch_timer_starting(unsigned int cpu)
+>>> {
+>>>           set_csr_ecfg(ECFGF_TIMER);
+>>>
+>>>           return 0;
+>>> }
+>>>
+>>> Though ECFGF_TIMER may be enabled in other places, for syntax we need it here.
+>>>
+>>>> +{
+>>>> +       constant_set_state_shutdown(NULL);
+>>>> +
+>>>> +       return 0;
+>>>> +}
+>>>> +
+>>>>    void __init time_init(void)
+>>>>    {
+>>>> +       int err;
+>>>> +
+>>>>           if (!cpu_has_cpucfg)
+>>>>                   const_clock_freq = cpu_clock_freq;
+>>>>           else
+>>>> @@ -220,4 +233,11 @@ void __init time_init(void)
+>>>>           constant_clockevent_init();
+>>>>           constant_clocksource_init();
+>>>>           pv_time_init();
+>>>> +
+>>>> +       err = cpuhp_setup_state_nocalls(CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
+>>>> +                                       "loongarch/timer:starting",
+>>>> +                                       NULL, arch_timer_dying_cpu);
+>>> Then we need use cpuhp_setup_state() here, because we have a startup
+>>> function now.
+>>>
+>>> And "loongarch/timer:starting" should be
+>>> "clockevents/loongarch/timer:starting" like others.
+>>>
+>>> And the whole should be moved to the last of
+>>> constant_clockevent_init() because it is clockevent specific.
+>> like this?
+>>
+>> @@ -164,6 +182,10 @@ int constant_clockevent_init(void)
+>>
+>>           timer_irq_installed = 1;
+>>
+>> +       cpuhp_setup_state(CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
+>> +                         "clockevents/loongarch/timer:starting",
+>> +                         arch_timer_starting, arch_timer_dying_cpu);
+>> +
+>>           sync_counter();
+>>
+>>
+>> I was wondering whether it should be placed before or after the
+>> "timer_irq_installed" judgment
+> Should be after "timer_irq_installed" because we only need to run once.
+>
+> The best place is after pr_info("Constant clock event device register\n");
 
-Ok, I see.
+Got it!
+> And there is another question:
+> Should we move "write_csr_tintclear(CSR_TINTCLR_TI)" from
+> constant_set_state_shutdown() to arch_timer_dying()?
 
+We may not need to do this. If the context in which the timer is
+turned off is to disable interrupts, and the last timing period just
+arrives during this process, when the interrupt is re-enabled,
+an additional interrupt will be triggered and the next timing expiration
+time will be filled. This is not in line with expectations.
+Isn't it more reasonable to clean up the interrupt flag after turning off
+the timer instead of just doing so cpu offline context cleaning.
 
-Thanks,
-
-Yanteng
+Thanks!
+Xianglai.
 
 >
-> Thanks,
-> Youling.
+> Huacai
+>
 >>
->>
->> Thanks,
->> Yanteng
+>>>> +       if (err)
+>>>> +               pr_info("cpu hotplug event register failed");
+>>> This is not so useful, because the error isn't fatal.
 >>>
->>> Youling.
+>>>
+>>> Huacai
+>>>
+>>>> +
+>>>>    }
+>>>> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+>>>> index edfa61d80702..6606c1546afc 100644
+>>>> --- a/include/linux/cpuhotplug.h
+>>>> +++ b/include/linux/cpuhotplug.h
+>>>> @@ -159,6 +159,7 @@ enum cpuhp_state {
+>>>>           CPUHP_AP_PERF_ARM_STARTING,
+>>>>           CPUHP_AP_PERF_RISCV_STARTING,
+>>>>           CPUHP_AP_ARM_L2X0_STARTING,
+>>>> +       CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
+>>>>           CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
+>>>>           CPUHP_AP_ARM_ARCH_TIMER_STARTING,
+>>>>           CPUHP_AP_ARM_ARCH_TIMER_EVTSTRM_STARTING,
 >>>>
->>>> Huacai
+>>>> base-commit: 53e760d8949895390e256e723e7ee46618310361
+>>>> --
+>>>> 2.39.1
+>>>>
+>>
+
