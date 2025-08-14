@@ -1,193 +1,334 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FA62D3731;
-	Thu, 14 Aug 2025 08:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462862FC883
+	for <loongarch@lists.linux.dev>; Thu, 14 Aug 2025 12:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755158729; cv=none; b=Q1Qr9u4U/MuV8RvugXjp3LJOmyC93NFL0Cdccz+Pq2Upr2EoMFqus++gbe64YUNmaVwrs/c84mhiuVsN2WmQcjyAyI3n1fp2Ls3Meb6mtQdsy/BTDQiUj7ACajarP4Jx79LyK9zOKM0ZO0P4yNbK6vNlJI+3yxOVxdYgpF8Y39M=
+	t=1755172831; cv=none; b=LnZtAs6zZeQKotBF04nJcAS24ClL1ODGA8LpjGtU90mKMo9YUsp6CTsR98U4dno6xIle2jUJN5peSfaqcqYs0BwPn5MiHMPqUmqb4z284ORz9hJkuNmGuhGtuOxT96DQrESoW+pAdG2+tBYJ7rzDWdKZHw1nWvtmhcZ7LjEZvts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755158729; c=relaxed/simple;
-	bh=5cPIVXM0nkCET4mfTMJk5eQOYlHUtDVZOyK2tRL3s7U=;
+	s=arc-20240116; t=1755172831; c=relaxed/simple;
+	bh=zAmZHWQ0j0nWSGugB3IwmC7n5DV/t+V6x/KLa6DwESs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fFnPMWb5uL6XTWddiJVcJxbRYHVcg9NFE0PleUq92yYApTQF9SZ+wiQnNGqXN6tYWJk+utLNBc8acJ1UZ53p9UMmqtqk4/vWghs1ySCZXRQ8b587wstrVNL1vnM5yfPZISxGaTpxJX/SK5ueB3z6ukpi8fpz4MBdk/pCYgsnNk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e5qOrdUD; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e5qOrdUD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755158727; x=1786694727;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5cPIVXM0nkCET4mfTMJk5eQOYlHUtDVZOyK2tRL3s7U=;
-  b=e5qOrdUDMGWQjBVcJtO5/WJMlsR5hKTDEvmqF/KhovkZnQKO+loX5EUD
-   MINL4FMrXmLIMwj5xsFhLwS+B66oGs0kO3aga7gYHFN17yyCX82rEebr2
-   KGTabiyNmPvQ8sQy9pqM9FkEWx2DjLoBstTjQNINlG13PlASYdjFGHoeU
-   MaqfuZxGZu68kvfG9woiPK4gZI+TiZZfRH4bCPtfiWNEWF2Q64PynQ77N
-   DP6Igjmfsr/Goi/EcEBIhJEbGU5KNPY+zqidmLo8CiKcD6f8M+rbNDflG
-   k/bejF9GhcmDiWbf9xF7oqKOtOXkFLgXDfp7sHjW+Avpb5tze197I/Pbi
-   w==;
-X-CSE-ConnectionGUID: nZu4Wv8zTuua7fPxZK3WSA==
-X-CSE-MsgGUID: XgJYI8RbQuqZDTU+SQwRBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="57372653"
-X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
-   d="scan'208";a="57372653"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 01:05:26 -0700
-X-CSE-ConnectionGUID: DDCZwDm7QaSoaweUXg1M6A==
-X-CSE-MsgGUID: uMzmV2T2TFe/bu5sz1uy2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
-   d="scan'208";a="190399976"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 14 Aug 2025 01:05:19 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1umSxZ-000Ajc-1M;
-	Thu, 14 Aug 2025 08:05:17 +0000
-Date: Thu, 14 Aug 2025 16:04:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Robin Murphy <robin.murphy@arm.com>, mingo@redhat.com, will@kernel.org,
-	mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 19/19] perf: Garbage-collect event_init checks
-Message-ID: <202508141524.QVgoOKMD-lkp@intel.com>
-References: <ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BlQQFIAIqjZepqlRIs1XIlmIUh2hBxAGcdV+HUWua3qbhvFQcn4T00sHdRLDzEwoSro0CKBGhe6nFC9dvc1vCeVJMtbzctma0cFlGhkaXTQZikXcsPSSPIxj3jLvJUJsuMDmfUmHcd1d9ytsomf4d3otNZ/Y37AwCs27GPPzIfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 3f5f8128790611f0b29709d653e92f7d-20250814
+X-CID-CACHE: Type:Local,Time:202508141940+08,HitQuantity:1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:a907b1a0-379c-477a-927b-7dc934e4894b,IP:0,U
+	RL:25,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:6493067,CLOUDID:12b4906887a891647f2f7712601a8547,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,EDM:
+	-3,IP:nil,URL:11|99|83|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI
+	:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 3f5f8128790611f0b29709d653e92f7d-20250814
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1117118590; Thu, 14 Aug 2025 20:00:18 +0800
+Date: Thu, 14 Aug 2025 20:00:15 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Vincent Li <vincent.mc.li@gmail.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: kernel lockup on bpf selftests module_attach
+Message-ID: <20250814120015.GA1626128@chenghao-pc>
+References: <CAK3+h2x_N-UnQqz_=bQOK9vB8fxEU=4YQ3YwCpnMNW4i5uBkQg@mail.gmail.com>
+ <CAAhV-H7wOZUJfn4pP2bV0G8Hnt2AfXt1ZL-eY5FFnQs4XF8g8Q@mail.gmail.com>
+ <CAK3+h2y003+3Ts+5PjVaxhYc8KM74B+3mSJ-hCt+Gmmta8Rbww@mail.gmail.com>
+ <CAK3+h2zSSW2EF88twhRNTG-QjsuX3ZeR+a8GVh80hOD50mdE6w@mail.gmail.com>
+ <CAAhV-H7QEidF7piHYJ0ZZD5FRp11ytBq+Q2YvpfZUPvS_BHTgQ@mail.gmail.com>
+ <CAK3+h2zq5ePgh5YDrMpb4GRsN-3kO=1AM4C057EZkB4OVRpKpw@mail.gmail.com>
+ <CAK3+h2wcOQr0iv=-K7WOCQkMkQb7b6gR77W7GSwuVqJuvc+fxQ@mail.gmail.com>
+ <20250812083441.GA1119757@chenghao-pc>
+ <CAK3+h2x1gjuqEsUSj+B-9sb73kRo3bStH6ROw=1LVSqQGMNcUw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK3+h2x1gjuqEsUSj+B-9sb73kRo3bStH6ROw=1LVSqQGMNcUw@mail.gmail.com>
 
-Hi Robin,
+On Tue, Aug 12, 2025 at 06:42:08AM -0700, Vincent Li wrote:
+> On Tue, Aug 12, 2025 at 1:34 AM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+> >
+> > On Sun, Aug 10, 2025 at 10:39:24AM -0700, Vincent Li wrote:
+> > > Hi Chenghao,
+> > >
+> > > On Sat, Aug 9, 2025 at 12:11 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
+> > > >
+> > > > On Fri, Aug 8, 2025 at 11:03 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > >
+> > > > > Hi, Chenghao,
+> > > > >
+> > > > > Please take a look.
+> > > > >
+> > > > > Huacai
+> > > > >
+> > > > I reverted loongson-next branch  tailcall count fix patches, struct
+> > > > ops trampoline patch, keep the rest of trampoline patches,
+> > > > module_attach test experienced the same issue, so definitely
+> > > > trampoline patches issue.
+> > > >
+> > >
+> > > I attempted to isolate which test in module_attach triggers the
+> > > "Unable to handle kernel paging request..." error, it appears to be
+> > > this one in "prog_tests/module_attach.c"
+> > >
+> > > ASSERT_OK(trigger_module_test_read(READ_SZ), "trigger_read");
+> > >
+> > > you can try to comment out other tests in "prog_tests/module_attach.c"
+> > > and perform the test, it might help isolate the issue.
+> > >
+> >
+> > Hi Vincent,
+> >
+> > The results I tested are different from yours. Could there be other
+> > differences between us? I am using the latest code of the loongarch-next
+> > branch.
+> >
+> > [root@localhost bpf]# ./test_progs -v -t module_attach
+> > bpf_testmod.ko is already unloaded.
+> > Loading bpf_testmod.ko...
+> > Successfully loaded bpf_testmod.ko.
+> > test_module_attach:PASS:skel_open 0 nsec
+> > test_module_attach:PASS:set_attach_target 0 nsec
+> > test_module_attach:PASS:set_attach_target_explicit 0 nsec
+> > WATCHDOG: test case module_attach executes for 10 seconds...
+> > libbpf: prog 'handle_fmod_ret': BPF program load failed: -EINVAL
+> > libbpf: prog 'handle_fmod_ret': -- BEGIN PROG LOAD LOG --
+> > bpf_testmod_test_read() is not modifiable
+> > processed 0 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+> > -- END PROG LOAD LOG --
+> > libbpf: prog 'handle_fmod_ret': failed to load: -EINVAL
+> > libbpf: failed to load object 'test_module_attach'
+> > libbpf: failed to load BPF skeleton 'test_module_attach': -EINVAL
+> > test_module_attach:FAIL:skel_load failed to load skeleton
+> > #205     module_attach:FAIL
+> > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+> > Successfully unloaded bpf_testmod.ko.
+> >
+> 
+> I build and run the most recent loongarch-next kernel too, can you try
+> my config https://www.bpfire.net/download/loongfire/config.txt? I am
+> on fedora, here are the steps I build, run the kernel, and run the
+> test
+> 
+> 1, check branch
+> [root@fedora linux-loongson]# git branch
+> * loongarch-next
+>   master
+>   no-tailcall
+>   no-trampoline
+> 
+> 2, build kernel and reboot
+> cp config.txt .config; make clean; make -j6; make modules_install;
+> make install; grub2-mkconfig -o /boot/grub2/grub.cfg; reboot
+> 
+> 3, after reboot and login, build bpf selftests, run module_attach
+> test, dmesg to check kernel log
+> cd tools/testing/selftests/bpf; make -j6; ./test_progs -t module_attach
+> 
 
-kernel test robot noticed the following build warnings:
+Hi Vincent,
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.17-rc1 next-20250814]
-[cannot apply to perf-tools-next/perf-tools-next tip/perf/core perf-tools/perf-tools acme/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I tried to refer to the config you provided, but the test results I
+obtained are as follows. I also specifically tested "modify" to verify
+the effectiveness of the patch, and the test of module_attach returns -EOPNOTSUPP.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Robin-Murphy/perf-arm-cmn-Fix-event-validation/20250814-010626
-base:   linus/master
-patch link:    https://lore.kernel.org/r/ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy%40arm.com
-patch subject: [PATCH 19/19] perf: Garbage-collect event_init checks
-config: i386-randconfig-003-20250814 (https://download.01.org/0day-ci/archive/20250814/202508141524.QVgoOKMD-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250814/202508141524.QVgoOKMD-lkp@intel.com/reproduce)
+[root@localhost bpf]# ./test_progs -v -t modify_return
+bpf_testmod.ko is already unloaded.
+Loading bpf_testmod.ko...
+Successfully loaded bpf_testmod.ko.
+run_test:PASS:skel_load 0 nsec
+run_test:PASS:modify_return__attach failed 0 nsec
+run_test:PASS:test_run 0 nsec
+run_test:PASS:test_run ret 0 nsec
+run_test:PASS:modify_return side_effect 0 nsec
+run_test:PASS:modify_return fentry_result 0 nsec
+run_test:PASS:modify_return fexit_result 0 nsec
+run_test:PASS:modify_return fmod_ret_result 0 nsec
+run_test:PASS:modify_return fentry_result2 0 nsec
+run_test:PASS:modify_return fexit_result2 0 nsec
+run_test:PASS:modify_return fmod_ret_result2 0 nsec
+run_test:PASS:skel_load 0 nsec
+run_test:PASS:modify_return__attach failed 0 nsec
+run_test:PASS:test_run 0 nsec
+run_test:PASS:test_run ret 0 nsec
+run_test:PASS:modify_return side_effect 0 nsec
+run_test:PASS:modify_return fentry_result 0 nsec
+run_test:PASS:modify_return fexit_result 0 nsec
+run_test:PASS:modify_return fmod_ret_result 0 nsec
+run_test:PASS:modify_return fentry_result2 0 nsec
+run_test:PASS:modify_return fexit_result2 0 nsec
+run_test:PASS:modify_return fmod_ret_result2 0 nsec
+#200     modify_return:OK
+Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+Successfully unloaded bpf_testmod.ko.
+[root@localhost bpf]# ./test_progs -v -t module_attach
+bpf_testmod.ko is already unloaded.
+Loading bpf_testmod.ko...
+Successfully loaded bpf_testmod.ko.
+test_module_attach:PASS:skel_open 0 nsec
+test_module_attach:PASS:set_attach_target 0 nsec
+test_module_attach:PASS:set_attach_target_explicit 0 nsec
+test_module_attach:PASS:skel_load 0 nsec
+libbpf: prog 'kprobe_multi': failed to attach: -EOPNOTSUPP
+libbpf: prog 'kprobe_multi': failed to auto-attach: -EOPNOTSUPP
+test_module_attach:FAIL:skel_attach skeleton attach failed: -95
+#201     module_attach:FAIL
+Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+Successfully unloaded bpf_testmod.ko.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508141524.QVgoOKMD-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+Chenghao
 
->> arch/x86/events/intel/uncore_snb.c:905:24: warning: unused variable 'hwc' [-Wunused-variable]
-     905 |         struct hw_perf_event *hwc = &event->hw;
-         |                               ^~~
-   1 warning generated.
-
-
-vim +/hwc +905 arch/x86/events/intel/uncore_snb.c
-
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  896  
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  897  /*
-9aae1780e7e81e arch/x86/events/intel/uncore_snb.c                Kan Liang               2018-05-03  898   * Keep the custom event_init() function compatible with old event
-9aae1780e7e81e arch/x86/events/intel/uncore_snb.c                Kan Liang               2018-05-03  899   * encoding for free running counters.
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  900   */
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  901  static int snb_uncore_imc_event_init(struct perf_event *event)
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  902  {
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  903  	struct intel_uncore_pmu *pmu;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  904  	struct intel_uncore_box *box;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30 @905  	struct hw_perf_event *hwc = &event->hw;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  906  	u64 cfg = event->attr.config & SNB_UNCORE_PCI_IMC_EVENT_MASK;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  907  	int idx, base;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  908  
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  909  	pmu = uncore_event_to_pmu(event);
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  910  	/* no device found for this pmu */
-3f710be02ea648 arch/x86/events/intel/uncore_snb.c                Kan Liang               2025-01-08  911  	if (!pmu->registered)
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  912  		return -ENOENT;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  913  
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  914  	/* check only supported bits are set */
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  915  	if (event->attr.config & ~SNB_UNCORE_PCI_IMC_EVENT_MASK)
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  916  		return -EINVAL;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  917  
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  918  	box = uncore_pmu_to_box(pmu, event->cpu);
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  919  	if (!box || box->cpu < 0)
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  920  		return -EINVAL;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  921  
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  922  	event->cpu = box->cpu;
-1f2569fac6c6dd arch/x86/events/intel/uncore_snb.c                Thomas Gleixner         2016-02-22  923  	event->pmu_private = box;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  924  
-e64cd6f73ff5a7 arch/x86/events/intel/uncore_snb.c                David Carrillo-Cisneros 2016-08-17  925  	event->event_caps |= PERF_EV_CAP_READ_ACTIVE_PKG;
-e64cd6f73ff5a7 arch/x86/events/intel/uncore_snb.c                David Carrillo-Cisneros 2016-08-17  926  
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  927  	event->hw.idx = -1;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  928  	event->hw.last_tag = ~0ULL;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  929  	event->hw.extra_reg.idx = EXTRA_REG_NONE;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  930  	event->hw.branch_reg.idx = EXTRA_REG_NONE;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  931  	/*
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  932  	 * check event is known (whitelist, determines counter)
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  933  	 */
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  934  	switch (cfg) {
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  935  	case SNB_UNCORE_PCI_IMC_DATA_READS:
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  936  		base = SNB_UNCORE_PCI_IMC_DATA_READS_BASE;
-9aae1780e7e81e arch/x86/events/intel/uncore_snb.c                Kan Liang               2018-05-03  937  		idx = UNCORE_PMC_IDX_FREERUNNING;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  938  		break;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  939  	case SNB_UNCORE_PCI_IMC_DATA_WRITES:
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  940  		base = SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE;
-9aae1780e7e81e arch/x86/events/intel/uncore_snb.c                Kan Liang               2018-05-03  941  		idx = UNCORE_PMC_IDX_FREERUNNING;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  942  		break;
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  943  	case SNB_UNCORE_PCI_IMC_GT_REQUESTS:
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  944  		base = SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE;
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  945  		idx = UNCORE_PMC_IDX_FREERUNNING;
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  946  		break;
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  947  	case SNB_UNCORE_PCI_IMC_IA_REQUESTS:
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  948  		base = SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE;
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  949  		idx = UNCORE_PMC_IDX_FREERUNNING;
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  950  		break;
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  951  	case SNB_UNCORE_PCI_IMC_IO_REQUESTS:
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  952  		base = SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE;
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  953  		idx = UNCORE_PMC_IDX_FREERUNNING;
-24633d901ea44f arch/x86/events/intel/uncore_snb.c                Vaibhav Shankar         2020-08-13  954  		break;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  955  	default:
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  956  		return -EINVAL;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  957  	}
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  958  
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  959  	/* must be done before validate_group */
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  960  	event->hw.event_base = base;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  961  	event->hw.idx = idx;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  962  
-8041ffd36f42d8 arch/x86/events/intel/uncore_snb.c                Kan Liang               2019-02-27  963  	/* Convert to standard encoding format for freerunning counters */
-8041ffd36f42d8 arch/x86/events/intel/uncore_snb.c                Kan Liang               2019-02-27  964  	event->hw.config = ((cfg - 1) << 8) | 0x10ff;
-8041ffd36f42d8 arch/x86/events/intel/uncore_snb.c                Kan Liang               2019-02-27  965  
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  966  	/* no group validation needed, we have free running counters */
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  967  
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  968  	return 0;
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  969  }
-92807ffdf32c38 arch/x86/kernel/cpu/perf_event_intel_uncore_snb.c Yan, Zheng              2014-07-30  970  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> >
+> >
+> > Chenghao
+> >
+> > >
+> > > > > On Sat, Aug 9, 2025 at 1:03 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
+> > > > > >
+> > > > > > On Fri, Aug 8, 2025 at 8:48 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
+> > > > > > >
+> > > > > > > On Fri, Aug 8, 2025 at 8:03 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > >
+> > > > > > > > Hi, Vincent,
+> > > > > > > >
+> > > > > > > > On Sat, Aug 9, 2025 at 12:53 AM Vincent Li <vincent.mc.li@gmail.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi Folks,
+> > > > > > > > >
+> > > > > > > > > Hengqi mentioned offline that the loongarch kernel locked up when
+> > > > > > > > > running full bpf selftests, so I went ahead and ran make run_tests to
+> > > > > > > > > perform full bpf selftest, I observed lockup too. It appears the
+> > > > > > > > > lockup happens when running module_attach test which includes testing
+> > > > > > > > > on fentry so this could be related to the trampoline patch series. for
+> > > > > > > > > example, if I just run ./test_progs -t module_attach, the kernel
+> > > > > > > > > lockup immediately.
+> > > > > > > > Is this a regression caused by the latest trampoline patches? Or in
+> > > > > > > > another word, Does vanilla 6.16 has this problem?
+> > > > > > > >
+> > > > > > >
+> > > > > > > I suspect this is caused by the latest trampoline patches because the
+> > > > > > > module_attach is to test the fentry feature for kernel module
+> > > > > > > functions, I believe Changhao and I only tested the fentry feature for
+> > > > > > > non-module kernel functions. I can try kernel without the trampoline
+> > > > > > > patches and will let you know the result.
+> > > > > > >
+> > > > > >
+> > > > > > I reverted  trampoline patches from loongarch-next branch and run
+> > > > > > ./test_progs -t module_attach simply just errors out with the fentry
+> > > > > > feature not supported
+> > > > > >
+> > > > > > [root@fedora bpf]# ./test_progs -t module_attach
+> > > > > > test_module_attach:PASS:skel_open 0 nsec
+> > > > > > test_module_attach:PASS:set_attach_target 0 nsec
+> > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
+> > > > > > test_module_attach:PASS:skel_load 0 nsec
+> > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
+> > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
+> > > > > > test_module_attach:FAIL:skel_attach skeleton attach failed: -524
+> > > > > > #205     module_attach:FAIL
+> > > > > >
+> > > > > > All error logs:
+> > > > > > test_module_attach:PASS:skel_open 0 nsec
+> > > > > > test_module_attach:PASS:set_attach_target 0 nsec
+> > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
+> > > > > > test_module_attach:PASS:skel_load 0 nsec
+> > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
+> > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
+> > > > > > test_module_attach:FAIL:skel_attach skeleton attach failed: -524
+> > > > > > #205     module_attach:FAIL
+> > > > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+> > > > > >
+> > > > > > I also tested loongarch-next branch with the trampoline patch series
+> > > > > > with no lockup kernel config so I can run dmesg to check kernel error
+> > > > > > log,  ./test_progs -t module_attach result in below kernel log:
+> > > > > >
+> > > > > > [  417.429954] bpf_testmod: loading out-of-tree module taints kernel.
+> > > > > > [  419.728620] CPU 70475748 Unable to handle kernel paging request at
+> > > > > > virtual address 0000000800000024, era == 90000000041d5854, ra ==
+> > > > > > 90000000041d5848
+> > > > > > [  419.728629] Oops[#1]:
+> > > > > > [  419.728632] CPU 70475748 Unable to handle kernel paging request at
+> > > > > > virtual address 0000000000000018, era == 9000000005750268, ra ==
+> > > > > > 9000000004163938
+> > > > > > [  441.305370] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> > > > > > [  441.305380] rcu:     5-...0: (29 ticks this GP)
+> > > > > > idle=eb74/1/0x4000000000000000 softirq=72377/72379 fqs=2599
+> > > > > > [  441.305386] rcu:     (detected by 4, t=5252 jiffies, g=60333, q=186 ncpus=8)
+> > > > > > [  441.305390] Sending NMI from CPU 4 to CPUs 5:
+> > > > > > [  451.305494] rcu: rcu_preempt kthread starved for 2499 jiffies!
+> > > > > > g60333 f0x0 RCU_GP_DOING_FQS(6) ->state=0x0 ->cpu=1
+> > > > > > [  451.305500] rcu:     Unless rcu_preempt kthread gets sufficient CPU
+> > > > > > time, OOM is now expected behavior.
+> > > > > > [  451.305502] rcu: RCU grace-period kthread stack dump:
+> > > > > > [  451.305504] task:rcu_preempt     state:R stack:0     pid:15
+> > > > > > tgid:15    ppid:2      task_flags:0x208040 flags:0x00000800
+> > > > > > [  451.305510] Stack : 9000000100467e80 0000000000000402
+> > > > > > 0000000000000010 90000001003b0680
+> > > > > > [  451.305519]         90000000058e0000 0000000000000000
+> > > > > > 0000000000000040 9000000006c2dfd0
+> > > > > > [  451.305526]         900000000578c9b0 0000000000000001
+> > > > > > 9000000006b21000 0000000000000005
+> > > > > > [  451.305533]         00000001000093a8 00000001000093a8
+> > > > > > 0000000000000000 0000000000000004
+> > > > > > [  451.305540]         90000000058f04e0 0000000000000000
+> > > > > > 0000000000000002 b793724be1dfb2b8
+> > > > > > [  451.305547]         00000001000093a9 b793724be1dfb2b8
+> > > > > > 000000000000003f 9000000006c2dfd0
+> > > > > > [  451.305554]         9000000006c30c18 0000000000000005
+> > > > > > 9000000006b0e000 9000000006b21000
+> > > > > > [  451.305560]         9000000100453c98 90000001003aff80
+> > > > > > 9000000006c31140 900000000578c9b0
+> > > > > > [  451.305567]         00000001000093a8 9000000005794d3c
+> > > > > > 00000000000000b4 0000000000000000
+> > > > > > [  451.305574]         90000000024021b8 00000001000093a8
+> > > > > > 9000000004284f20 000000000a400001
+> > > > > > [  451.305581]         ...
+> > > > > > [  451.305584] Call Trace:
+> > > > > > [  451.305586] [<900000000578b868>] __schedule+0x410/0x1520
+> > > > > > [  451.305595] [<900000000578c9ac>] schedule+0x34/0x190
+> > > > > > [  451.305599] [<9000000005794d38>] schedule_timeout+0x98/0x140
+> > > > > > [  451.305604] [<9000000004258f40>] rcu_gp_fqs_loop+0x5f8/0x868
+> > > > > > [  451.305609] [<900000000425d358>] rcu_gp_kthread+0x260/0x2e0
+> > > > > > [  451.305614] [<90000000041be704>] kthread+0x144/0x238
+> > > > > > [  451.305619] [<9000000005787b60>] ret_from_kernel_thread+0x28/0xc8
+> > > > > > [  451.305624] [<90000000041620e4>] ret_from_kernel_thread_asm+0xc/0x88
+> > > > > >
+> > > > > > [  451.305630] rcu: Stack dump where RCU GP kthread last ran:
+> > > > > > [  451.305633] Sending NMI from CPU 4 to CPUs 1:
+> > > > > > [  451.305636] NMI backtrace for cpu 1 skipped: idling at idle_exit+0x0/0x4
+> > > > > > [  451.306655] rcu: INFO: rcu_preempt detected expedited stalls on
+> > > > > > CPUs/tasks: { 5-...D } 7298 jiffies s: 853 root: 0x20/.
+> > > > > > [  451.306665] rcu: blocking rcu_node structures (internal RCU debug):
+> > > > > > [  451.306669] Sending NMI from CPU 6 to CPUs 5:
+> > > > > > [  451.306672] Unable to send backtrace IPI to CPU5 - perhaps it hung?
+> > > > > >
+> > > > > > So related to trampoline patches for sure unless I am missing something.
+> > > > > >
+> > > > > > > > Huacai
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > A side note, if I put the module_attach test in
+> > > > > > > > > tools/testing/selftests/bpf/DENYLIST to skip the module_attach test,
+> > > > > > > > > the module_attach test is not skipped.
+> > > > > > > > >
+> > > > > > > > > Thanks
+> > > > > > > > >
+> > > > > > > > > Vincent
