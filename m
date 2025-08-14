@@ -1,156 +1,201 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EADB42AA1
-	for <loongarch@lists.linux.dev>; Thu, 14 Aug 2025 01:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07A0D21771C
+	for <loongarch@lists.linux.dev>; Thu, 14 Aug 2025 02:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755135283; cv=none; b=Shx47db4rp6sxoDQtlRhwUlZ6iAUHmcW3+qe9QRgY06NvqOwEhLhrUi4UsiDQp5IHxnKbx66JHr6SFCfBZGjyOg9B/c5t1UK4Qs1WCYM824u2M9B45M9CU8Hmf4sb7WT6Nqw2qfjQ5O95krKR6Y+gA6wpHm8N+Xph+ZVmd7A1PM=
+	t=1755138518; cv=none; b=ERE3t7CPpUxXJ0pFjFy+lMzYhngEdGY9S1MIWRvqhPUYkSfKHARGAGJKbM5y8S4dDBphEfxPqOjhyANT+folvT0KzAiR6oer2spM/+xxHBTdopM8LFtwjldEt6vX2W9FerxiD+26+VEnyS0nYdlniTSc8aNu2pNBoT3FPr/PCWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755135283; c=relaxed/simple;
-	bh=kShqBeuqD5iArWlk+7X8fUPlsDhhwjtxDG+BgMQwJNM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jR9HMAKuoL/KUf4zJTYqg+lixq5zZ97tKVxaV/UbH0iRdZPXp9APhyhouagNrlA1TNWMsZsLT0OUFvKCPcilt41F11NY6SHvktLSZeWM/DvOC+H92KB+z8cmuZ20o2IGAUt8TtvBuPPt6fenBjrymrlscfmuXOL6ueZoTxvukuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d4e66c5078ae11f0b29709d653e92f7d-20250814
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:ce6aab69-ac94-41bd-8d04-2c85f21ce708,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-40,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-25
-X-CID-INFO: VERSION:1.1.45,REQID:ce6aab69-ac94-41bd-8d04-2c85f21ce708,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-40,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:6493067,CLOUDID:e4415ac137068210346248d78d3fa50a,BulkI
-	D:250814093435CO38H19R,BulkQuantity:0,Recheck:0,SF:10|24|44|66|78|102,TC:n
-	il,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
-	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSI
-X-UUID: d4e66c5078ae11f0b29709d653e92f7d-20250814
-X-User: jianghaoran@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.13)] by mailgw.kylinos.cn
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1602437645; Thu, 14 Aug 2025 09:34:33 +0800
-From: Haoran Jiang <jianghaoran@kylinos.cn>
-To: loongarch@lists.linux.dev
-Cc: bpf@vger.kernel.org,
-	kernel@xen0n.name,
-	chenhuacai@kernel.org,
-	hengqi.chen@gmail.com,
-	yangtiezhu@loongson.cn,
-	jolsa@kernel.org,
-	haoluo@google.com,
-	sdf@fomichev.me,
-	kpsingh@kernel.org,
-	john.fastabend@gmail.com,
-	yonghong.song@linux.dev,
-	song@kernel.org,
-	eddyz87@gmail.com,
-	martin.lau@linux.dev,
-	andrii@kernel.org,
-	daniel@iogearbox.net,
-	ast@kernel.org
-Subject: [PATCH] LoongArch: BPF: Fix incorrect return pointer value in the eBPF program
-Date: Thu, 14 Aug 2025 09:34:12 +0800
-Message-Id: <20250814013412.108668-1-jianghaoran@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1755138518; c=relaxed/simple;
+	bh=ikqHFmnyith9tdcpeJccTEEfJxKQm7i4cmgUo35wwn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=esnG7cwnXu7gsN6mfFtfS6Y9PVPb4m/bsI1IHLnmpMr0Tu4Sp7NhIJYsc8bwItnWZSfqdvFxAptUk2VtFu/9JnlnxJEg7U+k1RWcKTB8obzrMX6PsFRAUvPFNpJMd6WUUo4nSWEwmF9Rp1GU4l66Hpl5VFvFNUib4rD3S4KtkRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxYa_GSZ1ob5U_AQ--.15725S3;
+	Thu, 14 Aug 2025 10:28:23 +0800 (CST)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxM+TFSZ1oOWNKAA--.20901S4;
+	Thu, 14 Aug 2025 10:28:22 +0800 (CST)
+From: Kanglong Wang <wangkanglong@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: module: Optimize module load time by optimizing PLT/GOT counting
+Date: Thu, 14 Aug 2025 10:28:10 +0800
+Message-Id: <20250814022810.2917-1-wangkanglong@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxM+TFSZ1oOWNKAA--.20901S4
+X-CM-SenderInfo: 5zdqwyxdqjz0tqj6z05rqj20fqof0/1tbiAgEOAmicKQgR0gAAsZ
+X-Coremail-Antispam: 1Uk129KBj93XoWxtr15WF1xtF47WF48CF4DGFX_yoW7XF4xpF
+	W3Cr4rGr48JFn8Wa18A3WDuFs8W3sruF42qF4fKw17Aw1xXr10vF4ktr1rAFW3JrZ5AFy5
+	WFyjgw1ftF4UZagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1QVy3UUUUU==
 
-In some eBPF programs, the return value is a pointer.
-When the kernel call an eBPF program (such as struct_ops),
-it expects a 64-bit address to be returned, but instead a 32-bit value.
+When enabling CONFIG_KASAN, CONFIG_PREEMPT_VOLUNTARY_BUILD and
+CONFIG_PREEMPT_VOLUNTARY at the same time, there will be soft deadlock,
+the relevant logs are as follows:
 
-Before applying this patch:
-./test_progs -a ns_bpf_qdisc
-CPU 7 Unable to handle kernel paging request at virtual
-address 0000000010440158.
+rcu: INFO: rcu_sched self-detected stall on CPU
+...
+Call Trace:
+[<900000000024f9e4>] show_stack+0x5c/0x180
+[<90000000002482f4>] dump_stack_lvl+0x94/0xbc
+[<9000000000224544>] rcu_dump_cpu_stacks+0x1fc/0x280
+[<900000000037ac80>] rcu_sched_clock_irq+0x720/0xf88
+[<9000000000396c34>] update_process_times+0xb4/0x150
+[<90000000003b2474>] tick_nohz_handler+0xf4/0x250
+[<9000000000397e28>] __hrtimer_run_queues+0x1d0/0x428
+[<9000000000399b2c>] hrtimer_interrupt+0x214/0x538
+[<9000000000253634>] constant_timer_interrupt+0x64/0x80
+[<9000000000349938>] __handle_irq_event_percpu+0x78/0x1a0
+[<9000000000349a78>] handle_irq_event_percpu+0x18/0x88
+[<9000000000354c00>] handle_percpu_irq+0x90/0xf0
+[<9000000000348c74>] handle_irq_desc+0x94/0xb8
+[<9000000001012b28>] handle_cpu_irq+0x68/0xa0
+[<9000000001def8c0>] handle_loongarch_irq+0x30/0x48
+[<9000000001def958>] do_vint+0x80/0xd0
+[<9000000000268a0c>] kasan_mem_to_shadow.part.0+0x2c/0x2a0
+[<90000000006344f4>] __asan_load8+0x4c/0x120
+[<900000000025c0d0>] module_frob_arch_sections+0x5c8/0x6b8
+[<90000000003895f0>] load_module+0x9e0/0x2958
+[<900000000038b770>] __do_sys_init_module+0x208/0x2d0
+[<9000000001df0c34>] do_syscall+0x94/0x190
+[<900000000024d6fc>] handle_syscall+0xbc/0x158
 
-As shown in the following test case,
-bpf_fifo_dequeue return value is a pointer.
-progs/bpf_qdisc_fifo.c
+After analysis, because the slow speed of loading the amdgpu module
+leads to the long time occupation of the cpu and the soft deadlock.
 
-SEC("struct_ops/bpf_fifo_dequeue")
-struct sk_buff *BPF_PROG(bpf_fifo_dequeue, struct Qdisc *sch)
-{
-	struct sk_buff *skb = NULL;
-	........
-	skb = bpf_kptr_xchg(&skbn->skb, skb);
-	........
-	return skb;
-}
+When loading a module, module_frob_arch_sections() tries to figure out
+the number of PLTs/GOTs that'll be needed to handle all the RELAs. It
+will call the count_max_entries() to find in an out-of-order date which
+counting algorithm has O(n^2) complexity.
 
-kernel call bpf_fifo_dequeue：
-net/sched/sch_generic.c
+To make faster, it sorts the relocation list by info and addend. That
+way, to check for a duplicate relocation, it just needs to compare with
+the previous entry. This reduces the complexity of the algorithm to O(n
+ log n), as done in commit d4e0340919fb ("arm64/module: Optimize module
+load time by optimizing PLT counting"). This gives sinificant reduction
+in module load time for modules with large number of relocations.
 
-static struct sk_buff *dequeue_skb(struct Qdisc *q, bool *validate,
-				   int *packets)
-{
-	struct sk_buff *skb = NULL;
-	........
-	skb = q->dequeue(q);
-	.........
-}
-When accessing the skb, an address exception error will occur.
-because the value returned by q->dequeue at this point is a 32-bit
-address rather than a 64-bit address.
+After applying this patch, the soft deadlock problem has been solved,
+and the kernel starts normally without "Call Trace".
 
-After applying the patch：
-./test_progs -a ns_bpf_qdisc
-Warning: sch_htb: quantum of class 10001 is small. Consider r2q change.
-213/1   ns_bpf_qdisc/fifo:OK
-213/2   ns_bpf_qdisc/fq:OK
-213/3   ns_bpf_qdisc/attach to mq:OK
-213/4   ns_bpf_qdisc/attach to non root:OK
-213/5   ns_bpf_qdisc/incompl_ops:OK
-213     ns_bpf_qdisc:OK
-Summary: 1/5 PASSED, 0 SKIPPED, 0 FAILED
+Using the default configuration to test some modules, the results are as
+follows:
 
-Fixes: 73c359d1d356 ("LoongArch: BPF: Sign-extend return values")
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+Module              Size
+ip_tables           36K
+fat                 143K
+radeon              2.5MB
+amdgpu              16MB
+
+Without this patch:
+Module              Module load time (ms)	Count(PLTs/GOTs)
+ip_tables           18				59/6
+fat                 0				162/14
+radeon              54				1221/84
+amdgpu              1411			4525/1098
+
+With this patch:
+Module              Module load time (ms)	Count(PLTs/GOTs)
+ip_tables           18				59/6
+fat                 0				162/14
+radeon              22				1221/84
+amdgpu              45				4525/1098
+
+Fixes: fcdfe9d22bed ("LoongArch: Add ELF and module support")
+Signed-off-by: Kanglong Wang <wangkanglong@loongson.cn>
 ---
- arch/loongarch/net/bpf_jit.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/module-sections.c | 34 ++++++++++++-------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index abfdb6bb5c38..7df067a42f36 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -229,8 +229,24 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
- 	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_adjust);
+diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kernel/module-sections.c
+index e2f30ff9afde..3b22b3c1af28 100644
+--- a/arch/loongarch/kernel/module-sections.c
++++ b/arch/loongarch/kernel/module-sections.c
+@@ -8,6 +8,7 @@
+ #include <linux/module.h>
+ #include <linux/moduleloader.h>
+ #include <linux/ftrace.h>
++#include <linux/sort.h>
  
- 	if (!is_tail_call) {
--		/* Set return value */
-+		/*
-+		 *  Set return value
-+		 *  Check if the 64th bit in regmap[BPF_REG_0] is 1. If it is,
-+		 *  the value in regmap[BPF_REG_0] is a kernel-space address.
-+		 *
-+		 *  t1 = regmap[BPF_REG_0] >> 63
-+		 *  t2 = 1
-+		 *  if(t2 == t1)
-+		 *	move a0 <- regmap[BPF_REG_0]
-+		 *  else
-+		 *	addiw a0 <- regmap[BPF_REG_0] + 0
-+		 */
-+		emit_insn(ctx, srlid, LOONGARCH_GPR_T1, regmap[BPF_REG_0], 63);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_T2, LOONGARCH_GPR_ZERO, 0x1);
-+		emit_cond_jmp(ctx, BPF_JEQ, LOONGARCH_GPR_T1, LOONGARCH_GPR_T2, 3);
- 		emit_insn(ctx, addiw, LOONGARCH_GPR_A0, regmap[BPF_REG_0], 0);
-+		emit_uncond_jmp(ctx, 2);
-+		move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
- 		/* Return to the caller */
- 		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
- 	} else {
+ Elf_Addr module_emit_got_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val)
+ {
+@@ -61,39 +62,36 @@ Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr v
+ 	return (Elf_Addr)&plt[nr];
+ }
+ 
+-static int is_rela_equal(const Elf_Rela *x, const Elf_Rela *y)
+-{
+-	return x->r_info == y->r_info && x->r_addend == y->r_addend;
+-}
++#define cmp_3way(a, b)  ((a) < (b) ? -1 : (a) > (b))
+ 
+-static bool duplicate_rela(const Elf_Rela *rela, int idx)
++static int compare_rela(const void *x, const void *y)
+ {
+-	int i;
++	int ret;
++	const Elf_Rela *rela_x = x, *rela_y = y;
+ 
+-	for (i = 0; i < idx; i++) {
+-		if (is_rela_equal(&rela[i], &rela[idx]))
+-			return true;
+-	}
++	ret = cmp_3way(rela_x->r_info, rela_y->r_info);
++	if (ret == 0)
++		ret = cmp_3way(rela_x->r_addend, rela_y->r_addend);
+ 
+-	return false;
++	return ret;
+ }
+ 
+ static void count_max_entries(Elf_Rela *relas, int num,
+ 			      unsigned int *plts, unsigned int *gots)
+ {
+-	unsigned int i, type;
++	unsigned int i;
+ 
++	sort(relas, num, sizeof(Elf_Rela), compare_rela, NULL);
+ 	for (i = 0; i < num; i++) {
+-		type = ELF_R_TYPE(relas[i].r_info);
+-		switch (type) {
++		if (i > 0 && compare_rela(&relas[i-1], &relas[i]) == 0)
++			continue;
++		switch (ELF_R_TYPE(relas[i].r_info)) {
+ 		case R_LARCH_SOP_PUSH_PLT_PCREL:
+ 		case R_LARCH_B26:
+-			if (!duplicate_rela(relas, i))
+-				(*plts)++;
++			(*plts)++;
+ 			break;
+ 		case R_LARCH_GOT_PC_HI20:
+-			if (!duplicate_rela(relas, i))
+-				(*gots)++;
++			(*gots)++;
+ 			break;
+ 		default:
+ 			break; /* Do nothing. */
 -- 
-2.43.0
+2.20.1
 
