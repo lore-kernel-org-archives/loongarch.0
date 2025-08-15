@@ -1,202 +1,102 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1935C1F91C5
-	for <loongarch@lists.linux.dev>; Fri, 15 Aug 2025 08:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FED7271469
+	for <loongarch@lists.linux.dev>; Fri, 15 Aug 2025 09:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755246621; cv=none; b=P97E7OOse8DqrnpUEFOGi0K5SLRqnTN/oti4OMzoLYjedw4oLh875A0le6O8FfOk3dzvGHxSOvgcz0llm06RkEHEzqHhftLPvQbJKkpUUFGs5LiIrEyK5W9HCUVmCblVZqxTI5MbhMeKnXIxft9w9Y8fPEZKmHqWtxP+y4YHcSc=
+	t=1755248965; cv=none; b=WLw26E8zQnY1W2jJwFoCnhUx+we8ETox2UnelAghmD/GyX7JjFymB5UOlSkZmDKUEs6RdIRvfoMKE/TTGKB7bm2SsZNYiBRDKQdeNT1FPKyAep/b4Xyt1FeU/sWGWt1vGaHvqgH6rR3806qJ38KNh8J9Db6/AkRER1pu1i4jyDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755246621; c=relaxed/simple;
-	bh=xdScbArZyDvCizwzEcKsOWBk4+hm00etp3Piahm2JvM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=B+YK6hWCi+mvh59cRXQq5MZs86pf72FbStZ9sEaI97E3E+pcVhAze+7kjtUaC6ICZ9P0Yg78AtK5burQ2YqOfbYxkZGWFhu/nOW1j3tgzn6ed4zNCWnRw9N5Kw5CiBIoN3/wK2yOrSx0z3ikBPEdb/b9WW7JilN/JqWM1wKMJqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 1006923e79b211f0b29709d653e92f7d-20250815
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:e9a5f244-8b51-4764-ba9b-8bdb80bff79a,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-40,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-30
-X-CID-INFO: VERSION:1.1.45,REQID:e9a5f244-8b51-4764-ba9b-8bdb80bff79a,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-40,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-30
-X-CID-META: VersionHash:6493067,CLOUDID:1f90c40ad946df675a3ec111a452a776,BulkI
-	D:250815163015LSX0GZ51,BulkQuantity:0,Recheck:0,SF:10|24|44|66|78|102,TC:n
-	il,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
-	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSI
-X-UUID: 1006923e79b211f0b29709d653e92f7d-20250815
-X-User: jianghaoran@kylinos.cn
-Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1480246910; Fri, 15 Aug 2025 16:30:12 +0800
-From: Haoran Jiang <jianghaoran@kylinos.cn>
-To: loongarch@lists.linux.dev
-Cc: bpf@vger.kernel.org,
-	kernel@xen0n.name,
-	chenhuacai@kernel.org,
-	hengqi.chen@gmail.com,
-	yangtiezhu@loongson.cn,
-	jolsa@kernel.org,
-	haoluo@google.com,
-	sdf@fomichev.me,
-	kpsingh@kernel.org,
-	john.fastabend@gmail.com,
-	yonghong.song@linux.dev,
-	song@kernel.org,
-	eddyz87@gmail.com,
-	martin.lau@linux.dev,
-	andrii@kernel.org,
-	daniel@iogearbox.net,
-	ast@kernel.org,
-	Jinyang He <hejinyang@loongson.cn>
-Subject: [PATCH v2] LoongArch: BPF: Fix incorrect return pointer value in the eBPF program
-Date: Fri, 15 Aug 2025 16:29:31 +0800
-Message-Id: <20250815082931.875216-1-jianghaoran@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1755248965; c=relaxed/simple;
+	bh=IiOXunXG6Wpt4Dt7F+FTN1G6+TjBVJhYZCdnhrxDbc8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ROH24ONjkULPhGzNRepEczYW5arG49CboHcisWZOdZACfo+hZo5eEWk6dsYB9ZO8PB5/qNpJNiDed7+pvQYwGgLDyZkoOx1kee986fBu2VN6kAfh5XSSHdH7C10fmhmr1Y2t2R7Kn6a+sZOtnpdiHf9rsfIS+Qv9nDU+4L3xwQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.45])
+	by gateway (Coremail) with SMTP id _____8CxdXA8+Z5o_DpAAQ--.15708S3;
+	Fri, 15 Aug 2025 17:09:16 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.45])
+	by front1 (Coremail) with SMTP id qMiowJAx_8E2+Z5oYrlNAA--.33158S2;
+	Fri, 15 Aug 2025 17:09:16 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Hanlu Li <lihanlu@loongson.cn>
+Subject: [PATCH] LoongArch: Save LBT before FPU in setup_sigcontext()
+Date: Fri, 15 Aug 2025 17:09:02 +0800
+Message-ID: <20250815090902.1587392-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAx_8E2+Z5oYrlNAA--.33158S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ArW5CFykGF4fWFWrKr13KFX_yoW8Wr43pF
+	srCrn2yrW8G3Z3AFyDt348u3y5uryvqa4DW3Z2k34Fkr1qvrn8Gr1Iy3WvvFy5Xas3Jr40
+	vFs5K3WayF1UK3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
 
-In some eBPF programs, the return value is a pointer.
-When the kernel call an eBPF program (such as struct_ops),
-it expects a 64-bit address to be returned, but instead a 32-bit value.
+Now if preemption happens between protected_save_fpu_context() and
+protected_save_lbt_context(), FTOP context is lost. Because FTOP is
+saved by protected_save_lbt_context() but protected_save_fpu_context()
+disables TM before that. So save LBT before FPU in setup_sigcontext()
+to avoid this potential risk.
 
-Before applying this patch:
-./test_progs -a ns_bpf_qdisc
-CPU 7 Unable to handle kernel paging request at virtual
-address 0000000010440158.
-
-As shown in the following test case,
-bpf_fifo_dequeue return value is a pointer.
-progs/bpf_qdisc_fifo.c
-
-SEC("struct_ops/bpf_fifo_dequeue")
-struct sk_buff *BPF_PROG(bpf_fifo_dequeue, struct Qdisc *sch)
-{
-	struct sk_buff *skb = NULL;
-	........
-	skb = bpf_kptr_xchg(&skbn->skb, skb);
-	........
-	return skb;
-}
-
-kernel call bpf_fifo_dequeue：
-net/sched/sch_generic.c
-
-static struct sk_buff *dequeue_skb(struct Qdisc *q, bool *validate,
-				   int *packets)
-{
-	struct sk_buff *skb = NULL;
-	........
-	skb = q->dequeue(q);
-	.........
-}
-When accessing the skb, an address exception error will occur.
-because the value returned by q->dequeue at this point is a 32-bit
-address rather than a 64-bit address.
-
-After applying the patch：
-./test_progs -a ns_bpf_qdisc
-Warning: sch_htb: quantum of class 10001 is small. Consider r2q change.
-213/1   ns_bpf_qdisc/fifo:OK
-213/2   ns_bpf_qdisc/fq:OK
-213/3   ns_bpf_qdisc/attach to mq:OK
-213/4   ns_bpf_qdisc/attach to non root:OK
-213/5   ns_bpf_qdisc/incompl_ops:OK
-213     ns_bpf_qdisc:OK
-Summary: 1/5 PASSED, 0 SKIPPED, 0 FAILED
-
-Fixes: 73c359d1d356 ("LoongArch: BPF: Sign-extend return values")
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
-
-----------
-v2:
-1,add emit_slt* helpers
-2,Use slt/slld/srad instructions to avoid branch
+Signed-off-by: Hanlu Li <lihanlu@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/include/asm/inst.h |  8 ++++++++
- arch/loongarch/net/bpf_jit.c      | 17 +++++++++++++++--
- 2 files changed, 23 insertions(+), 2 deletions(-)
+ arch/loongarch/kernel/signal.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 277d2140676b..20f4fc745bea 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -92,6 +92,8 @@ enum reg2i6_op {
- };
+diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
+index 4740cb5b2388..c9f7ca778364 100644
+--- a/arch/loongarch/kernel/signal.c
++++ b/arch/loongarch/kernel/signal.c
+@@ -677,6 +677,11 @@ static int setup_sigcontext(struct pt_regs *regs, struct sigcontext __user *sc,
+ 	for (i = 1; i < 32; i++)
+ 		err |= __put_user(regs->regs[i], &sc->sc_regs[i]);
  
- enum reg2i12_op {
-+	slti_op         = 0x08,
-+	sltui_op        = 0x09,
- 	addiw_op	= 0x0a,
- 	addid_op	= 0x0b,
- 	lu52id_op	= 0x0c,
-@@ -148,6 +150,8 @@ enum reg3_op {
- 	addd_op		= 0x21,
- 	subw_op		= 0x22,
- 	subd_op		= 0x23,
-+	slt_op          = 0x24,
-+	sltu_op         = 0x25,
- 	nor_op		= 0x28,
- 	and_op		= 0x29,
- 	or_op		= 0x2a,
-@@ -629,6 +633,8 @@ static inline void emit_##NAME(union loongarch_instruction *insn,	\
- 	insn->reg2i12_format.rj = rj;					\
- }
- 
-+DEF_EMIT_REG2I12_FORMAT(slti, slti_op)
-+DEF_EMIT_REG2I12_FORMAT(sltui, sltui_op)
- DEF_EMIT_REG2I12_FORMAT(addiw, addiw_op)
- DEF_EMIT_REG2I12_FORMAT(addid, addid_op)
- DEF_EMIT_REG2I12_FORMAT(lu52id, lu52id_op)
-@@ -729,6 +735,8 @@ static inline void emit_##NAME(union loongarch_instruction *insn,	\
- DEF_EMIT_REG3_FORMAT(addw, addw_op)
- DEF_EMIT_REG3_FORMAT(addd, addd_op)
- DEF_EMIT_REG3_FORMAT(subd, subd_op)
-+DEF_EMIT_REG3_FORMAT(slt, slt_op)
-+DEF_EMIT_REG3_FORMAT(sltu, sltu_op)
- DEF_EMIT_REG3_FORMAT(muld, muld_op)
- DEF_EMIT_REG3_FORMAT(divd, divd_op)
- DEF_EMIT_REG3_FORMAT(modd, modd_op)
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index abfdb6bb5c38..50067be79c4f 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -229,8 +229,21 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
- 	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_adjust);
- 
- 	if (!is_tail_call) {
--		/* Set return value */
--		emit_insn(ctx, addiw, LOONGARCH_GPR_A0, regmap[BPF_REG_0], 0);
-+		/*
-+		 *  Set return value
-+		 *  Check if the 64th bit in regmap[BPF_REG_0] is 1. If it is,
-+		 *  the value in regmap[BPF_REG_0] is a kernel-space address.
++#ifdef CONFIG_CPU_HAS_LBT
++	if (extctx->lbt.addr)
++		err |= protected_save_lbt_context(extctx);
++#endif
 +
-+		 *  long long val = regmap[BPF_REG_0];
-+		 *  int shift = 0 < val ? 32 : 0;
-+		 *  return (val << shift) >> shift;
-+		 */
-+		move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
-+		emit_insn(ctx, slt, LOONGARCH_GPR_T0, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_A0);
-+		emit_insn(ctx, sllid, LOONGARCH_GPR_T0, LOONGARCH_GPR_T0, 5);
-+		emit_insn(ctx, slld, LOONGARCH_GPR_A0, LOONGARCH_GPR_A0, LOONGARCH_GPR_T0);
-+		emit_insn(ctx, srad, LOONGARCH_GPR_A0, LOONGARCH_GPR_A0, LOONGARCH_GPR_T0);
-+
- 		/* Return to the caller */
- 		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
- 	} else {
+ 	if (extctx->lasx.addr)
+ 		err |= protected_save_lasx_context(extctx);
+ 	else if (extctx->lsx.addr)
+@@ -684,11 +689,6 @@ static int setup_sigcontext(struct pt_regs *regs, struct sigcontext __user *sc,
+ 	else if (extctx->fpu.addr)
+ 		err |= protected_save_fpu_context(extctx);
+ 
+-#ifdef CONFIG_CPU_HAS_LBT
+-	if (extctx->lbt.addr)
+-		err |= protected_save_lbt_context(extctx);
+-#endif
+-
+ 	/* Set the "end" magic */
+ 	info = (struct sctx_info *)extctx->end.addr;
+ 	err |= __put_user(0, &info->magic);
 -- 
-2.43.0
+2.47.3
 
