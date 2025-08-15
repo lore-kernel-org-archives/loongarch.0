@@ -1,128 +1,176 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E473D2FCBE6;
-	Fri, 15 Aug 2025 10:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C7D28851B;
+	Fri, 15 Aug 2025 11:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755252366; cv=none; b=NI0+5yFsz4XxlVB9jEdoY/Z+jHn5G1lxQlCAIBH/SMNHDV3oe7Jb9JYf/KDeNJLCC8aUJFaJAv2fxghFfTTb2GPxqwXybudAfvZG/7Wqy4hq8dRHedDV3NzfOUKEOGxNv835w0u/xpTQTc5fpBphfsTva/qSTPxpUOLfTsSWIuk=
+	t=1755258004; cv=none; b=FWgq+IJIROqzB7b3MNCVq2UaohpvUZOeHVstEvfhunBrwANBV4qXGupbUjs20Zy0ftcV7q+LwY36WZ3rZG8EF5nWXFTBl4VdL+PhR91MYWszDf44Z0MQr4XopH3FHSpbxc16dZfBy9vF4MYOtg2t2HLeApz9xI5jGci4R2tF/3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755252366; c=relaxed/simple;
-	bh=Qum2QJiRlsLf40QcWgyKpHqDOId5H79nbhv7G1AXN9Y=;
+	s=arc-20240116; t=1755258004; c=relaxed/simple;
+	bh=C0oqbcfX48QjFch6cP3OL9Hcj4yxxWdACAmpuRqOXXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=msdvAgmOBcDqm7R6i4MEo/D0lB/vJJBGS5wPBZZJqmgAhKlv2QHAi37dyC5JmupKmxfyj5kNu3i1KfWIxjejRFE6zK6F1e3qEqrCPHQ+WM4mnyE81oM7V+fG0dw4clsqrHMi+5/BIKidIjYiKyoDMpAqSFE3SNthkydu0r/L4ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aO2iazZB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S6z9FpXD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jglev1DmALDJHto87a1lE+Mi9xj8mg3cxAwE4Ar1lD23owThyZfnSVApcQ0yVGk7qU6YtLnlGd1LkYfItoRY8bNov1Z9UjBywnNddBPpYZBFBk43QNfiXinObKz0nMb3B17e3K5STYAwBpQ6f2WU6OUSoIpCDqH6Vr4WHNfbmsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d3ilS2jy; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aO2iazZB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S6z9FpXD"
-Date: Fri, 15 Aug 2025 12:06:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1755252363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NKM6vYBTvYJgJZpC+3klg9OwyY5OfNg57KkNb0OocWg=;
-	b=aO2iazZBVl4jvGHcxioVfsh65iLR3Izq+qWPXADbutMqMavKgUaUthaDr+R6w1r6xC69M7
-	pL5h2TEWtWYewAnpScYhJCkIaFAKgULbi15SjfGtKC8LJ/mZc1hQQzLg71FWu25eDTH0y1
-	MdUY3+nnowrj0PdDzw1hyrQ8ozJ0BdBe+J6xfrhxUNOLMiWm7280NRlOtJuKnvCK2Hl4+R
-	JjnaSPjNDatrg+pgW4dq3uCQftbz45AWPj/EWmXs4IklOD4k8lw//0rXGaZQYflfEXqJDN
-	ZoNnis/wD+gc1ASC2wdlydN0BBi8bv7A4d+0Pi34HL6a8GZJXUQvVqO1fxQIkg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1755252363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NKM6vYBTvYJgJZpC+3klg9OwyY5OfNg57KkNb0OocWg=;
-	b=S6z9FpXDI0m5KmQAvWcT/IWg9tN8RVfisToJ75YI5pbqWTKx4VxzrYh7GLy6FZouW5QiYj
-	9qWhB6v7+0ZZRyBg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-mm@kvack.org, linux-um@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, Jan Stancek <jstancek@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: Re: [PATCH v4 00/24] vdso: Reject absolute relocations during build
-Message-ID: <20250815112851-e613308f-d49e-44ae-b2dd-ca7946fa1fd9@linutronix.de>
-References: <20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de>
- <86186254-b2c6-4818-af0a-4eb67d90e501@csgroup.eu>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d3ilS2jy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xjeTweJ3rpt6YpKV/vEnlA7rHRaCcvmve7oDl2/k04A=; b=d3ilS2jyupRTcEOmUlOqZKAjGM
+	0Qpsy+V+NIZ7r6wlbtVd3Bs2iHwdCFkGwOzPWg/E2TAHZ67IJq2YhPzRZLCrutdbF3TTo6Ag01Y2W
+	1nm6Ojyl7/9b6VntcO58DVhpiGFVPl2ElJHVYxgEeTGc8hwoxm/DVbquUrLBrlRCd8IxRmRpiSCGk
+	BCnawrZK+2z68e1v28tE9DnwMzqA2hI+I/uT3IoQAQMiZw9XSrIWuzhqt23Vw4AXDCCgR5yHUbRaG
+	NjrBmHQQaGA99TukqezyXSwAkPtTSWNAPQvvxlXehSLtU2ZtPtGN1X2zSR6LZZPcTEdzcBYYoOc+w
+	rt1YgSRw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1umsmm-0000000GhAl-3JcF;
+	Fri, 15 Aug 2025 11:39:53 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C287B3002ED; Fri, 15 Aug 2025 13:39:51 +0200 (CEST)
+Date: Fri, 15 Aug 2025 13:39:51 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
+ vector on guest load/put context
+Message-ID: <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-10-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <86186254-b2c6-4818-af0a-4eb67d90e501@csgroup.eu>
+In-Reply-To: <20250806195706.1650976-10-seanjc@google.com>
 
-Hi Christophe,
-
-On Thu, Aug 14, 2025 at 03:43:09PM +0200, Christophe Leroy wrote:
-> Le 12/08/2025 à 07:44, Thomas Weißschuh a écrit :
-> > The compiler can emit absolute relocations in vDSO code,
-> > which are invalid in vDSO code.
-> > Detect them at compile-time.
+On Wed, Aug 06, 2025 at 12:56:31PM -0700, Sean Christopherson wrote:
+> Add arch hooks to the mediated vPMU load/put APIs, and use the hooks to
+> switch PMIs to the dedicated mediated PMU IRQ vector on load, and back to
+> perf's standard NMI when the guest context is put.  I.e. route PMIs to
+> PERF_GUEST_MEDIATED_PMI_VECTOR when the guest context is active, and to
+> NMIs while the host context is active.
 > 
-> I'm a bit puzzled with this series.
+> While running with guest context loaded, ignore all NMIs (in perf).  Any
+> NMI that arrives while the LVTPC points at the mediated PMU IRQ vector
+> can't possibly be due to a host perf event.
 > 
-> If I understand correctly, the check will be done only when you have RUST
-> available ?
+> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> [sean: use arch hook instead of per-PMU callback]
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/events/core.c     | 27 +++++++++++++++++++++++++++
+>  include/linux/perf_event.h |  3 +++
+>  kernel/events/core.c       |  4 ++++
+>  3 files changed, 34 insertions(+)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 7610f26dfbd9..9b0525b252f1 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -55,6 +55,8 @@ DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+>  	.pmu = &pmu,
+>  };
+>  
+> +static DEFINE_PER_CPU(bool, x86_guest_ctx_loaded);
+> +
+>  DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
+>  DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
+>  DEFINE_STATIC_KEY_FALSE(perf_is_hybrid);
+> @@ -1756,6 +1758,16 @@ perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
+>  	u64 finish_clock;
+>  	int ret;
+>  
+> +	/*
+> +	 * Ignore all NMIs when a guest's mediated PMU context is loaded.  Any
+> +	 * such NMI can't be due to a PMI as the CPU's LVTPC is switched to/from
+> +	 * the dedicated mediated PMI IRQ vector while host events are quiesced.
+> +	 * Attempting to handle a PMI while the guest's context is loaded will
+> +	 * generate false positives and clobber guest state.
+> +	 */
+> +	if (this_cpu_read(x86_guest_ctx_loaded))
+> +		return NMI_DONE;
+> +
+>  	/*
+>  	 * All PMUs/events that share this PMI handler should make sure to
+>  	 * increment active_events for their events.
+> @@ -2727,6 +2739,21 @@ static struct pmu pmu = {
+>  	.filter			= x86_pmu_filter,
+>  };
+>  
+> +void arch_perf_load_guest_context(unsigned long data)
+> +{
+> +	u32 masked = data & APIC_LVT_MASKED;
+> +
+> +	apic_write(APIC_LVTPC,
+> +		   APIC_DM_FIXED | PERF_GUEST_MEDIATED_PMI_VECTOR | masked);
+> +	this_cpu_write(x86_guest_ctx_loaded, true);
+> +}
+> +
+> +void arch_perf_put_guest_context(void)
+> +{
+> +	this_cpu_write(x86_guest_ctx_loaded, false);
+> +	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> +}
+> +
+>  void arch_perf_update_userpage(struct perf_event *event,
+>  			       struct perf_event_mmap_page *userpg, u64 now)
+>  {
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 0c529fbd97e6..3a9bd9c4c90e 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1846,6 +1846,9 @@ static inline unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs)
+>  # define perf_arch_guest_misc_flags(regs)	perf_arch_guest_misc_flags(regs)
+>  #endif
+>  
+> +extern void arch_perf_load_guest_context(unsigned long data);
+> +extern void arch_perf_put_guest_context(void);
+> +
+>  static inline bool needs_branch_stack(struct perf_event *event)
+>  {
+>  	return event->attr.branch_sample_type != 0;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index e1df3c3bfc0d..ad22b182762e 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6408,6 +6408,8 @@ void perf_load_guest_context(unsigned long data)
+>  		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+>  	}
+>  
+> +	arch_perf_load_guest_context(data);
 
-Yes, this new check will only be performed if a rust toolchain is available.
-CONFIG_RUST however is *not* required.
+So I still don't understand why this ever needs to reach the generic
+code. x86 pmu driver and x86 kvm can surely sort this out inside of x86,
+no?
 
-> I wouldn't expect having RUST to build a C kernel.
-
-The build will work fine without Rust present and will fall back to the
-simplistic readelf test. A single report of breakage will allow us to fix the code,
-not everybody needs to run the full thing.
-
-> By the way, aren't relocations already detected by command cmd_vdso_check in
-> lib/vdso/Makefile.include , using readelf ? Why is a new tool needed
-
-The current cmd_vdso_check only validates the final vDSO image.
-However that is not sufficient, as some problematic relocations will not show
-up in the final image anymore but only the intermediary object files.
-And there the logic is more complex than can be reasonably expressed in inline
-shell scripts, see the previous revisions of this series for the attempts.
-The valid relocations depend on each architecture and the specific ELF section
-they appear in.
-For the real example that triggered all of this, see commit
-0c314cda9325 ("arm64: vdso: Work around invalid absolute relocations from GCC")
-
-> and why does it have to be written in RUST langage ?
-
-There is no hard requirement for Rust. I chose it for convenience of
-implementation, especially around descriptive error handling and generic
-functions. tglx was fine with it.
-
-
-Thomas
