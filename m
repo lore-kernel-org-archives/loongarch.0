@@ -1,90 +1,109 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E9529AB18;
-	Fri, 15 Aug 2025 13:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0B34086A
+	for <loongarch@lists.linux.dev>; Fri, 15 Aug 2025 15:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755263088; cv=none; b=JRrjDzu456TNV2eQM8UnVRbF+GvwK22UW/RRVpZNJbZIHEQYh+QtC2Wpn49uv7r/ISN9M9C4fIPzrXI8NXGYxRbO+GSKFZhLuO9GwvRtz+HwJcJHi5LWH10KwsOjG67oLM3oue16F8laNODODp3lygLTCmVDeLkSwPdcET4gUpA=
+	t=1755270352; cv=none; b=m4qqDMiQR02BF7NdxXhi6efRTblVxRSGvcOwCBzwm3nwGQ2C6FpMtBiWzLAfBF2cE6LkxXjAUI45t/d6c+3Dy8rU+AsXxqH1uKYlxdBdjuTlIDqoZIYZ6s8dygsIhFWL7/gATI/rluk4BgNYdFrcE4rQgU9rwPzkI78La3Z+FTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755263088; c=relaxed/simple;
-	bh=WSLKKBF+CKIpEZOxuJC+jWHJV147Q9/yBQM5aB8ofh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p28PiC0UxKfsUxcBiLu5E5KmBIc/VkGcN83o9dLLropLk83JMTCROQls2iszOZLxikyRDgcJSzm05qq6yuYh65pVkuSfsRlOj7cLFZC5FE/Ky03CA8msg4cAu/1iMWlnG2z1K7fme52vMS2ilfN6tnPnEwXhNIU6FioP6270wRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZKKP5mMs; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1755270352; c=relaxed/simple;
+	bh=wNfhEAk3rnqID1OBHwaELciuLi86NZwkA7swq1t5JdI=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=LkKMj6VKpd95BrWgDo5petM+P+xaW8E+Dz0aErbUGyYzTkT/ZJuMIdLDxuwIInkjFIRDeq4thrd4IKDqgzZFLhfjVcSlTm1gtTsZD6Plzue/LzVlHHHW5qwNBEbpk+04a6AX1EPaqs3Vs3kmM5kMaB2hD5lBOMQ2hxIT+7MRAUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=mMnNw5zV; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZKKP5mMs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Io7/GXj4Ah5f6/agCZ8UGExu5metz9Q7I/7GBoA/u94=; b=ZKKP5mMs2Zxf5m/v7uHZhDFsiX
-	mp1GPKzLskGtDNbZrpBQ2yosQFTOZGFfxIhWK0w/s0KnIWcJMkl7XNy49lpeRsAThdqmQBZzJw2OU
-	kFPVd0P7sSrjifBauCNhsIXqwJEKmMQD1S2cJp0lx1/GqizN0Huj77A6AnE20Z7oSdQY87jPYDsqT
-	DRL06FaFojcPXdDQ1/ptaokHnsT3TLYWiP88zJpJeZwRIJBny6Xf9T4vXgE8R7j3tOf36Z1/bUCpH
-	HBGUYwGq38df2bvnMtLj9UfwM882Yb0FJeLhwAKCV4uIaq3dAayrRxEsDRjBFuhrQZRAYkC8SqPdY
-	NwyK31Lg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1umu6n-0000000GiIQ-386b;
-	Fri, 15 Aug 2025 13:04:38 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7C219300310; Fri, 15 Aug 2025 15:04:36 +0200 (CEST)
-Date: Fri, 15 Aug 2025 15:04:36 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yongwei Ma <yongwei.ma@intel.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
- vector on guest load/put context
-Message-ID: <20250815130436.GA3289052@noisy.programming.kicks-ass.net>
-References: <20250806195706.1650976-1-seanjc@google.com>
- <20250806195706.1650976-10-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="mMnNw5zV"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b47173749dbso1293865a12.1
+        for <loongarch@lists.linux.dev>; Fri, 15 Aug 2025 08:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1755270350; x=1755875150; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=38zqqxNHqbGz3C68JOy9Ugb8wAb711DWGVbxjNinx0U=;
+        b=mMnNw5zViTpRlWQJc4pm28Fl9fG6GVbrTc7QvHbRN8mbSW4ftaYavwfxndvLAhEs5B
+         GqmUdCN2lKZRoAchaAjwItYStDI04oAoyj3fjahl34HyxlFTvkF8jkAfs3JtutFbmVgm
+         nY9KbhiXZfNAxcANtzpEgl/Qr5cZSP87gfkIRGIacAPulo6niq+cItyOpwFkhR8sEQfI
+         uOU/nXf+3yNbXDao4gKv1huVp5vtKxY7XdTUHR7AvV8j+jxN9haoUz6NL5m79O4DFKCf
+         iKXttbdFOI/hfWrIz3Q+priGCV76emKXdjj/MDhg6/Qn5UzyYVYVcpzOfz1Nc0aEQNby
+         Ehhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755270350; x=1755875150;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=38zqqxNHqbGz3C68JOy9Ugb8wAb711DWGVbxjNinx0U=;
+        b=CRWvL0oClGWBnXmj6uovEmlTtkonzaLzzaniXaiuYIjsPL4m3gl6RJipLn6ZP/vMXi
+         Klmlq83jQ21ttsP6dojQqSugEvrtF4OU93/MfDxTh4YebhfcanKMCjAvnGouto23WN1R
+         w3RCJn/3pzNCXfyIgwDM/+egaefUZIYy/XMEt59Pl+nQOEdj7XrhB0oPPdS3W28rebxH
+         hz4RCy4u2XT8GBBlvKgJwYwI9+cv8eFSPwChVKz/xXcqe4PvsIc+hmCnCbWW1+9+lEJb
+         tqWE/IElCQsuCPae4W+d282IpYjQaj7Rox9Dsk9i7+j4peR6y1LTZH0BPzgTRkuVn89a
+         35Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUf1UO2v5mNgQGjpOkIuGUfmaGsARt48lGP3DXQf8Omc0q37BRCAqtEo1Xa+8LX7zG8WU7LNyXLkQo=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw1lLMxW+NetUi9VgPqnutK4FZkqx2s+qT9cNw0aQE6by44/82x
+	ymEsStzdx179kwC0wQWhbZGQsNjZ6ApfIhDVaPQ9iJgDrLahprWa3tfgb+tswKb5DWY=
+X-Gm-Gg: ASbGncuzOZFiEIjsT9PcQEb3Xm/t5jM9l7SmpCgghFcFYLiH3lkfbckjNgZu8s90GwW
+	VYKvnvucaP2HaPHKxDv8NfV6XN0KVMWYNmwV/9ee3P3XwWH9whDDFVtWu86bbhqiOHst74Ki6hm
+	Epi+h3dNNVeFqJqtdJzTzNPwfjvkvNOUPNgEe5hE3tQHDKcFiEXmd5ntVKu1i95ca2V4JfCTR8e
+	L3udBqsHkiV2TBn6T7TN+ZVw7xiDg9xIMSxu+tvob71bbzNVik5IsDRL7Kgfd3/00ISDGp/2+yO
+	r9vZVtqu6sydeG/u/BhyXXvWxLWVl0o/fP2YjQngYsbGkObaebCZ3lFrEoNqxcwtoTGwFAdGdQj
+	OfR3q1aj6ZdCvcnYkD3NEbQ/LsQjoDJ2Ashk=
+X-Google-Smtp-Source: AGHT+IG3gBMogdOr+spUGY65daTLUVfmz5lhgO/opdXo6UimhkccgL0C2Gx+F8DUbrOBq4AI/2z6Vg==
+X-Received: by 2002:a17:903:198c:b0:240:a222:230c with SMTP id d9443c01a7336-2446d5af743mr41307075ad.12.1755270349908;
+        Fri, 15 Aug 2025 08:05:49 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2446cadf96fsm16286885ad.41.2025.08.15.08.05.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Aug 2025 08:05:49 -0700 (PDT)
+Date: Fri, 15 Aug 2025 08:05:49 -0700 (PDT)
+X-Google-Original-Date: Fri, 15 Aug 2025 08:05:47 PDT (-0700)
+Subject:     Re: [PATCH v4 06/24] riscv: elf: Move relocation constants to UAPI
+In-Reply-To: <20250812-vdso-absolute-reloc-v4-6-61a8b615e5ec@linutronix.de>
+CC: Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+  Alexandre Ghiti <alex@ghiti.fr>, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com,
+  justinstitt@google.com, luto@kernel.org, tglx@linutronix.de, vincenzo.frascino@arm.com,
+  kees@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+  hpa@zytor.com, richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+  linux@armlinux.org.uk, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+  maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+  chenhuacai@kernel.org, kernel@xen0n.name, hca@linux.ibm.com, gor@linux.ibm.com,
+  agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com, tsbogend@alpha.franken.de,
+  ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+  bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+  tmgross@umich.edu, dakr@kernel.org, nicolas.schier@linux.dev, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org, llvm@lists.linux.dev, linux-mm@kvack.org, linux-um@lists.infradead.org,
+  linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+  linux-s390@vger.kernel.org, linux-mips@vger.kernel.org, rust-for-linux@vger.kernel.org,
+  linux-kbuild@vger.kernel.org, jstancek@redhat.com, acme@redhat.com, alexghiti@rivosinc.com,
+  thomas.weissschuh@linutronix.de
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: thomas.weissschuh@linutronix.de
+Message-ID: <mhng-5B6E084E-60EE-440E-BFF9-5E81AAC9A473@Palmers-Mini.rwc.dabbelt.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250806195706.1650976-10-seanjc@google.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 06, 2025 at 12:56:31PM -0700, Sean Christopherson wrote:
+On Mon, 11 Aug 2025 22:44:19 PDT (-0700), thomas.weissschuh@linutronix.de wrote:
+> These constants are useful for cross-platform userspace, for example to
+> process ELF files during kernel cross-compilation.
+>
+> Move them from the kernel-private architecture-specific header to the UAPI.
+>
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  arch/riscv/include/uapi/asm/elf.h | 66 ---------------------------------------
+>  include/uapi/linux/elf-r.h        | 66 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 66 insertions(+), 66 deletions(-)
 
-> @@ -2727,6 +2739,21 @@ static struct pmu pmu = {
->  	.filter			= x86_pmu_filter,
->  };
->  
-> +void arch_perf_load_guest_context(unsigned long data)
-> +{
-> +	u32 masked = data & APIC_LVT_MASKED;
-> +
-> +	apic_write(APIC_LVTPC,
-> +		   APIC_DM_FIXED | PERF_GUEST_MEDIATED_PMI_VECTOR | masked);
-> +	this_cpu_write(x86_guest_ctx_loaded, true);
-> +}
+Acked-by: Palmer Dabbelt <palmer@dabbelt.com>
 
-I'm further confused, why would this ever be masked?
+I'm going to assume you want to take these all together though some 
+other tree, thanks!
