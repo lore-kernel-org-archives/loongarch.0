@@ -1,69 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC055211A19;
-	Thu, 14 Aug 2025 23:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CED4729AAFA
+	for <loongarch@lists.linux.dev>; Fri, 15 Aug 2025 02:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755212501; cv=none; b=PP96+SvpSou+P+rWBvFeBVkkRz0rPMSejV1RMkup5h1G24VImT4WrAdhN7J4/lbHag8Q28KD4kxrpm+waqFki/HRbCNoqnEgtwgt5PPv+jUKrY3snYCMQVSK4ri2MSTccM6toWOzxq5kk9OT99ZPFwbkSdHHx8UT0HeAC68B234=
+	t=1755224791; cv=none; b=MGQbyIxedSiCYsjdpJ2LuUEKBHXKp8OC+coVplgXW3OUzxp4j/r6EVNUO/xy8elJ3SSr4z4IGE+IqBbtL8K2gPmCtp4NbGd5RaSLZ8Q8KZoatUfGgHd9O7MKHx1GflKkaadYIzd5zqagQ3+zYiVMuPExrpDb8+Ax2arY7Qr3fdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755212501; c=relaxed/simple;
-	bh=71270bDwQGdyjI2tptY1IgBLbrB/+yi1tFe2mVuz4C4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S6HCNo3+nT98j22YlzW1DlLizNsVwHH9WIQFj5IImrlDZ9pKNqBDWPepL+unRYhm9f65c7XOEtPHAK97OObTCJ1NCd2JsFPXNWkomQLoC5poDzUhEF8uLKgWEZ/GpXhVlVe+YR2YsToLG99yTikfIYze+NYXQC1xaxeHmFenqS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vtf5cjKR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vtf5cjKR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAA21C4CEED;
-	Thu, 14 Aug 2025 23:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755212501;
-	bh=71270bDwQGdyjI2tptY1IgBLbrB/+yi1tFe2mVuz4C4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vtf5cjKRs3CRafEa4qw9FGnBuhKVtmby7/CdYjmzF1Opmlbyaz5yL4yGknkkQPlPK
-	 GW0Vu1jxMrVOcpZhtc2NMCmbaKZbtaoXy4kV2eT7AQeck3QXZO8ueHADf8GDE+BIWa
-	 PapHIDMT+Bfjopjsb/9W/r29u45cKnL+klCdz3koCB0xHaM0RHiHf8qU68Sy3XamX5
-	 SUiZYAUAQhXCQzRskkxv7yAIf18wzwqJSUmgQCcNDf89oLeVCtwlDdBGWhl2kMDRXJ
-	 Ym8QmJIzcIkJAv0xX25jI86HT0QTbDMGAN1x47QY3g11LE5ZeTdIvGh3VFR/O55YWL
-	 66b0qbmPfn0Bw==
-Date: Thu, 14 Aug 2025 16:01:37 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	s=arc-20240116; t=1755224791; c=relaxed/simple;
+	bh=tHt/ryI3WiDCTTiso+ZH2sfHUPG+grJOHuFEqk8eQAM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bZT3fn2ptRHLnAWYq7ORGa0L/kBeNlkeuRiiMbm9E1D5rNeaEFFbjpseq9o8i2KIltc3aN/6rO8N+fT9Q+Z9G4yOkcjZdAI9N6tGdxOFboHAeZkYBzVHZSxeWHUJT7FTsK/eycc8SyFMIu0dMaTMSlROKWSPL9eJm74MolpbYYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxLHLPmp5oRRpAAQ--.21835S3;
+	Fri, 15 Aug 2025 10:26:23 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxQMLOmp5oMPRMAA--.26771S2;
+	Fri, 15 Aug 2025 10:26:23 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xianglai Li <lixianglai@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Fix objtool warnings if LTO is enabled for LoongArch
-Message-ID: <20250814230137.GA2247447@ax162>
-References: <20250812132716.1465-1-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 0/4] LoongArch: KVM: Small enhancements about IPI and LBT
+Date: Fri, 15 Aug 2025 10:26:17 +0800
+Message-Id: <20250815022621.508174-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250812132716.1465-1-yangtiezhu@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxQMLOmp5oMPRMAA--.26771S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Tue, Aug 12, 2025 at 09:27:14PM +0800, Tiezhu Yang wrote:
-> The patch #1 should be a preparation for patch #2, that is to say,
-> the patch #2 is dependent on the patch #1, otherwise there is build
-> error if LTO is enabled after only applying patch #2.
+Thre are some small enhancement about IPI emulation and LBT enabling in
+LoongArch KVM. With IPI, it supports sending command to vCPU itself. And
+with LBT it adds flag checking int function kvm_own_lbt() and make it
+robust.
 
-Thanks, these two patches do indeed resolve most of the warnings that I
-see.
+---
+v2 ... v3:
+  1. Fix stack protector issue in send_ipi_data()
 
-Tested-by: Nathan Chancellor <nathan@kernel.org>
+v1 ... v2:
+  1. Add sending IPI command to vCPU itself
+  2. Avoid duplicated LBT enabling in kvm_own_lbt()
+---
+Bibo Mao (4):
+  LoongArch: KVM: Fix stack protector issue in send_ipi_data()
+  LoongArch: KVM: Access mailbox directly in mail_send()
+  LoongArch: KVM: Add implementation with IOCSR_IPI_SET
+  LoongArch: KVM: Make function kvm_own_lbt() robust
 
-> With this series, most of warnings have been silenced, only remains
-> the following warning by now, it needs more analysis:
-> 
->   vmlinux.o: warning: objtool: __efistub_efi_boot_kernel() falls through
->   to next function __efistub_exit_boot_func()
+ arch/loongarch/kvm/intc/ipi.c | 57 ++++++++++++++++++++++-------------
+ arch/loongarch/kvm/vcpu.c     |  8 +++--
+ 2 files changed, 41 insertions(+), 24 deletions(-)
 
-Yes, I do see this one too. Odd, as efi_boot_kernel() ends in a
-__noreturn function...
 
-Cheers,
-Nathan
+base-commit: dfc0f6373094dd88e1eaf76c44f2ff01b65db851
+-- 
+2.39.3
+
