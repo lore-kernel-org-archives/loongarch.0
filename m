@@ -1,88 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EA12F39B9
-	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 15:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40591A4F3C
+	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 16:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755356402; cv=none; b=rqZrcyA0DGe361sykpVk/h9S7/jc4+jzTVYMzIh4ddyPutRv4vI/s83NsASCsDrIHgMXm65UIA1IsdJsPtiWEFcgc9si+IbjhouJcSYD6t3xy/1GK2WI5YcGXubdAYanfZuyTExkuGcuomlhde70ysVRz9lquVERVEm5waI/rEo=
+	t=1755360497; cv=none; b=OqvTHASO0TGJtmXNs5GtuMqEwp3Si0083OuorHhbo/Xbk8J21CqfSIgUB9CwY4T4B6vGpm19rAWDvQ06HXhVNj/gqP0fgDTrbm5RLpDT/nImjD33haCw0CMlfILRIeW6avxgM00QzxBrEfZwHxdRXd6xmskPCDUcptMtIz1Jy8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755356402; c=relaxed/simple;
-	bh=Dg0tupBMCWXZvMeUo/PdfXgVzUQJ76yoyPAUfImiaP4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e37h5JUxDfUt62/3Woc1kLtTT5ESwp93uC/jOFElEe2dbaiwfr1GCN7qzt0F7lgDHOTb3jZLQN8jh/gTqWfnqumruWsaTHsNygTNolF3rmsy2VQyur7pyyp7o/Fy3xbF7gLzJSTeI/mi6kXNyQeOb4gOboz1qfYXLz83Gjn8GWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYXEZqNP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755360497; c=relaxed/simple;
+	bh=oSXu/5bEZ9WlhAtEdxk5ZZ6vNoMPX9phFwiUWWadqvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XjchhLcZyNtETzzxQInyYUW/oP1wAXP1Qtt4aZ5zdVc+VIFw6NCDaDPhCy67QeVDUR1tN2oxdwVjkQUvQ4Rg4KyqFFBN4TeL+W2lFupF77A5dvn/VIVFWaZwaZNMdxXm16dnwagYiF9cKFx3lBpWFv8LpRK0bdI39oIfclySAqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=IELA6aiB; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYXEZqNP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A75C4CEF6
-	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 15:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755356402;
-	bh=Dg0tupBMCWXZvMeUo/PdfXgVzUQJ76yoyPAUfImiaP4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bYXEZqNPk3Q/vbFMRzz1+Yu8JO37kyAumgfoezU//EagTtTOMNUFznBPBzXL1HUTJ
-	 gg97iBMdxWEQ8fP+Xzc0jupTVC4ksg2zhYlnUyewipzUBgyELXWR/tTicd15TbDcvG
-	 L2kGJu1k2/0cF3P3oVt1XcH77J/nbcNFXyp3Ip9WXSK44WXH80zxgPQvaRLbDbHKp1
-	 QYOcD2FNYsV0NI9whBjdjTzfY7wDJhM8XoD4KFfye2s5FTGTT8WpzVN4f8hve7lxrw
-	 jboQOA30YqtKe7mQJO42/jqgHOIR/K6Z0ucrQnP1MNv4rpQanPK0kJ75pgPheDa2uN
-	 u+dmy3yyjdydA==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-618b62dba1aso1641506a12.2
-        for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 08:00:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVpuyxA7zMCYMOwdKvdgEw92b1Mba8FqUOiq+t3pLBCPBvwQtcvGpVm7FXuKebxISGGIgF7hO/gRhQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YweAEv9S3boKaE+B5vfQbpsahbFj0DdfJWL5Kf+xZ8ShUskreUW
-	MkbcpmBsUW+WlPSqijDdj7Mdl4UEzoAZfIN2d+FUvi5s+tTP7CjDDlOhHWxYs3X9MnAGWukND9Q
-	13zrjeMkZqJ/jAMyPY2o10noRtyWq9Zo=
-X-Google-Smtp-Source: AGHT+IECnCO55i79Kgc43l0bl85Rl6To40Zyg8ZcGSNx4QYSd2Z54t6C3SfIL5mUsQ5wSr3hvAKYqt3mY0ZO7xBVd2Y=
-X-Received: by 2002:a05:6402:5203:b0:618:7585:be41 with SMTP id
- 4fb4d7f45d1cf-618b075995dmr4721080a12.30.1755356400040; Sat, 16 Aug 2025
- 08:00:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="IELA6aiB"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id C1B8222B44;
+	Sat, 16 Aug 2025 18:08:12 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 5vBCi2Do4UOV; Sat, 16 Aug 2025 18:08:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1755360492; bh=oSXu/5bEZ9WlhAtEdxk5ZZ6vNoMPX9phFwiUWWadqvc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=IELA6aiBcm3HMTEUydHZCrrPcJ5NtlDuORsKQvVPYYeJjH5ERsS3B9sWzjEst/oGs
+	 1f7rjUNwvmmBAcmdGlRABwGCfndD6JWwoDCeQLfpdFWULZU/nplHbkOKtHnnGQLNTC
+	 P27gDeRs0VjlultmUXco9VyHHM8NIe0tBVQwBgx6EeWk9jJFoKOrQdv+J5oZtQ5Xmx
+	 HTf0BtDZ1Zj6LHB/TxzRV4exQTFZ3TisVihCgOVV4rcHaiahs9XfsyFajcSJfxt7Mz
+	 Vh4l9Anys9IYCR+CR/eKm8trWct8WGU4WHp50ZOWmC8QtfPq9XhWzVJSmmyUVw94ge
+	 EyEmtR/hAYOqA==
+Date: Sat, 16 Aug 2025 16:07:54 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: loongson: Document GPIO
+ controller of 2K0300 SoC
+Message-ID: <aKCs2jUcYxYHWIB2@pie>
+References: <20250816035027.11727-2-ziyao@disroot.org>
+ <20250816035027.11727-3-ziyao@disroot.org>
+ <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250812132716.1465-1-yangtiezhu@loongson.cn> <20250814230137.GA2247447@ax162>
-In-Reply-To: <20250814230137.GA2247447@ax162>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 16 Aug 2025 22:59:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4pYKb9+XUZW4QNWiMQSZVBBsVSvDNB5RvKWnxFEC-gcg@mail.gmail.com>
-X-Gm-Features: Ac12FXw8N7Fq2YnX66Nrc5w2AQRwib4_hamW0XFD2Bp20kAYjgKC3cybL8zrf7I
-Message-ID: <CAAhV-H4pYKb9+XUZW4QNWiMQSZVBBsVSvDNB5RvKWnxFEC-gcg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Fix objtool warnings if LTO is enabled for LoongArch
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
 
-On Fri, Aug 15, 2025 at 7:01=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> On Tue, Aug 12, 2025 at 09:27:14PM +0800, Tiezhu Yang wrote:
-> > The patch #1 should be a preparation for patch #2, that is to say,
-> > the patch #2 is dependent on the patch #1, otherwise there is build
-> > error if LTO is enabled after only applying patch #2.
->
-> Thanks, these two patches do indeed resolve most of the warnings that I
-> see.
->
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
->
-> > With this series, most of warnings have been silenced, only remains
-> > the following warning by now, it needs more analysis:
+On Sat, Aug 16, 2025 at 10:18:57PM +0800, Huacai Chen wrote:
+> On Sat, Aug 16, 2025 at 11:51 AM Yao Zi <ziyao@disroot.org> wrote:
 > >
-> >   vmlinux.o: warning: objtool: __efistub_efi_boot_kernel() falls throug=
-h
-> >   to next function __efistub_exit_boot_func()
->
-> Yes, I do see this one too. Odd, as efi_boot_kernel() ends in a
-> __noreturn function...
-But this one only exists for LTO?
+> > Loongson 2K0300 ships a GPIO controller whose input/output control logic
+> > is similar to previous generation of SoCs. Additionally, it acts as an
+> > interrupt-controller supporting both level and edge interrupts and has a
+> > distinct reset signal.
+> >
+> > Describe its compatible in devicetree. We enlarge the maximum value of
+> > ngpios to 128, since the controller technically supports at most 128
+> > pins, although only 106 are routed out of the package. Properties for
+> > interrupt-controllers and resets are introduced and limited as 2K0300
+> > only.
+> >
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  .../bindings/gpio/loongson,ls-gpio.yaml       | 28 ++++++++++++++++++-
+> >  1 file changed, 27 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> > index b68159600e2b..69852444df23 100644
+> > --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> > +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> > @@ -14,6 +14,7 @@ properties:
+> >      oneOf:
+> >        - enum:
+> >            - loongson,ls2k-gpio
+> > +          - loongson,ls2k0300-gpio
+> >            - loongson,ls2k0500-gpio0
+> >            - loongson,ls2k0500-gpio1
+> >            - loongson,ls2k2000-gpio0
+> > @@ -36,7 +37,7 @@ properties:
+> >
+> >    ngpios:
+> >      minimum: 1
+> > -    maximum: 64
+> > +    maximum: 128
+> >
+> >    "#gpio-cells":
+> >      const: 2
+> > @@ -49,6 +50,14 @@ properties:
+> >      minItems: 1
+> >      maxItems: 64
+> >
+> > +  "#interrupt-cells":
+> > +    const: 2
+> > +
+> > +  interrupt-controller: true
+> ls2k300 supports interrupt-controller while others don't?
 
-Huacai
+For these SoCs' GPIO controllers (I didn't carefully check 3A{5,6}00 and
+7A{1,2}00), there're three different cases,
 
->
-> Cheers,
-> Nathan
+1. Controller of 2K0500, 2K1000:
+
+   These controllers have only interrupt enable bits for each GPIO.
+   Interrupts are routed directly to the parent interrupt controller and
+   there're multiple pins share the same interrupt in the parent, e.g.,
+   GPIO 0-31 share interrupt 26 of the second liointc on 2K0500.
+
+   Since we have neither an interrupt status register nor interrupt ack
+   bits, it's hard to tell which GPIO line is triggering the interrupt.
+   And we even cannot configure the polarity/edge for triggering
+   interrupts, thus I don't think these GPIO controller should be
+   described as interrupt controllers.
+
+   For these controllers, gpio-loongson-64bit.c implements GPIO
+   controller's .to_irq() method which translates GPIO descriptor to
+   corresponding IRQ number. This should work as long as there's at most
+   one interrupt consumer for each group of GPIOs that share the same
+   parent interrupt line.
+
+2. Node controller of 2K1500 and 2K2000:
+
+   These SoCs have GPIO controllers directly attached to the "node" (I
+   think it means the CPU core, but am not sure). These controllers are
+   similar to the first class, but they have an additional feature that
+   the polarity for triggering interrupts could be configured.
+
+   Still we couldn't precisely tell which GPIO line is triggering the
+   interrupt, thus it's hard to implement it as a fully-functional
+   irqchip, either. But if we don't do so, I cannot come up with a way
+   to describe the polarity settings. I'm unsure whether these
+   controllers should be implemented as interrupt controllers.
+
+3. South-bridge controller of 2K1500 and 2K2000, and 2K0300's
+   controller:
+
+   Reading through the public TRM, I'm sure these're all fully
+   functional interrupt controllers, and should be implemented as
+   interrupt controllers.
+
+   However, this also means the current binding for 2K1500/2K2000's
+   south-bridge controller is WRONG, and a fix it seems to bring in ABI
+   breakages (interrupt-controller/interrupt-cells are a must). But
+   since I don't have these devices on hand, and they are at least not
+   related to the situation of 2K0300, I decided to keep them as-is.
+
+So the answer to the original question is, no, at least 2K1500/2K2000's
+south-bridge GPIO controllers are also interrupt controllers according
+to their public documentation. But I cannot test my GPIO changes against
+them since I don't have such boards, and fixing the binding up may break
+the ABI, thus I leave them as-is in this "support for 2K0300" series.
+
+> Huacai
+
+Best regards,
+Yao Zi
+
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> >  required:
+> >    - compatible
+> >    - reg
+> > @@ -58,6 +67,23 @@ required:
+> >    - gpio-ranges
+> >    - interrupts
+> >
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: loongson,ls2k0300-gpio
+> > +    then:
+> > +      required:
+> > +        - "#interrupt-cells"
+> > +        - interrupt-controller
+> > +        - resets
+> > +    else:
+> > +      properties:
+> > +        "#interrupts-cells": false
+> > +        interrupt-controller: false
+> > +        resets: false
+> > +
+> >  additionalProperties: false
+> >
+> >  examples:
+> > --
+> > 2.50.1
+> >
