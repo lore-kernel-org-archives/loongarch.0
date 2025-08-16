@@ -1,55 +1,56 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8794C98
-	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 03:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C23C155333
+	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 03:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755315312; cv=none; b=du/jdU86CglugtUpCPFLo+Dk/xYZqTtbwNL97ZD+1RN0pni7UpbJ5/++B+ehUydsr0lQr4AZdQGQgir67ffDOb6qW6tM+TeFPbORmQZf+UFj3O2wYq+2KraeK8xsUihxvgN2X6PWJCjddHplp8hPQ2RZr0L+mPJHcNWoDGKMGEg=
+	t=1755316259; cv=none; b=SDOpmMr6w6pXQ9b16uKmTyDnR+m3y3oEm2VckK7RpCe6cq57SPgDLEY0ebfz4DJxHejfzBlPYy0RpVJx6eFSjCujyYrdw6nUwPmibbce6I3kG2eqECTQL01Diwu5cNtjISfaNBg3Z4vebMXxpShKgfzJGKPRl2nqRikzBVUk8Sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755315312; c=relaxed/simple;
-	bh=qzW26gUbpt8hihAYOY+dEBe3bjTSLZipdIoCfTbRj4I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XSCwWxJJy0h4gtP/nDYadCG14xS7tRnKBj4Sq8tWxFCD7N1gRqKeO04YQsCGEMzPfVz7KmKV6q8B6krulLClRAVPnIJ/eeNNJmU2r83eKR8JiHptBV2s2PQEy8AwhWdJFhWnqabE8uzCT1Lxpo/l6HwG/8eIZH3somzlcuQK7EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=ehjCBe2A; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1755316259; c=relaxed/simple;
+	bh=ji8lgMEfgfQf0FfIR9ASrIZlJBvRxe30F/clE5+N0bM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UsRddH24vcppsORuySc3qWKQhmPUvTzWwTDRzqmYan3Rh62xTrQkCtwNthBbzdO9noViQD3NJ9bdxYBSdHkOKHf0FeLZewbctKC3ciH8+SohWSaiuiXDBghs3UVWtv/emfhVJqpHCa/NrJPHk9AnFJsiwVczZ7I0w0wHiWAwcpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=fgOrKMkc; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="ehjCBe2A"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="fgOrKMkc"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 9022125CA7;
-	Sat, 16 Aug 2025 05:35:09 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id C10EC22C1F;
+	Sat, 16 Aug 2025 05:50:55 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 3FdLN3DQp297; Sat, 16 Aug 2025 05:35:09 +0200 (CEST)
+ id UOeO-Fg5KiIv; Sat, 16 Aug 2025 05:50:53 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1755315308; bh=qzW26gUbpt8hihAYOY+dEBe3bjTSLZipdIoCfTbRj4I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ehjCBe2A71we6h81TUE0nQ/FzDT1K+2g6AKiJPDsPkm8CmvpVAv3VMrnI5i+kbqvT
-	 FgSQCmTjyzXlXXng6xby2ooQHDhhmBUrhxUF5Fd0rYWyt6uhHocK0IgSBBlJkHI99U
-	 j8AYqiUZWOYyvR5bI9f+bov+EMmsLtPpfly8CPJUqjEnEtG5FXhM9JU/f7PzAQdHiv
-	 zLfNka7XDYbxkyTtTOXmrPXZP9Zq0I27VGRH+pbvPWIWthF5s+q9xurStAIpHipIjM
-	 XUPF1SLKnOeSzEyPtR/YRyzBFsyHihV3zyQGtXfxKgFRkOHW5TYgS0qDbw5l+bBpkX
-	 HOhV+6iLwM4Cw==
+	t=1755316253; bh=ji8lgMEfgfQf0FfIR9ASrIZlJBvRxe30F/clE5+N0bM=;
+	h=From:To:Cc:Subject:Date;
+	b=fgOrKMkc/kQuniJGhFm4QIyI0P9MepwygZp6f/OEuWBAkeou1poU0VYe/xOEgAo8/
+	 LmukokAJUavM5Bm7mjEmtih1SkNnC+M+I6rkPWkw6HFa1/YRlc8ugxhRbf8wHcUJzY
+	 oHNAHFeDJ2Uq8QqJb/+Y99CMC9LvMwkAsx0Yb1Ctd08SagRS3kzKXKJuliT8AhLSGH
+	 RtR1LgnLLOLU6Mtvac5MGQpSEBRbbQsjSo5F7rWIVf8CWdI4KCxPr65vdHuNGdHyDK
+	 sR2ukqsVXQYjsr/6N+hVXhRgnxahqEThXZOOxAkZagMegUNFUv94mYPJuPykQ6rB5r
+	 dxPcO3p2sIfhw==
 From: Yao Zi <ziyao@disroot.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>,
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: devicetree@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Mingcong Bai <jeffbai@aosc.io>,
 	Kexy Biscuit <kexybiscuit@aosc.io>,
 	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH 3/3] LoongArch: dts: Add reset controller for Loongson 2K0300
-Date: Sat, 16 Aug 2025 03:33:28 +0000
-Message-ID: <20250816033327.11359-5-ziyao@disroot.org>
-In-Reply-To: <20250816033327.11359-2-ziyao@disroot.org>
-References: <20250816033327.11359-2-ziyao@disroot.org>
+Subject: [PATCH 0/3] Support GPIO controller of Loongson 2K0300 SoC
+Date: Sat, 16 Aug 2025 03:50:25 +0000
+Message-ID: <20250816035027.11727-2-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -58,118 +59,32 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Describe the reset controller and add resets for UART nodes.
+This series adds support for Loongson 2K0300's GPIO controller. While
+being mostly identical to previous implementation, its interrupt
+functionality hasn't been implemented in gpio-loongson-64bit.c. PATCH 2
+implements its interrupt support with an IRQCHIP, and the code could be
+reused for other Loongson SoCs with similar interrupt functionality like
+2K1500 and 2K2000.
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/loongarch/boot/dts/loongson-2k0300.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Tested on CTCISZ Forever Pi, reading/writing GPIOs works correctly, and
+both level and edge interrupts could be triggered.
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-index a8ad8bd43f5d..835d3c63537b 100644
---- a/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-@@ -7,6 +7,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/clock/loongson,ls2k0300-clk.h>
-+#include <dt-bindings/reset/loongson,ls2k0300-reset.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- #define PINMUX(pin, func)	(((pin) << 8) | func)
-@@ -50,6 +51,12 @@ soc@10000000 {
- 			 <0x00 0x02000000 0x00 0x02000000 0x0 0x04000000>,
- 			 <0x00 0x40000000 0x00 0x40000000 0x0 0x40000000>;
- 
-+		rst: reset-controller@1600011c {
-+			compatible = "loongson,ls2k0300-reset";
-+			reg = <0x0 0x1600011c 0x0 0x8>;
-+			#reset-cells = <1>;
-+		};
-+
- 		clk: clock-controller@16000400 {
- 			compatible = "loongson,ls2k0300-clk";
- 			reg = <0x0 0x16000400 0x0 0x30>;
-@@ -128,6 +135,7 @@ uart0: serial@16100000 {
- 			compatible = "ns16550a";
- 			reg = <0 0x16100000 0 0x10>;
- 			clocks = <&clk LS2K0300_CLK_APB_GATE>;
-+			resets = <&rst RST_UART0>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
-@@ -141,6 +149,7 @@ uart1: serial@16100400 {
- 			reg = <0 0x16100400 0 0x10>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_UART1>;
- 			no-loopback-test;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart1_pins>;
-@@ -152,6 +161,7 @@ uart2: serial@16100800 {
- 			reg = <0 0x16100800 0 0x10>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_UART2>;
- 			no-loopback-test;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart2_pins>;
-@@ -163,6 +173,7 @@ uart3: serial@16100c00 {
- 			reg = <0 0x16100c00 0 0x10>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_UART3>;
- 			no-loopback-test;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart3_pins>;
-@@ -174,6 +185,7 @@ uart4: serial@16101000 {
- 			reg = <0 0x16101000 0 0x10>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_UART4>;
- 			no-loopback-test;
- 			status = "disabled";
- 		};
-@@ -183,6 +195,7 @@ uart5: serial@16101400 {
- 			reg = <0 0x16101400 0 0x10>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_UART5>;
- 			no-loopback-test;
- 			status = "disabled";
- 		};
-@@ -192,6 +205,7 @@ uart6: serial@16101800 {
- 			reg = <0 0x16101800 0 0x10>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_UART6>;
- 			no-loopback-test;
- 			status = "disabled";
- 		};
-@@ -201,6 +215,7 @@ uart7: serial@16101c00 {
- 			reg = <0 0x16101c00 0 0x10>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_UART7>;
- 			no-loopback-test;
- 			status = "disabled";
- 		};
-@@ -210,6 +225,7 @@ uart8: serial@16102000 {
- 			reg = <0 0x16102000 0 0x10>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_UART8>;
- 			no-loopback-test;
- 			status = "disabled";
- 		};
-@@ -219,6 +235,7 @@ uart9: serial@16102400 {
- 			reg = <0 0x16102400 0 0x10>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_UART9>;
- 			no-loopback-test;
- 			status = "disabled";
- 		};
+The devicetree patch depends on series "Support reset controller of
+Loongson 2K0300 SoC"[1] for a clean apply. Thanks for your time and review.
+
+[1]: https://lore.kernel.org/all/20250816033327.11359-2-ziyao@disroot.org/
+
+Yao Zi (3):
+  dt-bindings: gpio: loongson: Document GPIO controller of 2K0300 SoC
+  gpio: loongson-64bit: Add support for Loongson 2K0300 SoC
+  LoongArch: dts: Add GPIO controller for Loongson 2K0300
+
+ .../bindings/gpio/loongson,ls-gpio.yaml       |  28 ++-
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  20 ++
+ drivers/gpio/Kconfig                          |   1 +
+ drivers/gpio/gpio-loongson-64bit.c            | 191 +++++++++++++++++-
+ 4 files changed, 232 insertions(+), 8 deletions(-)
+
 -- 
 2.50.1
 
