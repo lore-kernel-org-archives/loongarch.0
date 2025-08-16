@@ -1,114 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B681E5B78;
-	Sat, 16 Aug 2025 05:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995E6238179;
+	Sat, 16 Aug 2025 09:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755322717; cv=none; b=DgxdbbKph0OAYGQGaP6dVvJAg1kD0RQb+6zL3vSPjf4AIe6zMc4J0Y57VpqxTu12qXUpDWuYKhC0QFlZE24NHXS+aNtnEqE6t37usC05akSEm02rZNMs7r8l3IM6AgWY+u5dkjoNOp4lTvOUgpi13hrVuGChLxYa/HmiMOd8onw=
+	t=1755337731; cv=none; b=PYUQlJoOkHNdiKqYEe753dXxmOvjE+0s6ziAkWxxFOGywwwWt2z+Q1imBX742WL1h9d4XjVRS7oKQXhyCefPw8/NOYJXwhTABSunRbiGDG1aUsQi6zEm/yrHIkVQ5/Aa0pa9tJzOXcOHEXomA7gPYb8jMTyKqlV41Ym7reDC38E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755322717; c=relaxed/simple;
-	bh=RmFXkF27XLwgOi3sq9GPdq023gAeh1eLeY2QmR9xnAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RN7OYWnJ7GrlC+kua5cuhPBxsKsEUiYsNhiToNf7WmkH6YBMhSA9fM+XGdy0OTn8WXO/ffK5U2b7bq3SeX9FG9MJaQE+IirbTiZovQsqX0KHGWjnap8ZYG2jgROwt6tgpKc2SVoKMVyCap2j+ukclj3ogFtRDcgjsKWhExUg9bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mBIFwdpl; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1755337731; c=relaxed/simple;
+	bh=tuDGi921oJen9tqn7mJsQZiu7Fywen9D9j9aCB+BOKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZQlJOffWB51v+VYGMrDIjOO3wprDuMnSfM/Is7z3YyrVuBTRilPzIEPyQaRkfeiVC+w4Wl462BrADY+ArIomgzSDhVO6yfdG+zQNIkdYxlLC8hRLT/78xjDP1BEgMrZARwU82a64itQS2F0TYDOIz1xYOhpAgsD1lvWD3X2cPzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvIN6SgP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mBIFwdpl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755322715; x=1786858715;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RmFXkF27XLwgOi3sq9GPdq023gAeh1eLeY2QmR9xnAo=;
-  b=mBIFwdplLqbMFRAA0XJPbLCUj9RiUKDA3bT8jeVcFns9coYZ+2vkNtS8
-   nYlvA8ShBl4BqAPWjyBvuLRugd5JxxcQjjB4fpxNIa4Hj8YDqvv0r2Rjb
-   2zKaAuSe8a/qJPddxZQBkeQcXOM4W85uRCjgITF512lzrTT1Xosio55Pt
-   5mCP+MLErQRU8ymDQmkOIxKcddHOggvuEFJ2/3e1M/CWdMH5kHY2d5jIf
-   ngGpwIYgp45Rrl/KaTYsUl1z08AqnEx7q+u3pQf+2OqvMlIkUaJb7QvxA
-   aSXJ7sW4P9Y2iTJBersFrsE1Arjk3bqh/xhZJRe12MZgxseWxjR9ZxVG3
-   w==;
-X-CSE-ConnectionGUID: sUDckE9kSN+Ex6Re6EwjTA==
-X-CSE-MsgGUID: xiV4XlzJSlmNBwm/PKnIgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11523"; a="61472916"
-X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
-   d="scan'208";a="61472916"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2025 22:38:34 -0700
-X-CSE-ConnectionGUID: ok76rYeETKqqt5ErORr8TQ==
-X-CSE-MsgGUID: RlIhM0uUTo2qwLWtC+kHcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
-   d="scan'208";a="167544025"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 15 Aug 2025 22:38:32 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1un9cY-000CcO-0Y;
-	Sat, 16 Aug 2025 05:38:27 +0000
-Date: Sat, 16 Aug 2025 13:37:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Youling Tang <youling.tang@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>,
-	Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-	youling.tang@linux.dev, Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH 2/6] LoongArch: Add kexec_file support
-Message-ID: <202508161329.M5Axl1XA-lkp@intel.com>
-References: <20250811092659.14903-3-youling.tang@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvIN6SgP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3A6C4CEEF;
+	Sat, 16 Aug 2025 09:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755337731;
+	bh=tuDGi921oJen9tqn7mJsQZiu7Fywen9D9j9aCB+BOKQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GvIN6SgPwMYzAyxMRox94LN7RuY32e/OtmGssFuhvgCxXiL5/nDkB+kj3A9UULc80
+	 PNpHAaOM/ULRjLCVNSenr8TSTJ0aud3iZaOVXQng4C4NcJf+1831ZSwENdAAYRqmYz
+	 K5zM9YPpuKz9hvKiu+4hB1BCp6Z2MNA0KERSMv6Ku8EsO/GoWHiu9KvFahu0eLC219
+	 IUHXto9phrlKq1L0VmRx2kmE7mgNDUw8iGq0FkQhH9jPQRS/dDqApTinqlDlrDSxGT
+	 oJPAUX7FPmAoHc+vReh3kNQjkh07oE5meAS8/C2BU/KqAKn+c07DyRa40A+YvOTKeD
+	 /I//eBF+bj2/g==
+Message-ID: <d5134909-58a4-48c2-a227-2fb3ce200c2f@kernel.org>
+Date: Sat, 16 Aug 2025 11:48:46 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250811092659.14903-3-youling.tang@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: reset: Document reset controller of
+ Loongson 2K0300 SoC
+To: Yao Zi <ziyao@disroot.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
+ Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250816033327.11359-2-ziyao@disroot.org>
+ <20250816033327.11359-3-ziyao@disroot.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250816033327.11359-3-ziyao@disroot.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Youling,
+On 16/08/2025 05:33, Yao Zi wrote:
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    rst: reset-controller@1600011c {
 
-kernel test robot noticed the following build warnings:
+Drop unused label
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.17-rc1 next-20250815]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Youling-Tang/LoongArch-Add-struct-loongarch_image_header-for-kernel-image/20250811-174725
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250811092659.14903-3-youling.tang%40linux.dev
-patch subject: [PATCH 2/6] LoongArch: Add kexec_file support
-config: loongarch-randconfig-r121-20250816 (https://download.01.org/0day-ci/archive/20250816/202508161329.M5Axl1XA-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 15.1.0
-reproduce: (https://download.01.org/0day-ci/archive/20250816/202508161329.M5Axl1XA-lkp@intel.com/reproduce)
+> +        compatible = "loongson,ls2k0300-reset";
+> +        reg = <0x1600011c 0x8>;
+> +        #reset-cells = <1>;
+> +    };
+> diff --git a/include/dt-bindings/reset/loongson,ls2k0300-reset.h b/include/dt-bindings/reset/loongson,ls2k0300-reset.h
+> new file mode 100644
+> index 000000000000..d425411e6d19
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/loongson,ls2k0300-reset.h
+> @@ -0,0 +1,70 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508161329.M5Axl1XA-lkp@intel.com/
+Why not using same license as the binding?
 
-All warnings (new ones prefixed by >>):
 
-   In file included from arch/loongarch/kernel/kexec_image.c:19:
->> arch/loongarch/include/asm/image.h:40:22: warning: 'loongarch_pe_machtype' defined but not used [-Wunused-const-variable=]
-      40 | static const uint8_t loongarch_pe_machtype[6] = {'P', 'E', 0x0, 0x0, 0x64, 0x62};
-         |                      ^~~~~~~~~~~~~~~~~~~~~
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-sparse warnings: (new ones prefixed by >>)
->> arch/loongarch/kernel/kexec_image.c:63:22: sparse: sparse: cast to restricted __le64
-   arch/loongarch/kernel/kexec_image.c:64:23: sparse: sparse: cast to restricted __le64
-
-vim +/loongarch_pe_machtype +40 arch/loongarch/include/asm/image.h
-
-    38	
-    39	static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
-  > 40	static const uint8_t loongarch_pe_machtype[6] = {'P', 'E', 0x0, 0x0, 0x64, 0x62};
-    41	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Krzysztof
