@@ -1,101 +1,77 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD4D317712
-	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 10:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9344D2BD025
+	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 10:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755339904; cv=none; b=QhIDDDDOb4d7zernNGhwAgCT3ZRE8iTZUZNgrsPF/ytovZYgRtDJn+BbOh2mfa3SabzGZnBlnCUoPi7xfiO81z0C/37uGDiRcZ3qpYFCDYeRRKpb9wpQIC6vfq3K/1ArpgqeKS4K5CELnCPl9IJfKcQpNyYoZ8qQ7N31/FSvjW8=
+	t=1755341782; cv=none; b=nYnpH+2uIrfVwvcjas+uba16ruRygDTVtGroGHY9j6J/DrMUFwNXJIMI7kk0UZHGvmgpzd9Gp0OM4zMJviYQwN2T6SpzGmfx7/52ne3ZyFqI0YTc1x3WtZ87vxOMyINaA7RLhPoPBBjU3oXuK/OQ0s2lz8zazbJjhqOtgd5/cNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755339904; c=relaxed/simple;
-	bh=PJU7htTDQ2hko0s3DIZZxAA1LpnKiMLmKn61cStMIsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EGmE/zuV16R0UHmWoFx5bg+p0J/QFSV4ZoSNXafqdC8p+FLIonklffoFEYy2e4iaHUdhER0q8hPKjUtlpB4o+34nAP4OiL2I3oErafCOXuPD3mBLqVBnpWWHj9c7qcecWBvd2EiC8jR1961OWOcmlrawqMs958mP1gB/8vdHUEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=IePDLVGZ; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1755341782; c=relaxed/simple;
+	bh=cR6kC3e3n6Bl1IMPmV9XN3aP3xEyc7Wn9kkGkKeGmyg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=brxQl9l8+RFB9BqXF4MX5WQ2TZa0KodtCj2+CaHZLUtQ5nRQwaK7YWhumX6Rf2ftRI3exKf0iHjx1XN5NPyLdbUKAZLenvsB1Y+JhTa5ieo37BXWdKyV3HPVEUNbqmMCERhaHCWVvN9HaT9GKoZ1kbDZvDK70hjZOGji7ON6pS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=MtvxWOwy; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="IePDLVGZ"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id CAEC22080B;
-	Sat, 16 Aug 2025 12:25:00 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id NXE75Uhcr_XP; Sat, 16 Aug 2025 12:25:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1755339900; bh=PJU7htTDQ2hko0s3DIZZxAA1LpnKiMLmKn61cStMIsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IePDLVGZYTzkNTAyL7QyTRXgQt0HbfqnmuB8PnhjCm5o3baBccG3fuAGEV8OzRAvD
-	 71MrSNLUA36NorOmr09RomrbRUaDhgDE3hZr0SBQ851th+G2rHH+9qmai2d6gv7jbw
-	 QpviGwFc+TUHwMYBlGyD3LIfEwioIn9nE0WBcq/UWsH0l0Wo8aUFlTYmXJVyywSSdA
-	 yJRqiTMcaZmLMD/M8PQKH1Y3OYw7vdwXs3Ky0PCYz15XvfaC8EwWOTsyocS8Yvqx+v
-	 rDDQSDJaIlnMYyI9xuCvWadC1S0L8OTBHJ2CFvsC6GlR8t3UjqdnDaqC8u5HpiQ5Tc
-	 93wwm8/LmllVA==
-Date: Sat, 16 Aug 2025 10:24:45 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 1/3] dt-bindings: reset: Document reset controller of
- Loongson 2K0300 SoC
-Message-ID: <aKBcbUbx-hgNBOY_@pie>
-References: <20250816033327.11359-2-ziyao@disroot.org>
- <20250816033327.11359-3-ziyao@disroot.org>
- <d5134909-58a4-48c2-a227-2fb3ce200c2f@kernel.org>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="MtvxWOwy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1755341404;
+	bh=CbJ7sHuYn22Ps9Cj2TYsRn0iAipKwJrAYBCH2boJmH8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MtvxWOwyZ6JUvj3lo9y7OqnWt1F2CgpheEJO0SMiyJbW1gH9+O7SAUhNaBvic6Zl6
+	 fb/adK6Bo9eCg4pKb+WDIWA0ES8uJ+K/DuKjWphejDdo2EHLFUZSn90H+dWcwbwYP2
+	 Fm8olvbnWcc2NB7DzsyFXeZPErHon2FcoVTXf7o4=
+Received: from stargazer (unknown [IPv6:2409:874d:200:3037::3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 6BDAF66BB8;
+	Sat, 16 Aug 2025 06:50:00 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	linux-pwm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] pwm: loongson: Fix LOONGSON_PWM_FREQ_DEFAULT
+Date: Sat, 16 Aug 2025 18:49:05 +0800
+Message-ID: <20250816104904.4779-2-xry111@xry111.site>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d5134909-58a4-48c2-a227-2fb3ce200c2f@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Aug 16, 2025 at 11:48:46AM +0200, Krzysztof Kozlowski wrote:
-> On 16/08/2025 05:33, Yao Zi wrote:
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    rst: reset-controller@1600011c {
-> 
-> Drop unused label
-> 
-> 
-> > +        compatible = "loongson,ls2k0300-reset";
-> > +        reg = <0x1600011c 0x8>;
-> > +        #reset-cells = <1>;
-> > +    };
-> > diff --git a/include/dt-bindings/reset/loongson,ls2k0300-reset.h b/include/dt-bindings/reset/loongson,ls2k0300-reset.h
-> > new file mode 100644
-> > index 000000000000..d425411e6d19
-> > --- /dev/null
-> > +++ b/include/dt-bindings/reset/loongson,ls2k0300-reset.h
-> > @@ -0,0 +1,70 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-> 
-> Why not using same license as the binding?
+Per the 7A1000 and 7A2000 user manual, the clock frequency of their
+PWM controllers is 50 MHz, not 50 kHz.
 
-I was referring to another binding's header when writing this, and yes
-it's better to keep them the same.
+Fixes: 2b62c89448dd ("pwm: Add Loongson PWM controller support")
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ drivers/pwm/pwm-loongson.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
+index 1ba16168cbb4..31a57edecfd0 100644
+--- a/drivers/pwm/pwm-loongson.c
++++ b/drivers/pwm/pwm-loongson.c
+@@ -49,7 +49,7 @@
+ #define LOONGSON_PWM_CTRL_REG_DZONE	BIT(10) /* Anti-dead Zone Enable Bit */
+ 
+ /* default input clk frequency for the ACPI case */
+-#define LOONGSON_PWM_FREQ_DEFAULT	50000 /* Hz */
++#define LOONGSON_PWM_FREQ_DEFAULT	50000000 /* Hz */
+ 
+ struct pwm_loongson_ddata {
+ 	struct clk *clk;
+-- 
+2.50.1
 
-Will fix these issues and carry the tag in v2, thanks.
-
-> Best regards,
-> Krzysztof
-
-Best regards,
-Yao Zi
