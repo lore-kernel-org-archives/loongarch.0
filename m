@@ -1,77 +1,150 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9344D2BD025
-	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 10:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D732A1BF
+	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 14:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755341782; cv=none; b=nYnpH+2uIrfVwvcjas+uba16ruRygDTVtGroGHY9j6J/DrMUFwNXJIMI7kk0UZHGvmgpzd9Gp0OM4zMJviYQwN2T6SpzGmfx7/52ne3ZyFqI0YTc1x3WtZ87vxOMyINaA7RLhPoPBBjU3oXuK/OQ0s2lz8zazbJjhqOtgd5/cNw=
+	t=1755353951; cv=none; b=XOtKO0SChAkWVwHoRrKc/EIjhThcEdcufh8bkyUNxV8AJCihM2GxxMUOQPaakXo4ZcTbP40rNB14NfXuo18lusb4iDX9E38fuqNLzQU8Jazeta2SHL1lhj7zDDwhU8Teu3mVDO4eBvqsu0KPv8/gU2w8OC4j+5HKVv3/gTMBLdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755341782; c=relaxed/simple;
-	bh=cR6kC3e3n6Bl1IMPmV9XN3aP3xEyc7Wn9kkGkKeGmyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=brxQl9l8+RFB9BqXF4MX5WQ2TZa0KodtCj2+CaHZLUtQ5nRQwaK7YWhumX6Rf2ftRI3exKf0iHjx1XN5NPyLdbUKAZLenvsB1Y+JhTa5ieo37BXWdKyV3HPVEUNbqmMCERhaHCWVvN9HaT9GKoZ1kbDZvDK70hjZOGji7ON6pS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=MtvxWOwy; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1755353951; c=relaxed/simple;
+	bh=YcFIevqPRmnHsCDkXNhTN5eFLd3vOH8VP/okgY0uJXY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KaSv21ix7qyKgGHTrFlPBq69gyz4Z6hJNLI52iLTsu6VyFihX6wQTDSLgc7P5lmqWRztngO4rkSSieofG51optMyprSld3rzsmgprBu3JwS2kgC10aZuF82uHIiAi4RW5viYZcD57YWS9lrCGeebviRPBPwUJ+TBb+x3yvhXjfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIZHRSS3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="MtvxWOwy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1755341404;
-	bh=CbJ7sHuYn22Ps9Cj2TYsRn0iAipKwJrAYBCH2boJmH8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MtvxWOwyZ6JUvj3lo9y7OqnWt1F2CgpheEJO0SMiyJbW1gH9+O7SAUhNaBvic6Zl6
-	 fb/adK6Bo9eCg4pKb+WDIWA0ES8uJ+K/DuKjWphejDdo2EHLFUZSn90H+dWcwbwYP2
-	 Fm8olvbnWcc2NB7DzsyFXeZPErHon2FcoVTXf7o4=
-Received: from stargazer (unknown [IPv6:2409:874d:200:3037::3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 6BDAF66BB8;
-	Sat, 16 Aug 2025 06:50:00 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	linux-pwm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH] pwm: loongson: Fix LOONGSON_PWM_FREQ_DEFAULT
-Date: Sat, 16 Aug 2025 18:49:05 +0800
-Message-ID: <20250816104904.4779-2-xry111@xry111.site>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIZHRSS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFBE5C4CEF9
+	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 14:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755353950;
+	bh=YcFIevqPRmnHsCDkXNhTN5eFLd3vOH8VP/okgY0uJXY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XIZHRSS3T/81UV43SIi6itPdlSWPZRBCHS0Zs/JjSZrtw7ic3MIPMfzc+CKQ0VJlr
+	 qHVI7fiSXDUFRaFwsgPRPoXCw923tDI5NAuL+QCY0DU3LnUrIHxuuQFvfO+SDqJzWH
+	 yXWgoNsSNPL57xIqD/cHcKBM8RBVirUWvVTQwa1K3KpcWF9s7ggApBK78dYd675/zF
+	 uDNvTsC4WWHdrZ1BkT7CY6v28HGklNsy4zOPyysmCCpox+MBqi0SxVnvrEkjX20EQG
+	 QD2aKIqbxrcn0wRPH+iqY5cIZWkwr3Z2ioMP+bLTPZ8jc7gInq2mz89KAMprcDQ1e9
+	 hbEfb6Zbo5VRw==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-61a1c6a5338so273972a12.1
+        for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 07:19:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJanP/t25O0Z/35iGn691h5DiutCa8pJa8F0efjyAuyBYumU9ni1X2XCnbjdUw4GxX7a9E8W5XeHQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YybJfScUANtD9QIvlILyKpc5o6aHofBoLhiFJ1POYqS5GSnEYEo
+	IA6z4rWyTs5eZEwd/HpQeGM5cKaP4Jmxe28qg5grnS6K3Rq6d/4Wuqw8qSaCI7OJ3ACrppxJH2O
+	CBJz09SB6LeoLmLAtIF50O4hUpsVCO/8=
+X-Google-Smtp-Source: AGHT+IEUkDFwlk9UhU8t342L0FCVGyMnVyPMWk30oqfsuvVTNwMtk4q2cTnYOAkS6eUbn+3TgBvlePgr0B/LX2tiyFU=
+X-Received: by 2002:a05:6402:2708:b0:618:adff:66e5 with SMTP id
+ 4fb4d7f45d1cf-618b054dbd5mr4317218a12.17.1755353949346; Sat, 16 Aug 2025
+ 07:19:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250816035027.11727-2-ziyao@disroot.org> <20250816035027.11727-3-ziyao@disroot.org>
+In-Reply-To: <20250816035027.11727-3-ziyao@disroot.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 16 Aug 2025 22:18:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
+X-Gm-Features: Ac12FXwCN0XtFPhP6PgPuh0T8gncotsiBAGxXqlAdAXBDWQBMIikImgkiykBIWA
+Message-ID: <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: loongson: Document GPIO controller
+ of 2K0300 SoC
+To: Yao Zi <ziyao@disroot.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Per the 7A1000 and 7A2000 user manual, the clock frequency of their
-PWM controllers is 50 MHz, not 50 kHz.
+On Sat, Aug 16, 2025 at 11:51=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
+>
+> Loongson 2K0300 ships a GPIO controller whose input/output control logic
+> is similar to previous generation of SoCs. Additionally, it acts as an
+> interrupt-controller supporting both level and edge interrupts and has a
+> distinct reset signal.
+>
+> Describe its compatible in devicetree. We enlarge the maximum value of
+> ngpios to 128, since the controller technically supports at most 128
+> pins, although only 106 are routed out of the package. Properties for
+> interrupt-controllers and resets are introduced and limited as 2K0300
+> only.
+>
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  .../bindings/gpio/loongson,ls-gpio.yaml       | 28 ++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml=
+ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> index b68159600e2b..69852444df23 100644
+> --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> @@ -14,6 +14,7 @@ properties:
+>      oneOf:
+>        - enum:
+>            - loongson,ls2k-gpio
+> +          - loongson,ls2k0300-gpio
+>            - loongson,ls2k0500-gpio0
+>            - loongson,ls2k0500-gpio1
+>            - loongson,ls2k2000-gpio0
+> @@ -36,7 +37,7 @@ properties:
+>
+>    ngpios:
+>      minimum: 1
+> -    maximum: 64
+> +    maximum: 128
+>
+>    "#gpio-cells":
+>      const: 2
+> @@ -49,6 +50,14 @@ properties:
+>      minItems: 1
+>      maxItems: 64
+>
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  interrupt-controller: true
+ls2k300 supports interrupt-controller while others don't?
 
-Fixes: 2b62c89448dd ("pwm: Add Loongson PWM controller support")
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- drivers/pwm/pwm-loongson.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Huacai
 
-diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-index 1ba16168cbb4..31a57edecfd0 100644
---- a/drivers/pwm/pwm-loongson.c
-+++ b/drivers/pwm/pwm-loongson.c
-@@ -49,7 +49,7 @@
- #define LOONGSON_PWM_CTRL_REG_DZONE	BIT(10) /* Anti-dead Zone Enable Bit */
- 
- /* default input clk frequency for the ACPI case */
--#define LOONGSON_PWM_FREQ_DEFAULT	50000 /* Hz */
-+#define LOONGSON_PWM_FREQ_DEFAULT	50000000 /* Hz */
- 
- struct pwm_loongson_ddata {
- 	struct clk *clk;
--- 
-2.50.1
-
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -58,6 +67,23 @@ required:
+>    - gpio-ranges
+>    - interrupts
+>
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: loongson,ls2k0300-gpio
+> +    then:
+> +      required:
+> +        - "#interrupt-cells"
+> +        - interrupt-controller
+> +        - resets
+> +    else:
+> +      properties:
+> +        "#interrupts-cells": false
+> +        interrupt-controller: false
+> +        resets: false
+> +
+>  additionalProperties: false
+>
+>  examples:
+> --
+> 2.50.1
+>
