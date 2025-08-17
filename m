@@ -1,93 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69901F9F73
-	for <loongarch@lists.linux.dev>; Sun, 17 Aug 2025 03:45:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B75FF4F1
+	for <loongarch@lists.linux.dev>; Sun, 17 Aug 2025 03:46:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755402332; cv=none; b=DW7dTekkjKhhQg9+rpGzd5JL3tyH0kqtSf8zh7SfOKrIWkxLewMmixvjS2mvaS/lgwiu2vVXNipoeeXJJSFhJMhUmOCAnkKs9DEOLEQED31JvY70IE/XqPa1AebRUKatzTRNXt6C9uw+/q/K2UxnTNcTICleI1xTfIddLX0+PJY=
+	t=1755402361; cv=none; b=q8WZ9MYxnWZ98BmtDpcp8TVFtr7jYLtJOI9/PZZmMqZ7NvHZrhQyZmzvAV9P3toWWOhxmricedbpTPyRR4pTIy3Ku7ReBq9FWgpUfawE0wOFCuXbeQ4uglMfczgswbD2a+gupygMGS+XroXO1DP8a2n7OfpIZQ4QV8mYdYgstKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755402332; c=relaxed/simple;
-	bh=0xTwLjVmn1pv+BiHVbOnx4WYaKKwm9hpP0y0rAIfPWE=;
+	s=arc-20240116; t=1755402361; c=relaxed/simple;
+	bh=FbBf6K49g5uG/OvWKAgJlk4llLTweZMsbI/rMlDt2SI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TLRgYMtUReWQa8ZJTSRMA/YJpq2vtgjT3AqmXFFwxqBSh083u/h63LJO55s9U3I7xwXLxF0qm7FOdDYxhqrXPVGlUFadvg5Y5dl0VA7WBafWnAjL3C25NGnQehbw0PbYrDRe/vf3UMiqENKpcGbXrTXkVTBdBYzf7I/LmbtsLak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBIg5Jjh; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=dUCM+J/jnWefjE8mPH55nhGRzOk0Nr8iOYD54Q8t00duVvJtsQHsuVGA2s4PM1VOezP8Iw0AoRz28BO4bHQPEb5dVd7nTN8kjb38WubMriOvEftSGcsPMoMpkK/6dxoLpitfJGmriZCIvOKmsgM8th7FyfkfCa9N65iHDjWFN6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YV8i3slE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBIg5Jjh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C33C4CEEB
-	for <loongarch@lists.linux.dev>; Sun, 17 Aug 2025 03:45:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YV8i3slE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E91C4CEED
+	for <loongarch@lists.linux.dev>; Sun, 17 Aug 2025 03:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755402331;
-	bh=0xTwLjVmn1pv+BiHVbOnx4WYaKKwm9hpP0y0rAIfPWE=;
+	s=k20201202; t=1755402360;
+	bh=FbBf6K49g5uG/OvWKAgJlk4llLTweZMsbI/rMlDt2SI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BBIg5JjhIcFmc8Hq0kMax9VlfspQxo8SAOK1Sh7QhbsYqhx/sGdB07egcP6x4KUWj
-	 Yoa7EswTSYkYOQjsyH9d4+5xsVWjjRqF/dvE77W5jXQv3DzIMy57GzxYtEI4BgEXED
-	 VlQSuXSTIoum1MnDQ8yPxHQ4qubfxdtrfXcIcdzAN1tXiyeDQ4iAjlTCRGXn4oym6U
-	 HgFo55afMivN5QiaxW6R6oDJlP0dzpH+8iJEczBkfynQ2bVXfL6bKrd0RXeiuyC+W5
-	 urRKeXdu6P0CPZ73yHm0YbJpquR+p+4eX4mYtO9ysjrWUucOrQxI2LfK+p2OLyvORg
-	 mPz94J94OkxWA==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6188b5b11b2so3878896a12.0
-        for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 20:45:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVQqJYgbYZWOdteoq4WtTdDsrcxFG65GwQHNocpAOc8v/RSMNwRH7SadaR2j25mKLZpkPUoCygnCWU=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx6+Gf+ropcHpF4i1fmxo4Oc7AUnm1HLINxGntWFd5lz4IkifoR
-	BPZGxe7f1xuPxwjhsu7poRWmkxvWpeehJ4PKGalupTzHmA9ixA2Ox7QT1yNp5kJZ9MQZMRcxXDK
-	SFcTnsvOf6yy+NgAdgKRSL1zzDUsQF2Y=
-X-Google-Smtp-Source: AGHT+IHU2F1OuHP2+TNA3BmJ4OGUQ0ScEw4NdOAnevoKv6AnvesNZw7f40m4RiAo5kKMzaMnqE4TJNhtY1cLVMGR4Qc=
-X-Received: by 2002:a05:6402:90d:b0:604:e602:779a with SMTP id
- 4fb4d7f45d1cf-619bf1fafa1mr3806554a12.28.1755402329800; Sat, 16 Aug 2025
- 20:45:29 -0700 (PDT)
+	b=YV8i3slEz7vFGoLu4gtF0Zkm4WfMhQUXdCwWxrgfm5USuafbu/zj9C90DxC2ivceM
+	 PegEcK9fO5fv1yfVc39G1+TOXSOF9inqNpR3C87m5xF5AOnTHB5UVZu4adsuVA+OOY
+	 FODxMo+3uYtUkDzK19UaFxFpQRMGM2efBJ9ms7+liCVHTnT2m1+TZNMxQkbvOAh7CM
+	 45lp82iE5sPAHA+DY31ZCvq0zj8Y+X24NGQAJSUOjFAHxhC/pNLxrYpYAgj70xYgnY
+	 /xz9KX7ZzvnJqjHsKfXS3XooHg7zk8tRYvxQHHWzVMsPPrKNSdeyyQqRyCic1ZrNyd
+	 vOij9FXYAbVNA==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6188b6f501cso3688690a12.2
+        for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 20:46:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVcQYox+DCjmT627LzLoWs3fSuKtZ+cCDJiAKbJE2sRkPwbtX2uH9nkIXxdsrA6gnyR2xsmpcCbSCk=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyfs9cj3pc4wviYpdUWPDTzGkwmmc6399Y00hG8RNtHhqUenWJd
+	hurGywPI2mjg4mXAaZt9RoYywRI1ztsOXJ/G8DsLzsNGcR2CsM+Y8+scYtYO3rkAQ/woVpr2kRw
+	piYSiIT/QGHhK5rMobpKe1SzpnoZN7NQ=
+X-Google-Smtp-Source: AGHT+IHUIXO9sSVSL/WQ4WQeurIylSuToovpBc+MPQErPaLPG5zOmAYue23ItDx9DXRnTT2ZHL7o/6ktOjRxAPdDG1k=
+X-Received: by 2002:a05:6402:5114:b0:618:1250:ac54 with SMTP id
+ 4fb4d7f45d1cf-619bf1d67f8mr3332590a12.21.1755402359322; Sat, 16 Aug 2025
+ 20:45:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250815022621.508174-1-maobibo@loongson.cn>
-In-Reply-To: <20250815022621.508174-1-maobibo@loongson.cn>
+References: <20250811021344.3678306-1-maobibo@loongson.cn> <20250811021344.3678306-6-maobibo@loongson.cn>
+In-Reply-To: <20250811021344.3678306-6-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 17 Aug 2025 11:45:14 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Sem=X7KUiO2vQgT_5KX-v4Xv3yB+UUrWHL4tmRnJkGQ@mail.gmail.com>
-X-Gm-Features: Ac12FXz8IKCWjK4TiPlQZ7UQkp-9Hmk1V7p2XaSuhPc1AliPMGuF1yhaOsApdh8
-Message-ID: <CAAhV-H4Sem=X7KUiO2vQgT_5KX-v4Xv3yB+UUrWHL4tmRnJkGQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] LoongArch: KVM: Small enhancements about IPI and LBT
+Date: Sun, 17 Aug 2025 11:45:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6rQVVF_Z+5A7AR+5Q-A2ydw4sxc9Qq6+-r33kRwYjwAA@mail.gmail.com>
+X-Gm-Features: Ac12FXxEqC-ac5xhYMZHIixPaMqxZZClPatbquOFPIPi5bPfcu5INPJZbWyfjUE
+Message-ID: <CAAhV-H6rQVVF_Z+5A7AR+5Q-A2ydw4sxc9Qq6+-r33kRwYjwAA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] LoongArch: KVM: Add address alignment check in
+ pch_pic register access
 To: Bibo Mao <maobibo@loongson.cn>
 Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
 	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Patch-1 and Patch-4 are applied for loongarch-fixes.
+This one is applied for loongarch-fixes.
 
 Huacai
 
-On Fri, Aug 15, 2025 at 10:26=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
+On Mon, Aug 11, 2025 at 10:15=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
 te:
 >
-> Thre are some small enhancement about IPI emulation and LBT enabling in
-> LoongArch KVM. With IPI, it supports sending command to vCPU itself. And
-> with LBT it adds flag checking int function kvm_own_lbt() and make it
-> robust.
+> With pch_pic device, its register is based on MMIO address space,
+> different access size 1/2/4/8 is supported. And base address should
+> be naturally aligned with its access size, here add alignment check
+> in its register access emulation function.
 >
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
-> v2 ... v3:
->   1. Fix stack protector issue in send_ipi_data()
+>  arch/loongarch/kvm/intc/pch_pic.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 >
-> v1 ... v2:
->   1. Add sending IPI command to vCPU itself
->   2. Avoid duplicated LBT enabling in kvm_own_lbt()
-> ---
-> Bibo Mao (4):
->   LoongArch: KVM: Fix stack protector issue in send_ipi_data()
->   LoongArch: KVM: Access mailbox directly in mail_send()
->   LoongArch: KVM: Add implementation with IOCSR_IPI_SET
->   LoongArch: KVM: Make function kvm_own_lbt() robust
+> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
+pch_pic.c
+> index 0710b5ab286e..5ee24dbf3c4c 100644
+> --- a/arch/loongarch/kvm/intc/pch_pic.c
+> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+> @@ -151,6 +151,11 @@ static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
+>                 return -EINVAL;
+>         }
 >
->  arch/loongarch/kvm/intc/ipi.c | 57 ++++++++++++++++++++++-------------
->  arch/loongarch/kvm/vcpu.c     |  8 +++--
->  2 files changed, 41 insertions(+), 24 deletions(-)
+> +       if (addr & (len - 1)) {
+> +               kvm_err("%s: pch pic not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> +               return -EINVAL;
+> +       }
+> +
+>         /* statistics of pch pic reading */
+>         vcpu->stat.pch_pic_read_exits++;
+>         ret =3D loongarch_pch_pic_read(s, addr, len, val);
+> @@ -246,6 +251,11 @@ static int kvm_pch_pic_write(struct kvm_vcpu *vcpu,
+>                 return -EINVAL;
+>         }
 >
->
-> base-commit: dfc0f6373094dd88e1eaf76c44f2ff01b65db851
+> +       if (addr & (len - 1)) {
+> +               kvm_err("%s: pch pic not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> +               return -EINVAL;
+> +       }
+> +
+>         /* statistics of pch pic writing */
+>         vcpu->stat.pch_pic_write_exits++;
+>         ret =3D loongarch_pch_pic_write(s, addr, len, val);
 > --
 > 2.39.3
+>
 >
