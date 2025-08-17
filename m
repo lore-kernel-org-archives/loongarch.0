@@ -1,111 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B75FF4F1
-	for <loongarch@lists.linux.dev>; Sun, 17 Aug 2025 03:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9197C1FBCB5;
+	Sun, 17 Aug 2025 10:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755402361; cv=none; b=q8WZ9MYxnWZ98BmtDpcp8TVFtr7jYLtJOI9/PZZmMqZ7NvHZrhQyZmzvAV9P3toWWOhxmricedbpTPyRR4pTIy3Ku7ReBq9FWgpUfawE0wOFCuXbeQ4uglMfczgswbD2a+gupygMGS+XroXO1DP8a2n7OfpIZQ4QV8mYdYgstKs=
+	t=1755428360; cv=none; b=tAEL4602e9dVSInHAWWqsTCo272L3HVhVxrbpTKcveVRN1vQ62kLm+9d1jG+hq1PTBrjgx+2h5bkPp/Leuv/z8tdYdEcr4v8BKZDIh4PHYiCqcgXXM2O/pxbpdcAkWZXqCgl4RDwXR2DSFlrr+fVjfrlnQlb6Pkce35wNIku9ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755402361; c=relaxed/simple;
-	bh=FbBf6K49g5uG/OvWKAgJlk4llLTweZMsbI/rMlDt2SI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dUCM+J/jnWefjE8mPH55nhGRzOk0Nr8iOYD54Q8t00duVvJtsQHsuVGA2s4PM1VOezP8Iw0AoRz28BO4bHQPEb5dVd7nTN8kjb38WubMriOvEftSGcsPMoMpkK/6dxoLpitfJGmriZCIvOKmsgM8th7FyfkfCa9N65iHDjWFN6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YV8i3slE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755428360; c=relaxed/simple;
+	bh=YsJgTTsnsXUMnX2YNiPMLa1RfWqepGr89YgSXk7AUX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M+Fq1pjc0ZVaNgGHqF4TK6uu34+C79wOHbRZXpZqHX6kqXig7NvoLSYvJP8yGtYoE4Fl8Ih1MDQlEhWU+bosCIrwsfvVSoBq3a5SBUCFQpX9Kj50FN6XzLeC5pzamtkyaKVfyNj0TpzrMczo4eqUfTMHGOigGrsBoRQeM7mq3WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sau3A0p9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YV8i3slE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E91C4CEED
-	for <loongarch@lists.linux.dev>; Sun, 17 Aug 2025 03:46:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sau3A0p9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F988C4CEEB;
+	Sun, 17 Aug 2025 10:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755402360;
-	bh=FbBf6K49g5uG/OvWKAgJlk4llLTweZMsbI/rMlDt2SI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YV8i3slEz7vFGoLu4gtF0Zkm4WfMhQUXdCwWxrgfm5USuafbu/zj9C90DxC2ivceM
-	 PegEcK9fO5fv1yfVc39G1+TOXSOF9inqNpR3C87m5xF5AOnTHB5UVZu4adsuVA+OOY
-	 FODxMo+3uYtUkDzK19UaFxFpQRMGM2efBJ9ms7+liCVHTnT2m1+TZNMxQkbvOAh7CM
-	 45lp82iE5sPAHA+DY31ZCvq0zj8Y+X24NGQAJSUOjFAHxhC/pNLxrYpYAgj70xYgnY
-	 /xz9KX7ZzvnJqjHsKfXS3XooHg7zk8tRYvxQHHWzVMsPPrKNSdeyyQqRyCic1ZrNyd
-	 vOij9FXYAbVNA==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6188b6f501cso3688690a12.2
-        for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 20:46:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVcQYox+DCjmT627LzLoWs3fSuKtZ+cCDJiAKbJE2sRkPwbtX2uH9nkIXxdsrA6gnyR2xsmpcCbSCk=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyfs9cj3pc4wviYpdUWPDTzGkwmmc6399Y00hG8RNtHhqUenWJd
-	hurGywPI2mjg4mXAaZt9RoYywRI1ztsOXJ/G8DsLzsNGcR2CsM+Y8+scYtYO3rkAQ/woVpr2kRw
-	piYSiIT/QGHhK5rMobpKe1SzpnoZN7NQ=
-X-Google-Smtp-Source: AGHT+IHUIXO9sSVSL/WQ4WQeurIylSuToovpBc+MPQErPaLPG5zOmAYue23ItDx9DXRnTT2ZHL7o/6ktOjRxAPdDG1k=
-X-Received: by 2002:a05:6402:5114:b0:618:1250:ac54 with SMTP id
- 4fb4d7f45d1cf-619bf1d67f8mr3332590a12.21.1755402359322; Sat, 16 Aug 2025
- 20:45:59 -0700 (PDT)
+	s=k20201202; t=1755428359;
+	bh=YsJgTTsnsXUMnX2YNiPMLa1RfWqepGr89YgSXk7AUX8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sau3A0p98zRjWNS2jEXHE5WL+dBNfVSrxqO8/wSlM94f6MA8eeUad5K6+HvrRSLFA
+	 ykZj+4NWA3uQQ+48qylfBzmgrcUtfkQrZAOGsEJlgebPPAZyIwk9Nkvkr+i2NONzwK
+	 aNkh+KcPbc+UaKFH0MeDBEH2WPg6QLrNNkVYndvem1+TvzAQ7KiVJX26DOAsV/MPTE
+	 z0mBr/98Gnfr+OLqVkoRoqbdyUhlm4KjaY/VCxO78L+Z91EL2Ogf4UtJvkx3joCMB2
+	 PdylwXPLH8i5DJXFCpkCYnbTz5Kqq4lu0/U6rD+4hyTSQBnRpscVdVqwq6LOTSxHrZ
+	 OskFbbyDSlcyQ==
+Date: Sun, 17 Aug 2025 12:59:16 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Juxin Gao <gaojuxin@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, linux-pwm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: loongson: Fix LOONGSON_PWM_FREQ_DEFAULT
+Message-ID: <n5kdswq7oduruqiruyup4rcdwrs76tlinz26swotzeqklterey@off5cbv5i4e5>
+References: <20250816104904.4779-2-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250811021344.3678306-1-maobibo@loongson.cn> <20250811021344.3678306-6-maobibo@loongson.cn>
-In-Reply-To: <20250811021344.3678306-6-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 17 Aug 2025 11:45:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6rQVVF_Z+5A7AR+5Q-A2ydw4sxc9Qq6+-r33kRwYjwAA@mail.gmail.com>
-X-Gm-Features: Ac12FXxEqC-ac5xhYMZHIixPaMqxZZClPatbquOFPIPi5bPfcu5INPJZbWyfjUE
-Message-ID: <CAAhV-H6rQVVF_Z+5A7AR+5Q-A2ydw4sxc9Qq6+-r33kRwYjwAA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] LoongArch: KVM: Add address alignment check in
- pch_pic register access
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4mc4hchyujztabjl"
+Content-Disposition: inline
+In-Reply-To: <20250816104904.4779-2-xry111@xry111.site>
+
+
+--4mc4hchyujztabjl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: loongson: Fix LOONGSON_PWM_FREQ_DEFAULT
+MIME-Version: 1.0
 
-This one is applied for loongarch-fixes.
+Hello,
 
-Huacai
+[adding Juxin Gao to Cc:]
 
-On Mon, Aug 11, 2025 at 10:15=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
-te:
->
-> With pch_pic device, its register is based on MMIO address space,
-> different access size 1/2/4/8 is supported. And base address should
-> be naturally aligned with its access size, here add alignment check
-> in its register access emulation function.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/kvm/intc/pch_pic.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
-pch_pic.c
-> index 0710b5ab286e..5ee24dbf3c4c 100644
-> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> @@ -151,6 +151,11 @@ static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
->                 return -EINVAL;
->         }
->
-> +       if (addr & (len - 1)) {
-> +               kvm_err("%s: pch pic not aligned addr %llx len %d\n", __f=
-unc__, addr, len);
-> +               return -EINVAL;
-> +       }
-> +
->         /* statistics of pch pic reading */
->         vcpu->stat.pch_pic_read_exits++;
->         ret =3D loongarch_pch_pic_read(s, addr, len, val);
-> @@ -246,6 +251,11 @@ static int kvm_pch_pic_write(struct kvm_vcpu *vcpu,
->                 return -EINVAL;
->         }
->
-> +       if (addr & (len - 1)) {
-> +               kvm_err("%s: pch pic not aligned addr %llx len %d\n", __f=
-unc__, addr, len);
-> +               return -EINVAL;
-> +       }
-> +
->         /* statistics of pch pic writing */
->         vcpu->stat.pch_pic_write_exits++;
->         ret =3D loongarch_pch_pic_write(s, addr, len, val);
-> --
-> 2.39.3
->
->
+On Sat, Aug 16, 2025 at 06:49:05PM +0800, Xi Ruoyao wrote:
+> Per the 7A1000 and 7A2000 user manual, the clock frequency of their
+> PWM controllers is 50 MHz, not 50 kHz.
+>=20
+> Fixes: 2b62c89448dd ("pwm: Add Loongson PWM controller support")
+
+A quick glimpse into
+https://loongson.github.io/LoongArch-Documentation/Loongson-7A1000-usermanu=
+al-EN.pdf
+confirms this, so I tend to apply it. I'll wait a bit to give the people
+involved in 2b62c89448dd a chance to comment.
+
+Best regards
+Uwe
+
+--4mc4hchyujztabjl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmihtgEACgkQj4D7WH0S
+/k5rbQf8CY/bnYqpoMTDvYD/tfhlrlJbUrH2oLdGjTFUo6fTLHNKHQmU4mN80JIZ
+TsfsPiYAexrvNCqcLUqDc6E0ADiPz8ZSU0slzUebNLabt9L8FPnLx6kqLM7lUdX/
+9eUxCxTc1m4WHgOqKfKbQmuRkPQRMl2jTBx405wNJx2Ly/EKIu4f6nf/x12OjJFi
+MXlDThXYRF24k2NsYmIrl+T/lEluf6Xj8J/7EbumRP7eL9TblE246RGi03u9BfDR
+mxA4d8eVQsf5LliGeJm93TUkvp9cd5oZz6ZGtlsQwNM9rVqr1Y7fUy9tbEwMSL41
+cMIVV8bz7ia4tamnjKXi3yGe/Zz+qQ==
+=86Nh
+-----END PGP SIGNATURE-----
+
+--4mc4hchyujztabjl--
