@@ -1,206 +1,111 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40591A4F3C
-	for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 16:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48EB1990C7
+	for <loongarch@lists.linux.dev>; Sun, 17 Aug 2025 03:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755360497; cv=none; b=OqvTHASO0TGJtmXNs5GtuMqEwp3Si0083OuorHhbo/Xbk8J21CqfSIgUB9CwY4T4B6vGpm19rAWDvQ06HXhVNj/gqP0fgDTrbm5RLpDT/nImjD33haCw0CMlfILRIeW6avxgM00QzxBrEfZwHxdRXd6xmskPCDUcptMtIz1Jy8Y=
+	t=1755402137; cv=none; b=QgKi1Y26z4SlxWAiZVvhfx7LeQoUekbwIVuBx0xG5BBgGfiZmG6nSMxaTBl+f/Sr2qQ8CkfP3ubADbwBy8YhI5sSPjzSb3py6w5Ny7TKfVHimjKu/i1uN8EMs+dYywe4b8zLz7SNqmNdJc7440k6NmaVwEHqOA4WbmY47As4Y8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755360497; c=relaxed/simple;
-	bh=oSXu/5bEZ9WlhAtEdxk5ZZ6vNoMPX9phFwiUWWadqvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XjchhLcZyNtETzzxQInyYUW/oP1wAXP1Qtt4aZ5zdVc+VIFw6NCDaDPhCy67QeVDUR1tN2oxdwVjkQUvQ4Rg4KyqFFBN4TeL+W2lFupF77A5dvn/VIVFWaZwaZNMdxXm16dnwagYiF9cKFx3lBpWFv8LpRK0bdI39oIfclySAqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=IELA6aiB; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1755402137; c=relaxed/simple;
+	bh=0RK7oybG39j/BzocNbqy4mpNmNZxOo5/Ezo2Vuk9LOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MIMMnQ6g5xY6osAUR6woI6HrEXmjxe05pVvkH8RAN92bGm6S2ZikM/DZOtkKz0SkD51Wa9QSszmV5KeKRyXJsUtCEeKpGBBD9qsv5cCHdWqMgfWO3DrnYKSHEraOOuTojURZibmIVy/d1KqAUoQfAClQqBWnZm1SjaSzgn9sslk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtj5huLr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="IELA6aiB"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id C1B8222B44;
-	Sat, 16 Aug 2025 18:08:12 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 5vBCi2Do4UOV; Sat, 16 Aug 2025 18:08:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1755360492; bh=oSXu/5bEZ9WlhAtEdxk5ZZ6vNoMPX9phFwiUWWadqvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IELA6aiBcm3HMTEUydHZCrrPcJ5NtlDuORsKQvVPYYeJjH5ERsS3B9sWzjEst/oGs
-	 1f7rjUNwvmmBAcmdGlRABwGCfndD6JWwoDCeQLfpdFWULZU/nplHbkOKtHnnGQLNTC
-	 P27gDeRs0VjlultmUXco9VyHHM8NIe0tBVQwBgx6EeWk9jJFoKOrQdv+J5oZtQ5Xmx
-	 HTf0BtDZ1Zj6LHB/TxzRV4exQTFZ3TisVihCgOVV4rcHaiahs9XfsyFajcSJfxt7Mz
-	 Vh4l9Anys9IYCR+CR/eKm8trWct8WGU4WHp50ZOWmC8QtfPq9XhWzVJSmmyUVw94ge
-	 EyEmtR/hAYOqA==
-Date: Sat, 16 Aug 2025 16:07:54 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: loongson: Document GPIO
- controller of 2K0300 SoC
-Message-ID: <aKCs2jUcYxYHWIB2@pie>
-References: <20250816035027.11727-2-ziyao@disroot.org>
- <20250816035027.11727-3-ziyao@disroot.org>
- <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtj5huLr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB9EEC116B1
+	for <loongarch@lists.linux.dev>; Sun, 17 Aug 2025 03:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755402137;
+	bh=0RK7oybG39j/BzocNbqy4mpNmNZxOo5/Ezo2Vuk9LOA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qtj5huLrqLq9PZqGS9NV2KRNcai63H0aKe1uFpxPvxIiwsZDfQwywOEFdWiRSBxX7
+	 spirLkb1pPoCL/R4QVFEQF9IMzc3DJWmqJjoA8gVIReY8K/GpYM9ymiDzSAncztT0Q
+	 1w7olO5rLg9O9t44FHWE8cN7MjSgbhipZG0nPKbF4vqf+Yw70dg76ErTeJAuOqvyjB
+	 LoZuo1ZcyEmK+qTe9+kZPo0wthgq/DJ8H92d8i1CPOA2041H1J5jPUnqcRsRrOHipl
+	 PIppqwPDX2AJcVYHECkrkV8d7Z5mHaUtPBpBfvVtZM/DdBQObdb5cEbtwbUQPf9Kb4
+	 K0PETbf902eWA==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6188b7949f6so6053730a12.3
+        for <loongarch@lists.linux.dev>; Sat, 16 Aug 2025 20:42:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4fq94yME5KfOZEv7HxL1XipePOigYGKvcHsC+VT/3VFfovQVotv9qwrDfNDBEbjGHuFqo8zgAe94=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxSjLQeVMGQ7fhD3v9oNbzJQOSi/urQekzlFRlNQdgISO+KyaKx
+	XK/rbqLEj45EguI2l+IMiDgRf6OizUKp6NkyPdIcW+5fPlHQpeQJaj7yyiKcP3VRuYJhITaLy+F
+	WKsK0TFEXvFi4xBoreuzVncnZQAnhk6A=
+X-Google-Smtp-Source: AGHT+IFBem0X5N5rrHNPoyjgpsHEbfGMj4eZD3b4gWF1FzyT3xN0jpZbWjI+FJ9IbxNO86/8kD6wXwUzeSs7qHNdcog=
+X-Received: by 2002:a05:6402:234b:b0:617:fe86:6bff with SMTP id
+ 4fb4d7f45d1cf-618b0513fe6mr6495112a12.8.1755402136197; Sat, 16 Aug 2025
+ 20:42:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
+References: <20250812122043.2462836-1-wangming01@loongson.cn>
+In-Reply-To: <20250812122043.2462836-1-wangming01@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 17 Aug 2025 11:42:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6MunQ7NBcH2gUytoFyQTk8NpaZ9ZoWUyfQrSPmvubBNw@mail.gmail.com>
+X-Gm-Features: Ac12FXxjtlZJIyQy_PnuNPhA3GQUv3sGESkFCR9A2gdlrilDcc-u2Q07VvWbo2w
+Message-ID: <CAAhV-H6MunQ7NBcH2gUytoFyQTk8NpaZ9ZoWUyfQrSPmvubBNw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Increase COMMAND_LINE_SIZE to 4096
+To: Ming Wang <wangming01@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	lixuefeng@loongson.cn, chenhuacai@loongson.cn, 
+	Huang Cun <cunhuang@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 16, 2025 at 10:18:57PM +0800, Huacai Chen wrote:
-> On Sat, Aug 16, 2025 at 11:51 AM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > Loongson 2K0300 ships a GPIO controller whose input/output control logic
-> > is similar to previous generation of SoCs. Additionally, it acts as an
-> > interrupt-controller supporting both level and edge interrupts and has a
-> > distinct reset signal.
-> >
-> > Describe its compatible in devicetree. We enlarge the maximum value of
-> > ngpios to 128, since the controller technically supports at most 128
-> > pins, although only 106 are routed out of the package. Properties for
-> > interrupt-controllers and resets are introduced and limited as 2K0300
-> > only.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  .../bindings/gpio/loongson,ls-gpio.yaml       | 28 ++++++++++++++++++-
-> >  1 file changed, 27 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-> > index b68159600e2b..69852444df23 100644
-> > --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-> > +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-> > @@ -14,6 +14,7 @@ properties:
-> >      oneOf:
-> >        - enum:
-> >            - loongson,ls2k-gpio
-> > +          - loongson,ls2k0300-gpio
-> >            - loongson,ls2k0500-gpio0
-> >            - loongson,ls2k0500-gpio1
-> >            - loongson,ls2k2000-gpio0
-> > @@ -36,7 +37,7 @@ properties:
-> >
-> >    ngpios:
-> >      minimum: 1
-> > -    maximum: 64
-> > +    maximum: 128
-> >
-> >    "#gpio-cells":
-> >      const: 2
-> > @@ -49,6 +50,14 @@ properties:
-> >      minItems: 1
-> >      maxItems: 64
-> >
-> > +  "#interrupt-cells":
-> > +    const: 2
-> > +
-> > +  interrupt-controller: true
-> ls2k300 supports interrupt-controller while others don't?
+Applied, thanks.
 
-For these SoCs' GPIO controllers (I didn't carefully check 3A{5,6}00 and
-7A{1,2}00), there're three different cases,
+Huacai
 
-1. Controller of 2K0500, 2K1000:
-
-   These controllers have only interrupt enable bits for each GPIO.
-   Interrupts are routed directly to the parent interrupt controller and
-   there're multiple pins share the same interrupt in the parent, e.g.,
-   GPIO 0-31 share interrupt 26 of the second liointc on 2K0500.
-
-   Since we have neither an interrupt status register nor interrupt ack
-   bits, it's hard to tell which GPIO line is triggering the interrupt.
-   And we even cannot configure the polarity/edge for triggering
-   interrupts, thus I don't think these GPIO controller should be
-   described as interrupt controllers.
-
-   For these controllers, gpio-loongson-64bit.c implements GPIO
-   controller's .to_irq() method which translates GPIO descriptor to
-   corresponding IRQ number. This should work as long as there's at most
-   one interrupt consumer for each group of GPIOs that share the same
-   parent interrupt line.
-
-2. Node controller of 2K1500 and 2K2000:
-
-   These SoCs have GPIO controllers directly attached to the "node" (I
-   think it means the CPU core, but am not sure). These controllers are
-   similar to the first class, but they have an additional feature that
-   the polarity for triggering interrupts could be configured.
-
-   Still we couldn't precisely tell which GPIO line is triggering the
-   interrupt, thus it's hard to implement it as a fully-functional
-   irqchip, either. But if we don't do so, I cannot come up with a way
-   to describe the polarity settings. I'm unsure whether these
-   controllers should be implemented as interrupt controllers.
-
-3. South-bridge controller of 2K1500 and 2K2000, and 2K0300's
-   controller:
-
-   Reading through the public TRM, I'm sure these're all fully
-   functional interrupt controllers, and should be implemented as
-   interrupt controllers.
-
-   However, this also means the current binding for 2K1500/2K2000's
-   south-bridge controller is WRONG, and a fix it seems to bring in ABI
-   breakages (interrupt-controller/interrupt-cells are a must). But
-   since I don't have these devices on hand, and they are at least not
-   related to the situation of 2K0300, I decided to keep them as-is.
-
-So the answer to the original question is, no, at least 2K1500/2K2000's
-south-bridge GPIO controllers are also interrupt controllers according
-to their public documentation. But I cannot test my GPIO changes against
-them since I don't have such boards, and fixing the binding up may break
-the ABI, thus I leave them as-is in this "support for 2K0300" series.
-
-> Huacai
-
-Best regards,
-Yao Zi
-
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -58,6 +67,23 @@ required:
-> >    - gpio-ranges
-> >    - interrupts
-> >
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: loongson,ls2k0300-gpio
-> > +    then:
-> > +      required:
-> > +        - "#interrupt-cells"
-> > +        - interrupt-controller
-> > +        - resets
-> > +    else:
-> > +      properties:
-> > +        "#interrupts-cells": false
-> > +        interrupt-controller: false
-> > +        resets: false
-> > +
-> >  additionalProperties: false
-> >
-> >  examples:
-> > --
-> > 2.50.1
-> >
+On Tue, Aug 12, 2025 at 8:20=E2=80=AFPM Ming Wang <wangming01@loongson.cn> =
+wrote:
+>
+> The default COMMAND_LINE_SIZE of 512, inherited from asm-generic, is
+> too small for modern use cases. For example, kdump configurations or
+> extensive debugging parameters can easily exceed this limit.
+>
+> Therefore, increase the command line size to 4096 bytes, aligning
+> LoongArch with the MIPS architecture. This change follows a broader
+> trend among architectures to raise this limit to support modern needs;
+> for instance, PowerPC increased its value for similar reasons in
+> commit a5980d064fe2 ("powerpc: Bump COMMAND_LINE_SIZE to 2048").
+>
+> Similar to the change made for RISC-V in commit 61fc1ee8be26
+> ("riscv: Bump COMMAND_LINE_SIZE value to 1024"), this is considered
+> a safe change. The broader kernel community has reached a consensus
+> that modifying COMMAND_LINE_SIZE from UAPI headers does not
+> constitute a uABI breakage, as well-behaved userspace applications
+> should not rely on this macro.
+>
+> Suggested-by: Huang Cun <cunhuang@tencent.com>
+> Signed-off-by: Ming Wang <wangming01@loongson.cn>
+> ---
+>  arch/loongarch/include/uapi/asm/setup.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>  create mode 100644 arch/loongarch/include/uapi/asm/setup.h
+>
+> diff --git a/arch/loongarch/include/uapi/asm/setup.h b/arch/loongarch/inc=
+lude/uapi/asm/setup.h
+> new file mode 100644
+> index 000000000000..d46363ce3e02
+> --- /dev/null
+> +++ b/arch/loongarch/include/uapi/asm/setup.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +
+> +#ifndef _UAPI_ASM_LOONGARCH_SETUP_H
+> +#define _UAPI_ASM_LOONGARCH_SETUP_H
+> +
+> +#define COMMAND_LINE_SIZE      4096
+> +
+> +#endif /* _UAPI_ASM_LOONGARCH_SETUP_H */
+> --
+> 2.43.0
+>
+>
