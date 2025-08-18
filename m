@@ -1,50 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521D12765F5;
-	Mon, 18 Aug 2025 15:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93562278146;
+	Mon, 18 Aug 2025 16:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755532528; cv=none; b=El7Tyj9K0U5IkgXwXl0G0NLzqtbK6qKHW1Erou/ueXkFfJp/lFHTkLJ53wCxR7N1eD7i9GYwfRfHnW5Mz56LWGDoKUV/di2bYn/hZBhjQnXW87wBX6zAudf429n+7F3KH1oZXO7U+ZlqBl4k/22q0+B907FoRXrqCiKEh7cz79k=
+	t=1755533544; cv=none; b=N7MdopQ93NHrWR9USgWpOwpGCYONSAs00DaH/m2vrgtTjgqnmHQ5N26pzuVubXsVOxkjJQ8XFvo4wWX1gFiNqZ2Cw3HJMR6fqGSAgvJmLsUAkELaS7N7dP+gJMQZwRqw1krFWYxuKKXqKhq+u7u1WF2dXOFFmSVDMd/h1QvpX+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755532528; c=relaxed/simple;
-	bh=xKr1rCiwUqIXI8QwBa6YH9SvSvUWEf9h67156BGMFsE=;
+	s=arc-20240116; t=1755533544; c=relaxed/simple;
+	bh=0KlOKuDfOUdk5ngaWQoAWmJ0VU24ir66fy6JVhYV5wA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b3WzCa2Xi1qCQxQdgqRMQeHSZaZHtGCadEF7uBu/Be6jzqqTu/a1lmPfJmqzNaEvw/1YJuGmsG6GMES3vps/07JyuCkAKisZIDIal+v5juFQOZrBjPLZt/8UUP7UseiBiYhFz8LKgge7kzSjJuL4h0sar/koYWwJS+VTxnv0dlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hY1fTk78; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=k8bENesrk8fvnY5ZrXgxxu8jcUj5jQH6VwPcjZNvgxrtSiV8EQKJBPeu6nWPGpDzQk6LuGsnn6KMak/+BH1chGv/HbKeKjclcHb62uawrbJ+4QJZj1Dgyool5htm6s/YZ+cz1uoIfLdhBTSaxM69VMuGa+L50fP98SoviNz6TuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bwEc88ku; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hY1fTk78"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A487CC4CEEB;
-	Mon, 18 Aug 2025 15:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755532527;
-	bh=xKr1rCiwUqIXI8QwBa6YH9SvSvUWEf9h67156BGMFsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hY1fTk78r5Mg09w6ATvOScvntsKcpQ54EuKLoMIs8bf9X+iNeXuEbj/NJQqO5NTce
-	 hATud+7OJVFO1HgYyM5WvKm2fjJzT8CAdcxx5Vqbn1jHN8wsU0b/2KbgQoVfkQDipo
-	 yNn7BxJ5nOuYiho2FBjDpGG43Nb7lGHdS7l48Yd9YaU8djK5ABINoUVQVsMGVn0Ue2
-	 3ZxJCxpjxH0nTFaV7/ATdKYN7EZ4M8nOkvq0WwHgJcbh3BWw8PiFDKQ1nsfVscEk9E
-	 6UHW44ocAaiPovndUTj0FFv/VnbYB5ud+KVJssZ3KMaU1yKC3stCVUKv+/6MLQiDzn
-	 l7yHsXqTvFZvw==
-Date: Mon, 18 Aug 2025 10:55:26 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>, linux-mtd@lists.infradead.org,
-	Rob Herring <robh+dt@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>, loongarch@lists.linux.dev,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Keguang Zhang <keguang.zhang@gmail.com>
-Subject: Re: [PATCH v2 7/8] dt-bindings: mtd: loongson,ls1b-nand-controller:
- Document the Loongson-2K1000 NAND controller
-Message-ID: <175553252642.1298621.17529958231132657783.robh@kernel.org>
-References: <cover.1754890670.git.zhoubinbin@loongson.cn>
- <e6568dad8dfc1c2fba6b31a1fbb113e82f8c5da5.1754890670.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bwEc88ku"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KmfCSi8O/XddsGKdRcKOqeDj7Pe6vE7Gax1joOuFhh4=; b=bwEc88kumrWiUkBPFis3R2xC8x
+	1VSU964ojxy4pizILXyaiupvjmCF+9S/j3hMn/7+0O6Nq5XCPfRh9SWhm98h0t2UFUjmA1dzWRZgt
+	tbkFmQuB/mZqY6ky3oZFaXzKbsxU61JtKuUNYn7rd7psdx+2eesyLw8rFRzpJQ1Win9JV+gpfxIJX
+	B0ERXsVVo7c2wl1HSeiIdqRZ4++3ImaZyhHbocKrxLR1Y5j1GlmqWCDYwxZ0RlMOOcuzzqa8ePrTH
+	qkSXaxaLa6fA1jK8eqoW/9WZ9mA8to8qlNfcQ4735MGvUb9ThF8/IOfNGNvoRXzwQSiekxnBpg4fR
+	SmVuRZ6Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uo2Sx-0000000HRhy-0oaa;
+	Mon, 18 Aug 2025 16:12:11 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7731030029B; Mon, 18 Aug 2025 18:12:10 +0200 (CEST)
+Date: Mon, 18 Aug 2025 18:12:10 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
+ vector on guest load/put context
+Message-ID: <20250818161210.GJ3289052@noisy.programming.kicks-ass.net>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-10-seanjc@google.com>
+ <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
+ <aJ9VQH87ytkWf1dH@google.com>
+ <aJ9YbZTJAg66IiVh@google.com>
+ <20250818143204.GH3289052@noisy.programming.kicks-ass.net>
+ <aKNF7jc4qr9ab-Es@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -53,18 +75,28 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e6568dad8dfc1c2fba6b31a1fbb113e82f8c5da5.1754890670.git.zhoubinbin@loongson.cn>
+In-Reply-To: <aKNF7jc4qr9ab-Es@google.com>
 
+On Mon, Aug 18, 2025 at 08:25:34AM -0700, Sean Christopherson wrote:
 
-On Mon, 11 Aug 2025 14:03:14 +0800, Binbin Zhou wrote:
-> Add new compatible for the Loongson-2K NAND controller used for
-> Loongson-2K1000 SoC.
+> > OK, so *IF* doing the VM-exit during PMI is sound, this is something
+> > that needs a comment somewhere. 
 > 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../mtd/loongson,ls1b-nand-controller.yaml    | 50 ++++++++++++++++++-
->  1 file changed, 49 insertions(+), 1 deletion(-)
-> 
+> I'm a bit lost here.  Are you essentially asking if it's ok to take a VM-Exit
+> while the guest is handling a PMI?  If so, that _has_ to work, because there are
+> myriad things that can/will trigger a VM-Exit at any point while the guest is
+> active.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Yes, that's what I'm asking. Why is this VM-exit during PMI nonsense not
+subject to the same failures that mandates the mid/late PMI ACK.
 
+And yes, I realize this needs to work. But so far I'm not sure I
+understand why that is a safe thing to do.
+
+Like I wrote, I suspect writing all the PMU MSRs serializes things
+sufficiently, but if that is the case, that needs to be explicitly
+mentioned. Because that also doesn't explain why we needs mid-ack
+instead of late-ack on ADL e-cores for instance.
+
+Could it perhaps be that we don't let the guests do PEBS because DS
+doesn't virtualize? And thus we don't have the malformed PEBS record?
