@@ -1,222 +1,162 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF40626E701
-	for <loongarch@lists.linux.dev>; Mon, 18 Aug 2025 09:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B772E228D;
+	Mon, 18 Aug 2025 14:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755510059; cv=none; b=kSHJGQCs8p985uBh5T/1DL/qH8FNTcgA15dzqUBGyqACnTVcR1opG6NaNbtWUDz8BYs7xn0BUEOeMb0OruUJOOMjaDc1gFyhfHfgfHascIsfYN24JbE4BRpOG4fjVWXAVanWDod+K/w/Z75BVaIVbMuel8H7ThFBhv5rY/T3IBs=
+	t=1755527539; cv=none; b=noxV84yZJiRyrp0Zu/SxrPv8cLI/NGBnFqX4i2DQWs3FC0MG11Sw//Poobudg6nzt+Igz6LB9VASv5H4DM6JRItauvLsVZmyPyNdrIc6mmHx38dbGLLqZBQ7VY4a8hPPYyvYUs6CyvTkQ03kn8HTvll44fMbRen6cyxEnYjUz9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755510059; c=relaxed/simple;
-	bh=hcd/LXE3tq0FmZwKYylrYTmoPz8yAtARoiR/DV8P020=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OQz/1fu4ysoZP1jBlg280tpbxAr084mhnadayKhJbeUUfk2GjdraUSLUvLWdQmXuNMhFktKcEVZYtqQ/aHzawLxxxLNktU28KZMFmq580qe/gGnRoDkh8ZtiFQIK85VBqk6oDW6B76UlC6jsriAPtUCugJuB8RvYBcbG7uKfhl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gsr0dNJi; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755527539; c=relaxed/simple;
+	bh=rJq1PLFg1Jl8mhEVCyIXsTV8k6n43w+l6BpugcpqbW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=anIK/enQGvTM2OMt66aHl8sAsLiYonzJ2oV7SnK1ocCV+s2qGiNRMCUqwzEF1nsJZjDEtpchoKf2x5Re313dkDH7cB4qjtmAH3Qxu7i66NQTG3+NQnCiIWPjq2MhgjpUJCk0eqeJNJb8bwHQD/egBt9GF3pb3k4+ZVf0FDhAFDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nTwJBQDM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gsr0dNJi"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-619487c8865so2499478a12.1
-        for <loongarch@lists.linux.dev>; Mon, 18 Aug 2025 02:40:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755510056; x=1756114856; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hOJjRWVOPzxNZaP1qKl5T6uQXMq+ZN2NpLXOIkGXeu8=;
-        b=Gsr0dNJiK/f6YF8o/8y2aqNq7ir5qeTFK4Hu/DT7i+YZDWNOm/Qc3XaPG0uknTEvd4
-         m4ntv6zwgBo9vEilbGtf16i50QaWaxNe2QFH9Irr9p3dGBdPdwn26e5kpZqD4RX+FUWE
-         TThrfv58q0De/DW1EV7/nci34EgsUo5tZv9ajXAQOhyfiG64gdj3y+ulcI7A9lQqNnDX
-         WK+jZyB41NysohhHjj+5cNr1psfsL6l1JpoO+Why0N8zHB+MTMGKDCEBkc3aluXHLTUn
-         dZ0tl6qK48KsfCcKY66cbJyY114M8NQWIE2kE4MIsPuQfKw+gJOEidQSMciT50SE7kNz
-         orkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755510056; x=1756114856;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hOJjRWVOPzxNZaP1qKl5T6uQXMq+ZN2NpLXOIkGXeu8=;
-        b=Lc7HqJjHkWI5U5e7pro6SMpn5mW7Li2A6fS7erP4fu17D5VUarcs2NPrVdDgLIXzlU
-         3AKXooH8HttnLkLGH6cJaCAzXceYEpCcefiewFKI5MBAy3s8GRHmk5RLdFtuMmttgB9f
-         Mg7vDVM1jssXZP/a5zcL7AmDNa/lJxK6K+64RA86V3N5LpT3V5pbROKkPNRXAj+d4iHI
-         p6GKYyKe37h/5zoJoQiwAIWVoXKYErQUDCmZo9IMGPRgXDNvvrCcjtKk40fQS2rUUhmM
-         QVpnUL0iXCm5b6MWcHj6n5KivOXbmyXYnNEEWl+gDKPwLvH8091AT9tV1rPkR+iqKYEO
-         03kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2GoNLPwP0ReFbtK1EOD7BNrg7OVjmvOqTIPEr4V3KqnC1M+VLg9zF+Uc1x1fT3m/jLkw7OmrErtg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzML7EQ9HMeYcztHZ3hvfTR3vnPzUJ5IT95EW0lNdczIUEfCrS3
-	0y8XMoFq4xClc9EtEFz7+7VPFnHc2t5TmyLjxFayOMnN+8k5DqsHOFhxDA0DnzfAa+acpmflYtC
-	/DXJJlGwvKx3l59ALwvNRvxG2s6BquXtQ8TTC
-X-Gm-Gg: ASbGncuS2nXFk/7ha2OpeorGLzuc0QCHljRJ1l47/HS9eQ/yYltfiJtItjXz4VK2tvG
-	uBO1KybTSgLsYyZQKHwv5eVcnyQ6y6hoUKo6WaDSN04XJUAttXZQ/DI9eYVmD3E3VnCvkWejsSF
-	EJWdPbYH9zjBvjXxzIXbHsiWIF94I5cvc7BBzj4uL0zKynTZgfAF1sg3v6XzlNPR4o/RmlYzxQc
-	vMJiAWYhHAiLtUHGw==
-X-Google-Smtp-Source: AGHT+IHp0UmWW2UaLhVJaYIR0yqe8Dam+rKGh2pWLy+njoco3WlqsBW5kQ+Ttg039INaMvj9jU9P+8OKwR3mwdhpHhs=
-X-Received: by 2002:a17:907:72d2:b0:af9:3f53:ed1d with SMTP id
- a640c23a62f3a-afcdb273236mr1142406066b.16.1755510055999; Mon, 18 Aug 2025
- 02:40:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nTwJBQDM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6/EIRFg9PLgH5wwlMqWFKmPwTY6Y/F+Dlmaynssm+2Y=; b=nTwJBQDMyEiWOl9UKDS8McJeti
+	nj2X7/q6CCyGsURq8PcmJKXeUUPIGn1OIHoJm93+vT3hwGJB/j6uSWZyqTNkmObWD5hUoZFcLuuqv
+	FDy6H/gOMAsxcb0nNNyzDeOEjs3qBBIvRCTnxZNQG4RgiZgY4h3Tl+whMPf7vRLFHfsGBo0dtF63J
+	b9a4itPxIPqRAa3/rFEEiJCCB1HWg+ppbiRYrSeF6BxqBVPvItmbtmMAUuckFZZXb1iaPxtZV3irs
+	UTjM7zKpuSyaFmkEsXTgejffm/Nqdx4etJkPDN0uMWcooNWwfQqSfINnPGbas/DAJX/d6G8BuDVHY
+	Gbz6qISA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uo0u5-00000007DeO-2MJS;
+	Mon, 18 Aug 2025 14:32:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EC54630029B; Mon, 18 Aug 2025 16:32:04 +0200 (CEST)
+Date: Mon, 18 Aug 2025 16:32:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
+ vector on guest load/put context
+Message-ID: <20250818143204.GH3289052@noisy.programming.kicks-ass.net>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-10-seanjc@google.com>
+ <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
+ <aJ9VQH87ytkWf1dH@google.com>
+ <aJ9YbZTJAg66IiVh@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1754890670.git.zhoubinbin@loongson.cn> <47545b7ed4943a088b27021a0fdbeaf56947e833.1754890670.git.zhoubinbin@loongson.cn>
- <CAAhV-H4h5qZ8gCjoKMKd8wBYG+secmTrHdo+AY1A60rmhKrCoQ@mail.gmail.com>
- <CAMpQs4JgvCCxgNhmQ7XPHZ9HHohFW69vO7D6mpbBb3Q16u78ag@mail.gmail.com> <CAJhJPsU+dVmnBnHgnNDL0Zro_KYN12c7+pw=720ju-w7veegMQ@mail.gmail.com>
-In-Reply-To: <CAJhJPsU+dVmnBnHgnNDL0Zro_KYN12c7+pw=720ju-w7veegMQ@mail.gmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Mon, 18 Aug 2025 17:40:43 +0800
-X-Gm-Features: Ac12FXw16I7aogqr-1UaRJJv6IlheqoNzx6yaN68YbS9d6fLFkQRWBbtKitkvQ8
-Message-ID: <CAMpQs4+smqstrmcReOYXtyJvgTdu=Yit8_Kq3kMdM=rM6ENKag@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] mtd: rawnand: loongson: Rename loongson1 to loongson
-To: Keguang Zhang <keguang.zhang@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aJ9YbZTJAg66IiVh@google.com>
 
-Hi Keguang:
+On Fri, Aug 15, 2025 at 08:55:25AM -0700, Sean Christopherson wrote:
+> On Fri, Aug 15, 2025, Sean Christopherson wrote:
+> > On Fri, Aug 15, 2025, Peter Zijlstra wrote:
+> > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > > index e1df3c3bfc0d..ad22b182762e 100644
+> > > > --- a/kernel/events/core.c
+> > > > +++ b/kernel/events/core.c
+> > > > @@ -6408,6 +6408,8 @@ void perf_load_guest_context(unsigned long data)
+> > > >  		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+> > > >  	}
+> > > >  
+> > > > +	arch_perf_load_guest_context(data);
+> > > 
+> > > So I still don't understand why this ever needs to reach the generic
+> > > code. x86 pmu driver and x86 kvm can surely sort this out inside of x86,
+> > > no?
+> > 
+> > It's definitely possible to handle this entirely within x86, I just don't love
+> > switching the LVTPC without the protection of perf_ctx_lock and perf_ctx_disable().
+> > It's not a sticking point for me if you strongly prefer something like this: 
+> > 
+> > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> > index 0e5048ae86fa..86b81c217b97 100644
+> > --- a/arch/x86/kvm/pmu.c
+> > +++ b/arch/x86/kvm/pmu.c
+> > @@ -1319,7 +1319,9 @@ void kvm_mediated_pmu_load(struct kvm_vcpu *vcpu)
+> >  
+> >         lockdep_assert_irqs_disabled();
+> >  
+> > -       perf_load_guest_context(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
+> > +       perf_load_guest_context();
+> > +
+> > +       perf_load_guest_lvtpc(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
+> 
+> Hmm, an argument for providing a dedicated perf_load_guest_lvtpc() APIs is that
+> it would allow KVM to handle LVTPC writes in KVM's VM-Exit fastpath, i.e. without
+> having to do a full put+reload of the guest context.
+> 
+> So if we're confident that switching the host LVTPC outside of
+> perf_{load,put}_guest_context() is functionally safe, I'm a-ok with it.
 
-Thanks for your reply.
+Let me see. So the hardware sets Masked when it raises the interrupt.
 
-On Mon, Aug 18, 2025 at 3:05=E2=80=AFPM Keguang Zhang <keguang.zhang@gmail.=
-com> wrote:
->
-> On Mon, Aug 11, 2025 at 5:42=E2=80=AFPM Binbin Zhou <zhoubb.aaron@gmail.c=
-om> wrote:
-> >
-> > Hi Huacai:
-> >
-> > Thanks for your reply.
-> >
-> > On Mon, Aug 11, 2025 at 2:36=E2=80=AFPM Huacai Chen <chenhuacai@kernel.=
-org> wrote:
-> > >
-> > > Hi, Binbin,
-> > >
-> > > On Mon, Aug 11, 2025 at 2:02=E2=80=AFPM Binbin Zhou <zhoubinbin@loong=
-son.cn> wrote:
-> > > >
-> > > > The second step in preparing to add Loongson-2K support is to chang=
-e the
-> > > > names of the driver files and Kconfig options from Loongson1-specif=
-ic to
-> > > > Loongson-generic.
-> > > Is it possible to merge the first two patches? If not, it is better t=
-o
-> > > use loongson1 rather than loongson in the subject line of this patch.
-> >
-> > At first, I thought that separating the renaming of file prefixes from
-> > the renaming of file names would make the changes clearer. Another
-> > point is whether renaming Kconfig items would be considered API
-> > breaking, even though no one is currently referencing them?
-> >
-> > Of course, if anyone thinks that separating them is unnecessary, I
-> > will merge them in the next version.
->
-> It=E2=80=99s reasonable to merge the first two patches.
-> I agree.
+The interrupt handler clears it from software -- depending on uarch in 3
+different places:
+ 1) right at the start of the PMI
+ 2) in the middle, right before enabling the PMU (writing global control)
+ 3) at the end of the PMI
 
-OK. I will do it in the next version.
->
-> > >
-> > > Huacai
-> > >
-> > > >
-> > > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > > > ---
-> > > >  MAINTAINERS                                                 | 2 +-
-> > > >  drivers/mtd/nand/raw/Kconfig                                | 6 ++=
-+---
-> > > >  drivers/mtd/nand/raw/Makefile                               | 2 +-
-> > > >  ...ongson1-nand-controller.c =3D> loongson-nand-controller.c} | 0
-> > > >  4 files changed, 5 insertions(+), 5 deletions(-)
-> > > >  rename drivers/mtd/nand/raw/{loongson1-nand-controller.c =3D> loon=
-gson-nand-controller.c} (100%)
-> > > >
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index 4bac4ea21b64..cc502582c9f1 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -16722,7 +16722,7 @@ F:      Documentation/devicetree/bindings/*=
-/loongson,ls1*.yaml
-> > > >  F:     arch/mips/include/asm/mach-loongson32/
-> > > >  F:     arch/mips/loongson32/
-> > > >  F:     drivers/*/*loongson1*
-> > > > -F:     drivers/mtd/nand/raw/loongson1-nand-controller.c
-> > > > +F:     drivers/mtd/nand/raw/loongson-nand-controller.c
-> > > >  F:     drivers/net/ethernet/stmicro/stmmac/dwmac-loongson1.c
-> > > >  F:     sound/soc/loongson/loongson1_ac97.c
-> > > >
-> > > > diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kc=
-onfig
-> > > > index 4b99d9c422c3..d9e3f13666ac 100644
-> > > > --- a/drivers/mtd/nand/raw/Kconfig
-> > > > +++ b/drivers/mtd/nand/raw/Kconfig
-> > > > @@ -462,12 +462,12 @@ config MTD_NAND_NUVOTON_MA35
-> > > >           Enables support for the NAND controller found on
-> > > >           the Nuvoton MA35 series SoCs.
-> > > >
-> > > > -config MTD_NAND_LOONGSON1
-> > > > -       tristate "Loongson1 NAND controller"
-> > > > +config MTD_NAND_LOONGSON
-> > > > +       tristate "Loongson NAND controller"
-> > > >         depends on LOONGSON1_APB_DMA || COMPILE_TEST
-> > > >         select REGMAP_MMIO
-> > > >         help
-> > > > -         Enables support for NAND controller on Loongson1 SoCs.
-> > > > +         Enables support for NAND controller on Loongson family ch=
-ips.
-> > > >
-> > > >  comment "Misc"
-> > > >
-> > > > diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/M=
-akefile
-> > > > index 711d043ad4f8..c182b9703a9e 100644
-> > > > --- a/drivers/mtd/nand/raw/Makefile
-> > > > +++ b/drivers/mtd/nand/raw/Makefile
-> > > > @@ -59,7 +59,7 @@ obj-$(CONFIG_MTD_NAND_ROCKCHIP)               +=
-=3D rockchip-nand-controller.o
-> > > >  obj-$(CONFIG_MTD_NAND_PL35X)           +=3D pl35x-nand-controller.=
-o
-> > > >  obj-$(CONFIG_MTD_NAND_RENESAS)         +=3D renesas-nand-controlle=
-r.o
-> > > >  obj-$(CONFIG_MTD_NAND_NUVOTON_MA35)    +=3D nuvoton-ma35d1-nand-co=
-ntroller.o
-> > > > -obj-$(CONFIG_MTD_NAND_LOONGSON1)       +=3D loongson1-nand-control=
-ler.o
-> > > > +obj-$(CONFIG_MTD_NAND_LOONGSON)                +=3D loongson-nand-=
-controller.o
-> > > >
-> > > >  nand-objs :=3D nand_base.o nand_legacy.o nand_bbt.o nand_timings.o=
- nand_ids.o
-> > > >  nand-objs +=3D nand_onfi.o
-> > > > diff --git a/drivers/mtd/nand/raw/loongson1-nand-controller.c b/dri=
-vers/mtd/nand/raw/loongson-nand-controller.c
-> > > > similarity index 100%
-> > > > rename from drivers/mtd/nand/raw/loongson1-nand-controller.c
-> > > > rename to drivers/mtd/nand/raw/loongson-nand-controller.c
-> > > > --
-> > > > 2.47.3
-> > > >
-> > > >
-> >
-> > --
-> > Thanks.
-> > Binbin
->
->
->
-> --
-> Best regards,
->
-> Keguang Zhang
+the various changelogs adding that code mention spurious PMIs and
+malformed PEBS records.
 
+So the fun all happens when the guest is doing PMI and gets a VM-exit
+while still Masked.
 
---=20
-Thanks.
-Binbin
+At that point, we can come in and completely rewrite the PMU state,
+reroute the PMI and enable things again. Then later, we 'restore' the
+PMU state, re-set LVTPC masked to the guest interrupt and 'resume'.
+
+What could possibly go wrong :/ Kan, I'm assuming, but not knowing, that
+writing all the PMU MSRs is somehow serializing state sufficient to not
+cause the above mentioned fails? Specifically, clearing PEBS_ENABLE
+should inhibit those malformed PEBS records or something? What if the
+host also has PEBS and we don't actually clear the bit?
+
+The current order ensures we rewrite LVTPC when global control is unset;
+I think we want to keep that.
+
+While staring at this, I note that perf_load_guest_context() will clear
+global ctrl, clear all the counter programming, and re-enable an empty
+pmu. Now, an empty PMU should result in global control being zero --
+there is nothing run after all.
+
+But then kvm_mediated_pmu_load() writes an explicit 0 again. Perhaps
+replace this with asserting it is 0 instead?
+
+Anyway, this means that moving the LVTPC writing into
+kvm_mediated_pmu_load() as you suggest is identical.
+perf_load_guest_context() results in global control being 0, we then
+assert it is 0, and write LVTPC while it is still 0.
+kvm_pmu_load_guest_pmcs() will then frob the MSRs.
+
+OK, so *IF* doing the VM-exit during PMI is sound, this is something
+that needs a comment somewhere. Then going back again, is the easy part,
+since on the host side, we can never transition into KVM during a PMI.
