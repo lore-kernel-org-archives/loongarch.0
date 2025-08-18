@@ -1,199 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A182D24B0;
-	Mon, 18 Aug 2025 17:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFF0F510;
+	Mon, 18 Aug 2025 20:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755539908; cv=none; b=WIrqGw7bVYNw2SwmxiTW1Z9fh774+tWqX0Ota5uuYyO4DDwQW4g+S8HTWydB73k8QroQCl+sIMqErmBQoKhJiVAOJDIBJElBdiLedSlO2SoK7TX6x2bkvwW8qWoCCQZBIDP28RMl51WnO2dQv1iocWVLbPvIDbVi+ksPbEZsRk4=
+	t=1755547664; cv=none; b=gtUnn62WZH7T1s+xYjyNBtr/onxmcqinDWqq9NqekHL3Z+mOpgN8NDeU6rY6VBAqN5hGZCQg5tiIAbd58ZAQAXfp5dGNhxAyhIzTCrahTWQPKn6tWppkF82l6ucb/l00SMtAvcDDoSLXaNn2By0qD/7lZag7ZWKyMv9PT/UOJEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755539908; c=relaxed/simple;
-	bh=ulZLbUkKKsVBIPbfqGa1aUvDJTveq02TSZlicwCIS60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=InmIxrzX0eAeO5IuJysl1DhII3sTtLRsQ1Ol1n6S3vatgl8PD2SOLO6kaZxMbMXonbUctj6zV5KuZ26idKDMCCT6E8N0bUD4ATjFPsAnPSAA9czc6qxHEUyqWDLjNG2qbIQxEkpTib6LwRIV75+gLKcXfb1lo0hAVnge4tSj0fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ph7VQEYP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755547664; c=relaxed/simple;
+	bh=HUP2AEiZfFgmlejZ9gs27ibEAHSKm6RtjRLDUuqDXBM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T9FbF6NmiBdc9AP9BHdcm16LWJHTUfR5oLe0Z4JlA9afit2kfuo9YD9z47kbtb5yVYPZzaqS6wdLaeICy/oNHtsJypgd1j7aVgNsKhXIe5xAObw8T69lNyi9coe6lZS3KjLB8FJL8Nb2Cr1tZN8vf7pcH9/eeu1zyYSp0Uy3ues=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F9oTVbBu; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ph7VQEYP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36A7C4CEEB;
-	Mon, 18 Aug 2025 17:58:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755539908;
-	bh=ulZLbUkKKsVBIPbfqGa1aUvDJTveq02TSZlicwCIS60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ph7VQEYPaaGLHX1CxSttvwluawSFjJ3RhwRQ9sc+uLROmePoNX8S92BodjURNxi2u
-	 21Xkf9TnFa6S+lJ8PRefXN7/sK3AKhIaup4wJlKHmP4QLrGOcw3E101A8LCaNXf26G
-	 ira2dKOY0WOzYlvHIZiemDObNHQQQbAp1V2dP5sHjIf9INn0omUMjJuaYEFxL+oOTP
-	 so2CpM/Dz74nw3MwHJ1l+OKqMaQLubHKLXpVP/y72aDcAM1kIH/wnBd8WNXcaabEbz
-	 WFYuX8hGs114fJDBLaDFNt4+jVQIBMGI69iSa2gt0xa1cfn+Bdfa+JjASll7obpXa8
-	 SLObNXlw2ffWQ==
-Date: Mon, 18 Aug 2025 12:58:27 -0500
-From: Rob Herring <robh@kernel.org>
-To: Yao Zi <ziyao@disroot.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 1/3] dt-binding: pinctrl: Document Loongson 2K0300 pin
- controller
-Message-ID: <20250818175827.GA1507697-robh@kernel.org>
-References: <20250811163749.47028-2-ziyao@disroot.org>
- <20250811163749.47028-3-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F9oTVbBu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755547663; x=1787083663;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HUP2AEiZfFgmlejZ9gs27ibEAHSKm6RtjRLDUuqDXBM=;
+  b=F9oTVbBuK8fZEOqmOJwLuhaU1Z+cHHP05a6oZ4yISpCDUrmXS5RaT96v
+   hM/6UP12uUeXoTRdbxuCYTftEHgh3f3LhIPb4Y5BpuLq28WF7nWoozjYD
+   q9HbTureoXfwT9iKnIMWAjh2VXAIuKK+lsNKOky8aUmpqFl1J/vuOr0Gh
+   iZr4w2xarbb/kpkqdWuUTYKXfM/y0uCBfhhDjbw/BQZM1caZBDFIbWTiH
+   8RLu7NuBVq7OgQ4skQTYRST7y9CTN60lsclY4c8I7VXNrJGDrlbqJ5N8K
+   EtEU/JyrhTTCCN6FC2DWQX0kVyu0gCrwFcy7R3D5ns78/ofrjYhb3aFef
+   g==;
+X-CSE-ConnectionGUID: fg4CMOqpTGuXd3INrYHpMg==
+X-CSE-MsgGUID: t/atL0QTT1i9kFJZh+IYIw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="69233315"
+X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
+   d="scan'208";a="69233315"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 13:07:43 -0700
+X-CSE-ConnectionGUID: VPdWLgrPQ4q9Io7sk+4Srw==
+X-CSE-MsgGUID: IPqmhJ93SHqaacsNGeVfjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
+   d="scan'208";a="168055360"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 13:07:41 -0700
+Received: from [10.124.163.195] (kliang2-mobl1.ccr.corp.intel.com [10.124.163.195])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id D183720B571C;
+	Mon, 18 Aug 2025 13:07:39 -0700 (PDT)
+Message-ID: <4e58688f-22e0-4e20-9043-dee76d01d24f@linux.intel.com>
+Date: Mon, 18 Aug 2025 13:07:39 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250811163749.47028-3-ziyao@disroot.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
+ vector on guest load/put context
+To: Peter Zijlstra <peterz@infradead.org>,
+ Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>, Mingwei Zhang <mizhang@google.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-10-seanjc@google.com>
+ <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
+ <aJ9VQH87ytkWf1dH@google.com> <aJ9YbZTJAg66IiVh@google.com>
+ <20250818143204.GH3289052@noisy.programming.kicks-ass.net>
+ <aKNF7jc4qr9ab-Es@google.com>
+ <20250818161210.GJ3289052@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250818161210.GJ3289052@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 11, 2025 at 04:37:48PM +0000, Yao Zi wrote:
-> The pincontroller integarted in Loongson 2K0300 is able to configure
-> function multiplexing for all the pins. It could also configure drive
-> strength on basis of functions, which means all pins set to the same
-> function share drive-strength setting. Drive-strength configuration
-> isn't available for all functions, either.
+
+
+On 2025-08-18 9:12 a.m., Peter Zijlstra wrote:
+> On Mon, Aug 18, 2025 at 08:25:34AM -0700, Sean Christopherson wrote:
 > 
-> This binding utilizes two levels of subnodes, where the outer represents
-> function and the inner represents groups. Drive-strength is allowed in
-> the outer since it's shared among all groups configured to the function.
+>>> OK, so *IF* doing the VM-exit during PMI is sound, this is something
+>>> that needs a comment somewhere. 
+>>
+>> I'm a bit lost here.  Are you essentially asking if it's ok to take a VM-Exit
+>> while the guest is handling a PMI?  If so, that _has_ to work, because there are
+>> myriad things that can/will trigger a VM-Exit at any point while the guest is
+>> active.
 > 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  .../pinctrl/loongson,ls2k0300-pinctrl.yaml    | 92 +++++++++++++++++++
->  MAINTAINERS                                   |  6 ++
->  2 files changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
+> Yes, that's what I'm asking. Why is this VM-exit during PMI nonsense not
+> subject to the same failures that mandates the mid/late PMI ACK.
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..cbd74cb45342
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k0300-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson-2K0300 SoC Pinctrl Controller
-> +
-> +maintainers:
-> +  - Yao Zi <ziyao@disroot.org>
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: loongson,ls2k0300-pinctrl
-> +
-> +  reg:
-> +    items:
-> +      - description: Pin function-multiplexing configuration registers
-> +      - description: Pin drive-strength configuration registers
-> +
-> +  reg-names:
-> +    items:
-> +      - const: mux
-> +      - const: drive
-> +
-> +patternProperties:
-> +  '^func-':
-> +    type: object
-> +
-> +    $ref: pincfg-node.yaml#
-> +
-> +    properties:
-> +      drive-strength:
-> +        description:
-> +          Maximum sink or source current as defined in pincfg-node.yaml. Note
-> +          that drive strength could only be configured on function basis, i.e.,
-> +          all pins multiplexed to the same function share the same
-> +          configuration.
-> +
-> +          This could only be configured for several functions, including jtag,
-> +          dvo, uart, gmac, sdio, spi, i2s, timer, usb and emmc.
-> +        enum: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-How do you know what pin this drive strength corresponds to without any 
-other properties? Node names generally aren't important, so you 
-shouldn't be using that. 
-
-> +
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '-pins$':
-> +        type: object
-> +        $ref: pinmux-node.yaml#
-
-Generally the pin config and muxing are in 1 node if you can control 
-both.
-
-> +
-> +        properties:
-> +          pinmux:
-> +            description:
-> +              Integer array, represents GPIO pin number and multiplexing
-> +              setting. Configuration for each pin takes one cell. The pin
-> +              number locates at the high 24 bits, and the setting locates at
-> +              the low 8 bits.
-> +
-> +        additionalProperties: false
-> +
-> +        required:
-> +          - pinmux
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pinctrl@1fe00420 {
-> +        compatible = "loongson,ls2k0300-pinctrl";
-> +        reg = <0x16000490 0x20>, <0x16000110 0x4>;
-> +        reg-names = "mux", "drive";
-> +
-> +        func-uart {
-> +            drive-strength = <2>;
-> +
-> +            uart0-pins {
-> +                pinmux = <((40 << 8) | 0x3)>, <((41 << 8) | 0x3)>;
-> +            };
-> +
-> +            uart1_pins: uart1-pins {
-> +                pinmux = <((42 << 8) | 0x3)>, <((43 << 8) | 0x3)>;
-> +            };
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7960e65d7dfc..dd50571b4072 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14414,6 +14414,12 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
->  F:	drivers/thermal/loongson2_thermal.c
->  
-> +LOONGSON-2K0300 SOC PINCTRL DRIVER
-> +M:	Yao Zi <ziyao@disroot.org>
-> +L:	linux-gpio@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
-> +
->  LOONGSON EDAC DRIVER
->  M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
->  L:	linux-edac@vger.kernel.org
-> -- 
-> 2.50.1
+> And yes, I realize this needs to work. But so far I'm not sure I
+> understand why that is a safe thing to do.
 > 
+> Like I wrote, I suspect writing all the PMU MSRs serializes things
+> sufficiently, but if that is the case, that needs to be explicitly
+> mentioned. Because that also doesn't explain why we needs mid-ack
+> instead of late-ack on ADL e-cores for instance.
+
+The mid-ack and late-ack only require under some corner cases, e.g., two
+PMIs are triggered simultaneously with PEBS.
+Because the ucode of p-core and e-core handle the pending PEBS records
+and PMIs differently.
+For p-core, the ACK should be as close to EOM. Otherwise, the pending
+PMI will trigger a spurious PMI warning.
+For e-core, the uncode handles the pending PMI well. There is no
+spurious PMI. However, it impacts the update of the PEBS_DATA_CFG. The
+PEBS_DATA_CFG is global. If the ACK cannot be done before re-enabling
+counters, the stale PEBS_DATA_CFG will somehow be written into the next
+PEBS record of the pending PMI. It triggers the malformed PEBS record.
+
+For the upcoming arch PEBS, the data cfg is per-counter.
+The mid-ack workaround should not be required.
+> 
+> Could it perhaps be that we don't let the guests do PEBS because DS
+> doesn't virtualize? And thus we don't have the malformed PEBS record?
+>
+
+Yes, I don't think it can impact the mediated PMU. The legacy PEBS for
+vPMU is not supported.
+Since the configuration is per-counter with the arch PEBS, the malformed
+PEBS record should not be triggered either.
+
+
+Thanks,
+Kan
