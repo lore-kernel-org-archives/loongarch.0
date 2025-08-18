@@ -1,72 +1,47 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93562278146;
-	Mon, 18 Aug 2025 16:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A182D24B0;
+	Mon, 18 Aug 2025 17:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755533544; cv=none; b=N7MdopQ93NHrWR9USgWpOwpGCYONSAs00DaH/m2vrgtTjgqnmHQ5N26pzuVubXsVOxkjJQ8XFvo4wWX1gFiNqZ2Cw3HJMR6fqGSAgvJmLsUAkELaS7N7dP+gJMQZwRqw1krFWYxuKKXqKhq+u7u1WF2dXOFFmSVDMd/h1QvpX+A=
+	t=1755539908; cv=none; b=WIrqGw7bVYNw2SwmxiTW1Z9fh774+tWqX0Ota5uuYyO4DDwQW4g+S8HTWydB73k8QroQCl+sIMqErmBQoKhJiVAOJDIBJElBdiLedSlO2SoK7TX6x2bkvwW8qWoCCQZBIDP28RMl51WnO2dQv1iocWVLbPvIDbVi+ksPbEZsRk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755533544; c=relaxed/simple;
-	bh=0KlOKuDfOUdk5ngaWQoAWmJ0VU24ir66fy6JVhYV5wA=;
+	s=arc-20240116; t=1755539908; c=relaxed/simple;
+	bh=ulZLbUkKKsVBIPbfqGa1aUvDJTveq02TSZlicwCIS60=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k8bENesrk8fvnY5ZrXgxxu8jcUj5jQH6VwPcjZNvgxrtSiV8EQKJBPeu6nWPGpDzQk6LuGsnn6KMak/+BH1chGv/HbKeKjclcHb62uawrbJ+4QJZj1Dgyool5htm6s/YZ+cz1uoIfLdhBTSaxM69VMuGa+L50fP98SoviNz6TuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bwEc88ku; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=InmIxrzX0eAeO5IuJysl1DhII3sTtLRsQ1Ol1n6S3vatgl8PD2SOLO6kaZxMbMXonbUctj6zV5KuZ26idKDMCCT6E8N0bUD4ATjFPsAnPSAA9czc6qxHEUyqWDLjNG2qbIQxEkpTib6LwRIV75+gLKcXfb1lo0hAVnge4tSj0fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ph7VQEYP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bwEc88ku"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KmfCSi8O/XddsGKdRcKOqeDj7Pe6vE7Gax1joOuFhh4=; b=bwEc88kumrWiUkBPFis3R2xC8x
-	1VSU964ojxy4pizILXyaiupvjmCF+9S/j3hMn/7+0O6Nq5XCPfRh9SWhm98h0t2UFUjmA1dzWRZgt
-	tbkFmQuB/mZqY6ky3oZFaXzKbsxU61JtKuUNYn7rd7psdx+2eesyLw8rFRzpJQ1Win9JV+gpfxIJX
-	B0ERXsVVo7c2wl1HSeiIdqRZ4++3ImaZyhHbocKrxLR1Y5j1GlmqWCDYwxZ0RlMOOcuzzqa8ePrTH
-	qkSXaxaLa6fA1jK8eqoW/9WZ9mA8to8qlNfcQ4735MGvUb9ThF8/IOfNGNvoRXzwQSiekxnBpg4fR
-	SmVuRZ6Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uo2Sx-0000000HRhy-0oaa;
-	Mon, 18 Aug 2025 16:12:11 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7731030029B; Mon, 18 Aug 2025 18:12:10 +0200 (CEST)
-Date: Mon, 18 Aug 2025 18:12:10 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yongwei Ma <yongwei.ma@intel.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
- vector on guest load/put context
-Message-ID: <20250818161210.GJ3289052@noisy.programming.kicks-ass.net>
-References: <20250806195706.1650976-1-seanjc@google.com>
- <20250806195706.1650976-10-seanjc@google.com>
- <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
- <aJ9VQH87ytkWf1dH@google.com>
- <aJ9YbZTJAg66IiVh@google.com>
- <20250818143204.GH3289052@noisy.programming.kicks-ass.net>
- <aKNF7jc4qr9ab-Es@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ph7VQEYP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36A7C4CEEB;
+	Mon, 18 Aug 2025 17:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755539908;
+	bh=ulZLbUkKKsVBIPbfqGa1aUvDJTveq02TSZlicwCIS60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ph7VQEYPaaGLHX1CxSttvwluawSFjJ3RhwRQ9sc+uLROmePoNX8S92BodjURNxi2u
+	 21Xkf9TnFa6S+lJ8PRefXN7/sK3AKhIaup4wJlKHmP4QLrGOcw3E101A8LCaNXf26G
+	 ira2dKOY0WOzYlvHIZiemDObNHQQQbAp1V2dP5sHjIf9INn0omUMjJuaYEFxL+oOTP
+	 so2CpM/Dz74nw3MwHJ1l+OKqMaQLubHKLXpVP/y72aDcAM1kIH/wnBd8WNXcaabEbz
+	 WFYuX8hGs114fJDBLaDFNt4+jVQIBMGI69iSa2gt0xa1cfn+Bdfa+JjASll7obpXa8
+	 SLObNXlw2ffWQ==
+Date: Mon, 18 Aug 2025 12:58:27 -0500
+From: Rob Herring <robh@kernel.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH 1/3] dt-binding: pinctrl: Document Loongson 2K0300 pin
+ controller
+Message-ID: <20250818175827.GA1507697-robh@kernel.org>
+References: <20250811163749.47028-2-ziyao@disroot.org>
+ <20250811163749.47028-3-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -75,28 +50,150 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aKNF7jc4qr9ab-Es@google.com>
+In-Reply-To: <20250811163749.47028-3-ziyao@disroot.org>
 
-On Mon, Aug 18, 2025 at 08:25:34AM -0700, Sean Christopherson wrote:
-
-> > OK, so *IF* doing the VM-exit during PMI is sound, this is something
-> > that needs a comment somewhere. 
+On Mon, Aug 11, 2025 at 04:37:48PM +0000, Yao Zi wrote:
+> The pincontroller integarted in Loongson 2K0300 is able to configure
+> function multiplexing for all the pins. It could also configure drive
+> strength on basis of functions, which means all pins set to the same
+> function share drive-strength setting. Drive-strength configuration
+> isn't available for all functions, either.
 > 
-> I'm a bit lost here.  Are you essentially asking if it's ok to take a VM-Exit
-> while the guest is handling a PMI?  If so, that _has_ to work, because there are
-> myriad things that can/will trigger a VM-Exit at any point while the guest is
-> active.
+> This binding utilizes two levels of subnodes, where the outer represents
+> function and the inner represents groups. Drive-strength is allowed in
+> the outer since it's shared among all groups configured to the function.
+> 
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  .../pinctrl/loongson,ls2k0300-pinctrl.yaml    | 92 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 ++
+>  2 files changed, 98 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..cbd74cb45342
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
+> @@ -0,0 +1,92 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k0300-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson-2K0300 SoC Pinctrl Controller
+> +
+> +maintainers:
+> +  - Yao Zi <ziyao@disroot.org>
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: loongson,ls2k0300-pinctrl
+> +
+> +  reg:
+> +    items:
+> +      - description: Pin function-multiplexing configuration registers
+> +      - description: Pin drive-strength configuration registers
+> +
+> +  reg-names:
+> +    items:
+> +      - const: mux
+> +      - const: drive
+> +
+> +patternProperties:
+> +  '^func-':
+> +    type: object
+> +
+> +    $ref: pincfg-node.yaml#
+> +
+> +    properties:
+> +      drive-strength:
+> +        description:
+> +          Maximum sink or source current as defined in pincfg-node.yaml. Note
+> +          that drive strength could only be configured on function basis, i.e.,
+> +          all pins multiplexed to the same function share the same
+> +          configuration.
+> +
+> +          This could only be configured for several functions, including jtag,
+> +          dvo, uart, gmac, sdio, spi, i2s, timer, usb and emmc.
+> +        enum: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-Yes, that's what I'm asking. Why is this VM-exit during PMI nonsense not
-subject to the same failures that mandates the mid/late PMI ACK.
+How do you know what pin this drive strength corresponds to without any 
+other properties? Node names generally aren't important, so you 
+shouldn't be using that. 
 
-And yes, I realize this needs to work. But so far I'm not sure I
-understand why that is a safe thing to do.
+> +
+> +    additionalProperties: false
+> +
+> +    patternProperties:
+> +      '-pins$':
+> +        type: object
+> +        $ref: pinmux-node.yaml#
 
-Like I wrote, I suspect writing all the PMU MSRs serializes things
-sufficiently, but if that is the case, that needs to be explicitly
-mentioned. Because that also doesn't explain why we needs mid-ack
-instead of late-ack on ADL e-cores for instance.
+Generally the pin config and muxing are in 1 node if you can control 
+both.
 
-Could it perhaps be that we don't let the guests do PEBS because DS
-doesn't virtualize? And thus we don't have the malformed PEBS record?
+> +
+> +        properties:
+> +          pinmux:
+> +            description:
+> +              Integer array, represents GPIO pin number and multiplexing
+> +              setting. Configuration for each pin takes one cell. The pin
+> +              number locates at the high 24 bits, and the setting locates at
+> +              the low 8 bits.
+> +
+> +        additionalProperties: false
+> +
+> +        required:
+> +          - pinmux
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pinctrl@1fe00420 {
+> +        compatible = "loongson,ls2k0300-pinctrl";
+> +        reg = <0x16000490 0x20>, <0x16000110 0x4>;
+> +        reg-names = "mux", "drive";
+> +
+> +        func-uart {
+> +            drive-strength = <2>;
+> +
+> +            uart0-pins {
+> +                pinmux = <((40 << 8) | 0x3)>, <((41 << 8) | 0x3)>;
+> +            };
+> +
+> +            uart1_pins: uart1-pins {
+> +                pinmux = <((42 << 8) | 0x3)>, <((43 << 8) | 0x3)>;
+> +            };
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7960e65d7dfc..dd50571b4072 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14414,6 +14414,12 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+>  F:	drivers/thermal/loongson2_thermal.c
+>  
+> +LOONGSON-2K0300 SOC PINCTRL DRIVER
+> +M:	Yao Zi <ziyao@disroot.org>
+> +L:	linux-gpio@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
+> +
+>  LOONGSON EDAC DRIVER
+>  M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
+>  L:	linux-edac@vger.kernel.org
+> -- 
+> 2.50.1
+> 
