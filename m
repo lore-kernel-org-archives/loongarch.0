@@ -1,91 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9197C1FBCB5;
-	Sun, 17 Aug 2025 10:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF2A7494
+	for <loongarch@lists.linux.dev>; Mon, 18 Aug 2025 03:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755428360; cv=none; b=tAEL4602e9dVSInHAWWqsTCo272L3HVhVxrbpTKcveVRN1vQ62kLm+9d1jG+hq1PTBrjgx+2h5bkPp/Leuv/z8tdYdEcr4v8BKZDIh4PHYiCqcgXXM2O/pxbpdcAkWZXqCgl4RDwXR2DSFlrr+fVjfrlnQlb6Pkce35wNIku9ak=
+	t=1755488928; cv=none; b=L4mRywzRxefYeb6kzByoVMD7bCbrbwy2sauQXbxbMliubTQxj2QmSySEoSK7AeVqZvbKwdCEXXx26P0B1LeZ4u5g/gJmuw5vd9JVcnlYI0yD8FF7oNnqKoDtQCI+Y3wk0D62LDCZTskFARi8Gp67aYVoDO16Plm4EOFTlywFlMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755428360; c=relaxed/simple;
-	bh=YsJgTTsnsXUMnX2YNiPMLa1RfWqepGr89YgSXk7AUX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M+Fq1pjc0ZVaNgGHqF4TK6uu34+C79wOHbRZXpZqHX6kqXig7NvoLSYvJP8yGtYoE4Fl8Ih1MDQlEhWU+bosCIrwsfvVSoBq3a5SBUCFQpX9Kj50FN6XzLeC5pzamtkyaKVfyNj0TpzrMczo4eqUfTMHGOigGrsBoRQeM7mq3WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sau3A0p9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sau3A0p9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F988C4CEEB;
-	Sun, 17 Aug 2025 10:59:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755428359;
-	bh=YsJgTTsnsXUMnX2YNiPMLa1RfWqepGr89YgSXk7AUX8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Sau3A0p98zRjWNS2jEXHE5WL+dBNfVSrxqO8/wSlM94f6MA8eeUad5K6+HvrRSLFA
-	 ykZj+4NWA3uQQ+48qylfBzmgrcUtfkQrZAOGsEJlgebPPAZyIwk9Nkvkr+i2NONzwK
-	 aNkh+KcPbc+UaKFH0MeDBEH2WPg6QLrNNkVYndvem1+TvzAQ7KiVJX26DOAsV/MPTE
-	 z0mBr/98Gnfr+OLqVkoRoqbdyUhlm4KjaY/VCxO78L+Z91EL2Ogf4UtJvkx3joCMB2
-	 PdylwXPLH8i5DJXFCpkCYnbTz5Kqq4lu0/U6rD+4hyTSQBnRpscVdVqwq6LOTSxHrZ
-	 OskFbbyDSlcyQ==
-Date: Sun, 17 Aug 2025 12:59:16 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Juxin Gao <gaojuxin@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, linux-pwm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: loongson: Fix LOONGSON_PWM_FREQ_DEFAULT
-Message-ID: <n5kdswq7oduruqiruyup4rcdwrs76tlinz26swotzeqklterey@off5cbv5i4e5>
-References: <20250816104904.4779-2-xry111@xry111.site>
+	s=arc-20240116; t=1755488928; c=relaxed/simple;
+	bh=9rNN2l2BSzLlAGChb7BkAAx9jQ0N67cHtfdPEx9MIsU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=soZzOF/X0GLDgH4Btbzc8aWdjGanprUUR1Oa9EMvkhu4SuGNJAhZk+0SQ5+nhdz+IB+IBR9/Ikn4Sc/logm9D0eHOYQgS80FYdvxgqYLHFhNLgPv0k2XdP3KgGqlDPLmcvSD/JRrLW6j8xemLZNksznTxispGk1NGenDXBXXo+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxPOKZoqJoSjRBAQ--.17212S3;
+	Mon, 18 Aug 2025 11:48:41 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxvsGYoqJoEbZUAA--.20054S3;
+	Mon, 18 Aug 2025 11:48:41 +0800 (CST)
+Subject: Re: [PATCH 0/2] Fix objtool warnings if LTO is enabled for LoongArch
+To: Huacai Chen <chenhuacai@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250812132716.1465-1-yangtiezhu@loongson.cn>
+ <20250814230137.GA2247447@ax162>
+ <CAAhV-H4pYKb9+XUZW4QNWiMQSZVBBsVSvDNB5RvKWnxFEC-gcg@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <80f3c9ff-5949-b8d3-6067-18090e7a282a@loongson.cn>
+Date: Mon, 18 Aug 2025 11:48:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4mc4hchyujztabjl"
-Content-Disposition: inline
-In-Reply-To: <20250816104904.4779-2-xry111@xry111.site>
+In-Reply-To: <CAAhV-H4pYKb9+XUZW4QNWiMQSZVBBsVSvDNB5RvKWnxFEC-gcg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxvsGYoqJoEbZUAA--.20054S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKw15GryrZw18KFWxZr17XFc_yoWDKFX_Zr
+	1Duwn3Cw17CanFya9xKas3ur1DKan7Was5Xw1SqryUGwnxJa1DCrWUGwnavrnagF48JFsr
+	GrZ09rsI9347WosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
+	DUUUU
 
+On 2025/8/16 下午10:59, Huacai Chen wrote:
+> On Fri, Aug 15, 2025 at 7:01 AM Nathan Chancellor <nathan@kernel.org> wrote:
+>>
+>> On Tue, Aug 12, 2025 at 09:27:14PM +0800, Tiezhu Yang wrote:
+>>> The patch #1 should be a preparation for patch #2, that is to say,
+>>> the patch #2 is dependent on the patch #1, otherwise there is build
+>>> error if LTO is enabled after only applying patch #2.
+>>
+>> Thanks, these two patches do indeed resolve most of the warnings that I
+>> see.
+>>
+>> Tested-by: Nathan Chancellor <nathan@kernel.org>
+>>
+>>> With this series, most of warnings have been silenced, only remains
+>>> the following warning by now, it needs more analysis:
+>>>
+>>>    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel() falls through
+>>>    to next function __efistub_exit_boot_func()
+>>
+>> Yes, I do see this one too. Odd, as efi_boot_kernel() ends in a
+>> __noreturn function...
+> But this one only exists for LTO?
 
---4mc4hchyujztabjl
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: loongson: Fix LOONGSON_PWM_FREQ_DEFAULT
-MIME-Version: 1.0
+Yes, this is true.
 
-Hello,
+I have fixed this warning and the other new warnings locally,
+will do more testing before sending patches.
 
-[adding Juxin Gao to Cc:]
+Thanks,
+Tiezhu
 
-On Sat, Aug 16, 2025 at 06:49:05PM +0800, Xi Ruoyao wrote:
-> Per the 7A1000 and 7A2000 user manual, the clock frequency of their
-> PWM controllers is 50 MHz, not 50 kHz.
->=20
-> Fixes: 2b62c89448dd ("pwm: Add Loongson PWM controller support")
-
-A quick glimpse into
-https://loongson.github.io/LoongArch-Documentation/Loongson-7A1000-usermanu=
-al-EN.pdf
-confirms this, so I tend to apply it. I'll wait a bit to give the people
-involved in 2b62c89448dd a chance to comment.
-
-Best regards
-Uwe
-
---4mc4hchyujztabjl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmihtgEACgkQj4D7WH0S
-/k5rbQf8CY/bnYqpoMTDvYD/tfhlrlJbUrH2oLdGjTFUo6fTLHNKHQmU4mN80JIZ
-TsfsPiYAexrvNCqcLUqDc6E0ADiPz8ZSU0slzUebNLabt9L8FPnLx6kqLM7lUdX/
-9eUxCxTc1m4WHgOqKfKbQmuRkPQRMl2jTBx405wNJx2Ly/EKIu4f6nf/x12OjJFi
-MXlDThXYRF24k2NsYmIrl+T/lEluf6Xj8J/7EbumRP7eL9TblE246RGi03u9BfDR
-mxA4d8eVQsf5LliGeJm93TUkvp9cd5oZz6ZGtlsQwNM9rVqr1Y7fUy9tbEwMSL41
-cMIVV8bz7ia4tamnjKXi3yGe/Zz+qQ==
-=86Nh
------END PGP SIGNATURE-----
-
---4mc4hchyujztabjl--
