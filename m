@@ -1,351 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE3D151991;
-	Tue, 19 Aug 2025 02:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755571514; cv=fail; b=nw4N8wFNlK+Shr1Xz/HY3YbZ6uFGg4xuD8/1CBoxwdEWKYBJnanHPaxHL8ng4yCzKin16RIC9aPXwkmY4nigFeCbcwV6idP0nGfalHiOM7N5P+8r/7LfxJuRu2G1j3+0+Cr31xCKNLaY4+4BFIRpbOAivjx7/BU9QPHSeH52dKw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755571514; c=relaxed/simple;
-	bh=CayFT9s7VcOTxRjlaOoNz2kqxx2ROPV3p/+xFr8rw7c=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GB/meQ06tFJjp8oWAUKlZS7u7yjr6YPxMeMFDKg570dONTuTBbNb9DXiX9/LLWCzMv9nM1BqLVj5/lh1cUwEo/9O37jybuHx1TvNTFVgOlbir5v9W1OyIRasYkNRvJozJl2weSIItBxLH927v6MdVGgjfAv2daHv8K9HRjadfAY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NKCS2PbP; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2A61FC0E2;
+	Tue, 19 Aug 2025 08:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755591869; cv=none; b=cMZZK8ntlyc2SEDgtNPBXtQAIGznlVPJU5YezGqWITQUD4UJRXQtiDlmycSoIo13jL7gGCtZKFFvBKr4/rppB1x1N8fUxh1JeM2AIICYy9J0gCyzODXiUYH30dZc5ppiV648XbzVfAIfKG+ZCPMP6/NZUOTEoVySTD+SFH/nawU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755591869; c=relaxed/simple;
+	bh=whGgDFHXFaI+eiNROC02dWhyPLyGU9Ql2D+xbbcJOmc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YNvVslCdUGTWdNeG+GCJq32mueAQNjqc5/l3isTly2/gathBxC7cFhsi1r3tnxvg7ybDXgzzpjE+Gj5TNGj17gXjyDrJMH1YZ1JrpDpO5tQ7CaimNuIiMw1E3jGxGQSlqS/MVIk+pAmdt1o//WojqiFfV81c1+vw6uk50kQCtfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=XAsC/JtW; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKCS2PbP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755571512; x=1787107512;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   mime-version;
-  bh=CayFT9s7VcOTxRjlaOoNz2kqxx2ROPV3p/+xFr8rw7c=;
-  b=NKCS2PbPC90D/kI90J4Txcp41Fx/KZ7oVa4F9w6YAv7GCSJsvHUyD5d2
-   nPVs/iP/Hw35kczhdSQO4bXTYzLvYbwjKaAUvf/EnqrzWvkiFscgI2D6f
-   IlIMcQhrXoycW37mEX9o9MAlCJTDi4/vLpXqhm4x4w0fuzSswOOj+M9wL
-   bvUET4zX8OhYMvFI36e1ocRTC13k1FmwKneNFAwTYoteUyokgJdX/VKNi
-   bYc7TzuCQ4iFJGw3hIaJcvTneglnG0h+uct5HaDVIHAP1yGdix5ZPkPhL
-   C+2kqiikpkPsLu8kec5DV5Gbh7a/ejPTu6Lgm6ibwtM81SwTAcsOeh/1b
-   Q==;
-X-CSE-ConnectionGUID: Fa5yJXJkQXW2jGSL0YzYdA==
-X-CSE-MsgGUID: 8eXTLjFBT4GQn9sTbnzyEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="57876436"
-X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="57876436"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 19:45:12 -0700
-X-CSE-ConnectionGUID: iOm5DksPTjitZ/uJ3IHZ0Q==
-X-CSE-MsgGUID: zafEqcEGRxeY97/srj4f4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="167241211"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 19:45:11 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Mon, 18 Aug 2025 19:45:10 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Mon, 18 Aug 2025 19:45:10 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.87)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Mon, 18 Aug 2025 19:45:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y06oIgppVj+2q+BvvxBOmAI/+xT66KGAlZ3iKcgrSBfA1q0ydZrzPRQ8KCltaEfE3CfGKDz/IT5IkgdyiomjPtluR//wsvosdSzwBwmxLzPrctGZC84sHinZX2L74LDT4W49rfUIl/KTI/5NYZdmBrnk61qHIpaqkGK1d5lTIbAaO1+vlJ9Dp+NcI4iN+0xIcRLxEE1wtrj/W4GJRqLAPJz98nuMdm6rAuLrYRYHkpRjVWmhKUU0tno5injzeftie7Ih/Inhasm4FS4hocS7vS82rEHp5FzbY8eCKDptfwQOLAnO7+On8UtuvUIkfDgNDiNQ2haEI68NVXk4BmgzgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LVmDpGKhzFy7+qtiUB7NCMogCLhINPZStbkOSeJvbAY=;
- b=udmJ5ywDr/Gymo9O6q2+95WBjX7SB/4SmMDgh66nQwBmbJUsOc9KXYFIJx8Xjde2XCBaTb7x6izOtW1JlLVTcge8bSOmBPocirsk4cHWyXgzURFLJSbtyW2K1V0RexrQEzOem5HdLCBm6waLEVLu2M6ExnRgjcnxUo5hGc9TY/JnUhxr/vEj8qzz4GX2OjAT7VnjEWVFg0PQJegtlMnjecf2PJIr+qFePehAh1pBDkxuO5vZ69AaDWIDazZ3Frcumjff1DDWPlcmDhS1X9NP62W8k/Xlh9lMVjvlsmqS4AKtjc1g+eV1VlE7N8dRC954BvyLbBbjCIQVBYJ5PHJHhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by DS0PR11MB6543.namprd11.prod.outlook.com (2603:10b6:8:d1::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.24; Tue, 19 Aug
- 2025 02:45:08 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.9031.023; Tue, 19 Aug 2025
- 02:45:08 +0000
-Date: Tue, 19 Aug 2025 10:44:49 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Robin Murphy <robin.murphy@arm.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-s390@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
-	<dmaengine@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
-	<amd-gfx@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>,
-	<intel-xe@lists.freedesktop.org>, <coresight@lists.linaro.org>,
-	<iommu@lists.linux.dev>, <linux-amlogic@lists.infradead.org>,
-	<linux-cxl@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<will@kernel.org>, <mark.rutland@arm.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<kan.liang@linux.intel.com>, <linux-alpha@vger.kernel.org>,
-	<linux-snps-arc@lists.infradead.org>, <imx@lists.linux.dev>,
-	<linux-csky@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-mips@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-	<sparclinux@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-riscv@lists.infradead.org>, <oliver.sang@intel.com>
-Subject: Re: [PATCH 19/19] perf: Garbage-collect event_init checks
-Message-ID: <202508190403.33c83ece-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy@arm.com>
-X-ClientProxiedBy: SG2P153CA0052.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::21)
- To LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="XAsC/JtW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=DybAQP3A9XXq+ZJvLB/p5zKqQAprjZy01NlBFoCu4Eg=; b=XAsC/JtWN/jOkrE+QALqdw73PE
+	Dl6A7fKBO9YoGw313UCjCwUaSDa9u10w2zCeFKA++1QqwYNxsmhPHI4ip3Ci9BnHtAjMek4D/aOhR
+	c7aucGG/mH+IWqHDU/tS9/coMOD8ful4a+pb6Vsq0Tq/LzkE/LoNZ8VcmJgtSqOF/mVryxuNRhYMl
+	pJcMUvP7QA0d+tkPbVnO9ZIaShmBMfM9pqfBqtDAacmSOTiLnsK05wxkqrMkSEIJ2A04a/66eJ+6I
+	wNRdH+P124ltPdv5w3qXeizsoGkV6QRNzQBZUrrFfNPRnwr/q0qql4lebY/1WAsd8BPcWg5FtpsvO
+	PYITbaNg==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uoHda-000Ocl-2U;
+	Tue, 19 Aug 2025 10:24:10 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uoHdZ-0003mp-1D;
+	Tue, 19 Aug 2025 10:24:09 +0200
+Message-ID: <720482db-17de-4831-b64a-0ae3fd7fa5a5@iogearbox.net>
+Date: Tue, 19 Aug 2025 10:24:09 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|DS0PR11MB6543:EE_
-X-MS-Office365-Filtering-Correlation-Id: 990ffba7-1ed5-4d51-0157-08dddeca68dc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?OmFKav8wQFOde57dm0yYAgE8GZOyNjuefmLcq/DNhAJ4D4nQn8NGjnNdmYz+?=
- =?us-ascii?Q?6biijlP8EYpqaZ8PGh3A0LPSIAmvOA+E02bp11e8w+T4ug54gUKKkI34rMWV?=
- =?us-ascii?Q?JNC5sUecRPVXhMUnTVSWmaFCvZooncJCmAaXeny1EW64jJpRcjSzQw+5nMxo?=
- =?us-ascii?Q?UeUydE6uZKT1Pq144OAf8yu6dP8ENtgFSD3/0WDWwwApk9UVrsIaKZrAf7O8?=
- =?us-ascii?Q?Tjjzhl0quYJzhShibEAvbwHMM0bIOl0sj/LkShLKNDXRb2nV/mbe/fIPoARG?=
- =?us-ascii?Q?VDp4E8RQdubEShPTdiA78xi9v55mo/ibz8VmzB1Ryb/sI3rbnAFBp8TUXxN1?=
- =?us-ascii?Q?YmLXuJ66b+xuzhovfHELmf+ksqHzn93t8Hk71xKst8ERueBoPMimUQdRNgXX?=
- =?us-ascii?Q?G25xGhsn7eajt2RQzXuFffLwthct14UlPN+Xqr7IG6jYNocabZzsYGA10gjo?=
- =?us-ascii?Q?6TZC5WYy1+vP0lJsymkPrruLjam+BURk9eaw8XwTwvSZZKLBsE5SsaG885Fo?=
- =?us-ascii?Q?L6FIUbQP8kZgJrmu/UjTskzncd1JnSfjm1JlLPmCtRwCNwDodJeNdFKxno2j?=
- =?us-ascii?Q?vNzIw7JFoGwU152XykoQv8MhRJ9snYWmA20GbgIEu+C+wyt30nafMz3W7waV?=
- =?us-ascii?Q?5FKo2xUwwS0VMZ6qZ9x0uKi8zJSalyeRR+Qj6l0tXb3Y+qqym0l7YMYnHUvH?=
- =?us-ascii?Q?IwCUmZGJwsa22lgniuRjzHm5/Bl8PulPmNBqKRvC9VCorB9jPyoQnA9DrXrb?=
- =?us-ascii?Q?P+HMXlY7b2K2XkQ+hE2QCN0A1ag0/vtCIFMA809wZPbeB4GQjgpwtU9iBkd3?=
- =?us-ascii?Q?9rWKVcMr1pBmPBTQnePeH9pJ7VQKGWd0C0Cy4WRQCzlPQFfFiwNCvmZCxjCh?=
- =?us-ascii?Q?rEKJJN7Seg6lq3ddmwY+VZzAmntgSfeDI7rIsrTb8VI+U4m9kLUCe/j/jZ1b?=
- =?us-ascii?Q?ixioSq/gZdgDpb9/60m4DQgOvuWp+LahfXffqeNXHJVpqnEVHDyMXVRZSo49?=
- =?us-ascii?Q?oTV992XkV4921pu9NW7wxALDMdsj4iGKUwjDncDgy09pvEpEFlesF1cnykj3?=
- =?us-ascii?Q?39oGyHdiys1JnAXJAKOM8B1gJ70QpgJ4EfjtNgEBSXNtKt5Oxc5aT6seJqy1?=
- =?us-ascii?Q?hoA9KG5TgTW2xblhaS1rqqeDwyegpfo2WmcWgROh0iAjpsYYmwS2PgBOg6BE?=
- =?us-ascii?Q?TRKbsLJwO9s/NkaEoH2eqcBRFTG9pHn0sKcOnrFaplZGmCwfa2lCWg/xu6P2?=
- =?us-ascii?Q?nQys1VpQONtSUlxXqpSLXcmYuH/rX273178KiLSok1DVAnfvSZdAprjMGkBx?=
- =?us-ascii?Q?4XQeU/AZBYiA5HyNac0ip2S8AzuZGZzg6YT/c5pYqNgdRmskEGROtK9wOlo1?=
- =?us-ascii?Q?Xu+vXKPEwsfROdJPSoUmoTLgxoKU?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/mpHyvf05tpQykGbkuSMQ2VkpxiauNaLbC126L4MJEq9Q2kmzp84kAZxujZW?=
- =?us-ascii?Q?AJx1tpBCnUbtE3gaXZ0L2YVLdftafkH3zOSTGLMs9G4FYoSbcqGT40ktzdIi?=
- =?us-ascii?Q?pa5m/QHTpMm19D1wUg1nhKOVoYJd8WkkuHyEKociBKx+B5T6c6A7h+AEv1k4?=
- =?us-ascii?Q?Mz7L1J6Sc8u3yTY90DwCWWELY6Kx4/BSoeH7IVJXQeruiqIJUi/kI2wOjZxf?=
- =?us-ascii?Q?Q6pm6H6zgVtH8LgEMXacI+nu6pDinajahV9VHjrLoKctRCh6QsMNPNGCK8sU?=
- =?us-ascii?Q?ha6EOiEcMFBcjSnoGlap9+QPkG8QrhBIu7vHiLSOKaLo3RTc3yC8VZDFR6Xz?=
- =?us-ascii?Q?cXWu77uo5TILMV/zH7dOA4nVYLbWnoswJn6ADRsbcuSo8rSI6rANT8QM+Z18?=
- =?us-ascii?Q?odhRr+GL84BQfeQFb4XcK3hvojGynqIo8BA9xFVGF79H/JB9jWHeqX9IuJKN?=
- =?us-ascii?Q?Ju5vSdDZT+hmbyQHTEC167QLL/9Ac1aZOuDRnUA0KdC448q/8kDpcK/HukG7?=
- =?us-ascii?Q?bmwfCGNlhjuvScwrtwzcORPmZQ8flWvCvUj95vaiujQg6OHuTYmCUfUKkPlT?=
- =?us-ascii?Q?FBiSxbPicgHLuh6wHQtOF8eeIK7WxGGkqmVbbRGUGdRTppEaW83tuwB6X4Rm?=
- =?us-ascii?Q?q7c18PXEEwyAS7ckqd3ah14MJKkGlxnlz16Yayp8vPJmF0iC0L3AQUMANYl1?=
- =?us-ascii?Q?UWXyP+YOu42Pq97t/vz5fe6ZPuI4ujJSiSvNEvJNjmN3Fkvy0NhuGRmPTKD6?=
- =?us-ascii?Q?SPRWs+vMu+AER306dQxvupSl/OXEtSqjz/JB2nYMv+aJ06z3in252eLAuNLo?=
- =?us-ascii?Q?BXdMT6agn5b5xbZNdmkpCvyYuR8e1gGEI+myf0QrLc9UWDzU9omkHaWhhEhB?=
- =?us-ascii?Q?+unHXMo+YgbEtu+5awJJvmQF94Bqycpur0uciTOjjf19qI76G2vzXyyZ3iia?=
- =?us-ascii?Q?b+tCwnOcR/Oc/SWL5Wpx44Sd7yLqqv2v9NuLmEruk9nsMUUfJQ4ZwonDdHY2?=
- =?us-ascii?Q?xGcLJJClqS4fHhSO/PzjmepKmKbZUy2ZXNfEnHYT9tW26copR0PQZaFmaM21?=
- =?us-ascii?Q?5uclX8x4ITeOnMhATdLVyV5gsMKeeEesZZauMOci6Yg0hqpzJ6C1qTFH4f9l?=
- =?us-ascii?Q?cZIDNZkFMKJcqPl+RnbstMg5+lsLZ/b1Kr3ynbHnwDnLaWoNYkU3E8FXPq6D?=
- =?us-ascii?Q?tOJiBVvZX9hmbBo5s32ZqXYjYSR5PZXUTfmnZ+gy4R/Y6e4EUGth9kf5rxhv?=
- =?us-ascii?Q?Z+rAnm5TKHeZDuNQHLOS4oe++hVa9K4rG6Hy56a+tu7SX3uUDMFU6IJXl+4l?=
- =?us-ascii?Q?BLnsnoVFL29/HXA++owPrjtj7pc6m4rvaUDwaakzx+W8zBJ8V0UMmJwvA7vO?=
- =?us-ascii?Q?750FYEAv01rKYdyRrRMzS1m9EsWiRM0PgO9rpB27rEMUbKgr56Wk4LgU/r1s?=
- =?us-ascii?Q?DrJAsJsJfR7xVCSYlSAzTt480Vmb8FvTlzoV/a0wacb+y7MTdYbYC6/g4oYb?=
- =?us-ascii?Q?ibViziihw5pjVox5CuWD+tHskwr8sMZLYg5ZHxftn/x9T318DgVCKDzf84Uc?=
- =?us-ascii?Q?6N9W/G0LQ6ypScDLhOPbPYMsrYIhth1BdBgTDt//qqbl5G6JwputhmPKTrOW?=
- =?us-ascii?Q?lw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 990ffba7-1ed5-4d51-0157-08dddeca68dc
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2025 02:45:08.2760
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A8feBY7qIgCEGcJymNGsn9WNMbmY8eePw8STRyuMn+tEuKRyUGaEgAayeYeo5hBQ1RxRlz3ZZN77XBQTViut1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6543
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] LoongArch: BPF: Fix incorrect return pointer value in
+ the eBPF program
+To: Haoran Jiang <jianghaoran@kylinos.cn>, loongarch@lists.linux.dev
+Cc: bpf@vger.kernel.org, kernel@xen0n.name, chenhuacai@kernel.org,
+ hengqi.chen@gmail.com, yangtiezhu@loongson.cn, jolsa@kernel.org,
+ haoluo@google.com, sdf@fomichev.me, kpsingh@kernel.org,
+ john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org,
+ eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, ast@kernel.org,
+ Jinyang He <hejinyang@loongson.cn>
+References: <20250815082931.875216-1-jianghaoran@kylinos.cn>
+Content-Language: en-US
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ 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
+In-Reply-To: <20250815082931.875216-1-jianghaoran@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27736/Mon Aug 18 10:27:28 2025)
 
+On 8/15/25 10:29 AM, Haoran Jiang wrote:
+> In some eBPF programs, the return value is a pointer.
+> When the kernel call an eBPF program (such as struct_ops),
+> it expects a 64-bit address to be returned, but instead a 32-bit value.
+> 
+> Before applying this patch:
+> ./test_progs -a ns_bpf_qdisc
+> CPU 7 Unable to handle kernel paging request at virtual
+> address 0000000010440158.
+> 
+> As shown in the following test case,
+> bpf_fifo_dequeue return value is a pointer.
+> progs/bpf_qdisc_fifo.c
+> 
+> SEC("struct_ops/bpf_fifo_dequeue")
+> struct sk_buff *BPF_PROG(bpf_fifo_dequeue, struct Qdisc *sch)
+> {
+> 	struct sk_buff *skb = NULL;
+> 	........
+> 	skb = bpf_kptr_xchg(&skbn->skb, skb);
+> 	........
+> 	return skb;
+> }
+> 
+> kernel call bpf_fifo_dequeue：
+> net/sched/sch_generic.c
+> 
+> static struct sk_buff *dequeue_skb(struct Qdisc *q, bool *validate,
+> 				   int *packets)
+> {
+> 	struct sk_buff *skb = NULL;
+> 	........
+> 	skb = q->dequeue(q);
+> 	.........
+> }
+> When accessing the skb, an address exception error will occur.
+> because the value returned by q->dequeue at this point is a 32-bit
+> address rather than a 64-bit address.
+> 
+> After applying the patch：
+> ./test_progs -a ns_bpf_qdisc
+> Warning: sch_htb: quantum of class 10001 is small. Consider r2q change.
+> 213/1   ns_bpf_qdisc/fifo:OK
+> 213/2   ns_bpf_qdisc/fq:OK
+> 213/3   ns_bpf_qdisc/attach to mq:OK
+> 213/4   ns_bpf_qdisc/attach to non root:OK
+> 213/5   ns_bpf_qdisc/incompl_ops:OK
+> 213     ns_bpf_qdisc:OK
+> Summary: 1/5 PASSED, 0 SKIPPED, 0 FAILED
+> 
+> Fixes: 73c359d1d356 ("LoongArch: BPF: Sign-extend return values")
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
 
+Huacai, are you routing the fix or want us to route via bpf tree?
 
-Hello,
-
-kernel test robot noticed "BUG:unable_to_handle_page_fault_for_address" on:
-
-commit: 1ba20479196e5af3ebbedf9321de6b26f2a0cdd3 ("[PATCH 19/19] perf: Garbage-collect event_init checks")
-url: https://github.com/intel-lab-lkp/linux/commits/Robin-Murphy/perf-arm-cmn-Fix-event-validation/20250814-010626
-base: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git 91325f31afc1026de28665cf1a7b6e157fa4d39d
-patch link: https://lore.kernel.org/all/ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy@arm.com/
-patch subject: [PATCH 19/19] perf: Garbage-collect event_init checks
-
-in testcase: perf-sanity-tests
-version: 
-with following parameters:
-
-	perf_compiler: clang
-	group: group-02
-
-
-
-config: x86_64-rhel-9.4-bpf
-compiler: gcc-12
-test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz (Kaby Lake) with 32G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202508190403.33c83ece-lkp@intel.com
-
-
-[  307.132412][ T7614] BUG: unable to handle page fault for address: ffffffff8674015c
-[  307.140048][ T7614] #PF: supervisor read access in kernel mode
-[  307.145926][ T7614] #PF: error_code(0x0000) - not-present page
-[  307.151801][ T7614] PGD 819477067 P4D 819477067 PUD 819478063 PMD 1002c3063 PTE 800ffff7e48bf062
-[  307.160663][ T7614] Oops: Oops: 0000 [#1] SMP KASAN PTI
-[  307.165931][ T7614] CPU: 0 UID: 0 PID: 7614 Comm: perf Tainted: G          I         6.17.0-rc1-00048-g1ba20479196e #1 PREEMPT(voluntary)
-[  307.178456][ T7614] Tainted: [I]=FIRMWARE_WORKAROUND
-[  307.183459][ T7614] Hardware name: Dell Inc. OptiPlex 7050/062KRH, BIOS 1.2.0 12/22/2016
-[ 307.191609][ T7614] RIP: 0010:uncore_pmu_event_init (arch/x86/events/intel/uncore.c:141 arch/x86/events/intel/uncore.c:739) intel_uncore 
-[ 307.198867][ T7614] Code: c1 4c 63 ab 0c 03 00 00 4a 8d 3c ed a0 3e c8 83 e8 17 de 3a c1 4e 03 24 ed a0 3e c8 83 49 8d bc 24 fc 00 00 00 e8 a2 dc 3a c1 <45> 8b a4 24 fc 00 00 00 44 3b 25 03 3d 35 00 0f 83 5b 04 00 00 48
-All code
-========
-   0:	c1 4c 63 ab 0c       	rorl   $0xc,-0x55(%rbx,%riz,2)
-   5:	03 00                	add    (%rax),%eax
-   7:	00 4a 8d             	add    %cl,-0x73(%rdx)
-   a:	3c ed                	cmp    $0xed,%al
-   c:	a0 3e c8 83 e8 17 de 	movabs 0xc13ade17e883c83e,%al
-  13:	3a c1 
-  15:	4e 03 24 ed a0 3e c8 	add    -0x7c37c160(,%r13,8),%r12
-  1c:	83 
-  1d:	49 8d bc 24 fc 00 00 	lea    0xfc(%r12),%rdi
-  24:	00 
-  25:	e8 a2 dc 3a c1       	call   0xffffffffc13adccc
-  2a:*	45 8b a4 24 fc 00 00 	mov    0xfc(%r12),%r12d		<-- trapping instruction
-  31:	00 
-  32:	44 3b 25 03 3d 35 00 	cmp    0x353d03(%rip),%r12d        # 0x353d3c
-  39:	0f 83 5b 04 00 00    	jae    0x49a
-  3f:	48                   	rex.W
-
-Code starting with the faulting instruction
-===========================================
-   0:	45 8b a4 24 fc 00 00 	mov    0xfc(%r12),%r12d
-   7:	00 
-   8:	44 3b 25 03 3d 35 00 	cmp    0x353d03(%rip),%r12d        # 0x353d12
-   f:	0f 83 5b 04 00 00    	jae    0x470
-  15:	48                   	rex.W
-[  307.218475][ T7614] RSP: 0018:ffff8881b30ef8d8 EFLAGS: 00010246
-[  307.224450][ T7614] RAX: 0000000000000000 RBX: ffff8881193547b8 RCX: dffffc0000000000
-[  307.232353][ T7614] RDX: 0000000000000007 RSI: ffffffffc05230ae RDI: ffffffff8674015c
-[  307.240255][ T7614] RBP: ffff88810468d000 R08: 0000000000000000 R09: fffffbfff0ae31b4
-[  307.248151][ T7614] R10: ffffffff85718da7 R11: 0000000067e9e64c R12: ffffffff86740060
-[  307.256042][ T7614] R13: ffffffffffffffff R14: ffff888119354890 R15: ffffffff81727da9
-[  307.263933][ T7614] FS:  00007f54bdb88880(0000) GS:ffff8887a24e8000(0000) knlGS:0000000000000000
-[  307.272787][ T7614] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  307.279279][ T7614] CR2: ffffffff8674015c CR3: 00000002e3e06003 CR4: 00000000003726f0
-[  307.287168][ T7614] Call Trace:
-[  307.290337][ T7614]  <TASK>
-[ 307.293157][ T7614] ? perf_init_event (include/linux/rcupdate.h:331 include/linux/rcupdate.h:841 include/linux/rcupdate.h:1155 kernel/events/core.c:12690) 
-[ 307.298005][ T7614] perf_try_init_event (kernel/events/core.c:12579) 
-[ 307.303538][ T7614] ? perf_init_event (include/linux/rcupdate.h:331 include/linux/rcupdate.h:841 include/linux/rcupdate.h:1155 kernel/events/core.c:12690) 
-[ 307.308370][ T7614] perf_init_event (kernel/events/core.c:12697) 
-[ 307.313031][ T7614] perf_event_alloc (kernel/events/core.c:12972) 
-[ 307.317862][ T7614] ? __pfx_perf_event_output_forward (kernel/events/core.c:8496) 
-[ 307.323919][ T7614] ? __lock_release+0x5d/0x160 
-[ 307.329194][ T7614] __do_sys_perf_event_open (kernel/events/core.c:13492) 
-[ 307.334732][ T7614] ? __pfx___do_sys_perf_event_open (kernel/events/core.c:13374) 
-[ 307.340702][ T7614] ? trace_contention_end (include/trace/events/lock.h:122 (discriminator 21)) 
-[ 307.345808][ T7614] ? lock_acquire (kernel/locking/lockdep.c:470 kernel/locking/lockdep.c:5870 kernel/locking/lockdep.c:5825) 
-[ 307.350379][ T7614] ? find_held_lock (kernel/locking/lockdep.c:5350) 
-[ 307.354947][ T7614] ? rcu_is_watching (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/context_tracking.h:128 kernel/rcu/tree.c:751) 
-[ 307.359623][ T7614] do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94) 
-[ 307.364020][ T7614] ? __do_sys_perf_event_open (include/linux/srcu.h:167 include/linux/srcu.h:375 include/linux/srcu.h:479 kernel/events/core.c:13454) 
-[ 307.369726][ T7614] ? __lock_release+0x5d/0x160 
-[ 307.375006][ T7614] ? __do_sys_perf_event_open (include/linux/srcu.h:167 include/linux/srcu.h:375 include/linux/srcu.h:479 kernel/events/core.c:13454) 
-[ 307.380713][ T7614] ? lock_release (kernel/locking/lockdep.c:470 kernel/locking/lockdep.c:5891) 
-[ 307.385194][ T7614] ? __srcu_read_unlock (kernel/rcu/srcutree.c:770) 
-[ 307.390112][ T7614] ? __do_sys_perf_event_open (include/linux/srcu.h:377 include/linux/srcu.h:479 kernel/events/core.c:13454) 
-[ 307.395823][ T7614] ? __pfx___do_sys_perf_event_open (kernel/events/core.c:13374) 
-[ 307.401798][ T7614] ? rcu_is_watching (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/context_tracking.h:128 kernel/rcu/tree.c:751) 
-[ 307.406455][ T7614] ? trace_irq_enable+0xac/0xe0 
-[ 307.412248][ T7614] ? rcu_is_watching (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/context_tracking.h:128 kernel/rcu/tree.c:751) 
-[ 307.416904][ T7614] ? trace_irq_enable+0xac/0xe0 
-[ 307.422698][ T7614] ? rcu_is_watching (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/context_tracking.h:128 kernel/rcu/tree.c:751) 
-[ 307.427355][ T7614] ? trace_irq_enable+0xac/0xe0 
-[ 307.433149][ T7614] ? do_syscall_64 (arch/x86/entry/syscall_64.c:113) 
-[ 307.437808][ T7614] ? handle_mm_fault (include/linux/rcupdate.h:341 include/linux/rcupdate.h:871 include/linux/memcontrol.h:981 include/linux/memcontrol.h:987 mm/memory.c:6229 mm/memory.c:6390) 
-[ 307.442652][ T7614] ? __lock_release+0x5d/0x160 
-[ 307.447923][ T7614] ? find_held_lock (kernel/locking/lockdep.c:5350) 
-[ 307.452491][ T7614] ? rcu_is_watching (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/context_tracking.h:128 kernel/rcu/tree.c:751) 
-[ 307.457151][ T7614] ? trace_irq_enable+0xac/0xe0 
-[ 307.462954][ T7614] ? do_syscall_64 (arch/x86/entry/syscall_64.c:113) 
-[ 307.467631][ T7614] ? lock_release (kernel/locking/lockdep.c:470 kernel/locking/lockdep.c:5891) 
-[ 307.472122][ T7614] ? do_user_addr_fault (arch/x86/include/asm/atomic.h:93 include/linux/atomic/atomic-arch-fallback.h:949 include/linux/atomic/atomic-instrumented.h:401 include/linux/refcount.h:389 include/linux/refcount.h:432 include/linux/mmap_lock.h:143 include/linux/mmap_lock.h:267 arch/x86/mm/fault.c:1338) 
-[ 307.477225][ T7614] ? rcu_is_watching (arch/x86/include/asm/atomic.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/context_tracking.h:128 kernel/rcu/tree.c:751) 
-[ 307.481892][ T7614] ? trace_irq_enable+0xac/0xe0 
-[ 307.487692][ T7614] ? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4351 kernel/locking/lockdep.c:4410) 
-[ 307.493487][ T7614] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130) 
-[  307.499281][ T7614] RIP: 0033:0x7f54c9b4d719
-[ 307.503585][ T7614] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d b7 06 0d 00 f7 d8 64 89 01 48
-All code
-========
-   0:	08 89 e8 5b 5d c3    	or     %cl,-0x3ca2a418(%rcx)
-   6:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
-   d:	00 00 00 
-  10:	90                   	nop
-  11:	48 89 f8             	mov    %rdi,%rax
-  14:	48 89 f7             	mov    %rsi,%rdi
-  17:	48 89 d6             	mov    %rdx,%rsi
-  1a:	48 89 ca             	mov    %rcx,%rdx
-  1d:	4d 89 c2             	mov    %r8,%r10
-  20:	4d 89 c8             	mov    %r9,%r8
-  23:	4c 8b 4c 24 08       	mov    0x8(%rsp),%r9
-  28:	0f 05                	syscall
-  2a:*	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax		<-- trapping instruction
-  30:	73 01                	jae    0x33
-  32:	c3                   	ret
-  33:	48 8b 0d b7 06 0d 00 	mov    0xd06b7(%rip),%rcx        # 0xd06f1
-  3a:	f7 d8                	neg    %eax
-  3c:	64 89 01             	mov    %eax,%fs:(%rcx)
-  3f:	48                   	rex.W
-
-Code starting with the faulting instruction
-===========================================
-   0:	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax
-   6:	73 01                	jae    0x9
-   8:	c3                   	ret
-   9:	48 8b 0d b7 06 0d 00 	mov    0xd06b7(%rip),%rcx        # 0xd06c7
-  10:	f7 d8                	neg    %eax
-  12:	64 89 01             	mov    %eax,%fs:(%rcx)
-  15:	48                   	rex.W
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250819/202508190403.33c83ece-lkp@intel.com
-
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Thanks,
+Daniel
