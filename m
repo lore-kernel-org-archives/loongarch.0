@@ -1,232 +1,139 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4C73043A8
-	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 12:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1163E2C11F2
+	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 12:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755606791; cv=none; b=NCYClerrV8BrSlu3q97YgPdkDAFxkImQSW8cvbfj/dFtNGw4pFoVSTCBv0mr38IaoElooqNJuwI4piDfICDhL+z8+Cd7rg/F8mweQvIHAjXQQSfdp5MxBsBsPj+Yx+1JuUCUoLqVGv4SS7gM2qao6OXGaXOm/UHszqxCgPd1aMk=
+	t=1755607269; cv=none; b=WjRIiLmR9YubfsrVt2EDV0hnl9SdNdJz8PCGJ0srBy7hgmb4GOeQ23K4aFBnw7PaX7Zkdhlv92YNtj9g82vsvhwO+9Xa9IlODhAIiHqC3YxJk3/9eYGJaacL+JxqesA5X8zZOcebD4wCYJlxZivX6fEuO/ZJ8+dS+GqjWvMCq9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755606791; c=relaxed/simple;
-	bh=oGIIhDvNcbEz2gNcueZOzpTWLK1v6vHPDTa7Zne8PoA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uZruTEYGjdGhA/smea99G07zw0HsoqcM1gU/OSSL8/X+CyaxXLWkEQXqzJ+JlCKgiw2rq7WcUyd0O4cgRstWY2Do7EkYbmmjV3zQazrzbioOe98Zx3uHbaw7oCJvGDXamgzyRPW1deO9/uuBdC5jBEE1xjd5c6M/9+Neqb67h0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D5CLFiOV; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755607269; c=relaxed/simple;
+	bh=hh0hq8bl+6A83FbnX3IgduD0wlBkscDYAAwjB9LkfIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=At61NfF+uY6nK3w00MRKnsRMulQTDFkZzZuQ51531TqgzLXBrPilVId1ImwhKxszAvTKEXySzVpmAEnqzru9qiJ2Sw8JzQVpUCA9nZatmnmWI/B8PUmrJlU81r4AwmZslgszy9R9ItVZYwoXrMHSiOefgWGnuNsQ5iOH00A5OYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=A4VcPE+Y; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5CLFiOV"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-435de5b2f29so1622509b6e.0
-        for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 05:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755606789; x=1756211589; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=euK/Sa43pRju1FeMVcXdjmsp+ESnMwlYC5m2uEfodPc=;
-        b=D5CLFiOVkohZvlsKCFZ7tNdmCXmqQt4e4/Y6F/VaGZz+wcFgZH8/eJI+Mgx6o3zUFF
-         p3blPy/hQboSsQy/U57vbCsaT8HLQR1/g5zTFqPdfqRf6sbls1y5ytGjeCGudjIryfSj
-         KYhY277GbimojVjkAt6PwyZ1zxj9+fruSKqK9KUKwQcUWwUDJyOCQHjFViJcYPCQkmSj
-         zPmmSvULghAha0eTQpdV2oja8l5h06W7rs+oBcv0m6c7Ek4jLVXBkSNzqRSfwBFiPJ/0
-         0sNCf6qPKNkRw3cByUIH3Sc1tQPbN/wbUCAzCNAO1Fo5u6VtmzhS2VTREDcrW/hzAa3t
-         PlIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755606789; x=1756211589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=euK/Sa43pRju1FeMVcXdjmsp+ESnMwlYC5m2uEfodPc=;
-        b=LTrlTQRgw9HOt/HC/7xdkE7GBenmvDMy9Ghe+q/mrF83ecfg/66hqWECCPDE8FPfv2
-         1I+hoKj5lIHseUdvKH4CkaZJ/AIxgjFDkXf2RmBFXmDus4m+NfENvmLfDP6c+fXAQx++
-         rlNeo8RrIK7Su/hko9WFLH3lnjxnBTvQbjpg39mx9IHCvpAHxKm16uya4/Bo2DvTwAIF
-         gvR65XcT71/GZbVFb5AhsAajNwlbpdn22dUF3Rp2Q0zZlP3ZYnFBT9F7Zd0sAyMPwtXg
-         uButmT8dro3WGpOp8bSWP3mTvlTNgqnOqKjWMaviiEwblAAWOs6ylcu9wLwX8immb/bd
-         hlIA==
-X-Gm-Message-State: AOJu0YwSh2jHNwWfNyCB6tyraJVT6m09SkN1HTUWe2IvvsCMwwa2OIdB
-	KTXLNBE23S0covTqCvyUYK07ehE9TCGChf0dJlHOgXr76tjzyOnZdYCplctkmPhNSc08ct2fejS
-	L1m8v8dUgMpJlzunPXBOD1vkN9kVJkx8=
-X-Gm-Gg: ASbGncv7CfrsetE/IXlNCAwhW4tSozotXULpLeB/AhQc0OlE6rGE/KPpAkZ73D2I1sX
-	VE3nhXUVgFZON3Eib1PfZZgzwpQYhBEc+jplxEptCLNzrLPeUGsOG2f/PYy0wLd1QgDdxh8PuUC
-	PL5ln8Yn62rPlnvUtXcb0+KHcX+69Khva4I3jGs7IMwBUHYRyeWKavJZXAI+I2rubexe3WH1dP5
-	Cw81G4=
-X-Google-Smtp-Source: AGHT+IF3TnzwDKbWVmb0nbU19B6sCvfBoJv+fy7qHe2Grj5VTQW+DyaKaeKUpV05oMJRpppbHIo9Qf/7YXz89cmmuuk=
-X-Received: by 2002:a05:6808:218f:b0:434:b6e:52a0 with SMTP id
- 5614622812f47-436da1e7ea7mr1689680b6e.22.1755606788728; Tue, 19 Aug 2025
- 05:33:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="A4VcPE+Y"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 283F7207A3;
+	Tue, 19 Aug 2025 14:41:04 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id GITvgjRrHzIi; Tue, 19 Aug 2025 14:41:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1755607263; bh=hh0hq8bl+6A83FbnX3IgduD0wlBkscDYAAwjB9LkfIg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=A4VcPE+YbdV/CT7PaNypqPsnuGdUcCBS7wgcpvtw336QmE2Ou2imom4xRufhUC0Os
+	 WqaGobxZ+5IN2cuyhbfC5eaEr1AWTiBFeoKB4gYM4U973psh0pDp25rT7ZUdhc4JpV
+	 MJT3wMKlJh0T/jWQUuwRls5mr0n34CLwQquUd9BzMULi+pCs4BHEBsUkflITJJCpOR
+	 CyaGZRanarTubzks3SDZWBM+o89VI35LXtvtwwLZkgGwdl1lOYocJlVoL2zs9ur1Sn
+	 Yq2eVrejKEuOFtAb7BRIqeOxIVAna95GYPOVN3fK9TZVSmzXcK0LapcoQssiP2YfK7
+	 GJw2uV+uKaDoQ==
+Date: Tue, 19 Aug 2025 12:40:54 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH 2/3] pinctrl: ls2k0300: Support Loongson 2K0300 SoC
+Message-ID: <aKRw1pEUUwd4cQoW@pie>
+References: <20250811163749.47028-2-ziyao@disroot.org>
+ <20250811163749.47028-4-ziyao@disroot.org>
+ <CACRpkdZp8FLrxgkeZ=xzSPgny51iDZ3KRCrxpoSdgF8_=df=KQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250815082931.875216-1-jianghaoran@kylinos.cn>
-In-Reply-To: <20250815082931.875216-1-jianghaoran@kylinos.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Tue, 19 Aug 2025 20:32:57 +0800
-X-Gm-Features: Ac12FXws3USO7bmtx8j4CoQoQxI-9k1R3TMQL0Aj_uHfyKHkQOQjd7LKqRtoh4w
-Message-ID: <CAEyhmHTv+3FxN5mGvtrNpW5Y=r5gD9wfS3iFUO4UCAzO9cBcPg@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: BPF: Fix incorrect return pointer value in
- the eBPF program
-To: Haoran Jiang <jianghaoran@kylinos.cn>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, kernel@xen0n.name, 
-	chenhuacai@kernel.org, yangtiezhu@loongson.cn, jolsa@kernel.org, 
-	haoluo@google.com, sdf@fomichev.me, kpsingh@kernel.org, 
-	john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org, 
-	eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, 
-	daniel@iogearbox.net, ast@kernel.org, Jinyang He <hejinyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZp8FLrxgkeZ=xzSPgny51iDZ3KRCrxpoSdgF8_=df=KQ@mail.gmail.com>
 
-On Fri, Aug 15, 2025 at 4:30=E2=80=AFPM Haoran Jiang <jianghaoran@kylinos.c=
-n> wrote:
->
-> In some eBPF programs, the return value is a pointer.
-> When the kernel call an eBPF program (such as struct_ops),
-> it expects a 64-bit address to be returned, but instead a 32-bit value.
->
-> Before applying this patch:
-> ./test_progs -a ns_bpf_qdisc
-> CPU 7 Unable to handle kernel paging request at virtual
-> address 0000000010440158.
->
-> As shown in the following test case,
-> bpf_fifo_dequeue return value is a pointer.
-> progs/bpf_qdisc_fifo.c
->
-> SEC("struct_ops/bpf_fifo_dequeue")
-> struct sk_buff *BPF_PROG(bpf_fifo_dequeue, struct Qdisc *sch)
-> {
->         struct sk_buff *skb =3D NULL;
->         ........
->         skb =3D bpf_kptr_xchg(&skbn->skb, skb);
->         ........
->         return skb;
-> }
->
-> kernel call bpf_fifo_dequeue=EF=BC=9A
-> net/sched/sch_generic.c
->
-> static struct sk_buff *dequeue_skb(struct Qdisc *q, bool *validate,
->                                    int *packets)
-> {
->         struct sk_buff *skb =3D NULL;
->         ........
->         skb =3D q->dequeue(q);
->         .........
-> }
-> When accessing the skb, an address exception error will occur.
-> because the value returned by q->dequeue at this point is a 32-bit
-> address rather than a 64-bit address.
->
-> After applying the patch=EF=BC=9A
-> ./test_progs -a ns_bpf_qdisc
-> Warning: sch_htb: quantum of class 10001 is small. Consider r2q change.
-> 213/1   ns_bpf_qdisc/fifo:OK
-> 213/2   ns_bpf_qdisc/fq:OK
-> 213/3   ns_bpf_qdisc/attach to mq:OK
-> 213/4   ns_bpf_qdisc/attach to non root:OK
-> 213/5   ns_bpf_qdisc/incompl_ops:OK
-> 213     ns_bpf_qdisc:OK
-> Summary: 1/5 PASSED, 0 SKIPPED, 0 FAILED
->
-> Fixes: 73c359d1d356 ("LoongArch: BPF: Sign-extend return values")
-> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
->
-> ----------
-> v2:
-> 1,add emit_slt* helpers
-> 2,Use slt/slld/srad instructions to avoid branch
-> ---
->  arch/loongarch/include/asm/inst.h |  8 ++++++++
->  arch/loongarch/net/bpf_jit.c      | 17 +++++++++++++++--
->  2 files changed, 23 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
-sm/inst.h
-> index 277d2140676b..20f4fc745bea 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -92,6 +92,8 @@ enum reg2i6_op {
->  };
->
->  enum reg2i12_op {
-> +       slti_op         =3D 0x08,
-> +       sltui_op        =3D 0x09,
->         addiw_op        =3D 0x0a,
->         addid_op        =3D 0x0b,
->         lu52id_op       =3D 0x0c,
-> @@ -148,6 +150,8 @@ enum reg3_op {
->         addd_op         =3D 0x21,
->         subw_op         =3D 0x22,
->         subd_op         =3D 0x23,
-> +       slt_op          =3D 0x24,
-> +       sltu_op         =3D 0x25,
->         nor_op          =3D 0x28,
->         and_op          =3D 0x29,
->         or_op           =3D 0x2a,
-> @@ -629,6 +633,8 @@ static inline void emit_##NAME(union loongarch_instru=
-ction *insn,   \
->         insn->reg2i12_format.rj =3D rj;                                  =
- \
->  }
->
-> +DEF_EMIT_REG2I12_FORMAT(slti, slti_op)
-> +DEF_EMIT_REG2I12_FORMAT(sltui, sltui_op)
->  DEF_EMIT_REG2I12_FORMAT(addiw, addiw_op)
->  DEF_EMIT_REG2I12_FORMAT(addid, addid_op)
->  DEF_EMIT_REG2I12_FORMAT(lu52id, lu52id_op)
-> @@ -729,6 +735,8 @@ static inline void emit_##NAME(union loongarch_instru=
-ction *insn,   \
->  DEF_EMIT_REG3_FORMAT(addw, addw_op)
->  DEF_EMIT_REG3_FORMAT(addd, addd_op)
->  DEF_EMIT_REG3_FORMAT(subd, subd_op)
-> +DEF_EMIT_REG3_FORMAT(slt, slt_op)
-> +DEF_EMIT_REG3_FORMAT(sltu, sltu_op)
->  DEF_EMIT_REG3_FORMAT(muld, muld_op)
->  DEF_EMIT_REG3_FORMAT(divd, divd_op)
->  DEF_EMIT_REG3_FORMAT(modd, modd_op)
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index abfdb6bb5c38..50067be79c4f 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -229,8 +229,21 @@ static void __build_epilogue(struct jit_ctx *ctx, bo=
-ol is_tail_call)
->         emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_a=
-djust);
->
->         if (!is_tail_call) {
-> -               /* Set return value */
-> -               emit_insn(ctx, addiw, LOONGARCH_GPR_A0, regmap[BPF_REG_0]=
-, 0);
-> +               /*
-> +                *  Set return value
-> +                *  Check if the 64th bit in regmap[BPF_REG_0] is 1. If i=
-t is,
-> +                *  the value in regmap[BPF_REG_0] is a kernel-space addr=
-ess.
-> +
-> +                *  long long val =3D regmap[BPF_REG_0];
-> +                *  int shift =3D 0 < val ? 32 : 0;
-> +                *  return (val << shift) >> shift;
-> +                */
-> +               move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
-> +               emit_insn(ctx, slt, LOONGARCH_GPR_T0, LOONGARCH_GPR_ZERO,=
- LOONGARCH_GPR_A0);
-> +               emit_insn(ctx, sllid, LOONGARCH_GPR_T0, LOONGARCH_GPR_T0,=
- 5);
-> +               emit_insn(ctx, slld, LOONGARCH_GPR_A0, LOONGARCH_GPR_A0, =
-LOONGARCH_GPR_T0);
-> +               emit_insn(ctx, srad, LOONGARCH_GPR_A0, LOONGARCH_GPR_A0, =
-LOONGARCH_GPR_T0);
-> +
+On Tue, Aug 19, 2025 at 12:02:23PM +0200, Linus Walleij wrote:
+> On Mon, Aug 11, 2025 at 6:39 PM Yao Zi <ziyao@disroot.org> wrote:
+> 
+> > Support pin multiplexing and drive-strength setting for Loongson 2K0300
+> > SoC. Pin multiplexing could be done separately for each pin, while
+> > drive-strength could be only configured on function basis. This differs
+> > a lot from the driver for previous generation of Loongson SoC, where
+> > pinmux setting is based on group.
+> >
+> > Pins are represented with pinmux properties in devicetrees, and we use
+> > the generic pinmux API for parsing. The common pinconf interface isn't
+> > used for drive-strength setting, since it handles pinconf settings at a
+> > unit of pin groups or smaller.
+> >
+> > Instead, the driver configures drive-strength settings just after
+> > parsing the devicetree. The devicetree's structure ensures no conflicts
+> > could happen in drive-strength settings.
+> >
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> 
+> Overall the driver looks very good, well done!
+> 
+> Look into Rob's comment on the bindings to use a single node
+> for mux and config.
 
-This change seems wrong to me. Need further investigation.
+I've raised several questions about the binding and will change the
+binding and code according to Rob's answer.
 
->                 /* Return to the caller */
->                 emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA=
-, 0);
->         } else {
-> --
-> 2.43.0
->
+> I saw that you want to make the pin controller strict, if you also have
+> some pins with "GPIO mode" that will serve as back-end for a
+> GPIO driver (and I saw you posted a GPIO driver series as well)
+> then have a look at Bartosz recent patches to add infrastructure
+> for pinctrl to know about what a GPIO pin is:
+> https://lore.kernel.org/linux-gpio/20250815-pinctrl-gpio-pinfuncs-v5-0-955de9fd91db@linaro.org/T/
+
+Thanks for the link! Actually according to the manual, all the 106 on
+2K0300 pins could be multiplexed as GPIO. But the pinctrl cannot set up
+any pin config for pins in GPIO mode.
+
+> The current driver does not seem to know about any of these
+> pins being usable as GPIO and does not implement those:
+> 
+>         int (*gpio_request_enable) (struct pinctrl_dev *pctldev,
+>                                     struct pinctrl_gpio_range *range,
+>                                     unsigned int offset);
+>         void (*gpio_disable_free) (struct pinctrl_dev *pctldev,
+>                                    struct pinctrl_gpio_range *range,
+>                                    unsigned int offset);
+>         int (*gpio_set_direction) (struct pinctrl_dev *pctldev,
+>                                    struct pinctrl_gpio_range *range,
+>                                    unsigned int offset,
+>                                    bool input);
+>         bool strict;
+> 
+> Which is fine if the pins actually cannot be used for GPIO, but if they
+> can, and this is just implicit for unconfigured pins ... then add
+> functions and groups for GPIO.
+
+For 2K0300, we want these pins to be able to multiplexed as GPIOs, but
+since this pinctrl driver could configure nothing for GPIO mode pins, I
+think it's enough to implement only the gpio_request_enable() callback
+and do the multiplexing work here, is this correct?
+
+I originally thought it's okay to multiplex pins as GPIO with an usual
+pinctrl configuration, and didn't realize that it causes conflicts on
+strict controllers since the pin will be claimed by both pincontroller
+and GPIO controller. Thanks for the reminder.
+
+> The other driver using pinconf_generic_parse_dt_pinmux()
+> drivers/pinctrl/meson/pinctrl-amlogic-a4.c has GPIO awareness.
+> 
+> Yours,
+> Linus Walleij
+> 
+
+Much thanks for the detailed guidance!
+
+Best regards,
+Yao Zi
