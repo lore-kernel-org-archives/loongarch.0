@@ -1,134 +1,81 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD52E21ABBB
-	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 10:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8B749620;
+	Tue, 19 Aug 2025 11:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755597759; cv=none; b=pq3I9tAEDeLfDHubPAliL9lhLxDXSMxEA3uxhRKPkWmfH2AxUyfo6DBgrb/PEXxWe39OkRVnKx8eghYGtz6Q0fdkWLRV3/5Dsr5vJ9Mh6l95wSN3JkLbrxb7EivNQHjskSvPX+50oLzrTf890WvmVRyHjS0bxnnIQ5Ge2GSmQsE=
+	t=1755602410; cv=none; b=AVWIHCY+lxjTnDkFvPyIaDEuE0xxSBS6nwPHd51GLeuNrnGODmBWqs2Jun3SAndyK61e5KvN9DxiQZH73OLOvGeLAYTrMywZRHX0q93BwqF0+5kqHO4KKPgz9wwSiBhgzecSdudaeeHSUQoPvg+4wrsO/O7h+i2pHCMbfEaca5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755597759; c=relaxed/simple;
-	bh=2oRJmy6jdudOx3Q3CK1t3Tr8AwssA1mqdMSyvD/J694=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=myqb1QpeCPIaizmpWaiKAWqZCMUcelrE0VL22AIzmXWGfJQPKUQ9Ygv0i1I2wiXL8vdsMha07cYDnhK6PZI/OCXu+KGjw2L061D6u+GnNHib1QQgTh3avbusKC+iPJOXnT5OgqpC1EqVPKt1+oDAnoks7L9EjhUyWyJE5Y3xN2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qnHmoH/p; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qnHmoH/p"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-333f8f0965dso42860391fa.1
-        for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 03:02:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755597755; x=1756202555; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jEIclbjfDHmWiMYwu7S7lb6mGq8E/UEDhqSMVO/QBNA=;
-        b=qnHmoH/pe+lf5Hos+5OYg+mWjKdFrOjRNfe7gySCtFrNQxYJzVhvUno4CnR7i5Lemd
-         ErP2XxIs4U5B4A+EiMlTGQOj5t8OmYIW+ytINlYLv+ntHqyGN+sXlfNTJYfqFaeQl+sz
-         LPlO6dnN8V/yCk0T0hicD8IFK8IjrDn2RimDmLOEBmSQ15tFO4IA/ygqfpuyKqRDHurF
-         1vdNusaA0aJQuei33H8Jxgro/9ykXw2Vq2HkqND49S1TLbDfwQLW3zD4A/79iP412H4K
-         OQSThq1CZRWBVU6L2W5bCAa+l0quEJ8RyhlkJcPtHalwaS1JgYo+hZh9mahGqNZGYRYp
-         Bh8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755597755; x=1756202555;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jEIclbjfDHmWiMYwu7S7lb6mGq8E/UEDhqSMVO/QBNA=;
-        b=ecGcQl4c1/07VVQCCO4pjiSyYdTFIIHV22S5baqNpDH4ZhSuRx6DHUZzFVNoG0jXpm
-         qajZ0wPePO89D7keGKhT43SJviKByyolH1QYCUvSQD+8w9jsrZSEnVspN4/i/jaAmtRS
-         e59tTS3k15P6HKRyWq8l+DS6/t16qRzVcaSUQr5hefqHXIgOBNB1LoA3Rw8E8C0J9Qk+
-         /6TQuS421yDe5zogOV/F8B97OxEJVzXYoaeTEXHELSEomLvMGDMjUjPr4klgKljsWGo8
-         DT/GOc3zEN5dpCaWeS27OPxlqlhpJwEXknhxxJNDnq5btK4QYyXAuFzBj0chiTlK4yov
-         cXVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmdIvWLCo79mFvZ8lSTAT9uME3KqUkhd8qTGjxBldPoV5XglvRBTPeF7Ft0e4YCjpOQ3y/QxJtzUI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy3pldhC6dd2Pu0L2SuM5X9J4YrkZW1Cos74RGVdfd1SMxjHvox
-	1m1OSDFgEVSHsz0Mpv8Wpns5diNdv2kPwXT6NLXFFgHzpnmoBpNwWO9RGYFbq2rdtfUj/84BgMe
-	m8uBif3JVJ5OX7npXgPk1EwMtQTFFn9vBybaSeOWbww==
-X-Gm-Gg: ASbGncuSgK3la2UG6QFAfeG5fawyW4z9AIKsIk4j5qUMN402g7nMxRDUqS1C9RCA/Ue
-	7HfRy35CbNJPUY2qE/sAUPGmvcKOuyB8GmH+7ljdedqxoaITQIsL6+5vNf3+n6TfDqW8Pk++TqC
-	dGt+4QOXiRr4wHWLkieFXHPpreLOt2jF1WPvaGnXkPi/gNy1LKj/1oLhOKHtCJdjbYflzJDm0Rw
-	oG1IROxvsHs
-X-Google-Smtp-Source: AGHT+IH/19oUBfRxFr8epug82uJ7/HieWJyUVlBhoMvAFaMluZmkd3UN9bc0BKENYULFNtqg/fXi8MkFaQZgBnal9yQ=
-X-Received: by 2002:a05:651c:4199:b0:333:ac42:8d6a with SMTP id
- 38308e7fff4ca-335304ee6damr4961591fa.3.1755597754935; Tue, 19 Aug 2025
- 03:02:34 -0700 (PDT)
+	s=arc-20240116; t=1755602410; c=relaxed/simple;
+	bh=3iN1imWj6bQi5lTmvbgFFhxC24mms+RpMTKHbwO5Mo8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AB/ebxAM+6++4ZuC9mpFU9kogTyaTNHAngfkOzHIHz+4VpKZXb4JNdrhlvD8YSVzNVSANHg0BGbNhtBzaBhZHWao3my/WzHLBvf5JDw4C9i007B5jOIjaODXevFL5YrLwuZJgvBzGxe9s2lR1UDDbfk56nF6tpkRjAwgjoEE85U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38288C4CEF1;
+	Tue, 19 Aug 2025 11:20:07 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>
+Cc: bpf@vger.kernel.org,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	George Guo <guodongtai@kylinos.cn>,
+	Chenghao Duan <duanchenghao@kylinos.cn>,
+	loongarch@lists.linux.dev,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	kernel test robot <lkp@intel.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH] LoongArch: BPF: Fix uninitialized symbol 'retval_off'
+Date: Tue, 19 Aug 2025 19:19:53 +0800
+Message-ID: <20250819111953.3197428-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250811163749.47028-2-ziyao@disroot.org> <20250811163749.47028-4-ziyao@disroot.org>
-In-Reply-To: <20250811163749.47028-4-ziyao@disroot.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 19 Aug 2025 12:02:23 +0200
-X-Gm-Features: Ac12FXx1atQmH6QeSnrDLNRud94fhJMECrA9TaInUV_M5vUWxhGJhif4Q5spxjg
-Message-ID: <CACRpkdZp8FLrxgkeZ=xzSPgny51iDZ3KRCrxpoSdgF8_=df=KQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pinctrl: ls2k0300: Support Loongson 2K0300 SoC
-To: Yao Zi <ziyao@disroot.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 11, 2025 at 6:39=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+In __arch_prepare_bpf_trampoline(), retval_off is meaningful only when
+save_ret is not 0, so the current logic is correct. But it may cause a
+build warning:
 
-> Support pin multiplexing and drive-strength setting for Loongson 2K0300
-> SoC. Pin multiplexing could be done separately for each pin, while
-> drive-strength could be only configured on function basis. This differs
-> a lot from the driver for previous generation of Loongson SoC, where
-> pinmux setting is based on group.
->
-> Pins are represented with pinmux properties in devicetrees, and we use
-> the generic pinmux API for parsing. The common pinconf interface isn't
-> used for drive-strength setting, since it handles pinconf settings at a
-> unit of pin groups or smaller.
->
-> Instead, the driver configures drive-strength settings just after
-> parsing the devicetree. The devicetree's structure ensures no conflicts
-> could happen in drive-strength settings.
->
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
+arch/loongarch/net/bpf_jit.c:1547 __arch_prepare_bpf_trampoline() error: uninitialized symbol 'retval_off'.
 
-Overall the driver looks very good, well done!
+So initialize retval_off unconditionally to fix it.
 
-Look into Rob's comment on the bindings to use a single node
-for mux and config.
+Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support")
+Closes: https://lore.kernel.org/r/202508191020.PBBh07cK-lkp@intel.com/
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-I saw that you want to make the pin controller strict, if you also have
-some pins with "GPIO mode" that will serve as back-end for a
-GPIO driver (and I saw you posted a GPIO driver series as well)
-then have a look at Bartosz recent patches to add infrastructure
-for pinctrl to know about what a GPIO pin is:
-https://lore.kernel.org/linux-gpio/20250815-pinctrl-gpio-pinfuncs-v5-0-955d=
-e9fd91db@linaro.org/T/
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index abfdb6bb5c38..a73f6ea4ed4a 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1504,11 +1504,10 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	stack_size += 16;
+ 
+ 	save_ret = flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_FENTRY_RET);
+-	if (save_ret) {
+-		/* Save BPF R0 and A0 */
+-		stack_size += 16;
+-		retval_off = stack_size;
+-	}
++	if (save_ret)
++		stack_size += 16; /* Save BPF R0 and A0 */
++
++	retval_off = stack_size;
+ 
+ 	/* Room of trampoline frame to store args */
+ 	nargs = m->nr_args;
+-- 
+2.47.3
 
-The current driver does not seem to know about any of these
-pins being usable as GPIO and does not implement those:
-
-        int (*gpio_request_enable) (struct pinctrl_dev *pctldev,
-                                    struct pinctrl_gpio_range *range,
-                                    unsigned int offset);
-        void (*gpio_disable_free) (struct pinctrl_dev *pctldev,
-                                   struct pinctrl_gpio_range *range,
-                                   unsigned int offset);
-        int (*gpio_set_direction) (struct pinctrl_dev *pctldev,
-                                   struct pinctrl_gpio_range *range,
-                                   unsigned int offset,
-                                   bool input);
-        bool strict;
-
-Which is fine if the pins actually cannot be used for GPIO, but if they
-can, and this is just implicit for unconfigured pins ... then add
-functions and groups for GPIO.
-
-The other driver using pinconf_generic_parse_dt_pinmux()
-drivers/pinctrl/meson/pinctrl-amlogic-a4.c has GPIO awareness.
-
-Yours,
-Linus Walleij
