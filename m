@@ -1,58 +1,232 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7341D30505B
-	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 12:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4C73043A8
+	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 12:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755605860; cv=none; b=IHOEP1DgrdCFjXGpe9dY1ES6WkWL+t8wOL9PYoGWT5t7Asg6Qt/SuElvd6+bbYnVCDapo8gF+jvRIGdVQFELDEI66RA2RQv7v0/kxADr9nNyR+1xR1E7Rgfq80y0ObSf6Waeqbnz87dkXJFtL7yPFV0pxb6g26ZPXmn8tZvsS4s=
+	t=1755606791; cv=none; b=NCYClerrV8BrSlu3q97YgPdkDAFxkImQSW8cvbfj/dFtNGw4pFoVSTCBv0mr38IaoElooqNJuwI4piDfICDhL+z8+Cd7rg/F8mweQvIHAjXQQSfdp5MxBsBsPj+Yx+1JuUCUoLqVGv4SS7gM2qao6OXGaXOm/UHszqxCgPd1aMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755605860; c=relaxed/simple;
-	bh=13cJ3LLl+BEyaEg2m8lLOvDNUxze5XMFg47O9XVdI/I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZO+AIMmv3fqehBbpcjKV9RoJcNkW1jDH4Tl/9kbiGLtrx/ts6PjEDVyBfSzyOfgszdX0MRprtX7Dsydid9cU9b26vawXqs9wGUBXe/mD7bhlsjhlBzJSzVge7fWl15/l58JffHVhVjxE7tpXI0SJZwkKQyO+FVA26EBU2y5b29I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxrdJWa6RopmIAAA--.704S3;
-	Tue, 19 Aug 2025 20:17:26 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAxfcFWa6Ro2DtYAA--.19719S2;
-	Tue, 19 Aug 2025 20:17:26 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Xianglai Li <lixianglai@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] Add sign extension with kernel MMIO read emulation
-Date: Tue, 19 Aug 2025 20:17:23 +0800
-Message-Id: <20250819121725.2423941-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1755606791; c=relaxed/simple;
+	bh=oGIIhDvNcbEz2gNcueZOzpTWLK1v6vHPDTa7Zne8PoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uZruTEYGjdGhA/smea99G07zw0HsoqcM1gU/OSSL8/X+CyaxXLWkEQXqzJ+JlCKgiw2rq7WcUyd0O4cgRstWY2Do7EkYbmmjV3zQazrzbioOe98Zx3uHbaw7oCJvGDXamgzyRPW1deO9/uuBdC5jBEE1xjd5c6M/9+Neqb67h0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D5CLFiOV; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5CLFiOV"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-435de5b2f29so1622509b6e.0
+        for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 05:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755606789; x=1756211589; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=euK/Sa43pRju1FeMVcXdjmsp+ESnMwlYC5m2uEfodPc=;
+        b=D5CLFiOVkohZvlsKCFZ7tNdmCXmqQt4e4/Y6F/VaGZz+wcFgZH8/eJI+Mgx6o3zUFF
+         p3blPy/hQboSsQy/U57vbCsaT8HLQR1/g5zTFqPdfqRf6sbls1y5ytGjeCGudjIryfSj
+         KYhY277GbimojVjkAt6PwyZ1zxj9+fruSKqK9KUKwQcUWwUDJyOCQHjFViJcYPCQkmSj
+         zPmmSvULghAha0eTQpdV2oja8l5h06W7rs+oBcv0m6c7Ek4jLVXBkSNzqRSfwBFiPJ/0
+         0sNCf6qPKNkRw3cByUIH3Sc1tQPbN/wbUCAzCNAO1Fo5u6VtmzhS2VTREDcrW/hzAa3t
+         PlIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755606789; x=1756211589;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=euK/Sa43pRju1FeMVcXdjmsp+ESnMwlYC5m2uEfodPc=;
+        b=LTrlTQRgw9HOt/HC/7xdkE7GBenmvDMy9Ghe+q/mrF83ecfg/66hqWECCPDE8FPfv2
+         1I+hoKj5lIHseUdvKH4CkaZJ/AIxgjFDkXf2RmBFXmDus4m+NfENvmLfDP6c+fXAQx++
+         rlNeo8RrIK7Su/hko9WFLH3lnjxnBTvQbjpg39mx9IHCvpAHxKm16uya4/Bo2DvTwAIF
+         gvR65XcT71/GZbVFb5AhsAajNwlbpdn22dUF3Rp2Q0zZlP3ZYnFBT9F7Zd0sAyMPwtXg
+         uButmT8dro3WGpOp8bSWP3mTvlTNgqnOqKjWMaviiEwblAAWOs6ylcu9wLwX8immb/bd
+         hlIA==
+X-Gm-Message-State: AOJu0YwSh2jHNwWfNyCB6tyraJVT6m09SkN1HTUWe2IvvsCMwwa2OIdB
+	KTXLNBE23S0covTqCvyUYK07ehE9TCGChf0dJlHOgXr76tjzyOnZdYCplctkmPhNSc08ct2fejS
+	L1m8v8dUgMpJlzunPXBOD1vkN9kVJkx8=
+X-Gm-Gg: ASbGncv7CfrsetE/IXlNCAwhW4tSozotXULpLeB/AhQc0OlE6rGE/KPpAkZ73D2I1sX
+	VE3nhXUVgFZON3Eib1PfZZgzwpQYhBEc+jplxEptCLNzrLPeUGsOG2f/PYy0wLd1QgDdxh8PuUC
+	PL5ln8Yn62rPlnvUtXcb0+KHcX+69Khva4I3jGs7IMwBUHYRyeWKavJZXAI+I2rubexe3WH1dP5
+	Cw81G4=
+X-Google-Smtp-Source: AGHT+IF3TnzwDKbWVmb0nbU19B6sCvfBoJv+fy7qHe2Grj5VTQW+DyaKaeKUpV05oMJRpppbHIo9Qf/7YXz89cmmuuk=
+X-Received: by 2002:a05:6808:218f:b0:434:b6e:52a0 with SMTP id
+ 5614622812f47-436da1e7ea7mr1689680b6e.22.1755606788728; Tue, 19 Aug 2025
+ 05:33:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxfcFWa6Ro2DtYAA--.19719S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20250815082931.875216-1-jianghaoran@kylinos.cn>
+In-Reply-To: <20250815082931.875216-1-jianghaoran@kylinos.cn>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Tue, 19 Aug 2025 20:32:57 +0800
+X-Gm-Features: Ac12FXws3USO7bmtx8j4CoQoQxI-9k1R3TMQL0Aj_uHfyKHkQOQjd7LKqRtoh4w
+Message-ID: <CAEyhmHTv+3FxN5mGvtrNpW5Y=r5gD9wfS3iFUO4UCAzO9cBcPg@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: BPF: Fix incorrect return pointer value in
+ the eBPF program
+To: Haoran Jiang <jianghaoran@kylinos.cn>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, kernel@xen0n.name, 
+	chenhuacai@kernel.org, yangtiezhu@loongson.cn, jolsa@kernel.org, 
+	haoluo@google.com, sdf@fomichev.me, kpsingh@kernel.org, 
+	john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org, 
+	eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, 
+	daniel@iogearbox.net, ast@kernel.org, Jinyang He <hejinyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch is to add sign extension with kernel MMIO/IOCSR read
-emulation, it is similar with user space MMIO/IOCSR read completion
-handling.
+On Fri, Aug 15, 2025 at 4:30=E2=80=AFPM Haoran Jiang <jianghaoran@kylinos.c=
+n> wrote:
+>
+> In some eBPF programs, the return value is a pointer.
+> When the kernel call an eBPF program (such as struct_ops),
+> it expects a 64-bit address to be returned, but instead a 32-bit value.
+>
+> Before applying this patch:
+> ./test_progs -a ns_bpf_qdisc
+> CPU 7 Unable to handle kernel paging request at virtual
+> address 0000000010440158.
+>
+> As shown in the following test case,
+> bpf_fifo_dequeue return value is a pointer.
+> progs/bpf_qdisc_fifo.c
+>
+> SEC("struct_ops/bpf_fifo_dequeue")
+> struct sk_buff *BPF_PROG(bpf_fifo_dequeue, struct Qdisc *sch)
+> {
+>         struct sk_buff *skb =3D NULL;
+>         ........
+>         skb =3D bpf_kptr_xchg(&skbn->skb, skb);
+>         ........
+>         return skb;
+> }
+>
+> kernel call bpf_fifo_dequeue=EF=BC=9A
+> net/sched/sch_generic.c
+>
+> static struct sk_buff *dequeue_skb(struct Qdisc *q, bool *validate,
+>                                    int *packets)
+> {
+>         struct sk_buff *skb =3D NULL;
+>         ........
+>         skb =3D q->dequeue(q);
+>         .........
+> }
+> When accessing the skb, an address exception error will occur.
+> because the value returned by q->dequeue at this point is a 32-bit
+> address rather than a 64-bit address.
+>
+> After applying the patch=EF=BC=9A
+> ./test_progs -a ns_bpf_qdisc
+> Warning: sch_htb: quantum of class 10001 is small. Consider r2q change.
+> 213/1   ns_bpf_qdisc/fifo:OK
+> 213/2   ns_bpf_qdisc/fq:OK
+> 213/3   ns_bpf_qdisc/attach to mq:OK
+> 213/4   ns_bpf_qdisc/attach to non root:OK
+> 213/5   ns_bpf_qdisc/incompl_ops:OK
+> 213     ns_bpf_qdisc:OK
+> Summary: 1/5 PASSED, 0 SKIPPED, 0 FAILED
+>
+> Fixes: 73c359d1d356 ("LoongArch: BPF: Sign-extend return values")
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+>
+> ----------
+> v2:
+> 1,add emit_slt* helpers
+> 2,Use slt/slld/srad instructions to avoid branch
+> ---
+>  arch/loongarch/include/asm/inst.h |  8 ++++++++
+>  arch/loongarch/net/bpf_jit.c      | 17 +++++++++++++++--
+>  2 files changed, 23 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
+sm/inst.h
+> index 277d2140676b..20f4fc745bea 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -92,6 +92,8 @@ enum reg2i6_op {
+>  };
+>
+>  enum reg2i12_op {
+> +       slti_op         =3D 0x08,
+> +       sltui_op        =3D 0x09,
+>         addiw_op        =3D 0x0a,
+>         addid_op        =3D 0x0b,
+>         lu52id_op       =3D 0x0c,
+> @@ -148,6 +150,8 @@ enum reg3_op {
+>         addd_op         =3D 0x21,
+>         subw_op         =3D 0x22,
+>         subd_op         =3D 0x23,
+> +       slt_op          =3D 0x24,
+> +       sltu_op         =3D 0x25,
+>         nor_op          =3D 0x28,
+>         and_op          =3D 0x29,
+>         or_op           =3D 0x2a,
+> @@ -629,6 +633,8 @@ static inline void emit_##NAME(union loongarch_instru=
+ction *insn,   \
+>         insn->reg2i12_format.rj =3D rj;                                  =
+ \
+>  }
+>
+> +DEF_EMIT_REG2I12_FORMAT(slti, slti_op)
+> +DEF_EMIT_REG2I12_FORMAT(sltui, sltui_op)
+>  DEF_EMIT_REG2I12_FORMAT(addiw, addiw_op)
+>  DEF_EMIT_REG2I12_FORMAT(addid, addid_op)
+>  DEF_EMIT_REG2I12_FORMAT(lu52id, lu52id_op)
+> @@ -729,6 +735,8 @@ static inline void emit_##NAME(union loongarch_instru=
+ction *insn,   \
+>  DEF_EMIT_REG3_FORMAT(addw, addw_op)
+>  DEF_EMIT_REG3_FORMAT(addd, addd_op)
+>  DEF_EMIT_REG3_FORMAT(subd, subd_op)
+> +DEF_EMIT_REG3_FORMAT(slt, slt_op)
+> +DEF_EMIT_REG3_FORMAT(sltu, sltu_op)
+>  DEF_EMIT_REG3_FORMAT(muld, muld_op)
+>  DEF_EMIT_REG3_FORMAT(divd, divd_op)
+>  DEF_EMIT_REG3_FORMAT(modd, modd_op)
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index abfdb6bb5c38..50067be79c4f 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -229,8 +229,21 @@ static void __build_epilogue(struct jit_ctx *ctx, bo=
+ol is_tail_call)
+>         emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_a=
+djust);
+>
+>         if (!is_tail_call) {
+> -               /* Set return value */
+> -               emit_insn(ctx, addiw, LOONGARCH_GPR_A0, regmap[BPF_REG_0]=
+, 0);
+> +               /*
+> +                *  Set return value
+> +                *  Check if the 64th bit in regmap[BPF_REG_0] is 1. If i=
+t is,
+> +                *  the value in regmap[BPF_REG_0] is a kernel-space addr=
+ess.
+> +
+> +                *  long long val =3D regmap[BPF_REG_0];
+> +                *  int shift =3D 0 < val ? 32 : 0;
+> +                *  return (val << shift) >> shift;
+> +                */
+> +               move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
+> +               emit_insn(ctx, slt, LOONGARCH_GPR_T0, LOONGARCH_GPR_ZERO,=
+ LOONGARCH_GPR_A0);
+> +               emit_insn(ctx, sllid, LOONGARCH_GPR_T0, LOONGARCH_GPR_T0,=
+ 5);
+> +               emit_insn(ctx, slld, LOONGARCH_GPR_A0, LOONGARCH_GPR_A0, =
+LOONGARCH_GPR_T0);
+> +               emit_insn(ctx, srad, LOONGARCH_GPR_A0, LOONGARCH_GPR_A0, =
+LOONGARCH_GPR_T0);
+> +
 
-Bibo Mao (2):
-  LoongArch: KVM: Add sign extension with kernel MMIO read emulation
-  LoongArch: KVM: Add sign extension with kernel IOCSR read emulation
+This change seems wrong to me. Need further investigation.
 
- arch/loongarch/kvm/exit.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
-
-
-base-commit: be48bcf004f9d0c9207ff21d0edb3b42f253829e
--- 
-2.39.3
-
+>                 /* Return to the caller */
+>                 emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA=
+, 0);
+>         } else {
+> --
+> 2.43.0
+>
