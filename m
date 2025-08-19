@@ -1,329 +1,174 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21F131B13E
-	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 09:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA52B31B11A
+	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 09:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755595681; cv=none; b=htLhH6nJ7ngcqvU6pFloMUk3m2YionJQ6OCGi4tRaIzyozuPaCaGcqCAf8Nw5sis/S/HfCmkOSoKK4vpSrAeWOAMVmJ2e+7TbfsQsxmB734W6Cpohz7NhCOlaS3TzcCpXx3zRXD8r6G/bLkFZufHGIMwOM885I6ANax2yGvlX4s=
+	t=1755597219; cv=none; b=IkwAMVqIX+7XlvZdtusUO4/WtfxD5glY2ujbNgBnmCXvLkCofJnKX7UfiKgtz9QKLKgZp6H3MAqZuVmHr9PX4kEgagIeuZtqE+zKNUI4dTbddp1D12t0IzqfAlJuMSCQgVb814Agm/voGPBLOWK6O9+CdfXE29aZVSzajmrGWTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755595681; c=relaxed/simple;
-	bh=KWI4eZgc4fZizU2DDU16/Bjf7Td+w6kwVmljHyukkQI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=scV+T+1UcWExRk6P22/+PJ07zFvkukTAbWirbw6h8gq2kuwwwHW6V9mLyQcRV5fclhkD8fCOuisATSjJfAp7v10/ZgXf/GSJgnQsgrIupFJ4BhknuqxHYelWYpTH0yTubDlm/O+XiVXqRQ/XdKGTGR2/jZGlIvQkiTaZo7VMryo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iIZdAKNf; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755597219; c=relaxed/simple;
+	bh=YEizIsE8/y/LtNcORPO8jldB4Nh5dJHp08eXLO5S9Go=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JmcwZt2oJcEMqXedKyv/+qZWbNqMs3iweV809fF1u/1URRgsQYE6hhFzdKJ1+apcyexL3bbfqtOTQEBmmD0Fb8kfl16YLkkSmub+0irwT33Gm/8lxzxI4RSyyaAKLae9hN9378elCIXl/Zz8pO84CothTsQndobi/I9FNwZ0g4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=stHQxcMk; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIZdAKNf"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-333f8f2d6c2so41814831fa.1
-        for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 02:27:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="stHQxcMk"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3b9edf0e4efso3488000f8f.2
+        for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 02:53:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755595678; x=1756200478; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0OQkr6zykDfsHE43g8uaPbe9t9idtDlDUqfpuMPRDjU=;
-        b=iIZdAKNf2qtSgP8A8IXuotJjtjRQXG1pnHsgqMguu1TUugO4/a2NVJqoup2IeJWFz9
-         dRpMa6iJYk1o+fJBZilsrvEN7k3U6m+SzKG7tMAc6GqANj7pXOK2X73pxJ112Q2lK3jE
-         aGzA0PMwwQkk/HlneddjYYmEK6TW1rkNaSwWgyovv1wjjlvN3pQMRKgLu/BG3XXZY7b0
-         MVSalPLfkCRZg7o4QxSAJ0o5CmhKXJUepb+Yl7FC+zNTFjLZskcw02OfXeiWQHv+EdYg
-         6NRKpWisSCoXaumSqUlehrebsLuN1Fvb1YGsHaE4ug5Hy8RJFVMLdxy+W5r23FDKEefw
-         +1Uw==
+        d=linaro.org; s=google; t=1755597214; x=1756202014; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rNam3s73jCkH5fp8vQUdOONkGiCMjeqztr8hoMDyHKE=;
+        b=stHQxcMkNQ24pdhoMMjJwKQiLbtuD0GQ3YIQEvctGGTBEj/tgrZ6JLWCWH6h7ubkoU
+         giaWj5RlFbw3wubYxU/3jGRxZijCpD8SECKzz85SdNWQMsNmLux8naNIdzl1FoX8SWOf
+         o0602gaqA9BrjfvaXceNL2w2Kf3x3mY/5ib0YKmoQw/f/Vu4gnp+LkKqbp7ZTlMyv18g
+         t4WE+p2IoGhJA89yIo2fcNSNYla38r99RinwfnkDJEYJ4qE/mwZk1FM4XD6aKB1T7O5x
+         jy9Z/1k/6rKwPOZ4pXduB+/FFOAetOW6wyu+OiYxF3SK6N27j24bAfmDq2PqFunicME+
+         IH3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755595678; x=1756200478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0OQkr6zykDfsHE43g8uaPbe9t9idtDlDUqfpuMPRDjU=;
-        b=RXGsd/LET3E5yVzwUP71+2zzY5RdHzR55rMikb813DAj/xL2TABkDxuOt70+mfMGY5
-         rtykn1JA74dqCjRLl1tsnKh8xbK+zwLlmM6c0WSOimoEe9gWMKfBdQdWYFspPXeX80ud
-         CTcYxi/5wr12/ioTsCHGFPf0noo3ldpVgNcEZkySsZCtuEjSbYTkNDmZDIaRxQyX0LAP
-         bDn01FRQiPGBADRePKjhKNomeKVo3WJgIwZboWm2mAnoMdChI80n9iBsvjGx3VuHjpec
-         Srbkn5zAFPw+MSnRi9mC0s/H5oH8icL8m5iYhTklrh2CXYNblZsAmy6+wb/+CxCr+PuM
-         LqtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUypH+gkWHwIlIivldXNh2ho3bOBGNNnzqceI8SS4Ef3iM0j7moMR72J3dSTVaY4yJv3f1gQjcglpw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwEA+mTJ7chDz7EG04Fcp4hIhwLYH61hALddWRiOk2PUfzE/n1I
-	4poxSXV+iY3CmjHIx6ZxMZPLlJ+2zWxfp+Mqfu8o803S3wGZSyPV4NqvY8vX6oCLoxYvfXrNXju
-	tj9Sl/0JtkV2Nrlic0vgJi2QSTlRn08E=
-X-Gm-Gg: ASbGncsvAqjzs3lFzSu55Gi2nO86UkLgYBLgqHad/AxbbO18QuGi6qMT61J2awY+pBF
-	XzpcTq0yDk2SJx+yyN0xrO+NKkvoMrgMnXp7xFDkcMsDJESEVyfTjWj7YnbMKED13/kq+SIxgGd
-	PuL2/m57zmVdZz1ySLBAROiEYH2RYs83Xc9nBDK+HRHxCU+pZEl+GpBUoJUtOchXCjlm0qeAM8v
-	fMheAlkHQXRlr1LaSI=
-X-Google-Smtp-Source: AGHT+IEzOSfuxMJN7nTWT11FErQMVotgyyYjG92JFtcnWqBAmEKBJN8oajoc8gRwD1X0zsZaM4IuiSvFpHzuKEMw1kE=
-X-Received: by 2002:a2e:be9a:0:b0:330:4b87:7a43 with SMTP id
- 38308e7fff4ca-3353073f5e8mr6234191fa.36.1755595677641; Tue, 19 Aug 2025
- 02:27:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755597214; x=1756202014;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rNam3s73jCkH5fp8vQUdOONkGiCMjeqztr8hoMDyHKE=;
+        b=mhRLL8dQF4dwOVRPJrKQ1Ed/bW/dm0HebOx0N344/2hixARdXDyQQ4ZTfT8dbG5+Hk
+         eSy1F64G42LsSBqDGDbonbOnyeiEe7Y6WW9NWgOp1MlACEK5t0++z1tfXVhYISXift3s
+         TP1pknrkd22cvcUgu1NG0/fakUlcc7TecfNnHva0hwhUV98mX+r1K8sxxgZf5YJTd2+a
+         Uw6jA0Hh9a/CcEfqc47+WnmqH02d9vbKnh4mOPG5aH8HgA4+uOqncjqswoW17wQKSUhj
+         gmibl/JDD65ExyGtcL2gVqpTjnHntK2mz1B3CrRHMUTYwnHh7smbNQSCfpnpXU8ps7Fx
+         DVmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbHTKrGuRE+DDlTqjq8ClwFGK/SKrYc4ZXxl2wwy8IQAdaPNfOLzYSWOqCKBFyds+Y7Dfc8M78s9A=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy0Y82sKqH8Cto4C80wJ6wEqo6oPI5HwsEmfVRC45gtyCJvjFwU
+	5OyfQvUF09BsnrmaPNXnIpGKN5/EfgM4Z79K1PzTSgAIxNULlGVVfK5fPyxPSEMYOPE=
+X-Gm-Gg: ASbGncsbV+5vEFY2AfLXHD6msYllKru9gQFq/INegx7RPMVIE37bksr+sf+K8TjCudJ
+	nHS5/caSmfHDnBZIMj/Y9mqBXEhQyo/BIL3eltyztsScf0P1UJJLzEgUDeqkWLSC0QyJ8SVC75g
+	wRTPInjm6b3APvnMAPnqLv/r/0BXehQRAw86UwVDxmizS0li/qdFuI5mphtLDjE4E6vWMcU/ykI
+	hNz1CymZLLbsvpUmgDX09eu8q6B0Usg6gYMFVRljlz8T7FkgHY6sNNr+wqOR0ZRAL8BDrTq9tUu
+	DRlzP1HP5e8WFpQxgQxVFK5sMCBfEmD7Y5jY3LssIDIENkaf0nY711yuz3f/+vI9nO/uOoQFdgN
+	iK8tusQU5PEr5RdD7CuXO5Gw/xrEaf2Qof7QlONw89Pg=
+X-Google-Smtp-Source: AGHT+IFhVoXOXWz933OS2H4MYPh1tnFGv79hui+RhHHpUYqmH0GfWUAlyD1l4ealbPI6uEAVPOGUJg==
+X-Received: by 2002:a05:6000:200d:b0:3b7:8832:fdd5 with SMTP id ffacd0b85a97d-3c0eaf4f6dfmr1431883f8f.16.1755597213853;
+        Tue, 19 Aug 2025 02:53:33 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3c0771c16eesm3152017f8f.37.2025.08.19.02.53.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Aug 2025 02:53:33 -0700 (PDT)
+Date: Tue, 19 Aug 2025 12:53:30 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
+	kexybiscuit@aosc.io, wangyao@lemote.com,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: Re: [PATCH v9 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function
+ support
+Message-ID: <202508191519.uT5io1jk-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1754890670.git.zhoubinbin@loongson.cn> <d9e92cfdb1ee69d98630286238e08a8df176718a.1754890670.git.zhoubinbin@loongson.cn>
-In-Reply-To: <d9e92cfdb1ee69d98630286238e08a8df176718a.1754890670.git.zhoubinbin@loongson.cn>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Tue, 19 Aug 2025 17:27:21 +0800
-X-Gm-Features: Ac12FXyoRJ82OzwQIguJkpDhNh3-mSKVf4Ur7V22rbg7xjXzky8k7BOMvrP3KFA
-Message-ID: <CAJhJPsWAUDUNb-JvNBN_ZVVXThZcvNCrL5XV=DAWzm2JJ=r=3Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] mtd: rawnand: loongson: Add nand chip select support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1809103a948545df93b7b439df46ca6393995aa1.1754999365.git.zhoubinbin@loongson.cn>
 
-On Mon, Aug 11, 2025 at 2:03=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> The page address register describes the page address of the starting
-> address for NAND read/write/erase operations.
->
-> According to the manual, it consists of two parts:
->         {chip select, page number}
->
-> The `chip select` is fixed at 2 bits, and the `page number` is
-> determined based on the actual capacity of the single-chip memory.
-> Therefore we need to determine the `chip select` bits base on the `page
-> number`.
->
-> For example, for a 1GB capacity chip (2K page size), it has 1M pages.
-> Thus, [19:0] is used to represent the page number, and [21:20]
-> represents the chip select.
->
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../mtd/nand/raw/loongson-nand-controller.c   | 133 ++++++++++++++----
->  1 file changed, 103 insertions(+), 30 deletions(-)
->
-> diff --git a/drivers/mtd/nand/raw/loongson-nand-controller.c b/drivers/mt=
-d/nand/raw/loongson-nand-controller.c
-> index 97cd566420a8..5a51c7d299cc 100644
-> --- a/drivers/mtd/nand/raw/loongson-nand-controller.c
-> +++ b/drivers/mtd/nand/raw/loongson-nand-controller.c
-> @@ -82,6 +82,7 @@ struct loongson_nand_data {
->         unsigned int op_scope_field;
->         unsigned int hold_cycle;
->         unsigned int wait_cycle;
-> +       unsigned int nand_cs;
->         void (*set_addr)(struct loongson_nand_host *host, struct loongson=
-_nand_op *op);
->  };
->
-> @@ -90,6 +91,7 @@ struct loongson_nand_host {
->         struct nand_chip chip;
->         struct nand_controller controller;
->         const struct loongson_nand_data *data;
-> +       unsigned int addr_cs_field;
->         void __iomem *reg_base;
->         struct regmap *regmap;
->         /* DMA Engine stuff */
-> @@ -215,6 +217,26 @@ static int loongson_nand_parse_instructions(struct n=
-and_chip *chip, const struct
->         return 0;
->  }
->
-> +static void loongson_nand_set_addr_cs(struct loongson_nand_host *host)
-> +{
-> +       struct nand_chip *chip =3D &host->chip;
-> +       struct mtd_info *mtd =3D nand_to_mtd(chip);
-> +
-> +       if (!host->data->nand_cs)
-> +               return;
-> +
-> +       /*
-> +        * The Manufacturer/Chip ID read operation precedes attach_chip, =
-at which point
-> +        * information such as NAND chip selection and capacity is unknow=
-n. As a
-> +        * workaround, we use 128MB cellsize (2KB pagesize) as a fallback=
-.
-> +        */
-> +       if (!mtd->writesize)
-> +               host->addr_cs_field =3D GENMASK(17, 16);
-> +
-> +       regmap_update_bits(host->regmap, LOONGSON_NAND_ADDR2, host->addr_=
-cs_field,
-> +                          host->data->nand_cs << __ffs(host->addr_cs_fie=
-ld));
-> +}
-> +
->  static void ls1b_nand_set_addr(struct loongson_nand_host *host, struct l=
-oongson_nand_op *op)
->  {
->         struct nand_chip *chip =3D &host->chip;
-> @@ -263,6 +285,8 @@ static void ls1c_nand_set_addr(struct loongson_nand_h=
-ost *host, struct loongson_
->                         regmap_update_bits(host->regmap, LOONGSON_NAND_AD=
-DR2, mask, val);
->                 }
->         }
-> +
-> +       loongson_nand_set_addr_cs(host);
->  }
->
->  static void loongson_nand_trigger_op(struct loongson_nand_host *host, st=
-ruct loongson_nand_op *op)
-> @@ -603,42 +627,89 @@ static int loongson_nand_exec_op(struct nand_chip *=
-chip, const struct nand_opera
->         return nand_op_parser_exec_op(chip, &loongson_nand_op_parser, op,=
- check_only);
->  }
->
-> -static int loongson_nand_attach_chip(struct nand_chip *chip)
-> +static int loongson_nand_get_chip_capacity(struct nand_chip *chip)
->  {
->         struct loongson_nand_host *host =3D nand_get_controller_data(chip=
-);
->         u64 chipsize =3D nanddev_target_size(&chip->base);
-> -       int cell_size =3D 0;
-> +       struct mtd_info *mtd =3D nand_to_mtd(chip);
->
-> -       switch (chipsize) {
-> -       case SZ_128M:
-> -               cell_size =3D 0x0;
-> -               break;
-> -       case SZ_256M:
-> -               cell_size =3D 0x1;
-> -               break;
-> -       case SZ_512M:
-> -               cell_size =3D 0x2;
-> -               break;
-> -       case SZ_1G:
-> -               cell_size =3D 0x3;
-> -               break;
-> -       case SZ_2G:
-> -               cell_size =3D 0x4;
-> -               break;
-> -       case SZ_4G:
-> -               cell_size =3D 0x5;
-> -               break;
-> -       case SZ_8G:
-> -               cell_size =3D 0x6;
-> -               break;
-> -       case SZ_16G:
-> -               cell_size =3D 0x7;
-> -               break;
-> -       default:
-> -               dev_err(host->dev, "unsupported chip size: %llu MB\n", ch=
-ipsize);
-> -               return -EINVAL;
-> +       if (mtd->writesize =3D=3D SZ_4K && chipsize =3D=3D SZ_2G) {
-> +               host->addr_cs_field =3D GENMASK(20, 19);
-> +               return 0x4;
->         }
->
-> +       if (mtd->writesize =3D=3D SZ_2K) {
-> +               switch (chipsize) {
-> +               case SZ_128M:
-> +                       host->addr_cs_field =3D GENMASK(17, 16);
-> +                       return 0;
-> +               case SZ_256M:
-> +                       host->addr_cs_field =3D GENMASK(18, 17);
-> +                       return 0x1;
-> +               case SZ_512M:
-> +                       host->addr_cs_field =3D GENMASK(19, 18);
-> +                       return 0x2;
-> +               case SZ_1G:
-> +                       host->addr_cs_field =3D GENMASK(20, 19);
-> +                       return 0x3;
-> +               default:
-> +                       goto err;
-> +               }
-> +       }
-> +
-> +       if (mtd->writesize =3D=3D SZ_8K) {
-> +               switch (chipsize) {
-> +               case SZ_4G:
-> +                       host->addr_cs_field =3D GENMASK(20, 19);
-> +                       return 0x5;
-> +               case SZ_8G:
-> +                       host->addr_cs_field =3D GENMASK(21, 20);
-> +                       return 0x6;
-> +               case SZ_16G:
-> +                       host->addr_cs_field =3D GENMASK(22, 21);
-> +                       return 0x7;
-> +               default:
-> +                       goto err;
-> +               }
-> +       }
-> +
-> +       if (mtd->writesize =3D=3D SZ_512) {
-> +               switch (chipsize) {
-> +               case SZ_8M:
-> +                       host->addr_cs_field =3D GENMASK(15, 14);
-> +                       return 0x9;
-> +               case SZ_16M:
-> +                       host->addr_cs_field =3D GENMASK(16, 15);
-> +                       return 0xa;
-> +               case SZ_32M:
-> +                       host->addr_cs_field =3D GENMASK(17, 16);
-> +                       return 0xb;
-> +               case SZ_64M:
-> +                       host->addr_cs_field =3D GENMASK(18, 17);
-> +                       return 0xc;
-> +               case SZ_128M:
-> +                       host->addr_cs_field =3D GENMASK(19, 18);
-> +                       return 0xd;
-> +               default:
-> +                       goto err;
-> +               }
-> +       }
-> +
-> +err:
-> +       dev_err(host->dev, "Unsupported chip size: %llu MB with page size=
- %u B\n",
-> +               chipsize, mtd->writesize);
-> +       return -EINVAL;
-> +}
-> +
-> +static int loongson_nand_attach_chip(struct nand_chip *chip)
-> +{
-> +       struct loongson_nand_host *host =3D nand_get_controller_data(chip=
-);
-> +       int cell_size =3D 0;
-> +
-> +       cell_size =3D loongson_nand_get_chip_capacity(chip);
-> +       if (cell_size < 0)
-> +               return cell_size;
-> +
->         switch (chip->ecc.engine_type) {
->         case NAND_ECC_ENGINE_TYPE_NONE:
->                 break;
-> @@ -818,6 +889,7 @@ static const struct loongson_nand_data ls1b_nand_data=
- =3D {
->         .status_field =3D GENMASK(15, 8),
->         .hold_cycle =3D 0x2,
->         .wait_cycle =3D 0xc,
-> +       .nand_cs =3D 0x0,
+Hi Binbin,
 
-The assignment `.nand_cs =3D 0x0` is redundant and can be removed.
+kernel test robot noticed the following build warnings:
 
->         .set_addr =3D ls1b_nand_set_addr,
->  };
->
-> @@ -828,6 +900,7 @@ static const struct loongson_nand_data ls1c_nand_data=
- =3D {
->         .op_scope_field =3D GENMASK(29, 16),
->         .hold_cycle =3D 0x2,
->         .wait_cycle =3D 0xc,
-> +       .nand_cs =3D 0x0,
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250812-200258
+base:   006aa8f57f55dd5bf68c4ada1e0d3f4e59027d71
+patch link:    https://lore.kernel.org/r/1809103a948545df93b7b439df46ca6393995aa1.1754999365.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v9 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+config: loongarch-randconfig-r073-20250818 (https://download.01.org/0day-ci/archive/20250819/202508191519.uT5io1jk-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 15.1.0
 
-Ditto.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202508191519.uT5io1jk-lkp@intel.com/
 
->         .set_addr =3D ls1c_nand_set_addr,
->  };
->
-> --
-> 2.47.3
->
+smatch warnings:
+drivers/mfd/ls2k-bmc-core.c:389 ls2k_bmc_pdata_initial() warn: passing zero to 'PTR_ERR'
 
+vim +/PTR_ERR +389 drivers/mfd/ls2k-bmc-core.c
 
---=20
-Best regards,
+71ff6b050ad788 Binbin Zhou 2025-08-12  360  static int ls2k_bmc_pdata_initial(struct ls2k_bmc_pdata *ddata)
+71ff6b050ad788 Binbin Zhou 2025-08-12  361  {
+71ff6b050ad788 Binbin Zhou 2025-08-12  362  	struct pci_dev *pdev = to_pci_dev(ddata->dev);
+71ff6b050ad788 Binbin Zhou 2025-08-12  363  	int gsi = 16 + (LS2K_BMC_RESET_GPIO & 7);
+71ff6b050ad788 Binbin Zhou 2025-08-12  364  	void __iomem *gpio_base;
+71ff6b050ad788 Binbin Zhou 2025-08-12  365  	int irq, ret, val;
+71ff6b050ad788 Binbin Zhou 2025-08-12  366  
+71ff6b050ad788 Binbin Zhou 2025-08-12  367  	ls2k_bmc_save_pci_data(pdev, ddata);
+71ff6b050ad788 Binbin Zhou 2025-08-12  368  
+71ff6b050ad788 Binbin Zhou 2025-08-12  369  	INIT_WORK(&ddata->bmc_reset_work, ls2k_bmc_events_fn);
+71ff6b050ad788 Binbin Zhou 2025-08-12  370  
+71ff6b050ad788 Binbin Zhou 2025-08-12  371  	ret = devm_request_irq(&pdev->dev, pdev->irq, ls2k_bmc_interrupt,
+71ff6b050ad788 Binbin Zhou 2025-08-12  372  			       IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kbmc pcie", ddata);
+71ff6b050ad788 Binbin Zhou 2025-08-12  373  	if (ret) {
+71ff6b050ad788 Binbin Zhou 2025-08-12  374  		dev_err(ddata->dev, "Failed to request LS2KBMC PCI-E IRQ %d.\n", pdev->irq);
+71ff6b050ad788 Binbin Zhou 2025-08-12  375  		return ret;
+71ff6b050ad788 Binbin Zhou 2025-08-12  376  	}
+71ff6b050ad788 Binbin Zhou 2025-08-12  377  
+71ff6b050ad788 Binbin Zhou 2025-08-12  378  	/*
+71ff6b050ad788 Binbin Zhou 2025-08-12  379  	 * Since gpio_chip->to_irq is not implemented in the Loongson-3 GPIO driver,
+71ff6b050ad788 Binbin Zhou 2025-08-12  380  	 * acpi_register_gsi() is used to obtain the GPIO IRQ. The GPIO interrupt is a
+71ff6b050ad788 Binbin Zhou 2025-08-12  381  	 * watchdog interrupt that is triggered when the BMC resets.
+71ff6b050ad788 Binbin Zhou 2025-08-12  382  	 */
+71ff6b050ad788 Binbin Zhou 2025-08-12  383  	irq = acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW);
+71ff6b050ad788 Binbin Zhou 2025-08-12  384  	if (irq < 0)
+71ff6b050ad788 Binbin Zhou 2025-08-12  385  		return irq;
+71ff6b050ad788 Binbin Zhou 2025-08-12  386  
+71ff6b050ad788 Binbin Zhou 2025-08-12  387  	gpio_base = ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG_SIZE);
+71ff6b050ad788 Binbin Zhou 2025-08-12  388  	if (!gpio_base) {
+71ff6b050ad788 Binbin Zhou 2025-08-12 @389  		ret = PTR_ERR(gpio_base);
 
-Keguang Zhang
+This PTR_ERR(NULL) is success.  It should be "ret = -ENOMEM;"
+
+71ff6b050ad788 Binbin Zhou 2025-08-12  390  		goto acpi_failed;
+71ff6b050ad788 Binbin Zhou 2025-08-12  391  	}
+71ff6b050ad788 Binbin Zhou 2025-08-12  392  
+71ff6b050ad788 Binbin Zhou 2025-08-12  393  	/* Disable GPIO output */
+71ff6b050ad788 Binbin Zhou 2025-08-12  394  	val = readl(gpio_base + LOONGSON_GPIO_OEN);
+71ff6b050ad788 Binbin Zhou 2025-08-12  395  	writel(val | BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_OEN);
+71ff6b050ad788 Binbin Zhou 2025-08-12  396  
+71ff6b050ad788 Binbin Zhou 2025-08-12  397  	/* Enable GPIO functionality */
+71ff6b050ad788 Binbin Zhou 2025-08-12  398  	val = readl(gpio_base + LOONGSON_GPIO_FUNC);
+71ff6b050ad788 Binbin Zhou 2025-08-12  399  	writel(val & ~BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_FUNC);
+71ff6b050ad788 Binbin Zhou 2025-08-12  400  
+71ff6b050ad788 Binbin Zhou 2025-08-12  401  	/* Set GPIO interrupts to low-level active */
+71ff6b050ad788 Binbin Zhou 2025-08-12  402  	val = readl(gpio_base + LOONGSON_GPIO_INTPOL);
+71ff6b050ad788 Binbin Zhou 2025-08-12  403  	writel(val & ~BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_INTPOL);
+71ff6b050ad788 Binbin Zhou 2025-08-12  404  
+71ff6b050ad788 Binbin Zhou 2025-08-12  405  	/* Enable GPIO interrupts */
+71ff6b050ad788 Binbin Zhou 2025-08-12  406  	val = readl(gpio_base + LOONGSON_GPIO_INTEN);
+71ff6b050ad788 Binbin Zhou 2025-08-12  407  	writel(val | BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_INTEN);
+71ff6b050ad788 Binbin Zhou 2025-08-12  408  
+71ff6b050ad788 Binbin Zhou 2025-08-12  409  	ret = devm_request_irq(ddata->dev, irq, ls2k_bmc_interrupt,
+71ff6b050ad788 Binbin Zhou 2025-08-12  410  			       IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kbmc gpio", ddata);
+71ff6b050ad788 Binbin Zhou 2025-08-12  411  	if (ret)
+71ff6b050ad788 Binbin Zhou 2025-08-12  412  		dev_err(ddata->dev, "Failed to request LS2KBMC GPIO IRQ %d.\n", irq);
+71ff6b050ad788 Binbin Zhou 2025-08-12  413  
+71ff6b050ad788 Binbin Zhou 2025-08-12  414  	iounmap(gpio_base);
+71ff6b050ad788 Binbin Zhou 2025-08-12  415  
+71ff6b050ad788 Binbin Zhou 2025-08-12  416  acpi_failed:
+71ff6b050ad788 Binbin Zhou 2025-08-12  417  	acpi_unregister_gsi(gsi);
+71ff6b050ad788 Binbin Zhou 2025-08-12  418  	return ret;
+71ff6b050ad788 Binbin Zhou 2025-08-12  419  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
