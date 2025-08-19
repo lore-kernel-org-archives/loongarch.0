@@ -1,174 +1,134 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA52B31B11A
-	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 09:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD52E21ABBB
+	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 10:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755597219; cv=none; b=IkwAMVqIX+7XlvZdtusUO4/WtfxD5glY2ujbNgBnmCXvLkCofJnKX7UfiKgtz9QKLKgZp6H3MAqZuVmHr9PX4kEgagIeuZtqE+zKNUI4dTbddp1D12t0IzqfAlJuMSCQgVb814Agm/voGPBLOWK6O9+CdfXE29aZVSzajmrGWTE=
+	t=1755597759; cv=none; b=pq3I9tAEDeLfDHubPAliL9lhLxDXSMxEA3uxhRKPkWmfH2AxUyfo6DBgrb/PEXxWe39OkRVnKx8eghYGtz6Q0fdkWLRV3/5Dsr5vJ9Mh6l95wSN3JkLbrxb7EivNQHjskSvPX+50oLzrTf890WvmVRyHjS0bxnnIQ5Ge2GSmQsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755597219; c=relaxed/simple;
-	bh=YEizIsE8/y/LtNcORPO8jldB4Nh5dJHp08eXLO5S9Go=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JmcwZt2oJcEMqXedKyv/+qZWbNqMs3iweV809fF1u/1URRgsQYE6hhFzdKJ1+apcyexL3bbfqtOTQEBmmD0Fb8kfl16YLkkSmub+0irwT33Gm/8lxzxI4RSyyaAKLae9hN9378elCIXl/Zz8pO84CothTsQndobi/I9FNwZ0g4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=stHQxcMk; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1755597759; c=relaxed/simple;
+	bh=2oRJmy6jdudOx3Q3CK1t3Tr8AwssA1mqdMSyvD/J694=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=myqb1QpeCPIaizmpWaiKAWqZCMUcelrE0VL22AIzmXWGfJQPKUQ9Ygv0i1I2wiXL8vdsMha07cYDnhK6PZI/OCXu+KGjw2L061D6u+GnNHib1QQgTh3avbusKC+iPJOXnT5OgqpC1EqVPKt1+oDAnoks7L9EjhUyWyJE5Y3xN2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qnHmoH/p; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="stHQxcMk"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3b9edf0e4efso3488000f8f.2
-        for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 02:53:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qnHmoH/p"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-333f8f0965dso42860391fa.1
+        for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 03:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755597214; x=1756202014; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rNam3s73jCkH5fp8vQUdOONkGiCMjeqztr8hoMDyHKE=;
-        b=stHQxcMkNQ24pdhoMMjJwKQiLbtuD0GQ3YIQEvctGGTBEj/tgrZ6JLWCWH6h7ubkoU
-         giaWj5RlFbw3wubYxU/3jGRxZijCpD8SECKzz85SdNWQMsNmLux8naNIdzl1FoX8SWOf
-         o0602gaqA9BrjfvaXceNL2w2Kf3x3mY/5ib0YKmoQw/f/Vu4gnp+LkKqbp7ZTlMyv18g
-         t4WE+p2IoGhJA89yIo2fcNSNYla38r99RinwfnkDJEYJ4qE/mwZk1FM4XD6aKB1T7O5x
-         jy9Z/1k/6rKwPOZ4pXduB+/FFOAetOW6wyu+OiYxF3SK6N27j24bAfmDq2PqFunicME+
-         IH3Q==
+        d=linaro.org; s=google; t=1755597755; x=1756202555; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jEIclbjfDHmWiMYwu7S7lb6mGq8E/UEDhqSMVO/QBNA=;
+        b=qnHmoH/pe+lf5Hos+5OYg+mWjKdFrOjRNfe7gySCtFrNQxYJzVhvUno4CnR7i5Lemd
+         ErP2XxIs4U5B4A+EiMlTGQOj5t8OmYIW+ytINlYLv+ntHqyGN+sXlfNTJYfqFaeQl+sz
+         LPlO6dnN8V/yCk0T0hicD8IFK8IjrDn2RimDmLOEBmSQ15tFO4IA/ygqfpuyKqRDHurF
+         1vdNusaA0aJQuei33H8Jxgro/9ykXw2Vq2HkqND49S1TLbDfwQLW3zD4A/79iP412H4K
+         OQSThq1CZRWBVU6L2W5bCAa+l0quEJ8RyhlkJcPtHalwaS1JgYo+hZh9mahGqNZGYRYp
+         Bh8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755597214; x=1756202014;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rNam3s73jCkH5fp8vQUdOONkGiCMjeqztr8hoMDyHKE=;
-        b=mhRLL8dQF4dwOVRPJrKQ1Ed/bW/dm0HebOx0N344/2hixARdXDyQQ4ZTfT8dbG5+Hk
-         eSy1F64G42LsSBqDGDbonbOnyeiEe7Y6WW9NWgOp1MlACEK5t0++z1tfXVhYISXift3s
-         TP1pknrkd22cvcUgu1NG0/fakUlcc7TecfNnHva0hwhUV98mX+r1K8sxxgZf5YJTd2+a
-         Uw6jA0Hh9a/CcEfqc47+WnmqH02d9vbKnh4mOPG5aH8HgA4+uOqncjqswoW17wQKSUhj
-         gmibl/JDD65ExyGtcL2gVqpTjnHntK2mz1B3CrRHMUTYwnHh7smbNQSCfpnpXU8ps7Fx
-         DVmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWbHTKrGuRE+DDlTqjq8ClwFGK/SKrYc4ZXxl2wwy8IQAdaPNfOLzYSWOqCKBFyds+Y7Dfc8M78s9A=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy0Y82sKqH8Cto4C80wJ6wEqo6oPI5HwsEmfVRC45gtyCJvjFwU
-	5OyfQvUF09BsnrmaPNXnIpGKN5/EfgM4Z79K1PzTSgAIxNULlGVVfK5fPyxPSEMYOPE=
-X-Gm-Gg: ASbGncsbV+5vEFY2AfLXHD6msYllKru9gQFq/INegx7RPMVIE37bksr+sf+K8TjCudJ
-	nHS5/caSmfHDnBZIMj/Y9mqBXEhQyo/BIL3eltyztsScf0P1UJJLzEgUDeqkWLSC0QyJ8SVC75g
-	wRTPInjm6b3APvnMAPnqLv/r/0BXehQRAw86UwVDxmizS0li/qdFuI5mphtLDjE4E6vWMcU/ykI
-	hNz1CymZLLbsvpUmgDX09eu8q6B0Usg6gYMFVRljlz8T7FkgHY6sNNr+wqOR0ZRAL8BDrTq9tUu
-	DRlzP1HP5e8WFpQxgQxVFK5sMCBfEmD7Y5jY3LssIDIENkaf0nY711yuz3f/+vI9nO/uOoQFdgN
-	iK8tusQU5PEr5RdD7CuXO5Gw/xrEaf2Qof7QlONw89Pg=
-X-Google-Smtp-Source: AGHT+IFhVoXOXWz933OS2H4MYPh1tnFGv79hui+RhHHpUYqmH0GfWUAlyD1l4ealbPI6uEAVPOGUJg==
-X-Received: by 2002:a05:6000:200d:b0:3b7:8832:fdd5 with SMTP id ffacd0b85a97d-3c0eaf4f6dfmr1431883f8f.16.1755597213853;
-        Tue, 19 Aug 2025 02:53:33 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3c0771c16eesm3152017f8f.37.2025.08.19.02.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Aug 2025 02:53:33 -0700 (PDT)
-Date: Tue, 19 Aug 2025 12:53:30 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
-	kexybiscuit@aosc.io, wangyao@lemote.com,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: Re: [PATCH v9 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function
- support
-Message-ID: <202508191519.uT5io1jk-lkp@intel.com>
+        d=1e100.net; s=20230601; t=1755597755; x=1756202555;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jEIclbjfDHmWiMYwu7S7lb6mGq8E/UEDhqSMVO/QBNA=;
+        b=ecGcQl4c1/07VVQCCO4pjiSyYdTFIIHV22S5baqNpDH4ZhSuRx6DHUZzFVNoG0jXpm
+         qajZ0wPePO89D7keGKhT43SJviKByyolH1QYCUvSQD+8w9jsrZSEnVspN4/i/jaAmtRS
+         e59tTS3k15P6HKRyWq8l+DS6/t16qRzVcaSUQr5hefqHXIgOBNB1LoA3Rw8E8C0J9Qk+
+         /6TQuS421yDe5zogOV/F8B97OxEJVzXYoaeTEXHELSEomLvMGDMjUjPr4klgKljsWGo8
+         DT/GOc3zEN5dpCaWeS27OPxlqlhpJwEXknhxxJNDnq5btK4QYyXAuFzBj0chiTlK4yov
+         cXVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmdIvWLCo79mFvZ8lSTAT9uME3KqUkhd8qTGjxBldPoV5XglvRBTPeF7Ft0e4YCjpOQ3y/QxJtzUI=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy3pldhC6dd2Pu0L2SuM5X9J4YrkZW1Cos74RGVdfd1SMxjHvox
+	1m1OSDFgEVSHsz0Mpv8Wpns5diNdv2kPwXT6NLXFFgHzpnmoBpNwWO9RGYFbq2rdtfUj/84BgMe
+	m8uBif3JVJ5OX7npXgPk1EwMtQTFFn9vBybaSeOWbww==
+X-Gm-Gg: ASbGncuSgK3la2UG6QFAfeG5fawyW4z9AIKsIk4j5qUMN402g7nMxRDUqS1C9RCA/Ue
+	7HfRy35CbNJPUY2qE/sAUPGmvcKOuyB8GmH+7ljdedqxoaITQIsL6+5vNf3+n6TfDqW8Pk++TqC
+	dGt+4QOXiRr4wHWLkieFXHPpreLOt2jF1WPvaGnXkPi/gNy1LKj/1oLhOKHtCJdjbYflzJDm0Rw
+	oG1IROxvsHs
+X-Google-Smtp-Source: AGHT+IH/19oUBfRxFr8epug82uJ7/HieWJyUVlBhoMvAFaMluZmkd3UN9bc0BKENYULFNtqg/fXi8MkFaQZgBnal9yQ=
+X-Received: by 2002:a05:651c:4199:b0:333:ac42:8d6a with SMTP id
+ 38308e7fff4ca-335304ee6damr4961591fa.3.1755597754935; Tue, 19 Aug 2025
+ 03:02:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1809103a948545df93b7b439df46ca6393995aa1.1754999365.git.zhoubinbin@loongson.cn>
+References: <20250811163749.47028-2-ziyao@disroot.org> <20250811163749.47028-4-ziyao@disroot.org>
+In-Reply-To: <20250811163749.47028-4-ziyao@disroot.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 19 Aug 2025 12:02:23 +0200
+X-Gm-Features: Ac12FXx1atQmH6QeSnrDLNRud94fhJMECrA9TaInUV_M5vUWxhGJhif4Q5spxjg
+Message-ID: <CACRpkdZp8FLrxgkeZ=xzSPgny51iDZ3KRCrxpoSdgF8_=df=KQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: ls2k0300: Support Loongson 2K0300 SoC
+To: Yao Zi <ziyao@disroot.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Binbin,
+On Mon, Aug 11, 2025 at 6:39=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
 
-kernel test robot noticed the following build warnings:
+> Support pin multiplexing and drive-strength setting for Loongson 2K0300
+> SoC. Pin multiplexing could be done separately for each pin, while
+> drive-strength could be only configured on function basis. This differs
+> a lot from the driver for previous generation of Loongson SoC, where
+> pinmux setting is based on group.
+>
+> Pins are represented with pinmux properties in devicetrees, and we use
+> the generic pinmux API for parsing. The common pinconf interface isn't
+> used for drive-strength setting, since it handles pinconf settings at a
+> unit of pin groups or smaller.
+>
+> Instead, the driver configures drive-strength settings just after
+> parsing the devicetree. The devicetree's structure ensures no conflicts
+> could happen in drive-strength settings.
+>
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250812-200258
-base:   006aa8f57f55dd5bf68c4ada1e0d3f4e59027d71
-patch link:    https://lore.kernel.org/r/1809103a948545df93b7b439df46ca6393995aa1.1754999365.git.zhoubinbin%40loongson.cn
-patch subject: [PATCH v9 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
-config: loongarch-randconfig-r073-20250818 (https://download.01.org/0day-ci/archive/20250819/202508191519.uT5io1jk-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 15.1.0
+Overall the driver looks very good, well done!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202508191519.uT5io1jk-lkp@intel.com/
+Look into Rob's comment on the bindings to use a single node
+for mux and config.
 
-smatch warnings:
-drivers/mfd/ls2k-bmc-core.c:389 ls2k_bmc_pdata_initial() warn: passing zero to 'PTR_ERR'
+I saw that you want to make the pin controller strict, if you also have
+some pins with "GPIO mode" that will serve as back-end for a
+GPIO driver (and I saw you posted a GPIO driver series as well)
+then have a look at Bartosz recent patches to add infrastructure
+for pinctrl to know about what a GPIO pin is:
+https://lore.kernel.org/linux-gpio/20250815-pinctrl-gpio-pinfuncs-v5-0-955d=
+e9fd91db@linaro.org/T/
 
-vim +/PTR_ERR +389 drivers/mfd/ls2k-bmc-core.c
+The current driver does not seem to know about any of these
+pins being usable as GPIO and does not implement those:
 
-71ff6b050ad788 Binbin Zhou 2025-08-12  360  static int ls2k_bmc_pdata_initial(struct ls2k_bmc_pdata *ddata)
-71ff6b050ad788 Binbin Zhou 2025-08-12  361  {
-71ff6b050ad788 Binbin Zhou 2025-08-12  362  	struct pci_dev *pdev = to_pci_dev(ddata->dev);
-71ff6b050ad788 Binbin Zhou 2025-08-12  363  	int gsi = 16 + (LS2K_BMC_RESET_GPIO & 7);
-71ff6b050ad788 Binbin Zhou 2025-08-12  364  	void __iomem *gpio_base;
-71ff6b050ad788 Binbin Zhou 2025-08-12  365  	int irq, ret, val;
-71ff6b050ad788 Binbin Zhou 2025-08-12  366  
-71ff6b050ad788 Binbin Zhou 2025-08-12  367  	ls2k_bmc_save_pci_data(pdev, ddata);
-71ff6b050ad788 Binbin Zhou 2025-08-12  368  
-71ff6b050ad788 Binbin Zhou 2025-08-12  369  	INIT_WORK(&ddata->bmc_reset_work, ls2k_bmc_events_fn);
-71ff6b050ad788 Binbin Zhou 2025-08-12  370  
-71ff6b050ad788 Binbin Zhou 2025-08-12  371  	ret = devm_request_irq(&pdev->dev, pdev->irq, ls2k_bmc_interrupt,
-71ff6b050ad788 Binbin Zhou 2025-08-12  372  			       IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kbmc pcie", ddata);
-71ff6b050ad788 Binbin Zhou 2025-08-12  373  	if (ret) {
-71ff6b050ad788 Binbin Zhou 2025-08-12  374  		dev_err(ddata->dev, "Failed to request LS2KBMC PCI-E IRQ %d.\n", pdev->irq);
-71ff6b050ad788 Binbin Zhou 2025-08-12  375  		return ret;
-71ff6b050ad788 Binbin Zhou 2025-08-12  376  	}
-71ff6b050ad788 Binbin Zhou 2025-08-12  377  
-71ff6b050ad788 Binbin Zhou 2025-08-12  378  	/*
-71ff6b050ad788 Binbin Zhou 2025-08-12  379  	 * Since gpio_chip->to_irq is not implemented in the Loongson-3 GPIO driver,
-71ff6b050ad788 Binbin Zhou 2025-08-12  380  	 * acpi_register_gsi() is used to obtain the GPIO IRQ. The GPIO interrupt is a
-71ff6b050ad788 Binbin Zhou 2025-08-12  381  	 * watchdog interrupt that is triggered when the BMC resets.
-71ff6b050ad788 Binbin Zhou 2025-08-12  382  	 */
-71ff6b050ad788 Binbin Zhou 2025-08-12  383  	irq = acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW);
-71ff6b050ad788 Binbin Zhou 2025-08-12  384  	if (irq < 0)
-71ff6b050ad788 Binbin Zhou 2025-08-12  385  		return irq;
-71ff6b050ad788 Binbin Zhou 2025-08-12  386  
-71ff6b050ad788 Binbin Zhou 2025-08-12  387  	gpio_base = ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG_SIZE);
-71ff6b050ad788 Binbin Zhou 2025-08-12  388  	if (!gpio_base) {
-71ff6b050ad788 Binbin Zhou 2025-08-12 @389  		ret = PTR_ERR(gpio_base);
+        int (*gpio_request_enable) (struct pinctrl_dev *pctldev,
+                                    struct pinctrl_gpio_range *range,
+                                    unsigned int offset);
+        void (*gpio_disable_free) (struct pinctrl_dev *pctldev,
+                                   struct pinctrl_gpio_range *range,
+                                   unsigned int offset);
+        int (*gpio_set_direction) (struct pinctrl_dev *pctldev,
+                                   struct pinctrl_gpio_range *range,
+                                   unsigned int offset,
+                                   bool input);
+        bool strict;
 
-This PTR_ERR(NULL) is success.  It should be "ret = -ENOMEM;"
+Which is fine if the pins actually cannot be used for GPIO, but if they
+can, and this is just implicit for unconfigured pins ... then add
+functions and groups for GPIO.
 
-71ff6b050ad788 Binbin Zhou 2025-08-12  390  		goto acpi_failed;
-71ff6b050ad788 Binbin Zhou 2025-08-12  391  	}
-71ff6b050ad788 Binbin Zhou 2025-08-12  392  
-71ff6b050ad788 Binbin Zhou 2025-08-12  393  	/* Disable GPIO output */
-71ff6b050ad788 Binbin Zhou 2025-08-12  394  	val = readl(gpio_base + LOONGSON_GPIO_OEN);
-71ff6b050ad788 Binbin Zhou 2025-08-12  395  	writel(val | BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_OEN);
-71ff6b050ad788 Binbin Zhou 2025-08-12  396  
-71ff6b050ad788 Binbin Zhou 2025-08-12  397  	/* Enable GPIO functionality */
-71ff6b050ad788 Binbin Zhou 2025-08-12  398  	val = readl(gpio_base + LOONGSON_GPIO_FUNC);
-71ff6b050ad788 Binbin Zhou 2025-08-12  399  	writel(val & ~BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_FUNC);
-71ff6b050ad788 Binbin Zhou 2025-08-12  400  
-71ff6b050ad788 Binbin Zhou 2025-08-12  401  	/* Set GPIO interrupts to low-level active */
-71ff6b050ad788 Binbin Zhou 2025-08-12  402  	val = readl(gpio_base + LOONGSON_GPIO_INTPOL);
-71ff6b050ad788 Binbin Zhou 2025-08-12  403  	writel(val & ~BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_INTPOL);
-71ff6b050ad788 Binbin Zhou 2025-08-12  404  
-71ff6b050ad788 Binbin Zhou 2025-08-12  405  	/* Enable GPIO interrupts */
-71ff6b050ad788 Binbin Zhou 2025-08-12  406  	val = readl(gpio_base + LOONGSON_GPIO_INTEN);
-71ff6b050ad788 Binbin Zhou 2025-08-12  407  	writel(val | BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_INTEN);
-71ff6b050ad788 Binbin Zhou 2025-08-12  408  
-71ff6b050ad788 Binbin Zhou 2025-08-12  409  	ret = devm_request_irq(ddata->dev, irq, ls2k_bmc_interrupt,
-71ff6b050ad788 Binbin Zhou 2025-08-12  410  			       IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kbmc gpio", ddata);
-71ff6b050ad788 Binbin Zhou 2025-08-12  411  	if (ret)
-71ff6b050ad788 Binbin Zhou 2025-08-12  412  		dev_err(ddata->dev, "Failed to request LS2KBMC GPIO IRQ %d.\n", irq);
-71ff6b050ad788 Binbin Zhou 2025-08-12  413  
-71ff6b050ad788 Binbin Zhou 2025-08-12  414  	iounmap(gpio_base);
-71ff6b050ad788 Binbin Zhou 2025-08-12  415  
-71ff6b050ad788 Binbin Zhou 2025-08-12  416  acpi_failed:
-71ff6b050ad788 Binbin Zhou 2025-08-12  417  	acpi_unregister_gsi(gsi);
-71ff6b050ad788 Binbin Zhou 2025-08-12  418  	return ret;
-71ff6b050ad788 Binbin Zhou 2025-08-12  419  }
+The other driver using pinconf_generic_parse_dt_pinmux()
+drivers/pinctrl/meson/pinctrl-amlogic-a4.c has GPIO awareness.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Yours,
+Linus Walleij
