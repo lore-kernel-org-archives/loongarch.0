@@ -1,52 +1,45 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1163E2C11F2
-	for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 12:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5207421765B;
+	Tue, 19 Aug 2025 12:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755607269; cv=none; b=WjRIiLmR9YubfsrVt2EDV0hnl9SdNdJz8PCGJ0srBy7hgmb4GOeQ23K4aFBnw7PaX7Zkdhlv92YNtj9g82vsvhwO+9Xa9IlODhAIiHqC3YxJk3/9eYGJaacL+JxqesA5X8zZOcebD4wCYJlxZivX6fEuO/ZJ8+dS+GqjWvMCq9k=
+	t=1755608124; cv=none; b=cne76+bK98/1BpAPIYl79CJimnVjEdROAAbsGLff0cnsuWVQ2/FRecnfGVRJ06dAq8u7TJdEmejBnXi7Ym9glAAE0dFuQV1e9f2WVxD6su2cDaNYHOPrEVh37VhR3AwT91M8Mza7t6ziA/IHNeiDYNETFKD1shGC7w+UbQcFi/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755607269; c=relaxed/simple;
-	bh=hh0hq8bl+6A83FbnX3IgduD0wlBkscDYAAwjB9LkfIg=;
+	s=arc-20240116; t=1755608124; c=relaxed/simple;
+	bh=+1/10nzw4Yf4yiVjA7ztc1dX3OYsmM9+0qlQA3cpdSg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=At61NfF+uY6nK3w00MRKnsRMulQTDFkZzZuQ51531TqgzLXBrPilVId1ImwhKxszAvTKEXySzVpmAEnqzru9qiJ2Sw8JzQVpUCA9nZatmnmWI/B8PUmrJlU81r4AwmZslgszy9R9ItVZYwoXrMHSiOefgWGnuNsQ5iOH00A5OYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=A4VcPE+Y; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=bmmysCGMOOBgDYaicuwibIjas56QYSxSKU54MO4uy7pCD2ZGaA+hZT/A1DgSqN46CE1Z1ud8sHMF3vMqCXLPDW/07IG5hUOeFNQG8qz6SEFFmQeVzL8GVuxf+ZVlNwHLGqUWJduGCOzTgxB3ENtZwXcObU9ti1xMl+PSZ7bDqHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Op6q3UE7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="A4VcPE+Y"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 283F7207A3;
-	Tue, 19 Aug 2025 14:41:04 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id GITvgjRrHzIi; Tue, 19 Aug 2025 14:41:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1755607263; bh=hh0hq8bl+6A83FbnX3IgduD0wlBkscDYAAwjB9LkfIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=A4VcPE+YbdV/CT7PaNypqPsnuGdUcCBS7wgcpvtw336QmE2Ou2imom4xRufhUC0Os
-	 WqaGobxZ+5IN2cuyhbfC5eaEr1AWTiBFeoKB4gYM4U973psh0pDp25rT7ZUdhc4JpV
-	 MJT3wMKlJh0T/jWQUuwRls5mr0n34CLwQquUd9BzMULi+pCs4BHEBsUkflITJJCpOR
-	 CyaGZRanarTubzks3SDZWBM+o89VI35LXtvtwwLZkgGwdl1lOYocJlVoL2zs9ur1Sn
-	 Yq2eVrejKEuOFtAb7BRIqeOxIVAna95GYPOVN3fK9TZVSmzXcK0LapcoQssiP2YfK7
-	 GJw2uV+uKaDoQ==
-Date: Tue, 19 Aug 2025 12:40:54 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 2/3] pinctrl: ls2k0300: Support Loongson 2K0300 SoC
-Message-ID: <aKRw1pEUUwd4cQoW@pie>
-References: <20250811163749.47028-2-ziyao@disroot.org>
- <20250811163749.47028-4-ziyao@disroot.org>
- <CACRpkdZp8FLrxgkeZ=xzSPgny51iDZ3KRCrxpoSdgF8_=df=KQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Op6q3UE7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D705C4CEF1;
+	Tue, 19 Aug 2025 12:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755608123;
+	bh=+1/10nzw4Yf4yiVjA7ztc1dX3OYsmM9+0qlQA3cpdSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Op6q3UE7eKv7xYk37W//xhzKMUL2XvdoNTa45dNkDlSf/a0dqxSKLzGkTFjy1ODhC
+	 gOfaNm1m5FpSsq0WGgFhmbTi11oQ5UT2a6utUz25TkBRkYfHfmjB6l9AGbaGLtX5Lg
+	 M9le2ylpxoFrce1kmFrMqwbieVaCIdyb8z0IkNZWiulgV8tw1HqujTHFV4m9QI/fh9
+	 NfJDeVggrWmvGUreyIo4UrBCejq9BOWTOlTae3A4VDfGZWzgGTQKZ/DUNuebOPnlsN
+	 oCL2ady6yZfisD5j5SWcqRBG0XxGb2koSMhhWKBDolwocwJl6wkrI31vjuyARtpBae
+	 yNmxj40rSPOiQ==
+Date: Tue, 19 Aug 2025 13:55:18 +0100
+From: Lee Jones <lee@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: herbert@gondor.apana.org.au, jarkko@kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	davem@davemloft.net, linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v12 2/4] crypto: loongson - add Loongson RNG driver
+ support
+Message-ID: <20250819125518.GF7508@google.com>
+References: <20250705072045.1067-1-zhaoqunqin@loongson.cn>
+ <20250705072045.1067-3-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -56,84 +49,92 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdZp8FLrxgkeZ=xzSPgny51iDZ3KRCrxpoSdgF8_=df=KQ@mail.gmail.com>
+In-Reply-To: <20250705072045.1067-3-zhaoqunqin@loongson.cn>
 
-On Tue, Aug 19, 2025 at 12:02:23PM +0200, Linus Walleij wrote:
-> On Mon, Aug 11, 2025 at 6:39 PM Yao Zi <ziyao@disroot.org> wrote:
+On Sat, 05 Jul 2025, Qunqin Zhao wrote:
+
+> Loongson's Random Number Generator is found inside Loongson Security
+> Engine chip.
 > 
-> > Support pin multiplexing and drive-strength setting for Loongson 2K0300
-> > SoC. Pin multiplexing could be done separately for each pin, while
-> > drive-strength could be only configured on function basis. This differs
-> > a lot from the driver for previous generation of Loongson SoC, where
-> > pinmux setting is based on group.
-> >
-> > Pins are represented with pinmux properties in devicetrees, and we use
-> > the generic pinmux API for parsing. The common pinconf interface isn't
-> > used for drive-strength setting, since it handles pinconf settings at a
-> > unit of pin groups or smaller.
-> >
-> > Instead, the driver configures drive-strength settings just after
-> > parsing the devicetree. The devicetree's structure ensures no conflicts
-> > could happen in drive-strength settings.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/crypto/Kconfig                 |   1 +
+>  drivers/crypto/Makefile                |   1 +
+>  drivers/crypto/loongson/Kconfig        |   5 +
+>  drivers/crypto/loongson/Makefile       |   1 +
+>  drivers/crypto/loongson/loongson-rng.c | 209 +++++++++++++++++++++++++
+>  5 files changed, 217 insertions(+)
+>  create mode 100644 drivers/crypto/loongson/Kconfig
+>  create mode 100644 drivers/crypto/loongson/Makefile
+>  create mode 100644 drivers/crypto/loongson/loongson-rng.c
 > 
-> Overall the driver looks very good, well done!
-> 
-> Look into Rob's comment on the bindings to use a single node
-> for mux and config.
+> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+> index 9f8a3a5be..f6117bc77 100644
+> --- a/drivers/crypto/Kconfig
+> +++ b/drivers/crypto/Kconfig
+> @@ -827,6 +827,7 @@ config CRYPTO_DEV_CCREE
+>  	  If unsure say Y.
+>  
+>  source "drivers/crypto/hisilicon/Kconfig"
+> +source "drivers/crypto/loongson/Kconfig"
+>  
+>  source "drivers/crypto/amlogic/Kconfig"
+>  
+> diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
+> index 22eadcc8f..125b99b24 100644
+> --- a/drivers/crypto/Makefile
+> +++ b/drivers/crypto/Makefile
+> @@ -44,6 +44,7 @@ obj-y += inside-secure/
+>  obj-$(CONFIG_CRYPTO_DEV_ARTPEC6) += axis/
+>  obj-y += xilinx/
+>  obj-y += hisilicon/
+> +obj-y += loongson/
+>  obj-$(CONFIG_CRYPTO_DEV_AMLOGIC_GXL) += amlogic/
+>  obj-y += intel/
+>  obj-y += starfive/
+> diff --git a/drivers/crypto/loongson/Kconfig b/drivers/crypto/loongson/Kconfig
+> new file mode 100644
+> index 000000000..15475da8f
+> --- /dev/null
+> +++ b/drivers/crypto/loongson/Kconfig
+> @@ -0,0 +1,5 @@
+> +config CRYPTO_DEV_LOONGSON_RNG
+> +	tristate "Support for Loongson RNG Driver"
+> +	depends on MFD_LOONGSON_SE
+> +	help
+> +	  Support for Loongson RNG Driver.
+> diff --git a/drivers/crypto/loongson/Makefile b/drivers/crypto/loongson/Makefile
+> new file mode 100644
+> index 000000000..1ce5ec32b
+> --- /dev/null
+> +++ b/drivers/crypto/loongson/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_CRYPTO_DEV_LOONGSON_RNG)  += loongson-rng.o
+> diff --git a/drivers/crypto/loongson/loongson-rng.c b/drivers/crypto/loongson/loongson-rng.c
+> new file mode 100644
+> index 000000000..3a4940260
+> --- /dev/null
+> +++ b/drivers/crypto/loongson/loongson-rng.c
+> @@ -0,0 +1,209 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2019 HiSilicon Limited. */
+> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> +
+> +#include <linux/crypto.h>
+> +#include <linux/err.h>
+> +#include <linux/hw_random.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/mfd/loongson-se.h>
 
-I've raised several questions about the binding and will change the
-binding and code according to Rob's answer.
+This depends on the first patch in the series.
 
-> I saw that you want to make the pin controller strict, if you also have
-> some pins with "GPIO mode" that will serve as back-end for a
-> GPIO driver (and I saw you posted a GPIO driver series as well)
-> then have a look at Bartosz recent patches to add infrastructure
-> for pinctrl to know about what a GPIO pin is:
-> https://lore.kernel.org/linux-gpio/20250815-pinctrl-gpio-pinfuncs-v5-0-955de9fd91db@linaro.org/T/
+Does this one have an Ack?
 
-Thanks for the link! Actually according to the manual, all the 106 on
-2K0300 pins could be multiplexed as GPIO. But the pinctrl cannot set up
-any pin config for pins in GPIO mode.
-
-> The current driver does not seem to know about any of these
-> pins being usable as GPIO and does not implement those:
-> 
->         int (*gpio_request_enable) (struct pinctrl_dev *pctldev,
->                                     struct pinctrl_gpio_range *range,
->                                     unsigned int offset);
->         void (*gpio_disable_free) (struct pinctrl_dev *pctldev,
->                                    struct pinctrl_gpio_range *range,
->                                    unsigned int offset);
->         int (*gpio_set_direction) (struct pinctrl_dev *pctldev,
->                                    struct pinctrl_gpio_range *range,
->                                    unsigned int offset,
->                                    bool input);
->         bool strict;
-> 
-> Which is fine if the pins actually cannot be used for GPIO, but if they
-> can, and this is just implicit for unconfigured pins ... then add
-> functions and groups for GPIO.
-
-For 2K0300, we want these pins to be able to multiplexed as GPIOs, but
-since this pinctrl driver could configure nothing for GPIO mode pins, I
-think it's enough to implement only the gpio_request_enable() callback
-and do the multiplexing work here, is this correct?
-
-I originally thought it's okay to multiplex pins as GPIO with an usual
-pinctrl configuration, and didn't realize that it causes conflicts on
-strict controllers since the pin will be claimed by both pincontroller
-and GPIO controller. Thanks for the reminder.
-
-> The other driver using pinconf_generic_parse_dt_pinmux()
-> drivers/pinctrl/meson/pinctrl-amlogic-a4.c has GPIO awareness.
-> 
-> Yours,
-> Linus Walleij
-> 
-
-Much thanks for the detailed guidance!
-
-Best regards,
-Yao Zi
+-- 
+Lee Jones [李琼斯]
