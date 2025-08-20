@@ -1,112 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AB91F2BB5
-	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 05:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDC629ACFC
+	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 05:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755668176; cv=none; b=QhWyKqZolSeyFKsuCwmIul5XeNrXhJf66nXKyQFCy7Hc9KaIUjfo9/mSrkp809oBu/QBqhcbFAMpyuXClk8nCvS7K67F0/fRuIhy6TPsdXxiybUYgxajg68lVyrOZFq/HqWYQRSQoV/grvIOyWuKGF2u0m0evlzAMA3VPzQhdWM=
+	t=1755669453; cv=none; b=GwEMI31+Ynv7xTJWkSl+QiLhWgOTtQkGizymRvGYpkFP0eX8INU7EexwOgeJTvjCJNDe6rX78mL5PN/6pbl/AGIccp+RStHbhd6+qw3IpCquqTSbKG7vZElQ/GIRJfCxl5bvgyNo0fmk8y6GDlg/8cC2So5aBzUgaP9AOv4q0UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755668176; c=relaxed/simple;
-	bh=qK2KiUugJNUUcLC7trMBab+1oibPnFRPbNs9ZqggVBk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=XkLJZosFVMuJmMl0gEtCcnR4Nnqm1RSNwbFW3nulTQiodiUWDp1/C38/XQ1nl1yuhc8P8J1/bvhxxf/FvrI5+6iKy2dkSothZH3JNPsBeKwiGVIb//5nCL+tmchK4ecyGsrkzw4S33et9+ZWox9f+MUSC98iwlMIpEM7P7A5iuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TYaWcGv0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1755669453; c=relaxed/simple;
+	bh=5WVSSBW/HOjzUzX3mU5w5ItKnTvEL+AwWRxnfZ9paXY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tB2eWKtforxFU0hqAGV8TdOSiJeL9WaZwxzdDRxwlrDo/iIpi2cWsZ/ot5SKMre63c7RfwhenAAP/TA8tDwNpaFup51hWnacYTRs93McoTP2w13+Ye/WK9Chh47GkehNVmxnitGu64+CCb9SQsfPcYqVohUpNjSrIg7B5ZYVvTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AEh2Np3O; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TYaWcGv0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755668173;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AEh2Np3O"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755669447;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HIvq87a0AAq2d23Q/rNsSw9xnqrtCb4IHcYwpyhrt5Y=;
-	b=TYaWcGv0FYilUjk/R7zi0+0A+ezdF7QWvwI5kPtK0jlet76YPGfSqr7K+7aV6dpJxinjxi
-	SoHCI68m/4t5pEfBonfz8YenMTsN4JzpKjYZgwLbuRSICt8pK+cRJCG7DNjWzeTrC/C2e/
-	989SJCf+YckFk1rLp8/4WBPho1dNJWw=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-P3sGgTDEOVKL3Cw8VTzXMw-1; Wed,
- 20 Aug 2025 01:36:09 -0400
-X-MC-Unique: P3sGgTDEOVKL3Cw8VTzXMw-1
-X-Mimecast-MFC-AGG-ID: P3sGgTDEOVKL3Cw8VTzXMw_1755668167
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5E17F195605A;
-	Wed, 20 Aug 2025 05:36:07 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.99])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 661C219560B0;
-	Wed, 20 Aug 2025 05:35:58 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-mm@kvack.org
-Cc: ryabinin.a.a@gmail.com,
-	andreyknvl@gmail.com,
-	glider@google.com,
-	dvyukov@google.com,
-	vincenzo.frascino@arm.com,
-	akpm@linux-foundation.org,
-	kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	sj@kernel.org,
-	lorenzo.stoakes@oracle.com,
-	elver@google.com,
-	snovitoll@gmail.com,
-	christophe.leroy@csgroup.eu,
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=IX26plY5Uf29k5UnA4HhqtwDMo5fxBKoNIkZeiD/EKE=;
+	b=AEh2Np3Oz59nRp6/JITqRY8s8f8om5cxv0JtivD/ElFl6AgojeMV5ozdg6pMHUmeDwofC8
+	FvnqQpIgkN+EPUWW0LVcjaWFrKzos/SchN+hfv+yGxZzXh2Jbiuvc+VZHIYS0wY4OWFzZJ
+	TAOaUH+mBqNs72xkVDJkKoCJ1agSHx0=
+From: Youling Tang <youling.tang@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
 	Baoquan He <bhe@redhat.com>,
-	loongarch@lists.linux.dev
-Subject: [PATCH v3 06/12] arch/loongarch: don't initialize kasan if it's disabled
-Date: Wed, 20 Aug 2025 13:34:53 +0800
-Message-ID: <20250820053459.164825-7-bhe@redhat.com>
-In-Reply-To: <20250820053459.164825-1-bhe@redhat.com>
-References: <20250820053459.164825-1-bhe@redhat.com>
+	Yao Zi <ziyao@disroot.org>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	youling.tang@linux.dev,
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: [PATCH v2 0/5] Add kexec_file support for LoongArch
+Date: Wed, 20 Aug 2025 13:56:55 +0800
+Message-Id: <20250820055700.24344-1-youling.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Migadu-Flow: FLOW_OUT
 
-And also add code to enable kasan_flag_enabled, this is for later
-usage.
+From: Youling Tang <tangyouling@kylinos.cn>
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Cc: loongarch@lists.linux.dev
----
- arch/loongarch/mm/kasan_init.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This patchset implement kexec_file_load() support on LoongArch.
 
-diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
-index d2681272d8f0..0c32eee6910f 100644
---- a/arch/loongarch/mm/kasan_init.c
-+++ b/arch/loongarch/mm/kasan_init.c
-@@ -267,6 +267,8 @@ void __init kasan_init(void)
- 	u64 i;
- 	phys_addr_t pa_start, pa_end;
- 
-+	if (kasan_arg_disabled)
-+		return;
- 	/*
- 	 * If PGDIR_SIZE is too large for cpu_vabits, KASAN_SHADOW_END will
- 	 * overflow UINTPTR_MAX and then looks like a user space address.
-@@ -327,6 +329,9 @@ void __init kasan_init(void)
- 	csr_write64(__pa_symbol(swapper_pg_dir), LOONGARCH_CSR_PGDH);
- 	local_flush_tlb_all();
- 
-+	/* KASAN is now initialized, enable it. */
-+	static_branch_enable(&kasan_flag_enabled);
-+
- 	/* At this point kasan is fully initialized. Enable error messages */
- 	init_task.kasan_depth = 0;
- 	pr_info("KernelAddressSanitizer initialized.\n");
+This patch series enables us to load the LoongArch vmlinuz.efi(pez) or
+vmlinux.efi(pei) or vmlinux(elf) by specifying its file decriptor,
+instead of user-filled buffer via kexec_load() syscall.
+
+To use kexec_file_load() system call, instead of kexec_load(), at kexec
+command, '-s' options must be specified. kexec-tools needs to apply the
+corresponding patches. These patches can be found in repository [1] and
+will be submitted to the kexec-tools community later.
+
+The basic usage of kexec_file is:
+1) Load second kernel image:
+ # kexec -s -l vmlinuz.efi --initrd=initrd.img --reuse-cmdline
+
+2) Startup second kernel:
+ # kexec -e
+
+For kdump:
+1) Load capture kernel image:
+ # kexec -s -p vmlinuz.efi --initrd=initrd.img --reuse-cmdline
+
+2) Do something to crash, like:
+ # echo c > /proc/sysrq-trigger
+
+Link:
+[1] https://github.com/tangyouling/kexec-tools/commits/main/
+
+Changelog:
+ v2:
+ * Merge some patches.
+ * Add support for ELF format images.
+ * Rename kexec_image.c to kexec_efi.c .
+ * When KEXEC_FILE is enabled, RELOCATABLE is selected by default.
+ * Some minor modifications.
+
+Youling Tang (5):
+  LoongArch: Add struct loongarch_image_header for kernel image
+  LoongArch: Add kexec_file support
+  LoongArch/kexec_file: Support loading ELF binary file
+  LoongArch/kexec_file: Add crash dump support
+  LoongArch: Enable CONFIG_KEXEC_FILE
+
+ arch/loongarch/Kconfig                     |  10 +
+ arch/loongarch/configs/loongson3_defconfig |   1 +
+ arch/loongarch/include/asm/image.h         |  57 +++++
+ arch/loongarch/include/asm/kexec.h         |  13 ++
+ arch/loongarch/kernel/Makefile             |   1 +
+ arch/loongarch/kernel/kexec_efi.c          | 111 ++++++++++
+ arch/loongarch/kernel/kexec_elf.c          | 105 +++++++++
+ arch/loongarch/kernel/machine_kexec.c      |  33 ++-
+ arch/loongarch/kernel/machine_kexec_file.c | 235 +++++++++++++++++++++
+ 9 files changed, 555 insertions(+), 11 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/image.h
+ create mode 100644 arch/loongarch/kernel/kexec_efi.c
+ create mode 100644 arch/loongarch/kernel/kexec_elf.c
+ create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+
 -- 
-2.41.0
+2.43.0
 
