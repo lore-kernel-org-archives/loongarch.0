@@ -1,217 +1,95 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5800F217F27
-	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 06:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791D72D375F
+	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 07:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755672625; cv=none; b=gq8PWqN37RTKXtPX4GNoVFewBv8vKSA2hmCsBRR0qXk0IOHRX0DMyYF5EzhGpQ8V1P6JkyExjPtkvGrAy3yX88kZ71bSmHRZCNyBvU3nvLKWllFoe64ttClTLzg6Kd99RkCaDJGgQxlwtudKMQBEEXKvF3+5UMtg3rx0tdnJPPA=
+	t=1755674069; cv=none; b=hPqnvgIWSRuclXIlKqLC640A9IOB6Lb0EyqVB+EZu3O6cAGbLTOm5M5FtXu075/dsXr4BY2HKTrfPBCn8gxzP2D1YAgIQgkZPvNY+cOYbSOHpEDYabm4ypaWkMrgYBUVvsM+l5ZsdRjT679kVsKV6fVQz55JOWg7lkCR8ccT+LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755672625; c=relaxed/simple;
-	bh=wQ8qM95j2gviU1QGJ8rgqDjbocACb6XZzCLsLaODwvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=he8JxFrEcq/z+BfabMp16PwsZt1XTpLfgA9ajVt7jijsfVP67JG2VOIiMH1YsgIxnvEYTrL2sB3n4wdnYJ4bDKOl474KEpK12Ae7Fgl0qINApntetmK01tiuehch817jjqpJs3UphMQWjmvwVnEG0pwZUZpMLRjM3dpGq2Bc9Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=UtEHQMRl; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1755674069; c=relaxed/simple;
+	bh=tV3BgH7JD7Uri/XOLF06iSV2q2nhQTdtZfr0viTJhjE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Uuc7ahHknwNpZ83R0G8ySGH/FrEGnw+DyBtvjDy6JZl/zVZhp0CRjbgsJRShQZRIkjcoidXinB2/XXSp1Qqgq/vTkxjZUqVd0V5pGDbuCh2tesv3R6CRIu14eLkes+/RPpmg3VkLMBdnkjlb03E38opT+0NB67dHmiwoJ7w1P8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=hGXLSCQA; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="UtEHQMRl"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 941A125EFA;
-	Wed, 20 Aug 2025 08:50:20 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 9fau3ZIC3Npm; Wed, 20 Aug 2025 08:50:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1755672619; bh=wQ8qM95j2gviU1QGJ8rgqDjbocACb6XZzCLsLaODwvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UtEHQMRlQ8rFrMqm+LHFQT49TgwWd3va36RPDXBR7xncfCUX10XX4FyWdzKwgt6Lb
-	 18LHJZDgky6OaiFfnAxm1KsLWsuTLYCJMqN1Ka2i+xv/shW19/KB2f390u4GIJGm08
-	 S77rKKia+72cEmXCIQZkGcrFoWlHBTUuOsqEnUuzaoSCIxwMZJe4e714jmv/SOZ6Ft
-	 CRrDb7oKPNGVKhCnefHSoPsp2KvbmCz034WIhxcsZRQBKwu138knkFNElpCtGtkJA0
-	 y5o7Ly4URMwyHxBOe9gDM4SraJtw3I2FDSFgZMEOfpCiYDQ5FnuiKYyLRC223Miyak
-	 7qjAWxmVGmABw==
-Date: Wed, 20 Aug 2025 06:50:04 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Youling Tang <youling.tang@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH v2 2/5] LoongArch: Add kexec_file support
-Message-ID: <aKVwHOM9KNEpUZF4@pie>
-References: <20250820055700.24344-1-youling.tang@linux.dev>
- <20250820055700.24344-3-youling.tang@linux.dev>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="hGXLSCQA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1755674061;
+	bh=h9cQ6nqM4f0ZcfhUClQ3XA7xlJBmCQtUEi7lJZWPs+Q=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=hGXLSCQAIWgP6Uxicw2kQzQKqoLXwDK2DpNikJF+6wgUZ2Dm8slctHoq4Mb7ndz5C
+	 Gfk05YE8wcxW/cCdJTwl5SxYuCyRbe59s/2teJIj2O+99FiFhe0CFYY5ZpyZ0bAtji
+	 oAW6z95Q4SVWgu4CsK9ye+DB2y+aq5Rs4s3QXx6o=
+Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1))
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 89C5F66E61;
+	Wed, 20 Aug 2025 03:14:17 -0400 (EDT)
+Message-ID: <1f0cad5f8fd36ea72e54d642f6866334a61b808e.camel@xry111.site>
+Subject: Re: [PATCH] pwm: loongson: Fix LOONGSON_PWM_FREQ_DEFAULT
+From: Xi Ruoyao <xry111@xry111.site>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, Binbin Zhou
+	 <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Juxin Gao <gaojuxin@loongson.cn>, 
+ Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ linux-pwm@vger.kernel.org, 	loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Date: Wed, 20 Aug 2025 15:14:15 +0800
+In-Reply-To: <bssxtcjtp4pnt3cymcrqnuwdzgdhwk5udnqwsh3xvmo2kkd567@5ovlk34bb4or>
+References: <20250816104904.4779-2-xry111@xry111.site>
+	 <n5kdswq7oduruqiruyup4rcdwrs76tlinz26swotzeqklterey@off5cbv5i4e5>
+	 <CAMpQs4LqEWSoMUZpcbyknuEvf48FMMgra+Jffk0AXvTiZYjANg@mail.gmail.com>
+	 <bssxtcjtp4pnt3cymcrqnuwdzgdhwk5udnqwsh3xvmo2kkd567@5ovlk34bb4or>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250820055700.24344-3-youling.tang@linux.dev>
 
-On Wed, Aug 20, 2025 at 01:56:57PM +0800, Youling Tang wrote:
-> From: Youling Tang <tangyouling@kylinos.cn>
-> 
-> This patch adds support for kexec_file on LoongArch.
-> 
-> The efi_kexec_load() as two parts:
-> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
-> - the second part loads other segments (eg: initrd, cmdline)
-> 
-> This initrd will be passed to the second kernel via the command line
-> 'initrd=start,size'.
-> 
-> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
-> but ELF format is not supported.
-> 
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
->  arch/loongarch/Kconfig                     |   9 ++
->  arch/loongarch/include/asm/image.h         |  17 +++
->  arch/loongarch/include/asm/kexec.h         |  12 +++
->  arch/loongarch/kernel/Makefile             |   1 +
->  arch/loongarch/kernel/kexec_efi.c          | 111 +++++++++++++++++++
->  arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
->  arch/loongarch/kernel/machine_kexec_file.c | 117 +++++++++++++++++++++
->  7 files changed, 289 insertions(+), 11 deletions(-)
->  create mode 100644 arch/loongarch/kernel/kexec_efi.c
->  create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+On Wed, 2025-08-20 at 08:36 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hi Binbin,
+>=20
+> On Mon, Aug 18, 2025 at 05:38:34PM +0800, Binbin Zhou wrote:
+> > On Sun, Aug 17, 2025 at 6:59=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek=
+@kernel.org> wrote:
+> > >=20
+> > > Hello,
+> > >=20
+> > > [adding Juxin Gao to Cc:]
+> > >=20
+> > > On Sat, Aug 16, 2025 at 06:49:05PM +0800, Xi Ruoyao wrote:
+> > > > Per the 7A1000 and 7A2000 user manual, the clock frequency of their
+> > > > PWM controllers is 50 MHz, not 50 kHz.
+> > > >=20
+> > > > Fixes: 2b62c89448dd ("pwm: Add Loongson PWM controller support")
+> >=20
+> > I have confirmed once again that this was indeed my mistake. Thank you =
+again!
+> >=20
+> > Reviewed-by: Binbin Zhou <zhoubinbin@loongson.cn>
+>=20
+> Thanks for your confirmation.=20
+>=20
+> My gut feeling is that this isn't very urgent and taking this as merge
+> window material for 6.18-rc1 is fine. I still applied it to
+> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git=C2=A0p=
+wm/fixes
+> and will send it along if something more urgent pops up. Please tell me
+> if you think I should bother Linus with it and get it into 6.17.
 
-...
+Just FYI: the issue was detected when I debugged a screen flickering
+with a downstream backlight control driver.  As this backlight control
+driver is not upstream yet anyway I don't see an emergency myself.
 
-> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
-> index 1f090736e71d..655d5836c4e8 100644
-> --- a/arch/loongarch/include/asm/image.h
-> +++ b/arch/loongarch/include/asm/image.h
-> @@ -36,5 +36,22 @@ struct loongarch_image_header {
->  	uint32_t pe_header;
->  };
->  
-> +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
-> +
-> +/**
-> + * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
-> + *
-> + * Returns non-zero if 'MZ' signature is found.
-> + */
-> +
-> +static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
-> +{
-> +	if (!h)
-> +		return 0;
-> +
-> +	return (h->pe_sig[0] == loongarch_image_pe_sig[0]
-> +		&& h->pe_sig[1] == loongarch_image_pe_sig[1]);
-> +}
 
-This check is still too weak and doesn't improve comparing to v1.
-
-> This could be simplified with a memcmp(). Also, this check isn't
-> strict enough: PE files for any architectures, and even legacy MS-DOS
-> COM executables all start with "MZ".
-
-I've pointed this out in my previous reply[1].
-
->  #endif /* __ASSEMBLY__ */
->  #endif /* __ASM_IMAGE_H */
-
-...
-
-> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
-> new file mode 100644
-> index 000000000000..7741f1139a12
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/kexec_efi.c
-
-...
-
-> +static void *efi_kexec_load(struct kimage *image,
-> +				char *kernel, unsigned long kernel_len,
-> +				char *initrd, unsigned long initrd_len,
-> +				char *cmdline, unsigned long cmdline_len)
-> +{
-> +	struct loongarch_image_header *h;
-> +	struct kexec_buf kbuf;
-> +	unsigned long text_offset, kernel_segment_number;
-> +	struct kexec_segment *kernel_segment;
-> +	int ret;
-> +
-> +	h = (struct loongarch_image_header *)kernel;
-> +	if (!h->image_size)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	/* Load the kernel */
-> +	kbuf.image = image;
-> +	kbuf.buf_max = ULONG_MAX;
-> +	kbuf.top_down = false;
-> +
-> +	kbuf.buffer = kernel;
-> +	kbuf.bufsz = kernel_len;
-> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> +	kbuf.memsz = le64_to_cpu(h->image_size);
-> +	text_offset = le64_to_cpu(h->text_offset);
-> +	kbuf.buf_min = text_offset;
-> +	kbuf.buf_align = SZ_2M;
-> +
-> +	kernel_segment_number = image->nr_segments;
-> +
-> +	/*
-> +	 * The location of the kernel segment may make it impossible to satisfy
-> +	 * the other segment requirements, so we try repeatedly to find a
-> +	 * location that will work.
-> +	 */
-> +	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
-> +		/* Try to load additional data */
-> +		kernel_segment = &image->segment[kernel_segment_number];
-> +		ret = load_other_segments(image, kernel_segment->mem,
-> +					  kernel_segment->memsz, initrd,
-> +					  initrd_len, cmdline, cmdline_len);
-> +		if (!ret)
-> +			break;
-> +
-> +		/*
-> +		 * We couldn't find space for the other segments; erase the
-> +		 * kernel segment and try the next available hole.
-> +		 */
-> +		image->nr_segments -= 1;
-> +		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
-> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> +	}
-> +
-> +	if (ret) {
-> +		pr_err("Could not find any suitable kernel location!");
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	kernel_segment = &image->segment[kernel_segment_number];
-> +
-> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
-> +	image->start = kernel_segment->mem + h->kernel_entry - text_offset;
-
-And this still assumes the loaded, secondary kernel is relocatable,
-with neither extra check nor comment explaining its limitation.
-
-Please see my previous reply[2] that explains why loading a
-non-relocatble kernel with kexec_file API is reasonable.
-
-> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> +		      kernel_segment->mem, kbuf.bufsz,
-> +		      kernel_segment->memsz);
-> +
-> +	return NULL;
-> +}
-> +
-> +const struct kexec_file_ops kexec_efi_ops = {
-> +	.probe = efi_kexec_probe,
-> +	.load = efi_kexec_load,
-> +};
-
-Thanks,
-Yao Zi
-
-[1]: https://lore.kernel.org/all/aJojDiHWi8cgvA2W@pie/
-[2]: https://lore.kernel.org/all/aJwFa8x5BQMouB1y@pie/
+--=20
+Xi Ruoyao <xry111@xry111.site>
