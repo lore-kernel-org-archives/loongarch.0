@@ -1,80 +1,107 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0A92C3256
-	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 05:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8E52BCF46;
+	Wed, 20 Aug 2025 06:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755669464; cv=none; b=NHBiysLQOk479WwbRIyVe9DWsum3ZPqxY2jegFPqcnhP/oVr/jQ1W06bALe/ICzIo+J8SxwTYn4eiuRAAimuHZrNI79/cWRGnl8vHwvQruZN3B/ccQyPXQwQHrfB5I1IxI+D3Ury+FUN2lWgQi2VXJRcWRWLGAqq5/nNrzcIJdQ=
+	t=1755671813; cv=none; b=DkP1oBGkBdVCQNWGoYQgNCdm+nZEWZY3kq2mgnXCaQE+dOcqN1hVYlx32I4jaH0He3AB8E52MKcqCzf6F/h3c7WvH56dmbWm6CvLJHa0asRueWalx4zEMLuzRrARWz4cn6YcfOpawRP1egh10fmFUQgBzin8RWig/fTWZmD/kHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755669464; c=relaxed/simple;
-	bh=QUKo6e58SSJFQgr+/h0Hwp0bH0rAwKhcQAAdxn7j7xs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bYiyvcpMriP+2Mdh7jsbr5VhkzocOuW4gEwpYRY97puqG8kRDtHB2cAXh+ueNjsZz/FwveUkQ58QZaoPJ/Iojx4nOLEtbcL4lOqLCQv6dZmha5WIZFleqMvBaeaxRL7ocQ4pzMYulvbzsnAKbQh3QfaY984CW0s6tQm0gaMymuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZGfbgEJ9; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1755671813; c=relaxed/simple;
+	bh=TeGFxK/Ez1DRQ5tHv+mVdHsV/wFNg/VNTD23hQjdB38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WpJWEFuv91y8pY8w+OYr/9iWzsQjyAuQGbLZCLcdi9TjUoIYjINTHqDgoNp9rHhIm2+P6/EphA04bIX6EHROQ8hdOOs7kbbmqU2Hz6g4VtngN4gb2LS+0hXsa8UOxfdOWwh81ttk6/NoJK1Y2IZdWxJ8UVGxaNoVcI6s9Uottg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vKiSnQBz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZGfbgEJ9"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755669461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cRynx6jaHBNziqdWwYMx6lpx2wd+0zdA8DgB67CZ52I=;
-	b=ZGfbgEJ9PJrpkrn+SPytCPRo0OZ5Nlnlm+sI5fekbXIkZjiInD+QN+yH9I9MKdf72pSFis
-	eBKau8BS29jkoPYVSTx/XJ5/RtoTcBGA6Hs6iz7FMKPGD/lUhvVzNjYM5H2Ac2ki1XxeFI
-	COFKubd3VtnCyZLXDQX03KNd4ZddSrc=
-From: Youling Tang <youling.tang@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Baoquan He <bhe@redhat.com>,
-	Yao Zi <ziyao@disroot.org>,
-	kexec@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	youling.tang@linux.dev,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH v2 5/5] LoongArch: Enable CONFIG_KEXEC_FILE
-Date: Wed, 20 Aug 2025 13:57:00 +0800
-Message-Id: <20250820055700.24344-6-youling.tang@linux.dev>
-In-Reply-To: <20250820055700.24344-1-youling.tang@linux.dev>
-References: <20250820055700.24344-1-youling.tang@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vKiSnQBz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A3C7C4CEEB;
+	Wed, 20 Aug 2025 06:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755671813;
+	bh=TeGFxK/Ez1DRQ5tHv+mVdHsV/wFNg/VNTD23hQjdB38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vKiSnQBzMiyijiIpvxJRXGfhK+fExTGQPeuJFGoZdbWb3GGXbWg/OIAeCabn1AogF
+	 kytxO1Lexl/+P/IvOtzeKi2C7CcANrbsgEHWVuvPC9rD8Ym6Qpu2wyLfKHb9A0obnT
+	 mdY2GxzsXuPP5r5x6AnIC7QuKlYB9gyUAFLxj5ayV+S5IWkkW+geGQ2Qhh2yJOzqBf
+	 JE3JVpbc1ySxGkGKZQkOWrclLzjzOTK6JV5UcAmGU4pz3k5vq6A6jNNfrER3s1RxhA
+	 jGXMulUlGIyOIXA/wowa/WsjvswAPneSSqowy2aKCsQHN+Xtw7uGe/G3z7Eg+q14zZ
+	 V9fpqZAYP2BlA==
+Date: Wed, 20 Aug 2025 08:36:50 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Xi Ruoyao <xry111@xry111.site>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, linux-pwm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: loongson: Fix LOONGSON_PWM_FREQ_DEFAULT
+Message-ID: <bssxtcjtp4pnt3cymcrqnuwdzgdhwk5udnqwsh3xvmo2kkd567@5ovlk34bb4or>
+References: <20250816104904.4779-2-xry111@xry111.site>
+ <n5kdswq7oduruqiruyup4rcdwrs76tlinz26swotzeqklterey@off5cbv5i4e5>
+ <CAMpQs4LqEWSoMUZpcbyknuEvf48FMMgra+Jffk0AXvTiZYjANg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ltoph65fy56dym4s"
+Content-Disposition: inline
+In-Reply-To: <CAMpQs4LqEWSoMUZpcbyknuEvf48FMMgra+Jffk0AXvTiZYjANg@mail.gmail.com>
 
-From: Youling Tang <tangyouling@kylinos.cn>
 
-This patch enables config KEXEC_FILE by default in the
-loongson3_defconfig, so that user-space tools like kexec-tools
-can use the same as the default interface for kexec/kdump
-on LoongArch.
+--ltoph65fy56dym4s
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: loongson: Fix LOONGSON_PWM_FREQ_DEFAULT
+MIME-Version: 1.0
 
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Hi Binbin,
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 34eaee0384c9..6cfea2f37cc0 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -45,6 +45,7 @@ CONFIG_EXPERT=y
- CONFIG_KALLSYMS_ALL=y
- CONFIG_PERF_EVENTS=y
- CONFIG_KEXEC=y
-+CONFIG_KEXEC_FILE=y
- CONFIG_CRASH_DUMP=y
- CONFIG_LOONGARCH=y
- CONFIG_64BIT=y
--- 
-2.43.0
+On Mon, Aug 18, 2025 at 05:38:34PM +0800, Binbin Zhou wrote:
+> On Sun, Aug 17, 2025 at 6:59=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@k=
+ernel.org> wrote:
+> >
+> > Hello,
+> >
+> > [adding Juxin Gao to Cc:]
+> >
+> > On Sat, Aug 16, 2025 at 06:49:05PM +0800, Xi Ruoyao wrote:
+> > > Per the 7A1000 and 7A2000 user manual, the clock frequency of their
+> > > PWM controllers is 50 MHz, not 50 kHz.
+> > >
+> > > Fixes: 2b62c89448dd ("pwm: Add Loongson PWM controller support")
+>=20
+> I have confirmed once again that this was indeed my mistake. Thank you ag=
+ain!
+>=20
+> Reviewed-by: Binbin Zhou <zhoubinbin@loongson.cn>
 
+Thanks for your confirmation.=20
+
+My gut feeling is that this isn't very urgent and taking this as merge
+window material for 6.18-rc1 is fine. I still applied it to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/fixes
+and will send it along if something more urgent pops up. Please tell me
+if you think I should bother Linus with it and get it into 6.17.
+
+Best regards
+Uwe
+
+--ltoph65fy56dym4s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmilbP8ACgkQj4D7WH0S
+/k6ZpQf9Gro+45aCGD4VgKF8IHEQrHPJH/F5jDeR0xmms1/pEbPYPS9CwZaq/af+
++TM+yJHbf2+WwHEPO8uloJMssgdC0UBnnsImLGRhXbB7QGCR8w5yMT5iCuCByIWi
+oDXynvnKFVSQ3whPPG/7FeFNI/wHf5vCIrEfkKDvUCzN1XTzlwDnaV3VmIdSZ08/
+/8klPqCyemsC2K8GIzSJbVu4Fkqt/wUIy34aVD91sMUxmyMm3o33h7ofs04TtO51
+WQHd91h1m1DpuMKXUt9RZqvrSfmwDUtxz0+BIjYadCGhwJ6xCF8g8FZLhOsqdSe9
+zgfbnJmyOWy6ADB/k9k06bUcAuokjA==
+=pW4U
+-----END PGP SIGNATURE-----
+
+--ltoph65fy56dym4s--
