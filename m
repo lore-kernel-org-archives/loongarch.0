@@ -1,245 +1,269 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A5E21CC71;
-	Wed, 20 Aug 2025 11:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEDA20B80B
+	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 12:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755689981; cv=none; b=qV2oEFHmjQ+yEAM5pSwkd+2Om+AS1HaDoUXFYv5qtzzICEYy9wreLp1z2JaoXkGaw6/rFoh3woZ93y+cGLaF9dupFnOwDJppZ/tilMqMGcvQGy1AhEJR41SabIVB1VNWq9ZcZNZbvsxxidvCu4nbKPRrOf7hpmR6EubtXK91hiE=
+	t=1755691577; cv=none; b=WlG6K2SslhmTvcSbhM8GU6EXHJ82O5Ern3B8wAv5lyJ7wjIjcF+sPHnuw9eCmA+svkzeyCPbhV/viCP+szF7rjd6pvBa+geeODu8m/OvFuHFRHIiKwoQI34FZwbRYMqplSDtqusVfcWUNFHwFwXOuLYiSP9wktRu1OAvDLGcsE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755689981; c=relaxed/simple;
-	bh=t2FS4x4WM9C4P1wTwEgmHoheakX0RBzLC1D6y+nGWHo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D+kylovgVl1rQbG86EBg/RHQUaoGchMd7cE3sQjaN23JvfDOReDNCwMG/dLEah1rVwiD6yDoHPr/9RvDLyYikHTWezOkfDlJZF7NVLzHNShzzFQM6C2FdvaCo5q2k7x+4LO4Qv5GPxXP94ESamXe3i2dGcEJYYvD8aaOO9/7Xo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 582231D31;
-	Wed, 20 Aug 2025 04:39:30 -0700 (PDT)
-Received: from [10.57.3.97] (unknown [10.57.3.97])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B3B33F58B;
-	Wed, 20 Aug 2025 04:39:32 -0700 (PDT)
-Message-ID: <145e1021-d2c3-4ff3-aabb-fb7416848a97@arm.com>
-Date: Wed, 20 Aug 2025 12:39:28 +0100
+	s=arc-20240116; t=1755691577; c=relaxed/simple;
+	bh=O6ai/fx4wQl5BDBuPEYlVMZTT+qbL9xmTYvF7l31v9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h6+rDU551JnT1HArYd3yjk1hgwE+g4SGUapMX+9gC3wO0jCHp74BxJgbrX973rjU100/oVzpUSUWHxAIYy1UPITnemVBfHCHjBvqwjSaa/AY45+G26huf4VK/MN7x6es0lAPxgcaHgbfnY29az3T3/Ay167EbV2WqR0awXOIR2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VetKWJW5; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VetKWJW5"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-323266b1d1aso3568384a91.0
+        for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 05:06:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755691574; x=1756296374; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C2i3tAyKE9jE1j2KIYTj9vxEXRS2G/2vf0yN8gaJWpY=;
+        b=VetKWJW5R+Ov3Xa+NZLmJ73WA12KjjPb5VPs56ARh5tKjdkcu4gxXzjit6Evnf0iug
+         2FJGG27kLo+Vy3yvFecnvmn6VaHOOQbOH57sb2ter5j0qvuDtq+TriqEpxMEGr5kf99U
+         u0GytqAm6P0a2xTSrK4C35KFuLa12nwLKtSpgEKt/YIKCO272Ua9mkSwFPyJAec7Ih1E
+         9922Oav/6uPxhnq24/zKTm1nwIDRNZWYKChg+ntDNiIjOdchljgp5kRIpPI8AjHFQhNi
+         iY9hPPPekxZ5f/ybhHbdK30xfEc0P9z2pnjhVDnyKfToaAZDgrrRd266jGimDCzKhCR1
+         th4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755691574; x=1756296374;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C2i3tAyKE9jE1j2KIYTj9vxEXRS2G/2vf0yN8gaJWpY=;
+        b=FbOcyZfZgnzWdtNG1glRCKspL5L3Lez3nwSTzhsMLomVfp5IijdK0ke1BbC+ApclNi
+         s4+1rz8RyhOSHBF/QKZ9V5SDtL/xvHsKwMlD1i5P4E9QQW/iWhB9YYSpilfxmLi0Q1dO
+         NT6KfSeYmfk5AK3HmaXqsMtIyk6RhJ+eJmBlg1s2zjKZIPSWUdE8iPMngPfRiQV8+Bot
+         vgWSPOG5tORnMz6YvNVd3I1WsrobDdJC1V9sQSfwy/VDW38iUWxPUUhCjzqautEAGGwC
+         5MQufHKCvFHkVdWk8InapUvOyGqLNO3/ebt45QGW4G3NDZ9lZXfZJNBvtLDOpjXc4/Tx
+         qVGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX29k0kSxx4peJPLWnrNAPU9dPfPoju0yLqvBGg92HPBzqme1Q5mHnWJnDJcyRfnHfay16cS0U4Xm0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyjuUFt6ft5OI7XQQKudHWTElXqiNpD4SdjV0zimPfiHSDrdrmg
+	SsUvYPN3ZKBOw8Tf/ykANspppkxrxU9F6LcHkcC5vbArjoZtfJJV56iFUupdQVKSVDU=
+X-Gm-Gg: ASbGncuVf7Jn1kvTd99r3pKZR/df7JOsQABBPgqDyEWPKRlNt2oR0K0ZXOourZapedp
+	ZzMh/F0t2g9/vFo5Ty9UTB0ahKHwBCJey1CjaVHmFzXUcj7laDsiiSKuSF4X/Uic56X8vN3yawV
+	4/sVf0TJD7ljU9qk4h/SUJ9V8+iC8Zn4JIsvI7sK9Me7gyT49LaMbJ2Q4614g1oEZsrIZiL34/g
+	3Z+aEeYXjN8RbGHY9e+o6EdnHd4V1wZhM22MoRkiGJLn/d04E0Ff+aDxp/ShOLN8fSdCUmWsj40
+	tLNHcR4Jtw6gCN0m+YnlcsxNmsf1zc5OCShrDTWY4w8zaeUkgE3uIBRoPekX1Hgl82YeE4R32Wd
+	iVJvZ0yOOtChQmrna5H/doY+97T+zoiuEX8oIPd7r
+X-Google-Smtp-Source: AGHT+IFFO41Ewu0qXcpl3C5a1UHXMWGJWLOk/xmuv5VLCpKt/PIG39Z2vJZOoSO1MfJj37642tBkXQ==
+X-Received: by 2002:a17:90b:4a03:b0:311:9c9a:58ca with SMTP id 98e67ed59e1d1-324e12e4b38mr3406763a91.8.1755691573461;
+        Wed, 20 Aug 2025 05:06:13 -0700 (PDT)
+Received: from devbox.. ([43.132.141.21])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3244235e3edsm2271919a91.3.2025.08.20.05.06.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Aug 2025 05:06:13 -0700 (PDT)
+From: Hengqi Chen <hengqi.chen@gmail.com>
+To: chenhuacai@kernel.org,
+	yangtiezhu@loongson.cn,
+	jianghaoran@kylinos.cn,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	vincent.mc.li@gmail.com
+Cc: bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Subject: [PATCH] LoongArch: BPF: Sign extend struct ops return values properly
+Date: Wed, 20 Aug 2025 10:39:56 +0000
+Message-ID: <20250820103956.394955-1-hengqi.chen@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/19] perf: Introduce positive capability for raw events
-To: Thomas Richter <tmricht@linux.ibm.com>, peterz@infradead.org,
- mingo@redhat.com, will@kernel.org, mark.rutland@arm.com, acme@kernel.org,
- namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
- linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
- iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
- linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <cover.1755096883.git.robin.murphy@arm.com>
- <542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com>
- <67a0d778-6e2c-4955-a7ce-56a10043ae8d@arm.com>
- <295ae4dd-4734-42a0-be63-2d322f00c799@linux.ibm.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <295ae4dd-4734-42a0-be63-2d322f00c799@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Thomas,
+The ns_bpf_qdisc selftest triggers a kernel panic:
 
-On 2025-08-20 9:09 am, Thomas Richter wrote:
-> On 8/19/25 15:15, Robin Murphy wrote:
->> On 13/08/2025 6:01 pm, Robin Murphy wrote:
->>> Only a handful of CPU PMUs accept PERF_TYPE_{RAW,HARDWARE,HW_CACHE}
->>> events without registering themselves as PERF_TYPE_RAW in the first
->>> place. Add an explicit opt-in for these special cases, so that we can
->>> make life easier for every other driver (and probably also speed up the
->>> slow-path search) by having perf_try_init_event() do the basic type
->>> checking to cover the majority of cases.
->>>
->>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->>> ---
->>>
->>> A further possibility is to automatically add the cap to PERF_TYPE_RAW
->>> PMUs in perf_pmu_register() to have a single point-of-use condition; I'm
->>> undecided...
->>> ---
->>>    arch/s390/kernel/perf_cpum_cf.c    |  1 +
->>>    arch/s390/kernel/perf_pai_crypto.c |  2 +-
->>>    arch/s390/kernel/perf_pai_ext.c    |  2 +-
->>>    arch/x86/events/core.c             |  2 +-
->>>    drivers/perf/arm_pmu.c             |  1 +
->>>    include/linux/perf_event.h         |  1 +
->>>    kernel/events/core.c               | 15 +++++++++++++++
->>>    7 files changed, 21 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
->>> index 1a94e0944bc5..782ab755ddd4 100644
->>> --- a/arch/s390/kernel/perf_cpum_cf.c
->>> +++ b/arch/s390/kernel/perf_cpum_cf.c
->>> @@ -1054,6 +1054,7 @@ static void cpumf_pmu_del(struct perf_event *event, int flags)
->>>    /* Performance monitoring unit for s390x */
->>>    static struct pmu cpumf_pmu = {
->>>        .task_ctx_nr  = perf_sw_context,
->>> +    .capabilities = PERF_PMU_CAP_RAW_EVENTS,
->>>        .pmu_enable   = cpumf_pmu_enable,
->>>        .pmu_disable  = cpumf_pmu_disable,
->>>        .event_init   = cpumf_pmu_event_init,
->>> diff --git a/arch/s390/kernel/perf_pai_crypto.c b/arch/s390/kernel/perf_pai_crypto.c
->>> index a64b6b056a21..b5b6d8b5d943 100644
->>> --- a/arch/s390/kernel/perf_pai_crypto.c
->>> +++ b/arch/s390/kernel/perf_pai_crypto.c
->>> @@ -569,7 +569,7 @@ static const struct attribute_group *paicrypt_attr_groups[] = {
->>>    /* Performance monitoring unit for mapped counters */
->>>    static struct pmu paicrypt = {
->>>        .task_ctx_nr  = perf_hw_context,
->>> -    .capabilities = PERF_PMU_CAP_SAMPLING,
->>> +    .capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
->>>        .event_init   = paicrypt_event_init,
->>>        .add          = paicrypt_add,
->>>        .del          = paicrypt_del,
->>> diff --git a/arch/s390/kernel/perf_pai_ext.c b/arch/s390/kernel/perf_pai_ext.c
->>> index 1261f80c6d52..bcd28c38da70 100644
->>> --- a/arch/s390/kernel/perf_pai_ext.c
->>> +++ b/arch/s390/kernel/perf_pai_ext.c
->>> @@ -595,7 +595,7 @@ static const struct attribute_group *paiext_attr_groups[] = {
->>>    /* Performance monitoring unit for mapped counters */
->>>    static struct pmu paiext = {
->>>        .task_ctx_nr  = perf_hw_context,
->>> -    .capabilities = PERF_PMU_CAP_SAMPLING,
->>> +    .capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
->>>        .event_init   = paiext_event_init,
->>>        .add          = paiext_add,
->>>        .del          = paiext_del,
->>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->>> index 789dfca2fa67..764728bb80ae 100644
->>> --- a/arch/x86/events/core.c
->>> +++ b/arch/x86/events/core.c
->>> @@ -2697,7 +2697,7 @@ static bool x86_pmu_filter(struct pmu *pmu, int cpu)
->>>    }
->>>      static struct pmu pmu = {
->>> -    .capabilities        = PERF_PMU_CAP_SAMPLING,
->>> +    .capabilities        = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
->>>          .pmu_enable        = x86_pmu_enable,
->>>        .pmu_disable        = x86_pmu_disable,
->>> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
->>> index 72d8f38d0aa5..bc772a3bf411 100644
->>> --- a/drivers/perf/arm_pmu.c
->>> +++ b/drivers/perf/arm_pmu.c
->>> @@ -877,6 +877,7 @@ struct arm_pmu *armpmu_alloc(void)
->>>             * specific PMU.
->>>             */
->>>            .capabilities    = PERF_PMU_CAP_SAMPLING |
->>> +                  PERF_PMU_CAP_RAW_EVENTS |
->>>                      PERF_PMU_CAP_EXTENDED_REGS |
->>>                      PERF_PMU_CAP_EXTENDED_HW_TYPE,
->>>        };
->>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->>> index 183b7c48b329..c6ad036c0037 100644
->>> --- a/include/linux/perf_event.h
->>> +++ b/include/linux/perf_event.h
->>> @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
->>>    #define PERF_PMU_CAP_EXTENDED_HW_TYPE    0x0100
->>>    #define PERF_PMU_CAP_AUX_PAUSE        0x0200
->>>    #define PERF_PMU_CAP_AUX_PREFER_LARGE    0x0400
->>> +#define PERF_PMU_CAP_RAW_EVENTS        0x0800
->>>      /**
->>>     * pmu::scope
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index 71b2a6730705..2ecee76d2ae2 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -12556,11 +12556,26 @@ static inline bool has_extended_regs(struct perf_event *event)
->>>               (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK);
->>>    }
->>>    +static bool is_raw_pmu(const struct pmu *pmu)
->>> +{
->>> +    return pmu->type == PERF_TYPE_RAW ||
->>> +           pmu->capabilities & PERF_PMU_CAP_RAW_EVENTS;
->>> +}
->>> +
->>>    static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->>>    {
->>>        struct perf_event_context *ctx = NULL;
->>>        int ret;
->>>    +    /*
->>> +     * Before touching anything, we can safely skip:
->>> +     * - any event for a specific PMU which is not this one
->>> +     * - any common event if this PMU doesn't support them
->>> +     */
->>> +    if (event->attr.type != pmu->type &&
->>> +        (event->attr.type >= PERF_TYPE_MAX || is_raw_pmu(pmu)))
->>
->> Ah, that should be "!is_raw_pmu(pmu)" there (although it's not entirely the cause of the LKP report on the final patch.)
->>
->> Thanks,
->> Robin.
->>
->>> +        return -ENOENT;
->>> +
->>>        if (!try_module_get(pmu->module))
->>>            return -ENODEV;
->>>    
->>
->>
-> 
-> Hi Robin,
-> 
-> what is the intention of that patch?
-> Can you explain that a bit more.
+    [ 2738.595309] CPU 0 Unable to handle kernel paging request at virtual address 0000000000741d58, era == 90000000851b5ac0, ra == 90000000851b5aa4
+    [ 2738.596716] Oops[#1]:
+    [ 2738.596980] CPU: 0 UID: 0 PID: 449 Comm: test_progs Tainted: G           OE       6.16.0+ #3 PREEMPT(full)
+    [ 2738.597184] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+    [ 2738.597265] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
+    [ 2738.597386] pc 90000000851b5ac0 ra 90000000851b5aa4 tp 90000001076b8000 sp 90000001076bb600
+    [ 2738.597484] a0 0000000000741ce8 a1 0000000000000001 a2 90000001076bb5c0 a3 0000000000000008
+    [ 2738.597577] a4 90000001004c4620 a5 9000000100741ce8 a6 0000000000000000 a7 0100000000000000
+    [ 2738.597682] t0 0000000000000010 t1 0000000000000000 t2 9000000104d24d30 t3 0000000000000001
+    [ 2738.597835] t4 4f2317da8a7e08c4 t5 fffffefffc002f00 t6 90000001004c4620 t7 ffffffffc61c5b3d
+    [ 2738.597997] t8 0000000000000000 u0 0000000000000001 s9 0000000000000050 s0 90000001075bc800
+    [ 2738.598097] s1 0000000000000040 s2 900000010597c400 s3 0000000000000008 s4 90000001075bc880
+    [ 2738.598196] s5 90000001075bc8f0 s6 0000000000000000 s7 0000000000741ce8 s8 0000000000000000
+    [ 2738.598313]    ra: 90000000851b5aa4 __qdisc_run+0xac/0x8d8
+    [ 2738.598553]   ERA: 90000000851b5ac0 __qdisc_run+0xc8/0x8d8
+    [ 2738.598629]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
+    [ 2738.598991]  PRMD: 00000004 (PPLV0 +PIE -PWE)
+    [ 2738.599065]  EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
+    [ 2738.599160]  ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
+    [ 2738.599278] ESTAT: 00010000 [PIL] (IS= ECode=1 EsubCode=0)
+    [ 2738.599364]  BADV: 0000000000741d58
+    [ 2738.599429]  PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
+    [ 2738.599513] Modules linked in: bpf_testmod(OE) [last unloaded: bpf_testmod(OE)]
+    [ 2738.599724] Process test_progs (pid: 449, threadinfo=000000009af02b3a, task=00000000e9ba4956)
+    [ 2738.599916] Stack : 0000000000000000 90000001075bc8ac 90000000869524a8 9000000100741ce8
+    [ 2738.600065]         90000001075bc800 9000000100415300 90000001075bc8ac 0000000000000000
+    [ 2738.600170]         900000010597c400 900000008694a000 0000000000000000 9000000105b59000
+    [ 2738.600278]         90000001075bc800 9000000100741ce8 0000000000000050 900000008513000c
+    [ 2738.600381]         9000000086936000 0000000100094d4c fffffff400676208 0000000000000000
+    [ 2738.600482]         9000000105b59000 900000008694a000 9000000086bf0dc0 9000000105b59000
+    [ 2738.600585]         9000000086bf0d68 9000000085147010 90000001075be788 0000000000000000
+    [ 2738.600690]         9000000086bf0f98 0000000000000001 0000000000000010 9000000006015840
+    [ 2738.600795]         0000000000000000 9000000086be6c40 0000000000000000 0000000000000000
+    [ 2738.600901]         0000000000000000 4f2317da8a7e08c4 0000000000000101 4f2317da8a7e08c4
+    [ 2738.601007]         ...
+    [ 2738.601062] Call Trace:
+    [ 2738.601135] [<90000000851b5ac0>] __qdisc_run+0xc8/0x8d8
+    [ 2738.601396] [<9000000085130008>] __dev_queue_xmit+0x578/0x10f0
+    [ 2738.601482] [<90000000853701c0>] ip6_finish_output2+0x2f0/0x950
+    [ 2738.601568] [<9000000085374bc8>] ip6_finish_output+0x2b8/0x448
+    [ 2738.601646] [<9000000085370b24>] ip6_xmit+0x304/0x858
+    [ 2738.601711] [<90000000853c4438>] inet6_csk_xmit+0x100/0x170
+    [ 2738.601784] [<90000000852b32f0>] __tcp_transmit_skb+0x490/0xdd0
+    [ 2738.601863] [<90000000852b47fc>] tcp_connect+0xbcc/0x1168
+    [ 2738.601934] [<90000000853b9088>] tcp_v6_connect+0x580/0x8a0
+    [ 2738.602019] [<90000000852e7738>] __inet_stream_connect+0x170/0x480
+    [ 2738.602103] [<90000000852e7a98>] inet_stream_connect+0x50/0x88
+    [ 2738.602175] [<90000000850f2814>] __sys_connect+0xe4/0x110
+    [ 2738.602244] [<90000000850f2858>] sys_connect+0x18/0x28
+    [ 2738.602320] [<9000000085520c94>] do_syscall+0x94/0x1a0
+    [ 2738.602399] [<9000000083df1fb8>] handle_syscall+0xb8/0x158
+    [ 2738.602502]
+    [ 2738.602546] Code: 4001ad80  2400873f  2400832d <240073cc> 001137ff  001133ff  6407b41f  001503cc  0280041d
+    [ 2738.602724]
+    [ 2738.602916] ---[ end trace 0000000000000000 ]---
+    [ 2738.603210] Kernel panic - not syncing: Fatal exception in interrupt
+    [ 2738.603548] Kernel relocated by 0x83bb0000
+    [ 2738.603622]  .text @ 0x9000000083db0000
+    [ 2738.603699]  .data @ 0x9000000085690000
+    [ 2738.603753]  .bss  @ 0x9000000087491e00
+    [ 2738.603900] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
 
-The background here is that, in this context, we essentially have 3 
-distinct categories of PMU driver:
+The bpf_fifo_dequeue prog returns a skb which is a pointer.
+The pointer is treated as a 32bit value and sign extend to
+64bit in epilogue. This behavior is right for most bpf prog
+types but wrong for struct ops which requires LoongArch ABI.
 
-- Older/simpler CPU PMUs which register as PERF_TYPE_RAW and accept 
-raw/hardware events
-- Newer/heterogeneous CPU PMUs which register as a dynamic type, and 
-accept both raw/hardware events and events of their own type
-- Other (mostly uncore) PMUs which only accept events of their own type
+So let's sign extend struct ops return values according to
+the return value spec in function model.
 
-These days that third one is by far the majority, so it seems 
-increasingly unreasonable and inefficient to always offer every kind of 
-event to every driver, and so force nearly all of them to have the same 
-boilerplate code to refuse events they don't want. The core code is 
-already in a position to be able to assume that a PERF_TYPE_RAW PMU 
-wants "raw" events and a typed PMU wants its own events, so the only 
-actual new thing we need is a way to discern the 5 drivers in the middle 
-category - where s390 dominates :) - from the rest in the third.
+Fixes: 6abf17d690d8 ("LoongArch: BPF: Add struct ops support for trampoline")
+Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+---
+ arch/loongarch/net/bpf_jit.c | 47 ++++++++++++++++++++++++++++++------
+ 1 file changed, 40 insertions(+), 7 deletions(-)
 
-The way the check itself ends up structured is that the only time we'll 
-now offer an event to a driver of a different type is if it's a "raw" 
-event and the driver has asked to be offered them (either by registering 
-as PERF_TYPE_RAW or with the new cap). Otherwise we can safely assume 
-that this PMU won't want this event, and so skip straight to trying the 
-next one. We can get away with the single PERF_TYPE_MAX check for all 
-"raw" events, since the drivers which do handle them already have to 
-consider the exact type to discern between RAW/HARDWARE/HW_CACHE, and 
-thus must reject SOFTWARE/TRACEPOINT/BREAKPOINT events anyway, but I 
-could of course make that more specific if people prefer. Conversely, 
-since the actual software/tracepoint/breakpoint PMUs won't pass the 
-is_raw_pmu() check either, and thus will only be given their own events, 
-I could remove the type checking from their event_init routines as well, 
-but I thought that might be perhaps a little too subtle as-is.
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index abfdb6bb5c38..4077565c9934 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1361,7 +1361,8 @@ static void restore_args(struct jit_ctx *ctx, int nargs, int args_off)
+ }
+ 
+ static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
+-			   int args_off, int retval_off, int run_ctx_off, bool save_ret)
++			   const struct btf_func_model *m, int args_off,
++			   int retval_off, int run_ctx_off, bool save_ret)
+ {
+ 	int ret;
+ 	u32 *branch;
+@@ -1425,13 +1426,14 @@ static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
+ }
+ 
+ static void invoke_bpf_mod_ret(struct jit_ctx *ctx, struct bpf_tramp_links *tl,
+-			       int args_off, int retval_off, int run_ctx_off, u32 **branches)
++			       const struct btf_func_model *m, int args_off,
++			       int retval_off, int run_ctx_off, u32 **branches)
+ {
+ 	int i;
+ 
+ 	emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -retval_off);
+ 	for (i = 0; i < tl->nr_links; i++) {
+-		invoke_bpf_prog(ctx, tl->links[i], args_off, retval_off, run_ctx_off, true);
++		invoke_bpf_prog(ctx, tl->links[i], m, args_off, retval_off, run_ctx_off, true);
+ 		emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -retval_off);
+ 		branches[i] = (u32 *)ctx->image + ctx->idx;
+ 		emit_insn(ctx, nop);
+@@ -1448,6 +1450,30 @@ void arch_free_bpf_trampoline(void *image, unsigned int size)
+ 	bpf_prog_pack_free(image, size);
+ }
+ 
++/*
++ * Sign-extend the register if necessary
++ */
++static int sign_extend(struct jit_ctx *ctx, int r, u8 size)
++{
++	switch (size) {
++	case 1:
++		emit_insn(ctx, sllid, r, r, 56);
++		emit_insn(ctx, sraid, r, r, 56);
++		return 0;
++	case 2:
++		emit_insn(ctx, sllid, r, r, 48);
++		emit_insn(ctx, sraid, r, r, 48);
++		return 0;
++	case 4:
++		emit_insn(ctx, addiw, r, r, 0);
++		return 0;
++	case 8:
++		return 0;
++	default:
++		return -1;
++	}
++}
++
+ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
+ 					 const struct btf_func_model *m, struct bpf_tramp_links *tlinks,
+ 					 void *func_addr, u32 flags)
+@@ -1602,8 +1628,8 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	}
+ 
+ 	for (i = 0; i < fentry->nr_links; i++) {
+-		ret = invoke_bpf_prog(ctx, fentry->links[i], args_off, retval_off,
+-				      run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY_RET);
++		ret = invoke_bpf_prog(ctx, fentry->links[i], m, args_off, retval_off,
++			      run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY_RET);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -1612,7 +1638,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 		if (!branches)
+ 			return -ENOMEM;
+ 
+-		invoke_bpf_mod_ret(ctx, fmod_ret, args_off, retval_off, run_ctx_off, branches);
++		invoke_bpf_mod_ret(ctx, fmod_ret, m, args_off, retval_off, run_ctx_off, branches);
+ 	}
+ 
+ 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
+@@ -1638,7 +1664,8 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	}
+ 
+ 	for (i = 0; i < fexit->nr_links; i++) {
+-		ret = invoke_bpf_prog(ctx, fexit->links[i], args_off, retval_off, run_ctx_off, false);
++		ret = invoke_bpf_prog(ctx, fexit->links[i], m, args_off,
++				      retval_off, run_ctx_off, false);
+ 		if (ret)
+ 			goto out;
+ 	}
+@@ -1657,6 +1684,12 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	if (save_ret) {
+ 		emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
+ 		emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
++		if (is_struct_ops) {
++			move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
++			ret = sign_extend(ctx, LOONGARCH_GPR_A0, m->ret_size);
++			if (ret)
++				goto out;
++		}
+ 	}
+ 
+ 	emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
+-- 
+2.43.5
 
-BTW if the s390 drivers are intended to coexist then I'm not sure they 
-actually handle sharing PERF_TYPE_RAW events very well - what happens to 
-any particular event seems ultimately largely dependent on the order in 
-which the drivers happen to register - but that's a pre-existing issue 
-and this series shouldn't change anything in that respect. (As it 
-similarly shouldn't affect the trick of the first matching driver 
-rewriting the event type to "forward" it to another driver later in the 
-list.)
 
-Thanks,
-Robin.
