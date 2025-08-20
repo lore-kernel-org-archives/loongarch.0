@@ -1,279 +1,245 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3209427781D
-	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 11:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A5E21CC71;
+	Wed, 20 Aug 2025 11:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755688455; cv=none; b=VKmAgd9/GmXmDHHKGVHQmEemKAUSjP4i9Bagecs/cm4H0E25cbm0V3G+F/JU6+afcTAXlCvKbFQtv8HVCnvoC7ZNAKlF1O221KpSlp5FFcnX6zoS6OcCbf/zE9nh+Fo9erE8DJowyo6WQ8WZb2dyu3Fs5rQZ4M6yJXfftbLp+gI=
+	t=1755689981; cv=none; b=qV2oEFHmjQ+yEAM5pSwkd+2Om+AS1HaDoUXFYv5qtzzICEYy9wreLp1z2JaoXkGaw6/rFoh3woZ93y+cGLaF9dupFnOwDJppZ/tilMqMGcvQGy1AhEJR41SabIVB1VNWq9ZcZNZbvsxxidvCu4nbKPRrOf7hpmR6EubtXK91hiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755688455; c=relaxed/simple;
-	bh=fAE4LeP4gRVZJ56ceko6LYfRClFNY4XpOfAEuCT1suI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iUsWvxSKxHT8f2v6jmwDXc+hH/ngyClfwZRi4Es9/d1ORemq0oLJWK1gxUM5KbFogzqpwUXIh+eS4MEhmtS2GKy8HM+e/n509pWCMdK+iMaPaz0/H9gtLJAKeANXHDmtReywfUS0buXgcNpjz338tSoBBBnEEYz+vyMtzQkzoaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=A1Dbi2/M; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="A1Dbi2/M"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 5130625F01;
-	Wed, 20 Aug 2025 13:14:10 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id CawIejir6Qjv; Wed, 20 Aug 2025 13:14:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1755688446; bh=fAE4LeP4gRVZJ56ceko6LYfRClFNY4XpOfAEuCT1suI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=A1Dbi2/MVbcei9TDGKMu5fu9PDUvQafoXB7k54QMkJ/zvH9kRf2TsqC1qG4gAyWtd
-	 5EUM+/JXs3pMX8m4c/OX2xsBGcowxoRVsNYiwSo5MyuUkP3J7Fcs4AtGVqDMto1VLu
-	 SQNvXcq2mPLHG8OhoXtIS/Le6lQUnBaieokE3avFJQ+zBbifnwBrAmCSoKZz36Gyj6
-	 4TLzipuHQ601yyTOJoPXdomvO/lmblFiFJ43zP/DAmCwV6rtVQWspTXiuAuhQGSHia
-	 gf6DTfWlo3c8/fmedJV4490xTVIUet9zGAkoEBbB6pbVFxcOuiXvxF8AAA8HWQd8EY
-	 6FuuF7vNL+aEg==
-Date: Wed, 20 Aug 2025 11:13:47 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Youling Tang <youling.tang@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH v2 2/5] LoongArch: Add kexec_file support
-Message-ID: <aKWt63S_wD3zeMYU@pie>
-References: <20250820055700.24344-1-youling.tang@linux.dev>
- <20250820055700.24344-3-youling.tang@linux.dev>
- <aKVwHOM9KNEpUZF4@pie>
- <5f6eeefb-681a-424e-9a6b-2e91eaf87571@linux.dev>
+	s=arc-20240116; t=1755689981; c=relaxed/simple;
+	bh=t2FS4x4WM9C4P1wTwEgmHoheakX0RBzLC1D6y+nGWHo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D+kylovgVl1rQbG86EBg/RHQUaoGchMd7cE3sQjaN23JvfDOReDNCwMG/dLEah1rVwiD6yDoHPr/9RvDLyYikHTWezOkfDlJZF7NVLzHNShzzFQM6C2FdvaCo5q2k7x+4LO4Qv5GPxXP94ESamXe3i2dGcEJYYvD8aaOO9/7Xo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 582231D31;
+	Wed, 20 Aug 2025 04:39:30 -0700 (PDT)
+Received: from [10.57.3.97] (unknown [10.57.3.97])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B3B33F58B;
+	Wed, 20 Aug 2025 04:39:32 -0700 (PDT)
+Message-ID: <145e1021-d2c3-4ff3-aabb-fb7416848a97@arm.com>
+Date: Wed, 20 Aug 2025 12:39:28 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 18/19] perf: Introduce positive capability for raw events
+To: Thomas Richter <tmricht@linux.ibm.com>, peterz@infradead.org,
+ mingo@redhat.com, will@kernel.org, mark.rutland@arm.com, acme@kernel.org,
+ namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+ linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+ iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+ linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com>
+ <67a0d778-6e2c-4955-a7ce-56a10043ae8d@arm.com>
+ <295ae4dd-4734-42a0-be63-2d322f00c799@linux.ibm.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <295ae4dd-4734-42a0-be63-2d322f00c799@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5f6eeefb-681a-424e-9a6b-2e91eaf87571@linux.dev>
 
-On Wed, Aug 20, 2025 at 05:13:27PM +0800, Youling Tang wrote:
-> Hi, Yao
+Hi Thomas,
+
+On 2025-08-20 9:09 am, Thomas Richter wrote:
+> On 8/19/25 15:15, Robin Murphy wrote:
+>> On 13/08/2025 6:01 pm, Robin Murphy wrote:
+>>> Only a handful of CPU PMUs accept PERF_TYPE_{RAW,HARDWARE,HW_CACHE}
+>>> events without registering themselves as PERF_TYPE_RAW in the first
+>>> place. Add an explicit opt-in for these special cases, so that we can
+>>> make life easier for every other driver (and probably also speed up the
+>>> slow-path search) by having perf_try_init_event() do the basic type
+>>> checking to cover the majority of cases.
+>>>
+>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>>> ---
+>>>
+>>> A further possibility is to automatically add the cap to PERF_TYPE_RAW
+>>> PMUs in perf_pmu_register() to have a single point-of-use condition; I'm
+>>> undecided...
+>>> ---
+>>>    arch/s390/kernel/perf_cpum_cf.c    |  1 +
+>>>    arch/s390/kernel/perf_pai_crypto.c |  2 +-
+>>>    arch/s390/kernel/perf_pai_ext.c    |  2 +-
+>>>    arch/x86/events/core.c             |  2 +-
+>>>    drivers/perf/arm_pmu.c             |  1 +
+>>>    include/linux/perf_event.h         |  1 +
+>>>    kernel/events/core.c               | 15 +++++++++++++++
+>>>    7 files changed, 21 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+>>> index 1a94e0944bc5..782ab755ddd4 100644
+>>> --- a/arch/s390/kernel/perf_cpum_cf.c
+>>> +++ b/arch/s390/kernel/perf_cpum_cf.c
+>>> @@ -1054,6 +1054,7 @@ static void cpumf_pmu_del(struct perf_event *event, int flags)
+>>>    /* Performance monitoring unit for s390x */
+>>>    static struct pmu cpumf_pmu = {
+>>>        .task_ctx_nr  = perf_sw_context,
+>>> +    .capabilities = PERF_PMU_CAP_RAW_EVENTS,
+>>>        .pmu_enable   = cpumf_pmu_enable,
+>>>        .pmu_disable  = cpumf_pmu_disable,
+>>>        .event_init   = cpumf_pmu_event_init,
+>>> diff --git a/arch/s390/kernel/perf_pai_crypto.c b/arch/s390/kernel/perf_pai_crypto.c
+>>> index a64b6b056a21..b5b6d8b5d943 100644
+>>> --- a/arch/s390/kernel/perf_pai_crypto.c
+>>> +++ b/arch/s390/kernel/perf_pai_crypto.c
+>>> @@ -569,7 +569,7 @@ static const struct attribute_group *paicrypt_attr_groups[] = {
+>>>    /* Performance monitoring unit for mapped counters */
+>>>    static struct pmu paicrypt = {
+>>>        .task_ctx_nr  = perf_hw_context,
+>>> -    .capabilities = PERF_PMU_CAP_SAMPLING,
+>>> +    .capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>>>        .event_init   = paicrypt_event_init,
+>>>        .add          = paicrypt_add,
+>>>        .del          = paicrypt_del,
+>>> diff --git a/arch/s390/kernel/perf_pai_ext.c b/arch/s390/kernel/perf_pai_ext.c
+>>> index 1261f80c6d52..bcd28c38da70 100644
+>>> --- a/arch/s390/kernel/perf_pai_ext.c
+>>> +++ b/arch/s390/kernel/perf_pai_ext.c
+>>> @@ -595,7 +595,7 @@ static const struct attribute_group *paiext_attr_groups[] = {
+>>>    /* Performance monitoring unit for mapped counters */
+>>>    static struct pmu paiext = {
+>>>        .task_ctx_nr  = perf_hw_context,
+>>> -    .capabilities = PERF_PMU_CAP_SAMPLING,
+>>> +    .capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>>>        .event_init   = paiext_event_init,
+>>>        .add          = paiext_add,
+>>>        .del          = paiext_del,
+>>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>>> index 789dfca2fa67..764728bb80ae 100644
+>>> --- a/arch/x86/events/core.c
+>>> +++ b/arch/x86/events/core.c
+>>> @@ -2697,7 +2697,7 @@ static bool x86_pmu_filter(struct pmu *pmu, int cpu)
+>>>    }
+>>>      static struct pmu pmu = {
+>>> -    .capabilities        = PERF_PMU_CAP_SAMPLING,
+>>> +    .capabilities        = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>>>          .pmu_enable        = x86_pmu_enable,
+>>>        .pmu_disable        = x86_pmu_disable,
+>>> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+>>> index 72d8f38d0aa5..bc772a3bf411 100644
+>>> --- a/drivers/perf/arm_pmu.c
+>>> +++ b/drivers/perf/arm_pmu.c
+>>> @@ -877,6 +877,7 @@ struct arm_pmu *armpmu_alloc(void)
+>>>             * specific PMU.
+>>>             */
+>>>            .capabilities    = PERF_PMU_CAP_SAMPLING |
+>>> +                  PERF_PMU_CAP_RAW_EVENTS |
+>>>                      PERF_PMU_CAP_EXTENDED_REGS |
+>>>                      PERF_PMU_CAP_EXTENDED_HW_TYPE,
+>>>        };
+>>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>>> index 183b7c48b329..c6ad036c0037 100644
+>>> --- a/include/linux/perf_event.h
+>>> +++ b/include/linux/perf_event.h
+>>> @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
+>>>    #define PERF_PMU_CAP_EXTENDED_HW_TYPE    0x0100
+>>>    #define PERF_PMU_CAP_AUX_PAUSE        0x0200
+>>>    #define PERF_PMU_CAP_AUX_PREFER_LARGE    0x0400
+>>> +#define PERF_PMU_CAP_RAW_EVENTS        0x0800
+>>>      /**
+>>>     * pmu::scope
+>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>> index 71b2a6730705..2ecee76d2ae2 100644
+>>> --- a/kernel/events/core.c
+>>> +++ b/kernel/events/core.c
+>>> @@ -12556,11 +12556,26 @@ static inline bool has_extended_regs(struct perf_event *event)
+>>>               (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK);
+>>>    }
+>>>    +static bool is_raw_pmu(const struct pmu *pmu)
+>>> +{
+>>> +    return pmu->type == PERF_TYPE_RAW ||
+>>> +           pmu->capabilities & PERF_PMU_CAP_RAW_EVENTS;
+>>> +}
+>>> +
+>>>    static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+>>>    {
+>>>        struct perf_event_context *ctx = NULL;
+>>>        int ret;
+>>>    +    /*
+>>> +     * Before touching anything, we can safely skip:
+>>> +     * - any event for a specific PMU which is not this one
+>>> +     * - any common event if this PMU doesn't support them
+>>> +     */
+>>> +    if (event->attr.type != pmu->type &&
+>>> +        (event->attr.type >= PERF_TYPE_MAX || is_raw_pmu(pmu)))
+>>
+>> Ah, that should be "!is_raw_pmu(pmu)" there (although it's not entirely the cause of the LKP report on the final patch.)
+>>
+>> Thanks,
+>> Robin.
+>>
+>>> +        return -ENOENT;
+>>> +
+>>>        if (!try_module_get(pmu->module))
+>>>            return -ENODEV;
+>>>    
+>>
+>>
 > 
-> On 2025/8/20 14:50, Yao Zi wrote:
+> Hi Robin,
 > 
-> > On Wed, Aug 20, 2025 at 01:56:57PM +0800, Youling Tang wrote:
-> > > From: Youling Tang <tangyouling@kylinos.cn>
-> > > 
-> > > This patch adds support for kexec_file on LoongArch.
-> > > 
-> > > The efi_kexec_load() as two parts:
-> > > - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
-> > > - the second part loads other segments (eg: initrd, cmdline)
-> > > 
-> > > This initrd will be passed to the second kernel via the command line
-> > > 'initrd=start,size'.
-> > > 
-> > > Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
-> > > but ELF format is not supported.
-> > > 
-> > > Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> > > ---
-> > >   arch/loongarch/Kconfig                     |   9 ++
-> > >   arch/loongarch/include/asm/image.h         |  17 +++
-> > >   arch/loongarch/include/asm/kexec.h         |  12 +++
-> > >   arch/loongarch/kernel/Makefile             |   1 +
-> > >   arch/loongarch/kernel/kexec_efi.c          | 111 +++++++++++++++++++
-> > >   arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
-> > >   arch/loongarch/kernel/machine_kexec_file.c | 117 +++++++++++++++++++++
-> > >   7 files changed, 289 insertions(+), 11 deletions(-)
-> > >   create mode 100644 arch/loongarch/kernel/kexec_efi.c
-> > >   create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
-> > ...
-> > 
-> > > diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
-> > > index 1f090736e71d..655d5836c4e8 100644
-> > > --- a/arch/loongarch/include/asm/image.h
-> > > +++ b/arch/loongarch/include/asm/image.h
-> > > @@ -36,5 +36,22 @@ struct loongarch_image_header {
-> > >   	uint32_t pe_header;
-> > >   };
-> > > +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
-> > > +
-> > > +/**
-> > > + * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
-> > > + *
-> > > + * Returns non-zero if 'MZ' signature is found.
-> > > + */
-> > > +
-> > > +static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
-> > > +{
-> > > +	if (!h)
-> > > +		return 0;
-> > > +
-> > > +	return (h->pe_sig[0] == loongarch_image_pe_sig[0]
-> > > +		&& h->pe_sig[1] == loongarch_image_pe_sig[1]);
-> > > +}
-> > This check is still too weak and doesn't improve comparing to v1.
-> > 
-> > > This could be simplified with a memcmp(). Also, this check isn't
-> > > strict enough: PE files for any architectures, and even legacy MS-DOS
-> > > COM executables all start with "MZ".
-> > I've pointed this out in my previous reply[1].
-> Previously, I had considered adding a specific LoongArch magic
-> number (such as "Loongson") in the loongarch_image_header, but
-> this is incompatible with older versions of the kernel, so it
-> remains the same without further checks.
+> what is the intention of that patch?
+> Can you explain that a bit more.
 
-All PE images ship a PE signature with offset 0x3c[1] and you could
-locate the PE header[2] by the offset provided by
-loongarch_image_header.pe_header and check its machine field[3], which
-should be 0x6264 for 64-bit LoongArch executables and 0x6232 for 32-bit
-ones. At least this ensures it's a LoongArch kernel image.
+The background here is that, in this context, we essentially have 3 
+distinct categories of PMU driver:
 
-> > >   #endif /* __ASSEMBLY__ */
-> > >   #endif /* __ASM_IMAGE_H */
-> > ...
-> > 
-> > > diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
-> > > new file mode 100644
-> > > index 000000000000..7741f1139a12
-> > > --- /dev/null
-> > > +++ b/arch/loongarch/kernel/kexec_efi.c
-> > ...
-> > 
-> > > +static void *efi_kexec_load(struct kimage *image,
-> > > +				char *kernel, unsigned long kernel_len,
-> > > +				char *initrd, unsigned long initrd_len,
-> > > +				char *cmdline, unsigned long cmdline_len)
-> > > +{
-> > > +	struct loongarch_image_header *h;
-> > > +	struct kexec_buf kbuf;
-> > > +	unsigned long text_offset, kernel_segment_number;
-> > > +	struct kexec_segment *kernel_segment;
-> > > +	int ret;
-> > > +
-> > > +	h = (struct loongarch_image_header *)kernel;
-> > > +	if (!h->image_size)
-> > > +		return ERR_PTR(-EINVAL);
-> > > +
-> > > +	/* Load the kernel */
-> > > +	kbuf.image = image;
-> > > +	kbuf.buf_max = ULONG_MAX;
-> > > +	kbuf.top_down = false;
-> > > +
-> > > +	kbuf.buffer = kernel;
-> > > +	kbuf.bufsz = kernel_len;
-> > > +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> > > +	kbuf.memsz = le64_to_cpu(h->image_size);
-> > > +	text_offset = le64_to_cpu(h->text_offset);
-> > > +	kbuf.buf_min = text_offset;
-> > > +	kbuf.buf_align = SZ_2M;
-> > > +
-> > > +	kernel_segment_number = image->nr_segments;
-> > > +
-> > > +	/*
-> > > +	 * The location of the kernel segment may make it impossible to satisfy
-> > > +	 * the other segment requirements, so we try repeatedly to find a
-> > > +	 * location that will work.
-> > > +	 */
-> > > +	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
-> > > +		/* Try to load additional data */
-> > > +		kernel_segment = &image->segment[kernel_segment_number];
-> > > +		ret = load_other_segments(image, kernel_segment->mem,
-> > > +					  kernel_segment->memsz, initrd,
-> > > +					  initrd_len, cmdline, cmdline_len);
-> > > +		if (!ret)
-> > > +			break;
-> > > +
-> > > +		/*
-> > > +		 * We couldn't find space for the other segments; erase the
-> > > +		 * kernel segment and try the next available hole.
-> > > +		 */
-> > > +		image->nr_segments -= 1;
-> > > +		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
-> > > +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> > > +	}
-> > > +
-> > > +	if (ret) {
-> > > +		pr_err("Could not find any suitable kernel location!");
-> > > +		return ERR_PTR(ret);
-> > > +	}
-> > > +
-> > > +	kernel_segment = &image->segment[kernel_segment_number];
-> > > +
-> > > +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
-> > > +	image->start = kernel_segment->mem + h->kernel_entry - text_offset;
-> > And this still assumes the loaded, secondary kernel is relocatable,
-> > with neither extra check nor comment explaining its limitation.
-> > 
-> > Please see my previous reply[2] that explains why loading a
-> > non-relocatble kernel with kexec_file API is reasonable.
-> LoongArch is a non-position independent (non-PIE) kernel when
-> the RELOCATABLE option is not enabled, the kernel contains certain
-> instructions such as la.abs, which prevent it from being relocated to
-> arbitrary memory addresses for execution. As a result, limitations
-> exist that make features like kdump or kexec_file dependent on
-> the RELOCATABLE option.
-> 
-> Strictly speaking, we need to add additional checks: if the kernel is
-> non-relocatable, the loading operation should fail directly.
+- Older/simpler CPU PMUs which register as PERF_TYPE_RAW and accept 
+raw/hardware events
+- Newer/heterogeneous CPU PMUs which register as a dynamic type, and 
+accept both raw/hardware events and events of their own type
+- Other (mostly uncore) PMUs which only accept events of their own type
 
-Agree.
+These days that third one is by far the majority, so it seems 
+increasingly unreasonable and inefficient to always offer every kind of 
+event to every driver, and so force nearly all of them to have the same 
+boilerplate code to refuse events they don't want. The core code is 
+already in a position to be able to assume that a PERF_TYPE_RAW PMU 
+wants "raw" events and a typed PMU wants its own events, so the only 
+actual new thing we need is a way to discern the 5 drivers in the middle 
+category - where s390 dominates :) - from the rest in the third.
 
-> For a
-> running kernel, we can easily determine this by calling
-> kallsyms_lookup_name("relocate_kernel"). However, for a kernel
-> that is being loaded but has not yet started execution, it is difficult
-> to easily determine whether the currently loaded kernel has the
-> RELOCATABLE configuration option enabled.
+The way the check itself ends up structured is that the only time we'll 
+now offer an event to a driver of a different type is if it's a "raw" 
+event and the driver has asked to be offered them (either by registering 
+as PERF_TYPE_RAW or with the new cap). Otherwise we can safely assume 
+that this PMU won't want this event, and so skip straight to trying the 
+next one. We can get away with the single PERF_TYPE_MAX check for all 
+"raw" events, since the drivers which do handle them already have to 
+consider the exact type to discern between RAW/HARDWARE/HW_CACHE, and 
+thus must reject SOFTWARE/TRACEPOINT/BREAKPOINT events anyway, but I 
+could of course make that more specific if people prefer. Conversely, 
+since the actual software/tracepoint/breakpoint PMUs won't pass the 
+is_raw_pmu() check either, and thus will only be given their own events, 
+I could remove the type checking from their event_init routines as well, 
+but I thought that might be perhaps a little too subtle as-is.
 
-I understand the difficulty, thus IMHO a comment is helpful here to
-remind the reader of lack of relocatability checks.
+BTW if the s390 drivers are intended to coexist then I'm not sure they 
+actually handle sharing PERF_TYPE_RAW events very well - what happens to 
+any particular event seems ultimately largely dependent on the order in 
+which the drivers happen to register - but that's a pre-existing issue 
+and this series shouldn't change anything in that respect. (As it 
+similarly shouldn't affect the trick of the first matching driver 
+rewriting the event type to "forward" it to another driver later in the 
+list.)
 
-Best regards,
-Yao Zi
-
-> For ELF format images, we can determine whether the loaded image
-> contains the ".la_abs" section in the following way:
-> static struct mem_shdr *laabs_section(const struct mem_ehdr *ehdr)
-> {
-> ������� struct mem_shdr *shdr, *shdr_end;
-> ������� unsigned char *strtab;
-> 
-> ������� strtab = (unsigned char *)ehdr->e_shdr[ehdr->e_shstrndx].sh_data;
-> ������� shdr_end = &ehdr->e_shdr[ehdr->e_shnum];
-> ������� for (shdr = ehdr->e_shdr; shdr != shdr_end; shdr++) {
-> ��������������� if (shdr->sh_size &&
-> ����������������������� strcmp((char *)&strtab[shdr->sh_name], ".la_abs") ==
-> 0) {
-> ����������������������� return shdr;
-> ��������������� }
-> ������� }
-> 
-> ������� return NULL;
-> }
-> 
-> Thanks,
-> Youling.
-> > 
-> > > +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> > > +		      kernel_segment->mem, kbuf.bufsz,
-> > > +		      kernel_segment->memsz);
-> > > +
-> > > +	return NULL;
-> > > +}
-> > > +
-> > > +const struct kexec_file_ops kexec_efi_ops = {
-> > > +	.probe = efi_kexec_probe,
-> > > +	.load = efi_kexec_load,
-> > > +};
-> > Thanks,
-> > Yao Zi
-> > 
-> > [1]: https://lore.kernel.org/all/aJojDiHWi8cgvA2W@pie/
-> > [2]: https://lore.kernel.org/all/aJwFa8x5BQMouB1y@pie/
-> 
-
-[1]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#signature-image-only
-[2]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#coff-file-header-object-and-image
-[3]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#machine-types
+Thanks,
+Robin.
