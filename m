@@ -1,135 +1,104 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8DC32147F9
-	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 02:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1CB1F948
+	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 03:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755657589; cv=none; b=ZgJkDhmj/8wEGDNGG8UScdBBCMQNsQq7HUhfK5VarJNEzUyBMTdfKmAQsM6MHTp5KcDVhT5RHce36Hyqw1OvZM4fC3z2kp5gzDEPjwZ3nxAYIm7Pw7M6FSlQLEXb/LT/XLxfwT1GxJzv8WDbLizF+Ub4YByu+Sgc8bz9LE+FY3o=
+	t=1755658999; cv=none; b=gRZatXw604icjp7HimW1KM9i8w4BgQRNlvFVJL+yVN9Chx/5frKEgOTbEjYr9/1x5eT4r1zY8+drTEoFyYjNfMh250CRx1EjNVBkcA4lAHV9/jPvLCtkgKe4WppjKtVpCL7QnG6Wutm3dzlmqRo/gUsp8vmQnNyPOU5wrekjApA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755657589; c=relaxed/simple;
-	bh=GuOwmwD8ZcZfR4Q5ezl3SsmSMqXl0ADPOaqErNpn4VY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ijTfeHPC+7im8H7uuiQppRtKhrK/jAiWCiLZiuoJwQJX+39CnjMyuFxwB4v/aTRt4B61+EPsf/uvg5m82uVZVGO3LGqur+WKFGjksPxdgSEEKYHw07xkkVqt+MjuqYNM27GZMUHW+ruVltJilC/xG1W7SVDF/v7Ss09arAT0mEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dx_tJmNaVoKLIAAA--.1299S3;
-	Wed, 20 Aug 2025 10:39:34 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by front1 (Coremail) with SMTP id qMiowJCxM+RdNaVoKMhZAA--.12938S2;
-	Wed, 20 Aug 2025 10:39:26 +0800 (CST)
-From: Xianglai Li <lixianglai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Song Gao <gaosong@loongson.cn>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V2] LoongArch: time: Fix the issue of high cpu usage of vcpu threads in virtual machines
-Date: Wed, 20 Aug 2025 10:15:51 +0800
-Message-Id: <20250820021551.911917-1-lixianglai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+	s=arc-20240116; t=1755658999; c=relaxed/simple;
+	bh=dUb5J4XH+q4916VJxIDDUCe2v7YaXyLg5gTQb9sEMLQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ElTMVNibVW1ze910DZXWu9gvfIa3/kPr8B4Z7jVstOon0Z5xwsyDoSQy7zX4f9Bnw/bVn+PYEUNJSjMqpkr9IsEvxIUcyfahzSQ88iwGKidc5OivrdyoSQRHJGeTKZpSQg3rNLMJAgv6G+lPrHb1XiZ715qmSJBz1nEr4mgT170=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TacO3eIF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TacO3eIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 301C0C4CEF4
+	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 03:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755658999;
+	bh=dUb5J4XH+q4916VJxIDDUCe2v7YaXyLg5gTQb9sEMLQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TacO3eIFWhHfC9iieBE0ZVulubtG93C+xWiJ94hVccdRj9Od4S0EHBmnzP8cynW+q
+	 JWawgVH9Q+GGZQZr1Y4eT11DaWFe5AJNn3JdPJ0ixY6avteUXXDFM4Kj7lrvwhJYu9
+	 62C4m8xbI5lhv4I8VO2xDhOXGMwReZ+p6X2VTwvFjv77+Fyumm3lT+e/uSxHHTbsxe
+	 fujBmYHh++k6QVhrel0J9R/DBAMA2+aCcRtVRBP/vNd5lCnfda9+NGX3Uq0+9uyXOn
+	 7RaKwC7tqvTyPKRXTfKiKL6d8a8j0wBz2BqAjqrGFeq9DoYAgNm++KpczvtvYr8gAo
+	 K95syn8Sx8xRQ==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6188b5ad4f0so8083977a12.0
+        for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 20:03:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXUat1PXf730bkTBy07Abdm183A3J5Ijzyq8/Z9dFj1bZJE05IkqWQKbRJtJCoN17wTnLoR86jGzfA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyOtY2MYZquYSYOkujQ+ZcIh0Kf9REj2Vz4WScClDs5W34R7M/C
+	ZkmXaQ2hDWkBRi9sX6Vr73JkRP5L5m9iTwo5Ac6diYw+I3USuHE8DV3LBBpYweqSoTHvNTaP+8C
+	LCmSJ+Xp48AecbCwsoABqbGolfYIRLYk=
+X-Google-Smtp-Source: AGHT+IGipsXdMkhLBiLLaqBjRzQlCXf5lG2voaM7ZlbwMucGPhtm3dMQcQrGXzIeWhNwxO91JT0saO4PJ+B8zwJNi0k=
+X-Received: by 2002:a05:6402:208a:b0:615:b0e2:124b with SMTP id
+ 4fb4d7f45d1cf-61a9762bcb8mr1222075a12.24.1755658997791; Tue, 19 Aug 2025
+ 20:03:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxM+RdNaVoKMhZAA--.12938S2
-X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20250722094734.4920545b@gandalf.local.home> <2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
+ <20250723214659.064b5d4a@gandalf.local.home> <15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
+ <CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com> <20250819202715.6f1cf0d6@gandalf.local.home>
+In-Reply-To: <20250819202715.6f1cf0d6@gandalf.local.home>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 20 Aug 2025 11:03:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5y8Tckih4jd3C8Q-M6OZiw2szCYuxLQfBXehpWSvrstA@mail.gmail.com>
+X-Gm-Features: Ac12FXz1padV2khVDKOyi3ekCMiGCzktzpAq5rTbzGUfDyfjZIQ6IiG85R2dpeE
+Message-ID: <CAAhV-H5y8Tckih4jd3C8Q-M6OZiw2szCYuxLQfBXehpWSvrstA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of generic code
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Bibo Mao <maobibo@loongson.cn>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When the cpu is offline, the timer under loongarch is not correctly closed,
-resulting in an excessively high cpu usage rate of the offline vcpu thread
-in the virtual machine.
+On Wed, Aug 20, 2025 at 8:27=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Thu, 24 Jul 2025 19:56:42 +0800
+> Huacai Chen <chenhuacai@kernel.org> wrote:
+>
+> > On Thu, Jul 24, 2025 at 9:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> > >
+> > >
+> > >
+> > > On 2025/7/24 =E4=B8=8A=E5=8D=889:46, Steven Rostedt wrote:
+> > > > On Thu, 24 Jul 2025 09:39:40 +0800
+> > > > Bibo Mao <maobibo@loongson.cn> wrote:
+> > > >
+> > > >>>    #define kvm_fpu_load_symbol      \
+> > > >>>     {0, "unload"},          \
+> > > >>>     {1, "load"}
+> > > >>>
+> > > >> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> > > >
+> > > > Thanks,
+> > > >
+> > > > Should this go through the loongarch tree or should I take it?
+> > > Huacai,
+> > >
+> > > What is your point about this?
+> > I will take it, thanks.
+> >
+> > Huacai
+>
+> Did this fall through the cracks?
+I don't know what this means, but I think you are pinging.
 
-To correctly close the timer, we have made the following modifications:
+This patch appears after I sent the KVM PR for 6.17, and it isn't a
+bugfix, so it will go to 6.18.
 
-Register the cpu hotplug timer start event for loongarch.This event will
-be called to close the timer when the cpu is offline.
+Huacai
 
-Clear the timer interrupt when the timer is turned off, Because before the
-timer is turned off, there may be a timer interrupt that has been in the
-pending state due to the interruption of the disabled, which also affects
-the halt state of the offline vcpu.
-
-Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
----
-V1->V2:
-1.Add the implementation of the function arch_timer_starting
-2.Add more descriptions about clear timer interrupts in the commit message
-3.Delete useless prints
-4.Adjust the calling position of the function cpuhp_setup_state
-5.Adjust the timer interrupt clear position
-
- arch/loongarch/kernel/time.c | 22 ++++++++++++++++++++++
- include/linux/cpuhotplug.h   |  1 +
- 2 files changed, 23 insertions(+)
-
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index 367906b10f81..09b95f28bdcc 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -12,6 +12,7 @@
- #include <linux/kernel.h>
- #include <linux/sched_clock.h>
- #include <linux/spinlock.h>
-+#include <linux/cpu.h>
- 
- #include <asm/cpu-features.h>
- #include <asm/loongarch.h>
-@@ -102,6 +103,23 @@ static int constant_timer_next_event(unsigned long delta, struct clock_event_dev
- 	return 0;
- }
- 
-+static int arch_timer_dying_cpu(unsigned int cpu)
-+{
-+	constant_set_state_shutdown(this_cpu_ptr(&constant_clockevent_device));
-+
-+	/* Clear Timer Interrupt */
-+	write_csr_tintclear(CSR_TINTCLR_TI);
-+
-+	return 0;
-+}
-+
-+static int arch_timer_starting(unsigned int cpu)
-+{
-+	set_csr_ecfg(ECFGF_TIMER);
-+
-+	return 0;
-+}
-+
- static unsigned long get_loops_per_jiffy(void)
- {
- 	unsigned long lpj = (unsigned long)const_clock_freq;
-@@ -172,6 +190,10 @@ int constant_clockevent_init(void)
- 	lpj_fine = get_loops_per_jiffy();
- 	pr_info("Constant clock event device register\n");
- 
-+	cpuhp_setup_state(CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
-+			  "clockevents/loongarch/timer:starting",
-+			  arch_timer_starting, arch_timer_dying_cpu);
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index edfa61d80702..6606c1546afc 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -159,6 +159,7 @@ enum cpuhp_state {
- 	CPUHP_AP_PERF_ARM_STARTING,
- 	CPUHP_AP_PERF_RISCV_STARTING,
- 	CPUHP_AP_ARM_L2X0_STARTING,
-+	CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
- 	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
- 	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
- 	CPUHP_AP_ARM_ARCH_TIMER_EVTSTRM_STARTING,
--- 
-2.39.1
-
+>
+> -- Steve
