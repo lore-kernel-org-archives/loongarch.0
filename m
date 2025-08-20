@@ -1,78 +1,726 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663C631DDB4
-	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 13:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C56C2E8B99
+	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 15:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755696919; cv=none; b=d68zRNXmOmTiCWfA+6FKlWozePlePk4kee25y2yvukj8aSBzLN7upRAQA/htU45O+QgenCMVH0/It4HUGOqy0sxIgyNAvZf7i8cD/HporQX/dUd67H2tEpG8XSnW1Fhl2Dbq/Iiik9Rp94WKLG7dXaGusCtRjGihdAxXXvlcYEA=
+	t=1755702923; cv=none; b=ViuS8Sj6Vv1yTKi8m58CGVfkdPmwcxtLJMfScOC0DHu/7D8Fm+9rLaBj3Vd42x7kzTb864VQUfpq0l6wynZMPgrOPk3PbxubZx2ekh2aPOP1lDIqZMogdR5bwuw8p3mZQiZuzf/XVThwmnaZNoTUfyvYJnTKp78K2sXOEnUF/Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755696919; c=relaxed/simple;
-	bh=6ELQVz1pCGrjhQgs+Cr+aXgY3t+o6KTC0x0kgzj1D9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VV3p04PZG37iZOdA9byfzKMdQmDhtiqb3WH1CybTaz9W2iBvS3eHIKdRUQC3CrzA9ZN9fYbgreDAHFJODTMJNGrHKxX8dF1glJlwSboXiA9R9Xb/8NrVt26hKh047aQzSoQcGH8J5fabnexz93Ttb6k97cZ43rka6cPSuakP65c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 8AABB59476;
-	Wed, 20 Aug 2025 13:35:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 405C020018;
-	Wed, 20 Aug 2025 13:35:13 +0000 (UTC)
-Date: Wed, 20 Aug 2025 09:35:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Bibo Mao <maobibo@loongson.cn>, LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of
- generic code
-Message-ID: <20250820093515.17afe135@gandalf.local.home>
-In-Reply-To: <CAAhV-H5y8Tckih4jd3C8Q-M6OZiw2szCYuxLQfBXehpWSvrstA@mail.gmail.com>
-References: <20250722094734.4920545b@gandalf.local.home>
-	<2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
-	<20250723214659.064b5d4a@gandalf.local.home>
-	<15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
-	<CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com>
-	<20250819202715.6f1cf0d6@gandalf.local.home>
-	<CAAhV-H5y8Tckih4jd3C8Q-M6OZiw2szCYuxLQfBXehpWSvrstA@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1755702923; c=relaxed/simple;
+	bh=hBrg8O0g7jixSViAPifIWIovm1UHUOv6ejAMd9uN2MU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bgS20adTpobQQ/X2mZu72COKrCbmynXdA2SeoZp7qtmV71VK2rCgJciYGKPLNSUM/VO8FuVnoASeLTNcSckbx3AMW49L0JbEP1qH8NQHFoC3ZDTR3EG9UpCbK79O+zY1PTXLbLebBX0vuCYKijFyYCDSAvcLGifueWvu/MyAN8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ju0SUztp; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ju0SUztp"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4b1099192b0so295191cf.0
+        for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 08:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755702919; x=1756307719; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ne63wwGU8OAFMNP3Lx0kvltgtXa3RxoxCeJ/ZWsCvSY=;
+        b=Ju0SUztp35mqnj7RWOHTEbMIGCi79KHOjGDWUXCeirn/9FlhXkb0hAYaHMoyilHLv9
+         ozxrFDYL9VExOJ4SAOt/bVUihhE81+3vLJz+ZSgSm4ivGYKX+Ik1pOWdcTxUMktaW61o
+         Gls9LOd+1x381XGUliDaLT3Dd6dnmd0dDGapl7nCr6vNWeiVLM36U4SZvDq1MCPOlJSC
+         Un+SSdA8L4C0WMNPIYioP9zx8EP/haJYtLyAq87ujJgZEOqQ2rVylwx+5P7R29c0Vpqa
+         hRIBCDleLdi8GBnSIT4rgKdNXJkOtbQeQnZ33vJA+xD+XdsGa1LYxgCsQi4+vzsdmfyF
+         Uyng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755702919; x=1756307719;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ne63wwGU8OAFMNP3Lx0kvltgtXa3RxoxCeJ/ZWsCvSY=;
+        b=uBFl4ZtjWjOwzgnxKxK54Q0V4M7Vk1KgHreen+ujE86zU7xhNxt4Wj5tyOV8tQ+f3H
+         yfFVLn+AGpyvcmhIPm3mjLENDyPqb1FFoHL3XOHsKs2UbbvUStOI3WRuDEyQBXLAoUGi
+         VtuHMBSX7rHEENJZIU7kiVYhc+s52JoeLCth23aBCCPORhxWJqzos8LrXomphTZgyJZ6
+         YjOOYWrUMqAGBO++XkS35ZZmFuWn6Y9gHRDV2BzSyHxZ4x3m7KF2TlVrGGHGy0J3bqMV
+         37ySXFxH9HwATSr+Rs4g2GSYbfpIbXiKjueIw8WYaBjDku9ZWEWX780Roe7aDZDENwzJ
+         Dlqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWlGT9hxZ1UQL5WJWcxc5PmJalCUIFgSlJ99+RZ50qb0GeU5u7cUl9Y7c6jLC1TVKs5kiqqoG23Dss=@lists.linux.dev
+X-Gm-Message-State: AOJu0YygiwHflc6l7YlLz92izVM//CkFE1XS6fNhsFkKLcwVq7FYqPfU
+	Edemik0xH77ndqQfvX8LhNJs+qgEmhw+PrMzf4Nv8egqqv+y9NUfUz/s8Iowb83BOKMvQigyjAd
+	5IWw9m8Pzx5hMHjwuCzOJHqxA47fvkM0=
+X-Gm-Gg: ASbGncuOt7FgcGnzVE/JJpqgiEIYG+Y33qB2aRkF/UY04TAuhwz+mSOTdosiiXR8sOG
+	jUdzHxG/7MPinn1+tQsvg5XngSq/k8THI+xWit7pxCFRJpCce9BBVlaojtN9DsiCygXCC+xIC5w
+	nlcTQRVnXD8xYsANGlGUB4KiqGlpF2eOkfPMLTRIais52qAduh1x9mwBkD3sgK/I4Zmb4hajgfp
+	EYm1+k=
+X-Google-Smtp-Source: AGHT+IEhvcBpHbyb8zJE1tdIUXgei1yo5S1lhVhBrc3v8eD/pw88pf9i2sKakywspMWJKV8iIiStAODFgEDiO+8vOpk=
+X-Received: by 2002:a05:622a:1450:b0:4af:1bc1:781e with SMTP id
+ d75a77b69052e-4b2918e2d78mr34004311cf.0.1755702918187; Wed, 20 Aug 2025
+ 08:15:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 9k4eh3oijqqgwyg3ppxk7whhmtf5pw8y
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 405C020018
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18nofUHrM87h1aA5I0GIXVNjvJt8sQYOls=
-X-HE-Tag: 1755696913-536970
-X-HE-Meta: U2FsdGVkX188CoBRITJc9sfrnjFJZAnQdfzvrGwI+DU2SR+8FpnwMpMY9Dva2BYtul0r8pAB7T3yfQGJdYFpl447Xnu+V9Cq2uh3G3yDIL70vxUEj+nGXp6og8B0PAdNjFvch7xTDKms7ipP6oJ1u5YO/7LvtcLsH/IM+pRmIcq7Ia1NrLkZ5DPMg0GTrkVZez1+2TvcfaqCQ1SnDMSU0aZb0+B2z4hh39OzbS+la0dtt8QVxLTEo3Y1r+6BGvkz/gQdLfC15IdkUoCmo50gnbHoZ1Vg5Dv+O6Y4qsMOF+DUS1SoG4YNpWfUbl8sRAAyTQbsa9TTeLn47+CqBQBTSd06zUo65A3C
+References: <20250820103956.394955-1-hengqi.chen@gmail.com>
+In-Reply-To: <20250820103956.394955-1-hengqi.chen@gmail.com>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Wed, 20 Aug 2025 08:15:06 -0700
+X-Gm-Features: Ac12FXyvYTosJS9opCF_VZUPe0FWbpaLM0LfVzg5HccfqkRuq8f9okrm2jBPRv4
+Message-ID: <CAK3+h2zGKRLe4OHjEKf4aQZOFR6X9vFE+RRvDdm-9Xxmy=Zk5Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Sign extend struct ops return values properly
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: chenhuacai@kernel.org, yangtiezhu@loongson.cn, jianghaoran@kylinos.cn, 
+	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	bpf@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 20 Aug 2025 11:03:05 +0800
-Huacai Chen <chenhuacai@kernel.org> wrote:
+On Wed, Aug 20, 2025 at 5:06=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> The ns_bpf_qdisc selftest triggers a kernel panic:
+>
+>     [ 2738.595309] CPU 0 Unable to handle kernel paging request at virtua=
+l address 0000000000741d58, era =3D=3D 90000000851b5ac0, ra =3D=3D 90000000=
+851b5aa4
+>     [ 2738.596716] Oops[#1]:
+>     [ 2738.596980] CPU: 0 UID: 0 PID: 449 Comm: test_progs Tainted: G    =
+       OE       6.16.0+ #3 PREEMPT(full)
+>     [ 2738.597184] Tainted: [O]=3DOOT_MODULE, [E]=3DUNSIGNED_MODULE
+>     [ 2738.597265] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown=
+ 2/2/2022
+>     [ 2738.597386] pc 90000000851b5ac0 ra 90000000851b5aa4 tp 90000001076=
+b8000 sp 90000001076bb600
+>     [ 2738.597484] a0 0000000000741ce8 a1 0000000000000001 a2 90000001076=
+bb5c0 a3 0000000000000008
+>     [ 2738.597577] a4 90000001004c4620 a5 9000000100741ce8 a6 00000000000=
+00000 a7 0100000000000000
+>     [ 2738.597682] t0 0000000000000010 t1 0000000000000000 t2 9000000104d=
+24d30 t3 0000000000000001
+>     [ 2738.597835] t4 4f2317da8a7e08c4 t5 fffffefffc002f00 t6 90000001004=
+c4620 t7 ffffffffc61c5b3d
+>     [ 2738.597997] t8 0000000000000000 u0 0000000000000001 s9 00000000000=
+00050 s0 90000001075bc800
+>     [ 2738.598097] s1 0000000000000040 s2 900000010597c400 s3 00000000000=
+00008 s4 90000001075bc880
+>     [ 2738.598196] s5 90000001075bc8f0 s6 0000000000000000 s7 00000000007=
+41ce8 s8 0000000000000000
+>     [ 2738.598313]    ra: 90000000851b5aa4 __qdisc_run+0xac/0x8d8
+>     [ 2738.598553]   ERA: 90000000851b5ac0 __qdisc_run+0xc8/0x8d8
+>     [ 2738.598629]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC =
+-WE)
+>     [ 2738.598991]  PRMD: 00000004 (PPLV0 +PIE -PWE)
+>     [ 2738.599065]  EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
+>     [ 2738.599160]  ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
+>     [ 2738.599278] ESTAT: 00010000 [PIL] (IS=3D ECode=3D1 EsubCode=3D0)
+>     [ 2738.599364]  BADV: 0000000000741d58
+>     [ 2738.599429]  PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
+>     [ 2738.599513] Modules linked in: bpf_testmod(OE) [last unloaded: bpf=
+_testmod(OE)]
+>     [ 2738.599724] Process test_progs (pid: 449, threadinfo=3D000000009af=
+02b3a, task=3D00000000e9ba4956)
+>     [ 2738.599916] Stack : 0000000000000000 90000001075bc8ac 900000008695=
+24a8 9000000100741ce8
+>     [ 2738.600065]         90000001075bc800 9000000100415300 90000001075b=
+c8ac 0000000000000000
+>     [ 2738.600170]         900000010597c400 900000008694a000 000000000000=
+0000 9000000105b59000
+>     [ 2738.600278]         90000001075bc800 9000000100741ce8 000000000000=
+0050 900000008513000c
+>     [ 2738.600381]         9000000086936000 0000000100094d4c fffffff40067=
+6208 0000000000000000
+>     [ 2738.600482]         9000000105b59000 900000008694a000 9000000086bf=
+0dc0 9000000105b59000
+>     [ 2738.600585]         9000000086bf0d68 9000000085147010 90000001075b=
+e788 0000000000000000
+>     [ 2738.600690]         9000000086bf0f98 0000000000000001 000000000000=
+0010 9000000006015840
+>     [ 2738.600795]         0000000000000000 9000000086be6c40 000000000000=
+0000 0000000000000000
+>     [ 2738.600901]         0000000000000000 4f2317da8a7e08c4 000000000000=
+0101 4f2317da8a7e08c4
+>     [ 2738.601007]         ...
+>     [ 2738.601062] Call Trace:
+>     [ 2738.601135] [<90000000851b5ac0>] __qdisc_run+0xc8/0x8d8
+>     [ 2738.601396] [<9000000085130008>] __dev_queue_xmit+0x578/0x10f0
+>     [ 2738.601482] [<90000000853701c0>] ip6_finish_output2+0x2f0/0x950
+>     [ 2738.601568] [<9000000085374bc8>] ip6_finish_output+0x2b8/0x448
+>     [ 2738.601646] [<9000000085370b24>] ip6_xmit+0x304/0x858
+>     [ 2738.601711] [<90000000853c4438>] inet6_csk_xmit+0x100/0x170
+>     [ 2738.601784] [<90000000852b32f0>] __tcp_transmit_skb+0x490/0xdd0
+>     [ 2738.601863] [<90000000852b47fc>] tcp_connect+0xbcc/0x1168
+>     [ 2738.601934] [<90000000853b9088>] tcp_v6_connect+0x580/0x8a0
+>     [ 2738.602019] [<90000000852e7738>] __inet_stream_connect+0x170/0x480
+>     [ 2738.602103] [<90000000852e7a98>] inet_stream_connect+0x50/0x88
+>     [ 2738.602175] [<90000000850f2814>] __sys_connect+0xe4/0x110
+>     [ 2738.602244] [<90000000850f2858>] sys_connect+0x18/0x28
+>     [ 2738.602320] [<9000000085520c94>] do_syscall+0x94/0x1a0
+>     [ 2738.602399] [<9000000083df1fb8>] handle_syscall+0xb8/0x158
+>     [ 2738.602502]
+>     [ 2738.602546] Code: 4001ad80  2400873f  2400832d <240073cc> 001137ff=
+  001133ff  6407b41f  001503cc  0280041d
+>     [ 2738.602724]
+>     [ 2738.602916] ---[ end trace 0000000000000000 ]---
+>     [ 2738.603210] Kernel panic - not syncing: Fatal exception in interru=
+pt
+>     [ 2738.603548] Kernel relocated by 0x83bb0000
+>     [ 2738.603622]  .text @ 0x9000000083db0000
+>     [ 2738.603699]  .data @ 0x9000000085690000
+>     [ 2738.603753]  .bss  @ 0x9000000087491e00
+>     [ 2738.603900] ---[ end Kernel panic - not syncing: Fatal exception i=
+n interrupt ]---
+>
+> The bpf_fifo_dequeue prog returns a skb which is a pointer.
+> The pointer is treated as a 32bit value and sign extend to
+> 64bit in epilogue. This behavior is right for most bpf prog
+> types but wrong for struct ops which requires LoongArch ABI.
+>
+> So let's sign extend struct ops return values according to
+> the return value spec in function model.
+>
+> Fixes: 6abf17d690d8 ("LoongArch: BPF: Add struct ops support for trampoli=
+ne")
+> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> ---
+>  arch/loongarch/net/bpf_jit.c | 47 ++++++++++++++++++++++++++++++------
+>  1 file changed, 40 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index abfdb6bb5c38..4077565c9934 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1361,7 +1361,8 @@ static void restore_args(struct jit_ctx *ctx, int n=
+args, int args_off)
+>  }
+>
+>  static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l=
+,
+> -                          int args_off, int retval_off, int run_ctx_off,=
+ bool save_ret)
+> +                          const struct btf_func_model *m, int args_off,
+> +                          int retval_off, int run_ctx_off, bool save_ret=
+)
+>  {
+>         int ret;
+>         u32 *branch;
+> @@ -1425,13 +1426,14 @@ static int invoke_bpf_prog(struct jit_ctx *ctx, s=
+truct bpf_tramp_link *l,
+>  }
+>
+>  static void invoke_bpf_mod_ret(struct jit_ctx *ctx, struct bpf_tramp_lin=
+ks *tl,
+> -                              int args_off, int retval_off, int run_ctx_=
+off, u32 **branches)
+> +                              const struct btf_func_model *m, int args_o=
+ff,
+> +                              int retval_off, int run_ctx_off, u32 **bra=
+nches)
+>  {
+>         int i;
+>
+>         emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -retval=
+_off);
+>         for (i =3D 0; i < tl->nr_links; i++) {
+> -               invoke_bpf_prog(ctx, tl->links[i], args_off, retval_off, =
+run_ctx_off, true);
+> +               invoke_bpf_prog(ctx, tl->links[i], m, args_off, retval_of=
+f, run_ctx_off, true);
+>                 emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -=
+retval_off);
+>                 branches[i] =3D (u32 *)ctx->image + ctx->idx;
+>                 emit_insn(ctx, nop);
+> @@ -1448,6 +1450,30 @@ void arch_free_bpf_trampoline(void *image, unsigne=
+d int size)
+>         bpf_prog_pack_free(image, size);
+>  }
+>
+> +/*
+> + * Sign-extend the register if necessary
+> + */
+> +static int sign_extend(struct jit_ctx *ctx, int r, u8 size)
+> +{
+> +       switch (size) {
+> +       case 1:
+> +               emit_insn(ctx, sllid, r, r, 56);
+> +               emit_insn(ctx, sraid, r, r, 56);
+> +               return 0;
+> +       case 2:
+> +               emit_insn(ctx, sllid, r, r, 48);
+> +               emit_insn(ctx, sraid, r, r, 48);
+> +               return 0;
+> +       case 4:
+> +               emit_insn(ctx, addiw, r, r, 0);
+> +               return 0;
+> +       case 8:
+> +               return 0;
+> +       default:
+> +               return -1;
+> +       }
+> +}
+> +
+>  static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf=
+_tramp_image *im,
+>                                          const struct btf_func_model *m, =
+struct bpf_tramp_links *tlinks,
+>                                          void *func_addr, u32 flags)
+> @@ -1602,8 +1628,8 @@ static int __arch_prepare_bpf_trampoline(struct jit=
+_ctx *ctx, struct bpf_tramp_i
+>         }
+>
+>         for (i =3D 0; i < fentry->nr_links; i++) {
+> -               ret =3D invoke_bpf_prog(ctx, fentry->links[i], args_off, =
+retval_off,
+> -                                     run_ctx_off, flags & BPF_TRAMP_F_RE=
+T_FENTRY_RET);
+> +               ret =3D invoke_bpf_prog(ctx, fentry->links[i], m, args_of=
+f, retval_off,
+> +                             run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY=
+_RET);
+>                 if (ret)
+>                         return ret;
+>         }
+> @@ -1612,7 +1638,7 @@ static int __arch_prepare_bpf_trampoline(struct jit=
+_ctx *ctx, struct bpf_tramp_i
+>                 if (!branches)
+>                         return -ENOMEM;
+>
+> -               invoke_bpf_mod_ret(ctx, fmod_ret, args_off, retval_off, r=
+un_ctx_off, branches);
+> +               invoke_bpf_mod_ret(ctx, fmod_ret, m, args_off, retval_off=
+, run_ctx_off, branches);
+>         }
+>
+>         if (flags & BPF_TRAMP_F_CALL_ORIG) {
+> @@ -1638,7 +1664,8 @@ static int __arch_prepare_bpf_trampoline(struct jit=
+_ctx *ctx, struct bpf_tramp_i
+>         }
+>
+>         for (i =3D 0; i < fexit->nr_links; i++) {
+> -               ret =3D invoke_bpf_prog(ctx, fexit->links[i], args_off, r=
+etval_off, run_ctx_off, false);
+> +               ret =3D invoke_bpf_prog(ctx, fexit->links[i], m, args_off=
+,
+> +                                     retval_off, run_ctx_off, false);
+>                 if (ret)
+>                         goto out;
+>         }
+> @@ -1657,6 +1684,12 @@ static int __arch_prepare_bpf_trampoline(struct ji=
+t_ctx *ctx, struct bpf_tramp_i
+>         if (save_ret) {
+>                 emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -=
+retval_off);
+>                 emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, =
+-(retval_off - 8));
+> +               if (is_struct_ops) {
+> +                       move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]=
+);
+> +                       ret =3D sign_extend(ctx, LOONGARCH_GPR_A0, m->ret=
+_size);
+> +                       if (ret)
+> +                               goto out;
+> +               }
+>         }
+>
+>         emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off=
+);
+> --
+> 2.43.5
+>
 
-> > Did this fall through the cracks?  
-> I don't know what this means, but I think you are pinging.
+Tested-by: Vincent Li <vincent.mc.li@gmail.com>
 
-Sorry for the colloquialism, it's not actually the same as a ping. A ping
-is for something that had no response. This is more about the patch was
-acknowledged but did not go further. "Falling through the cracks" is like
-picking a bunch of things up with a bucket that has a crack in it. Some of
-those things may "fall through the crack" and not be processed.
-> 
-> This patch appears after I sent the KVM PR for 6.17, and it isn't a
-> bugfix, so it will go to 6.18.
+ [root@fedora bpf]# ./test_progs -t struct_ops -d struct_ops_multi_pages
+#15/1    bad_struct_ops/invalid_prog_reuse:OK
+#15/2    bad_struct_ops/unused_program:OK
+#15      bad_struct_ops:OK
+#408/1   struct_ops_autocreate/cant_load_full_object:OK
+#408/2   struct_ops_autocreate/can_load_partial_object:OK
+#408/3   struct_ops_autocreate/autoload_and_shadow_vars:OK
+#408/4   struct_ops_autocreate/optional_maps:OK
+#408     struct_ops_autocreate:OK
+#409/1   struct_ops_kptr_return/kptr_return:OK
+#409/2   struct_ops_kptr_return/kptr_return_fail__wrong_type:OK
+#409/3   struct_ops_kptr_return/kptr_return_fail__invalid_scalar:OK
+#409/4   struct_ops_kptr_return/kptr_return_fail__nonzero_offset:OK
+#409/5   struct_ops_kptr_return/kptr_return_fail__local_kptr:OK
+#409     struct_ops_kptr_return:OK
+#410/1   struct_ops_maybe_null/maybe_null:OK
+#410/2   struct_ops_maybe_null/maybe_null_fail:OK
+#410     struct_ops_maybe_null:OK
+#411/1   struct_ops_module/struct_ops_load:OK
+#411/2   struct_ops_module/struct_ops_not_zeroed:OK
+#411/3   struct_ops_module/struct_ops_incompatible:OK
+#411/4   struct_ops_module/struct_ops_null_out_cb:OK
+#411/5   struct_ops_module/struct_ops_forgotten_cb:OK
+#411/6   struct_ops_module/test_detach_link:OK
+#411/7   struct_ops_module/unsupported_ops:OK
+#411     struct_ops_module:OK
+#413/1   struct_ops_no_cfi/load_bpf_test_no_cfi:OK
+#413     struct_ops_no_cfi:OK
+#414/1   struct_ops_private_stack/private_stack:SKIP
+#414/2   struct_ops_private_stack/private_stack_fail:SKIP
+#414/3   struct_ops_private_stack/private_stack_recur:SKIP
+#414     struct_ops_private_stack:SKIP
+#415/1   struct_ops_refcounted/refcounted:OK
+#415/2   struct_ops_refcounted/refcounted_fail__ref_leak:OK
+#415/3   struct_ops_refcounted/refcounted_fail__global_subprog:OK
+#415/4   struct_ops_refcounted/refcounted_fail__tail_call:OK
+#415     struct_ops_refcounted:OK
+Summary: 8/25 PASSED, 3 SKIPPED, 0 FAILED
+[root@fedora bpf]#
+[root@fedora bpf]#
+[root@fedora bpf]# ./test_progs -t struct_ops -a fentry_test/fentry
+#15/1    bad_struct_ops/invalid_prog_reuse:OK
+#15/2    bad_struct_ops/unused_program:OK
+#15      bad_struct_ops:OK
+#109/1   fentry_test/fentry:OK
+#109     fentry_test:OK
+#408/1   struct_ops_autocreate/cant_load_full_object:OK
+#408/2   struct_ops_autocreate/can_load_partial_object:OK
+#408/3   struct_ops_autocreate/autoload_and_shadow_vars:OK
+#408/4   struct_ops_autocreate/optional_maps:OK
+#408     struct_ops_autocreate:OK
+#409/1   struct_ops_kptr_return/kptr_return:OK
+#409/2   struct_ops_kptr_return/kptr_return_fail__wrong_type:OK
+#409/3   struct_ops_kptr_return/kptr_return_fail__invalid_scalar:OK
+#409/4   struct_ops_kptr_return/kptr_return_fail__nonzero_offset:OK
+#409/5   struct_ops_kptr_return/kptr_return_fail__local_kptr:OK
+#409     struct_ops_kptr_return:OK
+#410/1   struct_ops_maybe_null/maybe_null:OK
+#410/2   struct_ops_maybe_null/maybe_null_fail:OK
+#410     struct_ops_maybe_null:OK
+#411/1   struct_ops_module/struct_ops_load:OK
+#411/2   struct_ops_module/struct_ops_not_zeroed:OK
+#411/3   struct_ops_module/struct_ops_incompatible:OK
+#411/4   struct_ops_module/struct_ops_null_out_cb:OK
+#411/5   struct_ops_module/struct_ops_forgotten_cb:OK
+#411/6   struct_ops_module/test_detach_link:OK
+#411/7   struct_ops_module/unsupported_ops:OK
+#411     struct_ops_module:OK
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+#413/1   struct_ops_no_cfi/load_bpf_test_no_cfi:OK
+#413     struct_ops_no_cfi:OK
+#414/1   struct_ops_private_stack/private_stack:SKIP
+#414/2   struct_ops_private_stack/private_stack_fail:SKIP
+#414/3   struct_ops_private_stack/private_stack_recur:SKIP
+#414     struct_ops_private_stack:SKIP
+#415/1   struct_ops_refcounted/refcounted:OK
+#415/2   struct_ops_refcounted/refcounted_fail__ref_leak:OK
+#415/3   struct_ops_refcounted/refcounted_fail__global_subprog:OK
+#415/4   struct_ops_refcounted/refcounted_fail__tail_call:OK
+#415     struct_ops_refcounted:OK
 
-Well, it will start causing warnings soon because it wastes memory. But
-that will likely begin in 6.18 so we are OK, as long as it gets into
-linux-next before the warning trigger does.
+All error logs:
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+Summary: 9/26 PASSED, 3 SKIPPED, 1 FAILED
+[root@fedora bpf]#
+[root@fedora bpf]#
+[root@fedora bpf]# ./test_progs -t struct_ops -a fexit_sleep
+#15/1    bad_struct_ops/invalid_prog_reuse:OK
+#15/2    bad_struct_ops/unused_program:OK
+#15      bad_struct_ops:OK
+#111     fexit_sleep:OK
+#408/1   struct_ops_autocreate/cant_load_full_object:OK
+#408/2   struct_ops_autocreate/can_load_partial_object:OK
+#408/3   struct_ops_autocreate/autoload_and_shadow_vars:OK
+#408/4   struct_ops_autocreate/optional_maps:OK
+#408     struct_ops_autocreate:OK
+#409/1   struct_ops_kptr_return/kptr_return:OK
+#409/2   struct_ops_kptr_return/kptr_return_fail__wrong_type:OK
+#409/3   struct_ops_kptr_return/kptr_return_fail__invalid_scalar:OK
+#409/4   struct_ops_kptr_return/kptr_return_fail__nonzero_offset:OK
+#409/5   struct_ops_kptr_return/kptr_return_fail__local_kptr:OK
+#409     struct_ops_kptr_return:OK
+#410/1   struct_ops_maybe_null/maybe_null:OK
+#410/2   struct_ops_maybe_null/maybe_null_fail:OK
+#410     struct_ops_maybe_null:OK
+#411/1   struct_ops_module/struct_ops_load:OK
+#411/2   struct_ops_module/struct_ops_not_zeroed:OK
+#411/3   struct_ops_module/struct_ops_incompatible:OK
+#411/4   struct_ops_module/struct_ops_null_out_cb:OK
+#411/5   struct_ops_module/struct_ops_forgotten_cb:OK
+#411/6   struct_ops_module/test_detach_link:OK
+#411/7   struct_ops_module/unsupported_ops:OK
+#411     struct_ops_module:OK
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+#413/1   struct_ops_no_cfi/load_bpf_test_no_cfi:OK
+#413     struct_ops_no_cfi:OK
+#414/1   struct_ops_private_stack/private_stack:SKIP
+#414/2   struct_ops_private_stack/private_stack_fail:SKIP
+#414/3   struct_ops_private_stack/private_stack_recur:SKIP
+#414     struct_ops_private_stack:SKIP
+#415/1   struct_ops_refcounted/refcounted:OK
+#415/2   struct_ops_refcounted/refcounted_fail__ref_leak:OK
+#415/3   struct_ops_refcounted/refcounted_fail__global_subprog:OK
+#415/4   struct_ops_refcounted/refcounted_fail__tail_call:OK
+#415     struct_ops_refcounted:OK
 
--- Steve
+All error logs:
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+Summary: 9/25 PASSED, 3 SKIPPED, 1 FAILED
+[root@fedora bpf]#
+[root@fedora bpf]# ./test_progs -t struct_ops -a test_overhead
+#15/1    bad_struct_ops/invalid_prog_reuse:OK
+#15/2    bad_struct_ops/unused_program:OK
+#15      bad_struct_ops:OK
+#408/1   struct_ops_autocreate/cant_load_full_object:OK
+#408/2   struct_ops_autocreate/can_load_partial_object:OK
+#408/3   struct_ops_autocreate/autoload_and_shadow_vars:OK
+#408/4   struct_ops_autocreate/optional_maps:OK
+#408     struct_ops_autocreate:OK
+#409/1   struct_ops_kptr_return/kptr_return:OK
+#409/2   struct_ops_kptr_return/kptr_return_fail__wrong_type:OK
+#409/3   struct_ops_kptr_return/kptr_return_fail__invalid_scalar:OK
+#409/4   struct_ops_kptr_return/kptr_return_fail__nonzero_offset:OK
+#409/5   struct_ops_kptr_return/kptr_return_fail__local_kptr:OK
+#409     struct_ops_kptr_return:OK
+#410/1   struct_ops_maybe_null/maybe_null:OK
+#410/2   struct_ops_maybe_null/maybe_null_fail:OK
+#410     struct_ops_maybe_null:OK
+#411/1   struct_ops_module/struct_ops_load:OK
+#411/2   struct_ops_module/struct_ops_not_zeroed:OK
+#411/3   struct_ops_module/struct_ops_incompatible:OK
+#411/4   struct_ops_module/struct_ops_null_out_cb:OK
+#411/5   struct_ops_module/struct_ops_forgotten_cb:OK
+#411/6   struct_ops_module/test_detach_link:OK
+#411/7   struct_ops_module/unsupported_ops:OK
+#411     struct_ops_module:OK
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+#413/1   struct_ops_no_cfi/load_bpf_test_no_cfi:OK
+#413     struct_ops_no_cfi:OK
+#414/1   struct_ops_private_stack/private_stack:SKIP
+#414/2   struct_ops_private_stack/private_stack_fail:SKIP
+#414/3   struct_ops_private_stack/private_stack_recur:SKIP
+#414     struct_ops_private_stack:SKIP
+#415/1   struct_ops_refcounted/refcounted:OK
+#415/2   struct_ops_refcounted/refcounted_fail__ref_leak:OK
+#415/3   struct_ops_refcounted/refcounted_fail__global_subprog:OK
+#415/4   struct_ops_refcounted/refcounted_fail__tail_call:OK
+#415     struct_ops_refcounted:OK
+#452     test_overhead:OK
+
+All error logs:
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+Summary: 9/25 PASSED, 3 SKIPPED, 1 FAILED
+[root@fedora bpf]#
+[root@fedora bpf]#
+[root@fedora bpf]# ./test_progs -t struct_ops -a trampoline_count
+#15/1    bad_struct_ops/invalid_prog_reuse:OK
+#15/2    bad_struct_ops/unused_program:OK
+#15      bad_struct_ops:OK
+#408/1   struct_ops_autocreate/cant_load_full_object:OK
+#408/2   struct_ops_autocreate/can_load_partial_object:OK
+#408/3   struct_ops_autocreate/autoload_and_shadow_vars:OK
+#408/4   struct_ops_autocreate/optional_maps:OK
+#408     struct_ops_autocreate:OK
+#409/1   struct_ops_kptr_return/kptr_return:OK
+#409/2   struct_ops_kptr_return/kptr_return_fail__wrong_type:OK
+#409/3   struct_ops_kptr_return/kptr_return_fail__invalid_scalar:OK
+#409/4   struct_ops_kptr_return/kptr_return_fail__nonzero_offset:OK
+#409/5   struct_ops_kptr_return/kptr_return_fail__local_kptr:OK
+#409     struct_ops_kptr_return:OK
+#410/1   struct_ops_maybe_null/maybe_null:OK
+#410/2   struct_ops_maybe_null/maybe_null_fail:OK
+#410     struct_ops_maybe_null:OK
+#411/1   struct_ops_module/struct_ops_load:OK
+#411/2   struct_ops_module/struct_ops_not_zeroed:OK
+#411/3   struct_ops_module/struct_ops_incompatible:OK
+#411/4   struct_ops_module/struct_ops_null_out_cb:OK
+#411/5   struct_ops_module/struct_ops_forgotten_cb:OK
+#411/6   struct_ops_module/test_detach_link:OK
+#411/7   struct_ops_module/unsupported_ops:OK
+#411     struct_ops_module:OK
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+#413/1   struct_ops_no_cfi/load_bpf_test_no_cfi:OK
+#413     struct_ops_no_cfi:OK
+#414/1   struct_ops_private_stack/private_stack:SKIP
+#414/2   struct_ops_private_stack/private_stack_fail:SKIP
+#414/3   struct_ops_private_stack/private_stack_recur:SKIP
+#414     struct_ops_private_stack:SKIP
+#415/1   struct_ops_refcounted/refcounted:OK
+#415/2   struct_ops_refcounted/refcounted_fail__ref_leak:OK
+#415/3   struct_ops_refcounted/refcounted_fail__global_subprog:OK
+#415/4   struct_ops_refcounted/refcounted_fail__tail_call:OK
+#415     struct_ops_refcounted:OK
+#469     trampoline_count:OK
+
+All error logs:
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+Summary: 9/25 PASSED, 3 SKIPPED, 1 FAILED
+[root@fedora bpf]#
+[root@fedora bpf]#
+[root@fedora bpf]# ./test_progs -t struct_ops -a fexit_test/fexit
+#15/1    bad_struct_ops/invalid_prog_reuse:OK
+#15/2    bad_struct_ops/unused_program:OK
+#15      bad_struct_ops:OK
+#113/1   fexit_test/fexit:OK
+#113     fexit_test:OK
+#408/1   struct_ops_autocreate/cant_load_full_object:OK
+#408/2   struct_ops_autocreate/can_load_partial_object:OK
+#408/3   struct_ops_autocreate/autoload_and_shadow_vars:OK
+#408/4   struct_ops_autocreate/optional_maps:OK
+#408     struct_ops_autocreate:OK
+#409/1   struct_ops_kptr_return/kptr_return:OK
+#409/2   struct_ops_kptr_return/kptr_return_fail__wrong_type:OK
+#409/3   struct_ops_kptr_return/kptr_return_fail__invalid_scalar:OK
+#409/4   struct_ops_kptr_return/kptr_return_fail__nonzero_offset:OK
+#409/5   struct_ops_kptr_return/kptr_return_fail__local_kptr:OK
+#409     struct_ops_kptr_return:OK
+#410/1   struct_ops_maybe_null/maybe_null:OK
+#410/2   struct_ops_maybe_null/maybe_null_fail:OK
+#410     struct_ops_maybe_null:OK
+#411/1   struct_ops_module/struct_ops_load:OK
+#411/2   struct_ops_module/struct_ops_not_zeroed:OK
+#411/3   struct_ops_module/struct_ops_incompatible:OK
+#411/4   struct_ops_module/struct_ops_null_out_cb:OK
+#411/5   struct_ops_module/struct_ops_forgotten_cb:OK
+#411/6   struct_ops_module/test_detach_link:OK
+#411/7   struct_ops_module/unsupported_ops:OK
+#411     struct_ops_module:OK
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+#413/1   struct_ops_no_cfi/load_bpf_test_no_cfi:OK
+#413     struct_ops_no_cfi:OK
+#414/1   struct_ops_private_stack/private_stack:SKIP
+#414/2   struct_ops_private_stack/private_stack_fail:SKIP
+#414/3   struct_ops_private_stack/private_stack_recur:SKIP
+#414     struct_ops_private_stack:SKIP
+#415/1   struct_ops_refcounted/refcounted:OK
+#415/2   struct_ops_refcounted/refcounted_fail__ref_leak:OK
+#415/3   struct_ops_refcounted/refcounted_fail__global_subprog:OK
+#415/4   struct_ops_refcounted/refcounted_fail__tail_call:OK
+#415     struct_ops_refcounted:OK
+
+All error logs:
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+Summary: 9/26 PASSED, 3 SKIPPED, 1 FAILED
+[root@fedora bpf]#
+[root@fedora bpf]#
+[root@fedora bpf]# ./test_progs -t struct_ops -a fentry_fexit
+#15/1    bad_struct_ops/invalid_prog_reuse:OK
+#15/2    bad_struct_ops/unused_program:OK
+#15      bad_struct_ops:OK
+#108     fentry_fexit:OK
+#408/1   struct_ops_autocreate/cant_load_full_object:OK
+#408/2   struct_ops_autocreate/can_load_partial_object:OK
+#408/3   struct_ops_autocreate/autoload_and_shadow_vars:OK
+#408/4   struct_ops_autocreate/optional_maps:OK
+#408     struct_ops_autocreate:OK
+#409/1   struct_ops_kptr_return/kptr_return:OK
+#409/2   struct_ops_kptr_return/kptr_return_fail__wrong_type:OK
+#409/3   struct_ops_kptr_return/kptr_return_fail__invalid_scalar:OK
+#409/4   struct_ops_kptr_return/kptr_return_fail__nonzero_offset:OK
+#409/5   struct_ops_kptr_return/kptr_return_fail__local_kptr:OK
+#409     struct_ops_kptr_return:OK
+#410/1   struct_ops_maybe_null/maybe_null:OK
+#410/2   struct_ops_maybe_null/maybe_null_fail:OK
+#410     struct_ops_maybe_null:OK
+#411/1   struct_ops_module/struct_ops_load:OK
+#411/2   struct_ops_module/struct_ops_not_zeroed:OK
+#411/3   struct_ops_module/struct_ops_incompatible:OK
+#411/4   struct_ops_module/struct_ops_null_out_cb:OK
+#411/5   struct_ops_module/struct_ops_forgotten_cb:OK
+#411/6   struct_ops_module/test_detach_link:OK
+#411/7   struct_ops_module/unsupported_ops:OK
+#411     struct_ops_module:OK
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+#413/1   struct_ops_no_cfi/load_bpf_test_no_cfi:OK
+#413     struct_ops_no_cfi:OK
+#414/1   struct_ops_private_stack/private_stack:SKIP
+#414/2   struct_ops_private_stack/private_stack_fail:SKIP
+#414/3   struct_ops_private_stack/private_stack_recur:SKIP
+#414     struct_ops_private_stack:SKIP
+#415/1   struct_ops_refcounted/refcounted:OK
+#415/2   struct_ops_refcounted/refcounted_fail__ref_leak:OK
+#415/3   struct_ops_refcounted/refcounted_fail__global_subprog:OK
+#415/4   struct_ops_refcounted/refcounted_fail__tail_call:OK
+#415     struct_ops_refcounted:OK
+
+All error logs:
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+Summary: 9/25 PASSED, 3 SKIPPED, 1 FAILED
+[root@fedora bpf]#
+[root@fedora bpf]#
+[root@fedora bpf]# ./test_progs -t struct_ops -a modify_return
+#15/1    bad_struct_ops/invalid_prog_reuse:OK
+#15/2    bad_struct_ops/unused_program:OK
+#15      bad_struct_ops:OK
+#204     modify_return:OK
+#408/1   struct_ops_autocreate/cant_load_full_object:OK
+#408/2   struct_ops_autocreate/can_load_partial_object:OK
+#408/3   struct_ops_autocreate/autoload_and_shadow_vars:OK
+#408/4   struct_ops_autocreate/optional_maps:OK
+#408     struct_ops_autocreate:OK
+#409/1   struct_ops_kptr_return/kptr_return:OK
+#409/2   struct_ops_kptr_return/kptr_return_fail__wrong_type:OK
+#409/3   struct_ops_kptr_return/kptr_return_fail__invalid_scalar:OK
+#409/4   struct_ops_kptr_return/kptr_return_fail__nonzero_offset:OK
+#409/5   struct_ops_kptr_return/kptr_return_fail__local_kptr:OK
+#409     struct_ops_kptr_return:OK
+#410/1   struct_ops_maybe_null/maybe_null:OK
+#410/2   struct_ops_maybe_null/maybe_null_fail:OK
+#410     struct_ops_maybe_null:OK
+#411/1   struct_ops_module/struct_ops_load:OK
+#411/2   struct_ops_module/struct_ops_not_zeroed:OK
+#411/3   struct_ops_module/struct_ops_incompatible:OK
+#411/4   struct_ops_module/struct_ops_null_out_cb:OK
+#411/5   struct_ops_module/struct_ops_forgotten_cb:OK
+#411/6   struct_ops_module/test_detach_link:OK
+#411/7   struct_ops_module/unsupported_ops:OK
+#411     struct_ops_module:OK
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+#413/1   struct_ops_no_cfi/load_bpf_test_no_cfi:OK
+#413     struct_ops_no_cfi:OK
+#414/1   struct_ops_private_stack/private_stack:SKIP
+#414/2   struct_ops_private_stack/private_stack_fail:SKIP
+#414/3   struct_ops_private_stack/private_stack_recur:SKIP
+#414     struct_ops_private_stack:SKIP
+#415/1   struct_ops_refcounted/refcounted:OK
+#415/2   struct_ops_refcounted/refcounted_fail__ref_leak:OK
+#415/3   struct_ops_refcounted/refcounted_fail__global_subprog:OK
+#415/4   struct_ops_refcounted/refcounted_fail__tail_call:OK
+#415     struct_ops_refcounted:OK
+
+All error logs:
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+Summary: 9/25 PASSED, 3 SKIPPED, 1 FAILED
