@@ -1,104 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1CB1F948
-	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 03:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD2904409
+	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 03:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755658999; cv=none; b=gRZatXw604icjp7HimW1KM9i8w4BgQRNlvFVJL+yVN9Chx/5frKEgOTbEjYr9/1x5eT4r1zY8+drTEoFyYjNfMh250CRx1EjNVBkcA4lAHV9/jPvLCtkgKe4WppjKtVpCL7QnG6Wutm3dzlmqRo/gUsp8vmQnNyPOU5wrekjApA=
+	t=1755661556; cv=none; b=BSSlKm96wVTdw407EIpJshivUXSNctTvT/3DRYTmF/Y3rlV9kVYA9azX5Gewvn2r9ErdFq0TX5YdIA7qSHyNW/h0hvRQUhh9lG0mahiwdaYlSowNUHLiXRHbKmGE6nV88vjU0uEV4gkLM66q5wNn9LnNkLoa3hhy8M5hnOAmR9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755658999; c=relaxed/simple;
-	bh=dUb5J4XH+q4916VJxIDDUCe2v7YaXyLg5gTQb9sEMLQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ElTMVNibVW1ze910DZXWu9gvfIa3/kPr8B4Z7jVstOon0Z5xwsyDoSQy7zX4f9Bnw/bVn+PYEUNJSjMqpkr9IsEvxIUcyfahzSQ88iwGKidc5OivrdyoSQRHJGeTKZpSQg3rNLMJAgv6G+lPrHb1XiZ715qmSJBz1nEr4mgT170=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TacO3eIF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TacO3eIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 301C0C4CEF4
-	for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 03:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755658999;
-	bh=dUb5J4XH+q4916VJxIDDUCe2v7YaXyLg5gTQb9sEMLQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TacO3eIFWhHfC9iieBE0ZVulubtG93C+xWiJ94hVccdRj9Od4S0EHBmnzP8cynW+q
-	 JWawgVH9Q+GGZQZr1Y4eT11DaWFe5AJNn3JdPJ0ixY6avteUXXDFM4Kj7lrvwhJYu9
-	 62C4m8xbI5lhv4I8VO2xDhOXGMwReZ+p6X2VTwvFjv77+Fyumm3lT+e/uSxHHTbsxe
-	 fujBmYHh++k6QVhrel0J9R/DBAMA2+aCcRtVRBP/vNd5lCnfda9+NGX3Uq0+9uyXOn
-	 7RaKwC7tqvTyPKRXTfKiKL6d8a8j0wBz2BqAjqrGFeq9DoYAgNm++KpczvtvYr8gAo
-	 K95syn8Sx8xRQ==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6188b5ad4f0so8083977a12.0
-        for <loongarch@lists.linux.dev>; Tue, 19 Aug 2025 20:03:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXUat1PXf730bkTBy07Abdm183A3J5Ijzyq8/Z9dFj1bZJE05IkqWQKbRJtJCoN17wTnLoR86jGzfA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyOtY2MYZquYSYOkujQ+ZcIh0Kf9REj2Vz4WScClDs5W34R7M/C
-	ZkmXaQ2hDWkBRi9sX6Vr73JkRP5L5m9iTwo5Ac6diYw+I3USuHE8DV3LBBpYweqSoTHvNTaP+8C
-	LCmSJ+Xp48AecbCwsoABqbGolfYIRLYk=
-X-Google-Smtp-Source: AGHT+IGipsXdMkhLBiLLaqBjRzQlCXf5lG2voaM7ZlbwMucGPhtm3dMQcQrGXzIeWhNwxO91JT0saO4PJ+B8zwJNi0k=
-X-Received: by 2002:a05:6402:208a:b0:615:b0e2:124b with SMTP id
- 4fb4d7f45d1cf-61a9762bcb8mr1222075a12.24.1755658997791; Tue, 19 Aug 2025
- 20:03:17 -0700 (PDT)
+	s=arc-20240116; t=1755661556; c=relaxed/simple;
+	bh=WTXWNo+8E1X+chuNWr88tcEsODferF2t7m6sSFkY1qg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fLbZP1xqKDw9YOCgj09sG2p0DY5H+WtRMtL5CQtnLa8p4RGhypmtUbhaE52/RNLuT2hb5Ww3KgJrAtlX8t1WjW4KecWno28yS1M7W4s+VHRRXKGnix2PAxO8psghvHEq2o3szYCdCGzWnBlyI1r402WtEg+y5bWCARhM1IU62gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8Dxb_DsRKVoM7cAAA--.1496S3;
+	Wed, 20 Aug 2025 11:45:48 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by front1 (Coremail) with SMTP id qMiowJAxQMLqRKVo5uVZAA--.7887S2;
+	Wed, 20 Aug 2025 11:45:47 +0800 (CST)
+From: Song Gao <gaosong@loongson.cn>
+To: maobibo@loongson.cn,
+	zhaotianrui@loongson.cn,
+	chenhuacai@kernel.org,
+	lixianglai@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yanteng Si <siyanteng@cqsoftware.com.cm>
+Subject: [PATCH v2] LoongArch: KVM: Use kvm_get_vcpu_by_id() instead of kvm_get_vcpu()
+Date: Wed, 20 Aug 2025 11:22:29 +0800
+Message-Id: <20250820032229.913361-1-gaosong@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250722094734.4920545b@gandalf.local.home> <2c2f5036-c3ae-3904-e940-8a8b71a65957@loongson.cn>
- <20250723214659.064b5d4a@gandalf.local.home> <15e46f69-f270-0520-1ad4-874448439d2b@loongson.cn>
- <CAAhV-H4TGus35B6ONdkSOMwWw+H6NRmHStV-Xu7vUYYrkDGfUQ@mail.gmail.com> <20250819202715.6f1cf0d6@gandalf.local.home>
-In-Reply-To: <20250819202715.6f1cf0d6@gandalf.local.home>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 20 Aug 2025 11:03:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5y8Tckih4jd3C8Q-M6OZiw2szCYuxLQfBXehpWSvrstA@mail.gmail.com>
-X-Gm-Features: Ac12FXz1padV2khVDKOyi3ekCMiGCzktzpAq5rTbzGUfDyfjZIQ6IiG85R2dpeE
-Message-ID: <CAAhV-H5y8Tckih4jd3C8Q-M6OZiw2szCYuxLQfBXehpWSvrstA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Move kvm_iocsr tracepoint out of generic code
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Bibo Mao <maobibo@loongson.cn>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxQMLqRKVo5uVZAA--.7887S2
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Wed, Aug 20, 2025 at 8:27=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Thu, 24 Jul 2025 19:56:42 +0800
-> Huacai Chen <chenhuacai@kernel.org> wrote:
->
-> > On Thu, Jul 24, 2025 at 9:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> > >
-> > >
-> > >
-> > > On 2025/7/24 =E4=B8=8A=E5=8D=889:46, Steven Rostedt wrote:
-> > > > On Thu, 24 Jul 2025 09:39:40 +0800
-> > > > Bibo Mao <maobibo@loongson.cn> wrote:
-> > > >
-> > > >>>    #define kvm_fpu_load_symbol      \
-> > > >>>     {0, "unload"},          \
-> > > >>>     {1, "load"}
-> > > >>>
-> > > >> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> > > >
-> > > > Thanks,
-> > > >
-> > > > Should this go through the loongarch tree or should I take it?
-> > > Huacai,
-> > >
-> > > What is your point about this?
-> > I will take it, thanks.
-> >
-> > Huacai
->
-> Did this fall through the cracks?
-I don't know what this means, but I think you are pinging.
+Since using kvm_get_vcpu() may fail to retrieve the vcpu context,
+kvm_get_vcpu_by_id() should be used instead.
 
-This patch appears after I sent the KVM PR for 6.17, and it isn't a
-bugfix, so it will go to 6.18.
+Fixes: 8e3054261bc3 ("LoongArch: KVM: Add IPI user mode read and write function")
+Fixes: 3956a52bc05b ("LoongArch: KVM: Add EIOINTC read and write functions")
+Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cm>
+Signed-off-by: Song Gao <gaosong@loongson.cn>
+---
+ arch/loongarch/kvm/intc/eiointc.c | 6 +++++-
+ arch/loongarch/kvm/intc/ipi.c     | 2 +-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-Huacai
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index a3a12af9ecbf..b3829fb4f64e 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -45,7 +45,11 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
+ 	}
+ 
+ 	cpu = s->sw_coremap[irq];
+-	vcpu = kvm_get_vcpu(s->kvm, cpu);
++	vcpu = kvm_get_vcpu_by_id(s->kvm, cpu);
++	if (unlikely(vcpu == NULL)) {
++		kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
++		return;
++	}
+ 	if (level) {
+ 		/* if not enable return false */
+ 		if (!test_bit(irq, (unsigned long *)s->enable.reg_u32))
+diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+index e658d5b37c04..0348a83a7ed7 100644
+--- a/arch/loongarch/kvm/intc/ipi.c
++++ b/arch/loongarch/kvm/intc/ipi.c
+@@ -298,7 +298,7 @@ static int kvm_ipi_regs_access(struct kvm_device *dev,
+ 	cpu = (attr->attr >> 16) & 0x3ff;
+ 	addr = attr->attr & 0xff;
+ 
+-	vcpu = kvm_get_vcpu(dev->kvm, cpu);
++	vcpu = kvm_get_vcpu_by_id(dev->kvm, cpu);
+ 	if (unlikely(vcpu == NULL)) {
+ 		kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
+ 		return -EINVAL;
+-- 
+2.39.3
 
->
-> -- Steve
