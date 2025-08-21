@@ -1,61 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D7A1F3BAE
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 09:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B901E2DA77B
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 09:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755768994; cv=none; b=qzvuFR1pDbsvgAd9JUWHcZ0tMlGetoGOkaJfJB3TZg8Sg4Y+6bL6F99mFyiRnUbYDZ1xDjwmFB6THw5ExBEp9GvZg+jqw9lgtBBOBNvbslImbnUJ7GxHHDy9BoeCJcxeZxh6t2LnfF6SnHIIG/UNknqVOn+BiwccrcfC/6OmtdI=
+	t=1755769035; cv=none; b=eWFzu7mvU8mWMU3Ehco6HjhZ/xPPHq3KWYeaBS8XhvVBZpA9Xg+GzE7dcfSaRlsIY340PTbj6yxBpgjRx2R9aEjz45MT4Y7aPghpjk7gI96PgxhxI1COnm5LqZ4dddyjHOCgX5JB8y6jUDJ/xK21kBr1XHfKwGi5mEQmYW1HZfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755768994; c=relaxed/simple;
-	bh=nqx9qiv0zX+m1DlAVHHEFQpBiJu5QKpiHNQao79cgLU=;
+	s=arc-20240116; t=1755769035; c=relaxed/simple;
+	bh=Z1xajZ3+05Q+UuE7jtAgc4UYFwabW7W2pYmp5EVAd0I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jx7Q9T2e2TfQRYKxGdqO2CNHXJBtZHT7s9MDF9JB1RiIEZJ/dBhvtwBSipDHqsaCmh4HTfFICYZx3qvPSY4GErLy/Kf4vIFIjZb15E1qPRewkTp8wrooddozbXysO24ZN/VwW9hRYeKH6Z1iAiB8j3TpWN1iqfMFPHaNXdGNMCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LGl+HZep; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=P2TJ1a6p/Z4xMFULpHjBipL3pvHMHoVuo6+oJRrajvWClDy9X84Dd8rVBQNZdZYX19mPtZ7d9WHDOjjat+vs/TeYz/x1AqqZhMRiq0MM611Y3rHBr0d5YkZpxyq9xJ2zTj+qwAsFU4VmB6u/RKR9p76Zgecr3m2C/5rpqJdBnuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmWYqJP6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LGl+HZep"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 751B8C113CF
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 09:36:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmWYqJP6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FD14C113CF
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 09:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755768994;
-	bh=nqx9qiv0zX+m1DlAVHHEFQpBiJu5QKpiHNQao79cgLU=;
+	s=k20201202; t=1755769035;
+	bh=Z1xajZ3+05Q+UuE7jtAgc4UYFwabW7W2pYmp5EVAd0I=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LGl+HZepvSYTrSZQvPJz2CzFJjrPyIOlh2klCFObTfOrWk89AotH5iuMttASQbhRi
-	 Igy+IKt1CzX8mQbM8uVBWL38CND+hu2eGAxD6+zoJs1UuFv88OgIukQJGOeSphEKag
-	 vHP7epmux7UVDxIAaL0SUuQdMbaAW9EtxGkETU8aa/XDyyiqRrso5/37GxqIcsraip
-	 zHMSiUihE/fZNEF6o9MLFOR4MTaQB//Jc38+L7h9XknM0RgSvRWrfrFpIo7BCZB7V1
-	 AL1AVh1T1PAHvzEooatgXVC2khIcvjplxrqPXscyvR5mVvDbZUHks1bblPh6wjSzQD
-	 PPk4EGJ542FtA==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-61a2a5b0689so1366716a12.1
-        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 02:36:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVoPeVZGpyitSp87M2cQ+mKQ+Gl8nC1vdrR7ZFgCsA1YLVTf6c8BVEx9LVaS0ykkxTon8z53D1eUVs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzZjPrQ1jtXyq1/ADTn0aaxzfA9W8QZ20/MkIU5v1sK8i4DUPz/
-	yaervkdXvBtK1RynUxxRMYaqowK/NzYnat4HMXVAZqUxpNMAOtYHqS9Nw4V09OoCdsDBHILgMEC
-	pQWN5OmlnWTObzeqiVHI91CZrZN9UhQc=
-X-Google-Smtp-Source: AGHT+IFEA4wBZ6jlw56hAlRjDBUN+5W/lUtKr64PRv6Oy8jgud1DgDbvtzdnv5gAySIvxnJ+6+zjVTdFxjbAUHGHioE=
-X-Received: by 2002:a05:6402:34cc:b0:61a:7e43:65f7 with SMTP id
- 4fb4d7f45d1cf-61bf8728294mr1495394a12.18.1755768992966; Thu, 21 Aug 2025
- 02:36:32 -0700 (PDT)
+	b=GmWYqJP6+9xdwMM2mtP13N2KLVGlRrLcLUQKsuNvZ9cA2lIebr2+XKtOg5OUp/7rl
+	 ZZsE0dVSDGHXv1pMJkKb6ytplsOYipwVXwvsL2M4zy296j8MqNunMHTXtTwunSuSML
+	 H1TvusOqwlh7xyJh5K9XvvVsJYpCMSFB6NqpF9oBNZ8SE6QuSVLRJXqjyrKnDdLCVe
+	 U4Bu1joHpiw5Z5ZiEk6eh495L57E0mJWethgPHHBKeZMqioJQ2K0inPnvacaGCIbok
+	 0sjU2rZdTWm3IiKCrZUaDLKP8ckxp3RMf5CgVX3jjnGiVdCvbeXP16BZArGBDcva0o
+	 v2Otqi/aOcOaw==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-618b62dba1aso1104595a12.2
+        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 02:37:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVml5+pdQl1KG0S3i8ZF1wTNo0YUcMxXMHAeaUzYmV3Iz1IxJscNB0kKx0xnGqsn6jf5IdGPqe4p8Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy/fMBCVMPVDCnSJTcWAOSxKMitBX4EoeDdejiprEpnvpH4FPC/
+	JmXcFIyK/CFOsFY7t/61QCn27XcCk934rzINc38Lfil0/JPnM2hF1ob9zs40IBhokoB9RUvretK
+	BIDp+zRQiq12ekvSnr/dO2RlUiWfkak4=
+X-Google-Smtp-Source: AGHT+IGdEZAL1HDZaBeEI7REqCxgbgwB8Bm1qPZhNWktAGRMWjWTn5Aw48GXRZvyx4s82eTiupVE5DeAdW7H6qKlIek=
+X-Received: by 2002:a05:6402:42c4:b0:618:229d:7076 with SMTP id
+ 4fb4d7f45d1cf-61bf86dfe4amr1637334a12.6.1755769034002; Thu, 21 Aug 2025
+ 02:37:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250820021551.911917-1-lixianglai@loongson.cn>
-In-Reply-To: <20250820021551.911917-1-lixianglai@loongson.cn>
+References: <20250820032229.913361-1-gaosong@loongson.cn>
+In-Reply-To: <20250820032229.913361-1-gaosong@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 21 Aug 2025 17:36:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4+HQ9tZTKUgBqfkjDQnvhqVRcXy+yH0ZrYmCZoiv0BQA@mail.gmail.com>
-X-Gm-Features: Ac12FXzhmiV55DKl9Us75CDtoKOVW4ffSqRstkEZquCXTuKFhGBz-lQsu-aTTUA
-Message-ID: <CAAhV-H4+HQ9tZTKUgBqfkjDQnvhqVRcXy+yH0ZrYmCZoiv0BQA@mail.gmail.com>
-Subject: Re: [PATCH V2] LoongArch: time: Fix the issue of high cpu usage of
- vcpu threads in virtual machines
-To: Xianglai Li <lixianglai@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Bibo Mao <maobibo@loongson.cn>, 
-	Song Gao <gaosong@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Thu, 21 Aug 2025 17:37:00 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6sWPQrqBPuQmb_iMurg0PJ8ifZZo1o4Gx_rEsFQ=QvOw@mail.gmail.com>
+X-Gm-Features: Ac12FXwsE2tye1aLmYjgI4BclarHKvV1yS9uHVDRg1tAMh2Klsv2U2K4_TrZmHU
+Message-ID: <CAAhV-H6sWPQrqBPuQmb_iMurg0PJ8ifZZo1o4Gx_rEsFQ=QvOw@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: KVM: Use kvm_get_vcpu_by_id() instead of kvm_get_vcpu()
+To: Song Gao <gaosong@loongson.cn>
+Cc: maobibo@loongson.cn, zhaotianrui@loongson.cn, lixianglai@loongson.cn, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Yanteng Si <siyanteng@cqsoftware.com.cm>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -63,102 +61,57 @@ Applied, thanks.
 
 Huacai
 
-On Wed, Aug 20, 2025 at 10:39=E2=80=AFAM Xianglai Li <lixianglai@loongson.c=
-n> wrote:
+On Wed, Aug 20, 2025 at 11:45=E2=80=AFAM Song Gao <gaosong@loongson.cn> wro=
+te:
 >
-> When the cpu is offline, the timer under loongarch is not correctly close=
-d,
-> resulting in an excessively high cpu usage rate of the offline vcpu threa=
-d
-> in the virtual machine.
+> Since using kvm_get_vcpu() may fail to retrieve the vcpu context,
+> kvm_get_vcpu_by_id() should be used instead.
 >
-> To correctly close the timer, we have made the following modifications:
->
-> Register the cpu hotplug timer start event for loongarch.This event will
-> be called to close the timer when the cpu is offline.
->
-> Clear the timer interrupt when the timer is turned off, Because before th=
-e
-> timer is turned off, there may be a timer interrupt that has been in the
-> pending state due to the interruption of the disabled, which also affects
-> the halt state of the offline vcpu.
->
-> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> Fixes: 8e3054261bc3 ("LoongArch: KVM: Add IPI user mode read and write fu=
+nction")
+> Fixes: 3956a52bc05b ("LoongArch: KVM: Add EIOINTC read and write function=
+s")
+> Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cm>
+> Signed-off-by: Song Gao <gaosong@loongson.cn>
 > ---
-> V1->V2:
-> 1.Add the implementation of the function arch_timer_starting
-> 2.Add more descriptions about clear timer interrupts in the commit messag=
-e
-> 3.Delete useless prints
-> 4.Adjust the calling position of the function cpuhp_setup_state
-> 5.Adjust the timer interrupt clear position
+>  arch/loongarch/kvm/intc/eiointc.c | 6 +++++-
+>  arch/loongarch/kvm/intc/ipi.c     | 2 +-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 >
->  arch/loongarch/kernel/time.c | 22 ++++++++++++++++++++++
->  include/linux/cpuhotplug.h   |  1 +
->  2 files changed, 23 insertions(+)
+> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/=
+eiointc.c
+> index a3a12af9ecbf..b3829fb4f64e 100644
+> --- a/arch/loongarch/kvm/intc/eiointc.c
+> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> @@ -45,7 +45,11 @@ static void eiointc_update_irq(struct loongarch_eioint=
+c *s, int irq, int level)
+>         }
 >
-> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-> index 367906b10f81..09b95f28bdcc 100644
-> --- a/arch/loongarch/kernel/time.c
-> +++ b/arch/loongarch/kernel/time.c
-> @@ -12,6 +12,7 @@
->  #include <linux/kernel.h>
->  #include <linux/sched_clock.h>
->  #include <linux/spinlock.h>
-> +#include <linux/cpu.h>
+>         cpu =3D s->sw_coremap[irq];
+> -       vcpu =3D kvm_get_vcpu(s->kvm, cpu);
+> +       vcpu =3D kvm_get_vcpu_by_id(s->kvm, cpu);
+> +       if (unlikely(vcpu =3D=3D NULL)) {
+> +               kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
+> +               return;
+> +       }
+>         if (level) {
+>                 /* if not enable return false */
+>                 if (!test_bit(irq, (unsigned long *)s->enable.reg_u32))
+> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.=
+c
+> index e658d5b37c04..0348a83a7ed7 100644
+> --- a/arch/loongarch/kvm/intc/ipi.c
+> +++ b/arch/loongarch/kvm/intc/ipi.c
+> @@ -298,7 +298,7 @@ static int kvm_ipi_regs_access(struct kvm_device *dev=
+,
+>         cpu =3D (attr->attr >> 16) & 0x3ff;
+>         addr =3D attr->attr & 0xff;
 >
->  #include <asm/cpu-features.h>
->  #include <asm/loongarch.h>
-> @@ -102,6 +103,23 @@ static int constant_timer_next_event(unsigned long d=
-elta, struct clock_event_dev
->         return 0;
->  }
->
-> +static int arch_timer_dying_cpu(unsigned int cpu)
-> +{
-> +       constant_set_state_shutdown(this_cpu_ptr(&constant_clockevent_dev=
-ice));
-> +
-> +       /* Clear Timer Interrupt */
-> +       write_csr_tintclear(CSR_TINTCLR_TI);
-> +
-> +       return 0;
-> +}
-> +
-> +static int arch_timer_starting(unsigned int cpu)
-> +{
-> +       set_csr_ecfg(ECFGF_TIMER);
-> +
-> +       return 0;
-> +}
-> +
->  static unsigned long get_loops_per_jiffy(void)
->  {
->         unsigned long lpj =3D (unsigned long)const_clock_freq;
-> @@ -172,6 +190,10 @@ int constant_clockevent_init(void)
->         lpj_fine =3D get_loops_per_jiffy();
->         pr_info("Constant clock event device register\n");
->
-> +       cpuhp_setup_state(CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
-> +                         "clockevents/loongarch/timer:starting",
-> +                         arch_timer_starting, arch_timer_dying_cpu);
-> +
->         return 0;
->  }
->
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index edfa61d80702..6606c1546afc 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -159,6 +159,7 @@ enum cpuhp_state {
->         CPUHP_AP_PERF_ARM_STARTING,
->         CPUHP_AP_PERF_RISCV_STARTING,
->         CPUHP_AP_ARM_L2X0_STARTING,
-> +       CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
->         CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
->         CPUHP_AP_ARM_ARCH_TIMER_STARTING,
->         CPUHP_AP_ARM_ARCH_TIMER_EVTSTRM_STARTING,
+> -       vcpu =3D kvm_get_vcpu(dev->kvm, cpu);
+> +       vcpu =3D kvm_get_vcpu_by_id(dev->kvm, cpu);
+>         if (unlikely(vcpu =3D=3D NULL)) {
+>                 kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
+>                 return -EINVAL;
 > --
-> 2.39.1
->
+> 2.39.3
 >
