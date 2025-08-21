@@ -1,339 +1,299 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A3227EFF1
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 07:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09CAEAE7
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 07:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755760455; cv=none; b=VpJOIs3u6AVQM4S1OLauFaMO6fBLOAxc7oTQBt+9+qnwspYMKb4b3G/aj+p1ztMDd8FItHL/FccHQmHWR34GSriTIaFFm7/0rsJf3aqgmKYnYcKatpFJfMFS5Rw7+Jo6ajbfYNVGhLDxbJYEJ0M7Yo20duHCg9MaE7Q5oD8jFZE=
+	t=1755760542; cv=none; b=cszKXxsFT4dAArGGfUqYYNBZA0NsrYDm562DrS8RaQ1ODPCY4+Te4h/4O5UFG8lMwgsru23hkcnVCHMQv0wlDVE6Y80s0iq18sIOn+NZ/z9Gt4unjqEOFLur6qblrJlfoo0CE8zxFtywus7R2pe0G3MPUCQ0mdthl9mAc9sMWjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755760455; c=relaxed/simple;
-	bh=n1Y2BGuH7iKG2GvW4qBG7ldoRWZvuNsMPhdicKLieQk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gMCt2UDTcjVMc319pL4wXVpSnoooVBDxD8PANk0FWYKnIneo+D0fKXo5yJJnsJ7yMv3ccLAhuafJOjXpcDJNYWP9ZkVUNRRUT277qnA4XjNJw7c8xQ1RutXGmrtpKNJ7jklDDeq/4a6WU/E8PUJ0d0cWnTxAAoiXuVw4rzCatuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YwOYzBWV; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755760542; c=relaxed/simple;
+	bh=mBgYXcM+87FWaUtyCH5Q27VePGEs0N0aX3g5KEB5/k4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gU2XsJxuGN9KVuW2ZGVqfTL+kp3GftYP70pT+gQRxWlN3z75Qr+Q4MqPLb/ZopYisgGfJeZehodBNJEM+O5/WLdE/O2sySn3YExnq1zf7w1ntsLB7Y0syqivTKbRmIPTdvUjmu7ee5/SxIa+Izf11VoiXdqTKCaJWab7je8CUBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=knxq+tVi; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwOYzBWV"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6197efa570eso1199215a12.1
-        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 00:14:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755760451; x=1756365251; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d72kV5AqQ71r4FWlV/x/IF1vyWIU5hmO/NIRIMsWbyA=;
-        b=YwOYzBWV2pOBW5mDtKr5PVq4DKu8mMdkeXslKTWLqlfICjDr2wBTulskfVYfYd3xy5
-         V2O0KkMNxyRvoP3xvNtunFxGcS/41ED7ZgRt+G4Nz4VeowPxAhGrq7lp/RUVFlL3icsp
-         7uWf7v5Z2/FdlRgtcf0RxIT9ZTEkeblycoFEOVKg5pc8AgVDbxOjK2bmn4wroOJA8Du8
-         QMoZyxdoPbj3Orvghm1aYdox3aGg0NFCxVw9FMniVXNxtVe/W+71gq41hOnpujJ3Kg99
-         yXb6d9UE8nziWwHzOvaaSlUtAH4m8xoMpT63fxhIbcBYbuZ/60OS8sgx09334bQqNziz
-         sN7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755760451; x=1756365251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d72kV5AqQ71r4FWlV/x/IF1vyWIU5hmO/NIRIMsWbyA=;
-        b=E/z0fEYMnEuSRQU4VrvEESz0yr7WVr7lmnPiEXGhgMRJPBt+0/hZKKrA4GDsIX0DJm
-         Lnd73EAGGxYNywCA3XGokXnR8wOawuXP/GtIg/e76/lxQCeEy2Gcw+kEghQYzfbwPyv5
-         o5nZtGjXW1iJzXxgwsIp+uOkRfPLbF+aL2QnCmU3CKXlYs6ko4O6YqX2J8or1cs6UfXk
-         3Xu154ceN2X+GtwukpQf9SGKs2TZ2ZLUs66bbbT5wggs4Wl+BGFlRLU/vVNRuFi6Q/4h
-         fcEoMPVylg07kIOU4VR55uLGmQKzvUaThuikuaFd7pjcysi+0xf2aXPUO1UfG3BTSv4F
-         WWkw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9GCAiGji00GmxuufSDYavsvNFiflulg0BVrYrIQPTcQ0kjfJ2TmWWkVoJS3x0yrcDsLcTQck0e0g=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzqT7yFqkwC5tJtR4TyuHdsQb6yD6AGsMR24kFqg8GQoDoB+CdN
-	2QWPrsXMh9ENIITVm9geq+ZrKGq4uYu7CIz4rewIDuFrTTe5X+78SlIFWOWslq2N1JvQl3+eHEq
-	0r64cZzuHfpiN2/ucTxEzsnaJvjP5fcE=
-X-Gm-Gg: ASbGncssEWYMfUANIyIjhmyLxBHpvftVJ37nh7+flEzyu7GzgEsnXPM7nByBwoLT3t4
-	4qAzvCPGIVvmqqe+o6/jdZkHfj14oY4jS2FBS2cONrTFrwWVZD7q0XlP06ZMDig4QIFA6ill8cz
-	i3jY78OlL+Um7qE6R21R1WY4jDphW6MfKJyFzRtpi4m1UwzqRwcZaO67D4DqjqNDxYzlfVTf0hz
-	Rm8FPsToQ==
-X-Google-Smtp-Source: AGHT+IF/gzSFnR8QEoExjxqmg99tfrdz12dCDe5b2qQ6U8hREAVE8SbvqbihBKEL2quYQG/vK0hoMW1ZY+G2bfY/7K4=
-X-Received: by 2002:a17:907:9484:b0:af9:b4e9:8638 with SMTP id
- a640c23a62f3a-afe0745289amr140607166b.0.1755760450874; Thu, 21 Aug 2025
- 00:14:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="knxq+tVi"
+Message-ID: <284a663f-3bdd-4dcc-b017-b1b3fe6d9eb1@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755760526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hAJlHDvRqPXZP6gjpMtCItfPezDjP3bZ9+iZXylcguQ=;
+	b=knxq+tVimd9IbWYeagAu12XA+IPT9X5xTur4GrkRgf067Tk/mT3o5S0OPrDr0B1l9PKhga
+	52EcIZ52FIgtIwgx/QZTcynLtOlcpA+PLTsRbTdL4qA9kjrvZFC9x1RW5a3riqeJWzp5Qz
+	OKJI161XwmCJRjhiLChhKQj4WusaqA4=
+Date: Thu, 21 Aug 2025 15:14:46 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1754890670.git.zhoubinbin@loongson.cn> <89732d64415077ecd9f74c5853c542e62c0dfe26.1754890670.git.zhoubinbin@loongson.cn>
- <CAJhJPsW3KGL=FH5ZVqvRr-RD+ih09mFNuk7wGXepGVSw7bTaiw@mail.gmail.com>
-In-Reply-To: <CAJhJPsW3KGL=FH5ZVqvRr-RD+ih09mFNuk7wGXepGVSw7bTaiw@mail.gmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 21 Aug 2025 15:13:58 +0800
-X-Gm-Features: Ac12FXwlluWwN2EL5-pW7xP4YIsIoV3SOA07dCKLtV974jNddA8n9MGvt4ISBvE
-Message-ID: <CAMpQs4JyDTm_b0G-msqVO0nkxHHTOGoBDuUjYm+8+hpQKLZLyA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/8] mtd: rawnand: loongson: Add Loongson-2K0500 NAND
- controller support
-To: Keguang Zhang <keguang.zhang@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 3/5] LoongArch/kexec_file: Support loading ELF binary
+ file
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
+ Yao Zi <ziyao@disroot.org>, kexec@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Youling Tang <tangyouling@kylinos.cn>
+References: <20250820055700.24344-1-youling.tang@linux.dev>
+ <20250820055700.24344-4-youling.tang@linux.dev>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <20250820055700.24344-4-youling.tang@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Keguang:
+On 2025/8/20 13:56, Youling Tang wrote:
 
-Thanks for your reply.
+> From: Youling Tang <tangyouling@kylinos.cn>
+>
+> This patch creates kexec_elf_ops to load ELF binary file
+> for kexec_file_load() syscall.
+>
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> ---
+>   arch/loongarch/Kconfig                     |   1 +
+>   arch/loongarch/include/asm/kexec.h         |   1 +
+>   arch/loongarch/kernel/Makefile             |   2 +-
+>   arch/loongarch/kernel/kexec_elf.c          | 105 +++++++++++++++++++++
+>   arch/loongarch/kernel/machine_kexec_file.c |   1 +
+>   5 files changed, 109 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/loongarch/kernel/kexec_elf.c
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 490dc6eed749..bf2664ed7ce3 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -632,6 +632,7 @@ config ARCH_SELECTS_KEXEC_FILE
+>   	def_bool y
+>   	depends on KEXEC_FILE
+>   	select HAVE_IMA_KEXEC if IMA
+> +	select KEXEC_ELF
+>   	select RELOCATABLE
+>   
+>   config ARCH_SUPPORTS_CRASH_DUMP
+> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
+> index 34799db933fb..fecfb3015abc 100644
+> --- a/arch/loongarch/include/asm/kexec.h
+> +++ b/arch/loongarch/include/asm/kexec.h
+> @@ -43,6 +43,7 @@ struct kimage_arch {
+>   
+>   #ifdef CONFIG_KEXEC_FILE
+>   extern const struct kexec_file_ops kexec_efi_ops;
+> +extern const struct kexec_file_ops kexec_elf_ops;
+>   
+>   int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>   #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> index dd6183f353e6..001924877772 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -62,7 +62,7 @@ obj-$(CONFIG_MAGIC_SYSRQ)	+= sysrq.o
+>   obj-$(CONFIG_RELOCATABLE)	+= relocate.o
+>   
+>   obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+> -obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o
+> +obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o kexec_elf.o
+>   obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+>   
+>   obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
+> diff --git a/arch/loongarch/kernel/kexec_elf.c b/arch/loongarch/kernel/kexec_elf.c
+> new file mode 100644
+> index 000000000000..d41ee5fd7cef
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/kexec_elf.c
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Load ELF vmlinux file for the kexec_file_load syscall.
+> + *
+> + * Author: Youling Tang <tangyouling@kylinos.cn>
+> + * Copyright (C) 2025 KylinSoft Corporation.
+> + */
+> +
+> +#define pr_fmt(fmt)	"kexec_file(ELF): " fmt
+> +
+> +#include <linux/elf.h>
+> +#include <linux/kexec.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +#include <linux/memblock.h>
+> +#include <asm/image.h>
+> +#include <asm/setup.h>
+> +
+> +static int loongarch_kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+> +			 struct kexec_elf_info *elf_info,
+> +			 struct kexec_buf *kbuf,
+> +			 unsigned long *text_offset)
+> +{
+> +	int ret = -1;
+> +	size_t i;
+> +
+> +	/* Read in the PT_LOAD segments. */
+> +	for (i = 0; i < ehdr->e_phnum; i++) {
+> +		size_t size;
+> +		const struct elf_phdr *phdr;
+> +		struct loongarch_image_header *header;
+> +
+> +		phdr = &elf_info->proghdrs[i];
+> +		if (phdr->p_type != PT_LOAD)
+> +			continue;
+> +
+> +		size = phdr->p_filesz;
+> +		if (size > phdr->p_memsz)
+> +			size = phdr->p_memsz;
+> +
+> +		kbuf->buffer = (void *)elf_info->buffer + phdr->p_offset;
+> +		kbuf->bufsz = size;
+> +		kbuf->buf_align = phdr->p_align;
+> +		header = (struct loongarch_image_header *)kbuf->buffer;
+> +		*text_offset = le64_to_cpu(header->text_offset);
+> +		kbuf->buf_min = *text_offset;
+> +		kbuf->memsz = le64_to_cpu(header->image_size);
+Elf kernel resolution should not be used to struct loongarch_image_header,
+members of the content contained in the inner world of CONFIG_EFI_STUB in
+the arch/loongarch/kernel/head.S, should use the content inside the elf
+header information, The kexec-tools tool should also be fixed.
 
-On Thu, Aug 21, 2025 at 2:46=E2=80=AFPM Keguang Zhang <keguang.zhang@gmail.=
-com> wrote:
->
-> On Mon, Aug 11, 2025 at 2:03=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.=
-cn> wrote:
-> >
-> > The Loongson-2K0500 NAND controller is similar to the Loongson-1C.
-> >
-> > It supports a maximum capacity of 16GB FLASH per chip with a maximum
-> > page size of 8KB, and it supports up to 4 chip selects and 4 RDY
-> > signals.
-> >
-> > Its DMA controller is defaulted to APBDMA0.
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  drivers/mtd/nand/raw/Kconfig                  |  2 +-
-> >  .../mtd/nand/raw/loongson-nand-controller.c   | 55 ++++++++++++++++++-
-> >  2 files changed, 54 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfi=
-g
-> > index d9e3f13666ac..7b0c5d06aa95 100644
-> > --- a/drivers/mtd/nand/raw/Kconfig
-> > +++ b/drivers/mtd/nand/raw/Kconfig
-> > @@ -464,7 +464,7 @@ config MTD_NAND_NUVOTON_MA35
-> >
-> >  config MTD_NAND_LOONGSON
-> >         tristate "Loongson NAND controller"
-> > -       depends on LOONGSON1_APB_DMA || COMPILE_TEST
-> > +       depends on LOONGSON1_APB_DMA || LOONGSON2_APB_DMA || COMPILE_TE=
-ST
-> >         select REGMAP_MMIO
-> >         help
-> >           Enables support for NAND controller on Loongson family chips.
-> > diff --git a/drivers/mtd/nand/raw/loongson-nand-controller.c b/drivers/=
-mtd/nand/raw/loongson-nand-controller.c
-> > index 5a51c7d299cc..7a15df3fcd31 100644
-> > --- a/drivers/mtd/nand/raw/loongson-nand-controller.c
-> > +++ b/drivers/mtd/nand/raw/loongson-nand-controller.c
-> > @@ -3,6 +3,7 @@
-> >   * NAND Controller Driver for Loongson family chips
-> >   *
-> >   * Copyright (C) 2015-2025 Keguang Zhang <keguang.zhang@gmail.com>
-> > + * Copyright (C) 2025 Binbin Zhou <zhoubinbin@loongson.cn>
-> >   */
-> >
-> >  #include <linux/kernel.h>
-> > @@ -26,6 +27,7 @@
-> >  #define LOONGSON_NAND_IDH_STATUS       0x14
-> >  #define LOONGSON_NAND_PARAM            0x18
-> >  #define LOONGSON_NAND_OP_NUM           0x1c
-> > +#define LOONGSON_NAND_CS_RDY_MAP       0x20
-> >
-> >  /* Bitfields of nand command register */
-> >  #define LOONGSON_NAND_CMD_OP_DONE      BIT(10)
-> > @@ -40,6 +42,23 @@
-> >  #define LOONGSON_NAND_CMD_READ         BIT(1)
-> >  #define LOONGSON_NAND_CMD_VALID                BIT(0)
-> >
-> > +/* Bitfields of nand cs/rdy map register */
-> > +#define LOONGSON_NAND_MAP_CS1_SEL      GENMASK(11, 8)
-> > +#define LOONGSON_NAND_MAP_RDY1_SEL     GENMASK(15, 12)
-> > +#define LOONGSON_NAND_MAP_CS2_SEL      GENMASK(19, 16)
-> > +#define LOONGSON_NAND_MAP_RDY2_SEL     GENMASK(23, 20)
-> > +#define LOONGSON_NAND_MAP_CS3_SEL      GENMASK(27, 24)
-> > +#define LOONGSON_NAND_MAP_RDY3_SEL     GENMASK(31, 28)
-> > +
-> > +#define LOONGSON_NAND_CS_SEL0  BIT(0)
-> > +#define LOONGSON_NAND_CS_SEL1  BIT(1)
-> > +#define LOONGSON_NAND_CS_SEL2  BIT(2)
-> > +#define LOONGSON_NAND_CS_SEL3  BIT(3)
-> > +#define LOONGSON_NAND_CS_RDY0  BIT(0)
-> > +#define LOONGSON_NAND_CS_RDY1  BIT(1)
-> > +#define LOONGSON_NAND_CS_RDY2  BIT(2)
-> > +#define LOONGSON_NAND_CS_RDY3  BIT(3)
-> > +
-> >  /* Bitfields of nand timing register */
-> >  #define LOONGSON_NAND_WAIT_CYCLE_MASK  GENMASK(7, 0)
-> >  #define LOONGSON_NAND_HOLD_CYCLE_MASK  GENMASK(15, 8)
-> > @@ -53,6 +72,8 @@
-> >  #define LOONGSON_NAND_READ_ID_SLEEP_US         1000
-> >  #define LOONGSON_NAND_READ_ID_TIMEOUT_US       5000
-> >
-> > +#define LOONGSON_NAND_64BIT_DMA                BIT(0)
->
-> It's strongly suggested to replace this flag with a dma_bits field in
-> loongson_nand_host.
-> Please see the comments below.
->
-> > +
-> >  #define BITS_PER_WORD                  (4 * BITS_PER_BYTE)
-> >
-> >  struct loongson_nand_host;
-> > @@ -83,6 +104,7 @@ struct loongson_nand_data {
-> >         unsigned int hold_cycle;
-> >         unsigned int wait_cycle;
-> >         unsigned int nand_cs;
->
-> Add unsigned int dma_bits;
->
-> > +       unsigned int flags;
-> >         void (*set_addr)(struct loongson_nand_host *host, struct loongs=
-on_nand_op *op);
-> >  };
-> >
-> > @@ -751,7 +773,7 @@ static int loongson_nand_controller_init(struct loo=
-ngson_nand_host *host)
-> >         struct device *dev =3D host->dev;
-> >         struct dma_chan *chan;
-> >         struct dma_slave_config cfg =3D {};
-> > -       int ret;
-> > +       int ret, val;
-> >
-> >         host->regmap =3D devm_regmap_init_mmio(dev, host->reg_base, &lo=
-ongson_nand_regmap_config);
-> >         if (IS_ERR(host->regmap))
-> > @@ -761,6 +783,9 @@ static int loongson_nand_controller_init(struct loo=
-ngson_nand_host *host)
-> >                 regmap_update_bits(host->regmap, LOONGSON_NAND_PARAM, h=
-ost->data->id_cycle_field,
-> >                                    host->data->max_id_cycle << __ffs(ho=
-st->data->id_cycle_field));
-> >
-> > +       if (host->data->flags & LOONGSON_NAND_64BIT_DMA)
-> > +               dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-> > +
->
-> Sorry, all platforms should call dma_set_mask_and_coherent(),
-> including Loongson-1, which I missed earlier.
->        ret =3D dma_set_mask_and_coherent(dev,
-> DMA_BIT_MASK(host->data->dma_bits));
->        if (ret)
->                return dev_err_probe(dev, ret, "failed to set DMA mask\n")=
-;
->
+However, there is certain content in the elf header information, and the
+general kexec_elf_load() function cannot be used. Special processing of
+kbuf->memsz and kbuf->memsz is required.
 
-OK, if it is also required by Loongson-1, I will refactor this part.
-In addition, I will address all of the following comments in the V4
-patchset, as the V3 patchset[1] has already been submitted.
+$ readelf -l vmlinux
+...
+   Type           Offset             VirtAddr           PhysAddr
+                  FileSiz            MemSiz              Flags Align
+   LOAD           0x0000000000010000 0x9000000000200000 0x9000000000200000
+                  0x0000000002747a00 0x000000000287a0d8  RWE 0x10000
+   NOTE           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                  0x0000000000000000 0x0000000000000000  R      0x8
 
-[1]: https://lore.kernel.org/all/cover.1755757841.git.zhoubinbin@loongson.c=
-n/
+phdr->p_paddr should have been a physical address, but it is a virtual
+address on the current LoongArch. This will cause kexec_file to fail
+when loading the kernel and need to be converted to a physical address.
+Another patch is working to fix this issue[1].
 
-You are welcome to continue to comment on that patchset as well.
-> >         chan =3D dma_request_chan(dev, "rxtx");
-> >         if (IS_ERR(chan))
-> >                 return dev_err_probe(dev, PTR_ERR(chan), "failed to req=
-uest DMA channel\n");
-> > @@ -776,7 +801,14 @@ static int loongson_nand_controller_init(struct lo=
-ongson_nand_host *host)
-> >
-> >         init_completion(&host->dma_complete);
-> >
-> > -       return 0;
-> > +       val =3D FIELD_PREP(LOONGSON_NAND_MAP_CS1_SEL, LOONGSON_NAND_CS_=
-SEL1)
-> > +           | FIELD_PREP(LOONGSON_NAND_MAP_RDY1_SEL, LOONGSON_NAND_CS_R=
-DY1)
-> > +           | FIELD_PREP(LOONGSON_NAND_MAP_CS2_SEL, LOONGSON_NAND_CS_SE=
-L2)
-> > +           | FIELD_PREP(LOONGSON_NAND_MAP_RDY2_SEL, LOONGSON_NAND_CS_R=
-DY2)
-> > +           | FIELD_PREP(LOONGSON_NAND_MAP_CS3_SEL, LOONGSON_NAND_CS_SE=
-L3)
-> > +           | FIELD_PREP(LOONGSON_NAND_MAP_RDY3_SEL, LOONGSON_NAND_CS_R=
-DY3);
-> > +
-> > +       return regmap_write(host->regmap, LOONGSON_NAND_CS_RDY_MAP, val=
-);
->
-> Chip selects should be set before requesting the DMA channel.
->
-> >  }
-> >
-> >  static int loongson_nand_chip_init(struct loongson_nand_host *host)
-> > @@ -890,6 +922,7 @@ static const struct loongson_nand_data ls1b_nand_da=
-ta =3D {
-> >         .hold_cycle =3D 0x2,
-> >         .wait_cycle =3D 0xc,
-> >         .nand_cs =3D 0x0,
->
-> Add .dma_bits =3D 32,
->
-> > +       .flags =3D 0,
->
-> The assignment `.flags =3D 0x0` is redundant and can be removed.
->
-> >         .set_addr =3D ls1b_nand_set_addr,
-> >  };
-> >
-> > @@ -901,6 +934,19 @@ static const struct loongson_nand_data ls1c_nand_d=
-ata =3D {
-> >         .hold_cycle =3D 0x2,
-> >         .wait_cycle =3D 0xc,
-> >         .nand_cs =3D 0x0,
->
-> Add .dma_bits =3D 32,
->
-> > +       .flags =3D 0,
->
-> Ditto.
->
-> > +       .set_addr =3D ls1c_nand_set_addr,
-> > +};
-> > +
-> > +static const struct loongson_nand_data ls2k0500_nand_data =3D {
-> > +       .max_id_cycle =3D 6,
-> > +       .id_cycle_field =3D GENMASK(14, 12),
-> > +       .status_field =3D GENMASK(23, 16),
-> > +       .op_scope_field =3D GENMASK(29, 16),
-> > +       .hold_cycle =3D 0x4,
-> > +       .wait_cycle =3D 0x12,
-> > +       .nand_cs =3D 0x0,
-> > +       .flags =3D LOONGSON_NAND_64BIT_DMA,
->
-> Replace LOONGSON_NAND_64BIT_DMA with .dma_bits =3D 64,
->
-> >         .set_addr =3D ls1c_nand_set_addr,
-> >  };
-> >
-> > @@ -913,6 +959,10 @@ static const struct of_device_id loongson_nand_mat=
-ch[] =3D {
-> >                 .compatible =3D "loongson,ls1c-nand-controller",
-> >                 .data =3D &ls1c_nand_data,
-> >         },
-> > +       {
-> > +               .compatible =3D "loongson,ls2k0500-nand-controller",
-> > +               .data =3D &ls2k0500_nand_data,
-> > +       },
-> >         { /* sentinel */ }
-> >  };
-> >  MODULE_DEVICE_TABLE(of, loongson_nand_match);
-> > @@ -929,5 +979,6 @@ static struct platform_driver loongson_nand_driver =
-=3D {
-> >  module_platform_driver(loongson_nand_driver);
-> >
-> >  MODULE_AUTHOR("Keguang Zhang <keguang.zhang@gmail.com>");
-> > +MODULE_AUTHOR("Binbin Zhou <zhoubinbin@loongson.cn>");
-> >  MODULE_DESCRIPTION("Loongson NAND Controller Driver");
-> >  MODULE_LICENSE("GPL");
-> > --
-> > 2.47.3
-> >
->
->
-> --
-> Best regards,
->
-> Keguang Zhang
+ From the above MemSiz, it can be seen that 0x287a0d8 has not been aligned.
+Although kexec_add_buffer() will perform PAGE_SIZE alignment on kbuf->memsz,
+there is still a stampeding in the loaded kernel space and initrd space.
+The initrd resolution failed when starting the second kernel.
 
---=20
-Thanks.
-Binbin
+It can be known from the link script vmlinux.lds.S that,
+    BSS_SECTION(0, SZ_64K, 8)
+    . = ALIGN(PECOFF_SEGMENT_ALIGN);
+
+It needs to be aligned according to the SZ_64K size, so that after 
+alignment,
+its size is consistent with _kernel_asize 
+(loongarch_image_header->image_size).
+
+The following modifications will be used in the next version to fix it，
+
+--- a/arch/loongarch/kernel/kexec_elf.c
++++ b/arch/loongarch/kernel/kexec_elf.c
+@@ -28,7 +28,6 @@ static int loongarch_kexec_elf_load(struct kimage 
+*image, struct elfhdr *ehdr,
+         for (i = 0; i < ehdr->e_phnum; i++) {
+                 size_t size;
+                 const struct elf_phdr *phdr;
+-               struct loongarch_image_header *header;
+
+                 phdr = &elf_info->proghdrs[i];
+                 if (phdr->p_type != PT_LOAD)
+@@ -41,10 +40,9 @@ static int loongarch_kexec_elf_load(struct kimage 
+*image, struct elfhdr *ehdr,
+                 kbuf->buffer = (void *)elf_info->buffer + phdr->p_offset;
+                 kbuf->bufsz = size;
+                 kbuf->buf_align = phdr->p_align;
+-               header = (struct loongarch_image_header *)kbuf->buffer;
+-               *text_offset = le64_to_cpu(header->text_offset);
+-               kbuf->buf_min = *text_offset;
+-               kbuf->memsz = le64_to_cpu(header->image_size);
++               *text_offset = __pa(phdr->p_paddr);
++               kbuf->buf_min = _*text_offset;
++               kbuf->memsz = ALIGN(phdr->p_memsz, SZ_64K);
+                 kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
+
+[1]: 
+https://lore.kernel.org/loongarch/00651F3A-6649-4C69-B365-352C8D323902@flygoat.com/T/#t
+
+Thanks,
+Youling.
+> +		kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
+> +		ret = kexec_add_buffer(kbuf);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> +			    unsigned long kernel_len, char *initrd,
+> +			    unsigned long initrd_len, char *cmdline,
+> +			    unsigned long cmdline_len)
+> +{
+> +	int ret;
+> +	unsigned long text_offset = 0, kernel_segment_number;
+> +	struct elfhdr ehdr;
+> +	struct kexec_elf_info elf_info;
+> +	struct kexec_segment *kernel_segment;
+> +	struct kexec_buf kbuf;
+> +
+> +	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	/* Load the kernel */
+> +	kbuf.image = image;
+> +	kbuf.buf_max = ULONG_MAX;
+> +	kbuf.top_down = false;
+> +
+> +	kernel_segment_number = image->nr_segments;
+> +
+> +	ret = loongarch_kexec_elf_load(image, &ehdr, &elf_info, &kbuf, &text_offset);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* Load additional data */
+> +	kernel_segment = &image->segment[kernel_segment_number];
+> +	ret = load_other_segments(image, kernel_segment->mem, kernel_segment->memsz,
+> +				  initrd, initrd_len, cmdline, cmdline_len);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
+> +	image->start = kernel_segment->mem + __pa(ehdr.e_entry) - text_offset;
+> +
+> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +		      kernel_segment->mem, kbuf.bufsz, kernel_segment->memsz);
+> +
+> +out:
+> +	kexec_free_elf_info(&elf_info);
+> +	return ret ? ERR_PTR(ret) : NULL;
+> +}
+> +
+> +const struct kexec_file_ops kexec_elf_ops = {
+> +	.probe = kexec_elf_probe,
+> +	.load  = elf_kexec_load,
+> +};
+> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+> index a713acf32db8..dc6e37457559 100644
+> --- a/arch/loongarch/kernel/machine_kexec_file.c
+> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+> @@ -22,6 +22,7 @@
+>   
+>   const struct kexec_file_ops * const kexec_file_loaders[] = {
+>   	&kexec_efi_ops,
+> +	&kexec_elf_ops,
+>   	NULL
+>   };
+>   
