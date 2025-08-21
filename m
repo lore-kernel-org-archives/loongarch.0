@@ -1,106 +1,86 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2062EC549
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 13:57:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 537921F416A
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 14:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755784642; cv=none; b=UogAaDf/XIwKWATZ/H+qPyiQoYNdnGxvE7K6UhNWq/yp64FdB3E8OoHK5GaB7Hr33KS1l9ecQDKS1H+RP+0Wq6G3A2kJYQ6OxO0Hs+a3bn50bXI2sgO94QYWO53Yd4SadI98LUUY+XcdXoZjwV1arPjgCBgbeKmDSiqNRjxPBrM=
+	t=1755784893; cv=none; b=AAcsELG0iFJ9gi/ifxzmlyKfZivRj+Ptxf/YbUO5y2pGm8XjzN5WytNpOV/sp5t/O4KFNttCPzFMdDmR/KOZ4WBipknc9fDjG0CmcK+L3o6BlbTEdCuTx9GFXgaTUO9PicYPnp9eb5EJhr/JhwZ2rTzsAeL92YsGHp8h/XN5QWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755784642; c=relaxed/simple;
-	bh=HpItTb+c1tnNZomgUg+j0M9PgucXLcsaOZnwSK3zXns=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=O24vULDiqrM+0Lyw+ihqwrZjEjff3fKlBzKPpWk/yzdG8eMqb9dI0gHuRfqyRF6rYmG3gAjUNXEdhPXCi8paOOTorcNst7swbEvYZoke9EEwmmUuIsaQOEvgVrjWTNysbkP71U6mlPJ25+/OQ1L07DhqNyqcUH9Ex57FGVrYmdQ=
+	s=arc-20240116; t=1755784893; c=relaxed/simple;
+	bh=3ehpm10K5W8NSlHoWMV6jzSx1aXWo0UGSFSZEK2dpXY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Er6AWnGVCICnSIu5pTztvBRLxTVi0bQuH1pE8BH+33taR4YQq189RsUTgMGvRSYO/2LSEEKvAmLhcXiB39vOPw5aeNzSNnrF/fmUpk+LqqUAcFIW6xdGjcdKUEYv7VoxAa3AqjX5SNoSfvds09wnaklZZa2YvL5LqsOdaGvL2CQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxE9C4JadonHUBAA--.2383S3;
-	Thu, 21 Aug 2025 21:57:12 +0800 (CST)
-Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDx_8O4Jado7MNdAA--.26264S3;
-	Thu, 21 Aug 2025 21:57:12 +0800 (CST)
-Subject: Re: [PATCH 3/3] LoongArch: BPF: No support of struct argument in
- trampoline programs
-To: Hengqi Chen <hengqi.chen@gmail.com>, chenhuacai@kernel.org,
- jianghaoran@kylinos.cn, duanchenghao@kylinos.cn, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
- vincent.mc.li@gmail.com
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev
-References: <20250821091003.404870-1-hengqi.chen@gmail.com>
- <20250821091003.404870-4-hengqi.chen@gmail.com>
+	by gateway (Coremail) with SMTP id _____8Bx2tG2Jqdo+XUBAA--.2740S3;
+	Thu, 21 Aug 2025 22:01:26 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxpeSyJqdorsZdAA--.26328S2;
+	Thu, 21 Aug 2025 22:01:23 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <21c7ea87-6e48-6e96-fff2-6436db8fdb2a@loongson.cn>
-Date: Thu, 21 Aug 2025 21:57:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/2] LoongArch: BPF: Add more feature for trampoline
+Date: Thu, 21 Aug 2025 22:01:20 +0800
+Message-ID: <20250821140122.29752-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250821091003.404870-4-hengqi.chen@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDx_8O4Jado7MNdAA--.26264S3
+X-CM-TRANSID:qMiowJBxpeSyJqdorsZdAA--.26328S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uw1DJr1kJw4fXw1xJFW5Arc_yoW8JFW3pr
-	45uFsIyFZYgry7XFnrJ3yDXr1ayFZ8GrW2ga1FkryUGFnxX3s8Xr1rKas8XFs5JwsYkFyF
-	qw1q9rnIy3WUAacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
-	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XF4kCr47AF1xWF4DCrW8Zrc_yoWDWwcEkF
+	yfKFyDGw18Wa4YqF9Fqr1fAryDuFW7JryrCF48XrZ5Kr17Xw45Ar4vy34Dur109rs3Xa98
+	trnFyry0yryxuosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb78YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_
+	Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
 
-On 2025/8/21 下午5:10, Hengqi Chen wrote:
-> The current implementation does not support struct argument.
+This is a RFC series, based on Hengqi's series [1]:
 
-...
+  LoongArch: Fix BPF trampoline related issues
 
-> Reject it for now.
-> 
-> Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support")
-> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> ---
->   arch/loongarch/net/bpf_jit.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 6754e5231ece..a87f51f5b708 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1516,6 +1516,12 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
->   	if (m->nr_args > LOONGARCH_MAX_REG_ARGS)
->   		return -ENOTSUPP;
->   
-> +	/* don't support struct argument */
-> +	for (i = 0; i < m->nr_args; i++) {
-> +		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
-> +			return -ENOTSUPP;
-> +	}
-> +
+The initial aim is to pass the following related testcase:
 
-Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+  sudo ./test_progs -a tracing_struct/struct_args
+  sudo ./test_progs -a tracing_struct/struct_many_args
+  sudo ./test_progs -a fentry_test/fentry_many_args
+  sudo ./test_progs -a fexit_test/fexit_many_args
 
-By the way, I have 2 patches locally, one patch is to implement this 
-feature, but there exist some other problems now, maybe it is related 
-with the following failed testcase:
+but there exist some other problems now, maybe it is related with
+the following failed testcase:
 
-   sudo ./test_progs -t module_attach
+  sudo ./test_progs -t module_attach
 
-Anyway, I will send a RFC series later for your review.
+so just RFC for now, I will address the comments and send a formal
+series once there are no problems.
 
-Thanks,
-Tiezhu
+[1] https://lore.kernel.org/loongarch/20250821091003.404870-1-hengqi.chen@gmail.com/
+
+Tiezhu Yang (2):
+  LoongArch: BPF: Add struct arguments support for trampoline
+  LoongArch: BPF: Add 12 function arguments support for trampoline
+
+ arch/loongarch/net/bpf_jit.c | 84 ++++++++++++++++++++++++++----------
+ 1 file changed, 61 insertions(+), 23 deletions(-)
+
+-- 
+2.42.0
 
