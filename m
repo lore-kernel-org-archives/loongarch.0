@@ -1,299 +1,164 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09CAEAE7
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 07:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D7A1F3BAE
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 09:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755760542; cv=none; b=cszKXxsFT4dAArGGfUqYYNBZA0NsrYDm562DrS8RaQ1ODPCY4+Te4h/4O5UFG8lMwgsru23hkcnVCHMQv0wlDVE6Y80s0iq18sIOn+NZ/z9Gt4unjqEOFLur6qblrJlfoo0CE8zxFtywus7R2pe0G3MPUCQ0mdthl9mAc9sMWjI=
+	t=1755768994; cv=none; b=qzvuFR1pDbsvgAd9JUWHcZ0tMlGetoGOkaJfJB3TZg8Sg4Y+6bL6F99mFyiRnUbYDZ1xDjwmFB6THw5ExBEp9GvZg+jqw9lgtBBOBNvbslImbnUJ7GxHHDy9BoeCJcxeZxh6t2LnfF6SnHIIG/UNknqVOn+BiwccrcfC/6OmtdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755760542; c=relaxed/simple;
-	bh=mBgYXcM+87FWaUtyCH5Q27VePGEs0N0aX3g5KEB5/k4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gU2XsJxuGN9KVuW2ZGVqfTL+kp3GftYP70pT+gQRxWlN3z75Qr+Q4MqPLb/ZopYisgGfJeZehodBNJEM+O5/WLdE/O2sySn3YExnq1zf7w1ntsLB7Y0syqivTKbRmIPTdvUjmu7ee5/SxIa+Izf11VoiXdqTKCaJWab7je8CUBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=knxq+tVi; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1755768994; c=relaxed/simple;
+	bh=nqx9qiv0zX+m1DlAVHHEFQpBiJu5QKpiHNQao79cgLU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jx7Q9T2e2TfQRYKxGdqO2CNHXJBtZHT7s9MDF9JB1RiIEZJ/dBhvtwBSipDHqsaCmh4HTfFICYZx3qvPSY4GErLy/Kf4vIFIjZb15E1qPRewkTp8wrooddozbXysO24ZN/VwW9hRYeKH6Z1iAiB8j3TpWN1iqfMFPHaNXdGNMCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LGl+HZep; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="knxq+tVi"
-Message-ID: <284a663f-3bdd-4dcc-b017-b1b3fe6d9eb1@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755760526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hAJlHDvRqPXZP6gjpMtCItfPezDjP3bZ9+iZXylcguQ=;
-	b=knxq+tVimd9IbWYeagAu12XA+IPT9X5xTur4GrkRgf067Tk/mT3o5S0OPrDr0B1l9PKhga
-	52EcIZ52FIgtIwgx/QZTcynLtOlcpA+PLTsRbTdL4qA9kjrvZFC9x1RW5a3riqeJWzp5Qz
-	OKJI161XwmCJRjhiLChhKQj4WusaqA4=
-Date: Thu, 21 Aug 2025 15:14:46 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LGl+HZep"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 751B8C113CF
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 09:36:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755768994;
+	bh=nqx9qiv0zX+m1DlAVHHEFQpBiJu5QKpiHNQao79cgLU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LGl+HZepvSYTrSZQvPJz2CzFJjrPyIOlh2klCFObTfOrWk89AotH5iuMttASQbhRi
+	 Igy+IKt1CzX8mQbM8uVBWL38CND+hu2eGAxD6+zoJs1UuFv88OgIukQJGOeSphEKag
+	 vHP7epmux7UVDxIAaL0SUuQdMbaAW9EtxGkETU8aa/XDyyiqRrso5/37GxqIcsraip
+	 zHMSiUihE/fZNEF6o9MLFOR4MTaQB//Jc38+L7h9XknM0RgSvRWrfrFpIo7BCZB7V1
+	 AL1AVh1T1PAHvzEooatgXVC2khIcvjplxrqPXscyvR5mVvDbZUHks1bblPh6wjSzQD
+	 PPk4EGJ542FtA==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-61a2a5b0689so1366716a12.1
+        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 02:36:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVoPeVZGpyitSp87M2cQ+mKQ+Gl8nC1vdrR7ZFgCsA1YLVTf6c8BVEx9LVaS0ykkxTon8z53D1eUVs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzZjPrQ1jtXyq1/ADTn0aaxzfA9W8QZ20/MkIU5v1sK8i4DUPz/
+	yaervkdXvBtK1RynUxxRMYaqowK/NzYnat4HMXVAZqUxpNMAOtYHqS9Nw4V09OoCdsDBHILgMEC
+	pQWN5OmlnWTObzeqiVHI91CZrZN9UhQc=
+X-Google-Smtp-Source: AGHT+IFEA4wBZ6jlw56hAlRjDBUN+5W/lUtKr64PRv6Oy8jgud1DgDbvtzdnv5gAySIvxnJ+6+zjVTdFxjbAUHGHioE=
+X-Received: by 2002:a05:6402:34cc:b0:61a:7e43:65f7 with SMTP id
+ 4fb4d7f45d1cf-61bf8728294mr1495394a12.18.1755768992966; Thu, 21 Aug 2025
+ 02:36:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 3/5] LoongArch/kexec_file: Support loading ELF binary
- file
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
- Yao Zi <ziyao@disroot.org>, kexec@lists.infradead.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Youling Tang <tangyouling@kylinos.cn>
-References: <20250820055700.24344-1-youling.tang@linux.dev>
- <20250820055700.24344-4-youling.tang@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Youling Tang <youling.tang@linux.dev>
-In-Reply-To: <20250820055700.24344-4-youling.tang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250820021551.911917-1-lixianglai@loongson.cn>
+In-Reply-To: <20250820021551.911917-1-lixianglai@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 21 Aug 2025 17:36:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4+HQ9tZTKUgBqfkjDQnvhqVRcXy+yH0ZrYmCZoiv0BQA@mail.gmail.com>
+X-Gm-Features: Ac12FXzhmiV55DKl9Us75CDtoKOVW4ffSqRstkEZquCXTuKFhGBz-lQsu-aTTUA
+Message-ID: <CAAhV-H4+HQ9tZTKUgBqfkjDQnvhqVRcXy+yH0ZrYmCZoiv0BQA@mail.gmail.com>
+Subject: Re: [PATCH V2] LoongArch: time: Fix the issue of high cpu usage of
+ vcpu threads in virtual machines
+To: Xianglai Li <lixianglai@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Bibo Mao <maobibo@loongson.cn>, 
+	Song Gao <gaosong@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/8/20 13:56, Youling Tang wrote:
+Applied, thanks.
 
-> From: Youling Tang <tangyouling@kylinos.cn>
+Huacai
+
+On Wed, Aug 20, 2025 at 10:39=E2=80=AFAM Xianglai Li <lixianglai@loongson.c=
+n> wrote:
 >
-> This patch creates kexec_elf_ops to load ELF binary file
-> for kexec_file_load() syscall.
+> When the cpu is offline, the timer under loongarch is not correctly close=
+d,
+> resulting in an excessively high cpu usage rate of the offline vcpu threa=
+d
+> in the virtual machine.
 >
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> To correctly close the timer, we have made the following modifications:
+>
+> Register the cpu hotplug timer start event for loongarch.This event will
+> be called to close the timer when the cpu is offline.
+>
+> Clear the timer interrupt when the timer is turned off, Because before th=
+e
+> timer is turned off, there may be a timer interrupt that has been in the
+> pending state due to the interruption of the disabled, which also affects
+> the halt state of the offline vcpu.
+>
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
 > ---
->   arch/loongarch/Kconfig                     |   1 +
->   arch/loongarch/include/asm/kexec.h         |   1 +
->   arch/loongarch/kernel/Makefile             |   2 +-
->   arch/loongarch/kernel/kexec_elf.c          | 105 +++++++++++++++++++++
->   arch/loongarch/kernel/machine_kexec_file.c |   1 +
->   5 files changed, 109 insertions(+), 1 deletion(-)
->   create mode 100644 arch/loongarch/kernel/kexec_elf.c
+> V1->V2:
+> 1.Add the implementation of the function arch_timer_starting
+> 2.Add more descriptions about clear timer interrupts in the commit messag=
+e
+> 3.Delete useless prints
+> 4.Adjust the calling position of the function cpuhp_setup_state
+> 5.Adjust the timer interrupt clear position
 >
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 490dc6eed749..bf2664ed7ce3 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -632,6 +632,7 @@ config ARCH_SELECTS_KEXEC_FILE
->   	def_bool y
->   	depends on KEXEC_FILE
->   	select HAVE_IMA_KEXEC if IMA
-> +	select KEXEC_ELF
->   	select RELOCATABLE
->   
->   config ARCH_SUPPORTS_CRASH_DUMP
-> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
-> index 34799db933fb..fecfb3015abc 100644
-> --- a/arch/loongarch/include/asm/kexec.h
-> +++ b/arch/loongarch/include/asm/kexec.h
-> @@ -43,6 +43,7 @@ struct kimage_arch {
->   
->   #ifdef CONFIG_KEXEC_FILE
->   extern const struct kexec_file_ops kexec_efi_ops;
-> +extern const struct kexec_file_ops kexec_elf_ops;
->   
->   int arch_kimage_file_post_load_cleanup(struct kimage *image);
->   #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index dd6183f353e6..001924877772 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -62,7 +62,7 @@ obj-$(CONFIG_MAGIC_SYSRQ)	+= sysrq.o
->   obj-$(CONFIG_RELOCATABLE)	+= relocate.o
->   
->   obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
-> -obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o
-> +obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o kexec_elf.o
->   obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
->   
->   obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
-> diff --git a/arch/loongarch/kernel/kexec_elf.c b/arch/loongarch/kernel/kexec_elf.c
-> new file mode 100644
-> index 000000000000..d41ee5fd7cef
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/kexec_elf.c
-> @@ -0,0 +1,105 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Load ELF vmlinux file for the kexec_file_load syscall.
-> + *
-> + * Author: Youling Tang <tangyouling@kylinos.cn>
-> + * Copyright (C) 2025 KylinSoft Corporation.
-> + */
-> +
-> +#define pr_fmt(fmt)	"kexec_file(ELF): " fmt
-> +
-> +#include <linux/elf.h>
-> +#include <linux/kexec.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <linux/memblock.h>
-> +#include <asm/image.h>
-> +#include <asm/setup.h>
-> +
-> +static int loongarch_kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-> +			 struct kexec_elf_info *elf_info,
-> +			 struct kexec_buf *kbuf,
-> +			 unsigned long *text_offset)
+>  arch/loongarch/kernel/time.c | 22 ++++++++++++++++++++++
+>  include/linux/cpuhotplug.h   |  1 +
+>  2 files changed, 23 insertions(+)
+>
+> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+> index 367906b10f81..09b95f28bdcc 100644
+> --- a/arch/loongarch/kernel/time.c
+> +++ b/arch/loongarch/kernel/time.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sched_clock.h>
+>  #include <linux/spinlock.h>
+> +#include <linux/cpu.h>
+>
+>  #include <asm/cpu-features.h>
+>  #include <asm/loongarch.h>
+> @@ -102,6 +103,23 @@ static int constant_timer_next_event(unsigned long d=
+elta, struct clock_event_dev
+>         return 0;
+>  }
+>
+> +static int arch_timer_dying_cpu(unsigned int cpu)
 > +{
-> +	int ret = -1;
-> +	size_t i;
+> +       constant_set_state_shutdown(this_cpu_ptr(&constant_clockevent_dev=
+ice));
 > +
-> +	/* Read in the PT_LOAD segments. */
-> +	for (i = 0; i < ehdr->e_phnum; i++) {
-> +		size_t size;
-> +		const struct elf_phdr *phdr;
-> +		struct loongarch_image_header *header;
+> +       /* Clear Timer Interrupt */
+> +       write_csr_tintclear(CSR_TINTCLR_TI);
 > +
-> +		phdr = &elf_info->proghdrs[i];
-> +		if (phdr->p_type != PT_LOAD)
-> +			continue;
-> +
-> +		size = phdr->p_filesz;
-> +		if (size > phdr->p_memsz)
-> +			size = phdr->p_memsz;
-> +
-> +		kbuf->buffer = (void *)elf_info->buffer + phdr->p_offset;
-> +		kbuf->bufsz = size;
-> +		kbuf->buf_align = phdr->p_align;
-> +		header = (struct loongarch_image_header *)kbuf->buffer;
-> +		*text_offset = le64_to_cpu(header->text_offset);
-> +		kbuf->buf_min = *text_offset;
-> +		kbuf->memsz = le64_to_cpu(header->image_size);
-Elf kernel resolution should not be used to struct loongarch_image_header,
-members of the content contained in the inner world of CONFIG_EFI_STUB in
-the arch/loongarch/kernel/head.S, should use the content inside the elf
-header information, The kexec-tools tool should also be fixed.
-
-However, there is certain content in the elf header information, and the
-general kexec_elf_load() function cannot be used. Special processing of
-kbuf->memsz and kbuf->memsz is required.
-
-$ readelf -l vmlinux
-...
-   Type           Offset             VirtAddr           PhysAddr
-                  FileSiz            MemSiz              Flags Align
-   LOAD           0x0000000000010000 0x9000000000200000 0x9000000000200000
-                  0x0000000002747a00 0x000000000287a0d8  RWE 0x10000
-   NOTE           0x0000000000000000 0x0000000000000000 0x0000000000000000
-                  0x0000000000000000 0x0000000000000000  R      0x8
-
-phdr->p_paddr should have been a physical address, but it is a virtual
-address on the current LoongArch. This will cause kexec_file to fail
-when loading the kernel and need to be converted to a physical address.
-Another patch is working to fix this issue[1].
-
- From the above MemSiz, it can be seen that 0x287a0d8 has not been aligned.
-Although kexec_add_buffer() will perform PAGE_SIZE alignment on kbuf->memsz,
-there is still a stampeding in the loaded kernel space and initrd space.
-The initrd resolution failed when starting the second kernel.
-
-It can be known from the link script vmlinux.lds.S that,
-    BSS_SECTION(0, SZ_64K, 8)
-    . = ALIGN(PECOFF_SEGMENT_ALIGN);
-
-It needs to be aligned according to the SZ_64K size, so that after 
-alignment,
-its size is consistent with _kernel_asize 
-(loongarch_image_header->image_size).
-
-The following modifications will be used in the next version to fix it，
-
---- a/arch/loongarch/kernel/kexec_elf.c
-+++ b/arch/loongarch/kernel/kexec_elf.c
-@@ -28,7 +28,6 @@ static int loongarch_kexec_elf_load(struct kimage 
-*image, struct elfhdr *ehdr,
-         for (i = 0; i < ehdr->e_phnum; i++) {
-                 size_t size;
-                 const struct elf_phdr *phdr;
--               struct loongarch_image_header *header;
-
-                 phdr = &elf_info->proghdrs[i];
-                 if (phdr->p_type != PT_LOAD)
-@@ -41,10 +40,9 @@ static int loongarch_kexec_elf_load(struct kimage 
-*image, struct elfhdr *ehdr,
-                 kbuf->buffer = (void *)elf_info->buffer + phdr->p_offset;
-                 kbuf->bufsz = size;
-                 kbuf->buf_align = phdr->p_align;
--               header = (struct loongarch_image_header *)kbuf->buffer;
--               *text_offset = le64_to_cpu(header->text_offset);
--               kbuf->buf_min = *text_offset;
--               kbuf->memsz = le64_to_cpu(header->image_size);
-+               *text_offset = __pa(phdr->p_paddr);
-+               kbuf->buf_min = _*text_offset;
-+               kbuf->memsz = ALIGN(phdr->p_memsz, SZ_64K);
-                 kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
-
-[1]: 
-https://lore.kernel.org/loongarch/00651F3A-6649-4C69-B365-352C8D323902@flygoat.com/T/#t
-
-Thanks,
-Youling.
-> +		kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
-> +		ret = kexec_add_buffer(kbuf);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	return ret;
+> +       return 0;
 > +}
 > +
-> +static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-> +			    unsigned long kernel_len, char *initrd,
-> +			    unsigned long initrd_len, char *cmdline,
-> +			    unsigned long cmdline_len)
+> +static int arch_timer_starting(unsigned int cpu)
 > +{
-> +	int ret;
-> +	unsigned long text_offset = 0, kernel_segment_number;
-> +	struct elfhdr ehdr;
-> +	struct kexec_elf_info elf_info;
-> +	struct kexec_segment *kernel_segment;
-> +	struct kexec_buf kbuf;
+> +       set_csr_ecfg(ECFGF_TIMER);
 > +
-> +	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	/* Load the kernel */
-> +	kbuf.image = image;
-> +	kbuf.buf_max = ULONG_MAX;
-> +	kbuf.top_down = false;
-> +
-> +	kernel_segment_number = image->nr_segments;
-> +
-> +	ret = loongarch_kexec_elf_load(image, &ehdr, &elf_info, &kbuf, &text_offset);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* Load additional data */
-> +	kernel_segment = &image->segment[kernel_segment_number];
-> +	ret = load_other_segments(image, kernel_segment->mem, kernel_segment->memsz,
-> +				  initrd, initrd_len, cmdline, cmdline_len);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
-> +	image->start = kernel_segment->mem + __pa(ehdr.e_entry) - text_offset;
-> +
-> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> +		      kernel_segment->mem, kbuf.bufsz, kernel_segment->memsz);
-> +
-> +out:
-> +	kexec_free_elf_info(&elf_info);
-> +	return ret ? ERR_PTR(ret) : NULL;
+> +       return 0;
 > +}
 > +
-> +const struct kexec_file_ops kexec_elf_ops = {
-> +	.probe = kexec_elf_probe,
-> +	.load  = elf_kexec_load,
-> +};
-> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-> index a713acf32db8..dc6e37457559 100644
-> --- a/arch/loongarch/kernel/machine_kexec_file.c
-> +++ b/arch/loongarch/kernel/machine_kexec_file.c
-> @@ -22,6 +22,7 @@
->   
->   const struct kexec_file_ops * const kexec_file_loaders[] = {
->   	&kexec_efi_ops,
-> +	&kexec_elf_ops,
->   	NULL
->   };
->   
+>  static unsigned long get_loops_per_jiffy(void)
+>  {
+>         unsigned long lpj =3D (unsigned long)const_clock_freq;
+> @@ -172,6 +190,10 @@ int constant_clockevent_init(void)
+>         lpj_fine =3D get_loops_per_jiffy();
+>         pr_info("Constant clock event device register\n");
+>
+> +       cpuhp_setup_state(CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
+> +                         "clockevents/loongarch/timer:starting",
+> +                         arch_timer_starting, arch_timer_dying_cpu);
+> +
+>         return 0;
+>  }
+>
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index edfa61d80702..6606c1546afc 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -159,6 +159,7 @@ enum cpuhp_state {
+>         CPUHP_AP_PERF_ARM_STARTING,
+>         CPUHP_AP_PERF_RISCV_STARTING,
+>         CPUHP_AP_ARM_L2X0_STARTING,
+> +       CPUHP_AP_LOONGARCH_ARCH_TIMER_STARTING,
+>         CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
+>         CPUHP_AP_ARM_ARCH_TIMER_STARTING,
+>         CPUHP_AP_ARM_ARCH_TIMER_EVTSTRM_STARTING,
+> --
+> 2.39.1
+>
+>
