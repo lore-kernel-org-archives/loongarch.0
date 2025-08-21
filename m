@@ -1,63 +1,63 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3E81E9B08
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 12:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABA01F3FEC
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 12:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755778616; cv=none; b=kjueSM+7Yh0f/CWDcuRVoSOL6rcOZuyhGsA8zoaNA+cignpE/eInJGO1ub4unCz3SFIXQpGgHTPnV+ef8MliQ6O/Qsv4+IhXDpH1BC9Oi0OHIOH1JxFG2kQ0ny+tlHuDUFOtuQyQrVCpgtefLhzP83S+cCsonk9h0OcJqE5+Z3Y=
+	t=1755778622; cv=none; b=EI9sYYb+7OP5XbK8PnFATsVNL7CFduPL0IatcK6qOcsj/Rh/aRHqjVeSQL0bbNtd+ViajGX/xR4a3bHal3vnB4tK+G3WjaqVTrWBMkB4Joh1eMg49nFjvXo3ip2NItd1d2qTSrOEOC7dYRr5UT+4YpveNivNKVXIj9DO73ga3gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755778616; c=relaxed/simple;
-	bh=JQDXMFvPcMYCXT1HO2om+5Pr2frOt1z1iQIaaWYLM4o=;
+	s=arc-20240116; t=1755778622; c=relaxed/simple;
+	bh=YrjoTJI6JBY5AbzUyt1qMwTNNmqXTVMk5uzwMU1ycus=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CLwX5kPB51pkqvuRbdYNhUq0jIbbOrErE2Kg9xRHVREjvxEMh0de+n/tRbrh/A/2s+Iezbb60lizjT5wnot/0zQx462NlU8N2HkM5iRQhvJ9GKSrr9SsIrbPYCBownNzMClQN+QJQvCwJkyt8n+j5GqYqUD/G0Z8gModYkDSkas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ObUzIdeE; arc=none smtp.client-ip=209.85.215.178
+	 MIME-Version; b=g5zt52V/mnQvwvErcmrXY/shtYlVV2QUHHzhuGYtFHgr6Vg628l3lfQD0Yo9UY/xn9G+O2KPRiJ/xeRCPDefzNnsENxEf9OPYyZw+XrI1pJeFeW68ODj5ebUCxxN+LcyE7B7CqrtPB5zSYb0SmZSQHG2jMXjgzV4AirssIePpCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YOczkdK9; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ObUzIdeE"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b4746fd4793so757160a12.1
-        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 05:16:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YOczkdK9"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-321cfa7ad29so1544741a91.1
+        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 05:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755778614; x=1756383414; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1755778620; x=1756383420; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qvMUEjmvT4pmoXC0sNPb0RUMTP4b3u1zXLwmgoKlvX0=;
-        b=ObUzIdeE2C2SKeJKrMFO90XplqP0ySSq4nCt56z3xO7sD62v99SsdcXtIVaj8TtaI4
-         na/0SJgfxkK6wjwa1Z4z1IGSFo9hhgpQ1PVatkNDqHShu5N2gamvpDfvJO/U5olX+SNR
-         FTrOXAVQS1GHGLoSQ7i7eBT7lwqwbeXisVS7O1jgB5HyLXo6sWnfZ9JTd8MB8p/z+zrs
-         9wmFgqSJ0WVEWxnEABVymK2ZaG5zc16IW1rBTrINPt+Wg+SaMHz6+Ld0gyO29h/SOAiD
-         kTT5+2PkFMm1PCMO0ScXh7EKQr+mINZZq1n9eW/8dQhvuYNspIE88RIeS9EnJTgcLgCJ
-         niqA==
+        bh=OqamakcfwHFPLKt58TYCPYhTXg3ZUi1tEP08t5AyrIw=;
+        b=YOczkdK9J+YNhBScrPc9E0guigFBvyLrAT1b/Ja+n3kp+gQcmjbEXOlMIK3ijMxuAn
+         9MbxatUuLehzrlTwvL9J+t59jXozuc6BqPRX0zgAUIIX0I3Kkbq6nvJCp/g6lx+qJiBU
+         DWAwTkOFPfkZDqEmp7LGJOYH7BiJuUsl/BN9taYGLHmJMyHLtclDfKurPTJPhoRGOTDJ
+         gzvDcIC07LWEOItg3t0YbS/MFZovDDWFSz9C8QzXgs2t2ETzkWiA9ibULyrt9A+NFmi1
+         bUXsprYiDWkvricj+pKD6bxmW7NXIZvo35hRU50Hscg2dfFYYJZVhzYeDaJOBWGz1X8O
+         8M1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755778614; x=1756383414;
+        d=1e100.net; s=20230601; t=1755778620; x=1756383420;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qvMUEjmvT4pmoXC0sNPb0RUMTP4b3u1zXLwmgoKlvX0=;
-        b=E59Z7/2274GiXhrr8M30GXz/bWOsVARFOlgo+d2Cb8gOiyOZOD4tK881x2kQ3Yw9fJ
-         j3IVcMfy0hl585q3uTJsrnyuwf0vkxVMsh8Iy9yWNIPo2mcCfW6pAYPIJ9pajQzmm1AM
-         iPBVjDxe6zCuTCM2hRDvHwQIxEf95cgiuS/7bIYICk5uK6SOqq4beWPodRVKeauwJ4Xk
-         Fj05k5fOdrF4LxHNTvG0TeL8qKZTAotwbGWgSmGaCUZ4yG1nIrkll6CJpQBSBcmmV3qV
-         TwkHG8yZBDPKZFEwv80iRFOGCv39mTZPLoBj5VvvIj4v/O90EtgcLwULX0wV8uiG7qL1
-         y+Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKMDYq2koVk35yYfVAiLOkPLN4IrBjoCD5B5ysBEjXoeLAc0eYmwymTKQwvnHamNiNrqs5fnr4PEg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yybr5Ji+x8qaq3KG/RfC33tcFhN+vl/xENBbJaaOST0rfCkBw6a
-	aHlo704An4Boc/tRUnh1TsovoO2sJmJ+MbSpWJSSbVJOW3FHPzewrKIB
-X-Gm-Gg: ASbGncuFsYzP6F+M8dIA6z1OHnxt+vPAtyijNkhBGPStypYRlPBoEUvZ3P0GjKxDuPS
-	5g3ZJ6g1x47wmmgJ68jAQhcmeFhAjfdTkUdBCL70TcsKFRWtR6VdWF0tt/1iiGxBUnjNgn6gWKX
-	XkLwXMX3bRFMENKnSJYyq69AGrcnViRtZPK8MuiRm+OulXFxLZWnAguIO48Wg/wCd7K3XbSzZD3
-	my+OvsgtHp/Zks4C1w3x8spHSuXZQMu/Spb+bKIyC0y9SLv4oDB5EuPZi+5qT3mmeuCCsws0zqt
-	VrRtQGBX2Q90rpc6/V5ObsP4AeMDOk8JSp2DCNLJv+yC50DXiFm5oip9NQyhQ1BDdB4mDYNnTGL
-	ns4GQFp2kervSKz6RD5x1GKWZ/Qq3VAtPsPf3to4T
-X-Google-Smtp-Source: AGHT+IGsRutbFNcD/vVxMYnjXNXxntsxG1mdq1WK7tx+U95NZ1J3jn+Zp8lIho27pPyXCgcn8S9XUw==
-X-Received: by 2002:a17:903:3c6f:b0:234:d292:be95 with SMTP id d9443c01a7336-245fedd1f8cmr27545915ad.42.1755778614176;
-        Thu, 21 Aug 2025 05:16:54 -0700 (PDT)
+        bh=OqamakcfwHFPLKt58TYCPYhTXg3ZUi1tEP08t5AyrIw=;
+        b=EMUrw20bn8nrNXXJMU90L5CmcgZTzBrBbNseOTps9jZVeqYA4LkvfdAWdmVEDS3Dt6
+         BxN7IL+CsJnsX2W1WKTSIi3AajC2cf0ni742AtY7pRSW/X2GiD4egOAH4QL6gb9KLhsm
+         VnW2C4uaQ+TwE33yCujfY4vFo8vaeBKSQPqQp5imPQgczSKSWTpxB9OvDsT+/KeRVGbH
+         7B7jZbzbFig7ZbsHo39DmHLGtLdXB40pcM28MObGhhYFg3vqyPlez8cKoV0BIuVdqYTI
+         7wd6SalQqO14EeZjbL95aBiNgIXsbvDK9BeF40uHuVy8CJEVgrOFveswySN7CMFmCfzA
+         0IFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgDOab5pf23iCHY0wXxoK05x4Zyg5FaKOvXFgXpsKOmXrrDq8aKmWIfhzzs1/BLpNCOVWt//+XlAU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy65rJDX1v58HRyhIQbS1VwOS/Y90lYB/Tx8vDZR9Y6wmWa8yKa
+	5k1kfQGk4MM+9gfjcHce/mf8DQAd3uDP8uAIgl5DvyLagoLHbSlqv6/S
+X-Gm-Gg: ASbGnctPAObrNbatNV115UPmRWnrXEBq+h17nqYMN/yyAO+svkpMDy+nSBw7a3jfFPK
+	s7h2mP1g4UTVBA+YTpZr4Af/IkRVOuQfhSzv14tmDnhX6JyRE8qpXAf7ReplYuQK7suoGyGwTMb
+	kRQt23HwhQqae2zwyZfdVR6ixrFR/hWo9Qx+Z9ubkFkysqQr4odrI7Px2rXmpkjakLOvY3tLg3o
+	bJtANkE6/hGMEzofidpVB5xpkl5rAwH/JqYdPDJVS+PpeKi2vKQD2JEqIGuWGqUav5Sj2LSXeX7
+	fBYWH39TPWKOEv17cV3nuhcBaCXl+vyI5PVcD/549UYDrRsY/GTfCjyzFm5gTbhl4cfw6fHRhZm
+	UdFGYgdXOACOpXTHOys8pu0EQOA57LMZDt6AsgQzw
+X-Google-Smtp-Source: AGHT+IFioRcTnWkaN7vAuc6OYhbDDtjv9XBvPVRvGl/yn3M6ZYsZBYGGu9dMLWHG+nZcFAestbB/xQ==
+X-Received: by 2002:a17:90b:3d09:b0:31e:f30f:6d3b with SMTP id 98e67ed59e1d1-324eecf9b08mr2759366a91.2.1755778620068;
+        Thu, 21 Aug 2025 05:17:00 -0700 (PDT)
 Received: from devbox.. ([43.132.141.28])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-324f2c48337sm1745442a91.25.2025.08.21.05.16.50
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-324f2c48337sm1745442a91.25.2025.08.21.05.16.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Aug 2025 05:16:53 -0700 (PDT)
+        Thu, 21 Aug 2025 05:16:59 -0700 (PDT)
 From: Hengqi Chen <hengqi.chen@gmail.com>
 To: chenhuacai@kernel.org,
 	yangtiezhu@loongson.cn,
@@ -71,9 +71,9 @@ To: chenhuacai@kernel.org,
 Cc: bpf@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Hengqi Chen <hengqi.chen@gmail.com>
-Subject: [PATCH 2/3] LoongArch: BPF: Sign extend struct ops return values properly
-Date: Thu, 21 Aug 2025 09:10:02 +0000
-Message-ID: <20250821091003.404870-3-hengqi.chen@gmail.com>
+Subject: [PATCH 3/3] LoongArch: BPF: No support of struct argument in trampoline programs
+Date: Thu, 21 Aug 2025 09:10:03 +0000
+Message-ID: <20250821091003.404870-4-hengqi.chen@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250821091003.404870-1-hengqi.chen@gmail.com>
 References: <20250821091003.404870-1-hengqi.chen@gmail.com>
@@ -85,181 +85,71 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The ns_bpf_qdisc selftest triggers a kernel panic:
+The current implementation does not support struct argument.
+This cause a oops when running bpf selftest:
 
-    CPU 0 Unable to handle kernel paging request at virtual address 0000000000741d58, era == 90000000851b5ac0, ra == 90000000851b5aa4
+    $ ./test_progs -a tracing_struct
+    CPU -1 Unable to handle kernel paging request at virtual address 0000000000000018, era == 90000000845659f4, ra == 90000000845659e8
     Oops[#1]:
-    CPU: 0 UID: 0 PID: 449 Comm: test_progs Tainted: G           OE       6.16.0+ #3 PREEMPT(full)
-    Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-    Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
-    pc 90000000851b5ac0 ra 90000000851b5aa4 tp 90000001076b8000 sp 90000001076bb600
-    a0 0000000000741ce8 a1 0000000000000001 a2 90000001076bb5c0 a3 0000000000000008
-    a4 90000001004c4620 a5 9000000100741ce8 a6 0000000000000000 a7 0100000000000000
-    t0 0000000000000010 t1 0000000000000000 t2 9000000104d24d30 t3 0000000000000001
-    t4 4f2317da8a7e08c4 t5 fffffefffc002f00 t6 90000001004c4620 t7 ffffffffc61c5b3d
-    t8 0000000000000000 u0 0000000000000001 s9 0000000000000050 s0 90000001075bc800
-    s1 0000000000000040 s2 900000010597c400 s3 0000000000000008 s4 90000001075bc880
-    s5 90000001075bc8f0 s6 0000000000000000 s7 0000000000741ce8 s8 0000000000000000
-       ra: 90000000851b5aa4 __qdisc_run+0xac/0x8d8
-      ERA: 90000000851b5ac0 __qdisc_run+0xc8/0x8d8
-     CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
-     PRMD: 00000004 (PPLV0 +PIE -PWE)
-     EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
-     ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
-    ESTAT: 00010000 [PIL] (IS= ECode=1 EsubCode=0)
-     BADV: 0000000000741d58
-     PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
-    Modules linked in: bpf_testmod(OE) [last unloaded: bpf_testmod(OE)]
-    Process test_progs (pid: 449, threadinfo=000000009af02b3a, task=00000000e9ba4956)
-    Stack : 0000000000000000 90000001075bc8ac 90000000869524a8 9000000100741ce8
-            90000001075bc800 9000000100415300 90000001075bc8ac 0000000000000000
-            900000010597c400 900000008694a000 0000000000000000 9000000105b59000
-            90000001075bc800 9000000100741ce8 0000000000000050 900000008513000c
-            9000000086936000 0000000100094d4c fffffff400676208 0000000000000000
-            9000000105b59000 900000008694a000 9000000086bf0dc0 9000000105b59000
-            9000000086bf0d68 9000000085147010 90000001075be788 0000000000000000
-            9000000086bf0f98 0000000000000001 0000000000000010 9000000006015840
-            0000000000000000 9000000086be6c40 0000000000000000 0000000000000000
-            0000000000000000 4f2317da8a7e08c4 0000000000000101 4f2317da8a7e08c4
+    CPU -1 Unable to handle kernel paging request at virtual address 0000000000000018, era == 9000000085bef268, ra == 90000000844f3938
+    rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+    rcu:     1-...0: (19 ticks this GP) idle=1094/1/0x4000000000000000 softirq=1380/1382 fqs=801
+    rcu:     (detected by 0, t=5252 jiffies, g=1197, q=52 ncpus=4)
+    Sending NMI from CPU 0 to CPUs 1:
+    rcu: rcu_preempt kthread starved for 2495 jiffies! g1197 f0x0 RCU_GP_DOING_FQS(6) ->state=0x0 ->cpu=2
+    rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+    rcu: RCU grace-period kthread stack dump:
+    task:rcu_preempt     state:I stack:0     pid:15    tgid:15    ppid:2      task_flags:0x208040 flags:0x00000800
+    Stack : 9000000100423e80 0000000000000402 0000000000000010 90000001003b0680
+            9000000085d88000 0000000000000000 0000000000000040 9000000087159350
+            9000000085c2b9b0 0000000000000001 900000008704a000 0000000000000005
+            00000000ffff355b 00000000ffff355b 0000000000000000 0000000000000004
+            9000000085d90510 0000000000000000 0000000000000002 7b5d998f8281e86e
+            00000000ffff355c 7b5d998f8281e86e 000000000000003f 9000000087159350
+            900000008715bf98 0000000000000005 9000000087036000 900000008704a000
+            9000000100407c98 90000001003aff80 900000008715c4c0 9000000085c2b9b0
+            00000000ffff355b 9000000085c33d3c 00000000000000b4 0000000000000000
+            9000000007002150 00000000ffff355b 9000000084615480 0000000007000002
             ...
     Call Trace:
-    [<90000000851b5ac0>] __qdisc_run+0xc8/0x8d8
-    [<9000000085130008>] __dev_queue_xmit+0x578/0x10f0
-    [<90000000853701c0>] ip6_finish_output2+0x2f0/0x950
-    [<9000000085374bc8>] ip6_finish_output+0x2b8/0x448
-    [<9000000085370b24>] ip6_xmit+0x304/0x858
-    [<90000000853c4438>] inet6_csk_xmit+0x100/0x170
-    [<90000000852b32f0>] __tcp_transmit_skb+0x490/0xdd0
-    [<90000000852b47fc>] tcp_connect+0xbcc/0x1168
-    [<90000000853b9088>] tcp_v6_connect+0x580/0x8a0
-    [<90000000852e7738>] __inet_stream_connect+0x170/0x480
-    [<90000000852e7a98>] inet_stream_connect+0x50/0x88
-    [<90000000850f2814>] __sys_connect+0xe4/0x110
-    [<90000000850f2858>] sys_connect+0x18/0x28
-    [<9000000085520c94>] do_syscall+0x94/0x1a0
-    [<9000000083df1fb8>] handle_syscall+0xb8/0x158
+    [<9000000085c2a868>] __schedule+0x410/0x1520
+    [<9000000085c2b9ac>] schedule+0x34/0x190
+    [<9000000085c33d38>] schedule_timeout+0x98/0x140
+    [<90000000845e9120>] rcu_gp_fqs_loop+0x5f8/0x868
+    [<90000000845ed538>] rcu_gp_kthread+0x260/0x2e0
+    [<900000008454e8a4>] kthread+0x144/0x238
+    [<9000000085c26b60>] ret_from_kernel_thread+0x28/0xc8
+    [<90000000844f20e4>] ret_from_kernel_thread_asm+0xc/0x88
 
-    Code: 4001ad80  2400873f  2400832d <240073cc> 001137ff  001133ff  6407b41f  001503cc  0280041d
+    rcu: Stack dump where RCU GP kthread last ran:
+    Sending NMI from CPU 0 to CPUs 2:
+    NMI backtrace for cpu 2 skipped: idling at idle_exit+0x0/0x4
 
-    ---[ end trace 0000000000000000 ]---
+Reject it for now.
 
-The bpf_fifo_dequeue prog returns a skb which is a pointer.
-The pointer is treated as a 32bit value and sign extend to
-64bit in epilogue. This behavior is right for most bpf prog
-types but wrong for struct ops which requires LoongArch ABI.
-
-So let's sign extend struct ops return values according to
-the return value spec in function model.
-
-Fixes: 6abf17d690d8 ("LoongArch: BPF: Add struct ops support for trampoline")
+Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support")
 Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
 ---
- arch/loongarch/net/bpf_jit.c | 45 ++++++++++++++++++++++++++++++------
- 1 file changed, 38 insertions(+), 7 deletions(-)
+ arch/loongarch/net/bpf_jit.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index b646c6b73014..6754e5231ece 100644
+index 6754e5231ece..a87f51f5b708 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -1361,7 +1361,8 @@ static void restore_args(struct jit_ctx *ctx, int nargs, int args_off)
- }
+@@ -1516,6 +1516,12 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	if (m->nr_args > LOONGARCH_MAX_REG_ARGS)
+ 		return -ENOTSUPP;
  
- static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
--			   int args_off, int retval_off, int run_ctx_off, bool save_ret)
-+			   const struct btf_func_model *m, int args_off,
-+			   int retval_off, int run_ctx_off, bool save_ret)
- {
- 	int ret;
- 	u32 *branch;
-@@ -1425,13 +1426,14 @@ static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
- }
- 
- static void invoke_bpf_mod_ret(struct jit_ctx *ctx, struct bpf_tramp_links *tl,
--			       int args_off, int retval_off, int run_ctx_off, u32 **branches)
-+			       const struct btf_func_model *m, int args_off,
-+			       int retval_off, int run_ctx_off, u32 **branches)
- {
- 	int i;
- 
- 	emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -retval_off);
- 	for (i = 0; i < tl->nr_links; i++) {
--		invoke_bpf_prog(ctx, tl->links[i], args_off, retval_off, run_ctx_off, true);
-+		invoke_bpf_prog(ctx, tl->links[i], m, args_off, retval_off, run_ctx_off, true);
- 		emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -retval_off);
- 		branches[i] = (u32 *)ctx->image + ctx->idx;
- 		emit_insn(ctx, nop);
-@@ -1448,6 +1450,28 @@ void arch_free_bpf_trampoline(void *image, unsigned int size)
- 	bpf_prog_pack_free(image, size);
- }
- 
-+/*
-+ * Sign-extend the register if necessary
-+ */
-+static int sign_extend(struct jit_ctx *ctx, int r, u8 size)
-+{
-+	switch (size) {
-+	case 1:
-+		emit_insn(ctx, extwb, r, r);
-+		return 0;
-+	case 2:
-+		emit_insn(ctx, extwh, r, r);
-+		return 0;
-+	case 4:
-+		emit_insn(ctx, addiw, r, r, 0);
-+		return 0;
-+	case 8:
-+		return 0;
-+	default:
-+		return -1;
++	/* don't support struct argument */
++	for (i = 0; i < m->nr_args; i++) {
++		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
++			return -ENOTSUPP;
 +	}
-+}
 +
- static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
- 					 const struct btf_func_model *m, struct bpf_tramp_links *tlinks,
- 					 void *func_addr, u32 flags)
-@@ -1599,8 +1623,8 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 	}
+ 	if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIFY))
+ 		return -ENOTSUPP;
  
- 	for (i = 0; i < fentry->nr_links; i++) {
--		ret = invoke_bpf_prog(ctx, fentry->links[i], args_off, retval_off,
--				      run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY_RET);
-+		ret = invoke_bpf_prog(ctx, fentry->links[i], m, args_off, retval_off,
-+			      run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY_RET);
- 		if (ret)
- 			return ret;
- 	}
-@@ -1609,7 +1633,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 		if (!branches)
- 			return -ENOMEM;
- 
--		invoke_bpf_mod_ret(ctx, fmod_ret, args_off, retval_off, run_ctx_off, branches);
-+		invoke_bpf_mod_ret(ctx, fmod_ret, m, args_off, retval_off, run_ctx_off, branches);
- 	}
- 
- 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
-@@ -1635,7 +1659,8 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 	}
- 
- 	for (i = 0; i < fexit->nr_links; i++) {
--		ret = invoke_bpf_prog(ctx, fexit->links[i], args_off, retval_off, run_ctx_off, false);
-+		ret = invoke_bpf_prog(ctx, fexit->links[i], m, args_off,
-+				      retval_off, run_ctx_off, false);
- 		if (ret)
- 			goto out;
- 	}
-@@ -1654,6 +1679,12 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 	if (save_ret) {
- 		emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
- 		emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-+		if (is_struct_ops) {
-+			move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
-+			ret = sign_extend(ctx, LOONGARCH_GPR_A0, m->ret_size);
-+			if (ret)
-+				goto out;
-+		}
- 	}
- 
- 	emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
 -- 
 2.43.5
 
