@@ -1,32 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 537921F416A
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 14:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A05423D7C9
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 14:01:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755784893; cv=none; b=AAcsELG0iFJ9gi/ifxzmlyKfZivRj+Ptxf/YbUO5y2pGm8XjzN5WytNpOV/sp5t/O4KFNttCPzFMdDmR/KOZ4WBipknc9fDjG0CmcK+L3o6BlbTEdCuTx9GFXgaTUO9PicYPnp9eb5EJhr/JhwZ2rTzsAeL92YsGHp8h/XN5QWw=
+	t=1755784896; cv=none; b=ohzsyn4KzNRduMx9HMXO3f7tFXkV7H84WEfQY6ZcuHfI3r6zEuOJHnsJOF3Ypiw3VxrzDYzyNYBkjb62UaMb+W+oSB+BL1Ylt4Ovr2uwHrCV12mOZxkwqzMAoIBh797h011nRIx21HK7ZIsbKDwDf/i1uFUDdiX84JuQPcLZXMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755784893; c=relaxed/simple;
-	bh=3ehpm10K5W8NSlHoWMV6jzSx1aXWo0UGSFSZEK2dpXY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Er6AWnGVCICnSIu5pTztvBRLxTVi0bQuH1pE8BH+33taR4YQq189RsUTgMGvRSYO/2LSEEKvAmLhcXiB39vOPw5aeNzSNnrF/fmUpk+LqqUAcFIW6xdGjcdKUEYv7VoxAa3AqjX5SNoSfvds09wnaklZZa2YvL5LqsOdaGvL2CQ=
+	s=arc-20240116; t=1755784896; c=relaxed/simple;
+	bh=r/+8ODg0b9YgcL33UXUKZFg5Kqh5wZuQHj1SZZR1Jdo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LxA9avswdLP/Wc0Z8HgJoiBXFI56s+7d0GHKVlZu8p6RFKr6Knn2eY2zWma1CJ9O+cOxMDT+ylacGqtwLLWpO48ffk90qRVFdP+Uiq+uWItemehu6LVpOmBV0Gkp3++EpYCbu3LDaLJLTrqHz7rU81DREfUHLSMzFXEoNlzGv0M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx2tG2Jqdo+XUBAA--.2740S3;
-	Thu, 21 Aug 2025 22:01:26 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxO9K4JqdoAHYBAA--.2703S3;
+	Thu, 21 Aug 2025 22:01:28 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxpeSyJqdorsZdAA--.26328S2;
-	Thu, 21 Aug 2025 22:01:23 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBxpeSyJqdorsZdAA--.26328S4;
+	Thu, 21 Aug 2025 22:01:28 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Hengqi Chen <hengqi.chen@gmail.com>
 Cc: loongarch@lists.linux.dev,
 	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 0/2] LoongArch: BPF: Add more feature for trampoline
-Date: Thu, 21 Aug 2025 22:01:20 +0800
-Message-ID: <20250821140122.29752-1-yangtiezhu@loongson.cn>
+Subject: [RFC PATCH 2/2] LoongArch: BPF: Add 12 function arguments support for trampoline
+Date: Thu, 21 Aug 2025 22:01:22 +0800
+Message-ID: <20250821140122.29752-3-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20250821140122.29752-1-yangtiezhu@loongson.cn>
+References: <20250821140122.29752-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -34,32 +37,32 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpeSyJqdorsZdAA--.26328S2
+X-CM-TRANSID:qMiowJBxpeSyJqdorsZdAA--.26328S4
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XF4kCr47AF1xWF4DCrW8Zrc_yoWDWwcEkF
-	yfKFyDGw18Wa4YqF9Fqr1fAryDuFW7JryrCF48XrZ5Kr17Xw45Ar4vy34Dur109rs3Xa98
-	trnFyry0yryxuosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb78YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_
-	Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoW3Gr15uw4DWF4DuFW7WF1fXwc_yoW7uF1kpF
+	1qkFsY9F18tFW7Wa97XF4Uur1Ykan3A3y5KrW7Ja92gws8Zr98GayrtF1akFy5Gr1kZr1x
+	Aws0vryYkF1xJrbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-This is a RFC series, based on Hengqi's series [1]:
+Currently, LoongArch bpf trampoline supports up to 8 function arguments.
+According to the statistics from commit 473e3150e30a ("bpf, x86: allow
+function arguments up to 12 for TRACING"), there are over 200 functions
+accept 9 to 12 arguments, so add 12 arguments support for trampoline.
 
-  LoongArch: Fix BPF trampoline related issues
+The initial aim is to pass the following related testcases:
 
-The initial aim is to pass the following related testcase:
-
-  sudo ./test_progs -a tracing_struct/struct_args
   sudo ./test_progs -a tracing_struct/struct_many_args
   sudo ./test_progs -a fentry_test/fentry_many_args
   sudo ./test_progs -a fexit_test/fexit_many_args
@@ -69,18 +72,149 @@ the following failed testcase:
 
   sudo ./test_progs -t module_attach
 
-so just RFC for now, I will address the comments and send a formal
-series once there are no problems.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 57 ++++++++++++++++++++++++++++--------
+ 1 file changed, 45 insertions(+), 12 deletions(-)
 
-[1] https://lore.kernel.org/loongarch/20250821091003.404870-1-hengqi.chen@gmail.com/
-
-Tiezhu Yang (2):
-  LoongArch: BPF: Add struct arguments support for trampoline
-  LoongArch: BPF: Add 12 function arguments support for trampoline
-
- arch/loongarch/net/bpf_jit.c | 84 ++++++++++++++++++++++++++----------
- 1 file changed, 61 insertions(+), 23 deletions(-)
-
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 7bd4b132755a..805fa6dba2d8 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1340,26 +1340,48 @@ int bpf_arch_text_invalidate(void *dst, size_t len)
+ 	return ret;
+ }
+ 
+-static void store_args(struct jit_ctx *ctx, int nregs, int args_off)
++static void store_args(struct jit_ctx *ctx, int nr_arg_slots, int args_off)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < nregs; i++) {
+-		emit_insn(ctx, std, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_off);
++	for (i = 0; i < nr_arg_slots; i++) {
++		if (i < LOONGARCH_MAX_REG_ARGS) {
++			emit_insn(ctx, std, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_off);
++		} else {
++			/* skip slots for T0 and FP of traced function */
++			emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP,
++				  16 + (i - LOONGARCH_MAX_REG_ARGS) * 8);
++			emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -args_off);
++		}
+ 		args_off -= 8;
+ 	}
+ }
+ 
+-static void restore_args(struct jit_ctx *ctx, int nregs, int args_off)
++static void restore_args(struct jit_ctx *ctx, int nr_reg_args, int args_off)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < nregs; i++) {
++	for (i = 0; i < nr_reg_args; i++) {
+ 		emit_insn(ctx, ldd, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_off);
+ 		args_off -= 8;
+ 	}
+ }
+ 
++static void restore_stk_args(struct jit_ctx *ctx, int nr_stk_args,
++			       int args_off, int stk_arg_off)
++{
++	int i;
++
++	for (i = 0; i < nr_stk_args; i++) {
++		emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP,
++			  -(args_off - LOONGARCH_MAX_REG_ARGS * 8));
++		emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP,
++			  -stk_arg_off);
++		args_off -= 8;
++		stk_arg_off -= 8;
++	}
++}
++
+ static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
+ 			   const struct btf_func_model *m, int args_off,
+ 			   int retval_off, int run_ctx_off, bool save_ret)
+@@ -1477,7 +1499,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 					 void *func_addr, u32 flags)
+ {
+ 	int i, ret, save_ret;
+-	int stack_size = 0, nregs = m->nr_args;
++	int stack_size = 0, nr_arg_slots = 0, stk_arg_off;
+ 	int retval_off, args_off, nregs_off, ip_off, run_ctx_off, sreg_off, tcc_ptr_off;
+ 	bool is_struct_ops = flags & BPF_TRAMP_F_INDIRECT;
+ 	void *orig_call = func_addr;
+@@ -1511,9 +1533,13 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	 * FP - sreg_off    [ callee saved reg  ]
+ 	 *
+ 	 * FP - tcc_ptr_off [ tail_call_cnt_ptr ]
++	 *
++	 *                  [ stack_argN        ]
++	 *                  [ ...               ]
++	 * FP - stk_arg_off [ stack_arg1        ] BPF_TRAMP_F_CALL_ORIG
+ 	 */
+ 
+-	if (m->nr_args > LOONGARCH_MAX_REG_ARGS)
++	if (m->nr_args > MAX_BPF_FUNC_ARGS)
+ 		return -ENOTSUPP;
+ 
+ 	/* extra regiters for struct arguments */
+@@ -1544,7 +1570,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	}
+ 
+ 	/* Room of trampoline frame to store args */
+-	stack_size += nregs * 8;
++	stack_size += nr_arg_slots * 8;
+ 	args_off = stack_size;
+ 
+ 	/* Room of trampoline frame to store args number */
+@@ -1570,8 +1596,14 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 		tcc_ptr_off = stack_size;
+ 	}
+ 
++	if ((flags & BPF_TRAMP_F_CALL_ORIG) && (nr_arg_slots - LOONGARCH_MAX_REG_ARGS > 0))
++		stack_size += (nr_arg_slots - LOONGARCH_MAX_REG_ARGS) * 8;
++
+ 	stack_size = round_up(stack_size, 16);
+ 
++	/* Room for args on stack must be at the top of stack */
++	stk_arg_off = stack_size;
++
+ 	if (is_struct_ops) {
+ 		/*
+ 		 * For the trampoline called directly, just handle
+@@ -1613,10 +1645,10 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	}
+ 
+ 	/* store arg regs count */
+-	move_imm(ctx, LOONGARCH_GPR_T1, nregs, false);
++	move_imm(ctx, LOONGARCH_GPR_T1, nr_arg_slots, false);
+ 	emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -nregs_off);
+ 
+-	store_args(ctx, nregs, args_off);
++	store_args(ctx, nr_arg_slots, args_off);
+ 
+ 	/* To traced function */
+ 	/* Ftrace jump skips 2 NOP instructions */
+@@ -1648,7 +1680,8 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	}
+ 
+ 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
+-		restore_args(ctx, nregs, args_off);
++		restore_args(ctx, min_t(int, nr_arg_slots, LOONGARCH_MAX_REG_ARGS), args_off);
++		restore_stk_args(ctx, nr_arg_slots - LOONGARCH_MAX_REG_ARGS, args_off, stk_arg_off);
+ 
+ 		if (flags & BPF_TRAMP_F_TAIL_CALL_CTX)
+ 			emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_FP, -tcc_ptr_off);
+@@ -1685,7 +1718,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	}
+ 
+ 	if (flags & BPF_TRAMP_F_RESTORE_REGS)
+-		restore_args(ctx, nregs, args_off);
++		restore_args(ctx, min_t(int, nr_arg_slots, LOONGARCH_MAX_REG_ARGS), args_off);
+ 
+ 	if (save_ret) {
+ 		emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
 -- 
 2.42.0
 
