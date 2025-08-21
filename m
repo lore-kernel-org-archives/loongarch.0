@@ -1,145 +1,274 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE7F21DDA15
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 00:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9C91E493C
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 01:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755737343; cv=none; b=s/alHkEw9YLqMpqEyEGPBRqU2G7cpH8HU3fnlP8XszLeuzUCh3/iZlaCBSOjikF8gmGcXCVfMRlJIze1POTTHF3hhep7DASDffGHHgJcuvJttodAJ1ycdwiN4jnEmESH62EblDv/FU38+IM5jJfTwntymwzUc+wFzrIpT2D78oY=
+	t=1755739204; cv=none; b=tZIe85AKgNj3MPb9HM1obYcMFL+r4wxz1+cPFDEkg+zMJDAJvpPfiHoEZblFkwg7PM7mOEcTU7KkbhVVBpPDpEx/Pq4bAQhF84HQj7GEFY1EnYrMB2tgYcRWJb6dhCMfKhBkjfwMekPBz+deHMiXP56e8TsIIk9Mo2t5wyoJ3CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755737343; c=relaxed/simple;
-	bh=1+aUn81oPITWZVMYkwbZC65h1fH37rWb9oqzIFm/e4g=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Krr471PSLQG4vOFGAsHazEsoUCJfowj5BilkDmSZ8L5+Q0Lf4KwTcEBrxIZNs/QpIuQ9cGTl9kRDlKwn+WKyH7gOmN0DVmX4Bf9/zpICGujdoM8fN4qd9jcFLfS9ItXm6pN4dBywMoNlJEBTD4r02/xvfF30PtKq+atSE3L1MpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8Cx5tD4bKZoKCsBAA--.2181S3;
-	Thu, 21 Aug 2025 08:48:56 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by front1 (Coremail) with SMTP id qMiowJDxQ+T1bKZoWkFcAA--.21914S3;
-	Thu, 21 Aug 2025 08:48:55 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: BPF: Sign extend struct ops return values
- properly
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: chenhuacai@kernel.org, yangtiezhu@loongson.cn, jianghaoran@kylinos.cn,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, vincent.mc.li@gmail.com, bpf@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20250820103956.394955-1-hengqi.chen@gmail.com>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <0cf37a7c-2e14-58f2-1a1e-9311b2e65d4a@loongson.cn>
-Date: Thu, 21 Aug 2025 08:48:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1755739204; c=relaxed/simple;
+	bh=m8Z5IasriQz/I2WWaTd7UxK62rTZ1rKrUrN0XIc/o70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BKgFAmp0ZujxRihlrKQgEQwrGDxft4lKXUauYyPJHKngGrOIkhMf9Qccw0oOwzrbdvBUk9RTRr9phjYG410A0yYIWPnqrfeefdAHo6dBE95LHJtxP5UV92/AsT0m4R7MZrqaCO3ei0af8leKcQYVqq/PxTj/BiaVoepJEYQAxsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HGb41qSo; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HGb41qSo"
+Message-ID: <00a013bd-f30f-4b13-8019-f97a4d2eabb2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755739199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B1BwYAqmbIpfEsknqfyliOokHoXYWfDAgiKkk9hfZ3Y=;
+	b=HGb41qSovPGgohfPkGNYwp2m7O/CRz4mpKLjsIIrD3nI92y3dTGuTVfokht0kSj5pVtoZW
+	8MgTPqOeUIMVakn6iGFe5YIizsykpLZU2GKG0kTzL9is03AJdt8LNknyAACZAbrZd/vNHN
+	Yggh/5i1PH8nKC8/K4wgfnpNul6stbU=
+Date: Thu, 21 Aug 2025 09:19:19 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250820103956.394955-1-hengqi.chen@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 2/5] LoongArch: Add kexec_file support
+To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+References: <20250820055700.24344-1-youling.tang@linux.dev>
+ <20250820055700.24344-3-youling.tang@linux.dev> <aKVwHOM9KNEpUZF4@pie>
+ <5f6eeefb-681a-424e-9a6b-2e91eaf87571@linux.dev> <aKWt63S_wD3zeMYU@pie>
 Content-Language: en-US
-X-CM-TRANSID:qMiowJDxQ+T1bKZoWkFcAA--.21914S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxArW5GFy3Aw1DAryxXFyxZwc_yoW5GF1Dpr
-	1jkrW8CFy8try3XaykXr1DKF1ak3Wqq3sxu3429rZ5W3y3XrW5JF1rGr1FkryYkr1DAFyx
-	AFs0yw4v93W7GrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <aKWt63S_wD3zeMYU@pie>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 2025-08-20 18:39, Hengqi Chen wrote:
+On 2025/8/20 19:13, Yao Zi wrote:
 
-> The ns_bpf_qdisc selftest triggers a kernel panic:
+> On Wed, Aug 20, 2025 at 05:13:27PM +0800, Youling Tang wrote:
+>> Hi, Yao
+>>
+>> On 2025/8/20 14:50, Yao Zi wrote:
+>>
+>>> On Wed, Aug 20, 2025 at 01:56:57PM +0800, Youling Tang wrote:
+>>>> From: Youling Tang <tangyouling@kylinos.cn>
+>>>>
+>>>> This patch adds support for kexec_file on LoongArch.
+>>>>
+>>>> The efi_kexec_load() as two parts:
+>>>> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
+>>>> - the second part loads other segments (eg: initrd, cmdline)
+>>>>
+>>>> This initrd will be passed to the second kernel via the command line
+>>>> 'initrd=start,size'.
+>>>>
+>>>> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are supported,
+>>>> but ELF format is not supported.
+>>>>
+>>>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+>>>> ---
+>>>>    arch/loongarch/Kconfig                     |   9 ++
+>>>>    arch/loongarch/include/asm/image.h         |  17 +++
+>>>>    arch/loongarch/include/asm/kexec.h         |  12 +++
+>>>>    arch/loongarch/kernel/Makefile             |   1 +
+>>>>    arch/loongarch/kernel/kexec_efi.c          | 111 +++++++++++++++++++
+>>>>    arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
+>>>>    arch/loongarch/kernel/machine_kexec_file.c | 117 +++++++++++++++++++++
+>>>>    7 files changed, 289 insertions(+), 11 deletions(-)
+>>>>    create mode 100644 arch/loongarch/kernel/kexec_efi.c
+>>>>    create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+>>> ...
+>>>
+>>>> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/asm/image.h
+>>>> index 1f090736e71d..655d5836c4e8 100644
+>>>> --- a/arch/loongarch/include/asm/image.h
+>>>> +++ b/arch/loongarch/include/asm/image.h
+>>>> @@ -36,5 +36,22 @@ struct loongarch_image_header {
+>>>>    	uint32_t pe_header;
+>>>>    };
+>>>> +static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
+>>>> +
+>>>> +/**
+>>>> + * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
+>>>> + *
+>>>> + * Returns non-zero if 'MZ' signature is found.
+>>>> + */
+>>>> +
+>>>> +static inline int loongarch_header_check_pe_sig(const struct loongarch_image_header *h)
+>>>> +{
+>>>> +	if (!h)
+>>>> +		return 0;
+>>>> +
+>>>> +	return (h->pe_sig[0] == loongarch_image_pe_sig[0]
+>>>> +		&& h->pe_sig[1] == loongarch_image_pe_sig[1]);
+>>>> +}
+>>> This check is still too weak and doesn't improve comparing to v1.
+>>>
+>>>> This could be simplified with a memcmp(). Also, this check isn't
+>>>> strict enough: PE files for any architectures, and even legacy MS-DOS
+>>>> COM executables all start with "MZ".
+>>> I've pointed this out in my previous reply[1].
+>> Previously, I had considered adding a specific LoongArch magic
+>> number (such as "Loongson") in the loongarch_image_header, but
+>> this is incompatible with older versions of the kernel, so it
+>> remains the same without further checks.
+> All PE images ship a PE signature with offset 0x3c[1] and you could
+> locate the PE header[2] by the offset provided by
+> loongarch_image_header.pe_header and check its machine field[3], which
+> should be 0x6264 for 64-bit LoongArch executables and 0x6232 for 32-bit
+> ones. At least this ensures it's a LoongArch kernel image.
+I mentioned this judgment to Huacai before. Huacai, what do you think?
+If necessary, I will add this judgment.
+
+Thanks,
+Youling.
 >
-[...]
->   
-> +/*
-> + * Sign-extend the register if necessary
-> + */
-> +static int sign_extend(struct jit_ctx *ctx, int r, u8 size)
-> +{
-> +	switch (size) {
-> +	case 1:
-> +		emit_insn(ctx, sllid, r, r, 56);
-> +		emit_insn(ctx, sraid, r, r, 56);
-> +		return 0;
-> +	case 2:
-> +		emit_insn(ctx, sllid, r, r, 48);
-> +		emit_insn(ctx, sraid, r, r, 48);
-> +		return 0;
-Hi, Hengqi,
-
-For sign-extend char or short, we can use `ext.w.b` or `ext.w.h`.
-
-
-> +	case 4:
-> +		emit_insn(ctx, addiw, r, r, 0);
-> +		return 0;
-> +	case 8:
-> +		return 0;
-> +	default:
-> +		return -1;
-> +	}
-> +}
-> +
->   static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
->   					 const struct btf_func_model *m, struct bpf_tramp_links *tlinks,
->   					 void *func_addr, u32 flags)
-> @@ -1602,8 +1628,8 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
->   	}
->   
->   	for (i = 0; i < fentry->nr_links; i++) {
-> -		ret = invoke_bpf_prog(ctx, fentry->links[i], args_off, retval_off,
-> -				      run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY_RET);
-> +		ret = invoke_bpf_prog(ctx, fentry->links[i], m, args_off, retval_off,
-> +			      run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY_RET);
->   		if (ret)
->   			return ret;
->   	}
-> @@ -1612,7 +1638,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
->   		if (!branches)
->   			return -ENOMEM;
->   
-> -		invoke_bpf_mod_ret(ctx, fmod_ret, args_off, retval_off, run_ctx_off, branches);
-> +		invoke_bpf_mod_ret(ctx, fmod_ret, m, args_off, retval_off, run_ctx_off, branches);
->   	}
->   
->   	if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> @@ -1638,7 +1664,8 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
->   	}
->   
->   	for (i = 0; i < fexit->nr_links; i++) {
-> -		ret = invoke_bpf_prog(ctx, fexit->links[i], args_off, retval_off, run_ctx_off, false);
-> +		ret = invoke_bpf_prog(ctx, fexit->links[i], m, args_off,
-> +				      retval_off, run_ctx_off, false);
->   		if (ret)
->   			goto out;
->   	}
-> @@ -1657,6 +1684,12 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
->   	if (save_ret) {
->   		emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
->   		emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-> +		if (is_struct_ops) {
-> +			move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
-> +			ret = sign_extend(ctx, LOONGARCH_GPR_A0, m->ret_size);
-> +			if (ret)
-> +				goto out;
-> +		}
->   	}
->   
->   	emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-
+>>>>    #endif /* __ASSEMBLY__ */
+>>>>    #endif /* __ASM_IMAGE_H */
+>>> ...
+>>>
+>>>> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+>>>> new file mode 100644
+>>>> index 000000000000..7741f1139a12
+>>>> --- /dev/null
+>>>> +++ b/arch/loongarch/kernel/kexec_efi.c
+>>> ...
+>>>
+>>>> +static void *efi_kexec_load(struct kimage *image,
+>>>> +				char *kernel, unsigned long kernel_len,
+>>>> +				char *initrd, unsigned long initrd_len,
+>>>> +				char *cmdline, unsigned long cmdline_len)
+>>>> +{
+>>>> +	struct loongarch_image_header *h;
+>>>> +	struct kexec_buf kbuf;
+>>>> +	unsigned long text_offset, kernel_segment_number;
+>>>> +	struct kexec_segment *kernel_segment;
+>>>> +	int ret;
+>>>> +
+>>>> +	h = (struct loongarch_image_header *)kernel;
+>>>> +	if (!h->image_size)
+>>>> +		return ERR_PTR(-EINVAL);
+>>>> +
+>>>> +	/* Load the kernel */
+>>>> +	kbuf.image = image;
+>>>> +	kbuf.buf_max = ULONG_MAX;
+>>>> +	kbuf.top_down = false;
+>>>> +
+>>>> +	kbuf.buffer = kernel;
+>>>> +	kbuf.bufsz = kernel_len;
+>>>> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>>>> +	kbuf.memsz = le64_to_cpu(h->image_size);
+>>>> +	text_offset = le64_to_cpu(h->text_offset);
+>>>> +	kbuf.buf_min = text_offset;
+>>>> +	kbuf.buf_align = SZ_2M;
+>>>> +
+>>>> +	kernel_segment_number = image->nr_segments;
+>>>> +
+>>>> +	/*
+>>>> +	 * The location of the kernel segment may make it impossible to satisfy
+>>>> +	 * the other segment requirements, so we try repeatedly to find a
+>>>> +	 * location that will work.
+>>>> +	 */
+>>>> +	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
+>>>> +		/* Try to load additional data */
+>>>> +		kernel_segment = &image->segment[kernel_segment_number];
+>>>> +		ret = load_other_segments(image, kernel_segment->mem,
+>>>> +					  kernel_segment->memsz, initrd,
+>>>> +					  initrd_len, cmdline, cmdline_len);
+>>>> +		if (!ret)
+>>>> +			break;
+>>>> +
+>>>> +		/*
+>>>> +		 * We couldn't find space for the other segments; erase the
+>>>> +		 * kernel segment and try the next available hole.
+>>>> +		 */
+>>>> +		image->nr_segments -= 1;
+>>>> +		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+>>>> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>>>> +	}
+>>>> +
+>>>> +	if (ret) {
+>>>> +		pr_err("Could not find any suitable kernel location!");
+>>>> +		return ERR_PTR(ret);
+>>>> +	}
+>>>> +
+>>>> +	kernel_segment = &image->segment[kernel_segment_number];
+>>>> +
+>>>> +	/* Make sure the second kernel jumps to the correct "kernel_entry". */
+>>>> +	image->start = kernel_segment->mem + h->kernel_entry - text_offset;
+>>> And this still assumes the loaded, secondary kernel is relocatable,
+>>> with neither extra check nor comment explaining its limitation.
+>>>
+>>> Please see my previous reply[2] that explains why loading a
+>>> non-relocatble kernel with kexec_file API is reasonable.
+>> LoongArch is a non-position independent (non-PIE) kernel when
+>> the RELOCATABLE option is not enabled, the kernel contains certain
+>> instructions such as la.abs, which prevent it from being relocated to
+>> arbitrary memory addresses for execution. As a result, limitations
+>> exist that make features like kdump or kexec_file dependent on
+>> the RELOCATABLE option.
+>>
+>> Strictly speaking, we need to add additional checks: if the kernel is
+>> non-relocatable, the loading operation should fail directly.
+> Agree.
+>
+>> For a
+>> running kernel, we can easily determine this by calling
+>> kallsyms_lookup_name("relocate_kernel"). However, for a kernel
+>> that is being loaded but has not yet started execution, it is difficult
+>> to easily determine whether the currently loaded kernel has the
+>> RELOCATABLE configuration option enabled.
+> I understand the difficulty, thus IMHO a comment is helpful here to
+> remind the reader of lack of relocatability checks.
+>
+> Best regards,
+> Yao Zi
+>
+>> For ELF format images, we can determine whether the loaded image
+>> contains the ".la_abs" section in the following way:
+>> static struct mem_shdr *laabs_section(const struct mem_ehdr *ehdr)
+>> {
+>>          struct mem_shdr *shdr, *shdr_end;
+>>          unsigned char *strtab;
+>>
+>>          strtab = (unsigned char *)ehdr->e_shdr[ehdr->e_shstrndx].sh_data;
+>>          shdr_end = &ehdr->e_shdr[ehdr->e_shnum];
+>>          for (shdr = ehdr->e_shdr; shdr != shdr_end; shdr++) {
+>>                  if (shdr->sh_size &&
+>>                          strcmp((char *)&strtab[shdr->sh_name], ".la_abs") ==
+>> 0) {
+>>                          return shdr;
+>>                  }
+>>          }
+>>
+>>          return NULL;
+>> }
+>>
+>> Thanks,
+>> Youling.
+>>>> +	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>>>> +		      kernel_segment->mem, kbuf.bufsz,
+>>>> +		      kernel_segment->memsz);
+>>>> +
+>>>> +	return NULL;
+>>>> +}
+>>>> +
+>>>> +const struct kexec_file_ops kexec_efi_ops = {
+>>>> +	.probe = efi_kexec_probe,
+>>>> +	.load = efi_kexec_load,
+>>>> +};
+>>> Thanks,
+>>> Yao Zi
+>>>
+>>> [1]: https://lore.kernel.org/all/aJojDiHWi8cgvA2W@pie/
+>>> [2]: https://lore.kernel.org/all/aJwFa8x5BQMouB1y@pie/
+> [1]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#signature-image-only
+> [2]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#coff-file-header-object-and-image
+> [3]: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#machine-types
