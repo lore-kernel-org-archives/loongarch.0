@@ -1,183 +1,317 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C6B1FF61E
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 01:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755739298; cv=none; b=UISvJ4//gF+o+pv+7ot4LMLmsG+4id08zfO5WYNydGQlHVkzvHifYilo1l6vLczO7SOxTTHOdoPzgER9HTraLEmtC9H8g4KXtitsET4Bk4ArId7YNMty1WB53tPAzBju0ifuWsS51DAD8Mvc1KfG9NqumRSa6Mwi4QHTrasOq9c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755739298; c=relaxed/simple;
-	bh=8kNKgRZzXVRCrGmGZF4xSCWdkTEchJVyRhBl18+3IUU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nSUM/wn9Mzxq2vREyUtIDqQMMwK20J4y6puq1O1BKZoe5rHRK31Zux2RvQa+1DTGolt5hFpwDstEMhNlr4oX2Xa71rNjHop4ne1v1HmiQK6CCW508DXEKYnt5qn4u2YOY6K3MPOAaWiwzISEk7KYi1m8VWHZtd2gJtFaXY3dH5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IeL1LyZo; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166D32D374F;
+	Thu, 21 Aug 2025 02:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755744827; cv=fail; b=MRhHY64xc0r5chxRphbkKLkshDuET4c9BVzU/rhp/fQpzYMwrTL6MUvAcSD1bNGl7coCWghpm3A0VYnNrwaZJo0qlk0mIxgzB6fjp3eMVtsVsEkEH6oMsipavYxL0al20X3inWFQ8PGFeYiDxejPmVhrP2aFwBDnXdJI2GF5vPc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755744827; c=relaxed/simple;
+	bh=b7VLiopQ1dbd3Y4njnqpMQGBEPS7AkoecSlMrdrOwh0=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=W6qU2YsjkUvBRfaNPH6NtM5UDuob9/bgEuIXvqmRCQ5iZfe1+ZBSdTi5NNowGZR8SASg9KCgs9picAOasotCSAbY9N7cm/EdGUeYv1atUGuqf+ZP1aH6fvrHBSUPWHNq1djsPbuGKXwJIPvsWnk6ttZim+3ZaI4n0SgdmjnR+ZE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iyHtJF2d; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IeL1LyZo"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-435de8160dbso176399b6e.3
-        for <loongarch@lists.linux.dev>; Wed, 20 Aug 2025 18:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755739296; x=1756344096; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QbSzbdY3kHTaOmK1pPvMC+SmbvGcvig5ysbbwipvqs8=;
-        b=IeL1LyZok5BIkcZIAc0sU52kh/amdq11Yc2kj9GN8jbvbzSSEVhRmblkbJ+fELLar+
-         KxS1Oj2W0fSpe8/pZ6T0dC61iNvuAwbNDpuIhS+wrSkruhV3UgkxPTOi4F5iWQqlD0DO
-         l5KH83zsej6gJUhe5A3IGJoQAPNcxHP02Vur3GvSwg1O9nwBWN1i/RBG4/jK/fhe1zSf
-         u6VbUH9W++4N1vHf+DRK0eSQzSMjnpobWhufumnppDsTY8Oe4O3i35SG1Kd/CGwc1VXW
-         w3gCqbh5TukqozN+dFBY9LhGERxoqrQ85BPQXTAia9O32mcpdF5ZosGTdDyi+ju9AlIt
-         FcWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755739296; x=1756344096;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QbSzbdY3kHTaOmK1pPvMC+SmbvGcvig5ysbbwipvqs8=;
-        b=i0pBY1Xt3PxSDzHg5ba7GqcE6VHnYNXqdXs5PVQNIoYz9tIh1GRsD5d8AH9xdrvH+U
-         ioDAArY5xdomb1PcGZZd3uh2NM080SZv8ACpZP0WbW1Kefl3rQnpSKxVVM04CG2ipWEl
-         H4X2aqlu1Fd8DUHdgJpVuNDvCjiCR3Z8bZD7XP2d2vSAXvb8WVPD5Z0VYY53gJst3E1R
-         3eyGkCanbBuUC/Se07t1Z2QAW/osVclyZ9ihRU/eb2Si10LKHO1NKdcYrUGyhrWnpeDx
-         PKnhE+wGFOomSBG7wX5QQUGAZ2MdDZ3wdR5juKbSnHZH3OK1aGF5Ut87ryL/R/rKNqXq
-         ikOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqaGLyRTeEBLHIvt1bMZ3VaTsNMiYLnBUwMWaOCts+e3B7mxVOqDWx2oxbhssPhbjacd6w5hVMPY0=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyetlf7AVea5juPrDvel4XKDu57iGkflAn5o2pw20zFh+sa7wiC
-	ewcSeT3v3m3sooDorHXHfxDZJXB58r33mAEBUn5Vw7iiLtJnkJEWkgYlDZlabdyndB8ZM52AQQE
-	+77cmLYLFzf1zxAW7j5dHRrX4jbE1B3o=
-X-Gm-Gg: ASbGncs1wKmpkOyidAYJjSNc8Ver5j3u4Fl8BTY854EYobAGshq9ch0C+aYWd5mtjoJ
-	/7FX5qscJsxdrjlZXGT76KuRP+Hzm0c5eKS90VHSxlpSWnzKsMLXePOR6pXGfTiXc+FfHVRYWH/
-	2pyCZEoDYTQZ+GfCfZmoKErFg2NENaL2xlg4Ts30PawvgWG/40hFWtA1sp1eWy93jIBsINmTOlj
-	5S4FQ==
-X-Google-Smtp-Source: AGHT+IGPdk1Um7OyVh9GcThP/ox/UyRFOB3NcTp3LXTomORTnPG0fbhENbKRoMtDPq0FDVVcR3h54vgTDOafGAGRFvw=
-X-Received: by 2002:a05:6808:179d:b0:437:761b:dd0 with SMTP id
- 5614622812f47-4377d802f3fmr196751b6e.47.1755739295741; Wed, 20 Aug 2025
- 18:21:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iyHtJF2d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755744825; x=1787280825;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   mime-version;
+  bh=b7VLiopQ1dbd3Y4njnqpMQGBEPS7AkoecSlMrdrOwh0=;
+  b=iyHtJF2dOqc198pXUiNo1+3tpU28E1k4d1t6r8fZcKOk9fLAugTZAMil
+   55r3TwfUb8ex82ElFe36ttIq0vjQ5pE3Lx9GHrfcA0t1fs4xtFoq7Ah3U
+   Fuo4IELl9MkUqXKSoippOKiwT70JP3t5+9fj38ckdVRrzBZNTEmU1tBcR
+   oGObGDjZ6zqmqH4knOm78u0O+Gr3TZ3scjCZHohFt+TT1YVT9EEbO0Cht
+   OybSnAYvdJyB5Eh44fL7DrVK3+jzWA4dI2dl8d2wGjf36axgc1/H9YnEU
+   BcDKoiUjovQhrxArje1HBhbcb4hXD5OQrtmzHyJ/12qhr+dp4ICtT1kXK
+   Q==;
+X-CSE-ConnectionGUID: ovXmxNWsQKKQW2uP9SVQew==
+X-CSE-MsgGUID: 5UBSmHguRMqmfCCObeyDhA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="75607327"
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="75607327"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 19:53:44 -0700
+X-CSE-ConnectionGUID: 9/oHiCbGTXyUbvJs8bgumg==
+X-CSE-MsgGUID: 6hWzjSJhTtydzjcQLdujwg==
+X-ExtLoop1: 1
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 19:53:44 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Wed, 20 Aug 2025 19:53:43 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17 via Frontend Transport; Wed, 20 Aug 2025 19:53:43 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.63)
+ by edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Wed, 20 Aug 2025 19:53:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=I9XrXixsqSYwkcuGgttTLcaEyRQ+EZJ3ILk2juqiiHiM4V3j1iC8PuJJcXRvv7gXL0MegDrzitnQRMkrFSWt3VCL0BnEMTQVk10XexV3etk6cWjz9FIHetXwCkFc3+vC92MHVzsfz+UQqjp0yqosoC92VBBNBONP6sT+b1TTyO5lQYhjvz0CZeW4SDaQWCMizE7+5cLAXYfSCR60PDqRrFnjI+thofSL0zTNVP7aW+rogKCUiahRk4ZIMzqd0vGzmEPNjcIyGj+olusUa68Xft3sB+Whuv45r5G98O7azlGQBu2rtM1y1qrGi7+jT2CcRjkPhOS0SDc89FZlpvwjPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=us5HPxEWak+Z5wIcd9yL1Je4zM6FA2HXHnNZtF6tjio=;
+ b=SpqTTXMz0ChA3MWLc5qNIRfZFOz/d+c99qL8EA4Pg/x0PAiGXZZKyJ75hXqy5BVMLxMKBihvrQMUD9Zi7znEOdOf8dyxbICE+3DsqjtEsk5J6F3Q0TNQdYR5oR+mp57mxQucq+H2TgFXJPeEgz/rcw6RN5osq9pqflHXur/+a3jaqVCTP5VD2BxiLqeoczTOS/Yt8jwYDDU+IiknlIKPEoAEPQyjr+EGbb4IViY4/xzA1hRwdkbWp2UjZELnyTFtPDot0VtMJIrH+FyN/YlLRKpGX0WoZ16JdmTt6xaUrjU2xZa5QmGxsqWs4yrv5MC3DbrlFlCqUtYThTAhpBEb0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by SA3PR11MB7612.namprd11.prod.outlook.com (2603:10b6:806:31b::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.14; Thu, 21 Aug
+ 2025 02:53:40 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.9052.013; Thu, 21 Aug 2025
+ 02:53:40 +0000
+Date: Thu, 21 Aug 2025 10:53:21 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Robin Murphy <robin.murphy@arm.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-s390@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<linux-alpha@vger.kernel.org>, <linux-snps-arc@lists.infradead.org>,
+	<imx@lists.linux.dev>, <linux-csky@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-mips@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-sh@vger.kernel.org>,
+	<sparclinux@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linux-rockchip@lists.infradead.org>, <dmaengine@vger.kernel.org>,
+	<linux-fpga@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>,
+	<intel-xe@lists.freedesktop.org>, <coresight@lists.linaro.org>,
+	<iommu@lists.linux.dev>, <linux-amlogic@lists.infradead.org>,
+	<linux-cxl@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <oliver.sang@intel.com>
+Subject: Re: [PATCH 18/19] perf: Introduce positive capability for raw events
+Message-ID: <202508211037.3f897218-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com>
+X-ClientProxiedBy: SG2PR02CA0049.apcprd02.prod.outlook.com
+ (2603:1096:4:54::13) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250820103956.394955-1-hengqi.chen@gmail.com> <0cf37a7c-2e14-58f2-1a1e-9311b2e65d4a@loongson.cn>
-In-Reply-To: <0cf37a7c-2e14-58f2-1a1e-9311b2e65d4a@loongson.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Thu, 21 Aug 2025 09:21:24 +0800
-X-Gm-Features: Ac12FXxSSqb94RTO7WN1zCcydpJt3k4giY5F3rzM_IA743satsIiNLNsW-aWXVc
-Message-ID: <CAEyhmHTZC66cKazOf=fJ6WxSU1R=rpcd86uPwqOvpEBZ=97ULQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Sign extend struct ops return values properly
-To: Jinyang He <hejinyang@loongson.cn>
-Cc: chenhuacai@kernel.org, yangtiezhu@loongson.cn, jianghaoran@kylinos.cn, 
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	vincent.mc.li@gmail.com, bpf@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SA3PR11MB7612:EE_
+X-MS-Office365-Filtering-Correlation-Id: a79f70fb-d67f-4713-7430-08dde05def31
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?pV6vx/h8482Dn1wfx7nKgj3YF6GePZP4stTQELhvnJTZ093VIGEKopRjbbR3?=
+ =?us-ascii?Q?wKYx/r0IAB7G/y/lsJ+KThMirkTNq6duoC5Vw7yNdtZK2nkhxz5wwJmkxj18?=
+ =?us-ascii?Q?nCLbBwO5JcDJ0md0Q9RwJXUG5iDtGU3fcgoO2BTREpS4j0KxDnRPNA1wUKFI?=
+ =?us-ascii?Q?lFbarX2LTwIy9124Fr1HXGAoBiwYvy97QB6GH6yI1NuroOu/W2+UdDdHhK/3?=
+ =?us-ascii?Q?AAcalJzXQf/0w+GodUXGl/+o6iaPtzqRVqU2i9twCHo+1ksx3nJAxJUFoHQK?=
+ =?us-ascii?Q?VO0JroYI5Pp173IBSzdp8HHjtaCtiVEemx/f+CeioMa74eoBS4KwTRtbyobi?=
+ =?us-ascii?Q?vnBaPuDCX1M5PQsOM/eHT9IC/yODtZLgeIz+meYJz7//4BXviw9x+WeRvaN6?=
+ =?us-ascii?Q?TQA4BuFpnBYnDX236pyGP6e+rQndUtXcYM4XmYR4BB8GLhISM/oJzrklqcBZ?=
+ =?us-ascii?Q?5t2ANTxp/5BxI38qXUqMskggbGRjCY/2zoN6ERej2brNiSwqtwqxNDrP04fj?=
+ =?us-ascii?Q?PcZTFwvIZ9eRyyMmBGKG4+rbwH4I2x3Tq8G4Ctb0/fC6BvHn3CSJYbW26BzY?=
+ =?us-ascii?Q?zWhh+ELySDTj44nRzIEe6jqGJgPT+dnEFKnmM6FiyZh1fLsYltHVMOSRisqw?=
+ =?us-ascii?Q?o6hR96eZx8gx7kkY7VYkv/c9pSgHAhS0I7+qGS7ruiFjPC2LnsadYG29SaPu?=
+ =?us-ascii?Q?OAdBG7eRhKSU5yHO7MdOtj2ojXX9Wj7NoJESgugQD0Eug4Q4mRy0pyOTXWn1?=
+ =?us-ascii?Q?rPm0LXTCXKxRYqXgCIh3fgoK/XIqjl8Y6u7c1vBx+Mi4F04ftcldU0tMfcl9?=
+ =?us-ascii?Q?sxEPQ4ZNs7iwh4ADKMzcxhh62A6V0kF6QoYQIW71SLfQGsz2poBP+SbCU7Id?=
+ =?us-ascii?Q?BQLvXzSz3hWoobqR3uEEjX1uRlETMfUa5KLiWgFlsBq5M4MOQuzH00t34sCp?=
+ =?us-ascii?Q?V3pR18XY8HPB7HigcxO57VvykM/WfnyVvroy00cnHsRUH5M/mKPQkBsE/ba3?=
+ =?us-ascii?Q?I3sCUi3bchoXciD/wA5SExOYzSV/diVYgOZHvKJc3VWwj5Tds8G1N4OcRy4i?=
+ =?us-ascii?Q?wjLEtT8IiBoRhCixj/HvEz3/cMKhgbu5W0T0lCEv5czF7heeN7qKkiWVfuiO?=
+ =?us-ascii?Q?6ZwmhTnOitA3Zzt5TUbSgTH6yKK58cOBFov90XmeevZ5z60CzpE0qmyTo1U3?=
+ =?us-ascii?Q?nv/MPJxk9FiLImgz3INidQ+s/obqLs0J1Qp2h+K/Gn0YBGQYY4TqLTIpBdTg?=
+ =?us-ascii?Q?cbN84T4otD/V0oJJN7mz8hWn7ef2ZTGQNfC5dy8fE+u5lRVdJmcRlJkliGCX?=
+ =?us-ascii?Q?i7kS6i+5knhpLRJ4Of0bVaF1gUZCn20cM9+7xARoZ3rt/hpcCWC0GUwPudHV?=
+ =?us-ascii?Q?aO7kU8mQtV3aW5ZP5gnzaiF6qdnB?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?HC2UktMXOfxw2RO7xeHgyIqB2IHTOeXPIq2ZKdhAiBzIP0ROwLDmcyWqplqC?=
+ =?us-ascii?Q?uOdQ6lh/ItDxGRPBw1hJPcaNcmwQgW/rX2xT25FFMVagSIhTBR7mk7T93LuN?=
+ =?us-ascii?Q?ThD1aTnAsr9NBM6/sw/tibLg27VM8RirnQXfFSHPWShI8EYtqfwv9m9cxRsU?=
+ =?us-ascii?Q?qh7ATwvmIx4kBC9npk4v5IKynvp1eh6Vbl0LH8T6xMb2pyS/30+1gA6j8UCb?=
+ =?us-ascii?Q?9dfwMb33ZHGtj8acuseQ+IUv8O/ZZkFiIUvORzVKklY9Ge/k3DW6vSWAmYYo?=
+ =?us-ascii?Q?j4ldkpKLCshK+cFKRjFcAQ0ibn9p1/DqoXF+pyYsiwMu/t0RsiLA12YCLzI2?=
+ =?us-ascii?Q?M8sVljDYj/rMpdMnq/D3fFWGIocR5qiXLDCPKAwh2QL/2sDz4wGet3wBGc6e?=
+ =?us-ascii?Q?ZjgLcuwhbCFlgjtpZjNQlPav8c2OA2RHXX67+76aqtHAGluul9zPL1mIVXIa?=
+ =?us-ascii?Q?UgPvDFYQPIYgoRFalHq6Nhs8oA4ZO6+AjycrdEigHjZPoqliYWZyD/jogbqq?=
+ =?us-ascii?Q?OYUT2HrFKp4VT0fX/CVx0jS0EB6DBBOb0XgASKksvYoGznyNJu7BwMhDZU2J?=
+ =?us-ascii?Q?83X64RS0q9uEtOrc0dURPinK3EdTor02mED7F2Oq/bJoYhf6Yo5eFHFXx3qj?=
+ =?us-ascii?Q?Ciytdw4ptkecG5P+3/7CQbJ9x8ZXEIRxwLbK+JY0U1BYlS1/BpAFOtvpXyH6?=
+ =?us-ascii?Q?5+X8VTWK9ZAN64VBshP3PbAIFMg3upmwtoqLNCAovXxQ5bkMpS+XasLJ3n6m?=
+ =?us-ascii?Q?E8sd+X1k/0PMn4rEMWBIam0xEQlEGz6sHE7KFU+OovbMFe8EgYq57gk8Zpju?=
+ =?us-ascii?Q?EpaRC6gx6AIE4VRBFjRYQPpokigU77IYhCH/Fg6/G6D0DXfT56W9WaL/Uv/4?=
+ =?us-ascii?Q?ulEZzzi0G7c9S9UzmAHZYeBR5Qfy4USn1xVAFva45Zb4HCvnQPymQ/FxbwdN?=
+ =?us-ascii?Q?CXDlX7/B4WHf7TdwxrIooAufL7byavbUZCwGQCwxIs6FzcOYU3vdAX2OMXeD?=
+ =?us-ascii?Q?mHczCWwAhWlyEJByyGDwlQnU+dMmdunVlgq6vEnZbLIllDX6vpf17UyPS/bd?=
+ =?us-ascii?Q?ZL9iy4epX5ms7mVSXWn2UKDen41M1HqBBYLWf00JATJYMnk3kGIBiIm0dvO2?=
+ =?us-ascii?Q?4m5UWErCsqaUhhGxkZ9W4bCnTerDraHmdN6EFElkjd1phLlMMxozm39R6jUa?=
+ =?us-ascii?Q?MTIKn8iinvlG3kFNig6GlF7mxkFHcYQ7fxOefI5VkU0N9vCu053Pr+icKDhl?=
+ =?us-ascii?Q?zSGmeAq4h/8CP/1bueQgxMB6rlAfm/sMBfbBHKezfVj8BtgWf4SwtvR/biIZ?=
+ =?us-ascii?Q?9TjgqWImKItN56ZhfsuCkexxaxrUNC95prMtq9yVW1Lh7nZzp16YWpQXPYDR?=
+ =?us-ascii?Q?AW3Pf5ypyHIny6c/vxYXz2SnNPIhBrpiUOvHta5B02vMJQFuSVzJysFO15s0?=
+ =?us-ascii?Q?yu60pktaLF61zilpa0bOs+p/H+RC2+hGxB3mWSMzqkJ2nZIP+fKsuyz+zrgA?=
+ =?us-ascii?Q?/XSnXnbCVNqd9iL5cKWMQbPcLGlLImPNs5W5LuvFLb2tAEqT0h98o43GDkcL?=
+ =?us-ascii?Q?kD409CleM5U9CqF9wcqPfx6uEq3Kmtgn5ZqSZ2abjJS+W0+mnqGM6gCa5ZpM?=
+ =?us-ascii?Q?Pw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a79f70fb-d67f-4713-7430-08dde05def31
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2025 02:53:40.7764
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0Vz8UsI+7Aqf5HI6rtkycfIj/aRohd2CR4G55WpRZtUEvnAjF9uq+brWDTcSXdZf+L4yAVN/gu7i7e1YdDBYTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7612
+X-OriginatorOrg: intel.com
 
-On Thu, Aug 21, 2025 at 8:49=E2=80=AFAM Jinyang He <hejinyang@loongson.cn> =
-wrote:
->
-> On 2025-08-20 18:39, Hengqi Chen wrote:
->
-> > The ns_bpf_qdisc selftest triggers a kernel panic:
-> >
-> [...]
-> >
-> > +/*
-> > + * Sign-extend the register if necessary
-> > + */
-> > +static int sign_extend(struct jit_ctx *ctx, int r, u8 size)
-> > +{
-> > +     switch (size) {
-> > +     case 1:
-> > +             emit_insn(ctx, sllid, r, r, 56);
-> > +             emit_insn(ctx, sraid, r, r, 56);
-> > +             return 0;
-> > +     case 2:
-> > +             emit_insn(ctx, sllid, r, r, 48);
-> > +             emit_insn(ctx, sraid, r, r, 48);
-> > +             return 0;
-> Hi, Hengqi,
->
-> For sign-extend char or short, we can use `ext.w.b` or `ext.w.h`.
->
 
-Great. Will do.
 
->
-> > +     case 4:
-> > +             emit_insn(ctx, addiw, r, r, 0);
-> > +             return 0;
-> > +     case 8:
-> > +             return 0;
-> > +     default:
-> > +             return -1;
-> > +     }
-> > +}
-> > +
-> >   static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct =
-bpf_tramp_image *im,
-> >                                        const struct btf_func_model *m, =
-struct bpf_tramp_links *tlinks,
-> >                                        void *func_addr, u32 flags)
-> > @@ -1602,8 +1628,8 @@ static int __arch_prepare_bpf_trampoline(struct j=
-it_ctx *ctx, struct bpf_tramp_i
-> >       }
-> >
-> >       for (i =3D 0; i < fentry->nr_links; i++) {
-> > -             ret =3D invoke_bpf_prog(ctx, fentry->links[i], args_off, =
-retval_off,
-> > -                                   run_ctx_off, flags & BPF_TRAMP_F_RE=
-T_FENTRY_RET);
-> > +             ret =3D invoke_bpf_prog(ctx, fentry->links[i], m, args_of=
-f, retval_off,
-> > +                           run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY=
-_RET);
-> >               if (ret)
-> >                       return ret;
-> >       }
-> > @@ -1612,7 +1638,7 @@ static int __arch_prepare_bpf_trampoline(struct j=
-it_ctx *ctx, struct bpf_tramp_i
-> >               if (!branches)
-> >                       return -ENOMEM;
-> >
-> > -             invoke_bpf_mod_ret(ctx, fmod_ret, args_off, retval_off, r=
-un_ctx_off, branches);
-> > +             invoke_bpf_mod_ret(ctx, fmod_ret, m, args_off, retval_off=
-, run_ctx_off, branches);
-> >       }
-> >
-> >       if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> > @@ -1638,7 +1664,8 @@ static int __arch_prepare_bpf_trampoline(struct j=
-it_ctx *ctx, struct bpf_tramp_i
-> >       }
-> >
-> >       for (i =3D 0; i < fexit->nr_links; i++) {
-> > -             ret =3D invoke_bpf_prog(ctx, fexit->links[i], args_off, r=
-etval_off, run_ctx_off, false);
-> > +             ret =3D invoke_bpf_prog(ctx, fexit->links[i], m, args_off=
-,
-> > +                                   retval_off, run_ctx_off, false);
-> >               if (ret)
-> >                       goto out;
-> >       }
-> > @@ -1657,6 +1684,12 @@ static int __arch_prepare_bpf_trampoline(struct =
-jit_ctx *ctx, struct bpf_tramp_i
-> >       if (save_ret) {
-> >               emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -=
-retval_off);
-> >               emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, =
--(retval_off - 8));
-> > +             if (is_struct_ops) {
-> > +                     move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]=
-);
-> > +                     ret =3D sign_extend(ctx, LOONGARCH_GPR_A0, m->ret=
-_size);
-> > +                     if (ret)
-> > +                             goto out;
-> > +             }
-> >       }
-> >
-> >       emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off=
-);
->
+Hello,
+
+kernel test robot noticed "perf-sanity-tests.Event_groups.fail" on:
+
+commit: a704f7a13544a408baee6fa78f0f24fa05bfa406 ("[PATCH 18/19] perf: Introduce positive capability for raw events")
+url: https://github.com/intel-lab-lkp/linux/commits/Robin-Murphy/perf-arm-cmn-Fix-event-validation/20250814-010626
+base: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git 91325f31afc1026de28665cf1a7b6e157fa4d39d
+patch link: https://lore.kernel.org/all/542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com/
+patch subject: [PATCH 18/19] perf: Introduce positive capability for raw events
+
+in testcase: perf-sanity-tests
+version: 
+with following parameters:
+
+	perf_compiler: gcc
+	group: group-01
+
+
+
+config: x86_64-rhel-9.4-bpf
+compiler: gcc-12
+test machine: 224 threads 4 sockets Intel(R) Xeon(R) Platinum 8380H CPU @ 2.90GHz (Cooper Lake) with 192G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202508211037.3f897218-lkp@intel.com
+
+
+besides Event_groups, we also noticed perf_stat_JSON_output_linter and
+perf_stat_STD_output_linter become failed upon this commit but pass on parent.
+
+0129bbf0ee6f109a a704f7a13544a408baee6fa78f0
+---------------- ---------------------------
+       fail:runs  %reproduction    fail:runs
+           |             |             |
+           :38          16%           6:6     perf-sanity-tests.Event_groups.fail
+           :38          16%           6:6     perf-sanity-tests.perf_stat_JSON_output_linter.fail
+           :38          16%           6:6     perf-sanity-tests.perf_stat_STD_output_linter.fail
+
+
+
+2025-08-18 13:20:21 sudo /usr/src/linux-perf-x86_64-rhel-9.4-bpf-a704f7a13544a408baee6fa78f0f24fa05bfa406/tools/perf/perf test 66 -v
+ 66: Event groups                                                    : Running (1 active)
+--- start ---
+test child forked, pid 9619
+Using CPUID GenuineIntel-6-55-B
+Using uncore_imc_0 for uncore pmu event
+0x0 0x0, 0x0 0x0, 0x0 0x1: Fail
+0x0 0x0, 0x0 0x0, 0x1 0x3: Fail
+0x0 0x0, 0x0 0x0, 0xf 0x1: Fail
+0x0 0x0, 0x1 0x3, 0x0 0x0: Fail
+0x0 0x0, 0x1 0x3, 0x1 0x3: Fail
+0x0 0x0, 0x1 0x3, 0xf 0x1: Fail
+0x0 0x0, 0xf 0x1, 0x0 0x0: Fail
+0x0 0x0, 0xf 0x1, 0x1 0x3: Fail
+0x0 0x0, 0xf 0x1, 0xf 0x1: Fail
+0x1 0x3, 0x0 0x0, 0x0 0x0: Fail
+0x1 0x3, 0x0 0x0, 0x1 0x3: Fail
+0x1 0x3, 0x0 0x0, 0xf 0x1: Pass
+0x1 0x3, 0x1 0x3, 0x0 0x0: Fail
+0x1 0x3, 0x1 0x3, 0x1 0x3: Pass
+0x1 0x3, 0x1 0x3, 0xf 0x1: Pass
+0x1 0x3, 0xf 0x1, 0x0 0x0: Pass
+0x1 0x3, 0xf 0x1, 0x1 0x3: Pass
+0x1 0x3, 0xf 0x1, 0xf 0x1: Pass
+0xf 0x1, 0x0 0x0, 0x0 0x0: Pass
+0xf 0x1, 0x0 0x0, 0x1 0x3: Pass
+0xf 0x1, 0x0 0x0, 0xf 0x1: Pass
+0xf 0x1, 0x1 0x3, 0x0 0x0: Pass
+0xf 0x1, 0x1 0x3, 0x1 0x3: Pass
+0xf 0x1, 0x1 0x3, 0xf 0x1: Pass
+0xf 0x1, 0xf 0x1, 0x0 0x0: Pass
+0xf 0x1, 0xf 0x1, 0x1 0x3: Pass
+0xf 0x1, 0xf 0x1, 0xf 0x1: Pass
+---- end(-1) ----
+ 66: Event groups                                                    : FAILED!
+
+...
+
+2025-08-18 13:29:36 sudo /usr/src/linux-perf-x86_64-rhel-9.4-bpf-a704f7a13544a408baee6fa78f0f24fa05bfa406/tools/perf/perf test 97 -v
+ 97: perf stat JSON output linter                                    : Running (1 active)
+--- start ---
+test child forked, pid 20715
+Checking json output: no args [Success]
+Checking json output: system wide [Success]
+Checking json output: interval [Success]
+Checking json output: event [Success]
+Checking json output: per thread [Success]
+Checking json output: per node [Success]
+Checking json output: metric only Test failed for input:
+{"metric-value" : "none"}
+
+Traceback (most recent call last):
+  File "/usr/src/perf_selftests-x86_64-rhel-9.4-bpf-a704f7a13544a408baee6fa78f0f24fa05bfa406/tools/perf/tests/shell/lib/perf_json_output_lint.py", line 108, in <module>
+    check_json_output(expected_items)
+  File "/usr/src/perf_selftests-x86_64-rhel-9.4-bpf-a704f7a13544a408baee6fa78f0f24fa05bfa406/tools/perf/tests/shell/lib/perf_json_output_lint.py", line 93, in check_json_output
+    raise RuntimeError(f'Check failed for: key={key} value={value}')
+RuntimeError: Check failed for: key=metric-value value=none
+---- end(-1) ----
+ 97: perf stat JSON output linter                                    : FAILED!
+
+...
+
+2025-08-18 13:29:46 sudo /usr/src/linux-perf-x86_64-rhel-9.4-bpf-a704f7a13544a408baee6fa78f0f24fa05bfa406/tools/perf/perf test 99 -v
+ 99: perf stat STD output linter                                     : Running (1 active)
+--- start ---
+test child forked, pid 20818
+Checking STD output: no args [Success]
+Checking STD output: system wide [Success]
+Checking STD output: interval [Success]
+Checking STD output: per thread [Success]
+Checking STD output: per node [Success]
+Checking STD output: metric only ---- end(-1) ----
+ 99: perf stat STD output linter                                     : FAILED!
+
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250821/202508211037.3f897218-lkp@intel.com
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
