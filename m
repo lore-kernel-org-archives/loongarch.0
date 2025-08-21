@@ -1,106 +1,102 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339D630E830
-	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 11:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7894C9D
+	for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 12:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755775639; cv=none; b=tePwW4OqWlvtjffgZYHkiUe584w6u1uHCBrxm2QLRuiFQzML2AEyvNLqGg9EUq6gQolPyDNEFH1cCR5zdL1mTOHYDK1fHNezUa80ajmsJpM/RSst4RfJPbbhOivYWk2SSnvHFN4P7xPqDJJxw3zytGydGHs95Ne3xzJZ3KxPzb8=
+	t=1755778602; cv=none; b=eQ8bf1QcbgysSwEbVxzCZWm3B5OsGTlF3EylXgEOv/6pGOb8EREHa49dYdI3ff73PtQBwr4D/QZO85QmwuUJEUcegdH3xDC5tdDM2VK++bhkqe4qFAAbyeepAwwwa8l40OoyhoSjWDDGA6cz96cWQmGbUyYs7HtZjhlUw/+usBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755775639; c=relaxed/simple;
-	bh=2iuhQehcGJ/STLL1wVwziWidGXccPhxvPLuOUY7+u3Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SMlMIKwdcJMbJlBOJvaTv1/t6xJRZeWRMeewwC5DQWDuGz7XX3vit5j2EbfCD8Nc8uCS8YHCB8POpFSJJpdO6UYf/Bc4aUOxRvsnw4fx+4V/1qX0yw2duzghO0FoeVu/1FtcXPbY0mHkzPQy1t6GswUI5N4GH3CHWTShr63Xkb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QtGux6ZR; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1755778602; c=relaxed/simple;
+	bh=D3bW53kccqh7kC5HvQO/ybJCH5XgtyaXneoTz1iI9o4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lQLLSd6hXOCkmm3gJpnKmFvlPkuEX+QrMsIbM5tr60FXG3gbWBAaBjWZkr37OvYEd4uMwEOHlIsXfh2SjLY113F8NsHT9ucSsENRWL4TpcgLdWtMFs3Sxxi/MBbw8sVfdwz8E1nDXrtNmAX4PRae5L5w007t7w8FBevzr4FW0Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/zwG3aQ; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QtGux6ZR"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55ce5090b1cso804090e87.0
-        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 04:27:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/zwG3aQ"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-323266d2d9eso741854a91.0
+        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 05:16:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755775635; x=1756380435; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2iuhQehcGJ/STLL1wVwziWidGXccPhxvPLuOUY7+u3Q=;
-        b=QtGux6ZRzwNJFgDBV0euYuqiQ53ZBf2SGdQaJbyEXgrclECvAS+Xr9zPq9WqkcBCXG
-         bfiNzxBtJ0GlCvCDE6eObEeP5sr+fvz8y0ZWXKIMN8G/0Ph+DvwhcVR8q4N3MTJd/M5P
-         q8Y9Se6B0FWdGM6do/0K956cHdyYA0H/O7dnDOGphnujJZN3PDmNnQy9N0kaTKvzyirC
-         P0DVmhVu+Jih6btGpC9uaK7WLYeDo0rw7CvE7deozfoUGF8VMyd+2iwst6IJo2CaUqMB
-         gQylYT5kdqYfIpyEpudK1hR3BBVY9dEnXSFHWxF42S03PceDuqR88GL0MtMMA+IFPvMQ
-         0aXQ==
+        d=gmail.com; s=20230601; t=1755778600; x=1756383400; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WLc1SqMx88bxm5UNAuFakYImFc8qDW5ITO4vuXogwcM=;
+        b=P/zwG3aQG2pOGAPG0TnienW42M2cIsl26PulPr2Rusb6jdjoaphGlY2KhtgfV49Yti
+         HNiAKbzUekNpc6W+z4a/wAe62uUZIcZYdJ8rU0qGYRrbyih7tzW+RLd4fyHz3Dm1zDHq
+         PcOiLwSoyxWc872228U0AfrZMG0+eMTPmoEWU9Gn8LuRluVW3+pm6jeipuH26wzo8qHx
+         FKpdF/t0xRwTYCb5G236qrDqgWX4se7vJ2yx4M08rIMlFWcVS2kIxBDFPb8wom7R9pbz
+         II6E3m4cqDBVUFJkLT7ottEkhLeKsFHoIR7kRNnQJ6q2yxMyKX7CWufbC2e7Q9r6Qd0v
+         XLyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755775635; x=1756380435;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2iuhQehcGJ/STLL1wVwziWidGXccPhxvPLuOUY7+u3Q=;
-        b=shQM1LnVw1kBmXZpAUZIjfuvsJ89tV9QgXMLH1infHN4UWpeXicXinfKgO5FZlsNm8
-         pV0UxEq7WoTdZE0pqACdIxYh4+92W3QA9YuolaKGvecJNpQe/LGAoQf3JUk8GoxBtmMe
-         xVpD2CITPaQrsj7r/GbK56mgleSNaFnnZJGtFqA0Oxu3dGN6YEzLpa5yvRslEaU5u1C2
-         NH2FiRZiOrrNsEEncu/jwvUukW0wXLwqaxfQUwzStkuvC93looO0iy/Npkgh5FU6eD/n
-         wNzOVEDZ5rgYDBxp5jyzbueQNKaL1pP2L8EzUvP/7tW/3MPUCz1v0cc1Vm6/hFsv3WPU
-         iFYA==
-X-Forwarded-Encrypted: i=1; AJvYcCXg54cIZ/99/5eb9k9853573zYu3mk72M1GjdFL5wC2tPtDDn88UpYv2nS8Zfywve9Qd2/iwrWBNEw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxbKdH6acnfxkyI6MF9WbKNnMB7BHeO/wckJAPWyVXuLJyS590H
-	H4fDmDiLxGsoD4GjRj6I+5yqkCcwv9AU7P01qsZ4SY4O1ZO6J9T/LUtCEscCned40V4m2BU0+Iu
-	LJjoek2pN9w+XITPDbeTqY1qmhegt0ztW2NMybgjw2w==
-X-Gm-Gg: ASbGncuqELkHXEJMqz6NkmnbEvHIFY+jjYf+V5QgJ00Op4ti1wK8QFFGgXBxfKhSRh9
-	sbWCnXkjDXc0iXwXfW7nVw7RmvbO7IOCLO5bz4DdTPtFchnI5SksXddGJ1GIij45ddOJKWFUcl/
-	rKrCkGWgTZlm3+KIOyrQIHZjyXCaU4MwxVE3fPQDP94W64IwGFqRrdv6pdbwk1NOP6S92HgVaCb
-	is7/CE=
-X-Google-Smtp-Source: AGHT+IHfxoqcChsLfygBUpUWn2PCNNKaUpVfkw0VSrAeJy75AQZfqbB6MGhf72lV5Y0Gxx16LXjumAnruYNQwdN8gFk=
-X-Received: by 2002:a05:6512:2284:b0:553:d702:960c with SMTP id
- 2adb3069b0e04-55e0d5c59f0mr805985e87.56.1755775635103; Thu, 21 Aug 2025
- 04:27:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755778600; x=1756383400;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WLc1SqMx88bxm5UNAuFakYImFc8qDW5ITO4vuXogwcM=;
+        b=ewZNtW/80+wRTVCnQEq5OT1MfSGuZO/NqWKHhjM0ls8V8FIa/uL9KA0f7DYeHpvjmN
+         1BfZDKjAF9bhUVI0d6W35bYpWiGnRLlNhOHjNow1eJ0pVaDODgJVoSIfcyAgaaec2X7M
+         dkhBp7cXiowbe8mVTRQb6MjE+rcZ7ZTYy91z8BHueZZCpBgP11l8SY9Z+jRyUPMI888k
+         k9tnFmLoOIOsQh5ryPoo79qbzyzQBnlVfgfpmVNAeRbaiPYXTHF1/dMAjMg+hT4N60M7
+         QI2tJWb5fis5LqtyhxgDKycpn471+TeHfp2UhM4AKhXLMWs7FnYc1Avb9Cs+3tZ6tr9M
+         +AQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEAyCpP1YQ3DCk0mN9iusDsJNMsIVHuPVChDP/nKwChU/rILzhGbnSLquHOxrJRQaCrQ1aIOhmH7Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywzcs1Md3LqoD6jvEtJBohYUj1e0feZJAgRCWDMu2ZK98G1t5sp
+	Vnj+x5tNui5jDxh2Eu4J+kmPtqIabeX7srUEX4QzeUVOsBXobooS0A2v
+X-Gm-Gg: ASbGnctV4vdKerICO1g2dxYKeiMDIYVgQDgX15GpVDfCvu2xfSx1gOcFxkWWIPIw0bc
+	NImd6TefjuBzoKlAMSSbGNIYislA5i82QwKZtXmO9ueD3gkUjbXw+jBpCFPy6iPKIDlLT9NNq4D
+	b8J0npsqX3XWtqoMz6BbxdNvLfhGx1ktPC0Fo6YOHUK4FKX4M0aVL81vzge+BajMhUVotHGIBt6
+	7COdyvDAAF92UiSz68FQNT97KE3bqPGQ5T7TBLTx53QAQyY/BvcEcyXS1I0BTbt2+SBSBbPBGqI
+	U1aBCsOz/cTTK4GclZJvEfehalfQhaFkIHofwjgNOa5BEPh7N+oAb0rfT3JOjrVfJO9NRthjDeJ
+	kLESzXHpQ3NcF/kIJhdLmtnIw8sc/MAOyNLKrnHCRAQcntPuaIVA=
+X-Google-Smtp-Source: AGHT+IHoaaMZA6T6APFg53tzmeaf2Zh5Zrn4FteT1P37Y2XdhOf2oT0PLT3bidCUN9QlazYmYrMhjg==
+X-Received: by 2002:a17:90b:3d83:b0:323:39c0:8e74 with SMTP id 98e67ed59e1d1-324ed10c3camr3461899a91.24.1755778600188;
+        Thu, 21 Aug 2025 05:16:40 -0700 (PDT)
+Received: from devbox.. ([43.132.141.28])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-324f2c48337sm1745442a91.25.2025.08.21.05.16.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Aug 2025 05:16:39 -0700 (PDT)
+From: Hengqi Chen <hengqi.chen@gmail.com>
+To: chenhuacai@kernel.org,
+	yangtiezhu@loongson.cn,
+	jianghaoran@kylinos.cn,
+	duanchenghao@kylinos.cn,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	vincent.mc.li@gmail.com
+Cc: bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Subject: [PATCH 0/3] LoongArch: Fix BPF trampoline related issues
+Date: Thu, 21 Aug 2025 09:10:00 +0000
+Message-ID: <20250821091003.404870-1-hengqi.chen@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250811163749.47028-2-ziyao@disroot.org> <20250811163749.47028-4-ziyao@disroot.org>
- <CACRpkdZp8FLrxgkeZ=xzSPgny51iDZ3KRCrxpoSdgF8_=df=KQ@mail.gmail.com> <aKRw1pEUUwd4cQoW@pie>
-In-Reply-To: <aKRw1pEUUwd4cQoW@pie>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 21 Aug 2025 13:27:03 +0200
-X-Gm-Features: Ac12FXx9O5o9dI7NgdWBP_7YslWNrW827bj2s6nLtLSzojwBRCZi2QrMsWTrODw
-Message-ID: <CACRpkdZCs6u6Tyos_ufBoeZ9V+51btEQ2wbPv1GRp5RNGZcUyA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pinctrl: ls2k0300: Support Loongson 2K0300 SoC
-To: Yao Zi <ziyao@disroot.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 19, 2025 at 2:41=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+The following two selftest cases triggers oops on LoongArch:
 
-> > Which is fine if the pins actually cannot be used for GPIO, but if they
-> > can, and this is just implicit for unconfigured pins ... then add
-> > functions and groups for GPIO.
->
-> For 2K0300, we want these pins to be able to multiplexed as GPIOs, but
-> since this pinctrl driver could configure nothing for GPIO mode pins, I
-> think it's enough to implement only the gpio_request_enable() callback
-> and do the multiplexing work here, is this correct?
+    $ ./test_progs -a ns_bpf_qdisc -a tracing_struct
 
-Yes that is the quick and elegant solution.
+This small series tries to fix/workaround these issues.
+See individual commit for details.
 
-> I originally thought it's okay to multiplex pins as GPIO with an usual
-> pinctrl configuration, and didn't realize that it causes conflicts on
-> strict controllers since the pin will be claimed by both pincontroller
-> and GPIO controller. Thanks for the reminder.
+While at it, remove a duplicated flags check in __arch_prepare_bpf_trampoline().
 
-This is true as well, some drivers use an explicit "gpio" function
-and for these the the new .function_is_gpio() callback is especially
-helpful.
+Hengqi Chen (3):
+  LoongArch: BPF: Remove duplicated flags check
+  LoongArch: BPF: Sign extend struct ops return values properly
+  LoongArch: BPF: No support of struct argument in trampoline programs
 
-I think it is helpful if you're using the callbacks too (we can
-determine if we're already in GPIO mode) but it's not necessary.
+ arch/loongarch/net/bpf_jit.c | 54 +++++++++++++++++++++++++++++-------
+ 1 file changed, 44 insertions(+), 10 deletions(-)
 
-Yours,
-Linus Walleij
+--
+2.43.5
