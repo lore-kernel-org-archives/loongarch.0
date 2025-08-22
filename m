@@ -1,217 +1,129 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E1F393DD0
-	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 10:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2854919D07A
+	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 18:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755858783; cv=none; b=k5cUfvkqLc9D94JvAVvYgord8imMyJgxzZAeXuh7cpP++FTBH/CwxVe5wcDtzX5mbQpCi/DRtyUQPTvLN8glWCpCmUvJqmU0XCoRCZyXrqJhvuT8JG1X/WyANMbfkCpGXRXgoL8xSUe4vbJIY0TrrfyS8YAmInpIK/2WovFI5CA=
+	t=1755888219; cv=none; b=Vfx/YNplAet6yGFlSI5xd/yUzqd1QSAuUGwoXd2tRJ9xB8IYf+NmuFo9Iy5P6jyfk37icTAbKG9mdLbBSKodnqf9IHTUKy3WeTJ12XIpIZ37wdzlB33ZNUrh20bzppZbB3iQ+F4+NHnyXmWaYybpRBrPqYxWKs37hyyN8HosseY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755858783; c=relaxed/simple;
-	bh=CU41YE7iOuiEUBXAR1fHUTzQP9FmIAESCXuQePsKguE=;
+	s=arc-20240116; t=1755888219; c=relaxed/simple;
+	bh=dxkVD+b4M1nrUZ2Whc+sjYjTzOsWbtuFCZNW0FlJnoI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Oakf6xg0tpsfhFiIgoGtMU4BzobzTDnG6qysX8j3QZZGJhuctLRHTau5yjb8Hf/C7RzJwVriyC4ue/kmHyLuVm5K2jtsM4+i6T9t3ZKqTyJw6vxmV2HKnfcSTif648fk+hkIkB8efWp364BrUbx3X4hW2wv4ei7APKFITRYG0jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=jkCs8m8z; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	 To:Cc:Content-Type; b=hW0CV3w0lzlBcKzIDqTKh1Uofvz482e6mOCvXpj5OtGCEztvHKAN86eATVIwHo8FqZwIYgg63MJFaLEnQvA8/AwViKrfiMgyhT/yGaUFqIJ094y5APaXvWoDM/nPqfvdW5CBu1MU8TKhkpvOE/MdYmI4TLMXWG/HKi6WKG8X5TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fCGHh5rx; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="jkCs8m8z"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-88432e31bdbso142477039f.2
-        for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 03:33:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCGHh5rx"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-32326df0e75so2075796a91.2
+        for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 11:43:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1755858781; x=1756463581; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1755888215; x=1756493015; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LpW5veLMLPdr6OKMte0tGA4PuK4ym/yIcC2Y9SUMkpQ=;
-        b=jkCs8m8zRQUu2uwJtcA75Hd5FL2wM1V7Uv8yyo7XD9ty27HW4pJ1zK2nvFasNUx86e
-         vQLGdNQ+yiS5vZP7E2TUWGqlRRdPosY33a8SBF5yUoUTAWdRCU8YRkdRl/dte//3zep4
-         bGBjIy2AbgC/lWsZzGG3oEdybY/j4GNwDH0eqN5IQudpoqU1Ki7bhqvJwosUAYb18BPK
-         Y12LvGPUCisBQDxx55q0yfxdwa9BzBOe8MtzzReSx5jkNvtFaajJJHC+dpRUmpQ6Tht7
-         TA+FSjgXfzfnip3a/FGIYLZ6Huu2lPNlZH6MXMTCWkEyGVMR8tSGgEKOEQCoIsmYZiT/
-         I9jQ==
+        bh=4yrP3A2wc1sdHVj0Mjd5Q9CFRSUAOQeMpXsZFVELhAE=;
+        b=fCGHh5rxHlukbljd2T01oUU/m0ULnGS3U0Q5Ue3IuzMMeOFQwpsVMIDQC3xB3M5lmV
+         npElEBv5icIMzi6urN6Qh1DBA2ztUUy24iwlIubIevEHoOBtzQUzJYNSDsPnyyeTyA7L
+         IkbT3FNE3bwftjkzc7gHam6vzES1CpwbJf6076N2SMbB2EHNiJMQyZhwVsOMSrDgLat9
+         lI6jyFbaZqz/lOA9ITtoa+QD6PUa5G1T0XCtJAtZYCu4eUiD560sucJCG4qAb3I2G9Lh
+         P08y2B7nBJtGOzN5OrcuLGj5bH1xcCJLqQG2S91lr3I6LOxAlYNTGV8By7EdY5zgBE3m
+         MMjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755858781; x=1756463581;
+        d=1e100.net; s=20230601; t=1755888215; x=1756493015;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LpW5veLMLPdr6OKMte0tGA4PuK4ym/yIcC2Y9SUMkpQ=;
-        b=Dv6MkJywb4Y/f8fIYpbBm9jqLS63Ifyxj3gGiS43LaSE6TWIgGapEEZl5Q29vUIXWU
-         BM1szWRCeI//0b5jrePOpamnvSuLAAKC0gFQXe4Zkb4/uL9/2wnOtaJn6KiYCmBq0x0w
-         3fyIYcn2AEdPNYKRoAYa5XuUZpRVyCZujkUvhpZY/O/nEeKWzCbPG15s7p3+sMVT4O3u
-         N1jbWDVOqxN5rX6rE83hlzhIhjKB+AY8bvfDKUfzY/rcqqG6yPJbFIq7pQu0Y5UDbbsU
-         Qw53vg6yDVtg9Ozc0Vwd2MPVVf/M7KbI1VfAs/nrVCMD/0xUm+OHC+Q4guuE2N3uzGfT
-         HeJw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8l3/05+KNcxH9g5HY8T7934rC3KBGRWoM7wkBys/e24O0ixg3epFFqGl/mVpykZMtXbtU30sHv4E=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxHl+1ozKd/dKkWxu+uDJns4SorgjzBh3s9mRRUsk2AyDNsxkve
-	mmTzq+eMKgK2IdkyC06rbDfAtdILEvsUfEkWOyiT9bu8hKbK2pUk/w5kvl3/0CRvAJrHkMEoH4w
-	JC/ZRzJhUQ31mYQfrv4i4JwKTmnkVEPcI6ntdpN2PEg==
-X-Gm-Gg: ASbGncuL4MoFXxRILneUqS/C+sTpG3FuzwzpuP/sAL5681eP6UBAYJaoeqUQeLvr703
-	tHwmN3aRt42CcAwnBWuBuLOvsTlKd9N9Nca6XjOfDYCECJHsULHZCExtgbDtOrqX18QZQgTQ5Nl
-	32gmKzG8ciS+dd8ZWzbPRw12Pm0V0U7xetp2vIXcx+B/ReuOF406aXQ+VZwc8WKIeLSZE9jo+KP
-	J9lFCar
-X-Google-Smtp-Source: AGHT+IFxa3sIYy8GmbrliB9vOURhQsISjHNbjP8q123c5R9HRTAMf+tU9qbPOd1N7VsCfi+G9RwFcCmvT1G6Qpsac28=
-X-Received: by 2002:a05:6e02:1607:b0:3e3:fd25:f6a with SMTP id
- e9e14a558f8ab-3e921a5c447mr39155945ab.11.1755858780756; Fri, 22 Aug 2025
- 03:33:00 -0700 (PDT)
+        bh=4yrP3A2wc1sdHVj0Mjd5Q9CFRSUAOQeMpXsZFVELhAE=;
+        b=r8Mmith0bMPfFwYVQcwARBSTaDFP4d2ijGsCDAhNg7BBFWRL2fXeu5jAPEd66ISAQG
+         B8gz/TumqJcfR6vx190uPhM7Y56g5TuS6wyQw0DOfnuaxdbWqoqX8rce2MIP2nrvB8KF
+         w3ZXBaJ92CzaUKmiGULgHHL5KzlO2b9oKxchwhIfGo/frrjd+5MiHVZWLGY9TwvuHTyZ
+         TqZVl1a0HLQPJT9WxptJFJusps2TR7uS/bJGRdvua3ll45BjIDTao+12nqtoMO/rqnoo
+         f2fEOC6SFOqj4Sy8+siZZNg2hnwCgcJmrMlARZY77xSYJsQIxzaobToSs01WSLydxySY
+         UzQA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2i1z03Czb4mjZfxGMn6XI06yJ+3zpgdbT5xj1w1udqkf62OLo7BCzPXC+D5h3xK0M+CM33prvoXs=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx3QCIiHtSI2LQM5U92QXoWvFo1x8OUeflrOmnqSo+LYAY+BZH5
+	RvMUMu+Jay0wh1vOhpkVuiWWD/V+g/o9c6WxE1HTVPnR2YAZEAZovRUcAWTLLh+WnLqZxCt/bfA
+	uEryXbj6JHQcvMF5+TpMQz3JkON0Io/Wl8Q==
+X-Gm-Gg: ASbGncvUI4ykj/a0uEj+izIbdSffNBUYZNHVpNl0vxCN21j+EZsLN8T3fyJfQM3zhlf
+	Qxr/lh0cKsuV/umdkJdCTHSNUwWdbZ9SGW3Axml4rcv0hxdspyXq562o24M+0NeWIFeLGDXTbVn
+	dqGA5oZ3ilhsLKgtGKjHW7l+HW8f/JOVGjGRYSjIcKLaAwH2axiSqEmnZaOsKWR8369qnxZtvxg
+	7WYx4c/qKjZDu3a1qHXLHg=
+X-Google-Smtp-Source: AGHT+IEUXODzWS3pCnGwThbAnGSrXVApyosNmeapYZtj6MDSpkysw2w1jLflsuKy2DvUUmRQ0vvEUuK351S2Mcttzog=
+X-Received: by 2002:a17:90b:3f88:b0:31c:36f5:d95 with SMTP id
+ 98e67ed59e1d1-32515e2b881mr4766831a91.2.1755888215349; Fri, 22 Aug 2025
+ 11:43:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-17-seanjc@google.com>
-In-Reply-To: <20250806195706.1650976-17-seanjc@google.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 22 Aug 2025 16:02:49 +0530
-X-Gm-Features: Ac12FXz94_OmeQku-x70DMZyHIHAiBydPtfIxKmb7IUME7_u-QmNy8EiX87dBF4
-Message-ID: <CAAhSdy3Ee1K7kfwFUhdcjoe+c4oi06Tm+Jo7CE2ycqHjuBou-A@mail.gmail.com>
-Subject: Re: [PATCH v5 16/44] KVM: Add a simplified wrapper for registering
- perf callbacks
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20250819111953.3197428-1-chenhuacai@loongson.cn>
+In-Reply-To: <20250819111953.3197428-1-chenhuacai@loongson.cn>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 22 Aug 2025 11:43:19 -0700
+X-Gm-Features: Ac12FXzrYOzfj7i2cMKRVyTzQec3hNJbudkkDPYSdzi9TGgGm2mcwIbyXDmRGsw
+Message-ID: <CAEf4BzajrMOkdOX5fn=bzWVTLbObPM9=_4Nh9rm5oc_4377Pfw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Fix uninitialized symbol 'retval_off'
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
+	Huacai Chen <chenhuacai@gmail.com>, George Guo <guodongtai@kylinos.cn>, 
+	Chenghao Duan <duanchenghao@kylinos.cn>, loongarch@lists.linux.dev, 
+	kernel test robot <lkp@intel.com>, Dan Carpenter <dan.carpenter@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 7, 2025 at 1:27=E2=80=AFAM Sean Christopherson <seanjc@google.c=
-om> wrote:
+On Tue, Aug 19, 2025 at 4:21=E2=80=AFAM Huacai Chen <chenhuacai@loongson.cn=
+> wrote:
 >
-> Add a parameter-less API for registering perf callbacks in anticipation o=
-f
-> introducing another x86-only parameter for handling mediated PMU PMIs.
+> In __arch_prepare_bpf_trampoline(), retval_off is meaningful only when
+> save_ret is not 0, so the current logic is correct. But it may cause a
+> build warning:
 >
-> No functional change intended.
+> arch/loongarch/net/bpf_jit.c:1547 __arch_prepare_bpf_trampoline() error: =
+uninitialized symbol 'retval_off'.
 >
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-
-For KVM RISC-V:
-Acked-by: Anup Patel <anup@brainfault.org>
-
-Regards,
-Anup
-
+> So initialize retval_off unconditionally to fix it.
+>
+> Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support")
+> Closes: https://lore.kernel.org/r/202508191020.PBBh07cK-lkp@intel.com/
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->  arch/arm64/kvm/arm.c      |  2 +-
->  arch/loongarch/kvm/main.c |  2 +-
->  arch/riscv/kvm/main.c     |  2 +-
->  arch/x86/kvm/x86.c        |  2 +-
->  include/linux/kvm_host.h  | 11 +++++++++--
->  virt/kvm/kvm_main.c       |  5 +++--
->  6 files changed, 16 insertions(+), 8 deletions(-)
+>  arch/loongarch/net/bpf_jit.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 >
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 888f7c7abf54..6c604b5214f2 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -2328,7 +2328,7 @@ static int __init init_subsystems(void)
->         if (err)
->                 goto out;
+
+Is this something that should go through loongarch-specific tree?
+
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index abfdb6bb5c38..a73f6ea4ed4a 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1504,11 +1504,10 @@ static int __arch_prepare_bpf_trampoline(struct j=
+it_ctx *ctx, struct bpf_tramp_i
+>         stack_size +=3D 16;
 >
-> -       kvm_register_perf_callbacks(NULL);
-> +       kvm_register_perf_callbacks();
->
->  out:
->         if (err)
-> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> index 80ea63d465b8..f62326fe29fa 100644
-> --- a/arch/loongarch/kvm/main.c
-> +++ b/arch/loongarch/kvm/main.c
-> @@ -394,7 +394,7 @@ static int kvm_loongarch_env_init(void)
->         }
->
->         kvm_init_gcsr_flag();
-> -       kvm_register_perf_callbacks(NULL);
-> +       kvm_register_perf_callbacks();
->
->         /* Register LoongArch IPI interrupt controller interface. */
->         ret =3D kvm_loongarch_register_ipi_device();
-> diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
-> index 67c876de74ef..cbe842c2f615 100644
-> --- a/arch/riscv/kvm/main.c
-> +++ b/arch/riscv/kvm/main.c
-> @@ -159,7 +159,7 @@ static int __init riscv_kvm_init(void)
->                 kvm_info("AIA available with %d guest external interrupts=
-\n",
->                          kvm_riscv_aia_nr_hgei);
->
-> -       kvm_register_perf_callbacks(NULL);
-> +       kvm_register_perf_callbacks();
->
->         rc =3D kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
->         if (rc) {
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 5af2c5aed0f2..d80bbd5e0859 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9689,7 +9689,7 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *op=
-s)
->                 set_hv_tscchange_cb(kvm_hyperv_tsc_notifier);
->  #endif
->
-> -       kvm_register_perf_callbacks(ops->handle_intel_pt_intr);
-> +       __kvm_register_perf_callbacks(ops->handle_intel_pt_intr, NULL);
->
->         if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled)
->                 kvm_caps.supported_vm_types |=3D BIT(KVM_X86_SW_PROTECTED=
-_VM);
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 15656b7fba6c..20c50eaa0089 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -1731,10 +1731,17 @@ static inline bool kvm_arch_intc_initialized(stru=
-ct kvm *kvm)
->  #ifdef CONFIG_GUEST_PERF_EVENTS
->  unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu);
->
-> -void kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void));
-> +void __kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void)=
-,
-> +                                  void (*mediated_pmi_handler)(void));
+>         save_ret =3D flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_FEN=
+TRY_RET);
+> -       if (save_ret) {
+> -               /* Save BPF R0 and A0 */
+> -               stack_size +=3D 16;
+> -               retval_off =3D stack_size;
+> -       }
+> +       if (save_ret)
+> +               stack_size +=3D 16; /* Save BPF R0 and A0 */
 > +
-> +static inline void kvm_register_perf_callbacks(void)
-> +{
-> +       __kvm_register_perf_callbacks(NULL, NULL);
-> +}
-> +
->  void kvm_unregister_perf_callbacks(void);
->  #else
-> -static inline void kvm_register_perf_callbacks(void *ign) {}
-> +static inline void kvm_register_perf_callbacks(void) {}
->  static inline void kvm_unregister_perf_callbacks(void) {}
->  #endif /* CONFIG_GUEST_PERF_EVENTS */
+> +       retval_off =3D stack_size;
 >
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index ecafab2e17d9..d477a7fda0ae 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -6429,10 +6429,11 @@ static struct perf_guest_info_callbacks kvm_guest=
-_cbs =3D {
->         .handle_mediated_pmi    =3D NULL,
->  };
->
-> -void kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void))
-> +void __kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void)=
-,
-> +                                  void (*mediated_pmi_handler)(void))
->  {
->         kvm_guest_cbs.handle_intel_pt_intr =3D pt_intr_handler;
-> -       kvm_guest_cbs.handle_mediated_pmi =3D NULL;
-> +       kvm_guest_cbs.handle_mediated_pmi =3D mediated_pmi_handler;
->
->         perf_register_guest_info_callbacks(&kvm_guest_cbs);
->  }
+>         /* Room of trampoline frame to store args */
+>         nargs =3D m->nr_args;
 > --
-> 2.50.1.565.gc32cd1483b-goog
+> 2.47.3
+>
 >
