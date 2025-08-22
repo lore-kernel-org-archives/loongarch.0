@@ -1,81 +1,70 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9507261B
-	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 08:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28F82D46C4;
+	Fri, 22 Aug 2025 09:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755850779; cv=none; b=d3DWa7KP2z1YH7DRvxeUmvGms1L6kNodFejlC679Kfi0OV5/oGbXhEzmXj99FOySURRvSSei+2mPTJW9KU7RBEf6Ua6ypNTW1oQ4UQynUcoFgDc1+8hCvne6xwRE9YaXz4TepF3Dq7CSc9vGz6C/V3jHtMq6ahvAXJGuFuqP+/A=
+	t=1755854160; cv=none; b=MYHSZSJ+IcsCv5rsTJAdftzyOt85HHK1Ze+VOE76d1MeBBIr27Ur8n8KNNruypSB78TATQn9JqigkgqZqQY5KAi+G9cYY+PyXXD6iiMMSUYzgXG3a+JYVoTv626zOc5M5qlvoK6bjjkI/0j+r2R14Onep/oEOv4GqiAnd++Rnl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755850779; c=relaxed/simple;
-	bh=60ouIOMZNI4fWnOHSbMHCMjtcFdSJqT/Ab/afS1Y3Mw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:References:To:Cc:
-	 In-Reply-To:Content-Type; b=md12HRlh/6xORrs6xM4tH+q/x2ckDXK0HvdTbNV/5itnrWD5zz2tmBJ9FSbJ1b3N1XTeH269w08Hul8157Pem1VM9LiB5K/KMId7+K0xO/KFYfm4P/ipU7hDkBxreODFBlYhxJ9RgcVwTBKEW3jdE39XZsSET3REDrbRS7xNpg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=j6JP2Gcc; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1755854160; c=relaxed/simple;
+	bh=z8zbkUUqq89bepUoHJqZI8/S5RfXwWWhDEqDbowwr2c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RJsd4NAHVfCnvL6XrOqH2CfYACa8o6zD9pyDJLoOUIHAOaSMIBeKKL76unVOMoMwYucNDQ+uQxj+3KbR7nD2Sgo/nNC54+mcVgHPgt5iQm7aSlZnyYemiu0XC8rbwJboHN2Hi2MCTi6V/XJrk5rt6w42a2MWXbdyAtPu6FrYp4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGp9XNeT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="j6JP2Gcc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1755850760;
-	bh=W7YCuvCPw9irUhaTiH73c5zU7lbnLuDOyxSvUUqMIn4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To;
-	b=j6JP2GccDJteZxnoJt9uQbF0ew89mYn7uGfGLdsCKIa9Ga/e349GLYwEU0lG2SnVj
-	 cf80nbV/ESwbgtIOFrdjec6HKpNsry8D6z7Rp/csxKKpZapDPXfujCmiaduc4+SwW1
-	 nRBc/aGRl9FavqWIZjrXszaWBWe3vdE7X20HfRkY=
-X-QQ-mid: esmtpgz16t1755850751t6f1767cb
-X-QQ-Originating-IP: YQyxchHu0ua4Ds3I/SkKn4MXnSly7xSc9+Jbp9oLNbs=
-Received: from [198.18.0.1] ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 22 Aug 2025 16:18:53 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 18263725170358339871
-EX-QQ-RecipientCnt: 10
-Message-ID: <A6EC60FB84292EDF+4c8a74f7-6a65-47ee-bc0b-01ba77065ee8@uniontech.com>
-Date: Fri, 22 Aug 2025 16:18:53 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGp9XNeT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6EB75C4CEF4;
+	Fri, 22 Aug 2025 09:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755854159;
+	bh=z8zbkUUqq89bepUoHJqZI8/S5RfXwWWhDEqDbowwr2c=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=qGp9XNeTRVV8XCrO6I214plLlDHtf/hibXmaZL6HCig/glprBCbxDaxX89cAhCpj5
+	 cIRaS+x6+q68F5fuH1EuxsK5Dlbb4DpNUGhUYtXSrmeLou8Zo4B97E+pqms4Aa8mki
+	 SnstwxOSADnMIcrBaivYse1ya4askMUxaNJmM4a6Wit3l6PfUd9gFnoULVO3mWMi4L
+	 cJA8pyfPu5MofsYVw6BlONCecSmz+oQcfLebZEpXEbGr1713WIHRK4GV2G/PCeviEB
+	 zfa+AubDXoFsxgKpFliy3NCdWKaTnzZFTnmWXdO3Pww2fgW4F/IrHD+gV30pgiEzh3
+	 vuyuby9mHqvOQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD9BCA0FE1;
+	Fri, 22 Aug 2025 09:15:59 +0000 (UTC)
+From: Ziyao via B4 Relay <devnull+liziyao.uniontech.com@kernel.org>
+Date: Fri, 22 Aug 2025 17:15:58 +0800
+Subject: [PATCH RESEND] PCI: Override PCIe bridge supported speeds for
+ older Loongson 3C6000 series steppings
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Zi Yao <liziyao@uniontech.com>
-Subject: [PATCH] PCI: Override PCIe bridge supported speeds for older Loongson
- 3C6000 series steppings
-References: <>
-Content-Language: en-US
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, loongarch@lists.linux.dev,
- =?UTF-8?B?6IGC6K+a?= <niecheng1@uniontech.com>,
- Jun Zhan <zhanjun@uniontech.com>, linux-kernel@vger.kernel.org,
- Lain Fearyncess Yang <fsf@live.com>, Mingcong Bai <baimingcong@aosc.io>,
- Ayden Meng <aydenmeng@yeah.net>, Guan Wentao <guanwentao@uniontech.com>
-In-Reply-To: <>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: NbLMjDNEDlGtK6XyVh+w8Wy8MdGiMW/Z9wqOYiE/7jZ0zd/gS0FSJPI2
-	+UxcphMSOh2+xEKggFcgFQ9fYpAkDm2b0GO8wuRyx218By/M3CZS74NO0VnCtzK/fFhOEdq
-	3Z1lO0YWHC/fAJsaCZbklFxiIAA1zHFMgH7JzzLnoJ6FFQDdq6MGW4LQQCFPoamV+eXJFEY
-	N2WpP3fR7zqaoq9NnDbtmHgiUMFwUbKG2cJWEwF0leeFPqUwynmlWt0LbsJP9np7IZW9nl8
-	mDpA/O+WqGaClFj4OV5l4LfKH+6NNh6HdK5zPjd5P4lETERqWSxV0Rw+DRn5WeiuUa3ni4q
-	rK0dQJ+lSq2t6eY/BFA6YJUebpSKq5Xk6Gb5hxFjWG+6i3+acsFPdAwQcUqhumS25ibHXzt
-	7pUiT0niu/s9+7M/9DsJ9LB/mO1O142uvGOmp03lxh7GdSlOapMFDlp+9c8pUMq7cGZKn3D
-	/sLDBfY82dOI74kIH5hoxw0HWx80ejNHlnDxnimcylRbGwUTWymPpMO5rqdYHlWZKaqVpN+
-	qtXcaIyZQc2+J4brQDJXmfF27ukthztu4UsRCZPyRPPZJlzdwBIlFDQAeAOnjjwb9ptOwZi
-	gOP+RN5Yls+R/0NBYX1hnlwNK/DyyWHt7x2ibNn0OIGvY59e6E4se3e/985JCit9/EEo21v
-	Ga4Dn8uJfW/G+waJBu7lkJL6Y7AbAIpxcBq4U2zIH5OAjXXbrIZWm9jBZ598KXfjD8pPjRx
-	TGMOG0gSYCzEbOaMxxHqAqrDy89mzKOuxtDDliDSsAhXyklp+STQUpu2gweB/hVtu9DuPUB
-	/+La3t48Ljhwan23YGdESEWNQhWogTVrvrBkgtRYgCPl7tEopjlLhkepAjFKRNB5S2H0WdJ
-	6xd7J+8ZK3QuQXJlUOLxLsfPNZPeK9qufEHx+iuJ7yHFS0TCkHba/E+f+EBDyZGwiHe+VUT
-	4ktrmW13++2km2r+PuvbO5WXRsVrSlDE30hTO4h3NTX3/r/AEMGc90N3Pu2xMXzXLyYuqrm
-	l4U9aLoqynhYD0NpOjk/L2sDVEjMRD5wcHs3jZMlz+sSo2drEYDp9Ex91F2Zk=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+Message-Id: <20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com>
+X-B4-Tracking: v=1; b=H4sIAE01qGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDCyMj3Zz8/Lz04vw83YLkTENdk5TUFIMUc4s0w6QkJaCegqLUtMwKsHn
+ RSkGuwa5+LkqxtbUAxRNBqmcAAAA=
+X-Change-ID: 20250822-loongson-pci1-4ded0d78f1bb
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, niecheng1@uniontech.com, zhanjun@uniontech.com, 
+ guanwentao@uniontech.com, Kexy Biscuit <kexybiscuit@aosc.io>, 
+ Lain Fearyncess Yang <fsf@live.com>, Mingcong Bai <jeffbai@aosc.io>, 
+ Ayden Meng <aydenmeng@yeah.net>, Ziyao <liziyao@uniontech.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1755854158; l=2862;
+ i=liziyao@uniontech.com; s=20250730; h=from:subject:message-id;
+ bh=7xgYquKCBWgLgcwEUYsMzaOeKqJ2pkwi5F04w/83CmQ=;
+ b=4SQnoM5gRY/+gdNOKjlnMONV5R8RlOLqacb/Px3bQrAeMEACvDqhac2rM4vmbswmwm2afAwZQ
+ 0+S2BqiB5bRD4RXfwBUD0v6nMPOSh+K19IIE2TFDYzG24aEYM7r/8Qq
+X-Developer-Key: i=liziyao@uniontech.com; a=ed25519;
+ pk=tZ+U+kQkT45GRGewbMSB4VPmvpD+KkHC/Wv3rMOn/PU=
+X-Endpoint-Received: by B4 Relay for liziyao@uniontech.com/20250730 with
+ auth_id=471
+X-Original-From: Ziyao <liziyao@uniontech.com>
+Reply-To: liziyao@uniontech.com
 
+From: Ziyao <liziyao@uniontech.com>
 
 Older steppings of the Loongson 3C6000 series incorrectly report the
 supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
@@ -95,32 +84,32 @@ This patch is found from AOSC OS[1].
 
 Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
 Tested-by: Lain Fearyncess Yang <fsf@live.com>
-Tested-by: Mingcong Bai <baimingcong@aosc.io>
+Tested-by: Mingcong Bai <jeffbai@aosc.io>
 Tested-by: Ayden Meng <aydenmeng@yeah.net>
 Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
-Signed-off-by: Zi Yao <liziyao@uniontech.com>
+Signed-off-by: Ziyao <liziyao@uniontech.com>
 ---
-  drivers/pci/quirks.c | 24 ++++++++++++++++++++++++
-  1 file changed, 24 insertions(+)
+PCI: Override PCIe bridge supported speeds for older Loongson 3C6000
+ series steppings
+---
+ drivers/pci/quirks.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 
-d97335a401930fe8204e7ca91a8474b6b02554c1..8d29b130f45854d2bff8c47e6529a41a3231221e 
-100644
+index d97335a401930fe8204e7ca91a8474b6b02554c1..8d29b130f45854d2bff8c47e6529a41a3231221e 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -1956,6 +1956,30 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 
-PCI_DEVICE_ID_INTEL_E7525_MCH,	quir
-   DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, 
-PCI_CLASS_BRIDGE_PCI, 8, quirk_pcie_mch);
-  +/*
+@@ -1956,6 +1956,30 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7525_MCH,	quir
+ 
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, PCI_CLASS_BRIDGE_PCI, 8, quirk_pcie_mch);
+ 
++/*
 + * Older steppings of the Loongson 3C6000 series incorrectly report the
 + * supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
 + * only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
 + * up to 16 GT/s.
 + */
-+static void quirk_loongson_pci_bridge_supported_speeds(struct pci_dev 
-*pdev)
++static void quirk_loongson_pci_bridge_supported_speeds(struct pci_dev *pdev)
 +{
 +	switch (pdev->bus->max_bus_speed) {
 +	case PCIE_SPEED_16_0GT:
@@ -135,20 +124,19 @@ PCI_CLASS_BRIDGE_PCI, 8, quirk_pcie_mch);
 +		break;
 +	}
 +}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19, 
-quirk_loongson_secondary_bridge_supported_speeds);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29, 
-quirk_loongson_secondary_bridge_supported_speeds);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19, quirk_loongson_secondary_bridge_supported_speeds);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29, quirk_loongson_secondary_bridge_supported_speeds);
 +
-  /*
-   * HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
-   * actually on the AMBA bus. These fake PCI devices can support SVA via
+ /*
+  * HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
+  * actually on the AMBA bus. These fake PCI devices can support SVA via
 
 ---
 base-commit: 3957a5720157264dcc41415fbec7c51c4000fc2d
-change-id: 20250822-loongson-pci-0cca9e050843
+change-id: 20250822-loongson-pci1-4ded0d78f1bb
 
 Best regards,
 -- 
-Zi Yao <liziyao@uniontech.com>
+Ziyao <liziyao@uniontech.com>
+
 
