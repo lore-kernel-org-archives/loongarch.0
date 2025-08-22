@@ -1,59 +1,59 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9D428A704
-	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 05:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06881A255C
+	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 05:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755839433; cv=none; b=jpybOdZSgoTkUP6YthUmePF83tEsl4J+mT9ElIqKK1t5ols1USqPg4TSlGOHG/Pybj0Gb5p0J7Q+lF/wdCnHi/oeNVg/6HhX7I7+EPZFYa9Km7MPO5asgIFlzSSSrkgd4bInaGokmKtlIspKSkjcj1zSuYqJtEl1iwYcG2SMqRA=
+	t=1755840181; cv=none; b=h8wSgdYp17u3pObE6pO9KjqvdZUMiI7v1vZJ2eySndH2PgBEvFIGqmMOudzDc2OFh0kfBncf8OxJypkrlbWe4lMKBplTiDTnFU5W+XHc3/YYd3IER9Y2B6bIeaMU+GofBXkkmTotkB3XU9VKL0HviVW5zVWsHIW+cFePtrX3lwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755839433; c=relaxed/simple;
-	bh=AhH083+mvc1ssz3Out+ZnPqhwtIs0jRo9Bf0B1nSpiU=;
+	s=arc-20240116; t=1755840181; c=relaxed/simple;
+	bh=tormYOMmxxioX0eL7Jkkp5/j8Mi4xqtHhEZKwh29d7w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tbCT61BOr7XbhtnZn+A+HiL7q5GkQiQ8J2QJL3lycjacOou5ecr7XbaaFaF5aMDdghSG/Hy2cZ3xOrVSCTjG4X5W7aetKIMpSzzLdQKFOW3M7WpFLBHSvy1DcriGypydtmri9m/Booudaw7p+9Xa9uvT8WTK44fZcEWPz+D1o/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BbszAzng; arc=none smtp.client-ip=209.85.160.170
+	 To:Cc:Content-Type; b=e9ecYJPVfG16KcV4XSdoVYceK9WWTiFcV2TRqzK5iOW1yA6ZPgZr/pWjKHgre3rwp0WG/SbZZVJ3f1fVDPIav6q9IgH8YRpLf6p+K5IO4hU2SjtRCnj7XMMO83npn9pIpyBoL1MG6rnmvN+tWCb7TqKIUNh1dmz4KtfK2YN1n7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AsXUSn2S; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbszAzng"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4b297962b20so16119701cf.2
-        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 22:10:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsXUSn2S"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7e8704c7a46so206151085a.1
+        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 22:22:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755839430; x=1756444230; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1755840179; x=1756444979; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9x8HEF1V52u1EfPZEb1jx4OB888o3t7fWCWHEji6zao=;
-        b=BbszAzngRGkTRAvzKgfh4YL/lnvWIbZh040FcAVc36BGL2VrUSqk6HoOGs2fDwLumh
-         kqe2n/gAMKr+ffbfMCmqRyddhujSr5V++my6AWXNrpFGNOdfboXlXOpEaidW3Up94QEc
-         E+bsOaucxBTRxLmoVd1K8MmbOOKUgvYh78yX77KyvjICb+4JUWHWN2k5d7QBVvv7TBv4
-         RWPxRilcd7NadWBECTGlobuiI/hBmCVKZxVZjSFyQaUxJ115iS+R4qpBe6uqcfszBiXK
-         Z9+zJfyb6JMwdkUhgTd2Y57RheWgdb3eDt6X+CqEAvY9ZfjiMiONeIpsfUIYzAH2Bh1i
-         6J6Q==
+        bh=UPXI3hOO2iXZOuaIz6cNk/k+7/LzH0S7eJqSLussGBk=;
+        b=AsXUSn2SwmQiEFILWycOj915qtOc3PeD0R3qm9/B+XhbnLl1H7TOLTVA8r5T/ZUWCt
+         pzTq8EfS4DUDOzCALLiLCUVraWjS/3Zx1kIAhvqlHYX7MU1SeMktEjQiKELMoQzbgTSm
+         hZu64paNPzuBiCnV+oneB4FWMdKLk9QBvfb2GV180iK7PFAGDy8dNBfSusoziuhXWDtE
+         1ictBto0k52eEPqpkeWHub7cILNbKXdeV5skXl4C5I45s+tXuQotz4Hpqrksv3ib88Nh
+         HVXVqgX4V1oAoRfXVfQECjVeMfQNlHrdcGlKitOAt1r8yqdIyNi02KiSpeELxVELsMHe
+         nJDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755839430; x=1756444230;
+        d=1e100.net; s=20230601; t=1755840179; x=1756444979;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9x8HEF1V52u1EfPZEb1jx4OB888o3t7fWCWHEji6zao=;
-        b=fIR+c9SPF78wW9Orn4UUUzTNskFkbW8oIRNhimSf/umZjKJQ8eFz17yBtSh0OCbfJv
-         Gy0H44jdF2QnYGCaK0qjEyr4TjE0Of+PRhkIPE4e1X4vbrpHB2yDATGZloj40CY2I/wm
-         dK1leCwgbCamejFQyYag3n//+U36xgyJENRRck0D28zHeOkvZbqaQfLAQxzlaD4puScj
-         GU0F1cywBhFfVtjbqne8A5PcXwfsjYgmlkMaZByV3KHe7GP55oAEgQJmpqOYiCT+BpA+
-         EZx/6UQskyIcnOZH/dFXPvfanb93Ll9Rq6cNULrxJblhjKUjayOUMZZ2TWu0l4SIOQCD
-         jztQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsDzTnEvDfqBk8ZDHcf5HThbXb5RHS/fRJXmgdy+nwbzV48/pFWhYeq0NkPKX+SO5DwXOZJIJFtg0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzMEpONYC5q48M4oRoelqm9TT0lxkxOjqwtUgPepUM8dazSFS4/
-	yTD66ddhOTfPseYDc5ey/kpraOgwKQITNXz+f9vAIDoXQC40e5h19OzQmDPEanRPeTGkPQWy8LE
-	nEX9GxCCDwMeylcf3/PrWZLlkMNYaiW7Y3WCM
-X-Gm-Gg: ASbGncvadZFgFdG8s4luRANiDTp/5gOq9mw+wLaSOlK8hfnTSterpdRu2nY0Z84RBgF
-	M4q401OUYMENx+jcevdi64d/NryaCIlJN5e7FZ3JhJBTCYlGCosuCPhdKD9kRYpXG8lqaPXrdi8
-	ljSx/XAdVsd8PC/xrawwJF59kLC76PsmfCVD8qYRYCnUwdDfsNKQUbPJysnKGPWRAaorgGVI4c8
-	wItTns=
-X-Google-Smtp-Source: AGHT+IE0uh48rpYXCTEyzxggGTrvLIADEz3SBOHcOP+BU2VHUlEWOe1Qhlw/zhE2Wr1OUuWtVRFouMP6h1bPoM9Exb0=
-X-Received: by 2002:a05:622a:24a:b0:4b0:7e8c:64cd with SMTP id
- d75a77b69052e-4b2aaa57eabmr23700061cf.4.1755839429557; Thu, 21 Aug 2025
- 22:10:29 -0700 (PDT)
+        bh=UPXI3hOO2iXZOuaIz6cNk/k+7/LzH0S7eJqSLussGBk=;
+        b=UedVH7KqXAvLwgDn3G1rhP1OLfVCtNx5U0rKiabU0RLDfMZ0pknEMOB/UzzBsTBvFZ
+         SXY0zWr7pPSRK9sUkETUf934MDloZ8yp6kS5Pczg8jucDYIyRvxSGZWA0RB1o2pS1ZPQ
+         Ejb0bjQSp4d5i/axrFU87/lc3l0O9dZrOnmPzhYeZZ6vSf5MslYCW5MyYSasHi2T6lsb
+         9L2/S/gJBZ9RkM06D1OXLpgFdK3/Bz8an8x9DK4ZXuzqcPRcjNVKXq0E1x9b8TrcQhs3
+         PBDatIItR4gsGqlbJNGqyCf2xZtIcH8rLKfZNMpQg86T/zSuEF52dpYZq8b8embdL6fV
+         CBPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdLhxzr3BSeiBeGU+vHXHP9SXlKc3aPme7zWYGc8dx69BIxCBV/tWMkyRKBmvJFrWug+hJPSgqlEs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxGbWoXHGAh12e48DS5lnkqp6c5mbVcgynZbVsZN5Hx24XipXyU
+	v6zwBk0bRaNyOMV8enVvLLXxlbQici3EPZr2+xDXTk9y2z0B6xAWghAP+7kW/lyVsakwbwv1b77
+	4lAp+vY1oL5TvRqbzEfSl1G3wv6rooLw=
+X-Gm-Gg: ASbGncvf8gYoGR7VFo8leyWN6h0Mh2gqH2i04Ded+0ixwNK5Z5afWd9b+EfXHWp/chu
+	9GTq2d9QDyWI6iDg6APE/MZes3lDxYryYt364gJPqQ/1jOwigZreHXz//V+16XSlPoqCP5eW0w2
+	rF/vhgaW9dp8LkB3IQLdgWR9ic5m9bxJbmdo1GjZ9MJ2GQVAGhT/555BNbZlnWy8Nl99d+uQyeN
+	jJ/pkI=
+X-Google-Smtp-Source: AGHT+IFVTkPmpBmfxosGsG+BMNws5gjFFzSHpcDKFSBDmUToln/izGAnT/d6LNgbIUuoMM1eHyu96njoyspWyA3rfJE=
+X-Received: by 2002:a05:622a:1823:b0:4b0:7ace:1ca2 with SMTP id
+ d75a77b69052e-4b2aaa1a3d0mr23052721cf.16.1755840178407; Thu, 21 Aug 2025
+ 22:22:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,12 +68,12 @@ References: <CAAhV-H7wOZUJfn4pP2bV0G8Hnt2AfXt1ZL-eY5FFnQs4XF8g8Q@mail.gmail.com>
  <CAK3+h2wcOQr0iv=-K7WOCQkMkQb7b6gR77W7GSwuVqJuvc+fxQ@mail.gmail.com>
  <20250812083441.GA1119757@chenghao-pc> <CAK3+h2x1gjuqEsUSj+B-9sb73kRo3bStH6ROw=1LVSqQGMNcUw@mail.gmail.com>
  <20250814120015.GA1626128@chenghao-pc> <CAK3+h2zO5bMnGTNb30=ggi8bg1-+gbaP1HfBoatJ4FVMuRgZdw@mail.gmail.com>
- <20250822031102.GA331509@chenghao-pc>
-In-Reply-To: <20250822031102.GA331509@chenghao-pc>
+ <20250822031102.GA331509@chenghao-pc> <CAK3+h2y6fgzG8MfFU+bwUNa7N+PJeAYwXnr+4kC-DF+yGezgPQ@mail.gmail.com>
+In-Reply-To: <CAK3+h2y6fgzG8MfFU+bwUNa7N+PJeAYwXnr+4kC-DF+yGezgPQ@mail.gmail.com>
 From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 21 Aug 2025 22:10:16 -0700
-X-Gm-Features: Ac12FXzZfLNsCD_BaGXvk3gnCaw3g_Fb_nE1G5liGYQ_LyyKdLH4xh2XEQS1xWI
-Message-ID: <CAK3+h2y6fgzG8MfFU+bwUNa7N+PJeAYwXnr+4kC-DF+yGezgPQ@mail.gmail.com>
+Date: Thu, 21 Aug 2025 22:22:46 -0700
+X-Gm-Features: Ac12FXx0vL1HfFexDg1Q98hMbxvlkXlS5tFUU5J9dpWsjkPS3pOQxT2W2deQhgM
+Message-ID: <CAK3+h2zascHxT3A+9CBkWPetCXx-Cgg0XSbcQoo2tNMDvuHmVg@mail.gmail.com>
 Subject: Re: kernel lockup on bpf selftests module_attach
 To: Chenghao Duan <duanchenghao@kylinos.cn>
 Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
@@ -81,420 +81,538 @@ Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 21, 2025 at 8:11=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos=
-.cn> wrote:
+On Thu, Aug 21, 2025 at 10:10=E2=80=AFPM Vincent Li <vincent.mc.li@gmail.co=
+m> wrote:
 >
-> On Thu, Aug 21, 2025 at 08:04:07AM -0700, Vincent Li wrote:
-> > On Thu, Aug 14, 2025 at 5:00=E2=80=AFAM Chenghao Duan <duanchenghao@kyl=
-inos.cn> wrote:
-> > >
-> > > On Tue, Aug 12, 2025 at 06:42:08AM -0700, Vincent Li wrote:
-> > > > On Tue, Aug 12, 2025 at 1:34=E2=80=AFAM Chenghao Duan <duanchenghao=
-@kylinos.cn> wrote:
-> > > > >
-> > > > > On Sun, Aug 10, 2025 at 10:39:24AM -0700, Vincent Li wrote:
-> > > > > > Hi Chenghao,
+> On Thu, Aug 21, 2025 at 8:11=E2=80=AFPM Chenghao Duan <duanchenghao@kylin=
+os.cn> wrote:
+> >
+> > On Thu, Aug 21, 2025 at 08:04:07AM -0700, Vincent Li wrote:
+> > > On Thu, Aug 14, 2025 at 5:00=E2=80=AFAM Chenghao Duan <duanchenghao@k=
+ylinos.cn> wrote:
+> > > >
+> > > > On Tue, Aug 12, 2025 at 06:42:08AM -0700, Vincent Li wrote:
+> > > > > On Tue, Aug 12, 2025 at 1:34=E2=80=AFAM Chenghao Duan <duanchengh=
+ao@kylinos.cn> wrote:
 > > > > > >
-> > > > > > On Sat, Aug 9, 2025 at 12:11=E2=80=AFPM Vincent Li <vincent.mc.=
-li@gmail.com> wrote:
+> > > > > > On Sun, Aug 10, 2025 at 10:39:24AM -0700, Vincent Li wrote:
+> > > > > > > Hi Chenghao,
 > > > > > > >
-> > > > > > > On Fri, Aug 8, 2025 at 11:03=E2=80=AFPM Huacai Chen <chenhuac=
-ai@kernel.org> wrote:
+> > > > > > > On Sat, Aug 9, 2025 at 12:11=E2=80=AFPM Vincent Li <vincent.m=
+c.li@gmail.com> wrote:
 > > > > > > > >
-> > > > > > > > Hi, Chenghao,
-> > > > > > > >
-> > > > > > > > Please take a look.
-> > > > > > > >
-> > > > > > > > Huacai
-> > > > > > > >
-> > > > > > > I reverted loongson-next branch  tailcall count fix patches, =
-struct
-> > > > > > > ops trampoline patch, keep the rest of trampoline patches,
-> > > > > > > module_attach test experienced the same issue, so definitely
-> > > > > > > trampoline patches issue.
-> > > > > > >
-> > > > > >
-> > > > > > I attempted to isolate which test in module_attach triggers the
-> > > > > > "Unable to handle kernel paging request..." error, it appears t=
-o be
-> > > > > > this one in "prog_tests/module_attach.c"
-> > > > > >
-> > > > > > ASSERT_OK(trigger_module_test_read(READ_SZ), "trigger_read");
-> > > > > >
-> > > > > > you can try to comment out other tests in "prog_tests/module_at=
-tach.c"
-> > > > > > and perform the test, it might help isolate the issue.
-> > > > > >
-> > > > >
-> > > > > Hi Vincent,
-> > > > >
-> > > > > The results I tested are different from yours. Could there be oth=
-er
-> > > > > differences between us? I am using the latest code of the loongar=
-ch-next
-> > > > > branch.
-> > > > >
-> > > > > [root@localhost bpf]# ./test_progs -v -t module_attach
-> > > > > bpf_testmod.ko is already unloaded.
-> > > > > Loading bpf_testmod.ko...
-> > > > > Successfully loaded bpf_testmod.ko.
-> > > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > > WATCHDOG: test case module_attach executes for 10 seconds...
-> > > > > libbpf: prog 'handle_fmod_ret': BPF program load failed: -EINVAL
-> > > > > libbpf: prog 'handle_fmod_ret': -- BEGIN PROG LOAD LOG --
-> > > > > bpf_testmod_test_read() is not modifiable
-> > > > > processed 0 insns (limit 1000000) max_states_per_insn 0 total_sta=
-tes 0 peak_states 0 mark_read 0
-> > > > > -- END PROG LOAD LOG --
-> > > > > libbpf: prog 'handle_fmod_ret': failed to load: -EINVAL
-> > > > > libbpf: failed to load object 'test_module_attach'
-> > > > > libbpf: failed to load BPF skeleton 'test_module_attach': -EINVAL
-> > > > > test_module_attach:FAIL:skel_load failed to load skeleton
-> > > > > #205     module_attach:FAIL
-> > > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-> > > > > Successfully unloaded bpf_testmod.ko.
-> > > > >
-> > > >
-> > > > I build and run the most recent loongarch-next kernel too, can you =
-try
-> > > > my config https://www.bpfire.net/download/loongfire/config.txt? I a=
-m
-> > > > on fedora, here are the steps I build, run the kernel, and run the
-> > > > test
-> > > >
-> > > > 1, check branch
-> > > > [root@fedora linux-loongson]# git branch
-> > > > * loongarch-next
-> > > >   master
-> > > >   no-tailcall
-> > > >   no-trampoline
-> > > >
-> > > > 2, build kernel and reboot
-> > > > cp config.txt .config; make clean; make -j6; make modules_install;
-> > > > make install; grub2-mkconfig -o /boot/grub2/grub.cfg; reboot
-> > > >
-> > > > 3, after reboot and login, build bpf selftests, run module_attach
-> > > > test, dmesg to check kernel log
-> > > > cd tools/testing/selftests/bpf; make -j6; ./test_progs -t module_at=
-tach
-> > > >
-> > >
-> > > Hi Vincent,
-> > >
-> > > I tried to refer to the config you provided, but the test results I
-> > > obtained are as follows. I also specifically tested "modify" to verif=
+> > > > > > > > On Fri, Aug 8, 2025 at 11:03=E2=80=AFPM Huacai Chen <chenhu=
+acai@kernel.org> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi, Chenghao,
+> > > > > > > > >
+> > > > > > > > > Please take a look.
+> > > > > > > > >
+> > > > > > > > > Huacai
+> > > > > > > > >
+> > > > > > > > I reverted loongson-next branch  tailcall count fix patches=
+, struct
+> > > > > > > > ops trampoline patch, keep the rest of trampoline patches,
+> > > > > > > > module_attach test experienced the same issue, so definitel=
 y
-> > > the effectiveness of the patch, and the test of module_attach returns=
- -EOPNOTSUPP.
-> > >
-> > > [root@localhost bpf]# ./test_progs -v -t modify_return
-> > > bpf_testmod.ko is already unloaded.
-> > > Loading bpf_testmod.ko...
-> > > Successfully loaded bpf_testmod.ko.
-> > > run_test:PASS:skel_load 0 nsec
-> > > run_test:PASS:modify_return__attach failed 0 nsec
-> > > run_test:PASS:test_run 0 nsec
-> > > run_test:PASS:test_run ret 0 nsec
-> > > run_test:PASS:modify_return side_effect 0 nsec
-> > > run_test:PASS:modify_return fentry_result 0 nsec
-> > > run_test:PASS:modify_return fexit_result 0 nsec
-> > > run_test:PASS:modify_return fmod_ret_result 0 nsec
-> > > run_test:PASS:modify_return fentry_result2 0 nsec
-> > > run_test:PASS:modify_return fexit_result2 0 nsec
-> > > run_test:PASS:modify_return fmod_ret_result2 0 nsec
-> > > run_test:PASS:skel_load 0 nsec
-> > > run_test:PASS:modify_return__attach failed 0 nsec
-> > > run_test:PASS:test_run 0 nsec
-> > > run_test:PASS:test_run ret 0 nsec
-> > > run_test:PASS:modify_return side_effect 0 nsec
-> > > run_test:PASS:modify_return fentry_result 0 nsec
-> > > run_test:PASS:modify_return fexit_result 0 nsec
-> > > run_test:PASS:modify_return fmod_ret_result 0 nsec
-> > > run_test:PASS:modify_return fentry_result2 0 nsec
-> > > run_test:PASS:modify_return fexit_result2 0 nsec
-> > > run_test:PASS:modify_return fmod_ret_result2 0 nsec
-> > > #200     modify_return:OK
-> > > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > > Successfully unloaded bpf_testmod.ko.
-> > > [root@localhost bpf]# ./test_progs -v -t module_attach
-> > > bpf_testmod.ko is already unloaded.
-> > > Loading bpf_testmod.ko...
-> > > Successfully loaded bpf_testmod.ko.
-> > > test_module_attach:PASS:skel_open 0 nsec
-> > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > test_module_attach:PASS:skel_load 0 nsec
-> > > libbpf: prog 'kprobe_multi': failed to attach: -EOPNOTSUPP
-> > > libbpf: prog 'kprobe_multi': failed to auto-attach: -EOPNOTSUPP
-> >
-> > the -EOPNOTSUPP comes from libbpf, but I am not sure if it is error in
-> > kernel leads to libbpf error or libbpf itself, you can do strace -f
-> > -s1024 -o /tmp/module_attatch.txt  ./test_progs -v -t module_attach.
-> > The strace should have bpf syscall and I think it can tell you if the
-> > -EOPNOTSUPP is the result of kernel error or libbpf, you can share the
-> > strace if you want.
-> >
-> 2037  read(16, "", 8192)                =3D 0
-> 2037  close(16)                         =3D 0
-> 2037  bpf(BPF_LINK_CREATE, {link_create=3D{prog_fd=3D61, target_fd=3D0, a=
-ttach_type=3DBPF_TRACE_KPROBE_MULTI, flags=3D0, kprobe_multi=3D{flags=3D0, =
-cnt=3D1, syms=3DNULL, addrs=3D[0xffff8000035717d0], cookies=3DNULL}}}, 64) =
-=3D -1 EOPNOTSUPP (=E4=B8=8D=E6=94=AF=E6=8C=81=E7=9A=84=E6=93=8D=E4=BD=9C)
-
-so bpf syscall cmd BPF_LINK_CREATE returns  '-1 EOPNOTSUPP' exactly? I
-could not tell because I thought the return value is '-1'
-
-> 2037  write(1, "libbpf: prog 'kprobe_multi': failed to attach: -EOPNOTSUP=
-P\n", 59) =3D 59
-> 2037  write(1, "libbpf: prog 'kprobe_multi': failed to auto-attach: -EOPN=
-OTSUPP\n", 64) =3D 64
-> 2037  write(1, "test_module_attach:FAIL:skel_attach skeleton attach faile=
-d: -95\n", 64) =3D 64
->
-> not support attach_type BPF_TRACE_KPROBE_MULTI
->
-
-Could you share your kernel config (.config used for kernel compiling
-or running kernel /boot/config-*)  ? I wonder if you have the FPROBE
-really configured, since include/linux/fprobe.h has:
-
-#ifdef CONFIG_FPROBE
-int register_fprobe(struct fprobe *fp, const char *filter, const char
-*notfilter);
-int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num);
-int register_fprobe_syms(struct fprobe *fp, const char **syms, int num);
-int unregister_fprobe(struct fprobe *fp);
-bool fprobe_is_registered(struct fprobe *fp);
-int fprobe_count_ips_from_filter(const char *filter, const char *notfilter)=
+> > > > > > > > trampoline patches issue.
+> > > > > > > >
+> > > > > > >
+> > > > > > > I attempted to isolate which test in module_attach triggers t=
+he
+> > > > > > > "Unable to handle kernel paging request..." error, it appears=
+ to be
+> > > > > > > this one in "prog_tests/module_attach.c"
+> > > > > > >
+> > > > > > > ASSERT_OK(trigger_module_test_read(READ_SZ), "trigger_read");
+> > > > > > >
+> > > > > > > you can try to comment out other tests in "prog_tests/module_=
+attach.c"
+> > > > > > > and perform the test, it might help isolate the issue.
+> > > > > > >
+> > > > > >
+> > > > > > Hi Vincent,
+> > > > > >
+> > > > > > The results I tested are different from yours. Could there be o=
+ther
+> > > > > > differences between us? I am using the latest code of the loong=
+arch-next
+> > > > > > branch.
+> > > > > >
+> > > > > > [root@localhost bpf]# ./test_progs -v -t module_attach
+> > > > > > bpf_testmod.ko is already unloaded.
+> > > > > > Loading bpf_testmod.ko...
+> > > > > > Successfully loaded bpf_testmod.ko.
+> > > > > > test_module_attach:PASS:skel_open 0 nsec
+> > > > > > test_module_attach:PASS:set_attach_target 0 nsec
+> > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
+> > > > > > WATCHDOG: test case module_attach executes for 10 seconds...
+> > > > > > libbpf: prog 'handle_fmod_ret': BPF program load failed: -EINVA=
+L
+> > > > > > libbpf: prog 'handle_fmod_ret': -- BEGIN PROG LOAD LOG --
+> > > > > > bpf_testmod_test_read() is not modifiable
+> > > > > > processed 0 insns (limit 1000000) max_states_per_insn 0 total_s=
+tates 0 peak_states 0 mark_read 0
+> > > > > > -- END PROG LOAD LOG --
+> > > > > > libbpf: prog 'handle_fmod_ret': failed to load: -EINVAL
+> > > > > > libbpf: failed to load object 'test_module_attach'
+> > > > > > libbpf: failed to load BPF skeleton 'test_module_attach': -EINV=
+AL
+> > > > > > test_module_attach:FAIL:skel_load failed to load skeleton
+> > > > > > #205     module_attach:FAIL
+> > > > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+> > > > > > Successfully unloaded bpf_testmod.ko.
+> > > > > >
+> > > > >
+> > > > > I build and run the most recent loongarch-next kernel too, can yo=
+u try
+> > > > > my config https://www.bpfire.net/download/loongfire/config.txt? I=
+ am
+> > > > > on fedora, here are the steps I build, run the kernel, and run th=
+e
+> > > > > test
+> > > > >
+> > > > > 1, check branch
+> > > > > [root@fedora linux-loongson]# git branch
+> > > > > * loongarch-next
+> > > > >   master
+> > > > >   no-tailcall
+> > > > >   no-trampoline
+> > > > >
+> > > > > 2, build kernel and reboot
+> > > > > cp config.txt .config; make clean; make -j6; make modules_install=
 ;
+> > > > > make install; grub2-mkconfig -o /boot/grub2/grub.cfg; reboot
+> > > > >
+> > > > > 3, after reboot and login, build bpf selftests, run module_attach
+> > > > > test, dmesg to check kernel log
+> > > > > cd tools/testing/selftests/bpf; make -j6; ./test_progs -t module_=
+attach
+> > > > >
+> > > >
+> > > > Hi Vincent,
+> > > >
+> > > > I tried to refer to the config you provided, but the test results I
+> > > > obtained are as follows. I also specifically tested "modify" to ver=
+ify
+> > > > the effectiveness of the patch, and the test of module_attach retur=
+ns -EOPNOTSUPP.
+> > > >
+> > > > [root@localhost bpf]# ./test_progs -v -t modify_return
+> > > > bpf_testmod.ko is already unloaded.
+> > > > Loading bpf_testmod.ko...
+> > > > Successfully loaded bpf_testmod.ko.
+> > > > run_test:PASS:skel_load 0 nsec
+> > > > run_test:PASS:modify_return__attach failed 0 nsec
+> > > > run_test:PASS:test_run 0 nsec
+> > > > run_test:PASS:test_run ret 0 nsec
+> > > > run_test:PASS:modify_return side_effect 0 nsec
+> > > > run_test:PASS:modify_return fentry_result 0 nsec
+> > > > run_test:PASS:modify_return fexit_result 0 nsec
+> > > > run_test:PASS:modify_return fmod_ret_result 0 nsec
+> > > > run_test:PASS:modify_return fentry_result2 0 nsec
+> > > > run_test:PASS:modify_return fexit_result2 0 nsec
+> > > > run_test:PASS:modify_return fmod_ret_result2 0 nsec
+> > > > run_test:PASS:skel_load 0 nsec
+> > > > run_test:PASS:modify_return__attach failed 0 nsec
+> > > > run_test:PASS:test_run 0 nsec
+> > > > run_test:PASS:test_run ret 0 nsec
+> > > > run_test:PASS:modify_return side_effect 0 nsec
+> > > > run_test:PASS:modify_return fentry_result 0 nsec
+> > > > run_test:PASS:modify_return fexit_result 0 nsec
+> > > > run_test:PASS:modify_return fmod_ret_result 0 nsec
+> > > > run_test:PASS:modify_return fentry_result2 0 nsec
+> > > > run_test:PASS:modify_return fexit_result2 0 nsec
+> > > > run_test:PASS:modify_return fmod_ret_result2 0 nsec
+> > > > #200     modify_return:OK
+> > > > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+> > > > Successfully unloaded bpf_testmod.ko.
+> > > > [root@localhost bpf]# ./test_progs -v -t module_attach
+> > > > bpf_testmod.ko is already unloaded.
+> > > > Loading bpf_testmod.ko...
+> > > > Successfully loaded bpf_testmod.ko.
+> > > > test_module_attach:PASS:skel_open 0 nsec
+> > > > test_module_attach:PASS:set_attach_target 0 nsec
+> > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
+> > > > test_module_attach:PASS:skel_load 0 nsec
+> > > > libbpf: prog 'kprobe_multi': failed to attach: -EOPNOTSUPP
+> > > > libbpf: prog 'kprobe_multi': failed to auto-attach: -EOPNOTSUPP
+> > >
+> > > the -EOPNOTSUPP comes from libbpf, but I am not sure if it is error i=
+n
+> > > kernel leads to libbpf error or libbpf itself, you can do strace -f
+> > > -s1024 -o /tmp/module_attatch.txt  ./test_progs -v -t module_attach.
+> > > The strace should have bpf syscall and I think it can tell you if the
+> > > -EOPNOTSUPP is the result of kernel error or libbpf, you can share th=
+e
+> > > strace if you want.
+> > >
+> > 2037  read(16, "", 8192)                =3D 0
+> > 2037  close(16)                         =3D 0
+> > 2037  bpf(BPF_LINK_CREATE, {link_create=3D{prog_fd=3D61, target_fd=3D0,=
+ attach_type=3DBPF_TRACE_KPROBE_MULTI, flags=3D0, kprobe_multi=3D{flags=3D0=
+, cnt=3D1, syms=3DNULL, addrs=3D[0xffff8000035717d0], cookies=3DNULL}}}, 64=
+) =3D -1 EOPNOTSUPP (=E4=B8=8D=E6=94=AF=E6=8C=81=E7=9A=84=E6=93=8D=E4=BD=9C=
+)
+>
+> so bpf syscall cmd BPF_LINK_CREATE returns  '-1 EOPNOTSUPP' exactly? I
+> could not tell because I thought the return value is '-1'
+>
+> > 2037  write(1, "libbpf: prog 'kprobe_multi': failed to attach: -EOPNOTS=
+UPP\n", 59) =3D 59
+> > 2037  write(1, "libbpf: prog 'kprobe_multi': failed to auto-attach: -EO=
+PNOTSUPP\n", 64) =3D 64
+> > 2037  write(1, "test_module_attach:FAIL:skel_attach skeleton attach fai=
+led: -95\n", 64) =3D 64
+> >
+> > not support attach_type BPF_TRACE_KPROBE_MULTI
+> >
+>
+> Could you share your kernel config (.config used for kernel compiling
+> or running kernel /boot/config-*)  ? I wonder if you have the FPROBE
+> really configured, since include/linux/fprobe.h has:
+>
+> #ifdef CONFIG_FPROBE
+> int register_fprobe(struct fprobe *fp, const char *filter, const char
+> *notfilter);
+> int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num)=
+;
+> int register_fprobe_syms(struct fprobe *fp, const char **syms, int num);
+> int unregister_fprobe(struct fprobe *fp);
+> bool fprobe_is_registered(struct fprobe *fp);
+> int fprobe_count_ips_from_filter(const char *filter, const char *notfilte=
+r);
+> #else
+> static inline int register_fprobe(struct fprobe *fp, const char
+> *filter, const char *notfilter)
+> {
+>         return -EOPNOTSUPP;
+> }
+> static inline int register_fprobe_ips(struct fprobe *fp, unsigned long
+> *addrs, int num)
+> {
+>         return -EOPNOTSUPP;
+> }
+> static inline int register_fprobe_syms(struct fprobe *fp, const char
+> **syms, int num)
+> {
+>         return -EOPNOTSUPP;
+> }
+> static inline int unregister_fprobe(struct fprobe *fp)
+> {
+>         return -EOPNOTSUPP;
+> }
+> static inline bool fprobe_is_registered(struct fprobe *fp)
+> {
+>         return false;
+> }
+> static inline int fprobe_count_ips_from_filter(const char *filter,
+> const char *notfilter)
+> {
+>         return -EOPNOTSUPP;
+> }
+> #endif
+>
+
+and check CONFIG_BPF_EVENTS since linux/trace_events.h has:
+
+#ifdef CONFIG_BPF_EVENTS
+unsigned int trace_call_bpf(struct trace_event_call *call, void *ctx);
+int perf_event_attach_bpf_prog(struct perf_event *event, struct
+bpf_prog *prog, u64 bpf_cookie);
+void perf_event_detach_bpf_prog(struct perf_event *event);
+int perf_event_query_prog_array(struct perf_event *event, void __user *info=
+);
+
+struct bpf_raw_tp_link;
+int bpf_probe_register(struct bpf_raw_event_map *btp, struct
+bpf_raw_tp_link *link);
+int bpf_probe_unregister(struct bpf_raw_event_map *btp, struct
+bpf_raw_tp_link *link);
+
+struct bpf_raw_event_map *bpf_get_raw_tracepoint(const char *name);
+void bpf_put_raw_tracepoint(struct bpf_raw_event_map *btp);
+int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
+                            u32 *fd_type, const char **buf,
+                            u64 *probe_offset, u64 *probe_addr,
+                            unsigned long *missed);
+int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct
+bpf_prog *prog);
+int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct
+bpf_prog *prog);
 #else
-static inline int register_fprobe(struct fprobe *fp, const char
-*filter, const char *notfilter)
+static inline unsigned int trace_call_bpf(struct trace_event_call
+*call, void *ctx)
+{
+        return 1;
+}
+
+static inline int
+perf_event_attach_bpf_prog(struct perf_event *event, struct bpf_prog
+*prog, u64 bpf_cookie)
 {
         return -EOPNOTSUPP;
 }
-static inline int register_fprobe_ips(struct fprobe *fp, unsigned long
-*addrs, int num)
+
+static inline void perf_event_detach_bpf_prog(struct perf_event *event) { }
+
+static inline int
+perf_event_query_prog_array(struct perf_event *event, void __user *info)
 {
         return -EOPNOTSUPP;
 }
-static inline int register_fprobe_syms(struct fprobe *fp, const char
-**syms, int num)
+struct bpf_raw_tp_link;
+static inline int bpf_probe_register(struct bpf_raw_event_map *btp,
+struct bpf_raw_tp_link *link)
 {
         return -EOPNOTSUPP;
 }
-static inline int unregister_fprobe(struct fprobe *fp)
+static inline int bpf_probe_unregister(struct bpf_raw_event_map *btp,
+struct bpf_raw_tp_link *link)
 {
         return -EOPNOTSUPP;
 }
-static inline bool fprobe_is_registered(struct fprobe *fp)
+static inline struct bpf_raw_event_map *bpf_get_raw_tracepoint(const char *=
+name)
 {
-        return false;
+        return NULL;
 }
-static inline int fprobe_count_ips_from_filter(const char *filter,
-const char *notfilter)
+static inline void bpf_put_raw_tracepoint(struct bpf_raw_event_map *btp)
+{
+}
+static inline int bpf_get_perf_event_info(const struct perf_event *event,
+                                          u32 *prog_id, u32 *fd_type,
+                                          const char **buf, u64 *probe_offs=
+et,
+                                          u64 *probe_addr, unsigned
+long *missed)
+{
+        return -EOPNOTSUPP;
+}
+static inline int
+bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *p=
+rog)
+{
+        return -EOPNOTSUPP;
+}
+static inline int
+bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *p=
+rog)
 {
         return -EOPNOTSUPP;
 }
 #endif
 
-> Chenghao
->
->
+> > Chenghao
 > >
-> > > test_module_attach:FAIL:skel_attach skeleton attach failed: -95
-> > > #201     module_attach:FAIL
-> > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-> > > Successfully unloaded bpf_testmod.ko.
+> >
 > > >
-> > >
-> > > Chenghao
-> > >
+> > > > test_module_attach:FAIL:skel_attach skeleton attach failed: -95
+> > > > #201     module_attach:FAIL
+> > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+> > > > Successfully unloaded bpf_testmod.ko.
+> > > >
+> > > >
+> > > > Chenghao
 > > > >
 > > > > >
-> > > > >
-> > > > > Chenghao
-> > > > >
 > > > > > >
-> > > > > > > > On Sat, Aug 9, 2025 at 1:03=E2=80=AFPM Vincent Li <vincent.=
-mc.li@gmail.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Fri, Aug 8, 2025 at 8:48=E2=80=AFPM Vincent Li <vincen=
+> > > > > >
+> > > > > > Chenghao
+> > > > > >
+> > > > > > >
+> > > > > > > > > On Sat, Aug 9, 2025 at 1:03=E2=80=AFPM Vincent Li <vincen=
 t.mc.li@gmail.com> wrote:
 > > > > > > > > > >
-> > > > > > > > > > On Fri, Aug 8, 2025 at 8:03=E2=80=AFPM Huacai Chen <che=
-nhuacai@kernel.org> wrote:
+> > > > > > > > > > On Fri, Aug 8, 2025 at 8:48=E2=80=AFPM Vincent Li <vinc=
+ent.mc.li@gmail.com> wrote:
 > > > > > > > > > > >
-> > > > > > > > > > > Hi, Vincent,
+> > > > > > > > > > > On Fri, Aug 8, 2025 at 8:03=E2=80=AFPM Huacai Chen <c=
+henhuacai@kernel.org> wrote:
+> > > > > > > > > > > >
+> > > > > > > > > > > > Hi, Vincent,
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Sat, Aug 9, 2025 at 12:53=E2=80=AFAM Vincent Li =
+<vincent.mc.li@gmail.com> wrote:
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Hi Folks,
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Hengqi mentioned offline that the loongarch kerne=
+l locked up when
+> > > > > > > > > > > > > running full bpf selftests, so I went ahead and r=
+an make run_tests to
+> > > > > > > > > > > > > perform full bpf selftest, I observed lockup too.=
+ It appears the
+> > > > > > > > > > > > > lockup happens when running module_attach test wh=
+ich includes testing
+> > > > > > > > > > > > > on fentry so this could be related to the trampol=
+ine patch series. for
+> > > > > > > > > > > > > example, if I just run ./test_progs -t module_att=
+ach, the kernel
+> > > > > > > > > > > > > lockup immediately.
+> > > > > > > > > > > > Is this a regression caused by the latest trampolin=
+e patches? Or in
+> > > > > > > > > > > > another word, Does vanilla 6.16 has this problem?
+> > > > > > > > > > > >
 > > > > > > > > > > >
-> > > > > > > > > > > On Sat, Aug 9, 2025 at 12:53=E2=80=AFAM Vincent Li <v=
-incent.mc.li@gmail.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > Hi Folks,
-> > > > > > > > > > > >
-> > > > > > > > > > > > Hengqi mentioned offline that the loongarch kernel =
-locked up when
-> > > > > > > > > > > > running full bpf selftests, so I went ahead and ran=
- make run_tests to
-> > > > > > > > > > > > perform full bpf selftest, I observed lockup too. I=
-t appears the
-> > > > > > > > > > > > lockup happens when running module_attach test whic=
-h includes testing
-> > > > > > > > > > > > on fentry so this could be related to the trampolin=
-e patch series. for
-> > > > > > > > > > > > example, if I just run ./test_progs -t module_attac=
-h, the kernel
-> > > > > > > > > > > > lockup immediately.
-> > > > > > > > > > > Is this a regression caused by the latest trampoline =
-patches? Or in
-> > > > > > > > > > > another word, Does vanilla 6.16 has this problem?
+> > > > > > > > > > > I suspect this is caused by the latest trampoline pat=
+ches because the
+> > > > > > > > > > > module_attach is to test the fentry feature for kerne=
+l module
+> > > > > > > > > > > functions, I believe Changhao and I only tested the f=
+entry feature for
+> > > > > > > > > > > non-module kernel functions. I can try kernel without=
+ the trampoline
+> > > > > > > > > > > patches and will let you know the result.
 > > > > > > > > > > >
 > > > > > > > > > >
-> > > > > > > > > > I suspect this is caused by the latest trampoline patch=
-es because the
-> > > > > > > > > > module_attach is to test the fentry feature for kernel =
-module
-> > > > > > > > > > functions, I believe Changhao and I only tested the fen=
-try feature for
-> > > > > > > > > > non-module kernel functions. I can try kernel without t=
-he trampoline
-> > > > > > > > > > patches and will let you know the result.
+> > > > > > > > > > I reverted  trampoline patches from loongarch-next bran=
+ch and run
+> > > > > > > > > > ./test_progs -t module_attach simply just errors out wi=
+th the fentry
+> > > > > > > > > > feature not supported
 > > > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > I reverted  trampoline patches from loongarch-next branch=
- and run
-> > > > > > > > > ./test_progs -t module_attach simply just errors out with=
- the fentry
-> > > > > > > > > feature not supported
-> > > > > > > > >
-> > > > > > > > > [root@fedora bpf]# ./test_progs -t module_attach
-> > > > > > > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > > > > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > > > > > > test_module_attach:PASS:skel_load 0 nsec
-> > > > > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
-> > > > > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -ENO=
-TSUPP
-> > > > > > > > > test_module_attach:FAIL:skel_attach skeleton attach faile=
-d: -524
-> > > > > > > > > #205     module_attach:FAIL
-> > > > > > > > >
-> > > > > > > > > All error logs:
-> > > > > > > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > > > > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > > > > > > test_module_attach:PASS:skel_load 0 nsec
-> > > > > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
-> > > > > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -ENO=
-TSUPP
-> > > > > > > > > test_module_attach:FAIL:skel_attach skeleton attach faile=
-d: -524
-> > > > > > > > > #205     module_attach:FAIL
-> > > > > > > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-> > > > > > > > >
-> > > > > > > > > I also tested loongarch-next branch with the trampoline p=
-atch series
-> > > > > > > > > with no lockup kernel config so I can run dmesg to check =
-kernel error
-> > > > > > > > > log,  ./test_progs -t module_attach result in below kerne=
-l log:
-> > > > > > > > >
-> > > > > > > > > [  417.429954] bpf_testmod: loading out-of-tree module ta=
-ints kernel.
-> > > > > > > > > [  419.728620] CPU 70475748 Unable to handle kernel pagin=
-g request at
-> > > > > > > > > virtual address 0000000800000024, era =3D=3D 90000000041d=
-5854, ra =3D=3D
-> > > > > > > > > 90000000041d5848
-> > > > > > > > > [  419.728629] Oops[#1]:
-> > > > > > > > > [  419.728632] CPU 70475748 Unable to handle kernel pagin=
-g request at
-> > > > > > > > > virtual address 0000000000000018, era =3D=3D 900000000575=
-0268, ra =3D=3D
-> > > > > > > > > 9000000004163938
-> > > > > > > > > [  441.305370] rcu: INFO: rcu_preempt detected stalls on =
-CPUs/tasks:
-> > > > > > > > > [  441.305380] rcu:     5-...0: (29 ticks this GP)
-> > > > > > > > > idle=3Deb74/1/0x4000000000000000 softirq=3D72377/72379 fq=
-s=3D2599
-> > > > > > > > > [  441.305386] rcu:     (detected by 4, t=3D5252 jiffies,=
- g=3D60333, q=3D186 ncpus=3D8)
-> > > > > > > > > [  441.305390] Sending NMI from CPU 4 to CPUs 5:
-> > > > > > > > > [  451.305494] rcu: rcu_preempt kthread starved for 2499 =
-jiffies!
-> > > > > > > > > g60333 f0x0 RCU_GP_DOING_FQS(6) ->state=3D0x0 ->cpu=3D1
-> > > > > > > > > [  451.305500] rcu:     Unless rcu_preempt kthread gets s=
-ufficient CPU
-> > > > > > > > > time, OOM is now expected behavior.
-> > > > > > > > > [  451.305502] rcu: RCU grace-period kthread stack dump:
-> > > > > > > > > [  451.305504] task:rcu_preempt     state:R stack:0     p=
-id:15
-> > > > > > > > > tgid:15    ppid:2      task_flags:0x208040 flags:0x000008=
-00
-> > > > > > > > > [  451.305510] Stack : 9000000100467e80 0000000000000402
-> > > > > > > > > 0000000000000010 90000001003b0680
-> > > > > > > > > [  451.305519]         90000000058e0000 0000000000000000
-> > > > > > > > > 0000000000000040 9000000006c2dfd0
-> > > > > > > > > [  451.305526]         900000000578c9b0 0000000000000001
-> > > > > > > > > 9000000006b21000 0000000000000005
-> > > > > > > > > [  451.305533]         00000001000093a8 00000001000093a8
-> > > > > > > > > 0000000000000000 0000000000000004
-> > > > > > > > > [  451.305540]         90000000058f04e0 0000000000000000
-> > > > > > > > > 0000000000000002 b793724be1dfb2b8
-> > > > > > > > > [  451.305547]         00000001000093a9 b793724be1dfb2b8
-> > > > > > > > > 000000000000003f 9000000006c2dfd0
-> > > > > > > > > [  451.305554]         9000000006c30c18 0000000000000005
-> > > > > > > > > 9000000006b0e000 9000000006b21000
-> > > > > > > > > [  451.305560]         9000000100453c98 90000001003aff80
-> > > > > > > > > 9000000006c31140 900000000578c9b0
-> > > > > > > > > [  451.305567]         00000001000093a8 9000000005794d3c
-> > > > > > > > > 00000000000000b4 0000000000000000
-> > > > > > > > > [  451.305574]         90000000024021b8 00000001000093a8
-> > > > > > > > > 9000000004284f20 000000000a400001
-> > > > > > > > > [  451.305581]         ...
-> > > > > > > > > [  451.305584] Call Trace:
-> > > > > > > > > [  451.305586] [<900000000578b868>] __schedule+0x410/0x15=
-20
-> > > > > > > > > [  451.305595] [<900000000578c9ac>] schedule+0x34/0x190
-> > > > > > > > > [  451.305599] [<9000000005794d38>] schedule_timeout+0x98=
-/0x140
-> > > > > > > > > [  451.305604] [<9000000004258f40>] rcu_gp_fqs_loop+0x5f8=
-/0x868
-> > > > > > > > > [  451.305609] [<900000000425d358>] rcu_gp_kthread+0x260/=
-0x2e0
-> > > > > > > > > [  451.305614] [<90000000041be704>] kthread+0x144/0x238
-> > > > > > > > > [  451.305619] [<9000000005787b60>] ret_from_kernel_threa=
-d+0x28/0xc8
-> > > > > > > > > [  451.305624] [<90000000041620e4>] ret_from_kernel_threa=
-d_asm+0xc/0x88
-> > > > > > > > >
-> > > > > > > > > [  451.305630] rcu: Stack dump where RCU GP kthread last =
-ran:
-> > > > > > > > > [  451.305633] Sending NMI from CPU 4 to CPUs 1:
-> > > > > > > > > [  451.305636] NMI backtrace for cpu 1 skipped: idling at=
- idle_exit+0x0/0x4
-> > > > > > > > > [  451.306655] rcu: INFO: rcu_preempt detected expedited =
-stalls on
-> > > > > > > > > CPUs/tasks: { 5-...D } 7298 jiffies s: 853 root: 0x20/.
-> > > > > > > > > [  451.306665] rcu: blocking rcu_node structures (interna=
-l RCU debug):
-> > > > > > > > > [  451.306669] Sending NMI from CPU 6 to CPUs 5:
-> > > > > > > > > [  451.306672] Unable to send backtrace IPI to CPU5 - per=
-haps it hung?
-> > > > > > > > >
-> > > > > > > > > So related to trampoline patches for sure unless I am mis=
-sing something.
-> > > > > > > > >
-> > > > > > > > > > > Huacai
-> > > > > > > > > > >
+> > > > > > > > > > [root@fedora bpf]# ./test_progs -t module_attach
+> > > > > > > > > > test_module_attach:PASS:skel_open 0 nsec
+> > > > > > > > > > test_module_attach:PASS:set_attach_target 0 nsec
+> > > > > > > > > > test_module_attach:PASS:set_attach_target_explicit 0 ns=
+ec
+> > > > > > > > > > test_module_attach:PASS:skel_load 0 nsec
+> > > > > > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSU=
+PP
+> > > > > > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -E=
+NOTSUPP
+> > > > > > > > > > test_module_attach:FAIL:skel_attach skeleton attach fai=
+led: -524
+> > > > > > > > > > #205     module_attach:FAIL
+> > > > > > > > > >
+> > > > > > > > > > All error logs:
+> > > > > > > > > > test_module_attach:PASS:skel_open 0 nsec
+> > > > > > > > > > test_module_attach:PASS:set_attach_target 0 nsec
+> > > > > > > > > > test_module_attach:PASS:set_attach_target_explicit 0 ns=
+ec
+> > > > > > > > > > test_module_attach:PASS:skel_load 0 nsec
+> > > > > > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSU=
+PP
+> > > > > > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -E=
+NOTSUPP
+> > > > > > > > > > test_module_attach:FAIL:skel_attach skeleton attach fai=
+led: -524
+> > > > > > > > > > #205     module_attach:FAIL
+> > > > > > > > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+> > > > > > > > > >
+> > > > > > > > > > I also tested loongarch-next branch with the trampoline=
+ patch series
+> > > > > > > > > > with no lockup kernel config so I can run dmesg to chec=
+k kernel error
+> > > > > > > > > > log,  ./test_progs -t module_attach result in below ker=
+nel log:
+> > > > > > > > > >
+> > > > > > > > > > [  417.429954] bpf_testmod: loading out-of-tree module =
+taints kernel.
+> > > > > > > > > > [  419.728620] CPU 70475748 Unable to handle kernel pag=
+ing request at
+> > > > > > > > > > virtual address 0000000800000024, era =3D=3D 9000000004=
+1d5854, ra =3D=3D
+> > > > > > > > > > 90000000041d5848
+> > > > > > > > > > [  419.728629] Oops[#1]:
+> > > > > > > > > > [  419.728632] CPU 70475748 Unable to handle kernel pag=
+ing request at
+> > > > > > > > > > virtual address 0000000000000018, era =3D=3D 9000000005=
+750268, ra =3D=3D
+> > > > > > > > > > 9000000004163938
+> > > > > > > > > > [  441.305370] rcu: INFO: rcu_preempt detected stalls o=
+n CPUs/tasks:
+> > > > > > > > > > [  441.305380] rcu:     5-...0: (29 ticks this GP)
+> > > > > > > > > > idle=3Deb74/1/0x4000000000000000 softirq=3D72377/72379 =
+fqs=3D2599
+> > > > > > > > > > [  441.305386] rcu:     (detected by 4, t=3D5252 jiffie=
+s, g=3D60333, q=3D186 ncpus=3D8)
+> > > > > > > > > > [  441.305390] Sending NMI from CPU 4 to CPUs 5:
+> > > > > > > > > > [  451.305494] rcu: rcu_preempt kthread starved for 249=
+9 jiffies!
+> > > > > > > > > > g60333 f0x0 RCU_GP_DOING_FQS(6) ->state=3D0x0 ->cpu=3D1
+> > > > > > > > > > [  451.305500] rcu:     Unless rcu_preempt kthread gets=
+ sufficient CPU
+> > > > > > > > > > time, OOM is now expected behavior.
+> > > > > > > > > > [  451.305502] rcu: RCU grace-period kthread stack dump=
+:
+> > > > > > > > > > [  451.305504] task:rcu_preempt     state:R stack:0    =
+ pid:15
+> > > > > > > > > > tgid:15    ppid:2      task_flags:0x208040 flags:0x0000=
+0800
+> > > > > > > > > > [  451.305510] Stack : 9000000100467e80 000000000000040=
+2
+> > > > > > > > > > 0000000000000010 90000001003b0680
+> > > > > > > > > > [  451.305519]         90000000058e0000 000000000000000=
+0
+> > > > > > > > > > 0000000000000040 9000000006c2dfd0
+> > > > > > > > > > [  451.305526]         900000000578c9b0 000000000000000=
+1
+> > > > > > > > > > 9000000006b21000 0000000000000005
+> > > > > > > > > > [  451.305533]         00000001000093a8 00000001000093a=
+8
+> > > > > > > > > > 0000000000000000 0000000000000004
+> > > > > > > > > > [  451.305540]         90000000058f04e0 000000000000000=
+0
+> > > > > > > > > > 0000000000000002 b793724be1dfb2b8
+> > > > > > > > > > [  451.305547]         00000001000093a9 b793724be1dfb2b=
+8
+> > > > > > > > > > 000000000000003f 9000000006c2dfd0
+> > > > > > > > > > [  451.305554]         9000000006c30c18 000000000000000=
+5
+> > > > > > > > > > 9000000006b0e000 9000000006b21000
+> > > > > > > > > > [  451.305560]         9000000100453c98 90000001003aff8=
+0
+> > > > > > > > > > 9000000006c31140 900000000578c9b0
+> > > > > > > > > > [  451.305567]         00000001000093a8 9000000005794d3=
+c
+> > > > > > > > > > 00000000000000b4 0000000000000000
+> > > > > > > > > > [  451.305574]         90000000024021b8 00000001000093a=
+8
+> > > > > > > > > > 9000000004284f20 000000000a400001
+> > > > > > > > > > [  451.305581]         ...
+> > > > > > > > > > [  451.305584] Call Trace:
+> > > > > > > > > > [  451.305586] [<900000000578b868>] __schedule+0x410/0x=
+1520
+> > > > > > > > > > [  451.305595] [<900000000578c9ac>] schedule+0x34/0x190
+> > > > > > > > > > [  451.305599] [<9000000005794d38>] schedule_timeout+0x=
+98/0x140
+> > > > > > > > > > [  451.305604] [<9000000004258f40>] rcu_gp_fqs_loop+0x5=
+f8/0x868
+> > > > > > > > > > [  451.305609] [<900000000425d358>] rcu_gp_kthread+0x26=
+0/0x2e0
+> > > > > > > > > > [  451.305614] [<90000000041be704>] kthread+0x144/0x238
+> > > > > > > > > > [  451.305619] [<9000000005787b60>] ret_from_kernel_thr=
+ead+0x28/0xc8
+> > > > > > > > > > [  451.305624] [<90000000041620e4>] ret_from_kernel_thr=
+ead_asm+0xc/0x88
+> > > > > > > > > >
+> > > > > > > > > > [  451.305630] rcu: Stack dump where RCU GP kthread las=
+t ran:
+> > > > > > > > > > [  451.305633] Sending NMI from CPU 4 to CPUs 1:
+> > > > > > > > > > [  451.305636] NMI backtrace for cpu 1 skipped: idling =
+at idle_exit+0x0/0x4
+> > > > > > > > > > [  451.306655] rcu: INFO: rcu_preempt detected expedite=
+d stalls on
+> > > > > > > > > > CPUs/tasks: { 5-...D } 7298 jiffies s: 853 root: 0x20/.
+> > > > > > > > > > [  451.306665] rcu: blocking rcu_node structures (inter=
+nal RCU debug):
+> > > > > > > > > > [  451.306669] Sending NMI from CPU 6 to CPUs 5:
+> > > > > > > > > > [  451.306672] Unable to send backtrace IPI to CPU5 - p=
+erhaps it hung?
+> > > > > > > > > >
+> > > > > > > > > > So related to trampoline patches for sure unless I am m=
+issing something.
+> > > > > > > > > >
+> > > > > > > > > > > > Huacai
 > > > > > > > > > > > >
-> > > > > > > > > > > > A side note, if I put the module_attach test in
-> > > > > > > > > > > > tools/testing/selftests/bpf/DENYLIST to skip the mo=
-dule_attach test,
-> > > > > > > > > > > > the module_attach test is not skipped.
-> > > > > > > > > > > >
-> > > > > > > > > > > > Thanks
-> > > > > > > > > > > >
-> > > > > > > > > > > > Vincent
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > A side note, if I put the module_attach test in
+> > > > > > > > > > > > > tools/testing/selftests/bpf/DENYLIST to skip the =
+module_attach test,
+> > > > > > > > > > > > > the module_attach test is not skipped.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Thanks
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Vincent
