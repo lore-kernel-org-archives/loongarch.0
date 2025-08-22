@@ -1,363 +1,131 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689F020EB
-	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 03:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8900021256B
+	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 04:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755832278; cv=none; b=V+QIUMW3Mbz0TmhvyU2g0Xbo4+OiDOzTvAQ4vK0Rvniuv5OonwPNi57RbAQ17AK/MTefvR1P/W/4pq7xfY/5ShDkQP/d9VFXzPAmXU/6jU7EN0dRYEofjyGj4xlAQI1qhmVfo+u1Cp0sy6iEoNt2grVMrSCpgwoAUgc6ov/lfa8=
+	t=1755836019; cv=none; b=J7s99cJOLHRG9F9q081tMzhB+eFd+HjTZMhQxz4AP8osZMTgA22AiUzXDUZSgeauZ8Iu+wbUiyXj3bg1IwEk+ImbZypxhVcnS8PA2aanUYXgTMYI+ayNzSkeydhW+ZLnRL2/7pxJUI6Bt04X1r2PWwqImY7SyjOHskbjqkC6TMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755832278; c=relaxed/simple;
-	bh=Q2PHd49OXiq03Mtj/JUnMKJbUPLFzTHtHb7R4S09xS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=il9pKn9Q7MY//fxR8ZrlC8+IaUPJYgkL4tksjHo86yuYAKPDy4SCRiv/Xe+pIK79Kq8x2mOp7BZ3KJe/8162LOZYKVmW2R2sqcZOhc0vtYMakTYbaXjmmuw/+6hGyzrxxESbE9xuxUVRf8dG+nohOcKmsUMvGh698HKFVqoW/m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: a551d7247f0511f0b29709d653e92f7d-20250822
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:7248e6b9-b6d2-437b-bf5e-176c4cd312da,IP:10,
-	URL:25,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:20
-X-CID-INFO: VERSION:1.1.45,REQID:7248e6b9-b6d2-437b-bf5e-176c4cd312da,IP:10,UR
-	L:25,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:6493067,CLOUDID:371578b9c4365eac314e4ebad41af313,BulkI
-	D:2508091148269AKA4902,BulkQuantity:11,Recheck:0,SF:17|19|24|44|64|66|78|8
-	0|81|82|83|102|841|850,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:11|99|83|1,Fil
-	e:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DK
-	R:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_OBB,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,
-	TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: a551d7247f0511f0b29709d653e92f7d-20250822
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 632815180; Fri, 22 Aug 2025 11:11:07 +0800
-Date: Fri, 22 Aug 2025 11:11:02 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Vincent Li <vincent.mc.li@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Hengqi Chen <hengqi.chen@gmail.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: kernel lockup on bpf selftests module_attach
-Message-ID: <20250822031102.GA331509@chenghao-pc>
-References: <CAAhV-H7wOZUJfn4pP2bV0G8Hnt2AfXt1ZL-eY5FFnQs4XF8g8Q@mail.gmail.com>
- <CAK3+h2y003+3Ts+5PjVaxhYc8KM74B+3mSJ-hCt+Gmmta8Rbww@mail.gmail.com>
- <CAK3+h2zSSW2EF88twhRNTG-QjsuX3ZeR+a8GVh80hOD50mdE6w@mail.gmail.com>
- <CAAhV-H7QEidF7piHYJ0ZZD5FRp11ytBq+Q2YvpfZUPvS_BHTgQ@mail.gmail.com>
- <CAK3+h2zq5ePgh5YDrMpb4GRsN-3kO=1AM4C057EZkB4OVRpKpw@mail.gmail.com>
- <CAK3+h2wcOQr0iv=-K7WOCQkMkQb7b6gR77W7GSwuVqJuvc+fxQ@mail.gmail.com>
- <20250812083441.GA1119757@chenghao-pc>
- <CAK3+h2x1gjuqEsUSj+B-9sb73kRo3bStH6ROw=1LVSqQGMNcUw@mail.gmail.com>
- <20250814120015.GA1626128@chenghao-pc>
- <CAK3+h2zO5bMnGTNb30=ggi8bg1-+gbaP1HfBoatJ4FVMuRgZdw@mail.gmail.com>
+	s=arc-20240116; t=1755836019; c=relaxed/simple;
+	bh=yb76Z7Ykma61gCy+9MNVKgDDs9hMvaduu7vLFLdozcM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kN7wflLA82fAl9b0jocVBXHrn78FUiVc6vRPeCE+i/oaik98Q03v7tSQji7Ee6PouzJFo2XcrgfhfyyUA0G94cPoq2rEpuOV3IyA/pnWv572SxauaqtAaMOTfA6GnaCgX/v/kauBJbd6oUh5srlGNYBRUNOrIpe0ttS913puBrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJzzj8k+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJzzj8k+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC9C6C4CEF1
+	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 04:13:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755836019;
+	bh=yb76Z7Ykma61gCy+9MNVKgDDs9hMvaduu7vLFLdozcM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WJzzj8k+eyg5znnUWq4fKHUKGoMsHjV3xLGW7k30rL8DTGzo4b9O0S2SL9yEBWtuM
+	 sa76DGJTEliGt8Q7mKRW0aGgyRaIkWJ7/Gulb2bgFgzbZw6vU1wglOxcmVNU5KqdSF
+	 M9dDiSIYUMXZgU7baK4c8BYQ3mG6sU3kISNznSISYN50ejJSfgj04sPWWz3CD1RFUK
+	 wgLWd/wFp4/fc6BWXMAR2esakMFptRpPrDK6B9dp8dK2Gj1R/p5F+FP73LEQXVhymp
+	 aX6UMcFbMD9/AdRuMRKBLS6xtHUD2RzOnnkOBD7z8f8l4ulLsDXA3vCBv66TG4GVcm
+	 7Km5RRevsidHg==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-afcb73394b4so246050366b.0
+        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 21:13:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWAYlcPyYcbjcc3oIAteHRqe0hAvCtTMdcHbejQwz40LnnSwSd0QD8N7rQmKB/7myTzYvnhFOVAQLM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwMysJ0dOeZg9Vvj0UysfTtvij1B6EJD7PWWMTYzdvg2FXcfZs/
+	Dtjz4eqK1XcUDqkJCgauQxGhhzO8NIotRYAf0f47p9VrM92OEeO31Doa+fNwYOtfLvUH8Rhtll3
+	o0c86Qe2ANnUof8ZUk6tKFldwgG2ku/U=
+X-Google-Smtp-Source: AGHT+IEFuMcrqOC0a5CuS2+a1amqyQQ3UsKWwufqZnldyK0rganAdUmsu3sfje9HY72xiVnlqQSe1dyt3NpW1FUyf7c=
+X-Received: by 2002:a17:907:7e8d:b0:afd:d994:cb0 with SMTP id
+ a640c23a62f3a-afe294ced48mr137970166b.62.1755836017510; Thu, 21 Aug 2025
+ 21:13:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK3+h2zO5bMnGTNb30=ggi8bg1-+gbaP1HfBoatJ4FVMuRgZdw@mail.gmail.com>
+References: <20250820055700.24344-1-youling.tang@linux.dev>
+In-Reply-To: <20250820055700.24344-1-youling.tang@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 22 Aug 2025 12:13:24 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H75tsJkHC9DgCOOBbFjbK--B_LRRCP5PcZr6nHqwKHL1Q@mail.gmail.com>
+X-Gm-Features: Ac12FXxQ-yitmfFcJhpiv0kKjoJLco4W_rhyVcuIHjasvZBYLMaHXTbBasKgxa8
+Message-ID: <CAAhV-H75tsJkHC9DgCOOBbFjbK--B_LRRCP5PcZr6nHqwKHL1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Add kexec_file support for LoongArch
+To: Youling Tang <youling.tang@linux.dev>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>, Yao Zi <ziyao@disroot.org>, 
+	kexec@lists.infradead.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 21, 2025 at 08:04:07AM -0700, Vincent Li wrote:
-> On Thu, Aug 14, 2025 at 5:00 AM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> >
-> > On Tue, Aug 12, 2025 at 06:42:08AM -0700, Vincent Li wrote:
-> > > On Tue, Aug 12, 2025 at 1:34 AM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> > > >
-> > > > On Sun, Aug 10, 2025 at 10:39:24AM -0700, Vincent Li wrote:
-> > > > > Hi Chenghao,
-> > > > >
-> > > > > On Sat, Aug 9, 2025 at 12:11 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
-> > > > > >
-> > > > > > On Fri, Aug 8, 2025 at 11:03 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > >
-> > > > > > > Hi, Chenghao,
-> > > > > > >
-> > > > > > > Please take a look.
-> > > > > > >
-> > > > > > > Huacai
-> > > > > > >
-> > > > > > I reverted loongson-next branch  tailcall count fix patches, struct
-> > > > > > ops trampoline patch, keep the rest of trampoline patches,
-> > > > > > module_attach test experienced the same issue, so definitely
-> > > > > > trampoline patches issue.
-> > > > > >
-> > > > >
-> > > > > I attempted to isolate which test in module_attach triggers the
-> > > > > "Unable to handle kernel paging request..." error, it appears to be
-> > > > > this one in "prog_tests/module_attach.c"
-> > > > >
-> > > > > ASSERT_OK(trigger_module_test_read(READ_SZ), "trigger_read");
-> > > > >
-> > > > > you can try to comment out other tests in "prog_tests/module_attach.c"
-> > > > > and perform the test, it might help isolate the issue.
-> > > > >
-> > > >
-> > > > Hi Vincent,
-> > > >
-> > > > The results I tested are different from yours. Could there be other
-> > > > differences between us? I am using the latest code of the loongarch-next
-> > > > branch.
-> > > >
-> > > > [root@localhost bpf]# ./test_progs -v -t module_attach
-> > > > bpf_testmod.ko is already unloaded.
-> > > > Loading bpf_testmod.ko...
-> > > > Successfully loaded bpf_testmod.ko.
-> > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > WATCHDOG: test case module_attach executes for 10 seconds...
-> > > > libbpf: prog 'handle_fmod_ret': BPF program load failed: -EINVAL
-> > > > libbpf: prog 'handle_fmod_ret': -- BEGIN PROG LOAD LOG --
-> > > > bpf_testmod_test_read() is not modifiable
-> > > > processed 0 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
-> > > > -- END PROG LOAD LOG --
-> > > > libbpf: prog 'handle_fmod_ret': failed to load: -EINVAL
-> > > > libbpf: failed to load object 'test_module_attach'
-> > > > libbpf: failed to load BPF skeleton 'test_module_attach': -EINVAL
-> > > > test_module_attach:FAIL:skel_load failed to load skeleton
-> > > > #205     module_attach:FAIL
-> > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-> > > > Successfully unloaded bpf_testmod.ko.
-> > > >
-> > >
-> > > I build and run the most recent loongarch-next kernel too, can you try
-> > > my config https://www.bpfire.net/download/loongfire/config.txt? I am
-> > > on fedora, here are the steps I build, run the kernel, and run the
-> > > test
-> > >
-> > > 1, check branch
-> > > [root@fedora linux-loongson]# git branch
-> > > * loongarch-next
-> > >   master
-> > >   no-tailcall
-> > >   no-trampoline
-> > >
-> > > 2, build kernel and reboot
-> > > cp config.txt .config; make clean; make -j6; make modules_install;
-> > > make install; grub2-mkconfig -o /boot/grub2/grub.cfg; reboot
-> > >
-> > > 3, after reboot and login, build bpf selftests, run module_attach
-> > > test, dmesg to check kernel log
-> > > cd tools/testing/selftests/bpf; make -j6; ./test_progs -t module_attach
-> > >
-> >
-> > Hi Vincent,
-> >
-> > I tried to refer to the config you provided, but the test results I
-> > obtained are as follows. I also specifically tested "modify" to verify
-> > the effectiveness of the patch, and the test of module_attach returns -EOPNOTSUPP.
-> >
-> > [root@localhost bpf]# ./test_progs -v -t modify_return
-> > bpf_testmod.ko is already unloaded.
-> > Loading bpf_testmod.ko...
-> > Successfully loaded bpf_testmod.ko.
-> > run_test:PASS:skel_load 0 nsec
-> > run_test:PASS:modify_return__attach failed 0 nsec
-> > run_test:PASS:test_run 0 nsec
-> > run_test:PASS:test_run ret 0 nsec
-> > run_test:PASS:modify_return side_effect 0 nsec
-> > run_test:PASS:modify_return fentry_result 0 nsec
-> > run_test:PASS:modify_return fexit_result 0 nsec
-> > run_test:PASS:modify_return fmod_ret_result 0 nsec
-> > run_test:PASS:modify_return fentry_result2 0 nsec
-> > run_test:PASS:modify_return fexit_result2 0 nsec
-> > run_test:PASS:modify_return fmod_ret_result2 0 nsec
-> > run_test:PASS:skel_load 0 nsec
-> > run_test:PASS:modify_return__attach failed 0 nsec
-> > run_test:PASS:test_run 0 nsec
-> > run_test:PASS:test_run ret 0 nsec
-> > run_test:PASS:modify_return side_effect 0 nsec
-> > run_test:PASS:modify_return fentry_result 0 nsec
-> > run_test:PASS:modify_return fexit_result 0 nsec
-> > run_test:PASS:modify_return fmod_ret_result 0 nsec
-> > run_test:PASS:modify_return fentry_result2 0 nsec
-> > run_test:PASS:modify_return fexit_result2 0 nsec
-> > run_test:PASS:modify_return fmod_ret_result2 0 nsec
-> > #200     modify_return:OK
-> > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > Successfully unloaded bpf_testmod.ko.
-> > [root@localhost bpf]# ./test_progs -v -t module_attach
-> > bpf_testmod.ko is already unloaded.
-> > Loading bpf_testmod.ko...
-> > Successfully loaded bpf_testmod.ko.
-> > test_module_attach:PASS:skel_open 0 nsec
-> > test_module_attach:PASS:set_attach_target 0 nsec
-> > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > test_module_attach:PASS:skel_load 0 nsec
-> > libbpf: prog 'kprobe_multi': failed to attach: -EOPNOTSUPP
-> > libbpf: prog 'kprobe_multi': failed to auto-attach: -EOPNOTSUPP
-> 
-> the -EOPNOTSUPP comes from libbpf, but I am not sure if it is error in
-> kernel leads to libbpf error or libbpf itself, you can do strace -f
-> -s1024 -o /tmp/module_attatch.txt  ./test_progs -v -t module_attach.
-> The strace should have bpf syscall and I think it can tell you if the
-> -EOPNOTSUPP is the result of kernel error or libbpf, you can share the
-> strace if you want.
-> 
-2037  read(16, "", 8192)                = 0
-2037  close(16)                         = 0
-2037  bpf(BPF_LINK_CREATE, {link_create={prog_fd=61, target_fd=0, attach_type=BPF_TRACE_KPROBE_MULTI, flags=0, kprobe_multi={flags=0, cnt=1, syms=NULL, addrs=[0xffff8000035717d0], cookies=NULL}}}, 64) = -1 EOPNOTSUPP (不支持的操作)
-2037  write(1, "libbpf: prog 'kprobe_multi': failed to attach: -EOPNOTSUPP\n", 59) = 59
-2037  write(1, "libbpf: prog 'kprobe_multi': failed to auto-attach: -EOPNOTSUPP\n", 64) = 64
-2037  write(1, "test_module_attach:FAIL:skel_attach skeleton attach failed: -95\n", 64) = 64
+Hi, Youling,
 
-not support attach_type BPF_TRACE_KPROBE_MULTI
+On Wed, Aug 20, 2025 at 1:57=E2=80=AFPM Youling Tang <youling.tang@linux.de=
+v> wrote:
+>
+> From: Youling Tang <tangyouling@kylinos.cn>
+>
+> This patchset implement kexec_file_load() support on LoongArch.
+>
+> This patch series enables us to load the LoongArch vmlinuz.efi(pez) or
+> vmlinux.efi(pei) or vmlinux(elf) by specifying its file decriptor,
+> instead of user-filled buffer via kexec_load() syscall.
+>
+> To use kexec_file_load() system call, instead of kexec_load(), at kexec
+> command, '-s' options must be specified. kexec-tools needs to apply the
+> corresponding patches. These patches can be found in repository [1] and
+> will be submitted to the kexec-tools community later.
+>
+> The basic usage of kexec_file is:
+> 1) Load second kernel image:
+>  # kexec -s -l vmlinuz.efi --initrd=3Dinitrd.img --reuse-cmdline
+>
+> 2) Startup second kernel:
+>  # kexec -e
+>
+> For kdump:
+> 1) Load capture kernel image:
+>  # kexec -s -p vmlinuz.efi --initrd=3Dinitrd.img --reuse-cmdline
+>
+> 2) Do something to crash, like:
+>  # echo c > /proc/sysrq-trigger
+>
+> Link:
+> [1] https://github.com/tangyouling/kexec-tools/commits/main/
+>
+> Changelog:
+>  v2:
+>  * Merge some patches.
+>  * Add support for ELF format images.
+>  * Rename kexec_image.c to kexec_efi.c .
+>  * When KEXEC_FILE is enabled, RELOCATABLE is selected by default.
+>  * Some minor modifications.
+>
+> Youling Tang (5):
+>   LoongArch: Add struct loongarch_image_header for kernel image
+>   LoongArch: Add kexec_file support
+>   LoongArch/kexec_file: Support loading ELF binary file
+I prefer to combine Patch-2 and Patch-3. :)
 
-Chenghao
+Huacai
 
-
-> 
-> > test_module_attach:FAIL:skel_attach skeleton attach failed: -95
-> > #201     module_attach:FAIL
-> > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-> > Successfully unloaded bpf_testmod.ko.
-> >
-> >
-> > Chenghao
-> >
-> > >
-> > > >
-> > > >
-> > > > Chenghao
-> > > >
-> > > > >
-> > > > > > > On Sat, Aug 9, 2025 at 1:03 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > On Fri, Aug 8, 2025 at 8:48 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Fri, Aug 8, 2025 at 8:03 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Hi, Vincent,
-> > > > > > > > > >
-> > > > > > > > > > On Sat, Aug 9, 2025 at 12:53 AM Vincent Li <vincent.mc.li@gmail.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > Hi Folks,
-> > > > > > > > > > >
-> > > > > > > > > > > Hengqi mentioned offline that the loongarch kernel locked up when
-> > > > > > > > > > > running full bpf selftests, so I went ahead and ran make run_tests to
-> > > > > > > > > > > perform full bpf selftest, I observed lockup too. It appears the
-> > > > > > > > > > > lockup happens when running module_attach test which includes testing
-> > > > > > > > > > > on fentry so this could be related to the trampoline patch series. for
-> > > > > > > > > > > example, if I just run ./test_progs -t module_attach, the kernel
-> > > > > > > > > > > lockup immediately.
-> > > > > > > > > > Is this a regression caused by the latest trampoline patches? Or in
-> > > > > > > > > > another word, Does vanilla 6.16 has this problem?
-> > > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > I suspect this is caused by the latest trampoline patches because the
-> > > > > > > > > module_attach is to test the fentry feature for kernel module
-> > > > > > > > > functions, I believe Changhao and I only tested the fentry feature for
-> > > > > > > > > non-module kernel functions. I can try kernel without the trampoline
-> > > > > > > > > patches and will let you know the result.
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > I reverted  trampoline patches from loongarch-next branch and run
-> > > > > > > > ./test_progs -t module_attach simply just errors out with the fentry
-> > > > > > > > feature not supported
-> > > > > > > >
-> > > > > > > > [root@fedora bpf]# ./test_progs -t module_attach
-> > > > > > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > > > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > > > > > test_module_attach:PASS:skel_load 0 nsec
-> > > > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
-> > > > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
-> > > > > > > > test_module_attach:FAIL:skel_attach skeleton attach failed: -524
-> > > > > > > > #205     module_attach:FAIL
-> > > > > > > >
-> > > > > > > > All error logs:
-> > > > > > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > > > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > > > > > test_module_attach:PASS:skel_load 0 nsec
-> > > > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
-> > > > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
-> > > > > > > > test_module_attach:FAIL:skel_attach skeleton attach failed: -524
-> > > > > > > > #205     module_attach:FAIL
-> > > > > > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-> > > > > > > >
-> > > > > > > > I also tested loongarch-next branch with the trampoline patch series
-> > > > > > > > with no lockup kernel config so I can run dmesg to check kernel error
-> > > > > > > > log,  ./test_progs -t module_attach result in below kernel log:
-> > > > > > > >
-> > > > > > > > [  417.429954] bpf_testmod: loading out-of-tree module taints kernel.
-> > > > > > > > [  419.728620] CPU 70475748 Unable to handle kernel paging request at
-> > > > > > > > virtual address 0000000800000024, era == 90000000041d5854, ra ==
-> > > > > > > > 90000000041d5848
-> > > > > > > > [  419.728629] Oops[#1]:
-> > > > > > > > [  419.728632] CPU 70475748 Unable to handle kernel paging request at
-> > > > > > > > virtual address 0000000000000018, era == 9000000005750268, ra ==
-> > > > > > > > 9000000004163938
-> > > > > > > > [  441.305370] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> > > > > > > > [  441.305380] rcu:     5-...0: (29 ticks this GP)
-> > > > > > > > idle=eb74/1/0x4000000000000000 softirq=72377/72379 fqs=2599
-> > > > > > > > [  441.305386] rcu:     (detected by 4, t=5252 jiffies, g=60333, q=186 ncpus=8)
-> > > > > > > > [  441.305390] Sending NMI from CPU 4 to CPUs 5:
-> > > > > > > > [  451.305494] rcu: rcu_preempt kthread starved for 2499 jiffies!
-> > > > > > > > g60333 f0x0 RCU_GP_DOING_FQS(6) ->state=0x0 ->cpu=1
-> > > > > > > > [  451.305500] rcu:     Unless rcu_preempt kthread gets sufficient CPU
-> > > > > > > > time, OOM is now expected behavior.
-> > > > > > > > [  451.305502] rcu: RCU grace-period kthread stack dump:
-> > > > > > > > [  451.305504] task:rcu_preempt     state:R stack:0     pid:15
-> > > > > > > > tgid:15    ppid:2      task_flags:0x208040 flags:0x00000800
-> > > > > > > > [  451.305510] Stack : 9000000100467e80 0000000000000402
-> > > > > > > > 0000000000000010 90000001003b0680
-> > > > > > > > [  451.305519]         90000000058e0000 0000000000000000
-> > > > > > > > 0000000000000040 9000000006c2dfd0
-> > > > > > > > [  451.305526]         900000000578c9b0 0000000000000001
-> > > > > > > > 9000000006b21000 0000000000000005
-> > > > > > > > [  451.305533]         00000001000093a8 00000001000093a8
-> > > > > > > > 0000000000000000 0000000000000004
-> > > > > > > > [  451.305540]         90000000058f04e0 0000000000000000
-> > > > > > > > 0000000000000002 b793724be1dfb2b8
-> > > > > > > > [  451.305547]         00000001000093a9 b793724be1dfb2b8
-> > > > > > > > 000000000000003f 9000000006c2dfd0
-> > > > > > > > [  451.305554]         9000000006c30c18 0000000000000005
-> > > > > > > > 9000000006b0e000 9000000006b21000
-> > > > > > > > [  451.305560]         9000000100453c98 90000001003aff80
-> > > > > > > > 9000000006c31140 900000000578c9b0
-> > > > > > > > [  451.305567]         00000001000093a8 9000000005794d3c
-> > > > > > > > 00000000000000b4 0000000000000000
-> > > > > > > > [  451.305574]         90000000024021b8 00000001000093a8
-> > > > > > > > 9000000004284f20 000000000a400001
-> > > > > > > > [  451.305581]         ...
-> > > > > > > > [  451.305584] Call Trace:
-> > > > > > > > [  451.305586] [<900000000578b868>] __schedule+0x410/0x1520
-> > > > > > > > [  451.305595] [<900000000578c9ac>] schedule+0x34/0x190
-> > > > > > > > [  451.305599] [<9000000005794d38>] schedule_timeout+0x98/0x140
-> > > > > > > > [  451.305604] [<9000000004258f40>] rcu_gp_fqs_loop+0x5f8/0x868
-> > > > > > > > [  451.305609] [<900000000425d358>] rcu_gp_kthread+0x260/0x2e0
-> > > > > > > > [  451.305614] [<90000000041be704>] kthread+0x144/0x238
-> > > > > > > > [  451.305619] [<9000000005787b60>] ret_from_kernel_thread+0x28/0xc8
-> > > > > > > > [  451.305624] [<90000000041620e4>] ret_from_kernel_thread_asm+0xc/0x88
-> > > > > > > >
-> > > > > > > > [  451.305630] rcu: Stack dump where RCU GP kthread last ran:
-> > > > > > > > [  451.305633] Sending NMI from CPU 4 to CPUs 1:
-> > > > > > > > [  451.305636] NMI backtrace for cpu 1 skipped: idling at idle_exit+0x0/0x4
-> > > > > > > > [  451.306655] rcu: INFO: rcu_preempt detected expedited stalls on
-> > > > > > > > CPUs/tasks: { 5-...D } 7298 jiffies s: 853 root: 0x20/.
-> > > > > > > > [  451.306665] rcu: blocking rcu_node structures (internal RCU debug):
-> > > > > > > > [  451.306669] Sending NMI from CPU 6 to CPUs 5:
-> > > > > > > > [  451.306672] Unable to send backtrace IPI to CPU5 - perhaps it hung?
-> > > > > > > >
-> > > > > > > > So related to trampoline patches for sure unless I am missing something.
-> > > > > > > >
-> > > > > > > > > > Huacai
-> > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > A side note, if I put the module_attach test in
-> > > > > > > > > > > tools/testing/selftests/bpf/DENYLIST to skip the module_attach test,
-> > > > > > > > > > > the module_attach test is not skipped.
-> > > > > > > > > > >
-> > > > > > > > > > > Thanks
-> > > > > > > > > > >
-> > > > > > > > > > > Vincent
+>   LoongArch/kexec_file: Add crash dump support
+>   LoongArch: Enable CONFIG_KEXEC_FILE
+>
+>  arch/loongarch/Kconfig                     |  10 +
+>  arch/loongarch/configs/loongson3_defconfig |   1 +
+>  arch/loongarch/include/asm/image.h         |  57 +++++
+>  arch/loongarch/include/asm/kexec.h         |  13 ++
+>  arch/loongarch/kernel/Makefile             |   1 +
+>  arch/loongarch/kernel/kexec_efi.c          | 111 ++++++++++
+>  arch/loongarch/kernel/kexec_elf.c          | 105 +++++++++
+>  arch/loongarch/kernel/machine_kexec.c      |  33 ++-
+>  arch/loongarch/kernel/machine_kexec_file.c | 235 +++++++++++++++++++++
+>  9 files changed, 555 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/image.h
+>  create mode 100644 arch/loongarch/kernel/kexec_efi.c
+>  create mode 100644 arch/loongarch/kernel/kexec_elf.c
+>  create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+>
+> --
+> 2.43.0
+>
