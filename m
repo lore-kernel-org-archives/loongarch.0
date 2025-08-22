@@ -1,505 +1,519 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADBA2E172B
-	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 05:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181052EAB78
+	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 06:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755841020; cv=none; b=eB+tCi8C60P04xj4HiVOH67FpIARRuUVOC2Y3IcYFVfO3uXeHLceNXEbKQ1lYvD9z9f0GF6/hTJE3sp8DMlHPnJ3VSzkYf1AKdl57XAkF7yWzXiEYZ0d5fRu3nOvYPdFixl+cqVcVXXf3rdgvc3X7Z306/EBSxgOj/1v0XGeB/k=
+	t=1755844870; cv=none; b=Voazi9DCp0Rv2AM2/wK/5tQ2kyKT9L72ltqTXDO67Slk/AqAdM8mIyheO8WRKOnXeNDrWlNRreT7dWgZIzuIkOZwPxvFpVM3itF41VP+vGO+rgse3eV3norUf/nkWWZmYN8z6xcI4t1s1KllMVuwnOLnbOh89Z9jF6AAF/8FjBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755841020; c=relaxed/simple;
-	bh=RKG/r/kw6RTssDky/QUrir+3GbPvhMg6vDK9PyzTKRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wbi7PTLsiCjv+daZR5TrHiEhZCnQsnYq0YJh7mvX7POi19ZRlB4WdkDxuMfYpSmo0F+ZxwKJT/VTXGYFRVWLv8w9Oe1L9LFT1HGPzbvqOrAA3ILFdtgyURoqabYwBDKJguTAGuGFi9vJhB81ucoA26uSHocfAp9HHwCY1w4V/fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: ff0e7ca47f1911f0b29709d653e92f7d-20250822
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:9ccedf0b-1170-4dc1-96d3-28d000810191,IP:10,
-	URL:25,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:20
-X-CID-INFO: VERSION:1.1.45,REQID:9ccedf0b-1170-4dc1-96d3-28d000810191,IP:10,UR
-	L:25,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:6493067,CLOUDID:82c5a7bdba99bf8e5ea47f67cac0396c,BulkI
-	D:2508091148269AKA4902,BulkQuantity:15,Recheck:0,SF:17|19|24|44|64|66|78|8
-	0|81|82|83|102|841|850,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:11|99|83|1,Fil
-	e:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DK
-	R:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,
-	TF_CID_SPAM_FSI,TF_CID_SPAM_OBB
-X-UUID: ff0e7ca47f1911f0b29709d653e92f7d-20250822
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 2088312430; Fri, 22 Aug 2025 13:36:47 +0800
-Date: Fri, 22 Aug 2025 13:36:43 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Vincent Li <vincent.mc.li@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Hengqi Chen <hengqi.chen@gmail.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: kernel lockup on bpf selftests module_attach
-Message-ID: <20250822053643.GA685331@chenghao-pc>
-References: <CAAhV-H7QEidF7piHYJ0ZZD5FRp11ytBq+Q2YvpfZUPvS_BHTgQ@mail.gmail.com>
- <CAK3+h2zq5ePgh5YDrMpb4GRsN-3kO=1AM4C057EZkB4OVRpKpw@mail.gmail.com>
- <CAK3+h2wcOQr0iv=-K7WOCQkMkQb7b6gR77W7GSwuVqJuvc+fxQ@mail.gmail.com>
- <20250812083441.GA1119757@chenghao-pc>
- <CAK3+h2x1gjuqEsUSj+B-9sb73kRo3bStH6ROw=1LVSqQGMNcUw@mail.gmail.com>
- <20250814120015.GA1626128@chenghao-pc>
- <CAK3+h2zO5bMnGTNb30=ggi8bg1-+gbaP1HfBoatJ4FVMuRgZdw@mail.gmail.com>
- <20250822031102.GA331509@chenghao-pc>
- <CAK3+h2y6fgzG8MfFU+bwUNa7N+PJeAYwXnr+4kC-DF+yGezgPQ@mail.gmail.com>
- <CAK3+h2zascHxT3A+9CBkWPetCXx-Cgg0XSbcQoo2tNMDvuHmVg@mail.gmail.com>
+	s=arc-20240116; t=1755844870; c=relaxed/simple;
+	bh=zpYv+55z9hfkhhRESoRgSo3d++ULzMHj9eLxjAkGBYM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jbaMutc7mRAJWBz96Mtmc0x9wy2dAboC8LvvuCMmu97RotW9NYsicjpIUuib+z+0zI0ktc1EENI+OXvmwED+j+q5yBYNQhtI/Uo/Bri1icMLBJ3BFXjd4Sc+g6AgS44fi9Q/DVOpB3tcclo/JzKvkgjl3VYip8i4uFF9Thi5wUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSiclG5D; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSiclG5D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E817C116B1
+	for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 06:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755844869;
+	bh=zpYv+55z9hfkhhRESoRgSo3d++ULzMHj9eLxjAkGBYM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HSiclG5DgNwMjDidyLtSamzrRzu7cI532AM208xGx+DEabyf7EZps2ujJJBU1/5Rc
+	 5Tg5+bMo/iDYmTVufs10VE1mmf3Nj1/jYS6lNZxQsLIlmIkx6Bp3uW+yPP1oBIVX8B
+	 oORIyeD0OXNRg5/02/95AAbFH8UY3vCPEDtBivShwAfnJe5UqhsShEje5VglSxe72e
+	 MuEfi5P31OG6xesDNy2JxoFv5t7fyaj1XCWN4n3hFocxx0ekkCmFm9iA7l3ryR+Ntu
+	 eux9lSm8rGaO3ckTtm9mQd+pVxp4QErBiDGyOBQvFELZxPHvwkPUQX0P89Er3ivUZ2
+	 F1GxWSH/CbQpA==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6188b7550c0so2580994a12.2
+        for <loongarch@lists.linux.dev>; Thu, 21 Aug 2025 23:41:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWIifi+tX3I+g355CXyEK9+EqvT9PNeHNKrp8p6ma4ImFEPj9+3Dq6qMp+EeL89hi5eIGB5oIyDt9w=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwuGmIknAnnwRnYBraKZh4ROwOlcixTmLnTMRZ4r6PL8eJVFhaT
+	MqD9hHKE/BwPmZ4K/UhJrxvQMyQYmlozIjvQgbVq73SH0TFQ+pR2wNxcgjn99cIBCphyjPBy1sD
+	Uhq7d4EkdhNY57lef4nFSG3tf8Uy8xRc=
+X-Google-Smtp-Source: AGHT+IFKFtbxptrH35g2h2gONe2NPkyM6nkxZhgAotlR1Tv9/gEF9b7cQt7+ob0mJJ+R+F9PckHcYY/AqdkOswvDtoM=
+X-Received: by 2002:a05:6402:26c6:b0:615:5cc1:3453 with SMTP id
+ 4fb4d7f45d1cf-61c1b3d8cdbmr1502515a12.9.1755844868066; Thu, 21 Aug 2025
+ 23:41:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK3+h2zascHxT3A+9CBkWPetCXx-Cgg0XSbcQoo2tNMDvuHmVg@mail.gmail.com>
+References: <20250820055700.24344-1-youling.tang@linux.dev> <20250820055700.24344-3-youling.tang@linux.dev>
+In-Reply-To: <20250820055700.24344-3-youling.tang@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 22 Aug 2025 14:40:55 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H644+w+j+p6S-3aS_q9WryaArVpoYTae1s_ad6Voke3tw@mail.gmail.com>
+X-Gm-Features: Ac12FXz9qh94X2P8lVHI0F3ea7UwysGPUP2VBRZ2AjzPabMMShWc1Fxq2ZAzbK8
+Message-ID: <CAAhV-H644+w+j+p6S-3aS_q9WryaArVpoYTae1s_ad6Voke3tw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] LoongArch: Add kexec_file support
+To: Youling Tang <youling.tang@linux.dev>
+Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>, Yao Zi <ziyao@disroot.org>, 
+	kexec@lists.infradead.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 21, 2025 at 10:22:46PM -0700, Vincent Li wrote:
-> On Thu, Aug 21, 2025 at 10:10 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
-> >
-> > On Thu, Aug 21, 2025 at 8:11 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> > >
-> > > On Thu, Aug 21, 2025 at 08:04:07AM -0700, Vincent Li wrote:
-> > > > On Thu, Aug 14, 2025 at 5:00 AM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> > > > >
-> > > > > On Tue, Aug 12, 2025 at 06:42:08AM -0700, Vincent Li wrote:
-> > > > > > On Tue, Aug 12, 2025 at 1:34 AM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> > > > > > >
-> > > > > > > On Sun, Aug 10, 2025 at 10:39:24AM -0700, Vincent Li wrote:
-> > > > > > > > Hi Chenghao,
-> > > > > > > >
-> > > > > > > > On Sat, Aug 9, 2025 at 12:11 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Fri, Aug 8, 2025 at 11:03 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Hi, Chenghao,
-> > > > > > > > > >
-> > > > > > > > > > Please take a look.
-> > > > > > > > > >
-> > > > > > > > > > Huacai
-> > > > > > > > > >
-> > > > > > > > > I reverted loongson-next branch  tailcall count fix patches, struct
-> > > > > > > > > ops trampoline patch, keep the rest of trampoline patches,
-> > > > > > > > > module_attach test experienced the same issue, so definitely
-> > > > > > > > > trampoline patches issue.
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > I attempted to isolate which test in module_attach triggers the
-> > > > > > > > "Unable to handle kernel paging request..." error, it appears to be
-> > > > > > > > this one in "prog_tests/module_attach.c"
-> > > > > > > >
-> > > > > > > > ASSERT_OK(trigger_module_test_read(READ_SZ), "trigger_read");
-> > > > > > > >
-> > > > > > > > you can try to comment out other tests in "prog_tests/module_attach.c"
-> > > > > > > > and perform the test, it might help isolate the issue.
-> > > > > > > >
-> > > > > > >
-> > > > > > > Hi Vincent,
-> > > > > > >
-> > > > > > > The results I tested are different from yours. Could there be other
-> > > > > > > differences between us? I am using the latest code of the loongarch-next
-> > > > > > > branch.
-> > > > > > >
-> > > > > > > [root@localhost bpf]# ./test_progs -v -t module_attach
-> > > > > > > bpf_testmod.ko is already unloaded.
-> > > > > > > Loading bpf_testmod.ko...
-> > > > > > > Successfully loaded bpf_testmod.ko.
-> > > > > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > > > > WATCHDOG: test case module_attach executes for 10 seconds...
-> > > > > > > libbpf: prog 'handle_fmod_ret': BPF program load failed: -EINVAL
-> > > > > > > libbpf: prog 'handle_fmod_ret': -- BEGIN PROG LOAD LOG --
-> > > > > > > bpf_testmod_test_read() is not modifiable
-> > > > > > > processed 0 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
-> > > > > > > -- END PROG LOAD LOG --
-> > > > > > > libbpf: prog 'handle_fmod_ret': failed to load: -EINVAL
-> > > > > > > libbpf: failed to load object 'test_module_attach'
-> > > > > > > libbpf: failed to load BPF skeleton 'test_module_attach': -EINVAL
-> > > > > > > test_module_attach:FAIL:skel_load failed to load skeleton
-> > > > > > > #205     module_attach:FAIL
-> > > > > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-> > > > > > > Successfully unloaded bpf_testmod.ko.
-> > > > > > >
-> > > > > >
-> > > > > > I build and run the most recent loongarch-next kernel too, can you try
-> > > > > > my config https://www.bpfire.net/download/loongfire/config.txt? I am
-> > > > > > on fedora, here are the steps I build, run the kernel, and run the
-> > > > > > test
-> > > > > >
-> > > > > > 1, check branch
-> > > > > > [root@fedora linux-loongson]# git branch
-> > > > > > * loongarch-next
-> > > > > >   master
-> > > > > >   no-tailcall
-> > > > > >   no-trampoline
-> > > > > >
-> > > > > > 2, build kernel and reboot
-> > > > > > cp config.txt .config; make clean; make -j6; make modules_install;
-> > > > > > make install; grub2-mkconfig -o /boot/grub2/grub.cfg; reboot
-> > > > > >
-> > > > > > 3, after reboot and login, build bpf selftests, run module_attach
-> > > > > > test, dmesg to check kernel log
-> > > > > > cd tools/testing/selftests/bpf; make -j6; ./test_progs -t module_attach
-> > > > > >
-> > > > >
-> > > > > Hi Vincent,
-> > > > >
-> > > > > I tried to refer to the config you provided, but the test results I
-> > > > > obtained are as follows. I also specifically tested "modify" to verify
-> > > > > the effectiveness of the patch, and the test of module_attach returns -EOPNOTSUPP.
-> > > > >
-> > > > > [root@localhost bpf]# ./test_progs -v -t modify_return
-> > > > > bpf_testmod.ko is already unloaded.
-> > > > > Loading bpf_testmod.ko...
-> > > > > Successfully loaded bpf_testmod.ko.
-> > > > > run_test:PASS:skel_load 0 nsec
-> > > > > run_test:PASS:modify_return__attach failed 0 nsec
-> > > > > run_test:PASS:test_run 0 nsec
-> > > > > run_test:PASS:test_run ret 0 nsec
-> > > > > run_test:PASS:modify_return side_effect 0 nsec
-> > > > > run_test:PASS:modify_return fentry_result 0 nsec
-> > > > > run_test:PASS:modify_return fexit_result 0 nsec
-> > > > > run_test:PASS:modify_return fmod_ret_result 0 nsec
-> > > > > run_test:PASS:modify_return fentry_result2 0 nsec
-> > > > > run_test:PASS:modify_return fexit_result2 0 nsec
-> > > > > run_test:PASS:modify_return fmod_ret_result2 0 nsec
-> > > > > run_test:PASS:skel_load 0 nsec
-> > > > > run_test:PASS:modify_return__attach failed 0 nsec
-> > > > > run_test:PASS:test_run 0 nsec
-> > > > > run_test:PASS:test_run ret 0 nsec
-> > > > > run_test:PASS:modify_return side_effect 0 nsec
-> > > > > run_test:PASS:modify_return fentry_result 0 nsec
-> > > > > run_test:PASS:modify_return fexit_result 0 nsec
-> > > > > run_test:PASS:modify_return fmod_ret_result 0 nsec
-> > > > > run_test:PASS:modify_return fentry_result2 0 nsec
-> > > > > run_test:PASS:modify_return fexit_result2 0 nsec
-> > > > > run_test:PASS:modify_return fmod_ret_result2 0 nsec
-> > > > > #200     modify_return:OK
-> > > > > Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-> > > > > Successfully unloaded bpf_testmod.ko.
-> > > > > [root@localhost bpf]# ./test_progs -v -t module_attach
-> > > > > bpf_testmod.ko is already unloaded.
-> > > > > Loading bpf_testmod.ko...
-> > > > > Successfully loaded bpf_testmod.ko.
-> > > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > > test_module_attach:PASS:skel_load 0 nsec
-> > > > > libbpf: prog 'kprobe_multi': failed to attach: -EOPNOTSUPP
-> > > > > libbpf: prog 'kprobe_multi': failed to auto-attach: -EOPNOTSUPP
-> > > >
-> > > > the -EOPNOTSUPP comes from libbpf, but I am not sure if it is error in
-> > > > kernel leads to libbpf error or libbpf itself, you can do strace -f
-> > > > -s1024 -o /tmp/module_attatch.txt  ./test_progs -v -t module_attach.
-> > > > The strace should have bpf syscall and I think it can tell you if the
-> > > > -EOPNOTSUPP is the result of kernel error or libbpf, you can share the
-> > > > strace if you want.
-> > > >
-> > > 2037  read(16, "", 8192)                = 0
-> > > 2037  close(16)                         = 0
-> > > 2037  bpf(BPF_LINK_CREATE, {link_create={prog_fd=61, target_fd=0, attach_type=BPF_TRACE_KPROBE_MULTI, flags=0, kprobe_multi={flags=0, cnt=1, syms=NULL, addrs=[0xffff8000035717d0], cookies=NULL}}}, 64) = -1 EOPNOTSUPP (不支持的操作)
-> >
-> > so bpf syscall cmd BPF_LINK_CREATE returns  '-1 EOPNOTSUPP' exactly? I
-> > could not tell because I thought the return value is '-1'
-> >
-> > > 2037  write(1, "libbpf: prog 'kprobe_multi': failed to attach: -EOPNOTSUPP\n", 59) = 59
-> > > 2037  write(1, "libbpf: prog 'kprobe_multi': failed to auto-attach: -EOPNOTSUPP\n", 64) = 64
-> > > 2037  write(1, "test_module_attach:FAIL:skel_attach skeleton attach failed: -95\n", 64) = 64
-> > >
-> > > not support attach_type BPF_TRACE_KPROBE_MULTI
-> > >
-> >
-> > Could you share your kernel config (.config used for kernel compiling
-> > or running kernel /boot/config-*)  ? I wonder if you have the FPROBE
-> > really configured, since include/linux/fprobe.h has:
-> >
-> > #ifdef CONFIG_FPROBE
-> > int register_fprobe(struct fprobe *fp, const char *filter, const char
-> > *notfilter);
-> > int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num);
-> > int register_fprobe_syms(struct fprobe *fp, const char **syms, int num);
-> > int unregister_fprobe(struct fprobe *fp);
-> > bool fprobe_is_registered(struct fprobe *fp);
-> > int fprobe_count_ips_from_filter(const char *filter, const char *notfilter);
-> > #else
-> > static inline int register_fprobe(struct fprobe *fp, const char
-> > *filter, const char *notfilter)
-> > {
-> >         return -EOPNOTSUPP;
-> > }
-> > static inline int register_fprobe_ips(struct fprobe *fp, unsigned long
-> > *addrs, int num)
-> > {
-> >         return -EOPNOTSUPP;
-> > }
-> > static inline int register_fprobe_syms(struct fprobe *fp, const char
-> > **syms, int num)
-> > {
-> >         return -EOPNOTSUPP;
-> > }
-> > static inline int unregister_fprobe(struct fprobe *fp)
-> > {
-> >         return -EOPNOTSUPP;
-> > }
-> > static inline bool fprobe_is_registered(struct fprobe *fp)
-> > {
-> >         return false;
-> > }
-> > static inline int fprobe_count_ips_from_filter(const char *filter,
-> > const char *notfilter)
-> > {
-> >         return -EOPNOTSUPP;
-> > }
-> > #endif
-> >
-> 
-> and check CONFIG_BPF_EVENTS since linux/trace_events.h has:
-> 
-> #ifdef CONFIG_BPF_EVENTS
-> unsigned int trace_call_bpf(struct trace_event_call *call, void *ctx);
-> int perf_event_attach_bpf_prog(struct perf_event *event, struct
-> bpf_prog *prog, u64 bpf_cookie);
-> void perf_event_detach_bpf_prog(struct perf_event *event);
-> int perf_event_query_prog_array(struct perf_event *event, void __user *info);
-> 
-> struct bpf_raw_tp_link;
-> int bpf_probe_register(struct bpf_raw_event_map *btp, struct
-> bpf_raw_tp_link *link);
-> int bpf_probe_unregister(struct bpf_raw_event_map *btp, struct
-> bpf_raw_tp_link *link);
-> 
-> struct bpf_raw_event_map *bpf_get_raw_tracepoint(const char *name);
-> void bpf_put_raw_tracepoint(struct bpf_raw_event_map *btp);
-> int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
->                             u32 *fd_type, const char **buf,
->                             u64 *probe_offset, u64 *probe_addr,
->                             unsigned long *missed);
-> int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct
-> bpf_prog *prog);
-> int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct
-> bpf_prog *prog);
-> #else
-> static inline unsigned int trace_call_bpf(struct trace_event_call
-> *call, void *ctx)
-> {
->         return 1;
-> }
-> 
-> static inline int
-> perf_event_attach_bpf_prog(struct perf_event *event, struct bpf_prog
-> *prog, u64 bpf_cookie)
-> {
->         return -EOPNOTSUPP;
-> }
-> 
-> static inline void perf_event_detach_bpf_prog(struct perf_event *event) { }
-> 
-> static inline int
-> perf_event_query_prog_array(struct perf_event *event, void __user *info)
-> {
->         return -EOPNOTSUPP;
-> }
-> struct bpf_raw_tp_link;
-> static inline int bpf_probe_register(struct bpf_raw_event_map *btp,
-> struct bpf_raw_tp_link *link)
-> {
->         return -EOPNOTSUPP;
-> }
-> static inline int bpf_probe_unregister(struct bpf_raw_event_map *btp,
-> struct bpf_raw_tp_link *link)
-> {
->         return -EOPNOTSUPP;
-> }
-> static inline struct bpf_raw_event_map *bpf_get_raw_tracepoint(const char *name)
-> {
->         return NULL;
-> }
-> static inline void bpf_put_raw_tracepoint(struct bpf_raw_event_map *btp)
-> {
-> }
-> static inline int bpf_get_perf_event_info(const struct perf_event *event,
->                                           u32 *prog_id, u32 *fd_type,
->                                           const char **buf, u64 *probe_offset,
->                                           u64 *probe_addr, unsigned
-> long *missed)
-> {
->         return -EOPNOTSUPP;
-> }
-> static inline int
-> bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
-> {
->         return -EOPNOTSUPP;
-> }
-> static inline int
-> bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
-> {
->         return -EOPNOTSUPP;
-> }
-> #endif
+Hi, Youling,
 
-I checked the config and used the most straightforward method:
-intentionally adding errors in the macro's if-else to distinguish.
+On Wed, Aug 20, 2025 at 1:57=E2=80=AFPM Youling Tang <youling.tang@linux.de=
+v> wrote:
+>
+> From: Youling Tang <tangyouling@kylinos.cn>
+>
+> This patch adds support for kexec_file on LoongArch.
+>
+> The efi_kexec_load() as two parts:
+> - the first part loads the kernel image (vmlinuz.efi or vmlinux.efi)
+> - the second part loads other segments (eg: initrd, cmdline)
+>
+> This initrd will be passed to the second kernel via the command line
+> 'initrd=3Dstart,size'.
+>
+> Currently, pez(vmlinuz.efi) and pei(vmlinux.efi) format images are suppor=
+ted,
+> but ELF format is not supported.
+>
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> ---
+>  arch/loongarch/Kconfig                     |   9 ++
+>  arch/loongarch/include/asm/image.h         |  17 +++
+>  arch/loongarch/include/asm/kexec.h         |  12 +++
+>  arch/loongarch/kernel/Makefile             |   1 +
+>  arch/loongarch/kernel/kexec_efi.c          | 111 +++++++++++++++++++
+>  arch/loongarch/kernel/machine_kexec.c      |  33 ++++--
+>  arch/loongarch/kernel/machine_kexec_file.c | 117 +++++++++++++++++++++
+>  7 files changed, 289 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/loongarch/kernel/kexec_efi.c
+>  create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index f0abc38c40ac..490dc6eed749 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -625,6 +625,15 @@ config CPU_HAS_PREFETCH
+>  config ARCH_SUPPORTS_KEXEC
+>         def_bool y
+>
+> +config ARCH_SUPPORTS_KEXEC_FILE
+> +       def_bool 64BIT
+> +
+> +config ARCH_SELECTS_KEXEC_FILE
+> +       def_bool y
+> +       depends on KEXEC_FILE
+> +       select HAVE_IMA_KEXEC if IMA
+> +       select RELOCATABLE
+> +
+>  config ARCH_SUPPORTS_CRASH_DUMP
+>         def_bool y
+>
+> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/=
+asm/image.h
+> index 1f090736e71d..655d5836c4e8 100644
+> --- a/arch/loongarch/include/asm/image.h
+> +++ b/arch/loongarch/include/asm/image.h
+> @@ -36,5 +36,22 @@ struct loongarch_image_header {
+>         uint32_t pe_header;
+>  };
+>
+> +static const uint8_t loongarch_image_pe_sig[2] =3D {'M', 'Z'};
+> +
+> +/**
+> + * loongarch_header_check_pe_sig - Helper to check the loongarch image h=
+eader.
+> + *
+> + * Returns non-zero if 'MZ' signature is found.
+> + */
+> +
+> +static inline int loongarch_header_check_pe_sig(const struct loongarch_i=
+mage_header *h)
+> +{
+> +       if (!h)
+> +               return 0;
+> +
+> +       return (h->pe_sig[0] =3D=3D loongarch_image_pe_sig[0]
+> +               && h->pe_sig[1] =3D=3D loongarch_image_pe_sig[1]);
+> +}
+> +
+>  #endif /* __ASSEMBLY__ */
+>  #endif /* __ASM_IMAGE_H */
+> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/=
+asm/kexec.h
+> index cf95cd3eb2de..34799db933fb 100644
+> --- a/arch/loongarch/include/asm/kexec.h
+> +++ b/arch/loongarch/include/asm/kexec.h
+> @@ -41,6 +41,18 @@ struct kimage_arch {
+>         unsigned long systable_ptr;
+>  };
+>
+> +#ifdef CONFIG_KEXEC_FILE
+> +extern const struct kexec_file_ops kexec_efi_ops;
+> +
+> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cl=
+eanup
+> +
+> +extern int load_other_segments(struct kimage *image,
+> +               unsigned long kernel_load_addr, unsigned long kernel_size=
+,
+> +               char *initrd, unsigned long initrd_len,
+> +               char *cmdline, unsigned long cmdline_len);
+> +#endif
+> +
+>  typedef void (*do_kexec_t)(unsigned long efi_boot,
+>                            unsigned long cmdline_ptr,
+>                            unsigned long systable_ptr,
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
+ile
+> index 6f5a4574a911..dd6183f353e6 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -62,6 +62,7 @@ obj-$(CONFIG_MAGIC_SYSRQ)     +=3D sysrq.o
+>  obj-$(CONFIG_RELOCATABLE)      +=3D relocate.o
+>
+>  obj-$(CONFIG_KEXEC_CORE)       +=3D machine_kexec.o relocate_kernel.o
+> +obj-$(CONFIG_KEXEC_FILE)       +=3D machine_kexec_file.o kexec_efi.o
+>  obj-$(CONFIG_CRASH_DUMP)       +=3D crash_dump.o
+>
+>  obj-$(CONFIG_UNWINDER_GUESS)   +=3D unwind_guess.o
+> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/ke=
+xec_efi.c
+> new file mode 100644
+> index 000000000000..7741f1139a12
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/kexec_efi.c
+> @@ -0,0 +1,111 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Load EFI vmlinux file for the kexec_file_load syscall.
+> + *
+> + * Author: Youling Tang <tangyouling@kylinos.cn>
+> + * Copyright (C) 2025 KylinSoft Corporation.
+> + */
+> +
+> +#define pr_fmt(fmt)    "kexec_file(EFI): " fmt
+> +
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/kernel.h>
+> +#include <linux/kexec.h>
+> +#include <linux/pe.h>
+> +#include <linux/string.h>
+> +#include <asm/byteorder.h>
+> +#include <asm/cpufeature.h>
+> +#include <asm/image.h>
+> +
+> +static int efi_kexec_probe(const char *kernel_buf, unsigned long kernel_=
+len)
+> +{
+> +       const struct loongarch_image_header *h =3D (const struct loongarc=
+h_image_header *)kernel_buf;
+> +
+> +       if (!h || (kernel_len < sizeof(*h))) {
+> +               pr_err("No loongarch image header.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (!loongarch_header_check_pe_sig(h)) {
+> +               pr_warn("No loongarch PE image header.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void *efi_kexec_load(struct kimage *image,
+> +                               char *kernel, unsigned long kernel_len,
+> +                               char *initrd, unsigned long initrd_len,
+> +                               char *cmdline, unsigned long cmdline_len)
+> +{
+> +       struct loongarch_image_header *h;
+> +       struct kexec_buf kbuf;
+> +       unsigned long text_offset, kernel_segment_number;
+> +       struct kexec_segment *kernel_segment;
+> +       int ret;
+> +
+> +       h =3D (struct loongarch_image_header *)kernel;
+> +       if (!h->image_size)
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       /* Load the kernel */
+> +       kbuf.image =3D image;
+> +       kbuf.buf_max =3D ULONG_MAX;
+> +       kbuf.top_down =3D false;
+> +
+> +       kbuf.buffer =3D kernel;
+> +       kbuf.bufsz =3D kernel_len;
+> +       kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
+> +       kbuf.memsz =3D le64_to_cpu(h->image_size);
+> +       text_offset =3D le64_to_cpu(h->text_offset);
+> +       kbuf.buf_min =3D text_offset;
+> +       kbuf.buf_align =3D SZ_2M;
+> +
+> +       kernel_segment_number =3D image->nr_segments;
+> +
+> +       /*
+> +        * The location of the kernel segment may make it impossible to s=
+atisfy
+> +        * the other segment requirements, so we try repeatedly to find a
+> +        * location that will work.
+> +        */
+> +       while ((ret =3D kexec_add_buffer(&kbuf)) =3D=3D 0) {
+> +               /* Try to load additional data */
+> +               kernel_segment =3D &image->segment[kernel_segment_number]=
+;
+> +               ret =3D load_other_segments(image, kernel_segment->mem,
+> +                                         kernel_segment->memsz, initrd,
+> +                                         initrd_len, cmdline, cmdline_le=
+n);
+> +               if (!ret)
+> +                       break;
+> +
+> +               /*
+> +                * We couldn't find space for the other segments; erase t=
+he
+> +                * kernel segment and try the next available hole.
+> +                */
+> +               image->nr_segments -=3D 1;
+> +               kbuf.buf_min =3D kernel_segment->mem + kernel_segment->me=
+msz;
+> +               kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
+> +       }
+> +
+> +       if (ret) {
+> +               pr_err("Could not find any suitable kernel location!");
+> +               return ERR_PTR(ret);
+> +       }
+> +
+> +       kernel_segment =3D &image->segment[kernel_segment_number];
+> +
+> +       /* Make sure the second kernel jumps to the correct "kernel_entry=
+". */
+> +       image->start =3D kernel_segment->mem + h->kernel_entry - text_off=
+set;
+> +
+> +       kexec_dprintk("Loaded kernel at 0x%lx bufsz=3D0x%lx memsz=3D0x%lx=
+\n",
+> +                     kernel_segment->mem, kbuf.bufsz,
+> +                     kernel_segment->memsz);
+> +
+> +       return NULL;
+> +}
+> +
+> +const struct kexec_file_ops kexec_efi_ops =3D {
+> +       .probe =3D efi_kexec_probe,
+> +       .load =3D efi_kexec_load,
+> +};
+> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kerne=
+l/machine_kexec.c
+> index f9381800e291..ba8d64bc6549 100644
+> --- a/arch/loongarch/kernel/machine_kexec.c
+> +++ b/arch/loongarch/kernel/machine_kexec.c
+> @@ -70,18 +70,28 @@ int machine_kexec_prepare(struct kimage *kimage)
+>         kimage->arch.efi_boot =3D fw_arg0;
+>         kimage->arch.systable_ptr =3D fw_arg2;
+>
+> -       /* Find the command line */
+> -       for (i =3D 0; i < kimage->nr_segments; i++) {
+> -               if (!strncmp(bootloader, (char __user *)kimage->segment[i=
+].buf, strlen(bootloader))) {
+> -                       if (!copy_from_user(cmdline_ptr, kimage->segment[=
+i].buf, COMMAND_LINE_SIZE))
+> -                               kimage->arch.cmdline_ptr =3D (unsigned lo=
+ng)cmdline_ptr;
+> -                       break;
+> +       if (kimage->file_mode =3D=3D 1) {
+> +               /*
+> +                * kimage->cmdline_buf will be released in kexec_file_loa=
+d, so copy to
+> +                * the KEXEC_CMDLINE_ADDR safe area.
+> +                */
+> +               memcpy((void *)KEXEC_CMDLINE_ADDR, (void *)kimage->arch.c=
+mdline_ptr,
+> +                                       strlen((char *)kimage->arch.cmdli=
+ne_ptr) + 1);
+> +               kimage->arch.cmdline_ptr =3D (unsigned long)KEXEC_CMDLINE=
+_ADDR;
+> +       } else {
+> +               /* Find the command line */
+> +               for (i =3D 0; i < kimage->nr_segments; i++) {
+> +                       if (!strncmp(bootloader, (char __user *)kimage->s=
+egment[i].buf, strlen(bootloader))) {
+> +                               if (!copy_from_user(cmdline_ptr, kimage->=
+segment[i].buf, COMMAND_LINE_SIZE))
+> +                                       kimage->arch.cmdline_ptr =3D (uns=
+igned long)cmdline_ptr;
+> +                               break;
+> +                       }
+>                 }
+> -       }
+>
+> -       if (!kimage->arch.cmdline_ptr) {
+> -               pr_err("Command line not included in the provided image\n=
+");
+> -               return -EINVAL;
+> +               if (!kimage->arch.cmdline_ptr) {
+> +                       pr_err("Command line not included in the provided=
+ image\n");
+> +                       return -EINVAL;
+> +               }
+>         }
+>
+>         /* kexec/kdump need a safe page to save reboot_code_buffer */
+> @@ -288,7 +298,8 @@ void machine_kexec(struct kimage *image)
+>         local_irq_disable();
+>
+>         pr_notice("EFI boot flag 0x%lx\n", efi_boot);
+> -       pr_notice("Command line at 0x%lx\n", cmdline_ptr);
+> +       pr_notice("Command line addr at 0x%lx\n", cmdline_ptr);
+> +       pr_notice("Command line: %s\n", (char *)cmdline_ptr);
+Change to be like this is better:
+pr_notice("EFI boot flag: 0x%lx\n", efi_boot);
+pr_notice("Command line addr: 0x%lx\n", cmdline_ptr);
+pr_notice("Command line string: %s\n", (char *)cmdline_ptr);
 
-> 
-> > > Chenghao
-> > >
-> > >
-> > > >
-> > > > > test_module_attach:FAIL:skel_attach skeleton attach failed: -95
-> > > > > #201     module_attach:FAIL
-> > > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-> > > > > Successfully unloaded bpf_testmod.ko.
-> > > > >
-> > > > >
-> > > > > Chenghao
-> > > > >
-> > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > > Chenghao
-> > > > > > >
-> > > > > > > >
-> > > > > > > > > > On Sat, Aug 9, 2025 at 1:03 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > On Fri, Aug 8, 2025 at 8:48 PM Vincent Li <vincent.mc.li@gmail.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > On Fri, Aug 8, 2025 at 8:03 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Hi, Vincent,
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > On Sat, Aug 9, 2025 at 12:53 AM Vincent Li <vincent.mc.li@gmail.com> wrote:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Hi Folks,
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Hengqi mentioned offline that the loongarch kernel locked up when
-> > > > > > > > > > > > > > running full bpf selftests, so I went ahead and ran make run_tests to
-> > > > > > > > > > > > > > perform full bpf selftest, I observed lockup too. It appears the
-> > > > > > > > > > > > > > lockup happens when running module_attach test which includes testing
-> > > > > > > > > > > > > > on fentry so this could be related to the trampoline patch series. for
-> > > > > > > > > > > > > > example, if I just run ./test_progs -t module_attach, the kernel
-> > > > > > > > > > > > > > lockup immediately.
-> > > > > > > > > > > > > Is this a regression caused by the latest trampoline patches? Or in
-> > > > > > > > > > > > > another word, Does vanilla 6.16 has this problem?
-> > > > > > > > > > > > >
-> > > > > > > > > > > >
-> > > > > > > > > > > > I suspect this is caused by the latest trampoline patches because the
-> > > > > > > > > > > > module_attach is to test the fentry feature for kernel module
-> > > > > > > > > > > > functions, I believe Changhao and I only tested the fentry feature for
-> > > > > > > > > > > > non-module kernel functions. I can try kernel without the trampoline
-> > > > > > > > > > > > patches and will let you know the result.
-> > > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > I reverted  trampoline patches from loongarch-next branch and run
-> > > > > > > > > > > ./test_progs -t module_attach simply just errors out with the fentry
-> > > > > > > > > > > feature not supported
-> > > > > > > > > > >
-> > > > > > > > > > > [root@fedora bpf]# ./test_progs -t module_attach
-> > > > > > > > > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > > > > > > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > > > > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > > > > > > > > test_module_attach:PASS:skel_load 0 nsec
-> > > > > > > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
-> > > > > > > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
-> > > > > > > > > > > test_module_attach:FAIL:skel_attach skeleton attach failed: -524
-> > > > > > > > > > > #205     module_attach:FAIL
-> > > > > > > > > > >
-> > > > > > > > > > > All error logs:
-> > > > > > > > > > > test_module_attach:PASS:skel_open 0 nsec
-> > > > > > > > > > > test_module_attach:PASS:set_attach_target 0 nsec
-> > > > > > > > > > > test_module_attach:PASS:set_attach_target_explicit 0 nsec
-> > > > > > > > > > > test_module_attach:PASS:skel_load 0 nsec
-> > > > > > > > > > > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
-> > > > > > > > > > > libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
-> > > > > > > > > > > test_module_attach:FAIL:skel_attach skeleton attach failed: -524
-> > > > > > > > > > > #205     module_attach:FAIL
-> > > > > > > > > > > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-> > > > > > > > > > >
-> > > > > > > > > > > I also tested loongarch-next branch with the trampoline patch series
-> > > > > > > > > > > with no lockup kernel config so I can run dmesg to check kernel error
-> > > > > > > > > > > log,  ./test_progs -t module_attach result in below kernel log:
-> > > > > > > > > > >
-> > > > > > > > > > > [  417.429954] bpf_testmod: loading out-of-tree module taints kernel.
-> > > > > > > > > > > [  419.728620] CPU 70475748 Unable to handle kernel paging request at
-> > > > > > > > > > > virtual address 0000000800000024, era == 90000000041d5854, ra ==
-> > > > > > > > > > > 90000000041d5848
-> > > > > > > > > > > [  419.728629] Oops[#1]:
-> > > > > > > > > > > [  419.728632] CPU 70475748 Unable to handle kernel paging request at
-> > > > > > > > > > > virtual address 0000000000000018, era == 9000000005750268, ra ==
-> > > > > > > > > > > 9000000004163938
-> > > > > > > > > > > [  441.305370] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> > > > > > > > > > > [  441.305380] rcu:     5-...0: (29 ticks this GP)
-> > > > > > > > > > > idle=eb74/1/0x4000000000000000 softirq=72377/72379 fqs=2599
-> > > > > > > > > > > [  441.305386] rcu:     (detected by 4, t=5252 jiffies, g=60333, q=186 ncpus=8)
-> > > > > > > > > > > [  441.305390] Sending NMI from CPU 4 to CPUs 5:
-> > > > > > > > > > > [  451.305494] rcu: rcu_preempt kthread starved for 2499 jiffies!
-> > > > > > > > > > > g60333 f0x0 RCU_GP_DOING_FQS(6) ->state=0x0 ->cpu=1
-> > > > > > > > > > > [  451.305500] rcu:     Unless rcu_preempt kthread gets sufficient CPU
-> > > > > > > > > > > time, OOM is now expected behavior.
-> > > > > > > > > > > [  451.305502] rcu: RCU grace-period kthread stack dump:
-> > > > > > > > > > > [  451.305504] task:rcu_preempt     state:R stack:0     pid:15
-> > > > > > > > > > > tgid:15    ppid:2      task_flags:0x208040 flags:0x00000800
-> > > > > > > > > > > [  451.305510] Stack : 9000000100467e80 0000000000000402
-> > > > > > > > > > > 0000000000000010 90000001003b0680
-> > > > > > > > > > > [  451.305519]         90000000058e0000 0000000000000000
-> > > > > > > > > > > 0000000000000040 9000000006c2dfd0
-> > > > > > > > > > > [  451.305526]         900000000578c9b0 0000000000000001
-> > > > > > > > > > > 9000000006b21000 0000000000000005
-> > > > > > > > > > > [  451.305533]         00000001000093a8 00000001000093a8
-> > > > > > > > > > > 0000000000000000 0000000000000004
-> > > > > > > > > > > [  451.305540]         90000000058f04e0 0000000000000000
-> > > > > > > > > > > 0000000000000002 b793724be1dfb2b8
-> > > > > > > > > > > [  451.305547]         00000001000093a9 b793724be1dfb2b8
-> > > > > > > > > > > 000000000000003f 9000000006c2dfd0
-> > > > > > > > > > > [  451.305554]         9000000006c30c18 0000000000000005
-> > > > > > > > > > > 9000000006b0e000 9000000006b21000
-> > > > > > > > > > > [  451.305560]         9000000100453c98 90000001003aff80
-> > > > > > > > > > > 9000000006c31140 900000000578c9b0
-> > > > > > > > > > > [  451.305567]         00000001000093a8 9000000005794d3c
-> > > > > > > > > > > 00000000000000b4 0000000000000000
-> > > > > > > > > > > [  451.305574]         90000000024021b8 00000001000093a8
-> > > > > > > > > > > 9000000004284f20 000000000a400001
-> > > > > > > > > > > [  451.305581]         ...
-> > > > > > > > > > > [  451.305584] Call Trace:
-> > > > > > > > > > > [  451.305586] [<900000000578b868>] __schedule+0x410/0x1520
-> > > > > > > > > > > [  451.305595] [<900000000578c9ac>] schedule+0x34/0x190
-> > > > > > > > > > > [  451.305599] [<9000000005794d38>] schedule_timeout+0x98/0x140
-> > > > > > > > > > > [  451.305604] [<9000000004258f40>] rcu_gp_fqs_loop+0x5f8/0x868
-> > > > > > > > > > > [  451.305609] [<900000000425d358>] rcu_gp_kthread+0x260/0x2e0
-> > > > > > > > > > > [  451.305614] [<90000000041be704>] kthread+0x144/0x238
-> > > > > > > > > > > [  451.305619] [<9000000005787b60>] ret_from_kernel_thread+0x28/0xc8
-> > > > > > > > > > > [  451.305624] [<90000000041620e4>] ret_from_kernel_thread_asm+0xc/0x88
-> > > > > > > > > > >
-> > > > > > > > > > > [  451.305630] rcu: Stack dump where RCU GP kthread last ran:
-> > > > > > > > > > > [  451.305633] Sending NMI from CPU 4 to CPUs 1:
-> > > > > > > > > > > [  451.305636] NMI backtrace for cpu 1 skipped: idling at idle_exit+0x0/0x4
-> > > > > > > > > > > [  451.306655] rcu: INFO: rcu_preempt detected expedited stalls on
-> > > > > > > > > > > CPUs/tasks: { 5-...D } 7298 jiffies s: 853 root: 0x20/.
-> > > > > > > > > > > [  451.306665] rcu: blocking rcu_node structures (internal RCU debug):
-> > > > > > > > > > > [  451.306669] Sending NMI from CPU 6 to CPUs 5:
-> > > > > > > > > > > [  451.306672] Unable to send backtrace IPI to CPU5 - perhaps it hung?
-> > > > > > > > > > >
-> > > > > > > > > > > So related to trampoline patches for sure unless I am missing something.
-> > > > > > > > > > >
-> > > > > > > > > > > > > Huacai
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > A side note, if I put the module_attach test in
-> > > > > > > > > > > > > > tools/testing/selftests/bpf/DENYLIST to skip the module_attach test,
-> > > > > > > > > > > > > > the module_attach test is not skipped.
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Thanks
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Vincent
+Huacai
+
+
+>         pr_notice("System table at 0x%lx\n", systable_ptr);
+>         pr_notice("We will call new kernel at 0x%lx\n", start_addr);
+>         pr_notice("Bye ...\n");
+> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/=
+kernel/machine_kexec_file.c
+> new file mode 100644
+> index 000000000000..a713acf32db8
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+> @@ -0,0 +1,117 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * kexec_file for LoongArch
+> + *
+> + * Author: Youling Tang <tangyouling@kylinos.cn>
+> + * Copyright (C) 2025 KylinSoft Corporation.
+> + *
+> + * Most code is derived from LoongArch port of kexec-tools
+> + */
+> +
+> +#define pr_fmt(fmt) "kexec_file: " fmt
+> +
+> +#include <linux/ioport.h>
+> +#include <linux/kernel.h>
+> +#include <linux/kexec.h>
+> +#include <linux/memblock.h>
+> +#include <linux/slab.h>
+> +#include <linux/string.h>
+> +#include <linux/types.h>
+> +#include <linux/vmalloc.h>
+> +#include <asm/bootinfo.h>
+> +
+> +const struct kexec_file_ops * const kexec_file_loaders[] =3D {
+> +       &kexec_efi_ops,
+> +       NULL
+> +};
+> +
+> +int arch_kimage_file_post_load_cleanup(struct kimage *image)
+> +{
+> +       vfree(image->elf_headers);
+> +       image->elf_headers =3D NULL;
+> +       image->elf_headers_sz =3D 0;
+> +
+> +       return kexec_image_post_load_cleanup_default(image);
+> +}
+> +
+> +/* Adds the "initrd=3Dstart,size" command line parameter to command line=
+. */
+> +static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdl=
+ine_tmplen,
+> +                               char *modified_cmdline, unsigned long ini=
+trd)
+> +{
+> +       int initrd_strlen;
+> +
+> +       initrd_strlen =3D sprintf(modified_cmdline + (*cmdline_tmplen), "=
+initrd=3D0x%lx,0x%lx ",
+> +               initrd, image->initrd_buf_len);
+> +       *cmdline_tmplen +=3D initrd_strlen;
+> +}
+> +
+> +/*
+> + * Tries to add the initrd to the image. If it is not possible to find
+> + * valid locations, this function will undo changes to the image and ret=
+urn non
+> + * zero.
+> + */
+> +int load_other_segments(struct kimage *image,
+> +                       unsigned long kernel_load_addr,
+> +                       unsigned long kernel_size,
+> +                       char *initrd, unsigned long initrd_len,
+> +                       char *cmdline, unsigned long cmdline_len)
+> +{
+> +       struct kexec_buf kbuf;
+> +       unsigned long orig_segments =3D image->nr_segments;
+> +       char *modified_cmdline =3D NULL;
+> +       unsigned long cmdline_tmplen =3D 0;
+> +       unsigned long initrd_load_addr =3D 0;
+> +       int ret =3D 0;
+> +
+> +
+> +       kbuf.image =3D image;
+> +       /* not allocate anything below the kernel */
+> +       kbuf.buf_min =3D kernel_load_addr + kernel_size;
+> +
+> +       modified_cmdline =3D kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
+> +       if (!modified_cmdline)
+> +               return -EINVAL;
+> +
+> +       /* Ensure it's nul terminated */
+> +       modified_cmdline[COMMAND_LINE_SIZE - 1] =3D '\0';
+> +
+> +       /* load initrd */
+> +       if (initrd) {
+> +               kbuf.buffer =3D initrd;
+> +               kbuf.bufsz =3D initrd_len;
+> +               kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
+> +               kbuf.memsz =3D initrd_len;
+> +               kbuf.buf_align =3D 0;
+> +               /* within 1GB-aligned window of up to 32GB in size */
+> +               kbuf.buf_max =3D round_down(kernel_load_addr, SZ_1G)
+> +                                               + (unsigned long)SZ_1G * =
+32;
+> +               kbuf.top_down =3D false;
+> +
+> +               ret =3D kexec_add_buffer(&kbuf);
+> +               if (ret)
+> +                       goto out_err;
+> +               initrd_load_addr =3D kbuf.mem;
+> +
+> +               kexec_dprintk("Loaded initrd at 0x%lx bufsz=3D0x%lx memsz=
+=3D0x%lx\n",
+> +                             initrd_load_addr, kbuf.bufsz, kbuf.memsz);
+> +
+> +               /* Add the initrd=3Dstart,size parameter to the command l=
+ine */
+> +               cmdline_add_initrd(image, &cmdline_tmplen, modified_cmdli=
+ne, initrd_load_addr);
+> +       }
+> +
+> +       if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
+> +               pr_err("Appending command line exceeds cmdline size\n");
+> +               ret =3D -EINVAL;
+> +               goto out_err;
+> +       }
+> +       memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len);
+> +       cmdline =3D modified_cmdline;
+> +       image->arch.cmdline_ptr =3D (unsigned long)cmdline;
+> +
+> +       return 0;
+> +
+> +out_err:
+> +       image->nr_segments =3D orig_segments;
+> +       kfree(modified_cmdline);
+> +       return ret;
+> +}
+> --
+> 2.43.0
+>
