@@ -1,142 +1,71 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74572188715
-	for <loongarch@lists.linux.dev>; Sat, 23 Aug 2025 04:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A48E35972
+	for <loongarch@lists.linux.dev>; Sat, 23 Aug 2025 07:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755922239; cv=none; b=NGWX9PO2gA1sEjYQp11U4hNhetJkiexjSAYaz95/LuxSnC0f41bo1/DYBhRGlyWGG09yJwInhSnfTC7mvDVo4H9Vwgwv8RGgabUc1emswmHsSc3IhHsnJDiaHIz+7s9611jSmk/6g+FmTLLfe8T7tR1WxYGpR2J3MDKzGqH02X8=
+	t=1755933257; cv=none; b=uof/18dFHM/E40gd1jW3VrgWj8V3LCfmQPWtBY6lr83i/il98tDPp358lSXEeJ+RmF2Hxx1tq6ow4MUyX1mIbV79tvoWQ8fZIGuRpvoJqnIdSB5rJN6/fSYAGRssYw+Bc43bk4KwejDNT7uu+5KAHhGLFfR2TMb7xo9VK1VFX78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755922239; c=relaxed/simple;
-	bh=CQTeMpjBQEB7jad+Hl73ZOU8QhKJMH6ebsMrPqIGjug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kpvyd8ReXYNWvtAudEeh0FvyOPm6af3vVB5YoTMTs5s4H8/JSwvpbSLJ8y4+Qsb+a/4YZnxNats6Ia+oqp80siYKMU57+joh5/LfkSbXMSLN/DiGZ20n6AQDY7IGzh/VtTm3U0TGkeQl+7dGwWUbgwpkYkK0Sljv7fcY4Oo7wR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WEaLyxOH; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEaLyxOH"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-afcb7a3ee3cso402489566b.2
-        for <loongarch@lists.linux.dev>; Fri, 22 Aug 2025 21:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755922236; x=1756527036; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ypumJxO03YajLjZKwy8Tkl56v3hjokXusjP9nMqhO7w=;
-        b=WEaLyxOHO9MaxTNckC0bBTwj0RNjxPLGUFYXXHjZDTxy6CYuPvObNs8bjuZXNQ5kFx
-         17ef+FnoEeORiV10xxsQAWyYjBHlEA3Qva0KZ82cfLBmHiJwpAyA1F6CnuvLXrpemGP/
-         FqW9fP3PW1HZHwMioqnPZI/AQJGo4zMpdQnj9xYaTNwljOMsLpdJz4EWU+MvvTrsQa9M
-         31BulwgE5T4vMpyrfyVyJzm2m+/37NsvgMJB7YdWiXYG+gseJwEMlfCSMP+xAHsRhVWs
-         Iq64xyYkKJjAtzJgsi+iyG3Py07plDDB1mX8xHEzq3XNwcit2Td2jf6ndOAqW1KheF5V
-         F3jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755922236; x=1756527036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ypumJxO03YajLjZKwy8Tkl56v3hjokXusjP9nMqhO7w=;
-        b=rh1FMhagKIjLe73dOcRGNCkUESg2xrDEIMGf3Tn7Paf3w0ir0RcT3l8/OdrNYV9JzC
-         FQYaUA0+i4QrscNtSdvnU7Q/TmFmUq3y1AjT7t0IfFSHXEuiASOSCGAanghqecyiFuuh
-         lr5tA5C4GrEy2xHebiHLiuYdf7HkgCUCduq0s0zk3dNMCCDOieKV2TRWNw2R0Wn4wq7S
-         qyiGZUNqfsLio4UJ1DOma38CFDRCqP8xfFqAxlnCiWgzUN5c3Rl44R3h6JttPy/AlOA/
-         9F8HJPY18LDMGRQPizTiNuRlFNG3bKJloQMGoRs7IgihN3doZ2OrkJcOM1YDAVa7dUY2
-         Z80w==
-X-Forwarded-Encrypted: i=1; AJvYcCUI82pbJUZdbLfHwPyvr0sZsRvxwbi8IGSmBLtNSoGqYSk1IK+EJhggovI90s8mfBdqbLkgy6CNXR0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwlPsrl3cD9UAf/s+vQYpVe8IBPlXFaAiFhUoutdIEDksNtP0vW
-	y4RQ5VPwMNFHZwLep6IAhmSwU7+U1vL7nYrXm3Icsfqzk1EFewprm99hBg0hI84xztJLCF11TMZ
-	cE6gn21+DKrY++aNewK2QiH6TBpBwJOo=
-X-Gm-Gg: ASbGncuSsF8TKRNKXnE88RDDnhSjtp5CefNn/iBOWRi440Gokx/lBUiBkC3hP/HMRIZ
-	rRdrYFPWKj+N6K0kKvKBxt82z9vIOVk8uJXAgf/eohSBPjCYKOCXcwFEVkAWjv/dKNXv3aJJRNy
-	cQEp1Mpl5WYT3HJJYre0ZuBOm6EK0yRGDNJ987EJUEmsEEBH9sY2mUqonZngXjK6vetM9JFZtxM
-	TvqkksQCRiZMzJnxyJO1ucI0QNenlbcd6XzSGPprlBevVLw+C+Xye+u5oWq1EoWFYNYlW13GmZ/
-	89EhHcF2ZjLw+WdS8Z9iq9rx2k/Tgt89j7QuOKy6Q29UxL4E+3ICuGU=
-X-Google-Smtp-Source: AGHT+IE9HWKIFeL/eoieWGHthnR2mM+6lMen7eM7ViDX/Yt9x4J4JbxkX+waMQi8V3Vn117kbACUlSqpqH++Fl+y+yA=
-X-Received: by 2002:a17:906:c145:b0:afd:eb4f:d5ce with SMTP id
- a640c23a62f3a-afe29743499mr476219566b.62.1755922235554; Fri, 22 Aug 2025
- 21:10:35 -0700 (PDT)
+	s=arc-20240116; t=1755933257; c=relaxed/simple;
+	bh=DZ3hYx1rkMQxEOBSciXm3TiSc5s1BU9Ol0clHp0RWfk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RiO3krQKw9CDKQ8qnxE3G5sOX2kh9luFrXJKPS8RvOcBakTnhHrbaR4bbQ9BE46y7HEneXs6jAH0ftqc3+T/IOTGBxtFWUgg1vsFjpta7IRTMzNFCCpvFWrp6gC42EdDHBcTSgxh96sW4D6TE+HxsbfOiho4Hvk7s927P/ITTgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 913522C06841;
+	Sat, 23 Aug 2025 09:14:06 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 7FC2C54C67; Sat, 23 Aug 2025 09:14:06 +0200 (CEST)
+Date: Sat, 23 Aug 2025 09:14:06 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: liziyao@uniontech.com
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	niecheng1@uniontech.com, zhanjun@uniontech.com,
+	guanwentao@uniontech.com, Kexy Biscuit <kexybiscuit@aosc.io>,
+	Lain Fearyncess Yang <fsf@live.com>, Mingcong Bai <jeffbai@aosc.io>,
+	Ayden Meng <aydenmeng@yeah.net>
+Subject: Re: [PATCH RESEND] PCI: Override PCIe bridge supported speeds for
+ older Loongson 3C6000 series steppings
+Message-ID: <aKlqPoa6jeoNJEPc@wunner.de>
+References: <20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250819111953.3197428-1-chenhuacai@loongson.cn> <CAEf4BzajrMOkdOX5fn=bzWVTLbObPM9=_4Nh9rm5oc_4377Pfw@mail.gmail.com>
-In-Reply-To: <CAEf4BzajrMOkdOX5fn=bzWVTLbObPM9=_4Nh9rm5oc_4377Pfw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Sat, 23 Aug 2025 12:10:23 +0800
-X-Gm-Features: Ac12FXxdZ6yZh946ZPsRKRRir3wQhq1Dl1brKhL3lj_EOIJp0wAHwBeoD_l_qrs
-Message-ID: <CAAhV-H4DG0Uhq8RpEhusPMkqssLZsU6E4ATp5yH8w3R-KXA+qQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Fix uninitialized symbol 'retval_off'
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
-	George Guo <guodongtai@kylinos.cn>, Chenghao Duan <duanchenghao@kylinos.cn>, 
-	loongarch@lists.linux.dev, kernel test robot <lkp@intel.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com>
 
-Hi, Andrii,
+On Fri, Aug 22, 2025 at 05:15:58PM +0800, Ziyao via B4 Relay wrote:
+> Older steppings of the Loongson 3C6000 series incorrectly report the
+> supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
+> only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
+> up to 16 GT/s.
 
-On Sat, Aug 23, 2025 at 2:43=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Tue, Aug 19, 2025 at 4:21=E2=80=AFAM Huacai Chen <chenhuacai@loongson.=
-cn> wrote:
-> >
-> > In __arch_prepare_bpf_trampoline(), retval_off is meaningful only when
-> > save_ret is not 0, so the current logic is correct. But it may cause a
-> > build warning:
-> >
-> > arch/loongarch/net/bpf_jit.c:1547 __arch_prepare_bpf_trampoline() error=
-: uninitialized symbol 'retval_off'.
-> >
-> > So initialize retval_off unconditionally to fix it.
-> >
-> > Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support"=
-)
-> > Closes: https://lore.kernel.org/r/202508191020.PBBh07cK-lkp@intel.com/
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  arch/loongarch/net/bpf_jit.c | 9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> >
->
-> Is this something that should go through loongarch-specific tree?
-This one, and other LoongArch specific BPF patches will go through
-loongarch tree, thanks.
+I assume these bridges (Root Ports?) are only found on LS3C6000 CPUs?
 
-Huacai
+If so, please put the quirk in arch/loongarch/pci/pci.c or
+drivers/pci/controller/pci-loongson.c alongside the existing fixups there.
 
->
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
-c
-> > index abfdb6bb5c38..a73f6ea4ed4a 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -1504,11 +1504,10 @@ static int __arch_prepare_bpf_trampoline(struct=
- jit_ctx *ctx, struct bpf_tramp_i
-> >         stack_size +=3D 16;
-> >
-> >         save_ret =3D flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_F=
-ENTRY_RET);
-> > -       if (save_ret) {
-> > -               /* Save BPF R0 and A0 */
-> > -               stack_size +=3D 16;
-> > -               retval_off =3D stack_size;
-> > -       }
-> > +       if (save_ret)
-> > +               stack_size +=3D 16; /* Save BPF R0 and A0 */
-> > +
-> > +       retval_off =3D stack_size;
-> >
-> >         /* Room of trampoline frame to store args */
-> >         nargs =3D m->nr_args;
-> > --
-> > 2.47.3
-> >
-> >
+drivers/pci/quirks.c is compiled on all arches and if these bridges
+only exist on certain Loongson CPUs, the quirk isn't needed on other
+arches and wastes memory.
+
+Also, please consider adding entries for 3c19, 3c29 to the PCI IDs
+database:
+
+https://admin.pci-ids.ucw.cz/read/PC/0014
+
+Thanks,
+
+Lukas
