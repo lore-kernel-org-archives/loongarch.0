@@ -1,71 +1,225 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A48E35972
-	for <loongarch@lists.linux.dev>; Sat, 23 Aug 2025 07:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3889A179BD
+	for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 14:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755933257; cv=none; b=uof/18dFHM/E40gd1jW3VrgWj8V3LCfmQPWtBY6lr83i/il98tDPp358lSXEeJ+RmF2Hxx1tq6ow4MUyX1mIbV79tvoWQ8fZIGuRpvoJqnIdSB5rJN6/fSYAGRssYw+Bc43bk4KwejDNT7uu+5KAHhGLFfR2TMb7xo9VK1VFX78=
+	t=1756046512; cv=none; b=u7It08uyZwmEJlWmujZ8RO9Ex5YBHSmSGOP4GX2wYIOTGbxJo89fHJwDmm+ZjNY57csGNme1siKTlFG+im+Qx9ThVhb8U6oA9tV+2xAubIyqBecTP2ravI6ZAk7sbv4o1Z/rcEeaGDia7sIUtiAE1EUdB2s5Fc9i1xnENqH6tLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755933257; c=relaxed/simple;
-	bh=DZ3hYx1rkMQxEOBSciXm3TiSc5s1BU9Ol0clHp0RWfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RiO3krQKw9CDKQ8qnxE3G5sOX2kh9luFrXJKPS8RvOcBakTnhHrbaR4bbQ9BE46y7HEneXs6jAH0ftqc3+T/IOTGBxtFWUgg1vsFjpta7IRTMzNFCCpvFWrp6gC42EdDHBcTSgxh96sW4D6TE+HxsbfOiho4Hvk7s927P/ITTgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 913522C06841;
-	Sat, 23 Aug 2025 09:14:06 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 7FC2C54C67; Sat, 23 Aug 2025 09:14:06 +0200 (CEST)
-Date: Sat, 23 Aug 2025 09:14:06 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: liziyao@uniontech.com
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	niecheng1@uniontech.com, zhanjun@uniontech.com,
-	guanwentao@uniontech.com, Kexy Biscuit <kexybiscuit@aosc.io>,
-	Lain Fearyncess Yang <fsf@live.com>, Mingcong Bai <jeffbai@aosc.io>,
-	Ayden Meng <aydenmeng@yeah.net>
-Subject: Re: [PATCH RESEND] PCI: Override PCIe bridge supported speeds for
- older Loongson 3C6000 series steppings
-Message-ID: <aKlqPoa6jeoNJEPc@wunner.de>
-References: <20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com>
+	s=arc-20240116; t=1756046512; c=relaxed/simple;
+	bh=kL1wbSGg2bva1d0/uLmwklt12rLBglri4cRXJQOMN0Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n+tmg2bp5xSqxeoQZy1JpTna9o/R36cr9OENgN/AkC3ce5fDFA7dz+0qArpKALVfq6NTIFH2+lAeZF67/sbZhd2j6FVzuSdwxLZ7yJO31hXyceTnEqc6zw+xPPTbPHL+yhaLKfUkoWZwK5IJVQmJsbiUluugIe7LgPo9FYV7kl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9glV3kK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l9glV3kK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16690C4CEEB
+	for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 14:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756046512;
+	bh=kL1wbSGg2bva1d0/uLmwklt12rLBglri4cRXJQOMN0Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=l9glV3kKN1ORDiTF2zQW0w1iBJEVcfV8WVm/9dScl8NPOumhJCtLmEWC98YdXow9a
+	 SQNNdmgstbWnRyXlWsjdfV4/Vg/JK4duGhAWV2Q7kVM3lM3MoLxK9uJKZ3Xo1yLEIS
+	 4QVHGRLMTvq5P55ZXK9gv0jIF/2lRZu1fib/gH8NQN2PSgPWgQiAs0k+siHvVzSguM
+	 iksbF7seeQV6q0F4yVM1dXrF7u/xq5xmi7ecRmLsU4C0Uxv4NffHed9+cP7Bjqizd2
+	 oLRJ3Gp91vJunbD+ln4or0zpznvdYtSOgyr6LvIEUo4wSIj7z/DGl/8Zs1rMWBD2li
+	 VZd2BivsksSJg==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-61c22dceb25so3280229a12.2
+        for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 07:41:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWp/92RH0rDmXNkHJDioOXOwmYIBo6eD4g8QeORBOQKPa1R4/ck0xOYTe5Tm+DLktQTPTgH+8c7DqU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yypu13YJrV3jUnteQFCjBZvZL7Bgop9LxayyQY3ZF6g0vuCqyVf
+	EcUM7BvsykSZTDRgEHLOvgwsArX1KEC/Ru8B6CBxAJI44p6Axew0ahHM+9ddUN1XHFKI3FvLeYq
+	lK+4iSw67CQoLvBYQkzH2q8LS6Myhbes=
+X-Google-Smtp-Source: AGHT+IHkALI6d4oV2+TB+8VkgoKkmGCHLfVRG2C5GAMOuqyPJfaHQbaGJeBvFhH5I9e2NVcqeu5elTYOGD/KNCXIfRg=
+X-Received: by 2002:a05:6402:51c8:b0:61c:3ba0:64f4 with SMTP id
+ 4fb4d7f45d1cf-61c3ba06815mr4011336a12.14.1756046510595; Sun, 24 Aug 2025
+ 07:41:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com>
+References: <20250816035027.11727-2-ziyao@disroot.org> <20250816035027.11727-3-ziyao@disroot.org>
+ <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com> <aKCs2jUcYxYHWIB2@pie>
+In-Reply-To: <aKCs2jUcYxYHWIB2@pie>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 24 Aug 2025 22:41:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7KDgWR0p3jaVSDhAeXtM0Aj-86N1NtK7bEZLScQ8ux9Q@mail.gmail.com>
+X-Gm-Features: Ac12FXxEPV31RZBp8d2McHuEBpTKyUbhpdCKfQgd9mWv39TT7jG8ywm2lHDuRPQ
+Message-ID: <CAAhV-H7KDgWR0p3jaVSDhAeXtM0Aj-86N1NtK7bEZLScQ8ux9Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: loongson: Document GPIO controller
+ of 2K0300 SoC
+To: Yao Zi <ziyao@disroot.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 22, 2025 at 05:15:58PM +0800, Ziyao via B4 Relay wrote:
-> Older steppings of the Loongson 3C6000 series incorrectly report the
-> supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
-> only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
-> up to 16 GT/s.
+On Sun, Aug 17, 2025 at 12:08=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
+>
+> On Sat, Aug 16, 2025 at 10:18:57PM +0800, Huacai Chen wrote:
+> > On Sat, Aug 16, 2025 at 11:51=E2=80=AFAM Yao Zi <ziyao@disroot.org> wro=
+te:
+> > >
+> > > Loongson 2K0300 ships a GPIO controller whose input/output control lo=
+gic
+> > > is similar to previous generation of SoCs. Additionally, it acts as a=
+n
+> > > interrupt-controller supporting both level and edge interrupts and ha=
+s a
+> > > distinct reset signal.
+> > >
+> > > Describe its compatible in devicetree. We enlarge the maximum value o=
+f
+> > > ngpios to 128, since the controller technically supports at most 128
+> > > pins, although only 106 are routed out of the package. Properties for
+> > > interrupt-controllers and resets are introduced and limited as 2K0300
+> > > only.
+> > >
+> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > > ---
+> > >  .../bindings/gpio/loongson,ls-gpio.yaml       | 28 +++++++++++++++++=
++-
+> > >  1 file changed, 27 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.=
+yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> > > index b68159600e2b..69852444df23 100644
+> > > --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> > > +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> > > @@ -14,6 +14,7 @@ properties:
+> > >      oneOf:
+> > >        - enum:
+> > >            - loongson,ls2k-gpio
+> > > +          - loongson,ls2k0300-gpio
+> > >            - loongson,ls2k0500-gpio0
+> > >            - loongson,ls2k0500-gpio1
+> > >            - loongson,ls2k2000-gpio0
+> > > @@ -36,7 +37,7 @@ properties:
+> > >
+> > >    ngpios:
+> > >      minimum: 1
+> > > -    maximum: 64
+> > > +    maximum: 128
+> > >
+> > >    "#gpio-cells":
+> > >      const: 2
+> > > @@ -49,6 +50,14 @@ properties:
+> > >      minItems: 1
+> > >      maxItems: 64
+> > >
+> > > +  "#interrupt-cells":
+> > > +    const: 2
+> > > +
+> > > +  interrupt-controller: true
+> > ls2k300 supports interrupt-controller while others don't?
+>
+> For these SoCs' GPIO controllers (I didn't carefully check 3A{5,6}00 and
+> 7A{1,2}00), there're three different cases,
+>
+> 1. Controller of 2K0500, 2K1000:
+>
+>    These controllers have only interrupt enable bits for each GPIO.
+>    Interrupts are routed directly to the parent interrupt controller and
+>    there're multiple pins share the same interrupt in the parent, e.g.,
+>    GPIO 0-31 share interrupt 26 of the second liointc on 2K0500.
+>
+>    Since we have neither an interrupt status register nor interrupt ack
+>    bits, it's hard to tell which GPIO line is triggering the interrupt.
+>    And we even cannot configure the polarity/edge for triggering
+>    interrupts, thus I don't think these GPIO controller should be
+>    described as interrupt controllers.
+>
+>    For these controllers, gpio-loongson-64bit.c implements GPIO
+>    controller's .to_irq() method which translates GPIO descriptor to
+>    corresponding IRQ number. This should work as long as there's at most
+>    one interrupt consumer for each group of GPIOs that share the same
+>    parent interrupt line.
+>
+> 2. Node controller of 2K1500 and 2K2000:
+>
+>    These SoCs have GPIO controllers directly attached to the "node" (I
+>    think it means the CPU core, but am not sure). These controllers are
+>    similar to the first class, but they have an additional feature that
+>    the polarity for triggering interrupts could be configured.
+>
+>    Still we couldn't precisely tell which GPIO line is triggering the
+>    interrupt, thus it's hard to implement it as a fully-functional
+>    irqchip, either. But if we don't do so, I cannot come up with a way
+>    to describe the polarity settings. I'm unsure whether these
+>    controllers should be implemented as interrupt controllers.
+>
+> 3. South-bridge controller of 2K1500 and 2K2000, and 2K0300's
+>    controller:
+>
+>    Reading through the public TRM, I'm sure these're all fully
+>    functional interrupt controllers, and should be implemented as
+>    interrupt controllers.
+>
+>    However, this also means the current binding for 2K1500/2K2000's
+>    south-bridge controller is WRONG, and a fix it seems to bring in ABI
+>    breakages (interrupt-controller/interrupt-cells are a must). But
+>    since I don't have these devices on hand, and they are at least not
+>    related to the situation of 2K0300, I decided to keep them as-is.
+>
+> So the answer to the original question is, no, at least 2K1500/2K2000's
+> south-bridge GPIO controllers are also interrupt controllers according
+> to their public documentation. But I cannot test my GPIO changes against
+> them since I don't have such boards, and fixing the binding up may break
+> the ABI, thus I leave them as-is in this "support for 2K0300" series.
+Then I think more SOCs rather than LS2K0300 support
+interrupt-controller. Though the driver is not support yet, they can
+be improved later (of course unnecessary in this series), so in my
+opinion just keep the dt-binding in the same file is reasonable.
 
-I assume these bridges (Root Ports?) are only found on LS3C6000 CPUs?
 
-If so, please put the quirk in arch/loongarch/pci/pci.c or
-drivers/pci/controller/pci-loongson.c alongside the existing fixups there.
+Huacai
 
-drivers/pci/quirks.c is compiled on all arches and if these bridges
-only exist on certain Loongson CPUs, the quirk isn't needed on other
-arches and wastes memory.
-
-Also, please consider adding entries for 3c19, 3c29 to the PCI IDs
-database:
-
-https://admin.pci-ids.ucw.cz/read/PC/0014
-
-Thanks,
-
-Lukas
+>
+> > Huacai
+>
+> Best regards,
+> Yao Zi
+>
+> > > +
+> > > +  resets:
+> > > +    maxItems: 1
+> > > +
+> > >  required:
+> > >    - compatible
+> > >    - reg
+> > > @@ -58,6 +67,23 @@ required:
+> > >    - gpio-ranges
+> > >    - interrupts
+> > >
+> > > +allOf:
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            const: loongson,ls2k0300-gpio
+> > > +    then:
+> > > +      required:
+> > > +        - "#interrupt-cells"
+> > > +        - interrupt-controller
+> > > +        - resets
+> > > +    else:
+> > > +      properties:
+> > > +        "#interrupts-cells": false
+> > > +        interrupt-controller: false
+> > > +        resets: false
+> > > +
+> > >  additionalProperties: false
+> > >
+> > >  examples:
+> > > --
+> > > 2.50.1
+> > >
