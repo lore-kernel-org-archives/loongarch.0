@@ -1,103 +1,92 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B2D19343B
-	for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 15:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FA42AE90
+	for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 17:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756050037; cv=none; b=m5DuKi9gzJkroq4bbFn8/h1d+3Prj4n5rwu8SNlB+bEFrK7dXS7/dgvWR9gHBGVRwG3cFjYuUFGmQ9Y5Febt1ywGxs2m26/9PXZDN3HIvz6qPDGn7dHSZS3jLbRG02qMRIVVjpDNNz+z/2dB7sjV+BhHPL7Dq2HcGBS+s7EakNo=
+	t=1756057631; cv=none; b=E6UyNvKjNh9LcSiMWBJcDRpGEoTUafRDHsuCxySXGNFlF/CghILoHO/iaVF7Z/UB+DhhEqzuTBk6emui6PRbPZNddmCkHT/CMLNeRLmo7VC/i+mKevhB4Gfk0jblGyD4MG67KSxEBM57mGPl+WXoC7LqNkr9aGZlHmwmDc2+O00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756050037; c=relaxed/simple;
-	bh=qT3IN5JZqK0a9mJ1NdYp7+MaE8c9peEsfZLm0EqhpRU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=IryErUoYXsWKU4fQqE7MSEcBJksSeK6lzAxAKY27YbFIZ38yIwC+ypsyzyd81+1kuch4snUq7BBOHYrMd0kCd8X3yBgVHnEsIt3R5VmoqNBlSRMtxG3f+RO8JDvsGpJiO2GTnRiXIBjx6rcOnkDDxyrBeueFIF4Z3zoE2dOWLbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WeEmgYIq; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1756057631; c=relaxed/simple;
+	bh=FjCAjrvuuNaYOn6ZYz/76p3kTJGUMGhQ8aPRd6zRepQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PMKeEEjx3O/fPlItfOan5kSshQ1pPVjnorrjlzdiOI+FJVbx3x9/Qq7KSpGY6DEJ0rt1vwgZPPy5TNo4nZhRlQxzRDWh+2c0YGRQ9b8lqyscpS8gOl8o9vatZ30GaJAAHyXetGmm33iwTOCsfnncUjoR88XDG4Fe6kE+SJUlviA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imlcp7/i; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WeEmgYIq"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 60B8F4E40708;
-	Sun, 24 Aug 2025 15:40:32 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 1D32E605F1;
-	Sun, 24 Aug 2025 15:40:32 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id ADFCB1C2282BF;
-	Sun, 24 Aug 2025 17:40:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1756050031; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=MotUNYtWFgc8OORlfbN4GS88Cb0UZDtllVzLDmU3zCs=;
-	b=WeEmgYIqPuzO2yFtzWo79qo6u1aKpCZcQqdmC+eR1l5vXDo0+xGHRsipk77Gd9/41kY2ij
-	eqh8sKV8o+fwY3eqeGstLQHjqhxyggIRr4oZdhsK8BpX6LS8tj8eYKx9zpp+iUGWdV2sCl
-	+kROdgZ3j6NjY/y4KrBi7cDAVdVHOQd4xeN4qvuhIyoD8DwvgzCf3QtK/Pd/JYNHNbYvtn
-	k4PolOE1pSxmJ0tiKmm8/g+Uw00O05eriwioFivwCe3cFVoCCFCD94YQD2HI597g1ZJ2Ck
-	pEQZT/LC99A3PXsqtIbt+byL8acVH6FPo2MIrWHNezxau0S6OgvwM6ooBuAV7A==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,  Huacai Chen
- <chenhuacai@loongson.cn>,  Rob Herring <robh+dt@kernel.org>,  Krzysztof
- Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,
-  Keguang Zhang <keguang.zhang@gmail.com>,  Richard Weinberger
- <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,  Huacai Chen
- <chenhuacai@kernel.org>,  Xuerui Wang <kernel@xen0n.name>,
-  loongarch@lists.linux.dev,  devicetree@vger.kernel.org,
-  linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v3 7/7] mtd: rawnand: loongson: Add Loongson-2K1000 NAND
- controller support
-In-Reply-To: <f01986dcb9f16450bd7f38c8fd663df686e6d145.1755757841.git.zhoubinbin@loongson.cn>
-	(Binbin Zhou's message of "Thu, 21 Aug 2025 14:39:21 +0800")
-References: <cover.1755757841.git.zhoubinbin@loongson.cn>
-	<f01986dcb9f16450bd7f38c8fd663df686e6d145.1755757841.git.zhoubinbin@loongson.cn>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Sun, 24 Aug 2025 17:40:02 +0200
-Message-ID: <875xeclodp.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imlcp7/i"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4b0fa7ed37dso50224821cf.0
+        for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 10:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756057628; x=1756662428; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dEPOY7Zr3NpRQlVvtFsI5CSE/KgeAv5rkwr3uFG4z0I=;
+        b=imlcp7/i3Trzzp1bGHVnxJ3qWtP/0vYfTQMUOO5M/s4FwLwVhfqVo/TYOSQRTQDrOU
+         stIKoMBSla5aB0DPoJgqgoJcJv76zGtU/DjXNDgFtJRTy7bZis6bP+UVpuCEZ3zKrhij
+         P4dxu9UZSGC/ZUBNM85Ocsdulsus7PSDwfOOV53h4nSEC8WtCWorm7RzObTQ25xnE6X7
+         U+nypWb/ZbADXbpquegx7UUKGaAZgnlxTTn2uvYl8ksrraLAeey2WG+o8lBJWv6YGrVv
+         igfHQzxTlrx+RynF0QTMovTrla6+cQtonzooHGdFcaGongarjAPrgGySqS1r3ouV/7Ur
+         iCVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756057628; x=1756662428;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dEPOY7Zr3NpRQlVvtFsI5CSE/KgeAv5rkwr3uFG4z0I=;
+        b=nMmbg3RFTOkwmaim1zhN923ioXX5P2Xdy2Mmv8rbFAQ5rTmK/xEZquFUX5jg3GtZYC
+         EYbl2swggXaId4aSBPYGCtSpjcIaJtDGBnHoQNNszwMaEq9nPHIosX2oO9M2a1s+u4SA
+         71JImgNakN/hqL6oEAffcJyOEGOQpRoNVFum5yWBSY/GdnqoNPufkDAV7Qbr9nEZ02nT
+         oAzbn4d2nOnlfP5pJtlKastqjTTUAPCoy1uHNhOg7bZHULrIOtE2nnwCbsYCQzOHl8y2
+         DeefS0+XGs3eY3z2gjZkvzZ3x/0SBYmooPCIea1oo+HxvV1c5qrI5R7R6vyZ9DiHny1z
+         HfQA==
+X-Gm-Message-State: AOJu0YztqGlBcys/q/42JDjnm7P/eN+4wIttf7Xl8Bz4OOa6TjFmC/jz
+	cRSHFj/Luq65Ix0j0jJrMki75aaWXK37FDvMJ5Cp8/jC7+ni0hEX2h2J5qPPaR2baV+HtpEKwYp
+	4AwYRaHoToJCamdxOaBh7PNrvV2pLbvfpmUw+
+X-Gm-Gg: ASbGncugt1l+khSOc1iay4Yx+DIcN2c9lo1CaDgdxdEu+1lysofXhfdbU5QN1a1cW22
+	es6xbA0qJbHIEFb7yqQNjSncZIy+pv/l0tM4W6BEOjrXROPEoOmk+/OXc014nmNy8o2ijdzOeFR
+	+RJe6KkdLEt0UPVLZ5AUQ1mC+ZU/RTTsKJrkjihMoHtqgAZYzh0vxC16xHyDgsLoP3QtblkI/VV
+	qWnvLEx8I8Y73ZHkw==
+X-Google-Smtp-Source: AGHT+IGCRA47aS4SzwGeSGeEzFkh1FikuMeksoGo9k6iWCgXZ38PjTLOuf3JCf3/bnZDRmdnNGmQnIwheQJhvpePa5Y=
+X-Received: by 2002:ac8:578c:0:b0:4af:1554:783 with SMTP id
+ d75a77b69052e-4b29ff91168mr139573601cf.18.1756057628535; Sun, 24 Aug 2025
+ 10:47:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Last-TLS-Session-Version: TLSv1.3
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Sun, 24 Aug 2025 10:46:57 -0700
+X-Gm-Features: Ac12FXyLKHAJFiEjtDmolbVLHE8Fn1Usv_OJAHosqEEDOwMvkUq7NenYLo1PdnQ
+Message-ID: <CAK3+h2wDmpC-hP4u4pJY8T-yfKyk4yRzpu2LMO+C13FMT58oqQ@mail.gmail.com>
+Subject: Loongarch bpf selftests report
+To: loongarch@lists.linux.dev
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Chenghao Duan <duanchenghao@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-On 21/08/2025 at 14:39:21 +08, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+Hi Folks,
 
-> The Loongson-2K1000 NAND controller is also similar to the Loongson-1C.
->
-> It supports a maximum capacity of 16GB FLASH per chip with a maximum
-> page size of 8KB, and it supports up to 4 chip selects and 4 RDY
-> signals.
->
-> The key difference from the Loongson-2K0500 is that it requires explicit
-> configuration of the DMA control route. Typically, it is configured as
-> APBDMA0.
->
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../mtd/nand/raw/loongson-nand-controller.c   | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->
-> diff --git a/drivers/mtd/nand/raw/loongson-nand-controller.c b/drivers/mt=
-d/nand/raw/loongson-nand-controller.c
-> index 7b331d0ca2f0..6610c239f721 100644
-> --- a/drivers/mtd/nand/raw/loongson-nand-controller.c
-> +++ b/drivers/mtd/nand/raw/loongson-nand-controller.c
-> @@ -73,9 +73,18 @@
->  #define LOONGSON_NAND_READ_ID_TIMEOUT_US	5000
->=20=20
->  #define LOONGSON_NAND_64BIT_DMA		BIT(0)
-> +#define LOONGSON_NAND_DMA_CONFIG	BIT(1)
+I am able to finally complete the bpf selftests and generated a
+selftests report here
+https://www.bpfire.net/download/bpf_selftests.json.txt, here is the
+command to skip the tests that could hang up the kernel and  generate
+the rest of bpf selftests failed reports:
 
-You're reusing this flags member, so it's fine, please ignore the
-previous comment (except the style issue).
+./test_progs --deny=module_attach --deny=ns_bpf_qdisc
+--deny=struct_ops --deny=subprogs_extable --deny=tracing_struct
+--deny=timer_lockup --json-summary="./bpf_selftests.json"
 
-...
+In my opinion after reading related bpf selftests code:
 
-> +	regs =3D devm_platform_ioremap_resource(pdev, 2);
+1. module_attach, subprogs_extable, tracing_struct are related issues,
+that is fentry/fexit on kernel module function would hang up the
+kernel.
+2. ns_bpf_qdisc kernel panic is a separate issue and should not be tied to 1
+3. intermittent timer_lockup test hang up kernel that could be
+architecture independent.
 
-Would it be clearer to get the resource by name? (not a strong request)
+Thanks,
 
-Thanks
-Miqu=C3=A8l
+Vincent
