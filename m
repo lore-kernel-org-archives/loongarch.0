@@ -1,55 +1,56 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FA42AE90
-	for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 17:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDE7221299
+	for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 18:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756057631; cv=none; b=E6UyNvKjNh9LcSiMWBJcDRpGEoTUafRDHsuCxySXGNFlF/CghILoHO/iaVF7Z/UB+DhhEqzuTBk6emui6PRbPZNddmCkHT/CMLNeRLmo7VC/i+mKevhB4Gfk0jblGyD4MG67KSxEBM57mGPl+WXoC7LqNkr9aGZlHmwmDc2+O00=
+	t=1756060013; cv=none; b=TnRqn3DDafvJ6lzXjrYWdRN9gaVjJ3PmnhguKYe2AoTV3ZkZ0WaqGGmlXRVWRL2exQ+5R/ty+ql7zbXUMYmhZ0AtL8t5eyWGe0b28Urt3XrIW7jWPPF/4nWjTlMxbnHekqeoWwtg2bfBe3YH33WdgODVYlBYu8hAN07P/N+e4DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756057631; c=relaxed/simple;
-	bh=FjCAjrvuuNaYOn6ZYz/76p3kTJGUMGhQ8aPRd6zRepQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PMKeEEjx3O/fPlItfOan5kSshQ1pPVjnorrjlzdiOI+FJVbx3x9/Qq7KSpGY6DEJ0rt1vwgZPPy5TNo4nZhRlQxzRDWh+2c0YGRQ9b8lqyscpS8gOl8o9vatZ30GaJAAHyXetGmm33iwTOCsfnncUjoR88XDG4Fe6kE+SJUlviA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imlcp7/i; arc=none smtp.client-ip=209.85.160.181
+	s=arc-20240116; t=1756060013; c=relaxed/simple;
+	bh=QFEe9kr6hAgm1aLSumExWmXbmZ/gKzqSsucZN9wSA+g=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=W4mKW9wA1HRMtuHFd/C0GPyr1UM2mgH67QEBK/adxuIPZfRnMLnVXI7LB3FfLUhDZczAtRCz4IcW+IuTm0edVu6g/TVFC/j28L5FfEsO/Gdk+wz+DedKRBBAZDlQHqyN51k4NcTjfwdWDvN8do9Qopr4dCcXsAgy8B1bjZ5aTw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZgoMXff; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imlcp7/i"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4b0fa7ed37dso50224821cf.0
-        for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 10:47:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZgoMXff"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4b2cf656e4fso4472281cf.0
+        for <loongarch@lists.linux.dev>; Sun, 24 Aug 2025 11:26:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756057628; x=1756662428; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1756060010; x=1756664810; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=dEPOY7Zr3NpRQlVvtFsI5CSE/KgeAv5rkwr3uFG4z0I=;
-        b=imlcp7/i3Trzzp1bGHVnxJ3qWtP/0vYfTQMUOO5M/s4FwLwVhfqVo/TYOSQRTQDrOU
-         stIKoMBSla5aB0DPoJgqgoJcJv76zGtU/DjXNDgFtJRTy7bZis6bP+UVpuCEZ3zKrhij
-         P4dxu9UZSGC/ZUBNM85Ocsdulsus7PSDwfOOV53h4nSEC8WtCWorm7RzObTQ25xnE6X7
-         U+nypWb/ZbADXbpquegx7UUKGaAZgnlxTTn2uvYl8ksrraLAeey2WG+o8lBJWv6YGrVv
-         igfHQzxTlrx+RynF0QTMovTrla6+cQtonzooHGdFcaGongarjAPrgGySqS1r3ouV/7Ur
-         iCVA==
+        bh=oYKpS/OVLHtlw1SEhy49/yxULbAc472ZRbOq5epfbUY=;
+        b=AZgoMXffxDmrASguL1tPRVKUGkAeR8RoPyMgNg8TKwndEukeuernjrM3+82zraL1Uf
+         MoSFB2BhVaQcwSBR9v9MRmdIo+RkHWdEJw/aP5IG1g+BBmu0jYDOw9O01HYodWK5G+eQ
+         Cy1Y7d4ep7Jt9sbiNXAxVsp8ookSt3KmURpXUvMh15kkfmF63p3EaLr2hD9djpAyfjjq
+         ZvVixN19FA1d4WIlHQ4GMAXkixlLHdCLNsCTEVM+bZtPrAYwdm4pqVrebQBSRP4sY2CU
+         lw/LdZveIuHA3JCVj+suEXRlLOOjl+JW536JedfUsxh/y1rqZXvuF8DIduHRhBSdds6B
+         utCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756057628; x=1756662428;
+        d=1e100.net; s=20230601; t=1756060010; x=1756664810;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=dEPOY7Zr3NpRQlVvtFsI5CSE/KgeAv5rkwr3uFG4z0I=;
-        b=nMmbg3RFTOkwmaim1zhN923ioXX5P2Xdy2Mmv8rbFAQ5rTmK/xEZquFUX5jg3GtZYC
-         EYbl2swggXaId4aSBPYGCtSpjcIaJtDGBnHoQNNszwMaEq9nPHIosX2oO9M2a1s+u4SA
-         71JImgNakN/hqL6oEAffcJyOEGOQpRoNVFum5yWBSY/GdnqoNPufkDAV7Qbr9nEZ02nT
-         oAzbn4d2nOnlfP5pJtlKastqjTTUAPCoy1uHNhOg7bZHULrIOtE2nnwCbsYCQzOHl8y2
-         DeefS0+XGs3eY3z2gjZkvzZ3x/0SBYmooPCIea1oo+HxvV1c5qrI5R7R6vyZ9DiHny1z
-         HfQA==
-X-Gm-Message-State: AOJu0YztqGlBcys/q/42JDjnm7P/eN+4wIttf7Xl8Bz4OOa6TjFmC/jz
-	cRSHFj/Luq65Ix0j0jJrMki75aaWXK37FDvMJ5Cp8/jC7+ni0hEX2h2J5qPPaR2baV+HtpEKwYp
-	4AwYRaHoToJCamdxOaBh7PNrvV2pLbvfpmUw+
-X-Gm-Gg: ASbGncugt1l+khSOc1iay4Yx+DIcN2c9lo1CaDgdxdEu+1lysofXhfdbU5QN1a1cW22
-	es6xbA0qJbHIEFb7yqQNjSncZIy+pv/l0tM4W6BEOjrXROPEoOmk+/OXc014nmNy8o2ijdzOeFR
-	+RJe6KkdLEt0UPVLZ5AUQ1mC+ZU/RTTsKJrkjihMoHtqgAZYzh0vxC16xHyDgsLoP3QtblkI/VV
-	qWnvLEx8I8Y73ZHkw==
-X-Google-Smtp-Source: AGHT+IGCRA47aS4SzwGeSGeEzFkh1FikuMeksoGo9k6iWCgXZ38PjTLOuf3JCf3/bnZDRmdnNGmQnIwheQJhvpePa5Y=
-X-Received: by 2002:ac8:578c:0:b0:4af:1554:783 with SMTP id
- d75a77b69052e-4b29ff91168mr139573601cf.18.1756057628535; Sun, 24 Aug 2025
- 10:47:08 -0700 (PDT)
+        bh=oYKpS/OVLHtlw1SEhy49/yxULbAc472ZRbOq5epfbUY=;
+        b=EgpDWVric0Uei/ywaCYz8YVMqx2xSMLP0ArWzWKIRaf0M7NOy3dn9Y7JOw8HpJlVZU
+         xskG+9189nPbyVUMrR4TqDzBVqSCTzdZloHeVYTl9NH2fAaWrrakBFTGzRjuY2mQlegM
+         B+WM3P8NE48wXTG0vgbscHyeikepv6V8Caol1QZrGOTY59shgTIcojFzPx7Zi+4MmLrY
+         nThXRsfYJluuY6QASfZGDpe8+9io2Wv3K8WBebVu8/HOxnKdToGZ8Fc5pBzSC1EAYmz3
+         fOs2SF+DZi5a2+IPzGkMyHMWNDK42+jL4QhMJysPSG+mmLvWUy3LW1zrS/TzRwt7Th3O
+         y7DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFfLf3AWpk6RCl1kSGRcwIDQU75I4xnyVeqrtSx7Gmpi0JKMIH1KWJwpsD+SgdxmEJHxlmnXfWvYs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwzLVRo+YVuYSeQ/9/KpRCqlbNQcjHJdfw0TVbLcYfvMC6LTua+
+	iG6fhawxXEB7XnNdmBVeJ7i49fpoI+5ZcKWVcwjrKxZpUBAUz0fuFHZIQSwu0/W6mnLEY9vGeu7
+	jA4tPTkDEAAu0uNX3blXspbYv1pS3cyc=
+X-Gm-Gg: ASbGncu2aVGrYz9TyR7vvw3ulP+KTantiqiqM6FXZrxbOoljA3xDGl5/DvbJboTMMX8
+	3e9t66XusDWtenBjHiFK6tUZLSOw7W6lzU9Wq94sRidmMFisJQb1EOnnc2ivRbxig0Jl9UfGLeY
+	4XUoKAU30WCTcBje0O7KcyiF+hhqA9CfTlE7sB2PhzEIak3B0M9VwD5YClrB+5s7yFeW0NzPRDl
+	VOPe8E=
+X-Google-Smtp-Source: AGHT+IFJGyUqt33WNB4UCQgZ0UJ2Z/ZSspgv39DHBNDsrgKA63G9AUd2Zx0kdBgHEpAbjOPge5NFbYWTtoi1my3ETDw=
+X-Received: by 2002:a05:622a:1492:b0:4b2:8ac4:f09d with SMTP id
+ d75a77b69052e-4b2a0132c57mr167510561cf.39.1756060010522; Sun, 24 Aug 2025
+ 11:26:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -57,35 +58,58 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Sun, 24 Aug 2025 10:46:57 -0700
-X-Gm-Features: Ac12FXyLKHAJFiEjtDmolbVLHE8Fn1Usv_OJAHosqEEDOwMvkUq7NenYLo1PdnQ
-Message-ID: <CAK3+h2wDmpC-hP4u4pJY8T-yfKyk4yRzpu2LMO+C13FMT58oqQ@mail.gmail.com>
-Subject: Loongarch bpf selftests report
-To: loongarch@lists.linux.dev
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Chenghao Duan <duanchenghao@kylinos.cn>
+Date: Sun, 24 Aug 2025 11:26:39 -0700
+X-Gm-Features: Ac12FXz_2IBrNZzobiwpVlsjzn9xyUXTMXl_5flQTdavloKbOu5OKS0I1fCzbT0
+Message-ID: <CAK3+h2xOSEZUHhou7N2cRL-aGrZCNSm45g+P7thObMe+fpgYCA@mail.gmail.com>
+Subject: bpf selftests timer_lockup intermittently locks up kernel
+To: bpf <bpf@vger.kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Folks,
+Hi,
 
-I am able to finally complete the bpf selftests and generated a
-selftests report here
-https://www.bpfire.net/download/bpf_selftests.json.txt, here is the
-command to skip the tests that could hang up the kernel and  generate
-the rest of bpf selftests failed reports:
+I am running bpf selftests on a Loonarch PC and observed intermittent
+kernel lockup by timer_lockup, then I can repeat the lockup just by
+running the timer_lockup in while loop every 5 seconds, I could not
+find a good x86 machine to test, and I think this might be
+architecture independent. I don't have a good way to capture any
+kernel log messages for the PC after the kernel hangs, and I had to
+power reset the PC.
 
-./test_progs --deny=module_attach --deny=ns_bpf_qdisc
---deny=struct_ops --deny=subprogs_extable --deny=tracing_struct
---deny=timer_lockup --json-summary="./bpf_selftests.json"
+[root@fedora ~]# uname -a
+Linux fedora 6.17.0-rc2+ #20 SMP PREEMPT_DYNAMIC Thu Aug 21 13:08:01
+PDT 2025 loongarch64 GNU/Linux
 
-In my opinion after reading related bpf selftests code:
+[root@fedora bpf]# while true ; do ./test_progs -t timer_lockup
+--watchdog-timeout=120; sleep 5; done
+#458     timer_lockup:OK
+Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
 
-1. module_attach, subprogs_extable, tracing_struct are related issues,
-that is fentry/fexit on kernel module function would hang up the
-kernel.
-2. ns_bpf_qdisc kernel panic is a separate issue and should not be tied to 1
-3. intermittent timer_lockup test hang up kernel that could be
-architecture independent.
+#458     timer_lockup:OK
+Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+WATCHDOG: test case timer_lockup executes for 10 seconds...
+WATCHDOG: test case timer_lockup executes for 120 seconds, terminating
+with SIGSEGV
+test_timer_lockup:PASS:timer_lockup__open_and_load 0 nsec
+test_timer_lockup:PASS:pthread_create thread1 0 nsec
+test_timer_lockup:PASS:pthread_create thread2 0 nsec
+timer_lockup_thread:PASS:cpu affinity 0 nsec
+timer_lockup_thread:PASS:cpu affinity 0 nsec
+
+#458     timer_lockup:FAIL
+Caught signal #11!
+Stack trace:
+./test_progs(crash_handler+0x28)[0x120555b04]
+linux-vdso.so.1(__vdso_rt_sigreturn+0x0)[0x7ffffee55084]
+/lib64/libc.so.6(+0x7d900)[0x7fffef9b1900]
+/lib64/libc.so.6(+0x82cc0)[0x7fffef9b6cc0]
+./test_progs(test_timer_lockup+0x3fc)[0x1204bce28]
+./test_progs[0x120556244]
+./test_progs(main+0x684)[0x120558234]
+/lib64/libc.so.6(+0x2882c)[0x7fffef95c82c]
+/lib64/libc.so.6(__libc_start_main+0xa8)[0x7fffef95c918]
+./test_progs(_start+0x48)[0x12010f2d0]
 
 Thanks,
 
