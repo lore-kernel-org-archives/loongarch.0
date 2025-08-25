@@ -1,112 +1,130 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D339923ABB3
-	for <loongarch@lists.linux.dev>; Mon, 25 Aug 2025 08:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBE928135B
+	for <loongarch@lists.linux.dev>; Mon, 25 Aug 2025 20:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756112045; cv=none; b=t3kkZ0/9kNARAxx8jIIpnpYvOJwMFMQDWmUFHLY2ChG9OubUpCs8bz5aYLzLq8HE+uPGt3v2iKbv44Mv3ZQusJ/x8dcfmlQsKnKQl41hCVQzakK95Q2bMdtVn+Df+e50/AN4YZJfnhXVbJmQYALE8mM2gR0O+puxhSttykNXYAA=
+	t=1756152388; cv=none; b=gHDjdt42N83y54A9rJA5X8Pdzuh4pWb9f2wKZYtgqwdmbXBh6DZENlZml44W5v4K5plyiQ6qev8VcD/vj5HI36ozOcMj0kb2jjYQ/RsykJqEpRlSm/78HpM3m94MjbWSwxe//EQqO98RecPUnW96XzBvoQ3K4cwdhheRUcvxz2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756112045; c=relaxed/simple;
-	bh=m84ECcN0WxtVYyG32AbKesu0Gs/eWeOojmVOVeScXxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oS5vUq9hmp4xcMidrliw0Zz+kRZOxCtZF2j0jit6sIJEkWLaRwssEjUEmnt2dOJ9lKgsvnZ84Ie5sICJjyWullfy/iJnokW5YhYiR2nFFgevuwR/sp2fA0mGJ1bEN2Km5y3csXwfAfe2yidAEG76/b37tyY7YZYzkaAKjACKuEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Ova68O9t; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1756152388; c=relaxed/simple;
+	bh=e6UMH6C4QXeee3JknmCO2I9Y/5OAkfG/m9YVXqh8/eg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=X3uS8FBcYB2ebNdt9g9FThg2Epy1wkOXfvgJfARwxKl1LJ3AUgqAyPzDWZbtRenB5XThHt2t27YBxa7/9Gwg5Ge0yzKWgVUm8Z02EJwNjy//7xXYzIJ8bSIGoC/j3txOXpZNuyVnR1fymYkOgvhEiwu/3N9sERDKstPWcoH8Ovs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f0hSOs/a; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Ova68O9t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1756112035;
-	bh=sOPq0KUHy/zQLje3GwBSgWl+bHBkFOh2egvfb2ycGo8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Ova68O9tx5wsT1T5lnawE/wIbds2ux/wGsvhdCqJx0V+doE3+h7RoJ7ZLMIPyDWcQ
-	 F79keAPA2U1sQGlUz8pvfjVP0Tf1qQ5cfagVJfBbNcKiIBHJk66655E2aT4dqplmdV
-	 5BH93m72ceDJZRKXzw0TwczJxa7rC9+QiCjvpbuo=
-Received: from stargazer (unknown [IPv6:2409:874d:200:3037::3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 5925D66B28;
-	Mon, 25 Aug 2025 04:53:50 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: amd-gfx@lists.freedesktop.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	dri-devel@lists.freedesktop.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>,
-	Asiacn <710187964@qq.com>
-Subject: [PATCH] drm/amd/display/dml2: Guard dml21_map_dc_state_into_dml_display_cfg with DC_FP_START
-Date: Mon, 25 Aug 2025 16:52:11 +0800
-Message-ID: <20250825085211.34396-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f0hSOs/a"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3251d634cdbso3172942a91.1
+        for <loongarch@lists.linux.dev>; Mon, 25 Aug 2025 13:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1756152385; x=1756757185; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8pR7rIORhhha7uQoj/L4UbVHOw9HCPKdRxBVZAbw60c=;
+        b=f0hSOs/a40butemYucJdGv+Q2evjXYPBn2ulJaXeGDZRHU3riV3Ap0cdDmJPFGGR41
+         1L5IiDzcet0B9Q2CnKr8tny6GT0lkaOZZLiDh/UIMLbFj0vrdzfdtejfNxS2+QyCmh/Z
+         ChY+7GhXRKp3oZkbeCl/y+k9K7Mw8Tx6YLE5/r5tai9JaTdnlMrClKuSXAvEIR00Mc/Y
+         QBiryzgDonkociG/JVMqVJFGrB+H0Xuy7lubn0+KQTbFeL3NcXi/ltEqorRxmuP+Q+Uf
+         xwrlZO6x1RBExq8s8a0kVXgaWDrRdJPfB5e5cAr4o4/+JpmEB6YVjy36Y0j+dkG/bR3+
+         7tHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756152385; x=1756757185;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8pR7rIORhhha7uQoj/L4UbVHOw9HCPKdRxBVZAbw60c=;
+        b=H0vB/tKQP7sbKIssr/jdreSpBDjF+SMRSxE4d+te8rzaDCT936H+1t8bQ8/qw3s0q6
+         lmaVvuKaRVczcHdataMK4fSJpWo1q/O3x+nXRfG2kIDUdTv9CwvQzUyEHJTJgX37p0Jb
+         nre4Qn7CmBVi5O5TkRWbLc5R9v8jIcKBI/gWXvzsk/cK51375CdvsIXxjLNwBp/79tpi
+         P4kYNHZBXjWgBe3jLm3MoZBR4JvPovPM3WQOeCnULUdotAHIQkb/9Mn5C6aNWZsfBagF
+         UnI9TRFhSeIGPrK0fHS5oNJN/ss+fZZklFn9wkVCma38o9nt81kzEeVAQr2sLqiaNNXZ
+         JpiA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3mutzQ7y9wo/fLmhpbDKCAnKIO+tPpzjmeWZQRqU3oadHJCHHJ3aignPqeKJfxTKYO6AHAjZi6+8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwVMMfJQzq3L7K1mkaw1PgbXgjVwtyRn5zm5wz5PzV1QLtJ8iO9
+	3khz4dVhBgzC2OxL0ew6HhrVXJXh3CB36m7k8dOhrzy3BIFDeZ5Pk145subaqif+hRi5fxqHR4Z
+	6J6gJoQ==
+X-Google-Smtp-Source: AGHT+IEXEoKFvYTs3DYHIb6MyIfVoxfIwlslpUf6Y9Z1lNFDWyuIZVc83JO2uwlvd4IbE+BY+ZPFpeZDEbc=
+X-Received: from pjkk5.prod.google.com ([2002:a17:90b:57e5:b0:325:9fa7:5d07])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2ccd:b0:324:eac4:2968
+ with SMTP id 98e67ed59e1d1-32515ee13cdmr17210596a91.33.1756152385445; Mon, 25
+ Aug 2025 13:06:25 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Mon, 25 Aug 2025 13:06:17 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.261.g7ce5a0a67e-goog
+Message-ID: <20250825200622.3759571-1-seanjc@google.com>
+Subject: [PATCH 0/5] Drivers: hv: Fix NEED_RESCHED_LAZY and use common APIs
+From: Sean Christopherson <seanjc@google.com>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Sean Christopherson <seanjc@google.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andy Lutomirski <luto@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-hyperv@vger.kernel.org, rcu@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-dml21_map_dc_state_into_dml_display_cfg calls (the call is usually
-inlined by the compiler) populate_dml21_surface_config_from_plane_state
-and populate_dml21_plane_config_from_plane_state which may use FPU.  In
-a x86-64 build:
+Fix a bug where MSHV root partitions don't honor NEED_RESCHED_LAZY, and then
+deduplicate the TIF related MSHV code by turning the "kvm" entry APIs into
+more generic "virt" APIs (which ideally would have been done when MSHV root
+support was added).
 
-    $ objdump --disassemble=dml21_map_dc_state_into_dml_display_cfg \
-    > drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_translation_helper.o |
-    > grep %xmm -c
-    63
+Assuming all is well, maybe this could go through the tip tree?
 
-Thus it needs to be guarded with DC_FP_START.  But we must note that the
-current code quality of the in-kernel FPU use in AMD dml2 is very much
-problematic: we are actually calling DC_FP_START in dml21_wrapper.c
-here, and this translation unit is built with CC_FLAGS_FPU.  Strictly
-speaking this does not make any sense: with CC_FLAGS_FPU the compiler is
-allowed to generate FPU uses anywhere in the translated code, perhaps
-out of the DC_FP_START guard.  This problematic pattern also occurs in
-at least dml2_wrapper.c, dcn35_fpu.c, and dcn351_fpu.c.  Thus we really
-need a careful audit and refactor for the in-kernel FPU uses, and this
-patch is simply whacking a mole.  However per the reporter, whacking
-this mole is enough to make a 9060XT "just work."
+The Hyper-V stuff and non-x86 architectures are compile-tested only.
 
-Reported-by: Asiacn <710187964@qq.com>
-Link: https://github.com/loongson-community/discussions/issues/102
-Tested-by: Asiacn <710187964@qq.com>
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Sean Christopherson (5):
+  Drivers: hv: Move TIF pre-guest work handling fully into mshv_common.c
+  Drivers: hv: Handle NEED_RESCHED_LAZY before transferring to guest
+  entry/kvm: KVM: Move KVM details related to signal/-EINTR into KVM
+    proper
+  entry: Rename "kvm" entry code assets to "virt" to genericize APIs
+  Drivers: hv: Use common "entry virt" APIs to do work before running
+    guest
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
-index 03de3cf06ae5..059ede6ff256 100644
---- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
-@@ -224,7 +224,9 @@ static bool dml21_mode_check_and_programming(const struct dc *in_dc, struct dc_s
- 	dml_ctx->config.svp_pstate.callbacks.release_phantom_streams_and_planes(in_dc, context);
- 
- 	/* Populate stream, plane mappings and other fields in display config. */
-+	DC_FP_START();
- 	result = dml21_map_dc_state_into_dml_display_cfg(in_dc, context, dml_ctx);
-+	DC_FP_END();
- 	if (!result)
- 		return false;
- 
-@@ -279,7 +281,9 @@ static bool dml21_check_mode_support(const struct dc *in_dc, struct dc_state *co
- 	dml_ctx->config.svp_pstate.callbacks.release_phantom_streams_and_planes(in_dc, context);
- 
- 	mode_support->dml2_instance = dml_init->dml2_instance;
-+	DC_FP_START();
- 	dml21_map_dc_state_into_dml_display_cfg(in_dc, context, dml_ctx);
-+	DC_FP_END();
- 	dml_ctx->v21.mode_programming.dml2_instance->scratch.build_mode_programming_locals.mode_programming_params.programming = dml_ctx->v21.mode_programming.programming;
- 	DC_FP_START();
- 	is_supported = dml2_check_mode_supported(mode_support);
+ MAINTAINERS                                 |  2 +-
+ arch/arm64/kvm/Kconfig                      |  2 +-
+ arch/arm64/kvm/arm.c                        |  3 +-
+ arch/loongarch/kvm/Kconfig                  |  2 +-
+ arch/loongarch/kvm/vcpu.c                   |  3 +-
+ arch/riscv/kvm/Kconfig                      |  2 +-
+ arch/riscv/kvm/vcpu.c                       |  3 +-
+ arch/x86/kvm/Kconfig                        |  2 +-
+ arch/x86/kvm/vmx/vmx.c                      |  1 -
+ arch/x86/kvm/x86.c                          |  3 +-
+ drivers/hv/Kconfig                          |  1 +
+ drivers/hv/mshv.h                           |  2 --
+ drivers/hv/mshv_common.c                    | 22 ---------------
+ drivers/hv/mshv_root_main.c                 | 31 ++++-----------------
+ include/linux/{entry-kvm.h => entry-virt.h} | 19 +++++--------
+ include/linux/kvm_host.h                    | 17 +++++++++--
+ include/linux/rcupdate.h                    |  2 +-
+ kernel/entry/Makefile                       |  2 +-
+ kernel/entry/{kvm.c => virt.c}              | 15 ++++------
+ kernel/rcu/tree.c                           |  6 ++--
+ virt/kvm/Kconfig                            |  2 +-
+ 21 files changed, 49 insertions(+), 93 deletions(-)
+ rename include/linux/{entry-kvm.h => entry-virt.h} (83%)
+ rename kernel/entry/{kvm.c => virt.c} (66%)
+
+
+base-commit: 1b237f190eb3d36f52dffe07a40b5eb210280e00
 -- 
-2.51.0
+2.51.0.261.g7ce5a0a67e-goog
 
