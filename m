@@ -1,116 +1,92 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558232F90ED
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 06:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62B0872633
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 06:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756189110; cv=none; b=csvT0aaKMNM31rWc89yX+7Ar8Z3sv7+UyLWtOyjXhVYLGgr7Ds67zT4XAzGVJOaF07raI3EkcioR8bGdEnPtqJ2Auc/w4xt0tnZREjwTL12RXGhvJNGmLPXjrn6LtlcuRH42d1dTpLZUo4jDPHAK/E43S2DeyBc64G3CzXG7ik8=
+	t=1756190358; cv=none; b=ugaEjWRSrXRw+Dvfh67yIMxwnxPRbSC96+E0C806XGpE5hJyyAyRuXv+O4UPRNrKEmJuTOCOTzGp/i0EUUQSHVlz893IuLl+4WQjXNNQhr4VxkRtuALIqjdkDPuGwS4BDWa7bMhxJzhBytH3HwXn4/vAuamru6vVHfSK7mVgcS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756189110; c=relaxed/simple;
-	bh=e70kJzk3rr3WiO6RHhXGvE8arznJOv7er7zNzG1lBZY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RhYTxmWDhdsHTq5O/+3cFv7KdgmiE6AwOcIQE0jbf2G7GPq99hpwEim+54PdTRzBl7FGh3nHUjumV87mAluwFeS6qB/NxW37HsGpPrX5I5feiIpyNMqiztvrf1mRFBdQHDb74CoMmZrNGaCONE8KhWcbREXY0LUc+pIT6ssPehQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qff84Umw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=faCkWxdj; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qff84Umw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="faCkWxdj"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1756189106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aUyzbl96JnTO9V3eNt5MssqL9K7R8ZPYrzwmUDypjtQ=;
-	b=qff84UmwLm8iFQvqm09Om+iEel23vC9BJ1wHMhpnGuRjjiVtocG2gJc/efnzy7UGv0bqDh
-	X4YctMH0aSIUxDd3i6X4JoDQFU5IM3b5mriVj4iiUX/4ke9TsrEXJU+QjgXN9L2Hvg/r1e
-	gVrERdEyqsHFDbRTatoD2jUbrkzofjIHreOcsZGCDEtvBgy1C9OjuykTbsIoRwvmsiEo67
-	TT3uKBDVEPfUk1K7JbyuNP89aqNk5szSg7Q98Esgpnao8uytgt5ztulcsAYjKovknEd1Gv
-	DdfAb+Xqa/DsFSf6/Qptu/gAQ+92+1NXjLnQVTycTHPHpfQqUdNFtsZzBM1PEQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1756189106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aUyzbl96JnTO9V3eNt5MssqL9K7R8ZPYrzwmUDypjtQ=;
-	b=faCkWxdjd3FeEyW+rea8Q+WUcDNk36hjcPMaS1Mmo0pdEShLBn6gpn0pA+neXsTYaNOZIy
-	GVnfWQSajoT7S0Ag==
-Date: Tue, 26 Aug 2025 08:17:14 +0200
-Subject: [PATCH 11/11] vdso: Gate VDSO_GETRANDOM behind HAVE_GENERIC_VDSO
+	s=arc-20240116; t=1756190358; c=relaxed/simple;
+	bh=Nyeff2EhlQwRc/1f1YoX6APs/57fqdvKWPi4EOXkD+o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UWXGaG8jJ5CBtvUWXJ63Cad4+VKBDsJDr/UrrzSRMHu4qRqwK91Da/ieVIqMV3erH+ffMA2UzXs6kYXAdvP/Z6bAlePsAr7wJae0poE4A3f7+50KiL5FbhLZF06B7N02ZnfpvtrR9hl5DWNY/caB9m+rjo5xCj2DlRHtVZeyJLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx6tGNVq1oo0ADAA--.6215S3;
+	Tue, 26 Aug 2025 14:39:10 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxQ+SMVq1oo2dpAA--.401S2;
+	Tue, 26 Aug 2025 14:39:09 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Update help info of config ARCH_STRICT_ALIGN
+Date: Tue, 26 Aug 2025 14:39:08 +0800
+Message-ID: <20250826063908.6615-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250826-vdso-cleanups-v1-11-d9b65750e49f@linutronix.de>
-References: <20250826-vdso-cleanups-v1-0-d9b65750e49f@linutronix.de>
-In-Reply-To: <20250826-vdso-cleanups-v1-0-d9b65750e49f@linutronix.de>
-To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Nam Cao <namcao@linutronix.de>, 
- Russell King <linux@armlinux.org.uk>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>, 
- Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-s390@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1756189098; l=740;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=e70kJzk3rr3WiO6RHhXGvE8arznJOv7er7zNzG1lBZY=;
- b=Q6ersM0eWZuFWFRqw7St9QnfIHgjvUfXPslz3bmlle7dR6R1Tm8FlCD46/a/HTAHi+acl41TM
- HHiIuT3vNAnDyILoXrbvH+hSpTHjerUzqwG/UiWNkrt8K08Oly20NA4
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+X-CM-TRANSID:qMiowJDxQ+SMVq1oo2dpAA--.401S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CrWDZryrKFyDtry8Jr43Jwc_yoW8GF13pw
+	4YkanrGrW0gr1UCFZ0v3s3WFy5ZasFkF43Ww42y34UCr9xZ343ZrWxtFs3JFW7Cws5G3yr
+	WryFk3W2g3WkGacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1QVy3UUUUU==
 
-All architectures which want to implement getrandom() in the vDSO need to
-use the generic vDSO library.
+Loongson 3A6000 and 3C6000 CPUs also support unaligned memory access, so
+the current description is out of date to some extent.
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Actually, all of Loongson-3 series processors based on LoongArch support
+unaligned memory access, this hardware capability is indicated by the bit
+20 of CPUCFG1 register, update the help info to reflect the reality.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- lib/vdso/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/loongarch/Kconfig | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/lib/vdso/Kconfig b/lib/vdso/Kconfig
-index 3d2c2b90d193f984e3a202e701fa7f0bfa8f1938..db87ba34ef1928fac0d5c58abca86312687cc159 100644
---- a/lib/vdso/Kconfig
-+++ b/lib/vdso/Kconfig
-@@ -19,9 +19,9 @@ config GENERIC_VDSO_OVERFLOW_PROTECT
- 	  time getter functions for the price of an extra conditional
- 	  in the hotpath.
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index f0abc38c40ac..fcf6575b02f8 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -563,7 +563,8 @@ config ARCH_STRICT_ALIGN
+ 	  -mstrict-align build parameter to prevent unaligned accesses.
  
--endif
--
- config VDSO_GETRANDOM
- 	bool
- 	help
- 	  Selected by architectures that support vDSO getrandom().
+ 	  CPUs with h/w unaligned access support:
+-	  Loongson-2K2000/2K3000/3A5000/3C5000/3D5000.
++	  Loongson-2K2000/2K3000 and all of Loongson-3 series processors
++	  based on LoongArch.
+ 
+ 	  CPUs without h/w unaligned access support:
+ 	  Loongson-2K500/2K1000.
+@@ -573,6 +574,9 @@ config ARCH_STRICT_ALIGN
+ 	  to run kernel only on systems with h/w unaligned access support in
+ 	  order to optimise for performance.
+ 
++	  If you want to make sure whether to support unaligned memory access
++	  on your hardware, please read the bit 20 of CPUCFG1 register.
 +
-+endif
-
+ config CPU_HAS_FPU
+ 	bool
+ 	default y
 -- 
-2.50.1
+2.42.0
 
