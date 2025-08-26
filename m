@@ -1,35 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 524EF2F6564
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 12:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5CD7262E
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 12:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756211244; cv=none; b=dSKDuVnGlc86YvIn4AFAhjkvJkB+0gQv9VDknb+ejqw+tN3jl43MDMIcOh7v7s8TySmG316FK3XWqSwU5MFOYRP6PONz0lQOWF3optIzVT2kRn6tiTMzbQh1Ubpj/65bq82y8lMbZNgOhPTX6s2WanP2LJVmddavJzALo53ZFy4=
+	t=1756211430; cv=none; b=b7VAuASF5csnIA20fKITbgGUFkRZ3n+EH/h67hRsCS+86SrdzcX1V07AEACA4gF7cr/54RaaNHXo5aV8sAgjI07pHcPDYCyBB5Wa9Vgpp9u6soda/6De4/rM/6TQYb8sdOdSMgK595N8qgIsYQBfmkq7llHulOQbWdPuoY+4tNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756211244; c=relaxed/simple;
-	bh=lr/ktiqN8EGAwxTSlE1IH8BeTaDaJt2Zb2PkjFQqbHY=;
+	s=arc-20240116; t=1756211430; c=relaxed/simple;
+	bh=vi9HxGRPG4Osqc5VgRy7CzXqp8laDNkYadtP54HwQoM=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=nfHPdIN0EosW9T9JZPvg3RdiG2u2GJTpaGrGWJEjmkuv8KejlJC/HJs31DW5UBqwHYrYknxeZxcMYXZjRRcWtNY5G6cYW12KV43R7A7uQhmQsh3HxwFGBhfltC/I5xjKg729zUI7nKBGNxOogvW/XJkVs/fGY5ZtCHdy1rqRETs=
+	 In-Reply-To:Content-Type; b=G6LQPlQSNGI6iSN9HQd2PY2qXj40Z/5WWtsE20l2xlrC9zH0uLgnyw/afQTxJUKIr1rQK3EchkO1PsK+eyvDrndbmDlgcRuPoO7++tpJHxqRbau337yPqUolLRNld4JROJk5u7qqhGLO4cZM1husOV42eWZeEAEFnp/iT6XLRk4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dxb_AkqK1oclwDAA--.6697S3;
-	Tue, 26 Aug 2025 20:27:16 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx_7_hqK1oulwDAA--.6085S3;
+	Tue, 26 Aug 2025 20:30:25 +0800 (CST)
 Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxzsEhqK1oQ_5pAA--.40668S3;
-	Tue, 26 Aug 2025 20:27:14 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJAxT+bgqK1opP9pAA--.65380S3;
+	Tue, 26 Aug 2025 20:30:24 +0800 (CST)
 Subject: Re: [RFC PATCH 2/2] objtool/LoongArch: Fix unreachable instruction
  warnings about head.S
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor
+ <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <20250826064631.9617-1-yangtiezhu@loongson.cn>
  <20250826064631.9617-3-yangtiezhu@loongson.cn>
- <20250826082057.GE3245006@noisy.programming.kicks-ass.net>
+ <CAAhV-H7NNtH-oaqMsN5=2c+EdF0-dy5mxcsO=_KFGWqb-FZj_w@mail.gmail.com>
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <8dfe8bde-0095-d6c3-b9ca-cce2bf720ac2@loongson.cn>
-Date: Tue, 26 Aug 2025 20:27:13 +0800
+Message-ID: <b7551efd-cb5b-7503-c455-b8f22fac81bd@loongson.cn>
+Date: Tue, 26 Aug 2025 20:30:23 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -38,58 +38,63 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250826082057.GE3245006@noisy.programming.kicks-ass.net>
+In-Reply-To: <CAAhV-H7NNtH-oaqMsN5=2c+EdF0-dy5mxcsO=_KFGWqb-FZj_w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxzsEhqK1oQ_5pAA--.40668S3
+X-CM-TRANSID:qMiowJAxT+bgqK1opP9pAA--.65380S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWrZrW7ZF4rCFykXFy3tw1DurX_yoW8JF17pF
-	WUAw40kFZ8Jr1I9a13Ja1fWFyY9FZxXrWfGr1q9rySyayqyayjqr1agr1j9F9Iva9xKFyF
-	vw4DtF909Fn8AagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr
-	1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8I38UUU
-	UUU==
+X-Coremail-Antispam: 1Uk129KBj9xXoWruFWkWF47Gr1kZr4UuFyrXwc_yoWkCFg_ur
+	17uw48W3y8Jayqvw1DKasxuw1UZanY9F4FyrykZrZFv3WrJry5Xr47Jw1rurn8Kr4kGrZ8
+	A39Ygas3Ar1UtosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_
+	Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
+	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjxUcsjjDUUUU
 
-On 2025/8/26 下午4:20, Peter Zijlstra wrote:
-> On Tue, Aug 26, 2025 at 02:46:31PM +0800, Tiezhu Yang wrote:
+On 2025/8/26 下午4:26, Huacai Chen wrote:
+> On Tue, Aug 26, 2025 at 2:46 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
 >> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
 >> following objtool warnings after silencing all of the other warnings:
 
 ...
 
->> Just give a proper unwind hint to silence the above warnings. By the way,
->> the previous instructions of kernel_entry+0xf4 and smpboot_entry+0x68 are
->> the 'bl' instructions, the call destination symbols are start_kernel() and
->> start_secondary() which are noreturn functions, then the 'bl' instructions
->> are marked as dead end in annotate_call_site(), so actually ASM_BUG() can
->> be removed due to unnecessary, otherwise there are following warnings:
-
-...
-
->> Link: https://lore.kernel.org/lkml/20250814083651.GR4067720@noisy.programming.kicks-ass.net/
->> Suggested-by: Peter Zijlstra <peterz@infradead.org>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
 >>   arch/loongarch/kernel/head.S | 8 ++++----
 >>   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> At this point you should also be able to remove that Makefile thing,
-> right?
+>>
+>> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+>> index e3865e92a917..566a1dbf5fa0 100644
+>> --- a/arch/loongarch/kernel/head.S
+>> +++ b/arch/loongarch/kernel/head.S
+>> @@ -20,6 +20,7 @@
+>>          __HEAD
+>>
+>>   _head:
+>> +       UNWIND_HINT_UNDEFINED
+>>          .word   IMAGE_DOS_SIGNATURE     /* "MZ", MS-DOS header */
+>>          .org    0x8
+>>          .dword  _kernel_entry           /* Kernel entry point (physical address) */
+>> @@ -30,6 +31,7 @@ _head:
+>>          .long   pe_header - _head       /* Offset to the PE header */
+>>
+>>   pe_header:
+>> +       UNWIND_HINT_UNDEFINED
+>>          __EFI_PE_HEADER
+> The efi header is completely not code, the annotations are very strange.
 
-Yes, you are right, will do it in the next version if this patch
-makes sense.
+Yes, I think so too, but the aim is only to not checking for objtool,
+it seems no other better way.
 
 Thanks,
 Tiezhu
