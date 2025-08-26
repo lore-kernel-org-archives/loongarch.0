@@ -1,97 +1,106 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9F74C83
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 06:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B76612C21E8
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 07:08:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756190954; cv=none; b=f1OtQjRZhA72wzDbt92kB9Hck/fiBfmklDnuUJeV6PFAKN8asDIebvVa0gs5gIAQYjqOIrww8sw+eg85t4x7LLtUPYGVfHxCkCd+THkgldE4WbIJQ9OQY14wnGsCq2XntEXsxlS6Y4a64nDDTXLx9IoAjI+ArQVqvSbMZ6NOF1E=
+	t=1756192105; cv=none; b=CKHSg+isgcaWRgdOT455jQPnfQmU6w7bYkHjoRHI4xxbpVqRahgmFWiXu0MrrhWiifsmuHfMP0Hck0SnbIK1J/vETK3lLd9SNqHsNOPwHUZIKqTiPBxGY9z3ou5Xs4ffn61DDok2VLRxukM10XVkMAei+78MEnYb/HLP9f/JQJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756190954; c=relaxed/simple;
-	bh=WQiyCPe1c9Dqjla1jCqE9LJ4OEHB8M7ZV66fnfHLw20=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QaDSpvTIRWOABa+G4KyBfA9MXO/RiUcGHNHG8Sx6yG2cS8oKNS6q0bfBWU5QAkfI/3MHLjrohN6239MLdroVDecL92lltPIjL6OJf0FC6coDUp/hAiV6UfDiE2DQHS8NCPgesJ6JKst1bcS5xCkvQCcwaJIvE7uFfVI6R4ZLbb4=
+	s=arc-20240116; t=1756192105; c=relaxed/simple;
+	bh=OVE9hGqVcrmr2QU6izD836shHsGG1g38C4ChzAfeGaI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=AzMhIysxv5suda6a3for1owihTKErEebsBSDSxNVrDd1H6l8xvXGe8TY2zdb8qfabFcN0L2RHXkw3WrIQagtgXRZfDfB+IEpyIUomS4RhuXYm4fP9F6NkPoYRmSU3VnS+/vPoui7QQTNL0rBF+EPBdIswe04DA8Jbtx4sOgJcB4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxLvDjWK1oiEEDAA--.6265S3;
-	Tue, 26 Aug 2025 14:49:07 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxE+TiWK1oOGxpAA--.324S2;
-	Tue, 26 Aug 2025 14:49:07 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxP_BiXa1oD0MDAA--.6356S3;
+	Tue, 26 Aug 2025 15:08:18 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxfcFfXa1oQ3RpAA--.11172S3;
+	Tue, 26 Aug 2025 15:08:15 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: BPF: Fix uninitialized symbol 'retval_off'
+To: Huacai Chen <chenhuacai@loongson.cn>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>
+Cc: bpf@vger.kernel.org, Hengqi Chen <hengqi.chen@gmail.com>,
+ Huacai Chen <chenhuacai@gmail.com>, George Guo <guodongtai@kylinos.cn>,
+ Chenghao Duan <duanchenghao@kylinos.cn>, loongarch@lists.linux.dev,
+ kernel test robot <lkp@intel.com>, Dan Carpenter <dan.carpenter@linaro.org>
+References: <20250819111953.3197428-1-chenhuacai@loongson.cn>
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>,
-	bpf@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: BPF: Optimize sign-extention mov instructions
-Date: Tue, 26 Aug 2025 14:49:06 +0800
-Message-ID: <20250826064906.10683-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+Message-ID: <1378057e-4fc1-2bcd-4d60-1a10bd98e5bb@loongson.cn>
+Date: Tue, 26 Aug 2025 15:07:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20250819111953.3197428-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxE+TiWK1oOGxpAA--.324S2
+X-CM-TRANSID:qMiowJAxfcFfXa1oQ3RpAA--.11172S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tFWktw4rZw4xJr17Ar17XFc_yoW8Grykpr
-	ZrCrnYkrWjq347AF1kJa1UWrsFyFsxGr47XFy2q3y8J39xWryqqr1fKw13tFZ5J39YvFWk
-	XFy0kwn0qas8ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7AFW7Jr15CFWDGrWktFy3ZFc_yoW8Wr13pr
+	ZrZrnIyF48Wry2qa9rX3yrXrn0qr4DGrnxWF1YyFyrCay5Xw1vvr1rGa98WFyjy39Yvw10
+	qrs0krnIk3ZrAacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7BMNUUUUU=
 
-For 8-bit and 16-bit sign-extention mov instructions, it can use the native
-instructions ext.w.b and ext.w.h directly, no need to use the temporary t1
-register, just remove the redundant operations.
+On 2025/8/19 下午7:19, Huacai Chen wrote:
+> In __arch_prepare_bpf_trampoline(), retval_off is meaningful only when
+> save_ret is not 0, so the current logic is correct. But it may cause a
+> build warning:
+> 
+> arch/loongarch/net/bpf_jit.c:1547 __arch_prepare_bpf_trampoline() error: uninitialized symbol 'retval_off'.
+> 
+> So initialize retval_off unconditionally to fix it.
+> 
+> Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support")
+> Closes: https://lore.kernel.org/r/202508191020.PBBh07cK-lkp@intel.com/
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   arch/loongarch/net/bpf_jit.c | 9 ++++-----
+>   1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index abfdb6bb5c38..a73f6ea4ed4a 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1504,11 +1504,10 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+>   	stack_size += 16;
+>   
+>   	save_ret = flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_FENTRY_RET);
+> -	if (save_ret) {
+> -		/* Save BPF R0 and A0 */
+> -		stack_size += 16;
+> -		retval_off = stack_size;
+> -	}
+> +	if (save_ret)
+> +		stack_size += 16; /* Save BPF R0 and A0 */
+> +
+> +	retval_off = stack_size;
 
-Here are the test results:
+Just init retval_off as 0 at the beginning of this function?
+What is the difference? which is better?
 
-  # modprobe test_bpf test_range=81,84
-  # dmesg -t | tail -5
-  test_bpf: #81 ALU_MOVSX | BPF_B jited:1 5 PASS
-  test_bpf: #82 ALU_MOVSX | BPF_H jited:1 5 PASS
-  test_bpf: #83 ALU64_MOVSX | BPF_B jited:1 5 PASS
-  test_bpf: #84 ALU64_MOVSX | BPF_H jited:1 5 PASS
-  test_bpf: Summary: 4 PASSED, 0 FAILED, [4/4 JIT'ed]
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/net/bpf_jit.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index abfdb6bb5c38..7072db18c6cd 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -527,13 +527,11 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			emit_zext_32(ctx, dst, is32);
- 			break;
- 		case 8:
--			move_reg(ctx, t1, src);
--			emit_insn(ctx, extwb, dst, t1);
-+			emit_insn(ctx, extwb, dst, src);
- 			emit_zext_32(ctx, dst, is32);
- 			break;
- 		case 16:
--			move_reg(ctx, t1, src);
--			emit_insn(ctx, extwh, dst, t1);
-+			emit_insn(ctx, extwh, dst, src);
- 			emit_zext_32(ctx, dst, is32);
- 			break;
- 		case 32:
--- 
-2.42.0
+Thanks,
+Tiezhu
 
