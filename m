@@ -1,206 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A50C72627;
-	Tue, 26 Aug 2025 11:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41FD2820B1
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 11:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756206943; cv=none; b=re484LSf4GhK+ZJkBIAlGMlYP90a01rOyfm+U7EGxCG9YL7JDoQ6evHFE+OcfN1BCa0cSn8gUpk93RzI3ASZJO5vSe8VF+bB8sHP2X1h8M7cketHSCQNN6iI38MWj9Epr48mqAyaAYO9+L9VjCL6C+SN3XLPcvMAB6A5wNujBpI=
+	t=1756208137; cv=none; b=q3eGkEAvow72L5dp6PGXh8jc2zXwtx+ORJ5zJIHI+GszNrcdx/ghg0O1P3HPY2rUcNjnSV01dejQdaUFd72cFHx2bB+qFI6aR/3sjfCa4jQwYN3DUNps2Hu8ewuX6CqVIQhvQ5QUhMtYHJSSgKFYbgdUVtSu9KRA2Iq8vKhgRmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756206943; c=relaxed/simple;
-	bh=OTax/FZOAVkSfXJa1A9gunuHpIZmaqBR9VNEDweSclY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bKnrIfageEddsND/tQbu35XDLl+UdfFKritSwAh9f1ySjBjoTe5to6DgUah9+k67KTxzgvMEsB3wZP5egM+xDyVVgglPuPY9RtiJypax7d0F5XuaQupk6zZ+16RIe/IPnfSj0r5tqrjp1KK+rEVdMRy6ASpG8eGYCUcgofDF/3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E7AF1A00;
-	Tue, 26 Aug 2025 04:15:32 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 663C13F63F;
-	Tue, 26 Aug 2025 04:15:28 -0700 (PDT)
-Date: Tue, 26 Aug 2025 12:15:23 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-	acme@kernel.org, namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
-	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 02/19] perf/hisilicon: Fix group validation
-Message-ID: <aK2XS_GhLw1EQ2ml@J2N7QTR9R3>
-References: <cover.1755096883.git.robin.murphy@arm.com>
- <c7b877e66ba0d34d8558c5af8bbb620e8c0e47d9.1755096883.git.robin.murphy@arm.com>
+	s=arc-20240116; t=1756208137; c=relaxed/simple;
+	bh=VBo1svRdNginrTEbj9qaCPBWiJIBPwa3ORCjnE8hJR4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rk3IoP9FhvXU7GcByu6ypfhil/l4HJ5KQDHeIiTNvoy6YcakQ8lMfRqnvha7LrYve2VfedLdj23nGQUf/Rl3Rm5k0mICkafQCioA183HJjYkL2SYKRC5yLja6wGmApqSKdaX88QP/LS+uoY9XvBY9EiJQDCce/yGu4nXAzkeEHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=XA9RB8WY; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="XA9RB8WY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1756208114;
+	bh=R3t7Utl+TZovCPDN/hOP+mtqkeQuSJIeGBdP9uvpOi0=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=XA9RB8WY5yMKQNstl8UYDXtL7SpIYiYwsJzQDybnTNXJaiI8ZSFwRCq+9Q2VdsZfV
+	 G/09psUy4sBRGb5E3jJJkqkJXTyjycg9Gqu0J1e5CuzNJE773S5bDma4c855ivD2Yl
+	 nA3TFcXG34GlMkJ9oSfUEJZMBMtGWBaaKvKGraAU=
+X-QQ-mid: zesmtpsz4t1756208106tda2cce22
+X-QQ-Originating-IP: bKB9BJ/INt9s6T+Uy6F38r01fZSmLhamwRrNQE6i5ZY=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 26 Aug 2025 19:35:04 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 9744646128302791925
+EX-QQ-RecipientCnt: 7
+From: Wentao Guan <guanwentao@uniontech.com>
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	xry111@xry111.site,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	zhanjun@uniontech.com,
+	Wentao Guan <guanwentao@uniontech.com>
+Subject: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
+Date: Tue, 26 Aug 2025 19:32:25 +0800
+Message-Id: <20250826113225.406238-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c7b877e66ba0d34d8558c5af8bbb620e8c0e47d9.1755096883.git.robin.murphy@arm.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
+X-QQ-XMAILINFO: NmdX3UvlO4h/NP0/GDLA7fNsw+Z5U4f2tYDh378TRAfCcBYXAzUGNhbx
+	n7BIy5bEcQybtQxVIBzWEmFvlidpS7fWOrKfbIblujeYqM/Ol3kPgDwr53ssUWHG+BbSlG6
+	psUwL/hYHCuh3DEjccLOZqfa6KBiGyTGRrbpjHgUru7Pivg7CHMEIsEbOISoEDb6cL7NfpZ
+	SxoBa6nuRQ1671XtC45BlI7YCN8u30xRpGrCIkMAQ0TmVPd/x4ydwW0fyVlZChiSChy6UsG
+	G9MApD0PCmDSvqhRcuGjhvBI/Yf97l9RYhUSGugfo/G/069jTJk187MTKRikshB+zjGXu7Q
+	/uSZh0qbUCrOj8BwxriQ+3tLgsZvFCqgFrcd2DNmjZwYbEa3UBPlubj94FV4P6k6JQqnhkz
+	ThIg6L8HJJ/rgf59vx7+ymB6QKHRjGKq19PYw5ROgzEQQdqXnKft2Qtge6LeU4Kvf/HS3rl
+	aWlH2MhHe2MtDdRC9YxR2yhBTNiTwq8dvZhl7IznGy9p9NpWfjr1cV6wOovlwyAaB3D65ZQ
+	xYTIlCKTGVQIdxMk4zC/1zCq33uO5Qiz+JrKsUcWCBwrDviJDA65smtd2ECV0tc66DEyh3a
+	i0c2qwdnt07XJclu4ktajCvueyAibffKHPTivRN3dA4uKkDEC2bSosVNnrVF6LGET/jU2Tz
+	vnjLsvXhzkiOEyMjbv3a4f+sTk4KZx5BezS4wt5neQfrY9UWW+zM8yLBRqmeZyalBFSY5BG
+	0QgXNUaeKId/zpxzWpViLG2uVTjXAkFh072oGi0STWb+HrV7kbGosL9nboDkvo4lxO9/EWS
+	Nr1BqL/ubuvR4+YqQwPQct5eeX80yflfsYkEIR0TaXKpACPf2IK826l/nQqsbRtlg31x2eL
+	fDtN2yvL8jLCfxXSt8xXw7pVcdBMf3Qb9d51cjO6Sdw9fpxMgaaNGIIuWkkfBzPibk6wVJ6
+	db/x1mHfN3qCkXWvDLWduR6WwQLM7+43G8yvDS4wFeXJ52pFuqDIlyBg7T+VWL5lHdMQi/Z
+	ARxM9ezxlD5F4uYmiaArxURvcgrnBvMuRzTz3QhfY48pVmUfsUNNoj8kqmLAo=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 
-On Wed, Aug 13, 2025 at 06:00:54PM +0100, Robin Murphy wrote:
-> The group validation logic shared by the HiSilicon HNS3/PCIe drivers is
-> a bit off, in that given a software group leader, it will consider that
-> event *in place of* the actual new event being opened. At worst this
-> could theoretically allow an unschedulable group if the software event
-> config happens to look like one of the hardware siblings.
-> 
-> The uncore framework avoids that particular issue,
+Loongarch use -fno-builtin-memcpy in Makefile,
+so cause a extra memcpy in syscall hot path:
 
-What is "the uncore framework"? I'm not sure exactly what you're
-referring to, nor how that composes with the problem described above.
+syscall_enter_audit
+->syscall_get_arguments->memcpy(__memcpy_fast)
+->audit_syscall_entry
 
-> but all 3 also share the common issue of not preventing racy access to
-> the sibling list,
+Just avoid memcpy() altogether and write the copying of args from regs
+manually, which shows 5% multi core score up in UnixBench syscall.
 
-Can you please elaborate on this racy access to the silbing list? I'm
-not sure exactly what you're referring to.
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+---
+ arch/loongarch/include/asm/syscall.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> and some redundant checks which can be cleaned up.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->  drivers/perf/hisilicon/hisi_pcie_pmu.c   | 17 ++++++-----------
->  drivers/perf/hisilicon/hisi_uncore_pmu.c | 23 +++++++----------------
->  drivers/perf/hisilicon/hns3_pmu.c        | 17 ++++++-----------
->  3 files changed, 19 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> index c5394d007b61..3b0b2f7197d0 100644
-> --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> @@ -338,21 +338,16 @@ static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
->  	int counters = 1;
->  	int num;
->  
-> -	event_group[0] = leader;
-> -	if (!is_software_event(leader)) {
-> -		if (leader->pmu != event->pmu)
-> -			return false;
-> +	if (leader == event)
-> +		return true;
->  
-> -		if (leader != event && !hisi_pcie_pmu_cmp_event(leader, event))
-> -			event_group[counters++] = event;
-> -	}
-> +	event_group[0] = event;
-> +	if (leader->pmu == event->pmu && !hisi_pcie_pmu_cmp_event(leader, event))
-> +		event_group[counters++] = leader;
+diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/include/asm/syscall.h
+index 81d2733f7b94..171af2edd569 100644
+--- a/arch/loongarch/include/asm/syscall.h
++++ b/arch/loongarch/include/asm/syscall.h
+@@ -65,7 +65,11 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 					 unsigned long *args)
+ {
+ 	args[0] = regs->orig_a0;
+-	memcpy(&args[1], &regs->regs[5], 5 * sizeof(long));
++	args[1] = regs->regs[5];
++	args[2] = regs->regs[6];
++	args[3] = regs->regs[7];
++	args[4] = regs->regs[8];
++	args[5] = regs->regs[9];
+ }
+ 
+ static inline void syscall_set_arguments(struct task_struct *task,
+-- 
+2.20.1
 
-Looking at this, the existing logic to share counters (which
-hisi_pcie_pmu_cmp_event() is trying to permit) looks to be bogus, given
-that the start/stop callbacks will reprogram the HW counters (and hence
-can fight with one another).
-
-I suspect that can be removed *entirely*, and this can be simplified
-down to allocating N counters, without a quadratic event comparison.  We
-don't try to share counters in other PMU drivers, and there was no
-rationale for trying to do this when this wa introduced in commit:
-
-  8404b0fbc7fbd42e ("drivers/perf: hisi: Add driver for HiSilicon PCIe PMU")
-
-The 'link' tag in that comment goes to v13, which doesn't link to prior
-postings, so I'm not going to dig further.
-
-Mark.
-
->  
->  	for_each_sibling_event(sibling, event->group_leader) {
-> -		if (is_software_event(sibling))
-> -			continue;
-> -
->  		if (sibling->pmu != event->pmu)
-> -			return false;
-> +			continue;
->  
->  		for (num = 0; num < counters; num++) {
->  			/*
-> diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-> index a449651f79c9..3c531b36cf25 100644
-> --- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
-> +++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-> @@ -101,26 +101,17 @@ static bool hisi_validate_event_group(struct perf_event *event)
->  	/* Include count for the event */
->  	int counters = 1;
->  
-> -	if (!is_software_event(leader)) {
-> -		/*
-> -		 * We must NOT create groups containing mixed PMUs, although
-> -		 * software events are acceptable
-> -		 */
-> -		if (leader->pmu != event->pmu)
-> -			return false;
-> +	if (leader == event)
-> +		return true;
->  
-> -		/* Increment counter for the leader */
-> -		if (leader != event)
-> -			counters++;
-> -	}
-> +	/* Increment counter for the leader */
-> +	if (leader->pmu == event->pmu)
-> +		counters++;
->  
->  	for_each_sibling_event(sibling, event->group_leader) {
-> -		if (is_software_event(sibling))
-> -			continue;
-> -		if (sibling->pmu != event->pmu)
-> -			return false;
->  		/* Increment counter for each sibling */
-> -		counters++;
-> +		if (sibling->pmu == event->pmu)
-> +			counters++;
->  	}
->  
->  	/* The group can not count events more than the counters in the HW */
-> diff --git a/drivers/perf/hisilicon/hns3_pmu.c b/drivers/perf/hisilicon/hns3_pmu.c
-> index c157f3572cae..382e469257f9 100644
-> --- a/drivers/perf/hisilicon/hns3_pmu.c
-> +++ b/drivers/perf/hisilicon/hns3_pmu.c
-> @@ -1058,21 +1058,16 @@ static bool hns3_pmu_validate_event_group(struct perf_event *event)
->  	int counters = 1;
->  	int num;
->  
-> -	event_group[0] = leader;
-> -	if (!is_software_event(leader)) {
-> -		if (leader->pmu != event->pmu)
-> -			return false;
-> +	if (leader == event)
-> +		return true;
->  
-> -		if (leader != event && !hns3_pmu_cmp_event(leader, event))
-> -			event_group[counters++] = event;
-> -	}
-> +	event_group[0] = event;
-> +	if (leader->pmu == event->pmu && !hns3_pmu_cmp_event(leader, event))
-> +		event_group[counters++] = leader;
->  
->  	for_each_sibling_event(sibling, event->group_leader) {
-> -		if (is_software_event(sibling))
-> -			continue;
-> -
->  		if (sibling->pmu != event->pmu)
-> -			return false;
-> +			continue;
->  
->  		for (num = 0; num < counters; num++) {
->  			/*
-> -- 
-> 2.39.2.101.g768bb238c484.dirty
-> 
