@@ -1,32 +1,31 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76A762D3A9E
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 06:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9F74C83
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 06:49:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756190814; cv=none; b=ok5BHEu1cmrl15VzlQODr/BZ8Qw93e2CpKKgRtNwydCd1+0eoVoFz/m+DDitU+iHrXx4DXGK5HH+y5I5ZvhuCHRJz3Rw8LT/i62/UEwPI+HRnvXwC4PmaZPqXdDLRnifagXcMZRIewh3CzE9eKIPuBNPl4zlS/flOJy0DlbUuZA=
+	t=1756190954; cv=none; b=f1OtQjRZhA72wzDbt92kB9Hck/fiBfmklDnuUJeV6PFAKN8asDIebvVa0gs5gIAQYjqOIrww8sw+eg85t4x7LLtUPYGVfHxCkCd+THkgldE4WbIJQ9OQY14wnGsCq2XntEXsxlS6Y4a64nDDTXLx9IoAjI+ArQVqvSbMZ6NOF1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756190814; c=relaxed/simple;
-	bh=PJYcrW3146tg0jQ2dAlNuAr1YSgbWZab7/BLli09X04=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZdgoOTrsGbmKe6oFaIFQhiY9az3AcZlTAd6+gn4HHG/jlQH9mFL5zKhy6zSrKA4A0ltLVgGRVY/lP6+dv0hHWzlA6w/BeL84ykr7b239Bu6tc5jbon5G37F0ndKn2b2UajWkJ8rNIoV9E7AWe+zuOgJmRGAsOvBcaI6N1R0mJM0=
+	s=arc-20240116; t=1756190954; c=relaxed/simple;
+	bh=WQiyCPe1c9Dqjla1jCqE9LJ4OEHB8M7ZV66fnfHLw20=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QaDSpvTIRWOABa+G4KyBfA9MXO/RiUcGHNHG8Sx6yG2cS8oKNS6q0bfBWU5QAkfI/3MHLjrohN6239MLdroVDecL92lltPIjL6OJf0FC6coDUp/hAiV6UfDiE2DQHS8NCPgesJ6JKst1bcS5xCkvQCcwaJIvE7uFfVI6R4ZLbb4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cxf9NQWK1oHkEDAA--.6243S3;
-	Tue, 26 Aug 2025 14:46:40 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxLvDjWK1oiEEDAA--.6265S3;
+	Tue, 26 Aug 2025 14:49:07 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxTMFKWK1o6GppAA--.11160S2;
-	Tue, 26 Aug 2025 14:46:34 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJAxE+TiWK1oOGxpAA--.324S2;
+	Tue, 26 Aug 2025 14:49:07 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: loongarch@lists.linux.dev,
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>,
+	bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 0/2] Fix objtool warnings if LTO is enabled for LoongArch (Part 2)
-Date: Tue, 26 Aug 2025 14:46:29 +0800
-Message-ID: <20250826064631.9617-1-yangtiezhu@loongson.cn>
+Subject: [PATCH] LoongArch: BPF: Optimize sign-extention mov instructions
+Date: Tue, 26 Aug 2025 14:49:06 +0800
+Message-ID: <20250826064906.10683-1-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -35,54 +34,64 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxTMFKWK1o6GppAA--.11160S2
+X-CM-TRANSID:qMiowJAxE+TiWK1oOGxpAA--.324S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruF4UZF47Ar1DXryxWF4ftFc_yoWkCwb_ur
-	yS9F1xGrW7Cw4Fgw1UKFZxZFy7Ka40gryDAr92grW2g34fC3WDCanrGr13Ar10gFZ7JrZ8
-	GrWv9r18ZwnFgosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbzAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_
-	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7MmhUUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoW7tFWktw4rZw4xJr17Ar17XFc_yoW8Grykpr
+	ZrCrnYkrWjq347AF1kJa1UWrsFyFsxGr47XFy2q3y8J39xWryqqr1fKw13tFZ5J39YvFWk
+	XFy0kwn0qas8ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
 
-The previous series is to fix most of the warnings (total 3030):
+For 8-bit and 16-bit sign-extention mov instructions, it can use the native
+instructions ext.w.b and ext.w.h directly, no need to use the temporary t1
+register, just remove the redundant operations.
 
-  sibling call from callable instruction with modified stack frame
+Here are the test results:
 
-This series is a follow up to fix 2 kinds of warnings (total 24), it only
-touches the LoongArch related code:
+  # modprobe test_bpf test_range=81,84
+  # dmesg -t | tail -5
+  test_bpf: #81 ALU_MOVSX | BPF_B jited:1 5 PASS
+  test_bpf: #82 ALU_MOVSX | BPF_H jited:1 5 PASS
+  test_bpf: #83 ALU64_MOVSX | BPF_B jited:1 5 PASS
+  test_bpf: #84 ALU64_MOVSX | BPF_H jited:1 5 PASS
+  test_bpf: Summary: 4 PASSED, 0 FAILED, [4/4 JIT'ed]
 
-  falls through to next function
-  unreachable instruction
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-With this series, there is only 1 kind of warning (total 3), it does not
-only touch the LoongArch related code:
-
-  missing __noreturn in .c/.h or NORETURN() in noreturns.h
-
-In order to silence the above warnings, it needs to change the related
-code to give the functions __noreturn attribute, and have a NORETURN()
-annotation in tools/objtool/noreturns.h. IMO, it will touch all of the
-archs and the generic code, so this needs much more work to avoid the
-side effect or regression, once it is done I will send out the patch.
-
-Tiezhu Yang (2):
-  objtool/LoongArch: Fix fall through warning about efi_boot_kernel()
-  objtool/LoongArch: Fix unreachable instruction warnings about head.S
-
- arch/loongarch/kernel/head.S             | 8 ++++----
- drivers/firmware/efi/libstub/loongarch.c | 5 ++++-
- 2 files changed, 8 insertions(+), 5 deletions(-)
-
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index abfdb6bb5c38..7072db18c6cd 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -527,13 +527,11 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			emit_zext_32(ctx, dst, is32);
+ 			break;
+ 		case 8:
+-			move_reg(ctx, t1, src);
+-			emit_insn(ctx, extwb, dst, t1);
++			emit_insn(ctx, extwb, dst, src);
+ 			emit_zext_32(ctx, dst, is32);
+ 			break;
+ 		case 16:
+-			move_reg(ctx, t1, src);
+-			emit_insn(ctx, extwh, dst, t1);
++			emit_insn(ctx, extwh, dst, src);
+ 			emit_zext_32(ctx, dst, is32);
+ 			break;
+ 		case 32:
 -- 
 2.42.0
 
