@@ -1,116 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15B81DAC95
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 13:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B30184540;
+	Tue, 26 Aug 2025 13:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756213429; cv=none; b=kHBciPe61m2iF7VuwD9qJ6sagXxdbYBtTHmIYIo/USpgPVCkgOgFyEZsZFrF4jExVHXY88LBm0roV4f54yJitlm+JsZubKO/fLiMrWBM2jv7vkwQonCEBM9MZAq+FraHnqYuKpXVu9nQBkE0gvgS9ezsHS5ZS+wF/NX5y4i3BR4=
+	t=1756213694; cv=none; b=ZE88xS9qerwBHKbPHE+L1FDoOpsCOnius5W6cPTf78/IeU+sW1qXnmskCswemo9LbXoZPxqkZDg7loW6sFYwrXFkHXF5dYLEqkYqZxvzq1Y08ELfPyBc2Yuz9uaam51FExdUgtGkaZYGF6oLWGB4x6KDrH5+Joif0u9qcRtePv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756213429; c=relaxed/simple;
-	bh=nk7jhUwWLjxIbwK4I/zNtqt1MsWdQ36uPPgFbuOgopQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T82I29TyY9GFz8z0nZQE0FQmibc6YKU/bfdMpbZht2wpb9qhFNdOo2nvJPGbkhBbB90mD4zOtSa7n+CJFlZuz5VxUAvpxM7ZE1peblw/mhx5/jTOssUDtMVJ3yG1bxM1KN4lab6aMjSc1CxYWFQosXW5uRxcGGOL6PbRT4Vp448=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pY9gpf5H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756213694; c=relaxed/simple;
+	bh=K5Hq8A3EfCbmeiLfsfr4d1nDO6kRorI56BAyDsThWmo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=klvpv9HYhNGZn6PC3oLwfENyrx7P2IjzEuW9tdbFQaIIopxN3BkJHO2hboRwEgp6Xscz/Y+fqXvN+cgwsa+sFAACpu+4jhfuHOZyQatdRqYGzQoBF5gPzqz+5vZIFLkmfMPXVJrGs5TFQSx7ftgxWhY2dmhKYY7XLlZtBuBrYUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tTA/3PiA; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pY9gpf5H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A48C4CEF1
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 13:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756213428;
-	bh=nk7jhUwWLjxIbwK4I/zNtqt1MsWdQ36uPPgFbuOgopQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pY9gpf5H0j/3l6C2f4WZsvzR4T92c+qlxdvZMAibHkC+vbdJc4GVKDkUeQ7RXaaLM
-	 lD9O7jaWoO2usnocQHMj7cIs7cvxluZlQ3HHnaS8hKku1z+/8097bVNJq0ptC75717
-	 qyubmht8zCWMlWTJy2i6VqL+pEWdeS3TK3Q7ZW4mSvnGpr98rAcNITcsFTiTguoTTl
-	 o/f81aZGgROkJJ++wQYKZI5Qs2JacT5t2dsPC6+t5XbuBllU9/AoWk5ybZsVp2KUPt
-	 6YwESfLLMLFpClIZt/nqfx0N2VJqW4FaO6dICtTnTodr3QmacO2rAzvl4W8/ka4LPO
-	 Eer9rhlPcEJ0w==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-61c21e50168so5188105a12.3
-        for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 06:03:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUt+pgFnrskGUaumQs9M6r+8PPCZOsqqo/OYNmThYgpD+wWlhFi0guY6tkrp7v88m7GX43JaSW1bws=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyXVNZOfTPUGzLuo2ZLDK8k1QvA3kjTYlHyH75zTKgO7/UBsCk0
-	8icH8E7dec9BZPKnJ3nOYGKRxc+kInEquXaUIaZbD3OBI9o+dFHczc+MyTdTBeFdXUGaX4PqHC+
-	CtnLdal4jRe88KO1EXTuu8yJuov6a8oo=
-X-Google-Smtp-Source: AGHT+IE675Ml2VEXdGaR0URYV5LfkjLncmRAXtzDjddNaQF4YVtfzIVT53EfNILVoihSDWLkNi4/+6IxLm6P4iI6ZSs=
-X-Received: by 2002:a05:6402:26d0:b0:61c:5474:ffbf with SMTP id
- 4fb4d7f45d1cf-61c5474ffdamr7122162a12.33.1756213427061; Tue, 26 Aug 2025
- 06:03:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tTA/3PiA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=1anwaqC6FtBZhv/AdRsioHe6z7ff2/NtObpshRSmtXo=; b=tTA/3PiAJQSpvqwn9JBse0zv8x
+	XpRRlvytBaU8d04FPgmaRAhvvZSqAROIZ/4ezjLoE6WsNdrr9/VlG41rEHCWsnk6JH8UsrGv5T5LT
+	zWsAXDZBYt6RN2vrodVyAq1DmmcYAol3ljF/QPWtrzgIrZdA+eDohdH+O3MOT2cIfR3SAL6oZFxxT
+	a0buqH4Cjn32e+/T6hw9u+ioPisD3zaMrQKEyQ6W0w6+Ct9SXam4tKJBvFWH9AMfHquCJRKF+Zp4I
+	PdyzFVdx3HFHpHhkOPtwcc+TPPHK59R640Wqk+YmnwDvNpXZJgmWLR1JQJ9jnUMah3B3H6sSqGhBU
+	hjKnAxuQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uqtPC-00000002GIP-3rVi;
+	Tue, 26 Aug 2025 13:08:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id DB2A63002C5; Tue, 26 Aug 2025 15:08:06 +0200 (CEST)
+Date: Tue, 26 Aug 2025 15:08:06 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: mingo@redhat.com, will@kernel.org, mark.rutland@arm.com,
+	acme@kernel.org, namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 16/19] perf: Introduce positive capability for sampling
+Message-ID: <20250826130806.GY4067720@noisy.programming.kicks-ass.net>
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <ae81cb65b38555c628e395cce67ac6c7eaafdd23.1755096883.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250826064631.9617-1-yangtiezhu@loongson.cn> <20250826064631.9617-2-yangtiezhu@loongson.cn>
- <CAAhV-H5wW_04NHQ7z+SCPb6-T5Hc__n+x=ykg-u9vn4b4GXuww@mail.gmail.com> <487a8149-6cbe-46a7-6771-66aef0045f07@loongson.cn>
-In-Reply-To: <487a8149-6cbe-46a7-6771-66aef0045f07@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 26 Aug 2025 21:03:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7m-BSqajDiDNMNEq4FY9uoCd9LZySOe0VQ+2Sv1wZZVg@mail.gmail.com>
-X-Gm-Features: Ac12FXznsGPP8wLPZfGYQ1iw7g6utc_zspEM5jjFBXn1rZ2NWCs22HEn7S98enk
-Message-ID: <CAAhV-H7m-BSqajDiDNMNEq4FY9uoCd9LZySOe0VQ+2Sv1wZZVg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] objtool/LoongArch: Fix fall through warning about efi_boot_kernel()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae81cb65b38555c628e395cce67ac6c7eaafdd23.1755096883.git.robin.murphy@arm.com>
 
-On Tue, Aug 26, 2025 at 8:33=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> On 2025/8/26 =E4=B8=8B=E5=8D=884:32, Huacai Chen wrote:
-> > On Tue, Aug 26, 2025 at 2:46=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
-> >>
-> >> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
-> >> the following objtool warning:
-> >>
-> >>    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
-> >>    falls through to next function __efistub_exit_boot_func()
->
-> ...
->
-> >> -typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmd=
-line,
-> >> +typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
-> >>                                            unsigned long systab);
-> >  From my point of view this is incorrect, this function is indeed a
-> > noreturn function, and this modification makes LoongArch different to
-> > other architectures.
-> >
-> > Maybe it is better to let objtool ignore the whole
-> > drivers/firmware/efi/libstub directory. Because efistub is discarded
-> > at runtime so it is useless for stack unwinder.
->
-> I tested the following change but there is no effect, the objtool
-> warning still exists, this is because OBJECT_FILES_NON_STANDARD
-> does not work for link time validation of vmlinux.o according to
-> tools/objtool/Documentation/objtool.txt.
-Then I think objtool needs to be improved to handle this case, this
-problem is not arch specific.
+On Wed, Aug 13, 2025 at 06:01:08PM +0100, Robin Murphy wrote:
+> Sampling is inherently a feature for CPU PMUs, given that the thing
+> to be sampled is a CPU context. These days, we have many more
+> uncore/system PMUs than CPU PMUs, so it no longer makes much sense to
+> assume sampling support by default and force the ever-growing majority
+> of drivers to opt out of it (or erroneously fail to). Instead, let's
+> introduce a positive opt-in capability that's more obvious and easier to
+> maintain.
+> 
 
-Huacai
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 4d439c24c901..bf2cfbeabba2 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -294,7 +294,7 @@ struct perf_event_pmu_context;
+>  /**
+>   * pmu::capabilities flags
+>   */
+> -#define PERF_PMU_CAP_NO_INTERRUPT	0x0001
+> +#define PERF_PMU_CAP_SAMPLING		0x0001
+>  #define PERF_PMU_CAP_NO_NMI		0x0002
+>  #define PERF_PMU_CAP_AUX_NO_SG		0x0004
+>  #define PERF_PMU_CAP_EXTENDED_REGS	0x0008
+> @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
+>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
+>  #define PERF_PMU_CAP_AUX_PAUSE		0x0200
+>  #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
+> +#define PERF_PMU_CAP_NO_INTERRUPT	0x0800
 
->
-> diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefil=
-e
-> index 8efbcf699e4f..f1fff48eea76 100644
-> --- a/drivers/firmware/efi/Makefile
-> +++ b/drivers/firmware/efi/Makefile
-> @@ -10,6 +10,8 @@
->   #
->   KASAN_SANITIZE_runtime-wrappers.o      :=3D n
->
-> +OBJECT_FILES_NON_STANDARD              :=3D y
-> +
->   obj-$(CONFIG_ACPI_BGRT)                +=3D efi-bgrt.o
->   obj-$(CONFIG_EFI)                      +=3D efi.o vars.o reboot.o
-> memattr.o tpm.o
->   obj-$(CONFIG_EFI)                      +=3D memmap.o
->
-> Thanks,
-> Tiezhu
->
->
+So NO_INTERRUPT was supposed to be the negative of your new SAMPLING
+(and I agree with your reasoning).
+
+What I'm confused/curious about is why we retain NO_INTERRUPT?
