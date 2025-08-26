@@ -1,131 +1,120 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C01221F20
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 00:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354741FC8
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 01:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756168040; cv=none; b=FZd8H8Ft5ny3mgzdiWTHP0aVBKw0iX6FBqu24GudjciT7+TwUGeLPzfo7/HqojRADxiPZQkXxLWBXzg9zajCl4BGzjYjiZ9qX/KeRjL2t9RnymZt2WNtyILhE/hbIWALTvbm72KniIfE1Seb3m/0OweIi6ZeB7/xk8l0wwLUGTY=
+	t=1756171098; cv=none; b=OPVAJh5nABYhDFcebLDz3PxAf1tBOzhJEGvFvojco+G3eHNXA4jAtR8glUVXF3zHd/jo0d21G4SNQnSRVD4nAFLObVpcl2Edqkm7AjjR7Ufzhy7HsdXFuuebgPA1rFG94fJulgfs/yNRvpfSrc6xibNmYhB4TZ6yCetiCb2CptI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756168040; c=relaxed/simple;
-	bh=5L/BYqW9WfoHeTEgYYwzNBfWpjlpn5EeY5J3QpRZyJ0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Wn46mWlhFTeNpYe5tizylfUMJPS1UMklLl7YfqTh/UcW9aqEzMJbmUrHHOZaO8SJuX8HjaTIQQxBvscm3RcKKtYp+qMgBrq0WOEio1k1FVD40R75/JPctLUXPzgyjujjpX51w97GFBhUKBv8YVSCc9HLHqCF/mW/RkeWHPkdwac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=suNU1BZ7; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1756171098; c=relaxed/simple;
+	bh=pFERUv+q1Pvz6t8Bjs/RczTmneUUEdtrsHsfMjbdmII=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Bruo++N/MFlX29lY3KV49EgogGxyLWcieIEIOXEQ/SnkDCd8kXKA7OxPnd4MWOgdtpPv+s7bOYPcspFZFsJ8VfSFsH/n4CGLz+7X1D8zVs5LZYXBS45/QnDMpWTzYxOF4NLVEqihNozWSsI66047S4movGX79Wt2EiTwX1p3Hjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WzxTJYS3; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="suNU1BZ7"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b47174c65b0so8618862a12.2
-        for <loongarch@lists.linux.dev>; Mon, 25 Aug 2025 17:27:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756168038; x=1756772838; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U4ctZNwYJMz9+Hk7ge9l8ZiYDw45Y30bqY3Iaj5/gqE=;
-        b=suNU1BZ7W4CzNBuVKm/nc7VqXAfmq9IHBLaciWKHRiD+AeAYdd3AvNWDDlmPjmDwU7
-         embG1WIXkEOJlKrUyscEJBK04EOEbEwimoMogPtDIrdzaz6zB4DyhGpz7b6DamcFjPwN
-         vABjtwBOBZTQ2WTYfEjnp5xv82dyLu3gHwmTUMTcL50+zzRTEo/bom1ci6lbv8N6Kbc5
-         2aiR9sF4GI6+XHkbOCeLqAKyce2lBYZfITvEYmBmq1c6gSU7ZupWmMjWAhITqt+Bz3b3
-         YEcAQiz7haSo6Jbh6DlpaDsBwqCnN016rMfGsfUe/Iy+fK3QsSdDzH7HsF12p4hxlhIH
-         4+sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756168038; x=1756772838;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U4ctZNwYJMz9+Hk7ge9l8ZiYDw45Y30bqY3Iaj5/gqE=;
-        b=ZWCEYIZpCHannYJ1YQllQhmpw1DsodzbJQVib0uvl206lEZSPxIiMNpYYGpIxacDNa
-         ehU6SLa4GSnG8mAxegSbgzhR7frSDZGQfncmpgAjce2Edc3/Lby1iPxPUHiM3TKDG8zB
-         vjSzJctScwXqaZUzw/ljjU6l9ayxIUmnwTBKE4Xg/iLM/tYKUujjGWhnRtf51R0M/ZNN
-         5QXzytNorHqLPVnAQ8sBlbVMjbscNh/UfL8zX5UrOIAwyf5xobHWG4zVJ+sSMLbGRo9U
-         pNxXeKbWcmNACW+MOkJSYg9lGoCO73fB47ZGoZjMyi0qIjAiPjLDe2wGb+ws5L0j1f5K
-         8TyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkPAyU92xVMHAKyDIQSjFaFamAC6K3oFJXb/fSWXHwY2sOIamrWy96D6PTuUCJww4jlAda2HGb7gc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwRKXaBXILHBUafqmda+W3K8bBxPVY3aES7TFJdrXK4PENFzmfI
-	pTJevcsp41odUm5JN6A5JwkIobgr8BqW3VyLUsealmBOI73pp4qNpPDiJjw32n/UZmxXiqogs5d
-	fgv7xtQ==
-X-Google-Smtp-Source: AGHT+IFw5Mjf6HTcAUWU+u7CL/B6QAA0945o29LTS2VrhL4i1mL+9cXlmfjB4AEyc0iYoyyJlQoJr1vqexM=
-X-Received: from pjbsp15.prod.google.com ([2002:a17:90b:52cf:b0:30a:7da4:f075])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a105:b0:230:8b26:9d47
- with SMTP id adf61e73a8af0-24340ab318emr21164734637.10.1756168038330; Mon, 25
- Aug 2025 17:27:18 -0700 (PDT)
-Date: Mon, 25 Aug 2025 17:27:16 -0700
-In-Reply-To: <3188ca61-2591-4576-9777-1671689b7235@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WzxTJYS3"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1756171092;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=icSZngVaYlgp/7EJ4VaqjMZtnrg108Igob7ePxAT3/k=;
+	b=WzxTJYS3m7yQhP551w9/Kg/ePr9rPszSJrbq63hWnz8jSZTHYCTw4ATmLzfqCyBpyRHZ1o
+	n9Hv9lC0YbiKeUsUN9ie+RSsp8zDTeJloTZc1wGbs9tCeSZHCmLHlgLbPjoXaDY21K/SCs
+	LlW+CDAM18EYD5nHCCrJLx7QgM7wHjc=
+From: Youling Tang <youling.tang@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Baoquan He <bhe@redhat.com>,
+	Yao Zi <ziyao@disroot.org>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	youling.tang@linux.dev,
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: [PATCH v3 0/6] Add kexec_file support for LoongArch
+Date: Tue, 26 Aug 2025 09:17:16 +0800
+Message-Id: <20250826011722.82391-1-youling.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250825200622.3759571-1-seanjc@google.com> <3188ca61-2591-4576-9777-1671689b7235@linux.microsoft.com>
-Message-ID: <aKz_ZMvvF0e9nwSn@google.com>
-Subject: Re: [PATCH 0/5] Drivers: hv: Fix NEED_RESCHED_LAZY and use common APIs
-From: Sean Christopherson <seanjc@google.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andy Lutomirski <luto@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-hyperv@vger.kernel.org, 
-	rcu@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Aug 25, 2025, Nuno Das Neves wrote:
-> On 8/25/2025 1:06 PM, Sean Christopherson wrote:
-> > Fix a bug where MSHV root partitions don't honor NEED_RESCHED_LAZY, and then
-> > deduplicate the TIF related MSHV code by turning the "kvm" entry APIs into
-> > more generic "virt" APIs (which ideally would have been done when MSHV root
-> > support was added).
-> > 
-> > Assuming all is well, maybe this could go through the tip tree?
-> > 
-> > The Hyper-V stuff and non-x86 architectures are compile-tested only.
-> > 
-> 
-> Thanks Sean, I can test the root partition changes.
-> 
-> A similar change will be needed in mshv_vtl_main.c since it also calls
-> mshv_do_pre_guest_mode_work() (hence the "common" in mshv_common.c).
+From: Youling Tang <tangyouling@kylinos.cn>
 
-Oof, more dependencies.  I suppose the easiest thing would be to send a series
-against
+This patchset implement kexec_file_load() support on LoongArch.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git queue
+This patch series enables us to load the LoongArch vmlinuz.efi(pez) or
+vmlinux.efi(pei) or vmlinux(elf) by specifying its file decriptor,
+instead of user-filled buffer via kexec_load() syscall.
 
-and then route everything through there?
+To use kexec_file_load() system call, instead of kexec_load(), at kexec
+command, '-s' options must be specified. kexec-tools needs to apply the
+corresponding patches. These patches can be found in repository [1] and
+will be submitted to the kexec-tools community later.
 
-Alternatively, frontload the MSHV fixes (which I'll do regardless) and take those
-through hyperv and the rest through the tip tree?  That seems like an absurd
-amount of juggling though, especially if we want to get the cleanups into 6.18.
-And if none of these lands, it's MSHV that'll suffer the most, so betting it all
-on the hyperv tree doesn't seem terrible.
+The basic usage of kexec_file is:
+1) Load second kernel image:
+ # kexec -s -l vmlinuz.efi --initrd=initrd.img --reuse-cmdline
 
-> Also, is it possible to make all the mshv driver changes in a single patch?
+2) Startup second kernel:
+ # kexec -e
 
-It's certainly possible, but I'd prefer not do to that.
+For kdump:
+1) Load capture kernel image:
+ # kexec -s -p vmlinuz.efi --initrd=initrd.img --reuse-cmdline
 
-> It seems like it would be cleaner than refactoring it in patches 1 & 2 and
-> then deleting all the refactored code in patch 5.
+2) Do something to crash, like:
+ # echo c > /proc/sysrq-trigger
 
-Only if you don't care about backporting fixes, bisection, or maintaining code.
+Link:
+[1] https://github.com/tangyouling/kexec-tools/commits/main/
 
-E.g. if checking NEED_RESCHED_LAZY somehow causes issues, it would be really nice
-for that to bisect to exactly that patch, not a patch that also switches to a
-completely different set of APIs.
+Changelog:
+ v3:
+ * The ELF format kernel loading should not use loongarch_image_header. 
+ * Separate patch2 into an infrastructure patch and an EFI support
+   patch.
+ * Adding that kexec_file cannot load non-relocation kernel comments.
+ * Some minor modifications.
 
-And if someone is wants the fixes in a pre-6.18 kernel, they don't need to
-backport all of the KVM and entry code changes just to get the fix.
+ v2:
+ * Merge some patches.
+ * Add support for ELF format images.
+ * Rename kexec_image.c to kexec_efi.c .
+ * When KEXEC_FILE is enabled, RELOCATABLE is selected by default.
+ * Some minor modifications.
 
-As for the maintenance headache, see above.
+Youling Tang (6):
+  LoongArch: Add struct loongarch_image_header for kernel image
+  LoongArch: Add preparatory infrastructure for kexec_file
+  LoongArch/kexec_file: Support loading EFI binary file
+  LoongArch/kexec_file: Support loading ELF binary file
+  LoongArch/kexec_file: Add crash dump support
+  LoongArch: Enable CONFIG_KEXEC_FILE
+
+ arch/loongarch/Kconfig                     |  10 +
+ arch/loongarch/configs/loongson3_defconfig |   1 +
+ arch/loongarch/include/asm/image.h         |  57 +++++
+ arch/loongarch/include/asm/kexec.h         |  13 ++
+ arch/loongarch/kernel/Makefile             |   1 +
+ arch/loongarch/kernel/kexec_efi.c          | 114 ++++++++++
+ arch/loongarch/kernel/kexec_elf.c          | 105 +++++++++
+ arch/loongarch/kernel/machine_kexec.c      |  37 ++--
+ arch/loongarch/kernel/machine_kexec_file.c | 235 +++++++++++++++++++++
+ 9 files changed, 560 insertions(+), 13 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/image.h
+ create mode 100644 arch/loongarch/kernel/kexec_efi.c
+ create mode 100644 arch/loongarch/kernel/kexec_elf.c
+ create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+
+-- 
+2.43.0
+
