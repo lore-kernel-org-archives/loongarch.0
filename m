@@ -1,106 +1,172 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B76612C21E8
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 07:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63442F744D;
+	Tue, 26 Aug 2025 08:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756192105; cv=none; b=CKHSg+isgcaWRgdOT455jQPnfQmU6w7bYkHjoRHI4xxbpVqRahgmFWiXu0MrrhWiifsmuHfMP0Hck0SnbIK1J/vETK3lLd9SNqHsNOPwHUZIKqTiPBxGY9z3ou5Xs4ffn61DDok2VLRxukM10XVkMAei+78MEnYb/HLP9f/JQJg=
+	t=1756196464; cv=none; b=ZP7a6rLa2FF+ngL3+1P8UJer746Q0IRjH38ThZB3Pqs0EWXBWO8L88mk+GBtKANYtnh2h3KHI2YLK+uk5OnXDzAXud8AjQiPY21T2NifPKbO4+nVZMGscHn3UOAGUDtE4E6l+Bvx71vh4SqxpEFZ6ga9ggjT3hdFAaMyysM7NQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756192105; c=relaxed/simple;
-	bh=OVE9hGqVcrmr2QU6izD836shHsGG1g38C4ChzAfeGaI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=AzMhIysxv5suda6a3for1owihTKErEebsBSDSxNVrDd1H6l8xvXGe8TY2zdb8qfabFcN0L2RHXkw3WrIQagtgXRZfDfB+IEpyIUomS4RhuXYm4fP9F6NkPoYRmSU3VnS+/vPoui7QQTNL0rBF+EPBdIswe04DA8Jbtx4sOgJcB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxP_BiXa1oD0MDAA--.6356S3;
-	Tue, 26 Aug 2025 15:08:18 +0800 (CST)
-Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxfcFfXa1oQ3RpAA--.11172S3;
-	Tue, 26 Aug 2025 15:08:15 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: BPF: Fix uninitialized symbol 'retval_off'
-To: Huacai Chen <chenhuacai@loongson.cn>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>
-Cc: bpf@vger.kernel.org, Hengqi Chen <hengqi.chen@gmail.com>,
- Huacai Chen <chenhuacai@gmail.com>, George Guo <guodongtai@kylinos.cn>,
- Chenghao Duan <duanchenghao@kylinos.cn>, loongarch@lists.linux.dev,
- kernel test robot <lkp@intel.com>, Dan Carpenter <dan.carpenter@linaro.org>
-References: <20250819111953.3197428-1-chenhuacai@loongson.cn>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <1378057e-4fc1-2bcd-4d60-1a10bd98e5bb@loongson.cn>
-Date: Tue, 26 Aug 2025 15:07:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1756196464; c=relaxed/simple;
+	bh=zyOGpBT6MU4etiUjt/+Sh12XWH1nahSQBOLNyqnlQWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jzS/l2OPMnhw3rncYKs3dmpw2ID2i6UyBZqmULDHEASxUGfORrQkZgEMpeJZJbLWs1GVA1SwN5Q3QlYWglgVDv6KeDPYnoXY1l3vRmRnicpqh/Z7bN9fAykkZZiYIBcQOmWp10avu7bEobE69DNHfgGKWIDaX4856Risa2UzpaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CIw7fc2O; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CIw7fc2O"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=eW0qdKlKEDtIany2UuaD5p42GlzthPL/TQWYZP8788M=; b=CIw7fc2OrZsjpXqHLNwYmAz1Le
+	8GEghXTiWVWAMn71wDSBl8yFKxdbVOfo0IBpEFdEif7zmH5WiisbDFiubGax1Y+F2f5UqkwYGAGh5
+	7AD6vVJonNr6m8GXiSNwkNdcW+aLHEGXfVc5oRTCHZOofrz3vDh967B7xQ3X/pTp5EdP8uKJuDenF
+	fMnnE7AMaEuT1p5hPlrbuYym6DbNpgGdCNvqjcp3kluFBpn0a1iQw90IEQRf7z4YSSk+/tCoI5Zcu
+	dtKkyxen/3EW53p5/rTRTmjab5+Zlmtx+T4cASx34DTV9wbK0bjAdQhcpdDSvO+IVYHRfuZ/pdrBN
+	rRcdKtLQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uqovJ-0000000F2u3-1rni;
+	Tue, 26 Aug 2025 08:20:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A0AE03002C5; Tue, 26 Aug 2025 10:20:57 +0200 (CEST)
+Date: Tue, 26 Aug 2025 10:20:57 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] objtool/LoongArch: Fix unreachable instruction
+ warnings about head.S
+Message-ID: <20250826082057.GE3245006@noisy.programming.kicks-ass.net>
+References: <20250826064631.9617-1-yangtiezhu@loongson.cn>
+ <20250826064631.9617-3-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250819111953.3197428-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxfcFfXa1oQ3RpAA--.11172S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AFW7Jr15CFWDGrWktFy3ZFc_yoW8Wr13pr
-	ZrZrnIyF48Wry2qa9rX3yrXrn0qr4DGrnxWF1YyFyrCay5Xw1vvr1rGa98WFyjy39Yvw10
-	qrs0krnIk3ZrAacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7BMNUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250826064631.9617-3-yangtiezhu@loongson.cn>
 
-On 2025/8/19 下午7:19, Huacai Chen wrote:
-> In __arch_prepare_bpf_trampoline(), retval_off is meaningful only when
-> save_ret is not 0, so the current logic is correct. But it may cause a
-> build warning:
+On Tue, Aug 26, 2025 at 02:46:31PM +0800, Tiezhu Yang wrote:
+> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
+> following objtool warnings after silencing all of the other warnings:
 > 
-> arch/loongarch/net/bpf_jit.c:1547 __arch_prepare_bpf_trampoline() error: uninitialized symbol 'retval_off'.
+>   LD      vmlinux.o
+> vmlinux.o: warning: objtool: .head.text+0x0: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x18: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x38: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x3c: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x40: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x44: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x54: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x58: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x6c: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x84: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x94: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x9c: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0xc4: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0xf8: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0xfc: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x104: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x10c: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x11c: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x120: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x124: unreachable instruction
+> vmlinux.o: warning: objtool: .head.text+0x144: unreachable instruction
+> vmlinux.o: warning: objtool: kernel_entry+0x0: unreachable instruction
+> vmlinux.o: warning: objtool: smpboot_entry+0x0: unreachable instruction
 > 
-> So initialize retval_off unconditionally to fix it.
+> All of the above instructions are in arch/loongarch/kernel/head.S,
+> and there is "OBJECT_FILES_NON_STANDARD_head.o := y" in Makefile
+> to skip objtool checking for head.o, but OBJECT_FILES_NON_STANDARD
+> does not work for link time validation of vmlinux.o according to
+> tools/objtool/Documentation/objtool.txt.
 > 
-> Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support")
-> Closes: https://lore.kernel.org/r/202508191020.PBBh07cK-lkp@intel.com/
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Just give a proper unwind hint to silence the above warnings. By the way,
+> the previous instructions of kernel_entry+0xf4 and smpboot_entry+0x68 are
+> the 'bl' instructions, the call destination symbols are start_kernel() and
+> start_secondary() which are noreturn functions, then the 'bl' instructions
+> are marked as dead end in annotate_call_site(), so actually ASM_BUG() can
+> be removed due to unnecessary, otherwise there are following warnings:
+> 
+>   kernel_entry+0xf4: start_kernel() missing __noreturn
+>   in .c/.h or NORETURN() in noreturns.h
+> 
+>   smpboot_entry+0x68: start_secondary() missing __noreturn
+>   in .c/.h or NORETURN() in noreturns.h
+> 
+> Link: https://lore.kernel.org/lkml/20250814083651.GR4067720@noisy.programming.kicks-ass.net/
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->   arch/loongarch/net/bpf_jit.c | 9 ++++-----
->   1 file changed, 4 insertions(+), 5 deletions(-)
+>  arch/loongarch/kernel/head.S | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+
+At this point you should also be able to remove that Makefile thing,
+right?
+
+
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index e3865e92a917..566a1dbf5fa0 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -20,6 +20,7 @@
+>  	__HEAD
+>  
+>  _head:
+> +	UNWIND_HINT_UNDEFINED
+>  	.word	IMAGE_DOS_SIGNATURE	/* "MZ", MS-DOS header */
+>  	.org	0x8
+>  	.dword	_kernel_entry		/* Kernel entry point (physical address) */
+> @@ -30,6 +31,7 @@ _head:
+>  	.long	pe_header - _head	/* Offset to the PE header */
+>  
+>  pe_header:
+> +	UNWIND_HINT_UNDEFINED
+>  	__EFI_PE_HEADER
+>  
+>  SYM_DATA(kernel_asize, .long _kernel_asize);
+> @@ -42,6 +44,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
+>  	.align 12
+>  
+>  SYM_CODE_START(kernel_entry)			# kernel entry point
+> +	UNWIND_HINT_UNDEFINED
+>  
+>  	/* Config direct window and set PG */
+>  	SETUP_DMWINS	t0
+> @@ -109,8 +112,6 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+>  #endif
+>  
+>  	bl		start_kernel
+> -	ASM_BUG()
+> -
+>  SYM_CODE_END(kernel_entry)
+>  
+>  #ifdef CONFIG_SMP
+> @@ -120,6 +121,7 @@ SYM_CODE_END(kernel_entry)
+>   * function after setting up the stack and tp registers.
+>   */
+>  SYM_CODE_START(smpboot_entry)
+> +	UNWIND_HINT_UNDEFINED
+>  
+>  	SETUP_DMWINS	t0
+>  	JUMP_VIRT_ADDR	t0, t1
+> @@ -142,8 +144,6 @@ SYM_CODE_START(smpboot_entry)
+>  	ld.d		tp, t0, CPU_BOOT_TINFO
+>  
+>  	bl		start_secondary
+> -	ASM_BUG()
+> -
+>  SYM_CODE_END(smpboot_entry)
+>  
+>  #endif /* CONFIG_SMP */
+> -- 
+> 2.42.0
 > 
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index abfdb6bb5c38..a73f6ea4ed4a 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1504,11 +1504,10 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
->   	stack_size += 16;
->   
->   	save_ret = flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_FENTRY_RET);
-> -	if (save_ret) {
-> -		/* Save BPF R0 and A0 */
-> -		stack_size += 16;
-> -		retval_off = stack_size;
-> -	}
-> +	if (save_ret)
-> +		stack_size += 16; /* Save BPF R0 and A0 */
-> +
-> +	retval_off = stack_size;
-
-Just init retval_off as 0 at the beginning of this function?
-What is the difference? which is better?
-
-Thanks,
-Tiezhu
-
