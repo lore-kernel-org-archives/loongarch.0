@@ -1,47 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3902F6160
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 06:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BF22F618E
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 06:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756189105; cv=none; b=Dx7lNSX0FlS2BPlXvOdLnXUUH6D7tY2gAuf0Wp7ouzzSObHTsa6DF1yaEGR3r0Gsn5yXjEzm3Ur2Iz/6+DhzmiQZ6GzVpBO06OTxk6g//9Hod87dSINlMedEUZeJjTFsrYv5eySn3o4J66FdCLGOssVj13dACArefECQq87n0HA=
+	t=1756189106; cv=none; b=O2Y5gN0XShPRI3X4FYqThBbd9VukPmnqBZEhlbu9uTdbYnBn5pcHGx4tXHjPSeujHlGNHie284385A1BMV7nFTSl2V/QBtxVcu2vb/pErQwtaHHR3XZL5oNwqX1fXLPpqQmmaIu7PJW+kkvCR/6gvtXDuy+tDY0HMz8V4hIOa18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756189105; c=relaxed/simple;
-	bh=0FWlozWesIsQ0qQyaOP1bY0lFjVrbfKxBVeB1PCnS50=;
+	s=arc-20240116; t=1756189106; c=relaxed/simple;
+	bh=MIu9l2pTXbhJrvGPCmWjImoXUcbBkNjVmM+9aAFDkec=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PqO0tdI8dJ5TybFJrcZpUZ1YU3BUMV2f0k/xpKiqwwf1NtJ2n3rMeZhtxpWfhy2k1DlyH0hZ1ooh46mVZXcY032jEweRw37UqwNNDtZm0kkowh9UNM9uHVkJBRTipRdm53IP+wbyTKGKoxmkXpBEMM8zv3nl0MR+t/HqS0RP3nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vM/cvVQM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vA9RQwkS; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=tPuWj6pDafWtR8vuz2wvF/ShEVYGdXUQ7/MXldtrui7aSI2rZCTt8SrVSkoNxAWaIE8gthj3F+g+7wc0jApgxGl+8LXmH0hR1YYVY791iHvczCwwnNitXRVz3lr181EBXfA/kj57RxgecTHEb7ZxdbRe8bbOw1sGYUz8IEQw5cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s4Tv7+zx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aMy3eGdf; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vM/cvVQM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vA9RQwkS"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s4Tv7+zx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aMy3eGdf"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1756189101;
+	s=2020; t=1756189102;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3/oLlHMS/fCP6P1KLSn+cvJJv6PKUv3DICeaKqETsd4=;
-	b=vM/cvVQMAyhS92V8y5yVESyKxIqQ5R3zffJXNT39DFeEehqGvQ4cgcMYsWOtpmbyjLR+Jk
-	we8S1VPZLk08HyevreXbtrS0WfURWLCD0C1udndZaGXsxcvNVQ2IAa/sI7wZ5EjfeBV3QB
-	Xl1IBk2dQX2DHCg8P+mvsjehyFDzZ/AjK26U/WIM/Dx6E1r9CZ+xl3vYpcz/43dfXeL8zq
-	t+0oYU9wuduujEn9b3gXCqd8/s4+brqyYCVM79YY7DmkOuCIKG5XnjOxrX8XloYENkIp6J
-	frOXYpfPBh2KaqVqKhcgIbWwZ8GW0EG4XRusd22yhv2ylnUvt+X8LNumqRAcrg==
+	bh=DrBALLudUMMQIpB9Jb++BwmBRlfN0yHG1/njX6fnTE0=;
+	b=s4Tv7+zxFO1UuAQBOJqY36fYzoMoq9HBwuIpEoBOQcWaZh9/ewd4GAmLh1SU0pUebpqr7O
+	IrbBTzCLj7CJDuzlV6Dcdr1OqFm6SyO764o/62pnvhkTGUXW7ugMG+bh1U2I/2k0NNBSr5
+	OP1XpFRZEaXTaVFqIq3YdSg5+qsRfdKUKvpdsuwozMooSfzSGI0VUbRnkjOqSx5qOrar6I
+	ypdEH+UclFWViex+hKIMMrHA9akYZJ7i5W7/rVbBGGVIoe66Tmy8jOSesu8OQcaEiRtLvM
+	BHYdoRiODg0CG8wUQD0HRSdvaeLU921bXP6hDATICdIR91DBtxAh0Kw0aN0s1A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1756189101;
+	s=2020e; t=1756189102;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3/oLlHMS/fCP6P1KLSn+cvJJv6PKUv3DICeaKqETsd4=;
-	b=vA9RQwkSkeW435dz89cXdm1JlqEJ1IVbHIFd6A9tNEpJZ0qLZJMeeSzlzAhq24mxpdVhVM
-	OJzV+jwkYkep1fAA==
-Date: Tue, 26 Aug 2025 08:17:08 +0200
-Subject: [PATCH 05/11] time: Build generic update_vsyscall() only with
- generic time vDSO
+	bh=DrBALLudUMMQIpB9Jb++BwmBRlfN0yHG1/njX6fnTE0=;
+	b=aMy3eGdfoQdV0esGEjqNzj2T+GNVN9Gu5aP0E8xfdTY9CE2D/Ql6h41CsmHASq33jrTvgS
+	d2ksM8s+JfbrYcAg==
+Date: Tue, 26 Aug 2025 08:17:10 +0200
+Subject: [PATCH 07/11] vdso: Drop kconfig GENERIC_VDSO_32
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250826-vdso-cleanups-v1-5-d9b65750e49f@linutronix.de>
+Message-Id: <20250826-vdso-cleanups-v1-7-d9b65750e49f@linutronix.de>
 References: <20250826-vdso-cleanups-v1-0-d9b65750e49f@linutronix.de>
 In-Reply-To: <20250826-vdso-cleanups-v1-0-d9b65750e49f@linutronix.de>
 To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -79,36 +78,67 @@ Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
  linux-kselftest@vger.kernel.org, 
  Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1756189098; l=943;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1756189098; l=1702;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=0FWlozWesIsQ0qQyaOP1bY0lFjVrbfKxBVeB1PCnS50=;
- b=9pNh5a5NaguFfKkfKR0EeNJ5Hqk/rS5JHEaeEmX/n8dUdZlkDqHcQrQvn3JOYAA8u+Wl7yvQz
- BQudoqsm8axAvusAQkTMXCgGoVnMLts+duG7XkK6Eop3MTQ6RNupbR9
+ bh=MIu9l2pTXbhJrvGPCmWjImoXUcbBkNjVmM+9aAFDkec=;
+ b=VT2YYQvzHfODm57uAqR09c1duKjkkmGSVqmCVlLdgGb/ARCoX9KqMLFcxG4POgZTTs3Rm7rqY
+ RTH8Lz9nPvLBWpZeMT5QB55ugWOPWVYU1mHssRVmDUpj+5tIKw9H+EU
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The generic vDSO can be used without the time-related functionality.
-In that case the generic update_vsyscall() from kernel/time/vsyscall.c
-should not be built.
+This configuration is never used.
+
+Remove it.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- kernel/time/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mm/Kconfig | 1 -
+ arch/x86/Kconfig    | 1 -
+ lib/vdso/Kconfig    | 7 -------
+ 3 files changed, 9 deletions(-)
 
-diff --git a/kernel/time/Makefile b/kernel/time/Makefile
-index e6e9b85d4db5f8dd5d9b574ef7bb0a281b9daa6d..f7d52d9543cc7a2d1a18db179229a8d7936317d3 100644
---- a/kernel/time/Makefile
-+++ b/kernel/time/Makefile
-@@ -26,7 +26,7 @@ obj-$(CONFIG_LEGACY_TIMER_TICK)			+= tick-legacy.o
- ifeq ($(CONFIG_SMP),y)
-  obj-$(CONFIG_NO_HZ_COMMON)			+= timer_migration.o
- endif
--obj-$(CONFIG_HAVE_GENERIC_VDSO)			+= vsyscall.o
-+obj-$(CONFIG_GENERIC_GETTIMEOFDAY)		+= vsyscall.o
- obj-$(CONFIG_DEBUG_FS)				+= timekeeping_debug.o
- obj-$(CONFIG_TEST_UDELAY)			+= test_udelay.o
- obj-$(CONFIG_TIME_NS)				+= namespace.o
+diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
+index 5c1023a6d78c1b4db67b2d62b71af5a79b7e701f..2347988cf6417b91d8d3580387b53e610ed49a00 100644
+--- a/arch/arm/mm/Kconfig
++++ b/arch/arm/mm/Kconfig
+@@ -926,7 +926,6 @@ config VDSO
+ 	default y if ARM_ARCH_TIMER
+ 	select HAVE_GENERIC_VDSO
+ 	select GENERIC_TIME_VSYSCALL
+-	select GENERIC_VDSO_32
+ 	select GENERIC_GETTIMEOFDAY
+ 	select GENERIC_VDSO_DATA_STORE
+ 	help
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 58d890fe2100eb6990880bcf5ba600cdefb0a7d1..4f120070a51bd4e225256440649a2dae17025c41 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -14,7 +14,6 @@ config X86_32
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select CLKSRC_I8253
+ 	select CLONE_BACKWARDS
+-	select GENERIC_VDSO_32
+ 	select HAVE_DEBUG_STACKOVERFLOW
+ 	select KMAP_LOCAL
+ 	select MODULES_USE_ELF_REL
+diff --git a/lib/vdso/Kconfig b/lib/vdso/Kconfig
+index 45df764b49ad62479e6456e00c053e46131936a3..76157c26931d28327750ad53bfcae5109a29d998 100644
+--- a/lib/vdso/Kconfig
++++ b/lib/vdso/Kconfig
+@@ -12,13 +12,6 @@ config GENERIC_GETTIMEOFDAY
+ 	  Each architecture that enables this feature has to
+ 	  provide the fallback implementation.
+ 
+-config GENERIC_VDSO_32
+-	bool
+-	depends on GENERIC_GETTIMEOFDAY && !64BIT
+-	help
+-	  This config option helps to avoid possible performance issues
+-	  in 32 bit only architectures.
+-
+ config GENERIC_COMPAT_VDSO
+ 	bool
+ 	help
 
 -- 
 2.50.1
