@@ -1,153 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E072F99A8
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 08:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB7E2F8BC3
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 08:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756197181; cv=none; b=SDBD5je3dgnlL/rReSNAXd2cUj61osL67VXyRo9Yv1pgLQwI4AYwocDG9ZLvkRyp8fsO83FpS5dzsRm62SUMGcsd1JQ9a6pJsZHPKPxUdFE49Aw8PciB9YArg1Q3Lttuj3INhVmR/iBFuXvgmc1fRUqSl8dd3M/AlzLeg5ixeFk=
+	t=1756197639; cv=none; b=P2RdDBM4YrqLEapOcR7ydRqkMHiGnhvGBhkOMJELLSr3G1maRs9KhE9qXZBblvNzIHRcwrUTTdV9qCoGZk3B+V/vdhqx8B0h+Vq9kirRlNO2oayAXtamKtdEWZrOaqf7kUkbM2Til6bpEZFTldJuFm1+BTklsf/r8aXGdWto4Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756197181; c=relaxed/simple;
-	bh=FjVXVuF1xn0IxzPYpX/KhacBnVflH7IadABK4fObM6U=;
+	s=arc-20240116; t=1756197639; c=relaxed/simple;
+	bh=ml7uVD5DRcxn+9bX3pvVGLbn5/HLiqMsHxdVboS7fR0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gk4QX6aAPtHnzj9NFUKLwNkidJsjVLTwdb04HyBfq2zgzLIC96LzjywJVp4KeXPBQXom+s7+U5kzZvYDoCpiUys0Z7EMeBkRCjibk/pHmTdDBbalIzq88+8oZeQHJbWLqSXjhrBX6RSbVFS7bLJLcj3z78URhGckmmu5ZnwMWY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IyOy3/p7; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=PtwThoLCYI66uglSTEqbSQ2at8JA01kVXwUGJ/ep4npuqPqYkSBARSwwyZuOPoscOoRomNQz41jFSqJ/Mf0YY+vNotwnkiwCtV16c6941y90bZykjnM14OvPtANA/aXmN5RgKLC9RSRDOCVrqCNgkZ6L8rCITSpIE5mb3HucLTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KXHa2+p7; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IyOy3/p7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 354D9C116C6
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 08:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756197181;
-	bh=FjVXVuF1xn0IxzPYpX/KhacBnVflH7IadABK4fObM6U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IyOy3/p7IOVfAJpH1rA7uszKC7eN/YhNGsD8sBD1nCPCPAmqDZXamsZ17OwunQ5BS
-	 o1JOCDtKDp177eWggA4HZ1evXA3WE9fQaFSwqKnxCY1IM/QBctg+02gZ/WOZBRe2R1
-	 ZvUIcb1XDjc8ZxOpm3sG/DNqhdx21te2N5Rjfiy8h3xoFSPEsd2yE5tKgYLOntHeK3
-	 WTNlFds/Dh8UV2rWUm413Iev8vjnciSeIUEfCHz+GtTI4C+1rl9LS860VF+Vvl0eLm
-	 T+hwcxdvxliIPDH1lKM9IbXeCj8kk5Vc2qALGMF6CLNunFU8s63KqkIcv4jM+wtKcl
-	 Tek/TbODpw2Zw==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-61c91956560so914177a12.3
-        for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 01:33:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWcGEata4S8542RmZjMfOYjD/THTCWY/sGuMpZTkh3DV8kiF7O1hrAU4gVjTEUdkHVRH6W8bmbbrbM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwB42CyYL23ReExg0S1X6Hb3UemoCgu28hIG/irNIg+D1h/ChyU
-	Te0Hgz7ObOIYkwdo6ak/vXErL4VI3zxCx8Q3AZA7H4WtaG6Gl3WUcMrxJo0NpeQWNxSv/+CMMlZ
-	JXIzyQUbX80Er90CPNmSwSIE7sBL33Dw=
-X-Google-Smtp-Source: AGHT+IERbkTyzj+RHu5TkKBknnsaDb5gk0cJDOCT93hgIUxeh6Ko1mDfwDxFcko7i2c+sF3jdPl2NNcVvHiL4PIpAaE=
-X-Received: by 2002:a05:6402:44d2:b0:615:78c6:7aed with SMTP id
- 4fb4d7f45d1cf-61c1b705611mr9585880a12.32.1756197179778; Tue, 26 Aug 2025
- 01:32:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXHa2+p7"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6188b5ae1e8so6262759a12.0
+        for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 01:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756197636; x=1756802436; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tUznInQ+he7CTGLbKkCgI51NqCENsR+GsS1zL5TwQYs=;
+        b=KXHa2+p7YOWyQFhLmsy4VLpcU6o91RA0RsgG845pEhE2rCwC0AF8wzYM02ZXlI3Uwj
+         bp7dCARfS3kntEeOuz+xdWuHJj9dTfFun4lEvYp5GsXWh3R7K20dkeIluzetZ3xyrSTN
+         lT8eUYaVX1L3fdL69rWTgCLbDgItQpNvaL3cf/qiHrTHWsICqaE4/MuT0xPH6Qkq4uGq
+         Mnkpvm/P3rDlB/1z6uQDlt3Wugdu2wbVNnsJiuSEAIh2JBiBwWHLFGOz3hxikEJWkDv6
+         FyutZ+GcAEuSD6WK6kwG7AKh2IzGl8zmPOq2w6vxyTyWZ7op5dIPLn8C8n0VvyVawEKu
+         XAhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756197636; x=1756802436;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tUznInQ+he7CTGLbKkCgI51NqCENsR+GsS1zL5TwQYs=;
+        b=deyW665FPWFmOQwMm/WuzO2lacU8RH1J0OrfKb2DCVSnWWWNgBZ67v6vjnTrN+LSo5
+         ttpcPS6Szf996uFIPVpTdrGxSfFW4fwyK1B0FsKBiYfH5KZBmwSJQfPX+ZPxSbyTqM6j
+         o1G49rEQLZsgX6zoIMfrCfeqr2JYt54yK873V1n6zeEYTPPJhDa3gAf5Bx2LOEBW7J36
+         BIwhoMT96baup+oO3NhHRi/f5FMYN2QyU4TzNyccl3iMqZbyObkE4iRueYVmOeMxBudm
+         B6PTiCE0jkBgj6FpaqJUkRYvRJBw5JVANCFZUiQ6AmIos2w6tD96TE0tmPi5JV+tZRmV
+         MqTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWFFK9c1tfa+wD0H0PfNnJ/DWEH8MxEemqs6SnSSYZUJvIPi+BfaEjFNxZCkwc6a2r5WFwOcnoCypc=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxd1VZdH2S18WW1um4d7yNce0iOVZsU+e2rToZbNUcHVJMdXbV9
+	ohkbugnH7qFMDsbq0JJxwouadYFTH9hLXaiIeI9o/Tj7uFvzLUhD97F8QE2jXhEAB0epBbTEH1S
+	YjgMhOccwWWqgB6xoadni+ERJ00YtHnIW0TiWuUYHqA==
+X-Gm-Gg: ASbGnctIy4slt3AIyr+07+TF80z8WRf/0At8mjTATNHVagrWtFs1wRtorG4R10AICRx
+	ljzUSg8LxHinWM7bRcVa9/x4LD35ZOOP1lHcsroiNdbFVwLnO5iLaK11TVLJ5GvU2kRksyCZybz
+	oUg3aOtNJfr1mHViXTL1F3Eg8gicsoOMpX1N4DTF5nmylvcGeVq0ATU9LUqozLy7uBDaje8zAlB
+	5IR8QVPpid8OJ9a0sP5jzd8NZNMlrzXBW/YZV2Y8umxOGpat08OnXN/mOTOqpkye3tzyU6KzmK5
+	1QvKEoP23b5kIiNk7Fg+R409pbtc1pVGV/C6LP30rqdRlOwtjaKJPfQ=
+X-Google-Smtp-Source: AGHT+IFViBToBz8KQVACO+Zo3R9SVs9VHYtIQ/Gqv75jKhOBsfcB/SlIujQazaI+0CvTngCa+ykKREpzxIkr0qUtXws=
+X-Received: by 2002:a05:6402:21c1:b0:61b:ff85:398b with SMTP id
+ 4fb4d7f45d1cf-61c1b4a2163mr12823828a12.14.1756197635743; Tue, 26 Aug 2025
+ 01:40:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250826064631.9617-1-yangtiezhu@loongson.cn> <20250826064631.9617-2-yangtiezhu@loongson.cn>
-In-Reply-To: <20250826064631.9617-2-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 26 Aug 2025 16:32:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5wW_04NHQ7z+SCPb6-T5Hc__n+x=ykg-u9vn4b4GXuww@mail.gmail.com>
-X-Gm-Features: Ac12FXy0nLJKelVgOhaUqkw-rRI1Okua2pWt9oXv_S0FhdaFrsPpYhr3PJI-9AY
-Message-ID: <CAAhV-H5wW_04NHQ7z+SCPb6-T5Hc__n+x=ykg-u9vn4b4GXuww@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] objtool/LoongArch: Fix fall through warning about efi_boot_kernel()
+References: <20250819111953.3197428-1-chenhuacai@loongson.cn> <1378057e-4fc1-2bcd-4d60-1a10bd98e5bb@loongson.cn>
+In-Reply-To: <1378057e-4fc1-2bcd-4d60-1a10bd98e5bb@loongson.cn>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Tue, 26 Aug 2025 16:40:21 +0800
+X-Gm-Features: Ac12FXxf-4Mbv86G81MkWYAbsoZgs8HhVE-23zzhyxDMTXP0prtcdtpVv3BGBGs
+Message-ID: <CAAhV-H7UnPBpa7jK4WwqQJGnAP+cnsoggxkt1T3spoed4OfkTw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Fix uninitialized symbol 'retval_off'
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org, 
+	Hengqi Chen <hengqi.chen@gmail.com>, George Guo <guodongtai@kylinos.cn>, 
+	Chenghao Duan <duanchenghao@kylinos.cn>, loongarch@lists.linux.dev, 
+	kernel test robot <lkp@intel.com>, Dan Carpenter <dan.carpenter@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 26, 2025 at 2:46=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+On Tue, Aug 26, 2025 at 3:08=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
 > wrote:
 >
-> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
-> the following objtool warning:
->
->   vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
->   falls through to next function __efistub_exit_boot_func()
->
-> This is because efi_boot_kernel() doesn't end with a return instruction
-> or an unconditional jump, then objtool has determined that the function
-> can fall through into the next function.
->
-> Actually, efi_boot_kernel()'s last instruction is "jirl $ra, $a3, 0", it
-> is a call to a noreturn function pointer real_kernel_entry() which points
-> to the symbol kernel_entry() in arch/loongarch/kernel/head.S.
->
-> drivers/firmware/efi/libstub/loongarch.c:
->
-> typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline=
-,
->                                           unsigned long systab);
->
-> efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
->                              unsigned long kernel_addr, char *cmdline_ptr=
+> On 2025/8/19 =E4=B8=8B=E5=8D=887:19, Huacai Chen wrote:
+> > In __arch_prepare_bpf_trampoline(), retval_off is meaningful only when
+> > save_ret is not 0, so the current logic is correct. But it may cause a
+> > build warning:
+> >
+> > arch/loongarch/net/bpf_jit.c:1547 __arch_prepare_bpf_trampoline() error=
+: uninitialized symbol 'retval_off'.
+> >
+> > So initialize retval_off unconditionally to fix it.
+> >
+> > Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support"=
 )
-> {
->         kernel_entry_t real_kernel_entry;
->         ...
->         real_kernel_entry =3D (void *)kernel_entry_address(kernel_addr, i=
-mage);
+> > Closes: https://lore.kernel.org/r/202508191020.PBBh07cK-lkp@intel.com/
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >   arch/loongarch/net/bpf_jit.c | 9 ++++-----
+> >   1 file changed, 4 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
+c
+> > index abfdb6bb5c38..a73f6ea4ed4a 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -1504,11 +1504,10 @@ static int __arch_prepare_bpf_trampoline(struct=
+ jit_ctx *ctx, struct bpf_tramp_i
+> >       stack_size +=3D 16;
+> >
+> >       save_ret =3D flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_FEN=
+TRY_RET);
+> > -     if (save_ret) {
+> > -             /* Save BPF R0 and A0 */
+> > -             stack_size +=3D 16;
+> > -             retval_off =3D stack_size;
+> > -     }
+> > +     if (save_ret)
+> > +             stack_size +=3D 16; /* Save BPF R0 and A0 */
+> > +
+> > +     retval_off =3D stack_size;
 >
->         real_kernel_entry(true, (unsigned long)cmdline_ptr,
->                           (unsigned long)efi_system_table);
-> }
->
-> According to the description of tools/objtool/Documentation/objtool.txt,
-> in order to silence this warning, at the beginning just add the noreturn
-> real_kernel_entry() to objtool's hard-coded global_noreturns array, but
-> there is no effect, because it is not a valid symbol.
->
-> There exists an alternative way to silence this warning, the first thing
-> is to remove the attribute __noreturn for real_kernel_entry(), otherwise
-> the compiler can not generate instructions after that, and then just add
-> "while (1);" at the end of efi_boot_kernel(), so that efi_boot_kernel()
-> ends with an unconditional jump instruction "b".
->
-> Note that at the end of efi_boot_kernel(), using unreachable() has no
-> effect because it can still generate fall-through code, using BUG() is
-> not proper because it will generate the following ld.lld warning:
->
->   vmlinux.o:(.init__bug_table) is being placed in '.init__bug_table'
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  drivers/firmware/efi/libstub/loongarch.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/=
-efi/libstub/loongarch.c
-> index 3782d0a187d1..e309fd78fca7 100644
-> --- a/drivers/firmware/efi/libstub/loongarch.c
-> +++ b/drivers/firmware/efi/libstub/loongarch.c
-> @@ -10,7 +10,7 @@
->  #include "efistub.h"
->  #include "loongarch-stub.h"
->
-> -typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdlin=
-e,
-> +typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
->                                           unsigned long systab);
-From my point of view this is incorrect, this function is indeed a
-noreturn function, and this modification makes LoongArch different to
-other architectures.
+> Just init retval_off as 0 at the beginning of this function?
+> What is the difference? which is better?
+This patch is more like ARM64 does.
 
-Maybe it is better to let objtool ignore the whole
-drivers/firmware/efi/libstub directory. Because efistub is discarded
-at runtime so it is useless for stack unwinder.
+In addition, if save_ret is true, "init retval_off as 0" causes
+retval_off to be evaluated twice, while this patch is only evaluated
+once. But surely this is not a big deal.
 
 Huacai
 
 >
->  efi_status_t check_platform_features(void)
-> @@ -81,4 +81,7 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded_i=
-mage_t *image,
->
->         real_kernel_entry(true, (unsigned long)cmdline_ptr,
->                           (unsigned long)efi_system_table);
-> +
-> +       /* We should never get here */
-> +       while (1);
->  }
-> --
-> 2.42.0
+> Thanks,
+> Tiezhu
 >
