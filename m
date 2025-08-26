@@ -1,108 +1,96 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41FD2820B1
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 11:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 524EF2F6564
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 12:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756208137; cv=none; b=q3eGkEAvow72L5dp6PGXh8jc2zXwtx+ORJ5zJIHI+GszNrcdx/ghg0O1P3HPY2rUcNjnSV01dejQdaUFd72cFHx2bB+qFI6aR/3sjfCa4jQwYN3DUNps2Hu8ewuX6CqVIQhvQ5QUhMtYHJSSgKFYbgdUVtSu9KRA2Iq8vKhgRmI=
+	t=1756211244; cv=none; b=dSKDuVnGlc86YvIn4AFAhjkvJkB+0gQv9VDknb+ejqw+tN3jl43MDMIcOh7v7s8TySmG316FK3XWqSwU5MFOYRP6PONz0lQOWF3optIzVT2kRn6tiTMzbQh1Ubpj/65bq82y8lMbZNgOhPTX6s2WanP2LJVmddavJzALo53ZFy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756208137; c=relaxed/simple;
-	bh=VBo1svRdNginrTEbj9qaCPBWiJIBPwa3ORCjnE8hJR4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rk3IoP9FhvXU7GcByu6ypfhil/l4HJ5KQDHeIiTNvoy6YcakQ8lMfRqnvha7LrYve2VfedLdj23nGQUf/Rl3Rm5k0mICkafQCioA183HJjYkL2SYKRC5yLja6wGmApqSKdaX88QP/LS+uoY9XvBY9EiJQDCce/yGu4nXAzkeEHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=XA9RB8WY; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="XA9RB8WY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1756208114;
-	bh=R3t7Utl+TZovCPDN/hOP+mtqkeQuSJIeGBdP9uvpOi0=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=XA9RB8WY5yMKQNstl8UYDXtL7SpIYiYwsJzQDybnTNXJaiI8ZSFwRCq+9Q2VdsZfV
-	 G/09psUy4sBRGb5E3jJJkqkJXTyjycg9Gqu0J1e5CuzNJE773S5bDma4c855ivD2Yl
-	 nA3TFcXG34GlMkJ9oSfUEJZMBMtGWBaaKvKGraAU=
-X-QQ-mid: zesmtpsz4t1756208106tda2cce22
-X-QQ-Originating-IP: bKB9BJ/INt9s6T+Uy6F38r01fZSmLhamwRrNQE6i5ZY=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 26 Aug 2025 19:35:04 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 9744646128302791925
-EX-QQ-RecipientCnt: 7
-From: Wentao Guan <guanwentao@uniontech.com>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	xry111@xry111.site,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	zhanjun@uniontech.com,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
-Date: Tue, 26 Aug 2025 19:32:25 +0800
-Message-Id: <20250826113225.406238-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1756211244; c=relaxed/simple;
+	bh=lr/ktiqN8EGAwxTSlE1IH8BeTaDaJt2Zb2PkjFQqbHY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=nfHPdIN0EosW9T9JZPvg3RdiG2u2GJTpaGrGWJEjmkuv8KejlJC/HJs31DW5UBqwHYrYknxeZxcMYXZjRRcWtNY5G6cYW12KV43R7A7uQhmQsh3HxwFGBhfltC/I5xjKg729zUI7nKBGNxOogvW/XJkVs/fGY5ZtCHdy1rqRETs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dxb_AkqK1oclwDAA--.6697S3;
+	Tue, 26 Aug 2025 20:27:16 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxzsEhqK1oQ_5pAA--.40668S3;
+	Tue, 26 Aug 2025 20:27:14 +0800 (CST)
+Subject: Re: [RFC PATCH 2/2] objtool/LoongArch: Fix unreachable instruction
+ warnings about head.S
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250826064631.9617-1-yangtiezhu@loongson.cn>
+ <20250826064631.9617-3-yangtiezhu@loongson.cn>
+ <20250826082057.GE3245006@noisy.programming.kicks-ass.net>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8dfe8bde-0095-d6c3-b9ca-cce2bf720ac2@loongson.cn>
+Date: Tue, 26 Aug 2025 20:27:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20250826082057.GE3245006@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: NmdX3UvlO4h/NP0/GDLA7fNsw+Z5U4f2tYDh378TRAfCcBYXAzUGNhbx
-	n7BIy5bEcQybtQxVIBzWEmFvlidpS7fWOrKfbIblujeYqM/Ol3kPgDwr53ssUWHG+BbSlG6
-	psUwL/hYHCuh3DEjccLOZqfa6KBiGyTGRrbpjHgUru7Pivg7CHMEIsEbOISoEDb6cL7NfpZ
-	SxoBa6nuRQ1671XtC45BlI7YCN8u30xRpGrCIkMAQ0TmVPd/x4ydwW0fyVlZChiSChy6UsG
-	G9MApD0PCmDSvqhRcuGjhvBI/Yf97l9RYhUSGugfo/G/069jTJk187MTKRikshB+zjGXu7Q
-	/uSZh0qbUCrOj8BwxriQ+3tLgsZvFCqgFrcd2DNmjZwYbEa3UBPlubj94FV4P6k6JQqnhkz
-	ThIg6L8HJJ/rgf59vx7+ymB6QKHRjGKq19PYw5ROgzEQQdqXnKft2Qtge6LeU4Kvf/HS3rl
-	aWlH2MhHe2MtDdRC9YxR2yhBTNiTwq8dvZhl7IznGy9p9NpWfjr1cV6wOovlwyAaB3D65ZQ
-	xYTIlCKTGVQIdxMk4zC/1zCq33uO5Qiz+JrKsUcWCBwrDviJDA65smtd2ECV0tc66DEyh3a
-	i0c2qwdnt07XJclu4ktajCvueyAibffKHPTivRN3dA4uKkDEC2bSosVNnrVF6LGET/jU2Tz
-	vnjLsvXhzkiOEyMjbv3a4f+sTk4KZx5BezS4wt5neQfrY9UWW+zM8yLBRqmeZyalBFSY5BG
-	0QgXNUaeKId/zpxzWpViLG2uVTjXAkFh072oGi0STWb+HrV7kbGosL9nboDkvo4lxO9/EWS
-	Nr1BqL/ubuvR4+YqQwPQct5eeX80yflfsYkEIR0TaXKpACPf2IK826l/nQqsbRtlg31x2eL
-	fDtN2yvL8jLCfxXSt8xXw7pVcdBMf3Qb9d51cjO6Sdw9fpxMgaaNGIIuWkkfBzPibk6wVJ6
-	db/x1mHfN3qCkXWvDLWduR6WwQLM7+43G8yvDS4wFeXJ52pFuqDIlyBg7T+VWL5lHdMQi/Z
-	ARxM9ezxlD5F4uYmiaArxURvcgrnBvMuRzTz3QhfY48pVmUfsUNNoj8kqmLAo=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+X-CM-TRANSID:qMiowJBxzsEhqK1oQ_5pAA--.40668S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWrZrW7ZF4rCFykXFy3tw1DurX_yoW8JF17pF
+	WUAw40kFZ8Jr1I9a13Ja1fWFyY9FZxXrWfGr1q9rySyayqyayjqr1agr1j9F9Iva9xKFyF
+	vw4DtF909Fn8AagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr
+	1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8I38UUU
+	UUU==
 
-Loongarch use -fno-builtin-memcpy in Makefile,
-so cause a extra memcpy in syscall hot path:
+On 2025/8/26 下午4:20, Peter Zijlstra wrote:
+> On Tue, Aug 26, 2025 at 02:46:31PM +0800, Tiezhu Yang wrote:
+>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
+>> following objtool warnings after silencing all of the other warnings:
 
-syscall_enter_audit
-->syscall_get_arguments->memcpy(__memcpy_fast)
-->audit_syscall_entry
+...
 
-Just avoid memcpy() altogether and write the copying of args from regs
-manually, which shows 5% multi core score up in UnixBench syscall.
+>> Just give a proper unwind hint to silence the above warnings. By the way,
+>> the previous instructions of kernel_entry+0xf4 and smpboot_entry+0x68 are
+>> the 'bl' instructions, the call destination symbols are start_kernel() and
+>> start_secondary() which are noreturn functions, then the 'bl' instructions
+>> are marked as dead end in annotate_call_site(), so actually ASM_BUG() can
+>> be removed due to unnecessary, otherwise there are following warnings:
 
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
----
- arch/loongarch/include/asm/syscall.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+...
 
-diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/include/asm/syscall.h
-index 81d2733f7b94..171af2edd569 100644
---- a/arch/loongarch/include/asm/syscall.h
-+++ b/arch/loongarch/include/asm/syscall.h
-@@ -65,7 +65,11 @@ static inline void syscall_get_arguments(struct task_struct *task,
- 					 unsigned long *args)
- {
- 	args[0] = regs->orig_a0;
--	memcpy(&args[1], &regs->regs[5], 5 * sizeof(long));
-+	args[1] = regs->regs[5];
-+	args[2] = regs->regs[6];
-+	args[3] = regs->regs[7];
-+	args[4] = regs->regs[8];
-+	args[5] = regs->regs[9];
- }
- 
- static inline void syscall_set_arguments(struct task_struct *task,
--- 
-2.20.1
+>> Link: https://lore.kernel.org/lkml/20250814083651.GR4067720@noisy.programming.kicks-ass.net/
+>> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   arch/loongarch/kernel/head.S | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> At this point you should also be able to remove that Makefile thing,
+> right?
+
+Yes, you are right, will do it in the next version if this patch
+makes sense.
+
+Thanks,
+Tiezhu
 
