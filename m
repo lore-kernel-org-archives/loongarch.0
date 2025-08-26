@@ -1,69 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF902853F9;
-	Tue, 26 Aug 2025 02:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D162442AA3
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 03:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756176461; cv=none; b=SPUPoVTYjk+skQhVUUeHkt7hcAmAwD5oyholORC9rL9FvEx/D84L0mE/JE7D/B5Sqpjl3di6EGTEqoN7sOP7knQfDlhURKO6b2ciG6TqjxXLNGD1KnUgvHL08nX0K0d2GdNusfk7O8eqzlHzkzpsCuEK7hAKeVHoFuae3FRnRnw=
+	t=1756179327; cv=none; b=EBjxaPnlPO41EHUWYmY1mDSoHz17pUCbdy2wI6aemnG+GdjlgAHH3cbx7r+hDzETfDC7Dw2s5vCXVrYzwm1ody7+7r2RlemviTDZc8AGbQ8aBeXX/aJ3sih3n7tSSQUm50cRDWYZ1itxZmydPr68jVWwRO9pwiQu/mhXfN0kMuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756176461; c=relaxed/simple;
-	bh=yQUTnkr0o3F8VGrJhr3/b8Wij3HDtQpfzF97302VpNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DwKyXhhyI6Gyua6HYthtO9+FzpH2qs46iziHf3gU+/jhXGgM/+H+lK+D8tKBYGa2q+pQtThv0BtUHrIHSR3w9o1LGCzH6E7mTiFZeQdUxsWAgZkiU+eoxKN/Fxs8vnIUcN5u8jyK7z7v/xOl8Mf6RDvpzdqs31Z/iUu7ZIIVQFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/J1UDq8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/J1UDq8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD6D0C116B1;
-	Tue, 26 Aug 2025 02:47:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756176460;
-	bh=yQUTnkr0o3F8VGrJhr3/b8Wij3HDtQpfzF97302VpNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I/J1UDq86V0WbMRTPmMRyXdm/81vaz21rjmBbMI1HzIW44mqs8uUn7koMO4IPvi4D
-	 XxxXUxXYGTceQRDoTMSgbvPZRsYbhBEca0n3mqOZf5tlOUBG2I/RmR/Yi5Yrns3axX
-	 0tBiOZEaICGXkIXJXIuJLQP02I6vPY8f67W3YvKVEIyQAAfih1U+72jY9RKJvirQFZ
-	 UHbV/TrMNenHq6X/ct1lxMi8YEBIgAx8HmPjhCdOTb0K0hbjYBlVc2p8nK2/LZ+PDF
-	 hE/JslYqftHvtBxh4rJzme9m35JdVETFAQb+iaYbwthU+M4+1hXksOCHXYEhk88y6p
-	 r1EIMs4QusjYw==
-Date: Mon, 25 Aug 2025 19:47:40 -0700
-From: Kees Cook <kees@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Rename GCC_PLUGIN_STACKLEAK to KSTACK_ERASE
-Message-ID: <202508251947.B0C1B03D@keescook>
-References: <20250805110754.3243432-1-chenhuacai@loongson.cn>
- <175615793761.2150029.12607347712708724677.b4-ty@kernel.org>
- <CAAhV-H4eDRUBFyn8Wny1o7uFHHWKF__Vtu+m0bhmUP2rFHkZ+w@mail.gmail.com>
+	s=arc-20240116; t=1756179327; c=relaxed/simple;
+	bh=sDhlohnrPL8I0WbEhOXUdn5nk2jOSqoE8tewhBzI8OA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lYy3Hfn5jL40yUUXlCAd7KgapCJiXU7vXMeQhqFlCB6etd4FXx+bTMttVYEObcb8winbL59u2XVIW/17vfi5//LtazVnghhMn158sZ+kluUl06cAioJLjIzNNzodu3plY2+S/Ghd54apnOfslzNN/TUEgygHP/jHnM2oY85Tmc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Bxnr9zK61osTQDAA--.5218S3;
+	Tue, 26 Aug 2025 11:35:15 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxvsFzK61oLh9pAA--.21747S2;
+	Tue, 26 Aug 2025 11:35:15 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Add PTW feature detection on 3C6000 host
+Date: Tue, 26 Aug 2025 11:35:14 +0800
+Message-Id: <20250826033514.972480-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H4eDRUBFyn8Wny1o7uFHHWKF__Vtu+m0bhmUP2rFHkZ+w@mail.gmail.com>
+X-CM-TRANSID:qMiowJAxvsFzK61oLh9pAA--.21747S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Tue, Aug 26, 2025 at 10:42:52AM +0800, Huacai Chen wrote:
-> On Tue, Aug 26, 2025 at 5:39 AM Kees Cook <kees@kernel.org> wrote:
-> >
-> > On Tue, 05 Aug 2025 19:07:54 +0800, Huacai Chen wrote:
-> > > Commit 57fbad15c2eee772 ("stackleak: Rename STACKLEAK to KSTACK_ERASE")
-> > > misses the stackframe.h part for LoongArch, so fix it.
-> > >
-> > >
-> >
-> > Applied to for-linus/hardening, thanks!
-> >
-> > [1/1] LoongArch: Rename GCC_PLUGIN_STACKLEAK to KSTACK_ERASE
-> >       https://git.kernel.org/kees/c/351b51dc16a9
-> Unnecessary, it is already in 6.17-rc3 via loongarch tree, thanks.
+With 3C6000 hardware platform, hardware page table walking(PTW) features
+is supported on host. Here add this feature detection on KVM host.
 
-Ah-ha! Great; thanks!
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/uapi/asm/kvm.h | 1 +
+ arch/loongarch/kvm/vcpu.c             | 2 ++
+ arch/loongarch/kvm/vm.c               | 4 ++++
+ 3 files changed, 7 insertions(+)
 
+diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+index 5f354f5c6847..57ba1a563bb1 100644
+--- a/arch/loongarch/include/uapi/asm/kvm.h
++++ b/arch/loongarch/include/uapi/asm/kvm.h
+@@ -103,6 +103,7 @@ struct kvm_fpu {
+ #define  KVM_LOONGARCH_VM_FEAT_PMU		5
+ #define  KVM_LOONGARCH_VM_FEAT_PV_IPI		6
+ #define  KVM_LOONGARCH_VM_FEAT_PV_STEALTIME	7
++#define  KVM_LOONGARCH_VM_FEAT_PTW		8
+ 
+ /* Device Control API on vcpu fd */
+ #define KVM_LOONGARCH_VCPU_CPUCFG	0
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index ce478151466c..9c802f7103c6 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -680,6 +680,8 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ 			*v |= CPUCFG2_ARMBT;
+ 		if (cpu_has_lbt_mips)
+ 			*v |= CPUCFG2_MIPSBT;
++		if (cpu_has_ptw)
++			*v |= CPUCFG2_PTW;
+ 
+ 		return 0;
+ 	case LOONGARCH_CPUCFG3:
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+index edccfc8c9cd8..a49b1c1a3dd1 100644
+--- a/arch/loongarch/kvm/vm.c
++++ b/arch/loongarch/kvm/vm.c
+@@ -146,6 +146,10 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr
+ 		if (kvm_pvtime_supported())
+ 			return 0;
+ 		return -ENXIO;
++	case KVM_LOONGARCH_VM_FEAT_PTW:
++		if (cpu_has_ptw)
++			return 0;
++		return -ENXIO;
+ 	default:
+ 		return -ENXIO;
+ 	}
 -- 
-Kees Cook
+2.39.3
+
