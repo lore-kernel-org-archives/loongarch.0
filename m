@@ -1,77 +1,49 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC953002B4
-	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 09:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 004932405E1;
+	Tue, 26 Aug 2025 10:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756201317; cv=none; b=VJ8Ifw6Ohc8uH8Itex4bkiYqVtqYB511jfVHt17WCi0YeF+ioDT57ZpcI/z+RkbH1371lPNrZ70rGFW5HBa4h7EhWIcNN5PUl3VCVholiICM1tZxEaCZqjUSvEIY1HEUSeDvA5U7JBfNp5Ee9kPWABYHViApUI78trJPeU7rC3M=
+	t=1756205186; cv=none; b=r/NIMxaaXHdfaS6cJe8mD0qcxsnylRiSA/CnCAloga8Y6Tui2xtkTBc3y3sGUu8aXo4eCML1HsZ6/MZkRw/ps0JQpXDOSqwAbYdk/Ds1jqMuBx74lxDvheSSLmpj8F2V8A2zkt93rd6J3GVKsDULDwLYDchNP81Rfq3cttJR1u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756201317; c=relaxed/simple;
-	bh=6Yi/SP4F+vvFBMFt5ncu7Oa5rF7y/isevPXGyDleOEc=;
+	s=arc-20240116; t=1756205186; c=relaxed/simple;
+	bh=H3tVdYrDOxdRlNSFXF/jMCHZ3FgH+2UV7laTh6NYYEI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L7mv+ZYxrf5kmdKvjmCUxhHdkl8pDzRXK+RbjVZOLgioyRMTabYqS5nawugPtiDh+DjNEMZRW0R41rEa0upX0rTVexIM36FHb6ZlZNqkFSHkpoAMsfwpQQFAfB6C2vUk8/jUX+dC82jq+UoavDqrhmFdRhKHNECenclC/Eoa2dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dtWbXo52; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dtWbXo52"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-45a1b066b5eso28475315e9.1
-        for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 02:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756201314; x=1756806114; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vqGMxN7g2FZ5I2ZlUxDFgeHjpV96AkI1v/ye9FVXZH8=;
-        b=dtWbXo52FcCzJtEKFgtZdYI23BuOqe4IYVnwdky+2ZegqJa8p2I0cVpBktAZN92GNl
-         iPuJ910QitbkQ0Z/1U9ozuVDB3oybHLjFfPRNXDi20W5o8xykBh4Sxw543YPsWALprMI
-         SVvxU85fIY2m9U40yIRgq020caqKJKOx8p4cJMCSQN8DoVaBu+swO/YsgkomyyHI/ml0
-         wozPop4tli25sPy+isO2uDO+MfXRXVqvu1e0B9UQ41atwuvv4Q9tLTUrD41bSoD3qVBC
-         dNKHt8inuX4i1Xi2DOVWe8CiLHlSShYTzrL29AL0NNK7GtlZTG2ReGHwSEyFT3D6mLyD
-         lFLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756201314; x=1756806114;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vqGMxN7g2FZ5I2ZlUxDFgeHjpV96AkI1v/ye9FVXZH8=;
-        b=DjRozLphl1yoa/chCEpiDW9M+4f9ro7ubUYifEO4+RblZoVZeP8AT04OhqAwuIMbs5
-         tvEQZnV8onHpsIb22ts6y6R/E4c8ADEY1O1I51D1VPAJn+lhbsEIe+sy3vZWxCkKPRJ5
-         Cm5EYFmgXTDc7KxA4fHD+eUVBSIf1cPvzXd/02lS8zlHv5J3UZvgrG+KjlT5h25EOdAA
-         hV2hxyTnfK2l3frsAEf3ga8hShxV38SDu8n+sUN9Dqwp/7oOqjmHE+DoCIHiC20ohvYq
-         rGphdPfHA/HxeKq0PGjLiq1JHz9pDTxWjZBa8H5boWkm5FAZEYEggGQb8v+YR+8EQety
-         GHrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUM31tcpBybru3XgiC44/LkThXj4ivQQmCfJb6UmHV1WL95Hgws2qFNJ59GLaNDBswGrYh97V6oZWI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwkujAvwdRYxSREEtyYXTByNcPOPfc2CkmXnyXTL9kbc1vPmIel
-	jZZl+1CwXZ1zlH50tXcNB/Qx2bZZG/jiB57pkK7Lsa6qdzFYyQX97bTYgWok402EKs4=
-X-Gm-Gg: ASbGncsIS25NO82nRAB1Jn1gTUT8qXL6Le/BQZ9U8MfrXx3Z4XY23z7KRVQBtwtsrdK
-	JvsPZe9F5f19g1JTNDdPUy2AcaMRbM0t5+yjuIQTI3DLfjBpvpfCeazI5mE6fMVvcZ9Z6X7bpSW
-	1a47pBJyR4nKXY4EVbVlMJJ70O3Y/HKlxVxiAQoEMx8C9+uoov9GpkXFSfZpn9/0V4GT4IrmwYu
-	4f4z1k25jf55qpPgHVpd7ZrOMzFtTCCHkJkuPQPP8FdV3MXTpl8LPnRmoKIcqYLcUGJ32O65Mkv
-	P2TSOOMb822SaXT6/M4KUc3cVgafe9l2t7RUgrnhtqCX+t+Zi40conkMfsXTmhk3Su+qZb8z3/2
-	QC19tv/hQMoUxyr9fjYMNT69ntBs=
-X-Google-Smtp-Source: AGHT+IEvp//Eb3qaCZvE8rU15Km5LkdaAv1nzJiNdFb5H25Rx3A09MDCbXpDCLgp6CdR6xAWTv2TYQ==
-X-Received: by 2002:a05:600c:4f86:b0:459:db80:c29f with SMTP id 5b1f17b1804b1-45b5178e84amr121305475e9.1.1756201313624;
-        Tue, 26 Aug 2025 02:41:53 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45b5753550esm143915905e9.5.2025.08.26.02.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Aug 2025 02:41:53 -0700 (PDT)
-Date: Tue, 26 Aug 2025 12:41:49 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Hengqi Chen <hengqi.chen@gmail.com>,
-	Huacai Chen <chenhuacai@gmail.com>,
-	George Guo <guodongtai@kylinos.cn>,
-	Chenghao Duan <duanchenghao@kylinos.cn>, loongarch@lists.linux.dev,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] LoongArch: BPF: Fix uninitialized symbol 'retval_off'
-Message-ID: <aK2BXe_ADjY0WdAD@stanley.mountain>
-References: <20250819111953.3197428-1-chenhuacai@loongson.cn>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFJYUOq5A6E9j+0qXg+Ldef6aZCGnKbnc0SsGAghEhfr2vzghjTVd9eRrciyq0/tY21xWTWZv5zWZQhY5nDMAvhPBHf4DlFMdkMxP4hsf9bNMfq18S3KUnlKfIgGej+7CwrG9+6vbewCThidWYRN4MqkSfKiHcAqqkLUqdPwbAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A06821A25;
+	Tue, 26 Aug 2025 03:46:15 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8000D3F694;
+	Tue, 26 Aug 2025 03:46:14 -0700 (PDT)
+Date: Tue, 26 Aug 2025 11:46:10 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	acme@kernel.org, namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 01/19] perf/arm-cmn: Fix event validation
+Message-ID: <aK2QclH4jlHJ28EJ@J2N7QTR9R3>
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <0716da3e77065f005ef6ea0d10ddf67fc53e76cb.1755096883.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -80,24 +52,82 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250819111953.3197428-1-chenhuacai@loongson.cn>
+In-Reply-To: <0716da3e77065f005ef6ea0d10ddf67fc53e76cb.1755096883.git.robin.murphy@arm.com>
 
-On Tue, Aug 19, 2025 at 07:19:53PM +0800, Huacai Chen wrote:
-> In __arch_prepare_bpf_trampoline(), retval_off is meaningful only when
-> save_ret is not 0, so the current logic is correct. But it may cause a
-> build warning:
+Hi Robin,
 
-We pass uninitialized data to invoke_bpf_prog(), it's just that it isn't
-used.
+On Wed, Aug 13, 2025 at 06:00:53PM +0100, Robin Murphy wrote:
+> In the hypothetical case where a CMN event is opened with a software
+> group leader that already has some other hardware sibling, currently
+> arm_cmn_val_add_event() could try to interpret the other event's data
+> as an arm_cmn_hw_event, which is not great since we dereference a
+> pointer from there... Thankfully the way to be more robust is to be
+> less clever - stop trying to special-case software events and simply
+> skip any event that isn't for our PMU.
 
-In the kernel, we would say that's not a bug if invoke_bpf_prog() is
-inlined.  (The C standard doesn't differentiate between inlined and not
-inlined, passing uninitialized variables is always considered undefined
-behavior).  UBSan will complain about the uninitialized variable at
-runtime as well depending on if it's inlined or not.
+I think this is missing some important context w.r.t. how the core perf
+code behaves (and hence why this change doesn't cause other problems).
+I'd suggest that we give the first few patches a common preamble:
 
-It's not marked as an __always_inline function...
+| When opening a new perf event, the core perf code calls
+| pmu::event_init() before checking whether the new event would cause an
+| event group to span multiple hardware PMUs. Considering this:
+| 
+| (1) Any pmu::event_init() callback needs to be robust to cases where
+|     a non-software group_leader or sibling event targets a distinct
+|     PMU.
+| 
+| (2) Any pmu::event_init() callback doesn't need to explicitly reject
+|     groups that span multiple hardware PMUs, as the core code will
+|     reject this later.
 
-regards,
-dan carpenter
+... and then spell out the specific issues in the driver, e.g.
 
+| The logic in arm_cmn_validate_group() doesn't account for cases where
+| a non-software sibling event targets a distinct PMU. In such cases,
+| arm_cmn_val_add_event() will erroneously interpret the sibling's
+| event::hw as as struct arm_cmn_hw_event, including dereferencing
+| pointers from potentially user-controlled fields.
+|
+| Fix this by skipping any events for distinct PMUs, and leaving it to
+| the core code to reject event groups that span multiple hardware PMUs.
+
+With that context, the patch itself looks good to me.
+
+This will need a Cc stable. I'm not sure what Fixes tag is necessary;
+has this been broken since its introduction?
+
+Mark.
+
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/perf/arm-cmn.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index 11fb2234b10f..f8c9be9fa6c0 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+> @@ -1652,7 +1652,7 @@ static void arm_cmn_val_add_event(struct arm_cmn *cmn, struct arm_cmn_val *val,
+>  	enum cmn_node_type type;
+>  	int i;
+>  
+> -	if (is_software_event(event))
+> +	if (event->pmu != &cmn->pmu)
+>  		return;
+>  
+>  	type = CMN_EVENT_TYPE(event);
+> @@ -1693,9 +1693,6 @@ static int arm_cmn_validate_group(struct arm_cmn *cmn, struct perf_event *event)
+>  	if (leader == event)
+>  		return 0;
+>  
+> -	if (event->pmu != leader->pmu && !is_software_event(leader))
+> -		return -EINVAL;
+> -
+>  	val = kzalloc(sizeof(*val), GFP_KERNEL);
+>  	if (!val)
+>  		return -ENOMEM;
+> -- 
+> 2.39.2.101.g768bb238c484.dirty
+> 
