@@ -1,139 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB8A2D837C;
-	Tue, 26 Aug 2025 16:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F78371EA5
+	for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 18:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756227483; cv=none; b=XXhQxg+Z2zJ7Ls0Vfm5yhmEdAzyN7lyg7Rupp/xJ+CY/Qx7MtmI/+Iu7LJ6mJm5ZjpwOMx96WOEevVEQbTbbD63uChgix+YzdBTA201exvr4Z+D2QxGvwQ3oOxUnDtNL7jt8uNGyXA164c1FZ3zKYKVupuYV0ttdg3pYxdFmQJ0=
+	t=1756234145; cv=none; b=IFIQEie+LxZNbKtQ/5+7Hfdab+1mUgTxqqpF9gtNGFc8EwhPw3mZC0T2t/lqB7EXk//vIf4DCy/CrAEZ0Y5l1JEBWAPyXDm8qNz8o3Oxn1EbDsRIQd7h4Ka+/MIdwjTl6nbTnNjm3Hqj5jVbhNOPrbrHfSBRKch4BHHdaaNkuY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756227483; c=relaxed/simple;
-	bh=fnUtXDAxJfdbxKoWIvjZ0YEMsdquajfs3Wt0vqohrgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ubMmnoo2oZu9s6x/EePqUAL6yDQNyPSEn9QLVcp1fDTzFKhnPHdwNItf1KrVl76vYqHNUSo0T4xLsZrxMtzfPtxsYoeWBgZVL2BFKsLWS+Gn86AlRsHZVg5MsrA92wClIOcSii+yml4tMhTKqDDFw9xeLeS1jATQ2bfM51G8L/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuvpJ+uR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756234145; c=relaxed/simple;
+	bh=E/Ye7/SL7tqTx9oBx/tviBmGnvw5YMp+2zk7nWejWf0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l5+uzjC107TIcp4dVqrsXGpLIGTeFrl3KaLOL8IfqVFfBF6pOVjDYQNAnmVxqvbuRpVL2cL0soXuXhTsLaBebCPWHNIKC67PUOZtHfFsP+kSZbnSAA/hEeKGLunu94E7fMXkf2FBlauGmSYhk9GmSPDmso64eIMe/+KZiB6Tb3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TV5Fg5nV; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuvpJ+uR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C82A7C4CEF1;
-	Tue, 26 Aug 2025 16:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756227482;
-	bh=fnUtXDAxJfdbxKoWIvjZ0YEMsdquajfs3Wt0vqohrgU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fuvpJ+uRtRM9fzHvRv14jD9ZQo0Z+Ik1UILyoPgPF2jz8dNyPROaEFVvlvQAaXz4X
-	 ttXYaAtJGkub4HtTxq/BEINhmPDYT0kc4MO9Pt7hSTntGG0uTTAcFEzDYKdGxtFeT2
-	 qkjkQ9Njb/UFnPIIvb1+17UQA9vp2juzNUYGm3uywq3v8NTkaS1OlNFYQ09AI39lpx
-	 YQaZvSP4SUfRf4YlPPa54Y1tNy/wsF7ZVJVKqynCB7t8JfsAtW1Xvl7gh2NjEvVbqY
-	 byeS9jwZXrmVRhx6StAaC2vlVi6HX3Ox4JExT2RQEj9zwDNL3tioAysr1mHqOoXhAg
-	 8DUjtPx04KNjg==
-Date: Tue, 26 Aug 2025 16:58:00 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [PATCH 0/5] Drivers: hv: Fix NEED_RESCHED_LAZY and use common
- APIs
-Message-ID: <aK3nmOgVl4INJpjG@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250825200622.3759571-1-seanjc@google.com>
- <3188ca61-2591-4576-9777-1671689b7235@linux.microsoft.com>
- <aKz_ZMvvF0e9nwSn@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TV5Fg5nV"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-24611734e50so26075ad.1
+        for <loongarch@lists.linux.dev>; Tue, 26 Aug 2025 11:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1756234141; x=1756838941; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E/Ye7/SL7tqTx9oBx/tviBmGnvw5YMp+2zk7nWejWf0=;
+        b=TV5Fg5nVrcQDPq0DSXpAWiJ3DPBc6PyEI1YENgFhWDYdrVAaQ5Kg+IYQUHU8Gtpdsx
+         GxooIG7TYX0GzVONn3EO5NpBFA38Mo3YtsfzVgFCIEyA+GlUbJK0+KicL5losh3TFh2d
+         9z+SqFNnZ+3z0lTv/x2erwDH0cMpP/Ky6KbHq/22qCUxRajlZYOJaKMFn/rumoGdEjoE
+         kdS+kQdkDbcX5tdie7guOZYOcxPeZ0QtMv+NjEh20lDaPJzV9GnZZmnE9C1xXzuO0Rr1
+         G67GDFpyzEitc5ZdfEZb3mvtYKgn0RZnrMN8L0Gq5OmI6fP152dLMXunp84fbobtn3KO
+         zXkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756234141; x=1756838941;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E/Ye7/SL7tqTx9oBx/tviBmGnvw5YMp+2zk7nWejWf0=;
+        b=dSYkkXpDckHtH1SLEtCFOksUHHlNwh336m+qReQm161D1lbvarl8ReeqYmRYZV+TcG
+         l0YFL/WhRvRlzLuNGAlUt66DNpaxZ6XGufghbhBwuIvNdIbgrI1yM4/zYL5KAs9Hf2bn
+         vCz0SAOKVVNJc9asWx40VYLGVu6tD1tkEPaSU7ak1sfd7GchAKKAsMMGNgSkn9xTq60r
+         OqRh4fR5wyVdP7EqLgGEwDHsNUSdBRPaC0H3Rx07VYSF448pBHkVtFWSiDxeAO8KbOwv
+         RgdyXDY7ZpouiIZVMyXA9tHbHUOGjqj6opJEQPvwlxos1qPHZhkNviVDrcaxypft4QuN
+         Xm/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUJe9OCy3QqXOYZSIOUlDBdZuCw3mRQN3/cS8k7FhdRwIPqA1YnjZOKiveGA3g3P/2YB8dJoJP7TXU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzncSJU1xQPkR5upqA+9GXWavSm7EL2Gw7aXhaXkizPEg4jv0zi
+	efxPHiHjpTNyb31Qly53eCd9m3tfRdcxeSNUUl/MdHjArEnYTsf0/qAaNXTIc+/2r6ag6UBxn+c
+	AWPUJS8EZWPTCSNr5jgHOelItDqas09eYvvzRqHv1
+X-Gm-Gg: ASbGncvWoafE/Ie76l3UWY401pVyjeD3MgWQTVtukavmY6FmZawGz2Z/bDpkqENBGIG
+	/3x09gEBvIN5exmn2oV6f4PcyrlM9IvLkZ1mQGwpMRuSp/OFdNthzsdHOUW6Ik/cizH51XC9ANa
+	UWxfCLS429HrifYo4PcwQFMsjmZNgfwU5xhWn8QkiuRXnDc2jyUQBZhFBZ7NZ67VAmITkPVRPLI
+	N69tSMUQ6FHODfaP4JJZ9CAr5Fvdyfp04MbwL42TLXu1WMrp2gP60JxUUbNeKBi
+X-Google-Smtp-Source: AGHT+IG+ollMBmiaOYcyGD4fK0EXbH34IwD2F+IqBBnZbD5S5EK8GUe1Cco16tj20beWZxJ5YP1hQInru/5q0vhDcUY=
+X-Received: by 2002:a17:903:228c:b0:243:afef:cd88 with SMTP id
+ d9443c01a7336-2486395f193mr4627105ad.11.1756234140425; Tue, 26 Aug 2025
+ 11:49:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aKz_ZMvvF0e9nwSn@google.com>
+References: <cover.1755096883.git.robin.murphy@arm.com> <d6cda4e2999aba5794c8178f043c91068fa8080c.1755096883.git.robin.murphy@arm.com>
+ <20250826130329.GX4067720@noisy.programming.kicks-ass.net> <6080e45d-032e-48c2-8efc-3d7e5734d705@arm.com>
+In-Reply-To: <6080e45d-032e-48c2-8efc-3d7e5734d705@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 26 Aug 2025 11:48:48 -0700
+X-Gm-Features: Ac12FXxL0fQGFTk6-3SCJz15Qd8Ums9V_bcQA6gIxaEwQacWk3scYfeQZZ7cYZQ
+Message-ID: <CAP-5=fXF2x3hW4Sk+A362T-50cBbw6HVd7KY+QEUjFwT+JL37Q@mail.gmail.com>
+Subject: Re: [PATCH 12/19] perf: Ignore event state for group validation
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, will@kernel.org, 
+	mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	imx@lists.linux.dev, linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org, 
+	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org, 
+	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org, 
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 25, 2025 at 05:27:16PM -0700, Sean Christopherson wrote:
-> On Mon, Aug 25, 2025, Nuno Das Neves wrote:
-> > On 8/25/2025 1:06 PM, Sean Christopherson wrote:
-> > > Fix a bug where MSHV root partitions don't honor NEED_RESCHED_LAZY, and then
-> > > deduplicate the TIF related MSHV code by turning the "kvm" entry APIs into
-> > > more generic "virt" APIs (which ideally would have been done when MSHV root
-> > > support was added).
-> > > 
-> > > Assuming all is well, maybe this could go through the tip tree?
-> > > 
-> > > The Hyper-V stuff and non-x86 architectures are compile-tested only.
-> > > 
-> > 
-> > Thanks Sean, I can test the root partition changes.
-> > 
-> > A similar change will be needed in mshv_vtl_main.c since it also calls
-> > mshv_do_pre_guest_mode_work() (hence the "common" in mshv_common.c).
-> 
-> Oof, more dependencies.  I suppose the easiest thing would be to send a series
-> against
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git queue
-> 
-> and then route everything through there?
+On Tue, Aug 26, 2025 at 8:32=E2=80=AFAM Robin Murphy <robin.murphy@arm.com>=
+ wrote:
+>
+> On 2025-08-26 2:03 pm, Peter Zijlstra wrote:
+> > On Wed, Aug 13, 2025 at 06:01:04PM +0100, Robin Murphy wrote:
+> >> It may have been different long ago, but today it seems wrong for thes=
+e
+> >> drivers to skip counting disabled sibling events in group validation,
+> >> given that perf_event_enable() could make them schedulable again, and
+> >> thus increase the effective size of the group later. Conversely, if a
+> >> sibling event is truly dead then it stands to reason that the whole
+> >> group is dead, so it's not worth going to any special effort to try to
+> >> squeeze in a new event that's never going to run anyway. Thus, we can
+> >> simply remove all these checks.
+> >
+> > So currently you can do sort of a manual event rotation inside an
+> > over-sized group and have it work.
+> >
+> > I'm not sure if anybody actually does this, but its possible.
+> >
+> > Eg. on a PMU that supports only 4 counters, create a group of 5 and
+> > periodically cycle which of the 5 events is off.
 
-Our fixes branch is on 6.17-rc1. You can use it as a base if you want
-to.
-
-> 
-> Alternatively, frontload the MSHV fixes (which I'll do regardless) and take those
-> through hyperv and the rest through the tip tree?  That seems like an absurd
-> amount of juggling though, especially if we want to get the cleanups into 6.18.
-> And if none of these lands, it's MSHV that'll suffer the most, so betting it all
-> on the hyperv tree doesn't seem terrible.
-> 
-
-I'm happy to do it however the community sees fit.
-
-> > Also, is it possible to make all the mshv driver changes in a single patch?
-> 
-> It's certainly possible, but I'd prefer not do to that.
-> 
-> > It seems like it would be cleaner than refactoring it in patches 1 & 2 and
-> > then deleting all the refactored code in patch 5.
-> 
-> Only if you don't care about backporting fixes, bisection, or maintaining code.
-> 
-> E.g. if checking NEED_RESCHED_LAZY somehow causes issues, it would be really nice
-> for that to bisect to exactly that patch, not a patch that also switches to a
-> completely different set of APIs.
-> 
-> And if someone is wants the fixes in a pre-6.18 kernel, they don't need to
-> backport all of the KVM and entry code changes just to get the fix.
-
-+1 on this.
+I'm not sure this is true, I thought this would fail in the
+perf_event_open when adding the 5th event and there being insufficient
+counters for the group. Not all PMUs validate a group will fit on the
+counters, but I thought at least Intel's core PMU would validate and
+not allow this. Fwiw, the metric code is reliant on this behavior as
+by default all events are placed into a weak group:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/metricgroup.c?h=3Dperf-tools-next#n631
+Weak groups are really just groups that when the perf_event_open fails
+retry with the grouping removed. PMUs that don't fail the
+perf_event_open are problematic as the reads just report "not counted"
+and the metric doesn't work. Sometimes the PMU can't help it due to
+errata. There are a bunch of workarounds for those cases carried in
+the perf tool, but in general weak groups working is relied upon:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/pmu-events.h?h=3Dperf-tools-next#n16
 
 Thanks,
-Wei
+Ian
 
-> 
-> As for the maintenance headache, see above.
+> > So I'm not against changing this, but changing stuff like this always
+> > makes me a little fearful -- it wouldn't be the first time that when it
+> > finally trickles down to some 'enterprise' user in 5 years someone come=
+s
+> > and finally says, oh hey, you broke my shit :-(
+>
+> Eww, I see what you mean... and I guess that's probably lower-overhead
+> than actually deleting and recreating the sibling event(s) each time,
+> and potentially less bother then wrangling multiple groups for different
+> combinations of subsets when one simply must still approximate a complex
+> metric that requires more counters than the hardware offers.
+>
+> I'm also not keen to break anything that wasn't already somewhat broken,
+> especially since this patch is only intended as cleanup, so either we
+> could just drop it altogether, or perhaps I can wrap the existing
+> behaviour in a helper that can at least document this assumption and
+> discourage new drivers from copying it. Am I right that only
+> PERF_EVENT_STATE_{OFF,ERROR} would matter for this, though, and my
+> reasoning for state <=3D PERF_EVENT_STATE_EXIT should still stand? As for
+> the fiddly discrepancy with enable_on_exec between arm_pmu and others
+> I'm not really sure what to think...
+>
+> Thanks,
+> Robin.
