@@ -1,117 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD558322774
-	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AE91C860B
+	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 11:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756289909; cv=none; b=rW24C60RHgUWo7lJsQNroKL23VvMH0QFVMZlyxdq1OgPN7+EBBM4lgiQVntt6kOOKIMq7hbLoiy7tl/w30XIB2/axhEKET75NRA+t7prrV9Q2FF+RZ3bLJ1w/kmRyMp+uWSfEamjWDnlrsU4iOfrb1LePOJmortTRp1+qCBmEog=
+	t=1756293567; cv=none; b=ttksqH00L3t+5ULoaYhLJNlMX3AWrCzbYtC2OwkR+hL4sdvCjL47ASPXpdWjBC20/88fnigfqDA6rMy4etXRFX3f1PcNRG6x8of+NMkuCPoeItotyDTPxeS/qZaNK3A+yDDnxFa57pHpstYnBHRqepzd9Nm1eALKq+wyTmEKT6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756289909; c=relaxed/simple;
-	bh=6FzlqskmpU4mqgsOXMFz/wgzjeVlAW4PBLT2lq24aV4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VlV4BYkxeFcTpByc1jTxRzC1yLAOY0xvRv83n2lCo0vEU+GrzsX31tZCZ6x+TWRQOXZG1sEBNwG98i8ITmudRTpTaRbNk9EmxDkf5F4V1T+OZpoZGRxI9MB4C1xZuxDum9zOSockFy5XaazeUAsSy2LrQECse7IDonGvGW6Uu64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5hdkaV6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756293567; c=relaxed/simple;
+	bh=ddBCvL3X83QlTd+5WQd87vKRmMu0/T6UgLHIyN93SB8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Da1CqI1TxwIEgvsoC7Ae11CIovg4YDecMearR3UzeD3eDGz/I9TBj1X/r05robXNEfvujLBzSjufns8fQX1mrzmBcYnY5c58MJGiHDXvP86h7cUxkYmdQ7M/2MmvVDiN5vj4lriJD3qmQjBz8uPCwVdfGH6CMEcHndM2R70HPBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hk4E52Ov; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5hdkaV6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F8EC113CF
-	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756289909;
-	bh=6FzlqskmpU4mqgsOXMFz/wgzjeVlAW4PBLT2lq24aV4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M5hdkaV6NdbcRgLMTdZNGtKkBXlDzUaESLeMZ3UhOp2Lu/Eb0eDmH9DxvQDERmD8d
-	 dtg061BoVzk20FeEZOnpFcC8GsXs9FG0Ypc97u7EKCQYyqQpg89MG3RInCZUAgZ6Tl
-	 4QS+GTYWtFzE0laGDd2Vc0aoU8JL1sbVRu2ynic6fYmCGgJM+S0wMvGxWhA5SBQoTI
-	 DJv0i0ugeEtFH7IMPF0nQzozL1UiUPYta68OfIq1TKnmI5OiosllEU7wDkz52/norF
-	 SmKPFOQmjlZw7SdJGmn2ocSfchl0m2Sxfv/3PTI4SFSPkI+9rkApLntyGCWYPnQ+IY
-	 NqGcgP6jKuerg==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-61cb9f6dbe7so641812a12.0
-        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 03:18:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWd8b/u16rcXaypfZbnzR8J8xGuGBrAEWXk5Ou184dF4GSGywuWaaCsew3VBqKh8n5FGrIhe8lg3CM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw6ExMFt6H8aQTtsESB+AU5CJftz4nOoehOnP+O1CE09OVaRBgG
-	Dr5Q9EahU3qr3yakdZZ0QCc65bdDM4EWMv7QPEUHifSpRyGhFNMV1O8Bf8QaR/Rce1WioLoJoWr
-	t+szj0GHiGFLIg/jJbUM6sB4YQPHsgzg=
-X-Google-Smtp-Source: AGHT+IFDaHJmXdP3CC1Di8LlIhQV097JtkfPqlF8wrrAryeIiXdqAtfMWhdoQiulQi8pOLJWyHP8mPXfB1Tn/2IkwCk=
-X-Received: by 2002:a05:6402:2792:b0:61c:bfa7:5d0 with SMTP id
- 4fb4d7f45d1cf-61cbfa706c9mr119825a12.30.1756289908044; Wed, 27 Aug 2025
- 03:18:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hk4E52Ov"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-244580523a0so65730345ad.1
+        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 04:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756293565; x=1756898365; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=93FWKoT6dFc5J2SoWMKbByMa7GuFs+3MAuu7ATorRVc=;
+        b=hk4E52OvxDmXvcp6CcwMfdEwETO0hstEL+KtdtznhmUyd6ZgrcvODg7x+oKyhfss5H
+         xDfHZqtIjC6QZaMu26dI7DXmkMNxix9HMs2d0tzFbYxYW0KNTRXPaJuz7AhTjGhWwIaI
+         6NbZwsU7FmywRAJGD3CpdmULXwwBrqOy5pqYWQJuw7aX6CigC9TBtarGYT4wepLzsCdK
+         iXnZTCMLH7YF2zmJojQcFDtK+YYi9S1F8E33Ck76H70SLLTOj1P0nucDtoqyyQEyPY1u
+         vc8YrJfv4OAdLfkTx7rYPFWisSp7UXs9S/xSxlp3qULmJlrNRfPrDlES6S/br0rEb03i
+         O3mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756293565; x=1756898365;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=93FWKoT6dFc5J2SoWMKbByMa7GuFs+3MAuu7ATorRVc=;
+        b=uAYao7Wo2C4va3CqXkXcWe0RAc9BQyeeC/8vTYniSIH5Tfz3M0JGpU0rC/BztlyNhJ
+         W46ZV+i0SrbS4GCHTxNNryICiez0S3oiT78fgZuh9IxRLW1vul305taBwERtq/z5oPr6
+         mANL3V1UX+ARmmUuvHVcB3CtUq4xwoUcP07fSRf0Ho65tUmMHXc6gZGxiwyQn6hU2sbD
+         uAl3wdhZfKOVBFXcFRriDbuicsW0U18TaWBrUC/19G45FGu0XcHkBH5ySy0m5RDTWer/
+         OD5ZW+tkN9QMbN/K4LOKrfn1Rx0Wk7f8D0ZKAcSPMBKPl8K5HABM7UEFqbUqS72yRA8L
+         m/jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOzWYCLqJ0l3St+6oNtmcAtYYFez0jM+9DzHNMOHLA/yF4ZTEkORmkL5zLpLn5rhXcKAgphLwq3y4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxVLsTXBSgi7mhOxjazj4GyEZGMApjAxpm9qCfjnEDlAs+Yv2lv
+	VjTVQpMfJwsBILvRtClZo6DUS/RHShzA3jTqdJ9Oe97LbNnanQjd94Y0
+X-Gm-Gg: ASbGncsK6N/4gPKvGIFvXaekgsI5ETy9N+EwGFhz3mHfmGxyleyUs8Da9OMB0MJxEMm
+	KiStyyyM6KWEuJqNGJlt6TKkLCXU2RcdrhLkAmCQE5CWFGYsGWQldCF3i60Gy8Vp7aysIpWnaZj
+	wRbZg0YMhW+lByQFiGp8p4l2U87hDgp/DY/i0rHa1ssK0Zq7TFyy3yovCrfzSzChlEigivG5amk
+	ky5piTyn2ouRlIZibMc0whTaTsbmVjvQTV0kJcJQKPjiRHcycl4jjuRO/qcqktTiJ3uEdo3u6fP
+	vds1RLxlurSXeH1AP6dWcxvDMKj0raIo5zu/nvpMsQvU7HXXl3dA3BMWO3r+eA0rQI4yH2Ni8+m
+	N4C4cVqElBYCEgyAFuBnPiYhkPP0rOkWkyMNDIZzc
+X-Google-Smtp-Source: AGHT+IGHMyUCOUNe3WdFTytTI7vDD/W3K7K34Nd4VIqs9KdtpdHS1TLuZl4AOc0Ub0c52sQDgDVmBw==
+X-Received: by 2002:a17:902:ce82:b0:246:4de6:5cc0 with SMTP id d9443c01a7336-2464de66f6fmr233640965ad.53.1756293565298;
+        Wed, 27 Aug 2025 04:19:25 -0700 (PDT)
+Received: from devbox.. ([43.132.141.11])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3276f8a3335sm1829729a91.13.2025.08.27.04.19.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Aug 2025 04:19:24 -0700 (PDT)
+From: Hengqi Chen <hengqi.chen@gmail.com>
+To: chenhuacai@kernel.org,
+	yangtiezhu@loongson.cn,
+	jianghaoran@kylinos.cn,
+	duanchenghao@kylinos.cn,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	vincent.mc.li@gmail.com
+Cc: bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Subject: [PATCH v2 0/3] LoongArch: Fix BPF trampoline related issues
+Date: Wed, 27 Aug 2025 09:47:30 +0000
+Message-ID: <20250827094733.426839-1-hengqi.chen@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250826064906.10683-1-yangtiezhu@loongson.cn> <CAEyhmHQJcCvy2TPv7nwT87yS6y698WrECwd+xA9RjsCVmrVXvw@mail.gmail.com>
-In-Reply-To: <CAEyhmHQJcCvy2TPv7nwT87yS6y698WrECwd+xA9RjsCVmrVXvw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 27 Aug 2025 18:18:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5SCuXERUBbC5D+k1pjf-Pmf33LOQXL=aUP-E-DgO6+qg@mail.gmail.com>
-X-Gm-Features: Ac12FXw1WWwPsT1YP9ZG06PGkyzJXhLdasQwDqY8XKTWfUUAYVafM9Q29pau5cA
-Message-ID: <CAAhV-H5SCuXERUBbC5D+k1pjf-Pmf33LOQXL=aUP-E-DgO6+qg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Optimize sign-extention mov instructions
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, bpf@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Applied, thanks.
+The following two selftest cases triggers oops on LoongArch:
 
-Huacai
+    $ ./test_progs -a ns_bpf_qdisc -a tracing_struct
 
-On Wed, Aug 27, 2025 at 9:27=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com>=
- wrote:
->
-> On Tue, Aug 26, 2025 at 2:49=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
-cn> wrote:
-> >
-> > For 8-bit and 16-bit sign-extention mov instructions, it can use the na=
-tive
-> > instructions ext.w.b and ext.w.h directly, no need to use the temporary=
- t1
-> > register, just remove the redundant operations.
-> >
-> > Here are the test results:
-> >
-> >   # modprobe test_bpf test_range=3D81,84
-> >   # dmesg -t | tail -5
-> >   test_bpf: #81 ALU_MOVSX | BPF_B jited:1 5 PASS
-> >   test_bpf: #82 ALU_MOVSX | BPF_H jited:1 5 PASS
-> >   test_bpf: #83 ALU64_MOVSX | BPF_B jited:1 5 PASS
-> >   test_bpf: #84 ALU64_MOVSX | BPF_H jited:1 5 PASS
-> >   test_bpf: Summary: 4 PASSED, 0 FAILED, [4/4 JIT'ed]
-> >
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
-> >  arch/loongarch/net/bpf_jit.c | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
-c
-> > index abfdb6bb5c38..7072db18c6cd 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -527,13 +527,11 @@ static int build_insn(const struct bpf_insn *insn=
-, struct jit_ctx *ctx, bool ext
-> >                         emit_zext_32(ctx, dst, is32);
-> >                         break;
-> >                 case 8:
-> > -                       move_reg(ctx, t1, src);
-> > -                       emit_insn(ctx, extwb, dst, t1);
-> > +                       emit_insn(ctx, extwb, dst, src);
-> >                         emit_zext_32(ctx, dst, is32);
-> >                         break;
-> >                 case 16:
-> > -                       move_reg(ctx, t1, src);
-> > -                       emit_insn(ctx, extwh, dst, t1);
-> > +                       emit_insn(ctx, extwh, dst, src);
-> >                         emit_zext_32(ctx, dst, is32);
-> >                         break;
-> >                 case 32:
-> > --
->
-> Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
->
-> > 2.42.0
-> >
+This small series tries to fix/workaround these issues.
+See individual commit for details.
+
+While at it, remove a duplicated flags check in __arch_prepare_bpf_trampoline().
+
+v1 -> v2:
+* collect Acked-by/Tested-by tags
+* update sign_extend() in patch 2 as suggested by Huacai
+
+Hengqi Chen (3):
+  LoongArch: BPF: Remove duplicated flags check
+  LoongArch: BPF: Sign extend struct ops return values properly
+  LoongArch: BPF: No support of struct argument in trampoline programs
+
+ arch/loongarch/net/bpf_jit.c | 35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
+
+--
+2.43.5
