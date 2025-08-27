@@ -1,54 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015203164B4
-	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128A3319855
+	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756289872; cv=none; b=rFfbR5ShyOOflLUcblDeNE0nsZKoF3BlXxNenlpIP3cfNrf7+9L1AD6U2YMgKckfgqCmSDMzfI8ZS7FRPwh/l0MPq0IuM55W8bvdt+CKoE9bBfcC5GHDfPKYRXE7rVSIiZp5iNZT7F6ePS9gpjnaSbAuDctuG1JCr8jCYBIyxJ4=
+	t=1756289889; cv=none; b=eYcWVKlACf3Fe6yNPZxBF7C6NlDmIanYV8XtEMxeTMuR3tVUffyt+FAII+9qSZvl9NuiR1tWj4c6iZyKIMUSdTvVhCe4SIKr8bcgNLJA0oEQKFlj4jIB45jElG0Up80e/QCJdkIjLDWv3/fZcA6T9e2SlKsoy1Lpg9RmiQXRoKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756289872; c=relaxed/simple;
-	bh=lOiDzk3UlWjzR0d5BtVvVQ34OrJvTQo9wG1rv9COwv0=;
+	s=arc-20240116; t=1756289889; c=relaxed/simple;
+	bh=2QgysAeAv4Fx8NZcG5VTBdcdLTbyERQ6pDohcn5Qh9I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mCBs8jSwf09Qd2VWmoX/PPIja9LXc6aio65JjJea0AF29s2z3byrcxzPQ3J3nyiFF66j5PpdtpJcXWqtoMn+Aa4P2ywcgzfTrtuLPhM89MEibRnOKuJE+7dG5Qj8xCodXe4LEXYtsXU9GWU7/bKVq8M9qqvNcB0DkoIGdma/h88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7fSUn0Q; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=h3Yq1UMyEjXUXJEyvXgwa2T9aaF6nFkO2S/vzdWwGG+lpE3o5P7T+q2WZJtXh5PoIrbq13jqC0ahjn6KdBTkEEZr+8ChBaStGi+rvbBZgMTe9eFThrVCoeMZKh+rFTyQ9CQ/33u+bKE8vQoZ1KrDCe/NpDt/1ZqOzekJAL1M/TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mhYxiaaE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7fSUn0Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC9A8C4AF09
-	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:17:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mhYxiaaE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCA19C113CF
+	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756289871;
-	bh=lOiDzk3UlWjzR0d5BtVvVQ34OrJvTQo9wG1rv9COwv0=;
+	s=k20201202; t=1756289888;
+	bh=2QgysAeAv4Fx8NZcG5VTBdcdLTbyERQ6pDohcn5Qh9I=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=C7fSUn0QS1V3ETfjHLeo/Uu0aaQQ7I4aa1rZfuTgOpxV4wu3sgnbaYLLl4lrjGEop
-	 bXaqysRz1T459K9hHXX6Efg7qL1rfWIIC8iCxc79nf/0DrOyokuKwpr1/zNy+Z5A2D
-	 MMo+iJ2H5sYk596YY4o2RA3YsiF9hjp+DwYVopFiPE2UyVKfphxdH/ZDpm75TxYBkk
-	 FCGDvkCCwZMxqUSN8UgaP1pS3cqTd2LeEuJJtKUlE5NFfjHQgXe8ClAJHqiGItFCin
-	 YOlOY/6ihKCfIz4kjZeVAgMoEG+QLj14CrkYSiTNoUJdB/lPj1UJSfcPUNjle3fOIv
-	 1KFoSupfvU96A==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-61cbe5cef28so286620a12.0
-        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 03:17:51 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzICuzWOFDx3IypZfwMhNTyZLLmyfERSwkNAj7kcFRuHEhblMwj
-	kGPiijP65DCVLAPyw2dYwiwbj3EZOBYvTmn9vKRoUy+5QVU6oPEDMNryXALsncD3ralLwIOgVim
-	ZMcp6kWPWgxIC6L9w5/U3iP0jKQzCr5k=
-X-Google-Smtp-Source: AGHT+IFuech9sAlCSWYd7t9EcWjbklbmV5kXdVa4QmRBKMxaX258l/LboXqUcTT4erExFnyO4586YAytHpLYl57cYzA=
-X-Received: by 2002:a05:6402:5186:b0:615:3667:f4eb with SMTP id
- 4fb4d7f45d1cf-61c983b7f50mr4247202a12.6.1756289870308; Wed, 27 Aug 2025
- 03:17:50 -0700 (PDT)
+	b=mhYxiaaEN2dwPC1qSEJt4uM1aSvFjakNmLWqjOXsyE1VNvpruF3v+ly9LtCXRtt3O
+	 cZlvamC0xs326zTYNsshL3h9Vk2sffuec2YVXPhpvnwt4vwMre/LU5WAmHY/cfy2DA
+	 LX9/i2WgE+WNEmQQh82UtMF1FiIXVMpbqXU4b7P+F+TWcLGpIjhd3VAW8t077VEK+c
+	 VzXnDl+x+PYcswHqJyL962HxzS++q5Cjc6hZdwhcX+Ts2dit7ARM+ugmP1AZA/EgFq
+	 /MHmY4GoW7BiLQkJXCCSN33Q3F/8g1XOkPwzJjvuJGB+dm3h8TTh4G+OAKu3aGVtru
+	 k20V94vgShxMA==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-61cbfa1d820so124882a12.3
+        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 03:18:08 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwmTW15wsVhKeLCLX2lDpGrnLfFB5nHYuWQ8qneKosQJyK8uU0m
+	FZumSj6MXicCE2p3GFPdj8/P1FkWwxJ279N9HUhyV2sEJ2k7FC3lO1VRRSAbObMez/3XHF1uXK2
+	g3rUkiaSfss+Gll+YWTRNHNBSoO33fNw=
+X-Google-Smtp-Source: AGHT+IGK3BfC8RRIrj7re1nqlK8QPZ17Lm2SFwVMLkmJgHyFGuzPTSLAqIG0ubvo0jWejR2dR1DfZY3y6MyugUF/UuA=
+X-Received: by 2002:a05:6402:5194:b0:61c:93fb:a33b with SMTP id
+ 4fb4d7f45d1cf-61c93fba6f5mr4093109a12.21.1756289887378; Wed, 27 Aug 2025
+ 03:18:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250826063908.6615-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20250826063908.6615-1-yangtiezhu@loongson.cn>
+References: <20250826063956.6950-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20250826063956.6950-1-yangtiezhu@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 27 Aug 2025 18:17:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4G4_Xvuy35Ff_deY3FrRAaYGRTYpPR5Ru1=BUMqSb1fA@mail.gmail.com>
-X-Gm-Features: Ac12FXwg7x9U4Onn7m4aSR2UaTnf41bPqLgQoz98sosS70AuFhO6umncV1nZH5A
-Message-ID: <CAAhV-H4G4_Xvuy35Ff_deY3FrRAaYGRTYpPR5Ru1=BUMqSb1fA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Update help info of config ARCH_STRICT_ALIGN
+Date: Wed, 27 Aug 2025 18:17:55 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7qjHk_E_SvM-OqRKiasvykoM2bjLJObCCDs0kbDSS3Vw@mail.gmail.com>
+X-Gm-Features: Ac12FXznGeTE9uR7hSBOzXOsLDfCMpUBEKu3M0aWkOfm39tZzLqTQU31NPAPLCw
+Message-ID: <CAAhV-H7qjHk_E_SvM-OqRKiasvykoM2bjLJObCCDs0kbDSS3Vw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Handle newly added llsc instructions for probes
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -58,47 +58,71 @@ Applied, thanks.
 
 Huacai
 
-On Tue, Aug 26, 2025 at 2:39=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+On Tue, Aug 26, 2025 at 2:40=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
 > wrote:
 >
-> Loongson 3A6000 and 3C6000 CPUs also support unaligned memory access, so
-> the current description is out of date to some extent.
->
-> Actually, all of Loongson-3 series processors based on LoongArch support
-> unaligned memory access, this hardware capability is indicated by the bit
-> 20 of CPUCFG1 register, update the help info to reflect the reality.
+> The atomic instructions sc.q, llacq.{w/d}, screl.{w/d} were newly added
+> in the LoongArch Reference Manual v1.10, it is necessary to handle them
+> in insns_not_supported() to avoid putting a breakpoint in the middle of
+> a ll/sc atomic sequence, otherwise it will loop forever for kprobes and
+> uprobes.
 >
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  arch/loongarch/Kconfig | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  arch/loongarch/include/asm/inst.h |  5 +++++
+>  arch/loongarch/kernel/inst.c      | 12 ++++++++++++
+>  2 files changed, 17 insertions(+)
 >
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index f0abc38c40ac..fcf6575b02f8 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -563,7 +563,8 @@ config ARCH_STRICT_ALIGN
->           -mstrict-align build parameter to prevent unaligned accesses.
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
+sm/inst.h
+> index 277d2140676b..55e64a12a124 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -77,6 +77,10 @@ enum reg2_op {
+>         iocsrwrh_op     =3D 0x19205,
+>         iocsrwrw_op     =3D 0x19206,
+>         iocsrwrd_op     =3D 0x19207,
+> +       llacqw_op       =3D 0xe15e0,
+> +       screlw_op       =3D 0xe15e1,
+> +       llacqd_op       =3D 0xe15e2,
+> +       screld_op       =3D 0xe15e3,
+>  };
 >
->           CPUs with h/w unaligned access support:
-> -         Loongson-2K2000/2K3000/3A5000/3C5000/3D5000.
-> +         Loongson-2K2000/2K3000 and all of Loongson-3 series processors
-> +         based on LoongArch.
->
->           CPUs without h/w unaligned access support:
->           Loongson-2K500/2K1000.
-> @@ -573,6 +574,9 @@ config ARCH_STRICT_ALIGN
->           to run kernel only on systems with h/w unaligned access support=
- in
->           order to optimise for performance.
->
-> +         If you want to make sure whether to support unaligned memory ac=
-cess
-> +         on your hardware, please read the bit 20 of CPUCFG1 register.
+>  enum reg2i5_op {
+> @@ -189,6 +193,7 @@ enum reg3_op {
+>         fldxd_op        =3D 0x7068,
+>         fstxs_op        =3D 0x7070,
+>         fstxd_op        =3D 0x7078,
+> +       scq_op          =3D 0x70ae,
+>         amswapw_op      =3D 0x70c0,
+>         amswapd_op      =3D 0x70c1,
+>         amaddw_op       =3D 0x70c2,
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index 72ecfed29d55..4026edea9bdd 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -141,6 +141,18 @@ bool insns_not_supported(union loongarch_instruction=
+ insn)
+>         case amswapw_op ... ammindbdu_op:
+>                 pr_notice("atomic memory access instructions are not supp=
+orted\n");
+>                 return true;
+> +       case scq_op:
+> +               pr_notice("sc.q instruction is not supported\n");
+> +               return true;
+> +       }
 > +
->  config CPU_HAS_FPU
->         bool
->         default y
+> +       switch (insn.reg2_format.opcode) {
+> +       case llacqw_op:
+> +       case llacqd_op:
+> +       case screlw_op:
+> +       case screld_op:
+> +               pr_notice("llacq and screl instructions are not supported=
+\n");
+> +               return true;
+>         }
+>
+>         switch (insn.reg2i14_format.opcode) {
 > --
 > 2.42.0
 >
