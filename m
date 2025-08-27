@@ -1,56 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128A3319855
-	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD558322774
+	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756289889; cv=none; b=eYcWVKlACf3Fe6yNPZxBF7C6NlDmIanYV8XtEMxeTMuR3tVUffyt+FAII+9qSZvl9NuiR1tWj4c6iZyKIMUSdTvVhCe4SIKr8bcgNLJA0oEQKFlj4jIB45jElG0Up80e/QCJdkIjLDWv3/fZcA6T9e2SlKsoy1Lpg9RmiQXRoKg=
+	t=1756289909; cv=none; b=rW24C60RHgUWo7lJsQNroKL23VvMH0QFVMZlyxdq1OgPN7+EBBM4lgiQVntt6kOOKIMq7hbLoiy7tl/w30XIB2/axhEKET75NRA+t7prrV9Q2FF+RZ3bLJ1w/kmRyMp+uWSfEamjWDnlrsU4iOfrb1LePOJmortTRp1+qCBmEog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756289889; c=relaxed/simple;
-	bh=2QgysAeAv4Fx8NZcG5VTBdcdLTbyERQ6pDohcn5Qh9I=;
+	s=arc-20240116; t=1756289909; c=relaxed/simple;
+	bh=6FzlqskmpU4mqgsOXMFz/wgzjeVlAW4PBLT2lq24aV4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h3Yq1UMyEjXUXJEyvXgwa2T9aaF6nFkO2S/vzdWwGG+lpE3o5P7T+q2WZJtXh5PoIrbq13jqC0ahjn6KdBTkEEZr+8ChBaStGi+rvbBZgMTe9eFThrVCoeMZKh+rFTyQ9CQ/33u+bKE8vQoZ1KrDCe/NpDt/1ZqOzekJAL1M/TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mhYxiaaE; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=VlV4BYkxeFcTpByc1jTxRzC1yLAOY0xvRv83n2lCo0vEU+GrzsX31tZCZ6x+TWRQOXZG1sEBNwG98i8ITmudRTpTaRbNk9EmxDkf5F4V1T+OZpoZGRxI9MB4C1xZuxDum9zOSockFy5XaazeUAsSy2LrQECse7IDonGvGW6Uu64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5hdkaV6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mhYxiaaE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCA19C113CF
-	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:18:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5hdkaV6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F8EC113CF
+	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756289888;
-	bh=2QgysAeAv4Fx8NZcG5VTBdcdLTbyERQ6pDohcn5Qh9I=;
+	s=k20201202; t=1756289909;
+	bh=6FzlqskmpU4mqgsOXMFz/wgzjeVlAW4PBLT2lq24aV4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mhYxiaaEN2dwPC1qSEJt4uM1aSvFjakNmLWqjOXsyE1VNvpruF3v+ly9LtCXRtt3O
-	 cZlvamC0xs326zTYNsshL3h9Vk2sffuec2YVXPhpvnwt4vwMre/LU5WAmHY/cfy2DA
-	 LX9/i2WgE+WNEmQQh82UtMF1FiIXVMpbqXU4b7P+F+TWcLGpIjhd3VAW8t077VEK+c
-	 VzXnDl+x+PYcswHqJyL962HxzS++q5Cjc6hZdwhcX+Ts2dit7ARM+ugmP1AZA/EgFq
-	 /MHmY4GoW7BiLQkJXCCSN33Q3F/8g1XOkPwzJjvuJGB+dm3h8TTh4G+OAKu3aGVtru
-	 k20V94vgShxMA==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-61cbfa1d820so124882a12.3
-        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 03:18:08 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwmTW15wsVhKeLCLX2lDpGrnLfFB5nHYuWQ8qneKosQJyK8uU0m
-	FZumSj6MXicCE2p3GFPdj8/P1FkWwxJ279N9HUhyV2sEJ2k7FC3lO1VRRSAbObMez/3XHF1uXK2
-	g3rUkiaSfss+Gll+YWTRNHNBSoO33fNw=
-X-Google-Smtp-Source: AGHT+IGK3BfC8RRIrj7re1nqlK8QPZ17Lm2SFwVMLkmJgHyFGuzPTSLAqIG0ubvo0jWejR2dR1DfZY3y6MyugUF/UuA=
-X-Received: by 2002:a05:6402:5194:b0:61c:93fb:a33b with SMTP id
- 4fb4d7f45d1cf-61c93fba6f5mr4093109a12.21.1756289887378; Wed, 27 Aug 2025
- 03:18:07 -0700 (PDT)
+	b=M5hdkaV6NdbcRgLMTdZNGtKkBXlDzUaESLeMZ3UhOp2Lu/Eb0eDmH9DxvQDERmD8d
+	 dtg061BoVzk20FeEZOnpFcC8GsXs9FG0Ypc97u7EKCQYyqQpg89MG3RInCZUAgZ6Tl
+	 4QS+GTYWtFzE0laGDd2Vc0aoU8JL1sbVRu2ynic6fYmCGgJM+S0wMvGxWhA5SBQoTI
+	 DJv0i0ugeEtFH7IMPF0nQzozL1UiUPYta68OfIq1TKnmI5OiosllEU7wDkz52/norF
+	 SmKPFOQmjlZw7SdJGmn2ocSfchl0m2Sxfv/3PTI4SFSPkI+9rkApLntyGCWYPnQ+IY
+	 NqGcgP6jKuerg==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-61cb9f6dbe7so641812a12.0
+        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 03:18:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWd8b/u16rcXaypfZbnzR8J8xGuGBrAEWXk5Ou184dF4GSGywuWaaCsew3VBqKh8n5FGrIhe8lg3CM=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw6ExMFt6H8aQTtsESB+AU5CJftz4nOoehOnP+O1CE09OVaRBgG
+	Dr5Q9EahU3qr3yakdZZ0QCc65bdDM4EWMv7QPEUHifSpRyGhFNMV1O8Bf8QaR/Rce1WioLoJoWr
+	t+szj0GHiGFLIg/jJbUM6sB4YQPHsgzg=
+X-Google-Smtp-Source: AGHT+IFDaHJmXdP3CC1Di8LlIhQV097JtkfPqlF8wrrAryeIiXdqAtfMWhdoQiulQi8pOLJWyHP8mPXfB1Tn/2IkwCk=
+X-Received: by 2002:a05:6402:2792:b0:61c:bfa7:5d0 with SMTP id
+ 4fb4d7f45d1cf-61cbfa706c9mr119825a12.30.1756289908044; Wed, 27 Aug 2025
+ 03:18:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250826063956.6950-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20250826063956.6950-1-yangtiezhu@loongson.cn>
+References: <20250826064906.10683-1-yangtiezhu@loongson.cn> <CAEyhmHQJcCvy2TPv7nwT87yS6y698WrECwd+xA9RjsCVmrVXvw@mail.gmail.com>
+In-Reply-To: <CAEyhmHQJcCvy2TPv7nwT87yS6y698WrECwd+xA9RjsCVmrVXvw@mail.gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 27 Aug 2025 18:17:55 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7qjHk_E_SvM-OqRKiasvykoM2bjLJObCCDs0kbDSS3Vw@mail.gmail.com>
-X-Gm-Features: Ac12FXznGeTE9uR7hSBOzXOsLDfCMpUBEKu3M0aWkOfm39tZzLqTQU31NPAPLCw
-Message-ID: <CAAhV-H7qjHk_E_SvM-OqRKiasvykoM2bjLJObCCDs0kbDSS3Vw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Handle newly added llsc instructions for probes
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Wed, 27 Aug 2025 18:18:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5SCuXERUBbC5D+k1pjf-Pmf33LOQXL=aUP-E-DgO6+qg@mail.gmail.com>
+X-Gm-Features: Ac12FXw1WWwPsT1YP9ZG06PGkyzJXhLdasQwDqY8XKTWfUUAYVafM9Q29pau5cA
+Message-ID: <CAAhV-H5SCuXERUBbC5D+k1pjf-Pmf33LOQXL=aUP-E-DgO6+qg@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Optimize sign-extention mov instructions
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, bpf@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -58,72 +60,58 @@ Applied, thanks.
 
 Huacai
 
-On Tue, Aug 26, 2025 at 2:40=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+On Wed, Aug 27, 2025 at 9:27=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
 >
-> The atomic instructions sc.q, llacq.{w/d}, screl.{w/d} were newly added
-> in the LoongArch Reference Manual v1.10, it is necessary to handle them
-> in insns_not_supported() to avoid putting a breakpoint in the middle of
-> a ll/sc atomic sequence, otherwise it will loop forever for kprobes and
-> uprobes.
+> On Tue, Aug 26, 2025 at 2:49=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
+cn> wrote:
+> >
+> > For 8-bit and 16-bit sign-extention mov instructions, it can use the na=
+tive
+> > instructions ext.w.b and ext.w.h directly, no need to use the temporary=
+ t1
+> > register, just remove the redundant operations.
+> >
+> > Here are the test results:
+> >
+> >   # modprobe test_bpf test_range=3D81,84
+> >   # dmesg -t | tail -5
+> >   test_bpf: #81 ALU_MOVSX | BPF_B jited:1 5 PASS
+> >   test_bpf: #82 ALU_MOVSX | BPF_H jited:1 5 PASS
+> >   test_bpf: #83 ALU64_MOVSX | BPF_B jited:1 5 PASS
+> >   test_bpf: #84 ALU64_MOVSX | BPF_H jited:1 5 PASS
+> >   test_bpf: Summary: 4 PASSED, 0 FAILED, [4/4 JIT'ed]
+> >
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > ---
+> >  arch/loongarch/net/bpf_jit.c | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
+c
+> > index abfdb6bb5c38..7072db18c6cd 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -527,13 +527,11 @@ static int build_insn(const struct bpf_insn *insn=
+, struct jit_ctx *ctx, bool ext
+> >                         emit_zext_32(ctx, dst, is32);
+> >                         break;
+> >                 case 8:
+> > -                       move_reg(ctx, t1, src);
+> > -                       emit_insn(ctx, extwb, dst, t1);
+> > +                       emit_insn(ctx, extwb, dst, src);
+> >                         emit_zext_32(ctx, dst, is32);
+> >                         break;
+> >                 case 16:
+> > -                       move_reg(ctx, t1, src);
+> > -                       emit_insn(ctx, extwh, dst, t1);
+> > +                       emit_insn(ctx, extwh, dst, src);
+> >                         emit_zext_32(ctx, dst, is32);
+> >                         break;
+> >                 case 32:
+> > --
 >
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/include/asm/inst.h |  5 +++++
->  arch/loongarch/kernel/inst.c      | 12 ++++++++++++
->  2 files changed, 17 insertions(+)
+> Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
 >
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
-sm/inst.h
-> index 277d2140676b..55e64a12a124 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -77,6 +77,10 @@ enum reg2_op {
->         iocsrwrh_op     =3D 0x19205,
->         iocsrwrw_op     =3D 0x19206,
->         iocsrwrd_op     =3D 0x19207,
-> +       llacqw_op       =3D 0xe15e0,
-> +       screlw_op       =3D 0xe15e1,
-> +       llacqd_op       =3D 0xe15e2,
-> +       screld_op       =3D 0xe15e3,
->  };
->
->  enum reg2i5_op {
-> @@ -189,6 +193,7 @@ enum reg3_op {
->         fldxd_op        =3D 0x7068,
->         fstxs_op        =3D 0x7070,
->         fstxd_op        =3D 0x7078,
-> +       scq_op          =3D 0x70ae,
->         amswapw_op      =3D 0x70c0,
->         amswapd_op      =3D 0x70c1,
->         amaddw_op       =3D 0x70c2,
-> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-> index 72ecfed29d55..4026edea9bdd 100644
-> --- a/arch/loongarch/kernel/inst.c
-> +++ b/arch/loongarch/kernel/inst.c
-> @@ -141,6 +141,18 @@ bool insns_not_supported(union loongarch_instruction=
- insn)
->         case amswapw_op ... ammindbdu_op:
->                 pr_notice("atomic memory access instructions are not supp=
-orted\n");
->                 return true;
-> +       case scq_op:
-> +               pr_notice("sc.q instruction is not supported\n");
-> +               return true;
-> +       }
-> +
-> +       switch (insn.reg2_format.opcode) {
-> +       case llacqw_op:
-> +       case llacqd_op:
-> +       case screlw_op:
-> +       case screld_op:
-> +               pr_notice("llacq and screl instructions are not supported=
-\n");
-> +               return true;
->         }
->
->         switch (insn.reg2i14_format.opcode) {
-> --
-> 2.42.0
->
->
+> > 2.42.0
+> >
