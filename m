@@ -1,116 +1,172 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D16A21171D;
-	Wed, 27 Aug 2025 14:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D04829CB32
+	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 14:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756303427; cv=none; b=YuIkowAHhNFN8sAC3wHQJoukNZ/UvCk9JQwpihFHJnnImCRJnipAeY/729UmcBShrr8/GlEBGSJI/8Ejy3naxzZTuwLJ5t2i1Z2bBAR/ira5nFLVwSCrISxd6k00mZARtuBfwXG5H34AK0B4dH0TXmHfoURWvhlj2ICAqnVA90c=
+	t=1756304557; cv=none; b=lMiO9fZCdZIk7NT+3Qyw3wEwFi7wtHx0xQRyaRa0yUncLH2bTfjlWNy47jnf+EEHrYQAkdmlN05F4bA/XiayPoDQC1Vu/qHuZrmsmtpJSBoMYfIMzSV1olu0mZ8I86R0cByTgtXXHHLlmEFVUTtnsRKGS5e6SBRlLJ2ZeMnNAK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756303427; c=relaxed/simple;
-	bh=Raut/Y3QhFz4pCtCI4WlrGPrxYFCg/MxG6p0mRrxWl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZjIuRSZZnm3YZ2e9Gbe7ZVrcI76yluX0INvboYOL3liQ1R9BQQ29B8d365OgBOlHnmNlr1Jw5FnQ38jfYW8lETTN53A1V4VhVpxncfv+MZfq5wJLegXclL7CFB1klFQz3cwlKERM/ZhM7GpSRlCQGTa4knjabGPIbqRPVRLnCDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 417AD2720;
-	Wed, 27 Aug 2025 07:03:36 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 662DB3F738;
-	Wed, 27 Aug 2025 07:03:37 -0700 (PDT)
-Date: Wed, 27 Aug 2025 15:03:22 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-	acme@kernel.org, namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
-	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 02/19] perf/hisilicon: Fix group validation
-Message-ID: <aK8QKlGsjB4WWg2e@J2N7QTR9R3>
-References: <cover.1755096883.git.robin.murphy@arm.com>
- <c7b877e66ba0d34d8558c5af8bbb620e8c0e47d9.1755096883.git.robin.murphy@arm.com>
- <aK2XS_GhLw1EQ2ml@J2N7QTR9R3>
- <ab80cb84-42b2-4ce8-aa6c-4ce6be7a12b7@arm.com>
- <aK3TS3s5_Pczx1nu@J2N7QTR9R3>
+	s=arc-20240116; t=1756304557; c=relaxed/simple;
+	bh=GeqWgwT4sAUmsoagfWwhs2u8RfJZCpVqkxjVz3HfX5s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dGZJXjBLJ26r7hy8WwLh2WRKe7nrpZpjFBmgsHLbbBvUCfBrQYQpxm7H75Ryr6utMSb6/Vuf73p63Qo1HdU0Wfmt8IKZiuQK7XlSJ7m6Q604qFud6uXI6IbGJ+8GC5kooriadEEj4bAQ4bgM3tkApFossTiluodwf2MWL7zGzo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6nr8yXu; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6nr8yXu"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7e8704cdc76so728683685a.1
+        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 07:22:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756304554; x=1756909354; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y5re1CNxOrtxP/Ayif8QgNX+1ItqV8/B/L71l3X/hec=;
+        b=i6nr8yXuKrPPrC+CjNgghgF3eDPHyYeqlX+JBYxIaqjMqJk59oVXUYpknn7vRP7GPd
+         NOxXF8EeMSLSMPB4RD1cEvz881HHJ7NkpWQKOSMpkSWzBfzIxo5kgAuyCICWgmjKhaWG
+         Ya/2VtRNrJ7wwvViSCh28YgEiZT9kwNPnQYF4R8/XqPjGVCmnJkf8SSs1ZZk9Mgj/poz
+         AtK5pY5oGljSU923sCRgbGsBr3Jj5C1M0qXc7A8rr6YnfOyqxOPwLQ+mCloVOJgSwjVV
+         m5WWxAfTuLBPYCachzQTA2jRI4/sCiWpwlG7SksaeUHtRMyUU/8RGyrIDzV78t4uXUYS
+         i5RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756304554; x=1756909354;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y5re1CNxOrtxP/Ayif8QgNX+1ItqV8/B/L71l3X/hec=;
+        b=Dn/pRRrsBdloMqZdc4kTZQ7UDamuu2Cw6U1D/g5+LI6f/ujDlBjxWXQ7LkhR2gZlrS
+         5zdmxo4hJgGvssE6yfndE6YkHQ2v8NI9XonfJbkXVYlayQkjvxZ8njooBNk5cnDksEKw
+         YnYuueImH2S2tno54UhPpbqZLct4bJPTlyNrGI5ZxhAxsvIYmS6hf/ZFsdFk6PC5n4nI
+         XkOEuJ4Qy0XAvNGuEC7CAC0O+mGh7z7cAe1v290qfQ2vLwaY03StyocnQT9jQbPodBtk
+         n224Z1rXz6nNJITOBPMsq32WuyE8+TqdNXvzBS3kYP8/POf61YQhud73hyBK+SDTWk78
+         LzWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfFKSLnqaue9pOSLLRndeoQE0WlCDWQ65Z5n/ULtgb4gsQr6A7mUGf0W6PgFReog0DU6FolkZQxTE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzaermeRciTe05NQrbBMjfzVNaz1ojTKzjb7tOnd2rvz57mZPK/
+	+nyCFzIX2iueOYQIi6qCQdpl9EAN8tD9LlBuxC/cZedpz7Ne25zzgAjJXFvOMwoIoWvP1gZJzDc
+	9yLg1pnEdTQkf/t9HusPF9SadhOtZ8cw=
+X-Gm-Gg: ASbGncsip1AbcSpqI217xXfh6utnQk8t30/m7V9VhQ3w4rCs8TlvUOBSuyx7us5maNU
+	l93yRDpHtGiB+N/xCS2bCpmsZiGAatx1jxe7S8BLFnyc940G2uBPC2bM2jL9gkkE255SxD6vsFY
+	HxyfzphMEPZJbv226isJ8B2jsc1W/bxfMnX2LNe24LHSIe70MCCsTAhJbNK5jMcKodcnUjymQWh
+	KaMl3Q=
+X-Google-Smtp-Source: AGHT+IEslLJkl0ZeuNaKCzmfBShY64wlqef+fuiIb6XpRJiS3xat/lF1MmMoqGhwoODlIqS4kVLbxpod+nXSv5kvoxE=
+X-Received: by 2002:a05:620a:aa19:b0:7f3:9036:13f1 with SMTP id
+ af79cd13be357-7f390456b65mr1050631085a.49.1756304554037; Wed, 27 Aug 2025
+ 07:22:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aK3TS3s5_Pczx1nu@J2N7QTR9R3>
+References: <20250827094733.426839-1-hengqi.chen@gmail.com>
+In-Reply-To: <20250827094733.426839-1-hengqi.chen@gmail.com>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Wed, 27 Aug 2025 07:22:21 -0700
+X-Gm-Features: Ac12FXyTqKDbfmdcT2o4ZfZI0BPOE1IlkIAt6nFApsVRsY5DFVdrrp-xTu27jj8
+Message-ID: <CAK3+h2yJL4BFdsuXd3x+tVU4EcTinixbXwckbF1EwzepZWHXmA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] LoongArch: Fix BPF trampoline related issues
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: chenhuacai@kernel.org, yangtiezhu@loongson.cn, jianghaoran@kylinos.cn, 
+	duanchenghao@kylinos.cn, ast@kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, martin.lau@linux.dev, bpf@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 26, 2025 at 04:31:23PM +0100, Mark Rutland wrote:
-> On Tue, Aug 26, 2025 at 03:35:48PM +0100, Robin Murphy wrote:
-> > On 2025-08-26 12:15 pm, Mark Rutland wrote:
-> > > On Wed, Aug 13, 2025 at 06:00:54PM +0100, Robin Murphy wrote:
+On Wed, Aug 27, 2025 at 4:19=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> The following two selftest cases triggers oops on LoongArch:
+>
+>     $ ./test_progs -a ns_bpf_qdisc -a tracing_struct
 
-> > > > diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> > > > index c5394d007b61..3b0b2f7197d0 100644
-> > > > --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> > > > +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-> > > > @@ -338,21 +338,16 @@ static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
-> > > >   	int counters = 1;
-> > > >   	int num;
-> > > > -	event_group[0] = leader;
-> > > > -	if (!is_software_event(leader)) {
-> > > > -		if (leader->pmu != event->pmu)
-> > > > -			return false;
-> > > > +	if (leader == event)
-> > > > +		return true;
-> > > > -		if (leader != event && !hisi_pcie_pmu_cmp_event(leader, event))
-> > > > -			event_group[counters++] = event;
-> > > > -	}
-> > > > +	event_group[0] = event;
-> > > > +	if (leader->pmu == event->pmu && !hisi_pcie_pmu_cmp_event(leader, event))
-> > > > +		event_group[counters++] = leader;
-> > > 
-> > > Looking at this, the existing logic to share counters (which
-> > > hisi_pcie_pmu_cmp_event() is trying to permit) looks to be bogus, given
-> > > that the start/stop callbacks will reprogram the HW counters (and hence
-> > > can fight with one another).
+Last time I skipped struct_ops test and now I updated the test
+accordingly, no kernel hangs and test result is expected for this
+series:
 
-> > It does seem somewhat nonsensical to have multiple copies of the same event
-> > in the same group, but I imagine it could happen with some sort of scripted
-> > combination of metrics, and supporting it at this level saves needing
-> > explicit deduplication further up. So even though my initial instinct was to
-> > rip it out too, in the end I concluded that that doesn't seem justified.
-> 
-> As above, I think it's clearly bogus. I don't think we should have
-> merged it as-is and it's not something I'd like to see others copy.
-> Other PMUs don't do this sort of event deduplication, and in general it
-> should be up to the user or userspace software to do that rather than
-> doing that badly in the kernel.
-> 
-> Given it was implemented with no rationale I think we should rip it out.
-> If that breaks someone's scripting, then we can consider implementing
-> something that actually works.
+./test_progs \
+--deny=3Dmodule_attach \
+--deny=3Dsubprogs_extable \
+--deny=3Dtimer_lockup \
+--json-summary=3D"./bpf_selftests.json"
 
-Having dug some more, I see that this was intended to handle the way
-the hardware shares a single config register between pairs of counter
-and counter_ext registers, with the idea being that two related events
-could be allocated into the same counter pair (but would only occupy a
-single counter each).
+#213/1   ns_bpf_qdisc/fifo:OK
+#213/2   ns_bpf_qdisc/fq:OK
+#213/3   ns_bpf_qdisc/attach to mq:OK
+#213/4   ns_bpf_qdisc/attach to non root:OK
+#213/5   ns_bpf_qdisc/incompl_ops:OK
+#213     ns_bpf_qdisc:OK
 
-I still think the code is wrong, but it is more complex than I made it
-out to be, and you're right that we should leave it as-is for now. I can
-follow up after we've got this series in.
+#408/1   struct_ops_autocreate/cant_load_full_object:OK
+#408/2   struct_ops_autocreate/can_load_partial_object:OK
+#408/3   struct_ops_autocreate/autoload_and_shadow_vars:OK
+#408/4   struct_ops_autocreate/optional_maps:OK
+#408     struct_ops_autocreate:OK
+#409/1   struct_ops_kptr_return/kptr_return:OK
+#409/2   struct_ops_kptr_return/kptr_return_fail__wrong_type:OK
+#409/3   struct_ops_kptr_return/kptr_return_fail__invalid_scalar:OK
+#409/4   struct_ops_kptr_return/kptr_return_fail__nonzero_offset:OK
+#409/5   struct_ops_kptr_return/kptr_return_fail__local_kptr:OK
+#409     struct_ops_kptr_return:OK
+#410/1   struct_ops_maybe_null/maybe_null:OK
+#410/2   struct_ops_maybe_null/maybe_null_fail:OK
+#410     struct_ops_maybe_null:OK
+#411/1   struct_ops_module/struct_ops_load:OK
+#411/2   struct_ops_module/struct_ops_not_zeroed:OK
+#411/3   struct_ops_module/struct_ops_incompatible:OK
+#411/4   struct_ops_module/struct_ops_null_out_cb:OK
+#411/5   struct_ops_module/struct_ops_forgotten_cb:OK
+#411/6   struct_ops_module/test_detach_link:OK
+#411/7   struct_ops_module/unsupported_ops:OK
+#411     struct_ops_module:OK
+do_struct_ops_multi_pages:PASS:struct_ops_multi_pages_open_and_load 0 nsec
+do_struct_ops_multi_pages:FAIL:attach_multi_pages unexpected error: -7
+#412/1   struct_ops_multi_pages/multi_pages:FAIL
+#412     struct_ops_multi_pages:FAIL
+#413/1   struct_ops_no_cfi/load_bpf_test_no_cfi:OK
+#413     struct_ops_no_cfi:OK
+#414/1   struct_ops_private_stack/private_stack:SKIP
+#414/2   struct_ops_private_stack/private_stack_fail:SKIP
+#414/3   struct_ops_private_stack/private_stack_recur:SKIP
+#414     struct_ops_private_stack:SKIP
+#415/1   struct_ops_refcounted/refcounted:OK
+#415/2   struct_ops_refcounted/refcounted_fail__ref_leak:OK
+#415/3   struct_ops_refcounted/refcounted_fail__global_subprog:OK
+#415/4   struct_ops_refcounted/refcounted_fail__tail_call:OK
+#415     struct_ops_refcounted:OK
 
-Mark.
+test_struct_args:PASS:tracing_struct__open_and_load 0 nsec
+libbpf: prog 'test_struct_arg_1': failed to attach: -ENOTSUPP
+libbpf: prog 'test_struct_arg_1': failed to auto-attach: -ENOTSUPP
+test_struct_args:FAIL:tracing_struct__attach unexpected error: -524 (errno =
+524)
+#468/1   tracing_struct/struct_args:FAIL
+test_struct_many_args:PASS:tracing_struct_many_args__open_and_load 0 nsec
+libbpf: prog 'test_struct_many_args_1': failed to attach: -ENOTSUPP
+libbpf: prog 'test_struct_many_args_1': failed to auto-attach: -ENOTSUPP
+test_struct_many_args:FAIL:tracing_struct_many_args__attach unexpected
+error: -524 (errno 524)
+
+>
+> This small series tries to fix/workaround these issues.
+> See individual commit for details.
+>
+> While at it, remove a duplicated flags check in __arch_prepare_bpf_trampo=
+line().
+>
+> v1 -> v2:
+> * collect Acked-by/Tested-by tags
+> * update sign_extend() in patch 2 as suggested by Huacai
+>
+> Hengqi Chen (3):
+>   LoongArch: BPF: Remove duplicated flags check
+>   LoongArch: BPF: Sign extend struct ops return values properly
+>   LoongArch: BPF: No support of struct argument in trampoline programs
+>
+>  arch/loongarch/net/bpf_jit.c | 35 ++++++++++++++++++++++++++++++++---
+>  1 file changed, 32 insertions(+), 3 deletions(-)
+>
+> --
+> 2.43.5
