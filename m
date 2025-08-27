@@ -1,145 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B726E31984E
-	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 07:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40AF132254D;
+	Wed, 27 Aug 2025 08:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756280237; cv=none; b=RZzD7/BUxFSP9x3i1WcpzVE7gE4M5mc1xQlLps3WWQNDSiHs5Uhxb0fsuv6tDrPjbgFNMQLR0sL2jqx3DBMH/Yak46MByOjKd3BOhV4gEUD9CHvSRXV/9rTCauheE5NZiHhcxmJZS/Qi0FDUqbZxjEdJSKA7IT9MliDdd6gCp7o=
+	t=1756281995; cv=none; b=b9OPfqL6d4HtEvtbvELGOVN2CINzaRbMh9kioG4BM96BhKBmEfgSoShAEl/karsaIAKBsMkw1GhqoMDRvQESsKuM124rz9YUU9d+tF0+gsyTrJNTwBfetZG4RALGyYe7H1CUI70uszn42Ia8ohKS2rDevgBWl27TOTBfmeLXjuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756280237; c=relaxed/simple;
-	bh=Sh0yJk4cq763Z2S0AabEdm8SBSV2vslsylW6HkFUQaQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uqxdrMiBNLnZKSOjnSgC9AaeSBipmrgaJP1zyAtJDH8MhDsPZIr31RTZiVMMCtS+JGhT2VY6FA+hs+yzLn6cPW5FqdHQAjKr2aT82qx5hRM7OeHbsApKCtZVQO0TQ1id9o53il98s0Nh3/+buHynbqJRcxGP4EyJh6xSrPPRWus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtxBPYu7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtxBPYu7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38FF5C4CEEB
-	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 07:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756280237;
-	bh=Sh0yJk4cq763Z2S0AabEdm8SBSV2vslsylW6HkFUQaQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QtxBPYu7fDtFycNHJZ2LlU0AUcE4nnO7Q69SU1yBU54GFd/bGX8OOEI0BoOyxD0Ok
-	 isaGIW3gfkiXjKjb54VwDPd+us46jmMNnbFnVro2LXQidKaCeDfQOpqyVvsUdkVGL8
-	 ZUwGmQt5f4w2fjhSUE9T9Efw7ywEIVA7ewDEOOu3AF2YOE1IbhvvbDATFSUeWm/FlB
-	 X0aoJrPMhYaCJc0wXMp9sAjoI0Gss/q4uk/9uLGY7HBlg6sB77xJla0XZIJZVPqw3Q
-	 BrLDCRnoN897a4UA/9pIzw1uiWnBoPg6c44KAOTWo06inXYPdILerPKwR765FVuudF
-	 cnwetJuHMc7vQ==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-61c22dceb25so7909045a12.2
-        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 00:37:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUA2Dn57mCyHQ/u9UcUjM4XDlUlDhtY+fAVv6pEwak31tRr3pLQfS2zhBIAABF5AzVul0b1iIbUJK0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzsMLgMc+tW847Bzl2Mk1xDzQx+hcpt7yHz/GReU/pq95Mj/PWr
-	bY28Gz34ul0gcXkXkhxQc6kbvm6G+gc84j5HCNO74WMyh6bSRx1WumbU9sXvzlHSAGVEOkWtkEo
-	CDkh1cL5DnMtDu51ddxS+H7Ex6icAAL4=
-X-Google-Smtp-Source: AGHT+IHmE5mRPrt9MQZ5SrGZ/Eh0fnCb6y74Ut+o4kT2Qo/McnYzAh+aX1nwaWNUnvryQLwksDNy0JK0iUscSWykyZo=
-X-Received: by 2002:a05:6402:504e:b0:618:2257:7fcf with SMTP id
- 4fb4d7f45d1cf-61c1b705748mr13883285a12.18.1756280235646; Wed, 27 Aug 2025
- 00:37:15 -0700 (PDT)
+	s=arc-20240116; t=1756281995; c=relaxed/simple;
+	bh=mnqpdBh8LH7F6O6rDf98eADOJtLStOn4BOPmUubZFMA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=djfqTvZbL9u0OlMsDQqACLVzFfkIFG0qLd1pmm6HW3ql7qlDiCw7sNvvCbZudKe9oY16XOLd8ovtb04jNpCh9KqseUzcVf839bMV+hsxB1PK8rFFDFMpnBtvAkJVI+HhzkRuLPZ9ndOVqWvGQL6dis9pzLSerUJ3jTFLi1UdEj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35FE122FC;
+	Wed, 27 Aug 2025 01:06:24 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B8693F694;
+	Wed, 27 Aug 2025 01:06:32 -0700 (PDT)
+Date: Wed, 27 Aug 2025 09:06:30 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 16/19] perf: Introduce positive capability for sampling
+Message-ID: <20250827080630.GC745921@e132581.arm.com>
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <ae81cb65b38555c628e395cce67ac6c7eaafdd23.1755096883.git.robin.murphy@arm.com>
+ <20250826131124.GB745921@e132581.arm.com>
+ <983df32a-ba74-421d-bc20-06e778b4d2c9@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250826011722.82391-1-youling.tang@linux.dev> <20250826011722.82391-2-youling.tang@linux.dev>
-In-Reply-To: <20250826011722.82391-2-youling.tang@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 27 Aug 2025 15:37:03 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7csV-vce6QGjFGd-R4JrLmbgoEs4UwKayKUxdgc3Ki=w@mail.gmail.com>
-X-Gm-Features: Ac12FXwQWG9U9zLqW3Fy0iKKmm6IRWH5-eIBaw6-dIEfjnX1uwk4CAdRYKGbcgk
-Message-ID: <CAAhV-H7csV-vce6QGjFGd-R4JrLmbgoEs4UwKayKUxdgc3Ki=w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] LoongArch: Add struct loongarch_image_header for
- kernel image
-To: Youling Tang <youling.tang@linux.dev>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>, Yao Zi <ziyao@disroot.org>, 
-	kexec@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <983df32a-ba74-421d-bc20-06e778b4d2c9@arm.com>
 
-Hi, Youling,
+On Tue, Aug 26, 2025 at 04:53:51PM +0100, Robin Murphy wrote:
 
-On Tue, Aug 26, 2025 at 9:18=E2=80=AFAM Youling Tang <youling.tang@linux.de=
-v> wrote:
->
-> From: Youling Tang <tangyouling@kylinos.cn>
->
-> Define a dedicated image header structure for LoongArch architecture to
-> standardize kernel loading in bootloaders (primarily for kexec_file).
->
-> This header includes critical metadata such as PE signature, entry points=
-,
-> image size and load address offset, etc.
->
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
->  arch/loongarch/include/asm/image.h | 40 ++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 arch/loongarch/include/asm/image.h
->
-> diff --git a/arch/loongarch/include/asm/image.h b/arch/loongarch/include/=
-asm/image.h
-> new file mode 100644
-> index 000000000000..1f090736e71d
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/image.h
-> @@ -0,0 +1,40 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * LoongArch binary image header.
-> + *
-> + * Author: Youling Tang <tangyouling@kylinos.cn>
-> + * Copyright (C) 2025 KylinSoft Corporation.
-> + *
-> + * Most code is derived from LoongArch port of kexec-tools
-> + */
-> +
-> +#ifndef __ASM_IMAGE_H
-> +#define __ASM_IMAGE_H
-> +#ifndef __ASSEMBLY__
+[...]
 
-__ASSEMBLY__ is replaced by __ASSEMBLER__ now.
+> > Genearlly, AUX events generate interrupts based on AUX ring buffer
+> > watermark but not the period. Seems to me, it is correct to set the
+> > PERF_PMU_CAP_SAMPLING flag for them.
+> 
+> This cap is given to drivers which handle event->attr.sample_period and call
+> perf_event_overflow() - or in a few rare cases, perf_output_sample()
+> directly - to do something meaningful with it, since the intent is to convey
+> "I properly handle events for which is_sampling_event() is true". My
+> understanding is that aux events are something else entirely, but I'm happy
+> to be corrected.
 
-> +
-> +/**
-> + * struct loongarch_image_header
-> + *
-> + * @pe_sig: Optional PE format 'MZ' signature.
-> + * @reserved_1: Reserved.
-> + * @kernel_entry: Kernel image entry pointer.
-> + * @image_size: An estimated size of the memory image size in LSB byte o=
-rder.
-> + * @text_offset: The image load offset in LSB byte order.
-> + * @reserved_2: Reserved.
-> + * @reserved_3: Reserved.
-> + * @pe_header: Optional offset to a PE format header.
-> + **/
-> +
-> +struct loongarch_image_header {
-> +       uint8_t pe_sig[2];
-Use dos_sig is better.
+If the discussion is based only on this patch, my understanding is
+that the PERF_PMU_CAP_SAMPLING flag replaces the
+PERF_PMU_CAP_NO_INTERRUPT flag for checking whether a PMU event needs
+to be re-enabled in perf_adjust_freq_unthr_context().
 
-> +       uint16_t reserved_1[3];
-Use padding_1[3] is better.
+AUX events can trigger a large number of interrupts under certain
+conditions (e.g., if we set a very small watermark). This is why I
+conclude that we need to set the PERF_PMU_CAP_SAMPLING flag to ensure
+that AUX events are re-enabled properly after throttling (see
+perf_adjust_freq_unthr_events()).
 
-> +       uint64_t kernel_entry;
-> +       uint64_t image_size;
-Use kernel_asize to keep consistency with head.S.
+> Otherwise, perhaps this suggests it deserves to be named a little more
+> specifically for clarity, maybe PERF_CAP_SAMPLING_EVENTS?
 
-> +       uint64_t text_offset;
-> +       uint64_t reserved_2[3];
-> +       uint32_t reserved_3;
-Just use uint32_t reserved_2[7] here?
+Seems to me, the naming is not critical. If without setting the
+PERF_PMU_CAP_SAMPLING flag, AUX events might lose chance to be
+re-enabled after throttling.
 
-
-Huacai
-
-> +       uint32_t pe_header;
-> +};
-> +
-> +#endif /* __ASSEMBLY__ */
-> +#endif /* __ASM_IMAGE_H */
-> --
-> 2.43.0
->
+Thanks,
+Leo
