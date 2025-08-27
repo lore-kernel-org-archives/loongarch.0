@@ -1,107 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66EBB3128C5;
-	Wed, 27 Aug 2025 08:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015203164B4
+	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756282731; cv=none; b=swcH2catLw1jd1QCMBvmCSc8bPLDF0et5upa/mh7ABG/fIrrE2aK8SlT2jL3elVbUW0QXdtwO/B+SyEIwi/oKkMvU7NZIzXh1QAzv99HMdVMocR3zLoHq0M+SVyQjsbGZAPaj0FzQ18V/bSTYdwgU6Nx2BYLGe3oAXrk6gAOqmU=
+	t=1756289872; cv=none; b=rFfbR5ShyOOflLUcblDeNE0nsZKoF3BlXxNenlpIP3cfNrf7+9L1AD6U2YMgKckfgqCmSDMzfI8ZS7FRPwh/l0MPq0IuM55W8bvdt+CKoE9bBfcC5GHDfPKYRXE7rVSIiZp5iNZT7F6ePS9gpjnaSbAuDctuG1JCr8jCYBIyxJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756282731; c=relaxed/simple;
-	bh=CHy7QFSPgSRnuJKdtSIc/yYznxQB2FrFp5irQRpgBE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ozxm16dchzoZUANTM5OEnrJ04kXnA9RlLlyR7vkrQmT1N0xLvtoHM6c3uMRbQLFGzoCTuEKZYHSudxm30DOpgI6WEfmBd5aiRplPfzg5ivlxjcGrwgDDN1ZBnyDhOB+rg0p4VJLEObHanPF2BrzMTlMjp/s3LQQXOtGrZxcIFJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 875DD1515;
-	Wed, 27 Aug 2025 01:18:41 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8D1A3F694;
-	Wed, 27 Aug 2025 01:18:41 -0700 (PDT)
-Date: Wed, 27 Aug 2025 09:18:38 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
-	will@kernel.org, acme@kernel.org, namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
-	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 12/19] perf: Ignore event state for group validation
-Message-ID: <aK6_XrA_OaLnoFkr@J2N7QTR9R3>
-References: <cover.1755096883.git.robin.murphy@arm.com>
- <d6cda4e2999aba5794c8178f043c91068fa8080c.1755096883.git.robin.murphy@arm.com>
- <20250826130329.GX4067720@noisy.programming.kicks-ass.net>
- <6080e45d-032e-48c2-8efc-3d7e5734d705@arm.com>
- <CAP-5=fXF2x3hW4Sk+A362T-50cBbw6HVd7KY+QEUjFwT+JL37Q@mail.gmail.com>
+	s=arc-20240116; t=1756289872; c=relaxed/simple;
+	bh=lOiDzk3UlWjzR0d5BtVvVQ34OrJvTQo9wG1rv9COwv0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mCBs8jSwf09Qd2VWmoX/PPIja9LXc6aio65JjJea0AF29s2z3byrcxzPQ3J3nyiFF66j5PpdtpJcXWqtoMn+Aa4P2ywcgzfTrtuLPhM89MEibRnOKuJE+7dG5Qj8xCodXe4LEXYtsXU9GWU7/bKVq8M9qqvNcB0DkoIGdma/h88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7fSUn0Q; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7fSUn0Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC9A8C4AF09
+	for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 10:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756289871;
+	bh=lOiDzk3UlWjzR0d5BtVvVQ34OrJvTQo9wG1rv9COwv0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=C7fSUn0QS1V3ETfjHLeo/Uu0aaQQ7I4aa1rZfuTgOpxV4wu3sgnbaYLLl4lrjGEop
+	 bXaqysRz1T459K9hHXX6Efg7qL1rfWIIC8iCxc79nf/0DrOyokuKwpr1/zNy+Z5A2D
+	 MMo+iJ2H5sYk596YY4o2RA3YsiF9hjp+DwYVopFiPE2UyVKfphxdH/ZDpm75TxYBkk
+	 FCGDvkCCwZMxqUSN8UgaP1pS3cqTd2LeEuJJtKUlE5NFfjHQgXe8ClAJHqiGItFCin
+	 YOlOY/6ihKCfIz4kjZeVAgMoEG+QLj14CrkYSiTNoUJdB/lPj1UJSfcPUNjle3fOIv
+	 1KFoSupfvU96A==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-61cbe5cef28so286620a12.0
+        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 03:17:51 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzICuzWOFDx3IypZfwMhNTyZLLmyfERSwkNAj7kcFRuHEhblMwj
+	kGPiijP65DCVLAPyw2dYwiwbj3EZOBYvTmn9vKRoUy+5QVU6oPEDMNryXALsncD3ralLwIOgVim
+	ZMcp6kWPWgxIC6L9w5/U3iP0jKQzCr5k=
+X-Google-Smtp-Source: AGHT+IFuech9sAlCSWYd7t9EcWjbklbmV5kXdVa4QmRBKMxaX258l/LboXqUcTT4erExFnyO4586YAytHpLYl57cYzA=
+X-Received: by 2002:a05:6402:5186:b0:615:3667:f4eb with SMTP id
+ 4fb4d7f45d1cf-61c983b7f50mr4247202a12.6.1756289870308; Wed, 27 Aug 2025
+ 03:17:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXF2x3hW4Sk+A362T-50cBbw6HVd7KY+QEUjFwT+JL37Q@mail.gmail.com>
+References: <20250826063908.6615-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20250826063908.6615-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 27 Aug 2025 18:17:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4G4_Xvuy35Ff_deY3FrRAaYGRTYpPR5Ru1=BUMqSb1fA@mail.gmail.com>
+X-Gm-Features: Ac12FXwg7x9U4Onn7m4aSR2UaTnf41bPqLgQoz98sosS70AuFhO6umncV1nZH5A
+Message-ID: <CAAhV-H4G4_Xvuy35Ff_deY3FrRAaYGRTYpPR5Ru1=BUMqSb1fA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Update help info of config ARCH_STRICT_ALIGN
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 26, 2025 at 11:48:48AM -0700, Ian Rogers wrote:
-> On Tue, Aug 26, 2025 at 8:32 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> >
-> > On 2025-08-26 2:03 pm, Peter Zijlstra wrote:
-> > > On Wed, Aug 13, 2025 at 06:01:04PM +0100, Robin Murphy wrote:
-> > >> It may have been different long ago, but today it seems wrong for these
-> > >> drivers to skip counting disabled sibling events in group validation,
-> > >> given that perf_event_enable() could make them schedulable again, and
-> > >> thus increase the effective size of the group later. Conversely, if a
-> > >> sibling event is truly dead then it stands to reason that the whole
-> > >> group is dead, so it's not worth going to any special effort to try to
-> > >> squeeze in a new event that's never going to run anyway. Thus, we can
-> > >> simply remove all these checks.
-> > >
-> > > So currently you can do sort of a manual event rotation inside an
-> > > over-sized group and have it work.
-> > >
-> > > I'm not sure if anybody actually does this, but its possible.
-> > >
-> > > Eg. on a PMU that supports only 4 counters, create a group of 5 and
-> > > periodically cycle which of the 5 events is off.
-> 
-> I'm not sure this is true, I thought this would fail in the
-> perf_event_open when adding the 5th event and there being insufficient
-> counters for the group.
+Applied, thanks.
 
-We're talking specifically about cases where the logic in a pmu's
-pmu::event_init() callback doesn't count events in specific states, and
-hence the 5th even doesn't get rejected when it is initialised.
+Huacai
 
-For example, in arch/x86/events/core.c, validate_group() uses
-collect_events(), which has:
-
-	for_each_sibling_event(event, leader) {
-		if (!is_x86_event(event) || event->state <= PERF_EVENT_STATE_OFF)
-			continue;
-
-		if (collect_event(cpuc, event, max_count, n))
-			return -EINVAL;
-
-		n++;
-	}
-
-... and so where an event's state is <= PERF_EVENT_STATE_OFF at init
-time, that event is not counted to see if it fits into HW counters.
-
-Mark.
+On Tue, Aug 26, 2025 at 2:39=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> Loongson 3A6000 and 3C6000 CPUs also support unaligned memory access, so
+> the current description is out of date to some extent.
+>
+> Actually, all of Loongson-3 series processors based on LoongArch support
+> unaligned memory access, this hardware capability is indicated by the bit
+> 20 of CPUCFG1 register, update the help info to reflect the reality.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/Kconfig | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index f0abc38c40ac..fcf6575b02f8 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -563,7 +563,8 @@ config ARCH_STRICT_ALIGN
+>           -mstrict-align build parameter to prevent unaligned accesses.
+>
+>           CPUs with h/w unaligned access support:
+> -         Loongson-2K2000/2K3000/3A5000/3C5000/3D5000.
+> +         Loongson-2K2000/2K3000 and all of Loongson-3 series processors
+> +         based on LoongArch.
+>
+>           CPUs without h/w unaligned access support:
+>           Loongson-2K500/2K1000.
+> @@ -573,6 +574,9 @@ config ARCH_STRICT_ALIGN
+>           to run kernel only on systems with h/w unaligned access support=
+ in
+>           order to optimise for performance.
+>
+> +         If you want to make sure whether to support unaligned memory ac=
+cess
+> +         on your hardware, please read the bit 20 of CPUCFG1 register.
+> +
+>  config CPU_HAS_FPU
+>         bool
+>         default y
+> --
+> 2.42.0
+>
+>
