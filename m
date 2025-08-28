@@ -1,107 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177B61EEA5D
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:24:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFC92557A
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:34:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756362274; cv=none; b=EqTsHbX/Y0xmg4FCX2LnRtD6zpcRTajrLVflmtMJaH30LOYJ4asW7wARj62Lge8w/3EpL5ITxYAMMP8s0qxkcx2xMBoLY3bNnoUwz8tZC7vg+71PaPTnZNu0+qE5q7cymcK7rjW7+Y19Rkc7WYJaPNttdJ1UzbrHmACf4X0151I=
+	t=1756362871; cv=none; b=tMOlKQBEZHjl048CiGZEWTrWKEvTTUIBf7zQ7RUo4PqL2IeizPZaHSm6hDOzs00D+Lj18S5JtF2CQSrptq++DoTwTkF374wpAKd3tWSGW1ABQwkS9X021AFzCRDMd1de+c6SGk4SU+MO4NYaIVQTARBfQSR1Tw20A4FN69C77dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756362274; c=relaxed/simple;
-	bh=PbTNAw6VsC0gq8pGRpCcIHQPHceTnxcZLFVsT//1nFI=;
+	s=arc-20240116; t=1756362871; c=relaxed/simple;
+	bh=oDqhsUVoor8SfB72OMc8fRM70YsagjBrulWe6+faUX8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=empSlSbIrOt1w+KvKyKNlh08ho6O0P8gJm5hrsk4k47K3o5CcOEB/e3FGWdel4ZBQ5S+2b7oJ5criPOLk7VHVMQ0M7K8CIb3QKTe1kMLR2YG06fLg4zcdU4wfZm0qZa8CcksggxFGugehL07OtCaQ6GHPGvIiHiFTyzKQ+Fw7O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZc6LY2j; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=fPe6sC6/pd0gCaK0ZLgxzdbtRv74Xe4wRtuPkavjQEbRqssuHrt680sAHeJaiSD/wjLY34u7Rir4fSS9dEycNm53p1059bQr5TuUoZU4F/NmOt21pdb+qiHo5V8LJoa/kjqnk+6dVv6SBL1IN2WhMQEOzDyVf8WLdSYhWbZIQ4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=izg6L+ry; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZc6LY2j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9817C4CEFA
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:24:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="izg6L+ry"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8895FC4CEF4
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756362273;
-	bh=PbTNAw6VsC0gq8pGRpCcIHQPHceTnxcZLFVsT//1nFI=;
+	s=k20201202; t=1756362869;
+	bh=oDqhsUVoor8SfB72OMc8fRM70YsagjBrulWe6+faUX8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rZc6LY2juK9W7cD2kQl3hihP6CnbDnyCc0WR4B5fUUvr+uC8LbFBHpX+kqjPHuqp9
-	 WB3/ygN5MIx7nI7xv3iuQkvHIZpTsqy3KmNVXP3MRBJwnotK1L4EHxDRwLQ+5JXoob
-	 D3QqgUEYMHfMQiLEw4Ex6atdwKh1UKlBzM5aDVsbXYd5zp1oSUR8A36dQEqOkiix0f
-	 bC1kRqvPjnjna9ZDsosDgPAARkCyAKhJvf95Wx4DLh9+IU4P/clSmdtvQ8rX1yldTO
-	 2xSNJCCQSV/P+iZu/FbpCzXzcSVz5XFpQoYl4Div1HU2h7jhqGwoyhhifdJntvwTyq
-	 T/Jc6ctFJ01Sw==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-afcb7ae6ed0so74007566b.3
-        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 23:24:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWgw63I4cLTWPUdjhD/ye4oyzvJITerUjp5pK+pecpVShElMaGOC8exoO6FQBZY55sv2i2WxSLvFts=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwstXwVGIO8j+MSclqnXN/A8OBPjUAtkV3dGa6RSTnC/SuIaH/V
-	W4DaA1YFwlu7J4NgSi4VIkVXFBsrJzEgjVeVv0wLh3azM/rj60vjUU37eYB2ypDQIPxB/ZANvAD
-	cZyvoH+UaYc3jEORevNyTXWeUAwILRCQ=
-X-Google-Smtp-Source: AGHT+IEYCrvShTe9yG42YxJ8urVHPGRw2tZPfQGhKCQTKV1ONMGFl0EOB38RtG7/af97vG3MmBuw4w7xe34Me5jPunA=
-X-Received: by 2002:a17:907:d10:b0:af9:618f:83e with SMTP id
- a640c23a62f3a-afe2904321bmr2009811166b.37.1756362272254; Wed, 27 Aug 2025
- 23:24:32 -0700 (PDT)
+	b=izg6L+ryHYRPFev4a7YIp1ed3HMGhubyz0QjJ1P5AVn73xq1BWNKYMCNw2fBFUuMf
+	 2pDzNbnCEuo58YB7UVJH0L13EtNNUaH3J+n1Z5hDdhrs0/wJaL6LMJ3tayCJwIbHZn
+	 W0cDst1uESXDZDG6zHwgkzGguwzMUatmDs2oLGJ9W90qRTJom4kzILwSWzTuS9zJeS
+	 teaD/pXBNRwD5wUhlA8R06Q85OENkf3sHZAlhXEBrTs0LfZev7ou5TlMxN2KSYQrdQ
+	 yrnOk50xOg9Cm2u6GzClY2z3pKZH5kjHMrdN4olxilsPOf/jDZrHl8cMK0+okJ2JJ8
+	 qdXJRs5Kkt1YQ==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-afcb731caaaso78671966b.0
+        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 23:34:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWwaUF3m5Lyp6E5zGBcLpbmD1QUn07imoWkGoA94NOojWnSK4eZaFtRC6TcjlOlH57fgL6f7hNJJ7M=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy0b8BosnHkavjFGidUk9dUYSM9h6O26o/xPjIPMGVRX/d7/iqM
+	H0EdLSxKB9HIbMFS3e+nQjKZ+L1SdUHv4P1QKdzctalhuWVSUaTCxyMrqQcFXYc8SpASyJr0i+W
+	pBY+CM0Q6gUEeCu6aCUqwEsDyCi+EXpo=
+X-Google-Smtp-Source: AGHT+IHwzNu4KWfEQAtdDGT30qlIbF+VfbdLWOPpxjl7W4o6cZ/mwTJZC8jeanKnfMWD6fCZHLonOA3S2LHds8/N1nE=
+X-Received: by 2002:a17:907:1c28:b0:afe:d62a:f053 with SMTP id
+ a640c23a62f3a-afed62af70bmr209509266b.10.1756362868057; Wed, 27 Aug 2025
+ 23:34:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250826113225.406238-1-guanwentao@uniontech.com> <a0e11216-71b0-447f-beab-351d024810fb@linux.dev>
-In-Reply-To: <a0e11216-71b0-447f-beab-351d024810fb@linux.dev>
+References: <20250513101948.000036d6@linux.dev> <20250821030500.373806-1-dongtai.guo@linux.dev>
+In-Reply-To: <20250821030500.373806-1-dongtai.guo@linux.dev>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 28 Aug 2025 14:24:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7zKLNpx7jM=JBT7unqQ=G4Ztv4RgEhrFsjP+P4LjPYjA@mail.gmail.com>
-X-Gm-Features: Ac12FXx7udJpFMqE5gAtyKL_lpNyiSqtIp5wVrATKJWMX8-LbkV-HdT1q3hy8EI
-Message-ID: <CAAhV-H7zKLNpx7jM=JBT7unqQ=G4Ztv4RgEhrFsjP+P4LjPYjA@mail.gmail.com>
-Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
-To: Yanteng Si <si.yanteng@linux.dev>
-Cc: Wentao Guan <guanwentao@uniontech.com>, kernel@xen0n.name, xry111@xry111.site, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	zhanjun@uniontech.com
+Date: Thu, 28 Aug 2025 14:34:15 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4_d3m+1=2-Syfg0mU5avV8t=AemyU-c=Gc=bD7xQE-uw@mail.gmail.com>
+X-Gm-Features: Ac12FXx7LIkOTYf2Up48vsCGEgCPJSyrzS805lFr8Jk945we_DmINQR-T_s8LEc
+Message-ID: <CAAhV-H4_d3m+1=2-Syfg0mU5avV8t=AemyU-c=Gc=bD7xQE-uw@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: mm: remove redundant pte occupancy check in __set_fixmap()
+To: george <dongtai.guo@linux.dev>
+Cc: kernel@xen0n.name, hengqi.chen@gmail.com, akpm@linux-foundation.org, 
+	dave.hansen@linux.intel.com, geert@linux-m68k.org, 
+	guoweikang.kernel@gmail.com, loongarch@lists.linux.dev, 
+	George Guo <guodongtai@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 28, 2025 at 1:47=E2=80=AFPM Yanteng Si <si.yanteng@linux.dev> w=
-rote:
+On Thu, Aug 21, 2025 at 11:05=E2=80=AFAM george <dongtai.guo@linux.dev> wro=
+te:
 >
-> =E5=9C=A8 8/26/25 7:32 PM, Wentao Guan =E5=86=99=E9=81=93:
-> > Loongarch use -fno-builtin-memcpy in Makefile,
-> > so cause a extra memcpy in syscall hot path:
-> >
-> > syscall_enter_audit
-> > ->syscall_get_arguments->memcpy(__memcpy_fast)
-> > ->audit_syscall_entry
-> >
-> > Just avoid memcpy() altogether and write the copying of args from regs
-> > manually, which shows 5% multi core score up in UnixBench syscall.
-> 5%? Awesome!
-> >
-> > Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cn>
-But why this is a "fix"? It is an optimization.
+> From: George Guo <guodongtai@kylinos.cn>
+>
+> This check could falsely report errors when PTEs are remapped:
+> arch/loongarch/mm/init.c:204: bad pte 0000000107b601c3.
+>
+> The check was unnecessary because:
+> - Fixmap slots are designed to be reusable
+> - Callers are responsible for proper mapping management
+>
+> Changes in v2:
+> - modify commit messages
+>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> ---
+>  arch/loongarch/mm/init.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> index c3e4586a7975..626c99b803a3 100644
+> --- a/arch/loongarch/mm/init.c
+> +++ b/arch/loongarch/mm/init.c
+> @@ -192,10 +192,6 @@ void __init __set_fixmap(enum fixed_addresses idx,
+>         BUG_ON(idx <=3D FIX_HOLE || idx >=3D __end_of_fixed_addresses);
+>
+>         ptep =3D populate_kernel_pte(addr);
+> -       if (!pte_none(ptep_get(ptep))) {
+> -               pte_ERROR(*ptep);
+> -               return;
+> -       }
+This only makes sense if we have FIX_TEXT_POKE, if without it, fixmap
+won't change at runtime.
 
 Huacai
 
 >
-> Thanks,
-> Yanteng
-> > ---
-> >   arch/loongarch/include/asm/syscall.h | 6 +++++-
-> >   1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/incl=
-ude/asm/syscall.h
-> > index 81d2733f7b94..171af2edd569 100644
-> > --- a/arch/loongarch/include/asm/syscall.h
-> > +++ b/arch/loongarch/include/asm/syscall.h
-> > @@ -65,7 +65,11 @@ static inline void syscall_get_arguments(struct task=
-_struct *task,
-> >                                        unsigned long *args)
-> >   {
-> >       args[0] =3D regs->orig_a0;
-> > -     memcpy(&args[1], &regs->regs[5], 5 * sizeof(long));
-> > +     args[1] =3D regs->regs[5];
-> > +     args[2] =3D regs->regs[6];
-> > +     args[3] =3D regs->regs[7];
-> > +     args[4] =3D regs->regs[8];
-> > +     args[5] =3D regs->regs[9];
-> >   }
-> >
-> >   static inline void syscall_set_arguments(struct task_struct *task,
+>         if (pgprot_val(flags))
+>                 set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
+> --
+> 2.34.1
 >
