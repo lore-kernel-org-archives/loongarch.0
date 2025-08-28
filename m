@@ -1,187 +1,195 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3559214A4DB
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 11:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B04E322DB3
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 17:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756378997; cv=none; b=cHwTmhvgdjwMB0tkY+XI16ipM2m9bSKbkpfGHow569NHJRJxG0VMR+Uy1+Pw2WNvSa0wfAS+N+f5kof9gHgZz9sfv4TvnX5JNdUPHUCTxViNE7I+IXrUVszNZjyLqbm1QgckqjuHc5tojJIYYTrXTEtM9cy20pJ8pc1L6XJ3D+U=
+	t=1756401561; cv=none; b=imuqbxcZCsKylrWw+tYYWKpzEyawhRUlNjoHBDGu/X5Rqg1yEMRVur/E9VubK6L9g/Lsyoi1IvBPSERH6gy1INZbbVofysXglJBGgIzGpFSrSROznYTyHJnM4qxGr8Jf0u7SrWwOO45KFO4brTGPrsXixQVb6/kh01jXjJEwYCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756378997; c=relaxed/simple;
-	bh=wu0eGOtLQwcAdT6QuDpvgBOribHmNMfpR8QQ8q0r2N4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S9AjdGz4OuSjMfhoLenMgfbQrQdqjLdmaWM8nNDX062PzLB3k1JeXwmfkLHm7hNm1GvoYHN1gL91lgBSF08YpzTtLIZAuP+QIdNZtDhC11Dy8oI2RO3YrQvzJqKvD+BSNzapc64nf9pbUEHlFAdJ/tT52ptuHRVBW3+RFYA9UGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X27oFs6j; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756401561; c=relaxed/simple;
+	bh=h36ynH6Bd80Xap/ak7gTKh9a8SrMnwXa7sS2b1g2BQU=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=pxYBXm5fLNtBIZHhsF8fOcfWmtm58iroO807OHvkwEbMTTaTQFq8ZxHEMz4R+A9HMaO3QOOcDOwe+AWQ5PiS8nEZVnH7FcnT9uKfgHcsRj7QW+xpA+jrhh5ZuSnwVNgsADrFlvM5iSQ0sFsaMHmCFbWaN5kJkIyTli4CJ+03dlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=AGe0W0FG; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X27oFs6j"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-437d293d2f4so34876b6e.3
-        for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 04:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756378995; x=1756983795; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HrM9QpUTzn4CSaH2DsTf4uTpIcPswtHld3abJL0GRLs=;
-        b=X27oFs6j3GL9ACo5gDK2+xbKcq9y1q97EjeaEyNEu1U67aRWOtpq74BfuoZ0dpE0UE
-         OocMkAQPYgXmGlZlsgWcdjU5VYhZXGXSjFYLPBczpQlbcD2sxGRsxnWKIsrEeGBhVT7W
-         f4wYgxg91qnJBVQin+L4b90Af8MRjFv4/XQqaqsM/O8CNUEoOt7O4k5MotSuy06d+Hnk
-         zJ30lZqgqqcagFFkPTND0jfmqcW8BJbQzl4ZEyVuS/sxNzHbfaTn2JMoxIeJxVqrrXSH
-         g5GpJIuAvn+7/QnEM5Qq9PIiLJUkkbZAq58wc98p3jz3uBpWsFhe2zbpe5FEj+3+fWyL
-         +H4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756378995; x=1756983795;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HrM9QpUTzn4CSaH2DsTf4uTpIcPswtHld3abJL0GRLs=;
-        b=JsleWzQWY+EdStofbHsaF0Jp47chpdBtrhg7Z5eW88+JFexKsTgOI10N1rbFJQNgkJ
-         rXFu5qVERZM+YI8wFNs5lE5MV5sc9D+OoYvVQCWcOf4sOx05dIb8SQYRG7LsljhGOrAr
-         slAfbu+DdM5DAp2X3qthraB/sV9Bg77uiMIA+bmMTj5GO84rLjcaMknFdtUtGDCtYFnO
-         Z/KlW745XumUDBC7K+fe+bGIzHrSRNr95nwgRrRBwG7EDnj1S8z88iA/Y5N9D5ZEa2dw
-         RuA/xfFYbmH7doDJqDyu9KcRnEKCn/rG4Q2AptMf6lrcsij0gKOj4IRevDQ3yxxP2xXo
-         mGDA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6f7NSeCYVhRSXVf6zSqZzxP45sk4WHk0nn41KI5xRi48NodYIDy0nOtQ0HPAOko9pDIamA392d80=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwCCN2zX/sVIkye2nwEcDjQhW4+vDaKpXbBWkGjsQRSYyj29uVV
-	2XU5tgpVOk3vU0tuCSKEmgxW2qp/2aajekFkAPj6AgPaisDJravXjzQLeLQeXPiIJW54lDQFb9C
-	z8gEBT2hBMPZj7vptNPVMEbdfit19pdI=
-X-Gm-Gg: ASbGncsVV5M+dpRZ2tMQ6ZelXWSw+puXQ2ElPsaZbswPVZ7TaNwxKArJ8Vj0DC1T6po
-	x4qOcg+Tp5eoOTypYGwP5ZRcHWxypH1LG1iWqjyA29f8bKVtYAyDol6KBKytgDg3w6xd6qLHfEs
-	m2/3shTm4aITwWpYelJDS/rDPvE6pyj8eoWcC91FpSVSUON1J+Cd0K0qEhNKxoGj+3Sv7fVSFCJ
-	uHibVRIqVz8OblPehLQUlG/kl7/
-X-Google-Smtp-Source: AGHT+IG3/EGbs6E+rFxF8ODPTUAD0rSIfCc8kzDOdTk6YkRf3D4jJklCPcrVpNUx6a0sWOYzbXwvDbV9Lbo654DxDaY=
-X-Received: by 2002:a05:6808:190b:b0:437:e3d2:cb8c with SMTP id
- 5614622812f47-437e3d2d28fmr120663b6e.4.1756378995145; Thu, 28 Aug 2025
- 04:03:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="AGe0W0FG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1756401542;
+	bh=h36ynH6Bd80Xap/ak7gTKh9a8SrMnwXa7sS2b1g2BQU=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=AGe0W0FGKbrW2XjVnoUG2zko0GiOfSGHRs0p0QUVMAmGyCf4s1Az7VG+NsFJdQ5Ye
+	 d5SEBt1/8t+WcC5vZl7+76TcJJxWkIKP2FaF6hUlDnWy8wpdXM2+fnKRUS9WRdiL+X
+	 MPe8wQvnHkt7htb0VNjamaW2ZMO50nt0WdTE4gH0=
+EX-QQ-RecipientCnt: 7
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-FEAT: D4aqtcRDiqST8P4pfj07qGG6ZowgZlQrBrKFg+dHp6U=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: Cny2uphP+8mRH85lxn1RaGRUKi7RIoSHLZSnyjwiLI8=
+X-QQ-STYLE: 
+X-QQ-mid: lv3sz3a-6t1756401536tfcac6e36
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?5YWz5paH5rab?=" <guanwentao@uniontech.com>, "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
+Cc: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?5Y2g5L+K?=" <zhanjun@uniontech.com>
+Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20250827094733.426839-1-hengqi.chen@gmail.com>
- <20250827094733.426839-4-hengqi.chen@gmail.com> <CAAhV-H5sBUjPhuPgpsMV-ywiKJX2-C3D1Re60FGiD9b207NddQ@mail.gmail.com>
-In-Reply-To: <CAAhV-H5sBUjPhuPgpsMV-ywiKJX2-C3D1Re60FGiD9b207NddQ@mail.gmail.com>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Thu, 28 Aug 2025 19:03:04 +0800
-X-Gm-Features: Ac12FXzQ_-Qw0m3pMGn3le3oJZOJlQ50pt_UmAwjftgORUwHrsH6RRf62KaKfhY
-Message-ID: <CAEyhmHRo1UvSTf6RRKigBJcA1wWkffF6OojJncxud6Ff=A-WsA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] LoongArch: BPF: No support of struct argument in
- trampoline programs
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: yangtiezhu@loongson.cn, jianghaoran@kylinos.cn, duanchenghao@kylinos.cn, 
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	vincent.mc.li@gmail.com, bpf@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Fri, 29 Aug 2025 01:18:55 +0800
+X-Priority: 3
+Message-ID: <tencent_62C4A0442C3453142C0FA002@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <20250826113225.406238-1-guanwentao@uniontech.com>
+	<20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site>
+	<tencent_6579F3317CCF94D00EC3C7DD@qq.com>
+In-Reply-To: <tencent_6579F3317CCF94D00EC3C7DD@qq.com>
+X-QQ-ReplyHash: 101352067
+X-BIZMAIL-ID: 13946493721893942874
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Fri, 29 Aug 2025 01:18:57 +0800 (CST)
+Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MgQY1K25Ph0mWji9+SI8Lfix3zhgzxcHRpHnfzkUzUSE+RQnxVjeNNCz
+	4HKULFKQri4phUg0rzL/06b93IP42KcZ0gYc2f9bb8hwI3G9jMSdnzxwKJJfpIpYrOdZuFF
+	9Y+PLXGZwWL6kYV4aRPItNhDRtFFWOAwMFVH8+OmjarrgNif3gTzl2uZFdrzoQ9RY5+QFlP
+	om94pp+FwqCQtqaLogymx1R4yfPsJbooU/Ta/K11xOgkhjJB3dD2ShUAZF+IhpslmhretXI
+	aIC/zGe/sANrPLyxzBrTFKSRHfyT3xoaeZcveSENEJcXLCcyv6mBDt9skBXB9bKRaM0Qi6S
+	/b639XtHvDytZmwETGhFPmpD2ri0MJ6Q/CJC+6nDaX+/y8qDn4dVIF0ZR+8TYHp6idgE+Vi
+	BAYeoVMj9r+OqI3pO6Btc2sFOt599hnfj0Cr2NryUp6FWo4xr+0xYhofu9CWTpE5/lsCkbS
+	tEgpAgNhM0x6krdStJxSJwaaPn1crnS0lgyxthQp5B9wCB+4ayVn11wFY+S5fdPY6L57fKT
+	581D3FxWl44u4yQkIGRYX0zFMxD10GFl42aZBxF5yAi8m3XcysKAlkgcMjCN7QZFzBgqlw2
+	lFuJc4dEuwfL+5pP3FJliW2TRdZ2YYEIPL9wi8wWzpwGfx7XQ1Yq4fhXZGgqhwNNPLIgzAA
+	Tj6oO0rZdq1zmH+Iz/QPm8KzzLO86TKGNxqAo7/kSm3n/Dpl5nQJMVJKN8OgQCJMH4GpEih
+	S2yr82QTwaJjfoF4Peij0Ck2MxqGJR+IARI2uhzJmGAHgw6TIFRWV60h7igsZO0/rKuViEI
+	LirBddRy5TGZG3befZ37gc1U9fbUB4Prbw2vm1ZdkuWHsuekzGBDobl43eEwXMQJlwDJUiS
+	JzfAPl/PkE0O9wD0vqk86DoGrWJX23TdQf7Q35tJ9qTJi33O0ECDnCZu7Fhhep459vqFeSJ
+	s9EKKj0jei55c+KTSZPoFKZhSTPUuQQ/KOS+KV6IJt0VrFBeaU/iS+gwYzHVEJLfJERiYKN
+	mH2JB7jvQk2KFdrGwLYHeXwaRpuTKFN0CbnNzlDbko8OK9JoQ6
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Aug 28, 2025 at 5:26=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> On Wed, Aug 27, 2025 at 7:19=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.co=
-m> wrote:
-> >
-> > The current implementation does not support struct argument.
-> > This cause a oops when running bpf selftest:
-> >
-> >     $ ./test_progs -a tracing_struct
-> >     CPU -1 Unable to handle kernel paging request at virtual address 00=
-00000000000018, era =3D=3D 90000000845659f4, ra =3D=3D 90000000845659e8
-> >     Oops[#1]:
-> >     CPU -1 Unable to handle kernel paging request at virtual address 00=
-00000000000018, era =3D=3D 9000000085bef268, ra =3D=3D 90000000844f3938
-> >     rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> >     rcu:     1-...0: (19 ticks this GP) idle=3D1094/1/0x400000000000000=
-0 softirq=3D1380/1382 fqs=3D801
-> >     rcu:     (detected by 0, t=3D5252 jiffies, g=3D1197, q=3D52 ncpus=
-=3D4)
-> >     Sending NMI from CPU 0 to CPUs 1:
-> >     rcu: rcu_preempt kthread starved for 2495 jiffies! g1197 f0x0 RCU_G=
-P_DOING_FQS(6) ->state=3D0x0 ->cpu=3D2
-> >     rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM i=
-s now expected behavior.
-> >     rcu: RCU grace-period kthread stack dump:
-> >     task:rcu_preempt     state:I stack:0     pid:15    tgid:15    ppid:=
-2      task_flags:0x208040 flags:0x00000800
-> >     Stack : 9000000100423e80 0000000000000402 0000000000000010 90000001=
-003b0680
-> >             9000000085d88000 0000000000000000 0000000000000040 90000000=
-87159350
-> >             9000000085c2b9b0 0000000000000001 900000008704a000 00000000=
-00000005
-> >             00000000ffff355b 00000000ffff355b 0000000000000000 00000000=
-00000004
-> >             9000000085d90510 0000000000000000 0000000000000002 7b5d998f=
-8281e86e
-> >             00000000ffff355c 7b5d998f8281e86e 000000000000003f 90000000=
-87159350
-> >             900000008715bf98 0000000000000005 9000000087036000 90000000=
-8704a000
-> >             9000000100407c98 90000001003aff80 900000008715c4c0 90000000=
-85c2b9b0
-> >             00000000ffff355b 9000000085c33d3c 00000000000000b4 00000000=
-00000000
-> >             9000000007002150 00000000ffff355b 9000000084615480 00000000=
-07000002
-> >             ...
-> >     Call Trace:
-> >     [<9000000085c2a868>] __schedule+0x410/0x1520
-> >     [<9000000085c2b9ac>] schedule+0x34/0x190
-> >     [<9000000085c33d38>] schedule_timeout+0x98/0x140
-> >     [<90000000845e9120>] rcu_gp_fqs_loop+0x5f8/0x868
-> >     [<90000000845ed538>] rcu_gp_kthread+0x260/0x2e0
-> >     [<900000008454e8a4>] kthread+0x144/0x238
-> >     [<9000000085c26b60>] ret_from_kernel_thread+0x28/0xc8
-> >     [<90000000844f20e4>] ret_from_kernel_thread_asm+0xc/0x88
-> >
-> >     rcu: Stack dump where RCU GP kthread last ran:
-> >     Sending NMI from CPU 0 to CPUs 2:
-> >     NMI backtrace for cpu 2 skipped: idling at idle_exit+0x0/0x4
-> >
-> > Reject it for now.
-> Drop this patch or pick Tiezhu's patches as a single series?
-> https://lore.kernel.org/loongarch/20250821144302.14010-1-yangtiezhu@loong=
-son.cn/T/#t
->
+SGVsbG8gUnVveWFvLA0KDQpUaGUgcXVpY2sgdGVzdCByZXN1bHRzIGFyZSB2ZXJ5IGludGVy
+ZXN0aW5nLi4uOg0KVW5peEJlbmNoIHN5c2NhbGwgb24gM0E2MDAwIHBsYXRmb3JtOg0KLi9S
+dW4gc3lzY2FsbCAtaSAxMCAtYyA4DQprZXJuZWwgc291cmNlOiB2Ni4xNg0Ka2VybmVsIGNv
+bmZpZzoNCmh0dHBzOi8vZ2l0aHViLmNvbS9kZWVwaW4tY29tbXVuaXR5L2tlcm5lbC9ibG9i
+L2xpbnV4LTYuMTIueS9hcmNoL2xvb25nYXJjaC9jb25maWdzL2RlZXBpbl9sb29uZ2FyY2hf
+ZGVza3RvcF9kZWZjb25maWcNClVzZSB0aGlzIEdDQyAxNVsxXToNCg0KcmVzdWx0OiANCjEu
+IHdpdGggbm8gcGF0Y2g6DQpTeXN0ZW0gQ2FsbCBPdmVyaGVhZCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgMTUwMDAuMCAgICA4ODkzMDExLjggICA1OTI4LjcNCjIuIHdpdGggcGF0Y2gg
+WzJdIHRvIGRpc2FibGUgLWZuby1idWlsdGluLW1lbWNweSAtZm5vLWJ1aWx0aW4tbWVtbW92
+ZSAtZm5vLWJ1aWx0aW4tbWVtc2V0Og0KU3lzdGVtIENhbGwgT3ZlcmhlYWQgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDE1MDAwLjAgICAgODUxMDQxNS4yICAgNTY3My42DQpsb3dlciB0
+aGFuIHBhdGNoPz8/DQozLiB3aXRoIG15IG9yaWdpbiBwYXRjaCBbM10oKzQuOSUpOiANClN5
+c3RlbSBDYWxsIE92ZXJoZWFkICAgICAgICAgICAgICAgICAgICAgICAgICAxNTAwMC4wICAg
+IDkzMzYwMjIuMSAgIDYyMjQuMA0KDQpCUnMNCldlbnRhbyBHdWFuDQoNClsxXTogaHR0cHM6
+Ly9taXJyb3JzLmVkZ2Uua2VybmVsLm9yZy9wdWIvdG9vbHMvY3Jvc3N0b29sL2ZpbGVzL2Jp
+bi94ODZfNjQvMTUuMi4wDQpbMl06DQpkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gvS2Nv
+bmZpZyBiL2FyY2gvbG9vbmdhcmNoL0tjb25maWcNCmluZGV4IDRiMTlmOTMzNy4uNTNiYmNm
+MzFjIDEwMDY0NA0KLS0tIGEvYXJjaC9sb29uZ2FyY2gvS2NvbmZpZw0KKysrIGIvYXJjaC9s
+b29uZ2FyY2gvS2NvbmZpZw0KQEAgLTc0Niw2ICs3NDYsOSBAQCBjb25maWcgQVJDSF9TVVNQ
+RU5EX1BPU1NJQkxFDQogY29uZmlnIEFSQ0hfSElCRVJOQVRJT05fUE9TU0lCTEUNCiAgICAg
+ICAgZGVmX2Jvb2wgeQ0KIA0KK2NvbmZpZyBBUkNIX01FTU9SWV9MSUJDQUxMX0RJU0FCTEUN
+CisgICAgICAgZGVmX2Jvb2wgS0FTQU4gfHwgR0NDX1ZFUlNJT04gPj0gMTQwMDAwDQorDQog
+c291cmNlICJrZXJuZWwvcG93ZXIvS2NvbmZpZyINCiBzb3VyY2UgImRyaXZlcnMvYWNwaS9L
+Y29uZmlnIg0KIHNvdXJjZSAiZHJpdmVycy9jcHVmcmVxL0tjb25maWciDQpkaWZmIC0tZ2l0
+IGEvYXJjaC9sb29uZ2FyY2gvTWFrZWZpbGUgYi9hcmNoL2xvb25nYXJjaC9NYWtlZmlsZQ0K
+aW5kZXggYjA3MDNhNGUwLi5mYmE4MzdiMjIgMTAwNjQ0DQotLS0gYS9hcmNoL2xvb25nYXJj
+aC9NYWtlZmlsZQ0KKysrIGIvYXJjaC9sb29uZ2FyY2gvTWFrZWZpbGUNCkBAIC0xMjAsNyAr
+MTIwLDcgQEAgZW5kaWYNCiANCiBjZmxhZ3MteSArPSAkKGNhbGwgY2Mtb3B0aW9uLCAtbW5v
+LWNoZWNrLXplcm8tZGl2aXNpb24pDQogDQotaWZuZGVmIENPTkZJR19LQVNBTg0KK2lmZXEg
+KCQoQ09ORklHX0FSQ0hfTUVNT1JZX0xJQkNBTExfRElTQUJMRSksKQ0KIGNmbGFncy15ICs9
+IC1mbm8tYnVpbHRpbi1tZW1jcHkgLWZuby1idWlsdGluLW1lbW1vdmUgLWZuby1idWlsdGlu
+LW1lbXNldA0KIGVuZGlmDQpbM106DQpkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gvaW5j
+bHVkZS9hc20vc3lzY2FsbC5oIGIvYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20vc3lzY2Fs
+bC5oDQppbmRleCA4MWQyNzMzZjcuLjE3MWFmMmVkZCAxMDA2NDQNCi0tLSBhL2FyY2gvbG9v
+bmdhcmNoL2luY2x1ZGUvYXNtL3N5c2NhbGwuaA0KKysrIGIvYXJjaC9sb29uZ2FyY2gvaW5j
+bHVkZS9hc20vc3lzY2FsbC5oDQpAQCAtNjUsNyArNjUsMTEgQEAgc3RhdGljIGlubGluZSB2
+b2lkIHN5c2NhbGxfZ2V0X2FyZ3VtZW50cyhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2ssDQog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcg
+KmFyZ3MpDQogew0KICAgICAgICBhcmdzWzBdID0gcmVncy0+b3JpZ19hMDsNCi0gICAgICAg
+bWVtY3B5KCZhcmdzWzFdLCAmcmVncy0+cmVnc1s1XSwgNSAqIHNpemVvZihsb25nKSk7DQor
+ICAgICAgIGFyZ3NbMV0gPSByZWdzLT5yZWdzWzVdOw0KKyAgICAgICBhcmdzWzJdID0gcmVn
+cy0+cmVnc1s2XTsNCisgICAgICAgYXJnc1szXSA9IHJlZ3MtPnJlZ3NbN107DQorICAgICAg
+IGFyZ3NbNF0gPSByZWdzLT5yZWdzWzhdOw0KKyAgICAgICBhcmdzWzVdID0gcmVncy0+cmVn
+c1s5XTsNCiB9DQogDQogc3RhdGljIGlubGluZSB2b2lkIHN5c2NhbGxfc2V0X2FyZ3VtZW50
+cyhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2ssDQoNCls0XTogcGVyZiBkaWZmDQojIEV2ZW50
+ICdjeWNsZXM6UCcNCiMNCiMgQmFzZWxpbmUgIERlbHRhIEFicyAgU2hhcmVkIE9iamVjdCAg
+ICAgICAgICAgICAgICAgICAgICAgU3ltYm9sICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICA+DQojIC4uLi4uLi4uICAuLi4uLi4uLi4gIC4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uPg0KIw0KICAgIDEyLjcyJSAgICAgLTcuMDcl
+ICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICBba10gc3lzY2FsbF90cmFj
+ZV9lbnRlcg0KICAgICAwLjAwJSAgICAgKzIuOTQlICBba2VybmVsLmthbGxzeW1zXSAgICAg
+ICAgICAgICAgICAgICBba10gX19tZW1jcHlfZmFzdA0KICAgIDMzLjY5JSAgICAgKzEuNDEl
+ICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICBba10gZG9fc3lzY2FsbA0K
+ICAgICAyLjY0JSAgICAgKzAuMzIlICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAg
+ICAgICBba10gX19hdWRpdF9zeXNjYWxsX2VudHJ5DQogICAgIDQuOTIlICAgICArMC4zMiUg
+IGxpYmMuc28uNiAgICAgICAgICAgICAgICAgICAgICAgICAgIFsuXSBfX0dJX19fdW1hc2sN
+CiAgICAgMy41NCUgICAgICswLjMwJSAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAg
+ICAgICAgW2tdIGFsbG9jX2ZkDQogICAgIDQuMzYlICAgICArMC4yNCUgIGxpYmMuc28uNiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIFsuXSBfX0dJX19fZ2V0dWlkDQogICAgIDQuNjMl
+ICAgICArMC4yNCUgIGxpYmMuc28uNiAgICAgICAgICAgICAgICAgICAgICAgICAgIFsuXSBz
+eXNjYWxsDQogICAgIDQuNTAlICAgICArMC4yMiUgIGxpYmMuc28uNiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIFsuXSBfX0dJX19fZHVwDQogICAgIDQuODQlICAgICArMC4yMiUgIFtr
+ZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBzeXNjYWxsX2V4aXRfd29y
+aw0KICAgICA0LjgxJSAgICAgKzAuMjIlICBsaWJjLnNvLjYgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBbLl0gX19jbG9zZQ0KICAgICAgICAgICAgICAgKzAuMjAlICBba2VybmVsLmth
+bGxzeW1zXSAgICAgICAgICAgICAgICAgICBba10gX19tZW1jcHkNCiAgICAgMS40OCUgICAg
+ICswLjE1JSAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgW2tdIGF1ZGl0
+X3Jlc2V0X2NvbnRleHQNCiAgICAgMC42OSUgICAgICswLjEzJSAgW2tlcm5lbC5rYWxsc3lt
+c10gICAgICAgICAgICAgICAgICAgW2tdIF9fc2Vfc3lzX2Nsb3NlDQogICAgIDIuMTMlICAg
+ICArMC4xMCUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBmaWxl
+X2Nsb3NlX2ZkX2xvY2tlZA0KICAgICAwLjg2JSAgICAgKzAuMDglICBba2VybmVsLmthbGxz
+eW1zXSAgICAgICAgICAgICAgICAgICBba10gbWFwX2lkX3JhbmdlX3VwDQogICAgIDAuNzEl
+ICAgICArMC4wNiUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBf
+X3Rhc2tfcGlkX25yX25zDQogICAgIDAuNDElICAgICArMC4wNCUgIFtrZXJuZWwua2FsbHN5
+bXNdICAgICAgICAgICAgICAgICAgIFtrXSBmZF9pbnN0YWxsDQogICAgIDAuNTYlICAgICAr
+MC4wNCUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBfX3JjdV9y
+ZWFkX3VubG9jaw0KICAgICAwLjU3JSAgICAgKzAuMDQlICBba2VybmVsLmthbGxzeW1zXSAg
+ICAgICAgICAgICAgICAgICBba10gZnB1dF9jbG9zZV9zeW5jDQogICAgIDAuMDclICAgICAt
+MC4wNCUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBpZGxlX2V4
+aXQNCiAgICAgMS4zNyUgICAgICswLjA0JSAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAg
+ICAgICAgICAgW2tdIF9yYXdfc3Bpbl9sb2NrDQogICAgIDAuNjklICAgICArMC4wMyUgIFtr
+ZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBmaWxwX2ZsdXNoDQogICAg
+IDAuNzYlICAgICArMC4wMyUgIHN5c2NhbGwgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IFsuXSBtYWluDQogICAgIDAuNTIlICAgICArMC4wMyUgIFtrZXJuZWwua2FsbHN5bXNdICAg
+ICAgICAgICAgICAgICAgIFtrXSBmcm9tX2t1aWRfbXVuZ2VkDQogICAgIDAuNDUlICAgICAr
+MC4wMyUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBfcmF3X3Nw
+aW5fdW5sb2NrDQogICAgIDAuMDclICAgICAtMC4wMyUgIFtrZXJuZWwua2FsbHN5bXNdICAg
+ICAgICAgICAgICAgICAgIFtrXSBmaW5pc2hfdGFza19zd2l0Y2guaXNyYS4wDQogICAgIDEu
+NzIlICAgICArMC4wMyUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtr
+XSBrdGltZV9nZXRfY29hcnNlX3JlYWxfdHM2NA0KICAgICAwLjY3JSAgICAgKzAuMDMlICBb
+a2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICBba10gX19yY3VfcmVhZF9sb2Nr
+DQogICAgIDAuMDMlICAgICAtMC4wMyUgIGRlZXBpbi1kZWVwaW5pZC1kYWVtb24gICAgICAg
+ICAgICAgIFsuXSAweDAwMDAwMDAwMDAwMDMwMTgNCiAgICAgMS4yOCUgICAgIC0wLjAyJSAg
+W2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgW2tdIF9fYXVkaXRfc3lzY2Fs
+bF9leGl0DQogICAgIDAuMTIlICAgICArMC4wMiUgIHN5c2NhbGwgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIFsuXSBnZXR1aWRAcGx0DQogICAgIDAuMDIlICAgICAtMC4wMiUgIGRk
+ZS1zZXNzaW9uLWRhZW1vbiAgICAgICAgICAgICAgICAgIFsuXSAweDAwMDAwMDAwMDAyOTlk
+MTANCiAgICAgMC4wMiUgICAgIC0wLjAyJSAgbGQtbGludXgtbG9vbmdhcmNoLWxwNjRkLnNv
+LjEgICAgICAgWy5dIGRvX2xvb2t1cF94DQogICAgIDAuMDMlICAgICAtMC4wMSUgIFtrZXJu
+ZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBfcmF3X3NwaW5fdW5sb2NrX2ly
+cXJlc3RvcmUNCiAgICAgMC4wMSUgICAgIC0wLjAxJSAgbGQtbGludXgtbG9vbmdhcmNoLWxw
+NjRkLnNvLjEgICAgICAgWy5dIF9kbF9sb29rdXBfc3ltYm9sX3gNCiAgICAgMC4zMCUgICAg
+ICswLjAxJSAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgW2tdIHN5c19n
+ZXRwaWQNCiAgICAgMC4xNCUgICAgIC0wLjAxJSAgc3lzY2FsbCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgWy5dIHVtYXNrQHBsdA0KICAgICAwLjAxJSAgICAgLTAuMDElICBsaWJk
+YnVzLTEuc28uMy4zMi40ICAgICAgICAgICAgICAgICBbLl0gMHgwMDAwMDAwMDAwMDE1YWMw
+DQogICAgIDAuMDIlICAgICAtMC4wMSUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAg
+ICAgICAgIFtrXSBjbGVhcl9wYWdlDQogICAgIDAuMDElICAgICAtMC4wMSUgIGRlZXBpbi1z
+eW5jLWhlbHBlciAgICAgICAgICAgICAgICAgIFsuXSAweDAwMDAwMDAwMDAwMDNhODQNCiAg
+ICAgMC4xNCUgICAgICswLjAxJSAgc3lzY2FsbCAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgWy5dIGNsb3NlQHBsdA==
 
-Tiezhu's patch does not work for now unless we fix the module_attach issue.
-
-> Huacai
->
-> >
-> > Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support"=
-)
-> > Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > Tested-by: Vincent Li <vincent.mc.li@gmail.com>
-> > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> > ---
-> >  arch/loongarch/net/bpf_jit.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
-c
-> > index c239e5ed0c92..66b102ed9874 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -1514,6 +1514,12 @@ static int __arch_prepare_bpf_trampoline(struct =
-jit_ctx *ctx, struct bpf_tramp_i
-> >         if (m->nr_args > LOONGARCH_MAX_REG_ARGS)
-> >                 return -ENOTSUPP;
-> >
-> > +       /* don't support struct argument */
-> > +       for (i =3D 0; i < m->nr_args; i++) {
-> > +               if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
-> > +                       return -ENOTSUPP;
-> > +       }
-> > +
-> >         if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIF=
-Y))
-> >                 return -ENOTSUPP;
-> >
-> > --
-> > 2.43.5
-> >
-> >
-> >
