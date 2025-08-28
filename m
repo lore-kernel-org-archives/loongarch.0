@@ -1,86 +1,75 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AED2D0626
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 07:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B555D2C2368
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 07:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756364807; cv=none; b=tBK83eaG/wOjGOHjJ9TdzjjNqKgUqfiYMK9mvRfEV79pxebEb5LijExO6ejsIah2UbDS4nrapi0TnWCWKzXWlxCnmX3FgLnjZISRKPNSnT6lVG4gSvg+nLZrmr1HIKcDcYiAIJ21/MdNHPNHQaAai0S7dYQjLIcGjZrdZ4inU+E=
+	t=1756364976; cv=none; b=WCKMPGsvccd+xciPqgsaYsJP+USOY9lSdBhfjgtYO3Vf7sRqsoUlaUEAR2fTZynTc9ImSj7agrkG9h1CCbpw2fVkhLUo8R/yAeryZIn/Vt3ZI05gKSsbKGFfi55I2N8MJOOV5+61KDY0+jA9N4tuoDCugYPrdDukgM1OWdvjycc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756364807; c=relaxed/simple;
-	bh=iXYkDS/xZa2AbKSL4NnkU91Vx0JuRxZnRduo7ytTzwU=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=mvd2brmYYlS1PkOE17IC8/gMBKrT0cSxehAZJnCGYHwbfVW1sYV4A4JN3C84+DY4EEnMdRdejOZoJiqIXvHnsdf8e6XgC3CaWTl7w5MyCyibvCBShojchn/knfGRxrXYyNt0/misw5IO+MI9mN2RSHV4wFFH9rWS9HNaicOie8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=SiEBwDhk; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1756364976; c=relaxed/simple;
+	bh=CRTcNqNyMT97ewqeVrG1k8KzvI3+QazP8GobQvTtyyk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=emcgmbz013dXL7c/sZoLVaq0pzOot0LwlF0sYZimO+TAgimfQwCfQwPxOe16mngHd8p/hAipcqhQfbO8r8ShpKm3ON/0pdNuePaJdr+wrjarjFkRaEx4m8OohCKDmDmlL+kKoSC/wt6lb04JyqgmePQW+ClraXt6tRYSuM6mBfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SkVi2KD7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="SiEBwDhk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1756364777;
-	bh=iXYkDS/xZa2AbKSL4NnkU91Vx0JuRxZnRduo7ytTzwU=;
-	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=SiEBwDhkJbez3zWACv5h6+szVl2/89E900WbfNFKpnRPBHaMYCxgzW1hNtaiKZ9vb
-	 v+FDrdBMaSxESApYQ5cz9YAo+62zZhmFgzW2YZsh4HSezlE5WaI3zAQipg6376blMg
-	 BHiPPb8cdAbwLIIlP36diZR7oh4plMC5fuFtBgPE=
-EX-QQ-RecipientCnt: 6
-X-QQ-GoodBg: 1
-X-QQ-SSF: 0040000000000000
-X-QQ-FEAT: 1LZBGsge1Z42dw8meDLbRnaNYOtDu44q
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: iP39a7Lhf4uQnPcdOfXuMGmaJC52/MKbrO3g+EtIuY2HdMW2zOKSGA+OV8BlDwHdLvf4tjVCcKWa9UJbsvx2+g==
-X-QQ-STYLE: 
-X-QQ-mid: lv3sz3a-6t1756364773tbdd6b7d2
-From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
-Cc: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?5Y2g5L+K?=" <zhanjun@uniontech.com>
-Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SkVi2KD7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6732EC4CEF4
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 07:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756364976;
+	bh=CRTcNqNyMT97ewqeVrG1k8KzvI3+QazP8GobQvTtyyk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SkVi2KD7jMQ3zyDRiTmnoePBAFmboUKKC2ROYnEPhJq0wC5YV+3ih5saZwUyj46Kn
+	 4MQLi5mdr3lZ0tDNCeWITma2hCjGg0D3jx77pktq6dsXlH/LbUUlvMm/hABZmtlHkW
+	 LZZhc7uTw+47S4MICG5CpBM29tP/z1rw76yQrPf4ii8qRjheugIixyJuQB/pWPdHdC
+	 noGxsoqNFHecocwerP1qRJua20hBbAT9Yabzl47BqD974xRMd9kfHmN4oujrSFglm8
+	 AjwllRS/FCvwHE7aoeKirVYhZFNmQNsxMbe9pFHkTaTkz09Tq0VikJIfyN29aOqwuu
+	 JVpTCyyhcDUhA==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-afcb732eee6so96465066b.0
+        for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 00:09:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVTwa11922U0o3tV0B8jlCVztYa1t6pQWtc+HfQGxBAaYQT/qYZW8Qll8KM7WEpKRnOqZzX+2wIiSE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwByic1YjjefFuWQWhHo7howtp7fWVgdlGnTp5HP5PFp2Ssn7tw
+	+f2+SbSYW2UNu/hm5GH5pGMoasWTRFYL/lE9OXQgzHbSeMucF1USsqFoZ+OutTdMJYvZo/QI8Qt
+	c1Fx3gCsIR0vtA8ynrsTK90bK6wb8ETI=
+X-Google-Smtp-Source: AGHT+IEdj4uyB2ezk9HhUf79b9OJBHcgtGmr8Mnd99Hiov12Hmlp+SKv3xAlPf7+EC+8aF+ULSBXtIr0Vo2k5/jXtk0=
+X-Received: by 2002:a17:907:1c93:b0:af9:d80f:645d with SMTP id
+ a640c23a62f3a-afe29793340mr2068986466b.57.1756364974923; Thu, 28 Aug 2025
+ 00:09:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Thu, 28 Aug 2025 15:06:12 +0800
-X-Priority: 3
-Message-ID: <tencent_6579F3317CCF94D00EC3C7DD@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
+MIME-Version: 1.0
 References: <20250826113225.406238-1-guanwentao@uniontech.com>
-	<20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site>
-In-Reply-To: <20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site>
-X-QQ-ReplyHash: 3242655864
-X-BIZMAIL-ID: 12844274570607954762
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Thu, 28 Aug 2025 15:06:14 +0800 (CST)
-Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MA25rb7c/K0AGj94oJEjB3MJ9uP7MTuq6tOTQDhwBjJCOWqJpxzy+rRl
-	h4pcsEuGVR0iFIFwQnGHwHphVwK3nwmiUA+7fg/x+SCMdPD5nfQZXD2rbtY/tEZV1TwlxXy
-	cwRP13yL59VZfVBnDP94ETctyU8m6Ii4lXyH3z4rXDZuLiuGA1msIDphO1qqv+lHN6k6qNZ
-	K1h/7m1H88qwk6Eu6lplg6kbDtX1Oll3UmtDeVBmXrk8CpzEG8rKzzBZci/elF1oCpJxuyB
-	i3tM29CJCfQccDOTmGflIC+caeuArdhakXQFDtzWAl0cUBDc0MpX9jkJaY8ENRpKVqIWL3V
-	HLa+TRtBBPaXv5eEm219Kh1u29o5dOl9e+sTK/VCcGuajG2XuKuzWONcXPBb38T2b7LCxRU
-	jiZA2RpEdBAvReLvWrXnn4PSZOjv+5ZIIPjA5CmUZZmPK2utpeUHV6faDS5xW3BI/pRgUPX
-	VWH0+8M287JxTqJUtRA4WscjVdDslHc1wSHAPgGzD5RPxgJsHEFz8T7Ig3aVxjg0Ibyfsbs
-	F+1n6map0BPJ2yKWNve8hjMVtrPw7sTdmQXaKin3wnb47Y1QEqXptAGNbgzWiDg/TvTtAkT
-	y121x3Mk3mK0nEGxjKGkQ16X9BAscE4wio5Kk34sFp/uIBU9U1zRzjF7E4dwCo7sK9yZVie
-	7kUBR7WPNV0dG1te10uhqDcq1z8EON5/0CKymvDMeXqA3Agmy0oEO6tvZ1gawClq1ga0Lbc
-	MTzdCxZ+y07Ft9Rk6YToqMyog3MLBALXykI6QqTzXmXlw6RMxhZk+utPDYzN56qpj6MyF28
-	P6LhdiCblmQFW34FSTZSnVCXM8CZiHlGnAYB4mZeErCUA+CqE+aTIi+4fChYpCooDfschQD
-	X/bMuk6F2Url8BGrJStpXRxFyV3CQtrWnt75t6imlQduL0pmmhEwJ78lInK8IZtIatlbIYJ
-	p+DZzRBc1WKDfibmYKF2zwnx8sy1EyripAAtCOchnfUP3D1vuTQebsi6IaLADRApvdVxqte
-	8ZxY7+LRpPFCqZSpovbG18pEVwOU4A8ia9d4K4XXT7uQlMeOptHSymeUgRGjfChMaGs4kqi
-	cxzktIVr2F9
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+ <20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site> <tencent_6579F3317CCF94D00EC3C7DD@qq.com>
+In-Reply-To: <tencent_6579F3317CCF94D00EC3C7DD@qq.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 28 Aug 2025 15:09:23 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H68Tzewu3x+8=Psb-8Hqg58o4v-8QyvFew+Wuo=Ne-iAA@mail.gmail.com>
+X-Gm-Features: Ac12FXwfMgWNNgv10BfeNOpoGdtGBB9VwNXLisbu4V2-a35ae4seuy97OFb64IQ
+Message-ID: <CAAhV-H68Tzewu3x+8=Psb-8Hqg58o4v-8QyvFew+Wuo=Ne-iAA@mail.gmail.com>
+Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
+To: Wentao Guan <guanwentao@uniontech.com>
+Cc: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, loongarch <loongarch@lists.linux.dev>, 
+	=?UTF-8?B?5Y2g5L+K?= <zhanjun@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGVsbG8gUnVveWFvLA0KDQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3Lg0KSSB3aWxsIHRlc3Qg
-YW5kIHNlbmQgdGVzdCByZXN1bHRzIGxhdGVyLg0KKHVzZSBkaWZmZXJlbnQgZ2NjIHZlcmlv
-bnMgYW5kIHJlbW92ZSB0aGUgdGhyZWUgZmxhZ3MuKQ0KDQpCUnMNCldlbnRhbyBHdWFu
+On Thu, Aug 28, 2025 at 3:06=E2=80=AFPM Wentao Guan <guanwentao@uniontech.c=
+om> wrote:
+>
+> Hello Ruoyao,
+>
+> Thanks for your review.
+> I will test and send test results later.
+> (use different gcc verions and remove the three flags.)
+I think kernel's memcpy is still needed for CPUs without UAL.
 
+Huacai
+
+>
+> BRs
+> Wentao Guan
