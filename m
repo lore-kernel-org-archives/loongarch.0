@@ -1,217 +1,187 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91E69272E48
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 10:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3559214A4DB
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 11:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756377641; cv=none; b=R5ulg6oHW5jauZn+rVL3lUxalO1x9ASJlO6JCzvdIH8UPKsU+5/a6/Ix8X4VGU9H4vGlX58Xduqo0aigC/XcmVjWCAyL6grVLM5YpGM/hZqO7alrNkEQud0/JpmAXEMjx7c22RdpACcqi1DjXhirycvU+/30Oi0+j73xs734QHo=
+	t=1756378997; cv=none; b=cHwTmhvgdjwMB0tkY+XI16ipM2m9bSKbkpfGHow569NHJRJxG0VMR+Uy1+Pw2WNvSa0wfAS+N+f5kof9gHgZz9sfv4TvnX5JNdUPHUCTxViNE7I+IXrUVszNZjyLqbm1QgckqjuHc5tojJIYYTrXTEtM9cy20pJ8pc1L6XJ3D+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756377641; c=relaxed/simple;
-	bh=qRq+Kir/cKuFbXGTjwNFHCqS4ex/ch58SN5msSRNm5k=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Mb6px0VZfRv/8vK0tAIaiCA6hdomUulGMz3dJnNQmQ0cF6G7cmkzvd6J3jC+8K6UogmMoTI5kInwTKq4/FYHH8XxNrTWgqgrHN9LjWF1a21KunMROMwOMcrZLVksQQpl+wH7Rxkl1IQQv42V6TJ9UYhXpXGj+bwMmrKRonLavNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8BxndIYMrBoMiYEAA--.8052S3;
-	Thu, 28 Aug 2025 18:40:24 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by front1 (Coremail) with SMTP id qMiowJDxbMEUMrBonzZuAA--.27570S3;
-	Thu, 28 Aug 2025 18:40:23 +0800 (CST)
-Subject: Re: [PATCH v2 2/3] LoongArch: BPF: Sign extend struct ops return
- values properly
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: chenhuacai@kernel.org, yangtiezhu@loongson.cn, jianghaoran@kylinos.cn,
- duanchenghao@kylinos.cn, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, martin.lau@linux.dev, vincent.mc.li@gmail.com,
- bpf@vger.kernel.org, loongarch@lists.linux.dev
-References: <20250827094733.426839-1-hengqi.chen@gmail.com>
- <20250827094733.426839-3-hengqi.chen@gmail.com>
- <9cf3a423-6d7d-91ae-d9af-3587fad9b70b@loongson.cn>
- <CAEyhmHQodsW4WTOezi73-chmutoAxM-2qAdTO6NkYQ7brq2iQA@mail.gmail.com>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <6a3df58e-de24-8b42-ddb2-7dfd0b6bba19@loongson.cn>
-Date: Thu, 28 Aug 2025 18:40:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1756378997; c=relaxed/simple;
+	bh=wu0eGOtLQwcAdT6QuDpvgBOribHmNMfpR8QQ8q0r2N4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S9AjdGz4OuSjMfhoLenMgfbQrQdqjLdmaWM8nNDX062PzLB3k1JeXwmfkLHm7hNm1GvoYHN1gL91lgBSF08YpzTtLIZAuP+QIdNZtDhC11Dy8oI2RO3YrQvzJqKvD+BSNzapc64nf9pbUEHlFAdJ/tT52ptuHRVBW3+RFYA9UGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X27oFs6j; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X27oFs6j"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-437d293d2f4so34876b6e.3
+        for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 04:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756378995; x=1756983795; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HrM9QpUTzn4CSaH2DsTf4uTpIcPswtHld3abJL0GRLs=;
+        b=X27oFs6j3GL9ACo5gDK2+xbKcq9y1q97EjeaEyNEu1U67aRWOtpq74BfuoZ0dpE0UE
+         OocMkAQPYgXmGlZlsgWcdjU5VYhZXGXSjFYLPBczpQlbcD2sxGRsxnWKIsrEeGBhVT7W
+         f4wYgxg91qnJBVQin+L4b90Af8MRjFv4/XQqaqsM/O8CNUEoOt7O4k5MotSuy06d+Hnk
+         zJ30lZqgqqcagFFkPTND0jfmqcW8BJbQzl4ZEyVuS/sxNzHbfaTn2JMoxIeJxVqrrXSH
+         g5GpJIuAvn+7/QnEM5Qq9PIiLJUkkbZAq58wc98p3jz3uBpWsFhe2zbpe5FEj+3+fWyL
+         +H4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756378995; x=1756983795;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HrM9QpUTzn4CSaH2DsTf4uTpIcPswtHld3abJL0GRLs=;
+        b=JsleWzQWY+EdStofbHsaF0Jp47chpdBtrhg7Z5eW88+JFexKsTgOI10N1rbFJQNgkJ
+         rXFu5qVERZM+YI8wFNs5lE5MV5sc9D+OoYvVQCWcOf4sOx05dIb8SQYRG7LsljhGOrAr
+         slAfbu+DdM5DAp2X3qthraB/sV9Bg77uiMIA+bmMTj5GO84rLjcaMknFdtUtGDCtYFnO
+         Z/KlW745XumUDBC7K+fe+bGIzHrSRNr95nwgRrRBwG7EDnj1S8z88iA/Y5N9D5ZEa2dw
+         RuA/xfFYbmH7doDJqDyu9KcRnEKCn/rG4Q2AptMf6lrcsij0gKOj4IRevDQ3yxxP2xXo
+         mGDA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6f7NSeCYVhRSXVf6zSqZzxP45sk4WHk0nn41KI5xRi48NodYIDy0nOtQ0HPAOko9pDIamA392d80=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwCCN2zX/sVIkye2nwEcDjQhW4+vDaKpXbBWkGjsQRSYyj29uVV
+	2XU5tgpVOk3vU0tuCSKEmgxW2qp/2aajekFkAPj6AgPaisDJravXjzQLeLQeXPiIJW54lDQFb9C
+	z8gEBT2hBMPZj7vptNPVMEbdfit19pdI=
+X-Gm-Gg: ASbGncsVV5M+dpRZ2tMQ6ZelXWSw+puXQ2ElPsaZbswPVZ7TaNwxKArJ8Vj0DC1T6po
+	x4qOcg+Tp5eoOTypYGwP5ZRcHWxypH1LG1iWqjyA29f8bKVtYAyDol6KBKytgDg3w6xd6qLHfEs
+	m2/3shTm4aITwWpYelJDS/rDPvE6pyj8eoWcC91FpSVSUON1J+Cd0K0qEhNKxoGj+3Sv7fVSFCJ
+	uHibVRIqVz8OblPehLQUlG/kl7/
+X-Google-Smtp-Source: AGHT+IG3/EGbs6E+rFxF8ODPTUAD0rSIfCc8kzDOdTk6YkRf3D4jJklCPcrVpNUx6a0sWOYzbXwvDbV9Lbo654DxDaY=
+X-Received: by 2002:a05:6808:190b:b0:437:e3d2:cb8c with SMTP id
+ 5614622812f47-437e3d2d28fmr120663b6e.4.1756378995145; Thu, 28 Aug 2025
+ 04:03:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAEyhmHQodsW4WTOezi73-chmutoAxM-2qAdTO6NkYQ7brq2iQA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJDxbMEUMrBonzZuAA--.27570S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtFy5Jw1fJr15uryrCr4Utrc_yoWxtr4fpr
-	yUtF48KF48Xr17JF17tF1UAr15JrsxAFy8GryxJryUtr1UXr1UJFy8JrW5Kry5Ar1UAr1x
-	Arn0ywnxtF1UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxUGYDUUUU
+References: <20250827094733.426839-1-hengqi.chen@gmail.com>
+ <20250827094733.426839-4-hengqi.chen@gmail.com> <CAAhV-H5sBUjPhuPgpsMV-ywiKJX2-C3D1Re60FGiD9b207NddQ@mail.gmail.com>
+In-Reply-To: <CAAhV-H5sBUjPhuPgpsMV-ywiKJX2-C3D1Re60FGiD9b207NddQ@mail.gmail.com>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Thu, 28 Aug 2025 19:03:04 +0800
+X-Gm-Features: Ac12FXzQ_-Qw0m3pMGn3le3oJZOJlQ50pt_UmAwjftgORUwHrsH6RRf62KaKfhY
+Message-ID: <CAEyhmHRo1UvSTf6RRKigBJcA1wWkffF6OojJncxud6Ff=A-WsA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] LoongArch: BPF: No support of struct argument in
+ trampoline programs
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: yangtiezhu@loongson.cn, jianghaoran@kylinos.cn, duanchenghao@kylinos.cn, 
+	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	vincent.mc.li@gmail.com, bpf@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-08-28 17:24, Hengqi Chen wrote:
-
-> On Thu, Aug 28, 2025 at 2:11 PM Jinyang He <hejinyang@loongson.cn> wrote:
->> On 2025-08-27 17:47, Hengqi Chen wrote:
->>
->>> The ns_bpf_qdisc selftest triggers a kernel panic:
->>>
->>>       CPU 0 Unable to handle kernel paging request at virtual address 0000000000741d58, era == 90000000851b5ac0, ra == 90000000851b5aa4
->>>       Oops[#1]:
->>>       CPU: 0 UID: 0 PID: 449 Comm: test_progs Tainted: G           OE       6.16.0+ #3 PREEMPT(full)
->>>       Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
->>>       Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
->>>       pc 90000000851b5ac0 ra 90000000851b5aa4 tp 90000001076b8000 sp 90000001076bb600
->>>       a0 0000000000741ce8 a1 0000000000000001 a2 90000001076bb5c0 a3 0000000000000008
->>>       a4 90000001004c4620 a5 9000000100741ce8 a6 0000000000000000 a7 0100000000000000
->>>       t0 0000000000000010 t1 0000000000000000 t2 9000000104d24d30 t3 0000000000000001
->>>       t4 4f2317da8a7e08c4 t5 fffffefffc002f00 t6 90000001004c4620 t7 ffffffffc61c5b3d
->>>       t8 0000000000000000 u0 0000000000000001 s9 0000000000000050 s0 90000001075bc800
->>>       s1 0000000000000040 s2 900000010597c400 s3 0000000000000008 s4 90000001075bc880
->>>       s5 90000001075bc8f0 s6 0000000000000000 s7 0000000000741ce8 s8 0000000000000000
->>>          ra: 90000000851b5aa4 __qdisc_run+0xac/0x8d8
->>>         ERA: 90000000851b5ac0 __qdisc_run+0xc8/0x8d8
->>>        CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
->>>        PRMD: 00000004 (PPLV0 +PIE -PWE)
->>>        EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
->>>        ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
->>>       ESTAT: 00010000 [PIL] (IS= ECode=1 EsubCode=0)
->>>        BADV: 0000000000741d58
->>>        PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
->>>       Modules linked in: bpf_testmod(OE) [last unloaded: bpf_testmod(OE)]
->>>       Process test_progs (pid: 449, threadinfo=000000009af02b3a, task=00000000e9ba4956)
->>>       Stack : 0000000000000000 90000001075bc8ac 90000000869524a8 9000000100741ce8
->>>               90000001075bc800 9000000100415300 90000001075bc8ac 0000000000000000
->>>               900000010597c400 900000008694a000 0000000000000000 9000000105b59000
->>>               90000001075bc800 9000000100741ce8 0000000000000050 900000008513000c
->>>               9000000086936000 0000000100094d4c fffffff400676208 0000000000000000
->>>               9000000105b59000 900000008694a000 9000000086bf0dc0 9000000105b59000
->>>               9000000086bf0d68 9000000085147010 90000001075be788 0000000000000000
->>>               9000000086bf0f98 0000000000000001 0000000000000010 9000000006015840
->>>               0000000000000000 9000000086be6c40 0000000000000000 0000000000000000
->>>               0000000000000000 4f2317da8a7e08c4 0000000000000101 4f2317da8a7e08c4
->>>               ...
->>>       Call Trace:
->>>       [<90000000851b5ac0>] __qdisc_run+0xc8/0x8d8
->>>       [<9000000085130008>] __dev_queue_xmit+0x578/0x10f0
->>>       [<90000000853701c0>] ip6_finish_output2+0x2f0/0x950
->>>       [<9000000085374bc8>] ip6_finish_output+0x2b8/0x448
->>>       [<9000000085370b24>] ip6_xmit+0x304/0x858
->>>       [<90000000853c4438>] inet6_csk_xmit+0x100/0x170
->>>       [<90000000852b32f0>] __tcp_transmit_skb+0x490/0xdd0
->>>       [<90000000852b47fc>] tcp_connect+0xbcc/0x1168
->>>       [<90000000853b9088>] tcp_v6_connect+0x580/0x8a0
->>>       [<90000000852e7738>] __inet_stream_connect+0x170/0x480
->>>       [<90000000852e7a98>] inet_stream_connect+0x50/0x88
->>>       [<90000000850f2814>] __sys_connect+0xe4/0x110
->>>       [<90000000850f2858>] sys_connect+0x18/0x28
->>>       [<9000000085520c94>] do_syscall+0x94/0x1a0
->>>       [<9000000083df1fb8>] handle_syscall+0xb8/0x158
->>>
->>>       Code: 4001ad80  2400873f  2400832d <240073cc> 001137ff  001133ff  6407b41f  001503cc  0280041d
->>>
->>>       ---[ end trace 0000000000000000 ]---
->>>
->>> The bpf_fifo_dequeue prog returns a skb which is a pointer.
->>> The pointer is treated as a 32bit value and sign extend to
->>> 64bit in epilogue. This behavior is right for most bpf prog
->>> types but wrong for struct ops which requires LoongArch ABI.
->>>
->>> So let's sign extend struct ops return values according to
->>> the return value spec in function model.
->>>
->>> Fixes: 6abf17d690d8 ("LoongArch: BPF: Add struct ops support for trampoline")
->>> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>> Tested-by: Vincent Li <vincent.mc.li@gmail.com>
->>> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
->>> ---
->>>    arch/loongarch/net/bpf_jit.c | 26 ++++++++++++++++++++++++++
->>>    1 file changed, 26 insertions(+)
->>>
->>> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
->>> index b646c6b73014..c239e5ed0c92 100644
->>> --- a/arch/loongarch/net/bpf_jit.c
->>> +++ b/arch/loongarch/net/bpf_jit.c
->>> @@ -1448,6 +1448,28 @@ void arch_free_bpf_trampoline(void *image, unsigned int size)
->>>        bpf_prog_pack_free(image, size);
->>>    }
->>>
->>> +/*
->>> + * Sign-extend the register if necessary
->>> + */
->>> +static void sign_extend(struct jit_ctx *ctx, int r, u8 size)
->>> +{
->>> +     switch (size) {
->>> +     case 1:
->>> +             emit_insn(ctx, extwb, r, r);
->>> +             break;
->>> +     case 2:
->>> +             emit_insn(ctx, extwh, r, r);
->>> +             break;
->>> +     case 4:
->>> +             emit_insn(ctx, addiw, r, r, 0);
->>> +             break;
->>> +     case 8:
->>> +             break;
->>> +     default:
->>> +             pr_warn("bpf_jit: invalid size %d for sign_extend\n", size);
->>> +     }
->>> +}
->>> +
->>>    static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
->>>                                         const struct btf_func_model *m, struct bpf_tramp_links *tlinks,
->>>                                         void *func_addr, u32 flags)
->>> @@ -1654,6 +1676,10 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
->>>        if (save_ret) {
->>>                emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
->>>                emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
->>> +             if (is_struct_ops) {
->>> +                     move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
->>> +                     sign_extend(ctx, LOONGARCH_GPR_A0, m->ret_size);
->>> +             }
->>>        }
->> Hi, Hengqi,
->>
->> It can be did same as Tiezhu's patch, named "LoongArch: BPF: Optimize
->> sign-extention mov instructions", which use only one sign-extend
->> instruction.
->>
->> And btw, how about,
->> if (save_ret) {
->>     if (is_struct_ops) {
->>       ld.{d,w,h,b} LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -(retval_off - 8)
->>       emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP,
->> -(retval_off - 8)); // I don't know is it needed.
->>     } else {
->>       emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
->>       emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP,
->> -(retval_off - 8));
->>     }
-> Hmm, how about:
+On Thu, Aug 28, 2025 at 5:26=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
 >
-> static void sign_extend(struct jit_ctx *ctx, int rd, int rj, u8 size)
+> On Wed, Aug 27, 2025 at 7:19=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.co=
+m> wrote:
+> >
+> > The current implementation does not support struct argument.
+> > This cause a oops when running bpf selftest:
+> >
+> >     $ ./test_progs -a tracing_struct
+> >     CPU -1 Unable to handle kernel paging request at virtual address 00=
+00000000000018, era =3D=3D 90000000845659f4, ra =3D=3D 90000000845659e8
+> >     Oops[#1]:
+> >     CPU -1 Unable to handle kernel paging request at virtual address 00=
+00000000000018, era =3D=3D 9000000085bef268, ra =3D=3D 90000000844f3938
+> >     rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> >     rcu:     1-...0: (19 ticks this GP) idle=3D1094/1/0x400000000000000=
+0 softirq=3D1380/1382 fqs=3D801
+> >     rcu:     (detected by 0, t=3D5252 jiffies, g=3D1197, q=3D52 ncpus=
+=3D4)
+> >     Sending NMI from CPU 0 to CPUs 1:
+> >     rcu: rcu_preempt kthread starved for 2495 jiffies! g1197 f0x0 RCU_G=
+P_DOING_FQS(6) ->state=3D0x0 ->cpu=3D2
+> >     rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM i=
+s now expected behavior.
+> >     rcu: RCU grace-period kthread stack dump:
+> >     task:rcu_preempt     state:I stack:0     pid:15    tgid:15    ppid:=
+2      task_flags:0x208040 flags:0x00000800
+> >     Stack : 9000000100423e80 0000000000000402 0000000000000010 90000001=
+003b0680
+> >             9000000085d88000 0000000000000000 0000000000000040 90000000=
+87159350
+> >             9000000085c2b9b0 0000000000000001 900000008704a000 00000000=
+00000005
+> >             00000000ffff355b 00000000ffff355b 0000000000000000 00000000=
+00000004
+> >             9000000085d90510 0000000000000000 0000000000000002 7b5d998f=
+8281e86e
+> >             00000000ffff355c 7b5d998f8281e86e 000000000000003f 90000000=
+87159350
+> >             900000008715bf98 0000000000000005 9000000087036000 90000000=
+8704a000
+> >             9000000100407c98 90000001003aff80 900000008715c4c0 90000000=
+85c2b9b0
+> >             00000000ffff355b 9000000085c33d3c 00000000000000b4 00000000=
+00000000
+> >             9000000007002150 00000000ffff355b 9000000084615480 00000000=
+07000002
+> >             ...
+> >     Call Trace:
+> >     [<9000000085c2a868>] __schedule+0x410/0x1520
+> >     [<9000000085c2b9ac>] schedule+0x34/0x190
+> >     [<9000000085c33d38>] schedule_timeout+0x98/0x140
+> >     [<90000000845e9120>] rcu_gp_fqs_loop+0x5f8/0x868
+> >     [<90000000845ed538>] rcu_gp_kthread+0x260/0x2e0
+> >     [<900000008454e8a4>] kthread+0x144/0x238
+> >     [<9000000085c26b60>] ret_from_kernel_thread+0x28/0xc8
+> >     [<90000000844f20e4>] ret_from_kernel_thread_asm+0xc/0x88
+> >
+> >     rcu: Stack dump where RCU GP kthread last ran:
+> >     Sending NMI from CPU 0 to CPUs 2:
+> >     NMI backtrace for cpu 2 skipped: idling at idle_exit+0x0/0x4
+> >
+> > Reject it for now.
+> Drop this patch or pick Tiezhu's patches as a single series?
+> https://lore.kernel.org/loongarch/20250821144302.14010-1-yangtiezhu@loong=
+son.cn/T/#t
 >
-> and sign extend regmap[BPF_REG_0] to LOONGARCH_GPR_A0
 
-Up to you. I just give an idea for reduce instruction count.
-It won't change result. For readability, this is better.
+Tiezhu's patch does not work for now unless we fix the module_attach issue.
 
+> Huacai
 >
->> }
->>>        emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-
+> >
+> > Fixes: f9b6b41f0cf3 ("LoongArch: BPF: Add basic bpf trampoline support"=
+)
+> > Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > Tested-by: Vincent Li <vincent.mc.li@gmail.com>
+> > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > ---
+> >  arch/loongarch/net/bpf_jit.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
+c
+> > index c239e5ed0c92..66b102ed9874 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -1514,6 +1514,12 @@ static int __arch_prepare_bpf_trampoline(struct =
+jit_ctx *ctx, struct bpf_tramp_i
+> >         if (m->nr_args > LOONGARCH_MAX_REG_ARGS)
+> >                 return -ENOTSUPP;
+> >
+> > +       /* don't support struct argument */
+> > +       for (i =3D 0; i < m->nr_args; i++) {
+> > +               if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
+> > +                       return -ENOTSUPP;
+> > +       }
+> > +
+> >         if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIF=
+Y))
+> >                 return -ENOTSUPP;
+> >
+> > --
+> > 2.43.5
+> >
+> >
+> >
