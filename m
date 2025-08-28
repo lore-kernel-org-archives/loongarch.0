@@ -1,70 +1,86 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8791D2459E1
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AED2D0626
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 07:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756363593; cv=none; b=twAcfmoZkMACp8DOeomhqmLwYLVozdTD3eWZmashHrnLjI9sRkzLqQrwRuTtGWge/wdSlwKfx6IFJL2KRTHo/uhpbnD9HY+of69Hce4PRX4ZrhbFvtOfPcDHEDCdkYiTeYlhG8xXWdkyfxgljbdWcvUS4KI93YlJVwpAfBDwmPo=
+	t=1756364807; cv=none; b=tBK83eaG/wOjGOHjJ9TdzjjNqKgUqfiYMK9mvRfEV79pxebEb5LijExO6ejsIah2UbDS4nrapi0TnWCWKzXWlxCnmX3FgLnjZISRKPNSnT6lVG4gSvg+nLZrmr1HIKcDcYiAIJ21/MdNHPNHQaAai0S7dYQjLIcGjZrdZ4inU+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756363593; c=relaxed/simple;
-	bh=h4IEnhIGqLhKBC+Mi1ckgiPvNjyKGQmoznre6YVVR2E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kzeCeMJdzvQXtHX49Y6kBxzLsGUPzEfCvXKNbbnlHVldIxGCY5jcP0GgpHL+aA6O1w0S7XMBxqwO2UKN7kkay21qt0evTAGlCBbZBSlfZZOrfzCBUWwHkwosbHj3Mq7J3rVhRLLn6daLrCp3GFPEM4TXyfM7h8pkGaHogKqAGYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=C7YMqF9D; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1756364807; c=relaxed/simple;
+	bh=iXYkDS/xZa2AbKSL4NnkU91Vx0JuRxZnRduo7ytTzwU=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=mvd2brmYYlS1PkOE17IC8/gMBKrT0cSxehAZJnCGYHwbfVW1sYV4A4JN3C84+DY4EEnMdRdejOZoJiqIXvHnsdf8e6XgC3CaWTl7w5MyCyibvCBShojchn/knfGRxrXYyNt0/misw5IO+MI9mN2RSHV4wFFH9rWS9HNaicOie8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=SiEBwDhk; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="C7YMqF9D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1756363585;
-	bh=h4IEnhIGqLhKBC+Mi1ckgiPvNjyKGQmoznre6YVVR2E=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=C7YMqF9DkMoSf7EeME5X5jlNEp3gZrjyGVJWT/JcCH9ZMWeZ9tun7ymGS12gZrSQT
-	 d9lY4jg1lmwmqc2kaMKyWXwVEEUK2mk6FW8b+CypQ6TeCmOV6gNeNtVVz3iWOmWTNw
-	 5RuZbPWeVZyBbcR0rPjhtqfLhUBnHov11V2SjWX0=
-Received: from [IPv6:110::b] (unknown [IPv6:2409:874d:200:3037::3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 48A7666AB8;
-	Thu, 28 Aug 2025 02:46:23 -0400 (EDT)
-Message-ID: <20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site>
-Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS
- no-bultin-memcpy
-From: Xi Ruoyao <xry111@xry111.site>
-To: Wentao Guan <guanwentao@uniontech.com>, chenhuacai@kernel.org
-Cc: kernel@xen0n.name, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, 	zhanjun@uniontech.com
-Date: Thu, 28 Aug 2025 14:46:10 +0800
-In-Reply-To: <20250826113225.406238-1-guanwentao@uniontech.com>
-References: <20250826113225.406238-1-guanwentao@uniontech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="SiEBwDhk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1756364777;
+	bh=iXYkDS/xZa2AbKSL4NnkU91Vx0JuRxZnRduo7ytTzwU=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=SiEBwDhkJbez3zWACv5h6+szVl2/89E900WbfNFKpnRPBHaMYCxgzW1hNtaiKZ9vb
+	 v+FDrdBMaSxESApYQ5cz9YAo+62zZhmFgzW2YZsh4HSezlE5WaI3zAQipg6376blMg
+	 BHiPPb8cdAbwLIIlP36diZR7oh4plMC5fuFtBgPE=
+EX-QQ-RecipientCnt: 6
+X-QQ-GoodBg: 1
+X-QQ-SSF: 0040000000000000
+X-QQ-FEAT: 1LZBGsge1Z42dw8meDLbRnaNYOtDu44q
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: iP39a7Lhf4uQnPcdOfXuMGmaJC52/MKbrO3g+EtIuY2HdMW2zOKSGA+OV8BlDwHdLvf4tjVCcKWa9UJbsvx2+g==
+X-QQ-STYLE: 
+X-QQ-mid: lv3sz3a-6t1756364773tbdd6b7d2
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
+Cc: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?5Y2g5L+K?=" <zhanjun@uniontech.com>
+Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Thu, 28 Aug 2025 15:06:12 +0800
+X-Priority: 3
+Message-ID: <tencent_6579F3317CCF94D00EC3C7DD@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <20250826113225.406238-1-guanwentao@uniontech.com>
+	<20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site>
+In-Reply-To: <20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site>
+X-QQ-ReplyHash: 3242655864
+X-BIZMAIL-ID: 12844274570607954762
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Thu, 28 Aug 2025 15:06:14 +0800 (CST)
+Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MA25rb7c/K0AGj94oJEjB3MJ9uP7MTuq6tOTQDhwBjJCOWqJpxzy+rRl
+	h4pcsEuGVR0iFIFwQnGHwHphVwK3nwmiUA+7fg/x+SCMdPD5nfQZXD2rbtY/tEZV1TwlxXy
+	cwRP13yL59VZfVBnDP94ETctyU8m6Ii4lXyH3z4rXDZuLiuGA1msIDphO1qqv+lHN6k6qNZ
+	K1h/7m1H88qwk6Eu6lplg6kbDtX1Oll3UmtDeVBmXrk8CpzEG8rKzzBZci/elF1oCpJxuyB
+	i3tM29CJCfQccDOTmGflIC+caeuArdhakXQFDtzWAl0cUBDc0MpX9jkJaY8ENRpKVqIWL3V
+	HLa+TRtBBPaXv5eEm219Kh1u29o5dOl9e+sTK/VCcGuajG2XuKuzWONcXPBb38T2b7LCxRU
+	jiZA2RpEdBAvReLvWrXnn4PSZOjv+5ZIIPjA5CmUZZmPK2utpeUHV6faDS5xW3BI/pRgUPX
+	VWH0+8M287JxTqJUtRA4WscjVdDslHc1wSHAPgGzD5RPxgJsHEFz8T7Ig3aVxjg0Ibyfsbs
+	F+1n6map0BPJ2yKWNve8hjMVtrPw7sTdmQXaKin3wnb47Y1QEqXptAGNbgzWiDg/TvTtAkT
+	y121x3Mk3mK0nEGxjKGkQ16X9BAscE4wio5Kk34sFp/uIBU9U1zRzjF7E4dwCo7sK9yZVie
+	7kUBR7WPNV0dG1te10uhqDcq1z8EON5/0CKymvDMeXqA3Agmy0oEO6tvZ1gawClq1ga0Lbc
+	MTzdCxZ+y07Ft9Rk6YToqMyog3MLBALXykI6QqTzXmXlw6RMxhZk+utPDYzN56qpj6MyF28
+	P6LhdiCblmQFW34FSTZSnVCXM8CZiHlGnAYB4mZeErCUA+CqE+aTIi+4fChYpCooDfschQD
+	X/bMuk6F2Url8BGrJStpXRxFyV3CQtrWnt75t6imlQduL0pmmhEwJ78lInK8IZtIatlbIYJ
+	p+DZzRBc1WKDfibmYKF2zwnx8sy1EyripAAtCOchnfUP3D1vuTQebsi6IaLADRApvdVxqte
+	8ZxY7+LRpPFCqZSpovbG18pEVwOU4A8ia9d4K4XXT7uQlMeOptHSymeUgRGjfChMaGs4kqi
+	cxzktIVr2F9
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-On Tue, 2025-08-26 at 19:32 +0800, Wentao Guan wrote:
-> Loongarch use -fno-builtin-memcpy in Makefile,
+SGVsbG8gUnVveWFvLA0KDQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3Lg0KSSB3aWxsIHRlc3Qg
+YW5kIHNlbmQgdGVzdCByZXN1bHRzIGxhdGVyLg0KKHVzZSBkaWZmZXJlbnQgZ2NjIHZlcmlv
+bnMgYW5kIHJlbW92ZSB0aGUgdGhyZWUgZmxhZ3MuKQ0KDQpCUnMNCldlbnRhbyBHdWFu
 
-I still think we should just remove -fno-builtin-memcpy if GCC >=3D 14.=20
-There's some wide-spread misunderstanding like "-fno-builtin-memcpy can
-stop the compiler from using memcpy for copying small structs" but the
-fact is very much contrary to it.
-
-The compiler just uses memcpy for copying the structs of which the size
-is larger than a threshold, no matter -fbuiltin-memcpy or not, but with
--fbuiltin-memcpy the compiler can expand some of them into ld/st
-sequences, reducing the actual numbers of memcpy calls.
-
-The reason we didn't use -fbuiltin-memcpy is GCC < 14 expands memcpy for
-various sizes in a very stupid way, see https://gcc.gnu.org/PR109465.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
