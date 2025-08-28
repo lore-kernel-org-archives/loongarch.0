@@ -1,195 +1,141 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B04E322DB3
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 17:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E416634;
+	Thu, 28 Aug 2025 23:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756401561; cv=none; b=imuqbxcZCsKylrWw+tYYWKpzEyawhRUlNjoHBDGu/X5Rqg1yEMRVur/E9VubK6L9g/Lsyoi1IvBPSERH6gy1INZbbVofysXglJBGgIzGpFSrSROznYTyHJnM4qxGr8Jf0u7SrWwOO45KFO4brTGPrsXixQVb6/kh01jXjJEwYCM=
+	t=1756425394; cv=none; b=nYUdm8BP+4m9vOMx1CHCYk0fu+gdbHb8dGYOiTMDAiYrgIWNvH15XYFwb15eOb71fspXQw40JrwqB3QXyACrDUB2M2KO1YbVjRISEVPxXZCj+DEiM56N5Ci8iMQH4WiSFZSES2JRKvlVH0j7ZV9ywIWVwPpcAypBLcAcjKkPWK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756401561; c=relaxed/simple;
-	bh=h36ynH6Bd80Xap/ak7gTKh9a8SrMnwXa7sS2b1g2BQU=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=pxYBXm5fLNtBIZHhsF8fOcfWmtm58iroO807OHvkwEbMTTaTQFq8ZxHEMz4R+A9HMaO3QOOcDOwe+AWQ5PiS8nEZVnH7FcnT9uKfgHcsRj7QW+xpA+jrhh5ZuSnwVNgsADrFlvM5iSQ0sFsaMHmCFbWaN5kJkIyTli4CJ+03dlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=AGe0W0FG; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1756425394; c=relaxed/simple;
+	bh=jqOpLgavgnkRBITOWBnwEBLwXK1rh8ql4OGzOkGqwIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fccigkxiXMu26HzCCHk/C74nKVTeDf/XmNOon8iFQGuq1pjFt+LSKhvd0XF2/vxvFQk0ok2dh/anJrpg6pHhl5rR0kPuFn3+SfGqCM8mK9Ld+BpcwE160SJj3SdvDs8SqacvjymOel8I/Coy3T++u2hVv6gNsF+6OFKuW64ngF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FCmBOZww; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="AGe0W0FG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1756401542;
-	bh=h36ynH6Bd80Xap/ak7gTKh9a8SrMnwXa7sS2b1g2BQU=;
-	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=AGe0W0FGKbrW2XjVnoUG2zko0GiOfSGHRs0p0QUVMAmGyCf4s1Az7VG+NsFJdQ5Ye
-	 d5SEBt1/8t+WcC5vZl7+76TcJJxWkIKP2FaF6hUlDnWy8wpdXM2+fnKRUS9WRdiL+X
-	 MPe8wQvnHkt7htb0VNjamaW2ZMO50nt0WdTE4gH0=
-EX-QQ-RecipientCnt: 7
-X-QQ-GoodBg: 1
-X-QQ-SSF: 00400000000000F0
-X-QQ-FEAT: D4aqtcRDiqST8P4pfj07qGG6ZowgZlQrBrKFg+dHp6U=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: Cny2uphP+8mRH85lxn1RaGRUKi7RIoSHLZSnyjwiLI8=
-X-QQ-STYLE: 
-X-QQ-mid: lv3sz3a-6t1756401536tfcac6e36
-From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?5YWz5paH5rab?=" <guanwentao@uniontech.com>, "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
-Cc: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?5Y2g5L+K?=" <zhanjun@uniontech.com>
-Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FCmBOZww"
+Received: from [100.65.128.219] (unknown [20.236.11.69])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6157F2110814;
+	Thu, 28 Aug 2025 16:56:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6157F2110814
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1756425392;
+	bh=pCexqDkoW83y7LpImpFx62Xw3cNxneYeXhAEgKffuKE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FCmBOZwwR8w+zLgYvdYsQndKdjVa/Zic9g+xriRNGxIyvlCW/6jpNTSZnJfm6AeYV
+	 w2ojPM1lFjNBJBy+LYvZF2V3PzDSbQwMQWAu7ekzKLIlFXUd3JJs7xNFRWV7yBhSjO
+	 k2ChjjpZ1AKeJCgw2XX5B7Ss1Fvkq4e5nLRu23ks=
+Message-ID: <0b4eb0cc-657f-4cdb-8255-e3b8f6b14077@linux.microsoft.com>
+Date: Thu, 28 Aug 2025 16:56:20 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Fri, 29 Aug 2025 01:18:55 +0800
-X-Priority: 3
-Message-ID: <tencent_62C4A0442C3453142C0FA002@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <20250826113225.406238-1-guanwentao@uniontech.com>
-	<20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site>
-	<tencent_6579F3317CCF94D00EC3C7DD@qq.com>
-In-Reply-To: <tencent_6579F3317CCF94D00EC3C7DD@qq.com>
-X-QQ-ReplyHash: 101352067
-X-BIZMAIL-ID: 13946493721893942874
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Fri, 29 Aug 2025 01:18:57 +0800 (CST)
-Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MgQY1K25Ph0mWji9+SI8Lfix3zhgzxcHRpHnfzkUzUSE+RQnxVjeNNCz
-	4HKULFKQri4phUg0rzL/06b93IP42KcZ0gYc2f9bb8hwI3G9jMSdnzxwKJJfpIpYrOdZuFF
-	9Y+PLXGZwWL6kYV4aRPItNhDRtFFWOAwMFVH8+OmjarrgNif3gTzl2uZFdrzoQ9RY5+QFlP
-	om94pp+FwqCQtqaLogymx1R4yfPsJbooU/Ta/K11xOgkhjJB3dD2ShUAZF+IhpslmhretXI
-	aIC/zGe/sANrPLyxzBrTFKSRHfyT3xoaeZcveSENEJcXLCcyv6mBDt9skBXB9bKRaM0Qi6S
-	/b639XtHvDytZmwETGhFPmpD2ri0MJ6Q/CJC+6nDaX+/y8qDn4dVIF0ZR+8TYHp6idgE+Vi
-	BAYeoVMj9r+OqI3pO6Btc2sFOt599hnfj0Cr2NryUp6FWo4xr+0xYhofu9CWTpE5/lsCkbS
-	tEgpAgNhM0x6krdStJxSJwaaPn1crnS0lgyxthQp5B9wCB+4ayVn11wFY+S5fdPY6L57fKT
-	581D3FxWl44u4yQkIGRYX0zFMxD10GFl42aZBxF5yAi8m3XcysKAlkgcMjCN7QZFzBgqlw2
-	lFuJc4dEuwfL+5pP3FJliW2TRdZ2YYEIPL9wi8wWzpwGfx7XQ1Yq4fhXZGgqhwNNPLIgzAA
-	Tj6oO0rZdq1zmH+Iz/QPm8KzzLO86TKGNxqAo7/kSm3n/Dpl5nQJMVJKN8OgQCJMH4GpEih
-	S2yr82QTwaJjfoF4Peij0Ck2MxqGJR+IARI2uhzJmGAHgw6TIFRWV60h7igsZO0/rKuViEI
-	LirBddRy5TGZG3befZ37gc1U9fbUB4Prbw2vm1ZdkuWHsuekzGBDobl43eEwXMQJlwDJUiS
-	JzfAPl/PkE0O9wD0vqk86DoGrWJX23TdQf7Q35tJ9qTJi33O0ECDnCZu7Fhhep459vqFeSJ
-	s9EKKj0jei55c+KTSZPoFKZhSTPUuQQ/KOS+KV6IJt0VrFBeaU/iS+gwYzHVEJLfJERiYKN
-	mH2JB7jvQk2KFdrGwLYHeXwaRpuTKFN0CbnNzlDbko8OK9JoQ6
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/7] Drivers: hv: Handle NEED_RESCHED_LAZY before
+ transferring to guest
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andy Lutomirski <luto@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
+ <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, rcu@vger.kernel.org,
+ Mukesh R <mrathor@linux.microsoft.com>
+References: <20250828000156.23389-1-seanjc@google.com>
+ <20250828000156.23389-2-seanjc@google.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250828000156.23389-2-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SGVsbG8gUnVveWFvLA0KDQpUaGUgcXVpY2sgdGVzdCByZXN1bHRzIGFyZSB2ZXJ5IGludGVy
-ZXN0aW5nLi4uOg0KVW5peEJlbmNoIHN5c2NhbGwgb24gM0E2MDAwIHBsYXRmb3JtOg0KLi9S
-dW4gc3lzY2FsbCAtaSAxMCAtYyA4DQprZXJuZWwgc291cmNlOiB2Ni4xNg0Ka2VybmVsIGNv
-bmZpZzoNCmh0dHBzOi8vZ2l0aHViLmNvbS9kZWVwaW4tY29tbXVuaXR5L2tlcm5lbC9ibG9i
-L2xpbnV4LTYuMTIueS9hcmNoL2xvb25nYXJjaC9jb25maWdzL2RlZXBpbl9sb29uZ2FyY2hf
-ZGVza3RvcF9kZWZjb25maWcNClVzZSB0aGlzIEdDQyAxNVsxXToNCg0KcmVzdWx0OiANCjEu
-IHdpdGggbm8gcGF0Y2g6DQpTeXN0ZW0gQ2FsbCBPdmVyaGVhZCAgICAgICAgICAgICAgICAg
-ICAgICAgICAgMTUwMDAuMCAgICA4ODkzMDExLjggICA1OTI4LjcNCjIuIHdpdGggcGF0Y2gg
-WzJdIHRvIGRpc2FibGUgLWZuby1idWlsdGluLW1lbWNweSAtZm5vLWJ1aWx0aW4tbWVtbW92
-ZSAtZm5vLWJ1aWx0aW4tbWVtc2V0Og0KU3lzdGVtIENhbGwgT3ZlcmhlYWQgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDE1MDAwLjAgICAgODUxMDQxNS4yICAgNTY3My42DQpsb3dlciB0
-aGFuIHBhdGNoPz8/DQozLiB3aXRoIG15IG9yaWdpbiBwYXRjaCBbM10oKzQuOSUpOiANClN5
-c3RlbSBDYWxsIE92ZXJoZWFkICAgICAgICAgICAgICAgICAgICAgICAgICAxNTAwMC4wICAg
-IDkzMzYwMjIuMSAgIDYyMjQuMA0KDQpCUnMNCldlbnRhbyBHdWFuDQoNClsxXTogaHR0cHM6
-Ly9taXJyb3JzLmVkZ2Uua2VybmVsLm9yZy9wdWIvdG9vbHMvY3Jvc3N0b29sL2ZpbGVzL2Jp
-bi94ODZfNjQvMTUuMi4wDQpbMl06DQpkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gvS2Nv
-bmZpZyBiL2FyY2gvbG9vbmdhcmNoL0tjb25maWcNCmluZGV4IDRiMTlmOTMzNy4uNTNiYmNm
-MzFjIDEwMDY0NA0KLS0tIGEvYXJjaC9sb29uZ2FyY2gvS2NvbmZpZw0KKysrIGIvYXJjaC9s
-b29uZ2FyY2gvS2NvbmZpZw0KQEAgLTc0Niw2ICs3NDYsOSBAQCBjb25maWcgQVJDSF9TVVNQ
-RU5EX1BPU1NJQkxFDQogY29uZmlnIEFSQ0hfSElCRVJOQVRJT05fUE9TU0lCTEUNCiAgICAg
-ICAgZGVmX2Jvb2wgeQ0KIA0KK2NvbmZpZyBBUkNIX01FTU9SWV9MSUJDQUxMX0RJU0FCTEUN
-CisgICAgICAgZGVmX2Jvb2wgS0FTQU4gfHwgR0NDX1ZFUlNJT04gPj0gMTQwMDAwDQorDQog
-c291cmNlICJrZXJuZWwvcG93ZXIvS2NvbmZpZyINCiBzb3VyY2UgImRyaXZlcnMvYWNwaS9L
-Y29uZmlnIg0KIHNvdXJjZSAiZHJpdmVycy9jcHVmcmVxL0tjb25maWciDQpkaWZmIC0tZ2l0
-IGEvYXJjaC9sb29uZ2FyY2gvTWFrZWZpbGUgYi9hcmNoL2xvb25nYXJjaC9NYWtlZmlsZQ0K
-aW5kZXggYjA3MDNhNGUwLi5mYmE4MzdiMjIgMTAwNjQ0DQotLS0gYS9hcmNoL2xvb25nYXJj
-aC9NYWtlZmlsZQ0KKysrIGIvYXJjaC9sb29uZ2FyY2gvTWFrZWZpbGUNCkBAIC0xMjAsNyAr
-MTIwLDcgQEAgZW5kaWYNCiANCiBjZmxhZ3MteSArPSAkKGNhbGwgY2Mtb3B0aW9uLCAtbW5v
-LWNoZWNrLXplcm8tZGl2aXNpb24pDQogDQotaWZuZGVmIENPTkZJR19LQVNBTg0KK2lmZXEg
-KCQoQ09ORklHX0FSQ0hfTUVNT1JZX0xJQkNBTExfRElTQUJMRSksKQ0KIGNmbGFncy15ICs9
-IC1mbm8tYnVpbHRpbi1tZW1jcHkgLWZuby1idWlsdGluLW1lbW1vdmUgLWZuby1idWlsdGlu
-LW1lbXNldA0KIGVuZGlmDQpbM106DQpkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gvaW5j
-bHVkZS9hc20vc3lzY2FsbC5oIGIvYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20vc3lzY2Fs
-bC5oDQppbmRleCA4MWQyNzMzZjcuLjE3MWFmMmVkZCAxMDA2NDQNCi0tLSBhL2FyY2gvbG9v
-bmdhcmNoL2luY2x1ZGUvYXNtL3N5c2NhbGwuaA0KKysrIGIvYXJjaC9sb29uZ2FyY2gvaW5j
-bHVkZS9hc20vc3lzY2FsbC5oDQpAQCAtNjUsNyArNjUsMTEgQEAgc3RhdGljIGlubGluZSB2
-b2lkIHN5c2NhbGxfZ2V0X2FyZ3VtZW50cyhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2ssDQog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcg
-KmFyZ3MpDQogew0KICAgICAgICBhcmdzWzBdID0gcmVncy0+b3JpZ19hMDsNCi0gICAgICAg
-bWVtY3B5KCZhcmdzWzFdLCAmcmVncy0+cmVnc1s1XSwgNSAqIHNpemVvZihsb25nKSk7DQor
-ICAgICAgIGFyZ3NbMV0gPSByZWdzLT5yZWdzWzVdOw0KKyAgICAgICBhcmdzWzJdID0gcmVn
-cy0+cmVnc1s2XTsNCisgICAgICAgYXJnc1szXSA9IHJlZ3MtPnJlZ3NbN107DQorICAgICAg
-IGFyZ3NbNF0gPSByZWdzLT5yZWdzWzhdOw0KKyAgICAgICBhcmdzWzVdID0gcmVncy0+cmVn
-c1s5XTsNCiB9DQogDQogc3RhdGljIGlubGluZSB2b2lkIHN5c2NhbGxfc2V0X2FyZ3VtZW50
-cyhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2ssDQoNCls0XTogcGVyZiBkaWZmDQojIEV2ZW50
-ICdjeWNsZXM6UCcNCiMNCiMgQmFzZWxpbmUgIERlbHRhIEFicyAgU2hhcmVkIE9iamVjdCAg
-ICAgICAgICAgICAgICAgICAgICAgU3ltYm9sICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICA+DQojIC4uLi4uLi4uICAuLi4uLi4uLi4gIC4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uPg0KIw0KICAgIDEyLjcyJSAgICAgLTcuMDcl
-ICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICBba10gc3lzY2FsbF90cmFj
-ZV9lbnRlcg0KICAgICAwLjAwJSAgICAgKzIuOTQlICBba2VybmVsLmthbGxzeW1zXSAgICAg
-ICAgICAgICAgICAgICBba10gX19tZW1jcHlfZmFzdA0KICAgIDMzLjY5JSAgICAgKzEuNDEl
-ICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICBba10gZG9fc3lzY2FsbA0K
-ICAgICAyLjY0JSAgICAgKzAuMzIlICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAg
-ICAgICBba10gX19hdWRpdF9zeXNjYWxsX2VudHJ5DQogICAgIDQuOTIlICAgICArMC4zMiUg
-IGxpYmMuc28uNiAgICAgICAgICAgICAgICAgICAgICAgICAgIFsuXSBfX0dJX19fdW1hc2sN
-CiAgICAgMy41NCUgICAgICswLjMwJSAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAg
-ICAgICAgW2tdIGFsbG9jX2ZkDQogICAgIDQuMzYlICAgICArMC4yNCUgIGxpYmMuc28uNiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIFsuXSBfX0dJX19fZ2V0dWlkDQogICAgIDQuNjMl
-ICAgICArMC4yNCUgIGxpYmMuc28uNiAgICAgICAgICAgICAgICAgICAgICAgICAgIFsuXSBz
-eXNjYWxsDQogICAgIDQuNTAlICAgICArMC4yMiUgIGxpYmMuc28uNiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIFsuXSBfX0dJX19fZHVwDQogICAgIDQuODQlICAgICArMC4yMiUgIFtr
-ZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBzeXNjYWxsX2V4aXRfd29y
-aw0KICAgICA0LjgxJSAgICAgKzAuMjIlICBsaWJjLnNvLjYgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBbLl0gX19jbG9zZQ0KICAgICAgICAgICAgICAgKzAuMjAlICBba2VybmVsLmth
-bGxzeW1zXSAgICAgICAgICAgICAgICAgICBba10gX19tZW1jcHkNCiAgICAgMS40OCUgICAg
-ICswLjE1JSAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgW2tdIGF1ZGl0
-X3Jlc2V0X2NvbnRleHQNCiAgICAgMC42OSUgICAgICswLjEzJSAgW2tlcm5lbC5rYWxsc3lt
-c10gICAgICAgICAgICAgICAgICAgW2tdIF9fc2Vfc3lzX2Nsb3NlDQogICAgIDIuMTMlICAg
-ICArMC4xMCUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBmaWxl
-X2Nsb3NlX2ZkX2xvY2tlZA0KICAgICAwLjg2JSAgICAgKzAuMDglICBba2VybmVsLmthbGxz
-eW1zXSAgICAgICAgICAgICAgICAgICBba10gbWFwX2lkX3JhbmdlX3VwDQogICAgIDAuNzEl
-ICAgICArMC4wNiUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBf
-X3Rhc2tfcGlkX25yX25zDQogICAgIDAuNDElICAgICArMC4wNCUgIFtrZXJuZWwua2FsbHN5
-bXNdICAgICAgICAgICAgICAgICAgIFtrXSBmZF9pbnN0YWxsDQogICAgIDAuNTYlICAgICAr
-MC4wNCUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBfX3JjdV9y
-ZWFkX3VubG9jaw0KICAgICAwLjU3JSAgICAgKzAuMDQlICBba2VybmVsLmthbGxzeW1zXSAg
-ICAgICAgICAgICAgICAgICBba10gZnB1dF9jbG9zZV9zeW5jDQogICAgIDAuMDclICAgICAt
-MC4wNCUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBpZGxlX2V4
-aXQNCiAgICAgMS4zNyUgICAgICswLjA0JSAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAg
-ICAgICAgICAgW2tdIF9yYXdfc3Bpbl9sb2NrDQogICAgIDAuNjklICAgICArMC4wMyUgIFtr
-ZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBmaWxwX2ZsdXNoDQogICAg
-IDAuNzYlICAgICArMC4wMyUgIHN5c2NhbGwgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IFsuXSBtYWluDQogICAgIDAuNTIlICAgICArMC4wMyUgIFtrZXJuZWwua2FsbHN5bXNdICAg
-ICAgICAgICAgICAgICAgIFtrXSBmcm9tX2t1aWRfbXVuZ2VkDQogICAgIDAuNDUlICAgICAr
-MC4wMyUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBfcmF3X3Nw
-aW5fdW5sb2NrDQogICAgIDAuMDclICAgICAtMC4wMyUgIFtrZXJuZWwua2FsbHN5bXNdICAg
-ICAgICAgICAgICAgICAgIFtrXSBmaW5pc2hfdGFza19zd2l0Y2guaXNyYS4wDQogICAgIDEu
-NzIlICAgICArMC4wMyUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtr
-XSBrdGltZV9nZXRfY29hcnNlX3JlYWxfdHM2NA0KICAgICAwLjY3JSAgICAgKzAuMDMlICBb
-a2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICBba10gX19yY3VfcmVhZF9sb2Nr
-DQogICAgIDAuMDMlICAgICAtMC4wMyUgIGRlZXBpbi1kZWVwaW5pZC1kYWVtb24gICAgICAg
-ICAgICAgIFsuXSAweDAwMDAwMDAwMDAwMDMwMTgNCiAgICAgMS4yOCUgICAgIC0wLjAyJSAg
-W2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgW2tdIF9fYXVkaXRfc3lzY2Fs
-bF9leGl0DQogICAgIDAuMTIlICAgICArMC4wMiUgIHN5c2NhbGwgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIFsuXSBnZXR1aWRAcGx0DQogICAgIDAuMDIlICAgICAtMC4wMiUgIGRk
-ZS1zZXNzaW9uLWRhZW1vbiAgICAgICAgICAgICAgICAgIFsuXSAweDAwMDAwMDAwMDAyOTlk
-MTANCiAgICAgMC4wMiUgICAgIC0wLjAyJSAgbGQtbGludXgtbG9vbmdhcmNoLWxwNjRkLnNv
-LjEgICAgICAgWy5dIGRvX2xvb2t1cF94DQogICAgIDAuMDMlICAgICAtMC4wMSUgIFtrZXJu
-ZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgIFtrXSBfcmF3X3NwaW5fdW5sb2NrX2ly
-cXJlc3RvcmUNCiAgICAgMC4wMSUgICAgIC0wLjAxJSAgbGQtbGludXgtbG9vbmdhcmNoLWxw
-NjRkLnNvLjEgICAgICAgWy5dIF9kbF9sb29rdXBfc3ltYm9sX3gNCiAgICAgMC4zMCUgICAg
-ICswLjAxJSAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgW2tdIHN5c19n
-ZXRwaWQNCiAgICAgMC4xNCUgICAgIC0wLjAxJSAgc3lzY2FsbCAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgWy5dIHVtYXNrQHBsdA0KICAgICAwLjAxJSAgICAgLTAuMDElICBsaWJk
-YnVzLTEuc28uMy4zMi40ICAgICAgICAgICAgICAgICBbLl0gMHgwMDAwMDAwMDAwMDE1YWMw
-DQogICAgIDAuMDIlICAgICAtMC4wMSUgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAg
-ICAgICAgIFtrXSBjbGVhcl9wYWdlDQogICAgIDAuMDElICAgICAtMC4wMSUgIGRlZXBpbi1z
-eW5jLWhlbHBlciAgICAgICAgICAgICAgICAgIFsuXSAweDAwMDAwMDAwMDAwMDNhODQNCiAg
-ICAgMC4xNCUgICAgICswLjAxJSAgc3lzY2FsbCAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgWy5dIGNsb3NlQHBsdA==
+On 8/27/2025 5:01 PM, Sean Christopherson wrote:
+> Check for NEED_RESCHED_LAZY, not just NEED_RESCHED, prior to transferring
+> control to a guest.  Failure to check for lazy resched can unnecessarily
+> delay rescheduling until the next tick when using a lazy preemption model.
+> 
+> Note, ideally both the checking and processing of TIF bits would be handled
+> in common code, to avoid having to keep three separate paths synchronized,
+> but defer such cleanups to the future to keep the fix as standalone as
+> possible.
+> 
+> Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> Cc: Mukesh R <mrathor@linux.microsoft.com>
+> Fixes: 621191d709b1 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
+> Fixes: 64503b4f4468 ("Drivers: hv: Introduce mshv_vtl driver")
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  drivers/hv/mshv_common.c    | 2 +-
+>  drivers/hv/mshv_root_main.c | 3 ++-
+>  drivers/hv/mshv_vtl_main.c  | 3 ++-
+>  3 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
+> index 6f227a8a5af7..eb3df3e296bb 100644
+> --- a/drivers/hv/mshv_common.c
+> +++ b/drivers/hv/mshv_common.c
+> @@ -151,7 +151,7 @@ int mshv_do_pre_guest_mode_work(ulong th_flags)
+>  	if (th_flags & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
+>  		return -EINTR;
+>  
+> -	if (th_flags & _TIF_NEED_RESCHED)
+> +	if (th_flags & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
+>  		schedule();
+>  
+>  	if (th_flags & _TIF_NOTIFY_RESUME)
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index 932932cb91ea..0d849f09160a 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -484,7 +484,8 @@ mshv_vp_wait_for_hv_kick(struct mshv_vp *vp)
+>  static int mshv_pre_guest_mode_work(struct mshv_vp *vp)
+>  {
+>  	const ulong work_flags = _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING |
+> -				 _TIF_NEED_RESCHED  | _TIF_NOTIFY_RESUME;
+> +				 _TIF_NEED_RESCHED  | _TIF_NEED_RESCHED_LAZY |
+> +				 _TIF_NOTIFY_RESUME;
+>  	ulong th_flags;
+>  
+>  	th_flags = read_thread_flags();
+> diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
+> index dc6594ae03ad..12f5e77b7095 100644
+> --- a/drivers/hv/mshv_vtl_main.c
+> +++ b/drivers/hv/mshv_vtl_main.c
+> @@ -728,7 +728,8 @@ static int mshv_vtl_ioctl_return_to_lower_vtl(void)
+>  	preempt_disable();
+>  	for (;;) {
+>  		const unsigned long VTL0_WORK = _TIF_SIGPENDING | _TIF_NEED_RESCHED |
+> -						_TIF_NOTIFY_RESUME | _TIF_NOTIFY_SIGNAL;
+> +						_TIF_NOTIFY_RESUME | _TIF_NOTIFY_SIGNAL |
+> +						_TIF_NEED_RESCHED_LAZY;
+>  		unsigned long ti_work;
+>  		u32 cancel;
+>  		unsigned long irq_flags;
 
+Tested by compiling with CONFIG_PREEMPT_LAZY=y and booting a guest. For
+the test I added a check to confirm _TIF_NEED_RESCHED_LAZY was set and
+honored.
+
+Looks good, thanks.
+
+Tested-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
