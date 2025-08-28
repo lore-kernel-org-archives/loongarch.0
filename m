@@ -1,38 +1,39 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81AE27B344
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0C627A448
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756363453; cv=none; b=uTumCuzJuuhAk78gkiEiupcSk6+WFpFz74CEh5nePNk4FktyESwIKL2421BKAAl8l3NrvaLdaVmrFgUYVLl5gb6acZc0ztMYgRay4NDoZnIE8iwelio8wnwmIntBG684jFNxHn7kxLaiiaQoLe3b14A3ddtnIizRD97xm9Iet6Q=
+	t=1756363492; cv=none; b=U/20Qw00VMmM5xvoTBvr7vcKyF3CsyHAU7xliRoWQlDBK588V14Xqe2x0pns/kJ5L1Ha5C/k77GHUD329mElx8CtjY7gw6Pa80CcFqfff38eGBbu8lNWooMDtcSNc4VPpUk5wasjJKsPoHlDD+7K76xMcwu0oVBVNZXMd6h0mr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756363453; c=relaxed/simple;
-	bh=yq+wFxTVL2RzNrDhMgTRNWbOLvZn/ja6zdG986j2M0o=;
+	s=arc-20240116; t=1756363492; c=relaxed/simple;
+	bh=RwxnirQWhb3v7GeuZRE6t7kyeqE446HPGv8NzCkDJXw=;
 	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=Lc7Im/KJZoUrqXL3p32Fa5CYp88PmmU0Q3mOVk8cy9BHuawhCu/P1Ddlnn1v3S9WGefzAn9IfxN/fAxtQzXU3nuK+kr3Ypz6oi4XmqaO3szp1d6s/5yWt/GBYGspcWZtpIFE6Xpn+L3OHQ4swbQmoCN6DHZGB14lYhvgR/iQBw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=mTB0tG91; arc=none smtp.client-ip=18.169.211.239
+	 References:In-Reply-To; b=i6FvLwdj3GM5JUwa6zdk0UaHxWVwaW6osVY4ijANlOITku76rN9mPOEEmxqTqC/u9s976fj7JBTUHbniBfIqTA6qq5xuXBXRyT+TtGmJhv6aSykrWq/+QvBq/YUvQqOXS+uoyn6RXrKGs4Un6c2FDI+9wQdavmxRf9k+3v061Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=IxWiS6NV; arc=none smtp.client-ip=54.204.34.129
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="mTB0tG91"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="IxWiS6NV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1756363421;
-	bh=yq+wFxTVL2RzNrDhMgTRNWbOLvZn/ja6zdG986j2M0o=;
+	s=onoh2408; t=1756363470;
+	bh=RwxnirQWhb3v7GeuZRE6t7kyeqE446HPGv8NzCkDJXw=;
 	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=mTB0tG91oi9x6KssE9MJNelVl8qL7ewICkIoWd+/EEbnG1uXMm7WU4tqqkSVuz+mV
-	 aA4os/b/a7ZlJLSCq6jbVL5r4ER6uIDI/2DwOQ4E92Ip6Ym2icFq/uEcVFaPNkU93f
-	 EWCopLaqvXmJ5tIbfEFbh6be/kngqcoWYNJRNlpg=
+	b=IxWiS6NVKlz0bCIzzj+Yz7XxwUBidLbLyHUT8DXdydranpCjlTzC5DEAHN+ot9yiw
+	 GvV/fnC5rFMUjTx9tb0XUdciLUQDDx5N70IlOY+MtTkcPTKxpZZCBCdSkGtsUIUscu
+	 q0iRXEa0HcEOGWA0S/M9cihmF2nmvuQkYo6yxnis=
 EX-QQ-RecipientCnt: 7
 X-QQ-GoodBg: 1
-X-QQ-SSF: 00410000000000F0
-X-QQ-FEAT: DTni/y8B87/aZgC8Xs1Z47pSOeTS/TBOLVi5xJ6UuD4=
+X-QQ-SSF: 00400000000000F0
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-FEAT: D4aqtcRDiqST8P4pfj07qGG6ZowgZlQrBrKFg+dHp6U=
 X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: DBZElzaigNA6Te8v8pMdV02wWLWlM/95ZhXvOU1s/LA=
+X-QQ-Originating-IP: Kw7K0yF6b6Hx3NLKvB8+5aMahLGjEHXYdm8zYbH2IOm2TtkGq2+2QZByz9TVy1D8uoOKO6TKN4z31/+UbMYxGQ==
 X-QQ-STYLE: 
-X-QQ-mid: lv3sz3a-6t1756363417t4ae72586
+X-QQ-mid: lv3sz3a-6t1756363466t769ca8d8
 From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?SHVhY2FpIENoZW4=?=" <chenhuacai@kernel.org>, "=?utf-8?B?WWFudGVuZyBTaQ==?=" <si.yanteng@linux.dev>
+To: "=?utf-8?B?WWFudGVuZyBTaQ==?=" <si.yanteng@linux.dev>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
 Cc: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?5Y2g5L+K?=" <zhanjun@uniontech.com>
 Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
 Precedence: bulk
@@ -44,42 +45,43 @@ Mime-Version: 1.0
 Content-Type: text/plain;
 	charset="utf-8"
 Content-Transfer-Encoding: base64
-Date: Thu, 28 Aug 2025 14:43:36 +0800
+Date: Thu, 28 Aug 2025 14:44:26 +0800
 X-Priority: 3
-Message-ID: <tencent_1B5F03836C31C9BB345806A2@qq.com>
+Message-ID: <tencent_0FAF7256085045837A460C9A@qq.com>
 X-QQ-MIME: TCMime 1.0 by Tencent
 X-Mailer: QQMail 2.x
 X-QQ-Mailer: QQMail 2.x
 References: <20250826113225.406238-1-guanwentao@uniontech.com>
 	<a0e11216-71b0-447f-beab-351d024810fb@linux.dev>
-	<CAAhV-H7zKLNpx7jM=JBT7unqQ=G4Ztv4RgEhrFsjP+P4LjPYjA@mail.gmail.com>
-In-Reply-To: <CAAhV-H7zKLNpx7jM=JBT7unqQ=G4Ztv4RgEhrFsjP+P4LjPYjA@mail.gmail.com>
-X-QQ-ReplyHash: 3799560694
-X-BIZMAIL-ID: 12075257076705248846
+In-Reply-To: <a0e11216-71b0-447f-beab-351d024810fb@linux.dev>
+X-QQ-ReplyHash: 2877765852
+X-BIZMAIL-ID: 2562391891426195890
 X-QQ-SENDSIZE: 520
 Received: from qq.com (unknown [127.0.0.1])
 	by smtp.qq.com (ESMTP) with SMTP
-	id ; Thu, 28 Aug 2025 14:43:38 +0800 (CST)
+	id ; Thu, 28 Aug 2025 14:44:27 +0800 (CST)
 Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NAtipnnbTPea9vulzRXGw+KxxkO2e9FUsEUC7iZkrOcU/iUgF1SuBCRJ
-	kWKQ10yMfnR+4ZPpCxXUcGvQePUMPrE82+SzNHE2+9tlT/waWh+X4zKivuaZ2MAWPoVSPgT
-	/PH+4434VMD+dk8v1zkSIXS6UMK0hM4IR5VKCB2+kFmzHjJYcje5WiJbxogN0XLVD3n+ydk
-	crXtUAMbEIj4UHXn6K5dRl7CV46Xy4RUgqNApTPM2KGu3zvglyArj4fjPRm5dgT+/hW5Xu8
-	hmEsOSco3Vr+IYxfdRBsie7BJwB8dDG+v9mXkyDHGxpg7RHeSmdblEZXg0X7A8cqS6Mwf9h
-	0jyaa7zJTIO71+b8WIxPSlQkT8rQ9IWkOs5k6dx7ntdZqrUdO8Uz4tvHhP2ZQdnyU/a44ku
-	mug9UrA+23uSgdsUuWce80m6pWODxRJWciqFuIKPwEUWc7p4Z6QxMUbjYgV6cmCIxUVRxEY
-	lcV+I7uop8zsFGCtgwy1mv7m7YKwY++GFmCBj5Ig59L0nAyqq+yOmBUMI9LHlDLAnP0oxHs
-	qSzNgo0fPy4C8jJ2Cb5mgRufjh2p9KRXqZ0vhekbsmGOtWnDWGnF0GXPV72qIf56wJuIl90
-	TfQJsxq3k5lBF22Q0rrgyyBV1rQ5YSs3ndJ9A6VUanOtBZhq/gJOYWVI95ofCofEm2JDMIL
-	BjChD3iKqtOrptZOSJLusv+DyR9xhJrOS1m1JOmj8DrfGYZ2w1xeB/EVaZOHC6PPq4oR/rA
-	qd1Zbr/yQkCTLMmerctwH7LM7U2Z0gW3G4c+ow81DdvqmusyHD6kG/ZXLWJhxOQU0fSzTQU
-	7rc2suN9eYogquvq507hM9BkZLcg0lj7pDPBX1KQ844tCNNRoeSNVaMDyXKaYYArMSuBIFv
-	dAPLwiTT315GgUor45F99Baws4lvEZIkL4sH/VOVrpC9at9UOF9rOZPdxULW9gfoRVrwzQn
-	QpYl+r5/5Vo0TjtJQuvACNbbJ2Ik5etGc31ljvHPD7vZkPgNFjzfCKTRTbVz6lzCw9VeVHz
-	IQ+ozp3HVpNXT4GCqA+1a+m9gsRs+pflO1vOOLLSNgvwt77F/upPvCH6zVc98=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-XMAILINFO: NFb3Nvufrnbao/B3v6uZuN+ddbXhqwwj/gqUtgMyFr1kMuEwIAqvSNm2
+	hmoCbXUfaC4uptZJ7CtQ10YSQ0vu8pzryk51jHyEIDePTptYYDr0Gj6Jp8zgpow0HR35x2Z
+	wQi97RUAaZwTeNzmas7ZpSEePu0UJzfOcZkclI5EgzXdkmQb60d9ZrJbx/HlhfXJyAtT6mw
+	yaPH8/yEmlf1TW7K4UqP+9E9BJdv/EHdX8LtdohRal9rEpuMUt2eOhmzESFOQDLs1IPyOCI
+	hGkbdb9utHnfDflXJRzb8EtzddXRb7Ck1FROlrxJtsJfawRz6yf/GejnkLmEdwMh5cOzAD7
+	BDd/9l7zMBLPIveSLEQs81a0ktr8Z7W8cok5TCK0cCMgSAu46q64++zYfxX3GoZXp2u3dFw
+	4jffWEsaM73c17VtdY6QT6E7j/o7mH856gJ6SoVCacxUwY3xtAK4ol7bH6g7agLVilz4w2w
+	qUmRBdprxaqNDOG8Ckcm1URQ6dVPQ8vfM8LVroliDe0xCqZVDyKte7c/piKqMJ27TThrdJz
+	aaAkQvzxcjSUxJ8aVmVvS/Yn1IZVo0I+W/OgXkbhEVQRO0WzqfmbAiB1koJlFWn5KhF23F/
+	uQIX8raHqX6Z5D59L5oIoZ3ThAA4sH111pi8qm6dvZS3lQx0qVVXNgp+C0uBjbZEL0/8134
+	fKUDf68LC3DVdyVHf/MXv1VXAIyDeRTbmAuJkGJN/9sfRKmyqoTgkF0HcLba2BYWA4jrtFz
+	DAjr8VzANjCdoqkdzXm13jlbwtRpvyJeqmpVgllICIYt6Q05dwPMPcPOSrIFeCcdqYRa0NN
+	bZLJOlHThweiF7EVWN03E/zy33Uv7nR2Rcdz1ROx7d3uZRf3UR4EKb1cY0RpdCIGy/1eDs/
+	clW3qDLz0LncQjblgcj0xTfFW0S0jM2r+6DFMYx/kmLP+F+befFaRIY5SXdxgURv5Q+WDUv
+	amBDM+Y1JbxXpHQ5c0qZU8QS7B2mZAco5f4BkARx1VzG+tJooQ3S48OY1D3w7lGIdV/+0Qy
+	2lQKK/0Ho9T1d/B0O14e9Fy1WnRtw5a1dPoK9lITSAOEnZPmjhuAi9PGE9Zy8oYnlc9uYQs
+	0hsgdZf1HZDMXBnHMPzeDQ=
 X-QQ-RECHKSPAM: 0
 
-RGVhciBIdWFjYWksDQoNCkVtbW0sIGxldCBjaGFuZ2UgdGhlIHRpdGxlIGZpeCB0byBvcHRp
-bWl6ZS4uLg0KDQpCUnMNCldlbnRhbyBHdWFu
+SGVsbG8sDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcsDQpJIHRlc3QgdGhlIHBhdGNoIGlu
+IG91ciB2Ni42IGtlcm5lbCwNCmluIDNhNjAwMCBwbGF0Zm9ybSBVbml4QmVuY2ggcmVzdWx0
+cw0Kc3lzY2FsbCAxIHRocmVhZCBmcm9tIDk2NiB0byA5OTYNCjggdGhyZWFkcyBmcm9tIDYx
+NzMgdG8gNjUwMS4NCg0KQmVzdCBSZWdhcmRzDQpXZW50YW8gR3Vhbg==
 
