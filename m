@@ -1,203 +1,107 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AF684A02
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177B61EEA5D
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756361510; cv=none; b=rtJsaK/Rkf72Fe6LlmQGD8DJy55AirQnkOx6LdN7EkDlSNo+U8kWj0uSLRSnk29WE7kEY4WLDXT4WC7jd5zO/WRZrs+XDy4dqzySTUhrvUPR1hc/7ngWtzYAJpmXCiKcVC6h6N1YpsmK3UnMHkFOSfCNphPgi3m1FmU9WYvHMjM=
+	t=1756362274; cv=none; b=EqTsHbX/Y0xmg4FCX2LnRtD6zpcRTajrLVflmtMJaH30LOYJ4asW7wARj62Lge8w/3EpL5ITxYAMMP8s0qxkcx2xMBoLY3bNnoUwz8tZC7vg+71PaPTnZNu0+qE5q7cymcK7rjW7+Y19Rkc7WYJaPNttdJ1UzbrHmACf4X0151I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756361510; c=relaxed/simple;
-	bh=lwvGpZd9Wc1hAoG7izHSzPzyLxxwH5ozhKZsFkl9ws0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JbDA4r1CccS9EI5gr7d/PAza4QgcHjblpqvPgqcOBPDi9xmxnqMxUaPcHqU+i0UnWlqb567Z4q7G6rnV3hwRTXPitwBDoyQYfaZH7GVGrrn2hYU9VVmV9IK3ZQnZZaKy5UBE9xYErvFHEZ8U3yYxQ172RXPsVNsD2d4R8EUB3Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8BxndIe869otg4EAA--.7827S3;
-	Thu, 28 Aug 2025 14:11:42 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by front1 (Coremail) with SMTP id qMiowJAxfcEb869oqs1tAA--.25995S3;
-	Thu, 28 Aug 2025 14:11:41 +0800 (CST)
-Subject: Re: [PATCH v2 2/3] LoongArch: BPF: Sign extend struct ops return
- values properly
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: chenhuacai@kernel.org, yangtiezhu@loongson.cn, jianghaoran@kylinos.cn,
- duanchenghao@kylinos.cn, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, martin.lau@linux.dev, vincent.mc.li@gmail.com,
- bpf@vger.kernel.org, loongarch@lists.linux.dev
-References: <20250827094733.426839-1-hengqi.chen@gmail.com>
- <20250827094733.426839-3-hengqi.chen@gmail.com>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <9cf3a423-6d7d-91ae-d9af-3587fad9b70b@loongson.cn>
-Date: Thu, 28 Aug 2025 14:11:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1756362274; c=relaxed/simple;
+	bh=PbTNAw6VsC0gq8pGRpCcIHQPHceTnxcZLFVsT//1nFI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=empSlSbIrOt1w+KvKyKNlh08ho6O0P8gJm5hrsk4k47K3o5CcOEB/e3FGWdel4ZBQ5S+2b7oJ5criPOLk7VHVMQ0M7K8CIb3QKTe1kMLR2YG06fLg4zcdU4wfZm0qZa8CcksggxFGugehL07OtCaQ6GHPGvIiHiFTyzKQ+Fw7O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZc6LY2j; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZc6LY2j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9817C4CEFA
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 06:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756362273;
+	bh=PbTNAw6VsC0gq8pGRpCcIHQPHceTnxcZLFVsT//1nFI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rZc6LY2juK9W7cD2kQl3hihP6CnbDnyCc0WR4B5fUUvr+uC8LbFBHpX+kqjPHuqp9
+	 WB3/ygN5MIx7nI7xv3iuQkvHIZpTsqy3KmNVXP3MRBJwnotK1L4EHxDRwLQ+5JXoob
+	 D3QqgUEYMHfMQiLEw4Ex6atdwKh1UKlBzM5aDVsbXYd5zp1oSUR8A36dQEqOkiix0f
+	 bC1kRqvPjnjna9ZDsosDgPAARkCyAKhJvf95Wx4DLh9+IU4P/clSmdtvQ8rX1yldTO
+	 2xSNJCCQSV/P+iZu/FbpCzXzcSVz5XFpQoYl4Div1HU2h7jhqGwoyhhifdJntvwTyq
+	 T/Jc6ctFJ01Sw==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-afcb7ae6ed0so74007566b.3
+        for <loongarch@lists.linux.dev>; Wed, 27 Aug 2025 23:24:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWgw63I4cLTWPUdjhD/ye4oyzvJITerUjp5pK+pecpVShElMaGOC8exoO6FQBZY55sv2i2WxSLvFts=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwstXwVGIO8j+MSclqnXN/A8OBPjUAtkV3dGa6RSTnC/SuIaH/V
+	W4DaA1YFwlu7J4NgSi4VIkVXFBsrJzEgjVeVv0wLh3azM/rj60vjUU37eYB2ypDQIPxB/ZANvAD
+	cZyvoH+UaYc3jEORevNyTXWeUAwILRCQ=
+X-Google-Smtp-Source: AGHT+IEYCrvShTe9yG42YxJ8urVHPGRw2tZPfQGhKCQTKV1ONMGFl0EOB38RtG7/af97vG3MmBuw4w7xe34Me5jPunA=
+X-Received: by 2002:a17:907:d10:b0:af9:618f:83e with SMTP id
+ a640c23a62f3a-afe2904321bmr2009811166b.37.1756362272254; Wed, 27 Aug 2025
+ 23:24:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250827094733.426839-3-hengqi.chen@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJAxfcEb869oqs1tAA--.25995S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtFy8Cr4UGr15Ww4fAw1fGrX_yoWxXF48pr
-	yjyr48GF48Jr17JF1xAF1UCr15Jrs3AFyUGryxJrWUXr1UXr1UJFy8JrW5GFy5Ar4UJr1x
-	Jrn0yw15tF1UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
+References: <20250826113225.406238-1-guanwentao@uniontech.com> <a0e11216-71b0-447f-beab-351d024810fb@linux.dev>
+In-Reply-To: <a0e11216-71b0-447f-beab-351d024810fb@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 28 Aug 2025 14:24:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7zKLNpx7jM=JBT7unqQ=G4Ztv4RgEhrFsjP+P4LjPYjA@mail.gmail.com>
+X-Gm-Features: Ac12FXx7udJpFMqE5gAtyKL_lpNyiSqtIp5wVrATKJWMX8-LbkV-HdT1q3hy8EI
+Message-ID: <CAAhV-H7zKLNpx7jM=JBT7unqQ=G4Ztv4RgEhrFsjP+P4LjPYjA@mail.gmail.com>
+Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
+To: Yanteng Si <si.yanteng@linux.dev>
+Cc: Wentao Guan <guanwentao@uniontech.com>, kernel@xen0n.name, xry111@xry111.site, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	zhanjun@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-08-27 17:47, Hengqi Chen wrote:
+On Thu, Aug 28, 2025 at 1:47=E2=80=AFPM Yanteng Si <si.yanteng@linux.dev> w=
+rote:
+>
+> =E5=9C=A8 8/26/25 7:32 PM, Wentao Guan =E5=86=99=E9=81=93:
+> > Loongarch use -fno-builtin-memcpy in Makefile,
+> > so cause a extra memcpy in syscall hot path:
+> >
+> > syscall_enter_audit
+> > ->syscall_get_arguments->memcpy(__memcpy_fast)
+> > ->audit_syscall_entry
+> >
+> > Just avoid memcpy() altogether and write the copying of args from regs
+> > manually, which shows 5% multi core score up in UnixBench syscall.
+> 5%? Awesome!
+> >
+> > Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+> Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cn>
+But why this is a "fix"? It is an optimization.
 
-> The ns_bpf_qdisc selftest triggers a kernel panic:
->
->      CPU 0 Unable to handle kernel paging request at virtual address 0000000000741d58, era == 90000000851b5ac0, ra == 90000000851b5aa4
->      Oops[#1]:
->      CPU: 0 UID: 0 PID: 449 Comm: test_progs Tainted: G           OE       6.16.0+ #3 PREEMPT(full)
->      Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
->      Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
->      pc 90000000851b5ac0 ra 90000000851b5aa4 tp 90000001076b8000 sp 90000001076bb600
->      a0 0000000000741ce8 a1 0000000000000001 a2 90000001076bb5c0 a3 0000000000000008
->      a4 90000001004c4620 a5 9000000100741ce8 a6 0000000000000000 a7 0100000000000000
->      t0 0000000000000010 t1 0000000000000000 t2 9000000104d24d30 t3 0000000000000001
->      t4 4f2317da8a7e08c4 t5 fffffefffc002f00 t6 90000001004c4620 t7 ffffffffc61c5b3d
->      t8 0000000000000000 u0 0000000000000001 s9 0000000000000050 s0 90000001075bc800
->      s1 0000000000000040 s2 900000010597c400 s3 0000000000000008 s4 90000001075bc880
->      s5 90000001075bc8f0 s6 0000000000000000 s7 0000000000741ce8 s8 0000000000000000
->         ra: 90000000851b5aa4 __qdisc_run+0xac/0x8d8
->        ERA: 90000000851b5ac0 __qdisc_run+0xc8/0x8d8
->       CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
->       PRMD: 00000004 (PPLV0 +PIE -PWE)
->       EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
->       ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
->      ESTAT: 00010000 [PIL] (IS= ECode=1 EsubCode=0)
->       BADV: 0000000000741d58
->       PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
->      Modules linked in: bpf_testmod(OE) [last unloaded: bpf_testmod(OE)]
->      Process test_progs (pid: 449, threadinfo=000000009af02b3a, task=00000000e9ba4956)
->      Stack : 0000000000000000 90000001075bc8ac 90000000869524a8 9000000100741ce8
->              90000001075bc800 9000000100415300 90000001075bc8ac 0000000000000000
->              900000010597c400 900000008694a000 0000000000000000 9000000105b59000
->              90000001075bc800 9000000100741ce8 0000000000000050 900000008513000c
->              9000000086936000 0000000100094d4c fffffff400676208 0000000000000000
->              9000000105b59000 900000008694a000 9000000086bf0dc0 9000000105b59000
->              9000000086bf0d68 9000000085147010 90000001075be788 0000000000000000
->              9000000086bf0f98 0000000000000001 0000000000000010 9000000006015840
->              0000000000000000 9000000086be6c40 0000000000000000 0000000000000000
->              0000000000000000 4f2317da8a7e08c4 0000000000000101 4f2317da8a7e08c4
->              ...
->      Call Trace:
->      [<90000000851b5ac0>] __qdisc_run+0xc8/0x8d8
->      [<9000000085130008>] __dev_queue_xmit+0x578/0x10f0
->      [<90000000853701c0>] ip6_finish_output2+0x2f0/0x950
->      [<9000000085374bc8>] ip6_finish_output+0x2b8/0x448
->      [<9000000085370b24>] ip6_xmit+0x304/0x858
->      [<90000000853c4438>] inet6_csk_xmit+0x100/0x170
->      [<90000000852b32f0>] __tcp_transmit_skb+0x490/0xdd0
->      [<90000000852b47fc>] tcp_connect+0xbcc/0x1168
->      [<90000000853b9088>] tcp_v6_connect+0x580/0x8a0
->      [<90000000852e7738>] __inet_stream_connect+0x170/0x480
->      [<90000000852e7a98>] inet_stream_connect+0x50/0x88
->      [<90000000850f2814>] __sys_connect+0xe4/0x110
->      [<90000000850f2858>] sys_connect+0x18/0x28
->      [<9000000085520c94>] do_syscall+0x94/0x1a0
->      [<9000000083df1fb8>] handle_syscall+0xb8/0x158
->
->      Code: 4001ad80  2400873f  2400832d <240073cc> 001137ff  001133ff  6407b41f  001503cc  0280041d
->
->      ---[ end trace 0000000000000000 ]---
->
-> The bpf_fifo_dequeue prog returns a skb which is a pointer.
-> The pointer is treated as a 32bit value and sign extend to
-> 64bit in epilogue. This behavior is right for most bpf prog
-> types but wrong for struct ops which requires LoongArch ABI.
->
-> So let's sign extend struct ops return values according to
-> the return value spec in function model.
->
-> Fixes: 6abf17d690d8 ("LoongArch: BPF: Add struct ops support for trampoline")
-> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Tested-by: Vincent Li <vincent.mc.li@gmail.com>
-> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> ---
->   arch/loongarch/net/bpf_jit.c | 26 ++++++++++++++++++++++++++
->   1 file changed, 26 insertions(+)
->
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index b646c6b73014..c239e5ed0c92 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1448,6 +1448,28 @@ void arch_free_bpf_trampoline(void *image, unsigned int size)
->   	bpf_prog_pack_free(image, size);
->   }
->   
-> +/*
-> + * Sign-extend the register if necessary
-> + */
-> +static void sign_extend(struct jit_ctx *ctx, int r, u8 size)
-> +{
-> +	switch (size) {
-> +	case 1:
-> +		emit_insn(ctx, extwb, r, r);
-> +		break;
-> +	case 2:
-> +		emit_insn(ctx, extwh, r, r);
-> +		break;
-> +	case 4:
-> +		emit_insn(ctx, addiw, r, r, 0);
-> +		break;
-> +	case 8:
-> +		break;
-> +	default:
-> +		pr_warn("bpf_jit: invalid size %d for sign_extend\n", size);
-> +	}
-> +}
-> +
->   static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
->   					 const struct btf_func_model *m, struct bpf_tramp_links *tlinks,
->   					 void *func_addr, u32 flags)
-> @@ -1654,6 +1676,10 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
->   	if (save_ret) {
->   		emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
->   		emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-> +		if (is_struct_ops) {
-> +			move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
-> +			sign_extend(ctx, LOONGARCH_GPR_A0, m->ret_size);
-> +		}
->   	}
-Hi, Hengqi,
+Huacai
 
-It can be did same as Tiezhu's patch, named "LoongArch: BPF: Optimize
-sign-extention mov instructions", which use only one sign-extend 
-instruction.
-
-And btw, how about,
-if (save_ret) {
-   if (is_struct_ops) {
-     ld.{d,w,h,b} LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -(retval_off - 8)
-     emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, 
--(retval_off - 8)); // I don't know is it needed.
-   } else {
-     emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-     emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, 
--(retval_off - 8));
-   }
-}
->   
->   	emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-
+>
+> Thanks,
+> Yanteng
+> > ---
+> >   arch/loongarch/include/asm/syscall.h | 6 +++++-
+> >   1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/incl=
+ude/asm/syscall.h
+> > index 81d2733f7b94..171af2edd569 100644
+> > --- a/arch/loongarch/include/asm/syscall.h
+> > +++ b/arch/loongarch/include/asm/syscall.h
+> > @@ -65,7 +65,11 @@ static inline void syscall_get_arguments(struct task=
+_struct *task,
+> >                                        unsigned long *args)
+> >   {
+> >       args[0] =3D regs->orig_a0;
+> > -     memcpy(&args[1], &regs->regs[5], 5 * sizeof(long));
+> > +     args[1] =3D regs->regs[5];
+> > +     args[2] =3D regs->regs[6];
+> > +     args[3] =3D regs->regs[7];
+> > +     args[4] =3D regs->regs[8];
+> > +     args[5] =3D regs->regs[9];
+> >   }
+> >
+> >   static inline void syscall_set_arguments(struct task_struct *task,
+>
