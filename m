@@ -1,75 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B555D2C2368
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 07:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A242827B35F
+	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 07:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756364976; cv=none; b=WCKMPGsvccd+xciPqgsaYsJP+USOY9lSdBhfjgtYO3Vf7sRqsoUlaUEAR2fTZynTc9ImSj7agrkG9h1CCbpw2fVkhLUo8R/yAeryZIn/Vt3ZI05gKSsbKGFfi55I2N8MJOOV5+61KDY0+jA9N4tuoDCugYPrdDukgM1OWdvjycc=
+	t=1756365131; cv=none; b=Qsyb60/KiSGhyLVfgF8IEaWU5cLQ7cTVdQSaIVunxKOOlkeXEcAZJzS9QDQMrbOj+JuCbAvi6hskBdkkJkzQigiD5xD9ZHix9T810ARmR3jVXh967ZfkmCpoYukmFK4hk2XqutzTMOaKtabh7JHG+G4ANQXyJi3zJXy5DvuWMLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756364976; c=relaxed/simple;
-	bh=CRTcNqNyMT97ewqeVrG1k8KzvI3+QazP8GobQvTtyyk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=emcgmbz013dXL7c/sZoLVaq0pzOot0LwlF0sYZimO+TAgimfQwCfQwPxOe16mngHd8p/hAipcqhQfbO8r8ShpKm3ON/0pdNuePaJdr+wrjarjFkRaEx4m8OohCKDmDmlL+kKoSC/wt6lb04JyqgmePQW+ClraXt6tRYSuM6mBfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SkVi2KD7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756365131; c=relaxed/simple;
+	bh=X0ReWVy/9bRIZByWU1a4LxZFCHhsB6SDNoJO/V5qW6k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kf429+1MwWO6rxMMlA+gdCcqQOUcbHxHU74ZL0uUE6BKTpiJlq2YVCDj8GYcAg/c4XQJXuuRMmB66dQDPaqNyMR0LaWtZWYxlEgqUs3zngu+EA7yFFBo52Vts0TlkAa7t2Ow/1uKPzNvas+Yvm8Zb7FrrEah3fxfp68G05zDSDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=jwaBlKKZ; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SkVi2KD7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6732EC4CEF4
-	for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 07:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756364976;
-	bh=CRTcNqNyMT97ewqeVrG1k8KzvI3+QazP8GobQvTtyyk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SkVi2KD7jMQ3zyDRiTmnoePBAFmboUKKC2ROYnEPhJq0wC5YV+3ih5saZwUyj46Kn
-	 4MQLi5mdr3lZ0tDNCeWITma2hCjGg0D3jx77pktq6dsXlH/LbUUlvMm/hABZmtlHkW
-	 LZZhc7uTw+47S4MICG5CpBM29tP/z1rw76yQrPf4ii8qRjheugIixyJuQB/pWPdHdC
-	 noGxsoqNFHecocwerP1qRJua20hBbAT9Yabzl47BqD974xRMd9kfHmN4oujrSFglm8
-	 AjwllRS/FCvwHE7aoeKirVYhZFNmQNsxMbe9pFHkTaTkz09Tq0VikJIfyN29aOqwuu
-	 JVpTCyyhcDUhA==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-afcb732eee6so96465066b.0
-        for <loongarch@lists.linux.dev>; Thu, 28 Aug 2025 00:09:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVTwa11922U0o3tV0B8jlCVztYa1t6pQWtc+HfQGxBAaYQT/qYZW8Qll8KM7WEpKRnOqZzX+2wIiSE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwByic1YjjefFuWQWhHo7howtp7fWVgdlGnTp5HP5PFp2Ssn7tw
-	+f2+SbSYW2UNu/hm5GH5pGMoasWTRFYL/lE9OXQgzHbSeMucF1USsqFoZ+OutTdMJYvZo/QI8Qt
-	c1Fx3gCsIR0vtA8ynrsTK90bK6wb8ETI=
-X-Google-Smtp-Source: AGHT+IEdj4uyB2ezk9HhUf79b9OJBHcgtGmr8Mnd99Hiov12Hmlp+SKv3xAlPf7+EC+8aF+ULSBXtIr0Vo2k5/jXtk0=
-X-Received: by 2002:a17:907:1c93:b0:af9:d80f:645d with SMTP id
- a640c23a62f3a-afe29793340mr2068986466b.57.1756364974923; Thu, 28 Aug 2025
- 00:09:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="jwaBlKKZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1756365129;
+	bh=2OR7QGlfaXKbbhmoHE/dYhnXZMft1PS1VCZ/6tJ9vr4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=jwaBlKKZLxoFHt6YjYTV8msCnlnHUwAQLWnsUkXzw+O4RGp9XX5uTAF66EBq0wzly
+	 GPFyPzmMgUer0f+nmrSg9x1MYCakNIfjTQSoRW7l3jSIZ3/RrNhXWTGPTGQ6utascD
+	 fTmQXtKzjV4pryCHNRcIfUUO4UPJbogNLBrzrFZg=
+Received: from [IPv6:110::b] (unknown [IPv6:2409:874d:200:3037::3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 13BD466EFB;
+	Thu, 28 Aug 2025 03:12:06 -0400 (EDT)
+Message-ID: <601863349f71b54087bc7ffa382955ad6bbf5511.camel@xry111.site>
+Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS
+ no-bultin-memcpy
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, Wentao Guan
+ <guanwentao@uniontech.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, linux-kernel
+ <linux-kernel@vger.kernel.org>,  loongarch <loongarch@lists.linux.dev>,
+ =?gb2312?Q?=D5=BC=BF=A1?= <zhanjun@uniontech.com>
+Date: Thu, 28 Aug 2025 15:11:57 +0800
+In-Reply-To: <CAAhV-H68Tzewu3x+8=Psb-8Hqg58o4v-8QyvFew+Wuo=Ne-iAA@mail.gmail.com>
+References: <20250826113225.406238-1-guanwentao@uniontech.com>
+	 <20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site>
+	 <tencent_6579F3317CCF94D00EC3C7DD@qq.com>
+	 <CAAhV-H68Tzewu3x+8=Psb-8Hqg58o4v-8QyvFew+Wuo=Ne-iAA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250826113225.406238-1-guanwentao@uniontech.com>
- <20d3df642aaff2a771e74452b81463709f7c16d1.camel@xry111.site> <tencent_6579F3317CCF94D00EC3C7DD@qq.com>
-In-Reply-To: <tencent_6579F3317CCF94D00EC3C7DD@qq.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 28 Aug 2025 15:09:23 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H68Tzewu3x+8=Psb-8Hqg58o4v-8QyvFew+Wuo=Ne-iAA@mail.gmail.com>
-X-Gm-Features: Ac12FXwfMgWNNgv10BfeNOpoGdtGBB9VwNXLisbu4V2-a35ae4seuy97OFb64IQ
-Message-ID: <CAAhV-H68Tzewu3x+8=Psb-8Hqg58o4v-8QyvFew+Wuo=Ne-iAA@mail.gmail.com>
-Subject: Re: [PATCH] Loongarch: entry: fix syscall_get_arguments() VS no-bultin-memcpy
-To: Wentao Guan <guanwentao@uniontech.com>
-Cc: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, loongarch <loongarch@lists.linux.dev>, 
-	=?UTF-8?B?5Y2g5L+K?= <zhanjun@uniontech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 28, 2025 at 3:06=E2=80=AFPM Wentao Guan <guanwentao@uniontech.c=
-om> wrote:
->
-> Hello Ruoyao,
->
-> Thanks for your review.
-> I will test and send test results later.
-> (use different gcc verions and remove the three flags.)
-I think kernel's memcpy is still needed for CPUs without UAL.
+On Thu, 2025-08-28 at 15:09 +0800, Huacai Chen wrote:
+> On Thu, Aug 28, 2025 at 3:06=E2=80=AFPM Wentao Guan <guanwentao@uniontech=
+.com>
+> wrote:
+> >=20
+> > Hello Ruoyao,
+> >=20
+> > Thanks for your review.
+> > I will test and send test results later.
+> > (use different gcc verions and remove the three flags.)
+> I think kernel's memcpy is still needed for CPUs without UAL.
 
-Huacai
+GCC memcpy expansion correctly understands no-UAL case.  It won't
+generate unaligned access unless -mno-strict-align.
 
->
-> BRs
-> Wentao Guan
+--=20
+Xi Ruoyao <xry111@xry111.site>
