@@ -1,159 +1,121 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6BE930CD9D;
-	Fri, 29 Aug 2025 00:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AD929B228
+	for <loongarch@lists.linux.dev>; Fri, 29 Aug 2025 10:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756425813; cv=none; b=bCYvuBcyFknNzRr2/5Yer8kPD2Ru5425Uj/+PLhwbcxPz6SDbjjc8I2Pk1FM4otTW0ak2cfOG1rJ1ZQfZ4p9UP7JnWD8N5NyQ55Lx2od1WQk3j2uya5BSjGwlFc2CSoaWhAzH7iwsQZhywpRJNPBUgPUWDJdCQM2vkr/W4kxCrw=
+	t=1756462158; cv=none; b=WeaaCoup1IdA40Hf67UXmjvwtddPrsF65vnCuMTOjFA2IKFfQ+Fx1ibbkhrxLQ+Q3NUjs0AR0RjHiXkOBC6pGM9dmmBjPBsh8YCcHekJEEdtYty1FFnNrUNazVmVQ5xxg5ZWpdOzYz3pRMiI0Cf6fqGNegxt9sNRzZPtwzNz4uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756425813; c=relaxed/simple;
-	bh=h9ECKGOoE8l6lXBXfI/nqr/yvcdfmjjurJiByFbfZ+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UTF3QMdnfvbcIp+Mqfh0NjeqSODVTOrMchwzwij07h7GgnKE2H8tTjRvFNqFVVQrbKypNLNIos6lkZBx1/wZGbunnMQXAjM5hrn+YbhfelcD0viaoXhzOxC79soAND7PFRJUhvY0WwjrVetScXjLnCGj34DvHkY2Mie0JakYdcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=b/Cp3YVn; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1756462158; c=relaxed/simple;
+	bh=4QpS6sW814ov2VbrGGMcXn9/44aV6nOmTEk2x4dtQ9A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ub1WKUgG5KYXZoKiVA3yt/fPyNEI+/HxiNZUFVM0/h51b8NbBZdy/0zgjI7x6zSUYG6ftB4GI5MBh9sOLcB8cmZMsHCHN7O2pWIafY+4JyTjvBAqJGKDfw0Ys+5EH4nqmCKz01EIajCWpJvsgl1DxeDDxw4LepYYFR9ACedTXcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7lb7irz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b/Cp3YVn"
-Received: from [100.65.128.219] (unknown [20.236.11.69])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 29236211080D;
-	Thu, 28 Aug 2025 17:03:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 29236211080D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1756425810;
-	bh=NHYELJgOgtoYXMJjyiZ6Y/1BY77k4JUs4dbKzcllNgc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b/Cp3YVnPly7ZmtMQDa2AEMRoQa4CxzO0/V6ejotdr50lR5itAta36gVWEjEJkADW
-	 rU7s8pjJhzWn/fR2q78z1pzSDm8R5EbcWLUxToRvAEbLWCrmz4XX39aTX/yCwcbIg0
-	 s7ITLAqpkbVOXbI9g+AL0NaazVp0H0AaluYJk0kI=
-Message-ID: <c1a5ab1d-1601-46db-83da-b26422a2aabd@linux.microsoft.com>
-Date: Thu, 28 Aug 2025 17:03:28 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7lb7irz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD861C4CEF6
+	for <loongarch@lists.linux.dev>; Fri, 29 Aug 2025 10:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756462157;
+	bh=4QpS6sW814ov2VbrGGMcXn9/44aV6nOmTEk2x4dtQ9A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=p7lb7irzUQj1UXV3WvaUOWMSPaIux24blJMNGD3V/kmN49aPyVGqIqQreXbXQjJZR
+	 QV5tUWa/xdwOTZTL/cRFwKio/QlbBJ1sgrQ8hrQb8mvcXJWB9RID85WITEJSOT6UPT
+	 fLnp+Bv0Bkjmr3eb/KDHKLs871PkxMn/mqThZyzBIkt+08lMPzFVpAqyyGDqQiTwNe
+	 Be18ArlYN+XNHK+eHuqk1W1Hr55J7+8f5qsidgpB1YEbl4uPPMQmoTDXTE/rUGVnb+
+	 Zn2mthDIsoi+p/07ZUlYlqOr8ECVcJVzcIb9RsryNG88tKokuYhFwH+yt0d38CPDdS
+	 hJxtGGwRcu5lQ==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-afede1b3d05so334486166b.2
+        for <loongarch@lists.linux.dev>; Fri, 29 Aug 2025 03:09:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW55T6wLxI9AxGGRcvVQWaozJIg0t2w9LzMXPKClNBg1ZZQAwLPfDMJ9LMlaIE6acbW/x4HAz8HmEQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxN/bLxzqZgsL2pdQcmqNNt+DHppVQbZVf8Mm8vb2JpHM6N26uM
+	OkKVFLBKXiDbXTlVbj9/MujcdbRy2+AvlL5csQNtHwV5x4p96mqfuYQJbBoJfDzcn2SeyF61vjf
+	qS0XI1m/s7OI5VKf17Z9yNc2P9UgUf5k=
+X-Google-Smtp-Source: AGHT+IHuZ2WwOouG49QLK1d9QUo7J8C1hjI3CMBSYA+Xwt69N4cideZr4b/M61Yq5C2Zk3pkiXp5bke/Q/F24EYuugI=
+X-Received: by 2002:a17:906:40c5:b0:aff:a3e:fcb1 with SMTP id
+ a640c23a62f3a-aff0a3efddamr139484866b.54.1756462156441; Fri, 29 Aug 2025
+ 03:09:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] Drivers: hv: Use common "entry virt" APIs to do
- work in root before running guest
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>,
- Andy Lutomirski <luto@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Frederic Weisbecker <frederic@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
- <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-hyperv@vger.kernel.org, rcu@vger.kernel.org,
- Mukesh R <mrathor@linux.microsoft.com>
-References: <20250828000156.23389-1-seanjc@google.com>
- <20250828000156.23389-7-seanjc@google.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250828000156.23389-7-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250826033514.972480-1-maobibo@loongson.cn>
+In-Reply-To: <20250826033514.972480-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 29 Aug 2025 18:09:03 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4GeBYBNLq6w6W5aj+kUWQacJmNnkwB5uL_jVQNKMtCTw@mail.gmail.com>
+X-Gm-Features: Ac12FXyjkUzRlsg2RqdCQYHPHzTDAr74NmNHrwXO9jEPPvyTYvZFuAGWixqPKHk
+Message-ID: <CAAhV-H4GeBYBNLq6w6W5aj+kUWQacJmNnkwB5uL_jVQNKMtCTw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Add PTW feature detection on 3C6000 host
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 8/27/2025 5:01 PM, Sean Christopherson wrote:
-> Use the kernel's common "entry virt" APIs to handle pending work prior to
-> (re)entering guest mode, now that the virt APIs don't have a superfluous
-> dependency on KVM.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+Applied, thanks.
+
+
+Huacai
+
+On Tue, Aug 26, 2025 at 11:35=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
+te:
+>
+> With 3C6000 hardware platform, hardware page table walking(PTW) features
+> is supported on host. Here add this feature detection on KVM host.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  drivers/hv/Kconfig          |  1 +
->  drivers/hv/mshv_root_main.c | 32 ++++++--------------------------
->  2 files changed, 7 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 2e8df09db599..894037afcbf9 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -66,6 +66,7 @@ config MSHV_ROOT
->  	# no particular order, making it impossible to reassemble larger pages
->  	depends on PAGE_SIZE_4KB
->  	select EVENTFD
-> +	select VIRT_XFER_TO_GUEST_WORK
->  	default n
->  	help
->  	  Select this option to enable support for booting and running as root
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index 0d849f09160a..7c83f656e071 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-> @@ -8,6 +8,7 @@
->   * Authors: Microsoft Linux virtualization team
->   */
->  
-> +#include <linux/entry-virt.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/fs.h>
-> @@ -481,29 +482,6 @@ mshv_vp_wait_for_hv_kick(struct mshv_vp *vp)
->  	return 0;
->  }
->  
-> -static int mshv_pre_guest_mode_work(struct mshv_vp *vp)
-> -{
-> -	const ulong work_flags = _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING |
-> -				 _TIF_NEED_RESCHED  | _TIF_NEED_RESCHED_LAZY |
-> -				 _TIF_NOTIFY_RESUME;
-> -	ulong th_flags;
-> -
-> -	th_flags = read_thread_flags();
-> -	while (th_flags & work_flags) {
-> -		int ret;
-> -
-> -		/* nb: following will call schedule */
-> -		ret = mshv_do_pre_guest_mode_work(th_flags);
-> -
-> -		if (ret)
-> -			return ret;
-> -
-> -		th_flags = read_thread_flags();
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  /* Must be called with interrupts enabled */
->  static long mshv_run_vp_with_root_scheduler(struct mshv_vp *vp)
->  {
-> @@ -524,9 +502,11 @@ static long mshv_run_vp_with_root_scheduler(struct mshv_vp *vp)
->  		u32 flags = 0;
->  		struct hv_output_dispatch_vp output;
->  
-> -		ret = mshv_pre_guest_mode_work(vp);
-> -		if (ret)
-> -			break;
-> +		if (__xfer_to_guest_mode_work_pending()) {
-> +			ret = xfer_to_guest_mode_handle_work();
-> +			if (ret)
-> +				break;
-> +		}
->  
->  		if (vp->run.flags.intercept_suspend)
->  			flags |= HV_DISPATCH_VP_FLAG_CLEAR_INTERCEPT_SUSPEND;
-
-Also tested mshv_root with 1-6 applied, looks good to me. Possibly Naman,
-Saurabh, or Roman can test the mshv_vtl patches, I can't do it
-unfortunately.
-
-Tested-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>  arch/loongarch/include/uapi/asm/kvm.h | 1 +
+>  arch/loongarch/kvm/vcpu.c             | 2 ++
+>  arch/loongarch/kvm/vm.c               | 4 ++++
+>  3 files changed, 7 insertions(+)
+>
+> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/inclu=
+de/uapi/asm/kvm.h
+> index 5f354f5c6847..57ba1a563bb1 100644
+> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> @@ -103,6 +103,7 @@ struct kvm_fpu {
+>  #define  KVM_LOONGARCH_VM_FEAT_PMU             5
+>  #define  KVM_LOONGARCH_VM_FEAT_PV_IPI          6
+>  #define  KVM_LOONGARCH_VM_FEAT_PV_STEALTIME    7
+> +#define  KVM_LOONGARCH_VM_FEAT_PTW             8
+>
+>  /* Device Control API on vcpu fd */
+>  #define KVM_LOONGARCH_VCPU_CPUCFG      0
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index ce478151466c..9c802f7103c6 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -680,6 +680,8 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>                         *v |=3D CPUCFG2_ARMBT;
+>                 if (cpu_has_lbt_mips)
+>                         *v |=3D CPUCFG2_MIPSBT;
+> +               if (cpu_has_ptw)
+> +                       *v |=3D CPUCFG2_PTW;
+>
+>                 return 0;
+>         case LOONGARCH_CPUCFG3:
+> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> index edccfc8c9cd8..a49b1c1a3dd1 100644
+> --- a/arch/loongarch/kvm/vm.c
+> +++ b/arch/loongarch/kvm/vm.c
+> @@ -146,6 +146,10 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, =
+struct kvm_device_attr *attr
+>                 if (kvm_pvtime_supported())
+>                         return 0;
+>                 return -ENXIO;
+> +       case KVM_LOONGARCH_VM_FEAT_PTW:
+> +               if (cpu_has_ptw)
+> +                       return 0;
+> +               return -ENXIO;
+>         default:
+>                 return -ENXIO;
+>         }
+> --
+> 2.39.3
+>
