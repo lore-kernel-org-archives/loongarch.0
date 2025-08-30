@@ -1,143 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCCE3375DA;
-	Fri, 29 Aug 2025 18:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538A42DEA9D
+	for <loongarch@lists.linux.dev>; Sat, 30 Aug 2025 19:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756492699; cv=none; b=buttVTHJ+kDDvSgu+XgUIhp9EAX1umGqGygaz66t9x40bT9osxrtiTPC62CGB48tsbTo6hr1hikeeo37N/1mw3g0cJNXmLGskcSmdB+HVnPEszZxKy5JtDj6eLfW11+b89BV8vwrlp+DEHj5As06m74hnTyu1Zgj+1up7dxHP6s=
+	t=1756583400; cv=none; b=uWQs2o1bqvp8QOKpGwZnmni4nJ2++YKP1gSa2/xBGDyw2uZdiyswYeXyAgQl1c6aDdkm2rF1qz9tGH7iSq0Hbjxcl+2eDn3zGaxY9eyKCfArmxMNzJNHy6Gx/xB9Q77EBnFXiyq+YqKIEB0uUdBpuRZbMZ4kWRYO/x8rGZFdGHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756492699; c=relaxed/simple;
-	bh=G2OtD6gg+bw9ZqOkq99RiwmobzpQGmczBt388tEvqQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JuZrB5v6ysIU9K5ei4eCQuUR6pgA6aULQNRh30YJZ2bGxOaqrg2EsPTXHw04+XIVblAcx5yUR4ZmBMhRS8iQl4acYRMrWM8Fvx+P4ZMp78iDNJcdbk1yZ8UDeb40klNEsUCQA9+a2mmOT0Y48gjh6p9G5CINFOJnGcjt94r9STA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ov5WnNhD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756583400; c=relaxed/simple;
+	bh=RESvPL6lZSU1LVrX5w1VrBJByLVlXWsRl2ULoQXIrYw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XmEcdL7edInu0HC30SvS/e3X9xyjXT4zghzFdi08WbxbgFwFuScAEOO79EbkKDp1n7cU3oGn0q/lndBCMZM4mLbXYehAiqpLJVcvorXMj5dL3mq/iaK5uneccen4s351o57HN4tEddyd2BZ1XW3SOJDGv6jZl80EbELKj8Qs5n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qycCpYq9; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ov5WnNhD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 838E8C4CEF0;
-	Fri, 29 Aug 2025 18:38:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756492698;
-	bh=G2OtD6gg+bw9ZqOkq99RiwmobzpQGmczBt388tEvqQA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ov5WnNhDYY/E6a4awYJM+K8xgExCClE5Y0Tf2Y11//SUqC2e8H33VSZ3i1uc1POtL
-	 3YeCHPT+LRLLcXNmGQk3C5oHa7zsZ0bofiQBgc3pMXL6VH0tJuaARC3EPbSqo4icNK
-	 2wfmzXZxZK8E2DR8zjmoS3hnPuPIA3PoPtUqF3bYgIyCzxtY0eWIORQko0EVjTH3+9
-	 ZfDkkyLHld0blZUJ+7o4K80ZpSREI4kfSUqIc7jMHAmBsnDS9BGcDpLvn6Kaz95vU6
-	 U4WSMzFdzrnSt8Z0481GORe3zvOMdHZ8W4AuagPsc8gBnpvZu0IxNoyLS2Jq773s7J
-	 3OXrT9D8lO56A==
-Date: Fri, 29 Aug 2025 18:38:16 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, rcu@vger.kernel.org,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Mukesh R <mrathor@linux.microsoft.com>, ssengar@linux.microsoft.com,
-	namjain@linux.microsoft.com
-Subject: Re: [PATCH v2 2/7] Drivers: hv: Disentangle VTL return cancellation
- from SIGPENDING
-Message-ID: <aLHzmBFuWy2P5Opq@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250828000156.23389-1-seanjc@google.com>
- <20250828000156.23389-3-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qycCpYq9"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55f69cf4b77so1523118e87.2
+        for <loongarch@lists.linux.dev>; Sat, 30 Aug 2025 12:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756583397; x=1757188197; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RESvPL6lZSU1LVrX5w1VrBJByLVlXWsRl2ULoQXIrYw=;
+        b=qycCpYq9AF0p1OdLMqzrHrGObewQCHOouynC2FsmzVn+06/GZWk10N8s2inV+/izWC
+         ZZoHdxhjxkeAPot08qu5E71xHILwb5BFPFhWA6tbpMBnGgqEOvqykZhIBLiqochGkqBd
+         ZZUAvpOFrBa45PzZGf9UuQJIQFFj/oKeHJjyIXu2BymKlKQJS8CGr0pWYbXVAwpFxQgG
+         luoHIfhBtZA/up5uusP1zPPEzCqJ6uPoqgUYoPX6fCxGihtJY37PyZafddsTL+a/P3Nz
+         4Os7TRVrjHe5RxlK+trjL/VYVRD0pLdAVeEXsUOsQ6blIhkttxB5e3DsVEWY2s+CIwvr
+         CWbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756583397; x=1757188197;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RESvPL6lZSU1LVrX5w1VrBJByLVlXWsRl2ULoQXIrYw=;
+        b=eqTGxyzV+h3TO2JhozTmlEzL3OiXnn8E4BxNYEAlG6fi46NVeB6sV0SLxVn5K6QsG6
+         Zjp2mf5yfd3fbBZ5eylb0E5wI44EJz0P3/jWhnBQupRbybBwiiWFTjKVBLCq1uqe3M7U
+         6nfIw+jgMhy6/6V/lR+++U/2L0IDhD/DC51S7LqQRWpRbFexAyHw6Q2UZuNbIfB13Hhe
+         JmuUFdFD7LxtL8UVjW8N7irTB7ubvKnw/0HedSs/TvkhoOTTJ6Ycbew9e9RrzZ9QHY32
+         uIqEvWW8EUdm1KBeBs2m4lFcNyu0J0+8M60bibnbDC4HcbvXnAaDVxhVBQY8ERskP1II
+         sYOg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+y0YxFNKeR5su9SZQidGP1OeQOzNv82U+dJ/4nLvtjr+VdY5d6Nd/VhBb2x8soaxMgDJQJqkMCpU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwmGvyb04PTE8YrIwFJUGFresBatFl6Rz/IHUWWPQzFJHWM1hQW
+	0WsABwXmHdp5E6dmvDCTdWXXvb+lcB63ZLiF5ysd9SBd9C12WxBkklTlWtvus2UleRv+fi+TrUR
+	Z/hr8qfea4x1dqP4Soa66DTCmLwcJh3wRtnaneRM0gg==
+X-Gm-Gg: ASbGncuORpTL5sZkMonJYrh5goVDrZMhAePYsfy+7Y7IhHbx5NhWyAp4HO6rdZYEvV7
+	ejcvZTbhQ2RTtPx4skQSX/J7RDxUZoN+cM6IDirIqiFnio4S6A/YxvdUF9+rJApXwieQfwLzw8/
+	7fzQhw5MHVxu88O3UW2wgYwBCuMU0/++VUbk8eZLk54Y6/mXKnT5RbEJWFB4rbXV1lNRWE87KcN
+	ySukjUWwwdy0qOGrCMuYl1nQdwnik04ElPBBYYDfrIE04iu5A==
+X-Google-Smtp-Source: AGHT+IE50mGD6Wsp5fjlHRmoMQ5rebLnfakE86Vnr2ujarxjBgcFlbm1KFCExKkXTA2m/S8rPEWfnwfaAxEiJLlgF8g=
+X-Received: by 2002:a05:6512:3b9e:b0:55f:486b:7e44 with SMTP id
+ 2adb3069b0e04-55f708ecf52mr685020e87.37.1756583397500; Sat, 30 Aug 2025
+ 12:49:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250828000156.23389-3-seanjc@google.com>
+References: <20250816035027.11727-2-ziyao@disroot.org>
+In-Reply-To: <20250816035027.11727-2-ziyao@disroot.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Sat, 30 Aug 2025 21:49:46 +0200
+X-Gm-Features: Ac12FXyuG3vAb6oO4Z4zArYVmCFaF-tcxGvuqQuACijURT9dTtrTa_sARjkZMYw
+Message-ID: <CAMRc=Meed_x_OODv1fw1m7rpLY4uGic=0pacjV+Mj147_WMZPg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Support GPIO controller of Loongson 2K0300 SoC
+To: Yao Zi <ziyao@disroot.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 27, 2025 at 05:01:51PM -0700, Sean Christopherson wrote:
-> Check for return to a lower VTL being cancelled separately from handling
-> pending TIF-based work, as there is no need to immediately process pending
-> work; the kernel will immediately exit to userspace (ignoring preemption)
-> and handle the pending work at that time.
-> 
-> Disentangling cancellation from the TIF-based work will allow switching to
-> common virtualization APIs for detecting and processing pending work.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+On Sat, Aug 16, 2025 at 5:50=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
+>
+> This series adds support for Loongson 2K0300's GPIO controller. While
+> being mostly identical to previous implementation, its interrupt
+> functionality hasn't been implemented in gpio-loongson-64bit.c. PATCH 2
+> implements its interrupt support with an IRQCHIP, and the code could be
+> reused for other Loongson SoCs with similar interrupt functionality like
+> 2K1500 and 2K2000.
+>
+> Tested on CTCISZ Forever Pi, reading/writing GPIOs works correctly, and
+> both level and edge interrupts could be triggered.
+>
+> The devicetree patch depends on series "Support reset controller of
+> Loongson 2K0300 SoC"[1] for a clean apply. Thanks for your time and revie=
+w.
+>
+> [1]: https://lore.kernel.org/all/20250816033327.11359-2-ziyao@disroot.org=
+/
+>
 
-Thanks for this patch, Sean.
+Hi!
 
-My current plan is to drop this driver from my tree (hence it will
-disappear from linux-next soon) because Peter has an objection to the
-ABI it introduces. I just have not gotten around to it yet.
+This doesn't apply on top of current gpio/for-next. Can you please
+rebase and resend?
 
-I won't apply this patch, the next one and the last one. I have CC'ed
-the owner of that driver to this patch here so that your suggestion can
-be incorporated in future submissions.
-
-CC Saurabh and Naman.
-
-Thanks,
-Wei
-
-> ---
->  drivers/hv/mshv_vtl_main.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
-> index 12f5e77b7095..aa09a76f0eff 100644
-> --- a/drivers/hv/mshv_vtl_main.c
-> +++ b/drivers/hv/mshv_vtl_main.c
-> @@ -731,19 +731,21 @@ static int mshv_vtl_ioctl_return_to_lower_vtl(void)
->  						_TIF_NOTIFY_RESUME | _TIF_NOTIFY_SIGNAL |
->  						_TIF_NEED_RESCHED_LAZY;
->  		unsigned long ti_work;
-> -		u32 cancel;
->  		unsigned long irq_flags;
->  		struct hv_vp_assist_page *hvp;
->  		int ret;
->  
->  		local_irq_save(irq_flags);
-> +		if (READ_ONCE(mshv_vtl_this_run()->cancel)) {
-> +			local_irq_restore(irq_flags);
-> +			preempt_enable();
-> +			return -EINTR;
-> +		}
-> +
->  		ti_work = READ_ONCE(current_thread_info()->flags);
-> -		cancel = READ_ONCE(mshv_vtl_this_run()->cancel);
-> -		if (unlikely((ti_work & VTL0_WORK) || cancel)) {
-> +		if (unlikely(ti_work & VTL0_WORK)) {
->  			local_irq_restore(irq_flags);
->  			preempt_enable();
-> -			if (cancel)
-> -				ti_work |= _TIF_SIGPENDING;
->  			ret = mshv_do_pre_guest_mode_work(ti_work);
->  			if (ret)
->  				return ret;
-> -- 
-> 2.51.0.268.g9569e192d0-goog
-> 
-> 
+Bart
