@@ -1,154 +1,125 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A58233149;
-	Mon,  1 Sep 2025 08:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1FDB2F8BFF
+	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 08:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756714821; cv=none; b=UQZyc82d+zF4m7v5nTXhdLksybsndThOrGqsfHnK/9D1TJA4K2dRIQxRYCClppXDhq0jOUZ66WUK8pn48nqF5g9J4HtjEL+rHTP08XdUJQtFatmiZWy1walRc2IR1DMBFSufP4ffRyP3npybPcDNQM0Wqkbg/60FKuNN9prP4m8=
+	t=1756715508; cv=none; b=THi6ijOeKsMcrPQF9xLkAX5mDsZAXaZaVnmR4CK6dgBpkpRCwygAFGqPpUrzk9XrYqScq/x9nr5NwGVMrLTG/np7t2pOcpCNtO4peiFW6vgLGfdcUoKVsp9tax3iPsIebVOoI7zN2WQvYSE/rBGLxg6KaoEwm3SHEYTRj4QGlok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756714821; c=relaxed/simple;
-	bh=zvN4MhG8R7eqp6XEv4Ny2CmRe4e0u83TGuBsremkeZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I3mZudQQgI4q/2oKlzDT2TeLeAo7+bGqZqXiRqG1NC8b8iBBp6hQjL5NTv95as9HmIlNQvPlTXjeXJgvJVGb26hSIA8QUuVfrDMsq30UTV3AqhQkk2SCGxtUM5BZstEpnWuMNu6P45fQ6pgjP4obIIM7MNGCDIb0AyEihXyMPA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gik7oPrH; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gik7oPrH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=kc1JMKz1kOG2DZTIPmCW9JCS5gq3B4TzLi84ah9UiLo=; b=gik7oPrHOsb+aqj8HGp4uwGpCy
-	CNshygIK9o5rgCEHXO8RuovcX1zFHCtT8GQPQCOu4cBD2+Lpa/AqvhWH2E6QafKMJ1VaCnDmWuwV9
-	QRH+Tj0PHkP5740sSI4nJNUXDLLQbAEcvMdki/UQ5VboIJbNduDrpX1sYWrwjO14w/xSEWkD3f68p
-	xBqGhLDohP1w3+9CwXqVpDPPWKecSypZngeXriNAj7lc7ZDLXXjGwc09suAGwFRXPfIABFGWJYsc9
-	/ZrjslccE0HIva1tN573UY78NYQjDIi7D/VWv2/a6s9Sknfxh9bQ/fyE2tOd4mwxJxsvdjAshK39i
-	esVfhyWA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uszlw-000000059T8-3j5X;
-	Mon, 01 Sep 2025 08:20:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1CEA1300342; Mon, 01 Sep 2025 10:20:17 +0200 (CEST)
-Date: Mon, 1 Sep 2025 10:20:17 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] LoongArch: Fix unreachable instruction warnings
- about entry functions
-Message-ID: <20250901082017.GC4067720@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1756715508; c=relaxed/simple;
+	bh=VcHsK1OBhOnKkgN7PU7CkPFpJGZLnQT0rG1KgXhfG7Q=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pdO/3O2EN5WKxFQNMTzsGN7roP3CpLpj8BvD9U8Qc3NwahTjfwUlcEHguHJ5+cGCV0QyUPiStO1NcJq3AjuO2ELGu+3GzJ2+1C5QUArkkhYOW7hfbaXrxRf/6v0o0+LR6cMtyWlkTUCRLyskaJuMt87EPeuCrgcbgG/rhKnBmxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx5tDrWbVoWUsFAA--.10806S3;
+	Mon, 01 Sep 2025 16:31:39 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxXMHpWbVoUYt2AA--.55997S3;
+	Mon, 01 Sep 2025 16:31:37 +0800 (CST)
+Subject: Re: [PATCH v1 1/3] objtool/LoongArch: Fix fall through warning about
+ efi_boot_kernel()
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
- <20250901072156.31361-4-yangtiezhu@loongson.cn>
+ <20250901072156.31361-2-yangtiezhu@loongson.cn>
+ <20250901081616.GA4067720@noisy.programming.kicks-ass.net>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <a59b3eaa-133d-88bf-f1f3-41328d023c4a@loongson.cn>
+Date: Mon, 1 Sep 2025 16:31:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250901072156.31361-4-yangtiezhu@loongson.cn>
+In-Reply-To: <20250901081616.GA4067720@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxXMHpWbVoUYt2AA--.55997S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tr4kJFWrGFWDAw48WFyfAFc_yoW8KFWxpa
+	yUCFyUCFs8Jr4xta4kXw4F9Fy3XwsrtrWaga48J3s5Aw4DZFn2vF4Fgr1avF9rZr47Gw1a
+	vF40qrnI9a4DAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
+	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07jOuc_UUUUU=
 
-On Mon, Sep 01, 2025 at 03:21:56PM +0800, Tiezhu Yang wrote:
-> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
-> following objtool warnings:
+On 2025/9/1 下午4:16, Peter Zijlstra wrote:
+> On Mon, Sep 01, 2025 at 03:21:54PM +0800, Tiezhu Yang wrote:
+>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
+>> the following objtool warning:
+>>
+>>    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
+>>    falls through to next function __efistub_exit_boot_func()
+>>
+>> This is because efi_boot_kernel() doesn't end with a return instruction
+>> or an unconditional jump, then objtool has determined that the function
+>> can fall through into the next function.
+>>
+>> At the beginning, try to do something to make efi_boot_kernel() ends with
+>> an unconditional jump instruction, but it is not a proper way.
+>>
+>> After more analysis, one simple way is to ignore these EFISTUB functions
+>> in validate_branch() of objtool since they are useless for stack unwinder.
+>>
 > 
->   vmlinux.o: warning: objtool: kernel_entry+0x0: unreachable instruction
->   vmlinux.o: warning: objtool: smpboot_entry+0x0: unreachable instruction
+> This is drivers/firmware/efi/libstub/loongarch.c:efi_boot_kernel(),
+> right?
 > 
-> kernel_entry() and smpboot_entry() are in arch/loongarch/kernel/head.S,
-> there is "OBJECT_FILES_NON_STANDARD_head.o := y" to skip objtool checking
-> for head.o, but the STACK_FRAME_NON_STANDARD macro does not work for link
-> time validation of vmlinux.o according to objtool documentation, just give
-> a proper unwind hint to silence the warnings.
+> Why not simply do something like:
 > 
-> By the way, ASM_BUG() can be removed due to unnecessary, otherwise there
-> are following warnings:
-> 
->   kernel_entry+0xf4: start_kernel() missing __noreturn
->   in .c/.h or NORETURN() in noreturns.h
-> 
->   smpboot_entry+0x68: start_secondary() missing __noreturn
->   in .c/.h or NORETURN() in noreturns.h
-> 
-> This is because the previous instructions of kernel_entry+0xf4 and
-> smpboot_entry+0x68 are the 'bl' instructions, start_kernel() and
-> start_secondary() are the respective call destination symbols which
-> are noreturn functions, then the 'bl' instructions are already marked
-> as dead end in annotate_call_site().
-> 
-> For now, it is time to remove "OBJECT_FILES_NON_STANDARD_head.o := y"
-> in arch/loongarch/kernel/Makefile.
-> 
-> Link: https://lore.kernel.org/lkml/20250814083651.GR4067720@noisy.programming.kicks-ass.net/
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
+> index 3782d0a187d1..082611a5f1f0 100644
+> --- a/drivers/firmware/efi/libstub/loongarch.c
+> +++ b/drivers/firmware/efi/libstub/loongarch.c
+> @@ -81,4 +81,5 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
+>   
+>   	real_kernel_entry(true, (unsigned long)cmdline_ptr,
+>   			  (unsigned long)efi_system_table);
+> +	BUG();
+>   }
 
-Right, this looks good.
+At the beginning, I did the above change, but no effect.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+The first thing is to remove the attribute __noreturn for
+real_kernel_entry(), otherwise the compiler can not generate
+instructions after that.
 
-> ---
->  arch/loongarch/kernel/Makefile | 2 --
->  arch/loongarch/kernel/head.S   | 6 ++----
->  2 files changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index 6f5a4574a911..4302c5b0a201 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -3,8 +3,6 @@
->  # Makefile for the Linux/LoongArch kernel.
->  #
->  
-> -OBJECT_FILES_NON_STANDARD_head.o := y
-> -
->  always-$(KBUILD_BUILTIN)	:= vmlinux.lds
->  
->  obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index e3865e92a917..a11880f3a7e1 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -42,6 +42,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
->  	.align 12
->  
->  SYM_CODE_START(kernel_entry)			# kernel entry point
-> +	UNWIND_HINT_UNDEFINED
->  
->  	/* Config direct window and set PG */
->  	SETUP_DMWINS	t0
-> @@ -109,8 +110,6 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
->  #endif
->  
->  	bl		start_kernel
-> -	ASM_BUG()
-> -
->  SYM_CODE_END(kernel_entry)
->  
->  #ifdef CONFIG_SMP
-> @@ -120,6 +119,7 @@ SYM_CODE_END(kernel_entry)
->   * function after setting up the stack and tp registers.
->   */
->  SYM_CODE_START(smpboot_entry)
-> +	UNWIND_HINT_UNDEFINED
->  
->  	SETUP_DMWINS	t0
->  	JUMP_VIRT_ADDR	t0, t1
-> @@ -142,8 +142,6 @@ SYM_CODE_START(smpboot_entry)
->  	ld.d		tp, t0, CPU_BOOT_TINFO
->  
->  	bl		start_secondary
-> -	ASM_BUG()
-> -
->  SYM_CODE_END(smpboot_entry)
->  
->  #endif /* CONFIG_SMP */
-> -- 
-> 2.42.0
-> 
+But there is an argument in the previous RFC [1]:
+
+"From my point of view this is incorrect, this function is indeed a
+noreturn function, and this modification makes LoongArch different to
+other architectures."
+
+Josh suggested to do something so that the EFI stub code isn't linked 
+into vmlinux.o [2], it needs to modify the link process and seems too
+complicated and expensive for this warning to some extent.
+
+So I did this change for objtool.
+
+[1] 
+https://lore.kernel.org/loongarch/CAAhV-H5wW_04NHQ7z+SCPb6-T5Hc__n+x=ykg-u9vn4b4GXuww@mail.gmail.com/
+[2] 
+https://lore.kernel.org/loongarch/xyrcgkl7ud5pgh4h5yjyejz646bc22fnnwxahaoafqvnqintf3@mdhtfaybai67/
+
+Thanks,
+Tiezhu
+
