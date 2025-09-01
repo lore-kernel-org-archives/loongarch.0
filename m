@@ -1,61 +1,61 @@
 Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DBD2FABF8
-	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 13:35:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FF515C0
+	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 13:36:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756733734; cv=none; b=b8lrIjcjEiHQTEq0EzLcAl9bx0unPtZdscB7qwUag1Dl/eFwmeBJPRsDHllV2CCVItpycPkrdLizbjslyergzBG7UQYtBLn3Zc6wV+Ao0EPC6adE4fsh7BNrzXmUufMcgyro/n1y6EIOHJHUo4JL9f2eMwgm/I3ga20WDysTqTg=
+	t=1756733768; cv=none; b=o0NfS2MW4jkY8b0hiRbp3jyrespKlANdtcgQXiOMvcCjUXi8oPPJPoBbi8e1vmHLg7VpRAtHOsedQ0qzOx0u5TDyGi9fBbq8TcCbEE87qvdV5Gb5waHAnKzUSi3kY9KwPG8bkrUUyVUw2rWrKMqKe0d1B1RLedad4LIkBE9vdTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756733734; c=relaxed/simple;
-	bh=AnVy+GFpTqM3XIwnfxspH9w/hhNpLd3QoIWawv7MRX0=;
+	s=arc-20240116; t=1756733768; c=relaxed/simple;
+	bh=EkyOW6EUUTV+C/dNjMz2+XFswtE2xmJVWwojlRsa6wQ=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ZXDfIqWnseQ8zi9vkMuFr6dB1ri7hqSh8ioR7brLIswWAePNAg9ONGXUb9SZTeOnKpn/J9AKtDA6RLU+gmmpNtGi8FGxnx6kZ4h2W+8vSm3CLHp9sgjPhaTp7EdlxfaxfNn7ExvVY4Zdl1O5xEN1SQnY2pwZTqavHL9aSlMhQMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qOIcHpD4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TrZ7WmYW; arc=none smtp.client-ip=202.12.124.137
+	 Subject:Content-Type; b=o7YnSdwkmm2Lw3qc7cncHGEqSkY9kwYJTawHfbkA31SA8XTNYzHoR5IpqWI9ZdFCp32X5SGAqTxRyMa9JO8ezjf7GNBYsc3e+UgzJgchWRQBNXIts18z00018aNYJOutPibKKkdMwdUa9lVQ1cI2qY+q2VYayZ89q3nCI0Ue/50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=iqQoAqNv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YZdEcITL; arc=none smtp.client-ip=202.12.124.137
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qOIcHpD4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TrZ7WmYW"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="iqQoAqNv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YZdEcITL"
 Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.stl.internal (Postfix) with ESMTP id 72DA61300C7D;
-	Mon,  1 Sep 2025 09:35:30 -0400 (EDT)
+	by mailflow.stl.internal (Postfix) with ESMTP id 7D2251300C7D;
+	Mon,  1 Sep 2025 09:36:03 -0400 (EDT)
 Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Mon, 01 Sep 2025 09:35:31 -0400
+  by phl-compute-05.internal (MEProxy); Mon, 01 Sep 2025 09:36:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1756733730;
-	 x=1756740930; bh=AnVy+GFpTqM3XIwnfxspH9w/hhNpLd3QoIWawv7MRX0=; b=
-	qOIcHpD4d/ZwPxo1YAsCo06kvto8t7fcl/eyXQIg6cyMQZbfFLNJfqA2efdp4Xsl
-	SIxwT8NGSQEC1RYPKlI0w/9nHoTAjYhQnSNteytsGnnBue+kcc/ExwpMSrzbmjfu
-	+oboS1XJQ4PeLkgo/1t43q1StwLR6V2MDXQTVGUDUXS1g42rUqUbMAM5+WH8VnSH
-	kaWZ18CwqCxP7TO5BT4ZAGk7Pn1Z/8/XDfGh4tAITg3Z8HdEgvBouVWrHd0xoAiO
-	qv4oRiSq3Mhf0KE3i7RjlwcZNN7oiL5/3iv0waT1HbgOZ3HCFVNC+vRq22I7Wz7v
-	QiBDfGjrNaidFxuWoPXK+g==
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1756733763;
+	 x=1756740963; bh=EkyOW6EUUTV+C/dNjMz2+XFswtE2xmJVWwojlRsa6wQ=; b=
+	iqQoAqNvegrh6j4CIJgpRxtWPa4GfHGJHLJTeEiexLv/cC5adGMhR8mu9arcNl1O
+	I+SViigwx5fkDtvAUK3JQvr9LUo9tSyD34ZzpwtKWl4oFpF9VVsko6G0wgKCFOrB
+	Wgwk3+poGXpme23gg9tOI5NyS1XAjU0UtkVbuQdc6FHKDGjmCvobEZ9KxeWcp220
+	ubS3J54j+pFRzIZl5cfhA3pOQm3sGNXHxwAVgi/uBnkXKL329bISvPyPgjUgQwA9
+	8FW2trQiznoacWZhLt9i6H2QSMNg8TYnbJn1BTlhuZoxeGDnw5hk4Tdb29vm1nUY
+	bZXVgQ/h5beUsffzWqRmug==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1756733730; x=
-	1756740930; bh=AnVy+GFpTqM3XIwnfxspH9w/hhNpLd3QoIWawv7MRX0=; b=T
-	rZ7WmYWNKyTbBY0kpjsY07s3bpDNclAvZsAXI08SlFwVW+Ue69i4oCFAyqUpoKm1
-	CcQIQxv7Hmp4aVz7nEpjk5GdPWcO1haigrmDuMzTGRMruHZiN4qTX5WBBR4KJm4v
-	JJY6GqEOxeOtjDk/rKAh5vtg/2MK/YVpyOLcJNiv/dDj8BBkVSeVfTw7bG3uAS+N
-	1QuVYU4DQW5tNXY+Kq5F9HRYmIFo8Dlw5ydb2ovHcxqPGgzlBclh0D3/UtBOQfYF
-	MzrQ9r9iIoMLPbV2gpH4YsjASp8H3D4jOs6RAJSARnhDv+kSET/nwrfgFY9tzqLE
-	oFX2UPss9JLXwxUKU76TA==
-X-ME-Sender: <xms:IKG1aDr3Hqrb31TbMjN78ZTLVNY4RM96ZCFBcQVyAuY4LgHcbrnlEQ>
-    <xme:IKG1aNp7u77IIkCCX9bjV4qZW5wWqe7OkAxvJPCwwbE91dmYpG4mpCOLTMXsp-Jm3
-    nn8tlWvYObQvbyKOTk>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1756733763; x=
+	1756740963; bh=EkyOW6EUUTV+C/dNjMz2+XFswtE2xmJVWwojlRsa6wQ=; b=Y
+	ZdEcITLqgPB8jj8CHPxaiDUBffgGZ2F11HyGFeXL1aqJLq4I4uY3ERkYEVyLePpp
+	o/psznaJhEHGBKJ1kQdFcm4CnwWSHMxVhZ1tegHG4+vQZnEWzWcfLawto2oOCNBm
+	Q/nmgawaUaDpiYJcIgjle3tNvGPP7HrGRlkZTVjBSyx3SdL+Ubvbaw2NllbE0UKR
+	5PpaPKDdUnQpnidtMabM7ViC4q/rsdCRkhJmrsQb7pfEcghJVlhRRIXKOl1ByAL6
+	97jtMnFynzRNFQoG7yviaZDvoKIlFw/RFuOZzAvP0wULCLGRMZMgHnd0YvSE2EEr
+	37ywaIwtBcs1nPsRIxnAw==
+X-ME-Sender: <xms:QqG1aMBAb1qwptbTZfcieXRiGZJ-sUTLCT0kfm4oU2mfCmb2rLE59w>
+    <xme:QqG1aOgtge6O1bXGieZrbSKSwHUnyy_Eoot2uP8L9kA1s2-ybgS8kAo4MwLH_ML4e
+    xXpfwuSam7mVev1zuY>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduledvvdelucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
     uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
     hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    necuvehluhhsthgvrhfuihiivgepfeenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
     gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohephedtpdhmohguvgepshhmthhpohhu
     thdprhgtphhtthhopehvghhuphhtrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfi
     hilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhr
@@ -65,14 +65,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduledvvdelucetufdote
     htthhotheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprghnnhgrqdhmrghrihgrsehl
     ihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigi
     druggv
-X-ME-Proxy: <xmx:IKG1aLMz2TINr0c9twI8YvaS3Bl-TSQE5dUZWyhg-L_0znn_f0dfPQ>
-    <xmx:IKG1aE38YbHUEz7fNiAfpCQE3WrOAZZWG3HU_NyUya0Hi5uZ6Hpw_g>
-    <xmx:IKG1aKom2NHpTpyZT_0AwJSkDC2sC6eK75faHFKKsNdr-FTPcJGMHA>
-    <xmx:IKG1aEs7wsdixga8FnPAoUQDIFaRRBPGSqTVbhgfbhKfgrnZLF3VgQ>
-    <xmx:IqG1aPF5JqcLstqMCk-eCuy-NBIHh4w5lGboHTQV22jCAUfuu3AJWcNC>
+X-ME-Proxy: <xmx:QqG1aJZQk38pWZPUfRtMdGUj4gUf32jREDDlB8cSddU8-Bte6a_BGA>
+    <xmx:QqG1aI0LMalgb6WOOoOvBq_ZHFcA810ON4N6sxEckbEx2UH355DlHQ>
+    <xmx:QqG1aBnD05OhcRlHKCFLP4CiLGcm0kJsZXFJNAUtGT5thazjIMDFJw>
+    <xmx:QqG1aLuu7r7Df2HXyPIO-14-qQlreeIXRd5bgYb73qe7TD5XXuvCoQ>
+    <xmx:Q6G1aKbfgfdq7WHr6K7GavWXAT9kKUqpMQgMvatETMxCn_gjK_opBczb>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 33FF5700065; Mon,  1 Sep 2025 09:35:28 -0400 (EDT)
+	id 72651700065; Mon,  1 Sep 2025 09:36:02 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -80,8 +80,8 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AWRA786TDMiJ
-Date: Mon, 01 Sep 2025 15:35:06 +0200
+X-ThreadId: AHNSoFB7hZ_J
+Date: Mon, 01 Sep 2025 15:35:42 +0200
 From: "Arnd Bergmann" <arnd@arndb.de>
 To: "schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
  "Dinh Nguyen" <dinguyen@kernel.org>,
@@ -179,35 +179,25 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
  linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
  sparclinux@vger.kernel.org, linux-um@lists.infradead.org
-Message-Id: <ebe9be04-274b-4791-b883-198320cab886@app.fastmail.com>
+Message-Id: <35893d46-6caf-49ea-bbae-6e1cab6b2914@app.fastmail.com>
 In-Reply-To: 
- <20250901-nios2-implement-clone3-v2-2-53fcf5577d57@siemens-energy.com>
+ <20250901-nios2-implement-clone3-v2-4-53fcf5577d57@siemens-energy.com>
 References: 
  <20250901-nios2-implement-clone3-v2-0-53fcf5577d57@siemens-energy.com>
- <20250901-nios2-implement-clone3-v2-2-53fcf5577d57@siemens-energy.com>
-Subject: Re: [PATCH v2 2/4] copy_process: pass clone_flags as u64 across calltree
+ <20250901-nios2-implement-clone3-v2-4-53fcf5577d57@siemens-energy.com>
+Subject: Re: [PATCH v2 4/4] nios2: implement architecture-specific portion of
+ sys_clone3
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 On Mon, Sep 1, 2025, at 15:09, Simon Schuster via B4 Relay wrote:
 > From: Simon Schuster <schuster.simon@siemens-energy.com>
 >
-> With the introduction of clone3 in commit 7f192e3cd316 ("fork: add
-> clone3") the effective bit width of clone_flags on all architectures was
-> increased from 32-bit to 64-bit, with a new type of u64 for the flags.
-> However, for most consumers of clone_flags the interface was not
-> changed from the previous type of unsigned long.
->
-> While this works fine as long as none of the new 64-bit flag bits
-> (CLONE_CLEAR_SIGHAND and CLONE_INTO_CGROUP) are evaluated, this is still
-> undesirable in terms of the principle of least surprise.
->
-> Thus, this commit fixes all relevant interfaces of callees to
-> sys_clone3/copy_process (excluding the architecture-specific
-> copy_thread) to consistently pass clone_flags as u64, so that
-> no truncation to 32-bit integers occurs on 32-bit architectures.
+> This commit adds the sys_clone3 entry point for nios2. An
+> architecture-specific wrapper (__sys_clone3) is required to save and
+> restore additional registers to the kernel stack via SAVE_SWITCH_STACK
+> and RESTORE_SWITCH_STACK.
 >
 > Signed-off-by: Simon Schuster <schuster.simon@siemens-energy.com>
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
 Reviewed-by: Arnd Bergmann <arnd@arndb.de>
