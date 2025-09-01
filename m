@@ -1,98 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E188E1482F2
-	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 03:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3288D2AE77
+	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 04:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756696129; cv=none; b=tp0AlTcokpqhGRar/YZxSrgRoz2luMvWxWg2EJaMAoUb0BraS26nLI4T7fD/RYnvORCNBuQ7lXwkD/YLcROuRrbWtj0bqpTRRovP8xvwnbrHmQXfxEVlt8IwSqF/ZikIGTBlD4AIoVTWYrWx9T52DvhdCQzA1gcLmEpHx4Wv2tM=
+	t=1756699878; cv=none; b=odYGAl7V7rsqADWuCTGf+vY8rlAtOfs0AIsJYEYulvAiVWRSpDo7DMp6+QHLwLVh41P21WaMd7RZp69X+AndpDX66SDS5vxsglo7Kv1VZZyleI49OyPIljVIc+UoV+l9Hew1whW6PBzWYK+z9dIBNZ8KPSo8WL6tjb8dnfpu4ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756696129; c=relaxed/simple;
-	bh=512Yw/HnELQYWi6VxT1FeWLO2eAuVR2mCZ5r0TNPMAQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=CunzIRyeEDktVdoY3sfz5RI1jmfB6uyTSjQkKkY/eZ4rK74dU3AJ3bzKvwTpEiKZ+1ySdTFiVCRy5Jv21GyLTMShbqwEJyPj25lqXaOCCDX1d2EyxxaHB0slcsjWsM8nlUkk8VgHgonZaFn1UAufLUgDVnVTGW2aCqglBxNu9UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cxf9MvDrVoLjUFAA--.10530S3;
-	Mon, 01 Sep 2025 11:08:31 +0800 (CST)
-Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxZOQsDrVomBN2AA--.41729S3;
-	Mon, 01 Sep 2025 11:08:29 +0800 (CST)
-Subject: Re: [PATCH v3 2/3] LoongArch: BPF: Sign extend struct ops return
- values properly
-To: Hengqi Chen <hengqi.chen@gmail.com>, chenhuacai@kernel.org,
- vincent.mc.li@gmail.com
-Cc: loongarch@lists.linux.dev
-References: <20250831234328.22440-1-hengqi.chen@gmail.com>
- <20250831234328.22440-3-hengqi.chen@gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <ee579b48-e6d1-22ba-c1b9-f6088c269664@loongson.cn>
-Date: Mon, 1 Sep 2025 11:08:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1756699878; c=relaxed/simple;
+	bh=mwSSz6t1KNZDyyuS8ESTfh4vvpfEMcKun6PbJh1S4Wc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T+0TgvJRcNxyhMdeiXwPEeydplsKytCk31yAU9ZTu2R7DVqwu+LOW6fzrRJt4Y5XaxM0kR9WkwxSgYLbcZccOggueAnsVqn2ZTYHRBKolnFP5trMiHJQy12VWracDJ6HFL2qZNUB5x3qaMwaQ1Db14MbmdMSou7vJMiCDr7ffI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCLGBYpW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCLGBYpW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0783BC4CEF8
+	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 04:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756699878;
+	bh=mwSSz6t1KNZDyyuS8ESTfh4vvpfEMcKun6PbJh1S4Wc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GCLGBYpWbxQ4pA/HQWbC2eFUrlQD4yBGg7EUkkDx+ZJ3AUNxob7BOVG1i2blR9hFl
+	 3jt4Mc25X7A58NmxLMDRqH2mT3frafr/1D2SDYxZQnqrZXKW3BJZ3MJ0/FzF5yIzpc
+	 HwVmKaLFc14U3pGgBKBgJRIEH3gms39P2HMFxcEZv2OalejtWwoa5FxZ8tZG8vuv9z
+	 MOv5TJ9pJQLTHaQCVwDc+NKNTVHsEojVCOnDXP5+xaLvABqNjhLkNy3a7q5sA6hK5D
+	 hN64NlTUWYtu2H3brdJ3zi7DFIOTe/Cwm+S2q5wiyIYL6p92CEvne9gY3RhPKWQPNf
+	 LoB+CbvxvMKSQ==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-61cebce2f78so6834874a12.1
+        for <loongarch@lists.linux.dev>; Sun, 31 Aug 2025 21:11:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXtdDcbesJC4myggyVeMhYTzrUDwS6kAYlZBE7cEwbNIGF1geCrYwYBeGZuB8LdpOwi3wxmDPzUlHw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxG26j+szsheeM1eEnTRtgWc2L4rysEqMKS8DdOYOvB57b09YbT
+	x+4XssQo1Y/tCc2qYJTnASlaM4IpS6Ef7SUpUxj5pauWKygcZ1BmL/f9rNLoKfdsM5/aRw1lHgP
+	2f4EVbFAYswHESxPSNGlrHl6mZmfZdV0=
+X-Google-Smtp-Source: AGHT+IEdhU/bG9hcKR3ZrPzxC8S750C4P7YIbCwtkQtABRzwagwjVOZboO3LiTpECr0mtOGFYwgZ/kMQTJBNQc5XvOg=
+X-Received: by 2002:a05:6402:3812:b0:61a:1702:792a with SMTP id
+ 4fb4d7f45d1cf-61d269a6fb3mr5921149a12.9.1756699876614; Sun, 31 Aug 2025
+ 21:11:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250831234328.22440-3-hengqi.chen@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxZOQsDrVomBN2AA--.41729S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKw1UZr1UXF4fJw18Aw4DZFc_yoWkGrc_Ar
-	n3KryxCr409rnY9w45KwnrZFZ3C3y5Wr10q390g3sIga45Xry5Cr4DXr92qr9rZ3srtF47
-	C3sIqwsFyF1j9osvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
-	DUUUU
+References: <20250831234328.22440-1-hengqi.chen@gmail.com> <20250831234328.22440-3-hengqi.chen@gmail.com>
+ <ee579b48-e6d1-22ba-c1b9-f6088c269664@loongson.cn>
+In-Reply-To: <ee579b48-e6d1-22ba-c1b9-f6088c269664@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 1 Sep 2025 12:11:04 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5nG4RaOY+n327+4kdhhOLyNOOaoNcRiuRKSUcO7=nAvg@mail.gmail.com>
+X-Gm-Features: Ac12FXy2lSAlNzoEv32wW9H7IXj9Hxgfg-GTLNLSYVEMSJ_nQxSCMGKLkFYxii0
+Message-ID: <CAAhV-H5nG4RaOY+n327+4kdhhOLyNOOaoNcRiuRKSUcO7=nAvg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] LoongArch: BPF: Sign extend struct ops return
+ values properly
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, vincent.mc.li@gmail.com, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/9/1 上午7:43, Hengqi Chen wrote:
-> The ns_bpf_qdisc selftest triggers a kernel panic:
+On Mon, Sep 1, 2025 at 11:08=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> On 2025/9/1 =E4=B8=8A=E5=8D=887:43, Hengqi Chen wrote:
+> > The ns_bpf_qdisc selftest triggers a kernel panic:
+>
+> ...
+>
+> > So let's sign extend struct ops return values according to
+> > the return value spec in function model.
+>
+> ...
+>
+> >   static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct =
+bpf_tramp_image *im,
+> >                                        const struct btf_func_model *m, =
+struct bpf_tramp_links *tlinks,
+> >                                        void *func_addr, u32 flags)
+> > @@ -1654,6 +1677,8 @@ static int __arch_prepare_bpf_trampoline(struct j=
+it_ctx *ctx, struct bpf_tramp_i
+> >       if (save_ret) {
+> >               emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -=
+retval_off);
+>
+> If is_struct_ops is true, this operation is not necessary, because
+> LOONGARCH_GPR_A0 will be overwrote in the later code ...
+> >               emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, =
+-(retval_off - 8));
+> > +             if (is_struct_ops)
+> > +                     sign_extend(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG=
+_0], m->ret_size);
+>
+> ... in here, so it is better to write the code like this:
+>
+> if (is_struct_ops) {
+> ...
+> } else {
+> ...
+> }
+>
+> Maybe Huacai can adjust the code when applying.
+No hurry, I will wait your series (and there is another patch from
+Jiang Haoran, too), then apply together.
 
-...
+Huacai
 
-> So let's sign extend struct ops return values according to
-> the return value spec in function model.
-
-...
-
->   static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
->   					 const struct btf_func_model *m, struct bpf_tramp_links *tlinks,
->   					 void *func_addr, u32 flags)
-> @@ -1654,6 +1677,8 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
->   	if (save_ret) {
->   		emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-
-If is_struct_ops is true, this operation is not necessary, because
-LOONGARCH_GPR_A0 will be overwrote in the later code ...
->   		emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-> +		if (is_struct_ops)
-> +			sign_extend(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0], m->ret_size);
-
-... in here, so it is better to write the code like this:
-
-if (is_struct_ops) {
-...
-} else {
-...
-}
-
-Maybe Huacai can adjust the code when applying.
-
-Thanks,
-Tiezhu
-
+>
+> Thanks,
+> Tiezhu
+>
