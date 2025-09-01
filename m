@@ -1,102 +1,101 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C04B1FBEB9
-	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 01:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C47938FA3
+	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 02:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756691865; cv=none; b=RtkzW+pNrwdheisVz9zmWWIzEItiECY81LFLxODQyXVMjvjJvHJOTzgSUMl0E584OmkhECTYiyMo42tnDUO5GrY0S40UzeEBMdnBn9UPGr6ZghA7tlOv4C8gO7s9uqi3G0p+X8Fm0EpKoXXhPNMAln2VkmRxD2ZVI5MhcbJaO8M=
+	t=1756694865; cv=none; b=s6Ryal+SxH1vQ4DAe6LhvqKYc94geH7Hmy1s0g/AKcWAPx0SzLPi9S/u24/VkYX5JiaZ6XUvEZdmfnkeRTfsBmCSyVXOx7awPgRDM/nYVueYhT/mgZdnQngjvDcqjeA3QENx3STIEzj55qv0bVTT3XMq6RmlhsFSWVk93Eh6ZC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756691865; c=relaxed/simple;
-	bh=13xyZEyHtmKIBqhuxJv+8+I095v7QVL3CpCVZwMQsX8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UtCu2UrGSzk6PaNZlf8mqZuN13c+VAsflVbf4/B08p4VXlBUknPIvJ5Hp0hdt9GwOwgbyd2ycKfwc1AKuC6Vf8uiSzCMlJmE8Myv5/8BhwOFzTI6+0WTvicQLXTC5GML0K2gRfkso9atwXxJ4n6qRLiCcLCAA9jOTMqg+BKvN2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zn/4aQRe; arc=none smtp.client-ip=209.85.210.51
+	s=arc-20240116; t=1756694865; c=relaxed/simple;
+	bh=rxZr/LcE7mUoqfWVuzgUn17kyp83T4elClPnRt0j/t0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=msjh/xxeawDDUchIpmjZtS/hpJ6hkOZc05quQ9PUFBNO0mYb7DThekMXkdELvqx5oXG6HcnS+CO7OH1Twx4ce3qy67ksLiKGCKHMC72tWeHaUCkOi2XiHCEAkDyD6976IxivvYVVLdpqINn/0W43VXXV/Lr7QrytPjuBFn2f53A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mhSxPEfi; arc=none smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zn/4aQRe"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7455333b04dso2450264a34.1
-        for <loongarch@lists.linux.dev>; Sun, 31 Aug 2025 18:57:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhSxPEfi"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4b30f73ca2cso29066971cf.0
+        for <loongarch@lists.linux.dev>; Sun, 31 Aug 2025 19:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756691862; x=1757296662; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eSAvJfEOdVoFarNNb1vovLpi3YaQQM9EDFNwvLn8jog=;
-        b=Zn/4aQReKYwqtEFZu24XVmCwt7b0PfFTBMR3X4lj3wCjXQWTFJ4YguZBx8NOcNVLXO
-         3aYTzYnnQbI8Ofa9+JZy0SPjN0dx5ftPmRGFK4F8AR96Tt7rMey7xctola6WYEpxIxdk
-         BzcKIniPZAkKleVZHFF93Xw77qevPcbKu6CQEb5+4uT9DKhJO3egOSKnNGk6iHKtYHjQ
-         SGlX/HJQHjGN/5zrq/N43dGI5b2FnxMLAkW3kCBTzshq9qBKBYFk6istYPpHIT011rfa
-         0LidoRoUH+pDP8F2ChVzxMtl+o+rDDUYdvXpnscSRq2GZhd/zg72843HPlBs34TEQ+tH
-         XzxA==
+        d=gmail.com; s=20230601; t=1756694863; x=1757299663; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oZYiCjncPBOCZL5vVyQngckkkRakO4ayJSf8550Lyuw=;
+        b=mhSxPEfi4Sr+yQxPppYm1681C//1TSOrmsFgbVW7h8S2yhF7WgpL0Z2cqrQyM+cUe/
+         5mCMICEHsBqLHrckYwgP4k9v0eqsOEudYrdp4hUE+3oKY8onT5FtpmV+MFaEq2Z1ZITr
+         xOapV9wtRLMZcYz6aLavjHjjmCkDSO7E/K3xZ7vdtyz71qQ/w2F/Sj90p++I9oLIZsFX
+         ErpA76X/m07SYpSFmL5FLiPRJ4QkcpSJnbA65Xu6PFW1jkIAr/dTfOdUjkIEojyra58a
+         rfM/t52rH+xvGPNG6tqCyF3rpk0BphhNMeSBIQTLG22I8I3AT9f4dqtrBF4Sbfc8//JP
+         KtHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756691862; x=1757296662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eSAvJfEOdVoFarNNb1vovLpi3YaQQM9EDFNwvLn8jog=;
-        b=nqo7GIvCdUvsapnDiAIxKFNM2LVTBWlvSBi0i1dZdOrO+3vKHD2I8FgHm+nHbdgrIM
-         4CIVKxpHWMUTLQyLqEHhhGD7gw3hh3PV+H+Q8FClcXg9FCjCVYyOQ+spLJqNFvkFB1Yd
-         sQL9r2NI/NjfbAbkJ07r5CJy5hZd/KJ08NOgBsICW0fnbHGkUUgJnet/XCFLySa+8Jsd
-         0T9+lvxu2+woLlyd792f3evTweKRVzwGBDnlIf/3lnFZSGBUpFdXusBjIb8jYQcgT/Ic
-         +HrbyajXEZyVkqMPfFUt/Wh4qH3TxNEkcjVBj+YLu2PPI5i9Yj4RQuMYmxpwsVVdmFGe
-         xxNw==
-X-Gm-Message-State: AOJu0Yw6brk4BLjqgdRVmk1ecHdFSamd07f5fpM5K0KfIkbkAuL1EBOX
-	iOMpptzYUkqXl/2XNwOYyTwiXChXUrYBGNbS7oOL4DP7qNenI7MopwKI9GKhUfajNxSgYfGqBej
-	Ok1PfFq9GT+djrJW8Qw6v4CPa4S7L0gU=
-X-Gm-Gg: ASbGncuxu2F1tiRv8BNBe0J3yLHtOaXI9pCnLjh/3+iAqhIak3zfcqmx8r3L/KUBtGq
-	4Gv0559w9vlYZAyV53if0kHqwaJRZoauRxkAnVztN8qAOw/USYGqAUN5T6IYWm7Ld053qRnyGDr
-	yO7zYEZc/J66VXsMekaWNLjqBWmgxhuqQ8ThT8iAQZPunocYndGoXMVXmHIQ/AZreHS9t5JR1/z
-	v5Svn92G0gsaaa+j3KenaBVZKE=
-X-Google-Smtp-Source: AGHT+IF6sEhzr4qx1QXzaZN28Gu7ptKWw5Njp0aPWdmtjCbXNWuNyixKuITpp9iVseda2SBce+9anx/sHCCwCZEBaP0=
-X-Received: by 2002:a05:6808:2f1a:b0:437:dad8:4942 with SMTP id
- 5614622812f47-437f7e075b9mr2408795b6e.34.1756691862224; Sun, 31 Aug 2025
- 18:57:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756694863; x=1757299663;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oZYiCjncPBOCZL5vVyQngckkkRakO4ayJSf8550Lyuw=;
+        b=ZQOdsDTCoHmCEDZzuC/TDz50ElZnUrAfDBsTKgkp7p5sgl8N+JFVx8kbvkVCexP2+R
+         fdoKP0YoQDoq90qdBywcgNha4S5H05NYeRKd+eyaDq7Z3TWVhHI9cyb6LaIjQD1MIHnu
+         NOUK0AKjkApXjAC5F64Hl36uTSSVtge7ceAQY3m66ZzKYl6yUo2xkx4Urc5n667tlYpv
+         RJp5Chz2fpHHjH9UCMoMuMjG8bgTZk093WYbcUMN/OJC9BzxyF+4vqv2E/8QAgsV5kDv
+         F+QrX0dGlZBEDen/QoYqTp+EXutw+MlYVE2+lZJqjNOhVChqxAre1g/5jjCu5dZA3+0x
+         TJZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVteXKOunTg9YoBxNKB0Rg2L4+7fCNCZNvIaMmbp4pBiF4BQl04DPLsGlVZ2Vbm9tIhHv3TbI6wjwA=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz6xuRXjNl6JMJG7oIHDPUX40byjXz3XFhQcqQSkvSILXPAK5fJ
+	2YlrKO1jgoiQjoHrBlw9lamqqQNcoWoWrIVSIKrpqYBTQfOIen6yZBHy8spo9FwsP7e4FiW3I5g
+	WFCxpvew5qq7ZrigUt88Vpg3bAfzMrns=
+X-Gm-Gg: ASbGncu4a3s/iD2TYALCsO377qcceJyral5R9MyvXPlW6w2ZmzAXN2RSDuawaDSGLjb
+	ja7xn7AexGI+6SfPRlyP0d9rg6KQWE/DzMiJUKCMwXwb78e0eZRB7WdPqGu+6D7kAOE8sZKqwhX
+	t02aEk7puyt1b53RVWE96bM4rhcbBuUZ22A8kDy3cjUIGksBuuCQvkAroTe6kyuv/NmWuqk9QmT
+	pGvf1eaUvMZaDN29w==
+X-Google-Smtp-Source: AGHT+IHXzXAlKqknR7kubGUYqfXblADyqMfalPcwqRqHW29E6ncagvwr7bLO51jOlizKaUogiwo9dSOgT9qhm/58z2o=
+X-Received: by 2002:ac8:7d51:0:b0:4b1:dd3:e3a0 with SMTP id
+ d75a77b69052e-4b31dd23cf1mr74235981cf.63.1756694862825; Sun, 31 Aug 2025
+ 19:47:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250831234328.22440-1-hengqi.chen@gmail.com>
-In-Reply-To: <20250831234328.22440-1-hengqi.chen@gmail.com>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Mon, 1 Sep 2025 09:57:31 +0800
-X-Gm-Features: Ac12FXyABK8D8Q2ySlO9-7WqqkVpUgnpCxVdWTyeb-UQgpABBENHIcX0axup4aQ
-Message-ID: <CAEyhmHTV8a=Tp-qjHqMrUtN08n7WRJFGxZ85+eoVNnGiPTj8=w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] LoongArch: Fix BPF trampoline related issues
-To: chenhuacai@kernel.org, yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, 
-	Jinyang He <hejinyang@loongson.cn>
-Cc: loongarch@lists.linux.dev
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Sun, 31 Aug 2025 19:47:30 -0700
+X-Gm-Features: Ac12FXxAkBGzgJL6wXci8JirS0KlZnqs7A_RgrHcMn8mLb0FUKeEL18G77Af9kY
+Message-ID: <CAK3+h2wLLoVW_daqow_ygbut=KnDkPbvG_C8rOoyaiyFMnrPLg@mail.gmail.com>
+Subject: [BUG?] driver stmmac reports page_pool_release_retry() stalled pool
+ shutdown every minute
+To: netdev@vger.kernel.org, xdp-newbies@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-+ Jinyang
+Hi,
 
-On Mon, Sep 1, 2025 at 9:55=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com> =
-wrote:
->
-> The following two selftest cases triggers oops on LoongArch:
->
->     $ ./test_progs -a ns_bpf_qdisc -a tracing_struct
->
-> This small series tries to fix/workaround these issues.
-> See individual commit for details.
->
-> While at it, remove a duplicated flags check in __arch_prepare_bpf_trampo=
-line().
->
-> v2 -> v3:
-> * Simplify sign_extend() implementation as suggested by Jinyang
->
-> Hengqi Chen (3):
->   LoongArch: BPF: Remove duplicated flags check
->   LoongArch: BPF: Sign extend struct ops return values properly
->   LoongArch: BPF: No support of struct argument in trampoline programs
->
->  arch/loongarch/net/bpf_jit.c | 34 +++++++++++++++++++++++++++++++---
->  1 file changed, 31 insertions(+), 3 deletions(-)
->
-> --
-> 2.43.5
+I noticed once I attached a XDP program to a dwmac-loongson-pci
+network device on a loongarch PC, the kernel logs stalled pool message
+below every minute, it seems  not to affect network traffic though. it
+does not seem to be architecture dependent, so I decided to report
+this to netdev and XDP mailing list in case there is a bug in stmmac
+related network device with XDP.
+
+xdp-filter load green0
+
+Aug 31 19:19:06 loongfire kernel: [200871.855044] dwmac-loongson-pci
+0000:00:03.0 green0: Register MEM_TYPE_PAGE_POOL RxQ-0
+Aug 31 19:19:07 loongfire kernel: [200872.810587]
+page_pool_release_retry() stalled pool shutdown: id 9, 1 inflight
+200399 sec
+Aug 31 19:20:07 loongfire kernel: [200933.226488]
+page_pool_release_retry() stalled pool shutdown: id 9, 1 inflight
+200460 sec
+Aug 31 19:21:08 loongfire kernel: [200993.642391]
+page_pool_release_retry() stalled pool shutdown: id 9, 1 inflight
+200520 sec
+Aug 31 19:22:08 loongfire kernel: [201054.058292]
+page_pool_release_retry() stalled pool shutdown: id 9, 1 inflight
+200581 sec
+
+Thanks!
+
+Vincent
