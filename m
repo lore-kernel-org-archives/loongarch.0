@@ -1,55 +1,55 @@
 Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2E4198A11
-	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 13:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DBD2FABF8
+	for <loongarch@lists.linux.dev>; Mon,  1 Sep 2025 13:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756733507; cv=none; b=nW0gdPD8IA+KYgO6LzTKngMArsq4md1BrrKfYjTqNPBnh+32z8ijPWrgxSQbmTUF0uBOqXcGCUTDz4rqBnr1EEBJ/hUwQE/SGyRRhN0/9euAS4YPDUywSMR/KhFy4ynpdmHinS9+z6PtarxqE4i53bg4djJ1DvXiv4sGpTqQBkA=
+	t=1756733734; cv=none; b=b8lrIjcjEiHQTEq0EzLcAl9bx0unPtZdscB7qwUag1Dl/eFwmeBJPRsDHllV2CCVItpycPkrdLizbjslyergzBG7UQYtBLn3Zc6wV+Ao0EPC6adE4fsh7BNrzXmUufMcgyro/n1y6EIOHJHUo4JL9f2eMwgm/I3ga20WDysTqTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756733507; c=relaxed/simple;
-	bh=Eznu89d4Wi9DxarExeHtKpzVjwvcq68i7OTy3S868gA=;
+	s=arc-20240116; t=1756733734; c=relaxed/simple;
+	bh=AnVy+GFpTqM3XIwnfxspH9w/hhNpLd3QoIWawv7MRX0=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=KRjxMEn9Ng+A4P5m/aNEvZoYXV2hpXvsNkkkIIPkymVfhmfzeMr28+6JfPaAvcQX77qryQ1utc5ofl5pRDuo23DOBMWUJuz5haaei9IJLubeMWTYF9xOx5opBX0rsSW1FF5R8ps6GDNsn/Yf2c30C/BJP3LiwTvFIvMBXBqGXxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=j6cv+uWE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DSMSTkhz; arc=none smtp.client-ip=202.12.124.137
+	 Subject:Content-Type; b=ZXDfIqWnseQ8zi9vkMuFr6dB1ri7hqSh8ioR7brLIswWAePNAg9ONGXUb9SZTeOnKpn/J9AKtDA6RLU+gmmpNtGi8FGxnx6kZ4h2W+8vSm3CLHp9sgjPhaTp7EdlxfaxfNn7ExvVY4Zdl1O5xEN1SQnY2pwZTqavHL9aSlMhQMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qOIcHpD4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TrZ7WmYW; arc=none smtp.client-ip=202.12.124.137
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="j6cv+uWE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DSMSTkhz"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qOIcHpD4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TrZ7WmYW"
 Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.stl.internal (Postfix) with ESMTP id 5D0C61300A65;
-	Mon,  1 Sep 2025 09:31:43 -0400 (EDT)
+	by mailflow.stl.internal (Postfix) with ESMTP id 72DA61300C7D;
+	Mon,  1 Sep 2025 09:35:30 -0400 (EDT)
 Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Mon, 01 Sep 2025 09:31:44 -0400
+  by phl-compute-05.internal (MEProxy); Mon, 01 Sep 2025 09:35:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1756733503;
-	 x=1756740703; bh=Eznu89d4Wi9DxarExeHtKpzVjwvcq68i7OTy3S868gA=; b=
-	j6cv+uWEmN4tRp4L+tzI/9Zq6plmAiANvC3bo2w95zYsUC+H+2erTLZ0M6N7rnUE
-	0WJqmOlYYzOb6wa1b0ygTdG8BC5pYAWdzw2aqVPy+8gMQw3BlT0hWNGrjJ5655BK
-	jDWe+Joso3PW8J2CnKz3MeMzgwGqXtpLwj39pSqXUuiPUDezRBK0v5/xoU+sFox3
-	GWlZUV/LVedziW2nrloxdmm+vcN5X4cO58hdosyWO1W7tMLZTaRBkEP/5cheXfwp
-	+K5jjBJhDLT22wliXgMPdBEhiHMG/Km2fCAWR75bU4MZMr7W2ppn+8l8thXubf8x
-	H1W/5LtJ+sW5tj5YEJdOHw==
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1756733730;
+	 x=1756740930; bh=AnVy+GFpTqM3XIwnfxspH9w/hhNpLd3QoIWawv7MRX0=; b=
+	qOIcHpD4d/ZwPxo1YAsCo06kvto8t7fcl/eyXQIg6cyMQZbfFLNJfqA2efdp4Xsl
+	SIxwT8NGSQEC1RYPKlI0w/9nHoTAjYhQnSNteytsGnnBue+kcc/ExwpMSrzbmjfu
+	+oboS1XJQ4PeLkgo/1t43q1StwLR6V2MDXQTVGUDUXS1g42rUqUbMAM5+WH8VnSH
+	kaWZ18CwqCxP7TO5BT4ZAGk7Pn1Z/8/XDfGh4tAITg3Z8HdEgvBouVWrHd0xoAiO
+	qv4oRiSq3Mhf0KE3i7RjlwcZNN7oiL5/3iv0waT1HbgOZ3HCFVNC+vRq22I7Wz7v
+	QiBDfGjrNaidFxuWoPXK+g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1756733503; x=
-	1756740703; bh=Eznu89d4Wi9DxarExeHtKpzVjwvcq68i7OTy3S868gA=; b=D
-	SMSTkhz+YqIgiIvkfFhIfiL/7qZcqhBI4oCB9ZKy/r9OlCO0VYO0928G7HzW3t1X
-	R5CRMBk05X1v8XiPu0gU8Dsn6nFpXoqjPCqceWub8u0XqW6tCJ1OP7wG35dQCrI7
-	aSnljlc2n08wq1OFKrRVZX0kwVGoKguuQ/7/Dcw10oaWILbODGBPN66UY2hV+Hsl
-	Pxzc3wqxsF+FDOrc6yCoojuU69bPtOK3gY/ELK/7yp9zj2ym+EvtTx/qYimHAc9i
-	BoY9nsK3bIOPmDgoDjHr1nj4App+jYB2XmiH3LFMvgce7UfNmWvVI5wf8Kk3A7Gi
-	iHW0WInKpkLoSLGn621+A==
-X-ME-Sender: <xms:PKC1aIcONhsW8pFWOV14Sq7PTSfGUzdsPiv1pf9lSeQIoeQuUROA1Q>
-    <xme:PKC1aKOVe-VGCwHjIr1-HCUTyP2eI6IVsjiZwzoJs8XrW5uMtrI3FpSZ6Dsf67EKk
-    UVTmDVgbd78EjylEJU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduledvvdekucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1756733730; x=
+	1756740930; bh=AnVy+GFpTqM3XIwnfxspH9w/hhNpLd3QoIWawv7MRX0=; b=T
+	rZ7WmYWNKyTbBY0kpjsY07s3bpDNclAvZsAXI08SlFwVW+Ue69i4oCFAyqUpoKm1
+	CcQIQxv7Hmp4aVz7nEpjk5GdPWcO1haigrmDuMzTGRMruHZiN4qTX5WBBR4KJm4v
+	JJY6GqEOxeOtjDk/rKAh5vtg/2MK/YVpyOLcJNiv/dDj8BBkVSeVfTw7bG3uAS+N
+	1QuVYU4DQW5tNXY+Kq5F9HRYmIFo8Dlw5ydb2ovHcxqPGgzlBclh0D3/UtBOQfYF
+	MzrQ9r9iIoMLPbV2gpH4YsjASp8H3D4jOs6RAJSARnhDv+kSET/nwrfgFY9tzqLE
+	oFX2UPss9JLXwxUKU76TA==
+X-ME-Sender: <xms:IKG1aDr3Hqrb31TbMjN78ZTLVNY4RM96ZCFBcQVyAuY4LgHcbrnlEQ>
+    <xme:IKG1aNp7u77IIkCCX9bjV4qZW5wWqe7OkAxvJPCwwbE91dmYpG4mpCOLTMXsp-Jm3
+    nn8tlWvYObQvbyKOTk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduledvvdelucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
@@ -65,14 +65,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduledvvdekucetufdote
     htthhotheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprghnnhgrqdhmrghrihgrsehl
     ihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigi
     druggv
-X-ME-Proxy: <xmx:PKC1aPW1RGYxcaPPwQB08we1CrOb0vWdovfn6r5qNGsSUnTRNoysJw>
-    <xmx:PKC1aACPYBlQb5Uv6Ak1zXW3vbtk9zPb7jxSCaujwkmIdsz7VISSsA>
-    <xmx:PKC1aBANLPAWF_L6c2MK_OSvCPKCWVpa-XxY8Gz3G2h9a5ymRg7i6Q>
-    <xmx:PKC1aOYWrsQphouZ9KK0mtpQNLo0VBdm9yK6cb4vr0A_2uyW7_Wa4w>
-    <xmx:P6C1aLu2umbwmZJroLvt1vyRUndw9ctOMRaDydbyr815g78VacSqp4S2>
+X-ME-Proxy: <xmx:IKG1aLMz2TINr0c9twI8YvaS3Bl-TSQE5dUZWyhg-L_0znn_f0dfPQ>
+    <xmx:IKG1aE38YbHUEz7fNiAfpCQE3WrOAZZWG3HU_NyUya0Hi5uZ6Hpw_g>
+    <xmx:IKG1aKom2NHpTpyZT_0AwJSkDC2sC6eK75faHFKKsNdr-FTPcJGMHA>
+    <xmx:IKG1aEs7wsdixga8FnPAoUQDIFaRRBPGSqTVbhgfbhKfgrnZLF3VgQ>
+    <xmx:IqG1aPF5JqcLstqMCk-eCuy-NBIHh4w5lGboHTQV22jCAUfuu3AJWcNC>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 68A5D700068; Mon,  1 Sep 2025 09:31:40 -0400 (EDT)
+	id 33FF5700065; Mon,  1 Sep 2025 09:35:28 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -80,8 +80,8 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: A1XJ5FccVF4B
-Date: Mon, 01 Sep 2025 15:30:20 +0200
+X-ThreadId: AWRA786TDMiJ
+Date: Mon, 01 Sep 2025 15:35:06 +0200
 From: "Arnd Bergmann" <arnd@arndb.de>
 To: "schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
  "Dinh Nguyen" <dinguyen@kernel.org>,
@@ -179,13 +179,13 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
  linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
  sparclinux@vger.kernel.org, linux-um@lists.infradead.org
-Message-Id: <78ca3a1f-2ed9-4450-95ef-d690cf4aace1@app.fastmail.com>
+Message-Id: <ebe9be04-274b-4791-b883-198320cab886@app.fastmail.com>
 In-Reply-To: 
- <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
+ <20250901-nios2-implement-clone3-v2-2-53fcf5577d57@siemens-energy.com>
 References: 
  <20250901-nios2-implement-clone3-v2-0-53fcf5577d57@siemens-energy.com>
- <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
-Subject: Re: [PATCH v2 3/4] arch: copy_thread: pass clone_flags as u64
+ <20250901-nios2-implement-clone3-v2-2-53fcf5577d57@siemens-energy.com>
+Subject: Re: [PATCH v2 2/4] copy_process: pass clone_flags as u64 across calltree
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
@@ -202,11 +202,12 @@ On Mon, Sep 1, 2025, at 15:09, Simon Schuster via B4 Relay wrote:
 > (CLONE_CLEAR_SIGHAND and CLONE_INTO_CGROUP) are evaluated, this is still
 > undesirable in terms of the principle of least surprise.
 >
-> Thus, this commit fixes all relevant interfaces of the copy_thread
-> function that is called from copy_process to consistently pass
-> clone_flags as u64, so that no truncation to 32-bit integers occurs on
-> 32-bit architectures.
+> Thus, this commit fixes all relevant interfaces of callees to
+> sys_clone3/copy_process (excluding the architecture-specific
+> copy_thread) to consistently pass clone_flags as u64, so that
+> no truncation to 32-bit integers occurs on 32-bit architectures.
 >
 > Signed-off-by: Simon Schuster <schuster.simon@siemens-energy.com>
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
 Reviewed-by: Arnd Bergmann <arnd@arndb.de>
