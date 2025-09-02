@@ -1,86 +1,224 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73972FF15F
-	for <loongarch@lists.linux.dev>; Tue,  2 Sep 2025 11:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C5D272E46
+	for <loongarch@lists.linux.dev>; Tue,  2 Sep 2025 11:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756813502; cv=none; b=GqVCtkGags45mKFqBAVTH1SuSl8cOdxReSIHiVDZK4PtJwXMZrWkUUW28i+ltsja/j2PSQdc2bVpZEZ9kdzKilKaqVolRm1feS6udwLb/ia3eNfhP7ZAxnr9pzelqUOxSW6SoGqv95zxrDD+uUTVA7SDeodfkyMSG+m++krA4BE=
+	t=1756814332; cv=none; b=naVk1Dh4jTSylbDJVXGnnwHp9GdkTOhRbMEwOtB6nzxTvO1bype7auOilwLM437c/8XY/K7R7k8ajhgtfnl7hsopz7zK/5xO0c/zMYMpsU+t8oRm3p/3fkRoLcIhFj0dOOHMyfaxhm4S+1QHh8YPrV4xXEMg8NkNUCHusJogOco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756813502; c=relaxed/simple;
-	bh=0o5C5Ly/rHsnoowmYx3m8IcTZ1cPVbKim17lOjF7UUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yr99fq3LKd2sOGPqzXWTUgrntYafMafyWYpftc7jDAzWfecr0WG1Ub7D8gMijEC4SwxcBl6NFyyJsXN1ld62UMoKvIvLOlitEsQhmblHnR6Fq6O/AY91Lt7Nxv02Mz5VrJhsVI6HlMjwvwjOaRYaMnspm/e0NWPvOj1le/Ik8WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=jXmzEnXa reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
+	s=arc-20240116; t=1756814332; c=relaxed/simple;
+	bh=j/Jwr/nB0tXPhpoKkVu7JdowEXdG5JIKqo/3ZnOpSi8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c+LbJFnhJYna+TXW3dP8JhZZhDWYL9xjslL/c9vbXa5xVJwThaWM0Rgwb/N0B/NOADWzOXGTtxcPIh2UcbdwA11KnMwfNsa38v5jbQw5SUy1VJZ3nJZ0eOAw7pc/LO/Rtmb9rXk6SY/QTgMf70ulu0bTrMZ48xitg6+TTXzxY7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzg9KSJN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="jXmzEnXa"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4cGP6x6Rpwz1FZPJ;
-	Tue,  2 Sep 2025 13:44:57 +0200 (CEST)
-Received: from [192.168.0.25] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4cGP6w5mgsz1FXjD;
-	Tue,  2 Sep 2025 13:44:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=simplycom2; t=1756813497;
-	bh=voGobjfJ+JDIyxPuu8fGQb2u9QP7Z513vboXRHjWrpI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jXmzEnXapdgWj3k2C76LGG7k/5mt1kwvMqAYSfMFYlJ0dMOQ80Oj2YE0pnZAtNJ4t
-	 tXQk/LzaZA57Nv160y42KGcSc12HLtx5zDkXLTwO001yujBIUCUp0jXWbSqOup1wEK
-	 caelEQWo/j1aiLxV7BPWjSbstlue7ClkuM93YSG2cSzlCJSLWryT6cSw2EEQcr+aVF
-	 FTt0lGn6fnMuHg7U0U6sd3U2Ku9tEiPKwlVMzDHUsOHxPUryMAOV1qAvelOgjen0aR
-	 RoDQinmHdiIG1eCVLztKOXDNMYphrSPAPE4G8u5ceaF4FDq1DzCH6UTTJUx5w29cc0
-	 vZYTj+Lq2QLjQ==
-Message-ID: <92bace9a-b5c4-4ea1-a1f7-4742c15a64a0@gaisler.com>
-Date: Tue, 2 Sep 2025 13:44:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzg9KSJN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1182AC4CEF5
+	for <loongarch@lists.linux.dev>; Tue,  2 Sep 2025 11:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756814332;
+	bh=j/Jwr/nB0tXPhpoKkVu7JdowEXdG5JIKqo/3ZnOpSi8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jzg9KSJNBBKL0XaFT+9kUxAtv9rPdbRWppDsJOdV6usvQ3zD7+I1RPQd0MOIXWAHw
+	 PtE9ytV2pQimV6WNOGy7KAtKgdCZ6i4SLlyzWVIZki9btxfwOn43vTzU1O/OkTUjWj
+	 0Gf/fIis2rCyyq+Y/9DJCAZgCMY9lreaErGcT8zTbJMKNo4WQvrvx70j6W700C4ag3
+	 fzSazZ//LhW9PdYGFyVaF26NVUZP4GurTztIGuFbYNOTLEK5T9ypE8uUpv9vzRwNRm
+	 hCb4b77KiF9jWeUptr3h7lO11qJoafvjP2c/nSbIiJKcwfoyD9gXvJQccVXkJ67bJk
+	 iXO64yFjtGo9Q==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b043a33b060so206589866b.1
+        for <loongarch@lists.linux.dev>; Tue, 02 Sep 2025 04:58:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU3td8hs6VOYd/nVLokMSIl2tBf+BK7eQHGyK53c3lFyi31Gcq79AvnMjaC8TTT8zl5T/XAbQ8Ygc0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzgbyiXM6wzNKMFYBl5tVUY5Gz3zMjk/Yqsp8j5oEiR+EzMjt+s
+	ExV32xVv3qX2BxnIurOIBRt9gyd/7sM3BlJFfmRa153/O31ThxnldTOmKYjoIwIKjCv3oWeFWCa
+	kYFVSp3THd1HUpri66C5aHP+F8RQIGQ8=
+X-Google-Smtp-Source: AGHT+IHzG/wKW22VkgqhSqSrx6fuMcYMbjWzX0NMg1/Www8PFf4TcVGlMH/51DhJcAZWk0uJEUQHQqiU23PhMY4xuHQ=
+X-Received: by 2002:a17:907:a09:b0:aff:564:128c with SMTP id
+ a640c23a62f3a-b01e6d6fb48mr1075429066b.65.1756814330624; Tue, 02 Sep 2025
+ 04:58:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] arch: copy_thread: pass clone_flags as u64
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com,
- selinux@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org
-References: <20250901-nios2-implement-clone3-v2-0-53fcf5577d57@siemens-energy.com>
- <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
- <f2371539-cd4e-4d70-9576-4bb1c677104c@gaisler.com>
- <11a4d0a953e3a9405177d67f287c69379a2b2f8f.camel@physik.fu-berlin.de>
-Content-Language: en-US
-From: Andreas Larsson <andreas@gaisler.com>
-In-Reply-To: <11a4d0a953e3a9405177d67f287c69379a2b2f8f.camel@physik.fu-berlin.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250902094945.2957566-1-maobibo@loongson.cn> <20250902094945.2957566-2-maobibo@loongson.cn>
+In-Reply-To: <20250902094945.2957566-2-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 2 Sep 2025 19:58:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7hCggw_zhQk89uvBrpAPxgHCS_BC5+twsyZdwWkF4A1g@mail.gmail.com>
+X-Gm-Features: Ac12FXzw2QKDeMIrnZ-EJqRnyhVniM9UQBAWMAeOEa_K8ML-RCci0hJUHtWBDlg
+Message-ID: <CAAhV-H7hCggw_zhQk89uvBrpAPxgHCS_BC5+twsyZdwWkF4A1g@mail.gmail.com>
+Subject: Re: [PATCH 1/4] LoongArch: KVM: Avoid use copy_from_user with lock
+ hold in kvm_eiointc_regs_access
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Xianglai Li <lixianglai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-09-02 09:15, John Paul Adrian Glaubitz wrote:
->> Thanks for this and for the whole series! Needed foundation for a
->> sparc32 clone3 implementation as well.
-> 
-> Can you implement clone3 for sparc64 as well?
+Hi, Bibo,
 
-(heavily pairing down the to list)
+On Tue, Sep 2, 2025 at 5:49=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+> Function copy_from_user() and copy_to_user() may sleep because of page
+> fault, and they cannot be called in spin_lock hold context. Otherwise the=
+re
+> will be possible warning such as:
+>
+> BUG: sleeping function called from invalid context at include/linux/uacce=
+ss.h:192
+> in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 6292, name: qemu-s=
+ystem-loo
+> preempt_count: 1, expected: 0
+> RCU nest depth: 0, expected: 0
+> INFO: lockdep is turned off.
+> irq event stamp: 0
+> hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+> hardirqs last disabled at (0): [<9000000004c4a554>] copy_process+0x90c/0x=
+1d40
+> softirqs last  enabled at (0): [<9000000004c4a554>] copy_process+0x90c/0x=
+1d40
+> softirqs last disabled at (0): [<0000000000000000>] 0x0
+> CPU: 41 UID: 0 PID: 6292 Comm: qemu-system-loo Tainted: G W 6.17.0-rc3+ #=
+31 PREEMPT(full)
+> Tainted: [W]=3DWARN
+> Stack : 0000000000000076 0000000000000000 9000000004c28264 9000100092ff40=
+00
+>         9000100092ff7b80 9000100092ff7b88 0000000000000000 9000100092ff7c=
+c8
+>         9000100092ff7cc0 9000100092ff7cc0 9000100092ff7a00 00000000000000=
+01
+>         0000000000000001 9000100092ff7b88 947d2f9216a5e8b9 900010008773d8=
+80
+>         00000000ffff8b9f fffffffffffffffe 0000000000000ba1 ffffffffffffff=
+fe
+>         000000000000003e 900000000825a15b 000010007ad38000 9000100092ff7e=
+c0
+>         0000000000000000 0000000000000000 9000000006f3ac60 90000000072520=
+00
+>         0000000000000000 00007ff746ff2230 0000000000000053 9000200088a021=
+b0
+>         0000555556c9d190 0000000000000000 9000000004c2827c 000055556cfb5f=
+40
+>         00000000000000b0 0000000000000007 0000000000000007 0000000000071c=
+1d
+> Call Trace:
+> [<9000000004c2827c>] show_stack+0x5c/0x180
+> [<9000000004c20fac>] dump_stack_lvl+0x94/0xe4
+> [<9000000004c99c7c>] __might_resched+0x26c/0x290
+> [<9000000004f68968>] __might_fault+0x20/0x88
+> [<ffff800002311de0>] kvm_eiointc_regs_access.isra.0+0x88/0x380 [kvm]
+> [<ffff8000022f8514>] kvm_device_ioctl+0x194/0x290 [kvm]
+> [<900000000506b0d8>] sys_ioctl+0x388/0x1010
+> [<90000000063ed210>] do_syscall+0xb0/0x2d8
+> [<9000000004c25ef8>] handle_syscall+0xb8/0x158
+>
+> Fixes: 1ad7efa552fd5 ("LoongArch: KVM: Add EIOINTC user mode read and wri=
+te functions")
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/kvm/intc/eiointc.c | 33 ++++++++++++++++++++-----------
+>  1 file changed, 21 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/=
+eiointc.c
+> index 026b139dcff2..2fb5b9c6e8ad 100644
+> --- a/arch/loongarch/kvm/intc/eiointc.c
+> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> @@ -462,19 +462,17 @@ static int kvm_eiointc_ctrl_access(struct kvm_devic=
+e *dev,
+>
+>  static int kvm_eiointc_regs_access(struct kvm_device *dev,
+>                                         struct kvm_device_attr *attr,
+> -                                       bool is_write)
+> +                                       bool is_write, int *data)
+>  {
+>         int addr, cpu, offset, ret =3D 0;
+>         unsigned long flags;
+>         void *p =3D NULL;
+> -       void __user *data;
+>         struct loongarch_eiointc *s;
+>
+>         s =3D dev->kvm->arch.eiointc;
+>         addr =3D attr->attr;
+>         cpu =3D addr >> 16;
+>         addr &=3D 0xffff;
+> -       data =3D (void __user *)attr->addr;
+>         switch (addr) {
+>         case EIOINTC_NODETYPE_START ... EIOINTC_NODETYPE_END:
+>                 offset =3D (addr - EIOINTC_NODETYPE_START) / 4;
+> @@ -513,13 +511,10 @@ static int kvm_eiointc_regs_access(struct kvm_devic=
+e *dev,
+>         }
+>
+>         spin_lock_irqsave(&s->lock, flags);
+> -       if (is_write) {
+> -               if (copy_from_user(p, data, 4))
+> -                       ret =3D -EFAULT;
+> -       } else {
+> -               if (copy_to_user(data, p, 4))
+> -                       ret =3D -EFAULT;
+> -       }
+> +       if (is_write)
+> +               memcpy(p, data, 4);
+> +       else
+> +               memcpy(data, p, 4);
+p is a local variable, data is a parameter, they both have nothing to
+do with s, why memcpy need to be protected?
 
-We'll take a look at that as well.
+After some thinking I found the code was wrong at the first time.  The
+real code that needs to be protected is not copy_from_user() or
+memcpy(), but the above switch block.
 
-Cheers,
-Andreas
+Other patches have similar problems.
 
+Huacai
+
+>         spin_unlock_irqrestore(&s->lock, flags);
+>
+>         return ret;
+> @@ -576,9 +571,18 @@ static int kvm_eiointc_sw_status_access(struct kvm_d=
+evice *dev,
+>  static int kvm_eiointc_get_attr(struct kvm_device *dev,
+>                                 struct kvm_device_attr *attr)
+>  {
+> +       int ret, data;
+> +
+>         switch (attr->group) {
+>         case KVM_DEV_LOONGARCH_EXTIOI_GRP_REGS:
+> -               return kvm_eiointc_regs_access(dev, attr, false);
+> +               ret =3D kvm_eiointc_regs_access(dev, attr, false, &data);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               if (copy_to_user((void __user *)attr->addr, &data, 4))
+> +                       ret =3D -EFAULT;
+> +
+> +               return ret;
+>         case KVM_DEV_LOONGARCH_EXTIOI_GRP_SW_STATUS:
+>                 return kvm_eiointc_sw_status_access(dev, attr, false);
+>         default:
+> @@ -589,11 +593,16 @@ static int kvm_eiointc_get_attr(struct kvm_device *=
+dev,
+>  static int kvm_eiointc_set_attr(struct kvm_device *dev,
+>                                 struct kvm_device_attr *attr)
+>  {
+> +       int data;
+> +
+>         switch (attr->group) {
+>         case KVM_DEV_LOONGARCH_EXTIOI_GRP_CTRL:
+>                 return kvm_eiointc_ctrl_access(dev, attr);
+>         case KVM_DEV_LOONGARCH_EXTIOI_GRP_REGS:
+> -               return kvm_eiointc_regs_access(dev, attr, true);
+> +               if (copy_from_user(&data, (void __user *)attr->addr, 4))
+> +                       return -EFAULT;
+> +
+> +               return kvm_eiointc_regs_access(dev, attr, true, &data);
+>         case KVM_DEV_LOONGARCH_EXTIOI_GRP_SW_STATUS:
+>                 return kvm_eiointc_sw_status_access(dev, attr, true);
+>         default:
+> --
+> 2.39.3
+>
