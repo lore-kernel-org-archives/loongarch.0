@@ -1,80 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23751247298;
-	Tue,  2 Sep 2025 11:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73972FF15F
+	for <loongarch@lists.linux.dev>; Tue,  2 Sep 2025 11:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756812844; cv=none; b=Z3zZABvQpSEssolSx32CRpVam1DjCmpMT9F2UFmxdkeaCqvlOiFG2bERljXfcYJ6Oq2bISWI3pyHBdYPTixZ+vOf4G1me5UydhT1248kUFqTXzhHznGMlrGR8idGj3NJXR5iJ8zaCS6c/Koiq6PPsdyGfE5h0k4LE/Vp5X3RPGo=
+	t=1756813502; cv=none; b=GqVCtkGags45mKFqBAVTH1SuSl8cOdxReSIHiVDZK4PtJwXMZrWkUUW28i+ltsja/j2PSQdc2bVpZEZ9kdzKilKaqVolRm1feS6udwLb/ia3eNfhP7ZAxnr9pzelqUOxSW6SoGqv95zxrDD+uUTVA7SDeodfkyMSG+m++krA4BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756812844; c=relaxed/simple;
-	bh=NDEg3JUwIVXYkuZ0znIzSpopXc2IJTtscbXtwUBuMtc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j1xf+Munyjd3QeYjsRux3l5udadpXu83i30mRup/hSeO9qHEhibXcwz7hZuBQVfI9ngTXLkGbfajD1CrCKFK9HrUdINMfpT+V7EQgLlqebiXa1uDMxFQmw5FXnhVw8MnC/xHvEZWWVY3Y3NaupO0hCiBPKAXhQFeF1a4sEqOGCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IplzEo0/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756813502; c=relaxed/simple;
+	bh=0o5C5Ly/rHsnoowmYx3m8IcTZ1cPVbKim17lOjF7UUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yr99fq3LKd2sOGPqzXWTUgrntYafMafyWYpftc7jDAzWfecr0WG1Ub7D8gMijEC4SwxcBl6NFyyJsXN1ld62UMoKvIvLOlitEsQhmblHnR6Fq6O/AY91Lt7Nxv02Mz5VrJhsVI6HlMjwvwjOaRYaMnspm/e0NWPvOj1le/Ik8WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=jXmzEnXa reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IplzEo0/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ACADC4CEED;
-	Tue,  2 Sep 2025 11:34:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756812843;
-	bh=NDEg3JUwIVXYkuZ0znIzSpopXc2IJTtscbXtwUBuMtc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IplzEo0/LCoFnSOvu7NS4cizRR773dAiCcNJRkdjSJ35knNUKaD8gnVGZrIWKkIep
-	 +1kVN/zygPiulbxI6I8dluFiF5Vqn/la/mJlFQWT5CQI+aLwz37Utwe6ZdW5n7CJHE
-	 9O9K7mjbnHDAXlbAtNsJBRLvlTfAME4zaA6m+5gLXX4eJ7/EV5LWy1QiLe2UBPxx52
-	 seqk81IEEnVOzEErROkL5ZggP8btdaaqQkXFqVWRdGOHTbcaXfYmiTou6i4lwEe0AT
-	 eSZPIO/TbSA2U2Zj1nEOZojX3S8gNQCOI+5KUKawcRriM1PFVH4LQzau5JuVuX53V1
-	 cO8dfO43FFCxg==
-Date: Tue, 2 Sep 2025 12:33:58 +0100
-From: Lee Jones <lee@kernel.org>
-To: herbert@gondor.apana.org.au, jarkko@kernel.org,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	davem@davemloft.net, linux-crypto@vger.kernel.org,
-	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v12 0/4] Add Loongson Security Engine chip driver
-Message-ID: <20250902113358.GI2163762@google.com>
-References: <20250705072045.1067-1-zhaoqunqin@loongson.cn>
- <175681275359.2293173.7663755797512449740.b4-ty@kernel.org>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="jXmzEnXa"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4cGP6x6Rpwz1FZPJ;
+	Tue,  2 Sep 2025 13:44:57 +0200 (CEST)
+Received: from [192.168.0.25] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4cGP6w5mgsz1FXjD;
+	Tue,  2 Sep 2025 13:44:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=simplycom2; t=1756813497;
+	bh=voGobjfJ+JDIyxPuu8fGQb2u9QP7Z513vboXRHjWrpI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=jXmzEnXapdgWj3k2C76LGG7k/5mt1kwvMqAYSfMFYlJ0dMOQ80Oj2YE0pnZAtNJ4t
+	 tXQk/LzaZA57Nv160y42KGcSc12HLtx5zDkXLTwO001yujBIUCUp0jXWbSqOup1wEK
+	 caelEQWo/j1aiLxV7BPWjSbstlue7ClkuM93YSG2cSzlCJSLWryT6cSw2EEQcr+aVF
+	 FTt0lGn6fnMuHg7U0U6sd3U2Ku9tEiPKwlVMzDHUsOHxPUryMAOV1qAvelOgjen0aR
+	 RoDQinmHdiIG1eCVLztKOXDNMYphrSPAPE4G8u5ceaF4FDq1DzCH6UTTJUx5w29cc0
+	 vZYTj+Lq2QLjQ==
+Message-ID: <92bace9a-b5c4-4ea1-a1f7-4742c15a64a0@gaisler.com>
+Date: Tue, 2 Sep 2025 13:44:56 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <175681275359.2293173.7663755797512449740.b4-ty@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] arch: copy_thread: pass clone_flags as u64
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com,
+ selinux@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org
+References: <20250901-nios2-implement-clone3-v2-0-53fcf5577d57@siemens-energy.com>
+ <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
+ <f2371539-cd4e-4d70-9576-4bb1c677104c@gaisler.com>
+ <11a4d0a953e3a9405177d67f287c69379a2b2f8f.camel@physik.fu-berlin.de>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <11a4d0a953e3a9405177d67f287c69379a2b2f8f.camel@physik.fu-berlin.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 02 Sep 2025, Lee Jones wrote:
-
-> On Sat, 05 Jul 2025 15:20:41 +0800, Qunqin Zhao wrote:
-> > The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
-> > accelerator engines. Each engine have its own DMA buffer provided
-> > by the controller. The kernel cannot directly send commands to the
-> > engine and must first send them to the controller, which will
-> > forward them to the corresponding engine. Based on these engines,
-> > TPM2 have been implemented in the chip, then let's treat TPM2 itself
-> > as an engine.
-> > 
-> > [...]
+On 2025-09-02 09:15, John Paul Adrian Glaubitz wrote:
+>> Thanks for this and for the whole series! Needed foundation for a
+>> sparc32 clone3 implementation as well.
 > 
-> Applied, thanks!
-> 
-> [1/4] mfd: Add support for Loongson Security Engine chip controller
->       commit: e551fa3159e3050c26ff010c3b595b45d7eb071a
-> [2/4] crypto: loongson - add Loongson RNG driver support
->       commit: 766b2d724c8df071031412eea902b566a0049c31
-> [3/4] tpm: Add a driver for Loongson TPM device
->       commit: 5c83b07df9c5a6e063328c5b885de79f8e8f0263
-> [4/4] MAINTAINERS: Add entry for Loongson Security Engine drivers
->       commit: 74fddd5fbab879a7d039d9fb49af923927a64811
+> Can you implement clone3 for sparc64 as well?
 
-Submitted for testing.  I'll send out a PR once successful.
+(heavily pairing down the to list)
 
-Note to self: ib-mfd-char-crypto-6.18
+We'll take a look at that as well.
 
--- 
-Lee Jones [李琼斯]
+Cheers,
+Andreas
+
