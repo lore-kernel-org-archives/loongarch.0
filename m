@@ -1,171 +1,92 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC27918DB0D;
-	Tue,  2 Sep 2025 07:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340772EA481
+	for <loongarch@lists.linux.dev>; Tue,  2 Sep 2025 09:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756797327; cv=none; b=VvNEulg7vZYy63HUGUoXi046kUdpYQlVpX7tVffT01ujcNhBmwaDpq6IMdmU8ObLZ16y08rBA3QkIARm/Dvz7e23gxyk1JVIxphKDhBytz8KI+BaX+LqDag6LehQdkev+E/TOO23Ik3j/+U1Ixf+J+Yo889cj8wIJN7vCf7IXpY=
+	t=1756803841; cv=none; b=aWYLMkonfxaO1M4n8psoegLRTnQ6dhxiDqozSfR1KIXMtrxznd7WisjRACjgGFLXOkLWpvHKifLXuKH4dIvv4GSnV8LST1QwsDZn+uWeKTfJJqyCM5Jvtp/Gb+7LRmBssYaOPnLsZJ8GdwATFaj98iGH+JVIK6cDSQlJ+PwiXQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756797327; c=relaxed/simple;
-	bh=63Ypg42QVZ06s8ykliKTqwl+/W5CTIpV8b7Xr3N12cs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BFzdm5jLr0zocw9nsdSeklYN9QCW5WlBCGwGIRGLJbtE4459FkhidLnjrPoU62//Ik7IrBoPd2u14/qY4WRFDLvUJu1DDz6L9QEOt3BSMJWWC2QTcHbK1gNF7DGkzzNNZGMcEHYLn5T4roLrNbXzHhYXUb9I+65/43b/0IyDtqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=X921ENld; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="X921ENld"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:From:
-	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=75QsosR73EP7Bhx5dXwnnBiSrQlTSAdKIHehZonw/2s=; t=1756797323;
-	x=1757402123; b=X921ENldUxkTG2iEalnRJczAydGr+60jnSCemShmum7owLYveZD+utCqGKrDy
-	JxsQx+SR98LaDjqI5miAet79XGeKpnPG7pU3BPd3n7/p7jj0zED8JzynlUkYCEXmxO1C+S2YqjUVS
-	V5R+cn5H4MJ8GQ5lESC0XBVCeQWyJDgTJO6mH8pHWkK2Ql2ysaeO0po59wRj2FP9QgbfCVp5rkRUo
-	QrFBccBSWRKwxSgXOohUG2j8ZgCj04hDsSPMblP/7B1bUN6leCRxM1sThlrpmLA6s9V+5QZfZYVck
-	/wq/gloVjZWpqTUN4PorQGEzcaw3hEsFw6JDm7DJLVzjE57ybw==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1utLEY-00000000Jm5-12co; Tue, 02 Sep 2025 09:15:14 +0200
-Received: from p5b13aa34.dip0.t-ipconnect.de ([91.19.170.52] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1utLEX-00000002jxi-2pMt; Tue, 02 Sep 2025 09:15:13 +0200
-Message-ID: <11a4d0a953e3a9405177d67f287c69379a2b2f8f.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v2 3/4] arch: copy_thread: pass clone_flags as u64
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Andreas Larsson <andreas@gaisler.com>,
- schuster.simon@siemens-energy.com,  Dinh Nguyen <dinguyen@kernel.org>,
- Christian Brauner <brauner@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
- Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
- <david@redhat.com>, Lorenzo Stoakes	 <lorenzo.stoakes@oracle.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>,  Vlastimil Babka	 <vbabka@suse.cz>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan	 <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Ingo Molnar	 <mingo@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Juri Lelli	 <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,  Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben
- Segall <bsegall@google.com>,  Mel Gorman <mgorman@suse.de>, Valentin
- Schneider <vschneid@redhat.com>, Kees Cook <kees@kernel.org>,  Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,  Alexandre Ghiti	 <alex@ghiti.fr>, Guo
- Ren <guoren@kernel.org>, Oleg Nesterov <oleg@redhat.com>,  Jens Axboe
- <axboe@kernel.dk>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara
- <jack@suse.cz>, Tejun Heo <tj@kernel.org>, Johannes Weiner
- <hannes@cmpxchg.org>, Michal =?ISO-8859-1?Q?Koutn=FD?=	 <mkoutny@suse.com>,
- Paul Moore <paul@paul-moore.com>, Serge Hallyn	 <sergeh@kernel.org>, James
- Morris <jmorris@namei.org>, "Serge E. Hallyn"	 <serge@hallyn.com>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Masami
- Hiramatsu	 <mhiramat@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet	 <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni	 <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Mathieu
- Desnoyers	 <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>,  Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin	
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers	 <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, John
- Johansen	 <john.johansen@canonical.com>, Stephen Smalley
- <stephen.smalley.work@gmail.com>,  Ondrej Mosnacek <omosnace@redhat.com>,
- Kentaro Takeda <takedakn@nttdata.co.jp>, Tetsuo Handa	
- <penguin-kernel@I-love.SAKURA.ne.jp>, Richard Henderson	
- <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, Vineet
- Gupta	 <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin
- Marinas	 <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Brian
- Cain	 <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui	
- <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, Michal
- Simek	 <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Jonas Bonn	 <jonas@southpole.se>, Stefan Kristiansson
- <stefan.kristiansson@saunalahti.fi>,  Stafford Horne <shorne@gmail.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge
- Deller	 <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman	 <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy	 <christophe.leroy@csgroup.eu>, Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger	
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Yoshinori
- Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Richard
- Weinberger	 <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg	
- <johannes@sipsolutions.net>, Borislav Petkov <bp@alien8.de>, Dave Hansen	
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>,  Chris Zankel <chris@zankel.net>, Max Filippov
- <jcmvbkbc@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	selinux@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org
-Date: Tue, 02 Sep 2025 09:15:08 +0200
-In-Reply-To: <f2371539-cd4e-4d70-9576-4bb1c677104c@gaisler.com>
-References: 
-	<20250901-nios2-implement-clone3-v2-0-53fcf5577d57@siemens-energy.com>
-	 <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
-	 <f2371539-cd4e-4d70-9576-4bb1c677104c@gaisler.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	s=arc-20240116; t=1756803841; c=relaxed/simple;
+	bh=5y2U/uD+Ei+lf/6FUUMzsoRu+GouXWZFl07iKRtVGPU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MDrriJI5naZWG4Ed5LkFcKaEF20tKJJVgCOmjWHARr+7VrjXEhaD1M2PxwpWFXviGdpQwBYPBH0cz2ncpC8tGv2CxndgiT0YpuA03eSNM69fZW1qCIPhp0SiBfDIpRhvaFlCUVHvUDvI3j82P4aO83GT6jwdxUBeSnW9t2gYris=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: bf37d25487db11f0b29709d653e92f7d-20250902
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_UNFAMILIAR
+	SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+X-CID-UNFAMILIAR: 1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:9d4767fb-f45a-419d-a707-da34d1ea53d0,IP:15,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:18
+X-CID-INFO: VERSION:1.1.45,REQID:9d4767fb-f45a-419d-a707-da34d1ea53d0,IP:15,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_HamU,ACTION
+	:release,TS:18
+X-CID-META: VersionHash:6493067,CLOUDID:cfcfa361926ed5ea4edc87512b1cd4d0,BulkI
+	D:250902170354E04K2BJK,BulkQuantity:0,Recheck:0,SF:16|19|24|38|44|66|78|10
+	2,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,B
+	EC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_USA,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: bf37d25487db11f0b29709d653e92f7d-20250902
+X-User: cuitao@kylinos.cn
+Received: from ctao-ubuntu.. [(39.156.73.13)] by mailgw.kylinos.cn
+	(envelope-from <cuitao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1989404922; Tue, 02 Sep 2025 17:03:52 +0800
+From: cuitao <cuitao@kylinos.cn>
+To: chenhuacai@kernel.org,
+	loongarch@lists.linux.dev
+Cc: kernel@xen0n.name,
+	jiaxun.yang@flygoat.com,
+	linmq006@gmail.com,
+	ziyao@disroot.org,
+	linux-kernel@vger.kernel.org,
+	cuitao <cuitao@kylinos.cn>
+Subject: [PATCH] LoongArch: replace sprintf() with sysfs_emit()
+Date: Tue,  2 Sep 2025 17:02:58 +0800
+Message-ID: <20250902090258.1170896-1-cuitao@kylinos.cn>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Transfer-Encoding: 8bit
 
-Hi Andreas,
+As Documentation/filesystems/sysfs.rst suggested, show() should only use
+sysfs_emit() or sysfs_emit_at() when formatting the value to be returned
+to user space.
 
-On Tue, 2025-09-02 at 09:02 +0200, Andreas Larsson wrote:
-> On 2025-09-01 15:09, Simon Schuster via B4 Relay wrote:
-> > From: Simon Schuster <schuster.simon@siemens-energy.com>
-> >=20
-> > With the introduction of clone3 in commit 7f192e3cd316 ("fork: add
-> > clone3") the effective bit width of clone_flags on all architectures wa=
-s
-> > increased from 32-bit to 64-bit, with a new type of u64 for the flags.
-> > However, for most consumers of clone_flags the interface was not
-> > changed from the previous type of unsigned long.
-> >=20
-> > While this works fine as long as none of the new 64-bit flag bits
-> > (CLONE_CLEAR_SIGHAND and CLONE_INTO_CGROUP) are evaluated, this is stil=
-l
-> > undesirable in terms of the principle of least surprise.
-> >=20
-> > Thus, this commit fixes all relevant interfaces of the copy_thread
-> > function that is called from copy_process to consistently pass
-> > clone_flags as u64, so that no truncation to 32-bit integers occurs on
-> > 32-bit architectures.
-> >=20
-> > Signed-off-by: Simon Schuster <schuster.simon@siemens-energy.com>
-> > ---
->=20
-> Thanks for this and for the whole series! Needed foundation for a
-> sparc32 clone3 implementation as well.
+No functional change intended.
 
-Can you implement clone3 for sparc64 as well?
+Signed-off-by: cuitao <cuitao@kylinos.cn>
+---
+ arch/loongarch/kernel/env.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Adrian
+diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+index c0a5dc9aeae2..19e30206b6e7 100644
+--- a/arch/loongarch/kernel/env.c
++++ b/arch/loongarch/kernel/env.c
+@@ -86,7 +86,7 @@ late_initcall(fdt_cpu_clk_init);
+ static ssize_t boardinfo_show(struct kobject *kobj,
+ 			      struct kobj_attribute *attr, char *buf)
+ {
+-	return sprintf(buf,
++	return sysfs_emit(buf,
+ 		"BIOS Information\n"
+ 		"Vendor\t\t\t: %s\n"
+ 		"Version\t\t\t: %s\n"
+-- 
+2.33.0
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
