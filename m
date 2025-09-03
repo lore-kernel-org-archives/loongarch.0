@@ -1,107 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811473126BA
-	for <loongarch@lists.linux.dev>; Tue,  2 Sep 2025 15:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A7F22172E
+	for <loongarch@lists.linux.dev>; Wed,  3 Sep 2025 03:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756827866; cv=none; b=r6HGKWanw27mTf4BcWEf7SREhiJCrybZyRZwDnXR835U/ub6Bg2Ccc4NiLybBPFBP1RfPwZahaveWgfsRJ/iD9suWjwk0Hd7n35Qv8fHPobOYYl2JGIUB+TSmWGE9sOIk+BhJ0g6qVySqV5ymeTZQUc0nEw/zPKvHKSfuVlqLjA=
+	t=1756868536; cv=none; b=BQQflxQ0ReSVC1z/ePlH8l+eSM6nFQdRxdNg52FJv7x1NGxEZ4W9PWVNcT35cuke70ZvHDdac2vzwZvAAFEfU7H5PX50BSVa0g5JJhwFJqg7RBJ2I90RgA4rXT9HYu6RUaiZgHm9F3SXSNwnUMGgUIMq7iHurEJYbxIomoR+lso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756827866; c=relaxed/simple;
-	bh=tRuf/GDyIIArpeIiuGsBiOMQ7cIVqbvoG7nMpsSi53k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oPcFza33/0gFMvNOZdS4Hqs8K80h04zeG1F2GpX5TR9gFxW3Y7YsKOGCwPNCOL5QRA+ccJcAu7y5q2Z9F4LCY29M25dgBXNFTYVho8/ZcadRIJAR1NKUYH2Eh1LRkk8eoTqRJ9T0946eyOiBFzRRIlNhZ9YQDsVWNM98C+7k3c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gAX0SbfC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756868536; c=relaxed/simple;
+	bh=CCmrtHQ5/Qf/3xYkMKWcYE7l/AIidv/ZTRxCGLi3sqI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jer3mnyGVJcLtvh+B3J+IyUU8ji2etbpH5EOVuZykQ5UwJv1c2U1N9J1uhX2/1dwrNR/dpMw/AeC+5USimc+43NRJcy5r30bPmJYu0sxVp6Fi64m8gL4WZvO8DbDSsJO2e8nA3KvL2TlswWpcbOM6ifZsArTiKdzjn493zrWKCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KoprB8mx; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gAX0SbfC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C5E2C4CEF7
-	for <loongarch@lists.linux.dev>; Tue,  2 Sep 2025 15:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756827866;
-	bh=tRuf/GDyIIArpeIiuGsBiOMQ7cIVqbvoG7nMpsSi53k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gAX0SbfCGmL2kk92IUNicUapOCeZeZbABa9LoFy/S7Fa2rRwHDeFupg2dRzJ/RW+L
-	 ubRqwavV7lirCTfbfhYvbPKpq8NMmJK1ujj9bGoimll3OGjHd7K/f3Kny3ujSel/4R
-	 VW7say78jC7AB0bv7PVc2e3CtrCk0kIrcteOWyFOXcsLuVHq3Xc+zRczJj3oS1Yj3y
-	 zfsjx7jgw77ShduBbX3ZQ/ut+yWRsXH4ZlQkR9HprsBkudASI/9iDVrXW7VeoFWr24
-	 I4kj45VxCzWuovoylvy4IpnW3UM4wUPIqeCJRrUcKbPdNb6QyMY/R7RPN7xK/JgXeQ
-	 hi/FS6MuEnp6w==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b0449b1b56eso187464466b.1
-        for <loongarch@lists.linux.dev>; Tue, 02 Sep 2025 08:44:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVB9D0KbiCBhhfwgk1GAhd8iy4FbSJN+rTGPaFoXPLKlyiLG80BNbQTBzwO0l1Cmx0tirYQ05vtH5Q=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwwsQte2APO7Rrre3aCKk7VqMQir2m9+TwG38KS1vRgkIzCLdHO
-	Rg4P1OQbBO6OH94dE45zDd2GJJ06dRnp4ajwWtoNGmRexGLBlXOYgoqLonCDHS1ZWgBX14jrc4i
-	dU0Oc0JQsgnXXwTj1lZex9DjVcxC5ia0=
-X-Google-Smtp-Source: AGHT+IFO70924iVFolgzUjIZaE0GLn7wGy/Aud1H3aa/R/fGPcETwNoCLZ0tk7y3JHUXV0aqFuX5gzk/udJutrbJioY=
-X-Received: by 2002:a17:907:86aa:b0:afe:b5fa:2adc with SMTP id
- a640c23a62f3a-b01d8c7d928mr1279558566b.24.1756827864719; Tue, 02 Sep 2025
- 08:44:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KoprB8mx"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1756868532;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=isX+w1aFzVbrn4Ce/5g4IRvZrErGccZqzEtiZvEOUeY=;
+	b=KoprB8mxeXimFmXxZztGdBzZMgr3tlMB2BKekvN9qZ+dnvZKlU26qQSsOGfJWdq7Uw5ut9
+	Cf1JLuLQ2BfZ9ZrfB9D7gigjHSXQDOaWS0QXlJQHsxG1F1oCZpMsqGVR/+R7kU+LhGMxjf
+	mbBuMsHH85j9krbvOhWwgtnlx4ir3Ao=
+From: Youling Tang <youling.tang@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Baoquan He <bhe@redhat.com>,
+	Yao Zi <ziyao@disroot.org>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	youling.tang@linux.dev,
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: [PATCH v4 0/7] Add kexec_file support for LoongArch
+Date: Wed,  3 Sep 2025 11:00:53 +0800
+Message-Id: <20250903030100.196744-1-youling.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20250901072156.31361-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 2 Sep 2025 23:43:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Q7CPHjuvHns5OevW1DZ-jC30xtEQ5Ao=DYva-LZWStQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzky8itaIyvk-uerpxxb7YE4Vi6IRA9i6mbSOw_hcFwFsBBCvi-usHWc7E
-Message-ID: <CAAhV-H6Q7CPHjuvHns5OevW1DZ-jC30xtEQ5Ao=DYva-LZWStQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Fix objtool warnings if LTO is enabled for
- LoongArch (Part 2)
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Sep 1, 2025 at 3:22=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
- wrote:
->
-> The previous patches [1] [2] are to fix most of the warnings (total 3030)=
-:
->
->   sibling call from callable instruction with modified stack frame
->
-> This series is a follow up to fix 2 kinds of warnings (total 24), it only
-> touches the objtool and LoongArch related code:
->
->   falls through to next function
->   unreachable instruction
-This series seems the best solution from my point of view. So if no
-one has objections, I will take it.
+From: Youling Tang <tangyouling@kylinos.cn>
 
-Huacai
+This patchset implement kexec_file_load() support on LoongArch.
 
->
-> With this series, there is only 1 kind of warning (total 3), it does not
-> only touch the objtool and LoongArch related code:
->
->   missing __noreturn in .c/.h or NORETURN() in noreturns.h
->
-> In order to silence the above warnings, it needs to change the related
-> code to give the functions __noreturn attribute, and have a NORETURN()
-> annotation in tools/objtool/noreturns.h. IMO, it will touch all of the
-> archs and the generic code, so this needs much more work to avoid the
-> side effect or regression, once it is done I will send out the patch.
->
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-commit/?id=3Da47bc954cf0e [1]
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-commit/?id=3D5dfea6644d20 [2]
->
-> Tiezhu Yang (3):
->   objtool/LoongArch: Fix fall through warning about efi_boot_kernel()
->   objtool/LoongArch: Fix unreachable instruction warnings about EFISTUB
->   LoongArch: Fix unreachable instruction warnings about entry functions
->
->  arch/loongarch/kernel/Makefile | 2 --
->  arch/loongarch/kernel/head.S   | 6 ++----
->  tools/objtool/check.c          | 8 ++++++++
->  3 files changed, 10 insertions(+), 6 deletions(-)
->
-> --
-> 2.42.0
->
+This patch series enables us to load the LoongArch vmlinuz.efi(pez) or
+vmlinux.efi(pei) or vmlinux(elf) by specifying its file decriptor,
+instead of user-filled buffer via kexec_load() syscall.
+
+To use kexec_file_load() system call, instead of kexec_load(), at kexec
+command, '-s' options must be specified. kexec-tools needs to apply the
+corresponding patches. These patches can be found in repository [1] and
+will be submitted to the kexec-tools community later.
+
+The basic usage of kexec_file is:
+1) Load second kernel image:
+ # kexec -s -l vmlinuz.efi --initrd=initrd.img --reuse-cmdline
+
+2) Startup second kernel:
+ # kexec -e
+
+For kdump:
+1) Load capture kernel image:
+ # kexec -s -p vmlinuz.efi --initrd=initrd.img --reuse-cmdline
+
+2) Do something to crash, like:
+ # echo c > /proc/sysrq-trigger
+
+Link:
+[1] https://github.com/tangyouling/kexec-tools/commits/main/
+
+Changelog:
+ v4:
+ * Add the character "kexec_file" to the command-line parameter.
+ * Fixed the issue where kexec_file failed to load the KASLR kernel
+   startup.
+ * Modify the member name of the loongarch_image_header structure.
+ * Modify the patch commit message.
+
+ v3:
+ * The ELF format kernel loading should not use loongarch_image_header.
+ * Separate patch2 into an infrastructure patch and an EFI support
+   patch.
+ * Adding that kexec_file cannot load non-relocation kernel comments.
+ * Some minor modifications.
+
+ v2:
+ * Merge some patches.
+ * Add support for ELF format images.
+ * Rename kexec_image.c to kexec_efi.c .
+ * When KEXEC_FILE is enabled, RELOCATABLE is selected by default.
+ * Some minor modifications.
+
+Youling Tang (7):
+  LoongArch: Add struct loongarch_image_header for kernel image
+  LoongArch: Add preparatory infrastructure for kexec_file
+  LoongArch/kexec_file: Support loading EFI binary file
+  LoongArch/kexec_file: Support loading ELF binary file
+  LoongArch/kexec_file: Add crash dump support
+  LoongArch: Automatically disable kaslr when the kernel loads from
+    kexec_file
+  LoongArch: Enable CONFIG_KEXEC_FILE
+
+ arch/loongarch/Kconfig                     |  10 +
+ arch/loongarch/configs/loongson3_defconfig |   1 +
+ arch/loongarch/include/asm/image.h         |  53 +++++
+ arch/loongarch/include/asm/kexec.h         |  13 ++
+ arch/loongarch/kernel/Makefile             |   1 +
+ arch/loongarch/kernel/kexec_efi.c          | 114 ++++++++++
+ arch/loongarch/kernel/kexec_elf.c          | 105 +++++++++
+ arch/loongarch/kernel/machine_kexec.c      |  37 ++--
+ arch/loongarch/kernel/machine_kexec_file.c | 244 +++++++++++++++++++++
+ arch/loongarch/kernel/relocate.c           |   4 +
+ 10 files changed, 569 insertions(+), 13 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/image.h
+ create mode 100644 arch/loongarch/kernel/kexec_efi.c
+ create mode 100644 arch/loongarch/kernel/kexec_elf.c
+ create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
+
+-- 
+2.43.0
+
