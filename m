@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29862D374A;
-	Wed,  3 Sep 2025 19:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486A72D374A;
+	Wed,  3 Sep 2025 19:19:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756927052; cv=none; b=a76N/ycj+u2u7c3oYJU8O8jF19ikJvMZUjVrMTBbjDCRCUum4+uo4UePmW9HgNKYqZcUyPcO0e4vDa7uI3XQnDT3b+qXrC67yfGW2ZVRuopXLJWvBXvIYzhW4Y/tz7wOqyN3dl/PjTw5N+bR3ucHT/Ucd0Q7T0JDA2DrMpSIvtc=
+	t=1756927162; cv=none; b=b93l0dumyk4n01ny/fX0FxhUUiiI88NaCFz3043M+cWEqnc1wUuyuJn3TG1YodrGCJAjj4Hba8zQAG7jjluGMbcV1v0fnc+os/DVDhwQf53RwbKLLsEG1TElMErwMP8HCzPCs5JSydW97q2KuVlpG5SxhrMC47z9ZFplux4tSWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756927052; c=relaxed/simple;
-	bh=jcliH/w/a10uidu32SOmf201Z4fKoKFtR+/ALkAVbNI=;
+	s=arc-20240116; t=1756927162; c=relaxed/simple;
+	bh=/LA7irvtDdO2Ija0SsJ3D69faFD9Z6qw+QqTwYs3bjM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AqR2c3Uiht0mBgOCZ6fuBoEGxxDXHle8jCGrfsiNQC4/zjn6tDnUOpJL/v9HsjBWW3Ap7zJ024x9KnSRytg1MOvYBI9FsUPi5xgBnYtT01c06S8GGrGISLUSxwvkpZKcGgYG0G765sqOz0TUfevM7IKMm0eOouKxOgFN3nPnfvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l3KayKP3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jooQMRIV2D16qZKcj47F7sP6yMZtJ1hEU2NOnpxb7Out3Vo2OBPRPC/d+265e+6spc52Vuer7eKhQS83kpsPlCRcQ2x/VACD8SpkYs4mvOtzfSVMem5kroY/EoIVAApAxn1K3hEwyI5sn30w3ILLxY6qJaLnGQyf+0hTymxdAAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g7IEtb7a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l3KayKP3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CE7FC4CEE7;
-	Wed,  3 Sep 2025 19:17:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g7IEtb7a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 861BFC4CEE7;
+	Wed,  3 Sep 2025 19:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756927052;
-	bh=jcliH/w/a10uidu32SOmf201Z4fKoKFtR+/ALkAVbNI=;
+	s=k20201202; t=1756927161;
+	bh=/LA7irvtDdO2Ija0SsJ3D69faFD9Z6qw+QqTwYs3bjM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l3KayKP30VUp7HMTIBpFTDJv8yCdTfL63G+LkNamStVNqKqk7VoxJ78g91myKiup9
-	 IkZFtT333agNfrHIME6AXI9FbVsN3ocZevToMV692qqZ3ECLKEVytskR4NoB8eSpvF
-	 33mD/Rx9MtdKl9myd9ZwNn6geHeV7cDZPqJYG+3/NDM9l/wtZZQXFpyQ5ryejIyXqr
-	 xJT4XAG0garx1ubNQoplWpozn2AHaHnOn/OMq09e9kVFskLVPAyvukO4vLZOKEjkrw
-	 5aVqo+VLMvYpTBxfG/51hnu3QnamaII91wSQUn1gBCjeP8sxoNVMTfs11dituVLQaJ
-	 6WV/I2kmqX8pg==
-Date: Wed, 3 Sep 2025 12:17:29 -0700
+	b=g7IEtb7ashvJ2IvdPnTuSOEnKXAxbmLTmhMzzvJeDQjIIQnHU+FCd+XFh5f8e/7Ea
+	 h6obXV3PZOlpzQiSuXzzV3JCBnmePdcqSoQuYrx0EDE5T2UxBtwlEdo2nMpjYV2cV+
+	 4Q/bxklsH4aoFEBb0Gywd4JJ5WstW7GMPefHrt47p+JL0NCuDwdR4bFg08fMxf3EvH
+	 XCzyGMttmUi0WTvfozhXjPdlJyItLp0oMZpOUJn2MMm3hrHmm5VBKBzhJaMIluPE83
+	 uLFDXtt7qPjH8mPzUSDvRCD4Hiu7UNqxEkxXDj/NiM26A7Ky2b8hsYmNKR+eOtS0Dx
+	 zwRGL6hqi373A==
+Date: Wed, 3 Sep 2025 12:19:18 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc: Peter Zijlstra <peterz@infradead.org>, 
 	Huacai Chen <chenhuacai@kernel.org>, Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] objtool/LoongArch: Fix fall through warning about
- efi_boot_kernel()
-Message-ID: <qvatvh7rixtdtaflqtgphlva7kkr47drijklkvmae3xh54vn6y@y5v75lwgjdyu>
+Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
+ warnings about EFISTUB
+Message-ID: <wt4qpgi5isj5m6wq33pomvm6borvafuzktekc7lgtoitscar5q@brixzj3lccbw>
 References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
- <20250901072156.31361-2-yangtiezhu@loongson.cn>
- <20250901081616.GA4067720@noisy.programming.kicks-ass.net>
- <a59b3eaa-133d-88bf-f1f3-41328d023c4a@loongson.cn>
+ <20250901072156.31361-3-yangtiezhu@loongson.cn>
+ <20250901081904.GB4067720@noisy.programming.kicks-ass.net>
+ <82c913b9-4403-cde9-0542-5bd6e04415f5@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -48,64 +48,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a59b3eaa-133d-88bf-f1f3-41328d023c4a@loongson.cn>
+In-Reply-To: <82c913b9-4403-cde9-0542-5bd6e04415f5@loongson.cn>
 
-On Mon, Sep 01, 2025 at 04:31:36PM +0800, Tiezhu Yang wrote:
-> On 2025/9/1 下午4:16, Peter Zijlstra wrote:
-> > On Mon, Sep 01, 2025 at 03:21:54PM +0800, Tiezhu Yang wrote:
-> > > When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
-> > > the following objtool warning:
+On Mon, Sep 01, 2025 at 04:39:29PM +0800, Tiezhu Yang wrote:
+> On 2025/9/1 下午4:19, Peter Zijlstra wrote:
+> > On Mon, Sep 01, 2025 at 03:21:55PM +0800, Tiezhu Yang wrote:
+> > > When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
+> > > following objtool warnings:
 > > > 
-> > >    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
-> > >    falls through to next function __efistub_exit_boot_func()
+> > >    vmlinux.o: warning: objtool: .head.text+0x0: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x18: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x38: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x3c: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x40: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x44: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x54: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x58: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x6c: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x84: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x94: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x9c: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0xc4: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0xf8: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0xfc: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x104: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x10c: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x11c: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x120: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x124: unreachable instruction
+> > >    vmlinux.o: warning: objtool: .head.text+0x144: unreachable instruction
 > > > 
-> > > This is because efi_boot_kernel() doesn't end with a return instruction
-> > > or an unconditional jump, then objtool has determined that the function
-> > > can fall through into the next function.
-> > > 
-> > > At the beginning, try to do something to make efi_boot_kernel() ends with
-> > > an unconditional jump instruction, but it is not a proper way.
-> > > 
-> > > After more analysis, one simple way is to ignore these EFISTUB functions
-> > > in validate_branch() of objtool since they are useless for stack unwinder.
-> > > 
+> > > The instructions in the .head.text section are related with EFISTUB,
+> > > they are image header and can be ignored by objtool, so just check the
+> > > section name in ignore_unreachable_insn() to ignore it.
 > > 
-> > This is drivers/firmware/efi/libstub/loongarch.c:efi_boot_kernel(),
-> > right?
+> > I am confused; why do the efi/libstub functions generate this error?
 > > 
-> > Why not simply do something like:
-> > 
-> > diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
-> > index 3782d0a187d1..082611a5f1f0 100644
-> > --- a/drivers/firmware/efi/libstub/loongarch.c
-> > +++ b/drivers/firmware/efi/libstub/loongarch.c
-> > @@ -81,4 +81,5 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
-> >   	real_kernel_entry(true, (unsigned long)cmdline_ptr,
-> >   			  (unsigned long)efi_system_table);
-> > +	BUG();
-> >   }
+> > Is this zboot-header.S perhaps? Why can't we properly annotate that
+> > file?
 > 
-> At the beginning, I did the above change, but no effect.
+> This is arch/loongarch/kernel/head.S.
 > 
-> The first thing is to remove the attribute __noreturn for
-> real_kernel_entry(), otherwise the compiler can not generate
-> instructions after that.
+> There is "OBJECT_FILES_NON_STANDARD_head.o := y" in Makefile
+> to skip objtool checking for head.o, but OBJECT_FILES_NON_STANDARD
+> does not work for link time validation of vmlinux.o.
 > 
-> But there is an argument in the previous RFC [1]:
+> At the beginning, give UNWIND_HINT_UNDEFINED for these instructions,
+> but there is an argument in the previous RFC [1]:
 > 
-> "From my point of view this is incorrect, this function is indeed a
-> noreturn function, and this modification makes LoongArch different to
-> other architectures."
+> "The efi header is completely not code, the annotations are very strange."
 > 
-> Josh suggested to do something so that the EFI stub code isn't linked into
-> vmlinux.o [2], it needs to modify the link process and seems too
-> complicated and expensive for this warning to some extent.
+> Josh suggested to do something to put these instructions in the data
+> section, but as said in the previous reply, it needs to modify the link
+> process and seems too complicated and expensive for this warning to some
+> extent.
 > 
 > So I did this change for objtool.
 
-I don't like adding these workarounds to objtool.  Is it really that
-complicated to link efistub separately?  That seems like the proper
-design.  vmlinux.o should only have real kernel code.
+I don't like this workaround either, how exactly is it complicated and
+expensive to put the data in a data section?
 
 -- 
 Josh
