@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486A72D374A;
-	Wed,  3 Sep 2025 19:19:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAB82D9789;
+	Wed,  3 Sep 2025 19:22:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756927162; cv=none; b=b93l0dumyk4n01ny/fX0FxhUUiiI88NaCFz3043M+cWEqnc1wUuyuJn3TG1YodrGCJAjj4Hba8zQAG7jjluGMbcV1v0fnc+os/DVDhwQf53RwbKLLsEG1TElMErwMP8HCzPCs5JSydW97q2KuVlpG5SxhrMC47z9ZFplux4tSWY=
+	t=1756927342; cv=none; b=IsVEoXAq6ghMf+5EdjglwXuwVMi85PXPdJTjNTJ4ISBtZ71wNNTa7g2NHUj9Sgwr19SDT8BdV6QmqsnJobpAbk3agV9x30lmwt8GyR5Ed8566jObKaB/z+tkpvcWzZxiYEAqt4ep7NEUEe4awEid56KR0UlA0vTRSQRUsUOFgb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756927162; c=relaxed/simple;
-	bh=/LA7irvtDdO2Ija0SsJ3D69faFD9Z6qw+QqTwYs3bjM=;
+	s=arc-20240116; t=1756927342; c=relaxed/simple;
+	bh=Fo6LUWpj3L5ImvxYmnMdcLAutllHq3gmR/VcBHiyvUY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jooQMRIV2D16qZKcj47F7sP6yMZtJ1hEU2NOnpxb7Out3Vo2OBPRPC/d+265e+6spc52Vuer7eKhQS83kpsPlCRcQ2x/VACD8SpkYs4mvOtzfSVMem5kroY/EoIVAApAxn1K3hEwyI5sn30w3ILLxY6qJaLnGQyf+0hTymxdAAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g7IEtb7a; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nMFdtMU7ayAtrbNGtjdOhvMjcSA2Ef5r8Nu9DAQBm/PH+4DlhQpBkqqcAj1IqK3CUPv5LfPfsoT6uqrOPWLnjbIpBkwNcIemRgWaSsZiZ4QfV3ExsiiufnSGABchno+vE/+4Z6KY8lzSL9Q564cGnTx1Au/yO1qGaOtSrPeuJdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZ4geQwH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g7IEtb7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 861BFC4CEE7;
-	Wed,  3 Sep 2025 19:19:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZ4geQwH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1045C4CEF1;
+	Wed,  3 Sep 2025 19:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756927161;
-	bh=/LA7irvtDdO2Ija0SsJ3D69faFD9Z6qw+QqTwYs3bjM=;
+	s=k20201202; t=1756927341;
+	bh=Fo6LUWpj3L5ImvxYmnMdcLAutllHq3gmR/VcBHiyvUY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g7IEtb7ashvJ2IvdPnTuSOEnKXAxbmLTmhMzzvJeDQjIIQnHU+FCd+XFh5f8e/7Ea
-	 h6obXV3PZOlpzQiSuXzzV3JCBnmePdcqSoQuYrx0EDE5T2UxBtwlEdo2nMpjYV2cV+
-	 4Q/bxklsH4aoFEBb0Gywd4JJ5WstW7GMPefHrt47p+JL0NCuDwdR4bFg08fMxf3EvH
-	 XCzyGMttmUi0WTvfozhXjPdlJyItLp0oMZpOUJn2MMm3hrHmm5VBKBzhJaMIluPE83
-	 uLFDXtt7qPjH8mPzUSDvRCD4Hiu7UNqxEkxXDj/NiM26A7Ky2b8hsYmNKR+eOtS0Dx
-	 zwRGL6hqi373A==
-Date: Wed, 3 Sep 2025 12:19:18 -0700
+	b=HZ4geQwHjeuGI8qFmHj/azGmZXOMy/TZAa52LUYJyMj9TpdH6oXSgJ0HItAveoFNu
+	 hgZ7lqtF+5abnKaxl9Gw2Ts0MJs2y5v4auC0VBT/+swnd0u/LuV2natu6k1U2HvbA3
+	 nQBsXRj1uEalx9GP4eBtbRFTYOxXjIlHdf1K+9E/ytLGF2u/sj3PloZDCcC7yeJrR+
+	 luJoYa4bubCP+RJHy1gggSxUm/dF+p3HCc89uZquyvczKlLmFwZvYT61xTCTlRz+WP
+	 y6HnqzsKNEqE6fhno+7yjomOSm2c+ratX6MxM1+s9NKq+1tDIO8pw3QQO0crWRPYv6
+	 987U442D47FKA==
+Date: Wed, 3 Sep 2025 12:22:19 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Peter Zijlstra <peterz@infradead.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
+Cc: Huacai Chen <chenhuacai@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
- warnings about EFISTUB
-Message-ID: <wt4qpgi5isj5m6wq33pomvm6borvafuzktekc7lgtoitscar5q@brixzj3lccbw>
+Subject: Re: [PATCH v1 3/3] LoongArch: Fix unreachable instruction warnings
+ about entry functions
+Message-ID: <ots6w2ntyudj5ucs5eowncta2vmfssatpcqwzpar3ekk577hxi@j45dd4dmwx6x>
 References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
- <20250901072156.31361-3-yangtiezhu@loongson.cn>
- <20250901081904.GB4067720@noisy.programming.kicks-ass.net>
- <82c913b9-4403-cde9-0542-5bd6e04415f5@loongson.cn>
+ <20250901072156.31361-4-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,66 +45,34 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <82c913b9-4403-cde9-0542-5bd6e04415f5@loongson.cn>
+In-Reply-To: <20250901072156.31361-4-yangtiezhu@loongson.cn>
 
-On Mon, Sep 01, 2025 at 04:39:29PM +0800, Tiezhu Yang wrote:
-> On 2025/9/1 下午4:19, Peter Zijlstra wrote:
-> > On Mon, Sep 01, 2025 at 03:21:55PM +0800, Tiezhu Yang wrote:
-> > > When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
-> > > following objtool warnings:
-> > > 
-> > >    vmlinux.o: warning: objtool: .head.text+0x0: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x18: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x38: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x3c: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x40: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x44: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x54: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x58: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x6c: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x84: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x94: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x9c: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0xc4: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0xf8: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0xfc: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x104: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x10c: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x11c: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x120: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x124: unreachable instruction
-> > >    vmlinux.o: warning: objtool: .head.text+0x144: unreachable instruction
-> > > 
-> > > The instructions in the .head.text section are related with EFISTUB,
-> > > they are image header and can be ignored by objtool, so just check the
-> > > section name in ignore_unreachable_insn() to ignore it.
-> > 
-> > I am confused; why do the efi/libstub functions generate this error?
-> > 
-> > Is this zboot-header.S perhaps? Why can't we properly annotate that
-> > file?
-> 
-> This is arch/loongarch/kernel/head.S.
-> 
-> There is "OBJECT_FILES_NON_STANDARD_head.o := y" in Makefile
-> to skip objtool checking for head.o, but OBJECT_FILES_NON_STANDARD
-> does not work for link time validation of vmlinux.o.
-> 
-> At the beginning, give UNWIND_HINT_UNDEFINED for these instructions,
-> but there is an argument in the previous RFC [1]:
-> 
-> "The efi header is completely not code, the annotations are very strange."
-> 
-> Josh suggested to do something to put these instructions in the data
-> section, but as said in the previous reply, it needs to modify the link
-> process and seems too complicated and expensive for this warning to some
-> extent.
-> 
-> So I did this change for objtool.
+On Mon, Sep 01, 2025 at 03:21:56PM +0800, Tiezhu Yang wrote:
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -3,8 +3,6 @@
+>  # Makefile for the Linux/LoongArch kernel.
+>  #
+>  
+> -OBJECT_FILES_NON_STANDARD_head.o := y
+> -
+>  always-$(KBUILD_BUILTIN)	:= vmlinux.lds
+>  
+>  obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index e3865e92a917..a11880f3a7e1 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -42,6 +42,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
+>  	.align 12
+>  
+>  SYM_CODE_START(kernel_entry)			# kernel entry point
+> +	UNWIND_HINT_UNDEFINED
 
-I don't like this workaround either, how exactly is it complicated and
-expensive to put the data in a data section?
+Should this not be UNWIND_HINT_END_OF_STACK?
+
+I notice Loongarch doesn't seem to use that anywhere.  How does any ORC
+unwind succeed?  UNWIND_HINT_UNDEFINED sets an error condition which
+should cause a livepatch transition to stall.
 
 -- 
 Josh
