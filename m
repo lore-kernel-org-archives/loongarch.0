@@ -1,55 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457B42EAB98
-	for <loongarch@lists.linux.dev>; Wed,  3 Sep 2025 14:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C362F60A7
+	for <loongarch@lists.linux.dev>; Wed,  3 Sep 2025 14:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756911176; cv=none; b=XJXnTN7C5qVxyDTRAWwJ8l9lN9os7fezsZnRHsJERkZDyGLSslbiaCWk4jCt3tF4209wMlerls71UMksRZIlFseD8ck12dqmtWa4zFqIxOTIeiNuhsw088FttTjNS8tJQHszk9A5nXEX5y2sYCr7udoIA64NOdOfDbk+SpgV3T4=
+	t=1756911377; cv=none; b=CodO4T675GJPT/NlbKLIwrnqc535Ai30iwG2k4dNrn6pvZw1h3QZ7X8xUEIitxoEbZQ8BAFmQ5wdl9ZfX3lYviJGKpsU/iXI9LTuUc4j5d+JtN3BQsUa/lOogbA293DIwYyiXlskA4QBfm1cm5Vz2xb+6sGNC47mwBxq9VmdSkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756911176; c=relaxed/simple;
-	bh=d9Bbwtv8osC1I7NmUVFKQXL5pxMZGj1faVaNQaz1+no=;
+	s=arc-20240116; t=1756911377; c=relaxed/simple;
+	bh=tIj0Z+DTJ39YmUSL3K3XPXx/F2zAbmRduMb/bX0FT0I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TVchlzh2yCZsxOyHJ3pQokBFSp712VUveiQrUtx2IU3PerO2duyhWbHJmsbQllVYkQyShdY+xk9elO94DZsuF5ls+nJCNuMrl7LW36Zo5Hg9UAdldu9TaYRD5NBWEqqyMVstFLOn91mhnRh+Se7q6TGvkOyZwT8AAyXWmgNvfEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/c3Rdcp; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=iLY5dF1Ra7y3bI3h3nLbiI/votdhendbZXSwbGvwDBVavpudeDuBW8mUbNv1FqR5pA+9A9xWFD7ou8DkUkuUjdTgilhqd78JUTZS1GickVDrUP3OOENPp3LYos2V+n+a6eNxGhlyXSp0bsIu3HtbKW7wP0HcqZIkZYWohsTT9OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYcabpiX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/c3Rdcp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1079C4CEF7
-	for <loongarch@lists.linux.dev>; Wed,  3 Sep 2025 14:52:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYcabpiX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23A2DC4CEF0
+	for <loongarch@lists.linux.dev>; Wed,  3 Sep 2025 14:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756911175;
-	bh=d9Bbwtv8osC1I7NmUVFKQXL5pxMZGj1faVaNQaz1+no=;
+	s=k20201202; t=1756911375;
+	bh=tIj0Z+DTJ39YmUSL3K3XPXx/F2zAbmRduMb/bX0FT0I=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=k/c3RdcpxuRzeQeN7lTwqOuSNlFhaKfydnTpCNUM7Csssre/BR5tr2ze9h9qm2hw2
-	 XSIyZj3FD+AZxqhdJRiio1od52bgEA4TvDkGH7j/hcOBE+ha6A3w3wDCv+lFcoXzkU
-	 ND9Wmois0x2yx3gPKv03xj5XvdsUYqAWQxkkNl0Yq2k9GwJOpRMSfbqJp69F7sBhO4
-	 ZxAVRyaeZ4QKqnN1zBwbOWcNPq7ZsPloPptRgZltprzT9dZOG8BA/Wpef6RnsSFFXj
-	 CflDZ16bxah+l4XpTTtupMMYHfU2MeR7bfQdaPNFW9Gkfgcoo2QdJV9jEPMcKH5j+O
-	 WzPTzKaykwRLQ==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-afcb7a16441so1050508666b.2
-        for <loongarch@lists.linux.dev>; Wed, 03 Sep 2025 07:52:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVA809SfY+8tBNJfNpJTNZm8bLY5K34d4MhJ7z/MUxOOnoG181WRJqu6ELOk024De0SxNZoBOJar7c=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwS9rLuTNhhId9HBy2zdUDFmk6KMZJCgm2qWbSX5Dh/HoUgc7A7
-	DUfHDu9t4A+0emKqRwFUILxWEQyrP/o4kTRG5SISjrZUpP8HE+GU90OZlsHOXjlkLF81oQKXeoO
-	IepSguMjMYyVL92Kddscn3oGB0/GZk8M=
-X-Google-Smtp-Source: AGHT+IEfEGnM1rCbIpl0TVXdl65Go4E8qV576pQef7gV6AyOFKIxjqJi9IeXnD+Q1FhdPOnY0opDOYo4mGMYToI8GXo=
-X-Received: by 2002:a17:906:fd8d:b0:afe:35d:fd5d with SMTP id
- a640c23a62f3a-b01d8a33c18mr1645348066b.1.1756911174477; Wed, 03 Sep 2025
- 07:52:54 -0700 (PDT)
+	b=uYcabpiXBsMXHQsj5wpLGVmv80yreJZyt9i8IcopCdOx0vZdyYtgxEUiOUXPkO84j
+	 aOcRPVm9WX57mJ/tgYnmc2YvK8BsJDVkotHa0Q4WYM/S95BGlL8S98WG54lGdkjO+Q
+	 B2vvf05v/UXHbodQpKaV03CYGhlxe5/DJX/Jx2BxZIOE2V8Xy/RCotiYV28RR2UXN2
+	 tXPjJuWZVGDObaBMCxSP+V41o6uXKDTEmuG4bLgVkPNyObcrWoOLWivz4ZBtoYppK5
+	 h8msV8KNE1hnIlji0JhohkPyUf2Ljawr7kPJPv9VW5DlHVACP3ecJPzvrWeEK8dBxF
+	 +9rHbRCjcyDBA==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-61e4254271dso6223416a12.2
+        for <loongarch@lists.linux.dev>; Wed, 03 Sep 2025 07:56:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWGESTCIAVQSdDOVEDEfLsVr10tPPBjPLaQOJwYdB7652uB2X0yBiYEFcIzOAc3UAui5Id3cHjaNUc=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy+PShPcHkaOxgo3ubPUWq9dyQiU2VnsC7NzvWyL8qiE6gVqEnQ
+	Zbz2lDBnV1NP+EOpxtgJpkzBi3coJopYQu6kNb8+DWDeSvmXbQ0j/jsqjXDUPNurQJN31+tOa+T
+	KE6UI2fYv7qJVo2KUuhisONpyJ1Xu69c=
+X-Google-Smtp-Source: AGHT+IE/LR48GB5PXHUyXlgQN5d5j+LDUGmvSVQKVgj1NaHdjQ4F+nQJz/y0FnAx1FoJMmd7o/fE4B1dCE3EM5yDCH4=
+X-Received: by 2002:a17:906:c111:b0:afe:a446:b22e with SMTP id
+ a640c23a62f3a-b01d8a277bamr1555805266b.12.1756911373705; Wed, 03 Sep 2025
+ 07:56:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250903070113.42215-1-hengqi.chen@gmail.com> <20250903070113.42215-5-hengqi.chen@gmail.com>
-In-Reply-To: <20250903070113.42215-5-hengqi.chen@gmail.com>
+References: <20250903070113.42215-1-hengqi.chen@gmail.com> <20250903070113.42215-6-hengqi.chen@gmail.com>
+In-Reply-To: <20250903070113.42215-6-hengqi.chen@gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 3 Sep 2025 22:52:51 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4ZCM7uRB_oe__pJB_a1ei4+SPnVfT6c0JXvk4-HJg=bg@mail.gmail.com>
-X-Gm-Features: Ac12FXxr_quI7UFFLrrGKJoctMIpK5yvPUHqWbqxVI60ya4Nho2wm-A-D4_MNJY
-Message-ID: <CAAhV-H4ZCM7uRB_oe__pJB_a1ei4+SPnVfT6c0JXvk4-HJg=bg@mail.gmail.com>
-Subject: Re: [PATCH v4 4/8] LoongArch: BPF: No text_poke() for kernel text
+Date: Wed, 3 Sep 2025 22:56:10 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5PkWkhnBWEynxJki3rbN6rh_HW1hmVUY+ixY0Gx+ot+w@mail.gmail.com>
+X-Gm-Features: Ac12FXy6uYcWS4k8gsz97tFti1aoMm3hFKJp5EYEa2tM3SdU5Vr5jNyS3XB9jq0
+Message-ID: <CAAhV-H5PkWkhnBWEynxJki3rbN6rh_HW1hmVUY+ixY0Gx+ot+w@mail.gmail.com>
+Subject: Re: [PATCH v4 5/8] LoongArch: BPF: Don't assume trampoline size is
+ page aligned
 To: Hengqi Chen <hengqi.chen@gmail.com>
 Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, hejinyang@loongson.cn, 
 	loongarch@lists.linux.dev, bpf@vger.kernel.org
@@ -61,48 +62,38 @@ Hi, Hengqi,
 On Wed, Sep 3, 2025 at 8:06=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com> =
 wrote:
 >
-> The current implementation of bpf_arch_text_poke() requires 5 nops
-> at patch site which is not applicable for kernel/module functions.
-> With CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy, this can be done
-> by ftrace instead.
-Does this mean BPF trampoline can only work with FTRACE enabled?
+> Currently, arch_alloc_bpf_trampoline() use bpf_prog_pack_alloc()
+> which will pack multiple trampolines into a huge page. So no need
+> to assume the trampoline size is page aligned.
+We do the alignment because larch_insn_text_copy() changes page attrs.
+If there is other data and BPF trampoline is in the same page,
+changing page attrs may cause errors.
 
 Huacai
 
 >
-> See the following commit for details:
->   * commit b91e014f078e ("bpf: Make BPF trampoline use register_ftrace_di=
-rect() API")
->   * commit 9cdc3b6a299c ("LoongArch: ftrace: Add direct call support")
->
 > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
 > ---
->  arch/loongarch/net/bpf_jit.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  arch/loongarch/net/bpf_jit.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >
 > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 7b7e449b9ea9..35b13d91a979 100644
+> index 35b13d91a979..43628b5e1553 100644
 > --- a/arch/loongarch/net/bpf_jit.c
 > +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1294,8 +1294,11 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_pok=
-e_type poke_type,
->         u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
-_NOP};
->         u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
-_NOP};
+> @@ -1747,8 +1747,7 @@ int arch_bpf_trampoline_size(const struct btf_func_=
+model *m, u32 flags,
 >
-> -       if (!is_kernel_text((unsigned long)ip) &&
-> -               !is_bpf_text_address((unsigned long)ip))
-> +       if (!is_bpf_text_address((unsigned long)ip))
-> +               /* Only poking bpf text is supported. Since kernel functi=
-on
-> +                * entry is set up by ftrace, we reply on ftrace to poke =
-kernel
-> +                * functions.
-> +                */
->                 return -ENOTSUPP;
+>         ret =3D __arch_prepare_bpf_trampoline(&ctx, &im, m, tlinks, func_=
+addr, flags);
 >
->         ret =3D emit_jump_or_nops(old_addr, ip, old_insns, is_call);
+> -       /* Page align */
+> -       return ret < 0 ? ret : round_up(ret * LOONGARCH_INSN_SIZE, PAGE_S=
+IZE);
+> +       return ret < 0 ? ret : ret * LOONGARCH_INSN_SIZE;
+>  }
+>
+>  struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
 > --
 > 2.43.5
 >
