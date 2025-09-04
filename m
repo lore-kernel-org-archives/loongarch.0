@@ -1,83 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750382C11C7
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 08:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36B2F2D1F61
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 09:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756974040; cv=none; b=EHeepf3L7hZFar6zDDsLFTkDin4cyvs8Z6hwERq3ushTJTmlBMQSlNXlzZ2zUmvtz1tkZr22rFSLZnz8c6x/f+HBEO3eFcH4bH9H/DRmX+n3uiF0c7VfflJ8YJhBc4xVz2423TDNDm2Xe8pNlyjlaopookwwCtFCUo9qMu5RAgw=
+	t=1756976414; cv=none; b=opH1KXLwp3QMAe6q68b7u/Gs5haMImmgf/lfeIFZ20XPtLeOFB9A4jXGGcBWE5BYGKn3wSmIHM3xresnrxKQdLMTMZNzArIbur/CopDXYBAaFBVb9Ak0ni+vHG9XvLvh6/S4sylAoAkod0NI7OrtUKpcyy9ofAqtn6bzyyktPdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756974040; c=relaxed/simple;
-	bh=E/uXjtRmkLmNWxnlDCw0CKhl5d3ycTzBEGah+pZZG60=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rg7DOvfZPsUGd5cb6i4+oS9OSjZJ+AX8l/XEc7+H59ILGjtjSMBFWqaGr72OTeyNM6JOXuL4HEqWuPzqdhwJf/MNZcPnxLcm3sbBH6XWlRT8mUHYQ3t514ChqZMIDbZKo69eADMV07UE9fUuJLqW76kEtvl7x7BsZR7nC3nO5zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqqCBMnD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqqCBMnD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19983C4AF09
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 08:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756974040;
-	bh=E/uXjtRmkLmNWxnlDCw0CKhl5d3ycTzBEGah+pZZG60=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KqqCBMnDPDme7cNPhAslqYiZtDfFK07Hdwq+nNPShaGNbzw1iySrcsxmWiw8b3mXX
-	 mUni9v82wen+gY8vSWCdOkeadysLVo1BINUN6DJ6fPpBznk409MAPFn+AfzLU8P5Q5
-	 QVujMnJs+Oo+vkLM2DN+ey1ICBF1PdbBDtwX53juy2uzXQ/S4fWXweZ351Ih7SkyjJ
-	 m7ANfaf7wYpwt2pLRPb5a1PnBYWeFOHsy63LakobGkDaiyGpEQT3UlWziFIjtPuLRn
-	 mGj34/jNAgmZ/GGZGO+86qrWS+bndJSAIUgasA9gv8V3wPsq+4aCOHuV1DAjIMgPi+
-	 yQlsI4Fce0kWQ==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b043da5a55fso108973566b.0
-        for <loongarch@lists.linux.dev>; Thu, 04 Sep 2025 01:20:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVZhwCJmaty7YviBmhT1MHp9Uf4UnLCPU1j6qxLdkhkjIuH7comrqPR2x0fYCEE3/jdoAdFBBf62rs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxkh6BMAuTx3LvIvJ4OQSLRulmXFhfu1yvblcFsBlquSax/+b4T
-	TL5JdVjFq7c4j1w3hsB6ZUDA+AjuGLOiQQSt3kNCdCu/rJI+gYrbQY/hvqMtIUbjSB3wG760+L4
-	IAFbTK0N2vGwIUQZzlUluGpnphpwy9Ic=
-X-Google-Smtp-Source: AGHT+IGykX2kjpwbJSz2Df4Q0dC+COJpNbeU+7c1CUdwCq32YXgec8hSk5QMYiD/hWmRbZ9Libc//QGLnc87pKR/9tM=
-X-Received: by 2002:a17:907:940a:b0:afe:f8cb:f8bc with SMTP id
- a640c23a62f3a-b01d9732721mr1839905166b.35.1756974038671; Thu, 04 Sep 2025
- 01:20:38 -0700 (PDT)
+	s=arc-20240116; t=1756976414; c=relaxed/simple;
+	bh=ZxHp9rvXp3A5BFA/iyuoW2TlsxQ7kn4hKMLyxjrZ7Tg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=GVcHQRlfUULlm/MMNrn+tZKAPbQk6dqXEgrxRDvHU10gqlqLeNSOFnJ5kkShcxXtarMUb8T2zQfzNCNL44XuG9qiyL8koofOwwtQSppwQO9Uu7j1JXIbDtYZB5Lw4J/VMdhbb3z+IkedJTESs2eybGZ9muAnTq8AppDlZq7OlmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Bx1tAYVblohZoGAA--.13866S3;
+	Thu, 04 Sep 2025 17:00:08 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDxQ+QPVblou5t9AA--.4589S3;
+	Thu, 04 Sep 2025 17:00:03 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: remove unused returns.
+To: Huacai Chen <chenhuacai@kernel.org>, cuitao <cuitao@kylinos.cn>
+Cc: yangtiezhu@loongson.cn, kernel@xen0n.name, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ zhaotianrui@loongson.cn
+References: <462e346b-424d-263d-19a8-766d578d9781@loongson.cn>
+ <20250904081356.1310984-1-cuitao@kylinos.cn>
+ <CAAhV-H4QDs+zruvKVkDgWnMoObhoHiWOL7x4=Q2PRTnnqkNnsw@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <5bd70387-0dc0-fe66-5c5a-5914dd32d6bc@loongson.cn>
+Date: Thu, 4 Sep 2025 16:57:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <462e346b-424d-263d-19a8-766d578d9781@loongson.cn> <20250904081356.1310984-1-cuitao@kylinos.cn>
-In-Reply-To: <20250904081356.1310984-1-cuitao@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 4 Sep 2025 16:20:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4QDs+zruvKVkDgWnMoObhoHiWOL7x4=Q2PRTnnqkNnsw@mail.gmail.com>
-X-Gm-Features: Ac12FXyzzZrpldD23M0o6vMPkPUzHye1yDSCXQYfZAqAKOkke_zz16jNhRDVV0s
-Message-ID: <CAAhV-H4QDs+zruvKVkDgWnMoObhoHiWOL7x4=Q2PRTnnqkNnsw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: remove unused returns.
-To: cuitao <cuitao@kylinos.cn>
-Cc: yangtiezhu@loongson.cn, kernel@xen0n.name, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, maobibo@loongson.cn, 
-	zhaotianrui@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H4QDs+zruvKVkDgWnMoObhoHiWOL7x4=Q2PRTnnqkNnsw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxQ+QPVblou5t9AA--.4589S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZr17Gr47Gr4DWw1fKryDJwc_yoWDKwb_Wa
+	9ak3s2kw1ktF43K3Wvkw45CasxKw4DC34DtrWkJr1Sq34xXayDGrs5Cr17u3W3XayIvwnx
+	uFyYgayxXw1a9osvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_
+	Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
+	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjxUcyxRUUUUU
 
-On Thu, Sep 4, 2025 at 4:14=E2=80=AFPM cuitao <cuitao@kylinos.cn> wrote:
->
-> Thanks for the review.
->
-> My initial idea was to remove the switch-case structure.
-> However, after checking the case value KVM_FEATURE_STEAL_TIME,
-> I found there are 13 parallel definitions=E2=80=94and it is unclear when
-> this part of the development will be completed later. Therefore,
-> I temporarily retained the switch-case structure.
->
-> Now, I have updated the patch according to your suggestion:
-> - Replaced `switch` with `if` since there is only one case.
-> - Removed the redundant semicolon after the block.
->
-> Please see the updated patch below.
-It has been applied, don't make useless effort.
-https://github.com/chenhuacai/linux/commit/f5d35375a6546bcc5d0993e3a48cdbc3=
-a7217544
 
-Huacai
 
->
-> Thanks,
-> Tiezhu
+On 2025/9/4 下午4:20, Huacai Chen wrote:
+> On Thu, Sep 4, 2025 at 4:14 PM cuitao <cuitao@kylinos.cn> wrote:
+>>
+>> Thanks for the review.
+>>
+>> My initial idea was to remove the switch-case structure.
+>> However, after checking the case value KVM_FEATURE_STEAL_TIME,
+>> I found there are 13 parallel definitions—and it is unclear when
+>> this part of the development will be completed later. Therefore,
+>> I temporarily retained the switch-case structure.
+>>
+>> Now, I have updated the patch according to your suggestion:
+>> - Replaced `switch` with `if` since there is only one case.
+>> - Removed the redundant semicolon after the block.
+>>
+>> Please see the updated patch below.
+> It has been applied, don't make useless effort.
+> https://github.com/chenhuacai/linux/commit/f5d35375a6546bcc5d0993e3a48cdbc3a7217544
+I think that it is unnecessary to replace `switch` with `if` here:)
+
+One thing is that the change is big for such thing, and also there may 
+be new case condition in future, just maybe.
+
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>>
+>> Thanks,
+>> Tiezhu
+
