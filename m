@@ -1,120 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F00519DFA2
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 02:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EEF81F1317
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 02:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756951814; cv=none; b=tN/OXMTjpO6lgvCicaTFpNE5yMQc+QpF83SHfQd82pSpQuRuvQKtStVNjquUq6IlNV5Qiw0I3rgWW5ZjBPeowUp8OV93W1KZ1tv5krgstjexoK48IzT8ByfCZeZOS4lqZwJmepTcF466cVKcOmESPPKUYdefCfD4jelMai1owF4=
+	t=1756952141; cv=none; b=KqY+1KpMAcKiDtEWqOOejhlARxTKuj5MNMiTwmhFZ3kDwoaTRLf8MwDrHDEA5rndRPCcRoDuM+Vp+dhJ3NjN+S9F98Oy29rRpdQTd5rmCV7K7ZHzeJXN1V+DPrLXlSdU8IFwxuhbhCXNIL4w7XZeBiMByydU3vlb/A29mTWeEj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756951814; c=relaxed/simple;
-	bh=MTc2g4S451CT+5LG46/r2Ah0FmOd5F9DgiZ4ehFh6AU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bEmHbxVxwG/Rjo0au4eHeP/qSwaDry1RcupWz5LMk+lh9c8gCogHZ4VmcwrOcoKeGbfnn256zf1dk3Z5lm7DfIV/z4iR41bTq7K5MugFI1uJZYHX7Id9QfcjOom76Vg9KgvfWJPoDt2+/kxNYctjpk7607/KVWt1zZsjEq4O98E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAvXcc19; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAvXcc19"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7CECC4CEF8
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 02:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756951813;
-	bh=MTc2g4S451CT+5LG46/r2Ah0FmOd5F9DgiZ4ehFh6AU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uAvXcc19F/v66e3s+ajn8Ughn/C1BB841xTD1CSYdDtfbZULem9I04jdigl7RusAd
-	 G863bT/uaSnvWsn71Z/qsp6QXevK87xsJyuUnJgTYh4/UmYw4U+MTWn/aLti97MT1H
-	 6u+nU+q/a/oiCfAI8rAJwsOfvN2ytMoQxNE/MucrnkfH1w4pbQ3AwfF/aG3H9K0IU7
-	 PPotkbOlZ0mu+zCFFN7SeuLssAeYFVZWPMIZAmTgI5sBgdDo0gudGKW5FeKY71pWsg
-	 0abwWgreXrQTWg5CDO/rKUm6NZowRXlKqOp37VserIw+ktWWXa2XVted1KWUTBG0I9
-	 SFccXTkObF3Iw==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6188b6f7f15so636059a12.2
-        for <loongarch@lists.linux.dev>; Wed, 03 Sep 2025 19:10:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVtcuSlddmkYD5wiZEpjIO+nULLKXnH7XJQDeAqudxo1qTDZ01kmejWEVv4sceZiaSwE/4fOo5cjlw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YykRihPTRRwJrnAYrM1wJ5jIh8CUXDyznhkpEleBwRtwkRchXrm
-	lbaD+EPvJbE80+FvCjayqXpomW9Q7nECmZaQOToPLkf6xrlybxet5j4SZna5O/brkJNi41XdHfL
-	fW+nMv9ceKs0+2HknRv2gUk/Nd8jsAcw=
-X-Google-Smtp-Source: AGHT+IFbBtwIlWpuGUbzHoeIjMpeeDISsUwEw9z/ChIeaG2TNkL8golxeGlN6kc2peOczaxwZYovfzbhOpBkGsYlsAI=
-X-Received: by 2002:a17:907:980a:b0:b04:6412:9612 with SMTP id
- a640c23a62f3a-b0464129adbmr548299166b.46.1756951812372; Wed, 03 Sep 2025
- 19:10:12 -0700 (PDT)
+	s=arc-20240116; t=1756952141; c=relaxed/simple;
+	bh=cFFORYB7W9kJ/fMRCxTcDJgh1ntBg6Yn+F8k58EQXVY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ioRDfmDzjGqyHC8550QkjE2H4c76rKiyMM2Twl0qp7kaIdD8UPDI85Y+kNKt6VH9+E8gUYmUZXGwpT/XDSWmwSjxC4PHQin55PJe97apl0L/daRAvMIcL3r93rmZ0rNkPAcDl5cJAjRHjqZbOSfO879pgF52+1hwTGR0PY8km2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxSNFH9rhozXoGAA--.13774S3;
+	Thu, 04 Sep 2025 10:15:35 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxQ+RD9rhofdZ8AA--.1935S3;
+	Thu, 04 Sep 2025 10:15:32 +0800 (CST)
+Subject: Re: [PATCH v1 1/3] objtool/LoongArch: Fix fall through warning about
+ efi_boot_kernel()
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Huacai Chen
+ <chenhuacai@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
+ <20250901072156.31361-2-yangtiezhu@loongson.cn>
+ <20250901081616.GA4067720@noisy.programming.kicks-ass.net>
+ <a59b3eaa-133d-88bf-f1f3-41328d023c4a@loongson.cn>
+ <qvatvh7rixtdtaflqtgphlva7kkr47drijklkvmae3xh54vn6y@y5v75lwgjdyu>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <40e60857-8e02-cf5e-7804-453b406b0b8b@loongson.cn>
+Date: Thu, 4 Sep 2025 10:15:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250903070113.42215-1-hengqi.chen@gmail.com> <20250903070113.42215-6-hengqi.chen@gmail.com>
- <CAAhV-H5PkWkhnBWEynxJki3rbN6rh_HW1hmVUY+ixY0Gx+ot+w@mail.gmail.com> <CAEyhmHTsnLmQy2ShLKwnsrPforzVCA0rGFs0RPQYFOkXgErcmg@mail.gmail.com>
-In-Reply-To: <CAEyhmHTsnLmQy2ShLKwnsrPforzVCA0rGFs0RPQYFOkXgErcmg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 4 Sep 2025 10:09:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6y8VcJCp7MRchvepBjgU=AHGb6_JZYEwF=As=rvv+XGQ@mail.gmail.com>
-X-Gm-Features: Ac12FXxU278Ji3w2DDCqshLstBEqGVQxu9RSSobqzS3neEKtEBGZhHpLqOBf7_M
-Message-ID: <CAAhV-H6y8VcJCp7MRchvepBjgU=AHGb6_JZYEwF=As=rvv+XGQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/8] LoongArch: BPF: Don't assume trampoline size is
- page aligned
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, hejinyang@loongson.cn, 
-	loongarch@lists.linux.dev, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <qvatvh7rixtdtaflqtgphlva7kkr47drijklkvmae3xh54vn6y@y5v75lwgjdyu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxQ+RD9rhofdZ8AA--.1935S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZrWUury7GF13ZF15trWfCrX_yoWfWrc_ur
+	n29wn7C3s8ta1qvan8Kr4YqFZ5Za4UWrW8J3yDXw48Z345Ja90kFyfJFyfWas8KFsxZasr
+	GF4UXas5WryI9osvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_
+	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
+	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrx
+	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
+	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
+	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU
+	=
 
-On Thu, Sep 4, 2025 at 9:56=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com> =
-wrote:
->
-> On Wed, Sep 3, 2025 at 10:56=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> >
-> > Hi, Hengqi,
-> >
-> > On Wed, Sep 3, 2025 at 8:06=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.c=
-om> wrote:
-> > >
-> > > Currently, arch_alloc_bpf_trampoline() use bpf_prog_pack_alloc()
-> > > which will pack multiple trampolines into a huge page. So no need
-> > > to assume the trampoline size is page aligned.
-> > We do the alignment because larch_insn_text_copy() changes page attrs.
-> > If there is other data and BPF trampoline is in the same page,
-> > changing page attrs may cause errors.
-> >
->
-> Doesn't stop_machine() prevent this side effect?
-I don't think so.
+On 2025/9/4 上午3:17, Josh Poimboeuf wrote:
+> On Mon, Sep 01, 2025 at 04:31:36PM +0800, Tiezhu Yang wrote:
+>> On 2025/9/1 下午4:16, Peter Zijlstra wrote:
+>>> On Mon, Sep 01, 2025 at 03:21:54PM +0800, Tiezhu Yang wrote:
+>>>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
+>>>> the following objtool warning:
 
-Consider such a case: BPF trampoline and another vmalloc area share
-the same page, larch_insn_text_copy() makes the whole page be "rox",
-even if stop_machine() completes. But "rox" is only needed by BPF
-trampoline, and the other vmalloc area isn't.
+...
 
-Huacai
+>> Josh suggested to do something so that the EFI stub code isn't linked into
+>> vmlinux.o [2], it needs to modify the link process and seems too
+>> complicated and expensive for this warning to some extent.
+>>
+>> So I did this change for objtool.
+> 
+> I don't like adding these workarounds to objtool.  Is it really that
+> complicated to link efistub separately?  That seems like the proper
+> design.  vmlinux.o should only have real kernel code.
 
->
-> > Huacai
-> >
-> > >
-> > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> > > ---
-> > >  arch/loongarch/net/bpf_jit.c | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_ji=
-t.c
-> > > index 35b13d91a979..43628b5e1553 100644
-> > > --- a/arch/loongarch/net/bpf_jit.c
-> > > +++ b/arch/loongarch/net/bpf_jit.c
-> > > @@ -1747,8 +1747,7 @@ int arch_bpf_trampoline_size(const struct btf_f=
-unc_model *m, u32 flags,
-> > >
-> > >         ret =3D __arch_prepare_bpf_trampoline(&ctx, &im, m, tlinks, f=
-unc_addr, flags);
-> > >
-> > > -       /* Page align */
-> > > -       return ret < 0 ? ret : round_up(ret * LOONGARCH_INSN_SIZE, PA=
-GE_SIZE);
-> > > +       return ret < 0 ? ret : ret * LOONGARCH_INSN_SIZE;
-> > >  }
-> > >
-> > >  struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
-> > > --
-> > > 2.43.5
-> > >
->
+OK, I see. If this is the only proper direction, I will do it
+in the next version.
+
+Thanks,
+Tiezhu
+
