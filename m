@@ -1,171 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CCA7E107
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 03:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045184437A
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 04:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756958384; cv=none; b=gqcHjUUO4GqmDhVXf3pi7pWT+R0Ga68hyfPyQjRqEwFXKB2daAmUBhVRrG4QcWRDjzLKVAFS4ymhNJQTn+w1J4dauKPP7J4AAdv0lFnGrXHPteLiBIp6jnQMIi+53JGg5yOhHfCmrv+PgB/C14l8NfCcR4Wgdl+/T0KMOJg3R3A=
+	t=1756960012; cv=none; b=m8U39fuQ0tGN5Ug+7hYezyRXaeT4BsxokAOGsfWKXSr+q8n83rPEFTBT0XrMit6nvLen+urEDr8rcD2FGGxROw1SDYqLRuGRrm52HBIVceVeMOl9FiWT0YxbprrKqzL/+Cu8PbbBRz478WMfDxGzcMRL7tBVWl1GCEjGb8HOako=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756958384; c=relaxed/simple;
-	bh=Z+BnEz0jvg+yK0dAV5XhybeWEpr6xpDUc3QMzhsDHXs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ivdhOLJ2BiOUSa1rAkz6Hec/l8Z/8HAmWHf3Z8dPbOUDb2VHjG862szio4VlUzv1ied7sKM9kp0rqscKW1acXVlQAzqpPh/GZQWVrsw8o8tr7N7cvnyoPTfRbgn3m9aemHjT8UxEFZjiaRaVP4g2FWfP4MQmc/CZFSOWI+yaadw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmEi8hQV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmEi8hQV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B00FC4CEF6
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 03:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756958384;
-	bh=Z+BnEz0jvg+yK0dAV5XhybeWEpr6xpDUc3QMzhsDHXs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AmEi8hQVxB+vB4qI9JIsiQmWd0Itxe0lorXLK50cLyibClunc7/HTif68v2OeD3OV
-	 OC1OtlC2syfmkCu1tDhpsFcrgJ3N4E56j4O0fObeFy+Zs9t9k45IImdC0UhaT2p+bK
-	 OF7NE+/XaKdwJK68cF2Y3BLF+hyB3mbAcLVfKsKYtsz9nXK4DJ2BFjo6WP/0/EV3je
-	 dC2PktXMVbS1BykhCQw2I2lNQhBJzKzc5fFYP9kQSh3+O+WJ5MEHLil10Xc4CWOAD0
-	 Ut6ebi5ZUun+tMlATTFNeQvlYzqvgxOpw/3xm99Cyus4PFrYkyxdzt+/3pw8Z3x7tO
-	 LhDyLTo2Tj/WQ==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-61cb4370e7bso813099a12.3
-        for <loongarch@lists.linux.dev>; Wed, 03 Sep 2025 20:59:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUFfL8pcDUw/JhTnZsxTg1oz9ysOHUDX/oDxpLjAMFuj+av5YqHz7c8hYS90vnBZvdqo0ksY3BVp5A=@lists.linux.dev
-X-Gm-Message-State: AOJu0YznD1PNAG5nl2qq5X3/gGJt4SssvEtbiTOdvszUldBp6TCbmmPo
-	RAHaG42meNq/+N5Mt4pp95idxzH83IQZF2NfDmTisfxJ/80yBEmtg0+HSnJzX4olJUuChVubOKN
-	SZFJyL0A6L0jPRitaIaCoPjNObvOmHiQ=
-X-Google-Smtp-Source: AGHT+IFtZbt4F2wiEft1YMfhg8FPqNBSOrFLpd05PCI0gAHIRapAuWGlrPMyURoHhEefcvG/q+IUwr4/gCmxQKjvREE=
-X-Received: by 2002:a05:6402:1d49:b0:61f:177a:e458 with SMTP id
- 4fb4d7f45d1cf-61f177ae946mr559135a12.24.1756958382663; Wed, 03 Sep 2025
- 20:59:42 -0700 (PDT)
+	s=arc-20240116; t=1756960012; c=relaxed/simple;
+	bh=FZ3hp9QC4qMTv8OfmfI7/9tLLAbqepHOg93t9NYVi6Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GaT8V6NJA8GfUMgWZxVDSxk47JxcDg9petVmvXnTeb2A93eVwFM37hLkTteeRl6BLQGOjO+c4ZsaWma7/iDZb7lY4jlSlJyAaPkBbgO9fF2FnLzxDgbSAkO1O33QFPUDO7yuzI0h+TV208GsKDXCYb58EKknLOeopWxaZwFZcJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 5916e9de894711f0b29709d653e92f7d-20250904
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_LOWREP
+	SA_EXISTED, SN_UNTRUSTED, SN_LOWREP, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
+	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:2d54f3e2-bec7-42bd-bbf8-e29200111e39,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:10
+X-CID-INFO: VERSION:1.1.45,REQID:2d54f3e2-bec7-42bd-bbf8-e29200111e39,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:10
+X-CID-META: VersionHash:6493067,CLOUDID:18a91f417ddc5b29999841a85909ed68,BulkI
+	D:250904122643NMZQD1AN,BulkQuantity:0,Recheck:0,SF:19|24|38|44|66|72|78|10
+	2,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,B
+	EC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 5916e9de894711f0b29709d653e92f7d-20250904
+X-User: cuitao@kylinos.cn
+Received: from ctao-ubuntu.. [(39.156.73.13)] by mailgw.kylinos.cn
+	(envelope-from <cuitao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 2133732486; Thu, 04 Sep 2025 12:26:37 +0800
+From: cuitao <cuitao@kylinos.cn>
+To: zhaotianrui@loongson.cn,
+	maobibo@loongson.cn,
+	chenhuacai@kernel.org,
+	loongarch@lists.linux.dev
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cuitao <cuitao@kylinos.cn>
+Subject: [PATCH] LoongArch: KVM: remove unused returns.
+Date: Thu,  4 Sep 2025 12:26:22 +0800
+Message-ID: <20250904042622.1291085-1-cuitao@kylinos.cn>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
- <20250901072156.31361-3-yangtiezhu@loongson.cn> <20250901081904.GB4067720@noisy.programming.kicks-ass.net>
- <82c913b9-4403-cde9-0542-5bd6e04415f5@loongson.cn> <wt4qpgi5isj5m6wq33pomvm6borvafuzktekc7lgtoitscar5q@brixzj3lccbw>
- <ccbb40c1-5f2d-77e9-e8d2-52f2fdbad645@loongson.cn> <CAAhV-H5qhKepa-8sz3_AC=_RCChbVeEmnHKESMqpiJ0phMORbg@mail.gmail.com>
- <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn>
-In-Reply-To: <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 4 Sep 2025 11:59:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
-X-Gm-Features: Ac12FXxP3ZoLcidPegFPaxOdZY3bQjf34J0IwTsbnSzDdpOhDTVExs6BrMaldbE
-Message-ID: <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
- warnings about EFISTUB
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 4, 2025 at 11:50=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> On 2025/9/4 =E4=B8=8A=E5=8D=8810:21, Huacai Chen wrote:
-> > On Thu, Sep 4, 2025 at 10:18=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
-> >>
-> >> On 2025/9/4 =E4=B8=8A=E5=8D=883:19, Josh Poimboeuf wrote:
-> >>> On Mon, Sep 01, 2025 at 04:39:29PM +0800, Tiezhu Yang wrote:
-> >>>> On 2025/9/1 =E4=B8=8B=E5=8D=884:19, Peter Zijlstra wrote:
-> >>>>> On Mon, Sep 01, 2025 at 03:21:55PM +0800, Tiezhu Yang wrote:
-> >>>>>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist =
-the
-> >>>>>> following objtool warnings:
-> >>
-> >> ...
-> >>
-> >>>> Josh suggested to do something to put these instructions in the data
-> >>>> section, but as said in the previous reply, it needs to modify the l=
-ink
-> >>>> process and seems too complicated and expensive for this warning to =
-some
-> >>>> extent.
-> >>>>
-> >>>> So I did this change for objtool.
-> >>>
-> >>> I don't like this workaround either, how exactly is it complicated an=
-d
-> >>> expensive to put the data in a data section?
-> >>
-> >> I can put them in a data section in the next version, this is
-> >> reasonable.
-> > No, from the ARM64 and RISC-V design, we can put jump instructions in
-> > the HEAD section, and this is what Jiaxun wants to do. Changing to a
-> > data section is not reasonable.
->
-> ARM64, RISC-V and LoongArch share the same logic in efistub:
->
-> $ grep -r "libstub/lib.a" arch/*/Makefile
-> arch/arm64/Makefile:libs-$(CONFIG_EFI_STUB) +=3D
-> $(objtree)/drivers/firmware/efi/libstub/lib.a
-> arch/loongarch/Makefile:libs-$(CONFIG_EFI_STUB) +=3D
-> $(objtree)/drivers/firmware/efi/libstub/lib.a
-> arch/riscv/Makefile:libs-$(CONFIG_EFI_STUB) +=3D
-> $(objtree)/drivers/firmware/efi/libstub/lib.a
->
-> If we can not put the these data to a data section, then we can not
-> link efistub separately, because if remove the following code in
-> arch/loongarch/Makefile:
->
-> libs-$(CONFIG_EFI_STUB) +=3D $(objtree)/drivers/firmware/efi/libstub/lib.=
-a
->
-> there exists the following build error:
->
->     LD      vmlinux.o
->    OBJCOPY modules.builtin.modinfo
->    GEN     modules.builtin
->    GEN     .vmlinux.objs
->    MODPOST Module.symvers
->    UPD     include/generated/utsversion.h
->    CC      init/version-timestamp.o
->    KSYMS   .tmp_vmlinux0.kallsyms.S
->    AS      .tmp_vmlinux0.kallsyms.o
->    LD      .tmp_vmlinux1
-> ld: arch/loongarch/kernel/head.o: in function `pe_header':
-> (.head.text+0x68): undefined reference to `__efistub_efi_pe_entry'
->
-> What should to do in the next step? I am looking forward to your
-> final conclusion.
+The default branch has already handled all undefined cases,
+so the final return statement is redundant.
 
-This is from RISC-V code.
+Signed-off-by: cuitao <cuitao@kylinos.cn>
+---
+ arch/loongarch/kvm/exit.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-__HEAD
-SYM_CODE_START(_start)
-        /*
-         * Image header expected by Linux boot-loaders. The image header da=
-ta
-         * structure is described in asm/image.h.
-         * Do not modify it without modifying the structure and all bootloa=
-ders
-         * that expects this header format!!
-         */
-#ifdef CONFIG_EFI
-        /*
-         * This instruction decodes to "MZ" ASCII required by UEFI.
-         */
-        c.li s4,-13
-        j _start_kernel
-#else
-        /* jump to start kernel */
-        j _start_kernel
-        /* reserved */
-        .word 0
-#endif
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index 2ce41f93b2a4..e501867740b1 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -778,9 +778,7 @@ static long kvm_save_notify(struct kvm_vcpu *vcpu)
+ 		return 0;
+ 	default:
+ 		return KVM_HCALL_INVALID_CODE;
+-	};
+-
+-	return KVM_HCALL_INVALID_CODE;
++	}
+ };
+ 
+ /*
+-- 
+2.48.1
 
-The HEAD section has instructions, if you change it into a data
-section then it loses the "x" attribute.
-
-So my conclusion is this series is the correct solution for all
-non-x86 archs. We don't need to treat it as "workarounds".
-
-Huacai
-
->
-> Thanks,
-> Tiezhu
->
