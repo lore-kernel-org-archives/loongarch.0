@@ -1,147 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08762F8BD1;
-	Thu,  4 Sep 2025 16:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C071F75A6;
+	Thu,  4 Sep 2025 17:16:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757002094; cv=none; b=sWvnOCWpi9EEEaWdjRCDc+dFXwvyFXelva5p7mFYP2j2bSCO4lGdnHcTnoJYJrEwOnMPKOMm2L9ObSwi/vvCucRUNHACSFR2NHUQOERXa5bPwO7IGD41SV2mbjH3Z/JCBa4mAiD/umooovTc7png6/ZIeoIa53TFaewaHjciHSE=
+	t=1757006164; cv=none; b=UM9pd2Q4ZXyMR4uMUuyJKPtNsMaBut11sqtdbsggGPneL2ljCFHzQQU+G2WmpuuVU7VrezUNk6scjJ1ddASqQERhyzqUH04IY3aK6ndG88ftmi5pPu5aZQW8IGRIZh6Tt5nyikWzDRKJKpahEph/23y9QeWsUayoNq4ump/+jig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757002094; c=relaxed/simple;
-	bh=9CpHF3e779/0EiTNYs7BVku2HEp20J+MBisbKh39eq0=;
+	s=arc-20240116; t=1757006164; c=relaxed/simple;
+	bh=RLDNaMvtTcDFLBRI8CRbBMtmCXNq09oCo1x8DhLKx1c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=roitekEEr2Pxqq75bMuPPi891zysxyT1cZGzJXdzGWAQIsxwU2/cp6hkXpBOCvYDocSU0e1jS5gz2nCl3AA6T24xE83iYtEeBrbxA98vp6D3LAdpOp2oTN7kd2XVgs0uY0/gbIlmGZLnJOJ13/S2d/OXayJ9hZYLArm3+TarjII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5N+iYyc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cg/XpvfUE7R6PpMvLdKL1tZal2v5xR6SC+Q+6liqBZxqqSK8OVc+9pJG9zbN0IF9ZX5PFIpKDdIpLlWaNTGJCyUPA5v9hpT9vhNFxikylw8m6Ix9pHRgUd+SWwrCndwYW5gbGsd54zbXL/smpzp/3D5ubyOUa+964QJXwyvWSEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkxFS2Ik; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5N+iYyc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12938C4CEF6;
-	Thu,  4 Sep 2025 16:08:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkxFS2Ik"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E563C4CEF0;
+	Thu,  4 Sep 2025 17:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757002093;
-	bh=9CpHF3e779/0EiTNYs7BVku2HEp20J+MBisbKh39eq0=;
+	s=k20201202; t=1757006162;
+	bh=RLDNaMvtTcDFLBRI8CRbBMtmCXNq09oCo1x8DhLKx1c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F5N+iYycovpeRk8V9xKnvZ3Up5BSP7TH+UEcPvEbYRnIUoYbTz0+JV23vqILN/sJp
-	 uP+BnNP4/CA8ojS3aLAUdtlCVacVCNc8/IOt+E7tZmy8UslQe2Lj1ZjwDnonIA3+5z
-	 gYGDElGWt35RV10wCsZ+ImVfgqY7FWT7Xv9MGYa8b5DncoULVsTb50Mf/V8p72r1P+
-	 3mzSEPwLDgjpezuic7IGa5WJl0waTVeIdlOE8lzqhwk3LPXCIUl+xBY4eMFA38iamP
-	 iPg3wVfxDHB8aXXGm3ow0QjYQ1Mr4rsREBKx5RBNSGwybAC3GawMDPzWtnwpspRrUy
-	 ooeWA615kCotg==
-Date: Thu, 4 Sep 2025 18:08:10 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Xianglai Li <lixianglai@loongson.cn>
-Subject: Re: [PATCH v2 1/2] tick: Remove unreasonable detached state set in
- tick_shutdown()
-Message-ID: <aLm5aodjygSZkN8j@localhost.localdomain>
-References: <20250904071732.3513694-1-maobibo@loongson.cn>
- <20250904071732.3513694-2-maobibo@loongson.cn>
- <87frd2xlat.ffs@tglx>
+	b=IkxFS2IkdAtwB3Vh43Sjl55zEKa6+/w0Sx5c7pthtfcoAXDLknCNY2tzNpHe0s9BC
+	 /3Ub8kxvCHyb9NXPwBLME8V1kk0IOK6cB9fhjGbi3zsCCAR/2p+CCmFtAl2ekW/0dQ
+	 Zkfzn7Vu9SxEL0ZubGSvnCTr2PrKq4+L2T1Rr7g0/Sy9Qh1r8F7xShzd+U0OSIQhuI
+	 uESS+8YbK/EaO6jSHzHdy2z5qwsdtly65It5Xdhuy9no0BqLUmjOYCKL5IcP1IeSg1
+	 y9lU4eH4PICyqKBJ/RQyzg5YEcyGANlf81qiomNJX+MJzXM0FqXbmZrBqVLNqbQBNg
+	 yOnPNg/iU3eKA==
+Date: Thu, 4 Sep 2025 10:16:00 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] LoongArch: Fix unreachable instruction warnings
+ about entry functions
+Message-ID: <kjiyla6qj3l7ezspitulrdoc5laj2e6hoecvd254hssnpddczm@g6nkaombh6va>
+References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
+ <20250901072156.31361-4-yangtiezhu@loongson.cn>
+ <ots6w2ntyudj5ucs5eowncta2vmfssatpcqwzpar3ekk577hxi@j45dd4dmwx6x>
+ <3da2092b-e6ca-a7a1-9459-c2754adf19aa@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87frd2xlat.ffs@tglx>
+In-Reply-To: <3da2092b-e6ca-a7a1-9459-c2754adf19aa@loongson.cn>
 
-Le Thu, Sep 04, 2025 at 05:57:30PM +0200, Thomas Gleixner a �crit :
-> On Thu, Sep 04 2025 at 15:17, Bibo Mao wrote:
-> > Function clockevents_switch_state() will check whether it has already
-> > switched to specified state, do nothing if it has.
-> >
-> > In function tick_shutdown(), it will set detached state at first and
-> > call clockevents_switch_state() in clockevents_exchange_device(). The
-> > function clockevents_switch_state() will do nothing since it is already
-> > detached state. So the tick timer device will not be shutdown when CPU
-> > is offline. In guest VM system, timer interrupt will prevent vCPU to
-> > sleep if vCPU is hot removed.
-> >
-> > Here remove state set before calling clockevents_exchange_device(),
-> > its state will be set in function clockevents_switch_state() if it
-> > succeeds to do so.
+On Thu, Sep 04, 2025 at 11:18:28AM +0800, Tiezhu Yang wrote:
+> On 2025/9/4 上午3:22, Josh Poimboeuf wrote:
+> > On Mon, Sep 01, 2025 at 03:21:56PM +0800, Tiezhu Yang wrote:
+> > > +++ b/arch/loongarch/kernel/Makefile
+> > > @@ -3,8 +3,6 @@
+> > >   # Makefile for the Linux/LoongArch kernel.
+> > >   #
+> > > -OBJECT_FILES_NON_STANDARD_head.o := y
+> > > -
+> > >   always-$(KBUILD_BUILTIN)	:= vmlinux.lds
+> > >   obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
+> > > diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> > > index e3865e92a917..a11880f3a7e1 100644
+> > > --- a/arch/loongarch/kernel/head.S
+> > > +++ b/arch/loongarch/kernel/head.S
+> > > @@ -42,6 +42,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
+> > >   	.align 12
+> > >   SYM_CODE_START(kernel_entry)			# kernel entry point
+> > > +	UNWIND_HINT_UNDEFINED
+> > 
+> > Should this not be UNWIND_HINT_END_OF_STACK?
 > 
-> This explanation is incomplete. tick_shutdown() did this because it was
-> originally invoked on a life CPU and not on the outgoing CPU.
+> Yes, makes sense, will do it in the next version.
+> 
+> > I notice Loongarch doesn't seem to use that anywhere.  How does any ORC
+> > unwind succeed?  UNWIND_HINT_UNDEFINED sets an error condition which
+> > should cause a livepatch transition to stall.
+> 
+> Actually, kernel_entry() or smpboot_entry() is recognized as the last
+> frame, because at this point is_entry_func() is true and
+> state->stack_info.type = STACK_TYPE_UNKNOWN in unwind_next_frame() of
+> arch/loongarch/kernel/unwind_orc.c.
 
-Ok I didn't know that.
-
-> 
-> That got changed in
-> 
->   3b1596a21fbf ("clockevents: Shutdown and unregister current clockevents at CPUHP_AP_TICK_DYING")
-> 
-> which is the actual root cause.
-> 
-> The pile of 'Fixes:' below is just enumerating the subsequent problems.
-> 
-> > Fixes: bf9a001fb8e4 ("clocksource/drivers/timer-tegra: Remove clockevents shutdown call on offlining")
-> > Fixes: cd165ce8314f ("clocksource/drivers/qcom: Remove clockevents shutdown call on offlining")
-> > Fixes: 30f8c70a85bc ("clocksource/drivers/armada-370-xp: Remove clockevents shutdown call on offlining")
-> > Fixes: ba23b6c7f974 ("clocksource/drivers/exynos_mct: Remove clockevents shutdown call on offlining")
-> > Fixes: 15b810e0496e ("clocksource/drivers/arm_global_timer: Remove clockevents shutdown call on offlining")
-> > Fixes: 78b5c2ca5f27 ("clocksource/drivers/arm_arch_timer: Remove clockevents shutdown call on offlining")
-> > Fixes: 900053d9eedf ("ARM: smp_twd: Remove clockevents shutdown call on
-> > offlining")
-
-Makes sense.
-
-> >
-> > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-> > ---
-> >  kernel/time/tick-common.c | 5 -----
-> >  1 file changed, 5 deletions(-)
-> >
-> > diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-> > index 9a3859443c04..eb9b777f5492 100644
-> > --- a/kernel/time/tick-common.c
-> > +++ b/kernel/time/tick-common.c
-> > @@ -424,11 +424,6 @@ void tick_shutdown(unsigned int cpu)
-> >  
-> >  	td->mode = TICKDEV_MODE_PERIODIC;
-> >  	if (dev) {
-> > -		/*
-> > -		 * Prevent that the clock events layer tries to call
-> > -		 * the set mode function!
-> > -		 */
-> > -		clockevent_set_state(dev, CLOCK_EVT_STATE_DETACHED);
-> >  		clockevents_exchange_device(dev, NULL);
-> >  		dev->event_handler = clockevents_handle_noop;
-> >  		td->evtdev = NULL;
-> 
-> Can this pretty please cleanup the misleading comment above
-> tick_shutdown() as well?
-> 
->  * Shutdown an event device on a given cpu:
->  *
->  * This is called on a life CPU, when a CPU is dead. So we cannot
->  * access the hardware device itself.
->  * We just set the mode and remove it from the lists.
-> 
-> That should have been removed or updated with 3b1596a21fbf too, no?
-
-Right, missed that.
-
-> 
-> With that the cpu argument is not longer useful either, because this is
-> now guaranteed to be invoked on the outgoing CPU, no?
-
-Right.
-
-Thanks!
-
-> 
-> Thanks,
-> 
->         tglx
-> 
+I think you can get rid of is_entry_func() in favor of just using
+UNWIND_HINT_END_OF_STACK at all the entry points.
 
 -- 
-Frederic Weisbecker
-SUSE Labs
+Josh
