@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C071F75A6;
-	Thu,  4 Sep 2025 17:16:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE223EEAB;
+	Thu,  4 Sep 2025 17:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757006164; cv=none; b=UM9pd2Q4ZXyMR4uMUuyJKPtNsMaBut11sqtdbsggGPneL2ljCFHzQQU+G2WmpuuVU7VrezUNk6scjJ1ddASqQERhyzqUH04IY3aK6ndG88ftmi5pPu5aZQW8IGRIZh6Tt5nyikWzDRKJKpahEph/23y9QeWsUayoNq4ump/+jig=
+	t=1757006809; cv=none; b=iE7wbDzu3xDlYMJcnIebMqAlDryI2pcY7UK2RVGv9k9lJfAuITWFPRfB9oL2OTh08BUcpZLgdALE2ZDbAW5R10n+HjeAZyL1H5N02CHMMVmstq/Sf/LFTTwJ+XeaY0e9QzYLU+kEhERZBkhGreAu3BGp3qSSSrIpIamvKy9oOsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757006164; c=relaxed/simple;
-	bh=RLDNaMvtTcDFLBRI8CRbBMtmCXNq09oCo1x8DhLKx1c=;
+	s=arc-20240116; t=1757006809; c=relaxed/simple;
+	bh=Mffg9KVeBcQXps8s2vHAGfu9z8Il5tXK3/sTqDNFHe4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cg/XpvfUE7R6PpMvLdKL1tZal2v5xR6SC+Q+6liqBZxqqSK8OVc+9pJG9zbN0IF9ZX5PFIpKDdIpLlWaNTGJCyUPA5v9hpT9vhNFxikylw8m6Ix9pHRgUd+SWwrCndwYW5gbGsd54zbXL/smpzp/3D5ubyOUa+964QJXwyvWSEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkxFS2Ik; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADtfLnvKA1TWCyVHq3Upo9/dNYKb7UzADJlOlvZkmh1ngc1pt4G/84wNmX6hewemRHYZquBPWav8Nkj5UDFQUAxoA1AoTfKQ5JbPg7KEk5gZIyRjFAKay3fNiHYOB9jkV0VDWYUiyrMCxj8ruMIgURUONqhvfYomB4nvt8GDoGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uBkQLuSb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkxFS2Ik"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E563C4CEF0;
-	Thu,  4 Sep 2025 17:16:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uBkQLuSb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74F1C4CEF0;
+	Thu,  4 Sep 2025 17:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757006162;
-	bh=RLDNaMvtTcDFLBRI8CRbBMtmCXNq09oCo1x8DhLKx1c=;
+	s=k20201202; t=1757006809;
+	bh=Mffg9KVeBcQXps8s2vHAGfu9z8Il5tXK3/sTqDNFHe4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IkxFS2IkdAtwB3Vh43Sjl55zEKa6+/w0Sx5c7pthtfcoAXDLknCNY2tzNpHe0s9BC
-	 /3Ub8kxvCHyb9NXPwBLME8V1kk0IOK6cB9fhjGbi3zsCCAR/2p+CCmFtAl2ekW/0dQ
-	 Zkfzn7Vu9SxEL0ZubGSvnCTr2PrKq4+L2T1Rr7g0/Sy9Qh1r8F7xShzd+U0OSIQhuI
-	 uESS+8YbK/EaO6jSHzHdy2z5qwsdtly65It5Xdhuy9no0BqLUmjOYCKL5IcP1IeSg1
-	 y9lU4eH4PICyqKBJ/RQyzg5YEcyGANlf81qiomNJX+MJzXM0FqXbmZrBqVLNqbQBNg
-	 yOnPNg/iU3eKA==
-Date: Thu, 4 Sep 2025 10:16:00 -0700
+	b=uBkQLuSbuacufk5N6YlbC1tcFwo9Onv09elp7pARH6HnoErGxQsvYigSMmNrNDxoG
+	 dvnd/y5yWDsPHw0iUdWIDY07hYia1CZBlElmTn42Tx/EB1EFXEXsodhXffstIB/Io6
+	 4Mos5ZRWIC7G9y5weqbsEvk9AfPdW2uTC5YPoIYNDgoLLUsIvrnT2Py5wZl6VLsUHj
+	 U4m0GRu45gjqtF2EnUUh6060/3KDHPpkk66/kcPt7JV2K37/ucdMRwLinU7lgj6ybH
+	 +qlDhGI6hhYA6BnyFxb/RDJjbbfIjjSmGghPPVe0DtMGN+zzgCEksUCFUqo8oQCJeE
+	 +zjGIHylLxdEQ==
+Date: Thu, 4 Sep 2025 10:26:46 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, 
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, 
 	Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] LoongArch: Fix unreachable instruction warnings
- about entry functions
-Message-ID: <kjiyla6qj3l7ezspitulrdoc5laj2e6hoecvd254hssnpddczm@g6nkaombh6va>
+Subject: Re: [PATCH v1 1/3] objtool/LoongArch: Fix fall through warning about
+ efi_boot_kernel()
+Message-ID: <mqyjt5cabahlvezowt6plurkyrrbputvg776rhgaxhpwsqnuq3@onr5svx5heuf>
 References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
- <20250901072156.31361-4-yangtiezhu@loongson.cn>
- <ots6w2ntyudj5ucs5eowncta2vmfssatpcqwzpar3ekk577hxi@j45dd4dmwx6x>
- <3da2092b-e6ca-a7a1-9459-c2754adf19aa@loongson.cn>
+ <20250901072156.31361-2-yangtiezhu@loongson.cn>
+ <20250901081616.GA4067720@noisy.programming.kicks-ass.net>
+ <a59b3eaa-133d-88bf-f1f3-41328d023c4a@loongson.cn>
+ <qvatvh7rixtdtaflqtgphlva7kkr47drijklkvmae3xh54vn6y@y5v75lwgjdyu>
+ <CAAhV-H5u4xHcuLhyPe+a_YqPoCX2uVoqcW94i=HvU1NooL_efg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -48,43 +50,80 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3da2092b-e6ca-a7a1-9459-c2754adf19aa@loongson.cn>
+In-Reply-To: <CAAhV-H5u4xHcuLhyPe+a_YqPoCX2uVoqcW94i=HvU1NooL_efg@mail.gmail.com>
 
-On Thu, Sep 04, 2025 at 11:18:28AM +0800, Tiezhu Yang wrote:
-> On 2025/9/4 上午3:22, Josh Poimboeuf wrote:
-> > On Mon, Sep 01, 2025 at 03:21:56PM +0800, Tiezhu Yang wrote:
-> > > +++ b/arch/loongarch/kernel/Makefile
-> > > @@ -3,8 +3,6 @@
-> > >   # Makefile for the Linux/LoongArch kernel.
-> > >   #
-> > > -OBJECT_FILES_NON_STANDARD_head.o := y
-> > > -
-> > >   always-$(KBUILD_BUILTIN)	:= vmlinux.lds
-> > >   obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
-> > > diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> > > index e3865e92a917..a11880f3a7e1 100644
-> > > --- a/arch/loongarch/kernel/head.S
-> > > +++ b/arch/loongarch/kernel/head.S
-> > > @@ -42,6 +42,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
-> > >   	.align 12
-> > >   SYM_CODE_START(kernel_entry)			# kernel entry point
-> > > +	UNWIND_HINT_UNDEFINED
-> > 
-> > Should this not be UNWIND_HINT_END_OF_STACK?
+On Thu, Sep 04, 2025 at 10:17:11AM +0800, Huacai Chen wrote:
+> Hi, Josh,
 > 
-> Yes, makes sense, will do it in the next version.
+> On Thu, Sep 4, 2025 at 3:17 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> >
+> > On Mon, Sep 01, 2025 at 04:31:36PM +0800, Tiezhu Yang wrote:
+> > > On 2025/9/1 下午4:16, Peter Zijlstra wrote:
+> > > > On Mon, Sep 01, 2025 at 03:21:54PM +0800, Tiezhu Yang wrote:
+> > > > > When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
+> > > > > the following objtool warning:
+> > > > >
+> > > > >    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
+> > > > >    falls through to next function __efistub_exit_boot_func()
+> > > > >
+> > > > > This is because efi_boot_kernel() doesn't end with a return instruction
+> > > > > or an unconditional jump, then objtool has determined that the function
+> > > > > can fall through into the next function.
+> > > > >
+> > > > > At the beginning, try to do something to make efi_boot_kernel() ends with
+> > > > > an unconditional jump instruction, but it is not a proper way.
+> > > > >
+> > > > > After more analysis, one simple way is to ignore these EFISTUB functions
+> > > > > in validate_branch() of objtool since they are useless for stack unwinder.
+> > > > >
+> > > >
+> > > > This is drivers/firmware/efi/libstub/loongarch.c:efi_boot_kernel(),
+> > > > right?
+> > > >
+> > > > Why not simply do something like:
+> > > >
+> > > > diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
+> > > > index 3782d0a187d1..082611a5f1f0 100644
+> > > > --- a/drivers/firmware/efi/libstub/loongarch.c
+> > > > +++ b/drivers/firmware/efi/libstub/loongarch.c
+> > > > @@ -81,4 +81,5 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
+> > > >     real_kernel_entry(true, (unsigned long)cmdline_ptr,
+> > > >                       (unsigned long)efi_system_table);
+> > > > +   BUG();
+> > > >   }
+> > >
+> > > At the beginning, I did the above change, but no effect.
+> > >
+> > > The first thing is to remove the attribute __noreturn for
+> > > real_kernel_entry(), otherwise the compiler can not generate
+> > > instructions after that.
+> > >
+> > > But there is an argument in the previous RFC [1]:
+> > >
+> > > "From my point of view this is incorrect, this function is indeed a
+> > > noreturn function, and this modification makes LoongArch different to
+> > > other architectures."
+> > >
+> > > Josh suggested to do something so that the EFI stub code isn't linked into
+> > > vmlinux.o [2], it needs to modify the link process and seems too
+> > > complicated and expensive for this warning to some extent.
+> > >
+> > > So I did this change for objtool.
+> >
+> > I don't like adding these workarounds to objtool.  Is it really that
+> > complicated to link efistub separately?  That seems like the proper
+> > design.  vmlinux.o should only have real kernel code.
+> I don't think this is just a "workaround", ARM64, RISC-V and LoongArch
+> share the same logic in efistub which may be different from X86. When
+> ARM64 and RISC-V add objtool support, they will also need to ignore
+> the __efistub_ functions.
 > 
-> > I notice Loongarch doesn't seem to use that anywhere.  How does any ORC
-> > unwind succeed?  UNWIND_HINT_UNDEFINED sets an error condition which
-> > should cause a livepatch transition to stall.
-> 
-> Actually, kernel_entry() or smpboot_entry() is recognized as the last
-> frame, because at this point is_entry_func() is true and
-> state->stack_info.type = STACK_TYPE_UNKNOWN in unwind_next_frame() of
-> arch/loongarch/kernel/unwind_orc.c.
+> The other patch is similar.
 
-I think you can get rid of is_entry_func() in favor of just using
-UNWIND_HINT_END_OF_STACK at all the entry points.
+Objtool expects/enforces certain rules.  One of them is that vmlinux.o
+is proper runtime kernel code.  efistub is not that.
+
+Is there some technical reason why vmlinux.o needs efistub linked in?
 
 -- 
 Josh
