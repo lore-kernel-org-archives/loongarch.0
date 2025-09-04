@@ -1,95 +1,87 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6B292989BF
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 07:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1982126B747
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 08:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756970262; cv=none; b=g4yVPR7Z/CzpH9EAiEjYjK6JLgZOpEge77GDRMdKU/Vxg8IxE99zcmlKCGdFwE9vrRfiqkLWjUTPxjUx8z4778AV0yUTQWCIwbKFYVe0gNRTrs0+xnltbHS5nK3ehxmQewviOFLV/6mG4HxRGphwUW66g2mWOaQR/8VOIrtZVWE=
+	t=1756973658; cv=none; b=sPNrBPYLnQ1mlkXplrGOsFf55cYITR+FiNaZFnnjrwyqMNYiGXyJF2Kw2N+zCRkAyHZOKPuE8B9Da/00G0G5iv9fwDTj8Fudo+ORXbfbTsVQFUyGuRPevvn13ziJ3FwI9pjbq1n2j16qNBxeRw0eIuY0PlHhdj14q1HPpkA390E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756970262; c=relaxed/simple;
-	bh=Xjaa/4KIvlEb0Eb8QUjZKXufKO7jQ3AcbZtE0SnZ4yA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gnYLwVMWWWhdFdXV691flaHNRuFnEMbjF10S/vr2PPqUpwU5KJA3xpqlD0/v9fDXhybE65sy9HPgsWyHfEdrgl7g0olW3Y2NaIDhymbDbe4RfA7k+JeCyXnusYtcVdCoQBzBmJOhLbGCkxeHG2DAh646/NZMUE1wv3osmj+Sql0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxK9IRPbloTY8GAA--.12756S3;
-	Thu, 04 Sep 2025 15:17:37 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJDx_8MNPbloS2h9AA--.2519S3;
-	Thu, 04 Sep 2025 15:17:37 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1756973658; c=relaxed/simple;
+	bh=MCg0R7lspWnUAF0f5SuTopyp8Sjf2uoftrZVGTPACaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RIGfkx23/8TL/gKybC3B2RXfjXjPBagKvSF9FySn7kWs/SzXclkq4wVH6EuFec5KRQa2bglecCrxwS5Qi3ciMYKJ6xnOWUB36z7zvto6hPweGLrccP4WlGwcrtgZoD6vfortxL0NPz7I3CulWOab9N9XnRHkB7X23evmWmSO3Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 22352d5c896711f0b29709d653e92f7d-20250904
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_LANG
+	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
+	HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_LOWREP
+	SA_EXISTED, SN_UNTRUSTED, SN_LOWREP, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:14293aca-ade4-4f5a-8cfe-b60be37e72da,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:10
+X-CID-INFO: VERSION:1.1.45,REQID:14293aca-ade4-4f5a-8cfe-b60be37e72da,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:10
+X-CID-META: VersionHash:6493067,CLOUDID:fcf7ad9177248482b0e7c728bd1ded62,BulkI
+	D:250904142548XOOMPT96,BulkQuantity:2,Recheck:0,SF:19|24|44|66|72|78|81|82
+	|83|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:
+	nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,AR
+	C:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: 22352d5c896711f0b29709d653e92f7d-20250904
+X-User: cuitao@kylinos.cn
+Received: from ctao-ubuntu.. [(39.156.73.13)] by mailgw.kylinos.cn
+	(envelope-from <cuitao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1218613750; Thu, 04 Sep 2025 16:14:09 +0800
+From: cuitao <cuitao@kylinos.cn>
+To: yangtiezhu@loongson.cn
+Cc: chenhuacai@kernel.org,
+	cuitao@kylinos.cn,
+	kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	Xianglai Li <lixianglai@loongson.cn>
-Subject: [PATCH v2 1/2] tick: Remove unreasonable detached state set in tick_shutdown()
-Date: Thu,  4 Sep 2025 15:17:31 +0800
-Message-Id: <20250904071732.3513694-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250904071732.3513694-1-maobibo@loongson.cn>
-References: <20250904071732.3513694-1-maobibo@loongson.cn>
+	maobibo@loongson.cn,
+	zhaotianrui@loongson.cn
+Subject: Re: [PATCH] LoongArch: KVM: remove unused returns.
+Date: Thu,  4 Sep 2025 16:13:55 +0800
+Message-ID: <20250904081356.1310984-1-cuitao@kylinos.cn>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <462e346b-424d-263d-19a8-766d578d9781@loongson.cn>
+References: <462e346b-424d-263d-19a8-766d578d9781@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDx_8MNPbloS2h9AA--.2519S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Function clockevents_switch_state() will check whether it has already
-switched to specified state, do nothing if it has.
+Thanks for the review.
 
-In function tick_shutdown(), it will set detached state at first and
-call clockevents_switch_state() in clockevents_exchange_device(). The
-function clockevents_switch_state() will do nothing since it is already
-detached state. So the tick timer device will not be shutdown when CPU
-is offline. In guest VM system, timer interrupt will prevent vCPU to
-sleep if vCPU is hot removed.
+My initial idea was to remove the switch-case structure. 
+However, after checking the case value KVM_FEATURE_STEAL_TIME, 
+I found there are 13 parallel definitions—and it is unclear when 
+this part of the development will be completed later. Therefore, 
+I temporarily retained the switch-case structure. 
 
-Here remove state set before calling clockevents_exchange_device(),
-its state will be set in function clockevents_switch_state() if it
-succeeds to do so.
+Now, I have updated the patch according to your suggestion:
+- Replaced `switch` with `if` since there is only one case.
+- Removed the redundant semicolon after the block.
 
-Fixes: bf9a001fb8e4 ("clocksource/drivers/timer-tegra: Remove clockevents shutdown call on offlining")
-Fixes: cd165ce8314f ("clocksource/drivers/qcom: Remove clockevents shutdown call on offlining")
-Fixes: 30f8c70a85bc ("clocksource/drivers/armada-370-xp: Remove clockevents shutdown call on offlining")
-Fixes: ba23b6c7f974 ("clocksource/drivers/exynos_mct: Remove clockevents shutdown call on offlining")
-Fixes: 15b810e0496e ("clocksource/drivers/arm_global_timer: Remove clockevents shutdown call on offlining")
-Fixes: 78b5c2ca5f27 ("clocksource/drivers/arm_arch_timer: Remove clockevents shutdown call on offlining")
-Fixes: 900053d9eedf ("ARM: smp_twd: Remove clockevents shutdown call on offlining")
+Please see the updated patch below.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
----
- kernel/time/tick-common.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-index 9a3859443c04..eb9b777f5492 100644
---- a/kernel/time/tick-common.c
-+++ b/kernel/time/tick-common.c
-@@ -424,11 +424,6 @@ void tick_shutdown(unsigned int cpu)
- 
- 	td->mode = TICKDEV_MODE_PERIODIC;
- 	if (dev) {
--		/*
--		 * Prevent that the clock events layer tries to call
--		 * the set mode function!
--		 */
--		clockevent_set_state(dev, CLOCK_EVT_STATE_DETACHED);
- 		clockevents_exchange_device(dev, NULL);
- 		dev->event_handler = clockevents_handle_noop;
- 		td->evtdev = NULL;
--- 
-2.39.3
-
+Thanks,
+Tiezhu
