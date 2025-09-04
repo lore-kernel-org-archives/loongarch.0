@@ -1,97 +1,103 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA3591DF97C
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 01:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80E54437A
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 01:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756949221; cv=none; b=kZj9grDXJFOHx95DDUIyVE6i/DHW0zYAX/wXFi1S7ogj9x42+5uHm96sjk+TnnE0LYbdZcWoW0isjM7GSqZ2ns0JhOjRtr4d6KMwO62Gjs3YbExl3UjrIdt8SeezqTg2dPR1mchQl2/rNk77GHewMP0+bBOYk8XC8Zqn4Fg/5Ks=
+	t=1756949713; cv=none; b=NYhkSvfCPzzImcqCXol3Oc3e7CW6qrnPmWxIVLhGaD1ltkITD7qaOk0bp0CE6bg8ceFX2sQwCUQjltIHli65S2z8seikA/hV6xSlcYwbtesvkAaldvAQDIpmqGzBK9QzQBntMOQ8dKQEHe+T13R1vP6KqG2iIMIDBBdq5hnsshw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756949221; c=relaxed/simple;
-	bh=cuaU9uG3GXxPtLcYoEepVCklgjJFmkWc6RMtvoPPB/k=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VzTDki7iXzFqr1yZVEhMI3ghhUhAdobxlIx19LR6WDlaiUgcO9/WvlcJUrYX9vs0NKpZhabTeBWwYAhYOiC5ERqoMomSkhcnYTU8NMgooFbDnSu4WP3vZKateLaJQKHRhp9mGNN22Ro8tUuzje8Caet+9HadsICthd1+U9SnCuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8Bxnr_X6rhoYnYGAA--.12651S3;
-	Thu, 04 Sep 2025 09:26:47 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by front1 (Coremail) with SMTP id qMiowJDxrcHU6rholbt8AA--.41867S3;
-	Thu, 04 Sep 2025 09:26:46 +0800 (CST)
-Subject: Re: [PATCH v1 3/3] LoongArch: Fix unreachable instruction warnings
- about entry functions
-To: Josh Poimboeuf <jpoimboe@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
- <20250901072156.31361-4-yangtiezhu@loongson.cn>
- <ots6w2ntyudj5ucs5eowncta2vmfssatpcqwzpar3ekk577hxi@j45dd4dmwx6x>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <93a93bcf-8778-a6a3-142d-c8aeb3cee5cd@loongson.cn>
-Date: Thu, 4 Sep 2025 09:26:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1756949713; c=relaxed/simple;
+	bh=rK7UvUnvod158lPYL4vusiZ8if3giwXepEt7gycPh1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Idh7KLNCh2r0KCGBmFXi1OZJUeHpOsuaHWI1MN4QgTPJfUpoz7H2k5+b0hGvfr6bwvRb/+jJ2jRP+rxQSygBn34gACGbo4rKy3JALEcCZ9Xz+tyulJ28NeEpejNAfDZDoO02jEZ5vHmomvF8065jeilApcLPAR+JT/RPyy61ZfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=IEj1Q5BS; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="IEj1Q5BS"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 91BF825D3B;
+	Thu,  4 Sep 2025 03:35:02 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id c0C6HC74cgYU; Thu,  4 Sep 2025 03:35:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1756949701; bh=rK7UvUnvod158lPYL4vusiZ8if3giwXepEt7gycPh1Q=;
+	h=From:To:Cc:Subject:Date;
+	b=IEj1Q5BSXsa2ONfQS4DsgxI96IdyTugFe3QSzh4wrmtgV+QwZh4mUz4rbFDarvOMX
+	 RDbGDG6fZH0ro52ZdHsnDPoYYYEGrQK5sXXr/byTPMLq5Jko+smAUJcv3xL689A3mI
+	 PxmtXtuhvioFpqzzI1xNsJAKtvwiiXqg8qSCCg+MKmfWpQuWJ56Tw2vdTeJ8TILrQI
+	 3w6DpNsAOP1ve2TPhhQ2nBDMaEHFEqZFfd4SKAPmPZseOWhEg4592Uf8m6whpMfco8
+	 1+v0U8sQhN96dIDH+pqYbmbFybO/5KuWYZcpO8vq0vbxKFijJl63wpfhJzL4friJWy
+	 QTkN1JENLQ3XA==
+From: Yao Zi <ziyao@disroot.org>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>,
+	Yao Zi <ziyao@disroot.org>
+Subject: [PATCH v3 0/3] Support GPIO controller of Loongson-2K0300 SoC
+Date: Thu,  4 Sep 2025 01:34:35 +0000
+Message-ID: <20250904013438.2405-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ots6w2ntyudj5ucs5eowncta2vmfssatpcqwzpar3ekk577hxi@j45dd4dmwx6x>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJDxrcHU6rholbt8AA--.41867S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Xr4DWr4Uur4kAF47XrWfXrc_yoW8Jr4UpF
-	y7CFsrXrWDKrnFywn8t3409FWDJa4DG342g3WDKFyFkwsFqr17Zr48Zr9rWFyqqw4Iy3yF
-	qFn5W39rtF4UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24SoDUUU
-	U
+Content-Transfer-Encoding: 8bit
 
-On 2025-09-04 03:22, Josh Poimboeuf wrote:
+This series adds support for Loongson-2K0300's GPIO controller. While
+being mostly identical to previous implementation, its interrupt
+functionality hasn't been implemented in gpio-loongson-64bit.c. PATCH 2
+implements its interrupt support with an IRQCHIP, and the code could be
+reused for other Loongson SoCs with similar interrupt functionality like
+LS2K1500 and LS2K2000.
 
-> On Mon, Sep 01, 2025 at 03:21:56PM +0800, Tiezhu Yang wrote:
->> +++ b/arch/loongarch/kernel/Makefile
->> @@ -3,8 +3,6 @@
->>   # Makefile for the Linux/LoongArch kernel.
->>   #
->>   
->> -OBJECT_FILES_NON_STANDARD_head.o := y
->> -
->>   always-$(KBUILD_BUILTIN)	:= vmlinux.lds
->>   
->>   obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
->> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
->> index e3865e92a917..a11880f3a7e1 100644
->> --- a/arch/loongarch/kernel/head.S
->> +++ b/arch/loongarch/kernel/head.S
->> @@ -42,6 +42,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
->>   	.align 12
->>   
->>   SYM_CODE_START(kernel_entry)			# kernel entry point
->> +	UNWIND_HINT_UNDEFINED
-> Should this not be UNWIND_HINT_END_OF_STACK?
->
-> I notice Loongarch doesn't seem to use that anywhere.  How does any ORC
-> unwind succeed?
-IIRC, unwinder stops when fail when call __kernel_text_address(bt_address),
-or success when call 
-arch/loongarch/kernel/unwind_orc.c::is_entry_func(bt_address).
-> UNWIND_HINT_UNDEFINED sets an error condition which
-> should cause a livepatch transition to stall.
->
+Tested on CTCISZ Forever Pi, reading/writing GPIOs works correctly, and
+both level and edge interrupts could be triggered.
+
+The devicetree patch depends on series "Support reset controller of
+Loongson 2K0300 SoC"[1] for a clean apply. Thanks for your time and
+review.
+
+Changed from v2:
+- Adjust SoC naming style
+- Fold some multi-line calls to dev_err_probe() in the driver into a
+  single line
+- Collect review tags
+- Link to v2: https://lore.kernel.org/all/20250901133804.38433-1-ziyao@disroot.org/
+Changed from v1:
+- Rebase on top of gpio/for-next, adapt changes that convert
+  gpio-loongson-64bit.c to use generic gpiochip.
+- Collect review tags
+- Link to v1: https://lore.kernel.org/all/20250816035027.11727-2-ziyao@disroot.org/
+
+[1]: https://lore.kernel.org/all/20250816033327.11359-2-ziyao@disroot.org/
+
+Yao Zi (3):
+  dt-bindings: gpio: loongson: Document GPIO controller of LS2K0300 SoC
+  gpio: loongson-64bit: Add support for Loongson-2K0300 SoC
+  LoongArch: dts: Add GPIO controller for Loongson-2K0300
+
+ .../bindings/gpio/loongson,ls-gpio.yaml       |  28 ++-
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  20 ++
+ drivers/gpio/Kconfig                          |   1 +
+ drivers/gpio/gpio-loongson-64bit.c            | 189 +++++++++++++++++-
+ 4 files changed, 230 insertions(+), 8 deletions(-)
+
+-- 
+2.50.1
 
