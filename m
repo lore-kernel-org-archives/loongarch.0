@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 918AE2F6162
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 12:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3F42FCC1F
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 12:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756989348; cv=none; b=nbp7BKFquG7znNdesHnfp3TndEUTbtmqJPELI1YoG0npjSlToUABnohnY2+yXYf8h4xOMLuJ9QiKAm9zJnvpCaTHmeOruNxd+WWTErOlHj0hTsdF/6yEp+3E7m4xGKB2lpDZ/izid0IRvW396g7A7ClplzkhFD7koGHtL1oKHdc=
+	t=1756989355; cv=none; b=DxRJyjrIbqtKPjoKAUVa+yFt5fqD6YMMuK+NlG0CS5Kd3yssXUnYWIK8qWTbia3br2VQe2qkCYO9njNIq50jNdIyVH3rB/Kz1E+3iIVbIwi2TLHE1qf4FqEx9Xj26BEpvbc6H7wnC+RfJPoiKqUg0faYMre4WYPJYPEc3Td1Row=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756989348; c=relaxed/simple;
-	bh=ZpXhtcpnnTVTp1+RkIQZU+2oQ5gFMy0AyWPe/HMm3Iw=;
+	s=arc-20240116; t=1756989355; c=relaxed/simple;
+	bh=GBuzldoQ+Zwt4ZAbsT82qg4dH/T232Yi3wsur1q2kNU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tNwoDy+hSEY0Un/jv9aHqEwmVDSSD6VArQgaRF2BnXR9cBuTCXbnf/yesDxgeVFQGl3+8b8Z7AB/M5gx79KHb673v0yxSvOWF9mERL5DZ/WHGQW4McvsMKEWrX4B4Fa1cO4qET0YjpfszWdDZnEl5BNs5R5ZT1j+4ujQL29OppM=
+	 MIME-Version; b=dWZNiuDxMiyVkXX48y/4+ZYB+0N9FYrN+pgysKoMjGKf2RZXBShrngQanKa+JaQ6lHkwZuMFXa0IbBVG5HH4IBK4QhrP46Y9soikbbj7ApGJPNbFRLxV0NJ20ojbyYCg4LLBsDN30JSy+peDcMiRhe5fHvHqLL7bJj79padsmM0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.89])
-	by gateway (Coremail) with SMTP id _____8AxidGTh7loXKkGAA--.13928S3;
-	Thu, 04 Sep 2025 20:35:31 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bxnr+Wh7loZqkGAA--.13086S3;
+	Thu, 04 Sep 2025 20:35:34 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.89])
-	by front1 (Coremail) with SMTP id qMiowJAxE+SJh7lot_99AA--.5542S3;
-	Thu, 04 Sep 2025 20:35:29 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJAxE+SJh7lot_99AA--.5542S4;
+	Thu, 04 Sep 2025 20:35:33 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -34,9 +34,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Binbin Zhou <zhoubinbin@loongson.cn>,
 	Chong Qiao <qiaochong@loongson.cn>,
 	Corey Minyard <corey@minyard.net>
-Subject: [PATCH v11 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
-Date: Thu,  4 Sep 2025 20:35:05 +0800
-Message-ID: <0dc1fd53020ce2562453961ffed2cd9eb8f359e1.1756987761.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v11 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+Date: Thu,  4 Sep 2025 20:35:06 +0800
+Message-ID: <de4e04b42ff9ee282f86f9bb9efbf959a9848205.1756987761.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1756987761.git.zhoubinbin@loongson.cn>
 References: <cover.1756987761.git.zhoubinbin@loongson.cn>
@@ -47,31 +47,45 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxE+SJh7lot_99AA--.5542S3
+X-CM-TRANSID:qMiowJAxE+SJh7lot_99AA--.5542S4
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Jw1DWF1rZr1rXw1DKF1rGrX_yoWfWF1xp3
-	WxAay5CF1DJF47G39xAr1UuFsxua9Yv3y5Xa9rJwnI9a13Ca4UXw48tFyavrWDJFyvgry2
-	qr9xJr4UC3ZxJFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
+X-Coremail-Antispam: 1Uk129KBj9fXoW3tF4DXrW3KFWDJF47KryrXwc_yoW8Xr1xAo
+	WfXFZ3Zw18Gr17A34xAF17KFWjq3y09F93A397CryDWFyxJas8tFyrGFsrZr1fZa1fKry5
+	Ar95W3WfZFWayr17l-sFpf9Il3svdjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUYX7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
+	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j22NtUUUUU=
 
-The Loongson-2K Board Management Controller provides an PCIe interface
-to the host to access the feature implemented in the BMC.
+Since the display is a sub-function of the Loongson-2K BMC, when the
+BMC reset, the entire BMC PCIe is disconnected, including the display
+which is interrupted.
 
-The BMC is assembled on a server similar to the server machine with
-Loongson-3 CPU. It supports multiple sub-devices like DRM and IPMI.
+Quick overview of the entire LS2K BMC reset process:
+
+There are two types of reset methods: soft reset (BMC-initiated reboot
+of IPMI reset command) and BMC watchdog reset (watchdog timeout).
+
+First, regardless of the method, an interrupt is generated (PCIe interrupt
+for soft reset/GPIO interrupt for watchdog reset);
+
+Second, during the interrupt process, the system enters bmc_reset_work,
+clears the bus/IO/mem resources of the LS7A PCI-E bridge, waits for the BMC
+reset to begin, then restores the parent device's PCI configuration space,
+waits for the BMC reset to complete, and finally restores the BMC PCI
+configuration space.
+
+Display restoration occurs last.
 
 Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
 Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
@@ -79,262 +93,396 @@ Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 Acked-by: Corey Minyard <corey@minyard.net>
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- MAINTAINERS                 |   6 ++
- drivers/mfd/Kconfig         |  13 +++
- drivers/mfd/Makefile        |   2 +
- drivers/mfd/ls2k-bmc-core.c | 189 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 210 insertions(+)
- create mode 100644 drivers/mfd/ls2k-bmc-core.c
+ drivers/mfd/ls2k-bmc-core.c | 339 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 339 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 51823e99ecdb..bff129a41bb0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14417,6 +14417,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
- F:	drivers/thermal/loongson2_thermal.c
- 
-+LOONGSON-2K Board Management Controller (BMC) DRIVER
-+M:	Binbin Zhou <zhoubinbin@loongson.cn>
-+M:	Chong Qiao <qiaochong@loongson.cn>
-+S:	Maintained
-+F:	drivers/mfd/ls2k-bmc-core.c
-+
- LOONGSON EDAC DRIVER
- M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
- L:	linux-edac@vger.kernel.org
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 04f8bea1dccf..a79822e50f4a 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -2454,6 +2454,19 @@ config MFD_LOONGSON_SE
- 	  commands to the engine and must first send them to the controller,
- 	  which will forward them to the corresponding engine.
- 
-+config MFD_LS2K_BMC_CORE
-+	bool "Loongson-2K Board Management Controller Support"
-+	depends on PCI && ACPI_GENERIC_GSI
-+	select MFD_CORE
-+	help
-+	  Say yes here to add support for the Loongson-2K BMC which is a Board
-+	  Management Controller connected to the PCIe bus. The device supports
-+	  multiple sub-devices like display and IPMI. This driver provides common
-+	  support for accessing the devices.
-+
-+	  The display is enabled by default in the driver, while the IPMI interface
-+	  is enabled independently through the IPMI_LS2K option in the IPMI section.
-+
- config MFD_QNAP_MCU
- 	tristate "QNAP microcontroller unit core driver"
- 	depends on SERIAL_DEV_BUS
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 73df7fc8b5ff..c93273dfd5ee 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -286,6 +286,8 @@ obj-$(CONFIG_MFD_INTEL_M10_BMC_CORE)   += intel-m10-bmc-core.o
- obj-$(CONFIG_MFD_INTEL_M10_BMC_SPI)    += intel-m10-bmc-spi.o
- obj-$(CONFIG_MFD_INTEL_M10_BMC_PMCI)   += intel-m10-bmc-pmci.o
- 
-+obj-$(CONFIG_MFD_LS2K_BMC_CORE)		+= ls2k-bmc-core.o
-+
- obj-$(CONFIG_MFD_ATC260X)	+= atc260x-core.o
- obj-$(CONFIG_MFD_ATC260X_I2C)	+= atc260x-i2c.o
- 
 diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-new file mode 100644
-index 000000000000..39cc481d9ba1
---- /dev/null
+index 39cc481d9ba1..e162b3c7c9f8 100644
+--- a/drivers/mfd/ls2k-bmc-core.c
 +++ b/drivers/mfd/ls2k-bmc-core.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Loongson-2K Board Management Controller (BMC) Core Driver.
-+ *
-+ * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
-+ *
-+ * Authors:
-+ *	Chong Qiao <qiaochong@loongson.cn>
-+ *	Binbin Zhou <zhoubinbin@loongson.cn>
-+ */
+@@ -10,8 +10,12 @@
+  */
+ 
+ #include <linux/aperture.h>
++#include <linux/bitfield.h>
++#include <linux/delay.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
++#include <linux/iopoll.h>
++#include <linux/kbd_kern.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/core.h>
+ #include <linux/module.h>
+@@ -19,6 +23,8 @@
+ #include <linux/pci_ids.h>
+ #include <linux/platform_data/simplefb.h>
+ #include <linux/platform_device.h>
++#include <linux/stop_machine.h>
++#include <linux/vt_kern.h>
+ 
+ /* LS2K BMC resources */
+ #define LS2K_DISPLAY_RES_START		(SZ_16M + SZ_2M)
+@@ -29,6 +35,54 @@
+ #define LS2K_IPMI3_RES_START		(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
+ #define LS2K_IPMI4_RES_START		(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
+ 
++#define LS7A_PCI_CFG_SIZE		0x100
 +
-+#include <linux/aperture.h>
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/core.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/pci_ids.h>
-+#include <linux/platform_data/simplefb.h>
-+#include <linux/platform_device.h>
++/* LS7A bridge registers */
++#define LS7A_PCIE_PORT_CTL0		0x0
++#define LS7A_PCIE_PORT_STS1		0xC
++#define LS7A_GEN2_CTL			0x80C
++#define LS7A_SYMBOL_TIMER		0x71C
 +
-+/* LS2K BMC resources */
-+#define LS2K_DISPLAY_RES_START		(SZ_16M + SZ_2M)
-+#define LS2K_IPMI_RES_SIZE		0x1C
-+#define LS2K_IPMI0_RES_START		(SZ_16M + 0xF00000)
-+#define LS2K_IPMI1_RES_START		(LS2K_IPMI0_RES_START + LS2K_IPMI_RES_SIZE)
-+#define LS2K_IPMI2_RES_START		(LS2K_IPMI1_RES_START + LS2K_IPMI_RES_SIZE)
-+#define LS2K_IPMI3_RES_START		(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
-+#define LS2K_IPMI4_RES_START		(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
++/* Bits of LS7A_PCIE_PORT_CTL0 */
++#define LS2K_BMC_PCIE_LTSSM_ENABLE	BIT(3)
 +
-+enum {
-+	LS2K_BMC_DISPLAY,
-+	LS2K_BMC_IPMI0,
-+	LS2K_BMC_IPMI1,
-+	LS2K_BMC_IPMI2,
-+	LS2K_BMC_IPMI3,
-+	LS2K_BMC_IPMI4,
++/* Bits of LS7A_PCIE_PORT_STS1 */
++#define LS2K_BMC_PCIE_LTSSM_STS		GENMASK(5, 0)
++#define LS2K_BMC_PCIE_CONNECTED		0x11
++
++#define LS2K_BMC_PCIE_DELAY_US		1000
++#define LS2K_BMC_PCIE_TIMEOUT_US	1000000
++
++/* Bits of LS7A_GEN2_CTL */
++#define LS7A_GEN2_SPEED_CHANG		BIT(17)
++#define LS7A_CONF_PHY_TX		BIT(18)
++
++/* Bits of LS7A_SYMBOL_TIMER */
++#define LS7A_MASK_LEN_MATCH		BIT(26)
++
++/* Interval between interruptions */
++#define LS2K_BMC_INT_INTERVAL		(60 * HZ)
++
++/* Maximum time to wait for U-Boot and DDR to be ready with ms. */
++#define LS2K_BMC_RESET_WAIT_TIME	10000
++
++/* It's an experience value */
++#define LS7A_BAR0_CHECK_MAX_TIMES	2000
++
++#define PCI_REG_STRIDE			0x4
++
++#define LS2K_BMC_RESET_GPIO		14
++#define LOONGSON_GPIO_REG_BASE		0x1FE00500
++#define LOONGSON_GPIO_REG_SIZE		0x18
++#define LOONGSON_GPIO_OEN		0x0
++#define LOONGSON_GPIO_FUNC		0x4
++#define LOONGSON_GPIO_INTPOL		0x10
++#define LOONGSON_GPIO_INTEN		0x14
++
++#define LOONGSON_IO_INT_BASE		16
++#define LS2K_BMC_RESET_GPIO_INT_VEC	(LS2K_BMC_RESET_GPIO % 8)
++#define LS2K_BMC_RESET_GPIO_GSI		(LOONGSON_IO_INT_BASE + LS2K_BMC_RESET_GPIO_INT_VEC)
++
+ enum {
+ 	LS2K_BMC_DISPLAY,
+ 	LS2K_BMC_IPMI0,
+@@ -95,6 +149,278 @@ static struct mfd_cell ls2k_bmc_cells[] = {
+ 	},
+ };
+ 
++/* Index of the BMC PCI configuration space to be restored at BMC reset. */
++struct ls2k_bmc_pci_data {
++	u32 pci_command;
++	u32 base_address0;
++	u32 interrupt_line;
 +};
 +
-+static struct resource ls2k_display_resources[] = {
-+	DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
++/* Index of the parent PCI configuration space to be restored at BMC reset. */
++struct ls2k_bmc_bridge_pci_data {
++	u32 pci_command;
++	u32 base_address[6];
++	u32 rom_addreess;
++	u32 interrupt_line;
++	u32 msi_hi;
++	u32 msi_lo;
++	u32 devctl;
++	u32 linkcap;
++	u32 linkctl_sts;
++	u32 symbol_timer;
++	u32 gen2_ctrl;
 +};
 +
-+static struct resource ls2k_ipmi0_resources[] = {
-+	DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "ipmi0-res"),
++struct ls2k_bmc_ddata {
++	struct device *dev;
++	struct work_struct bmc_reset_work;
++	struct ls2k_bmc_pci_data bmc_pci_data;
++	struct ls2k_bmc_bridge_pci_data bridge_pci_data;
 +};
 +
-+static struct resource ls2k_ipmi1_resources[] = {
-+	DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "ipmi1-res"),
-+};
-+
-+static struct resource ls2k_ipmi2_resources[] = {
-+	DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "ipmi2-res"),
-+};
-+
-+static struct resource ls2k_ipmi3_resources[] = {
-+	DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "ipmi3-res"),
-+};
-+
-+static struct resource ls2k_ipmi4_resources[] = {
-+	DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "ipmi4-res"),
-+};
-+
-+static struct mfd_cell ls2k_bmc_cells[] = {
-+	[LS2K_BMC_DISPLAY] = {
-+		.name = "simple-framebuffer",
-+		.num_resources = ARRAY_SIZE(ls2k_display_resources),
-+		.resources = ls2k_display_resources
-+	},
-+	[LS2K_BMC_IPMI0] = {
-+		.name = "ls2k-ipmi-si",
-+		.num_resources = ARRAY_SIZE(ls2k_ipmi0_resources),
-+		.resources = ls2k_ipmi0_resources
-+	},
-+	[LS2K_BMC_IPMI1] = {
-+		.name = "ls2k-ipmi-si",
-+		.num_resources = ARRAY_SIZE(ls2k_ipmi1_resources),
-+		.resources = ls2k_ipmi1_resources
-+	},
-+	[LS2K_BMC_IPMI2] = {
-+		.name = "ls2k-ipmi-si",
-+		.num_resources = ARRAY_SIZE(ls2k_ipmi2_resources),
-+		.resources = ls2k_ipmi2_resources
-+	},
-+	[LS2K_BMC_IPMI3] = {
-+		.name = "ls2k-ipmi-si",
-+		.num_resources = ARRAY_SIZE(ls2k_ipmi3_resources),
-+		.resources = ls2k_ipmi3_resources
-+	},
-+	[LS2K_BMC_IPMI4] = {
-+		.name = "ls2k-ipmi-si",
-+		.num_resources = ARRAY_SIZE(ls2k_ipmi4_resources),
-+		.resources = ls2k_ipmi4_resources
-+	},
-+};
-+
-+/*
-+ * Currently the Loongson-2K BMC hardware does not have an I2C interface to adapt to the
-+ * resolution. We set the resolution by presetting "video=1280x1024-16@2M" to the BMC memory.
-+ */
-+static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
++static bool ls2k_bmc_bar0_addr_is_set(struct pci_dev *pdev)
 +{
-+	char *mode;
-+	int depth, ret;
++	u32 addr;
 +
-+	/* The last 16M of PCI BAR0 is used to store the resolution string. */
-+	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
-+	if (!mode)
-+		return -ENOMEM;
++	pci_read_config_dword(pdev, PCI_BASE_ADDRESS_0, &addr);
 +
-+	/* The resolution field starts with the flag "video=". */
-+	if (!strncmp(mode, "video=", 6))
-+		mode = mode + 6;
++	return addr & PCI_BASE_ADDRESS_MEM_MASK ? true : false;
++}
 +
-+	ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
-+	if (ret)
-+		return ret;
++static bool ls2k_bmc_pcie_is_connected(struct pci_dev *parent, struct ls2k_bmc_ddata *ddata)
++{
++	void __iomem *base;
++	int val, ret;
 +
-+	ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
-+	if (ret)
-+		return ret;
++	base = pci_iomap(parent, 0, LS7A_PCI_CFG_SIZE);
++	if (!base)
++		return false;
 +
-+	ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
-+	if (ret)
-+		return ret;
++	val = readl(base + LS7A_PCIE_PORT_CTL0);
++	writel(val | LS2K_BMC_PCIE_LTSSM_ENABLE, base + LS7A_PCIE_PORT_CTL0);
 +
-+	pd->stride = pd->width * depth / 8;
-+	pd->format = depth == 32 ? "a8r8g8b8" : "r5g6b5";
++	ret = readl_poll_timeout_atomic(base + LS7A_PCIE_PORT_STS1, val,
++					(val & LS2K_BMC_PCIE_LTSSM_STS) == LS2K_BMC_PCIE_CONNECTED,
++					LS2K_BMC_PCIE_DELAY_US, LS2K_BMC_PCIE_TIMEOUT_US);
++	if (ret) {
++		pci_iounmap(parent, base);
++		dev_err(ddata->dev, "PCI-E training failed status=0x%x\n", val);
++		return false;
++	}
++
++	pci_iounmap(parent, base);
++	return true;
++}
++
++static void ls2k_bmc_restore_bridge_pci_data(struct pci_dev *parent, struct ls2k_bmc_ddata *ddata)
++{
++	int base, i = 0;
++
++	pci_write_config_dword(parent, PCI_COMMAND, ddata->bridge_pci_data.pci_command);
++
++	for (base = PCI_BASE_ADDRESS_0; base <= PCI_BASE_ADDRESS_5; base += PCI_REG_STRIDE, i++)
++		pci_write_config_dword(parent, base, ddata->bridge_pci_data.base_address[i]);
++
++	pci_write_config_dword(parent, PCI_ROM_ADDRESS, ddata->bridge_pci_data.rom_addreess);
++	pci_write_config_dword(parent, PCI_INTERRUPT_LINE, ddata->bridge_pci_data.interrupt_line);
++
++	pci_write_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_LO,
++			       ddata->bridge_pci_data.msi_lo);
++	pci_write_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_HI,
++			       ddata->bridge_pci_data.msi_hi);
++	pci_write_config_dword(parent, parent->pcie_cap + PCI_EXP_DEVCTL,
++			       ddata->bridge_pci_data.devctl);
++	pci_write_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCAP,
++			       ddata->bridge_pci_data.linkcap);
++	pci_write_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCTL,
++			       ddata->bridge_pci_data.linkctl_sts);
++
++	pci_write_config_dword(parent, LS7A_GEN2_CTL, ddata->bridge_pci_data.gen2_ctrl);
++	pci_write_config_dword(parent, LS7A_SYMBOL_TIMER, ddata->bridge_pci_data.symbol_timer);
++}
++
++static int ls2k_bmc_recover_pci_data(void *data)
++{
++	struct ls2k_bmc_ddata *ddata = data;
++	struct pci_dev *pdev = to_pci_dev(ddata->dev);
++	struct pci_dev *parent = pdev->bus->self;
++	u32 i;
++
++	/*
++	 * Clear the bus, io and mem resources of the PCI-E bridge to zero, so that
++	 * the processor can not access the LS2K PCI-E port, to avoid crashing due to
++	 * the lack of return signal from accessing the LS2K PCI-E port.
++	 */
++	pci_write_config_dword(parent, PCI_BASE_ADDRESS_2, 0);
++	pci_write_config_dword(parent, PCI_BASE_ADDRESS_3, 0);
++	pci_write_config_dword(parent, PCI_BASE_ADDRESS_4, 0);
++
++	/*
++	 * When the LS2K BMC is reset, the LS7A PCI-E port is also reset, and its PCI
++	 * BAR0 register is cleared. Due to the time gap between the GPIO interrupt
++	 * generation and the LS2K BMC reset, the LS7A PCI BAR0 register is read to
++	 * determine whether the reset has begun.
++	 */
++	for (i = LS7A_BAR0_CHECK_MAX_TIMES; i > 0 ; i--) {
++		if (!ls2k_bmc_bar0_addr_is_set(parent))
++			break;
++		mdelay(1);
++	};
++
++	if (i == 0)
++		return false;
++
++	ls2k_bmc_restore_bridge_pci_data(parent, ddata);
++
++	/* Check if PCI-E is connected */
++	if (!ls2k_bmc_pcie_is_connected(parent, ddata))
++		return false;
++
++	/* Waiting for U-Boot and DDR ready */
++	mdelay(LS2K_BMC_RESET_WAIT_TIME);
++	if (!ls2k_bmc_bar0_addr_is_set(parent))
++		return false;
++
++	/* Restore LS2K BMC PCI-E config data */
++	pci_write_config_dword(pdev, PCI_COMMAND, ddata->bmc_pci_data.pci_command);
++	pci_write_config_dword(pdev, PCI_BASE_ADDRESS_0, ddata->bmc_pci_data.base_address0);
++	pci_write_config_dword(pdev, PCI_INTERRUPT_LINE, ddata->bmc_pci_data.interrupt_line);
 +
 +	return 0;
 +}
 +
-+static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
++static void ls2k_bmc_events_fn(struct work_struct *work)
 +{
-+	struct simplefb_platform_data pd;
-+	resource_size_t base;
-+	int ret;
++	struct ls2k_bmc_ddata *ddata = container_of(work, struct ls2k_bmc_ddata, bmc_reset_work);
 +
-+	ret = pci_enable_device(dev);
-+	if (ret)
-+		return ret;
++	/*
++	 * The PCI-E is lost when the BMC resets, at which point access to the PCI-E
++	 * from other CPUs is suspended to prevent a crash.
++	 */
++	stop_machine(ls2k_bmc_recover_pci_data, ddata, NULL);
 +
-+	ret = ls2k_bmc_parse_mode(dev, &pd);
-+	if (ret)
-+		goto disable_pci;
++	if (IS_ENABLED(CONFIG_VT)) {
++		/* Re-push the display due to previous PCI-E loss. */
++		set_console(vt_move_to_console(MAX_NR_CONSOLES - 1, 1));
++	}
++}
 +
-+	ls2k_bmc_cells[LS2K_BMC_DISPLAY].platform_data = &pd;
-+	ls2k_bmc_cells[LS2K_BMC_DISPLAY].pdata_size = sizeof(pd);
-+	base = dev->resource[0].start + LS2K_DISPLAY_RES_START;
++static irqreturn_t ls2k_bmc_interrupt(int irq, void *arg)
++{
++	struct ls2k_bmc_ddata *ddata = arg;
++	static unsigned long last_jiffies;
 +
-+	/* Remove conflicting efifb device */
-+	ret = aperture_remove_conflicting_devices(base, SZ_4M, "simple-framebuffer");
-+	if (ret) {
-+		dev_err(&dev->dev, "Failed to removed firmware framebuffers: %d\n", ret);
-+		goto disable_pci;
++	if (system_state != SYSTEM_RUNNING)
++		return IRQ_HANDLED;
++
++	/* Skip interrupt in LS2K_BMC_INT_INTERVAL */
++	if (time_after(jiffies, last_jiffies + LS2K_BMC_INT_INTERVAL)) {
++		schedule_work(&ddata->bmc_reset_work);
++		last_jiffies = jiffies;
 +	}
 +
-+	return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
-+				    ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_cells),
-+				    &dev->resource[0], 0, NULL);
++	return IRQ_HANDLED;
++}
 +
-+disable_pci:
-+	pci_disable_device(dev);
++/*
++ * Saves the BMC parent device (LS7A) and its own PCI configuration space registers
++ * that need to be restored after BMC reset.
++ */
++static void ls2k_bmc_save_pci_data(struct pci_dev *pdev, struct ls2k_bmc_ddata *ddata)
++{
++	struct pci_dev *parent = pdev->bus->self;
++	int base, i = 0;
++
++	pci_read_config_dword(parent, PCI_COMMAND, &ddata->bridge_pci_data.pci_command);
++
++	for (base = PCI_BASE_ADDRESS_0; base <= PCI_BASE_ADDRESS_5; base += PCI_REG_STRIDE, i++)
++		pci_read_config_dword(parent, base, &ddata->bridge_pci_data.base_address[i]);
++
++	pci_read_config_dword(parent, PCI_ROM_ADDRESS, &ddata->bridge_pci_data.rom_addreess);
++	pci_read_config_dword(parent, PCI_INTERRUPT_LINE, &ddata->bridge_pci_data.interrupt_line);
++
++	pci_read_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_LO,
++			      &ddata->bridge_pci_data.msi_lo);
++	pci_read_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_HI,
++			      &ddata->bridge_pci_data.msi_hi);
++
++	pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_DEVCTL,
++			      &ddata->bridge_pci_data.devctl);
++	pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCAP,
++			      &ddata->bridge_pci_data.linkcap);
++	pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCTL,
++			      &ddata->bridge_pci_data.linkctl_sts);
++
++	pci_read_config_dword(parent, LS7A_GEN2_CTL, &ddata->bridge_pci_data.gen2_ctrl);
++	ddata->bridge_pci_data.gen2_ctrl |= FIELD_PREP(LS7A_GEN2_SPEED_CHANG, 0x1) |
++					    FIELD_PREP(LS7A_CONF_PHY_TX, 0x0);
++
++	pci_read_config_dword(parent, LS7A_SYMBOL_TIMER, &ddata->bridge_pci_data.symbol_timer);
++	ddata->bridge_pci_data.symbol_timer |= LS7A_MASK_LEN_MATCH;
++
++	pci_read_config_dword(pdev, PCI_COMMAND, &ddata->bmc_pci_data.pci_command);
++	pci_read_config_dword(pdev, PCI_BASE_ADDRESS_0, &ddata->bmc_pci_data.base_address0);
++	pci_read_config_dword(pdev, PCI_INTERRUPT_LINE, &ddata->bmc_pci_data.interrupt_line);
++}
++
++static int ls2k_bmc_init(struct ls2k_bmc_ddata *ddata)
++{
++	struct pci_dev *pdev = to_pci_dev(ddata->dev);
++	void __iomem *gpio_base;
++	int gpio_irq, ret, val;
++
++	ls2k_bmc_save_pci_data(pdev, ddata);
++
++	INIT_WORK(&ddata->bmc_reset_work, ls2k_bmc_events_fn);
++
++	ret = devm_request_irq(&pdev->dev, pdev->irq, ls2k_bmc_interrupt,
++			       IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kbmc pcie", ddata);
++	if (ret) {
++		dev_err(ddata->dev, "Failed to request LS2KBMC PCI-E IRQ %d.\n", pdev->irq);
++		return ret;
++	}
++
++	gpio_base = ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG_SIZE);
++	if (!gpio_base)
++		return -ENOMEM;
++
++	/* Disable GPIO output */
++	val = readl(gpio_base + LOONGSON_GPIO_OEN);
++	writel(val | BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_OEN);
++
++	/* Enable GPIO functionality */
++	val = readl(gpio_base + LOONGSON_GPIO_FUNC);
++	writel(val & ~BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_FUNC);
++
++	/* Set GPIO interrupts to low-level active */
++	val = readl(gpio_base + LOONGSON_GPIO_INTPOL);
++	writel(val & ~BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_INTPOL);
++
++	/* Enable GPIO interrupts */
++	val = readl(gpio_base + LOONGSON_GPIO_INTEN);
++	writel(val | BIT(LS2K_BMC_RESET_GPIO), gpio_base + LOONGSON_GPIO_INTEN);
++
++	iounmap(gpio_base);
++
++	/*
++	 * Since gpio_chip->to_irq is not implemented in the Loongson-3 GPIO driver,
++	 * acpi_register_gsi() is used to obtain the GPIO IRQ. The GPIO interrupt is a
++	 * watchdog interrupt that is triggered when the BMC resets.
++	 */
++	gpio_irq = acpi_register_gsi(NULL, LS2K_BMC_RESET_GPIO_GSI, ACPI_EDGE_SENSITIVE,
++				     ACPI_ACTIVE_LOW);
++	if (gpio_irq < 0)
++		return gpio_irq;
++
++	ret = devm_request_irq(ddata->dev, gpio_irq, ls2k_bmc_interrupt,
++			       IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kbmc gpio", ddata);
++	if (ret)
++		dev_err(ddata->dev, "Failed to request LS2KBMC GPIO IRQ %d.\n", gpio_irq);
++
++	acpi_unregister_gsi(LS2K_BMC_RESET_GPIO_GSI);
 +	return ret;
 +}
 +
-+static void ls2k_bmc_remove(struct pci_dev *dev)
-+{
-+	pci_disable_device(dev);
-+}
+ /*
+  * Currently the Loongson-2K BMC hardware does not have an I2C interface to adapt to the
+  * resolution. We set the resolution by presetting "video=1280x1024-16@2M" to the BMC memory.
+@@ -134,6 +460,7 @@ static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_da
+ static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ {
+ 	struct simplefb_platform_data pd;
++	struct ls2k_bmc_ddata *ddata;
+ 	resource_size_t base;
+ 	int ret;
+ 
+@@ -141,6 +468,18 @@ static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (ret)
+ 		return ret;
+ 
++	ddata = devm_kzalloc(&dev->dev, sizeof(*ddata), GFP_KERNEL);
++	if (IS_ERR(ddata)) {
++		ret = -ENOMEM;
++		goto disable_pci;
++	}
 +
-+static struct pci_device_id ls2k_bmc_devices[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
++	ddata->dev = &dev->dev;
 +
-+static struct pci_driver ls2k_bmc_driver = {
-+	.name = "ls2k-bmc",
-+	.id_table = ls2k_bmc_devices,
-+	.probe = ls2k_bmc_probe,
-+	.remove = ls2k_bmc_remove,
-+};
-+module_pci_driver(ls2k_bmc_driver);
++	ret = ls2k_bmc_init(ddata);
++	if (ret)
++		goto disable_pci;
 +
-+MODULE_DESCRIPTION("Loongson-2K Board Management Controller (BMC) Core driver");
-+MODULE_AUTHOR("Loongson Technology Corporation Limited");
-+MODULE_LICENSE("GPL");
+ 	ret = ls2k_bmc_parse_mode(dev, &pd);
+ 	if (ret)
+ 		goto disable_pci;
 -- 
 2.47.3
 
