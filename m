@@ -1,35 +1,39 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCD2925F99F
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 03:18:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41832F9CB
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 03:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756955918; cv=none; b=JwuMpv+LitRTf/orc+Wnab+lmTCi2oC/qmN6OXhTb/Ck0RYJe8a9IHpZKcQkPuNznzxiiNLnhJRHa7NWvr8yEV4S+ZEpYro6Mqv6lF8CJnIyzA83B03prPJVmFRyyFx4p712yJnL/wcav1CBkonLEK5h/V29I4/h04VS22SZiQY=
+	t=1756957845; cv=none; b=DcD5zxoktUuOXQlvMCm545oKQue78CqmGKaMg7VOc5GkjRajAjiQuXGhLWW79bgXHvJYxCs6iJGrrUY3LfzCgdJLTYWwhaKv0Qswehm6l076pxRumLGyNkI/da28tNDxZ7NZE5255zKh+nuDjfMixBcrjsiM/dKEe0eEtWRPGyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756955918; c=relaxed/simple;
-	bh=/GuSdoUa7Mg6kegPOB9iDxfDzkb16eBIAU06JZax8vg=;
+	s=arc-20240116; t=1756957845; c=relaxed/simple;
+	bh=dRIG/SZ+uchSsJrg0bDTlouOEqRxCMR5/5ovjUahhxM=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Pf+5DtCTtHUPCXzCKzJPfaF6g4wRuRxUB1D0U8H72mKrfQQeEYBG+oDpzJ2QnKQjAjhMDpwVMtxjqbxS6PT+E+xeAY8iuAEZVxYNNuxyPCSybB3pxZVjdu6oy9HYjfYzMRvKD/8KMWbyKtTbot+KC0QyIZI8SDmFWPNriuSppmc=
+	 In-Reply-To:Content-Type; b=TLtFo26ot7noYgF63xDtf1/p1FfwZ5CFmkQUbDO8uRwlIL96UZGZRUY6OJSnj2Wce8/JOtJJUnJFdLXMcAZx8xrtJ4IOwsxniA2uxWlwFyONXTaEFjZXr329V/uQKfP36OEG0qCuXF4e5Iuhh1s/sfXggKShgjNwXw93N0vwG88=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxmdEGBblobn8GAA--.13872S3;
-	Thu, 04 Sep 2025 11:18:30 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxB9GPDLloGoEGAA--.13505S3;
+	Thu, 04 Sep 2025 11:50:39 +0800 (CST)
 Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxM+QEBbloyvV8AA--.579S3;
-	Thu, 04 Sep 2025 11:18:30 +0800 (CST)
-Subject: Re: [PATCH v1 3/3] LoongArch: Fix unreachable instruction warnings
- about entry functions
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+	by front1 (Coremail) with SMTP id qMiowJCxM+SJDLlofwR9AA--.766S3;
+	Thu, 04 Sep 2025 11:50:34 +0800 (CST)
+Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
+ warnings about EFISTUB
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor
+ <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
- <20250901072156.31361-4-yangtiezhu@loongson.cn>
- <ots6w2ntyudj5ucs5eowncta2vmfssatpcqwzpar3ekk577hxi@j45dd4dmwx6x>
+ <20250901072156.31361-3-yangtiezhu@loongson.cn>
+ <20250901081904.GB4067720@noisy.programming.kicks-ass.net>
+ <82c913b9-4403-cde9-0542-5bd6e04415f5@loongson.cn>
+ <wt4qpgi5isj5m6wq33pomvm6borvafuzktekc7lgtoitscar5q@brixzj3lccbw>
+ <ccbb40c1-5f2d-77e9-e8d2-52f2fdbad645@loongson.cn>
+ <CAAhV-H5qhKepa-8sz3_AC=_RCChbVeEmnHKESMqpiJ0phMORbg@mail.gmail.com>
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <3da2092b-e6ca-a7a1-9459-c2754adf19aa@loongson.cn>
-Date: Thu, 4 Sep 2025 11:18:28 +0800
+Message-ID: <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn>
+Date: Thu, 4 Sep 2025 11:50:32 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -38,92 +42,91 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ots6w2ntyudj5ucs5eowncta2vmfssatpcqwzpar3ekk577hxi@j45dd4dmwx6x>
+In-Reply-To: <CAAhV-H5qhKepa-8sz3_AC=_RCChbVeEmnHKESMqpiJ0phMORbg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxM+QEBbloyvV8AA--.579S3
+X-CM-TRANSID:qMiowJCxM+SJDLlofwR9AA--.766S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGryUAr18Zw17Aw1UXry8Xrc_yoW5WF17pF
-	y5Ar4kCrWkJr1qva45Aa4UuFWDXa4Du3Z7uF4kKryUCw40qr10qr1qvr47WF98Kw48GFWY
-	qF1xXw1ftFy8J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw18Cr4kXF1rGw43tr4DKFX_yoW8KFWkpa
+	yUCFWjkr4DJrW8J397tw48Wa4akrZxtrWSqa4YqryDA3WqqrnagrWDJry5CFZxWr4xtF1I
+	va1xtF43WayjyagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jnUUUU
-	UUUU=
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr
+	1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU83UUUUU
+	UUU==
 
-On 2025/9/4 上午3:22, Josh Poimboeuf wrote:
-> On Mon, Sep 01, 2025 at 03:21:56PM +0800, Tiezhu Yang wrote:
->> +++ b/arch/loongarch/kernel/Makefile
->> @@ -3,8 +3,6 @@
->>   # Makefile for the Linux/LoongArch kernel.
->>   #
->>   
->> -OBJECT_FILES_NON_STANDARD_head.o := y
->> -
->>   always-$(KBUILD_BUILTIN)	:= vmlinux.lds
->>   
->>   obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
->> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
->> index e3865e92a917..a11880f3a7e1 100644
->> --- a/arch/loongarch/kernel/head.S
->> +++ b/arch/loongarch/kernel/head.S
->> @@ -42,6 +42,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
->>   	.align 12
->>   
->>   SYM_CODE_START(kernel_entry)			# kernel entry point
->> +	UNWIND_HINT_UNDEFINED
-> 
-> Should this not be UNWIND_HINT_END_OF_STACK?
+On 2025/9/4 上午10:21, Huacai Chen wrote:
+> On Thu, Sep 4, 2025 at 10:18 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> On 2025/9/4 上午3:19, Josh Poimboeuf wrote:
+>>> On Mon, Sep 01, 2025 at 04:39:29PM +0800, Tiezhu Yang wrote:
+>>>> On 2025/9/1 下午4:19, Peter Zijlstra wrote:
+>>>>> On Mon, Sep 01, 2025 at 03:21:55PM +0800, Tiezhu Yang wrote:
+>>>>>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
+>>>>>> following objtool warnings:
+>>
+>> ...
+>>
+>>>> Josh suggested to do something to put these instructions in the data
+>>>> section, but as said in the previous reply, it needs to modify the link
+>>>> process and seems too complicated and expensive for this warning to some
+>>>> extent.
+>>>>
+>>>> So I did this change for objtool.
+>>>
+>>> I don't like this workaround either, how exactly is it complicated and
+>>> expensive to put the data in a data section?
+>>
+>> I can put them in a data section in the next version, this is
+>> reasonable.
+> No, from the ARM64 and RISC-V design, we can put jump instructions in
+> the HEAD section, and this is what Jiaxun wants to do. Changing to a
+> data section is not reasonable.
 
-Yes, makes sense, will do it in the next version.
+ARM64, RISC-V and LoongArch share the same logic in efistub:
 
-> I notice Loongarch doesn't seem to use that anywhere.  How does any ORC
-> unwind succeed?  UNWIND_HINT_UNDEFINED sets an error condition which
-> should cause a livepatch transition to stall.
+$ grep -r "libstub/lib.a" arch/*/Makefile
+arch/arm64/Makefile:libs-$(CONFIG_EFI_STUB) += 
+$(objtree)/drivers/firmware/efi/libstub/lib.a
+arch/loongarch/Makefile:libs-$(CONFIG_EFI_STUB) += 
+$(objtree)/drivers/firmware/efi/libstub/lib.a
+arch/riscv/Makefile:libs-$(CONFIG_EFI_STUB) += 
+$(objtree)/drivers/firmware/efi/libstub/lib.a
 
-Actually, kernel_entry() or smpboot_entry() is recognized as the last
-frame, because at this point is_entry_func() is true and 
-state->stack_info.type = STACK_TYPE_UNKNOWN in unwind_next_frame() of
-arch/loongarch/kernel/unwind_orc.c.
+If we can not put the these data to a data section, then we can not
+link efistub separately, because if remove the following code in
+arch/loongarch/Makefile:
 
-Call Trace:
-[<90000000031a36b4>] show_stack+0x5c/0x180
-[<900000000319d4b0>] dump_stack_lvl+0x6c/0x9c
-[<900000000458d3e0>] nmi_cpu_backtrace+0x160/0x168
-[<90000000031a3b6c>] handle_backtrace+0xc/0x40
-[<90000000032b1078>] __flush_smp_call_function_queue+0xd0/0x330
-[<90000000031aec40>] loongson_ipi_interrupt+0xb0/0x168
-[<900000000325b4d4>] __handle_irq_event_percpu+0x54/0x1a8
-[<900000000325b63c>] handle_irq_event_percpu+0x14/0x80
-[<9000000003262a48>] handle_percpu_irq+0x50/0xa0
-[<900000000325aad4>] generic_handle_domain_irq+0x2c/0x80
-[<9000000003bc4d24>] handle_cpu_irq+0x64/0xa0
-[<90000000045a350c>] handle_loongarch_irq+0x2c/0x48
-[<90000000045a35e4>] do_vint+0xbc/0xe0
-[<90000000031a1624>] handle_vint+0x144/0x1e4
-[<900000000321e2e8>] _nohz_idle_balance.isra.0+0x230/0x3a0
-[<90000000031cd004>] handle_softirqs+0x10c/0x298
-[<90000000031cd2e8>] __irq_exit_rcu+0x100/0x160
-[<90000000045a35a4>] do_vint+0x7c/0xe0
-[<90000000045a55cc>] idle_exit+0x0/0x4
-[<90000000045a55d8>] arch_cpu_idle+0x8/0x30
-[<90000000045a5698>] default_idle_call+0x18/0x50
-[<90000000032250b0>] do_idle+0xb8/0x130
-[<9000000003225374>] cpu_startup_entry+0x2c/0x38
-[<90000000045a6240>] kernel_entry_end+0xdc/0xe0
-[<90000000045c0d44>] start_kernel+0x65c/0x660
-[<90000000045a60f0>] kernel_entry+0xf0/0xf8
+libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+
+there exists the following build error:
+
+    LD      vmlinux.o
+   OBJCOPY modules.builtin.modinfo
+   GEN     modules.builtin
+   GEN     .vmlinux.objs
+   MODPOST Module.symvers
+   UPD     include/generated/utsversion.h
+   CC      init/version-timestamp.o
+   KSYMS   .tmp_vmlinux0.kallsyms.S
+   AS      .tmp_vmlinux0.kallsyms.o
+   LD      .tmp_vmlinux1
+ld: arch/loongarch/kernel/head.o: in function `pe_header':
+(.head.text+0x68): undefined reference to `__efistub_efi_pe_entry'
+
+What should to do in the next step? I am looking forward to your
+final conclusion.
 
 Thanks,
 Tiezhu
