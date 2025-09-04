@@ -1,148 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8735D242D8B;
-	Thu,  4 Sep 2025 21:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE122F60D1;
+	Thu,  4 Sep 2025 23:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757022396; cv=none; b=T1TQkLZaiN7BlVFELkCHSwTKXCUTU6CuGfGlnYQxwBxINJXbLL0Ta4iRmVtqF7gku2ajzUZJJdD9b8EhGtQRs+jawsfBVyAUpxHH+GxEC1JGeRHdkufVP9nRvFQZU0SRgZdiM1CiphIpXNCQzI5JBKaNUvIm7wVatbXRCyo3opE=
+	t=1757029289; cv=none; b=OG5HE6AHKVNUwuihW2cU5kaMMkSMDQPOyg866X5Vv2+U7DWDGPn9Gj7rt6ExljYIeq8ZR714OVil+HOR4t4FPXPZ70yCuy5d7MBI8yTLeKd8i9yvFD22RxQBm4rAVD/Z+yBD1agL3EZEMgfnepZAYF4RLuoU10qMeLgmAEXv/4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757022396; c=relaxed/simple;
-	bh=4fJ9zZxsC1MqR01ZLfdpGSY+0DIm1cCw5C2znm5oqqA=;
+	s=arc-20240116; t=1757029289; c=relaxed/simple;
+	bh=FXSCx6Zola7pSIKISL/TTWzUvg3jHW6dDupjOWBR9lE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k5M7OwUvMrrM0FaZFRZv83zTmB39c+EKaNEbkBUO0pqnEBCCYlvRoH3/ZfvRt2UnQM32zI80QKbyPt+Ag6gNUhQ5Ox1pyR2wLl0O/ozhHqVtcJx54NBVanf4tyNsPRO2QDrcyHJ0DQNpm1hSrpZ462iInmE6aQ2eNi7LgS1Dd8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFCqVeCB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DOi97P6+Pe+6xfvDusBZnXPU6f02TbicBGE5sTH0usqQuqj9SflTG3QXF3V9juBBMXMJUSy/aH2ksDXo+JAoirzW6wUZhh1SF1iaXD1qVLLRjVGTVZZRqkm6Siw0T5H6IBF8QEHTbMXX8FB51E0ZP9KGPg1WxWOUMIOsI63QHmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGFEfNiS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFCqVeCB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D175C4CEF0;
-	Thu,  4 Sep 2025 21:46:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGFEfNiS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A26EC4CEF0;
+	Thu,  4 Sep 2025 23:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757022396;
-	bh=4fJ9zZxsC1MqR01ZLfdpGSY+0DIm1cCw5C2znm5oqqA=;
+	s=k20201202; t=1757029289;
+	bh=FXSCx6Zola7pSIKISL/TTWzUvg3jHW6dDupjOWBR9lE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UFCqVeCBJ0dLeTOx1GMqDQ+GAP0IjUfn+Zy0XxOiQzSs7ST8/8JfjnWQUmMOm8Ljz
-	 cPJj4lFf67aIF3nw9IMhOY+5g4Nb6REnbujfyOk/G5x3k4Y3/5enbqYRG26dxDEJsC
-	 /36kwn8F8NyBoICp2R0CyxePKdsOxJ/g8QG07fHJPnZbWQGRVzfbiLO8rnfKo4hHlN
-	 0T9VaOyrPCdNOH4IgNXlov3AM/YkBE6yhiMobFwFjtinHtjgSCu+v4pfPcMtNo8TDZ
-	 IMK4MKrrpsy+xrf8mJHkay/ivPb3kztgsaVmrFnz2EcFseIBllq97SCH9D5vFYvUR/
-	 vj1cE/QvgOVGg==
-Date: Thu, 4 Sep 2025 14:46:33 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
- warnings about EFISTUB
-Message-ID: <4thrzifl6ntk7kdf65egt4srzkbrxqoqf7yzmasblwvaq3qwmt@vigfgpbxzjkq>
-References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
- <20250901072156.31361-3-yangtiezhu@loongson.cn>
- <20250901081904.GB4067720@noisy.programming.kicks-ass.net>
- <82c913b9-4403-cde9-0542-5bd6e04415f5@loongson.cn>
- <wt4qpgi5isj5m6wq33pomvm6borvafuzktekc7lgtoitscar5q@brixzj3lccbw>
- <ccbb40c1-5f2d-77e9-e8d2-52f2fdbad645@loongson.cn>
- <CAAhV-H5qhKepa-8sz3_AC=_RCChbVeEmnHKESMqpiJ0phMORbg@mail.gmail.com>
- <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn>
- <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
- <ybv2ndrzbqztkctzwhfphpdqrqbxlougs75glm22rcuzdmnrfp@lqwcms3j2d55>
+	b=dGFEfNiSpDwfJ33AtkShNPM078gopMDZtzNhmg6Vx1TpHFUOEvHE+k+nQY+CIaWt5
+	 ldWncxa93/0mE3j+f0i1Zf9yrOAJ+75RyW+J1YwN9tXAIyt16lM0sjyPFDPMbSNME9
+	 iAWsaSqDPvNGQEzmBsNdR6uepNSln8tH6NyayMc2Hs5KL//qxSgb18Q53qhXSKKTs6
+	 m1as719tex5fuOBePlRAFY6+mm5bWvyJ9wGVFmA8ooOZOzSAGKCmC9nu1o09XoeMOK
+	 dHazGYMYzfoQcWMEFYNS67lV9mMee8b+DdnvMtqZmWlNl7GJ16FSdXhv+Mq5nHvjJE
+	 LI6S0TEtEv4Xg==
+Date: Thu, 4 Sep 2025 23:41:27 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, rcu@vger.kernel.org,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	Mukesh R <mrathor@linux.microsoft.com>
+Subject: Re: [PATCH v2 0/7] Drivers: hv: Fix NEED_RESCHED_LAZY and use common
+ APIs
+Message-ID: <aLojpyTwAMdb1z6D@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250828000156.23389-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ybv2ndrzbqztkctzwhfphpdqrqbxlougs75glm22rcuzdmnrfp@lqwcms3j2d55>
+In-Reply-To: <20250828000156.23389-1-seanjc@google.com>
 
-On Thu, Sep 04, 2025 at 10:39:30AM -0700, Josh Poimboeuf wrote:
-> On Thu, Sep 04, 2025 at 11:59:30AM +0800, Huacai Chen wrote:
-> > This is from RISC-V code.
-> > 
-> > __HEAD
-> > SYM_CODE_START(_start)
-> >         /*
-> >          * Image header expected by Linux boot-loaders. The image header data
-> >          * structure is described in asm/image.h.
-> >          * Do not modify it without modifying the structure and all bootloaders
-> >          * that expects this header format!!
-> >          */
-> > #ifdef CONFIG_EFI
-> >         /*
-> >          * This instruction decodes to "MZ" ASCII required by UEFI.
-> >          */
-> >         c.li s4,-13
-> >         j _start_kernel
-> > #else
-> >         /* jump to start kernel */
-> >         j _start_kernel
-> >         /* reserved */
-> >         .word 0
-> > #endif
-> > 
-> > The HEAD section has instructions, if you change it into a data
-> > section then it loses the "x" attribute.
+On Wed, Aug 27, 2025 at 05:01:49PM -0700, Sean Christopherson wrote:
+> Fix a bug where MSHV root partitions (and upper-level VTL code) don't honor
+> NEED_RESCHED_LAZY, and then deduplicate the TIF related MSHV code by turning
+> the "kvm" entry APIs into more generic "virt" APIs.
+> 
+> This version is based on
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git hyperv-next
+> 
+> in order to pickup the VTL changes that are queued for 6.18.  I also
+> squashed the NEED_RESCHED_LAZY fixes for root and VTL modes into a single
+> patch, as it should be easy/straightforward to drop the VTL change as needed
+> if we want this in 6.17 or earlier.
+> 
+> That effectively means the full series is dependent on the VTL changes being
+> fully merged for 6.18.  But I think that's ok as it's really only the MSHV
+> changes that have any urgency whatsoever, and I assume that Microsoft is
+> the only user that truly cares about the MSHV root fix.  I.e. if the whole
+> thing gets delayed, I think it's only the Hyper-V folks that are impacted.
+> 
+> I have no preference what tree this goes through, or when, and can respin
+> and/or split as needed.
+> 
+> As with v1, the Hyper-V stuff and non-x86 architectures are compile-tested
+> only.
+> 
+> v2:
+>  - Rebase on hyperv-next.
+>  - Fix and converge the VTL code as well. [Peter, Nuno]
+> 
+> v1: https://lore.kernel.org/all/20250825200622.3759571-1-seanjc@google.com
+> 
 
-Actually, the "x" attribute isn't needed for vmlinux.  The vmlinux
-linker script places it in the text region regardless.
+I dropped the mshv_vtl changes in this series and applied the rest
+(including the KVM changes) to hyperv-next.
 
-Moving the data to a data section should be really simple, something
-like the below.
-
-And yes, even the above RISC-V code can be in a data section.  Those
-instructions are part of the 'struct riscv_image_header' data structure.
-
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index e3865e92a917a..c42500d9fad81 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -17,7 +17,7 @@
- 
- #include "efi-header.S"
- 
--	__HEAD
-+	__HEADDATA
- 
- _head:
- 	.word	IMAGE_DOS_SIGNATURE	/* "MZ", MS-DOS header */
-diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-index 08ea921cdec16..fc35ef349aba6 100644
---- a/arch/loongarch/kernel/vmlinux.lds.S
-+++ b/arch/loongarch/kernel/vmlinux.lds.S
-@@ -38,6 +38,7 @@ SECTIONS
- 	. = VMLINUX_LOAD_ADDRESS;
- 
- 	_text = .;
-+	HEAD_DATA_SECTION
- 	HEAD_TEXT_SECTION
- 
- 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 6b2311fa41393..c74492e1baa5a 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -629,6 +629,11 @@
- 		*(.static_call.text)					\
- 		__static_call_text_end = .;
- 
-+#define HEAD_DATA_SECTION						\
-+	.head.data : AT(ADDR(.head.data) - LOAD_OFFSET) {		\
-+		KEEP(*(.head.data))					\
-+	}
-+
- /* Section used for early init (in .S files) */
- #define HEAD_TEXT  KEEP(*(.head.text))
- 
-diff --git a/include/linux/init.h b/include/linux/init.h
-index 331886205049e..fcb02ab3faae2 100644
---- a/include/linux/init.h
-+++ b/include/linux/init.h
-@@ -98,6 +98,7 @@
- 
- /* For assembly routines */
- #define __HEAD		.section	".head.text","ax"
-+#define __HEADDATA	.section	".head.data","aw"
- #define __INIT		.section	".init.text","ax"
- #define __FINIT		.previous
- 
-
+Thanks,
+Wei
