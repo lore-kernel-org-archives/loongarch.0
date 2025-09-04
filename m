@@ -1,156 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8540B27511C;
-	Thu,  4 Sep 2025 17:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3CD26E6E3
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 19:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757007573; cv=none; b=nswBYiDyCTORHD6hTYz1aKaB3aQ4GTI7Fc94NjBXhSWyw9Dx0XMIlU8sSSEWbaBMwxzf2piOgF7v1XaVnPfgdI7QC6BmPJvMKgxejiPe4ownQ0De73X4x1aKwyW8NHpq3/D9TvI0zet2g/C4eKKWOuGWY3U5Db6McsNdCTe2LbE=
+	t=1757015087; cv=none; b=hJQHR0d/Y1oYY8csloHtMKv3eAGq+hfW7TdxCxpom8spl8IOfyUf/Z59rjDWJiY7OS13y7+eSxpsPu4QeqFBKGaFoQvsfH64wDWXAIZJcMlUgo72wuUAg1CjES5c5NHrM1L0aVYxJpYbj8z6YdvEB3da2AYHKeEERFItPkwH19A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757007573; c=relaxed/simple;
-	bh=Xbvz6qKnaBnWjDty07oXkI1QOz/gH22+Af4nDw/yES0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l7ctd8OcaWYXvZlosbK5VZleLwLLJsYK+comEC7BKcI1Am2Boc6o34zr8yUgMw9h26b/MaV6XE8NS8437vMvnPEkhy5iA8+sb80mYzzXQFT63yRIv6YsW5xq3seQ1o4AQgia5hS49PswCCiRj/jyV2EhjzeZlL4KTI6cp3+Dl7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edEYk+u/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757015087; c=relaxed/simple;
+	bh=nrsoN2cRsUh6+oDjNodKxMkbhTbg0va/okCb6ReI6KA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tweEfq1CjKCm5GXVs+4Et0k0HmVlkrwB/yM/HSsiFIIr6tNVsGz/nIDdu0HSaIlikpsxE7W7bJDS+LsJuLYBwOYnUIJVhla1zQU54+Rk8WRHDW6lBLsKx+EfJBXF4VyxobpYQJmnQ2qD6PEKbj9r1k1yE1sZRj9Jxdy0Wsr9PqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=okDYUyUf; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edEYk+u/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E811C4CEF0;
-	Thu,  4 Sep 2025 17:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757007573;
-	bh=Xbvz6qKnaBnWjDty07oXkI1QOz/gH22+Af4nDw/yES0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=edEYk+u//CE5kp4AcfLqO+W2yncL4Or78zA4tBKXCkJ78caqFnnvgzVkDFLLcKh5R
-	 AP1BtIQCjrkYFVq1HOD0aQuLiGxB0bzBG5L+Vt5RYywOa/N7vj94cCw2cM5Porjk6G
-	 9eLFYE7W8OgsfqJeclDt/znvHo743bcVpXjjmMIX+J/VoreDiDmcvmLQ8UItIDZ1C5
-	 I7CFCmNBTXQdGKuYVAKPXsC3NYUeRljlkhfrBrxvz5LvYqhcKQB+y5NmxdbvJICGHG
-	 pBJxPOykZOuv7WoWR31BHxlvnSGSb52nUVa9Zow4A5qpPDMWrNYk5FvZspMCFTDYQd
-	 h3tB+2/ZmaGaQ==
-Date: Thu, 4 Sep 2025 10:39:30 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
- warnings about EFISTUB
-Message-ID: <ybv2ndrzbqztkctzwhfphpdqrqbxlougs75glm22rcuzdmnrfp@lqwcms3j2d55>
-References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
- <20250901072156.31361-3-yangtiezhu@loongson.cn>
- <20250901081904.GB4067720@noisy.programming.kicks-ass.net>
- <82c913b9-4403-cde9-0542-5bd6e04415f5@loongson.cn>
- <wt4qpgi5isj5m6wq33pomvm6borvafuzktekc7lgtoitscar5q@brixzj3lccbw>
- <ccbb40c1-5f2d-77e9-e8d2-52f2fdbad645@loongson.cn>
- <CAAhV-H5qhKepa-8sz3_AC=_RCChbVeEmnHKESMqpiJ0phMORbg@mail.gmail.com>
- <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn>
- <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="okDYUyUf"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-336dd55aae1so13659811fa.1
+        for <loongarch@lists.linux.dev>; Thu, 04 Sep 2025 12:44:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757015084; x=1757619884; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nrsoN2cRsUh6+oDjNodKxMkbhTbg0va/okCb6ReI6KA=;
+        b=okDYUyUfjkbzZxXJYYKoTMFHWu0tLrjlsEluYKY82CLIYSfRcDt/sKTWlnHrBGY02/
+         WvNnjOIM2okR9XBJEbDdc4620tCcIxq4BU8ynlDODG8VobIwkZ310uFGYmIUEdVjtlFt
+         PndMsX/aHVMdTPJJ1LRYjYDLmYlBGfN7yaPeYSJjcVqv1s2LuZ/ukY1MwqoLXAjBGXB/
+         +0ZvVj68Rd6tOKr9wozdTVxHcVXosxbRASXkg5VyRSDVZLXA3oayGPPtJBqnew80nA1d
+         P5fWFyNGHltOybluXplMvhmgA/o+O7Wa0zIHY7Vq5CdVkx0+L+TWdvehtSRFesLM+AQB
+         9A4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757015084; x=1757619884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nrsoN2cRsUh6+oDjNodKxMkbhTbg0va/okCb6ReI6KA=;
+        b=I7O4/XDF9XWaA1XJ4T4ZW5ePM9FByl6RJvkTUYzt4/dvD0akTLbohLXp83kllicOtS
+         YXdJzX6As0uBcONt10qoD4KyE1SnF5N7/pufQLxTDcNuiFRNsG+bEM1syBcggAeHo75k
+         bvrDwQwxvDe8WoJJh6Qkf6xvMBwwC90CHXVBCMEDBXo8d7IC9xuyJ20/bBuXNBe55RAK
+         Vo5aTKgUc+yg+udvFv9DeWGR/hFC1Bi4B7M+tfNKD+TVhlFKsE3+UDt3CZ5ocZKOZiLi
+         9eh/VDSY3V2kG5d4sedt5HMJ3AnR83cXVnWc0APqacqLg5eEbBHO1NBslw/C8AOBusIP
+         YJKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0bxGoXCV/0MWDlE7Vuw4E5i2WVxpA7pTSEglfseFuFE39HfcJdIPvW2nZLsTtz+6RIlpv5/3yqg4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzDBXfUnHIc2MM7yj2DbOpsDTEj6HpjcRvNQ+94NJvjAxZUjWSU
+	pxnQAhHzZewnKu6tvaEeTiRWjL9KwkMVh+LpAXz1RC2HGxAMygL52HlkEmUc9DMy7r+Y4/xP2md
+	qRRR1ArjhKjsQ3FtQfkhU3a4JTlWLV+u6yk6fkq/TLaE5GI58CQK+
+X-Gm-Gg: ASbGnctMRYGTa6UJCWKsnv1ea2N7f4SemUlmJtBo9So4bsw7yhkt/9iySuSCdo4UJxw
+	veODs18xANcE9Ry+P/Ck3IoL1FtkX90uzuhcwVw6qS6yTa6E1G5wPWLgfDRbVSavktsJNkLk7bJ
+	2lJTPZ8VNwBjpzgL9oXqrF9ZaVVQYQFNmAci0Ox5et1FqbOeMBq+8Vblh4clK51f/UBfckefqmE
+	rs67FJBz+HdhwrktA==
+X-Google-Smtp-Source: AGHT+IGW3Q5mVQSa4T86jRPxMcDx+PrjgBKT3CCZeXO2AlCJTgPkak9+H+1Qa+5a1Zu0cS0PJQgLLRFuw4VSi8OlYhY=
+X-Received: by 2002:a05:651c:1118:10b0:334:45a:6e65 with SMTP id
+ 38308e7fff4ca-336ca9dc2e6mr50813331fa.18.1757015083748; Thu, 04 Sep 2025
+ 12:44:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
+References: <20250904013438.2405-1-ziyao@disroot.org> <20250904013438.2405-3-ziyao@disroot.org>
+In-Reply-To: <20250904013438.2405-3-ziyao@disroot.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 4 Sep 2025 21:44:31 +0200
+X-Gm-Features: Ac12FXzijnUJnUS4O1_UBtocPghj3eDGF7zfv9ZNj6v1waFbdxgsEZ7rJIcKPss
+Message-ID: <CACRpkdZJ16O+t87aB6dVm7kqCNkiFQiExDVjRJCRgNUhDbzV4w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] gpio: loongson-64bit: Add support for
+ Loongson-2K0300 SoC
+To: Yao Zi <ziyao@disroot.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
+	Kexy Biscuit <kexybiscuit@aosc.io>, Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 04, 2025 at 11:59:30AM +0800, Huacai Chen wrote:
-> On Thu, Sep 4, 2025 at 11:50 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >
-> > On 2025/9/4 上午10:21, Huacai Chen wrote:
-> > > On Thu, Sep 4, 2025 at 10:18 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> > >>
-> > >> On 2025/9/4 上午3:19, Josh Poimboeuf wrote:
-> > >>> On Mon, Sep 01, 2025 at 04:39:29PM +0800, Tiezhu Yang wrote:
-> > >>>> On 2025/9/1 下午4:19, Peter Zijlstra wrote:
-> > >>>>> On Mon, Sep 01, 2025 at 03:21:55PM +0800, Tiezhu Yang wrote:
-> > >>>>>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
-> > >>>>>> following objtool warnings:
-> > >>
-> > >> ...
-> > >>
-> > >>>> Josh suggested to do something to put these instructions in the data
-> > >>>> section, but as said in the previous reply, it needs to modify the link
-> > >>>> process and seems too complicated and expensive for this warning to some
-> > >>>> extent.
-> > >>>>
-> > >>>> So I did this change for objtool.
-> > >>>
-> > >>> I don't like this workaround either, how exactly is it complicated and
-> > >>> expensive to put the data in a data section?
-> > >>
-> > >> I can put them in a data section in the next version, this is
-> > >> reasonable.
-> > > No, from the ARM64 and RISC-V design, we can put jump instructions in
-> > > the HEAD section, and this is what Jiaxun wants to do. Changing to a
-> > > data section is not reasonable.
-> >
-> > ARM64, RISC-V and LoongArch share the same logic in efistub:
-> >
-> > $ grep -r "libstub/lib.a" arch/*/Makefile
-> > arch/arm64/Makefile:libs-$(CONFIG_EFI_STUB) +=
-> > $(objtree)/drivers/firmware/efi/libstub/lib.a
-> > arch/loongarch/Makefile:libs-$(CONFIG_EFI_STUB) +=
-> > $(objtree)/drivers/firmware/efi/libstub/lib.a
-> > arch/riscv/Makefile:libs-$(CONFIG_EFI_STUB) +=
-> > $(objtree)/drivers/firmware/efi/libstub/lib.a
-> >
-> > If we can not put the these data to a data section, then we can not
-> > link efistub separately, because if remove the following code in
-> > arch/loongarch/Makefile:
-> >
-> > libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-> >
-> > there exists the following build error:
-> >
-> >     LD      vmlinux.o
-> >    OBJCOPY modules.builtin.modinfo
-> >    GEN     modules.builtin
-> >    GEN     .vmlinux.objs
-> >    MODPOST Module.symvers
-> >    UPD     include/generated/utsversion.h
-> >    CC      init/version-timestamp.o
-> >    KSYMS   .tmp_vmlinux0.kallsyms.S
-> >    AS      .tmp_vmlinux0.kallsyms.o
-> >    LD      .tmp_vmlinux1
-> > ld: arch/loongarch/kernel/head.o: in function `pe_header':
-> > (.head.text+0x68): undefined reference to `__efistub_efi_pe_entry'
-> >
-> > What should to do in the next step? I am looking forward to your
-> > final conclusion.
-> 
-> This is from RISC-V code.
-> 
-> __HEAD
-> SYM_CODE_START(_start)
->         /*
->          * Image header expected by Linux boot-loaders. The image header data
->          * structure is described in asm/image.h.
->          * Do not modify it without modifying the structure and all bootloaders
->          * that expects this header format!!
->          */
-> #ifdef CONFIG_EFI
->         /*
->          * This instruction decodes to "MZ" ASCII required by UEFI.
->          */
->         c.li s4,-13
->         j _start_kernel
-> #else
->         /* jump to start kernel */
->         j _start_kernel
->         /* reserved */
->         .word 0
-> #endif
-> 
-> The HEAD section has instructions, if you change it into a data
-> section then it loses the "x" attribute.
-> 
-> So my conclusion is this series is the correct solution for all
-> non-x86 archs. We don't need to treat it as "workarounds".
+On Thu, Sep 4, 2025 at 3:35=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
 
-Ok.  In that case please put the full justifications for these changes
-in the patch descriptions.
+> This controller's input and output logic is similar to previous
+> generations of SoCs. Additionally, it's capable of interrupt masking,
+> and could be configured to detect levels and edges, and is supplied with
+> a distinct reset signal.
+>
+> The interrupt functionality is implemented through an irqchip, whose
+> operations are written with previous generation SoCs in mind and could
+> be reused. Since all Loongson SoCs with similar interrupt capability
+> (LS2K1500, LS2K2000) support byte-control mode, these operations are for
+> byte-control mode only for simplicity.
+>
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
--- 
-Josh
+Uses generic GPIO IRQCHIP which is great,
+and generic_handle_domain_irq() so I think it looks
+great.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
