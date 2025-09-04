@@ -1,104 +1,148 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E729D242910
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 19:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8735D242D8B;
+	Thu,  4 Sep 2025 21:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757015155; cv=none; b=HHtxWlQDqvXppJIGkMhk8CeWSmnnw/rBR+YDDdGLS+ZzNe1DYBsIyfOokxltOcXpaf41LMR1WRYjM7cs0xnKaHD+IeRHpeNk+aXmlcTsF4Vj+E/x6o2HF28JFB8SN09K8bbC+mQfFC9iXnXbckxIhF4CqUNEaiKMANSRIt1SZcA=
+	t=1757022396; cv=none; b=T1TQkLZaiN7BlVFELkCHSwTKXCUTU6CuGfGlnYQxwBxINJXbLL0Ta4iRmVtqF7gku2ajzUZJJdD9b8EhGtQRs+jawsfBVyAUpxHH+GxEC1JGeRHdkufVP9nRvFQZU0SRgZdiM1CiphIpXNCQzI5JBKaNUvIm7wVatbXRCyo3opE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757015155; c=relaxed/simple;
-	bh=hzWQ+NZvkCjPqaF5rQWuE+BV3WjbZDFdOwhEuuB25rY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O2hEWDx5jTE6+JnVX3fEMGFDhVt6vU9tI2ru8cjLxKppwRE+2KuLucdA7iZ0IjhgAjxpjeZYmMeK2J462QPQIVBeGFTLZoOvvzcEb11otvzxX1U6hHF6ZtQStJMkZD3ZYCup2+Yk9/tEDPe9nkSycFKWk7ENHww8LHTbSKZmekk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aXY9JGxm; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1757022396; c=relaxed/simple;
+	bh=4fJ9zZxsC1MqR01ZLfdpGSY+0DIm1cCw5C2znm5oqqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k5M7OwUvMrrM0FaZFRZv83zTmB39c+EKaNEbkBUO0pqnEBCCYlvRoH3/ZfvRt2UnQM32zI80QKbyPt+Ag6gNUhQ5Ox1pyR2wLl0O/ozhHqVtcJx54NBVanf4tyNsPRO2QDrcyHJ0DQNpm1hSrpZ462iInmE6aQ2eNi7LgS1Dd8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFCqVeCB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aXY9JGxm"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-336cdca64e6so10684631fa.0
-        for <loongarch@lists.linux.dev>; Thu, 04 Sep 2025 12:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757015152; x=1757619952; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hzWQ+NZvkCjPqaF5rQWuE+BV3WjbZDFdOwhEuuB25rY=;
-        b=aXY9JGxmJyMcUWAY32njJjnDymamQm94F89BCgzuMYTuPR3LvlUvhmxymHg/hBXzEL
-         tERft4izXSzg+ny5uRvIjawF1iBNk1hpJfwn3DW+OL1Ix3s+xvtRsujs7TO93i9tt/T4
-         ljlXxzFwnySiMOKnEIOtqny0p7Frgx2p3fmCoiD6fcBYwCUfduXT0XZT4BRrHM1Rs/yF
-         gnER/1ItrZMLb6E+ju91TcbI1JFKzLKb1Wef0PnqcPxmYX9ASzdOGg1d4s1zRpfj0806
-         KuuDseyE5BL4qEXLEeW1fQUucr4R4OO5DyPu5Ct+9yrT3MTUB8Ww/lgw8txugUlXtr8q
-         nsgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757015152; x=1757619952;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hzWQ+NZvkCjPqaF5rQWuE+BV3WjbZDFdOwhEuuB25rY=;
-        b=R8/93LbA4jOoGZTGAu3jGDBlp3IHP2lRcLlICSGZ64tzidnxI9sQ5L6Va5ty6xrU40
-         RqbcMGpGvBPRDBlqO8ztEHgvH8lw247yxjMZtSVdxYs5gxMBtdUOjwAGCicLvLV8KcE0
-         WNz92ufo6KlVYY3ObJSXx+n5CfAwSG039UQG4VNyI6sJ3FStqL51DHaWHpvVX0SoUbZx
-         ZR+iB8vTCM3TvkpnUPhTVRLigrhwtZ3PtLIlczI9SMjd/tLGpkyQOoDJwBtkputpafOo
-         7BOpNOP4IicFi8GPqF0PWN6pE5k73XNGNo7Nfw5FoINDUbwXr+a5CVTn7CeQUICi0Cy2
-         mS9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWEr4G9ToIo6+j3X/BcooD1snfXBWlTp2JHN6vej/TxJESS8L74fsgHiyy7Cyka589JUtEFmKn2IeI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz8xlrbj4Gzk1J0F5FJRv2rqV3QJG14+lZpJ4bk2co6n4ZwwnOS
-	jVrjpomJiQtURjXHTLC/UouTkBMmrRt7a57GVDKXeo60zJr3k4hZJEEsHqU7nX/23ENnb5ds6K4
-	32QCFmi0y+pMmFT1vGFHAUAuin79PBnj0KhJtef4TNw==
-X-Gm-Gg: ASbGncvyA6PWqo4kBylF3gsPoz3C+5rtDNSdLNGHb3xzTMU/BAcxbDRcp+aJP+uXXv7
-	kS7HZKsJNcnWCRZi6VmAYoZ17RyE+Adc/nyX3hpxqQ1sFMaeMRJ9+ROzu/m7I256BtjGsjuc7Vq
-	w0E2OPmTBGtFahBTx9g9k9yYFshkDcf2s0ZnQN0vRUIhJbwv3X2bU7Wf/1VdQXOCdhyhzBm3qpy
-	1XxtIZQyYLlYqOZLw==
-X-Google-Smtp-Source: AGHT+IHyOco31RUv2Oe9cKuPvD0Htgm4IoRC25q2CFRrREw8Wo2WlCc9mBvTU1sMDJcN9tENLMEe0p4jJKwMHOJBxZ8=
-X-Received: by 2002:a2e:a54c:0:b0:337:e460:bef6 with SMTP id
- 38308e7fff4ca-337e460c680mr43543631fa.10.1757015152027; Thu, 04 Sep 2025
- 12:45:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFCqVeCB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D175C4CEF0;
+	Thu,  4 Sep 2025 21:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757022396;
+	bh=4fJ9zZxsC1MqR01ZLfdpGSY+0DIm1cCw5C2znm5oqqA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UFCqVeCBJ0dLeTOx1GMqDQ+GAP0IjUfn+Zy0XxOiQzSs7ST8/8JfjnWQUmMOm8Ljz
+	 cPJj4lFf67aIF3nw9IMhOY+5g4Nb6REnbujfyOk/G5x3k4Y3/5enbqYRG26dxDEJsC
+	 /36kwn8F8NyBoICp2R0CyxePKdsOxJ/g8QG07fHJPnZbWQGRVzfbiLO8rnfKo4hHlN
+	 0T9VaOyrPCdNOH4IgNXlov3AM/YkBE6yhiMobFwFjtinHtjgSCu+v4pfPcMtNo8TDZ
+	 IMK4MKrrpsy+xrf8mJHkay/ivPb3kztgsaVmrFnz2EcFseIBllq97SCH9D5vFYvUR/
+	 vj1cE/QvgOVGg==
+Date: Thu, 4 Sep 2025 14:46:33 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
+ warnings about EFISTUB
+Message-ID: <4thrzifl6ntk7kdf65egt4srzkbrxqoqf7yzmasblwvaq3qwmt@vigfgpbxzjkq>
+References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
+ <20250901072156.31361-3-yangtiezhu@loongson.cn>
+ <20250901081904.GB4067720@noisy.programming.kicks-ass.net>
+ <82c913b9-4403-cde9-0542-5bd6e04415f5@loongson.cn>
+ <wt4qpgi5isj5m6wq33pomvm6borvafuzktekc7lgtoitscar5q@brixzj3lccbw>
+ <ccbb40c1-5f2d-77e9-e8d2-52f2fdbad645@loongson.cn>
+ <CAAhV-H5qhKepa-8sz3_AC=_RCChbVeEmnHKESMqpiJ0phMORbg@mail.gmail.com>
+ <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn>
+ <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
+ <ybv2ndrzbqztkctzwhfphpdqrqbxlougs75glm22rcuzdmnrfp@lqwcms3j2d55>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250904013438.2405-1-ziyao@disroot.org> <20250904013438.2405-2-ziyao@disroot.org>
-In-Reply-To: <20250904013438.2405-2-ziyao@disroot.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 4 Sep 2025 21:45:40 +0200
-X-Gm-Features: Ac12FXx4X2_pNhzcdcYEzziDJRvtowb7CpE7cKPonDOwSax6LARZw_4oRio8qGA
-Message-ID: <CACRpkdZfruCqEzN-sMtxidh_e7JM1e_LG3JKaQ3ahkDAnx59Cg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: gpio: loongson: Document GPIO
- controller of LS2K0300 SoC
-To: Yao Zi <ziyao@disroot.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
-	Kexy Biscuit <kexybiscuit@aosc.io>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ybv2ndrzbqztkctzwhfphpdqrqbxlougs75glm22rcuzdmnrfp@lqwcms3j2d55>
 
-On Thu, Sep 4, 2025 at 3:35=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
+On Thu, Sep 04, 2025 at 10:39:30AM -0700, Josh Poimboeuf wrote:
+> On Thu, Sep 04, 2025 at 11:59:30AM +0800, Huacai Chen wrote:
+> > This is from RISC-V code.
+> > 
+> > __HEAD
+> > SYM_CODE_START(_start)
+> >         /*
+> >          * Image header expected by Linux boot-loaders. The image header data
+> >          * structure is described in asm/image.h.
+> >          * Do not modify it without modifying the structure and all bootloaders
+> >          * that expects this header format!!
+> >          */
+> > #ifdef CONFIG_EFI
+> >         /*
+> >          * This instruction decodes to "MZ" ASCII required by UEFI.
+> >          */
+> >         c.li s4,-13
+> >         j _start_kernel
+> > #else
+> >         /* jump to start kernel */
+> >         j _start_kernel
+> >         /* reserved */
+> >         .word 0
+> > #endif
+> > 
+> > The HEAD section has instructions, if you change it into a data
+> > section then it loses the "x" attribute.
 
-> Loongson-2K0300 ships a GPIO controller whose input/output control logic
-> is similar to previous generation of SoCs. Additionally, it acts as an
-> interrupt-controller supporting both level and edge interrupts and has a
-> distinct reset signal.
->
-> Describe its compatible in devicetree. We enlarge the maximum value of
-> ngpios to 128, since the controller technically supports at most 128
-> pins, although only 106 are routed out of the package. Properties for
-> interrupt-controllers and resets are introduced and limited as LS2K0300
-> only.
->
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Actually, the "x" attribute isn't needed for vmlinux.  The vmlinux
+linker script places it in the text region regardless.
 
-Looks good:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Moving the data to a data section should be really simple, something
+like the below.
 
-Yours,
-Linus Walleij
+And yes, even the above RISC-V code can be in a data section.  Those
+instructions are part of the 'struct riscv_image_header' data structure.
+
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index e3865e92a917a..c42500d9fad81 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -17,7 +17,7 @@
+ 
+ #include "efi-header.S"
+ 
+-	__HEAD
++	__HEADDATA
+ 
+ _head:
+ 	.word	IMAGE_DOS_SIGNATURE	/* "MZ", MS-DOS header */
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+index 08ea921cdec16..fc35ef349aba6 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -38,6 +38,7 @@ SECTIONS
+ 	. = VMLINUX_LOAD_ADDRESS;
+ 
+ 	_text = .;
++	HEAD_DATA_SECTION
+ 	HEAD_TEXT_SECTION
+ 
+ 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 6b2311fa41393..c74492e1baa5a 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -629,6 +629,11 @@
+ 		*(.static_call.text)					\
+ 		__static_call_text_end = .;
+ 
++#define HEAD_DATA_SECTION						\
++	.head.data : AT(ADDR(.head.data) - LOAD_OFFSET) {		\
++		KEEP(*(.head.data))					\
++	}
++
+ /* Section used for early init (in .S files) */
+ #define HEAD_TEXT  KEEP(*(.head.text))
+ 
+diff --git a/include/linux/init.h b/include/linux/init.h
+index 331886205049e..fcb02ab3faae2 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -98,6 +98,7 @@
+ 
+ /* For assembly routines */
+ #define __HEAD		.section	".head.text","ax"
++#define __HEADDATA	.section	".head.data","aw"
+ #define __INIT		.section	".init.text","ax"
+ #define __FINIT		.previous
+ 
+
