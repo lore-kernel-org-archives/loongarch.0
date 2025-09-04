@@ -1,87 +1,83 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1982126B747
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 08:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750382C11C7
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 08:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756973658; cv=none; b=sPNrBPYLnQ1mlkXplrGOsFf55cYITR+FiNaZFnnjrwyqMNYiGXyJF2Kw2N+zCRkAyHZOKPuE8B9Da/00G0G5iv9fwDTj8Fudo+ORXbfbTsVQFUyGuRPevvn13ziJ3FwI9pjbq1n2j16qNBxeRw0eIuY0PlHhdj14q1HPpkA390E=
+	t=1756974040; cv=none; b=EHeepf3L7hZFar6zDDsLFTkDin4cyvs8Z6hwERq3ushTJTmlBMQSlNXlzZ2zUmvtz1tkZr22rFSLZnz8c6x/f+HBEO3eFcH4bH9H/DRmX+n3uiF0c7VfflJ8YJhBc4xVz2423TDNDm2Xe8pNlyjlaopookwwCtFCUo9qMu5RAgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756973658; c=relaxed/simple;
-	bh=MCg0R7lspWnUAF0f5SuTopyp8Sjf2uoftrZVGTPACaA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RIGfkx23/8TL/gKybC3B2RXfjXjPBagKvSF9FySn7kWs/SzXclkq4wVH6EuFec5KRQa2bglecCrxwS5Qi3ciMYKJ6xnOWUB36z7zvto6hPweGLrccP4WlGwcrtgZoD6vfortxL0NPz7I3CulWOab9N9XnRHkB7X23evmWmSO3Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 22352d5c896711f0b29709d653e92f7d-20250904
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_LANG
-	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
-	HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_LOWREP
-	SA_EXISTED, SN_UNTRUSTED, SN_LOWREP, SN_EXISTED, SPF_NOPASS
-	DKIM_NOPASS, DMARC_NOPASS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:14293aca-ade4-4f5a-8cfe-b60be37e72da,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:10
-X-CID-INFO: VERSION:1.1.45,REQID:14293aca-ade4-4f5a-8cfe-b60be37e72da,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:10
-X-CID-META: VersionHash:6493067,CLOUDID:fcf7ad9177248482b0e7c728bd1ded62,BulkI
-	D:250904142548XOOMPT96,BulkQuantity:2,Recheck:0,SF:19|24|44|66|72|78|81|82
-	|83|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:
-	nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,AR
-	C:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: 22352d5c896711f0b29709d653e92f7d-20250904
-X-User: cuitao@kylinos.cn
-Received: from ctao-ubuntu.. [(39.156.73.13)] by mailgw.kylinos.cn
-	(envelope-from <cuitao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1218613750; Thu, 04 Sep 2025 16:14:09 +0800
-From: cuitao <cuitao@kylinos.cn>
-To: yangtiezhu@loongson.cn
-Cc: chenhuacai@kernel.org,
-	cuitao@kylinos.cn,
-	kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	maobibo@loongson.cn,
-	zhaotianrui@loongson.cn
-Subject: Re: [PATCH] LoongArch: KVM: remove unused returns.
-Date: Thu,  4 Sep 2025 16:13:55 +0800
-Message-ID: <20250904081356.1310984-1-cuitao@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <462e346b-424d-263d-19a8-766d578d9781@loongson.cn>
-References: <462e346b-424d-263d-19a8-766d578d9781@loongson.cn>
+	s=arc-20240116; t=1756974040; c=relaxed/simple;
+	bh=E/uXjtRmkLmNWxnlDCw0CKhl5d3ycTzBEGah+pZZG60=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rg7DOvfZPsUGd5cb6i4+oS9OSjZJ+AX8l/XEc7+H59ILGjtjSMBFWqaGr72OTeyNM6JOXuL4HEqWuPzqdhwJf/MNZcPnxLcm3sbBH6XWlRT8mUHYQ3t514ChqZMIDbZKo69eADMV07UE9fUuJLqW76kEtvl7x7BsZR7nC3nO5zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqqCBMnD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqqCBMnD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19983C4AF09
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 08:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756974040;
+	bh=E/uXjtRmkLmNWxnlDCw0CKhl5d3ycTzBEGah+pZZG60=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KqqCBMnDPDme7cNPhAslqYiZtDfFK07Hdwq+nNPShaGNbzw1iySrcsxmWiw8b3mXX
+	 mUni9v82wen+gY8vSWCdOkeadysLVo1BINUN6DJ6fPpBznk409MAPFn+AfzLU8P5Q5
+	 QVujMnJs+Oo+vkLM2DN+ey1ICBF1PdbBDtwX53juy2uzXQ/S4fWXweZ351Ih7SkyjJ
+	 m7ANfaf7wYpwt2pLRPb5a1PnBYWeFOHsy63LakobGkDaiyGpEQT3UlWziFIjtPuLRn
+	 mGj34/jNAgmZ/GGZGO+86qrWS+bndJSAIUgasA9gv8V3wPsq+4aCOHuV1DAjIMgPi+
+	 yQlsI4Fce0kWQ==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b043da5a55fso108973566b.0
+        for <loongarch@lists.linux.dev>; Thu, 04 Sep 2025 01:20:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVZhwCJmaty7YviBmhT1MHp9Uf4UnLCPU1j6qxLdkhkjIuH7comrqPR2x0fYCEE3/jdoAdFBBf62rs=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxkh6BMAuTx3LvIvJ4OQSLRulmXFhfu1yvblcFsBlquSax/+b4T
+	TL5JdVjFq7c4j1w3hsB6ZUDA+AjuGLOiQQSt3kNCdCu/rJI+gYrbQY/hvqMtIUbjSB3wG760+L4
+	IAFbTK0N2vGwIUQZzlUluGpnphpwy9Ic=
+X-Google-Smtp-Source: AGHT+IGykX2kjpwbJSz2Df4Q0dC+COJpNbeU+7c1CUdwCq32YXgec8hSk5QMYiD/hWmRbZ9Libc//QGLnc87pKR/9tM=
+X-Received: by 2002:a17:907:940a:b0:afe:f8cb:f8bc with SMTP id
+ a640c23a62f3a-b01d9732721mr1839905166b.35.1756974038671; Thu, 04 Sep 2025
+ 01:20:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <462e346b-424d-263d-19a8-766d578d9781@loongson.cn> <20250904081356.1310984-1-cuitao@kylinos.cn>
+In-Reply-To: <20250904081356.1310984-1-cuitao@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 4 Sep 2025 16:20:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4QDs+zruvKVkDgWnMoObhoHiWOL7x4=Q2PRTnnqkNnsw@mail.gmail.com>
+X-Gm-Features: Ac12FXyzzZrpldD23M0o6vMPkPUzHye1yDSCXQYfZAqAKOkke_zz16jNhRDVV0s
+Message-ID: <CAAhV-H4QDs+zruvKVkDgWnMoObhoHiWOL7x4=Q2PRTnnqkNnsw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: remove unused returns.
+To: cuitao <cuitao@kylinos.cn>
+Cc: yangtiezhu@loongson.cn, kernel@xen0n.name, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, maobibo@loongson.cn, 
+	zhaotianrui@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the review.
+On Thu, Sep 4, 2025 at 4:14=E2=80=AFPM cuitao <cuitao@kylinos.cn> wrote:
+>
+> Thanks for the review.
+>
+> My initial idea was to remove the switch-case structure.
+> However, after checking the case value KVM_FEATURE_STEAL_TIME,
+> I found there are 13 parallel definitions=E2=80=94and it is unclear when
+> this part of the development will be completed later. Therefore,
+> I temporarily retained the switch-case structure.
+>
+> Now, I have updated the patch according to your suggestion:
+> - Replaced `switch` with `if` since there is only one case.
+> - Removed the redundant semicolon after the block.
+>
+> Please see the updated patch below.
+It has been applied, don't make useless effort.
+https://github.com/chenhuacai/linux/commit/f5d35375a6546bcc5d0993e3a48cdbc3=
+a7217544
 
-My initial idea was to remove the switch-case structure. 
-However, after checking the case value KVM_FEATURE_STEAL_TIME, 
-I found there are 13 parallel definitions—and it is unclear when 
-this part of the development will be completed later. Therefore, 
-I temporarily retained the switch-case structure. 
+Huacai
 
-Now, I have updated the patch according to your suggestion:
-- Replaced `switch` with `if` since there is only one case.
-- Removed the redundant semicolon after the block.
-
-Please see the updated patch below.
-
-Thanks,
-Tiezhu
+>
+> Thanks,
+> Tiezhu
