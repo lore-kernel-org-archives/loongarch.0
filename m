@@ -1,89 +1,95 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DBCD13E898
-	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 06:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AD81D6DA9
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 06:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756966640; cv=none; b=t+6VEpXIE3QMNCzkgwMmc/05cHCF/Qzhs/RFIxfGL4tQI6iiBBfZdvVYZFbolUBXqm7AQ43TzTcvIqyDfVACujsQ28Go39ZtLiSMM5IlAkreiyYLcbcM9TCrGj60Eav9N7ViPjPz1T+GLW1PKMHJqOqFz4JkOp4eZg3k6YS1TG0=
+	t=1756967139; cv=none; b=U9xuQHmcoBjA87TWk3LK9RWEUEBQAOfj2MnmjmRvQjqLXJnv8+TotCS0hPe06ANVkinQXbbczeJ4SwNqJO/EwdD426wn6pjn13PXGA7ARcnP26XOO12RESNkiIIgIR6HMXf9idgmC8zH84drTfJdEalwJNKQqW89Se/2ImJqNp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756966640; c=relaxed/simple;
-	bh=QJP7VVZZyM+qnHALZSZbtVOoHUDNhZ1aAqXZh4XrcyI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FJ6EpPbhdQeiI55pV4H1/53LLT4cfMh4LuG/0KEfy7QcrTsn5zpICUEeAF7ZHk+ZLGoqZ5JkhneafFBmBmfhwxwvHTxkHlCUNY7QaQw1u9iJEGE9J3JVv24LwKSps1QhRcAZTVZSp6TRCqi1qMSAdE6D9hZIxLsYa44So26P+o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Dxb_DrLrlow4kGAA--.13977S3;
-	Thu, 04 Sep 2025 14:17:15 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxzsHiLrlocUl9AA--.40817S3;
-	Thu, 04 Sep 2025 14:17:08 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: remove unused returns.
-To: cuitao <cuitao@kylinos.cn>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, loongarch@lists.linux.dev
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250904042622.1291085-1-cuitao@kylinos.cn>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <c70e595e-c1ab-2c8a-3f46-3862ecd6e0b8@loongson.cn>
-Date: Thu, 4 Sep 2025 14:15:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1756967139; c=relaxed/simple;
+	bh=OiyQg+RIct2VcV7DDl+1YPRlSTFJG6extkQc30EN9eE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ilo3dNl1Itk15T1da0DbiqlSJh6VLQMstnj2UvGhHdZeJXXSP5bTlZJ+kjIUaRNNoV8s/N9qMvwNxhT5Gj906Qi88k3Poz0QniufFi50lP71dKHSKn5o6lXwPyKLVMDHISKuYSCJGA7r9rvtpprdTZvdMLyXWaJxjRE6q6lec4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTDyjq3J; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTDyjq3J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E819C4AF09
+	for <loongarch@lists.linux.dev>; Thu,  4 Sep 2025 06:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756967139;
+	bh=OiyQg+RIct2VcV7DDl+1YPRlSTFJG6extkQc30EN9eE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tTDyjq3JdIVLxtQmDTLKhtZFQhY5ZpPAWyuaGNg4HsT3tkkTzggq+ooI4yyb2N4ER
+	 VWz+BoBXpPZOKOi27m0Qr4bAnA4b6RdGnUjf9iJqCXSdxx21+1OCRX4gByuvpjnUwb
+	 FIgjt+NcvPHeU/lMRLispT2DkaiMQyU0JN1T9x7G5UZ9Kr51Os9P5k3HjDpXYK73JC
+	 oIC3BwVJSuunFD9uX0QJ7srIh/um13Zd2HHw0YWmLUVAbzJYoPMOLgjmYkZjCFJumW
+	 GMxDQvnpZopxpyM0QH7D419sBYA097IwWmKkMBFdx+73hrqS4EUg6k+Q/8Q+MYjfro
+	 QJt8Mx2xChuMA==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6188b72b7caso796904a12.2
+        for <loongarch@lists.linux.dev>; Wed, 03 Sep 2025 23:25:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWY/mhInn5J1unfdSzeEgG0kPkV1IHlPqHeNwm5wEK9E8jvSnDziYao/FdEMCTPGxKWSyb24yrjKLs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzkSba03gDo2naBH08QI9PxKyVvwzWxADx9RXK9LvahMA6HWINy
+	FX97sayin2Woe7A4g6drfi3GPex8g8EAzYiU8D9IGdPye5nPPVxyzR7sGbh1phgJpxHR1AYViLG
+	306KDcHXQjACsewNXWgs4izIl6/m5yWM=
+X-Google-Smtp-Source: AGHT+IEuSgUEojFL2lGX5tP7lxrB3EtHth4NYh/l+8QCJ5MmWsFTsME71131TAohVLCemezrMPb56TXZN5B5xjH98S8=
+X-Received: by 2002:a17:907:6e8f:b0:b04:67f3:890f with SMTP id
+ a640c23a62f3a-b0467f38cfdmr562352066b.33.1756967137680; Wed, 03 Sep 2025
+ 23:25:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250904042622.1291085-1-cuitao@kylinos.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxzsHiLrlocUl9AA--.40817S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruFWfZrWktF4kAFW7tryfXwc_yoW3GFc_Jw
-	17J392krs5Jay8ua13trn5G3WSqw4kJFn3urnrZr1fJwn8Jrs8ZrWqgw1rAryvqFsrAF4r
-	taykZF9Ikw1jyosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_
-	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
-	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU
-	=
+References: <20250904042622.1291085-1-cuitao@kylinos.cn> <c70e595e-c1ab-2c8a-3f46-3862ecd6e0b8@loongson.cn>
+In-Reply-To: <c70e595e-c1ab-2c8a-3f46-3862ecd6e0b8@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 4 Sep 2025 14:25:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7j=7RSsyNFkfT_t0GuhzNL1kX1XaWhk3uU=VqYWtRiow@mail.gmail.com>
+X-Gm-Features: Ac12FXyz1ygNs0gFRYev90sVCFlGP3Iehi__0o2aVnlYycpoWG1QGUYC90zfJwg
+Message-ID: <CAAhV-H7j=7RSsyNFkfT_t0GuhzNL1kX1XaWhk3uU=VqYWtRiow@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: remove unused returns.
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: cuitao <cuitao@kylinos.cn>, zhaotianrui@loongson.cn, loongarch@lists.linux.dev, 
+	kernel@xen0n.name, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Sep 4, 2025 at 2:17=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+>
+>
+> On 2025/9/4 =E4=B8=8B=E5=8D=8812:26, cuitao wrote:
+> > The default branch has already handled all undefined cases,
+> > so the final return statement is redundant.
+> >
+> > Signed-off-by: cuitao <cuitao@kylinos.cn>
+> > ---
+> >   arch/loongarch/kvm/exit.c | 4 +---
+> >   1 file changed, 1 insertion(+), 3 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> > index 2ce41f93b2a4..e501867740b1 100644
+> > --- a/arch/loongarch/kvm/exit.c
+> > +++ b/arch/loongarch/kvm/exit.c
+> > @@ -778,9 +778,7 @@ static long kvm_save_notify(struct kvm_vcpu *vcpu)
+> >               return 0;
+> >       default:
+> >               return KVM_HCALL_INVALID_CODE;
+> > -     };
+> > -
+> > -     return KVM_HCALL_INVALID_CODE;
+> > +     }
+> >   };
+> >
+> >   /*
+> >
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+Applied, thanks.
 
+Huacai
 
-On 2025/9/4 下午12:26, cuitao wrote:
-> The default branch has already handled all undefined cases,
-> so the final return statement is redundant.
-> 
-> Signed-off-by: cuitao <cuitao@kylinos.cn>
-> ---
->   arch/loongarch/kvm/exit.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> index 2ce41f93b2a4..e501867740b1 100644
-> --- a/arch/loongarch/kvm/exit.c
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -778,9 +778,7 @@ static long kvm_save_notify(struct kvm_vcpu *vcpu)
->   		return 0;
->   	default:
->   		return KVM_HCALL_INVALID_CODE;
-> -	};
-> -
-> -	return KVM_HCALL_INVALID_CODE;
-> +	}
->   };
->   
->   /*
-> 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-
+>
+>
