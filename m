@@ -1,182 +1,148 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E092367C5
-	for <loongarch@lists.linux.dev>; Fri,  5 Sep 2025 05:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67D131D9663
+	for <loongarch@lists.linux.dev>; Fri,  5 Sep 2025 06:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757050787; cv=none; b=jm7rsheWd4PjSUagvo8mhVOO0rGsfvdXzl5xRmRBqhX4M4F2/J0fomPzl7qPJV9p/dNsLTUR4RRK05YvhVq0riHs0usW344AdXqeh/KEwFAZTYrBujYzcpEmrS77C6g2ZHOL4SynrVK6dESOWxbUI+YZ/PMEftjDPij1dOQ1j3c=
+	t=1757055002; cv=none; b=PY5oA5F+6iG/6bRtWenwdy6JNWq736qgYg6MdW/DbGR1fKVRF/8h84p5q9SQw5+AwPid2DdhMmh0K+zENKIyRFszOSMJ3bm2BJ4GTeXI0usURbyQlq3cQNANLo6benM00g4LSUgAvdFmDsjdQMrkss4JK0bqaws/Oci+PH4f0q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757050787; c=relaxed/simple;
-	bh=wP0Nh39SvLrrUzcjoVyfrVPxYIzy1SY/V7/2kWcMIHU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=syfz38fyMxFnv8ispU9TFzADUr5x5QPLdmpbJylR3kpbiVYYgaYuwl//2F0ZxUCZ4z5FXaBmBPpUrqcrUuwXCdIcgB0IgfqwIY+z/0OuCn1HFhl4ceQby3mxWMIM4/FR7mtQEJcXc5IVTh7fuc/LWBvjkDFoGmznIM0LHGehs0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rxq8RaLZ; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rxq8RaLZ"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32b58eeb874so1686304a91.3
-        for <loongarch@lists.linux.dev>; Thu, 04 Sep 2025 22:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757050785; x=1757655585; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3udnh9xsllR+FkjIGPPOo5bX8r6scLid4vmBPD5wmTc=;
-        b=rxq8RaLZZ+q0Qn3PZtfWjIScpcSCMRi6vKMB+hpsrK3HExYvl8fSTgWtJmvSPDAEo/
-         87CStX/IW+bGLAJaZChET+lp/6Veh0pvSbaPmeOBEWo/OyyJWavqr0JYn1GBL11l7xJL
-         FTnp3uHBoLYoKboEdgL80Xqx5yrWZI7ede8Kme7OPgMY3J1pe4kQ0Bfa3c2OAtb+eF7a
-         ehxCHeXK1Cu0kvpM7gi0KasJUOFknF8ztOEgwhYxmkrUkyG+yRPygfHK8ScNOkKK8Y/I
-         ADD4j8gpJvzaNN6W8WpE7vtY/hHOzqQMkYFHvIFwjSWyvRCbknpqbYg7AfsptMXxqhX1
-         lA1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757050785; x=1757655585;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3udnh9xsllR+FkjIGPPOo5bX8r6scLid4vmBPD5wmTc=;
-        b=GZHbP8ogqnM640LO6FDt6SdvvGnuOpNRtLQ0Shm4wO0TwEVPmUUAMkRJ2AVg6GE+lW
-         7ote362rhWJFTwgNqzVbdA9YLb0D2v+/zVfR6JSw1G1aEce3htGBYG/mpsYQ8CkfqR/O
-         BGMfcdf9i956RbUorNq1AoceNTqiBuEbDNFBAmaI5dCUQctc8InKih4U1mKSJCpC73sS
-         irugGHBbMYFHG9yCkJichyTIIIj44ZGbTSM1gWmxCfC1Gh66U/mYXNWokThu9nQtjV/8
-         6nemRCR0lnKVE04dAM9ClFrZcFhSbuCOL+V11SZNF0G07MT0MprkAdGPWcVN0/GE434Q
-         gftA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzx3BbnNP2By4+BIIkLB9KdBdyVHH5ATwGfHcHuRkSQyHuMIheilqkHmrDQzqfM3sSOoAx/Uz/EmY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyPA7jx0sx4we4RrBkE2G84T5001D7MlLWseeKGiAKSH01sZ1Wa
-	ykmj4GLKftOg4dnZ8hu8+1Yb2V8VIFIJivk6wpdpU3KGD+rYJYbde6NSQOzHacJ3QMiwoO+BV2k
-	dgFcRfw==
-X-Google-Smtp-Source: AGHT+IEl3aDxdJxOeFOgsIqqYfLRUExl039yXm0dtHzzby5zYzVGU35ZbpW1dVjZIdU0C50mCLd9IUYMCJw=
-X-Received: from pjuw15.prod.google.com ([2002:a17:90a:d60f:b0:325:5e4e:4bd4])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3809:b0:329:dff0:701b
- with SMTP id 98e67ed59e1d1-329dff070c6mr19066965a91.17.1757050784899; Thu, 04
- Sep 2025 22:39:44 -0700 (PDT)
-Date: Thu, 4 Sep 2025 22:39:37 -0700
-In-Reply-To: <aLojpyTwAMdb1z6D@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+	s=arc-20240116; t=1757055002; c=relaxed/simple;
+	bh=V1cbCu4EQV8urxLhTiYKFn+wwpdWhCVDC8bBsrk+pLc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t0ndQnJsgDfVuCIbnDdEwx4NUtyW9lBtdjrIhA+b6EZqBc0P2J6ENUAsq9ewBeu3HPE/+hCK1qPBiwT1LP2CaKusQvkvYJ31SpGpUm6ywVylfylIHhn9/37zKWTrqXQJI044ICYBO9ZrBlHVLKfNYLBNkxL57vA/uvVY7oaBhEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [124.127.223.97])
+	by gateway (Coremail) with SMTP id _____8BxXNITiLpoT_YGAA--.14706S3;
+	Fri, 05 Sep 2025 14:49:55 +0800 (CST)
+Received: from [127.0.0.1] (unknown [124.127.223.97])
+	by front1 (Coremail) with SMTP id qMiowJBxD8IIiLpouZ9_AA--.40671S2;
+	Fri, 05 Sep 2025 14:49:47 +0800 (CST)
+Message-ID: <17f2c722-a32b-482b-9363-6a415443fb40@loongson.cn>
+Date: Fri, 5 Sep 2025 14:49:44 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250828000156.23389-1-seanjc@google.com> <aLojpyTwAMdb1z6D@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-Message-ID: <aLp3makY6FzuUwor@google.com>
-Subject: Re: [PATCH v2 0/7] Drivers: hv: Fix NEED_RESCHED_LAZY and use common APIs
-From: Sean Christopherson <seanjc@google.com>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andy Lutomirski <luto@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-hyperv@vger.kernel.org, 
-	rcu@vger.kernel.org, Nuno Das Neves <nunodasneves@linux.microsoft.com>, 
-	Mukesh R <mrathor@linux.microsoft.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage where
+ possible
+To: Greg KH <gregkh@linuxfoundation.org>, WangYuli <wangyuli@uniontech.com>
+Cc: ardb@kernel.org, chenhuacai@kernel.org, chenhuacai@loongson.cn,
+ kernel@xen0n.name, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+ nicolas@fjasle.eu, sashal@kernel.org, stable@vger.kernel.org
+References: <2024120635-wham-campsite-b62b@gregkh>
+ <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
+ <2025020611-olive-gluten-fa45@gregkh>
+Content-Language: en-US
+From: Ming Wang <wangming01@loongson.cn>
+In-Reply-To: <2025020611-olive-gluten-fa45@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJBxD8IIiLpouZ9_AA--.40671S2
+X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAgEQEmi6e4sAywAAso
+X-Coremail-Antispam: 1Uk129KBj93XoWxAw4rtF47Xr18uryUAFW7ZFc_yoWrJw43pa
+	ySga4ktr4DJF1Ivwn2vws2va40v3yfJFy5Gr95K34DZrs8WF9FqrWSqa1Yqa4Duw4fWa1q
+	qr4aq34kCa4UZacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20x
+	vEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I
+	3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJV
+	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
+	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+	6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jotCwUUUUU=
 
-On Thu, Sep 04, 2025, Wei Liu wrote:
-> On Wed, Aug 27, 2025 at 05:01:49PM -0700, Sean Christopherson wrote:
-> > Fix a bug where MSHV root partitions (and upper-level VTL code) don't honor
-> > NEED_RESCHED_LAZY, and then deduplicate the TIF related MSHV code by turning
-> > the "kvm" entry APIs into more generic "virt" APIs.
-> > 
-> > This version is based on
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git hyperv-next
-> > 
-> > in order to pickup the VTL changes that are queued for 6.18.  I also
-> > squashed the NEED_RESCHED_LAZY fixes for root and VTL modes into a single
-> > patch, as it should be easy/straightforward to drop the VTL change as needed
-> > if we want this in 6.17 or earlier.
-> > 
-> > That effectively means the full series is dependent on the VTL changes being
-> > fully merged for 6.18.  But I think that's ok as it's really only the MSHV
-> > changes that have any urgency whatsoever, and I assume that Microsoft is
-> > the only user that truly cares about the MSHV root fix.  I.e. if the whole
-> > thing gets delayed, I think it's only the Hyper-V folks that are impacted.
-> > 
-> > I have no preference what tree this goes through, or when, and can respin
-> > and/or split as needed.
-> > 
-> > As with v1, the Hyper-V stuff and non-x86 architectures are compile-tested
-> > only.
-> > 
-> > v2:
-> >  - Rebase on hyperv-next.
-> >  - Fix and converge the VTL code as well. [Peter, Nuno]
-> > 
-> > v1: https://lore.kernel.org/all/20250825200622.3759571-1-seanjc@google.com
-> > 
+Hi Greg, all,
+
+On 2/6/25 18:03, Greg KH wrote:
+> On Thu, Feb 06, 2025 at 04:37:02PM +0800, WangYuli wrote:
+>> Hi, Greg,
+>>
+>> It's rather unfortunate that currently, almost all Linux distributions
+>> supporting LoongArch are using LTS kernels version v6.6 or older, such as
+>> openEuler and deepin. [1][2]
+>>
+>> If this bugfix isn't merged into linux-stable, then every single distro
+>> kernel team will have to waste time fixing the same darn bug over and
+>> over, even though it's already fixed in later kernels.
+>>
+>> This would really make LTS look like it's failing to serve its intended
+>> purpose. And I'm sure all of us do not want to see something so terrible
+>> happen.
 > 
-> I dropped the mshv_vtl changes in this series and applied the rest
-> (including the KVM changes) to hyperv-next.
+> LTS is here to ensure that the original release of these branches, keeps
+> working for that branch.  Adding support for newer toolchains sometimes
+> happens, but is not a requirement or a normal thing to do as that really
+> isn't a "regression", right?
+> 
+> Most of the time, fixing things up for newer compilers is simple.
+> Sometimes it is not simple.  The "not simple" ones we usually just do
+> not backport as that causes extra work for everyone over time.
+> 
+> As for the distros like openEuler, and deepin, they are free to add
+> these patches there, on top of their other non-LTS patches, right?
+> 
+> thanks,
+> 
+> greg k-h
 
-mshv_do_pre_guest_mode_work() ended up getting left behind since its removal was
-in the last mshv_vtl patch.
+I'm writing to follow up on this important discussion. I have carefully
+read the entire thread, including your explanation of the LTS philosophy
+regarding support for new toolchains. I understand and respect the
+principle that LTS aims to maintain stability for the environment in
+which it was released, and that adapting to future toolchains is
+primarily a distributor's responsibility.
 
-  $ git grep mshv_do_pre_guest_mode_work
-  drivers/hv/mshv.h:int mshv_do_pre_guest_mode_work(ulong th_flags);
-  drivers/hv/mshv_common.c:int mshv_do_pre_guest_mode_work(ulong th_flags)
-  drivers/hv/mshv_common.c:EXPORT_SYMBOL_GPL(mshv_do_pre_guest_mode_work);
+However, I would like to respectfully ask for a reconsideration by
+framing this issue from a slightly different perspective, based on the
+excellent technical analysis provided by Xi Ruoyao and Ard Biesheuvel.
 
-Want to squash this into 3786d7d6b3c0 ("mshv: Use common "entry virt" APIs to do
-work in root before running guest")?
+This situation appears to be more than just an incompatibility with a
+"newer" toolchain. As Xi Ruoyao detailed, the older toolchains did not
+"work correctly" but instead had a silent bug that produced incorrect
+code for undefined weak symbols on LoongArch. The new binutils version
+did not introduce a regression, but rather, it correctly started
+erroring out on this problematic code pattern, thus exposing a
+pre-existing, latent issue.
 
----
- drivers/hv/mshv.h        |  2 --
- drivers/hv/mshv_common.c | 22 ----------------------
- 2 files changed, 24 deletions(-)
+ From this viewpoint, this patch series is less about "adding support for
+a new toolchain" and more about "fixing a latent bug that was previously
+hidden by silent toolchain defects."
 
-diff --git a/drivers/hv/mshv.h b/drivers/hv/mshv.h
-index 0340a67acd0a..d4813df92b9c 100644
---- a/drivers/hv/mshv.h
-+++ b/drivers/hv/mshv.h
-@@ -25,6 +25,4 @@ int hv_call_set_vp_registers(u32 vp_index, u64 partition_id, u16 count,
- int hv_call_get_partition_property(u64 partition_id, u64 property_code,
- 				   u64 *property_value);
- 
--int mshv_do_pre_guest_mode_work(ulong th_flags);
--
- #endif /* _MSHV_H */
-diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
-index eb3df3e296bb..aa2be51979fd 100644
---- a/drivers/hv/mshv_common.c
-+++ b/drivers/hv/mshv_common.c
-@@ -138,25 +138,3 @@ int hv_call_get_partition_property(u64 partition_id,
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(hv_call_get_partition_property);
--
--/*
-- * Handle any pre-processing before going into the guest mode on this cpu, most
-- * notably call schedule(). Must be invoked with both preemption and
-- * interrupts enabled.
-- *
-- * Returns: 0 on success, -errno on error.
-- */
--int mshv_do_pre_guest_mode_work(ulong th_flags)
--{
--	if (th_flags & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
--		return -EINTR;
--
--	if (th_flags & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
--		schedule();
--
--	if (th_flags & _TIF_NOTIFY_RESUME)
--		resume_user_mode_work(NULL);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(mshv_do_pre_guest_mode_work);
+Furthermore, the patches themselves, originally authored by Ard, 
+represent a clean, correct, and low-risk improvement. They were accepted 
+into the mainline not just as a workaround, but as a superior way to 
+handle these symbols, improving codegen for all architectures. 
+Backporting this series would therefore be applying a high-quality, 
+vetted bug fix that also has the fortunate side effect of resolving this 
+build failure.
 
-base-commit: 3786d7d6b3c0a412ebe4439ba4a7d4b0e27d9a12
---
+While the build failure currently only manifests on LoongArch, the
+underlying code improvement is generic. For a relatively new 
+architecture like LoongArch, ensuring that the primary LTS kernels are 
+usable with modern, widely-adopted toolchains is crucial for the health 
+and growth of its ecosystem within the broader Linux community. As 
+WangYuli pointed out, this would prevent fragmented efforts across 
+multiple distributions.
+
+In summary, we believe this case is exceptional because the patch fixes
+a latent issue exposed by a toolchain correction and represents a clean,
+mainline-accepted improvement. We would be very grateful if you could
+take another look at this series from this perspective.
+
+Thank you for your time.
+
+Best Regards,
+Robin
+
