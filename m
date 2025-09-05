@@ -1,118 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDA232F76C;
-	Fri,  5 Sep 2025 07:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FA5257825
+	for <loongarch@lists.linux.dev>; Fri,  5 Sep 2025 07:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757056152; cv=none; b=buMO+qa7gsxZCSnvvgoiz72FR7yALHFImNZP5h4mOaEdlpPPU9hkNiJ92nBFXZBEr8Qu/u4IuWGCTk9WVsyrLjVJU4+PLeKaXuxxMLIynPpoz3Du+MFN37GUFdozOjjkwg0T5QrzrVqDHNCdMpmpKM2CJATQbZFKgVYSuz0Ho+k=
+	t=1757058080; cv=none; b=OkQ8h4TzueogHT+WLgPQBTTm3RsAo6qrg6sXkVkEyjhd+az8VLlbQ4DuLC44vdohKN+rFEv2i56JUnuPbsPiF91jqxnDaMwrq4ViolbOjkJK8Hbq+zk95enWfWcLCjif0iUbEwGm3Cgh7OSb52IvSgv4EsSByWZzbk4p0ivP8Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757056152; c=relaxed/simple;
-	bh=uW6MvFBs8s7onCuHdD02j3rhqcGvGTFKLr5+U/ZCBNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EkN/YyCyHIgPLMBg7F3qVwCPlSl/9kNke1TdMUTbF61b9OX0b5UdDRjgvErorxQaUwTmyOTMioNT3GetAyTUhY+p2zxdqN8MYYc79ZeanVLEUja+vewiGkdZYu9UfiUGc42+Va1o28fXrffXcAOfpD8i2NCfRooQRAYOCcHKS6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kJrhCRVf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757058080; c=relaxed/simple;
+	bh=XOgAgqtP8AdI/ZiqUUOrcsnAl/+L4+N2dBwsUg7H+xo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=J+Y6Gt2Dqym5s4C9jVWbMTVftyKBXMBO7fBhV2veyztbjfhjpNYdNd6BYe7jriE3XTDIcPJ+NEE1oYDfAY/GDkDYCJQsbUXVwweRdcWll5lafmhGFuGdsbUDaR1jnCJ1KgOskm3MBfJJJdXTXudUhbXuE+2kyRcz6XqKiUfigug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aoC10umj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q0ajjj21; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kJrhCRVf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C477C4CEF1;
-	Fri,  5 Sep 2025 07:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1757056151;
-	bh=uW6MvFBs8s7onCuHdD02j3rhqcGvGTFKLr5+U/ZCBNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kJrhCRVfXTWCWu3txFyy9ohboIYaRM+La8MSMSlWRhC6cAVnNAiJTSxeIVAPxKmc1
-	 RbGcPOaCjVAJvmlIA3WJfFjWQpmuazpWp8gxNH+QF1R2CRvri0kc/bIHGE/EWC0Ri8
-	 K7xV1SL50L01pD8a2JxL9kvXbbFgpSPFQp/6gWMs=
-Date: Fri, 5 Sep 2025 09:09:08 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Ming Wang <wangming01@loongson.cn>
-Cc: WangYuli <wangyuli@uniontech.com>, ardb@kernel.org,
-	chenhuacai@kernel.org, chenhuacai@loongson.cn, kernel@xen0n.name,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, masahiroy@kernel.org, nathan@kernel.org,
-	ndesaulniers@google.com, nicolas@fjasle.eu, sashal@kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage where
- possible
-Message-ID: <2025090549-mannish-tremor-2469@gregkh>
-References: <2024120635-wham-campsite-b62b@gregkh>
- <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
- <2025020611-olive-gluten-fa45@gregkh>
- <17f2c722-a32b-482b-9363-6a415443fb40@loongson.cn>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aoC10umj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q0ajjj21"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1757058076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XOgAgqtP8AdI/ZiqUUOrcsnAl/+L4+N2dBwsUg7H+xo=;
+	b=aoC10umjTUQa7xE5qwG77ipt2x/l99uDdNMWZlOheHsaCbTrYW7OvzD05cQYJ0m8aouWTC
+	59/Kdprs5Wxuu77v/3XYGxHh1rIA75JxqO5sk2jHx/IH8hDSGIuSf/hq4hPgU1FVHW5UMd
+	Sa2AVBiB2LoiIxgeSkdArBJ2npOMWk9tZTaT9bsQpwFR0pG/zwXWcUmzcqczWAFByK99e3
+	pCD+FDJCQlyWFnHcrAbF/22BwzfFg8ijYzxguvQ8HotVwKLa5nTI9aTtK50A83tGD3QAX2
+	n1qHMJCrE7kAk9GAJU7BxVgfsOEduhJ8MJ8uSmMZyjZcOQRbNz7uAB8XJtp39Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1757058076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XOgAgqtP8AdI/ZiqUUOrcsnAl/+L4+N2dBwsUg7H+xo=;
+	b=Q0ajjj21DVV05pcwqafYB0prXaqnKHGB1iwePlY5FQ/F5081MZPzH0T3zwDUuFU+twBql2
+	VVicjwlucFe0IvAw==
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Xianglai Li
+ <lixianglai@loongson.cn>
+Subject: Re: [PATCH v2 1/2] tick: Remove unreasonable detached state set in
+ tick_shutdown()
+In-Reply-To: <5d9fe6d9-d694-6a46-96be-9f7306cd9be0@loongson.cn>
+References: <20250904071732.3513694-1-maobibo@loongson.cn>
+ <20250904071732.3513694-2-maobibo@loongson.cn> <87frd2xlat.ffs@tglx>
+ <5d9fe6d9-d694-6a46-96be-9f7306cd9be0@loongson.cn>
+Date: Fri, 05 Sep 2025 09:41:15 +0200
+Message-ID: <87y0qtwdlw.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17f2c722-a32b-482b-9363-6a415443fb40@loongson.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 05, 2025 at 02:49:44PM +0800, Ming Wang wrote:
-> Hi Greg, all,
-> 
-> On 2/6/25 18:03, Greg KH wrote:
-> > On Thu, Feb 06, 2025 at 04:37:02PM +0800, WangYuli wrote:
-> > > Hi, Greg,
-> > > 
-> > > It's rather unfortunate that currently, almost all Linux distributions
-> > > supporting LoongArch are using LTS kernels version v6.6 or older, such as
-> > > openEuler and deepin. [1][2]
-> > > 
-> > > If this bugfix isn't merged into linux-stable, then every single distro
-> > > kernel team will have to waste time fixing the same darn bug over and
-> > > over, even though it's already fixed in later kernels.
-> > > 
-> > > This would really make LTS look like it's failing to serve its intended
-> > > purpose. And I'm sure all of us do not want to see something so terrible
-> > > happen.
-> > 
-> > LTS is here to ensure that the original release of these branches, keeps
-> > working for that branch.  Adding support for newer toolchains sometimes
-> > happens, but is not a requirement or a normal thing to do as that really
-> > isn't a "regression", right?
-> > 
-> > Most of the time, fixing things up for newer compilers is simple.
-> > Sometimes it is not simple.  The "not simple" ones we usually just do
-> > not backport as that causes extra work for everyone over time.
-> > 
-> > As for the distros like openEuler, and deepin, they are free to add
-> > these patches there, on top of their other non-LTS patches, right?
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> I'm writing to follow up on this important discussion. I have carefully
-> read the entire thread, including your explanation of the LTS philosophy
-> regarding support for new toolchains. I understand and respect the
-> principle that LTS aims to maintain stability for the environment in
-> which it was released, and that adapting to future toolchains is
-> primarily a distributor's responsibility.
-> 
-> However, I would like to respectfully ask for a reconsideration by
-> framing this issue from a slightly different perspective, based on the
-> excellent technical analysis provided by Xi Ruoyao and Ard Biesheuvel.
+On Fri, Sep 05 2025 at 10:04, Bibo Mao wrote:
+> On 2025/9/4 =E4=B8=8B=E5=8D=8811:57, Thomas Gleixner wrote:
+>
+> It is not easy with my poor English to spell out the comments :(
+> How about the patch like this?
 
-<snip>
-
-i'm sorry, but for an email thread that happened 6+ months ago, it's a
-bit hard to try to remember anything involved in it.
-
-Heck, I can't remember an email thread from last week.
-
-Remember, some of us get 1000+ emails a day to deal with.
-
-If you feel a patch set should be applied to a stable tree, and it has
-been rejected in the past, feel free to resubmit it with all of the new
-information about why the previous rejection was wrong and why it really
-should be applied this time.  Otherwise, there's really nothing I could
-possibly do here as the patches are long gone from everyone's review
-queues.
-
-Also, why aren't you just using 6.12.y now?  :)
-
-thanks,
-
-greg k-h
+Looks about right.
