@@ -1,198 +1,175 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ADAB8834
-	for <loongarch@lists.linux.dev>; Fri,  5 Sep 2025 02:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1471F582F
+	for <loongarch@lists.linux.dev>; Fri,  5 Sep 2025 04:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757037987; cv=none; b=L6eNaZAjzowK8BqdEc5X6WJN3y7f4OQskcUInU6SSs5tYv6weX9Mqpk0suu5l/3KgtiCsFgvNvYU9Q4R6IyRg2VGPgjWLty3j74Onwp5nxnWBbVGFbvW+4Qld9EbViH71fMqB3AJPPvOqJ/8WKm5ct32kla6JQ4wfWUvdpADzO0=
+	t=1757046852; cv=none; b=Vn46BlhMFk2Majh6ClJ2jkO2XHnmPmE2wZG8OqXlknb1t6urReXB2Ea6xmdJSTYUuQ5MSE4XaEyUAkD5BvHs8oqXhqJ/DNGacAVEiopiwEWoqNNU2zUHhvGPaTHpiLIp/Z+G51AsUm6JuQQrzNUD16t+PfvggYL6lA+raun8PQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757037987; c=relaxed/simple;
-	bh=jWWA8e4f4ha2Dp6mGCmULD3qf2IKoMr5xgmCucDlwS0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Mauw9E0JQ4/78k+lrSAkmxg/VmmfiAqeiwLuvawZuyymZML7mkuDy99T0vnmXL8caAyMpAqLS44cs1vpiRalpWgAKxRmA2dfDfZXYBaaGZcS+GgmSeXYaeu9qcSPa0I0d566o4zMyT9WmOpkzgCFHpMPftlaWWv0e0wRqLQSKIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxxtCaRbpon+cGAA--.14317S3;
-	Fri, 05 Sep 2025 10:06:18 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxT+aVRbpoMER_AA--.7370S3;
-	Fri, 05 Sep 2025 10:06:18 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] tick: Remove unreasonable detached state set in
- tick_shutdown()
-To: Thomas Gleixner <tglx@linutronix.de>, Huacai Chen
- <chenhuacai@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Xianglai Li <lixianglai@loongson.cn>
-References: <20250904071732.3513694-1-maobibo@loongson.cn>
- <20250904071732.3513694-2-maobibo@loongson.cn> <87frd2xlat.ffs@tglx>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <5d9fe6d9-d694-6a46-96be-9f7306cd9be0@loongson.cn>
-Date: Fri, 5 Sep 2025 10:04:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1757046852; c=relaxed/simple;
+	bh=93eYOwzmhYqlVId6ScwG0fiTFyob9ZihP0QmlRDRW0U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ehuS5KDbunnnl031W2EIs3QjBkmQDXOCQuMy5VE7YbOYgkUaOKTUJVIjnSIZj67PIhcNaYqsMXeHBaDJiyzlZ60CVsS/8vGtKS0k90TBgx3cOCnLbJInvOSHFfMbcbUceUgpyItzq+OwbgC6RG5VO6J5TdOG3FLzDP1mhfsDYIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMA9ktnb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMA9ktnb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A148C4AF0B
+	for <loongarch@lists.linux.dev>; Fri,  5 Sep 2025 04:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757046852;
+	bh=93eYOwzmhYqlVId6ScwG0fiTFyob9ZihP0QmlRDRW0U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qMA9ktnbRuyc9CxJoNhUOhr0XDdk8khX4Bb/VwkOgm+3qiC447l2CoT1FB+ZL3V8T
+	 CEKUqRjUOXxx0Ct0ShTUZK3lR2uFnzm5Q+n8BTGneuc3CMv6kRMrRCU06aR3oqQT3b
+	 C8fTG0laYAIqySsqtsEVXG+ykTDCz5KLHTjVFi/we5M+XJA/jB7pQhvkj7kUAikXdA
+	 zudbG1A7+hlHIgZGNcdSay8hgLSoqB1IheyCk6Z2Hvvr5gigFHXSgONlLulezMqpH5
+	 AkDcQx0piyp2DCSzAwwSb1yygpobmHetCANaZg7UW3HUUfgwX1TRzyVuXnY8uYNLLz
+	 Ac7+SLzgFZvgw==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-61cd3748c6dso3365790a12.3
+        for <loongarch@lists.linux.dev>; Thu, 04 Sep 2025 21:34:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUQy0+D4YDeLC497cG6TE7lSZWPGUK/eOF3a738K/qs1POa1n0YnoZCHRl06Ue8mXSrmUbEng032Ug=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxK1GYWlz1oEfE8I31b0uxK7euaeXib37Uho9dTK/MJ60d+3qtI
+	QE2l3gHbf7SgR6vppwJoIL38dGZNBF32b0lbsXSZcnx0J+1r8LhCnkJPztWAtQn3CWJFJqqwl0h
+	0DGkWvke2ZkwD0mxqjabMwnVV2At6fQw=
+X-Google-Smtp-Source: AGHT+IEYnRnv6QyrFFLhU335oaNE1Pi7Pbzml+RbS5eygSj1BA3oxMC/GHg7k/yIqAzQswqXkSslAQ5J0kbs6d1oqdo=
+X-Received: by 2002:a05:6402:84e:b0:61a:9385:c78b with SMTP id
+ 4fb4d7f45d1cf-61d26ecf561mr18232926a12.38.1757046850740; Thu, 04 Sep 2025
+ 21:34:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87frd2xlat.ffs@tglx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxT+aVRbpoMER_AA--.7370S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Xry8Aw1DGF1DJrWDGw1DCFX_yoW7WryUpF
-	ykJF1YgrWkK3y0g3Waqw1kWF9xGay8Aws5Gw13G3s2krWrJryrtF4DKFWUAryrC39xZws2
-	qa4Fqr18CFWUAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
-	U
+References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
+ <20250901072156.31361-2-yangtiezhu@loongson.cn> <20250901081616.GA4067720@noisy.programming.kicks-ass.net>
+ <a59b3eaa-133d-88bf-f1f3-41328d023c4a@loongson.cn> <qvatvh7rixtdtaflqtgphlva7kkr47drijklkvmae3xh54vn6y@y5v75lwgjdyu>
+ <CAAhV-H5u4xHcuLhyPe+a_YqPoCX2uVoqcW94i=HvU1NooL_efg@mail.gmail.com> <mqyjt5cabahlvezowt6plurkyrrbputvg776rhgaxhpwsqnuq3@onr5svx5heuf>
+In-Reply-To: <mqyjt5cabahlvezowt6plurkyrrbputvg776rhgaxhpwsqnuq3@onr5svx5heuf>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 5 Sep 2025 12:33:58 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Cntwxo2XcPtB+zH0VE5J3N=Wb2Ad8RZ6DjwopGsXALw@mail.gmail.com>
+X-Gm-Features: Ac12FXz9jRiihPx90RyWQNG9n-1NNt8T63C-bXFnz9VDkt98kudWbfYzJncG-SY
+Message-ID: <CAAhV-H6Cntwxo2XcPtB+zH0VE5J3N=Wb2Ad8RZ6DjwopGsXALw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] objtool/LoongArch: Fix fall through warning about efi_boot_kernel()
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
+	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Josh,
 
+On Fri, Sep 5, 2025 at 1:26=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org>=
+ wrote:
+>
+> On Thu, Sep 04, 2025 at 10:17:11AM +0800, Huacai Chen wrote:
+> > Hi, Josh,
+> >
+> > On Thu, Sep 4, 2025 at 3:17=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.=
+org> wrote:
+> > >
+> > > On Mon, Sep 01, 2025 at 04:31:36PM +0800, Tiezhu Yang wrote:
+> > > > On 2025/9/1 =E4=B8=8B=E5=8D=884:16, Peter Zijlstra wrote:
+> > > > > On Mon, Sep 01, 2025 at 03:21:54PM +0800, Tiezhu Yang wrote:
+> > > > > > When compiling with LLVM and CONFIG_LTO_CLANG is set, there exi=
+sts
+> > > > > > the following objtool warning:
+> > > > > >
+> > > > > >    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
+> > > > > >    falls through to next function __efistub_exit_boot_func()
+> > > > > >
+> > > > > > This is because efi_boot_kernel() doesn't end with a return ins=
+truction
+> > > > > > or an unconditional jump, then objtool has determined that the =
+function
+> > > > > > can fall through into the next function.
+> > > > > >
+> > > > > > At the beginning, try to do something to make efi_boot_kernel()=
+ ends with
+> > > > > > an unconditional jump instruction, but it is not a proper way.
+> > > > > >
+> > > > > > After more analysis, one simple way is to ignore these EFISTUB =
+functions
+> > > > > > in validate_branch() of objtool since they are useless for stac=
+k unwinder.
+> > > > > >
+> > > > >
+> > > > > This is drivers/firmware/efi/libstub/loongarch.c:efi_boot_kernel(=
+),
+> > > > > right?
+> > > > >
+> > > > > Why not simply do something like:
+> > > > >
+> > > > > diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/f=
+irmware/efi/libstub/loongarch.c
+> > > > > index 3782d0a187d1..082611a5f1f0 100644
+> > > > > --- a/drivers/firmware/efi/libstub/loongarch.c
+> > > > > +++ b/drivers/firmware/efi/libstub/loongarch.c
+> > > > > @@ -81,4 +81,5 @@ efi_status_t efi_boot_kernel(void *handle, efi_=
+loaded_image_t *image,
+> > > > >     real_kernel_entry(true, (unsigned long)cmdline_ptr,
+> > > > >                       (unsigned long)efi_system_table);
+> > > > > +   BUG();
+> > > > >   }
+> > > >
+> > > > At the beginning, I did the above change, but no effect.
+> > > >
+> > > > The first thing is to remove the attribute __noreturn for
+> > > > real_kernel_entry(), otherwise the compiler can not generate
+> > > > instructions after that.
+> > > >
+> > > > But there is an argument in the previous RFC [1]:
+> > > >
+> > > > "From my point of view this is incorrect, this function is indeed a
+> > > > noreturn function, and this modification makes LoongArch different =
+to
+> > > > other architectures."
+> > > >
+> > > > Josh suggested to do something so that the EFI stub code isn't link=
+ed into
+> > > > vmlinux.o [2], it needs to modify the link process and seems too
+> > > > complicated and expensive for this warning to some extent.
+> > > >
+> > > > So I did this change for objtool.
+> > >
+> > > I don't like adding these workarounds to objtool.  Is it really that
+> > > complicated to link efistub separately?  That seems like the proper
+> > > design.  vmlinux.o should only have real kernel code.
+> > I don't think this is just a "workaround", ARM64, RISC-V and LoongArch
+> > share the same logic in efistub which may be different from X86. When
+> > ARM64 and RISC-V add objtool support, they will also need to ignore
+> > the __efistub_ functions.
+> >
+> > The other patch is similar.
+>
+> Objtool expects/enforces certain rules.  One of them is that vmlinux.o
+> is proper runtime kernel code.  efistub is not that.
+>
+> Is there some technical reason why vmlinux.o needs efistub linked in?
+I think so. For example, EFISTUB prefer to directly use screen_info
+that defined in vmlinux, see the comments in
+drivers/firmware/efi/libstub/screen_info.c:
 
-On 2025/9/4 下午11:57, Thomas Gleixner wrote:
-> On Thu, Sep 04 2025 at 15:17, Bibo Mao wrote:
->> Function clockevents_switch_state() will check whether it has already
->> switched to specified state, do nothing if it has.
->>
->> In function tick_shutdown(), it will set detached state at first and
->> call clockevents_switch_state() in clockevents_exchange_device(). The
->> function clockevents_switch_state() will do nothing since it is already
->> detached state. So the tick timer device will not be shutdown when CPU
->> is offline. In guest VM system, timer interrupt will prevent vCPU to
->> sleep if vCPU is hot removed.
->>
->> Here remove state set before calling clockevents_exchange_device(),
->> its state will be set in function clockevents_switch_state() if it
->> succeeds to do so.
-> 
-> This explanation is incomplete. tick_shutdown() did this because it was
-> originally invoked on a life CPU and not on the outgoing CPU.
-> 
-> That got changed in
-> 
->    3b1596a21fbf ("clockevents: Shutdown and unregister current clockevents at CPUHP_AP_TICK_DYING")
-> 
-> which is the actual root cause.
-> 
-> The pile of 'Fixes:' below is just enumerating the subsequent problems.
-> 
->> Fixes: bf9a001fb8e4 ("clocksource/drivers/timer-tegra: Remove clockevents shutdown call on offlining")
->> Fixes: cd165ce8314f ("clocksource/drivers/qcom: Remove clockevents shutdown call on offlining")
->> Fixes: 30f8c70a85bc ("clocksource/drivers/armada-370-xp: Remove clockevents shutdown call on offlining")
->> Fixes: ba23b6c7f974 ("clocksource/drivers/exynos_mct: Remove clockevents shutdown call on offlining")
->> Fixes: 15b810e0496e ("clocksource/drivers/arm_global_timer: Remove clockevents shutdown call on offlining")
->> Fixes: 78b5c2ca5f27 ("clocksource/drivers/arm_arch_timer: Remove clockevents shutdown call on offlining")
->> Fixes: 900053d9eedf ("ARM: smp_twd: Remove clockevents shutdown call on offlining")
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
->> ---
->>   kernel/time/tick-common.c | 5 -----
->>   1 file changed, 5 deletions(-)
->>
->> diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
->> index 9a3859443c04..eb9b777f5492 100644
->> --- a/kernel/time/tick-common.c
->> +++ b/kernel/time/tick-common.c
->> @@ -424,11 +424,6 @@ void tick_shutdown(unsigned int cpu)
->>   
->>   	td->mode = TICKDEV_MODE_PERIODIC;
->>   	if (dev) {
->> -		/*
->> -		 * Prevent that the clock events layer tries to call
->> -		 * the set mode function!
->> -		 */
->> -		clockevent_set_state(dev, CLOCK_EVT_STATE_DETACHED);
->>   		clockevents_exchange_device(dev, NULL);
->>   		dev->event_handler = clockevents_handle_noop;
->>   		td->evtdev = NULL;
-> 
-> Can this pretty please cleanup the misleading comment above
-> tick_shutdown() as well?
-> 
->   * Shutdown an event device on a given cpu:
->   *
->   * This is called on a life CPU, when a CPU is dead. So we cannot
->   * access the hardware device itself.
->   * We just set the mode and remove it from the lists.
-> 
-> That should have been removed or updated with 3b1596a21fbf too, no?
-> 
-> With that the cpu argument is not longer useful either, because this is
-> now guaranteed to be invoked on the outgoing CPU, no?
+/*
+ * There are two ways of populating the core kernel's struct
+screen_info via the stub:
+ * - using a configuration table, like below, which relies on the EFI init =
+code
+ *   to locate the table and copy the contents;
+ * - by linking directly to the core kernel's copy of the global symbol.
+ *
+ * The latter is preferred because it makes the EFIFB earlycon available ve=
+ry
+ * early, but it only works if the EFI stub is part of the core kernel imag=
+e
+ * itself. The zboot decompressor can only use the configuration table
+ * approach.
+ */
 
-It is not easy with my poor English to spell out the comments :(
-How about the patch like this?
+Huacai
 
-Function clockevents_switch_state() will check whether it has already
-switched to specified state, do nothing if it has.
-
-In function tick_shutdown(), it will set detached state at first and
-call clockevents_switch_state() in clockevents_exchange_device(). The
-function clockevents_switch_state() will do nothing since it is already
-detached state. So the tick timer device will not be shutdown when CPU
-is offline.
-
-Function tick_shutdown() did this because it was originally invoked
-on a life CPU and not on the outgoing CPU. Now this function is called
-on the outgoing CPU, the hardware device can be accessed.
-
-Here remove state set before calling clockevents_exchange_device(), its
-state will be set in function clockevents_switch_state() if it succeeds
-to do so.
-
-Fixes: 3b1596a21fbf ("clockevents: Shutdown and unregister current 
-clockevents at CPUHP_AP_TICK_DYING")
-
-
-  /*
-- * Shutdown an event device on a given cpu:
-+ * Shutdown an event device on the outgoing CPU:
-   *
-- * This is called on a life CPU, when a CPU is dead. So we cannot
-- * access the hardware device itself.
-- * We just set the mode and remove it from the lists.
-+ * Called by the dying CPU during teardown, with clockevents_lock held
-+ * and interrupts disabled.
-   */
--void tick_shutdown(unsigned int cpu)
-+void tick_shutdown(void)
-  {
--       struct tick_device *td = &per_cpu(tick_cpu_device, cpu);
-+       struct tick_device *td = this_cpu_ptr(&tick_cpu_device);
-         struct clock_event_device *dev = td->evtdev;
-
-         td->mode = TICKDEV_MODE_PERIODIC;
-         if (dev) {
--               /*
--                * Prevent that the clock events layer tries to call
--                * the set mode function!
--                */
--               clockevent_set_state(dev, CLOCK_EVT_STATE_DETACHED);
-                 clockevents_exchange_device(dev, NULL);
-                 dev->event_handler = clockevents_handle_noop;
-                 td->evtdev = NULL;
-
-Regards
-Bibo Mao
-> 
-> Thanks,
-> 
->          tglx
-> 
-
+>
+> --
+> Josh
