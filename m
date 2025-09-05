@@ -1,145 +1,111 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E52A30AD1A
-	for <loongarch@lists.linux.dev>; Fri,  5 Sep 2025 08:29:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B5062868B3
+	for <loongarch@lists.linux.dev>; Fri,  5 Sep 2025 09:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757060954; cv=none; b=a2gvHspDbSrlnhOBoCASXt9fqfMks9C8eZcYEqb6PPa5TwkSfIh8MtMYjfw9REivNrY2sffnmFGbNuL+RJ1/zCdIfLA/XuqBIJ6wqz8PN4Bkx0RQb/f2ZYpFVkUMcUWlQ2ngcIpyVZw8Qxz2JNDEmjn9RSAPpcAzST48m5vE5gA=
+	t=1757066006; cv=none; b=OFt+WRazrvdKtn9jEJHTEJa3jVmtmpTwmYWCpvvEjLnKWcEJlR7chg8NjjRmG8xMG8VsIV+1lReo4afbG1Ob0PapmMHyH83AgNbUEjwtohDic1vC8AZVpO3eJ4pW3dwI33oaHd9pctVNIxlIH5BjwCVezusMxUxzOYvLKedbwvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757060954; c=relaxed/simple;
-	bh=uFpqLHJ/iwW5TixEGbiXanXB+kW0ltZ8ZAKzxsK5NzQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=po4Lj33O1xlp+42QyIPSro4oKbqBwF1PC1Aw0H1hBYuwoWvhsk6TsuZRS5thCUh3a27XVYRbgB20Lv9iWXa9FNDVZXYDbSX1otJSGtQv1HBTlsK10jpWl++FydFahP1ejYTxIot/nal5q8iGB9sRNqEGbZQR+IOuCxkMFKJY/v0=
+	s=arc-20240116; t=1757066006; c=relaxed/simple;
+	bh=TA/IRpMoFzaGCaODu0EFqNFBZRbPPnCaAi9dH1MgABc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Wdyu9XeWu9G2OqYf35GWQnzsIfQCXM4H+wGmqzMw/ynCkvy4hchrpRpUvx0lq1BH4UgeDsy9XxPXRG3yg10JrEI25AD3GaTjv9ImLEW0NwVl0gmSfGUyrDHRZVMtWK4Cyxooxs7b6AdBuzUICyvWc3HfmNtedxcN6/eEfA4+/KE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [124.127.223.97])
-	by gateway (Coremail) with SMTP id _____8DxP9NSn7po7v8GAA--.14495S3;
-	Fri, 05 Sep 2025 16:29:06 +0800 (CST)
-Received: from [127.0.0.1] (unknown [124.127.223.97])
-	by front1 (Coremail) with SMTP id qMiowJDxK8FQn7poxr9_AA--.3881S2;
-	Fri, 05 Sep 2025 16:29:05 +0800 (CST)
-Message-ID: <e08c4462-7ecd-4c2a-bd08-c38ec148b5c8@loongson.cn>
-Date: Fri, 5 Sep 2025 16:29:04 +0800
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxT_AKs7poYggHAA--.14864S3;
+	Fri, 05 Sep 2025 17:53:15 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxzsEJs7poud1_AA--.49582S3;
+	Fri, 05 Sep 2025 17:53:14 +0800 (CST)
+Subject: Re: [PATCH v1 1/3] objtool/LoongArch: Fix fall through warning about
+ efi_boot_kernel()
+To: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+ Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250901072156.31361-1-yangtiezhu@loongson.cn>
+ <20250901072156.31361-2-yangtiezhu@loongson.cn>
+ <20250901081616.GA4067720@noisy.programming.kicks-ass.net>
+ <a59b3eaa-133d-88bf-f1f3-41328d023c4a@loongson.cn>
+ <qvatvh7rixtdtaflqtgphlva7kkr47drijklkvmae3xh54vn6y@y5v75lwgjdyu>
+ <CAAhV-H5u4xHcuLhyPe+a_YqPoCX2uVoqcW94i=HvU1NooL_efg@mail.gmail.com>
+ <mqyjt5cabahlvezowt6plurkyrrbputvg776rhgaxhpwsqnuq3@onr5svx5heuf>
+ <CAAhV-H6Cntwxo2XcPtB+zH0VE5J3N=Wb2Ad8RZ6DjwopGsXALw@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <75cae289-8717-85e7-1d86-a2736010d99c@loongson.cn>
+Date: Fri, 5 Sep 2025 17:53:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage where
- possible
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: WangYuli <wangyuli@uniontech.com>, ardb@kernel.org,
- chenhuacai@kernel.org, chenhuacai@loongson.cn, kernel@xen0n.name,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, masahiroy@kernel.org, nathan@kernel.org,
- ndesaulniers@google.com, nicolas@fjasle.eu, sashal@kernel.org,
- stable@vger.kernel.org
-References: <2024120635-wham-campsite-b62b@gregkh>
- <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
- <2025020611-olive-gluten-fa45@gregkh>
- <17f2c722-a32b-482b-9363-6a415443fb40@loongson.cn>
- <2025090549-mannish-tremor-2469@gregkh>
+In-Reply-To: <CAAhV-H6Cntwxo2XcPtB+zH0VE5J3N=Wb2Ad8RZ6DjwopGsXALw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Ming Wang <wangming01@loongson.cn>
-In-Reply-To: <2025090549-mannish-tremor-2469@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowJDxK8FQn7poxr9_AA--.3881S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAQEQEmi6e6UDhwABsL
-X-Coremail-Antispam: 1Uk129KBj93XoWxXFykCFW7Ar15CF15Aw4rXrc_yoW5AF1fp3
-	y7K3Wjkr4DJrn7Cwn2vw40vFyjy3yxJF98Gr98GryDC390vF1aqr43XF4Y9FyDur1rCry2
-	qr4Yqas7ua15ZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxzsEJs7poud1_AA--.49582S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uF15AF15ur4xZF1kuF13KFX_yoW8JFW7pF
+	W0qrWxKF4kJF4xArn7X3y09Fy3W3s7t3s0kwn8Wry5Aa4DJr1Svr12gr15uFZ8Xr4xta12
+	vr1Yq342kayDGrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20x
-	vEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I
-	3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJV
-	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
-	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY
-	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxzVbDUUUU
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU89iSPUUUUU==
 
-Hi Greg,
+Hi Josh,
 
-On 9/5/25 15:09, Greg KH wrote:
-> On Fri, Sep 05, 2025 at 02:49:44PM +0800, Ming Wang wrote:
->> Hi Greg, all,
+On 2025/9/5 下午12:33, Huacai Chen wrote:
+> Hi, Josh,
+> 
+> On Fri, Sep 5, 2025 at 1:26 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 >>
->> On 2/6/25 18:03, Greg KH wrote:
->>> On Thu, Feb 06, 2025 at 04:37:02PM +0800, WangYuli wrote:
->>>> Hi, Greg,
->>>>
->>>> It's rather unfortunate that currently, almost all Linux distributions
->>>> supporting LoongArch are using LTS kernels version v6.6 or older, such as
->>>> openEuler and deepin. [1][2]
->>>>
->>>> If this bugfix isn't merged into linux-stable, then every single distro
->>>> kernel team will have to waste time fixing the same darn bug over and
->>>> over, even though it's already fixed in later kernels.
->>>>
->>>> This would really make LTS look like it's failing to serve its intended
->>>> purpose. And I'm sure all of us do not want to see something so terrible
->>>> happen.
->>>
->>> LTS is here to ensure that the original release of these branches, keeps
->>> working for that branch.  Adding support for newer toolchains sometimes
->>> happens, but is not a requirement or a normal thing to do as that really
->>> isn't a "regression", right?
->>>
->>> Most of the time, fixing things up for newer compilers is simple.
->>> Sometimes it is not simple.  The "not simple" ones we usually just do
->>> not backport as that causes extra work for everyone over time.
->>>
->>> As for the distros like openEuler, and deepin, they are free to add
->>> these patches there, on top of their other non-LTS patches, right?
->>>
->>> thanks,
->>>
->>> greg k-h
->>
->> I'm writing to follow up on this important discussion. I have carefully
->> read the entire thread, including your explanation of the LTS philosophy
->> regarding support for new toolchains. I understand and respect the
->> principle that LTS aims to maintain stability for the environment in
->> which it was released, and that adapting to future toolchains is
->> primarily a distributor's responsibility.
->>
->> However, I would like to respectfully ask for a reconsideration by
->> framing this issue from a slightly different perspective, based on the
->> excellent technical analysis provided by Xi Ruoyao and Ard Biesheuvel.
-> 
-> <snip>
-> 
-> i'm sorry, but for an email thread that happened 6+ months ago, it's a
-> bit hard to try to remember anything involved in it.
-> 
-> Heck, I can't remember an email thread from last week.
-> 
-> Remember, some of us get 1000+ emails a day to deal with.
-> 
-> If you feel a patch set should be applied to a stable tree, and it has
-> been rejected in the past, feel free to resubmit it with all of the new
-> information about why the previous rejection was wrong and why it really
-> should be applied this time.  Otherwise, there's really nothing I could
-> possibly do here as the patches are long gone from everyone's review
-> queues.
-> 
-> Also, why aren't you just using 6.12.y now?  :)
-> 
-> thanks,
-> 
-> greg k-h
+>> On Thu, Sep 04, 2025 at 10:17:11AM +0800, Huacai Chen wrote:
 
-Thank you for the quick reply.You've raised a very fair point about 
-moving to a newer kernel. Thanks again for your time and the guidance.
+...
 
-Best Regards,
-Robin
+>> Is there some technical reason why vmlinux.o needs efistub linked in?
+> I think so. For example, EFISTUB prefer to directly use screen_info
+> that defined in vmlinux, see the comments in
+> drivers/firmware/efi/libstub/screen_info.c:
+> 
+> /*
+>   * There are two ways of populating the core kernel's struct
+> screen_info via the stub:
+>   * - using a configuration table, like below, which relies on the EFI init code
+>   *   to locate the table and copy the contents;
+>   * - by linking directly to the core kernel's copy of the global symbol.
+>   *
+>   * The latter is preferred because it makes the EFIFB earlycon available very
+>   * early, but it only works if the EFI stub is part of the core kernel image
+>   * itself. The zboot decompressor can only use the configuration table
+>   * approach.
+>   */
+
+I wonder what is the final conclusion.
+
+(1) For patch #1 and #2, keep the code as is and just update
+the commit message.
+
+(2) For patch #3, replace UNWIND_HINT_UNDEFINED with
+UNWIND_HINT_END_OF_STACK and remove is_entry_func().
+
+If there are any more comments, please let me know.
+
+Thanks,
+Tiezhu
 
