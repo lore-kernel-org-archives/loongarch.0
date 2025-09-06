@@ -1,138 +1,161 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8D9D2797AD
-	for <loongarch@lists.linux.dev>; Sat,  6 Sep 2025 06:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A340716F265
+	for <loongarch@lists.linux.dev>; Sat,  6 Sep 2025 10:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757141406; cv=none; b=rGSPRP4/3lwtyPHHSCJzf6adV0shluY2rfaXrQlex6f5xFFk+C6jyTd1YazjD9jMY/K0ozdxXfDNglrKNx2dPEepkw4fz8jQzH0jCXbPMo4jUh4RmH98yRJsnZFOhzFnsiS83zGrKlk8J4u9vCTeq6sR2AyU4WrudhFAP5hMaaM=
+	t=1757153594; cv=none; b=gCdKllENzOmZSeuynz4p+fC79Nfac+I2/trrpjusje3JI/zgCNmoe+uc//e9tUKd0IosTUCoTeTPwAfUe7ZI/ERoyrMHPjWTRgjWno3BgVbHzAFygsqSkVK5qYb0rCm4lgrIn6ZLEB2V8o8EmJKj5GbCpUothC+NQzZB4td4eiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757141406; c=relaxed/simple;
-	bh=LlUX4MJaaSh7LZmA9f9FS/sywguLW+RUIRJ8UNXhu8w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eKzDlBgTbWgl9E5kZNaOUkYSYvEQK7p7ZQsHXD+u+i0ypH2bHcf6bT77hpTMvd2n2UkJrsRFEp3fHcNuowc8tMI+ERQ7JQluGg8BurCihiE0plunRDpRBiJ5MGyykwv3+mZrBDHxX4hANik5tZJb99D11qs1fsZgfViPbDobjKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Bxnr+U2btooVcHAA--.14497S3;
-	Sat, 06 Sep 2025 14:49:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJDx_8OQ2btoJZuBAA--.17141S3;
-	Sat, 06 Sep 2025 14:49:56 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Xianglai Li <lixianglai@loongson.cn>
-Subject: [PATCH v3 1/2] tick: Remove unreasonable detached state set in tick_shutdown()
-Date: Sat,  6 Sep 2025 14:49:51 +0800
-Message-Id: <20250906064952.3749122-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250906064952.3749122-1-maobibo@loongson.cn>
-References: <20250906064952.3749122-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1757153594; c=relaxed/simple;
+	bh=ByOyrmhw76sib+QC/DJ6J5eB0YKm5Is8sHXtlb8k4h0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nFN6M5GiYMyAYRBMZEtMMqvoy6gH02Gjvd32qapZYQyqs7YnvOTcYGx7WbkLlRKxgh4GmgheE+F3LMDebsGXf+CgltyFhWyaM2lZRoaJ3X9mgXEctQgWBlQVuGr5RqhDQE2Yt3pKS6aZj1lN2BT3fdZFvgeHJrP+fQG0wP0akNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VzjDEbJs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VzjDEbJs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77824C4CEF5
+	for <loongarch@lists.linux.dev>; Sat,  6 Sep 2025 10:13:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757153594;
+	bh=ByOyrmhw76sib+QC/DJ6J5eB0YKm5Is8sHXtlb8k4h0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VzjDEbJsBI1t1KRfad2SrgQsTlU7cw8xn2wieA02kasSBzGR9g98kmqiV9aZhnulT
+	 zwA4ifPkoKEdgJeVHqEtCcS7adH6gjAPkRBLHAz8di2hz/K9/gfHNf94X8zlgZACyK
+	 dE5xLySOJHiQZ6T/wNziqDcefh8t7wFN8egSuQTXwVERaDRI3IklKkNluzOcZKcaZu
+	 IJDLJTOpiRi/4aySxttaUoIEo72Y99+Mkjio4cyJJ4bbh7tQVyZp/B/5EluoAJ6mPr
+	 w9Gh6fmLLfxGBSjZG2g3H85tMl8maC2F7LcyTBZcYCnfSDEd98j+pCAHnWghBnO1we
+	 bZ+vRPKiiusbQ==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-61cb4374d2fso4484911a12.2
+        for <loongarch@lists.linux.dev>; Sat, 06 Sep 2025 03:13:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUAk4+nz+byMoq4WiAfiBvJo8jV+0F5VwW4SQkkvelWEli/jtnlnm4bn75O5S3kT3R9yw5HizHGFbs=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx/XlfyRzMlez/zUwCjXJtEHARnyHrlrRQqYjVIYimVB/u6bXsw
+	CRmEmupArLC3B0L6c2Xyvj0TYhuh9gBPtvxtIe3fU00MYV3tWddCZo2wi1x/99ob/AFTec/D1eo
+	fEsQ/iK6xKZWUc3G1Lv+hAChkjl0klp0=
+X-Google-Smtp-Source: AGHT+IFEMzcpjb1F7HrVerRmNEAClo3vMkaFyoQwQqbZwmYnq/aFQUripeKqB1JRCdMek9nRuVaw+OrWqYjQ4KyAFVQ=
+X-Received: by 2002:a05:6402:1ed3:b0:61c:7a45:583a with SMTP id
+ 4fb4d7f45d1cf-6237b8740cfmr1867207a12.10.1757153593035; Sat, 06 Sep 2025
+ 03:13:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDx_8OQ2btoJZuBAA--.17141S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20250804081946.1456573-1-maobibo@loongson.cn> <20250804081946.1456573-2-maobibo@loongson.cn>
+In-Reply-To: <20250804081946.1456573-2-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 6 Sep 2025 18:13:00 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H76VOW2yzqUZznUzXAx-bDRjLjtyVe2KmMpEkg_hZT8YQ@mail.gmail.com>
+X-Gm-Features: Ac12FXxqfcbVS0Oym9-liirSElqMSdq0UiJiq0Bqz9Z7H5gY7RTp5ic7UgEqCgU
+Message-ID: <CAAhV-H76VOW2yzqUZznUzXAx-bDRjLjtyVe2KmMpEkg_hZT8YQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] irqchip/loongson-eiointc: Route interrupt parsed
+ from bios table
+To: Bibo Mao <maobibo@loongson.cn>, Mingcong Bai <jeffbai@aosc.io>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Thomas Gleixner <tglx@linutronix.de>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Function clockevents_switch_state() will check whether it has already
-switched to specified state, do nothing if it has.
+Hi, Mingcong,
 
-In function tick_shutdown(), it will set detached state at first and
-call clockevents_switch_state() in clockevents_exchange_device(). The
-function clockevents_switch_state() will do nothing since it is already
-detached state. So the tick timer device will not be shutdown when CPU
-is offline.
+On Mon, Aug 4, 2025 at 4:19=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+> Interrupt controller eiointc routes irq to cpu interface IP0 - IP7,
+> now it is hard-coded that eiointc routes irq to CPU started from IP1,
+> however with function irq_create_mapping() parameter parent hwirq
+> uses irq parsed from ACPI or DTS table.
+>
+> Routed interrupt pin need be the consistent with parent hwirq.
+I remember that you want to test as many machine types as possible,
+have you completed it?
 
-Function tick_shutdown() did this because it was originally invoked
-on a life CPU and not on the outgoing CPU. Now this function is called
-on the outgoing CPU, the hardware device can be accessed.
 
-Here remove state set before calling clockevents_exchange_device(), its
-state will be set in function clockevents_switch_state() if it succeeds
-to do so.
+Huacai
 
-Fixes: 3b1596a21fbf ("clockevents: Shutdown and unregister current clockevents at CPUHP_AP_TICK_DYING")
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
----
- kernel/time/clockevents.c   |  2 +-
- kernel/time/tick-common.c   | 16 +++++-----------
- kernel/time/tick-internal.h |  2 +-
- 3 files changed, 7 insertions(+), 13 deletions(-)
-
-diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
-index f3e831f62906..a59bc75ab7c5 100644
---- a/kernel/time/clockevents.c
-+++ b/kernel/time/clockevents.c
-@@ -633,7 +633,7 @@ void tick_offline_cpu(unsigned int cpu)
- 	raw_spin_lock(&clockevents_lock);
- 
- 	tick_broadcast_offline(cpu);
--	tick_shutdown(cpu);
-+	tick_shutdown();
- 
- 	/*
- 	 * Unregister the clock event devices which were
-diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-index 9a3859443c04..7e33d3f2e889 100644
---- a/kernel/time/tick-common.c
-+++ b/kernel/time/tick-common.c
-@@ -411,24 +411,18 @@ int tick_cpu_dying(unsigned int dying_cpu)
- }
- 
- /*
-- * Shutdown an event device on a given cpu:
-+ * Shutdown an event device on the outgoing CPU:
-  *
-- * This is called on a life CPU, when a CPU is dead. So we cannot
-- * access the hardware device itself.
-- * We just set the mode and remove it from the lists.
-+ * Called by the dying CPU during teardown, with clockevents_lock held
-+ * and interrupts disabled.
-  */
--void tick_shutdown(unsigned int cpu)
-+void tick_shutdown(void)
- {
--	struct tick_device *td = &per_cpu(tick_cpu_device, cpu);
-+	struct tick_device *td = this_cpu_ptr(&tick_cpu_device);
- 	struct clock_event_device *dev = td->evtdev;
- 
- 	td->mode = TICKDEV_MODE_PERIODIC;
- 	if (dev) {
--		/*
--		 * Prevent that the clock events layer tries to call
--		 * the set mode function!
--		 */
--		clockevent_set_state(dev, CLOCK_EVT_STATE_DETACHED);
- 		clockevents_exchange_device(dev, NULL);
- 		dev->event_handler = clockevents_handle_noop;
- 		td->evtdev = NULL;
-diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
-index faac36de35b9..4e4f7bbe2a64 100644
---- a/kernel/time/tick-internal.h
-+++ b/kernel/time/tick-internal.h
-@@ -26,7 +26,7 @@ extern void tick_setup_periodic(struct clock_event_device *dev, int broadcast);
- extern void tick_handle_periodic(struct clock_event_device *dev);
- extern void tick_check_new_device(struct clock_event_device *dev);
- extern void tick_offline_cpu(unsigned int cpu);
--extern void tick_shutdown(unsigned int cpu);
-+extern void tick_shutdown(void);
- extern void tick_suspend(void);
- extern void tick_resume(void);
- extern bool tick_check_replacement(struct clock_event_device *curdev,
--- 
-2.39.3
-
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  drivers/irqchip/irq-loongson-eiointc.c | 19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq=
+-loongson-eiointc.c
+> index b2860eb2d32c..3e987d1232d2 100644
+> --- a/drivers/irqchip/irq-loongson-eiointc.c
+> +++ b/drivers/irqchip/irq-loongson-eiointc.c
+> @@ -68,6 +68,7 @@ struct eiointc_priv {
+>         struct fwnode_handle    *domain_handle;
+>         struct irq_domain       *eiointc_domain;
+>         int                     flags;
+> +       irq_hw_number_t         parent_hwirq;
+>  };
+>
+>  static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
+> @@ -211,7 +212,12 @@ static int eiointc_router_init(unsigned int cpu)
+>                 }
+>
+>                 for (i =3D 0; i < eiointc_priv[0]->vec_count / 32 / 4; i+=
++) {
+> -                       bit =3D BIT(1 + index); /* Route to IP[1 + index]=
+ */
+> +                       /*
+> +                        * Route to interrupt pin, relative offset used h=
+ere
+> +                        * Offset 0 means routing to IP0 and so on
+> +                        * Every 32 vector routing to one interrupt pin
+> +                        */
+> +                       bit =3D BIT(eiointc_priv[index]->parent_hwirq - I=
+NT_HWI0);
+>                         data =3D bit | (bit << 8) | (bit << 16) | (bit <<=
+ 24);
+>                         iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
+>                 }
+> @@ -495,7 +501,7 @@ int __init eiointc_acpi_init(struct irq_domain *paren=
+t,
+>
+>         priv->vec_count =3D VEC_COUNT;
+>         priv->node =3D acpi_eiointc->node;
+> -
+> +       priv->parent_hwirq =3D acpi_eiointc->cascade;
+>         parent_irq =3D irq_create_mapping(parent, acpi_eiointc->cascade);
+>
+>         ret =3D eiointc_init(priv, parent_irq, acpi_eiointc->node_map);
+> @@ -529,6 +535,7 @@ static int __init eiointc_of_init(struct device_node =
+*of_node,
+>  {
+>         int parent_irq, ret;
+>         struct eiointc_priv *priv;
+> +       struct irq_data *irq_data;
+>
+>         priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
+>         if (!priv)
+> @@ -544,6 +551,12 @@ static int __init eiointc_of_init(struct device_node=
+ *of_node,
+>         if (ret < 0)
+>                 goto out_free_priv;
+>
+> +       irq_data =3D irq_get_irq_data(parent_irq);
+> +       if (!irq_data) {
+> +               ret =3D -ENODEV;
+> +               goto out_free_priv;
+> +       }
+> +
+>         /*
+>          * In particular, the number of devices supported by the LS2K0500
+>          * extended I/O interrupt vector is 128.
+> @@ -552,7 +565,7 @@ static int __init eiointc_of_init(struct device_node =
+*of_node,
+>                 priv->vec_count =3D 128;
+>         else
+>                 priv->vec_count =3D VEC_COUNT;
+> -
+> +       priv->parent_hwirq =3D irqd_to_hwirq(irq_data);
+>         priv->node =3D 0;
+>         priv->domain_handle =3D of_fwnode_handle(of_node);
+>
+> --
+> 2.39.3
+>
