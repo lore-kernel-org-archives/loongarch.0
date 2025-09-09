@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7974832C322
-	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 12:11:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B73AC32C324
+	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 12:11:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757419912; cv=none; b=VN1IsHTXyW/9SYq5juUlfIfmbcBTDPfUXVPK1EDOjlNE0DKWhESL1yz6F8Sev3FcJlrCvlAGwXW+yd4jN8A6+VDJPkGtoKRjcUKT9RTLfoQ0dwr0WUJI7rPtMl926Hf7pNn7X1jt3sdL33G7hisZU7/6L3B6ycMLoGWAiwj9sic=
+	t=1757419913; cv=none; b=NPclJEcL47lSXEpu1p1kMRtTt0byjavvvx3362CWlTaEuZYwgq61kQXf9FIb4e86n/OUNFlNTKADzRCi9U4WK9s5GR/iKqmKyjnYfLTf9oVYYTMnSG+QDKOFvE+x2AA7GXAQq8KNLUXmNYNx3hsQYxqHSh3oexJ/zAvRtXgIOOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757419912; c=relaxed/simple;
-	bh=dr+Bf1C/48UjbM5tX+sSGLrFuTY17HEZbGu903l4oeo=;
+	s=arc-20240116; t=1757419913; c=relaxed/simple;
+	bh=Bqcfq/5hvvyukGL3kkXiQQnws5gX06F+lhFQbamJsBA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O5jAh5UMYvyn5KQ/Qotu3J0pfO+Eaa4KxcJ1qr3TVXPwYHgYUfq6qYi1NNJRoLh5Z7ajY+HWqOMJzA8aOdu04fspW6FRisIP6t7lO6hRk2o2YjrY38PvW7Y6u1EWTaP1GSJtLQzLnn59axBfchGEEmAmPXL2NwGsgepArtsATyI=
+	 MIME-Version; b=FEPsgGSiQDNcqlsjn8oL+Vo592VNgVuwM/+8L0GSFmCKJiO1EgAS6SzPm1VgjU/s+v4vcm5fGanjRKbHUnw/Z5Dd+hy4zygPQZgrQ/gB6ZiFOqt2Tbif50847YHxeiiX6RmkIUvAb1GD96C1u+g9oQ+Pb8FpBCV+zWoyZf0tcmE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.89])
-	by gateway (Coremail) with SMTP id _____8CxHvB_GcBoel0IAA--.17937S3;
-	Tue, 09 Sep 2025 20:11:43 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxP9OBGcBog10IAA--.17412S3;
+	Tue, 09 Sep 2025 20:11:45 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.89])
-	by front1 (Coremail) with SMTP id qMiowJCxH8JzGcBoOzSKAA--.57626S4;
-	Tue, 09 Sep 2025 20:11:42 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJCxH8JzGcBoOzSKAA--.57626S5;
+	Tue, 09 Sep 2025 20:11:45 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -33,9 +33,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v4 2/3] serial: 8250: Add Loongson uart driver support
-Date: Tue,  9 Sep 2025 20:11:19 +0800
-Message-ID: <91ae8cd4f903ac452e337e4662bbabf8a412b061.1757318368.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v4 3/3] LoongArch: dts: Add uart new compatible string
+Date: Tue,  9 Sep 2025 20:11:20 +0800
+Message-ID: <2f93b8f20c6e93a15258888998e926814bfd0adf.1757318368.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1757318368.git.zhoubinbin@loongson.cn>
 References: <cover.1757318368.git.zhoubinbin@loongson.cn>
@@ -46,14 +46,14 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxH8JzGcBoOzSKAA--.57626S4
+X-CM-TRANSID:qMiowJCxH8JzGcBoOzSKAA--.57626S5
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3ur4rCr17ZF4xJr18Jr45XFc_yoWDXw4xpF
-	n0k390yrWjgF4093y8Jr4YkF45ZasFkasrKFZrG3s8Kr98t3s5XryFkasFyr4jyryDJFy7
-	ZFWDCFWjkF4UX3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7urW5KFWkZw4kKFy8ArW7ZFc_yoW8tr45p3
+	sI939rKr4Igr1fCryDJFWUJr4kZF98GFnFga13CFyUGrsIqa4jvr1rJF9IqF1rXw4Fq3y0
+	grnYgrWa9F4UZabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
@@ -63,313 +63,58 @@ X-Coremail-Antispam: 1Uk129KBj93XoW3ur4rCr17ZF4xJr18Jr45XFc_yoWDXw4xpF
 	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
 	IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
 	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOdb8UUUUU=
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5l1kUUUUU=
 
-Add the driver for on-chip UART used on Loongson family chips.
-
-The hardware is similar to 8250, but there are the following
-differences:
- - Some chips (such as Loongson-2K2000) have added a fractional division
-   register to obtain the required baud rate accurately, so the
-   {get,set}_divisor callback is overridden.
- - Due to hardware defects, quirk handling is required for
-   UART_MCR/UART_MSR.
+Add loongson,ls2k*-uart compatible string on uarts.
 
 Co-developed-by: Haowei Zheng <zhenghaowei@loongson.cn>
 Signed-off-by: Haowei Zheng <zhenghaowei@loongson.cn>
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- MAINTAINERS                             |   1 +
- drivers/tty/serial/8250/8250_loongson.c | 200 ++++++++++++++++++++++++
- drivers/tty/serial/8250/8250_port.c     |   8 +
- drivers/tty/serial/8250/Kconfig         |  10 ++
- drivers/tty/serial/8250/Makefile        |   1 +
- include/uapi/linux/serial_core.h        |   1 +
- 6 files changed, 221 insertions(+)
- create mode 100644 drivers/tty/serial/8250/8250_loongson.c
+ arch/loongarch/boot/dts/loongson-2k0500.dtsi | 2 +-
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi | 2 +-
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ed016f251cf7..9383d12e430c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14359,6 +14359,7 @@ M:	Binbin Zhou <zhoubinbin@loongson.cn>
- L:	linux-serial@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/serial/loongson,uart.yaml
-+F:	drivers/tty/serial/8250/8250_loongson.c
+diff --git a/arch/loongarch/boot/dts/loongson-2k0500.dtsi b/arch/loongarch/boot/dts/loongson-2k0500.dtsi
+index 588ebc3bded4..357de4ca7555 100644
+--- a/arch/loongarch/boot/dts/loongson-2k0500.dtsi
++++ b/arch/loongarch/boot/dts/loongson-2k0500.dtsi
+@@ -380,7 +380,7 @@ tsensor: thermal-sensor@1fe11500 {
+ 		};
  
- LOONGSON-2 SOC SERIES CLOCK DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-diff --git a/drivers/tty/serial/8250/8250_loongson.c b/drivers/tty/serial/8250/8250_loongson.c
-new file mode 100644
-index 000000000000..78328f77d941
---- /dev/null
-+++ b/drivers/tty/serial/8250/8250_loongson.c
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Serial Port driver for Loongson family chips
-+ *
-+ * Copyright (C) 2020-2025 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/module.h>
-+#include <linux/reset.h>
-+
-+#include "8250.h"
-+
-+/* Divisor Latch Fraction Register */
-+#define LOONGSON_UART_DLF		0x2
-+
-+/* Flags */
-+#define LOONGSON_UART_HAS_FRAC		BIT(0)
-+#define LOONGSON_UART_QUIRK_MCR		BIT(1)
-+#define LOONGSON_UART_QUIRK_MSR		BIT(2)
-+
-+#define LS2K0500_UART_FLAG	(LOONGSON_UART_QUIRK_MCR | LOONGSON_UART_QUIRK_MSR)
-+#define LS2K1500_UART_FLAG	(LOONGSON_UART_HAS_FRAC | LOONGSON_UART_QUIRK_MCR)
-+
-+struct loongson_uart_data {
-+	int line;
-+	int mcr_invert;
-+	int msr_invert;
-+	struct reset_control *rst;
-+};
-+
-+static unsigned int serial_fixup(struct uart_port *p, unsigned int offset, unsigned int val)
-+{
-+	struct loongson_uart_data *ddata = p->private_data;
-+
-+	if (offset == UART_MCR)
-+		val ^= ddata->mcr_invert;
-+
-+	if (offset == UART_MSR)
-+		val ^= ddata->msr_invert;
-+
-+	return val;
-+}
-+
-+static u32 loongson_serial_in(struct uart_port *p, unsigned int offset)
-+{
-+	unsigned int val;
-+
-+	val = readb(p->membase + (offset << p->regshift));
-+
-+	return serial_fixup(p, offset, val);
-+}
-+
-+static void loongson_serial_out(struct uart_port *p, unsigned int offset, unsigned int value)
-+{
-+	offset <<= p->regshift;
-+	writeb(serial_fixup(p, offset, value), p->membase + offset);
-+}
-+
-+static unsigned int loongson_frac_get_divisor(struct uart_port *port, unsigned int baud,
-+					      unsigned int *frac)
-+{
-+	unsigned int quot;
-+
-+	quot = DIV_ROUND_CLOSEST((port->uartclk << 4), baud);
-+	*frac = FIELD_GET(GENMASK(7, 0), quot);
-+
-+	return FIELD_GET(GENMASK(15, 8), quot);
-+}
-+
-+static void loongson_frac_set_divisor(struct uart_port *port, unsigned int baud,
-+				      unsigned int quot, unsigned int quot_frac)
-+{
-+	struct uart_8250_port *up = up_to_u8250p(port);
-+
-+	serial_port_out(port, UART_LCR, up->lcr | UART_LCR_DLAB);
-+	serial_dl_write(up, quot);
-+	serial_port_out(port, LOONGSON_UART_DLF, quot_frac);
-+}
-+
-+static int loongson_uart_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct uart_8250_port uart = {};
-+	struct loongson_uart_data *ddata;
-+	struct resource *res;
-+	unsigned int flags;
-+	int ret;
-+
-+	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENODEV;
-+
-+	uart.port.irq = platform_get_irq(pdev, 0);
-+	if (uart.port.irq < 0)
-+		return -EINVAL;
-+
-+	device_property_read_u32(dev, "clock-frequency", &uart.port.uartclk);
-+
-+	spin_lock_init(&uart.port.lock);
-+	uart.port.flags = UPF_SHARE_IRQ | UPF_FIXED_PORT | UPF_FIXED_TYPE | UPF_IOREMAP;
-+	uart.port.iotype = UPIO_MEM;
-+	uart.port.regshift = 0;
-+	uart.port.dev = dev;
-+	uart.port.type = PORT_LOONGSON;
-+	uart.port.private_data = ddata;
-+
-+	uart.port.mapbase = res->start;
-+	uart.port.mapsize = resource_size(res);
-+	uart.port.serial_in = loongson_serial_in;
-+	uart.port.serial_out = loongson_serial_out;
-+
-+	flags = (uintptr_t)device_get_match_data(dev);
-+
-+	if (flags & LOONGSON_UART_HAS_FRAC) {
-+		uart.port.get_divisor = loongson_frac_get_divisor;
-+		uart.port.set_divisor = loongson_frac_set_divisor;
-+	}
-+
-+	if (flags & LOONGSON_UART_QUIRK_MCR)
-+		ddata->mcr_invert |= (UART_MCR_RTS | UART_MCR_DTR);
-+
-+	if (flags & LOONGSON_UART_QUIRK_MSR)
-+		ddata->msr_invert |= (UART_MSR_CTS | UART_MSR_DSR);
-+
-+	ddata->rst = devm_reset_control_get_optional_shared(dev, NULL);
-+	if (IS_ERR(ddata->rst))
-+		return PTR_ERR(ddata->rst);
-+
-+	ret = reset_control_deassert(ddata->rst);
-+	if (ret)
-+		return ret;
-+
-+	ret = serial8250_register_8250_port(&uart);
-+	if (ret < 0) {
-+		reset_control_assert(ddata->rst);
-+		return ret;
-+	}
-+
-+	ddata->line = ret;
-+	platform_set_drvdata(pdev, ddata);
-+
-+	return 0;
-+}
-+
-+static void loongson_uart_remove(struct platform_device *pdev)
-+{
-+	struct loongson_uart_data *ddata = platform_get_drvdata(pdev);
-+
-+	serial8250_unregister_port(ddata->line);
-+	reset_control_assert(ddata->rst);
-+}
-+
-+static int loongson_uart_suspend(struct device *dev)
-+{
-+	struct loongson_uart_data *ddata = dev_get_drvdata(dev);
-+
-+	serial8250_suspend_port(ddata->line);
-+
-+	return 0;
-+}
-+
-+static int loongson_uart_resume(struct device *dev)
-+{
-+	struct loongson_uart_data *data = dev_get_drvdata(dev);
-+
-+	serial8250_resume_port(data->line);
-+
-+	return 0;
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(loongson_uart_pm_ops, loongson_uart_suspend,
-+				loongson_uart_resume);
-+
-+static const struct of_device_id loongson_uart_of_ids[] = {
-+	{ .compatible = "loongson,ls2k0500-uart", .data = (void *)LS2K0500_UART_FLAG },
-+	{ .compatible = "loongson,ls2k1500-uart", .data = (void *)LS2K1500_UART_FLAG },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, loongson_uart_of_ids);
-+
-+static struct platform_driver loongson_uart_driver = {
-+	.probe = loongson_uart_probe,
-+	.remove = loongson_uart_remove,
-+	.driver = {
-+		.name = "loongson-uart",
-+		.pm = pm_ptr(&loongson_uart_pm_ops),
-+		.of_match_table = loongson_uart_of_ids,
-+	},
-+};
-+
-+module_platform_driver(loongson_uart_driver);
-+
-+MODULE_DESCRIPTION("Loongson UART driver");
-+MODULE_AUTHOR("Loongson Technology Corporation Limited.");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 719faf92aa8a..53efe841656f 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -310,6 +310,14 @@ static const struct serial8250_config uart_config[] = {
- 		.rxtrig_bytes	= {1, 8, 16, 30},
- 		.flags		= UART_CAP_FIFO | UART_CAP_AFE,
- 	},
-+	[PORT_LOONGSON] = {
-+		.name		= "Loongson",
-+		.fifo_size	= 16,
-+		.tx_loadsz	= 16,
-+		.fcr		= UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10,
-+		.rxtrig_bytes   = {1, 4, 8, 14},
-+		.flags		= UART_CAP_FIFO,
-+	},
- };
+ 		uart0: serial@1ff40800 {
+-			compatible = "ns16550a";
++			compatible = "loongson,ls2k0500-uart", "ns16550a";
+ 			reg = <0x0 0x1ff40800 0x0 0x10>;
+ 			clock-frequency = <100000000>;
+ 			interrupt-parent = <&eiointc>;
+diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+index d8e01e2534dd..60ab425f793f 100644
+--- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
++++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+@@ -297,7 +297,7 @@ dma-controller@1fe00c40 {
+ 		};
  
- /* Uart divisor latch read */
-diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-index f64ef0819cd4..98236b3bec10 100644
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -468,6 +468,16 @@ config SERIAL_8250_OMAP_TTYO_FIXUP
- 	  not booting kernel because the serial console remains silent in case
- 	  they forgot to update the command line.
+ 		uart0: serial@1fe20000 {
+-			compatible = "ns16550a";
++			compatible = "loongson,ls2k1000-uart", "loongson,ls2k0500-uart", "ns16550a";
+ 			reg = <0x0 0x1fe20000 0x0 0x10>;
+ 			clock-frequency = <125000000>;
+ 			interrupt-parent = <&liointc0>;
+diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
+index 00cc485b753b..6c77b86ee06c 100644
+--- a/arch/loongarch/boot/dts/loongson-2k2000.dtsi
++++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
+@@ -250,7 +250,7 @@ i2c@1fe00130 {
+ 		};
  
-+config SERIAL_8250_LOONGSON
-+	tristate "Loongson 8250 based serial port"
-+	depends on SERIAL_8250
-+	depends on LOONGARCH || COMPILE_TEST
-+	help
-+	  If you have a machine based on LoongArch CPU you can enable
-+	  its onboard serial ports by enabling this option. The option
-+	  is applicable to both devicetree and ACPI, say Y to this option.
-+	  If unsure, say N.
-+
- config SERIAL_8250_LPC18XX
- 	tristate "NXP LPC18xx/43xx serial port support"
- 	depends on SERIAL_8250 && OF && (ARCH_LPC18XX || COMPILE_TEST)
-diff --git a/drivers/tty/serial/8250/Makefile b/drivers/tty/serial/8250/Makefile
-index 513a0941c284..e318a3240789 100644
---- a/drivers/tty/serial/8250/Makefile
-+++ b/drivers/tty/serial/8250/Makefile
-@@ -38,6 +38,7 @@ obj-$(CONFIG_SERIAL_8250_HP300)		+= 8250_hp300.o
- obj-$(CONFIG_SERIAL_8250_HUB6)		+= 8250_hub6.o
- obj-$(CONFIG_SERIAL_8250_INGENIC)	+= 8250_ingenic.o
- obj-$(CONFIG_SERIAL_8250_IOC3)		+= 8250_ioc3.o
-+obj-$(CONFIG_SERIAL_8250_LOONGSON)	+= 8250_loongson.o
- obj-$(CONFIG_SERIAL_8250_LPC18XX)	+= 8250_lpc18xx.o
- obj-$(CONFIG_SERIAL_8250_LPSS)		+= 8250_lpss.o
- obj-$(CONFIG_SERIAL_8250_MEN_MCB)	+= 8250_men_mcb.o
-diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
-index 9c007a106330..607cf060a72a 100644
---- a/include/uapi/linux/serial_core.h
-+++ b/include/uapi/linux/serial_core.h
-@@ -31,6 +31,7 @@
- #define PORT_ALTR_16550_F128 28 /* Altera 16550 UART with 128 FIFOs */
- #define PORT_RT2880	29	/* Ralink RT2880 internal UART */
- #define PORT_16550A_FSL64 30	/* Freescale 16550 UART with 64 FIFOs */
-+#define PORT_LOONGSON	31	/* Loongson 16550 UART */
- 
- /*
-  * ARM specific type numbers.  These are not currently guaranteed
+ 		uart0: serial@1fe001e0 {
+-			compatible = "ns16550a";
++			compatible = "loongson,ls2k2000-uart", "loongson,ls2k1500-uart", "ns16550a";
+ 			reg = <0x0 0x1fe001e0 0x0 0x10>;
+ 			clock-frequency = <100000000>;
+ 			interrupt-parent = <&liointc>;
 -- 
 2.47.3
 
