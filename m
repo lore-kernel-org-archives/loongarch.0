@@ -1,100 +1,103 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B606A3176E1
-	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 10:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35AF8322544
+	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 11:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757412998; cv=none; b=mF/ohIzlax1EigCpUH+hgBU3qsAdfP3Ly84tGY26wGNW9lnf0asreQfddu3ssRHOuGtlca7CqPe1ZKUjhHU0qcrG2w6wlBm/L9UvfXBiwN5NIYkiSYOIw6URYnXxiLWXQkDL14At/78pz9/JxRh+gkGmpe3v98wQhaqRUJ1nsgg=
+	t=1757417473; cv=none; b=iidnC/O5mAGj4y1AiupjQppn/DBvBOaXB6cpkhS9nKR5YG2k7Mk09TDNpDjrD8zBBWxQRjvsuZoN9HWuJnVqhTgO3SknRJAriY2Zq2F4UXJp6z2St3ohmH/D2tDqJ3l/30BCxicjuabH3MyIVpSh+3L+/QoBLAcQ2TNifjnPs8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757412998; c=relaxed/simple;
-	bh=BA//Cphq5edMK4Qw1gaH2KdEhbSdge9EaLUpTsUxTOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rcHuHFgAkaBvy/TtoOYyOheeI4RsNehFZYQRqDNuw10aRXBEIdS1DN9kKQCjXuiMxsoAKVz8H3REMMaxwhW+Ib1HyeHbZsZinW9+7cY56Ul/LMn7hidi1a3xulH3LDuTEEyUNMdCW9N7ihbbrHbZwSMXHAdWBI7yij60FlQ71SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wf+ATKaZ; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wf+ATKaZ"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-24602f6d8b6so11081625ad.1
-        for <loongarch@lists.linux.dev>; Tue, 09 Sep 2025 03:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757412996; x=1758017796; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sRA1tNnGH/MfGCb7e8SaVap6oHhoVBPZzEtWR1E3eD8=;
-        b=Wf+ATKaZr6C1rzh3g26j8rQGh2ejpxjsvTi6d6f8fmn14FnnITPBw4mbm2iTNVx/E7
-         WTSaGSG8FzGPCePWwRdo3vAsTQZQfhLmlSGLOeUy9Ij/oT2n9QmH5R2aSuCuBwDnahnE
-         JQ8zVGNj7qac/uADbaLt4Ha0/HzRBCw+WYsrFqPLQSNB9lz8GC06tBnuTeTDg6rIuYdf
-         DfznQvYBE/C0iDQSJjHUudqh7hjw2kGTQ2jJjdRRWfBoarNroJDGy0Mbo46tGZz1k6Ow
-         N0iixKrYPGnjgCCI0XMc0ag6X4+XfmpbjntZpQ+RvT3i1s1g1ku4oWe7dZ+QeHRjJp4K
-         Gb0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757412996; x=1758017796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sRA1tNnGH/MfGCb7e8SaVap6oHhoVBPZzEtWR1E3eD8=;
-        b=Q8BhLXTOyKP/oqYlw1KVgSApyLsKqw1Q5dsBUr8XZSR5gD3uD/AApnHi+YkcXTEzpq
-         RYBax3pe37B10C59SLsl6FXmLplyMxDdxh+RxKQ5yhu5iLR9W9fUoZ2VTW1O5I5L28DD
-         LhEZioMuwRS2c4EyeHZ+IZAC5xbeUp6xcrgJ+JPfiXGRDjG9OCFZeIzZLTCXaWgMCJKT
-         QpEY/DK1JUMripYK0q8cvBRx+LvRM9p42hzEMFN3/Jo61iCdxzcgpdnSDHIUE1p5d9DX
-         MP8aQQAs7L8QAC6msVWpZ939cF6cxl5HO3KP6lC7Pj6pTiGD1Z5dyLbQ97qBQ9Dcb80w
-         ZXGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZJKY+XBQY7RlHCrX8CpsAqobl5gbgqfGCf7+1QvhErdV5x2aqqRHjxedM6CyZBqiJJ9fBOfVgpiU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwJFyAlp+XyG9m4xIOVHFOgPE+Ex4iF5wcT43RhJGqQ5kJNOLin
-	UetRuuhwuZRW9zovKH+ZkZTh9rj5vhZsLtoG7gRBctJKwsq3jM/9s3Aro6KDns2Vht3KJREbO78
-	2wdiVghYaTlkqhoT0+ZIIjLQXnrS2mek=
-X-Gm-Gg: ASbGncsk2dy9Sccc2XmeYkC9/UhPho/oMqDbDcVWnosMncqCarmPGilfKp3tV3l75Lo
-	1/MifiLGhqNzaYX9j3bj2CkKishoYDcPYKNjMT8wo8RgttVtOQPptcUTkIZszRR/7K4oiILZtDJ
-	V5OM09EPAc7eQsKDSdXa29rfgUQvT6/nSHZoDC5dVEosuZjuNr4JtNZ83ufCN4Nl847Inq95Af5
-	OQOxG7YhH0Kn6lNH7SdaaR/iwaUceb0NtaKrPIZOBm6LLw5sXLjPStb6nwoAbXc92xMjPnHW3lI
-	JjO0Q9sYda4bG7/TF+kBr3vFlw==
-X-Google-Smtp-Source: AGHT+IFRVKo/Gtkg+6TprWyzPoJr3m/eSYj6SZpUwtqQlLRttkeYnxvnIbsHYeRNu819giRbB97IRmdiE0doJRE7eVM=
-X-Received: by 2002:a17:902:e845:b0:24e:a074:fbbe with SMTP id
- d9443c01a7336-251703939dbmr75623775ad.3.1757412995866; Tue, 09 Sep 2025
- 03:16:35 -0700 (PDT)
+	s=arc-20240116; t=1757417473; c=relaxed/simple;
+	bh=g35X596naWjYRJ4mQIhiO8ELMlH7T3GzYKcqBdox2Ms=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=b/1G7yZ4OaITQ7jqvwufU/P0hY/icF4kLdLrSM3kVIhubDmpUq2bPuuIYKYfl8Z2MiK0k2BPVT5LQ+9FXgPdQfCRoVTE6RS6+iXfR1cLqSYgyoZ6nYpOlCQ5DVhnp+1r8N5Ql5OMgdlCaWaJ4IdYPoRVkdQIdCsB+C1draZQ+No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxSNH8D8BotFoIAA--.17951S3;
+	Tue, 09 Sep 2025 19:31:08 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxjcH7D8BoviGKAA--.57546S3;
+	Tue, 09 Sep 2025 19:31:08 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Xi Zhang <zhangxi@kylinos.cn>,
+	live-patching@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] livepatch: Add config LIVEPATCH_DEBUG to get debug information
+Date: Tue,  9 Sep 2025 19:31:05 +0800
+Message-ID: <20250909113106.22992-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20250909113106.22992-1-yangtiezhu@loongson.cn>
+References: <20250909113106.22992-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250909092707.3127-1-yangtiezhu@loongson.cn> <20250909092707.3127-3-yangtiezhu@loongson.cn>
-In-Reply-To: <20250909092707.3127-3-yangtiezhu@loongson.cn>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 9 Sep 2025 12:16:22 +0200
-X-Gm-Features: AS18NWBru0Kq2XMwTpEiOoCDlYbqPUJ3s50syOJN4CqxsvVJPRxFAC9ia-wum2c
-Message-ID: <CANiq72n7OSCUzycAQXFybx6BSVnj3MWAXvZj7U=AWf_UQwmO+g@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] LoongArch: Handle jump tables option for RUST
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Matthew Maurer <mmaurer@google.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	WANG Rui <wangrui@loongson.cn>, rust-for-linux@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxjcH7D8BoviGKAA--.57546S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ar13uw1xWw47KFy3tr4UZFc_yoW8XrWrpw
+	s8GF98tw4kJFyY93ZFk3yxuFy5W397G3y3Ja93u3s5XrZ8X34YqF4ktr12v3yUXrn5K3Wa
+	qr97WF1jqFyrArcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOb18UUUUU=
 
-On Tue, Sep 9, 2025 at 11:27=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> +config RUSTC_HAS_ANNOTATE_TABLEJUMP
-> +       depends on RUST
-> +       def_bool $(rustc-option,-Cllvm-args=3D--loongarch-annotate-tablej=
-ump)
+Add config LIVEPATCH_DEBUG and define DEBUG if CONFIG_LIVEPATCH_DEBUG
+is set, then pr_debug() can print a debug level message, it is a easy
+way to get debug information without dynamic debugging.
 
-I am not sure if this needs the `depends on` -- from a quick test, it
-seems to run regardless of it (and your `ifdef` below doesn't care
-either). Cc'ing Matthew in case he remembers why the docs mention that
-the Kconfig one should be guarded by `RUST_IS_AVAILABLE`.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ kernel/livepatch/Kconfig      | 8 ++++++++
+ kernel/livepatch/transition.c | 4 ++++
+ 2 files changed, 12 insertions(+)
 
-In any case, it shouldn't hurt and it is only on the LoongArch Makefile.
+diff --git a/kernel/livepatch/Kconfig b/kernel/livepatch/Kconfig
+index 53d51ed619a3..4843665b1939 100644
+--- a/kernel/livepatch/Kconfig
++++ b/kernel/livepatch/Kconfig
+@@ -18,3 +18,11 @@ config LIVEPATCH
+ 	  module uses the interface provided by this option to register
+ 	  a patch, causing calls to patched functions to be redirected
+ 	  to new function code contained in the patch module.
++
++config LIVEPATCH_DEBUG
++	bool "Kernel Live Patching debug"
++	depends on LIVEPATCH
++	help
++	  Say Y here to print a debug level message with pr_debug() for
++	  the Kernel Live Patching code, it is a easy way to get debug
++	  information without dynamic debugging.
+diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+index 2351a19ac2a9..0ab3e5684680 100644
+--- a/kernel/livepatch/transition.c
++++ b/kernel/livepatch/transition.c
+@@ -5,6 +5,10 @@
+  * Copyright (C) 2015-2016 Josh Poimboeuf <jpoimboe@redhat.com>
+  */
+ 
++#ifdef CONFIG_LIVEPATCH_DEBUG
++#define DEBUG
++#endif
++
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/cpu.h>
+-- 
+2.42.0
 
-If you will be taking this through the LoongArch tree:
-
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
-
-Thanks again for fixing this!
-
-Cheers,
-Miguel
