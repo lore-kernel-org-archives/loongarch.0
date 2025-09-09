@@ -1,145 +1,100 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9479E25228D
-	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 09:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B606A3176E1
+	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 10:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757411637; cv=none; b=kOb30qn4VHkUgkjawOrkL9kfOQfUis7jMXmPJFbu7VIbBYfQ2zzLqL7/ypjOza6BX7aPLtg8x8cXAAvif0RBJFdY6fKG3uJ9306BB1TtbpqBZvSt9dr6wXPMYZu6dmBkhzIahPjD09sdlN5YTsInm+UO4e7BYWilhKn6jTp/4NU=
+	t=1757412998; cv=none; b=mF/ohIzlax1EigCpUH+hgBU3qsAdfP3Ly84tGY26wGNW9lnf0asreQfddu3ssRHOuGtlca7CqPe1ZKUjhHU0qcrG2w6wlBm/L9UvfXBiwN5NIYkiSYOIw6URYnXxiLWXQkDL14At/78pz9/JxRh+gkGmpe3v98wQhaqRUJ1nsgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757411637; c=relaxed/simple;
-	bh=jddvsvw7DK9PN8pRakOPEzf8iaNd0mlQfX3YALv7OyE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EYcFmZgXkzCG2qnvcpWHvnAVQ7cydULeqWB4fZE23E5epuqzjTH1pQUJgJJWTtuTpT5SiOEfPTqC3lI6ZHugnEcs4AC1LbyasRkWkf/6vFq9eFZBU9UYh2ClAcBdUQMracwQqCLC3CthkQiAOvjh5979vGlLcU5w58kGPrK6uW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.89])
-	by gateway (Coremail) with SMTP id _____8Cxrr8y+b9oplIIAA--.16745S3;
-	Tue, 09 Sep 2025 17:53:54 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.89])
-	by front1 (Coremail) with SMTP id qMiowJAx_8Eu+b9oVfGJAA--.41496S2;
-	Tue, 09 Sep 2025 17:53:53 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Allow specify SIMD width via kernel parameters
-Date: Tue,  9 Sep 2025 17:53:39 +0800
-Message-ID: <20250909095339.4083769-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1757412998; c=relaxed/simple;
+	bh=BA//Cphq5edMK4Qw1gaH2KdEhbSdge9EaLUpTsUxTOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rcHuHFgAkaBvy/TtoOYyOheeI4RsNehFZYQRqDNuw10aRXBEIdS1DN9kKQCjXuiMxsoAKVz8H3REMMaxwhW+Ib1HyeHbZsZinW9+7cY56Ul/LMn7hidi1a3xulH3LDuTEEyUNMdCW9N7ihbbrHbZwSMXHAdWBI7yij60FlQ71SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wf+ATKaZ; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wf+ATKaZ"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-24602f6d8b6so11081625ad.1
+        for <loongarch@lists.linux.dev>; Tue, 09 Sep 2025 03:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757412996; x=1758017796; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sRA1tNnGH/MfGCb7e8SaVap6oHhoVBPZzEtWR1E3eD8=;
+        b=Wf+ATKaZr6C1rzh3g26j8rQGh2ejpxjsvTi6d6f8fmn14FnnITPBw4mbm2iTNVx/E7
+         WTSaGSG8FzGPCePWwRdo3vAsTQZQfhLmlSGLOeUy9Ij/oT2n9QmH5R2aSuCuBwDnahnE
+         JQ8zVGNj7qac/uADbaLt4Ha0/HzRBCw+WYsrFqPLQSNB9lz8GC06tBnuTeTDg6rIuYdf
+         DfznQvYBE/C0iDQSJjHUudqh7hjw2kGTQ2jJjdRRWfBoarNroJDGy0Mbo46tGZz1k6Ow
+         N0iixKrYPGnjgCCI0XMc0ag6X4+XfmpbjntZpQ+RvT3i1s1g1ku4oWe7dZ+QeHRjJp4K
+         Gb0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757412996; x=1758017796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sRA1tNnGH/MfGCb7e8SaVap6oHhoVBPZzEtWR1E3eD8=;
+        b=Q8BhLXTOyKP/oqYlw1KVgSApyLsKqw1Q5dsBUr8XZSR5gD3uD/AApnHi+YkcXTEzpq
+         RYBax3pe37B10C59SLsl6FXmLplyMxDdxh+RxKQ5yhu5iLR9W9fUoZ2VTW1O5I5L28DD
+         LhEZioMuwRS2c4EyeHZ+IZAC5xbeUp6xcrgJ+JPfiXGRDjG9OCFZeIzZLTCXaWgMCJKT
+         QpEY/DK1JUMripYK0q8cvBRx+LvRM9p42hzEMFN3/Jo61iCdxzcgpdnSDHIUE1p5d9DX
+         MP8aQQAs7L8QAC6msVWpZ939cF6cxl5HO3KP6lC7Pj6pTiGD1Z5dyLbQ97qBQ9Dcb80w
+         ZXGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZJKY+XBQY7RlHCrX8CpsAqobl5gbgqfGCf7+1QvhErdV5x2aqqRHjxedM6CyZBqiJJ9fBOfVgpiU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJFyAlp+XyG9m4xIOVHFOgPE+Ex4iF5wcT43RhJGqQ5kJNOLin
+	UetRuuhwuZRW9zovKH+ZkZTh9rj5vhZsLtoG7gRBctJKwsq3jM/9s3Aro6KDns2Vht3KJREbO78
+	2wdiVghYaTlkqhoT0+ZIIjLQXnrS2mek=
+X-Gm-Gg: ASbGncsk2dy9Sccc2XmeYkC9/UhPho/oMqDbDcVWnosMncqCarmPGilfKp3tV3l75Lo
+	1/MifiLGhqNzaYX9j3bj2CkKishoYDcPYKNjMT8wo8RgttVtOQPptcUTkIZszRR/7K4oiILZtDJ
+	V5OM09EPAc7eQsKDSdXa29rfgUQvT6/nSHZoDC5dVEosuZjuNr4JtNZ83ufCN4Nl847Inq95Af5
+	OQOxG7YhH0Kn6lNH7SdaaR/iwaUceb0NtaKrPIZOBm6LLw5sXLjPStb6nwoAbXc92xMjPnHW3lI
+	JjO0Q9sYda4bG7/TF+kBr3vFlw==
+X-Google-Smtp-Source: AGHT+IFRVKo/Gtkg+6TprWyzPoJr3m/eSYj6SZpUwtqQlLRttkeYnxvnIbsHYeRNu819giRbB97IRmdiE0doJRE7eVM=
+X-Received: by 2002:a17:902:e845:b0:24e:a074:fbbe with SMTP id
+ d9443c01a7336-251703939dbmr75623775ad.3.1757412995866; Tue, 09 Sep 2025
+ 03:16:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx_8Eu+b9oVfGJAA--.41496S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KF4xGr4xWry5urW7Cw1fKrX_yoW8KF4UpF
-	4qyw4fGr409Fnaga9xJr409r93XFs7C3y7ZFW7Gw4YyFn5ZryDXw1vy3sxXFnxW34fWw1f
-	uFs5AF1Y9a1kt3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0byZUUUUU=
+References: <20250909092707.3127-1-yangtiezhu@loongson.cn> <20250909092707.3127-3-yangtiezhu@loongson.cn>
+In-Reply-To: <20250909092707.3127-3-yangtiezhu@loongson.cn>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 9 Sep 2025 12:16:22 +0200
+X-Gm-Features: AS18NWBru0Kq2XMwTpEiOoCDlYbqPUJ3s50syOJN4CqxsvVJPRxFAC9ia-wum2c
+Message-ID: <CANiq72n7OSCUzycAQXFybx6BSVnj3MWAXvZj7U=AWf_UQwmO+g@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] LoongArch: Handle jump tables option for RUST
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Matthew Maurer <mmaurer@google.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	WANG Rui <wangrui@loongson.cn>, rust-for-linux@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For power saving or debugging purpose, we usually want to limit the SIMD
-(LSX/LASX) usage on a rich feature platform. So allow specify SIMD width
-via kernel parameters "simd=".
+On Tue, Sep 9, 2025 at 11:27=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> +config RUSTC_HAS_ANNOTATE_TABLEJUMP
+> +       depends on RUST
+> +       def_bool $(rustc-option,-Cllvm-args=3D--loongarch-annotate-tablej=
+ump)
 
-Allowed values of "simd=" are any integers, and recommended values are:
-0:		Disable all SIMD features;
-128:		Enable at most 128bit SIMD features;
-256:		Enable at most 256bit SIMD features;
--1(default):	Enable as many as possible SIMD features automatically.
+I am not sure if this needs the `depends on` -- from a quick test, it
+seems to run regardless of it (and your `ifdef` below doesn't care
+either). Cc'ing Matthew in case he remembers why the docs mention that
+the Kconfig one should be guarded by `RUST_IS_AVAILABLE`.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/cpu-probe.c | 46 +++++++++++++++++++++++++++++--
- 1 file changed, 44 insertions(+), 2 deletions(-)
+In any case, it shouldn't hurt and it is only on the LoongArch Makefile.
 
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index fedaa67cde41..cbfce2872d71 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -52,6 +52,48 @@ static inline void cpu_set_fpu_fcsr_mask(struct cpuinfo_loongarch *c)
- 	c->fpu_mask = ~(fcsr0 ^ fcsr1) & ~mask;
- }
- 
-+/* simd = -1/0/128/256 */
-+static unsigned int simd = -1U;
-+
-+static int __init cpu_setup_simd(char *str)
-+{
-+	get_option(&str, &simd);
-+	pr_info("Set SIMD width = %u\n", simd);
-+
-+	return 0;
-+}
-+
-+early_param("simd", cpu_setup_simd);
-+
-+static int __init cpu_final_simd(void)
-+{
-+	struct cpuinfo_loongarch *c = &cpu_data[0];
-+
-+	if (simd < 128) {
-+		c->options &= ~LOONGARCH_CPU_LSX;
-+		elf_hwcap &= ~HWCAP_LOONGARCH_LSX;
-+	}
-+
-+	if (simd < 256) {
-+		c->options &= ~LOONGARCH_CPU_LASX;
-+		elf_hwcap &= ~HWCAP_LOONGARCH_LASX;
-+	}
-+
-+	simd = 0;
-+
-+	if (c->options & LOONGARCH_CPU_LSX)
-+		simd = 128;
-+
-+	if (c->options & LOONGARCH_CPU_LASX)
-+		simd = 256;
-+
-+	pr_info("Final SIMD width = %u\n", simd);
-+
-+	return 0;
-+}
-+
-+arch_initcall(cpu_final_simd);
-+
- static inline void set_elf_platform(int cpu, const char *plat)
- {
- 	if (cpu == 0)
-@@ -134,13 +176,13 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
- 		elf_hwcap |= HWCAP_LOONGARCH_FPU;
- 	}
- #ifdef CONFIG_CPU_HAS_LSX
--	if (config & CPUCFG2_LSX) {
-+	if ((config & CPUCFG2_LSX) && (simd >= 128)) {
- 		c->options |= LOONGARCH_CPU_LSX;
- 		elf_hwcap |= HWCAP_LOONGARCH_LSX;
- 	}
- #endif
- #ifdef CONFIG_CPU_HAS_LASX
--	if (config & CPUCFG2_LASX) {
-+	if ((config & CPUCFG2_LASX) && (simd >= 256)) {
- 		c->options |= LOONGARCH_CPU_LASX;
- 		elf_hwcap |= HWCAP_LOONGARCH_LASX;
- 	}
--- 
-2.47.3
+If you will be taking this through the LoongArch tree:
 
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+
+Thanks again for fixing this!
+
+Cheers,
+Miguel
