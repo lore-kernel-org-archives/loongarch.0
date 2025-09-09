@@ -1,149 +1,133 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DAC335BB0
-	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 12:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E295121B9C0;
+	Tue,  9 Sep 2025 16:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757420964; cv=none; b=jLlO6LiV0E1f5ydkx6lFOJ5VUKV4J6Y8Q+ndGV8fVF/COgaJuSShast+vY+kAn9/1amQToXQZOkSvWkX3hV2ncV1TYDYbaHpeWhYAv43nfWxAL18Br+3Ep/asjOoehDEVn8Lko/HFFnbkscwC0/l5A2dwB9Loj08vqaE+M9Y894=
+	t=1757433945; cv=none; b=rpLiSePRsCUizyA1OOABt04WffAIg8BWPM1EM6+1w+vx6cg7+ciZiKAdZ8NKtj4ghY9sMKCLnhCl4vMMNHnC+MwFNOPM0sbxDpcNcER8NJ3+CJbFOBfeD2OZsxzkZdP2tKXjAW8QEjat0Kwp7mYGXdbP6+NQ0Tvcl7Kg5eqiwQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757420964; c=relaxed/simple;
-	bh=hI8LYwkhJ2hsvMSHofs0BWyxXSx1uhBWD1aDRW0j71U=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=gBUEfO7SwkQu41MslOp3s3U9lLwmvSayR/hugczSJ3/z1xq7Yn03FAY7uilKVf0//6wpYjGVb+uweRuTnRK8s7T587m7wEKIX2BwJUH0QdWa47JMW87uwNaHoWpGtNHlsWddU9v7JNwFFC0RmlRvs4BwosBRVVYapXYv4QaoyP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=WFG0R2Ys; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XxHsryW+; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1757433945; c=relaxed/simple;
+	bh=knogLe+uZIeoGxILF9gC9izXX3E+9SsuaakElZpKIug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pfCUo8kdlviOHG1uhob47mMEuiCrxSy0nvVupV48Lpz6a9q31M1DHZBKukSgBsrin9ol90P0YiY/TNUrkMgzJ2CJKalOQDZ5BC84cfgAsrUrH5zzfp4ZGHIBFqSIJ8ELs9Elqi5ut1YTU+se0n3DLKc9dn6UPC4XZgJHHK10fmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJlauKOP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="WFG0R2Ys";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XxHsryW+"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id 6E3F6EC1D1D;
-	Tue,  9 Sep 2025 08:29:20 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-06.internal (MEProxy); Tue, 09 Sep 2025 08:29:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1757420960;
-	 x=1757507360; bh=/5QUYul75LVf73bnFi+E1ia3JzB02v3UT7J4baXowV8=; b=
-	WFG0R2YsdUIIn8guSOvzcR/576lHa3/Y6WikMO3iUnXjD/9KGH8xLVPfZ6cXxUBT
-	6tnfFyHvzQk+sWYc7Gr7COiv1wZtB8XgnGO/DhvXBtt6kqk4LlIR3KMK7JWiC1Hj
-	j2KDgA4iPufJ3yUxe9roZLdA+MrCcjGx9woeyu/zIXOK4Hhco/SPEjwwiIcn4AUL
-	kzrAhL2dp2OPFD87Rs8k8dMg0NyJiix/xrZXSTbUGbwI+VpqpDPaHvW/gI3PePgx
-	sAEI9/ZU+qUbNKDNa8a/azSJIu+fCq+3j3W2u0Hd1P2xRZsj3U30x8LWcrjgPqB/
-	gkKPdI/y7EvW3zVjs1EPXw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1757420960; x=
-	1757507360; bh=/5QUYul75LVf73bnFi+E1ia3JzB02v3UT7J4baXowV8=; b=X
-	xHsryW+M2k1jilg6p7frTmtwRMfNY0SUYPbHr1ir1/jhH5Kxem89BBOSPOeOCiyH
-	rJ4lUCVrZZAMPPB3cBrGKBcK3BiWLNP3EPeZjVPgj3W7Y4RyjYiJqVzBRiByKZpe
-	xcnBYsigYXKTkNDlBa9Nesw/34kUxV+kBXvSuLITxBckTf6fhk4COf3cGVL58pOP
-	otPwxlhJlu9we2mygy5l5c5ej313bWKcMLLoaHeyzZ2vV7bzbbDsVyt6hf3CaZRK
-	MkL4sbRtnzi2BSOKiPUlf34NMID8IR6tdblVzvZ2g1K69GaxwRvOU8jk+K21WVY5
-	fX1tu6en+jyy2kbr6lWRg==
-X-ME-Sender: <xms:nx3AaDMxmZis_CXxAvgm6F12Q1Cgmxbgw7kBOJTydfczqzbVf-nVFg>
-    <xme:nx3AaN_gZ3g2NfQIso-fNSMzwgSY-fm3LKqaT4JlkIuVD2FcFrS5sTwXhf8QciP46
-    EQNNfMyPkhid77a1QI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvtdegvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdflihgrgihu
-    nhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeejheefuddvtdfggfdvffekteehhfelgfdvvedvkeeuffefkeeh
-    heegvefhveetjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphht
-    thhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegthhgvnhhhuhgrtggrih
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhuohhrvghnsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehlohhonhhgrghrtghhsehlihhsthhsrdhlihhnuhigrdguvghvpd
-    hrtghpthhtoheptghhvghnhhhurggtrghisehlohhonhhgshhonhdrtghnpdhrtghpthht
-    oheplhhigihuvghfvghngheslhhoohhnghhsohhnrdgtnhdprhgtphhtthhopeiihhhouh
-    gsihhnsghinheslhhoohhnghhsohhnrdgtnhdprhgtphhtthhopehlihhnuhigqdhkvghr
-    nhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhesgi
-    gvnhdtnhdrnhgrmhgvpdhrtghpthhtohepgihrhiduudduseigrhihudduuddrshhithgv
-X-ME-Proxy: <xmx:nx3AaDGjD9vN-S3-z7_PFNUW1_V0FhiV3yBhigTFHInmiG9bZ_Vu8w>
-    <xmx:nx3AaB5-eQpFa99C-QJ8nhXH29cBbRkwSgGac9-RASyhz6b-umQikA>
-    <xmx:nx3AaLeNfVyM4r_eVGx7YA_Uuo-pVFoBiweFta3CvL95etyF6fg_Zw>
-    <xmx:nx3AaM75IfkcYmrReEM4cD9c78Qj4tj7eJ4l97iIWAogw_FZtSSKBQ>
-    <xmx:oB3AaEf4wY5kC08FVQ2P39ZVskazm6NdkWs_elRA-5U0d_XdCtkbZKQF>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6D9B72CE0072; Tue,  9 Sep 2025 08:29:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJlauKOP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEDAAC4CEF4;
+	Tue,  9 Sep 2025 16:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757433944;
+	bh=knogLe+uZIeoGxILF9gC9izXX3E+9SsuaakElZpKIug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tJlauKOPjhbG1fxATmBDJz12hCxfkjlYA8hHHKD7+SrAZJtuu1O7PJY2JjVScaBDm
+	 gm2GmuK2A1TbocAuTpK7+Gs8mbxm6PI3Mp6/B08FxsAr4FkQpVgvCGuRRXYOXNSh/r
+	 EaEr9RbbBQXs6SHwZX4tma/OXH6zaSBhYSu95O39NrfCGznd7O3zkvIP8/FXEbEXyg
+	 81Y7x5BHRyGJR8KDNO6Xb2tJLKU+sV+uPv4DzsIAO1Qa4BlUYF07cuLYUPpO/Dq83+
+	 mM3ijhBh8oV5elA0Gvs89ZaYV3LP1Yf7fGBG0vk7tlZkZnsDRBiNZoYJzdNrfYuKeV
+	 Q8lt926uBCj4w==
+Date: Tue, 9 Sep 2025 09:05:40 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
+ warnings about EFISTUB
+Message-ID: <domy5iwmaasksrm7srdmus5vifcxrzvozwpnc3ht43qtxvkjhd@gkyxt3qaeyqu>
+References: <ccbb40c1-5f2d-77e9-e8d2-52f2fdbad645@loongson.cn>
+ <CAAhV-H5qhKepa-8sz3_AC=_RCChbVeEmnHKESMqpiJ0phMORbg@mail.gmail.com>
+ <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn>
+ <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
+ <ybv2ndrzbqztkctzwhfphpdqrqbxlougs75glm22rcuzdmnrfp@lqwcms3j2d55>
+ <4thrzifl6ntk7kdf65egt4srzkbrxqoqf7yzmasblwvaq3qwmt@vigfgpbxzjkq>
+ <CAAhV-H53DkR6oK1chXQtoczqxYBCU-FMKrD99bjEvfXapND1Vw@mail.gmail.com>
+ <itoqfhz4pxaf7aclzajkxcdsxe5akxhgahzj4dp24leh7w334k@epnvcxdga75p>
+ <49ceb19c-6107-d026-3ae6-ae897d1fcae4@loongson.cn>
+ <CAAhV-H7U+-WM_cmehAEyKZrGteosZZ3GUsO3yy7wjUNK-v=qjw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AW9Y6xjD3IRZ
-Date: Tue, 09 Sep 2025 20:28:59 +0800
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@loongson.cn>,
- "Huacai Chen" <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, "Xuefeng Li" <lixuefeng@loongson.cn>,
- "Guo Ren" <guoren@kernel.org>, "Xuerui Wang" <kernel@xen0n.name>,
- linux-kernel@vger.kernel.org, "Binbin Zhou" <zhoubinbin@loongson.cn>,
- "Xi Ruoyao" <xry111@xry111.site>
-Message-Id: <07042615-8fc9-476f-b614-46c8b9f148ab@app.fastmail.com>
-In-Reply-To: <20250909095320.4083749-1-chenhuacai@loongson.cn>
-References: <20250909095320.4083749-1-chenhuacai@loongson.cn>
-Subject: Re: [PATCH] LoongArch: Align ACPI structures if ARCH_STRICT_ALIGN enabled
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H7U+-WM_cmehAEyKZrGteosZZ3GUsO3yy7wjUNK-v=qjw@mail.gmail.com>
 
+On Tue, Sep 09, 2025 at 12:10:29PM +0800, Huacai Chen wrote:
+> On Tue, Sep 9, 2025 at 12:00 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> >
+> > On 2025/9/6 上午12:04, Josh Poimboeuf wrote:
+> > > On Fri, Sep 05, 2025 at 12:36:16PM +0800, Huacai Chen wrote:
+> > >> Hi, Josh,
+> > >>
+> > >> On Fri, Sep 5, 2025 at 5:46 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> > >>>
+> > >>> On Thu, Sep 04, 2025 at 10:39:30AM -0700, Josh Poimboeuf wrote:
+> > >>>> On Thu, Sep 04, 2025 at 11:59:30AM +0800, Huacai Chen wrote:
+> > >>>>> This is from RISC-V code.
+> > >>>>>
+> > >>>>> __HEAD
+> > >>>>> SYM_CODE_START(_start)
+> > >>>>>          /*
+> > >>>>>           * Image header expected by Linux boot-loaders. The image header data
+> > >>>>>           * structure is described in asm/image.h.
+> > >>>>>           * Do not modify it without modifying the structure and all bootloaders
+> > >>>>>           * that expects this header format!!
+> > >>>>>           */
+> > >>>>> #ifdef CONFIG_EFI
+> > >>>>>          /*
+> > >>>>>           * This instruction decodes to "MZ" ASCII required by UEFI.
+> > >>>>>           */
+> > >>>>>          c.li s4,-13
+> > >>>>>          j _start_kernel
+> > >>>>> #else
+> > >>>>>          /* jump to start kernel */
+> > >>>>>          j _start_kernel
+> > >>>>>          /* reserved */
+> > >>>>>          .word 0
+> > >>>>> #endif
+> > >>>>>
+> > >>>>> The HEAD section has instructions, if you change it into a data
+> > >>>>> section then it loses the "x" attribute.
+> > >>>
+> > >>> Actually, the "x" attribute isn't needed for vmlinux.  The vmlinux
+> > >>> linker script places it in the text region regardless.
+> > >>>
+> > >>> Moving the data to a data section should be really simple, something
+> > >>> like the below.
+> > >>>
+> > >>> And yes, even the above RISC-V code can be in a data section.  Those
+> > >>> instructions are part of the 'struct riscv_image_header' data structure.
+> > >> This may work but also look strange (code in data section), it is more
+> > >> like a "workaround". :)
+> > >
+> > > The "strange" part of the code is the intermixing of code and data.  If
+> > > they can't be separated, then they are part of a data structure and
+> > > belong in a data section.
+> >
+> > I tried the following minimal changes, put the image header into
+> > the section .head.data, do not link efistub lib.a into vmlinux.o,
+> > just link efistub lib.a into vmlinux, no other changes, they have
+> > same effect with patch #1 and #2, what do you think?
+> I still don't think we have to put the HEAD into a data section. Yes,
+> it is a mix of code and data, but the data is read-only so it doesn't
+> need the "w" attribute (and code needs "x", at least in theory).
 
+Then it can be __HEAD_RODATA, with the "w" removed:
 
-=E5=9C=A82025=E5=B9=B49=E6=9C=889=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=
-=8D=885:53=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> ARCH_STRICT_ALIGN is used for hardware without UAL, now it only control
-> the -mstrict-align flag. However, ACPI structures are packed by default
-> so will cause unaligned accesses.
->
-> To avoid this, define ACPI_MISALIGNMENT_NOT_SUPPORTED in Makefile to
-> align ACPI structures if ARCH_STRICT_ALIGN enabled.
->
-> Reported-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Suggested-by: Xi Ruoyao <xry111@xry111.site>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/loongarch/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index a3a9759414f4..a86de4f26264 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -147,10 +147,10 @@ ifdef CONFIG_ARCH_STRICT_ALIGN
->  # Don't emit unaligned accesses.
->  # Not all LoongArch cores support unaligned access, and as kernel we=20
-> can't
->  # rely on others to provide emulation for these accesses.
-> -KBUILD_CFLAGS +=3D $(call cc-option,-mstrict-align)
-> +KBUILD_CFLAGS +=3D $(call cc-option,-mstrict-align)=20
-> -DACPI_MISALIGNMENT_NOT_SUPPORTED
+#define __HEAD_RODATA	.section	".head.rodata","a"
 
-This is a little bit hacky.
+> From my point of view, the text section is still the best for HEAD.
 
-Maybe a better place for `ACPI_MISALIGNMENT_NOT_SUPPORTED would be
-`arch/loongarch/include/asm/acenv.h`, or `include/acpi/platform/aclinux.=
-h`
+It belongs in a data section for two reasons:
 
->  else
->  # Optimise for performance on hardware supports unaligned access.
-> -KBUILD_CFLAGS +=3D $(call cc-option,-mno-strict-align)
-> +KBUILD_CFLAGS +=3D $(call cc-option,-mno-strict-align)=20
-> -UACPI_MISALIGNMENT_NOT_SUPPORTED
->  endif
->=20
->  KBUILD_CFLAGS +=3D -isystem $(shell $(CC) -print-file-name=3Dinclude)
-> --=20
-> 2.47.3
+  1) It's an image header data structure.
 
-Thanks
---=20
-- Jiaxun
+  2) We don't want objtool (or any other tooling) to try to validate it
+     or otherwise treat it as text during the build.
+
+-- 
+Josh
