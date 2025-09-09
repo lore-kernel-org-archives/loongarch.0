@@ -1,132 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574132D3A98;
-	Tue,  9 Sep 2025 17:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA1031D37B
+	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 18:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757438436; cv=none; b=G8EVKlvJg4HpscHN4F2hMTK+p3EjEaJQ7dtLUnHNhkwHBA0ErwgjsO+CHRGv83rEEJoJbjtO0z4bQi9//NgP4uWgF0mI/CJQfA/0IsMNxazwm395BktFcx6cWraTOBQpaptnE+R6g5MQE4EjXRDZfeGMlCxbQ1/9ScjDEO9PpyE=
+	t=1757441200; cv=none; b=DsZcbkD0ykVoJxnpB8KIxwH0qjFAXiRFimKPdiLC+p/bIEDDdxcQdjXCMSBCrTnHCqM1NqYQaCAcp9j7Xru5n8zYGRJTbXQyMb3O3G30LlNIV62116fsaSk2s2SzZFduR/sN3M+2khzYPVF8j5HS59uUaB7QXixGMAktzcawntQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757438436; c=relaxed/simple;
-	bh=aDtO0EP2Luwblw7wXBa/S0nm/bbd84Amf4RIFEa0YMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rOu7s5EO5pcY6yvB5luIoFuWha6+GE6iNzpLOnCFaM1pMlZHDc4SqD0SzbX/J5KaUIqB8uHa9JZUwiwzhJFIGFFQnpY95iUxwb1/RTKw4DyZ6IxZ5R0jbA6RD+xnTMaCg0+VWKJPpn0e2WFjeFVg62xhivLqT1lh+XFVPjhYc1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rWNA+SZ7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757441200; c=relaxed/simple;
+	bh=jZ4q7/TmAhAt9Egg4Ce9ImZslltIxN0BNL1jgujUK+c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LLs/l/x9nsoWI/iMypNE+uD8QQ9v5yNhINI0TnTrIaBAr8yyIqTlv8s/2A3KvGD3TcvfbHuplgwYrRpe4WqUE/0Is6GmFb+LT2TNeW23bpgU5LzgZ+qZVvdKYjje6tMXkT20VJtwY45dJds4af4pZxC0MMMdpu0WOJ72fGR2mCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xj7JK1W2; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rWNA+SZ7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B305C4CEF4;
-	Tue,  9 Sep 2025 17:20:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757438435;
-	bh=aDtO0EP2Luwblw7wXBa/S0nm/bbd84Amf4RIFEa0YMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rWNA+SZ7P7XMqvonOPAEdmtY55rXaIKEEzU9HK+ppzMNafCHRqDvkVmEoUduHt/rT
-	 aa5OZZx3ilY519/VHWj4+vwbhsuG88pY0+u24AUMR9OeOT4pFbgJb7ecQe/x2pWO4E
-	 vcn4jx2aGZ2e8t05J44ouMyfLu5WoVzT4hxN53UWANQ6M/G517uScWAOMTyKqRmi5V
-	 diqflVnydGhyAkUdxMQ6Bnquv1D4Xk2wLalfluyanQAMUeNCL713BGUmRtcdXk2oSb
-	 +eCWCY1ISYJlrL6GLeiTkLfqGaoEYVf8wOe7r+TdNoqrDDp/wKG1ImILx8nFyAfEJN
-	 RYEyJmVbovIiA==
-Date: Tue, 9 Sep 2025 17:20:34 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Wei Liu <wei.liu@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, rcu@vger.kernel.org,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Mukesh R <mrathor@linux.microsoft.com>
-Subject: Re: [PATCH v2 0/7] Drivers: hv: Fix NEED_RESCHED_LAZY and use common
- APIs
-Message-ID: <aMBh4kPNOEUKvxpV@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250828000156.23389-1-seanjc@google.com>
- <aLojpyTwAMdb1z6D@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
- <aLp3makY6FzuUwor@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xj7JK1W2"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-61d14448c22so1578a12.1
+        for <loongarch@lists.linux.dev>; Tue, 09 Sep 2025 11:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1757441196; x=1758045996; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zs2bT3Dg9Ff25HRhQXBnWG6WLypX8eEtjPTIvXY4ebI=;
+        b=xj7JK1W2c0VVpASxUkbTINEV3E457qq0qxsAGMoRA/9m3THzl0SFBLS0ePImA7kv9H
+         8I+V+kgjLTyB1up3gLxjjRMw4pGYGk4zccLCsFa98XUyg1P1abSf7plDvSBezUNVukPc
+         JQVLI0ktXp03neVtnBWtdFOpZhc6J62YVsfaBA9IL7+9MHJfDP7N5ok7DybGBP4pO6Ba
+         KB0R9UAIdL6Cxst2PXFgdrNC4a6e9xR/i7LNgDHhvNV0OkGQDScUQJM5Xqwc+p/nxGUg
+         WnMtzBXpYbn2C1Bw8gG3h2X/LDa34/2LfKL8kHI8jBo+dHHwXOgik/+XSPidIG9WIRNI
+         tZeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757441196; x=1758045996;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Zs2bT3Dg9Ff25HRhQXBnWG6WLypX8eEtjPTIvXY4ebI=;
+        b=WX++/jCytEkAvn9mz8rceSBrjQsJ5b5FcaViHnhd7Z5UK6aafY/cFtgmInOgo6AL+T
+         OlSGw6pa8aMYtuN5Emkkip9IqBpjcucvpbw5Cka9SwGsa8i/njXQBqPv6Zhwk09d/Zy+
+         2N5glZezZJiqwPLRyGGitV0WOERfsljE4ChwMUA4jQXGCLizOwKp1SM322P6tmgzohMK
+         cEa0iwZnGTP97JFM62UwpxN/sJY3kEiHxojaolyoSu6Xx4ksqz34PG8BuCTQVsz+fEc/
+         PN86AolqXrTSXm4lOHWcEsW/SGJMyLeBRVyiSsPqtQPwZm889Rh/alV3EvBDsOv5i9vL
+         YKFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXAYEE+yliPrS9j8rxbpVgNP5djjDjH14qL5I30gpbxwrH9zWTmh4zK8ISQpk6iTVQU1t8U7930K1s=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxAr6vc13WY5tpz+kq/MNU6SYKohbULMrzVVoDgcH0xuum8u06r
+	w0OeiWGJFk/wXoC7oG1fBtBTz0+OAGHyJWLtuMK+PZdNqopZAiNKhxSgQMeC3kQsiLnemeTquk3
+	JHlAXe6UyPo9VgBBhHsuIpVkCUEFf/fg2GM64f6Xg
+X-Gm-Gg: ASbGncvn9PITRCuUv/dgvLTYie3uygrdztL3AmxeUaHfDe+dICwDgXBB4rqkuLzs51a
+	Xz0jPE7/qrRCb6cTkLOH6mCynbhaTx+wD6Mm7F3RSZkAZjzeRQB/tquCbeVxlcxyl1CzAUbkBJp
+	mPoqM6lTV/Npgj0n8u/xz//0DP/L5O9F1OfEVar1Moq2a+GbVHuv8eLBckj93GGQpEydbWuTQHR
+	E6uLD3AbduMq2pjDYAwS/LMdTJCf5QeUel8g5zelrLi
+X-Google-Smtp-Source: AGHT+IGeH7jyX9ct4ZAzKinokBQ1+zc2FEaXfp6pE5j81gEVTiuyh5DC4nkYapGmxfFWYMAqNWcHbugCP2vmV3t5O7Q=
+X-Received: by 2002:a05:6402:21d4:b0:61c:c08d:359d with SMTP id
+ 4fb4d7f45d1cf-62d27d84e7amr6983a12.4.1757441196486; Tue, 09 Sep 2025 11:06:36
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aLp3makY6FzuUwor@google.com>
+References: <20250909092707.3127-1-yangtiezhu@loongson.cn> <20250909092707.3127-3-yangtiezhu@loongson.cn>
+ <CANiq72n7OSCUzycAQXFybx6BSVnj3MWAXvZj7U=AWf_UQwmO+g@mail.gmail.com>
+In-Reply-To: <CANiq72n7OSCUzycAQXFybx6BSVnj3MWAXvZj7U=AWf_UQwmO+g@mail.gmail.com>
+From: Matthew Maurer <mmaurer@google.com>
+Date: Tue, 9 Sep 2025 11:06:25 -0700
+X-Gm-Features: Ac12FXyLkTDu-xW8KQeBG2jwxZmVi08cxdiK25_6D-p0oCXaRRpW6X0CHqv7ho0
+Message-ID: <CAGSQo01mQfcU1EiW53be1hcts0c1p-HQAab_HBk6VcVmhq3n2Q@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] LoongArch: Handle jump tables option for RUST
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, WANG Rui <wangrui@loongson.cn>, rust-for-linux@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 04, 2025 at 10:39:37PM -0700, Sean Christopherson wrote:
-> On Thu, Sep 04, 2025, Wei Liu wrote:
-> > On Wed, Aug 27, 2025 at 05:01:49PM -0700, Sean Christopherson wrote:
-> > > Fix a bug where MSHV root partitions (and upper-level VTL code) don't honor
-> > > NEED_RESCHED_LAZY, and then deduplicate the TIF related MSHV code by turning
-> > > the "kvm" entry APIs into more generic "virt" APIs.
-> > > 
-> > > This version is based on
-> > > 
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git hyperv-next
-> > > 
-> > > in order to pickup the VTL changes that are queued for 6.18.  I also
-> > > squashed the NEED_RESCHED_LAZY fixes for root and VTL modes into a single
-> > > patch, as it should be easy/straightforward to drop the VTL change as needed
-> > > if we want this in 6.17 or earlier.
-> > > 
-> > > That effectively means the full series is dependent on the VTL changes being
-> > > fully merged for 6.18.  But I think that's ok as it's really only the MSHV
-> > > changes that have any urgency whatsoever, and I assume that Microsoft is
-> > > the only user that truly cares about the MSHV root fix.  I.e. if the whole
-> > > thing gets delayed, I think it's only the Hyper-V folks that are impacted.
-> > > 
-> > > I have no preference what tree this goes through, or when, and can respin
-> > > and/or split as needed.
-> > > 
-> > > As with v1, the Hyper-V stuff and non-x86 architectures are compile-tested
-> > > only.
-> > > 
-> > > v2:
-> > >  - Rebase on hyperv-next.
-> > >  - Fix and converge the VTL code as well. [Peter, Nuno]
-> > > 
-> > > v1: https://lore.kernel.org/all/20250825200622.3759571-1-seanjc@google.com
-> > > 
-> > 
-> > I dropped the mshv_vtl changes in this series and applied the rest
-> > (including the KVM changes) to hyperv-next.
-> 
-> mshv_do_pre_guest_mode_work() ended up getting left behind since its removal was
-> in the last mshv_vtl patch.
-> 
->   $ git grep mshv_do_pre_guest_mode_work
->   drivers/hv/mshv.h:int mshv_do_pre_guest_mode_work(ulong th_flags);
->   drivers/hv/mshv_common.c:int mshv_do_pre_guest_mode_work(ulong th_flags)
->   drivers/hv/mshv_common.c:EXPORT_SYMBOL_GPL(mshv_do_pre_guest_mode_work);
-> 
-> Want to squash this into 3786d7d6b3c0 ("mshv: Use common "entry virt" APIs to do
-> work in root before running guest")?
-> 
+On Tue, Sep 9, 2025 at 3:16=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Tue, Sep 9, 2025 at 11:27=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.=
+cn> wrote:
+> >
+> > +config RUSTC_HAS_ANNOTATE_TABLEJUMP
+> > +       depends on RUST
+> > +       def_bool $(rustc-option,-Cllvm-args=3D--loongarch-annotate-tabl=
+ejump)
+>
+> I am not sure if this needs the `depends on` -- from a quick test, it
+> seems to run regardless of it (and your `ifdef` below doesn't care
+> either). Cc'ing Matthew in case he remembers why the docs mention that
+> the Kconfig one should be guarded by `RUST_IS_AVAILABLE`.
 
-It's done. Thanks for pointing it out.
+I think this isn't needed. I added it initially because Kconfig was
+dying when `rustc` was not on the path, but I'm not sure how I managed
+that, since `success,trap` should guard against that (perhaps I was
+doing something wrong in earlier development, fixed it, and didn't
+remove the restriction). I have tested `rustc-option` with an
+intentionally missing `rustc`, and Kconfig doesn't seem to be taken
+down (and it gets a no answer), so the change to the macro means that
+doc warning should be removed.
 
-Wei
+>
+> In any case, it shouldn't hurt and it is only on the LoongArch Makefile.
+>
+> If you will be taking this through the LoongArch tree:
+>
+> Acked-by: Miguel Ojeda <ojeda@kernel.org>
+>
+> Thanks again for fixing this!
+>
+> Cheers,
+> Miguel
