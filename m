@@ -1,61 +1,36 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DDC25744D
-	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 08:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F0E22D3A65
+	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 09:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757405998; cv=none; b=DVskKrImcsDGDcaQgwk4ByooVIBiyO1Lsd3o9TjgTt8lG9b4O29O3I6QDl4sDtOWbKylmeeqwmSwV78h7+DaDkKa5YWexB8Hw/L0t2x6/SnyxvCHRHyJL3qaBJ6kQyakIvpN4838am93NjkvDohbUwW2MmOb6GPDIDU1YlAX8jA=
+	t=1757410034; cv=none; b=SVHNi73/419Da3okgFG1HzXasbUSPVsV300qWcNh1uP5dUkaBi7EdUryN+78ibcGe87z4Dw49xk8XiqI9JhgyzfPQwIsWyvwZ3ExL8q7/A1QUOyn7xyrOfsSn7bOa3HZ03bN+V0wR410CSEII3WdpQkeO5r5Lp7e+pS9gqfr5NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757405998; c=relaxed/simple;
-	bh=mM/ZjWAVbUUkql8H1oFghgabuM9jKXe/SwcEiQbRuBU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U7pPtaUyxfs/89syxr081UgNoGV8JwLDtdJgB72AVXTuLXgXRf5WUDmj4CPn/+fsZQTNPYz1cQAUdS/5w5BYvEQLqUcme0USFRh85A+qNr2KH8i7Cv81Y0OKbfogYxUV4l4dwvHFWWPbmljsqTDOlS/A2y0/fU3LflcrM0+JggY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c039b8f08d5511f0b29709d653e92f7d-20250909
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED
-	SA_LOWREP, SA_EXISTED, SN_UNTRUSTED, SN_LOWREP, SN_EXISTED
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD
-	CIE_GOOD_SPF, GTI_FG_BS, GTI_C_CI, GTI_FG_IT, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:b1e419d6-c164-4e88-81de-838cb3fc5ba1,IP:15,
-	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:20
-X-CID-INFO: VERSION:1.1.45,REQID:b1e419d6-c164-4e88-81de-838cb3fc5ba1,IP:15,UR
-	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:20
-X-CID-META: VersionHash:6493067,CLOUDID:5b9a6df3204e70fc12a8c2585deda649,BulkI
-	D:2509091619500BZNL3X6,BulkQuantity:0,Recheck:0,SF:17|19|24|38|44|66|78|10
-	2,TC:nil,Content:0|50,EDM:5,IP:-2,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil
-	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
-	TF_CID_SPAM_ULS
-X-UUID: c039b8f08d5511f0b29709d653e92f7d-20250909
-X-User: cuitao@kylinos.cn
-Received: from ctao-ubuntu.. [(39.156.73.13)] by mailgw.kylinos.cn
-	(envelope-from <cuitao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1619689536; Tue, 09 Sep 2025 16:19:48 +0800
-From: cuitao <cuitao@kylinos.cn>
-To: chenhuacai@kernel.org,
-	loongarch@lists.linux.dev
-Cc: kernel@xen0n.name,
-	linux-kernel@vger.kernel.org,
-	cuitao <cuitao@kylinos.cn>
-Subject: [PATCH v3] LoongArch: Add a check for the return value when creating the kobj
-Date: Tue,  9 Sep 2025 16:19:40 +0800
-Message-ID: <20250909081940.1851044-1-cuitao@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1757410034; c=relaxed/simple;
+	bh=XDP0wG8oJcBD8iSHmUgaU/ixC9iP7cOFsK+EMA7pI/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Pr1OFYMaepSzqlsbMVMONqkzlTyiY/MdHKstPjJfDKyDk+8bRFaOOqooeYMcP7mNq//2wXdmftbKt7SlhrtpS4vzePGggFbGc2PJPd63s2figoRybkql/uXdnf1apy2WDB2krWXZ6+1CF/i2ITguEvoQ8nL77OOQe69BJsnfi1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxSNHu8r9onk8IAA--.17836S3;
+	Tue, 09 Sep 2025 17:27:10 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxbMHr8r9oeuSJAA--.56108S3;
+	Tue, 09 Sep 2025 17:27:09 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>
+Cc: WANG Rui <wangrui@loongson.cn>,
+	rust-for-linux@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] LoongArch: Make LTO case independent in Makefile
+Date: Tue,  9 Sep 2025 17:27:06 +0800
+Message-ID: <20250909092707.3127-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20250909092707.3127-1-yangtiezhu@loongson.cn>
+References: <20250909092707.3127-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -63,32 +38,62 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxbMHr8r9oeuSJAA--.56108S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CFyDXrW8ur45AF17Jw4fJFc_yoW8XryDpw
+	sa9rZYqr4rWr4vgr9rJay5WrnxtFZrtr1xWFWxK3W8AF47Xw17Xr48tFyDXFyDJ3s3JrWI
+	qrWfKr9xJF4UC3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcDDGUUUUU
 
-Add a check for the return value of kobject_create_and_add to ensure
-that the kobj allocation succeeds.
+LTO is not only used for Clang, it maybe used for Rust, make LTO case out
+of CONFIG_CC_HAS_ANNOTATE_TABLEJUMP in Makefile.
 
-Signed-off-by: cuitao <cuitao@kylinos.cn>
+This is preparation for later patch, no function changes.
+
+Suggested-by: WANG Rui <wangrui@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
-v3: Removed the unnecessary debug prints.
-https://lore.kernel.org/all/CAAhV-H5CjH8i81dGNxaVrzdVUiTwqMUYeuBifQ0wSW_Mw9wSTw@mail.gmail.com/
----
- arch/loongarch/kernel/env.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/loongarch/Makefile | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-index c0a5dc9aeae2..e9a7ea3bc5c8 100644
---- a/arch/loongarch/kernel/env.c
-+++ b/arch/loongarch/kernel/env.c
-@@ -109,6 +109,9 @@ static int __init boardinfo_init(void)
- 	struct kobject *loongson_kobj;
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index a3a9759414f4..9d80af7f75c8 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -102,16 +102,16 @@ KBUILD_CFLAGS			+= $(call cc-option,-mthin-add-sub) $(call cc-option,-Wa$(comma)
  
- 	loongson_kobj = kobject_create_and_add("loongson", firmware_kobj);
-+	if (!loongson_kobj) {
-+		return -ENOMEM;
-+	}
+ ifdef CONFIG_OBJTOOL
+ ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
++KBUILD_CFLAGS			+= -mannotate-tablejump
++else
++KBUILD_CFLAGS			+= -fno-jump-tables # keep compatibility with older compilers
++endif
++ifdef CONFIG_LTO_CLANG
+ # The annotate-tablejump option can not be passed to LLVM backend when LTO is enabled.
+ # Ensure it is aware of linker with LTO, '--loongarch-annotate-tablejump' also needs to
+ # be passed via '-mllvm' to ld.lld.
+-KBUILD_CFLAGS			+= -mannotate-tablejump
+-ifdef CONFIG_LTO_CLANG
+ KBUILD_LDFLAGS			+= -mllvm --loongarch-annotate-tablejump
+ endif
+-else
+-KBUILD_CFLAGS			+= -fno-jump-tables # keep compatibility with older compilers
+-endif
+ endif
  
- 	return sysfs_create_file(loongson_kobj, &boardinfo_attr.attr);
- }
+ KBUILD_RUSTFLAGS		+= --target=loongarch64-unknown-none-softfloat -Ccode-model=small
 -- 
-2.48.1
+2.42.0
 
