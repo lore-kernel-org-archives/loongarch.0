@@ -1,159 +1,146 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E4C1F4C8C
-	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 02:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5968824468C
+	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 02:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757383339; cv=none; b=PnyKWB6g0z63dDH8EDkkUYm6/4QmQPyyirJVqHeHOLSPYRpvlmXyC8fImFLIgjB4Q3Yu+YE91MwuzmtfRg2kjXsDDKGTgeVHlEK+g/coWKWcLDe/E+yJWZzdsJ20QJ2yekUpK9UdbI54hGoM4y7doITQ2HoC0AwyPGNa374B/rw=
+	t=1757385312; cv=none; b=B1hYtq+zmTkBbruRnogMYRR3ZV7TAFZQwvVyWMUhpT3FEf2PsvCLEXwyx3Tza99ci+CVyPp8wdp/a+7fclvJgvJAhYCiffYsUwVCYep51JrKPyXQT6WYBDjgiU9n5iPEd8qtZ2orXYM3AwgbTfXu4/ng7xRWfMokzTTB1ltQQRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757383339; c=relaxed/simple;
-	bh=mNrzLpRNDZAr8L4KEo6CtqFNIMGoxZ8/i9fpKSQyI2E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ic6u4CUh2tgl69EQ0lzuw4BPDK16imjwr0uUxZenUTsrCUmvP4iPxSxLp9rbq+7jyb335kyV07X2oJG2BXhfO1PKWgx74Y8jd0TbhPqoZd3IiQFsTV8zJDgXU7OHN0nwjC9mesD2cpICo95HApWQECNE+5fBd3QqVwEaR3YK6V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=mwh+wD9p; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="mwh+wD9p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1757383337;
-	bh=zcmpcw0mekrXcR6rkLebx4OWUdSHyk73nm9XQs6nR5E=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mwh+wD9pqb74xXaSeUW0Fy4iOx+0uACLhjsiWm+anmJ9h85Kmbz1NMEAHsXYtQWVH
-	 IKCeXHS5cncmv/E1+oAd3eDpkO9aoc2Y8jSca6um59hYQNYspm8As1xpC5954/PgYA
-	 KeT3BBkec8hgk7HOa9qB4WdsDrAXR/HxCoq9GuRQ=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 18F2866983;
-	Mon,  8 Sep 2025 22:02:13 -0400 (EDT)
-Message-ID: <6f0857ec48e7d1aab55f5e1cc923d9b5086af6c2.camel@xry111.site>
-Subject: Re: [PATCH] drm/amd/display/dml2: Guard
- dml21_map_dc_state_into_dml_display_cfg with DC_FP_START
-From: Xi Ruoyao <xry111@xry111.site>
-To: Alex Hung <alex.hung@amd.com>, Alex Deucher <alexander.deucher@amd.com>,
-  Christian =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, Huacai Chen <chenhuacai@kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, Mingcong Bai <jeffbai@aosc.io>,
- dri-devel@lists.freedesktop.org, 	loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Asiacn <710187964@qq.com>,  Austin Zheng
- <Austin.Zheng@amd.com>, Harry Wentland <Harry.Wentland@amd.com>, Wenjing
- Liu	 <wenjing.liu@amd.com>
-Date: Tue, 09 Sep 2025 10:02:12 +0800
-In-Reply-To: <25fcd3b5c1a415deb8358714279a7d532e26ed47.camel@xry111.site>
-References: <20250825085211.34396-1-xry111@xry111.site>
-		 <0f6b54fa-720f-43b7-ad74-91c2c5700dad@amd.com>
-	 <25fcd3b5c1a415deb8358714279a7d532e26ed47.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	s=arc-20240116; t=1757385312; c=relaxed/simple;
+	bh=ZaMQMsmJx43/kuknqIfVkdoxZe/Z1yIISMyY1iHBu44=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GlsXXgtu6QOlwA41da1JNKnaIkDCcXKd/px4a2HVGRfjiICgdh61uNCIYNlkmnLcBVNFHQwtwfMRrCsa0bRU1XMZTqCMxkFmX6qCHONPJaWU5RQAvRgknNVTxOclPa9gT/813q+ukFipkb+VZFzCBWfv4B1A5hzXksuoSQSUd5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 953d603c8d2511f0b29709d653e92f7d-20250909
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_LOWREP
+	SA_EXISTED, SN_UNTRUSTED, SN_LOWREP, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
+	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:e6a52cfc-1a57-4781-a0e4-7e2a0dc05774,IP:15,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-15
+X-CID-INFO: VERSION:1.1.45,REQID:e6a52cfc-1a57-4781-a0e4-7e2a0dc05774,IP:15,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-15
+X-CID-META: VersionHash:6493067,CLOUDID:0c5d66e56d80284f326809b8760d8e74,BulkI
+	D:250909103503QB182ID1,BulkQuantity:0,Recheck:0,SF:19|24|38|44|66|72|78|10
+	2,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,B
+	EC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 953d603c8d2511f0b29709d653e92f7d-20250909
+X-User: cuitao@kylinos.cn
+Received: from ctao-ubuntu.. [(39.156.73.13)] by mailgw.kylinos.cn
+	(envelope-from <cuitao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1783533472; Tue, 09 Sep 2025 10:35:00 +0800
+From: cuitao <cuitao@kylinos.cn>
+To: chenhuacai@kernel.org,
+	loongarch@lists.linux.dev
+Cc: kernel@xen0n.name,
+	linux-kernel@vger.kernel.org,
+	cuitao <cuitao@kylinos.cn>
+Subject: [PATCH] LoongArch: Added detection of return values of some steps in the system init process
+Date: Tue,  9 Sep 2025 10:34:48 +0800
+Message-ID: <20250909023448.1820120-1-cuitao@kylinos.cn>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-09-09 at 09:47 +0800, Xi Ruoyao wrote:
-> On Mon, 2025-09-08 at 14:18 -0600, Alex Hung wrote:
-> >=20
-> >=20
-> > On 8/25/25 02:52, Xi Ruoyao wrote:
-> > > dml21_map_dc_state_into_dml_display_cfg calls (the call is usually
-> > > inlined by the compiler) populate_dml21_surface_config_from_plane_sta=
-te
-> > > and populate_dml21_plane_config_from_plane_state which may use FPU.=
-=C2=A0 In
-> > > a x86-64 build:
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 $ objdump --disassemble=3Ddml21_map_dc_state=
-_into_dml_display_cfg \
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 > drivers/gpu/drm/amd/display/dc/dml2/dml21/=
-dml21_translation_helper.o |
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 > grep %xmm -c
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 63
-> > >=20
-> > > Thus it needs to be guarded with DC_FP_START.=C2=A0 But we must note =
-that the
-> > > current code quality of the in-kernel FPU use in AMD dml2 is very muc=
-h
-> > > problematic: we are actually calling DC_FP_START in dml21_wrapper.c
-> > > here, and this translation unit is built with CC_FLAGS_FPU.=C2=A0 Str=
-ictly
-> > > speaking this does not make any sense: with CC_FLAGS_FPU the compiler=
- is
-> > > allowed to generate FPU uses anywhere in the translated code, perhaps
-> > > out of the DC_FP_START guard.=C2=A0 This problematic pattern also occ=
-urs in
-> > > at least dml2_wrapper.c, dcn35_fpu.c, and dcn351_fpu.c.=C2=A0 Thus we=
- really
-> >=20
-> > Let me share Austin's comments below:
-> >=20
-> > "
-> > Both CC_FLAGS_FPU and DC_FP_START are required for FPU usage.
-> >=20
-> > CC_FLAGS_FPU allows the compiler to generate FPU code whereas=20
-> > DC_FP_START ensures that the FPU registers don't get tainted during run=
-time.
->=20
-> But the correct pattern would be: isolating the code using FPU into its
-> own translation unit, say xxx_fp.c, then call DC_FP_START in another
-> translation unit (for which CC_FLAGS_FPU is NOT used) before calling the
-> routines in xxx_fp.c.
->=20
-> It's because there's generally no way to guarantee the compiler only
-> generate FP code in the range of DC_FP_START ... DC_FP_END if
-> CC_FLAGS_FPU is used.=C2=A0 The compiler can generate FPU code in situati=
-ons
-> we don't intend to use (and don't anticipate) FPU, for example if a
-> "counting number of ones in a word" pattern is detected when the code is
-> built for LoongArch, the compiler can invoke FPU to use a popcount
-> instruction with CC_FLAGS_FPU.=C2=A0 (That doesn't really happen now but =
-it
-> may happen in the future.)
->=20
-> And the correct pattern is already used by, for example
-> dcn10_resource.c:
->=20
-> =C2=A0=C2=A0=C2=A0 DC_FP_START();
-> =C2=A0=C2=A0=C2=A0 voltage_supported =3D dcn_validate_bandwidth(dc, conte=
-xt, validate_mode);
-> =C2=A0=C2=A0=C2=A0 DC_FP_END();
->=20
-> Here dcn_validate_bandwidth is in dcn_calcs.c where CC_FLAGS_FPU is in-
-> effect, but dcn10_resource.c itself is not built with CC_FLAGS_FPU.
+Check the return value after early_memremap_ro and kobject_create_and_add,
+and check whether the memory allocation was successful after kstrdup
 
-And the correct pattern is already documented and explained in
-dcn20_fpu.c:
+Signed-off-by: cuitao <cuitao@kylinos.cn>
+---
+ arch/loongarch/kernel/env.c | 30 ++++++++++++++++++++++++++----
+ 1 file changed, 26 insertions(+), 4 deletions(-)
 
- * 4. Developers **must not** use DC_FP_START/END in this file, but they ne=
-ed
- *    to ensure that the caller invokes it before access any function avail=
-able
- *    in this file. For this reason, public functions in this file must inv=
-oke
- *    dc_assert_fp_enabled();
- *
- * Let's expand a little bit more the idea in the code pattern. To fully
- * isolate FPU operations in a single place, we must avoid situations where
- * compilers spill FP values to registers due to FP enable in a specific C
- * file. Note that even if we isolate all FPU functions in a single file an=
-d
- * call its interface from other files, the compiler might enable the use o=
-f
- * FPU before we call DC_FP_START. Nevertheless, it is the programmer's
- * responsibility to invoke DC_FP_START/END in the correct place. To highli=
-ght
- * situations where developers forgot to use the FP protection before calli=
-ng
- * the DC FPU interface functions, we introduce a helper that checks if the
- * function is invoked under FP protection. If not, it will trigger a kerne=
-l
- * warning.
+diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+index c0a5dc9aeae2..eaa9e054209c 100644
+--- a/arch/loongarch/kernel/env.c
++++ b/arch/loongarch/kernel/env.c
+@@ -23,7 +23,13 @@ EXPORT_SYMBOL(loongson_sysconf);
+ void __init init_environ(void)
+ {
+ 	int efi_boot = fw_arg0;
+-	char *cmdline = early_memremap_ro(fw_arg1, COMMAND_LINE_SIZE);
++	char *cmdline;
++
++	cmdline = early_memremap_ro(fw_arg1, COMMAND_LINE_SIZE);
++	if (!cmdline) {
++		pr_err("Failed to map command line memory\n");
++		return;
++	}
+ 
+ 	if (efi_boot)
+ 		set_bit(EFI_BOOT, &efi.flags);
+@@ -46,10 +52,18 @@ static int __init init_cpu_fullname(void)
+ 
+ 	/* Parsing cpuname from DTS model property */
+ 	root = of_find_node_by_path("/");
++	if (!root) {
++		pr_warn("Failed to find root device node\n");
++		return -ENODEV;
++	}
+ 	ret = of_property_read_string(root, "model", &model);
+ 	if (ret == 0) {
+ 		cpuname = kstrdup(model, GFP_KERNEL);
+-		loongson_sysconf.cpuname = strsep(&cpuname, " ");
++		if (cpuname) {
++			loongson_sysconf.cpuname = strsep(&cpuname, " ");
++		} else {
++			pr_warn("Failed to allocate memory for cpuname\n");
++		}
+ 	}
+ 	of_node_put(root);
+ 
+@@ -67,14 +81,18 @@ static int __init fdt_cpu_clk_init(void)
+ 	struct device_node *np;
+ 
+ 	np = of_get_cpu_node(0, NULL);
+-	if (!np)
++	if (!np) {
++		pr_warn("Failed to get CPU node\n");
+ 		return -ENODEV;
++	}
+ 
+ 	clk = of_clk_get(np, 0);
+ 	of_node_put(np);
+ 
+-	if (IS_ERR(clk))
++	if (IS_ERR(clk)) {
++		pr_warn("Failed to get CPU clock\n");
+ 		return -ENODEV;
++	}
+ 
+ 	cpu_clock_freq = clk_get_rate(clk);
+ 	clk_put(clk);
+@@ -109,6 +127,10 @@ static int __init boardinfo_init(void)
+ 	struct kobject *loongson_kobj;
+ 
+ 	loongson_kobj = kobject_create_and_add("loongson", firmware_kobj);
++	if (!loongson_kobj) {
++		pr_warn("loongson: Firmware registration failed.\n");
++		return -ENOMEM;
++	}
+ 
+ 	return sysfs_create_file(loongson_kobj, &boardinfo_attr.attr);
+ }
+-- 
+2.33.0
 
---=20
-Xi Ruoyao <xry111@xry111.site>
