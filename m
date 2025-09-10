@@ -1,94 +1,172 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D895325A2DA
-	for <loongarch@lists.linux.dev>; Tue,  9 Sep 2025 20:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4F521E32A2
+	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 01:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757448894; cv=none; b=Rqx8x0VanCjvx2KYdGKyj6AIgneEgiuOU0VU6eENv/UNQmibUHVNhHlVIz6NO+6Z73HggeZETCFH8fG9YcZpIU8dzREiX0Fva0USh7CAuikHk/wECA5FhTDZPtaVWTq3sihPpaNG+V8Q1XUNidhV4SW8/UggPlQDkTFW6qbQEks=
+	t=1757466722; cv=none; b=Pt08Ke5Rvha1SktFppvuut2E+Y7RX093d+N6JHjhVJoRlKoJ2y/nfSRTjM9uG5L4//wycmbIqVu2fPU+sME32AwM2IG+IbLpa/AN8Red38tLe3yd6foIxQJKyPbt/MID7n2OL+/Kz2Z4db/ukIAv3WbAA8iv+WyYn/PDR8yK8pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757448894; c=relaxed/simple;
-	bh=0RsLYpIdBCFq2CXnIllIIUx06sgVvgCrX54kp3Ry6Rk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ya+2wdHdsg7khScqjX1BClx5n0o8iIms8pPhSrRCscu29En0/I4h+1T5mQPHAuXoGkvEMGaSA7WAKztl7r5qQ41/fEWfzSwKfB7jY4jQUp+XqMA/9lAH8ueCbrffkq8KEoxUCR1JViCZoPNWYrMkza7NAWalhqRgTJf55IPlGhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bqZAEHbi; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqZAEHbi"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-24602f6d8b6so12198715ad.1
-        for <loongarch@lists.linux.dev>; Tue, 09 Sep 2025 13:14:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757448892; x=1758053692; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0RsLYpIdBCFq2CXnIllIIUx06sgVvgCrX54kp3Ry6Rk=;
-        b=bqZAEHbiQn2RJFOdPggDF9oR126H7zmG5rYjKwIowWsnuY3YefkFA1IdQUEQ/ttZs3
-         jntB8fqfiA0o1dNeLoOjPtjV4i5Y+2hcIyA3Elcn8O4Loz4K0OOzpitfbP7JrFWYgQEU
-         IzwDO6jrTdK56JgTXf/hZaBRS/ojmlguTGfwlRE6TzQveVhoO2yOxDUIjTWVRpQVQVT4
-         EMUZ5yqWcLQAu0XjNVu2Xwp9Ld/ARix2a8xVdH2CUa4M04DKzFBXqkRKwuBN8j2gCxKT
-         tZzrE1Ijf6o1jeGWzI7jxQARlpWLg7kqFa9OP4H6fIKVZKh6NBFkk6lnrVuldH7oTkJ4
-         W4Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757448892; x=1758053692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0RsLYpIdBCFq2CXnIllIIUx06sgVvgCrX54kp3Ry6Rk=;
-        b=L45Pt9A47h9xL7beXtlRCKs8WaEXUQyxmwEz33ubS5gKbSsjKfAno2gdg6hcaeSxan
-         GDsQXvEQShy3Lcq7hxPNU98jIyy4Wf82MlPNkV19IeFrBqd87cjAyH7FZGHATfXQD/SV
-         oRG8e5u0Uc/LrK1GpOURe6CeGYqodSjFzA1pJz/2uOq5NBFRPmkKOiWucuSZ1vsAyP0/
-         jR0z6XPEbtVTpRsrbjz11RMQ1gzYTICpJZ7qF8nESDvMilIB2Wa7Vu4o3JXYpGT3PGrA
-         D/02tECM7yWosbW8yITMj9hPaim+p6YhBiJ8iMJKKTwsPxtSiHsES5kpoZ2zgm8Ndlfe
-         HSdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUk9lSQmsd2qR3pTdi/ssNL/GUGb/+rDRZj7z6YG1gULtbLJ3LATbXf9wfibHa8BF98DjYcVrPm+lI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy/gXSSUpdBwi3Vujn/XqZfcVQVPN3O0gReoQnpirDuCYT4Uajk
-	p6w6vAxqX0XVupXnySUecY5fBCLo+5f/F5Ob9abOr1SzBCAKCQl4b9YMRlo1AkQIxy55VxDfVPu
-	O+EdnWn9tMPJJakdedUSzzfru/+dh+/HVnhlTz1k=
-X-Gm-Gg: ASbGncsCrIiGE+b0Z4Wg9xVzGJ4KsO4SjjOdQY1LA4VFL5sLcBqh6QOm+Jg8sfZuHpJ
-	ACpmoleFoISlE5sevlpkH4hvvujse5VmWUFVLGRhvhB0ltOAvJ0lz/6zFrZUD9UCGwG3giCBtsj
-	/lXCdj11kooPsMw3lHQIfji2DT3dS+SPgx3kfhgkt7RFi+EnD6sDeBhdi7yOVXnjM8SY3jB6txU
-	ElJeiUslDZDXZOuo99e1nR3vKciJedqQPFBcMgHSgpBh7qY1fmYDfwgw94e5HuOCwPb5gN4XF9p
-	PXvCeOf8STAqeABI2z6I1RmK9A==
-X-Google-Smtp-Source: AGHT+IG8l2Cl0crbnUXdUU1gkjVHq4CtZSPylbc0kTpXl7tI3C1ru4Lsu/w7cyIRw74CZbstsu1Z6Dk+uaNPN+HTnJo=
-X-Received: by 2002:a17:902:ea01:b0:246:ed8f:c63e with SMTP id
- d9443c01a7336-25168e74592mr84188935ad.0.1757448892145; Tue, 09 Sep 2025
- 13:14:52 -0700 (PDT)
+	s=arc-20240116; t=1757466722; c=relaxed/simple;
+	bh=VLZV08D0RrY8qkrpwcLypvyV7VjZDjrL8NWEVgCZtdM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YZao3QPEQwF3AlKuKNp4ZynmuC/ibNZ3sTneMx+8NCsiDC1etsEgtuweRnSfpgfMtaH6EgsnlOaUAIprCjJ69vojq5TGP3P5wZpne8w62IBraUm8JIMgNEa4GaniWLIu4TISc9B/sYGlcWBtYrxmfr2yD0QONu4/+jY5QqUCCHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8Bx3tJb0MBowp4IAA--.18477S3;
+	Wed, 10 Sep 2025 09:11:56 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by front1 (Coremail) with SMTP id qMiowJAxQMJY0MBozDqLAA--.43503S3;
+	Wed, 10 Sep 2025 09:11:54 +0800 (CST)
+Subject: Re: [PATCH v1 2/2] LoongArch: Return 0 for user tasks in
+ arch_stack_walk_reliable()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, Xi Zhang <zhangxi@kylinos.cn>,
+ live-patching@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250909113106.22992-1-yangtiezhu@loongson.cn>
+ <20250909113106.22992-3-yangtiezhu@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <5e45a1a9-4ac3-56ee-1415-0b2128b4ed9a@loongson.cn>
+Date: Wed, 10 Sep 2025 09:11:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250909092707.3127-1-yangtiezhu@loongson.cn> <20250909092707.3127-3-yangtiezhu@loongson.cn>
- <CANiq72n7OSCUzycAQXFybx6BSVnj3MWAXvZj7U=AWf_UQwmO+g@mail.gmail.com> <CAGSQo01mQfcU1EiW53be1hcts0c1p-HQAab_HBk6VcVmhq3n2Q@mail.gmail.com>
-In-Reply-To: <CAGSQo01mQfcU1EiW53be1hcts0c1p-HQAab_HBk6VcVmhq3n2Q@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 9 Sep 2025 22:14:39 +0200
-X-Gm-Features: AS18NWDg4ZT2JJKp5Wn_EDsPG-hMufN-5mAXel2614jBzRLlCVd_Ejc82tjlxds
-Message-ID: <CANiq72nkim=Nn__xM118Vut-Bhyo6Na3RK-F6a0pCxN-M7Xgsg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] LoongArch: Handle jump tables option for RUST
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, WANG Rui <wangrui@loongson.cn>, rust-for-linux@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250909113106.22992-3-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJAxQMJY0MBozDqLAA--.43503S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZF48KryDAw4fCr1DuF4fCrX_yoWrWF4Dpr
+	15u3Zxt3yUt3sIq3ZFkr45ZryrXw4kA3sxWF93K3sa93WDZa48tr92kw1jyw4Yvr90kw17
+	Xr10gFyvga1xZ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zyIUUUUUU==
 
-On Tue, Sep 9, 2025 at 8:06=E2=80=AFPM Matthew Maurer <mmaurer@google.com> =
-wrote:
+On 2025-09-09 19:31, Tiezhu Yang wrote:
+
+> When testing the kernel live patching with "modprobe livepatch-sample",
+> there is a timeout over 15 seconds from "starting patching transition"
+> to "patching complete", dmesg shows "unreliable stack" for user tasks
+> in debug mode. When executing "rmmod livepatch-sample", there exists
+> the similar issue.
 >
-> I think this isn't needed. I added it initially because Kconfig was
-> dying when `rustc` was not on the path, but I'm not sure how I managed
-> that, since `success,trap` should guard against that (perhaps I was
-> doing something wrong in earlier development, fixed it, and didn't
-> remove the restriction). I have tested `rustc-option` with an
-> intentionally missing `rustc`, and Kconfig doesn't seem to be taken
-> down (and it gets a no answer), so the change to the macro means that
-> doc warning should be removed.
+> Like x86, arch_stack_walk_reliable() should return 0 for user tasks.
+> It is necessary to set regs->csr_prmd as task->thread.csr_prmd first,
+> then use user_mode() to check whether the task is in userspace.
+>
+> Here are the call chains:
+>
+>    klp_enable_patch()
+>      klp_try_complete_transition()
+>        klp_try_switch_task()
+>          klp_check_and_switch_task()
+>            klp_check_stack()
+>              stack_trace_save_tsk_reliable()
+>                arch_stack_walk_reliable()
+>
+> With this patch, it takes a short time for patching and unpatching.
+>
+> Before:
+>
+>    # modprobe livepatch-sample
+>    # dmesg -T | tail -3
+>    [Sat Sep  6 11:00:20 2025] livepatch: 'livepatch_sample': starting patching transition
+>    [Sat Sep  6 11:00:35 2025] livepatch: signaling remaining tasks
+>    [Sat Sep  6 11:00:36 2025] livepatch: 'livepatch_sample': patching complete
+>
+>    # echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled
+>    # rmmod livepatch_sample
+>    rmmod: ERROR: Module livepatch_sample is in use
+>    # rmmod livepatch_sample
+>    # dmesg -T | tail -3
+>    [Sat Sep  6 11:06:05 2025] livepatch: 'livepatch_sample': starting unpatching transition
+>    [Sat Sep  6 11:06:20 2025] livepatch: signaling remaining tasks
+>    [Sat Sep  6 11:06:21 2025] livepatch: 'livepatch_sample': unpatching complete
+>
+> After:
+>
+>    # modprobe livepatch-sample
+>    # dmesg -T | tail -2
+>    [Sat Sep  6 11:19:00 2025] livepatch: 'livepatch_sample': starting patching transition
+>    [Sat Sep  6 11:19:01 2025] livepatch: 'livepatch_sample': patching complete
+>
+>    # echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled
+>    # rmmod livepatch_sample
+>    # dmesg -T | tail -2
+>    [Sat Sep  6 11:21:10 2025] livepatch: 'livepatch_sample': starting unpatching transition
+>    [Sat Sep  6 11:21:11 2025] livepatch: 'livepatch_sample': unpatching complete
+>
+> While at it, do the similar thing for arch_stack_walk() to avoid
+> potential issues.
+>
+> Cc: stable@vger.kernel.org # v6.9+
+> Fixes: 199cc14cb4f1 ("LoongArch: Add kernel livepatching support")
+> Reported-by: Xi Zhang <zhangxi@kylinos.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   arch/loongarch/kernel/stacktrace.c | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+>
+> diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/stacktrace.c
+> index 9a038d1070d7..0454cce3b667 100644
+> --- a/arch/loongarch/kernel/stacktrace.c
+> +++ b/arch/loongarch/kernel/stacktrace.c
+> @@ -30,10 +30,15 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+>   		}
+>   		regs->regs[1] = 0;
+>   		regs->regs[22] = 0;
+> +		regs->csr_prmd = task->thread.csr_prmd;
+>   	}
+>   
+>   	for (unwind_start(&state, task, regs);
+>   	     !unwind_done(&state); unwind_next_frame(&state)) {
+> +		/* Success path for user tasks */
+> +		if (user_mode(regs))
+> +			return;
+> +
+>   		addr = unwind_get_return_address(&state);
+>   		if (!addr || !consume_entry(cookie, addr))
+>   			break;
+> @@ -57,9 +62,14 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+>   	}
+>   	regs->regs[1] = 0;
+>   	regs->regs[22] = 0;
+> +	regs->csr_prmd = task->thread.csr_prmd;
+>   
+>   	for (unwind_start(&state, task, regs);
+>   	     !unwind_done(&state) && !unwind_error(&state); unwind_next_frame(&state)) {
+> +		/* Success path for user tasks */
+> +		if (user_mode(regs))
+> +			return 0;
+> +
+>   		addr = unwind_get_return_address(&state);
+>   
+>   		/*
+Hi, Tiezhu,
 
-Yeah, that matches my test then, thanks! (and for the patch)
+We update stack info by get_stack_info when meet ORC_TYPE_REGS in
+unwind_next_frame. And in arch_stack_walk(_reliable), we always
+do unwind_done before unwind_next_frame. So is there anything
+error in get_stack_info which causing regs is user_mode while
+stack is not STACK_TYPE_UNKNOWN?
 
-Cheers,
-Miguel
