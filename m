@@ -1,182 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A01303C8A
-	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 06:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A9F3257829
+	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 07:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757487333; cv=none; b=oO6tyUQMAaVmSdcWFLjSnigZC3+/ngl2RHMwWfbYiAa88rIipa2xSIgyIK9pHpd8wPbUq2zr5PDpx7hJZt8xgNP8NSOkIPN41IXdvXEkCNDpW+9fGGjg/0gD3IrVFq8MwtXoGaRFRxSVoJ4XN1DFgIyev97xboBDVwRhZgjOpns=
+	t=1757488484; cv=none; b=q2LJ4EAj7wIqOQa26wLGm4c05s706j8tv12r2W1yfzSEvgT8VsVu1iEfvT6i+SZpNfHLfrYA1jyxQFhEX5QUkrQE7HiJjJo9Ws2u6Xeo2iC/2jsDeEE3sGIlMG52V1/5f5ciy1I8sXRhihx7rN7Z86dSz3cghVg0TLnzaYciKgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757487333; c=relaxed/simple;
-	bh=d2fBUdHLE7EpK3sE/IipwtUnbiMjdcQOLwP7kSpaPTA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TLQmlpYaIUWtbOQrYu3Ht120ss8t/Re972loHzLGSNQzXvr8P5gBuYUk7arOAtdw0X5dJ7jFK1jpoG97wdnV/lAzXM++mWgvr9nXDCe+QGPsyHjJibWJuAQwqWCq77nSNoWHg1/hIPXC8w7CgM7/AdxOVo3IRkKoj9NKTE3gOhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdFZ2Vli; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdFZ2Vli"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0973AC4CEF5
-	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 06:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757487333;
-	bh=d2fBUdHLE7EpK3sE/IipwtUnbiMjdcQOLwP7kSpaPTA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QdFZ2VliPTzR8f7aeJJa7Ys6qpl+ICC7P3babIBgSokGSXUw1z0rUJhvVtHDRxBa/
-	 XUUg+c6P8N4TcVvELXzIqDtfTiV43l1EkyWrvJisPn9jv3qoUYnmY9HP/mClNI1q3b
-	 pdmI5TimlMFbuYoGrJrSrzqSHMN2UObQwRIV7oQUbyS4HqxF4k0LWH9aMOFcmS0X+K
-	 xSWku17H1X6FBfGPemyrjeCErGe2pSROUNytLm/bKXRhcLOtl+hoU6T8ET2aTw6gKy
-	 S9bUNAWQT7qNyNh1Yz4a0hAxirMTccax81Q5ADkZfvTudD4HpUNKl1fXN4XT6FdJiK
-	 yITzER6XKjM/A==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-62733e779bbso4011178a12.1
-        for <loongarch@lists.linux.dev>; Tue, 09 Sep 2025 23:55:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUua0ac1WSK/WwKzRrJhAUyNd53bA8qHTDjCuJEVa5gMkSVyQHX1y+7sf3w1CTRvKuc7julJArvb/A=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwJBDzh3M8TS9uU7+tyyJClefCD5QIT2ekza4LWfIazNwAUsk8i
-	Pu4dZfQdlivmcAdq2Pae4N6Zw/pK/w2E7IHCIpSTCDhyFIC0nox7qFq3rfDjTDDutgl4njVDKsq
-	GbJNyt2y/saSAcAOhTduP/RUh652ZWF8=
-X-Google-Smtp-Source: AGHT+IETxLIN8OmW7AOoSFL9DGIajG37sBe44LIZH4sqbnnRXxSq/3ywiNlQPbGtvXDD53eudUc9m5nTUe/xX1Twno8=
-X-Received: by 2002:a05:6402:5c8:b0:623:d0f1:b029 with SMTP id
- 4fb4d7f45d1cf-623d0f1bdc8mr12511145a12.21.1757487331557; Tue, 09 Sep 2025
- 23:55:31 -0700 (PDT)
+	s=arc-20240116; t=1757488484; c=relaxed/simple;
+	bh=xLA71r6c4GbYPtkzPxfvjMrHMJLa5QUEkYcbkv1pbkw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SGNzrqBdjV12DeXVM5s5Jv+5hU3V+BbhBgQdBjfFvtRCPU6sJIWOp62SiigOJGa3d+UASJ0dOf3CvhET0k8R/QspFXT7k3qq7K9cP7MQwopFSHBOc4SuelLGexTg8GNZcUThaqPuohEn7WxQBbNaZTMd6z/dfYAvKpi6tFOTch8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Dxvr9WJcFocrMIAA--.17333S3;
+	Wed, 10 Sep 2025 15:14:30 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxQMJVJcFot5+LAA--.44735S2;
+	Wed, 10 Sep 2025 15:14:30 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Fix VM migration failure with PTW enabled
+Date: Wed, 10 Sep 2025 15:14:29 +0800
+Message-Id: <20250910071429.3925025-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ccbb40c1-5f2d-77e9-e8d2-52f2fdbad645@loongson.cn>
- <CAAhV-H5qhKepa-8sz3_AC=_RCChbVeEmnHKESMqpiJ0phMORbg@mail.gmail.com>
- <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn> <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
- <ybv2ndrzbqztkctzwhfphpdqrqbxlougs75glm22rcuzdmnrfp@lqwcms3j2d55>
- <4thrzifl6ntk7kdf65egt4srzkbrxqoqf7yzmasblwvaq3qwmt@vigfgpbxzjkq>
- <CAAhV-H53DkR6oK1chXQtoczqxYBCU-FMKrD99bjEvfXapND1Vw@mail.gmail.com>
- <itoqfhz4pxaf7aclzajkxcdsxe5akxhgahzj4dp24leh7w334k@epnvcxdga75p>
- <49ceb19c-6107-d026-3ae6-ae897d1fcae4@loongson.cn> <CAAhV-H7U+-WM_cmehAEyKZrGteosZZ3GUsO3yy7wjUNK-v=qjw@mail.gmail.com>
- <domy5iwmaasksrm7srdmus5vifcxrzvozwpnc3ht43qtxvkjhd@gkyxt3qaeyqu>
-In-Reply-To: <domy5iwmaasksrm7srdmus5vifcxrzvozwpnc3ht43qtxvkjhd@gkyxt3qaeyqu>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 10 Sep 2025 14:55:20 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H47Tfzb-JbM1-mN1c0WaodPM0G0ip6NCDwZb8Yj=E8+Fw@mail.gmail.com>
-X-Gm-Features: Ac12FXw_vNPkO5NdCd0ygz9HU0E7ujj68OT-djgljfs4hYxzRqViwYjspQUXbA8
-Message-ID: <CAAhV-H47Tfzb-JbM1-mN1c0WaodPM0G0ip6NCDwZb8Yj=E8+Fw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
- warnings about EFISTUB
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxQMJVJcFot5+LAA--.44735S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi, Josh,
+With PTW disabled system, bit Dirty is HW bit for page writing, however
+with PTW enabled system, bit Write is HW bit for page writing. Previously
+bit Write is treated as SW bit to record page writable attribute for fast
+page fault handling in the secondary MMU, however with PTW enabled machine,
+this bit is used by HW already.
 
-On Wed, Sep 10, 2025 at 12:05=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.or=
-g> wrote:
->
-> On Tue, Sep 09, 2025 at 12:10:29PM +0800, Huacai Chen wrote:
-> > On Tue, Sep 9, 2025 at 12:00=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
-> > >
-> > > On 2025/9/6 =E4=B8=8A=E5=8D=8812:04, Josh Poimboeuf wrote:
-> > > > On Fri, Sep 05, 2025 at 12:36:16PM +0800, Huacai Chen wrote:
-> > > >> Hi, Josh,
-> > > >>
-> > > >> On Fri, Sep 5, 2025 at 5:46=E2=80=AFAM Josh Poimboeuf <jpoimboe@ke=
-rnel.org> wrote:
-> > > >>>
-> > > >>> On Thu, Sep 04, 2025 at 10:39:30AM -0700, Josh Poimboeuf wrote:
-> > > >>>> On Thu, Sep 04, 2025 at 11:59:30AM +0800, Huacai Chen wrote:
-> > > >>>>> This is from RISC-V code.
-> > > >>>>>
-> > > >>>>> __HEAD
-> > > >>>>> SYM_CODE_START(_start)
-> > > >>>>>          /*
-> > > >>>>>           * Image header expected by Linux boot-loaders. The im=
-age header data
-> > > >>>>>           * structure is described in asm/image.h.
-> > > >>>>>           * Do not modify it without modifying the structure an=
-d all bootloaders
-> > > >>>>>           * that expects this header format!!
-> > > >>>>>           */
-> > > >>>>> #ifdef CONFIG_EFI
-> > > >>>>>          /*
-> > > >>>>>           * This instruction decodes to "MZ" ASCII required by =
-UEFI.
-> > > >>>>>           */
-> > > >>>>>          c.li s4,-13
-> > > >>>>>          j _start_kernel
-> > > >>>>> #else
-> > > >>>>>          /* jump to start kernel */
-> > > >>>>>          j _start_kernel
-> > > >>>>>          /* reserved */
-> > > >>>>>          .word 0
-> > > >>>>> #endif
-> > > >>>>>
-> > > >>>>> The HEAD section has instructions, if you change it into a data
-> > > >>>>> section then it loses the "x" attribute.
-> > > >>>
-> > > >>> Actually, the "x" attribute isn't needed for vmlinux.  The vmlinu=
-x
-> > > >>> linker script places it in the text region regardless.
-> > > >>>
-> > > >>> Moving the data to a data section should be really simple, someth=
-ing
-> > > >>> like the below.
-> > > >>>
-> > > >>> And yes, even the above RISC-V code can be in a data section.  Th=
-ose
-> > > >>> instructions are part of the 'struct riscv_image_header' data str=
-ucture.
-> > > >> This may work but also look strange (code in data section), it is =
-more
-> > > >> like a "workaround". :)
-> > > >
-> > > > The "strange" part of the code is the intermixing of code and data.=
-  If
-> > > > they can't be separated, then they are part of a data structure and
-> > > > belong in a data section.
-> > >
-> > > I tried the following minimal changes, put the image header into
-> > > the section .head.data, do not link efistub lib.a into vmlinux.o,
-> > > just link efistub lib.a into vmlinux, no other changes, they have
-> > > same effect with patch #1 and #2, what do you think?
-> > I still don't think we have to put the HEAD into a data section. Yes,
-> > it is a mix of code and data, but the data is read-only so it doesn't
-> > need the "w" attribute (and code needs "x", at least in theory).
->
-> Then it can be __HEAD_RODATA, with the "w" removed:
->
-> #define __HEAD_RODATA   .section        ".head.rodata","a"
->
-> > From my point of view, the text section is still the best for HEAD.
->
-> It belongs in a data section for two reasons:
->
->   1) It's an image header data structure.
->
->   2) We don't want objtool (or any other tooling) to try to validate it
->      or otherwise treat it as text during the build.
-I'm sorry but I insist on my opinion. :)
+Here define KVM_PAGE_SOFT_WRITE with SW bit _PAGE_MODIFIED, so that it can
+work on both PTW disabled and enabled machines. And with HW write bit, both
+bit Dirty and Write is set or clear.
 
-Yes, there are reasons to put it into a data section, but there are
-also reasons to put it into a code section.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_mmu.h | 20 ++++++++++++++++----
+ arch/loongarch/kvm/mmu.c             |  8 ++++----
+ 2 files changed, 20 insertions(+), 8 deletions(-)
 
-1) ARM64, RISC-V and LoongArch have the same style (mix code and data
-in __HEAD), I don't want to do something special.
+diff --git a/arch/loongarch/include/asm/kvm_mmu.h b/arch/loongarch/include/asm/kvm_mmu.h
+index 099bafc6f797..efcd593c42b1 100644
+--- a/arch/loongarch/include/asm/kvm_mmu.h
++++ b/arch/loongarch/include/asm/kvm_mmu.h
+@@ -16,6 +16,13 @@
+  */
+ #define KVM_MMU_CACHE_MIN_PAGES	(CONFIG_PGTABLE_LEVELS - 1)
+ 
++/*
++ * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
++ * kernel, on secondary MMU it records page writable in order to fast
++ * path handling
++ */
++#define KVM_PAGE_SOFT_WRITE	_PAGE_MODIFIED
++
+ #define _KVM_FLUSH_PGTABLE	0x1
+ #define _KVM_HAS_PGMASK		0x2
+ #define kvm_pfn_pte(pfn, prot)	(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
+@@ -52,11 +59,16 @@ static inline void kvm_set_pte(kvm_pte_t *ptep, kvm_pte_t val)
+ 	WRITE_ONCE(*ptep, val);
+ }
+ 
+-static inline int kvm_pte_write(kvm_pte_t pte) { return pte & _PAGE_WRITE; }
+-static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & _PAGE_DIRTY; }
++static inline int kvm_pte_soft_write(kvm_pte_t pte) { return pte & KVM_PAGE_SOFT_WRITE; }
++static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & __WRITEABLE; }
+ static inline int kvm_pte_young(kvm_pte_t pte) { return pte & _PAGE_ACCESSED; }
+ static inline int kvm_pte_huge(kvm_pte_t pte) { return pte & _PAGE_HUGE; }
+ 
++static inline kvm_pte_t kvm_pte_mksoft_write(kvm_pte_t pte)
++{
++	return pte | KVM_PAGE_SOFT_WRITE;
++}
++
+ static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
+ {
+ 	return pte | _PAGE_ACCESSED;
+@@ -69,12 +81,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t pte)
+ 
+ static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
+ {
+-	return pte | _PAGE_DIRTY;
++	return pte | __WRITEABLE;
+ }
+ 
+ static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
+ {
+-	return pte & ~_PAGE_DIRTY;
++	return pte & ~__WRITEABLE;
+ }
+ 
+ static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index ed956c5cf2cc..68749069290f 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
+ 	/* Track access to pages marked old */
+ 	new = kvm_pte_mkyoung(*ptep);
+ 	if (write && !kvm_pte_dirty(new)) {
+-		if (!kvm_pte_write(new)) {
++		if (!kvm_pte_soft_write(new)) {
+ 			ret = -EFAULT;
+ 			goto out;
+ 		}
+@@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+ 		prot_bits |= _CACHE_SUC;
+ 
+ 	if (writeable) {
+-		prot_bits |= _PAGE_WRITE;
++		prot_bits = kvm_pte_mksoft_write(prot_bits);
+ 		if (write)
+-			prot_bits |= __WRITEABLE;
++			prot_bits = kvm_pte_mkdirty(prot_bits);
+ 	}
+ 
+ 	/* Disable dirty logging on HugePages */
+@@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+ 	kvm_release_faultin_page(kvm, page, false, writeable);
+ 	spin_unlock(&kvm->mmu_lock);
+ 
+-	if (prot_bits & _PAGE_DIRTY)
++	if (kvm_pte_dirty(prot_bits))
+ 		mark_page_dirty_in_slot(kvm, memslot, gfn);
+ 
+ out:
 
-2) __HEAD is used for nearly all archs, except ARM64, RISC-V and
-LoongArch, other archs are almost pure code (so they must use a code
-section). However, the code in __HEAD is usually not like a regular
-function. In other word, if other archs add objtool support, __HEAD
-will also probably cause problems.
+base-commit: 9dd1835ecda5b96ac88c166f4a87386f3e727bd9
+-- 
+2.39.3
 
-3) Many archs put __HEAD between __init_begin and __init_end, which
-means it is discarded at runtime, stack unwinder is useless for it.
-
-So, ignoring .head.text is not just a workaround for LoongArch, it is
-a proper solution for other archs.
-
-
-Huacai
-
->
-> --
-> Josh
->
