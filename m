@@ -1,97 +1,99 @@
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A764307AD7
-	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 08:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CAE230BB96
+	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 09:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757494619; cv=none; b=tPm5ecmzd9Pb8YPo9hDd/ZJFq8NPJtPX6CSg2VTyrFit8YTqHpDRE1h+QUtY+osgHLp7DvNbdp4nnFj4q1PlqH29aDW3NDt9XL2BPcZbpuPuleHZOOrmqOelESA/nLTKkIuCnbCm9k4RZP2gcybbkWG4kG97ZJ6IyBKW6zAQAs4=
+	t=1757495454; cv=none; b=jTHdL36Ze/vt5jklr0smdUS7ny7PEfSI6/5LWJE0eyPCeXc5Z9Y6jELXXI/B3jN87NLgdyAUz8Ijn7zGS4Btv1ulQgjnQMa7ecO92807Fe/vKncna+KEMW+uHMrO6X5wMwbPp6idsihF8yQB4zI4516Ptxlj1hjDpfF+l6PWSB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757494619; c=relaxed/simple;
-	bh=RMF005p9u9dfBw7QNthPu/NejOw7XiP7uoknr3J7Uko=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QoLWcUBrSi6kcBEorAXvk9YEX3E37mH8uZZ6oCrh+uNqPlTodpQfTic7EDuGknhc0qvBJ/sNlc6o98IHbRcl4uwkzXD2tW4mrxzsJe4i7PTO581zRkM7bLVXd0fN4mX9CSYYlJfzjBPApokRMv71r2+JWtEdGVDg1Elo00iOlOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=vmSmM908; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="vmSmM908"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 24FA5C6B3AC;
-	Wed, 10 Sep 2025 08:56:39 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id E0E72606D4;
-	Wed, 10 Sep 2025 08:56:54 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C79FE102F1D2E;
-	Wed, 10 Sep 2025 10:56:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1757494614; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=qo2BlmEUSD/J8v+xzmhhSNhPkQC0w+4Piainj47b+IU=;
-	b=vmSmM908Ow2DoozMw2yMHS167Mej8C9ju6lL/Gg899huQ+nJBJFri8u4BDtkXL8M22LPIe
-	0Ht8uTa91iphxBPGQjo3x0oGM33tLvd0o771n3UnzYqpZq82ioH3gU0+hIOssSAQFzfvUV
-	F7px4NXyWWOt5UirxxI9Q02/0rCyKAarA2CSZzcKLlroxQrsjNfQJg5OqrQQIfUP0EytbY
-	4KioQUzyA1b9vSF+6yZ98w9mcB5rSVlEY4S6qXoo9xj6AEAI7pd86r+G5y61WdWaClSBzb
-	rvNGaTbwMSCSdyMptAn46evHaf2zgYUpErZgSemIRLBlQSYic8ROyK/1pBsarg==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Huacai Chen <chenhuacai@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
- loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
- linux-mtd@lists.infradead.org
-In-Reply-To: <cover.1756991031.git.zhoubinbin@loongson.cn>
-References: <cover.1756991031.git.zhoubinbin@loongson.cn>
-Subject: Re: [PATCH v4 0/7] mtd: rawnand: loongson: Add Loongson-2K nand
- controller support
-Message-Id: <175749461059.461240.3393347019053494264.b4-ty@bootlin.com>
-Date: Wed, 10 Sep 2025 10:56:50 +0200
+	s=arc-20240116; t=1757495454; c=relaxed/simple;
+	bh=nN0dkOHatWi3Kgddu96dR8RKHH0WVA7ud+zi9dAXztE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lGiGKF2h/Xi6eRemMv1q2GLa0hwBmiCmv3tFGNYNBO6tOv2xnKqOleRhroQme3si57F4wprqlElX2FvdlkoCI5Y9ARJ7X2gA7VtB4QdPwX7DGg9SNoEhTHD8f9jVmVTI7InWmtjgTwaWYZ36IB3Z7dYE/M5zkesnmKXGLyhCSIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.89])
+	by gateway (Coremail) with SMTP id _____8Dx_7+XQMFoVL8IAA--.18088S3;
+	Wed, 10 Sep 2025 17:10:47 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.89])
+	by front1 (Coremail) with SMTP id qMiowJAxz8OTQMFo18eLAA--.52768S2;
+	Wed, 10 Sep 2025 17:10:47 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH V2] LoongArch: Align ACPI structures if ARCH_STRICT_ALIGN enabled
+Date: Wed, 10 Sep 2025 17:10:33 +0800
+Message-ID: <20250910091033.725716-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.14.2
-X-Last-TLS-Session-Version: TLSv1.3
+X-CM-TRANSID:qMiowJAxz8OTQMFo18eLAA--.52768S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr18CF1rJryxJF43XF17XFc_yoW8GryUpF
+	yDCrWkGrZrGr1fCa4jy397uryUtFs5CrWIgFWUt3W8ZF1qva4UXr4kKr1DWFyYgayFqFWx
+	ZFnag34DZa4Yv3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUUUUU==
 
-On Thu, 04 Sep 2025 21:06:32 +0800, Binbin Zhou wrote:
-> This patchset adds support for the Loongson-2K0500/Loongson-2K1000 NAND
-> controllers, which are similar to the Loongson-1C NAND controller.
-> 
-> They support a maximum capacity of 16GB FLASH per chip, with a maximum
-> page size of 8KB. The chip supports up to 4 chip selects and 4 RDY signals.
-> 
-> The key difference between the Loongson-2K NAND controllers is that the
-> Loongson-2K1000 explicitly configures the DMA controller routing, while
-> the Loongson-2K0500 defaults to using APBDMA0.
-> 
-> [...]
+ARCH_STRICT_ALIGN is used for hardware without UAL, now it only control
+the -mstrict-align flag. However, ACPI structures are packed by default
+so will cause unaligned accesses.
 
-Applied to nand/next, thanks!
+To avoid this, define ACPI_MISALIGNMENT_NOT_SUPPORTED in asm/acenv.h to
+align ACPI structures if ARCH_STRICT_ALIGN enabled.
 
-[1/7] mtd: rawnand: loongson1: Rename the prefix from ls1x to loongson
-      commit: 7a1e3a452a574ef337c4c2cd9202332a1ae9cd94
-[2/7] mtd: rawnand: loongson: Add 6-byte NAND ID reading support
-      commit: fb1dd6b6722b5187a4fa7385d0be60b28c0f9936
-[3/7] mtd: rawnand: loongson: Add nand chip select support
-      commit: 7ad5bdf88d7295c295a363a5daf481b283acedc2
-[4/7] dt-bindings: mtd: loongson,ls1b-nand-controller: Document the Loongson-2K0500 NAND controller
-      commit: 4a2bab7ccceb14b48e86794b87104248c75aa587
-[5/7] mtd: rawnand: loongson: Add Loongson-2K0500 NAND controller support
-      commit: e55bbdd4a4b654dfe8ee8649b3be1db82319d6c0
-[6/7] dt-bindings: mtd: loongson,ls1b-nand-controller: Document the Loongson-2K1000 NAND controller
-      commit: 0b1ae6480c3be58ad31afe757cbf1069ae072bb1
-[7/7] mtd: rawnand: loongson: Add Loongson-2K1000 NAND controller support
-      commit: 5808ae66f22e665c7131816e146548f2d7903ae1
+Cc: stable@vger.kernel.org
+Reported-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Suggested-by: Xi Ruoyao <xry111@xry111.site>
+Suggested-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Modify asm/acenv.h instead of Makefile.
 
-Patche(s) should be available on mtd/linux.git and will be
-part of the next PR (provided that no robot complains by then).
+ arch/loongarch/include/asm/acenv.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Kind regards,
-Miquèl
+diff --git a/arch/loongarch/include/asm/acenv.h b/arch/loongarch/include/asm/acenv.h
+index 52f298f7293b..483c955f2ae5 100644
+--- a/arch/loongarch/include/asm/acenv.h
++++ b/arch/loongarch/include/asm/acenv.h
+@@ -10,9 +10,8 @@
+ #ifndef _ASM_LOONGARCH_ACENV_H
+ #define _ASM_LOONGARCH_ACENV_H
+ 
+-/*
+- * This header is required by ACPI core, but we have nothing to fill in
+- * right now. Will be updated later when needed.
+- */
++#ifdef CONFIG_ARCH_STRICT_ALIGN
++#define ACPI_MISALIGNMENT_NOT_SUPPORTED
++#endif /* CONFIG_ARCH_STRICT_ALIGN */
+ 
+ #endif /* _ASM_LOONGARCH_ACENV_H */
+-- 
+2.47.3
 
