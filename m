@@ -1,45 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CF130FF02;
-	Wed, 10 Sep 2025 08:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5ED30BB97
+	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 08:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757492936; cv=none; b=Nc4oytsaxjUMV8+FojuQ0MdaSc2oGdtbYsf0/zcKHGF75VD9uyTLoxHL+7U3teRuI0zLstnh4QFRsjthxupzPmhuam+wlV20dbrbP8pKCmscPKrlPTDPMv946FpFzOmukq6Y33EeQ+Myw1lmz5inGd8erb29XF7/THOAdbGJApQ=
+	t=1757494089; cv=none; b=TflxP23ofxPRcLeDfWZJBaw1yoys6/E0FFtnltQOtDFe0vVbAsiJZOAEpzUjZxTMkcpIUDFOqGDbTBdBt9c0aETbwYq21Ra4Ve6aWY3eoKsu2PZxpxmu1GGvYekzEczBkxVY1E0jEJZoO1SWcJQZwZ5zQ6D49pHugEQ92y3ZpEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757492936; c=relaxed/simple;
-	bh=Zzz+n+3XnhvvAwKjxQsHO9+m+x/oUwOy4G12ZoV2hV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GNenhOEDJQMa+hWXAWXgXs+bqg9DFr2zXFxVXIYjrrcGK8YTomR6xEAr2fkL4YJCr0hu09ZYw5/fhQkw7BatJY3stoX9RWsiQtN21IbGvI3Op3wN+t+XBtX0h5ce/XHgpaw1em4JynG1LfLjSm4f/l8OYLkqvd4ESYUszR/x804=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjTAPRQ4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757494089; c=relaxed/simple;
+	bh=dN+1i6d8UPUpI1B2syCPjraQa4MBlPD0R+WcgvBzssU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=d7ztdQgDvySO1Bdr0lsf86v9qMWVpGhIFC8/x0amWQv9GZNM2n8RolCranS+34x88VSvTYvF3hDCFH/6uNqHajcAARyj48APFBd3sRrMR0a+TUT5rORkWAx25ct9uEOv/Jg7gG9jmXRE3yO1qcE/O2U/jEYdd57wi6063lhf85w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XzzO2s+g; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjTAPRQ4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D654EC4CEF7;
-	Wed, 10 Sep 2025 08:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757492936;
-	bh=Zzz+n+3XnhvvAwKjxQsHO9+m+x/oUwOy4G12ZoV2hV4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RjTAPRQ4FDT5MZweJjJC+ihc1i5IfQyxrDV091Vzev11Tc0nP0z57Uuin25cK1zXk
-	 YX6xNa73JWwuYzI1IQu9lLD5Er1pYZKPpp1FOVHrm1kMqQDLUwzpUDcRR9H6S6lyM2
-	 ZFHPvb+N66JyG60wqrhp05uGe7fGFoKH2MAWZ/Bzg2X+rYqJ6nAdiPSdY9O+LKSEBu
-	 juCpgf1quUKEEy8iCWZb0nfWK4YpUeBkXlX0ImM+kj5sOOpgFhAlUxFTj+a4mrUCR2
-	 frSr4jnqME6mkxXQv+kKJj+zq3MsQq4CJaXVT+TfbbwUiaWqk+nHF7Do8gq9uvUtjb
-	 +puGkScXW/g/w==
-Date: Wed, 10 Sep 2025 10:28:53 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XzzO2s+g"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id E8568C6B3AC;
+	Wed, 10 Sep 2025 08:47:49 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id AD6CD606D4;
+	Wed, 10 Sep 2025 08:48:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2DABB102F28A1;
+	Wed, 10 Sep 2025 10:47:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1757494083; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=dN+1i6d8UPUpI1B2syCPjraQa4MBlPD0R+WcgvBzssU=;
+	b=XzzO2s+gbAYCRDK65qI97IRSh9+XaVduxowWkmB17x9o6kEZ1OC2g5strtFPOv6h+VZTnG
+	YYePbp4mpXS3LtlaMNdDk0SFLKgn++vgvrUk+5jBGDgDa68vWdl9eSZ0YEO1vTClikYomj
+	VoiyVOWNR8EsrlDMeaaMQbuqf8yn162Y1VdNG2yidqjnBlIbIezpXt+1Bt6qRHvLN0FmqK
+	M1ITxZgPiilf4q5Ve9ShN+UD1luo/BvvDAG6P0ufHsjQyfA9E+U44NsxHIhgqHIryhNF2y
+	BQ7zTVSjEu0YNeh+ASmZPrktBKYPth53Lm97mGFMzd5Yx0WFqRK5zWF1/4gucQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Haowei Zheng <zhenghaowei@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] dt-bindings: serial: Add Loongson UART controller
-Message-ID: <20250910-knowing-labradoodle-of-protection-d37884@kuoka>
-References: <cover.1757318368.git.zhoubinbin@loongson.cn>
- <8575ff2d46b701950b1b0da3d3c181db331f79db.1757318368.git.zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,  Huacai Chen
+ <chenhuacai@loongson.cn>,  Rob Herring <robh+dt@kernel.org>,  Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,
+  Keguang Zhang <keguang.zhang@gmail.com>,  Richard Weinberger
+ <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,  Huacai Chen
+ <chenhuacai@kernel.org>,  Xuerui Wang <kernel@xen0n.name>,
+  loongarch@lists.linux.dev,  devicetree@vger.kernel.org,
+  linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v4 1/7] mtd: rawnand: loongson1: Rename the prefix from
+ ls1x to loongson
+In-Reply-To: <8c804abb75277f0ff389151c1cd58c94f2b258ca.1756991031.git.zhoubinbin@loongson.cn>
+	(Binbin Zhou's message of "Thu, 4 Sep 2025 21:06:33 +0800")
+References: <cover.1756991031.git.zhoubinbin@loongson.cn>
+	<8c804abb75277f0ff389151c1cd58c94f2b258ca.1756991031.git.zhoubinbin@loongson.cn>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Wed, 10 Sep 2025 10:47:49 +0200
+Message-ID: <87bjnielsa.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,19 +59,28 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8575ff2d46b701950b1b0da3d3c181db331f79db.1757318368.git.zhoubinbin@loongson.cn>
+Content-Transfer-Encoding: quoted-printable
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, Sep 09, 2025 at 08:11:18PM +0800, Binbin Zhou wrote:
-> Add Loongson UART controller binding with DT schema format using
-> json-schema.
+Hi Binbin,
 
-Why? Your DTS claims this is 8250 / ns16550a.
+On 04/09/2025 at 21:06:33 +08, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
 
-This is just incomplete commit msg. You must explain the bigger picture
-here, not repeat what the patch does. We see what the patch does from
-the patch.
+> I am going to introduce the NAND controllers of the Loongson-2K series
 
-Best regards,
-Krzysztof
+Please adopt a more global phrasing, like "In order to introduce" rather
+than the first singular person.
 
+> CPUs, which are similar to Loongson-1.
+>
+> As preparation, rename all prefixes from Loongson1-specific to
+> Loongson-generic.
+>
+> No functional change intended.
+>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+
+
+Thanks,
+Miqu=C3=A8l
