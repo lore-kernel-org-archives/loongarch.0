@@ -1,172 +1,182 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4F521E32A2
-	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 01:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A01303C8A
+	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 06:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757466722; cv=none; b=Pt08Ke5Rvha1SktFppvuut2E+Y7RX093d+N6JHjhVJoRlKoJ2y/nfSRTjM9uG5L4//wycmbIqVu2fPU+sME32AwM2IG+IbLpa/AN8Red38tLe3yd6foIxQJKyPbt/MID7n2OL+/Kz2Z4db/ukIAv3WbAA8iv+WyYn/PDR8yK8pU=
+	t=1757487333; cv=none; b=oO6tyUQMAaVmSdcWFLjSnigZC3+/ngl2RHMwWfbYiAa88rIipa2xSIgyIK9pHpd8wPbUq2zr5PDpx7hJZt8xgNP8NSOkIPN41IXdvXEkCNDpW+9fGGjg/0gD3IrVFq8MwtXoGaRFRxSVoJ4XN1DFgIyev97xboBDVwRhZgjOpns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757466722; c=relaxed/simple;
-	bh=VLZV08D0RrY8qkrpwcLypvyV7VjZDjrL8NWEVgCZtdM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YZao3QPEQwF3AlKuKNp4ZynmuC/ibNZ3sTneMx+8NCsiDC1etsEgtuweRnSfpgfMtaH6EgsnlOaUAIprCjJ69vojq5TGP3P5wZpne8w62IBraUm8JIMgNEa4GaniWLIu4TISc9B/sYGlcWBtYrxmfr2yD0QONu4/+jY5QqUCCHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8Bx3tJb0MBowp4IAA--.18477S3;
-	Wed, 10 Sep 2025 09:11:56 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by front1 (Coremail) with SMTP id qMiowJAxQMJY0MBozDqLAA--.43503S3;
-	Wed, 10 Sep 2025 09:11:54 +0800 (CST)
-Subject: Re: [PATCH v1 2/2] LoongArch: Return 0 for user tasks in
- arch_stack_walk_reliable()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, Xi Zhang <zhangxi@kylinos.cn>,
- live-patching@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250909113106.22992-1-yangtiezhu@loongson.cn>
- <20250909113106.22992-3-yangtiezhu@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <5e45a1a9-4ac3-56ee-1415-0b2128b4ed9a@loongson.cn>
-Date: Wed, 10 Sep 2025 09:11:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1757487333; c=relaxed/simple;
+	bh=d2fBUdHLE7EpK3sE/IipwtUnbiMjdcQOLwP7kSpaPTA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TLQmlpYaIUWtbOQrYu3Ht120ss8t/Re972loHzLGSNQzXvr8P5gBuYUk7arOAtdw0X5dJ7jFK1jpoG97wdnV/lAzXM++mWgvr9nXDCe+QGPsyHjJibWJuAQwqWCq77nSNoWHg1/hIPXC8w7CgM7/AdxOVo3IRkKoj9NKTE3gOhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdFZ2Vli; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdFZ2Vli"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0973AC4CEF5
+	for <loongarch@lists.linux.dev>; Wed, 10 Sep 2025 06:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757487333;
+	bh=d2fBUdHLE7EpK3sE/IipwtUnbiMjdcQOLwP7kSpaPTA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QdFZ2VliPTzR8f7aeJJa7Ys6qpl+ICC7P3babIBgSokGSXUw1z0rUJhvVtHDRxBa/
+	 XUUg+c6P8N4TcVvELXzIqDtfTiV43l1EkyWrvJisPn9jv3qoUYnmY9HP/mClNI1q3b
+	 pdmI5TimlMFbuYoGrJrSrzqSHMN2UObQwRIV7oQUbyS4HqxF4k0LWH9aMOFcmS0X+K
+	 xSWku17H1X6FBfGPemyrjeCErGe2pSROUNytLm/bKXRhcLOtl+hoU6T8ET2aTw6gKy
+	 S9bUNAWQT7qNyNh1Yz4a0hAxirMTccax81Q5ADkZfvTudD4HpUNKl1fXN4XT6FdJiK
+	 yITzER6XKjM/A==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-62733e779bbso4011178a12.1
+        for <loongarch@lists.linux.dev>; Tue, 09 Sep 2025 23:55:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUua0ac1WSK/WwKzRrJhAUyNd53bA8qHTDjCuJEVa5gMkSVyQHX1y+7sf3w1CTRvKuc7julJArvb/A=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJBDzh3M8TS9uU7+tyyJClefCD5QIT2ekza4LWfIazNwAUsk8i
+	Pu4dZfQdlivmcAdq2Pae4N6Zw/pK/w2E7IHCIpSTCDhyFIC0nox7qFq3rfDjTDDutgl4njVDKsq
+	GbJNyt2y/saSAcAOhTduP/RUh652ZWF8=
+X-Google-Smtp-Source: AGHT+IETxLIN8OmW7AOoSFL9DGIajG37sBe44LIZH4sqbnnRXxSq/3ywiNlQPbGtvXDD53eudUc9m5nTUe/xX1Twno8=
+X-Received: by 2002:a05:6402:5c8:b0:623:d0f1:b029 with SMTP id
+ 4fb4d7f45d1cf-623d0f1bdc8mr12511145a12.21.1757487331557; Tue, 09 Sep 2025
+ 23:55:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250909113106.22992-3-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJAxQMJY0MBozDqLAA--.43503S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZF48KryDAw4fCr1DuF4fCrX_yoWrWF4Dpr
-	15u3Zxt3yUt3sIq3ZFkr45ZryrXw4kA3sxWF93K3sa93WDZa48tr92kw1jyw4Yvr90kw17
-	Xr10gFyvga1xZ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zyIUUUUUU==
+References: <ccbb40c1-5f2d-77e9-e8d2-52f2fdbad645@loongson.cn>
+ <CAAhV-H5qhKepa-8sz3_AC=_RCChbVeEmnHKESMqpiJ0phMORbg@mail.gmail.com>
+ <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn> <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
+ <ybv2ndrzbqztkctzwhfphpdqrqbxlougs75glm22rcuzdmnrfp@lqwcms3j2d55>
+ <4thrzifl6ntk7kdf65egt4srzkbrxqoqf7yzmasblwvaq3qwmt@vigfgpbxzjkq>
+ <CAAhV-H53DkR6oK1chXQtoczqxYBCU-FMKrD99bjEvfXapND1Vw@mail.gmail.com>
+ <itoqfhz4pxaf7aclzajkxcdsxe5akxhgahzj4dp24leh7w334k@epnvcxdga75p>
+ <49ceb19c-6107-d026-3ae6-ae897d1fcae4@loongson.cn> <CAAhV-H7U+-WM_cmehAEyKZrGteosZZ3GUsO3yy7wjUNK-v=qjw@mail.gmail.com>
+ <domy5iwmaasksrm7srdmus5vifcxrzvozwpnc3ht43qtxvkjhd@gkyxt3qaeyqu>
+In-Reply-To: <domy5iwmaasksrm7srdmus5vifcxrzvozwpnc3ht43qtxvkjhd@gkyxt3qaeyqu>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 10 Sep 2025 14:55:20 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H47Tfzb-JbM1-mN1c0WaodPM0G0ip6NCDwZb8Yj=E8+Fw@mail.gmail.com>
+X-Gm-Features: Ac12FXw_vNPkO5NdCd0ygz9HU0E7ujj68OT-djgljfs4hYxzRqViwYjspQUXbA8
+Message-ID: <CAAhV-H47Tfzb-JbM1-mN1c0WaodPM0G0ip6NCDwZb8Yj=E8+Fw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
+ warnings about EFISTUB
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
+	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-09-09 19:31, Tiezhu Yang wrote:
+Hi, Josh,
 
-> When testing the kernel live patching with "modprobe livepatch-sample",
-> there is a timeout over 15 seconds from "starting patching transition"
-> to "patching complete", dmesg shows "unreliable stack" for user tasks
-> in debug mode. When executing "rmmod livepatch-sample", there exists
-> the similar issue.
+On Wed, Sep 10, 2025 at 12:05=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.or=
+g> wrote:
 >
-> Like x86, arch_stack_walk_reliable() should return 0 for user tasks.
-> It is necessary to set regs->csr_prmd as task->thread.csr_prmd first,
-> then use user_mode() to check whether the task is in userspace.
+> On Tue, Sep 09, 2025 at 12:10:29PM +0800, Huacai Chen wrote:
+> > On Tue, Sep 9, 2025 at 12:00=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
+n.cn> wrote:
+> > >
+> > > On 2025/9/6 =E4=B8=8A=E5=8D=8812:04, Josh Poimboeuf wrote:
+> > > > On Fri, Sep 05, 2025 at 12:36:16PM +0800, Huacai Chen wrote:
+> > > >> Hi, Josh,
+> > > >>
+> > > >> On Fri, Sep 5, 2025 at 5:46=E2=80=AFAM Josh Poimboeuf <jpoimboe@ke=
+rnel.org> wrote:
+> > > >>>
+> > > >>> On Thu, Sep 04, 2025 at 10:39:30AM -0700, Josh Poimboeuf wrote:
+> > > >>>> On Thu, Sep 04, 2025 at 11:59:30AM +0800, Huacai Chen wrote:
+> > > >>>>> This is from RISC-V code.
+> > > >>>>>
+> > > >>>>> __HEAD
+> > > >>>>> SYM_CODE_START(_start)
+> > > >>>>>          /*
+> > > >>>>>           * Image header expected by Linux boot-loaders. The im=
+age header data
+> > > >>>>>           * structure is described in asm/image.h.
+> > > >>>>>           * Do not modify it without modifying the structure an=
+d all bootloaders
+> > > >>>>>           * that expects this header format!!
+> > > >>>>>           */
+> > > >>>>> #ifdef CONFIG_EFI
+> > > >>>>>          /*
+> > > >>>>>           * This instruction decodes to "MZ" ASCII required by =
+UEFI.
+> > > >>>>>           */
+> > > >>>>>          c.li s4,-13
+> > > >>>>>          j _start_kernel
+> > > >>>>> #else
+> > > >>>>>          /* jump to start kernel */
+> > > >>>>>          j _start_kernel
+> > > >>>>>          /* reserved */
+> > > >>>>>          .word 0
+> > > >>>>> #endif
+> > > >>>>>
+> > > >>>>> The HEAD section has instructions, if you change it into a data
+> > > >>>>> section then it loses the "x" attribute.
+> > > >>>
+> > > >>> Actually, the "x" attribute isn't needed for vmlinux.  The vmlinu=
+x
+> > > >>> linker script places it in the text region regardless.
+> > > >>>
+> > > >>> Moving the data to a data section should be really simple, someth=
+ing
+> > > >>> like the below.
+> > > >>>
+> > > >>> And yes, even the above RISC-V code can be in a data section.  Th=
+ose
+> > > >>> instructions are part of the 'struct riscv_image_header' data str=
+ucture.
+> > > >> This may work but also look strange (code in data section), it is =
+more
+> > > >> like a "workaround". :)
+> > > >
+> > > > The "strange" part of the code is the intermixing of code and data.=
+  If
+> > > > they can't be separated, then they are part of a data structure and
+> > > > belong in a data section.
+> > >
+> > > I tried the following minimal changes, put the image header into
+> > > the section .head.data, do not link efistub lib.a into vmlinux.o,
+> > > just link efistub lib.a into vmlinux, no other changes, they have
+> > > same effect with patch #1 and #2, what do you think?
+> > I still don't think we have to put the HEAD into a data section. Yes,
+> > it is a mix of code and data, but the data is read-only so it doesn't
+> > need the "w" attribute (and code needs "x", at least in theory).
 >
-> Here are the call chains:
+> Then it can be __HEAD_RODATA, with the "w" removed:
 >
->    klp_enable_patch()
->      klp_try_complete_transition()
->        klp_try_switch_task()
->          klp_check_and_switch_task()
->            klp_check_stack()
->              stack_trace_save_tsk_reliable()
->                arch_stack_walk_reliable()
+> #define __HEAD_RODATA   .section        ".head.rodata","a"
 >
-> With this patch, it takes a short time for patching and unpatching.
+> > From my point of view, the text section is still the best for HEAD.
 >
-> Before:
+> It belongs in a data section for two reasons:
 >
->    # modprobe livepatch-sample
->    # dmesg -T | tail -3
->    [Sat Sep  6 11:00:20 2025] livepatch: 'livepatch_sample': starting patching transition
->    [Sat Sep  6 11:00:35 2025] livepatch: signaling remaining tasks
->    [Sat Sep  6 11:00:36 2025] livepatch: 'livepatch_sample': patching complete
+>   1) It's an image header data structure.
 >
->    # echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled
->    # rmmod livepatch_sample
->    rmmod: ERROR: Module livepatch_sample is in use
->    # rmmod livepatch_sample
->    # dmesg -T | tail -3
->    [Sat Sep  6 11:06:05 2025] livepatch: 'livepatch_sample': starting unpatching transition
->    [Sat Sep  6 11:06:20 2025] livepatch: signaling remaining tasks
->    [Sat Sep  6 11:06:21 2025] livepatch: 'livepatch_sample': unpatching complete
->
-> After:
->
->    # modprobe livepatch-sample
->    # dmesg -T | tail -2
->    [Sat Sep  6 11:19:00 2025] livepatch: 'livepatch_sample': starting patching transition
->    [Sat Sep  6 11:19:01 2025] livepatch: 'livepatch_sample': patching complete
->
->    # echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled
->    # rmmod livepatch_sample
->    # dmesg -T | tail -2
->    [Sat Sep  6 11:21:10 2025] livepatch: 'livepatch_sample': starting unpatching transition
->    [Sat Sep  6 11:21:11 2025] livepatch: 'livepatch_sample': unpatching complete
->
-> While at it, do the similar thing for arch_stack_walk() to avoid
-> potential issues.
->
-> Cc: stable@vger.kernel.org # v6.9+
-> Fixes: 199cc14cb4f1 ("LoongArch: Add kernel livepatching support")
-> Reported-by: Xi Zhang <zhangxi@kylinos.cn>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   arch/loongarch/kernel/stacktrace.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
->
-> diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/stacktrace.c
-> index 9a038d1070d7..0454cce3b667 100644
-> --- a/arch/loongarch/kernel/stacktrace.c
-> +++ b/arch/loongarch/kernel/stacktrace.c
-> @@ -30,10 +30,15 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
->   		}
->   		regs->regs[1] = 0;
->   		regs->regs[22] = 0;
-> +		regs->csr_prmd = task->thread.csr_prmd;
->   	}
->   
->   	for (unwind_start(&state, task, regs);
->   	     !unwind_done(&state); unwind_next_frame(&state)) {
-> +		/* Success path for user tasks */
-> +		if (user_mode(regs))
-> +			return;
-> +
->   		addr = unwind_get_return_address(&state);
->   		if (!addr || !consume_entry(cookie, addr))
->   			break;
-> @@ -57,9 +62,14 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
->   	}
->   	regs->regs[1] = 0;
->   	regs->regs[22] = 0;
-> +	regs->csr_prmd = task->thread.csr_prmd;
->   
->   	for (unwind_start(&state, task, regs);
->   	     !unwind_done(&state) && !unwind_error(&state); unwind_next_frame(&state)) {
-> +		/* Success path for user tasks */
-> +		if (user_mode(regs))
-> +			return 0;
-> +
->   		addr = unwind_get_return_address(&state);
->   
->   		/*
-Hi, Tiezhu,
+>   2) We don't want objtool (or any other tooling) to try to validate it
+>      or otherwise treat it as text during the build.
+I'm sorry but I insist on my opinion. :)
 
-We update stack info by get_stack_info when meet ORC_TYPE_REGS in
-unwind_next_frame. And in arch_stack_walk(_reliable), we always
-do unwind_done before unwind_next_frame. So is there anything
-error in get_stack_info which causing regs is user_mode while
-stack is not STACK_TYPE_UNKNOWN?
+Yes, there are reasons to put it into a data section, but there are
+also reasons to put it into a code section.
 
+1) ARM64, RISC-V and LoongArch have the same style (mix code and data
+in __HEAD), I don't want to do something special.
+
+2) __HEAD is used for nearly all archs, except ARM64, RISC-V and
+LoongArch, other archs are almost pure code (so they must use a code
+section). However, the code in __HEAD is usually not like a regular
+function. In other word, if other archs add objtool support, __HEAD
+will also probably cause problems.
+
+3) Many archs put __HEAD between __init_begin and __init_end, which
+means it is discarded at runtime, stack unwinder is useless for it.
+
+So, ignoring .head.text is not just a workaround for LoongArch, it is
+a proper solution for other archs.
+
+
+Huacai
+
+>
+> --
+> Josh
+>
