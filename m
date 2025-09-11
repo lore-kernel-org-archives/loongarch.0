@@ -1,153 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049422DE202
-	for <loongarch@lists.linux.dev>; Thu, 11 Sep 2025 08:28:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2692E424F
+	for <loongarch@lists.linux.dev>; Thu, 11 Sep 2025 08:41:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757579330; cv=none; b=ageLbRm59BcrB9DLMokMFmi3VG7wXsK2xej40rKKPq/UQel4n+RdHrkg5ftXqcdZbeorhxdrJJsXwS+/1/GZwZxCjukCMq8Wh2PSvsoq7KjOSCYofhB5vaR1KCdVfs9hHu80hCzetk77cx8o9HnjWH0ujJTfiZvvUF8IDqBvEgQ=
+	t=1757580093; cv=none; b=dSzBbkhnUF1UIoFIzkUrpHPJZQ+PAz5bteirz0WjrcRIzplKeDlfifo5C5jKSnuT+/jLIitYrstnczhYvsYoqjreUB+z34mWZWH79mhIQs0bnoXFdgsozTlpf24mizsHGy/SFwx5Q3bMnwbKzbUaxb1mo9bMRavFeaz/h8Gehcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757579330; c=relaxed/simple;
-	bh=cb0wyntMwgB1gjC+HWYBQ+NKZZAa9aHSE8Hd61ANSTQ=;
+	s=arc-20240116; t=1757580093; c=relaxed/simple;
+	bh=rKZlrOiOpYWSNGkzGrMllX51wmmYySviIaeS+Q92BC8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GFpqZT1u9qQ1QujaP4rrAlnmTQJ0M0+IauyrKKfd2rCCJZ3BzEHTScafOWgBel66Uqq5Qj19VVKn1HqEOfxrEFs1tjfmI3fXb6FBGdZczUIvx1xz/Os8F2mRuNrMua/ZvXOcn8K6oyoCv/xjprT/WMsUkWuiLPOqmfk46T7sNK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhnD4yxX; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=CTva085KNBZvo+xMqadenaYFIMoxlgd4Mypzs6ktSzWBjP1dEa7JhQ8TuCcJWW7vybk9rf29JXr1+Ud5z8yUc01AsJ/tSNDidrL1ZUryqJ2/v8XrfSGA3S+RhXix5+z3mloZ0NLRkhi62zmKpoUZUhyq4ch7JEX61+aiYTgSTf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XWOrrQlo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhnD4yxX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A485CC4AF09
-	for <loongarch@lists.linux.dev>; Thu, 11 Sep 2025 08:28:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XWOrrQlo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E09BC4AF0B
+	for <loongarch@lists.linux.dev>; Thu, 11 Sep 2025 08:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757579329;
-	bh=cb0wyntMwgB1gjC+HWYBQ+NKZZAa9aHSE8Hd61ANSTQ=;
+	s=k20201202; t=1757580093;
+	bh=rKZlrOiOpYWSNGkzGrMllX51wmmYySviIaeS+Q92BC8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EhnD4yxX5cx91wpWJgbz9LWCNM2nleFRjOs9gEpy/hkiKBT/qhxzeKiKewAcTQ+3u
-	 qdso5bB0FdHXURrcCSIyaYBx0VKBqWRNOjykU3DQVxta1WqfBXAVactgXlCCpBbKnu
-	 axhUmQcRzAYyP/PJC0yHleAp3LTtLgip/TMUO/k8KkyjSTZ9AK3vl24Oa6Bm0JvqX6
-	 /3228bEfRxCkm0ntWB/zaseSB1nrzq+jufSoIo0g+RHOmnuLhNMqyRMyLlZerRyuyY
-	 z1rbne8llmNUZjLYmjw9QynjWkfBowLsEjwJlFhDaUobcZI3qTEzPrjujuWog7PdnA
-	 ogj9WwOPLGHgA==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b0411b83aafso62884566b.1
-        for <loongarch@lists.linux.dev>; Thu, 11 Sep 2025 01:28:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWBrd8i0QyRYobWO9Tz6e0UFlH6U2MpB1e6GQNSeEBilQV95Lexor1r4ktzus5H31tdE/hXMJwrzjw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YymWywbI/i6xtnbXPTd6CfWFRCoDScIdopJLrQV34G8u2AeGoL5
-	elXB71MxXNGd0SP7iUCuf7nCTivuyYc3vHQruSr2I0qO7wqz53S1fT3tk0qQjZcI8A1Syc6yAOC
-	8p8QXLdO3PvYkDGgWToRO9yIFwCD1teY=
-X-Google-Smtp-Source: AGHT+IEHXNgN50M8HXyQdlQC/5yNQQZlA/Ec0hkxp8QsM3mL5Qa8fI7BgwhYPjfTAlpheFgOzZ+r3v2LqCIH7zWhD70=
-X-Received: by 2002:a17:907:84c1:b0:b04:31c6:a41f with SMTP id
- a640c23a62f3a-b04b1697ae6mr1350979566b.41.1757579328222; Thu, 11 Sep 2025
- 01:28:48 -0700 (PDT)
+	b=XWOrrQloZH7dBQBSbIdAuzeWR9WNueYMdJNYrJU+zW4j1th+z0BKgc1wVYCpwUbfs
+	 UeZYF3n9C6s8oKe9mV1j08qQj7yZsSOwBq3UAvdOxR7yfeJNs6c3m4A/L3KeeK3rO4
+	 /Ju1ANHhxnOVNHVgmttMQQ8zsFUIf/gzHBnkX2YsYDGs/7vyfznWx72uD/gqrFClvc
+	 PPjub7rQyNgQvRYUu/VQvYY3rtKH5wLp2iwJJo+0sUBxkEl7qcXOB9dKx9Kkh5XFbz
+	 44wn1jcCLb/lF7lYYOa0JfIodNXqCpah4DAaFBu+5curf961KgaqgltrmLp78o3rfn
+	 gAJefxN6x1arQ==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b0418f6fc27so71130966b.3
+        for <loongarch@lists.linux.dev>; Thu, 11 Sep 2025 01:41:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXu5bH8XdiILP6dnCh+XiKK7HzFCGwgvZ2SdFtSsfl3Vw+X3HnRevLVmu071eW7KM7SgBynMPAWgFI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwV4WrIE1ZfGwxpzrEaIugC2FRgCEkEt85TiIC/NhiyFGW5YnXv
+	ERi1q3pjWWikAPErkl1BwSEo8F+M3k3RatXoUBTxTBnHtlor9g3JBSj0dQVrTg9vkMLVQj4EtCM
+	6OCC8+IZcGkRko88MC8wo/haZ7yhO+cQ=
+X-Google-Smtp-Source: AGHT+IEyB92D+HyH8vTtrcoIFQUagsci7gdRxSdRn2/h7d/2hIo9GfgU3oeg8ffU0IcQ/q+cWAoYmPWmXjrYcxt50vo=
+X-Received: by 2002:a17:907:6d17:b0:b04:a1ec:d071 with SMTP id
+ a640c23a62f3a-b04b1780c10mr2048468066b.56.1757580091931; Thu, 11 Sep 2025
+ 01:41:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <52056c29-4f21-83c9-db1f-ebd1875a3675@loongson.cn>
- <CAAhV-H47VKERJCKRi7uAS7OmCWaE4yxZ07Hwz_si2DMVRDrsag@mail.gmail.com>
- <ybv2ndrzbqztkctzwhfphpdqrqbxlougs75glm22rcuzdmnrfp@lqwcms3j2d55>
- <4thrzifl6ntk7kdf65egt4srzkbrxqoqf7yzmasblwvaq3qwmt@vigfgpbxzjkq>
- <CAAhV-H53DkR6oK1chXQtoczqxYBCU-FMKrD99bjEvfXapND1Vw@mail.gmail.com>
- <itoqfhz4pxaf7aclzajkxcdsxe5akxhgahzj4dp24leh7w334k@epnvcxdga75p>
- <49ceb19c-6107-d026-3ae6-ae897d1fcae4@loongson.cn> <CAAhV-H7U+-WM_cmehAEyKZrGteosZZ3GUsO3yy7wjUNK-v=qjw@mail.gmail.com>
- <domy5iwmaasksrm7srdmus5vifcxrzvozwpnc3ht43qtxvkjhd@gkyxt3qaeyqu>
- <CAAhV-H47Tfzb-JbM1-mN1c0WaodPM0G0ip6NCDwZb8Yj=E8+Fw@mail.gmail.com> <kuf6r3fuxftpwccnz7llw6vta4ec5f2z53isgw34iow546j73l@zbcse36q6dsj>
-In-Reply-To: <kuf6r3fuxftpwccnz7llw6vta4ec5f2z53isgw34iow546j73l@zbcse36q6dsj>
+References: <20250910091033.725716-1-chenhuacai@loongson.cn> <202509110853.ASZKE1gv-lkp@intel.com>
+In-Reply-To: <202509110853.ASZKE1gv-lkp@intel.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 11 Sep 2025 16:28:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6A_swQmqpWHp6ryAEvc96CAMOMd2ZGyJEVNMsJfLkz6w@mail.gmail.com>
-X-Gm-Features: AS18NWBgObv5qE04wF8boTWHO4tfzJjtMf3zuv6zHJMJT_hNGITOslklVGB1_fI
-Message-ID: <CAAhV-H6A_swQmqpWHp6ryAEvc96CAMOMd2ZGyJEVNMsJfLkz6w@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] objtool/LoongArch: Fix unreachable instruction
- warnings about EFISTUB
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	Nathan Chancellor <nathan@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Thu, 11 Sep 2025 16:41:20 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H70c=kZf4rjEfiXnpmNb0PjWb_kh7L4ZKhVzpa=teMvFg@mail.gmail.com>
+X-Gm-Features: AS18NWBEH_um46mN5E-6MDwPMMRBZZk6Qm4uTjND-wWAR5mBCU5LXN5YjIUn7ks
+Message-ID: <CAAhV-H70c=kZf4rjEfiXnpmNb0PjWb_kh7L4ZKhVzpa=teMvFg@mail.gmail.com>
+Subject: Re: [PATCH V2] LoongArch: Align ACPI structures if ARCH_STRICT_ALIGN enabled
+To: kernel test robot <lkp@intel.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, oe-kbuild-all@lists.linux.dev, 
+	loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Xi Ruoyao <xry111@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 11, 2025 at 11:23=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.or=
-g> wrote:
+On Thu, Sep 11, 2025 at 9:00=E2=80=AFAM kernel test robot <lkp@intel.com> w=
+rote:
 >
-> On Wed, Sep 10, 2025 at 02:55:20PM +0800, Huacai Chen wrote:
-> >
-> > On Wed, Sep 10, 2025 at 12:05=E2=80=AFAM Josh Poimboeuf <jpoimboe@kerne=
-l.org> wrote:
-> > > On Tue, Sep 09, 2025 at 12:10:29PM +0800, Huacai Chen wrote:
-> > >
-> > > Then it can be __HEAD_RODATA, with the "w" removed:
-> > >
-> > > #define __HEAD_RODATA   .section        ".head.rodata","a"
-> > >
-> > > > From my point of view, the text section is still the best for HEAD.
-> > >
-> > > It belongs in a data section for two reasons:
-> > >
-> > >   1) It's an image header data structure.
-> > >
-> > >   2) We don't want objtool (or any other tooling) to try to validate =
-it
-> > >      or otherwise treat it as text during the build.
-> > I'm sorry but I insist on my opinion. :)
-> >
-> > Yes, there are reasons to put it into a data section, but there are
-> > also reasons to put it into a code section.
-> >
-> > 1) ARM64, RISC-V and LoongArch have the same style (mix code and data
-> > in __HEAD), I don't want to do something special.
+> Hi Huacai,
 >
-> There's no need for anything special... Fo ARM64 and RISC-V, if their
-> head "code" is actually just structured data, that *also* belongs in a
-> data section.
+> kernel test robot noticed the following build warnings:
 >
-> And that can get changed if/when they get objtool support.  If not
-> before.
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v6.17-rc5 next-20250910]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 >
-> > 2) __HEAD is used for nearly all archs, except ARM64, RISC-V and
-> > LoongArch, other archs are almost pure code (so they must use a code
-> > section). However, the code in __HEAD is usually not like a regular
-> > function. In other word, if other archs add objtool support, __HEAD
-> > will also probably cause problems.
+> url:    https://github.com/intel-lab-lkp/linux/commits/Huacai-Chen/LoongA=
+rch-Align-ACPI-structures-if-ARCH_STRICT_ALIGN-enabled/20250910-171140
+> base:   linus/master
+> patch link:    https://lore.kernel.org/r/20250910091033.725716-1-chenhuac=
+ai%40loongson.cn
+> patch subject: [PATCH V2] LoongArch: Align ACPI structures if ARCH_STRICT=
+_ALIGN enabled
+> config: loongarch-randconfig-001-20250911 (https://download.01.org/0day-c=
+i/archive/20250911/202509110853.ASZKE1gv-lkp@intel.com/config)
+> compiler: loongarch64-linux-gcc (GCC) 15.1.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20250911/202509110853.ASZKE1gv-lkp@intel.com/reproduce)
 >
-> Hm?  Objtool can handle "non-regular" functions fine.  That's what the
-> unwind hints are for.  x86 has that already and it works fine.
->
-> What *actually* causes problems for objtool (and the whole point of this
-> discussion) is the placing of data in a text section.  I don't
-> understand why we're still arguing about whether that's the right thing
-> to do.  Not to mention the fact that using objtool as an excuse *not* to
-> do it seems completely backwards!
->
-> > 3) Many archs put __HEAD between __init_begin and __init_end, which
-> > means it is discarded at runtime, stack unwinder is useless for it.
->
-> Unwinding can easily (and often does) happen during boot, before init
-> memory is freed.
->
-> It could even happen in the head code, e.g. in a debugger.  (whether
-> that actually works might be a different story.)
->
-> But also, keep in mind that objtool has many other features beyond just
-> ORC generation.  In the future it would be quite foreseeable for some
-> other objtool feature to get confused by this "code" again and spit out
-> more warnings.
->
-> Similarly, if loongarch eventually switches to using sframe, and the
-> binutils assembler learns how to autogenerate sframe with minimal cfi
-> directives (a planned feature I believe), it would have the same problem
-> trying to decipher this "code".
->
-> > So, ignoring .head.text is not just a workaround for LoongArch, it is
-> > a proper solution for other archs.
->
-> I'm not convinced of that.  I don't think we want to ignore it on x86.
-OK, then don't ignore .head.text in objtool. But I also don't want to
-change .head.text to .head.data. So Tiezhu please just use unwind
-hints (UNWIND_HINT_UNDEFINED) in __HEAD like the earliest version.
-Thanks.
-
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202509110853.ASZKE1gv-lkp=
+@intel.com/
+This seems like a compiler issue...
+https://github.com/AOSC-Tracking/linux/commit/1e9ee413357ef58dd902f6ec55013=
+d2a2f2043eb
 
 Huacai
 
 >
+> All warnings (new ones prefixed by >>):
+>
+>    In file included from include/acpi/acpi.h:24,
+>                     from drivers/acpi/acpica/tbprint.c:10:
+>    drivers/acpi/acpica/tbprint.c: In function 'acpi_tb_print_table_header=
+':
+> >> include/acpi/actypes.h:530:43: warning: 'strncmp' argument 1 declared =
+attribute 'nonstring' is smaller than the specified bound 8 [-Wstringop-ove=
+rread]
+>      530 | #define ACPI_VALIDATE_RSDP_SIG(a)       (!strncmp (ACPI_CAST_P=
+TR (char, (a)), ACPI_SIG_RSDP, (sizeof(a) < 8) ? ACPI_NAMESEG_SIZE : 8))
+>          |                                           ^~~~~~~~~~~~~~~~~~~~=
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    drivers/acpi/acpica/tbprint.c:105:20: note: in expansion of macro 'ACP=
+I_VALIDATE_RSDP_SIG'
+>      105 |         } else if (ACPI_VALIDATE_RSDP_SIG(ACPI_CAST_PTR(struct=
+ acpi_table_rsdp,
+>          |                    ^~~~~~~~~~~~~~~~~~~~~~
+>    In file included from include/acpi/acpi.h:26:
+>    include/acpi/actbl.h:69:14: note: argument 'signature' declared here
+>       69 |         char signature[ACPI_NAMESEG_SIZE] ACPI_NONSTRING;     =
+  /* ASCII table signature */
+>          |              ^~~~~~~~~
+>
+>
+> vim +530 include/acpi/actypes.h
+>
+> cacba8657351f7 Lv Zheng    2013-09-23  529
+> 64b9dfd0776e9c Ahmed Salem 2025-04-25 @530  #define ACPI_VALIDATE_RSDP_SI=
+G(a)       (!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, (sizeof(a) =
+< 8) ? ACPI_NAMESEG_SIZE : 8))
+> 4fa4616e279df8 Bob Moore   2015-07-01  531  #define ACPI_MAKE_RSDP_SIG(de=
+st)        (memcpy (ACPI_CAST_PTR (char, (dest)), ACPI_SIG_RSDP, 8))
+> cacba8657351f7 Lv Zheng    2013-09-23  532
+>
 > --
-> Josh
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
