@@ -1,114 +1,74 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD311341AA2
-	for <loongarch@lists.linux.dev>; Thu, 11 Sep 2025 13:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760463431E3;
+	Thu, 11 Sep 2025 14:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757598647; cv=none; b=NyLzivYaqUxpi14qr+ZY6kyjypCqe8iKXr71DBhcptTGRCRZbFciwikFLLT1SOrZfBVog9Rq+3QDcL5aOjXUj/QW7RFB3pyQctx6R/lNDR5m+NE8j1/zZYmOyYZyvMHATAp5AEqK5dpiEJRgq5FhhneUq+Emazuc9EFSFNG+FcM=
+	t=1757601224; cv=none; b=lWeg2XHxsHcWZ898CyV96U6uZfR8dLBAYaLH9sT78Y5xZdT/n1zISMT/eganOOuNb4yYk7K+NtmL4vcqgU8VS6Szh0+mb3MLgpo+aOwuAgAqb2dhjoKN708aMyeJR8iJbMdXgCMPWQ+zBsxJBDUrFA0zoCheYrvBAKCR6eO20ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757598647; c=relaxed/simple;
-	bh=D15DkPxVQrXFCQ9CvGX684z04L33a220UlGGZJTtIWM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FFo3V5NXZz2c+uuwL9kZKYOJBtnETztdLGxmRpCd4DbswafZUDH0Kix6JpDcJaDWiY3GS60qRfFE2iwiLv7zli6pTdsVJPYOkcG/XUpEK3CDFH7wf3CFnER/ZQ3du5hZGhxPT0hb9Y76lapLenCBa+LD5+lQBwkBpuCHSLow8dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=gSqgeGis; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=n2XcOlXN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=GrDqjdri; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TWbr/sHp; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1757601224; c=relaxed/simple;
+	bh=ev0kH+F4I4aR6tb2Y8LgzgF7MQQFKIRMaQAG06rDm/0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=s9WmKcMlvziWzroVcnq7QmB7L6yPcttMQ/xRYYvE43HUtbj4AAIAMBgEKxGSAz9eniU5GO2cj8klEePEGDnv6C4/HearLW9v95hgFLrEUKGncSm4Z0agpFj/1M0Ko5v0LNMLeRTSdQH+T7Svq0F6K3x1+RGOHVoSNnNNJjt2Mog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfmtpwAN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="gSqgeGis";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="n2XcOlXN";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="GrDqjdri";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TWbr/sHp"
-Received: from pobox.suse.cz (unknown [10.100.2.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CFCE93F269;
-	Thu, 11 Sep 2025 13:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757598644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6tfwNDG3W2Gc1HTTMYNm6h+W0ATYJ4FkFneAMnrmbcw=;
-	b=gSqgeGis870VEcBoQT30HwmpWDXAMSlBKFy+zKr1m2hsawx2dyDB9KIBkTcb/t4H1GHE3v
-	xkQa2mTChzMjEvgxezUtZJ2jiVzcH/DfgTccXhGAtl7aVueV4Avwz/MB83esPul/pecjEn
-	wGrnW0lpK7iYZf+xUfSGlmphy4Sg2Sw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757598644;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6tfwNDG3W2Gc1HTTMYNm6h+W0ATYJ4FkFneAMnrmbcw=;
-	b=n2XcOlXNaRDa/rGdCxyy7oBRUwAdIfjID2/WmqJOwv9Z2y4PQQqrEubT/RAZ0X+IeOvu2v
-	0xUnpzPsl6/NAdDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757598642; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6tfwNDG3W2Gc1HTTMYNm6h+W0ATYJ4FkFneAMnrmbcw=;
-	b=GrDqjdritxxDQpMjI0P9s4CovFFoXxEYZKQGp3Iu8Fh3uPbzpF8PpGMp6DNlXw35yXZLfI
-	WCLR2URixbHr61oHjd4OIBFXGF1jYTMR5Wl3LIFdh7UEQUeDAb4V+IQMK2PvJcySfxuBOn
-	TqgODvuhXqo9l5UKqflwNRYs1P5PBro=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757598642;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6tfwNDG3W2Gc1HTTMYNm6h+W0ATYJ4FkFneAMnrmbcw=;
-	b=TWbr/sHpJX1mbxM71fdmTZ/RQeLQRX8SMto6czXKZ31gY2/IU0sx62tjl3TS3cIaciOBBj
-	TyTwhpZH2JP+UQCA==
-Date: Thu, 11 Sep 2025 15:50:42 +0200 (CEST)
-From: Miroslav Benes <mbenes@suse.cz>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-    Xi Zhang <zhangxi@kylinos.cn>, live-patching@vger.kernel.org, 
-    loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] livepatch: Add config LIVEPATCH_DEBUG to get
- debug information
-In-Reply-To: <20250909113106.22992-2-yangtiezhu@loongson.cn>
-Message-ID: <alpine.LSU.2.21.2509111549200.29971@pobox.suse.cz>
-References: <20250909113106.22992-1-yangtiezhu@loongson.cn> <20250909113106.22992-2-yangtiezhu@loongson.cn>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfmtpwAN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCCE4C4CEF1;
+	Thu, 11 Sep 2025 14:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757601224;
+	bh=ev0kH+F4I4aR6tb2Y8LgzgF7MQQFKIRMaQAG06rDm/0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=GfmtpwANiJZnUEikmMTN/7lHgpKrD+U0DENh1FJRZ2C1uiy1wAzbL4yJdmzIG0tMb
+	 hoFe/9JIQ811KSg1nA5wvQ5oa526Kh4yO4dAh73TSBayGh5CVwCQeHkpL5NEsK+P5D
+	 lN/nyZIvyakH5mq/o6yWjwXP2x4oOcZxZ3wYQGhvGSm5aVaZ24/OzUEg2OzKpyIjCl
+	 +rHJPH4xrouQZZTE6vfaSL0hXMDYIA8IjTgI11zMlqPIykwYc2JK+/MBmlClso7dcI
+	 oP6KFl00kHKE72FS4ycn1YK/76uy/MeM5xhpgTUPK2bLF2uXlwc17siUbmwFoRFxJX
+	 0owaH42L7xglw==
+From: Lee Jones <lee@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>, Lee Jones <lee@kernel.org>, 
+ Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>, 
+ Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io, 
+ kexybiscuit@aosc.io, wangyao@lemote.com
+In-Reply-To: <cover.1756987761.git.zhoubinbin@loongson.cn>
+References: <cover.1756987761.git.zhoubinbin@loongson.cn>
+Subject: Re: (subset) [PATCH v11 0/3] LoongArch: Add Loongson-2K BMC
+ support
+Message-Id: <175760122164.1552180.16853979882678693472.b4-ty@kernel.org>
+Date: Thu, 11 Sep 2025 15:33:41 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.19)[-0.953];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[pobox.suse.cz:mid,pobox.suse.cz:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -4.29
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-c81fc
 
-Hi,
+On Thu, 04 Sep 2025 20:35:04 +0800, Binbin Zhou wrote:
+> This patchset introduces the Loongson-2K BMC.
+> 
+> It is a PCIe device present on servers similar to the Loongson-3 CPUs.
+> And it is a multifunctional device (MFD), such as display as a sub-function
+> of it.
+> 
+> For IPMI, according to the existing design, we use software simulation to
+> implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+> 
+> [...]
 
-On Tue, 9 Sep 2025, Tiezhu Yang wrote:
+Applied, thanks!
 
-> Add config LIVEPATCH_DEBUG and define DEBUG if CONFIG_LIVEPATCH_DEBUG
-> is set, then pr_debug() can print a debug level message, it is a easy
-> way to get debug information without dynamic debugging.
+[1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+      commit: 67c2639e1fc1a07b45d216af659c0dd92a370c68
+[2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+      commit: 2364ccc827e44064e9763f2ae2d1dcc5f945fdf3
 
-I do not have a strong opinion but is it really worth it? Configuring 
-dynamic debug is not difficult, it is more targetted (you can enable it 
-just for a subset of functions in livepatch subsystem) and it can also be 
-done on the command line.
+--
+Lee Jones [李琼斯]
 
-Miroslav
