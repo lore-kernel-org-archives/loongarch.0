@@ -1,175 +1,249 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fra-out-004.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-004.esa.eu-central-1.outbound.mail-perimeter.amazon.com [3.74.81.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A4726E715
-	for <loongarch@lists.linux.dev>; Fri, 12 Sep 2025 08:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C0F283146;
+	Fri, 12 Sep 2025 09:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.74.81.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757666558; cv=none; b=GWgYVg2uElQttNyKotQabaljtS/Ae5LFtbiJrNLqcjX6f5dws3wjnr46x7/s33Vr9myovlxx+2nc7WtlqG0XTJxC5RpQ30JbzgyLzRe7M9VzbX64fxyBm7QVQ19hHWTiOD+Ndwwq2xZ1SJmjeNs81HVXp6J44RZ8hZ2j/cvZlps=
+	t=1757668663; cv=none; b=NK/jINfCUsy9sjUe4oVIRPy4g5mstfJrLFO5dZwdgznMotMJ95STNrnt1HECPJFqktONuWS3zStvIQxaZmVRP06j8SnclWvHVqZJ2DI87wVTSpGWok1zdCIRkpyb58AlQtYXRgALh5/8ypWEXbAWTkG5oZBLUxGeeXeNL9eB2uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757666558; c=relaxed/simple;
-	bh=DxQwjwkkgCus0lc3RFJ14NA9phr1rMb9GHdKSvPXbJo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=daftSQCHK+sUE1B1NrWtj3N6/U4jX+RIfzXq6uA8AxdCOlqNKSY8/wYj+X9gwZ126JDqHgQ/Vq/gfMv67yIFyTYdfYXSJRIahTFYXgMXBfwa2Npf//abxPxmYX4eYo/5tnDkZl5aktg0eneOAf7K0Kjh1mxhZN5mfC5KJTLwuqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=XQyQ1xhD; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1757668663; c=relaxed/simple;
+	bh=V/gNybMhlcM17xEcJFIgonEkiuW7o9f1xXbH2RHhk9U=;
+	h=From:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=NuxumCvtn1ziWG3avONK9guIgEriQ2jMVHXhymvgXbScCfAFBi1S7wQ9CcIm/UBqROVIEDLQHqZQ8QVfdIRqQ7Q+xLr3RDJC/iAANg3YKJMt3A1zyRRdxV8NImjeDW116AIvM4FHSdV5M7oMAyMiZMptZPkGwOqBvCsGPKR8L7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=klVREMry; arc=none smtp.client-ip=3.74.81.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="XQyQ1xhD"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 3073520822;
-	Fri, 12 Sep 2025 10:42:27 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id C-yEYBJTT9nY; Fri, 12 Sep 2025 10:42:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1757666546; bh=DxQwjwkkgCus0lc3RFJ14NA9phr1rMb9GHdKSvPXbJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=XQyQ1xhD4/JjR7yV/ko1JFRyYkrxoG5cjkoIfpkvVEE+m+5sVtarqzLn8PaVGlT0g
-	 j4/REY64UCU+rTvFAhM05Yh15zXFCHF6cM7QRWK9em926BOEzBsCbHKBfYHIGI8WtT
-	 uAYtyJ8JAlslKSqE8cAWDO4TGtiqtn9Ma/4+HDVh6dHcTWFQuM7VGAcf2vgNhIG9Au
-	 zBL/7n/CQbDbMNU7RYXuyCJF9Tqjz+rvb8BtRQTkq2/vK9OCaH3SN4XyHABc0whT87
-	 klweirxHXSNc5hfKDj5IY4SgkAOu/8NCigDY7GS1cBiyaWkgAakhByC99t5oaNVEhG
-	 wRXg5OLpiv3fw==
-Date: Fri, 12 Sep 2025 08:42:08 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 1/3] dt-binding: pinctrl: Document Loongson 2K0300 pin
- controller
-Message-ID: <aMPcLusIHmji8e_3@pie>
-References: <20250811163749.47028-2-ziyao@disroot.org>
- <20250811163749.47028-3-ziyao@disroot.org>
- <20250818175827.GA1507697-robh@kernel.org>
- <aKRh8M0szWKfpPF9@pie>
+	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="klVREMry"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazoncorp2; t=1757668661; x=1789204661;
+  h=from:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=euX1DcBgIQsakeQD0gmDCocpRR5IiK5IHce/Exk3Qcs=;
+  b=klVREMrypMkUj3ctNGDh58zT5EalHeGXEHDd8iEojY7pGU6AKVCvup3q
+   m1invOD7LMNcJO2yPHpi6F0pkc7oFhDXzJJ1Y8GrWZ1B+xkgdii9V1Gdn
+   CzIu7xRuNszBhe3irpaKG+VgoGLdgx2UM6bwJPNiYe3QAZQa6MdfiqB/v
+   GJFDnyA2KSdGNDejpYvLgBtdn6LvDPFR9/m/mJoTwJz/si27q2UIT6i82
+   D0f6KyZRoEttSGWa9m476/04E5TriQFXCFp08xOpY5r1xnjIahFrIPbu9
+   0JWIZHRL3x2OB+beHu77/YdMiETFVW+08ajgMxdUvYT2VKS510YTvXJu9
+   w==;
+X-CSE-ConnectionGUID: din/RBPeSnGfqj64mcO16Q==
+X-CSE-MsgGUID: h+u6Z7AnQzWKlyQKajwbGQ==
+X-IronPort-AV: E=Sophos;i="6.18,259,1751241600"; 
+   d="scan'208";a="2004929"
+Received: from ip-10-6-3-216.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.3.216])
+  by internal-fra-out-004.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 09:17:30 +0000
+Received: from EX19MTAEUB001.ant.amazon.com [54.240.197.234:6055]
+ by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.45.248:2525] with esmtp (Farcaster)
+ id 353fed0d-37b0-4710-853f-25025dd2cbc0; Fri, 12 Sep 2025 09:17:30 +0000 (UTC)
+X-Farcaster-Flow-ID: 353fed0d-37b0-4710-853f-25025dd2cbc0
+Received: from EX19D015EUB004.ant.amazon.com (10.252.51.13) by
+ EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Fri, 12 Sep 2025 09:17:29 +0000
+Received: from EX19D015EUB004.ant.amazon.com (10.252.51.13) by
+ EX19D015EUB004.ant.amazon.com (10.252.51.13) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Fri, 12 Sep 2025 09:17:29 +0000
+Received: from EX19D015EUB004.ant.amazon.com ([fe80::2dc9:7aa9:9cd3:fc8a]) by
+ EX19D015EUB004.ant.amazon.com ([fe80::2dc9:7aa9:9cd3:fc8a%3]) with mapi id
+ 15.02.2562.020; Fri, 12 Sep 2025 09:17:29 +0000
+From: "Roy, Patrick" <roypat@amazon.co.uk>
+CC: "Thomson, Jack" <jackabt@amazon.co.uk>, "Kalyazin, Nikita"
+	<kalyazin@amazon.co.uk>, "Cali, Marco" <xmarcalx@amazon.co.uk>,
+	"derekmn@amazon.co.uk" <derekmn@amazon.co.uk>, "Roy, Patrick"
+	<roypat@amazon.co.uk>, "willy@infradead.org" <willy@infradead.org>,
+	"corbet@lwn.net" <corbet@lwn.net>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "maz@kernel.org" <maz@kernel.org>,
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "joey.gouly@arm.com"
+	<joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com"
+	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>, "kernel@xen0n.name"
+	<kernel@xen0n.name>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>, "aou@eecs.berkeley.edu"
+	<aou@eecs.berkeley.edu>, "alex@ghiti.fr" <alex@ghiti.fr>,
+	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
+	"gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>,
+	"hca@linux.ibm.com" <hca@linux.ibm.com>, "gor@linux.ibm.com"
+	<gor@linux.ibm.com>, "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+	"svens@linux.ibm.com" <svens@linux.ibm.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "luto@kernel.org" <luto@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com"
+	<hpa@zytor.com>, "trondmy@kernel.org" <trondmy@kernel.org>, "anna@kernel.org"
+	<anna@kernel.org>, "hubcap@omnibond.com" <hubcap@omnibond.com>,
+	"martin@omnibond.com" <martin@omnibond.com>, "viro@zeniv.linux.org.uk"
+	<viro@zeniv.linux.org.uk>, "brauner@kernel.org" <brauner@kernel.org>,
+	"jack@suse.cz" <jack@suse.cz>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "david@redhat.com" <david@redhat.com>,
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz"
+	<vbabka@suse.cz>, "rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com"
+	<surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org"
+	<ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev"
+	<martin.lau@linux.dev>, "eddyz87@gmail.com" <eddyz87@gmail.com>,
+	"song@kernel.org" <song@kernel.org>, "yonghong.song@linux.dev"
+	<yonghong.song@linux.dev>, "john.fastabend@gmail.com"
+	<john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>,
+	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com"
+	<peterx@redhat.com>, "jannh@google.com" <jannh@google.com>,
+	"pfalcato@suse.de" <pfalcato@suse.de>, "axelrasmussen@google.com"
+	<axelrasmussen@google.com>, "yuanchu@google.com" <yuanchu@google.com>,
+	"weixugc@google.com" <weixugc@google.com>, "hannes@cmpxchg.org"
+	<hannes@cmpxchg.org>, "zhengqi.arch@bytedance.com"
+	<zhengqi.arch@bytedance.com>, "shakeel.butt@linux.dev"
+	<shakeel.butt@linux.dev>, "shuah@kernel.org" <shuah@kernel.org>,
+	"seanjc@google.com" <seanjc@google.com>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "linux-nfs@vger.kernel.org"
+	<linux-nfs@vger.kernel.org>, "devel@lists.orangefs.org"
+	<devel@lists.orangefs.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: [PATCH v6 00/11] Direct Map Removal Support for guest_memfd
+Thread-Topic: [PATCH v6 00/11] Direct Map Removal Support for guest_memfd
+Thread-Index: AQHcI8YPHCplp86cBE2LweCaK1PIkA==
+Date: Fri, 12 Sep 2025 09:17:29 +0000
+Message-ID: <20250912091708.17502-1-roypat@amazon.co.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aKRh8M0szWKfpPF9@pie>
 
-On Tue, Aug 19, 2025 at 11:37:20AM +0000, Yao Zi wrote:
-> On Mon, Aug 18, 2025 at 12:58:27PM -0500, Rob Herring wrote:
-> > On Mon, Aug 11, 2025 at 04:37:48PM +0000, Yao Zi wrote:
-> > > The pincontroller integarted in Loongson 2K0300 is able to configure
-> > > function multiplexing for all the pins. It could also configure drive
-> > > strength on basis of functions, which means all pins set to the same
-> > > function share drive-strength setting. Drive-strength configuration
-> > > isn't available for all functions, either.
-> > > 
-> > > This binding utilizes two levels of subnodes, where the outer represents
-> > > function and the inner represents groups. Drive-strength is allowed in
-> > > the outer since it's shared among all groups configured to the function.
-> > > 
-> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > ---
-> > >  .../pinctrl/loongson,ls2k0300-pinctrl.yaml    | 92 +++++++++++++++++++
-> > >  MAINTAINERS                                   |  6 ++
-> > >  2 files changed, 98 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
-> > > new file mode 100644
-> > > index 000000000000..cbd74cb45342
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
-> > > @@ -0,0 +1,92 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k0300-pinctrl.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Loongson-2K0300 SoC Pinctrl Controller
-> > > +
-> > > +maintainers:
-> > > +  - Yao Zi <ziyao@disroot.org>
-> > > +
-> > > +allOf:
-> > > +  - $ref: pinctrl.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: loongson,ls2k0300-pinctrl
-> > > +
-> > > +  reg:
-> > > +    items:
-> > > +      - description: Pin function-multiplexing configuration registers
-> > > +      - description: Pin drive-strength configuration registers
-> > > +
-> > > +  reg-names:
-> > > +    items:
-> > > +      - const: mux
-> > > +      - const: drive
-> > > +
-> > > +patternProperties:
-> > > +  '^func-':
-> > > +    type: object
-> > > +
-> > > +    $ref: pincfg-node.yaml#
-> > > +
-> > > +    properties:
-> > > +      drive-strength:
-> > > +        description:
-> > > +          Maximum sink or source current as defined in pincfg-node.yaml. Note
-> > > +          that drive strength could only be configured on function basis, i.e.,
-> > > +          all pins multiplexed to the same function share the same
-> > > +          configuration.
-> > > +
-> > > +          This could only be configured for several functions, including jtag,
-> > > +          dvo, uart, gmac, sdio, spi, i2s, timer, usb and emmc.
-> > > +        enum: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-> > 
-> > How do you know what pin this drive strength corresponds to without any 
-> > other properties? Node names generally aren't important, so you 
-> > shouldn't be using that. 
-> 
-> Thanks for the hint... yes I'm matching the node name to identify
-> functions in this revision of driver. Could I introduce a "function"
-> property to the outer node for identification of the function?
-> 
-> > > +
-> > > +    additionalProperties: false
-> > > +
-> > > +    patternProperties:
-> > > +      '-pins$':
-> > > +        type: object
-> > > +        $ref: pinmux-node.yaml#
-> > 
-> > Generally the pin config and muxing are in 1 node if you can control 
-> > both.
-> 
-> On 2K0300, drive-strength could only be configured for each function,
-> not each pin, i.e. all pins configured to the same function share the
-> same drive-strength configuration.
-> 
-> Putting the driver-strength property in the outer node describes the
-> situation: a property in the outer node is function-specific and shared
-> between all groups (represented by inner nodes) configured to this
-> function.
-> 
-> Do you think it's better to move pin config (the driver-strength
-> property) to the inner node in this case? If so, should the new
-> "function" property for identifying functions reliably be in the inner
-> node or the outer node? Thanks for your explanation,
-
-Hi Rob, could you please comment further on my questions? Thanks for
-your time.
-
-> Best regards,
-> Yao Zi
-
-Regards,
-Yao Zi
+[ based on kvm/next ]=0A=
+=0A=
+Unmapping virtual machine guest memory from the host kernel's direct map is=
+ a=0A=
+successful mitigation against Spectre-style transient execution issues: If =
+the=0A=
+kernel page tables do not contain entries pointing to guest memory, then an=
+y=0A=
+attempted speculative read through the direct map will necessarily be block=
+ed=0A=
+by the MMU before any observable microarchitectural side-effects happen. Th=
+is=0A=
+means that Spectre-gadgets and similar cannot be used to target virtual mac=
+hine=0A=
+memory. Roughly 60% of speculative execution issues fall into this category=
+ [1,=0A=
+Table 1].=0A=
+=0A=
+This patch series extends guest_memfd with the ability to remove its memory=
+=0A=
+from the host kernel's direct map, to be able to attain the above protectio=
+n=0A=
+for KVM guests running inside guest_memfd.=0A=
+=0A=
+Additionally, a Firecracker branch with support for these VMs can be found =
+on=0A=
+GitHub [2].=0A=
+=0A=
+For more details, please refer to the v5 cover letter [v5]. No=0A=
+substantial changes in design have taken place since.=0A=
+=0A=
+=3D=3D=3D Changes Since v5 =3D=3D=3D =0A=
+=0A=
+- Fix up error handling for set_direct_map_[in]valid_noflush() (Mike)=0A=
+- Fix capability check for KVM_GUEST_MEMFD_NO_DIRECT_MAP (Mike)=0A=
+- Make secretmem_aops static in mm/secretmem.c (Mike)=0A=
+- Fixup some more comments in gup.c that referred to secretmem=0A=
+  specifically to instead point to AS_NO_DIRECT_MAP (Mike)=0A=
+- New patch (PATCH 4/11) to avoid ifdeffery in kvm_gmem_free_folio() (Mike)=
+=0A=
+- vma_is_no_direct_map() -> vma_has_no_direct_map() rename (David)=0A=
+- Squash some patches (David)=0A=
+- Fix up const-ness of parameters to new functions in pagemap.h (Fuad)=0A=
+=0A=
+[1]: https://download.vusec.net/papers/quarantine_raid23.pdf=0A=
+[2]: https://github.com/firecracker-microvm/firecracker/tree/feature/secret=
+-hiding=0A=
+[RFCv1]: https://lore.kernel.org/kvm/20240709132041.3625501-1-roypat@amazon=
+.co.uk/=0A=
+[RFCv2]: https://lore.kernel.org/kvm/20240910163038.1298452-1-roypat@amazon=
+.co.uk/=0A=
+[RFCv3]: https://lore.kernel.org/kvm/20241030134912.515725-1-roypat@amazon.=
+co.uk/=0A=
+[v4]: https://lore.kernel.org/kvm/20250221160728.1584559-1-roypat@amazon.co=
+.uk/=0A=
+[v5]: https://lore.kernel.org/kvm/20250828093902.2719-1-roypat@amazon.co.uk=
+/=0A=
+=0A=
+Elliot Berman (1):=0A=
+  filemap: Pass address_space mapping to ->free_folio()=0A=
+=0A=
+Patrick Roy (10):=0A=
+  arch: export set_direct_map_valid_noflush to KVM module=0A=
+  mm: introduce AS_NO_DIRECT_MAP=0A=
+  KVM: guest_memfd: Add stub for kvm_arch_gmem_invalidate=0A=
+  KVM: guest_memfd: Add flag to remove from direct map=0A=
+  KVM: selftests: load elf via bounce buffer=0A=
+  KVM: selftests: set KVM_MEM_GUEST_MEMFD in vm_mem_add() if guest_memfd=0A=
+    !=3D -1=0A=
+  KVM: selftests: Add guest_memfd based vm_mem_backing_src_types=0A=
+  KVM: selftests: stuff vm_mem_backing_src_type into vm_shape=0A=
+  KVM: selftests: cover GUEST_MEMFD_FLAG_NO_DIRECT_MAP in existing=0A=
+    selftests=0A=
+  KVM: selftests: Test guest execution from direct map removed gmem=0A=
+=0A=
+ Documentation/filesystems/locking.rst         |  2 +-=0A=
+ Documentation/virt/kvm/api.rst                |  5 ++=0A=
+ arch/arm64/include/asm/kvm_host.h             | 12 ++++=0A=
+ arch/arm64/mm/pageattr.c                      |  1 +=0A=
+ arch/loongarch/mm/pageattr.c                  |  1 +=0A=
+ arch/riscv/mm/pageattr.c                      |  1 +=0A=
+ arch/s390/mm/pageattr.c                       |  1 +=0A=
+ arch/x86/mm/pat/set_memory.c                  |  1 +=0A=
+ fs/nfs/dir.c                                  | 11 ++--=0A=
+ fs/orangefs/inode.c                           |  3 +-=0A=
+ include/linux/fs.h                            |  2 +-=0A=
+ include/linux/kvm_host.h                      |  9 +++=0A=
+ include/linux/pagemap.h                       | 16 +++++=0A=
+ include/linux/secretmem.h                     | 18 ------=0A=
+ include/uapi/linux/kvm.h                      |  2 +=0A=
+ lib/buildid.c                                 |  4 +-=0A=
+ mm/filemap.c                                  |  9 +--=0A=
+ mm/gup.c                                      | 19 ++----=0A=
+ mm/mlock.c                                    |  2 +-=0A=
+ mm/secretmem.c                                | 11 ++--=0A=
+ mm/vmscan.c                                   |  4 +-=0A=
+ .../testing/selftests/kvm/guest_memfd_test.c  |  2 +=0A=
+ .../testing/selftests/kvm/include/kvm_util.h  | 37 ++++++++---=0A=
+ .../testing/selftests/kvm/include/test_util.h |  8 +++=0A=
+ tools/testing/selftests/kvm/lib/elf.c         |  8 +--=0A=
+ tools/testing/selftests/kvm/lib/io.c          | 23 +++++++=0A=
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 61 +++++++++++--------=0A=
+ tools/testing/selftests/kvm/lib/test_util.c   |  8 +++=0A=
+ tools/testing/selftests/kvm/lib/x86/sev.c     |  1 +=0A=
+ .../selftests/kvm/pre_fault_memory_test.c     |  1 +=0A=
+ .../selftests/kvm/set_memory_region_test.c    | 50 +++++++++++++--=0A=
+ .../kvm/x86/private_mem_conversions_test.c    |  7 ++-=0A=
+ virt/kvm/guest_memfd.c                        | 56 ++++++++++++++---=0A=
+ virt/kvm/kvm_main.c                           |  5 ++=0A=
+ 34 files changed, 288 insertions(+), 113 deletions(-)=0A=
+=0A=
+=0A=
+base-commit: a6ad54137af92535cfe32e19e5f3bc1bb7dbd383=0A=
+-- =0A=
+2.50.1=0A=
+=0A=
