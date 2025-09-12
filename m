@@ -1,114 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FCC28313F;
-	Fri, 12 Sep 2025 06:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BA421D5BC
+	for <loongarch@lists.linux.dev>; Fri, 12 Sep 2025 07:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757658229; cv=none; b=N6r5WxcnYAnChbpBaT2j6t+c+GUO75oi97xTPT0QOWXesjcFrNEyan+zQJna0zETUIUa6cqrvpGRTEj5R9TPQA59c94UBiQ7oV/o3133G8ftICcaMJbXaicLhhr5qFl14CEdSMg0vscCY9MT65OBcxLNWKJkDpSzo53DEhR0n1k=
+	t=1757661280; cv=none; b=cluamrrcxt53ggtI189r3ytKExXxRUKdJYdPmUNP2cD8CGd5ZY+7vxfh/2OUXSvWXjcyeShtX5Wli+jKdchjVq4kioAuvo/JTtFjfVtNyU+xEB7v+qyqUofK4dJTlXe3M7I35rckR9gEoBmsgI1Y+6Guyb95nvnl16Etio0ElhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757658229; c=relaxed/simple;
-	bh=9T73VS9+o4Zoo6JQMDrxwkWyCcTGJSPu9bJ/JLxGhoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XVQ44RrsQJ/rc5vcw5zCE3o71e247DhZ959G5xDqdHlBaWSe0NeXB3QDJ/wPhZ8fp6xakf2R9rXk99hOgze0Q4gh/ZqEjnDv7ejn8qEDQoqBiVSWDQ3WDj8PrVp+dDBIK6DnAadXHylgRP78cxIwmYgkqA6iEhW0nnRF8lVfCkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+tUT9Ui; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757661280; c=relaxed/simple;
+	bh=5UmTb29+wvToZMjF8jQIGCifuFHDDgC/fASNWQ5bMto=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WSVVjFVyy+Skf6cqzyWeAyDDdwGEapq4/I+hkDIpQhwF4HQNg1gyqRd4mkJsYBYDyIo9tougIg00XDKo8QL/l+dqbcrQyKKe2TBZ3JtdVR3pyb40GX85sDaOXDyZ27YA6QjCz67naeGcaUNICU2Jhfpg5xXyx59kvEIsnEPOHU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wthmgBzU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kVUIzgFS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wthmgBzU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kVUIzgFS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+tUT9Ui"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5749EC4CEF4;
-	Fri, 12 Sep 2025 06:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757658229;
-	bh=9T73VS9+o4Zoo6JQMDrxwkWyCcTGJSPu9bJ/JLxGhoI=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=K+tUT9Ui0Lj0qetX4V8f8hxvGPJsm/BKTf0HW7pE5h0z0YOzKPHtIxQhImX/f+n88
-	 gIuNPwW4DTVun4DprE4qf5t+qx5He/qG+pETHjCT3CATCAXmMzjZ1vWuw+ac99zdfm
-	 +0aVzmrQL52bl6DV3bmQq+0IRUqRkRMDEuBcnmXuYaPcRJHCkC+i31tQKa7A3TQ56D
-	 n7cx6at6JYpOJZbx3fVBPZli50U6g2ppn8f3IMad24G4Qk3PIFAOv0b3LedhAUosuY
-	 IGi+43ynLvyWq4ea6CVaNvuE7ALbHzlh+dAhb+JmPcQZnJO83RCRsGrJ+lGYixbAwm
-	 91fKGAvuN2fkg==
-Message-ID: <295aa861-8e5c-4146-a137-20dcfc24e1c0@kernel.org>
-Date: Fri, 12 Sep 2025 08:23:43 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wthmgBzU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kVUIzgFS";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wthmgBzU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kVUIzgFS"
+Received: from pobox.suse.cz (unknown [10.100.2.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 40A0521B3B;
+	Fri, 12 Sep 2025 07:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1757661277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mV+s3hEFUvEmsYvcUZo46b54180UGBE4ZzHhrPY5VJY=;
+	b=wthmgBzU5MqeZQ8GPkP8sVM8PukPsWHv/xchnTHeWA/+n3qzv64N44nSbrasl86vJtBUEi
+	/9j54MY7pLycjNQ+uzI1HjD8rwi/O1dCNSUPkVx4V41ijIkepSW9rkx8l8mbuExhuHbtc9
+	fKQqgrmOwtqHC2Z3Y0Vuw53brqGXdmA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1757661277;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mV+s3hEFUvEmsYvcUZo46b54180UGBE4ZzHhrPY5VJY=;
+	b=kVUIzgFS7+Ux6qoePXWUBwc129xgSHIx9SuT4CFqrXag2o7X7pVCJP3DTErdigZMQ/KPBk
+	iF8ilg/CmqjnlqBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1757661277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mV+s3hEFUvEmsYvcUZo46b54180UGBE4ZzHhrPY5VJY=;
+	b=wthmgBzU5MqeZQ8GPkP8sVM8PukPsWHv/xchnTHeWA/+n3qzv64N44nSbrasl86vJtBUEi
+	/9j54MY7pLycjNQ+uzI1HjD8rwi/O1dCNSUPkVx4V41ijIkepSW9rkx8l8mbuExhuHbtc9
+	fKQqgrmOwtqHC2Z3Y0Vuw53brqGXdmA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1757661277;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mV+s3hEFUvEmsYvcUZo46b54180UGBE4ZzHhrPY5VJY=;
+	b=kVUIzgFS7+Ux6qoePXWUBwc129xgSHIx9SuT4CFqrXag2o7X7pVCJP3DTErdigZMQ/KPBk
+	iF8ilg/CmqjnlqBg==
+Date: Fri, 12 Sep 2025 09:14:37 +0200 (CEST)
+From: Miroslav Benes <mbenes@suse.cz>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+    Xi Zhang <zhangxi@kylinos.cn>, live-patching@vger.kernel.org, 
+    loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] livepatch: Add config LIVEPATCH_DEBUG to get
+ debug information
+In-Reply-To: <8dcdba05-4d8c-83ff-f337-b6e71546e1a0@loongson.cn>
+Message-ID: <alpine.LSU.2.21.2509120912510.26788@pobox.suse.cz>
+References: <20250909113106.22992-1-yangtiezhu@loongson.cn> <20250909113106.22992-2-yangtiezhu@loongson.cn> <alpine.LSU.2.21.2509111549200.29971@pobox.suse.cz> <8dcdba05-4d8c-83ff-f337-b6e71546e1a0@loongson.cn>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] defconfig: cleanup orphaned CONFIG_SCHED_DEBUG
-To: Trevor Woerner <twoerner@gmail.com>, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-arm-msm@vger.kernel.org, openbmc@lists.ozlabs.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250828103828.33255-1-twoerner@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250828103828.33255-1-twoerner@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="1678380546-2262061-1757661277=:26788"
+X-Spamd-Result: default: False [-3.29 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	CTYPE_MIXED_BOGUS(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.19)[-0.949];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	FROM_EQ_ENVFROM(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -3.29
 
-On 28/08/2025 12:38, Trevor Woerner wrote:
-> In commit b52173065e0a ("sched/debug: Remove CONFIG_SCHED_DEBUG") this
-> Kconfig option was removed since CONFIG_SCHED_DEBUG was made unconditional
-> by patches preceding it.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--1678380546-2262061-1757661277=:26788
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+On Fri, 12 Sep 2025, Tiezhu Yang wrote:
+
+> On 2025/9/11 下午9:50, Miroslav Benes wrote:
+> > Hi,
+> > 
+> > On Tue, 9 Sep 2025, Tiezhu Yang wrote:
+> > 
+> >> Add config LIVEPATCH_DEBUG and define DEBUG if CONFIG_LIVEPATCH_DEBUG
+> >> is set, then pr_debug() can print a debug level message, it is a easy
+> >> way to get debug information without dynamic debugging.
+> > 
+> > I do not have a strong opinion but is it really worth it? Configuring
 > 
-> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+> This is an alternative way, there are some similar usages:
+> 
+> drivers/iommu/exynos-iommu.c:
+> #ifdef CONFIG_EXYNOS_IOMMU_DEBUG
+> #define DEBUG
+> #endif
+> 
+> drivers/mtd/nand/raw/s3c2410.c:
+> #ifdef CONFIG_MTD_NAND_S3C2410_DEBUG
+> #define DEBUG
+> #endif
+> 
+> drivers/usb/storage/usb.c:
+> #ifdef CONFIG_USB_STORAGE_DEBUG
+> #define DEBUG
+> #endif
+> 
+> > dynamic debug is not difficult, it is more targetted (you can enable it
+> > just for a subset of functions in livepatch subsystem) and it can also be
+> > done on the command line.
+> 
+> Yes, this is true. It is up to the maintainers to apply this patch
+> or not.
 
-I doubt anyone will pick up such patch touching all possible
-architectures. I would suggest to split it per arch.
+Right and I do not see the point to have it in the tree for the reasons 
+above.
 
-If you want to keep it like that, there is a chance soc@ would pick it
-up if you send it to them.
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
+Miroslav
+--1678380546-2262061-1757661277=:26788--
