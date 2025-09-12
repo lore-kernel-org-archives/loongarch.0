@@ -1,103 +1,147 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16FBF1E3DDB
-	for <loongarch@lists.linux.dev>; Fri, 12 Sep 2025 02:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44BA2882B4
+	for <loongarch@lists.linux.dev>; Fri, 12 Sep 2025 06:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757643977; cv=none; b=RJW55BFgQVYlvCgSnPcpjBt/wHLhBhCOoBT7XqNo582tL0C40+TnHrqCnVryel6tRNaEAFasb9p9oK5w8EMRu+pMQ0UQ0J2a3iY5mEsPHjdzTjgAPNeys3GEB4CKnt1ImPnFdvLw/idQPPxuzANu+LOagXwYzOMNqAM5MSMAaZc=
+	t=1757657223; cv=none; b=jwtF+OxFn68p/yvSjPXMti7hw2GggxAHJyFdHLBF3CB145i2+QaSyYWe/zp4cuZNte1QrdyMKMu5bYN91z9yOasnBu/R1HDxPOKkDMipbKmIQl61Hygj/AtodrnqaQJlI0MLSBsLozDIudLDY+j6LZaMMsCXps8YVAHjxb0Et6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757643977; c=relaxed/simple;
-	bh=v4ZnAAgRrIZoT2rwuee+YKSyMUXAE5UC6+NNSIG6dHk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=V6NWj33zSturaZDkPjXf9BpYchy6ImdqFtYprJSHhQxy5LKJn/+BFKpgTykCPadkL38Ih98f4iC1+L9O5g0dvI9pTzDAegf95/jPpTwPsnXoRlrXwDJD+9KsWkzzbacr6JRjmZeVBh0P4eExWPPxQrgtNDM195uH6hQQCRL5sO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxG9K+hMNoKHgJAA--.19726S3;
-	Fri, 12 Sep 2025 10:26:06 +0800 (CST)
-Received: from [10.130.10.66] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxQ+S9hMNoYVmPAA--.64958S3;
-	Fri, 12 Sep 2025 10:26:05 +0800 (CST)
-Subject: Re: [PATCH v1 1/2] livepatch: Add config LIVEPATCH_DEBUG to get debug
- information
-To: Miroslav Benes <mbenes@suse.cz>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, Xi Zhang <zhangxi@kylinos.cn>,
- live-patching@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250909113106.22992-1-yangtiezhu@loongson.cn>
- <20250909113106.22992-2-yangtiezhu@loongson.cn>
- <alpine.LSU.2.21.2509111549200.29971@pobox.suse.cz>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <8dcdba05-4d8c-83ff-f337-b6e71546e1a0@loongson.cn>
-Date: Fri, 12 Sep 2025 10:26:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1757657223; c=relaxed/simple;
+	bh=xhNUv4r15tNXSlEeRfAfsJoZ1YS+9y9Hm87zeZ8pVCg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fDbl2QIpD8RUvPABuVfj1TGzgqiabRDlVtmFSw39zt+UGdMmT/U2Qo4WszA3qkmPB4iKXFmVkNWxc3f3LX5XgtMLb4GIaS1CdWWrFnYs6RE7Iz+YMpccDMT6IeI54qhm2d5WVx6nKMWG9XuwPeagDBJaB1c4Jugy1X1ycnswKoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PPug2EcT; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPug2EcT"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b0415e03e25so193583666b.0
+        for <loongarch@lists.linux.dev>; Thu, 11 Sep 2025 23:07:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757657220; x=1758262020; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TOVssAlVzuybD/LJbI3Y9xOJ1MXiBDYcVtpUt3l7gBI=;
+        b=PPug2EcT2WEls96Jnqtrz8hJav5cTwcu7OXxIhZC/ht8Qwgw6Pz8Jd3b0X1cUj/1ub
+         0IU8RzVb5lA0c7Si0us1fEVyfMTofePgGrYUTNFc9hji3DbqZ+NEcboEN19nnvVRIVWM
+         KgQHDGzU18uDafuBGj1gNnlREv0hdU1n8fROmS/b/ur1+kG3DYqiXYFzecMa2NgWJD1U
+         2EJqvQaF5+EP31Jj0eyu+6Dh8/MhI0RaHR+9rnIlbNil7FtPyawSTJYQxmSVaHU+pQE6
+         Yosq79hpRUaUp67WFTZmZvr+BOlXfn7BvjA4yH1r9xgSw659coMKpvhfkR0EhAHFGJkp
+         XqDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757657220; x=1758262020;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TOVssAlVzuybD/LJbI3Y9xOJ1MXiBDYcVtpUt3l7gBI=;
+        b=BMteSoXtniZc1VsxBQqtskJFbuiU5GtyB8GuXTVDuRkXbpg5YXk3wdKmABT4herhO1
+         RTSJvvEs8Zr25Z1jvzbfaTKu5AS0lIxZnD1J+6gd669M4isaFP8JUUBvV+lRcm4AP5Tg
+         C0C0xrm/77JQzqATO+WxdCze5c6VXRi+jwuLOkQzhm6nr9WsAp+RoD12Eacz1XXgC7g8
+         EqSsneqfByolcldB1NRystQ0rpmXur75Vhe+k6hafa9ZVe8YJGZ7tWvE3K9fMCQavMI9
+         pBT58m+tAsDL3o8EobsKLMc5c8xFFxh5XaclO+qmhg5X0IOudbPAU9bjETxhlt7P0c1W
+         buxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAIEv7QfH2PL34ypJDC8Criyh4rlA+tQy5/Z3NuHx47w27SPvl4g3HytYajbNZw2QZkZjNQ9w+1Bk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzEY7gxed2pTOnj2VsSNOz79kiJTTA1bBTgNr6wb+NNq4QshlBg
+	5J2cwAcQFdazIDk19BnYeVGM0+08mfSL18Vp6MM66BvwLTrXb6w9/iUfwA77uFzaB2ATuvHxsQZ
+	+rfYRrZ5JMaUZdiSC/MKadmXdsVn1pL8=
+X-Gm-Gg: ASbGncsGQeoQzTc+bOhUD3DW9XQxGaz4Jtjxtqw5msNhC0I61Epo+qecT56DnnTBdkT
+	ca7NeF65/mxDIeoFrScAlasHWjJTdTgc6tqnIWrkcRgUHroXzPNF5MA/X1x6e+WKDbFIMUIiFMn
+	S0RwHwxFw5mdLGrxrlfMfGYT08Jdlnk0tkyYnitUK4+oQxx/a1AAoI86ztS/9v6FsnImB+mmb9N
+	sFycGD3fnqFV0+weQ==
+X-Google-Smtp-Source: AGHT+IGbUmIoLVqRxKuVQ8ZiqtWYSSth8aq/nfPm70faiRBEOfXVPN4NALZRbJpq4jayZtv4bcHIGewkEuMmT769r/8=
+X-Received: by 2002:a17:907:3f07:b0:b04:7ad5:b567 with SMTP id
+ a640c23a62f3a-b07c35be704mr164366766b.16.1757657219928; Thu, 11 Sep 2025
+ 23:06:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.21.2509111549200.29971@pobox.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxQ+S9hMNoYVmPAA--.64958S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JF1fZFyfZFW7CrW5ZFy5trc_yoWDGwbEyr
-	1xuwnrWa1UuFyq9a1fWr4avFWktw1kWryDXrn3ZryYvryqgFy5JrZYkF9IgrWrJrWjvF4D
-	Kan5JFs3JryjgosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_
-	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
-	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU
-	=
+References: <cover.1757318368.git.zhoubinbin@loongson.cn> <8575ff2d46b701950b1b0da3d3c181db331f79db.1757318368.git.zhoubinbin@loongson.cn>
+ <20250910-knowing-labradoodle-of-protection-d37884@kuoka>
+In-Reply-To: <20250910-knowing-labradoodle-of-protection-d37884@kuoka>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Fri, 12 Sep 2025 14:06:47 +0800
+X-Gm-Features: AS18NWCgzeCmKpxIiPEQ4y-Le_Edm7fm5KZRjhTlMd28XiZokJFtKz-8hZ5wN2U
+Message-ID: <CAMpQs4+9DwkELn3xyi+PqOGNabGC2vvYiujjTa0Q1wH6mSacRg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: serial: Add Loongson UART controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Haowei Zheng <zhenghaowei@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/9/11 下午9:50, Miroslav Benes wrote:
-> Hi,
-> 
-> On Tue, 9 Sep 2025, Tiezhu Yang wrote:
-> 
->> Add config LIVEPATCH_DEBUG and define DEBUG if CONFIG_LIVEPATCH_DEBUG
->> is set, then pr_debug() can print a debug level message, it is a easy
->> way to get debug information without dynamic debugging.
-> 
-> I do not have a strong opinion but is it really worth it? Configuring
+Hi Krzysztof:
 
-This is an alternative way, there are some similar usages:
+Thanks for your reply.
 
-drivers/iommu/exynos-iommu.c:
-#ifdef CONFIG_EXYNOS_IOMMU_DEBUG
-#define DEBUG
-#endif
+On Wed, Sep 10, 2025 at 4:28=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On Tue, Sep 09, 2025 at 08:11:18PM +0800, Binbin Zhou wrote:
+> > Add Loongson UART controller binding with DT schema format using
+> > json-schema.
+>
+> Why? Your DTS claims this is 8250 / ns16550a.
+>
+> This is just incomplete commit msg. You must explain the bigger picture
+> here, not repeat what the patch does. We see what the patch does from
+> the patch.
 
-drivers/mtd/nand/raw/s3c2410.c:
-#ifdef CONFIG_MTD_NAND_S3C2410_DEBUG
-#define DEBUG
-#endif
+According to the chip manual[1], the Loongson UART controller's
+registers and functions are compatible with the NS16550A.
 
-drivers/usb/storage/usb.c:
-#ifdef CONFIG_USB_STORAGE_DEBUG
-#define DEBUG
-#endif
+Would adding Loongson UART compatible to the 8250.yaml file be a
+better choice, as shown below:
 
-> dynamic debug is not difficult, it is more targetted (you can enable it
-> just for a subset of functions in livepatch subsystem) and it can also be
-> done on the command line.
+diff --git a/Documentation/devicetree/bindings/serial/8250.yaml
+b/Documentation/devicetree/bindings/serial/8250.yaml
+index e46bee8d25bf..abd41e996e68 100644
+--- a/Documentation/devicetree/bindings/serial/8250.yaml
++++ b/Documentation/devicetree/bindings/serial/8250.yaml
+@@ -99,6 +99,8 @@ properties:
+               - nxp,lpc1850-uart
+               - opencores,uart16550-rtlsvn105
+               - ti,da830-uart
++              - loongson,ls2k0500-uart
++              - loongson,ls2k1500-uart
+           - const: ns16550a
+       - items:
+           - enum:
+@@ -143,6 +145,18 @@ properties:
+               - nvidia,tegra194-uart
+               - nvidia,tegra234-uart
+           - const: nvidia,tegra20-uart
++      - items:
++          - enum:
++              - loongson,ls2k1000-uart
++          - const: loongson,ls2k0500-uart
++          - const: ns16550a
++      - items:
++          - enum:
++              - loongson,ls3a5000-uart
++              - loongson,ls3a6000-uart
++              - loongson,ls2k2000-uart
++          - const: loongson,ls2k1500-uart
++          - const: ns16550a
 
-Yes, this is true. It is up to the maintainers to apply this patch
-or not.
+   reg:
+     maxItems: 1
 
-Thanks,
-Tiezhu
+[1]: https://loongson.github.io/LoongArch-Documentation/Loongson-3A5000-use=
+rmanual-EN.pdf
+>
+> Best regards,
+> Krzysztof
+>
 
+--
+Thanks.
+Binbin
