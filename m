@@ -1,63 +1,63 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBCB2C1A2
-	for <loongarch@lists.linux.dev>; Sat, 13 Sep 2025 01:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754361A9B24
+	for <loongarch@lists.linux.dev>; Sat, 13 Sep 2025 01:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757726243; cv=none; b=K6nnnhoEd7D7OOzrAdDpZ7TFStXJpI++RlBJodwZ2yMeyYKnxSGIx0GoRSutSNvnyCPawIjT/e3ORgoJWRgvwUrM4RBm0dNWePPvyqVHFM+8WDq1gKXhjLShjm2kfb3YDWJuPlwNGSEQG1z7K6/3ZdEKfHhvHHeYX1qN+/Z9wMY=
+	t=1757726310; cv=none; b=Qx5sP2G+oD+AFN7/jklsT/ozpbPhW6EtqGmRBaSAVAR/jcggJlV1mo4HQozA8af2itR56VaeG8jqP8k+dD3U+8j4NB1Cp0up1OtkjcjNrUpXf4O4ritGMQw32MOcDtyr4yOCCuxwaLPN8OQdKR7p6IPYcwf6lTRXD4ScCH9iG9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757726243; c=relaxed/simple;
-	bh=oyncyjaLrzPFmjkp22Lh+fbFcypfHWy3Ry54UY3bgvQ=;
+	s=arc-20240116; t=1757726310; c=relaxed/simple;
+	bh=gqqGfNEIy1h395KAAal0EqVTqfHBZvgS53UXMAzAIg4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uM+165t/HDi97veVi+gKsCjpQcfhWZfLghwNDRmDI47AEdJvGbKiQNjflx9wRHsevwCm+wIhKzKbUScsLTSYVBBpiC8NiT2fv3Eiw2DaGdXUkHDtrQcYK43Mjx9dpu17RvuzIY/yv9lGtuz6Q0xGI3X46dT76LbxMkWfN6VNliI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QMUYk7lG; arc=none smtp.client-ip=209.85.218.41
+	 MIME-Version; b=uLrhF8ZB9G9GQMEzeZizX1mxwannYGJtV3F2hoqHfEBS7y3UcxbpKgNgFXSCZ9YQn6EFbtZ+VDG/a/M/vO1cH0mhT3qO4cBvoRg/hA71QZf8A0AZrVQj43L9rYXifd1czYFWgqcT+SXX31/ISKQzWV6Y5L7YHld/KOTTQDDqHmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UFfTKPZQ; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMUYk7lG"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b07c081660aso314123966b.0
-        for <loongarch@lists.linux.dev>; Fri, 12 Sep 2025 18:17:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFfTKPZQ"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b03fa5c5a89so369261366b.2
+        for <loongarch@lists.linux.dev>; Fri, 12 Sep 2025 18:18:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757726239; x=1758331039; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1757726305; x=1758331105; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lOKK4KIFki64V1O84ArLWA6Jx4UbLCdmK3IY8vRFz3o=;
-        b=QMUYk7lGtsZXevu6tpmwNTNkEhiI3s1Rv4CfIaDKtgkUB5oAsNUaTdlaTbRTdUofP0
-         uuxZ5k8d3lFaYneuCOiiUh8us4NhkCdu+wt1APqF/uyQIZnudekBetaHwfMjKUNjrGAV
-         dY35tm1sEdNs8pLr5iIpBu8OlS7dYTfmlIQQgAKoKyIXsx6LE5/KWsymQculM/5zgpFD
-         YU+H9EC7wwQHp2tIcrNuoWlCoZj8ql2Gn86nygDdFKyCspzIbrsODdQBSAICyp2rZmAg
-         pFaxl8ILCiISijLkGtLHx147BRWiYtOIk/HEjng0RFzHENe62Z932ammUA9tgJYCsDsg
-         mtCw==
+        bh=azZv/jvf6IRhG0wveCq5ECQcNHAHnPNLNif/IfsLlkA=;
+        b=UFfTKPZQESinNVZm1tat/s2RYLPBVVW0S8HQDThbLMufi+GemEu9G5nOm2Zefuk2Qt
+         cgxGSz4fTY9Ap0UjTQH8j4pDj95k3x4eoBHBt2wVK54ZdjnwprWfcImdDPKb1ZMWac/F
+         OU4qGF2O8TK+86yhM/yief54r7xpz7zz/EMSNd6/j4wIfzb6Mb2xxmgJHDQnHoKbGEzd
+         5o12V3R77/ct/rty3KoFrPvv0hw6BClbGbpqcCEBPLxpcwp3UUQo3OVN6Y8scnMv382e
+         2/38GQhkADPRJ+X+NEfdNjxdc/Bzq9RMFbza4Rxv2ab8GcDkt7nOL6m6kCu7uaa8pXyp
+         9ZaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757726239; x=1758331039;
+        d=1e100.net; s=20230601; t=1757726305; x=1758331105;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lOKK4KIFki64V1O84ArLWA6Jx4UbLCdmK3IY8vRFz3o=;
-        b=iQd1COGnSr+rSywYsWh3icxVaOKyD10qgb1L5SFJrrsW2qW73kIRME6ovuka0K5Rvp
-         xYPUhy2WSg0yy9XRJ7WGn8e+nziNPggGyJDpkLqKBs19VyzO7qb1Bv2xDFFhBOW6H7hO
-         fBZCPlzLbMexSFZfORiZ+/Q3bTQYzSFNhJuuV3TQtjNIFLWguun1j3rRbPN25OjI6x8m
-         jcnTvIWWk1B4rs77sBnCMtqNNFpPzcjUyUk+pJcxVPi5ME7oYKPwbnoSgJbzW5CeBFVE
-         D9v0h4Zkt36iKdtTREFeKqFNIty8QZDppbbgZ48eGiHmS3aJ1Iv6JBnvv5A0uapH4mEE
-         QP+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWXHPZfVoqzBsJKWcN3/CJ4DL4BPIOYj3tJqkdiEVZ//C/iDKqKU9mfwLwGI8bgN2VoIIOAnhGtFMk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YycfbsKQ+NepC/GJ5thPYsYWcCC/jruacMWmGk9frAJ9l7ACcDT
-	adtWrVdRd3EVgQazsY+3wG9khxrfPvfXwthB+G+/yv8rJop+KBfEryac
-X-Gm-Gg: ASbGncv2OuVOmgQLNXX+HD6ZRQO5dQFilIvUtD1zqxvTdi/uLkykt+cYriVV+XV0TUr
-	i56yv/qMAMM5nxgRrrYe1LhwDpd+5hy/bUs6lqA1PLcC9gHBwCVjEVMOkw518lwbIujeYBgJJnw
-	9W4b6ZIq7Hx8lwFdFlb28JDmGyArukEz51ZSZJdRtuOmsRg6VyYT/D1JL7X0piFCqIibjSbo2bm
-	6Vfe8XW1oyxusHa09Lt7suJ4nvLANgTabdFGgE/1jo+qP0tDXLggDZaJSoW/otiGH82doyLKa+h
-	jVfseq+fD42t4w/Bv6dMgQrz9P4ZASoeUVhJ+8AGP7sNR9aKQgCkzTbEkdoNkNgYyahrqjBcvUi
-	VydJtFTZpMO+aNSdo5Y8=
-X-Google-Smtp-Source: AGHT+IGWcEC7VhNjJKZzReFkWP7F1gkqH4tvvChKQBMnzdm+44287e9kqOEvM9aYYFOmJE4OYY5/Qw==
-X-Received: by 2002:a17:906:4788:b0:b04:b435:fc6b with SMTP id a640c23a62f3a-b07c3a79fefmr497358466b.60.1757726238469;
-        Fri, 12 Sep 2025 18:17:18 -0700 (PDT)
+        bh=azZv/jvf6IRhG0wveCq5ECQcNHAHnPNLNif/IfsLlkA=;
+        b=cwo1R9yW558LbkNhOfKkSWLPXxWL//CLXyl0fgnEYI97bBe65PTHaxbEKHDoFBBSoU
+         +dtr0RdMoKxuHYw7X7i3zDzLy4SGCNUxnh4cysc17lqnLztA1AO/b9NiQwwhX7gCqHns
+         YrnS8sz1p+L5uu/X7ScLlJwj68OLjCNiXIuvUuPj8oxgXGjONP4dxLuvOrUkKpF8uzV6
+         SJtueqFE7iKQLyS1GO5kqPRkGb+TCwNVp62h5j+mBxi2UqKi4yMoXWtu4HZRIx6s2U3o
+         hgxcgJQ3zZ48PFUuyxfXwpiJ2eoSIHjwMIolCqu6Em9yeUvsQoYF4HOj0XeY7bKL5wHC
+         2ahg==
+X-Forwarded-Encrypted: i=1; AJvYcCUT2zUny1E/VfiU7ik0peVpNrza3pclNsJlIKJMzoyWrd8xrxSPYREfK3HPzfY2V4BqjA37I19HZd8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw8Wq3M3SpEFXvJNBSkCc4IgT/0jbvqgfgd49E+AVS8nyKH+kFX
+	SBy4D3GN1EtZWo0V6mN8SEXuhnvfsknVgWzcOm/q+20toEhL5r4npQ4N
+X-Gm-Gg: ASbGncv3m185GgYuv7WFr+bidcjaaxG/asD6MYb4NOdc1CL7p9bsoBAe9oQv5kX8vQg
+	Zaif1A1MkyRH0VjaEUbA3vQcFzL8M9JFi/Oo9sXIR1MDpbS+AA2r3xBmc5Zfx9CbUI+csg+bqdz
+	kz66zJIMSjuMqKMOsEtaiLQX8ItIYGrwBK/naL/1KKTclCq+l2GFXX+NbPz57jajv9SmdBzP4zF
+	0cULUSAMQh0y/vjSZmFhE+xSGLvJ63qHhiWm/cOSCFyIzG+Uj3jxVzd/gcQRIJd1EdscPcf6UWE
+	h/WLVpsdA3N5ZdOVVpc3atci/LrH6FtVdPPwpdBanVzdyiwAfmvK/LI0vg8GobkoAgvPP90zHpz
+	Ph+K7/aqShLbiAwuULlY=
+X-Google-Smtp-Source: AGHT+IExQyu+Z7m4GD3MP2gVTN78xlktku98kUsQddou1aWuxY/hOtzAat6yYKAto7vnFggGkvcCIA==
+X-Received: by 2002:a17:907:3f18:b0:b04:45e1:5929 with SMTP id a640c23a62f3a-b07c35cd746mr507554266b.28.1757726304508;
+        Fri, 12 Sep 2025 18:18:24 -0700 (PDT)
 Received: from localhost ([212.73.77.104])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-62ec33ae181sm4478774a12.22.2025.09.12.18.17.13
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b07b32dd309sm475244766b.53.2025.09.12.18.18.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Sep 2025 18:17:17 -0700 (PDT)
+        Fri, 12 Sep 2025 18:18:24 -0700 (PDT)
 From: Askar Safin <safinaskar@gmail.com>
 To: linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -113,9 +113,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Thorsten Blum <thorsten.blum@linux.dev>,
 	Heiko Carstens <hca@linux.ibm.com>,
 	patches@lists.linux.dev
-Subject: [PATCH RESEND 34/62] init: inline create_dev into the only caller
-Date: Sat, 13 Sep 2025 00:38:13 +0000
-Message-ID: <20250913003842.41944-35-safinaskar@gmail.com>
+Subject: [PATCH RESEND 35/62] init: make mount_root_generic static
+Date: Sat, 13 Sep 2025 00:38:14 +0000
+Message-ID: <20250913003842.41944-36-safinaskar@gmail.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250913003842.41944-1-safinaskar@gmail.com>
 References: <20250913003842.41944-1-safinaskar@gmail.com>
@@ -131,43 +131,35 @@ This is cleanup after initrd removal
 
 Signed-off-by: Askar Safin <safinaskar@gmail.com>
 ---
- init/do_mounts.c | 5 ++++-
- init/do_mounts.h | 6 ------
- 2 files changed, 4 insertions(+), 7 deletions(-)
+ init/do_mounts.c | 2 +-
+ init/do_mounts.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 5c407ca54063..60ba8a633d32 100644
+index 60ba8a633d32..c722351c991f 100644
 --- a/init/do_mounts.c
 +++ b/init/do_mounts.c
-@@ -366,7 +366,10 @@ static int __init mount_nodev_root(char *root_device_name)
- #ifdef CONFIG_BLOCK
- static void __init mount_block_root(char *root_device_name)
- {
--	int err = create_dev("/dev/root", ROOT_DEV);
-+	int err;
-+
-+	init_unlink("/dev/root");
-+	err = init_mknod("/dev/root", S_IFBLK | 0600, new_encode_dev(ROOT_DEV));
+@@ -174,7 +174,7 @@ static int __init do_mount_root(const char *name, const char *fs,
+ 	return ret;
+ }
  
- 	if (err < 0)
- 		pr_emerg("Failed to create /dev/root: %d\n", err);
+-void __init mount_root_generic(char *name, char *pretty_name, int flags)
++static void __init mount_root_generic(char *name, char *pretty_name, int flags)
+ {
+ 	struct page *page = alloc_page(GFP_KERNEL);
+ 	char *fs_names = page_address(page);
 diff --git a/init/do_mounts.h b/init/do_mounts.h
-index 6c7a535e71ce..f3df9d697304 100644
+index f3df9d697304..f291c30f7407 100644
 --- a/init/do_mounts.h
 +++ b/init/do_mounts.h
-@@ -16,12 +16,6 @@ void  mount_root_generic(char *name, char *pretty_name, int flags);
+@@ -12,7 +12,6 @@
+ #include <linux/task_work.h>
+ #include <linux/file.h>
+ 
+-void  mount_root_generic(char *name, char *pretty_name, int flags);
  void  mount_root(char *root_device_name);
  extern int root_mountflags;
  
--static inline __init int create_dev(char *name, dev_t dev)
--{
--	init_unlink(name);
--	return init_mknod(name, S_IFBLK | 0600, new_encode_dev(dev));
--}
--
- /* Ensure that async file closing finished to prevent spurious errors. */
- static inline void init_flush_fput(void)
- {
 -- 
 2.47.2
 
