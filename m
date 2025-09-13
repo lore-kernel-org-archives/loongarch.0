@@ -1,63 +1,63 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996561494DB
-	for <loongarch@lists.linux.dev>; Sat, 13 Sep 2025 00:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1AB1547CC
+	for <loongarch@lists.linux.dev>; Sat, 13 Sep 2025 00:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757725120; cv=none; b=nj4fJBPr+rugEUqy9MdY9w/YV5m1R1wt29fJvOodoKh8H3+b2eotbqPXl+l/9X7L/+rGxRIdFxgUthR3utx0CwFSOCOJmebcscQvDD7tL4O/TGXYEuaFTCkn+0iDoFr8uJ4MtGmpsnbiLQev5YN7sEKVtB9hYBwyNDHRyW990Wg=
+	t=1757725186; cv=none; b=gx1pah+CUN/xvDpkR/MtIK13aeNTvUQT24bCRkWkoWDArDvhgCBzFvycjwfbRjPJq/s1W0n9WKxZfK9U7y+s3lMb/HPjmST70FSyrUszKABRHeW9KuSIvRviKI6Hq0+jcH+nfIs4A6LoizGPyyOIE1s8UroGffLHi1r6128nwjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757725120; c=relaxed/simple;
-	bh=riLYrwvey4IG1vm31BCl7axPrjxd4nPuzw1Lf4FnM3A=;
+	s=arc-20240116; t=1757725186; c=relaxed/simple;
+	bh=96PHKpKkduNWBMWlLUmXlhnRkmSl0kWQr4vXMbTyP8M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mGSuhcjSgG8aCBm8gn5I05Ep+3Z4xoRo87m65D+kPz31NinbPd3wae5htKAcMHYWXMMchEx/TIWKPU3e7P0MC2XULUc2WmvuO2WVYZW6TE67RWMwdZn2Pkl728MRL7fWRIzAeg+FyfCZwwMUXNl18UXq9O7EIVsus1dzH84CLbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DzX33owQ; arc=none smtp.client-ip=209.85.208.46
+	 MIME-Version; b=U1DyqaJIqWfdZUD6clFvW1Ha3s+PlMFBJgPjUfmLXaT+DuwfdfNIiJXzQKcb6zpidY/2vZ73vrKQvEF0LlliPunTX7Rx5PMMnmjhVcIHem8L8ixiD0XTN69xyrZHtwEkIWsfcl3MiJn8Tze538f+TTJGjVRJTSA3q+valNN3iY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihUDCM40; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzX33owQ"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6188b5ad4f0so3984402a12.0
-        for <loongarch@lists.linux.dev>; Fri, 12 Sep 2025 17:58:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihUDCM40"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b07e081d852so68050266b.2
+        for <loongarch@lists.linux.dev>; Fri, 12 Sep 2025 17:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757725115; x=1758329915; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1757725180; x=1758329980; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2BXXMTZbWkKZqT8QgJ9Z777RqiFOaP2Wc1It8eJXku8=;
-        b=DzX33owQJirHW7ZcUr0FiNGgSFUBYr+OuuV0awGHT2Uq7Qn4XbjyQuumXzUCGu/HLl
-         zMOfkGx/k3DKyLa+z4UK9Qcu7bkTynemX+jeQcibRetUpaKnBDZSTRSC809fze/aCJBD
-         palhy0mdfVf+912qloOlgqQ8bBnHVXcGEFLlmdYnlnJzzx7g4Exswm7RLIWJlqx6lXB+
-         K35LQTywg8Fk/xN69FI3rde/fcYdQ6On4BK9SyKucv5XutUY7nCSTYxr9WEJE2b5cUKU
-         CyiqpI7h8Wp1ADghaSS4ruR0SlaOV7JgclXTpOT8iSEPmwYukJJrtMepkYMcRMNsQv0J
-         0DAQ==
+        bh=6fWPoN959WwxjoYegCw0rDaXLTHmPmQJSliJ+OqkRJY=;
+        b=ihUDCM40LDVx4GeLFp8XgdnJDIRbUsMxnZ07jWTvowKdf+yvc6NplKmUTgBTXyU5Hy
+         CkW0FMAOqOzp0L/VhTuxJG4D1z5t09e9Fk+/CI6g57X/D0HJQkNMnW4xeza+WqrnXCG+
+         zNKgAXJXCtp/uhbFN3pBAOnzwfBehOgLsnWLf1vyWsWsISskCw+mb3nYYXOgriHveZoS
+         mIJs8I2jKD8RLcHd6LrD3aqdm3lb/7YgGY4olEysc6PUrUqxYqxmOxtKq9OQmxI7sFO6
+         ch1YUXUNlwtoOQW7ZBCzM6e0fhXw1CHaTe+YjD/uh2899WaYUdeRR0MtvL+QUAQPGZjw
+         RMgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757725115; x=1758329915;
+        d=1e100.net; s=20230601; t=1757725180; x=1758329980;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2BXXMTZbWkKZqT8QgJ9Z777RqiFOaP2Wc1It8eJXku8=;
-        b=OlbfwdkZsJCYQZnFbAkrJTxJIl75NZdVPVihoJhlCQhw6AZ0RzvYFs8kamIpyfELCA
-         o8ZXM7GT6pEZPpM4y6Os/ysJ0iwI0MQhj12Hwz308J6fERdj4gY2fX/JzRnCEGdiy4up
-         L/jRUYlpZXhkNy/S/EpqworkIBtWw86wGkn23NAlcKAYf/cagMaotOdMbtoDR/SGVCYT
-         j+PdaDRSxJgcIUKpb5xbtYmGAAPpdfQaklYQGujWVq2k6hk2Fje0vVE91an6KyI+YJRr
-         5rdJbnMXkuTgX76XyIJvRX9/JNZaySuNYhdI2xxiI82dRVQYodhLcSxYrRUn4QfodZuI
-         2Yvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWo1VtjaziV04kX6zrp0onztEMKg8O+zby/FikTKXDoq1kzQy9QWIUHPVoZaoT0n61kQnKeD29roYI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzuMKA8HIF0Jsg+gdml6i5Q2axavZvOKZVIgcqTCnnN1mCAVSB6
-	a16ua72z+C3fAWV9PuYWuiRbOnnTQihZ0SK7Ydn75Olm3oKFNGpTKxNc
-X-Gm-Gg: ASbGncvYaT6X+GPFsJb1k9nYQnGHr2PA3Wnkvlni+On5d5GsBqU072homAOEdQXDOL6
-	+N4oHoY61DyeynLNZYrEmoQ/OuPokJe4fZyogNZuavRuIrKF5wELp8IXE/jiGNswAwQVxFftjTj
-	RanZBURMBXw+eGfLFvJE9/K+xAgNdDfKddsTO6Gs/GkbeoPgsPAk1ObtsKmucBT6zYjyLBR0tMi
-	yMeDlZ9eZmCo5P6PpNr1cZDPIgcKy0eJDJzG1MlkYD5A28+9i5MBFltzgfaddZ8n+3zW6UXiylf
-	bEiRqKZZeXp1nkX71K8c9rFwqHmRcKzln39VYVOj13JSnyWgZoHUQp8KKh9IUlHkIw15+1mySgR
-	iTOk7Di4KJJ/GdTMdjwxDNz4UIWJUyw==
-X-Google-Smtp-Source: AGHT+IF4XezAq8wXNO6voYrJeDnCFhU1tJ+TfyE7OJRqFWOCMlq1YMWoUA8uaJ4xPb3fA3w8qZjP4Q==
-X-Received: by 2002:a05:6402:5242:b0:628:a4fb:3b44 with SMTP id 4fb4d7f45d1cf-62ed825998fmr4961876a12.1.1757725114882;
-        Fri, 12 Sep 2025 17:58:34 -0700 (PDT)
+        bh=6fWPoN959WwxjoYegCw0rDaXLTHmPmQJSliJ+OqkRJY=;
+        b=VO4z+39rp76k2cDztftPyLOsym529HIlBxXr2SN0NvqkmU6gkIoWw2PaNXp6KzZgKc
+         bHrJ9PvLDCJpqGVNo6WsuHY8XAyZVukXxyhOVMGnAW40p0wS6UlLw1x6SFMetSM8yjvq
+         55UlTX0sNoc+HUAs2W3528RTg5psh5ICqy52cl/HmbPHPBw/JRd3q+JZ7Ry5wxwLSRo8
+         putxh4IaM3XOL1tLF/NAP4d0T22JdnfjXw9JNVbnsr+Ha86Gge4oU017Z443fz8mFREq
+         Ia+4lWqEfC0uIv/Htf5xdxJcG0ueZTYtHKcrEpA12emz1iewJKtyBOxrdx6e3+SX6gFi
+         2PEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUzqEFnD8EYB0TgLYg/DJat5SvIlMGLuWYac5G/XSjZxT7iIb03+5PVcB++Uq3bYDJOJFCOQi6kLA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwtFQgZjs/pMMfyH3p7sUiPMhXMqOYYxeLoeIZxoyj8ztT1OTTa
+	qbqstMYhxnGL6XcHO809MXDGr5GKmdyFd+5/e+0OP1EaLFhfADhP/r31
+X-Gm-Gg: ASbGncvKNZTfrTzo9yvjFldUvjEuFSEJo8zmx7MmAt5rfe3SK6QaSuOPOvt0s6ctIMP
+	27e5sHLX31ixOlkHFsJJ9APdwJxaoip6BTuFbwBGs6w79CXRjIx6shVVQSiaAbVCSFBaxmbU1dR
+	ItyxmYgLkQGOI6nMaW6AdY26E8o94wflyTKelvdLGIZ184q8PXG3PAZkGXlFsQczTaDPXkOL4uS
+	5O6SAyc+1LIDpciptbNyXFSNV1555sw4SF+QYxZJgSTtCXYejg+rLcTP3f3vgyqDZ9U6ETbHMSh
+	kawIQngW4dZoidSI+Xk0Pft2FBxx95aBVRcKF0vBzNaygUy8BJo7gmPxfJfrHGBy8tny7rknAFn
+	ydpG/diyoLbmkIE9NTqI=
+X-Google-Smtp-Source: AGHT+IGLvsatTRrbnodGqisgzpCsfnT+5kjCyZkQGsCYdRKthq/XXLBOPdic+fyhUVGMnj7YztyCUg==
+X-Received: by 2002:a17:907:3f1a:b0:b04:ae7c:703e with SMTP id a640c23a62f3a-b07c35bca5fmr458205966b.24.1757725180390;
+        Fri, 12 Sep 2025 17:59:40 -0700 (PDT)
 Received: from localhost ([212.73.77.104])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-62ec33f3b16sm4143925a12.24.2025.09.12.17.58.30
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b07b3347a2dsm471368266b.98.2025.09.12.17.59.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Sep 2025 17:58:34 -0700 (PDT)
+        Fri, 12 Sep 2025 17:59:39 -0700 (PDT)
 From: Askar Safin <safinaskar@gmail.com>
 To: linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -113,9 +113,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Thorsten Blum <thorsten.blum@linux.dev>,
 	Heiko Carstens <hca@linux.ibm.com>,
 	patches@lists.linux.dev
-Subject: [PATCH RESEND 17/62] doc: modernize Documentation/filesystems/ramfs-rootfs-initramfs.rst
-Date: Sat, 13 Sep 2025 00:37:56 +0000
-Message-ID: <20250913003842.41944-18-safinaskar@gmail.com>
+Subject: [PATCH RESEND 18/62] doc: modernize Documentation/driver-api/early-userspace/early_userspace_support.rst
+Date: Sat, 13 Sep 2025 00:37:57 +0000
+Message-ID: <20250913003842.41944-19-safinaskar@gmail.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250913003842.41944-1-safinaskar@gmail.com>
 References: <20250913003842.41944-1-safinaskar@gmail.com>
@@ -127,82 +127,52 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update it to reflect initrd removal.
-
-Also I specified that error reports should
-go to linux-doc@vger.kernel.org , because
-Rob Landley said that he keeps getting
-reports about this document and is unable
-to fix them
+Update it to reflect initrd removal
 
 Signed-off-by: Askar Safin <safinaskar@gmail.com>
 ---
- .../filesystems/ramfs-rootfs-initramfs.rst    | 20 +++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ .../early_userspace_support.rst                | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/filesystems/ramfs-rootfs-initramfs.rst b/Documentation/filesystems/ramfs-rootfs-initramfs.rst
-index fa4f81099cb4..38a9cf11f547 100644
---- a/Documentation/filesystems/ramfs-rootfs-initramfs.rst
-+++ b/Documentation/filesystems/ramfs-rootfs-initramfs.rst
-@@ -8,6 +8,8 @@ October 17, 2005
+diff --git a/Documentation/driver-api/early-userspace/early_userspace_support.rst b/Documentation/driver-api/early-userspace/early_userspace_support.rst
+index 61bdeac1bae5..0ca923c1007b 100644
+--- a/Documentation/driver-api/early-userspace/early_userspace_support.rst
++++ b/Documentation/driver-api/early-userspace/early_userspace_support.rst
+@@ -127,28 +127,22 @@ mailing list at https://www.zytor.com/mailman/listinfo/klibc
+ How does it work?
+ =================
  
- :Author: Rob Landley <rob@landley.net>
+-The kernel has currently 3 ways to mount the root filesystem:
++The kernel has currently 2 ways to mount the root filesystem:
  
-+Report errors in this document to <linux-doc@vger.kernel.org>
-+
- What is ramfs?
- --------------
+ a) all required device and filesystem drivers compiled into the kernel, no
+-   initrd.  init/main.c:init() will call prepare_namespace() to mount the
++   initramfs.  init/main.c:kernel_init_freeable() will call prepare_namespace() to mount the
+    final root filesystem, based on the root= option and optional init= to run
+-   some other init binary than listed at the end of init/main.c:init().
++   some other init binary than listed at the end of init/main.c:kernel_init().
  
-@@ -101,9 +103,9 @@ archive is extracted into it, the kernel will fall through to the older code
- to locate and mount a root partition, then exec some variant of /sbin/init
- out of that.
+-b) some device and filesystem drivers built as modules and stored in an
+-   initrd.  The initrd must contain a binary '/linuxrc' which is supposed to
+-   load these driver modules.  It is also possible to mount the final root
+-   filesystem via linuxrc and use the pivot_root syscall.  The initrd is
+-   mounted and executed via prepare_namespace().
+-
+-c) using initramfs.  The call to prepare_namespace() must be skipped.
++b) using initramfs.  The call to prepare_namespace() must be skipped.
+    This means that a binary must do all the work.  Said binary can be stored
+    into initramfs either via modifying usr/gen_init_cpio.c or via the new
+-   initrd format, an cpio archive.  It must be called "/init".  This binary
++   initramfs format, an cpio archive.  It must be called "/init".  This binary
+    is responsible to do all the things prepare_namespace() would do.
  
--All this differs from the old initrd in several ways:
-+All this differs from the old initrd (removed in 2025) in several ways:
+    To maintain backwards compatibility, the /init binary will only run if it
+    comes via an initramfs cpio archive.  If this is not the case,
+-   init/main.c:init() will run prepare_namespace() to mount the final root
++   init/main.c:kernel_init_freeable() will run prepare_namespace() to mount the final root
+    and exec one of the predefined init binaries.
  
--  - The old initrd was always a separate file, while the initramfs archive is
-+  - The old initrd was always a separate file, while the initramfs archive can be
-     linked into the linux kernel image.  (The directory ``linux-*/usr`` is
-     devoted to generating this archive during the build.)
- 
-@@ -137,7 +139,7 @@ Populating initramfs:
- 
- The 2.6 kernel build process always creates a gzipped cpio format initramfs
- archive and links it into the resulting kernel binary.  By default, this
--archive is empty (consuming 134 bytes on x86).
-+archive is nearly empty (consuming 134 bytes on x86).
- 
- The config option CONFIG_INITRAMFS_SOURCE (in General Setup in menuconfig,
- and living in usr/Kconfig) can be used to specify a source for the
-@@ -222,15 +224,13 @@ use in place of the above config file::
- External initramfs images:
- --------------------------
- 
--If the kernel has initrd support enabled, an external cpio.gz archive can also
--be passed into a 2.6 kernel in place of an initrd.  In this case, the kernel
--will autodetect the type (initramfs, not initrd) and extract the external cpio
-+If the kernel has CONFIG_BLK_DEV_INITRD enabled, an external cpio.gz archive can also
-+be passed into a 2.6 kernel.  In this case, the kernel will extract the external cpio
- archive into rootfs before trying to run /init.
- 
--This has the memory efficiency advantages of initramfs (no ramdisk block
--device) but the separate packaging of initrd (which is nice if you have
-+This is nice if you have
- non-GPL code you'd like to run from initramfs, without conflating it with
--the GPL licensed Linux kernel binary).
-+the GPL licensed Linux kernel binary.
- 
- It can also be used to supplement the kernel's built-in initramfs image.  The
- files in the external archive will overwrite any conflicting files in
-@@ -278,7 +278,7 @@ User Mode Linux, like so::
-   EOF
-   gcc -static hello.c -o init
-   echo init | cpio -o -H newc | gzip > test.cpio.gz
--  # Testing external initramfs using the initrd loading mechanism.
-+  # Testing external initramfs.
-   qemu -kernel /boot/vmlinuz -initrd test.cpio.gz /dev/zero
- 
- When debugging a normal root filesystem, it's nice to be able to boot with
+ Bryan O'Sullivan <bos@serpentine.com>
 -- 
 2.47.2
 
