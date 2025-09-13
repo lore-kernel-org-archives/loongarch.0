@@ -1,103 +1,74 @@
-Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19C42DC789;
-	Fri, 12 Sep 2025 22:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.95
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757717165; cv=pass; b=YHT/nZUGTAm11gMxH0rg5wBMg2GjDCQM82Zx+1fvuNkSlXVmY0EOV7psC71o1mQ4mPkYjzPHj/cGGwzSVsooYS6sQ2ThtRZSmnZ7usLSXES7tg7uUFPbF54Hz27Pm9qA0/JfKsBwTkwRkrvP7H8/+tbTWe3W5yvUudFq6t0F0+w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757717165; c=relaxed/simple;
-	bh=guye89JU8c6lU3xOKktnL/Suo1HlmTbQCY9h2iBDVkw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ICcVdpmDMnGVnZEG5kCE/kckHoGus3ONlkgYiU4t8fuifKAKgvsh21hed6SlyHMDwYwoNyK/wuWZpwQQq/cPHH7LNvjc0ETu6pHLrarRs655ZMnh7VJ8baFA5bDlkfM+V67Ip5As5OmBFtv0I+/dhtu7u405HCRirr7Hfzi5/1o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=acIupnwF; arc=pass smtp.client-ip=136.143.188.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD9729D05
+	for <loongarch@lists.linux.dev>; Sat, 13 Sep 2025 00:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757723353; cv=none; b=a2Oe8vkIuYudLK5aBIo/DQBXlu7BXHY+NfpylyljBHY+pealt8WMvOwQOLc7jCXm9diiOr76ucaVPfcxRW+AqfChCO9y8SRN1JKAUcQiJ70bUVkPXF3ayX0OA+r7+O2n/aXeeVfGdz2PGikUPN6cplQLNg059tzblLC0AckstCY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757723353; c=relaxed/simple;
+	bh=o/2/1rLuGad7KFL3fjUL65woyzwOsWRQ8y/k/9zJK20=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=eiX+0JnL76T7ziRhi3hQrEF5M1N6MD9su1G7aCGe7L0Gb/mtJcT0MZ3+e6tir/OmoS5DJFxc3OUk8rtfVw9JZSaNqIDvyyM8fpG1oMS66JhK5g87SRE+ESP+tgA99iqE8tGZzNCYs3xYd9gUh5ehVLgRgnySBnixxZEin5q3p54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eV6eB74K; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="acIupnwF"
-ARC-Seal: i=1; a=rsa-sha256; t=1757716883; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cYmkTWVTcQlLmLr5V8p1CrwhziHK5jWEHqN1/x0dbbnP4N6eqwJhNpFD+YvvcG1JcA1pILR0lg+/Ny7uiewAqWrYp0xgwBVqCid/qUwxU2pBACMW8E+qi9+gH5uFDpaMNSKBUmBcqwPg32DVp6NEprKLCwOzLldRlExaYRgKRTw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1757716883; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=q9iQK8EdIF6RRP4HkX18/uU6rY0egPm6PmmgTdmDikE=; 
-	b=Ju1dqMVIkIYpU5LdsWBIf/CGwDsN0K99qbvJhITUG43b4iO5ReBci570gSrCvJZpIaavRZGeh519zGwQ3xzl9eLPP7B/6fd5qSQvFqfvp30skE+0PjF0wF1ZPM088gDBmx9lu1/Hmu9iiGaXsgt143EyXlTcYz1mO0b4E8ZkWow=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
-	dmarc=pass header.from=<safinaskar@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757716883;
-	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=q9iQK8EdIF6RRP4HkX18/uU6rY0egPm6PmmgTdmDikE=;
-	b=acIupnwFZvyRH5FokPCft4nvGFUMr39pqEpKs0NtNZVw5kg9Xyn8fLnVwVnsMrYi
-	icAGCn5xQY/D8nPVu8I73mfObC5kAiAiUgDDUOK0dT7tuN6mPBE7LpoJ79v5Pcf1s+2
-	+A3prhgVdkGFxaNK2Z8tJ6RB7TjqHAI2HFOwbXVs=
-Received: by mx.zohomail.com with SMTPS id 1757716881894668.1339002049043;
-	Fri, 12 Sep 2025 15:41:21 -0700 (PDT)
-From: Askar Safin <safinaskar@zohomail.com>
-To: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Aleksa Sarai <cyphar@cyphar.com>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Julian Stecklina <julian.stecklina@cyberus-technology.de>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Art Nikpal <email2tema@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Eric Curtin <ecurtin@redhat.com>,
-	Alexander Graf <graf@amazon.com>,
-	Rob Landley <rob@landley.net>,
-	Lennart Poettering <mzxreary@0pointer.de>,
-	linux-arch@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eV6eB74K"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-ea3c9376d90so2372567276.1
+        for <loongarch@lists.linux.dev>; Fri, 12 Sep 2025 17:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757723351; x=1758328151; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CmOJuo57ImQUiYUwmR7+IFwJm/0Fqs9h33y3GCq+M5c=;
+        b=eV6eB74Kux6VU5iBU3xZ/4RBAGNm/9SBVgst9TvficdKmbyI7x9beVuUdhlxUnpaMc
+         yAolMwMJ3+rQ3KlOwKdQTCMl1Z8sgJ0NSCLsR7Yg0SpHw1U9GJldw/8It0LxVu4lb7TO
+         gz7XuoSten6dOyXcv1RyCceUvFguOCjmGoMHJHoGnPdrHBRs82VAmQwFfhc/mGzklGM4
+         rBe/OwzQ8zJCyRMmOajEKadQ0y9kyIOTfxrVrIETZTMHWg1jwrU16T3dlik8NDqGzxfg
+         xqo6eYsIWPgF+eeQGHpEzHGatYmAhsfKyupRXEYf1RyATyQXOQFk5oCOZSAafgHoQU1l
+         ZJnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757723351; x=1758328151;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CmOJuo57ImQUiYUwmR7+IFwJm/0Fqs9h33y3GCq+M5c=;
+        b=phtKEia3IStTKMi37xdmkAAYNwoo9IPHsprVa4dJg9nxdEmZEORurJXAwauxcfw9UJ
+         MWvBT4eqSi5QlgxDnip4WxWARHdx9lJac06uggCLDzO5qP19n4aYQtRseNK3Eo65LRCY
+         8gRPIwosGEodG/d1RtyhZDgWBH3GrDGZonhJ3tAKhD90IsfYncfbWzzsVvzJlxM8TIbW
+         Ym5ZAdnwVX3SNVO78t+C59Ta/q64fykrZjiJQRmnNT4bPuDxVTqIwOlno47+2tmZvvD+
+         bIRvRdFdfeZ7X1F9zaXn2wJSQF5YkF4f5+LkoCeHUBKH0OVjII/rnwLAl1/EGw4CwaC7
+         FPgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwfJKIAbyLIZpUVMpI8sqYYtJSpsdcH2KJD6Fs8Mj0QPiy0XfJAHqPEi00GP5Kqb4BinOVGW343bQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxRht9VENwkyDDPFJIbK01uF/48OSRUEcmLa/pZqeFwc2OAetTO
+	C9nkMjK9eAEcSQJ1AyrtT8BvnKoyNiqiGIYvsHtvJspCi+DShUEL1/nq
+X-Gm-Gg: ASbGnct1BUOSfXlVPCPj0wm5FDymvILOG2rQfx9k6K7OR5hGxunMjcqPGn+abp+Sjwc
+	0Q2wB3C+Wf4EPMKMs0+XbegqRgrZunuTmKwqSLgH6qMBmh/f8sbPr1ALV6Ex+8jBICqFjbdkwW5
+	O22hF/01y2gF6Unq03dFV0V+WOZft8HCOFuxzwWiKbXl+ztt54xqh8H6ZO0AafA1ue74se2n3HL
+	a27FOGKqCiLX0U85U1eUgoHIWe+iywUNS3GrjafzOKLr+AUFxE/SnL2CodaJkr5sogQqniz3kwW
+	PdX93AglK5HkMtq2bid1FyiwGUeh3Do5uxfIgXD1YyuJc3+sMOAhpyK02x7mrqQpModb1O3EDtV
+	b6ri/BK9TWJu2SCXqj+eAIk/DbneEfki3nqay8mIaxI6UVo5y3ToYsLlXWOM1itltUAMw
+X-Google-Smtp-Source: AGHT+IEtdwnNl1zhwm0zJTMTaAzTVGehCEQNymipUs87iXcurGE3yl/I9Hy29mFJtQZMSLEbg45DmA==
+X-Received: by 2002:a53:c541:0:b0:622:6078:42bf with SMTP id 956f58d0204a3-623389c38c0mr6011595d50.5.1757723351254;
+        Fri, 12 Sep 2025 17:29:11 -0700 (PDT)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-ea3cf211a04sm1793439276.20.2025.09.12.17.29.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Sep 2025 17:29:09 -0700 (PDT)
+From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Xianglai Li <lixianglai@loongson.cn>,
+	"Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
+	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	x86@kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-block@vger.kernel.org,
-	initramfs@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	"Theodore Y . Ts'o" <tytso@mit.edu>,
-	linux-acpi@vger.kernel.org,
-	Michal Simek <monstr@monstr.eu>,
-	devicetree@vger.kernel.org,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	patches@lists.linux.dev,
-	stable+noautosel@kernel.org
-Subject: [PATCH 03/62] init: sh, sparc, x86: remove unused constants RAMDISK_PROMPT_FLAG and RAMDISK_LOAD_FLAG
-Date: Fri, 12 Sep 2025 22:38:38 +0000
-Message-ID: <20250912223937.3735076-4-safinaskar@zohomail.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250912223937.3735076-1-safinaskar@zohomail.com>
-References: <20250912223937.3735076-1-safinaskar@zohomail.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: rework pch_pic_update_batch_irqs()
+Date: Fri, 12 Sep 2025 20:29:07 -0400
+Message-ID: <20250913002907.69703-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -105,89 +76,38 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112274be46f51a3e6d7b65453b8c4000084fba7464352cc4dc9cd50377fd7f09b0684ed62a16f1e6eeb:zu08011227aebba3291345918c920d3b3a00008f86ff3411911b832b8b206255ff0b95bb9fe1592be8b5327b:rf0801122cd997ff081c6a0f543772417b00002b369a2b05bf7efffc2b9c1c1140566e0d80ce0978fa409c151951bada9a:ZohoMail
-X-ZohoMailClient: External
 
-They were used for initrd before c8376994c86.
+Use proper bitmap API and drop all the housekeeping code.
 
-c8376994c86c made them unused and forgot to remove them
-
-Fixes: c8376994c86c ("initrd: remove support for multiple floppies")
-Cc: <stable+noautosel@kernel.org> # because changes uapi headers
-Signed-off-by: Askar Safin <safinaskar@zohomail.com>
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
 ---
- arch/sh/kernel/setup.c                | 2 --
- arch/sparc/kernel/setup_32.c          | 2 --
- arch/sparc/kernel/setup_64.c          | 2 --
- arch/x86/include/uapi/asm/bootparam.h | 2 --
- arch/x86/kernel/setup.c               | 2 --
- 5 files changed, 10 deletions(-)
+ arch/loongarch/kvm/intc/pch_pic.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
-index 039a51291002..d66f098e9e9f 100644
---- a/arch/sh/kernel/setup.c
-+++ b/arch/sh/kernel/setup.c
-@@ -71,8 +71,6 @@ EXPORT_SYMBOL(sh_mv);
- extern int root_mountflags;
+diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+index 119290bcea79..57e13ae51d24 100644
+--- a/arch/loongarch/kvm/intc/pch_pic.c
++++ b/arch/loongarch/kvm/intc/pch_pic.c
+@@ -35,16 +35,11 @@ static void pch_pic_update_irq(struct loongarch_pch_pic *s, int irq, int level)
+ /* update batch irqs, the irq_mask is a bitmap of irqs */
+ static void pch_pic_update_batch_irqs(struct loongarch_pch_pic *s, u64 irq_mask, int level)
+ {
+-	int irq, bits;
++	DECLARE_BITMAP(irqs, 64) = { BITMAP_FROM_U64(irq_mask) };
++	unsigned int irq;
  
- #define RAMDISK_IMAGE_START_MASK	0x07FF
--#define RAMDISK_PROMPT_FLAG		0x8000
--#define RAMDISK_LOAD_FLAG		0x4000
+-	/* find each irq by irqs bitmap and update each irq */
+-	bits = sizeof(irq_mask) * 8;
+-	irq = find_first_bit((void *)&irq_mask, bits);
+-	while (irq < bits) {
++	for_each_set_bit(irq, irqs, 64)
+ 		pch_pic_update_irq(s, irq, level);
+-		bitmap_clear((void *)&irq_mask, irq, 1);
+-		irq = find_first_bit((void *)&irq_mask, bits);
+-	}
+ }
  
- static char __initdata command_line[COMMAND_LINE_SIZE] = { 0, };
- 
-diff --git a/arch/sparc/kernel/setup_32.c b/arch/sparc/kernel/setup_32.c
-index 704375c061e7..eb60be31127f 100644
---- a/arch/sparc/kernel/setup_32.c
-+++ b/arch/sparc/kernel/setup_32.c
-@@ -172,8 +172,6 @@ extern unsigned short root_flags;
- extern unsigned short root_dev;
- extern unsigned short ram_flags;
- #define RAMDISK_IMAGE_START_MASK	0x07FF
--#define RAMDISK_PROMPT_FLAG		0x8000
--#define RAMDISK_LOAD_FLAG		0x4000
- 
- extern int root_mountflags;
- 
-diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
-index 63615f5c99b4..f728f1b00aca 100644
---- a/arch/sparc/kernel/setup_64.c
-+++ b/arch/sparc/kernel/setup_64.c
-@@ -145,8 +145,6 @@ extern unsigned short root_flags;
- extern unsigned short root_dev;
- extern unsigned short ram_flags;
- #define RAMDISK_IMAGE_START_MASK	0x07FF
--#define RAMDISK_PROMPT_FLAG		0x8000
--#define RAMDISK_LOAD_FLAG		0x4000
- 
- extern int root_mountflags;
- 
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-index dafbf581c515..f53dd3f319ba 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -6,8 +6,6 @@
- 
- /* ram_size flags */
- #define RAMDISK_IMAGE_START_MASK	0x07FF
--#define RAMDISK_PROMPT_FLAG		0x8000
--#define RAMDISK_LOAD_FLAG		0x4000
- 
- /* loadflags */
- #define LOADED_HIGH	(1<<0)
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 1b2edd07a3e1..6409e766fb17 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -223,8 +223,6 @@ extern int root_mountflags;
- unsigned long saved_video_mode;
- 
- #define RAMDISK_IMAGE_START_MASK	0x07FF
--#define RAMDISK_PROMPT_FLAG		0x8000
--#define RAMDISK_LOAD_FLAG		0x4000
- 
- static char __initdata command_line[COMMAND_LINE_SIZE];
- #ifdef CONFIG_CMDLINE_BOOL
+ /* called when a irq is triggered in pch pic */
 -- 
-2.47.2
+2.43.0
 
