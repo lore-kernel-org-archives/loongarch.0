@@ -1,239 +1,298 @@
-Received: from FR4P281CU032.outbound.protection.outlook.com (mail-germanywestcentralazon11022109.outbound.protection.outlook.com [40.107.149.109])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322AD2E88AA;
-	Sat, 13 Sep 2025 08:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.149.109
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757753923; cv=fail; b=J46EV34FNE+eEKJNI5HOqWHa+qElChKGr9MzPOpF6KgVbxR0q5RZ9dJzj1R6DMNKO0pskAB8q7Zv6WInE9iO2wY1RJU+vjHSkXd/NA9EFoSmUDQ0t+2QwknjnYrxHv2EcE823ASvfKvjWTL9WpgkxQ1mJAwyj4k61sCiSaHwlOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757753923; c=relaxed/simple;
-	bh=2dfdAhExD64i0DbF+CwkX379VUlZaZ5kAHQMSZbWJEs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=R27t4baZmKhZUjxeqH+K93tNFpONXGO1otO0Rn9XFUKco406qq9xEp69hxDbTuzDi1KiiQgkkeBLW4mJMznZObqKXrBpcHLu05/u0kyhdXj1D1YVXsMpZjjQ9XvDE3m7eYd33lEEXPEZXaKdJ+++EKiB9oLPBRd05+J9WO4AMHg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cyberus-technology.de; spf=pass smtp.mailfrom=cyberus-technology.de; dkim=pass (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b=v8IwRRRa; arc=fail smtp.client-ip=40.107.149.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cyberus-technology.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyberus-technology.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CB83594B
+	for <loongarch@lists.linux.dev>; Sun, 14 Sep 2025 01:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757815041; cv=none; b=dVfvnBZ4J8dJs3p3JSxC2gsYgkmIGYFZX6DTJQqrTKU8T+HPbkmgjHlKTI3rArWOuVUH6iHVORBFMDmXYUi5449MEkUrVZ5oMlgpm0jrmlbp5/TKJ7Sni472/KYr6k4XlI5LVPH+0UjXmWq3ZMv57QFmb04u2tWNDDE82mpoe98=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757815041; c=relaxed/simple;
+	bh=2bA54a8XQO3oplu+GpK3brlzTVegVik1P3OTH4QDtaA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PTyLbGG75eXIW7u70JkZocPUNLT3Owootmtu5AgGwTCG1oieTHc70o+hbTGa5S0sKU5y92NapFKOdvHMLor+3dWiV+D3cX3JEl+WKeyfKNMNWAz7Flr1fF3iHmSRMkKTPbfnRp0BmsWYca0r8z6S126WLSCw3AtBiqke3WhXdyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rm3eVyeW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="v8IwRRRa"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=unz+GwaXOMrNJfVpWglQMAY7rUGvAoKFKdr/1pQdisZ/jopx7kW5c0jmC/f0mfsnqffKbvgYyoZx2xzBYx5PlSzcrFP7wCB+bcX5hpjKyH7fS5DCcq51N1viklREFSjKgc41CGDVVp+i9oXvpAVMc5XkcHqTdSSveM4zdUSl4DkefG2KOU00fEfQlUPF+mJ/ZlGTSkz0kbReSAcwGmOoZqzaDkJm8CHlpM4jprDljUZ/unOB/JMkv5me3XTIaaSiAkcDOAkKAI/wlQRnnmYViZ7kZYBcoxjQZktkmC/nmbEmYERuZg3SpLrQ814PunDbFJgKzvX7rZ+sTQqT7GdnaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2dfdAhExD64i0DbF+CwkX379VUlZaZ5kAHQMSZbWJEs=;
- b=KbaqekWDPaCJG9KV809dHKZBfnLPY9OSDJuYyaK974T2ne4va4LvM7Uz4ymIgUmFhnloRRd+3iyw0tVuVqez2ii7hhRBNMMiJWUYB7cyINfY0XNQKNK+pj/Fg46Fm7qY9ShdRbQh+rof6r7aZiwumBiXNJ6a5eFLTQMI3c7AFwZnp58Ys2u40D+mUXuqfpfUq+x7yhIRa+/gKNXWrCttlT7AukQauylFIqEvCMmP8FkdOwlPETFkxgnETDgXXOXxBTS5zN6qOZJQ7i3+l/HaKV2rx/KqeuxAP12b4myzGCvr9FCNKfdQby3gmXf0g6bbk5mj9ULN8eUAizGVZmRmlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cyberus-technology.de; dmarc=pass action=none
- header.from=cyberus-technology.de; dkim=pass header.d=cyberus-technology.de;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyberus-technology.de;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2dfdAhExD64i0DbF+CwkX379VUlZaZ5kAHQMSZbWJEs=;
- b=v8IwRRRaz0Swv/eDkePsNK1OqI2n1FnfYfnm4YrzUdW72wwYRuxeTzHIafEIgwLqMB7NfO/tYlolVtZonhoO5SHJNOGqwvLqDtd5Xjk895zqUT6Gc6dSulH0tgWEvLgvRN+EREbgvz66S/Y244n0/D7FsC5lAsbFoNTFcTH67xTY4QFt4l2onrYU9sPGbnfNhlFq5ztU+7cN0GJ4aE3TjEY1i5aH+fkfUxqUlXWz+EEZ5dmNL9wum/z1xlpgavQy31R0V/cNuEnNuYKuNa1XSki+29qHrmSK5cu1AglZeqiSHNT7iwepL+Twr2YPKgfKqcl0Af7XkvBiWqbPpMcj+g==
-Received: from FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:38::7) by
- BE1PPF5475DB85A.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b18::644) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9115.19; Sat, 13 Sep 2025 08:58:34 +0000
-Received: from FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
- ([fe80::bf0d:16fc:a18c:c423]) by FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
- ([fe80::bf0d:16fc:a18c:c423%7]) with mapi id 15.20.9115.018; Sat, 13 Sep 2025
- 08:58:34 +0000
-From: Julian Stecklina <julian.stecklina@cyberus-technology.de>
-To: "safinaskar@gmail.com" <safinaskar@gmail.com>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "tytso@mit.edu" <tytso@mit.edu>, "linux-csky@vger.kernel.org"
-	<linux-csky@vger.kernel.org>, "linux-arch@vger.kernel.org"
-	<linux-arch@vger.kernel.org>, "rob@landley.net" <rob@landley.net>,
-	"linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>,
-	"mzxreary@0pointer.de" <mzxreary@0pointer.de>, "viro@zeniv.linux.org.uk"
-	<viro@zeniv.linux.org.uk>, "jack@suse.cz" <jack@suse.cz>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "axboe@kernel.dk"
-	<axboe@kernel.dk>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "hch@lst.de" <hch@lst.de>,
-	"thomas.weissschuh@linutronix.de" <thomas.weissschuh@linutronix.de>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, "x86@kernel.org"
-	<x86@kernel.org>, "kees@kernel.org" <kees@kernel.org>,
-	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-	"hsiangkao@linux.alibaba.com" <hsiangkao@linux.alibaba.com>,
-	"mcgrof@kernel.org" <mcgrof@kernel.org>, "linux-efi@vger.kernel.org"
-	<linux-efi@vger.kernel.org>, "cyphar@cyphar.com" <cyphar@cyphar.com>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"hca@linux.ibm.com" <hca@linux.ibm.com>, "linux-m68k@lists.linux-m68k.org"
-	<linux-m68k@lists.linux-m68k.org>, "monstr@monstr.eu" <monstr@monstr.eu>,
-	"andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "graf@amazon.com"
-	<graf@amazon.com>, "brauner@kernel.org" <brauner@kernel.org>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"email2tema@gmail.com" <email2tema@gmail.com>, "linux-sh@vger.kernel.org"
-	<linux-sh@vger.kernel.org>, "sparclinux@vger.kernel.org"
-	<sparclinux@vger.kernel.org>, "ecurtin@redhat.com" <ecurtin@redhat.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-hexagon@vger.kernel.org"
-	<linux-hexagon@vger.kernel.org>, "linux-alpha@vger.kernel.org"
-	<linux-alpha@vger.kernel.org>, "linux-um@lists.infradead.org"
-	<linux-um@lists.infradead.org>, "mingo@redhat.com" <mingo@redhat.com>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"initramfs@vger.kernel.org" <initramfs@vger.kernel.org>,
-	"torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>,
-	"thorsten.blum@linux.dev" <thorsten.blum@linux.dev>
-Subject: Re: [PATCH RESEND 00/62] initrd: remove classic initrd support
-Thread-Topic: [PATCH RESEND 00/62] initrd: remove classic initrd support
-Thread-Index: AQHcJEeT2Mpw/pxzFEi5dQsRFemUDLSQ0JwA
-Date: Sat, 13 Sep 2025 08:58:34 +0000
-Message-ID:
- <1f9aee6090716db537e9911685904786b030111f.camel@cyberus-technology.de>
-References: <20250913003842.41944-1-safinaskar@gmail.com>
-In-Reply-To: <20250913003842.41944-1-safinaskar@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cyberus-technology.de;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: FR2P281MB2329:EE_|BE1PPF5475DB85A:EE_
-x-ms-office365-filtering-correlation-id: 90a42005-8cbb-461a-a583-08ddf2a3b8a2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700021;
-x-microsoft-antispam-message-info:
- =?utf-8?B?NEtqeWxscitYa1RhT3VCWlcwU2ZkaFpyT1prcXR2cmlhd1QwVnFDZUJoZDN3?=
- =?utf-8?B?OWh3QmZSY0xTekozdXpuVjhrdmZTcWl0bVFYOUt2NWxPY2hpakJrM1U1bE9i?=
- =?utf-8?B?YkMxUENDWDJpaitMMFRoU2Jpc2U4bGFNTHM3STVBc3BDNTQ1VnJRYmIwb1RP?=
- =?utf-8?B?UmZqWUt1SmVrbFBFZDhHWm40SEE0VEdoUCtRQ3BhdVNSV3VCNWFGRGNpR1c0?=
- =?utf-8?B?d204Sk4yREN1UWNEaUJlMVRlVXgwQ0YvSzVTbnM1TEtmNzBsNEthZjRzZFd3?=
- =?utf-8?B?R1lIaWpjdXFUOU9sWFpKb01OaEJ0eWpMcDJLZXlBdVNVSjJuVUF5cUxmOGtv?=
- =?utf-8?B?U0EzTkpFZDhkOExGRk1KdWFUamFBYUt4WDZvTEc5VXNqUVlXOTdiV3kraHFx?=
- =?utf-8?B?bGd4Rjg2dVBCbU5QeUNIU0JqcjJOYks1djMxV2JJYVY1MGxHZFliMFlEVk5Q?=
- =?utf-8?B?eHNFMWw5ekZUSkZTMzF3aGZFOU04SGw4NXBkS0FoMk5yZWIyVys1SnpnOVIw?=
- =?utf-8?B?SmV2cGZEeTVEYnRBZnBWbFlVVS9DZE1hWi84dVdQR0g4ZzZzaWtQME1NL2sy?=
- =?utf-8?B?YjRHc3NVTWN6NEs1KzhZaGZWcDQrR3dhOW8xZVVndTkyWmtZY202S3RIODJt?=
- =?utf-8?B?M0tQcjZoSXdrNkxUNFhrR0w0cDY0Zm10NkVoeG9QMHdYakUxQWZuek91czJG?=
- =?utf-8?B?N20vOVBDWDV5ZDYvYjl4VzFTOUNmMExaTjhHczJBekZua284bEl1QnlkVDFi?=
- =?utf-8?B?a0dMUnhNb0x4S1kxbUFKQmlBaHBwQmNuM3B3T2Z3THRIZXh5NjlwdkZmeFhT?=
- =?utf-8?B?dlpGQWhmS1ZXVkhYQUJMd0hjNmlQaHJYSWJ5U0l2b2hYaUk4RGlQUDNYRHNs?=
- =?utf-8?B?WC9uMlB0bk90dVB1UlBNMGhFNzh1WXMxbjVXU1FLWm5qTHBkYW94aVlrV2dQ?=
- =?utf-8?B?TEQvLzJRNTdlOGRsUEhOZlNhczB6R3JzRWM2NW1lOWduc0o2UFJURGNJeVg1?=
- =?utf-8?B?OTgrMWpXUjZvQ0ZGYVU4VEVYeDJ2dGZ4TncvVDNtbFhQaTNGLzhlZjRzbHlm?=
- =?utf-8?B?VkRsZnQvOUZiVEJ0clgzeExxMnpSZUMwUC9PTERTQXBxOXMzKzlNUUhZRGxL?=
- =?utf-8?B?am5NeUFNeFB3R3YybGtTcjhVeDNpQ2QzV3cwMkQvNk5vTFR2V0FoMDJwQjRG?=
- =?utf-8?B?VlJ4ZVBvaFA3ZkJPM3FLSzRoZE5MbEZKcW16R1kzTGtMaDhXQ2RjcElXRW5S?=
- =?utf-8?B?cGpBSllRSEFhTURpRE5GUm5yZ3V3bThsWXF5YnB5WVdRaFlmYXYvdWM2UDBx?=
- =?utf-8?B?VXNZVEpjRWczSEE2UUR4Z282aTh0aldwOE5rZDc1ano1MFBUZXRiOUxacUNJ?=
- =?utf-8?B?Q0xpQmRlWnRPV2NlRFBheWRJVWNIWXhlQmZSN1lRYUVlWUloNWxmQlBjaSt1?=
- =?utf-8?B?eHFVdGFleTE1bUo1dzA1MXhHcFhIa1E1cWo5aHNXV1RBc2laTll4UXAwYUMw?=
- =?utf-8?B?VGlUT3cyTVdJWUZPcXAyMnQzcnFFWUlHYXlTNWdUZW1uM1NJOTNiUUNzeTRJ?=
- =?utf-8?B?V3BLWkhiTnJVV1pxQXdFQ3A2VC94b2t4dW5Hazh2blE5QWphSHZ0TlFJUVcw?=
- =?utf-8?B?dGt3YTRCK3d2V3o4eHhlYWtFWTZZZUx1NlFQRnNVUEFaOWZZY25pTmdKUXEw?=
- =?utf-8?B?TUlpRkZIb0Rza1ZJTVZMck5BeStNT1dNSGZpbkVpK1FSUkRkL2t0RzlaMzhK?=
- =?utf-8?B?Z3VzVDZJT1UwamJQUzdUc3l0SnFRVVVqd3ZYeTRsQVBkbnJhVGIxbmRLMmJG?=
- =?utf-8?B?M1pBTHNvR2pyUVZZYlFVUnBYRXg2Q2tOU0IyUFJEbjZ5OEc1dS9JQnpvSm0z?=
- =?utf-8?B?RUxBanpRUFBBZ2xnWU4xUlRkVlNIR1BUR0g3S1JSUUh3NWtpbjV1T1JHU0dv?=
- =?utf-8?B?b0hCVTNpVlR3STNGMkhhZ0ZVaXo5QVE2Z0UySnpLNTNxOWZnK0I3UExPODdH?=
- =?utf-8?B?MGpzdWppYUpBPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?RzUzRlFmTWxKQXpCMDZHbVR2NGJoT0g2NzNlUEx4OGRkWTJ2OFFaUHFKTS9X?=
- =?utf-8?B?SElIZ2o0TzkxSFlFUnlkY0VzeEk5cnVEYWZvZzQyblpFaXZlejArUDZ4N1F0?=
- =?utf-8?B?NlNsUnJiMy9Xd2Z3aTVLbGJjVFU5VG0xVTlRVXh6UFFGZFVVb29pZ2Y1bFRx?=
- =?utf-8?B?OVd4L1BsWktDRXliazkwVHpLRzhSZ0gvcURYbjE3UUE1R0hQSVFYdkcvTnl0?=
- =?utf-8?B?UjUzOUdibTdsNGlVcnJHdjU5eklTRU5jTG9HSFN1Q294R09DbXVUTjFLRmh3?=
- =?utf-8?B?T2NhQXZPbm5PQTlJQWRISlA3NmhhK1NGOU1HbVRLOFRma2tJWHVuQzczVVNI?=
- =?utf-8?B?MXJVcC9NbDdnVXV6cTFvSi9sMzhOQmFxV0pMZGsybFdqRnFYZXdPQVU1YzBo?=
- =?utf-8?B?UlpMa24ra1NsQ3d1SGxvZHIzc3NYekhQNDdQZG1BQ1ZPRHJ4SHozWEE0TGFp?=
- =?utf-8?B?em9Kb01PdlNwWmV4OW5qQVlwb2o4cVZyVEdGVXBLRmJzWWtUb1I4ekd6bWlY?=
- =?utf-8?B?UlozenNjdGZ0bU5vMVJYNDlSK1dKcFB1M1JnYjM3SU5tUDJMZ1lSTkVFZTlu?=
- =?utf-8?B?YlRya3pjUEFFTXJKT2htR25GMlZmVlM2eElzdDlYU2pWTWtTcEFieEFPTm1s?=
- =?utf-8?B?Z0txRnJtMUt1UkxObGZHTWphWnVGN2FmcitHczdpSjRURGdlakdpVU43dTZH?=
- =?utf-8?B?RGlHTG1pY1hqV0dXeWhIblhrMkNsSlFIQmx0aU9yeThjQWRuLzRFUVhjMzVR?=
- =?utf-8?B?dE9WMGNaZk9qaE84SlBKWXUwVkFKd2lPaU15UG1Gcktad1p1b3BrVHRmbU1S?=
- =?utf-8?B?d21nZy9vSHlTS2ZWNk80QVg3VmFDVmRXWm0rNW5Ja0FpL0hLTngxbmV3TUFZ?=
- =?utf-8?B?dXZqWEt1ODFoNW1WKzZoSHdsOGtMWVJzYURCWEFET2RKVHNEOVVNK2c1cm9I?=
- =?utf-8?B?QXZaQVNDSGx0VnJCclJGSDU5S1Y3M25DNENuaDVOeTJ1WTQ4bG9NQnpoeHc4?=
- =?utf-8?B?T2tBQmZzcjU5K0M3UUFmRk04WkN4TUxZcGFPQThBaFdmSHlBRFo0Wi9abXhJ?=
- =?utf-8?B?QUQydlRQYTNGRlRDdnovTGZvQUUyTXc2anlpRG91akpuUlJnSy9MbTZIUzNq?=
- =?utf-8?B?K0hQWEtUUkQ3TW9ycW5iOWM4a2xQY0QzekFRd3lLNG01OXFCTmRoZmxBL0lP?=
- =?utf-8?B?VXFwWXJ4TlBXRkoyUHlLc2pRQ2Z3VUVKZTc1TWt0VTZmaXh2Z3JlSHVzOXNr?=
- =?utf-8?B?U3JPVFZKMkpNZkt6RGlsdVJVRWFDbHhVczVjRzlyQTZmWTFGbG5VNlRCV0du?=
- =?utf-8?B?REZWNnFrYkI0a2hFZGNLSkFLY1lSNVhLSFl4aXQ3dUhiOUkyeHpYa0FIU281?=
- =?utf-8?B?VUdKS3Zha1U1dENFMVNhbEJ1cjFOMFIvTDQ1RVJsYTRQK1Q0SGg3eHJLcUpS?=
- =?utf-8?B?ektYSTJLQ3RnVy9wMFlWK291QWt3V2U5WG1jMFlWR3ZicmtjVzB3eGU3QTBh?=
- =?utf-8?B?SnduQzhIRnRsVE02cHZjZ3JXc3JCSDF6NWdVSWZ6bkluRXFMN3VxTytnZXBv?=
- =?utf-8?B?am5Qc3JTeFRhN0tKQm83T3BsckljR1hYc2hiLzJ1c3NMT3hONjRFdkFXSmN0?=
- =?utf-8?B?TFZ4LzEybUt6bm1wWWI0RFdiMlMyUXZtRktTUjFsQzNFbzdqbXNQNENJcTBK?=
- =?utf-8?B?VHduZ0JUSmJNZ2R6QXprN3lOVnFxOWVObVZtSEU2MmhxVGl0NlRGL2ZtU29k?=
- =?utf-8?B?S3BqTm1UQnVjYUI4OExTMWI5N1o1V1AxZXNtaU9hRWo3aWdXNDdpS28zVGdr?=
- =?utf-8?B?bzFydjFrTUFvU3grejVBY3VVZkhuWVN0QkVYQlpaelRKaGlwNEJ5ZG1ocURi?=
- =?utf-8?B?U3NwMjhoeEgybkxLYWtGWTU4eXJqV25mUVE4eHUyQStnRWxwVlNYdEh5Y3l1?=
- =?utf-8?B?TmExc2lnM2xXYjBtRlVxSHFXT2dwYXNVMklCbGtZQnc1eWQ4c2NBaGY2TE5H?=
- =?utf-8?B?SmZrL3Y4cVB3aG5Kd01ybEZJNk5ENHAzNUl6UGVzZ1VEMXFnaEgwQUJMcmdO?=
- =?utf-8?B?K1VyNnNKaUN6YmMzYkFpOWVkVUdzWXVmdWdUUWRpaFBHYWtvOTBJSUdaMi9Z?=
- =?utf-8?B?QnFRL0xQQXUvZUEzYkdVTEhXa2JpUE1lS1JoUWNRVVlUU2haYndiMjVDbjZ6?=
- =?utf-8?Q?nTUtMQqogJuNvRWJU3SGGumdm6VWCjbZO0z4EjSXdgSR?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CE82B6496E16714F9F4AF9BA1CEEFB91@DEUP281.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rm3eVyeW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72CABC4CEFA
+	for <loongarch@lists.linux.dev>; Sun, 14 Sep 2025 01:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757815041;
+	bh=2bA54a8XQO3oplu+GpK3brlzTVegVik1P3OTH4QDtaA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Rm3eVyeWLB90tjDfWg4cd/8Go+FYh4GNgJ1W6mCc90EgnEawb6rEmy85Gc2qk363q
+	 7fkERHY/yaKy0MFH3jz6eGDHtw2DW40CUoz7fqxmKVJ8xERjRWA4kDe862vX/bj7G1
+	 ynMp7dssLS3BO2so51EkIylPmSxKqIdytEiA3f9NihGSsLojIvukfGIYA126ZXvzZ4
+	 gJ3guL1jlqUTzll1FgnsMcUn+aPikz9M5Cb0UOrVQVSzLHlZcquIewKvgz9Sgs9ZNk
+	 rRMVUahfCoMFBLuf1UW3uEEdh/ClhwEMn/Y/179kr883A079sMr8yeCi8dtFmmGvYm
+	 HHNUaACLchAxA==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-afcb7ae31caso548009666b.3
+        for <loongarch@lists.linux.dev>; Sat, 13 Sep 2025 18:57:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUcwauDUM8MEXmP1a28yh7SCLQThz9A6bWCMAfUl5PfdZgCqhonur2793hX2oW/fFqw9A4xIV0ur+I=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxufLc8v22gWAm78KJu/s+gca6brVi8LZZL6UxKY2ZcunDs2nP4
+	rY+A5UuIwdAuj+yVd0jxFYCAIDO8+brxU3tZdk1hFpyjshomGPH7K5wfpxXDCoKIO4bAiBXTR9v
+	eW3/F33I0zUoA7Gz+fQ511i3wqSL18GE=
+X-Google-Smtp-Source: AGHT+IFfNmQmnqGZYX0ngUS0c2d+ly5r+Z8sFAk/gU9hnaLKvZrHmV0tDaiOU94759FUb8SGhbBwfAAm52QYlnu9vvg=
+X-Received: by 2002:a17:907:3e9f:b0:b04:a1ec:d06f with SMTP id
+ a640c23a62f3a-b07c35bcc13mr854776466b.25.1757815039974; Sat, 13 Sep 2025
+ 18:57:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: cyberus-technology.de
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90a42005-8cbb-461a-a583-08ddf2a3b8a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2025 08:58:34.7227
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f4e0f4e0-9d68-4bd6-a95b-0cba36dbac2e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TApQElCG/9VYp7xZZBuNrg6KUgdNp8YPpXIs6shYbTWilwooEJ2zXSgpXo2d5f4wqv0KdbBJx8BSvGGknZaQeD0gAkKNGSj0Mk9sP2QQQUGYu3WbaY8lw8J1sUs89vpM
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BE1PPF5475DB85A
+References: <20250910071429.3925025-1-maobibo@loongson.cn>
+In-Reply-To: <20250910071429.3925025-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 14 Sep 2025 09:57:08 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H65H_iREuETGU_v9oZdaPFoQj1VZV46XSNTC8ppENXzuQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzfN2bNWTNhJRbB-SLTolLXMjAH5r5IpQVt22wgOskPBdaWpLkZgPjmVEs
+Message-ID: <CAAhV-H65H_iREuETGU_v9oZdaPFoQj1VZV46XSNTC8ppENXzuQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Fix VM migration failure with PTW enabled
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gU2F0LCAyMDI1LTA5LTEzIGF0IDAwOjM3ICswMDAwLCBBc2thciBTYWZpbiB3cm90ZToNCj4g
-SW50cm8NCj4gPT09PQ0KPiBUaGlzIHBhdGNoc2V0IHJlbW92ZXMgY2xhc3NpYyBpbml0cmQgKGlu
-aXRpYWwgUkFNIGRpc2spIHN1cHBvcnQsDQo+IHdoaWNoIHdhcyBkZXByZWNhdGVkIGluIDIwMjAu
-DQo+IEluaXRyYW1mcyBzdGlsbCBzdGF5cywgYW5kIFJBTSBkaXNrIGl0c2VsZiAoYnJkKSBzdGls
-bCBzdGF5cywgdG9vLg0KPiBpbml0L2RvX21vdW50cyogYW5kIGluaXQvKmluaXRyYW1mcyogYXJl
-IGxpc3RlZCBpbiBWRlMgZW50cnkgaW4NCj4gTUFJTlRBSU5FUlMsIHNvIEkgdGhpbmsgdGhpcyBw
-YXRjaHNldCBzaG91bGQgZ28gdGhyb3VnaCBWRlMgdHJlZS4NCj4gVGhpcyBwYXRjaHNldCB0b3Vj
-aHMgZXZlcnkgc3ViZGlyZWN0b3J5IGluIGFyY2gvLCBzbyBJIHRlc3RlZCBpdA0KPiBvbiA4ICgh
-ISEpIGFyY2hzIGluIFFlbXUgKHNlZSBkZXRhaWxzIGJlbG93KS4NCj4gV2FybmluZzogdGhpcyBw
-YXRjaHNldCByZW5hbWVzIENPTkZJR19CTEtfREVWX0lOSVRSRCAoISEhKSB0byBDT05GSUdfSU5J
-VFJBTUZTDQo+IGFuZCBDT05GSUdfUkRfKiB0byBDT05GSUdfSU5JVFJBTUZTX0RFQ09NUFJFU1Nf
-KiAoZm9yIGV4YW1wbGUsDQo+IENPTkZJR19SRF9HWklQIHRvIENPTkZJR19JTklUUkFNRlNfREVD
-T01QUkVTU19HWklQKS4NCj4gSWYgeW91IHN0aWxsIHVzZSBpbml0cmQsIHNlZSBiZWxvdyBmb3Ig
-d29ya2Fyb3VuZC4NCj4gDQoNCkFzIHRoZSBwZXJzb24gd2hvIGtpY2tlZCB0aGlzIG9mZiBieSB0
-cnlpbmcgdG8gZ2V0IGVyb2ZzIHN1cHBvcnQgZm9yIGluaXRyZHM6DQpZb3UgaGF2ZSBhbGwgbXkg
-c3VwcG9ydCBmb3IgbnVraW5nIHNvIG11Y2ggbGVnYWN5IGNvZGUhIEknbSBhbGwgZm9yIHJlbW92
-aW5nDQpoaXN0b3JpY2FsIGJhZ2dhZ2UgZXZlbiBpZiBpdCBjb21lcyB3aXRoIHNsaWdodCBpbmNv
-bnZlbmllbmNlcyBmb3IgZnJpbmdlDQp1c2VjYXNlIHVzZXJzIChtZSEpLg0KDQpJZiB0aGlzIHNl
-cmllcyBnb2VzIHRocm91Z2gsIEknbGwgZHJpbmsgYSBiZWVyIHRvIHlvdSENCg0KQWNrZWQtYnk6
-IEp1bGlhbiBTdGVja2xpbmEgPGp1bGlhbi5zdGVja2xpbmFAY3liZXJ1cy10ZWNobm9sb2d5LmRl
-Pg0KDQo+IA0KPiBBbHNvIEkgcmVuYW1lZCBDT05GSUdfQkxLX0RFVl9JTklUUkQgKHdoaWNoIGJl
-Y2FtZSB0b3RhbCBtaXNub21lcikNCj4gdG8gQ09ORklHX0lOSVRSQU1GUy4gQW5kIENPTkZJR19S
-RF8qIHRvIENPTkZJR19JTklUUkFNRlNfREVDT01QUkVTU18qLg0KPiBUaGlzIHdpbGwgYnJlYWsg
-YWxsIGNvbmZpZ3Mgb3V0IHRoZXJlICh1cGRhdGUgeW91ciBjb25maWdzISkuDQoNClRoaXMgaXMg
-YmVhdXRpZnVsLiBUaGUgb3JpZ2luYWwgbmFtZXMgd2VyZSBwcmV0dHkgbWlzbGVhZGluZyENCg0K
-PiBXb3JrYXJvdW5kDQo+ID09PT0NCj4gSWYgInJldGFpbl9pbml0cmQiIGlzIHBhc3NlZCB0byBr
-ZXJuZWwsIHRoZW4gaW5pdHJhbWZzL2luaXRyZCwNCj4gcGFzc2VkIGJ5IGJvb3Rsb2FkZXIsIGlz
-IHJldGFpbmVkIGFuZCBiZWNvbWVzIGF2YWlsYWJsZSBhZnRlciBib290DQo+IGFzIHJlYWQtb25s
-eSBtYWdpYyBmaWxlIC9zeXMvZmlybXdhcmUvaW5pdHJkIFszXS4NCg0KVGhpcyBpcyBwcmV0dHkg
-bmVhdCwgYmVjYXVzZSBub3cgeW91IGNhbiB1c2UgX2FsbCBmaWxlc3lzdGVtc18gYXMgaW5pdHJk
-cy4gOi1EDQpUaGlzIHNvbHZlcyBteSBvcmlnaW5hbCBwcm9ibGVtLCBhbGJlaXQgd2l0aCBhIHRp
-bnkgc2hpbSBpbml0cmFtZnMuIE5pY2UhDQoNCg0KSnVsaWFuDQo=
+Hi, Bibo,
+
+On Wed, Sep 10, 2025 at 3:14=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> With PTW disabled system, bit Dirty is HW bit for page writing, however
+> with PTW enabled system, bit Write is HW bit for page writing. Previously
+> bit Write is treated as SW bit to record page writable attribute for fast
+> page fault handling in the secondary MMU, however with PTW enabled machin=
+e,
+> this bit is used by HW already.
+>
+> Here define KVM_PAGE_SOFT_WRITE with SW bit _PAGE_MODIFIED, so that it ca=
+n
+> work on both PTW disabled and enabled machines. And with HW write bit, bo=
+th
+> bit Dirty and Write is set or clear.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/kvm_mmu.h | 20 ++++++++++++++++----
+>  arch/loongarch/kvm/mmu.c             |  8 ++++----
+>  2 files changed, 20 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/kvm_mmu.h b/arch/loongarch/includ=
+e/asm/kvm_mmu.h
+> index 099bafc6f797..efcd593c42b1 100644
+> --- a/arch/loongarch/include/asm/kvm_mmu.h
+> +++ b/arch/loongarch/include/asm/kvm_mmu.h
+> @@ -16,6 +16,13 @@
+>   */
+>  #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
+>
+> +/*
+> + * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
+> + * kernel, on secondary MMU it records page writable in order to fast
+> + * path handling
+> + */
+> +#define KVM_PAGE_SOFT_WRITE    _PAGE_MODIFIED
+KVM_PAGE_WRITEABLE is more suitable.
+
+> +
+>  #define _KVM_FLUSH_PGTABLE     0x1
+>  #define _KVM_HAS_PGMASK                0x2
+>  #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) | pgprot_val(pr=
+ot))
+> @@ -52,11 +59,16 @@ static inline void kvm_set_pte(kvm_pte_t *ptep, kvm_p=
+te_t val)
+>         WRITE_ONCE(*ptep, val);
+>  }
+>
+> -static inline int kvm_pte_write(kvm_pte_t pte) { return pte & _PAGE_WRIT=
+E; }
+> -static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & _PAGE_DIRT=
+Y; }
+> +static inline int kvm_pte_soft_write(kvm_pte_t pte) { return pte & KVM_P=
+AGE_SOFT_WRITE; }
+The same, kvm_pte_mkwriteable() is more suitable.
+
+> +static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & __WRITEABL=
+E; }
+_PAGE_DIRTY and _PAGE_WRITE are always set/cleared at the same time,
+so the old version still works.
+
+>  static inline int kvm_pte_young(kvm_pte_t pte) { return pte & _PAGE_ACCE=
+SSED; }
+>  static inline int kvm_pte_huge(kvm_pte_t pte) { return pte & _PAGE_HUGE;=
+ }
+>
+> +static inline kvm_pte_t kvm_pte_mksoft_write(kvm_pte_t pte)
+> +{
+> +       return pte | KVM_PAGE_SOFT_WRITE;
+> +}
+> +
+>  static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
+>  {
+>         return pte | _PAGE_ACCESSED;
+> @@ -69,12 +81,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t pte)
+>
+>  static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
+>  {
+> -       return pte | _PAGE_DIRTY;
+> +       return pte | __WRITEABLE;
+>  }
+>
+>  static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
+>  {
+> -       return pte & ~_PAGE_DIRTY;
+> +       return pte & ~__WRITEABLE;
+>  }
+>
+>  static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index ed956c5cf2cc..68749069290f 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, u=
+nsigned long gpa, bool writ
+>         /* Track access to pages marked old */
+>         new =3D kvm_pte_mkyoung(*ptep);
+>         if (write && !kvm_pte_dirty(new)) {
+> -               if (!kvm_pte_write(new)) {
+> +               if (!kvm_pte_soft_write(new)) {
+>                         ret =3D -EFAULT;
+>                         goto out;
+>                 }
+> @@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsign=
+ed long gpa, bool write)
+>                 prot_bits |=3D _CACHE_SUC;
+>
+>         if (writeable) {
+> -               prot_bits |=3D _PAGE_WRITE;
+> +               prot_bits =3D kvm_pte_mksoft_write(prot_bits);
+>                 if (write)
+> -                       prot_bits |=3D __WRITEABLE;
+> +                       prot_bits =3D kvm_pte_mkdirty(prot_bits);
+>         }
+>
+>         /* Disable dirty logging on HugePages */
+> @@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsign=
+ed long gpa, bool write)
+>         kvm_release_faultin_page(kvm, page, false, writeable);
+>         spin_unlock(&kvm->mmu_lock);
+>
+> -       if (prot_bits & _PAGE_DIRTY)
+> +       if (kvm_pte_dirty(prot_bits))
+>                 mark_page_dirty_in_slot(kvm, memslot, gfn);
+>
+>  out:
+To save time, I just change the whole patch like this, you can confirm
+whether it woks:
+
+diff --git a/arch/loongarch/include/asm/kvm_mmu.h
+b/arch/loongarch/include/asm/kvm_mmu.h
+index 099bafc6f797..882f60c72b46 100644
+--- a/arch/loongarch/include/asm/kvm_mmu.h
++++ b/arch/loongarch/include/asm/kvm_mmu.h
+@@ -16,6 +16,13 @@
+  */
+ #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
+
++/*
++ * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
++ * kernel, on secondary MMU it records page writable in order to fast
++ * path handling
++ */
++#define KVM_PAGE_WRITEABLE     _PAGE_MODIFIED
++
+ #define _KVM_FLUSH_PGTABLE     0x1
+ #define _KVM_HAS_PGMASK                0x2
+ #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) |
+pgprot_val(prot))
+@@ -56,6 +63,7 @@ static inline int kvm_pte_write(kvm_pte_t pte) {
+return pte & _PAGE_WRITE; }
+ static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte &
+_PAGE_DIRTY; }
+ static inline int kvm_pte_young(kvm_pte_t pte) { return pte &
+_PAGE_ACCESSED; }
+ static inline int kvm_pte_huge(kvm_pte_t pte) { return pte &
+_PAGE_HUGE; }
++static inline int kvm_pte_writeable(kvm_pte_t pte) { return pte &
+KVM_PAGE_WRITEABLE; }
+
+ static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
+ {
+@@ -69,12 +77,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t
+pte)
+
+ static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
+ {
+-       return pte | _PAGE_DIRTY;
++       return pte | __WRITEABLE;
+ }
+
+ static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
+ {
+-       return pte & ~_PAGE_DIRTY;
++       return pte & ~__WRITEABLE;
+ }
+
+ static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
+@@ -87,6 +95,11 @@ static inline kvm_pte_t kvm_pte_mksmall(kvm_pte_t
+pte)
+        return pte & ~_PAGE_HUGE;
+ }
+
++static inline kvm_pte_t kvm_pte_mkwriteable(kvm_pte_t pte)
++{
++       return pte | KVM_PAGE_WRITEABLE;
++}
++
+ static inline int kvm_need_flush(kvm_ptw_ctx *ctx)
+ {
+        return ctx->flag & _KVM_FLUSH_PGTABLE;
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index ed956c5cf2cc..7c8143e79c12 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu
+*vcpu, unsigned long gpa, bool writ
+        /* Track access to pages marked old */
+        new =3D kvm_pte_mkyoung(*ptep);
+        if (write && !kvm_pte_dirty(new)) {
+-               if (!kvm_pte_write(new)) {
++               if (!kvm_pte_writeable(new)) {
+                        ret =3D -EFAULT;
+                        goto out;
+                }
+@@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
+unsigned long gpa, bool write)
+                prot_bits |=3D _CACHE_SUC;
+
+        if (writeable) {
+-               prot_bits |=3D _PAGE_WRITE;
++               prot_bits =3D kvm_pte_mkwriteable(prot_bits);
+                if (write)
+-                       prot_bits |=3D __WRITEABLE;
++                       prot_bits =3D kvm_pte_mkdirty(prot_bits);
+        }
+
+        /* Disable dirty logging on HugePages */
+@@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
+unsigned long gpa, bool write)
+        kvm_release_faultin_page(kvm, page, false, writeable);
+        spin_unlock(&kvm->mmu_lock);
+
+-       if (prot_bits & _PAGE_DIRTY)
++       if (kvm_pte_dirty(prot_bits))
+                mark_page_dirty_in_slot(kvm, memslot, gfn);
+
+ out:
+
+Huacai
+
+>
+> base-commit: 9dd1835ecda5b96ac88c166f4a87386f3e727bd9
+> --
+> 2.39.3
+>
+>
