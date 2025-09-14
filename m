@@ -1,63 +1,63 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47DF2749ED
-	for <loongarch@lists.linux.dev>; Sun, 14 Sep 2025 04:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0C226E16A
+	for <loongarch@lists.linux.dev>; Sun, 14 Sep 2025 04:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757822487; cv=none; b=DEC0EtvnQmpcYa9/CZkj/ommKqXccgJJB+XXjkhERfXoQnaRY/E0RLc8fMhM2xpQ+0HPYFaa4tlxlSKILF2nqCCF8OvBG3qeRJjrGWQ17fjnqEiyY0M3ScHC3HUi0nUMR4p8eJ3DqRPQqKdbS1ycPS/2PTpqbb3PwZ5sOjvYv64=
+	t=1757822522; cv=none; b=Sc+m41GfqeiS+w9Nj0xEXLRWpEDeLMpRbhbPya7u1WxKrjGY06ZUTC/lkPggW5P8oKNx7iTrM2sE2hgVASJ3CD4Bg0vgoyWr9eyGBsUv+S3xrjvZyJPFpwBcR5gdPIjSvrHtBQ/J44ksssz7+b9ETl87p98QZUEN/Ks1rBx5C0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757822487; c=relaxed/simple;
-	bh=sakDOyHfnSb4jjAr1r+9WRDw8CL8MGXlnh4FVRPIUR4=;
+	s=arc-20240116; t=1757822522; c=relaxed/simple;
+	bh=Mr4TsGc1GUlbHoN089IbfCGW58eyBBGvk6oB79C9p1A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tIJNogRdhUwYYKCNYOuSsM8BCJJM/AGr7Agkd6SaS+FhrSwRjjJg6LM5ulefq5V10Y7EASIiFDlV/LuWqeX6SThZBNSGGTr2VAdAa+sSUsz/k6TaGoLfHjKR6dtWdZdhnlb7tBH7b0sOjyQsccHaKuaQIVdyYdcRZEXsHNFJlx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fivygPPu; arc=none smtp.client-ip=209.85.208.48
+	 MIME-Version; b=bChTrDlbHK+jAX1wMJDjUsSEi6LiscHOjv0HoNbOQotIdBOEkXk6rGA87NRzQdwXPyS8gUZXB+aJ/9vHTO515TGsC68oV9H0v6RlRyQEW2dK5JMrQBoVkTHLLm62+K1GeK3Y42GIfHXp/PoX283pZd1kaJwQnvQ5ryM0Iw0OluY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YXndciV4; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fivygPPu"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6228de280a4so5039813a12.2
-        for <loongarch@lists.linux.dev>; Sat, 13 Sep 2025 21:01:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXndciV4"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-61a8c134533so5971945a12.3
+        for <loongarch@lists.linux.dev>; Sat, 13 Sep 2025 21:01:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757822481; x=1758427281; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1757822517; x=1758427317; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VwNZ1dGhSyiZay2XNiU9ezAgD/oIZHhpGCNy2W223z4=;
-        b=fivygPPuZEC1Zj9iIZ0nGxTg1JXG9xHX3WHy2oXsURAhQN/EnOT2o5bm6dfTpRN2ED
-         XHLlSr+4ShUYRXGEIT3K6IsLdWDPfXF+aBdawQUJpk5PndifVWEnv1iI3nLREk99ZmJI
-         EF7HKUn8vFPK6MAZBaVDFOknGa1SOZ4/dwTe47Cer705yi60ghcJmH8an1eMrs8WJMcN
-         9p0BDbiyiri/7ZBcDtSRe6C3Frxh2Ol7bgspNwMTMCaTyn+A/IgdeSke7ZFooyUo1RLE
-         Nrk3GNduhCJ5FQ6t8TsIs6oR4hyf0ZQjKqwsclxvOg4nieIE86fCXcut4PtH1RjRbsFn
-         T3gA==
+        bh=fGq2rj18j5nvFWvHRh616vM6JteMHLrszS02ds4tBLs=;
+        b=YXndciV4V2jW7ibx9TMW3S5w7gSJ9Ll5mbRhy3okgL/cBu2ayCXA1ENWeWyCNHDWaQ
+         pjz5mG07vgeX8B425XG5y/dorvW7X12zmdcTOWyNASUOw9e1ugSCJlm+HeOWXmVIxihx
+         ls9OoSuqLEjFjp3x5l2aBXurtJ2cBdCN0YxKYHUbC2qW3IA9eTsQuIKc0UdLXIZEbg87
+         A5193EY4rpBbc3BoKdhpxz2paFc1dKd4BG+B3ImGREqn1BiLK/6uyAZFD/f+aEKXwsDL
+         zhNTVeItYj4GfcMvLHModZOp0kNXjDcS3gzLJ6tqHNi3Lgvk+L3m0E/h7G4KMAA6vBmF
+         VuZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757822481; x=1758427281;
+        d=1e100.net; s=20230601; t=1757822517; x=1758427317;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VwNZ1dGhSyiZay2XNiU9ezAgD/oIZHhpGCNy2W223z4=;
-        b=mRBTYlwFJdW9t5vd24qekOWxJTDrUz5uM5ZgxpEkPsc2CC2LLXSV+f9B1kz2CTjdH9
-         OK/nQRAejHVdx4oJhmrssujBLMxdQWH5SlFvKkJRY6pHbv8nsLxos2wIlYRafeB01YXt
-         9IpwxKodDceIugSxaMS1D7Cepy1+Udf5xgp4Cu3laHdyRO5jOB+BXT8WWkbAFMqWSE5o
-         CfEzRFHT7lhuxYDYPDd0M4Pe7GKSvYaLFGn6qjD0/aY3dmFJz2bFis5VCagOB/6+w7z7
-         X9LgBJYdBNm81y0wlh30Px83EyVMGfv4pQ5Yl1Z4RNeVsQXxLbQzwwC3c5jC6Z3yPQtq
-         4xeg==
-X-Forwarded-Encrypted: i=1; AJvYcCW87+L4qLJPKAOLg/AgDfuP0Z3JX8IIBdR9MMWI4L64SwX4JNIEe90n7ReyqwD+2l/uZ9BvSNNW0Ps=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzJyZRIidysBYMyGJv0YNKiAdZSmNQQdxo3ZcdVWO3msoTOjd/u
-	Btrr/IM5Rlb02dUROkR2hiN+Ye45RYWGhqrlIKPDLXRBJd6MOreZR0pV
-X-Gm-Gg: ASbGncsNs31fOWceeL06vBAqIHNj8K5SK+PUVqEmUgte8DKbTeK2XFtR2u+jMPSwTrI
-	iY8R0MOmyVmvRlR7s9NAJL0peSOPOST2yhxCTiHzMp1jYzd+gTgNzaqef1Hnq3Jd0dawQSf839H
-	QUrBNiDz8RgbijslYCrkfB2o40JG2DQC6w6BP78X4/7Ai3SeNpsiGmtCTulCwg/lYWJoVWU4k+L
-	n1VYuEdx9GZIwbqndVUz1LrI1MGBDhmHF39qewS6/3Ww+lj2fWul7YXOjpoH+uReLO7hap0y6Ju
-	D0oqv3BwhN0techNLCj14kCUpaUnAfGS22x+A3IG4S7GNx2INQGxxxS9qRqVF2j2rm/2VJv7ASw
-	fGz+rsc5qVYAd8e1xEuIrQIt9n2sPQO3FUMU1mBDN
-X-Google-Smtp-Source: AGHT+IFULnpNvXsN8iyaJQvxHQtijyFN7+GqapflbxpSh737GK1sqeditLl7Ifn9jo0c7UhvyyAB9w==
-X-Received: by 2002:a05:6402:5107:b0:62a:82e8:e1bd with SMTP id 4fb4d7f45d1cf-62ed82b22cbmr8144850a12.32.1757822480960;
-        Sat, 13 Sep 2025 21:01:20 -0700 (PDT)
+        bh=fGq2rj18j5nvFWvHRh616vM6JteMHLrszS02ds4tBLs=;
+        b=VYnZnCA2v3fD9tcvVCXUh1y+/Ly92+Boj6FMfCPyCPTDKjUH18NN77T6D8uvqeTzcd
+         jA6kazPQcHzpFKMW3lysop1jYSyh9VylQemm8FcgiBeU1DSIq81CkooBVb/blxt3HCo8
+         CtrLGYUtpI0aL0pidOwtVHXXJKpBlKf/YpkxXAzb4xfY8DCYWujqfuqERHaKvX+wwJEY
+         WHMDeo9XawfgnHydquirf5v+Shf71wc6yBJ483QsrnZs+QUIvSW441u5LIAhhatgOml2
+         cXrYNoHO3ENekicfyOmXGTPu2MqGIXqUH9OiFb9+0+NRrJCC2ThxBCbFa/MCNqNGwnaP
+         sLig==
+X-Forwarded-Encrypted: i=1; AJvYcCWUq/H7RfrzKBNi+x0CwRIz+zECHl+ZdnT3UoltGkwzsfHjg337vsOzY0i08nxvY9K/GnZ85no27KA=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx5xTU2UVHsVgNNV4bOX4NaNdkT7uLQXFMcyy81cN6D36WOWkCp
+	lF07U3vUgw6K6GxLYSstBySTcX4wszYAryCmxeb2Ynwcm+Udc/4MYEZJ
+X-Gm-Gg: ASbGncuULv1viVZGnKyWQ3ZrHzdwZwrolVuOwvCzZNk+NZ/nO43SC5MPVeZaEC35srY
+	+WRnoFg2/odkCdPVdZSasbcD59Z3bBISUDRze/BNbwaObsLZXw966lZ9egzFGy5XsYhy9gkN9rY
+	XAYw13qqQ8EONr3pyjUx/iIWv8dx7DubfAr5RdBdscWsCaqBQHUK6+hcIPjvuMjuztiL+aeqUro
+	oOVG2pJGdlfTa+G8ess6g/oLk1A2wfeKWEhUViCpCLFYt2lkvYjXLXBxSnlnhQmai7yF5BVnEID
+	Kb6QL+mhSSjQZpTmwaXy9rwYD4jhl7q65H1ousaeRuqdrgH+OeeO7n+/xJDpstWi58b0F2hYrxD
+	pftXVaPFn0Xo0x9VGbVw=
+X-Google-Smtp-Source: AGHT+IHGppk9Eg00mRFWKY3oyWZDORImAaUMiStm5q/vVvxsBauDUIDKfxmQ2agdiwYo6nbnpX+hpA==
+X-Received: by 2002:a05:6402:3587:b0:62f:2ac2:af41 with SMTP id 4fb4d7f45d1cf-62f2ac2b11amr1102107a12.38.1757822517371;
+        Sat, 13 Sep 2025 21:01:57 -0700 (PDT)
 Received: from localhost ([212.73.77.104])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-62ec33f57dbsm6450117a12.25.2025.09.13.21.01.15
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-62ec2e661a5sm6322050a12.0.2025.09.13.21.01.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Sep 2025 21:01:19 -0700 (PDT)
+        Sat, 13 Sep 2025 21:01:56 -0700 (PDT)
 From: Askar Safin <safinaskar@gmail.com>
 To: linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -113,9 +113,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Thorsten Blum <thorsten.blum@linux.dev>,
 	Heiko Carstens <hca@linux.ibm.com>,
 	patches@lists.linux.dev
-Subject: [PATCH RESEND 56/62] init: rename CONFIG_RD_GZIP to CONFIG_INITRAMFS_DECOMPRESS_GZIP
-Date: Sun, 14 Sep 2025 07:01:13 +0300
-Message-ID: <20250914040114.3796281-1-safinaskar@gmail.com>
+Subject: [PATCH RESEND 57/62] init: rename CONFIG_RD_BZIP2 to CONFIG_INITRAMFS_DECOMPRESS_BZIP2
+Date: Sun, 14 Sep 2025 07:01:51 +0300
+Message-ID: <20250914040151.3805905-1-safinaskar@gmail.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250913003842.41944-1-safinaskar@gmail.com>
 References: <20250913003842.41944-1-safinaskar@gmail.com>
@@ -128,205 +128,232 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Initrd support was removed,
-and CONFIG_RD_GZIP has nothing to do with ramdisks.
+and CONFIG_RD_BZIP2 has nothing to do with ramdisks.
 
 Update your configs
 
 Signed-off-by: Askar Safin <safinaskar@gmail.com>
 ---
- arch/arc/configs/tb10x_defconfig           | 2 +-
+ arch/arm/configs/aspeed_g4_defconfig       | 2 +-
+ arch/arm/configs/aspeed_g5_defconfig       | 2 +-
+ arch/arm/configs/lpc18xx_defconfig         | 2 +-
  arch/arm/configs/sp7021_defconfig          | 2 +-
+ arch/arm/configs/vf610m4_defconfig         | 2 +-
  arch/mips/configs/ath25_defconfig          | 2 +-
- arch/mips/configs/ath79_defconfig          | 2 +-
  arch/mips/configs/bmips_stb_defconfig      | 2 +-
- arch/mips/configs/rt305x_defconfig         | 2 +-
- arch/mips/configs/xway_defconfig           | 2 +-
- arch/openrisc/configs/or1ksim_defconfig    | 2 +-
  arch/openrisc/configs/simple_smp_defconfig | 2 +-
- arch/powerpc/configs/mgcoge_defconfig      | 2 +-
  arch/powerpc/configs/skiroot_defconfig     | 2 +-
  arch/riscv/configs/nommu_k210_defconfig    | 2 +-
+ arch/riscv/configs/nommu_virt_defconfig    | 2 +-
+ arch/sh/configs/sdk7786_defconfig          | 2 +-
+ arch/xtensa/configs/cadence_csp_defconfig  | 2 +-
+ arch/xtensa/configs/nommu_kc705_defconfig  | 2 +-
  usr/Kconfig                                | 4 ++--
- 13 files changed, 14 insertions(+), 14 deletions(-)
+ 15 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arc/configs/tb10x_defconfig b/arch/arc/configs/tb10x_defconfig
-index 26a06eb336df..f177600a527a 100644
---- a/arch/arc/configs/tb10x_defconfig
-+++ b/arch/arc/configs/tb10x_defconfig
-@@ -13,7 +13,7 @@ CONFIG_INITRAMFS=y
- CONFIG_INITRAMFS_SOURCE="../tb10x-rootfs.cpio"
- CONFIG_INITRAMFS_ROOT_UID=2100
- CONFIG_INITRAMFS_ROOT_GID=501
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- CONFIG_KALLSYMS_ALL=y
- # CONFIG_AIO is not set
- CONFIG_EXPERT=y
-diff --git a/arch/arm/configs/sp7021_defconfig b/arch/arm/configs/sp7021_defconfig
-index ec723401b440..30cfafc49ec9 100644
---- a/arch/arm/configs/sp7021_defconfig
-+++ b/arch/arm/configs/sp7021_defconfig
-@@ -5,7 +5,7 @@ CONFIG_PREEMPT=y
- CONFIG_IKCONFIG=y
- CONFIG_IKCONFIG_PROC=y
- CONFIG_LOG_BUF_SHIFT=14
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- # CONFIG_RD_BZIP2 is not set
- # CONFIG_RD_LZMA is not set
- # CONFIG_RD_XZ is not set
-diff --git a/arch/mips/configs/ath25_defconfig b/arch/mips/configs/ath25_defconfig
-index cb16a1f18db8..58ae5f9726a0 100644
---- a/arch/mips/configs/ath25_defconfig
-+++ b/arch/mips/configs/ath25_defconfig
-@@ -3,7 +3,7 @@ CONFIG_SYSVIPC=y
- # CONFIG_CROSS_MEMORY_ATTACH is not set
- CONFIG_HIGH_RES_TIMERS=y
+diff --git a/arch/arm/configs/aspeed_g4_defconfig b/arch/arm/configs/aspeed_g4_defconfig
+index f2abada5036a..af891a2b2d6c 100644
+--- a/arch/arm/configs/aspeed_g4_defconfig
++++ b/arch/arm/configs/aspeed_g4_defconfig
+@@ -9,7 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ CONFIG_CGROUPS=y
+ CONFIG_NAMESPACES=y
  CONFIG_INITRAMFS=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- # CONFIG_RD_BZIP2 is not set
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZO is not set
+ # CONFIG_RD_LZ4 is not set
+ CONFIG_EXPERT=y
+diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
+index 7098a09fefb8..a16aed0abcaa 100644
+--- a/arch/arm/configs/aspeed_g5_defconfig
++++ b/arch/arm/configs/aspeed_g5_defconfig
+@@ -9,7 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ CONFIG_CGROUPS=y
+ CONFIG_NAMESPACES=y
+ CONFIG_INITRAMFS=y
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZO is not set
+ # CONFIG_RD_LZ4 is not set
+ CONFIG_EXPERT=y
+diff --git a/arch/arm/configs/lpc18xx_defconfig b/arch/arm/configs/lpc18xx_defconfig
+index c8f7fa140225..abde171f1742 100644
+--- a/arch/arm/configs/lpc18xx_defconfig
++++ b/arch/arm/configs/lpc18xx_defconfig
+@@ -1,7 +1,7 @@
+ CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_PREEMPT=y
+ CONFIG_INITRAMFS=y
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZMA is not set
  # CONFIG_RD_XZ is not set
  # CONFIG_RD_LZO is not set
-diff --git a/arch/mips/configs/ath79_defconfig b/arch/mips/configs/ath79_defconfig
-index 014bb1107b86..500b94dfc6c1 100644
---- a/arch/mips/configs/ath79_defconfig
-+++ b/arch/mips/configs/ath79_defconfig
-@@ -2,7 +2,7 @@
- CONFIG_SYSVIPC=y
- CONFIG_HIGH_RES_TIMERS=y
- CONFIG_INITRAMFS=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- # CONFIG_AIO is not set
- # CONFIG_KALLSYMS is not set
- CONFIG_EXPERT=y
-diff --git a/arch/mips/configs/bmips_stb_defconfig b/arch/mips/configs/bmips_stb_defconfig
-index ed4d4be772be..2217a3ca5b72 100644
---- a/arch/mips/configs/bmips_stb_defconfig
-+++ b/arch/mips/configs/bmips_stb_defconfig
-@@ -14,7 +14,7 @@ CONFIG_SMP=y
- CONFIG_NR_CPUS=4
- # CONFIG_SECCOMP is not set
- CONFIG_MIPS_O32_FP64_SUPPORT=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- # CONFIG_RD_BZIP2 is not set
- # CONFIG_RD_LZMA is not set
- CONFIG_RD_XZ=y
-diff --git a/arch/mips/configs/rt305x_defconfig b/arch/mips/configs/rt305x_defconfig
-index bf4dd5930876..9102f9ebcf88 100644
---- a/arch/mips/configs/rt305x_defconfig
-+++ b/arch/mips/configs/rt305x_defconfig
-@@ -3,7 +3,7 @@ CONFIG_SYSVIPC=y
- # CONFIG_CROSS_MEMORY_ATTACH is not set
- CONFIG_HIGH_RES_TIMERS=y
- CONFIG_INITRAMFS=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- CONFIG_CC_OPTIMIZE_FOR_SIZE=y
- # CONFIG_AIO is not set
- CONFIG_KALLSYMS_ALL=y
-diff --git a/arch/mips/configs/xway_defconfig b/arch/mips/configs/xway_defconfig
-index 41d0d7d8cb6c..fa49183a4147 100644
---- a/arch/mips/configs/xway_defconfig
-+++ b/arch/mips/configs/xway_defconfig
-@@ -3,7 +3,7 @@ CONFIG_SYSVIPC=y
- # CONFIG_CROSS_MEMORY_ATTACH is not set
- CONFIG_HIGH_RES_TIMERS=y
- CONFIG_INITRAMFS=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- CONFIG_CC_OPTIMIZE_FOR_SIZE=y
- # CONFIG_AIO is not set
- CONFIG_KALLSYMS_ALL=y
-diff --git a/arch/openrisc/configs/or1ksim_defconfig b/arch/openrisc/configs/or1ksim_defconfig
-index 96578bfb7159..56ddb48f7955 100644
---- a/arch/openrisc/configs/or1ksim_defconfig
-+++ b/arch/openrisc/configs/or1ksim_defconfig
-@@ -1,7 +1,7 @@
- CONFIG_NO_HZ=y
- CONFIG_LOG_BUF_SHIFT=14
- CONFIG_INITRAMFS=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- CONFIG_EXPERT=y
- # CONFIG_KALLSYMS is not set
- # CONFIG_EPOLL is not set
-diff --git a/arch/openrisc/configs/simple_smp_defconfig b/arch/openrisc/configs/simple_smp_defconfig
-index f7c807b32d50..e4aaaeaec7a8 100644
---- a/arch/openrisc/configs/simple_smp_defconfig
-+++ b/arch/openrisc/configs/simple_smp_defconfig
-@@ -2,7 +2,7 @@ CONFIG_LOCALVERSION="-simple-smp"
- CONFIG_NO_HZ=y
- CONFIG_LOG_BUF_SHIFT=14
- CONFIG_INITRAMFS=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- # CONFIG_RD_BZIP2 is not set
- # CONFIG_RD_LZMA is not set
- # CONFIG_RD_XZ is not set
-diff --git a/arch/powerpc/configs/mgcoge_defconfig b/arch/powerpc/configs/mgcoge_defconfig
-index 1b782855c84a..6d543b9f0bc6 100644
---- a/arch/powerpc/configs/mgcoge_defconfig
-+++ b/arch/powerpc/configs/mgcoge_defconfig
+diff --git a/arch/arm/configs/sp7021_defconfig b/arch/arm/configs/sp7021_defconfig
+index 30cfafc49ec9..4f5cd0d0511d 100644
+--- a/arch/arm/configs/sp7021_defconfig
++++ b/arch/arm/configs/sp7021_defconfig
 @@ -6,7 +6,7 @@ CONFIG_IKCONFIG=y
  CONFIG_IKCONFIG_PROC=y
  CONFIG_LOG_BUF_SHIFT=14
- CONFIG_INITRAMFS=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- CONFIG_KALLSYMS_ALL=y
- # CONFIG_PCSPKR_PLATFORM is not set
- CONFIG_EXPERT=y
-diff --git a/arch/powerpc/configs/skiroot_defconfig b/arch/powerpc/configs/skiroot_defconfig
-index 1611e15a72f3..9a6ef1d8ca44 100644
---- a/arch/powerpc/configs/skiroot_defconfig
-+++ b/arch/powerpc/configs/skiroot_defconfig
-@@ -10,7 +10,7 @@ CONFIG_IKCONFIG=y
- CONFIG_IKCONFIG_PROC=y
- CONFIG_LOG_BUF_SHIFT=20
- CONFIG_INITRAMFS=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- # CONFIG_RD_BZIP2 is not set
- # CONFIG_RD_LZMA is not set
- # CONFIG_RD_LZO is not set
-diff --git a/arch/riscv/configs/nommu_k210_defconfig b/arch/riscv/configs/nommu_k210_defconfig
-index 7824f13e84f3..a1fa77563bb8 100644
---- a/arch/riscv/configs/nommu_k210_defconfig
-+++ b/arch/riscv/configs/nommu_k210_defconfig
-@@ -1,7 +1,7 @@
- # CONFIG_CPU_ISOLATION is not set
- CONFIG_LOG_BUF_SHIFT=13
- CONFIG_INITRAMFS=y
--# CONFIG_RD_GZIP is not set
-+# CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
- # CONFIG_RD_BZIP2 is not set
+ # CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
  # CONFIG_RD_LZMA is not set
  # CONFIG_RD_XZ is not set
+ # CONFIG_RD_LZO is not set
+diff --git a/arch/arm/configs/vf610m4_defconfig b/arch/arm/configs/vf610m4_defconfig
+index b253d76e0d40..9e6175467998 100644
+--- a/arch/arm/configs/vf610m4_defconfig
++++ b/arch/arm/configs/vf610m4_defconfig
+@@ -1,6 +1,6 @@
+ CONFIG_NAMESPACES=y
+ CONFIG_INITRAMFS=y
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZMA is not set
+ # CONFIG_RD_XZ is not set
+ # CONFIG_RD_LZ4 is not set
+diff --git a/arch/mips/configs/ath25_defconfig b/arch/mips/configs/ath25_defconfig
+index 58ae5f9726a0..7c1ec18b0eeb 100644
+--- a/arch/mips/configs/ath25_defconfig
++++ b/arch/mips/configs/ath25_defconfig
+@@ -4,7 +4,7 @@ CONFIG_SYSVIPC=y
+ CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_INITRAMFS=y
+ # CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_XZ is not set
+ # CONFIG_RD_LZO is not set
+ # CONFIG_RD_LZ4 is not set
+diff --git a/arch/mips/configs/bmips_stb_defconfig b/arch/mips/configs/bmips_stb_defconfig
+index 2217a3ca5b72..6ccb53279345 100644
+--- a/arch/mips/configs/bmips_stb_defconfig
++++ b/arch/mips/configs/bmips_stb_defconfig
+@@ -15,7 +15,7 @@ CONFIG_NR_CPUS=4
+ # CONFIG_SECCOMP is not set
+ CONFIG_MIPS_O32_FP64_SUPPORT=y
+ # CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZMA is not set
+ CONFIG_RD_XZ=y
+ # CONFIG_RD_LZO is not set
+diff --git a/arch/openrisc/configs/simple_smp_defconfig b/arch/openrisc/configs/simple_smp_defconfig
+index e4aaaeaec7a8..ba6f06c29fed 100644
+--- a/arch/openrisc/configs/simple_smp_defconfig
++++ b/arch/openrisc/configs/simple_smp_defconfig
+@@ -3,7 +3,7 @@ CONFIG_NO_HZ=y
+ CONFIG_LOG_BUF_SHIFT=14
+ CONFIG_INITRAMFS=y
+ # CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZMA is not set
+ # CONFIG_RD_XZ is not set
+ # CONFIG_RD_LZO is not set
+diff --git a/arch/powerpc/configs/skiroot_defconfig b/arch/powerpc/configs/skiroot_defconfig
+index 9a6ef1d8ca44..a5b30aba9ac1 100644
+--- a/arch/powerpc/configs/skiroot_defconfig
++++ b/arch/powerpc/configs/skiroot_defconfig
+@@ -11,7 +11,7 @@ CONFIG_IKCONFIG_PROC=y
+ CONFIG_LOG_BUF_SHIFT=20
+ CONFIG_INITRAMFS=y
+ # CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZMA is not set
+ # CONFIG_RD_LZO is not set
+ # CONFIG_RD_LZ4 is not set
+diff --git a/arch/riscv/configs/nommu_k210_defconfig b/arch/riscv/configs/nommu_k210_defconfig
+index a1fa77563bb8..bc0df803ecaa 100644
+--- a/arch/riscv/configs/nommu_k210_defconfig
++++ b/arch/riscv/configs/nommu_k210_defconfig
+@@ -2,7 +2,7 @@
+ CONFIG_LOG_BUF_SHIFT=13
+ CONFIG_INITRAMFS=y
+ # CONFIG_INITRAMFS_DECOMPRESS_GZIP is not set
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZMA is not set
+ # CONFIG_RD_XZ is not set
+ # CONFIG_RD_LZO is not set
+diff --git a/arch/riscv/configs/nommu_virt_defconfig b/arch/riscv/configs/nommu_virt_defconfig
+index d777e4a774bd..1291e21b7ce5 100644
+--- a/arch/riscv/configs/nommu_virt_defconfig
++++ b/arch/riscv/configs/nommu_virt_defconfig
+@@ -1,7 +1,7 @@
+ # CONFIG_CPU_ISOLATION is not set
+ CONFIG_LOG_BUF_SHIFT=16
+ CONFIG_INITRAMFS=y
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZMA is not set
+ # CONFIG_RD_XZ is not set
+ # CONFIG_RD_LZO is not set
+diff --git a/arch/sh/configs/sdk7786_defconfig b/arch/sh/configs/sdk7786_defconfig
+index dd0ef63a0064..2c339b2111fe 100644
+--- a/arch/sh/configs/sdk7786_defconfig
++++ b/arch/sh/configs/sdk7786_defconfig
+@@ -27,7 +27,7 @@ CONFIG_USER_NS=y
+ CONFIG_PID_NS=y
+ CONFIG_NET_NS=y
+ CONFIG_INITRAMFS=y
+-CONFIG_RD_BZIP2=y
++CONFIG_INITRAMFS_DECOMPRESS_BZIP2=y
+ CONFIG_RD_LZMA=y
+ CONFIG_RD_LZO=y
+ # CONFIG_COMPAT_BRK is not set
+diff --git a/arch/xtensa/configs/cadence_csp_defconfig b/arch/xtensa/configs/cadence_csp_defconfig
+index 788274247b03..06d82e725e64 100644
+--- a/arch/xtensa/configs/cadence_csp_defconfig
++++ b/arch/xtensa/configs/cadence_csp_defconfig
+@@ -14,7 +14,7 @@ CONFIG_SCHED_AUTOGROUP=y
+ CONFIG_RELAY=y
+ CONFIG_INITRAMFS=y
+ CONFIG_INITRAMFS_SOURCE="$$KERNEL_INITRAMFS_SOURCE"
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZMA is not set
+ # CONFIG_RD_XZ is not set
+ # CONFIG_RD_LZO is not set
+diff --git a/arch/xtensa/configs/nommu_kc705_defconfig b/arch/xtensa/configs/nommu_kc705_defconfig
+index 5050b3e5e1be..cde2ae3ca4b1 100644
+--- a/arch/xtensa/configs/nommu_kc705_defconfig
++++ b/arch/xtensa/configs/nommu_kc705_defconfig
+@@ -15,7 +15,7 @@ CONFIG_NAMESPACES=y
+ CONFIG_SCHED_AUTOGROUP=y
+ CONFIG_RELAY=y
+ CONFIG_INITRAMFS=y
+-# CONFIG_RD_BZIP2 is not set
++# CONFIG_INITRAMFS_DECOMPRESS_BZIP2 is not set
+ # CONFIG_RD_LZMA is not set
+ # CONFIG_RD_XZ is not set
+ # CONFIG_RD_LZO is not set
 diff --git a/usr/Kconfig b/usr/Kconfig
-index 8899353bd7d5..cf3c7539e3dc 100644
+index cf3c7539e3dc..325c2d95eb74 100644
 --- a/usr/Kconfig
 +++ b/usr/Kconfig
-@@ -52,7 +52,7 @@ config INITRAMFS_ROOT_GID
+@@ -60,7 +60,7 @@ config INITRAMFS_DECOMPRESS_GZIP
+ 	  Support loading of a gzip encoded initial ramfs.
+ 	  If unsure, say Y.
  
- 	  If you are not sure, leave it set to "0".
- 
--config RD_GZIP
-+config INITRAMFS_DECOMPRESS_GZIP
- 	bool "Support initial ramfs compressed using gzip"
+-config RD_BZIP2
++config INITRAMFS_DECOMPRESS_BZIP2
+ 	bool "Support initial ramfs compressed using bzip2"
  	default y
- 	select DECOMPRESS_GZIP
-@@ -134,7 +134,7 @@ choice
+ 	select DECOMPRESS_BZIP2
+@@ -144,7 +144,7 @@ config INITRAMFS_COMPRESSION_GZIP
  
- config INITRAMFS_COMPRESSION_GZIP
- 	bool "Gzip"
--	depends on RD_GZIP
-+	depends on INITRAMFS_DECOMPRESS_GZIP
+ config INITRAMFS_COMPRESSION_BZIP2
+ 	bool "Bzip2"
+-	depends on RD_BZIP2
++	depends on INITRAMFS_DECOMPRESS_BZIP2
  	help
- 	  Use the old and well tested gzip compression algorithm. Gzip provides
- 	  a good balance between compression ratio and decompression speed and
+ 	  It's compression ratio and speed is intermediate. Decompression speed
+ 	  is slowest among the choices. The initramfs size is about 10% smaller
 -- 
 2.47.2
 
