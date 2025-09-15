@@ -1,221 +1,299 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2065.outbound.protection.outlook.com [40.107.243.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B12125A0
-	for <loongarch@lists.linux.dev>; Mon, 15 Sep 2025 01:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757898164; cv=fail; b=X9yEM4THF130AA9mqpqLD0dh7RmBLIqjxqupmrygT3MSqvISf2ewXfQcAQtZo4M/ikaDUQnntIhzkNAVJ6WIGDKPA9NecdkarWVu2q2Y7aVZWBZIPuVQJ2xOWbgca4sT3JwJWkCN7sMcYc/ZNwcpCGYctZLsQic/h7wcpXAROwg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757898164; c=relaxed/simple;
-	bh=0xPbH2eKtNOcTmAusYN31rEqNtc+OSJiQqpY8VvR+hQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=GgYaxj4TaADU8Ikf7ZK8KWUHA07//gehK8SacofbJK7g7m9ohRHnqn/UzdtlW16z46ufSOTHcLg1UAZmR6ao+hH+38tiv6zY3f+6YmyRkxtnMZu6TNnXXlG+aI86bWylcPLIA2Pg05XWyJi5ZfyLNrcyxzoWVuk2xKE58ha+YbY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kh2F9R48; arc=fail smtp.client-ip=40.107.243.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kh2F9R48"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EhzqSfuRDj2lG/riKIqkDekmdyR5ckG2rmPirzHgbi68cNq9geq2JXev0QAJOxhLqaS1XukAVMvgNFWSlLu/k7RY7FY2puF3+9h5FkJf49q011Cdw9m437GrB2C2Zi3aNl02tEzrphMTXZYxe+cC6BhYXmo9LHQd79V/rW19ahO2l4j9e9H3mKoytwkJ30kLzwIrNd/sg1t7PWbva54+x3/ME0ZQm+kuNv65X3qcur9+BBNbA/EbOHQD3Q3qM9okrQ4m0B/Xemd2lsJWsnTDeBcVqE6qvjnaArJwKWlCR5Hkj9H8dRa3420PWJ1a7k6JYi6vkJNJkQzeja/vNPnYmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dUOUJ8DUzx6W+0/L84PxmWGMPDSMBtXDODxQfQSXqbI=;
- b=n2L5NW9iSVqTI80DPXZ3Yf9mvQeTapyd7QoZX7UCAlq7AV/09JVtFlAVj49nSyAaMCbPppeNCSuBndrTC/S60wcRvYDW/ERYlEZwerB/Fa1Fbf54ljfe82lK/G7C6D9SaRZL4G1QysZ1rYeNlGsi4GIlOCL5ZT9jZ46uVYfUT7naJOj3DMTcL11RLIy08keUsOO3u0nBig+VH6q5OVU00kbZ6zTi7a2RSr87XdVlx1Ng9wxt3lB9LBSEQ5zZI6g5Vl5BLZZoc9D/vaMZs3WnLdAMVdk0XAZTSDADht+tKbSYE00m4ihSlw2KPEm17FtG0DXs53ikFVBJ+iYaDPtUtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dUOUJ8DUzx6W+0/L84PxmWGMPDSMBtXDODxQfQSXqbI=;
- b=kh2F9R487d0NczcRWCJr7BNBakKa9JOv7mopa1Tl4YV/hGP6O3ntKZkiyLNeyrIp/Sq8D1olli2vdABy+4mKQnZ7SzHjbMwhMkdl9wOFq/4sZDM8u0JGXJcquOMWSgTUjy9OwuCUlJScYU7h4Y6Dq/upUvYijpYRn28haX6bYE4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
- by DS5PPF8002542C7.namprd12.prod.outlook.com (2603:10b6:f:fc00::657) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.21; Mon, 15 Sep
- 2025 01:02:40 +0000
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1]) by DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1%7]) with mapi id 15.20.9115.018; Mon, 15 Sep 2025
- 01:02:40 +0000
-Message-ID: <834110fd-a7a9-49df-acda-3fd9e7508aeb@amd.com>
-Date: Sun, 14 Sep 2025 19:02:37 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/amd/display/dml2: Guard
- dml21_map_dc_state_into_dml_display_cfg with DC_FP_START
-To: Xi Ruoyao <xry111@xry111.site>, Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Mingcong Bai <jeffbai@aosc.io>,
- dri-devel@lists.freedesktop.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Asiacn <710187964@qq.com>
-References: <20250825085211.34396-1-xry111@xry111.site>
-Content-Language: en-US
-From: Alex Hung <alex.hung@amd.com>
-In-Reply-To: <20250825085211.34396-1-xry111@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW2PR16CA0067.namprd16.prod.outlook.com
- (2603:10b6:907:1::44) To DM4PR12MB8476.namprd12.prod.outlook.com
- (2603:10b6:8:17e::15)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A0BD13DDAA
+	for <loongarch@lists.linux.dev>; Mon, 15 Sep 2025 01:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757899375; cv=none; b=py+USuhb6tdiHRkVN6pYMGMdezpxTsECLw86BpYNX9TRcTX4NBnGjkiNP/StjdswPO1kLSijvNtXt1lvtIs1muenq7UnuSIn5MqEwDU+Fx93TyIH7w7K08OqKMSHaWmU4ZmKtTP0ySLU1n7zZtwX+0ExBp/PP5TX1UZFmsOtWzs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757899375; c=relaxed/simple;
+	bh=JLjOoWsie7IviIN5XaPGn5jUoyWaOhpXrhxA9p1LBLs=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Bex+4zCOe6YmhLWwAL0ZZLKXaGxQS3ZxeMv7Jr+Ye1l/I5iHZiqqhMPHlYcquU5hR4d6rCTQ4llbO1VlP1pu8SjG4khoIzT24Q8qrDyaJgfWjBTb//9+xQxqeATXoGBNG0fklyDoMEv1yt1v5wHBZY3l8dP0VAbxbyo4Gtl29cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Bxnr9lasdoeloKAA--.20949S3;
+	Mon, 15 Sep 2025 09:22:45 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDx_8NiasdoN2CWAA--.21338S3;
+	Mon, 15 Sep 2025 09:22:45 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Fix VM migration failure with PTW enabled
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250910071429.3925025-1-maobibo@loongson.cn>
+ <CAAhV-H65H_iREuETGU_v9oZdaPFoQj1VZV46XSNTC8ppENXzuQ@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <3d3a72c2-7c91-7640-5f0b-7b95bd5f0d2e@loongson.cn>
+Date: Mon, 15 Sep 2025 09:20:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB8476:EE_|DS5PPF8002542C7:EE_
-X-MS-Office365-Filtering-Correlation-Id: efa84b5f-6cc6-4a96-5a48-08ddf3f391b0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?akdKYUxHVVZoTXZTZ1NaTWZsckVZRWhSN2Q0OGI2b0Y0bSs1Z3owL3ZMdVA4?=
- =?utf-8?B?YzR0VnBRR1pIbnFacEdqa1lqUVJWY0p1Nnh3UlVVblJqSjNkakxKTlphV2ht?=
- =?utf-8?B?em9Cc2RtWXUwZ0JFM0pZY3FaeW9OSkZmdGJjcFBadVo3OEVHT1JEZlNaNkp3?=
- =?utf-8?B?bS9WTWtGUTRsUXFmNWlXQ21xS2FZcmtyblhMck5LajZiNVJYdEdrNzRUTSts?=
- =?utf-8?B?bC9sbWhGZGZTTmlNKy9YTTZYTFkreXphek5DWHk1SFk2UlZObTQwZXBEZ2hP?=
- =?utf-8?B?QnprZFo5aUFwdm9qMEVzUHhURXJBMFdsZVhtUjhLc3hzK0hPK3NNeGtEODdX?=
- =?utf-8?B?QnhnNUg4YjhqRk52Z0xMNmlvWWZ0NERScnEyR0xaNDVnWkhqVUVXYUlVUEdY?=
- =?utf-8?B?L1YwYkVvS1A5SE5FYzFObloxbnUxaGowWEtvSzZhaWxHMzQ5MjhncndBMC9s?=
- =?utf-8?B?Z0NPV2hERmhONGxQWVJzUEpmanpZQXNVMWtRSE02d1BjSlkvMDYzazJYQS9w?=
- =?utf-8?B?NTAzN25LdDY1NmdIY0cxV0swT3hyak8vcmgrTEUzeUF0YnBzMncwUm5qVDBl?=
- =?utf-8?B?UE1YaUZWTlNDTDNBSjdkbGpDQkVGeFcrdGZ4cGZMb3MxWTV6KzlhN2ZCNTVz?=
- =?utf-8?B?aU1Ub3c2QUxRZFRKUTUxN3NFeWRyM1IwZmJtTW12YU5Qb2pZaE4vOUEzRnRT?=
- =?utf-8?B?KzB6OWV5bFFxUkg2a3ZTd0d3K2p4Mlp2elNGS001OEplOEg4MFl2eUFpOWdT?=
- =?utf-8?B?bUM0UElHRTc3SXBQYmxBdFd3eHFQazYzOGxUYnBtTFhuZzFJeFFHNDVmdGxl?=
- =?utf-8?B?V1JxZklQSjVHK0NQazZZKy80SVlhWWtTRzRwYXJiaW5WMVZNdUNEMkZhZ2lQ?=
- =?utf-8?B?R0I2OFZuaUZGOS9IN3gyMlpXOFFVc0s1VFdhT2FoZXFwQWk2MEJBSThDdEhS?=
- =?utf-8?B?RFUrTW9JT3E5eG1scmJ3VUQrUUNzaWdKVTV6Qll4ZkgzTWxNUnMwMUhsNkli?=
- =?utf-8?B?dm5rZGR2MWhJR1o5SDVUSlU3V2ZlcjFPNEJvS1ZTSTg0aEhxS1MzcXZiUEtR?=
- =?utf-8?B?cWoreDE0K2JtRDZaNXJjTWVNajZWbGFXSm9EWUdUdDVEa2Y3ZE44ZFUwVTIw?=
- =?utf-8?B?ZklBTVZ5MkQvcGYvbGMwZEw0U1p1Zkw4dFV4QmtaN0lobWhKWXdIVVVmN0tN?=
- =?utf-8?B?RlFiSGZ1dFBod1JFc1pOdFJlSHJjUHpVWitabVdDVWNJVnk1NnIwSnNSOXJQ?=
- =?utf-8?B?ekkwY0hIRTZHSlRsRUpMK2djY1EzcnJaZldONW9Nb2o2ZUJqMnZDbzF0VlRu?=
- =?utf-8?B?SUsxZDhST3RKOUVHbkdzRjh0U2IrazQ3dmsrMitxeUlxQW5HSlVoV1JVdmNQ?=
- =?utf-8?B?Uy9qQ0pnWVlPWFJtejk2c21hTUhCdVRKMG02WFg4a1k0UHhnQ1NkNTdQZ2Vl?=
- =?utf-8?B?VjJLYzRBa0NzMEVTNmFqdVdnUVBOd053MEQ2YXdJa3Vsb21VaW9yUnJ5dG5W?=
- =?utf-8?B?NTJlMy91U2lUQ2dlWnpLSVVOV3dvb3NWS2doekdiamJQOEN5SFRvM2ZIK1A0?=
- =?utf-8?B?Mm5TTmtxUTRJOTVpL0RYMWQyRUoxOHhSRDJRd0YyTk5ieWtPMGpGT3QxbS9U?=
- =?utf-8?B?aHNTMStVS0IzbkdDTXl6UG1pMWtiYkVjQWNVT09vZGJtdVl6MncwK0dQQ1pw?=
- =?utf-8?B?R0xuQjZvbFNteHFYR2svempGTW5wM0c1Q2RYcEgvMWQvem5KK2V3Kzdsc0ky?=
- =?utf-8?B?RFlHUEhjaHFEVXdYWTJPOHNjWEdxUWxTM1ZuOHZtMDNSc1BCWjRsbFRyMmpz?=
- =?utf-8?B?SG5DMHJPdEd5TlRHUVdhWkpZN2JCd3prOE5rd3N4MGxObTZEMm4vTk1DNmRi?=
- =?utf-8?B?cmt0ajhUQ2dhM2xUL2JSbVAwUWFGaU9abU1LWXR6K054MTV4RkhhcDZURTdQ?=
- =?utf-8?Q?q7XF/GJF254=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB8476.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Uk42RDN4ekZyZXF1SVh4Y1NhalAwelVwMGVpajlaZFd3M0JVdy8yek9wb3JS?=
- =?utf-8?B?cjRSL2ZzemRyR1ZJRkNrWEtPUFpwdEpYelFHRjYyVDFpdVZFWkhqSVI4YStH?=
- =?utf-8?B?YS8xYy9GSDFjcUFsWGZLWGsrYVhpaGQvQk5ENHcwSmhQQjNTVkpuNzJpWDhW?=
- =?utf-8?B?SVdleHVFai9yM2xVbmZLaVd2NEc1WFVIU2xLQlpveHNOd3N1NHBiZFk4VDJY?=
- =?utf-8?B?b2JPWjhQWXdaZ3pGL3pjSWoxMHN4NDZLWWVyT0pjdEFPVFF6SWRvbmdzTzI3?=
- =?utf-8?B?L1MvTmlYUDBJcVVla2JFT1gvWUJoQmEzUXVNamJCRmovS0tZd0llaUVGR3hZ?=
- =?utf-8?B?Nm41U3pqcU1NREJURXZDSmJva0dxcGN1bCtRQURkSGhUNzBOeExpcmVtNGdm?=
- =?utf-8?B?REZhNTIyeTNINXNxL3J4bnMzUHprUzJRZFh6Q3I1VkRlUGF0NnZIM0t4c3lx?=
- =?utf-8?B?amZITWxzZjFOUUxMVDZ6WktUZ0N0aXZydmxZU1FiZEgvU2cvV29obnVjMHVX?=
- =?utf-8?B?cmpiL0VtWXQra2h6dU42RGV6aHRYT0FqOFowN1h2YVhiVEQxMElBNERBcGIz?=
- =?utf-8?B?YUNJR2ZoNEJjYmRNNGhUSU42NElZQWhTampNOTk0SGk0bW16eGpBRCtnUXNi?=
- =?utf-8?B?azFoQ0VmaXRjVjIrWEZkckdzS1lVZjZxdkZXM1JsQjB6UldDYm9jRmw1UDEx?=
- =?utf-8?B?RFJPMm1MZVJpeWJleThrSGhza0VEL2J0U3k3M2JqT01BcTBhbmFyek9DNXNw?=
- =?utf-8?B?aENEVUJ0NUFieEVHaTBKUmp5L2s2RGIxeXNGNzg1U3ZBenlqK0hwY2t4WlZr?=
- =?utf-8?B?MmhmenRhZWlMYzZKcWlHR0wzV0RzcEsxSkRPOFl5bDNXbHl2WmQ2a2VXVVZK?=
- =?utf-8?B?elZGTGhSeHB1TisyUmxmOVlzSUVoL1NZeUFiWjVaWkNHRnkrMXVBL2Rkcm5D?=
- =?utf-8?B?TGpwM2Y4TS9hTVB4Zmt6ejlzMm5BYytwT0ZEclo4RlpRdlFKb1ptSnJLSlBa?=
- =?utf-8?B?dis0bWRObWlrMng0eG5zWU9Za2R1VFBWeW5ZK0J4V1ViY1dIZC85c1VjdVg4?=
- =?utf-8?B?b2NTU1VjbTVKMUliRjR1VlJCL3RoYkZYOGVucW5KT2daMUJxUGtzdHZXQ09W?=
- =?utf-8?B?aUdIZDUvT3JnZkFrczQ3aGJuMU1hc29pMys4WDl1WG43RzFoN0R2V09oNVBn?=
- =?utf-8?B?STIzRFNpWktZT3g4aVlSWU50N3k0eE90U0NWM0NYTlJRUnlOdU96UWxRcWVs?=
- =?utf-8?B?TlA1S2YyYVpGVUxvT1dIbSt5QnVDdCtiU29pcUdMWUx5M05rdGFvclA1KytX?=
- =?utf-8?B?NkJNakdCV0hkZW9LYXQrcDZjVEJIaEN2dUdod0RTWVl4enRPN0xRemdFYW9s?=
- =?utf-8?B?dHlpYTNzNG9kOGFWN1lhMTB0M0xGUjhCSWNybWJwVVUreWI1YjBRUmEwenpT?=
- =?utf-8?B?VjBmdlJVMHc3MGFBbnExTHlmVExFWGFra1ZVdWZvMmNReG5QSDVWem05Yzdx?=
- =?utf-8?B?YVFiT24wUzFxZVJvODFWVzllOUFWcldHYlZNcnFqdXd2d05VVm9uNjhLcU1P?=
- =?utf-8?B?alQ0STZZQ0RycGg1dGdUeG42aEU0bGROWi8rMjZoL2NyTy9EdEJQZWpUdXdx?=
- =?utf-8?B?dm9vZ2Zjd2k4VFpCbUh3cjM2anZpUjk2YkdNT0pDSHA3bUVId1Z3NERwS213?=
- =?utf-8?B?VDVEU0hhcEhVQnRhUytmNmF4RFZRVEtRTzJhbFc1aWtkYUtRVkM3OGZBODRt?=
- =?utf-8?B?dWI1NzV4QjV0WGtwck1ZQ3dzM3pkemFwL1kyM2x5TDN2cjR5eW5uaHFzTThI?=
- =?utf-8?B?QjlzVTQvSjRVQU1EUWRqdkptSE5IcEdPZXdubDlJSUJhY3RpTDRGdHRYU0RP?=
- =?utf-8?B?VVVUaFlmUGlGVHVGWjEzT3B2TklNRlF5VWpXWHdGU1dMWU40Q24rSllOT3hm?=
- =?utf-8?B?NVlGY1RyVW5DV2ZzdTZWMHpDWkVncmtFSVY5cHE5WnFSY0hVT0h3RjNLbmNG?=
- =?utf-8?B?elhKdVJnOG9nTUFyMWdmK0VqN24ySUJyZjYvNmtWNGpWMXhweVhmRVJNYXVQ?=
- =?utf-8?B?RGZmK01lSTNIZ05vc05MTVVVc0tvTXJGNnpYdU9KbWNJSXF6Ym5wZkZKNDZX?=
- =?utf-8?Q?3vVRIvAPqZ+5zwlOWyN7hzRCI?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efa84b5f-6cc6-4a96-5a48-08ddf3f391b0
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB8476.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2025 01:02:40.5116
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g7ZYi59wMZ2rgGrxAGh6yF+D50lvh0LDWgOPKdyNpV6QoW/fU9gG9Wh9m+eSaFDXzabNXHmbIPKYVMVt5Goedg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF8002542C7
+In-Reply-To: <CAAhV-H65H_iREuETGU_v9oZdaPFoQj1VZV46XSNTC8ppENXzuQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDx_8NiasdoN2CWAA--.21338S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKr1DCr1xtr13AFWDCr4rZwc_yoW3Cw47pF
+	WkGF4jyr4rtF17CFW2g3Wqqryj9rsrKF4xAFy7Kw1UGF1UtryUuF18W3yYqF18J34vkayx
+	XF4Fqr13W3y7tabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
+	e5UUUUU==
 
-No regression found in DC promotion test.
 
-Reviewed-by: Alex Hung <alex.hung@amd.com>
 
-On 8/25/25 02:52, Xi Ruoyao wrote:
-> dml21_map_dc_state_into_dml_display_cfg calls (the call is usually
-> inlined by the compiler) populate_dml21_surface_config_from_plane_state
-> and populate_dml21_plane_config_from_plane_state which may use FPU.  In
-> a x86-64 build:
+On 2025/9/14 上午9:57, Huacai Chen wrote:
+> Hi, Bibo,
 > 
->      $ objdump --disassemble=dml21_map_dc_state_into_dml_display_cfg \
->      > drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_translation_helper.o |
->      > grep %xmm -c
->      63
+> On Wed, Sep 10, 2025 at 3:14 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> With PTW disabled system, bit Dirty is HW bit for page writing, however
+>> with PTW enabled system, bit Write is HW bit for page writing. Previously
+>> bit Write is treated as SW bit to record page writable attribute for fast
+>> page fault handling in the secondary MMU, however with PTW enabled machine,
+>> this bit is used by HW already.
+>>
+>> Here define KVM_PAGE_SOFT_WRITE with SW bit _PAGE_MODIFIED, so that it can
+>> work on both PTW disabled and enabled machines. And with HW write bit, both
+>> bit Dirty and Write is set or clear.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/kvm_mmu.h | 20 ++++++++++++++++----
+>>   arch/loongarch/kvm/mmu.c             |  8 ++++----
+>>   2 files changed, 20 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/loongarch/include/asm/kvm_mmu.h b/arch/loongarch/include/asm/kvm_mmu.h
+>> index 099bafc6f797..efcd593c42b1 100644
+>> --- a/arch/loongarch/include/asm/kvm_mmu.h
+>> +++ b/arch/loongarch/include/asm/kvm_mmu.h
+>> @@ -16,6 +16,13 @@
+>>    */
+>>   #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
+>>
+>> +/*
+>> + * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
+>> + * kernel, on secondary MMU it records page writable in order to fast
+>> + * path handling
+>> + */
+>> +#define KVM_PAGE_SOFT_WRITE    _PAGE_MODIFIED
+> KVM_PAGE_WRITEABLE is more suitable.
+both are ok for me.
 > 
-> Thus it needs to be guarded with DC_FP_START.  But we must note that the
-> current code quality of the in-kernel FPU use in AMD dml2 is very much
-> problematic: we are actually calling DC_FP_START in dml21_wrapper.c
-> here, and this translation unit is built with CC_FLAGS_FPU.  Strictly
-> speaking this does not make any sense: with CC_FLAGS_FPU the compiler is
-> allowed to generate FPU uses anywhere in the translated code, perhaps
-> out of the DC_FP_START guard.  This problematic pattern also occurs in
-> at least dml2_wrapper.c, dcn35_fpu.c, and dcn351_fpu.c.  Thus we really
-> need a careful audit and refactor for the in-kernel FPU uses, and this
-> patch is simply whacking a mole.  However per the reporter, whacking
-> this mole is enough to make a 9060XT "just work."
+>> +
+>>   #define _KVM_FLUSH_PGTABLE     0x1
+>>   #define _KVM_HAS_PGMASK                0x2
+>>   #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
+>> @@ -52,11 +59,16 @@ static inline void kvm_set_pte(kvm_pte_t *ptep, kvm_pte_t val)
+>>          WRITE_ONCE(*ptep, val);
+>>   }
+>>
+>> -static inline int kvm_pte_write(kvm_pte_t pte) { return pte & _PAGE_WRITE; }
+>> -static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & _PAGE_DIRTY; }
+>> +static inline int kvm_pte_soft_write(kvm_pte_t pte) { return pte & KVM_PAGE_SOFT_WRITE; }
+> The same, kvm_pte_mkwriteable() is more suitable.
+kvm_pte_writable()  here ?  and kvm_pte_mkwriteable() for the bellowing 
+sentense.
+
+If so, that is ok, both are ok for me.
 > 
-> Reported-by: Asiacn <710187964@qq.com>
-> Link: https://github.com/loongson-community/discussions/issues/102
-> Tested-by: Asiacn <710187964@qq.com>
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->   drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c | 4 ++++
->   1 file changed, 4 insertions(+)
+>> +static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & __WRITEABLE; }
+> _PAGE_DIRTY and _PAGE_WRITE are always set/cleared at the same time,
+> so the old version still works.
+Although it is workable, I still want to remove single bit _PAGE_DIRTY 
+checking here.
+
+Regards
+Bibo Mao
 > 
-> diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
-> index 03de3cf06ae5..059ede6ff256 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
-> @@ -224,7 +224,9 @@ static bool dml21_mode_check_and_programming(const struct dc *in_dc, struct dc_s
->   	dml_ctx->config.svp_pstate.callbacks.release_phantom_streams_and_planes(in_dc, context);
->   
->   	/* Populate stream, plane mappings and other fields in display config. */
-> +	DC_FP_START();
->   	result = dml21_map_dc_state_into_dml_display_cfg(in_dc, context, dml_ctx);
-> +	DC_FP_END();
->   	if (!result)
->   		return false;
->   
-> @@ -279,7 +281,9 @@ static bool dml21_check_mode_support(const struct dc *in_dc, struct dc_state *co
->   	dml_ctx->config.svp_pstate.callbacks.release_phantom_streams_and_planes(in_dc, context);
->   
->   	mode_support->dml2_instance = dml_init->dml2_instance;
-> +	DC_FP_START();
->   	dml21_map_dc_state_into_dml_display_cfg(in_dc, context, dml_ctx);
-> +	DC_FP_END();
->   	dml_ctx->v21.mode_programming.dml2_instance->scratch.build_mode_programming_locals.mode_programming_params.programming = dml_ctx->v21.mode_programming.programming;
->   	DC_FP_START();
->   	is_supported = dml2_check_mode_supported(mode_support);
+>>   static inline int kvm_pte_young(kvm_pte_t pte) { return pte & _PAGE_ACCESSED; }
+>>   static inline int kvm_pte_huge(kvm_pte_t pte) { return pte & _PAGE_HUGE; }
+>>
+>> +static inline kvm_pte_t kvm_pte_mksoft_write(kvm_pte_t pte)
+>> +{
+>> +       return pte | KVM_PAGE_SOFT_WRITE;
+>> +}
+>> +
+>>   static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
+>>   {
+>>          return pte | _PAGE_ACCESSED;
+>> @@ -69,12 +81,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t pte)
+>>
+>>   static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
+>>   {
+>> -       return pte | _PAGE_DIRTY;
+>> +       return pte | __WRITEABLE;
+>>   }
+>>
+>>   static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
+>>   {
+>> -       return pte & ~_PAGE_DIRTY;
+>> +       return pte & ~__WRITEABLE;
+>>   }
+>>
+>>   static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
+>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+>> index ed956c5cf2cc..68749069290f 100644
+>> --- a/arch/loongarch/kvm/mmu.c
+>> +++ b/arch/loongarch/kvm/mmu.c
+>> @@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
+>>          /* Track access to pages marked old */
+>>          new = kvm_pte_mkyoung(*ptep);
+>>          if (write && !kvm_pte_dirty(new)) {
+>> -               if (!kvm_pte_write(new)) {
+>> +               if (!kvm_pte_soft_write(new)) {
+>>                          ret = -EFAULT;
+>>                          goto out;
+>>                  }
+>> @@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+>>                  prot_bits |= _CACHE_SUC;
+>>
+>>          if (writeable) {
+>> -               prot_bits |= _PAGE_WRITE;
+>> +               prot_bits = kvm_pte_mksoft_write(prot_bits);
+>>                  if (write)
+>> -                       prot_bits |= __WRITEABLE;
+>> +                       prot_bits = kvm_pte_mkdirty(prot_bits);
+>>          }
+>>
+>>          /* Disable dirty logging on HugePages */
+>> @@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+>>          kvm_release_faultin_page(kvm, page, false, writeable);
+>>          spin_unlock(&kvm->mmu_lock);
+>>
+>> -       if (prot_bits & _PAGE_DIRTY)
+>> +       if (kvm_pte_dirty(prot_bits))
+>>                  mark_page_dirty_in_slot(kvm, memslot, gfn);
+>>
+>>   out:
+> To save time, I just change the whole patch like this, you can confirm
+> whether it woks:
+> 
+> diff --git a/arch/loongarch/include/asm/kvm_mmu.h
+> b/arch/loongarch/include/asm/kvm_mmu.h
+> index 099bafc6f797..882f60c72b46 100644
+> --- a/arch/loongarch/include/asm/kvm_mmu.h
+> +++ b/arch/loongarch/include/asm/kvm_mmu.h
+> @@ -16,6 +16,13 @@
+>    */
+>   #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
+> 
+> +/*
+> + * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
+> + * kernel, on secondary MMU it records page writable in order to fast
+> + * path handling
+> + */
+> +#define KVM_PAGE_WRITEABLE     _PAGE_MODIFIED
+> +
+>   #define _KVM_FLUSH_PGTABLE     0x1
+>   #define _KVM_HAS_PGMASK                0x2
+>   #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) |
+> pgprot_val(prot))
+> @@ -56,6 +63,7 @@ static inline int kvm_pte_write(kvm_pte_t pte) {
+> return pte & _PAGE_WRITE; }
+>   static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte &
+> _PAGE_DIRTY; }
+>   static inline int kvm_pte_young(kvm_pte_t pte) { return pte &
+> _PAGE_ACCESSED; }
+>   static inline int kvm_pte_huge(kvm_pte_t pte) { return pte &
+> _PAGE_HUGE; }
+> +static inline int kvm_pte_writeable(kvm_pte_t pte) { return pte &
+> KVM_PAGE_WRITEABLE; }
+> 
+>   static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
+>   {
+> @@ -69,12 +77,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t
+> pte)
+> 
+>   static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
+>   {
+> -       return pte | _PAGE_DIRTY;
+> +       return pte | __WRITEABLE;
+>   }
+> 
+>   static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
+>   {
+> -       return pte & ~_PAGE_DIRTY;
+> +       return pte & ~__WRITEABLE;
+>   }
+> 
+>   static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
+> @@ -87,6 +95,11 @@ static inline kvm_pte_t kvm_pte_mksmall(kvm_pte_t
+> pte)
+>          return pte & ~_PAGE_HUGE;
+>   }
+> 
+> +static inline kvm_pte_t kvm_pte_mkwriteable(kvm_pte_t pte)
+> +{
+> +       return pte | KVM_PAGE_WRITEABLE;
+> +}
+> +
+>   static inline int kvm_need_flush(kvm_ptw_ctx *ctx)
+>   {
+>          return ctx->flag & _KVM_FLUSH_PGTABLE;
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index ed956c5cf2cc..7c8143e79c12 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu
+> *vcpu, unsigned long gpa, bool writ
+>          /* Track access to pages marked old */
+>          new = kvm_pte_mkyoung(*ptep);
+>          if (write && !kvm_pte_dirty(new)) {
+> -               if (!kvm_pte_write(new)) {
+> +               if (!kvm_pte_writeable(new)) {
+>                          ret = -EFAULT;
+>                          goto out;
+>                  }
+> @@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
+> unsigned long gpa, bool write)
+>                  prot_bits |= _CACHE_SUC;
+> 
+>          if (writeable) {
+> -               prot_bits |= _PAGE_WRITE;
+> +               prot_bits = kvm_pte_mkwriteable(prot_bits);
+>                  if (write)
+> -                       prot_bits |= __WRITEABLE;
+> +                       prot_bits = kvm_pte_mkdirty(prot_bits);
+>          }
+> 
+>          /* Disable dirty logging on HugePages */
+> @@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
+> unsigned long gpa, bool write)
+>          kvm_release_faultin_page(kvm, page, false, writeable);
+>          spin_unlock(&kvm->mmu_lock);
+> 
+> -       if (prot_bits & _PAGE_DIRTY)
+> +       if (kvm_pte_dirty(prot_bits))
+>                  mark_page_dirty_in_slot(kvm, memslot, gfn);
+> 
+>   out:
+> 
+> Huacai
+> 
+>>
+>> base-commit: 9dd1835ecda5b96ac88c166f4a87386f3e727bd9
+>> --
+>> 2.39.3
+>>
+>>
 
