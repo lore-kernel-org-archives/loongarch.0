@@ -1,151 +1,111 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900A52F25EE
-	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 17:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E9727702A;
+	Tue, 16 Sep 2025 19:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758042515; cv=none; b=pLT1NGy4Ep/gvFxAOsTCt1sZ6oDofNXd5H6yLNUNWOu13y/wA4DBPwibiFY8O3Chc09XQxAHkSmCVNHdhTlLTlg0THIRTAitDfb1lgIB93VjC+HC4XkGHNKwQCDwNYJxudkhUerC4uGUnAi1kza4aHi/GdltOdJCK6Z6vEJF1zQ=
+	t=1758050224; cv=none; b=iZ2IgqB37l0h7HLwChU9k4+LlRWDg28yQ+ixzWY70IBuA4lFUDY28mxBMA8Ia28Gf4gKjzbFW6eTeOmcB3zpggjR2ROi0L9xTcbDNk1zUSydc+lXhOYFFX9ceezT8v4KO5NnXJUebtbTbTZtZsbe2OoVvPA3xvN0jGXpajS0svU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758042515; c=relaxed/simple;
-	bh=PgWcajlgRtwCN1aidp/F0FGsvN0V9p5zYN3VYaOBF0E=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=C6apTbfE7us3D+lI+RUQo9ox+CrOY+rZg27vcxSWkhn0cHXyRII7rXKm2OBBDgc/4ZbVmhg+12/hPG6+xh07/dJ3KrixxjJMKCazdLwleaAZMdqcq+GsHj4GQiAlVcAvl4NL4fIK/DvqRPsBdSv+c/KjLhoJ+SIbS2PyHk5puJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=Hnr3QzTs; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
+	s=arc-20240116; t=1758050224; c=relaxed/simple;
+	bh=MCfy3UUe9SGDvblB2otWUElDBg2kG3cObuhgRkiSZaE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnMepHA7BiNFGMwRdjVstAlfQvqVykVErT/KETEFNi+NniikhiIFPLlPv6DvU4oCvB0YGNVcB5NHec23JtFtUzbHzGhbkvgndMyX5A+JMU4Wb9+lmcWdyh7olcJRfvPxsEV1i5rCarM/9sULu4fCrm3Hn3Ibv8h1r0Hrxah3NP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irVToYby; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="Hnr3QzTs"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3e9ca387425so2246470f8f.0
-        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 10:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jrtc27.com; s=gmail.jrtc27.user; t=1758042511; x=1758647311; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AIXyc3Fa0oN4a5i/p3ClDZo8xo9GAZJtSKI5SCU0zd8=;
-        b=Hnr3QzTsmHkewP7ZgYg6kL56fAPGlK3lnqtivxkONFj/hYptAt7eDf4kAJ2iUOdFnA
-         WMgpXADwmFUxPvxCNBAwLJycpXtlcIvN2AvH+LR4igVyrJLVOnSDoqWoEh2cANHTk+uh
-         LW9QWC54BXjBBfYjU6BeOQ8238aC47RztbdpIyf4i2r2X9vKTXZauyeyDFOtlXd7kPxr
-         r+JIOvMVj7rjjygki94y0PlsGcxepCvXZXEa9X1GLrUq/VERYnYOYbJ2pxudJQ28Jiir
-         xZjiCq0wteOdZzg8hBwbWdu/EIa7sG7LOSP8vjxLtfApNwOHOoKJKurJwOSO5ewA3Zp3
-         bjxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758042511; x=1758647311;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AIXyc3Fa0oN4a5i/p3ClDZo8xo9GAZJtSKI5SCU0zd8=;
-        b=D0YsET54dEm/40H4o3HqbtUddr97tOPmmedhIbyMLgItiJh+0+SeQR+hP7IpKnlm19
-         4uUoKiYYWXfahc1gkNawtv4N6u0ySVGCT6/pOUFhumB172iRQ85466e0NavVO49DcukD
-         cb0Nrbkz+I8myNiEVOdJrGOBPZO6v3jKp0VRHr2FANd8Ojjt8y7E7puS1r587bouA5mI
-         W4n7mfokfPCJidangGLTpYcT29b3Kf5kspc7ICKkVTuNbbmVqXCsmG3vsNByhR5oX0v6
-         H5YTzgcg6XxpZEa245RXVH/Mi9oasl0TOWkYTuohqC+zqCpFTtgUeSWRA+nCd6qLKFhT
-         uQiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvluaQhGbI4IWWocpMjxVCl/FDfFFNuBkq0WbZ6IYjG4HzYD0Gvge9vaXc3a/ZX+2bOeGJyhUSRIE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzB6ry0036b99f/wsywcTkrWbjkBuGg5gHWmk+RVDPVRph2+S+w
-	a+twGFEAIMHf1FL2HGwehBAeuFJMAK4MdE+cDaIvQ1OKi+/VWW3kzcz6ThmN1j6cUGI=
-X-Gm-Gg: ASbGncv6lsR3cjQAMTWeEjF8PjYE04hmpQVwHXLyxxLIec8lsfBzNfz70JE38W/LInC
-	voHE6Fq1va0MTh8bRTTWvsTXIK3nrIZhoFFvTIevpChtnS8Fe1azVeIY1/dnivOcpps43vUgUJv
-	BpvZn8Wqau3arixR5rX1V5Jw2QnZ6oOg0O0cFmJc5s57kSsFyun9KM6oPHVjNVVDwFNpyfldDIX
-	3rnuYZokAG4R0BMyVjKaJhtpS+vsFCKAjsso2svLGCapkYnGareImxng7RQQBnkwMATfmSeb+uE
-	MMWnbda+FKdwiSW58ynQwSUfOjVoReLpMcDB6E0l5vbEtvVb3jEzyvohOaNy5wu0gYt2XtO0P7P
-	D3lYLhihxMs0lVY8p8E5OWDzfgdaC8feDxP8ld+K/RccOHgMwREbSVsYeYg==
-X-Google-Smtp-Source: AGHT+IGdFovreVsG0VTuKKVTgWJJEqEKFnO21Mo+tI9uoQq7jJrFi/9vVCfXuUmfB6QhCbWUaAaAkg==
-X-Received: by 2002:a05:6000:2dca:b0:3eb:2437:97c5 with SMTP id ffacd0b85a97d-3eb24379a13mr7083124f8f.22.1758042510664;
-        Tue, 16 Sep 2025 10:08:30 -0700 (PDT)
-Received: from smtpclient.apple (nat-184-7.net.cam.ac.uk. [131.111.184.7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd0a7sm22520843f8f.39.2025.09.16.10.08.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Sep 2025 10:08:30 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irVToYby"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BAC0C4CEEB;
+	Tue, 16 Sep 2025 19:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758050224;
+	bh=MCfy3UUe9SGDvblB2otWUElDBg2kG3cObuhgRkiSZaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=irVToYbyKA9zV+Jv/UyZYdBPHUu5trW7OpgacTJmnzFxEPjY5GODB5+/dB47WdJOM
+	 wUsXChj1HRtPu/aBNMTmTiwdDlN7Jn1NA2M2AT8HkeY0lpaTiKQDLqUh8OyKJYa08k
+	 82uz577D9jimv+LWW+4RSr36XmfkfxjhzCiSMQKHHH//N2uC0Bv9/CByfUl1IAf6xv
+	 kUdTXtitRRqkHDf4ujw4pYee2s9k+FlV1KiB8MlmOFydY/2h46w4RJokFo+uALCWUA
+	 F4vjsWGxkKaTNUzPqBdPft3WdQCp+6EYP8kdsFckQgIvU9/A990/O+vm/kv5wnnSiZ
+	 hTSP7K7d/TS7g==
+Date: Tue, 16 Sep 2025 12:16:58 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Qunqin Zhao <zhaoqunqin@loongson.cn>, herbert@gondor.apana.org.au,
+	jarkko@kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, davem@davemloft.net,
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org, sgarzare@redhat.com
+Subject: Re: [GIT PULL] Immutable branch between MFD, Char and Crypto due for
+ the v6.18 merge window
+Message-ID: <20250916191658.GA1249009@ax162>
+References: <20250705072045.1067-1-zhaoqunqin@loongson.cn>
+ <20250902124205.GL2163762@google.com>
+ <20250912213256.GA3062565@ax162>
+ <20250916075835.GB1637058@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH RESEND 00/62] initrd: remove classic initrd support
-From: Jessica Clarke <jrtc27@jrtc27.com>
-In-Reply-To: <20250913003842.41944-1-safinaskar@gmail.com>
-Date: Tue, 16 Sep 2025 18:08:18 +0100
-Cc: linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Christian Brauner <brauner@kernel.org>,
- Al Viro <viro@zeniv.linux.org.uk>,
- Jan Kara <jack@suse.cz>,
- Christoph Hellwig <hch@lst.de>,
- Jens Axboe <axboe@kernel.dk>,
- Andy Shevchenko <andy.shevchenko@gmail.com>,
- Aleksa Sarai <cyphar@cyphar.com>,
- =?utf-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Julian Stecklina <julian.stecklina@cyberus-technology.de>,
- Gao Xiang <hsiangkao@linux.alibaba.com>,
- Art Nikpal <email2tema@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Eric Curtin <ecurtin@redhat.com>,
- Alexander Graf <graf@amazon.com>,
- Rob Landley <rob@landley.net>,
- Lennart Poettering <mzxreary@0pointer.de>,
- linux-arch@vger.kernel.org,
- linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org,
- x86@kernel.org,
- Ingo Molnar <mingo@redhat.com>,
- linux-block@vger.kernel.org,
- initramfs@vger.kernel.org,
- linux-api@vger.kernel.org,
- linux-doc@vger.kernel.org,
- linux-efi@vger.kernel.org,
- linux-ext4@vger.kernel.org,
- "Theodore Y . Ts'o" <tytso@mit.edu>,
- linux-acpi@vger.kernel.org,
- Michal Simek <monstr@monstr.eu>,
- devicetree@vger.kernel.org,
- Luis Chamberlain <mcgrof@kernel.org>,
- Kees Cook <kees@kernel.org>,
- Thorsten Blum <thorsten.blum@linux.dev>,
- Heiko Carstens <hca@linux.ibm.com>,
- patches@lists.linux.dev
-Content-Transfer-Encoding: 7bit
-Message-Id: <A08066E1-A57E-4980-B15A-8FB00AC747CC@jrtc27.com>
-References: <20250913003842.41944-1-safinaskar@gmail.com>
-To: Askar Safin <safinaskar@gmail.com>
-X-Mailer: Apple Mail (2.3826.700.81)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250916075835.GB1637058@google.com>
 
-On 13 Sep 2025, at 01:37, Askar Safin <safinaskar@gmail.com> wrote:
-> [...]
-> For example, I renamed the following global variables:
+On Tue, Sep 16, 2025 at 08:58:35AM +0100, Lee Jones wrote:
+> On Fri, 12 Sep 2025, Nathan Chancellor wrote:
+> > > The following changes since commit 8f5ae30d69d7543eee0d70083daf4de8fe15d585:
+> > > 
+> > >   Linux 6.17-rc1 (2025-08-10 19:41:16 +0300)
+...
+> > > Qunqin Zhao (4):
+> > ...
+> > >       tpm: Add a driver for Loongson TPM device
+> > 
+> > This one needs a fix up due to commit 07d8004d6fb9 ("tpm: add bufsiz
+> > parameter in the .send callback") in 6.17-rc1, as I am seeing the
+> > following error in next-20250912.
+> > 
+> >   drivers/char/tpm/tpm_loongson.c:48:17: error: initialization of 'int (*)(struct tpm_chip *, u8 *, size_t,  size_t)' {aka 'int (*)(struct tpm_chip *, unsigned char *, long unsigned int,  long unsigned int)'} from incompatible pointer type 'int (*)(struct tpm_chip *, u8 *, size_t)' {aka 'int (*)(struct tpm_chip *, unsigned char *, long unsigned int)'} [-Wincompatible-pointer-types]
+> >      48 |         .send = tpm_loongson_send,
+> >         |                 ^~~~~~~~~~~~~~~~~
+> >   drivers/char/tpm/tpm_loongson.c:48:17: note: (near initialization for 'tpm_loongson_ops.send')
+> >   drivers/char/tpm/tpm_loongson.c:31:12: note: 'tpm_loongson_send' declared here
+> >      31 | static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> >         |            ^~~~~~~~~~~~~~~~~
+> > 
+> > Can you squash it or do you want a separate patch?
+> > 
+> > Cheers,
+> > Nathan
+> > 
+> > diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
+> > index a4ec23639911..9e50250763d1 100644
+> > --- a/drivers/char/tpm/tpm_loongson.c
+> > +++ b/drivers/char/tpm/tpm_loongson.c
+> > @@ -28,7 +28,7 @@ static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> >  	return cmd_ret->data_len;
+> >  }
+> >  
+> > -static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> > +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz, size_t count)
+> >  {
+> >  	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> >  	struct tpm_loongson_cmd *cmd = tpm_engine->command;
 > 
-> __initramfs_start
-> __initramfs_size
-> [...]
+> This will break my local branch.
 > 
-> to:
+> Any chance of an immutable pull-request for:
 > 
-> __builtin_initramfs_start
-> __builtin_initramfs_size
+>   07d8004d6fb9 ("tpm: add bufsiz parameter in the .send callback")
 
-I strongly suggest picking different names given __builtin_foo is the
-naming scheme used for GNU C builtins/intrinsics. I leave you and
-others to bikeshed that one.
+I might be missing something but this commit is in Linux 6.17-rc1, which
+this tree is based on according to both 'git log' and the lead in to
+your pull request at the top, so your local branch is already broken.
+That error message was taken from the tip of your tree and the fix was
+tested against it as well.
 
-Jessica
+"tpm: Add a driver for Loongson TPM device" was sent back in early July,
+so it was never updated for this conflict.
 
+Cheers,
+Nathan
