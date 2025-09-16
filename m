@@ -1,166 +1,102 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994782C21D6
-	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 10:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F39DD18A6CF
+	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 12:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758019902; cv=none; b=WYGgS3PKiKQsz6K5fDHf/ubxM5BcjT6Qd/L4qWKsMtVewxbGVBWYq8LP9j4WSdlzdiSc+X6wpJpl3CdqIHZW4NPTicCkpHxObtjDcNfga15SZnEftkIOXg+ARCmANg3fM7crdg/J8ol8qxP0mWRRqMoDdqSLhFVQOdr2IMUOtLU=
+	t=1758025139; cv=none; b=M77To1hZ7mReZfU95tUAh76NbG6RmvXPJQUtu7xLzvTcvubKRurL4FXNqt0nOVtk/MwBqW0yYjt5ufUtTypeCCeiBrsPtkWg7uL0LjZfeQDHPBP4hXcQsDfgd49NHhOxCUbcqF1qG1sUmL/0cewduD972jxLg2N368qY+qoZC48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758019902; c=relaxed/simple;
-	bh=uetLMam59rqoueBhx9E0z0pGPZLJA28i0fsai71QFtA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Znjxk3AZMEyZ1GQQ9PYch4JTRdSuugDzPC4Khl/oiTi8loxAcTAMUlcjkzt7wmgXfCe6i3pMUrn1COQbWjVs0FfKLWBhR05GtCX1ib6YufrTBi5vCRJFdtV8xyRXm64hIVmCc7L83bHtz9JGEC0/uuF3WhIrvA4PbnZmbIscId8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pxyrf1iZ; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pxyrf1iZ"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6228de280a4so2488557a12.2
-        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 03:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758019899; x=1758624699; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OObpzBjFF7yMnSbls/d6bSlMk0bpjxblQhgbD3Wv4xQ=;
-        b=Pxyrf1iZPVD4oUpbUX0PjH9WuaRtJ0hxmqJH372d2mOH8g4z3lttOCQWqsPr+zTYhQ
-         biEwurzZuJLbqHzV+dx/XwzCN2XwB8OGJu4Z66gWrMn1xtI4yFRfp2fcIpmLcPT54RIE
-         AubYR/E0wKIvu+j8M3RIosS292ISiRorB+Y2BgIUZj+NT0ruSkstC5rc0lCHVtNNFCei
-         plNykEyqd/dWNDtXW87WeBinQonnqO6aVQkoMTSfNFCbDdpvN1DXq0zDJpyd4hL60V+h
-         W5cDsoNF/fCKYjWrCOqtsUVki5Q2rqoxloxLt83ma5MyTOyP2JfIrPpFX3dgQmwdGH4S
-         Oz0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758019899; x=1758624699;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OObpzBjFF7yMnSbls/d6bSlMk0bpjxblQhgbD3Wv4xQ=;
-        b=ZdqrsewV7E7sYP79jZqf5dOwZqiLcwspJByErsrEt429hfPJWEJBoon84CAV8pm1fA
-         JJ/nx1xarJc0qi3JO4pchdlTp89VqnijErjLniywmE1OAOs7ebRjvudZbruiUwhf9kl0
-         g6F7BtgVV6mHxZoPsQ7cumJDlkCspFuLv9COxLk7QnDwC4z2AYkQCP0sCMT9eMct2Z40
-         G0GTGrC2cCLy5mUgrh9osG8AcBFZtAsPeIhvVlRWd576JAT553NRPeYairQUn1stNNHv
-         XCBUmrY9sDHNchHJtEaqJ109/J2uYCOxEaDuKXB2EmnLHpC/DQKPyP0Vobjo2UIIhoqE
-         5agA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUyYzsfic97avVDt/wYgjMfqVIOqGT0DGpH4dxUPnr3cdmhVHd6m380Gr107APlV7o36bRkhZFTho=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwGX6CMcf4O2YcM8ackJqxcwS8mhzr4GSXImcLDNEFRD0gjDApl
-	wpvsmV2UYyv9ppp+CI7QzTipSrOlCwPsALoGV9ONZn8r2BBtKSCW56WQHkTteMmSuBScerEpXvX
-	Mgz08F429xZmtRuUHNIFn496Va9mepmQ=
-X-Gm-Gg: ASbGnct+l/pKpL0ppaFxjMlSmvYo+hVcTzzPuArhMQbDnnJJcbulYQZ7fFBT193RWY3
-	kNDTs2K5X+qosnjLTK8UoK/CepJ5XutLIf6qY6JsztXxWiI1tuZ7nyAkPDoW8oiSnvB+5KHQEpb
-	SfJKefXI1VvAh0AWu4qHwFXKV1M6XtM3kxSiLLE1FzGcJ2DVpJJkgTTYRX0UFJuze3d1X4ESe66
-	kDDAUFTaUFo91kBWA==
-X-Google-Smtp-Source: AGHT+IH6HVcq8RFIaQkQFA17EoE6YWoCKD+1h9ynJNaDikwRoq31OLQVBiURDJCjf116z9WR/3PQypnzBaYuEhoS4l0=
-X-Received: by 2002:a05:6402:2802:b0:627:6281:e441 with SMTP id
- 4fb4d7f45d1cf-62ed8278bfemr15882478a12.23.1758019898611; Tue, 16 Sep 2025
- 03:51:38 -0700 (PDT)
+	s=arc-20240116; t=1758025139; c=relaxed/simple;
+	bh=Qzyx6iaqieZHa1bD+k8VgtFucreEpdcW2COkAWhgJbU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fQ906Gi4EfB297pk7ih5U4zFyTMR9v8WwQpW8KlxuBn48taNG0ggtGt7FRxGcEkNM10g5ONDNT1mFcvJfUeqjgSQsTzr52Vj9uTNqlWfV/YqX/UX0xr8ZcN4dLBCq+kRRK/7d6qFm4qcrQDGvT++doFKxQ08Ns7JXwhfnolWACI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxSNGqVcloHvEKAA--.23752S3;
+	Tue, 16 Sep 2025 20:18:50 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxrcGpVclouVKZAA--.6520S3;
+	Tue, 16 Sep 2025 20:18:49 +0800 (CST)
+Subject: Re: [PATCH v1] objtool/LoongArch: Mark special atomic instruction as
+ INSN_BUG type
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ rust-for-linux@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250916061117.32315-1-yangtiezhu@loongson.cn>
+ <CAHirt9jbY4yX84Kfzax71rCvPY--SQpDKrjqWsDCHMVnuUuD0g@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <b218d981-49a4-3ee3-6eb9-68953ec29b1e@loongson.cn>
+Date: Tue, 16 Sep 2025 20:18:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1756987761.git.zhoubinbin@loongson.cn> <175760122164.1552180.16853979882678693472.b4-ty@kernel.org>
- <CAMpQs4JbQU3D-Bs2687BXSC=FKJBS6RMvWAKb6AJEtzit6hWqw@mail.gmail.com>
- <20250916084002.GF1637058@google.com> <CAMpQs4+J2zYgZaGYBSaf4UwzKZY-qMoD1oe2vmgJQXAfghqu=w@mail.gmail.com>
- <20250916101438.GA3585920@google.com>
-In-Reply-To: <20250916101438.GA3585920@google.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 16 Sep 2025 18:51:25 +0800
-X-Gm-Features: AS18NWDo7mI5EB9dmqCohctCrqyLMUFRWlwlIpYcOxURUZMTdq3nypJv3YzNjgE
-Message-ID: <CAMpQs4+kj0i1BpJ4Nk+Z=Ov-AMEWcqPmkbruNhD--TmycX4z-Q@mail.gmail.com>
-Subject: Re: (subset) [PATCH v11 0/3] LoongArch: Add Loongson-2K BMC support
-To: Lee Jones <lee@kernel.org>
-Cc: Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Binbin Zhou <zhoubinbin@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	jeffbai@aosc.io, kexybiscuit@aosc.io, wangyao@lemote.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHirt9jbY4yX84Kfzax71rCvPY--SQpDKrjqWsDCHMVnuUuD0g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxrcGpVclouVKZAA--.6520S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kw4kWw1fWrWUGryDCFy8Zwc_yoW8Xw1rpF
+	srZa4ftayDXFZFg3Z7tFZ2gayayrW3ArW7XF1rWr18t398tF13tFn0qrWUJFWrA3yY9ryj
+	qF4qva48uFyY9FXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU83UUUUU
+	UUU==
 
-On Tue, Sep 16, 2025 at 6:14=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> On Tue, 16 Sep 2025, Binbin Zhou wrote:
->
-> > Hi Lee:
-> >
-> > Thanks for your reply.
-> >
-> > On Tue, Sep 16, 2025 at 4:40=E2=80=AFPM Lee Jones <lee@kernel.org> wrot=
-e:
-> > >
-> > > On Fri, 12 Sep 2025, Binbin Zhou wrote:
-> > >
-> > > > Hi Lee:
-> > > >
-> > > > On Thu, Sep 11, 2025 at 10:33=E2=80=AFPM Lee Jones <lee@kernel.org>=
- wrote:
-> > > > >
-> > > > > On Thu, 04 Sep 2025 20:35:04 +0800, Binbin Zhou wrote:
-> > > > > > This patchset introduces the Loongson-2K BMC.
-> > > > > >
-> > > > > > It is a PCIe device present on servers similar to the Loongson-=
-3 CPUs.
-> > > > > > And it is a multifunctional device (MFD), such as display as a =
-sub-function
-> > > > > > of it.
-> > > > > >
-> > > > > > For IPMI, according to the existing design, we use software sim=
-ulation to
-> > > > > > implement the KCS interface registers: Stauts/Command/Data_Out/=
-Data_In.
-> > > > > >
-> > > > > > [...]
-> > > > >
-> > > > > Applied, thanks!
-> > > > >
-> > > > > [1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
-> > > > >       commit: 67c2639e1fc1a07b45d216af659c0dd92a370c68
-> > > > > [2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
-> > > > >       commit: 2364ccc827e44064e9763f2ae2d1dcc5f945fdf3
-> > > >
-> > > > Thanks for acknowledging my patchset.
-> > > >
-> > > > I can't confirm why you didn't apply the IPMI patch, but this appea=
-rs
-> > > > to break the patchset's integrity, potentially causing missing Kcon=
-fig
-> > > > dependencies (IPMI_LS2K select MFD_LS2K_BMC_CORE).
-> > >
-> > > Pretty sure this doesn't break anything.
-> > >
-> > > What build errors do you see as a result?
-> > >
-> > > > Additionally, as Corey previously explained[1], this patch can be
-> > > > applied through your side.
-> > > >
-> > > > [1]: https://lore.kernel.org/all/aFVtNAY4u2gDiLDS@mail.minyard.net/
-> > >
-> > > We only apply cross-subsystem patch-sets to a single tree if there ar=
-e
-> > > good reasons to do so.  In this instance, I can't see any reason why =
-the
-> > > IPMI driver cannot go in via it's own repo.
-> >
-> > However, there still seems to be a text dependency issue. The IPMI
-> > patch modifies the MAINTAINERS, which depends on the first patch.
-> > If the entire series of patches cannot be merged together, does this
-> > mean the IPMI patch can only be merged after the MFD patch has been
-> > merged into the mainline?
->
-> No, not at all.  So long as all patches come together during the
-> merge-window, there is no issue.
+On 2025/9/16 下午5:02, WANG Rui wrote:
+> On Tue, Sep 16, 2025 at 2:11 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> When compiling with LLVM and CONFIG_RUST is set, there exists the
+>> following objtool warning:
+>>
+>>    rust/compiler_builtins.o: warning: objtool: __rust__unordsf2(): unexpected end of section .text.unlikely.
+>>
+>> objdump shows that the end of section .text.unlikely is a atomic
+>> instruction:
+>>
+>>    amswap.w        $zero, $ra, $zero
+>>
+>> According to the LoongArch Reference Manual, if the amswap.w atomic
+>> memory access instruction has the same register number as rd and rj,
+>> the execution will trigger an Instruction Non-defined Exception, so
+>> mark the above instruction as INSN_BUG type to fix the warning.
+> 
+> LLVM lowers `llvm.trap()` to `amswap.w R0, R1, R0`. For x86, it lowers
+> to `ud2`, and objtool marks it as INSN_BUG.
+> 
+> https://github.com/llvm/llvm-project/blob/788a25a0f71bfa5e5e1c12ad093993b115d10e7a/llvm/lib/Target/LoongArch/LoongArchInstrInfo.td#L1376-L1381
 
-OK, I see, thanks.
+Thanks for the detailed explanation from the point of view of the
+compiler.
 
-Hi Corey:
+> LLVM and GCC handle this differently, GCC lowers it to a break
+> instruction. Since the break instruction has other uses, can objtool
+> mark all break instructions as INSN_BUG? or it should mark different
+> types based on the break immediate code.
 
-What do you think about it?
+If the break immediate code is 0, it should mark the type
+as INSN_TRAP. If the break immediate code is 1, it should
+mark the type as INSN_BUG. I will do it.
 
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+Thanks,
+Tiezhu
 
---=20
-Thanks.
-Binbin
