@@ -1,99 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B51E285C9A;
-	Tue, 16 Sep 2025 08:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B2272BE034
+	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 09:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758012008; cv=none; b=j5b9pXNvSxA3Eh/Q8fwcYLeltsoTyu5VSaYHfPGg+VDc7FOVJg+nGodo94JWq38qehA70E1gsQOPeYF9ucTM1i5fdE4pr3CJbUF/WomtwAtnaXwLO1Y4x4uXrCoGY6wI/HhseGZGqxsa6/QKK4UIMaklKzjuOShv9zAieeK93/Q=
+	t=1758013365; cv=none; b=WUtZcFukvWEoff515KEmadwpI43sRa8CDDfqp2Bnb2QrWTdWGK3HkZZgJKMcj6RNgyAruAAYBcv+LIT2w+Nx+tY6DzRVadx6fYRajlhzJ5jneychHieUTStbnx/RKM3IfdgCA8I7Lqs8W76zKMIYPZfE0CZJqDcsyBvfaMm/Ke4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758012008; c=relaxed/simple;
-	bh=TkEDRubaFnasxH43gJIkhStFdKmrHOl5HziunN9y1ck=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xu7gQP/7kfDuguEbouDUPWPkrSSB+4phQXu5vVYadYMLqD3eMVXVLOXFfTXCeK1Hqgl4Q7qPlweFYhXqgfzgt2fO1YKzsmje1AsO8Mxf+4Nli2sXn3839phRcfEl3mWIG4qUITXrwYb8b1EFc6kqzqKscMIeLQeNlH0Xjto2iG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Apa+aU43; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Apa+aU43"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 963A5C4CEEB;
-	Tue, 16 Sep 2025 08:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758012008;
-	bh=TkEDRubaFnasxH43gJIkhStFdKmrHOl5HziunN9y1ck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Apa+aU43uDrCpxAMDbWtRUwpR1esMRY5nyDWOrYpuhxtBCDciLMVw9MmgPYWTn+Bu
-	 RCi/5X49BFO6h8IK3cTEaaOUcd3E5pJtjW8heKzuSF8AcZ3oeZQsYNvZq0L81F0ERG
-	 5LGGG5iq0YG/DGww4/Q1qf13ruQzuE21WjvQEmpz9qeKinP4RPvJuBsZ7bSQV4rvw1
-	 bo9mdaUpxbH1ajyoBo8Hj3VhFBswJHZ1gF8fBUqrIM64Pq/dyP/2fesbSuz+u6TZ/B
-	 eot1MtV9XVDJq4HhKnr8evrRxFQ4dJzZR5zlVv3VZr5cJFOWER995/vGzvURYovjiI
-	 DEVEfrHo4VBiA==
-Date: Tue, 16 Sep 2025 09:40:02 +0100
-From: Lee Jones <lee@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
-	kexybiscuit@aosc.io, wangyao@lemote.com
-Subject: Re: (subset) [PATCH v11 0/3] LoongArch: Add Loongson-2K BMC support
-Message-ID: <20250916084002.GF1637058@google.com>
-References: <cover.1756987761.git.zhoubinbin@loongson.cn>
- <175760122164.1552180.16853979882678693472.b4-ty@kernel.org>
- <CAMpQs4JbQU3D-Bs2687BXSC=FKJBS6RMvWAKb6AJEtzit6hWqw@mail.gmail.com>
+	s=arc-20240116; t=1758013365; c=relaxed/simple;
+	bh=iyOGR5OjdcJcruEoDj50e0N6pXuQVeGejPadiPYFKV8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hv4Hb5bAVDFA7sAUnf4tuKceIIZjTsRUVEjjYsSMepw1/axTe4t2BUY+m4vf97P9VRVIO0wdWd9Ly+vtutXJ3zSEPE8unwp+BRp2ATQWI4gzbQ4GwtWhaube5To/1jG3CZlst7Id1YKQlaFMC5TgmdB+Ru+P6bBOAVGoWtATLEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [209.85.219.177])
+	by gateway (Coremail) with SMTP id _____8BxT_CsJ8loKuEKAA--.23231S3;
+	Tue, 16 Sep 2025 17:02:36 +0800 (CST)
+Received: from mail-yb1-f177.google.com (unknown [209.85.219.177])
+	by front1 (Coremail) with SMTP id qMiowJBxjcGmJ8lotwyZAA--.41487S3;
+	Tue, 16 Sep 2025 17:02:33 +0800 (CST)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-ea3f2bf7b34so1899078276.3
+        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 02:02:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXa5WkheX1k6VWPyq0c5EhzRfjtIap90nSFXWZSbkrsq3Hb+V2fmxbd3Mydu+fYlrxTVXBPzx4txII=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzaeilvKUmcsAYftKVPz0dZMwD8me6J8moets7xptbq4/B8G/Ma
+	iFJObKOBKOFZtfSPCxQqmhAOzLx8KlOnitnLaxX8p6bTbLRb80gdpAUZwwBfsuncjdij+TrJHpg
+	oDIO5p2Lz2xxoR3L5PGeynEYAevMB0VGf9GbE2nWm9w==
+X-Google-Smtp-Source: AGHT+IGGHRxmXOWaJAAygIfBjG9V73Ij3pe802twnw9XNH3Zr+pFQkBur6uu/hjKgXPTVwuAsWHJdWtS4p+VNQ5WHRw=
+X-Received: by 2002:a05:6902:124e:b0:ea5:ae89:4468 with SMTP id
+ 3f1490d57ef6-ea5ae895b6emr817879276.41.1758013349641; Tue, 16 Sep 2025
+ 02:02:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpQs4JbQU3D-Bs2687BXSC=FKJBS6RMvWAKb6AJEtzit6hWqw@mail.gmail.com>
+References: <20250916061117.32315-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20250916061117.32315-1-yangtiezhu@loongson.cn>
+From: WANG Rui <wangrui@loongson.cn>
+Date: Tue, 16 Sep 2025 17:02:19 +0800
+X-Gmail-Original-Message-ID: <CAHirt9jbY4yX84Kfzax71rCvPY--SQpDKrjqWsDCHMVnuUuD0g@mail.gmail.com>
+X-Gm-Features: AS18NWBxdv3kvW4jqwIz5er8Ma5qQhQbAuQvQ8nyLqYfZsUPrt-rPn9UxPQ1rPo
+Message-ID: <CAHirt9jbY4yX84Kfzax71rCvPY--SQpDKrjqWsDCHMVnuUuD0g@mail.gmail.com>
+Subject: Re: [PATCH v1] objtool/LoongArch: Mark special atomic instruction as
+ INSN_BUG type
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	rust-for-linux@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:qMiowJBxjcGmJ8lotwyZAA--.41487S3
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZF4rJw1rWryDWw15WrykWFX_yoWrWr13pa
+	1DZ3s8Gr48Wrn3KwnrJ3yUurW3trs3WrWIgFnxG3s2krWaqr97XF1kKry0yFn5Jw4rKFyI
+	9rn5Zw17uF1jyagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrw
+	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+	14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxK
+	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
+	0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
 
-On Fri, 12 Sep 2025, Binbin Zhou wrote:
+On Tue, Sep 16, 2025 at 2:11=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> When compiling with LLVM and CONFIG_RUST is set, there exists the
+> following objtool warning:
+>
+>   rust/compiler_builtins.o: warning: objtool: __rust__unordsf2(): unexpec=
+ted end of section .text.unlikely.
+>
+> objdump shows that the end of section .text.unlikely is a atomic
+> instruction:
+>
+>   amswap.w        $zero, $ra, $zero
+>
+> According to the LoongArch Reference Manual, if the amswap.w atomic
+> memory access instruction has the same register number as rd and rj,
+> the execution will trigger an Instruction Non-defined Exception, so
+> mark the above instruction as INSN_BUG type to fix the warning.
 
-> Hi Lee:
-> 
-> On Thu, Sep 11, 2025 at 10:33 PM Lee Jones <lee@kernel.org> wrote:
-> >
-> > On Thu, 04 Sep 2025 20:35:04 +0800, Binbin Zhou wrote:
-> > > This patchset introduces the Loongson-2K BMC.
-> > >
-> > > It is a PCIe device present on servers similar to the Loongson-3 CPUs.
-> > > And it is a multifunctional device (MFD), such as display as a sub-function
-> > > of it.
-> > >
-> > > For IPMI, according to the existing design, we use software simulation to
-> > > implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
-> > >
-> > > [...]
-> >
-> > Applied, thanks!
-> >
-> > [1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
-> >       commit: 67c2639e1fc1a07b45d216af659c0dd92a370c68
-> > [2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
-> >       commit: 2364ccc827e44064e9763f2ae2d1dcc5f945fdf3
-> 
-> Thanks for acknowledging my patchset.
-> 
-> I can't confirm why you didn't apply the IPMI patch, but this appears
-> to break the patchset's integrity, potentially causing missing Kconfig
-> dependencies (IPMI_LS2K select MFD_LS2K_BMC_CORE).
+LLVM lowers `llvm.trap()` to `amswap.w R0, R1, R0`. For x86, it lowers
+to `ud2`, and objtool marks it as INSN_BUG.
 
-Pretty sure this doesn't break anything.
+https://github.com/llvm/llvm-project/blob/788a25a0f71bfa5e5e1c12ad093993b11=
+5d10e7a/llvm/lib/Target/LoongArch/LoongArchInstrInfo.td#L1376-L1381
 
-What build errors do you see as a result?
+LLVM and GCC handle this differently, GCC lowers it to a break
+instruction. Since the break instruction has other uses, can objtool
+mark all break instructions as INSN_BUG? or it should mark different
+types based on the break immediate code.
 
-> Additionally, as Corey previously explained[1], this patch can be
-> applied through your side.
-> 
-> [1]: https://lore.kernel.org/all/aFVtNAY4u2gDiLDS@mail.minyard.net/
+https://github.com/torvalds/linux/blob/46a51f4f5edade43ba66b3c151f0e25ec8b6=
+9cb6/tools/objtool/arch/loongarch/decode.c#L315-L317
 
-We only apply cross-subsystem patch-sets to a single tree if there are
-good reasons to do so.  In this instance, I can't see any reason why the
-IPMI driver cannot go in via it's own repo.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  tools/arch/loongarch/include/asm/inst.h | 12 ++++++++++++
+>  tools/objtool/arch/loongarch/decode.c   | 21 +++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
+>
+> diff --git a/tools/arch/loongarch/include/asm/inst.h b/tools/arch/loongar=
+ch/include/asm/inst.h
+> index c25b5853181d..d68fad63c8b7 100644
+> --- a/tools/arch/loongarch/include/asm/inst.h
+> +++ b/tools/arch/loongarch/include/asm/inst.h
+> @@ -51,6 +51,10 @@ enum reg2i16_op {
+>         bgeu_op         =3D 0x1b,
+>  };
+>
+> +enum reg3_op {
+> +       amswapw_op      =3D 0x70c0,
+> +};
+> +
+>  struct reg0i15_format {
+>         unsigned int immediate : 15;
+>         unsigned int opcode : 17;
+> @@ -96,6 +100,13 @@ struct reg2i16_format {
+>         unsigned int opcode : 6;
+>  };
+>
+> +struct reg3_format {
+> +       unsigned int rd : 5;
+> +       unsigned int rj : 5;
+> +       unsigned int rk : 5;
+> +       unsigned int opcode : 17;
+> +};
+> +
+>  union loongarch_instruction {
+>         unsigned int word;
+>         struct reg0i15_format   reg0i15_format;
+> @@ -105,6 +116,7 @@ union loongarch_instruction {
+>         struct reg2i12_format   reg2i12_format;
+>         struct reg2i14_format   reg2i14_format;
+>         struct reg2i16_format   reg2i16_format;
+> +       struct reg3_format      reg3_format;
+>  };
+>
+>  #define LOONGARCH_INSN_SIZE    sizeof(union loongarch_instruction)
+> diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/l=
+oongarch/decode.c
+> index b6fdc68053cc..707f339b1840 100644
+> --- a/tools/objtool/arch/loongarch/decode.c
+> +++ b/tools/objtool/arch/loongarch/decode.c
+> @@ -278,6 +278,25 @@ static bool decode_insn_reg2i16_fomat(union loongarc=
+h_instruction inst,
+>         return true;
+>  }
+>
+> +static bool decode_insn_reg3_fomat(union loongarch_instruction inst,
+> +                                  struct instruction *insn)
+> +{
+> +       switch (inst.reg3_format.opcode) {
+> +       case amswapw_op:
+> +               if (inst.reg3_format.rd =3D=3D LOONGARCH_GPR_ZERO &&
+> +                   inst.reg3_format.rk =3D=3D LOONGARCH_GPR_RA &&
+> +                   inst.reg3_format.rj =3D=3D LOONGARCH_GPR_ZERO) {
+> +                       /* amswap.w $zero, $ra, $zero */
+> +                       insn->type =3D INSN_BUG;
+> +               }
+> +               break;
+> +       default:
+> +               return false;
+> +       }
+> +
+> +       return true;
+> +}
+> +
+>  int arch_decode_instruction(struct objtool_file *file, const struct sect=
+ion *sec,
+>                             unsigned long offset, unsigned int maxlen,
+>                             struct instruction *insn)
+> @@ -309,6 +328,8 @@ int arch_decode_instruction(struct objtool_file *file=
+, const struct section *sec
+>                 return 0;
+>         if (decode_insn_reg2i16_fomat(inst, insn))
+>                 return 0;
+> +       if (decode_insn_reg3_fomat(inst, insn))
+> +               return 0;
+>
+>         if (inst.word =3D=3D 0)
+>                 insn->type =3D INSN_NOP;
+> --
+> 2.42.0
+>
+>
 
--- 
-Lee Jones [李琼斯]
