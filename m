@@ -1,330 +1,103 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF2E7266B6C
-	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 01:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A18B2DEA72
+	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 01:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758071461; cv=none; b=YHZlrM4JvtfjwDKu9XLABQJzycjY/uKCS9NU9UmcDyZ9+8lBdrP3DDPOA0f/DEImiRkAGtnLsfd/cZvzHERTSYOBCjYyyTh5rZbLB5FuzdXyrZqK2RKHiF9cPIcBSkn3FAkhmmhZhKj+ly/x9p3I7/4aolE0KJdIobkHCouL57k=
+	t=1758074145; cv=none; b=dfiail4PZClmZD7JWTzppHePwUq0IMLFtogf3/kmaheWy+4m9Z9/ougLq5dKp2+TlNjBJYERoQS6B7YS+o+njWmifMM3gM25WnedyJejGJ2Ky1PUJYZs/PtMM2aHaUcEjvoiQmL60RR2rJaeKZaKeROQ9ndCmM75ZOFfMZm0LcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758071461; c=relaxed/simple;
-	bh=p5MOrxNALnPdLniwGLdUchd89/VDK3rKO1Ya3OOUR2g=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FTqJHeOhFc7uwoJWb6sslQFhVzRSlytkUGWKYHu4H4Fi4hT8Zhz/jQAmFID83ZEzDRWCWWEY4TO2DFEoOlknM2p8QlKZL1zA+n6Jaw2o672RbJ3m/EaHWhiDq7Rw5Jb80NQkuLRqI37Im1Wl2bAYXt0jPJq09PXFmBG3TAnAPqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Cxbb+hCsposS4LAA--.23145S3;
-	Wed, 17 Sep 2025 09:10:57 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxVOSeCspoamSaAA--.36958S3;
-	Wed, 17 Sep 2025 09:10:57 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Fix VM migration failure with PTW enabled
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250910071429.3925025-1-maobibo@loongson.cn>
- <CAAhV-H65H_iREuETGU_v9oZdaPFoQj1VZV46XSNTC8ppENXzuQ@mail.gmail.com>
- <3d3a72c2-7c91-7640-5f0b-7b95bd5f0d2e@loongson.cn>
- <CAAhV-H4bEyeV7WkfSNBJnicMhhnSwj3PEr9K4ZpXwto1=JyWUw@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <ff12ec30-b0df-aedd-a713-4fb77a4e092a@loongson.cn>
-Date: Wed, 17 Sep 2025 09:08:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1758074145; c=relaxed/simple;
+	bh=BGFE+p5DigdVs92ZkLlcZk3UVXbN6PVuRDNovY63usc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BExIjqt/t1TVi7kovuMb9Y0wiR0AwNxQj7yyp7zZMqAQVmi4KDuCSw4j3ZRzYPKqxOWdsrXZgofq0RGPOWLo827Y9A0lkwkOHssNnKGVEea1rB3TZmROAM8AHgtQGdO8cdGLLRsBmel8qsZr4N5Lp+Y91RfPq0zAuW5S6dN4F84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9Pbci2N; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9Pbci2N"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-323266cdf64so5320674a91.0
+        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 18:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758074143; x=1758678943; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7PQe4xHtTsROTDkp1aihG2tna4AogIvR+KAUvItXOO8=;
+        b=C9Pbci2NkCxCxd/WuX+0M6iudBSRnua6TOq+Tayrw7Dfq2A0WqDmOrDIXdfrXPFVNF
+         pAwWO87s67/1tTL4os1xZWFXPkOigkxkkD8E8bm88JMbl8+0+5zVUFOY/dtpXsk0IceQ
+         qRKdAH3q0JRoyU1iT/MueuLnVVt/Ewvg/U+1pbtb9cXMf5Xujx61xDJonwmb12pHtuHs
+         mISkapFI4t/GRLbI7aaxHNcCGq7M3rjtalds5MJN35lsTtwdYSxClzYNugUMss476NSl
+         KGTUCigx3d2qHk1OpMNef5F08DygdvYrKoCKKhmFZZ4nZ/LTpwKZXuo1doxFZmDmn6hN
+         chaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758074143; x=1758678943;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7PQe4xHtTsROTDkp1aihG2tna4AogIvR+KAUvItXOO8=;
+        b=mBkX5hoNXnDcfz4GsDdwCCB7sCnPp/Psl+MYZqq4+m0xz9dmJC8APT03GosXns1ut9
+         sKEElDSHNPRacgr7/AsisTs6xr2ZHhMROwGxoXY83ptJicFb7V98aeXIa9DJ58Cl2HbA
+         /+rg7iiNmJskdur0h9sf9HpOH9fZ316cBFJNhU0NXsFvOwuAPxb9J3A2Z1RbGQ8zSwK4
+         LZeVaR1xUZtFH9JJbdTfWkA1lObsOiznGtWBzuHF4PlxCkvpnF820Ofh90yIVuclZhxm
+         akVgf46jP7b01HpVuatyhr4x0qucjUdQRh1x1rQ2oHs7zZOK+rGSE8c9WILI1UGsjvLS
+         cQ0w==
+X-Gm-Message-State: AOJu0YxzKNp1E3xhCtFqhGaYtWbbS5WBGR2m1Fq+y7P+SyYUhPfsEE0V
+	t3BfmKl8ro/qxUyw448OKwwThIfBL93zV4v/w3pcALenBumY5ua1xOnV
+X-Gm-Gg: ASbGnctQRHt2vMHoX2a1+L6QLyMrNzAoeaNlhdd7RqRjt2j0fXOeNcL5lCZJNTihTLd
+	bYHRIqGAfuMRtqDup/LMzjpCqlIDG/DRN9DapxTQE244QtCjbgwj3nrHA1x4V57BU/EQq04CyTj
+	kFlL3UIAXF6nE6GTpHbqcmrkC74CCeK9I1dftSAppqQrlkZxxWZOVFNa4V08+tODvYfY4OjeLZZ
+	UfzVZKhBN/B5kavoby0WhXCsALyucpM5GXz8KQH6FIRkfP6TlfDcsA90xOdM/o9ofWjHCwfKQg/
+	IbepsibmjJ099nehWebxGuAi1ltin1cjOVzNeCsXSZs1cE7Uh/Dhx6ZylqafMhzoQIVFCen0kzH
+	YYtUqzdEwyNxX2Idxy3q4TV6G0fVxG762Lq4YKqM=
+X-Google-Smtp-Source: AGHT+IHqqK2wUrlor1fpCWgNM1tuaVBLsIfFaalxAjaCvVXSL7VSuuJl2SBc1+Dp7s33Tjo08W6zMg==
+X-Received: by 2002:a17:90b:4c12:b0:32e:c6b6:956b with SMTP id 98e67ed59e1d1-32ee3eb1caemr580685a91.4.1758074142872;
+        Tue, 16 Sep 2025 18:55:42 -0700 (PDT)
+Received: from devbox.. ([43.132.141.6])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32ed278b065sm839746a91.29.2025.09.16.18.55.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 18:55:42 -0700 (PDT)
+From: Hengqi Chen <hengqi.chen@gmail.com>
+To: chenhuacai@kernel.org,
+	yangtiezhu@loongson.cn,
+	vincent.mc.li@gmail.com,
+	hejinyang@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Subject: [PATCH v5 0/8] LoongArch: Fix BPF trampoline related issues
+Date: Tue, 16 Sep 2025 23:56:19 +0000
+Message-ID: <20250916235627.102831-1-hengqi.chen@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4bEyeV7WkfSNBJnicMhhnSwj3PEr9K4ZpXwto1=JyWUw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxVOSeCspoamSaAA--.36958S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Wry3JFW8Cr1rAF15AF1UurX_yoWftF1xpF
-	WkGF4DAr48tr17GrW2g3Z0qr9FkrsrKF1xXF1UKw1UGF1DtryUuF18WrWY9F18A348G3W7
-	XF4rtry3u3y3tabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
 
+The following two selftest cases triggers oops on LoongArch:
 
+    $ ./test_progs -a ns_bpf_qdisc -a tracing_struct
 
-On 2025/9/16 下午10:21, Huacai Chen wrote:
-> On Mon, Sep 15, 2025 at 9:22 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/9/14 上午9:57, Huacai Chen wrote:
->>> Hi, Bibo,
->>>
->>> On Wed, Sep 10, 2025 at 3:14 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> With PTW disabled system, bit Dirty is HW bit for page writing, however
->>>> with PTW enabled system, bit Write is HW bit for page writing. Previously
->>>> bit Write is treated as SW bit to record page writable attribute for fast
->>>> page fault handling in the secondary MMU, however with PTW enabled machine,
->>>> this bit is used by HW already.
->>>>
->>>> Here define KVM_PAGE_SOFT_WRITE with SW bit _PAGE_MODIFIED, so that it can
->>>> work on both PTW disabled and enabled machines. And with HW write bit, both
->>>> bit Dirty and Write is set or clear.
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>    arch/loongarch/include/asm/kvm_mmu.h | 20 ++++++++++++++++----
->>>>    arch/loongarch/kvm/mmu.c             |  8 ++++----
->>>>    2 files changed, 20 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/arch/loongarch/include/asm/kvm_mmu.h b/arch/loongarch/include/asm/kvm_mmu.h
->>>> index 099bafc6f797..efcd593c42b1 100644
->>>> --- a/arch/loongarch/include/asm/kvm_mmu.h
->>>> +++ b/arch/loongarch/include/asm/kvm_mmu.h
->>>> @@ -16,6 +16,13 @@
->>>>     */
->>>>    #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
->>>>
->>>> +/*
->>>> + * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
->>>> + * kernel, on secondary MMU it records page writable in order to fast
->>>> + * path handling
->>>> + */
->>>> +#define KVM_PAGE_SOFT_WRITE    _PAGE_MODIFIED
->>> KVM_PAGE_WRITEABLE is more suitable.
->> both are ok for me.
->>>
->>>> +
->>>>    #define _KVM_FLUSH_PGTABLE     0x1
->>>>    #define _KVM_HAS_PGMASK                0x2
->>>>    #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
->>>> @@ -52,11 +59,16 @@ static inline void kvm_set_pte(kvm_pte_t *ptep, kvm_pte_t val)
->>>>           WRITE_ONCE(*ptep, val);
->>>>    }
->>>>
->>>> -static inline int kvm_pte_write(kvm_pte_t pte) { return pte & _PAGE_WRITE; }
->>>> -static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & _PAGE_DIRTY; }
->>>> +static inline int kvm_pte_soft_write(kvm_pte_t pte) { return pte & KVM_PAGE_SOFT_WRITE; }
->>> The same, kvm_pte_mkwriteable() is more suitable.
->> kvm_pte_writable()  here ?  and kvm_pte_mkwriteable() for the bellowing
->> sentense.
->>
->> If so, that is ok, both are ok for me.
-> Yes.
-> 
->>>
->>>> +static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & __WRITEABLE; }
->>> _PAGE_DIRTY and _PAGE_WRITE are always set/cleared at the same time,
->>> so the old version still works.
->> Although it is workable, I still want to remove single bit _PAGE_DIRTY
->> checking here.
-> I want to check a single bit because "kvm_pte_write() return
-> _PAGE_WRITE and kvm_pte_dirty() return _PAGE_DIRTY" looks more
-> natural.
-kvm_pte_write() is not needed any more and removed here. This is only
-kvm_pte_writable() to check software writable bit, kvm_pte_dirty() to 
-check HW write bit.
+This series tries to fix/workaround these issues.
+See individual commit for details.
 
-There is no reason to check single bit with _PAGE_WRITE or _PAGE_DIRTY, 
-since there is different meaning on machines with/without HW PTW.
+v4 -> v5:
+* Rework sign_extend()
+* Add Tested-by tag for first 7 patches
 
-Regards
-Bibo Mao
-> 
-> You may argue that kvm_pte_mkdirty() set both _PAGE_WRITE and
-> _PAGE_DIRTY so kvm_pte_dirty() should also return both. But I think
-> kvm_pte_mkdirty() in this patch is just a "reasonable optimization".
-> Because strictly speaking, we need both kvm_pte_mkdirty() and
-> kvm_pte_mkwrite() and call the pair when needed.
-> 
-> Huacai
-> 
->>
->> Regards
->> Bibo Mao
->>>
->>>>    static inline int kvm_pte_young(kvm_pte_t pte) { return pte & _PAGE_ACCESSED; }
->>>>    static inline int kvm_pte_huge(kvm_pte_t pte) { return pte & _PAGE_HUGE; }
->>>>
->>>> +static inline kvm_pte_t kvm_pte_mksoft_write(kvm_pte_t pte)
->>>> +{
->>>> +       return pte | KVM_PAGE_SOFT_WRITE;
->>>> +}
->>>> +
->>>>    static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
->>>>    {
->>>>           return pte | _PAGE_ACCESSED;
->>>> @@ -69,12 +81,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t pte)
->>>>
->>>>    static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
->>>>    {
->>>> -       return pte | _PAGE_DIRTY;
->>>> +       return pte | __WRITEABLE;
->>>>    }
->>>>
->>>>    static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
->>>>    {
->>>> -       return pte & ~_PAGE_DIRTY;
->>>> +       return pte & ~__WRITEABLE;
->>>>    }
->>>>
->>>>    static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
->>>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
->>>> index ed956c5cf2cc..68749069290f 100644
->>>> --- a/arch/loongarch/kvm/mmu.c
->>>> +++ b/arch/loongarch/kvm/mmu.c
->>>> @@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
->>>>           /* Track access to pages marked old */
->>>>           new = kvm_pte_mkyoung(*ptep);
->>>>           if (write && !kvm_pte_dirty(new)) {
->>>> -               if (!kvm_pte_write(new)) {
->>>> +               if (!kvm_pte_soft_write(new)) {
->>>>                           ret = -EFAULT;
->>>>                           goto out;
->>>>                   }
->>>> @@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
->>>>                   prot_bits |= _CACHE_SUC;
->>>>
->>>>           if (writeable) {
->>>> -               prot_bits |= _PAGE_WRITE;
->>>> +               prot_bits = kvm_pte_mksoft_write(prot_bits);
->>>>                   if (write)
->>>> -                       prot_bits |= __WRITEABLE;
->>>> +                       prot_bits = kvm_pte_mkdirty(prot_bits);
->>>>           }
->>>>
->>>>           /* Disable dirty logging on HugePages */
->>>> @@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
->>>>           kvm_release_faultin_page(kvm, page, false, writeable);
->>>>           spin_unlock(&kvm->mmu_lock);
->>>>
->>>> -       if (prot_bits & _PAGE_DIRTY)
->>>> +       if (kvm_pte_dirty(prot_bits))
->>>>                   mark_page_dirty_in_slot(kvm, memslot, gfn);
->>>>
->>>>    out:
->>> To save time, I just change the whole patch like this, you can confirm
->>> whether it woks:
->>>
->>> diff --git a/arch/loongarch/include/asm/kvm_mmu.h
->>> b/arch/loongarch/include/asm/kvm_mmu.h
->>> index 099bafc6f797..882f60c72b46 100644
->>> --- a/arch/loongarch/include/asm/kvm_mmu.h
->>> +++ b/arch/loongarch/include/asm/kvm_mmu.h
->>> @@ -16,6 +16,13 @@
->>>     */
->>>    #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
->>>
->>> +/*
->>> + * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
->>> + * kernel, on secondary MMU it records page writable in order to fast
->>> + * path handling
->>> + */
->>> +#define KVM_PAGE_WRITEABLE     _PAGE_MODIFIED
->>> +
->>>    #define _KVM_FLUSH_PGTABLE     0x1
->>>    #define _KVM_HAS_PGMASK                0x2
->>>    #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) |
->>> pgprot_val(prot))
->>> @@ -56,6 +63,7 @@ static inline int kvm_pte_write(kvm_pte_t pte) {
->>> return pte & _PAGE_WRITE; }
->>>    static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte &
->>> _PAGE_DIRTY; }
->>>    static inline int kvm_pte_young(kvm_pte_t pte) { return pte &
->>> _PAGE_ACCESSED; }
->>>    static inline int kvm_pte_huge(kvm_pte_t pte) { return pte &
->>> _PAGE_HUGE; }
->>> +static inline int kvm_pte_writeable(kvm_pte_t pte) { return pte &
->>> KVM_PAGE_WRITEABLE; }
->>>
->>>    static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
->>>    {
->>> @@ -69,12 +77,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t
->>> pte)
->>>
->>>    static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
->>>    {
->>> -       return pte | _PAGE_DIRTY;
->>> +       return pte | __WRITEABLE;
->>>    }
->>>
->>>    static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
->>>    {
->>> -       return pte & ~_PAGE_DIRTY;
->>> +       return pte & ~__WRITEABLE;
->>>    }
->>>
->>>    static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
->>> @@ -87,6 +95,11 @@ static inline kvm_pte_t kvm_pte_mksmall(kvm_pte_t
->>> pte)
->>>           return pte & ~_PAGE_HUGE;
->>>    }
->>>
->>> +static inline kvm_pte_t kvm_pte_mkwriteable(kvm_pte_t pte)
->>> +{
->>> +       return pte | KVM_PAGE_WRITEABLE;
->>> +}
->>> +
->>>    static inline int kvm_need_flush(kvm_ptw_ctx *ctx)
->>>    {
->>>           return ctx->flag & _KVM_FLUSH_PGTABLE;
->>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
->>> index ed956c5cf2cc..7c8143e79c12 100644
->>> --- a/arch/loongarch/kvm/mmu.c
->>> +++ b/arch/loongarch/kvm/mmu.c
->>> @@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu
->>> *vcpu, unsigned long gpa, bool writ
->>>           /* Track access to pages marked old */
->>>           new = kvm_pte_mkyoung(*ptep);
->>>           if (write && !kvm_pte_dirty(new)) {
->>> -               if (!kvm_pte_write(new)) {
->>> +               if (!kvm_pte_writeable(new)) {
->>>                           ret = -EFAULT;
->>>                           goto out;
->>>                   }
->>> @@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
->>> unsigned long gpa, bool write)
->>>                   prot_bits |= _CACHE_SUC;
->>>
->>>           if (writeable) {
->>> -               prot_bits |= _PAGE_WRITE;
->>> +               prot_bits = kvm_pte_mkwriteable(prot_bits);
->>>                   if (write)
->>> -                       prot_bits |= __WRITEABLE;
->>> +                       prot_bits = kvm_pte_mkdirty(prot_bits);
->>>           }
->>>
->>>           /* Disable dirty logging on HugePages */
->>> @@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
->>> unsigned long gpa, bool write)
->>>           kvm_release_faultin_page(kvm, page, false, writeable);
->>>           spin_unlock(&kvm->mmu_lock);
->>>
->>> -       if (prot_bits & _PAGE_DIRTY)
->>> +       if (kvm_pte_dirty(prot_bits))
->>>                   mark_page_dirty_in_slot(kvm, memslot, gfn);
->>>
->>>    out:
->>>
->>> Huacai
->>>
->>>>
->>>> base-commit: 9dd1835ecda5b96ac88c166f4a87386f3e727bd9
->>>> --
->>>> 2.39.3
->>>>
->>>>
->>
+Hengqi Chen (8):
+  LoongArch: BPF: Remove duplicated flags check
+  LoongArch: BPF: Remove duplicated bpf_flush_icache()
+  LoongArch: BPF: No support of struct argument in trampoline programs
+  LoongArch: BPF: No text_poke() for kernel text
+  LoongArch: BPF: Don't assume trampoline size is page aligned
+  LoongArch: BPF: Make trampoline size stable
+  LoongArch: BPF: Make error handling robust in
+    arch_prepare_bpf_trampoline()
+  LoongArch: BPF: Sign extend struct ops return values properly
 
+ arch/loongarch/net/bpf_jit.c | 71 ++++++++++++++++++++++++++++--------
+ 1 file changed, 55 insertions(+), 16 deletions(-)
+
+--
+2.43.5
