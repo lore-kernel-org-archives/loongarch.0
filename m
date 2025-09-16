@@ -1,142 +1,146 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D919E299A8C
-	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 09:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A07A29ACF7
+	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 10:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758015319; cv=none; b=sgqY/3XFDDsqz3AajVrIyLYwlZP/y3xvAe5xrBpf9kNXUZq7PEbBo5wtIMqM2iWt5MMM2CgmDZ/YOyphhVzyY0k/FAD/QHcDXHAa5gXPd6+OypXGzyp685Eczqxy+rjb8QVQrTc8w4LbR8wH9AjW9W9y+OzVeaKoGQafZLa2f/o=
+	t=1758017078; cv=none; b=VNOnbb6gXX5gTf5uu6T5vSvun4e+fp9ofTyfyZLMjh+Gka22nr8G7xxcYhtGivw9dtGczCcKJnGc9/I0j3pmzpoD4fuNFM98AUM8xVpMypJNtFxAE14L/IKqcnTbh8PzJ1iAZoMbXH7YldnELomS5Bz4mJbtt/aYzJ8U2vcGQbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758015319; c=relaxed/simple;
-	bh=aTpnJ6Qp8KPI/iAnagCI5mpqRs+1bJ6DnZJJNiiWeto=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dZ+eT0WsZ4nx8ydZRY5AdmQwUazNVOn7xPfVlhGD4eC3rBcoHPyX/FqKDcM5cFuexh2qNZ1k/qRbAITF+hLi0wFjohh3ig0fjmPNTPOSjJkLLY0vj0sr+HTnm0gv31eEfl2ILPGjsC3IrIjJY+PLIasNyVtiMa7cTyu4AX9ALh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxK9JRL8loPeQKAA--.22054S3;
-	Tue, 16 Sep 2025 17:35:13 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxT+ZNL8loxhiZAA--.27899S2;
-	Tue, 16 Sep 2025 17:35:12 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Xi Zhang <zhangxi@kylinos.cn>,
-	live-patching@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Fix unreliable stack for live patching
-Date: Tue, 16 Sep 2025 17:35:09 +0800
-Message-ID: <20250916093509.17306-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1758017078; c=relaxed/simple;
+	bh=9QDWXq+ckM2Own18uScrRB4h421cBu6n7SahYyLtGS0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IPyuiBRFXbD8xMp4EtmAZPjNpU+BeSM9VBpQhi6olhZGGBlAW44xCEqZwzH6Dconc7VDUAqN1hrE1dn7OmscHf4LCo9a++4RrIl2BGbS34HFvkYpTpecPYmSWh2+wYwlurj8oSCt+Nk/KZlkpIUjSO3mAJ8Av6fFCuv6cf5vAzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z/grl2jo; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/grl2jo"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-62f1987d53aso3277396a12.0
+        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 03:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758017075; x=1758621875; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xvq0oFtPmi38XNhelZdp7JrUmNikqA6Z70LwGViEgDA=;
+        b=Z/grl2jozBcb5IK9YPfLc+oEzyKDKL+84VPYcJQMTFxAJdQGrlYcIMeJekwRlmDLoN
+         5OwfaFgsJPhPxTFFrqcbpneZTdJMrfC3Cn2/QBGbcupDbw7tRv9AejjNC1YNakPt3P3B
+         8xdilLp2Y8mjIyJfdhqCElHzHDAbPP+t6B7rtSsDpUsAx1aTuD7H9ilCX08+S+w2Z5cR
+         GNU0L1um22wVo081jQTrPnKc6EvRbYHbjuepf5xJoGWXjrDCyLtghcoq7woWNXVAhqQ+
+         JEy9YXs0m+WcKtdFF11z0cJBl1GteLJaINoKXZnyTVy8fi/7LM9WXAld6DH6r7j3xaSf
+         YhJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758017075; x=1758621875;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xvq0oFtPmi38XNhelZdp7JrUmNikqA6Z70LwGViEgDA=;
+        b=vKdoCDIMuXszbxK6LDFd06nPA6FRywVTDRCC1nE8tAZQitrvzE4peRI9AA+n3kWKYX
+         8ROIrFeupRudw6AOiDfOVurMRTZnjUNS7uomU5gzoxvIDPt4glMnXV2HSWkLV7kHyHLX
+         KvN5uEtRChOfc8xDA9NiD0KiWJo1UsI90eSz19KT4xhFV9el/2B9BN5Zhz/zjbDIG4JR
+         fAik9YsTI2F5Jiv3FgI4UTT/AEnxZ07Y5P+j0k6ws37PkRg0rXomhjbL45KQ3+CwdGt6
+         AS4YKBLES9hV1OgdyTTZXDA+34+gXG55fObyWd6lhOe5f6HPyvAWZzjD5OEojI1qy1DL
+         7nlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXn0wbYhY23iGkk7OH6pUSWWwIIQPOlNArzQ9rdcP31rjUW2SYo/Cr4BPgZAdbvX0QHM94bCJJKXaU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyoiilTxGF1xwXEzZ/SGWxcOxiaa+6QuraDRUtuDMOI710F+AtH
+	qpLZvbdYIAXaoYyh++z9P2g4LWF11ZZFUNKNg9L9jzlbT8cAdDk31yKI+VUF8u8iG1eni21eZe0
+	Cp1k1m81sG7NchuxVsU9JTwIkttDk/x4=
+X-Gm-Gg: ASbGncsnnjbxy3LYIdPJtBypWfw3RajX6CV33rcVonmNbEVwScx9Lm1NtXgx9LO+zKM
+	KCRtrujF5o2Yrn31RRqnby8IrPlOiEFiuw4NUJSaSjD49BNyLNsKluNsC/pKZK98anZWktXJ/qN
+	n2ueh1gT3AjbShxQ+ohl3zeABfJrKN0603paezu2aLEnRi/zD0wlvN4rPC1ToYBpeT3U/XJNh1I
+	Gayqbo=
+X-Google-Smtp-Source: AGHT+IEPxRjXpipLqO1hanLT4Es6XaecDmd6j0Gs7/wn2Tp86zqgVa2ychH1gW5ousYZhRv8X6WtLF5xIPq0D+5VGFU=
+X-Received: by 2002:a05:6402:1e93:b0:62f:2afa:60e6 with SMTP id
+ 4fb4d7f45d1cf-62f2afa64a9mr8308237a12.7.1758017074551; Tue, 16 Sep 2025
+ 03:04:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxT+ZNL8loxhiZAA--.27899S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZryUtFWfKF1xAFW3WrWfZwc_yoW5tw4Upr
-	45Zwnxtw4UJw1qq3ZFkr4Uury8Zws3A3sxWF93K3s3Xw1Uua48trn2q3Wjya1jvr95Cr47
-	Xr18tFy8Za18A3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
+References: <cover.1756987761.git.zhoubinbin@loongson.cn> <175760122164.1552180.16853979882678693472.b4-ty@kernel.org>
+ <CAMpQs4JbQU3D-Bs2687BXSC=FKJBS6RMvWAKb6AJEtzit6hWqw@mail.gmail.com> <20250916084002.GF1637058@google.com>
+In-Reply-To: <20250916084002.GF1637058@google.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 16 Sep 2025 18:04:21 +0800
+X-Gm-Features: AS18NWANjn2G57nOU62SNxRQ6bZ8lIjTtYZPiruAZN2iRv_YMwXDLOAyZ_D0zcI
+Message-ID: <CAMpQs4+J2zYgZaGYBSaf4UwzKZY-qMoD1oe2vmgJQXAfghqu=w@mail.gmail.com>
+Subject: Re: (subset) [PATCH v11 0/3] LoongArch: Add Loongson-2K BMC support
+To: Lee Jones <lee@kernel.org>
+Cc: Corey Minyard <minyard@acm.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Binbin Zhou <zhoubinbin@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	jeffbai@aosc.io, kexybiscuit@aosc.io, wangyao@lemote.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When testing the kernel live patching with "modprobe livepatch-sample",
-there is a timeout over 15 seconds from "starting patching transition"
-to "patching complete", dmesg shows "unreliable stack" for user tasks
-in debug mode, here is one of the messages:
+Hi Lee:
 
-  livepatch: klp_try_switch_task: bash:1193 has an unreliable stack
+Thanks for your reply.
 
-The "unreliable stack" is because it can not unwind from do_syscall()
-to its previous frame handle_syscall(), it should use fp to find the
-original stack top due to secondary stack in do_syscall(), but fp is
-not used for some other functions, then fp can not be restored by the
-next frame of do_syscall(), so it is necessary to save fp if task is
-not current to get the stack top of do_syscall().
+On Tue, Sep 16, 2025 at 4:40=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
+>
+> On Fri, 12 Sep 2025, Binbin Zhou wrote:
+>
+> > Hi Lee:
+> >
+> > On Thu, Sep 11, 2025 at 10:33=E2=80=AFPM Lee Jones <lee@kernel.org> wro=
+te:
+> > >
+> > > On Thu, 04 Sep 2025 20:35:04 +0800, Binbin Zhou wrote:
+> > > > This patchset introduces the Loongson-2K BMC.
+> > > >
+> > > > It is a PCIe device present on servers similar to the Loongson-3 CP=
+Us.
+> > > > And it is a multifunctional device (MFD), such as display as a sub-=
+function
+> > > > of it.
+> > > >
+> > > > For IPMI, according to the existing design, we use software simulat=
+ion to
+> > > > implement the KCS interface registers: Stauts/Command/Data_Out/Data=
+_In.
+> > > >
+> > > > [...]
+> > >
+> > > Applied, thanks!
+> > >
+> > > [1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+> > >       commit: 67c2639e1fc1a07b45d216af659c0dd92a370c68
+> > > [2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+> > >       commit: 2364ccc827e44064e9763f2ae2d1dcc5f945fdf3
+> >
+> > Thanks for acknowledging my patchset.
+> >
+> > I can't confirm why you didn't apply the IPMI patch, but this appears
+> > to break the patchset's integrity, potentially causing missing Kconfig
+> > dependencies (IPMI_LS2K select MFD_LS2K_BMC_CORE).
+>
+> Pretty sure this doesn't break anything.
+>
+> What build errors do you see as a result?
+>
+> > Additionally, as Corey previously explained[1], this patch can be
+> > applied through your side.
+> >
+> > [1]: https://lore.kernel.org/all/aFVtNAY4u2gDiLDS@mail.minyard.net/
+>
+> We only apply cross-subsystem patch-sets to a single tree if there are
+> good reasons to do so.  In this instance, I can't see any reason why the
+> IPMI driver cannot go in via it's own repo.
 
-Here are the call chains:
+However, there still seems to be a text dependency issue. The IPMI
+patch modifies the MAINTAINERS, which depends on the first patch.
+If the entire series of patches cannot be merged together, does this
+mean the IPMI patch can only be merged after the MFD patch has been
+merged into the mainline?
 
-  klp_enable_patch()
-    klp_try_complete_transition()
-      klp_try_switch_task()
-        klp_check_and_switch_task()
-          klp_check_stack()
-            stack_trace_save_tsk_reliable()
-              arch_stack_walk_reliable()
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
 
-When executing "rmmod livepatch-sample", there exists the similar issue.
-With this patch, it takes a short time for patching and unpatching.
-
-Before:
-
-  # modprobe livepatch-sample
-  # dmesg -T | tail -3
-  [Sat Sep  6 11:00:20 2025] livepatch: 'livepatch_sample': starting patching transition
-  [Sat Sep  6 11:00:35 2025] livepatch: signaling remaining tasks
-  [Sat Sep  6 11:00:36 2025] livepatch: 'livepatch_sample': patching complete
-
-  # echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled
-  # rmmod livepatch_sample
-  rmmod: ERROR: Module livepatch_sample is in use
-  # rmmod livepatch_sample
-  # dmesg -T | tail -3
-  [Sat Sep  6 11:06:05 2025] livepatch: 'livepatch_sample': starting unpatching transition
-  [Sat Sep  6 11:06:20 2025] livepatch: signaling remaining tasks
-  [Sat Sep  6 11:06:21 2025] livepatch: 'livepatch_sample': unpatching complete
-
-After:
-
-  # modprobe livepatch-sample
-  # dmesg -T | tail -2
-  [Tue Sep 16 16:19:30 2025] livepatch: 'livepatch_sample': starting patching transition
-  [Tue Sep 16 16:19:31 2025] livepatch: 'livepatch_sample': patching complete
-
-  # echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled
-  # rmmod livepatch_sample
-  # dmesg -T | tail -2
-  [Tue Sep 16 16:19:36 2025] livepatch: 'livepatch_sample': starting unpatching transition
-  [Tue Sep 16 16:19:37 2025] livepatch: 'livepatch_sample': unpatching complete
-
-Cc: stable@vger.kernel.org # v6.9+
-Fixes: 199cc14cb4f1 ("LoongArch: Add kernel livepatching support")
-Reported-by: Xi Zhang <zhangxi@kylinos.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/stacktrace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/stacktrace.c
-index 9a038d1070d7..387dc4d3c486 100644
---- a/arch/loongarch/kernel/stacktrace.c
-+++ b/arch/loongarch/kernel/stacktrace.c
-@@ -51,12 +51,13 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 	if (task == current) {
- 		regs->regs[3] = (unsigned long)__builtin_frame_address(0);
- 		regs->csr_era = (unsigned long)__builtin_return_address(0);
-+		regs->regs[22] = 0;
- 	} else {
- 		regs->regs[3] = thread_saved_fp(task);
- 		regs->csr_era = thread_saved_ra(task);
-+		regs->regs[22] = task->thread.reg22;
- 	}
- 	regs->regs[1] = 0;
--	regs->regs[22] = 0;
- 
- 	for (unwind_start(&state, task, regs);
- 	     !unwind_done(&state) && !unwind_error(&state); unwind_next_frame(&state)) {
--- 
-2.42.0
-
+--=20
+Thanks.
+Binbin
