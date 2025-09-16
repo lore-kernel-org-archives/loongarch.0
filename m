@@ -1,197 +1,142 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B2272BE034
-	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 09:02:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D919E299A8C
+	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 09:35:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758013365; cv=none; b=WUtZcFukvWEoff515KEmadwpI43sRa8CDDfqp2Bnb2QrWTdWGK3HkZZgJKMcj6RNgyAruAAYBcv+LIT2w+Nx+tY6DzRVadx6fYRajlhzJ5jneychHieUTStbnx/RKM3IfdgCA8I7Lqs8W76zKMIYPZfE0CZJqDcsyBvfaMm/Ke4=
+	t=1758015319; cv=none; b=sgqY/3XFDDsqz3AajVrIyLYwlZP/y3xvAe5xrBpf9kNXUZq7PEbBo5wtIMqM2iWt5MMM2CgmDZ/YOyphhVzyY0k/FAD/QHcDXHAa5gXPd6+OypXGzyp685Eczqxy+rjb8QVQrTc8w4LbR8wH9AjW9W9y+OzVeaKoGQafZLa2f/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758013365; c=relaxed/simple;
-	bh=iyOGR5OjdcJcruEoDj50e0N6pXuQVeGejPadiPYFKV8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hv4Hb5bAVDFA7sAUnf4tuKceIIZjTsRUVEjjYsSMepw1/axTe4t2BUY+m4vf97P9VRVIO0wdWd9Ly+vtutXJ3zSEPE8unwp+BRp2ATQWI4gzbQ4GwtWhaube5To/1jG3CZlst7Id1YKQlaFMC5TgmdB+Ru+P6bBOAVGoWtATLEs=
+	s=arc-20240116; t=1758015319; c=relaxed/simple;
+	bh=aTpnJ6Qp8KPI/iAnagCI5mpqRs+1bJ6DnZJJNiiWeto=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dZ+eT0WsZ4nx8ydZRY5AdmQwUazNVOn7xPfVlhGD4eC3rBcoHPyX/FqKDcM5cFuexh2qNZ1k/qRbAITF+hLi0wFjohh3ig0fjmPNTPOSjJkLLY0vj0sr+HTnm0gv31eEfl2ILPGjsC3IrIjJY+PLIasNyVtiMa7cTyu4AX9ALh0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.219.177])
-	by gateway (Coremail) with SMTP id _____8BxT_CsJ8loKuEKAA--.23231S3;
-	Tue, 16 Sep 2025 17:02:36 +0800 (CST)
-Received: from mail-yb1-f177.google.com (unknown [209.85.219.177])
-	by front1 (Coremail) with SMTP id qMiowJBxjcGmJ8lotwyZAA--.41487S3;
-	Tue, 16 Sep 2025 17:02:33 +0800 (CST)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-ea3f2bf7b34so1899078276.3
-        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 02:02:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXa5WkheX1k6VWPyq0c5EhzRfjtIap90nSFXWZSbkrsq3Hb+V2fmxbd3Mydu+fYlrxTVXBPzx4txII=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzaeilvKUmcsAYftKVPz0dZMwD8me6J8moets7xptbq4/B8G/Ma
-	iFJObKOBKOFZtfSPCxQqmhAOzLx8KlOnitnLaxX8p6bTbLRb80gdpAUZwwBfsuncjdij+TrJHpg
-	oDIO5p2Lz2xxoR3L5PGeynEYAevMB0VGf9GbE2nWm9w==
-X-Google-Smtp-Source: AGHT+IGGHRxmXOWaJAAygIfBjG9V73Ij3pe802twnw9XNH3Zr+pFQkBur6uu/hjKgXPTVwuAsWHJdWtS4p+VNQ5WHRw=
-X-Received: by 2002:a05:6902:124e:b0:ea5:ae89:4468 with SMTP id
- 3f1490d57ef6-ea5ae895b6emr817879276.41.1758013349641; Tue, 16 Sep 2025
- 02:02:29 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxK9JRL8loPeQKAA--.22054S3;
+	Tue, 16 Sep 2025 17:35:13 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxT+ZNL8loxhiZAA--.27899S2;
+	Tue, 16 Sep 2025 17:35:12 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Xi Zhang <zhangxi@kylinos.cn>,
+	live-patching@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: Fix unreliable stack for live patching
+Date: Tue, 16 Sep 2025 17:35:09 +0800
+Message-ID: <20250916093509.17306-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250916061117.32315-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20250916061117.32315-1-yangtiezhu@loongson.cn>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Tue, 16 Sep 2025 17:02:19 +0800
-X-Gmail-Original-Message-ID: <CAHirt9jbY4yX84Kfzax71rCvPY--SQpDKrjqWsDCHMVnuUuD0g@mail.gmail.com>
-X-Gm-Features: AS18NWBxdv3kvW4jqwIz5er8Ma5qQhQbAuQvQ8nyLqYfZsUPrt-rPn9UxPQ1rPo
-Message-ID: <CAHirt9jbY4yX84Kfzax71rCvPY--SQpDKrjqWsDCHMVnuUuD0g@mail.gmail.com>
-Subject: Re: [PATCH v1] objtool/LoongArch: Mark special atomic instruction as
- INSN_BUG type
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	rust-for-linux@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:qMiowJBxjcGmJ8lotwyZAA--.41487S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZF4rJw1rWryDWw15WrykWFX_yoWrWr13pa
-	1DZ3s8Gr48Wrn3KwnrJ3yUurW3trs3WrWIgFnxG3s2krWaqr97XF1kKry0yFn5Jw4rKFyI
-	9rn5Zw17uF1jyagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxT+ZNL8loxhiZAA--.27899S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZryUtFWfKF1xAFW3WrWfZwc_yoW5tw4Upr
+	45Zwnxtw4UJw1qq3ZFkr4Uury8Zws3A3sxWF93K3s3Xw1Uua48trn2q3Wjya1jvr95Cr47
+	Xr18tFy8Za18A3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
 	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxK
-	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-	0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
 
-On Tue, Sep 16, 2025 at 2:11=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> When compiling with LLVM and CONFIG_RUST is set, there exists the
-> following objtool warning:
->
->   rust/compiler_builtins.o: warning: objtool: __rust__unordsf2(): unexpec=
-ted end of section .text.unlikely.
->
-> objdump shows that the end of section .text.unlikely is a atomic
-> instruction:
->
->   amswap.w        $zero, $ra, $zero
->
-> According to the LoongArch Reference Manual, if the amswap.w atomic
-> memory access instruction has the same register number as rd and rj,
-> the execution will trigger an Instruction Non-defined Exception, so
-> mark the above instruction as INSN_BUG type to fix the warning.
+When testing the kernel live patching with "modprobe livepatch-sample",
+there is a timeout over 15 seconds from "starting patching transition"
+to "patching complete", dmesg shows "unreliable stack" for user tasks
+in debug mode, here is one of the messages:
 
-LLVM lowers `llvm.trap()` to `amswap.w R0, R1, R0`. For x86, it lowers
-to `ud2`, and objtool marks it as INSN_BUG.
+  livepatch: klp_try_switch_task: bash:1193 has an unreliable stack
 
-https://github.com/llvm/llvm-project/blob/788a25a0f71bfa5e5e1c12ad093993b11=
-5d10e7a/llvm/lib/Target/LoongArch/LoongArchInstrInfo.td#L1376-L1381
+The "unreliable stack" is because it can not unwind from do_syscall()
+to its previous frame handle_syscall(), it should use fp to find the
+original stack top due to secondary stack in do_syscall(), but fp is
+not used for some other functions, then fp can not be restored by the
+next frame of do_syscall(), so it is necessary to save fp if task is
+not current to get the stack top of do_syscall().
 
-LLVM and GCC handle this differently, GCC lowers it to a break
-instruction. Since the break instruction has other uses, can objtool
-mark all break instructions as INSN_BUG? or it should mark different
-types based on the break immediate code.
+Here are the call chains:
 
-https://github.com/torvalds/linux/blob/46a51f4f5edade43ba66b3c151f0e25ec8b6=
-9cb6/tools/objtool/arch/loongarch/decode.c#L315-L317
+  klp_enable_patch()
+    klp_try_complete_transition()
+      klp_try_switch_task()
+        klp_check_and_switch_task()
+          klp_check_stack()
+            stack_trace_save_tsk_reliable()
+              arch_stack_walk_reliable()
 
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  tools/arch/loongarch/include/asm/inst.h | 12 ++++++++++++
->  tools/objtool/arch/loongarch/decode.c   | 21 +++++++++++++++++++++
->  2 files changed, 33 insertions(+)
->
-> diff --git a/tools/arch/loongarch/include/asm/inst.h b/tools/arch/loongar=
-ch/include/asm/inst.h
-> index c25b5853181d..d68fad63c8b7 100644
-> --- a/tools/arch/loongarch/include/asm/inst.h
-> +++ b/tools/arch/loongarch/include/asm/inst.h
-> @@ -51,6 +51,10 @@ enum reg2i16_op {
->         bgeu_op         =3D 0x1b,
->  };
->
-> +enum reg3_op {
-> +       amswapw_op      =3D 0x70c0,
-> +};
-> +
->  struct reg0i15_format {
->         unsigned int immediate : 15;
->         unsigned int opcode : 17;
-> @@ -96,6 +100,13 @@ struct reg2i16_format {
->         unsigned int opcode : 6;
->  };
->
-> +struct reg3_format {
-> +       unsigned int rd : 5;
-> +       unsigned int rj : 5;
-> +       unsigned int rk : 5;
-> +       unsigned int opcode : 17;
-> +};
-> +
->  union loongarch_instruction {
->         unsigned int word;
->         struct reg0i15_format   reg0i15_format;
-> @@ -105,6 +116,7 @@ union loongarch_instruction {
->         struct reg2i12_format   reg2i12_format;
->         struct reg2i14_format   reg2i14_format;
->         struct reg2i16_format   reg2i16_format;
-> +       struct reg3_format      reg3_format;
->  };
->
->  #define LOONGARCH_INSN_SIZE    sizeof(union loongarch_instruction)
-> diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/l=
-oongarch/decode.c
-> index b6fdc68053cc..707f339b1840 100644
-> --- a/tools/objtool/arch/loongarch/decode.c
-> +++ b/tools/objtool/arch/loongarch/decode.c
-> @@ -278,6 +278,25 @@ static bool decode_insn_reg2i16_fomat(union loongarc=
-h_instruction inst,
->         return true;
->  }
->
-> +static bool decode_insn_reg3_fomat(union loongarch_instruction inst,
-> +                                  struct instruction *insn)
-> +{
-> +       switch (inst.reg3_format.opcode) {
-> +       case amswapw_op:
-> +               if (inst.reg3_format.rd =3D=3D LOONGARCH_GPR_ZERO &&
-> +                   inst.reg3_format.rk =3D=3D LOONGARCH_GPR_RA &&
-> +                   inst.reg3_format.rj =3D=3D LOONGARCH_GPR_ZERO) {
-> +                       /* amswap.w $zero, $ra, $zero */
-> +                       insn->type =3D INSN_BUG;
-> +               }
-> +               break;
-> +       default:
-> +               return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
->  int arch_decode_instruction(struct objtool_file *file, const struct sect=
-ion *sec,
->                             unsigned long offset, unsigned int maxlen,
->                             struct instruction *insn)
-> @@ -309,6 +328,8 @@ int arch_decode_instruction(struct objtool_file *file=
-, const struct section *sec
->                 return 0;
->         if (decode_insn_reg2i16_fomat(inst, insn))
->                 return 0;
-> +       if (decode_insn_reg3_fomat(inst, insn))
-> +               return 0;
->
->         if (inst.word =3D=3D 0)
->                 insn->type =3D INSN_NOP;
-> --
-> 2.42.0
->
->
+When executing "rmmod livepatch-sample", there exists the similar issue.
+With this patch, it takes a short time for patching and unpatching.
+
+Before:
+
+  # modprobe livepatch-sample
+  # dmesg -T | tail -3
+  [Sat Sep  6 11:00:20 2025] livepatch: 'livepatch_sample': starting patching transition
+  [Sat Sep  6 11:00:35 2025] livepatch: signaling remaining tasks
+  [Sat Sep  6 11:00:36 2025] livepatch: 'livepatch_sample': patching complete
+
+  # echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled
+  # rmmod livepatch_sample
+  rmmod: ERROR: Module livepatch_sample is in use
+  # rmmod livepatch_sample
+  # dmesg -T | tail -3
+  [Sat Sep  6 11:06:05 2025] livepatch: 'livepatch_sample': starting unpatching transition
+  [Sat Sep  6 11:06:20 2025] livepatch: signaling remaining tasks
+  [Sat Sep  6 11:06:21 2025] livepatch: 'livepatch_sample': unpatching complete
+
+After:
+
+  # modprobe livepatch-sample
+  # dmesg -T | tail -2
+  [Tue Sep 16 16:19:30 2025] livepatch: 'livepatch_sample': starting patching transition
+  [Tue Sep 16 16:19:31 2025] livepatch: 'livepatch_sample': patching complete
+
+  # echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled
+  # rmmod livepatch_sample
+  # dmesg -T | tail -2
+  [Tue Sep 16 16:19:36 2025] livepatch: 'livepatch_sample': starting unpatching transition
+  [Tue Sep 16 16:19:37 2025] livepatch: 'livepatch_sample': unpatching complete
+
+Cc: stable@vger.kernel.org # v6.9+
+Fixes: 199cc14cb4f1 ("LoongArch: Add kernel livepatching support")
+Reported-by: Xi Zhang <zhangxi@kylinos.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/stacktrace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/stacktrace.c
+index 9a038d1070d7..387dc4d3c486 100644
+--- a/arch/loongarch/kernel/stacktrace.c
++++ b/arch/loongarch/kernel/stacktrace.c
+@@ -51,12 +51,13 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 	if (task == current) {
+ 		regs->regs[3] = (unsigned long)__builtin_frame_address(0);
+ 		regs->csr_era = (unsigned long)__builtin_return_address(0);
++		regs->regs[22] = 0;
+ 	} else {
+ 		regs->regs[3] = thread_saved_fp(task);
+ 		regs->csr_era = thread_saved_ra(task);
++		regs->regs[22] = task->thread.reg22;
+ 	}
+ 	regs->regs[1] = 0;
+-	regs->regs[22] = 0;
+ 
+ 	for (unwind_start(&state, task, regs);
+ 	     !unwind_done(&state) && !unwind_error(&state); unwind_next_frame(&state)) {
+-- 
+2.42.0
 
