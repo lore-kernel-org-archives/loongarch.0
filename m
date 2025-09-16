@@ -1,158 +1,226 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D3831F1538
-	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 06:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2602DCF62
+	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 06:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758003086; cv=none; b=csCe/wS1L5Pwj8lO36wI/jHcOVz4Fm8O035MnD3hEqG4eLFdwldeMAfTB6dGNPuWI0IGNTfBBci1HpYk7a3alu5awQIwlXiU8S7XgQIeBhPl4vlQvJ8ymFrgj+PcfGtMUqnvNB/0ygbMDWE6fcx5NdkhRlLZqQZ/Q2mTHAIsFRk=
+	t=1758003809; cv=none; b=IRL1SOXI6ebadE2+BugGr8GWNrHoouTMSYThrW6b3a50Sj9UqvkwDW4ekpVoOWOsDXejBRX4o1DqWsh4Ofje9ujpr6kpj0tNo/CNxreodNg6mE8J/7Ox4vYDQl6YD0iFIbxuHFLyru0Z0dADe2k5AjSmrRCtFA9M85O0WnbNHpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758003086; c=relaxed/simple;
-	bh=pncgwftl2MGsAF4N7q+zqQcHheOR4n68YnBtiTiOJqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PdZ/JkXZcESgXjvj3FYWfVP3LfnQN5yvzTrHH+y0tE9KH7iokTkszm7IilzsC4t1WSRd41cpCu6ywNDnhyOC0FtSXNT443zlqGlYcLn2BH2ylmdZEavXlsOpGKFOCCTSrDmugu2IWRNeRpMhPDm/uANjkvrXkLwcnf+OmNsEdZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx1tCH_8homtQKAA--.23254S3;
-	Tue, 16 Sep 2025 14:11:19 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxM+SF_8hoI8GYAA--.28469S2;
-	Tue, 16 Sep 2025 14:11:18 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: WANG Rui <wangrui@loongson.cn>,
-	rust-for-linux@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] objtool/LoongArch: Mark special atomic instruction as INSN_BUG type
-Date: Tue, 16 Sep 2025 14:11:17 +0800
-Message-ID: <20250916061117.32315-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1758003809; c=relaxed/simple;
+	bh=ATPz90HRMzTO45UePY5i8G0/KGUUiD+EHn3zGHoMIzU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Q2AWA3Sy9xPzgYHNhBaiIzpGyxZZ3Q7nlUUayePYemAn6QsSWnk43FNtn0idSqr7YtJbRCiNcsbbdY38H+JeO/6YVkGVlBcdk3QdGN9ObR0rxC7nd2ufaPhub1xG1/Gyc97yL4oX4queD6t/xWXiA8A+8ZiRZ+bjnwIDlRLq+jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dVnnM3FL; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dVnnM3FL"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-71d603a9cfaso38840447b3.1
+        for <loongarch@lists.linux.dev>; Mon, 15 Sep 2025 23:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758003806; x=1758608606; darn=lists.linux.dev;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jzwxSCgUK/3UElXn+qMCVZOXd6lLimgLpQ+KrGfwqaU=;
+        b=dVnnM3FLQiZ7FdwMAvZuF7ZaOPebYKS6zqKMl7fCSuTqS9dqkvFaFGTHA+MpNQi6rA
+         UbGl1OgV0or8qr7kj6gmhZ6OzGeBWAasguWkxfv65Jqw7vHVtAC6i72BfJjXCtvUHhou
+         MumC4IQ3cSOuQ25ezFOkHxOeO1D4UmM2oqP5F6beQgwHJrgU5IESfCWiFdbx1CzxnKGl
+         4PNu1gBWGR0dkGAALC0pXhKj2ZSXJ0Y3jTjxoAnxURPHGEn6dhbmIpxlHCClBgxhaE25
+         Knte9myWGq0nr0zzGWvwa9/YdNNo+nBoxopNMsbXVWeCDAKmdGpgb/DlXB1Q7MIljW6V
+         tu3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758003806; x=1758608606;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jzwxSCgUK/3UElXn+qMCVZOXd6lLimgLpQ+KrGfwqaU=;
+        b=FiH9+aBx7PsMjhteBYhPfrp9JugmdmcGONORdahjQW5v8pSS3wBXT6wiN02GWXdC/M
+         7VN8t+rdliBt6BEg3hdz7AV0NQgJM3z9U48mBM3kCBHte3umoiuB6jb4rTdBv0FHUmjX
+         IE9litnv4gFKHQ+dx9yTCJQ12D3nf3w+xdG1izNrOrM70hmEOPKO+1xJnDU0cpdk/xY5
+         +px5eQOleCrSTEyOSjT/3nDsUPbVYKGZuxS/G51mvj7htKzX3G+UvlKcSHk0F1D6FtPz
+         qIQlAWrl9YMvaBBVAbc/UW/MU81jq1JcFBqvdmWonSHajtTBtxekPDJmDLZhcKrfAlWQ
+         qsIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXaDDLwYP6he/FRasson4Mh1o3Yl6B5rfQeXPYo+08BzoAh6ivVLRx8deyxseAe8Ojc+LUOXzYane0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyLoNqYZuzI8AbXhlBXQc6KShEsCsnRU+vO9h6WWNW1KGMYMGNA
+	Wlj3qE6kUZe4Tvjeq78GWYPQFhLKwzms6fewsSRlsO+nRpFStRdJm22z2hgRiiuhCw==
+X-Gm-Gg: ASbGncuykgjICTwFxS8QPfp/9H5q9uMDRw467XMmpeOtCVC5xGUgy9qjFNAnqgIX8T6
+	CO+AiRYhIF1POe7R2EHzwD09HM/gNAFNbB82kVL7Vi3M3mq3dQVY671y8W2DdMQYHogc2QZSyBd
+	Nzxb54SGWVHIvygZvnsIMnfDPwJluZG040E6c8AG5cOXeFank9CPKQYRYmr/01Bh/2WGwjLGkr3
+	6KOBaSsQWcpM5tPRtZj7nFGr82g2F6m+6eTIC4yHnJndg01xLTmZHZiAlI7Pmp4qhQysksyboeE
+	U4wNoFUEs5vSZRdGDihZkdwli60f0NFCSgmV76ydTKp3BxTORlbzf4aXA7O00vjiG51E34k3oMR
+	z/D97KZc0E4dbNxCrkvDeVwefKawDo/NdX50f8j5XBBf41RB3JeoTLq4Rx9tOeoQHMw4Mhc1q0Z
+	dwR39jNwmiw3O42g==
+X-Google-Smtp-Source: AGHT+IFYH7nKR98YSl0bgd4j6elLmVBr5qc5bTleI6LMDXL64/KgQAEWWcRI4ClTxXA+31LnE3T7pA==
+X-Received: by 2002:a05:690c:b13:b0:71f:eb2b:83e0 with SMTP id 00721157ae682-73062ca43c8mr138095197b3.13.1758003805348;
+        Mon, 15 Sep 2025 23:23:25 -0700 (PDT)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-72f7683148dsm38488107b3.23.2025.09.15.23.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Sep 2025 23:23:24 -0700 (PDT)
+Date: Mon, 15 Sep 2025 23:23:17 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+To: "Roy, Patrick" <roypat@amazon.co.uk>
+cc: "Thomson, Jack" <jackabt@amazon.co.uk>, 
+    "Kalyazin, Nikita" <kalyazin@amazon.co.uk>, 
+    "Cali, Marco" <xmarcalx@amazon.co.uk>, 
+    "derekmn@amazon.co.uk" <derekmn@amazon.co.uk>, 
+    Elliot Berman <quic_eberman@quicinc.com>, 
+    "willy@infradead.org" <willy@infradead.org>, 
+    "corbet@lwn.net" <corbet@lwn.net>, 
+    "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+    "maz@kernel.org" <maz@kernel.org>, 
+    "oliver.upton@linux.dev" <oliver.upton@linux.dev>, 
+    "joey.gouly@arm.com" <joey.gouly@arm.com>, 
+    "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
+    "yuzenghui@huawei.com" <yuzenghui@huawei.com>, 
+    "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
+    "will@kernel.org" <will@kernel.org>, 
+    "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
+    "kernel@xen0n.name" <kernel@xen0n.name>, 
+    "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, 
+    "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+    "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
+    "alex@ghiti.fr" <alex@ghiti.fr>, 
+    "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, 
+    "gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>, 
+    "hca@linux.ibm.com" <hca@linux.ibm.com>, 
+    "gor@linux.ibm.com" <gor@linux.ibm.com>, 
+    "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, 
+    "svens@linux.ibm.com" <svens@linux.ibm.com>, 
+    "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+    "luto@kernel.org" <luto@kernel.org>, 
+    "peterz@infradead.org" <peterz@infradead.org>, 
+    "tglx@linutronix.de" <tglx@linutronix.de>, 
+    "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+    "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, 
+    "trondmy@kernel.org" <trondmy@kernel.org>, 
+    "anna@kernel.org" <anna@kernel.org>, 
+    "hubcap@omnibond.com" <hubcap@omnibond.com>, 
+    "martin@omnibond.com" <martin@omnibond.com>, 
+    "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
+    "brauner@kernel.org" <brauner@kernel.org>, "jack@suse.cz" <jack@suse.cz>, 
+    "akpm@linux-foundation.org" <akpm@linux-foundation.org>, 
+    "david@redhat.com" <david@redhat.com>, 
+    "lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, 
+    "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, 
+    "vbabka@suse.cz" <vbabka@suse.cz>, "rppt@kernel.org" <rppt@kernel.org>, 
+    "surenb@google.com" <surenb@google.com>, 
+    "mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org" <ast@kernel.org>, 
+    "daniel@iogearbox.net" <daniel@iogearbox.net>, 
+    "andrii@kernel.org" <andrii@kernel.org>, 
+    "martin.lau@linux.dev" <martin.lau@linux.dev>, 
+    "eddyz87@gmail.com" <eddyz87@gmail.com>, 
+    "song@kernel.org" <song@kernel.org>, 
+    "yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
+    "john.fastabend@gmail.com" <john.fastabend@gmail.com>, 
+    "kpsingh@kernel.org" <kpsingh@kernel.org>, 
+    "sdf@fomichev.me" <sdf@fomichev.me>, 
+    "haoluo@google.com" <haoluo@google.com>, 
+    "jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+    "jhubbard@nvidia.com" <jhubbard@nvidia.com>, 
+    "peterx@redhat.com" <peterx@redhat.com>, 
+    "jannh@google.com" <jannh@google.com>, 
+    "pfalcato@suse.de" <pfalcato@suse.de>, 
+    "axelrasmussen@google.com" <axelrasmussen@google.com>, 
+    "yuanchu@google.com" <yuanchu@google.com>, 
+    "weixugc@google.com" <weixugc@google.com>, 
+    "hannes@cmpxchg.org" <hannes@cmpxchg.org>, 
+    "zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>, 
+    "shakeel.butt@linux.dev" <shakeel.butt@linux.dev>, 
+    "shuah@kernel.org" <shuah@kernel.org>, 
+    "seanjc@google.com" <seanjc@google.com>, 
+    "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+    "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+    "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+    "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+    "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
+    "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
+    "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
+    "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
+    "devel@lists.orangefs.org" <devel@lists.orangefs.org>, 
+    "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+    "bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+    "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v6 01/11] filemap: Pass address_space mapping to
+ ->free_folio()
+In-Reply-To: <20250912091708.17502-2-roypat@amazon.co.uk>
+Message-ID: <7c2677e1-daf7-3b49-0a04-1efdf451379a@google.com>
+References: <20250912091708.17502-1-roypat@amazon.co.uk> <20250912091708.17502-2-roypat@amazon.co.uk>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxM+SF_8hoI8GYAA--.28469S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZF47JF4kXFWrCw4DKr1UXFc_yoW5CFW8pa
-	1DZ3s5Jr4rWrn3KwnrJ3y5urW3Krs3WrWIqFnxG3s2krWaqr95XF1kKr10yF1kJw4Fgr1I
-	9rn3Zw17uF1jyagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+Content-Type: text/plain; charset=US-ASCII
 
-When compiling with LLVM and CONFIG_RUST is set, there exists the
-following objtool warning:
+On Fri, 12 Sep 2025, Roy, Patrick wrote:
 
-  rust/compiler_builtins.o: warning: objtool: __rust__unordsf2(): unexpected end of section .text.unlikely.
+> From: Elliot Berman <quic_eberman@quicinc.com>
+> 
+> When guest_memfd removes memory from the host kernel's direct map,
+> direct map entries must be restored before the memory is freed again. To
+> do so, ->free_folio() needs to know whether a gmem folio was direct map
+> removed in the first place though. While possible to keep track of this
+> information on each individual folio (e.g. via page flags), direct map
+> removal is an all-or-nothing property of the entire guest_memfd, so it
+> is less error prone to just check the flag stored in the gmem inode's
+> private data.  However, by the time ->free_folio() is called,
+> folio->mapping might be cleared. To still allow access to the address
+> space from which the folio was just removed, pass it in as an additional
+> argument to ->free_folio, as the mapping is well-known to all callers.
+> 
+> Link: https://lore.kernel.org/all/15f665b4-2d33-41ca-ac50-fafe24ade32f@redhat.com/
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+> [patrick: rewrite shortlog for new usecase]
+> Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
+> ---
+>  Documentation/filesystems/locking.rst |  2 +-
+>  fs/nfs/dir.c                          | 11 ++++++-----
+>  fs/orangefs/inode.c                   |  3 ++-
+>  include/linux/fs.h                    |  2 +-
+>  mm/filemap.c                          |  9 +++++----
+>  mm/secretmem.c                        |  3 ++-
+>  mm/vmscan.c                           |  4 ++--
+>  virt/kvm/guest_memfd.c                |  3 ++-
+>  8 files changed, 21 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+> index aa287ccdac2f..74c97287ec40 100644
+> --- a/Documentation/filesystems/locking.rst
+> +++ b/Documentation/filesystems/locking.rst
+> @@ -262,7 +262,7 @@ prototypes::
+>  	sector_t (*bmap)(struct address_space *, sector_t);
+>  	void (*invalidate_folio) (struct folio *, size_t start, size_t len);
+>  	bool (*release_folio)(struct folio *, gfp_t);
+> -	void (*free_folio)(struct folio *);
+> +	void (*free_folio)(struct address_space *, struct folio *);
+>  	int (*direct_IO)(struct kiocb *, struct iov_iter *iter);
+>  	int (*migrate_folio)(struct address_space *, struct folio *dst,
+>  			struct folio *src, enum migrate_mode);
 
-objdump shows that the end of section .text.unlikely is a atomic
-instruction:
+Beware, that is against the intent of free_folio().
 
-  amswap.w        $zero, $ra, $zero
+Since its 2.6.37 origin in 6072d13c4293 ("Call the filesystem back
+whenever a page is removed from the page cache"), freepage() or
+free_folio() has intentionally NOT taken a struct address_space *mapping,
+because that structure may already be freed by the time free_folio() is
+called, if the last folio holding it has now been freed.
 
-According to the LoongArch Reference Manual, if the amswap.w atomic
-memory access instruction has the same register number as rd and rj,
-the execution will trigger an Instruction Non-defined Exception, so
-mark the above instruction as INSN_BUG type to fix the warning.
+Maybe something has changed since then, or maybe it happens to be safe
+just in the context in which you want to use it; but it is against the
+principle of free_folio().  (Maybe an rcu_read_lock() could be added
+in __remove_mapping() to make it safe nowadays? maybe not welcome.)
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/arch/loongarch/include/asm/inst.h | 12 ++++++++++++
- tools/objtool/arch/loongarch/decode.c   | 21 +++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+See Documentation/filesystems/vfs.rst:
+free_folio is called once the folio is no longer visible in the
+page cache in order to allow the cleanup of any private data.
+Since it may be called by the memory reclaimer, it should not
+assume that the original address_space mapping still exists, and
+it should not block.
 
-diff --git a/tools/arch/loongarch/include/asm/inst.h b/tools/arch/loongarch/include/asm/inst.h
-index c25b5853181d..d68fad63c8b7 100644
---- a/tools/arch/loongarch/include/asm/inst.h
-+++ b/tools/arch/loongarch/include/asm/inst.h
-@@ -51,6 +51,10 @@ enum reg2i16_op {
- 	bgeu_op		= 0x1b,
- };
- 
-+enum reg3_op {
-+	amswapw_op	= 0x70c0,
-+};
-+
- struct reg0i15_format {
- 	unsigned int immediate : 15;
- 	unsigned int opcode : 17;
-@@ -96,6 +100,13 @@ struct reg2i16_format {
- 	unsigned int opcode : 6;
- };
- 
-+struct reg3_format {
-+	unsigned int rd : 5;
-+	unsigned int rj : 5;
-+	unsigned int rk : 5;
-+	unsigned int opcode : 17;
-+};
-+
- union loongarch_instruction {
- 	unsigned int word;
- 	struct reg0i15_format	reg0i15_format;
-@@ -105,6 +116,7 @@ union loongarch_instruction {
- 	struct reg2i12_format	reg2i12_format;
- 	struct reg2i14_format	reg2i14_format;
- 	struct reg2i16_format	reg2i16_format;
-+	struct reg3_format	reg3_format;
- };
- 
- #define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
-diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
-index b6fdc68053cc..707f339b1840 100644
---- a/tools/objtool/arch/loongarch/decode.c
-+++ b/tools/objtool/arch/loongarch/decode.c
-@@ -278,6 +278,25 @@ static bool decode_insn_reg2i16_fomat(union loongarch_instruction inst,
- 	return true;
- }
- 
-+static bool decode_insn_reg3_fomat(union loongarch_instruction inst,
-+				   struct instruction *insn)
-+{
-+	switch (inst.reg3_format.opcode) {
-+	case amswapw_op:
-+		if (inst.reg3_format.rd == LOONGARCH_GPR_ZERO &&
-+		    inst.reg3_format.rk == LOONGARCH_GPR_RA &&
-+		    inst.reg3_format.rj == LOONGARCH_GPR_ZERO) {
-+			/* amswap.w $zero, $ra, $zero */
-+			insn->type = INSN_BUG;
-+		}
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- int arch_decode_instruction(struct objtool_file *file, const struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    struct instruction *insn)
-@@ -309,6 +328,8 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
- 		return 0;
- 	if (decode_insn_reg2i16_fomat(inst, insn))
- 		return 0;
-+	if (decode_insn_reg3_fomat(inst, insn))
-+		return 0;
- 
- 	if (inst.word == 0)
- 		insn->type = INSN_NOP;
--- 
-2.42.0
-
+Hugh
