@@ -1,62 +1,62 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047A621255E
-	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 01:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5542F39BC
+	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 01:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758074156; cv=none; b=uDbvDWGnIGy36w0PsnoGJDpbQt4tA9uJYmAx2qf51VuabbTeHC5YsHiTAbqhrOq6ZXE63Xe5IHFtWzQwexHD++JV9XRdJSOM9D9S5QHKcakSGUWklzYEHA4c2aKnbRhV7fY2YP32wng+pOe6hkI4w9ZcbAQCg3PRsopeZHw0F3A=
+	t=1758074159; cv=none; b=VVDy4jqkqrqactaYJkQ4tLJYbt8HKxM014NPsxz8ZP4ZvL1hcYKcdMtiSpmrbCxgp5jn7VCkbG5kEuZURf7hcZ8JpdWCPGFz6v8up/86OcveZhXIBQoQ/mhaVpn0CXUJF5m2/8hVYqprA+eZ4J88I5Q8h9GBor++Q/zrpBzvS4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758074156; c=relaxed/simple;
-	bh=LUemA4N08X5oDb4xxfSMdr2TmHBXwmyKrepX1+wihzo=;
+	s=arc-20240116; t=1758074159; c=relaxed/simple;
+	bh=U5ankppA0Fbik10WvbYgQWOpgplXW08aiBpb2I9wzTY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cEjtXVfbje+lUsKrzwUqt3NcAPvCjHpcdqo+UUeAV7eX14sLml/sheNP3n2GcFsz08jvFYF7Qtcwlf1AnRVOH1MdxpHEai6F3MdinlM0JJc+7UgPDWmnNMxlx34V4QSphGsvARIP9aBsdOQ5IatpiaeWqQGmuaVRcPVCYWTjyps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cXLixQwR; arc=none smtp.client-ip=209.85.216.46
+	 MIME-Version; b=BF8Rb07AuLz/vA3g1jjgZR9nsuG4EHc64RBJ3Th2NsYO6fk1vxK2TTaMC4TEjm2ev6j+DR2UP8CdlKlLokWwjuGQ7i4Nvwq1GLhE8c0YcXj0OC59oUUifN5Yzn92mxsStUwztjCY7k6BdT64g3f7oHJpOo0j1v9RkfpU2wFRQmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WhoufAt2; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXLixQwR"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-32e74ae0306so367003a91.1
-        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 18:55:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhoufAt2"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-26488308cf5so25064525ad.0
+        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 18:55:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758074154; x=1758678954; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1758074157; x=1758678957; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QaoQaQg2GZ4ysBsECGEcp1W6hQwHJZzYlnTF1RhwwV8=;
-        b=cXLixQwR7SbCnhJThHxxMxqCH6/audYH33Xubb+Ok4RhXOxl+JBsiAiVnCQPy212II
-         RIGe4xYSc+HDV72AFUlYFF+0G3X6LqtKrd1+Lrr9EnXAIdWcLsd8i2iUgzUJHA/4MwwE
-         SPa+oK86tH6uDcEinHgtgmJBwJCvoLLk0Wc+5l4QUfYWfTwlFzoJFEVaV66OHWFM2zSv
-         JA9QcKcEByvP1OoWxB+4Y4CcQd4Elv7Rl8ZfosWTisIy27RHXGIOKZKpXaUtJEpVa+H0
-         el+AYq9M3EK7r91QmDzyenHepvCw2vCXYA975twLU1r37F/hNVh47wFoBdW22P/rthvr
-         I39A==
+        bh=WdOzmDyOFs4IOwQK3P0d4e7en1vFeF0HoaLHdpopSlg=;
+        b=WhoufAt27iIZOxS5msc7UsKm0qVMgb+PDknKosDx7Qo/WzzXXVxm84YBbylDhxcLp/
+         azaSm34TKObdwp8VA6M1oL5WHbeR5a9z85XeGGfVi4aLlE7txemK+ADZwnb/e2bKXDEg
+         URE2xx+TSEt+zoXcN4RCi9+Meo72meTOFK02D3CAleBeUL9v7tAa3PjZFZCoG7kScz3Q
+         sdFMC71RkTMbZew60c5NOfurJln1PdMkewH8X82x4mmEr9cEAKm8QivgW7wE+S3AnXU7
+         +HzuaMXcriYp6BqhjiJN5xdyDtNrKFHW8lTb8mEKA1UG/6Y4FtHA3MTysVev5bb+oSWk
+         ISqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758074154; x=1758678954;
+        d=1e100.net; s=20230601; t=1758074157; x=1758678957;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QaoQaQg2GZ4ysBsECGEcp1W6hQwHJZzYlnTF1RhwwV8=;
-        b=JllkjbaIYGxFaioROk9kkvWaamImEtZsMbHGxt8NltxdbJSYA3HaR7+GyZ7sHcEvsO
-         msdws+ZQg5GVa34GsnNOFIOx5oFlYtQKzrex1JAUYjqb+4YtU+wh794FaZ1fy6JQtPZk
-         AR5WwMEBZfHDyf3AAJSjSOxSpAfxdcEqAa7cWhBb7wsuV2sIhxMFf6kSx59g8Cv4mB/w
-         noDcNxPDAOKVNSVADGdDWQR3d/1UgoYioP1xwM7oSU0w9pevJzaA62TZm19KRx13qCzZ
-         gN/tAPKXGQcdLkXDsYFWwP8igiADjHoksKXtWGsF8QRB4StO/BOeYgjTvDN688xky2Ze
-         h28g==
-X-Gm-Message-State: AOJu0Yx6G6D+cvkttsHdWJBZCu6DhXTxY1p4NogSvpYVVosN3YfG7ux+
-	WMc2QjGr9nmOfQzTuwczQhTcyRFk3R3PhLzzInNRKyczc5M3lJux0DbI6KYJ+fV1
-X-Gm-Gg: ASbGncut/1po4J1w1s7qQgEfvYQRV6Tu+k1j5nNoAqvmjoYbw4lhCvdW98R+ye1hGYy
-	vthus6rzEjeD0tDEpnqiVef6cZARaP7dHnKR6A96yjIMpJf1p8wfWCrxmJh5hHvi3A6jioxXWdU
-	x8C13IgtAXOc20tniNMjFBm9J40GgMjj8J6Kb71Azx/AP9WuDXI1r++HSPD/0gxmLjYsgmsjVol
-	77D/7yL+3/ZI/5rh7/nglAlinU9c3oVIGUVlkuvB+TnJO6eM/VPoxE0ycJ0sAQ2bOG+grzb4U/w
-	+o55R1X4XCiGsMkaugg2M6jyYvMhLcVE9LPZN38IWx+zJF8xnWYJReSaswhUiCFL1Ia+vBrq5Jr
-	/FGu4BbcfVAe4drE4KKO7Uw/gg19oWCIx2yGnCzw=
-X-Google-Smtp-Source: AGHT+IEoOiZMF1fa+aBzUXPK70/O0+Rt2f4TIXypvljNqmA5ICTBNExAOPPN5HiGjjLHS34T3jRQqw==
-X-Received: by 2002:a17:90b:33cd:b0:32b:d8a9:8725 with SMTP id 98e67ed59e1d1-32ea631cd58mr4826726a91.18.1758074154248;
-        Tue, 16 Sep 2025 18:55:54 -0700 (PDT)
+        bh=WdOzmDyOFs4IOwQK3P0d4e7en1vFeF0HoaLHdpopSlg=;
+        b=G3fKBMGmBVp0F2/qOJEXVjuPYWfDF8eW4eUrlBmOjmED8pM4jeCsmsOS/CYPNk8eXV
+         bZZyTQw2VaJbFzQnaEV2GHwQJujd8mk8bHTAXoxpDutCaVPuNNUn7NsgyWvJcwyD7Fc9
+         nlciv7gha+OjYEcPnHIJi1NSoTHFRSyEJewPt0rJ4Xx/wLmUOvw5S/iVCRV7GtksSqpV
+         wxBrmuXGSL3AyD91UzW90n3tLSCOaz0Tbp966psBNpaoFp1TkXmug71cnEyMNz2Yb1x3
+         rNqUGW5nvN+fxkibbcX7dL8i1+qAZRUr9Km6BaZZKWs9c0CocMEKbEEea/kmg6xSCG5+
+         6KeQ==
+X-Gm-Message-State: AOJu0YxHqNHYFnr29oVUeiIAAyoDpiVIbC94AbogMBvKfMNb5igsKFm7
+	1ErZsij1YwqzVQBaR+NIyPOdgQu0Man6dvyAmISOS1cFb/uT/ZY8humb
+X-Gm-Gg: ASbGncswtK1HlWUkOAtmIi+vmY9njX+hvLW6heGVqj0SLEQKkjtV3zVXG6lSbMMJoma
+	5oVATKt1VN+JgMQO3PER4v5Spqajh6gQN38TZ6UmvO9gL8qq3QTFWhZ/gSXy1ZRH0y5QxiuBpmM
+	NABsL1yjVIBDdcYntlf6Tl7fuX5i7Fi6KIsVFWjAZPXxoV4oFj6D2Udwd4AhS7+yFd7ZRlSlcAW
+	Z8ofsmtI6CUv/5DP3ZmgraUCiPHPpYNqpvvislt7UAliaUHB4Xo3Vgw6pcNnszR0lp3aE01Gqow
+	uGWq85sdoZrsImG6X9ot/+P8JF7fm1FXcfzDnUgtzWp+8gndwklbpQZ5qtJf1iyw0koFcQcVrqC
+	Plqg72zMO3Yz/0YP1iSG8UQvf5RR+yavU+kLNzOs=
+X-Google-Smtp-Source: AGHT+IGQChHSLAXacI7RmuCFpIkU55D6O1PlyZKsWH1IwfveXET1q/ZrCXyzD1H78dBxG6J+bQw8Zw==
+X-Received: by 2002:a17:902:f603:b0:24c:ea1c:1176 with SMTP id d9443c01a7336-268138fdac7mr4404545ad.38.1758074156985;
+        Tue, 16 Sep 2025 18:55:56 -0700 (PDT)
 Received: from devbox.. ([43.132.141.6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32ed278b065sm839746a91.29.2025.09.16.18.55.52
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32ed278b065sm839746a91.29.2025.09.16.18.55.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Sep 2025 18:55:54 -0700 (PDT)
+        Tue, 16 Sep 2025 18:55:56 -0700 (PDT)
 From: Hengqi Chen <hengqi.chen@gmail.com>
 To: chenhuacai@kernel.org,
 	yangtiezhu@loongson.cn,
@@ -64,9 +64,9 @@ To: chenhuacai@kernel.org,
 	hejinyang@loongson.cn
 Cc: loongarch@lists.linux.dev,
 	Hengqi Chen <hengqi.chen@gmail.com>
-Subject: [PATCH v5 4/8] LoongArch: BPF: No text_poke() for kernel text
-Date: Tue, 16 Sep 2025 23:56:23 +0000
-Message-ID: <20250916235627.102831-5-hengqi.chen@gmail.com>
+Subject: [PATCH v5 5/8] LoongArch: BPF: Don't assume trampoline size is page aligned
+Date: Tue, 16 Sep 2025 23:56:24 +0000
+Message-ID: <20250916235627.102831-6-hengqi.chen@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250916235627.102831-1-hengqi.chen@gmail.com>
 References: <20250916235627.102831-1-hengqi.chen@gmail.com>
@@ -78,40 +78,30 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current implementation of bpf_arch_text_poke() requires 5 nops
-at patch site which is not applicable for kernel/module functions.
-Because LoongArch reserves ONLY 2 nops at function entry.
-With CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=y, this can be done
-by ftrace instead.
-
-See the following commit for details:
-  * commit b91e014f078e ("bpf: Make BPF trampoline use register_ftrace_direct() API")
-  * commit 9cdc3b6a299c ("LoongArch: ftrace: Add direct call support")
+Currently, arch_alloc_bpf_trampoline() use bpf_prog_pack_alloc()
+which will pack multiple trampolines into a huge page. So no need
+to assume the trampoline size is page aligned.
 
 Tested-by: Vincent Li <vincent.mc.li@gmail.com>
 Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
 ---
- arch/loongarch/net/bpf_jit.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/loongarch/net/bpf_jit.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 7b7e449b9ea9..35b13d91a979 100644
+index 35b13d91a979..43628b5e1553 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -1294,8 +1294,11 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
- 	u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
- 	u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
+@@ -1747,8 +1747,7 @@ int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
  
--	if (!is_kernel_text((unsigned long)ip) &&
--		!is_bpf_text_address((unsigned long)ip))
-+	if (!is_bpf_text_address((unsigned long)ip))
-+		/* Only poking bpf text is supported. Since kernel function
-+		 * entry is set up by ftrace, we reply on ftrace to poke kernel
-+		 * functions.
-+		 */
- 		return -ENOTSUPP;
+ 	ret = __arch_prepare_bpf_trampoline(&ctx, &im, m, tlinks, func_addr, flags);
  
- 	ret = emit_jump_or_nops(old_addr, ip, old_insns, is_call);
+-	/* Page align */
+-	return ret < 0 ? ret : round_up(ret * LOONGARCH_INSN_SIZE, PAGE_SIZE);
++	return ret < 0 ? ret : ret * LOONGARCH_INSN_SIZE;
+ }
+ 
+ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
 -- 
 2.43.5
 
