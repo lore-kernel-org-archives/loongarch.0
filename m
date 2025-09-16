@@ -1,109 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E37306B22
-	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 14:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56E9335BAC
+	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 14:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758032841; cv=none; b=u6E9uD7RltPztVw2lSqIBbvrqQY0F8f9/mx61jL/CyC1C6aJNM377Vx4IAney9/93T7pULX+gl2bJnud6iFBbzGHhRJBZ3nWvEmquFZQl6ifYeXw+7tc3kegmMGjVLf9SA9n5BJYlRtJooo7siQS12G+/dSXZolBWs1oM+OQHwM=
+	t=1758034658; cv=none; b=PD6qglwej+ZXG3SVsinIXdor0tIJKbbW9x43tUn+pJJsCMVr85flhpvfzIDqxeKzn1obiQxWt/yw9JvARBLwYdgRyA/foa8PpID5XZx69GrAkjb5FJBhiGrKlAzG/QUkVFvHj3XSFFy0Mf7++0GNsZG0+Tiq+XfnYNW9mlGzxSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758032841; c=relaxed/simple;
-	bh=q4rUfcvmiJb32MQczGG3S+6Y8g30PLS6+e2uvzs7O0M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fvkkeMeoeXgzLlTuJgpr6N4Bce2GAYHta0wTZc0uWZjgzXDrbiTcbYpaetWzTcFs4DXVqYpqSZ6sxvls3h8GyNvfTgJYLj65ehK0dAufQ7mXTcz4IFbXd0hn3VENOoJG8OlpJrWjMUJ6hdZwFCYPcBiNDFJCh1eHcG0eIsHyVuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2HBtTeB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758034658; c=relaxed/simple;
+	bh=8palloZvosHrIgHRGThUtWJIYbk78Nd31FUAB6PjsBc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cBjgHKnTopJ0X/AmLv4IvvOYphvY21Zb3eUohuBB3NVaQscHf6+gvsOK26ziE9VA/ysYwhPAhUzhuTVOe/bsVJ+IOTahrTuBnzq+2mgqmeF63jrnNodggzZTGGFxZzc8X93YNe2Pda6pBQnzkIVy1sepq7kHKQyKhNUPJVnudPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZO0Q+VPU; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2HBtTeB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02CDEC4AF0B
-	for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 14:27:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758032841;
-	bh=q4rUfcvmiJb32MQczGG3S+6Y8g30PLS6+e2uvzs7O0M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=l2HBtTeBHdKqoiSy/dakxKQFFR+ZTEnNdB7CiUwhGGPxzleXSvXfSEOUF/2vwKUd0
-	 XFh32KsO7sSvnfeUQQzjB6Z07+N/JYGE2XNJFsudIpGQVSGEVOVsphFyygErU/hYgq
-	 bbuWI3rjpW8lKc300skBAduIV+ZJvIUGWem1rBRkCyK54FV/Y9pb/YcUkD9R9fIshH
-	 JliGhH0cFRnxHTdW2ffvlzeiIGQPUQ7jZQZF/LZ5KJ6iU/eUM34xcpYNn8ogP1xpyA
-	 QM9lHiN9A7ULv3M3YNa9+XDSDCj06GC+FOwCeweCpp1h3XUKWlQZFxeucNnCJiReNI
-	 eh8bJccsQWreQ==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b00a9989633so1067410066b.0
-        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 07:27:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVVuNEamp8L0coErSXZsxXx781f+rxpdg1mkLNPPdYEA7WKnyFbbze5CuYRYrpHSnVrzQUKUeUNIUM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyiMrqL7KHHySpDySvdKFPWpwqVfitcGE4kL0EvePnl5kYKri4X
-	rZg0h9G15QaQvzYJruWKBz43gZ+S0ntczvJpSLsHq59K9GfM1tJr6J00a7H0uWg+EJMyBHOKz9u
-	j03RAUfmvagx7xfWEk034GYOceHlQroM=
-X-Google-Smtp-Source: AGHT+IFqP0fpUqt1ZWajzstj84vE34u4JkQD1agA/3Q1+0riSlytXGPjdEylj+SXW1TR5p7NMwNV5e+mGbeyV8m0vps=
-X-Received: by 2002:a17:907:3d02:b0:b04:7eba:1b55 with SMTP id
- a640c23a62f3a-b1680591430mr301532466b.19.1758032839546; Tue, 16 Sep 2025
- 07:27:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZO0Q+VPU"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-261682fdfceso28209965ad.1
+        for <loongarch@lists.linux.dev>; Tue, 16 Sep 2025 07:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758034655; x=1758639455; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BhPFazCfoeMydP8mh5h0YOREkSkQ/yfL4yFrVQbtIJk=;
+        b=ZO0Q+VPU3vldcxatKQvhFg+6sB3XnTPuOe03gskz1j2+gcKGzNsgTQzzZ0XB7ynelr
+         V/0zRCuer+5sAUj1SYAhjwuuADhQ1Sbcfveebf+vYMSkCz7w8qL7RTwY1QyTrM9+BbyE
+         n3VKxa60NUae24ohJuIyMpBm/NpFgB0g7ByEO5tEGtkh0q1wf1eNeq9hD7E3VXG7OkV9
+         jNLVqFl0lgEV22YUQw0qi8s511BFLfZ3gSuxcUkSN9E3LPVFkqw36IILvypnqW+UFBxy
+         KBgSnOpsAQplNUZjB5f0RkTCW/rA85V+3TyAUyIkfau5irpP4Y7KXH0S8cPDy3qTT/bc
+         K/Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758034655; x=1758639455;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BhPFazCfoeMydP8mh5h0YOREkSkQ/yfL4yFrVQbtIJk=;
+        b=IbK3Dt2cD0qVX9feX6YpnhGU9d386DZW5hPam5LwzxCTgYohEP8cdxWuHgv5FyQQZL
+         7iTUi+K0gLqvYcYCLBZ66YRqKFcBi/zXOuKlTzthP3y9s56G2+qBAMW0pf/BZoTvAQio
+         K4f7EU2cdsKJsJzGASM3U9hZaOSYjXePQbYkQGKx+sbWROeG+BuQHmAmapTLXSCfu6mi
+         TlothCLKuk97ECxs0d26cjGkFMc571Tfsy9mfcjaCPnljbHvtnVoW990mGxoizfcLUwZ
+         1Ymsm+hFmAXX7RXf7BIUKpGXd4nZsH5djfCX1Qt4pCER6ADc7o3s5SNspC71RoMS26mG
+         o1Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiyRs96tpvJ6XSfQoODl8dweikq8E7V1Bk30hNHDJLCqBXXPuMwyAutAKvQD9Lg92aOvfVylmgG28=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwdCUJ0Kk7MhMJs9G3SpjVfI8JAdAuDvFcG65dWmOhnwZ40wHq6
+	pNe8YcYW/XRop5nQ8/0fmB3HTKwjeLbea1ysOHPGSqzjgViOoJJJp6GA
+X-Gm-Gg: ASbGncta6uphGSjYJBvuTKuQQz2wrG5m28BlsYc5sJ9OUYQx087BEzgS2FAm3aNn2v6
+	mvI/xyTvaTiyZpguRfeW4Y63QtqODmAcczdvTsjcW7XUa3s2HpVEc/JAmXoPFvNTC/OZBe2tOxA
+	xlO1uDrXxukpL5eIEeQg3jBVSPW3sZQm0NV8YZdPs/0n/kvMzqEESgVhvCu069iEI4G1kQ7B3Pl
+	U6agN3MhL3ALdngoOPPy/MqvvOrX/ZYXEka6/dd4wXTUGvuRzU1U8mIjNnSQHi8ZZtciWsoaTs9
+	G//BWf4H1gV0Rdg5+Mm7eVwREcdryYNbXJvA1QrTljnUpjWzkoiENRVpFuZVaERbcOZk1KWRUBA
+	GoWy7W3aFupPXJyK13nd5tNY=
+X-Google-Smtp-Source: AGHT+IE70dT64itvjVNcN+FspZAaHywtKEf5DdHLD2RGP4yJ8tS/2lNgczMINmrv9xvEqDqg18WQaw==
+X-Received: by 2002:a17:902:c945:b0:267:c172:971a with SMTP id d9443c01a7336-267d15d7bb4mr43532905ad.18.1758034655035;
+        Tue, 16 Sep 2025 07:57:35 -0700 (PDT)
+Received: from lgs.. ([2408:8417:e00:1e5d:6d43:6fc3:26a2:6645])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-267a5b097f6sm48728095ad.11.2025.09.16.07.57.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 07:57:34 -0700 (PDT)
+From: lgs201920130244@gmail.com
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nam Cao <namcao@kernel.org>,
+	Xi Ruoyao <xry111@xry111.site>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guangshuo Li <202321181@mail.sdu.edu.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: vDSO: check kcalloc() result in init_vdso
+Date: Tue, 16 Sep 2025 22:57:10 +0800
+Message-ID: <20250916145710.2994663-1-lgs201920130244@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250913002907.69703-1-yury.norov@gmail.com> <0e330fc0-1200-6a02-7b21-78064fc63a2e@loongson.cn>
-In-Reply-To: <0e330fc0-1200-6a02-7b21-78064fc63a2e@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 16 Sep 2025 22:27:07 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6yyM+tDhVix=3RH6VtDMs3E-B7jW1K6Xbn7mryBDW74A@mail.gmail.com>
-X-Gm-Features: AS18NWCwWelxSFwVvkzr8lZM6L2aWGgaUs1snDVHDrpyA8a8UYAEXIM94XsZF0M
-Message-ID: <CAAhV-H6yyM+tDhVix=3RH6VtDMs3E-B7jW1K6Xbn7mryBDW74A@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: rework pch_pic_update_batch_irqs()
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 16, 2025 at 9:30=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> On 2025/9/13 =E4=B8=8A=E5=8D=888:29, Yury Norov (NVIDIA) wrote:
-> > Use proper bitmap API and drop all the housekeeping code.
-> >
-> > Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-> > ---
-> >   arch/loongarch/kvm/intc/pch_pic.c | 11 +++--------
-> >   1 file changed, 3 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/int=
-c/pch_pic.c
-> > index 119290bcea79..57e13ae51d24 100644
-> > --- a/arch/loongarch/kvm/intc/pch_pic.c
-> > +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> > @@ -35,16 +35,11 @@ static void pch_pic_update_irq(struct loongarch_pch=
-_pic *s, int irq, int level)
-> >   /* update batch irqs, the irq_mask is a bitmap of irqs */
-> >   static void pch_pic_update_batch_irqs(struct loongarch_pch_pic *s, u6=
-4 irq_mask, int level)
-> >   {
-> > -     int irq, bits;
-> > +     DECLARE_BITMAP(irqs, 64) =3D { BITMAP_FROM_U64(irq_mask) };
-> > +     unsigned int irq;
-> >
-> > -     /* find each irq by irqs bitmap and update each irq */
-> > -     bits =3D sizeof(irq_mask) * 8;
-> > -     irq =3D find_first_bit((void *)&irq_mask, bits);
-> > -     while (irq < bits) {
-> > +     for_each_set_bit(irq, irqs, 64)
-> >               pch_pic_update_irq(s, irq, level);
-> > -             bitmap_clear((void *)&irq_mask, irq, 1);
-> > -             irq =3D find_first_bit((void *)&irq_mask, bits);
-> > -     }
-> >   }
-> >
-> >   /* called when a irq is triggered in pch pic */
-> >
-> Thanks for doing this.
->
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-Queued, thanks.
+From: Guangshuo Li <202321181@mail.sdu.edu.cn>
 
-Huacai
+Add a NULL-pointer check after the kcalloc() call in init_vdso(). If
+allocation fails, return -ENOMEM to prevent a possible dereference of
+vdso_info.code_mapping.pages when it is NULL.
 
->
->
+Fixes: 2ed119aef60d ("LoongArch: Set correct size for vDSO code mapping")
+Cc: stable@vger.kernel.org
+Signed-off-by: Guangshuo Li <202321181@mail.sdu.edu.cn>
+---
+ arch/loongarch/kernel/vdso.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+index 10cf1608c7b3..da7a7922fb24 100644
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -53,7 +53,8 @@ static int __init init_vdso(void)
+ 	vdso_info.size = PAGE_ALIGN(vdso_end - vdso_start);
+ 	vdso_info.code_mapping.pages =
+ 		kcalloc(vdso_info.size / PAGE_SIZE, sizeof(struct page *), GFP_KERNEL);
+-
++	if (!vdso_info.code_mapping.pages)
++		return -ENOMEM;
+ 	pfn = __phys_to_pfn(__pa_symbol(vdso_info.vdso));
+ 	for (i = 0; i < vdso_info.size / PAGE_SIZE; i++)
+ 		vdso_info.code_mapping.pages[i] = pfn_to_page(pfn + i);
+-- 
+2.43.0
+
