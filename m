@@ -1,150 +1,330 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BD1D4A04
-	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 01:10:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF2E7266B6C
+	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 01:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758071426; cv=none; b=TYj8fk4njDz2JSLpkyY++DIEVE1d0u+C4u1lZqN5LaUAxdC+knvQDlD2fI6UbSVjxrWlN+xEQz6HM7Snof7z6e15Q/nyuUS+3ZHk42ludHDQ8YbabgCrlyBB2Corxz/DJ8z8YD+EKo+xp7i1mjr9TkvA8RdGDVUiUTSJfo57cnQ=
+	t=1758071461; cv=none; b=YHZlrM4JvtfjwDKu9XLABQJzycjY/uKCS9NU9UmcDyZ9+8lBdrP3DDPOA0f/DEImiRkAGtnLsfd/cZvzHERTSYOBCjYyyTh5rZbLB5FuzdXyrZqK2RKHiF9cPIcBSkn3FAkhmmhZhKj+ly/x9p3I7/4aolE0KJdIobkHCouL57k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758071426; c=relaxed/simple;
-	bh=BAIPU8rlA97jKSZnfb7y8zKgt9TXDAgT/6jsp+7GqfY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V0/gyWsaWNDEkojys6lWn3z3jsh++SXO7nWNGbDf5zpjMlKVqwnD8Da8mjt2BPnCyzAzrY1vLF7qchHsOnuMXFRAAZ4Bozb0OlqiSGH6E9xwV9dT28RvKHX2cCLWJRBqt52bhculAim4XONkvFp6eZwS0/fYeeeIaZCElc72JFg=
+	s=arc-20240116; t=1758071461; c=relaxed/simple;
+	bh=p5MOrxNALnPdLniwGLdUchd89/VDK3rKO1Ya3OOUR2g=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FTqJHeOhFc7uwoJWb6sslQFhVzRSlytkUGWKYHu4H4Fi4hT8Zhz/jQAmFID83ZEzDRWCWWEY4TO2DFEoOlknM2p8QlKZL1zA+n6Jaw2o672RbJ3m/EaHWhiDq7Rw5Jb80NQkuLRqI37Im1Wl2bAYXt0jPJq09PXFmBG3TAnAPqI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxmdF8CspoJS4LAA--.24315S3;
-	Wed, 17 Sep 2025 09:10:20 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxE+RwCsposWOaAA--.35728S5;
-	Wed, 17 Sep 2025 09:10:20 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] objtool/LoongArch: Fix unreachable instruction warnings about entry points
-Date: Wed, 17 Sep 2025 09:10:06 +0800
-Message-ID: <20250917011007.4540-4-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250917011007.4540-1-yangtiezhu@loongson.cn>
-References: <20250917011007.4540-1-yangtiezhu@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cxbb+hCsposS4LAA--.23145S3;
+	Wed, 17 Sep 2025 09:10:57 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJAxVOSeCspoamSaAA--.36958S3;
+	Wed, 17 Sep 2025 09:10:57 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Fix VM migration failure with PTW enabled
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250910071429.3925025-1-maobibo@loongson.cn>
+ <CAAhV-H65H_iREuETGU_v9oZdaPFoQj1VZV46XSNTC8ppENXzuQ@mail.gmail.com>
+ <3d3a72c2-7c91-7640-5f0b-7b95bd5f0d2e@loongson.cn>
+ <CAAhV-H4bEyeV7WkfSNBJnicMhhnSwj3PEr9K4ZpXwto1=JyWUw@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <ff12ec30-b0df-aedd-a713-4fb77a4e092a@loongson.cn>
+Date: Wed, 17 Sep 2025 09:08:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H4bEyeV7WkfSNBJnicMhhnSwj3PEr9K4ZpXwto1=JyWUw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxE+RwCsposWOaAA--.35728S5
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZF45KF1rKw4kAw4rKr18tFc_yoW5Zr1fpF
-	43Cr4DXrZ5CrnFyw1UJayrurWjv3ZrWw43W3WDGryrA39Fq3ZFqw40vrnrXFyqga1UKay0
-	gF4rtF9F9F4UA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJAxVOSeCspoamSaAA--.36958S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Wry3JFW8Cr1rAF15AF1UurX_yoWftF1xpF
+	WkGF4DAr48tr17GrW2g3Z0qr9FkrsrKF1xXF1UKw1UGF1DtryUuF18WrWY9F18A348G3W7
+	XF4rtry3u3y3tabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07Ul4E_UUUUU=
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
+	UUU==
 
-When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
-following objtool warnings:
 
-  vmlinux.o: warning: objtool: kernel_entry+0x0: unreachable instruction
-  vmlinux.o: warning: objtool: smpboot_entry+0x0: unreachable instruction
 
-kernel_entry() and smpboot_entry() are in arch/loongarch/kernel/head.S,
-there is "OBJECT_FILES_NON_STANDARD_head.o := y" to skip objtool checking
-for head.o, but the STACK_FRAME_NON_STANDARD macro does not work for link
-time validation of vmlinux.o according to objtool documentation, just give
-a proper unwind hint to fix the warnings.
+On 2025/9/16 下午10:21, Huacai Chen wrote:
+> On Mon, Sep 15, 2025 at 9:22 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/9/14 上午9:57, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Wed, Sep 10, 2025 at 3:14 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> With PTW disabled system, bit Dirty is HW bit for page writing, however
+>>>> with PTW enabled system, bit Write is HW bit for page writing. Previously
+>>>> bit Write is treated as SW bit to record page writable attribute for fast
+>>>> page fault handling in the secondary MMU, however with PTW enabled machine,
+>>>> this bit is used by HW already.
+>>>>
+>>>> Here define KVM_PAGE_SOFT_WRITE with SW bit _PAGE_MODIFIED, so that it can
+>>>> work on both PTW disabled and enabled machines. And with HW write bit, both
+>>>> bit Dirty and Write is set or clear.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/kvm_mmu.h | 20 ++++++++++++++++----
+>>>>    arch/loongarch/kvm/mmu.c             |  8 ++++----
+>>>>    2 files changed, 20 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/kvm_mmu.h b/arch/loongarch/include/asm/kvm_mmu.h
+>>>> index 099bafc6f797..efcd593c42b1 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_mmu.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_mmu.h
+>>>> @@ -16,6 +16,13 @@
+>>>>     */
+>>>>    #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
+>>>>
+>>>> +/*
+>>>> + * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
+>>>> + * kernel, on secondary MMU it records page writable in order to fast
+>>>> + * path handling
+>>>> + */
+>>>> +#define KVM_PAGE_SOFT_WRITE    _PAGE_MODIFIED
+>>> KVM_PAGE_WRITEABLE is more suitable.
+>> both are ok for me.
+>>>
+>>>> +
+>>>>    #define _KVM_FLUSH_PGTABLE     0x1
+>>>>    #define _KVM_HAS_PGMASK                0x2
+>>>>    #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
+>>>> @@ -52,11 +59,16 @@ static inline void kvm_set_pte(kvm_pte_t *ptep, kvm_pte_t val)
+>>>>           WRITE_ONCE(*ptep, val);
+>>>>    }
+>>>>
+>>>> -static inline int kvm_pte_write(kvm_pte_t pte) { return pte & _PAGE_WRITE; }
+>>>> -static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & _PAGE_DIRTY; }
+>>>> +static inline int kvm_pte_soft_write(kvm_pte_t pte) { return pte & KVM_PAGE_SOFT_WRITE; }
+>>> The same, kvm_pte_mkwriteable() is more suitable.
+>> kvm_pte_writable()  here ?  and kvm_pte_mkwriteable() for the bellowing
+>> sentense.
+>>
+>> If so, that is ok, both are ok for me.
+> Yes.
+> 
+>>>
+>>>> +static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & __WRITEABLE; }
+>>> _PAGE_DIRTY and _PAGE_WRITE are always set/cleared at the same time,
+>>> so the old version still works.
+>> Although it is workable, I still want to remove single bit _PAGE_DIRTY
+>> checking here.
+> I want to check a single bit because "kvm_pte_write() return
+> _PAGE_WRITE and kvm_pte_dirty() return _PAGE_DIRTY" looks more
+> natural.
+kvm_pte_write() is not needed any more and removed here. This is only
+kvm_pte_writable() to check software writable bit, kvm_pte_dirty() to 
+check HW write bit.
 
-By the way, ASM_BUG() can be removed due to unnecessary, otherwise there
-are following warnings:
+There is no reason to check single bit with _PAGE_WRITE or _PAGE_DIRTY, 
+since there is different meaning on machines with/without HW PTW.
 
-  kernel_entry+0xf4: start_kernel() missing __noreturn
-  in .c/.h or NORETURN() in noreturns.h
-
-  smpboot_entry+0x68: start_secondary() missing __noreturn
-  in .c/.h or NORETURN() in noreturns.h
-
-This is because the previous instructions of kernel_entry+0xf4 and
-smpboot_entry+0x68 are the 'bl' instructions, start_kernel() and
-start_secondary() are the respective call destination symbols which
-are noreturn functions, then the 'bl' instructions are already marked
-as dead end in annotate_call_site().
-
-For now, it is time to remove "OBJECT_FILES_NON_STANDARD_head.o := y"
-in arch/loongarch/kernel/Makefile.
-
-Link: https://lore.kernel.org/lkml/20250814083651.GR4067720@noisy.programming.kicks-ass.net/
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/Makefile | 2 --
- arch/loongarch/kernel/head.S   | 6 ++----
- 2 files changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 6f5a4574a911..4302c5b0a201 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -3,8 +3,6 @@
- # Makefile for the Linux/LoongArch kernel.
- #
- 
--OBJECT_FILES_NON_STANDARD_head.o := y
--
- always-$(KBUILD_BUILTIN)	:= vmlinux.lds
- 
- obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 6ce999586757..c62dab32a06b 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -43,6 +43,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
- 	.align 12
- 
- SYM_CODE_START(kernel_entry)			# kernel entry point
-+	UNWIND_HINT_END_OF_STACK
- 
- 	/* Config direct window and set PG */
- 	SETUP_DMWINS	t0
-@@ -110,8 +111,6 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- #endif
- 
- 	bl		start_kernel
--	ASM_BUG()
--
- SYM_CODE_END(kernel_entry)
- 
- #ifdef CONFIG_SMP
-@@ -121,6 +120,7 @@ SYM_CODE_END(kernel_entry)
-  * function after setting up the stack and tp registers.
-  */
- SYM_CODE_START(smpboot_entry)
-+	UNWIND_HINT_END_OF_STACK
- 
- 	SETUP_DMWINS	t0
- 	JUMP_VIRT_ADDR	t0, t1
-@@ -143,8 +143,6 @@ SYM_CODE_START(smpboot_entry)
- 	ld.d		tp, t0, CPU_BOOT_TINFO
- 
- 	bl		start_secondary
--	ASM_BUG()
--
- SYM_CODE_END(smpboot_entry)
- 
- #endif /* CONFIG_SMP */
--- 
-2.42.0
+Regards
+Bibo Mao
+> 
+> You may argue that kvm_pte_mkdirty() set both _PAGE_WRITE and
+> _PAGE_DIRTY so kvm_pte_dirty() should also return both. But I think
+> kvm_pte_mkdirty() in this patch is just a "reasonable optimization".
+> Because strictly speaking, we need both kvm_pte_mkdirty() and
+> kvm_pte_mkwrite() and call the pair when needed.
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>>    static inline int kvm_pte_young(kvm_pte_t pte) { return pte & _PAGE_ACCESSED; }
+>>>>    static inline int kvm_pte_huge(kvm_pte_t pte) { return pte & _PAGE_HUGE; }
+>>>>
+>>>> +static inline kvm_pte_t kvm_pte_mksoft_write(kvm_pte_t pte)
+>>>> +{
+>>>> +       return pte | KVM_PAGE_SOFT_WRITE;
+>>>> +}
+>>>> +
+>>>>    static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
+>>>>    {
+>>>>           return pte | _PAGE_ACCESSED;
+>>>> @@ -69,12 +81,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t pte)
+>>>>
+>>>>    static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
+>>>>    {
+>>>> -       return pte | _PAGE_DIRTY;
+>>>> +       return pte | __WRITEABLE;
+>>>>    }
+>>>>
+>>>>    static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
+>>>>    {
+>>>> -       return pte & ~_PAGE_DIRTY;
+>>>> +       return pte & ~__WRITEABLE;
+>>>>    }
+>>>>
+>>>>    static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
+>>>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+>>>> index ed956c5cf2cc..68749069290f 100644
+>>>> --- a/arch/loongarch/kvm/mmu.c
+>>>> +++ b/arch/loongarch/kvm/mmu.c
+>>>> @@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
+>>>>           /* Track access to pages marked old */
+>>>>           new = kvm_pte_mkyoung(*ptep);
+>>>>           if (write && !kvm_pte_dirty(new)) {
+>>>> -               if (!kvm_pte_write(new)) {
+>>>> +               if (!kvm_pte_soft_write(new)) {
+>>>>                           ret = -EFAULT;
+>>>>                           goto out;
+>>>>                   }
+>>>> @@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+>>>>                   prot_bits |= _CACHE_SUC;
+>>>>
+>>>>           if (writeable) {
+>>>> -               prot_bits |= _PAGE_WRITE;
+>>>> +               prot_bits = kvm_pte_mksoft_write(prot_bits);
+>>>>                   if (write)
+>>>> -                       prot_bits |= __WRITEABLE;
+>>>> +                       prot_bits = kvm_pte_mkdirty(prot_bits);
+>>>>           }
+>>>>
+>>>>           /* Disable dirty logging on HugePages */
+>>>> @@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+>>>>           kvm_release_faultin_page(kvm, page, false, writeable);
+>>>>           spin_unlock(&kvm->mmu_lock);
+>>>>
+>>>> -       if (prot_bits & _PAGE_DIRTY)
+>>>> +       if (kvm_pte_dirty(prot_bits))
+>>>>                   mark_page_dirty_in_slot(kvm, memslot, gfn);
+>>>>
+>>>>    out:
+>>> To save time, I just change the whole patch like this, you can confirm
+>>> whether it woks:
+>>>
+>>> diff --git a/arch/loongarch/include/asm/kvm_mmu.h
+>>> b/arch/loongarch/include/asm/kvm_mmu.h
+>>> index 099bafc6f797..882f60c72b46 100644
+>>> --- a/arch/loongarch/include/asm/kvm_mmu.h
+>>> +++ b/arch/loongarch/include/asm/kvm_mmu.h
+>>> @@ -16,6 +16,13 @@
+>>>     */
+>>>    #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
+>>>
+>>> +/*
+>>> + * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
+>>> + * kernel, on secondary MMU it records page writable in order to fast
+>>> + * path handling
+>>> + */
+>>> +#define KVM_PAGE_WRITEABLE     _PAGE_MODIFIED
+>>> +
+>>>    #define _KVM_FLUSH_PGTABLE     0x1
+>>>    #define _KVM_HAS_PGMASK                0x2
+>>>    #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) |
+>>> pgprot_val(prot))
+>>> @@ -56,6 +63,7 @@ static inline int kvm_pte_write(kvm_pte_t pte) {
+>>> return pte & _PAGE_WRITE; }
+>>>    static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte &
+>>> _PAGE_DIRTY; }
+>>>    static inline int kvm_pte_young(kvm_pte_t pte) { return pte &
+>>> _PAGE_ACCESSED; }
+>>>    static inline int kvm_pte_huge(kvm_pte_t pte) { return pte &
+>>> _PAGE_HUGE; }
+>>> +static inline int kvm_pte_writeable(kvm_pte_t pte) { return pte &
+>>> KVM_PAGE_WRITEABLE; }
+>>>
+>>>    static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
+>>>    {
+>>> @@ -69,12 +77,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t
+>>> pte)
+>>>
+>>>    static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
+>>>    {
+>>> -       return pte | _PAGE_DIRTY;
+>>> +       return pte | __WRITEABLE;
+>>>    }
+>>>
+>>>    static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
+>>>    {
+>>> -       return pte & ~_PAGE_DIRTY;
+>>> +       return pte & ~__WRITEABLE;
+>>>    }
+>>>
+>>>    static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
+>>> @@ -87,6 +95,11 @@ static inline kvm_pte_t kvm_pte_mksmall(kvm_pte_t
+>>> pte)
+>>>           return pte & ~_PAGE_HUGE;
+>>>    }
+>>>
+>>> +static inline kvm_pte_t kvm_pte_mkwriteable(kvm_pte_t pte)
+>>> +{
+>>> +       return pte | KVM_PAGE_WRITEABLE;
+>>> +}
+>>> +
+>>>    static inline int kvm_need_flush(kvm_ptw_ctx *ctx)
+>>>    {
+>>>           return ctx->flag & _KVM_FLUSH_PGTABLE;
+>>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+>>> index ed956c5cf2cc..7c8143e79c12 100644
+>>> --- a/arch/loongarch/kvm/mmu.c
+>>> +++ b/arch/loongarch/kvm/mmu.c
+>>> @@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu
+>>> *vcpu, unsigned long gpa, bool writ
+>>>           /* Track access to pages marked old */
+>>>           new = kvm_pte_mkyoung(*ptep);
+>>>           if (write && !kvm_pte_dirty(new)) {
+>>> -               if (!kvm_pte_write(new)) {
+>>> +               if (!kvm_pte_writeable(new)) {
+>>>                           ret = -EFAULT;
+>>>                           goto out;
+>>>                   }
+>>> @@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
+>>> unsigned long gpa, bool write)
+>>>                   prot_bits |= _CACHE_SUC;
+>>>
+>>>           if (writeable) {
+>>> -               prot_bits |= _PAGE_WRITE;
+>>> +               prot_bits = kvm_pte_mkwriteable(prot_bits);
+>>>                   if (write)
+>>> -                       prot_bits |= __WRITEABLE;
+>>> +                       prot_bits = kvm_pte_mkdirty(prot_bits);
+>>>           }
+>>>
+>>>           /* Disable dirty logging on HugePages */
+>>> @@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
+>>> unsigned long gpa, bool write)
+>>>           kvm_release_faultin_page(kvm, page, false, writeable);
+>>>           spin_unlock(&kvm->mmu_lock);
+>>>
+>>> -       if (prot_bits & _PAGE_DIRTY)
+>>> +       if (kvm_pte_dirty(prot_bits))
+>>>                   mark_page_dirty_in_slot(kvm, memslot, gfn);
+>>>
+>>>    out:
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> base-commit: 9dd1835ecda5b96ac88c166f4a87386f3e727bd9
+>>>> --
+>>>> 2.39.3
+>>>>
+>>>>
+>>
 
