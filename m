@@ -1,172 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4E0469D
-	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 07:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E2362F25F9
+	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 07:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758092851; cv=none; b=U4jmT1kRM1epx/42SGVAdQxCIULuwRmJZbWfOP94k+UJpUCBy9phpoMXfLBt8V2r69+ejlqMxMBdAntZdY0aJBSvgz70TnjnjmYZk9opOMQwBqcaFty57hrFv2gvDEDCzUVpGe4l1x2XJWNiRMh0ttBn9NKJOrkdscEbvE/YLXM=
+	t=1758093797; cv=none; b=LM0gLJuquoeykp1eiSbWVkBeBoVFM1iISSlRZvI8iSbmglRgCdqi6+eYFU3vYzeH0F4DBaMm8Ctut1BSeX+8vQFuQu5VAIyf2oQBTzuNjXaWvOHaExftXr1FzDspdriXoEnz0uVNFpf0AQcycxw8/dHY6B0QV2UKSbKKS72hn6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758092851; c=relaxed/simple;
-	bh=OaRce51hMgVbE7SHXOBadRr7blVfjSSfr4N61mMeGH4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YPrqayjwVj5j4+BD9AWppn+ug74f0dAuiSBSEhT0O4NOm/q5BmWgXoOxTH93ZacNHh9bnh7O17vb9DQK49vJ8B0GUt6cRUmIV1Zfj+hh+1ubRNdsdB2mYY+ECOcBcgUJt1VagdVpiw23FqrvgEB/PyOSnz/z+fwvk2TeyA/bAK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRZLLWPD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRZLLWPD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F169AC4AF09
-	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 07:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758092851;
-	bh=OaRce51hMgVbE7SHXOBadRr7blVfjSSfr4N61mMeGH4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uRZLLWPD0ApicP1dUNTh+eH97ahMBvlKcs/0TkMdhW0bL99qeJ556XwqbSDglASAR
-	 pZM1SzOKMVf19gmfieZIh4bPsfE1itXaXdP2Es4nA25bEo/UGst8WkL1AYw9qez05b
-	 o4G8ShWjAt0f3g/wxwhynogRK77tf6v+rHTFqZecd6remP4RWorvdXRepdOAjF7O6l
-	 BJmJmPFLu/FF80yMbrSAh7x1LcVZoTiGxVibCqo/cbSoQubLFKDpNag9LSBzfHVsD5
-	 DgS8GmAj3i3as+etlRoseiaI5oPomvCFJj7LzfGo6OqqxFoAJfUdz16lvXeNxQu5qa
-	 Z3bKDQN5GuwsQ==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b046fc9f359so976733466b.0
-        for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 00:07:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVsxSCWEnTFUVdFTqKu7GQOp6V89O7y+DoYI2FEgJktT5B2jx9qxtFBHePD5+7GW44I3klYUu4CnzI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx59Um3CtpsHpUXtS2aaV2mRYSUAoWNiJxDhOKqFab6I2fQAQfi
-	PNsnkcSArMeYdG1dOpwnpCvaMVpMivKelFo26sOyI/nrVq93mUB0zQxpEKy78IDDvE2pDNroAJJ
-	drU8xt9Fqhy3VJsLv5E53zPYSyWdsJ3c=
-X-Google-Smtp-Source: AGHT+IHnWDsDAUsjhNqyZZZp/XBcsXnqgvg07HKOKV9eRxOWA7vHoJaEBhv12d3En2EYSoJh/CDl5oSnYc4C9a/rZBY=
-X-Received: by 2002:a17:907:7fa7:b0:b04:4b0d:8e82 with SMTP id
- a640c23a62f3a-b1bb86d273fmr139668666b.50.1758092849526; Wed, 17 Sep 2025
- 00:07:29 -0700 (PDT)
+	s=arc-20240116; t=1758093797; c=relaxed/simple;
+	bh=mnowoztyNFk7rEsFWORNMEgvHDk9y/GDoOV6hiIhPpo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uMTUrEtr9FQgAljiCizJ9f8s6AXSZPJMwdCcB7lttKxhWy/CpW7r/aTXlgY0R/E8z6f/OmqoIcYWay8DKppOnM4omSA5vTL8kfDk4H5GZW8h535/O2QL+CkfkdA0M3nC/YD9bynzyWBVroU9HS9wIkCB7igjX+ehexjpM5tPR8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxaNHZYcpo9UMLAA--.24376S3;
+	Wed, 17 Sep 2025 15:23:05 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxM+TRYcpo6fGaAA--.35942S3;
+	Wed, 17 Sep 2025 15:22:57 +0800 (CST)
+Subject: Re: [PATCH v2 2/4] objtool/LoongArch: Fix unreachable instruction
+ warnings about image header
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250917011007.4540-1-yangtiezhu@loongson.cn>
+ <20250917011007.4540-3-yangtiezhu@loongson.cn>
+ <CAAhV-H6L6nSuDxn_8cpexmSdLjO6DLLG0+9faPdhuD9iFMfdVw@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <21f7af56-5ec8-2922-3f19-ab1085238aec@loongson.cn>
+Date: Wed, 17 Sep 2025 15:22:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250917011007.4540-1-yangtiezhu@loongson.cn> <20250917011007.4540-4-yangtiezhu@loongson.cn>
-In-Reply-To: <20250917011007.4540-4-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 17 Sep 2025 15:07:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6yKyqU+jQ=-RoOOc0fyRgjFfdorJAk1LashV0Gt=Y=AQ@mail.gmail.com>
-X-Gm-Features: AS18NWDcFCYSyFl7KmJfFK-YsCl3-DOT73b5BYQ547WLX_PqpnPbI0ZcEI1ZxM0
-Message-ID: <CAAhV-H6yKyqU+jQ=-RoOOc0fyRgjFfdorJAk1LashV0Gt=Y=AQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] objtool/LoongArch: Fix unreachable instruction
- warnings about entry points
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H6L6nSuDxn_8cpexmSdLjO6DLLG0+9faPdhuD9iFMfdVw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxM+TRYcpo6fGaAA--.35942S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
+	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8PC
+	zJUUUUU==
 
-Hi, Tiezhu,
+On 2025/9/17 下午3:04, Huacai Chen wrote:
+> Hi, Tiezhu,
+> 
+> Patch-2 and Patch-3 can be squashed.
 
-On Wed, Sep 17, 2025 at 9:10=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
-> following objtool warnings:
->
->   vmlinux.o: warning: objtool: kernel_entry+0x0: unreachable instruction
->   vmlinux.o: warning: objtool: smpboot_entry+0x0: unreachable instruction
->
-> kernel_entry() and smpboot_entry() are in arch/loongarch/kernel/head.S,
-> there is "OBJECT_FILES_NON_STANDARD_head.o :=3D y" to skip objtool checki=
-ng
-> for head.o, but the STACK_FRAME_NON_STANDARD macro does not work for link
-> time validation of vmlinux.o according to objtool documentation, just giv=
-e
-> a proper unwind hint to fix the warnings.
->
-> By the way, ASM_BUG() can be removed due to unnecessary, otherwise there
-> are following warnings:
->
->   kernel_entry+0xf4: start_kernel() missing __noreturn
->   in .c/.h or NORETURN() in noreturns.h
->
->   smpboot_entry+0x68: start_secondary() missing __noreturn
->   in .c/.h or NORETURN() in noreturns.h
->
-> This is because the previous instructions of kernel_entry+0xf4 and
-> smpboot_entry+0x68 are the 'bl' instructions, start_kernel() and
-> start_secondary() are the respective call destination symbols which
-> are noreturn functions, then the 'bl' instructions are already marked
-> as dead end in annotate_call_site().
->
-> For now, it is time to remove "OBJECT_FILES_NON_STANDARD_head.o :=3D y"
-> in arch/loongarch/kernel/Makefile.
->
-> Link: https://lore.kernel.org/lkml/20250814083651.GR4067720@noisy.program=
-ming.kicks-ass.net/
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/kernel/Makefile | 2 --
->  arch/loongarch/kernel/head.S   | 6 ++----
->  2 files changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
-ile
-> index 6f5a4574a911..4302c5b0a201 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -3,8 +3,6 @@
->  # Makefile for the Linux/LoongArch kernel.
->  #
->
-> -OBJECT_FILES_NON_STANDARD_head.o :=3D y
-This line should be kept, othewise we get:
+OK, no problem.
 
-arch/loongarch/kernel/head.o: warning: objtool: kernel_entry+0xf4:
-start_kernel() missing __noreturn in .c/.h or NORETURN() in
-noreturns.h
+Thanks,
+Tiezhu
 
-even without LTO. This is a regression, we can only remove it after
-the above warning be fixed.
-
-Huacai
-> -
->  always-$(KBUILD_BUILTIN)       :=3D vmlinux.lds
->
->  obj-y          +=3D head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o=
- genex.o \
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index 6ce999586757..c62dab32a06b 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -43,6 +43,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
->         .align 12
->
->  SYM_CODE_START(kernel_entry)                   # kernel entry point
-> +       UNWIND_HINT_END_OF_STACK
->
->         /* Config direct window and set PG */
->         SETUP_DMWINS    t0
-> @@ -110,8 +111,6 @@ SYM_CODE_START(kernel_entry)                        #=
- kernel entry point
->  #endif
->
->         bl              start_kernel
-> -       ASM_BUG()
-> -
->  SYM_CODE_END(kernel_entry)
->
->  #ifdef CONFIG_SMP
-> @@ -121,6 +120,7 @@ SYM_CODE_END(kernel_entry)
->   * function after setting up the stack and tp registers.
->   */
->  SYM_CODE_START(smpboot_entry)
-> +       UNWIND_HINT_END_OF_STACK
->
->         SETUP_DMWINS    t0
->         JUMP_VIRT_ADDR  t0, t1
-> @@ -143,8 +143,6 @@ SYM_CODE_START(smpboot_entry)
->         ld.d            tp, t0, CPU_BOOT_TINFO
->
->         bl              start_secondary
-> -       ASM_BUG()
-> -
->  SYM_CODE_END(smpboot_entry)
->
->  #endif /* CONFIG_SMP */
-> --
-> 2.42.0
->
