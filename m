@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EF62EAB73
-	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 14:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31502E339B
+	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 14:02:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758117736; cv=none; b=Kw0nQ/51AS8rhJHa+LFmlI7GSoMyQsURQFGO1X+yXG5uLas1mN8JaLZKPBbRvtAqaacqT5+OUfQ2TyR6aKhfU58ezf/Z1sdAX19sxZHbGe3SDkheo3YxDL5+lqFPXZTEQHVRc4cQmzxYDI7LewT9iyvHQNbofGKV/W0N8eW/OGk=
+	t=1758117738; cv=none; b=IQBfYCAqOC0Y5Bac4gX4KZMVKI7Xdj+2hEmAegNJY+q20SARXb9aYdhMPt/n+sFf/Sp6NQIOYEuWSTNmC2CTNkbDit4uizL5djMuvOcRLP4P3fiBFQyED56yyQ/rlYbJrGeKKRsO6pQwSqN0oXX07Jr7yN1uGK6opFnhWBofLaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758117736; c=relaxed/simple;
-	bh=8w72gLGme3rV9N/8xInoEUzLlu1u1Hn8GjckW/Fu+5Y=;
+	s=arc-20240116; t=1758117738; c=relaxed/simple;
+	bh=bLHK5rc0xL0mheEkPNV3V7uSWVXHdgCMlMEJz+r6PKo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ib/IuD6+hD2ddZM46erwozH5NbJgP5eAw+zBuYDjSyTZSPxjykQf+4+2bRT2VXXk2ZamXD3NaGdDMWHMHxFOgJ5J8KsyU+X+FqksxC/MZL5HH+VQdoMWiV4nO/lZBB/GFNrk7gQa7ascPXjpu+S5CdPA728hdV3zPKwsfxnz4/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z30Hwa++; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uny7uvHO; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=dsKoFeRv38VSxOYcGQXnBTRrtioklaBdCDedyYZ9HajaZdRkvWB/qxRi1E4plFaUEvCmPrJzJ9prQ17lq+Y0XztQHxlaMcLfY2bjSzMR6Ws6tUxWuXj56EHamPEkK4bxHIJ4BCu+vSAiX+r7A63ulLXl5pfoSUacZ37vddeiqzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zoRadJg3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c8KhJbDG; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z30Hwa++";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uny7uvHO"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zoRadJg3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c8KhJbDG"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1758117729;
+	s=2020; t=1758117730;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mRNw6GkZZ0SOwENot0cflaJo5WOKKLsTLyEwUK24zow=;
-	b=Z30Hwa++YpmdECroIgGLGo2qdagWua1+42J45XnVC49cul3KcaHrxdUhuIBDt3V6HVyw9C
-	x88vdcmNUH+OJGU/N36wEOa0fbSZhPDuG1A9ophk5d2oEXjvV+ErtH03aur3YOEmSJq05H
-	yrUWa94v4xD6JlJlYveDMSAGZz2bYTDERdBAVq5FJdApxjq9Eo4P5wTRB6cJccOQ71YjVQ
-	otSwetGTNZAeftVt5GIw0Gd/RSIhYYG9VmMDIp2lEWNuVjA+ZrAC3C96zv+KIXdcuxaOGe
-	tWprgkciuzV2udYjb1dIADelwFE05b/S6ia4nm2ZwKn6+icRQgRTcbN290SKCg==
+	bh=Pt4b7qdGZEvlXHLUCQXL1u12YRBEmzsU7TbQFTJlP+E=;
+	b=zoRadJg3n3MqMkKr3lVohUZrFXREJAk09a0o4YF0AiOUEDM2kK/h04U3obsXNjvJFLxiIb
+	Tk/z35ZAelo8eAe0mnwqKOTLDLU5NdspwmkmN42oiMWAdqaKrVYL6qyFiSIPYPrfvvpZUe
+	nLJZcN4RXLPdEGiAs8p10V/sZIDFPe/UFnsyzK0mcHcJh+HTNalA6PDKst0IQklDOWGXXQ
+	HGTaEqPaefHU5+qunwaLvndMhIKYtP7duRzWMkyRr3X/l/PET/juKIaQTf+uEN9ZwT+mXx
+	AoYUTO3scm8bYso/4zLLdzPGkUGmRqFjvdtK0AOKBjuS+xMrm8YM1QcjdCd9Wg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1758117729;
+	s=2020e; t=1758117730;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mRNw6GkZZ0SOwENot0cflaJo5WOKKLsTLyEwUK24zow=;
-	b=uny7uvHOBpJaQmiyNWgZDoVcJ/W4s4C4UJydeIXx+29V6CWnPmW/6D9xgUBg+G1HuhVrw6
-	/GPNUaUtapK0CQDQ==
-Date: Wed, 17 Sep 2025 16:00:28 +0200
-Subject: [PATCH v3 26/36] sparc64: vdso: Remove obsolete "fake section
- table" reservation
+	bh=Pt4b7qdGZEvlXHLUCQXL1u12YRBEmzsU7TbQFTJlP+E=;
+	b=c8KhJbDGWh7HaCqBAqTXx2NabSsS/kDtFKS+b+DYzX+fzNQfntfrUCKO46vhJRcqAUvjbn
+	AKplNCoZEKSb24Bg==
+Date: Wed, 17 Sep 2025 16:00:30 +0200
+Subject: [PATCH v3 28/36] sparc64: vdso: Move hardware counter read into
+ header
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250917-vdso-sparc64-generic-2-v3-26-3679b1bc8ee8@linutronix.de>
+Message-Id: <20250917-vdso-sparc64-generic-2-v3-28-3679b1bc8ee8@linutronix.de>
 References: <20250917-vdso-sparc64-generic-2-v3-0-3679b1bc8ee8@linutronix.de>
 In-Reply-To: <20250917-vdso-sparc64-generic-2-v3-0-3679b1bc8ee8@linutronix.de>
 To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -79,97 +79,218 @@ Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
  linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
  linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758117712; l=2564;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758117712; l=5708;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=8w72gLGme3rV9N/8xInoEUzLlu1u1Hn8GjckW/Fu+5Y=;
- b=QgCYHWUCSKPu9lf4c4OeQFeEjv9jGji9gCgDezyDsZYodT0c3UE1Qh/8caZxZEy4/G9jAr3o+
- +gt1ht2t+QnC4eIxVKBSv2ORSay29H8EfuooOZ1hluInrsoTIoX56qW
+ bh=bLHK5rc0xL0mheEkPNV3V7uSWVXHdgCMlMEJz+r6PKo=;
+ b=fSI3Wa9GBdvxAH5KWxg+OnRwldVAdC3IeeiXVUILV+OiyE4kUWlTvVgMWIlUsLwyvVUcdxy7e
+ TSh4CLgNuiDC47cwTGQC5e6KoQnwl5Rd2Han+/of4gwj2+EdXJexyQg
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-When the vDSO logic was copied from x86 to SPARC some unused remnants of
-the fake section handling were copied, too. In x86 the original fake
-section handling had already been removed incompletely in commit
-da861e18eccc ("x86, vdso: Get rid of the fake section mechanism").
-On x86 the reservation was only cleaned up in commit 24b7c77bbb24
-("x86/vdso: Remove obsolete "fake section table" reservation").
+The generic vDSO libraries expected the architecture glue around hardware
+counter reading in asm/vdso/gettimeofday.h. To prepare the adoption of the
+generic library, move the existing functions there.
 
-Remove the reservation for SPARC, too.
+While at it, perform some trivial alignment with the generic vDSO library:
+* Drop 'notrace', as the functions are __always_inline anyways
+* Use the same parameter types
+* Use the same function names
 
-Fixes: 9a08862a5d2e ("vDSO for sparc")
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- arch/sparc/vdso/vdso-layout.lds.S | 21 ---------------------
- arch/sparc/vdso/vdso2c.c          |  8 --------
- 2 files changed, 29 deletions(-)
+ arch/sparc/include/asm/vdso/gettimeofday.h | 78 ++++++++++++++++++++++++++++++
+ arch/sparc/vdso/vclock_gettime.c           | 70 ++-------------------------
+ 2 files changed, 82 insertions(+), 66 deletions(-)
 
-diff --git a/arch/sparc/vdso/vdso-layout.lds.S b/arch/sparc/vdso/vdso-layout.lds.S
-index d31e57e8a3bbffd3afb187cd631e2491fde64148..9e0804789d11696948f11be367480b530a1f18d9 100644
---- a/arch/sparc/vdso/vdso-layout.lds.S
-+++ b/arch/sparc/vdso/vdso-layout.lds.S
-@@ -4,16 +4,6 @@
-  * This script controls its layout.
-  */
+diff --git a/arch/sparc/include/asm/vdso/gettimeofday.h b/arch/sparc/include/asm/vdso/gettimeofday.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..31f6505d3ab5dde9e02eca6da9182e5fb91031c4
+--- /dev/null
++++ b/arch/sparc/include/asm/vdso/gettimeofday.h
+@@ -0,0 +1,78 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2006 Andi Kleen, SUSE Labs.
++ */
++
++#ifndef _ASM_SPARC_VDSO_GETTIMEOFDAY_H
++#define _ASM_SPARC_VDSO_GETTIMEOFDAY_H
++
++#include <linux/types.h>
++#include <asm/vvar.h>
++
++#ifdef	CONFIG_SPARC64
++static __always_inline u64 vdso_shift_ns(u64 val, u32 amt)
++{
++	return val >> amt;
++}
++
++static __always_inline u64 vread_tick(void)
++{
++	u64	ret;
++
++	__asm__ __volatile__("rd %%tick, %0" : "=r" (ret));
++	return ret;
++}
++
++static __always_inline u64 vread_tick_stick(void)
++{
++	u64	ret;
++
++	__asm__ __volatile__("rd %%asr24, %0" : "=r" (ret));
++	return ret;
++}
++#else
++static __always_inline u64 vdso_shift_ns(u64 val, u32 amt)
++{
++	u64 ret;
++
++	__asm__ __volatile__("sllx %H1, 32, %%g1\n\t"
++			     "srl %L1, 0, %L1\n\t"
++			     "or %%g1, %L1, %%g1\n\t"
++			     "srlx %%g1, %2, %L0\n\t"
++			     "srlx %L0, 32, %H0"
++			     : "=r" (ret)
++			     : "r" (val), "r" (amt)
++			     : "g1");
++	return ret;
++}
++
++static __always_inline u64 vread_tick(void)
++{
++	register unsigned long long ret asm("o4");
++
++	__asm__ __volatile__("rd %%tick, %L0\n\t"
++			     "srlx %L0, 32, %H0"
++			     : "=r" (ret));
++	return ret;
++}
++
++static __always_inline u64 vread_tick_stick(void)
++{
++	register unsigned long long ret asm("o4");
++
++	__asm__ __volatile__("rd %%asr24, %L0\n\t"
++			     "srlx %L0, 32, %H0"
++			     : "=r" (ret));
++	return ret;
++}
++#endif
++
++static __always_inline u64 __arch_get_hw_counter(struct vvar_data *vvar)
++{
++	if (likely(vvar->vclock_mode == VCLOCK_STICK))
++		return vread_tick_stick();
++	else
++		return vread_tick();
++}
++
++#endif /* _ASM_SPARC_VDSO_GETTIMEOFDAY_H */
+diff --git a/arch/sparc/vdso/vclock_gettime.c b/arch/sparc/vdso/vclock_gettime.c
+index 643608bffe13d904c5f77edd585b2e58277491fb..16ac80982a00b9f965453b89a0cc111312baa9b2 100644
+--- a/arch/sparc/vdso/vclock_gettime.c
++++ b/arch/sparc/vdso/vclock_gettime.c
+@@ -19,6 +19,7 @@
+ #include <asm/unistd.h>
+ #include <asm/timex.h>
+ #include <asm/clocksource.h>
++#include <asm/vdso/gettimeofday.h>
+ #include <asm/vvar.h>
  
--#if defined(BUILD_VDSO64)
--# define SHDR_SIZE 64
--#elif defined(BUILD_VDSO32)
--# define SHDR_SIZE 40
+ #ifdef	CONFIG_SPARC64
+@@ -85,73 +86,10 @@ notrace static long vdso_fallback_gettimeofday(struct __kernel_old_timeval *tv,
+ 	return o0;
+ }
+ 
+-#ifdef	CONFIG_SPARC64
+-notrace static __always_inline u64 __shr64(u64 val, int amt)
+-{
+-	return val >> amt;
+-}
+-
+-notrace static __always_inline u64 vread_tick(void)
+-{
+-	u64	ret;
+-
+-	__asm__ __volatile__("rd %%tick, %0" : "=r" (ret));
+-	return ret;
+-}
+-
+-notrace static __always_inline u64 vread_tick_stick(void)
+-{
+-	u64	ret;
+-
+-	__asm__ __volatile__("rd %%asr24, %0" : "=r" (ret));
+-	return ret;
+-}
 -#else
--# error unknown VDSO target
+-notrace static __always_inline u64 __shr64(u64 val, int amt)
+-{
+-	u64 ret;
+-
+-	__asm__ __volatile__("sllx %H1, 32, %%g1\n\t"
+-			     "srl %L1, 0, %L1\n\t"
+-			     "or %%g1, %L1, %%g1\n\t"
+-			     "srlx %%g1, %2, %L0\n\t"
+-			     "srlx %L0, 32, %H0"
+-			     : "=r" (ret)
+-			     : "r" (val), "r" (amt)
+-			     : "g1");
+-	return ret;
+-}
+-
+-notrace static __always_inline u64 vread_tick(void)
+-{
+-	register unsigned long long ret asm("o4");
+-
+-	__asm__ __volatile__("rd %%tick, %L0\n\t"
+-			     "srlx %L0, 32, %H0"
+-			     : "=r" (ret));
+-	return ret;
+-}
+-
+-notrace static __always_inline u64 vread_tick_stick(void)
+-{
+-	register unsigned long long ret asm("o4");
+-
+-	__asm__ __volatile__("rd %%asr24, %L0\n\t"
+-			     "srlx %L0, 32, %H0"
+-			     : "=r" (ret));
+-	return ret;
+-}
 -#endif
 -
--#define NUM_FAKE_SHDRS 7
--
- SECTIONS
+ notrace static __always_inline u64 vgetsns(struct vvar_data *vvar)
  {
- 	/*
-@@ -47,19 +37,8 @@ SECTIONS
- 		*(.bss*)
- 		*(.dynbss*)
- 		*(.gnu.linkonce.b.*)
+ 	u64 v;
+-	u64 cycles;
 -
--		/*
--		 * Ideally this would live in a C file: kept in here for
--		 * compatibility with x86-64.
--		 */
--		VDSO_FAKE_SECTION_TABLE_START = .;
--		. = . + NUM_FAKE_SHDRS * SHDR_SIZE;
--		VDSO_FAKE_SECTION_TABLE_END = .;
- 	}						:text
+-	if (likely(vvar->vclock_mode == VCLOCK_STICK))
+-		cycles = vread_tick_stick();
+-	else
+-		cycles = vread_tick();
++	u64 cycles = __arch_get_hw_counter(vvar);
  
--	.fake_shstrtab	: { *(.fake_shstrtab) }		:text
--
--
- 	.note		: { *(.note.*) }		:text	:note
+ 	v = (cycles - vvar->clock.cycle_last) & vvar->clock.mask;
+ 	return v * vvar->clock.mult;
+@@ -168,7 +106,7 @@ notrace static __always_inline int do_realtime(struct vvar_data *vvar,
+ 		ts->tv_sec = vvar->wall_time_sec;
+ 		ns = vvar->wall_time_snsec;
+ 		ns += vgetsns(vvar);
+-		ns = __shr64(ns, vvar->clock.shift);
++		ns = vdso_shift_ns(ns, vvar->clock.shift);
+ 	} while (unlikely(vvar_read_retry(vvar, seq)));
  
- 	.eh_frame_hdr	: { *(.eh_frame_hdr) }		:text	:eh_frame_hdr
-diff --git a/arch/sparc/vdso/vdso2c.c b/arch/sparc/vdso/vdso2c.c
-index dc81240aab6fd31a72b8a751cc2a4a821a3c4e4e..b97af5ec9f35c01f2a976b6213b1768b677ad231 100644
---- a/arch/sparc/vdso/vdso2c.c
-+++ b/arch/sparc/vdso/vdso2c.c
-@@ -61,8 +61,6 @@ const char *outfilename;
- /* Symbols that we need in vdso2c. */
- enum {
- 	sym_vvar_start,
--	sym_VDSO_FAKE_SECTION_TABLE_START,
--	sym_VDSO_FAKE_SECTION_TABLE_END,
- };
+ 	ts->tv_sec += __iter_div_u64_rem(ns, NSEC_PER_SEC, &ns);
+@@ -188,7 +126,7 @@ notrace static __always_inline int do_monotonic(struct vvar_data *vvar,
+ 		ts->tv_sec = vvar->monotonic_time_sec;
+ 		ns = vvar->monotonic_time_snsec;
+ 		ns += vgetsns(vvar);
+-		ns = __shr64(ns, vvar->clock.shift);
++		ns = vdso_shift_ns(ns, vvar->clock.shift);
+ 	} while (unlikely(vvar_read_retry(vvar, seq)));
  
- struct vdso_sym {
-@@ -72,12 +70,6 @@ struct vdso_sym {
- 
- struct vdso_sym required_syms[] = {
- 	[sym_vvar_start] = {"vvar_start", 1},
--	[sym_VDSO_FAKE_SECTION_TABLE_START] = {
--		"VDSO_FAKE_SECTION_TABLE_START", 0
--	},
--	[sym_VDSO_FAKE_SECTION_TABLE_END] = {
--		"VDSO_FAKE_SECTION_TABLE_END", 0
--	},
- };
- 
- __attribute__((format(printf, 1, 2))) __attribute__((noreturn))
+ 	ts->tv_sec += __iter_div_u64_rem(ns, NSEC_PER_SEC, &ns);
 
 -- 
 2.51.0
