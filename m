@@ -1,122 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC134306B22;
-	Wed, 17 Sep 2025 09:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C346A285404
+	for <loongarch@lists.linux.dev>; Wed, 17 Sep 2025 09:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758101909; cv=none; b=U0clGr+0Nfkwx4H2pJqWPUYByn57lHLMu+IYW36DZYXiiX3yHtzdJPNvY0LS42jXOQPx/oMXtgJmmneyTFZuBTuUmW71IME5kiJCyNtJ6ZDB/3crM+5suETAZqkHZOgrbVG3jYQk6yxLbt2bYIT+KnwaIK8YJ1ucqiPJeX+hTOg=
+	t=1758102444; cv=none; b=oGLyBeN+uNdXRL9IIK4oH/nT0dit/QdUsXHcqgJ8ROQyqehs+AwMEoX0EYdqpfL2qD8koYspsT52RUPUDWHUhtQoL+dwLeEsySpl8vOw7wYxLlM+MrDgwZeXSZl7xZITBj1hBD9QLySBXv3uXRtj90DPg0aTiq3QnlQKafdD1Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758101909; c=relaxed/simple;
-	bh=Jio7bAVw9qSJCBnMd44EyKscciXyCsu3ThljIX/NLok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CywAvzDfVSHRKCbNY1C0JgYMcrlePGQvXSM2WXDEpFX3Bo9OIzG1tNExiPx6GCUoZwaiG0yKIHK6hTbeqkAJes1k22UO3Ku2VPEHCL9EeHirzTvtwZAhWTITj4SPjpfuneWsmp96yBnlGfRTYBPf8vvfb8hd8j3ryaPlsR4FKgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aA123NGr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aA123NGr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D726C4CEF0;
-	Wed, 17 Sep 2025 09:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758101908;
-	bh=Jio7bAVw9qSJCBnMd44EyKscciXyCsu3ThljIX/NLok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aA123NGre/Y337CiqEBShrS4jPBc82oq0oClBDi8S5SoV4ZvC37x/MkzmPxmAqUuo
-	 f7mvhgd/sVw0LkDQrxwgKKWvn+qSTWyzSC8Xl7aHazts+ItYYStGeQWD9kDUPx/tXC
-	 zSekAoppOpm//P7gzr2SuoYlYAdgtSmDDjHx8Q6vfj4z+IZMqFZm9tsVnX7LT3afFV
-	 Mxuvu6W/FPyfB3igMdJmB0xl3HQshKJ56I17gmMAzVEv5OTaa4U/dOzoF8s70HT5zh
-	 JIFW9G3A0lzbHdy3hsoGaO4J5NrzwABG+2fh6w+pqqT9Qhycw6Sw30tMuPW9i5RHqo
-	 l6VFg19ajS9aQ==
-Date: Wed, 17 Sep 2025 10:38:23 +0100
-From: Lee Jones <lee@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Qunqin Zhao <zhaoqunqin@loongson.cn>, herbert@gondor.apana.org.au,
-	jarkko@kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org, sgarzare@redhat.com
-Subject: Re: [GIT PULL] Immutable branch between MFD, Char and Crypto due for
- the v6.18 merge window
-Message-ID: <20250917093823.GG3893363@google.com>
-References: <20250705072045.1067-1-zhaoqunqin@loongson.cn>
- <20250902124205.GL2163762@google.com>
- <20250912213256.GA3062565@ax162>
- <20250916075835.GB1637058@google.com>
- <20250916191658.GA1249009@ax162>
+	s=arc-20240116; t=1758102444; c=relaxed/simple;
+	bh=UTIf4txpaImQ0cFB7zAgM6nm9pOQSd8jCc/j9BwiWaA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TbQebSHq7MVOZZgZyrM6Xwd5pIUZ1e9i8mqkbx/76CYk0DDwd93h30HytBqn51QA9Lk/zlB8JDnqMOwQlhVm4MeYEoA5TbkFGaHP2X0H2SA7O0BDnbgGFiH/yt4zWus1wrgm7D4o9qt2saRKvOPl77NiNieTBNiFS+pwZwYp59Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxP_Cmg8poLU8LAA--.24142S3;
+	Wed, 17 Sep 2025 17:47:19 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxpeSjg8po9DebAA--.36350S3;
+	Wed, 17 Sep 2025 17:47:17 +0800 (CST)
+Subject: Re: [PATCH v2 3/4] objtool/LoongArch: Fix unreachable instruction
+ warnings about entry points
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250917011007.4540-1-yangtiezhu@loongson.cn>
+ <20250917011007.4540-4-yangtiezhu@loongson.cn>
+ <CAAhV-H6yKyqU+jQ=-RoOOc0fyRgjFfdorJAk1LashV0Gt=Y=AQ@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <bfd7035b-ca08-66d2-bdc5-d28743144128@loongson.cn>
+Date: Wed, 17 Sep 2025 17:47:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CAAhV-H6yKyqU+jQ=-RoOOc0fyRgjFfdorJAk1LashV0Gt=Y=AQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250916191658.GA1249009@ax162>
+X-CM-TRANSID:qMiowJBxpeSjg8po9DebAA--.36350S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kw47WF48CFy3tFWrWrW7trc_yoW5JF43pF
+	WUC390y3yvyF1qva1DJ3yagrWrZFn3Wr4aqFnxGryrA39Fv3ZFqw40yr1UXFyDKw47W340
+	qrWrtFZ0gayUA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jntxDUUUUU=
 
-On Tue, 16 Sep 2025, Nathan Chancellor wrote:
-
-> On Tue, Sep 16, 2025 at 08:58:35AM +0100, Lee Jones wrote:
-> > On Fri, 12 Sep 2025, Nathan Chancellor wrote:
-> > > > The following changes since commit 8f5ae30d69d7543eee0d70083daf4de8fe15d585:
-> > > > 
-> > > >   Linux 6.17-rc1 (2025-08-10 19:41:16 +0300)
-> ...
-> > > > Qunqin Zhao (4):
-> > > ...
-> > > >       tpm: Add a driver for Loongson TPM device
-> > > 
-> > > This one needs a fix up due to commit 07d8004d6fb9 ("tpm: add bufsiz
-> > > parameter in the .send callback") in 6.17-rc1, as I am seeing the
-> > > following error in next-20250912.
-> > > 
-> > >   drivers/char/tpm/tpm_loongson.c:48:17: error: initialization of 'int (*)(struct tpm_chip *, u8 *, size_t,  size_t)' {aka 'int (*)(struct tpm_chip *, unsigned char *, long unsigned int,  long unsigned int)'} from incompatible pointer type 'int (*)(struct tpm_chip *, u8 *, size_t)' {aka 'int (*)(struct tpm_chip *, unsigned char *, long unsigned int)'} [-Wincompatible-pointer-types]
-> > >      48 |         .send = tpm_loongson_send,
-> > >         |                 ^~~~~~~~~~~~~~~~~
-> > >   drivers/char/tpm/tpm_loongson.c:48:17: note: (near initialization for 'tpm_loongson_ops.send')
-> > >   drivers/char/tpm/tpm_loongson.c:31:12: note: 'tpm_loongson_send' declared here
-> > >      31 | static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> > >         |            ^~~~~~~~~~~~~~~~~
-> > > 
-> > > Can you squash it or do you want a separate patch?
-> > > 
-> > > Cheers,
-> > > Nathan
-> > > 
-> > > diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
-> > > index a4ec23639911..9e50250763d1 100644
-> > > --- a/drivers/char/tpm/tpm_loongson.c
-> > > +++ b/drivers/char/tpm/tpm_loongson.c
-> > > @@ -28,7 +28,7 @@ static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-> > >  	return cmd_ret->data_len;
-> > >  }
-> > >  
-> > > -static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> > > +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz, size_t count)
-> > >  {
-> > >  	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-> > >  	struct tpm_loongson_cmd *cmd = tpm_engine->command;
-> > 
-> > This will break my local branch.
-> > 
-> > Any chance of an immutable pull-request for:
-> > 
-> >   07d8004d6fb9 ("tpm: add bufsiz parameter in the .send callback")
+On 2025/9/17 下午3:07, Huacai Chen wrote:
+> Hi, Tiezhu,
 > 
-> I might be missing something but this commit is in Linux 6.17-rc1, which
-> this tree is based on according to both 'git log' and the lead in to
-> your pull request at the top, so your local branch is already broken.
-> That error message was taken from the tip of your tree and the fix was
-> tested against it as well.
+> On Wed, Sep 17, 2025 at 9:10 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exist the
+>> following objtool warnings:
+>>
+>>    vmlinux.o: warning: objtool: kernel_entry+0x0: unreachable instruction
+>>    vmlinux.o: warning: objtool: smpboot_entry+0x0: unreachable instruction
+>>
+>> kernel_entry() and smpboot_entry() are in arch/loongarch/kernel/head.S,
+>> there is "OBJECT_FILES_NON_STANDARD_head.o := y" to skip objtool checking
+>> for head.o, but the STACK_FRAME_NON_STANDARD macro does not work for link
+>> time validation of vmlinux.o according to objtool documentation, just give
+>> a proper unwind hint to fix the warnings.
+>>
+>> By the way, ASM_BUG() can be removed due to unnecessary, otherwise there
+>> are following warnings:
+>>
+>>    kernel_entry+0xf4: start_kernel() missing __noreturn
+>>    in .c/.h or NORETURN() in noreturns.h
+>>
+>>    smpboot_entry+0x68: start_secondary() missing __noreturn
+>>    in .c/.h or NORETURN() in noreturns.h
+>>
+>> This is because the previous instructions of kernel_entry+0xf4 and
+>> smpboot_entry+0x68 are the 'bl' instructions, start_kernel() and
+>> start_secondary() are the respective call destination symbols which
+>> are noreturn functions, then the 'bl' instructions are already marked
+>> as dead end in annotate_call_site().
+>>
+>> For now, it is time to remove "OBJECT_FILES_NON_STANDARD_head.o := y"
+>> in arch/loongarch/kernel/Makefile.
+
+...
+
+>> -OBJECT_FILES_NON_STANDARD_head.o := y
+> This line should be kept, othewise we get:
 > 
-> "tpm: Add a driver for Loongson TPM device" was sent back in early July,
-> so it was never updated for this conflict.
+> arch/loongarch/kernel/head.o: warning: objtool: kernel_entry+0xf4:
+> start_kernel() missing __noreturn in .c/.h or NORETURN() in
+> noreturns.h
+> 
+> even without LTO. This is a regression, we can only remove it after
+> the above warning be fixed.
 
-Ah, gotcha.  I thought you were saying that 07d8004d6fb9 ("tpm: add
-bufsiz parameter in the .send callback") was applied somewhere else.  In
-which case, I need to figure out why my build testing didn't catch it.
+As said in the commit message, ASM_BUG() needs to be removed
+to fix the above warning.
 
-I'd be happy with a formal patch from you or I can create the patch and
-add your {Reported,Suggested}-by.  How would you like to proceed?
+I tested again with GCC and LLVM (with and without LTO),
+there is no the warning what you said, please double check.
 
--- 
-Lee Jones [李琼斯]
+(1) GCC
+make ARCH=loongarch defconfig
+make ARCH=loongarch -j8
+
+(2) LLVM without LTO
+make ARCH=loongarch LLVM=1 clean defconfig
+make ARCH=loongarch LLVM=1 olddefconfig all -j8
+
+(3) LLVM with LTO
+make ARCH=loongarch LLVM=1 clean defconfig
+scripts/config -d LTO_NONE -e LTO_CLANG_THIN
+make ARCH=loongarch LLVM=1 olddefconfig all -j8
+
+Thanks,
+Tiezhu
+
