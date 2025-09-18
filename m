@@ -1,78 +1,98 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315C71C2DB2
-	for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 06:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD322DA753
+	for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 07:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758177944; cv=none; b=W7S7uQ4aP5RKLMMkhpU5wZaJEKYevmiRmMS9Sv1ZC4cqYm04H8Yo1huobPzhrMF2UPJTAC3AS06W4DfBfeo2T9W/wRBggZGJgbH7g7lkFCxfXbnJIXauQqvuB2wxh1B7CZVIT0IuVEoVH49dbEkiKZaVF7RIR1y17EKdAMhr1gA=
+	t=1758179225; cv=none; b=DHfS43XzCExzrAuDNFW7sDAsXwmSUGk0QcQvQmR2zcbtC4ZK6Ui9I9kVxHKi9An8Fat0tufL/AFL5wtE3t+huw10zioTOKRaoBgzDWAawNVqddG2cWxC3J5PvfDclE7H5m2spOaJNP5n8l9urFlfibqMNrkCjcNYyXWy5rQ02sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758177944; c=relaxed/simple;
-	bh=sTnRaHgX/E3OYmsyP/l8gzNfVk/50KS7tLhRkCXC2Ek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ss7V6LZwdY4Lh/DkdacLmd676ZevH4mmf7bHuc9Kwhs1kHDFX46981uwsE3TcsV6zI8fplJpZ0/NzZyhB78mL7LsgcUcJlcgxP+lApI71loHSZykIYYYPAqA+mZ/3qwUrkV/O4BitNXHs0QUKOvr0Z8VZXdudZgRB2wA/Xs8DBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TKfHsa0A; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1758179225; c=relaxed/simple;
+	bh=LIWh9rCdfk9QZIOUNYrRMXALV0xzQlmiVi96oKR3cJU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bSa/2l+CvNbpJkFryFufAdxsxtwR2fsx2eiGOKhtwOe703E+MV7ZqcGZZ/o/GD2a0ol8L1jb1LDMywVnk3y+zujbMwNc/SZRqFldXVYJy0K2bqv0xvO7tkbDAlCPPTRnLJjukSZBDLosLE0vBuMt81EwV8azM32cMnLYpMSI92Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bU5Z1lt4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TKfHsa0A"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1758177940;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=frMGU+6gZkfURSvTwgSB9PhFpok35Fde0U/zq47+Nyk=;
-	b=TKfHsa0A1Y9CX/loX+VPKrqv/SfTm6XS2XF2/le0P6gJjnDWbBf+O+OL+u8FqaIGuBWP9i
-	PB8xv05DEGgCdne+cYgo29qtQmHEXt6J1ohYh4SQLWPgIoNqRT3mzgES3P9Zp+SOgNQmdc
-	35fHgehXssBfqiaTLzM9F/wLIfnojYc=
-From: Jackie Liu <liu.yun@linux.dev>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	loongarch@lists.linux.dev,
-	liu.yun@linux.dev
-Subject: [PATCH 2/2] loongarch/env: fix missing NULL check after kstrdup()
-Date: Thu, 18 Sep 2025 14:44:48 +0800
-Message-ID: <20250918064448.91647-2-liu.yun@linux.dev>
-In-Reply-To: <20250918064448.91647-1-liu.yun@linux.dev>
-References: <20250918064448.91647-1-liu.yun@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bU5Z1lt4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 902CCC4CEF7
+	for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 07:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758179224;
+	bh=LIWh9rCdfk9QZIOUNYrRMXALV0xzQlmiVi96oKR3cJU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bU5Z1lt47Lq0VkB4KKNYsVyisLJO8FFfkZ/yyMccp/uZss70isryVNw5E/RzHsj0N
+	 fvnriXofakA3oKEv2foRfNviHJ+hvfQf9gCHO3WZFrH348D8aWsWn0xo0nv6vVih+U
+	 Xs1LgeKSacudQOdjTskJd1nkl59TvgKg/0CBLc309dLM+dMgb3+Tyjxqumq6lVl116
+	 FPhC+ZgakWtvYPYsw1iot0fJqSNrnA1LZKzEBHKVdZhrc4elX+wZABZ3aTCBcLZ4NJ
+	 b24yJXOtSr3lmAVeNMIO1vyyICfVUTx6vChSh1MKJo6wWi+FSxKTgdefsDve7r7N4k
+	 cMsm6qTBjyW9g==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b00a9989633so128254266b.0
+        for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 00:07:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVfagn0w4Ie3oOhmjT0AkIgh3w0/lqGhnbrZ4DRuVu2XqWOGLSipMFsZqFlSy3VlBKc5jjKo8zsOwo=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw63SV/D6Uwz4i00O9mMtV+J/gbdbH0s6UVxqdVVEuiMe4UbyWD
+	d0+SuZbS/fE5G3ULDQbAnzmhupnS6zIth2UsX6fKwJ1w2Vau9tA1YOd2zf+2vx5xHHXaPIcn1QR
+	b3fwa2lBS/Xf0nA6P+xF2qhIcP7bTBxM=
+X-Google-Smtp-Source: AGHT+IHDwQed8QlPUnnnh18AjAw4YMW4KXcHgPP/wiHiSdIyFg9qXXASXGDcTOHAySLAH7fyN/psk4mX2ofDkgxKubU=
+X-Received: by 2002:a17:906:4a94:b0:b20:a567:8724 with SMTP id
+ a640c23a62f3a-b20a567874dmr141766966b.1.1758179223191; Thu, 18 Sep 2025
+ 00:07:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250916145710.2994663-1-lgs201920130244@gmail.com>
+In-Reply-To: <20250916145710.2994663-1-lgs201920130244@gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 18 Sep 2025 15:06:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6hTFrUO5gTx6FYo89TAouEykTvKpLNkqFfhtsg0PVLiw@mail.gmail.com>
+X-Gm-Features: AS18NWC7cWrisYIT52dGDytiHP4tfAEgtfCVPbsy0njCO_2FdgqJJthiylvNoAg
+Message-ID: <CAAhV-H6hTFrUO5gTx6FYo89TAouEykTvKpLNkqFfhtsg0PVLiw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: vDSO: check kcalloc() result in init_vdso
+To: lgs201920130244@gmail.com
+Cc: WANG Xuerui <kernel@xen0n.name>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Nam Cao <namcao@kernel.org>, Xi Ruoyao <xry111@xry111.site>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Guangshuo Li <202321181@mail.sdu.edu.cn>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jackie Liu <liuyun01@kylinos.cn>
+Applied, thanks.
 
-The result of kstrdup() may be NULL when memory allocation fails.
-In init_cpu_fullname(), the return value was used directly by strsep()
-without validation, which could lead to NULL pointer dereference.
+Huacai
 
-Add a proper check for the kstrdup() result and return -ENOMEM when
-allocation fails.
-
-Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
----
- arch/loongarch/kernel/env.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-index c0a5dc9aeae2..b41a65ec45c3 100644
---- a/arch/loongarch/kernel/env.c
-+++ b/arch/loongarch/kernel/env.c
-@@ -49,6 +49,8 @@ static int __init init_cpu_fullname(void)
- 	ret = of_property_read_string(root, "model", &model);
- 	if (ret == 0) {
- 		cpuname = kstrdup(model, GFP_KERNEL);
-+		if (!cpuname)
-+			return -ENOMEM;
- 		loongson_sysconf.cpuname = strsep(&cpuname, " ");
- 	}
- 	of_node_put(root);
--- 
-2.51.0
-
+On Tue, Sep 16, 2025 at 10:57=E2=80=AFPM <lgs201920130244@gmail.com> wrote:
+>
+> From: Guangshuo Li <202321181@mail.sdu.edu.cn>
+>
+> Add a NULL-pointer check after the kcalloc() call in init_vdso(). If
+> allocation fails, return -ENOMEM to prevent a possible dereference of
+> vdso_info.code_mapping.pages when it is NULL.
+>
+> Fixes: 2ed119aef60d ("LoongArch: Set correct size for vDSO code mapping")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Guangshuo Li <202321181@mail.sdu.edu.cn>
+> ---
+>  arch/loongarch/kernel/vdso.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+> index 10cf1608c7b3..da7a7922fb24 100644
+> --- a/arch/loongarch/kernel/vdso.c
+> +++ b/arch/loongarch/kernel/vdso.c
+> @@ -53,7 +53,8 @@ static int __init init_vdso(void)
+>         vdso_info.size =3D PAGE_ALIGN(vdso_end - vdso_start);
+>         vdso_info.code_mapping.pages =3D
+>                 kcalloc(vdso_info.size / PAGE_SIZE, sizeof(struct page *)=
+, GFP_KERNEL);
+> -
+> +       if (!vdso_info.code_mapping.pages)
+> +               return -ENOMEM;
+>         pfn =3D __phys_to_pfn(__pa_symbol(vdso_info.vdso));
+>         for (i =3D 0; i < vdso_info.size / PAGE_SIZE; i++)
+>                 vdso_info.code_mapping.pages[i] =3D pfn_to_page(pfn + i);
+> --
+> 2.43.0
+>
