@@ -1,81 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E4520D51C;
-	Wed, 17 Sep 2025 22:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0096922A4D8
+	for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 01:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758148347; cv=none; b=utKKbJ1aNgM06bvre5neHKSyCMsXh9ZG/R1SthRbFRFBAW6LOq85vfDynbAxh2L7yf/tOvY+QQrIbqJQ7ax3CZgUGUzG51eBRqNqrA/sq+odno7UajtIh96IgwG1KgU67hJQ5TiG2HZ79V2htnasu+sd3+/s545xuttNokQEkjg=
+	t=1758159873; cv=none; b=phsfEhtWY1fDDfobmgewxmmV9u8j1f2gd2BUkrWyWFxFqoM1r2xQNpvjxpgiWfKpwdtRhiR5nguGksbBgGIa1OKD7xE8GLyEGnvbdHXAi0dYZZ3YBIh0pmUNvLwv6+pzJS7IJJv5DeTHaKFAznU6HzTzXkoIAN1VqGqO21Ce3qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758148347; c=relaxed/simple;
-	bh=eqj+1kpCBqFilRkjYIFtlpw1vDrGyjP2k2RZfwrKZfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WC0zih2gJVLNaokwRCK5YuDRdWiOz/FgS+i1FR6qvIXUHDZli6Vum9IyYm98T14ItKj08JXv8nb7oap/93CzqWaCjrTPXnLpesiYOSlxK0BsfAAGR2NuFuMZyxmqizvkbznkMtYa2/YRMsD6+jX1kHVnW9mLtYbwupro2Qy6YPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ah9kQTxe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ah9kQTxe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01B2CC4CEE7;
-	Wed, 17 Sep 2025 22:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758148346;
-	bh=eqj+1kpCBqFilRkjYIFtlpw1vDrGyjP2k2RZfwrKZfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ah9kQTxe3ntAwz8PSzy+vP8XJTixqiYXFz6bfZIKBkKpO4nuMjk8RWfK6jM6ek7Yb
-	 XPI/DUNOzi17L+23/Ffn48w9xnrKqqJKfYOXS4yzr0V1m+x6m6Eq1JoHVnoLq7g25o
-	 Zg1WyPgijPtf4d81RooTMB0+p5kqJisvIFtNwhc8+/QnyHWn3tkwm+MbbWoW7SmM5h
-	 2ow2TAz0ZLJN1vvGRilRxkhEs6iJABfjK4XnbiohHfoeFTH84X4+jXOJDTsFXQ449v
-	 4nlUlXn9RRtkNBfKW0rVebN4XxV3c46hUU0LqippzXHIXf5932creF1E+42SbZ2U0i
-	 HClFkeFUVdLDg==
-Date: Wed, 17 Sep 2025 15:32:24 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Peter Zijlstra <peterz@infradead.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1758159873; c=relaxed/simple;
+	bh=AxF4xKFZH0YTiOI8tfP7JO7jIoU68GO/jZFynjfk9Pc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=OEfV0oZEJE2PMEX14Y5pRs+7WKGHkrWpKOBlekrac1Um0nAGv5kwRzA2WgO7cbqJ1kluc0j6Wh7ChxkPpSM58feK/I1HqvHz2S3YHIbwlafftuCGYsHc4nRtFHaAwgdXyCEzcVXGddj3tSaokpEh/6cFHtC9R+YKA7A2BSDey5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxxtD7Y8toyJ0LAA--.24545S3;
+	Thu, 18 Sep 2025 09:44:27 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxjcH4Y8toEKacAA--.53165S3;
+	Thu, 18 Sep 2025 09:44:25 +0800 (CST)
 Subject: Re: [PATCH v3 1/3] objtool/LoongArch: Fix fall through warning about
  efistub
-Message-ID: <ym3yf3rkxfq3sukfqbemmbpamjfsx4jjushqh3f54ah5ugamse@qqwabon64umq>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Huacai Chen
+ <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
 References: <20250917112716.24415-1-yangtiezhu@loongson.cn>
  <20250917112716.24415-2-yangtiezhu@loongson.cn>
+ <ym3yf3rkxfq3sukfqbemmbpamjfsx4jjushqh3f54ah5ugamse@qqwabon64umq>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <64530e20-9bc7-0c0b-d6ea-a4c7df3e85d9@loongson.cn>
+Date: Thu, 18 Sep 2025 09:44:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250917112716.24415-2-yangtiezhu@loongson.cn>
+In-Reply-To: <ym3yf3rkxfq3sukfqbemmbpamjfsx4jjushqh3f54ah5ugamse@qqwabon64umq>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxjcH4Y8toEKacAA--.53165S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZF4rCrWxur4fWFy5WFy3Awc_yoWrGF4xpa
+	yjyrW2vrs8JrWvq3s7J3yF9ryaqFsxtrZIga4DuryrA3W5Xr1IvrWIqr4DZFZrXw4vy3WI
+	qryftrnFka4DA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24SoDUUU
+	U
 
-On Wed, Sep 17, 2025 at 07:27:14PM +0800, Tiezhu Yang wrote:
-> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
-> the following objtool warning:
+On 2025/9/18 上午6:32, Josh Poimboeuf wrote:
+> On Wed, Sep 17, 2025 at 07:27:14PM +0800, Tiezhu Yang wrote:
+>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
+>> the following objtool warning:
+>>
+>>    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
+>>    falls through to next function __efistub_exit_boot_func()
+>>
+>> This is because efi_boot_kernel() doesn't end with a return instruction
+>> or an unconditional jump, then objtool has determined that the function
+>> can fall through into the next function.
+>>
+>> At the beginning, try to do something to make efi_boot_kernel() ends with
+>> an unconditional jump instruction, but this modification seems not proper
+>> and makes LoongArch different to other architectures.
+>>
+>> Furthermore, it is not proper to link efistub separately for LoongArch,
+>> ARM64 and RISC-V too due to there is technical reason why vmlinux.o needs
+>> efistub linked in.
+>>
+>> For example, there are two ways of populating the core kernel's struct
+>> screen_info via the stub, the latter is preferred because it makes the
+>> EFIFB earlycon available very early, but it only works if the EFI stub
+>> is part of the core kernel image itself. For more information, please
+>> see the comments in drivers/firmware/efi/libstub/screen_info.c.
 > 
->   vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
->   falls through to next function __efistub_exit_boot_func()
+> Hm?  Of course libstub needs to be linked into *vmlinux*.  But that
+> doesn't mean it needs to be in vmlinux.o.
 > 
-> This is because efi_boot_kernel() doesn't end with a return instruction
-> or an unconditional jump, then objtool has determined that the function
-> can fall through into the next function.
-> 
-> At the beginning, try to do something to make efi_boot_kernel() ends with
-> an unconditional jump instruction, but this modification seems not proper
-> and makes LoongArch different to other architectures.
-> 
-> Furthermore, it is not proper to link efistub separately for LoongArch,
-> ARM64 and RISC-V too due to there is technical reason why vmlinux.o needs
-> efistub linked in.
-> 
-> For example, there are two ways of populating the core kernel's struct
-> screen_info via the stub, the latter is preferred because it makes the
-> EFIFB earlycon available very early, but it only works if the EFI stub
-> is part of the core kernel image itself. For more information, please
-> see the comments in drivers/firmware/efi/libstub/screen_info.c.
+> Why not build libstub.a separately, and then link it with vmlinux.o
+> during the final vmlinux link, as x86 does?
 
-Hm?  Of course libstub needs to be linked into *vmlinux*.  But that
-doesn't mean it needs to be in vmlinux.o.
+If this change is not OK, what do you think of the following changes?
+Which one do you prefer?
 
-Why not build libstub.a separately, and then link it with vmlinux.o
-during the final vmlinux link, as x86 does?
+(1) libstub doesn't link to vmlinux.o, only link libstub with vmlinux.o
+during the final vmlinux link.
 
--- 
-Josh
+----->8-----
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index a3a9759414f4..919c1970ce14 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -164,7 +164,6 @@ CHECKFLAGS += $(shell $(CC) $(KBUILD_CPPFLAGS) 
+$(KBUILD_CFLAGS) -dM -E -x c /dev
+  endif
+
+  libs-y += arch/loongarch/lib/
+-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+
+  drivers-y              += arch/loongarch/crypto/
+
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 51367c2bfc21..c664bfb9b15f 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -69,6 +69,12 @@ vmlinux_link()
+                 libs="${KBUILD_VMLINUX_LIBS}"
+         fi
+
++       if [ "${SRCARCH}" = "loongarch" ]; then
++               if is_enabled CONFIG_EFI_STUB; then
++                       libs="${libs} drivers/firmware/efi/libstub/lib.a"
++               fi
++       fi
++
+         if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
+                 objs="${objs} .builtin-dtbs.o"
+         fi
+
+https://lore.kernel.org/loongarch/49ceb19c-6107-d026-3ae6-ae897d1fcae4@loongson.cn/
+
+(2) make efi_boot_kernel() ends with an unconditional jump instruction.
+
+----->8-----
+diff --git a/drivers/firmware/efi/libstub/loongarch.c 
+b/drivers/firmware/efi/libstub/loongarch.c
+index 3782d0a187d1..e309fd78fca7 100644
+--- a/drivers/firmware/efi/libstub/loongarch.c
++++ b/drivers/firmware/efi/libstub/loongarch.c
+@@ -10,7 +10,7 @@
+  #include "efistub.h"
+  #include "loongarch-stub.h"
+
+-typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline,
++typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
+  					  unsigned long systab);
+
+  efi_status_t check_platform_features(void)
+@@ -81,4 +81,7 @@ efi_status_t efi_boot_kernel(void *handle, 
+efi_loaded_image_t *image,
+
+  	real_kernel_entry(true, (unsigned long)cmdline_ptr,
+  			  (unsigned long)efi_system_table);
++
++	/* We should never get here */
++	while (1);
+  }
+
+https://lore.kernel.org/loongarch/20250826064631.9617-2-yangtiezhu@loongson.cn/
+
+Thanks,
+Tiezhu
+
