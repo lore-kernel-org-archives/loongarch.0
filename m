@@ -1,131 +1,63 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1393191A4
-	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 15:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1100322742;
+	Fri, 19 Sep 2025 17:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758295504; cv=none; b=dYPEdj7U1XAyEkKJ1BvJnJVQcb4E0b3EDP0enwQCMvWKCUkr6ep2J1xhujvoCphxjrxDZaQ5wKaQWo0CkvRKbtARvGAGbvlpO7XEPPP4VF/h+nVFYDVT4AlRyTQSnpglHO5zoK5PMLv9bG5p9sRsK2KX/U8oiKyVpW8cO7LRFpA=
+	t=1758302117; cv=none; b=QazQ9/BXfPgGEmdoZ7KHrl5LCGrt2sUFg1swciwnIo5M9bczitBsOxC7EShIoXXPAcA5VusV5L8cVDn2yJ0/q7vL46GXsYYAQZY2DH+49mtzBWcMURMz4mD3mupc1qKDSwRkz7BjCpGX9aXVH1cF1z2fkDbHVYiKCQGcpRi21hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758295504; c=relaxed/simple;
-	bh=tIBWHHOOKfm2qL1G0oNEg1lQ/EY8RTTkm2B9w+25Bvk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pbMqiDluawR510nIjqOzUl+duz286VrRh/qg4d2NbGYTN7XoyAA/MH0s6wXQ83J6MqEYv0QRy65aIuH237PTH9h1yRRHH8TaWjFt2kvwMVUIAStfwcqwc3OCyVCZbp9xxqLrr3S4o7JqGZMUaShQleGOpXpBaGVznDSh48unku4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=N4pVqfaS; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freebox.fr
+	s=arc-20240116; t=1758302117; c=relaxed/simple;
+	bh=HXG/CmUGTgNOertLWEyVW5762g+ACt+EH60Tpst+e18=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nHvt2QcCOu3KRxRkEVcDBOXAyRi0v/3xs16OR4XkxH8WVG4hbQcnwpQ5eOKo40kH375PsMCC7WvXILEMoAlNlySH+uamj0NkwffnEeO9hMpHrjDd/cAlTi0/8cEvX2K+ecp9KGaEh/1WNUR09xQ+18UGbzlSdzt3PZlP5bZdgzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ee0socMM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="N4pVqfaS"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-577dd4c1e84so2840546e87.0
-        for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 08:25:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1758295500; x=1758900300; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EztjVQ+y07YMfegmHOd0VyK62XkODMWu0LdNE29WAS0=;
-        b=N4pVqfaSojGwMhZ0SjnKJ5NfuTTBFTG9k97/GI7M2SJFdj1+2c9RW91IYaLSTz+Bep
-         r6T+2Kgm2WyYWHa9wtuJyzde4zhItTvdEyhrl2xWNaYh5v1mIqbD/2cUQIDF1eofcS/p
-         qGP4TC9L2Sf8TPKFrVK+Ucki3+z3BW0fNfTNF/UoPUWNjTll2wkZ2XddOIgzpcF9N2el
-         3S/szoJ0FRED6bBsbmNLahezUXlIXpwPnJq6fxAryg9R56j6IsoSejq7dDT9G/v0aaIK
-         QS4i8lh1qKrl7WVTT/qTs8U9goZlQ+SENjhH3hEBFQPZe26VLi5I7mwRnoN0O+fgBW4w
-         qsAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758295500; x=1758900300;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EztjVQ+y07YMfegmHOd0VyK62XkODMWu0LdNE29WAS0=;
-        b=p42knuT3/ROEBrnqU8XLCknWS7C4Z87o37NZ4CmyRMEvl/WL9VH2H0VLqtL2s9h9cP
-         Idoo1jEak0zvTmOJg9xOZ3pnehs3XGE6ia5Sd8FGZK1MznPCspuNncpDXub3tcPE14Qw
-         ZTWZILu7N6EMGtPbjsmrc2rCbJMVJZfR5gbFXrYT6oVs7fVhOHXVQh1vLDBhpygej2if
-         tH8v4ruuat17BUmMsqFdE5mtJJhmS432+LQB/y3S69WeYh4QADsRQ6b07PeCnh5YXL/9
-         BQkQeKqz0tEuwVm1mxb7MaMZAbZ9YzlRQ7S6tgiJks4l1XDU1jndT9yHtDEm18uHwbdt
-         jqMg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/9B0haDDp1fj5f+xjfaQDeYQAtPN0A8rOs+ZDxFcaJJrbjhnPpLZccY+e/QlPtZ9OfmEHJ3ZkVEA=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzh0c3rVtctyTNPjsjvQXOtMBBu5jFGPkk2qsJrw3gbSoM/5rxy
-	9E33rKT+5BQe1bD4GA2AzlcVWrR9TmLd09nke3tSbgMDs46D7LXUrEkiOqJUMostbiF+bDPN1bp
-	pCxCYjEpw/eOykunwo9H+hIEzuCtDQMB/Sxm2zVbC9w==
-X-Gm-Gg: ASbGncs/jUoCDtCqK+IaQkQ4AOlZWpQ/kN9QQQLZp0auQWon0OphF2/Eg7UBFrY/ayH
-	qFRlgnMLYi9EUpHQeKK5qrNd2zvHlY3Bk+Ti+BuspPbINqWqLAOlQYSMHhWujfhBnW9XvtlYW5F
-	18dF9mni2HBQbGxZvO+w7uvAcOnupoEvo1+RV/SOtNa2TFHgU92ATObx4PCFpIeOzveAKIDoHwl
-	Ghuk4ai/bHBTBg=
-X-Google-Smtp-Source: AGHT+IHin4gQus9SrkFEog2pTedfunr2Ers950l0f82oxrEtfjemfexmsAorW/Dsqdjvay/GpFMt6pfW/hwC+qBHF14=
-X-Received: by 2002:a05:6512:2c0b:b0:571:b70b:7dbf with SMTP id
- 2adb3069b0e04-579e2507c81mr1455897e87.17.1758295499599; Fri, 19 Sep 2025
- 08:24:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ee0socMM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45BD3C4CEF0;
+	Fri, 19 Sep 2025 17:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758302116;
+	bh=HXG/CmUGTgNOertLWEyVW5762g+ACt+EH60Tpst+e18=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=Ee0socMMQn9OihYMsxqrwFwXJTp9iuLz5HjVxEL1aRm6XcOpVeAosro6FrVNeMcap
+	 3QqFBQ+jQBHhNH7bVgqIBo9JLYR7WOsU5gYIQnDmi/aNGuu+9VLWfyQAQMRCjvdnY6
+	 aerymI9u7n5H/BYEzT3gt7lb1F7bWx9n5ddMOqTKFCK6a34NYSYDhjPhT4mAoRExZi
+	 nqjn6XnVOH0Mma9lSKsJcks44mCj7KKBChcthOUaQDr0b3WsWCvhG2YmH8vOMtwt0P
+	 X4jlxSqlsAjrq76/43/mKWs/SfwAK7w/XKdSc29TtKFFG/XFUZ7H2I8XZbmK/Grz6k
+	 gSuM+w0+6A27w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB1E939D0C20;
+	Fri, 19 Sep 2025 17:15:16 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.17-rc7
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250919072154.2509239-1-chenhuacai@loongson.cn>
+References: <20250919072154.2509239-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20250919072154.2509239-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.17-2
+X-PR-Tracked-Commit-Id: 8dc5245673cf7f33743e5c0d2a4207c0b8df3067
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 39879e3a41061e2fc8313d55bcdbed6f458ae75d
+Message-Id: <175830211547.3636420.5775908855255160873.pr-tracker-bot@kernel.org>
+Date: Fri, 19 Sep 2025 17:15:15 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20250918152830.438554-1-nschichan@freebox.fr> <20250918195806.6337-1-safinaskar@gmail.com>
-In-Reply-To: <20250918195806.6337-1-safinaskar@gmail.com>
-From: Nicolas Schichan <nschichan@freebox.fr>
-Date: Fri, 19 Sep 2025 17:24:48 +0200
-X-Gm-Features: AS18NWBwMqIXE_dMXDlT0ngUIReSbekPPTszWv5gIfg03bAEg3Id33JL3Yqjedw
-Message-ID: <CAHNNwZAzecVcJXZmycX063-=p-M5jVkfStfgYVKJruOFo7y9zg@mail.gmail.com>
-Subject: Re: [PATCH RESEND 00/62] initrd: remove classic initrd support
-To: Askar Safin <safinaskar@gmail.com>
-Cc: akpm@linux-foundation.org, andy.shevchenko@gmail.com, axboe@kernel.dk, 
-	brauner@kernel.org, cyphar@cyphar.com, devicetree@vger.kernel.org, 
-	ecurtin@redhat.com, email2tema@gmail.com, graf@amazon.com, 
-	gregkh@linuxfoundation.org, hca@linux.ibm.com, hch@lst.de, 
-	hsiangkao@linux.alibaba.com, initramfs@vger.kernel.org, jack@suse.cz, 
-	julian.stecklina@cyberus-technology.de, kees@kernel.org, 
-	linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-efi@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, mcgrof@kernel.org, 
-	mingo@redhat.com, monstr@monstr.eu, mzxreary@0pointer.de, 
-	patches@lists.linux.dev, rob@landley.net, sparclinux@vger.kernel.org, 
-	thomas.weissschuh@linutronix.de, thorsten.blum@linux.dev, 
-	torvalds@linux-foundation.org, tytso@mit.edu, viro@zeniv.linux.org.uk, 
-	x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+The pull request you sent on Fri, 19 Sep 2025 15:21:54 +0800:
 
-> > When booting with root=/dev/ram0 in the kernel commandline,
-> > handle_initrd() where the deprecation message resides is never called,
-> > which is rather unfortunate (init/do_mounts_initrd.c):
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.17-2
 
-> Yes, this is unfortunate.
->
-> I personally still think that initrd should be removed.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/39879e3a41061e2fc8313d55bcdbed6f458ae75d
 
-Considering that the deprecation message didn't get displayed in some
-configurations, maybe it's a bit early at the very least.
-
-> I suggest using workaround I described in cover letter.
-
-I'm not too keen on having an initramfs just to loop-mount
-/sys/firmware/initrd, after all current kernels are able to handle the
-use case just fine.
-
-It looks like there is a lot of code calling into specific filesystems
-so that the initrd code can guess the size of the file system before
-copying into /dev/ram0, and I believe this is what causes the main
-gripe against initrd today. What is wrong with just copying
-/initrd.image using its actual size into /dev/ram0 instead of guessing
-it with the help of filesystem specific code ?
-
-> Also, for unknown reasons I didn't get your letter in my inbox.
-> (Not even in spam folder.) I ocasionally found it on lore.kernel.org .
-
-Sorry about that, When I used git-send-email yesterday to reply, the
-SMTP server I used wasn't authenticated to google, so all gmail
-recipients were dropped. Hopefully this work better today.
-
-Regards,
+Thank you!
 
 -- 
-Nicolas Schichan
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
