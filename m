@@ -1,129 +1,102 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA0678C9C
-	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 00:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B261B423B;
+	Fri, 19 Sep 2025 00:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758240699; cv=none; b=DnBB5ppbbKUPqxVgo4s7WJ1VooXDQSSdCF/E0xVX7YqVz99O5CaImCCPEo/dnI1MJmdm+0FddkSRl0GdhLV+wKeXVmcDt67/4T/J8sG2a6O1D6jgD+/Usxs/Fgp5jCZzBmqbwPmZa3eN2PP3Ow4Z0aCn+W9YATA+wxR5Dxz4+Jo=
+	t=1758241217; cv=none; b=uZyyB4cX2s1IUoknEO36dsWY5ZvzdPvyin+FmNJQ0j745a362c+hQAmtOnXJWTGlFcEyadrJSlz8oEG0eO37VpsQrrAvaN6SYBBUU4Pix6H6eirAz9TNFt6d+PihjABmdA41Pg5Yv7nkSJVu4EHBQPpzuvvPBW3rZYksnkhvbWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758240699; c=relaxed/simple;
-	bh=9ggq31TuElkvdeTP2ZjS79K/WX3d9QrheK9IIUaFVzY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FxaehBHNPxXAplWnED6Iz3S+mKE5gXC+8tx89UcVksvcK/3Giy//1dDRnmcBQAqHFopigAuS+U+RmO/YcdqeSSxSqpmBSn0YewP7PeeY6uz2XnmWeFeXz5LZg4awOEGWH5mGJWJfUarECN/pIIPBgMeTyL8GVuYOtVAAVIScSaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VHoIuLai; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1758241217; c=relaxed/simple;
+	bh=KNat9G+U5mHLxvNQl/KrmWBAEdqLL4t5uL9DjIO2hyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jcvxyd/2IYMs2pBjHkrNCdxxZijqP66nZsvLlAmrzuH7QUdgPCDZ6igzlmIAKCe4+fpUOoMP2imyJm2n5suM4KBLOGgPCkEGTh0jV4+CmIIQizjR1EgS6fQ+GwX6loX9qHrjAvYndYnfRPjuXKxsOVPzKs5zOMQccpYxKxa/H0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrSOBkQT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VHoIuLai"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b5514519038so822741a12.0
-        for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 17:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758240697; x=1758845497; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5pHZG9bcElhtMtIe02tLqtkF2uGVTgQcC3bk12Urlxs=;
-        b=VHoIuLaisdxbEEZKFcCPxYQssVXLupsv64xvWUgdBT45fxeO0oVerHDf7sFmuTI12W
-         dcGZ/0osP3AbaNUWpfv0oVtqnF0cii8E6Uop2QFKRFw9KS3J4y/j5cbCY8fc1ejeriAV
-         5QTccxvtm9vMiBtGbaaULeuQM5sEm4rspShKGP21TDeUyKAo92zHXNs2aCa61Vw1NxIN
-         CPNOCQbS+sve/khsa0I8PDy9uClopS1ejoW9qTBAJxrkZK2ns5c1bT/qbN3oseVvfZwT
-         n4Ue1MAAvoAJfgw7nSgyhAKnsrh87x8Rg+DBjXI+mNIpiIeherQUfvmrWav6WjKVkWOx
-         0iog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758240697; x=1758845497;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5pHZG9bcElhtMtIe02tLqtkF2uGVTgQcC3bk12Urlxs=;
-        b=hCKAdOv1IopWVYmXFSzFmmRh7D0+B6BnmTsBOJud4/aeoAX2eihwtYKun1RcVvBEQo
-         J2j5vjEF2H40qCfIwYIJjCJkyxz7DzJs/+N3n7S7hBksDleGAyaZd+gJwD4LCdAvhv+6
-         VMy1uaUK6EzQJ+TVp6zLjmLErCKvUpOZ93e/cLZ/vFptQU1QTMuDT4fI4iW6gzolDRSR
-         Gw4E0JlbtAlydKOHYUhETNVUfwiFsLrXg6ZLavpYLoT8HCZTzQisD5rR7ex6NnbmYaK3
-         COI+vdX5jv6MnXG+UN0joDksE3/+swx+BSXdeC4yR0UwIJs6ivy10FPSFg0tKw/60NMF
-         Vhvw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8E4G37GjNWfHli+Pijt5/osOZbYMoHhp03Z91hRN3pWL5+pDk0/95Ucc9YtAoNTvvKOnSltxT8NA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzpQa8iumPMamt+BHVgkDmoXcG7AznX6Xn6WU3FfxDn9L/dxJM+
-	a+llDAfqJQNyIDItIRGFHtyeskklz6UawPRZni6irGen0l2sxDOCDqysD2U0WX2aVyRLVh+Gefg
-	dRp5Gjg==
-X-Google-Smtp-Source: AGHT+IHL6wVIYMVXo/qF+C7m2xAthhi9wrZHJ6iKg3qq/wSUNMfIVTHCzCbvYXSzkHH/AND/3vPqEr/ALak=
-X-Received: from pjyf16.prod.google.com ([2002:a17:90a:ec90:b0:330:75c7:341c])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:99a8:b0:252:3c5e:45cc
- with SMTP id adf61e73a8af0-2925d5abc4cmr2117916637.19.1758240696687; Thu, 18
- Sep 2025 17:11:36 -0700 (PDT)
-Date: Thu, 18 Sep 2025 17:10:50 -0700
-In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrSOBkQT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380BCC4CEE7;
+	Fri, 19 Sep 2025 00:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758241216;
+	bh=KNat9G+U5mHLxvNQl/KrmWBAEdqLL4t5uL9DjIO2hyw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IrSOBkQTeylNQH80rL75q77fqhbMFQ/J0XXm4MGKnjSgvS60l9vaLGmEDaQBTyb93
+	 sqoILEs82qDfq7x213XWVypBI/5s+c/dSvf1YCmD/GTJsVhP4ryVQ5pSCryr2YtP2X
+	 jVzQzMvN6Bb4MuNoMGuX++p8LNyozQM5vLz5Rp0TfgzU9hkGW7g/USi8od6aQuUU0E
+	 8HPxZjRFVZiwyaBuxQfg3jOAO/kRG0X+SFlU/jkCrrs8semsvkWrQMq2yaBccd0Nqv
+	 1aa7XD6k7J9L8X0r1/T/Hr+CXZ7iLkMNpNVR83d07dB5yTqoUWl8+lVmpKQ49r8qi2
+	 T+zRPZ1MtFs/w==
+Date: Thu, 18 Sep 2025 17:20:13 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Peter Zijlstra <peterz@infradead.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] objtool/LoongArch: Fix fall through warning about
+ efistub
+Message-ID: <pq4h7jgndnt6p45lj4kgubxjd5gidfetugcuf5rcxzxxanzetd@6rrlpjnjsmuy>
+References: <20250917112716.24415-1-yangtiezhu@loongson.cn>
+ <20250917112716.24415-2-yangtiezhu@loongson.cn>
+ <ym3yf3rkxfq3sukfqbemmbpamjfsx4jjushqh3f54ah5ugamse@qqwabon64umq>
+ <64530e20-9bc7-0c0b-d6ea-a4c7df3e85d9@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250806195706.1650976-1-seanjc@google.com>
-X-Mailer: git-send-email 2.51.0.470.ga7dc726c21-goog
-Message-ID: <175824021167.1343722.9290387002572827825.b4-ty@google.com>
-Subject: Re: [PATCH v5 00/44] KVM: x86: Add support for mediated vPMUs
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, 
-	Yongwei Ma <yongwei.ma@intel.com>, Mingwei Zhang <mizhang@google.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <64530e20-9bc7-0c0b-d6ea-a4c7df3e85d9@loongson.cn>
 
-On Wed, 06 Aug 2025 12:56:22 -0700, Sean Christopherson wrote:
-> This series is based on the fastpath+PMU cleanups series[*] (which is based on
-> kvm/queue), but the non-KVM changes apply cleanly on v6.16 or Linus' tree.
-> I.e. if you only care about the perf changes, I would just apply on whatever
-> branch is convenient and stop when you hit the KVM changes.
+On Thu, Sep 18, 2025 at 09:44:24AM +0800, Tiezhu Yang wrote:
+> (1) libstub doesn't link to vmlinux.o, only link libstub with vmlinux.o
+> during the final vmlinux link.
 > 
-> My hope/plan is that the perf changes will go through the tip tree with a
-> stable tag/branch, and the KVM changes will go the kvm-x86 tree.
+> ----->8-----
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index a3a9759414f4..919c1970ce14 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -164,7 +164,6 @@ CHECKFLAGS += $(shell $(CC) $(KBUILD_CPPFLAGS)
+> $(KBUILD_CFLAGS) -dM -E -x c /dev
+>  endif
 > 
-> [...]
+>  libs-y += arch/loongarch/lib/
+> -libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> 
+>  drivers-y              += arch/loongarch/crypto/
+> 
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index 51367c2bfc21..c664bfb9b15f 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -69,6 +69,12 @@ vmlinux_link()
+>                 libs="${KBUILD_VMLINUX_LIBS}"
+>         fi
+> 
+> +       if [ "${SRCARCH}" = "loongarch" ]; then
+> +               if is_enabled CONFIG_EFI_STUB; then
+> +                       libs="${libs} drivers/firmware/efi/libstub/lib.a"
+> +               fi
+> +       fi
 
-Applied a subset (roughtly 1/4) of the KVM patches to kvm-x86 misc, as the full
-thing is far too late for 6.18.  In a nutshell, all of the random prep work and
-cleanups that aren't directly related to mediated PMU support.
+Right, though I think it would need to be something more generic so that
+other arches can have "post-objtool libs" as well.
 
-I want to get "setup VMCS prior to kvm_x86_vendor_init()" in particular landed
-to establish the order of setup operations.  The in-progress CET series moves
-the _nested_ VMCS setup later, and I had a moment of panic that I was creating
-incompatible patches.
+For example, arch/loongarch/Makefile could have 
 
-[14/44] KVM: VMX: Setup canonical VMCS config prior to kvm_x86_vendor_init()
-        https://github.com/kvm-x86/linux/commit/4687a2c4e6a6
-[15/44] KVM: SVM: Check pmu->version, not enable_pmu, when getting PMC MSRs
-        https://github.com/kvm-x86/linux/commit/e3d1f2826da6
+  KBUILD_VMLINUX_LIBS_PRELINK += $(objtree)/drivers/firmware/efi/libstub/lib.a
 
-[17/44] KVM: x86/pmu: Snapshot host (i.e. perf's) reported PMU capabilities
-        https://github.com/kvm-x86/linux/commit/51f34b1e650f
+which can be exported by the top-level Makefile:
 
-[22/44] KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
-        https://github.com/kvm-x86/linux/commit/1e24bece2681
-[23/44] KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
-        https://github.com/kvm-x86/linux/commit/cdfed9370b96
-[24/44] KVM: x86: Rework KVM_REQ_MSR_FILTER_CHANGED into a generic RECALC_INTERCEPTS
-        https://github.com/kvm-x86/linux/commit/6057497336bb
-[25/44] KVM: x86: Use KVM_REQ_RECALC_INTERCEPTS to react to CPUID updates
-        https://github.com/kvm-x86/linux/commit/5a1a726e68ff
-[26/44] KVM: VMX: Add helpers to toggle/change a bit in VMCS execution controls
-        https://github.com/kvm-x86/linux/commit/2bff2edf69ed
+  export KBUILD_VMLINUX_LIBS_PRELINK
 
-[29/44] KVM: x86/pmu: Use BIT_ULL() instead of open coded equivalents
-        https://github.com/kvm-x86/linux/commit/30c0267f1581
-[30/44] KVM: x86/pmu: Move initialization of valid PMCs bitmask to common x86
-        https://github.com/kvm-x86/linux/commit/9bae7a086394
-[31/44] KVM: x86/pmu: Restrict GLOBAL_{CTRL,STATUS}, fixed PMCs, and PEBS to PMU v2+
-        https://github.com/kvm-x86/linux/commit/c49aa9837686
+and then used by scripts/link-vmlinux.sh (untested):
 
---
-https://github.com/kvm-x86/linux/tree/next
+  ${ld} ${ldflags} -o ${output} \
+	${wl}--whole-archive ${objs} ${wl}--no-whole-archive \
+	${wl}--start-group ${libs} ${KBUILD_VMLINUX_LIBS_PRELINK} ${wl}--end-group \
+	${kallsymso} ${btf_vmlinux_bin_o} ${arch_vmlinux_o} ${ldlibs}
+
+-- 
+Josh
