@@ -1,91 +1,83 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04061E32A2
-	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 12:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DDD1EB5E3
+	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 13:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758286734; cv=none; b=oXt4RiPBKwt9hTtNNKk42EoYeC/0dDtJgEOU6iVnh907ikx2CPX/ydNRx026D4SHrer/JlPtJEx5eL3df29n/w26iIpw+7jB6NO7+wrf6XDNc3XSFi80o9Kbe5pkoeD0lEekqcSadGiR/QVGKFKcuep4UleCGtnlRNJ2zOLSAvU=
+	t=1758288139; cv=none; b=OfSJlvz303XHV42cUYLYXOjAiVpTwr6e8cgi3sO8ZP18IenxJhEyndq0asWTMvuSCgc2l+RAXIQi4GekMP55zcKed5xSQQodX4F8Db9ngnGLW4kUY/NNVfJM+DreYh3ORhl0cFgnM/nkvQ74qmHxYAVsKGTHVtBzqf8XcTa14CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758286734; c=relaxed/simple;
-	bh=UqZPKjOghmkUG63/f5MtcyvviVRnMG+ZaWlI+fBKYkA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R3dX33oapfGR6e2HY14A/zNk2K6ApB6Kyf+oD7uDndBMo50MniB3Ag+Ok1vROPOU6C2EdT6WkzKnW92Zd8SP/BwiR27eYFZAKhn1bxiI+SA9/E8g0DvUyfpuRCdzv3DI6T9P7V7K39TGS6j4RdhdAfjEEGtWkvfxVIdGzzGyiEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=aa+Yr6yl; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1758288139; c=relaxed/simple;
+	bh=T70MbS0K8WkSnx8CHqdI37DUguC+d4jdsViVEfGIAxs=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=QbTtzemyAtMFsvL6i4JSIJhuphNLkkjmPnJx1U/9bK6kXk5CqaPG22JjdwQNcVJ/rpDdweIc1jOaA9oCxvMs9LSX3EcSNd5o383liBbe2q0j+g/M+HfC/1Ia4lKOADueWvWJ73SaE8COjSbUCCs1VwI8Php0XgwZVb6ijDGDG/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=gMW1G2+T; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="aa+Yr6yl"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 4D5A32654B;
-	Fri, 19 Sep 2025 14:58:50 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id le6wcmcofI2V; Fri, 19 Sep 2025 14:58:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1758286729; bh=UqZPKjOghmkUG63/f5MtcyvviVRnMG+ZaWlI+fBKYkA=;
-	h=From:To:Cc:Subject:Date;
-	b=aa+Yr6ylX17nEX8EK4RlKgRuRDHqli3dwz7Wb9fty120Qgx5Kw70GkohSQdiZtN8F
-	 fIQ3Srd4TrY0U9stCxzNgFR4zi0l/kyHyWw8oEqv8RFnW2i8zNdi28bXJfrksYrP8N
-	 x+LtTsUSeU1MUP6gMKtuVhv5J319bGrHEUaO8/GESTVvNluOha6XxJkLMiLmyipREu
-	 dkjqxfvdBdZz26k07HxdwIo69oBP1Cy2FB98doth98eevXvy8TPJ0z2YzE6D3ai8tw
-	 OwfFAKArsHPPuPGl5BH+j4AxmhwaYg56DEQe9ksHzalwqYOU6fh7ySmmwsFAiHAy6k
-	 MyGGJ1Y+V4mEg==
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Huth <thuth@redhat.com>,
-	Yao Zi <ziyao@disroot.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Xi Ruoyao <xry111@xry111.site>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Fix bitflag conflict for TIF_FIXADE
-Date: Fri, 19 Sep 2025 12:58:29 +0000
-Message-ID: <20250919125829.37951-1-ziyao@disroot.org>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="gMW1G2+T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1758288095;
+	bh=T70MbS0K8WkSnx8CHqdI37DUguC+d4jdsViVEfGIAxs=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=gMW1G2+TJKbENPB8SYO1N6tosOE8K5QVPnKgHQ497XqPQ2o6HKuZGOjUG9j8M7pA5
+	 jNVDvECymcvC0pN+92McbuZgZRnUQDoRvKo+nAqMzZ4gVX0v5OqxOMpmqnTe1IYBk2
+	 7xNcx4oR2Wc/HA8X1c6FjB1uPNaGAvKT5dnr67Z8=
+EX-QQ-RecipientCnt: 8
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-FEAT: D4aqtcRDiqT3izQPfYk+lmlkbENMFn3oJT9AK4gN80M=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: 0778vltmOfK63PxtYuK9G+mnXvLYboqmCGFS/29NVIuIugbXSNmgi+5KBpkqoIdWpTfdTUuU3HHj5hjXMxU9Kw==
+X-QQ-STYLE: 
+X-QQ-mid: lv3sz3a-6t1758288093t0f72603b
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>, "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?VGhvbWFzIEh1dGg=?=" <thuth@redhat.com>, "=?utf-8?B?WWFvIFpp?=" <ziyao@disroot.org>, "=?utf-8?B?dGdseA==?=" <tglx@linutronix.de>, "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>
+Cc: "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
+Subject: Re:[PATCH] LoongArch: Fix bitflag conflict for TIF_FIXADE
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Fri, 19 Sep 2025 21:21:32 +0800
+X-Priority: 3
+Message-ID: <tencent_65BA2C816FF78FD06FE2FE6B@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <20250919125829.37951-1-ziyao@disroot.org>
+In-Reply-To: <20250919125829.37951-1-ziyao@disroot.org>
+X-QQ-ReplyHash: 3796280728
+X-BIZMAIL-ID: 3095721564594470550
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Fri, 19 Sep 2025 21:21:34 +0800 (CST)
+Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OLsBWtCIHsg6P/JR5jKZTXK+q2HWbV9YWDM/2FnuJIXrxI07V4Q0zyiG
+	kJlEnKfXHE0Lybq/oqbWIaoB6w6yf6KW2y3lNqtzFnxSZ1cfRTaUn2DLUtHOmwH8OD8KKwu
+	TdQfDpW9lv9fAaiRQ2nf2G1THitNCWF7HjnfVBZ92zuzfedDhZDVSzFOSY61mr8pruPHC8M
+	xo03tYl0u6dUHcgA3vO8gggYP86F/dQh1REXk6cHYHAP4lFUAwJMQwXlHmpLEQb8kSjG+FC
+	GMB5dmG4NqPusgxWeZt8KYF1yK81IB2DwcMlOv+cj9229yeeqbjo073ppRb/AtwLSmK68Aq
+	YJE/oO7+gLXF+BmgdeADt6nbisBfgOzkLEpBkKbeqGTosA7O9IwI8hc8c7cbKDhixPRLVA/
+	kgMV0MJcxuLLnyuFT+qu1hyHRWO+r/dHv0CkBgHK6SfGU4w5enUQIaoBO4jVcauNgcnWpaq
+	E93Hcv9L4SGEnM+vmo7RAw0pupiAU2YNp3uxyAQR7hPIWNd2jNqitgEZGn7OJQJudNfZx+3
+	1glmCxSintNEVkXsUitGaCJIOan+yQG4cMP3VVT63ks+n/wJYxJL89GeStEt1gw/yMb4bqF
+	wf8oZllfrTS4MkKfPbvEO4ZX34rcNIEux+LpoUqIUErqwGtKWVkhbXaQcmfAoay2cECTTV0
+	1P0d+Ax5meIzsxQHxmUTPBHfHDtJ1nmG+wrShzlU1ByqegwfEwvuCUBib6tI5g9lqkoeB61
+	Ijn9YfPWTX1n3gg0u5403agdLTnt+TRjZbK2GYGHV2hGV6kto23dRHGTA3KQyNlwvSX6XXT
+	YGEc3CioiSQO0PbRpjpyhy5uOMpAgGNkZ03lfMfqtDUYWcFhMoAqqroGtB167BhIlNQeJAi
+	v9MFkfIHrBgJxr7hgD3lvklEkn8B62l4ouHtuuee3tNaJ6PKdzxIC9knEmn6vbH2oClBJ2K
+	jns0RtpUl7LVVAQjs4OAtal9+u/wRfgHIH4OUo5vRo1Z5YFcDIXGyNJOW7PmxxcaIRxbwh8
+	yXtrnsR+WY8QDRHVgxowc6oCMDftk=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-After LoongArch was converted to use the generic TIF bits in commit
-f9629891d407 ("loongarch: Use generic TIF bits"), its TIF_FIXADE flag
-takes the same bit with TIF_RESTORE_SIGMASK in thread_info.flags.
-
-Such conflict causes TIF_FIXADE being considered cleared when
-TIF_RESTORE_SIGMASK is cleared during deliver of a signal. And since
-TIF_FIXADE determines whether unaligned access emulation works for a
-task, userspace making use of unaligned access will receive unexpected
-SIGBUS (and likely terminate) after receiving its first signal.
-
-This conflict looks like a simple typo, let's just switch to a free bit.
-
-Fixes: f9629891d407 ("loongarch: Use generic TIF bits")
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
-
-Note the problematic commit is contained in next-20250918, but not
-master.
-
- arch/loongarch/include/asm/thread_info.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/include/asm/thread_info.h b/arch/loongarch/include/asm/thread_info.h
-index def7cb14467e..4d7117fcdc78 100644
---- a/arch/loongarch/include/asm/thread_info.h
-+++ b/arch/loongarch/include/asm/thread_info.h
-@@ -77,7 +77,7 @@ register unsigned long current_stack_pointer __asm__("$sp");
- #define TIF_NOHZ		16	/* in adaptive nohz mode */
- #define TIF_USEDFPU		17	/* FPU was used by this task this quantum (SMP) */
- #define TIF_USEDSIMD		18	/* SIMD has been used this quantum */
--#define TIF_FIXADE		10	/* Fix address errors in software */
-+#define TIF_FIXADE		19	/* Fix address errors in software */
- #define TIF_LOGADE		20	/* Log address errors to syslog */
- #define TIF_32BIT_REGS		21	/* 32-bit general purpose registers */
- #define TIF_32BIT_ADDR		22	/* 32-bit address space */
--- 
-2.50.1
+SGVsbG8sDQoNCm5pY2UgY2F0Y2g6KQ0KDQpSZXZpZXdlZC1ieTogV2VudGFvIEd1YW4gPGd1
+YW53ZW50YW9AdW5pb250ZWNoLmNvbT4NCg0KQlJzDQpXZW50YW8gR3Vhbg==
 
