@@ -1,348 +1,295 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61CC02441B8
-	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 01:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBA5277C95
+	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 06:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758246003; cv=none; b=E1fp6zmouM9byW+FxD3nuutkc2XKjZxQOit0c+rNT0+eZpqVROu/rDK9NyEUCccAo+fLPhl9uBvi5JlFCE3lagNCchNaLXbPKhPiMhsATiq7Rc3FPVooaYu2QvQFw247iNvesyv2M0p0aaI8r2fjiaA+zSRDmuePh0mb+Z9SB70=
+	t=1758264787; cv=none; b=lM7L+15LLQPt7y99LJMvdgz5svwGEYIuQRdMqoeQr8Ks5YWH2KMw/2ToE9DEgDHLuNQGaluM/6S0b3ugpA8nMv6OZFfUvObpO3r4q9JSUU1jVZKkaVhhHR7Zurd/VqmaFvxeQNnvv5CLMm5aALuD+JSS3fLuLz8JiUp4ThvmT1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758246003; c=relaxed/simple;
-	bh=QkVwto4FoSVDUqJ7/ZjcZwZ0G2bU4P9E42N+ULx1FxQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=lhfRT7hLwPHsyfw5R/VW90u+J4ra3+Hnak4ntT3wM1+qOe2c35qDs6IMXT1Vq/duuqc9x31XhoXCveSVQ2jV++Q66DlVFjkbeB7kmSya5KqmiCTPtH5Ubuld/WNfi7XQHw7vkUrQ8n8vs0M2NuTjxqJpdHV7R1vKCwYoWWdKk4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxE9BktMxoMBEMAA--.25549S3;
-	Fri, 19 Sep 2025 09:39:48 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDxrcFgtMxoxb2eAA--.23502S3;
-	Fri, 19 Sep 2025 09:39:46 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Fix VM migration failure with PTW enabled
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250910071429.3925025-1-maobibo@loongson.cn>
- <CAAhV-H65H_iREuETGU_v9oZdaPFoQj1VZV46XSNTC8ppENXzuQ@mail.gmail.com>
- <3d3a72c2-7c91-7640-5f0b-7b95bd5f0d2e@loongson.cn>
- <CAAhV-H4bEyeV7WkfSNBJnicMhhnSwj3PEr9K4ZpXwto1=JyWUw@mail.gmail.com>
- <ff12ec30-b0df-aedd-a713-4fb77a4e092a@loongson.cn>
- <CAAhV-H7AhUijxaW5oS6s4hCtWyEOgx8iaku2KhbK_6mZbRHYHQ@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <dc654dc5-e00a-9599-2238-40366942cc9c@loongson.cn>
-Date: Fri, 19 Sep 2025 09:37:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1758264787; c=relaxed/simple;
+	bh=xHnquOqSX3ANSv/VLcyjTGkQOGzW8lCY89iculM2yQg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HWpuni6yTth1ltANJvEZkcc7BlB+uH/uQK9FD8hrQ/chR2+lasF0jHesMwObCnvuOGTNELw+oeowKHZtvKvH4v7MaRR+TkzsYW7Xqe/bfW+r5gD1VOKFhfDkogsHJAHtbcojxhNCeQhXjAqwQoIDiZk1tdI6NGtHePyf3tEAu64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=shJCGwT2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="shJCGwT2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A5AC4CEF1
+	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 06:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758264787;
+	bh=xHnquOqSX3ANSv/VLcyjTGkQOGzW8lCY89iculM2yQg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=shJCGwT2+EjHcmGWSnRW6zUAs1/Ff08OvWr1uLhCGCp/jtvnEPfYdBUCEM2x7Khj8
+	 tBB7xaZlVKcYnz7icJzF1gv+brD9kAYYS43FFSFVl8Zo3NME61RUI8szfgrjy4DCWW
+	 WiL0ZagYR+wG3IEK6OG+NcHfLDDQatCc5/20qwSqJ0jaKJS2mAR7iD0D5mJCePjrqx
+	 CniOJ8kPU7fspPCyFxzr4lO0knzLBVNUxddNDIFRK3ZfaHCAV8B3Iz4VGypfzudb1L
+	 5WHuDGFIOh/JKgBGMje2UDKpq+gZsM/7crMKBEy/m2iu5gDDapDsTt6SlOAH4/OAJt
+	 dupPqapQkQMYA==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-62fc2d92d34so735214a12.2
+        for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 23:53:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXjWotjtIZEyg4CdkvOZhB5UVR/Bc/pm4BXbouKnz8Lr0JIKkBu4jCtes2hJLzvlZ0LJ8opiIq/qWM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzCf2jhane3deessMQRmMayvw+JvODPEhOygh38n57Ju5uqcTaq
+	txiDXDDKcD5KYWQKWZg8tCnsafMaGIn7ekdtHESE8CTCJPUHyBhEYx8gSPSzdoeqEyn52nuwepA
+	DgKYvk/S1EPGiBvi+fbSL0CL2kOX+4xw=
+X-Google-Smtp-Source: AGHT+IFc/Fpj/ukN4/atKPKL8E8Lu2yEPdJCnEgMdClfLHXcrjzhf/VJiH9a+YQhmqUGaOXl9C62KCggazdE8poOwyo=
+X-Received: by 2002:a17:907:7241:b0:b04:3f35:9761 with SMTP id
+ a640c23a62f3a-b24ee6ef78amr186287266b.1.1758264786006; Thu, 18 Sep 2025
+ 23:53:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7AhUijxaW5oS6s4hCtWyEOgx8iaku2KhbK_6mZbRHYHQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxrcFgtMxoxb2eAA--.23502S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3ZF1rAFW8Zr1xXw15Gr1xWFX_yoWDur47pF
-	W8GF4UAr48Jr17GrW2g3WqqrnrtrsrKF1xXF1UKw1UGF1Dtr1UZF18WrWY9F18J348G3W7
-	XF45Jry3W3y3tabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUrNtxDUUU
-	U
+References: <20250916235627.102831-1-hengqi.chen@gmail.com>
+ <20250916235627.102831-9-hengqi.chen@gmail.com> <CAAhV-H7oOSWXYjmjXOhvEAcwQnEAs9ZfpdAps83Q=RhP6wcJrw@mail.gmail.com>
+ <CAEyhmHSwVTbYHdSVGyZ4wf-Sv+rhe2rF4L9H+6oOh97CU7jE1Q@mail.gmail.com>
+ <CAAhV-H6gEMy0fvjFot1VZrwx319t4wJKeA769MLfmF4z7L5JHA@mail.gmail.com> <CAEyhmHQhEutwdD4jBrU_eJ7kDKCROusNEvVaP0nrWuKgXGB2_Q@mail.gmail.com>
+In-Reply-To: <CAEyhmHQhEutwdD4jBrU_eJ7kDKCROusNEvVaP0nrWuKgXGB2_Q@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 19 Sep 2025 14:52:53 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Mzaef8r+nOntHiERk0-6rkCbRqD-3OFeYHV5Hj-kkYA@mail.gmail.com>
+X-Gm-Features: AS18NWCTVZMVU49CndW2kz1wIFZCDi_I463iHFBxdD3ZbqIvGURNqeIhJg_gC8M
+Message-ID: <CAAhV-H6Mzaef8r+nOntHiERk0-6rkCbRqD-3OFeYHV5Hj-kkYA@mail.gmail.com>
+Subject: Re: [PATCH v5 8/8] LoongArch: BPF: Sign extend struct ops return
+ values properly
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, hejinyang@loongson.cn, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Sep 18, 2025 at 8:32=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> On Wed, Sep 17, 2025 at 4:58=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
+g> wrote:
+> >
+> > On Wed, Sep 17, 2025 at 1:34=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.=
+com> wrote:
+> > >
+> > > On Wed, Sep 17, 2025 at 11:19=E2=80=AFAM Huacai Chen <chenhuacai@kern=
+el.org> wrote:
+> > > >
+> > > > Hi, Hengqi,
+> > > >
+> > > > On Wed, Sep 17, 2025 at 9:56=E2=80=AFAM Hengqi Chen <hengqi.chen@gm=
+ail.com> wrote:
+> > > > >
+> > > > > The ns_bpf_qdisc selftest triggers a kernel panic:
+> > > > >
+> > > > >     CPU 0 Unable to handle kernel paging request at virtual addre=
+ss 0000000000741d58, era =3D=3D 90000000851b5ac0, ra =3D=3D 90000000851b5aa=
+4
+> > > > >     Oops[#1]:
+> > > > >     CPU: 0 UID: 0 PID: 449 Comm: test_progs Tainted: G           =
+OE       6.16.0+ #3 PREEMPT(full)
+> > > > >     Tainted: [O]=3DOOT_MODULE, [E]=3DUNSIGNED_MODULE
+> > > > >     Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/20=
+22
+> > > > >     pc 90000000851b5ac0 ra 90000000851b5aa4 tp 90000001076b8000 s=
+p 90000001076bb600
+> > > > >     a0 0000000000741ce8 a1 0000000000000001 a2 90000001076bb5c0 a=
+3 0000000000000008
+> > > > >     a4 90000001004c4620 a5 9000000100741ce8 a6 0000000000000000 a=
+7 0100000000000000
+> > > > >     t0 0000000000000010 t1 0000000000000000 t2 9000000104d24d30 t=
+3 0000000000000001
+> > > > >     t4 4f2317da8a7e08c4 t5 fffffefffc002f00 t6 90000001004c4620 t=
+7 ffffffffc61c5b3d
+> > > > >     t8 0000000000000000 u0 0000000000000001 s9 0000000000000050 s=
+0 90000001075bc800
+> > > > >     s1 0000000000000040 s2 900000010597c400 s3 0000000000000008 s=
+4 90000001075bc880
+> > > > >     s5 90000001075bc8f0 s6 0000000000000000 s7 0000000000741ce8 s=
+8 0000000000000000
+> > > > >        ra: 90000000851b5aa4 __qdisc_run+0xac/0x8d8
+> > > > >       ERA: 90000000851b5ac0 __qdisc_run+0xc8/0x8d8
+> > > > >      CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC -WE)
+> > > > >      PRMD: 00000004 (PPLV0 +PIE -PWE)
+> > > > >      EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
+> > > > >      ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
+> > > > >     ESTAT: 00010000 [PIL] (IS=3D ECode=3D1 EsubCode=3D0)
+> > > > >      BADV: 0000000000741d58
+> > > > >      PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
+> > > > >     Modules linked in: bpf_testmod(OE) [last unloaded: bpf_testmo=
+d(OE)]
+> > > > >     Process test_progs (pid: 449, threadinfo=3D000000009af02b3a, =
+task=3D00000000e9ba4956)
+> > > > >     Stack : 0000000000000000 90000001075bc8ac 90000000869524a8 90=
+00000100741ce8
+> > > > >             90000001075bc800 9000000100415300 90000001075bc8ac 00=
+00000000000000
+> > > > >             900000010597c400 900000008694a000 0000000000000000 90=
+00000105b59000
+> > > > >             90000001075bc800 9000000100741ce8 0000000000000050 90=
+0000008513000c
+> > > > >             9000000086936000 0000000100094d4c fffffff400676208 00=
+00000000000000
+> > > > >             9000000105b59000 900000008694a000 9000000086bf0dc0 90=
+00000105b59000
+> > > > >             9000000086bf0d68 9000000085147010 90000001075be788 00=
+00000000000000
+> > > > >             9000000086bf0f98 0000000000000001 0000000000000010 90=
+00000006015840
+> > > > >             0000000000000000 9000000086be6c40 0000000000000000 00=
+00000000000000
+> > > > >             0000000000000000 4f2317da8a7e08c4 0000000000000101 4f=
+2317da8a7e08c4
+> > > > >             ...
+> > > > >     Call Trace:
+> > > > >     [<90000000851b5ac0>] __qdisc_run+0xc8/0x8d8
+> > > > >     [<9000000085130008>] __dev_queue_xmit+0x578/0x10f0
+> > > > >     [<90000000853701c0>] ip6_finish_output2+0x2f0/0x950
+> > > > >     [<9000000085374bc8>] ip6_finish_output+0x2b8/0x448
+> > > > >     [<9000000085370b24>] ip6_xmit+0x304/0x858
+> > > > >     [<90000000853c4438>] inet6_csk_xmit+0x100/0x170
+> > > > >     [<90000000852b32f0>] __tcp_transmit_skb+0x490/0xdd0
+> > > > >     [<90000000852b47fc>] tcp_connect+0xbcc/0x1168
+> > > > >     [<90000000853b9088>] tcp_v6_connect+0x580/0x8a0
+> > > > >     [<90000000852e7738>] __inet_stream_connect+0x170/0x480
+> > > > >     [<90000000852e7a98>] inet_stream_connect+0x50/0x88
+> > > > >     [<90000000850f2814>] __sys_connect+0xe4/0x110
+> > > > >     [<90000000850f2858>] sys_connect+0x18/0x28
+> > > > >     [<9000000085520c94>] do_syscall+0x94/0x1a0
+> > > > >     [<9000000083df1fb8>] handle_syscall+0xb8/0x158
+> > > > >
+> > > > >     Code: 4001ad80  2400873f  2400832d <240073cc> 001137ff  00113=
+3ff  6407b41f  001503cc  0280041d
+> > > > >
+> > > > >     ---[ end trace 0000000000000000 ]---
+> > > > >
+> > > > > The bpf_fifo_dequeue prog returns a skb which is a pointer.
+> > > > > The pointer is treated as a 32bit value and sign extend to
+> > > > > 64bit in epilogue. This behavior is right for most bpf prog
+> > > > > types but wrong for struct ops which requires LoongArch ABI.
+> > > > >
+> > > > > So let's sign extend struct ops return values according to
+> > > > > the LoongArch ABI ([0]) and return value spec in function model.
+> > > > >
+> > > > >   [0]: https://loongson.github.io/LoongArch-Documentation/LoongAr=
+ch-ELF-ABI-EN.html
+> > > > >
+> > > > > Fixes: 6abf17d690d8 ("LoongArch: BPF: Add struct ops support for =
+trampoline")
+> > > > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > > > > ---
+> > > > >  arch/loongarch/net/bpf_jit.c | 36 ++++++++++++++++++++++++++++++=
++++++-
+> > > > >  1 file changed, 35 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bp=
+f_jit.c
+> > > > > index 6dba407c202f..6533088c86ba 100644
+> > > > > --- a/arch/loongarch/net/bpf_jit.c
+> > > > > +++ b/arch/loongarch/net/bpf_jit.c
+> > > > > @@ -1451,6 +1451,36 @@ void arch_free_bpf_trampoline(void *image,=
+ unsigned int size)
+> > > > >         bpf_prog_pack_free(image, size);
+> > > > >  }
+> > > > >
+> > > > > +/*
+> > > > > + * Sign-extend the register if necessary
+> > > > > + */
+> > > > > +static void sign_extend(struct jit_ctx *ctx, int rd, int rj, u8 =
+size, u8 flags)
+> > > > > +{
+> > > > > +       if (!(flags & BTF_FMODEL_SIGNED_ARG) && (size =3D=3D 1 ||=
+ size =3D=3D 2)) {
+> > > > We don't need to move_reg() for size =3D=3D 4?
+> > > >
+> > >
+> > > The ABI says that unsigned char/short should be zero-extended.
+> > > But int (both signed and unsigned) should be signed-extended.
+> > >
+> > > > And it is better to move this logic to the switch-case block.
+> > > >
+> > >
+> > > I tried, it looks more complicated than the current approach.
+> > > FYI, I've done similar fix for riscv ([0]).
+> > >
+> > >   [0]: https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.g=
+it/commit/?id=3Dfd2e08128944a7679e753f920e9eda72057e427c
+> > OK, then please also evaluate BTF_FMODEL_SIGNED_ARG from the caller
+>
+> I talked to Tiezhu off-list, he thinks this is unnecessary.
+> We might need to check other flag bit later.
+sign_extend() can hardly use other flags. And if really needed, we can
+use a local variable "sign" in this function that is convenient for
+below logic.
 
+Huacai
 
-On 2025/9/18 下午6:54, Huacai Chen wrote:
-> On Wed, Sep 17, 2025 at 9:11 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/9/16 下午10:21, Huacai Chen wrote:
->>> On Mon, Sep 15, 2025 at 9:22 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>>
->>>>
->>>> On 2025/9/14 上午9:57, Huacai Chen wrote:
->>>>> Hi, Bibo,
->>>>>
->>>>> On Wed, Sep 10, 2025 at 3:14 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>>>
->>>>>> With PTW disabled system, bit Dirty is HW bit for page writing, however
->>>>>> with PTW enabled system, bit Write is HW bit for page writing. Previously
->>>>>> bit Write is treated as SW bit to record page writable attribute for fast
->>>>>> page fault handling in the secondary MMU, however with PTW enabled machine,
->>>>>> this bit is used by HW already.
->>>>>>
->>>>>> Here define KVM_PAGE_SOFT_WRITE with SW bit _PAGE_MODIFIED, so that it can
->>>>>> work on both PTW disabled and enabled machines. And with HW write bit, both
->>>>>> bit Dirty and Write is set or clear.
->>>>>>
->>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>>>> ---
->>>>>>     arch/loongarch/include/asm/kvm_mmu.h | 20 ++++++++++++++++----
->>>>>>     arch/loongarch/kvm/mmu.c             |  8 ++++----
->>>>>>     2 files changed, 20 insertions(+), 8 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/loongarch/include/asm/kvm_mmu.h b/arch/loongarch/include/asm/kvm_mmu.h
->>>>>> index 099bafc6f797..efcd593c42b1 100644
->>>>>> --- a/arch/loongarch/include/asm/kvm_mmu.h
->>>>>> +++ b/arch/loongarch/include/asm/kvm_mmu.h
->>>>>> @@ -16,6 +16,13 @@
->>>>>>      */
->>>>>>     #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
->>>>>>
->>>>>> +/*
->>>>>> + * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
->>>>>> + * kernel, on secondary MMU it records page writable in order to fast
->>>>>> + * path handling
->>>>>> + */
->>>>>> +#define KVM_PAGE_SOFT_WRITE    _PAGE_MODIFIED
->>>>> KVM_PAGE_WRITEABLE is more suitable.
->>>> both are ok for me.
->>>>>
->>>>>> +
->>>>>>     #define _KVM_FLUSH_PGTABLE     0x1
->>>>>>     #define _KVM_HAS_PGMASK                0x2
->>>>>>     #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
->>>>>> @@ -52,11 +59,16 @@ static inline void kvm_set_pte(kvm_pte_t *ptep, kvm_pte_t val)
->>>>>>            WRITE_ONCE(*ptep, val);
->>>>>>     }
->>>>>>
->>>>>> -static inline int kvm_pte_write(kvm_pte_t pte) { return pte & _PAGE_WRITE; }
->>>>>> -static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & _PAGE_DIRTY; }
->>>>>> +static inline int kvm_pte_soft_write(kvm_pte_t pte) { return pte & KVM_PAGE_SOFT_WRITE; }
->>>>> The same, kvm_pte_mkwriteable() is more suitable.
->>>> kvm_pte_writable()  here ?  and kvm_pte_mkwriteable() for the bellowing
->>>> sentense.
->>>>
->>>> If so, that is ok, both are ok for me.
->>> Yes.
->>>
->>>>>
->>>>>> +static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & __WRITEABLE; }
->>>>> _PAGE_DIRTY and _PAGE_WRITE are always set/cleared at the same time,
->>>>> so the old version still works.
->>>> Although it is workable, I still want to remove single bit _PAGE_DIRTY
->>>> checking here.
->>> I want to check a single bit because "kvm_pte_write() return
->>> _PAGE_WRITE and kvm_pte_dirty() return _PAGE_DIRTY" looks more
->>> natural.
->> kvm_pte_write() is not needed any more and removed here. This is only
->> kvm_pte_writable() to check software writable bit, kvm_pte_dirty() to
->> check HW write bit.
->>
->> There is no reason to check single bit with _PAGE_WRITE or _PAGE_DIRTY,
->> since there is different meaning on machines with/without HW PTW.
-> Applied together with other patches, you can test it.
-> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-next
-yes, this branch passes to migrate on PTW enabled machines such as 3C6000.
-
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
->>
->> Regards
->> Bibo Mao
->>>
->>> You may argue that kvm_pte_mkdirty() set both _PAGE_WRITE and
->>> _PAGE_DIRTY so kvm_pte_dirty() should also return both. But I think
->>> kvm_pte_mkdirty() in this patch is just a "reasonable optimization".
->>> Because strictly speaking, we need both kvm_pte_mkdirty() and
->>> kvm_pte_mkwrite() and call the pair when needed.
->>>
->>> Huacai
->>>
->>>>
->>>> Regards
->>>> Bibo Mao
->>>>>
->>>>>>     static inline int kvm_pte_young(kvm_pte_t pte) { return pte & _PAGE_ACCESSED; }
->>>>>>     static inline int kvm_pte_huge(kvm_pte_t pte) { return pte & _PAGE_HUGE; }
->>>>>>
->>>>>> +static inline kvm_pte_t kvm_pte_mksoft_write(kvm_pte_t pte)
->>>>>> +{
->>>>>> +       return pte | KVM_PAGE_SOFT_WRITE;
->>>>>> +}
->>>>>> +
->>>>>>     static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
->>>>>>     {
->>>>>>            return pte | _PAGE_ACCESSED;
->>>>>> @@ -69,12 +81,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t pte)
->>>>>>
->>>>>>     static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
->>>>>>     {
->>>>>> -       return pte | _PAGE_DIRTY;
->>>>>> +       return pte | __WRITEABLE;
->>>>>>     }
->>>>>>
->>>>>>     static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
->>>>>>     {
->>>>>> -       return pte & ~_PAGE_DIRTY;
->>>>>> +       return pte & ~__WRITEABLE;
->>>>>>     }
->>>>>>
->>>>>>     static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
->>>>>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
->>>>>> index ed956c5cf2cc..68749069290f 100644
->>>>>> --- a/arch/loongarch/kvm/mmu.c
->>>>>> +++ b/arch/loongarch/kvm/mmu.c
->>>>>> @@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
->>>>>>            /* Track access to pages marked old */
->>>>>>            new = kvm_pte_mkyoung(*ptep);
->>>>>>            if (write && !kvm_pte_dirty(new)) {
->>>>>> -               if (!kvm_pte_write(new)) {
->>>>>> +               if (!kvm_pte_soft_write(new)) {
->>>>>>                            ret = -EFAULT;
->>>>>>                            goto out;
->>>>>>                    }
->>>>>> @@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
->>>>>>                    prot_bits |= _CACHE_SUC;
->>>>>>
->>>>>>            if (writeable) {
->>>>>> -               prot_bits |= _PAGE_WRITE;
->>>>>> +               prot_bits = kvm_pte_mksoft_write(prot_bits);
->>>>>>                    if (write)
->>>>>> -                       prot_bits |= __WRITEABLE;
->>>>>> +                       prot_bits = kvm_pte_mkdirty(prot_bits);
->>>>>>            }
->>>>>>
->>>>>>            /* Disable dirty logging on HugePages */
->>>>>> @@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
->>>>>>            kvm_release_faultin_page(kvm, page, false, writeable);
->>>>>>            spin_unlock(&kvm->mmu_lock);
->>>>>>
->>>>>> -       if (prot_bits & _PAGE_DIRTY)
->>>>>> +       if (kvm_pte_dirty(prot_bits))
->>>>>>                    mark_page_dirty_in_slot(kvm, memslot, gfn);
->>>>>>
->>>>>>     out:
->>>>> To save time, I just change the whole patch like this, you can confirm
->>>>> whether it woks:
->>>>>
->>>>> diff --git a/arch/loongarch/include/asm/kvm_mmu.h
->>>>> b/arch/loongarch/include/asm/kvm_mmu.h
->>>>> index 099bafc6f797..882f60c72b46 100644
->>>>> --- a/arch/loongarch/include/asm/kvm_mmu.h
->>>>> +++ b/arch/loongarch/include/asm/kvm_mmu.h
->>>>> @@ -16,6 +16,13 @@
->>>>>      */
->>>>>     #define KVM_MMU_CACHE_MIN_PAGES        (CONFIG_PGTABLE_LEVELS - 1)
->>>>>
->>>>> +/*
->>>>> + * _PAGE_MODIFIED is SW pte bit, it records page ever written on host
->>>>> + * kernel, on secondary MMU it records page writable in order to fast
->>>>> + * path handling
->>>>> + */
->>>>> +#define KVM_PAGE_WRITEABLE     _PAGE_MODIFIED
->>>>> +
->>>>>     #define _KVM_FLUSH_PGTABLE     0x1
->>>>>     #define _KVM_HAS_PGMASK                0x2
->>>>>     #define kvm_pfn_pte(pfn, prot) (((pfn) << PFN_PTE_SHIFT) |
->>>>> pgprot_val(prot))
->>>>> @@ -56,6 +63,7 @@ static inline int kvm_pte_write(kvm_pte_t pte) {
->>>>> return pte & _PAGE_WRITE; }
->>>>>     static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte &
->>>>> _PAGE_DIRTY; }
->>>>>     static inline int kvm_pte_young(kvm_pte_t pte) { return pte &
->>>>> _PAGE_ACCESSED; }
->>>>>     static inline int kvm_pte_huge(kvm_pte_t pte) { return pte &
->>>>> _PAGE_HUGE; }
->>>>> +static inline int kvm_pte_writeable(kvm_pte_t pte) { return pte &
->>>>> KVM_PAGE_WRITEABLE; }
->>>>>
->>>>>     static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
->>>>>     {
->>>>> @@ -69,12 +77,12 @@ static inline kvm_pte_t kvm_pte_mkold(kvm_pte_t
->>>>> pte)
->>>>>
->>>>>     static inline kvm_pte_t kvm_pte_mkdirty(kvm_pte_t pte)
->>>>>     {
->>>>> -       return pte | _PAGE_DIRTY;
->>>>> +       return pte | __WRITEABLE;
->>>>>     }
->>>>>
->>>>>     static inline kvm_pte_t kvm_pte_mkclean(kvm_pte_t pte)
->>>>>     {
->>>>> -       return pte & ~_PAGE_DIRTY;
->>>>> +       return pte & ~__WRITEABLE;
->>>>>     }
->>>>>
->>>>>     static inline kvm_pte_t kvm_pte_mkhuge(kvm_pte_t pte)
->>>>> @@ -87,6 +95,11 @@ static inline kvm_pte_t kvm_pte_mksmall(kvm_pte_t
->>>>> pte)
->>>>>            return pte & ~_PAGE_HUGE;
->>>>>     }
->>>>>
->>>>> +static inline kvm_pte_t kvm_pte_mkwriteable(kvm_pte_t pte)
->>>>> +{
->>>>> +       return pte | KVM_PAGE_WRITEABLE;
->>>>> +}
->>>>> +
->>>>>     static inline int kvm_need_flush(kvm_ptw_ctx *ctx)
->>>>>     {
->>>>>            return ctx->flag & _KVM_FLUSH_PGTABLE;
->>>>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
->>>>> index ed956c5cf2cc..7c8143e79c12 100644
->>>>> --- a/arch/loongarch/kvm/mmu.c
->>>>> +++ b/arch/loongarch/kvm/mmu.c
->>>>> @@ -569,7 +569,7 @@ static int kvm_map_page_fast(struct kvm_vcpu
->>>>> *vcpu, unsigned long gpa, bool writ
->>>>>            /* Track access to pages marked old */
->>>>>            new = kvm_pte_mkyoung(*ptep);
->>>>>            if (write && !kvm_pte_dirty(new)) {
->>>>> -               if (!kvm_pte_write(new)) {
->>>>> +               if (!kvm_pte_writeable(new)) {
->>>>>                            ret = -EFAULT;
->>>>>                            goto out;
->>>>>                    }
->>>>> @@ -856,9 +856,9 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
->>>>> unsigned long gpa, bool write)
->>>>>                    prot_bits |= _CACHE_SUC;
->>>>>
->>>>>            if (writeable) {
->>>>> -               prot_bits |= _PAGE_WRITE;
->>>>> +               prot_bits = kvm_pte_mkwriteable(prot_bits);
->>>>>                    if (write)
->>>>> -                       prot_bits |= __WRITEABLE;
->>>>> +                       prot_bits = kvm_pte_mkdirty(prot_bits);
->>>>>            }
->>>>>
->>>>>            /* Disable dirty logging on HugePages */
->>>>> @@ -904,7 +904,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu,
->>>>> unsigned long gpa, bool write)
->>>>>            kvm_release_faultin_page(kvm, page, false, writeable);
->>>>>            spin_unlock(&kvm->mmu_lock);
->>>>>
->>>>> -       if (prot_bits & _PAGE_DIRTY)
->>>>> +       if (kvm_pte_dirty(prot_bits))
->>>>>                    mark_page_dirty_in_slot(kvm, memslot, gfn);
->>>>>
->>>>>     out:
->>>>>
->>>>> Huacai
->>>>>
->>>>>>
->>>>>> base-commit: 9dd1835ecda5b96ac88c166f4a87386f3e727bd9
->>>>>> --
->>>>>> 2.39.3
->>>>>>
->>>>>>
->>>>
->>
->>
-
+>
+> > like RISC-V. And then adjust the condition like this (I think it is
+> > clearer):
+> > +       if (size =3D=3D 1 || size =3D=3D 2) {
+> > +               if (!sign && (rd !=3D rj))
+> > +                       move_reg(ctx, rd, rj);
+> > +               return;
+> > +       }
+> >
+>
+> Instead, I think adding a comment mentioning the ABI requirement is enoug=
+h.
+>
+> > Huacai
+> >
+> > >
+> > > > Huacai
+> > > >
+> > > > > +               if (rd !=3D rj)
+> > > > > +                       move_reg(ctx, rd, rj);
+> > > > > +               return;
+> > > > > +       }
+> > > > > +
+> > > > > +       switch (size) {
+> > > > > +       case 1:
+> > > > > +               emit_insn(ctx, extwb, rd, rj);
+> > > > > +               break;
+> > > > > +       case 2:
+> > > > > +               emit_insn(ctx, extwh, rd, rj);
+> > > > > +               break;
+> > > > > +       case 4:
+> > > > > +               emit_insn(ctx, addiw, rd, rj, 0);
+> > > > > +               break;
+> > > > > +       case 8:
+> > > > > +               if (rd !=3D rj)
+> > > > > +                       move_reg(ctx, rd, rj);
+> > > > > +               break;
+> > > > > +       default:
+> > > > > +               pr_warn("bpf_jit: invalid size %d for sign_extend=
+\n", size);
+> > > > > +       }
+> > > > > +}
+> > > > > +
+> > > > >  static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, st=
+ruct bpf_tramp_image *im,
+> > > > >                                          const struct btf_func_mo=
+del *m, struct bpf_tramp_links *tlinks,
+> > > > >                                          void *func_addr, u32 fla=
+gs)
+> > > > > @@ -1659,8 +1689,12 @@ static int __arch_prepare_bpf_trampoline(s=
+truct jit_ctx *ctx, struct bpf_tramp_i
+> > > > >                 restore_args(ctx, m->nr_args, args_off);
+> > > > >
+> > > > >         if (save_ret) {
+> > > > > -               emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_G=
+PR_FP, -retval_off);
+> > > > >                 emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_=
+GPR_FP, -(retval_off - 8));
+> > > > > +               if (is_struct_ops)
+> > > > > +                       sign_extend(ctx, LOONGARCH_GPR_A0, regmap=
+[BPF_REG_0],
+> > > > > +                                   m->ret_size, m->ret_flags);
+> > > > > +               else
+> > > > > +                       emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOO=
+NGARCH_GPR_FP, -retval_off);
+> > > > >         }
+> > > > >
+> > > > >         emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -=
+sreg_off);
+> > > > > --
+> > > > > 2.43.5
+> > > > >
