@@ -1,252 +1,137 @@
-Received: from fra-out-004.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-004.esa.eu-central-1.outbound.mail-perimeter.amazon.com [3.74.81.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F4D2FFF80;
-	Fri, 19 Sep 2025 08:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.74.81.189
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17DCA25B2FE
+	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 09:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758271483; cv=none; b=jNyI3Qy5h+Gm6x4tgbmoUx5uMPOyC13hFYsD/xexDWY5dVKjjiQKGPcJ1ptKy5YBbP1rYM6cWgSzp6k1cBhpdIotfy+TlfQIQrFn6b0TVQBQgt8TWzpWa1Uh9KNFeQJCjxh3zHje8cC+f8JTz0UpleAJTOhzmZ+MG5e7UAEJbPw=
+	t=1758274585; cv=none; b=K4KdghIJRoj3/mKEOMK8ETEKucG8VyJBHuLbcQkBPeRjOlPzlh5Gf7PSgkJnWZIFZUXK4ovTrHBnHS7ofQGzmQ2ZeVZ4ckOAPO+JeNMdq87iVmRVanWAdBnrC1fIu2xL+LsTZUUeZuj/sdTIe5uZqf5rT5lSZQ+kQWjWwopwBWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758271483; c=relaxed/simple;
-	bh=CzNa5ax+6SWZph/acveGblbyXULOKX6jSGgNsw+V/Ms=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=sOoup9WA9iznh4t3qkIbMVFSR9vAGOt3VPTapeFHxjBEi2clIqitGJiWHp/y4l9JQi7QLUc1Zk0XblX8f4h7RSD/VuP7+Nbg2pjXoU9QkvX+CM1bPxqsIfRR1OviuXXBm7wMQWl2adhGpP84qXaRd/pFHxi2OYZ3L4sF7K7RTRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=stOBsgVg; arc=none smtp.client-ip=3.74.81.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="stOBsgVg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazoncorp2; t=1758271481; x=1789807481;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=FDaXBfPtB1+IZ028q3Oc9ecT9TZeV+KPQRYxRClbnDE=;
-  b=stOBsgVgEIz5/6E8WWdU/+HzUiFzx9QrEJEY6BLeIgF2wR7Zjd/Ws3xJ
-   5KRb1Yfy0Bu/liWdRWualNjwjGlbzz2EGkL5uO1j9FSbQF97Q/qbJf3C/
-   nNZ7rnh6Hpd637Gu9JKocafYVvsL3RU2avGJqCQErKS5HivVNWGZEuZm/
-   iUlbwotaqYitekvqlzwHfYn4HTsk6/SP+NtTANzao1C5QHRa83bL8BPJL
-   I9MIwSIe/GZXBYW5l0wZPC9utYQSQljyecemP+VHuyv4Nf9FDQ78FvIVn
-   Z32kfkD/PbQ9I/Q17Vd0ZiTZazg6U+D3Jxk6hd1D6/d+JeF+YhvvPaVgx
-   w==;
-X-CSE-ConnectionGUID: mbWG6VQ7RoqqzIWbzp0AjA==
-X-CSE-MsgGUID: vpo8mYMDQZK9UPEfdukZNw==
-X-IronPort-AV: E=Sophos;i="6.18,277,1751241600"; 
-   d="scan'208";a="2360353"
-Received: from ip-10-6-6-97.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.6.97])
-  by internal-fra-out-004.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 08:44:31 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [54.240.197.234:18849]
- by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.1.3:2525] with esmtp (Farcaster)
- id 2446a584-4a1c-4985-9be9-b5a1e9401e86; Fri, 19 Sep 2025 08:44:30 +0000 (UTC)
-X-Farcaster-Flow-ID: 2446a584-4a1c-4985-9be9-b5a1e9401e86
-Received: from EX19D015EUB002.ant.amazon.com (10.252.51.123) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Fri, 19 Sep 2025 08:44:27 +0000
-Received: from EX19D015EUB004.ant.amazon.com (10.252.51.13) by
- EX19D015EUB002.ant.amazon.com (10.252.51.123) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Fri, 19 Sep 2025 08:44:27 +0000
-Received: from EX19D015EUB004.ant.amazon.com ([fe80::2dc9:7aa9:9cd3:fc8a]) by
- EX19D015EUB004.ant.amazon.com ([fe80::2dc9:7aa9:9cd3:fc8a%3]) with mapi id
- 15.02.2562.020; Fri, 19 Sep 2025 08:44:27 +0000
-From: "Roy, Patrick" <roypat@amazon.co.uk>
-To: "will@kernel.org" <will@kernel.org>
-CC: "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>,
-	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "alex@ghiti.fr"
-	<alex@ghiti.fr>, "andrii@kernel.org" <andrii@kernel.org>, "anna@kernel.org"
-	<anna@kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"ast@kernel.org" <ast@kernel.org>, "axelrasmussen@google.com"
-	<axelrasmussen@google.com>, "borntraeger@linux.ibm.com"
-	<borntraeger@linux.ibm.com>, "bp@alien8.de" <bp@alien8.de>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, "brauner@kernel.org"
-	<brauner@kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"chenhuacai@kernel.org" <chenhuacai@kernel.org>, "corbet@lwn.net"
-	<corbet@lwn.net>, "daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"david@redhat.com" <david@redhat.com>, "derekmn@amazon.co.uk"
-	<derekmn@amazon.co.uk>, "devel@lists.orangefs.org"
-	<devel@lists.orangefs.org>, "eddyz87@gmail.com" <eddyz87@gmail.com>,
-	"gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>,
-	"gor@linux.ibm.com" <gor@linux.ibm.com>, "hannes@cmpxchg.org"
-	<hannes@cmpxchg.org>, "haoluo@google.com" <haoluo@google.com>,
-	"hca@linux.ibm.com" <hca@linux.ibm.com>, "hpa@zytor.com" <hpa@zytor.com>,
-	"hubcap@omnibond.com" <hubcap@omnibond.com>, "jack@suse.cz" <jack@suse.cz>,
-	"Thomson, Jack" <jackabt@amazon.co.uk>, "jannh@google.com"
-	<jannh@google.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "jhubbard@nvidia.com"
-	<jhubbard@nvidia.com>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "jolsa@kernel.org"
-	<jolsa@kernel.org>, "Kalyazin, Nikita" <kalyazin@amazon.co.uk>,
-	"kernel@xen0n.name" <kernel@xen0n.name>, "kpsingh@kernel.org"
-	<kpsingh@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, "luto@kernel.org"
-	<luto@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>,
-	"martin@omnibond.com" <martin@omnibond.com>, "maz@kernel.org"
-	<maz@kernel.org>, "mhocko@suse.com" <mhocko@suse.com>, "mingo@redhat.com"
-	<mingo@redhat.com>, "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>, "paul.walmsley@sifive.com"
-	<paul.walmsley@sifive.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"peterx@redhat.com" <peterx@redhat.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "pfalcato@suse.de" <pfalcato@suse.de>, "Roy, Patrick"
-	<roypat@amazon.co.uk>, "rppt@kernel.org" <rppt@kernel.org>, "sdf@fomichev.me"
-	<sdf@fomichev.me>, "seanjc@google.com" <seanjc@google.com>,
-	"shakeel.butt@linux.dev" <shakeel.butt@linux.dev>, "shuah@kernel.org"
-	<shuah@kernel.org>, "song@kernel.org" <song@kernel.org>, "surenb@google.com"
-	<surenb@google.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"svens@linux.ibm.com" <svens@linux.ibm.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "trondmy@kernel.org" <trondmy@kernel.org>,
-	"vbabka@suse.cz" <vbabka@suse.cz>, "viro@zeniv.linux.org.uk"
-	<viro@zeniv.linux.org.uk>, "weixugc@google.com" <weixugc@google.com>,
-	"willy@infradead.org" <willy@infradead.org>, "x86@kernel.org"
-	<x86@kernel.org>, "Cali, Marco" <xmarcalx@amazon.co.uk>,
-	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, "yuanchu@google.com"
-	<yuanchu@google.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>
-Subject: Re: [PATCH v6 05/11] KVM: guest_memfd: Add flag to remove from direct
- map
-Thread-Topic: [PATCH v6 05/11] KVM: guest_memfd: Add flag to remove from
- direct map
-Thread-Index: AQHcKUGbESLQYfpS9EGxnIIHED72/Q==
-Date: Fri, 19 Sep 2025 08:44:27 +0000
-Message-ID: <20250919084425.30632-1-roypat@amazon.co.uk>
-References: <aMxpvI6Aj8mDsRNm@willie-the-truck>
-In-Reply-To: <aMxpvI6Aj8mDsRNm@willie-the-truck>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1758274585; c=relaxed/simple;
+	bh=WcG0omybLt/WfUJoDZrm8GNqdvyombjqKFY+koInuQ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ujfMEupQFWHr1W1imul0h8IgZpYIL6sOp2sxI5PgtuU/ete0MzsIjLK+jXc19OXxFOOx1dC3ctx5++r7lKUImh9bvlrk7foZwlGudeNd5Gk3u55pViGAR4IuVeHOVH1Cuz0h5w5opJQGDy3XxGVR2fD/DgdOrGpY+nJy6gq+kjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxP9MUJM1ooC0MAA--.25678S3;
+	Fri, 19 Sep 2025 17:36:20 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxbMEPJM1oMmufAA--.61162S3;
+	Fri, 19 Sep 2025 17:36:17 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-efi@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/3] LoongArch: Only link libstub to final vmlinux
+Date: Fri, 19 Sep 2025 17:36:13 +0800
+Message-ID: <20250919093615.30235-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20250919093615.30235-1-yangtiezhu@loongson.cn>
+References: <20250919093615.30235-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxbMEPJM1oMmufAA--.61162S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZF4rCF15tF13ury3Ar4rtFc_yoW5Wryfpa
+	1vkw42vrWDXrWvq3s7JFW0qw15tFs5Jr42qFyDGFZ8AryDXrn2vrZxArsrXF9Fq34DAFWI
+	qF1xtF1akFyUA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j83kZUUUUU=
 
-Hi Will,=0A=
-=0A=
-On Thu, 2025-09-18 at 21:21 +0100, Will Deacon wrote:=0A=
-> Hi Patrick,=0A=
-> We chatted briefly at KVM Forum, so I wanted to chime in here too from=0A=
-> the arm64 side.=0A=
-> =0A=
-> On Fri, Sep 12, 2025 at 09:17:37AM +0000, Roy, Patrick wrote:=0A=
->> Add GUEST_MEMFD_FLAG_NO_DIRECT_MAP flag for KVM_CREATE_GUEST_MEMFD()=0A=
->> ioctl. When set, guest_memfd folios will be removed from the direct map=
-=0A=
->> after preparation, with direct map entries only restored when the folios=
-=0A=
->> are freed.=0A=
->>=0A=
->> To ensure these folios do not end up in places where the kernel cannot=
-=0A=
->> deal with them, set AS_NO_DIRECT_MAP on the guest_memfd's struct=0A=
->> address_space if GUEST_MEMFD_FLAG_NO_DIRECT_MAP is requested.=0A=
->>=0A=
->> Add KVM_CAP_GUEST_MEMFD_NO_DIRECT_MAP to let userspace discover whether=
-=0A=
->> guest_memfd supports GUEST_MEMFD_FLAG_NO_DIRECT_MAP. Support depends on=
-=0A=
->> guest_memfd itself being supported, but also on whether linux supports=
-=0A=
->> manipulatomg the direct map at page granularity at all (possible most of=
-=0A=
->> the time, outliers being arm64 where its impossible if the direct map=0A=
->> has been setup using hugepages, as arm64 cannot break these apart due to=
-=0A=
->> break-before-make semantics, and powerpc, which does not select=0A=
->> ARCH_HAS_SET_DIRECT_MAP, which also doesn't support guest_memfd anyway=
-=0A=
->> though).=0A=
->>=0A=
->> Note that this flag causes removal of direct map entries for all=0A=
->> guest_memfd folios independent of whether they are "shared" or "private"=
-=0A=
->> (although current guest_memfd only supports either all folios in the=0A=
->> "shared" state, or all folios in the "private" state if=0A=
->> GUEST_MEMFD_FLAG_MMAP is not set). The usecase for removing direct map=
-=0A=
->> entries of also the shared parts of guest_memfd are a special type of=0A=
->> non-CoCo VM where, host userspace is trusted to have access to all of=0A=
->> guest memory, but where Spectre-style transient execution attacks=0A=
->> through the host kernel's direct map should still be mitigated.  In this=
-=0A=
->> setup, KVM retains access to guest memory via userspace mappings of=0A=
->> guest_memfd, which are reflected back into KVM's memslots via=0A=
->> userspace_addr. This is needed for things like MMIO emulation on x86_64=
-=0A=
->> to work.=0A=
->>=0A=
->> Do not perform TLB flushes after direct map manipulations. This is=0A=
->> because TLB flushes resulted in a up to 40x elongation of page faults in=
-=0A=
->> guest_memfd (scaling with the number of CPU cores), or a 5x elongation=
-=0A=
->> of memory population. TLB flushes are not needed for functional=0A=
->> correctness (the virt->phys mapping technically stays "correct",  the=0A=
->> kernel should simply not use it for a while). On the other hand, it mean=
-s=0A=
->> that the desired protection from Spectre-style attacks is not perfect,=
-=0A=
->> as an attacker could try to prevent a stale TLB entry from getting=0A=
->> evicted, keeping it alive until the page it refers to is used by the=0A=
->> guest for some sensitive data, and then targeting it using a=0A=
->> spectre-gadget.=0A=
-> =0A=
-> I'm really not keen on this last part (at least, for arm64).=0A=
-> =0A=
-> If you're not going to bother invalidating the TLB after unmapping from=
-=0A=
-> the direct map because of performance reasons, you're better off just=0A=
-> leaving the direct map intact and getting even better performance. On=0A=
-> arm64, that would mean you could use block mappings too.=0A=
-=0A=
-Not until we have hardware with the newest BBM goodies I thought. When I=0A=
-checked earlier this year, a defconfig has the direct map setup at 4k=0A=
-granularity.=0A=
-=0A=
-> On the other hand, if you actually care about the security properties=0A=
-> from the unmap then you need the invalidation so that the mapping=0A=
-> doesn't linger around. With "modern" CPU features such as pte=0A=
-> aggregation and shared TLB walk caches it's not unlikely that these=0A=
-> entries will persist a lot longer than you think and it makes the=0A=
-> security benefits of this series impossible to reason about.=0A=
-=0A=
-I agree it's not 100% protection, but it is still better than the status qu=
-o. I=0A=
-would also love to have the TLB flushes, but sadly the performance impact o=
-f=0A=
-them would make this completely unusable for Amazon :/=0A=
-=0A=
-Mh, thinking about it now though, iirc the performance problems were mostly=
-=0A=
-because all CPUs needed to acknowledge the flush before the issuing CPU cou=
-ld=0A=
-continue. Is there a way to have "fire and forget" flushes, where we don't =
-wait=0A=
-for acknowledgements?=0A=
-=0A=
-> As a compromise, could we make the TLB invalidation an architecture=0A=
-> opt-in so that we can have it enabled on arm64, please?=0A=
-=0A=
-How about instead of an architecture opt-in, we have some sort of opt-out f=
-lag=0A=
-userspace can set? Similar to the PFNMAP stuff KVM already has.=0A=
-=0A=
-> Will=0A=
-=0A=
-Best,=0A=
-Patrick=0A=
+When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
+the following objtool warning:
+
+  vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
+  falls through to next function __efistub_exit_boot_func()
+
+This is because efi_boot_kernel() doesn't end with a return instruction
+or an unconditional jump, then objtool has determined that the function
+can fall through into the next function.
+
+At the beginning, try to do something to make efi_boot_kernel() ends with
+an unconditional jump instruction, but this modification seems not proper.
+
+Since the efistub functions are useless for stack unwinder, they can be
+ignored by objtool. After many discussions, no need to link libstub to
+the vmlinux.o, only link libstub to the final vmlinux.
+
+Link: https://lore.kernel.org/lkml/pq4h7jgndnt6p45lj4kgubxjd5gidfetugcuf5rcxzxxanzetd@6rrlpjnjsmuy/
+Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ Makefile                | 1 +
+ arch/loongarch/Makefile | 5 ++++-
+ scripts/link-vmlinux.sh | 5 ++---
+ 3 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 9771619ac596..b8e7c63ae3d1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1201,6 +1201,7 @@ KBUILD_VMLINUX_OBJS := built-in.a $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)
+ KBUILD_VMLINUX_LIBS := $(filter-out %/, $(libs-y))
+ 
+ export KBUILD_VMLINUX_LIBS
++export KBUILD_VMLINUX_LIBS_PRELINK
+ export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
+ 
+ ifdef CONFIG_TRIM_UNUSED_KSYMS
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index a3a9759414f4..e9c61f76a045 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -164,7 +164,10 @@ CHECKFLAGS += $(shell $(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) -dM -E -x c /dev
+ endif
+ 
+ libs-y += arch/loongarch/lib/
+-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
++
++ifdef CONFIG_EFI_STUB
++KBUILD_VMLINUX_LIBS_PRELINK += $(objtree)/drivers/firmware/efi/libstub/lib.a
++endif
+ 
+ drivers-y		+= arch/loongarch/crypto/
+ 
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 51367c2bfc21..b3cbff31d8a9 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -61,12 +61,11 @@ vmlinux_link()
+ 	shift
+ 
+ 	if is_enabled CONFIG_LTO_CLANG || is_enabled CONFIG_X86_KERNEL_IBT; then
+-		# Use vmlinux.o instead of performing the slow LTO link again.
+ 		objs=vmlinux.o
+-		libs=
++		libs="${KBUILD_VMLINUX_LIBS_PRELINK}"
+ 	else
+ 		objs=vmlinux.a
+-		libs="${KBUILD_VMLINUX_LIBS}"
++		libs="${KBUILD_VMLINUX_LIBS} ${KBUILD_VMLINUX_LIBS_PRELINK}"
+ 	fi
+ 
+ 	if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
+-- 
+2.42.0
+
