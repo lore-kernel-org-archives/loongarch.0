@@ -1,38 +1,48 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4BEF3043BF
-	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 09:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04061E32A2
+	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 12:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758274588; cv=none; b=pZQbgbMxLctMrvO8znG0cQ11AGmKLnGQQYgpxkK1oEE5af9opw5pcanq3DTmPVWZzd6DrkXHc1TBAJkyyucV1MSVT+sFJIxT7mzQjMHjYjIGQifuyl54sAxgVWbbAzH4ufmzmIiq8kuw2bcdX/PJHTdPFU7PaJ1ixZkvis+tVOw=
+	t=1758286734; cv=none; b=oXt4RiPBKwt9hTtNNKk42EoYeC/0dDtJgEOU6iVnh907ikx2CPX/ydNRx026D4SHrer/JlPtJEx5eL3df29n/w26iIpw+7jB6NO7+wrf6XDNc3XSFi80o9Kbe5pkoeD0lEekqcSadGiR/QVGKFKcuep4UleCGtnlRNJ2zOLSAvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758274588; c=relaxed/simple;
-	bh=c0aFLf+K/5xDdlOK+v5TNIoQS0iAmSlqkl9KH5H0XJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lhgEUySBBRR9YY593YfBlKkWyhrzOtfmbJC0j+Qocz4DUNUTl7i6MVq9J4mcSi3U2XjNqmj9dFxx77UpiZG40dFyv4zsCdsGVz3aPDjYJIrpEAa5sE+SL31MaxTLBVKK8ylK9PDw7qX1iIlBMlgwgHqnB/MHczte9WrtR2uZSSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxWNEZJM1oqS0MAA--.26341S3;
-	Fri, 19 Sep 2025 17:36:25 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxbMEPJM1oMmufAA--.61162S5;
-	Fri, 19 Sep 2025 17:36:24 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
+	s=arc-20240116; t=1758286734; c=relaxed/simple;
+	bh=UqZPKjOghmkUG63/f5MtcyvviVRnMG+ZaWlI+fBKYkA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R3dX33oapfGR6e2HY14A/zNk2K6ApB6Kyf+oD7uDndBMo50MniB3Ag+Ok1vROPOU6C2EdT6WkzKnW92Zd8SP/BwiR27eYFZAKhn1bxiI+SA9/E8g0DvUyfpuRCdzv3DI6T9P7V7K39TGS6j4RdhdAfjEEGtWkvfxVIdGzzGyiEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=aa+Yr6yl; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="aa+Yr6yl"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 4D5A32654B;
+	Fri, 19 Sep 2025 14:58:50 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id le6wcmcofI2V; Fri, 19 Sep 2025 14:58:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1758286729; bh=UqZPKjOghmkUG63/f5MtcyvviVRnMG+ZaWlI+fBKYkA=;
+	h=From:To:Cc:Subject:Date;
+	b=aa+Yr6ylX17nEX8EK4RlKgRuRDHqli3dwz7Wb9fty120Qgx5Kw70GkohSQdiZtN8F
+	 fIQ3Srd4TrY0U9stCxzNgFR4zi0l/kyHyWw8oEqv8RFnW2i8zNdi28bXJfrksYrP8N
+	 x+LtTsUSeU1MUP6gMKtuVhv5J319bGrHEUaO8/GESTVvNluOha6XxJkLMiLmyipREu
+	 dkjqxfvdBdZz26k07HxdwIo69oBP1Cy2FB98doth98eevXvy8TPJ0z2YzE6D3ai8tw
+	 OwfFAKArsHPPuPGl5BH+j4AxmhwaYg56DEQe9ksHzalwqYOU6fh7ySmmwsFAiHAy6k
+	 MyGGJ1Y+V4mEg==
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Huth <thuth@redhat.com>,
+	Yao Zi <ziyao@disroot.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Xi Ruoyao <xry111@xry111.site>
 Cc: loongarch@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-efi@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] riscv: Only link libstub to final vmlinux
-Date: Fri, 19 Sep 2025 17:36:15 +0800
-Message-ID: <20250919093615.30235-4-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250919093615.30235-1-yangtiezhu@loongson.cn>
-References: <20250919093615.30235-1-yangtiezhu@loongson.cn>
+Subject: [PATCH] LoongArch: Fix bitflag conflict for TIF_FIXADE
+Date: Fri, 19 Sep 2025 12:58:29 +0000
+Message-ID: <20250919125829.37951-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -40,54 +50,42 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxbMEPJM1oMmufAA--.61162S5
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Gw15Wr13Kw43AFWrCFW5twc_yoW8Jr1kpw
-	s8CF4jvrZ5urWrWa48X3y7W3y5Kws5XrZI9Fy8ArWUJrWrXwsrZrn8Ar42yFs3XFy8XFWf
-	Jw4fCF1rCF4UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUqUUUUU
 
-Since the efistub functions are useless for stack unwinder, they can be
-ignored by objtool. No need to link libstub to the vmlinux.o, only link
-libstub to the final vmlinux. Otherwise, there may be objtool warnings
-when riscv supports objtool, this is to make consistent with the other
-archs that use libstub.
+After LoongArch was converted to use the generic TIF bits in commit
+f9629891d407 ("loongarch: Use generic TIF bits"), its TIF_FIXADE flag
+takes the same bit with TIF_RESTORE_SIGMASK in thread_info.flags.
 
-Link: https://lore.kernel.org/lkml/pq4h7jgndnt6p45lj4kgubxjd5gidfetugcuf5rcxzxxanzetd@6rrlpjnjsmuy/
-Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Such conflict causes TIF_FIXADE being considered cleared when
+TIF_RESTORE_SIGMASK is cleared during deliver of a signal. And since
+TIF_FIXADE determines whether unaligned access emulation works for a
+task, userspace making use of unaligned access will receive unexpected
+SIGBUS (and likely terminate) after receiving its first signal.
+
+This conflict looks like a simple typo, let's just switch to a free bit.
+
+Fixes: f9629891d407 ("loongarch: Use generic TIF bits")
+Signed-off-by: Yao Zi <ziyao@disroot.org>
 ---
- arch/riscv/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index df57654a615e..cfd82b2c1bbf 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -173,7 +173,10 @@ boot-image-$(CONFIG_XIP_KERNEL)		:= xipImage
- KBUILD_IMAGE				:= $(boot)/$(boot-image-y)
- 
- libs-y += arch/riscv/lib/
--libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-+
-+ifdef CONFIG_EFI_STUB
-+KBUILD_VMLINUX_LIBS_PRELINK += $(objtree)/drivers/firmware/efi/libstub/lib.a
-+endif
- 
- ifeq ($(KBUILD_EXTMOD),)
- ifeq ($(CONFIG_MMU),y)
+Note the problematic commit is contained in next-20250918, but not
+master.
+
+ arch/loongarch/include/asm/thread_info.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/thread_info.h b/arch/loongarch/include/asm/thread_info.h
+index def7cb14467e..4d7117fcdc78 100644
+--- a/arch/loongarch/include/asm/thread_info.h
++++ b/arch/loongarch/include/asm/thread_info.h
+@@ -77,7 +77,7 @@ register unsigned long current_stack_pointer __asm__("$sp");
+ #define TIF_NOHZ		16	/* in adaptive nohz mode */
+ #define TIF_USEDFPU		17	/* FPU was used by this task this quantum (SMP) */
+ #define TIF_USEDSIMD		18	/* SIMD has been used this quantum */
+-#define TIF_FIXADE		10	/* Fix address errors in software */
++#define TIF_FIXADE		19	/* Fix address errors in software */
+ #define TIF_LOGADE		20	/* Log address errors to syslog */
+ #define TIF_32BIT_REGS		21	/* 32-bit general purpose registers */
+ #define TIF_32BIT_ADDR		22	/* 32-bit address space */
 -- 
-2.42.0
+2.50.1
 
