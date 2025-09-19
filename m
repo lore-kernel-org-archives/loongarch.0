@@ -1,133 +1,129 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E1923CF12
-	for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 20:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA0678C9C
+	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 00:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758227460; cv=none; b=pme3Ow7bYGKpKXWNfPqASgqvO62+q+H3bugVc+e+3CUR+MD7f3px+YlPu0QnGXjkI01hs6882UyllwndnLUA/LdrdNA/bfEogqu+k1AqxZeNYUpmrn1C7keRcT2O+/tzhleOyuqAsvZZ3LzKwDNZz4tPFhFG5+NRSi8UiQ+clhg=
+	t=1758240699; cv=none; b=DnBB5ppbbKUPqxVgo4s7WJ1VooXDQSSdCF/E0xVX7YqVz99O5CaImCCPEo/dnI1MJmdm+0FddkSRl0GdhLV+wKeXVmcDt67/4T/J8sG2a6O1D6jgD+/Usxs/Fgp5jCZzBmqbwPmZa3eN2PP3Ow4Z0aCn+W9YATA+wxR5Dxz4+Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758227460; c=relaxed/simple;
-	bh=BGACq/j6NlHIfj+byhrMU0NNhVJomWIJpdEcfXI9Nj8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pkoxnoVMJDtn/Spo3F/mXjLMDsfEbHh+rJRXz6JI7pHYIHnGgT0O0C+BSleioJi1K5PnxwCMJSXpiAr8e2HZDO7ljrytO3MWe30xnT+mSYYzqDe//Kts4Ei7JCi/L3HxMa1Nf1/qtKrrDRQr2d90ltog2+CGnr9A2fgfEq3l3Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M0CDqEAS; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758240699; c=relaxed/simple;
+	bh=9ggq31TuElkvdeTP2ZjS79K/WX3d9QrheK9IIUaFVzY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FxaehBHNPxXAplWnED6Iz3S+mKE5gXC+8tx89UcVksvcK/3Giy//1dDRnmcBQAqHFopigAuS+U+RmO/YcdqeSSxSqpmBSn0YewP7PeeY6uz2XnmWeFeXz5LZg4awOEGWH5mGJWJfUarECN/pIIPBgMeTyL8GVuYOtVAAVIScSaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VHoIuLai; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0CDqEAS"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4b7a8ceaad3so13282151cf.2
-        for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 13:30:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VHoIuLai"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b5514519038so822741a12.0
+        for <loongarch@lists.linux.dev>; Thu, 18 Sep 2025 17:11:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758227457; x=1758832257; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pUaueEvzZnq+nhMhJPbiUds9k38v0e0np0Aho5dWCGU=;
-        b=M0CDqEAS9xupXuuzUggZ/pFtFxja0kMJpRGi9q+pVMsFom4npbeeFuLEeVkiV5xUno
-         FJYVQknviNH4I9fp4J+kVywsAX+3JTxof0wUnmXZ8yuiYgUwF7DLZUFELEAoRTRW3Vcf
-         W/KDzz22fneWKJ0gg6KJbHI/lnFRtSNO55y2ItGR/AMKhPULn8G3PVktgwKfnVRSBgTQ
-         n4zWYR9Cp2RXz4MlBgF7zunC5z5gj8soZVSzrft93uD8zugNcfa0gtaCrxl+2loZnSEA
-         qdiAt5OVzIDYrOUHslBtWOSTr6mKnTZaBUZ3JJHkTKLPldP2H9nbF5wI91LuD3Mt9BYa
-         3z4A==
+        d=google.com; s=20230601; t=1758240697; x=1758845497; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5pHZG9bcElhtMtIe02tLqtkF2uGVTgQcC3bk12Urlxs=;
+        b=VHoIuLaisdxbEEZKFcCPxYQssVXLupsv64xvWUgdBT45fxeO0oVerHDf7sFmuTI12W
+         dcGZ/0osP3AbaNUWpfv0oVtqnF0cii8E6Uop2QFKRFw9KS3J4y/j5cbCY8fc1ejeriAV
+         5QTccxvtm9vMiBtGbaaULeuQM5sEm4rspShKGP21TDeUyKAo92zHXNs2aCa61Vw1NxIN
+         CPNOCQbS+sve/khsa0I8PDy9uClopS1ejoW9qTBAJxrkZK2ns5c1bT/qbN3oseVvfZwT
+         n4Ue1MAAvoAJfgw7nSgyhAKnsrh87x8Rg+DBjXI+mNIpiIeherQUfvmrWav6WjKVkWOx
+         0iog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758227457; x=1758832257;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pUaueEvzZnq+nhMhJPbiUds9k38v0e0np0Aho5dWCGU=;
-        b=jsJOvA+DmWXU/wmeFdrnQvj8zIDcXtd7o+z/zJQEYT45hOxtRMaMJVZGXq0CPCH/dy
-         OkPG3N3SfNKvS/xl7pS44goENx8srJXNN37l31bZUrzBMA25D3DRJ2SBVFZpbURayc9m
-         d1Y86LsT93bR1Lo3dEsbam8zp1P17Phr0+CudjCVVd7uRJowZMMQD4PJhqJYVfaGACJn
-         Jb+tKYJt/6v90m28xFeSHLHlx2YkD7DbS+D0t3GYnjkd9eEmQeJmQrYblzH0B13ZNT4P
-         NVMomNA4UQg8RsurW3EpnCjDU/VWkDdqyOgKGHhlw2NKzxprxmvQ9Izjj7H+Xa3wClYj
-         olMg==
-X-Forwarded-Encrypted: i=1; AJvYcCViopVk5a45tqbDZjJOGAKkDgo4MPAHLK99efJrijdp1wEzQTAXaY4+u4elcZVkTgyiSgwddmhcZ60=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz9zU2BFUlXBQFovJpSv/83bGx075ZfNt+LoCfXDJ8WiRgtxRQK
-	T2eUYLkSY7//63Q80Kwrn3jWL45ZGMnXOYyUlw01FepYjR9YklIh55/vdVjQKzA/DlKHOXaYrld
-	H91vVKe3vMFzMvxIBoRbt4v/ad8kqMcA=
-X-Gm-Gg: ASbGnctRk/fM7znMQSz/mWMI4gHcX33Hi1jOgmoX33zn4oLLhMzq2wG0DGLcXG5YnS/
-	+8WzqI2Qn6dHCOlwT/WR2qVUZt0OLvYnGd29K/cHEovafA6bwLns7N2K4f8DKKDoX5SJ1oaBJte
-	8ImUxfTN8HeodYoWFcIWXVfX+3sasWdgC4cWD3MQt66dJefVAyLvl7P5aiHecR9JD1HZfLg7vFR
-	pRnvIrv3Eh9w7SomxTS/vNtSA==
-X-Google-Smtp-Source: AGHT+IGUhligoIK1bt5Cv6B8LkOhb54JflvZ5PSGhgztoqM0v2F25sMixSqe/ZYAsm3isHhBFbwNnY+F7uE1dEbDEgE=
-X-Received: by 2002:a05:622a:1650:b0:4b5:edd3:ddd4 with SMTP id
- d75a77b69052e-4c06d9630f0mr9179801cf.6.1758227457436; Thu, 18 Sep 2025
- 13:30:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758240697; x=1758845497;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5pHZG9bcElhtMtIe02tLqtkF2uGVTgQcC3bk12Urlxs=;
+        b=hCKAdOv1IopWVYmXFSzFmmRh7D0+B6BnmTsBOJud4/aeoAX2eihwtYKun1RcVvBEQo
+         J2j5vjEF2H40qCfIwYIJjCJkyxz7DzJs/+N3n7S7hBksDleGAyaZd+gJwD4LCdAvhv+6
+         VMy1uaUK6EzQJ+TVp6zLjmLErCKvUpOZ93e/cLZ/vFptQU1QTMuDT4fI4iW6gzolDRSR
+         Gw4E0JlbtAlydKOHYUhETNVUfwiFsLrXg6ZLavpYLoT8HCZTzQisD5rR7ex6NnbmYaK3
+         COI+vdX5jv6MnXG+UN0joDksE3/+swx+BSXdeC4yR0UwIJs6ivy10FPSFg0tKw/60NMF
+         Vhvw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8E4G37GjNWfHli+Pijt5/osOZbYMoHhp03Z91hRN3pWL5+pDk0/95Ucc9YtAoNTvvKOnSltxT8NA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzpQa8iumPMamt+BHVgkDmoXcG7AznX6Xn6WU3FfxDn9L/dxJM+
+	a+llDAfqJQNyIDItIRGFHtyeskklz6UawPRZni6irGen0l2sxDOCDqysD2U0WX2aVyRLVh+Gefg
+	dRp5Gjg==
+X-Google-Smtp-Source: AGHT+IHL6wVIYMVXo/qF+C7m2xAthhi9wrZHJ6iKg3qq/wSUNMfIVTHCzCbvYXSzkHH/AND/3vPqEr/ALak=
+X-Received: from pjyf16.prod.google.com ([2002:a17:90a:ec90:b0:330:75c7:341c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:99a8:b0:252:3c5e:45cc
+ with SMTP id adf61e73a8af0-2925d5abc4cmr2117916637.19.1758240696687; Thu, 18
+ Sep 2025 17:11:36 -0700 (PDT)
+Date: Thu, 18 Sep 2025 17:10:50 -0700
+In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20250916235627.102831-1-hengqi.chen@gmail.com> <20250916235627.102831-5-hengqi.chen@gmail.com>
-In-Reply-To: <20250916235627.102831-5-hengqi.chen@gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 18 Sep 2025 13:30:45 -0700
-X-Gm-Features: AS18NWBbmXD_c7Us4SlQzFdv464ZT-q0IJwDt9g7QCxdrBr6xP2yCMlernvnBUo
-Message-ID: <CAK3+h2xXCkhTw+z20twDq27U=hALiWjmJ9xxBvzzQfCk5sFY3A@mail.gmail.com>
-Subject: Re: [PATCH v5 4/8] LoongArch: BPF: No text_poke() for kernel text
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: chenhuacai@kernel.org, yangtiezhu@loongson.cn, hejinyang@loongson.cn, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250806195706.1650976-1-seanjc@google.com>
+X-Mailer: git-send-email 2.51.0.470.ga7dc726c21-goog
+Message-ID: <175824021167.1343722.9290387002572827825.b4-ty@google.com>
+Subject: Re: [PATCH v5 00/44] KVM: x86: Add support for mediated vPMUs
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, 
+	Yongwei Ma <yongwei.ma@intel.com>, Mingwei Zhang <mizhang@google.com>, 
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Sep 16, 2025 at 6:55=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
- wrote:
->
-> The current implementation of bpf_arch_text_poke() requires 5 nops
-> at patch site which is not applicable for kernel/module functions.
-> Because LoongArch reserves ONLY 2 nops at function entry.
-> With CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy, this can be done
-> by ftrace instead.
->
-> See the following commit for details:
->   * commit b91e014f078e ("bpf: Make BPF trampoline use register_ftrace_di=
-rect() API")
->   * commit 9cdc3b6a299c ("LoongArch: ftrace: Add direct call support")
->
-> Tested-by: Vincent Li <vincent.mc.li@gmail.com>
-> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> ---
->  arch/loongarch/net/bpf_jit.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 7b7e449b9ea9..35b13d91a979 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1294,8 +1294,11 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_pok=
-e_type poke_type,
->         u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
-_NOP};
->         u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
-_NOP};
->
-> -       if (!is_kernel_text((unsigned long)ip) &&
-> -               !is_bpf_text_address((unsigned long)ip))
-> +       if (!is_bpf_text_address((unsigned long)ip))
-> +               /* Only poking bpf text is supported. Since kernel functi=
-on
-> +                * entry is set up by ftrace, we reply on ftrace to poke =
-kernel
-> +                * functions.
-> +                */
->                 return -ENOTSUPP;
->
+On Wed, 06 Aug 2025 12:56:22 -0700, Sean Christopherson wrote:
+> This series is based on the fastpath+PMU cleanups series[*] (which is based on
+> kvm/queue), but the non-KVM changes apply cleanly on v6.16 or Linus' tree.
+> I.e. if you only care about the perf changes, I would just apply on whatever
+> branch is convenient and stop when you hit the KVM changes.
+> 
+> My hope/plan is that the perf changes will go through the tip tree with a
+> stable tag/branch, and the KVM changes will go the kvm-x86 tree.
+> 
+> [...]
 
-Just wonder if the code is borrowed from riscv :),  Should riscv
-bpf_arch_text_poke()  also remove the if (!is_kernel_text((unsigned
-long)ip) ?
+Applied a subset (roughtly 1/4) of the KVM patches to kvm-x86 misc, as the full
+thing is far too late for 6.18.  In a nutshell, all of the random prep work and
+cleanups that aren't directly related to mediated PMU support.
 
-arch/riscv/net/bpf_jit_comp64.c
+I want to get "setup VMCS prior to kvm_x86_vendor_init()" in particular landed
+to establish the order of setup operations.  The in-progress CET series moves
+the _nested_ VMCS setup later, and I had a moment of panic that I was creating
+incompatible patches.
 
-       if (!is_kernel_text((unsigned long)ip) &&
-            !is_bpf_text_address((unsigned long)ip))
-                return -ENOTSUPP;
+[14/44] KVM: VMX: Setup canonical VMCS config prior to kvm_x86_vendor_init()
+        https://github.com/kvm-x86/linux/commit/4687a2c4e6a6
+[15/44] KVM: SVM: Check pmu->version, not enable_pmu, when getting PMC MSRs
+        https://github.com/kvm-x86/linux/commit/e3d1f2826da6
 
+[17/44] KVM: x86/pmu: Snapshot host (i.e. perf's) reported PMU capabilities
+        https://github.com/kvm-x86/linux/commit/51f34b1e650f
 
->         ret =3D emit_jump_or_nops(old_addr, ip, old_insns, is_call);
-> --
-> 2.43.5
->
+[22/44] KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
+        https://github.com/kvm-x86/linux/commit/1e24bece2681
+[23/44] KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
+        https://github.com/kvm-x86/linux/commit/cdfed9370b96
+[24/44] KVM: x86: Rework KVM_REQ_MSR_FILTER_CHANGED into a generic RECALC_INTERCEPTS
+        https://github.com/kvm-x86/linux/commit/6057497336bb
+[25/44] KVM: x86: Use KVM_REQ_RECALC_INTERCEPTS to react to CPUID updates
+        https://github.com/kvm-x86/linux/commit/5a1a726e68ff
+[26/44] KVM: VMX: Add helpers to toggle/change a bit in VMCS execution controls
+        https://github.com/kvm-x86/linux/commit/2bff2edf69ed
+
+[29/44] KVM: x86/pmu: Use BIT_ULL() instead of open coded equivalents
+        https://github.com/kvm-x86/linux/commit/30c0267f1581
+[30/44] KVM: x86/pmu: Move initialization of valid PMCs bitmask to common x86
+        https://github.com/kvm-x86/linux/commit/9bae7a086394
+[31/44] KVM: x86/pmu: Restrict GLOBAL_{CTRL,STATUS}, fixed PMCs, and PEBS to PMU v2+
+        https://github.com/kvm-x86/linux/commit/c49aa9837686
+
+--
+https://github.com/kvm-x86/linux/tree/next
