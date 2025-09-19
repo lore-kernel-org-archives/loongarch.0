@@ -1,83 +1,115 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DDD1EB5E3
-	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 13:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500EE31355E
+	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 14:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758288139; cv=none; b=OfSJlvz303XHV42cUYLYXOjAiVpTwr6e8cgi3sO8ZP18IenxJhEyndq0asWTMvuSCgc2l+RAXIQi4GekMP55zcKed5xSQQodX4F8Db9ngnGLW4kUY/NNVfJM+DreYh3ORhl0cFgnM/nkvQ74qmHxYAVsKGTHVtBzqf8XcTa14CA=
+	t=1758292045; cv=none; b=gsR+TyJtJxOqKKKrsPfIMWUloRmFHlRWmjvx2JSRsTRmAi87xoRt82swuKD7Cfu3DjTeFla55/c37rS7EeE2l8lWW+Eeoz9tKLA7JUKkyd/mQTDY60EN9kLFM2EThgC2xjKXRe6K/jlx7RqKTdyEaZZU5HwDTDoLHEJwMtGOGYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758288139; c=relaxed/simple;
-	bh=T70MbS0K8WkSnx8CHqdI37DUguC+d4jdsViVEfGIAxs=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=QbTtzemyAtMFsvL6i4JSIJhuphNLkkjmPnJx1U/9bK6kXk5CqaPG22JjdwQNcVJ/rpDdweIc1jOaA9oCxvMs9LSX3EcSNd5o383liBbe2q0j+g/M+HfC/1Ia4lKOADueWvWJ73SaE8COjSbUCCs1VwI8Php0XgwZVb6ijDGDG/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=gMW1G2+T; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1758292045; c=relaxed/simple;
+	bh=wG7HP8U4mFstc/9UQjpKbDZQqvBNpc0oXj8XRRmh6HI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RSwWuLOxbkrxuiMWrX6Fg4hmMG2bkS4mCAf+pE+5qHd0igGAxSuC9ltpwDnA3nAVpNKkBK0h7dLYHwZFvqbTM9bq2jfMpwpOdxp1S8cyfAr54OFtaia73F7ZIurgIzQFrrkNDf829FIhMDVofEhmSIj5vV9+mEMWXJ3AzBRLQe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=D8t47JzY; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="gMW1G2+T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1758288095;
-	bh=T70MbS0K8WkSnx8CHqdI37DUguC+d4jdsViVEfGIAxs=;
-	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=gMW1G2+TJKbENPB8SYO1N6tosOE8K5QVPnKgHQ497XqPQ2o6HKuZGOjUG9j8M7pA5
-	 jNVDvECymcvC0pN+92McbuZgZRnUQDoRvKo+nAqMzZ4gVX0v5OqxOMpmqnTe1IYBk2
-	 7xNcx4oR2Wc/HA8X1c6FjB1uPNaGAvKT5dnr67Z8=
-EX-QQ-RecipientCnt: 8
-X-QQ-GoodBg: 1
-X-QQ-SSF: 00400000000000F0
-X-QQ-FEAT: D4aqtcRDiqT3izQPfYk+lmlkbENMFn3oJT9AK4gN80M=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: 0778vltmOfK63PxtYuK9G+mnXvLYboqmCGFS/29NVIuIugbXSNmgi+5KBpkqoIdWpTfdTUuU3HHj5hjXMxU9Kw==
-X-QQ-STYLE: 
-X-QQ-mid: lv3sz3a-6t1758288093t0f72603b
-From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>, "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?VGhvbWFzIEh1dGg=?=" <thuth@redhat.com>, "=?utf-8?B?WWFvIFpp?=" <ziyao@disroot.org>, "=?utf-8?B?dGdseA==?=" <tglx@linutronix.de>, "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>
-Cc: "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
-Subject: Re:[PATCH] LoongArch: Fix bitflag conflict for TIF_FIXADE
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="D8t47JzY"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id E1DFB20CA1;
+	Fri, 19 Sep 2025 16:27:20 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id G4GDa5VZ5iKv; Fri, 19 Sep 2025 16:27:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1758292039; bh=wG7HP8U4mFstc/9UQjpKbDZQqvBNpc0oXj8XRRmh6HI=;
+	h=From:To:Cc:Subject:Date;
+	b=D8t47JzYnRkojo9f1P59p7RXww3Wj+XBEcyQvo2qfY7mNl3xNxwJjVztZsvbXNN3r
+	 bCaEEwX24aaGl+MVIOsdat88lOZrg0RaGbKRRfXUcwdk8T8UCEJuD5LtKutg/5Feoo
+	 lOg6jdbG4+wHzR2ka8+R6ImRk/NKxUh60yPvnaB5kMZ+n4OAzh9WebLCr7YBdy9BRI
+	 NXIlKsbIM5BpHTE5pj2e3U4jwrsGYFV7mjCfsf0tliBwIEXiGM2kFr8Jn3OhJ9AGHr
+	 8/FQLDKXgDprG0yDVT9dRMKf+3IVhVELq9VR6kWiR6N3lUuZmU+7crWsMuSfe/It+6
+	 SBG1nD1717WeQ==
+From: Yao Zi <ziyao@disroot.org>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>,
+	Yao Zi <ziyao@disroot.org>
+Subject: [PATCH v4 0/8] Add clock support for Loongson 2K0300 SoC
+Date: Fri, 19 Sep 2025 14:26:41 +0000
+Message-ID: <20250919142649.58859-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Fri, 19 Sep 2025 21:21:32 +0800
-X-Priority: 3
-Message-ID: <tencent_65BA2C816FF78FD06FE2FE6B@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <20250919125829.37951-1-ziyao@disroot.org>
-In-Reply-To: <20250919125829.37951-1-ziyao@disroot.org>
-X-QQ-ReplyHash: 3796280728
-X-BIZMAIL-ID: 3095721564594470550
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Fri, 19 Sep 2025 21:21:34 +0800 (CST)
-Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OLsBWtCIHsg6P/JR5jKZTXK+q2HWbV9YWDM/2FnuJIXrxI07V4Q0zyiG
-	kJlEnKfXHE0Lybq/oqbWIaoB6w6yf6KW2y3lNqtzFnxSZ1cfRTaUn2DLUtHOmwH8OD8KKwu
-	TdQfDpW9lv9fAaiRQ2nf2G1THitNCWF7HjnfVBZ92zuzfedDhZDVSzFOSY61mr8pruPHC8M
-	xo03tYl0u6dUHcgA3vO8gggYP86F/dQh1REXk6cHYHAP4lFUAwJMQwXlHmpLEQb8kSjG+FC
-	GMB5dmG4NqPusgxWeZt8KYF1yK81IB2DwcMlOv+cj9229yeeqbjo073ppRb/AtwLSmK68Aq
-	YJE/oO7+gLXF+BmgdeADt6nbisBfgOzkLEpBkKbeqGTosA7O9IwI8hc8c7cbKDhixPRLVA/
-	kgMV0MJcxuLLnyuFT+qu1hyHRWO+r/dHv0CkBgHK6SfGU4w5enUQIaoBO4jVcauNgcnWpaq
-	E93Hcv9L4SGEnM+vmo7RAw0pupiAU2YNp3uxyAQR7hPIWNd2jNqitgEZGn7OJQJudNfZx+3
-	1glmCxSintNEVkXsUitGaCJIOan+yQG4cMP3VVT63ks+n/wJYxJL89GeStEt1gw/yMb4bqF
-	wf8oZllfrTS4MkKfPbvEO4ZX34rcNIEux+LpoUqIUErqwGtKWVkhbXaQcmfAoay2cECTTV0
-	1P0d+Ax5meIzsxQHxmUTPBHfHDtJ1nmG+wrShzlU1ByqegwfEwvuCUBib6tI5g9lqkoeB61
-	Ijn9YfPWTX1n3gg0u5403agdLTnt+TRjZbK2GYGHV2hGV6kto23dRHGTA3KQyNlwvSX6XXT
-	YGEc3CioiSQO0PbRpjpyhy5uOMpAgGNkZ03lfMfqtDUYWcFhMoAqqroGtB167BhIlNQeJAi
-	v9MFkfIHrBgJxr7hgD3lvklEkn8B62l4ouHtuuee3tNaJ6PKdzxIC9knEmn6vbH2oClBJ2K
-	jns0RtpUl7LVVAQjs4OAtal9+u/wRfgHIH4OUo5vRo1Z5YFcDIXGyNJOW7PmxxcaIRxbwh8
-	yXtrnsR+WY8QDRHVgxowc6oCMDftk=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-SGVsbG8sDQoNCm5pY2UgY2F0Y2g6KQ0KDQpSZXZpZXdlZC1ieTogV2VudGFvIEd1YW4gPGd1
-YW53ZW50YW9AdW5pb250ZWNoLmNvbT4NCg0KQlJzDQpXZW50YW8gR3Vhbg==
+This series adds support for Loongson-2K0300's clock controller.
+Loongson 2 clock driver is prepared to support more clock variants and
+its flexibility is improved. All clock hardwares except the output one
+for GMAC module are then defined.
+
+A clock tree dump could be obtained here[1]. Devicetree changes (PATCH 7
+and 8) depends on v3 of series "Initial support for CTCISZ Forever Pi"[2]
+to apply.
+
+[1]: https://gist.github.com/ziyao233/5261c5983d7ccb0a4299cfd7f26b2027
+[2]: https://lore.kernel.org/all/20250523095408.25919-1-ziyao@disroot.org/
+
+Changed from v3:
+- Collect review tags
+- Change "Loongson 2K0300" to "Loongson-2K0300", and "2K0300" to
+  "LS2K0300" in commit messages
+- dt-bindings
+  - Merge loongson,ls2k0300-clk.h into loongson,ls2k-clk.h
+  - Change LS2K0300_PLL_{NODE,DDR,PIX} to LS2K0300_{NODE,DDR,PIX}_PLL
+    for consistency
+- driver
+  - Fold clock definition into a single line if possible
+- Link to v3: https://lore.kernel.org/all/20250805150147.25909-1-ziyao@disroot.org/
+
+Changed from v2:
+- Disallow clock-names property for loongson,2k0300-clk's binding, avoid
+  overriding content of clock-names property within an allOf block
+- Correct clock-controller's MMIO-region size in SoC devicetree
+- Link to v2: https://lore.kernel.org/all/20250617162426.12629-1-ziyao@disroot.org/
+
+Changed from v1:
+- Fold loongson,ls2k0300-clk.yaml into loongson,ls2k-clk.yaml
+- Include the new binding header in MAINTAINERS
+- Link to v1: https://lore.kernel.org/all/20250523104552.32742-1-ziyao@disroot.org/
+
+Yao Zi (8):
+  dt-bindings: clock: loongson2: Add Loongson-2K0300 compatible
+  clk: loongson2: Allow specifying clock flags for gate clock
+  clk: loongson2: Support scale clocks with an alternative mode
+  clk: loongson2: Allow zero divisors for dividers
+  clk: loongson2: Avoid hardcoding firmware name of the reference clock
+  clk: loongson2: Add clock definitions for Loongson-2K0300 SoC
+  LoongArch: dts: Add clock tree for Loongson-2K0300
+  LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
+
+ .../bindings/clock/loongson,ls2k-clk.yaml     |  18 ++-
+ .../dts/loongson-2k0300-ctcisz-forever-pi.dts |   1 -
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  16 ++-
+ drivers/clk/clk-loongson2.c                   | 122 +++++++++++++++---
+ include/dt-bindings/clock/loongson,ls2k-clk.h |  36 ++++++
+ 5 files changed, 166 insertions(+), 27 deletions(-)
+
+-- 
+2.50.1
 
