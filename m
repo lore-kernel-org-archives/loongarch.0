@@ -1,37 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DBF3148AB
-	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 14:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3C5314B87
+	for <loongarch@lists.linux.dev>; Fri, 19 Sep 2025 14:29:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758292182; cv=none; b=oPLqvxYUMD6peY2Fxo7VEXfxrZeoCOiHuCp2rQFOfKvegwCh01+fSzc6Y/2uhQF0ZDhQJ9MU3z1AvPH4TlVNJzbCih2WjKzJkYoPm2BbSBRnmUj9KNd958EZ7iUY+JfoY6MfYyslEF3MaW4KZQg9PKt+4frTZJkKhj39Fcqsr2A=
+	t=1758292190; cv=none; b=okKKHUdkAB65jkRshSjyH5Gs7p5nnTUvRHCuL8hr0atvRcqD1w1zlBY5iY2cQmRd8v6m9SJtLf8pIbFhFKHd3EWnsQYCIs9R1jgeVozCIAKzPekXA4cjAKFUKumvP7p/ISzYdCLIeveO+dPzgF7Fi6WXF/FfqHaRWrU7TStdrgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758292182; c=relaxed/simple;
-	bh=RuyvpmG2t13QQMjunY9RjVpiiVYBqIn0A101uyqlM6c=;
+	s=arc-20240116; t=1758292190; c=relaxed/simple;
+	bh=81PMYlqM/y1cobIvGWv6NmLT8uHoL246gy0zJP1C1Hk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YNm1DfMhPUk+ATmw5VmRekLeg/nY7mWgsLV1eynS8WkoQWhLLhJkE8tak9327T+/zgkmGhLI9V6v9q/s9XSd+zSW8L3zT+uL6Rso/KkUkk36hhftevx88uF/zwsaA6+w1mxd+L2OLJQIrPicqKlc9D3epZI0f4uttcsyE43J89c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=YaZXsM+c; arc=none smtp.client-ip=178.21.23.139
+	 MIME-Version; b=E2V3eco36rIo20AV9FbP3gITuB0E8kZxJj/Cp+Kb94jcxa1e6TBhCXcgEK0pjjcqe/IJ/+elmaXQSyye3HEQCM1cX8qDj0cpMmChoBmcdM8rESHJ7nOUT2d3e6rAmb3hwEptg//I4ZbXTIX26vu5AJrq0hn4V2PrCuSMKXEsM8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=BQOMoimQ; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="YaZXsM+c"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="BQOMoimQ"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 7AFBE25DAF;
-	Fri, 19 Sep 2025 16:29:39 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 059042054C;
+	Fri, 19 Sep 2025 16:29:48 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id VF3DWfCFfU43; Fri, 19 Sep 2025 16:29:38 +0200 (CEST)
+ id tBBtd3IQlEy2; Fri, 19 Sep 2025 16:29:46 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1758292178; bh=RuyvpmG2t13QQMjunY9RjVpiiVYBqIn0A101uyqlM6c=;
+	t=1758292186; bh=81PMYlqM/y1cobIvGWv6NmLT8uHoL246gy0zJP1C1Hk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YaZXsM+cQFPBNx4Tu+BlZNdxa1BIPCEvyx01BpckNjHIug4qdbe0kAvEELwnX0zil
-	 FGWUZp5dBhe2umMX+3/99TMtOkDZu5QP8SCA6Vxb/EBddEKmAT/PJo6NrHVeXEWiyp
-	 kYrMfDaBZoyUfyrg6jEg1fEsgOHFRCPs5P6VFw0JeOUJJ+dKevPFXm8yM378fD1u9+
-	 6XBEVao+Q+Fb9NNG5x6AxAmd07PvdY3xxkL2LQJE43Me9syUDUnOKzcHabSmYm2fJj
-	 yH0cewo4xrJHSxhBIQokLArgLNibWwcCl9KNV5vWFuVq8GvjJC8pwBt7zslEdxx0Bz
-	 oo6p2H/4+BO3Q==
+	b=BQOMoimQpdAVlc0FjdRCdRXrc9RdGZlN5x5GcNVaZTZroEZ4irVCJF+dvkIeNZ4yd
+	 F+YHKnSE3/oSxm5E6USKGj4LaChrpfN4ZVmClHDRtvQYi/lQsUWKdf5zgwvbeXr4Gc
+	 r7An77PaG7TYJA8d1JqqQb/0Vi6DwVmSrOrtxAt+hc0KNtSCpnx/OagWgkMuOLfnR6
+	 gJ1Q1bgfy1ckEjOzwlIdFrLVUwHNHtNiP+n/aQXZyR95JqDpP1e2ZnLlG6mmzIVkl0
+	 J9k+g5S+DFWrc8P6KOteGN6FCPL1La1AHw9S6kbyJyMlS3OwghbVursrksVnp9MHjm
+	 d7vEjb8yD3Oyw==
 From: Yao Zi <ziyao@disroot.org>
 To: Yinbo Zhu <zhuyinbo@loongson.cn>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -48,9 +48,9 @@ Cc: linux-clk@vger.kernel.org,
 	Mingcong Bai <jeffbai@aosc.io>,
 	Kexy Biscuit <kexybiscuit@aosc.io>,
 	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v4 7/8] LoongArch: dts: Add clock tree for Loongson-2K0300
-Date: Fri, 19 Sep 2025 14:26:48 +0000
-Message-ID: <20250919142649.58859-8-ziyao@disroot.org>
+Subject: [PATCH v4 8/8] LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
+Date: Fri, 19 Sep 2025 14:26:49 +0000
+Message-ID: <20250919142649.58859-9-ziyao@disroot.org>
 In-Reply-To: <20250919142649.58859-1-ziyao@disroot.org>
 References: <20250919142649.58859-1-ziyao@disroot.org>
 Precedence: bulk
@@ -61,70 +61,25 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Describe the clock controller integrated in Loongson-2K0300 SoC and
-clocks for UARTs.
+The property isn't required anymore as the supply clock of UART0 has
+been described.
 
 Signed-off-by: Yao Zi <ziyao@disroot.org>
 ---
- arch/loongarch/boot/dts/loongson-2k0300.dtsi | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-index ce3574691aa9..ddc2e2697838 100644
---- a/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-@@ -6,6 +6,7 @@
+diff --git a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
+index a033c086461f..1bdfff7fae92 100644
+--- a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
++++ b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
+@@ -40,6 +40,5 @@ linux,cma {
+ };
  
- /dts-v1/;
- 
-+#include <dt-bindings/clock/loongson,ls2k-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
-@@ -21,7 +22,7 @@ cpu0: cpu@0 {
- 			compatible = "loongson,la264";
- 			reg = <0>;
- 			device_type = "cpu";
--			clocks = <&cpu_clk>;
-+			clocks = <&clk LS2K0300_CLK_NODE_GATE>;
- 		};
- 
- 	};
-@@ -32,9 +33,10 @@ cpuintc: interrupt-controller {
- 		#interrupt-cells = <1>;
- 	};
- 
--	cpu_clk: clock-1000m {
-+	refclk: clock-120m {
- 		compatible = "fixed-clock";
--		clock-frequency = <1000000000>;
-+		clock-frequency = <120000000>;
-+		clock-output-names = "refclk_120m";
- 		#clock-cells = <0>;
- 	};
- 
-@@ -46,6 +48,13 @@ soc@10000000 {
- 			 <0x00 0x02000000 0x00 0x02000000 0x0 0x04000000>,
- 			 <0x00 0x40000000 0x00 0x40000000 0x0 0x40000000>;
- 
-+		clk: clock-controller@16000400 {
-+			compatible = "loongson,ls2k0300-clk";
-+			reg = <0x0 0x16000400 0x0 0x30>;
-+			clocks = <&refclk>;
-+			#clock-cells = <1>;
-+		};
-+
- 		liointc0: interrupt-controller@16001400 {
- 			compatible = "loongson,liointc-2.0";
- 			reg = <0x0 0x16001400 0x0 0x40>,
-@@ -87,6 +96,7 @@ liointc1: interrupt-controller@16001440 {
- 		uart0: serial@16100000 {
- 			compatible = "ns16550a";
- 			reg = <0 0x16100000 0 0x10>;
-+			clocks = <&clk LS2K0300_CLK_APB_GATE>;
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
+ &uart0 {
+-	clock-frequency = <100000000>;
+ 	status = "okay";
+ };
 -- 
 2.50.1
 
