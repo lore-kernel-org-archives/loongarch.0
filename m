@@ -1,152 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8041C63B9
-	for <loongarch@lists.linux.dev>; Sat, 20 Sep 2025 08:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 177111F09A5;
+	Sat, 20 Sep 2025 09:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758356645; cv=none; b=UFpJmnnaGmuWEyjUAoUePq7Zk+aDUMDi4EoGXEBCqhthnl1FUDBs62Zyh2uhQNjlheiXUIwCh/odQXaN92whkheBCbF+x0n47IhTe4+VL/WFgP4BAr1wdIsnvkTmKz3qBH/mh5lI+5bN36RSPidceeUfW+EmfpaDzefSuXn4Kz8=
+	t=1758359957; cv=none; b=qgncHGBUdULBu22vaaQV4OCzDttg17As3jNMp5viejgetpYGFCJAoYASPT1/OTzFEp7gwaK0CcBrOUgRYEVA4s4A1DSPrvaf1Mhvj4ih9DtQKTYPi46BghCW3lH1+9o030dh8XiZXwvEjW/dcfU31kAnsfMCokc+xHxzDyYBVgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758356645; c=relaxed/simple;
-	bh=YnYHhp0UWx6XtM/X67tIf+lKn9tz3bkw4GNRmkXRbv8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=If5HpYB9LNqfJzoY1sjS6Io5eVH/xhK2Ymr84i1UIEFV8f2RuwjtJ66IlZicIOBL0u4a1+syBH8a8rY+yX2OesFTOGG+XnrIVMxa9dFMhnAWivwb1hqMRJh7zSFyIwwqfnaC1kCCXwaxYByHy8k1pUDats/uwQfhm29+CADI0Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzCDD84P; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzCDD84P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567F0C4CEF9
-	for <loongarch@lists.linux.dev>; Sat, 20 Sep 2025 08:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758356645;
-	bh=YnYHhp0UWx6XtM/X67tIf+lKn9tz3bkw4GNRmkXRbv8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KzCDD84PSE0a+6xvX8MuJ9W5b4IwFfji0hSiIrcuqyFjHch8oDjbmtRkf606RoSVP
-	 3nKsM5hig0jTNTV+2EY6MBPqNQiDgfLEgRYtO3CRj+aXxwI2M1mMgBDHWr1zPEDl2H
-	 9+KDVba66jdYpONszXv81CtoMwiIztx3LsN2YNVVU1lBNQDMRFFoSEmBdA8/ZSUYTS
-	 feGqJZm+uVzcXW6wGj+HFuDEPN6ti5hAPA9JNLR9F8VER+slltFqNWBM6eoo5ECgFy
-	 zREbF37zmbtf2h7Nheh0olIYfxhvtTOnQNVGVKquQx44oD25EDmSq0P3jDnkdsGB+K
-	 ORBmnxF8drCpA==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b0473327e70so516967166b.3
-        for <loongarch@lists.linux.dev>; Sat, 20 Sep 2025 01:24:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWw/xDrrLSYBy5rutvu4bt4e77ZSsJDfICC5hV3NjWaYobSVxYGZuV3h03PiwGIjGnpags4LS0X2K0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxYAoUWM7bDhTpz9dS+m8aZN+ZmfHwoQu/xSz5xZr9mj0aL7Rzl
-	EpM8b6G5h/wlEc1obmr9NmCuTISC5kloBQ3VbxAqZVWFgaekpdr9QCSXybDH9BRW896dy5MZ9rt
-	F2x3kXtoPAqlPN+7sEvxiwragCO76NFA=
-X-Google-Smtp-Source: AGHT+IE1V69IB770zqWYjhjaCj6tn8iJPPv0SBnhYKLAU9Ntgj5lSyQh1CuISoGxQ9p9ufFMB1R9rGUANEUSEmP/28o=
-X-Received: by 2002:a17:906:c155:b0:b24:3412:7cfe with SMTP id
- a640c23a62f3a-b24f5b59e7dmr574572866b.63.1758356643803; Sat, 20 Sep 2025
- 01:24:03 -0700 (PDT)
+	s=arc-20240116; t=1758359957; c=relaxed/simple;
+	bh=JM/uyBholIygfdOwgZZsVxmoJA4UBigh39/6CljrjDg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bx9m4RxZ8wR2Tj70Sq8GkLUcw7Iq+SH91ckeoujrUasPThUW+Q8uXvCvEmhgIW9C+EyR37cDUCcdcn/ecwOPzk48g2he3l0nEmbhOSXuf5ifK1FmYeEOd3iMcV4dp4xpa9crqDxmX0BKI/oPhTTuQ1R2insEljqZ96EPMKsoOBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [117.22.84.112])
+	by gateway (Coremail) with SMTP id _____8Cx6tGHcc5oHIgMAA--.27231S3;
+	Sat, 20 Sep 2025 17:19:03 +0800 (CST)
+Received: from [192.168.0.111] (unknown [117.22.84.112])
+	by front1 (Coremail) with SMTP id qMiowJAxfcGDcc5oiTKhAA--.1523S3;
+	Sat, 20 Sep 2025 17:19:01 +0800 (CST)
+Message-ID: <c9c4c0e6-946d-95de-9c03-a4b8e1636b81@loongson.cn>
+Date: Sat, 20 Sep 2025 17:19:00 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250909092707.3127-1-yangtiezhu@loongson.cn> <20250909092707.3127-2-yangtiezhu@loongson.cn>
- <20250920061536.GA1460394@ax162>
-In-Reply-To: <20250920061536.GA1460394@ax162>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 20 Sep 2025 16:23:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5=w82CDx=1=PZjf4FVW_dGWe_e__QazwDTwE3kKXtPLQ@mail.gmail.com>
-X-Gm-Features: AS18NWDYHVIbI5779aN0UyncebCxN_ZOrrIzZhLpspFq65G-qD9jtCDFkKgouS4
-Message-ID: <CAAhV-H5=w82CDx=1=PZjf4FVW_dGWe_e__QazwDTwE3kKXtPLQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
 Subject: Re: [PATCH v1 1/2] LoongArch: Make LTO case independent in Makefile
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Miguel Ojeda <ojeda@kernel.org>, 
-	WANG Rui <wangrui@loongson.cn>, rust-for-linux@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, WANG Rui <wangrui@loongson.cn>,
+ rust-for-linux@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20250909092707.3127-1-yangtiezhu@loongson.cn>
+ <20250909092707.3127-2-yangtiezhu@loongson.cn>
+ <20250920061536.GA1460394@ax162>
+ <CAAhV-H5=w82CDx=1=PZjf4FVW_dGWe_e__QazwDTwE3kKXtPLQ@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+In-Reply-To: <CAAhV-H5=w82CDx=1=PZjf4FVW_dGWe_e__QazwDTwE3kKXtPLQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxfcGDcc5oiTKhAA--.1523S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXw1kWw4fZr1kAF1UXr4rCrX_yoWrGw4Upw
+	s7CF4qgFs5WrWktr92y3y5Wrn8trsrtr12gF13try8uFsFqw1xWr48JryDWFyDZwn7J3yI
+	qryfKa43XF4UA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
+	U
 
-On Sat, Sep 20, 2025 at 2:15=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> Hi Tiezhu,
->
-> On Tue, Sep 09, 2025 at 05:27:06PM +0800, Tiezhu Yang wrote:
-> > LTO is not only used for Clang, it maybe used for Rust, make LTO case o=
-ut
-> > of CONFIG_CC_HAS_ANNOTATE_TABLEJUMP in Makefile.
-> >
-> > This is preparation for later patch, no function changes.
-> >
-> > Suggested-by: WANG Rui <wangrui@loongson.cn>
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
-> >  arch/loongarch/Makefile | 10 +++++-----
-> >  1 file changed, 5 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> > index a3a9759414f4..9d80af7f75c8 100644
-> > --- a/arch/loongarch/Makefile
-> > +++ b/arch/loongarch/Makefile
-> > @@ -102,16 +102,16 @@ KBUILD_CFLAGS                   +=3D $(call cc-op=
-tion,-mthin-add-sub) $(call cc-option,-Wa$(comma)
-> >
-> >  ifdef CONFIG_OBJTOOL
-> >  ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
-> > +KBUILD_CFLAGS                        +=3D -mannotate-tablejump
-> > +else
-> > +KBUILD_CFLAGS                        +=3D -fno-jump-tables # keep comp=
-atibility with older compilers
-> > +endif
-> > +ifdef CONFIG_LTO_CLANG
-> >  # The annotate-tablejump option can not be passed to LLVM backend when=
- LTO is enabled.
-> >  # Ensure it is aware of linker with LTO, '--loongarch-annotate-tableju=
-mp' also needs to
-> >  # be passed via '-mllvm' to ld.lld.
-> > -KBUILD_CFLAGS                        +=3D -mannotate-tablejump
-> > -ifdef CONFIG_LTO_CLANG
-> >  KBUILD_LDFLAGS                       +=3D -mllvm --loongarch-annotate-=
-tablejump
-> >  endif
-> > -else
-> > -KBUILD_CFLAGS                        +=3D -fno-jump-tables # keep comp=
-atibility with older compilers
-> > -endif
-> >  endif
-> >
-> >  KBUILD_RUSTFLAGS             +=3D --target=3Dloongarch64-unknown-none-=
-softfloat -Ccode-model=3Dsmall
-> > --
-> > 2.42.0
-> >
->
-> This change is now in -next as commit b15212824a01 ("LoongArch: Make LTO
-> case independent in Makefile"), where it breaks the build for clang-18,
-> as '--loongarch-annotate-tablejump' is unimplemented there but there is
-> no version check before using it.
->
->   $ make -skj"$(nproc)" ARCH=3Dloongarch LLVM=3D1 mrproper defconfig
->
->   $ scripts/config -d LTO_NONE -e LTO_CLANG_THIN
->
->   $ make -skj"$(nproc)" ARCH=3Dloongarch LLVM=3D1 olddefconfig vmlinuz.ef=
-i
->   ld.lld: error: -mllvm: ld.lld: Unknown command line argument '--loongar=
-ch-annotate-tablejump'.
->   ...
->
->   $ scripts/config -s CC_HAS_ANNOTATE_TABLEJUMP
->   undef
-Hmm, maybe we need this?
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index ae419e32f22e..fcfa793f9bb0 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -115,7 +115,7 @@ ifdef CONFIG_LTO_CLANG
- # The annotate-tablejump option can not be passed to LLVM backend
-when LTO is enabled.
- # Ensure it is aware of linker with LTO,
-'--loongarch-annotate-tablejump' also needs to
- # be passed via '-mllvm' to ld.lld.
--KBUILD_LDFLAGS                 +=3D -mllvm
---loongarch-annotate-tablejump
-+KBUILD_LDFLAGS                 +=3D $(call ld-option,-mllvm
---loongarch-annotate-tablejump)
- endif
- endif
->
-> Cheers,
-> Nathan
+On 9/20/25 16:23, Huacai Chen wrote:
+> On Sat, Sep 20, 2025 at 2:15 PM Nathan Chancellor <nathan@kernel.org> wrote:
+>>
+>> Hi Tiezhu,
+>>
+>> On Tue, Sep 09, 2025 at 05:27:06PM +0800, Tiezhu Yang wrote:
+>>> LTO is not only used for Clang, it maybe used for Rust, make LTO case out
+>>> of CONFIG_CC_HAS_ANNOTATE_TABLEJUMP in Makefile.
+>>>
+>>> This is preparation for later patch, no function changes.
+>>>
+>>> Suggested-by: WANG Rui <wangrui@loongson.cn>
+>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>> ---
+>>>   arch/loongarch/Makefile | 10 +++++-----
+>>>   1 file changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+>>> index a3a9759414f4..9d80af7f75c8 100644
+>>> --- a/arch/loongarch/Makefile
+>>> +++ b/arch/loongarch/Makefile
+>>> @@ -102,16 +102,16 @@ KBUILD_CFLAGS                   += $(call cc-option,-mthin-add-sub) $(call cc-option,-Wa$(comma)
+>>>
+>>>   ifdef CONFIG_OBJTOOL
+>>>   ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
+>>> +KBUILD_CFLAGS                        += -mannotate-tablejump
+>>> +else
+>>> +KBUILD_CFLAGS                        += -fno-jump-tables # keep compatibility with older compilers
+>>> +endif
+>>> +ifdef CONFIG_LTO_CLANG
+>>>   # The annotate-tablejump option can not be passed to LLVM backend when LTO is enabled.
+>>>   # Ensure it is aware of linker with LTO, '--loongarch-annotate-tablejump' also needs to
+>>>   # be passed via '-mllvm' to ld.lld.
+>>> -KBUILD_CFLAGS                        += -mannotate-tablejump
+>>> -ifdef CONFIG_LTO_CLANG
+>>>   KBUILD_LDFLAGS                       += -mllvm --loongarch-annotate-tablejump
+>>>   endif
+>>> -else
+>>> -KBUILD_CFLAGS                        += -fno-jump-tables # keep compatibility with older compilers
+>>> -endif
+>>>   endif
+>>>
+>>>   KBUILD_RUSTFLAGS             += --target=loongarch64-unknown-none-softfloat -Ccode-model=small
+>>> --
+>>> 2.42.0
+>>>
+>>
+>> This change is now in -next as commit b15212824a01 ("LoongArch: Make LTO
+>> case independent in Makefile"), where it breaks the build for clang-18,
+>> as '--loongarch-annotate-tablejump' is unimplemented there but there is
+>> no version check before using it.
+>>
+>>    $ make -skj"$(nproc)" ARCH=loongarch LLVM=1 mrproper defconfig
+>>
+>>    $ scripts/config -d LTO_NONE -e LTO_CLANG_THIN
+>>
+>>    $ make -skj"$(nproc)" ARCH=loongarch LLVM=1 olddefconfig vmlinuz.efi
+>>    ld.lld: error: -mllvm: ld.lld: Unknown command line argument '--loongarch-annotate-tablejump'.
+>>    ...
+>>
+>>    $ scripts/config -s CC_HAS_ANNOTATE_TABLEJUMP
+>>    undef
+> Hmm, maybe we need this?
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index ae419e32f22e..fcfa793f9bb0 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -115,7 +115,7 @@ ifdef CONFIG_LTO_CLANG
+>   # The annotate-tablejump option can not be passed to LLVM backend
+> when LTO is enabled.
+>   # Ensure it is aware of linker with LTO,
+> '--loongarch-annotate-tablejump' also needs to
+>   # be passed via '-mllvm' to ld.lld.
+> -KBUILD_LDFLAGS                 += -mllvm
+> --loongarch-annotate-tablejump
+> +KBUILD_LDFLAGS                 += $(call ld-option,-mllvm
+> --loongarch-annotate-tablejump)
+>   endif
+>   endif
+
+We need to handle the other case to use -fno-jump-tables if llvm does
+not support -loongarch-annotate-tablejump.
+
+So, it is better to update the minimal version of llvm to 20, which
+includes the following two important commits:
+
+[LoongArch] Add options for annotate tablejump
+https://github.com/llvm/llvm-project/commit/4c2c17756739
+
+[LoongArch] Avoid indirect branch jumps using the ra register
+https://github.com/llvm/llvm-project/commit/21ef17c62645
+
+If you are OK, I will send a patch to modify the following file:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/min-tool-version.sh#n29
+
+and keep arch/loongarch/Makefile as is.
+
+Thanks,
+Tiezhu
+
