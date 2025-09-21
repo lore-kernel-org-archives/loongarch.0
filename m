@@ -1,149 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD421509A0
-	for <loongarch@lists.linux.dev>; Sun, 21 Sep 2025 14:03:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C55E1FE471;
+	Sun, 21 Sep 2025 19:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758463417; cv=none; b=JfW6NzRjtr2ect2APzokfrS/Y5gVgBHmUtG50QffQxPnySwmgsXqWBgEpG1nMRdEokOGitOHVEyGMtKB3dcdVhIO6bZEaTOYHC7+gum5IkdKUaFI0UnY4Eaum4bXr3tf+IJr5pu9FPN9viGb4WxQXfwr635s+aLPOfIo4uckaB0=
+	t=1758484235; cv=none; b=A0sXUVQ9OfZ6KCd07EWeqve/ecZ0sn9WzhllbL2P/JcL+fd+rDAQdJxWzlSLqsdeR4d4U+W2A4xFc/JPVC96Y9SXQD34szs6TZrCK2GEHkr01MICw5ZfOhhi7hlnF1/DkVYBOKWgTwBQkE3e0nTJMfbIGo/K7IufnfUVt39UW7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758463417; c=relaxed/simple;
-	bh=Dii3XVV3GqFGsvIpQHJXuB3JBENZx3cw7QxToan9g2A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NiQ25vbrFUBO9VC1OECJf4rHvetnX9eBNMlegkS1gZSLop0rUEfvnlK8jFEx0Aa++c0/oSERFy5ogYj6BcHtI/buFNB7vQdxptY4teC8LVFooRYQ6wF5qQwtCiRJE4uhNjp6Jcz7WkyEOXCgay5K7/oB/cCMGu5S6Fnd/9/TO0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GLZ7+1rE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758484235; c=relaxed/simple;
+	bh=bSF2+Hk1yy6ag80W+9NMMTrN6gDfZ0Cv2kfuaUaqDiQ=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=nHksN3M0EfV/0XfHJBd5b69FiU4XRT8mWfiR/1HlYRbP6aKMsJJB9IM3EcqRU2bNwAmqFEgNR7p6fZR77ILaVmYVkymbHEy2aC/JU1HNafSeuBBM3XWi/E1k4GjlAppTAGZ/y6Bzb7IYILz7VB3YWC05oRFiytVis/qpnWqcnUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYW7zuv8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GLZ7+1rE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA130C116B1
-	for <loongarch@lists.linux.dev>; Sun, 21 Sep 2025 14:03:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYW7zuv8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD818C4CEE7;
+	Sun, 21 Sep 2025 19:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758463416;
-	bh=Dii3XVV3GqFGsvIpQHJXuB3JBENZx3cw7QxToan9g2A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GLZ7+1rE9YpZL9dDgv4EWsCmZtrfxY9jZ01tUHgxjrJzPBSEoeHMukNsYJTId3qzo
-	 2XSMzvOkX1C36xp8+iXOUYul+NiR/W55AxzHiko6LlnVr6uKQByrwO0hvK7UB86jjE
-	 57q2GDg+YZUNmknrJe9o+8IjrJUTRCr8GsiwTb/sCrUbCw42XBGOEuQiAsZPAzqcRR
-	 svOXjyWynn+8zl4s1zWql2bCFPTwHLWUFniv2SQ0j0Y7TYaUBNuJkIQUmD6pZCq3W/
-	 Gh6XjssCZOS8Qr6zItak+VNVkLJIelavMq/gQSNo11he3Kd4cxRRXozqZUegKf1Mfq
-	 /B6b8P0eN++rQ==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b042eb09948so609465366b.3
-        for <loongarch@lists.linux.dev>; Sun, 21 Sep 2025 07:03:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXLoxRFALuwMW6hd49ZcaH7E/en4fXI6SeDXj4VLrE/7RG0chk78SNNMfQZenTfYklByIxMtw6AqAs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwDHD4Oxs90QwZhS4c2fP696ezWGtds8yUCLl+g5g2r310Ab9bd
-	/J4PrW8vbXwjwCS+Mk0UaPgi9aDpUPylHmaXEq5+sTcEMucMrq4Bydg0ra+SDTC/GqRD8VKM4Jl
-	UdwFzFLHJnvasfuPFWy+FSLFeN7C66ig=
-X-Google-Smtp-Source: AGHT+IEJY9pRCOQ9ba+DERLtt5IlKiSfTxj+DOQMubiAwVQ0XJ0uKpMlJPHMt7g8wlCII+jXBu1TfMjByYNPDasXSXs=
-X-Received: by 2002:a17:907:9449:b0:b04:806b:c612 with SMTP id
- a640c23a62f3a-b24ee6ef5c6mr1122778866b.10.1758463415400; Sun, 21 Sep 2025
- 07:03:35 -0700 (PDT)
+	s=k20201202; t=1758484234;
+	bh=bSF2+Hk1yy6ag80W+9NMMTrN6gDfZ0Cv2kfuaUaqDiQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=YYW7zuv8jnypq8Uzjk94jDSPamztLzg9cS317/WBJsq/97enhnhQGRQv03Uz+Li4N
+	 sNWH0vbXVA5tq7iNr2LTcbIIdgolVeGSlsLN4vg6zxH7uc2ehUmcX7xgz7OuHO7MRg
+	 Jqz/9f/AL4Z0LSe9UjKkJ11a97nGAqT5ArGaXylV+Y/tp15jEWhpAukbrDQ0EDqgEK
+	 38rdBB4bjDS6Fgs1/O8DKe0+hhqj/BM/V2umZVWbKkKr3SKKkVxccEi4AKnoq+iyZQ
+	 nWAAMkNZts2A7V+CaHzZOvqzOOoDbT5e3HFW1iIok7BcjrKIQ28/U1vQh5/nrBhAxA
+	 e8WIQXWs4WqDA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250903030100.196744-1-youling.tang@linux.dev>
-In-Reply-To: <20250903030100.196744-1-youling.tang@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 21 Sep 2025 22:03:19 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5LnRruyzdxR26Sopot4HoAwsGJ=kQKr4D=gRmW4t1R0Q@mail.gmail.com>
-X-Gm-Features: AS18NWDUaq5tytPXMFw7v4wdbczyDPhFJ5b_iiVJqz7-XJetSXZrcs_y8_quLOw
-Message-ID: <CAAhV-H5LnRruyzdxR26Sopot4HoAwsGJ=kQKr4D=gRmW4t1R0Q@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] Add kexec_file support for LoongArch
-To: Youling Tang <youling.tang@linux.dev>
-Cc: WANG Xuerui <kernel@xen0n.name>, Baoquan He <bhe@redhat.com>, Yao Zi <ziyao@disroot.org>, 
-	kexec@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250919142649.58859-2-ziyao@disroot.org>
+References: <20250919142649.58859-1-ziyao@disroot.org> <20250919142649.58859-2-ziyao@disroot.org>
+Subject: Re: [PATCH v4 1/8] dt-bindings: clock: loongson2: Add Loongson-2K0300 compatible
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>, Yao Zi <ziyao@disroot.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Yanteng Si <siyanteng@cqsoftware.com.cn>
+To: Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Yao Zi <ziyao@disroot.org>, Yinbo Zhu <zhuyinbo@loongson.cn>
+Date: Sun, 21 Sep 2025 12:50:33 -0700
+Message-ID: <175848423305.4354.12821111451867845330@lazor>
+User-Agent: alot/0.11
 
-Applied with some modifications. You may need to test whether everything is=
- OK.
-https://github.com/chenhuacai/linux/commits/loongarch-next
+Quoting Yao Zi (2025-09-19 07:26:42)
+> Document the clock controller shipped in Loongson-2K0300 SoC, which
+> generates various clock signals for SoC peripherals. Differing from
+> previous generations of SoCs, LS2K0300 requires a 120MHz external clock
+> input.
+>=20
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cn>
+> ---
 
-Huacai
-
-On Wed, Sep 3, 2025 at 11:02=E2=80=AFAM Youling Tang <youling.tang@linux.de=
-v> wrote:
->
-> From: Youling Tang <tangyouling@kylinos.cn>
->
-> This patchset implement kexec_file_load() support on LoongArch.
->
-> This patch series enables us to load the LoongArch vmlinuz.efi(pez) or
-> vmlinux.efi(pei) or vmlinux(elf) by specifying its file decriptor,
-> instead of user-filled buffer via kexec_load() syscall.
->
-> To use kexec_file_load() system call, instead of kexec_load(), at kexec
-> command, '-s' options must be specified. kexec-tools needs to apply the
-> corresponding patches. These patches can be found in repository [1] and
-> will be submitted to the kexec-tools community later.
->
-> The basic usage of kexec_file is:
-> 1) Load second kernel image:
->  # kexec -s -l vmlinuz.efi --initrd=3Dinitrd.img --reuse-cmdline
->
-> 2) Startup second kernel:
->  # kexec -e
->
-> For kdump:
-> 1) Load capture kernel image:
->  # kexec -s -p vmlinuz.efi --initrd=3Dinitrd.img --reuse-cmdline
->
-> 2) Do something to crash, like:
->  # echo c > /proc/sysrq-trigger
->
-> Link:
-> [1] https://github.com/tangyouling/kexec-tools/commits/main/
->
-> Changelog:
->  v4:
->  * Add the character "kexec_file" to the command-line parameter.
->  * Fixed the issue where kexec_file failed to load the KASLR kernel
->    startup.
->  * Modify the member name of the loongarch_image_header structure.
->  * Modify the patch commit message.
->
->  v3:
->  * The ELF format kernel loading should not use loongarch_image_header.
->  * Separate patch2 into an infrastructure patch and an EFI support
->    patch.
->  * Adding that kexec_file cannot load non-relocation kernel comments.
->  * Some minor modifications.
->
->  v2:
->  * Merge some patches.
->  * Add support for ELF format images.
->  * Rename kexec_image.c to kexec_efi.c .
->  * When KEXEC_FILE is enabled, RELOCATABLE is selected by default.
->  * Some minor modifications.
->
-> Youling Tang (7):
->   LoongArch: Add struct loongarch_image_header for kernel image
->   LoongArch: Add preparatory infrastructure for kexec_file
->   LoongArch/kexec_file: Support loading EFI binary file
->   LoongArch/kexec_file: Support loading ELF binary file
->   LoongArch/kexec_file: Add crash dump support
->   LoongArch: Automatically disable kaslr when the kernel loads from
->     kexec_file
->   LoongArch: Enable CONFIG_KEXEC_FILE
->
->  arch/loongarch/Kconfig                     |  10 +
->  arch/loongarch/configs/loongson3_defconfig |   1 +
->  arch/loongarch/include/asm/image.h         |  53 +++++
->  arch/loongarch/include/asm/kexec.h         |  13 ++
->  arch/loongarch/kernel/Makefile             |   1 +
->  arch/loongarch/kernel/kexec_efi.c          | 114 ++++++++++
->  arch/loongarch/kernel/kexec_elf.c          | 105 +++++++++
->  arch/loongarch/kernel/machine_kexec.c      |  37 ++--
->  arch/loongarch/kernel/machine_kexec_file.c | 244 +++++++++++++++++++++
->  arch/loongarch/kernel/relocate.c           |   4 +
->  10 files changed, 569 insertions(+), 13 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/image.h
->  create mode 100644 arch/loongarch/kernel/kexec_efi.c
->  create mode 100644 arch/loongarch/kernel/kexec_elf.c
->  create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
->
-> --
-> 2.43.0
->
+Applied to clk-next
