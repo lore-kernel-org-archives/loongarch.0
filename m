@@ -1,149 +1,94 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12D622425E
-	for <loongarch@lists.linux.dev>; Mon, 22 Sep 2025 14:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B647917A2EB;
+	Tue, 23 Sep 2025 01:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758551351; cv=none; b=SDS9gXSljFwKAdRdqAqdg8YII6gVprgpvMHsCQV/e9bfkM+R977XYPF1MquRzRUArfQAz8Vzyxt1yrK7zFOsRwV5l9AbYvRVNd87vNK0O/zSFnx26mai2rokC8XiPh4Bst/b0q0OwdAGcOOxnENktNh5MqZvYC/oCL9bSOD0pJo=
+	t=1758589862; cv=none; b=MvwDah5O5a9efYrJcuVJAzcZ6CkWVoRQCIW+aHF8IIV7GoX5Ogkl0sveHgvu6Z/SJOwB1sM5TiykWp1tlP61vUy6mpK54PtHrnDUpP2+CtefcY7HnqvwSWBsQIePlsq88T0QOekrRxhVmBGLEj16MDHkbloNZTvjeTQdn+4dO3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758551351; c=relaxed/simple;
-	bh=zds9c11i5EPuC+LW5E2qVk5slu7nHVv1cCYASY1uK64=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KdX7rbLzNZUYZVkNiKvbh7EIMQ2Ae1/+NqHc28lzmTEViFXEGrErJOHzyKMflki4kqkZ/2C/tIdqgUktsmMrSHDXmimI9wN3xFnMBa7zz+9EeSiqr/3HO0b5kReBUcIJM0nzGqI9YKHBTS2frk54CyR59znzGUuJgh+tH5V4eDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=2Gz+rLQe; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freebox.fr
+	s=arc-20240116; t=1758589862; c=relaxed/simple;
+	bh=0Jda59RXsYzCBoDfESCbAp0uTTWmM63AxOyVi5h88sI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DUnMMa1Jm3ZN0qrcp0JNsskGjwJ4+fdm99jJgNSvQSzi3VWzCt5Zus3KX5UMRPJ+tzChRQoDL/0BFfekOZfdHfKOFZq6kouGPzyjz1c3I6oZxmlZcKiqua4Y7jsiVVYYJ+hVOspL1oW/aOCs8BpZIT9uHxwJijvVe3AVtMcT62s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qf21CC1V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="2Gz+rLQe"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-57cfe6656dcso1483993e87.1
-        for <loongarch@lists.linux.dev>; Mon, 22 Sep 2025 07:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1758551345; x=1759156145; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zds9c11i5EPuC+LW5E2qVk5slu7nHVv1cCYASY1uK64=;
-        b=2Gz+rLQePjUyTcOk8yOgV7H859HGg0X3gm1CuK/6wSUqqgXN7tf9+L3wxqU/t/6EyJ
-         KEgCMJo3GM861QyzW8xu8euK5D6+xneGAXI8u/U9Zozb4f23SJh2YBYyeQlQR0XuIQVJ
-         yclVS7sl6QEu5Di3vz4+D1HTK+Rv4WsOsZKb9aGa/ZGbvn/zSN0URtWTDFFEltFQpyDi
-         +P3zda0ARUxVPLjZgHXKWnidVo5Kf52D+koef0C3vGcy02XTg/QNJY5OOCf3lgMhbpKi
-         6sckr3njWR82MxW0JgGQ3oeNHVUQ7OmjwESu6Jx7F3QKhzXnf21E8SCG2Cji4y9dFRA6
-         WY+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758551345; x=1759156145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zds9c11i5EPuC+LW5E2qVk5slu7nHVv1cCYASY1uK64=;
-        b=Bx8xOzrjEiSv1dWZdqYbmM+/ppz/oFPH44Ng7pbQjH4fUId0RXdabT+tyyRoYo34i7
-         xQR+61b0NWmDdUWzbGYbONW3tpFeqOZxWB4BXiV3mHlEhwT5i8s2IKVccySWbz8ArPaG
-         ThV9f1PF297NDj168mOyB7YPOenpp+h0fAFArKc+M8/eE15kODUztC6K7VV8aZcF83Vu
-         7ZKod7Pm2z1KGgxWl2Bv/vA3u25QfwKMRMgk9vKsMA6FZzwMB8UqrWniZlj7PQ0tSylh
-         4KsBmVbQbFu/XImIPLOtpmh6FMW0U5Iyqx6cCgHOl/9NrjfwvYRFl2VLx2B2/MZxTEdz
-         lamw==
-X-Forwarded-Encrypted: i=1; AJvYcCVE8gS/4Mb5LlKr7pwOqJoVeDJuuERIOUngOLZ5fLp0vi8AshquoLrAw3BrVT43+OJJKb8Cx3Z/bIg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YySKtF7KNcZQkE1YZQY8BIdG+PZ6g8kDf2+d4cgOYut6EP+SJQI
-	KSM3yTalQ8yMif9DTcNbU/c6HNaAwDx67wxFBSm/IXehm8pDPXB6NC+Y+KI2nU68xzBFU152+Qj
-	Gp4798CTC5u20Vm8G00bRI2Hdshj/a+1rDsVmYm34gg==
-X-Gm-Gg: ASbGnctFb7cQno61CXfI34Lj1GiESw7Ymcuz1v0ky+qtqc8HhMaBPI6Q5MdT8EE4y3E
-	mVlxISFmACjXEd4VgevCVH6J2sQcp3yE2LYXubqFt9vt3LUbn4AMRv3s1sL9cO5Ielz+FxI89xR
-	J9crD8a5FFIzXAgqgSWIksG4Gqd+bmadTFfmuxGTu252LE1ArNabc8nW/rWi5poB3N/QZO/mqfT
-	ogkZ94bb76K1vI=
-X-Google-Smtp-Source: AGHT+IF9Kx0YHTgWZximr8IphichwJGTQ/wmiFKfxBKU7xEPIwY53K1eZ5EsUZqb+vcW1xAllqgOcQU2VEEacURTmEE=
-X-Received: by 2002:a05:6512:4389:b0:57b:478b:d8a6 with SMTP id
- 2adb3069b0e04-57b478be162mr3313173e87.35.1758551344116; Mon, 22 Sep 2025
- 07:29:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qf21CC1V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E08FC4CEF0;
+	Tue, 23 Sep 2025 01:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758589862;
+	bh=0Jda59RXsYzCBoDfESCbAp0uTTWmM63AxOyVi5h88sI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qf21CC1VHuzqsFrt9dS3cC6RIWogn3VfVXv0rKXEMx6Uzh+M2zSEoX5dzyQuFpssw
+	 9xFya1OK7hMe0IAmleR+5/bxwRt3C9vbrPVGmZYio0tvUFvfp6rh+O8QYYk2BtAcg/
+	 81JyBVFfTdfR81M7u0HXevRPuZThLoWbSFEG6Iqx9IE/Kcd1htwcgo0VQu1ZF1lHRB
+	 vgNvA+xXdrqHkzwDZ6kNA7a7bgwGylX8wbNpgS4AvjHv+yQYe3jLGR7n3WF0P7NVPV
+	 zHK/v58Zl09YJMOvJg1mn6yWKsOReOSs/4owCl3Lo+BSAKfpKkRgAINkfg7jNH02fO
+	 fG2bKG/QKtsgw==
+Date: Mon, 22 Sep 2025 18:10:57 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	WANG Rui <wangrui@loongson.cn>, rust-for-linux@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v1 1/2] LoongArch: Make LTO case independent in Makefile
+Message-ID: <20250923011057.GA3980504@ax162>
+References: <20250909092707.3127-1-yangtiezhu@loongson.cn>
+ <20250909092707.3127-2-yangtiezhu@loongson.cn>
+ <20250920061536.GA1460394@ax162>
+ <CAAhV-H5=w82CDx=1=PZjf4FVW_dGWe_e__QazwDTwE3kKXtPLQ@mail.gmail.com>
+ <c9c4c0e6-946d-95de-9c03-a4b8e1636b81@loongson.cn>
+ <7eafa4a6-55bf-2fcb-19ef-b18bd51bfd39@loongson.cn>
+ <CAAhV-H4xx-C28-a8H7yJTK30+r90zL9XTSAb87Jr4zLc5ShBoA@mail.gmail.com>
+ <750c907d-cc95-5116-4507-52dd48927cec@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250918152830.438554-1-nschichan@freebox.fr> <20250918195806.6337-1-safinaskar@gmail.com>
- <CAHNNwZAzecVcJXZmycX063-=p-M5jVkfStfgYVKJruOFo7y9zg@mail.gmail.com> <CAPnZJGDwETQVVURezSRxZB8ZAwBETQ5fwbXyeMpfDLuLW4rVdg@mail.gmail.com>
-In-Reply-To: <CAPnZJGDwETQVVURezSRxZB8ZAwBETQ5fwbXyeMpfDLuLW4rVdg@mail.gmail.com>
-From: Nicolas Schichan <nschichan@freebox.fr>
-Date: Mon, 22 Sep 2025 16:28:52 +0200
-X-Gm-Features: AS18NWBjmNA3KBj8cPrgwDAVm5OX9a5odWP7LbRlHvhoE96nP3yo2_PGoZ1JbG8
-Message-ID: <CAHNNwZC7gC7zaZGiSBhobSAb4m2O1BuoZ4r=SQBF-tCQyuAPvw@mail.gmail.com>
-Subject: Re: [PATCH RESEND 00/62] initrd: remove classic initrd support
-To: Askar Safin <safinaskar@gmail.com>
-Cc: akpm@linux-foundation.org, andy.shevchenko@gmail.com, axboe@kernel.dk, 
-	brauner@kernel.org, cyphar@cyphar.com, devicetree@vger.kernel.org, 
-	ecurtin@redhat.com, email2tema@gmail.com, graf@amazon.com, 
-	gregkh@linuxfoundation.org, hca@linux.ibm.com, hch@lst.de, 
-	hsiangkao@linux.alibaba.com, initramfs@vger.kernel.org, jack@suse.cz, 
-	julian.stecklina@cyberus-technology.de, kees@kernel.org, 
-	linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-efi@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, mcgrof@kernel.org, 
-	mingo@redhat.com, monstr@monstr.eu, mzxreary@0pointer.de, 
-	patches@lists.linux.dev, rob@landley.net, sparclinux@vger.kernel.org, 
-	thomas.weissschuh@linutronix.de, thorsten.blum@linux.dev, 
-	torvalds@linux-foundation.org, tytso@mit.edu, viro@zeniv.linux.org.uk, 
-	x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <750c907d-cc95-5116-4507-52dd48927cec@loongson.cn>
 
-[resending to the lists and Cc, sorry I initially replied only to Askar]
+> > > ifdef CONFIG_LTO_CLANG
+> > > ifdef CONFIG_LLD_HAS_ANNOTATE_TABLEJUMP
+> > > KBUILD_LDFLAGS                  += -mllvm --loongarch-annotate-tablejump
+> > > else
+> > > KBUILD_LDFLAGS                  += -mllvm --no-jump-tables
+> > > endif
 
-On Sat, Sep 20, 2025 at 5:55=E2=80=AFAM Askar Safin <safinaskar@gmail.com> =
-wrote:
-> On Fri, Sep 19, 2025 at 6:25=E2=80=AFPM Nicolas Schichan <nschichan@freeb=
-ox.fr> wrote:
-> > Considering that the deprecation message didn't get displayed in some
-> > configurations, maybe it's a bit early at the very least.
->
-> I changed my opinion.
-> Breaking users, who did not see a deprecation message at all,
-> is unfair.
-> I will send a patchset soon, which will remove initrd codepath,
-> which currently contains deprecation notice. And I will put
-> deprecation notice to
-> other codepath.
+There is no '--no-jump-tables' LLVM option so this will not work.
+Shouldn't -fno-jump-tables and -Zno-jump-tables take care of generating
+jump tables?
 
-Thanks
+> I do not know whether this is valid, you can test it with llvm 18
+> and llvm 20 if you think it is a proper way.
 
-> Then in September 2026 I will fully remove initrd.
+For what it's worth, Huacai's original suggestion of
 
-Is there a way to find some kind of middle ground here ?
+    KBUILD_LDFLAGS += $(call ld-option,-mllvm --loongarch-annotate-tablejump)
 
-I'm lead to believe that the main issue with the current code is that
-it needs to parse the superblocks of the ramdisk image in order to get
-the amount to data to copy into /dev/ram0.
+appears to work for me and I do not see any objtool warnings with LTO
+enabled but I might be missing something.
 
-It looks like it is partly because of the ramdisk_start=3D kernel
-command line parameter which looks to be a remnant of the time it was
-possible to boot on floppy disk on x86.
+> But IIRC, there is objtool warning with llvm 18, I reported to llvm
+> developer Wang Lei and he fixed it as the following commit:
+> 
+> [LoongArch] Avoid indirect branch jumps using the ra register
+> https://github.com/llvm/llvm-project/commit/21ef17c62645
+> 
+> Actually, the above commit solved a performance issue of llvm compiler,
+> so I prefer to update the minimal llvm version to 20 for LoongArch.
 
-This kernel command line allows to look for a rootfs image at an
-offset into the initrd data.
+I tend to let architecture maintainers make the call around minimum
+supported versions of compilers, so if that is how you would like to
+proceed, I am fine with that. I will say LLVM 20 is pretty new (released
+on March 4th, 2025) but I expect most of your users to probably be using
+bleeding edge tools for all the changes you make in the compiler and
+lower level libraries?
 
-If we assume now that the rootfs image data starts at the beginning of
-the initrd image and is the only part of the initrd image this would
-indeed remove a lot of complexity.
-
-Maybe it would be possible to remove the identify_ramdisk_image()
-function and just copy the actual size of /initrd.image into
-/dev/ram0. This would allow any file system to be used in an initrd
-image (no just romfs, cramfs, minixfs, ext2fs and squashfs), and this
-would simplify the code in init/do_mounts_rd.c greatly, with just the
-function rd_load_image() and nr_blocks() remaining in this file.
-
-I can send a patch for that but first I need to sort out my SMTP
-issues from the other day.
-
-Regards,
-
---=20
-Nicolas Schichan
+Cheers,
+Nathan
