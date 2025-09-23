@@ -1,94 +1,124 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7319E1A9F90
-	for <loongarch@lists.linux.dev>; Tue, 23 Sep 2025 13:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E7A214210
+	for <loongarch@lists.linux.dev>; Tue, 23 Sep 2025 14:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758632517; cv=none; b=BS+DgltQaqmC+8URFx/TYhj68WfqCw6xxH1fskTY3iXMdR5OVAF9K1eJcFV1re8LDdi4PzuwsFu9uETU2U2u90cxvk+9Ttjr+MQAghUAqdgjijBm5RmitdkvjJFUoXApzUCWgn+xIXjUgaBAPKzwKvNUix98o6gcdymYSXQZLZo=
+	t=1758637945; cv=none; b=S8lG/HClPRGzGgp4px7I/hDXnqIF0NB0kh+47i6sgFPW3/MYANYrrlTz6nhhZMHL3/4KJmoSDUQvRp1TAW9nW5N7teFPhNqrWZ+Tue42bFufX4I6HNzfg/Q+RZ2IJXY2pKCldFwtN+SpuPvkP3XKi2DuIkbO372T37nAsw/pE94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758632517; c=relaxed/simple;
-	bh=u2Zu3SbYsOko4xCdftQZw0rrh7SK+R8rMwwDRCnoEso=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GA1QyJdqXLlWONjdKW2QethViMMPwrNC8XQAi8V+LfDaAZlSxXyb+nLrzqvJNh/Yez0gqjD9biFiCSspc1GgySKjZnBlTvgjeuWIbYi+6CHebvFh63lsnAieZ77azhVu2JRxqtnt7Zkn6ug4dk7LqqfBdLQs7u9pbZ/sVoaIlY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8DxvdI5mtJo2KkNAA--.29008S3;
-	Tue, 23 Sep 2025 21:01:45 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowJDxK8EtmtJoyiGoAA--.9124S2;
-	Tue, 23 Sep 2025 21:01:45 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Nathan Chancellor <nathan@kernel.org>,
-	WANG Rui <wangrui@loongson.cn>
-Subject: [PATCH] LoongArch: Fix build error for LTO with LLVM-18
-Date: Tue, 23 Sep 2025 21:01:22 +0800
-Message-ID: <20250923130122.2321771-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1758637945; c=relaxed/simple;
+	bh=SyF2JYjmgNSd1raMXbXoz7cNPV1N8IiH9rEfanxfDAk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N6VWvtxQUDBWhQoHTAPnwQZGeFj6wOSOYU3wyOa750Glpr7msSS7cJOldKe7+3SYIekn4JlPYIKgdsOpVLKxLc7522eqv2ZcOJBROYBdvCipRNwHy3yUjuz/BE4Nm2/VBeEd8GBXuX3JJEKlD5rIiB3BOpC9PunkHHtTYB+ImsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+7Dwcij; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+7Dwcij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A3E9C16AAE
+	for <loongarch@lists.linux.dev>; Tue, 23 Sep 2025 14:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758637944;
+	bh=SyF2JYjmgNSd1raMXbXoz7cNPV1N8IiH9rEfanxfDAk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=H+7DwcijAcU0RCz4y0A3Rwsi4riw0jYG3FB+zPbiY+9HPPSawYn5BajbHqSIYqmHS
+	 QZK4Z1GrzYLhPG4RMe4g7q/uIcyy0vsl15TFM187icZCFd+u2ZlEwTqoMheYPl1XU9
+	 DLCZ5MdorU+yO9JNs7xqoHn6RGUqM0ZSMBPSe7WQWwDUpbJGOSrbgZO5pAT3Gj+hlN
+	 i48BXuMAj8hXudLzA5Lm9LRKUWXd/i1EePdRuIUZblfUxak20t3vTL9fcivBtTR0NH
+	 Clwgwn6gPKlTO9x27GYHx/TYY3oyFdIQhHaofY94L35rT+rg0JlS0Xv8j70Z8nhIS2
+	 WlZOTQwOgGdtw==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b3164978f11so75133166b.3
+        for <loongarch@lists.linux.dev>; Tue, 23 Sep 2025 07:32:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVgc0UujR12/Wj43AzoO4Kr2BD0t3ui5UxCbrJV/IjqIRrk1qBMlT+8mEr8InRtglXbPwpSwHM8JvE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzhQHMGLhFeSHzlwDIWEduZQMLmoKQ4Okf/JU+9WlpctbK1lIfh
+	OUu9UZN4pKWCHt728uYhm17GEqLy3WjR23BiGU2gPEbLu2O2I5zM7YpUQhbD5og4yGyrW2tEYCL
+	MfBfS8TX+HUbLUjU4Ek3Omq5l+Ptvh70=
+X-Google-Smtp-Source: AGHT+IGIkFwYjOX3usyebxtGb1H50QClcMAW03NWwNMggd+PADyfcgxohGn87l5jtQfOMRTJbk9MQ7GEJkgAdYLLOQE=
+X-Received: by 2002:a17:907:787:b0:b04:6546:347e with SMTP id
+ a640c23a62f3a-b302b50c092mr266770566b.51.1758637943170; Tue, 23 Sep 2025
+ 07:32:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxK8EtmtJoyiGoAA--.9124S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CryUGFW5KFyUKFyxWr4xZrc_yoW8Xr15p3
-	9xCF90qrs5Gr4kK3s3JrWagrn5trsFya12gF1Sk3W8AFs5Xw4UXw18XF9rWFy8uws8JryI
-	qryrK345JFZ5G3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+References: <20250923061722.24457-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20250923061722.24457-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 23 Sep 2025 22:32:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4e0xeHoEJ4Vzs8pQT+sbjaAL8N=Vc=TrU8fd3iU=97nQ@mail.gmail.com>
+X-Gm-Features: AS18NWAjA60oBdRDZ55y-2Nhs7beo3GYqq44uA2jysjtFj67BTWZM1yP8m2PJwo
+Message-ID: <CAAhV-H4e0xeHoEJ4Vzs8pQT+sbjaAL8N=Vc=TrU8fd3iU=97nQ@mail.gmail.com>
+Subject: Re: [PATCH v1] LoongArch: Add -fno-isolate-erroneous-paths-dereference
+ in Makefile
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: WANG Rui <wangrui@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit b15212824a01 ("LoongArch: Make LTO case independent in Makefile")
-moves "KBUILD_LDFLAGS += -mllvm --loongarch-annotate-tablejump" out of
-CONFIG_CC_HAS_ANNOTATE_TABLEJUMP, which breaks the build for LLVM-18, as
-'--loongarch-annotate-tablejump' is unimplemented there:
+Hi, Tiezhu,
 
-ld.lld: error: -mllvm: ld.lld: Unknown command line argument '--loongarch-annotate-tablejump'.
+On Tue, Sep 23, 2025 at 2:17=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> Currently, when compiling with GCC, there is no "break 0x7" instruction
+> for zero division due to using the option -mno-check-zero-division, but
+> the compiler still generates "break 0x0" instruction for zero division.
+>
+> Here is a simple example:
+>
+>   $ cat test.c
+>   int div(int a)
+>   {
+>           return a / 0;
+>   }
+>   $ gcc -O2 -S test.c -o test.s
+>
+> GCC generates "break 0" On LoongArch and "ud2" on x86, objtool decodes
+> "ud2" as INSN_BUG for x86, so decode "break 0" as INSN_BUG can fix the
+> objtool warnings for LoongArch, but this is not the intention.
+>
+> When decoding "break 0" as INSN_TRAP in the previous commit, the aim is
+> to handle "break 0" as a trap. The generated "break 0" for zero division
+> by GCC is not proper, it should generate a break instruction with proper
+> bug type, so add the GCC option -fno-isolate-erroneous-paths-dereference
+> to avoid generating the unexpected "break 0" instruction for now.
+You said that this patch make performance increase a little. But this
+is strange, because -isolate-erroneous-paths-dereference rather than
+-no-isolate-erroneous-paths-dereference is considered as an
+optimization.
 
-Call ld-option to detect '--loongarch-annotate-tablejump' before use, so
-as to fix the build error.
+Huacai
 
-Fixes: b15212824a01 ("LoongArch: Make LTO case independent in Makefile")
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Suggested-by: WANG Rui <wangrui@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index ae419e32f22e..fcfa793f9bb0 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -115,7 +115,7 @@ ifdef CONFIG_LTO_CLANG
- # The annotate-tablejump option can not be passed to LLVM backend when LTO is enabled.
- # Ensure it is aware of linker with LTO, '--loongarch-annotate-tablejump' also needs to
- # be passed via '-mllvm' to ld.lld.
--KBUILD_LDFLAGS			+= -mllvm --loongarch-annotate-tablejump
-+KBUILD_LDFLAGS			+= $(call ld-option,-mllvm --loongarch-annotate-tablejump)
- endif
- endif
- 
--- 
-2.47.3
-
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/r/202509200413.7uihAxJ5-lkp@intel.com/
+> Fixes: baad7830ee9a ("objtool/LoongArch: Mark types based on break immedi=
+ate code")
+> Suggested-by: WANG Rui <wangrui@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index ae419e32f22e..f2a585b4a937 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -129,7 +129,7 @@ KBUILD_RUSTFLAGS_KERNEL             +=3D -Crelocation=
+-model=3Dpie
+>  LDFLAGS_vmlinux                        +=3D -static -pie --no-dynamic-li=
+nker -z notext $(call ld-option, --apply-dynamic-relocs)
+>  endif
+>
+> -cflags-y +=3D $(call cc-option, -mno-check-zero-division)
+> +cflags-y +=3D $(call cc-option, -mno-check-zero-division -fno-isolate-er=
+roneous-paths-dereference)
+>
+>  ifndef CONFIG_KASAN
+>  cflags-y +=3D -fno-builtin-memcpy -fno-builtin-memmove -fno-builtin-mems=
+et
+> --
+> 2.42.0
+>
