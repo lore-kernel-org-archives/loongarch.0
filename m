@@ -1,40 +1,28 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B647917A2EB;
-	Tue, 23 Sep 2025 01:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E348524468B;
+	Tue, 23 Sep 2025 03:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758589862; cv=none; b=MvwDah5O5a9efYrJcuVJAzcZ6CkWVoRQCIW+aHF8IIV7GoX5Ogkl0sveHgvu6Z/SJOwB1sM5TiykWp1tlP61vUy6mpK54PtHrnDUpP2+CtefcY7HnqvwSWBsQIePlsq88T0QOekrRxhVmBGLEj16MDHkbloNZTvjeTQdn+4dO3I=
+	t=1758597250; cv=none; b=O3y7bmU90Irt7WR2X8R8MdWewpK7nSZjDccfckH7/7r3hfpjZdJtIVy+paq24LVAkbAJDbFfXvDS2KQsKv0KW+mywHXBLPpZkbroq0yvXqtJFM+GjKmx0vEYJFgLdPDHVE15WvkYpiXCHkfGOw8pAyI4O7PeutJl3Vii+rDLf5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758589862; c=relaxed/simple;
-	bh=0Jda59RXsYzCBoDfESCbAp0uTTWmM63AxOyVi5h88sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DUnMMa1Jm3ZN0qrcp0JNsskGjwJ4+fdm99jJgNSvQSzi3VWzCt5Zus3KX5UMRPJ+tzChRQoDL/0BFfekOZfdHfKOFZq6kouGPzyjz1c3I6oZxmlZcKiqua4Y7jsiVVYYJ+hVOspL1oW/aOCs8BpZIT9uHxwJijvVe3AVtMcT62s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qf21CC1V; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qf21CC1V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E08FC4CEF0;
-	Tue, 23 Sep 2025 01:11:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758589862;
-	bh=0Jda59RXsYzCBoDfESCbAp0uTTWmM63AxOyVi5h88sI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qf21CC1VHuzqsFrt9dS3cC6RIWogn3VfVXv0rKXEMx6Uzh+M2zSEoX5dzyQuFpssw
-	 9xFya1OK7hMe0IAmleR+5/bxwRt3C9vbrPVGmZYio0tvUFvfp6rh+O8QYYk2BtAcg/
-	 81JyBVFfTdfR81M7u0HXevRPuZThLoWbSFEG6Iqx9IE/Kcd1htwcgo0VQu1ZF1lHRB
-	 vgNvA+xXdrqHkzwDZ6kNA7a7bgwGylX8wbNpgS4AvjHv+yQYe3jLGR7n3WF0P7NVPV
-	 zHK/v58Zl09YJMOvJg1mn6yWKsOReOSs/4owCl3Lo+BSAKfpKkRgAINkfg7jNH02fO
-	 fG2bKG/QKtsgw==
-Date: Mon, 22 Sep 2025 18:10:57 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	WANG Rui <wangrui@loongson.cn>, rust-for-linux@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
+	s=arc-20240116; t=1758597250; c=relaxed/simple;
+	bh=ZrlGg5+T9abifBw/iJ/AfUiU2mX4DnhZuR3Zd+vV5XE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=VBiwlgyJVtTgNPYaOiWFQiRtLZqnvJ+IpixxWnDQkEuBW8vK0zd93rvLqJQkFNjWLDPJ6c/UMcFfebL4MlKJYo0BlNq6DrQMLpgiCPIQLOXFmujFdtNxTbvB4i5rLMPzyqVxvXTDubJkmMufpWNrdOGzQrKQu+z/2+Jd+rqtKX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx7792ENJowH0NAA--.27435S3;
+	Tue, 23 Sep 2025 11:13:58 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxVOR1ENJorgqnAA--.10350S3;
+	Tue, 23 Sep 2025 11:13:58 +0800 (CST)
 Subject: Re: [PATCH v1 1/2] LoongArch: Make LTO case independent in Makefile
-Message-ID: <20250923011057.GA3980504@ax162>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+ WANG Rui <wangrui@loongson.cn>, rust-for-linux@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 References: <20250909092707.3127-1-yangtiezhu@loongson.cn>
  <20250909092707.3127-2-yangtiezhu@loongson.cn>
  <20250920061536.GA1460394@ax162>
@@ -43,52 +31,87 @@ References: <20250909092707.3127-1-yangtiezhu@loongson.cn>
  <7eafa4a6-55bf-2fcb-19ef-b18bd51bfd39@loongson.cn>
  <CAAhV-H4xx-C28-a8H7yJTK30+r90zL9XTSAb87Jr4zLc5ShBoA@mail.gmail.com>
  <750c907d-cc95-5116-4507-52dd48927cec@loongson.cn>
+ <20250923011057.GA3980504@ax162>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <a04cc3e2-d8d9-8ac4-d919-705babf4ccd8@loongson.cn>
+Date: Tue, 23 Sep 2025 11:13:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <750c907d-cc95-5116-4507-52dd48927cec@loongson.cn>
+In-Reply-To: <20250923011057.GA3980504@ax162>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxVOR1ENJorgqnAA--.10350S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw13Xry8tF13JFyfXw15KFX_yoW8CrW7pa
+	ykWFy3Krs8JF4Iy39Fvw4UKFZ8KrsxGFy8Xr1rtr1kZr1DZrWIgrWxtrZ3XasrZr9rJFW2
+	qFW8t3s8AF4UZ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALU
+	UUUU=
 
-> > > ifdef CONFIG_LTO_CLANG
-> > > ifdef CONFIG_LLD_HAS_ANNOTATE_TABLEJUMP
-> > > KBUILD_LDFLAGS                  += -mllvm --loongarch-annotate-tablejump
-> > > else
-> > > KBUILD_LDFLAGS                  += -mllvm --no-jump-tables
-> > > endif
-
-There is no '--no-jump-tables' LLVM option so this will not work.
-Shouldn't -fno-jump-tables and -Zno-jump-tables take care of generating
-jump tables?
-
-> I do not know whether this is valid, you can test it with llvm 18
-> and llvm 20 if you think it is a proper way.
-
-For what it's worth, Huacai's original suggestion of
-
-    KBUILD_LDFLAGS += $(call ld-option,-mllvm --loongarch-annotate-tablejump)
-
-appears to work for me and I do not see any objtool warnings with LTO
-enabled but I might be missing something.
-
-> But IIRC, there is objtool warning with llvm 18, I reported to llvm
-> developer Wang Lei and he fixed it as the following commit:
+On 2025/9/23 上午9:10, Nathan Chancellor wrote:
+>>>> ifdef CONFIG_LTO_CLANG
+>>>> ifdef CONFIG_LLD_HAS_ANNOTATE_TABLEJUMP
+>>>> KBUILD_LDFLAGS                  += -mllvm --loongarch-annotate-tablejump
+>>>> else
+>>>> KBUILD_LDFLAGS                  += -mllvm --no-jump-tables
+>>>> endif
 > 
-> [LoongArch] Avoid indirect branch jumps using the ra register
-> https://github.com/llvm/llvm-project/commit/21ef17c62645
+> There is no '--no-jump-tables' LLVM option so this will not work.
+> Shouldn't -fno-jump-tables and -Zno-jump-tables take care of generating
+> jump tables?
 > 
-> Actually, the above commit solved a performance issue of llvm compiler,
-> so I prefer to update the minimal llvm version to 20 for LoongArch.
+>> I do not know whether this is valid, you can test it with llvm 18
+>> and llvm 20 if you think it is a proper way.
+> 
+> For what it's worth, Huacai's original suggestion of
+> 
+>      KBUILD_LDFLAGS += $(call ld-option,-mllvm --loongarch-annotate-tablejump)
+> 
+> appears to work for me and I do not see any objtool warnings with LTO
+> enabled but I might be missing something.
 
-I tend to let architecture maintainers make the call around minimum
-supported versions of compilers, so if that is how you would like to
-proceed, I am fine with that. I will say LLVM 20 is pretty new (released
-on March 4th, 2025) but I expect most of your users to probably be using
-bleeding edge tools for all the changes you make in the compiler and
-lower level libraries?
+As discussed offline, Huacai will test this change and submit a patch
+later.
 
-Cheers,
-Nathan
+>> But IIRC, there is objtool warning with llvm 18, I reported to llvm
+>> developer Wang Lei and he fixed it as the following commit:
+>>
+>> [LoongArch] Avoid indirect branch jumps using the ra register
+>> https://github.com/llvm/llvm-project/commit/21ef17c62645
+>>
+>> Actually, the above commit solved a performance issue of llvm compiler,
+>> so I prefer to update the minimal llvm version to 20 for LoongArch.
+> 
+> I tend to let architecture maintainers make the call around minimum
+> supported versions of compilers, so if that is how you would like to
+> proceed, I am fine with that. I will say LLVM 20 is pretty new (released
+> on March 4th, 2025) but I expect most of your users to probably be using
+> bleeding edge tools for all the changes you make in the compiler and
+> lower level libraries?
+
+Usually, I like to use the latest LLVM upstream version to test the
+kernel, but maybe somebody only uses the lower version, so keep the
+minimal version as is.
+
+Thanks,
+Tiezhu
+
