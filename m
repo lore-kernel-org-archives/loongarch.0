@@ -1,62 +1,62 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1242B31812F
-	for <loongarch@lists.linux.dev>; Tue, 23 Sep 2025 08:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026662ECD33
+	for <loongarch@lists.linux.dev>; Tue, 23 Sep 2025 08:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758617744; cv=none; b=AUCuORKpXxP+lLLdmrouTJQgwYz4/piT1r1ALLCAlzsCqxEhUccc0pDfhWdlrBTNw1erG3A+5N9w2wPlOjAi5z4vcWfeNsCqujamY+7PeH0a5Z+vHKd9ow2HLw5ce8n/gG/loqMxEyqY2/oa4hK6NQO23KXDoFd75ggBHuhN/Ho=
+	t=1758617748; cv=none; b=az5jKhgk121oTkhWlMRshQeWqv8kJV5Xczyo5kMV71kfbeOxdSQV9kNVlv++VLhuGXJ2ALGCrjDMiA0+LhT4Oi+dU87dGBjXkeeBsCtz7Raq/DbuLjwX+0fPBm0UGuvNuXPOn1h9+gXeSYZIL8ORXZJQvnP5+8/OKG8nsxHd1A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758617744; c=relaxed/simple;
-	bh=NewO4njemEniVz7mSlQozZsOjqSCSXJQc2zH/OdZIqk=;
+	s=arc-20240116; t=1758617748; c=relaxed/simple;
+	bh=mfRqLxrQbK9ufYnhCzdh6ReMtMnLnEihp/qs/DK77aY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JZAm2sYtYTazE+Jse4yA7MX+cRGLN7raEo5C6DlioYBsVHJ6LE5Pcwho1YqP0RjZWa2uDoUHfArUh3J0VatVxqWbWzLYX7qCebsaUJIC9E7DBdDAQAyvIFdneUBOYxiGl4zS857py3WDK9E/FiMeefkKrmDlCprY0ZiaNaUvLCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZV5Df7P; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=Q9mjk+G3ceIp+7aasErDSio8hNKbYUUX1F/om8OnXRQxbP9CPsmGbyFRGVaOQa84KQipTjh9QZZXH8FjGGXvtIbaECtdA18gFBaGC39Td3bxuymt6t98miTzgRQWAAPUTd4jP8lNm/md/32oOb9w+FmhUsbaJadHAiV81Nx1Mug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCFvVVua; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZV5Df7P"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-77e87003967so1966567b3a.1
-        for <loongarch@lists.linux.dev>; Tue, 23 Sep 2025 01:55:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCFvVVua"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-27a6c3f482dso13182915ad.1
+        for <loongarch@lists.linux.dev>; Tue, 23 Sep 2025 01:55:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758617742; x=1759222542; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1758617746; x=1759222546; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Sq3M1EuezVXyFff7JhHFKkQRUBD32DzfJXZ578Wxpbo=;
-        b=RZV5Df7Pax1G7aO/z4/28+JxvNd/PcbdxWe4t8tHO8B+XICPyr/teT5KOHkNc69GLW
-         0BW13/GRHs4rCC1R113DHh0ED6l7npcxHZAy+0dV3rIIlwhk02+Mga62wvG0zmZRqY89
-         PhXOUfyavPRu4BNnpWQmkUcml2GUHwmZk2mG1aPxD0yKu3OmS6IsgF2GkeUul/Ngkwm4
-         yRFVjKo9jHNutkkLEEF8xlqduSDEVQGptbImVka243Yv4JrnaTGa5SA3F8yQZmBttRtq
-         0ZCkjDgeIjB5AN/teBLQYZ0wsgNbON1vFdJ1uqNCMKZwV8YnADpRpYnEYFdRbw4mA+xc
-         KiHw==
+        bh=2YZmDj07Ldq6nfFbWtqFrG1CWWP+54yDeybcH+1ins0=;
+        b=YCFvVVuaFzz6xuspi9ujXN+W7LIoY/udLeycndtJFmXDZ5V8L1ROKLVU7+NTQ9wis7
+         Gmxlx+KHD6/hJvwdikq95iauc09ZUW9eftCrxif1xRXvvqWodIvde37osJHez6aP8cRl
+         XDSPWMJXycFl1MKP+7zG/RsA2n4DLbiDp3u3GVoXdo5jk4vrOCH6ep9xu5A0KmDVtFin
+         NmG6oYp9Acnjcv6p3Z1OLj4ewnb3DbB4nJmlqJOjHJyOQnG8/hUq+numeQyrWC/U+vLK
+         REYtFD7YWmhKkzyqwOSn86qZBazpQ1E7G8kw3Dk3PwyFI6dnY08akTVWTQ1M0oWtvgmu
+         L1WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758617742; x=1759222542;
+        d=1e100.net; s=20230601; t=1758617746; x=1759222546;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Sq3M1EuezVXyFff7JhHFKkQRUBD32DzfJXZ578Wxpbo=;
-        b=pmZLCBfC9+u/D4f/xZX0a76YJlGc94jEbq2paHhlBncxGu1q18KqjzGfPoAv2rN2C8
-         qcAFChpI4DzmqTtKCNRm5/6FnN9s1xdGa3gkMNsuhFyExbojD6ge+vnpgA/54e78YOB/
-         cLX9KvnYrQOF6D+yP4vC6FjSNmZXmv6aw3WwSouK+ow+5Ls6JK2AciAsewtqNrE0vgPk
-         EU2WhTVqwbPthoPy7OEUP/XKxgMRi7xUo8kiRoJDwHENpcX46Ov1ODrfVvAN2bW3kKiJ
-         xvb+HceZqq/zkCMQRaLrLuBKIW2P0VnOQqAClqaBvfGRlH9hZSAHkqHyH3hHJMFTjA3a
-         /e8Q==
-X-Gm-Message-State: AOJu0Yz+9M0nS60vJ3OVq33TunW6DYW9W61WzU8KgSzivBKI/xI0lJMw
-	/3VK2BRfwpUmz/0xzOwWUmd54FOkZbOR6wOnP3vlUuMX/wzy4eNsjLWY
-X-Gm-Gg: ASbGncvWaH7SkHBH9N12bBdDGj+SbK08iOYOcYHRveDWTssoHhKq5WfTMHsEdVLUBdl
-	mnAEhAVmxBD6CKNcvd/E3KVVDONajvaWXtmMu46xdlcqZI+M+Y7s/CiIdOcnk04XxeeC9i44AtY
-	lFh7f1CNEM65zHxARIZqwgpDkUdOw6qls6GE3vBzn4iKPzcbDLzpjbkdCe/8V+uLWGny7e2f0vU
-	lVf1KMk/1Ve15j8UJK20RKh2/RJ2lxfdM1vRKUHxe4JICCmYLxAM3NMViA3w/t/t83EdLYYrwZm
-	mAJm7kKNa0Gr+t+/FupuBTbSCTT6yJg/J1JXrMtyHOqDcf1k26O/torXnUNXUK52Uh8OHx2iiuq
-	ysD3E01BO6lZYpJAKrHkMVLGahAyU5w==
-X-Google-Smtp-Source: AGHT+IGGfdXUVaeqkhhnDFITsRwfUZf/qKWk72D4q5+cPdwEjxR34vD1w6AlhuhA3OMl9cNThDGi9g==
-X-Received: by 2002:a17:902:e952:b0:266:9c1a:6def with SMTP id d9443c01a7336-27cbaf114f6mr22865435ad.0.1758617742322;
-        Tue, 23 Sep 2025 01:55:42 -0700 (PDT)
+        bh=2YZmDj07Ldq6nfFbWtqFrG1CWWP+54yDeybcH+1ins0=;
+        b=BFIi7BzgXPp/+89KqwcYq8VB28ejreqHxWu9zp386dxrS4CA8KMi1EcxhfpFzFWmIj
+         SlBpW77qpqn6cbVrFrxxhyagnrjTc3eT9WPN12pATqtlDzaPj8mSJdfqXWa7i2dI1+tN
+         7fpt8tnJ1fL0JjXNhJOP0EIcyIVP/MdKYe11b9zTZENjTS6Ks7JVfK5g6Czn0i9DfTIX
+         oaoIo9Yc9rbtqEU7cSRYKqhIa5NRleeRL7N458kikGAQA11dBjWdfnpqpf/3jdPcB4dN
+         LuGTZfUpdoVt0kEWsXN/OwDSPbm76AsJ6kNfAAN9QDI95M8utk7KRAz+MWwconSmXVGY
+         R5pw==
+X-Gm-Message-State: AOJu0YwJNjD6OHBukaAdMOcjBOpfGdAS2nbVcktUYQSxttICKyAPX2Sc
+	yAR85kq4CcZYMWoiIKr53zv2+WFEpeGc4X3j9E9O8WhdtkiyPdYXlViN+OMZbynSLfR17w==
+X-Gm-Gg: ASbGncuaH2SS17YdcprGYH1yNE6E4BidljkaXEk/Hbyd08Orh35AhFLzk5hb66fKTc9
+	c7Y4UhhVyiYlT2aC3GqMac8LrWHyppQ9CetgkIqP5IbHVPS8NZwhi9P02FVdEcDXG5ONWvoMu5T
+	X9L6SIKxQqHe2CWbKe+A/Wkjg+4NsUl4ZVIK6lDWImzZ6mAI8OpJJi+IJFhzFFjBrUoxTUYzu2r
+	EkwnO9VH/bpqcCDpsEVPnI8be8D275+1RO9nhMvXHiwjUMXwjGJAghjJhk4BZ/RhuEwtNZ+AGtx
+	SbJToomaxmLs9QbITg5PxUPVV3mR94kfYPtkfapGtOgte/qPkNmZZZV1jyKt5N04IIASeyD3vNV
+	wd3alwOESe2+EOAZ1BdE6e+E4iAm0SQ==
+X-Google-Smtp-Source: AGHT+IGnEV7xU40L9N5rI2X9oYMiH8YZWH/3lyh9KpilkgtnWgdGxsYPQ8fAJI2TQfcDnh2FkH7THw==
+X-Received: by 2002:a17:902:d487:b0:27d:339c:4b0 with SMTP id d9443c01a7336-27d339c059dmr16281865ad.35.1758617746391;
+        Tue, 23 Sep 2025 01:55:46 -0700 (PDT)
 Received: from devbox.. ([120.229.24.47])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-269800531c6sm156676805ad.14.2025.09.23.01.55.39
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-269800531c6sm156676805ad.14.2025.09.23.01.55.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Sep 2025 01:55:42 -0700 (PDT)
+        Tue, 23 Sep 2025 01:55:46 -0700 (PDT)
 From: Hengqi Chen <hengqi.chen@gmail.com>
 To: chenhuacai@kernel.org,
 	yangtiezhu@loongson.cn,
@@ -64,9 +64,9 @@ To: chenhuacai@kernel.org,
 	hejinyang@loongson.cn
 Cc: loongarch@lists.linux.dev,
 	Hengqi Chen <hengqi.chen@gmail.com>
-Subject: [PATCH v6 6/8] LoongArch: BPF: Make trampoline size stable
-Date: Tue, 23 Sep 2025 08:54:47 +0000
-Message-ID: <20250923085450.140602-7-hengqi.chen@gmail.com>
+Subject: [PATCH v6 7/8] LoongArch: BPF: Make error handling robust in arch_prepare_bpf_trampoline()
+Date: Tue, 23 Sep 2025 08:54:48 +0000
+Message-ID: <20250923085450.140602-8-hengqi.chen@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250923085450.140602-1-hengqi.chen@gmail.com>
 References: <20250923085450.140602-1-hengqi.chen@gmail.com>
@@ -78,48 +78,31 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When attach fentry/fexit BPF programs, __arch_prepare_bpf_trampoline()
-is called twice with different `struct bpf_tramp_image *im`:
-
-    bpf_trampoline_update
-        -> arch_bpf_trampoline_size
-            -> __arch_prepare_bpf_trampoline
-        -> arch_prepare_bpf_trampoline
-            -> __arch_prepare_bpf_trampoline
-
-Use move_imm() will emit unstable instruction sequences, let's use
-move_addr() instead to prevent subtle bugs.
-
-(I observed this while debugging other issues with printk.)
+Bail out instead of trying to perform a bpf_arch_text_copy()
+if __arch_prepare_bpf_trampoline() failed.
 
 Tested-by: Vincent Li <vincent.mc.li@gmail.com>
 Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
 ---
- arch/loongarch/net/bpf_jit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/loongarch/net/bpf_jit.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 43628b5e1553..07ca32c673d5 100644
+index 07ca32c673d5..6dba407c202f 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -1599,7 +1599,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 		orig_call += LOONGARCH_BPF_FENTRY_NBYTES;
+@@ -1719,7 +1719,10 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *ro_image,
  
- 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
--		move_imm(ctx, LOONGARCH_GPR_A0, (const s64)im, false);
-+		move_addr(ctx, LOONGARCH_GPR_A0, (const u64)im);
- 		ret = emit_call(ctx, (const u64)__bpf_tramp_enter);
- 		if (ret)
- 			return ret;
-@@ -1649,7 +1649,7 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 
- 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
- 		im->ip_epilogue = ctx->ro_image + ctx->idx;
--		move_imm(ctx, LOONGARCH_GPR_A0, (const s64)im, false);
-+		move_addr(ctx, LOONGARCH_GPR_A0, (const u64)im);
- 		ret = emit_call(ctx, (const u64)__bpf_tramp_exit);
- 		if (ret)
- 			goto out;
+ 	jit_fill_hole(image, (unsigned int)(ro_image_end - ro_image));
+ 	ret = __arch_prepare_bpf_trampoline(&ctx, im, m, tlinks, func_addr, flags);
+-	if (ret > 0 && validate_code(&ctx) < 0) {
++	if (ret < 0)
++		goto out;
++
++	if (validate_code(&ctx) < 0) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
 -- 
 2.43.5
 
