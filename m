@@ -1,66 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4221B24A05D;
-	Wed, 24 Sep 2025 10:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB26D24DFF4
+	for <loongarch@lists.linux.dev>; Wed, 24 Sep 2025 11:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758709369; cv=none; b=FDs3ImGFbNQsWrypq12cBizZjXLVviv0qkf5oNaSntEq+7or3vtcvpi8WLMQaoubdQloi5RLT7e2bn7x242eDyKm41PrjKWcu9t+O+ifKKdBt3MStaM0PiQfdlLKX0vmgad49B2qARQCdINrQ9NosxjIA1lEVtTJMvMdTLK2oBs=
+	t=1758713752; cv=none; b=k8vEDNqOo+dtn1ehHPqqZBbb+IlCkM57fSOeBfuYqudq1ov5+7fzQqUauTnlwRGTndua9g6pOanVQWFA37RZL7TdlH2O5WJSeF3NLb9Nnn7SnklwFutkG1NkRTx432XNSJZSp8IZQij56043Ab9n5lD1Kr8M6Qis76/E7kQNPuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758709369; c=relaxed/simple;
-	bh=i/8c57xJ7LfF5nE7wYPBrai8xtoFVnojUkqn4RkrIhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aj/b5VxkKU3k0DCXjNq1PinzwsYw98B0/ks3a9DDd4g9m+2/fOL76SAGkOJiMV6bhfcf/pESVwwOCRjZ+IjsMg6KlXkNgt4gYfzW6iknYoDJofSq936zPhJySRZ/qUL0gW5fX9bdHjcyQmiNcPkIbKkkYx3ALcSDwVHVCGtaDCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Yfjq5iN2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758713752; c=relaxed/simple;
+	bh=0JGoQ4hmCfZ/TkMkG/taAm55rt5AIxt1SS2NLziKhmk=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=BD6nIUOxE/1Bpo2FXc1RWtXvV9SnAdDc5tfnpGhAmzzBLTaAORJoouyXF9m5IKQ+K3tY669T3vLRDqxSthqmZd3zMLZOytVczCISiTrR3d1/13H8FIXUbD9CASPDpFXK8+Cq1EL86QUjsGUZMfiZrziTOscNI7LXXtYrtL9Kdgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QlOkXOk3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9aYLxaYQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Yfjq5iN2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FC48C113CF;
-	Wed, 24 Sep 2025 10:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1758709368;
-	bh=i/8c57xJ7LfF5nE7wYPBrai8xtoFVnojUkqn4RkrIhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yfjq5iN2jryJpV0DEAGbzF7A+wALDrpHpP1VcQrOAFnoIxQjU+qFPgVE1ps/tquFz
-	 YSBRPpMpOmEv0W96xuGxBRJeAcvTSSxcRwljyV35FjKPJVDTvI4JHT0EeXBxL0GbeD
-	 aiv6255cTI8kqp8DqazIrudVohFMWnqYuAn7awvQ=
-Date: Wed, 24 Sep 2025 12:22:44 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Haowei Zheng <zhenghaowei@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] serial: 8250: Add Loongson uart driver support
-Message-ID: <2025092428-glade-monologue-3663@gregkh>
-References: <cover.1758676290.git.zhoubinbin@loongson.cn>
- <9823e7afe713450e210dab9dba6fa18683dc1fe0.1758676290.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QlOkXOk3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9aYLxaYQ"
+Date: Wed, 24 Sep 2025 13:35:22 +0200 (GMT+02:00)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1758713743;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0JGoQ4hmCfZ/TkMkG/taAm55rt5AIxt1SS2NLziKhmk=;
+	b=QlOkXOk3wDqFbbFYZsEnlgMHERzf96yJYS0jGCAx8XL84tsLn5ka3PYxS3tS6fRiz4EdFp
+	hMUyAsiUILtR8JSw3OgT3Fy0mtO9V6+vyErIQ7UEqbgWogA4ThP02dZ7nQf1bcNUN6oc1E
+	qIS9/nd74dV5DEbbsNthzLIIe0mNg8fHArZw72OWjj0HJx2y/wJcXKWq9tADPKUcw2oCa1
+	MNgG8SaKpMW/kXFfHB3IGyN4KRzzDdYS8yZwV4AN2CdSs8O+lduKmgKTYpZGvoSsWu5yzJ
+	vn9hc+ve1LqLnCQYSUPrJ8WxAuF+cXnlxVYaeRwKdflbaBdk98XsHYzpLwzheQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1758713743;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0JGoQ4hmCfZ/TkMkG/taAm55rt5AIxt1SS2NLziKhmk=;
+	b=9aYLxaYQfRDX5WwG1TPEXNPpaVf2pDqro4TeNjcbtq5rkULq+SlNuIn8W8JezYqbHJuTiS
+	grPgu4XhzSRIaIAw==
+From: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Nick Alcock <nick.alcock@oracle.com>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+	Shannon Nelson <sln@onemain.com>, linux-kernel@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-s390@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
+Message-ID: <c5e28d44-3480-4e28-aff0-5c5cfd1b0632@linutronix.de>
+In-Reply-To: <ec0894011cb4403f45ad8b30095cc333edc1e5e6.camel@physik.fu-berlin.de>
+References: <20250917-vdso-sparc64-generic-2-v3-0-3679b1bc8ee8@linutronix.de> <9a122c6cf3e2e0e61a62b0512eb97804acebeee9.camel@physik.fu-berlin.de> <48fd164e-959b-4263-b3c7-cef5771aa40a@linutronix.de> <60a0af09cc1a5de3b33b9606ed07ae91b42c5432.camel@physik.fu-berlin.de> <bea9cc5c-7fc6-4c87-ab78-8232b2bee4dc@linutronix.de> <ec0894011cb4403f45ad8b30095cc333edc1e5e6.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v3 00/36] sparc64: vdso: Switch to the generic vDSO
+ library
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9823e7afe713450e210dab9dba6fa18683dc1fe0.1758676290.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <c5e28d44-3480-4e28-aff0-5c5cfd1b0632@linutronix.de>
 
-On Wed, Sep 24, 2025 at 02:29:37PM +0800, Binbin Zhou wrote:
-> --- a/include/uapi/linux/serial_core.h
-> +++ b/include/uapi/linux/serial_core.h
-> @@ -31,6 +31,7 @@
->  #define PORT_ALTR_16550_F128 28 /* Altera 16550 UART with 128 FIFOs */
->  #define PORT_RT2880	29	/* Ralink RT2880 internal UART */
->  #define PORT_16550A_FSL64 30	/* Freescale 16550 UART with 64 FIFOs */
-> +#define PORT_LOONGSON	31	/* Loongson 16550 UART */
+Sep 24, 2025 10:29:00 John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.=
+de>:
 
-Why does userspace need to have this value exported?
+> Hi,
+>
+> On Wed, 2025-09-24 at 10:07 +0200, Thomas Wei=C3=9Fschuh wrote:
+>> Sep 24, 2025 09:40:47 John Paul Adrian Glaubitz <glaubitz@physik.fu-berl=
+in.de>:
+>>
+>>> Hi Thomas,
+>>>
+>>> On Sat, 2025-09-20 at 16:37 +0200, Thomas Wei=C3=9Fschuh wrote:
+>>>>> Could you share a version of the series based on top of 6.17.0-rcN fo=
+r
+>>>>> testing purposes? I would like to test the series on a Sun Netra 240
+>>>>> which is based on the UltraSPARC IIIi.
+>>>>
+>>>> Here is the git branch based on rc4:
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/thomas.weissschuh/linu=
+x.git/log/?h=3Db4/vdso-sparc64-generic-2
+>>>>
+>>>> Does that work for you?
+>>>
+>>> I'm getting merge conflicts with "vdso/datastore: Allocate data pages d=
+ynamically" and
+>>> "vdso/datapage: Remove inclusion of gettimeofday.h".
+>>>
+>>> Can these be skipped?
+>>
+>> No, these are important.
+>>
+>> What are you trying to merge?
+>> I can probably give you a merge.
+>
+> I'm using v6.17-rc7 plus all SPARC fixes in Andreas Larsson's linux-sparc=
+ for-next branch:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/alarsson/linux-sparc.git/=
+log/?h=3Dfor-next
 
-thanks,
+This merged cleanly for me:
+https://git.kernel.org/pub/scm/linux/kernel/git/thomas.weissschuh/linux.git=
+/log/?h=3Dvdso-sparc64-merge
 
-greg k-h
+
+(Only compile-tested)
+
+
+Thomas
