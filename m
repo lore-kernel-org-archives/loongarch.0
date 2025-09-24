@@ -1,136 +1,211 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from postout2.mail.lrz.de (postout2.mail.lrz.de [129.187.255.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB26D24DFF4
-	for <loongarch@lists.linux.dev>; Wed, 24 Sep 2025 11:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54273064AA;
+	Wed, 24 Sep 2025 15:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.187.255.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758713752; cv=none; b=k8vEDNqOo+dtn1ehHPqqZBbb+IlCkM57fSOeBfuYqudq1ov5+7fzQqUauTnlwRGTndua9g6pOanVQWFA37RZL7TdlH2O5WJSeF3NLb9Nnn7SnklwFutkG1NkRTx432XNSJZSp8IZQij56043Ab9n5lD1Kr8M6Qis76/E7kQNPuY=
+	t=1758726700; cv=none; b=reTeDIwD9UtQ09WJA4bc8rdG34vFX1uoS6rwp5I2+n5BUJ6GjGAyNbYBmFwQrCjl6m7gG4L69zfBZNCdE2Z3xQqpy3LEySOrkaaWJ1mhtQZus2g0vOOJDe+FW/wyyl02mypLXVf0Qts5vmKufCnwk+bZMlNZHK0Nx/uM0q+M/Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758713752; c=relaxed/simple;
-	bh=0JGoQ4hmCfZ/TkMkG/taAm55rt5AIxt1SS2NLziKhmk=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=BD6nIUOxE/1Bpo2FXc1RWtXvV9SnAdDc5tfnpGhAmzzBLTaAORJoouyXF9m5IKQ+K3tY669T3vLRDqxSthqmZd3zMLZOytVczCISiTrR3d1/13H8FIXUbD9CASPDpFXK8+Cq1EL86QUjsGUZMfiZrziTOscNI7LXXtYrtL9Kdgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QlOkXOk3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9aYLxaYQ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1758726700; c=relaxed/simple;
+	bh=ZNfU2/BIASQO3fWfzdEY1q9Zbqul50E24+/no2KCYus=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cVMhyJ0sM+1YTYCNBMTdEr0k21hUFXO4z50swILITK20vpJTOb0B+DHXd898XkwHIQp3qhpvnup0XIKlzjlQnYkCfsODK1rPHL+VWyG+foqJvkhxrCnU19CtUHWOMwtnubhMVfV84p4oRlFhAOQxcrky+EFMpm6k377i8NY099M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=campus.lmu.de; spf=pass smtp.mailfrom=campus.lmu.de; dkim=pass (2048-bit key) header.d=lmu.de header.i=@campus.lmu.de header.b=ERCmo7GN; arc=none smtp.client-ip=129.187.255.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=campus.lmu.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=campus.lmu.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QlOkXOk3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9aYLxaYQ"
-Date: Wed, 24 Sep 2025 13:35:22 +0200 (GMT+02:00)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1758713743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0JGoQ4hmCfZ/TkMkG/taAm55rt5AIxt1SS2NLziKhmk=;
-	b=QlOkXOk3wDqFbbFYZsEnlgMHERzf96yJYS0jGCAx8XL84tsLn5ka3PYxS3tS6fRiz4EdFp
-	hMUyAsiUILtR8JSw3OgT3Fy0mtO9V6+vyErIQ7UEqbgWogA4ThP02dZ7nQf1bcNUN6oc1E
-	qIS9/nd74dV5DEbbsNthzLIIe0mNg8fHArZw72OWjj0HJx2y/wJcXKWq9tADPKUcw2oCa1
-	MNgG8SaKpMW/kXFfHB3IGyN4KRzzDdYS8yZwV4AN2CdSs8O+lduKmgKTYpZGvoSsWu5yzJ
-	vn9hc+ve1LqLnCQYSUPrJ8WxAuF+cXnlxVYaeRwKdflbaBdk98XsHYzpLwzheQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1758713743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0JGoQ4hmCfZ/TkMkG/taAm55rt5AIxt1SS2NLziKhmk=;
-	b=9aYLxaYQfRDX5WwG1TPEXNPpaVf2pDqro4TeNjcbtq5rkULq+SlNuIn8W8JezYqbHJuTiS
-	grPgu4XhzSRIaIAw==
-From: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Nick Alcock <nick.alcock@oracle.com>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-	Shannon Nelson <sln@onemain.com>, linux-kernel@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-s390@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
-Message-ID: <c5e28d44-3480-4e28-aff0-5c5cfd1b0632@linutronix.de>
-In-Reply-To: <ec0894011cb4403f45ad8b30095cc333edc1e5e6.camel@physik.fu-berlin.de>
-References: <20250917-vdso-sparc64-generic-2-v3-0-3679b1bc8ee8@linutronix.de> <9a122c6cf3e2e0e61a62b0512eb97804acebeee9.camel@physik.fu-berlin.de> <48fd164e-959b-4263-b3c7-cef5771aa40a@linutronix.de> <60a0af09cc1a5de3b33b9606ed07ae91b42c5432.camel@physik.fu-berlin.de> <bea9cc5c-7fc6-4c87-ab78-8232b2bee4dc@linutronix.de> <ec0894011cb4403f45ad8b30095cc333edc1e5e6.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v3 00/36] sparc64: vdso: Switch to the generic vDSO
- library
+	dkim=pass (2048-bit key) header.d=lmu.de header.i=@campus.lmu.de header.b="ERCmo7GN"
+Received: from lxmhs52.srv.lrz.de (localhost [127.0.0.1])
+	by postout2.mail.lrz.de (Postfix) with ESMTP id 4cX0gB4hkgzyTD;
+	Wed, 24 Sep 2025 17:11:34 +0200 (CEST)
+Authentication-Results: postout.lrz.de (amavis); dkim=pass (2048-bit key)
+ reason="pass (just generated, assumed good)" header.d=lmu.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lmu.de; h=
+	content-transfer-encoding:mime-version:references:in-reply-to
+	:x-mailer:message-id:date:date:subject:subject:from:from
+	:received:received; s=lm-postout21; i=@campus.lmu.de; t=
+	1758726694; bh=Wp7TACVDU5DtOz71qp4hjyzNeEjUGnycsxHnG+BQylo=; b=E
+	RCmo7GN3cJorQyZx7veOPX1uJX526B979gcoqD9YQPNg2IlhNVxWPFsMFg+QS/q3
+	L/wVNxo8mJlMHtkp/bEvKP7Hn+Gec2q7CNLyZt0EpSMka0FGzp5jCLM+/4Q4Yf9m
+	bVnNe2Tm7A8+i74QMY7Y1jxU7K7i3ZBWXNk3nMdvTZsDVJlux0h/VG4Yw7pbmUSO
+	RpLfSu4b6GZEIpe3sZKqyNWAaDHGBchXBCWQzjhHNdflPiUJAQ9O1DmlqkXQb9EW
+	Uhe+iIn9Bv6pA0Z2aDaAYUqxTzRjd0IKO7k1GlUoiaatpmzPZUMKJctUANGLq63W
+	fc7ujWT6qB0l70vnk9IVA==
+X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs52.srv.lrz.de
+X-Spam-Flag: NO
+X-Spam-Score: -2.887
+X-Spam-Level:
+Received: from postout2.mail.lrz.de ([127.0.0.1])
+ by lxmhs52.srv.lrz.de (lxmhs52.srv.lrz.de [127.0.0.1]) (amavis, port 20024)
+ with LMTP id bdh52MywZE5f; Wed, 24 Sep 2025 17:11:34 +0200 (CEST)
+Received: from spacestation.cable.virginm.net (oxfd-27-b2-v4wan-164230-cust474.vm42.cable.virginm.net [86.22.133.219])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by postout2.mail.lrz.de (Postfix) with ESMTPSA id 4cX0g40m58zyXY;
+	Wed, 24 Sep 2025 17:11:28 +0200 (CEST)
+From: Patrick Roy <patrick.roy@campus.lmu.de>
+To: 
+Cc: Patrick Roy <roypat@amazon.co.uk>,
+	pbonzini@redhat.com,
+	corbet@lwn.net,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	luto@kernel.org,
+	peterz@infradead.org,
+	willy@infradead.org,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	song@kernel.org,
+	jolsa@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	peterx@redhat.com,
+	jannh@google.com,
+	pfalcato@suse.de,
+	shuah@kernel.org,
+	seanjc@google.com,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	xmarcalx@amazon.co.uk,
+	kalyazin@amazon.co.uk,
+	jackabt@amazon.co.uk,
+	derekmn@amazon.co.uk,
+	tabba@google.com,
+	ackerleytng@google.com,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org
+Subject: [PATCH v7 01/12] arch: export set_direct_map_valid_noflush to KVM module
+Date: Wed, 24 Sep 2025 16:10:41 +0100
+Message-ID: <20250924151101.2225820-2-patrick.roy@campus.lmu.de>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250924151101.2225820-1-patrick.roy@campus.lmu.de>
+References: <20250924151101.2225820-1-patrick.roy@campus.lmu.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <c5e28d44-3480-4e28-aff0-5c5cfd1b0632@linutronix.de>
+Content-Transfer-Encoding: 7bit
 
-Sep 24, 2025 10:29:00 John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.=
-de>:
+From: Patrick Roy <roypat@amazon.co.uk>
 
-> Hi,
->
-> On Wed, 2025-09-24 at 10:07 +0200, Thomas Wei=C3=9Fschuh wrote:
->> Sep 24, 2025 09:40:47 John Paul Adrian Glaubitz <glaubitz@physik.fu-berl=
-in.de>:
->>
->>> Hi Thomas,
->>>
->>> On Sat, 2025-09-20 at 16:37 +0200, Thomas Wei=C3=9Fschuh wrote:
->>>>> Could you share a version of the series based on top of 6.17.0-rcN fo=
-r
->>>>> testing purposes? I would like to test the series on a Sun Netra 240
->>>>> which is based on the UltraSPARC IIIi.
->>>>
->>>> Here is the git branch based on rc4:
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/thomas.weissschuh/linu=
-x.git/log/?h=3Db4/vdso-sparc64-generic-2
->>>>
->>>> Does that work for you?
->>>
->>> I'm getting merge conflicts with "vdso/datastore: Allocate data pages d=
-ynamically" and
->>> "vdso/datapage: Remove inclusion of gettimeofday.h".
->>>
->>> Can these be skipped?
->>
->> No, these are important.
->>
->> What are you trying to merge?
->> I can probably give you a merge.
->
-> I'm using v6.17-rc7 plus all SPARC fixes in Andreas Larsson's linux-sparc=
- for-next branch:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/alarsson/linux-sparc.git/=
-log/?h=3Dfor-next
+Use the new per-module export functionality to allow KVM (and only KVM)
+access to set_direct_map_valid_noflush(). This allows guest_memfd to
+remove its memory from the direct map, even if KVM is built as a module.
 
-This merged cleanly for me:
-https://git.kernel.org/pub/scm/linux/kernel/git/thomas.weissschuh/linux.git=
-/log/?h=3Dvdso-sparc64-merge
+Direct map removal gives guest_memfd the same protection that
+memfd_secret enjoys, such as hardening against Spectre-like attacks
+through in-kernel gadgets.
 
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Reviewed-by: Fuad Tabba <tabba@google.com>
+Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
+---
+ arch/arm64/mm/pageattr.c     | 1 +
+ arch/loongarch/mm/pageattr.c | 1 +
+ arch/riscv/mm/pageattr.c     | 1 +
+ arch/s390/mm/pageattr.c      | 1 +
+ arch/x86/mm/pat/set_memory.c | 1 +
+ 5 files changed, 5 insertions(+)
 
-(Only compile-tested)
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 04d4a8f676db..4f3cddfab9b0 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -291,6 +291,7 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
+ 
+ 	return set_memory_valid(addr, nr, valid);
+ }
++EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
+ 
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ /*
+diff --git a/arch/loongarch/mm/pageattr.c b/arch/loongarch/mm/pageattr.c
+index f5e910b68229..458f5ae6a89b 100644
+--- a/arch/loongarch/mm/pageattr.c
++++ b/arch/loongarch/mm/pageattr.c
+@@ -236,3 +236,4 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
+ 
+ 	return __set_memory(addr, 1, set, clear);
+ }
++EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
+diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
+index 3f76db3d2769..6db31040cd66 100644
+--- a/arch/riscv/mm/pageattr.c
++++ b/arch/riscv/mm/pageattr.c
+@@ -400,6 +400,7 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
+ 
+ 	return __set_memory((unsigned long)page_address(page), nr, set, clear);
+ }
++EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
+ 
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ static int debug_pagealloc_set_page(pte_t *pte, unsigned long addr, void *data)
+diff --git a/arch/s390/mm/pageattr.c b/arch/s390/mm/pageattr.c
+index 348e759840e7..8ffd9ef09bc6 100644
+--- a/arch/s390/mm/pageattr.c
++++ b/arch/s390/mm/pageattr.c
+@@ -413,6 +413,7 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
+ 
+ 	return __set_memory((unsigned long)page_to_virt(page), nr, flags);
+ }
++EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
+ 
+ bool kernel_page_present(struct page *page)
+ {
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 8834c76f91c9..87e9c7d2dcdc 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -2661,6 +2661,7 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
+ 
+ 	return __set_pages_np(page, nr);
+ }
++EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
+ 
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ void __kernel_map_pages(struct page *page, int numpages, int enable)
+-- 
+2.51.0
 
-
-Thomas
