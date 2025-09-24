@@ -1,211 +1,143 @@
-Received: from postout2.mail.lrz.de (postout2.mail.lrz.de [129.187.255.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54273064AA;
-	Wed, 24 Sep 2025 15:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.187.255.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE06313281
+	for <loongarch@lists.linux.dev>; Wed, 24 Sep 2025 16:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758726700; cv=none; b=reTeDIwD9UtQ09WJA4bc8rdG34vFX1uoS6rwp5I2+n5BUJ6GjGAyNbYBmFwQrCjl6m7gG4L69zfBZNCdE2Z3xQqpy3LEySOrkaaWJ1mhtQZus2g0vOOJDe+FW/wyyl02mypLXVf0Qts5vmKufCnwk+bZMlNZHK0Nx/uM0q+M/Bs=
+	t=1758730689; cv=none; b=cT0GKM1y2+a79o5cx8KhEWtTGXNv3Sb7ikgDd+ILCJCz5U/f6dp5BlO8YqQDiCzxpAGxz/xpOisVCUWDV2iF2tD9lxR8c1fYO/2gikPE+pw9J4F7BKKX9Yfmcvl4tLrOncJawLHU1sSr9NWNtDA6E9dPRRIRX0Q+w+lz5FI8NbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758726700; c=relaxed/simple;
-	bh=ZNfU2/BIASQO3fWfzdEY1q9Zbqul50E24+/no2KCYus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cVMhyJ0sM+1YTYCNBMTdEr0k21hUFXO4z50swILITK20vpJTOb0B+DHXd898XkwHIQp3qhpvnup0XIKlzjlQnYkCfsODK1rPHL+VWyG+foqJvkhxrCnU19CtUHWOMwtnubhMVfV84p4oRlFhAOQxcrky+EFMpm6k377i8NY099M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=campus.lmu.de; spf=pass smtp.mailfrom=campus.lmu.de; dkim=pass (2048-bit key) header.d=lmu.de header.i=@campus.lmu.de header.b=ERCmo7GN; arc=none smtp.client-ip=129.187.255.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=campus.lmu.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=campus.lmu.de
+	s=arc-20240116; t=1758730689; c=relaxed/simple;
+	bh=+elp/mgEwQHUPO2/veHl6cFeD7QMzkxV3mT27B/vMe0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lce8zZ6F0TeSqRobFQbGMq+SZV6Cy3xL1sgaz+diKTc+Wjc/i/GEVuZdr0Lj5DvHisHySP6lfEOQsi9+g7dwH73HwWkV+LK2po0eNv90IgIrPWBXI2kNIRaPAqp8rLJmEsQPddZnYSQRsqeGXPRUOHZ4ovcfyRqDW03KYwDPVBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k6RLaFJE; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lmu.de header.i=@campus.lmu.de header.b="ERCmo7GN"
-Received: from lxmhs52.srv.lrz.de (localhost [127.0.0.1])
-	by postout2.mail.lrz.de (Postfix) with ESMTP id 4cX0gB4hkgzyTD;
-	Wed, 24 Sep 2025 17:11:34 +0200 (CEST)
-Authentication-Results: postout.lrz.de (amavis); dkim=pass (2048-bit key)
- reason="pass (just generated, assumed good)" header.d=lmu.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lmu.de; h=
-	content-transfer-encoding:mime-version:references:in-reply-to
-	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=lm-postout21; i=@campus.lmu.de; t=
-	1758726694; bh=Wp7TACVDU5DtOz71qp4hjyzNeEjUGnycsxHnG+BQylo=; b=E
-	RCmo7GN3cJorQyZx7veOPX1uJX526B979gcoqD9YQPNg2IlhNVxWPFsMFg+QS/q3
-	L/wVNxo8mJlMHtkp/bEvKP7Hn+Gec2q7CNLyZt0EpSMka0FGzp5jCLM+/4Q4Yf9m
-	bVnNe2Tm7A8+i74QMY7Y1jxU7K7i3ZBWXNk3nMdvTZsDVJlux0h/VG4Yw7pbmUSO
-	RpLfSu4b6GZEIpe3sZKqyNWAaDHGBchXBCWQzjhHNdflPiUJAQ9O1DmlqkXQb9EW
-	Uhe+iIn9Bv6pA0Z2aDaAYUqxTzRjd0IKO7k1GlUoiaatpmzPZUMKJctUANGLq63W
-	fc7ujWT6qB0l70vnk9IVA==
-X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs52.srv.lrz.de
-X-Spam-Flag: NO
-X-Spam-Score: -2.887
-X-Spam-Level:
-Received: from postout2.mail.lrz.de ([127.0.0.1])
- by lxmhs52.srv.lrz.de (lxmhs52.srv.lrz.de [127.0.0.1]) (amavis, port 20024)
- with LMTP id bdh52MywZE5f; Wed, 24 Sep 2025 17:11:34 +0200 (CEST)
-Received: from spacestation.cable.virginm.net (oxfd-27-b2-v4wan-164230-cust474.vm42.cable.virginm.net [86.22.133.219])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by postout2.mail.lrz.de (Postfix) with ESMTPSA id 4cX0g40m58zyXY;
-	Wed, 24 Sep 2025 17:11:28 +0200 (CEST)
-From: Patrick Roy <patrick.roy@campus.lmu.de>
-To: 
-Cc: Patrick Roy <roypat@amazon.co.uk>,
-	pbonzini@redhat.com,
-	corbet@lwn.net,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	willy@infradead.org,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	song@kernel.org,
-	jolsa@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	peterx@redhat.com,
-	jannh@google.com,
-	pfalcato@suse.de,
-	shuah@kernel.org,
-	seanjc@google.com,
-	kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	xmarcalx@amazon.co.uk,
-	kalyazin@amazon.co.uk,
-	jackabt@amazon.co.uk,
-	derekmn@amazon.co.uk,
-	tabba@google.com,
-	ackerleytng@google.com,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH v7 01/12] arch: export set_direct_map_valid_noflush to KVM module
-Date: Wed, 24 Sep 2025 16:10:41 +0100
-Message-ID: <20250924151101.2225820-2-patrick.roy@campus.lmu.de>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250924151101.2225820-1-patrick.roy@campus.lmu.de>
-References: <20250924151101.2225820-1-patrick.roy@campus.lmu.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6RLaFJE"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4ce9b5de951so70831cf.2
+        for <loongarch@lists.linux.dev>; Wed, 24 Sep 2025 09:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758730685; x=1759335485; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+elp/mgEwQHUPO2/veHl6cFeD7QMzkxV3mT27B/vMe0=;
+        b=k6RLaFJENoyf27dhPfhGcKy8bElZo/hqOl1L7lUiJ8MO7A42qgou6drl2Tm4RbQ7H/
+         RJaSWJZr9eWfabUTFm0A01qupeZeXWYTkSmmpg24dzy0diaMq3WUFg9QQx0ZR4cWtSAw
+         sZQ4IUr/l5TraA7LEDmzpR5X3Kx1TxBryACeQ5+nnePvjiiOW+c1i2uXaa2cVh3fAOIi
+         gRZoDnwtCazIMC9heEY1+nE8qXH8l73Pe9/t4hZ5LFJ4jP4MXc16TqqFVgLl6nkTo33t
+         toe3IAwTa+YC/Vds6IXWUsk8vBTEMCJs28qtvCelVMlqnmlfhlYqCtaEwpSDDj/xuDj1
+         Tf+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758730685; x=1759335485;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+elp/mgEwQHUPO2/veHl6cFeD7QMzkxV3mT27B/vMe0=;
+        b=kiuCvXQT4jkr/Bhu/u/+VV43Cr18pjcs4CSFwYWbPaJ4Xbi4PDOmn1xTUKQu6OnktW
+         ZnxfSqlDQxDKx1VWSCGzJpSBxH3xf7mw9c/GX+r2ijyl26Zd2FOC0+DT40ng7SLgLvUk
+         g3gpbIlzk4jQ7uAecqVGNgUdBM2Tu3xAbxUIw/47ueZ9V65Gc5oGug2o+saYmGv8gwjS
+         bk1rULxqhHJ1erTc9pfw0O5TEd3uSF09T28USGZNemGty66vCBI49xE4j2iJsxns9inm
+         9Y9KDtjpeitxA524+nEg/1LqemZyC+G+rrIcBSTqdCc+IcrzThgY5uX6P021XZKVKxqE
+         nMZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUsqTigy9CdbHpFYrckryqMQBsMgzxnFdCPab+NiCJYYPefbIfFnkyPpO6ctcrHVDz7AQdAIxG0Q8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyla5RlcKWT0qm+3SVcWq2vqPQFjmcJ9aAsKottExvvxZ/6B9Bv
+	vaYJEHGot/hpwa9TdtoYIfZJPVn2t9mI1GtWxIVLUX+tu/INN8eDhJnA3M07dVkQ8ddNHwOpgck
+	+YFIDcwqId8nzwMgik0eXJnUZGWO8JVY=
+X-Gm-Gg: ASbGncu3Ne/jOUTGD2E0dMbETqAd/wexHMIdC+pv4UrTdshxauVnyR5S/qpSdoWV5CY
+	AEshv1BSo/VGA44E3qARICb6IxmUX56lN+cgK7Omg/Q9UmwT+T2jJ4Lknd32pxesbnsV3cnqUzH
+	jPMgXh5R3Qxaoiw8Y13HrgNLywdPZ0UvulHYY+/8aMnFE9qQOmQpKKbE4frSJMcKQdvQp8Ywf21
+	SOGHUct2NkyzE89DHTxn+/jHy/xyG29ZNcf+HGE
+X-Google-Smtp-Source: AGHT+IHrjx0XfB3NQHdqBt66Ox1dwY4oj3I0wMxztSwqqFAAkQnhEkK0QBLdnresO+RuCvDJitimjmBRn2YZHsgZxpk=
+X-Received: by 2002:a05:622a:3d2:b0:4d9:ea03:74f8 with SMTP id
+ d75a77b69052e-4da473535b8mr6186491cf.16.1758730685377; Wed, 24 Sep 2025
+ 09:18:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20250913003842.41944-1-safinaskar@gmail.com> <ffbf1a04-047d-4787-ac1e-f5362e1ca600@csgroup.eu>
+In-Reply-To: <ffbf1a04-047d-4787-ac1e-f5362e1ca600@csgroup.eu>
+From: Alexander Patrakov <patrakov@gmail.com>
+Date: Thu, 25 Sep 2025 00:17:39 +0800
+X-Gm-Features: AS18NWB-xeGoRDKYPj3kUYXUnKXLhFMFvvc0QyoLpOeKcP1DsD-enKeBhlulfsI
+Message-ID: <CAN_LGv3Opj9RW0atfXODy-Epn++5mt_DLEi-ewxR9Me5x46Bkg@mail.gmail.com>
+Subject: Re: [PATCH RESEND 00/62] initrd: remove classic initrd support
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Askar Safin <safinaskar@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Brauner <brauner@kernel.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>, 
+	Jens Axboe <axboe@kernel.dk>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Aleksa Sarai <cyphar@cyphar.com>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Julian Stecklina <julian.stecklina@cyberus-technology.de>, 
+	Gao Xiang <hsiangkao@linux.alibaba.com>, Art Nikpal <email2tema@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Eric Curtin <ecurtin@redhat.com>, 
+	Alexander Graf <graf@amazon.com>, Rob Landley <rob@landley.net>, 
+	Lennart Poettering <mzxreary@0pointer.de>, linux-arch@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org, 
+	Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org, initramfs@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-efi@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	"Theodore Y . Ts'o" <tytso@mit.edu>, linux-acpi@vger.kernel.org, Michal Simek <monstr@monstr.eu>, 
+	devicetree@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Thorsten Blum <thorsten.blum@linux.dev>, Heiko Carstens <hca@linux.ibm.com>, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Patrick Roy <roypat@amazon.co.uk>
+On Tue, Sep 23, 2025 at 8:22=E2=80=AFPM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+>
+>
+> Le 13/09/2025 =C3=A0 02:37, Askar Safin a =C3=A9crit :
+> > [Vous ne recevez pas souvent de courriers de safinaskar@gmail.com. D=C3=
+=A9couvrez pourquoi ceci est important =C3=A0 https://aka.ms/LearnAboutSend=
+erIdentification ]
+> >
+> > Intro
+> > =3D=3D=3D=3D
+> > This patchset removes classic initrd (initial RAM disk) support,
+> > which was deprecated in 2020.
+> > Initramfs still stays, and RAM disk itself (brd) still stays, too.
+> > init/do_mounts* and init/*initramfs* are listed in VFS entry in
+> > MAINTAINERS, so I think this patchset should go through VFS tree.
+> > This patchset touchs every subdirectory in arch/, so I tested it
+> > on 8 (!!!) archs in Qemu (see details below).
+> > Warning: this patchset renames CONFIG_BLK_DEV_INITRD (!!!) to CONFIG_IN=
+ITRAMFS
+> > and CONFIG_RD_* to CONFIG_INITRAMFS_DECOMPRESS_* (for example,
+> > CONFIG_RD_GZIP to CONFIG_INITRAMFS_DECOMPRESS_GZIP).
+> > If you still use initrd, see below for workaround.
+>
+> Apologise if my question looks stupid, but I'm using QEMU for various
+> tests, and the way QEMU is started is something like:
+>
+> qemu-system-ppc -kernel ./vmlinux -cpu g4 -M mac99 -initrd
+> ./qemu/rootfs.cpio.gz
+>
+> I was therefore expecting (and fearing) it to fail with your series
+> applied, but surprisingly it still works.
+>
+> Therefore is it really initrd you are removing or just some corner case
+> ? If it is really initrd, then how does QEMU still work with that
+> -initrd parameter ?
 
-Use the new per-module export functionality to allow KVM (and only KVM)
-access to set_direct_map_valid_noflush(). This allows guest_memfd to
-remove its memory from the direct map, even if KVM is built as a module.
+The QEMU -initrd parameter is a misnomer. It can be used to pass an
+initrd or an initramfs, and the kernel automatically figures out what
+it is. What you are passing is an initramfs (a gzipped cpio archive
+with all the files), which is a modern and supported use case.
 
-Direct map removal gives guest_memfd the same protection that
-memfd_secret enjoys, such as hardening against Spectre-like attacks
-through in-kernel gadgets.
-
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: loongarch@lists.linux.dev
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-s390@vger.kernel.org
-Reviewed-by: Fuad Tabba <tabba@google.com>
-Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
----
- arch/arm64/mm/pageattr.c     | 1 +
- arch/loongarch/mm/pageattr.c | 1 +
- arch/riscv/mm/pageattr.c     | 1 +
- arch/s390/mm/pageattr.c      | 1 +
- arch/x86/mm/pat/set_memory.c | 1 +
- 5 files changed, 5 insertions(+)
-
-diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-index 04d4a8f676db..4f3cddfab9b0 100644
---- a/arch/arm64/mm/pageattr.c
-+++ b/arch/arm64/mm/pageattr.c
-@@ -291,6 +291,7 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
- 
- 	return set_memory_valid(addr, nr, valid);
- }
-+EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
- 
- #ifdef CONFIG_DEBUG_PAGEALLOC
- /*
-diff --git a/arch/loongarch/mm/pageattr.c b/arch/loongarch/mm/pageattr.c
-index f5e910b68229..458f5ae6a89b 100644
---- a/arch/loongarch/mm/pageattr.c
-+++ b/arch/loongarch/mm/pageattr.c
-@@ -236,3 +236,4 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
- 
- 	return __set_memory(addr, 1, set, clear);
- }
-+EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
-diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-index 3f76db3d2769..6db31040cd66 100644
---- a/arch/riscv/mm/pageattr.c
-+++ b/arch/riscv/mm/pageattr.c
-@@ -400,6 +400,7 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
- 
- 	return __set_memory((unsigned long)page_address(page), nr, set, clear);
- }
-+EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
- 
- #ifdef CONFIG_DEBUG_PAGEALLOC
- static int debug_pagealloc_set_page(pte_t *pte, unsigned long addr, void *data)
-diff --git a/arch/s390/mm/pageattr.c b/arch/s390/mm/pageattr.c
-index 348e759840e7..8ffd9ef09bc6 100644
---- a/arch/s390/mm/pageattr.c
-+++ b/arch/s390/mm/pageattr.c
-@@ -413,6 +413,7 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
- 
- 	return __set_memory((unsigned long)page_to_virt(page), nr, flags);
- }
-+EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
- 
- bool kernel_page_present(struct page *page)
- {
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 8834c76f91c9..87e9c7d2dcdc 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2661,6 +2661,7 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
- 
- 	return __set_pages_np(page, nr);
- }
-+EXPORT_SYMBOL_FOR_MODULES(set_direct_map_valid_noflush, "kvm");
- 
- #ifdef CONFIG_DEBUG_PAGEALLOC
- void __kernel_map_pages(struct page *page, int numpages, int enable)
--- 
-2.51.0
-
+--=20
+Alexander Patrakov
