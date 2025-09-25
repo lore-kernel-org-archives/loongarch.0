@@ -1,156 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AE32DF149
-	for <loongarch@lists.linux.dev>; Thu, 25 Sep 2025 02:44:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6548420ED
+	for <loongarch@lists.linux.dev>; Thu, 25 Sep 2025 02:46:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758768240; cv=none; b=LSMhdZDQJcM84Hc/86gke6q27u1xanhYND1gTB/GyA7h4tLYeHIdP+0Ul8s+WArBXGdXZXM2nGRYxqYGxQLtqj6eV6t/Pa73HS1quzZqidHQ+1t/vCFhXoVlTROoWTMiRsnSFoBeZWmDBc0K9ZmOs95BRQtANTk5tgw4ltHqH8E=
+	t=1758768377; cv=none; b=NuBXj43AtZnoSyBsp2dlFR979YLLtOur6XNzjZbZmPqeQdCZwWPnsFHyPFRGYsxVBH6HuRHp2r577M/ZudjnCBz2W76mFZi2+hgfJy7j2NqMKNKvlzKOrFeIkHXTaFVWIqUEb1W/rVv32xVFMbJbJ5dTK0e/nSibF95hEFbiytw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758768240; c=relaxed/simple;
-	bh=S7vb/zf3V2GaassUXCT9UJV1Et/9TJiqD8ubx2PkhwE=;
+	s=arc-20240116; t=1758768377; c=relaxed/simple;
+	bh=qZJ56txTnTBrCjtnQdYqmKA071Y/aHl30ZR+GOyWVoM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XmXbci2yKoIDzCqQND0TG1aiCN9M9fQrRMkEo7GtXY7HHtCjnUVL4ASYex6595rm2ozjCelWq9Y7Gui+8pTAJyedRyu6tkVY2Y3yhbAUp/s0qWSmq3TKUFZujpaac7+XT2hPrz9/DS1ddL5HW34ZinBsEzFStTVSN9DOgWNcMWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J58/SCUf; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Lsr476ujlo3JA4ZhpKvwomvyg+z0QsFhegewJxgQWDAGuJZ8TE3gLZSThEZbwUNHwSBNOXRuCigW3x0NTYUOeN3uxpdtWEfVnntxv5ZaBeojPDDmK5xbAOCJSbdJq7V8DRxvg0FaQOiXufu00G5AcXDc+Oe7QZXalIF3d5mxL5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyFT1MSZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J58/SCUf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82568C4CEE7
-	for <loongarch@lists.linux.dev>; Thu, 25 Sep 2025 02:44:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyFT1MSZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8961C113CF
+	for <loongarch@lists.linux.dev>; Thu, 25 Sep 2025 02:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758768240;
-	bh=S7vb/zf3V2GaassUXCT9UJV1Et/9TJiqD8ubx2PkhwE=;
+	s=k20201202; t=1758768376;
+	bh=qZJ56txTnTBrCjtnQdYqmKA071Y/aHl30ZR+GOyWVoM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=J58/SCUfWipwZ1MVIpQEBYOUxqgqodgM0cUqxO+6oYTnwX30OAYYFnF0WKJxi5SU3
-	 1YOU1P/IZqOtiBNDhKnXN1z4ovoCMhsotskp189F0RKKNay05fweIgyzg2e3gFkOa+
-	 mrEzWgOqJIw9XZ1B1L1AdSJy3OwrymPL9j/QShB/+lcZEezrx+noPCD585qWFJNKzN
-	 6E6HdZZvyCsVBaO63lJCmSambbsyS5Xwl45MRs1Bl9W47XafA1DEa4nLWflPswoZ74
-	 CUlx92J4FcsuHOfMtemFUEOhpKfKnlSdBytdl9IRLQmzaeKqeOP4mbfyhOZCLS3Mji
-	 uaOs9TbYVJNTg==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-62fb48315ddso807353a12.2
-        for <loongarch@lists.linux.dev>; Wed, 24 Sep 2025 19:44:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUut/kJb/7YUd3NFQ7N5p7LyET4cQLbjMn6/FqoLPXJiE2FwLWlSkKM/CA4j5UXzWRNEYGcW2Jc3Fk=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy8MPvRujwe41ARodfP+yYSIuEpve3Gzp31+8qg87bfk3OkFpzq
-	oVgAavNtBbHt2ArEO+zGImewMe7mfE14p70wpEpSqjrSQI2+7kI05RDc733A6s1dSxn6o2OwYgn
-	KrtDWZCnl8jFEEBKb24HCgL+wW7Rk9oc=
-X-Google-Smtp-Source: AGHT+IFAKAis+f8CsaeB/ZYEn6Mbsm0qvkYWWb/1JIaJw+bN7o9FCGRKh+44tCSaadZ6c4rMcagZJ6G9mHVPClZ1tck=
-X-Received: by 2002:a17:907:3f1e:b0:b11:c9df:7a73 with SMTP id
- a640c23a62f3a-b34bd34a2b0mr217761266b.57.1758768239043; Wed, 24 Sep 2025
- 19:43:59 -0700 (PDT)
+	b=fyFT1MSZtxXue976G59Ja6hsv6nktgzi38h/Ski7HTC05i08PVnRcNkh7F6GNvNtY
+	 f0pSHNpGoptGx//yVrn0LaOKLGN0lgSapzOvn/+WPTUjp8oJEiPv9BUCCmxZSE/FLJ
+	 8tf31R50heJFEIiaAS0BwALsqQRPQyQyyPAXbA8KCjaovbHx7grDGN6XJaL5AuC4y4
+	 3qqhO2pjZrRY/Fqa6xIfG6IYgvW501GkOzXPuAVYuO2MBAueMAWVIUoVxyz/oPl9j9
+	 ZuAcqRgJ5qWX823HlVSwA5t6NliqqYcZf1QI35qYQ5nVIUAUYYMHmQB5gc5KKh7qdJ
+	 FBTbfWS0usbFw==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b2e0513433bso76076566b.1
+        for <loongarch@lists.linux.dev>; Wed, 24 Sep 2025 19:46:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVU8g1HR9+SHvAYrpZnR9CsIDyaTHAy1i1DiC/kcCSZgxwX4dQH9983L+xqC4VZVQsECxYDtD33qDE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yya34fA9vO5rN/PSidMNYR9fV6cEj4/kyawKKXjIRfBfVFsZjt0
+	lyEbltOMmJa5jskrSBNvWbBqBmL65Tx3VhcSuBgIu351O6nOC4D/1CDxO8TNP3ke5jnzTCnxept
+	JCHlPHNgoXagvlLezG/gVZXU7hj8liVY=
+X-Google-Smtp-Source: AGHT+IEAhoS9PJ3r94+cySZIDL8IA0W5HIItnqS2SG48L01/vcSzoMJXQ55jWAfjjkFzB3xdWmBeHsT0fl+uENJNoso=
+X-Received: by 2002:a17:907:94c1:b0:b2c:fa32:51d3 with SMTP id
+ a640c23a62f3a-b34b91a8803mr218621366b.3.1758768375567; Wed, 24 Sep 2025
+ 19:46:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250919093615.30235-1-yangtiezhu@loongson.cn> <20250919093615.30235-2-yangtiezhu@loongson.cn>
-In-Reply-To: <20250919093615.30235-2-yangtiezhu@loongson.cn>
+References: <20250923085450.140602-1-hengqi.chen@gmail.com>
+In-Reply-To: <20250923085450.140602-1-hengqi.chen@gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 25 Sep 2025 10:43:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4fdfB3fH0DnfgxNimPBsjiOGQZV-w0g63d7TVDOK5-zw@mail.gmail.com>
-X-Gm-Features: AS18NWDZZeQr-H2-K3eeVtlqTGrlSQzrQ7P8GUhNaKX_KK-BVvdywIo1Js7nnoc
-Message-ID: <CAAhV-H4fdfB3fH0DnfgxNimPBsjiOGQZV-w0g63d7TVDOK5-zw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] LoongArch: Only link libstub to final vmlinux
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, loongarch@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Thu, 25 Sep 2025 10:46:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Q_f5fFAaJMHexh9vnjWPy0y-1N2DX5VqTqrtiASsxew@mail.gmail.com>
+X-Gm-Features: AS18NWDUZjf_aL6svseQCu1xq7gRMI2MAsd5Zi5UVYBCe1OI98bNui1oPKzmgA0
+Message-ID: <CAAhV-H7Q_f5fFAaJMHexh9vnjWPy0y-1N2DX5VqTqrtiASsxew@mail.gmail.com>
+Subject: Re: [PATCH v6 0/8] LoongArch: Fix BPF trampoline related issues
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, hejinyang@loongson.cn, 
+	loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Tiezhu,
-
-On Fri, Sep 19, 2025 at 5:36=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
-> the following objtool warning:
->
->   vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
->   falls through to next function __efistub_exit_boot_func()
->
-> This is because efi_boot_kernel() doesn't end with a return instruction
-> or an unconditional jump, then objtool has determined that the function
-> can fall through into the next function.
->
-> At the beginning, try to do something to make efi_boot_kernel() ends with
-> an unconditional jump instruction, but this modification seems not proper=
-.
->
-> Since the efistub functions are useless for stack unwinder, they can be
-> ignored by objtool. After many discussions, no need to link libstub to
-> the vmlinux.o, only link libstub to the final vmlinux.
->
-> Link: https://lore.kernel.org/lkml/pq4h7jgndnt6p45lj4kgubxjd5gidfetugcuf5=
-rcxzxxanzetd@6rrlpjnjsmuy/
-> Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  Makefile                | 1 +
->  arch/loongarch/Makefile | 5 ++++-
->  scripts/link-vmlinux.sh | 5 ++---
->  3 files changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 9771619ac596..b8e7c63ae3d1 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1201,6 +1201,7 @@ KBUILD_VMLINUX_OBJS :=3D built-in.a $(patsubst %/, =
-%/lib.a, $(filter %/, $(libs-y)
->  KBUILD_VMLINUX_LIBS :=3D $(filter-out %/, $(libs-y))
->
->  export KBUILD_VMLINUX_LIBS
-> +export KBUILD_VMLINUX_LIBS_PRELINK
->  export KBUILD_LDS          :=3D arch/$(SRCARCH)/kernel/vmlinux.lds
->
->  ifdef CONFIG_TRIM_UNUSED_KSYMS
-Why does the LoongArch patch modify the common parts? Since the whole
-series is small enough, I suggest modifying everything in a single
-patch. And the single patch can be merged via the efi tree.
+Applied, thanks.
 
 Huacai
 
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index a3a9759414f4..e9c61f76a045 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -164,7 +164,10 @@ CHECKFLAGS +=3D $(shell $(CC) $(KBUILD_CPPFLAGS) $(K=
-BUILD_CFLAGS) -dM -E -x c /dev
->  endif
+On Tue, Sep 23, 2025 at 4:55=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
 >
->  libs-y +=3D arch/loongarch/lib/
-> -libs-$(CONFIG_EFI_STUB) +=3D $(objtree)/drivers/firmware/efi/libstub/lib=
-.a
-> +
-> +ifdef CONFIG_EFI_STUB
-> +KBUILD_VMLINUX_LIBS_PRELINK +=3D $(objtree)/drivers/firmware/efi/libstub=
-/lib.a
-> +endif
+> The following two selftest cases triggers oops on LoongArch:
 >
->  drivers-y              +=3D arch/loongarch/crypto/
+>     $ ./test_progs -a ns_bpf_qdisc -a tracing_struct
 >
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index 51367c2bfc21..b3cbff31d8a9 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -61,12 +61,11 @@ vmlinux_link()
->         shift
+> This series tries to fix/workaround these issues.
+> See individual commit for details.
 >
->         if is_enabled CONFIG_LTO_CLANG || is_enabled CONFIG_X86_KERNEL_IB=
-T; then
-> -               # Use vmlinux.o instead of performing the slow LTO link a=
-gain.
->                 objs=3Dvmlinux.o
-> -               libs=3D
-> +               libs=3D"${KBUILD_VMLINUX_LIBS_PRELINK}"
->         else
->                 objs=3Dvmlinux.a
-> -               libs=3D"${KBUILD_VMLINUX_LIBS}"
-> +               libs=3D"${KBUILD_VMLINUX_LIBS} ${KBUILD_VMLINUX_LIBS_PREL=
-INK}"
->         fi
+> v5 -> v6:
+> * Rework patch 8 as suggested by Huacai and Tiezhu
 >
->         if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
+> Hengqi Chen (8):
+>   LoongArch: BPF: Remove duplicated flags check
+>   LoongArch: BPF: Remove duplicated bpf_flush_icache()
+>   LoongArch: BPF: No support of struct argument in trampoline programs
+>   LoongArch: BPF: No text_poke() for kernel text
+>   LoongArch: BPF: Don't assume trampoline size is page aligned
+>   LoongArch: BPF: Make trampoline size stable
+>   LoongArch: BPF: Make error handling robust in
+>     arch_prepare_bpf_trampoline()
+>   LoongArch: BPF: Sign extend struct ops return values properly
+>
+>  arch/loongarch/net/bpf_jit.c | 72 ++++++++++++++++++++++++++++--------
+>  1 file changed, 56 insertions(+), 16 deletions(-)
+>
 > --
-> 2.42.0
->
+> 2.43.5
