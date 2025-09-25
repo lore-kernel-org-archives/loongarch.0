@@ -1,215 +1,74 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7B6286D5D
-	for <loongarch@lists.linux.dev>; Thu, 25 Sep 2025 09:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA4F1114;
+	Thu, 25 Sep 2025 12:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758792818; cv=none; b=U0NjXD4bTEdRtzGJYQmdAOl928HxsdheITtSHAl7//EI+errOaA8frqyVgYAqT9/uTqn9Z+A4z8wS7ZphzEy1mamuVVkdTM9dqea63j5yJANKwU1+Q9PVQCnJTioU4nZfw7e0efV/f9z2+R0BAdwxrNlfxeRZHzVgMtUqXGc6ek=
+	t=1758801646; cv=none; b=YGwdgbNqxLVWPrW5+9RQbjq0tjNUM9Zunw3gGSADvMjBn7xpQf9enfbBcY80D1RwCZ4kgxhx48TlNtaN2wXgNFc5b9leYDxLN2Ie13DlR4DNFicwQGSTWibZ4g+IvIT1vauuzZ6HhFgtAMzLD/BXa2oZZiCgWT2qP0Zu6faIPLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758792818; c=relaxed/simple;
-	bh=auYht+0Ii8E8ToqtTSAbmUZiPI/dAKwRVeHbDcj1DPg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C+CMnETGYIfAaFYm/GpORM2rWrm4WeM2rlM4n+BX/0DaBvhHN2XOUJYfgfNldq/6MJCBkPkNdxZtwr8QKhPpL5Qa1yzMAZPYYlnOmg7kqBgH7NfxH4P45LMGtFBqP4WNpDkhhwrq2OP770y2/Hlomnx6untvaRnQJCngWFFEzLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=IlUtM1nA; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1758801646; c=relaxed/simple;
+	bh=+YAB5I/onFJFzUFrF0bfZccZfgP5koeJO9saION6R6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JYSXLDpx/8MfSEbrmSXRDFVPJn86lk1fSLRcvP2yGK5sTfayhRJmnTxpN8GjCyH7zOMKHQNQ2ZkZmcVuUrF0bgsk7+56Bx1ELdi94cXYE65Q3gyUHPqfSj8McdZ7rBJTYXgj8Bg4YFP9EQBBjOhyZQRcTRvHHHArGcj+ep+TVJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXSTIoOF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="IlUtM1nA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1758792784;
-	bh=PUqKWUWGOy3vCXTCSh8ME4dr34YvDSo7AVqS5AKddLU=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=IlUtM1nAbKpNC34I0i4n1OCi1MJonAFJ/Ojg450X5HZ9leHKzpyN2vi6I7SN24gF4
-	 aYIZctz2pJAv+p5PmPDAkH6NpvaXCN3/I7zx5JooMMy056wnrmChJw0pke5qaqJgEi
-	 4LHiEwIMknK24bITl9wKpo/KHhlpB3DvZlkj/I9Q=
-X-QQ-mid: zesmtpsz7t1758792750t10d2a62f
-X-QQ-Originating-IP: xVRMiDpisEXjZ9YtxmnV1wJtbRo8IJPujb5Zovub53o=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 25 Sep 2025 17:32:28 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 4921902207246476678
-EX-QQ-RecipientCnt: 7
-From: Wentao Guan <guanwentao@uniontech.com>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXSTIoOF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFE25C4CEF0;
+	Thu, 25 Sep 2025 12:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758801645;
+	bh=+YAB5I/onFJFzUFrF0bfZccZfgP5koeJO9saION6R6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iXSTIoOFGhJWqlDKp/2cXjv/b6GXJ07IYgwYeHWSyhZZgI1Y2TwzisczlhvtRvPB2
+	 Fj2s4lN1QuUpvaCh62L/hCXrr265mGZsiYa6m9yhWKbKbyqAIWVlriUQVdcXAr8Qr9
+	 ErI2oie40wlw564bhE/U83HpteZSmxV/qeFtSeJfyitzJkEpQ62Ir8HYAS3og/KxGp
+	 eo5RLRwkn+hH8ZxbY93r2uhBcZfmgGcshezWy4hRCU5Hui/Fhc4nxU9QG23bdhjwzx
+	 weqdST9J6KvxkBLd+lHIZowLygEy+yESOTKGyjaRvRa5ehFakrjkhPPkDWVgAJ3O1z
+	 zTX+gos6CUPBQ==
+Date: Thu, 25 Sep 2025 13:00:41 +0100
+From: Lee Jones <lee@kernel.org>
+To: Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: Qunqin Zhao <zhaoqunqin@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>, linux-crypto@vger.kernel.org,
+	loongarch@lists.linux.dev, kernel-janitors@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH] LoongArch: mm: try VMA lock-based page fault handling first
-Date: Thu, 25 Sep 2025 17:29:02 +0800
-Message-Id: <20250925092902.1366058-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust file entry in LOONGSON SECURITY
+ ENGINE DRIVERS
+Message-ID: <20250925120041.GJ8757@google.com>
+References: <20250912074638.109070-1-lukas.bulwahn@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: MQb3KhmQP37MXN3ucjQB8D9eIoxlFKurU8wuF4boBcYAe81MiiTi2gJv
-	k4kTZp+UrmsTFmPpl1u7N4lu1XEFrFuA2TD4lBG9JP2jqCpNhd+p5zpJOtWE2C/aCr1PJZy
-	5pA4yzwLfaRR/n22yARMzZVt9vo/etsgaTTq/IWpmM6Uuo8hMPae8p0hsc4y6D7HL2/ai/5
-	QpCzOS0EgIVOCfyXDGk3IVNgOmfJd9JyvJ9/Kq3NwDmZHg9VvSZIBkxX9zaqYmvW4pVx6Cw
-	WkqDT2BFThg+WvBpflJ+t330Yv4eRJYvkpghZoN25PqwQaeyzGbatZYte2Yb6vXpnFbfRug
-	1OxH2SwKZ2Biv+Lml0k1Vo4FEicuLCK44Y1bxmomUq5ZCuzWwVu8vyYwnamgxjD6j1DmrBU
-	rOG7xaU9EnJ0SWmrB06L+Y61WWqLCRmcs4tjLjcsECPQdQ3HN04xc5bLLxC4dOujmfPsJo2
-	Ivk+Hdq28RMBiRnbdaCUHm4whi/f0J/yECOLOaYshGJL77aQ7grC7Y/kBz3GKApnKIMiAJ2
-	kAkrX7Re9pxTwhzxI3oUs6P7UJtuo4qvr8oMoUPxIRazPe+oZJCXh3f5pin+f0NB3GYDkNS
-	w/maCrnaaMX7ah0nWzUMBCEo07pAiXC1r1YAer+Ke3RraToGmy4r58lmLsnShONVxxTxP4J
-	ewAdfHC7Da4k67pCOHFYrtqQa8BZKxPWwCy0OxVzwnHTNYQVok3cQs8YPU0ED2DVg5SeJ62
-	aNnWK/vkU1GOsnVDG2iXtta0D40YJzik8BKEuwJLBs6EP8pFihyJ8FIaLV/UVkSsavJbtqV
-	mRsc0m5mlZ2tz9nQ/8QCwTIH47Mnj2YzaIhJswPt99latWTq1LiWEWHlMzBoDn4ZP15NL39
-	uPtBX7SktYzgQIwfXvCU/DWnV4ccvVnffkBmQl4FvFmIq3WmghEk2G9zTTied8b8Z9mtRcg
-	RGO88rJ70Obp9ewsuM5zCI+JmbH8LyowRLcucxKTCvCkMdAKnuUzged4xadtwhD7k9mttn0
-	E9nrsZ/n75BluW1le7zNfcoYa3O3mNyHs8kFhDOA1PJ/gKgV3xl4qZTSYKy0U=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <20250912074638.109070-1-lukas.bulwahn@redhat.com>
 
-Attempt VMA lock-based page fault handling first, and fall back to the
-existing mmap_lock-based handling if that fails.
+On Fri, 12 Sep 2025, Lukas Bulwahn wrote:
 
-The "ebizzy -mTRp" on 3A6000 shows that PER_VMA_LOCK can
-improve the benchmark by about 20.7%.
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> 
+> Commit 5c83b07df9c5 ("tpm: Add a driver for Loongson TPM device") adds a
+> driver at drivers/char/tpm/tpm_loongson.c, and commit 74fddd5fbab8
+> ("MAINTAINERS: Add entry for Loongson Security Engine drivers") adds a new
+> section LOONGSON SECURITY ENGINE DRIVERS intending to refer to that driver.
+> It however adds the entry drivers/char/tpm_loongson.c; note that it misses
+> the tpm subdirectory.
+> 
+> Adjust the entry to refer to the intended file.
+> 
+> Fixes: 74fddd5fbab8 ("MAINTAINERS: Add entry for Loongson Security Engine drivers")
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is the loongarch variant of "x86/mm: try VMA lock-based page fault
-handling first".
+Applied, thanks
 
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
----
-ebizzy-0.3(can download by phoronix-test-suite):
-before patch:
-97800 records/s
-real 10.00 s user  0.25 s sys  13.54 s
-97835 records/s
-real 10.00 s user  0.27 s sys  13.51 s
-97929 records/s
-real 10.00 s user  0.26 s sys  13.53 s
-97736 records/s
-real 10.00 s user  0.31 s sys  13.48 s
-97914 records/s
-real 10.00 s user  0.30 s sys  13.50 s
-97916 records/s
-real 10.00 s user  0.31 s sys  13.48 s
-97857 records/s
-real 10.00 s user  0.28 s sys  13.51 s
-97927 records/s
-real 10.00 s user  0.24 s sys  13.55 s
-97962 records/s
-real 10.00 s user  0.41 s sys  13.39 s
-97501 records/s
-real 10.00 s user  0.20 s sys  13.53 s
-after patch:
-117645 records/s
-real 10.00 s user  0.31 s sys  23.17 s
-118207 records/s
-real 10.00 s user  0.37 s sys  23.18 s
-118426 records/s
-real 10.00 s user  0.32 s sys  23.14 s
-118172 records/s
-real 10.00 s user  0.44 s sys  23.07 s
-118548 records/s
-real 10.00 s user  0.45 s sys  23.04 s
-118011 records/s
-real 10.00 s user  0.32 s sys  23.15 s
-118143 records/s
-real 10.00 s user  0.41 s sys  23.09 s
-118181 records/s
-real 10.00 s user  0.42 s sys  23.12 s
-117721 records/s
-real 10.00 s user  0.34 s sys  23.17 s
-118138 records/s
-real 10.00 s user  0.42 s sys  23.04 s
----
----
- arch/loongarch/Kconfig    |  1 +
- arch/loongarch/mm/fault.c | 49 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 0631a6b11281b..1c517954157c0 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -69,6 +69,7 @@ config LOONGARCH
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
- 	select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
- 	select ARCH_SUPPORTS_NUMA_BALANCING
-+	select ARCH_SUPPORTS_PER_VMA_LOCK
- 	select ARCH_SUPPORTS_RT
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF
-diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-index deefd9617d008..d2dc3e194dd76 100644
---- a/arch/loongarch/mm/fault.c
-+++ b/arch/loongarch/mm/fault.c
-@@ -215,6 +215,53 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 		flags |= FAULT_FLAG_USER;
- 
- 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-+	if (!(flags & FAULT_FLAG_USER))
-+		goto lock_mmap;
-+
-+	vma = lock_vma_under_rcu(mm, address);
-+	if (!vma)
-+		goto lock_mmap;
-+
-+	if (write) {
-+		flags |= FAULT_FLAG_WRITE;
-+		if (!(vma->vm_flags & VM_WRITE)) {
-+			vma_end_read(vma);
-+			si_code = SEGV_ACCERR;
-+			goto bad_area_nosemaphore;
-+		}
-+	} else {
-+		if (!(vma->vm_flags & VM_EXEC) && address == exception_era(regs)){
-+			vma_end_read(vma);
-+			si_code = SEGV_ACCERR;
-+			goto bad_area_nosemaphore;
-+		}
-+		if (!(vma->vm_flags & (VM_READ | VM_WRITE)) && address != exception_era(regs)){
-+			vma_end_read(vma);
-+			si_code = SEGV_ACCERR;
-+			goto bad_area_nosemaphore;
-+		}
-+	}
-+
-+	fault = handle_mm_fault(vma, address, flags | FAULT_FLAG_VMA_LOCK, regs);
-+	if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
-+		vma_end_read(vma);
-+
-+	if (!(fault & VM_FAULT_RETRY)) {
-+		count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-+		goto done;
-+	}
-+	count_vm_vma_lock_event(VMA_LOCK_RETRY);
-+	if (fault & VM_FAULT_MAJOR)
-+		flags |= FAULT_FLAG_TRIED;
-+
-+	/* Quick path to respond to signals */
-+	if (fault_signal_pending(fault, regs)) {
-+		if (!user_mode(regs))
-+			no_context(regs, write, address);
-+		return;
-+	}
-+lock_mmap:
-+
- retry:
- 	vma = lock_mm_and_find_vma(mm, address, regs);
- 	if (unlikely(!vma))
-@@ -292,6 +339,8 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
- 	}
- 
- 	mmap_read_unlock(mm);
-+done:
-+	return;	
- }
- 
- asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
 -- 
-2.20.1
-
+Lee Jones [李琼斯]
