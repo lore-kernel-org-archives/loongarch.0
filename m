@@ -1,46 +1,47 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545DD2E6CB2
-	for <loongarch@lists.linux.dev>; Thu, 25 Sep 2025 02:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7B6286D5D
+	for <loongarch@lists.linux.dev>; Thu, 25 Sep 2025 09:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758768447; cv=none; b=AqQg/p331yxQ+xL+tYfETSj2A8P2X5wm2tyPddARNl9i4FR1KrnR2s3BcXjUbTA0fh+V4gjT9GddJQTXeVveMhSi61cDHBQmQZz+Guhr8qxHSpXJc32NtxYluHNi+DGur82IDkiRQsB4b45ooafWmNpIzLkRuQ+g85gcJn0LRcM=
+	t=1758792818; cv=none; b=U0NjXD4bTEdRtzGJYQmdAOl928HxsdheITtSHAl7//EI+errOaA8frqyVgYAqT9/uTqn9Z+A4z8wS7ZphzEy1mamuVVkdTM9dqea63j5yJANKwU1+Q9PVQCnJTioU4nZfw7e0efV/f9z2+R0BAdwxrNlfxeRZHzVgMtUqXGc6ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758768447; c=relaxed/simple;
-	bh=19ujwnFXj88kacwo85PIaKscRN1Zn0ix4HoQX5JW+mk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=anIfJdRlf1pXS3uO6ss9spuGHZO5hI7fMuBRXwEFHbzZ1rvBGBkKHgwH2F3orkmnlRcpuwxJXJhdO0T9gdQj8wuylzvtt/okRHBqUoOkX9q3tgY97E6va5uFPnQw4sjejCtqm726+uJ1pEILBoJ3uLUROVbnFDpzZRoPiseKfeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=d1PH1lyP; arc=none smtp.client-ip=15.184.224.54
+	s=arc-20240116; t=1758792818; c=relaxed/simple;
+	bh=auYht+0Ii8E8ToqtTSAbmUZiPI/dAKwRVeHbDcj1DPg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C+CMnETGYIfAaFYm/GpORM2rWrm4WeM2rlM4n+BX/0DaBvhHN2XOUJYfgfNldq/6MJCBkPkNdxZtwr8QKhPpL5Qa1yzMAZPYYlnOmg7kqBgH7NfxH4P45LMGtFBqP4WNpDkhhwrq2OP770y2/Hlomnx6untvaRnQJCngWFFEzLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=IlUtM1nA; arc=none smtp.client-ip=54.207.19.206
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="d1PH1lyP"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="IlUtM1nA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1758768416;
-	bh=oUVIgw1hSqZOvYR+N4LRnpAUQ/Srtvh3WmwHHoH7NH0=;
+	s=onoh2408; t=1758792784;
+	bh=PUqKWUWGOy3vCXTCSh8ME4dr34YvDSo7AVqS5AKddLU=;
 	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=d1PH1lyPpy/QlnSO1KC4JSc/WMYgddpPAJy4+Hr9LFsJU+o0qQVrPSQduQ1z4KVPp
-	 Ee6PT4Jc7zCCXfQzO6mwjKYQOVBsvrvPcePLTeHT4EkurOue+8MkXArtY7xxr2mqUG
-	 KdUXvws+DsawtjdEt+e0laTxAdu8WlHDVXAz4Yws=
-X-QQ-mid: esmtpsz19t1758768389t5149b116
-X-QQ-Originating-IP: IPWBwPHDWCio8nJn3Kphf0rZ+QSFAF3ARlWGDRkJ5Lk=
+	b=IlUtM1nAbKpNC34I0i4n1OCi1MJonAFJ/Ojg450X5HZ9leHKzpyN2vi6I7SN24gF4
+	 aYIZctz2pJAv+p5PmPDAkH6NpvaXCN3/I7zx5JooMMy056wnrmChJw0pke5qaqJgEi
+	 4LHiEwIMknK24bITl9wKpo/KHhlpB3DvZlkj/I9Q=
+X-QQ-mid: zesmtpsz7t1758792750t10d2a62f
+X-QQ-Originating-IP: xVRMiDpisEXjZ9YtxmnV1wJtbRo8IJPujb5Zovub53o=
 Received: from localhost.localdomain ( [113.57.152.160])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 25 Sep 2025 10:46:27 +0800 (CST)
+	id ; Thu, 25 Sep 2025 17:32:28 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 16810204573868226589
-EX-QQ-RecipientCnt: 6
+X-BIZMAIL-ID: 4921902207246476678
+EX-QQ-RecipientCnt: 7
 From: Wentao Guan <guanwentao@uniontech.com>
 To: chenhuacai@kernel.org
 Cc: kernel@xen0n.name,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
+	zhanjun@uniontech.com,
 	niecheng1@uniontech.com,
 	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH] LoongArch: defconfig: enable NLS_ISO8859_1
-Date: Thu, 25 Sep 2025 10:43:01 +0800
-Message-Id: <20250925024301.1283742-1-guanwentao@uniontech.com>
+Subject: [PATCH] LoongArch: mm: try VMA lock-based page fault handling first
+Date: Thu, 25 Sep 2025 17:29:02 +0800
+Message-Id: <20250925092902.1366058-1-guanwentao@uniontech.com>
 X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -50,51 +51,165 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: OddG9bJrw+wO99H0+kBP8l/Vm8yAmfeyKKqyWK4a6sDgdCuKLHPkKyDe
-	f7s4kLFnqhXoQgWQ9JRchVLwxVwNVGZsmjViMrxHOAhTNB2lpzIQGiCTzXgE/h0lcbr1nE/
-	8G/JxTNvYHG0HU96QjtiKVGwOd02KsDJhhdVZzQEuMh4DPQ8wlctwhw9FECHGM978PRSvLk
-	8+G1L9Fh5S8g+LnLCkBIFvshDPi4EDSaekpupJLuVTNcduX5hMxB9BmXWTuthElwzmqqJfl
-	rOsnUesoy4EeEPbX8M+2EKEcH8Pcx3T/MdSbZvLhGtiWdr7xpeg4C6y8j3zQe4/jYP8g00z
-	1V9cizYaakKW4rWoJogbD5NZ0X5ZWMTRqJV4krAXG6j6n0EIAV6WnqGYoRlYqH1CAcow7o5
-	YQENgqUaYbCCPeb9jLrkRPM51th9ghqdhcBXTqDvDrASHWYDDNERrBXQtbWQxisD81xL6xU
-	LQisI/BcLIiWBriUDNXSQxHAl/ZOD/XkLNugO8yKEmaQx+N1c2pMdWm+YHFZjZK4Kn+ani4
-	DgHKkTdKcRXi5kqLp0KJgOEGzsWjRV2RUtqF+RTDUYECtzTM3LOt+x8m0jqtfzs/di2FSpj
-	djSk3UDQIav+56ItTg+NSwY2+ifK0xpCDj3pmlNHLpUNGlwOgRNE4+zFfuykGRNBdxG7ohg
-	UqVYColJsK3OK4keolTJiTuFuU+KmEJdo0qwQYcpg5o21EPVqqTXdV49l5vY8nC7BrHjolO
-	xsObgxnQrx6+Ni/lMd3c57hvNyqH/oY9cgbWMBrMPPn3xRAUmE43xXCyMaPxxpnLoFWwK5W
-	JE2CZTDit9D0IusSky3T9c6xvQSeOQiBIKD+We2n4JNyulXXn7k6sJVI86r24u6a8riTlLP
-	5kEvsVgWbaZ4q/lleGvqSWDKJMT48pPiS+ii9kx1LwRYtf3h+C2FWgj9DZSCnzisd7J4EVO
-	hiMYd7GXtpoYa5QsItNGn289Nh69fMoh7nPFXnFyaWTivDKGykyGkqTiuu7u3aXCQUPs+mz
-	pTJbGgDi8ujdHiy+9IDFxRnJ2lfriGKKQMilVvjnbPZ+gmJdxI
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
+X-QQ-XMAILINFO: MQb3KhmQP37MXN3ucjQB8D9eIoxlFKurU8wuF4boBcYAe81MiiTi2gJv
+	k4kTZp+UrmsTFmPpl1u7N4lu1XEFrFuA2TD4lBG9JP2jqCpNhd+p5zpJOtWE2C/aCr1PJZy
+	5pA4yzwLfaRR/n22yARMzZVt9vo/etsgaTTq/IWpmM6Uuo8hMPae8p0hsc4y6D7HL2/ai/5
+	QpCzOS0EgIVOCfyXDGk3IVNgOmfJd9JyvJ9/Kq3NwDmZHg9VvSZIBkxX9zaqYmvW4pVx6Cw
+	WkqDT2BFThg+WvBpflJ+t330Yv4eRJYvkpghZoN25PqwQaeyzGbatZYte2Yb6vXpnFbfRug
+	1OxH2SwKZ2Biv+Lml0k1Vo4FEicuLCK44Y1bxmomUq5ZCuzWwVu8vyYwnamgxjD6j1DmrBU
+	rOG7xaU9EnJ0SWmrB06L+Y61WWqLCRmcs4tjLjcsECPQdQ3HN04xc5bLLxC4dOujmfPsJo2
+	Ivk+Hdq28RMBiRnbdaCUHm4whi/f0J/yECOLOaYshGJL77aQ7grC7Y/kBz3GKApnKIMiAJ2
+	kAkrX7Re9pxTwhzxI3oUs6P7UJtuo4qvr8oMoUPxIRazPe+oZJCXh3f5pin+f0NB3GYDkNS
+	w/maCrnaaMX7ah0nWzUMBCEo07pAiXC1r1YAer+Ke3RraToGmy4r58lmLsnShONVxxTxP4J
+	ewAdfHC7Da4k67pCOHFYrtqQa8BZKxPWwCy0OxVzwnHTNYQVok3cQs8YPU0ED2DVg5SeJ62
+	aNnWK/vkU1GOsnVDG2iXtta0D40YJzik8BKEuwJLBs6EP8pFihyJ8FIaLV/UVkSsavJbtqV
+	mRsc0m5mlZ2tz9nQ/8QCwTIH47Mnj2YzaIhJswPt99latWTq1LiWEWHlMzBoDn4ZP15NL39
+	uPtBX7SktYzgQIwfXvCU/DWnV4ccvVnffkBmQl4FvFmIq3WmghEk2G9zTTied8b8Z9mtRcg
+	RGO88rJ70Obp9ewsuM5zCI+JmbH8LyowRLcucxKTCvCkMdAKnuUzged4xadtwhD7k9mttn0
+	E9nrsZ/n75BluW1le7zNfcoYa3O3mNyHs8kFhDOA1PJ/gKgV3xl4qZTSYKy0U=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
 X-QQ-RECHKSPAM: 0
 
-NLS_DEFAULT is "iso8859-1",so enable CONFIG_NLS_ISO8859_1.
-To solve the problem that I found EFI partition(FAT) mount failed,
-systemd say "Failed to mount boot-efi.mount - /boot/efi",
-and booting to emergency mode.
+Attempt VMA lock-based page fault handling first, and fall back to the
+existing mmap_lock-based handling if that fails.
 
-It is similar to commit
-efe1e08bca9a("riscv: defconfig: enable NLS_CODEPAGE_437, NLS_ISO8859_1")
+The "ebizzy -mTRp" on 3A6000 shows that PER_VMA_LOCK can
+improve the benchmark by about 20.7%.
+
+This is the loongarch variant of "x86/mm: try VMA lock-based page fault
+handling first".
 
 Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
 ---
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ebizzy-0.3(can download by phoronix-test-suite):
+before patch:
+97800 records/s
+real 10.00 s user  0.25 s sys  13.54 s
+97835 records/s
+real 10.00 s user  0.27 s sys  13.51 s
+97929 records/s
+real 10.00 s user  0.26 s sys  13.53 s
+97736 records/s
+real 10.00 s user  0.31 s sys  13.48 s
+97914 records/s
+real 10.00 s user  0.30 s sys  13.50 s
+97916 records/s
+real 10.00 s user  0.31 s sys  13.48 s
+97857 records/s
+real 10.00 s user  0.28 s sys  13.51 s
+97927 records/s
+real 10.00 s user  0.24 s sys  13.55 s
+97962 records/s
+real 10.00 s user  0.41 s sys  13.39 s
+97501 records/s
+real 10.00 s user  0.20 s sys  13.53 s
+after patch:
+117645 records/s
+real 10.00 s user  0.31 s sys  23.17 s
+118207 records/s
+real 10.00 s user  0.37 s sys  23.18 s
+118426 records/s
+real 10.00 s user  0.32 s sys  23.14 s
+118172 records/s
+real 10.00 s user  0.44 s sys  23.07 s
+118548 records/s
+real 10.00 s user  0.45 s sys  23.04 s
+118011 records/s
+real 10.00 s user  0.32 s sys  23.15 s
+118143 records/s
+real 10.00 s user  0.41 s sys  23.09 s
+118181 records/s
+real 10.00 s user  0.42 s sys  23.12 s
+117721 records/s
+real 10.00 s user  0.34 s sys  23.17 s
+118138 records/s
+real 10.00 s user  0.42 s sys  23.04 s
+---
+---
+ arch/loongarch/Kconfig    |  1 +
+ arch/loongarch/mm/fault.c | 49 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 34eaee0384c92..b1dabce266e9c 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -1030,6 +1030,7 @@ CONFIG_9P_FS=y
- CONFIG_NLS_CODEPAGE_437=y
- CONFIG_NLS_CODEPAGE_936=y
- CONFIG_NLS_ASCII=y
-+CONFIG_NLS_ISO8859_1=y
- CONFIG_NLS_UTF8=y
- CONFIG_DLM=m
- CONFIG_KEY_DH_OPERATIONS=y
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 0631a6b11281b..1c517954157c0 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -69,6 +69,7 @@ config LOONGARCH
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN
+ 	select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
++	select ARCH_SUPPORTS_PER_VMA_LOCK
+ 	select ARCH_SUPPORTS_RT
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
+index deefd9617d008..d2dc3e194dd76 100644
+--- a/arch/loongarch/mm/fault.c
++++ b/arch/loongarch/mm/fault.c
+@@ -215,6 +215,53 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
+ 		flags |= FAULT_FLAG_USER;
+ 
+ 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
++	if (!(flags & FAULT_FLAG_USER))
++		goto lock_mmap;
++
++	vma = lock_vma_under_rcu(mm, address);
++	if (!vma)
++		goto lock_mmap;
++
++	if (write) {
++		flags |= FAULT_FLAG_WRITE;
++		if (!(vma->vm_flags & VM_WRITE)) {
++			vma_end_read(vma);
++			si_code = SEGV_ACCERR;
++			goto bad_area_nosemaphore;
++		}
++	} else {
++		if (!(vma->vm_flags & VM_EXEC) && address == exception_era(regs)){
++			vma_end_read(vma);
++			si_code = SEGV_ACCERR;
++			goto bad_area_nosemaphore;
++		}
++		if (!(vma->vm_flags & (VM_READ | VM_WRITE)) && address != exception_era(regs)){
++			vma_end_read(vma);
++			si_code = SEGV_ACCERR;
++			goto bad_area_nosemaphore;
++		}
++	}
++
++	fault = handle_mm_fault(vma, address, flags | FAULT_FLAG_VMA_LOCK, regs);
++	if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
++		vma_end_read(vma);
++
++	if (!(fault & VM_FAULT_RETRY)) {
++		count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
++		goto done;
++	}
++	count_vm_vma_lock_event(VMA_LOCK_RETRY);
++	if (fault & VM_FAULT_MAJOR)
++		flags |= FAULT_FLAG_TRIED;
++
++	/* Quick path to respond to signals */
++	if (fault_signal_pending(fault, regs)) {
++		if (!user_mode(regs))
++			no_context(regs, write, address);
++		return;
++	}
++lock_mmap:
++
+ retry:
+ 	vma = lock_mm_and_find_vma(mm, address, regs);
+ 	if (unlikely(!vma))
+@@ -292,6 +339,8 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
+ 	}
+ 
+ 	mmap_read_unlock(mm);
++done:
++	return;	
+ }
+ 
+ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
 -- 
 2.20.1
 
