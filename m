@@ -1,217 +1,166 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA732FAC0E
-	for <loongarch@lists.linux.dev>; Fri, 26 Sep 2025 13:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C078B1C07C4
+	for <loongarch@lists.linux.dev>; Fri, 26 Sep 2025 14:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758894845; cv=none; b=qdSvvUPOeGQ/X+OmTkxoxUVrTZ01Pk3jxDFXci3nv4cYbtMi8yfwj5AyZ5b5wmgpjtUh0YFwJ07xpVisMhqnz90zo7sZlPMDSvpewfikTc9lCsG5GUwndaOnR4o2DLWLiU49fKsRsi6y7C2WZoSA3l3A1U88LE/H3ocdbjM2hZM=
+	t=1758897066; cv=none; b=qn7Ik3C8NSp6KhCxUKscPPyca3WsD+EoCSSW9LgV27gPSh4nk7wccfPElkjuhXv2Io/6Pl52XA9k2avxb/avZ4lzyRVg3g6rI6SANzn8WbnQ3bmKBNMVd0jqWMl1dTFR7D/0Rwuw0Y7fx5MnLpXGeXIm0ibrORQz3CW8JNF5N/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758894845; c=relaxed/simple;
-	bh=EAqKV/2RF7bW8arWG9fwnOlAqRNSwPmfuGtdSoCMrbU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iXnkN3q9YiVcVgu3gkINWJo0z1GgVodR44ISm+hEyOUI9Bda+cXkncwdi1gjUWPcclPrM2kaQC+TleROQktICz9nUlfRGkig0Z1/I7dsN1x6tMTW3lTpps4JMeYpNRpc1l3YshzTmFxp7spxhF3V6vr6S7q8y3ETYnmkCwkh7qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=exUyD7xU reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
+	s=arc-20240116; t=1758897066; c=relaxed/simple;
+	bh=IGdCqM/yTaiPyzZyhYs3irmCvSMu4bZkT42mEj1Liho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGbn0hEI8e48hDH8pOcAIeN26UlYuExtPtS9m5IpD4/Q4z3kRSwIM6trihbkYGQeJ2D3defGi8OBPMI1qz4/BGOiil4oRlxKQww4Ydk2oO2zAwQSU4quBEU3yX6dtO6ZYXch8i45E/M95dp5M+174wS9Ul8p15G18mWSMGB3YoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=je5lcoVJ; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="exUyD7xU"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4cYBrd72t9z1DDr7;
-	Fri, 26 Sep 2025 15:53:53 +0200 (CEST)
-Received: from [10.10.15.8] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4cYBrc5B6bz1Fb38;
-	Fri, 26 Sep 2025 15:53:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=simplycom2; t=1758894833;
-	bh=0oKPt5B2BYzle8pqRjAR1Qbv4tzNfaR8uywq90JI968=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=exUyD7xU1FFoAo0zIaGO8L1T0an8JyysSniNaBEN284brN/McStsyIZqRxq8PWEKU
-	 4xjl2QjrfL3v6vRMcSOZA6TsputTD4TBzNeEmQkcG3KIUuhpPXP+zEXF3Yz/NS7pmB
-	 PcxjXfIwjxcneymF0BZH9kKiWkU57AHDRlm5Of+kNpRF0jGMlR6JwP/sN6nrYrb0Z0
-	 guRP8WAhweSnyJbReXLTERryS4IR1w0uYknNh+L2dgFLhbTwnQE2kx++CD7JJaeLrS
-	 PJLHZmJ4jqQSjfHyyxYla7ZzLAyJTcxvyTl+OUIQNZsx642Tr8lLuLkTgoW04lH9tr
-	 uEVtlAUR67olA==
-Message-ID: <76d9171c-4a74-499e-a598-ec51fdfa4e94@gaisler.com>
-Date: Fri, 26 Sep 2025 15:53:52 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="je5lcoVJ"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-77f3405c38aso2303744b3a.0
+        for <loongarch@lists.linux.dev>; Fri, 26 Sep 2025 07:31:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758897064; x=1759501864; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eu75bAdjt5h24Mx1b29gb92p1XKKnNXBr/2FE3JcqU0=;
+        b=je5lcoVJv71crmtxIJ44NsErxeFSJDRWTFlKcLC6gMYON8XSfs5dDvkY1YzDf3riyn
+         mX0tP0336z2SpBS0Jy2owQjL+ONxtY/6RddbxRdvbzko8p6p/R46NcwQyuqdLqdw5xCA
+         Kl/c+NZs9q7YL8mW8WZFxiKTADg+fRwiGDAILYG8XiorQHPgL6jnsifXcPMGMUhJE4Ud
+         zabocbFxOIwDLyYHxgXZrY3SYVFaeTrB7jaJS2DgmY14CR56/RkffirXUm+IRkcWKQdM
+         t/sk7rYrZ/2HWO7LNHP7MP7f7CChz41I4ZJc8u1yflUq2tLU/bDlPI5lnzD5MmeFMLV1
+         Qw/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758897064; x=1759501864;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eu75bAdjt5h24Mx1b29gb92p1XKKnNXBr/2FE3JcqU0=;
+        b=njvdyfdk7FEdEkHFNc46nKF278rIw7tr6/qWlP+SSDIV/WcbtwP+yuDVm3r6eohe8E
+         dqkbKQsIEMjPztso3ZJkyVkbj+DiziJgeSIuIsdl+NgGY9q1pO3lDAXie49HSUyeTsFI
+         AzwTb9PkPwYjuXjOR0Avf6+ghF1oIT8nw30NCglNNqrnMrcpFynWEfgjdhyqknYj+g6a
+         sk9WMpIJjFynPjQJXxOpOjghXspDDugfY0Rswl+OjQYfUyyUsQ4WK4jAYQxdyigVSho/
+         6MwdnL6gSWIQDfDp7iTSTWC1/LjqGHpr7bTHu1fkp1KCi5Fm1kxRtcILaKk6oeHi7DwL
+         /Opw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVu6/RUhbrbNaM9fPD4DeVihIqf4Ys9pybYhKS+2CJlHX2+MwtRvnf7fBw3FDWgnZySBNZs0G5mPw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyhSIVlEiLISjg+c3QX9TXizAZcnQGC91OSe8R3PlkMcHWPaCCv
+	4ugetHHMwONSQoU5bLsI8+Z/Saomw7DyodgyMYkUlcKYquZE/VuTQc4E
+X-Gm-Gg: ASbGnct7WuyEVVv8FQT0/jmEfpJ8gmiyH4e8iYHxsTJFlys320eJGKa9dURUlbyO6MJ
+	nV7S/0NY2NaRc/QHpvRtvgbXoXoWvFLiBwusy77sRP5iNArNc+0pvUyXhjPv2Ib8tX4kLZuJS25
+	/b2ATKdPjLUfeOpq6tj2gN87gjpD4SD5gPoakFT9N/zX0Sv6duvSKypgeP0CJf7ZYath+224ro4
+	9hk/ItG+Gwm7fZX8uUvPaVd/icN1zbPAEfYViAA54IZzXVUpCNHFgsb18kuwzauMH7/h2brynZw
+	Psauqa7+YeiiyePWtJEoiACg0eMDC9bzhHDxSPp2X9H0et1RfI9LyImpobirD/m+UuvXlwRCDWq
+	u/MeNC1jHhuZgqui6n/3tX76HTE+XvMO7rhs=
+X-Google-Smtp-Source: AGHT+IGltOAbo12hajVKgocbpBnHZMZeOL2ERzr9t+RXZ6PnxdAexobpssI/N7xOALCEb6/v2s939A==
+X-Received: by 2002:a05:6a21:7116:b0:2f9:4cde:34fb with SMTP id adf61e73a8af0-2f94cde4d16mr2209198637.1.1758897063477;
+        Fri, 26 Sep 2025 07:31:03 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7810238cafasm4613070b3a.4.2025.09.26.07.31.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Sep 2025 07:31:02 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Fri, 26 Sep 2025 07:31:02 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Binbin Zhou <zhoubinbin@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: Re: [PATCH V2] LoongArch: Align ACPI structures if ARCH_STRICT_ALIGN
+ enabled
+Message-ID: <899f2dec-e8b9-44f4-ab8d-001e160a2aed@roeck-us.net>
+References: <20250910091033.725716-1-chenhuacai@loongson.cn>
+ <20250920234836.GA3857420@ax162>
+ <CAAhV-H5S8VKKBkNyrWfeuCVv8jS6tNED6YNeAD=i-+wkaoRSDQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/36] sparc64: vdso: Switch to the generic vDSO
- library
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnd Bergmann
- <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
- Nick Alcock <nick.alcock@oracle.com>, John Stultz <jstultz@google.com>,
- Stephen Boyd <sboyd@kernel.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Russell King
- <linux@armlinux.org.uk>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
- Shannon Nelson <sln@onemain.com>
-Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
- Arnd Bergmann <arnd@kernel.org>
-References: <20250917-vdso-sparc64-generic-2-v3-0-3679b1bc8ee8@linutronix.de>
-Content-Language: en-US
-From: Andreas Larsson <andreas@gaisler.com>
-In-Reply-To: <20250917-vdso-sparc64-generic-2-v3-0-3679b1bc8ee8@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H5S8VKKBkNyrWfeuCVv8jS6tNED6YNeAD=i-+wkaoRSDQ@mail.gmail.com>
 
-On 2025-09-17 16:00, Thomas Weißschuh wrote:
-> The generic vDSO provides a lot common functionality shared between
-> different architectures. SPARC is the last architecture not using it,
-> preventing some necessary code cleanup.
+On Sun, Sep 21, 2025 at 09:07:38AM +0800, Huacai Chen wrote:
+> Hi, Nathan,
 > 
-> Make use of the generic infrastructure.
+> On Sun, Sep 21, 2025 at 7:48 AM Nathan Chancellor <nathan@kernel.org> wrote:
+> >
+> > Hi Huacai,
+> >
+> > On Wed, Sep 10, 2025 at 05:10:33PM +0800, Huacai Chen wrote:
+> > > ARCH_STRICT_ALIGN is used for hardware without UAL, now it only control
+> > > the -mstrict-align flag. However, ACPI structures are packed by default
+> > > so will cause unaligned accesses.
+> > >
+> > > To avoid this, define ACPI_MISALIGNMENT_NOT_SUPPORTED in asm/acenv.h to
+> > > align ACPI structures if ARCH_STRICT_ALIGN enabled.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Reported-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > Suggested-by: Xi Ruoyao <xry111@xry111.site>
+> > > Suggested-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > ---
+> > > V2: Modify asm/acenv.h instead of Makefile.
+> > >
+> > >  arch/loongarch/include/asm/acenv.h | 7 +++----
+> > >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/arch/loongarch/include/asm/acenv.h b/arch/loongarch/include/asm/acenv.h
+> > > index 52f298f7293b..483c955f2ae5 100644
+> > > --- a/arch/loongarch/include/asm/acenv.h
+> > > +++ b/arch/loongarch/include/asm/acenv.h
+> > > @@ -10,9 +10,8 @@
+> > >  #ifndef _ASM_LOONGARCH_ACENV_H
+> > >  #define _ASM_LOONGARCH_ACENV_H
+> > >
+> > > -/*
+> > > - * This header is required by ACPI core, but we have nothing to fill in
+> > > - * right now. Will be updated later when needed.
+> > > - */
+> > > +#ifdef CONFIG_ARCH_STRICT_ALIGN
+> > > +#define ACPI_MISALIGNMENT_NOT_SUPPORTED
+> > > +#endif /* CONFIG_ARCH_STRICT_ALIGN */
+> > >
+> > >  #endif /* _ASM_LOONGARCH_ACENV_H */
+> >
+> > I am seeing several ACPI errors in my QEMU testing after this change in
+> > Linus's tree as commit a9d13433fe17 ("LoongArch: Align ACPI structures
+> > if ARCH_STRICT_ALIGN enabled").
+> >
+> >   $ make -skj"$(nproc)" ARCH=loongarch CROSS_COMPILE=loongarch64-linux- clean defconfig vmlinuz.efi
+> >   kernel/sched/fair.o: warning: objtool: sched_update_scaling() falls through to next function init_entity_runnable_average()
+> >   mm/mempolicy.o: warning: objtool: alloc_pages_bulk_mempolicy_noprof+0x380: stack state mismatch: reg1[30]=-1+0 reg2[30]=-2-80
+> >   lib/crypto/mpi/mpih-div.o: warning: objtool: mpihelp_divrem+0x2d0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-16
+> >   In file included from include/acpi/acpi.h:24,
+> >                    from drivers/acpi/acpica/tbprint.c:10:
+> >   drivers/acpi/acpica/tbprint.c: In function 'acpi_tb_print_table_header':
+> >   include/acpi/actypes.h:530:43: warning: 'strncmp' argument 1 declared attribute 'nonstring' is smaller than the specified bound 8 [-Wstringop-overread]
+> >     530 | #define ACPI_VALIDATE_RSDP_SIG(a)       (!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, (sizeof(a) < 8) ? ACPI_NAMESEG_SIZE : 8))
+> >         |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >   drivers/acpi/acpica/tbprint.c:105:20: note: in expansion of macro 'ACPI_VALIDATE_RSDP_SIG'
+> >     105 |         } else if (ACPI_VALIDATE_RSDP_SIG(ACPI_CAST_PTR(struct acpi_table_rsdp,
+> >         |                    ^~~~~~~~~~~~~~~~~~~~~~
+> >   In file included from include/acpi/acpi.h:26:
+> >   include/acpi/actbl.h:69:14: note: argument 'signature' declared here
+> >      69 |         char signature[ACPI_NAMESEG_SIZE] ACPI_NONSTRING;       /* ASCII table signature */
+> >         |              ^~~~~~~~~
+> >From this link this seems a comiler issue (at least not an
+> arch-specific kernel issue):
+> https://github.com/AOSC-Tracking/linux/commit/1e9ee413357ef58dd902f6ec55013d2a2f2043eb
 > 
-> Follow-up to and replacement for Arnd's SPARC vDSO removal patches:
-> https://lore.kernel.org/lkml/20250707144726.4008707-1-arnd@kernel.org/
-> 
-> Tested on a Niagara T4 and QEMU.
-> 
-> This has a semantic conflict with my series "vdso: Reject absolute
-> relocations during build". The last patch of this series expects all users
-> of the generic vDSO library to use the vdsocheck tool.
-> This is not the case (yet) for SPARC64. I do have the patches for the
-> integration, the specifics will depend on which series is applied first.
-> 
-> Based on tip/timers/vdso.
-> 
-> [0] https://lore.kernel.org/lkml/20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de/
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> ---
-> Changes in v3:
-> - Allocate vDSO data pages dynamically (and lots of preparations for that)
-> - Drop clock_getres()
-> - Fix 32bit clock_gettime() syscall fallback
-> - Link to v2: https://lore.kernel.org/r/20250815-vdso-sparc64-generic-2-v2-0-b5ff80672347@linutronix.de
-> 
-> Changes in v2:
-> - Rebase on v6.17-rc1
-> - Drop RFC state
-> - Fix typo in commit message
-> - Drop duplicate 'select GENERIC_TIME_VSYSCALL'
-> - Merge "sparc64: time: Remove architecture-specific clocksource data" into the
->   main conversion patch. It violated the check in __clocksource_register_scale()
-> - Link to v1: https://lore.kernel.org/r/20250724-vdso-sparc64-generic-2-v1-0-e376a3bd24d1@linutronix.de
-> 
-> ---
-> Arnd Bergmann (1):
->       clocksource: remove ARCH_CLOCKSOURCE_DATA
-> 
-> Thomas Weißschuh (35):
->       selftests: vDSO: vdso_test_correctness: Handle different tv_usec types
->       arm64: vDSO: getrandom: Explicitly include asm/alternative.h
->       arm64: vDSO: gettimeofday: Explicitly include vdso/clocksource.h
->       arm64: vDSO: compat_gettimeofday: Add explicit includes
->       ARM: vdso: gettimeofday: Add explicit includes
->       powerpc/vdso/gettimeofday: Explicitly include vdso/time32.h
->       powerpc/vdso: Explicitly include asm/cputable.h and asm/feature-fixups.h
->       LoongArch: vDSO: Explicitly include asm/vdso/vdso.h
->       MIPS: vdso: Add include guard to asm/vdso/vdso.h
->       MIPS: vdso: Explicitly include asm/vdso/vdso.h
->       random: vDSO: Add explicit includes
->       vdso/gettimeofday: Add explicit includes
->       vdso/helpers: Explicitly include vdso/processor.h
->       vdso/datapage: Remove inclusion of gettimeofday.h
->       vdso/datapage: Trim down unnecessary includes
->       random: vDSO: trim vDSO includes
->       random: vDSO: remove ifdeffery
->       random: vDSO: split out datapage update into helper functions
->       random: vDSO: only access vDSO datapage after random_init()
->       s390/time: Set up vDSO datapage later
->       vdso/datastore: Reduce scope of some variables in vvar_fault()
->       vdso/datastore: Drop inclusion of linux/mmap_lock.h
->       vdso/datastore: Map pages through struct page
->       vdso/datastore: Allocate data pages dynamically
->       sparc64: vdso: Link with -z noexecstack
->       sparc64: vdso: Remove obsolete "fake section table" reservation
->       sparc64: vdso: Replace code patching with runtime conditional
->       sparc64: vdso: Move hardware counter read into header
->       sparc64: vdso: Move syscall fallbacks into header
->       sparc64: vdso: Introduce vdso/processor.h
->       sparc64: vdso: Switch to the generic vDSO library
->       sparc64: vdso2c: Drop sym_vvar_start handling
->       sparc64: vdso2c: Remove symbol handling
->       sparc64: vdso: Implement clock_gettime64()
->       clocksource: drop include of asm/clocksource.h from linux/clocksource.h
-> 
->  arch/arm/include/asm/vdso/gettimeofday.h           |   2 +
->  arch/arm64/include/asm/vdso/compat_gettimeofday.h  |   3 +
->  arch/arm64/include/asm/vdso/gettimeofday.h         |   2 +
->  arch/arm64/kernel/vdso/vgetrandom.c                |   2 +
->  arch/loongarch/kernel/process.c                    |   1 +
->  arch/loongarch/kernel/vdso.c                       |   1 +
->  arch/mips/include/asm/vdso/vdso.h                  |   5 +
->  arch/mips/kernel/vdso.c                            |   1 +
->  arch/powerpc/include/asm/vdso/gettimeofday.h       |   1 +
->  arch/powerpc/include/asm/vdso/processor.h          |   3 +
->  arch/s390/kernel/time.c                            |   4 +-
->  arch/sparc/Kconfig                                 |   3 +-
->  arch/sparc/include/asm/clocksource.h               |   9 -
->  arch/sparc/include/asm/processor.h                 |   3 +
->  arch/sparc/include/asm/processor_32.h              |   2 -
->  arch/sparc/include/asm/processor_64.h              |  25 --
->  arch/sparc/include/asm/vdso.h                      |   2 -
->  arch/sparc/include/asm/vdso/clocksource.h          |  10 +
->  arch/sparc/include/asm/vdso/gettimeofday.h         | 184 ++++++++++
->  arch/sparc/include/asm/vdso/processor.h            |  41 +++
->  arch/sparc/include/asm/vdso/vsyscall.h             |  10 +
->  arch/sparc/include/asm/vvar.h                      |  75 ----
->  arch/sparc/kernel/Makefile                         |   1 -
->  arch/sparc/kernel/time_64.c                        |   6 +-
->  arch/sparc/kernel/vdso.c                           |  69 ----
->  arch/sparc/vdso/Makefile                           |   8 +-
->  arch/sparc/vdso/vclock_gettime.c                   | 380 ++-------------------
->  arch/sparc/vdso/vdso-layout.lds.S                  |  26 +-
->  arch/sparc/vdso/vdso.lds.S                         |   2 -
->  arch/sparc/vdso/vdso2c.c                           |  24 --
->  arch/sparc/vdso/vdso2c.h                           |  45 +--
->  arch/sparc/vdso/vdso32/vdso32.lds.S                |   4 +-
->  arch/sparc/vdso/vma.c                              | 274 +--------------
->  drivers/char/random.c                              |  75 ++--
->  include/linux/clocksource.h                        |   8 -
->  include/linux/vdso_datastore.h                     |   6 +
->  include/vdso/datapage.h                            |  23 +-
->  include/vdso/helpers.h                             |   1 +
->  init/main.c                                        |   2 +
->  kernel/time/Kconfig                                |   4 -
->  lib/vdso/datastore.c                               |  73 ++--
->  lib/vdso/getrandom.c                               |   3 +
->  lib/vdso/gettimeofday.c                            |  17 +
->  .../testing/selftests/vDSO/vdso_test_correctness.c |   8 +-
->  44 files changed, 451 insertions(+), 997 deletions(-)
-> ---
-> base-commit: 5f84f6004e298bd41c9e4ed45c18447954b1dce6
-> change-id: 20250722-vdso-sparc64-generic-2-25f2e058e92c
 
-Tested-by: Andreas Larsson <andreas@gaisler.com>
-Reviewed-by: Andreas Larsson <andreas@gaisler.com>
-Acked-by: Andreas Larsson <andreas@gaisler.com> # arch/sparc
+I see that the patch made it into the upstream kernel, now breaking both
+mainline and 6.16.y test builds of loongarch64:allmodconfig with gcc.
 
-Thanks,
-Andreas
+Since this is apparently intentional, I'll stop build testing
+loongarch64:allmodconfig. So far it looks like my qemu tests
+are not affected, so I'll continue testing those for the time being.
 
+Guenter
