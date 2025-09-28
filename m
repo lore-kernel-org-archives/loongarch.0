@@ -1,99 +1,181 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C13F1F5EA
-	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 12:52:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771C729B233
+	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 13:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759063972; cv=none; b=fyiDavAmi6LKc+pBu0XDMOMS/2yRcSBm5nk4PP95IRrzF780/MLkEg21iVDgFX5CGpyS4Wa8UkyMzfdg5Ma1rKgacqSEszE2JM8ilaWQ+oRhJREQr1jvyaru0x1xniUIsfpWG4XPWw/2/f5DtjgY5c1yRmbQ0bzSW2Dcll6y8Ig=
+	t=1759066927; cv=none; b=qRsxxhXNpEYNELuQEPZRuYycXJki9L2AF9x8FHrQy1E8wKzj6tCDGHZzBlx63wjX8cF2eRGdw4lsdzPtHeeCoTgLL6oq5RCCQ8UCIn4PckRomFczhG8v6n9N8de0RqP7l1To3JB2JJ2wL463G1tzAoEeZwnGqXALO5/Wa+MlHns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759063972; c=relaxed/simple;
-	bh=o0dRgkYPt8FVyYHCzavSccIzNEqH+Of0fl8Q4I4bCr4=;
+	s=arc-20240116; t=1759066927; c=relaxed/simple;
+	bh=b7lQZMpm3jaFTG6dtKVKcEubjwdkNUjuclDki/TIr1Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BXW3hITyVXGpnX9G8+5JEbrcGtTL9ZjRdWrfrMMh26974tqgAa1ezgJ78N8zW6pU1gkxR/ZHyA1KUaIYUsEu3hQiz2hPwa/bBtzMckjNAIEf3+ad4rNuyfYZFpuajuB+Ax8E7k4S81qeOQaidPnNzenayY7yR/O94JryCCWplBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YO2Lq1Bm; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Ch7CDbgMOoiPbtTFqEiYyr38pxE9ZB4Z/3h1ITuZnYQ66LnPCijZBZm5oQbNxavhakLi7b9YE+tKyGkh3Um7tghg1WPuflA/DwN7b2y8NEj366cXhAWCf48ikc12zmXYqI/elsMe53BknmLQ6Pj1CYCDpIvitKCNtca7pQctadQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6lhNJFd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YO2Lq1Bm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA49C116B1
-	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 12:52:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6lhNJFd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD97C16AAE
+	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 13:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759063972;
-	bh=o0dRgkYPt8FVyYHCzavSccIzNEqH+Of0fl8Q4I4bCr4=;
+	s=k20201202; t=1759066927;
+	bh=b7lQZMpm3jaFTG6dtKVKcEubjwdkNUjuclDki/TIr1Y=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YO2Lq1Bmn4D2kQmQ/ZhMV/e7s3RykwqoKHSKFl29euneODYZgOdI7dFwScby6+t6G
-	 z2ZWxzh2+igf/+sP+EcqjKsXMsouo0KFUObzNalL957WVlHXNqQyRgeukGfpVt6CCm
-	 nK4oviBoHN/88yfofREoJnMGozBcWOuAwlDY6jio3ZfSOsvUINYFIVPEchVwHz9PjD
-	 vLBLDXKQwPsBCbb88CFkFG0jRV583lA2LIGnvChIbkiHn/2eYRiF72N0i2iDCbN3Nf
-	 LgR47E/oIAeDXMnwKH8EitORD0K3XeSwHWiBVwSjlLGZbJ32+UydnP0PnPJqZudQni
-	 SwO8yntjT/18A==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-afcb7a16441so601449366b.2
-        for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 05:52:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX05pc1hvcSoVzpV/HM8A+7ROc5ZQuJCxdorJ/CAclp2jqKfL7PdzUFH4CSL0Q5rdPDXk9lZx6g74Y=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwQcqwDeBytlsSHko6TSfcLQInh25yvtNg5cpzCaJHMOP9zcqM7
-	PHGQC6+beWADTBXHxtIVDtq6N2ygSYz5zOpdADlpT8eD1d+gcMKDCvQUDa2pCHZR+inEM4OTU8o
-	7OU1kc6dCWOemELlg1tueg1gaEe4D1BE=
-X-Google-Smtp-Source: AGHT+IE0e5GdGmwcL9fJjsh+uc1S16MNhJRviy7PI0hwaXxlefeqRPOvEi//6qTK5+/VTlWMcJ2dONh2yfV3gQbs4gs=
-X-Received: by 2002:a17:907:2d26:b0:b30:880:8d4f with SMTP id
- a640c23a62f3a-b34b720a94bmr1375731566b.2.1759063970754; Sun, 28 Sep 2025
- 05:52:50 -0700 (PDT)
+	b=m6lhNJFdEkreSucB/dxMB91UrwJt6hhk8u7yLb3moYbEyO3YNCQDQpZeyjmsvdCA1
+	 Toga5ITJofDzKTAiQhErydIP7701BjSfwg3kp6sXPKdL0m4FKAIWlEb4k0K6HA6oQj
+	 0+VWp3z+6bod1kBnBzJ5bkEyJusUvXNqljcTimM988HiBmJi6VCN8FIGarZwKCEY17
+	 2fMnLseHBVhWU0OvsUSNdzw3UGBQS59MU2Bb2Gyubs4sx/raxgTR21vYeCg9Ily9x/
+	 zuP0FbPqRv/UjoEOb3hZUnkiKVF1LmvGr4AOcMAziRkQGBrGxpFbGkowGad8zuT8ui
+	 zKfCcC33++BgA==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-57b8fc6097fso4823497e87.1
+        for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 06:42:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVGhYD2+l1fEeAazGE/HxrSx0+VWxrn7b0oe1kFEreMJL3LiHCBoXd2gykGf41s+LLEGaf1jSHKuEs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwMcCD/WXqroitfO8AG6AzIDuj7lilorxJaBct88phzUsTi/FOI
+	yrRAEA88AGTAvTWBdae0MaTLzht1ejTDOxVDREsH2YmxqMvXwGmiWru+Oez+r2l80RE3Og14ZKO
+	63dRPnyU/lurw9Q+kupHAkkWjoiZsXiM=
+X-Google-Smtp-Source: AGHT+IENjnF+wQFCTm2WX/2LUMrC3xClXeEULM4n0/VRgHOOZVaGDYKViPHE16Jf9kIytcqTJZySM24jjWSQ6nTxM8g=
+X-Received: by 2002:a05:6512:12d1:b0:57b:8a82:1dd0 with SMTP id
+ 2adb3069b0e04-582d0c28621mr4021018e87.15.1759066925407; Sun, 28 Sep 2025
+ 06:42:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250923061722.24457-1-yangtiezhu@loongson.cn> <53b3b0e4c12f048d17e95111ac97b59fa35dea23.camel@xry111.site>
-In-Reply-To: <53b3b0e4c12f048d17e95111ac97b59fa35dea23.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 28 Sep 2025 20:52:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Q9g3u2txE5qf7r9tb8R+-g+8bYOPQMHHe=bT+Xj_Zug@mail.gmail.com>
-X-Gm-Features: AS18NWD4TDESgj-bY93W3Gb8tMnvkLiBdYaDOEsQrCu3p4ikA1M5VWoltL5_4f8
-Message-ID: <CAAhV-H5Q9g3u2txE5qf7r9tb8R+-g+8bYOPQMHHe=bT+Xj_Zug@mail.gmail.com>
-Subject: Re: [PATCH v1] LoongArch: Add -fno-isolate-erroneous-paths-dereference
- in Makefile
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, WANG Rui <wangrui@loongson.cn>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250928085506.4471-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20250928085506.4471-1-yangtiezhu@loongson.cn>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 28 Sep 2025 15:41:54 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
+X-Gm-Features: AS18NWAAyvtoI8B9uL7arznbuV6ccfy2mwG4BGuL--lHKmdvv097Yi3SZbekg3Q
+Message-ID: <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 23, 2025 at 8:39=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
+On Sun, 28 Sept 2025 at 10:55, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >
-> On Tue, 2025-09-23 at 14:17 +0800, Tiezhu Yang wrote:
-> > Currently, when compiling with GCC, there is no "break 0x7" instruction
-> > for zero division due to using the option -mno-check-zero-division, but
-> > the compiler still generates "break 0x0" instruction for zero division.
-> >
-> > Here is a simple example:
-> >
-> >   $ cat test.c
-> >   int div(int a)
-> >   {
-> >         return a / 0;
-> >   }
-> >   $ gcc -O2 -S test.c -o test.s
-> >
-> > GCC generates "break 0" On LoongArch and "ud2" on x86, objtool decodes
-> > "ud2" as INSN_BUG for x86, so decode "break 0" as INSN_BUG can fix the
-> > objtool warnings for LoongArch, but this is not the intention.
-> >
-> > When decoding "break 0" as INSN_TRAP in the previous commit, the aim is
-> > to handle "break 0" as a trap. The generated "break 0" for zero divisio=
-n
-> > by GCC is not proper, it should generate a break instruction with prope=
-r
-> > bug type, so add the GCC option -fno-isolate-erroneous-paths-dereferenc=
-e
-> > to avoid generating the unexpected "break 0" instruction for now.
+> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
+> the following objtool warning on LoongArch:
 >
-> I just proposed GCC to use the same "documented undefined instruction"
-> as Clang:
-> https://gcc.gnu.org/pipermail/gcc-patches/2025-September/695981.html.
-I have discussed it with Tiezhu offline, and we prefer "break 0x1".
+>   vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
+>   falls through to next function __efistub_exit_boot_func()
+>
+> This is because efi_boot_kernel() doesn't end with a return instruction
+> or an unconditional jump, then objtool has determined that the function
+> can fall through into the next function.
+>
+> At the beginning, try to do something to make efi_boot_kernel() ends with
+> an unconditional jump instruction, but this modification seems not proper.
+>
+> Since the efistub functions are useless for stack unwinder, they can be
+> ignored by objtool. After many discussions, no need to link libstub to
+> the vmlinux.o, only link libstub to the final vmlinux.
+>
 
-Huacai
+Please try keeping these changes confined to arch/loongarch. This
+problem does not exist on other architectures, and changing the way
+vmlinux is constructed might create other issues down the road.
 
+> Do the similar things for arm64 and riscv, otherwise there may be objtool
+> warnings when arm64 and riscv support objtool, this is to make consistent
+> with the archs that use libstub.
 >
+> Link: https://lore.kernel.org/lkml/pq4h7jgndnt6p45lj4kgubxjd5gidfetugcuf5rcxzxxanzetd@6rrlpjnjsmuy/
+> Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  Makefile                | 1 +
+>  arch/arm64/Makefile     | 5 ++++-
+>  arch/loongarch/Makefile | 5 ++++-
+>  arch/riscv/Makefile     | 5 ++++-
+
+>  scripts/link-vmlinux.sh | 5 ++---
+>  5 files changed, 15 insertions(+), 6 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 10355ecf32cb..8ba2e28ef3d1 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1201,6 +1201,7 @@ KBUILD_VMLINUX_OBJS := built-in.a $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)
+>  KBUILD_VMLINUX_LIBS := $(filter-out %/, $(libs-y))
+>
+>  export KBUILD_VMLINUX_LIBS
+> +export KBUILD_VMLINUX_LIBS_PRELINK
+>  export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
+>
+>  ifdef CONFIG_TRIM_UNUSED_KSYMS
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index 73a10f65ce8b..038f37ef2143 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -156,7 +156,10 @@ KBUILD_CPPFLAGS += -DKASAN_SHADOW_SCALE_SHIFT=$(KASAN_SHADOW_SCALE_SHIFT)
+>  KBUILD_AFLAGS += -DKASAN_SHADOW_SCALE_SHIFT=$(KASAN_SHADOW_SCALE_SHIFT)
+>
+>  libs-y         := arch/arm64/lib/ $(libs-y)
+> -libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> +
+> +ifdef CONFIG_EFI_STUB
+> +KBUILD_VMLINUX_LIBS_PRELINK += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> +endif
+>
+>  # Default target when executing plain make
+>  boot           := arch/arm64/boot
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index ae419e32f22e..4eb904c20718 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -169,7 +169,10 @@ CHECKFLAGS += $(shell $(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) -dM -E -x c /dev
+>  endif
+>
+>  libs-y += arch/loongarch/lib/
+> -libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> +
+> +ifdef CONFIG_EFI_STUB
+> +KBUILD_VMLINUX_LIBS_PRELINK += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> +endif
+>
+>  drivers-y              += arch/loongarch/crypto/
+>
+> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> index df57654a615e..cfd82b2c1bbf 100644
+> --- a/arch/riscv/Makefile
+> +++ b/arch/riscv/Makefile
+> @@ -173,7 +173,10 @@ boot-image-$(CONFIG_XIP_KERNEL)            := xipImage
+>  KBUILD_IMAGE                           := $(boot)/$(boot-image-y)
+>
+>  libs-y += arch/riscv/lib/
+> -libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> +
+> +ifdef CONFIG_EFI_STUB
+> +KBUILD_VMLINUX_LIBS_PRELINK += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> +endif
+>
+>  ifeq ($(KBUILD_EXTMOD),)
+>  ifeq ($(CONFIG_MMU),y)
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index 51367c2bfc21..b3cbff31d8a9 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -61,12 +61,11 @@ vmlinux_link()
+>         shift
+>
+>         if is_enabled CONFIG_LTO_CLANG || is_enabled CONFIG_X86_KERNEL_IBT; then
+> -               # Use vmlinux.o instead of performing the slow LTO link again.
+>                 objs=vmlinux.o
+> -               libs=
+> +               libs="${KBUILD_VMLINUX_LIBS_PRELINK}"
+>         else
+>                 objs=vmlinux.a
+> -               libs="${KBUILD_VMLINUX_LIBS}"
+> +               libs="${KBUILD_VMLINUX_LIBS} ${KBUILD_VMLINUX_LIBS_PRELINK}"
+>         fi
+>
+>         if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
 > --
-> Xi Ruoyao <xry111@xry111.site>
+> 2.42.0
+>
