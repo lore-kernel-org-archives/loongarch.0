@@ -1,35 +1,35 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE521DE3CB
-	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 17:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9749B254855
+	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 17:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759081688; cv=none; b=O08yB4dcjuhrFtHQ6RdwEPYw5ff7p2io38ZxMkvNlfZOPhglYTNqjWG8BM3P9hAuCai8sZGloz8Gn/EPUBbSU2Zu2NJl1jAVrqe8gH+3dYqZOF1Swy2qhK2X2hRzslQG2QuAS39zwHicU4E3wegzjjBPhgsg2HQJps/iyfUJ+E8=
+	t=1759082307; cv=none; b=f6Huj9BdN9R4agSIMkATARH4SYNB293eBXyq1ihck1Eg1xdART68B0i8+hsmSz0v73I07n3tDSPIvqeErt+M5h2ha6CbovRpgNCZmYrv1NMmbFmrWAfCxMHWxBRkK7uLwRfOdDPCPrdm/sljHGyvWhEfx0/kQrtOs2WwCJgqW9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759081688; c=relaxed/simple;
-	bh=4qNTlbFEjuH9bnCDI/3xbsjA3TN4w2pHJC6MjFBFSXo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=URAfknM/bgcQbK87kHcNhUA6o4EtMDZMNjTUMsBfUBEtIqBoNaim6VPtDOtsjC5yE6kehsRGj67ocwZwuwn/k15maVzJrFjTxzvsrNipOkSBCbwUhOP6Jl0V5llYvEgxEyTEBdWiFXJtbzIfqlYftmRhzP18R69AyClWb67xAQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=SORaCu2E; arc=none smtp.client-ip=54.207.19.206
+	s=arc-20240116; t=1759082307; c=relaxed/simple;
+	bh=zoth4Jd8+ebGp96SODsyzU/qIkA5bSTmUolQ8U3RIFc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KK2KOFRqPYaMcMtNG8XXIhBkRoZnXdxKpfzFSozkaXEpolKwZq/rTvf6XYvOv9szWzEiP5Xn753Iniwl7PTo/T7zeS2vq88WbOANFpZvSawJrcc3GadLGsgxLJrFi70Tkf4d9HVda8YtCWUr2V3nLaM2NO58fxVNmh70UzME8ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=koZQlMYs; arc=none smtp.client-ip=18.132.163.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="SORaCu2E"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="koZQlMYs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1759081666;
-	bh=0od+6JBZeJ5IviLF7qLj8sUhTWwVv7Ij6LAzPVrXKRA=;
+	s=onoh2408; t=1759082279;
+	bh=WgGAPDRLizaQ2tgi+7+CIMNXt69uicKpNncJAxaf35I=;
 	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=SORaCu2E9wyMThwRMBvXkvQ6KlU4LBLXyGv23PeD8z26hrvccgqdw0HFEC0Cs9Bto
-	 0MT7cSVrn98JQi/z/RKeIHOLBLY49mi0YpM0sXYO35vj9gU1SPPEIXqikt/ua63jys
-	 vsvlrWZ3w1AqEsk1WfglXfVWk+YGYwUxToJScerk=
-X-QQ-mid: zesmtpgz9t1759081631t021883b7
-X-QQ-Originating-IP: ifKfQK1/7p2OuYkam46LsyMMByw8Bz++5YdlIWb80RA=
+	b=koZQlMYsA1Da5x5bEFJHXbtZSx+3iOhg+HT/XqZjAtPZXQoannzgARsjN+QiRZ0MP
+	 iHqCkS73j963JszL0+TePMvaL2zsQX9vaidUo+y/3m1I2VY4HBHG4ji4E/w5iHIaet
+	 nusKc01igJZl5ha0QnpX4vZQ52yryG0B+Yd1sKR0=
+X-QQ-mid: esmtpgz13t1759082244tc33ca4f5
+X-QQ-Originating-IP: 1qcKc0aPTgmdkS23CtGBizQEl313ki0DE4YEetKRsV0=
 Received: from localhost.localdomain ( [113.57.152.160])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 29 Sep 2025 01:47:09 +0800 (CST)
+	id ; Mon, 29 Sep 2025 01:57:22 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10726783025379362395
+X-BIZMAIL-ID: 17229065183674050420
 EX-QQ-RecipientCnt: 7
 From: Wentao Guan <guanwentao@uniontech.com>
 To: chenhuacai@kernel.org
@@ -39,9 +39,9 @@ Cc: kernel@xen0n.name,
 	zhanjun@uniontech.com,
 	niecheng1@uniontech.com,
 	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH v2] LoongArch: mm: try VMA lock-based page fault handling first
-Date: Mon, 29 Sep 2025 01:43:41 +0800
-Message-Id: <20250928174341.307295-1-guanwentao@uniontech.com>
+Subject: [PATCH v3] LoongArch: mm: try VMA lock-based page fault handling first
+Date: Mon, 29 Sep 2025 01:53:55 +0800
+Message-Id: <20250928175355.308261-1-guanwentao@uniontech.com>
 X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -51,24 +51,25 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: N7fjnhHz1C62yd+e3T1r55oIq1HB/wiSpZZFoE4qis+Hb08RQPlo67cz
-	sxrx0FsU9o98Vzx0MODUYgnIhFrp1ckO36XyFNjH2sbfHSWtQXR28Maq7pNfS0ir7iWkxmR
-	xW8md5Bjo5rizcY8if+dUDlWRRviIpcrSiwgU48++bLYNsFY57KCTj6aB/htJDev2ArRdSy
-	tK5F0GQTXPgzNqyjFhvgIZEtvXZtpt2O8kBVQmKkOQnTx5+h9yVmNWvnhxEESMDYrntO/Ur
-	6XlyNFgu5pJF9YQQxRcIyRix7mJzMBo48PD3uoU0f3MCaTIZB21hyvqyXPmcQpgb2RXOl+z
-	0QlJKp7VNDehnqm20zMDzS1Tk/2vULWQhnUWRjBrQyiPCoUDvXgUyEyd7U5tctrzBPMnixg
-	GJ6D+Dv/jBirfXkU/gPrc719wJnk9NbDm2erbm33ovklH7R11AneayeVt7q9oPTeNLt34sz
-	6KNPU0H0TM05+wJ38NesbENzwG30/nVdqG339SBIz7M8DOquBUaPErItJYjN1ZQyGgEBIIv
-	KXcbusjD9ikVMUN7gw7+NQlQYI//drjM7aE6KaS8BVyzZ1edfqU39z4Yfr+H0sleKiXvVzE
-	2HQfaaR7yemo9/Q+gloT5Qj9DNO1+rAibQ5QhxFSZGFO0Tl+F2500Mw3iMsTvL2/gBLmQBd
-	UHa/Hvxg8D6T7dDBP4eDDtny4GM04cQl+E2VkMw4aqBrN7rrNvdqY2jIgVkJ9jBOi+FQkWy
-	O5AR+zPpqTjHV8Gbvw/c48nLJJQ5NIm4hFA1T1jWtJC4en2NVE3l4Cs3Mfu/3NBAksQtyci
-	pCtvn4t80azA6mF4N6UFdMJzfqzeWWblRx8letPpz9BsGkTEaqp/izTrhh64x2o/2cOtoLc
-	+GN1uQmlZ21Hnvu/Lzp0j7qGfO1yHhmOeBFMl3Fms2ItP+U2G0SXMdcKtD6bfcQXv5efC+o
-	7r6Yi1bC3pbpWBDYaOjP9i2YoH2l3RCtCCkb9k0ABN8C9MdS9Fi1TmqpGU4LFZ72L9jPa26
-	gpCQVuAy9rCsUlvF83rfff2VOTq/eua54QcltsUKG28JuQEjSs
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
+X-QQ-XMAILINFO: MfU+/gEHf8gNdeSnhuPFY2CRNjcSuojhbnQ7+liofFH7/h2QZ4BKA45P
+	w+kXkj4YgqR79LfF/lPL9XlaJnsuiR/VWHZVYN58nrdu4loEDWseYsdXsU9uotYezCpjHu1
+	C38YezPr+fCKcvwbbAcE5NivdQARHMPU6kQXK9BMfma6oOPP7JLff4rwwky6WHR52PYDz0j
+	D7FLkBeY6LtpdMylueFEnRxC/3PoNjjJHwpGetSNL31ZQuTGPQD6JKuAFmd2CabCMgMaCij
+	f7Tvb+bDhJUV/mrjURvN+sGu3bX296jxzfAVRoFBo3k/0F03lLDYOjE08jkJb6L0ELjSLb3
+	3kqi75So4Vl1k7XMZipLErzqJ5MNuiZ6v8/NNBCnVzmH0SGIFM+iQiN0GnZYaI/zVtBzP/Z
+	7vfQKA/McQ89ZS3ucoCYKtKzxoMmQVhSo4dOu3tplVu0sD3pzbvU5v3EzX/VgI1uTvnE0yp
+	pPOSd9jneu1cICeT7yyDA8en1Eu5NO15oDgF45wQ5NO6JMm3qD1SLVX41Jz+1XeZ2keWvt0
+	0Dk6xVBwsuuFj35fzTp7IYzmrLcdDpbOBhB3FCfER8YE8dZBVE8lKU1awK3fn93amGUrsts
+	dKEG9bKOzDJxYPUhC6G/DOfyLL0cK98M+4AonXc9ZRHOazDovPvAmAmOObCrtegYuANcPPK
+	0uCQYrjA5mXLpO8sufhFDjYwsX5/AT9CP1xkPdfexzZCzzOze4/MpkNSrvAtTe/WEtCpCOt
+	fWRDTq6/Epy3NzRrd5JrwasRPgARl2KI+nPEmuQc5Q+BbT7kI0oUe314FsOtozIJtVzkwEJ
+	zQgW1H6hoIARxLE0EAmhcgcmJVeC+r6DNzNK3rznv2H+M3mBsV996lAopCvHbHQE+bwBcgb
+	FrL85rE6OoDqOQnLssV0dcXIbvy9JzwlLmfCatXiXajjEfFrkEf97ox0kK1CkTPw7wdy2w0
+	oTlNgckSKqWnbfwjGAh2KH9WQI64dao+FxCZqQkLQfnIhj4MuS5+5bEzDxtADXL+eLPztDZ
+	9ujYvTWVRVrI0jX/IHXKCgi2IKr2krGjSFg6pjFRaKzbge2FnfOAJI8u9dgJzp9dmIgGRrw
+	GrljkwbF9B1hwBPFpyqGD9YKLvNaXrnHvnSAlrmUkr3iiaxWhgaNUhUyAUk+fBL2w==
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
 X-QQ-RECHKSPAM: 0
 
 Attempt VMA lock-based page fault handling first, and fall back to the
@@ -92,6 +93,9 @@ reuse the origin way to handle.
 
 Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
 ---
+v3 changelog:
+fix checkpatch format error.
+
 v2 changelog:
 1. fix bug when VM_FAULT_ERROR and miss some count_vm_vma_lock_event
 2. update test result.
@@ -159,7 +163,7 @@ index 0631a6b11281b..1c517954157c0 100644
  	select ARCH_USE_BUILTIN_BSWAP
  	select ARCH_USE_CMPXCHG_LOCKREF
 diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-index deefd9617d008..425b20f3b6b83 100644
+index deefd9617d008..2ba9bba55fbb6 100644
 --- a/arch/loongarch/mm/fault.c
 +++ b/arch/loongarch/mm/fault.c
 @@ -215,6 +215,56 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
@@ -182,13 +186,13 @@ index deefd9617d008..425b20f3b6b83 100644
 +			goto bad_area_nosemaphore;
 +		}
 +	} else {
-+		if (!(vma->vm_flags & VM_EXEC) && address == exception_era(regs)){
++		if (!(vma->vm_flags & VM_EXEC) && address == exception_era(regs)) {
 +			vma_end_read(vma);
 +			si_code = SEGV_ACCERR;
 +			count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
 +			goto bad_area_nosemaphore;
 +		}
-+		if (!(vma->vm_flags & (VM_READ | VM_WRITE)) && address != exception_era(regs)){
++		if (!(vma->vm_flags & (VM_READ | VM_WRITE)) && address != exception_era(regs)) {
 +			vma_end_read(vma);
 +			si_code = SEGV_ACCERR;
 +			count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
