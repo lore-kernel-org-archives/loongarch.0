@@ -1,317 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC2F1A9F9F
-	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 13:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255441E3775
+	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 14:40:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759067912; cv=none; b=aJtITBbS5XOJXV/DNr5nvdymqL2pwPaETo9vR0r7X3W6MExScpqAnofNjNA90G5pX1ElUa0EU8RMriA5sC50AFnTsURdfiG1gwSdkZ49KibkHX/K5PHPe6ipvTNNT8H2dDE/B4UQGX4UUoOe/Ftijz6GL8l2kv3nWKYcz1UW/Pg=
+	t=1759070407; cv=none; b=YJjpVnVLySrbmaIQjY/VQatgEpDaDj4lNgfSAKpdDPANL98583MRo6NdL7GhkDSdydytgj69Hhobac5IDDoLowXxHhMtLccQRmVDAN4sj0EGh77ICRcHPVcNYOcmEXtiR7NDzMH5X+1QkE64VXMJ46RFSbFCftsm9dtRieyE6mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759067912; c=relaxed/simple;
-	bh=RrHTkPkJ9KxjQHnavmnJvqPxNotZNOveUTg85TUYacM=;
+	s=arc-20240116; t=1759070407; c=relaxed/simple;
+	bh=YTfeZ2Az2Z8Gm9DtkMQMER4W7eQCdNdPKRtSzc6jOSQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=owr7Fwn+7YaDbjLFIY9URYr+0oF4Lj+TB2izauHKP1n3XM/FGLmzHQspvdfa7js+xei8zoRt91eNPwcILhzmJkLTwmtN2EEzg6vWZ4XAjQy6d2ERUzaq1+35EbCI/myLrJPUFPUhf0p+VqRW2blt7SNrXFdnJoxMoTkNSAZLXKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKjQnmZj; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=SR53O2NSxGAuI6QmBQt/fOh7nTLDuKEkuZ7Z78ytqpIWD+29ZHbnJxD9swO+9IGmckK083O5JpMvgtu+O1v1lbA2Lea8vXLaXu9Xvmq8WPmmitTbK1//WMqxNLQ2inG4gBK6GGP3GQD8FpvTZh8q8IrJbe7vFFkGgd/Li8e7/Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+eEDf73; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKjQnmZj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2D9C116D0
-	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 13:58:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+eEDf73"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C726EC4AF09
+	for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 14:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759067911;
-	bh=RrHTkPkJ9KxjQHnavmnJvqPxNotZNOveUTg85TUYacM=;
+	s=k20201202; t=1759070406;
+	bh=YTfeZ2Az2Z8Gm9DtkMQMER4W7eQCdNdPKRtSzc6jOSQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PKjQnmZj3fCkD3MWVEG+KERvYDGC5glGHO5U1iSEA8SLxZj4YKcoVQLfDwqnsgTGb
-	 g7UEVDkkFdDZOAh3da7i9zwLZR0i+8PCoiwFZaBmyUL8XHWQ0WpvZZ77plpxN23DrL
-	 SIlDsh9wDdg2uBb981l5OyAdwB9g0ywpKYQXRDxRHcxC6luVM3k7CznTicX1dTIT/b
-	 wNzKpZCCxvSedYJzhl0x/E8eIbUR7J5ivVthMZO6g29i9+3+7ij5qNczxwxvuBUNyx
-	 8G/eQ8suDiawrmCETdsGi6ivSTdMJZDOPn1+kbWMgvlpPgcTknHlCV0P8xLB8G729k
-	 9JeixuPDo5dwQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-62fa0653cd1so5443085a12.0
-        for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 06:58:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUoA54GapuzoFJvpOL7B9TA7roT0B5Hrfbpnh+gHr54oWG+/bNgD33no2LqTSthD7i5vAtyl2Tccag=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxKmxvvGarGgA5mF45Y28hihUPyka7xJ9fY9U1LeefJB/Nfwkbm
-	HHWy68EcLxC6XZ/fWS2YpZx/5EFD2bzhHhSquhoZ5eWHRIF3EHKaKhVJnNqn/d59yeazw761WSB
-	8aBSX95eCI3drCu5TfYkrZR8jT50G3Zo=
-X-Google-Smtp-Source: AGHT+IGvCaXEaCCGJHQTjwko5ijQWG9wboug0FNJB/iFsDT+joLcDSwsGEgrpDHptK2NwMwDEBf4VrRUfqQe1ZGaJD8=
-X-Received: by 2002:a17:906:c141:b0:b04:5895:fe8e with SMTP id
- a640c23a62f3a-b34bb9e9b51mr1496780366b.36.1759067910449; Sun, 28 Sep 2025
- 06:58:30 -0700 (PDT)
+	b=E+eEDf738DIWH8AV/fKoc38BolmBbkv2V3MzRdl9kmp+cWmedZHwK0nxfwFGGO+UQ
+	 45AqO5ZFt4tJZzxZd6CS2q3iWcAS4Cbm2N1Iy990txMQROoVk7uAHvjUuU/JHjVJcx
+	 E3P76EMaVdCAm6ljVWWca2xSfv6YP/I871kQXLIassNB/tMf1STibLRON5mCzYfrnW
+	 f3v6VVvYwtllH8yx9nPhcUazF0FUub5fedvheR2I3/cGe+iSgelMwVd2B05vSjy5SP
+	 UbAmbTHotqsZB+WoHDd19rq+DNy7tPRZbosPIetRNE91Jw7cB4CFTM8kJNYWmpZNOE
+	 yl+zwxV//VHnw==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-371e4858f74so20521811fa.1
+        for <loongarch@lists.linux.dev>; Sun, 28 Sep 2025 07:40:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUiWGsXeX8kW5tkJ8zK+7Q/6Xneqmgw8cc6jiqC937Phw6cgNTG3jgQwtnI9h1kC/fbZgsQ0TQ4FsE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyYEjRQNO+63OJo1Kzvw3O5+On9AzY8iyoeI9jrGt9TnxPFaULz
+	C4fdgndI15D1OsUxjc00GJo7G/H63kYwWALuJkcRsbc2DYHnJQ5rXPxL7XA24stUDWUXmrTKXAa
+	HAtt0QIi0c5F6idBWwbcksXC8PsvQpkI=
+X-Google-Smtp-Source: AGHT+IHH3ITnfb2BpbA6fI4i1D/KynnPo0itxokVo5z2R2BxNhPDjgHL5REZ4v90HN8ojvUvINWVTbbCPEGJLRT00uM=
+X-Received: by 2002:a2e:bc24:0:b0:36c:2899:7a33 with SMTP id
+ 38308e7fff4ca-36fb05aac1emr41368541fa.5.1759070405095; Sun, 28 Sep 2025
+ 07:40:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250925092902.1366058-1-guanwentao@uniontech.com>
-In-Reply-To: <20250925092902.1366058-1-guanwentao@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 28 Sep 2025 21:58:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5ny_e9G5qRUMYW-d5LqjXv8rvsGMz9BQPt6+npyPmCOA@mail.gmail.com>
-X-Gm-Features: AS18NWC547i7JUcuDNSIYAe0E_ay43qn0jlubReLFKEmkn6ebN_O807Utlh1SZ8
-Message-ID: <CAAhV-H5ny_e9G5qRUMYW-d5LqjXv8rvsGMz9BQPt6+npyPmCOA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: mm: try VMA lock-based page fault handling first
-To: Wentao Guan <guanwentao@uniontech.com>
-Cc: kernel@xen0n.name, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	zhanjun@uniontech.com, niecheng1@uniontech.com
+References: <20250928085506.4471-1-yangtiezhu@loongson.cn> <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
+ <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
+In-Reply-To: <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 28 Sep 2025 16:39:53 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
+X-Gm-Features: AS18NWBfnP56WGhzhDUorQf3ioUtwwx0in0DsVvUF4v8bsmet9iSfiUkxyOpxGQ
+Message-ID: <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Wentao,
-
-Thanks for you patch, but it is full of bugs...
-
-On Thu, Sep 25, 2025 at 5:33=E2=80=AFPM Wentao Guan <guanwentao@uniontech.c=
-om> wrote:
+On Sun, 28 Sept 2025 at 15:52, Huacai Chen <chenhuacai@kernel.org> wrote:
 >
-> Attempt VMA lock-based page fault handling first, and fall back to the
-> existing mmap_lock-based handling if that fails.
+> Hi, Ard,
 >
-> The "ebizzy -mTRp" on 3A6000 shows that PER_VMA_LOCK can
-> improve the benchmark by about 20.7%.
+> On Sun, Sep 28, 2025 at 9:42=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> =
+wrote:
+> >
+> > On Sun, 28 Sept 2025 at 10:55, Tiezhu Yang <yangtiezhu@loongson.cn> wro=
+te:
+> > >
+> > > When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
+> > > the following objtool warning on LoongArch:
+> > >
+> > >   vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
+> > >   falls through to next function __efistub_exit_boot_func()
+> > >
+> > > This is because efi_boot_kernel() doesn't end with a return instructi=
+on
+> > > or an unconditional jump, then objtool has determined that the functi=
+on
+> > > can fall through into the next function.
+> > >
+> > > At the beginning, try to do something to make efi_boot_kernel() ends =
+with
+> > > an unconditional jump instruction, but this modification seems not pr=
+oper.
+> > >
+> > > Since the efistub functions are useless for stack unwinder, they can =
+be
+> > > ignored by objtool. After many discussions, no need to link libstub t=
+o
+> > > the vmlinux.o, only link libstub to the final vmlinux.
+> > >
+> >
+> > Please try keeping these changes confined to arch/loongarch. This
+> > problem does not exist on other architectures, and changing the way
+> > vmlinux is constructed might create other issues down the road.
+> ARM, RISC-V and LoongArch do things exactly in the same way. Now
+> LoongArch is the first of the three to enable objtool, so we meet the
+> problem first.
 >
-> This is the loongarch variant of "x86/mm: try VMA lock-based page fault
-> handling first".
+> But yes, I also don't want to change the way of constructing vmlinux.
+> So I prefer the earliest way to fix this problem.
+> https://lore.kernel.org/loongarch/CAAhV-H7fRHGFVKV8HitRgmuoDPt5ODt--iSuV0=
+EmeeUb9d5FNw@mail.gmail.com/T/#meef7411abd14f4c28c85e686614aa9211fccdca0
 >
-> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> ---
-> ebizzy-0.3(can download by phoronix-test-suite):
-> before patch:
-> 97800 records/s
-> real 10.00 s user  0.25 s sys  13.54 s
-> 97835 records/s
-> real 10.00 s user  0.27 s sys  13.51 s
-> 97929 records/s
-> real 10.00 s user  0.26 s sys  13.53 s
-> 97736 records/s
-> real 10.00 s user  0.31 s sys  13.48 s
-> 97914 records/s
-> real 10.00 s user  0.30 s sys  13.50 s
-> 97916 records/s
-> real 10.00 s user  0.31 s sys  13.48 s
-> 97857 records/s
-> real 10.00 s user  0.28 s sys  13.51 s
-> 97927 records/s
-> real 10.00 s user  0.24 s sys  13.55 s
-> 97962 records/s
-> real 10.00 s user  0.41 s sys  13.39 s
-> 97501 records/s
-> real 10.00 s user  0.20 s sys  13.53 s
-> after patch:
-> 117645 records/s
-> real 10.00 s user  0.31 s sys  23.17 s
-> 118207 records/s
-> real 10.00 s user  0.37 s sys  23.18 s
-> 118426 records/s
-> real 10.00 s user  0.32 s sys  23.14 s
-> 118172 records/s
-> real 10.00 s user  0.44 s sys  23.07 s
-> 118548 records/s
-> real 10.00 s user  0.45 s sys  23.04 s
-> 118011 records/s
-> real 10.00 s user  0.32 s sys  23.15 s
-> 118143 records/s
-> real 10.00 s user  0.41 s sys  23.09 s
-> 118181 records/s
-> real 10.00 s user  0.42 s sys  23.12 s
-> 117721 records/s
-> real 10.00 s user  0.34 s sys  23.17 s
-> 118138 records/s
-> real 10.00 s user  0.42 s sys  23.04 s
-> ---
-> ---
->  arch/loongarch/Kconfig    |  1 +
->  arch/loongarch/mm/fault.c | 49 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 0631a6b11281b..1c517954157c0 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -69,6 +69,7 @@ config LOONGARCH
->         select ARCH_SUPPORTS_LTO_CLANG_THIN
->         select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
->         select ARCH_SUPPORTS_NUMA_BALANCING
-> +       select ARCH_SUPPORTS_PER_VMA_LOCK
->         select ARCH_SUPPORTS_RT
->         select ARCH_USE_BUILTIN_BSWAP
->         select ARCH_USE_CMPXCHG_LOCKREF
-> diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-> index deefd9617d008..d2dc3e194dd76 100644
-> --- a/arch/loongarch/mm/fault.c
-> +++ b/arch/loongarch/mm/fault.c
-> @@ -215,6 +215,53 @@ static void __kprobes __do_page_fault(struct pt_regs=
- *regs,
->                 flags |=3D FAULT_FLAG_USER;
->
->         perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-> +       if (!(flags & FAULT_FLAG_USER))
-> +               goto lock_mmap;
-> +
-> +       vma =3D lock_vma_under_rcu(mm, address);
-> +       if (!vma)
-> +               goto lock_mmap;
-> +
-> +       if (write) {
-> +               flags |=3D FAULT_FLAG_WRITE;
-> +               if (!(vma->vm_flags & VM_WRITE)) {
-> +                       vma_end_read(vma);
-> +                       si_code =3D SEGV_ACCERR;
-Need count_vm_vma_lock_event(VMA_LOCK_SUCCESS) here.
 
-> +                       goto bad_area_nosemaphore;
-> +               }
-> +       } else {
-> +               if (!(vma->vm_flags & VM_EXEC) && address =3D=3D exceptio=
-n_era(regs)){
-> +                       vma_end_read(vma);
-> +                       si_code =3D SEGV_ACCERR;
-The same.
-
-> +                       goto bad_area_nosemaphore;
-> +               }
-> +               if (!(vma->vm_flags & (VM_READ | VM_WRITE)) && address !=
-=3D exception_era(regs)){
-> +                       vma_end_read(vma);
-> +                       si_code =3D SEGV_ACCERR;
-The same.
-
-> +                       goto bad_area_nosemaphore;
-> +               }
-> +       }
-> +
-> +       fault =3D handle_mm_fault(vma, address, flags | FAULT_FLAG_VMA_LO=
-CK, regs);
-> +       if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
-> +               vma_end_read(vma);
-> +
-> +       if (!(fault & VM_FAULT_RETRY)) {
-> +               count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-> +               goto done;
-> +       }
-> +       count_vm_vma_lock_event(VMA_LOCK_RETRY);
-> +       if (fault & VM_FAULT_MAJOR)
-> +               flags |=3D FAULT_FLAG_TRIED;
-> +
-> +       /* Quick path to respond to signals */
-> +       if (fault_signal_pending(fault, regs)) {
-> +               if (!user_mode(regs))
-> +                       no_context(regs, write, address);
-> +               return;
-> +       }
-> +lock_mmap:
-lock_mmap is exactly the same as retry, but since other architectures
-are also like this, let's keep it as is...
-
-> +
->  retry:
->         vma =3D lock_mm_and_find_vma(mm, address, regs);
->         if (unlikely(!vma))
-> @@ -292,6 +339,8 @@ static void __kprobes __do_page_fault(struct pt_regs =
-*regs,
->         }
->
->         mmap_read_unlock(mm);
-> +done:
-We need error handling here.
-
-> +       return;
->  }
->
->  asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
-I think the whole correct patch is like this:
-diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-index deefd9617d00..c87e7d38090d 100644
---- a/arch/loongarch/mm/fault.c
-+++ b/arch/loongarch/mm/fault.c
-@@ -215,6 +215,58 @@ static void __kprobes __do_page_fault(struct pt_regs *=
-regs,
-                flags |=3D FAULT_FLAG_USER;
-
-        perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-+
-+       if (!(flags & FAULT_FLAG_USER))
-+               goto lock_mmap;
-+
-+       vma =3D lock_vma_under_rcu(mm, address);
-+       if (!vma)
-+               goto lock_mmap;
-+
-+       if (write) {
-+               flags |=3D FAULT_FLAG_WRITE;
-+               if (!(vma->vm_flags & VM_WRITE)) {
-+                       vma_end_read(vma);
-+                       si_code =3D SEGV_ACCERR;
-+                       count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-+                       goto bad_area_nosemaphore;
-+               }
-+       } else {
-+               if (!(vma->vm_flags & VM_EXEC) && address =3D=3D
-exception_era(regs)){
-+                       vma_end_read(vma);
-+                       si_code =3D SEGV_ACCERR;
-+                       count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-+                       goto bad_area_nosemaphore;
-+               }
-+               if (!(vma->vm_flags & (VM_READ | VM_WRITE)) && address
-!=3D exception_era(regs)){
-+                       vma_end_read(vma);
-+                       si_code =3D SEGV_ACCERR;
-+                       count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-+                       goto bad_area_nosemaphore;
-+               }
-+       }
-+
-+       fault =3D handle_mm_fault(vma, address, flags |
-FAULT_FLAG_VMA_LOCK, regs);
-+       if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
-+               vma_end_read(vma);
-+
-+       if (!(fault & VM_FAULT_RETRY)) {
-+               count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-+               goto done;
-+       }
-+
-+       count_vm_vma_lock_event(VMA_LOCK_RETRY);
-+       if (fault & VM_FAULT_MAJOR)
-+               flags |=3D FAULT_FLAG_TRIED;
-+
-+       /* Quick path to respond to signals */
-+       if (fault_signal_pending(fault, regs)) {
-+               if (!user_mode(regs))
-+                       no_context(regs, write, address);
-+               return;
-+       }
-+lock_mmap:
-+
- retry:
-        vma =3D lock_mm_and_find_vma(mm, address, regs);
-        if (unlikely(!vma))
-@@ -276,8 +328,10 @@ static void __kprobes __do_page_fault(struct pt_regs *=
-regs,
-                 */
-                goto retry;
-        }
-+       mmap_read_unlock(mm);
-+
-+done:
-        if (unlikely(fault & VM_FAULT_ERROR)) {
--               mmap_read_unlock(mm);
-                if (fault & VM_FAULT_OOM) {
-                        do_out_of_memory(regs, write, address);
-                        return;
-@@ -290,8 +344,6 @@ static void __kprobes __do_page_fault(struct pt_regs *r=
-egs,
-                }
-                BUG();
-        }
--
--       mmap_read_unlock(mm);
- }
-
- asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
-
-Huacai
-
-> --
-> 2.20.1
->
+Can we just drop the __noreturn annotation from kernel_entry_t, and
+return EFI_SUCCESS from efi_boot_kernel()?
