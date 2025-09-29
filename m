@@ -1,157 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69E1231A21;
-	Mon, 29 Sep 2025 06:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 067382853EF
+	for <loongarch@lists.linux.dev>; Mon, 29 Sep 2025 06:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759127220; cv=none; b=irZRzPZqSknu+qThN0NbCniHNCm87dNmRHGlG7dH4vH+33oT7TzkDAIqhM8ZLS96Mm5mZ+syJ+alVmjap5aoDlkRwKDMIrEJ/a7dtc1Z/zUQQWgtZhbh4gvVB2YZm5IJ+n8iFTeAlaFRay7uO2qdBQ5pdGY8rIDQTqUedydDtqg=
+	t=1759127754; cv=none; b=tkpBbEwmjTP0VwmbFStVWNtDfnk4l3VHiKbcpC5v8/5AUT1Dh5C0LIzkYtpY+tns+K/iUqLFM7W2Xd3Fq63mXrSOofBhBcTUBelTBpZ5AJazsUH1zuchdLMkO2a34KD7dIru2HGO2WRX+TC+OdP4ubqujAPXaQgrlGiPAHh/tvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759127220; c=relaxed/simple;
-	bh=YNr2IXX+FEDhdPm3XMK+GnoSYVTDwv1s5NcrSp4kehE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZTPzGx/DXZ8QPgopK35FEdU6bJx1k8I6tc0KrEhk862rVHB18DlzcuSDgTczXogl28dq+J3J1WDZi240385NLZJUz0BAM2Ir9tPJwMiSAspgEzyceNuq7xfPEX+dOQOjCrS7XlgExtv6DB6D5gjxTCGb4KlmFsDKpA4I0A6tBXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHx+XT5l; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHx+XT5l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C40FEC4CEF4;
-	Mon, 29 Sep 2025 06:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759127220;
-	bh=YNr2IXX+FEDhdPm3XMK+GnoSYVTDwv1s5NcrSp4kehE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qHx+XT5ljIFU/BApDIy0waMYHfa0mwQnhXGgLSTanImnAX2Ef6NA1Wmdhc4AjUb7a
-	 sIEi1OR1R70gH/QJI1bUuiyoRsn9vi+sYTfb5csunWkQOxilfpK4Jzap9ZBEN48yWg
-	 bqutEQ3dUHrvTw0iG7FieSgvRdPpge0fsqAHLrK/Sncb3O0XTSif8ce1e7JLGG7QZZ
-	 n6X9FXKIm3rSRIeKyHgp227sZvvEteDI10HAv+36b29jBcrrcK4C+gmfHFdJQGQX7M
-	 5HRk1RfhfxfactSB6dPJ/f3j4NU6bmhfagAgs6VzkXf+Fa/E48jPQBADfJM1xpGQL2
-	 GTugBYQytAnGA==
-Message-ID: <a985f144-7489-4a99-bcb7-90e7b21d9885@kernel.org>
-Date: Mon, 29 Sep 2025 08:26:56 +0200
+	s=arc-20240116; t=1759127754; c=relaxed/simple;
+	bh=amBmvfPdJq5nYuTEQxhZgfISPVwHTD8YQl26g4U1KuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=upmTzmLeNUTdDldUCNG68K+4HocVQffbKzW4dm+ptaqikbjkeyDPUbTMQ8JxEdb6S3Rhau/frUmCMaNpOpPB51l3ycQ/da+cTyE5dzP06hzRewzSbvmH1KXUbsmJPn5JRU5ElGGcnNMuTs0UzT+MdxcPsSh9vdt16Gg0GOxL144=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.198])
+	by gateway (Coremail) with SMTP id _____8BxndLEKNpovvwPAA--.33104S3;
+	Mon, 29 Sep 2025 14:35:48 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.198])
+	by front1 (Coremail) with SMTP id qMiowJCxrsPAKNpo3s+8AA--.60247S2;
+	Mon, 29 Sep 2025 14:35:47 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Init acpi_gbl_use_global_lock to false
+Date: Mon, 29 Sep 2025 14:35:34 +0800
+Message-ID: <20250929063534.784235-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/3] serial: 8250: Add Loongson uart driver support
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Haowei Zheng <zhenghaowei@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- linux-serial@vger.kernel.org
-References: <cover.1758676290.git.zhoubinbin@loongson.cn>
- <9823e7afe713450e210dab9dba6fa18683dc1fe0.1758676290.git.zhoubinbin@loongson.cn>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <9823e7afe713450e210dab9dba6fa18683dc1fe0.1758676290.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxrsPAKNpo3s+8AA--.60247S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZF13Xr1xKF4fCryDCF48AFc_yoWDAFc_Gr
+	y7Ja1kGr4xAa1Yv3WYqFWfJryFya1xZF4YkFn7WrW7KFy7J3W7Crs3Aa4fZr98KFWDCrZ0
+	y397GFn8uw1IqosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-On 24. 09. 25, 8:29, Binbin Zhou wrote:
-> Add the driver for on-chip UART used on Loongson family chips.
-> 
-> The hardware is similar to 8250, but there are the following
-> differences:
->   - Some chips (such as Loongson-2K2000) have added a fractional division
->     register to obtain the required baud rate accurately, so the
->     {get,set}_divisor callback is overridden.
->   - Due to hardware defects, quirk handling is required for
->     UART_MCR/UART_MSR.
+Init acpi_gbl_use_global_lock to false, in order to void error messages
+during boot phase:
 
-So how hard would be to implement this in 8250 using existing (or new) 
-callbacks+quirks?
+ ACPI Error: Could not enable GlobalLock event (20240827/evxfevnt-182)
+ ACPI Error: No response from Global Lock hardware, disabling lock (20240827/evglock-59)
 
-> --- /dev/null
-> +++ b/drivers/tty/serial/8250/8250_loongson.c
-> @@ -0,0 +1,202 @@
-...
-> +struct loongson_uart_data {
-> +	int line;
-> +	int mcr_invert;
-> +	int msr_invert;
+Fixes: 628c3bb40e9a8cefc0a6 ("LoongArch: Add boot and setup routines")
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+Note: Depend on feb8ae81b2378b75 ("ACPICA: Allow to skip Global Lock initialization").
 
-These two should be unsigned. They should be u8, actually.
+ arch/loongarch/kernel/setup.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +	struct reset_control *rst;
-> +};
-> +
-> +static unsigned int serial_fixup(struct uart_port *p, unsigned int offset, unsigned int val)
-
-Both 'val' and ret type should be u8.
-
-> +{
-> +	struct loongson_uart_data *ddata = p->private_data;
-> +
-> +	if (offset == UART_MCR)
-> +		val ^= ddata->mcr_invert;
-> +
-> +	if (offset == UART_MSR)
-> +		val ^= ddata->msr_invert;
-> +
-> +	return val;
-> +}
-> +
-> +static u32 loongson_serial_in(struct uart_port *p, unsigned int offset)
-> +{
-> +	unsigned int val;
-
-u8
-
-> +
-> +	val = readb(p->membase + (offset << p->regshift));
-> +
-> +	return serial_fixup(p, offset, val);
-> +}
-
-thanks,
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 075b79b2c1d3..69c17d162fff 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -355,6 +355,7 @@ void __init platform_init(void)
+ 
+ #ifdef CONFIG_ACPI
+ 	acpi_table_upgrade();
++	acpi_gbl_use_global_lock = false;
+ 	acpi_gbl_use_default_register_widths = false;
+ 	acpi_boot_table_init();
+ #endif
 -- 
-js
-suse labs
+2.47.3
+
