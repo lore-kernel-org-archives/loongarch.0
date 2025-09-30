@@ -1,118 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48671A239A
-	for <loongarch@lists.linux.dev>; Tue, 30 Sep 2025 02:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E3118859B
+	for <loongarch@lists.linux.dev>; Tue, 30 Sep 2025 03:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759200792; cv=none; b=gXreRooLn0j/aytJ+PmyGdYE3sIcIodMji7KNmHXrtkXLUdGZsc+DoTsA1tjwEbsoDgsy0V2svN/IwHNB13AabC5MnspNmXv0NBFCLFUHL24gqgmud2ADXxq8+znoov7msT/OPgGNNO2Pi+Yoy2g3oIbCoV2421XRRa/JZbYfqY=
+	t=1759201425; cv=none; b=s0kRO+5OwymhJQfOIEB2VztpLpUq/6Od7OA8KE0C1G9VgMjDvIhL1Zl7x4jashGQj48euSQZga7pm2l0SicOEBnorNLIfNAHq4bIq7oS6qjpFy5wC3HeMcuO5BTt1QI3OyqpQ8zgxCHxAKtqfmxz6QpgsoDINBzqTtDLhPQv6N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759200792; c=relaxed/simple;
-	bh=ym6h+Qei6CJdmJJVbagIpDYKjBeMBZx8FHWAejUB0wE=;
+	s=arc-20240116; t=1759201425; c=relaxed/simple;
+	bh=TlSrEI1g4LJ14N4ECMUQYeDV9+p/D6qPn677XjVLXis=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iZKugwPZsqCVCx3cuBacl/wfz27a1l3wTjto7JP5/3wvNlc3+OAGy2I/thAH2DeBsKgAz7ih39cHkaTZ0VQ3kRRjMQwKN2ay7415JcJ3Aqvul/PwPPX5k9kAKDBVrSGuKM0VVgSBBzndFGgvZShfGqp4mJVZIt/W+B3XO5Kkpis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQEQ98G3; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=He9SwFzznEAJMLCVIKQFH1B0bRctLggIkQbo9pDNjawXhj6OXYmSp1ukvMVISoRWtsM4VkHzUf9nBczqc7h9GYgZj1OcgXJUH4GUYTG5rWPhs3cRPCWPTWiUTDrL3kyDbdawQ5yjesiUd9BLdaKKCGoVHdtD42CKMJPOU3SyNtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhNWwL4f; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQEQ98G3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B128C16AAE
-	for <loongarch@lists.linux.dev>; Tue, 30 Sep 2025 02:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759200792;
-	bh=ym6h+Qei6CJdmJJVbagIpDYKjBeMBZx8FHWAejUB0wE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZQEQ98G3bc+RXLkAjVNzcVi/lvBuHyora3y6Zw3XprKqYOMPaiGuYjUK/G31JHpHr
-	 O/OuKZm9HxOCnEpUNddpaLPt8AEcacqAeWwfafojoodFqESXk1zkEJdNPhyMg0aCTq
-	 u9t2U/bkf6E2Ki2+tyhc3LF4SVgdenJkZpg5gxVO8OiTLyAuSdwIQIn6hyFegsIt+o
-	 czyltKdO8Mhzmuk9ok02kbwhybem3tvpxnlWZKLjd1DoG/jUDb+8I5/pMNXO+ow6wc
-	 9R56Mc3eNQU+YHPldkahVJa9yh0GzHiPaLclpp3q1D+rONvmophr3SCnxBPTIcVQ4F
-	 ilqJGzWWnxTQA==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b3e9d633b78so422940966b.1
-        for <loongarch@lists.linux.dev>; Mon, 29 Sep 2025 19:53:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWQZndK/lkklYYiljk9f1e27aRfOc0WX6juURVVvz4YpNobxOfhGS7RHHOzTNWVmIqTK3KdGD6x1jE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxIGGsn9TpIUhNPVcNDbXFOH1/OMphlF4jpKxkH+NRJEVir/O7D
-	sRIV5zDcE+iFEAExvvYwXdnb6Gvc6z0qaLKzPnYjqW+t3G4y+B+p9d2tu4+jO+MVAxxDIqylPvw
-	ZSRyz2VO7Yn2ka+UktcS+TX4TdSVfogM=
-X-Google-Smtp-Source: AGHT+IEfvCuZAVXXWVTEo167aebO6qUsrh2w2UDinUqmaNHItIXCoAnwHta702NRz1ENszkgUaXlenJfqCGyw7SV6Wc=
-X-Received: by 2002:a17:907:daa:b0:b2d:4e57:58d8 with SMTP id
- a640c23a62f3a-b413600acc6mr256609966b.10.1759200791107; Mon, 29 Sep 2025
- 19:53:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhNWwL4f"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b00a9989633so989881166b.0
+        for <loongarch@lists.linux.dev>; Mon, 29 Sep 2025 20:03:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759201422; x=1759806222; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9NFP/aRPpSqSxRRCDSAPryYMxFsX/KQ2AaIdR8RyNrI=;
+        b=fhNWwL4fzb/4vFMQQ7MabtB9BdzCXadEIaSn4/7zWHLlez5C630a6oUregKD9wj1Y+
+         gSIcbo8gRRa1GRYrJcpGLgNH82QHUEEm6KllmVJ3ybASpQx66De16d7kQT98tbL4r3ma
+         haBvJcwKEgixTFsxNkXPAtnprzI5dmPan3TCkLjOZ9L94lT9GB88o7C93Hui+EwWh+3f
+         PZHR8vn3UQKYyu60A5uyRblNgkrb7wsTa0hc5ZLHIF54NbInUe+vv6faAMuaHxAkijwh
+         BHXSoerNJG3MG5CSnUVqtM7X3WahVxG31oeplhojv67CFCQdLHYQFf8QQahIeMc3eHzr
+         qfgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759201422; x=1759806222;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9NFP/aRPpSqSxRRCDSAPryYMxFsX/KQ2AaIdR8RyNrI=;
+        b=NWJxd5P4ycXPoKoY9VhceA7XGB3NJK9JwfbyC01nTKQ6eoZwAHux7IiqIVWUKk1QVY
+         yRSJHuTWQsjynZl8PRPuhoMBIjsTaCclUSD3BV7nU1ougXdlAPyxLoEJgFwKxRDo0MYt
+         LCBO0qH5P91EsmIBV0m+B0w8JQNyAijRYnmi+SLvuphZTiAXJxSH5uHRuAeHV5obYLuX
+         3zYlUnC6XvA7bSgZ0ksg2cWyMoZ43JxIWbHyIuJV6RarVAD9B2TsYrdbEZHBcCV9fAfS
+         xIlLaJtT4hLetPlpqL5eOAtzan3EuvFQkl4ci9PFnU3OVszd/dejaCn8l3sf7ngXCEq5
+         /8cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyf60DXgqx+1akhHU9YDifOwQ6gf3Cstrl8cDqzn4S4E3FN99POvAA442jYp2k9/CVgpcgG/GQBGA=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx6pVhm3yzMmbEkHPP0cLjSNpGCXvDIhS0nY4R8lY0H/MXjhizO
+	IenHYs7QRq5xFQBT/8ORE612G56xXpftvGJDvfHS95Yqm9OOmox8lNAmmZYcMum4CeuK3SRw5Y3
+	H/GaJNe0X5KsAbLyn5ISH5T6lOmMn4hg=
+X-Gm-Gg: ASbGncuaKrCf5rnPBqA4dru+a4poUroKwIKEEeIQLDSiQtoHbHjSUTYzEQhfrtConW8
+	wBtgTBr6vXR7o1wc42M3UJciisr5AMs7EpPyH15KK0h3OwQ/uHKET79qltmgjQe/zjgHrHyRTkX
+	TxGyTBkf0Nb+I8Z4fxfWLELcLhnW1pY8V6QQoNUTAUwr/NSSPmeh4UQAIVW9XbUBLwcqP8hC524
+	8X8TRxuuTs1vK63/Jb3pKyKUdyEeRmCAA==
+X-Google-Smtp-Source: AGHT+IF/n5rxioCLmT/RhA4+s+0eSGWB5ynhr3d237Tn0J8d1xLcsm+RN0zUj0iTmh5Xi96u/TsBTy9XttW3rYTj7eY=
+X-Received: by 2002:a17:906:6a13:b0:b3d:d30b:39c0 with SMTP id
+ a640c23a62f3a-b4138d54e8fmr254813966b.21.1759201421958; Mon, 29 Sep 2025
+ 20:03:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250928085506.4471-1-yangtiezhu@loongson.cn> <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
- <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com> <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
-In-Reply-To: <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 30 Sep 2025 10:52:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6PNcyTNXEhzdovt3an7e9V+B+Z-px=_HPiQ5vv7qaDMg@mail.gmail.com>
-X-Gm-Features: AS18NWDktm4BaCz5O-7O3VzGm9rq1tPjPU1iKF2Ar1jh6n3dOQanb3Px7roMXtU
-Message-ID: <CAAhV-H6PNcyTNXEhzdovt3an7e9V+B+Z-px=_HPiQ5vv7qaDMg@mail.gmail.com>
-Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1758676290.git.zhoubinbin@loongson.cn> <9823e7afe713450e210dab9dba6fa18683dc1fe0.1758676290.git.zhoubinbin@loongson.cn>
+ <2025092428-glade-monologue-3663@gregkh> <CAMpQs4JgR=iG6LAuYeVxOpE31S6n=dC4+FGUJczOYDVfWHDuFw@mail.gmail.com>
+ <b862846d-fb2a-4df4-8457-d858aa63031d@kernel.org>
+In-Reply-To: <b862846d-fb2a-4df4-8457-d858aa63031d@kernel.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 30 Sep 2025 11:03:29 +0800
+X-Gm-Features: AS18NWCm6-Znvj04Md8NL1AWVBDpMDNMtoDJ4KZsLhmeYeLRSp3jYSKwZzNeE88
+Message-ID: <CAMpQs4KVgSFk=B5JtQ1KM02HydTkwaYqi+LzzhdJAyoSUfAxLw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] serial: 8250: Add Loongson uart driver support
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Haowei Zheng <zhenghaowei@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 28, 2025 at 10:40=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> w=
+Hi Jiri:
+
+Thanks for your reply.
+
+On Mon, Sep 29, 2025 at 2:19=E2=80=AFPM Jiri Slaby <jirislaby@kernel.org> w=
 rote:
 >
-> On Sun, 28 Sept 2025 at 15:52, Huacai Chen <chenhuacai@kernel.org> wrote:
-> >
-> > Hi, Ard,
-> >
-> > On Sun, Sep 28, 2025 at 9:42=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org=
-> wrote:
-> > >
-> > > On Sun, 28 Sept 2025 at 10:55, Tiezhu Yang <yangtiezhu@loongson.cn> w=
-rote:
-> > > >
-> > > > When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
-> > > > the following objtool warning on LoongArch:
-> > > >
-> > > >   vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
-> > > >   falls through to next function __efistub_exit_boot_func()
-> > > >
-> > > > This is because efi_boot_kernel() doesn't end with a return instruc=
-tion
-> > > > or an unconditional jump, then objtool has determined that the func=
-tion
-> > > > can fall through into the next function.
-> > > >
-> > > > At the beginning, try to do something to make efi_boot_kernel() end=
-s with
-> > > > an unconditional jump instruction, but this modification seems not =
-proper.
-> > > >
-> > > > Since the efistub functions are useless for stack unwinder, they ca=
-n be
-> > > > ignored by objtool. After many discussions, no need to link libstub=
- to
-> > > > the vmlinux.o, only link libstub to the final vmlinux.
-> > > >
-> > >
-> > > Please try keeping these changes confined to arch/loongarch. This
-> > > problem does not exist on other architectures, and changing the way
-> > > vmlinux is constructed might create other issues down the road.
-> > ARM, RISC-V and LoongArch do things exactly in the same way. Now
-> > LoongArch is the first of the three to enable objtool, so we meet the
-> > problem first.
-> >
-> > But yes, I also don't want to change the way of constructing vmlinux.
-> > So I prefer the earliest way to fix this problem.
-> > https://lore.kernel.org/loongarch/CAAhV-H7fRHGFVKV8HitRgmuoDPt5ODt--iSu=
-V0EmeeUb9d5FNw@mail.gmail.com/T/#meef7411abd14f4c28c85e686614aa9211fccdca0
-> >
+> Hi,
 >
-> Can we just drop the __noreturn annotation from kernel_entry_t, and
-> return EFI_SUCCESS from efi_boot_kernel()?
-Not good, because kernel_entry_t is really "noreturn", and at present
-no architecture returns EFI_SUCCESS at the end of efi_boot_kernel().
+> On 28. 09. 25, 4:48, Binbin Zhou wrote:
+> > Hi Greg:
+> >
+> > Thanks for your reply.
+> >
+> > On Wed, Sep 24, 2025 at 6:22=E2=80=AFPM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> >>
+> >> On Wed, Sep 24, 2025 at 02:29:37PM +0800, Binbin Zhou wrote:
+> >>> --- a/include/uapi/linux/serial_core.h
+> >>> +++ b/include/uapi/linux/serial_core.h
+> >>> @@ -31,6 +31,7 @@
+> >>>   #define PORT_ALTR_16550_F128 28 /* Altera 16550 UART with 128 FIFOs=
+ */
+> >>>   #define PORT_RT2880  29      /* Ralink RT2880 internal UART */
+> >>>   #define PORT_16550A_FSL64 30 /* Freescale 16550 UART with 64 FIFOs =
+*/
+> >>> +#define PORT_LOONGSON        31      /* Loongson 16550 UART */
+> >>
+> >> Why does userspace need to have this value exported?
+> >
+> > Sorry, this was a cheap mistake.
+> > It should follow the existing latest macro definition as follows:
+>
+> That was not the point. The point was why do you need that at all?
 
+Emm...
+We attempted to define Loongson UART as a new `uart_config` entry.
+Therefore, `PORT_LOONGSON` is referenced as follows:
 
-Huacai
+diff --git a/drivers/tty/serial/8250/8250_port.c
+b/drivers/tty/serial/8250/8250_port.c
+index 719faf92aa8a..53efe841656f 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -310,6 +310,14 @@ static const struct serial8250_config uart_config[] =
+=3D {
+                .rxtrig_bytes   =3D {1, 8, 16, 30},
+                .flags          =3D UART_CAP_FIFO | UART_CAP_AFE,
+        },
++       [PORT_LOONGSON] =3D {
++               .name           =3D "Loongson",
++               .fifo_size      =3D 16,
++               .tx_loadsz      =3D 16,
++               .fcr            =3D UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_=
+10,
++               .rxtrig_bytes   =3D {1, 4, 8, 14},
++               .flags          =3D UART_CAP_FIFO,
++       },
+ };
+
+ /* Uart divisor latch read */
+
+Additionally, `uart.port.type` will also be assigned the value `PORT_LOONGS=
+ON`.
+>
+> --
+> js
+> suse labs
+
+--=20
+Thanks.
+Binbin
