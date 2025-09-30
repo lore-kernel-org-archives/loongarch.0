@@ -1,59 +1,59 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E3118859B
-	for <loongarch@lists.linux.dev>; Tue, 30 Sep 2025 03:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CED1E1E04
+	for <loongarch@lists.linux.dev>; Tue, 30 Sep 2025 03:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759201425; cv=none; b=s0kRO+5OwymhJQfOIEB2VztpLpUq/6Od7OA8KE0C1G9VgMjDvIhL1Zl7x4jashGQj48euSQZga7pm2l0SicOEBnorNLIfNAHq4bIq7oS6qjpFy5wC3HeMcuO5BTt1QI3OyqpQ8zgxCHxAKtqfmxz6QpgsoDINBzqTtDLhPQv6N0=
+	t=1759201660; cv=none; b=TrcvFShPabOlIAHk8DujFMLVrClwiaTBY8vEW0aX8jcg6Fvf2Fb7iea37TSFhl/aVIBpYaYN+6/yJajs2R0/Jj+BQsmrcoevjzWC70oOZQbWjOlJxCQpTGnwaULW1oHamUAJTEugB7Mjs2crA8oAC0Ezh7X6Vmw3Uc1SV9/bZS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759201425; c=relaxed/simple;
-	bh=TlSrEI1g4LJ14N4ECMUQYeDV9+p/D6qPn677XjVLXis=;
+	s=arc-20240116; t=1759201660; c=relaxed/simple;
+	bh=trQzuaxM7PQI3lc7+SrnpL4ChZ2FG1z0MjB3OtsDT/U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=He9SwFzznEAJMLCVIKQFH1B0bRctLggIkQbo9pDNjawXhj6OXYmSp1ukvMVISoRWtsM4VkHzUf9nBczqc7h9GYgZj1OcgXJUH4GUYTG5rWPhs3cRPCWPTWiUTDrL3kyDbdawQ5yjesiUd9BLdaKKCGoVHdtD42CKMJPOU3SyNtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhNWwL4f; arc=none smtp.client-ip=209.85.218.41
+	 To:Cc:Content-Type; b=R9Mkw2kfUF9FE+t/DGFbYLAEzhsmDs/1IlEsMI5/gVB4dFwTW6HktJoZ31vmlLVUMLHRCpGW5exRZNlGFsiPS+sVrBjEIompkdw8iLvPcMpdcLj360LnjOyzZfdoqqrLDBxNxGmbcN9TVtkOGLmYURB3SpbAZCGuscdMIHTfgsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nQfw6lux; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhNWwL4f"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b00a9989633so989881166b.0
-        for <loongarch@lists.linux.dev>; Mon, 29 Sep 2025 20:03:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQfw6lux"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-62fb48315ddso9789971a12.2
+        for <loongarch@lists.linux.dev>; Mon, 29 Sep 2025 20:07:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759201422; x=1759806222; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1759201657; x=1759806457; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9NFP/aRPpSqSxRRCDSAPryYMxFsX/KQ2AaIdR8RyNrI=;
-        b=fhNWwL4fzb/4vFMQQ7MabtB9BdzCXadEIaSn4/7zWHLlez5C630a6oUregKD9wj1Y+
-         gSIcbo8gRRa1GRYrJcpGLgNH82QHUEEm6KllmVJ3ybASpQx66De16d7kQT98tbL4r3ma
-         haBvJcwKEgixTFsxNkXPAtnprzI5dmPan3TCkLjOZ9L94lT9GB88o7C93Hui+EwWh+3f
-         PZHR8vn3UQKYyu60A5uyRblNgkrb7wsTa0hc5ZLHIF54NbInUe+vv6faAMuaHxAkijwh
-         BHXSoerNJG3MG5CSnUVqtM7X3WahVxG31oeplhojv67CFCQdLHYQFf8QQahIeMc3eHzr
-         qfgw==
+        bh=cP8Qg3pgdasQQeaKIyYbB5fXWml1kh5kpaGwLIEk0T8=;
+        b=nQfw6luxYIiV6y70Ap+dLIdSLNp5l2v2lf73j6qEiEN6P001zW0otTH1TWfNpqSCwW
+         S0yU0d1kv3rlVQLZYVPEH15w65gNxeHA0sfXjGj2A2VD0St/PeH4ykMneJYRsGPEfNR/
+         M7lIplVtI2JEpjTp3ybHHJkAGG3XBGXgCiFRmWDkgRvRd3Iir7e8z/4JBbym0FdG8mHS
+         ALun2jIxA7FrapSoH5R83oZlfiEpetBBt5jpwfKigVb+B47viJ90xuGdYuZTCJLPdFGd
+         csLWIVTWBvmzwziivTPZABWGjp2bnKirXm+HAhOJ7n/MJq1UC1Ohi1bNz6RUQ6tnJvbj
+         noUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759201422; x=1759806222;
+        d=1e100.net; s=20230601; t=1759201657; x=1759806457;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9NFP/aRPpSqSxRRCDSAPryYMxFsX/KQ2AaIdR8RyNrI=;
-        b=NWJxd5P4ycXPoKoY9VhceA7XGB3NJK9JwfbyC01nTKQ6eoZwAHux7IiqIVWUKk1QVY
-         yRSJHuTWQsjynZl8PRPuhoMBIjsTaCclUSD3BV7nU1ougXdlAPyxLoEJgFwKxRDo0MYt
-         LCBO0qH5P91EsmIBV0m+B0w8JQNyAijRYnmi+SLvuphZTiAXJxSH5uHRuAeHV5obYLuX
-         3zYlUnC6XvA7bSgZ0ksg2cWyMoZ43JxIWbHyIuJV6RarVAD9B2TsYrdbEZHBcCV9fAfS
-         xIlLaJtT4hLetPlpqL5eOAtzan3EuvFQkl4ci9PFnU3OVszd/dejaCn8l3sf7ngXCEq5
-         /8cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyf60DXgqx+1akhHU9YDifOwQ6gf3Cstrl8cDqzn4S4E3FN99POvAA442jYp2k9/CVgpcgG/GQBGA=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx6pVhm3yzMmbEkHPP0cLjSNpGCXvDIhS0nY4R8lY0H/MXjhizO
-	IenHYs7QRq5xFQBT/8ORE612G56xXpftvGJDvfHS95Yqm9OOmox8lNAmmZYcMum4CeuK3SRw5Y3
-	H/GaJNe0X5KsAbLyn5ISH5T6lOmMn4hg=
-X-Gm-Gg: ASbGncuaKrCf5rnPBqA4dru+a4poUroKwIKEEeIQLDSiQtoHbHjSUTYzEQhfrtConW8
-	wBtgTBr6vXR7o1wc42M3UJciisr5AMs7EpPyH15KK0h3OwQ/uHKET79qltmgjQe/zjgHrHyRTkX
-	TxGyTBkf0Nb+I8Z4fxfWLELcLhnW1pY8V6QQoNUTAUwr/NSSPmeh4UQAIVW9XbUBLwcqP8hC524
-	8X8TRxuuTs1vK63/Jb3pKyKUdyEeRmCAA==
-X-Google-Smtp-Source: AGHT+IF/n5rxioCLmT/RhA4+s+0eSGWB5ynhr3d237Tn0J8d1xLcsm+RN0zUj0iTmh5Xi96u/TsBTy9XttW3rYTj7eY=
-X-Received: by 2002:a17:906:6a13:b0:b3d:d30b:39c0 with SMTP id
- a640c23a62f3a-b4138d54e8fmr254813966b.21.1759201421958; Mon, 29 Sep 2025
- 20:03:41 -0700 (PDT)
+        bh=cP8Qg3pgdasQQeaKIyYbB5fXWml1kh5kpaGwLIEk0T8=;
+        b=WuS5gy/hOsuBdru+UFobElTBNVC+e0MTZoB9059Up3Logzz9CkRrGf9ZeqqHLHhxF+
+         QZTEV5KCspL4lH4v0uVCKp+K4ZWHFF9pC1kEHPWxBho46wRc53aIZbgcuiZydMUt6NS9
+         rSZrl63uLXc1DnOCTu+9SDSz8yoE3GfKVxrN5Zi+nvRHq4mTSZkbJmN76DXtoeCRaM3c
+         BjIm9gn7+Its9ThECbGqJ3ItvV4mJhGS0+Uyh86/T86uccQqPAQKwJz5P+uYdnbPXdvI
+         CyzUZFX7iHxfTa3WiQe/z697aUs9XBwBRnBynZRbdVF8le54xF+MqCWeKJSvh+A9hmxl
+         G+9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWbfoSSFAUFj6Wfh/MzVmIE8y99OX+3iu6YsW+lg/7TT+bppTBYIu5ksuNkgWsBCAZ3Now6OWxRb34=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy4ms0yAHz1DoPX70tnd+riZJJ6/nbCPQFt7yM9goY8sZHzsacm
+	rwjhfFLhq5WgIcRBi0jPnWCb6gJ6+Ix6aILWqGvnCy948yRjLKSoRICzOArb1azE7aIpFDw1tRa
+	9x00oYULOS1H1T2cN/3cfqb27gEikafY=
+X-Gm-Gg: ASbGnct50FW2H+8ZbIKmhAf4VYkr18scvyZJp+RHQbURP1TRvksTqORUQbQ5neqQGbP
+	6o6v8on0wzquWTGfhsX8xy2qcVa104D6v+YeDplvw915/8YYAYtHlnB1iSSnbE25XKoU2y457Cx
+	VSUChc0iBj2DoCWGr7YbZ87Ku4S2cKyf72+4RYzXAlnmo58nrVVoy/DCertEu9WkUK6jCT23oRW
+	hvC/SzPMB4le+YmCMFkUPAJI5pu0qTDDhnO4SMT3xjw
+X-Google-Smtp-Source: AGHT+IEN648vI6Hm5m9/RNBdn/c6BTF3t50WrblnPLPcU3GBbVZCvpdfAA56AdTbz+ybr1l29cbfpXFz2yx0RQiYjaE=
+X-Received: by 2002:a17:906:c103:b0:b45:44f4:30e1 with SMTP id
+ a640c23a62f3a-b4544f479e0mr28136366b.34.1759201656713; Mon, 29 Sep 2025
+ 20:07:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -61,18 +61,17 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <cover.1758676290.git.zhoubinbin@loongson.cn> <9823e7afe713450e210dab9dba6fa18683dc1fe0.1758676290.git.zhoubinbin@loongson.cn>
- <2025092428-glade-monologue-3663@gregkh> <CAMpQs4JgR=iG6LAuYeVxOpE31S6n=dC4+FGUJczOYDVfWHDuFw@mail.gmail.com>
- <b862846d-fb2a-4df4-8457-d858aa63031d@kernel.org>
-In-Reply-To: <b862846d-fb2a-4df4-8457-d858aa63031d@kernel.org>
+ <a985f144-7489-4a99-bcb7-90e7b21d9885@kernel.org>
+In-Reply-To: <a985f144-7489-4a99-bcb7-90e7b21d9885@kernel.org>
 From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 30 Sep 2025 11:03:29 +0800
-X-Gm-Features: AS18NWCm6-Znvj04Md8NL1AWVBDpMDNMtoDJ4KZsLhmeYeLRSp3jYSKwZzNeE88
-Message-ID: <CAMpQs4KVgSFk=B5JtQ1KM02HydTkwaYqi+LzzhdJAyoSUfAxLw@mail.gmail.com>
+Date: Tue, 30 Sep 2025 11:07:24 +0800
+X-Gm-Features: AS18NWDRGIX8ccYnyCzkTicMCR8HLLJvmhoh5wlIK_KmTb0hEwHglsNxtMS1qtU
+Message-ID: <CAMpQs4Kpcb5n0g=cH6_RPnjvcwPQ0k0Obcc6c8j6yMxg3THp+w@mail.gmail.com>
 Subject: Re: [PATCH v5 2/3] serial: 8250: Add Loongson uart driver support
 To: Jiri Slaby <jirislaby@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
 	Haowei Zheng <zhenghaowei@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
 	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
 	linux-serial@vger.kernel.org
@@ -81,73 +80,116 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Jiri:
 
-Thanks for your reply.
+Thanks for your review.
 
-On Mon, Sep 29, 2025 at 2:19=E2=80=AFPM Jiri Slaby <jirislaby@kernel.org> w=
+On Mon, Sep 29, 2025 at 2:27=E2=80=AFPM Jiri Slaby <jirislaby@kernel.org> w=
 rote:
 >
-> Hi,
+> On 24. 09. 25, 8:29, Binbin Zhou wrote:
+> > Add the driver for on-chip UART used on Loongson family chips.
+> >
+> > The hardware is similar to 8250, but there are the following
+> > differences:
+> >   - Some chips (such as Loongson-2K2000) have added a fractional divisi=
+on
+> >     register to obtain the required baud rate accurately, so the
+> >     {get,set}_divisor callback is overridden.
+> >   - Due to hardware defects, quirk handling is required for
+> >     UART_MCR/UART_MSR.
 >
-> On 28. 09. 25, 4:48, Binbin Zhou wrote:
-> > Hi Greg:
-> >
-> > Thanks for your reply.
-> >
-> > On Wed, Sep 24, 2025 at 6:22=E2=80=AFPM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> >>
-> >> On Wed, Sep 24, 2025 at 02:29:37PM +0800, Binbin Zhou wrote:
-> >>> --- a/include/uapi/linux/serial_core.h
-> >>> +++ b/include/uapi/linux/serial_core.h
-> >>> @@ -31,6 +31,7 @@
-> >>>   #define PORT_ALTR_16550_F128 28 /* Altera 16550 UART with 128 FIFOs=
- */
-> >>>   #define PORT_RT2880  29      /* Ralink RT2880 internal UART */
-> >>>   #define PORT_16550A_FSL64 30 /* Freescale 16550 UART with 64 FIFOs =
-*/
-> >>> +#define PORT_LOONGSON        31      /* Loongson 16550 UART */
-> >>
-> >> Why does userspace need to have this value exported?
-> >
-> > Sorry, this was a cheap mistake.
-> > It should follow the existing latest macro definition as follows:
->
-> That was not the point. The point was why do you need that at all?
+> So how hard would be to implement this in 8250 using existing (or new)
+> callbacks+quirks?
 
-Emm...
-We attempted to define Loongson UART as a new `uart_config` entry.
-Therefore, `PORT_LOONGSON` is referenced as follows:
+Initially, we attempted to directly add Loongson UART support to the
+existing 8250 driver. The critical section is as follows:
 
 diff --git a/drivers/tty/serial/8250/8250_port.c
 b/drivers/tty/serial/8250/8250_port.c
-index 719faf92aa8a..53efe841656f 100644
+index aa4de6907f77..6754f496a95c 100644
 --- a/drivers/tty/serial/8250/8250_port.c
 +++ b/drivers/tty/serial/8250/8250_port.c
-@@ -310,6 +310,14 @@ static const struct serial8250_config uart_config[] =
-=3D {
-                .rxtrig_bytes   =3D {1, 8, 16, 30},
-                .flags          =3D UART_CAP_FIFO | UART_CAP_AFE,
-        },
-+       [PORT_LOONGSON] =3D {
-+               .name           =3D "Loongson",
-+               .fifo_size      =3D 16,
-+               .tx_loadsz      =3D 16,
-+               .fcr            =3D UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_=
-10,
-+               .rxtrig_bytes   =3D {1, 4, 8, 14},
-+               .flags          =3D UART_CAP_FIFO,
-+       },
- };
+@@ -395,14 +404,36 @@ static void hub6_serial_out(struct uart_port *p,
+int offset, int value)
+        outb(value, p->iobase + 1);
+ }
 
- /* Uart divisor latch read */
+ static unsigned int mem_serial_in(struct uart_port *p, int offset)
+ {
++       unsigned int val, offset0 =3D offset;
+        offset =3D offset << p->regshift;
+-       return readb(p->membase + offset);
++       val =3D readb(p->membase + offset);
++       if (p->type =3D=3D PORT_LOONGSON)
++               val =3D serial_in_fixup(p, offset0, val);
++       return val;
+ }
 
-Additionally, `uart.port.type` will also be assigned the value `PORT_LOONGS=
-ON`.
+ static void mem_serial_out(struct uart_port *p, int offset, int value)
+ {
++       if (p->type =3D=3D PORT_LOONGSON)
++               value =3D serial_out_fixup(p, offset, value);
+        offset =3D offset << p->regshift;
+        writeb(value, p->membase + offset);
+ }
+
+This made the code difficult to read, so I concluded it was not a good
+solution. Therefore, I separated it into a standalone driver.
+
 >
+> > --- /dev/null
+> > +++ b/drivers/tty/serial/8250/8250_loongson.c
+> > @@ -0,0 +1,202 @@
+> ...
+> > +struct loongson_uart_data {
+> > +     int line;
+> > +     int mcr_invert;
+> > +     int msr_invert;
+>
+> These two should be unsigned. They should be u8, actually.
+
+OK....
+>
+> > +     struct reset_control *rst;
+> > +};
+> > +
+> > +static unsigned int serial_fixup(struct uart_port *p, unsigned int off=
+set, unsigned int val)
+>
+> Both 'val' and ret type should be u8.
+
+OK... I will check twice.
+>
+> > +{
+> > +     struct loongson_uart_data *ddata =3D p->private_data;
+> > +
+> > +     if (offset =3D=3D UART_MCR)
+> > +             val ^=3D ddata->mcr_invert;
+> > +
+> > +     if (offset =3D=3D UART_MSR)
+> > +             val ^=3D ddata->msr_invert;
+> > +
+> > +     return val;
+> > +}
+> > +
+> > +static u32 loongson_serial_in(struct uart_port *p, unsigned int offset=
+)
+> > +{
+> > +     unsigned int val;
+>
+> u8
+>
+> > +
+> > +     val =3D readb(p->membase + (offset << p->regshift));
+> > +
+> > +     return serial_fixup(p, offset, val);
+> > +}
+>
+> thanks,
 > --
 > js
 > suse labs
 
---=20
+
+--
 Thanks.
 Binbin
