@@ -1,143 +1,63 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4160E2D46A1
-	for <loongarch@lists.linux.dev>; Mon,  6 Oct 2025 14:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3451D33993;
+	Mon,  6 Oct 2025 21:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759759991; cv=none; b=jG5H/TvdBkZmxNn8dVEqQ46Bq/Xs6/qIJSfJjV6ugFd44lxh6kZ4vUIUSrUqJEijAATG6Nn2mxgUjtYCHIVn6oigPiOkxeyfToiU8dq101pMKZltPwPzRLNnyhD/GZHvDZ+X8oUt6zFPqmS4MioNyfyM0YyVjGtHT+GxyPcwAEU=
+	t=1759784441; cv=none; b=tqtOTZJp8bz9oDOtZ5GEZULwof9TLx00e2+A3hho+wdbQnNfBX4np01sbgiNh3nzSi7sDxvUUJYJdssuhLEcbPLQqaMQsfISZkyv3mI77Ab+1ceB8DIIFYgRT5ZAEecDFn7wAY/F0q5WR1xBBoRdjpz7AXPEl8FmlB1pjTSbtVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759759991; c=relaxed/simple;
-	bh=uP6CerlMC0Y3nc50t2A1HH3D4P1/cf2ULQQcMRhQSOk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qBO2Q1gzdkaTvO971ZvRFSs8+H4CSPC7yAvXPtiVwDAtF1cOEEOhaMRVegh2e0mbsB6555+uzDFnFLrzLVHEeYzVY41fJQ1d/Gwldu7wovoBfTjmcztizddLXoVWzK/q/lAEgkQYJ023Wg0iFjpT20VxWt70NVpvV2jqbIrdkDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8BxndJrzuNoPPsSAA--.39745S3;
-	Mon, 06 Oct 2025 22:12:59 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowJCxrsNhzuNosArSAA--.62698S2;
-	Mon, 06 Oct 2025 22:12:57 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.18
-Date: Mon,  6 Oct 2025 22:12:28 +0800
-Message-ID: <20251006141228.3534607-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1759784441; c=relaxed/simple;
+	bh=iDl8Zu3v0MQTZVTv9kzwnPwIBKpczrRYT9UDZln8bXU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=XuZE4sIRmxz5kgINoje2t2A42lsXweddI9jBp+yeCIkpUPiM4PUdq3M4LbkbUfTG0v+yj7+qoUGBn4eQBTTWCijUTuxqnaIqbSBKYx2JxaH0d0w+QlwYFFcFtIhFKe2D+C/L3MRB3rfSgm3o972qoO7TiZqg8jMjgGU9R48U3/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5FweuP5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5FweuP5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A7BC4CEF5;
+	Mon,  6 Oct 2025 21:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759784441;
+	bh=iDl8Zu3v0MQTZVTv9kzwnPwIBKpczrRYT9UDZln8bXU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=D5FweuP5ozTtEsloMEgafIShW35PCKpsCAeHKk8BxkhRz2qL0wmwk17KDTPSsFeQ3
+	 qcAVopsYY2UL+VM18WAGP7j97ppPWtoaGD/6HifP1sCl/qD08ORKLpxOu+sWPeqQsm
+	 6tTSXTT/fg2BYnPIFFO+VSttbzIqHy8jbtRvkdS/l330kXEBTnkLwGTJzk3f6GodHh
+	 eSRPMp1nBVOyvPXxOAm3Lvucaz3XkTuMp+T7md+v2lGftAaVgP09mATXtogeHHBmCh
+	 HSgtFzvSMrw38LSHlVAP0/K+SMxv3R+ZCGAks0xa4fZ+CDWZ3yLDOyP31qNviSVzIa
+	 pyhKWpWKzmLsg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB42539D0C1B;
+	Mon,  6 Oct 2025 21:00:31 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v6.18
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20251006141228.3534607-1-chenhuacai@loongson.cn>
+References: <20251006141228.3534607-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20251006141228.3534607-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.18
+X-PR-Tracked-Commit-Id: 032676ff8217cab3273da56ee774b64c46b56b5e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fb5bc347311b1d78dc608c91c2d68327b0a1d1d4
+Message-Id: <175978443045.1594692.4419604317572721635.pr-tracker-bot@kernel.org>
+Date: Mon, 06 Oct 2025 21:00:30 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxrsNhzuNosArSAA--.62698S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWr1rZFWDWrW5KF4kKw4DAwc_yoWrJrW8pr
-	43urnxJF4UGrsxJr9xt345uF15twn7Gry7Xa1akry8Cr1UZr1UGw1xXF97Xa4Ut3yrJr1I
-	qr1rG34jg3WUJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
-	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
-	0xZFpf9x07jepB-UUUUU=
 
-The following changes since commit e5f0a698b34ed76002dc5cff3804a61c80233a7a:
+The pull request you sent on Mon,  6 Oct 2025 22:12:28 +0800:
 
-  Linux 6.17 (2025-09-28 14:39:22 -0700)
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.18
 
-are available in the Git repository at:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fb5bc347311b1d78dc608c91c2d68327b0a1d1d4
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.18
+Thank you!
 
-for you to fetch changes up to 032676ff8217cab3273da56ee774b64c46b56b5e:
-
-  LoongArch: Update Loongson-3 default config file (2025-10-05 11:52:43 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v6.18
-
-1, Init acpi_gbl_use_global_lock to false;
-2, Allow specify SIMD width via kernel parameters;
-3, Add kexec_file (both EFI & ELF format) support;
-4, Add PER_VMA_LOCK for page fault handling support;
-5, Improve BPF trampoline support;
-6, Update the default config file;
-7, Some bug fixes and other small changes.
-
-Note: There is a conflict in arch/loongarch/Kconfig but can be simply
-fixed by adjusting context.
-
-----------------------------------------------------------------
-Hengqi Chen (8):
-      LoongArch: BPF: Remove duplicated flags check
-      LoongArch: BPF: Remove duplicated bpf_flush_icache()
-      LoongArch: BPF: No text_poke() for kernel text
-      LoongArch: BPF: No support of struct argument in trampoline programs
-      LoongArch: BPF: Don't align trampoline size
-      LoongArch: BPF: Make trampoline size stable
-      LoongArch: BPF: Make error handling robust in arch_prepare_bpf_trampoline()
-      LoongArch: BPF: Sign-extend struct ops return values properly
-
-Huacai Chen (6):
-      Merge tag 'acpi-6.18-rc1' into loongarch-next
-      LoongArch: Fix build error for LTO with LLVM-18
-      LoongArch: Init acpi_gbl_use_global_lock to false
-      LoongArch: Allow specify SIMD width via kernel parameters
-      LoongArch: BPF: Fix uninitialized symbol 'retval_off'
-      LoongArch: Update Loongson-3 default config file
-
-Tiezhu Yang (3):
-      LoongArch: Add cflag -fno-isolate-erroneous-paths-dereference
-      LoongArch: Handle new atomic instructions for probes
-      LoongArch: BPF: Optimize sign-extention mov instructions
-
-Wentao Guan (1):
-      LoongArch: Try VMA lock-based page fault handling first
-
-Youling Tang (6):
-      LoongArch: Add struct loongarch_image_header for kernel
-      LoongArch: Add preparatory infrastructure for kexec_file
-      LoongArch: Add EFI binary support for kexec_file
-      LoongArch: Add ELF binary support for kexec_file
-      LoongArch: Add crash dump support for kexec_file
-      LoongArch: Automatically disable kaslr if boot from kexec_file
-
- arch/loongarch/Kconfig                     |  11 ++
- arch/loongarch/Makefile                    |   4 +-
- arch/loongarch/configs/loongson3_defconfig |  73 ++++++++-
- arch/loongarch/include/asm/image.h         |  52 +++++++
- arch/loongarch/include/asm/inst.h          |   5 +
- arch/loongarch/include/asm/kexec.h         |  12 ++
- arch/loongarch/kernel/Makefile             |   1 +
- arch/loongarch/kernel/cpu-probe.c          |  46 +++++-
- arch/loongarch/kernel/inst.c               |  12 ++
- arch/loongarch/kernel/kexec_efi.c          | 113 ++++++++++++++
- arch/loongarch/kernel/kexec_elf.c          | 105 +++++++++++++
- arch/loongarch/kernel/machine_kexec.c      |  37 +++--
- arch/loongarch/kernel/machine_kexec_file.c | 239 +++++++++++++++++++++++++++++
- arch/loongarch/kernel/relocate.c           |   4 +
- arch/loongarch/kernel/setup.c              |   1 +
- arch/loongarch/mm/fault.c                  |  58 ++++++-
- arch/loongarch/net/bpf_jit.c               |  86 ++++++++---
- 17 files changed, 809 insertions(+), 50 deletions(-)
- create mode 100644 arch/loongarch/include/asm/image.h
- create mode 100644 arch/loongarch/kernel/kexec_efi.c
- create mode 100644 arch/loongarch/kernel/kexec_elf.c
- create mode 100644 arch/loongarch/kernel/machine_kexec_file.c
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
