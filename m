@@ -1,63 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3451D33993;
-	Mon,  6 Oct 2025 21:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5C72116F6;
+	Wed,  8 Oct 2025 12:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759784441; cv=none; b=tqtOTZJp8bz9oDOtZ5GEZULwof9TLx00e2+A3hho+wdbQnNfBX4np01sbgiNh3nzSi7sDxvUUJYJdssuhLEcbPLQqaMQsfISZkyv3mI77Ab+1ceB8DIIFYgRT5ZAEecDFn7wAY/F0q5WR1xBBoRdjpz7AXPEl8FmlB1pjTSbtVc=
+	t=1759925817; cv=none; b=h+F1WGV3eTWcvrjZOj0NtKMCMLCPT5bUqqD1B3SDR47G3IckvyakUeXQTp/13aPORYlB9JNqdI2jIgEQqQc5pUobe7GxA0vy32WN4Uqbg4uVv0PN91tXpLm6PoU66FzGCzoBxSL/oBQWjwrCNL9nj3Hcz1qwoAwVWi8nN7Dra0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759784441; c=relaxed/simple;
-	bh=iDl8Zu3v0MQTZVTv9kzwnPwIBKpczrRYT9UDZln8bXU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=XuZE4sIRmxz5kgINoje2t2A42lsXweddI9jBp+yeCIkpUPiM4PUdq3M4LbkbUfTG0v+yj7+qoUGBn4eQBTTWCijUTuxqnaIqbSBKYx2JxaH0d0w+QlwYFFcFtIhFKe2D+C/L3MRB3rfSgm3o972qoO7TiZqg8jMjgGU9R48U3/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5FweuP5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759925817; c=relaxed/simple;
+	bh=41Q6dYudRRc1BldM8r7PPMDN3nIYC3sGz9eHv636/GQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+hJKhFPWfSzaRekbuoo8ZQUZV/ubDatogfjsY5I8U1VFvdKH7EWh8li7f8cU4jDE1UvA7tYQaN+nWQRFnsnB+cHLgAH6r45npXHDHqg1O9pARH3HtXg0fVCCOB3U+3kWw01J7CsYyJPV27uMTYyJ6dn4PEGVsc4vh3moqVn30E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=liOJUmyV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5FweuP5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A7BC4CEF5;
-	Mon,  6 Oct 2025 21:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759784441;
-	bh=iDl8Zu3v0MQTZVTv9kzwnPwIBKpczrRYT9UDZln8bXU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=D5FweuP5ozTtEsloMEgafIShW35PCKpsCAeHKk8BxkhRz2qL0wmwk17KDTPSsFeQ3
-	 qcAVopsYY2UL+VM18WAGP7j97ppPWtoaGD/6HifP1sCl/qD08ORKLpxOu+sWPeqQsm
-	 6tTSXTT/fg2BYnPIFFO+VSttbzIqHy8jbtRvkdS/l330kXEBTnkLwGTJzk3f6GodHh
-	 eSRPMp1nBVOyvPXxOAm3Lvucaz3XkTuMp+T7md+v2lGftAaVgP09mATXtogeHHBmCh
-	 HSgtFzvSMrw38LSHlVAP0/K+SMxv3R+ZCGAks0xa4fZ+CDWZ3yLDOyP31qNviSVzIa
-	 pyhKWpWKzmLsg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB42539D0C1B;
-	Mon,  6 Oct 2025 21:00:31 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v6.18
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20251006141228.3534607-1-chenhuacai@loongson.cn>
-References: <20251006141228.3534607-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20251006141228.3534607-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.18
-X-PR-Tracked-Commit-Id: 032676ff8217cab3273da56ee774b64c46b56b5e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fb5bc347311b1d78dc608c91c2d68327b0a1d1d4
-Message-Id: <175978443045.1594692.4419604317572721635.pr-tracker-bot@kernel.org>
-Date: Mon, 06 Oct 2025 21:00:30 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="liOJUmyV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6522EC4CEF5;
+	Wed,  8 Oct 2025 12:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1759925816;
+	bh=41Q6dYudRRc1BldM8r7PPMDN3nIYC3sGz9eHv636/GQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=liOJUmyVi2ItxLHP/m5OEoyKjYw5r41MGqxA3tKydZ85y/ITbFnG/dKJwMEQQIc0m
+	 rbX3LuZHJlZY+T7dIlx8p9/hUhkToReczlr3f47RQa/QgEzOxJ0RBAGri0EGhqnCNg
+	 AldM/D7MqkSwWzg9Hw2As38aOQfL4NQvt86y0D9A=
+Date: Wed, 8 Oct 2025 14:16:54 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Haowei Zheng <zhenghaowei@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] serial: 8250: Add Loongson uart driver support
+Message-ID: <2025100838-deskbound-framing-ac6f@gregkh>
+References: <cover.1758676290.git.zhoubinbin@loongson.cn>
+ <9823e7afe713450e210dab9dba6fa18683dc1fe0.1758676290.git.zhoubinbin@loongson.cn>
+ <2025092428-glade-monologue-3663@gregkh>
+ <CAMpQs4JgR=iG6LAuYeVxOpE31S6n=dC4+FGUJczOYDVfWHDuFw@mail.gmail.com>
+ <b862846d-fb2a-4df4-8457-d858aa63031d@kernel.org>
+ <CAMpQs4KVgSFk=B5JtQ1KM02HydTkwaYqi+LzzhdJAyoSUfAxLw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4KVgSFk=B5JtQ1KM02HydTkwaYqi+LzzhdJAyoSUfAxLw@mail.gmail.com>
 
-The pull request you sent on Mon,  6 Oct 2025 22:12:28 +0800:
+On Tue, Sep 30, 2025 at 11:03:29AM +0800, Binbin Zhou wrote:
+> Hi Jiri:
+> 
+> Thanks for your reply.
+> 
+> On Mon, Sep 29, 2025 at 2:19 PM Jiri Slaby <jirislaby@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > On 28. 09. 25, 4:48, Binbin Zhou wrote:
+> > > Hi Greg:
+> > >
+> > > Thanks for your reply.
+> > >
+> > > On Wed, Sep 24, 2025 at 6:22 PM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > >>
+> > >> On Wed, Sep 24, 2025 at 02:29:37PM +0800, Binbin Zhou wrote:
+> > >>> --- a/include/uapi/linux/serial_core.h
+> > >>> +++ b/include/uapi/linux/serial_core.h
+> > >>> @@ -31,6 +31,7 @@
+> > >>>   #define PORT_ALTR_16550_F128 28 /* Altera 16550 UART with 128 FIFOs */
+> > >>>   #define PORT_RT2880  29      /* Ralink RT2880 internal UART */
+> > >>>   #define PORT_16550A_FSL64 30 /* Freescale 16550 UART with 64 FIFOs */
+> > >>> +#define PORT_LOONGSON        31      /* Loongson 16550 UART */
+> > >>
+> > >> Why does userspace need to have this value exported?
+> > >
+> > > Sorry, this was a cheap mistake.
+> > > It should follow the existing latest macro definition as follows:
+> >
+> > That was not the point. The point was why do you need that at all?
+> 
+> Emm...
+> We attempted to define Loongson UART as a new `uart_config` entry.
+> Therefore, `PORT_LOONGSON` is referenced as follows:
+> 
+> diff --git a/drivers/tty/serial/8250/8250_port.c
+> b/drivers/tty/serial/8250/8250_port.c
+> index 719faf92aa8a..53efe841656f 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -310,6 +310,14 @@ static const struct serial8250_config uart_config[] = {
+>                 .rxtrig_bytes   = {1, 8, 16, 30},
+>                 .flags          = UART_CAP_FIFO | UART_CAP_AFE,
+>         },
+> +       [PORT_LOONGSON] = {
+> +               .name           = "Loongson",
+> +               .fifo_size      = 16,
+> +               .tx_loadsz      = 16,
+> +               .fcr            = UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10,
+> +               .rxtrig_bytes   = {1, 4, 8, 14},
+> +               .flags          = UART_CAP_FIFO,
+> +       },
+>  };
+> 
+>  /* Uart divisor latch read */
+> 
+> Additionally, `uart.port.type` will also be assigned the value `PORT_LOONGSON`.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.18
+Yes, but that is the same exact value as PORT_PXA, which means this code
+will not really work properly, right?  You can not just redefine an
+already used user/kernel value.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fb5bc347311b1d78dc608c91c2d68327b0a1d1d4
+thanks,
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+greg k-h
