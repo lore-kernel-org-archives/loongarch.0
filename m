@@ -1,198 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F21486352
-	for <loongarch@lists.linux.dev>; Thu,  9 Oct 2025 11:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D9D2FB0BA
+	for <loongarch@lists.linux.dev>; Thu,  9 Oct 2025 15:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760010393; cv=none; b=gB+MF6Wi1QBmDtNkJO2AQAoRRGUlMl5VAIJW6Hq/SZJei37XjSz02Q4RNnIuqn+euhNKOR498nNNBAL+me4ypB2m7V9q/e6dIf+JKFWUjo3D6lzzf8e7v/CDjKj/Yh/qgtDvWXUkYkKdDa7WSbFn5HZIPXHEmaPOD0Mwe5lmXLM=
+	t=1760025593; cv=none; b=frMyxXOZPS/HDn6uYgyZoCFA+4vPkpH78pyyym/WvHf0Fpw84D+SBiHT/bxw+y1SftuI5z/TwNcxgVewwQsJ8lbO00Xchnk5kPd2K3q1MUp25ZyuenxpCtiM0NFVYOH9x1KgXvMCZZa4Ev5H+qhjhwFAeuYPgolbiUt8YTtVoCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760010393; c=relaxed/simple;
-	bh=mZZt5YdIwuaPegnVqL4be4LrmctNgNxtCGeCY51/RGw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SsuyLPUb4PV4g/vnp98VOdDBwLn1Zv4gTMW7pKElrv26kYLTm6qD5CWL9uUM0hrLLPa0T72YZfKuxy1N2w81stjQ3bb0emavoawkcx9Raor97Zk/04IlMkKsJuzC14mIc5OLA6yr2lt3Jfjro+x3BuKXCO3VHA4gUTbK20NYjdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TBPe/JHM; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1760025593; c=relaxed/simple;
+	bh=Ofw2I16zOAWsVSdhqMKa7TgqrVl1ooqEk3Bf5PywpZo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ik+QB5K34ckZ5bx/8AvxrhVscV8APA5GI3v6pVOPKLIM+CnLdiAjyHpYPp4jmlm07KfqGIwKoCbA0Pw8y5Tq4+pYgAicJ+wqoRNfhRxuYYGhob3RdV4R5H88CAoVyIJc+s8nsl/khVKvQC6q3ymJG5SjbWUq1QhbwefMGTPdupI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXulqPOk; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TBPe/JHM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760010392; x=1791546392;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=mZZt5YdIwuaPegnVqL4be4LrmctNgNxtCGeCY51/RGw=;
-  b=TBPe/JHMRbQPh2dXGsBFkHtq1EnIis5O0uffkUjh0rdqI9ApxJj+tf3Y
-   t+ddN2HFWs8ZasRZMklPhgd2/zWAyDm+JDk2TirHe1iI2t6zAPU2esIto
-   mwDV2b95kQ9vIyiNMfwDzeoMeY+dUz1sJ7NNBD2Tn7n3hXB0fCjveFdh3
-   JdwXGQo+aHxTZEyiANu7JaKd4Knr/i9zMabY/RwIH7aJWLVEpoJVcamJl
-   QqywXYPKs2hWsyuUAdONJP5kLZEitHlHye7NwNLs6Mc3irrBky1HacXXH
-   uCvyxBlkJNgLe9WMiu+HMfwua1ZXILXKreCxUrF7/Z2aZJn9WARSCvP62
-   w==;
-X-CSE-ConnectionGUID: Bn8wY9jHTkG03qwpaNPyXg==
-X-CSE-MsgGUID: BRLMuHMIRg+4RH5rlpoFbQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11576"; a="65865421"
-X-IronPort-AV: E=Sophos;i="6.19,216,1754982000"; 
-   d="scan'208";a="65865421"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 04:46:31 -0700
-X-CSE-ConnectionGUID: v/CHf2U8Q4WnRvXibbHLCg==
-X-CSE-MsgGUID: 2WjfIzpqTli1vahEaLIIHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,216,1754982000"; 
-   d="scan'208";a="185072214"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.26])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 04:46:25 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 9 Oct 2025 14:46:22 +0300 (EEST)
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-    Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, Haowei Zheng <zhenghaowei@loongson.cn>, 
-    Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-    loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-    linux-serial <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] serial: 8250: Add Loongson uart driver support
-In-Reply-To: <CAMpQs4KS=hd3zvj5KYH7vBXpbEhPLmS61H9dLgnRpBpH+04ChA@mail.gmail.com>
-Message-ID: <5e33cb28-0f03-519e-10e6-74d5305c1284@linux.intel.com>
-References: <cover.1758676290.git.zhoubinbin@loongson.cn> <9823e7afe713450e210dab9dba6fa18683dc1fe0.1758676290.git.zhoubinbin@loongson.cn> <9cd368a1-4ba2-3b96-5cfe-0e600e77a3fe@linux.intel.com>
- <CAMpQs4KS=hd3zvj5KYH7vBXpbEhPLmS61H9dLgnRpBpH+04ChA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXulqPOk"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-57d5ccd73dfso1225032e87.0
+        for <loongarch@lists.linux.dev>; Thu, 09 Oct 2025 08:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760025590; x=1760630390; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WQBxmURKiGaN3QIqBhTff7pEbZ70mJ9TllMgftPCUcQ=;
+        b=EXulqPOki4G3RAt1xfd/pqmni7h5ohgX0KMbBjLxpzbDRFar/aH/OrRIulLXGYqYic
+         UFnVZhR/+aGAk4+6t2a14KBjWV5+cMbqVcrOVgRPjNanSw45xbRcd06rP6qX9KBJ6XTt
+         eDDtC/4KtnQBDwXTulSh/XBWnFItJAavEBDeuBrceA/D7SW0gh7jjmRDi1M1JmngyQcA
+         9UNCZwf+Gd2+SONxaDrGyaTAT4a5TkVV9NHSrnnS1LUpgBsegjfNEIwYOfbXszN8dwPp
+         2sa4uXpyyK2P5RJ/X2ro8uGiJ6pQUuvih4D3k4LoYAMcmpG2sGL9MFpkH/g+rIUm2noT
+         cbJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760025590; x=1760630390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WQBxmURKiGaN3QIqBhTff7pEbZ70mJ9TllMgftPCUcQ=;
+        b=V+4Pw69ijSeTBC4EkDskNe8rNBz11USclrY7bOdZ9+FOuXSt5Sc05ov/wibPhetlIe
+         xAzgJe7nqKAws42ZEsgssJGLLWbSOWgUlU+nYMcWcX6PjQh+u2lKoYoTM3tETqp1MX8M
+         SXKmSuwRmWFXWBl3n4Ckn4xMMiAOspDl1aU0ae++ApsfjXJkRYODqzIa/4OAZWPwWYYU
+         AXH3FaECzy95aohSKfTQdcDwDRdg2LKgeSFV+h1eIVmUBnpEmDxWslKzcxLhwnM+eLzt
+         ymfHEly2NWIHWDWt2DcEJjbaArRtG7b0XsXwM3xHHKBW7xfk6pE30O6iK4hqBt6yGuGf
+         KYsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzZS+CtwVK0nBPH1CZpuNLOcIzZjWyHjIUcOkRUUf6tfENOmLsCoTBM9KZZsCuEzPAmLaKclCg5CQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyCnpFIBQ1lKM4owLmxgUF1nnwm3dsw6v6YUG8EFzWCD2twBcJj
+	jmuLSX3QzFglinhlwG9GClWjyo7dTQHgs2bwx/cpQCK1v1h9+Tcd49Xwd4KHX7YG2R8OWfgTmhM
+	2Dpej6imbYecvHgyJDBayAg0YXYKET9s=
+X-Gm-Gg: ASbGnctnd2ymw4miBB8r+ReCp91qsw5HQYKVdPn03Gm6sECL8KWtYuXbgP9cnclc+rE
+	hmvM/hbhtOcCiSdoKxtgp+3IePXOuYFub2/JHlCvkl2i+n3Oh4EO+k6XttXP9wKmUa4uNBAn/tj
+	OAII/f/ekzu7O0fxAmTWhvEurJwJbyA6kAZa41azNK8Jjm2hOoqVU3my2+72KobDYgHehaqSQXE
+	tmoNBmBXnO856uuVbqmCFHU0fUlLFiF5ajMwdG6pg==
+X-Google-Smtp-Source: AGHT+IFiOw5ablsLgUKfCaNuQJri4wcztl+zI4ly3LRjrgaXjzgOnqWcpR8ZMzuTHWFg5QDe7h9JoAEutSyQKhvfT4w=
+X-Received: by 2002:a05:6512:1291:b0:57d:ffa4:56f4 with SMTP id
+ 2adb3069b0e04-5906dae5904mr2393608e87.41.1760025589415; Thu, 09 Oct 2025
+ 08:59:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-604913320-1760010382=:944"
+References: <20250810125746.1105476-1-snovitoll@gmail.com> <20250810125746.1105476-2-snovitoll@gmail.com>
+ <87ldmv6p5n.ritesh.list@gmail.com>
+In-Reply-To: <87ldmv6p5n.ritesh.list@gmail.com>
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Date: Thu, 9 Oct 2025 20:59:32 +0500
+X-Gm-Features: AS18NWAnJdcYDP3fsUmpv8ZuZnvVnkv1zMHsU4QWH3X3orZoE8748Ur0FWZohd0
+Message-ID: <CACzwLxia6xMcQ=vsYG7SE+pUO8=4DiRWD_Omq3wzRyuhDjGcPQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] kasan: introduce ARCH_DEFER_KASAN and unify static
+ key across modes
+To: Ritesh Harjani <ritesh.list@gmail.com>
+Cc: ryabinin.a.a@gmail.com, christophe.leroy@csgroup.eu, bhe@redhat.com, 
+	hca@linux.ibm.com, andreyknvl@gmail.com, akpm@linux-foundation.org, 
+	zhangqing@loongson.cn, chenhuacai@loongson.cn, davidgow@google.com, 
+	glider@google.com, dvyukov@google.com, alexghiti@rivosinc.com, alex@ghiti.fr, 
+	agordeev@linux.ibm.com, vincenzo.frascino@arm.com, elver@google.com, 
+	kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Sep 4, 2025 at 5:38=E2=80=AFAM Ritesh Harjani <ritesh.list@gmail.co=
+m> wrote:
+>
+>
+> Only book3s64 needs static keys here because of radix v/s hash mode
+> selection during runtime. The changes in above for powerpc looks good to
+> me. It's a nice cleanup too.
+>
 
---8323328-604913320-1760010382=:944
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Hello,
+Thanks for the review and sorry for the late reply. This has already
+been merged.
+AFAIU, in arch/powerpc/Kconfig
 
-On Thu, 9 Oct 2025, Binbin Zhou wrote:
+config PPC
+...
+        select ARCH_NEEDS_DEFER_KASAN if PPC_RADIX_MMU
 
-> Hi Ilpo:
->=20
-> Sorry for the late reply and thanks for your detailed review.
->=20
-> On Tue, Sep 30, 2025 at 7:58=E2=80=AFPM Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> >
-> > On Wed, 24 Sep 2025, Binbin Zhou wrote:
-> >
-> > > Add the driver for on-chip UART used on Loongson family chips.
-> > >
-> > > The hardware is similar to 8250, but there are the following
-> > > differences:
-> > >  - Some chips (such as Loongson-2K2000) have added a fractional divis=
-ion
-> > >    register to obtain the required baud rate accurately, so the
-> > >    {get,set}_divisor callback is overridden.
-> > >  - Due to hardware defects, quirk handling is required for
-> > >    UART_MCR/UART_MSR.
-> > >
-> > > Co-developed-by: Haowei Zheng <zhenghaowei@loongson.cn>
-> > > Signed-off-by: Haowei Zheng <zhenghaowei@loongson.cn>
-> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > > ---
+and in arch/powerpc/platforms/Kconfig.cputype:
 
-> > > +static unsigned int serial_fixup(struct uart_port *p, unsigned int o=
-ffset, unsigned int val)
-> > > +{
-> > > +     struct loongson_uart_data *ddata =3D p->private_data;
-> > > +
-> > > +     if (offset =3D=3D UART_MCR)
-> > > +             val ^=3D ddata->mcr_invert;
-> > > +
-> > > +     if (offset =3D=3D UART_MSR)
-> > > +             val ^=3D ddata->msr_invert;
+config PPC_RADIX_MMU
+        bool "Radix MMU Support"
+        depends on PPC_BOOK3S_64
+        select ARCH_HAS_GIGANTIC_PAGE
+        default y
 
-One additional thing, this could use switch/case.
+So the KASAN static key is enabled only for PPC_BOOK3S_64 by this
+Kconfig selection.
+In other git changes like:
+arch/powerpc/mm/kasan/init_32.c
+arch/powerpc/mm/kasan/init_book3e_64.c
 
-I'd just do:
+, where we call kasan_init_generic() -> kasan_enable() does nothing because
+CONFIG_ARCH_DEFER_KASAN is not selected.
 
-=09...
-=09case UART_MSR:
-=09=09return val ^ ddata->msr_invert;
-=09default:
-=09=09return val;
-=09}
+> So feel free to take:
+> Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com> #powerpc
+>
+> However I have few comments below...
+>
+> > @@ -246,7 +255,7 @@ static inline void poison_slab_object(struct kmem_c=
+ache *cache, void *object,
+> >  bool __kasan_slab_pre_free(struct kmem_cache *cache, void *object,
+> >                               unsigned long ip)
+> >  {
+> > -     if (!kasan_arch_is_ready() || is_kfence_address(object))
+> > +     if (is_kfence_address(object))
+>
+> For changes in mm/kasan/common.c.. you have removed !kasan_enabled()
+> check at few places. This seems to be partial revert of commit [1]:
+>
+>   b3c34245756ada "kasan: catch invalid free before SLUB reinitializes the=
+ object"
+>
+> Can you please explain why this needs to be removed?
 
-That way you don't need to use breaks.
+kasan_arch_is_ready() was removed here because in
+commit 1e338f4d99e6("kasan: introduce ARCH_DEFER_KASAN and unify
+static key across modes")
+I've unified the check with kasan_enabled() which is already called in
+the __wrapper
+__kasan_slab_pre_free in include/linux/kasan.h
 
-> > > +     if (flags & LOONGSON_UART_HAS_FRAC) {
-> > > +             uart.port.get_divisor =3D loongson_frac_get_divisor;
-> > > +             uart.port.set_divisor =3D loongson_frac_set_divisor;
-> > > +     }
-> > > +
-> > > +     if (flags & LOONGSON_UART_QUIRK_MCR)
-> > > +             ddata->mcr_invert |=3D (UART_MCR_RTS | UART_MCR_DTR);
-> > > +
-> > > +     if (flags & LOONGSON_UART_QUIRK_MSR)
-> > > +             ddata->msr_invert |=3D (UART_MSR_CTS | UART_MSR_DSR);
-> >
-> > I think it would be better to put these invert masks directly into a
-> > struct which is then put into .data. LOONGSON_UART_HAS_FRAC can be bool
-> > in that struct.
->=20
-> I attempted the following refactoring:
->=20
-> struct loongson_uart_ddata {
->         bool has_frac;
->         u8 mcr_invert;
->         u8 msr_invert;
-> };
->=20
-> static const struct loongson_uart_ddata ls2k0500_uart_data {
->         .has_frac =3D false,
->         .mcr_invert =3D UART_MCR_RTS | UART_MCR_DTR,
->         .msr_invert =3D UART_MSR_CTS | UART_MSR_DSR,
-> };
->=20
-> static const struct loongson_uart_ddata ls2k1500_uart_data {
->         .has_frac =3D true,
->         .mcr_invert =3D UART_MCR_RTS | UART_MCR_DTR,
->         .msr_invert =3D 0,
-> };
->=20
-> struct loongson_uart_priv {
->         int line;
->         struct clk *clk;
->         struct resource *res;
->         struct reset_control *rst;
->         struct loongson_uart_ddata *ddata;
-
-This can and should be const struct as well as those underlying data=20
-structs are const too.
-
-> };
->=20
-> .............
-> In loongson_uart_probe():
->        priv->ddata =3D device_get_match_data(dev);
->=20
->         if (priv->ddata->has_frac) {
->                 port->get_divisor =3D loongson_frac_get_divisor;
->                 port->set_divisor =3D loongson_frac_set_divisor;
->         }
->=20
->=20
-> .............
-> static const struct of_device_id loongson_uart_of_ids[] =3D {
->         { .compatible =3D "loongson,ls2k0500-uart", .data =3D ls2k0500_ua=
-rt_data },
->         { .compatible =3D "loongson,ls2k1500-uart", .data =3D ls2k1500_ua=
-rt_data },
->         { },
-> };
-
-
---=20
- i.
-
---8323328-604913320-1760010382=:944--
+> Also the explaination of the same should be added in the commit msg too.
+>
+> [1]: https://lore.kernel.org/all/20240809-kasan-tsbrcu-v8-1-aef4593f9532@=
+google.com/
+>
