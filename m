@@ -1,123 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5C72116F6;
-	Wed,  8 Oct 2025 12:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C697082D;
+	Thu,  9 Oct 2025 01:07:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759925817; cv=none; b=h+F1WGV3eTWcvrjZOj0NtKMCMLCPT5bUqqD1B3SDR47G3IckvyakUeXQTp/13aPORYlB9JNqdI2jIgEQqQc5pUobe7GxA0vy32WN4Uqbg4uVv0PN91tXpLm6PoU66FzGCzoBxSL/oBQWjwrCNL9nj3Hcz1qwoAwVWi8nN7Dra0c=
+	t=1759972028; cv=none; b=D84JNm438dyr9ZH9mBrdve6x2rw+Kh1q7L3QWthJ9GcsdSiIPot62PWAJe2H8uyq5B9+MUJqwphe7kDaPctcl2XXN1GLmPRMCD2/wstfvc5x2haBK34Pto7VM2w0pxq5wDa3ccmZfOIBVp93jB5krrpC2CZKJj+wIZU1v7PYYxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759925817; c=relaxed/simple;
-	bh=41Q6dYudRRc1BldM8r7PPMDN3nIYC3sGz9eHv636/GQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r+hJKhFPWfSzaRekbuoo8ZQUZV/ubDatogfjsY5I8U1VFvdKH7EWh8li7f8cU4jDE1UvA7tYQaN+nWQRFnsnB+cHLgAH6r45npXHDHqg1O9pARH3HtXg0fVCCOB3U+3kWw01J7CsYyJPV27uMTYyJ6dn4PEGVsc4vh3moqVn30E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=liOJUmyV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759972028; c=relaxed/simple;
+	bh=VISjCl3028ZdolLBlNDZGd4lu4o1butuKMV03AtZBlw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=BNUU0AANUHqccrRIptTrY9gZjtGJEozA74zp58XfSB9qOwfrBpucQQB47KmDptEOE/XZoNqgfL74FPmHKPHJK3rxyCkzsyCWbYBSjjFGUy9oDP8fVuaJ/pJ4v6/sjN3ALQdagnbr/R8acTRTr1Ehb3jgPMk6RvRoNMW5OpiyG+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z85MDq7b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="liOJUmyV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6522EC4CEF5;
-	Wed,  8 Oct 2025 12:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1759925816;
-	bh=41Q6dYudRRc1BldM8r7PPMDN3nIYC3sGz9eHv636/GQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=liOJUmyVi2ItxLHP/m5OEoyKjYw5r41MGqxA3tKydZ85y/ITbFnG/dKJwMEQQIc0m
-	 rbX3LuZHJlZY+T7dIlx8p9/hUhkToReczlr3f47RQa/QgEzOxJ0RBAGri0EGhqnCNg
-	 AldM/D7MqkSwWzg9Hw2As38aOQfL4NQvt86y0D9A=
-Date: Wed, 8 Oct 2025 14:16:54 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Haowei Zheng <zhenghaowei@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] serial: 8250: Add Loongson uart driver support
-Message-ID: <2025100838-deskbound-framing-ac6f@gregkh>
-References: <cover.1758676290.git.zhoubinbin@loongson.cn>
- <9823e7afe713450e210dab9dba6fa18683dc1fe0.1758676290.git.zhoubinbin@loongson.cn>
- <2025092428-glade-monologue-3663@gregkh>
- <CAMpQs4JgR=iG6LAuYeVxOpE31S6n=dC4+FGUJczOYDVfWHDuFw@mail.gmail.com>
- <b862846d-fb2a-4df4-8457-d858aa63031d@kernel.org>
- <CAMpQs4KVgSFk=B5JtQ1KM02HydTkwaYqi+LzzhdJAyoSUfAxLw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z85MDq7b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EE42C4CEF8;
+	Thu,  9 Oct 2025 01:07:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759972027;
+	bh=VISjCl3028ZdolLBlNDZGd4lu4o1butuKMV03AtZBlw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Z85MDq7bFHAVb7Rv7QvW4jT9Y15cPiI0WVlhCJV3Hb8KzH2ZYtKDIugmNBfAaGySd
+	 z5ewF5rNJ+Eg/0lDf4iQ7eqlYgIW0QFXYttqFueGd0EyH0q3YxGVMid01GmetPjhLw
+	 CLKH4BhiZk2QE9ZHGNcP1R+Uu7twuBVmXVU7JX+WU6Qkgezekw/tfTay9IqLn/03qv
+	 fGM0puNNPNlEwlNS8diIH3zKif6A6uWsftAXlyDWexxIsHVq/Ua4/nh1U3nC4uYics
+	 +WuF25l1nNqeg2I6RnH6RhbrrEuRMwXBeUzGy3elVssgawfAsHG1eRRK1qPPGapFZ4
+	 MDqB4RaRlBhng==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB00C3A41017;
+	Thu,  9 Oct 2025 01:06:56 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpQs4KVgSFk=B5JtQ1KM02HydTkwaYqi+LzzhdJAyoSUfAxLw@mail.gmail.com>
+Subject: Re: [PATCH 00/11] vdso: Various cleanups
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <175997201575.3661959.11378704835584004005.git-patchwork-notify@kernel.org>
+Date: Thu, 09 Oct 2025 01:06:55 +0000
+References: <20250826-vdso-cleanups-v1-0-d9b65750e49f@linutronix.de>
+In-Reply-To: <20250826-vdso-cleanups-v1-0-d9b65750e49f@linutronix.de>
+To: =?utf-8?q?Thomas_Wei=C3=9Fschuh_=3Cthomas=2Eweissschuh=40linutronix=2Ede=3E?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
+Cc: linux-riscv@lists.infradead.org, luto@kernel.org, tglx@linutronix.de,
+ vincenzo.frascino@arm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, namcao@linutronix.de,
+ linux@armlinux.org.uk, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, tsbogend@alpha.franken.de, maddy@linux.ibm.com,
+ mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com, svens@linux.ibm.com, arnd@arndb.de,
+ brauner@kernel.org, shuah@kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux@rasmusvillemoes.dk
 
-On Tue, Sep 30, 2025 at 11:03:29AM +0800, Binbin Zhou wrote:
-> Hi Jiri:
-> 
-> Thanks for your reply.
-> 
-> On Mon, Sep 29, 2025 at 2:19 PM Jiri Slaby <jirislaby@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > On 28. 09. 25, 4:48, Binbin Zhou wrote:
-> > > Hi Greg:
-> > >
-> > > Thanks for your reply.
-> > >
-> > > On Wed, Sep 24, 2025 at 6:22 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > >>
-> > >> On Wed, Sep 24, 2025 at 02:29:37PM +0800, Binbin Zhou wrote:
-> > >>> --- a/include/uapi/linux/serial_core.h
-> > >>> +++ b/include/uapi/linux/serial_core.h
-> > >>> @@ -31,6 +31,7 @@
-> > >>>   #define PORT_ALTR_16550_F128 28 /* Altera 16550 UART with 128 FIFOs */
-> > >>>   #define PORT_RT2880  29      /* Ralink RT2880 internal UART */
-> > >>>   #define PORT_16550A_FSL64 30 /* Freescale 16550 UART with 64 FIFOs */
-> > >>> +#define PORT_LOONGSON        31      /* Loongson 16550 UART */
-> > >>
-> > >> Why does userspace need to have this value exported?
-> > >
-> > > Sorry, this was a cheap mistake.
-> > > It should follow the existing latest macro definition as follows:
-> >
-> > That was not the point. The point was why do you need that at all?
-> 
-> Emm...
-> We attempted to define Loongson UART as a new `uart_config` entry.
-> Therefore, `PORT_LOONGSON` is referenced as follows:
-> 
-> diff --git a/drivers/tty/serial/8250/8250_port.c
-> b/drivers/tty/serial/8250/8250_port.c
-> index 719faf92aa8a..53efe841656f 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -310,6 +310,14 @@ static const struct serial8250_config uart_config[] = {
->                 .rxtrig_bytes   = {1, 8, 16, 30},
->                 .flags          = UART_CAP_FIFO | UART_CAP_AFE,
->         },
-> +       [PORT_LOONGSON] = {
-> +               .name           = "Loongson",
-> +               .fifo_size      = 16,
-> +               .tx_loadsz      = 16,
-> +               .fcr            = UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10,
-> +               .rxtrig_bytes   = {1, 4, 8, 14},
-> +               .flags          = UART_CAP_FIFO,
-> +       },
->  };
-> 
->  /* Uart divisor latch read */
-> 
-> Additionally, `uart.port.type` will also be assigned the value `PORT_LOONGSON`.
+Hello:
 
-Yes, but that is the same exact value as PORT_PXA, which means this code
-will not really work properly, right?  You can not just redefine an
-already used user/kernel value.
+This series was applied to riscv/linux.git (for-next)
+by Thomas Gleixner <tglx@linutronix.de>:
 
-thanks,
+On Tue, 26 Aug 2025 08:17:03 +0200 you wrote:
+> Various cleanups to the generic vDSO infrastructure and a patch for ARM
+> which was never applied.
+> 
+> This series has one trivial syntactic conflict with "dso/datastore: Allow
+> prefaulting by mlockall()" [0] and a semantic one with "sparc64: vdso:
+> Switch to generic vDSO library" [1], which still uses the removed
+> GENERIC_VDSO_DATA_STORE.
+> 
+> [...]
 
-greg k-h
+Here is the summary with links:
+  - [01/11] vdso/datastore: Gate time data behind CONFIG_GENERIC_GETTIMEOFDAY
+    https://git.kernel.org/riscv/c/7c0c01a216e6
+  - [02/11] ARM: VDSO: remove cntvct_ok global variable
+    https://git.kernel.org/riscv/c/39f1ee1299c9
+  - [03/11] vdso: Move ENABLE_COMPAT_VDSO from core to arm64
+    https://git.kernel.org/riscv/c/7d298d25ce81
+  - [04/11] vdso/gettimeofday: Remove !CONFIG_TIME_NS stubs
+    https://git.kernel.org/riscv/c/f145d6bf8d59
+  - [05/11] time: Build generic update_vsyscall() only with generic time vDSO
+    https://git.kernel.org/riscv/c/ea1a1fa919a5
+  - [06/11] riscv: vdso: Untangle kconfig logic
+    https://git.kernel.org/riscv/c/eb3b66aab72c
+  - [07/11] vdso: Drop kconfig GENERIC_VDSO_32
+    https://git.kernel.org/riscv/c/278f1c933c3f
+  - [08/11] vdso: Drop kconfig GENERIC_COMPAT_VDSO
+    https://git.kernel.org/riscv/c/bb5bc7bfab06
+  - [09/11] vdso: Drop kconfig GENERIC_VDSO_DATA_STORE
+    https://git.kernel.org/riscv/c/7b338f6d4e3d
+  - [10/11] vdso: Drop kconfig GENERIC_VDSO_TIME_NS
+    https://git.kernel.org/riscv/c/bad53ae2dc42
+  - [11/11] vdso: Gate VDSO_GETRANDOM behind HAVE_GENERIC_VDSO
+    https://git.kernel.org/riscv/c/258b37c6e626
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
