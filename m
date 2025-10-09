@@ -1,200 +1,248 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBBF3212F98
-	for <loongarch@lists.linux.dev>; Thu,  9 Oct 2025 03:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEBE125FA2D
+	for <loongarch@lists.linux.dev>; Thu,  9 Oct 2025 07:27:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759979453; cv=none; b=jYXctCX8b9vcI7ulWIGEeC5RmNgICFsJErhT8WPL4dVRdX9yMksy1rmGXyBqhlENs1OIesdkCuv0W5o/+D4qk6PZ6RKv+QlDDrakhz6ay7l+wpioSaZzPXYLYlT7WOLRi8ntpWCGj2zhEg+CVyBnFwV7SExR36DQWZlLUt5/mo4=
+	t=1759994878; cv=none; b=GhlGAZ+xIxOGW34tgQrKZi26nprDvea0CebATEftnOkuH6Rp7xfwoT+D63vCXesxXv102jw8n1wPvehR7dJRQovJZbBnZOLcPfSnTN2q/knlrf2OuqyrYLht8uVl+IBC07QabmW+X1+XPlkNrcvEpuA5BXsEQtDuoh+inT7CAD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759979453; c=relaxed/simple;
-	bh=o0d5JpASkza7rqqxCj05F+IcejpHTWGxjF4WTOyyto4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ljygacwB3ysVihUXob4zGAPx62L6472bOMElMJEXRF64O/6yQU7XelK+CxD7Ryi6oj68AtTdkM4LXrT5orK5RJZinNup7cVTOvd92V7ZhLjdPQGRHUcYiZ/5Kp/WBhoS7rs5blpSesDAdMoWXWBwtgK4An6w2BWPsCpeO/bUVpI=
+	s=arc-20240116; t=1759994878; c=relaxed/simple;
+	bh=XfqDBfd6iAezjZ4Zyx6Aa3kJN4a1sI8LfvLWt/i2PWw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=qJOEW+xs/nZ3APkv0Ha+C8X4HM8/cOs/Mwi0oiPHrMIREtjXJIm92FQeXn9/DRF2jozREAGLXVING8lCBPOkPSel8fo9ff1rMaAKjEz7TZAYK4mFHIkm8eo4qA8kMfIgu5gMvVieiFEzzhEbwjEPFwv+lo1+HZoJ/CznvurRKs8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxqdG0J+dokCMUAA--.43274S3;
-	Thu, 09 Oct 2025 11:10:44 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by front1 (Coremail) with SMTP id qMiowJDxbMG0J+do1wrWAA--.23781S2;
-	Thu, 09 Oct 2025 11:10:44 +0800 (CST)
-From: Song Gao <gaosong@loongson.cn>
-To: maobibo@loongson.cn,
-	chenhuacai@kernel.org
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	kernel@xen0n.name
-Subject: [PATCH 1/1] LoongArch: KVM: Add AVEC support
-Date: Thu,  9 Oct 2025 10:46:59 +0800
-Message-Id: <20251009024659.2369836-1-gaosong@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cxrr_zY+doGjAUAA--.41959S3;
+	Thu, 09 Oct 2025 15:27:47 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxocLrY+doN1fWAA--.11175S3;
+	Thu, 09 Oct 2025 15:27:39 +0800 (CST)
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Ard Biesheuvel <ardb@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, loongarch@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250928085506.4471-1-yangtiezhu@loongson.cn>
+ <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
+ <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
+ <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
+ <CAMj1kXHWe2uGY3S1NJ6mckqD4n116rPmaOzw3_Qbvxyjh7ECMw@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn>
+Date: Thu, 9 Oct 2025 15:27:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAMj1kXHWe2uGY3S1NJ6mckqD4n116rPmaOzw3_Qbvxyjh7ECMw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxbMG0J+do1wrWAA--.23781S2
-X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-TRANSID:qMiowJCxocLrY+doN1fWAA--.11175S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxuFyDZr45uF48uFyxuF4DAwc_yoWxWw1kpa
+	yjkFWjyr4kJr4kXas7t3yY9r1YqanIqrWaga4DuryrZa1qqr40vrWUZr4DuF9rXw4DC3WI
+	qF1fJr9Ik3WUJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24SoDUUU
+	U
 
-Add cpu_has_msgint() to check whether the host cpu supported avec,
-and restore/save CSR_MSGIS0-CSR_MSGIS3.
+On 2025/9/28 下午10:41, Ard Biesheuvel wrote:
+> On Sun, 28 Sept 2025 at 16:39, Ard Biesheuvel <ardb@kernel.org> wrote:
+>>
+>> On Sun, 28 Sept 2025 at 15:52, Huacai Chen <chenhuacai@kernel.org> wrote:
+>>>
+>>> Hi, Ard,
+>>>
+>>> On Sun, Sep 28, 2025 at 9:42 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>>>>
+>>>> On Sun, 28 Sept 2025 at 10:55, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>>>>
+>>>>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
+>>>>> the following objtool warning on LoongArch:
+>>>>>
+>>>>>    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
+>>>>>    falls through to next function __efistub_exit_boot_func()
+>>>>>
+>>>>> This is because efi_boot_kernel() doesn't end with a return instruction
+>>>>> or an unconditional jump, then objtool has determined that the function
+>>>>> can fall through into the next function.
+>>>>>
+>>>>> At the beginning, try to do something to make efi_boot_kernel() ends with
+>>>>> an unconditional jump instruction, but this modification seems not proper.
+>>>>>
+>>>>> Since the efistub functions are useless for stack unwinder, they can be
+>>>>> ignored by objtool. After many discussions, no need to link libstub to
+>>>>> the vmlinux.o, only link libstub to the final vmlinux.
+>>>>>
+>>>>
+>>>> Please try keeping these changes confined to arch/loongarch. This
+>>>> problem does not exist on other architectures, and changing the way
+>>>> vmlinux is constructed might create other issues down the road.
 
-Signed-off-by: Song Gao <gaosong@loongson.cn>
----
-based-on: LoongArch: KVM: Get VM PMU capability from HW GCFG register
+This was discussed and tested in the v3 patch, it only touches the code
+of LoongArch and works well like this:
 
- arch/loongarch/include/asm/kvm_host.h |  4 ++++
- arch/loongarch/include/asm/kvm_vcpu.h |  1 +
- arch/loongarch/include/uapi/asm/kvm.h |  1 +
- arch/loongarch/kvm/interrupt.c        |  3 +++
- arch/loongarch/kvm/vcpu.c             | 19 +++++++++++++++++--
- arch/loongarch/kvm/vm.c               |  4 ++++
- 6 files changed, 30 insertions(+), 2 deletions(-)
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index dc5bd3f1b8d2..f34b416f5ca2 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -169,7 +169,6 @@ CHECKFLAGS += $(shell $(CC) $(KBUILD_CPPFLAGS) 
+$(KBUILD_CFLAGS) -dM -E -x c /dev
+  endif
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 392480c9b958..446f1104d59d 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -285,6 +285,10 @@ static inline bool kvm_guest_has_lbt(struct kvm_vcpu_arch *arch)
- 	return arch->cpucfg[2] & (CPUCFG2_X86BT | CPUCFG2_ARMBT | CPUCFG2_MIPSBT);
- }
- 
-+static inline bool cpu_has_msgint(void)
-+{
-+	return read_cpucfg(LOONGARCH_CPUCFG1) & CPUCFG1_MSGINT;
-+}
- static inline bool kvm_guest_has_pmu(struct kvm_vcpu_arch *arch)
- {
- 	return arch->cpucfg[6] & CPUCFG6_PMP;
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index f1efd7cfbc20..3784ab4ccdb5 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -15,6 +15,7 @@
- #define CPU_PMU				(_ULCAST_(1) << 10)
- #define CPU_TIMER			(_ULCAST_(1) << 11)
- #define CPU_IPI				(_ULCAST_(1) << 12)
-+#define CPU_AVEC                        (_ULCAST_(1) << 14)
- 
- /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 */
- #define CPU_IP0				(_ULCAST_(1))
-diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-index 57ba1a563bb1..de6c3f18e40a 100644
---- a/arch/loongarch/include/uapi/asm/kvm.h
-+++ b/arch/loongarch/include/uapi/asm/kvm.h
-@@ -104,6 +104,7 @@ struct kvm_fpu {
- #define  KVM_LOONGARCH_VM_FEAT_PV_IPI		6
- #define  KVM_LOONGARCH_VM_FEAT_PV_STEALTIME	7
- #define  KVM_LOONGARCH_VM_FEAT_PTW		8
-+#define  KVM_LOONGARCH_VM_FEAT_MSGINT		9
- 
- /* Device Control API on vcpu fd */
- #define KVM_LOONGARCH_VCPU_CPUCFG	0
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-index 8462083f0301..adc278fb3cb9 100644
---- a/arch/loongarch/kvm/interrupt.c
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -21,6 +21,7 @@ static unsigned int priority_to_irq[EXCCODE_INT_NUM] = {
- 	[INT_HWI5]	= CPU_IP5,
- 	[INT_HWI6]	= CPU_IP6,
- 	[INT_HWI7]	= CPU_IP7,
-+	[INT_AVEC]	= CPU_AVEC,
- };
- 
- static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
-@@ -36,6 +37,7 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
- 	case INT_IPI:
- 	case INT_SWI0:
- 	case INT_SWI1:
-+	case INT_AVEC:
- 		set_gcsr_estat(irq);
- 		break;
- 
-@@ -63,6 +65,7 @@ static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
- 	case INT_IPI:
- 	case INT_SWI0:
- 	case INT_SWI1:
-+	case INT_AVEC:
- 		clear_gcsr_estat(irq);
- 		break;
- 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 30e3b089a596..226c735155be 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -657,8 +657,7 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
- 		*v = GENMASK(31, 0);
- 		return 0;
- 	case LOONGARCH_CPUCFG1:
--		/* CPUCFG1_MSGINT is not supported by KVM */
--		*v = GENMASK(25, 0);
-+		*v = GENMASK(26, 0);
- 		return 0;
- 	case LOONGARCH_CPUCFG2:
- 		/* CPUCFG2 features unconditionally supported by KVM */
-@@ -726,6 +725,10 @@ static int kvm_check_cpucfg(int id, u64 val)
- 		return -EINVAL;
- 
- 	switch (id) {
-+	case LOONGARCH_CPUCFG1:
-+		if ((val & CPUCFG1_MSGINT) && (!cpu_has_msgint()))
-+			return -EINVAL;
-+		return 0;
- 	case LOONGARCH_CPUCFG2:
- 		if (!(val & CPUCFG2_LLFTP))
- 			/* Guests must have a constant timer */
-@@ -1658,6 +1661,12 @@ static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
- 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
- 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_LLBCTL);
-+	if (cpu_has_msgint()) {
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR0);
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR1);
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR2);
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR3);
-+	}
- 
- 	/* Restore Root.GINTC from unused Guest.GINTC register */
- 	write_csr_gintc(csr->csrs[LOONGARCH_CSR_GINTC]);
-@@ -1747,6 +1756,12 @@ static int _kvm_vcpu_put(struct kvm_vcpu *vcpu, int cpu)
- 	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN1);
- 	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
- 	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
-+	if (cpu_has_msgint()) {
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR0);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR1);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR2);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR3);
-+	}
- 
- 	vcpu->arch.aux_inuse |= KVM_LARCH_SWCSR_LATEST;
- 
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index d8c813e2d72e..6c2bb604a359 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -37,6 +37,9 @@ static void kvm_vm_init_features(struct kvm *kvm)
- 		kvm->arch.support_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_STEALTIME);
- 	}
- 
-+	if (cpu_has_msgint())
-+		kvm->arch.features |= BIT(KVM_LOONGARCH_VM_FEAT_MSGINT);
+  libs-y += arch/loongarch/lib/
+-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+
+  drivers-y              += arch/loongarch/crypto/
+
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 433849ff7529..ed94871c3606 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -69,6 +69,12 @@ vmlinux_link()
+                 libs="${KBUILD_VMLINUX_LIBS}"
+         fi
+
++       if [ "${SRCARCH}" = "loongarch" ]; then
++               if is_enabled CONFIG_EFI_STUB; then
++                       libs="${libs} drivers/firmware/efi/libstub/lib.a"
++               fi
++       fi
 +
- 	val = read_csr_gcfg();
- 	if (val & CSR_GCFG_GPMP)
- 		kvm->arch.support_features |= BIT(KVM_LOONGARCH_VM_FEAT_PMU);
-@@ -153,6 +156,7 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr
- 	case KVM_LOONGARCH_VM_FEAT_PMU:
- 	case KVM_LOONGARCH_VM_FEAT_PV_IPI:
- 	case KVM_LOONGARCH_VM_FEAT_PV_STEALTIME:
-+        case KVM_LOONGARCH_VM_FEAT_MSGINT:
- 		if (kvm_vm_support(&kvm->arch, attr->attr))
- 			return 0;
- 		return -ENXIO;
--- 
-2.39.3
+         if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
+                 objs="${objs} .builtin-dtbs.o"
+         fi
+
+https://lore.kernel.org/loongarch/pq4h7jgndnt6p45lj4kgubxjd5gidfetugcuf5rcxzxxanzetd@6rrlpjnjsmuy/
+
+>>> ARM, RISC-V and LoongArch do things exactly in the same way. Now
+>>> LoongArch is the first of the three to enable objtool, so we meet the
+>>> problem first.
+>>>
+>>> But yes, I also don't want to change the way of constructing vmlinux.
+>>> So I prefer the earliest way to fix this problem.
+>>> https://lore.kernel.org/loongarch/CAAhV-H7fRHGFVKV8HitRgmuoDPt5ODt--iSuV0EmeeUb9d5FNw@mail.gmail.com/T/#meef7411abd14f4c28c85e686614aa9211fccdca0
+>>>
+>>
+>> Can we just drop the __noreturn annotation from kernel_entry_t, and
+>> return EFI_SUCCESS from efi_boot_kernel()?
+
+This was done in the early RFC patch, it works well like this:
+
+diff --git a/drivers/firmware/efi/libstub/loongarch.c 
+b/drivers/firmware/efi/libstub/loongarch.c
+index 3782d0a187d1..e309fd78fca7 100644
+--- a/drivers/firmware/efi/libstub/loongarch.c
++++ b/drivers/firmware/efi/libstub/loongarch.c
+@@ -10,7 +10,7 @@
+  #include "efistub.h"
+  #include "loongarch-stub.h"
+
+-typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline,
++typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
+  					  unsigned long systab);
+
+  efi_status_t check_platform_features(void)
+@@ -81,4 +81,7 @@ efi_status_t efi_boot_kernel(void *handle, 
+efi_loaded_image_t *image,
+
+  	real_kernel_entry(true, (unsigned long)cmdline_ptr,
+  			  (unsigned long)efi_system_table);
++
++	/* We should never get here */
++	while (1);
+  }
+
+https://lore.kernel.org/loongarch/20250826064631.9617-2-yangtiezhu@loongson.cn/
+
+> ... or add efi_boot_kernel() to ./tools/objtool/noreturns.h?
+
+It can not fix the objtool warning.
+
+Are you OK with the following changes?
+
+(1) libstub doesn't link to vmlinux.o, only link libstub with vmlinux.o 
+during the final vmlinux link, keep the changes confined to LoongArch, 
+no need to be something more generic.
+
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index dc5bd3f1b8d2..f34b416f5ca2 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -169,7 +169,6 @@ CHECKFLAGS += $(shell $(CC) $(KBUILD_CPPFLAGS) 
+$(KBUILD_CFLAGS) -dM -E -x c /dev
+  endif
+
+  libs-y += arch/loongarch/lib/
+-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+
+  drivers-y              += arch/loongarch/crypto/
+
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 433849ff7529..ed94871c3606 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -69,6 +69,12 @@ vmlinux_link()
+                 libs="${KBUILD_VMLINUX_LIBS}"
+         fi
+
++       if [ "${SRCARCH}" = "loongarch" ]; then
++               if is_enabled CONFIG_EFI_STUB; then
++                       libs="${libs} drivers/firmware/efi/libstub/lib.a"
++               fi
++       fi
++
+         if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
+                 objs="${objs} .builtin-dtbs.o"
+         fi
+
+(2) remove the attribute __noreturn for real_kernel_entry() and add
+"while (1);" at the end of efi_boot_kernel().
+
+diff --git a/drivers/firmware/efi/libstub/loongarch.c 
+b/drivers/firmware/efi/libstub/loongarch.c
+index 3782d0a187d1..e309fd78fca7 100644
+--- a/drivers/firmware/efi/libstub/loongarch.c
++++ b/drivers/firmware/efi/libstub/loongarch.c
+@@ -10,7 +10,7 @@
+  #include "efistub.h"
+  #include "loongarch-stub.h"
+
+-typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline,
++typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
+  					  unsigned long systab);
+
+  efi_status_t check_platform_features(void)
+@@ -81,4 +81,7 @@ efi_status_t efi_boot_kernel(void *handle, 
+efi_loaded_image_t *image,
+
+  	real_kernel_entry(true, (unsigned long)cmdline_ptr,
+  			  (unsigned long)efi_system_table);
++
++	/* We should never get here */
++	while (1);
+  }
+
+Taking all of the considerations in balance, what should to do?
+
+Thanks,
+Tiezhu
 
