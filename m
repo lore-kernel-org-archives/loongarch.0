@@ -1,136 +1,173 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB23239099
-	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 15:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4F82FC00C
+	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 16:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760111504; cv=none; b=AeifG96Us2IH+ApfhmqH3pFW8u+L/HPYNxaJuCSRguwhSVdhZXj9JltV3EpKWA6S8cgqQYFgAjlyZIJxy8M56d/zGRm7CcoSGM1UzyT8kC4wXWQ1t802cMQNDYq1Sxolf7RVUcU9ufFp7opXJvaDVXDnlH0g3KHVEObP9RyDsdg=
+	t=1760113571; cv=none; b=ovQnWniK6YkLIVGRyP/fc6SOrgfSduYOlL+gvUzkyqHPNI2kw7hQaJBzETJ8Mb98o+XiWBuT5lZRuxt8UMeUn2PrVzhrzokkXoNAa0HGtH5RrB+AiDaskPDx3u0LwNr23umgzcfPPp6YnwvAXSG1c3zR/fKch49JQruKjUe00jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760111504; c=relaxed/simple;
-	bh=iUlTIJ6eMR+WnNU+CzY8CVbAR+KrvdOMvkUKsD3UqPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cA0SoUYrxmYI4ZSFam4gqmaRvkxEMiCJzGqG9Nrvpabc6YijFxDCXvEX43lBbfIH2cS5ccBIrRITmOdfyjvzmRbJdN37dqlUXPldqxYPpcTTWtuHjLA99ZnGxUgAuytnBIfL9H3WwCg3u06t7Km5EB/IZPk+XmsDTY9Ik+Qd+jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XBdEiQhm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1760113571; c=relaxed/simple;
+	bh=utKCZjeHw3iqnFfYB1ZfxGnO3UrPmvILiol4TqfBHR4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MUw1+k1Xy8geR7KUrZgdXEdA+qoHSl/iuiFkb5zwa2pfWcemIUZuq4aUq/UMwdXVleMyKnjdtNKfUd9fmOPe68ISuQguRvuwDXIMQoZHJHEA9X8uA6UXOFM6ct0BFUnAdTOi0r05fv8KKcLZICABUSDoL6tZRNYLSU/4Pp939Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Edzm6Syy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XBdEiQhm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760111502;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IMfkEjR7bo9/GPZWUZrcsZpIJiAh+KjKI2oJCMzgHeQ=;
-	b=XBdEiQhmykoDHaZBN4o4vx+YNpeUdXX1YkjWrUeIQt+FyJRgIXNrjuwGnRnGhJ/T9F6xcm
-	3UXFKaoDgsszkvFQMgMMcUSx95WRyePvlUnlR9Nlx8D/6fPw68qwZxboW0p+TdKy+mexbM
-	s+ONVDXGq2ReXw+i+0d/f8/buVDTPBM=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-152-vxoZ-j2iObiDj7gk3pSmjA-1; Fri,
- 10 Oct 2025 11:43:29 -0400
-X-MC-Unique: vxoZ-j2iObiDj7gk3pSmjA-1
-X-Mimecast-MFC-AGG-ID: vxoZ-j2iObiDj7gk3pSmjA_1760111002
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C62319560AF;
-	Fri, 10 Oct 2025 15:43:22 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.45.224.29])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DB64E1800578;
-	Fri, 10 Oct 2025 15:43:06 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	rcu@vger.kernel.org,
-	x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Andrew Jones <ajones@ventanamicro.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Han Shen <shenhan@google.com>,
-	Rik van Riel <riel@surriel.com>,
-	Jann Horn <jannh@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Daniel Wagner <dwagner@suse.de>,
-	Petr Tesarik <ptesarik@suse.com>
-Subject: [PATCH v6 10/29] riscv/paravirt: Mark pv_steal_clock static call as __ro_after_init
-Date: Fri, 10 Oct 2025 17:38:20 +0200
-Message-ID: <20251010153839.151763-11-vschneid@redhat.com>
-In-Reply-To: <20251010153839.151763-1-vschneid@redhat.com>
-References: <20251010153839.151763-1-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Edzm6Syy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E139CC116B1
+	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 16:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760113570;
+	bh=utKCZjeHw3iqnFfYB1ZfxGnO3UrPmvILiol4TqfBHR4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Edzm6SyycKKkFWiTk3912LPCjJ42xcjg9u99+ZCWUuoxk24NyxIEoUV0xYtQ1hUhS
+	 ZusMQJfHtM2t/nyvK+d3GH5aIGZgyQMn4OfO9/mKwlFqZQ0BGVVR8/K61WyGw1Gnfx
+	 hCR7R6B0dRDHMtGQAjYSQjR0oJR/xhkoXFo+ZeIAl5w8rQWa1PkKYdMaE+FlyXYU27
+	 QSIioFAwgaRXm3nXRFlpzxgYTy194pXYy1LgUWUVcXFadZGIW8i9ZlapyZYIRg/5Mh
+	 rxA3StEnbj9gQGcrOzzgEgWNXP8PcnpnB16a1kGiOhggvJ4zKo4zGppCUZdhrF7luz
+	 r771GJdkNs/2w==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-57f0aa38aadso2616324e87.2
+        for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 09:26:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWtEr/fHZaSr1ndLd3jBPqXD8SlQPe13Z6peLGBxGcjLh01IW3EarXNS4/Ho5zK69oICaKZDcVt8VE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyIyPpPBWpKxScgT8TVsPkKC4zjTp6l4yTydC9R8HZEgdtXF74Q
+	S/zh0I/KoYr2ayf9tvCMb9krStgyisBwNERhYmhdlEHEK6omGNLhCILKQ8M206i2J4d+Bt6Y5SU
+	kdkei8xdp1PG34LAIx+0RSVfBEFgvNSE=
+X-Google-Smtp-Source: AGHT+IFlrMsUvrC/ZHyp7C1tmfy80lEWySBj/07SSrfUI6v7Q7I01eOrR8aE8CO2xnNLYI6LpFea10RRzC+bIaZdgH8=
+X-Received: by 2002:a05:6512:1152:b0:57b:5794:ccd9 with SMTP id
+ 2adb3069b0e04-5906d77e26bmr3537150e87.9.1760113569266; Fri, 10 Oct 2025
+ 09:26:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <20250928085506.4471-1-yangtiezhu@loongson.cn> <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
+ <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
+ <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
+ <CAMj1kXHWe2uGY3S1NJ6mckqD4n116rPmaOzw3_Qbvxyjh7ECMw@mail.gmail.com> <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn>
+In-Reply-To: <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 10 Oct 2025 09:25:57 -0700
+X-Gmail-Original-Message-ID: <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
+X-Gm-Features: AS18NWAp30BvVY9ZXh0_0XY6OhGFXDo-CTjUdGdhBNHw2LQ_EFhIlBfBfuAUJuI
+Message-ID: <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The static call is only ever updated in:
+On Thu, 9 Oct 2025 at 00:27, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> On 2025/9/28 =E4=B8=8B=E5=8D=8810:41, Ard Biesheuvel wrote:
+> > On Sun, 28 Sept 2025 at 16:39, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >>
+> >> On Sun, 28 Sept 2025 at 15:52, Huacai Chen <chenhuacai@kernel.org> wro=
+te:
+> >>>
+> >>> Hi, Ard,
+> >>>
+> >>> On Sun, Sep 28, 2025 at 9:42=E2=80=AFPM Ard Biesheuvel <ardb@kernel.o=
+rg> wrote:
+> >>>>
+> >>>> On Sun, 28 Sept 2025 at 10:55, Tiezhu Yang <yangtiezhu@loongson.cn> =
+wrote:
+> >>>>>
+> >>>>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
+> >>>>> the following objtool warning on LoongArch:
+> >>>>>
+> >>>>>    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
+> >>>>>    falls through to next function __efistub_exit_boot_func()
+> >>>>>
+> >>>>> This is because efi_boot_kernel() doesn't end with a return instruc=
+tion
+> >>>>> or an unconditional jump, then objtool has determined that the func=
+tion
+> >>>>> can fall through into the next function.
+> >>>>>
+> >>>>> At the beginning, try to do something to make efi_boot_kernel() end=
+s with
+> >>>>> an unconditional jump instruction, but this modification seems not =
+proper.
+> >>>>>
+> >>>>> Since the efistub functions are useless for stack unwinder, they ca=
+n be
+> >>>>> ignored by objtool. After many discussions, no need to link libstub=
+ to
+> >>>>> the vmlinux.o, only link libstub to the final vmlinux.
+> >>>>>
+> >>>>
+...
+> Are you OK with the following changes?
+>
+> (1) libstub doesn't link to vmlinux.o, only link libstub with vmlinux.o
+> during the final vmlinux link, keep the changes confined to LoongArch,
+> no need to be something more generic.
+>
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index dc5bd3f1b8d2..f34b416f5ca2 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -169,7 +169,6 @@ CHECKFLAGS +=3D $(shell $(CC) $(KBUILD_CPPFLAGS)
+> $(KBUILD_CFLAGS) -dM -E -x c /dev
+>   endif
+>
+>   libs-y +=3D arch/loongarch/lib/
+> -libs-$(CONFIG_EFI_STUB) +=3D $(objtree)/drivers/firmware/efi/libstub/lib=
+.a
+>
+>   drivers-y              +=3D arch/loongarch/crypto/
+>
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index 433849ff7529..ed94871c3606 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -69,6 +69,12 @@ vmlinux_link()
+>                  libs=3D"${KBUILD_VMLINUX_LIBS}"
+>          fi
+>
+> +       if [ "${SRCARCH}" =3D "loongarch" ]; then
+> +               if is_enabled CONFIG_EFI_STUB; then
+> +                       libs=3D"${libs} drivers/firmware/efi/libstub/lib.=
+a"
+> +               fi
+> +       fi
+> +
+>          if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
+>                  objs=3D"${objs} .builtin-dtbs.o"
+>          fi
+>
+> (2) remove the attribute __noreturn for real_kernel_entry() and add
+> "while (1);" at the end of efi_boot_kernel().
+>
+> diff --git a/drivers/firmware/efi/libstub/loongarch.c
+> b/drivers/firmware/efi/libstub/loongarch.c
+> index 3782d0a187d1..e309fd78fca7 100644
+> --- a/drivers/firmware/efi/libstub/loongarch.c
+> +++ b/drivers/firmware/efi/libstub/loongarch.c
+> @@ -10,7 +10,7 @@
+>   #include "efistub.h"
+>   #include "loongarch-stub.h"
+>
+> -typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdlin=
+e,
+> +typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
+>                                           unsigned long systab);
+>
+>   efi_status_t check_platform_features(void)
+> @@ -81,4 +81,7 @@ efi_status_t efi_boot_kernel(void *handle,
+> efi_loaded_image_t *image,
+>
+>         real_kernel_entry(true, (unsigned long)cmdline_ptr,
+>                           (unsigned long)efi_system_table);
+> +
+> +       /* We should never get here */
+> +       while (1);
+>   }
+>
 
-  __init pv_time_init()
-  __init xen_time_setup_guest()
-
-so mark it appropriately as __ro_after_init.
-
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
----
- arch/riscv/kernel/paravirt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/riscv/kernel/paravirt.c b/arch/riscv/kernel/paravirt.c
-index fa6b0339a65de..dfe8808016fd8 100644
---- a/arch/riscv/kernel/paravirt.c
-+++ b/arch/riscv/kernel/paravirt.c
-@@ -30,7 +30,7 @@ static u64 native_steal_clock(int cpu)
- 	return 0;
- }
- 
--DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
-+DEFINE_STATIC_CALL_RO(pv_steal_clock, native_steal_clock);
- 
- static bool steal_acc = true;
- static int __init parse_no_stealacc(char *arg)
--- 
-2.51.0
-
+Why do we need both (1) and (2)?
