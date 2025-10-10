@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572E6265609
-	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 15:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB23239099
+	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 15:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760111307; cv=none; b=OOLsv2nNuVnR7S3EAsBtYh9ef8n51bkusfF52GkW9g3m/VP1OwjYp/HYm1Rx2sQBOOOZUDVJ85tSQ/ZAbz4Ot6C8DukBNEFUzWu+aj6EWUBOb9AyJz7iVXRAtuKnwcQcDMZ0d++mOhuVwAdZzqiaQPkOiFPZtFf5dt6RoVCglnQ=
+	t=1760111504; cv=none; b=AeifG96Us2IH+ApfhmqH3pFW8u+L/HPYNxaJuCSRguwhSVdhZXj9JltV3EpKWA6S8cgqQYFgAjlyZIJxy8M56d/zGRm7CcoSGM1UzyT8kC4wXWQ1t802cMQNDYq1Sxolf7RVUcU9ufFp7opXJvaDVXDnlH0g3KHVEObP9RyDsdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760111307; c=relaxed/simple;
-	bh=/vZYtaWzNZHLvAn1E8dpP5gg037nYFmt++kBJSi+VPM=;
+	s=arc-20240116; t=1760111504; c=relaxed/simple;
+	bh=iUlTIJ6eMR+WnNU+CzY8CVbAR+KrvdOMvkUKsD3UqPw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Up9u3JybwS0wD2sk7Qa9JcEEwuB6M86z2SRmsz3A4u16OSROTNM/DII12WXVKz7cYs8A+EHabpykuHiKLuLMHscHGfCFHJzCr/wsdrkT9EsJLRiCqP9x2UxL/dmMhrWvJxgAkKmg3i6TcBeDkbM4xV3wx5PGQqJJYiQcYMXBgXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FX7FTCoT; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=cA0SoUYrxmYI4ZSFam4gqmaRvkxEMiCJzGqG9Nrvpabc6YijFxDCXvEX43lBbfIH2cS5ccBIrRITmOdfyjvzmRbJdN37dqlUXPldqxYPpcTTWtuHjLA99ZnGxUgAuytnBIfL9H3WwCg3u06t7Km5EB/IZPk+XmsDTY9Ik+Qd+jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XBdEiQhm; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FX7FTCoT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XBdEiQhm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760111305;
+	s=mimecast20190719; t=1760111502;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BS3ds8Up0Gh0Vcw12QbhifbfMtExSe/6UKJ7yZRlT/s=;
-	b=FX7FTCoTceZo3jtDT8QA5XBmtCNDsrhDGRNCXX0UosPtRRk8aqs6Pdpozie7J0nPG4EC2B
-	L/reYqhY+yd5e63CooyJg/ZWPeAc9wjCZ/7TFuoM8x6DUyGnwQoXUouT3Z3PDtT6pp7xS9
-	Mgr/UGivrrf4vUOjPWaegbswM4EwtOE=
+	bh=IMfkEjR7bo9/GPZWUZrcsZpIJiAh+KjKI2oJCMzgHeQ=;
+	b=XBdEiQhmykoDHaZBN4o4vx+YNpeUdXX1YkjWrUeIQt+FyJRgIXNrjuwGnRnGhJ/T9F6xcm
+	3UXFKaoDgsszkvFQMgMMcUSx95WRyePvlUnlR9Nlx8D/6fPw68qwZxboW0p+TdKy+mexbM
+	s+ONVDXGq2ReXw+i+0d/f8/buVDTPBM=
 Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-227-mm0n-4RTPUCAn9uW9vCAGg-1; Fri,
- 10 Oct 2025 11:48:23 -0400
-X-MC-Unique: mm0n-4RTPUCAn9uW9vCAGg-1
-X-Mimecast-MFC-AGG-ID: mm0n-4RTPUCAn9uW9vCAGg_1760111296
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-152-vxoZ-j2iObiDj7gk3pSmjA-1; Fri,
+ 10 Oct 2025 11:43:29 -0400
+X-MC-Unique: vxoZ-j2iObiDj7gk3pSmjA-1
+X-Mimecast-MFC-AGG-ID: vxoZ-j2iObiDj7gk3pSmjA_1760111002
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 566A519560B0;
-	Fri, 10 Oct 2025 15:48:16 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C62319560AF;
+	Fri, 10 Oct 2025 15:43:22 +0000 (UTC)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.45.224.29])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F0D471800578;
-	Fri, 10 Oct 2025 15:48:01 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DB64E1800578;
+	Fri, 10 Oct 2025 15:43:06 +0000 (UTC)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -52,7 +52,8 @@ To: linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-arch@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
+Cc: Andrew Jones <ajones@ventanamicro.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
@@ -90,9 +91,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Marcelo Tosatti <mtosatti@redhat.com>,
 	Daniel Wagner <dwagner@suse.de>,
 	Petr Tesarik <ptesarik@suse.com>
-Subject: [RFC PATCH v6 29/29] x86/entry: Add an option to coalesce TLB flushes
-Date: Fri, 10 Oct 2025 17:38:39 +0200
-Message-ID: <20251010153839.151763-30-vschneid@redhat.com>
+Subject: [PATCH v6 10/29] riscv/paravirt: Mark pv_steal_clock static call as __ro_after_init
+Date: Fri, 10 Oct 2025 17:38:20 +0200
+Message-ID: <20251010153839.151763-11-vschneid@redhat.com>
 In-Reply-To: <20251010153839.151763-1-vschneid@redhat.com>
 References: <20251010153839.151763-1-vschneid@redhat.com>
 Precedence: bulk
@@ -104,72 +105,32 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Previous patches have introduced a mechanism to prevent kernel text updates
-from inducing interference on isolated CPUs. A similar action is required
-for kernel-range TLB flushes in order to silence the biggest remaining
-cause of isolated CPU IPI interference.
+The static call is only ever updated in:
 
-These flushes are mostly caused by vmalloc manipulations - e.g. on x86 with
-CONFIG_VMAP_STACK, spawning enough processes will easily trigger
-flushes. Unfortunately, the newly added context_tracking IPI deferral
-mechanism cannot be leveraged for TLB flushes, as the deferred work would
-be executed too late. Consider the following execution flow:
+  __init pv_time_init()
+  __init xen_time_setup_guest()
 
-  <userspace>
-
-  !interrupt!
-
-  SWITCH_TO_KERNEL_CR3 // vmalloc range becomes accessible
-
-  idtentry_func_foo()
-    irqentry_enter()
-      irqentry_enter_from_user_mode()
-	enter_from_user_mode()
-	  [...]
-	    ct_kernel_enter_state()
-	      ct_work_flush() // deferred flush would be done here
-
-Since there is no sane way to assert no stale entry is accessed during
-kernel entry, any code executed between SWITCH_TO_KERNEL_CR3 and
-ct_work_flush() is at risk of accessing a stale entry. Dave had suggested
-hacking up something within SWITCH_TO_KERNEL_CR3 itself, which is what has
-been implemented in the previous patches.
-
-Make kernel-range TLB flush deferral available via CONFIG_COALESCE_TLBI.
+so mark it appropriately as __ro_after_init.
 
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 ---
- arch/x86/Kconfig | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/riscv/kernel/paravirt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 3f1557b7acd8f..390e1dbe5d4de 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2188,6 +2188,23 @@ config ADDRESS_MASKING
-	  The capability can be used for efficient address sanitizers (ASAN)
-	  implementation and for optimizations in JITs.
-
-+config COALESCE_TLBI
-+       def_bool n
-+       prompt "Coalesce kernel TLB flushes for NOHZ-full CPUs"
-+       depends on X86_64 && MITIGATION_PAGE_TABLE_ISOLATION && NO_HZ_FULL
-+       help
-+	 TLB flushes for kernel addresses can lead to IPIs being sent to
-+	 NOHZ-full CPUs, thus kicking them out of userspace.
-+
-+	 This option coalesces kernel-range TLB flushes for NOHZ-full CPUs into
-+	 a single flush executed at kernel entry, right after switching to the
-+	 kernel page table. Note that this flush is unconditionnal, even if no
-+	 remote flush was issued during the previous userspace execution window.
-+
-+	 This obviously makes the user->kernel transition overhead even worse.
-+
-+	 If unsure, say N.
-+
- config HOTPLUG_CPU
-	def_bool y
-	depends on SMP
---
+diff --git a/arch/riscv/kernel/paravirt.c b/arch/riscv/kernel/paravirt.c
+index fa6b0339a65de..dfe8808016fd8 100644
+--- a/arch/riscv/kernel/paravirt.c
++++ b/arch/riscv/kernel/paravirt.c
+@@ -30,7 +30,7 @@ static u64 native_steal_clock(int cpu)
+ 	return 0;
+ }
+ 
+-DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
++DEFINE_STATIC_CALL_RO(pv_steal_clock, native_steal_clock);
+ 
+ static bool steal_acc = true;
+ static int __init parse_no_stealacc(char *arg)
+-- 
 2.51.0
 
