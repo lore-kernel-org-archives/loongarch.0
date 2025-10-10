@@ -1,173 +1,187 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4F82FC00C
-	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 16:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6662826D4EB
+	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 22:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760113571; cv=none; b=ovQnWniK6YkLIVGRyP/fc6SOrgfSduYOlL+gvUzkyqHPNI2kw7hQaJBzETJ8Mb98o+XiWBuT5lZRuxt8UMeUn2PrVzhrzokkXoNAa0HGtH5RrB+AiDaskPDx3u0LwNr23umgzcfPPp6YnwvAXSG1c3zR/fKch49JQruKjUe00jU=
+	t=1760133922; cv=none; b=BfEZvETCnKvsTF2yXuMxpU2+0xSRD8xFnqfThQgvC2WSXJ4k1iv+vcRUURiH0U7Wd5UcO3h1U5DMSmal5HFnM3+3X4Zp4xyCWDeADrhvy6cS5Gw+6iD4gkgGHbj7gECbiqae5gIAHWu4glInEWHcar6RC48qTfDbD+o4NdOoIjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760113571; c=relaxed/simple;
-	bh=utKCZjeHw3iqnFfYB1ZfxGnO3UrPmvILiol4TqfBHR4=;
+	s=arc-20240116; t=1760133922; c=relaxed/simple;
+	bh=ULkcu+ErWUDnM+0yG/yzCIlYRGPz4NooEguavSIe4VI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MUw1+k1Xy8geR7KUrZgdXEdA+qoHSl/iuiFkb5zwa2pfWcemIUZuq4aUq/UMwdXVleMyKnjdtNKfUd9fmOPe68ISuQguRvuwDXIMQoZHJHEA9X8uA6UXOFM6ct0BFUnAdTOi0r05fv8KKcLZICABUSDoL6tZRNYLSU/4Pp939Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Edzm6Syy; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=ak+KXMGFUvY9nY7HvR1+S8SqEcuVW4T7v78ij34QYyq1Hhc9V3sn4j4NF8bT0Jt5jeku0UoY3IbARP+KOy05d6DB3mjMCNqIM8tCmb/TFlBRnFI/LRJrrBX60/IQ/w70HPTNFrPwpfWWDjx6OQ9d1S73CMoO8ddafaNgZsvh7Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftpshqaQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Edzm6Syy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E139CC116B1
-	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 16:26:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ftpshqaQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03399C116B1
+	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 22:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760113570;
-	bh=utKCZjeHw3iqnFfYB1ZfxGnO3UrPmvILiol4TqfBHR4=;
+	s=k20201202; t=1760133922;
+	bh=ULkcu+ErWUDnM+0yG/yzCIlYRGPz4NooEguavSIe4VI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Edzm6SyycKKkFWiTk3912LPCjJ42xcjg9u99+ZCWUuoxk24NyxIEoUV0xYtQ1hUhS
-	 ZusMQJfHtM2t/nyvK+d3GH5aIGZgyQMn4OfO9/mKwlFqZQ0BGVVR8/K61WyGw1Gnfx
-	 hCR7R6B0dRDHMtGQAjYSQjR0oJR/xhkoXFo+ZeIAl5w8rQWa1PkKYdMaE+FlyXYU27
-	 QSIioFAwgaRXm3nXRFlpzxgYTy194pXYy1LgUWUVcXFadZGIW8i9ZlapyZYIRg/5Mh
-	 rxA3StEnbj9gQGcrOzzgEgWNXP8PcnpnB16a1kGiOhggvJ4zKo4zGppCUZdhrF7luz
-	 r771GJdkNs/2w==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-57f0aa38aadso2616324e87.2
-        for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 09:26:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWtEr/fHZaSr1ndLd3jBPqXD8SlQPe13Z6peLGBxGcjLh01IW3EarXNS4/Ho5zK69oICaKZDcVt8VE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyIyPpPBWpKxScgT8TVsPkKC4zjTp6l4yTydC9R8HZEgdtXF74Q
-	S/zh0I/KoYr2ayf9tvCMb9krStgyisBwNERhYmhdlEHEK6omGNLhCILKQ8M206i2J4d+Bt6Y5SU
-	kdkei8xdp1PG34LAIx+0RSVfBEFgvNSE=
-X-Google-Smtp-Source: AGHT+IFlrMsUvrC/ZHyp7C1tmfy80lEWySBj/07SSrfUI6v7Q7I01eOrR8aE8CO2xnNLYI6LpFea10RRzC+bIaZdgH8=
-X-Received: by 2002:a05:6512:1152:b0:57b:5794:ccd9 with SMTP id
- 2adb3069b0e04-5906d77e26bmr3537150e87.9.1760113569266; Fri, 10 Oct 2025
- 09:26:09 -0700 (PDT)
+	b=ftpshqaQR+MKSoyq2LrMNvppCPHDo4+mvS503i3vArOetgTOzPb9pmDZxTRFQo0pd
+	 7uJ2PilMQxRneN9/uTkAcJ4hmoG4bAccEViWk9uFLL+BCjs8ATJfHqdANwprBaoQTI
+	 kUPaLbCtZ1JUplpr92fW7HMnbmZpJeyA3W75IySLAtEWfneEt5N5XCUU8uiLUv6sfh
+	 33avqC/ziB+l9bUDyosz2Zad5PLP/uopVe8D+H57UZcvbBQ6XRRNV2bGAx81XAKQ3B
+	 /nhpQSh4xNg+alcZZGa+V2315VHqp0X/SiTBjvpiTuaInGaSW2Qcrtrwlqs5Z6j5Vx
+	 q167V+a+kR3Fw==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-636535e4b1aso5488902a12.0
+        for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 15:05:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUI/R2Yd5wEi5ohP6WmrNmp+7QejFDkq6An4J6gwt/8HKJ3lJc64LGB9j2J+Id4XwdiVakqvwYJ15g=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywf1hNsrtPl37CylIKVShjTj0YbLEqL5kUAgAwxR9KDnPF7eL6f
+	oC6oDcfZaJ6AEVDvv8g3iX/skETANBi4UiyFDo2m98PWjTSTTKwzzbMDJrg68Mbt859uuJAvpND
+	PvawqIzM6r1f33+q7uNHujoRTj/cqzg==
+X-Google-Smtp-Source: AGHT+IFuxZcfGuyDGnYvmRipLMVeDwsutLoA5afsi1To0UHAb/F8Wkp4QQcADLcPiJYb4k/lngw3miLIFLMhQgfvXPY=
+X-Received: by 2002:a17:907:7213:b0:b38:49a6:583a with SMTP id
+ a640c23a62f3a-b50bf2bcc2amr1295183566b.23.1760133920590; Fri, 10 Oct 2025
+ 15:05:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250928085506.4471-1-yangtiezhu@loongson.cn> <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
- <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
- <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
- <CAMj1kXHWe2uGY3S1NJ6mckqD4n116rPmaOzw3_Qbvxyjh7ECMw@mail.gmail.com> <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn>
-In-Reply-To: <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 10 Oct 2025 09:25:57 -0700
-X-Gmail-Original-Message-ID: <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
-X-Gm-Features: AS18NWAp30BvVY9ZXh0_0XY6OhGFXDo-CTjUdGdhBNHw2LQ_EFhIlBfBfuAUJuI
-Message-ID: <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
-Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250811163749.47028-2-ziyao@disroot.org> <20250811163749.47028-3-ziyao@disroot.org>
+ <20250818175827.GA1507697-robh@kernel.org> <aKRh8M0szWKfpPF9@pie>
+In-Reply-To: <aKRh8M0szWKfpPF9@pie>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 10 Oct 2025 17:05:09 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+8U75kYFADTNnMONxrLy9H7YHukXNdtPpp20yG-HEyng@mail.gmail.com>
+X-Gm-Features: AS18NWBAJg1X1PNJxas_Z_phPDWL6QAMLHfZflRShgSUFengE_WoLreRmG5ombg
+Message-ID: <CAL_Jsq+8U75kYFADTNnMONxrLy9H7YHukXNdtPpp20yG-HEyng@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-binding: pinctrl: Document Loongson 2K0300 pin controller
+To: Yao Zi <ziyao@disroot.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
+	Kexy Biscuit <kexybiscuit@aosc.io>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 9 Oct 2025 at 00:27, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+On Tue, Aug 19, 2025 at 6:37=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
 >
-> On 2025/9/28 =E4=B8=8B=E5=8D=8810:41, Ard Biesheuvel wrote:
-> > On Sun, 28 Sept 2025 at 16:39, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >>
-> >> On Sun, 28 Sept 2025 at 15:52, Huacai Chen <chenhuacai@kernel.org> wro=
-te:
-> >>>
-> >>> Hi, Ard,
-> >>>
-> >>> On Sun, Sep 28, 2025 at 9:42=E2=80=AFPM Ard Biesheuvel <ardb@kernel.o=
-rg> wrote:
-> >>>>
-> >>>> On Sun, 28 Sept 2025 at 10:55, Tiezhu Yang <yangtiezhu@loongson.cn> =
-wrote:
-> >>>>>
-> >>>>> When compiling with LLVM and CONFIG_LTO_CLANG is set, there exists
-> >>>>> the following objtool warning on LoongArch:
-> >>>>>
-> >>>>>    vmlinux.o: warning: objtool: __efistub_efi_boot_kernel()
-> >>>>>    falls through to next function __efistub_exit_boot_func()
-> >>>>>
-> >>>>> This is because efi_boot_kernel() doesn't end with a return instruc=
-tion
-> >>>>> or an unconditional jump, then objtool has determined that the func=
-tion
-> >>>>> can fall through into the next function.
-> >>>>>
-> >>>>> At the beginning, try to do something to make efi_boot_kernel() end=
-s with
-> >>>>> an unconditional jump instruction, but this modification seems not =
-proper.
-> >>>>>
-> >>>>> Since the efistub functions are useless for stack unwinder, they ca=
-n be
-> >>>>> ignored by objtool. After many discussions, no need to link libstub=
- to
-> >>>>> the vmlinux.o, only link libstub to the final vmlinux.
-> >>>>>
-> >>>>
-...
-> Are you OK with the following changes?
+> On Mon, Aug 18, 2025 at 12:58:27PM -0500, Rob Herring wrote:
+> > On Mon, Aug 11, 2025 at 04:37:48PM +0000, Yao Zi wrote:
+> > > The pincontroller integarted in Loongson 2K0300 is able to configure
+> > > function multiplexing for all the pins. It could also configure drive
+> > > strength on basis of functions, which means all pins set to the same
+> > > function share drive-strength setting. Drive-strength configuration
+> > > isn't available for all functions, either.
+> > >
+> > > This binding utilizes two levels of subnodes, where the outer represe=
+nts
+> > > function and the inner represents groups. Drive-strength is allowed i=
+n
+> > > the outer since it's shared among all groups configured to the functi=
+on.
+> > >
+> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > > ---
+> > >  .../pinctrl/loongson,ls2k0300-pinctrl.yaml    | 92 +++++++++++++++++=
+++
+> > >  MAINTAINERS                                   |  6 ++
+> > >  2 files changed, 98 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/loongso=
+n,ls2k0300-pinctrl.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0=
+300-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0=
+300-pinctrl.yaml
+> > > new file mode 100644
+> > > index 000000000000..cbd74cb45342
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pin=
+ctrl.yaml
+> > > @@ -0,0 +1,92 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k0300-pinctrl=
+.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Loongson-2K0300 SoC Pinctrl Controller
+> > > +
+> > > +maintainers:
+> > > +  - Yao Zi <ziyao@disroot.org>
+> > > +
+> > > +allOf:
+> > > +  - $ref: pinctrl.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: loongson,ls2k0300-pinctrl
+> > > +
+> > > +  reg:
+> > > +    items:
+> > > +      - description: Pin function-multiplexing configuration registe=
+rs
+> > > +      - description: Pin drive-strength configuration registers
+> > > +
+> > > +  reg-names:
+> > > +    items:
+> > > +      - const: mux
+> > > +      - const: drive
+> > > +
+> > > +patternProperties:
+> > > +  '^func-':
+> > > +    type: object
+> > > +
+> > > +    $ref: pincfg-node.yaml#
+> > > +
+> > > +    properties:
+> > > +      drive-strength:
+> > > +        description:
+> > > +          Maximum sink or source current as defined in pincfg-node.y=
+aml. Note
+> > > +          that drive strength could only be configured on function b=
+asis, i.e.,
+> > > +          all pins multiplexed to the same function share the same
+> > > +          configuration.
+> > > +
+> > > +          This could only be configured for several functions, inclu=
+ding jtag,
+> > > +          dvo, uart, gmac, sdio, spi, i2s, timer, usb and emmc.
+> > > +        enum: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+> >
+> > How do you know what pin this drive strength corresponds to without any
+> > other properties? Node names generally aren't important, so you
+> > shouldn't be using that.
 >
-> (1) libstub doesn't link to vmlinux.o, only link libstub with vmlinux.o
-> during the final vmlinux link, keep the changes confined to LoongArch,
-> no need to be something more generic.
->
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index dc5bd3f1b8d2..f34b416f5ca2 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -169,7 +169,6 @@ CHECKFLAGS +=3D $(shell $(CC) $(KBUILD_CPPFLAGS)
-> $(KBUILD_CFLAGS) -dM -E -x c /dev
->   endif
->
->   libs-y +=3D arch/loongarch/lib/
-> -libs-$(CONFIG_EFI_STUB) +=3D $(objtree)/drivers/firmware/efi/libstub/lib=
-.a
->
->   drivers-y              +=3D arch/loongarch/crypto/
->
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index 433849ff7529..ed94871c3606 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -69,6 +69,12 @@ vmlinux_link()
->                  libs=3D"${KBUILD_VMLINUX_LIBS}"
->          fi
->
-> +       if [ "${SRCARCH}" =3D "loongarch" ]; then
-> +               if is_enabled CONFIG_EFI_STUB; then
-> +                       libs=3D"${libs} drivers/firmware/efi/libstub/lib.=
-a"
-> +               fi
-> +       fi
-> +
->          if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
->                  objs=3D"${objs} .builtin-dtbs.o"
->          fi
->
-> (2) remove the attribute __noreturn for real_kernel_entry() and add
-> "while (1);" at the end of efi_boot_kernel().
->
-> diff --git a/drivers/firmware/efi/libstub/loongarch.c
-> b/drivers/firmware/efi/libstub/loongarch.c
-> index 3782d0a187d1..e309fd78fca7 100644
-> --- a/drivers/firmware/efi/libstub/loongarch.c
-> +++ b/drivers/firmware/efi/libstub/loongarch.c
-> @@ -10,7 +10,7 @@
->   #include "efistub.h"
->   #include "loongarch-stub.h"
->
-> -typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdlin=
-e,
-> +typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
->                                           unsigned long systab);
->
->   efi_status_t check_platform_features(void)
-> @@ -81,4 +81,7 @@ efi_status_t efi_boot_kernel(void *handle,
-> efi_loaded_image_t *image,
->
->         real_kernel_entry(true, (unsigned long)cmdline_ptr,
->                           (unsigned long)efi_system_table);
-> +
-> +       /* We should never get here */
-> +       while (1);
->   }
->
+> Thanks for the hint... yes I'm matching the node name to identify
+> functions in this revision of driver. Could I introduce a "function"
+> property to the outer node for identification of the function?
 
-Why do we need both (1) and (2)?
+Yes, that should be defined somewhere.
+
+> > > +
+> > > +    additionalProperties: false
+> > > +
+> > > +    patternProperties:
+> > > +      '-pins$':
+> > > +        type: object
+> > > +        $ref: pinmux-node.yaml#
+> >
+> > Generally the pin config and muxing are in 1 node if you can control
+> > both.
+>
+> On 2K0300, drive-strength could only be configured for each function,
+> not each pin, i.e. all pins configured to the same function share the
+> same drive-strength configuration.
+>
+> Putting the driver-strength property in the outer node describes the
+> situation: a property in the outer node is function-specific and shared
+> between all groups (represented by inner nodes) configured to this
+> function.
+>
+> Do you think it's better to move pin config (the driver-strength
+> property) to the inner node in this case? If so, should the new
+> "function" property for identifying functions reliably be in the inner
+> node or the outer node? Thanks for your explanation,
+
+I don't know. I'll defer to Linus on this one who is more familiar
+with the variations of h/w out there.
+
+Rob
