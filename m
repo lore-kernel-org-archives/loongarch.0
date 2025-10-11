@@ -1,139 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B2D61FFE;
-	Sat, 11 Oct 2025 01:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C1C654918
+	for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 01:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760145176; cv=none; b=imGWl7y1j/homp316ZDgxiw8p9PXUmINDnHlB8ddSux3PEjcrO03Aoihuf67kPeS6VpFkquglRVLixeA65uMMARwAPyVTaOC2xV8Z3+ABFY+DS7TP9FGgfJFfWRELZAgwlMtnLzpkvrXztE1FryyfZCfe6eW+L16v4MQOGCOzEc=
+	t=1760145219; cv=none; b=mCktgBYtPHfgB93+JsIkpIDNE796yT+CcAILMB347LmIeCKIdrP3ryYBdl0jEUdZYZR4PEC1VLSbzFE29Urv7gmtK5TnXzVetogvHQvtPg+tv2K0LjizA3ZrwceeSoow2THmTSHvQlTt7eWgzO5tnJpur3jUt/QR7eiP37zix4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760145176; c=relaxed/simple;
-	bh=ucy6YOJRmqBcirVEuFy4wQRT/WtafEtff4nZW2czQcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=reSbKGe0/vxjTIVDU0h0Y7k8DYA0zYTcuokezoe4kdiWMgWZNq3KktejbTNM0RkrcROQ8QQ/1QW51y8h5+OAngwZ+ki4wV+Ar/qQjvNkWKwLJRw8VkDTWpdWiJdwrMpRLNAW4SAxU5fpKVdhykMmjfb4R/wyFfhUkK6IIxqT4ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WIuoc4kk; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WIuoc4kk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760145175; x=1791681175;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ucy6YOJRmqBcirVEuFy4wQRT/WtafEtff4nZW2czQcg=;
-  b=WIuoc4kkyuFmKgdu7Yy5HlvHfC3Yddmgzv3Md+WhqIj2ByoAjHJdJ2Dl
-   BgoE5hcaI7WtR1Je9BL/jivG8MYTl50uLLgT5xdI3Miuga35kKPxSuRqx
-   teOKRmx+MNT3SLR7r61z4Rh5ED6vIER27I55Er3NQbNvzry7Ik3BbkxkC
-   uAAkKAc9XFzFMEtJDIGPS/cZYZbeEJ34syPEavE95ozuTVsc0gD2bpdd6
-   KdieSKHc9z8TMc3ejynfG5YnRH4Nn4gReXxEWbz+mPZzWLRjCjadxw4QO
-   2I4l6rZWBgjAA1D1tlxjQ1Yr8Xn2wLlV1NBzmZFvyMewz4I8n8OAiQPfS
-   Q==;
-X-CSE-ConnectionGUID: dDwz1fxJT/+BwzX6VUTvbA==
-X-CSE-MsgGUID: OmLwWTP2TWmw+bxfEGQefw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11578"; a="66220398"
-X-IronPort-AV: E=Sophos;i="6.19,220,1754982000"; 
-   d="scan'208";a="66220398"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 18:12:55 -0700
-X-CSE-ConnectionGUID: zxk79Xh6Qi2s7rWg5gOvQg==
-X-CSE-MsgGUID: 5w6Sct5DSYWT4cqH8YS1Dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,220,1754982000"; 
-   d="scan'208";a="204783189"
-Received: from lkp-server01.sh.intel.com (HELO 6a630e8620ab) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 10 Oct 2025 18:12:50 -0700
-Received: from kbuild by 6a630e8620ab with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v7OAC-0003Mv-11;
-	Sat, 11 Oct 2025 01:12:48 +0000
-Date: Sat, 11 Oct 2025 09:12:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
-	kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org,
-	si.yanteng@linux.dev, tglx@linutronix.de, jiaxun.yang@flygoat.com,
-	peterz@infradead.org, wangliupu@loongson.cn, lvjianmin@loongson.cn,
-	maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
-	gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: Re: [PATCH v5 2/2] irqchip/irq-loongarch-ir:Add Redirect irqchip
- support
-Message-ID: <202510110810.nIsLpJni-lkp@intel.com>
-References: <20251010022845.140234-3-zhangtianyang@loongson.cn>
+	s=arc-20240116; t=1760145219; c=relaxed/simple;
+	bh=QAvrNv3XCKLrr1IgfH2Cr/h9V9DNCl1mBClRvJ5QQR4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=HUWLcefa5I+L4YHXJoKz2ztvl7ErmJX3iiaaHsKWSkvDYLrUyWX+SN8chR5OBXmc4Hrs8SrMBARLdFJnOCEQ4Mt5FSZrKqZjEjDTDmMYPSo7DQszTpxKbaoiCXt4pl9QaE8bU3sdTY5VwuTpqw2vBSkw1r77MtL3VO42AvEM91k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx6tE8r+loKucUAA--.45012S3;
+	Sat, 11 Oct 2025 09:13:32 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxaMA2r+loXHTZAA--.194S3;
+	Sat, 11 Oct 2025 09:13:29 +0800 (CST)
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, loongarch@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250928085506.4471-1-yangtiezhu@loongson.cn>
+ <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
+ <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
+ <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
+ <CAMj1kXHWe2uGY3S1NJ6mckqD4n116rPmaOzw3_Qbvxyjh7ECMw@mail.gmail.com>
+ <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn>
+ <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8091e8fa-3483-af39-2f7a-e4eb62b0944f@loongson.cn>
+Date: Sat, 11 Oct 2025 09:13:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251010022845.140234-3-zhangtianyang@loongson.cn>
+In-Reply-To: <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxaMA2r+loXHTZAA--.194S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E
+	14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280
+	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UR
+	a0PUUUUU=
 
-Hi Tianyang,
+On 2025/10/11 上午12:25, Ard Biesheuvel wrote:
+...
+> Why do we need both (1) and (2)?
 
-kernel test robot noticed the following build warnings:
+Not both, either (1) or (2).
+Which one do you prefer? Or any other suggestions?
 
-[auto build test WARNING on tip/irq/core]
-[also build test WARNING on linus/master v6.17 next-20251010]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Taking all of the considerations in balance, we should decide
+what is the proper way.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tianyang-Zhang/Docs-LoongArch-Add-Advanced-Extended-Redirect-IRQ-model-description/20251010-131542
-base:   tip/irq/core
-patch link:    https://lore.kernel.org/r/20251010022845.140234-3-zhangtianyang%40loongson.cn
-patch subject: [PATCH v5 2/2] irqchip/irq-loongarch-ir:Add Redirect irqchip support
-config: loongarch-randconfig-r121-20251011 (https://download.01.org/0day-ci/archive/20251011/202510110810.nIsLpJni-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251011/202510110810.nIsLpJni-lkp@intel.com/reproduce)
+Thanks,
+Tiezhu
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510110810.nIsLpJni-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/irqchip/irq-loongarch-ir.c:130:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
-   drivers/irqchip/irq-loongarch-ir.c:130:34: sparse:     expected void [noderef] __iomem *reg_addr
-   drivers/irqchip/irq-loongarch-ir.c:130:34: sparse:     got void *
->> drivers/irqchip/irq-loongarch-ir.c:130:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
-   drivers/irqchip/irq-loongarch-ir.c:130:34: sparse:     expected void [noderef] __iomem *reg_addr
-   drivers/irqchip/irq-loongarch-ir.c:130:34: sparse:     got void *
-   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
-   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     expected void [noderef] __iomem *reg_addr
-   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     got void *
-   drivers/irqchip/irq-loongarch-ir.c:159:9: sparse: sparse: context imbalance in 'invalid_enqueue' - wrong count at exit
-   drivers/irqchip/irq-loongarch-ir.c:188:12: sparse: sparse: context imbalance in 'redirect_table_alloc' - wrong count at exit
-   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
-   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     expected void [noderef] __iomem *reg_addr
-   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     got void *
-   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
-   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     expected void [noderef] __iomem *reg_addr
-   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     got void *
-   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
-   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     expected void [noderef] __iomem *reg_addr
-   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     got void *
-   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
-   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     expected void [noderef] __iomem *reg_addr
-   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     got void *
-   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
-   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     expected void [noderef] __iomem *reg_addr
-   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     got void *
-
-vim +130 drivers/irqchip/irq-loongarch-ir.c
-
-   127	
-   128	static inline u32 redirect_read_reg32(int node, int reg)
-   129	{
- > 130		void __iomem *reg_addr = REDIRECT_REG(reg, node);
-   131	
-   132		return readl(reg_addr);
-   133	}
-   134	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
