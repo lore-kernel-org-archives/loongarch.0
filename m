@@ -1,119 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C931DF963
-	for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 03:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDC4219C553
+	for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 07:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760154040; cv=none; b=iMkgpGamBTt63n1+Xqemi9OtAZICkYQHB1aRCJ4FgsAh3H+wgLXlq61TtYg3poMdtt7pw4LaBxC5Osv+rtjYLcJB0zrf+PKydRTzHXpgHL5W1A9NwRg/mT8vBeOMkSSHY4Vw34Ch2WGp0/iMp+lc0MNITEDsj6hMND6P98jHCWw=
+	t=1760167042; cv=none; b=AzV+BH0bNTXW96v4kavklAFM/jtgYYxT8LtPXoFtsVT4GAwp9vU/C8sgDAEqiXzGYLUJzsg1yEEOJINqXXetZ+bq3C5G2rpe5RNoLg03nmwosep/NkcUcosE2RQJZKwFb2gdtZbkIsFxonEn0/Xc7n4qxvLlwQLfehkwJrOaXB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760154040; c=relaxed/simple;
-	bh=d8gS8wOiKMr+l/ZJJK/wQClNzHRVZjbJoYCPz75pBA0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hpNoNRFr4hBFmGdoZdLA608ApWcY+c+Qzh4M+cyYTQV8U21lU7vS0UmOTYp2adJhtUOtQcnLxtyvaIcChQQezSGQY1bTMg8lD3xkTEwEQZlGdtbBoQtapdIp8n26R2RqnomTk2N7NbcKcD++h1w8xBdczBs9RBR71EEPEC4/4+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzNmc2ht; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzNmc2ht"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D70C116C6
-	for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 03:40:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760154039;
-	bh=d8gS8wOiKMr+l/ZJJK/wQClNzHRVZjbJoYCPz75pBA0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DzNmc2htDKTHCp3aozZ6E5kEpQ/T9k9BWOy4+jwgGV0SIndwfInOWiuXfSFiC5/5t
-	 QL0ZrMiCOK0FsZeNjSXSIG3/Br58Maj0goLA9/Q6msU1Q15XtRG+/XCdCPfCh/moCu
-	 3wN9SmB4nk5eeZ2n9d7wmFfMO1QGUzW5I1c3d7STbqXTYzS+mpV20pHVAmWvmSxSj4
-	 RkOfn0MoXV6y5yHYuCfrLF8mrUT/cWs/nH/BhFqc8TDo0dG4dA+boCphnqx3GOExuE
-	 QOttymeUokIXpaUETbAytEn+TzSZ/z6oVLixTt5MXuB/USBSphsTqedUHobjukDNnT
-	 j/m2eilL1toDw==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-57992ba129eso3248709e87.3
-        for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 20:40:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+i6JVlH3IlupS6xXSpowkL2KIcVJhRT7XA2mIh2Cz/qOk+eAq5nucnraTIpf81ZiSVLqjN7N9fuc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx5ZhHZhKhxfJ2BGxFbjgagOacNGKCFr0z/Z9N2+eNEbFsTJQXH
-	7jLCVErd96Dhk0FAVE8DN7YD6MBmP/ht06Y3Dy68wseOQvoGiTprNjfR0YgGfeAEmUAkJ0W/wYD
-	xv1Uj8+j/MEQRGoBgZZlNEqJ478Z6ClU=
-X-Google-Smtp-Source: AGHT+IFLXMYQ5g+Z7hYaE+htkOTZgcAsNtsCxDgeGT8tN/INhUQhJ+SJe8urgMafAAQJ9Ld+ELNhgSE8e7XFB5+/m9g=
-X-Received: by 2002:a05:6512:b10:b0:577:9ee:7d57 with SMTP id
- 2adb3069b0e04-5906de88ee4mr3575140e87.46.1760154038165; Fri, 10 Oct 2025
- 20:40:38 -0700 (PDT)
+	s=arc-20240116; t=1760167042; c=relaxed/simple;
+	bh=qzboaWjQ9fakcaoo7RXt9Dp1iwJWnjFhrHhL4aO65jE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l62FJidsW09k4dmgP5jgooZb28P4+GmAxTIqmpNzXks6mxIQ9txD5BNxZddhc8NdIrd4pW19EaCNTVWM+ITq3095mchybaDR5my85fIH9/YEzEGy0nnBS5qiBU8COS+C+J1Wxwd/yR46JGPNl0P39tllEqqYTJ+xpbl3OPGNXsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.198])
+	by gateway (Coremail) with SMTP id _____8Dxb_B2BOpoS_kUAA--.45324S3;
+	Sat, 11 Oct 2025 15:17:10 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.198])
+	by front1 (Coremail) with SMTP id qMiowJDxaMBwBOpo1ebZAA--.1011S3;
+	Sat, 11 Oct 2025 15:17:10 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Haowei Zheng <zhenghaowei@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	ilpo.jarvinen@linux.intel.com,
+	linux-serial@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v6 1/3] dt-bindings: serial: 8250: Add Loongson uart compatible
+Date: Sat, 11 Oct 2025 15:16:47 +0800
+Message-ID: <2d858e9303d95a3e4909aa9c1379d4abbdc52cc2.1760166651.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <cover.1760166651.git.zhoubinbin@loongson.cn>
+References: <cover.1760166651.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250928085506.4471-1-yangtiezhu@loongson.cn> <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
- <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
- <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
- <CAMj1kXHWe2uGY3S1NJ6mckqD4n116rPmaOzw3_Qbvxyjh7ECMw@mail.gmail.com>
- <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn> <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
- <8091e8fa-3483-af39-2f7a-e4eb62b0944f@loongson.cn> <CAAhV-H4+UGLSkbjHbq9MerWfxnq0a13x+uzNfTsCoe1UxjbWsg@mail.gmail.com>
-In-Reply-To: <CAAhV-H4+UGLSkbjHbq9MerWfxnq0a13x+uzNfTsCoe1UxjbWsg@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 10 Oct 2025 20:40:26 -0700
-X-Gmail-Original-Message-ID: <CAMj1kXH-rK0bRyHXdJ-crAyMyvJHApH0WR7_8Qd8vrSPBLK+yg@mail.gmail.com>
-X-Gm-Features: AS18NWCSTMnmP5OepZJr1Y4u3ZHVFaMO9Ik-XYJVsvY5QDAPT-bP-GHnlwwanEk
-Message-ID: <CAMj1kXH-rK0bRyHXdJ-crAyMyvJHApH0WR7_8Qd8vrSPBLK+yg@mail.gmail.com>
-Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxaMBwBOpo1ebZAA--.1011S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEMCGjp8Y8BCAAAsx
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw1DCw13ZF47uF47KrWkKrX_yoW8Xr1rpF
+	sakF9xKry0kr13ua95XFy8Ja1rurWkAa1ayFW7G3ZFgF95ta9aqr1fKw4jqF4rCF10qFyU
+	ZFW0gF4rKa40yrbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
+	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU8sL05UUUUU==
 
-On Fri, 10 Oct 2025 at 19:54, Huacai Chen <chenhuacai@kernel.org> wrote:
->
-> On Sat, Oct 11, 2025 at 9:13=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.=
-cn> wrote:
-> >
-> > On 2025/10/11 =E4=B8=8A=E5=8D=8812:25, Ard Biesheuvel wrote:
-> > ...
-> > > Why do we need both (1) and (2)?
-> >
-> > Not both, either (1) or (2).
-> > Which one do you prefer? Or any other suggestions?
-> >
-> > Taking all of the considerations in balance, we should decide
-> > what is the proper way.
-> As a summary, there are three methods:
-> (1) Only link libstub with vmlinux.o during the final vmlinux link.
-> (2) Remove the attribute __noreturn for real_kernel_entry() and add while=
- (1).
-> (3) Ignore "__efistub_" prefix in objtool.
->
-> Josh prefers method (1), I prefer method (3) but also accept method
-> (1) if it is not only specific to loongarch.
->
+The Loongson family have a mostly NS16550A-compatible UART and
+High-Speed UART hardware with the exception of custom frequency divider
+latch settings register.
 
-This is a false positive warning in objtool, which complains about a
-function that falls through, even though that can never happen in
-reality.
+Co-developed-by: Haowei Zheng <zhenghaowei@loongson.cn>
+Signed-off-by: Haowei Zheng <zhenghaowei@loongson.cn>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ Documentation/devicetree/bindings/serial/8250.yaml | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-To me, it is not acceptable to modify how vmlinux.o is constructed
-also for other architectures, in order to hide some of its constituent
-parts from objtool, which do not use objtool to begin with.
+diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Documentation/devicetree/bindings/serial/8250.yaml
+index b243afa69a1a..167ddcbd8800 100644
+--- a/Documentation/devicetree/bindings/serial/8250.yaml
++++ b/Documentation/devicetree/bindings/serial/8250.yaml
+@@ -125,6 +125,8 @@ properties:
+               - nxp,lpc1850-uart
+               - opencores,uart16550-rtlsvn105
+               - ti,da830-uart
++              - loongson,ls2k0500-uart
++              - loongson,ls2k1500-uart
+           - const: ns16550a
+       - items:
+           - enum:
+@@ -169,6 +171,18 @@ properties:
+               - nvidia,tegra194-uart
+               - nvidia,tegra234-uart
+           - const: nvidia,tegra20-uart
++      - items:
++          - enum:
++              - loongson,ls2k1000-uart
++          - const: loongson,ls2k0500-uart
++          - const: ns16550a
++      - items:
++          - enum:
++              - loongson,ls3a5000-uart
++              - loongson,ls3a6000-uart
++              - loongson,ls2k2000-uart
++          - const: loongson,ls2k1500-uart
++          - const: ns16550a
+ 
+   reg:
+     maxItems: 1
+-- 
+2.47.3
 
-
-If you are not willing to fix objtool, I suggest fixing the loongarch
-code like this:
-
---- a/drivers/firmware/efi/libstub/loongarch.c
-+++ b/drivers/firmware/efi/libstub/loongarch.c
-@@ -10,7 +10,7 @@
- #include "efistub.h"
- #include "loongarch-stub.h"
-
--typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline,
-+typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
-                                          unsigned long systab);
-
- efi_status_t check_platform_features(void)
-@@ -81,4 +81,6 @@
-
-        real_kernel_entry(true, (unsigned long)cmdline_ptr,
-                          (unsigned long)efi_system_table);
-+
-+       return EFI_LOAD_ERROR;
- }
