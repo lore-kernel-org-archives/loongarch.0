@@ -1,187 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6662826D4EB
-	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 22:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B2D61FFE;
+	Sat, 11 Oct 2025 01:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760133922; cv=none; b=BfEZvETCnKvsTF2yXuMxpU2+0xSRD8xFnqfThQgvC2WSXJ4k1iv+vcRUURiH0U7Wd5UcO3h1U5DMSmal5HFnM3+3X4Zp4xyCWDeADrhvy6cS5Gw+6iD4gkgGHbj7gECbiqae5gIAHWu4glInEWHcar6RC48qTfDbD+o4NdOoIjQ=
+	t=1760145176; cv=none; b=imGWl7y1j/homp316ZDgxiw8p9PXUmINDnHlB8ddSux3PEjcrO03Aoihuf67kPeS6VpFkquglRVLixeA65uMMARwAPyVTaOC2xV8Z3+ABFY+DS7TP9FGgfJFfWRELZAgwlMtnLzpkvrXztE1FryyfZCfe6eW+L16v4MQOGCOzEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760133922; c=relaxed/simple;
-	bh=ULkcu+ErWUDnM+0yG/yzCIlYRGPz4NooEguavSIe4VI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ak+KXMGFUvY9nY7HvR1+S8SqEcuVW4T7v78ij34QYyq1Hhc9V3sn4j4NF8bT0Jt5jeku0UoY3IbARP+KOy05d6DB3mjMCNqIM8tCmb/TFlBRnFI/LRJrrBX60/IQ/w70HPTNFrPwpfWWDjx6OQ9d1S73CMoO8ddafaNgZsvh7Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftpshqaQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760145176; c=relaxed/simple;
+	bh=ucy6YOJRmqBcirVEuFy4wQRT/WtafEtff4nZW2czQcg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=reSbKGe0/vxjTIVDU0h0Y7k8DYA0zYTcuokezoe4kdiWMgWZNq3KktejbTNM0RkrcROQ8QQ/1QW51y8h5+OAngwZ+ki4wV+Ar/qQjvNkWKwLJRw8VkDTWpdWiJdwrMpRLNAW4SAxU5fpKVdhykMmjfb4R/wyFfhUkK6IIxqT4ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WIuoc4kk; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ftpshqaQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03399C116B1
-	for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 22:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760133922;
-	bh=ULkcu+ErWUDnM+0yG/yzCIlYRGPz4NooEguavSIe4VI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ftpshqaQR+MKSoyq2LrMNvppCPHDo4+mvS503i3vArOetgTOzPb9pmDZxTRFQo0pd
-	 7uJ2PilMQxRneN9/uTkAcJ4hmoG4bAccEViWk9uFLL+BCjs8ATJfHqdANwprBaoQTI
-	 kUPaLbCtZ1JUplpr92fW7HMnbmZpJeyA3W75IySLAtEWfneEt5N5XCUU8uiLUv6sfh
-	 33avqC/ziB+l9bUDyosz2Zad5PLP/uopVe8D+H57UZcvbBQ6XRRNV2bGAx81XAKQ3B
-	 /nhpQSh4xNg+alcZZGa+V2315VHqp0X/SiTBjvpiTuaInGaSW2Qcrtrwlqs5Z6j5Vx
-	 q167V+a+kR3Fw==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-636535e4b1aso5488902a12.0
-        for <loongarch@lists.linux.dev>; Fri, 10 Oct 2025 15:05:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUI/R2Yd5wEi5ohP6WmrNmp+7QejFDkq6An4J6gwt/8HKJ3lJc64LGB9j2J+Id4XwdiVakqvwYJ15g=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywf1hNsrtPl37CylIKVShjTj0YbLEqL5kUAgAwxR9KDnPF7eL6f
-	oC6oDcfZaJ6AEVDvv8g3iX/skETANBi4UiyFDo2m98PWjTSTTKwzzbMDJrg68Mbt859uuJAvpND
-	PvawqIzM6r1f33+q7uNHujoRTj/cqzg==
-X-Google-Smtp-Source: AGHT+IFuxZcfGuyDGnYvmRipLMVeDwsutLoA5afsi1To0UHAb/F8Wkp4QQcADLcPiJYb4k/lngw3miLIFLMhQgfvXPY=
-X-Received: by 2002:a17:907:7213:b0:b38:49a6:583a with SMTP id
- a640c23a62f3a-b50bf2bcc2amr1295183566b.23.1760133920590; Fri, 10 Oct 2025
- 15:05:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WIuoc4kk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760145175; x=1791681175;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ucy6YOJRmqBcirVEuFy4wQRT/WtafEtff4nZW2czQcg=;
+  b=WIuoc4kkyuFmKgdu7Yy5HlvHfC3Yddmgzv3Md+WhqIj2ByoAjHJdJ2Dl
+   BgoE5hcaI7WtR1Je9BL/jivG8MYTl50uLLgT5xdI3Miuga35kKPxSuRqx
+   teOKRmx+MNT3SLR7r61z4Rh5ED6vIER27I55Er3NQbNvzry7Ik3BbkxkC
+   uAAkKAc9XFzFMEtJDIGPS/cZYZbeEJ34syPEavE95ozuTVsc0gD2bpdd6
+   KdieSKHc9z8TMc3ejynfG5YnRH4Nn4gReXxEWbz+mPZzWLRjCjadxw4QO
+   2I4l6rZWBgjAA1D1tlxjQ1Yr8Xn2wLlV1NBzmZFvyMewz4I8n8OAiQPfS
+   Q==;
+X-CSE-ConnectionGUID: dDwz1fxJT/+BwzX6VUTvbA==
+X-CSE-MsgGUID: OmLwWTP2TWmw+bxfEGQefw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11578"; a="66220398"
+X-IronPort-AV: E=Sophos;i="6.19,220,1754982000"; 
+   d="scan'208";a="66220398"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 18:12:55 -0700
+X-CSE-ConnectionGUID: zxk79Xh6Qi2s7rWg5gOvQg==
+X-CSE-MsgGUID: 5w6Sct5DSYWT4cqH8YS1Dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,220,1754982000"; 
+   d="scan'208";a="204783189"
+Received: from lkp-server01.sh.intel.com (HELO 6a630e8620ab) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 10 Oct 2025 18:12:50 -0700
+Received: from kbuild by 6a630e8620ab with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v7OAC-0003Mv-11;
+	Sat, 11 Oct 2025 01:12:48 +0000
+Date: Sat, 11 Oct 2025 09:12:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+	kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org,
+	si.yanteng@linux.dev, tglx@linutronix.de, jiaxun.yang@flygoat.com,
+	peterz@infradead.org, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+	maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+	gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: Re: [PATCH v5 2/2] irqchip/irq-loongarch-ir:Add Redirect irqchip
+ support
+Message-ID: <202510110810.nIsLpJni-lkp@intel.com>
+References: <20251010022845.140234-3-zhangtianyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250811163749.47028-2-ziyao@disroot.org> <20250811163749.47028-3-ziyao@disroot.org>
- <20250818175827.GA1507697-robh@kernel.org> <aKRh8M0szWKfpPF9@pie>
-In-Reply-To: <aKRh8M0szWKfpPF9@pie>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 10 Oct 2025 17:05:09 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+8U75kYFADTNnMONxrLy9H7YHukXNdtPpp20yG-HEyng@mail.gmail.com>
-X-Gm-Features: AS18NWBAJg1X1PNJxas_Z_phPDWL6QAMLHfZflRShgSUFengE_WoLreRmG5ombg
-Message-ID: <CAL_Jsq+8U75kYFADTNnMONxrLy9H7YHukXNdtPpp20yG-HEyng@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-binding: pinctrl: Document Loongson 2K0300 pin controller
-To: Yao Zi <ziyao@disroot.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251010022845.140234-3-zhangtianyang@loongson.cn>
 
-On Tue, Aug 19, 2025 at 6:37=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
->
-> On Mon, Aug 18, 2025 at 12:58:27PM -0500, Rob Herring wrote:
-> > On Mon, Aug 11, 2025 at 04:37:48PM +0000, Yao Zi wrote:
-> > > The pincontroller integarted in Loongson 2K0300 is able to configure
-> > > function multiplexing for all the pins. It could also configure drive
-> > > strength on basis of functions, which means all pins set to the same
-> > > function share drive-strength setting. Drive-strength configuration
-> > > isn't available for all functions, either.
-> > >
-> > > This binding utilizes two levels of subnodes, where the outer represe=
-nts
-> > > function and the inner represents groups. Drive-strength is allowed i=
-n
-> > > the outer since it's shared among all groups configured to the functi=
-on.
-> > >
-> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > ---
-> > >  .../pinctrl/loongson,ls2k0300-pinctrl.yaml    | 92 +++++++++++++++++=
-++
-> > >  MAINTAINERS                                   |  6 ++
-> > >  2 files changed, 98 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/loongso=
-n,ls2k0300-pinctrl.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0=
-300-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0=
-300-pinctrl.yaml
-> > > new file mode 100644
-> > > index 000000000000..cbd74cb45342
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pin=
-ctrl.yaml
-> > > @@ -0,0 +1,92 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k0300-pinctrl=
-.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Loongson-2K0300 SoC Pinctrl Controller
-> > > +
-> > > +maintainers:
-> > > +  - Yao Zi <ziyao@disroot.org>
-> > > +
-> > > +allOf:
-> > > +  - $ref: pinctrl.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: loongson,ls2k0300-pinctrl
-> > > +
-> > > +  reg:
-> > > +    items:
-> > > +      - description: Pin function-multiplexing configuration registe=
-rs
-> > > +      - description: Pin drive-strength configuration registers
-> > > +
-> > > +  reg-names:
-> > > +    items:
-> > > +      - const: mux
-> > > +      - const: drive
-> > > +
-> > > +patternProperties:
-> > > +  '^func-':
-> > > +    type: object
-> > > +
-> > > +    $ref: pincfg-node.yaml#
-> > > +
-> > > +    properties:
-> > > +      drive-strength:
-> > > +        description:
-> > > +          Maximum sink or source current as defined in pincfg-node.y=
-aml. Note
-> > > +          that drive strength could only be configured on function b=
-asis, i.e.,
-> > > +          all pins multiplexed to the same function share the same
-> > > +          configuration.
-> > > +
-> > > +          This could only be configured for several functions, inclu=
-ding jtag,
-> > > +          dvo, uart, gmac, sdio, spi, i2s, timer, usb and emmc.
-> > > +        enum: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-> >
-> > How do you know what pin this drive strength corresponds to without any
-> > other properties? Node names generally aren't important, so you
-> > shouldn't be using that.
->
-> Thanks for the hint... yes I'm matching the node name to identify
-> functions in this revision of driver. Could I introduce a "function"
-> property to the outer node for identification of the function?
+Hi Tianyang,
 
-Yes, that should be defined somewhere.
+kernel test robot noticed the following build warnings:
 
-> > > +
-> > > +    additionalProperties: false
-> > > +
-> > > +    patternProperties:
-> > > +      '-pins$':
-> > > +        type: object
-> > > +        $ref: pinmux-node.yaml#
-> >
-> > Generally the pin config and muxing are in 1 node if you can control
-> > both.
->
-> On 2K0300, drive-strength could only be configured for each function,
-> not each pin, i.e. all pins configured to the same function share the
-> same drive-strength configuration.
->
-> Putting the driver-strength property in the outer node describes the
-> situation: a property in the outer node is function-specific and shared
-> between all groups (represented by inner nodes) configured to this
-> function.
->
-> Do you think it's better to move pin config (the driver-strength
-> property) to the inner node in this case? If so, should the new
-> "function" property for identifying functions reliably be in the inner
-> node or the outer node? Thanks for your explanation,
+[auto build test WARNING on tip/irq/core]
+[also build test WARNING on linus/master v6.17 next-20251010]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I don't know. I'll defer to Linus on this one who is more familiar
-with the variations of h/w out there.
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianyang-Zhang/Docs-LoongArch-Add-Advanced-Extended-Redirect-IRQ-model-description/20251010-131542
+base:   tip/irq/core
+patch link:    https://lore.kernel.org/r/20251010022845.140234-3-zhangtianyang%40loongson.cn
+patch subject: [PATCH v5 2/2] irqchip/irq-loongarch-ir:Add Redirect irqchip support
+config: loongarch-randconfig-r121-20251011 (https://download.01.org/0day-ci/archive/20251011/202510110810.nIsLpJni-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251011/202510110810.nIsLpJni-lkp@intel.com/reproduce)
 
-Rob
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510110810.nIsLpJni-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/irqchip/irq-loongarch-ir.c:130:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
+   drivers/irqchip/irq-loongarch-ir.c:130:34: sparse:     expected void [noderef] __iomem *reg_addr
+   drivers/irqchip/irq-loongarch-ir.c:130:34: sparse:     got void *
+>> drivers/irqchip/irq-loongarch-ir.c:130:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
+   drivers/irqchip/irq-loongarch-ir.c:130:34: sparse:     expected void [noderef] __iomem *reg_addr
+   drivers/irqchip/irq-loongarch-ir.c:130:34: sparse:     got void *
+   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
+   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     expected void [noderef] __iomem *reg_addr
+   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     got void *
+   drivers/irqchip/irq-loongarch-ir.c:159:9: sparse: sparse: context imbalance in 'invalid_enqueue' - wrong count at exit
+   drivers/irqchip/irq-loongarch-ir.c:188:12: sparse: sparse: context imbalance in 'redirect_table_alloc' - wrong count at exit
+   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
+   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     expected void [noderef] __iomem *reg_addr
+   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     got void *
+   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
+   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     expected void [noderef] __iomem *reg_addr
+   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     got void *
+   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
+   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     expected void [noderef] __iomem *reg_addr
+   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     got void *
+   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
+   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     expected void [noderef] __iomem *reg_addr
+   drivers/irqchip/irq-loongarch-ir.c:123:34: sparse:     got void *
+   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *reg_addr @@     got void * @@
+   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     expected void [noderef] __iomem *reg_addr
+   drivers/irqchip/irq-loongarch-ir.c:116:34: sparse:     got void *
+
+vim +130 drivers/irqchip/irq-loongarch-ir.c
+
+   127	
+   128	static inline u32 redirect_read_reg32(int node, int reg)
+   129	{
+ > 130		void __iomem *reg_addr = REDIRECT_REG(reg, node);
+   131	
+   132		return readl(reg_addr);
+   133	}
+   134	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
