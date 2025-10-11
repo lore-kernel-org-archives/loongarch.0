@@ -1,158 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDB31E480;
-	Sat, 11 Oct 2025 15:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C11C27A12C
+	for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 15:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760196493; cv=none; b=qoAlteT1Y3y0bc24FXsq1szXzUyjmvOEzI3hVoKiNBElzNfWvpN53iRM9ttnnsm/3YvX/hBYuIJPUXZhv7t+4mpSRqb+2nJ4nY1C7RKcw4mRdUTxu94wC4A0+JezkWAqc/RCeynxR+R02Zk1yC8U0V3bzUnbn9XtinSGxRC7ZK0=
+	t=1760198349; cv=none; b=BMXpfpvc85axp7pNatKUsW1J726qFyBj6Kl9wXjrjI4AyQ7co8y7CI5jC9qFI0ExPAN2vtTV6+ofl8bs9IR+ArR/9rPPns/Bfo+gfPtofL2dXZ2gency2uyEwczM1Y9XDT3gyW5USVOSXZQHrDG/CEHtA/x13NjqqhsFWtrNGuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760196493; c=relaxed/simple;
-	bh=usBYVE1eZfyEMfHqr2yt6OEMuGPOwPvlMQfsDnwCZTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G26zwbHH3/Ymzau8mX5IL1tj+aDAIKMUCwQoN4bZUANuIq4TY5zOvQK4LOUvMHiZCaj446cRMh6Jl4KVTwQaKqJzpfTVck9BvEgoSsLRoyerteXJnyusBp5EwonBQtLdqvLr2rAv8jqhZU/YDY6SV0OSh6SEVdqNm6ObYVL8BDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XdkhUp9i; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1760198349; c=relaxed/simple;
+	bh=FMP8VZ8gA8szkAuFWTgf4lD8+bKkcaaQoNiLGdi+x8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e1voPDTQZUdSXU3XTnArTjAv4nQxTbpKMtZICvifficf8T5qYsJ2c6PB9rjY5fso9hM1oAD++PWsHbtcw47xtzNoPDlW/tUstJU47mCFtPGeVF3gsMF85vlELRnT32PQXD9JS7Xw6K29fFmgsE7JruTzlBCGAJ4uOSAOlidJwyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHGQKRIH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XdkhUp9i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760196491; x=1791732491;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=usBYVE1eZfyEMfHqr2yt6OEMuGPOwPvlMQfsDnwCZTQ=;
-  b=XdkhUp9iuR4d2v00WgX5dH+5vd+rC+cHFfZK5OsWYzkaDNYf6r8tRc5A
-   EeaVlAX22vZ2JoXDEvTUF02CNoaFjIeVxbxl0XdZ5kIbrEsn1Q5JcIIqL
-   V4KhE1MYhjt+JFL800HqLgDs+Vm7pcGWmKQRg+h3X2qzj0q0vF6gW2ckI
-   GWhuO/5ccv6JmpQBCpZMGsBnV6iIuqMZM6R+Fiwiwk3I4jwIgJBvEub4u
-   0CG+Uq8Ht0iyqtMEq2HzhcLaedp1gHjmU8kaB/MEzFH9zwaakDOz/1ReH
-   cu+IrY06ugtAw+1iiHV8JHtTBh/ZCGi4wHAE3ImkYtjO1xNZqNNKTvGYL
-   w==;
-X-CSE-ConnectionGUID: WPVS3GH5SFm9sdunyYQzaw==
-X-CSE-MsgGUID: /GqMqoTiSwapucbxkrU8ig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11579"; a="62274598"
-X-IronPort-AV: E=Sophos;i="6.19,221,1754982000"; 
-   d="scan'208";a="62274598"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2025 08:28:11 -0700
-X-CSE-ConnectionGUID: ImVrFSK0SdyMf7mwIE/Jfg==
-X-CSE-MsgGUID: BrYeQkKdSQq6l+eImZFbBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,221,1754982000"; 
-   d="scan'208";a="185465265"
-Received: from lkp-server01.sh.intel.com (HELO 6a630e8620ab) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 11 Oct 2025 08:28:06 -0700
-Received: from kbuild by 6a630e8620ab with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v7bVr-0003ph-2D;
-	Sat, 11 Oct 2025 15:28:03 +0000
-Date: Sat, 11 Oct 2025 23:27:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
-	kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org,
-	si.yanteng@linux.dev, tglx@linutronix.de, jiaxun.yang@flygoat.com,
-	peterz@infradead.org, wangliupu@loongson.cn, lvjianmin@loongson.cn,
-	maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
-	gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: Re: [PATCH v5 2/2] irqchip/irq-loongarch-ir:Add Redirect irqchip
- support
-Message-ID: <202510112232.3mPdCFd1-lkp@intel.com>
-References: <20251010022845.140234-3-zhangtianyang@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHGQKRIH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E0DC113D0
+	for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 15:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760198348;
+	bh=FMP8VZ8gA8szkAuFWTgf4lD8+bKkcaaQoNiLGdi+x8Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GHGQKRIHweQ7PZMVovdL3iYLbmpFP9KKXvT7q02FDt6cXW0P69kn5Mw8QcpaNB1B8
+	 m6IygR0VmI8zPuyzvxrK1h0pe3A32eDEpPvCY732dmtDbkD6Zs+C5JnVs7jr5nxNXe
+	 NXC7vhUFAVTAgDzMg+sqiAXHNsFxUtBJdYwnvZvXJ1UFKczzNsfLUK9pJ1v6aPANZD
+	 vQM4Ll99H7Pk/CsITHNEPb/wzhX/k+wB3r+xBDUUMPGd+GCyiUWkDJ+2IHWxJZm6ag
+	 wfaCps6geQcvo2qmRjhe0CWyO34pPZnoZP9lj8ibMdy8qFuZaln/cENRQCFQzdInCS
+	 kN6FXpXaYfeDw==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5906665139cso3817738e87.3
+        for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 08:59:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXAJJ1IAzvej2Djlkw65fCuYyMPnPTbOB/mE0Jh6qXyf4q1sZmYZpH6Sm/2Z8mmdYG2FgziadiGM8w=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywn0tY0z4RNYJHkeYYKXGaiz5Y5zlBkxkYUK9f29Xop6wf++F3R
+	SG2NlmA5YMz48KWcNKHdSxh1ZAcSAJzarJGkeeZlJbfT4zKLwP97t4uXTFt8HilWl6IRAflezji
+	JIxhpgEK2nfWI3D2rJqTyI7ESapw70so=
+X-Google-Smtp-Source: AGHT+IHd5fznoov3yvP+tErzIhmwiFjGEZONVFkecfMa35ml0OgDZ88tcqRJ52S0xdOyn0JZVXsG2S6/tycTHC1Itx8=
+X-Received: by 2002:a05:6512:6c1:b0:57a:f38a:397b with SMTP id
+ 2adb3069b0e04-5906db03666mr4327444e87.3.1760198347099; Sat, 11 Oct 2025
+ 08:59:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251010022845.140234-3-zhangtianyang@loongson.cn>
+References: <20250928085506.4471-1-yangtiezhu@loongson.cn> <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
+ <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
+ <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
+ <CAMj1kXHWe2uGY3S1NJ6mckqD4n116rPmaOzw3_Qbvxyjh7ECMw@mail.gmail.com>
+ <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn> <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
+ <8091e8fa-3483-af39-2f7a-e4eb62b0944f@loongson.cn> <CAAhV-H4+UGLSkbjHbq9MerWfxnq0a13x+uzNfTsCoe1UxjbWsg@mail.gmail.com>
+ <CAMj1kXH-rK0bRyHXdJ-crAyMyvJHApH0WR7_8Qd8vrSPBLK+yg@mail.gmail.com>
+ <0c9b8e6a-96a6-91d4-946f-2109f48a529b@loongson.cn> <CAAhV-H41m96fvEWG5NqAE=tykPjyzt=50CseJDeCqdG-c_WMrQ@mail.gmail.com>
+ <CAMj1kXEs5=VRi_rJwgHUrQWos-27PBbr3c4fYnmkV8Ahi8HZgw@mail.gmail.com> <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
+In-Reply-To: <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 11 Oct 2025 08:58:55 -0700
+X-Gmail-Original-Message-ID: <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
+X-Gm-Features: AS18NWAdTcjhG-nlKj9-SJF_h7OC6cz6ubjlCu1ov6qw2W9Mvr0vP5hoof0hvXo
+Message-ID: <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Tianyang,
+On Sat, 11 Oct 2025 at 08:01, Huacai Chen <chenhuacai@kernel.org> wrote:
+>
+> On Sat, Oct 11, 2025 at 10:48=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org>=
+ wrote:
+> >
+> > On Sat, 11 Oct 2025 at 00:43, Huacai Chen <chenhuacai@kernel.org> wrote=
+:
+> > >
+> > > On Sat, Oct 11, 2025 at 3:29=E2=80=AFPM Tiezhu Yang <yangtiezhu@loong=
+son.cn> wrote:
+> > > >
+> > > > On 2025/10/11 =E4=B8=8A=E5=8D=8811:40, Ard Biesheuvel wrote:
+> > > > > On Fri, 10 Oct 2025 at 19:54, Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+> > > > >>
+> > > > >> On Sat, Oct 11, 2025 at 9:13=E2=80=AFAM Tiezhu Yang <yangtiezhu@=
+loongson.cn> wrote:
+> > > > >>>
+> > > > >>> On 2025/10/11 =E4=B8=8A=E5=8D=8812:25, Ard Biesheuvel wrote:
+> > > > >>> ...
+> > > > >>>> Why do we need both (1) and (2)?
+> > > > >>>
+> > > > >>> Not both, either (1) or (2).
+> > > > >>> Which one do you prefer? Or any other suggestions?
+> > > > >>>
+> > > > >>> Taking all of the considerations in balance, we should decide
+> > > > >>> what is the proper way.
+> > > > >> As a summary, there are three methods:
+> > > > >> (1) Only link libstub with vmlinux.o during the final vmlinux li=
+nk.
+> > > > >> (2) Remove the attribute __noreturn for real_kernel_entry() and =
+add while (1).
+> > > > >> (3) Ignore "__efistub_" prefix in objtool.
+> > > > >>
+> > > > >> Josh prefers method (1), I prefer method (3) but also accept met=
+hod
+> > > > >> (1) if it is not only specific to loongarch.
+> > > > >>
+> > > > >
+> > > > > This is a false positive warning in objtool, which complains abou=
+t a
+> > > > > function that falls through, even though that can never happen in
+> > > > > reality.
+> > > > >
+> > > > > To me, it is not acceptable to modify how vmlinux.o is constructe=
+d
+> > > > > also for other architectures, in order to hide some of its consti=
+tuent
+> > > > > parts from objtool, which do not use objtool to begin with.
+> > > > >
+> > > > >
+> > > > > If you are not willing to fix objtool, I suggest fixing the loong=
+arch
+> > > > > code like this:
+> > > >
+> > > > Thank you.
+> > > >
+> > > > > --- a/drivers/firmware/efi/libstub/loongarch.c
+> > > > > +++ b/drivers/firmware/efi/libstub/loongarch.c
+> > > > > @@ -10,7 +10,7 @@
+> > > > >   #include "efistub.h"
+> > > > >   #include "loongarch-stub.h"
+> > > > >
+> > > > > -typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned lon=
+g cmdline,
+> > > > > +typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
+> > > > >                                            unsigned long systab);
+> > > > >
+> > > > >   efi_status_t check_platform_features(void)
+> > > > > @@ -81,4 +81,6 @@
+> > > > >
+> > > > >          real_kernel_entry(true, (unsigned long)cmdline_ptr,
+> > > > >                            (unsigned long)efi_system_table);
+> > > > > +
+> > > > > +       return EFI_LOAD_ERROR;
+> > > > >   }
+> > > >
+> > > > I tested the above changes, the falls through objtool warning can
+> > > > be fixed because efi_boot_kernel() ends with a return instruction,
+> > > > I think this is reasonable.
+> > > >
+> > > > efi_boot_kernel() has a return value, there are "return status" in
+> > > > other parts of efi_boot_kernel(), it should also return at the end
+> > > > of efi_boot_kernel() in theory, although we should never get here.
+> > > >
+> > > > If there are more comments, please let me know.
+> > > I still don't want LoongArch to be a special case, which means
+> > > efi_boot_kernel() in fdt.c, jump_kernel_func in riscv.c and
+> > > enter_kernel in arm64.c should also be modified.
+> > >
+> >
+> > You have made LoongArch a special case by adding objtool support,
+> > which  arm64 and RISC-V do not have.
+> >
+> > So NAK to changing arm64 and RISC-V as well.
+> Hmmm, I want to know whether this problem is an objtool issue or an
+> efistub issue in essence. If it is an objtool issue, we should fix
+> objtool and don't touch efistub. If it is an efistub issue, then we
+> should modify efistub (but not specific to LoongArch, when RISC-V and
+> ARM64 add objtool they will meet the same issue).
+>
 
-kernel test robot noticed the following build warnings:
+It is an objtool issue in essence.
 
-[auto build test WARNING on tip/irq/core]
-[also build test WARNING on linus/master v6.17 next-20251010]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The generated code looks like this
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tianyang-Zhang/Docs-LoongArch-Add-Advanced-Extended-Redirect-IRQ-model-description/20251010-131542
-base:   tip/irq/core
-patch link:    https://lore.kernel.org/r/20251010022845.140234-3-zhangtianyang%40loongson.cn
-patch subject: [PATCH v5 2/2] irqchip/irq-loongarch-ir:Add Redirect irqchip support
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20251011/202510112232.3mPdCFd1-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251011/202510112232.3mPdCFd1-lkp@intel.com/reproduce)
+9000000001743080: ff b7 fe 57   bl      -332 <__efistub_kernel_entry_addres=
+s>
+9000000001743084: 26 03 c0 28   ld.d    $a2, $s2, 0
+9000000001743088: 87 00 15 00   move    $a3, $a0
+900000000174308c: 04 04 80 03   ori     $a0, $zero, 1
+9000000001743090: c5 02 15 00   move    $a1, $fp
+9000000001743094: e1 00 00 4c   jirl    $ra, $a3, 0
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510112232.3mPdCFd1-lkp@intel.com/
+9000000001743098 <__efistub_exit_boot_func>:
+9000000001743098: 63 c0 ff 02   addi.d  $sp, $sp, -16
 
-All warnings (new ones prefixed by >>):
+There is nothing wrong with this code, given that the indirect call is
+to a __noreturn function, and so the fact that it falls through into
+__efistub_exit_boot_func() is not a problem.
 
->> drivers/irqchip/irq-loongarch-ir.c:498:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-     498 |         if (!redirect_domain) {
-         |             ^~~~~~~~~~~~~~~~
-   drivers/irqchip/irq-loongarch-ir.c:525:9: note: uninitialized use occurs here
-     525 |         return ret;
-         |                ^~~
-   drivers/irqchip/irq-loongarch-ir.c:498:2: note: remove the 'if' if its condition is always false
-     498 |         if (!redirect_domain) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~
-     499 |                 pr_err("Unable to alloc redirect domain\n");
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     500 |                 goto out_free_fwnode;
-         |                 ~~~~~~~~~~~~~~~~~~~~~
-     501 |         }
-         |         ~
-   drivers/irqchip/irq-loongarch-ir.c:491:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-     491 |         if (!fwnode) {
-         |             ^~~~~~~
-   drivers/irqchip/irq-loongarch-ir.c:525:9: note: uninitialized use occurs here
-     525 |         return ret;
-         |                ^~~
-   drivers/irqchip/irq-loongarch-ir.c:491:2: note: remove the 'if' if its condition is always false
-     491 |         if (!fwnode) {
-         |         ^~~~~~~~~~~~~~
-     492 |                 pr_err("Unable to alloc redirect domain handle\n");
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     493 |                 goto fail;
-         |                 ~~~~~~~~~~
-     494 |         }
-         |         ~
-   drivers/irqchip/irq-loongarch-ir.c:488:9: note: initialize the variable 'ret' to silence this warning
-     488 |         int ret, node;
-         |                ^
-         |                 = 0
-   2 warnings generated.
+Even though the compiler does nothing wrong here, it would be nice if
+it would emit some kind of UD or BRK instruction after such a call, if
+only to make the backtrace more reliable. But the code is fine, and
+objtool simply does not have the information it needs to determine
+that the indirect call is of a variety that never returns.
 
-
-vim +498 drivers/irqchip/irq-loongarch-ir.c
-
-   484	
-   485	int __init redirect_acpi_init(struct irq_domain *parent)
-   486	{
-   487		struct fwnode_handle *fwnode;
-   488		int ret, node;
-   489	
-   490		fwnode = irq_domain_alloc_named_fwnode("redirect");
-   491		if (!fwnode) {
-   492			pr_err("Unable to alloc redirect domain handle\n");
-   493			goto fail;
-   494		}
-   495	
-   496		redirect_domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
-   497							      &redirect_domain_ops, irde_descs);
- > 498		if (!redirect_domain) {
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+So I don't mind fixing it in the code, but only for LoongArch, given
+that the problem does not exist on arm64 or RISC-V.
