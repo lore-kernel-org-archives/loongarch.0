@@ -1,197 +1,399 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C11C27A12C
-	for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 15:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A8C199BC
+	for <loongarch@lists.linux.dev>; Sun, 12 Oct 2025 03:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760198349; cv=none; b=BMXpfpvc85axp7pNatKUsW1J726qFyBj6Kl9wXjrjI4AyQ7co8y7CI5jC9qFI0ExPAN2vtTV6+ofl8bs9IR+ArR/9rPPns/Bfo+gfPtofL2dXZ2gency2uyEwczM1Y9XDT3gyW5USVOSXZQHrDG/CEHtA/x13NjqqhsFWtrNGuA=
+	t=1760239792; cv=none; b=Lu8+gflOD0663dCff/GFL0e8gdcJ3u5LbelZz6SBTzWp6rq6tDvWAaio92qcDUC+Vw1Er7NKW6e3Gq3QuEbegJ74dIXzMvE6cmrRXH5cN942Qa3CYq6OFw9LzKj9qvuAw3oAUmA+bBAWMCHKWPbmh1KbT7aWYDOlqAWlRyhT0/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760198349; c=relaxed/simple;
-	bh=FMP8VZ8gA8szkAuFWTgf4lD8+bKkcaaQoNiLGdi+x8Q=;
+	s=arc-20240116; t=1760239792; c=relaxed/simple;
+	bh=wohbLso/9qasD0TfExgKyMjkZOn7lRTAdb8KXQNe8lw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e1voPDTQZUdSXU3XTnArTjAv4nQxTbpKMtZICvifficf8T5qYsJ2c6PB9rjY5fso9hM1oAD++PWsHbtcw47xtzNoPDlW/tUstJU47mCFtPGeVF3gsMF85vlELRnT32PQXD9JS7Xw6K29fFmgsE7JruTzlBCGAJ4uOSAOlidJwyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHGQKRIH; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=u91Dgins962Z8V5j13BGDE5RZZQEXi+e5a31rhVdZgkXEAgvA9N3BFBaYIIEigt/2pkEYfGS3ONDowZpU7/Aoi+pQrqBwUguTLm1yQCQvDCzLCovF/CiANkRJeL+95BIaJYOJYDIpYaXHHK5AtValnlLuqqUaWgLy6U9aOIHTMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fo+E4D8f; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHGQKRIH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E0DC113D0
-	for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 15:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760198348;
-	bh=FMP8VZ8gA8szkAuFWTgf4lD8+bKkcaaQoNiLGdi+x8Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GHGQKRIHweQ7PZMVovdL3iYLbmpFP9KKXvT7q02FDt6cXW0P69kn5Mw8QcpaNB1B8
-	 m6IygR0VmI8zPuyzvxrK1h0pe3A32eDEpPvCY732dmtDbkD6Zs+C5JnVs7jr5nxNXe
-	 NXC7vhUFAVTAgDzMg+sqiAXHNsFxUtBJdYwnvZvXJ1UFKczzNsfLUK9pJ1v6aPANZD
-	 vQM4Ll99H7Pk/CsITHNEPb/wzhX/k+wB3r+xBDUUMPGd+GCyiUWkDJ+2IHWxJZm6ag
-	 wfaCps6geQcvo2qmRjhe0CWyO34pPZnoZP9lj8ibMdy8qFuZaln/cENRQCFQzdInCS
-	 kN6FXpXaYfeDw==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5906665139cso3817738e87.3
-        for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 08:59:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXAJJ1IAzvej2Djlkw65fCuYyMPnPTbOB/mE0Jh6qXyf4q1sZmYZpH6Sm/2Z8mmdYG2FgziadiGM8w=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywn0tY0z4RNYJHkeYYKXGaiz5Y5zlBkxkYUK9f29Xop6wf++F3R
-	SG2NlmA5YMz48KWcNKHdSxh1ZAcSAJzarJGkeeZlJbfT4zKLwP97t4uXTFt8HilWl6IRAflezji
-	JIxhpgEK2nfWI3D2rJqTyI7ESapw70so=
-X-Google-Smtp-Source: AGHT+IHd5fznoov3yvP+tErzIhmwiFjGEZONVFkecfMa35ml0OgDZ88tcqRJ52S0xdOyn0JZVXsG2S6/tycTHC1Itx8=
-X-Received: by 2002:a05:6512:6c1:b0:57a:f38a:397b with SMTP id
- 2adb3069b0e04-5906db03666mr4327444e87.3.1760198347099; Sat, 11 Oct 2025
- 08:59:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fo+E4D8f"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-3c8f257b7e1so530611fac.1
+        for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 20:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760239789; x=1760844589; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f2DSPxMlK5vUJVJhYT5y5drO9Eqje14L+CXzN7YBrz0=;
+        b=fo+E4D8fTefntmwkBax+XtKrJeM2NANTUl0opd7F3j54dmbB4+dURY82E4Rn9oIP9+
+         ugbFl8vlG6xIjPgrx1bQGhw0obbNf5rRyAp7XO9TtP3vz/MLvypOKwX7tGJWnvOq0Dsd
+         qHIpopujeZCxCxjG/4YSecNiRpKsWgXwKtUhqyvuTybimsN5ZIzo6olutN1AgOBeXClb
+         kx0L8rPVQ8JOm3O/4q+clFx7xlPMHrF68Emi6zjy1HCDq5XtqB7WqpossCwHqgrl/bUx
+         1S3AzS5mynFf/WWvrQiuTxxRJtOpuwBf5j48u4xkaD0tw/r//DVVyEed0fN0BmxXfyRU
+         TPXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760239789; x=1760844589;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f2DSPxMlK5vUJVJhYT5y5drO9Eqje14L+CXzN7YBrz0=;
+        b=OKIUGGT/ZgoeMWt8EPGcD3dyodOFwAOsRaPCu/pmKKNozJQIfw+zNpjSHNZzUpAEx0
+         HOg9PSEgpMrh4LyoScFEojDuHNeY95imMa+1kGElX67m5B8xkbSad+nXY9Xv6CgdCkNF
+         mq1NfjedZmBR2GwtSNGEkWgrMkfH98dvoIhmAoG4sNMmm9Zd7c45Q9SQmza2EGFlMQnW
+         BiHy0x75QajVPRDd0hw8abhvA2LSB4Q2p4LLrhy6Suzb7lVLvOIAUrsW8CC5RJKzQctk
+         +4RKuiJwiTPfHWJGEnCVH3yJ00GtDwE3M7StIbA3TR9vzngQeXeOlVWpzZNS4+WfaPob
+         yxGA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+t26hMsxdBRch7issvanLCuIvyaHKizEAOzXqQgBVU6elXcN2rBUl04zpbb9HRhvgH4ChG7aq+Pw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxW8T7j4f/+hYo2aFbRC5QSTvpLC041qCPxbJLTpIZWdQLJev27
+	yP8mknzXds/Fu45JB3gFPGJyOTGghAdsWZ3Fdoi+RZ61Cds/mQzGvJl+dzzHEW11bqJZDdUUtB4
+	tW91trr1ZWwwXDkVqokNBp6ZXAhEE3Ug=
+X-Gm-Gg: ASbGncurTLNGQ+fh0TgNGUe6tBqQIDHm0dCVlFbhs22K+aoEND4OYkJFm89xZl9BZ+b
+	rezsttdmLsJOczD9Rco057bOYBl7+NKcQiIhUD4TY/B8Rc3jYWrCDMI7uwBy2YOQfgDVGIes29N
+	dJ8YrELR+PUeopVV4PpyxRdA4zaym/mNMOIOB4LYWNBkOwfEgwSHiiN8ESUD2cssYS93Fs+Q0zZ
+	Pp+sw4p0BSIr3eF5vPW4mk+6QZqomYzSgaV
+X-Google-Smtp-Source: AGHT+IFZpeHLJDOkMcDAZQ1PcIWLMt3UpOGWbl+Q5L4wWDejQfFHc1Cs5P4sbiVYvvT7HiQq7Nm5m4lMZSiJlwKbnmE=
+X-Received: by 2002:a05:6871:1c1:b0:346:24fc:77de with SMTP id
+ 586e51a60fabf-3be6d8f491amr9402053fac.12.1760239788975; Sat, 11 Oct 2025
+ 20:29:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250928085506.4471-1-yangtiezhu@loongson.cn> <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
- <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
- <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
- <CAMj1kXHWe2uGY3S1NJ6mckqD4n116rPmaOzw3_Qbvxyjh7ECMw@mail.gmail.com>
- <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn> <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
- <8091e8fa-3483-af39-2f7a-e4eb62b0944f@loongson.cn> <CAAhV-H4+UGLSkbjHbq9MerWfxnq0a13x+uzNfTsCoe1UxjbWsg@mail.gmail.com>
- <CAMj1kXH-rK0bRyHXdJ-crAyMyvJHApH0WR7_8Qd8vrSPBLK+yg@mail.gmail.com>
- <0c9b8e6a-96a6-91d4-946f-2109f48a529b@loongson.cn> <CAAhV-H41m96fvEWG5NqAE=tykPjyzt=50CseJDeCqdG-c_WMrQ@mail.gmail.com>
- <CAMj1kXEs5=VRi_rJwgHUrQWos-27PBbr3c4fYnmkV8Ahi8HZgw@mail.gmail.com> <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
-In-Reply-To: <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 11 Oct 2025 08:58:55 -0700
-X-Gmail-Original-Message-ID: <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
-X-Gm-Features: AS18NWAdTcjhG-nlKj9-SJF_h7OC6cz6ubjlCu1ov6qw2W9Mvr0vP5hoof0hvXo
-Message-ID: <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
-Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+References: <20251006053323.193581-1-hengqi.chen@gmail.com>
+ <20251006053323.193581-6-hengqi.chen@gmail.com> <CAAhV-H6-_xUm=DVHGavWerG4KqZStgJn4ZOKA3ByYoBVUQWHaQ@mail.gmail.com>
+In-Reply-To: <CAAhV-H6-_xUm=DVHGavWerG4KqZStgJn4ZOKA3ByYoBVUQWHaQ@mail.gmail.com>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Sun, 12 Oct 2025 11:29:37 +0800
+X-Gm-Features: AS18NWAqRqhojLmQfD1r2Qjb-pR1rYWkqYpJjNCEMsq6hZCDeRWOGP411uYmFWE
+Message-ID: <CAEyhmHSAOaYNM078i24vpJFgqA9SqcRhMQAc0-MFiB8s_gD59g@mail.gmail.com>
+Subject: Re: [PATCH 5/7] LoongArch: BPF: Use BPF prog pack allocator
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 11 Oct 2025 at 08:01, Huacai Chen <chenhuacai@kernel.org> wrote:
+On Mon, Oct 6, 2025 at 5:21=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
+wrote:
 >
-> On Sat, Oct 11, 2025 at 10:48=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org>=
- wrote:
+> On Mon, Oct 6, 2025 at 1:33=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com=
+> wrote:
 > >
-> > On Sat, 11 Oct 2025 at 00:43, Huacai Chen <chenhuacai@kernel.org> wrote=
-:
-> > >
-> > > On Sat, Oct 11, 2025 at 3:29=E2=80=AFPM Tiezhu Yang <yangtiezhu@loong=
-son.cn> wrote:
-> > > >
-> > > > On 2025/10/11 =E4=B8=8A=E5=8D=8811:40, Ard Biesheuvel wrote:
-> > > > > On Fri, 10 Oct 2025 at 19:54, Huacai Chen <chenhuacai@kernel.org>=
- wrote:
-> > > > >>
-> > > > >> On Sat, Oct 11, 2025 at 9:13=E2=80=AFAM Tiezhu Yang <yangtiezhu@=
-loongson.cn> wrote:
-> > > > >>>
-> > > > >>> On 2025/10/11 =E4=B8=8A=E5=8D=8812:25, Ard Biesheuvel wrote:
-> > > > >>> ...
-> > > > >>>> Why do we need both (1) and (2)?
-> > > > >>>
-> > > > >>> Not both, either (1) or (2).
-> > > > >>> Which one do you prefer? Or any other suggestions?
-> > > > >>>
-> > > > >>> Taking all of the considerations in balance, we should decide
-> > > > >>> what is the proper way.
-> > > > >> As a summary, there are three methods:
-> > > > >> (1) Only link libstub with vmlinux.o during the final vmlinux li=
-nk.
-> > > > >> (2) Remove the attribute __noreturn for real_kernel_entry() and =
-add while (1).
-> > > > >> (3) Ignore "__efistub_" prefix in objtool.
-> > > > >>
-> > > > >> Josh prefers method (1), I prefer method (3) but also accept met=
-hod
-> > > > >> (1) if it is not only specific to loongarch.
-> > > > >>
-> > > > >
-> > > > > This is a false positive warning in objtool, which complains abou=
-t a
-> > > > > function that falls through, even though that can never happen in
-> > > > > reality.
-> > > > >
-> > > > > To me, it is not acceptable to modify how vmlinux.o is constructe=
-d
-> > > > > also for other architectures, in order to hide some of its consti=
-tuent
-> > > > > parts from objtool, which do not use objtool to begin with.
-> > > > >
-> > > > >
-> > > > > If you are not willing to fix objtool, I suggest fixing the loong=
-arch
-> > > > > code like this:
-> > > >
-> > > > Thank you.
-> > > >
-> > > > > --- a/drivers/firmware/efi/libstub/loongarch.c
-> > > > > +++ b/drivers/firmware/efi/libstub/loongarch.c
-> > > > > @@ -10,7 +10,7 @@
-> > > > >   #include "efistub.h"
-> > > > >   #include "loongarch-stub.h"
-> > > > >
-> > > > > -typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned lon=
-g cmdline,
-> > > > > +typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline,
-> > > > >                                            unsigned long systab);
-> > > > >
-> > > > >   efi_status_t check_platform_features(void)
-> > > > > @@ -81,4 +81,6 @@
-> > > > >
-> > > > >          real_kernel_entry(true, (unsigned long)cmdline_ptr,
-> > > > >                            (unsigned long)efi_system_table);
-> > > > > +
-> > > > > +       return EFI_LOAD_ERROR;
-> > > > >   }
-> > > >
-> > > > I tested the above changes, the falls through objtool warning can
-> > > > be fixed because efi_boot_kernel() ends with a return instruction,
-> > > > I think this is reasonable.
-> > > >
-> > > > efi_boot_kernel() has a return value, there are "return status" in
-> > > > other parts of efi_boot_kernel(), it should also return at the end
-> > > > of efi_boot_kernel() in theory, although we should never get here.
-> > > >
-> > > > If there are more comments, please let me know.
-> > > I still don't want LoongArch to be a special case, which means
-> > > efi_boot_kernel() in fdt.c, jump_kernel_func in riscv.c and
-> > > enter_kernel in arm64.c should also be modified.
-> > >
+> > Use bpf_jit_binary_pack_alloc() for JIT binaries. The BPF
+> > prog pack allocator creates a pair of RW and RX buffers.
+> > The JIT writes the program into the RW buffer. When the JIT
+> > is done, the program is copied to the final RX buffer
+> > with bpf_jit_binary_pack_finalize.
 > >
-> > You have made LoongArch a special case by adding objtool support,
-> > which  arm64 and RISC-V do not have.
-> >
-> > So NAK to changing arm64 and RISC-V as well.
-> Hmmm, I want to know whether this problem is an objtool issue or an
-> efistub issue in essence. If it is an objtool issue, we should fix
-> objtool and don't touch efistub. If it is an efistub issue, then we
-> should modify efistub (but not specific to LoongArch, when RISC-V and
-> ARM64 add objtool they will meet the same issue).
+> > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > ---
+> >  arch/loongarch/net/bpf_jit.c | 123 ++++++++++++++++++++++++-----------
+> >  arch/loongarch/net/bpf_jit.h |   2 +-
+> >  stxSxLQw                     |   0
+> >  3 files changed, 87 insertions(+), 38 deletions(-)
+> >  create mode 100644 stxSxLQw
+> ???
+
+Sorry, this slipped in probably due to disk full and leftover during
+my local build.
+Will remove and resend.
+
 >
-
-It is an objtool issue in essence.
-
-The generated code looks like this
-
-9000000001743080: ff b7 fe 57   bl      -332 <__efistub_kernel_entry_addres=
-s>
-9000000001743084: 26 03 c0 28   ld.d    $a2, $s2, 0
-9000000001743088: 87 00 15 00   move    $a3, $a0
-900000000174308c: 04 04 80 03   ori     $a0, $zero, 1
-9000000001743090: c5 02 15 00   move    $a1, $fp
-9000000001743094: e1 00 00 4c   jirl    $ra, $a3, 0
-
-9000000001743098 <__efistub_exit_boot_func>:
-9000000001743098: 63 c0 ff 02   addi.d  $sp, $sp, -16
-
-There is nothing wrong with this code, given that the indirect call is
-to a __noreturn function, and so the fact that it falls through into
-__efistub_exit_boot_func() is not a problem.
-
-Even though the compiler does nothing wrong here, it would be nice if
-it would emit some kind of UD or BRK instruction after such a call, if
-only to make the backtrace more reliable. But the code is fine, and
-objtool simply does not have the information it needs to determine
-that the indirect call is of a variety that never returns.
-
-So I don't mind fixing it in the code, but only for LoongArch, given
-that the problem does not exist on arm64 or RISC-V.
+> >
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
+c
+> > index 9f868bf85960..57a9774affad 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -490,11 +490,11 @@ static int add_exception_handler(const struct bpf=
+_insn *insn,
+> >                                  struct jit_ctx *ctx,
+> >                                  int dst_reg)
+> >  {
+> > -       unsigned long pc;
+> > -       off_t offset;
+> >         struct exception_table_entry *ex;
+> > +       off_t ins_offset, fixup_offset;
+> > +       unsigned long pc;
+> >
+> > -       if (!ctx->image || !ctx->prog->aux->extable)
+> > +       if (!ctx->image || !ctx->ro_image || !ctx->prog->aux->extable)
+> >                 return 0;
+> >
+> >         if (BPF_MODE(insn->code) !=3D BPF_PROBE_MEM &&
+> > @@ -505,14 +505,18 @@ static int add_exception_handler(const struct bpf=
+_insn *insn,
+> >                 return -EINVAL;
+> >
+> >         ex =3D &ctx->prog->aux->extable[ctx->num_exentries];
+> > -       pc =3D (unsigned long)&ctx->image[ctx->idx - 1];
+> > +       pc =3D (unsigned long)&ctx->ro_image[ctx->idx - 1];
+> >
+> > -       offset =3D pc - (long)&ex->insn;
+> > -       if (WARN_ON_ONCE(offset >=3D 0 || offset < INT_MIN))
+> > +       /*
+> > +        * This is the relative offset of the instruction that may faul=
+t from
+> > +        * the exception table itself. This will be written to the exce=
+ption
+> > +        * table and if this instruction faults, the destination regist=
+er will
+> > +        * be set to '0' and the execution will jump to the next instru=
+ction.
+> > +        */
+> > +       ins_offset =3D pc - (long)&ex->insn;
+> > +       if (WARN_ON_ONCE(ins_offset >=3D 0 || ins_offset < INT_MIN))
+> >                 return -ERANGE;
+> >
+> > -       ex->insn =3D offset;
+> > -
+> >         /*
+> >          * Since the extable follows the program, the fixup offset is a=
+lways
+> >          * negative and limited to BPF_JIT_REGION_SIZE. Store a positiv=
+e value
+> > @@ -520,13 +524,25 @@ static int add_exception_handler(const struct bpf=
+_insn *insn,
+> >          * bits. We don't need to worry about buildtime or runtime sort
+> >          * modifying the upper bits because the table is already sorted=
+, and
+> >          * isn't part of the main exception table.
+> > +        *
+> > +        * The fixup_offset is set to the next instruction from the ins=
+truction
+> > +        * that may fault. The execution will jump to this after handli=
+ng the
+> > +        * fault.
+> >          */
+> > -       offset =3D (long)&ex->fixup - (pc + LOONGARCH_INSN_SIZE);
+> > -       if (!FIELD_FIT(BPF_FIXUP_OFFSET_MASK, offset))
+> > +       fixup_offset =3D (long)&ex->fixup - (pc + LOONGARCH_INSN_SIZE);
+> > +       if (!FIELD_FIT(BPF_FIXUP_OFFSET_MASK, fixup_offset))
+> >                 return -ERANGE;
+> >
+> > +       /*
+> > +        * The offsets above have been calculated using the RO buffer b=
+ut we
+> > +        * need to use the R/W buffer for writes.
+> > +        * switch ex to rw buffer for writing.
+> > +        */
+> > +       ex =3D (void *)ctx->image + ((void *)ex - (void *)ctx->ro_image=
+);
+> > +       ex->insn =3D ins_offset;
+> > +       ex->fixup =3D FIELD_PREP(BPF_FIXUP_OFFSET_MASK, fixup_offset) |
+> > +                   FIELD_PREP(BPF_FIXUP_REG_MASK, dst_reg);
+> >         ex->type =3D EX_TYPE_BPF;
+> > -       ex->fixup =3D FIELD_PREP(BPF_FIXUP_OFFSET_MASK, offset) | FIELD=
+_PREP(BPF_FIXUP_REG_MASK, dst_reg);
+> >
+> >         ctx->num_exentries++;
+> >
+> > @@ -1809,11 +1825,12 @@ int arch_bpf_trampoline_size(const struct btf_f=
+unc_model *m, u32 flags,
+> >  struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+> >  {
+> >         bool tmp_blinded =3D false, extra_pass =3D false;
+> > -       u8 *image_ptr;
+> > +       u8 *image_ptr, *ro_image_ptr;
+> >         int image_size, prog_size, extable_size;
+> >         struct jit_ctx ctx;
+> >         struct jit_data *jit_data;
+> >         struct bpf_binary_header *header;
+> > +       struct bpf_binary_header *ro_header;
+> >         struct bpf_prog *tmp, *orig_prog =3D prog;
+> >
+> >         /*
+> > @@ -1848,8 +1865,10 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_=
+prog *prog)
+> >         }
+> >         if (jit_data->ctx.offset) {
+> >                 ctx =3D jit_data->ctx;
+> > -               image_ptr =3D jit_data->image;
+> > +               ro_image_ptr =3D (void *)ctx.ro_image;
+> > +               ro_header =3D jit_data->ro_header;
+> >                 header =3D jit_data->header;
+> > +               image_ptr =3D (void *)header + ((void *)ro_image_ptr - =
+(void *)ro_header);
+> >                 extra_pass =3D true;
+> >                 prog_size =3D sizeof(u32) * ctx.idx;
+> >                 goto skip_init_ctx;
+> > @@ -1883,17 +1902,26 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf=
+_prog *prog)
+> >         prog_size =3D sizeof(u32) * ctx.idx;
+> >         image_size =3D prog_size + extable_size;
+> >         /* Now we know the size of the structure to make */
+> > -       header =3D bpf_jit_binary_alloc(image_size, &image_ptr,
+> > -                                     sizeof(u32), jit_fill_hole);
+> > -       if (header =3D=3D NULL) {
+> > +       ro_header =3D bpf_jit_binary_pack_alloc(image_size, &ro_image_p=
+tr,
+> > +                                             sizeof(u32), &header, &im=
+age_ptr,
+> > +                                             jit_fill_hole);
+> > +       if (!ro_header) {
+> >                 prog =3D orig_prog;
+> >                 goto out_offset;
+> >         }
+> >
+> >         /* 2. Now, the actual pass to generate final JIT code */
+> > +       /*
+> > +        * Use the image(RW) for writing the JITed instructions. But al=
+so save
+> > +        * the ro_image(RX) for calculating the offsets in the image. T=
+he RW
+> > +        * image will be later copied to the RX image from where the pr=
+ogram
+> > +        * will run. The bpf_jit_binary_pack_finalize() will do this co=
+py in the
+> > +        * final step.
+> > +        */
+> >         ctx.image =3D (union loongarch_instruction *)image_ptr;
+> > +       ctx.ro_image =3D (union loongarch_instruction *)ro_image_ptr;
+> >         if (extable_size)
+> > -               prog->aux->extable =3D (void *)image_ptr + prog_size;
+> > +               prog->aux->extable =3D (void *)ro_image_ptr + prog_size=
+;
+> >
+> >  skip_init_ctx:
+> >         ctx.idx =3D 0;
+> > @@ -1901,48 +1929,47 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf=
+_prog *prog)
+> >
+> >         build_prologue(&ctx);
+> >         if (build_body(&ctx, extra_pass)) {
+> > -               bpf_jit_binary_free(header);
+> >                 prog =3D orig_prog;
+> > -               goto out_offset;
+> > +               goto out_free;
+> >         }
+> >         build_epilogue(&ctx);
+> >
+> >         /* 3. Extra pass to validate JITed code */
+> >         if (validate_ctx(&ctx)) {
+> > -               bpf_jit_binary_free(header);
+> >                 prog =3D orig_prog;
+> > -               goto out_offset;
+> > +               goto out_free;
+> >         }
+> >
+> >         /* And we're done */
+> >         if (bpf_jit_enable > 1)
+> >                 bpf_jit_dump(prog->len, prog_size, 2, ctx.image);
+> >
+> > -       /* Update the icache */
+> > -       flush_icache_range((unsigned long)header, (unsigned long)(ctx.i=
+mage + ctx.idx));
+> > -
+> >         if (!prog->is_func || extra_pass) {
+> > -               int err;
+> > -
+> >                 if (extra_pass && ctx.idx !=3D jit_data->ctx.idx) {
+> >                         pr_err_once("multi-func JIT bug %d !=3D %d\n",
+> >                                     ctx.idx, jit_data->ctx.idx);
+> >                         goto out_free;
+> >                 }
+> > -               err =3D bpf_jit_binary_lock_ro(header);
+> > -               if (err) {
+> > -                       pr_err_once("bpf_jit_binary_lock_ro() returned =
+%d\n",
+> > -                                   err);
+> > +               if (WARN_ON(bpf_jit_binary_pack_finalize(ro_header, hea=
+der))) {
+> > +                       /* ro_header has been freed */
+> > +                       ro_header =3D NULL;
+> > +                       prog =3D orig_prog;
+> >                         goto out_free;
+> >                 }
+> > +               /*
+> > +                * The instructions have now been copied to the ROX reg=
+ion from
+> > +                * where they will execute. Now the data cache has to b=
+e cleaned to
+> > +                * the PoU and the I-cache has to be invalidated for th=
+e VAs.
+> > +                */
+> > +               bpf_flush_icache(ro_header, ctx.ro_image + ctx.idx);
+> >         } else {
+> >                 jit_data->ctx =3D ctx;
+> > -               jit_data->image =3D image_ptr;
+> >                 jit_data->header =3D header;
+> > +               jit_data->ro_header =3D ro_header;
+> >         }
+> >         prog->jited =3D 1;
+> >         prog->jited_len =3D prog_size;
+> > -       prog->bpf_func =3D (void *)ctx.image;
+> > +       prog->bpf_func =3D (void *)ctx.ro_image;
+> >
+> >         if (!prog->is_func || extra_pass) {
+> >                 int i;
+> > @@ -1962,17 +1989,39 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf=
+_prog *prog)
+> >         if (tmp_blinded)
+> >                 bpf_jit_prog_release_other(prog, prog =3D=3D orig_prog =
+? tmp : orig_prog);
+> >
+> > -
+> >         return prog;
+> >
+> >  out_free:
+> > -       bpf_jit_binary_free(header);
+> > -       prog->bpf_func =3D NULL;
+> > -       prog->jited =3D 0;
+> > -       prog->jited_len =3D 0;
+> > +       if (header) {
+> > +               bpf_arch_text_copy(&ro_header->size, &header->size, siz=
+eof(header->size));
+> > +               bpf_jit_binary_pack_free(ro_header, header);
+> > +       }
+> >         goto out_offset;
+> >  }
+> >
+> > +void bpf_jit_free(struct bpf_prog *prog)
+> > +{
+> > +       if (prog->jited) {
+> > +               struct jit_data *jit_data =3D prog->aux->jit_data;
+> > +               struct bpf_binary_header *hdr;
+> > +
+> > +               /*
+> > +                * If we fail the final pass of JIT (from jit_subprogs)=
+,
+> > +                * the program may not be finalized yet. Call finalize =
+here
+> > +                * before freeing it.
+> > +                */
+> > +               if (jit_data) {
+> > +                       bpf_jit_binary_pack_finalize(jit_data->ro_heade=
+r, jit_data->header);
+> > +                       kfree(jit_data);
+> > +               }
+> > +               hdr =3D bpf_jit_binary_pack_hdr(prog);
+> > +               bpf_jit_binary_pack_free(hdr, NULL);
+> > +               WARN_ON_ONCE(!bpf_prog_kallsyms_verify_off(prog));
+> > +       }
+> > +
+> > +       bpf_prog_unlock_free(prog);
+> > +}
+> > +
+> >  bool bpf_jit_bypass_spec_v1(void)
+> >  {
+> >         return true;
+> > diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.=
+h
+> > index 5697158fd164..e76819a157ca 100644
+> > --- a/arch/loongarch/net/bpf_jit.h
+> > +++ b/arch/loongarch/net/bpf_jit.h
+> > @@ -24,7 +24,7 @@ struct jit_ctx {
+> >
+> >  struct jit_data {
+> >         struct bpf_binary_header *header;
+> > -       u8 *image;
+> > +       struct bpf_binary_header *ro_header;
+> >         struct jit_ctx ctx;
+> >  };
+> >
+> > diff --git a/stxSxLQw b/stxSxLQw
+> > new file mode 100644
+> > index 000000000000..e69de29bb2d1
+> > --
+> > 2.43.5
+> >
