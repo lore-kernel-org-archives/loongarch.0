@@ -1,135 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68ECD233128
-	for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 14:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB1B253954
+	for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 14:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760364418; cv=none; b=SfjuymocayDfogZX0lcDM+sLKTNwA8pE1H8/BVrhDAQCG/F1z5F8HbytU9ULvoQjBaij9/5ClEWOK4RUgDkElxAFIj7m90bj9hNCu4ztOwj2uBKh+cidfzuNs/H7oLioVP+okwkFCp+D0HfNEHsYcSNMC4LdTPHEk+IbI0UmAn4=
+	t=1760364578; cv=none; b=FLK3cii0WTLTUUjnX5+C2cPNURLPA+F6y8SdYDqNMVRzlfTGyM852P6gSdBPs107CfY89gn/N66X8DTzM2rx/5qLaZS/EG4zeDJxlkSst0taJ+3X2qrDjKGsK33VkslbV2FWHV18xe//jwj1KOamyNgOXEnLLSjd8oEtm1Cw0B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760364418; c=relaxed/simple;
-	bh=L5mJoBb6ix5GBpByToQiDe5tqBFj7Zbr19ly3L1L3KI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cMIwTdumXXebpCUDzIXCtMYnRKEzuvCH1qZwcdKWxwkBC5rWuzqDbz17uCOnNR2puuWQvfFnUkNXkUiiXaooP4HXkKWAp5vWQvylhHP0n/A+/Hq4xffL2+S04uFIYrpwv2RtKezaGm1X9i8MG+46GEbSbyEPxSVz1/Gul6aY5TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YaL1Lc2O; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1760364578; c=relaxed/simple;
+	bh=z15tpTrBW83KAZNHEtZD1R+Eafynq/cwxlwzlacByEA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VAOqR4dpfLv/Q8PUZrA90Zk1PEXl+4w5m9ANmmBbI/FSS7itrkiU1TU2ACZi+pMaf4scySD4m413sy72KQDKM63ezDQZg1qteAVl7bchXXpINESI0k68QZ0dNT4mL8hDDu+xD3GCRYPjc9nZYI2CbX36f4LRxvP7KiBsMcnIZ0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZW9BBm+R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YaL1Lc2O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760364418; x=1791900418;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=L5mJoBb6ix5GBpByToQiDe5tqBFj7Zbr19ly3L1L3KI=;
-  b=YaL1Lc2Omy7qI9scQjYqvVrPDt3IBuYgas97ODu3NZgxuPXDbBA/vBHI
-   yjtewhM4xrSAaTlTwetf6Kg5VjKyxdtIGyIxfqG4TSREnr2umxtr5WwD0
-   4gERmaDzqqtue/XyWPCdEWcx1Nzp6qCCciFH/NqzRBNVs4Eb+vDBrRatr
-   mvz/gq70YCjuyfbgTKiBVp2XqxqO90W0dw5WvGE+Fo054fdtFNBXRtj7Z
-   dmTw4dzxCxDS7nBd2TYj9bJ8SNpZXwJF6dd6FsQ8aaDyLjWaAaT6T/NVL
-   /cj1UbVeEHHA4UBZ4uX6JQTwBTUGwAo0CK6hRD5YQcLaNbJkmCbUBoVeH
-   g==;
-X-CSE-ConnectionGUID: 3Iqo3uuLRL+jqdkjVetKNg==
-X-CSE-MsgGUID: jRJsPMNVR6+KFK6UV8vkxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="73946675"
-X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
-   d="scan'208";a="73946675"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 07:06:57 -0700
-X-CSE-ConnectionGUID: uNRTtnxdRKStoMWW6widHg==
-X-CSE-MsgGUID: WCIV4fbYShWKbukyiTN2yA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
-   d="scan'208";a="186691282"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.111.123]) ([10.125.111.123])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 07:06:57 -0700
-Message-ID: <e95dc212-6fd3-43e3-aeb7-bf55917e0cd4@intel.com>
-Date: Mon, 13 Oct 2025 07:06:55 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZW9BBm+R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5896DC16AAE
+	for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 14:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760364578;
+	bh=z15tpTrBW83KAZNHEtZD1R+Eafynq/cwxlwzlacByEA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZW9BBm+RDZVXSC16M5XPZ1SNTDzkAinZVNEEu1scGxpHEzH0Ihz6imSnyg6O6CuTe
+	 WkMZ+A5OesyoAhmCOsp78i/7axOWTRRoZqTpUEm6odKL3eYMJotEi3nGKygqklmUI7
+	 hAlN5zB9tQEoBW5SL10UuMKf8c42Vgo4tn9b0Kh+7LrDSU48VnuxEyBW3TKwuKT8eI
+	 YsPaN3bFdZ6ZvOUnhNnnGY2MQAN48TP9rOmcSMGNxfpkJOlJ8u+aqC/niIvJwsw7RT
+	 yCTUe40+mst5BRbJmF1wZ0+oeUxnZ3wQbIpPGBVcBf45/5sdLo5F35/4rjNmH3JObR
+	 ltyx7mJvcnRBA==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-63a10267219so1298313a12.0
+        for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 07:09:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX1UnuafIuQs2KHnqC3jSdBZmOUWcWE4aZsE3txhEk56FW+PaEB/wcx2N7n5u2vEWCVSTMel80TFxc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyyEceVemUSfR85tH3ZQgsPEvwTceuSEQBDoEIyguVNGK2Ji2Jf
+	oPbUJP5oPyc43MKE2VODppBOm5WmojzHbXJ+7WnzxcERS9i4z4YVdmPizaK9lb7rpHi1eyMj3Th
+	BHco6Yb0LX9ISwzKG8Ho8RFYKa906uTw=
+X-Google-Smtp-Source: AGHT+IGIKmx1BchY0pXNFGB9InPUsy11nkEwRUNkdw0dz8PMMYgsxJ499uv1kM2Bm0HVTHpzS82ofc5CbUu9I//1Cng=
+X-Received: by 2002:aa7:d785:0:b0:633:14bb:dcb1 with SMTP id
+ 4fb4d7f45d1cf-639bb13500dmr18155251a12.11.1760364576745; Mon, 13 Oct 2025
+ 07:09:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] vdso: Remove struct getcpu_cache
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Andy Lutomirski <luto@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan <shuah@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
- linux-api@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20251013-getcpu_cache-v2-1-880fbfa3b7cc@linutronix.de>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20251013-getcpu_cache-v2-1-880fbfa3b7cc@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250928085506.4471-1-yangtiezhu@loongson.cn> <CAMj1kXG8Wi+THa2SeLxiDT=+t_TKx0AL4H-azZO4DNJvyyv96g@mail.gmail.com>
+ <CAAhV-H7xOf8DEwOrNh+GQGHktOT4Ljp+7SqutGvvDZp6GLXJrA@mail.gmail.com>
+ <CAMj1kXG=EFkRAMkvKMSjPixoGqU-tZXVoRkJJ6Wcnzs3x52X6Q@mail.gmail.com>
+ <CAMj1kXHWe2uGY3S1NJ6mckqD4n116rPmaOzw3_Qbvxyjh7ECMw@mail.gmail.com>
+ <fec0c03d-9d8c-89a3-886a-1adc22e59b66@loongson.cn> <CAMj1kXFLyBbRL+pAAQ6be6dxqFPiyw_Ug8qNQWaicZQ235HE=A@mail.gmail.com>
+ <8091e8fa-3483-af39-2f7a-e4eb62b0944f@loongson.cn> <CAAhV-H4+UGLSkbjHbq9MerWfxnq0a13x+uzNfTsCoe1UxjbWsg@mail.gmail.com>
+ <CAMj1kXH-rK0bRyHXdJ-crAyMyvJHApH0WR7_8Qd8vrSPBLK+yg@mail.gmail.com>
+ <0c9b8e6a-96a6-91d4-946f-2109f48a529b@loongson.cn> <CAAhV-H41m96fvEWG5NqAE=tykPjyzt=50CseJDeCqdG-c_WMrQ@mail.gmail.com>
+ <CAMj1kXEs5=VRi_rJwgHUrQWos-27PBbr3c4fYnmkV8Ahi8HZgw@mail.gmail.com>
+ <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com> <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
+In-Reply-To: <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 13 Oct 2025 22:09:25 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4UKdso0BokAqvjYeBLr-jbjFAaQX4z=1ztpBamqrOEEg@mail.gmail.com>
+X-Gm-Features: AS18NWB3mSCepPt1etTJs4X35a5tkxvZPNilre683PYaU3Xj0J0E-YjIBVuCFt4
+Message-ID: <CAAhV-H4UKdso0BokAqvjYeBLr-jbjFAaQX4z=1ztpBamqrOEEg@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/13/25 02:20, Thomas Weißschuh wrote:
-> -int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused);
-> -int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused)
-> +int __vdso_getcpu(unsigned int *cpu, unsigned int *node, void *unused);
-> +int __vdso_getcpu(unsigned int *cpu, unsigned int *node, void *unused)
->  {
->  	int cpu_id;
+On Sat, Oct 11, 2025 at 11:59=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> w=
+rote:
+>
+> On Sat, 11 Oct 2025 at 08:01, Huacai Chen <chenhuacai@kernel.org> wrote:
+> >
+> > On Sat, Oct 11, 2025 at 10:48=E2=80=AFPM Ard Biesheuvel <ardb@kernel.or=
+g> wrote:
+> > >
+> > > On Sat, 11 Oct 2025 at 00:43, Huacai Chen <chenhuacai@kernel.org> wro=
+te:
+> > > >
+> > > > On Sat, Oct 11, 2025 at 3:29=E2=80=AFPM Tiezhu Yang <yangtiezhu@loo=
+ngson.cn> wrote:
+> > > > >
+> > > > > On 2025/10/11 =E4=B8=8A=E5=8D=8811:40, Ard Biesheuvel wrote:
+> > > > > > On Fri, 10 Oct 2025 at 19:54, Huacai Chen <chenhuacai@kernel.or=
+g> wrote:
+> > > > > >>
+> > > > > >> On Sat, Oct 11, 2025 at 9:13=E2=80=AFAM Tiezhu Yang <yangtiezh=
+u@loongson.cn> wrote:
+> > > > > >>>
+> > > > > >>> On 2025/10/11 =E4=B8=8A=E5=8D=8812:25, Ard Biesheuvel wrote:
+> > > > > >>> ...
+> > > > > >>>> Why do we need both (1) and (2)?
+> > > > > >>>
+> > > > > >>> Not both, either (1) or (2).
+> > > > > >>> Which one do you prefer? Or any other suggestions?
+> > > > > >>>
+> > > > > >>> Taking all of the considerations in balance, we should decide
+> > > > > >>> what is the proper way.
+> > > > > >> As a summary, there are three methods:
+> > > > > >> (1) Only link libstub with vmlinux.o during the final vmlinux =
+link.
+> > > > > >> (2) Remove the attribute __noreturn for real_kernel_entry() an=
+d add while (1).
+> > > > > >> (3) Ignore "__efistub_" prefix in objtool.
+> > > > > >>
+> > > > > >> Josh prefers method (1), I prefer method (3) but also accept m=
+ethod
+> > > > > >> (1) if it is not only specific to loongarch.
+> > > > > >>
+> > > > > >
+> > > > > > This is a false positive warning in objtool, which complains ab=
+out a
+> > > > > > function that falls through, even though that can never happen =
+in
+> > > > > > reality.
+> > > > > >
+> > > > > > To me, it is not acceptable to modify how vmlinux.o is construc=
+ted
+> > > > > > also for other architectures, in order to hide some of its cons=
+tituent
+> > > > > > parts from objtool, which do not use objtool to begin with.
+> > > > > >
+> > > > > >
+> > > > > > If you are not willing to fix objtool, I suggest fixing the loo=
+ngarch
+> > > > > > code like this:
+> > > > >
+> > > > > Thank you.
+> > > > >
+> > > > > > --- a/drivers/firmware/efi/libstub/loongarch.c
+> > > > > > +++ b/drivers/firmware/efi/libstub/loongarch.c
+> > > > > > @@ -10,7 +10,7 @@
+> > > > > >   #include "efistub.h"
+> > > > > >   #include "loongarch-stub.h"
+> > > > > >
+> > > > > > -typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned l=
+ong cmdline,
+> > > > > > +typedef void (*kernel_entry_t)(bool efi, unsigned long cmdline=
+,
+> > > > > >                                            unsigned long systab=
+);
+> > > > > >
+> > > > > >   efi_status_t check_platform_features(void)
+> > > > > > @@ -81,4 +81,6 @@
+> > > > > >
+> > > > > >          real_kernel_entry(true, (unsigned long)cmdline_ptr,
+> > > > > >                            (unsigned long)efi_system_table);
+> > > > > > +
+> > > > > > +       return EFI_LOAD_ERROR;
+> > > > > >   }
+> > > > >
+> > > > > I tested the above changes, the falls through objtool warning can
+> > > > > be fixed because efi_boot_kernel() ends with a return instruction=
+,
+> > > > > I think this is reasonable.
+> > > > >
+> > > > > efi_boot_kernel() has a return value, there are "return status" i=
+n
+> > > > > other parts of efi_boot_kernel(), it should also return at the en=
+d
+> > > > > of efi_boot_kernel() in theory, although we should never get here=
+.
+> > > > >
+> > > > > If there are more comments, please let me know.
+> > > > I still don't want LoongArch to be a special case, which means
+> > > > efi_boot_kernel() in fdt.c, jump_kernel_func in riscv.c and
+> > > > enter_kernel in arm64.c should also be modified.
+> > > >
+> > >
+> > > You have made LoongArch a special case by adding objtool support,
+> > > which  arm64 and RISC-V do not have.
+> > >
+> > > So NAK to changing arm64 and RISC-V as well.
+> > Hmmm, I want to know whether this problem is an objtool issue or an
+> > efistub issue in essence. If it is an objtool issue, we should fix
+> > objtool and don't touch efistub. If it is an efistub issue, then we
+> > should modify efistub (but not specific to LoongArch, when RISC-V and
+> > ARM64 add objtool they will meet the same issue).
+> >
+>
+> It is an objtool issue in essence.
+>
+> The generated code looks like this
+>
+> 9000000001743080: ff b7 fe 57   bl      -332 <__efistub_kernel_entry_addr=
+ess>
+> 9000000001743084: 26 03 c0 28   ld.d    $a2, $s2, 0
+> 9000000001743088: 87 00 15 00   move    $a3, $a0
+> 900000000174308c: 04 04 80 03   ori     $a0, $zero, 1
+> 9000000001743090: c5 02 15 00   move    $a1, $fp
+> 9000000001743094: e1 00 00 4c   jirl    $ra, $a3, 0
+>
+> 9000000001743098 <__efistub_exit_boot_func>:
+> 9000000001743098: 63 c0 ff 02   addi.d  $sp, $sp, -16
+>
+> There is nothing wrong with this code, given that the indirect call is
+> to a __noreturn function, and so the fact that it falls through into
+> __efistub_exit_boot_func() is not a problem.
+>
+> Even though the compiler does nothing wrong here, it would be nice if
+> it would emit some kind of UD or BRK instruction after such a call, if
+> only to make the backtrace more reliable. But the code is fine, and
+> objtool simply does not have the information it needs to determine
+> that the indirect call is of a variety that never returns.
+So the best way is to fix the objtool?
 
-It would ideally be nice to have a _bit_ more history on this about
-how it became unused any why there is such high confidence that
-userspace never tries to use it.
+>
+> So I don't mind fixing it in the code, but only for LoongArch, given
+> that the problem does not exist on arm64 or RISC-V.
+You believe this problem won't exist even if they add objtool support
+(because their objtool will be sane)?
 
-Let's say someone comes along in a few years and wants to use this
-'unused' parameter. Could they?
+
+Huacai
