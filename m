@@ -1,139 +1,263 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F551ACEDA
-	for <loongarch@lists.linux.dev>; Sun, 12 Oct 2025 03:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 250C01ACEAF
+	for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 03:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760240069; cv=none; b=jBfc5ihGUJ8IALXa4h6VFmM3lZ0tfMZAQjgOJzY6My0Oym2iPHvm7egySIVUdUu34erptxKJCbs0mADkL0IvFkm8V+6flAJa/pwZM3isbaYC3ln9is4+S3TLZAQXcYhkN9P5w3nvfxpxWCpYneN/5GEEBc/XJZKN241rwS3nahk=
+	t=1760325562; cv=none; b=QQIdJ7/zqk3GTrL29NiVNNsqwnZvY9+IppPv4FV0RjA/JAbssZAz4cwzgfBh2ji3RcSprCWvTkg8Z64mdxMR9N83EaA23A0UV1UihELGxzoHDNTgTWOnJEWkAFP15eXMGRncrC2d8Uymod3MhrKxzVLYzXm3IlwxzIcwo2jVNhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760240069; c=relaxed/simple;
-	bh=5eVN5BDwP1MbZI+tBe7x2FM0cPTcm1yN963eHxducrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cgC2T82HHHSz2DaSLydpJfLkhLIQRF21835/8V2pbXHBty1dFmD98+HBxSHcINosiJxJIPFhHvywEm4LLJcVmVbkAfJ/r/qNorBsSVwCAmk9BEonpmQdU/PyN5sV2eo58QjzhDIKE9QQVwraCxgJyz29HkuQiBTGGDnTZtVcI/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GcO9MfBk; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcO9MfBk"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-7a4a993dea6so1105328a34.1
-        for <loongarch@lists.linux.dev>; Sat, 11 Oct 2025 20:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760240067; x=1760844867; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E/g79Ugc5NGg828MfRu+U8pP/SS8/Yyv8+5+D5GK6L8=;
-        b=GcO9MfBkfEq7KU83CWD1VEW5kwLY4/hk78uqWQkV0Ym1mSjzCNUIz13QlZPFzilgh4
-         fOp5IQYxp0qL2YZHavqkdHVIA/bG5skTX8+EkK9F/38aOiycy1uFdO6zLV4JHCTgE/05
-         uzkTaY1+F+0WRsn6DqjRoCJuY+1+z01wPnth1Isp3SvQLVJYKfRlpbaB/fgbpMBkym1M
-         mvYZR3jnN+B24huFkJ2hNyluNCtkNuCa+E7nLFq+Kf2UndPZIZskr3OGV6ElvSOdwUgI
-         kmaPeYmAW+CxkHGXiqtdfCdWy0tDvuAK/aumjxk2gY7EI0Js6IZgeWsq2D72/OX3MceL
-         znjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760240067; x=1760844867;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E/g79Ugc5NGg828MfRu+U8pP/SS8/Yyv8+5+D5GK6L8=;
-        b=gOBKftS8H++q8KbIXu+oFxNHSztr4vY0nzWOYfkzKLdQa5n/7qvwmHGG+icGvJsURe
-         ewCDB5fI3e4YSJ7eAy0d+yJqJ1QGwSDkQXuD0sOwKFu3702htpBE1xX6O1ShlrdcrW1N
-         n5QqwvW9KqZetj0d4srEYGCpOv1vQd8yJHfU+0ojJ8+cbsn7twoYfC4e/rCsBXZzb4hD
-         qRtEey+kJSMXp4uTs+a8N54VEJe1N2f86OUHfh2NsWaTd46JAbQ4+bVql1av95UNUt8l
-         toBtZ0sw6nNdGo+y1/Fap+CP6ZJ9emflny9Efoue19ZaVaUGubXJ0Ns4/Fh2WxeNnC7o
-         9qfw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2/HtxL+TPeq5r+ZcMsCuAsGx2m0XDaovS5zOCz0dq+6hKZ9Bd802OoBkflaewiHn/lgC/Taj07Ac=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyZMKPjTmsKG3vH6NINQXypUBamMspssLwtqETRllqWb9C0qtD0
-	kP2rgF/ro9bLMaVN8QH6vg35WCsEIobwBEjI36Cp0yoTDli7kmnsHjhG5anen+in+AmPCDKGgYY
-	jDYjyAKgLgciTh3KW+0FV9qtNGlZV5fc=
-X-Gm-Gg: ASbGncuC8dd5ZXuezaLBXMoc5/juyPmQIk5SZoc+NHq2eM33yCKnCpo81tfXEVsB22i
-	BP1cA96kBNPlk80QRsbzgbMYqbuDNyzt3PgKO4PZrqSlYt95Nw8tOeT01tJpVLumtwbTUDu63Wp
-	ut/SE0y3btSN68fyyN8bPYVi1GqGAYYGvOKi3iJz6owFI1bJaSKOsRMFzFFPnL+tUZYsUf7Oggp
-	TJAnpKjHZzhPFHtHJ+zUl8Qog==
-X-Google-Smtp-Source: AGHT+IHs32sY3Q82KfBU4AhqKgdnps+6J1JXcdpPhtFXl8+jJOvzm48mumg4+TzCgU/Iuo5DbSdS9Wbcw68pQX+3f5E=
-X-Received: by 2002:a05:6871:5809:b0:341:88c3:cab6 with SMTP id
- 586e51a60fabf-3c0f81e9c32mr7081521fac.26.1760240066963; Sat, 11 Oct 2025
- 20:34:26 -0700 (PDT)
+	s=arc-20240116; t=1760325562; c=relaxed/simple;
+	bh=N3LHKPL5OVrA7eGEWAK9jGaZkBqysPyAEOHnkVU9HOc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TMAqQRRcM4pFlnFnGZrrdGRW+GcQlAxW1ineif1kGnAEzQJkrtAStk1uBfpGlNa5n/m5PiYboKsIP16GpSBARk8YGeoAB0jAy0udOAMnoy+hXXTsBK2WD9fZELoZXCCvvC3p3Tqv9OE9NtwN5G4Hm8MuGxkPEHjlXffSnVftLgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.239])
+	by gateway (Coremail) with SMTP id _____8BxmdGsb+xoz20VAA--.46181S3;
+	Mon, 13 Oct 2025 11:19:08 +0800 (CST)
+Received: from [10.20.42.239] (unknown [10.20.42.239])
+	by front1 (Coremail) with SMTP id qMiowJDxQ+Sjb+xoegPdAA--.32361S3;
+	Mon, 13 Oct 2025 11:19:01 +0800 (CST)
+Subject: Re: [PATCH v2] LoongArch: KVM: Add AVEC support
+To: Bibo Mao <maobibo@loongson.cn>, chenhuacai@kernel.org
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev, kernel@xen0n.name,
+ linux-kernel@vger.kernel.org
+References: <20251010064858.2392927-1-gaosong@loongson.cn>
+ <39779e6d-2f09-4ee9-e5e0-97fc09efbbf5@loongson.cn>
+From: gaosong <gaosong@loongson.cn>
+Message-ID: <a2d41419-2268-c041-9858-9287056d7f31@loongson.cn>
+Date: Mon, 13 Oct 2025 11:18:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251006053323.193581-1-hengqi.chen@gmail.com>
- <20251006053323.193581-4-hengqi.chen@gmail.com> <5dceffaa-1a86-b4f7-c7c0-07e08d43dcd7@loongson.cn>
-In-Reply-To: <5dceffaa-1a86-b4f7-c7c0-07e08d43dcd7@loongson.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Sun, 12 Oct 2025 11:34:16 +0800
-X-Gm-Features: AS18NWDWwG7GkbbegzkiqaPtk5RIIVjuTwp9ySjwcKMyWLlOxth_IoBJEY60fbM
-Message-ID: <CAEyhmHR6XEh3C8WpAKny9xJyN8Q4kw=ey=-eJxpFsaVHARx_rQ@mail.gmail.com>
-Subject: Re: [PATCH 3/7] LoongArch: BPF: Sign extend kfunc call arguments
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: chenhuacai@kernel.org, vincent.mc.li@gmail.com, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <39779e6d-2f09-4ee9-e5e0-97fc09efbbf5@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJDxQ+Sjb+xoegPdAA--.32361S3
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3XrWruF15KFWDJF15CFyDurX_yoWfAF1fpr
+	1kAFWDWrWrKrn7tF1UJr1qvryUXr18tw17Xr1UtFWUJF1UJr1Yqr40gryqgF1UJw48JF18
+	Ar15JrnrZF4UJwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xu
+	ctUUUUU==
 
-On Thu, Oct 9, 2025 at 10:09=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+在 2025/10/11 上午9:29, Bibo Mao 写道:
 >
-> On 2025/10/6 =E4=B8=8B=E5=8D=881:33, Hengqi Chen wrote:
-> > The kfunc calls are native calls so they should follow
-> > LoongArch calling conventions. Sign extend its arguments
-> > properly to avoid kernel panic.
-> >
-> > Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> > ---
-> >   arch/loongarch/net/bpf_jit.c | 16 ++++++++++++++++
-> >   1 file changed, 16 insertions(+)
-> >
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
-c
-> > index 579957b4d40a..83e623ce2908 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -983,6 +983,22 @@ static int build_insn(const struct bpf_insn *insn,=
- struct jit_ctx *ctx, bool ext
-> >                       emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tc=
-c_ptr_off);
-> >               }
-> >
-> > +             if (insn->src_reg =3D=3D BPF_PSEUDO_KFUNC_CALL) {
-> > +                     const struct btf_func_model *fm;
-> > +                     int idx;
-> > +
-> > +                     fm =3D bpf_jit_find_kfunc_model(ctx->prog, insn);
-> > +                     if (!fm)
-> > +                             return -EINVAL;
-> > +
-> > +                     for (idx =3D 0; idx < fm->nr_args; idx++) {
-> > +                             u8 reg =3D regmap[BPF_REG_1 + idx];
-> > +
-> > +                             sign_extend(ctx, reg, reg, fm->arg_size[i=
-dx],
-> > +                                         fm->arg_flags[idx] & BTF_FMOD=
-EL_SIGNED_ARG);
-> > +                     }
-> > +             }
-> > +
-> >               move_addr(ctx, t1, func_addr);
-> >               emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
 >
-> Without this patch, there are some failed test cases?
-> With this patch, the failed test cases can pass?
+> On 2025/10/10 下午2:48, Song Gao wrote:
+>> Add cpu_has_msgint() to check whether the host cpu supported avec,
+>> and restore/save CSR_MSGIS0-CSR_MSGIS3.
+>>
+>> Signed-off-by: Song Gao <gaosong@loongson.cn>
+>> ---
+>> Based-on: 
+>> https://patchew.org/linux/20250930093741.2734974-1-maobibo@loongson.cn/
+>> v2: fix build error.
+> It is not necessary based on this patch, you can base it on master 
+> branch. The later merged patch need based on previous version in general.
 >
-> If so, please add the related test cases in the commit
-> message, then we can test this single patch with the
-> corresponding test cases and the git log can show what
-> problem this patch solves clearly.
+Got it.
+>>
+>>   arch/loongarch/include/asm/kvm_host.h |  4 ++++
+>>   arch/loongarch/include/asm/kvm_vcpu.h |  1 +
+>>   arch/loongarch/include/uapi/asm/kvm.h |  1 +
+>>   arch/loongarch/kvm/interrupt.c        |  3 +++
+>>   arch/loongarch/kvm/vcpu.c             | 19 +++++++++++++++++--
+>>   arch/loongarch/kvm/vm.c               |  4 ++++
+>>   6 files changed, 30 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/loongarch/include/asm/kvm_host.h 
+>> b/arch/loongarch/include/asm/kvm_host.h
+>> index 392480c9b958..446f1104d59d 100644
+>> --- a/arch/loongarch/include/asm/kvm_host.h
+>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>> @@ -285,6 +285,10 @@ static inline bool kvm_guest_has_lbt(struct 
+>> kvm_vcpu_arch *arch)
+>>       return arch->cpucfg[2] & (CPUCFG2_X86BT | CPUCFG2_ARMBT | 
+>> CPUCFG2_MIPSBT);
+>>   }
+>>   +static inline bool cpu_has_msgint(void)
+>> +{
+>> +    return read_cpucfg(LOONGARCH_CPUCFG1) & CPUCFG1_MSGINT;
+>> +}
+>>   static inline bool kvm_guest_has_pmu(struct kvm_vcpu_arch *arch)
+>>   {
+>>       return arch->cpucfg[6] & CPUCFG6_PMP;
+>> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h 
+>> b/arch/loongarch/include/asm/kvm_vcpu.h
+>> index f1efd7cfbc20..3784ab4ccdb5 100644
+>> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+>> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+>> @@ -15,6 +15,7 @@
+>>   #define CPU_PMU                (_ULCAST_(1) << 10)
+>>   #define CPU_TIMER            (_ULCAST_(1) << 11)
+>>   #define CPU_IPI                (_ULCAST_(1) << 12)
+>> +#define CPU_AVEC                        (_ULCAST_(1) << 14)
+>>     /* Controlled by 0x52 guest exception VIP aligned to estat bit 
+>> 5~12 */
+>>   #define CPU_IP0                (_ULCAST_(1))
+>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h 
+>> b/arch/loongarch/include/uapi/asm/kvm.h
+>> index 57ba1a563bb1..de6c3f18e40a 100644
+>> --- a/arch/loongarch/include/uapi/asm/kvm.h
+>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+>> @@ -104,6 +104,7 @@ struct kvm_fpu {
+>>   #define  KVM_LOONGARCH_VM_FEAT_PV_IPI        6
+>>   #define  KVM_LOONGARCH_VM_FEAT_PV_STEALTIME    7
+>>   #define  KVM_LOONGARCH_VM_FEAT_PTW        8
+>> +#define  KVM_LOONGARCH_VM_FEAT_MSGINT        9
+>>     /* Device Control API on vcpu fd */
+>>   #define KVM_LOONGARCH_VCPU_CPUCFG    0
+>> diff --git a/arch/loongarch/kvm/interrupt.c 
+>> b/arch/loongarch/kvm/interrupt.c
+>> index 8462083f0301..adc278fb3cb9 100644
+>> --- a/arch/loongarch/kvm/interrupt.c
+>> +++ b/arch/loongarch/kvm/interrupt.c
+>> @@ -21,6 +21,7 @@ static unsigned int 
+>> priority_to_irq[EXCCODE_INT_NUM] = {
+>>       [INT_HWI5]    = CPU_IP5,
+>>       [INT_HWI6]    = CPU_IP6,
+>>       [INT_HWI7]    = CPU_IP7,
+>> +    [INT_AVEC]    = CPU_AVEC,
+>>   };
+>>     static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int 
+>> priority)
+>> @@ -36,6 +37,7 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, 
+>> unsigned int priority)
+>>       case INT_IPI:
+>>       case INT_SWI0:
+>>       case INT_SWI1:
+>> +    case INT_AVEC:
+>>           set_gcsr_estat(irq);
+> Do we need cpu_has_msgint() here ? It is impossible that VMM inject 
+> INT_AVEC interrrupt on non-msgint machine such as 3C5000.
 >
-> Please add the related test cases in the commit message
-> for the patch #4 - #7 too.
+yes we need , how about this?
+
+@@ -31,6 +32,11 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, 
+unsigned int priority)
+         if (priority < EXCCODE_INT_NUM)
+                 irq = priority_to_irq[priority];
+
++        if (cpu_has_msgint() && (priority == INT_AVEC)) {
++                set_gcsr_estat(irq);
++                return 1;
++        }
++
+         switch (priority) {
+         case INT_TI:
+         case INT_IPI:
+
+Thanks.
+Song Gao
+
+
+>>           break;
+>>   @@ -63,6 +65,7 @@ static int kvm_irq_clear(struct kvm_vcpu *vcpu, 
+>> unsigned int priority)
+>>       case INT_IPI:
+>>       case INT_SWI0:
+>>       case INT_SWI1:
+>> +    case INT_AVEC:
+>>           clear_gcsr_estat(irq);
+> Ditto.
+>
+> The others look good to me.
+>
+> Regards
+> Bibo Mao
+>>           break;
+>>   diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>> index 30e3b089a596..226c735155be 100644
+>> --- a/arch/loongarch/kvm/vcpu.c
+>> +++ b/arch/loongarch/kvm/vcpu.c
+>> @@ -657,8 +657,7 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>>           *v = GENMASK(31, 0);
+>>           return 0;
+>>       case LOONGARCH_CPUCFG1:
+>> -        /* CPUCFG1_MSGINT is not supported by KVM */
+>> -        *v = GENMASK(25, 0);
+>> +        *v = GENMASK(26, 0);
+>>           return 0;
+>>       case LOONGARCH_CPUCFG2:
+>>           /* CPUCFG2 features unconditionally supported by KVM */
+>> @@ -726,6 +725,10 @@ static int kvm_check_cpucfg(int id, u64 val)
+>>           return -EINVAL;
+>>         switch (id) {
+>> +    case LOONGARCH_CPUCFG1:
+>> +        if ((val & CPUCFG1_MSGINT) && (!cpu_has_msgint()))
+>> +            return -EINVAL;
+>> +        return 0;
+>>       case LOONGARCH_CPUCFG2:
+>>           if (!(val & CPUCFG2_LLFTP))
+>>               /* Guests must have a constant timer */
+>> @@ -1658,6 +1661,12 @@ static int _kvm_vcpu_load(struct kvm_vcpu 
+>> *vcpu, int cpu)
+>>       kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
+>>       kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
+>>       kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_LLBCTL);
+>> +    if (cpu_has_msgint()) {
+>> +        kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR0);
+>> +        kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR1);
+>> +        kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR2);
+>> +        kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR3);
+>> +    }
+>>         /* Restore Root.GINTC from unused Guest.GINTC register */
+>>       write_csr_gintc(csr->csrs[LOONGARCH_CSR_GINTC]);
+>> @@ -1747,6 +1756,12 @@ static int _kvm_vcpu_put(struct kvm_vcpu 
+>> *vcpu, int cpu)
+>>       kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN1);
+>>       kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
+>>       kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
+>> +    if (cpu_has_msgint()) {
+>> +        kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR0);
+>> +        kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR1);
+>> +        kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR2);
+>> +        kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR3);
+>> +    }
+>>         vcpu->arch.aux_inuse |= KVM_LARCH_SWCSR_LATEST;
+>>   diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+>> index d8c813e2d72e..438885b6f2b1 100644
+>> --- a/arch/loongarch/kvm/vm.c
+>> +++ b/arch/loongarch/kvm/vm.c
+>> @@ -37,6 +37,9 @@ static void kvm_vm_init_features(struct kvm *kvm)
+>>           kvm->arch.support_features |= 
+>> BIT(KVM_LOONGARCH_VM_FEAT_PV_STEALTIME);
+>>       }
+>>   +    if (cpu_has_msgint())
+>> +        kvm->arch.support_features |= 
+>> BIT(KVM_LOONGARCH_VM_FEAT_MSGINT);
+>> +
+>>       val = read_csr_gcfg();
+>>       if (val & CSR_GCFG_GPMP)
+>>           kvm->arch.support_features |= BIT(KVM_LOONGARCH_VM_FEAT_PMU);
+>> @@ -153,6 +156,7 @@ static int kvm_vm_feature_has_attr(struct kvm 
+>> *kvm, struct kvm_device_attr *attr
+>>       case KVM_LOONGARCH_VM_FEAT_PMU:
+>>       case KVM_LOONGARCH_VM_FEAT_PV_IPI:
+>>       case KVM_LOONGARCH_VM_FEAT_PV_STEALTIME:
+>> +        case KVM_LOONGARCH_VM_FEAT_MSGINT:
+>>           if (kvm_vm_support(&kvm->arch, attr->attr))
+>>               return 0;
+>>           return -ENXIO;
+>>
 >
 
-Will detail the test instructions in cover letter, it's complex in
-some way.
-
-> Thanks,
-> Tiezhu
->
