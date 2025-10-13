@@ -1,92 +1,107 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C9223F294
-	for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 16:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633782C11C9
+	for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 17:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760372159; cv=none; b=EyHEUOUvuh1OYh+5/O0xwz8kPFumiMBfdbsktoOZzgLc5J0L0gf9w5sUv5ORbW8luNM92V5pP/rRf6hpyVQcwA/3NMpzgVdtS2iZpdYjLZu0zQlQ5/yMGO+OcbwW2IiH6W7pEhoG2x+VsuAss0ZRxCBvKu9W1Q71wZeOtyl5bWU=
+	t=1760375712; cv=none; b=FnSgZkk0DRBy48kCoUB5vZoHLA7dhKqSirPpgkTb8aWFvQipwzN/bQKP7ayT1zf5Nl4tdxBLVsUt6ZlsdsKV0zBiBVeZuu9A+2cPC7qi5Xo61lL5fS4i4izFqjx71gMrEqPECil2OrG3TbIiLtBGLRKHsliew+zBd0JTMNtrJ2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760372159; c=relaxed/simple;
-	bh=q4TWi+EHOJV5TC7Iymk26iR2c2LUySOZ0b50x1RvGCo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ARB43RENXhCML6xEjtCNGnZ2UQJsvIki7E62EbH10GWv5Y5FKXxxOAKOlwJfpb0pj2iVQy48clD5xQnaJ+wKNeX3WWdBPCsA7Ti3CtSnlNRxgnkNI+bCl11ItWCuTbLz/uGcf8AETvhQ+yq8pW+nmD+HRkNqckXv1uOwFxbAl5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=JQss/l/M; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1760375712; c=relaxed/simple;
+	bh=qg3NRHdeNA4Fg5h3g9E13z1ZmJaUuUt4rsIs+bfAZf0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gg7AwL5XV1CTlvy1t5ucoBiDG/3zpw/NxGRewtKu3yP7tnH3VUks5roV5H6qLILpF3dFKqOL7uDp8805AtVJMHpH4hVoJ9Y30syA884QHAHoAgZwz1Kq0Nz9vdmPq7O6PoiNc+NXEOA8d7OBLDW06F9/D6OXU76MACOqZHg3HBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YY7JTkMk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JQss/l/M"
-Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 59DGEplg1360107
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 13 Oct 2025 09:14:52 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 59DGEplg1360107
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025092201; t=1760372093;
-	bh=MzpJMWVhNoOjgk4BJX8F1SShnKbckMn+Nc+zuR294Q0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=JQss/l/MXShiySKzZWsav9VeArEu5N+uHoA047KLEMyntuwcMeK9wlN7HIQ0Tqk38
-	 JWP3hXYKNvikpWfX6arlx9W0uwDMOxRmDNvKTDAE5F6UoQRuW2UYdQH8FS/dmu5d3E
-	 IWsydJI7iSqT/4JiUB/QpAvO0m3CLOT54r0BnuzOxjwp1hTkoYG5cC2cXMzIqbFFu/
-	 hVeOMUm7eShn55+XGXxv1i0cXqiWlUTDXcOMz142IMJrmHCUqBtj9hGS3pSQf+YHB+
-	 vjYWunPASD2OmpmvS1CGd8ToW6X150kS6ymSlNwqvCNTUzUlIQ4v/fyvlZZe23Moc7
-	 PV1r9bSGOj9qg==
-Date: Mon, 13 Oct 2025 09:14:51 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Dave Hansen <dave.hansen@intel.com>,
-        =?ISO-8859-1?Q?Thomas_Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Shuah Khan <shuah@kernel.org>
-CC: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-api@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2] vdso: Remove struct getcpu_cache
-User-Agent: K-9 Mail for Android
-In-Reply-To: <e95dc212-6fd3-43e3-aeb7-bf55917e0cd4@intel.com>
-References: <20251013-getcpu_cache-v2-1-880fbfa3b7cc@linutronix.de> <e95dc212-6fd3-43e3-aeb7-bf55917e0cd4@intel.com>
-Message-ID: <9F23DEFF-FCD7-488E-B31C-E891A7521D9E@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YY7JTkMk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB97C4CEE7
+	for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 17:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760375711;
+	bh=qg3NRHdeNA4Fg5h3g9E13z1ZmJaUuUt4rsIs+bfAZf0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YY7JTkMkhWWhzK3mC3Kej4FDWV7neKJe4/xpANHNH+vjNECANnPLzsta/RlsUVxvw
+	 HquxzpXW/W6sKxOIyxAAfWj9KzGJB0dqpYNKvhIteyA9UKXuTVr2mHHmGbd02/P45D
+	 PH384XIcQU/ukOBY2fZbeuHh6CCSIthaM4t+HH0WWLbS5Z/N3UXx9ThuWbYhghihd8
+	 Q9KDvOOoxzgLIO79sYgks7uPhtpJfGd5TRaJc5JAtO1GWtuGqAUeroxLKcZlhfKxaa
+	 4TY4bPu4ycBqt6qVKEaoG3MYlxQ65G0FI8vzwCJFvArXCi+8rZ8Bv3S2EKX+0s/Wa/
+	 akKGhcRT0hVlQ==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-59054fc6a45so1276423e87.3
+        for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 10:15:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUBIuZXXiNQVdaaJRifaDSNUdAk+2dn/HyCJU35M/4vIXhlJVg5K9ca4qvdZ9mhbcRiyZtv54dKTBU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyqs/eCqqtu+Hs3Jn3aYxLNkIv63UmQUzq9NX7JtV5Kv9607CST
+	bSfKnBiQkcGESnz19gOpoUFvt8ZETqO7IzuSowFPZFxVRjD2WObnZ8Sxo41C8uekIj5wADe6x/4
+	7S/h/mj0X4xY4ZzI9UgUyM+97Nwzdp2kQapE0apBt
+X-Google-Smtp-Source: AGHT+IFe+SzxnNHmLcFlvnfkJvIZjwnZkm1Ok6JvoMYuj8nhVWXCmwvh0KaZdzeEUyoNuxcssWgKIbqhAnjyljsSJMw=
+X-Received: by 2002:a05:6512:230c:b0:573:68fd:7ad2 with SMTP id
+ 2adb3069b0e04-5906dd53da9mr5881107e87.35.1760375710222; Mon, 13 Oct 2025
+ 10:15:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20251013-getcpu_cache-v2-1-880fbfa3b7cc@linutronix.de> <e95dc212-6fd3-43e3-aeb7-bf55917e0cd4@intel.com>
+In-Reply-To: <e95dc212-6fd3-43e3-aeb7-bf55917e0cd4@intel.com>
+From: Andy Lutomirski <luto@kernel.org>
+Date: Mon, 13 Oct 2025 10:14:58 -0700
+X-Gmail-Original-Message-ID: <CALCETrV2W3cZEJ2yy7F-F9=e_8HLP84ZWrOJCzUYn_ASb0+M6A@mail.gmail.com>
+X-Gm-Features: AS18NWDGlHiZ6TxV2AYIYIygvwnW3vlieR2fC4dbq7adbnnZ1RUCMMYySi05JAY
+Message-ID: <CALCETrV2W3cZEJ2yy7F-F9=e_8HLP84ZWrOJCzUYn_ASb0+M6A@mail.gmail.com>
+Subject: Re: [PATCH v2] vdso: Remove struct getcpu_cache
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan <shuah@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-api@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On October 13, 2025 7:06:55 AM PDT, Dave Hansen <dave=2Ehansen@intel=2Ecom>=
+On Mon, Oct 13, 2025 at 7:07=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
  wrote:
->On 10/13/25 02:20, Thomas Wei=C3=9Fschuh wrote:
->> -int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu=
+>
+> On 10/13/25 02:20, Thomas Wei=C3=9Fschuh wrote:
+> > -int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu=
 _cache *unused);
->> -int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu=
+> > -int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu=
 _cache *unused)
->> +int __vdso_getcpu(unsigned int *cpu, unsigned int *node, void *unused)=
+> > +int __vdso_getcpu(unsigned int *cpu, unsigned int *node, void *unused)=
 ;
->> +int __vdso_getcpu(unsigned int *cpu, unsigned int *node, void *unused)
->>  {
->>  	int cpu_id;
+> > +int __vdso_getcpu(unsigned int *cpu, unsigned int *node, void *unused)
+> >  {
+> >       int cpu_id;
 >
->It would ideally be nice to have a _bit_ more history on this about
->how it became unused any why there is such high confidence that
->userspace never tries to use it=2E
->
->Let's say someone comes along in a few years and wants to use this
->'unused' parameter=2E Could they?
+> It would ideally be nice to have a _bit_ more history on this about
+> how it became unused any why there is such high confidence that
+> userspace never tries to use it.
 
-I believe it was a private storage area for the kernel to use=2E=2E=2E whi=
-ch it doesn't=2E Not doing anything at all with the pointer is perfectly le=
-gitimate=2E
+The theory is that people thought that getcpu was going to be kind of
+slow, so userspace would allocate a little cache (IIRC per-thread) and
+pass it in, and the vDSO would do, well, something clever to return
+the right value.  The something clever was probably based on the idea
+that you can't actually tell (in general) if the return value from
+getcpu is stale, since you might well get migrated right as the
+function returns anyway, so the cache could be something silly like
+(jiffies, cpu).
+
+I don't actually remember whether the kernel ever used this.  It's
+possible that there are ancient kernels where passing a wild, non-null
+pointer would blow up.  But it's certainly safe to pass null, and it's
+certainly safe for the kernel to ignore the parameter.
+
+--Andy
+
+>
+> Let's say someone comes along in a few years and wants to use this
+> 'unused' parameter. Could they?
+>
