@@ -1,122 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B1D302161;
-	Tue, 14 Oct 2025 16:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F52239E63
+	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 19:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760460480; cv=none; b=lzvGRnLIHAxtvjWU51AGbtINjQYvIGpddvm9688HS/JGdsYtraODaCrGTVSpB8glP9RdDPj0a7ggKvjR1bnV4U4jgGwT2cyMSh1FvEWr4CsiIKf61jKg4LxOJ4cyOcBLaifXSWxnqGT00wiPlAj4JMBr6UxD81oRzEK56xcA9jI=
+	t=1760468797; cv=none; b=oE0PvimuP1I/74wqnYiDWgZvv0PF1790LyiGn3JfP/OsoG86KR3g0hpJytIwby3/wNOMxjG1SfzLG+c9JOQBhXlFd5ZOt3zC5LJOyDG+wxRhSX4cqLPxyA3iCsVqmsso5clsVmYyE1Sa57z5r407Sjf8efE0+7cbaM6jddSmESo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760460480; c=relaxed/simple;
-	bh=l8eLRFVMqE9fpiqrKqMylM/MEdNRiawD7W1mbhHYUUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K5Smf76Elf0DuUKHLirm0TmjDtcfGaKov+fGI0Nk0ybTqV/8UpPGoIVqt2rh1E/5hQPAWNTXT+xVEPeBiISAASiceLiwrgEGvFcH428NZ5p7+n5yc+1M8exlQqdF5ayF1gS+KxcJaqACE7AhvJBu6mgy3bg48zqMmSbNr6X/7jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGSA3pga; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760468797; c=relaxed/simple;
+	bh=YHkoBXMGobkLQ8o+PhxXHefddsG1ieCfaB2d71pVtoU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Yy93ViAqr/1DL6kMZiJkVaU8g2oLYH5KBUwPzE1pNQfS7FTyOBSKKspQ3y/rWJCG9Q523F3PkovO4Fcl5zW2wTvUiajoECPRTEsTD1EMwCZedz+EkHK/nlLUN0adKIAmXp8IdqoXpQkx9rE1M7e0q/lYSWOamGGw20Ff5vHoOgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NcOobYXt; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGSA3pga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F4FBC4CEF9;
-	Tue, 14 Oct 2025 16:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760460478;
-	bh=l8eLRFVMqE9fpiqrKqMylM/MEdNRiawD7W1mbhHYUUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eGSA3pgaOhHGfOTcRgObQgFAXRmOW61i/dlmHQrwQtYq+xQu+Ft19yt6twH4meYJQ
-	 pWh4Zv2yemKHxTklIE0SZgp3LMws95vKHPuayVyCrSzSO/TuzlIKgKlN/9AzmSYXI+
-	 VDWj2WvV3uEOaZ0+mpeTKD3MLGvDFT3ttd2kKoAg8mFv263krvh8pHzQF2S8h0d4ww
-	 mm+3rI11mjJHFue72xqUgh8qpTfrAldmagVOJzzCXqrhyFjsfIqCa5+MRQvPB9RG+W
-	 jCXWH/AKVd0lxrKcHaX4aoIX3SXFgHU9WqNVNS2owUSOkfqBwuBB2vnN+AirnG+X8m
-	 oq6U4gwpx/A1w==
-Date: Tue, 14 Oct 2025 09:47:55 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
-Message-ID: <rhnei6wovxmoqs36wdysomfsul3faxtmgde73wrrqdt3qo3b2j@akd7vzne76rq>
-References: <8091e8fa-3483-af39-2f7a-e4eb62b0944f@loongson.cn>
- <CAAhV-H4+UGLSkbjHbq9MerWfxnq0a13x+uzNfTsCoe1UxjbWsg@mail.gmail.com>
- <CAMj1kXH-rK0bRyHXdJ-crAyMyvJHApH0WR7_8Qd8vrSPBLK+yg@mail.gmail.com>
- <0c9b8e6a-96a6-91d4-946f-2109f48a529b@loongson.cn>
- <CAAhV-H41m96fvEWG5NqAE=tykPjyzt=50CseJDeCqdG-c_WMrQ@mail.gmail.com>
- <CAMj1kXEs5=VRi_rJwgHUrQWos-27PBbr3c4fYnmkV8Ahi8HZgw@mail.gmail.com>
- <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
- <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
- <CAAhV-H4UKdso0BokAqvjYeBLr-jbjFAaQX4z=1ztpBamqrOEEg@mail.gmail.com>
- <CAMj1kXEXDC_oq4aWbkR5dqYBix2d1xJEdaj-v747e1nOA0Q_Yg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NcOobYXt"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b630753cc38so15611194a12.1
+        for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 12:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1760468794; x=1761073594; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NJxlV+oNDwXk+z+h9rw/7gmtAEVoUIc/lNQpO7FKflY=;
+        b=NcOobYXtU9AutDy6rLclSnE7jbXML4J9pPXSMrzFfdMVMLOsswUZZ/X3B9ornnAVUT
+         8+7VaJN0CF1MCP64IYgd3gj6lqNglBbXdOb2k1s9JClffmdyEFf0wsvLx+UCZCRFrAn4
+         M3sMimb2dxyHMavYT+n8nZ7TU1nExo16vW684nUv2iy2Hqyh6xnyKS8IBvfI01hrsffN
+         FFjWFJ/g88uH71s2gNmdBq96Uj2RhLzXMP+549ro9NBHPyjp6St4xLIFP9aFuFI+YZRs
+         mXRYhEOoNjZxNlC8WipPRE9MplxXE+hx6dS8NHA8UXShA5lIZYOWN2t3zCVtX6RRfhYN
+         Di9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760468794; x=1761073594;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NJxlV+oNDwXk+z+h9rw/7gmtAEVoUIc/lNQpO7FKflY=;
+        b=P2uGlb8h2heeafs+Zo9q9h/YbP9Q/u+vLi2MsnAdVHn8cRlUgqwdbBu3+33NJWR7uS
+         CD+WHybDp+78GYo0pnbeEVd+icTS8v6OgquSdlmOa8HFTmii98Ft9fQByxYLpC9in5tc
+         hu9iNvXDW0R+gRMFQ8ws9u7HL91ZNrEllbTLcn7a7Z6eRfHJ6TbqVNmsy5Lgp6b/3wA0
+         TVsFqYFNiVCHbrTS6WPCTYscpSgyop1GJiZ/3kHS4j9Djdr0kxjk1GodKf3DVePjd6Ga
+         hfmTcYNluR1eeXcMWmZmz0hM9ho+OyHVENI9+OYPqsrjftLSoooXPfhPjPrCBN0o+I/d
+         nzFA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/hUt4OpYkudpJxxEB4RUdl2Le5lJYlAyiuTJz8Ctw9cz118QYDLBEHUsPiBO7cybdeCX2s4YAC0I=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJ/m8CNLqmCnATF+TSRvg7C6tObDlVlvEcbKJ+3NFT+ERHIXDr
+	GjW5eU8ROnfv7e768iBN9k7suuZlI/gr1WV0D+7mmQX7tIBnoUViXcJGLTX4zOD5JQdDne1tabT
+	bbbO1lA==
+X-Google-Smtp-Source: AGHT+IG9Zd3t+86XRNhfr6MOl3z2x5n36Sr6uReq0nGSm2P7jNviBzkfzWGC0x9bWFlsxNGdGfsNX6JxluA=
+X-Received: from pjuj14.prod.google.com ([2002:a17:90a:d00e:b0:32b:95bb:dbc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3ec5:b0:327:e018:204a
+ with SMTP id 98e67ed59e1d1-33b50f85081mr35201870a91.0.1760468794156; Tue, 14
+ Oct 2025 12:06:34 -0700 (PDT)
+Date: Tue, 14 Oct 2025 12:06:32 -0700
+In-Reply-To: <xhsmhwm4xpwyt.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMj1kXEXDC_oq4aWbkR5dqYBix2d1xJEdaj-v747e1nOA0Q_Yg@mail.gmail.com>
+Mime-Version: 1.0
+References: <20251010153839.151763-1-vschneid@redhat.com> <20251010153839.151763-20-vschneid@redhat.com>
+ <aO2S3oZwOW_UgAci@google.com> <xhsmhwm4xpwyt.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Message-ID: <aO6fOM-XydknM6NJ@google.com>
+Subject: Re: [PATCH v6 19/29] KVM: VMX: Mark vmx_l1d_should flush and
+ vmx_l1d_flush_cond keys as allowed in .noinstr
+From: Sean Christopherson <seanjc@google.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>, Jann Horn <jannh@google.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, 
+	Yair Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, 
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Oct 13, 2025 at 04:36:49PM +0200, Ard Biesheuvel wrote:
-> On Mon, 13 Oct 2025 at 16:09, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > On Sat, Oct 11, 2025 at 11:59 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > It is an objtool issue in essence.
-> > >
-> > > The generated code looks like this
-> > >
-> > > 9000000001743080: ff b7 fe 57   bl      -332 <__efistub_kernel_entry_address>
-> > > 9000000001743084: 26 03 c0 28   ld.d    $a2, $s2, 0
-> > > 9000000001743088: 87 00 15 00   move    $a3, $a0
-> > > 900000000174308c: 04 04 80 03   ori     $a0, $zero, 1
-> > > 9000000001743090: c5 02 15 00   move    $a1, $fp
-> > > 9000000001743094: e1 00 00 4c   jirl    $ra, $a3, 0
-> > >
-> > > 9000000001743098 <__efistub_exit_boot_func>:
-> > > 9000000001743098: 63 c0 ff 02   addi.d  $sp, $sp, -16
-> > >
-> > > There is nothing wrong with this code, given that the indirect call is
-> > > to a __noreturn function, and so the fact that it falls through into
-> > > __efistub_exit_boot_func() is not a problem.
-> > >
-> > > Even though the compiler does nothing wrong here, it would be nice if
-> > > it would emit some kind of UD or BRK instruction after such a call, if
-> > > only to make the backtrace more reliable. But the code is fine, and
-> > > objtool simply does not have the information it needs to determine
-> > > that the indirect call is of a variety that never returns.
-> > So the best way is to fix the objtool?
+On Tue, Oct 14, 2025, Valentin Schneider wrote:
+> On 13/10/25 17:01, Sean Christopherson wrote:
+> > On Fri, Oct 10, 2025, Valentin Schneider wrote:
+> >> Later commits will cause objtool to warn about static keys being used in
+> >> .noinstr sections in order to safely defer instruction patching IPIs
+> >> targeted at NOHZ_FULL CPUs.
+> >>
+> >> These keys are used in .noinstr code, and can be modified at runtime
+> >> (/proc/kernel/vmx* write). However it is not expected that they will be
+> >> flipped during latency-sensitive operations, and thus shouldn't be a source
+> >> of interference wrt the text patching IPI.
+> >>
+> >> Mark it to let objtool know not to warn about it.
 > >
+> > Can you elaborate in the changelog on what will happen if the key is toggle?
+> > IIUC, smp_text_poke_batch_finish() will force IPIs if noinstr code is being
+> > patched.
 > 
-> I think the best solution is to fix the compiler, and ensure that call
-> instructions are always followed by some undefined or debug/break
-> opcode. This works around this problem, but it also ensures that the
-> return address does not point to the wrong function, which may cause
-> confusion in backtraces.
-
-I think the compiler folks will say that's working as designed.  The
-whole point of __noreturn is to eliminate unecessary code after the
-call.
-
-Unwinders are already designed to handle that case anyway.
-
-If you don't want to optimize out the code after the call then just
-remove the __noreturn annotation from the function pointer.
-
-> > > So I don't mind fixing it in the code, but only for LoongArch, given
-> > > that the problem does not exist on arm64 or RISC-V.
-> > You believe this problem won't exist even if they add objtool support
-> > (because their objtool will be sane)?
+> Right!
+> 
+> > Even just a small footnote like this:
 > >
+> >   Note, smp_text_poke_batch_finish() never defers IPIs if noinstr code is
+> >   being patched, i.e. this is purely about silencing objtool warnings.
+> >
+> > to make it clear that there's no bug/race being introduced.
 > 
-> It depends on the compiler.
+> Good point. How about:
+> 
+> """
+> Later commits will cause objtool to warn about static keys being used in
+> .noinstr sections in order to safely defer instruction patching IPIs
+> targeted at NOHZ_FULL CPUs.
+> 
+> The VMX keys are used in .noinstr code, and can be modified at runtime
+> (/proc/kernel/vmx* write). However it is not expected that they will be
+> flipped during latency-sensitive operations, and thus shouldn't be a source
+> of interference for NOHZ_FULL CPUs wrt the text patching IPI.
+> 
+> Note, smp_text_poke_batch_finish() never defers IPIs if noinstr code is
+> being patched, i.e. this is purely to tell objtool we're okay with updates
+> to that key causing IPIs and to silence the associated objtool warning.
+> """
 
-I don't think so, all compilers do this...
+LGTM.  With the updated changelog,
 
-My suggestion (which prompted this v2 patch) was to move the libstub
-code out of vmlinux.o (but still keep it in vmlinux), to make it
-consistent with what x86 already does.
-
-The idea is that libstub code doesn't belong in vmlinux.o because it's
-not a part of the kernel proper, and doesn't need to be validated or
-modified by objtool for any reason.
-
--- 
-Josh
+Acked-by: Sean Christopherson <seanjc@google.com>
