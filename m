@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D4330F7F3
-	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 06:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3872D3217
+	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 06:49:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760424568; cv=none; b=aW8tcGwnh4oIanZJoD3feMIkwQaRUTQhhbCaNXjBCz834XT+sjZwwpxrY11mp1zW507w9QDU/NkKOG76RuSMX2biVtH2dg21mvmJsJr1lbaeNQoKPCRc4Gz7Fe1xDc4u+yDUmMKRK5XLkjEyrFyykT1Ld3JQKo9IqyuV48hUQCs=
+	t=1760424568; cv=none; b=jKTCQ07PdRmqlgQnGViFTYa7W+vWx3GUATytnhjt/ncHzsro4oir3nvDs72EGly8LFCUSr9GwZ6f/d164YERnl7Dkxhuz38v/LPCm2Ftlt3N/txmjM0kJBN4lHBhQifrrSAu7IpX9yOrkhc95kNgUZyFA+dh+uV2dutyZZayrTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1760424568; c=relaxed/simple;
-	bh=GlpQP2ovZSCDOGxS8s5nj5uE5YbM4kkpY+anU8ERtBk=;
+	bh=i+D0m1xzFKLn45sG3YvmSAccyUMoIH83lYmvGLk5jvY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=la5F2BUUEFzkdA/DKg2kXFczAPGA+6dXsgnp0v2vEYUMLanrShOhyKD164voh4O4+O9buP1JUF3ABmeNeLKSECziYCjoOzhIzwe8AxonE+F3Oz72+4f4oz5f4hBXJOr7Z8x6R6LZ3sod96ytK4VSSMGmcflv/8lKaYD4r/EKoNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dva6KHun; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CePrGsnF; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=Xy90kbHKuxJOkkeGB1gccOIDmvr38HwwREajjQbE3WWcceONz+2J2aJI2QmGpsnGehakeecrmEazjYtvz2qtpjOCDPgetOZ1lPA7KddCBlRuZd6lQDjCq3APN/Q6oVG6RnWpqfc2ZRZzoWhKMhcVbFJmB+YkJ289wP0FARXm5dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r0cS0sTR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DC2kCZtn; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dva6KHun";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CePrGsnF"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r0cS0sTR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DC2kCZtn"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1760424561;
+	s=2020; t=1760424562;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iK+MuStgP9LYq96Rw1QlhWknm6Ic3/FbgcY09qE0/8Q=;
-	b=dva6KHun4SHZO3CF0DWTyYjZwdzjdid0XSRCDNGvJUWgCdmeGxbOsrxLhNX3UbIBShWuqi
-	wkV0v7v3WdjaVC3aO6ViYdnY+bPmRdZ2Kp6+30TTx2Xc0DA4jrZqvAEN/9WmEVLe1mpeRB
-	Rte2dFCf1AvS+QkU8CSjrMPiILunOoWeBxlYuaMFL+dHEkvNvtLoJmMxdqvapC0bdfHWed
-	arFPykJD8FkOqyoPJOeSzvxgOLxpymV61rc2KQ2e6tD04xR+3ie46qNUoo91lAigZnxL8M
-	LSSBXSvQ3BJZ6SpuPEQi6psL140j+xMxWwaBcTNkhu23yipVJ+F7XBDXriU2Qg==
+	bh=uwthaOGY1VLvaz+koev4FhKg8AeyDPmuh05iyUl1cmc=;
+	b=r0cS0sTRrNL77WmBrtChDtD2Wke+kaBBWEeANxute2VZ4pF7wUrxdVRXd7ew1JQu4RySYw
+	vphu5OS8xl2WWKNoME6n9VcxAR1TjgC7WT6ZVBaA0SwfgW7HWcGwOhNY4Ss8ygJlVw0CNI
+	suKfuCyXVo19oaUdnQcJumBm3BTMT9DXMOW5YrhvtDIgajpd972UXN3gNOkMPe8p84atrs
+	viDMD3DqY3cOqNA7aCAgF50FtT9ejbWigeDd0S85XXpTr/45hxsCrslpx1YqCbe7cWvgVe
+	MIGO6cNWbSoRYrgdP5s+Lulzut4TED4vu/+aeOvZFav/Z+ChjEg7tdcUpKlRdw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1760424561;
+	s=2020e; t=1760424562;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iK+MuStgP9LYq96Rw1QlhWknm6Ic3/FbgcY09qE0/8Q=;
-	b=CePrGsnF1VwArn9P+Buz8BoLT1mEbMIt82mCzQVb8ECz0JqgNWwt/DxTO1p3wduT/t2KdA
-	galRONxNndh6qKBA==
-Date: Tue, 14 Oct 2025 08:49:09 +0200
-Subject: [PATCH v4 23/35] vdso/datastore: Map pages through struct page
+	bh=uwthaOGY1VLvaz+koev4FhKg8AeyDPmuh05iyUl1cmc=;
+	b=DC2kCZtnoRHDhHxzOn7BuLwY96Nb5Q0Rn8XgchhVTV5WldgLonnN7NV5ny9Gy5+E1QKBGC
+	Z1PhFbe9MpT99CBg==
+Date: Tue, 14 Oct 2025 08:49:11 +0200
+Subject: [PATCH v4 25/35] sparc64: vdso: Link with -z noexecstack
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20251014-vdso-sparc64-generic-2-v4-23-e0607bf49dea@linutronix.de>
+Message-Id: <20251014-vdso-sparc64-generic-2-v4-25-e0607bf49dea@linutronix.de>
 References: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
 In-Reply-To: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
 To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -77,107 +77,45 @@ Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
  linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1760424546; l=3383;
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ Arnd Bergmann <arnd@kernel.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1760424546; l=1559;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=GlpQP2ovZSCDOGxS8s5nj5uE5YbM4kkpY+anU8ERtBk=;
- b=9srfjekW0ACLWEnnbN460RbJBa5iFjAY5gkDai4i+4epl7bSlqGXV5PRxJsd46eKGlWW/VJSD
- 0c+mk+hSEp3Dt2g0aBiJd9xPp6FwZoqr3G3E388Uc7M0MdIDPabWt/m
+ bh=i+D0m1xzFKLn45sG3YvmSAccyUMoIH83lYmvGLk5jvY=;
+ b=Jw7XxXdt2/x1RqZIyg4gZB08VRDxJluhd1LlWMdXrtJGp9ncd1JR8OCq1zwGyz4vuI482GqCx
+ ycDmPRnXt1VAD+QnyySctQIcyb7mQ+xF5HiQEHEy/aRxrVZornj0B0d
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-An upcoming change will allocate the datapages dynamically instead of as
-part of the kernel image. Such pages can only be mapped through
-'struct page' and not through PFNs.
+The vDSO stack does not need to be executable. Prevent the linker from
+creating executable. For more background see commit ffcf9c5700e4 ("x86:
+link vdso and boot with -z noexecstack --no-warn-rwx-segments").
 
-Prepare for the dynamic allocation by mapping through 'struct page'.
+Also prevent the following warning from the linker:
+sparc64-linux-ld: warning: arch/sparc/vdso/vdso-note.o: missing .note.GNU-stack section implies executable stack
+sparc64-linux-ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 
-VM_MIXEDMAP is necessary for the call to vmf_insert_page() in the timens
-prefault path to work.
-
+Suggested-by: Arnd Bergmann <arnd@kernel.org>
+Link: https://lore.kernel.org/lkml/20250707144726.4008707-1-arnd@kernel.org/
+Fixes: 9a08862a5d2e ("vDSO for sparc")
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Tested-by: Andreas Larsson <andreas@gaisler.com>
 Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+Acked-by: Andreas Larsson <andreas@gaisler.com>
 ---
- lib/vdso/datastore.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ arch/sparc/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/vdso/datastore.c b/lib/vdso/datastore.c
-index 7377fcb6e1dfe31d02ffcae371fdf9da069ae4c1..6e5feb4a95b85f5a1cbdced7cdeddc593fcbad40 100644
---- a/lib/vdso/datastore.c
-+++ b/lib/vdso/datastore.c
-@@ -39,14 +39,15 @@ struct vdso_arch_data *vdso_k_arch_data = &vdso_arch_data_store.data;
- static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 			     struct vm_area_struct *vma, struct vm_fault *vmf)
- {
--	struct page *timens_page = find_timens_vvar_page(vma);
--	unsigned long pfn;
-+	struct page *page, *timens_page;
-+
-+	timens_page = find_timens_vvar_page(vma);
+diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
+index 1a4e585c91d7d03d8444cc2e4914fd10cd078fb8..2e911ccc9db71b2888ffc432d75ac8815ecce0f7 100644
+--- a/arch/sparc/vdso/Makefile
++++ b/arch/sparc/vdso/Makefile
+@@ -107,4 +107,4 @@ quiet_cmd_vdso = VDSO    $@
+ 		       $(VDSO_LDFLAGS) $(VDSO_LDFLAGS_$(filter %.lds,$(^F))) \
+ 		       -T $(filter %.lds,$^) $(filter %.o,$^)
  
- 	switch (vmf->pgoff) {
- 	case VDSO_TIME_PAGE_OFFSET:
- 		if (!IS_ENABLED(CONFIG_GENERIC_GETTIMEOFDAY))
- 			return VM_FAULT_SIGBUS;
--		pfn = __phys_to_pfn(__pa_symbol(vdso_k_time_data));
-+		page = virt_to_page(vdso_k_time_data);
- 		if (timens_page) {
- 			/*
- 			 * Fault in VVAR page too, since it will be accessed
-@@ -56,10 +57,10 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 			vm_fault_t err;
- 
- 			addr = vmf->address + VDSO_TIMENS_PAGE_OFFSET * PAGE_SIZE;
--			err = vmf_insert_pfn(vma, addr, pfn);
-+			err = vmf_insert_page(vma, addr, page);
- 			if (unlikely(err & VM_FAULT_ERROR))
- 				return err;
--			pfn = page_to_pfn(timens_page);
-+			page = timens_page;
- 		}
- 		break;
- 	case VDSO_TIMENS_PAGE_OFFSET:
-@@ -72,24 +73,25 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 		 */
- 		if (!IS_ENABLED(CONFIG_TIME_NS) || !timens_page)
- 			return VM_FAULT_SIGBUS;
--		pfn = __phys_to_pfn(__pa_symbol(vdso_k_time_data));
-+		page = virt_to_page(vdso_k_time_data);
- 		break;
- 	case VDSO_RNG_PAGE_OFFSET:
- 		if (!IS_ENABLED(CONFIG_VDSO_GETRANDOM))
- 			return VM_FAULT_SIGBUS;
--		pfn = __phys_to_pfn(__pa_symbol(vdso_k_rng_data));
-+		page = virt_to_page(vdso_k_rng_data);
- 		break;
- 	case VDSO_ARCH_PAGES_START ... VDSO_ARCH_PAGES_END:
- 		if (!IS_ENABLED(CONFIG_ARCH_HAS_VDSO_ARCH_DATA))
- 			return VM_FAULT_SIGBUS;
--		pfn = __phys_to_pfn(__pa_symbol(vdso_k_arch_data)) +
--			vmf->pgoff - VDSO_ARCH_PAGES_START;
-+		page = virt_to_page(vdso_k_arch_data) + vmf->pgoff - VDSO_ARCH_PAGES_START;
- 		break;
- 	default:
- 		return VM_FAULT_SIGBUS;
- 	}
- 
--	return vmf_insert_pfn(vma, vmf->address, pfn);
-+	get_page(page);
-+	vmf->page = page;
-+	return 0;
- }
- 
- const struct vm_special_mapping vdso_vvar_mapping = {
-@@ -101,7 +103,7 @@ struct vm_area_struct *vdso_install_vvar_mapping(struct mm_struct *mm, unsigned
- {
- 	return _install_special_mapping(mm, addr, VDSO_NR_PAGES * PAGE_SIZE,
- 					VM_READ | VM_MAYREAD | VM_IO | VM_DONTDUMP |
--					VM_PFNMAP | VM_SEALED_SYSMAP,
-+					VM_MIXEDMAP | VM_SEALED_SYSMAP,
- 					&vdso_vvar_mapping);
- }
- 
+-VDSO_LDFLAGS = -shared --hash-style=both --build-id=sha1 -Bsymbolic --no-undefined
++VDSO_LDFLAGS = -shared --hash-style=both --build-id=sha1 -Bsymbolic --no-undefined -z noexecstack
 
 -- 
 2.51.0
