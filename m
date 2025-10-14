@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C687E30BF52
-	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 06:49:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECAD30DEB0
+	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 06:49:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760424561; cv=none; b=akmXn2KI7yXLcBLxDa0BF1t7qcjgN/AtKN+bQpK7QujstGcrASKyuQizpshtspHt2k5eyG5Cv7C84FUAyDjjWLMixCrZ1Wp/hIHltEr9giYSx7q+SSEs966yAxdzPlmWKqyz9MxJrfvHzfcSrQASveRdJ2PIi6iZsg8sK+462UQ=
+	t=1760424561; cv=none; b=jJwUSA+eL3O+/wSnl2M5XjUYu7uBzeemu6Ct89TAYOV4mRRfaWpIxcTMs2jkOxMSejYTwh49kw2/gllePfIgzBan41RH6vOSo1v72EGeMVBD3D2z57oi1+AvekvkVhIVwt38XjzCPGwX3pdqeIvyng2nQcn608lRFVBhzZ2PtNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1760424561; c=relaxed/simple;
-	bh=pWSgr9LF0PVimD93prkaQ1gUly1gwK+GgmvcantsbHs=;
+	bh=PM9q9catgRqCjb/cltSFmqCsNmoTi7HWsxpIPxIvJHQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ke393Cb1hCEc04qZRJ5x4vTS9yzlTx/jAJdhKm8XjLA9SL18ak+i6PmmQHsMy+dB0KR9rEy6n87YmjnL/HiYLrdKU8BtzB8wbkzJukM6q0X6NWCDwoiPCEPtZCSDCH4cShii1/rStz0hbScZKh9ItREY7vGHxldmqDVMi3RNFoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bAt9euk0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=esfzR2Bk; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=XzQLFe0Le5jSqgUS/LsBovXA9rYlOiPDWLRZ0md+kBx9K9Z/W/9GuzX9j4BZ2humiAsc1x65o+Sx/uZcMoqH9gf1daYdMULjO7a2XPF+UVmiepwnHeF4et2psFlFJuz18UfiETLiVhL4xlFlpCyLIVv32OIEJXjRmxl4XSpzriY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WWh5VpqL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wnI12/0K; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bAt9euk0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="esfzR2Bk"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WWh5VpqL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wnI12/0K"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1760424554;
+	s=2020; t=1760424552;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dfNwuY9Nbo9A8Jz5YapUcUJT7RvIIqIGIu7ip/76FOw=;
-	b=bAt9euk0Gmfcxq+1sPRKr0+Z9KV4nDi5abBHzVx+PmfhX5M8UcXyKLYlz1RqAipn6Jh/O2
-	NvI0WQeuDc6JUulIDet6DSUEkHjMzVt5wQsIVCLQBw1V7DpbV8H37mwx8s4FL9j+omQW0j
-	b7/ozB8cBrT+A0EYsNAX/SZWLXq2RLlCvePi7nUJedgAkpbxv4XxQe1OECDJmxtJoEkW5G
-	7ECmMbuBOz1FLoGs1wUocoDRPUA7aOv0yPPvAanmiOqrmrG9mOBnP0AUnh/VxgTm88DR50
-	KB/yYOLGq1xLJ15hkQjZ5nf+aBxZqGgGCbN1aCkbilVgFxlZ+neev1qBgjiTww==
+	bh=HfqyV6Jh7glVwn00bSS6JTapm9r/93qO+3QFj5gItgM=;
+	b=WWh5VpqLgSvQgzfndPwRIoYyzeSx3k7/0Qg4euYDOWy3SnjMgN1y/09V55tbR7IyTzV6yx
+	xFQEgm7DmyR8bm2w9XhEUayzgW36lLn/sq206PjDVs/N9VigdSEjvfmGGwgVld0wuBmPDB
+	901qmOczZuAC3Bi0Qu8G+aJoRTS0X288HG7b+pVi9DjT92HGdBPr7ZBWSrYnTUJaEBUZ2s
+	W7bjmRVYq/3T1ENhZispnZVja37HlogoBXjDW+2CeJpP6wlGH2ArxH0CZ8vz7URgGyRBWZ
+	cMlmHzYgF5t6y6NO20O2Y5KTeB19WTpQ2CMm1EiU3aiE8y+kQ0CxDBNnHK0gnw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1760424554;
+	s=2020e; t=1760424552;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dfNwuY9Nbo9A8Jz5YapUcUJT7RvIIqIGIu7ip/76FOw=;
-	b=esfzR2Bkxo2Am6QrNXPkK62SV3u0qeZUqxgG9f45AHxPFpnkxj0m2u9CgK15zrEzW1UR3w
-	mzkDyBFdEo9KqDBw==
-Date: Tue, 14 Oct 2025 08:48:59 +0200
-Subject: [PATCH v4 13/35] vdso/helpers: Explicitly include vdso/processor.h
+	bh=HfqyV6Jh7glVwn00bSS6JTapm9r/93qO+3QFj5gItgM=;
+	b=wnI12/0KPfZmKkwHukGRh7cwZ9gRF3KxJz1B/BuSw8yg21fKYGKlrvjrdgrDQ2o1TKv+dM
+	IWYFlra1atNwqFBA==
+Date: Tue, 14 Oct 2025 08:48:56 +0200
+Subject: [PATCH v4 10/35] MIPS: vdso: Explicitly include asm/vdso/vdso.h
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20251014-vdso-sparc64-generic-2-v4-13-e0607bf49dea@linutronix.de>
+Message-Id: <20251014-vdso-sparc64-generic-2-v4-10-e0607bf49dea@linutronix.de>
 References: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
 In-Reply-To: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
 To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -78,17 +78,17 @@ Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
  linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
  linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1760424546; l=852;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1760424546; l=854;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=pWSgr9LF0PVimD93prkaQ1gUly1gwK+GgmvcantsbHs=;
- b=5CvSNsNvaTcLjW++rQpMme843bzIkkTG1SlgYXdtHg1f8BR19OEsteb5hyQkz7+vWc90VEFWD
- w/4AnwpYHxKB/tfilZa2RyjB+Fjj4hyln+qNLpcvU5wxi/iSPlUding
+ bh=PM9q9catgRqCjb/cltSFmqCsNmoTi7HWsxpIPxIvJHQ=;
+ b=s9ICf9c4fBeEG84bnIKxg6TfqKULHMqHOp4PVzLmfuEkZEJVm4DyMwAVRaa0jAOvAZkx1eDcS
+ Z0DlN4eLe8IDIu6ZKT2P+LpuhX1/Ot8oTC/PcD80ZtkkZ7w/qEeoQKr
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The usage of cpu_relax() requires vdso/processor.h. Currently
-this header is included transitively, but that transitive inclusion is
-about to go away.
+The usage of __VDSO_PAGES requires asm/vdso/vdso.h. Currently this header
+is included transitively, but that transitive inclusion is about to go
+away.
 
 Explicitly include the header.
 
@@ -96,21 +96,21 @@ Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Tested-by: Andreas Larsson <andreas@gaisler.com>
 Reviewed-by: Andreas Larsson <andreas@gaisler.com>
 ---
- include/vdso/helpers.h | 1 +
+ arch/mips/kernel/vdso.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/include/vdso/helpers.h b/include/vdso/helpers.h
-index 1a5ee9d9052c38553c0cdf413e0030286f884d53..a1c995af4696351e55cd870c7c4211b0984fe9ab 100644
---- a/include/vdso/helpers.h
-+++ b/include/vdso/helpers.h
-@@ -6,6 +6,7 @@
+diff --git a/arch/mips/kernel/vdso.c b/arch/mips/kernel/vdso.c
+index de096777172f082b5b7847a5c14cae5ddaee0430..2fa4df3e46e47b5c9675aeb00ebb96ac3353c68e 100644
+--- a/arch/mips/kernel/vdso.c
++++ b/arch/mips/kernel/vdso.c
+@@ -21,6 +21,7 @@
+ #include <asm/mips-cps.h>
+ #include <asm/page.h>
+ #include <asm/vdso.h>
++#include <asm/vdso/vdso.h>
+ #include <vdso/helpers.h>
+ #include <vdso/vsyscall.h>
  
- #include <asm/barrier.h>
- #include <vdso/datapage.h>
-+#include <vdso/processor.h>
- 
- static __always_inline u32 vdso_read_begin(const struct vdso_clock *vc)
- {
 
 -- 
 2.51.0
