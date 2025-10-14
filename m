@@ -1,101 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA522068A
-	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 08:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7C0A2EBBAB
+	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 09:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760432188; cv=none; b=MLIdNxmAOkdLrFOpe3cRyDxkgk5cGDVn2ErzlMluVvZye/38gHEsZuoY6qO8NeZTanTD8AwIl0ZJefnRmHUrDqa6qtTTYSdy7XCKCkb5/fWXGP+7HNJYoVr4MQnEd32MhrhsON1qnY0PXqtcyd91Gixsyak8uXMqALb3XXUcalo=
+	t=1760435463; cv=none; b=uwBdnhF9eQOMtbR1BGbCJvn/sbN7ICusWH8Epp/m3/wJE83qkQmuIQ7sTHfWRfAv60nG2Ls31A+ibIRJ8AU80xMxKjlYGxqNs0SyoBEfz/nCUECvj2ZxAkyVOgWCMuxpiFu4KYdKJ1zBOj70EUqP3r6MrOcXzeovxzg276XdG8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760432188; c=relaxed/simple;
-	bh=Gx9Z6mn6RyElOVVuTuwoqX8a6quS8JbkEQ2dofakRLs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Klx1Vf2JpMf3xR23gMorQl3r1DiZDfoK9dNlXBt3biv1ERYtXESMWYj9ENNhzqx/+UkAuOUVK4Vie4QqNRokkeuEpX5gJMR3vhClj6Fgp3dm/MkoHS35Y9mm4SVaPMJLxXehK94N6AY7m8mNUy6S5jwhSb7LX1KSR1PNglespyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fIYzn6Kt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fIYzn6Kt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760432186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SzW2cWfpQXuLGQqbaNqxu1i17z4sh2RC+KzHuoIl4BY=;
-	b=fIYzn6KtMu5n9GfzhUSwKEvV9s+HgjbLQp2Jpw0wPISg+SYrx8FVEA2SPPbWt7EKBExKxK
-	Ztg3yk3cZAlTXanfyDUJcqEmuOIB+tMhqgSFGWE5TkFJ0xRKrmXPevjiQI6jLERWwmObDg
-	UtZSd+4roIU8RfvBjwe93/PCcXz5Mnk=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-301-88ZyZhZiPSKzb3dgMZdLLQ-1; Tue,
- 14 Oct 2025 04:56:22 -0400
-X-MC-Unique: 88ZyZhZiPSKzb3dgMZdLLQ-1
-X-Mimecast-MFC-AGG-ID: 88ZyZhZiPSKzb3dgMZdLLQ_1760432179
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A5F2180045C;
-	Tue, 14 Oct 2025 08:56:17 +0000 (UTC)
-Received: from fweimer-oldenburg.csb.redhat.com (unknown [10.44.33.199])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E4B5F19560A2;
-	Tue, 14 Oct 2025 08:56:08 +0000 (UTC)
-From: Florian Weimer <fweimer@redhat.com>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>,  Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
- <thomas.weissschuh@linutronix.de>,  Huacai Chen <chenhuacai@kernel.org>,
-  WANG Xuerui <kernel@xen0n.name>,  Heiko Carstens <hca@linux.ibm.com>,
-  Vasily Gorbik <gor@linux.ibm.com>,  Alexander Gordeev
- <agordeev@linux.ibm.com>,  Christian Borntraeger
- <borntraeger@linux.ibm.com>,  Sven Schnelle <svens@linux.ibm.com>,  Thomas
- Gleixner <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,  Borislav
- Petkov <bp@alien8.de>,  Dave Hansen <dave.hansen@linux.intel.com>,
-  x86@kernel.org,  "H. Peter Anvin" <hpa@zytor.com>,  Richard Weinberger
- <richard@nod.at>,  Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-  Johannes Berg <johannes@sipsolutions.net>,  Vincenzo Frascino
- <vincenzo.frascino@arm.com>,  Shuah Khan <shuah@kernel.org>,
-  loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org,
-  linux-s390@vger.kernel.org,  linux-um@lists.infradead.org,
-  linux-api@vger.kernel.org,  linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2] vdso: Remove struct getcpu_cache
-In-Reply-To: <CALCETrV2W3cZEJ2yy7F-F9=e_8HLP84ZWrOJCzUYn_ASb0+M6A@mail.gmail.com>
-	(Andy Lutomirski's message of "Mon, 13 Oct 2025 10:14:58 -0700")
-References: <20251013-getcpu_cache-v2-1-880fbfa3b7cc@linutronix.de>
-	<e95dc212-6fd3-43e3-aeb7-bf55917e0cd4@intel.com>
-	<CALCETrV2W3cZEJ2yy7F-F9=e_8HLP84ZWrOJCzUYn_ASb0+M6A@mail.gmail.com>
-Date: Tue, 14 Oct 2025 10:56:06 +0200
-Message-ID: <lhu5xchq2u1.fsf@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1760435463; c=relaxed/simple;
+	bh=KHz1B1HQJgmAT3g5P4keVtakO0U0qrIOmzuBpaoJnlQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nPwQW5gZp8+AMwamfI8J1EuS7cqHSfBujLgE0F+HYaIveuVsX3LaEiiOLgPW69ZfRe/uGe3tnRih0ZG+vNpsXRNIgQsRf/9TCtq0KPJMVkZ3mqK8+lPrv20DNzComT02e0UKmGeGk1vEQT1ArdvdoCjq0e0ojXw1NXUo/M3Z0cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Cxbb8BHe5ox_YVAA--.46012S3;
+	Tue, 14 Oct 2025 17:50:57 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBxTMEBHe5o+V3hAA--.48048S2;
+	Tue, 14 Oct 2025 17:50:57 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xianglai Li <lixianglai@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Fix max supported vCPUs set with eiointc
+Date: Tue, 14 Oct 2025 17:50:55 +0800
+Message-Id: <20251014095055.1159534-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxTMEBHe5o+V3hAA--.48048S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-* Andy Lutomirski:
+VM fails to boot with 256 vCPUs, the detailed command is
+qemu-system-loongarch64 -smp 256 and there is error reported as follows:
+  KVM_LOONGARCH_EXTIOI_INIT_NUM_CPU failed: Invalid argument
 
-> The theory is that people thought that getcpu was going to be kind of
-> slow, so userspace would allocate a little cache (IIRC per-thread) and
-> pass it in, and the vDSO would do, well, something clever to return
-> the right value.  The something clever was probably based on the idea
-> that you can't actually tell (in general) if the return value from
-> getcpu is stale, since you might well get migrated right as the
-> function returns anyway, so the cache could be something silly like
-> (jiffies, cpu).
+There is typo issue in function kvm_eiointc_ctrl_access() when set
+max supported vCPUs.
 
-It probably had to do something with per-CPU or per-node mappings of the
-vDSO.  Or may some non-coherent cache line in the vDSO.  As far as I
-understand it, the cache has zero chance of working with the way vDSO
-data is currently implemented.
+Cc: stable@vger.kernel.org
+Fixes: 47256c4c8b1b ("LoongArch: KVM: Avoid copy_*_user() with lock hold in kvm_eiointc_ctrl_access()")
 
-We have the CPU ID and node ID in the restartable sequences area now
-(although glibc does not use the node ID yet).  It's not a cache.  So
-this clearly supersedes whatever struct getcpu_cache tried to achieve.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/intc/eiointc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Florian
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index c32333695381..a1cc116b4dac 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -439,7 +439,7 @@ static int kvm_eiointc_ctrl_access(struct kvm_device *dev,
+ 	spin_lock_irqsave(&s->lock, flags);
+ 	switch (type) {
+ 	case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_NUM_CPU:
+-		if (val >= EIOINTC_ROUTE_MAX_VCPUS)
++		if (val > EIOINTC_ROUTE_MAX_VCPUS)
+ 			ret = -EINVAL;
+ 		else
+ 			s->num_cpu = val;
+
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+-- 
+2.39.3
 
