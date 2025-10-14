@@ -1,168 +1,126 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7262C23C50A
-	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 02:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBA0289811
+	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 06:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760408618; cv=none; b=OQb8FC1ixp8UIDax+bfiEPRWs7GLguW0NGM47wBQBm0RLU8QKjtI4Wj+sqekwzrxcyESrpDLiwVR8QdBN9SHBld3kfuNGSXsGJB4vjF/EZzob2XOCX62ktAFJvISiGb+FUNT04DdyQzTBhf/vIC/DzbSaFnXsAUJ7f+GOppEm3w=
+	t=1760424556; cv=none; b=RgN+ADKGIC6XEitKwwjRxqMssU2zEKnKUIB6LsaVNYN8VnAIh7d5TpEBN5iCPwcgPxtSWxrTv3cDp7/8m5zPBdSdiuJjfWefh/FehbimrNCNaqP0BVCHyXDELpbGIezCw5X1f77imo2yu4lWkr2d7tDwte9TOf3CdHIWICeSbUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760408618; c=relaxed/simple;
-	bh=9wos1iQGekXRuYAqDwpm5kTkuWg2EB110LQ7Z+hNRvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=njxjpzOkVPxSGSi7WQCluzZWX7mRGJ3HO0q1BU4VIBi87sfXPv6tqfv04Nku06J9EXeCFXc2gRzhKlALY9Z34FD9MPuDp1su4ooX67snds5uQE9Ulk2+35mTSHh0dB2GRnadNry7XHEPSF3fhQASe4Tp7tlindt8rkgsejr2IHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HqtJfKtL; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1760424556; c=relaxed/simple;
+	bh=xwlcFnQEXqQ5ZW5NFBVaIG/RI+shPsghmy7vrrzmGh4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ob6Zt+iYb5luqh9rnM472TIW11Kq/ZCig3SDKqP9zRqI2YZYqKOyu+IiqpQQgPs7HddsDVAXVd1P+XGBFlC4s0hAIeib8gQM1mplG+OxVlPFVqUPoi5B8KcWaiN0/XsOG4SgV6K9ERuN2pDvrgp9UbWSpIs5VPz/8E+uqQCFF2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AbS1ivXK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J46V6TKs; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HqtJfKtL"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 03EE4264C7;
-	Tue, 14 Oct 2025 04:23:35 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id xpXP0q_EE9wl; Tue, 14 Oct 2025 04:23:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1760408614; bh=9wos1iQGekXRuYAqDwpm5kTkuWg2EB110LQ7Z+hNRvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HqtJfKtL8HZ9DpOd5ZJfDQVf3fbQi+zJObBC+vs+GH6yD7NPpSljr9Wah+T1FvhxZ
-	 jsr3tBjzcan5T9zdEuxtWiTtLCpcRbUMxaKBkCIeGaXShyEep2Fi/bREbJLeFJRijf
-	 M2Xg03bU9YmTKsPslZHLVJKtxhIqTtGAsiQk0+RLxF5VuzmxxHGTe2i8ez937G6B4s
-	 PTpfRloto+EeFqkzQfQMCMcQzusDKgURLkdAG1QiGRcB/ZUbgcP46LVUXAGQpHNEEq
-	 ksoc6KbJmm2VAlcPmA1a6zjMpNz0GfXV7GL7ZBzO2R2bDFIF7jQmTWe0rFHh/S22XK
-	 3qlxk8o+w6NoA==
-Date: Tue, 14 Oct 2025 02:23:23 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 1/3] dt-binding: pinctrl: Document Loongson 2K0300 pin
- controller
-Message-ID: <aO20G22p7OwJq6C-@pie>
-References: <20250811163749.47028-2-ziyao@disroot.org>
- <20250811163749.47028-3-ziyao@disroot.org>
- <CACRpkdYC6ueVGngC=KMqh9aW8DiMKWyxoa8dqb4N3sEEkpdsFg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AbS1ivXK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J46V6TKs"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1760424547;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vpEp5M7NzfQSiFH2jKL570Ai1wZvStN2XYEWzJ3d1nM=;
+	b=AbS1ivXKSxxKvhGecPLcRSNUEWEuw9fn6U9T3JexzRDy4JP8ptlcSanCYF7zLa7B67+Fvx
+	vWnzFZpxNxM35GWpLIGZRc6nT8e15qKJ03J0cCqPobHZ10bRDU/JD56SGgEXedarEiedw0
+	UmgAgk0wbFazDmiJ/4I1Psqpi57GDcTb2aDqLWjaCwXFbhwedWiRm8Dv/sUI0ZAnVA0DJy
+	DKzMrqyjpZb62iR/9tN73/HrfsZyr3QuaxXpuQG1x9YgTtIOXEuBtSM+husw4mfA1Xxamw
+	XrpoFznq3OcrLyOV/jN2QbdxFGXTjcVXOHEVMFjepXBXGWwPZ/TOQ/hdp0hORw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1760424547;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vpEp5M7NzfQSiFH2jKL570Ai1wZvStN2XYEWzJ3d1nM=;
+	b=J46V6TKs5EP3v7C7yqoHXUbYqQbF+JHtlmqZ3FKeLekr9GW27Um+kEL7iiE8relpRw5k4T
+	qT89+dQndZVSw0Aw==
+Date: Tue, 14 Oct 2025 08:48:47 +0200
+Subject: [PATCH v4 01/35] selftests: vDSO: vdso_test_correctness: Handle
+ different tv_usec types
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdYC6ueVGngC=KMqh9aW8DiMKWyxoa8dqb4N3sEEkpdsFg@mail.gmail.com>
+Message-Id: <20251014-vdso-sparc64-generic-2-v4-1-e0607bf49dea@linutronix.de>
+References: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
+In-Reply-To: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
+To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>, 
+ John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>, 
+ Shannon Nelson <sln@onemain.com>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+ linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1760424546; l=1636;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=xwlcFnQEXqQ5ZW5NFBVaIG/RI+shPsghmy7vrrzmGh4=;
+ b=qHfqnjpjjXV61eOxYf7edKHo0slWvZ5SYsA/BifGNprPJAD8Khq30C50W+CTRD32kGW8dw5tZ
+ hV7nr3UKiEeCeSt/ajtTzQxWm4toVPCt96lvMzDcV9Vp8mhorWE8oeH
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Tue, Oct 14, 2025 at 12:48:31AM +0200, Linus Walleij wrote:
-> On Mon, Aug 11, 2025 at 6:39 PM Yao Zi <ziyao@disroot.org> wrote:
-> 
-> > The pincontroller integarted in Loongson 2K0300 is able to configure
-> > function multiplexing for all the pins. It could also configure drive
-> > strength on basis of functions, which means all pins set to the same
-> > function share drive-strength setting. Drive-strength configuration
-> > isn't available for all functions, either.
-> >
-> > This binding utilizes two levels of subnodes, where the outer represents
-> > function and the inner represents groups. Drive-strength is allowed in
-> > the outer since it's shared among all groups configured to the function.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> (...)
-> > +patternProperties:
-> > +  '^func-':
-> > +    type: object
-> > +
-> > +    $ref: pincfg-node.yaml#
-> > +
-> > +    properties:
-> > +      drive-strength:
-> > +        description:
-> > +          Maximum sink or source current as defined in pincfg-node.yaml. Note
-> > +          that drive strength could only be configured on function basis, i.e.,
-> > +          all pins multiplexed to the same function share the same
-> > +          configuration.
-> > +
-> > +          This could only be configured for several functions, including jtag,
-> > +          dvo, uart, gmac, sdio, spi, i2s, timer, usb and emmc.
-> > +        enum: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-> 
-> As Rob points out this is really odd, or rather the first time I see
-> something like this.
-> 
-> It is clear from the driver that these are all set by writing bits
-> in a 32bit register, with 2 or 3 bits dedicated to each function.
-> 
-> Its a bit weird, like each function has driver totempoles/stages
-> before the mux instead of after (which is the normal). But
-> I guess it is engineered like that then!
+On SPARC the field tv_usec of 'struct timespec' is not a 'long int', but
+only a regular int. In this case the format string is incorrect and will
+trigger compiler warnings.
 
-Yes, it occurs strange to me at the first sight, too.
+Avoid the warnings by casting to 'long long', similar to how it is done for
+the tv_sec and what the other similar selftests are doing.
 
-> 
-> It now looks like this:
-> 
-> +        func-uart {
-> +            drive-strength = <2>;
-> +
-> +            uart0-pins {
-> +                pinmux = <((40 << 8) | 0x3)>, <((41 << 8) | 0x3)>;
-> +            };
-> 
-> I think this is better:
-> 
-> uart0_default: uart0-pins {
->      function = "uart0";
->      drive-strength = <2>;
->      pinmux = <((40 << 8) | 0x3)>, <((41 << 8) | 0x3)>;
->  };
-> 
-> This is consistent with the bindings if you include both
-> $ref: pinmux-node.yaml#
-> $ref: pincfg-node.yaml#
-> 
-> And will configure it all in one go.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Tested-by: Andreas Larsson <andreas@gaisler.com>
+Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+---
+ tools/testing/selftests/vDSO/vdso_test_correctness.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-To confirm my understanding, would you like to drop the outside node
-(which now refers to pincfg-node.yaml) and refer to both
-pinmux-node.yaml and pincfg-node.yaml in the single level of subnode?
-i.e.
+diff --git a/tools/testing/selftests/vDSO/vdso_test_correctness.c b/tools/testing/selftests/vDSO/vdso_test_correctness.c
+index da651cf53c6ca4242085de109c7fc57bd807297c..5229fcaae8194d51b2cdffdbae59f00cfaeb96dc 100644
+--- a/tools/testing/selftests/vDSO/vdso_test_correctness.c
++++ b/tools/testing/selftests/vDSO/vdso_test_correctness.c
+@@ -412,10 +412,10 @@ static void test_gettimeofday(void)
+ 		return;
+ 	}
+ 
+-	printf("\t%llu.%06ld %llu.%06ld %llu.%06ld\n",
+-	       (unsigned long long)start.tv_sec, start.tv_usec,
+-	       (unsigned long long)vdso.tv_sec, vdso.tv_usec,
+-	       (unsigned long long)end.tv_sec, end.tv_usec);
++	printf("\t%llu.%06lld %llu.%06lld %llu.%06lld\n",
++	       (unsigned long long)start.tv_sec, (long long)start.tv_usec,
++	       (unsigned long long)vdso.tv_sec, (long long)vdso.tv_usec,
++	       (unsigned long long)end.tv_sec, (long long)end.tv_usec);
+ 
+ 	if (!tv_leq(&start, &vdso) || !tv_leq(&vdso, &end)) {
+ 		printf("[FAIL]\tTimes are out of sequence\n");
 
-	pinctrl {
-		uart0_defaults: uart0-pins {
-			function = "uart0";
-			drive-strength = <2>;
-			pinmux = <...>;
-		};
-	};
+-- 
+2.51.0
 
-> Sure you need a lookup for the function strings in the driver
-> but it's OK.
-> 
-> It's odd to have "function" without "group" but it seems legal
-> and works fine for your usecase. The normal would be to
-> skip pinmux, have just pins = <40, 41>; and look up the
-> function value for each function for a pin from a table that
-> cross-reference in this case "uart0" to 3. But I
-> guess you don't wanna do that so pinmux is fine too.
-
-Thanks, glad to hear it's okay.
-
-> <((40 << 8) | 0x3)>, <((41 << 8) | 0x3)> is a bit odd, maybe
-> you want to also include an explanatory macro in the bindings.
-
-Sure, I will add a macro like the one included in the DTS change.
-
-> Yours,
-> Linus Walleij
-> 
-
-Thank you and Rob for the help! Will adapt the suggestions in v2.
-
-Best regards,
-Yao Zi
