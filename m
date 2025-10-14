@@ -1,104 +1,168 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181AD8C11
-	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 00:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7262C23C50A
+	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 02:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760400172; cv=none; b=GWRJqoDGSKRE+8qAu0ddGVpg0oJsK58RLZ8B0cwQf9zXjDSXi+F2ZoluqtHIR64S8HyeiSV1qCu3KX/672ChLLaLwD7qZV5cLGanFmHv08TQ7At9t6XlO6+vXNd+XJ39v7rmXJwr38ngugeqDaD0mbZLkEdttFuSW22MLUN8qC4=
+	t=1760408618; cv=none; b=OQb8FC1ixp8UIDax+bfiEPRWs7GLguW0NGM47wBQBm0RLU8QKjtI4Wj+sqekwzrxcyESrpDLiwVR8QdBN9SHBld3kfuNGSXsGJB4vjF/EZzob2XOCX62ktAFJvISiGb+FUNT04DdyQzTBhf/vIC/DzbSaFnXsAUJ7f+GOppEm3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760400172; c=relaxed/simple;
-	bh=LLOVlwAfJOO/6dIvSHatLzz1DYqRKk528EsxcLVUzvg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JFJkCsfoFuZ8xF5MTdBtF7HIu08y+PbPap2DXH9DBQp0wk47teSdIwbKZmOcEuewRc2JfKz6v5jtKDdQ2AnHrh5eQkh83/WHf3p54YNLtcJOYGniPUV0GHzsiJg9Vmtqjbr7eUnGOI44hytC+QTX+Qtrbqr4oszkx+XcJMj7IsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lz9duTdV; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1760408618; c=relaxed/simple;
+	bh=9wos1iQGekXRuYAqDwpm5kTkuWg2EB110LQ7Z+hNRvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=njxjpzOkVPxSGSi7WQCluzZWX7mRGJ3HO0q1BU4VIBi87sfXPv6tqfv04Nku06J9EXeCFXc2gRzhKlALY9Z34FD9MPuDp1su4ooX67snds5uQE9Ulk2+35mTSHh0dB2GRnadNry7XHEPSF3fhQASe4Tp7tlindt8rkgsejr2IHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HqtJfKtL; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lz9duTdV"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-334b0876195so10678256a91.1
-        for <loongarch@lists.linux.dev>; Mon, 13 Oct 2025 17:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760400170; x=1761004970; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbMLU0DBTTE4ZUI3tpJtNUcx/FkgYHD5aLH5yKQ0ecU=;
-        b=Lz9duTdVge4dEeqpg92gYbVNG9x5qU1gEWrNHCYAi/DOg4MO5CF4FySoA1gQUKScoS
-         JdLi8RmqzzpTu6qXLueew3IDt8Ela/+NtbiwlGk4o94FNwX+1ICBZi04iVXQ6xfuU3T8
-         p2Gd1hGxBMLr1xUsrC94jiiQ20doKroGxAo9tOf6o9nDI3tGVF8Nc9gq6NCiI2vkt13h
-         zUOiSDzmYTvSvQUu25Q1wXdZ0RvROvPpthE7jT0qwOKz3PmBJCC4c7EhVbBKHse5kxJJ
-         vIDxk45ZLorILP/QxnUBPS8QD6YX1sSZdSGLkIa4KzcPZG1QkW/ri5VX9XkDuPVNCs5T
-         YRGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760400170; x=1761004970;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbMLU0DBTTE4ZUI3tpJtNUcx/FkgYHD5aLH5yKQ0ecU=;
-        b=UP1qnJ0r6z49zHPsgn3+EVD15fqtmtPeFI2v1E+exas9ZlXDqlv5Xs+S02shLeNFdG
-         0hBj0Hax9bI4cDVKoKmjp9Oo+KN4fB8WGwiEE2fAYIXxhrTSZLZTTtmzDqdsmcr/DoAo
-         0LakEWirtklgUdKSnY+SQVKly6se4fGfFEq7/TEPW2J9vcr7U7ECO0q8RFgOzdv4GS5W
-         NZn4giqw6aFlNUFXXf7VyImWOii9GmOO6bAawuAd4CcqsQAFl51b3a1mnJPdgGiTpCKd
-         qHoPJkVUNHG048ZkuCCD7B2YBQvgH8vT88qKvnjVs49YltfRWAsA/Wq83sAsBeD+yC/T
-         4bHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUzMvdmkJiTQVBauWuk5y+aYf1DOXCV6Ymr++HtlBBQTCPdFLVfcL+S6pAkR5tfIOh8bGpLw7lDGs4=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw85yHr4uLqn7nNmH9TaZ9LPR1xPR9w41pRlFvI3U6Zfo1uG1Ld
-	iifyTzFjlMzwcrmNmV/UbxXsz3LxtyJWyg8u0Xsto4af9DG3k6f2+tJ+q1KMHQuhPXEpO+9fX8t
-	aTM7r5Q==
-X-Google-Smtp-Source: AGHT+IFj7XEk3dTkPnLos5082VprjEOkbmDHEla6HA+8/jfX0ozELV9F0rEtoGCDSVNCkEzGlN6/hN7WXyk=
-X-Received: from pjzm8.prod.google.com ([2002:a17:90b:688:b0:33b:51fe:1a75])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c89:b0:321:9366:5865
- with SMTP id 98e67ed59e1d1-33b513b4afemr31472790a91.33.1760400170137; Mon, 13
- Oct 2025 17:02:50 -0700 (PDT)
-Date: Mon, 13 Oct 2025 17:02:48 -0700
-In-Reply-To: <20251010153839.151763-17-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HqtJfKtL"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 03EE4264C7;
+	Tue, 14 Oct 2025 04:23:35 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id xpXP0q_EE9wl; Tue, 14 Oct 2025 04:23:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1760408614; bh=9wos1iQGekXRuYAqDwpm5kTkuWg2EB110LQ7Z+hNRvM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HqtJfKtL8HZ9DpOd5ZJfDQVf3fbQi+zJObBC+vs+GH6yD7NPpSljr9Wah+T1FvhxZ
+	 jsr3tBjzcan5T9zdEuxtWiTtLCpcRbUMxaKBkCIeGaXShyEep2Fi/bREbJLeFJRijf
+	 M2Xg03bU9YmTKsPslZHLVJKtxhIqTtGAsiQk0+RLxF5VuzmxxHGTe2i8ez937G6B4s
+	 PTpfRloto+EeFqkzQfQMCMcQzusDKgURLkdAG1QiGRcB/ZUbgcP46LVUXAGQpHNEEq
+	 ksoc6KbJmm2VAlcPmA1a6zjMpNz0GfXV7GL7ZBzO2R2bDFIF7jQmTWe0rFHh/S22XK
+	 3qlxk8o+w6NoA==
+Date: Tue, 14 Oct 2025 02:23:23 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH 1/3] dt-binding: pinctrl: Document Loongson 2K0300 pin
+ controller
+Message-ID: <aO20G22p7OwJq6C-@pie>
+References: <20250811163749.47028-2-ziyao@disroot.org>
+ <20250811163749.47028-3-ziyao@disroot.org>
+ <CACRpkdYC6ueVGngC=KMqh9aW8DiMKWyxoa8dqb4N3sEEkpdsFg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20251010153839.151763-1-vschneid@redhat.com> <20251010153839.151763-17-vschneid@redhat.com>
-Message-ID: <aO2TKOY5JV9OoRUg@google.com>
-Subject: Re: [PATCH v6 16/29] KVM: VMX: Mark __kvm_is_using_evmcs static key
- as __ro_after_init
-From: Sean Christopherson <seanjc@google.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org, 
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	"David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>, Jann Horn <jannh@google.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, 
-	Yair Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, 
-	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdYC6ueVGngC=KMqh9aW8DiMKWyxoa8dqb4N3sEEkpdsFg@mail.gmail.com>
 
-On Fri, Oct 10, 2025, Valentin Schneider wrote:
-> The static key is only ever enabled in
+On Tue, Oct 14, 2025 at 12:48:31AM +0200, Linus Walleij wrote:
+> On Mon, Aug 11, 2025 at 6:39 PM Yao Zi <ziyao@disroot.org> wrote:
 > 
->   __init hv_init_evmcs()
+> > The pincontroller integarted in Loongson 2K0300 is able to configure
+> > function multiplexing for all the pins. It could also configure drive
+> > strength on basis of functions, which means all pins set to the same
+> > function share drive-strength setting. Drive-strength configuration
+> > isn't available for all functions, either.
+> >
+> > This binding utilizes two levels of subnodes, where the outer represents
+> > function and the inner represents groups. Drive-strength is allowed in
+> > the outer since it's shared among all groups configured to the function.
+> >
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> (...)
+> > +patternProperties:
+> > +  '^func-':
+> > +    type: object
+> > +
+> > +    $ref: pincfg-node.yaml#
+> > +
+> > +    properties:
+> > +      drive-strength:
+> > +        description:
+> > +          Maximum sink or source current as defined in pincfg-node.yaml. Note
+> > +          that drive strength could only be configured on function basis, i.e.,
+> > +          all pins multiplexed to the same function share the same
+> > +          configuration.
+> > +
+> > +          This could only be configured for several functions, including jtag,
+> > +          dvo, uart, gmac, sdio, spi, i2s, timer, usb and emmc.
+> > +        enum: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 > 
-> so mark it appropriately as __ro_after_init.
+> As Rob points out this is really odd, or rather the first time I see
+> something like this.
 > 
-> Reported-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> ---
+> It is clear from the driver that these are all set by writing bits
+> in a 32bit register, with 2 or 3 bits dedicated to each function.
+> 
+> Its a bit weird, like each function has driver totempoles/stages
+> before the mux instead of after (which is the normal). But
+> I guess it is engineered like that then!
 
-Acked-by: Sean Christopherson <seanjc@google.com>
+Yes, it occurs strange to me at the first sight, too.
 
-Holler if you want me to grab this for 6.19.  I assume the plan is to try and
-take the whole series through tip?
+> 
+> It now looks like this:
+> 
+> +        func-uart {
+> +            drive-strength = <2>;
+> +
+> +            uart0-pins {
+> +                pinmux = <((40 << 8) | 0x3)>, <((41 << 8) | 0x3)>;
+> +            };
+> 
+> I think this is better:
+> 
+> uart0_default: uart0-pins {
+>      function = "uart0";
+>      drive-strength = <2>;
+>      pinmux = <((40 << 8) | 0x3)>, <((41 << 8) | 0x3)>;
+>  };
+> 
+> This is consistent with the bindings if you include both
+> $ref: pinmux-node.yaml#
+> $ref: pincfg-node.yaml#
+> 
+> And will configure it all in one go.
+
+To confirm my understanding, would you like to drop the outside node
+(which now refers to pincfg-node.yaml) and refer to both
+pinmux-node.yaml and pincfg-node.yaml in the single level of subnode?
+i.e.
+
+	pinctrl {
+		uart0_defaults: uart0-pins {
+			function = "uart0";
+			drive-strength = <2>;
+			pinmux = <...>;
+		};
+	};
+
+> Sure you need a lookup for the function strings in the driver
+> but it's OK.
+> 
+> It's odd to have "function" without "group" but it seems legal
+> and works fine for your usecase. The normal would be to
+> skip pinmux, have just pins = <40, 41>; and look up the
+> function value for each function for a pin from a table that
+> cross-reference in this case "uart0" to 3. But I
+> guess you don't wanna do that so pinmux is fine too.
+
+Thanks, glad to hear it's okay.
+
+> <((40 << 8) | 0x3)>, <((41 << 8) | 0x3)> is a bit odd, maybe
+> you want to also include an explanatory macro in the bindings.
+
+Sure, I will add a macro like the one included in the DTS change.
+
+> Yours,
+> Linus Walleij
+> 
+
+Thank you and Rob for the help! Will adapt the suggestions in v2.
+
+Best regards,
+Yao Zi
