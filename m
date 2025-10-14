@@ -1,121 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7691A2D131A
-	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 07:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0140230DEAA
+	for <loongarch@lists.linux.dev>; Tue, 14 Oct 2025 07:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760425365; cv=none; b=k5UkzWLP0u/BW+iR3c6pdtlykkXscPla0WOPsklSsroUsRZF3PgeD9ahtFoNKIXQpTFDskMNNh1lN3TRZ17ekEwrmcKW3svhPeviuo+BgjpPX46cZ95TRzBNk6rb7DpWsJmoEggkeArCTz3NQKprUeGX90RZg4UphIwXUkSACrM=
+	t=1760428236; cv=none; b=tQ7G1GT3qV81t2LkD//nhpWiOSZ4+PAgdNHm5jA0eKrwaSI9NyJjIRkajM9eQGrRiEZbUFS7AhrQGIH8Lfgne0XdRUOalmwa886SWTWEtzX0NsPPO8TQtgnYqk769xe4FXFQy1sxvUj+EIM1+G/92PnXgx4VMxs+joSR3oo/TuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760425365; c=relaxed/simple;
-	bh=y9Y6O8hfCDzT76c4seGWeaubHai+VPjb8cx8iSnw+6E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qH05dNw2xwWzQO/tCdpx02aH+U04LeYY+IxkIoBVAxQzw0RAbxQu0ycjd85BPTt0YdzQuYRK7RBCvK06Qx0SiPTkhKgTOPxqIBVOL3WofFp4ywECk85W8NLIgXtkf0QShRBud8nEz+We1Fwlk2mMuvLo4o/HcvZki0gkgvRO77M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx5tCG9e1oP+gVAA--.46961S3;
-	Tue, 14 Oct 2025 15:02:31 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxfcGD9e1odRLhAA--.49445S2;
-	Tue, 14 Oct 2025 15:02:28 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] LoongArch: Refine init_hw_perf_events()
-Date: Tue, 14 Oct 2025 15:02:27 +0800
-Message-ID: <20251014070227.22396-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1760428236; c=relaxed/simple;
+	bh=LF/wX3C8mmlPSeO26AlwuOqnE9fpiLF1bsBkySWWDJk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ylue0H49MyG4VISgotxhRyR3blUQAqqfAeDqbRloxd29GXb2so1V+Dr+lGkRhz445CdEcHSoFn3hbG80UKbcxfFgAnhxl7IMHxs05e2kB1mIaLLZlveQFVmz9jwUfFx+AE/JbtqnJOKpXjlSPuZ5hXV6uNhEzjmGDaMU3MJGWXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4cm5lc3Hnjz9sST;
+	Tue, 14 Oct 2025 09:42:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id dfjcQFiX-ub0; Tue, 14 Oct 2025 09:42:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4cm5lc2Gfnz9sRy;
+	Tue, 14 Oct 2025 09:42:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 358268B768;
+	Tue, 14 Oct 2025 09:42:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id zsFJORiQt4Vt; Tue, 14 Oct 2025 09:42:20 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4DA788B763;
+	Tue, 14 Oct 2025 09:42:18 +0200 (CEST)
+Message-ID: <6942ea07-e6fa-4a5e-a003-0c7ee5e0c936@csgroup.eu>
+Date: Tue, 14 Oct 2025 09:42:17 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 06/35] powerpc/vdso/gettimeofday: Explicitly include
+ vdso/time32.h
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnd Bergmann
+ <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>,
+ John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Russell King
+ <linux@armlinux.org.uk>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+ Shannon Nelson <sln@onemain.com>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-s390@vger.kernel.org
+References: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
+ <20251014-vdso-sparc64-generic-2-v4-6-e0607bf49dea@linutronix.de>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Content-Language: fr-FR
+In-Reply-To: <20251014-vdso-sparc64-generic-2-v4-6-e0607bf49dea@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxfcGD9e1odRLhAA--.49445S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAr4xtF15Zr13Ar48Gw1xZwc_yoW5Wr18pr
-	ZFvrsYgr40grn2yw1Dt345WryUJrn7uFWagFnxt3yxCFs8XrW5X3WkG3s8XF1rKw48CFyI
-	qan5Wa43Xa47ZabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZUUUUU=
 
-(1) Use the existing CPUCFG6_PMNUM_SHIFT macro definition instead of
-the magic value 4 to get the PMU number.
 
-(2) Detect the value of PMU bits via CPUCFG instruction according to
-the ISA manual instead of hard-coded as 64, because the value may be
-different for various microarchitectures.
 
-(3) Rename the PMU name without the postfix 64 due to it is redundant
-and may be inaccurate.
+Le 14/10/2025 à 08:48, Thomas Weißschuh a écrit :
+> The usage of 'struct old_timespec32' requires vdso/time32.h. Currently
+> this header is included transitively, but that transitive inclusion is
+> about to go away.
+> 
+> Explicitly include the header.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> Tested-by: Andreas Larsson <andreas@gaisler.com>
+> Reviewed-by: Andreas Larsson <andreas@gaisler.com>
 
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_cpucfg
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/loongarch.h | 1 +
- arch/loongarch/kernel/perf_event.c     | 8 +++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 09dfd7eb406e..89343b1a526f 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -128,6 +128,7 @@
- #define  CPUCFG6_PMNUM			GENMASK(7, 4)
- #define  CPUCFG6_PMNUM_SHIFT		4
- #define  CPUCFG6_PMBITS			GENMASK(13, 8)
-+#define  CPUCFG6_PMBITS_SHIFT		8
- #define  CPUCFG6_UPM			BIT(14)
- 
- #define LOONGARCH_CPUCFG16		0x10
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index 8ad098703488..ee5404d28423 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -846,18 +846,20 @@ static const struct loongarch_perf_event *loongarch_pmu_map_raw_event(u64 config
- static int __init init_hw_perf_events(void)
- {
- 	int counters;
-+	int bits;
- 
- 	if (!cpu_has_pmp)
- 		return -ENODEV;
- 
- 	pr_info("Performance counters: ");
--	counters = ((read_cpucfg(LOONGARCH_CPUCFG6) & CPUCFG6_PMNUM) >> 4) + 1;
-+	counters = ((read_cpucfg(LOONGARCH_CPUCFG6) & CPUCFG6_PMNUM) >> CPUCFG6_PMNUM_SHIFT) + 1;
-+	bits = ((read_cpucfg(LOONGARCH_CPUCFG6) & CPUCFG6_PMBITS) >> CPUCFG6_PMBITS_SHIFT) + 1;
- 
- 	loongarch_pmu.num_counters = counters;
- 	loongarch_pmu.max_period = (1ULL << 63) - 1;
- 	loongarch_pmu.valid_count = (1ULL << 63) - 1;
- 	loongarch_pmu.overflow = 1ULL << 63;
--	loongarch_pmu.name = "loongarch/loongson64";
-+	loongarch_pmu.name = "loongarch/loongson";
- 	loongarch_pmu.read_counter = loongarch_pmu_read_counter;
- 	loongarch_pmu.write_counter = loongarch_pmu_write_counter;
- 	loongarch_pmu.map_raw_event = loongarch_pmu_map_raw_event;
-@@ -867,7 +869,7 @@ static int __init init_hw_perf_events(void)
- 	on_each_cpu(reset_counters, NULL, 1);
- 
- 	pr_cont("%s PMU enabled, %d %d-bit counters available to each CPU.\n",
--			loongarch_pmu.name, counters, 64);
-+			loongarch_pmu.name, counters, bits);
- 
- 	perf_pmu_register(&pmu, "cpu", PERF_TYPE_RAW);
- 
--- 
-2.42.0
+> ---
+>   arch/powerpc/include/asm/vdso/gettimeofday.h | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> index ab3df12c8d947ed3a5b0b173567ca8469afbf2d6..b2f0e971076acaea8bc70107fc0f5b2d23e0b312 100644
+> --- a/arch/powerpc/include/asm/vdso/gettimeofday.h
+> +++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> @@ -8,6 +8,7 @@
+>   #include <asm/barrier.h>
+>   #include <asm/unistd.h>
+>   #include <uapi/linux/time.h>
+> +#include <vdso/time32.h>
+>   
+>   #define VDSO_HAS_CLOCK_GETRES		1
+>   
+> 
 
