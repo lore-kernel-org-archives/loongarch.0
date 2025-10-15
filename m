@@ -1,133 +1,215 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B15B149C6F;
-	Wed, 15 Oct 2025 03:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C5CB27464F
+	for <loongarch@lists.linux.dev>; Wed, 15 Oct 2025 06:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760498427; cv=none; b=JlyWJTXqT12U5vW4Wj88tmRZD5eaJWCCF4NuZ+KfOXlRegPHxkydvE8+KYWp3jxjseahlwG5eTcF90X8MuDszCdLNC1jIFChjxmBDqa7DKBMe2phdzdv6L+M+Y6RP8FOnkE6YgMFgTbPL6jMPoXtDw1+uAXEWmn/xF3v5l7/3eA=
+	t=1760509824; cv=none; b=sL81StB0ZRc6l1pN4EFZ5f1MtCZJsCbkL4vtx4zfDnRcB1VMwametVuNKXCPpeBh90jNdt6dYsomYTAeqAWAPy15VJ4C+Vjt0unh8bB0EnENAPevGKusDSRFD6FxQkR+LdYw1u4PrbSCvN8b45QOfm3ktztN0aTkNmQ5Xex0uMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760498427; c=relaxed/simple;
-	bh=fFWtcqbYqwSuAfaIbZBKUxXweqQB3D5s5ZgdU0zniP0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YBusmoQs1W1pELNQC5H18JS4WOtunu9J0dK45XRhCa6xMicNgt6ND8D8DK5//RhsTaQW23dbIEziWhCmxpDRtmef0uVygDlN92B0uh4ZD3qoG7ISZVtF+XyfOT49DOHznq/D16jHOLB31zwvr9/MFu9yjz/TXeFakMQRRcs4mbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=qWqRPe6t; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="qWqRPe6t"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 9E6D22248D;
-	Wed, 15 Oct 2025 03:20:24 +0000 (UTC)
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 3B97326369;
-	Wed, 15 Oct 2025 03:20:16 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id 932D03E88F;
-	Wed, 15 Oct 2025 03:20:08 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 3EFE740099;
-	Wed, 15 Oct 2025 03:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1760498406; bh=fFWtcqbYqwSuAfaIbZBKUxXweqQB3D5s5ZgdU0zniP0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qWqRPe6tMkyVt24L4TQxEokd9xxbIlS5nPQZHmqN93YdMm9uG4Vyi2MOpEzAAC5fU
-	 yms65895aXhnWBAYzlOyX4+QA5sNOUa+RQ/LRLgLIQuCS7z85svNozjlpvdOT/++T1
-	 edWLKoXTE5kAyCqm105Hi4a6rBlFhUWANv7W4VcY=
-Received: from [198.18.0.1] (unknown [223.76.243.206])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 40A7440D62;
-	Wed, 15 Oct 2025 03:20:00 +0000 (UTC)
-Message-ID: <7ead454c-8807-4e50-800c-5a646d88fa25@aosc.io>
-Date: Wed, 15 Oct 2025 11:19:52 +0800
+	s=arc-20240116; t=1760509824; c=relaxed/simple;
+	bh=ghyH7Mw21tZMDfsCR/q5qBCvDT8hj65ATGvsufe9qvg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y/jxS1+SKA7FqbP7IKMrZQKuyN4pGyW5bW64wQ5XPQixeYwVbsZhSYRO3VWgJ9zavQK1tBfvaf8Rrx2+/AoNZ/uXMuSA3Pj/KxRwMAV6zSBf63Hjcvx91bdTq3qVDkEfJ6XaZH7nW6AdrIzcYX2aG43R20H9eQfiT28dpCuye0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8AxP_B4P+9og04WAA--.47834S3;
+	Wed, 15 Oct 2025 14:30:16 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by front1 (Coremail) with SMTP id qMiowJDxbMF3P+9ouf3kAA--.57346S2;
+	Wed, 15 Oct 2025 14:30:15 +0800 (CST)
+From: Song Gao <gaosong@loongson.cn>
+To: maobibo@loongson.cn,
+	chenhuacai@kernel.org
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] LoongArch: KVM: Add AVEC support
+Date: Wed, 15 Oct 2025 14:06:26 +0800
+Message-Id: <20251015060626.3915824-1-gaosong@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rust: Add -fno-isolate-erroneous-paths-dereference to
- bindgen_skip_c_flags
-To: Xi Ruoyao <xry111@xry111.site>, Nathan Chancellor <nathan@kernel.org>
-Cc: loongarch@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Huacai Chen <chenhuacai@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>,
- "open list:RUST" <rust-for-linux@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b"
- <llvm@lists.linux.dev>
-References: <20251015022037.14535-2-xry111@xry111.site>
-Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
-In-Reply-To: <20251015022037.14535-2-xry111@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 3EFE740099
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [1.40 / 10.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[lkml];
-	MID_RHS_MATCH_FROM(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,xry111.xry111.site:server fail];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,protonmail.com];
-	FREEMAIL_CC(0.00)[lists.linux.dev,kernel.org,gmail.com,garyguo.net,protonmail.com,google.com,umich.edu,loongson.cn,vger.kernel.org];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Action: no action
+X-CM-TRANSID:qMiowJDxbMF3P+9ouf3kAA--.57346S2
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi Ruoyao,
+Add cpu_has_msgint() to check whether the host cpu supported avec,
+and restore/save CSR_MSGIS0-CSR_MSGIS3.
 
-在 2025/10/15 10:20, Xi Ruoyao 写道:
-> It's used to work around an objtool issue since commit abb2a5572264
-> ("LoongArch: Add cflag -fno-isolate-erroneous-paths-dereference"), but
-> it's then passed to bindgen and cause an error because Clang does not
-> have this option.
-> 
-> Fixes: abb2a5572264 ("LoongArch: Add cflag -fno-isolate-erroneous-paths-dereference")
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->   rust/Makefile | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/rust/Makefile b/rust/Makefile
-> index 23c7ae905bd2..0676b1194a62 100644
-> --- a/rust/Makefile
-> +++ b/rust/Makefile
-> @@ -289,7 +289,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
->   	-fno-inline-functions-called-once -fsanitize=bounds-strict \
->   	-fstrict-flex-arrays=% -fmin-function-alignment=% \
->   	-fzero-init-padding-bits=% -mno-fdpic \
-> -	--param=% --param asan-%
-> +	--param=% --param asan-% -fno-isolate-erroneous-paths-dereference
->   
->   # Derived from `scripts/Makefile.clang`.
->   BINDGEN_TARGET_x86	:= x86_64-linux-gnu
+Signed-off-by: Song Gao <gaosong@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_host.h |  4 ++++
+ arch/loongarch/include/asm/kvm_vcpu.h |  1 +
+ arch/loongarch/include/uapi/asm/kvm.h |  1 +
+ arch/loongarch/kvm/interrupt.c        | 15 +++++++++++++--
+ arch/loongarch/kvm/vcpu.c             | 19 +++++++++++++++++--
+ arch/loongarch/kvm/vm.c               |  4 ++++
+ 6 files changed, 40 insertions(+), 4 deletions(-)
 
-Tested good applied atop v6.18-rc1, which includes the aforementioned 
-abb2a5572264.
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 0cecbd038bb3..827e204bdeb3 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -283,6 +283,10 @@ static inline bool kvm_guest_has_lbt(struct kvm_vcpu_arch *arch)
+ 	return arch->cpucfg[2] & (CPUCFG2_X86BT | CPUCFG2_ARMBT | CPUCFG2_MIPSBT);
+ }
+ 
++static inline bool cpu_has_msgint(void)
++{
++	return read_cpucfg(LOONGARCH_CPUCFG1) & CPUCFG1_MSGINT;
++}
+ static inline bool kvm_guest_has_pmu(struct kvm_vcpu_arch *arch)
+ {
+ 	return arch->cpucfg[6] & CPUCFG6_PMP;
+diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+index f1efd7cfbc20..3784ab4ccdb5 100644
+--- a/arch/loongarch/include/asm/kvm_vcpu.h
++++ b/arch/loongarch/include/asm/kvm_vcpu.h
+@@ -15,6 +15,7 @@
+ #define CPU_PMU				(_ULCAST_(1) << 10)
+ #define CPU_TIMER			(_ULCAST_(1) << 11)
+ #define CPU_IPI				(_ULCAST_(1) << 12)
++#define CPU_AVEC                        (_ULCAST_(1) << 14)
+ 
+ /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 */
+ #define CPU_IP0				(_ULCAST_(1))
+diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+index 57ba1a563bb1..de6c3f18e40a 100644
+--- a/arch/loongarch/include/uapi/asm/kvm.h
++++ b/arch/loongarch/include/uapi/asm/kvm.h
+@@ -104,6 +104,7 @@ struct kvm_fpu {
+ #define  KVM_LOONGARCH_VM_FEAT_PV_IPI		6
+ #define  KVM_LOONGARCH_VM_FEAT_PV_STEALTIME	7
+ #define  KVM_LOONGARCH_VM_FEAT_PTW		8
++#define  KVM_LOONGARCH_VM_FEAT_MSGINT		9
+ 
+ /* Device Control API on vcpu fd */
+ #define KVM_LOONGARCH_VCPU_CPUCFG	0
+diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
+index 8462083f0301..f586f421bc19 100644
+--- a/arch/loongarch/kvm/interrupt.c
++++ b/arch/loongarch/kvm/interrupt.c
+@@ -21,6 +21,7 @@ static unsigned int priority_to_irq[EXCCODE_INT_NUM] = {
+ 	[INT_HWI5]	= CPU_IP5,
+ 	[INT_HWI6]	= CPU_IP6,
+ 	[INT_HWI7]	= CPU_IP7,
++	[INT_AVEC]	= CPU_AVEC,
+ };
+ 
+ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
+@@ -31,6 +32,11 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
+ 	if (priority < EXCCODE_INT_NUM)
+ 		irq = priority_to_irq[priority];
+ 
++	if (cpu_has_msgint() && (priority == INT_AVEC)) {
++		set_gcsr_estat(irq);
++		return 1;
++	}
++
+ 	switch (priority) {
+ 	case INT_TI:
+ 	case INT_IPI:
+@@ -58,6 +64,11 @@ static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
+ 	if (priority < EXCCODE_INT_NUM)
+ 		irq = priority_to_irq[priority];
+ 
++	if (cpu_has_msgint() && (priority == INT_AVEC)) {
++		clear_gcsr_estat(irq);
++		return 1;
++	}
++
+ 	switch (priority) {
+ 	case INT_TI:
+ 	case INT_IPI:
+@@ -83,10 +94,10 @@ void kvm_deliver_intr(struct kvm_vcpu *vcpu)
+ 	unsigned long *pending = &vcpu->arch.irq_pending;
+ 	unsigned long *pending_clr = &vcpu->arch.irq_clear;
+ 
+-	for_each_set_bit(priority, pending_clr, INT_IPI + 1)
++	for_each_set_bit(priority, pending_clr, EXCCODE_INT_NUM)
+ 		kvm_irq_clear(vcpu, priority);
+ 
+-	for_each_set_bit(priority, pending, INT_IPI + 1)
++	for_each_set_bit(priority, pending, EXCCODE_INT_NUM)
+ 		kvm_irq_deliver(vcpu, priority);
+ }
+ 
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 30e3b089a596..226c735155be 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -657,8 +657,7 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ 		*v = GENMASK(31, 0);
+ 		return 0;
+ 	case LOONGARCH_CPUCFG1:
+-		/* CPUCFG1_MSGINT is not supported by KVM */
+-		*v = GENMASK(25, 0);
++		*v = GENMASK(26, 0);
+ 		return 0;
+ 	case LOONGARCH_CPUCFG2:
+ 		/* CPUCFG2 features unconditionally supported by KVM */
+@@ -726,6 +725,10 @@ static int kvm_check_cpucfg(int id, u64 val)
+ 		return -EINVAL;
+ 
+ 	switch (id) {
++	case LOONGARCH_CPUCFG1:
++		if ((val & CPUCFG1_MSGINT) && (!cpu_has_msgint()))
++			return -EINVAL;
++		return 0;
+ 	case LOONGARCH_CPUCFG2:
+ 		if (!(val & CPUCFG2_LLFTP))
+ 			/* Guests must have a constant timer */
+@@ -1658,6 +1661,12 @@ static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
+ 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
+ 	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_LLBCTL);
++	if (cpu_has_msgint()) {
++		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR0);
++		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR1);
++		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR2);
++		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR3);
++	}
+ 
+ 	/* Restore Root.GINTC from unused Guest.GINTC register */
+ 	write_csr_gintc(csr->csrs[LOONGARCH_CSR_GINTC]);
+@@ -1747,6 +1756,12 @@ static int _kvm_vcpu_put(struct kvm_vcpu *vcpu, int cpu)
+ 	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN1);
+ 	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
+ 	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
++	if (cpu_has_msgint()) {
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR0);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR1);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR2);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ISR3);
++	}
+ 
+ 	vcpu->arch.aux_inuse |= KVM_LARCH_SWCSR_LATEST;
+ 
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+index a49b1c1a3dd1..ec92e6f3cf92 100644
+--- a/arch/loongarch/kvm/vm.c
++++ b/arch/loongarch/kvm/vm.c
+@@ -150,6 +150,10 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr
+ 		if (cpu_has_ptw)
+ 			return 0;
+ 		return -ENXIO;
++	case KVM_LOONGARCH_VM_FEAT_MSGINT:
++		if (cpu_has_msgint())
++			return 0;
++		return -ENXIO;
+ 	default:
+ 		return -ENXIO;
+ 	}
 
-Tested-by: Mingcong Bai <jeffbai@aosc.io>
-
-Best Regards,
-Mingcong Bai
+base-commit: 9b332cece987ee1790b2ed4c989e28162fa47860
+-- 
+2.39.3
 
