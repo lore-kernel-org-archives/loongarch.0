@@ -1,298 +1,115 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1552DF14C;
-	Fri, 17 Oct 2025 09:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F35732D0CF
+	for <loongarch@lists.linux.dev>; Fri, 17 Oct 2025 11:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760692496; cv=none; b=FQS1lWjaebOXHY9ktGyi43cE71hnozyO9BEvychG0y+Otp8WddMj7tlc31ciCCsh2pyAotmkl7+3RYMPGJNZsEeV8Nx5Dz7eIgp9BsLYZbU/o2l2r7PoD4LamZVwqSMdHxR+YsjyK0BnBvj7qzfbr0pmgnsTYFKVUWGgrgzC0ow=
+	t=1760698832; cv=none; b=E3n0PLZnaBEQbrzqnJufUwd7z/uTVW32X7OBmQoyJgacltg4dbPPBV/VxQsMoL3+/a0rblT7LhUIEUNNlkabZv28xIlrDY2XnYFYT4ccgMT+3Lk3wT+QA3tVtCA1Vx+1qPvKEr4Xi1nmqirviaQh5T09G0DyR/RsqY6Db5REY5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760692496; c=relaxed/simple;
-	bh=mSjk6FZr791b9H75YuvBcHRyC9djxbilNgqrZo54H6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T5oZ5MrbOpRWaga9OTXjWdVid7haaxpZv85w4Cc12433/Sz8T6ObGpDt76Jrd+XZF0Vfqp5zr5Gyj1IBMU/AnOu4M4N17FFzFfoa0X4ZOeP+tYGzuj21i9OnnJqLOnPzO7kE0mo35ERryvr4sGb4o3IGj1Cyk9Ex8ELYjTtUoFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JsaKqEez; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1760698832; c=relaxed/simple;
+	bh=0qKoqeZEFFOD2RlWkl69ruJZbnMDtQNF0IQVriRGDxI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZPO5BRSg/jyv/k70Z/YUTyxlulodUGdE+X0FVO2tK6kQgU2+v5xKlF6sBJbOmInXymKXRcnhHFOppcLV7EL5yn+zvs5yCfy9NhpxGC/WcFxO6A4KJr+Ni50h+tk4GhUqc9ql5W9TtC5Qa1Zk1NBbLN0WtxH5kTBmHYXmsP4m6JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWvUWl5n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JsaKqEez"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59H7iHlk001398;
-	Fri, 17 Oct 2025 09:14:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=+3Upo5
-	OE7pHxEFe3tmbZpeawhzh4FlEoIXRxd4VSv28=; b=JsaKqEezcfpud5WrRLycdc
-	H+oQQuOQKt9AWS2MA2f2AWZxfvs/fKy1XLjRxCuyz+56f5TaICphCw6V+vG/C2bz
-	F5gbzyBcSi8cacGtFSmpTAFrTlG2aUVsmy31GO+qAMN+54h8jCVe9POxWOaK8fN7
-	/hJEpyoIAS2JTMgkwbRRg9OFM1BAa8/e1C7ZI4h8ECcspk29fPXdeARq+uJw8Tjf
-	D5t5GR/pWKBSuIjzJXOp2kI6eD4WxDfkehxYD18sHbNqW2XhzgpvGBF1H6XEoi2M
-	HcjAvo8sAVrEbNJQz08zCz9y9YqXcAvYvdU1ercKZUeSINmh7JZlhpwWWcKvdf1A
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49rfp8c6xn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Oct 2025 09:14:31 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59H9EULh021760;
-	Fri, 17 Oct 2025 09:14:30 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49rfp8c6wu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Oct 2025 09:14:30 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59H8ubTK003613;
-	Fri, 17 Oct 2025 09:14:29 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49r1xyc2fw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Oct 2025 09:14:29 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59H9ENpC44826910
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Oct 2025 09:14:23 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A877D2004D;
-	Fri, 17 Oct 2025 09:14:23 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 12A9920043;
-	Fri, 17 Oct 2025 09:14:22 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.111.16.217])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Fri, 17 Oct 2025 09:14:21 +0000 (GMT)
-Date: Fri, 17 Oct 2025 11:12:41 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-        Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Madhavan Srinivasan
- <maddy@linux.ibm.com>,
-        Anup Patel <anup@brainfault.org>, Paul Walmsley
- <pjw@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou
- <aou@eecs.berkeley.edu>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Kirill A. Shutemov" <kas@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        x86@kernel.org, linux-coco@lists.linux.dev,
-        linux-kernel@vger.kernel.org, Ira Weiny
- <ira.weiny@intel.com>,
-        Kai Huang <kai.huang@intel.com>, Michael Roth
- <michael.roth@amd.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Vishal Annapurve
- <vannapurve@google.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Ackerley Tng <ackerleytng@google.com>,
-        Binbin Wu
- <binbin.wu@linux.intel.com>
-Subject: Re: [PATCH v3 01/25] KVM: Make support for
- kvm_arch_vcpu_async_ioctl() mandatory
-Message-ID: <20251017111241.3ce81f4f@p-imbrenda>
-In-Reply-To: <20251017003244.186495-2-seanjc@google.com>
-References: <20251017003244.186495-1-seanjc@google.com>
-	<20251017003244.186495-2-seanjc@google.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWvUWl5n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C05A5C113D0
+	for <loongarch@lists.linux.dev>; Fri, 17 Oct 2025 11:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760698831;
+	bh=0qKoqeZEFFOD2RlWkl69ruJZbnMDtQNF0IQVriRGDxI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EWvUWl5nqTu29sldpT18woB5mT2hLN7XcQmiPTwyYqdXHu+jnVksMP04uDJo2FWId
+	 4waqpD0TRzeyYRxJyOG+KEvd5B4kPr3T4CVxPDayI/eVuAIa7DeXuZSrik+8eZN7v4
+	 LOuqUX8hLZGgrZq0E+I+Ne/tD7zeWxatENHTNaQT6XhXdB9sD/ewxDfqRU3BdtbZdG
+	 QPZMDM+rejO5ZkUON1ph6fVZPVRUKL2HLcUQ/mDGUCK/bLV5XfIqQh99SGJsRbcg3Y
+	 4ahOPJqRncQedXOEULxkPrZ+OpZ+tWNuIZLVsrXnJIW3z5j28FogNDbN/BmUf7rz89
+	 mpc1xYLK4W6Xg==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-57f0aa38aadso2544113e87.2
+        for <loongarch@lists.linux.dev>; Fri, 17 Oct 2025 04:00:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXYI0u9x8mB9zVsrjXduN05V2clu4C9FsnS/upTlvRyAebDZbxqVLEDkdwZ+p+5heMT0Q9LaqTJpEM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwkP21//NvzN4g+G5Zl3jYAQxobXRkybN4G6mrk9NWudRwFraPy
+	Yz+F6DFabbUgFt/q9N7w05n8El4CpQII49nwlWnT+CFm8MhnDTzMTjzeeUi54ggWGLYlPLw7uq0
+	mupdca4ApGcLXbKBkP1QY6aJLM0Y8Ik4=
+X-Google-Smtp-Source: AGHT+IHxN2kS3odkWkazx6Kii1GVS0Wt6GhSEw2kpURhNsBRjiYw7sCxVK13poY4URZHjBG3Xbuf2j46mmtwgrQHRjc=
+X-Received: by 2002:a05:6512:3b24:b0:57b:8a82:1dcf with SMTP id
+ 2adb3069b0e04-591d84fd0c5mr1144213e87.18.1760698830068; Fri, 17 Oct 2025
+ 04:00:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: WPthx5jfwUZwmBXm82Ziu6FlbYNGp6QD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDEyMDA4NCBTYWx0ZWRfX5i24UI+B1MAY
- VWfB/xDHmOzuGKZz+zkZ2l9x8ZFHXJp4bGgLzsCYZhO0HnyGdmaDMrR3mpcUClvHV/6yUf/DJgW
- ovv0s0yH2DpJzEoDalTUQ7xn8+BsGsuUL1Evgi81/rNK8f7liy/e1u5Eplk2Ps1PMqe9VGG88Gd
- B/PWIRzNBJouLYr5zASWk7TtznxP5X/Q7AcX7MyEwpCz/kio7cNBjUypNeg4aqEfYVvH1iNdnqr
- DDQxOpdTs6xRl/ZL81gMulg8gwbv+0DLWp2ISeg0UnUuPhPGkSeiVmEYx2auRl+f/B7rfTpWlo4
- 36AvglRUTKXS0RgNKsrmRPKBst0ScMzACFqT/FpbRDvXiLwKYRDDM1MCJ2Zszccck9R4e2QBfwT
- CUAxfvzW0pSyHs9EaJzGgT7XBGLbiw==
-X-Proofpoint-GUID: R3CWxwVp1MSUDtnlqjQzPeUreuCpS978
-X-Authority-Analysis: v=2.4 cv=af5sXBot c=1 sm=1 tr=0 ts=68f208f7 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=kj9zAlcOel0A:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=Pqhxwy0yHowpa1wmBDEA:9
- a=3CZKy65qupELU2PZ:21 a=CjuIK1q_8ugA:10 a=nl4s5V0KI7Kw-pW0DWrs:22
- a=pHzHmUro8NiASowvMSCR:22 a=xoEH_sTeL_Rfw54TyV31:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-17_03,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 priorityscore=1501 spamscore=0 adultscore=0 suspectscore=0
- bulkscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510120084
+References: <CAMj1kXH-rK0bRyHXdJ-crAyMyvJHApH0WR7_8Qd8vrSPBLK+yg@mail.gmail.com>
+ <0c9b8e6a-96a6-91d4-946f-2109f48a529b@loongson.cn> <CAAhV-H41m96fvEWG5NqAE=tykPjyzt=50CseJDeCqdG-c_WMrQ@mail.gmail.com>
+ <CAMj1kXEs5=VRi_rJwgHUrQWos-27PBbr3c4fYnmkV8Ahi8HZgw@mail.gmail.com>
+ <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
+ <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
+ <CAAhV-H4UKdso0BokAqvjYeBLr-jbjFAaQX4z=1ztpBamqrOEEg@mail.gmail.com>
+ <CAMj1kXEXDC_oq4aWbkR5dqYBix2d1xJEdaj-v747e1nOA0Q_Yg@mail.gmail.com>
+ <rhnei6wovxmoqs36wdysomfsul3faxtmgde73wrrqdt3qo3b2j@akd7vzne76rq>
+ <CAMj1kXF+hDJy0vRWNgwoijHxvA-scvhGODMj9A3dv19v3jf2yw@mail.gmail.com> <lgyzruqczm7uti2lfbhfhr5hyzpnm7wtvgffa2o7nigx76g6i3@wlffltvmhhez>
+In-Reply-To: <lgyzruqczm7uti2lfbhfhr5hyzpnm7wtvgffa2o7nigx76g6i3@wlffltvmhhez>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 17 Oct 2025 13:00:17 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFDquPxCYSBWgjikS=209pSJ_kth67M0RDeuetV9CPYAw@mail.gmail.com>
+X-Gm-Features: AS18NWCIYrjb5KW9LhHY0tpEoyBeBcU1fB0oUJiskEYiezDhT-2dTfp0F9THCv4
+Message-ID: <CAMj1kXFDquPxCYSBWgjikS=209pSJ_kth67M0RDeuetV9CPYAw@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 16 Oct 2025 17:32:19 -0700
-Sean Christopherson <seanjc@google.com> wrote:
+On Thu, 16 Oct 2025 at 17:49, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>
+> On Thu, Oct 16, 2025 at 04:52:20PM +0200, Ard Biesheuvel wrote:
+> > On Tue, 14 Oct 2025 at 18:47, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> > > The idea is that libstub code doesn't belong in vmlinux.o because it's
+> > > not a part of the kernel proper, and doesn't need to be validated or
+> > > modified by objtool for any reason.
+> > >
+> >
+> > I don't see a reason to change this on architectures that a) do not
+> > use objtool and b) link the EFI stub into vmlinux. If LoongArch wants
+> > to change this, that is fine, but that still does not mean it needs to
+> > change on other architectures too.
+> >
+> > EFI related boot errors are a nightmare to debug, and I will be the
+> > one getting the reports when this regresses arm64 on hardware that 2
+> > people on the planet have access to.
+>
+> The idea was to have more consistency, so vmlinux.o never has libstub,
+> regardless of arch, but that's your call.
+>
 
-> Implement kvm_arch_vcpu_async_ioctl() "natively" in x86 and arm64 instead
-> of relying on an #ifdef'd stub, and drop HAVE_KVM_VCPU_ASYNC_IOCTL in
-> anticipation of using the API on x86.  Once x86 uses the API, providing a
-> stub for one architecture and having all other architectures opt-in
-> requires more code than simply implementing the API in the lone holdout.
-> 
-> Eliminating the Kconfig will also reduce churn if the API is renamed in
-> the future (spoiler alert).
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+The code in libstub ends up in .init.text, which will be mapped
+executable during boot on architectures that incorporate it into
+vmlinux.
 
-Acked-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+If objtool validation is never needed for such code, on the basis that
+it is not actually called even though it is present, then I think that
+is fine.
 
-> ---
->  arch/arm64/kvm/arm.c       |  6 ++++++
->  arch/loongarch/kvm/Kconfig |  1 -
->  arch/mips/kvm/Kconfig      |  1 -
->  arch/powerpc/kvm/Kconfig   |  1 -
->  arch/riscv/kvm/Kconfig     |  1 -
->  arch/s390/kvm/Kconfig      |  1 -
->  arch/x86/kvm/x86.c         |  6 ++++++
->  include/linux/kvm_host.h   | 10 ----------
->  virt/kvm/Kconfig           |  3 ---
->  9 files changed, 12 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index f21d1b7f20f8..785aaaee6a5d 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -1828,6 +1828,12 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->  	return r;
->  }
->  
-> +long kvm_arch_vcpu_async_ioctl(struct file *filp, unsigned int ioctl,
-> +			       unsigned long arg)
-> +{
-> +	return -ENOIOCTLCMD;
-> +}
-> +
->  void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
->  {
->  
-> diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
-> index ae64bbdf83a7..ed4f724db774 100644
-> --- a/arch/loongarch/kvm/Kconfig
-> +++ b/arch/loongarch/kvm/Kconfig
-> @@ -25,7 +25,6 @@ config KVM
->  	select HAVE_KVM_IRQCHIP
->  	select HAVE_KVM_MSI
->  	select HAVE_KVM_READONLY_MEM
-> -	select HAVE_KVM_VCPU_ASYNC_IOCTL
->  	select KVM_COMMON
->  	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
->  	select KVM_GENERIC_HARDWARE_ENABLING
-> diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
-> index ab57221fa4dd..cc13cc35f208 100644
-> --- a/arch/mips/kvm/Kconfig
-> +++ b/arch/mips/kvm/Kconfig
-> @@ -22,7 +22,6 @@ config KVM
->  	select EXPORT_UASM
->  	select KVM_COMMON
->  	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
-> -	select HAVE_KVM_VCPU_ASYNC_IOCTL
->  	select KVM_MMIO
->  	select KVM_GENERIC_MMU_NOTIFIER
->  	select KVM_GENERIC_HARDWARE_ENABLING
-> diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
-> index 2f2702c867f7..c9a2d50ff1b0 100644
-> --- a/arch/powerpc/kvm/Kconfig
-> +++ b/arch/powerpc/kvm/Kconfig
-> @@ -20,7 +20,6 @@ if VIRTUALIZATION
->  config KVM
->  	bool
->  	select KVM_COMMON
-> -	select HAVE_KVM_VCPU_ASYNC_IOCTL
->  	select KVM_VFIO
->  	select HAVE_KVM_IRQ_BYPASS
->  
-> diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-> index c50328212917..77379f77840a 100644
-> --- a/arch/riscv/kvm/Kconfig
-> +++ b/arch/riscv/kvm/Kconfig
-> @@ -23,7 +23,6 @@ config KVM
->  	select HAVE_KVM_IRQCHIP
->  	select HAVE_KVM_IRQ_ROUTING
->  	select HAVE_KVM_MSI
-> -	select HAVE_KVM_VCPU_ASYNC_IOCTL
->  	select HAVE_KVM_READONLY_MEM
->  	select HAVE_KVM_DIRTY_RING_ACQ_REL
->  	select KVM_COMMON
-> diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
-> index cae908d64550..96d16028e8b7 100644
-> --- a/arch/s390/kvm/Kconfig
-> +++ b/arch/s390/kvm/Kconfig
-> @@ -20,7 +20,6 @@ config KVM
->  	def_tristate y
->  	prompt "Kernel-based Virtual Machine (KVM) support"
->  	select HAVE_KVM_CPU_RELAX_INTERCEPT
-> -	select HAVE_KVM_VCPU_ASYNC_IOCTL
->  	select KVM_ASYNC_PF
->  	select KVM_ASYNC_PF_SYNC
->  	select KVM_COMMON
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b4b5d2d09634..ca5ba2caf314 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7240,6 +7240,12 @@ static int kvm_vm_ioctl_set_clock(struct kvm *kvm, void __user *argp)
->  	return 0;
->  }
->  
-> +long kvm_arch_vcpu_async_ioctl(struct file *filp, unsigned int ioctl,
-> +			       unsigned long arg)
-> +{
-> +	return -ENOIOCTLCMD;
-> +}
-> +
->  int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
->  {
->  	struct kvm *kvm = filp->private_data;
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 5bd76cf394fa..7186b2ae4b57 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -2437,18 +2437,8 @@ static inline bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
->  }
->  #endif /* CONFIG_HAVE_KVM_NO_POLL */
->  
-> -#ifdef CONFIG_HAVE_KVM_VCPU_ASYNC_IOCTL
->  long kvm_arch_vcpu_async_ioctl(struct file *filp,
->  			       unsigned int ioctl, unsigned long arg);
-> -#else
-> -static inline long kvm_arch_vcpu_async_ioctl(struct file *filp,
-> -					     unsigned int ioctl,
-> -					     unsigned long arg)
-> -{
-> -	return -ENOIOCTLCMD;
-> -}
-> -#endif /* CONFIG_HAVE_KVM_VCPU_ASYNC_IOCTL */
-> -
->  void kvm_arch_guest_memory_reclaimed(struct kvm *kvm);
->  
->  #ifdef CONFIG_HAVE_KVM_VCPU_RUN_PID_CHANGE
-> diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-> index 5f0015c5dd95..267c7369c765 100644
-> --- a/virt/kvm/Kconfig
-> +++ b/virt/kvm/Kconfig
-> @@ -78,9 +78,6 @@ config HAVE_KVM_IRQ_BYPASS
->         tristate
->         select IRQ_BYPASS_MANAGER
->  
-> -config HAVE_KVM_VCPU_ASYNC_IOCTL
-> -       bool
-> -
->  config HAVE_KVM_VCPU_RUN_PID_CHANGE
->         bool
->  
+For the other architectures, I don't have any objections in principle,
+I'm just being cautious due to the regression risk.
 
+> I'd still propose we keep the KBUILD_VMLINUX_LIBS_PRELINK mechanism to
+> allow other arches to opt in as needed.
+>
+
+Again, no objection in principle. To me, it just seems a lot of churn
+just to avoid having to teach objtool about indirect calls to noreturn
+functions.
+
+> And that variable might even be useful for other cases (x86 startup
+> code?)
+>
+
+Not all x86 startup code is in .init.text; some of it sticks around
+and is still used at runtime. I reckon that implies that objtool
+validation will remain needed for that, no?
