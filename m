@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFC91E1DE7
-	for <loongarch@lists.linux.dev>; Fri, 17 Oct 2025 00:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20A124DCE5
+	for <loongarch@lists.linux.dev>; Fri, 17 Oct 2025 00:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760661179; cv=none; b=k9eLlXPsp9RnCnzqEiLlReXs4S+q8jLGH2uWf67UorOJ7+vJexOd+jG0kDrOEHDQDhvSZf7DT9YfaaVU7IRtKHnKxIASJ8JkPXl4KQVZZ449MAlN3HbFMy/TYfDqkSXqi2OyKtaCdBAUkdprpnfU+plDCkahOaHkG/ll6PNsHYE=
+	t=1760661181; cv=none; b=gMP7CjaJorn7Otav0i07k9xLNWDKPn1KZ3gyJ0XhvOPuFVYOD8eDvkbUuRFgpGyJ7YNcmEQX+MdnXkZLj1R3cjsY5NPXe9jvxNb20bC0Esu9X4awet8DzFuMAvCXA2CEATwUObP51myH4EppNYeAatXOfcdHWhgF97WtNL3vIp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760661179; c=relaxed/simple;
-	bh=lN6TxI+PfhLHjdoqy+h+mIIhaLO+a3s8opjxmb2B/Lc=;
+	s=arc-20240116; t=1760661181; c=relaxed/simple;
+	bh=gVnI4GkFUztKHqGbjzSVkprmmFdtZW16vSgVFL0Yqz4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=s6vl+ruwf0Wuis/Gx2Ps+WfadmEyDdBBGa5pUEA9ZV+HTcL4P5aOd7dqmKaIVvQBCJwZwD/fGOvOuFBETjrnwHuQBPFDeMow9hq1F7/h85LasVJLiLqxzO3mZ+RW0KfmBl9q7pheJhM6YEjdC6z8VBhHvvJCx5lqZ+x7H4K4EgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OoxmptsQ; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=nxHKZilCoqvIEew6mrQ3eaVsXglt1JJYf67/FPr3oEQAfVm0V4lp3lWHKDYXTbbmtmm9I/Yv/T7CLSs6CYWh4sDfwAovmvSYi1y/CCznW6nVo5uOrhxRDSRi9GLO2zRND0DaqZAfMRedbQj0lDnhNpR3J3eNDsU+buMGDLhhZ4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lxkc8fl4; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OoxmptsQ"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-339d5dbf58aso3074062a91.3
-        for <loongarch@lists.linux.dev>; Thu, 16 Oct 2025 17:32:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lxkc8fl4"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33bcb7796d4so676791a91.0
+        for <loongarch@lists.linux.dev>; Thu, 16 Oct 2025 17:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760661177; x=1761265977; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1760661179; x=1761265979; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=YWIeng8BsOTkZWInydege0vVgImBIZwpoQ1m6PsVarA=;
-        b=OoxmptsQ+WqIyPddDlpDwB+DHjplUpstA4n3ImffLnhkSwdt+N8/rUwq8LR/0eeLrD
-         aEPQWutBfXoyhPns9WVZt1ifTHuC/wsJ6QFoS8i/UbNjfVRplAPQWIGIQIdxxk03ZJ3j
-         m/EB7vYnWDFTlwKuUlLz1tVjx6hRQIAfgfDSyQUOWnbrjgDPfA5G2gjiW22OddbgHxfB
-         9Z0qyJS3k8+S0h54oT+j6fCt27igzF8EO3/pzF1yJc3bn1/8Ynr9OWsPiISLYtxIbvZA
-         P1sq/ZEw8ej2kYdblkvGcmjO4ckUBa7kcGsy7ySEYC4NxTdDdQPO08Y6zrlWIkzJwriS
-         /wQw==
+        bh=+a1al4eiPUacV4Mot5X5KU5+gR34Rt/H3K9T45t0ZTE=;
+        b=lxkc8fl4E54Esn7v3hdi5TtBK3Mk4vCbrTe73unMTBFeVEIRUBVh89u2xAlUjNcJG3
+         OWpmyn1ME6l9tfb99/DEXtCQnwNe6/43k40boH+lZH/pVVrMKCYm9m6FOKOcI54BoeId
+         VQ0mSuGcko0bct24Eer/+0FatYsjhK+EBjUURbaPzYxaEiD6UYm5jnZny2nheCJIo4/e
+         GAvxNK2UYG6yvAeOq/YP+A9BcCaagnNSOrRdJ1UXTxXZZDCC+5kghlDRt2ZvXLmsM8u6
+         7UvmBuSeczZnkZgZKY4SdV4vpXTHWJuDjMfQCsmw+6dWxHh7uN6abQPZS2JUECcUeYAW
+         o9iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760661177; x=1761265977;
+        d=1e100.net; s=20230601; t=1760661179; x=1761265979;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YWIeng8BsOTkZWInydege0vVgImBIZwpoQ1m6PsVarA=;
-        b=BGAa97EIWcKjmpflXQnAOMFVu4CJhacVtPEASt7JGPXGF9XZA6JIS/ANhJdAZLfSnc
-         +bz3KoOvtf47xdpLgfwl4M/Wauxc4S+FWs/fjuA5fdmTV5P3SZP6ik8yZQaO53GaMYLd
-         MM3/1Q5wbW+xRsiTaazNfik3UIRg96uzIjUVlJmSZQ+RwQs+pRTWRywdZeHuJn82NVj9
-         Ptxk5RhcVOoDrm10GOrIYzcNxBMKVy/ty93FDsbTyTXjvaFNGnq8fI1t0AmedeJIfAFj
-         ukbR8ANtisT34kR69ZlqRFmNZ84di/hB/X2HWW+n2B9e8gCDuzLVeWjHMqqvKyhKuGI9
-         hK8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUCYhMJpHvb1p9cHLMgYlgfxb9wsHUzTueN0lJH79l6UeC7s3o0w0eZ0dMQIYZ6Abk5veZG1bJCYrs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yys9i4+Y21YWk4NjmnJQZuwIjSN+8cw6ehyPbvzRwT9qGq8oRp/
-	KDKeIyv7QgchsSiCK6o/vT7D61Yy8x7v1Km23vef9Zcap3rIR0ss53pt/k/IRly7wbMK+zK+9Q8
-	bdrKcAA==
-X-Google-Smtp-Source: AGHT+IFms9prLqRWu4j+VpVVO9qXU7xKhQ1tryuBH0Kw5CCld5HGLDevmfw2rLOsCJwDJFMJbPJJK8xVq/g=
-X-Received: from pjzh17.prod.google.com ([2002:a17:90a:ea91:b0:32f:46d:993b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2789:b0:330:6d5e:f17b
- with SMTP id 98e67ed59e1d1-33bcf8fa140mr1764119a91.21.1760661177139; Thu, 16
- Oct 2025 17:32:57 -0700 (PDT)
+        bh=+a1al4eiPUacV4Mot5X5KU5+gR34Rt/H3K9T45t0ZTE=;
+        b=PgbzdWURXFmD0c5fHXun+Bxkjw9iV8Cvuph5DGaEIWNzNZFwgthTAjt/XnGxBS5zvP
+         wjFV/8b02cDKqUXz6iTyeJKLTJlXDi5Okay+5HVZrze3ekaaadcGVEwrmYv/DofhqQix
+         5Y5VKYZKT6gwswB8OlbDYzlT/XrvuZlLwP3YK7i4LzHcah0HO7mlFkFcVXzdNJXs/l16
+         xdXc2FeUbGDXst9HCQ2CakRPnmI7ioNxnrw6zkk3UZqtUhvqC70QD2KzQkrjNwXWLOV3
+         GC65o7RfO6Qm9F8NvxCf9NrO7rzwc7ThdFcCrOIUwFLFyiVLk71Yc2fszfWgqk86Ew4O
+         Z39g==
+X-Forwarded-Encrypted: i=1; AJvYcCU4mtfFHRMG2vRdlZX7iZ1fXHmvexxnInj9cmQ93leY/Galm6SUpo5bGJcz0ko4ly4vEgyv8I7Y9b4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx+ZDpmj5RgiMzv4aoTSHQ9MuZJ1DJidp6XWgOS68OgzUPkG6aX
+	HjxXY6YNRR4rwpKXDVsrBjEK7S8DQ91QFKmpQuFm42l+CrSzl2ynKHYYCh8Pyj3HpEkhdBqjWZY
+	1Q/lltA==
+X-Google-Smtp-Source: AGHT+IHzIstKbR2q/VP+R8akfQ7d0mH54WcISHRgZ7r9iWOK+ijBTCVCrvD3k8+Ee7BqK468kooIUIkBSz0=
+X-Received: from pjbgj21.prod.google.com ([2002:a17:90b:1095:b0:33b:b662:ae3a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1343:b0:30a:4874:5397
+ with SMTP id 98e67ed59e1d1-33bcf87f454mr1982502a91.9.1760661178904; Thu, 16
+ Oct 2025 17:32:58 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 16 Oct 2025 17:32:23 -0700
+Date: Thu, 16 Oct 2025 17:32:24 -0700
 In-Reply-To: <20251017003244.186495-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20251017003244.186495-1-seanjc@google.com>
 X-Mailer: git-send-email 2.51.0.858.gf9c4a03a3a-goog
-Message-ID: <20251017003244.186495-6-seanjc@google.com>
-Subject: [PATCH v3 05/25] Revert "KVM: x86/tdp_mmu: Add a helper function to
- walk down the TDP MMU"
+Message-ID: <20251017003244.186495-7-seanjc@google.com>
+Subject: [PATCH v3 06/25] KVM: x86/mmu: Rename kvm_tdp_map_page() to kvm_tdp_page_prefault()
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -84,115 +83,41 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Binbin Wu <binbin.wu@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Remove the helper and exports that were added to allow TDX code to reuse
-kvm_tdp_map_page() for its gmem post-populate flow now that a dedicated
-TDP MMU API is provided to install a mapping given a gfn+pfn pair.
+Rename kvm_tdp_map_page() to kvm_tdp_page_prefault() now that it's used
+only by kvm_arch_vcpu_pre_fault_memory().
 
-This reverts commit 2608f105760115e94a03efd9f12f8fbfd1f9af4b.
+No functional change intended.
 
 Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/mmu.h         |  2 --
- arch/x86/kvm/mmu/mmu.c     |  4 ++--
- arch/x86/kvm/mmu/tdp_mmu.c | 37 +++++--------------------------------
- 3 files changed, 7 insertions(+), 36 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 2f108e381959..9e5045a60d8b 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -257,8 +257,6 @@ extern bool tdp_mmu_enabled;
- #define tdp_mmu_enabled false
- #endif
- 
--bool kvm_tdp_mmu_gpa_is_mapped(struct kvm_vcpu *vcpu, u64 gpa);
--int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code, u8 *level);
- int kvm_tdp_mmu_map_private_pfn(struct kvm_vcpu *vcpu, gfn_t gfn, kvm_pfn_t pfn);
- 
- static inline bool kvm_memslots_have_rmaps(struct kvm *kvm)
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index ba5cca825a7f..3711dba92440 100644
+index 3711dba92440..94d7f32a03b6 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4924,7 +4924,8 @@ int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+@@ -4924,8 +4924,8 @@ int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
  	return direct_page_fault(vcpu, fault);
  }
  
--int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code, u8 *level)
-+static int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code,
-+			    u8 *level)
+-static int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code,
+-			    u8 *level)
++static int kvm_tdp_page_prefault(struct kvm_vcpu *vcpu, gpa_t gpa,
++				 u64 error_code, u8 *level)
  {
  	int r;
  
-@@ -4966,7 +4967,6 @@ int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code, u8 *level
- 		return -EIO;
- 	}
- }
--EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_tdp_map_page);
+@@ -5002,7 +5002,7 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+ 	 * Shadow paging uses GVA for kvm page fault, so restrict to
+ 	 * two-dimensional paging.
+ 	 */
+-	r = kvm_tdp_map_page(vcpu, range->gpa | direct_bits, error_code, &level);
++	r = kvm_tdp_page_prefault(vcpu, range->gpa | direct_bits, error_code, &level);
+ 	if (r < 0)
+ 		return r;
  
- long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
- 				    struct kvm_pre_fault_memory *range)
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index c5734ca5c17d..9b4006c2120e 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -1939,13 +1939,16 @@ bool kvm_tdp_mmu_write_protect_gfn(struct kvm *kvm,
-  *
-  * Must be called between kvm_tdp_mmu_walk_lockless_{begin,end}.
-  */
--static int __kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
--				  struct kvm_mmu_page *root)
-+int kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
-+			 int *root_level)
- {
-+	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
- 	struct tdp_iter iter;
- 	gfn_t gfn = addr >> PAGE_SHIFT;
- 	int leaf = -1;
- 
-+	*root_level = vcpu->arch.mmu->root_role.level;
-+
- 	for_each_tdp_pte(iter, vcpu->kvm, root, gfn, gfn + 1) {
- 		leaf = iter.level;
- 		sptes[leaf] = iter.old_spte;
-@@ -1954,36 +1957,6 @@ static int __kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
- 	return leaf;
- }
- 
--int kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
--			 int *root_level)
--{
--	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
--	*root_level = vcpu->arch.mmu->root_role.level;
--
--	return __kvm_tdp_mmu_get_walk(vcpu, addr, sptes, root);
--}
--
--bool kvm_tdp_mmu_gpa_is_mapped(struct kvm_vcpu *vcpu, u64 gpa)
--{
--	struct kvm *kvm = vcpu->kvm;
--	bool is_direct = kvm_is_addr_direct(kvm, gpa);
--	hpa_t root = is_direct ? vcpu->arch.mmu->root.hpa :
--				 vcpu->arch.mmu->mirror_root_hpa;
--	u64 sptes[PT64_ROOT_MAX_LEVEL + 1], spte;
--	int leaf;
--
--	lockdep_assert_held(&kvm->mmu_lock);
--	rcu_read_lock();
--	leaf = __kvm_tdp_mmu_get_walk(vcpu, gpa, sptes, root_to_sp(root));
--	rcu_read_unlock();
--	if (leaf < 0)
--		return false;
--
--	spte = sptes[leaf];
--	return is_shadow_present_pte(spte) && is_last_spte(spte, leaf);
--}
--EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_tdp_mmu_gpa_is_mapped);
--
- /*
-  * Returns the last level spte pointer of the shadow page walk for the given
-  * gpa, and sets *spte to the spte value. This spte may be non-preset. If no
 -- 
 2.51.0.858.gf9c4a03a3a-goog
 
