@@ -1,105 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E851A00F0;
-	Sun, 19 Oct 2025 16:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43C7612C544
+	for <loongarch@lists.linux.dev>; Mon, 20 Oct 2025 01:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760891120; cv=none; b=XHqLF6dvRtksg/rpYaCpQd0wvqWfyKJgzRoZOqo5spJ4Cn/TkCZgTu6JzpGpBu0J1SKlNei0ueCrHDOMqGwoUKzWBCBz3S9ZE0auTv0slrLqXDj6EYOZyyn3TRcK+xmuf68aD9XzkJ/k2fOaQu7wV9hIHvFwVkoglY1/dUjCpeE=
+	t=1760923456; cv=none; b=RinOt+6KxZW46D9xbGjY/NNZNrdE5WdCFdJSMuuHVtt2eBpIu9/NDpTx+EYggOBLZG0+6iLX4EM+EmATrerb1RYdFRZsAjZXjKqDegv/MlDDirTEMuz3ba1jafjjUNSYKRV715+fbhzE+vTpfgNRGjn9Et1wBT6X6CUrpwKvYrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760891120; c=relaxed/simple;
-	bh=AqeDRU1eKSmQXUiCZ7pwi0Bd8BGGXBM48O4Ou5Xs+sw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ny8OD4gi8nAij93+qSPZ92ytYCmvNp2te+9feN52PBmDlCrgJ1LDdj5X2hGC62awAnItnCA0/a6WPJfjeS0Obn/cuF4G9jS+9seTkI2xHvvDm9V2UN3sxVdmY/T5nBWmWwbDG3Y/jYnCrBraz4hwbcw1tiUMrGiFXEDLdfNHHNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2EokHRL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2EokHRL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7610C4CEE7;
-	Sun, 19 Oct 2025 16:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760891119;
-	bh=AqeDRU1eKSmQXUiCZ7pwi0Bd8BGGXBM48O4Ou5Xs+sw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F2EokHRLd68kZBeDRRdhxJ1rDW2elFlh8EnkyaTJnHSCfqkoujh7BohpZc68H407D
-	 6bUXmBrNoq7Ww0jTMF1QQwGeMEpfXz0BrGd0k+T8PJbgWDRrKfDcnhwumf2RRZV3Tp
-	 M1nqa0cZRI89OYqyvuvRWeFwctcqJgDf9nK43gHk2G3mRl3usq7ey6ziFEp5oxVwef
-	 8ha/lyEniLuE2fegL9ApZJO+lst38G6OUrwAE6O/NFZ/Mz1YaBFZd+ociss1pkQv9d
-	 0MzWPAoBwoLUZ5+ACw5ohULeXVrjB6+3sdA7UiNPKC79wDn4zGf7+6LA7UKkZ5vUk5
-	 GbYsQCDUj5ADg==
-Date: Sun, 19 Oct 2025 09:23:46 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: ardb@kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
-	x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v4 15/19] lib/crc32: make crc32c() go directly to lib
-Message-ID: <20251019162346.GB1604@sol>
-References: <20241202010844.144356-16-ebiggers@kernel.org>
- <20251019060845.553414-1-safinaskar@gmail.com>
- <CAPnZJGAb7AM4p=HdsDhYcANCzD8=gpGjuP4wYfr2utLp3WMSNQ@mail.gmail.com>
+	s=arc-20240116; t=1760923456; c=relaxed/simple;
+	bh=v7X4C2h2L+kGvezMXwy4G6A4IXMrDu2HuF/hi0zlsSI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=cIPuDYx5ZkAw202qUJEbrOdxNCY7xjPgR/9FvV2KEDaJSwAkWAZ3eIw61uA+0XpI5MTEG8KsfHyFUn88mjl/CPJrSyxYUS4CyYokr7Wx9dL3nOKdXDsgxMaXF0qaZWm7B2DUdL4jpfBaT9npUMUv3ro52lZw/IenrcZE7Ey+I/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxHvAyj_Vo0hkYAA--.51784S3;
+	Mon, 20 Oct 2025 09:24:02 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxdOQyj_Vo+iH3AA--.20492S3;
+	Mon, 20 Oct 2025 09:24:02 +0800 (CST)
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Josh Poimboeuf <jpoimboe@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
+ <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
+ <CAAhV-H4UKdso0BokAqvjYeBLr-jbjFAaQX4z=1ztpBamqrOEEg@mail.gmail.com>
+ <CAMj1kXEXDC_oq4aWbkR5dqYBix2d1xJEdaj-v747e1nOA0Q_Yg@mail.gmail.com>
+ <rhnei6wovxmoqs36wdysomfsul3faxtmgde73wrrqdt3qo3b2j@akd7vzne76rq>
+ <CAMj1kXF+hDJy0vRWNgwoijHxvA-scvhGODMj9A3dv19v3jf2yw@mail.gmail.com>
+ <lgyzruqczm7uti2lfbhfhr5hyzpnm7wtvgffa2o7nigx76g6i3@wlffltvmhhez>
+ <CAMj1kXFDquPxCYSBWgjikS=209pSJ_kth67M0RDeuetV9CPYAw@mail.gmail.com>
+ <wlx6pt5crtfdwtop4w5vjznjfarrwitq44wdbufncjdvtsx647@tgobruak66yb>
+ <CAMj1kXFfEBkcc-aiwGrRR-pKg4LBbS7weK0pEpZJsKOk5pbkuA@mail.gmail.com>
+ <jxfb5a2c2qber623l2gwewirwod54bbgfnvt7t7f3jah2ea33g@2uyhy3auzmpx>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <d9f3352a-1c1f-464a-a8fd-741cd96b5f8e@loongson.cn>
+Date: Mon, 20 Oct 2025 09:24:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <jxfb5a2c2qber623l2gwewirwod54bbgfnvt7t7f3jah2ea33g@2uyhy3auzmpx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPnZJGAb7AM4p=HdsDhYcANCzD8=gpGjuP4wYfr2utLp3WMSNQ@mail.gmail.com>
+X-CM-TRANSID:qMiowJCxdOQyj_Vo+iH3AA--.20492S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s02
+	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
+	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8j-e5UUUUU==
 
-On Sun, Oct 19, 2025 at 11:10:25AM +0300, Askar Safin wrote:
-> On Sun, Oct 19, 2025 at 9:09 AM Askar Safin <safinaskar@gmail.com> wrote:
-> >
-> > Eric Biggers <ebiggers@kernel.org>:
-> > > Now that the lower level __crc32c_le() library function is optimized for
-> >
-> > This patch (i. e. 38a9a5121c3b ("lib/crc32: make crc32c() go directly to lib"))
-> > solves actual bug I found in practice. So, please, backport it
-> > to stable kernels.
-> 
-> Oops. I just noticed that this patch removes module "libcrc32c".
-> And this breaks build for Debian kernel v6.12.48.
-> Previously I tested minimal build using "make localmodconfig".
-> Now I tried full build of Debian kernel using "dpkg-buildpackage".
-> And it failed, because some of Debian files reference "libcrc32c",
-> which is not available.
-> 
-> So, please, don't backport this patch to stable kernels.
-> I'm sorry.
+Hi Josh, Ard and Huacai,
 
-Right, this commit simplified the CRC library design by removing the
-libcrc32c module.  initramfs build scripts that hard-coded the addition
-of libcrc32c.ko into the ramdisk (which I don't think was ever necessary
-in the first place, though it did used to be useful to hard-code some of
-the *other* CRC modules like crc32c-intel) had to be updated to remove
-it.  It looks like Debian did indeed do that, and they updated it in
-https://salsa.debian.org/kernel-team/linux/-/commit/6c242c647f84bfdbdc22a6a758fa59da4e941a10#1251f9400a85485d275e1709758350aa098709a8
+On 2025/10/18 上午1:05, Josh Poimboeuf wrote:
 
-As for your original problem, I'd glad to see that the simplified design
-is preventing problems.  There's an issue with backporting this commit
-alone, though.  This was patch 15 of a 19-patch series for a good
-reason: the CRC-32C implementation in lib/ wasn't architecture-optimized
-until after patches 1-14 of this series.  Backporting this commit alone
-would make crc32c() no longer utilize architecture-optimized code.
+...
 
-Now, it already didn't do so reliably (and this patch series fixed
-that).  However, backporting this commit alone would make it never do
-so.  So it would regress performance in some cases.
+> But IIUC, the libstub code runs *very* early, and wouldn't show up in a
+> stack trace anyway, because there are no traces of it on the stack once
+> it branches to head.S code (which doesn't save the link register).
 
-Since the errors you're actually getting are:
+Thanks for your discussions.
 
-    [   19.619731] Invalid ELF header magic: != ELF
-    modprobe: can't load module libcrc32c (kernel/lib/libcrc32c.ko.xz): unknown symbol in module, or unknown parameter
+Are you OK with this current patch?
+Or should I update this patch to remove the changes of arm64 and riscv?
+Or any other suggestions?
 
-I do have to wonder if this is actually a busybox bug or
-misconfiguration, where it's passing a compressed module to the kernel
-without decompressing it?  And removing the module just hid the problem.
+Thanks,
+Tiezhu
 
-- Eric
