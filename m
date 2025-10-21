@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329D620C023
-	for <loongarch@lists.linux.dev>; Tue, 21 Oct 2025 12:16:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6761632ABD0
+	for <loongarch@lists.linux.dev>; Tue, 21 Oct 2025 13:35:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761048967; cv=none; b=uiRIc8hZcCiygOvOIuO+1x7HiP5NXv2wHcV0AehkzevaFlZfWuCOk6+krZu6d34soBS0lBl2l/JQD+iXr38I2WEpEmCJwv90M46Qq3/w5USSjxD8aCdarZPNpYGviInfgJnX1GKZxJExSRd1qRDWVOyHNKRJl9Jnmwzzxxi9B80=
+	t=1761053723; cv=none; b=axCgbvFwvOZH28NO2/hvMNPoxhyNXAoNbwq5iGHIBaKAxQu7x5DqkN4ECtyNNWDQhexmbdgg1+LahjwLdOzgv2SoewecbouicHQlRGrmi+IFSABTDC78bF99q1jC9rqAgOiogFAW4FiywakvOL9SaygG9jy0tHOXa0tICvhdu9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761048967; c=relaxed/simple;
-	bh=afZ9LYjd3nXPgO7A1CJ8B6ceDU96mc91oikI4RgUCjE=;
+	s=arc-20240116; t=1761053723; c=relaxed/simple;
+	bh=ZuqBsIVbt1VZeH9Nd3+eLrJ3RNjtyUBnOrvCECRWIMo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=guaR0EitosMxkPYtBN5DNu3Iyx/a35KjC3Y2q36rumM1RF5vI7jybvsxMCCYMsWIrldVig66CfSEk0xE60Ll1DA8A/LiJc1u+3E0da3mFm0kBTtV01LxDCaG3sxXCVIVPA6vFur+UmOCsUmsuHz+8jBRpF1HeiXTAY6NxdUNVGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzFOPIPe; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=dTIDvwolDl+87ZxTOKzh/pFxouyfxSviXBPLjA0dJFVU+ZOXOTBKAtDTQsPeEAbWmE3ugTQYhtxDxBU3JoGeJj51jsn6Oml4RLOHY6JVfiT5yoknmYzqZWKtRBr/woHSbgnta21e0/PMiHs44gth/u2yDvFpjCq5ciV708zJ7YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S18DavwY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzFOPIPe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAA78C4CEFD
-	for <loongarch@lists.linux.dev>; Tue, 21 Oct 2025 12:16:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S18DavwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DDC6C116B1
+	for <loongarch@lists.linux.dev>; Tue, 21 Oct 2025 13:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761048966;
-	bh=afZ9LYjd3nXPgO7A1CJ8B6ceDU96mc91oikI4RgUCjE=;
+	s=k20201202; t=1761053723;
+	bh=ZuqBsIVbt1VZeH9Nd3+eLrJ3RNjtyUBnOrvCECRWIMo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZzFOPIPe/CIJyCZzZS5xDCOU6fb9z5+niTUJu2f8nz3yhyIuvbfquK4urojZ6W7RK
-	 QI61caoK/RX3VirzOJ975dczZ65ziZVmC+yyPjsoPBE5iYBfWFKHbQHN3zs4IO7R5s
-	 ZLt2HMJ2uYxOq//IBo6TRnQratgTnDvrfaviDON5U9nb8Z/y6K2f8o648lEGTX11X2
-	 rxsYOU2RFX8YkazroUHdo7g4fmAS9fFqU7SkdZJ0JIy3UpzQrp2rjgogt0LXDPPWkx
-	 HtYrpl3MftltAZmMXxsQL5Sxn/zSsdNyYdHCx9qXuLBVEBaKxVGjqetnM9CfTqcffJ
-	 yImIwoc6dhvmA==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6399328ff1fso9329147a12.0
-        for <loongarch@lists.linux.dev>; Tue, 21 Oct 2025 05:16:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWFBapd7b3Sk8EHvw8tDq+jiWhArOfogsBlKsPIEZEzkklKG0tgKIv8sgCnzgwMwoMzzCfIbl4x+8U=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzbr1Fo3/MarqfjREPvJoJqVvCTYFqhpQ3VORITYjOUFym7X70g
-	IG/cbcVhUIy9VIidZc0UrBrPia2/9jknOoI429Zk6/oiQj4azPMdG7xd8mJ9VPfaDFf8XOi9FBf
-	zn0nPtJ/hTSMDjwsHYK21IDI58Y6V+uc=
-X-Google-Smtp-Source: AGHT+IEehxa0VVriHcp2h3pPnTDlb8T/F5FMqzRVzT7FPHkMVaKDIi/rjGcv9KvbFvUKwGOelOx0U0eBViPra1u4cao=
-X-Received: by 2002:a05:6402:440f:b0:63b:fbd9:3d9c with SMTP id
- 4fb4d7f45d1cf-63c1f66c82dmr15228151a12.15.1761048965319; Tue, 21 Oct 2025
- 05:16:05 -0700 (PDT)
+	b=S18DavwYbzRxUahcWRpwvrAe0zB/UyjTqme1jX6ivlUDXe9QF0MKnRpZNlzcuUyr8
+	 qP5MgWy12F+Rs9j7/aCAn6IFq9dZJl3do1D5zUf4WGRirGdJX9e52/ghZzazGqgLq8
+	 jltEEgMXbsleqCDk34o9aZkyOzhqHH5ihgj2Ag5zKitF1ewMcY0HKzIRV0L+UQBVqm
+	 92UaqEccm542WIRtl/tiJOy6cjSQyveypKBIyuOGWuZm4fA2jWKGnilpLEmqBs7Xmo
+	 lPOeXhXZEwXbADA8Pt1oU6PNsQ3Ei09bw7u1q+Wq9LxPo5DNaN9tkIR6oFASPG7Mob
+	 KEPxeFT7w9bQw==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-43f9cc65f66so3183692b6e.2
+        for <loongarch@lists.linux.dev>; Tue, 21 Oct 2025 06:35:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW2CjkqOjtPnEebzUCyYAz2GAUt3AEyi7Y4ClwIGwrFlRj1mXYg4lZo0Ly9Adnz1udbB3v1tGGPk9s=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzIztubGLggQoV251VoBmiKAwOA8IkTY3IOOg+dGb133ygFGJHr
+	eiWlTS6giONUdI7m2igonzhuEews5LBRMxe2ITI61Bwz5Ch0ImYc7XYMomytEBZbndFYoVmtLpz
+	38lWbrnogmjgjuTPnCwvXcLLb1XI8nV0=
+X-Google-Smtp-Source: AGHT+IEKKO8UIzncbp3yZO81oyf6QsCEy/ZN7tr85jZ4pwoPxanGyvexPT/O4C5oiumqVgjKTnBwE1h32ENYeNiUZgM=
+X-Received: by 2002:a05:6808:444b:b0:441:8f74:f1a with SMTP id
+ 5614622812f47-443a315b372mr7649786b6e.52.1761053722613; Tue, 21 Oct 2025
+ 06:35:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,11 +44,11 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20251021092825.822007-1-xry111@xry111.site>
 In-Reply-To: <20251021092825.822007-1-xry111@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 21 Oct 2025 20:15:53 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5e-U+nxHkSjE_3_PcoOuaHTqJWnYm9OZXVwuWvh3N5ZQ@mail.gmail.com>
-X-Gm-Features: AS18NWBcCXTydL281tEwc29bBx_Sgj2MfqdSDFPAw33oyAwgRfjsz5gyo8nMyNs
-Message-ID: <CAAhV-H5e-U+nxHkSjE_3_PcoOuaHTqJWnYm9OZXVwuWvh3N5ZQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 21 Oct 2025 15:35:11 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iy8wChaPYGmc=mWJRrA+uXnGF2Ar7aMCMRoUqS6877aQ@mail.gmail.com>
+X-Gm-Features: AS18NWA8xXgTYvIuPvaLuEdFpvBPRx9_4TgORXKHv2p-jVKPnls01cOnTQbgH10
+Message-ID: <CAJZ5v0iy8wChaPYGmc=mWJRrA+uXnGF2Ar7aMCMRoUqS6877aQ@mail.gmail.com>
 Subject: Re: [PATCH] acpica: Work around bogus -Wstringop-overread warning
  since GCC 11
 To: Xi Ruoyao <xry111@xry111.site>
@@ -56,13 +56,14 @@ Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, loongarch@lists.linux.dev
 	Mingcong Bai <jeffbai@aosc.io>, Guenter Roeck <linux@roeck-us.net>, stable@vger.kernel.org, 
 	Saket Dumbre <saket.dumbre@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
 	Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, 
 	"open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <linux-acpi@vger.kernel.org>, 
 	"open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <acpica-devel@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 21, 2025 at 5:28=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
+On Tue, Oct 21, 2025 at 11:28=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wro=
+te:
 >
 > When ACPI_MISALIGNMENT_NOT_SUPPORTED, GCC can produce a bogus
 > -Wstringop-overread warning, see https://gcc.gnu.org/PR122073.
@@ -79,7 +80,13 @@ eck-us.net/
 > Co-developed-by: Saket Dumbre <saket.dumbre@intel.com>
 > Signed-off-by: Saket Dumbre <saket.dumbre@intel.com>
 > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+
+Please submit ACPICA changes to the upstream ACPICA project on GitHub
+as pull requests (PRs).  After a given PR has been merged upstream, a
+corresponding Linux patch can be submitted with a Link: tag pointing
+to the upstream commit, but note that upstream ACPICA material is
+automatically transferred to Linux, so it should not be necessary to
+do so unless timing is important.
 
 > ---
 >  drivers/acpi/acpica/tbprint.c | 6 ++++++
