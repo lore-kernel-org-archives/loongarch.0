@@ -1,46 +1,53 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CC825D527
-	for <loongarch@lists.linux.dev>; Tue, 21 Oct 2025 09:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1A92E1C6F;
+	Tue, 21 Oct 2025 09:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761037941; cv=none; b=ObiO85cjss6ldkP/lk5wJL7UpnP/HYYHS8RoXx9CKzkIKF/7ViU3irG2k04rc5BLLgt/BzjPue6QY0O8wpfugHIu2w7kiWwJqmiWPeFsn0zrN9q27T6DJnaTAYWjT521J5exvyuHiW0kyvEt4EEs1RQAQyDTU2UIio2CW3Uu9SY=
+	t=1761038934; cv=none; b=CcCwXmVosg6HGxLRhzl13jVe/+Xsna29iQcsvJn8opcPMQ4/Xjs/mqLCOBuv9Ia8srhXh/i+9HGqiR/oMMW+KAdQhAvMGkCLf5EbHx0y8LWR57acmTPLFSpyZDUayw4F+oCpwnTUYB38Z/TFw37zpRHmx8fVBvFuoJdKfHxIUQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761037941; c=relaxed/simple;
-	bh=FRqje6zZqwQFspWHvUiPAxQygWNim8OVJRmR3NbaxYc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SzZUIjh4x4ICAnCqkc6/HnxRIpUYvzjJhNhcVkTpZ5mXrjB9VbPclTihxDGfUiEdTmwWjlWDxsdid/H1EGUIsC4wj0zGM/dUx6vngXcEVLgQKET7MmvGZcTiIk3OME6YxXCJ29Xvmw7h7qQuROsTorEo63N6r02oq24LyiWsGLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=GLo8ZfOJ; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1761038934; c=relaxed/simple;
+	bh=nY1r0rxq3zaIyV9igiRD6jd9u+zKeLm99ZgpBR96GdE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PXxjBUDqUD0KQxbS6OC9wLxC/jfd896zj0QNsLfty0/5NO7UH6k9yY2A9lWXTmK6KZHc0iEtFdjCSWC+r2n2bb1fCE6G63tGNseWMtFjE0ZIRMCKufcW08PXpWQBXafkq+zk9NbQsH0YM1538gtXvAbe6TZYPMMmCEUZoIZgT3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=mtcgjYK/; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="GLo8ZfOJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1761037908;
-	bh=NFpwIvY8OI+j5BVs1t2HxeAH2S2XYLpAzZObsYvHy6s=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=GLo8ZfOJDGNMjdyt4FuLeizKSG4m8hJLFqzkIUX97rqHYNNDyoXdIw0Diukot/g28
-	 rL32lGPhIG3L0YpOd36SMZBl+qH/tXdJgcY2Rs9Sg+sXpHqIjhmxGu9Ck+9BfOVwVV
-	 atiwvoQ+MoFRrgxV96WjiK7yOuZZvHPwiwVzl1u0=
-X-QQ-mid: zesmtpsz4t1761037903t5eefea4c
-X-QQ-Originating-IP: wVogaDMgnwbVTvybg6BtlltHTXkOW5VMPO1Dbf5yshA=
-Received: from localhost.localdomain ( [123.114.60.34])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 21 Oct 2025 17:11:41 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 3431755223997503707
-EX-QQ-RecipientCnt: 5
-From: Qiang Ma <maqianga@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="mtcgjYK/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1761038924;
+	bh=6oB5odA3UzXNEi7uAc9r3126xC/gOgrjKsCdeXENfnU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mtcgjYK/H7i5havNt1Z+iywQROBMi1C/19KSLs03eDNPrlLLNaxgHt+j5HQmHuNY3
+	 u2fs2y2N1MZJx0LHe+TPIyLDmOkuMkGmxB86HCS9nK+zLf9JeWflmO5FNsXsh8Vh/r
+	 OO1NsZF987gHXUz12J6tPALakJd/Sd5k+6CQQO8s=
+Received: from stargazer (unknown [IPv6:2409:8a4c:e29:d50::b3c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 14EC566D01;
+	Tue, 21 Oct 2025 05:28:40 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
 Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH] LoongArch: kexec_file: print out debugging message if required
-Date: Tue, 21 Oct 2025 17:11:14 +0800
-Message-Id: <20251021091114.982820-1-maqianga@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	Mingcong Bai <jeffbai@aosc.io>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Xi Ruoyao <xry111@xry111.site>,
+	stable@vger.kernel.org,
+	Saket Dumbre <saket.dumbre@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Len Brown <lenb@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	linux-acpi@vger.kernel.org (open list:ACPI COMPONENT ARCHITECTURE (ACPICA)),
+	acpica-devel@lists.linux.dev (open list:ACPI COMPONENT ARCHITECTURE (ACPICA)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] acpica: Work around bogus -Wstringop-overread warning since GCC 11
+Date: Tue, 21 Oct 2025 17:28:25 +0800
+Message-ID: <20251021092825.822007-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -48,91 +55,46 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-1
-X-QQ-XMAILINFO: NyqG2qnv0b2db+leZrY/G1ua8gNsmqbtm7mpaBgm6uBFCLTQEn4/Ct6C
-	epM8mUjKecW6mW5A1ZpLo3c6POw/6JmC0Myj8rdN1QJdIzVzDhD+XiksWUFJDQTmxAUFAPa
-	pavUM7N+7ZLWftOSUBgJy85tXuTFDnzjGrgepnUX82W3eFMtdWfLxoNxF3a9qifm8WqdKQ0
-	orRZ5s9RjxTwWgRIi5U5bLVlXEiAT323afMIH9aeWCrSXDyo4srNisBRypSXlT/kkGCXaDb
-	47nyYacsNefGgWabUsbV87OvWiEfPf9XV/ykYAAlz8G3H7m6XS97JPklK2WWlbskRZPTgK6
-	DOwKHfA3m+o2OjRIepmyheOXFUNxS9xdZZfd4Ke0n9M2tYvQ5PrPm+ICnHW+zViy+/0zBtp
-	0LtrUjNiieOTDUBK2UQQdWBBICsGxkJ+GEYJd0WvAZvrBurZfQb3Or2F+fepoaMYPVGLVBI
-	5L9t4oFIhJJ+ju1HcaFtQa5tVuP6gTr3e1dpE/Bdqw7u9o2wo1dMyq4vqimHuSlWX4BRvNz
-	VD4eqCHCZanoc5Qi1l09YPN7CjpWbiJanurZvyFXXEKRRAaw1/qVbVzLSI3F/nTZ5uS2HnU
-	reMp7JJCfcB9gOwT9VZIbuPCfM9uejeYbqwyGg4cTVCabxpRgn3m3lvOJf38Sjvlmp2r8Qy
-	AbE+hOJ3PWtMUax/zUl+GQ+WoM5mY/onJ7pcb1M2E8gw/6rriUKxLkqKjjNfY0A+sr+rjTJ
-	g1xlZ0zEGkNnhje4geG9zktGiVNyqCQwNiK9TH5N7myLNXwzId4rxVK0kpOw4DRhXUdc3/a
-	83Uq91CNv84sHuFrVCr4vIJCdx6+CNTkb6viNsPnITMh8o9mgvb81qL2sXoqMOskvF21K9a
-	ZmPp+Y23ynt3bUA+4xdEgl+p0O4QPv63zgN8zAQC6EPpMyNBE3QYlKF9htsuBXPd0Uy57VC
-	VQP1zxmnwtGNThaPD6B5e7EDJ/CL0GKWk1dNZ6W7vai1yN4Jw5WR7orWwaNFHbMO9WJKcWa
-	joV6Uoyg==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
 
-When specifying '-d' for kexec_file_load interface, loaded locations
-of kernel/initrd/cmdline etc can be printed out to help debug.
+When ACPI_MISALIGNMENT_NOT_SUPPORTED, GCC can produce a bogus
+-Wstringop-overread warning, see https://gcc.gnu.org/PR122073.
 
-Commit eb7622d908a0 ("kexec_file, riscv: print out debugging message
-if required") fixes the same issue on RISC-V.
+To me it's very clear that we have a compiler bug here, thus just
+disable the warning.
 
-So, remove kexec_image_info() because the content has been printed
-out in generic code.
-
-And on Loongson-3A5000, the printed messages look like below:
-
-[  288.667939] kexec_file: kernel: 00000000d9aad283 kernel_size: 0x2e77f30
-[  288.668414] kexec_file(EFI): No LoongArch PE image header.
-[  288.703104] kexec_file: Loaded initrd at 0x80000000 bufsz=0x1637cd0 memsz=0x1638000
-[  288.703674] kexec_file(ELF): Loaded kernel at 0x9c20000 bufsz=0x27f1800 memsz=0x2950000
-[  288.704092] kexec_file: nr_segments = 2
-[  288.704277] kexec_file: segment[0]: buf=0x00000000cc3e6c33 bufsz=0x27f1800 mem=0x9c20000 memsz=0x2950000
-[  288.741213] kexec_file: segment[1]: buf=0x00000000bb75a541 bufsz=0x1637cd0 mem=0x80000000 memsz=0x1638000
-[  288.757182] kexec_file: kexec_file_load: type:0, start:0xb15d000 head:0x18db60002 flags:0x8
-
-Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+Cc: stable@vger.kernel.org
+Fixes: a9d13433fe17 ("LoongArch: Align ACPI structures if ARCH_STRICT_ALIGN enabled")
+Link: https://lore.kernel.org/all/899f2dec-e8b9-44f4-ab8d-001e160a2aed@roeck-us.net/
+Link: https://github.com/acpica/acpica/commit/abf5b573
+Co-developed-by: Saket Dumbre <saket.dumbre@intel.com>
+Signed-off-by: Saket Dumbre <saket.dumbre@intel.com>
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- arch/loongarch/kernel/machine_kexec.c | 22 ----------------------
- 1 file changed, 22 deletions(-)
+ drivers/acpi/acpica/tbprint.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index e4b2bbc47e62..2d64b7c81e5e 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -39,34 +39,12 @@ static unsigned long systable_ptr;
- static unsigned long start_addr;
- static unsigned long first_ind_entry;
- 
--static void kexec_image_info(const struct kimage *kimage)
--{
--	unsigned long i;
--
--	pr_debug("kexec kimage info:\n");
--	pr_debug("\ttype:        %d\n", kimage->type);
--	pr_debug("\tstart:       %lx\n", kimage->start);
--	pr_debug("\thead:        %lx\n", kimage->head);
--	pr_debug("\tnr_segments: %lu\n", kimage->nr_segments);
--
--	for (i = 0; i < kimage->nr_segments; i++) {
--		pr_debug("\t    segment[%lu]: %016lx - %016lx", i,
--			kimage->segment[i].mem,
--			kimage->segment[i].mem + kimage->segment[i].memsz);
--		pr_debug("\t\t0x%lx bytes, %lu pages\n",
--			(unsigned long)kimage->segment[i].memsz,
--			(unsigned long)kimage->segment[i].memsz /  PAGE_SIZE);
--	}
--}
--
- int machine_kexec_prepare(struct kimage *kimage)
+diff --git a/drivers/acpi/acpica/tbprint.c b/drivers/acpi/acpica/tbprint.c
+index 049f6c2f1e32..e5631027f7f1 100644
+--- a/drivers/acpi/acpica/tbprint.c
++++ b/drivers/acpi/acpica/tbprint.c
+@@ -95,6 +95,11 @@ acpi_tb_print_table_header(acpi_physical_address address,
  {
- 	int i;
- 	char *bootloader = "kexec";
- 	void *cmdline_ptr = (void *)KEXEC_CMDLINE_ADDR;
+ 	struct acpi_table_header local_header;
  
--	kexec_image_info(kimage);
--
- 	kimage->arch.efi_boot = fw_arg0;
- 	kimage->arch.systable_ptr = fw_arg2;
++#pragma GCC diagnostic push
++#if defined(__GNUC__) && __GNUC__ >= 11
++#pragma GCC diagnostic ignored "-Wstringop-overread"
++#endif
++
+ 	if (ACPI_COMPARE_NAMESEG(header->signature, ACPI_SIG_FACS)) {
  
+ 		/* FACS only has signature and length fields */
+@@ -143,4 +148,5 @@ acpi_tb_print_table_header(acpi_physical_address address,
+ 			   local_header.asl_compiler_id,
+ 			   local_header.asl_compiler_revision));
+ 	}
++#pragma GCC diagnostic pop
+ }
 -- 
-2.20.1
+2.51.1
 
