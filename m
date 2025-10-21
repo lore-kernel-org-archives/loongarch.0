@@ -1,354 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04E11A3166;
-	Tue, 21 Oct 2025 04:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761019742; cv=fail; b=DV1zFx5PaIy30KQdwKupnZ/7xzM70fXge0M8FchqMUHuNIJ+w1f4svQMKvWRXaX6IC/nms2JZjtWwXQ5S0uG2jKumykHkfancQfTHe7Y3vx5BIa6g2FkBCNuPAN+6sZtoWdFgRqxIsFqDso2qXJCpjYRV13K1xaUJ5FV6j0/AsM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761019742; c=relaxed/simple;
-	bh=L47OiHBXBe380poBuH7nuFhhF9IJ4xFdGbem4KTP6kU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LdSI5R/qLaEKJL3wBWAMsoIRAVD8m/oIdGSCC6C5btwkGSEDVb0qKqEwriby8t3vIFxPJZcDgKjtNKw/MJbqFmDx08pmJ3YppMTsSmMWgorgAkpTsfzFU84byyUWJDenL2s/ciA/yWjT1s/Of9uYrEvthi6weX4Gy+37TEFDjaw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cvlLyCup; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CC825D527
+	for <loongarch@lists.linux.dev>; Tue, 21 Oct 2025 09:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761037941; cv=none; b=ObiO85cjss6ldkP/lk5wJL7UpnP/HYYHS8RoXx9CKzkIKF/7ViU3irG2k04rc5BLLgt/BzjPue6QY0O8wpfugHIu2w7kiWwJqmiWPeFsn0zrN9q27T6DJnaTAYWjT521J5exvyuHiW0kyvEt4EEs1RQAQyDTU2UIio2CW3Uu9SY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761037941; c=relaxed/simple;
+	bh=FRqje6zZqwQFspWHvUiPAxQygWNim8OVJRmR3NbaxYc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SzZUIjh4x4ICAnCqkc6/HnxRIpUYvzjJhNhcVkTpZ5mXrjB9VbPclTihxDGfUiEdTmwWjlWDxsdid/H1EGUIsC4wj0zGM/dUx6vngXcEVLgQKET7MmvGZcTiIk3OME6YxXCJ29Xvmw7h7qQuROsTorEo63N6r02oq24LyiWsGLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=GLo8ZfOJ; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cvlLyCup"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761019741; x=1792555741;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=L47OiHBXBe380poBuH7nuFhhF9IJ4xFdGbem4KTP6kU=;
-  b=cvlLyCupIo6HLFrVQ3lyH2e1in+AMePv5CBR+mddCOvMsHkVMvO2vpdQ
-   soJDAlCYde43ke9WGCNrf4yAhVDTZBA0+MVGwCSgog0CaJkbrrJqaWLP5
-   q8Fss1/ORzSDny48Pp1TKoHYniso0wUIKeGOSZ3gVw8qKwUh3ji6GRl/l
-   Exj+3haQgK4T/UMggdCvGGicvQsECCbZOMwU0OXeKwpom6zBB2dohuXDe
-   D8Y+ocPRIZOFNp+Yx/mqfc0e6Nuelv5fkmcO+6EJVtNObbpM63sA+OoMn
-   W/yk07G/awNMPNfdz/KOepEiU8suPodYgGIjPkv85rvLDUqp66FnhlCtY
-   Q==;
-X-CSE-ConnectionGUID: S2sZLgaDSX2KHsatpLzr6g==
-X-CSE-MsgGUID: Eqtt5plfTGeexCiGA4v3cw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="85764386"
-X-IronPort-AV: E=Sophos;i="6.19,244,1754982000"; 
-   d="scan'208";a="85764386"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 21:09:01 -0700
-X-CSE-ConnectionGUID: yYcYeic1R/OkMsuLATu+Mw==
-X-CSE-MsgGUID: as9fsLapSv+kr41LIkc3qg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,244,1754982000"; 
-   d="scan'208";a="214116142"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 21:09:00 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Mon, 20 Oct 2025 21:08:59 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Mon, 20 Oct 2025 21:08:59 -0700
-Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.15) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Mon, 20 Oct 2025 21:08:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xqs5RhdgTwSrpaebHs2/v1dZMfAoxZDlfw+P41AbrAtpFHgZxZV48x5Sv8QR11D8eIxeRbdOncJWH5gZ9ox0m9p+4lgHnDef/7l6r58vBigcBFgOijA0yGxJqtsKMq6puAaMPPmDUD+EZiKIGAC5ZHsF8jOWon4p3zolJh9JBLP/nMWggTBgBbFTLGVNe7EBOXJ8KeJnvrudHsleXAHeX8Sa4ECESgW0nG+rhxYRG4fy14v11o/oFHuwXmftjYmjAWyLIgjpEsXmoQxdUplFcvIz2RidM6cUtWLZbXqSA0quIPTUxblIaeKKSs1Kk+B2AopVAusliFasv95uBljWjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ifi6FzgI1ycRclmmJV790rJS8TJHTSfD7Ay0MVnruqc=;
- b=AkS3k7LJxKZEv+vGbzhRR/gD1c/g7ZjHdY2w76Nxy4JLiyDsL+0AzYTUkCUqpHrHDzEXoWBpiFeopmfGQAFvcN3pnA6/e2wNTVLL3MK07dHKj/gwTnqAAnIQAfjkuZ2SSfo2IHz1rkgsUkigug7QNjt1C2jv985XApmhVyEuKX7EwcKnt7FLHEfgpPikSmEX28l6/53BIYUmmGrlchouJ2E0NyN3bRdZbQMV3oQs6bQ/NlNXLxa9Bkn3+tIJqT8IbdVRKCfun9b7MB0ZPvjv3+xNZXbHwgp92kEF5DJ0iCURFjdoqJLsoU4x7pG2JDx0Iz/OMuTlIvuLYz1LXvhoaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
- SA1PR11MB7087.namprd11.prod.outlook.com (2603:10b6:806:2b5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.16; Tue, 21 Oct
- 2025 04:08:51 +0000
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca%6]) with mapi id 15.20.9228.015; Tue, 21 Oct 2025
- 04:08:50 +0000
-Date: Tue, 21 Oct 2025 12:06:52 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
-	<maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley
-	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda
-	<imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, "Kirill A.
- Shutemov" <kas@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>, <kvm@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
-	<x86@kernel.org>, <linux-coco@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>, Kai Huang
-	<kai.huang@intel.com>, Michael Roth <michael.roth@amd.com>, Vishal Annapurve
-	<vannapurve@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Ackerley Tng <ackerleytng@google.com>, Binbin Wu <binbin.wu@linux.intel.com>
-Subject: Re: [PATCH v3 04/25] KVM: x86/mmu: Add dedicated API to map
- guest_memfd pfn into TDP MMU
-Message-ID: <aPcG3LMA0qX5H5YI@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20251017003244.186495-1-seanjc@google.com>
- <20251017003244.186495-5-seanjc@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20251017003244.186495-5-seanjc@google.com>
-X-ClientProxiedBy: KL1PR0401CA0012.apcprd04.prod.outlook.com
- (2603:1096:820:f::17) To DS7PR11MB5966.namprd11.prod.outlook.com
- (2603:10b6:8:71::6)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="GLo8ZfOJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1761037908;
+	bh=NFpwIvY8OI+j5BVs1t2HxeAH2S2XYLpAzZObsYvHy6s=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=GLo8ZfOJDGNMjdyt4FuLeizKSG4m8hJLFqzkIUX97rqHYNNDyoXdIw0Diukot/g28
+	 rL32lGPhIG3L0YpOd36SMZBl+qH/tXdJgcY2Rs9Sg+sXpHqIjhmxGu9Ck+9BfOVwVV
+	 atiwvoQ+MoFRrgxV96WjiK7yOuZZvHPwiwVzl1u0=
+X-QQ-mid: zesmtpsz4t1761037903t5eefea4c
+X-QQ-Originating-IP: wVogaDMgnwbVTvybg6BtlltHTXkOW5VMPO1Dbf5yshA=
+Received: from localhost.localdomain ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 21 Oct 2025 17:11:41 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 3431755223997503707
+EX-QQ-RecipientCnt: 5
+From: Qiang Ma <maqianga@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Qiang Ma <maqianga@uniontech.com>
+Subject: [PATCH] LoongArch: kexec_file: print out debugging message if required
+Date: Tue, 21 Oct 2025 17:11:14 +0800
+Message-Id: <20251021091114.982820-1-maqianga@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|SA1PR11MB7087:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e098889-4d24-46e9-dd08-08de10578a8d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?9sN25FzY8AbMpnLOAmcJOzpeqUzJLs9uEPXvTkWoonORC5cFeIWH0s49W1Ck?=
- =?us-ascii?Q?xO/ssu0tL/fYPcB4+Hb9pcc2IqZ/Xke6RZB04IHLx/RpaHdS0ybvrMBnc5K0?=
- =?us-ascii?Q?B6oxsc/m/UB1s0Eh7N9Nyzy3CtZwhkm/b+rdH2ooG6jOOBRpi8kqhiEjO55E?=
- =?us-ascii?Q?8ljhJ8ABlK54Ub8mitNKB5fxu/INUS/tPBeBO58o2SWNf1cR1ccYct9Q+AGk?=
- =?us-ascii?Q?4IOYucMsFpqprJnCb9jTqrFRlJm3a3Gv5KBcRa/mlOFyCJZgrF3ADHAd2ze6?=
- =?us-ascii?Q?q5AUL7b288B7zYJHL3tAu388V2cue0X+fRyog1q/pEy1kyqPY0Q/X5MOtHwu?=
- =?us-ascii?Q?MVLbCeF7p/25AFYlqPmsp+5nDJqH96xI2CJdU3Kza23ltDt0jCmlKTQdj7fc?=
- =?us-ascii?Q?x/QfYV+FyXGPHzMYKS3VhEsPmQvIs/u6V+3MCLhpkDEAxzgRND0r6IoliXCw?=
- =?us-ascii?Q?lbvaI+gEb2AguLUcgy4lFjBrYNlywNP/51QvYjU3oCoXLxpGg6/lJroNc/8E?=
- =?us-ascii?Q?riJEFvr3KZmf+V503B/W8NF0InFe4t7tcmiYr/pbedhKCuzYj+FR0PeQr9Dc?=
- =?us-ascii?Q?KGG2z6rQwQWx0ef719BOy//lk/UCP8QRKIVtrLLzgy/lVXD8prHjyVrg952O?=
- =?us-ascii?Q?8zgngJAja8G3gIm+dZKWfqjYYZDIJfwroDZ7hQLks27uWKbaOuEE5i7zbhnR?=
- =?us-ascii?Q?FpYX2ZoUNFohLCuN0HoHVIPteXyFiZhd6EOOWpge3PaBByskUh3yK0GpOPdL?=
- =?us-ascii?Q?XLObogB4MrpmGU5iUJrVvgJAsxJ3RIn8UYkIW2GwA2JRpqEkpq2LbeAMN/yE?=
- =?us-ascii?Q?jCVeFQTTU87nsC3PcbwXrAXeIhgucb1BVwJCzIUL2ETuCPEPsOwiM7YQUkY5?=
- =?us-ascii?Q?yNHG/i+8PtMwqCcJhYePm22DYlthfCM1vvAxYwvFuI2MgxF5MJMR/MgzrFqj?=
- =?us-ascii?Q?vNoIJ0oEBqb/M5oh65Yx89rKWN9n2Ix4mWHYQICy7je61IoNWBc0swkmhtqV?=
- =?us-ascii?Q?2OAnUcfIc4C5FZsbzrfvHpRmhssZzVDvP3LWJTAHc/x4z+cJu4odo5aqsa+2?=
- =?us-ascii?Q?z0RhUFv1MrJMnLOYtGQJQT2llFNvMrPpBOiY4W18SkNDE5ROXX1OCh5cEs2T?=
- =?us-ascii?Q?EY/Lf7QIbkbFwGAblhcAAPS7OYiA4AliYYI3bmCwFkwqDprAsNtOibvf+KKh?=
- =?us-ascii?Q?9D8l/vSPbwapkygD7ndqU2MX8Mw3GCJ1O6WKC+K3wcV/3UPKQ8MLcuOR3Qcq?=
- =?us-ascii?Q?/sWRmUF/8PoaETkw//XEyqs8qf17veg5roR+t83JLUJOCihAEPFZPxWtOz0a?=
- =?us-ascii?Q?qHD1uygVhLnESYXn6gXjpkdRVEkO5R6JFP/533VDLJLWu4qbLeaP8SQg3XBA?=
- =?us-ascii?Q?O6+NSEDdYv5L3e3JhbfisLwRk6EDsEb6M8jsYpeIodZhvW3QUJcdo7h7yE9n?=
- =?us-ascii?Q?4MwXxpLcTcuBVngkc3Ug2ZQzN/uyPtNC?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uJq0KgsCSwPiWHhRJka5L8dtnu4YIHpKDcGb+fnavfoE6z2lFGl1WTn3g2He?=
- =?us-ascii?Q?MoN/J2luVeo/A/kCUrPpj3C4EQp3SJC0n7ueJa+y5x+9uJ5IeXd3e6b5WRny?=
- =?us-ascii?Q?Gu9WX5Rd1/YNA59xAL8KAwun57kcLdPtq6not/IIMU2YmpsKkQEzthz5RACf?=
- =?us-ascii?Q?g1SdRrU++DZqYQh7frE09dAzl3PiR4xeYFB7lDBUC8EESPrb2QvHOMUp1WbU?=
- =?us-ascii?Q?oFaVCe/8OFJZKn0lMasfrDVg01jIQArwyizWAGTkwnOjOekhxU96JNE/laqj?=
- =?us-ascii?Q?1+/KutmikBy1rQVcf4ZkBnT+NnExlRZxadPQmpnjApMv26pSt2j8+I7yreb+?=
- =?us-ascii?Q?6vUTqYPa8vViKta8KGdEAAC1v77NrvBS/iea57tgLzfVcoaZtxiqmKuadTr0?=
- =?us-ascii?Q?EYu6XZ69wIICg2nrtOZRiF4M8otAgUicVB4BQIKidjJKQIIpKCbBOhOYBzWI?=
- =?us-ascii?Q?4Pw3V/6IbzgeZ4gSNpjJ2SmFsUZeC93S2155EqI1+h19g3wqpylg0VXlgJKB?=
- =?us-ascii?Q?DKDfRw0mxmT5dBBGl2ZQziQVNGAuI+sAZ9N6AaKd6wv8LLt4yHcmETElUz8N?=
- =?us-ascii?Q?CqjVF2rV6f1Bd81jfhd3DDAGTU/XZGkhrKxI0wY6cLP7ubZItq2CkXagUaMm?=
- =?us-ascii?Q?pD6JmPOETa0Y96dgM97bEk4+hmBWjn88clKQE6k7V3NJDu/LlHpczRLHM0YQ?=
- =?us-ascii?Q?QmO/SThLYPfjhox0iRkzIkBZjMJAVRzpyz9gg/r3GbsHDgiIqx0YcXp4n7Pn?=
- =?us-ascii?Q?1z1nC9Ckt66Jfv7fYMJvBaLgh+wEpJo74dCqLcUDlJwBOOTDcCmwwVQFbSu+?=
- =?us-ascii?Q?ZZCM29EEXRRdLklgDeTycyePJrrtU3C1n5DadeDyHtfNm9dBiUlKFsFLKL0y?=
- =?us-ascii?Q?QWvSl8Kf6CJw0fq5kMq2mNpEWvSR5HHKddMU7jKiep1p8L1wuD/YfijY3/Ip?=
- =?us-ascii?Q?T29oAdIQFZueL5HIcbbU/+pEdZvQWFWqxMI9FenkaCqyYpnSkWukE1kQY2Av?=
- =?us-ascii?Q?7MkrnnTumZW6jowgJweIy/Za/UUqRTEnh+0XVe5lVQi6U87CxIAGCKjGY0rj?=
- =?us-ascii?Q?NC7vRveMWY7N7mgRXu2fNpOqcnouKSPkeVkvhDTH5+ouHSmaM+vkA9HmNL0+?=
- =?us-ascii?Q?k1h9ELY7z9tc9nWjuLWaN2HAtvDIMH++e4QAO7qzD+YDIwLreFtNAEHt+JxQ?=
- =?us-ascii?Q?tgNTcIAguO/igMArgP2n326PmNuMcNFLcHFgkGVFqBjp80Y5gPKAdTASQA+b?=
- =?us-ascii?Q?I2JnZsH8ltmolkMNzxttYIaRpjJAvY2FM6xoI7ASOzWnqDtX3MvtSI+rSSnt?=
- =?us-ascii?Q?D+hLPTsuByfo9Fnjws171K3tNyt+48wMKtXJ7RZz4L9ZfYDjSZtL7xzSnlp0?=
- =?us-ascii?Q?MnCCwvjZFlA5dDtSNi1MytgcjQJSMFeHU9KihTUl8O+SF0oLv4IjfIUXP6Ko?=
- =?us-ascii?Q?SG/TfLLTGZWXPHBhi36lBMo0YRR3FuCnXJC6v//WLISK4YYXkQZW6G4dvFmJ?=
- =?us-ascii?Q?lOUQvSoOblMQmSmuG00oFroB8xz9teH0SFZgBmmOlFGWcVrj2Nn647pOr4tp?=
- =?us-ascii?Q?B1xrOLztuO9XH9LewZJ48qq2OVjNl5GrmaQC6u5U?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e098889-4d24-46e9-dd08-08de10578a8d
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2025 04:08:50.7978
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0leKKKNfpe3FOF2Wyg8kBZyGFOtR6A9rZGsI/YixEjygwwFaO8QMIcxZJ2hstsPAkG1TInbvdNRU448SeZSyeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB7087
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-1
+X-QQ-XMAILINFO: NyqG2qnv0b2db+leZrY/G1ua8gNsmqbtm7mpaBgm6uBFCLTQEn4/Ct6C
+	epM8mUjKecW6mW5A1ZpLo3c6POw/6JmC0Myj8rdN1QJdIzVzDhD+XiksWUFJDQTmxAUFAPa
+	pavUM7N+7ZLWftOSUBgJy85tXuTFDnzjGrgepnUX82W3eFMtdWfLxoNxF3a9qifm8WqdKQ0
+	orRZ5s9RjxTwWgRIi5U5bLVlXEiAT323afMIH9aeWCrSXDyo4srNisBRypSXlT/kkGCXaDb
+	47nyYacsNefGgWabUsbV87OvWiEfPf9XV/ykYAAlz8G3H7m6XS97JPklK2WWlbskRZPTgK6
+	DOwKHfA3m+o2OjRIepmyheOXFUNxS9xdZZfd4Ke0n9M2tYvQ5PrPm+ICnHW+zViy+/0zBtp
+	0LtrUjNiieOTDUBK2UQQdWBBICsGxkJ+GEYJd0WvAZvrBurZfQb3Or2F+fepoaMYPVGLVBI
+	5L9t4oFIhJJ+ju1HcaFtQa5tVuP6gTr3e1dpE/Bdqw7u9o2wo1dMyq4vqimHuSlWX4BRvNz
+	VD4eqCHCZanoc5Qi1l09YPN7CjpWbiJanurZvyFXXEKRRAaw1/qVbVzLSI3F/nTZ5uS2HnU
+	reMp7JJCfcB9gOwT9VZIbuPCfM9uejeYbqwyGg4cTVCabxpRgn3m3lvOJf38Sjvlmp2r8Qy
+	AbE+hOJ3PWtMUax/zUl+GQ+WoM5mY/onJ7pcb1M2E8gw/6rriUKxLkqKjjNfY0A+sr+rjTJ
+	g1xlZ0zEGkNnhje4geG9zktGiVNyqCQwNiK9TH5N7myLNXwzId4rxVK0kpOw4DRhXUdc3/a
+	83Uq91CNv84sHuFrVCr4vIJCdx6+CNTkb6viNsPnITMh8o9mgvb81qL2sXoqMOskvF21K9a
+	ZmPp+Y23ynt3bUA+4xdEgl+p0O4QPv63zgN8zAQC6EPpMyNBE3QYlKF9htsuBXPd0Uy57VC
+	VQP1zxmnwtGNThaPD6B5e7EDJ/CL0GKWk1dNZ6W7vai1yN4Jw5WR7orWwaNFHbMO9WJKcWa
+	joV6Uoyg==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Oct 16, 2025 at 05:32:22PM -0700, Sean Christopherson wrote:
-> Add and use a new API for mapping a private pfn from guest_memfd into the
-> TDP MMU from TDX's post-populate hook instead of partially open-coding the
-> functionality into the TDX code.  Sharing code with the pre-fault path
-> sounded good on paper, but it's fatally flawed as simulating a fault loses
-> the pfn, and calling back into gmem to re-retrieve the pfn creates locking
-> problems, e.g. kvm_gmem_populate() already holds the gmem invalidation
-> lock.
-> 
-> Providing a dedicated API will also removing several MMU exports that
-> ideally would not be exposed outside of the MMU, let alone to vendor code.
-> On that topic, opportunistically drop the kvm_mmu_load() export.  Leave
-> kvm_tdp_mmu_gpa_is_mapped() alone for now; the entire commit that added
-> kvm_tdp_mmu_gpa_is_mapped() will be removed in the near future.
-> 
-> Cc: Michael Roth <michael.roth@amd.com>
-> Cc: Yan Zhao <yan.y.zhao@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Vishal Annapurve <vannapurve@google.com>
-> Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> Link: https://lore.kernel.org/all/20250709232103.zwmufocd3l7sqk7y@amd.com
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/mmu.h     |  1 +
->  arch/x86/kvm/mmu/mmu.c | 60 +++++++++++++++++++++++++++++++++++++++++-
->  arch/x86/kvm/vmx/tdx.c | 10 +++----
->  3 files changed, 63 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-> index f63074048ec6..2f108e381959 100644
-> --- a/arch/x86/kvm/mmu.h
-> +++ b/arch/x86/kvm/mmu.h
-> @@ -259,6 +259,7 @@ extern bool tdp_mmu_enabled;
->  
->  bool kvm_tdp_mmu_gpa_is_mapped(struct kvm_vcpu *vcpu, u64 gpa);
->  int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code, u8 *level);
-> +int kvm_tdp_mmu_map_private_pfn(struct kvm_vcpu *vcpu, gfn_t gfn, kvm_pfn_t pfn);
->  
->  static inline bool kvm_memslots_have_rmaps(struct kvm *kvm)
->  {
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 18d69d48bc55..ba5cca825a7f 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -5014,6 +5014,65 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
->  	return min(range->size, end - range->gpa);
->  }
->  
-> +int kvm_tdp_mmu_map_private_pfn(struct kvm_vcpu *vcpu, gfn_t gfn, kvm_pfn_t pfn)
-> +{
-> +	struct kvm_page_fault fault = {
-> +		.addr = gfn_to_gpa(gfn),
-> +		.error_code = PFERR_GUEST_FINAL_MASK | PFERR_PRIVATE_ACCESS,
-> +		.prefetch = true,
-> +		.is_tdp = true,
-> +		.nx_huge_page_workaround_enabled = is_nx_huge_page_enabled(vcpu->kvm),
-> +
-> +		.max_level = PG_LEVEL_4K,
-> +		.req_level = PG_LEVEL_4K,
-> +		.goal_level = PG_LEVEL_4K,
-> +		.is_private = true,
-> +
-> +		.gfn = gfn,
-> +		.slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn),
-> +		.pfn = pfn,
-> +		.map_writable = true,
-> +	};
-> +	struct kvm *kvm = vcpu->kvm;
-> +	int r;
-> +
-> +	lockdep_assert_held(&kvm->slots_lock);
-Do we need to assert that filemap_invalidate_lock() is held as well?
-Otherwise, a concurrent kvm_gmem_punch_hole(), which does not hold slots_lock,
-could make the pfn stale.
+When specifying '-d' for kexec_file_load interface, loaded locations
+of kernel/initrd/cmdline etc can be printed out to help debug.
 
-Or check for stale mapping?
-> +
-> +	if (KVM_BUG_ON(!tdp_mmu_enabled, kvm))
-> +		return -EIO;
-> +
-> +	if (kvm_gfn_is_write_tracked(kvm, fault.slot, fault.gfn))
-> +		return -EPERM;
-> +
-> +	r = kvm_mmu_reload(vcpu);
-> +	if (r)
-> +		return r;
-> +
-> +	r = mmu_topup_memory_caches(vcpu, false);
-> +	if (r)
-> +		return r;
-> +
-> +	do {
-> +		if (signal_pending(current))
-> +			return -EINTR;
-> +
-> +		if (kvm_test_request(KVM_REQ_VM_DEAD, vcpu))
-> +			return -EIO;
-> +
-> +		cond_resched();
-> +
-> +		guard(read_lock)(&kvm->mmu_lock);
-> +
-> +		r = kvm_tdp_mmu_map(vcpu, &fault);
-> +	} while (r == RET_PF_RETRY);
-> +
-> +	if (r != RET_PF_FIXED)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_tdp_mmu_map_private_pfn);
-> +
->  static void nonpaging_init_context(struct kvm_mmu *context)
->  {
->  	context->page_fault = nonpaging_page_fault;
-> @@ -5997,7 +6056,6 @@ int kvm_mmu_load(struct kvm_vcpu *vcpu)
->  out:
->  	return r;
->  }
-> -EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_mmu_load);
->  
->  void kvm_mmu_unload(struct kvm_vcpu *vcpu)
->  {
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 4c3014befe9f..29f344af4cc2 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -3157,15 +3157,12 @@ struct tdx_gmem_post_populate_arg {
->  static int tdx_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
->  				  void __user *src, int order, void *_arg)
->  {
-> -	u64 error_code = PFERR_GUEST_FINAL_MASK | PFERR_PRIVATE_ACCESS;
-> -	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
->  	struct tdx_gmem_post_populate_arg *arg = _arg;
-> -	struct kvm_vcpu *vcpu = arg->vcpu;
-> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> +	u64 err, entry, level_state;
->  	gpa_t gpa = gfn_to_gpa(gfn);
-> -	u8 level = PG_LEVEL_4K;
->  	struct page *src_page;
->  	int ret, i;
-> -	u64 err, entry, level_state;
->  
->  	/*
->  	 * Get the source page if it has been faulted in. Return failure if the
-> @@ -3177,7 +3174,7 @@ static int tdx_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
->  	if (ret != 1)
->  		return -ENOMEM;
->  
-> -	ret = kvm_tdp_map_page(vcpu, gpa, error_code, &level);
-> +	ret = kvm_tdp_mmu_map_private_pfn(arg->vcpu, gfn, pfn);
->  	if (ret < 0)
->  		goto out;
->  
-> @@ -3240,7 +3237,6 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
->  	    !vt_is_tdx_private_gpa(kvm, region.gpa + (region.nr_pages << PAGE_SHIFT) - 1))
->  		return -EINVAL;
->  
-> -	kvm_mmu_reload(vcpu);
->  	ret = 0;
->  	while (region.nr_pages) {
->  		if (signal_pending(current)) {
-> -- 
-> 2.51.0.858.gf9c4a03a3a-goog
-> 
+Commit eb7622d908a0 ("kexec_file, riscv: print out debugging message
+if required") fixes the same issue on RISC-V.
+
+So, remove kexec_image_info() because the content has been printed
+out in generic code.
+
+And on Loongson-3A5000, the printed messages look like below:
+
+[  288.667939] kexec_file: kernel: 00000000d9aad283 kernel_size: 0x2e77f30
+[  288.668414] kexec_file(EFI): No LoongArch PE image header.
+[  288.703104] kexec_file: Loaded initrd at 0x80000000 bufsz=0x1637cd0 memsz=0x1638000
+[  288.703674] kexec_file(ELF): Loaded kernel at 0x9c20000 bufsz=0x27f1800 memsz=0x2950000
+[  288.704092] kexec_file: nr_segments = 2
+[  288.704277] kexec_file: segment[0]: buf=0x00000000cc3e6c33 bufsz=0x27f1800 mem=0x9c20000 memsz=0x2950000
+[  288.741213] kexec_file: segment[1]: buf=0x00000000bb75a541 bufsz=0x1637cd0 mem=0x80000000 memsz=0x1638000
+[  288.757182] kexec_file: kexec_file_load: type:0, start:0xb15d000 head:0x18db60002 flags:0x8
+
+Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+---
+ arch/loongarch/kernel/machine_kexec.c | 22 ----------------------
+ 1 file changed, 22 deletions(-)
+
+diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+index e4b2bbc47e62..2d64b7c81e5e 100644
+--- a/arch/loongarch/kernel/machine_kexec.c
++++ b/arch/loongarch/kernel/machine_kexec.c
+@@ -39,34 +39,12 @@ static unsigned long systable_ptr;
+ static unsigned long start_addr;
+ static unsigned long first_ind_entry;
+ 
+-static void kexec_image_info(const struct kimage *kimage)
+-{
+-	unsigned long i;
+-
+-	pr_debug("kexec kimage info:\n");
+-	pr_debug("\ttype:        %d\n", kimage->type);
+-	pr_debug("\tstart:       %lx\n", kimage->start);
+-	pr_debug("\thead:        %lx\n", kimage->head);
+-	pr_debug("\tnr_segments: %lu\n", kimage->nr_segments);
+-
+-	for (i = 0; i < kimage->nr_segments; i++) {
+-		pr_debug("\t    segment[%lu]: %016lx - %016lx", i,
+-			kimage->segment[i].mem,
+-			kimage->segment[i].mem + kimage->segment[i].memsz);
+-		pr_debug("\t\t0x%lx bytes, %lu pages\n",
+-			(unsigned long)kimage->segment[i].memsz,
+-			(unsigned long)kimage->segment[i].memsz /  PAGE_SIZE);
+-	}
+-}
+-
+ int machine_kexec_prepare(struct kimage *kimage)
+ {
+ 	int i;
+ 	char *bootloader = "kexec";
+ 	void *cmdline_ptr = (void *)KEXEC_CMDLINE_ADDR;
+ 
+-	kexec_image_info(kimage);
+-
+ 	kimage->arch.efi_boot = fw_arg0;
+ 	kimage->arch.systable_ptr = fw_arg2;
+ 
+-- 
+2.20.1
+
