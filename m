@@ -1,232 +1,206 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5DD2D061C
-	for <loongarch@lists.linux.dev>; Wed, 22 Oct 2025 17:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6308A2EBBA6
+	for <loongarch@lists.linux.dev>; Wed, 22 Oct 2025 18:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761154411; cv=none; b=e9qOkxylLN31JyGb1qkOn0hC0GzR3v94mDdo0Yds99obPV6RN8vXF3LbF2fZ2KE6fTqK6qVdw1ahw6BpZLs70JeMIypYKNesf3Dw6spNGgyI8XzbYtD6Al1dlKzRJU/6ViUM2fdD7Ov6kYmDFiO4dyQSIqdOh0Kt36mbFVeHoto=
+	t=1761156774; cv=none; b=BLPTo0OIC6jgvIWnlTpN4JUEolylOsL9GG20EiBMO1ESO/Kwupd7/F+mSuB4nO8KSLG6YENElyaBZYDvl+V5q0kJrCOy/MU6UTOL8k8p38Qjyt0uChosLKrxcdCmXSc3/uN+MyBBrQtl1qrG/izGjaZJAR+aQIi4DqIlWaJndP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761154411; c=relaxed/simple;
-	bh=/Yk9WiXQBjIwG6nS0SNWlq/vPVccKp+iCtnR+gPxq0U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FlDg7w59P/dUICVANcxsIq8LJ/nNRXJ3zWESASp5vlJsNjdc5sL+nuA3inyXyWJtu+KE65xJfT0fDzRuQ5/4EFdb3/EUP6+/Wb24vqrEKzc8y1VcESlzGCHiUlR+n82R9IujgKgNsuuWhaqtCfKWU5qkBBQuBif5eFR3qk0hasw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kOqs+hxH; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1761156774; c=relaxed/simple;
+	bh=UmH1svExxe3696H3/lrjYo2eB/zUc0gH+XKx1eKRj0s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Bg2RGhaaMXKIa6vKREMNaTxsgDrlZTg4gdA7Q/mV6hwOc35i7ffG2paw/NI5dJ39LrfAZykgI5VWESm0TL/xety+LNQEPXrGbjkRrCMVIzCQjt8WRfRauRqHaAm7FbHAdCeDDCAIUrawp0yXc4nql2PJFFmWFbXlGuyW8x1lEdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e/cYskuW; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kOqs+hxH"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59MAOXBn003946;
-	Wed, 22 Oct 2025 17:33:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/Yk9Wi
-	XQBjIwG6nS0SNWlq/vPVccKp+iCtnR+gPxq0U=; b=kOqs+hxH1CqLHrj8YxBgu/
-	2vj5zA4+6c0sArBC7uMpIBqeSKb+4qkoRZddCyLvS/UKiWDWfKi94E98X/PEMT8h
-	7Axa1vAUGH6lylie0sZa/Q1ms8ghFgTnaD0nWM6Dh2CM9+23GL3qsD73yeNjaoGC
-	f1XjOOgLR5x91/5x8/u8M3i8kW2MBl99SaAn91Z7qWK2LlxfDrdbJLfA3noJp5q9
-	IngNEzz9GmghW3dgwjdhfVB+pzPRvOa+P+S/THyRk8Odz/mivbb9S3EWEsxIFTSv
-	l6GKQabLgj8QWiM9PCkS9Px0fO02lXycjjZH7xCRSD0sGuHKcPKvre0gGM0gZrhA
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v32hmn4x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Oct 2025 17:33:25 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59MH1oWU017052;
-	Wed, 22 Oct 2025 17:33:24 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49vnky1r8r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Oct 2025 17:33:24 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59MHXNMr24707762
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Oct 2025 17:33:23 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E851A58058;
-	Wed, 22 Oct 2025 17:33:22 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2044158059;
-	Wed, 22 Oct 2025 17:33:21 +0000 (GMT)
-Received: from [9.111.88.198] (unknown [9.111.88.198])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 22 Oct 2025 17:33:20 +0000 (GMT)
-Message-ID: <7e15ec9e157521489fb5e98a0c52f90aa3ccf09a.camel@linux.ibm.com>
-Subject: Re: Potential issue with hypervisor_isolated_pci_functions()
- handling
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>, jailhouse-dev@googlegroups.com,
-        linux-s390	 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev,
-        Farhan
- Ali	 <alifm@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Tianrui Zhao	 <zhaotianrui@loongson.cn>,
-        Gerd Bayer <gbayer@linux.ibm.com>
-Date: Wed, 22 Oct 2025 19:33:20 +0200
-In-Reply-To: <CAAhV-H4Q932R0fAbL6JyygZcgALdO_HJZ1Cqo88EhNMm04yjtQ@mail.gmail.com>
-References: <d3f11e8562f589ddb2c1c83e74161bd8948084c3.camel@linux.ibm.com>
-	 <CAAhV-H4Q932R0fAbL6JyygZcgALdO_HJZ1Cqo88EhNMm04yjtQ@mail.gmail.com>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/cYskuW"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33d75897745so3562782a91.0
+        for <loongarch@lists.linux.dev>; Wed, 22 Oct 2025 11:12:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761156771; x=1761761571; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V5F7t24lC7jgleOK3FW+MwSMdfYKm48DJa8i0z/06to=;
+        b=e/cYskuWyIQpg3D27Z5FTQbBrRvwr7fyTOvcQy8QqegpR5QIDg1g96mnneYK9TJYTj
+         y0C4NZhEhxtxlaj2o2CqiEeyKP8+1O2FFwscf30fo3t+5O3CMVWEhQ7Bh67gQYoVu/kZ
+         RlUOV1IUpzBvHcoopGn8a2eJB8uFxZ29q85Tg4uJxaT2awEbycwD2BfQW3y73jlBTZj4
+         UXLbHLFhjKgwe3dZe3lqz/3XoubWSBlbHt4T24EvPLKi9ukFqJ8qJYhs7CEZL3ubz9Vu
+         QO3xYDhwIQM2IOtzjx4j9F6TvqJoqRjMLTWFf+noT3ILDj6RFtW2YW48k954QHfQtwwl
+         h5vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761156771; x=1761761571;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V5F7t24lC7jgleOK3FW+MwSMdfYKm48DJa8i0z/06to=;
+        b=UbBJ/Us4gGLSWgChwfaI4r30WEHeTUSdciGcJ5TBZqxyaIy+9MZSb/3dhfh/BBkNJT
+         IM1ZMo3DElkQf/I/n9Q4/XgnmxtlAhZPfmVEyseCENpHTADyhcdjSSZ/Ps+jdLvBlz8g
+         rL2a+l+GD1S1Qg5b4dQGbeHNNg9EgK/1ODC0dE5eNbyJXmCb6WA1f59272n3Jw74k199
+         TCDtU/1daK2+C+AyxI/ELmFF6055roDiJdIXHKxd8lcXHxrRPdsuZNmfVRVDPkQIgimg
+         ipK4JBVkAA8b9/3rP02Ffg6UtGg58RCvf5NqgR66Fi69Yw+FUu/LITFeQby0va5qvmc1
+         dTLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNBuKW5QZV8BEj1UzLm2ysKYOYgCZlANObbYZMX1inZCAWLqpLjgpMSk/E/yCRaBIWVxSpADtpChE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx7tHvJAEAhfGCxeYLTu0Nk6CONQ08DQ7b2PRKzxDftQaPRmqTf
+	YpUCeAfXz84Tdj/C4ecRs/XMcj9V6YNMfQc1v6BHByvPABU3/5dB4IcTnFSh4oNdmFd4e9I0hXd
+	ShInWUQ==
+X-Google-Smtp-Source: AGHT+IFAZr0wpbGx7b8wp6kFow05WwkzX+gl9q/tJGKoWGxIdF2WxHsL5OqcbuH+85tLuHrz8145UQS6wJM=
+X-Received: from pjbnm19.prod.google.com ([2002:a17:90b:19d3:b0:33d:cdb9:9adf])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3f8d:b0:33b:be31:8193
+ with SMTP id 98e67ed59e1d1-33bcf85d59dmr30647063a91.6.1761156768896; Wed, 22
+ Oct 2025 11:12:48 -0700 (PDT)
+Date: Wed, 22 Oct 2025 11:12:47 -0700
+In-Reply-To: <aPiQYBoDlUmrQxEw@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfX9zhnbiIttv74
- 3JnksB+ByvKr2ZSUzqpj/+IKkTkfCSRemz+6fXK2/bMUlmqROPkX9kmYIBKrOY9cl4RBuH15pSF
- 3X7eLzxO7hDEFZ+CTWXNayMsBLfutMZMZ9N71Ru6s7aZsxRctnQ8AuVC0pYMpEuoEOfzkR7/7PV
- Tfe776M/JMqTjDOo/9PB6gyOcVXzaxKkHJA48eojJ+8Sdam7/OaOFIAEgfr3biggfcwnpn/OU60
- MFkaghPEUiQ42//c5lFD0XLn/0yf5exC+bdYrHpmCfiNHzFZbCmY5BPOMEeL/OplfbIKbs+32p3
- FJ0pmtJijcYGT6eO0cOFP5OSufSzPeBD4SQjE5ZKeBLkjLuJE3dqvEi7jB5/u24B2VxZkH+Y/jL
- ALvrMmS6pMQMyhEh7Oz/o/0SoTyTXw==
-X-Authority-Analysis: v=2.4 cv=OrVCCi/t c=1 sm=1 tr=0 ts=68f91565 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=9vf2bs2iEuHWSEF46McA:9 a=QEXdDO2ut3YA:10
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-GUID: E16fo7ub-l2JXCn_GDTbDSOdQnAVEKJS
-X-Proofpoint-ORIG-GUID: E16fo7ub-l2JXCn_GDTbDSOdQnAVEKJS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-22_07,2025-10-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
- clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
+Mime-Version: 1.0
+References: <20251017003244.186495-1-seanjc@google.com> <20251017003244.186495-5-seanjc@google.com>
+ <aPcG3LMA0qX5H5YI@yzhao56-desk.sh.intel.com> <aPe2pDYSpVFxDRWv@google.com> <aPiQYBoDlUmrQxEw@yzhao56-desk.sh.intel.com>
+Message-ID: <aPken0s-0MfdSd5o@google.com>
+Subject: Re: [PATCH v3 04/25] KVM: x86/mmu: Add dedicated API to map
+ guest_memfd pfn into TDP MMU
+From: Sean Christopherson <seanjc@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	"Kirill A. Shutemov" <kas@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Ira Weiny <ira.weiny@intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Michael Roth <michael.roth@amd.com>, Vishal Annapurve <vannapurve@google.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Ackerley Tng <ackerleytng@google.com>, 
+	Binbin Wu <binbin.wu@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 2025-10-22 at 22:49 +0800, Huacai Chen wrote:
-> Hi, Niklas,
->=20
-> On Wed, Oct 22, 2025 at 7:40=E2=80=AFPM Niklas Schnelle <schnelle@linux.i=
-bm.com> wrote:
-> >=20
-> > Hi Huacai, Hi Jan, Hi Bjorn,
-> >=20
-> > I noticed that with commit a02fd05661d7 ("PCI: Extend isolated function
-> > probing to LoongArch") LoongArch now also makes use of the isolated
-> > function probing. First, nice to see this sees more users and that the
-> > interface is useful to you.
-> >=20
-> > Seeing this, I was reminded of an issue I ran into when using this
-> > mechanism with SR-IOV capable devices. In that case VFs with devfn > 7
-> > and PCI_SLOT(devfn) !=3D 0 wouldn't get probed.
-> > This is because if a device is found next_fn() will check whether dev-
-> > > multifunction is set. So if for example devfn =3D=3D 8 is found (fn =
-=3D=3D 0)
-> > dev->multifunction won't be set in pci_scan_slot() and for VFs it's
-> > also not set via PCI_HEADER_TYPE_MFD. So we won't check for devfn =3D=
-=3D 9
-> > even though that could very well be there.
-> >=20
-> > Now for s390 this currently doesn't cause issues because for all
-> > multifunction devices we have, we either get a VF alone and then since
-> > commit 25f39d3dcb48 ("s390/pci: Ignore RID for isolated VFs") use devfn
-> > =3D=3D 0, or we have the parent PF passed-through and then VFs always g=
-et
-> > hot plugged after SR-IOV enable, which then uses
-> > pci_scan_single_device(). And for non VFs we always have devfn =3D=3D 0
-> > and/or devfn =3D=3D 1 and multifunction via the header. So in a sense t=
-he
-> > above commit works around the issue, though that wasn't its primary
-> > intention.
-> >=20
-> > Did either of you also run into this issue or can reproduce it?
-> >=20
-> > Somewhat related, if ARI is enabled this would also break the isolated
-> > function case including on s390 where ARI is used by the platform
-> > firmware, but detected as off by Linux because there is no struct
-> > pci_dev associated with the PCI bus. If I patch Linux to correctly
-> > detect ARI, it no longer finds an isolated PF with devfn =3D=3D 1.
-> LoongArch do have some problems after commit a02fd05661d7 ("PCI:
-> Extend isolated function probing to LoongArch"). Please see:
-> https://lore.kernel.org/linux-pci/20251014074100.2149737-1-chenhuacai@loo=
-ngson.cn/
->=20
-> Now we don't know what happens exactly, so I haven't answered Bjorn's
-> question...
->=20
-> Huacai
->=20
+On Wed, Oct 22, 2025, Yan Zhao wrote:
+> On Tue, Oct 21, 2025 at 09:36:52AM -0700, Sean Christopherson wrote:
+> > On Tue, Oct 21, 2025, Yan Zhao wrote:
+> > > On Thu, Oct 16, 2025 at 05:32:22PM -0700, Sean Christopherson wrote:
+> > > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > > > index 18d69d48bc55..ba5cca825a7f 100644
+> > > > --- a/arch/x86/kvm/mmu/mmu.c
+> > > > +++ b/arch/x86/kvm/mmu/mmu.c
+> > > > @@ -5014,6 +5014,65 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+> > > >  	return min(range->size, end - range->gpa);
+> > > >  }
+> > > >  
+> > > > +int kvm_tdp_mmu_map_private_pfn(struct kvm_vcpu *vcpu, gfn_t gfn, kvm_pfn_t pfn)
+> > > > +{
+> > > > +	struct kvm_page_fault fault = {
+> > > > +		.addr = gfn_to_gpa(gfn),
+> > > > +		.error_code = PFERR_GUEST_FINAL_MASK | PFERR_PRIVATE_ACCESS,
+> > > > +		.prefetch = true,
+> > > > +		.is_tdp = true,
+> > > > +		.nx_huge_page_workaround_enabled = is_nx_huge_page_enabled(vcpu->kvm),
+> > > > +
+> > > > +		.max_level = PG_LEVEL_4K,
+> > > > +		.req_level = PG_LEVEL_4K,
+> > > > +		.goal_level = PG_LEVEL_4K,
+> > > > +		.is_private = true,
+> > > > +
+> > > > +		.gfn = gfn,
+> > > > +		.slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn),
+> > > > +		.pfn = pfn,
+> > > > +		.map_writable = true,
+> > > > +	};
+> > > > +	struct kvm *kvm = vcpu->kvm;
+> > > > +	int r;
+> > > > +
+> > > > +	lockdep_assert_held(&kvm->slots_lock);
+> > > Do we need to assert that filemap_invalidate_lock() is held as well?
+> > 
+> > Hrm, a lockdep assertion would be nice to have, but it's obviously not strictly
+> > necessary, and I'm not sure it's worth the cost.  To safely assert, KVM would need
+> Not sure. Maybe just add a comment?
+> But even with kvm_assert_gmem_invalidate_lock_held() and
+> lockdep_assert_held(&kvm->slots_lock), it seems that
+> kvm_tdp_mmu_map_private_pfn() still can't guarantee that the pfn is not stale.
 
-Interesting. I'm working on a patch that simplifies and hopefully fixes
-the isolated function probing by basically going back to basics and
-just trying every devfn 0-255. It would be interesting if that fixes
-your issue too. In the linked patch you said that the hole left by
-function 0 is not supposed to be probed, but with disabled isolated
-function probing you'd still try to scan function 0 so I can't see how
-that would explain your issues. On the other hand it doesn't sound like
-an exact match of what I saw. I'm still working on the cover letter and
-more testing including testing on x86, but if you're curious the
-current state is on my git.kernel.org account[0] in the
-b4/ari_no_bus_dev branch.
+At some point we have to assume correctness.  E.g. one could also argue that
+holding every locking in the universe still doesn't ensure the pfn is fresh,
+because theoretically guest_memfd could violate the locking scheme.
 
-Thanks,
-Niklas
+Aha!  And to further harden and document this code, this API can be gated on
+CONFIG_KVM_GUEST_MEMFD=y, as pointed out by the amazing-as-always test bot:
 
-[0]
-https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/log/?h=3Db4/=
-ari_no_bus_dev
+https://lore.kernel.org/all/202510221928.ikBXHGCf-lkp@intel.com
+
+We could go a step further and gate it on CONFIG_KVM_INTEL_TDX=y, but I don't
+like that idea as I think it'd would be a net negative in terms of documenation,
+compared to checking CONFIG_KVM_GUEST_MEMFD.  And in general I don't want to set
+a precedent of ifdef-ing common x86 based on what vendor code _currently_ needs
+an API.
+
+> e.g., if hypothetically those locks were released and re-acquired after getting
+> the pfn.
+> 
+> > to first assert that the file refcount is elevated, e.g. to guard against
+> > guest_memfd _really_ screwing up and not grabbing a reference to the underlying
+> > file.
+> > 
+> > E.g. it'd have to be something like this:
+> > 
+> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > index 94d7f32a03b6..5d46b2ac0292 100644
+> > --- a/arch/x86/kvm/mmu/mmu.c
+> > +++ b/arch/x86/kvm/mmu/mmu.c
+> > @@ -5014,6 +5014,18 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+> >         return min(range->size, end - range->gpa);
+> >  }
+> >  
+> > +static void kvm_assert_gmem_invalidate_lock_held(struct kvm_memory_slot *slot)
+> > +{
+> > +#ifdef CONFIG_PROVE_LOCKING
+> > +       if (WARN_ON_ONCE(!kvm_slot_has_gmem(slot)) ||
+> > +           WARN_ON_ONCE(!slot->gmem.file) ||
+> > +           WARN_ON_ONCE(!file_count(slot->gmem.file)))
+> > +               return;
+> > +
+> > +       lockdep_assert_held(file_inode(&slot->gmem.file)->i_mapping->invalidate_lock));
+> 	  lockdep_assert_held(&file_inode(slot->gmem.file)->i_mapping->invalidate_lock);
+> > +#endif
+> > +}
+> > +
+> >  int kvm_tdp_mmu_map_private_pfn(struct kvm_vcpu *vcpu, gfn_t gfn, kvm_pfn_t pfn)
+> >  {
+> >         struct kvm_page_fault fault = {
+> > @@ -5038,6 +5050,8 @@ int kvm_tdp_mmu_map_private_pfn(struct kvm_vcpu *vcpu, gfn_t gfn, kvm_pfn_t pfn)
+> >  
+> >         lockdep_assert_held(&kvm->slots_lock);
+> >  
+> > +       kvm_assert_gmem_invalidate_lock_held(fault.slot);
+> > +
+> >         if (KVM_BUG_ON(!tdp_mmu_enabled, kvm))
+> >                 return -EIO;
+> > --
+> > 
+> > Which I suppose isn't that terrible?
+> Is it good if we test is_page_fault_stale()? e.g.,
+
+No, because it can only get false positives, e.g. if an mmu_notifier invalidation
+on shared, non-guest_memfd memory.  Though a sanity check would be nice to have;
+I believe we can simply do:
+
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index c5734ca5c17d..440fd8f80397 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -1273,6 +1273,8 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+        struct kvm_mmu_page *sp;
+        int ret = RET_PF_RETRY;
+ 
++       KVM_MMU_WARN_ON(!root || root->role.invalid);
++
+        kvm_mmu_hugepage_adjust(vcpu, fault);
+ 
+        trace_kvm_mmu_spte_requested(fault);
