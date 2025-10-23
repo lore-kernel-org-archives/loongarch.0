@@ -1,99 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B032EE60B
-	for <loongarch@lists.linux.dev>; Thu, 23 Oct 2025 13:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC00332910
+	for <loongarch@lists.linux.dev>; Thu, 23 Oct 2025 15:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761224910; cv=none; b=DvCz5QAWmrBptzWk0DU1Ku/NxtcoYj8WCK4Ir6vdFoEUeVAha1rCZUzQ+BAR3R23zCqroUoho+BtXBqJXgb3Nsn/CLX6oXtaEhwkqXEYB8vBWo4GS9SrvCt6J8tKnPTgOIiMG5FJEnKCzRWGuXhmMQ4cwWHkqRF6dsQDuQwAneU=
+	t=1761231602; cv=none; b=JDHwwd0n4xxZCQhNzyGf1YHwKXz6NC9Z8MH2JoYHXO2gtfnCk9941jhKdLwzahIXWDjaJFxioy+nwj9pTzRjqdNlSP49g/5CdMbuCxXSIVT9LBg9aO1m4vb8ZEvpVISnsqV1x0LrY7wODXM9lnQt9cIudgzQ98zAy1tz40HrNK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761224910; c=relaxed/simple;
-	bh=rZRxnZoiPfM11fgodGAzhTvAF8cwKF/3dUpvAD80g7I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eM1BYS1t8Nu5VDPIrU2ML06vASeoj3C6SgBkG0UCWeHqY4OkeqQqRCH2MWQ3HQ2KIAV7Duu0dk4NrvMZKg0h+pqK8igsad/YOd8aDPbvX2UoGvWnc+lPdSFc+AhqMHTaPs6Xv7F0bwGWQd30WEmyMUf/wOq1Onsu9Qq/ASp7Y04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZW/rQmE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761231602; c=relaxed/simple;
+	bh=cCjw14mLE9P+iI4RdSZoroo4x5ze1Fp0XffjVUeu23Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ear4uDl40FF3ALnoD96OaK9Hxl3//vO6Y/iVP7yCA9FFddB8kBJUTaJZxSF901Bs9OCGKqKDpejFiiSviCSyhoengO0Ih5pyNCeJBQRfEyf5s1SbY5Pa4BzVImjIdy/a8ikdHoCzmrsGupjH8YHm6Rgnk05H9DBCVRAiszYGHhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lulYKaOq; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZW/rQmE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 840BDC4CEE7
-	for <loongarch@lists.linux.dev>; Thu, 23 Oct 2025 13:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761224909;
-	bh=rZRxnZoiPfM11fgodGAzhTvAF8cwKF/3dUpvAD80g7I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oZW/rQmEUz2YH53qKD7ymYPUPQkUeT129GFlJbzc1r9CRAfWc7NgvwzDimpKJVEuO
-	 HaAIXYTD/lVPRDAgJgJtcBP+pI7vwftBj/4ZLNcrC5mWXx66rrzk/ZUt9JczWQWgZf
-	 A8ZTK7M9av8BVNnHNC0dxN+VS7blQ9lpMn4rEWCh7S6Nu4LS3Q+3HvNjTgFK2Nfp3N
-	 yhihsOCpXTYI09g0yTSUzS+IAXUXC9kJ4YzbtIf5R9ak9qExgRXEmFLwM68mju9rtz
-	 Js00DgzYmfJPb2l5lBog1XHiYOs9WcQmFpwHEICYFZ7trIcv0sIA0vguz3BhdP/c87
-	 K/XzFPAhQQo7g==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-61feb87fe26so1385006a12.1
-        for <loongarch@lists.linux.dev>; Thu, 23 Oct 2025 06:08:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUNCp/AZjSGTnBvPt15sUXW9QeUAsAgXV48/WFs6ZZkdhhRRlsoy27+jp7t2/g+XLy2H5RP1tTPCIE=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx5E5E00XueKHO8MlR0Fxeut/RPQCY7Spksu7PR+lmYwbqt4J+m
-	6AFutWw03s26iOg/FzNwsEQR6p/20EO6Os1/WGOhZBHOEUXMxYwbO/ccmiy74zUvUw6YudDnRC6
-	/5jP1Uyej1WbAc/UMwVhyco0qRBrRuF4=
-X-Google-Smtp-Source: AGHT+IGgxwrANKKCzMlvCvvxWaKxTknrL+aOM8gkoV8nSDhlCuWQPhGyWc7sQ5zlWA5rMpi547IqAfFwjC3LyiTOuV4=
-X-Received: by 2002:a05:6402:5191:b0:63c:4f1e:6d7a with SMTP id
- 4fb4d7f45d1cf-63c4f1e734cmr20753748a12.19.1761224908104; Thu, 23 Oct 2025
- 06:08:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lulYKaOq"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-33baef12edaso925320a91.0
+        for <loongarch@lists.linux.dev>; Thu, 23 Oct 2025 08:00:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761231600; x=1761836400; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DsY3zzD8XUrRiTLyLBawfwaQI9/sErmot+/rfYHcY0U=;
+        b=lulYKaOq/TcTSltLmKJBDonwuU391kqfUdLAy49yAcWJ+jpzNlLU8GajY3pjFxzERC
+         lh8NFPxrEDgUxuUDVVCaOrgXcSk7fBX352krBjfVFGGlI+gEthVzsQU8ctgJ7c1Bd5D/
+         6T2Ss3dzabxs/sZxaWX7ROpZZHa1aagDkHcxUFA7aaCUaPkfGFSA8lAEtrgrrNZ/WICi
+         kFwsolRf79hc5oeE6RpXaJggrBQwCaJUpxhF6l7cz9jCIrRuODA95SvA7UUwjUlFPV1K
+         T8+4k6hLgXMcJSdvOgGg3g7VDH56hllRXJAuwtiLhTJWFkA6zCOXeYKUoa9fhClzoKCe
+         zY8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761231600; x=1761836400;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DsY3zzD8XUrRiTLyLBawfwaQI9/sErmot+/rfYHcY0U=;
+        b=kMAOekFyGKM9eOBe9WTIBXFjuO/lTwaXzOAUMlASlU8Diqty9nsRbaWMPlVH+F1M9z
+         +RXOT3YiUgjWyoWU3PohuCAMNLBYQZFwZnA8oEza11n3Q/FOl7zjSxyLlmrqWUdO1kfL
+         XBceGjm6QQmry9X1q0gISh8jHoVR0lfLq8Tbyx7AP5P3EA+iLnEyHQ3fpXX82a+iWNdc
+         EmlU+CS2x5FWeUFkxC/9vWAKR5N20c9HFUgzvwzEcQiJp5ZZp5SdwvLqCtRxS9L1qSHI
+         aCKHfjRqptCv2inzLatyqAHL2CA/O6S8YDev0gafMG2DjmyV9iwF8yEwfRRdtMTe2dUp
+         d2Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8jR1uCfIT+KNkdH87dfxVpYOwn9w6rOz/elpfZ4z/oGQfIPHVTU1Xq2S6UleUGdoKDapRbwsHkhg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx/+Bncwx4YnvmzXKLKppIDHFXFzVRLREcpd4oCulELuQcOnRqF
+	q0xJ2O/8AsqgQY6/D92H2F5VpFS6QwKwMlAkGCdFLJNXPbPPQrawW8Z7Hul4s2k5DvW565MShSE
+	4rqzabQ==
+X-Google-Smtp-Source: AGHT+IGIKST/5gTXkhLeNb6+zo5OEJ6E7Tz0ILKzp1TDg+5uVro2JJ+z5T3UkH4GmCDPjUQAuY2o81CumRA=
+X-Received: from pjbsp15.prod.google.com ([2002:a17:90b:52cf:b0:330:a006:a384])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5291:b0:32e:859:c79
+ with SMTP id 98e67ed59e1d1-33bcec1ab25mr31136898a91.0.1761231599767; Thu, 23
+ Oct 2025 07:59:59 -0700 (PDT)
+Date: Thu, 23 Oct 2025 07:59:58 -0700
+In-Reply-To: <28136b62074550826efa3f57b1f7be07f571abdc.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20251023090346.1995894-1-zhoubinbin@loongson.cn>
-In-Reply-To: <20251023090346.1995894-1-zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 23 Oct 2025 21:08:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H58Cn2LY0Zv3h4_JXdYtg2j0T7ZOhKXpGY2J_dMd5uVvg@mail.gmail.com>
-X-Gm-Features: AS18NWCXMckJqVsBdOKHC9RM0y5iw6kxnbNEcILL3LuQzqZ-M_8BOJatx8V83fg
-Message-ID: <CAAhV-H58Cn2LY0Zv3h4_JXdYtg2j0T7ZOhKXpGY2J_dMd5uVvg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: loongson-64bit: Switch to dynamic allocate GPIO
- base in byte mode
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-gpio@vger.kernel.org, Hongliang Wang <wanghongliang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20251017003244.186495-1-seanjc@google.com> <20251017003244.186495-10-seanjc@google.com>
+ <28136b62074550826efa3f57b1f7be07f571abdc.camel@intel.com>
+Message-ID: <aPpC7mt3CwWuhv1p@google.com>
+Subject: Re: [PATCH v3 09/25] KVM: TDX: Fold tdx_sept_drop_private_spte() into tdx_sept_remove_private_spte()
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: "chenhuacai@kernel.org" <chenhuacai@kernel.org>, "frankja@linux.ibm.com" <frankja@linux.ibm.com>, 
+	"maz@kernel.org" <maz@kernel.org>, "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, 
+	"pjw@kernel.org" <pjw@kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
+	"kas@kernel.org" <kas@kernel.org>, "maobibo@loongson.cn" <maobibo@loongson.cn>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "maddy@linux.ibm.com" <maddy@linux.ibm.com>, 
+	"palmer@dabbelt.com" <palmer@dabbelt.com>, "imbrenda@linux.ibm.com" <imbrenda@linux.ibm.com>, 
+	"zhaotianrui@loongson.cn" <zhaotianrui@loongson.cn>, "anup@brainfault.org" <anup@brainfault.org>, 
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, Yan Y Zhao <yan.y.zhao@intel.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+	"kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>, Vishal Annapurve <vannapurve@google.com>, 
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, 
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Oct 23, 2025 at 5:04=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> gpiolib want to get completely rid of static gpiobase allocation, so
-> switch to dynamic allocate GPIO base in byte mode, also can avoid
-> warning message:
->
-> [1.529974] gpio gpiochip0: Static allocation of GPIO base is deprecated,
-> use dynamic allocation.
->
-> Reported-by: Hongliang Wang <wanghongliang@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+On Thu, Oct 23, 2025, Kai Huang wrote:
+> On Thu, 2025-10-16 at 17:32 -0700, Sean Christopherson wrote:
+> > Fold tdx_sept_drop_private_spte() into tdx_sept_remove_private_spte() to
+> > avoid having to differnatiate between "zap", "drop", and "remove", and to
+> 		  ^
+> 		  differentiate
+> 
+> Nit: it's a wee bit confusing that you mentioned "zap", because after this
+> patch tdx_sept_zap_private_spte() is still there.  But it may be only me
+> feeling that way.
 
-> ---
->  drivers/gpio/gpio-loongson-64bit.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loong=
-son-64bit.c
-> index 02f181cb219e..d4e291b275f0 100644
-> --- a/drivers/gpio/gpio-loongson-64bit.c
-> +++ b/drivers/gpio/gpio-loongson-64bit.c
-> @@ -312,6 +312,7 @@ static int loongson_gpio_init(struct platform_device =
-*pdev, struct loongson_gpio
->                 lgpio->chip.gc.direction_output =3D loongson_gpio_directi=
-on_output;
->                 lgpio->chip.gc.set =3D loongson_gpio_set;
->                 lgpio->chip.gc.parent =3D &pdev->dev;
-> +               lgpio->chip.gc.base =3D -1;
->                 spin_lock_init(&lgpio->lock);
->         }
->
->
-> base-commit: d5376026f9269601e239545e2ec4aea0cc62bf2a
-> --
-> 2.47.3
->
+Hmm, yeah, I agree that's a confusing/misleading.  How about this?
+
+  KVM: TDX: Fold tdx_sept_drop_private_spte() into tdx_sept_remove_private_spte()
+  
+  Fold tdx_sept_drop_private_spte() into tdx_sept_remove_private_spte() as a
+  step towards having "remove" be the only and only function that deals with
+  removing/zapping/dropping a SPTE, e.g. to avoid having to differentiate
+  between "zap", "drop", and "remove".  Eliminating the "drop" helper also
+  gets rid of what is effectively dead code due to redundant checks, e.g. on
+  an HKID being assigned.
+  
+  No functional change intended.
