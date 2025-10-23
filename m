@@ -1,180 +1,193 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70333321DD
-	for <loongarch@lists.linux.dev>; Thu, 23 Oct 2025 15:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1651494C2
+	for <loongarch@lists.linux.dev>; Thu, 23 Oct 2025 15:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761232449; cv=none; b=g6JPrG54mPe1LHRcT9XVHrRBDucrDdZbNCs5u2makjpKK6WqiQk8PxqZP2OG0wv82qfjGWKUkwyJuDAFoXCRiJ09+wZL0jN0wR4H3I/QHfPv6kaz1LV/+QFuD4GbzkzT26z8NOEiTy6hsIK6soIr9YQqrlgkOCywmg7E9jzyIOo=
+	t=1761232859; cv=none; b=T4gaupFUKcIyRDDHJGK4xeXUv8vJh5Uv/g5SuQ8F2Mg9B4Zx59KO9A4wMZIPTa2KrYA50QuweJmiv6ecmQCRUcr9WkgkRjjAFgxXz31Ishnvxfxzxh/ztms+gOP4AWsq5cvOOI2eKvCM1A4PWkYCd5aTW67od8mGFqeY7FZcDVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761232449; c=relaxed/simple;
-	bh=uHRCY9cQRjtJ7szhlZgEWB+vNgN2UZvp04I8fLcJxas=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cum0wq4j9mjwdiijolPhH8zPNZraw1Z6A5dCQHVKcJ+GkXDkTdWV8mQvJWaLa2iW9GHd4L7sXwm/pvLCNu3zaSXkJ2oZS0FLnMTNzo+UQL/PCVLSz0op4QqwVkFtf86IPtz2PcDwMBIx2haHDEMh0ay/B2V3qubFK8Cms7YaDTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YQwUj7hz; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1761232859; c=relaxed/simple;
+	bh=BYb7xuVoSyultx4DlCUy4uvLkrktc8Bom/DND+zE5Z0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uEJo885eKPaRWkyjg/gYGjTCDJNQnkQOVI3qvE0fiU0bmKJ/t4wav3KLCyCocxJ2cQVb2aCOdWDiYh3081zOmTt0o0ZajqJ+AIVrLW8YAX0Xthnfj51XIj1PNu/kenKLLjFXOx6MAezUQMJlAEIAa2Ww1lDbISQR+2I2ZhKyQ34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=f3dkbZQd; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YQwUj7hz"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33ba9047881so1111321a91.1
-        for <loongarch@lists.linux.dev>; Thu, 23 Oct 2025 08:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761232446; x=1761837246; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eGj/4U8Cjm7Jzuo0N797IrKS+KWnd9Al6qyj+0gj5DU=;
-        b=YQwUj7hz2KTZkAfAiI4aTpFWcQHP3qf/NJYhByQWh83Uh8Nz0Kv+132nCfhhe6sc8x
-         BhNoTZfU/Sv6Tckwpk65SbEFKvp1plHaJj0cTONmTtD8MUXBzB510PlFVucn3N5s9hn8
-         7GwafDTr1m8+rOAiq+aOKapZWMrQAtSxdZe43nVRI0Ngm+OkXwSbSNqjXLmgnceokUOo
-         2iKj3jLi89T2Q8q0IWqxi5UwsnSPBJZl5rJNy2UUlnPd2o7SkorIVaZ0+4qqytiLsbJV
-         NMMRk6xUE81LBcqsrJKHWSlGjSuNZ/IxUPRDScGxIjsDxJxXnRHm/UH06uDDgJ+6W+W+
-         YTfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761232446; x=1761837246;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eGj/4U8Cjm7Jzuo0N797IrKS+KWnd9Al6qyj+0gj5DU=;
-        b=n7Q/UBzr0+aAo5rHDtp+KAT5b3pEGvCC9SWoneKYqLu9V5x0G5PoGv4sjqTAgiiL6O
-         z08S4PDOqnCRGP5c1sVYIWI+jmlCe/7kUzeKw4UeKUWEzmui4e3TX6hQQqWMHc+M/9Zr
-         sSnzqHYD+SwEHvdHkJ3aOWtizKtA21dKi20DwErNQw2g3Pedh5uXzNCIf2WDwhVs/uAH
-         SzrjxRilTYukoRQy1v1c92XU23Fpmz0A2HBbCcRYU9V4KfMsLQPyEsJG9/6dpwf+vbWa
-         gjUGp5/DdiAYPF+6g/h/n1ds91DyFtZx94yv2VV3TrmvDV3exM2jOLkZWi8B0MPcdRyh
-         yMKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRqF0d9VkpDpcL04fl+7nCGSMFMwE7O7H6C7O6tNifMfPJKDm7iPM/1FVLF79lstbb3O7hxm9f7+U=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxTsBcLtm5omc6W4NOWB/5Q973sLwWemfh+3hwkJqptFfiVubaZ
-	VierheEGYl8qWmVzBaOonLPKS15ZGm28MiJhcxmSA7BgAsb85an101g7W0YP0Hcq3clerI/kuvt
-	hDIONow==
-X-Google-Smtp-Source: AGHT+IGyk+8DKCi3tYCJowX0kgLUyc4PpyLVM16G5qza1KYeH4GEBaOP8pzea9wQFWKumE2t1taaAoPvn3M=
-X-Received: from pjbrm7.prod.google.com ([2002:a17:90b:3ec7:b0:330:6c04:207])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:570e:b0:32e:7ff6:6dbd
- with SMTP id 98e67ed59e1d1-33e21dedc9fmr9424992a91.0.1761232446100; Thu, 23
- Oct 2025 08:14:06 -0700 (PDT)
-Date: Thu, 23 Oct 2025 08:14:04 -0700
-In-Reply-To: <aPnbIDxGlcAyI9vy@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="f3dkbZQd"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59N86h5O010024;
+	Thu, 23 Oct 2025 15:20:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=kEBe9mUJWO2XS82G5NZUz8/+A0G7
+	iJdz+oms7mK5oWk=; b=f3dkbZQdCIszpjactf15bOrmk99Ax/SLrDIHwq+YqCep
+	JvqIBlkwclUcO+QyVCLaWJOT7PZEfylmzjoWBRQ670tv81FfvGEzavJNvE4BgFa0
+	atTNrDlmETNS/i6dQBopYb+nPlSDJZO4bh+FvGYU5JyO9xpbkMErqjKFJXMLxc5u
+	rFVEgQmyBmWO6yHJQt2rns1jxcqFXnyKm7f5vYnwkQ3NMaBu65ZyWY6Gqxhh5ucP
+	G0GPQ90BmVSnocE0WocWRDUSuZSh5OATzo9iDQSxa9mbh2NqzOAwj5Yi71C7JtU1
+	t4G6r8GkC5ywuyWrZVwlpUHCx8SaFekZttCq8l0Wgg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v30w1gb7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Oct 2025 15:20:53 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59NF8Wwn019219;
+	Thu, 23 Oct 2025 15:20:53 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v30w1gb3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Oct 2025 15:20:53 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59ND9nAP014676;
+	Thu, 23 Oct 2025 15:20:52 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 49vn7sent7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Oct 2025 15:20:52 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59NFKbU130933584
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 Oct 2025 15:20:38 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5AE6858055;
+	Thu, 23 Oct 2025 15:20:50 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E2BD458043;
+	Thu, 23 Oct 2025 15:20:47 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 23 Oct 2025 15:20:47 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH v4 0/2] PCI: Fix isolated function probing and enable ARI
+ for s390
+Date: Thu, 23 Oct 2025 17:20:40 +0200
+Message-Id: <20251023-ari_no_bus_dev-v4-0-8482e2ed10bd@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20251017003244.186495-1-seanjc@google.com> <20251017003244.186495-20-seanjc@google.com>
- <aPnbIDxGlcAyI9vy@yzhao56-desk.sh.intel.com>
-Message-ID: <aPpGPF8McvI3-OO7@google.com>
-Subject: Re: [PATCH v3 19/25] KVM: TDX: Assert that mmu_lock is held for write
- when removing S-EPT entries
-From: Sean Christopherson <seanjc@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	"Kirill A. Shutemov" <kas@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Ira Weiny <ira.weiny@intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Michael Roth <michael.roth@amd.com>, Vishal Annapurve <vannapurve@google.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Ackerley Tng <ackerleytng@google.com>, 
-	Binbin Wu <binbin.wu@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMhH+mgC/23P0QqCMBTG8VeJXTfZzqZzXfUeETJ1ywOpseUow
+ ndvShFUl/8Pzg/OgwTr0Qay2zyItxEDjkMKud2QpjPDyVJsUxNgIJkCSY3HahiregpVayPNoQY
+ DyglZFCQdXbx1eFvBwzF1h+E6+vvqR76sL0qwbypyyqlqLVeFKpx2dn/GYbplWPdZM/Zk4SJ8C
+ M3LHwISUYrGGa05K8H9I8SbyJnk6ocQiaiNLNNL2hipvol5np9DJXtkNgEAAA==
+X-Change-ID: 20240724-ari_no_bus_dev-52b2a27f3466
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>, Huacai Chen <chenhuacai@kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Tianrui Zhao <zhaotianrui@loongson.cn>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Gerd Bayer <gbayer@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        jailhouse-dev@googlegroups.com,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2604;
+ i=schnelle@linux.ibm.com; h=from:subject:message-id;
+ bh=BYb7xuVoSyultx4DlCUy4uvLkrktc8Bom/DND+zE5Z0=;
+ b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDJ+uZ+NdrwQsWtzLFt64WelRXs937I3OPz2S7t4VfqV0
+ KYLIb8XdJSyMIhxMciKKbIs6nL2W1cwxXRPUH8HzBxWJpAhDFycAjAR9xBGhve/owrUHy/93ikw
+ R4Gtu2DenM9T03q273i5Sed83/3aW5yMDB0NP6bGyXVvvu1xJKPY9OvPH9v+Ol9eNSNZxSFX2uY
+ IMw8A
+X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
+ fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: U4UQobL0buWUJUotGSDdum7ot8fFSVik
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfX9c/XJ8faq6PS
+ Pp0LFH7zLFF3UKcJJwYrm1ZJaTmE/dc3lXbcFRwavNaBSCqHO6IigQ98iBzLG6blalr4/9U9gjY
+ JgeQoqYE0SUMhpuduEv+9IeE2TuF3YkegW3QSwUQUQaG4FprIK6RSzQI5sm1kt1nBnCIl0/YH9N
+ a9ntpfob7AFl5DnoDw9zFDcfFzFAajQNmcnLPJBeJjVTcKTkf2Wlji/TyXb+txvJy5veWDb5xy4
+ xdnpeeDhY2J/pgs06sVd7okFWUqpsSpfomypexIcr5SL7aBXnBFSYHk2Yq3FmcfUZCONpmb8QM8
+ TdH4cuet2pI9STndeYSD5HCMrfgelWnGvHvgIFz0iwN7IhWCavs/EgQLCRxo129APj7+LPOd+wC
+ 4ROT6RG8En3pUH6h3q3CaR5Ge1k7ZA==
+X-Authority-Analysis: v=2.4 cv=MIJtWcZl c=1 sm=1 tr=0 ts=68fa47d5 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=hLx8FqHbWYRF7YI4eHsA:9 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-ORIG-GUID: jFahKdE41NQYbbKuOIJDD_Pj10-2SaU4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-23_01,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 phishscore=0 lowpriorityscore=0 adultscore=0
+ clxscore=1015 impostorscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
 
-On Thu, Oct 23, 2025, Yan Zhao wrote:
-> On Thu, Oct 16, 2025 at 05:32:37PM -0700, Sean Christopherson wrote:
-> > Unconditionally assert that mmu_lock is held for write when removing S-EPT
-> > entries, not just when removing S-EPT entries triggers certain conditions,
-> > e.g. needs to do TDH_MEM_TRACK or kick vCPUs out of the guest.
-> > Conditionally asserting implies that it's safe to hold mmu_lock for read
-> > when those paths aren't hit, which is simply not true, as KVM doesn't
-> > support removing S-EPT entries under read-lock.
-> > 
-> > Only two paths lead to remove_external_spte(), and both paths asserts that
-> > mmu_lock is held for write (tdp_mmu_set_spte() via lockdep, and
-> > handle_removed_pt() via KVM_BUG_ON()).
-> > 
-> > Deliberately leave lockdep assertions in the "no vCPUs" helpers to document
-> > that wait_for_sept_zap is guarded by holding mmu_lock for write.
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  arch/x86/kvm/vmx/tdx.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> > index e517ad3d5f4f..f6782b0ffa98 100644
-> > --- a/arch/x86/kvm/vmx/tdx.c
-> > +++ b/arch/x86/kvm/vmx/tdx.c
-> > @@ -1711,8 +1711,6 @@ static void tdx_track(struct kvm *kvm)
-> >  	if (unlikely(kvm_tdx->state != TD_STATE_RUNNABLE))
-> >  		return;
-> >  
-> > -	lockdep_assert_held_write(&kvm->mmu_lock);
-> Could we also deliberately leave lockdep assertion for tdx_track()?
+Hi Bjorn,
 
-Can do.
+This series originally aimed to correctly detect ARI as being used on
+s390. I had missed however that this, in a pretty obious manner, breaks
+the isolated function probing resulting devices not getting probed. For
+example if a partition/system only has a PF with devfn 1 passed-through.
+Additionally the fix may (TBD) help with an issue that LoongArch has
+encountered when using isolated function probing and tried to fix by
+limiting it to bus 0 ([0]). If it does fix this it may make sense to
+apply this separately from the second patch.
 
-> This is because if we allow removing S-EPT entries while holding mmu_lock for
-> read in future, tdx_track() needs to be protected by a separate spinlock to
-> ensure serialization of tdh_mem_track() and vCPUs kick-off (kicking off vCPUs
-> must follow each tdh_mem_track() to unblock the next tdh_mem_track()).
+Besides the effect on s390 the second patch should also ensure that VFs
+on a virtual bus created via virtfn_add_bus() correctly present ARI as
+enabled. Sadly I don't have access to any device to test this.
 
-Does this look/sound right?
+Speaking of testing. For the first patch I can reproduce the AER
+scenario described by only applying the second patch. The SR-IOV
+scenario I encountered in the past before commit 25f39d3dcb48 ("s390/pci:
+Ignore RID for isolated VFs") and tested the fix now with a partial
+revert hack of that commit.
 
-From: Sean Christopherson <seanjc@google.com>
-Date: Thu, 28 Aug 2025 17:06:17 -0700
-Subject: [PATCH] KVM: TDX: Assert that mmu_lock is held for write when
- removing S-EPT entries
+I also tested the series on x86_64 both on a Ryzen AI 340 based laptop
+and a Xeon Sapphire Rapids based system (including with SR-IOV on
+a ConnectX-6 DX).
 
-Unconditionally assert that mmu_lock is held for write when removing S-EPT
-entries, not just when removing S-EPT entries triggers certain conditions,
-e.g. needs to do TDH_MEM_TRACK or kick vCPUs out of the guest.
-Conditionally asserting implies that it's safe to hold mmu_lock for read
-when those paths aren't hit, which is simply not true, as KVM doesn't
-support removing S-EPT entries under read-lock.
+Thanks,
+Niklas
 
-Only two paths lead to remove_external_spte(), and both paths asserts that
-mmu_lock is held for write (tdp_mmu_set_spte() via lockdep, and
-handle_removed_pt() via KVM_BUG_ON()).
+[0] https://lore.kernel.org/linux-pci/20251014074100.2149737-1-chenhuacai@loongson.cn/
 
-Deliberately leave lockdep assertions in the "no vCPUs" helpers to document
-that wait_for_sept_zap is guarded by holding mmu_lock for write, and keep
-the conditional assert in tdx_track() as well, but with a comment to help
-explain why holding mmu_lock for write matters (above and beyond why
-tdx_sept_remove_private_spte()'s requirements).
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 ---
- arch/x86/kvm/vmx/tdx.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Changes in v4:
+- Add fix of isolated function probing with ARI enabled and in certain
+  cases with SR-IOV devices.
+- Link to v3: https://lore.kernel.org/r/20250417-ari_no_bus_dev-v3-1-ba48f349aa47@linux.ibm.com
 
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index dca9e2561270..899051c64faa 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1715,6 +1715,11 @@ static void tdx_track(struct kvm *kvm)
- 	if (unlikely(kvm_tdx->state != TD_STATE_RUNNABLE))
- 		return;
- 
-+	/*
-+	 * The full sequence of TDH.MEM.TRACK and forcing vCPUs out of guest
-+	 * mode must be serialized, as TDH.MEM.TRACK will fail if the previous
-+	 * tracking epoch hasn't completed.
-+	*/
- 	lockdep_assert_held_write(&kvm->mmu_lock);
- 
- 	err = tdh_mem_track(&kvm_tdx->td);
-@@ -1762,6 +1767,8 @@ static void tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 	gpa_t gpa = gfn_to_gpa(gfn);
- 	u64 err, entry, level_state;
- 
-+	lockdep_assert_held_write(&kvm->mmu_lock);
-+
- 	/*
- 	 * HKID is released after all private pages have been removed, and set
- 	 * before any might be populated. Warn if zapping is attempted when
+Changes in v3:
+- Move setting of ari_enabled on s390 to bus creation and clear it in
+  pcibios_add_device() if the capability is not available.
+- Rebase on v6.15-rc2
+- Link to v2: https://lore.kernel.org/r/20240918-ari_no_bus_dev-v2-1-83cfa991082f@linux.ibm.com
 
-base-commit: 69564844a116861ebea4396894005c8b4e48f870
---
+Changes in v2:
+- Rebased on v6.11
+- Link to v1: https://lore.kernel.org/r/20240730-ari_no_bus_dev-v1-1-7de17676f9fe@linux.ibm.com
+
+---
+Niklas Schnelle (2):
+      PCI: Fix isolated PCI function probing with ARI and SR-IOV
+      PCI: s390: Handle ARI on bus without associated struct pci_dev
+
+ arch/s390/pci/pci.c     |  7 +++++++
+ arch/s390/pci/pci_bus.c | 10 ++++++++++
+ drivers/pci/pci.c       |  4 ++--
+ drivers/pci/probe.c     | 21 +++++++++++++--------
+ include/linux/pci.h     |  4 ++--
+ 5 files changed, 34 insertions(+), 12 deletions(-)
+---
+base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
+change-id: 20240724-ari_no_bus_dev-52b2a27f3466
+
+Best regards,
+-- 
+Niklas Schnelle
+
