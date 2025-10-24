@@ -1,142 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B5A289376
-	for <loongarch@lists.linux.dev>; Fri, 24 Oct 2025 07:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86C129BDA9
+	for <loongarch@lists.linux.dev>; Fri, 24 Oct 2025 07:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761289477; cv=none; b=piKVG4RZUPImwY/TN7i/EZckOpLUyaHKCMpk/1qXZwGHL1a7LTSwrcaUX0k1yqC34UinDBoIndWzhQWA8gKk5fJeHlseDKc4b6IHYiyQPWrJB3MLg8wgaE/whFgWTyK6oaUHlMQfmichWOLkv0ZsDuiGD85M2vn3jomg2APSvjo=
+	t=1761289675; cv=none; b=tJAdoG9sxXZEkH7tJ92W2Xh576oHPwO6duufpt1bJbAJCh5R5tqnvUVjQuWdSRJQM/31ADPAzsaZp3lUFgtb51HVZ0MXWRZu7BxIRqF5JwrWXx13TkEp1NFu86gef5oAExFeBc7GIXdWH7yuu4KSracB0/CZnXg4cmM169TW+io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761289477; c=relaxed/simple;
-	bh=aC27PHhmKovU7D855GtJzRNEbpQZ/LShb8gjYcHPdjk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cwfW1qPUws6lBSrVen8pRSNumOjD0pDwMO/4RHsZBV4Tfyg/oj5vDBdRJb9ZOkUps+eXmnH3DqmZXUC6mOTzb5jcUy84sp7uzWjqDuRArQAAcaPMXwi+BiL4CYlAKaz3bLbzIMj9vHURpGD/buw8knOn5yc1MfA+2o65KSIq+0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPS0X4Q6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761289675; c=relaxed/simple;
+	bh=BNniUyI901wXBDIZRDj//iLWjluNXPc/huJRB/20Imc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mv7nEoeH0L8XWtBHpccjgc/z6Y00jwV3p3cY/sYctpM/xXyCUm7uGzKJRktljH3KrKpRmt9WkLxM/pyDxuaMzh+rf9iFv6+gkJ4ch+IAZWwsywLgyfKeN9Y1F1oCu2erdtZ8brg9KZoG1GO5flnWCuBsDyy1dsUqRrrkoVNsH2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cIRh5nFO; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPS0X4Q6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F9CC4CEFF
-	for <loongarch@lists.linux.dev>; Fri, 24 Oct 2025 07:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761289476;
-	bh=aC27PHhmKovU7D855GtJzRNEbpQZ/LShb8gjYcHPdjk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lPS0X4Q6rUGDZVp7kcB+Vc0LRouMvChtbWVCriBUj/UqNOdi4ZI8Rs5bG2okWc4sn
-	 YaI4rOEJMo0DeT4v/ftWPeFS4u4pEeWGg9BbSMHHMQmyC0FBIBvkuTY2z8k33VsYDo
-	 IVUAI/PTIKSCj1VBTkmaTCFlIhfdAB9csmi1pJfcy9q6L65wnyuq5T40/nE7Dnujsg
-	 og/rro/98KI95qm0IUwGYTObdKwG4HLc/c8boo95KSIwdyLlpii0Bji49X2R3svbHY
-	 GPVF/dcED3jQAAGy31vxsSrj3W6KCa6D9OD+yjl98qanCk0aZDJV81872p2ECiQhSB
-	 XYuN2Di2HzUpg==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6399328ff1fso3141072a12.0
-        for <loongarch@lists.linux.dev>; Fri, 24 Oct 2025 00:04:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUa/KBKPWPu79cKUVaPFtGsBnP97nTVXOVPcQofCq7sR6Nqginf+JhGsD3vL3MSp9+kwL7C88K/4QY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyKnV8WvodE1NVyaDhoMij3FOswpItkvYBCoxA2EtWJceO+XBHf
-	8MCbhBvbjz/XylHUmg3fH+qTb4piACR2a2gSeXq1SdjCUWJsfg9DLFmbcoVwOJbaCJiyZ+XEVG0
-	57FlZStgl2cUee4BlO6rVCur/sLIQCc4=
-X-Google-Smtp-Source: AGHT+IHYyTZcGIxi0Fl+OTaB+QvsYqVNksO0QasRF0cppR46oEv3S0a3JmoHXvshpZB1oJm++yaeW9PCGheC+RPrbnY=
-X-Received: by 2002:a05:6402:430e:b0:63c:b2:c656 with SMTP id
- 4fb4d7f45d1cf-63e6000378amr1199075a12.4.1761289475058; Fri, 24 Oct 2025
- 00:04:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cIRh5nFO"
+Message-ID: <d327af2b-8089-4d1b-8f7f-9f18c0d9faba@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761289671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LJpu9jNeG/9AHqtuVmrf1mdpbO23IJsdx1yWPp+AZv8=;
+	b=cIRh5nFOYHb6pF8W1pDgnMpBx3yfZ+vT+k8OKL4renNzvsbG3YwZjaVL2tEjNRluaJMKZt
+	noGOXGtoSBhgmWSOrdo3DdHFZjsXW4A2dU1CwLkyZkVCCTn9c68E5sIzJoZS7HJD0eHa5W
+	pL693ktqobj4sgZBoAIMN7pEIyeAmsY=
+Date: Fri, 24 Oct 2025 15:06:56 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251021091114.982820-1-maqianga@uniontech.com>
-In-Reply-To: <20251021091114.982820-1-maqianga@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 24 Oct 2025 15:04:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5P9GGbSz0=J+a1hVkLVLwQWq1LfH7dxq4XHLqpgx7wDQ@mail.gmail.com>
-X-Gm-Features: AWmQ_blm-i60Rn_dKVR1u3qxE41hsHF68WOmrXhNujegOS84i4864dMEiTi6MD4
-Message-ID: <CAAhV-H5P9GGbSz0=J+a1hVkLVLwQWq1LfH7dxq4XHLqpgx7wDQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: kexec_file: print out debugging message if required
-To: Qiang Ma <maqianga@uniontech.com>, Youling Tang <youling.tang@linux.dev>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] LoongArch: kexec: Initialize kexec_buf struct
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kexec@lists.infradead.org, Breno Leitao <leitao@debian.org>,
+ Youling Tang <tangyouling@kylinos.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20251024063653.35492-1-youling.tang@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <20251024063653.35492-1-youling.tang@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi, Youling,
+cc to loongarch@lists.linux.dev and linux-kernel@vger.kernel.org
 
-What do you think about this?
 
-Huacai
-
-On Tue, Oct 21, 2025 at 5:12=E2=80=AFPM Qiang Ma <maqianga@uniontech.com> w=
-rote:
+On 10/24/25 14:36, Youling Tang wrote:
+> From: Youling Tang <tangyouling@kylinos.cn>
 >
-> When specifying '-d' for kexec_file_load interface, loaded locations
-> of kernel/initrd/cmdline etc can be printed out to help debug.
+> The kexec_buf structure was previously declared without initialization.
+> commit bf454ec31add ("kexec_file: allow to place kexec_buf randomly")
+> added a field that is always read but not consistently populated by all
+> architectures. This un-initialized field will contain garbage.
 >
-> Commit eb7622d908a0 ("kexec_file, riscv: print out debugging message
-> if required") fixes the same issue on RISC-V.
+> This is also triggering a UBSAN warning when the uninitialized data was
+> accessed:
 >
-> So, remove kexec_image_info() because the content has been printed
-> out in generic code.
+>          ------------[ cut here ]------------
+>          UBSAN: invalid-load in ./include/linux/kexec.h:210:10
+>          load of value 252 is not a valid value for type '_Bool'
 >
-> And on Loongson-3A5000, the printed messages look like below:
+> Zero-initializing kexec_buf at declaration ensures all fields are
+> cleanly set, preventing future instances of uninitialized memory being
+> used.
 >
-> [  288.667939] kexec_file: kernel: 00000000d9aad283 kernel_size: 0x2e77f3=
-0
-> [  288.668414] kexec_file(EFI): No LoongArch PE image header.
-> [  288.703104] kexec_file: Loaded initrd at 0x80000000 bufsz=3D0x1637cd0 =
-memsz=3D0x1638000
-> [  288.703674] kexec_file(ELF): Loaded kernel at 0x9c20000 bufsz=3D0x27f1=
-800 memsz=3D0x2950000
-> [  288.704092] kexec_file: nr_segments =3D 2
-> [  288.704277] kexec_file: segment[0]: buf=3D0x00000000cc3e6c33 bufsz=3D0=
-x27f1800 mem=3D0x9c20000 memsz=3D0x2950000
-> [  288.741213] kexec_file: segment[1]: buf=3D0x00000000bb75a541 bufsz=3D0=
-x1637cd0 mem=3D0x80000000 memsz=3D0x1638000
-> [  288.757182] kexec_file: kexec_file_load: type:0, start:0xb15d000 head:=
-0x18db60002 flags:0x8
->
-> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> Fixes: bf454ec31add ("kexec_file: allow to place kexec_buf randomly")
+> Link: https://lore.kernel.org/r/20250827-kbuf_all-v1-2-1df9882bb01a@debian.org
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 > ---
->  arch/loongarch/kernel/machine_kexec.c | 22 ----------------------
->  1 file changed, 22 deletions(-)
+>   arch/loongarch/kernel/kexec_efi.c          | 2 +-
+>   arch/loongarch/kernel/kexec_elf.c          | 2 +-
+>   arch/loongarch/kernel/machine_kexec_file.c | 2 +-
+>   3 files changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kerne=
-l/machine_kexec.c
-> index e4b2bbc47e62..2d64b7c81e5e 100644
-> --- a/arch/loongarch/kernel/machine_kexec.c
-> +++ b/arch/loongarch/kernel/machine_kexec.c
-> @@ -39,34 +39,12 @@ static unsigned long systable_ptr;
->  static unsigned long start_addr;
->  static unsigned long first_ind_entry;
->
-> -static void kexec_image_info(const struct kimage *kimage)
-> -{
-> -       unsigned long i;
-> -
-> -       pr_debug("kexec kimage info:\n");
-> -       pr_debug("\ttype:        %d\n", kimage->type);
-> -       pr_debug("\tstart:       %lx\n", kimage->start);
-> -       pr_debug("\thead:        %lx\n", kimage->head);
-> -       pr_debug("\tnr_segments: %lu\n", kimage->nr_segments);
-> -
-> -       for (i =3D 0; i < kimage->nr_segments; i++) {
-> -               pr_debug("\t    segment[%lu]: %016lx - %016lx", i,
-> -                       kimage->segment[i].mem,
-> -                       kimage->segment[i].mem + kimage->segment[i].memsz=
-);
-> -               pr_debug("\t\t0x%lx bytes, %lu pages\n",
-> -                       (unsigned long)kimage->segment[i].memsz,
-> -                       (unsigned long)kimage->segment[i].memsz /  PAGE_S=
-IZE);
-> -       }
-> -}
-> -
->  int machine_kexec_prepare(struct kimage *kimage)
->  {
->         int i;
->         char *bootloader =3D "kexec";
->         void *cmdline_ptr =3D (void *)KEXEC_CMDLINE_ADDR;
->
-> -       kexec_image_info(kimage);
-> -
->         kimage->arch.efi_boot =3D fw_arg0;
->         kimage->arch.systable_ptr =3D fw_arg2;
->
-> --
-> 2.20.1
->
+> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+> index 45121b914f8f..5ee78ebb1546 100644
+> --- a/arch/loongarch/kernel/kexec_efi.c
+> +++ b/arch/loongarch/kernel/kexec_efi.c
+> @@ -42,7 +42,7 @@ static void *efi_kexec_load(struct kimage *image,
+>   {
+>   	int ret;
+>   	unsigned long text_offset, kernel_segment_number;
+> -	struct kexec_buf kbuf;
+> +	struct kexec_buf kbuf = {};
+>   	struct kexec_segment *kernel_segment;
+>   	struct loongarch_image_header *h;
+>   
+> diff --git a/arch/loongarch/kernel/kexec_elf.c b/arch/loongarch/kernel/kexec_elf.c
+> index 97b2f049801a..1b6b64744c7f 100644
+> --- a/arch/loongarch/kernel/kexec_elf.c
+> +++ b/arch/loongarch/kernel/kexec_elf.c
+> @@ -59,7 +59,7 @@ static void *elf_kexec_load(struct kimage *image,
+>   	int ret;
+>   	unsigned long text_offset, kernel_segment_number;
+>   	struct elfhdr ehdr;
+> -	struct kexec_buf kbuf;
+> +	struct kexec_buf kbuf = {};
+>   	struct kexec_elf_info elf_info;
+>   	struct kexec_segment *kernel_segment;
+>   
+> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+> index dda236b51a88..fb57026f5f25 100644
+> --- a/arch/loongarch/kernel/machine_kexec_file.c
+> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+> @@ -143,7 +143,7 @@ int load_other_segments(struct kimage *image,
+>   	unsigned long initrd_load_addr = 0;
+>   	unsigned long orig_segments = image->nr_segments;
+>   	char *modified_cmdline = NULL;
+> -	struct kexec_buf kbuf;
+> +	struct kexec_buf kbuf = {};
+>   
+>   	kbuf.image = image;
+>   	/* Don't allocate anything below the kernel */
