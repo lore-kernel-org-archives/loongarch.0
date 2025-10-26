@@ -1,129 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDBB21B1AA
-	for <loongarch@lists.linux.dev>; Sun, 26 Oct 2025 11:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A784A00
+	for <loongarch@lists.linux.dev>; Sun, 26 Oct 2025 15:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761477614; cv=none; b=I7EbcTzo/T0ZaCEyRSYbtNpEicbGr85bB4mqUGUAWKyeE55PgBDmf2UvxEp9E/eMTNzMrEIg4ROdqzHrYRka/GnACSVYluv/3hbX8yphXoYVTdpw2X7QqduEfWELOknEQFcp1AWbMfuVsMMB4ypL1fUO33SAPgbXQoryMNHN6GE=
+	t=1761491034; cv=none; b=WMH3w6J9UfW6P+CE6nxnWKMzK4Wnw/tv/NiAu/ki+dkKLfm4yh5Xhvyqqt0mgtcE91otc8Q1TNDh2/uEF9CbekE0lPLsWXsPfcsYb0h3YvkPWuocdeYhkhvqv2Ow/kxxTXfZNRWFju3wvqyYnBTO8qxMvMkN2XiSG4Svxa0MbkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761477614; c=relaxed/simple;
-	bh=WXhSsOHYlSratjyBUfDoyHGZ/FPtXvc0lOg0vqlrD54=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hyzBYHbqzgotf3+i4bxxwoHrQmqmNgLe7xRV6sdL382XKo0l477MBT5ls4bt+KZ7fy+67Va8os2U9xajELcLWFRHpbIeR2X8WrO8nCXByh05vQFGQQLupamjuKQYeE76Z5JQ9LE6r8rCafEQpSccjzUR+DqbjX3JRajxSFvHhco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZO0l5rCu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761491034; c=relaxed/simple;
+	bh=PUY8ufN7vstGylzvnbltRDJNllT5tt1XhKbAwVE5Z54=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uPH9kRafaEmwEtIWfN7WTBuPklSXHhsxZ9k7+x9wVoKBvmvUVIS0Sjx7PZOalV2bV8JfIg/RKdzJK+Fg6bVptKA94xjeb3gAySh+txv2+9GT7e6LclaC45Vwo0Oux8Abio3PAu7Bln2UTmTKG+VgI+TgIiFiZw/2t7CByYJf634=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn; spf=pass smtp.mailfrom=smail.nju.edu.cn; dkim=pass (1024-bit key) header.d=smail.nju.edu.cn header.i=@smail.nju.edu.cn header.b=qmYZCnpt; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smail.nju.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZO0l5rCu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E731C4AF09
-	for <loongarch@lists.linux.dev>; Sun, 26 Oct 2025 11:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761477614;
-	bh=WXhSsOHYlSratjyBUfDoyHGZ/FPtXvc0lOg0vqlrD54=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZO0l5rCuPbIC/tMs2ZuC773iICJte/FhCsKJGvRLh/ebR5CG5S+VTY5XG4cXYGP6M
-	 Z/s0dV9b87BHLomxqE3D5UB8YqEJDQMLXCjNhmL9oHg2FyALdelP52uznyqeTRAPMp
-	 oBp5OEhpNRTOVFxf+2szgNMIw5nni1QkLzPtSsAco9J85vpSxJJ18yQu3skkx9ZV48
-	 TeqeJWzUOU+ddhJvY63n21A1GJ/mL1Kp2KEUzUAQcILa1EYMOUZ9Xd4Ih7IKIH87W4
-	 1ZcaMZsEhxOSBXmCN8UXXzR3oP/5iDBxJi5ii6DwIowMZaDj+Q9cssR22TrvUoAcqe
-	 0vAyEzYFx5uSA==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-637e9f9f9fbso6575880a12.0
-        for <loongarch@lists.linux.dev>; Sun, 26 Oct 2025 04:20:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVnf/hf4CkgackLNJ+AAr3ni4MwWeVjBVd/MhdqscMu8uny1cmoJicgKYsFkrYyZGnhSzI5T62PJSg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwXQjO5FcKlIiuePkIYXrEp9EfWTjXYs0N6GcpNPm5FV6ZGJokM
-	8CeKyiCo9Du7cnRQAoLF7g44xNZ/tpvShLEHVh5FqmZiSYki5Ygf88cXJI2cjznGMIip6hLyzPV
-	odtQw54EjCCGhBMZgvQk/9iRZfkpKN/Q=
-X-Google-Smtp-Source: AGHT+IHSStRGe85V7TfWyZyzfF6Ya5hjYUTpONErQ3HLd1kUDYooXBrzJ4vLF95pyPPlWOudi0MNIFeRATeAXFEtvLQ=
-X-Received: by 2002:a05:6402:2554:b0:63e:2d46:cc5d with SMTP id
- 4fb4d7f45d1cf-63e3dff1673mr10711788a12.7.1761477612710; Sun, 26 Oct 2025
- 04:20:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=smail.nju.edu.cn header.i=@smail.nju.edu.cn header.b="qmYZCnpt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smail.nju.edu.cn;
+	s=iohv2404; t=1761490986;
+	bh=+Z+j6fQorgO5+luTFqPZGzIYaMBkEtHiXYbxa9t/aKU=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=qmYZCnptUP+6DU5xy/xiqp16b9ymOd5+W8thqCSSPb+hcYObYLJ68DlS8Wmckjeue
+	 T45V97Nw2YVrCvVQd6L5X0vGVdwBIdD15N2gDEFHWFeCU4F6xa7w4NmIVhzXa9x4z2
+	 lTegKfBqv2w2CrpCRb5dVDsukbI/6mZ4Az0LO/dQ=
+X-QQ-mid: zesmtpsz8t1761490977t568d50cd
+X-QQ-Originating-IP: NrAxf5G8PfEeh737gDU+xRgygti1s0gwHe4kjF8ywb0=
+Received: from localhost.localdomain ( [1.27.207.188])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sun, 26 Oct 2025 23:02:35 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 14413365355414812529
+EX-QQ-RecipientCnt: 13
+From: Kexin Sun <kexinsun@smail.nju.edu.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Yunbo Lyu <yunbolyu@smu.edu.sg>,
+	ratnadiraw <ratnadiraw@smu.edu.sg>,
+	Kexin Sun <kexinsun@smail.nju.edu.cn>
+Subject: [PATCH] KVM: MIPS/LoongArch: Fix typo in pfn_to_pfn_prot comments
+Date: Sun, 26 Oct 2025 23:02:19 +0800
+Message-Id: <20251026150219.2711-1-kexinsun@smail.nju.edu.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
- <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
- <CAAhV-H4UKdso0BokAqvjYeBLr-jbjFAaQX4z=1ztpBamqrOEEg@mail.gmail.com>
- <CAMj1kXEXDC_oq4aWbkR5dqYBix2d1xJEdaj-v747e1nOA0Q_Yg@mail.gmail.com>
- <rhnei6wovxmoqs36wdysomfsul3faxtmgde73wrrqdt3qo3b2j@akd7vzne76rq>
- <CAMj1kXF+hDJy0vRWNgwoijHxvA-scvhGODMj9A3dv19v3jf2yw@mail.gmail.com>
- <lgyzruqczm7uti2lfbhfhr5hyzpnm7wtvgffa2o7nigx76g6i3@wlffltvmhhez>
- <CAMj1kXFDquPxCYSBWgjikS=209pSJ_kth67M0RDeuetV9CPYAw@mail.gmail.com>
- <wlx6pt5crtfdwtop4w5vjznjfarrwitq44wdbufncjdvtsx647@tgobruak66yb>
- <CAMj1kXFfEBkcc-aiwGrRR-pKg4LBbS7weK0pEpZJsKOk5pbkuA@mail.gmail.com>
- <jxfb5a2c2qber623l2gwewirwod54bbgfnvt7t7f3jah2ea33g@2uyhy3auzmpx>
- <d9f3352a-1c1f-464a-a8fd-741cd96b5f8e@loongson.cn> <CAAhV-H6m5vszCyiF3qi94cpHBPVuqM2xH93D=gfsQqOSYvC-sA@mail.gmail.com>
- <33612d85-e70b-26da-8460-ea6b9064ce08@loongson.cn> <CAAhV-H5ZSTFDxvm-W1CrgEoQ5d_jw5yVsfetQ_J_qL5pqLtzgg@mail.gmail.com>
- <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
-In-Reply-To: <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 26 Oct 2025 19:20:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bnx7p3KGFn8w4CVpWUGoGvdUyYRdpas7DP247MZLQ7EzDz5RnfRwoldkjM
-Message-ID: <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
-Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:smail.nju.edu.cn:qybglogicsvrgz:qybglogicsvrgz6b-0
+X-QQ-XMAILINFO: NlrfLQhmr2s5c53fY0QiQxylX6NgeuqXb8Q6KRvQiWN52YrS8uLceJYs
+	rrcBSGCpLyZGeRHrHRl1/gd5tbaPIjiHPNjfxN4pdMLu9SM2XEOcis/QzXhWS8wG1xZMrpr
+	g/tupIJTKeDcl2fi8Zj3t8LtUo8CibKU+boBJExVAsXSImLuGJ0ZssIYkBSefHjkqTnMsvJ
+	rXhVyICCImEJt8X1w+/pBd5JSrxR+LsQEDuOMY9N9PMC80v2lUlHBNoKlYKXTFFgZaYRzaB
+	UfstE33LR0A1xVgUhVtyB6M381VHS35UsUl8w1di9Y10UPVudMjmtDV8e4JLbbU5eOI4G0H
+	eM4jd4FcN5wCQ2kDBPvLGe578QqpPu18QwALHAdu015FjyBTWyxlcn/Hri7OL4M4dScoXOd
+	RPsoWnEfJkiQGzcZ+NvIAsQwQqAdHMCqVG7klaCieuxaPsAZ44subTNz3fGWQv3y0DcWKtF
+	0z6EA+YSefhYRNWSeuFOd0z4c9FiWQHLMebzI7A5IKBLpVZKpZbUo23iMfboG1BgdGo8CB9
+	w8I3vs2FuB9JQsQnc5+KPfLpDISbjixNa9dmWnpUAJKOWrb/Bs3YqhB+AYxFentb299QQcd
+	Q4X6UqaQ3IKGZN1DYYp5snflNmqOgLLQIFHk5bNtwxMkCtFhHKPuUk1vJMf68of/9dFwSSH
+	vKTFji0gTuMiBmR1acLs2PqFNcKZzzxmA1c69Q0dwvTiVlUE7W+DbHD/EXk+aCDRFuVgEJs
+	M5n0x3p4K5iYKOpQI2VLhtbhBQyixBZFfFF/RjkNDmIdxXHykv80qrJ2i3QOnBucuJmGXPk
+	4pYaTGCPtMhMzFqemPVbvJgK10IyotZfATqmKoX4w0mePRWJk6+ujLzQZwrwqU+sEcA9StN
+	7PLGvihrDHTRc5Fj/CPobFpJrTHYAQo2XJ9iEBosG3cogGVU81l7OyODXhgw2tFgTRwgwT9
+	Duqq3dw8SiH3utXeoIR4WaOi+PzwkW8PL+EXRqaMy33ofPfEL6NJI9Z9T9XPyq7nNr5t5yh
+	oY02cYmzkKWK++We0qpTDFCZxSYJyyuXmUJnhYj6w4kR/3mocczCLikEnOEXU2etZe2+V/X
+	Zaxktp8U+Q8Na6jD+3P4b4=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Oct 23, 2025 at 4:07=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> wr=
-ote:
->
-> On Thu, 23 Oct 2025 at 10:01, Huacai Chen <chenhuacai@kernel.org> wrote:
-> >
-> > On Thu, Oct 23, 2025 at 2:55=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
-> > >
-> > > Hi Josh and Ard,
-> > >
-> > > On 2025/10/20 =E4=B8=8B=E5=8D=882:55, Huacai Chen wrote:
-> > > > On Mon, Oct 20, 2025 at 9:24=E2=80=AFAM Tiezhu Yang <yangtiezhu@loo=
-ngson.cn> wrote:
-> > > >>
-> > > >> Hi Josh, Ard and Huacai,
-> > > >>
-> > > >> On 2025/10/18 =E4=B8=8A=E5=8D=881:05, Josh Poimboeuf wrote:
-> > > >>
-> > > >> ...
-> > > >>
-> > > >>> But IIUC, the libstub code runs *very* early, and wouldn't show u=
-p in a
-> > > >>> stack trace anyway, because there are no traces of it on the stac=
-k once
-> > > >>> it branches to head.S code (which doesn't save the link register)=
-.
-> > > >>
-> > > >> Thanks for your discussions.
-> > > >>
-> > > >> Are you OK with this current patch?
-> > > > For me the current patch is just OK.
-> > >
-> > > We have discussed this a few times but there is almost no consensus
-> > > of what should happen next and nothing changes.
-> > >
-> > > Could you please give me a clear reply? Then I can make progress for
-> > > the following series:
-> > >
-> > > https://lore.kernel.org/loongarch/20250917112716.24415-1-yangtiezhu@l=
-oongson.cn/
-> > For me, this patch is OK, ignore __efistub_ prefix in objtool is also
-> > OK [1]. But I cannot accept the way that modifying the efistub part
-> > only for LoongArch.
-> >
-> > Clear enough?
-> >
->
-> LoongArch is the only architecture which has the problem, so I don't
-> see a reason to modify other architectures.
-From your reply I think the efistub code is completely right, but
-objtool cannot handle the "noreturn" function pointer. And this patch
-is a workaround rather than a proper fix (so you don't want to touch
-other architectures), right?
+The comments in arch/{mips,loongarch}/kvm/mmu.c refer to a non-existent
+function "pfn_to_pfn_prot". This is a historical typo.
 
+In MIPS, it was introduced in commit 411740f5422a ("KVM: MIPS/MMU:
+Implement KVM_CAP_SYNC_MMU") where the actual function being called was
+`gfn_to_pfn_prot`.
+(see `pfn = gfn_to_pfn_prot(kvm, gfn, write, &writeable);`).
+This was later replaced by `kvm_faultin_pfn()` in commit 7e8f1aa59d0b
+("KVM: MIPS: Use kvm_faultin_pfn() to map pfns into the guest").
 
-Huacai
+The LoongArch code, likely copied from MIPS, inherited this typo upon
+its introduction in commit 752e2cd7b4fb ("LoongArch: KVM: Implement
+kvm mmu operations"). The actual function call was likewise updated to
+`kvm_faultin_pfn()` in commit 14d02b7ff912 ("KVM: LoongArch: Use
+kvm_faultin_pfn() to map pfns into the guest").
+
+Update the comments in both files to correctly reference the current
+function, `kvm_faultin_pfn`.
+
+No functional change; comments only.
+
+Fixes: 411740f5422a ("KVM: MIPS/MMU: Implement KVM_CAP_SYNC_MMU")
+Fixes: 752e2cd7b4fb ("LoongArch: KVM: Implement kvm mmu operations").
+
+Signed-off-by: Kexin Sun <kexinsun@smail.nju.edu.cn>
+---
+ arch/loongarch/kvm/mmu.c | 2 +-
+ arch/mips/kvm/mmu.c      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index 7c8143e79c12..1a9ed6f56a1b 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -803,7 +803,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+ retry:
+ 	/*
+ 	 * Used to check for invalidations in progress, of the pfn that is
+-	 * returned by pfn_to_pfn_prot below.
++	 * returned by kvm_faultin_pfn() below.
+ 	 */
+ 	mmu_seq = kvm->mmu_invalidate_seq;
+ 	/*
+diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
+index d2c3b6b41f18..da51707a2366 100644
+--- a/arch/mips/kvm/mmu.c
++++ b/arch/mips/kvm/mmu.c
+@@ -574,7 +574,7 @@ static int kvm_mips_map_page(struct kvm_vcpu *vcpu, unsigned long gpa,
+ retry:
+ 	/*
+ 	 * Used to check for invalidations in progress, of the pfn that is
+-	 * returned by pfn_to_pfn_prot below.
++	 * returned by kvm_faultin_pfn() below.
+ 	 */
+ 	mmu_seq = kvm->mmu_invalidate_seq;
+ 	/*
+-- 
+2.25.1
+
