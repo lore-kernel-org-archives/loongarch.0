@@ -1,89 +1,129 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875BE14E2E2
-	for <loongarch@lists.linux.dev>; Sat, 25 Oct 2025 13:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDBB21B1AA
+	for <loongarch@lists.linux.dev>; Sun, 26 Oct 2025 11:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761397381; cv=none; b=T6hX2pPsQrhXzpBhng2IQpFQfbkjHrCndHfl2YbYv2LuK8hWQHO6Hg5I1a+jP5yuH3GuEnBRTV29nJ22UnKJ4P5Idz6ftDYfXmer3xYGqjA65TAffq8z9VPCfC4rgCnTJoC7X/3rMXsszAd6XPa2owORCC+MaE482m3ZZxndBUI=
+	t=1761477614; cv=none; b=I7EbcTzo/T0ZaCEyRSYbtNpEicbGr85bB4mqUGUAWKyeE55PgBDmf2UvxEp9E/eMTNzMrEIg4ROdqzHrYRka/GnACSVYluv/3hbX8yphXoYVTdpw2X7QqduEfWELOknEQFcp1AWbMfuVsMMB4ypL1fUO33SAPgbXQoryMNHN6GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761397381; c=relaxed/simple;
-	bh=ZgL11gmghu1u0zJJAQ8GJBKY01T3xvC5t4LkY4lQKMk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=M02OpF8Td3ilBazYw42HudyMSNb6mcpujPtn9jz8Dp++c6EZRZPpnf9ZZXM17yJVz6aRRA2BVDgwW26QajMXG+m6F0mIdlZoH/9zDmhu5ruQIijqEBVYRTniRyfZ5Q6FXBv3DNa9yOVtLu+8D/espfbNC8GNUYJvzX0OxzVwoJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=X7yKepI2; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1761477614; c=relaxed/simple;
+	bh=WXhSsOHYlSratjyBUfDoyHGZ/FPtXvc0lOg0vqlrD54=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hyzBYHbqzgotf3+i4bxxwoHrQmqmNgLe7xRV6sdL382XKo0l477MBT5ls4bt+KZ7fy+67Va8os2U9xajELcLWFRHpbIeR2X8WrO8nCXByh05vQFGQQLupamjuKQYeE76Z5JQ9LE6r8rCafEQpSccjzUR+DqbjX3JRajxSFvHhco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZO0l5rCu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="X7yKepI2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1761397372;
-	bh=wa5kbvI1NcBJ15BDxTohZ2py5hqHQxhiLr45hAYayx8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=X7yKepI2uUSP2mSweLEeU73GKzletV1pu6JUimUejLupHE7CG8cVM/lNIzowCLdF5
-	 Vb6Z1bktsORX6Uk47PohxEDM1gZADP0R0NG+g5CBYkGtKAmGuiXeF+ZpN7qSkmWpEX
-	 4zO7DXKtRLkqF4NZY3+DXKSI0Vko3ara6Wve5KzY=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 621E466C0E;
-	Sat, 25 Oct 2025 09:02:48 -0400 (EDT)
-Message-ID: <274fe4e6ff05401bc43d952efe69908fe052d875.camel@xry111.site>
-Subject: Re: [PATCH V2] LoongArch: Align ACPI structures if
- ARCH_STRICT_ALIGN enabled
-From: Xi Ruoyao <xry111@xry111.site>
-To: Guenter Roeck <linux@roeck-us.net>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Huacai Chen
- <chenhuacai@loongson.cn>, 	loongarch@lists.linux.dev, Xuefeng Li
- <lixuefeng@loongson.cn>, Guo Ren	 <guoren@kernel.org>, Xuerui Wang
- <kernel@xen0n.name>, Jiaxun Yang	 <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,  Binbin Zhou
- <zhoubinbin@loongson.cn>
-Date: Sat, 25 Oct 2025 21:02:45 +0800
-In-Reply-To: <0104bccd-d3a2-4f6b-8838-0acf0563c4b6@roeck-us.net>
-References: <20250910091033.725716-1-chenhuacai@loongson.cn>
-	 <20250920234836.GA3857420@ax162>
-	 <CAAhV-H5S8VKKBkNyrWfeuCVv8jS6tNED6YNeAD=i-+wkaoRSDQ@mail.gmail.com>
-	 <899f2dec-e8b9-44f4-ab8d-001e160a2aed@roeck-us.net>
-	 <c1f9e36dbdff64298ed2c6418247fb37dcd1f986.camel@xry111.site>
-	 <0104bccd-d3a2-4f6b-8838-0acf0563c4b6@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.0 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZO0l5rCu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E731C4AF09
+	for <loongarch@lists.linux.dev>; Sun, 26 Oct 2025 11:20:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761477614;
+	bh=WXhSsOHYlSratjyBUfDoyHGZ/FPtXvc0lOg0vqlrD54=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZO0l5rCuPbIC/tMs2ZuC773iICJte/FhCsKJGvRLh/ebR5CG5S+VTY5XG4cXYGP6M
+	 Z/s0dV9b87BHLomxqE3D5UB8YqEJDQMLXCjNhmL9oHg2FyALdelP52uznyqeTRAPMp
+	 oBp5OEhpNRTOVFxf+2szgNMIw5nni1QkLzPtSsAco9J85vpSxJJ18yQu3skkx9ZV48
+	 TeqeJWzUOU+ddhJvY63n21A1GJ/mL1Kp2KEUzUAQcILa1EYMOUZ9Xd4Ih7IKIH87W4
+	 1ZcaMZsEhxOSBXmCN8UXXzR3oP/5iDBxJi5ii6DwIowMZaDj+Q9cssR22TrvUoAcqe
+	 0vAyEzYFx5uSA==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-637e9f9f9fbso6575880a12.0
+        for <loongarch@lists.linux.dev>; Sun, 26 Oct 2025 04:20:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVnf/hf4CkgackLNJ+AAr3ni4MwWeVjBVd/MhdqscMu8uny1cmoJicgKYsFkrYyZGnhSzI5T62PJSg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwXQjO5FcKlIiuePkIYXrEp9EfWTjXYs0N6GcpNPm5FV6ZGJokM
+	8CeKyiCo9Du7cnRQAoLF7g44xNZ/tpvShLEHVh5FqmZiSYki5Ygf88cXJI2cjznGMIip6hLyzPV
+	odtQw54EjCCGhBMZgvQk/9iRZfkpKN/Q=
+X-Google-Smtp-Source: AGHT+IHSStRGe85V7TfWyZyzfF6Ya5hjYUTpONErQ3HLd1kUDYooXBrzJ4vLF95pyPPlWOudi0MNIFeRATeAXFEtvLQ=
+X-Received: by 2002:a05:6402:2554:b0:63e:2d46:cc5d with SMTP id
+ 4fb4d7f45d1cf-63e3dff1673mr10711788a12.7.1761477612710; Sun, 26 Oct 2025
+ 04:20:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
+ <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
+ <CAAhV-H4UKdso0BokAqvjYeBLr-jbjFAaQX4z=1ztpBamqrOEEg@mail.gmail.com>
+ <CAMj1kXEXDC_oq4aWbkR5dqYBix2d1xJEdaj-v747e1nOA0Q_Yg@mail.gmail.com>
+ <rhnei6wovxmoqs36wdysomfsul3faxtmgde73wrrqdt3qo3b2j@akd7vzne76rq>
+ <CAMj1kXF+hDJy0vRWNgwoijHxvA-scvhGODMj9A3dv19v3jf2yw@mail.gmail.com>
+ <lgyzruqczm7uti2lfbhfhr5hyzpnm7wtvgffa2o7nigx76g6i3@wlffltvmhhez>
+ <CAMj1kXFDquPxCYSBWgjikS=209pSJ_kth67M0RDeuetV9CPYAw@mail.gmail.com>
+ <wlx6pt5crtfdwtop4w5vjznjfarrwitq44wdbufncjdvtsx647@tgobruak66yb>
+ <CAMj1kXFfEBkcc-aiwGrRR-pKg4LBbS7weK0pEpZJsKOk5pbkuA@mail.gmail.com>
+ <jxfb5a2c2qber623l2gwewirwod54bbgfnvt7t7f3jah2ea33g@2uyhy3auzmpx>
+ <d9f3352a-1c1f-464a-a8fd-741cd96b5f8e@loongson.cn> <CAAhV-H6m5vszCyiF3qi94cpHBPVuqM2xH93D=gfsQqOSYvC-sA@mail.gmail.com>
+ <33612d85-e70b-26da-8460-ea6b9064ce08@loongson.cn> <CAAhV-H5ZSTFDxvm-W1CrgEoQ5d_jw5yVsfetQ_J_qL5pqLtzgg@mail.gmail.com>
+ <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
+In-Reply-To: <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 26 Oct 2025 19:20:04 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bnx7p3KGFn8w4CVpWUGoGvdUyYRdpas7DP247MZLQ7EzDz5RnfRwoldkjM
+Message-ID: <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-09-26 at 11:27 -0700, Guenter Roeck wrote:
-> > > I see that the patch made it into the upstream kernel, now breaking b=
-oth
-> > > mainline and 6.16.y test builds of loongarch64:allmodconfig with gcc.
-> > >=20
-> > > Since this is apparently intentional, I'll stop build testing
-> > > loongarch64:allmodconfig. So far it looks like my qemu tests
-> > > are not affected, so I'll continue testing those for the time being.
-> >=20
-> > See=C2=A0https://gcc.gnu.org/PR122073=C2=A0and
-> > https://github.com/acpica/acpica/pull/1050.
-> >=20
->=20
-> I understand that. Every compiler has bugs. Normally workarounds are impl=
-emented.
-> Since that won't happen here, my remedy is to stop testing the affected
-> configuration(s). I do this whenever I learn that a known problem won't b=
-e fixed.
-> The above is not a complaint, just an information.
+On Thu, Oct 23, 2025 at 4:07=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> wr=
+ote:
+>
+> On Thu, 23 Oct 2025 at 10:01, Huacai Chen <chenhuacai@kernel.org> wrote:
+> >
+> > On Thu, Oct 23, 2025 at 2:55=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
+n.cn> wrote:
+> > >
+> > > Hi Josh and Ard,
+> > >
+> > > On 2025/10/20 =E4=B8=8B=E5=8D=882:55, Huacai Chen wrote:
+> > > > On Mon, Oct 20, 2025 at 9:24=E2=80=AFAM Tiezhu Yang <yangtiezhu@loo=
+ngson.cn> wrote:
+> > > >>
+> > > >> Hi Josh, Ard and Huacai,
+> > > >>
+> > > >> On 2025/10/18 =E4=B8=8A=E5=8D=881:05, Josh Poimboeuf wrote:
+> > > >>
+> > > >> ...
+> > > >>
+> > > >>> But IIUC, the libstub code runs *very* early, and wouldn't show u=
+p in a
+> > > >>> stack trace anyway, because there are no traces of it on the stac=
+k once
+> > > >>> it branches to head.S code (which doesn't save the link register)=
+.
+> > > >>
+> > > >> Thanks for your discussions.
+> > > >>
+> > > >> Are you OK with this current patch?
+> > > > For me the current patch is just OK.
+> > >
+> > > We have discussed this a few times but there is almost no consensus
+> > > of what should happen next and nothing changes.
+> > >
+> > > Could you please give me a clear reply? Then I can make progress for
+> > > the following series:
+> > >
+> > > https://lore.kernel.org/loongarch/20250917112716.24415-1-yangtiezhu@l=
+oongson.cn/
+> > For me, this patch is OK, ignore __efistub_ prefix in objtool is also
+> > OK [1]. But I cannot accept the way that modifying the efistub part
+> > only for LoongArch.
+> >
+> > Clear enough?
+> >
+>
+> LoongArch is the only architecture which has the problem, so I don't
+> see a reason to modify other architectures.
+From your reply I think the efistub code is completely right, but
+objtool cannot handle the "noreturn" function pointer. And this patch
+is a workaround rather than a proper fix (so you don't want to touch
+other architectures), right?
 
-Hi Guenter,
 
-The mainline should be already fixed with 6e3a4754717a ("ACPICA: Work
-around bogus -Wstringop-overread warning since GCC 11") now.  The commit
-is Cc'ed to stable so we can expect 6.16.y will be fixed soon as well.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
+Huacai
