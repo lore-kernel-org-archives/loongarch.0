@@ -1,40 +1,35 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68EB230D35
-	for <loongarch@lists.linux.dev>; Tue, 28 Oct 2025 06:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20B0147A6B
+	for <loongarch@lists.linux.dev>; Tue, 28 Oct 2025 07:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761634386; cv=none; b=l+87m8xbdfNaRxe+V+WujkjlwceknvcZPtdcZb/LxFyS8wnIHHhzxpCentVHLHgAVk0q9LTtbuEtLmw69xvHhR7og7EID1Dm/8wB4eIWI4TBF1qDpMvVXaaTpOrgfC4BFqK4J761y5a8J1kL8Bp2YWBKflz2rnfmFkArKNQwpHE=
+	t=1761635922; cv=none; b=qn2EJ9/+8vgXP3zm8681nkJescNpkex9DGeNhWfu6wUH52HGLUW2DFGQ2zMCziFQM+70O+v/OGqJPAt8aJ0DXp8JdDO70bVeHQard+ZhkF48UYqKeqYRGifvPE6yEnJ/TEIJFEc/1AARbxIrowcr3pVGGuHOcDQ9vcMKkNVAB/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761634386; c=relaxed/simple;
-	bh=cHCAFr3bDIe20W1u4NOZPS9he0BMGsrN0qVV3tfL/Gw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gJQVve6qQ814ZKLULgQvs/444Mtm1axTMQHAfv8/pnd1WEpLyiUK0knx+0INxK+DBtcT15jqTLbF8raxV7tLC+ZCmcCDF/SrrhisnVWc4wWpnB5A3QQ+H98pmZ1PZl6qUzGr0r3E1OXLd/uhCIsuwgKqy6XFABxn5i2NDNloGnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g+13w49F; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g+13w49F"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1761634381;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NqS6VU5MIVR//qY5Ua4Xx8PnMfFDh/WpsUPptTf5jMo=;
-	b=g+13w49F2TcV+0UrcvNeGf7GegKZhpumP0aKGnpERPXeqIEPWseZaWoxCdldb09ihEMbY9
-	VSZBnLUqBGN4+GhmPbbnsIHNWtPIH8vP9jD80O/DN48/aE0pT1MvuLqZfKaVfOKCCKMTfD
-	eX2YdFo4y9YWc79N3j8mTqwzHJN/vlI=
-From: Youling Tang <youling.tang@linux.dev>
+	s=arc-20240116; t=1761635922; c=relaxed/simple;
+	bh=9wFMyl+wlVQmV9kjcbTomuLiPKrjV9h0+QJfzU8zhOY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uvAJunBFCzjca1t44rP4v2MZ7up/wPzaMOPrzzX3vhxWXsX4K4T9ph9eJixEOGwucP31Hzi8fpI3fXq1Py1I+ahP19kCLKMjoJx6R5a7iclICT9ZrimJzTb2Z/f0qVZk3x66rMWTcApolZ3oND9vxxFlRGO9pLsiruiWRxLmfEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.45])
+	by gateway (Coremail) with SMTP id _____8BxXNJNbgBpqnobAA--.59466S3;
+	Tue, 28 Oct 2025 15:18:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.45])
+	by front1 (Coremail) with SMTP id qMiowJCxrsNJbgBpsa8UAQ--.1270S2;
+	Tue, 28 Oct 2025 15:18:36 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	linux-kernel@vger.kernel.org,
-	youling.tang@linux.dev,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH] LoongArch: jump_label: Batch icache maintenance
-Date: Tue, 28 Oct 2025 14:51:39 +0800
-Message-ID: <20251028065139.10227-1-youling.tang@linux.dev>
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Consolidate max_pfn & max_low_pfn calculation
+Date: Tue, 28 Oct 2025 15:18:25 +0800
+Message-ID: <20251028071825.1639678-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,139 +37,178 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJCxrsNJbgBpsa8UAQ--.1270S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKr45Gry3CF1kuw4kKw1rGrX_yoW7XF15pr
+	yjyr95Jr48Wrn3Z3yIq3s8ury5J3Z2kw47Way2kF93uFnrZrnrXr1kXrnrZF90q3yxCFWS
+	vrnYyrySv3WUt3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-From: Youling Tang <tangyouling@kylinos.cn>
+Now there 5 places which calculate max_pfn & max_low_pfn:
+1. in fdt_setup() for FDT systems;
+2. in memblock_init() for ACPI systems;
+3. in init_numa_memory() for NUMA systems;
+4. in arch_mem_init() to recalculate for "mem=" cmdline;
+5. in paging_init() to recalculate for NUMA systems.
 
-Switch to the batched version of the jump label update functions so
-instruction cache maintenance is deferred until the end of the update.
+Since memblock_init() is called both for ACPI and FDT systems, move the
+calculation out of the for_each_efi_memory_desc() loop can eliminate the
+first case. The last case is very questionable (may be derived from the
+MIPS/Loongson code) and breaks the "mem=" cmdline, so should be removed.
+And then the NUMA version of paging_init() can be also eliminated.
 
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+After consolidation there are 3 places of calculation:
+1. in memblock_init() for both ACPI and FDT systems;
+2. in init_numa_memory() to recalculate for NUMA systems;
+3. in arch_mem_init() to recalculate for the "mem=" cmdline.
+
+For all cases the calculation is:
+max_pfn = PFN_DOWN(memblock_end_of_DRAM());
+max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/include/asm/cacheflush.h | 16 +++++++++++++++-
- arch/loongarch/include/asm/jump_label.h |  1 +
- arch/loongarch/kernel/inst.c            |  6 +++---
- arch/loongarch/kernel/jump_label.c      | 13 +++++++++++--
- arch/loongarch/mm/cache.c               | 10 ----------
- 5 files changed, 30 insertions(+), 16 deletions(-)
+ arch/loongarch/kernel/mem.c   |  7 +++----
+ arch/loongarch/kernel/numa.c  | 23 ++---------------------
+ arch/loongarch/kernel/setup.c |  5 ++---
+ arch/loongarch/mm/init.c      |  2 --
+ 4 files changed, 7 insertions(+), 30 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
-index f8754d08a31a..66c34c821ecb 100644
---- a/arch/loongarch/include/asm/cacheflush.h
-+++ b/arch/loongarch/include/asm/cacheflush.h
-@@ -31,9 +31,23 @@ static inline unsigned int cpu_last_level_cache_line_size(void)
- 	return boot_cpu_data.cache_leaves[cache_present - 1].linesz;
- }
- 
-+/*
-+ * LoongArch maintains ICache/DCache coherency by hardware,
-+ * we just need "ibar" to avoid instruction hazard here.
-+ */
-+static inline void local_flush_icache_all(void)
-+{
-+	asm volatile ("\tibar 0\n"::);
-+}
-+
-+static inline void local_flush_icache_range(unsigned long start, unsigned long end)
-+{
-+	local_flush_icache_all();
-+}
-+
- asmlinkage void __flush_cache_all(void);
--void local_flush_icache_range(unsigned long start, unsigned long end);
- 
-+#define flush_icache_all	local_flush_icache_all
- #define flush_icache_range	local_flush_icache_range
- #define flush_icache_user_range	local_flush_icache_range
- 
-diff --git a/arch/loongarch/include/asm/jump_label.h b/arch/loongarch/include/asm/jump_label.h
-index 4000c7603d8e..d0689032fd9d 100644
---- a/arch/loongarch/include/asm/jump_label.h
-+++ b/arch/loongarch/include/asm/jump_label.h
-@@ -11,6 +11,7 @@
- 
- #include <linux/types.h>
- 
-+#define HAVE_JUMP_LABEL_BATCH
- #define JUMP_LABEL_NOP_SIZE	4
- 
- /* This macro is also expanded on the Rust side. */
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index bf037f0c6b26..65c1b74d677a 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -209,6 +209,9 @@ int larch_insn_write(void *addr, u32 insn)
- 	int ret;
- 	unsigned long flags = 0;
- 
-+	if ((unsigned long)addr & 3)
-+		return -EINVAL;
-+
- 	raw_spin_lock_irqsave(&patch_lock, flags);
- 	ret = copy_to_kernel_nofault(addr, &insn, LOONGARCH_INSN_SIZE);
- 	raw_spin_unlock_irqrestore(&patch_lock, flags);
-@@ -221,9 +224,6 @@ int larch_insn_patch_text(void *addr, u32 insn)
- 	int ret;
- 	u32 *tp = addr;
- 
--	if ((unsigned long)tp & 3)
--		return -EINVAL;
--
- 	ret = larch_insn_write(tp, insn);
- 	if (!ret)
- 		flush_icache_range((unsigned long)tp,
-diff --git a/arch/loongarch/kernel/jump_label.c b/arch/loongarch/kernel/jump_label.c
-index 31891214b767..f5a394bdb5f3 100644
---- a/arch/loongarch/kernel/jump_label.c
-+++ b/arch/loongarch/kernel/jump_label.c
-@@ -6,9 +6,11 @@
-  */
- #include <linux/kernel.h>
- #include <linux/jump_label.h>
-+#include <asm/cacheflush.h>
- #include <asm/inst.h>
- 
--void arch_jump_label_transform(struct jump_entry *entry, enum jump_label_type type)
-+bool arch_jump_label_transform_queue(struct jump_entry *entry,
-+				     enum jump_label_type type)
+diff --git a/arch/loongarch/kernel/mem.c b/arch/loongarch/kernel/mem.c
+index aed901c57fb4..8ab1ffedc52c 100644
+--- a/arch/loongarch/kernel/mem.c
++++ b/arch/loongarch/kernel/mem.c
+@@ -13,7 +13,7 @@
+ void __init memblock_init(void)
  {
- 	u32 insn;
- 	void *addr = (void *)jump_entry_code(entry);
-@@ -18,5 +20,12 @@ void arch_jump_label_transform(struct jump_entry *entry, enum jump_label_type ty
- 	else
- 		insn = larch_insn_gen_nop();
+ 	u32 mem_type;
+-	u64 mem_start, mem_end, mem_size;
++	u64 mem_start, mem_size;
+ 	efi_memory_desc_t *md;
  
--	larch_insn_patch_text(addr, insn);
-+	larch_insn_write(addr, insn);
-+
-+	return true;
-+}
-+
-+void arch_jump_label_transform_apply(void)
-+{
-+	flush_icache_all();
- }
-diff --git a/arch/loongarch/mm/cache.c b/arch/loongarch/mm/cache.c
-index 6be04d36ca07..966b8d2b04ad 100644
---- a/arch/loongarch/mm/cache.c
-+++ b/arch/loongarch/mm/cache.c
-@@ -31,16 +31,6 @@ void cache_error_setup(void)
- 	set_merr_handler(0x0, &except_vec_cex, 0x80);
- }
+ 	/* Parse memory information */
+@@ -21,7 +21,6 @@ void __init memblock_init(void)
+ 		mem_type = md->type;
+ 		mem_start = md->phys_addr;
+ 		mem_size = md->num_pages << EFI_PAGE_SHIFT;
+-		mem_end = mem_start + mem_size;
  
--/*
-- * LoongArch maintains ICache/DCache coherency by hardware,
-- * we just need "ibar" to avoid instruction hazard here.
-- */
--void local_flush_icache_range(unsigned long start, unsigned long end)
+ 		switch (mem_type) {
+ 		case EFI_LOADER_CODE:
+@@ -31,8 +30,6 @@ void __init memblock_init(void)
+ 		case EFI_PERSISTENT_MEMORY:
+ 		case EFI_CONVENTIONAL_MEMORY:
+ 			memblock_add(mem_start, mem_size);
+-			if (max_low_pfn < (mem_end >> PAGE_SHIFT))
+-				max_low_pfn = mem_end >> PAGE_SHIFT;
+ 			break;
+ 		case EFI_PAL_CODE:
+ 		case EFI_UNUSABLE_MEMORY:
+@@ -49,6 +46,8 @@ void __init memblock_init(void)
+ 		}
+ 	}
+ 
++	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
++	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
+ 	memblock_set_current_limit(PFN_PHYS(max_low_pfn));
+ 
+ 	/* Reserve the first 2MB */
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index d6e73e8f9c0b..ab9c660526a3 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -272,7 +272,8 @@ int __init init_numa_memory(void)
+ 		node_mem_init(node);
+ 		node_set_online(node);
+ 	}
+-	max_low_pfn = PHYS_PFN(memblock_end_of_DRAM());
++	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
++	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
+ 
+ 	setup_nr_node_ids();
+ 	loongson_sysconf.nr_nodes = nr_node_ids;
+@@ -283,26 +284,6 @@ int __init init_numa_memory(void)
+ 
+ #endif
+ 
+-void __init paging_init(void)
 -{
--	asm volatile ("\tibar 0\n"::);
--}
--EXPORT_SYMBOL(local_flush_icache_range);
+-	unsigned int node;
+-	unsigned long zones_size[MAX_NR_ZONES] = {0, };
 -
- static void flush_cache_leaf(unsigned int leaf)
+-	for_each_online_node(node) {
+-		unsigned long start_pfn, end_pfn;
+-
+-		get_pfn_range_for_nid(node, &start_pfn, &end_pfn);
+-
+-		if (end_pfn > max_low_pfn)
+-			max_low_pfn = end_pfn;
+-	}
+-#ifdef CONFIG_ZONE_DMA32
+-	zones_size[ZONE_DMA32] = MAX_DMA32_PFN;
+-#endif
+-	zones_size[ZONE_NORMAL] = max_low_pfn;
+-	free_area_init(zones_size);
+-}
+-
+ int pcibus_to_node(struct pci_bus *bus)
  {
- 	int i, j, nr_nodes;
+ 	return dev_to_node(&bus->dev);
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 69c17d162fff..25a87378e48e 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -294,8 +294,6 @@ static void __init fdt_setup(void)
+ 
+ 	early_init_dt_scan(fdt_pointer, __pa(fdt_pointer));
+ 	early_init_fdt_reserve_self();
+-
+-	max_low_pfn = PFN_PHYS(memblock_end_of_DRAM());
+ #endif
+ }
+ 
+@@ -390,7 +388,8 @@ static void __init check_kernel_sections_mem(void)
+ static void __init arch_mem_init(char **cmdline_p)
+ {
+ 	/* Recalculate max_low_pfn for "mem=xxx" */
+-	max_pfn = max_low_pfn = PHYS_PFN(memblock_end_of_DRAM());
++	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
++	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
+ 
+ 	if (usermem)
+ 		pr_info("User-defined physical RAM map overwrite\n");
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index c3e4586a7975..6bfd4b8dad1b 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -60,7 +60,6 @@ int __ref page_is_ram(unsigned long pfn)
+ 	return memblock_is_memory(addr) && !memblock_is_reserved(addr);
+ }
+ 
+-#ifndef CONFIG_NUMA
+ void __init paging_init(void)
+ {
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES];
+@@ -72,7 +71,6 @@ void __init paging_init(void)
+ 
+ 	free_area_init(max_zone_pfns);
+ }
+-#endif /* !CONFIG_NUMA */
+ 
+ void __ref free_initmem(void)
+ {
 -- 
-2.43.0
+2.47.3
 
