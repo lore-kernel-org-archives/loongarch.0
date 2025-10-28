@@ -1,214 +1,135 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20B0147A6B
-	for <loongarch@lists.linux.dev>; Tue, 28 Oct 2025 07:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849C9227E82
+	for <loongarch@lists.linux.dev>; Tue, 28 Oct 2025 13:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761635922; cv=none; b=qn2EJ9/+8vgXP3zm8681nkJescNpkex9DGeNhWfu6wUH52HGLUW2DFGQ2zMCziFQM+70O+v/OGqJPAt8aJ0DXp8JdDO70bVeHQard+ZhkF48UYqKeqYRGifvPE6yEnJ/TEIJFEc/1AARbxIrowcr3pVGGuHOcDQ9vcMKkNVAB/8=
+	t=1761659252; cv=none; b=qoLMlox1FvO29gcf09Q2rKr6RAohxkUSVjLIXRh8qvkvPzwccoJefL7fBIk74FCT5nR3dF5RDqY4Lq2li6bsXPkkEMfpEG57LgPzinKWLE2KD7K3XezE1rxc0tIjsg3f041291gjSyJy9eB9upuJtdeH88SanlcIyqHev9bqJBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761635922; c=relaxed/simple;
-	bh=9wFMyl+wlVQmV9kjcbTomuLiPKrjV9h0+QJfzU8zhOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uvAJunBFCzjca1t44rP4v2MZ7up/wPzaMOPrzzX3vhxWXsX4K4T9ph9eJixEOGwucP31Hzi8fpI3fXq1Py1I+ahP19kCLKMjoJx6R5a7iclICT9ZrimJzTb2Z/f0qVZk3x66rMWTcApolZ3oND9vxxFlRGO9pLsiruiWRxLmfEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.45])
-	by gateway (Coremail) with SMTP id _____8BxXNJNbgBpqnobAA--.59466S3;
-	Tue, 28 Oct 2025 15:18:37 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.45])
-	by front1 (Coremail) with SMTP id qMiowJCxrsNJbgBpsa8UAQ--.1270S2;
-	Tue, 28 Oct 2025 15:18:36 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Consolidate max_pfn & max_low_pfn calculation
-Date: Tue, 28 Oct 2025 15:18:25 +0800
-Message-ID: <20251028071825.1639678-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1761659252; c=relaxed/simple;
+	bh=GVjUEKZRgeMgDKNXAgezVSn0xrs6j1yMXphGPwksYBw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rOartTf4ki8rw3RhA8ex0RTM1F+kso3HdLPw9WaVnWLQHt4zG1QLzqP+mTohUzXzlNry0ldXfRyhoP+uFHd8VjXRIveWxpQ4FgUKE0zM4mP4e8TZFor8wy/ulM1Lll0TlFNFV0S34bYbMFKUBP89cADV9tvomkm/rKlTcEMWIrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCBzeOpV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCBzeOpV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A2CC4CEFD
+	for <loongarch@lists.linux.dev>; Tue, 28 Oct 2025 13:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761659252;
+	bh=GVjUEKZRgeMgDKNXAgezVSn0xrs6j1yMXphGPwksYBw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BCBzeOpVuTtpNnsK/HEK0mvaOH767BgRFEyc3cHrIO1uiPno7n9YbPE0RrBArxZJU
+	 W1oBY0fw/FAwbktfbNtUAgrshGxHddq0rN8tOoA4XbxSqmUtrpxUBsI12txQ7WoGpW
+	 ZRQoArmgPB6yUM7WhWutdmuL7EdEOUXbQDGy+kXexwRk0gFMBYoD6FrGcjfft1EaO7
+	 Yw35Jaet/uAic4eP1VgrZelWiQyauRn+hnaML2Agzj5bHh9X3g7vAs6DrnQSflHlrP
+	 1j+pIlVoCla2DQOukwOJTvguGHl/86+1BWvl85Hjah+3g35Bo82ImtyFxIG1M8I0Bp
+	 T0vmV1b6La1Zw==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3761e5287c9so70418621fa.2
+        for <loongarch@lists.linux.dev>; Tue, 28 Oct 2025 06:47:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWdDzqbmbLuo5CsuKBPStbBVd/8EL32sBIKrYITYY5xULxBuAKVMbdx1vByGPDm3e0Oomv/P7F19Sw=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx+fSq3EXhruZwbVwQ7vqJGNPBOs8zdMgPUXPN2YFuWec6hSavg
+	ouGM5rVsiAnmixepfU8SBa3g3akNS7ADHp9MwKBhao0fgyLTA15L7GPhF+hWlcgo+UqCUDzG7GR
+	ubZl/L6u9tJn7l0jX4qiOa+nhFIcXaFw=
+X-Google-Smtp-Source: AGHT+IGMDRiylwmZD0SBl5ugRhR6rIlFVm0u852ZP1jG9URNwU34wlwBhJJFjd3gP3FgNoxZynY+eRUKXAVIwfZ/a6U=
+X-Received: by 2002:a2e:9a13:0:b0:36f:284:56db with SMTP id
+ 38308e7fff4ca-379077114c5mr10647291fa.23.1761659250814; Tue, 28 Oct 2025
+ 06:47:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxrsNJbgBpsa8UAQ--.1270S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKr45Gry3CF1kuw4kKw1rGrX_yoW7XF15pr
-	yjyr95Jr48Wrn3Z3yIq3s8ury5J3Z2kw47Way2kF93uFnrZrnrXr1kXrnrZF90q3yxCFWS
-	vrnYyrySv3WUt3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+References: <CAAhV-H7HN128du-b1Rk_9qbYBq7gMSwo0s31909N4pTou6wzew@mail.gmail.com>
+ <CAMj1kXGvSnCMRVCW7eAxgLRWMEV3QRj3Dqg3PmZchZJNpnLK9w@mail.gmail.com>
+ <CAAhV-H4UKdso0BokAqvjYeBLr-jbjFAaQX4z=1ztpBamqrOEEg@mail.gmail.com>
+ <CAMj1kXEXDC_oq4aWbkR5dqYBix2d1xJEdaj-v747e1nOA0Q_Yg@mail.gmail.com>
+ <rhnei6wovxmoqs36wdysomfsul3faxtmgde73wrrqdt3qo3b2j@akd7vzne76rq>
+ <CAMj1kXF+hDJy0vRWNgwoijHxvA-scvhGODMj9A3dv19v3jf2yw@mail.gmail.com>
+ <lgyzruqczm7uti2lfbhfhr5hyzpnm7wtvgffa2o7nigx76g6i3@wlffltvmhhez>
+ <CAMj1kXFDquPxCYSBWgjikS=209pSJ_kth67M0RDeuetV9CPYAw@mail.gmail.com>
+ <wlx6pt5crtfdwtop4w5vjznjfarrwitq44wdbufncjdvtsx647@tgobruak66yb>
+ <CAMj1kXFfEBkcc-aiwGrRR-pKg4LBbS7weK0pEpZJsKOk5pbkuA@mail.gmail.com>
+ <jxfb5a2c2qber623l2gwewirwod54bbgfnvt7t7f3jah2ea33g@2uyhy3auzmpx>
+ <d9f3352a-1c1f-464a-a8fd-741cd96b5f8e@loongson.cn> <CAAhV-H6m5vszCyiF3qi94cpHBPVuqM2xH93D=gfsQqOSYvC-sA@mail.gmail.com>
+ <33612d85-e70b-26da-8460-ea6b9064ce08@loongson.cn> <CAAhV-H5ZSTFDxvm-W1CrgEoQ5d_jw5yVsfetQ_J_qL5pqLtzgg@mail.gmail.com>
+ <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com> <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
+In-Reply-To: <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 28 Oct 2025 14:47:18 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com>
+X-Gm-Features: AWmQ_bkAt2Vtj9hvye18BBbdzR0dpGQ4Zhb1DJGs0utdf4kJbulyIP6uV_Jkez8
+Message-ID: <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now there 5 places which calculate max_pfn & max_low_pfn:
-1. in fdt_setup() for FDT systems;
-2. in memblock_init() for ACPI systems;
-3. in init_numa_memory() for NUMA systems;
-4. in arch_mem_init() to recalculate for "mem=" cmdline;
-5. in paging_init() to recalculate for NUMA systems.
+On Sun, 26 Oct 2025 at 12:20, Huacai Chen <chenhuacai@kernel.org> wrote:
+>
+> On Thu, Oct 23, 2025 at 4:07=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> =
+wrote:
+> >
+> > On Thu, 23 Oct 2025 at 10:01, Huacai Chen <chenhuacai@kernel.org> wrote=
+:
+> > >
+> > > On Thu, Oct 23, 2025 at 2:55=E2=80=AFPM Tiezhu Yang <yangtiezhu@loong=
+son.cn> wrote:
+> > > >
+> > > > Hi Josh and Ard,
+> > > >
+> > > > On 2025/10/20 =E4=B8=8B=E5=8D=882:55, Huacai Chen wrote:
+> > > > > On Mon, Oct 20, 2025 at 9:24=E2=80=AFAM Tiezhu Yang <yangtiezhu@l=
+oongson.cn> wrote:
+> > > > >>
+> > > > >> Hi Josh, Ard and Huacai,
+> > > > >>
+> > > > >> On 2025/10/18 =E4=B8=8A=E5=8D=881:05, Josh Poimboeuf wrote:
+> > > > >>
+> > > > >> ...
+> > > > >>
+> > > > >>> But IIUC, the libstub code runs *very* early, and wouldn't show=
+ up in a
+> > > > >>> stack trace anyway, because there are no traces of it on the st=
+ack once
+> > > > >>> it branches to head.S code (which doesn't save the link registe=
+r).
+> > > > >>
+> > > > >> Thanks for your discussions.
+> > > > >>
+> > > > >> Are you OK with this current patch?
+> > > > > For me the current patch is just OK.
+> > > >
+> > > > We have discussed this a few times but there is almost no consensus
+> > > > of what should happen next and nothing changes.
+> > > >
+> > > > Could you please give me a clear reply? Then I can make progress fo=
+r
+> > > > the following series:
+> > > >
+> > > > https://lore.kernel.org/loongarch/20250917112716.24415-1-yangtiezhu=
+@loongson.cn/
+> > > For me, this patch is OK, ignore __efistub_ prefix in objtool is also
+> > > OK [1]. But I cannot accept the way that modifying the efistub part
+> > > only for LoongArch.
+> > >
+> > > Clear enough?
+> > >
+> >
+> > LoongArch is the only architecture which has the problem, so I don't
+> > see a reason to modify other architectures.
+> From your reply I think the efistub code is completely right, but
+> objtool cannot handle the "noreturn" function pointer. And this patch
+> is a workaround rather than a proper fix (so you don't want to touch
+> other architectures), right?
+>
 
-Since memblock_init() is called both for ACPI and FDT systems, move the
-calculation out of the for_each_efi_memory_desc() loop can eliminate the
-first case. The last case is very questionable (may be derived from the
-MIPS/Loongson code) and breaks the "mem=" cmdline, so should be removed.
-And then the NUMA version of paging_init() can be also eliminated.
-
-After consolidation there are 3 places of calculation:
-1. in memblock_init() for both ACPI and FDT systems;
-2. in init_numa_memory() to recalculate for NUMA systems;
-3. in arch_mem_init() to recalculate for the "mem=" cmdline.
-
-For all cases the calculation is:
-max_pfn = PFN_DOWN(memblock_end_of_DRAM());
-max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
-
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/mem.c   |  7 +++----
- arch/loongarch/kernel/numa.c  | 23 ++---------------------
- arch/loongarch/kernel/setup.c |  5 ++---
- arch/loongarch/mm/init.c      |  2 --
- 4 files changed, 7 insertions(+), 30 deletions(-)
-
-diff --git a/arch/loongarch/kernel/mem.c b/arch/loongarch/kernel/mem.c
-index aed901c57fb4..8ab1ffedc52c 100644
---- a/arch/loongarch/kernel/mem.c
-+++ b/arch/loongarch/kernel/mem.c
-@@ -13,7 +13,7 @@
- void __init memblock_init(void)
- {
- 	u32 mem_type;
--	u64 mem_start, mem_end, mem_size;
-+	u64 mem_start, mem_size;
- 	efi_memory_desc_t *md;
- 
- 	/* Parse memory information */
-@@ -21,7 +21,6 @@ void __init memblock_init(void)
- 		mem_type = md->type;
- 		mem_start = md->phys_addr;
- 		mem_size = md->num_pages << EFI_PAGE_SHIFT;
--		mem_end = mem_start + mem_size;
- 
- 		switch (mem_type) {
- 		case EFI_LOADER_CODE:
-@@ -31,8 +30,6 @@ void __init memblock_init(void)
- 		case EFI_PERSISTENT_MEMORY:
- 		case EFI_CONVENTIONAL_MEMORY:
- 			memblock_add(mem_start, mem_size);
--			if (max_low_pfn < (mem_end >> PAGE_SHIFT))
--				max_low_pfn = mem_end >> PAGE_SHIFT;
- 			break;
- 		case EFI_PAL_CODE:
- 		case EFI_UNUSABLE_MEMORY:
-@@ -49,6 +46,8 @@ void __init memblock_init(void)
- 		}
- 	}
- 
-+	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
-+	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
- 	memblock_set_current_limit(PFN_PHYS(max_low_pfn));
- 
- 	/* Reserve the first 2MB */
-diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-index d6e73e8f9c0b..ab9c660526a3 100644
---- a/arch/loongarch/kernel/numa.c
-+++ b/arch/loongarch/kernel/numa.c
-@@ -272,7 +272,8 @@ int __init init_numa_memory(void)
- 		node_mem_init(node);
- 		node_set_online(node);
- 	}
--	max_low_pfn = PHYS_PFN(memblock_end_of_DRAM());
-+	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
-+	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
- 
- 	setup_nr_node_ids();
- 	loongson_sysconf.nr_nodes = nr_node_ids;
-@@ -283,26 +284,6 @@ int __init init_numa_memory(void)
- 
- #endif
- 
--void __init paging_init(void)
--{
--	unsigned int node;
--	unsigned long zones_size[MAX_NR_ZONES] = {0, };
--
--	for_each_online_node(node) {
--		unsigned long start_pfn, end_pfn;
--
--		get_pfn_range_for_nid(node, &start_pfn, &end_pfn);
--
--		if (end_pfn > max_low_pfn)
--			max_low_pfn = end_pfn;
--	}
--#ifdef CONFIG_ZONE_DMA32
--	zones_size[ZONE_DMA32] = MAX_DMA32_PFN;
--#endif
--	zones_size[ZONE_NORMAL] = max_low_pfn;
--	free_area_init(zones_size);
--}
--
- int pcibus_to_node(struct pci_bus *bus)
- {
- 	return dev_to_node(&bus->dev);
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 69c17d162fff..25a87378e48e 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -294,8 +294,6 @@ static void __init fdt_setup(void)
- 
- 	early_init_dt_scan(fdt_pointer, __pa(fdt_pointer));
- 	early_init_fdt_reserve_self();
--
--	max_low_pfn = PFN_PHYS(memblock_end_of_DRAM());
- #endif
- }
- 
-@@ -390,7 +388,8 @@ static void __init check_kernel_sections_mem(void)
- static void __init arch_mem_init(char **cmdline_p)
- {
- 	/* Recalculate max_low_pfn for "mem=xxx" */
--	max_pfn = max_low_pfn = PHYS_PFN(memblock_end_of_DRAM());
-+	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
-+	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
- 
- 	if (usermem)
- 		pr_info("User-defined physical RAM map overwrite\n");
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index c3e4586a7975..6bfd4b8dad1b 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -60,7 +60,6 @@ int __ref page_is_ram(unsigned long pfn)
- 	return memblock_is_memory(addr) && !memblock_is_reserved(addr);
- }
- 
--#ifndef CONFIG_NUMA
- void __init paging_init(void)
- {
- 	unsigned long max_zone_pfns[MAX_NR_ZONES];
-@@ -72,7 +71,6 @@ void __init paging_init(void)
- 
- 	free_area_init(max_zone_pfns);
- }
--#endif /* !CONFIG_NUMA */
- 
- void __ref free_initmem(void)
- {
--- 
-2.47.3
-
+That is my reasoning, yes. But Josh is right that it shouldn't make a
+difference in practice, I am just reluctant to make changes to the
+code running on the target to accommodate a flawed build time tool.
