@@ -1,260 +1,167 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B0C32F77B
-	for <loongarch@lists.linux.dev>; Wed, 29 Oct 2025 09:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3BD2E7631
+	for <loongarch@lists.linux.dev>; Wed, 29 Oct 2025 10:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761730931; cv=none; b=jLbSEgrJ1ZJ23P70cYTE7D5zJuevkpV2aGIlcNPwnJrBmSr91t941/Cw0bF6bYJOtgQSh609B2VRVvGnwmsZNf3xh0fORMh1XGLuiIPCTI2NdD53khovXYdD3UT5PX2Xtch30eTrsyjCI8csDwwlE+sSbOtyDJN00nlk6jikQNs=
+	t=1761732599; cv=none; b=h+qz1I8/YOKyRRGwwyuo6IHYf4pqWzmZyn+K1n2PyW4jdAsqqRA81FfNOSbCz69nIP69hrP8VCnOdejH2xXLv+zxAplamCZsKBF2ujoPLZKKIQhc5Z/pcDuTJbcazxXYq0P2jLrZzItErRJjwnINYMZGj1clCWP1oUDvlrcLwLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761730931; c=relaxed/simple;
-	bh=ei4AVSTiMTWOo2764Fe34I0FDbcBcV7ctbcxvqyHbiM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=g8B0TmqSBimUPGgJIUd2ZZoLR/QP+CRE8bSl+UWCMyxOzZMzPcRG6IIvQ4ptBuKU5++Bh4g/483sgCH8gOUrDJPZT/xDnv4Uv+ztw5sGM5u4M48PPwQ+EKXENxZxAhcK23uJvkFZvS+puNtxsqk3IhxRh1J3/7S//G65AlJ3jn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tsFNGwgP; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1761732599; c=relaxed/simple;
+	bh=fDud/gli0gs0bKQHR8KRS+b9VJUz0ACksoD21DnIixM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=u6xKUKVHC/rLc3+611OlnQtm7V7xREWjQvKITIqe4i/PHI0b+g6qCKSs0NE8XScPmZh6W5S+L93+uGaxxhpQmRqpueonQdCxQwpSAXfcpxH+FuAijnH2IeAUBdIEWN147S3xYhY5opFXQczmQ/K8eP9b+QdRSpwb26qtKLCmDxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TWszmJri; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tsFNGwgP"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SJmKa3019586;
-	Wed, 29 Oct 2025 09:41:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=51F1KP
-	X2GaNeDDDtEnKMSmu/zB48xYsKZ7OyK4P3FQY=; b=tsFNGwgPUaWkd957rNSR/u
-	+JYSd/XvQMv9FnZInqtDgREwmubpyFc5tRSXD+tnh0DH39Ny9/sBuEWxujf6H38L
-	F28E51ALCa0LMGSavm46nm4c2a4jFkQnGZ+1BG/OIgYCkHtrwWr0+wkIfcKm52vA
-	DKgh5c0GahAkYTOVr8DdiAvqewCJ9XW8WDwQJLfm0gufR7LDMvgpeesDEWhs0zkd
-	3ki6265KvHlP76gce5WkGeA5wEVe+vbja+drHpkd5qqHKjbzg1pa5cqT6L1urijl
-	wnqabhIxS+37071n66qQk0Tba0xAF4qtTRByZkL0Ol7LPS9KwOkRaTf+2LaFzw6g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agjdyd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Oct 2025 09:41:56 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59T9W7YP002955;
-	Wed, 29 Oct 2025 09:41:55 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agjdy9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Oct 2025 09:41:55 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59T5E6iu027495;
-	Wed, 29 Oct 2025 09:41:54 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a33w2jkqt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Oct 2025 09:41:54 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59T9frV631916732
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Oct 2025 09:41:53 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8E0AE58052;
-	Wed, 29 Oct 2025 09:41:53 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2A21658056;
-	Wed, 29 Oct 2025 09:41:51 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 29 Oct 2025 09:41:51 +0000 (GMT)
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-Date: Wed, 29 Oct 2025 10:41:32 +0100
-Subject: [PATCH v5 2/2] PCI: s390: Handle ARI on bus without associated
- struct pci_dev
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TWszmJri"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761732596;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P8VL8F1BbEiYOKI5l4LcZTZfjaaIUn5rioPCVGdYu3M=;
+	b=TWszmJriLh3sb/XOvxs0g1/N8dMFiRWbwwGww+WGTJ9MstDMNd3VopUIYJj2LP4PkVkE5m
+	+0Ib7Vl3wpueWFiQqZiU5VOGxYquOS33ywvwy7K5NlHmxLoOFN1xOx6crlaIk2gqaGLWeY
+	62HVL2zpQyLwAMPalb3S7K2jm3FvilU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-370-Vsevmv4WMISXVDzA5nx4lw-1; Wed, 29 Oct 2025 06:09:55 -0400
+X-MC-Unique: Vsevmv4WMISXVDzA5nx4lw-1
+X-Mimecast-MFC-AGG-ID: Vsevmv4WMISXVDzA5nx4lw_1761732594
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3f384f10762so4304097f8f.3
+        for <loongarch@lists.linux.dev>; Wed, 29 Oct 2025 03:09:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761732594; x=1762337394;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F7va99Zg9nu4+XxtsT3y+i0Qg89ua4ByIHfysL3F+F4=;
+        b=MVnEPYa+DuEmBJf00xU6E1++OJziVa+ZUL2towUVhzz3B0SQlgLCLe6iDH8NiMt2Au
+         HQNlkp1ODxXuC3FjW+mzZoz6Pt8NibFxs7nhwFCvaXv6wViw7+0FBLtb/LK4l6k33Wqj
+         JiE97PZCQgVP/yrmiU3C5asj8X+7kQj8CduYhQTJ/6o3KYa76LJjLP/ATKdG8k11Vpqt
+         Hfyp3+kkqlLHud65Ij087V8r/ikkFsevtY6LSJWqCNPBDx99K+EZhqGXvzfXXmX0hx4I
+         iqxSJf4JPipPMzXNJFuuLflXgJsUbCRJIC4IRqCmLhBT+vkxVz6jKDQfpcoD2naDztsH
+         erfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUereVWTZt+26Y/Sjeib6794AQdxdtHq6VyTKETzmMHug6bdeKrJ1UNfHITk+qfr5HZQVBsAHV8vmE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwQlEBcdPtZrz5SZRKz6dT95pr308q6gVJOruCOW2Ml/QIONrrk
+	v0Dc2FHwjZhK0M9xvL+qhrV1J/ATIg9F6gPHlVqStp7DJpPuEZSdTi5wf1LMUHfcB2RIOvOpuR2
+	ekRbEx1GOcMSrNB75Fn7LyANxXokhKWK8syPV4A9Zfz+cARBhmdzItGhQ8Pn1Jg==
+X-Gm-Gg: ASbGncsDtDSG0eJmo6Bf71DU0YYn06cfNsr4kFeiRRBJ0Umc54hFqfDJ46m4tj8zf26
+	A1ElVcAVqySp/jPumtg4kxVdOh2GhZJitCM4YAHzIILd1r0xYzdE1ol1nrBpAqPi50LB1B3zXcU
+	2EGmQjdk3JkfjsYC5UqrYEo1mrj0e7dOdYSxv+5AN8lqVjjUIycC3ElJ2uhzqmXYPQHnllRM1e5
+	C5tFk6SagGZp4ekHjAe++Geon3yCZWXc3CDDgncsvX2MJwnnbfr48UkSEIR/ojDW7rAvYS5cqPK
+	WmkLBq9qiWvi/OsGba4a+wjgvCAIF1BV1qejNdmKzEUn7WFMVX9X94uEaFgXQPlr/32peTL93gd
+	I+khGjMQnQgkmtUWPi6yT/JMKzQE5/G/6qXgXw05eLnoheGQgZuXIt39cU3qn
+X-Received: by 2002:a05:6000:2089:b0:428:4354:aa43 with SMTP id ffacd0b85a97d-429aef83083mr1733936f8f.18.1761732594351;
+        Wed, 29 Oct 2025 03:09:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMwZOd1Sm4LKIO70Dn8iCGAQm9z32hncQVtTx+dFITCY/jcrLahS/V2gOWr58H4oqqEmvh5w==
+X-Received: by 2002:a05:6000:2089:b0:428:4354:aa43 with SMTP id ffacd0b85a97d-429aef83083mr1733872f8f.18.1761732593822;
+        Wed, 29 Oct 2025 03:09:53 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952e3201sm25467518f8f.47.2025.10.29.03.09.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Oct 2025 03:09:52 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
+ x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Nicolas
+ Saenz Julienne <nsaenzju@redhat.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Josh
+ Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Arnd
+ Bergmann <arnd@arndb.de>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, Josh
+ Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, Andrew
+ Morton <akpm@linux-foundation.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Han Shen <shenhan@google.com>, Rik van Riel
+ <riel@surriel.com>, Jann Horn <jannh@google.com>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [PATCH v6 23/29] context-tracking: Introduce work deferral
+ infrastructure
+In-Reply-To: <aQDMfu0tzecFzoGr@localhost.localdomain>
+References: <20251010153839.151763-1-vschneid@redhat.com>
+ <20251010153839.151763-24-vschneid@redhat.com>
+ <aQDMfu0tzecFzoGr@localhost.localdomain>
+Date: Wed, 29 Oct 2025 11:09:50 +0100
+Message-ID: <xhsmh5xbyqas1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251029-ari_no_bus_dev-v5-2-d9a5eab67ed0@linux.ibm.com>
-References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
-In-Reply-To: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>, Huacai Chen <chenhuacai@kernel.org>,
-        Bibo Mao <maobibo@loongson.cn>,
-        linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Tianrui Zhao <zhaotianrui@loongson.cn>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5163;
- i=schnelle@linux.ibm.com; h=from:subject:message-id;
- bh=ei4AVSTiMTWOo2764Fe34I0FDbcBcV7ctbcxvqyHbiM=;
- b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDIZH0aeO/jzV/sb4y2zrPVuFspx7P7ZtfZ6AMvBs2+EH
- VLMOoR3dpSyMIhxMciKKbIs6nL2W1cwxXRPUH8HzBxWJpAhDFycAjCRqdYMf4XTX+i2bJT8UlG3
- TnxNzLl4wcNBOUpnv584eDijqnLxkz+MDG1VXTrH115deajq5x2O/Tr34wO/9N950r/7VnGg3qt
- FR9kB
-X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
- fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=K+gv3iWI c=1 sm=1 tr=0 ts=6901e164 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=NZt1OnvTlnlKU9qwqt4A:9 a=QEXdDO2ut3YA:10
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: F81w5a-q_A82GzZG431alqBGvXqZe0Wb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX7nX5f9EiYWlK
- 7T3M6ZmYpaMXdGyr0oXSmdTJQ881Cgjci9HNY1WcC3l7moDqZgu1KZCN006tqEgl6h6eu5bJR3u
- ANCSANjFZvRj7gxvvMNOs+QM3XWJXeZ+5g6yUUYdcHCU/1ZyslhpqJEH7xL+YWAd95UODeloX6T
- QEOgip/ipSVbBP4YLPsM0AoKNtaoU8101QUdB6qfuDCzO5nEsg2yCKf0aAvdqsSUOoinSIhBRgu
- uyX06su+wXgMwJTwW6lJiMz8nlGAH71SwGDSBGB3iL7lFfDudU5nS6QN4TYSNR2YxeK76znHePR
- z2o5YBvXwukQj5fgyqeaP+KtR6uK09sa7SORarmlYDgI58XeDIHmwbyWeOuSG4eQqQvDQUA22Jz
- 6zumN4tTDjHBoCumV51houpzWGHACg==
-X-Proofpoint-GUID: SydpWizy2eNmQYSkNRnQjAuU8oeOREV5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-29_04,2025-10-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 suspectscore=0
- adultscore=0 clxscore=1015 malwarescore=0 phishscore=0 spamscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2510280166
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: nZZoJwg6aCZyx3Qn6CZ2zuNga-nNND7msZjjc-_x2wU_1761732594
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On s390 PCI busses are virtualized and the downstream ports are
-invisible to the OS and self in struct pci_bus is NULL. This associated
-struct pci_dev is however relied upon in pci_ari_enabled() to check
-whether ARI is enabled for the bus. ARI is therefor always detected as
-disabled. At the same time, firmware on s390 always enables and relies
-upon ARI thus causing a mismatch.
+On 28/10/25 15:00, Frederic Weisbecker wrote:
+> Le Fri, Oct 10, 2025 at 05:38:33PM +0200, Valentin Schneider a =C3=A9crit=
+ :
+>> +=09old =3D atomic_read(&ct->state);
+>> +
+>> +=09/*
+>> +=09 * The work bit must only be set if the target CPU is not executing
+>> +=09 * in kernelspace.
+>> +=09 * CT_RCU_WATCHING is used as a proxy for that - if the bit is set, =
+we
+>> +=09 * know for sure the CPU is executing in the kernel whether that be =
+in
+>> +=09 * NMI, IRQ or process context.
+>> +=09 * Set CT_RCU_WATCHING here and let the cmpxchg do the check for us;
+>> +=09 * the state could change between the atomic_read() and the cmpxchg(=
+).
+>> +=09 */
+>> +=09old |=3D CT_RCU_WATCHING;
+>
+> Most of the time, the task should be either idle or in userspace. I'm sti=
+ll not
+> sure why you start with a bet that the CPU is in the kernel with RCU watc=
+hing.
+>
 
-Despite simply being a mismatch this causes problems as some PCI devices
-present a different SR-IOV topology depending on PCI_SRIOV_CTRL_ARI.
+Right I think I got that the wrong way around when I switched to using
+CT_RCU_WATCHING vs CT_STATE_KERNEL. That wants to be
 
-A similar mismatch may occur with SR-IOV when virtfn_add_bus() creates new
-busses with no associated struct pci_dev. Here too pci_ari_enabled()
-on these busses returns false even if ARI is actually used.
+  old &=3D ~CT_RCU_WATCHING;
 
-Prevent both mismatches by moving the ari_enabled flag from struct
-pci_dev to struct pci_bus making it independent from self in struct
-pci_bus. Let the bus inherit the ari_enabled state from its parent bus
-when there is no bridge device such that busses added by virtfn_add_bus()
-match their parent. For s390 set ari_enabled when the device supports
-ARI in the awareness that all PCIe ports on s390 systems are ARI
-capable.
+i.e. bet the CPU is NOHZ-idle, if it's not the cmpxchg fails and we don't
+store the work bit.
 
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- arch/s390/pci/pci.c     |  7 +++++++
- arch/s390/pci/pci_bus.c | 10 ++++++++++
- drivers/pci/pci.c       |  4 ++--
- drivers/pci/probe.c     |  1 +
- include/linux/pci.h     |  4 ++--
- 5 files changed, 22 insertions(+), 4 deletions(-)
+>> +=09/*
+>> +=09 * Try setting the work until either
+>> +=09 * - the target CPU has entered kernelspace
+>> +=09 * - the work has been set
+>> +=09 */
+>> +=09do {
+>> +=09=09ret =3D atomic_try_cmpxchg(&ct->state, &old, old | (work << CT_WO=
+RK_START));
+>> +=09} while (!ret && !(old & CT_RCU_WATCHING));
+>
+> So this applies blindly to idle as well, right? It should work but note t=
+hat
+> idle entry code before RCU watches is also fragile.
+>
 
-diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-index c82c577db2bcd2143476cb8189fd89b9a4dc9836..773c0cbfc313ea1a6419a44d6158397dd13f6e76 100644
---- a/arch/s390/pci/pci.c
-+++ b/arch/s390/pci/pci.c
-@@ -609,6 +609,13 @@ int pcibios_device_add(struct pci_dev *pdev)
- 			continue;
- 		pci_claim_resource(pdev, i);
- 	}
-+	/*
-+	 * The below is the s390 equivalent of pci_configure_ari()
-+	 * which we can't use directly because the bridge devices
-+	 * are hidden in firmware.
-+	 */
-+	if (!pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ARI))
-+		zdev->zbus->bus->ari_enabled = 0;
- 
- 	return 0;
- }
-diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-index 45a1c36c5a54e3a841e61cc365d3f36e9a94ba50..c887e61eb384ca98ff27d4f8af69e58c715b5002 100644
---- a/arch/s390/pci/pci_bus.c
-+++ b/arch/s390/pci/pci_bus.c
-@@ -207,6 +207,16 @@ static int zpci_bus_create_pci_bus(struct zpci_bus *zbus, struct zpci_dev *fr, s
- 		return -EFAULT;
- 	}
- 
-+	/*
-+	 * On s390 PCI busses are virtualized and the bridge
-+	 * devices are invisible to the OS. Furthermore busses
-+	 * may exist without a devfn 0 function. Thus the normal
-+	 * ARI detection does not work. At the same time fw/hw
-+	 * has always enabled ARI when possible. Reflect the actual
-+	 * state by setting ari_enabled whenever a device on the bus
-+	 * supports it.
-+	 */
-+	bus->ari_enabled = 1;
- 	zbus->bus = bus;
- 
- 	return 0;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b14dd064006cca80ec5275e45a35d6dc2b4d0bbc..8ef3c68280a629449e0a2176d938bf987c68dddf 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3532,11 +3532,11 @@ void pci_configure_ari(struct pci_dev *dev)
- 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI)) {
- 		pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
- 					 PCI_EXP_DEVCTL2_ARI);
--		bridge->ari_enabled = 1;
-+		dev->bus->ari_enabled = 1;
- 	} else {
- 		pcie_capability_clear_word(bridge, PCI_EXP_DEVCTL2,
- 					   PCI_EXP_DEVCTL2_ARI);
--		bridge->ari_enabled = 0;
-+		dev->bus->ari_enabled = 0;
- 	}
- }
- 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 41dd1a339a994956a6bc7e1fea0fe0d55452a963..6fc03328a62f54f33f47309f8300516e8f52b5eb 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1216,6 +1216,7 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
- 
- 	if (!bridge) {
- 		child->dev.parent = parent->bridge;
-+		child->ari_enabled = parent->ari_enabled;
- 		goto add_dev;
- 	}
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index d1fdf81fbe1e427aecbc951fa3fdf65c20450b05..a9c3dbf17339e523362bd179ad3c7c8c91293cf0 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -445,7 +445,6 @@ struct pci_dev {
- 	unsigned int	irq_reroute_variant:2;	/* Needs IRQ rerouting variant */
- 	unsigned int	msi_enabled:1;
- 	unsigned int	msix_enabled:1;
--	unsigned int	ari_enabled:1;		/* ARI forwarding */
- 	unsigned int	ats_enabled:1;		/* Address Translation Svc */
- 	unsigned int	pasid_enabled:1;	/* Process Address Space ID */
- 	unsigned int	pri_enabled:1;		/* Page Request Interface */
-@@ -691,6 +690,7 @@ struct pci_bus {
- 	unsigned int		is_added:1;
- 	unsigned int		unsafe_warn:1;	/* warned about RW1C config write */
- 	unsigned int		flit_mode:1;	/* Link in Flit mode */
-+	unsigned int		ari_enabled:1;	/* ARI forwarding enabled */
- };
- 
- #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
-@@ -2740,7 +2740,7 @@ static inline bool pci_is_dev_assigned(struct pci_dev *pdev)
-  */
- static inline bool pci_ari_enabled(struct pci_bus *bus)
- {
--	return bus->self && bus->self->ari_enabled;
-+	return bus->ari_enabled;
- }
- 
- /**
+Yeah I remember losing some hair trying to grok the idle entry situation;
+we could keep this purely NOHZ_FULL and have the deferral condition be:
 
--- 
-2.48.1
+  (ct->state & CT_STATE_USER) && !(ct->state & CT_RCU_WATCHING)
 
