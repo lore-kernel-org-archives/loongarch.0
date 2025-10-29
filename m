@@ -1,22 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68D592E7F21
-	for <loongarch@lists.linux.dev>; Wed, 29 Oct 2025 02:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E2E1EEA55
+	for <loongarch@lists.linux.dev>; Wed, 29 Oct 2025 02:09:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761703751; cv=none; b=OgwOzKj6c5XEj5/iJWUfmCk6aBiLQ4I9uc0H9ZHG/FsjYFo5jJmxow54TKvb0YustScBdMwa91gszPdGt0pn0QD5WWWfj0drN+bW7Mr/LubiPSNZirRzvTjrKaCcU1bLaoHIDXDL2+6iSXX+66rayRGcee7UR8HpIcBUykxcaD4=
+	t=1761703765; cv=none; b=OSwYBphnJke6cqBPzKvEMVIZ9Oy96r97VvJwp0e8tnNI0iHFHW7VMcxMLgr5rOLYw4kmdn0veNXApVAxuz+mlGXMz6dTS+GAjXxIQNrS5ZOiJZYCpmUuoxrFMEe+EBdTg9SQKyCBFcazrlmZwrUa/vY+kdkJFNfGV9gCiP2QHUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761703751; c=relaxed/simple;
-	bh=XGXgKP4uvbIWo7QdcLdnSN2lnZ9oTH2t7HkLiSqWwXw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iNEcMoY5jWvwC7N62TELhCOAvDqQPS1hdNWkZqIiQi4jsllvb2F5suYbcTpBAEwlrsxkFbwAbBIXyVItU2sxi2Hvb0W/BgpCB4ppXNcGJUypIDRKM0NjgOi8cL9eZpJA/GEPGpUZm2vZASa5WEmHFtO0b00kEzImMIxxP2axySg=
+	s=arc-20240116; t=1761703765; c=relaxed/simple;
+	bh=QL7Kpmsvg3N6pJriiqLI0HEO2QI3ovEP/gHHLRCzh4s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LNNmQvTQENLTFc9p38NGB1lAiPzp/VW/N1RxueI8ji8/1Dlnvi0FTiRGiLzuee153TwIgIoyVcljCbuQm+PI+XVW7AAOwUyLbNct5WuAKgNWFJjgTWfCczYizk6WIIl3lpBJ18CzeaBaCUqInJVLzzhXwjr9IHZJYadBvCcMa1A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.45])
-	by gateway (Coremail) with SMTP id _____8Cxbb8_dwFpRNobAA--.59517S3;
-	Wed, 29 Oct 2025 10:09:03 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxVNBSdwFpe9obAA--.60395S3;
+	Wed, 29 Oct 2025 10:09:22 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.45])
-	by front1 (Coremail) with SMTP id qMiowJDxqcA5dwFpbrAXAQ--.64967S2;
-	Wed, 29 Oct 2025 10:08:58 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJAx+8BRdwFp1rAXAQ--.27054S2;
+	Wed, 29 Oct 2025 10:09:22 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -32,9 +32,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-watchdog@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 0/6] Watchdog: Add Loongson-2K0300 watchdog support
-Date: Wed, 29 Oct 2025 10:08:44 +0800
-Message-ID: <20251029020847.1946295-1-zhoubinbin@loongson.cn>
+Subject: [PATCH 4/6] watchdog: loongson: Drop CONFIG_OF
+Date: Wed, 29 Oct 2025 10:09:11 +0800
+Message-ID: <20251029020913.1946321-1-zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -43,54 +43,61 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxqcA5dwFpbrAXAQ--.64967S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEKCGkAWywU5QAAst
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JFyxJw4DKFW8Xr4kWr43XFc_yoWkuFg_ua
-	4Igas7Cr1DuF13Ja4jqw1UCrWIqFWDZ3W8CF18KrWfZ34Iyry5KrWxZrW0g3W7X3WUXrn8
-	Xr4kur4F9r97XosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+X-CM-TRANSID:qMiowJAx+8BRdwFp1rAXAQ--.27054S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEKCGkAWxIUrQAAsY
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKrW8Jr4xCr1rKry8Jw1rKrX_yoWkWrX_ua
+	42qrZ3WFyrJrW3Xa4Yg3y5Ar92qas0qa45uF48KFs3Xa47tryYqrWkZF1DG3W7ZrWUJry3
+	ur4kWrWSkry7XosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
 	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbzAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_
-	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
+	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-Hi all:
+The general recommendation is to not use of_match_ptr() or CONFIG_OF
+ifdef.
 
-This patch set adds support for the Loongson-2K0300 watchdog driver.
-It's similar to the Loongson-1, except for some different register offsets.
-Therefore, I've merged it with the Loongson-1 watchdog driver.
+Drop them.
 
-In addition, I've simply fixed some minor issues with the previous driver.
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ drivers/watchdog/loongson_wdt.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Thanks.
-
-Binbin Zhou (6):
-  watchdog: loongson1: Rename the prefix from ls1x to loongson
-  watchdog: loongson: Add missing MODULE_PARM_DESC
-  watchdog: loongson: Simplify loongson_wdt_probe code
-  watchdog: loongson: Drop CONFIG_OF
-  dt-bindings: watchdog: loongson,ls1x-wdt: Add ls2k0300-wdt compatible
-  watchdog: loongson: Add Loongson-2k0300 watchdog support
-
- .../bindings/watchdog/loongson,ls1x-wdt.yaml  |   3 +-
- drivers/watchdog/Kconfig                      |   8 +-
- drivers/watchdog/Makefile                     |   2 +-
- drivers/watchdog/loongson1_wdt.c              | 170 --------------
- drivers/watchdog/loongson_wdt.c               | 209 ++++++++++++++++++
- 5 files changed, 216 insertions(+), 176 deletions(-)
- delete mode 100644 drivers/watchdog/loongson1_wdt.c
- create mode 100644 drivers/watchdog/loongson_wdt.c
-
-
-base-commit: c64c2a50cdd487e2270c875c1770cd55705d75ff
+diff --git a/drivers/watchdog/loongson_wdt.c b/drivers/watchdog/loongson_wdt.c
+index 3e0c3cac14f9..703c65952c7c 100644
+--- a/drivers/watchdog/loongson_wdt.c
++++ b/drivers/watchdog/loongson_wdt.c
+@@ -140,20 +140,18 @@ static int loongson_wdt_probe(struct platform_device *pdev)
+ 	return devm_watchdog_register_device(dev, &drvdata->wdt);
+ }
+ 
+-#ifdef CONFIG_OF
+ static const struct of_device_id loongson_wdt_dt_ids[] = {
+ 	{ .compatible = "loongson,ls1b-wdt", },
+ 	{ .compatible = "loongson,ls1c-wdt", },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, loongson_wdt_dt_ids);
+-#endif
+ 
+ static struct platform_driver loongson_wdt_driver = {
+ 	.probe = loongson_wdt_probe,
+ 	.driver = {
+ 		.name = "loongson-wdt",
+-		.of_match_table = of_match_ptr(loongson_wdt_dt_ids),
++		.of_match_table = loongson_wdt_dt_ids,
+ 	},
+ };
+ 
 -- 
 2.47.3
 
