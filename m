@@ -1,155 +1,184 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtps.ntu.edu.tw (smtps.ntu.edu.tw [140.112.2.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E85306498
-	for <loongarch@lists.linux.dev>; Wed, 29 Oct 2025 15:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D0434AB14
+	for <loongarch@lists.linux.dev>; Wed, 29 Oct 2025 15:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.112.2.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761751248; cv=none; b=tcUwp71C4ntzgJLlE67duQlXf1y/T72sAw3L/9EGA8FbbMFlJoAIoicwLUuc9zRrGAm9OBr6dhmg0G4lqJ6wNjVrxwhzNsmBRLl5yIQn+uVZAu92iVIgWolxuPw/S61E0kzdNAU3/rrimIFhkJhN6mjVeMsvc67RbFCVBwB1RIg=
+	t=1761752704; cv=none; b=kA3ESgIqK5uo2p30jVDK0qQ6BPGKzQ4/eJg14SVX6U7DthtggNLymQuF7MmAnwiOd+dhzgjrNhe21NXW/ChxYhRi/E2nDrhC9WmLvQ+oL/H7zddJxaDGMOTxR90SOPhFkul2yeq0TGbXCVfHF2bujkhHsRMtnL4QpaYgCtlYJIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761751248; c=relaxed/simple;
-	bh=HsqIx8+IJ0E/PCaCWQFdxj3WXjldedE9WdTaVKu8Mzs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YPbVSeasf7ZYp+fM2LSyqbAesEmd6QSuuphWf92ihvuXwuoHRaxAjPVX+7BrirMJa3USdUvpIpJBRwpQXgDwFgj3F8AIdutH01kHfChFuCa3u/XT0ZuaKZ/+V6bZiKJHFEhPe4TuFvJLMn4j+NaY7MruumpLJl9XtfLpoHXc1io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=T22IUOzV; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="T22IUOzV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1761751242;
-	bh=HsqIx8+IJ0E/PCaCWQFdxj3WXjldedE9WdTaVKu8Mzs=;
-	h=From:Date:Subject:To:Cc:From;
-	b=T22IUOzV/MsCEGMHkrD5VbnbP7/xZR0Rk4JduAqAJb4uU0gEjZFI2KHDMheeadKy0
-	 Gdp9NkeTyt2rl8pGUK+7AkOLJ2Jfbjoo6+WS4/Dw8afsrRkykPM2aDi5ERJvghF5vu
-	 xS8cB3U7TAcDC1gWg2n3zGdCsRmJxb2MjLtDlnPg=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Wed, 29 Oct 2025 16:20:34 +0100
-Subject: [PATCH] LoongArch: ptrace: Use UAPI types in UAPI header
+	s=arc-20240116; t=1761752704; c=relaxed/simple;
+	bh=LUKhmCcDHmOd1ZUPv07YQs7L48f4jaD6YukQ1MvBL60=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B73DqpPYSC1w4W+hzHpM4vm1NrENSkPOb2U/g4mAhkGh8HlJhrbmkajNRC/UokT/CITxAB4FL4c5YMM7j674xBxqRxIWv8y56q2B67pyHfWzEk1qh2QpSdKeFrSb0ibEHGEf3l/2Cab+aRZ47385xEGhhTeltv3HbkO+hKdm5QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ntu.edu.tw; spf=pass smtp.mailfrom=ntu.edu.tw; arc=none smtp.client-ip=140.112.2.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ntu.edu.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ntu.edu.tw
+Received: from x415ea.. (unknown [101.10.245.44])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtps.ntu.edu.tw (Postfix) with ESMTPSA id 8DBD8CE7F;
+	Wed, 29 Oct 2025 23:38:02 +0800 (CST)
+From: Bill Tsui <b10902118@ntu.edu.tw>
+To: chenhuacai@kernel.org,
+	oleg@redhat.com
+Cc: kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Bill Tsui <b10902118@ntu.edu.tw>
+Subject: [PATCH] LoongArch: ptrace: Merge ptrace_hbp_set_*()
+Date: Wed, 29 Oct 2025 23:36:49 +0800
+Message-ID: <20251029153649.33345-1-b10902118@ntu.edu.tw>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20251029-loongarch-uapi-ptrace-types-v1-1-5c84855a348d@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIAMEwAmkC/x3MQQqEMAwAwK9IzgZqocr6FdlDiVEDS1tSV5Ti3
- y0e5zIFMqtwhrEpoHxIlhgqurYB2nxYGWWuBmus64z94C/GsHqlDf8+CaZdPTHuV+KMhhz1g+u
- XgQ3UISkvcr779L3vB4uWWa5tAAAA
-X-Change-ID: 20251029-loongarch-uapi-ptrace-types-0c5c6756f7e0
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1761751240; l=2467;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=HsqIx8+IJ0E/PCaCWQFdxj3WXjldedE9WdTaVKu8Mzs=;
- b=iRGJc3xKWpH8P8tHfaNUxQgjaPLqEMXyIUdYMwkHmnUIDlVkOxJKQd8MbhR2Pb4O9f7J3yvU8
- qCeHgSmlM/5BoDUlgE1aB0wVgdYcHKtrv01J4B/PlkUphgBZ54+WYqc
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The kernel UAPI headers already contain fixed-width integer types,
-there is no need to rely on libc types. There may not be a libc
-available or it may not provide <stdint.h>, like for example on nolibc.
+In hw_break_set(), those functions actually can be combined into one.
+This eliminates intermediate calls to modify_user_hw_breakpoint() that
+may leave hardware registers in a partially updated state.
 
-This also aligns the header with the rest of the LoongArch UAPI headers.
+This redundancy was originally found in ARM ptrace, where it caused
+non-4-byte address alignment checks to fail.
 
-Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Link:
+https://lore.kernel.org/all/20251018133731.42505-2-b10902118@ntu.edu.tw/
+
+The LoongArch implementation appears to have been derived from ARM,
+so this refactor helps avoid the same issue and simplifies future
+maintenance.
+
+Signed-off-by: Bill Tsui <b10902118@ntu.edu.tw>
 ---
-I'd like to take this through the nolibc tree, as this currently breaks
-the upcoming nolibc ptrace support.
----
- arch/loongarch/include/uapi/asm/ptrace.h | 40 ++++++++++++++------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
+ arch/loongarch/kernel/ptrace.c | 69 +++++++++-------------------------
+ 1 file changed, 17 insertions(+), 52 deletions(-)
 
-diff --git a/arch/loongarch/include/uapi/asm/ptrace.h b/arch/loongarch/include/uapi/asm/ptrace.h
-index aafb3cd9e943..215e0f9e8aa3 100644
---- a/arch/loongarch/include/uapi/asm/ptrace.h
-+++ b/arch/loongarch/include/uapi/asm/ptrace.h
-@@ -10,10 +10,6 @@
+diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+index 8edd0954e55a..c6cd51569a64 100644
+--- a/arch/loongarch/kernel/ptrace.c
++++ b/arch/loongarch/kernel/ptrace.c
+@@ -581,13 +581,15 @@ static int ptrace_hbp_get_addr(unsigned int note_type,
+ 	return 0;
+ }
  
- #include <linux/types.h>
+-static int ptrace_hbp_set_ctrl(unsigned int note_type,
++static int ptrace_hbp_set(unsigned int note_type,
+ 			       struct task_struct *tsk,
+-			       unsigned long idx, u32 uctrl)
++			       unsigned long idx, u64 addr,
++				   u64 mask, u32 uctrl)
+ {
+ 	int err;
+ 	struct perf_event *bp;
+ 	struct perf_event_attr attr;
++	struct arch_hw_breakpoint *info;
+ 	struct arch_hw_breakpoint_ctrl ctrl;
+ 	struct thread_info *ti = task_thread_info(tsk);
  
--#ifndef __KERNEL__
--#include <stdint.h>
--#endif
+@@ -597,6 +599,17 @@ static int ptrace_hbp_set_ctrl(unsigned int note_type,
+ 
+ 	attr = bp->attr;
+ 
++	/* addr */
++	/* Kernel-space address cannot be monitored by user-space */
++	if ((unsigned long)addr >= XKPRANGE)
++		return -EINVAL;
++	attr.bp_addr = addr;
++
++	/* mask */
++	info = counter_arch_bp(bp);
++	info->mask = mask;
++
++	/* ctrl */
+ 	switch (note_type) {
+ 	case NT_LOONGARCH_HW_BREAK:
+ 		ctrl.type = LOONGARCH_BREAKPOINT_EXECUTE;
+@@ -623,46 +636,6 @@ static int ptrace_hbp_set_ctrl(unsigned int note_type,
+ 	return modify_user_hw_breakpoint(bp, &attr);
+ }
+ 
+-static int ptrace_hbp_set_mask(unsigned int note_type,
+-			       struct task_struct *tsk,
+-			       unsigned long idx, u64 mask)
+-{
+-	struct perf_event *bp;
+-	struct perf_event_attr attr;
+-	struct arch_hw_breakpoint *info;
 -
- /*
-  * For PTRACE_{POKE,PEEK}USR. 0 - 31 are GPRs,
-  * 32 is syscall's original ARG0, 33 is PC, 34 is BADVADDR.
-@@ -41,44 +37,44 @@ struct user_pt_regs {
- } __attribute__((aligned(8)));
+-	bp = ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
+-	if (IS_ERR(bp))
+-		return PTR_ERR(bp);
+-
+-	attr = bp->attr;
+-	info = counter_arch_bp(bp);
+-	info->mask = mask;
+-
+-	return modify_user_hw_breakpoint(bp, &attr);
+-}
+-
+-static int ptrace_hbp_set_addr(unsigned int note_type,
+-			       struct task_struct *tsk,
+-			       unsigned long idx, u64 addr)
+-{
+-	struct perf_event *bp;
+-	struct perf_event_attr attr;
+-
+-	/* Kernel-space address cannot be monitored by user-space */
+-	if ((unsigned long)addr >= XKPRANGE)
+-		return -EINVAL;
+-
+-	bp = ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
+-	if (IS_ERR(bp))
+-		return PTR_ERR(bp);
+-
+-	attr = bp->attr;
+-	attr.bp_addr = addr;
+-
+-	return modify_user_hw_breakpoint(bp, &attr);
+-}
+-
+ #define PTRACE_HBP_ADDR_SZ	sizeof(u64)
+ #define PTRACE_HBP_MASK_SZ	sizeof(u64)
+ #define PTRACE_HBP_CTRL_SZ	sizeof(u32)
+@@ -733,10 +706,6 @@ static int hw_break_set(struct task_struct *target,
+ 					 offset, offset + PTRACE_HBP_ADDR_SZ);
+ 		if (ret)
+ 			return ret;
+-
+-		ret = ptrace_hbp_set_addr(note_type, target, idx, addr);
+-		if (ret)
+-			return ret;
+ 		offset += PTRACE_HBP_ADDR_SZ;
  
- struct user_fp_state {
--	uint64_t fpr[32];
--	uint64_t fcc;
--	uint32_t fcsr;
-+	__u64 fpr[32];
-+	__u64 fcc;
-+	__u32 fcsr;
- };
+ 		if (!count)
+@@ -746,21 +715,17 @@ static int hw_break_set(struct task_struct *target,
+ 					 offset, offset + PTRACE_HBP_MASK_SZ);
+ 		if (ret)
+ 			return ret;
+-
+-		ret = ptrace_hbp_set_mask(note_type, target, idx, mask);
+-		if (ret)
+-			return ret;
+ 		offset += PTRACE_HBP_MASK_SZ;
  
- struct user_lsx_state {
- 	/* 32 registers, 128 bits width per register. */
--	uint64_t vregs[32*2];
-+	__u64 vregs[32*2];
- };
+ 		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &ctrl,
+ 					 offset, offset + PTRACE_HBP_CTRL_SZ);
+ 		if (ret)
+ 			return ret;
++		offset += PTRACE_HBP_CTRL_SZ;
  
- struct user_lasx_state {
- 	/* 32 registers, 256 bits width per register. */
--	uint64_t vregs[32*4];
-+	__u64 vregs[32*4];
- };
+-		ret = ptrace_hbp_set_ctrl(note_type, target, idx, ctrl);
++		ret = ptrace_hbp_set(note_type, target, idx, addr, mask, ctrl);
+ 		if (ret)
+ 			return ret;
+-		offset += PTRACE_HBP_CTRL_SZ;
  
- struct user_lbt_state {
--	uint64_t scr[4];
--	uint32_t eflags;
--	uint32_t ftop;
-+	__u64 scr[4];
-+	__u32 eflags;
-+	__u32 ftop;
- };
- 
- struct user_watch_state {
--	uint64_t dbg_info;
-+	__u64 dbg_info;
- 	struct {
--		uint64_t    addr;
--		uint64_t    mask;
--		uint32_t    ctrl;
--		uint32_t    pad;
-+		__u64    addr;
-+		__u64    mask;
-+		__u32    ctrl;
-+		__u32    pad;
- 	} dbg_regs[8];
- };
- 
- struct user_watch_state_v2 {
--	uint64_t dbg_info;
-+	__u64 dbg_info;
- 	struct {
--		uint64_t    addr;
--		uint64_t    mask;
--		uint32_t    ctrl;
--		uint32_t    pad;
-+		__u64    addr;
-+		__u64    mask;
-+		__u32    ctrl;
-+		__u32    pad;
- 	} dbg_regs[14];
- };
- 
-
----
-base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
-change-id: 20251029-loongarch-uapi-ptrace-types-0c5c6756f7e0
-
-Best regards,
+ 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+ 					  offset, offset + PTRACE_HBP_PAD_SZ);
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.51.0
 
