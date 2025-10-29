@@ -1,68 +1,50 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2062D8779
-	for <loongarch@lists.linux.dev>; Wed, 29 Oct 2025 03:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BAA2DF150;
+	Wed, 29 Oct 2025 06:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761709159; cv=none; b=sgRGNMuKb9MaEIJw94oA2T5+y166f7NIq3kzJSN6BCmkMBlr4P4rtqcA3nZpDV8kCSN8cSN0q4xAvLVx3aWWWEhgVry5lj2eqOUXlNC7wq5VjeEIeJWXsdn3QX3C0G45eIeXAfCn7mCAD6VbuTZg7htPOyV3j0hIs7tjs/So7Qw=
+	t=1761719891; cv=none; b=C9YRAD6Hz1PJ5n9pMWqZLvOndRex3eXA+o9f+bCy8CI1m90hmVHTmcpwYEbdTN8jsufDwQzOlYYEzX/L2HXcw9oRhuP9Pq2t/wC/6F5JvT1WxC8Ff3cZ/jkDA25Of/xJFl0hoeu2ydpgUpFHexM+ZCXcsJEjQVKARv0RYn2KFJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761709159; c=relaxed/simple;
-	bh=TyfYGe4/hBzeXrsINZzpk4KGPbSdo9pWIsH0jmRWTDY=;
+	s=arc-20240116; t=1761719891; c=relaxed/simple;
+	bh=GQBcTt3q3jYhlQdBtZfxngxuplRCCGIsPQTXwR3o7QE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E487kJk4ixkUaPkDLThqKt0rfMJTr1CtNv+4mgYWX93coF/Dn4KQ/hrR4Vn3o4lXm87oJ1knSParCwAPVy0ipKBsR9j/+YfspOonTZXwVzBMNyyoAmwTMZkwbzGdPjrBQH9Fs/PHvitixKJj8e2gKwPCWwoA15ZMBTONptwi6OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=htqSx9Kf; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=mRhgF1BjDPiwkkCNDWcYgW4y1/d2mnHmCBkVb6Vup2x95B9xzqaJbgcJDZp+0HcLhWxeIqUUpRIG3BxUcFXVMAw+C5l2Tu7iRgNnUNZbdVY4dDBHumuRDZUXCcia/hEaky2uf9Pw2x14yp022zzOr2aINlVE5Acb5RYNQhFjBwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LE5DIOnD; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htqSx9Kf"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-33d7589774fso6461430a91.0
-        for <loongarch@lists.linux.dev>; Tue, 28 Oct 2025 20:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761709157; x=1762313957; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=/BZncI02+WgKD2vtY17c3GNq2KPB7/BXVKrpLm5xpsw=;
-        b=htqSx9KfbkrLVgGT8YfBSngfkky8dQxX2GyZ27HcGblI5dvO7mPOA7GVFK+0CB3qFI
-         qu//AU5cyrvnYevpvHutQV8g0D0CCUXS3zsS3/vsaN2s/aNoGjgXEhGg8DKJxe4SnSba
-         DAkmVQcqCnIbM/Y6OjSjm+/I3hJyoeKL94xgGdt1uPAB9rd2Qy/Ii322l6ksCA1WXt+6
-         uzX2N63XDu1w9jHn1FEpZrnOAsnW54kNVgiUGdOs64O2xXA8T2JDhxxne9zv6xbiLZlR
-         pE1vVFdeqcrcKOFMtbU0OQekdbYPJ/gUqE6XTb5fK9OynPR6cmJGMlzIN8y6dGmvN699
-         Xm8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761709157; x=1762313957;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/BZncI02+WgKD2vtY17c3GNq2KPB7/BXVKrpLm5xpsw=;
-        b=CGB3qz+UxlyAhySeT2PF6NmiOwbMFmJahCCqqyAddHk1UlQvGn8T8/pty2Ca6qPDUK
-         IT7dw27kjt9s6s3MK5mZRSHtSjsiaPc7qnTokhAK9LO2GHqw62UFq9s7m26Dnr5qgeXg
-         BfAzVXwGswjRMsQpxZAGKFRD7OKpc1uO40dOOSxQdhq9/XMDa3KSHT4oekPb2loBG2EX
-         H7bGR7kiQM4VFbjMQpNhxX9w4HuqlAnKDBCcBHhZQhFlfJJknGNaab6TSUggX2am8o4m
-         eVxjPGsH40x4TEdFVmor/7aX2scGqVLqfCWPVGNUtPLTJIOpup1IBcd8KuxastRURZ/3
-         s1QA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7N1JR9GKkYQQ+2p1wt3ZFCwaewM8JL8oW4hYxxvShCkk1Hg9w5/lEj2r2cBVKUJQ85dMssFGGzoE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwLeiu9iHrR12zKM2kQ/iL0E2/7DpzKNirx6EAsTjbEWrTTX6Jj
-	bsfvzlfDO+m6hci08PR3VrwpG+SSt6fmmj2gJXki+kr8DwFdU8vHOO95
-X-Gm-Gg: ASbGncu7QmXSB0RtLV0n4ApoEDp4uu+H5zlTuM0kjGWhKdQonFtHhPqS91j4w468c1x
-	KAiXPx7R2YCbL85kiliWflZBXZe6kXvbdpZNlpDIV4AyPv6HJmZUUUDKVDCJKTKpt7K+6/nZ9pC
-	wr0gbSOjc4VFOAs/fweLpK1yl7xbdAQaGDEnY83Mp0+l7m2QrJls/gzfzcqUswkVSx3pKvcuQM4
-	JfrzLIuvLbCUvlT9PORZai3D0pebf+DqM2eqpT6vR2ULOwrxLsDs666z9Wk0e+dij42vMuk4w64
-	AMJbUcseOPMdzBMh+xRJzgy+imOcwpIJMQoKGnstGKrn1uoeO0pOPv1Qt4na1dd4Tb9Wh6+4W+g
-	p9mPkzH2/b9XQSwxW8EEHyis89FkUMJE0iMj7vi7KBPGn0gLehJo9/Bt6MvEDHxnQhHEZ4j0Pmt
-	y+aSgZFML1GweBcBEFdK9Dt7a7TQxAiLwCSQIeEZ1BdJn/QFbjdFUrYMP3lyg=
-X-Google-Smtp-Source: AGHT+IEiyDlZP1feO9DTWIe15zckp12teQzAQXHct99PFnGyM2qbgxCl3AMaZwOULwpSxTv5RNJzjQ==
-X-Received: by 2002:a17:90b:37cd:b0:338:3156:fc44 with SMTP id 98e67ed59e1d1-3403a283b3dmr1594516a91.18.1761709156729;
-        Tue, 28 Oct 2025 20:39:16 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b7127a0a2f9sm12286984a12.9.2025.10.28.20.39.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Oct 2025 20:39:16 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <dd97339d-a984-4e74-8043-be99046c5102@roeck-us.net>
-Date: Tue, 28 Oct 2025 20:39:14 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LE5DIOnD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761719887; x=1793255887;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GQBcTt3q3jYhlQdBtZfxngxuplRCCGIsPQTXwR3o7QE=;
+  b=LE5DIOnDHPPMwBZ6V+EXCZXh4DxsQVD4bMaNQ61jgeMPH98N1S0gBbzF
+   yJNFIspJPqDQQblEh7R7ooyk+DItra1O2NatQvbYOuc1ZVvecq8W2rGox
+   QPM8itT532kpJnK5slcYc91kz4kO6HYzjbX5yJLzld1KTuylIg006fov1
+   AvC5Zh2JSUfd1kx8XFkCjEuYMLFRJRr2dC1l287cB1BghdS5mM5zgCX/g
+   QoN5TL8XnAQDRU47jkjPmuWHGym4rOdJFngCXNYMzOV+8WQIavzUszRkO
+   KUTgnF2vC6d86m76o3/Z1phRsnn1k0+a83HfUmYjkRwViUw09zHaih2Bi
+   g==;
+X-CSE-ConnectionGUID: LZ3P2BrwQNGVOiKhWbOX0w==
+X-CSE-MsgGUID: xKU5U/z9Th+9Z9tgDvc9lA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63927782"
+X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
+   d="scan'208";a="63927782"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 23:38:05 -0700
+X-CSE-ConnectionGUID: 8nQPxS3sQHujSGq7kBId9A==
+X-CSE-MsgGUID: W9e750ZQTU6M5dFb3BxcwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
+   d="scan'208";a="190701774"
+Received: from yinghaoj-desk.ccr.corp.intel.com (HELO [10.238.1.225]) ([10.238.1.225])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 23:37:57 -0700
+Message-ID: <71006f78-7afa-4821-8bd1-9cd5b8d62a33@linux.intel.com>
+Date: Wed, 29 Oct 2025 14:37:55 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -70,317 +52,113 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] watchdog: loongson1: Rename the prefix from ls1x to
- loongson
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
- <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>,
- Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- linux-watchdog@vger.kernel.org
-References: <20251029020847.1946295-1-zhoubinbin@loongson.cn>
- <20251029020847.1946295-2-zhoubinbin@loongson.cn>
+Subject: Re: [PATCH] KVM: TDX: Take MMU lock around tdh_vp_init()
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: seanjc@google.com, ackerleytng@google.com, anup@brainfault.org,
+ aou@eecs.berkeley.edu, borntraeger@linux.ibm.com, chenhuacai@kernel.org,
+ frankja@linux.ibm.com, imbrenda@linux.ibm.com, ira.weiny@intel.com,
+ kai.huang@intel.com, kas@kernel.org, kvm-riscv@lists.infradead.org,
+ kvm@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev, maddy@linux.ibm.com, maobibo@loongson.cn,
+ maz@kernel.org, michael.roth@amd.com, oliver.upton@linux.dev,
+ palmer@dabbelt.com, pbonzini@redhat.com, pjw@kernel.org,
+ vannapurve@google.com, x86@kernel.org, yan.y.zhao@intel.com,
+ zhaotianrui@loongson.cn
+References: <aP-1qlTkmFUgTld-@google.com>
+ <20251028002824.1470939-1-rick.p.edgecombe@intel.com>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAmgrMyQFCSbODQkACgkQyx8mb86fmYGcWRAA
- oRwrk7V8fULqnGGpBIjp7pvR187Yzx+lhMGUHuM5H56TFEqeVwCMLWB2x1YRolYbY4MEFlQg
- VUFcfeW0OknSr1s6wtrtQm0gdkolM8OcCL9ptTHOg1mmXa4YpW8QJiL0AVtbpE9BroeWGl9v
- 2TGILPm9mVp+GmMQgkNeCS7Jonq5f5pDUGumAMguWzMFEg+Imt9wr2YA7aGen7KPSqJeQPpj
- onPKhu7O/KJKkuC50ylxizHzmGx+IUSmOZxN950pZUFvVZH9CwhAAl+NYUtcF5ry/uSYG2U7
- DCvpzqOryJRemKN63qt1bjF6cltsXwxjKOw6CvdjJYA3n6xCWLuJ6yk6CAy1Ukh545NhgBAs
- rGGVkl6TUBi0ixL3EF3RWLa9IMDcHN32r7OBhw6vbul8HqyTFZWY2ksTvlTl+qG3zV6AJuzT
- WdXmbcKN+TdhO5XlxVlbZoCm7ViBj1+PvIFQZCnLAhqSd/DJlhaq8fFXx1dCUPgQDcD+wo65
- qulV/NijfU8bzFfEPgYP/3LP+BSAyFs33y/mdP8kbMxSCjnLEhimQMrSSo/To1Gxp5C97fw5
- 3m1CaMILGKCmfI1B8iA8zd8ib7t1Rg0qCwcAnvsM36SkrID32GfFbv873bNskJCHAISK3Xkz
- qo7IYZmjk/IJGbsiGzxUhvicwkgKE9r7a1rOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAmgrMyQFCSbODQkACgkQyx8mb86fmYHlgg/9
- H5JeDmB4jsreE9Bn621wZk7NMzxy9STxiVKSh8Mq4pb+IDu1RU2iLyetCY1TiJlcxnE362kj
- njrfAdqyPteHM+LU59NtEbGwrfcXdQoh4XdMuPA5ADetPLma3YiRa3VsVkLwpnR7ilgwQw6u
- dycEaOxQ7LUXCs0JaGVVP25Z2hMkHBwx6BlW6EZLNgzGI2rswSZ7SKcsBd1IRHVf0miwIFYy
- j/UEfAFNW+tbtKPNn3xZTLs3quQN7GdYLh+J0XxITpBZaFOpwEKV+VS36pSLnNl0T5wm0E/y
- scPJ0OVY7ly5Vm1nnoH4licaU5Y1nSkFR/j2douI5P7Cj687WuNMC6CcFd6j72kRfxklOqXw
- zvy+2NEcXyziiLXp84130yxAKXfluax9sZhhrhKT6VrD45S6N3HxJpXQ/RY/EX35neH2/F7B
- RgSloce2+zWfpELyS1qRkCUTt1tlGV2p+y2BPfXzrHn2vxvbhEn1QpQ6t+85FKN8YEhJEygJ
- F0WaMvQMNrk9UAUziVcUkLU52NS9SXqpVg8vgrO0JKx97IXFPcNh0DWsSj/0Y8HO/RDkGXYn
- FDMj7fZSPKyPQPmEHg+W/KzxSSfdgWIHF2QaQ0b2q1wOSec4Rti52ohmNSY+KNIW/zODhugJ
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <20251029020847.1946295-2-zhoubinbin@loongson.cn>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20251028002824.1470939-1-rick.p.edgecombe@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/28/25 19:08, Binbin Zhou wrote:
-> In order to introduce the watchdog driver of the Loongson-2K0300 SoC,
-> which is similar to Loongson-1.
-> 
-> As preparation, rename all prefixes from ls1x-specific to
-> Loongson-generic.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 
-This is unnecessary. We don't rename drivers or function names because
-other chips are added to a driver. Doing so causes unnecessary churn
-and other problems, such as (in this case) loongson1_defconfig no longer
-enabling this watchdog. Any userspace depending (for whatever reason)
-on the driver name would also have problems.
 
-It is ok to make the driver more generic and remove the "1" from
-the Kconfig description and from MODULE_DESCRIPTION. However,
-please leave function and driver names alone.
-
-Thanks,
-Guenter
-
+On 10/28/2025 8:28 AM, Rick Edgecombe wrote:
+> Take MMU lock around tdh_vp_init() in KVM_TDX_INIT_VCPU to prevent
+> meeting contention during retries in some no-fail MMU paths.
+>
+> The TDX module takes various try-locks internally, which can cause
+> SEAMCALLs to return an error code when contention is met. Dealing with
+> an error in some of the MMU paths that make SEAMCALLs is not straight
+> forward, so KVM takes steps to ensure that these will meet no contention
+> during a single BUSY error retry. The whole scheme relies on KVM to take
+> appropriate steps to avoid making any SEAMCALLs that could contend while
+> the retry is happening.
+>
+> Unfortunately, there is a case where contention could be met if userspace
+> does something unusual. Specifically, hole punching a gmem fd while
+> initializing the TD vCPU. The impact would be triggering a KVM_BUG_ON().
+>
+> The resource being contended is called the "TDR resource" in TDX docs
+> parlance. The tdh_vp_init() can take this resource as exclusive if the
+> 'version' passed is 1, which happens to be version the kernel passes. The
+> various MMU operations (tdh_mem_range_block(), tdh_mem_track() and
+> tdh_mem_page_remove()) take it as shared.
+>
+> There isn't a KVM lock that maps conceptually and in a lock order friendly
+> way to the TDR lock. So to minimize infrastructure, just take MMU lock
+> around tdh_vp_init(). This makes the operations we care about mutually
+> exclusive. Since the other operations are under a write mmu_lock, the code
+> could just take the lock for read, however this is weirdly inverted from
+> the actual underlying resource being contended. Since this is covering an
+> edge case that shouldn't be hit in normal usage, be a little less weird
+> and take the mmu_lock for write around the call.
+>
+> Fixes: 02ab57707bdb ("KVM: TDX: Implement hooks to propagate changes of TDP MMU mirror page table")
+> Reported-by: Yan Zhao <yan.y.zhao@intel.com>
+> Suggested-by: Yan Zhao <yan.y.zhao@intel.com>
+> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 > ---
->   drivers/watchdog/Kconfig                      |  6 +-
->   drivers/watchdog/Makefile                     |  2 +-
->   .../{loongson1_wdt.c => loongson_wdt.c}       | 86 +++++++++----------
->   3 files changed, 46 insertions(+), 48 deletions(-)
->   rename drivers/watchdog/{loongson1_wdt.c => loongson_wdt.c} (50%)
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 0c25b2ed44eb..74edeb13e95b 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1963,12 +1963,12 @@ config LANTIQ_WDT
->   	help
->   	  Hardware driver for the Lantiq SoC Watchdog Timer.
+> Hi,
+>
+> It was indeed awkward, as Sean must have sniffed. But seems ok enough to
+> close the issue.
+>
+> Yan, can you give it a look?
+>
+> Posted here, but applies on top of this series.
+>
+> Thanks,
+>
+> Rick
+> ---
+>   arch/x86/kvm/vmx/tdx.c | 15 ++++++++++++---
+>   1 file changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index daec88d4b88d..8bf5d2624152 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -2938,9 +2938,18 @@ static int tdx_td_vcpu_init(struct kvm_vcpu *vcpu, u64 vcpu_rcx)
+>   		}
+>   	}
 >   
-> -config LOONGSON1_WDT
-> -	tristate "Loongson1 SoC hardware watchdog"
-> +config LOONGSON_WDT
-> +	tristate "Loongson SoC hardware watchdog"
->   	depends on MACH_LOONGSON32 || COMPILE_TEST
->   	select WATCHDOG_CORE
->   	help
-> -	  Hardware driver for the Loongson1 SoC Watchdog Timer.
-> +	  Hardware driver for the Loongson SoC Watchdog Timer.
+> -	err = tdh_vp_init(&tdx->vp, vcpu_rcx, vcpu->vcpu_id);
+> -	if (TDX_BUG_ON(err, TDH_VP_INIT, vcpu->kvm))
+> -		return -EIO;
+> +	/*
+> +	 * tdh_vp_init() can take a exclusive lock of the TDR resource inside
+                                   ^
+                                   an
+
+> +	 * the TDX module. This resource is also taken as shared in several
+> +	 * no-fail MMU paths, which could return TDX_OPERAND_BUSY on contention.
+> +	 * A read lock here would be enough to exclude the contention, but take
+> +	 * a write lock to avoid the weird inversion.
+Can we also add the description that the lock is trying to prevent an edge case
+as in the change log if not too wordy?
+
+> +	 */
+> +	scoped_guard(write_lock, &vcpu->kvm->mmu_lock) {
+> +		err = tdh_vp_init(&tdx->vp, vcpu_rcx, vcpu->vcpu_id);
+> +		if (TDX_BUG_ON(err, TDH_VP_INIT, vcpu->kvm))
+> +			return -EIO;
+> +	}
 >   
->   config RALINK_WDT
->   	tristate "Ralink SoC watchdog"
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index bbd4d62d2cc3..70be11bf7bbf 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -178,7 +178,7 @@ obj-$(CONFIG_TXX9_WDT) += txx9wdt.o
->   obj-$(CONFIG_OCTEON_WDT) += octeon-wdt.o
->   octeon-wdt-y := octeon-wdt-main.o octeon-wdt-nmi.o
->   obj-$(CONFIG_LANTIQ_WDT) += lantiq_wdt.o
-> -obj-$(CONFIG_LOONGSON1_WDT) += loongson1_wdt.o
-> +obj-$(CONFIG_LOONGSON_WDT) += loongson_wdt.o
->   obj-$(CONFIG_RALINK_WDT) += rt2880_wdt.o
->   obj-$(CONFIG_IMGPDC_WDT) += imgpdc_wdt.o
->   obj-$(CONFIG_MT7621_WDT) += mt7621_wdt.o
-> diff --git a/drivers/watchdog/loongson1_wdt.c b/drivers/watchdog/loongson_wdt.c
-> similarity index 50%
-> rename from drivers/watchdog/loongson1_wdt.c
-> rename to drivers/watchdog/loongson_wdt.c
-> index 0587ff44d3a1..19f6a19fc811 100644
-> --- a/drivers/watchdog/loongson1_wdt.c
-> +++ b/drivers/watchdog/loongson_wdt.c
-> @@ -10,7 +10,7 @@
->   #include <linux/platform_device.h>
->   #include <linux/watchdog.h>
+>   	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
 >   
-> -/* Loongson 1 Watchdog Register Definitions */
-> +/* Loongson Watchdog Register Definitions */
->   #define WDT_EN			0x0
->   #define WDT_TIMER		0x4
->   #define WDT_SET			0x8
-> @@ -23,26 +23,25 @@ module_param(nowayout, bool, 0444);
->   static unsigned int heartbeat;
->   module_param(heartbeat, uint, 0444);
->   
-> -struct ls1x_wdt_drvdata {
-> +struct loongson_wdt_drvdata {
->   	void __iomem *base;
->   	struct clk *clk;
->   	unsigned long clk_rate;
->   	struct watchdog_device wdt;
->   };
->   
-> -static int ls1x_wdt_ping(struct watchdog_device *wdt_dev)
-> +static int loongson_wdt_ping(struct watchdog_device *wdt_dev)
->   {
-> -	struct ls1x_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
-> +	struct loongson_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
->   
->   	writel(0x1, drvdata->base + WDT_SET);
->   
->   	return 0;
->   }
->   
-> -static int ls1x_wdt_set_timeout(struct watchdog_device *wdt_dev,
-> -				unsigned int timeout)
-> +static int loongson_wdt_set_timeout(struct watchdog_device *wdt_dev, unsigned int timeout)
->   {
-> -	struct ls1x_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
-> +	struct loongson_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
->   	unsigned int max_hw_heartbeat = wdt_dev->max_hw_heartbeat_ms / 1000;
->   	unsigned int counts;
->   
-> @@ -54,28 +53,27 @@ static int ls1x_wdt_set_timeout(struct watchdog_device *wdt_dev,
->   	return 0;
->   }
->   
-> -static int ls1x_wdt_start(struct watchdog_device *wdt_dev)
-> +static int loongson_wdt_start(struct watchdog_device *wdt_dev)
->   {
-> -	struct ls1x_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
-> +	struct loongson_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
->   
->   	writel(0x1, drvdata->base + WDT_EN);
->   
->   	return 0;
->   }
->   
-> -static int ls1x_wdt_stop(struct watchdog_device *wdt_dev)
-> +static int loongson_wdt_stop(struct watchdog_device *wdt_dev)
->   {
-> -	struct ls1x_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
-> +	struct loongson_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
->   
->   	writel(0x0, drvdata->base + WDT_EN);
->   
->   	return 0;
->   }
->   
-> -static int ls1x_wdt_restart(struct watchdog_device *wdt_dev,
-> -			    unsigned long action, void *data)
-> +static int loongson_wdt_restart(struct watchdog_device *wdt_dev, unsigned long action, void *data)
->   {
-> -	struct ls1x_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
-> +	struct loongson_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
->   
->   	writel(0x1, drvdata->base + WDT_EN);
->   	writel(0x1, drvdata->base + WDT_TIMER);
-> @@ -84,25 +82,25 @@ static int ls1x_wdt_restart(struct watchdog_device *wdt_dev,
->   	return 0;
->   }
->   
-> -static const struct watchdog_info ls1x_wdt_info = {
-> +static const struct watchdog_info loongson_wdt_info = {
->   	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-> -	.identity = "Loongson1 Watchdog",
-> +	.identity = "Loongson Watchdog",
->   };
->   
-> -static const struct watchdog_ops ls1x_wdt_ops = {
-> +static const struct watchdog_ops loongson_wdt_ops = {
->   	.owner = THIS_MODULE,
-> -	.start = ls1x_wdt_start,
-> -	.stop = ls1x_wdt_stop,
-> -	.ping = ls1x_wdt_ping,
-> -	.set_timeout = ls1x_wdt_set_timeout,
-> -	.restart = ls1x_wdt_restart,
-> +	.start = loongson_wdt_start,
-> +	.stop = loongson_wdt_stop,
-> +	.ping = loongson_wdt_ping,
-> +	.set_timeout = loongson_wdt_set_timeout,
-> +	.restart = loongson_wdt_restart,
->   };
->   
-> -static int ls1x_wdt_probe(struct platform_device *pdev)
-> +static int loongson_wdt_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
-> -	struct ls1x_wdt_drvdata *drvdata;
-> -	struct watchdog_device *ls1x_wdt;
-> +	struct loongson_wdt_drvdata *drvdata;
-> +	struct watchdog_device *loongson_wdt;
->   	unsigned long clk_rate;
->   	int err;
->   
-> @@ -123,17 +121,17 @@ static int ls1x_wdt_probe(struct platform_device *pdev)
->   		return -EINVAL;
->   	drvdata->clk_rate = clk_rate;
->   
-> -	ls1x_wdt = &drvdata->wdt;
-> -	ls1x_wdt->info = &ls1x_wdt_info;
-> -	ls1x_wdt->ops = &ls1x_wdt_ops;
-> -	ls1x_wdt->timeout = DEFAULT_HEARTBEAT;
-> -	ls1x_wdt->min_timeout = 1;
-> -	ls1x_wdt->max_hw_heartbeat_ms = U32_MAX / clk_rate * 1000;
-> -	ls1x_wdt->parent = dev;
-> +	loongson_wdt = &drvdata->wdt;
-> +	loongson_wdt->info = &loongson_wdt_info;
-> +	loongson_wdt->ops = &loongson_wdt_ops;
-> +	loongson_wdt->timeout = DEFAULT_HEARTBEAT;
-> +	loongson_wdt->min_timeout = 1;
-> +	loongson_wdt->max_hw_heartbeat_ms = U32_MAX / clk_rate * 1000;
-> +	loongson_wdt->parent = dev;
->   
-> -	watchdog_init_timeout(ls1x_wdt, heartbeat, dev);
-> -	watchdog_set_nowayout(ls1x_wdt, nowayout);
-> -	watchdog_set_drvdata(ls1x_wdt, drvdata);
-> +	watchdog_init_timeout(loongson_wdt, heartbeat, dev);
-> +	watchdog_set_nowayout(loongson_wdt, nowayout);
-> +	watchdog_set_drvdata(loongson_wdt, drvdata);
->   
->   	err = devm_watchdog_register_device(dev, &drvdata->wdt);
->   	if (err)
-> @@ -141,30 +139,30 @@ static int ls1x_wdt_probe(struct platform_device *pdev)
->   
->   	platform_set_drvdata(pdev, drvdata);
->   
-> -	dev_info(dev, "Loongson1 Watchdog driver registered\n");
-> +	dev_info(dev, "Loongson Watchdog driver registered\n");
->   
->   	return 0;
->   }
->   
->   #ifdef CONFIG_OF
-> -static const struct of_device_id ls1x_wdt_dt_ids[] = {
-> +static const struct of_device_id loongson_wdt_dt_ids[] = {
->   	{ .compatible = "loongson,ls1b-wdt", },
->   	{ .compatible = "loongson,ls1c-wdt", },
->   	{ /* sentinel */ }
->   };
-> -MODULE_DEVICE_TABLE(of, ls1x_wdt_dt_ids);
-> +MODULE_DEVICE_TABLE(of, loongson_wdt_dt_ids);
->   #endif
->   
-> -static struct platform_driver ls1x_wdt_driver = {
-> -	.probe = ls1x_wdt_probe,
-> +static struct platform_driver loongson_wdt_driver = {
-> +	.probe = loongson_wdt_probe,
->   	.driver = {
-> -		.name = "ls1x-wdt",
-> -		.of_match_table = of_match_ptr(ls1x_wdt_dt_ids),
-> +		.name = "loongson-wdt",
-> +		.of_match_table = of_match_ptr(loongson_wdt_dt_ids),
->   	},
->   };
->   
-> -module_platform_driver(ls1x_wdt_driver);
-> +module_platform_driver(loongson_wdt_driver);
->   
->   MODULE_AUTHOR("Yang Ling <gnaygnil@gmail.com>");
-> -MODULE_DESCRIPTION("Loongson1 Watchdog Driver");
-> +MODULE_DESCRIPTION("Loongson Watchdog Driver");
->   MODULE_LICENSE("GPL");
 
