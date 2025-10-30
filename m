@@ -1,65 +1,65 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDD229A31C
-	for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 12:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F249D313E1B
+	for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 12:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761826580; cv=none; b=iZp7T4KmeQqczEgLNI99/L8gPfWFB5h4G2mITY/vJt/+Vwi9tIDuUi0+W2u6UiK2zGdsXgW4CpEyibJ/EBnmTUbXEnv8BsliLXaAWFtXabhpqccTZSorySinF3H9pVllu3O1QYjOUAxah+sQz8EdVyO3bMKtazzau/x9VNWJfhs=
+	t=1761827292; cv=none; b=RihCqpZjzE3P2RINB4/cUtP078DGQ+x63snY/4gq4V4d8gn7OQkpgWIm0QSFnkEYbd0iYcrwa3i0tGV2yggmX6zBwqX7ALKEC7HCQnJ20V1XgKh/8E+UHKaGI/b670WLsQ2HdDq9r/d+XL7wQ6Ov48Y23OtjY+53Vjl2DtifVgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761826580; c=relaxed/simple;
-	bh=75RLQB8GL2/gKDokgbvRHwaJGve5LAaTdeXDRa43ZHM=;
+	s=arc-20240116; t=1761827292; c=relaxed/simple;
+	bh=MP/GQsemHnbJLXZSkSeqHyRxgPMfPq6oei3BZNEbjXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u97xQxmz0BAkmIpNmSaaNHtXxl3QxOI0vR5pW0zi7zZVSign5yjmwc5eKbwqvGNXP9aTcsoHGtVJ/5lIkokoUKwBBGH2hXprdxw5NZDmKjilSLcX8RfVNWdRulDxFWg0tSGvIkAOSe6eN6G6LMizsKtX/Aq35E6PvblCDSwnBDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P8M/edpH; arc=none smtp.client-ip=209.85.221.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=T0XXINKgLBFgSgEDAyVkBGMEIdfG0Cwq4eoyaxeFxmsfHruolkAwECdXz1GP/u/03DslqIxBKrlTHA7x8inWg2qTNuItBWJE55fyRwZg/h+HLsHvAm/QQ0KzbeU8GX318Is3q7RKPxSmSlLfi+uzapmClnGHOsDeTS3HC0IwYO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nqs5bzmM; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8M/edpH"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-426fd62bfeaso463726f8f.2
-        for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 05:16:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqs5bzmM"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3f0ae439bc3so597887f8f.1
+        for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 05:28:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761826577; x=1762431377; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1761827288; x=1762432088; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s2h4BnseYLvI915SuwI6txSi2xO1Lp6zcqUfBWQt5q8=;
-        b=P8M/edpH4Il9+D3PtOTKUG/bB6N8peXFPlrFpIAAbGxKed8EyVQLDnTyLO84rRsyox
-         alUrPliRh6AnVYBi9MJmM+cHn+wdVc3Y5vQgu6+I2p4QR3luO8bGvdzLWBhVWzDpbfaV
-         hF4zbTYnrx2GpsnIY2qRGot94RNYkJnFi+Ks8tW40fwvNZsxiPW/nXUC77KG4lcdczKD
-         iCqLOpDXo6O7jdMfucTHoNTXvJIjzGaKh7jpbSpFZIUX23tcpJrDPYPWpwSJigfngqma
-         6zl8Py1A5DZZCcDO+e5sNlDmFs9Y/pAJbr3BcuEZX5rJm5oY2S9HNNRg8y9kGq1nrQeK
-         U7eg==
+        bh=4faCkAArvXRFWP/BvJT3qCkXJoGOkTL/9xvSBBThwwA=;
+        b=nqs5bzmMVWomDcR2rLGPJAwrC7niA+2efwydKCWL8DEzZqb0TsGOGVVAHHKvT4pKvs
+         F9ASe/M8QBu1ces+VfnXky6hta4f1+Lmht19D/ni54AWko2CdYZMGaITYF1juKL3OXDa
+         4XWnqWtBpevwHJ7GxOoyHiprGSbgM0j1EutOEzZpno/5J/zvxEzJ/DKVOmXh0Sni6J8Y
+         Yh3pNOJVLboA2l9P2+mcTLoen5r1atpkHOGxHLQPXmSpp33ic5rshrrg1yjFVvq0HFqG
+         lXlNN3sxxxkKtvnHOH7A5M6388hKFTM5ciI13QPG1x0765jJsL4VsV5qrgngR9OSUoci
+         tS0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761826577; x=1762431377;
+        d=1e100.net; s=20230601; t=1761827288; x=1762432088;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s2h4BnseYLvI915SuwI6txSi2xO1Lp6zcqUfBWQt5q8=;
-        b=d1OghfiOZ7G9fGkC9wMkayOti6TJHF5XfiDK1to5OTqvn69nti7UuoFrbYAI87Hfkt
-         /CYGwlh2LIHGEzLe1Ri1jwifJQzyb7ckAC950yxjKgAeaWeFcBK39qMVpswRvjkPl+G5
-         IcGoV7ET9Xbf/t/pVrjVfOmMeaN2258eZ68HEJjWbdoofligYDt2nei2QhtZDqbnSTnJ
-         gsNu+Ti3e4tAazz1MW1wHuHNptJ4LA8NL3SsiAl+voWq7Oho2RRG4h9aDdABxJO7fRZq
-         SxTIDlZx7ZOcm+ZtiZdepezdk8n+J0O+aW2Y2blCzOjEo2/YbHiZLI57QbG2YDoDreDO
-         wCOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVViLGJh6I3clbo6ejRpPLVzWILQ2loA4FBAa17nOEq6EVCvZCwL+QNF54uRKl1BiGIZC5JavtN4hE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzA38GUd4cREZs3GwP4EzLSaPkciVyjHIK5+BFDghnHaUmp4KhE
-	1PWzvJ6V/dqKxzsUAERTZhBMJbuyvkqBkKb89FPFg+rWxaDuyeThxOtb
-X-Gm-Gg: ASbGncuZIOgX3P+9oy55nfv9LCUVPD1uDbA7qN4wz4MZLsYbhVH9w7HBEsFJZKg899p
-	jUqWUIL9Aave5fnOSkdylOg7DvNxtC261yYW4HkQKIF0mtYPGGH9VFGai6BS545NWh3i0d6jEU+
-	UNxF4waRVebtAHGngu4/n9HYUkWGxzN2ChcolmImHQa9XSxnSL/jYXU30PFI9XLU24z/rCyh8ts
-	dyRaBTNqFg08bfbaoM7iQfyuaZg1VQaJnftVSqSKNeFu//a1FIkv5jh1OZB94UPkhMva2Im4C1I
-	V1wl5vYviruWE40De+kx52UaLHmULCCV+NStF9iYZzDAYxp9ESHQzet45Fd0Ww8kBSu9KoeGbU8
-	6rI4PQflJXP4HzIdTnrmEBMlCT7pbx9AJZ+oFmAjAHSZros16y3z0osVytYyH0LP4tXtybloYtW
-	S3VkjSsKcLNd+7DmaxE4kLzKLTuPhXkqWInfh/ZPaPcNLmyylFl01CITL6zgN+67+DhP2oOtSrE
-	e59aoVA4FeL
-X-Google-Smtp-Source: AGHT+IFFiHEvNPjKUlWf15eT6QrZW2LM5hHmfdRjCPGtpfvtcJfaix0mKpAwNuPfyTcNYpcwrmxIZg==
-X-Received: by 2002:a05:6000:2508:b0:3fb:aca3:d5d9 with SMTP id ffacd0b85a97d-429aef76469mr4752945f8f.1.1761826576503;
-        Thu, 30 Oct 2025 05:16:16 -0700 (PDT)
+        bh=4faCkAArvXRFWP/BvJT3qCkXJoGOkTL/9xvSBBThwwA=;
+        b=nltV4D0JH4UiqO2vIVxK/w7B1M0wIfTD9eIckuCUAnSTn11mBuLmJ3nTeYkAJP5KjD
+         t8Neb3DVirvTK8HIThHFhn4xiWDsy8Ri105zpSv/MVTk8KLC+U5ncGXryV8VM/5QqGpm
+         Cg8/XZ8BCiJDdugLav4i7vQWp+lBayQV311mCR82BgyXx0iObsOGclk0Qz7f/Gv50vS2
+         faYnWKweJsfRooJQCy5wbtN53nkLQ99Po+WnypgXrCkvXLRbdiEIosw1lA8WNf5qM8fd
+         94gJFfrskTclhB2MXC1n7nLy1KdqA+nsccBo0TLDJqxP5XlZThZrhj/vb0BqNMS4bXt7
+         NeGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzKGYAch5fjuJ+VLzqVSkkWhoSqpGARb4j8+xHTtD3I3rOB6rizchWYthwq/78hPJwuGVmChDITw0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwIkbsSLq1AUaffS8RElATMMCMpGRmAj1FVVev+rx2H3fdAEwVU
+	q84yUh0xox7r8SrMhZEO2+zn1Cl5yPW+dI4Ygu4NuddEtCjBbrK1OEWg
+X-Gm-Gg: ASbGncvH/uRcRTbzRptnZH+Xnxs6q3Hst07vXBG6ZBopNlmy7OiKbPnD77D+SFJ1b3W
+	6XWCcRgaXbXZrz85b+E5vNwHQx4KwphbEs9saeC5Q1lbJ7dPKo5W1aPCZZvo4W9mNYvbibtFpf0
+	cJXCrK8DH4kAewJ5B+G2PYn+sz5DbXZt958pYgzqHwOt0unbimPjcLBkBkHeWBwGpvppUM9NVBu
+	Yawp61VCW8tm9PHJb5xapIxLaiaby1CmhVpQ6u93+hdwmZeNvGBLkfEBktDq/KReogy/BsvofQU
+	La/b4ObZ2KAfxmFVDfm0frP9nUEK8aIjbUQtjM/1MzatYl1VkiYvQrJkqmXVzOXs/dQ8f9jLtNr
+	BicP8lYgTM7tM/RdhOarHcLrL/b6xFhXtwSI03B9/I2MQe8pRs6yUp+VpYQcuMDwmeJfU0Cfihl
+	agyZYlfvuollOVZ/yXIekGTQ1oIg/dewIu9n4yfYqX4tHh1lIWvES2O15iIVxKJcXqltWqvCWvp
+	g==
+X-Google-Smtp-Source: AGHT+IFohGfPrMB+gEC0PPjeDu6wKsKn5Xw4tnoTnVq6JsR15gq4re74GuIZTwiApDmgxJjGG1cQpQ==
+X-Received: by 2002:a5d:5d06:0:b0:3ec:d78d:8fcc with SMTP id ffacd0b85a97d-429aef82ae4mr6294449f8f.14.1761827288007;
+        Thu, 30 Oct 2025 05:28:08 -0700 (PDT)
 Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952db839sm33617710f8f.34.2025.10.30.05.16.14
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429ba445463sm2028625f8f.10.2025.10.30.05.28.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Oct 2025 05:16:14 -0700 (PDT)
-Date: Thu, 30 Oct 2025 13:16:12 +0100
+        Thu, 30 Oct 2025 05:28:06 -0700 (PDT)
+Date: Thu, 30 Oct 2025 13:28:04 +0100
 From: Thierry Reding <thierry.reding@gmail.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -67,11 +67,11 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
 	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, 
 	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] MIPS: PCI: Use contextual data instead of global
- variable
-Message-ID: <t3la3jte5tia7rh5ftuv5cchrwdxe4cxa2v3g6lxgoh5u6rmcy@hzw7lbke2vac>
-References: <20251029163336.2785270-3-thierry.reding@gmail.com>
- <20251029174654.GA1571737@bhelgaas>
+Subject: Re: [PATCH v3 4/7] clk: ingenic: tcu: Use contextual data instead of
+ global variable
+Message-ID: <5psq67p7ozmfz6mbi626q2uixqtbtfpejkhud5fv6wqr66xasz@ksiokkf5qsgr>
+References: <20251029163336.2785270-5-thierry.reding@gmail.com>
+ <20251029175647.GA1572736@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -79,179 +79,81 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="stoiegldli5skly3"
+	protocol="application/pgp-signature"; boundary="6ob5xm6zi76m7ppm"
 Content-Disposition: inline
-In-Reply-To: <20251029174654.GA1571737@bhelgaas>
+In-Reply-To: <20251029175647.GA1572736@bhelgaas>
 
 
---stoiegldli5skly3
+--6ob5xm6zi76m7ppm
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/7] MIPS: PCI: Use contextual data instead of global
- variable
+Subject: Re: [PATCH v3 4/7] clk: ingenic: tcu: Use contextual data instead of
+ global variable
 MIME-Version: 1.0
 
-On Wed, Oct 29, 2025 at 12:46:54PM -0500, Bjorn Helgaas wrote:
-> On Wed, Oct 29, 2025 at 05:33:31PM +0100, Thierry Reding wrote:
+On Wed, Oct 29, 2025 at 12:56:47PM -0500, Bjorn Helgaas wrote:
+> On Wed, Oct 29, 2025 at 05:33:33PM +0100, Thierry Reding wrote:
 > > From: Thierry Reding <treding@nvidia.com>
 > >=20
 > > Pass the driver-specific data via the syscore struct and use it in the
 > > syscore ops.
 >=20
-> Would be nice to include the "instead of global variable" part here so
-> the commit log includes the benefit and can stand alone even without
-> the subject.
-
-Good point.
-
-> Awesome to get rid of another global variable!  More comments below.
-
-\o/
-
-> > +++ b/arch/mips/pci/pci-alchemy.c
-> > @@ -33,6 +33,7 @@
-> > =20
-> >  struct alchemy_pci_context {
-> >  	struct pci_controller alchemy_pci_ctrl; /* leave as first member! */
-> > +	struct syscore syscore;
-> >  	void __iomem *regs;			/* ctrl base */
-> >  	/* tools for wired entry for config space access */
-> >  	unsigned long last_elo0;
-> > @@ -46,12 +47,6 @@ struct alchemy_pci_context {
-> >  	int (*board_pci_idsel)(unsigned int devsel, int assert);
-> >  };
-> > =20
-> > -/* for syscore_ops. There's only one PCI controller on Alchemy chips, =
-so this
-> > - * should suffice for now.
-> > - */
-> > -static struct alchemy_pci_context *__alchemy_pci_ctx;
-> > -
-> > -
-> >  /* IO/MEM resources for PCI. Keep the memres in sync with fixup_bigphy=
-s_addr
-> >   * in arch/mips/alchemy/common/setup.c
-> >   */
-> > @@ -306,9 +301,7 @@ static int alchemy_pci_def_idsel(unsigned int devse=
-l, int assert)
-> >  /* save PCI controller register contents. */
-> >  static int alchemy_pci_suspend(void *data)
-> >  {
-> > -	struct alchemy_pci_context *ctx =3D __alchemy_pci_ctx;
-> > -	if (!ctx)
-> > -		return 0;
-> > +	struct alchemy_pci_context *ctx =3D data;
-> > =20
-> >  	ctx->pm[0]  =3D __raw_readl(ctx->regs + PCI_REG_CMEM);
-> >  	ctx->pm[1]  =3D __raw_readl(ctx->regs + PCI_REG_CONFIG) & 0x0009ffff;
-> > @@ -328,9 +321,7 @@ static int alchemy_pci_suspend(void *data)
-> > =20
-> >  static void alchemy_pci_resume(void *data)
-> >  {
-> > -	struct alchemy_pci_context *ctx =3D __alchemy_pci_ctx;
-> > -	if (!ctx)
-> > -		return;
-> > +	struct alchemy_pci_context *ctx =3D data;
-> > =20
-> >  	__raw_writel(ctx->pm[0],  ctx->regs + PCI_REG_CMEM);
-> >  	__raw_writel(ctx->pm[2],  ctx->regs + PCI_REG_B2BMASK_CCH);
-> > @@ -359,10 +350,6 @@ static const struct syscore_ops alchemy_pci_syscor=
-e_ops =3D {
-> >  	.resume =3D alchemy_pci_resume,
-> >  };
-> > =20
-> > -static struct syscore alchemy_pci_syscore =3D {
-> > -	.ops =3D &alchemy_pci_syscore_ops,
-> > -};
-> > -
-> >  static int alchemy_pci_probe(struct platform_device *pdev)
-> >  {
-> >  	struct alchemy_pci_platdata *pd =3D pdev->dev.platform_data;
-> > @@ -480,9 +467,10 @@ static int alchemy_pci_probe(struct platform_devic=
-e *pdev)
-> >  	__raw_writel(val, ctx->regs + PCI_REG_CONFIG);
-> >  	wmb();
-> > =20
-> > -	__alchemy_pci_ctx =3D ctx;
-> >  	platform_set_drvdata(pdev, ctx);
-> > -	register_syscore(&alchemy_pci_syscore);
-> > +	ctx->syscore.ops =3D &alchemy_pci_syscore_ops;
-> > +	ctx->syscore.data =3D ctx;
-> > +	register_syscore(&ctx->syscore);
+> Some of these things in drivers/clk/ are also platform_device drivers
+> (though not this one) and use generic power management, e.g.,
 >=20
-> As far as I can tell, the only use of syscore in this driver is for
-> suspend/resume.
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/clk/qcom/q6sstop-qcs404.c?id=3Dv6.17#n209
 >=20
-> This is a regular platform_device driver, so instead of syscore, I
-> think it should use generic power management like other PCI host
-> controller drivers do, something like this:
->=20
->   static int alchemy_pci_suspend_noirq(struct device *dev)
->   ...
->=20
->   static int alchemy_pci_resume_noirq(struct device *dev)
->   ...
->=20
->   static DEFINE_NOIRQ_DEV_PM_OPS(alchemy_pci_pm_ops,
->                                  alchemy_pci_suspend_noirq,
->                                  alchemy_pci_resume_noirq);
->=20
->   static struct platform_driver alchemy_pcictl_driver =3D {
->           .probe          =3D alchemy_pci_probe,
->           .driver =3D {
->                   .name   =3D "alchemy-pci",
->                   .pm     =3D pm_sleep_ptr(&alchemy_pci_pm_ops),
->           },
->   };
->=20
-> Here's a sample in another driver:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers/pci/controller/cadence/pci-j721e.c?id=3Dv6.17#n663
+> I have no idea if that's desirable or practical here, but using the
+> platform_device model instead of syscore could have advantages in
+> terms of modeling device dependencies and ordering.
 
-I thought so too, but then I looked at the history and saw that it was
-initially regular PM ops and then fixed by using syscore in this commit:
+Similar to the MIPS/Alchemy PCI driver, although there's no git log
+reference in this case, I suspect this was not in driver PM on purpose.
+The pattern I've seen quite often is very low-level device driver code
+doing this using syscore_ops because they run very late/early during
+suspend/resume, respectively, so the driver PM callbacks often aren't
+sufficient.
 
-    commit 864c6c22e9a5742b0f43c983b6c405d52817bacd
-    Author: Manuel Lauss <manuel.lauss@googlemail.com>
-    Date:   Wed Nov 16 15:42:28 2011 +0100
-   =20
-        MIPS: Alchemy: Fix PCI PM
-   =20
-        Move PCI Controller PM to syscore_ops since the platform_driver PM =
-methods
-        are called way too late on resume and far too early on suspend (aft=
-er and
-        before PCI device resume/suspend).
-        This also allows to simplify wired entry management a bit.
-   =20
-        Signed-off-by: Manuel Lauss <manuel.lauss@googlemail.com>
-        Cc: linux-mips@linux-mips.org
-        Patchwork: https://patchwork.linux-mips.org/patch/3007/
-        Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+In recent years, some of the issues have been alleviated by things such
+as device links, so a conversion may work now.
 
-So unfortunately I don't think it'll work for this driver.
+However, often these are also exotic and/or old devices that are
+difficult to find testers for, so I've been trying to keep the changes
+in this series as minimal as possible, so that we can be reasonably sure
+things will continue to work just by reviewing the code.
+
+The most important bit in the series is patch 1, which lays the
+groundwork for avoiding these global variables for new code. Also, in
+particular I have a concrete case where the global variable approach
+doesn't work because an IP block that used to be a guaranteed singleton
+now no longer is.
+
+I have looked at various drivers that I ended up not converting because
+they use a global variable not only for syscore but also for other
+things and fixing that up would've been way out of scope of this series.
 
 Thierry
 
---stoiegldli5skly3
+--6ob5xm6zi76m7ppm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkDVwcACgkQ3SOs138+
-s6FWDw//asJQ0od9HClRIj0RNLWAbliTk9QI3rUVvZd0krnee9oWFJS6p9gosZi7
-Baqb5WJ5xo7atxuHYK6RlAFAina/LUDWNpY9w1up0hM1K/NqVj0D6Ufrx2O4zw2Q
-5Ff2rbnpTBndYi8w6kth5MU4p/g3VtsilfSmErNPBQQF2CUQA3qmp3XVvAvbaH8+
-aUGS2rLpxX0Q06XGtXMtnvf4LHF4uzbZkX+AC6XqcBFT9BSgSjAKr65vMcYnqRqL
-sRxPbqQ9e6iZ2SibX+o61epk7rmO72XUa1v9TpZ24JNuvUIJnLfwm8D96f8NJEzK
-EznsDwGuOT/G87UYPvgqTZDbT8hbSvDEjGnlF8a6xtPP14Zm9hlMc0b9ZJ+wgMV4
-aMq7WckO8j/yY3NLAIokI/pMm5D11aYCSmk4PS7K4KdubNSeD+18J0QOZ/4cJyIQ
-cWI/P6sqD62A0QPMbbbtBa3MP9RbCZ0zhfFwI9dTprNJ7I7bijD/OLo798mkNB2f
-71+yECk1VnOKeAj9v80k479HlfUHaGCpRiEzWaKJ3IvLNqgUKH0q8nP8/McNXEKL
-8rRCO+5Ona/ND0lf2fue+/QeT44Fi24invQSdsgGdeaxEmcDkW06HSOK3Cp4pZWB
-E86uRaPgXuSRgDbxv2MMtv+PNWNWlqYzJ5/Lz0AkTm920p5RAvk=
-=Pbyc
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkDWcwACgkQ3SOs138+
+s6Hg1w//bfwZK2UyWYgH0DjUdLRkw/JLbu/3memPliSQO+SxPOEf7uwnD1QnAiQ3
+AaL3UiueXsnj30IkhBnqYoPaFQRz3G5Ag/PFIKX3kireFrAExwZP/9AKWiJflD1I
+gh+QOfqgZ1HpJr3QSmmjosBmkm5T7a/J5dUNuCcZoRcya8QmACQqg3sWy8gj4BdT
+Hy/aq2/JWEEJs1pLE5SvCexBqTP5gxTj8MTuNgqm3hRDtZc4TQnKNZIcJwgOruMX
+Wy4rrgBPQiASKxxP7ksI7iXCTOYM61AlEm39RUFNcGKI9iOw1YxFn2LuVIPoFJc6
+H92dgYcRmcEgy/oWPc8yTs9iX2POH5p/40/nb53U3sj6iQVhEMoVIGmIuxEX9RHL
+VHkn3RNfYCZlwqDtwCCoN6DWBW2PNUAX3dsD1ng3ZZHuDH2lbQaQudKRi7MGhAxm
+ADqiAfq1HO8Fk6uo5BFMtpieue14jJFHaQs21TkOlurf/LH9GT2qO52/8KtcxYx8
+F8pXjAM4Ps+sj+Er6h1Tb6PpXrpJ1lvGqagYTEJpWQuWyjXLGeseMpif2ucjdzjp
+4qfcE13QtePpLlbO8kklfDMdo6+uClFAMgWMM0jWWFtczIaUWmwRYcDGUbW4RbHt
+H6TJJVsDtuaQNx9wfo+vq3oMZviuttJPzFqYefIOL7oACIZD6sk=
+=0K07
 -----END PGP SIGNATURE-----
 
---stoiegldli5skly3--
+--6ob5xm6zi76m7ppm--
