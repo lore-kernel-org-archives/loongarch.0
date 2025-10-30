@@ -1,163 +1,257 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E07351FAF
-	for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 10:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDD229A31C
+	for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 12:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761819919; cv=none; b=YclJwFOJcysrI3ZpI3L55I5JgYT+UHYiholqxOIoCXfNzzcIOL0HmMdhXAiQvLIq5Me4w2d96VYJTH1/3Z4ykPeWwlg/uOeqr6qcGItzc/EXYVDAqPKBw1yrlkbz7yEdiA5YDxeN3k2mjpDWZb47L+oqhdh+iatrABAr+jC5uFM=
+	t=1761826580; cv=none; b=iZp7T4KmeQqczEgLNI99/L8gPfWFB5h4G2mITY/vJt/+Vwi9tIDuUi0+W2u6UiK2zGdsXgW4CpEyibJ/EBnmTUbXEnv8BsliLXaAWFtXabhpqccTZSorySinF3H9pVllu3O1QYjOUAxah+sQz8EdVyO3bMKtazzau/x9VNWJfhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761819919; c=relaxed/simple;
-	bh=/OiTwmyjWBCx0q96Gsr9SY27ybAo0GLz8Cev2v1IhyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JBvRBhoJDIqLJoyuX76duMaxQBzm7v/EAEdqjuLPZ58Iq3SvlKNycdvO+HE/AK754MZfvA83U802+6oLmnUorAumRJhuYTzxMnrKrEIwTGm3ZEISDbmLPjVbQ2XFAUu1Lf+ys7xjf2M42tPnEBXQ1yT9kfLa2xOzQ+8pqQTLFdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Y6u8EDwd; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1761826580; c=relaxed/simple;
+	bh=75RLQB8GL2/gKDokgbvRHwaJGve5LAaTdeXDRa43ZHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u97xQxmz0BAkmIpNmSaaNHtXxl3QxOI0vR5pW0zi7zZVSign5yjmwc5eKbwqvGNXP9aTcsoHGtVJ/5lIkokoUKwBBGH2hXprdxw5NZDmKjilSLcX8RfVNWdRulDxFWg0tSGvIkAOSe6eN6G6LMizsKtX/Aq35E6PvblCDSwnBDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P8M/edpH; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Y6u8EDwd"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b404a8be3f1so15861566b.1
-        for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 03:25:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8M/edpH"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-426fd62bfeaso463726f8f.2
+        for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 05:16:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1761819915; x=1762424715; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lTgIsc3O+wDypaKqBlwZIo86kBPQGfr40arZuVCJ75M=;
-        b=Y6u8EDwdJE4qRv7xk104SR3QjeXKUUN61suQkK4ihfL4Lg8YQNygns4HvOGeLvLzbu
-         2LbcVykvITkh2qW9KuHt9dp4L2F2gIqJz1E+GElrIQIZb6ayIwRTzpZbgCbI/gkJdPnA
-         9Wh4Ri+g/irLKTRtbWvGomDVut+V9sBthVOgW/992FK4untt5GqwXVu43TzU+mrkNdJE
-         5Iqn/Yftq4/2HyC1rrK9TIg8NMFxBptRPCCSHT33yC3Z1Lf/E+ZeG/TJ//sYiHlxTgbL
-         OsRbi5K/vmjMDmLZrrmU970ctEBQtbRv3FfDAzBzBOcTBrQm6/mE5KDSaDIjsyDaFceX
-         HXsw==
+        d=gmail.com; s=20230601; t=1761826577; x=1762431377; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s2h4BnseYLvI915SuwI6txSi2xO1Lp6zcqUfBWQt5q8=;
+        b=P8M/edpH4Il9+D3PtOTKUG/bB6N8peXFPlrFpIAAbGxKed8EyVQLDnTyLO84rRsyox
+         alUrPliRh6AnVYBi9MJmM+cHn+wdVc3Y5vQgu6+I2p4QR3luO8bGvdzLWBhVWzDpbfaV
+         hF4zbTYnrx2GpsnIY2qRGot94RNYkJnFi+Ks8tW40fwvNZsxiPW/nXUC77KG4lcdczKD
+         iCqLOpDXo6O7jdMfucTHoNTXvJIjzGaKh7jpbSpFZIUX23tcpJrDPYPWpwSJigfngqma
+         6zl8Py1A5DZZCcDO+e5sNlDmFs9Y/pAJbr3BcuEZX5rJm5oY2S9HNNRg8y9kGq1nrQeK
+         U7eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761819915; x=1762424715;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lTgIsc3O+wDypaKqBlwZIo86kBPQGfr40arZuVCJ75M=;
-        b=rbAYYLTuFfBLYThPXaw6p/GLRXcUVA6E7nRpyfmGB0GDGTraeAgQpE1W/1E5ZbfFOg
-         BaQrvX5AYmxBkqo2ZC6vJqWePGKa/ZlWqamJvJ2mPvY17Qxq3aX0bIFf37aCW427PzIV
-         n8yhG0WUJhtSJ5duAyhwA+X83Zl/jqCcoJfCUszLynhDIDKc7wDAAz7y8KLcN+Qf7Ary
-         F7nRFJ6bRq1i2WKw/LagSatzldhCQgjFkhFYdHsKQaxCR5RY/GEj6fhVPKEufVXtdF2G
-         tyLiaWnITvcrFmZ5vSVPKvT53ClRkZQfe7JPR2J6XzevwTh78fexwGP/IjB1C3wHRevS
-         n11Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWwHV0niUMsqhnmpoalknC10Q9Bq6rYM57MK3LMimviGKoxQ+T2FH67L91kAepLH7FmORgZWvJkXag=@lists.linux.dev
-X-Gm-Message-State: AOJu0YykSvf4e9Mw2LGIwaG/zINGZalyGIRYBZB7fKghFPO4J1v3egXD
-	gYiN4hVsaMSD2lufbe1wY0RWr0k1tnxU/H5dBgpt+KYpstKVAINyBR0yxXp5yOsc0Os=
-X-Gm-Gg: ASbGncs2DReEOmVpcZGYISVSZ4L/7acAMfpG9D+mkavjzPVy9CG9IYB2djICP1yhJRP
-	PV1jV11JtN6yrcNUR52SOXn/+5eubpD3NrqB038kAjL+UkB5yTye2X+fvFFE2/KhVSaFM5imAyl
-	UcjC4NzX9KGXqyaBh4aXJijRL5sn62FuDSLnVXc5YB3qcMymslOZEoGb5CFaHP2WzP6Ws6Xotk9
-	zBj6Ok/g+9KTuYHHcCE0d0td4QNsukkx88Fjb4a3VbpGJDTip1B7q92JbFrpX8C2HKV5m/j1It/
-	bbpZeqBEKLowci4XUi1bR/Jz/o0MljJEscnJv6Fzug1FI4K7K2bXJf6HAu9PkeUXPPt/IK7JKk0
-	SwV/VHnSqTzzCwAYFr8XKUdf+AVj5r/aSnIydRkTyMVMqUpeZEtfKu9SNyiyf5O8lD0NobjDXp6
-	MxPvo0JLfCys2oSUwTLidBj2SetoSrCZTWE88J8MYuwUH1D+FDUQaUmsk77TzN5FQM+tvE7YF3t
-	J91
-X-Google-Smtp-Source: AGHT+IEXsUOIqP3MBMqvuO3EOkZU6BKA34oP58piwLuVoouucxjytl3skX6Ka8nntE+ckkHO79CK6A==
-X-Received: by 2002:a17:906:f586:b0:b6d:5439:e668 with SMTP id a640c23a62f3a-b703d55e454mr372826866b.8.1761819915166;
-        Thu, 30 Oct 2025 03:25:15 -0700 (PDT)
-Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b6d853c549fsm1728375066b.37.2025.10.30.03.25.12
+        d=1e100.net; s=20230601; t=1761826577; x=1762431377;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s2h4BnseYLvI915SuwI6txSi2xO1Lp6zcqUfBWQt5q8=;
+        b=d1OghfiOZ7G9fGkC9wMkayOti6TJHF5XfiDK1to5OTqvn69nti7UuoFrbYAI87Hfkt
+         /CYGwlh2LIHGEzLe1Ri1jwifJQzyb7ckAC950yxjKgAeaWeFcBK39qMVpswRvjkPl+G5
+         IcGoV7ET9Xbf/t/pVrjVfOmMeaN2258eZ68HEJjWbdoofligYDt2nei2QhtZDqbnSTnJ
+         gsNu+Ti3e4tAazz1MW1wHuHNptJ4LA8NL3SsiAl+voWq7Oho2RRG4h9aDdABxJO7fRZq
+         SxTIDlZx7ZOcm+ZtiZdepezdk8n+J0O+aW2Y2blCzOjEo2/YbHiZLI57QbG2YDoDreDO
+         wCOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVViLGJh6I3clbo6ejRpPLVzWILQ2loA4FBAa17nOEq6EVCvZCwL+QNF54uRKl1BiGIZC5JavtN4hE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzA38GUd4cREZs3GwP4EzLSaPkciVyjHIK5+BFDghnHaUmp4KhE
+	1PWzvJ6V/dqKxzsUAERTZhBMJbuyvkqBkKb89FPFg+rWxaDuyeThxOtb
+X-Gm-Gg: ASbGncuZIOgX3P+9oy55nfv9LCUVPD1uDbA7qN4wz4MZLsYbhVH9w7HBEsFJZKg899p
+	jUqWUIL9Aave5fnOSkdylOg7DvNxtC261yYW4HkQKIF0mtYPGGH9VFGai6BS545NWh3i0d6jEU+
+	UNxF4waRVebtAHGngu4/n9HYUkWGxzN2ChcolmImHQa9XSxnSL/jYXU30PFI9XLU24z/rCyh8ts
+	dyRaBTNqFg08bfbaoM7iQfyuaZg1VQaJnftVSqSKNeFu//a1FIkv5jh1OZB94UPkhMva2Im4C1I
+	V1wl5vYviruWE40De+kx52UaLHmULCCV+NStF9iYZzDAYxp9ESHQzet45Fd0Ww8kBSu9KoeGbU8
+	6rI4PQflJXP4HzIdTnrmEBMlCT7pbx9AJZ+oFmAjAHSZros16y3z0osVytYyH0LP4tXtybloYtW
+	S3VkjSsKcLNd+7DmaxE4kLzKLTuPhXkqWInfh/ZPaPcNLmyylFl01CITL6zgN+67+DhP2oOtSrE
+	e59aoVA4FeL
+X-Google-Smtp-Source: AGHT+IFFiHEvNPjKUlWf15eT6QrZW2LM5hHmfdRjCPGtpfvtcJfaix0mKpAwNuPfyTcNYpcwrmxIZg==
+X-Received: by 2002:a05:6000:2508:b0:3fb:aca3:d5d9 with SMTP id ffacd0b85a97d-429aef76469mr4752945f8f.1.1761826576503;
+        Thu, 30 Oct 2025 05:16:16 -0700 (PDT)
+Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952db839sm33617710f8f.34.2025.10.30.05.16.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Oct 2025 03:25:14 -0700 (PDT)
-Date: Thu, 30 Oct 2025 11:25:03 +0100
-From: Petr Tesarik <ptesarik@suse.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
- x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Josh
- Poimboeuf <jpoimboe@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy
- Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Paolo Bonzini
- <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron
- <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel
- <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, "David S.
- Miller" <davem@davemloft.net>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, Josh
- Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, Andrew
- Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>,
- Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>, Jann Horn
- <jannh@google.com>, Dan Carpenter <dan.carpenter@linaro.org>, Oleg Nesterov
- <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, Clark Williams
- <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti
- <mtosatti@redhat.com>, Daniel Wagner <dwagner@suse.de>
-Subject: Re: [PATCH v6 06/29] static_call: Add read-only-after-init static
- calls
-Message-ID: <20251030112251.5afcf9ed@mordecai>
-In-Reply-To: <20251010153839.151763-7-vschneid@redhat.com>
-References: <20251010153839.151763-1-vschneid@redhat.com>
-	<20251010153839.151763-7-vschneid@redhat.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
+        Thu, 30 Oct 2025 05:16:14 -0700 (PDT)
+Date: Thu, 30 Oct 2025 13:16:12 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/7] MIPS: PCI: Use contextual data instead of global
+ variable
+Message-ID: <t3la3jte5tia7rh5ftuv5cchrwdxe4cxa2v3g6lxgoh5u6rmcy@hzw7lbke2vac>
+References: <20251029163336.2785270-3-thierry.reding@gmail.com>
+ <20251029174654.GA1571737@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="stoiegldli5skly3"
+Content-Disposition: inline
+In-Reply-To: <20251029174654.GA1571737@bhelgaas>
 
-On Fri, 10 Oct 2025 17:38:16 +0200
-Valentin Schneider <vschneid@redhat.com> wrote:
 
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
-> 
-> Deferring a code patching IPI is unsafe if the patched code is in a
-> noinstr region.  In that case the text poke code must trigger an
-> immediate IPI to all CPUs, which can rudely interrupt an isolated NO_HZ
-> CPU running in userspace.
-> 
-> If a noinstr static call only needs to be patched during boot, its key
-> can be made ro-after-init to ensure it will never be patched at runtime.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
->  include/linux/static_call.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/include/linux/static_call.h b/include/linux/static_call.h
-> index 78a77a4ae0ea8..ea6ca57e2a829 100644
-> --- a/include/linux/static_call.h
-> +++ b/include/linux/static_call.h
-> @@ -192,6 +192,14 @@ extern long __static_call_return0(void);
->  	};								\
->  	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
->  
-> +#define DEFINE_STATIC_CALL_RO(name, _func)				\
-> +	DECLARE_STATIC_CALL(name, _func);				\
-> +	struct static_call_key __ro_after_init STATIC_CALL_KEY(name) = {\
-> +		.func = _func,						\
-> +		.type = 1,						\
-> +	};								\
-> +	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
-> +
->  #define DEFINE_STATIC_CALL_NULL(name, _func)				\
->  	DECLARE_STATIC_CALL(name, _func);				\
->  	struct static_call_key STATIC_CALL_KEY(name) = {		\
-> @@ -200,6 +208,14 @@ extern long __static_call_return0(void);
->  	};								\
->  	ARCH_DEFINE_STATIC_CALL_NULL_TRAMP(name)
->  
-> +#define DEFINE_STATIC_CALL_NULL_RO(name, _func)				\
-> +	DECLARE_STATIC_CALL(name, _func);				\
-> +	struct static_call_key __ro_after_init STATIC_CALL_KEY(name) = {\
-> +		.func = NULL,						\
-> +		.type = 1,						\
-> +	};								\
-> +	ARCH_DEFINE_STATIC_CALL_NULL_TRAMP(name)
-> +
+--stoiegldli5skly3
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 2/7] MIPS: PCI: Use contextual data instead of global
+ variable
+MIME-Version: 1.0
 
-I think it would be a good idea to add a comment describing when these
-macros are supposed to be used, similar to the explanation you wrote for
-the _NOINSTR variants. Just to provide a clue for people adding a new
-static key in the future, because the commit message may become a bit
-hard to find if there are a few cleanup patches on top.
+On Wed, Oct 29, 2025 at 12:46:54PM -0500, Bjorn Helgaas wrote:
+> On Wed, Oct 29, 2025 at 05:33:31PM +0100, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > Pass the driver-specific data via the syscore struct and use it in the
+> > syscore ops.
+>=20
+> Would be nice to include the "instead of global variable" part here so
+> the commit log includes the benefit and can stand alone even without
+> the subject.
 
-Just my two cents,
-Petr T
+Good point.
+
+> Awesome to get rid of another global variable!  More comments below.
+
+\o/
+
+> > +++ b/arch/mips/pci/pci-alchemy.c
+> > @@ -33,6 +33,7 @@
+> > =20
+> >  struct alchemy_pci_context {
+> >  	struct pci_controller alchemy_pci_ctrl; /* leave as first member! */
+> > +	struct syscore syscore;
+> >  	void __iomem *regs;			/* ctrl base */
+> >  	/* tools for wired entry for config space access */
+> >  	unsigned long last_elo0;
+> > @@ -46,12 +47,6 @@ struct alchemy_pci_context {
+> >  	int (*board_pci_idsel)(unsigned int devsel, int assert);
+> >  };
+> > =20
+> > -/* for syscore_ops. There's only one PCI controller on Alchemy chips, =
+so this
+> > - * should suffice for now.
+> > - */
+> > -static struct alchemy_pci_context *__alchemy_pci_ctx;
+> > -
+> > -
+> >  /* IO/MEM resources for PCI. Keep the memres in sync with fixup_bigphy=
+s_addr
+> >   * in arch/mips/alchemy/common/setup.c
+> >   */
+> > @@ -306,9 +301,7 @@ static int alchemy_pci_def_idsel(unsigned int devse=
+l, int assert)
+> >  /* save PCI controller register contents. */
+> >  static int alchemy_pci_suspend(void *data)
+> >  {
+> > -	struct alchemy_pci_context *ctx =3D __alchemy_pci_ctx;
+> > -	if (!ctx)
+> > -		return 0;
+> > +	struct alchemy_pci_context *ctx =3D data;
+> > =20
+> >  	ctx->pm[0]  =3D __raw_readl(ctx->regs + PCI_REG_CMEM);
+> >  	ctx->pm[1]  =3D __raw_readl(ctx->regs + PCI_REG_CONFIG) & 0x0009ffff;
+> > @@ -328,9 +321,7 @@ static int alchemy_pci_suspend(void *data)
+> > =20
+> >  static void alchemy_pci_resume(void *data)
+> >  {
+> > -	struct alchemy_pci_context *ctx =3D __alchemy_pci_ctx;
+> > -	if (!ctx)
+> > -		return;
+> > +	struct alchemy_pci_context *ctx =3D data;
+> > =20
+> >  	__raw_writel(ctx->pm[0],  ctx->regs + PCI_REG_CMEM);
+> >  	__raw_writel(ctx->pm[2],  ctx->regs + PCI_REG_B2BMASK_CCH);
+> > @@ -359,10 +350,6 @@ static const struct syscore_ops alchemy_pci_syscor=
+e_ops =3D {
+> >  	.resume =3D alchemy_pci_resume,
+> >  };
+> > =20
+> > -static struct syscore alchemy_pci_syscore =3D {
+> > -	.ops =3D &alchemy_pci_syscore_ops,
+> > -};
+> > -
+> >  static int alchemy_pci_probe(struct platform_device *pdev)
+> >  {
+> >  	struct alchemy_pci_platdata *pd =3D pdev->dev.platform_data;
+> > @@ -480,9 +467,10 @@ static int alchemy_pci_probe(struct platform_devic=
+e *pdev)
+> >  	__raw_writel(val, ctx->regs + PCI_REG_CONFIG);
+> >  	wmb();
+> > =20
+> > -	__alchemy_pci_ctx =3D ctx;
+> >  	platform_set_drvdata(pdev, ctx);
+> > -	register_syscore(&alchemy_pci_syscore);
+> > +	ctx->syscore.ops =3D &alchemy_pci_syscore_ops;
+> > +	ctx->syscore.data =3D ctx;
+> > +	register_syscore(&ctx->syscore);
+>=20
+> As far as I can tell, the only use of syscore in this driver is for
+> suspend/resume.
+>=20
+> This is a regular platform_device driver, so instead of syscore, I
+> think it should use generic power management like other PCI host
+> controller drivers do, something like this:
+>=20
+>   static int alchemy_pci_suspend_noirq(struct device *dev)
+>   ...
+>=20
+>   static int alchemy_pci_resume_noirq(struct device *dev)
+>   ...
+>=20
+>   static DEFINE_NOIRQ_DEV_PM_OPS(alchemy_pci_pm_ops,
+>                                  alchemy_pci_suspend_noirq,
+>                                  alchemy_pci_resume_noirq);
+>=20
+>   static struct platform_driver alchemy_pcictl_driver =3D {
+>           .probe          =3D alchemy_pci_probe,
+>           .driver =3D {
+>                   .name   =3D "alchemy-pci",
+>                   .pm     =3D pm_sleep_ptr(&alchemy_pci_pm_ops),
+>           },
+>   };
+>=20
+> Here's a sample in another driver:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
+rivers/pci/controller/cadence/pci-j721e.c?id=3Dv6.17#n663
+
+I thought so too, but then I looked at the history and saw that it was
+initially regular PM ops and then fixed by using syscore in this commit:
+
+    commit 864c6c22e9a5742b0f43c983b6c405d52817bacd
+    Author: Manuel Lauss <manuel.lauss@googlemail.com>
+    Date:   Wed Nov 16 15:42:28 2011 +0100
+   =20
+        MIPS: Alchemy: Fix PCI PM
+   =20
+        Move PCI Controller PM to syscore_ops since the platform_driver PM =
+methods
+        are called way too late on resume and far too early on suspend (aft=
+er and
+        before PCI device resume/suspend).
+        This also allows to simplify wired entry management a bit.
+   =20
+        Signed-off-by: Manuel Lauss <manuel.lauss@googlemail.com>
+        Cc: linux-mips@linux-mips.org
+        Patchwork: https://patchwork.linux-mips.org/patch/3007/
+        Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+
+So unfortunately I don't think it'll work for this driver.
+
+Thierry
+
+--stoiegldli5skly3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkDVwcACgkQ3SOs138+
+s6FWDw//asJQ0od9HClRIj0RNLWAbliTk9QI3rUVvZd0krnee9oWFJS6p9gosZi7
+Baqb5WJ5xo7atxuHYK6RlAFAina/LUDWNpY9w1up0hM1K/NqVj0D6Ufrx2O4zw2Q
+5Ff2rbnpTBndYi8w6kth5MU4p/g3VtsilfSmErNPBQQF2CUQA3qmp3XVvAvbaH8+
+aUGS2rLpxX0Q06XGtXMtnvf4LHF4uzbZkX+AC6XqcBFT9BSgSjAKr65vMcYnqRqL
+sRxPbqQ9e6iZ2SibX+o61epk7rmO72XUa1v9TpZ24JNuvUIJnLfwm8D96f8NJEzK
+EznsDwGuOT/G87UYPvgqTZDbT8hbSvDEjGnlF8a6xtPP14Zm9hlMc0b9ZJ+wgMV4
+aMq7WckO8j/yY3NLAIokI/pMm5D11aYCSmk4PS7K4KdubNSeD+18J0QOZ/4cJyIQ
+cWI/P6sqD62A0QPMbbbtBa3MP9RbCZ0zhfFwI9dTprNJ7I7bijD/OLo798mkNB2f
+71+yECk1VnOKeAj9v80k479HlfUHaGCpRiEzWaKJ3IvLNqgUKH0q8nP8/McNXEKL
+8rRCO+5Ona/ND0lf2fue+/QeT44Fi24invQSdsgGdeaxEmcDkW06HSOK3Cp4pZWB
+E86uRaPgXuSRgDbxv2MMtv+PNWNWlqYzJ5/Lz0AkTm920p5RAvk=
+=Pbyc
+-----END PGP SIGNATURE-----
+
+--stoiegldli5skly3--
