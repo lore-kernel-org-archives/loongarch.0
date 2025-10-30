@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB57329E4D
-	for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 20:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF6C33E345
+	for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 20:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761855062; cv=none; b=CbLZwWkSKndzYvo1ijA6thk9mvjJ9BX7l/MXSIz5nIej+kfmaOx6bVVsys7kQmYwV8F83GzmzRpbCV7SVUoFutQTpo/wm70CCzxzTl8+nPbrY0Kjdl0Mc+OeBC0F8fge4oWY7ap733BCvMgQjVP/RR1Xp9O24hwyJPADr0HuSuY=
+	t=1761855063; cv=none; b=UjOfi4YpS67Ol3022/eHcr1qWdPBWPt2b2bW3ZZYBpJyh5U1WPX1LNP1YQ0QLpN/EEI8uTUSXXu3atvqJoc9gcjkOBPagf5shn06G0qCUGG7wkFhjThH50VWdwOGEQ7aPIlrUv8ebJFHxiAOFAm3puXwEdLZLSHREGaOL7JoUok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761855062; c=relaxed/simple;
-	bh=P1goZ+98qKVEWbuRxPkvfQzAqWl2KpW9bCv/jdGFRzQ=;
+	s=arc-20240116; t=1761855063; c=relaxed/simple;
+	bh=dmFGy64Opu9Mkjf3vfnnmQEC763oF8Lj2ACAU4D9x+8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XIjlNUn6gEYAY/ZHeeWK/3CvMIv6a74WNKOr/FmuI/nqD0/o3UPYjQjscWwcETWjCFT0toRyZZV/HQrTKciFS+n5H0NxKjNbYHQE0pRrPalVc4g2kqHraIrTR/ziWhPO9ZF1VzgLQD4L+GCpYwyEzu9Sge68pCl04r1MeWq3CZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B1rst4AB; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=Jog9SXyokw6tJj4yIwsTQRX+oKAxK3UyceGFF/XRQQGhDxwNcorz/aUUIT9mKikMaOKsYkkcvVSOiYrullan45DDI0xfYb/Al7hxSitJJ9NqyfvnCawDL95SUvIPkWwcwbdpddXq+rU5oQy8FTA+WqGCDJrUFy/gwS0tqQ+myUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x2QGnhZ+; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1rst4AB"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7a675fbd71eso2043877b3a.2
-        for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 13:11:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x2QGnhZ+"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-294fca58e78so8886075ad.1
+        for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 13:11:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761855059; x=1762459859; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1761855061; x=1762459861; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPfEDjublRysEg+wBq1Bud0evQ6Qw3SUr7bZgrR40cM=;
-        b=B1rst4ABFDdK50m54yfW3H9ooDyTUn9P2jCAYXWhADCIH0VIcohEhpcrS3lu33l1+L
-         gbRyR1Ntke+jO2fjihSSeOuNkr9BBbr/vHcIcEwWu1CDpRezk/OlgWJBUWLI3fLMJCyO
-         0CUWg9DYGJjEebnh/ZIPEs4Sz6PinlMbzKSKp5QIIUs/DWQhCImrVTBTfOAt26dzhYv6
-         UPP/UpfTfPSr0w1CLhfT0R23RBheuoXsenB/O7+ZyfLk1Rr/TmaA4llYBwfl103hXnck
-         TzcYfpgi+25sd3dkdnaPIJmCtxJ1TwvQePtUk5Uq+Wei4RP0X6FjHsrh3x75tkSJiAtE
-         lMcA==
+        bh=pcGBUMDBt4QrK3gZ63mWxwFVf8xhoPzw9YjzqkGrLic=;
+        b=x2QGnhZ+3hEip5gh83eXLmnpHCA2ZU9+rJmVSMfKKBN1Kf7/ELkuvVTdEriY+GDfAD
+         NZMM52GlCKyhjeih9VDtPrlJvOwh6kFtyFcDHPTDHUKUmKheJiFaDPZsM3PewzOKwmMO
+         7LCpmNLI3YfaUy+usJl89D8/qWqnTCc4W4UN+ztfemS8Cn43rLo2VyohdKm6iDD+TZ7/
+         3te3sk+gMfTPNQDolZzndDAmxqT00z7dtsv6knQ/X8kvEnOa29HpnmFjTgS2t+Moq0Et
+         9LaLRloU4+vJjPlYLYNuQ4F9gURIvxjvp2rf7req8wPxeMjYVnUCHLJ06oDlL0lpRasl
+         nS9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761855059; x=1762459859;
+        d=1e100.net; s=20230601; t=1761855061; x=1762459861;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZPfEDjublRysEg+wBq1Bud0evQ6Qw3SUr7bZgrR40cM=;
-        b=FriO8VWet9c1qqSTTdWxBnnsteaQZS8C1CWEkVzY6OdxQJKy3e5nVTHQFYgJN33xEi
-         tfNBhxhhxvuyZwtoczMyajl8QDIAlU3JZHz04B9lKrzmMmcnRBoBsoI7yfQ6OVat8E0Z
-         Z7oWFeUwuu9dY3mlOrrRE0/Q4OBjwGNb3aeKu3CUNlxzPOgqXxTrG9IH4q0N61KHDNWE
-         PySQ4oViqD9DYQqwVn7oxxBsy3ZTk6JIV9q1qXmuU1ekKllPom5BtZnPViuWiZJn0q/l
-         49hqcpGmjscNDXZw8y+3qj7XMCwvTI0/GPa7WfZICMyi3UFejociQ+RH0LDsnLUbr4zL
-         8H1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVGU5i5IqL5japO0R4WvtHItCT39sL1b9/PNcTgh4lbqLQ81L90rvIrHmBJIjy9n0DyrcLSW7tOsyg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy+1cidVwTrW3vOwlYusyx+ferXN9zRC5yQKiKXY5gcSH0yfrhl
-	Wyykj5KnxnBPi/9WyANJJ5oHZvkqsjCtkrMu41zscsqHIjNAyYOTeJk3iQgU88QKXhQ3y8/8c1u
-	6fHPJWA==
-X-Google-Smtp-Source: AGHT+IE4oqFNhFQQZr1IyqSPUxhZWizKY8+4h3k61YypjXkX/4HyRwAM2GyKD7DH49xWshMyjNqw52ssRLY=
-X-Received: from pfbgi4.prod.google.com ([2002:a05:6a00:63c4:b0:793:b157:af42])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2283:b0:7a2:721b:adb6
- with SMTP id d2e1a72fcca58-7a77a9cb11amr747302b3a.28.1761855059275; Thu, 30
- Oct 2025 13:10:59 -0700 (PDT)
+        bh=pcGBUMDBt4QrK3gZ63mWxwFVf8xhoPzw9YjzqkGrLic=;
+        b=J+mKPpmGuIEdK9fTGVCDFRyWJicedt7g7K3xElQbCoBligltgI2EPpI4vrHpuA89TK
+         oz6WLMRD7kj4dt2HgHq9ZXk62mOZlPGIM95BuEuYSEKPjTLh/Zt6vn16VVjNFfsGC4+h
+         zS+wEYcazlh87XUtVTymw6HrZD84ydpUKu76fjlDT6KB6gS6nucbz8K09ixz64sPOsSb
+         i96rvK0qpySpirtTRk8/H1VOLjVE6KpyHFBTO2xc95KZFA16Ytdp5SL3l1UpWpT1YcNS
+         QvzvdIquC+KHtClM93Gwq0n9pJ7/L6IwuMlseJ+vuQMCJyE44tLZR4TE5lL9ct51yLJu
+         i8SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcWzJxx10R+ZCweWM+nHsZljbguxCE5Y2SjNsW7+veGGtohdZvbW7aQfbYkY32fcnyyoKFUC+yzm4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwsyRAxzqDaDa0nEESpxL3eVd3YNeuC0MMHb7XMaOC8YXQWFkKy
+	QtdxNZotarlS8nFmRCSO+mVHcQDw3WqH7w17Jtzxt6igO8QYJ0Diqcsg9ZZoyQsCYgMJFTdvjfh
+	zh2FZPA==
+X-Google-Smtp-Source: AGHT+IE/OfQCQRYqXElzN+OeKvwnTKdqn8Aa5qkU15JwMNXReTeV5Yh/81ZcfUEIC9p/s1OTRodzv1oDE/0=
+X-Received: from pjbms9.prod.google.com ([2002:a17:90b:2349:b0:33d:69cf:1f82])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c401:b0:295:21ac:3540
+ with SMTP id d9443c01a7336-29521ac3a29mr3509295ad.33.1761855061339; Thu, 30
+ Oct 2025 13:11:01 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 30 Oct 2025 13:09:47 -0700
+Date: Thu, 30 Oct 2025 13:09:48 -0700
 In-Reply-To: <20251030200951.3402865-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20251030200951.3402865-1-seanjc@google.com>
 X-Mailer: git-send-email 2.51.1.930.gacf6e81ea2-goog
-Message-ID: <20251030200951.3402865-25-seanjc@google.com>
-Subject: [PATCH v4 24/28] KVM: TDX: Use guard() to acquire kvm->lock in tdx_vm_ioctl()
+Message-ID: <20251030200951.3402865-26-seanjc@google.com>
+Subject: [PATCH v4 25/28] KVM: TDX: Don't copy "cmd" back to userspace for KVM_TDX_CAPABILITIES
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -83,50 +83,40 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Use guard() in tdx_vm_ioctl() to tidy up the code a small amount, but more
-importantly to minimize the diff of a future change, which will use
-guard-like semantics to acquire and release multiple locks.
+Don't copy the kvm_tdx_cmd structure back to userspace when handling
+KVM_TDX_CAPABILITIES, as tdx_get_capabilities() doesn't modify hw_error or
+any other fields.
 
-No functional change intended.
+Opportunistically hoist the call to tdx_get_capabilities() outside of the
+kvm->lock critical section, as getting the capabilities doesn't touch the
+VM in any way, e.g. doesn't even take @kvm.
 
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
+Suggested-by: Kai Huang <kai.huang@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/vmx/tdx.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/x86/kvm/vmx/tdx.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index d6f40a481487..037429964fd7 100644
+index 037429964fd7..57dfddd2a6cf 100644
 --- a/arch/x86/kvm/vmx/tdx.c
 +++ b/arch/x86/kvm/vmx/tdx.c
-@@ -2806,7 +2806,7 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
+@@ -2806,12 +2806,12 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
  	if (r)
  		return r;
  
--	mutex_lock(&kvm->lock);
-+	guard(mutex)(&kvm->lock);
++	if (tdx_cmd.id == KVM_TDX_CAPABILITIES)
++		return tdx_get_capabilities(&tdx_cmd);
++
+ 	guard(mutex)(&kvm->lock);
  
  	switch (tdx_cmd.id) {
- 	case KVM_TDX_CAPABILITIES:
-@@ -2819,15 +2819,12 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
- 		r = tdx_td_finalize(kvm, &tdx_cmd);
+-	case KVM_TDX_CAPABILITIES:
+-		r = tdx_get_capabilities(&tdx_cmd);
+-		break;
+ 	case KVM_TDX_INIT_VM:
+ 		r = tdx_td_init(kvm, &tdx_cmd);
  		break;
- 	default:
--		r = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	if (copy_to_user(argp, &tdx_cmd, sizeof(struct kvm_tdx_cmd)))
--		r = -EFAULT;
-+		return -EFAULT;
- 
--out:
--	mutex_unlock(&kvm->lock);
- 	return r;
- }
- 
 -- 
 2.51.1.930.gacf6e81ea2-goog
 
