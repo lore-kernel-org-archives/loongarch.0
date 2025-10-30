@@ -1,57 +1,57 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBDE346FB7
-	for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 20:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCE033E37C
+	for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 20:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761855069; cv=none; b=VPiqV/3Hk/5iP3SjT0iJIoBqr4Grf9wE6pyhV9eUqUKLywTKYQ5C0CP8oD0++MrJqW/E6dzDKP6ZLzBKo3rUdor3z1ruuH5pDy4fuvqg4OjvY2q1cQgqSLyp25hbYKk4xmlRWafcyuY9zLX6WHtLXh0Ksb/rSbAwmxouLZX9FJk=
+	t=1761855070; cv=none; b=MXNITOZqMrJLY9NaFzQV2FljWlKUIimbO5PZrf4k8znzvIT/M9jS7WCpvPkyY2QNO+IAg1Y6tCEZZHObwbm0NnmJM6EHNPYeoDrfYzwyO4Usz7v2A7EFiWiXSj9Xi6Xge6o1va43PQUtloJQsIuuLKdFte14wAziTMNg8H+L9Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761855069; c=relaxed/simple;
-	bh=BNSOEKa28oWXqKHW7RuSRcfta2Y9XobgHdriosWTdaA=;
+	s=arc-20240116; t=1761855070; c=relaxed/simple;
+	bh=+qLC3Iee5+EjjvPxLbec42/6nK7vtOEI69ofQbkEfuY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=leouwXE7rOw9H8scueq2UUUcfcVMveY7YXbdPt37qXlewIbbCYoywJzi/86ddAL2EdIubJwygiBB4bJDr4NRK6hUnJ8B1upkCqPTWNT9XzyCcfoF14o8rrVfMNsvvFjKWltGxgYUBsAdmjLi5UsmC2i2mdGVTlwd+zYBmQ55OrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GrdDFBHb; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=gJmihN1xcU9QlZDItqt1S34wuDAtyaECfHXx+mwn+I9rQ+dTvj1GdkjAW75r/hA5UljLe+1zme93kdCiH9kCgzX2scal/N5i3B9UUR0Qh2XxvZ2TZCKdZUTJu05yWvTU2ULHyU8VsC9ANgYnL3Ym8hsw9Fo97mymziH8poAIFuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jWW2Q06M; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GrdDFBHb"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b522037281bso969380a12.3
-        for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 13:11:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jWW2Q06M"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-340410b11b8so1333858a91.2
+        for <loongarch@lists.linux.dev>; Thu, 30 Oct 2025 13:11:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761855065; x=1762459865; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1761855068; x=1762459868; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=gJtCncfCK9X54oXx991KGpYhmmpTyjjcLT5mmtOhZeY=;
-        b=GrdDFBHbnbhRhcKXg4hvDFAe6pVRyyotwUeBUZAOfpHJEYR5UtuTq/tkT7krxq91Qg
-         9u86MynXlfC9oeyy5oLuWKLbHrPB7NJAwPQlsopsGJpgRVm9b3XsXWAoDn0Kp0yeQuKT
-         lysKmT+AM1FtcKeCy7JOvPVv07S45NBNgzdF56nA2FepogQaX4hFxMJJggLKERRYYRBe
-         Aym2/+ypTO94/jQPlQ5SIRZR7F1BEKQ682ny3riyn307KT9lrvthSG5fwFR6ubLa91si
-         MSw547ydxbBZmDXhJDTScyTjvGQLQEwC3vKhk7NMrP+Mp+cib6xc0aPdxucy+50VMoMm
-         yJVw==
+        bh=g0DZj43Z67Ng4V8dccak1Ym5loj+qmLakJ+LCALP9kg=;
+        b=jWW2Q06M7mt8KNvmcCEJpuYFNJGLYI4FQJ6HLWGrIZuiOp4N6+2VPHOQduT0CKzAS9
+         jJRqRZJQ09EFq/q0BRj51wd2goU+xVTJfPWvff8wJaXTcRHMLKvyZyrikjIys4MmQDeU
+         iil1wkC0861MrdOL0aLNBsXn4gUwvIOvAHPEncKeBe5I7BLTfk+2zqMF+30A1J6RQVFf
+         rT1znEmf40ViORGh+voxkWIK9bHYHetH9j2yfu+NLsIsxQH3x2hqguF6TfyJDHAklmSp
+         hTZ+9GiJaslthtw8GVFNcTTzBISYPDP0VMAu6uGHP/VnuV9tUA6ACrGBAgK2BhNd/gmi
+         jHCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761855065; x=1762459865;
+        d=1e100.net; s=20230601; t=1761855068; x=1762459868;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gJtCncfCK9X54oXx991KGpYhmmpTyjjcLT5mmtOhZeY=;
-        b=kXxXpPTvpMOtTGruYJZ+5T7N7K03e95G3LTAO/x5LE2Wx0CvEW3CibSaDLRGQqHKCA
-         BmeqwXmNIUpDMDBOdudG+I2mycpCqhBoBMEkLbAAIFfGa4H8KhvtUGQPSlqJViMH2vnO
-         ecX1XtwKzhuQe3E9r0LegNAASab4IRtT5Cj+zBSsMw+J56Bq73I5+yLlnzesusSc8jaR
-         uMIxtB9J+NsyNlJepPKlfuQBrICSmCx/dnpBoODOl15zYHQsmmnIdr7ZBrh02ZdAoTef
-         WAtpqeu6G4fTV+dNSn0ZSjL6ds3evjg2rm2iZJE8FPsVf5ojkVGkAdGPAKkAjuGRjNTn
-         lQEg==
-X-Forwarded-Encrypted: i=1; AJvYcCWiqzQeTC1IKVRLoe+28ZKAL3g8LSKhEOHlkCQLoqY4BlXB7kangm1mSE2pcpHqp5h1V+lY1UhB7qU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyXrgV95qsWxO6YglNj2Kedqug2slBZrsuNZcOBUHpypI5+uxer
-	z8xnqSXfGGk8h86Q4clvwnyKgm1ngi8sT4/g2hERI1KWsldRizgnBHirP34V7R5ZEuRuaVj29rk
-	iAzHQQA==
-X-Google-Smtp-Source: AGHT+IGHOQLpfyFznvDWNUH7H5RRwumwXl+ad4M1fU9LKzyWdjNf4lBkOJxqkb3vWAdXWhUIZ0D4LKjuEDo=
-X-Received: from pjd14.prod.google.com ([2002:a17:90b:54ce:b0:339:ee20:f620])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3e4d:b0:32e:528c:60ee
- with SMTP id 98e67ed59e1d1-34083055b02mr1449393a91.24.1761855065570; Thu, 30
- Oct 2025 13:11:05 -0700 (PDT)
+        bh=g0DZj43Z67Ng4V8dccak1Ym5loj+qmLakJ+LCALP9kg=;
+        b=kOWYTnc3Gt1xDhURt7fjBaVNs6ZzGzsw1BNx4casWa8NwhD4znBhGp+5QvyWrgvZQc
+         KxwPs7LY3H9MwvefB5jkI8R9tl1+SyLkmAYk8J+gPrKy69whwihzADAR5FF5gg4xn2S0
+         /kCMwLpPkL/GFljyDwg2Gdy13mZviFEc0wDYM2Zy+FtNGnkCxOZeiJtTOnu1tMWooeKk
+         BJXTd0TboSHrF2uHQPbxz2rOa5hjHE9pQfI9++ne6/XpYZOqy5ZFD15Z0hoIjrDtGdIa
+         mdFqVMu052/6HZ036tq5/ax/6OwiOel3gOQ1yu3DDDZ8Xci/2VF10Bkcw3FFeYI5h3eD
+         35dg==
+X-Forwarded-Encrypted: i=1; AJvYcCWE/wPHkZHxByvjScOP7BTks48JSnYWbvtQaoYZ8o5p1js4yM23nXjEmh8D3swcGfmbfqFLjjNGvM0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzlKJAhXJWRxoJYJ6vO9ahDR1swznDAspragjLdeN3gAISmfkvO
+	rloAQlkqItzsXKjkfVgStFoF2fPKo0enPNenJ0idF3p+hibxY2vvf3EhpwngkSlygk9eoU6UtrO
+	JTa4i7w==
+X-Google-Smtp-Source: AGHT+IHFPEZaejYJvfIle9tc1ZXyDJfCQsJh2BXbTmXv+Mn/KvdDlX4yHPVD4nKwk0+goI6XnN1tnx5wN9U=
+X-Received: from pjbgp21.prod.google.com ([2002:a17:90a:df15:b0:33b:51fe:1a7b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c12:b0:32e:7340:a7f7
+ with SMTP id 98e67ed59e1d1-34082fc8525mr1267842a91.2.1761855067459; Thu, 30
+ Oct 2025 13:11:07 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 30 Oct 2025 13:09:50 -0700
+Date: Thu, 30 Oct 2025 13:09:51 -0700
 In-Reply-To: <20251030200951.3402865-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20251030200951.3402865-1-seanjc@google.com>
 X-Mailer: git-send-email 2.51.1.930.gacf6e81ea2-goog
-Message-ID: <20251030200951.3402865-28-seanjc@google.com>
-Subject: [PATCH v4 27/28] KVM: TDX: Bug the VM if extending the initial
- measurement fails
+Message-ID: <20251030200951.3402865-29-seanjc@google.com>
+Subject: [PATCH v4 28/28] KVM: TDX: Fix list_add corruption during vcpu_load()
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -84,77 +83,112 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-WARN and terminate the VM if TDH_MR_EXTEND fails, as extending the
-measurement should fail if and only if there is a KVM bug, or if the S-EPT
-mapping is invalid.  Now that KVM makes all state transitions mutually
-exclusive via tdx_vm_state_guard, it should be impossible for S-EPT
-mappings to be removed between kvm_tdp_mmu_map_private_pfn() and
-tdh_mr_extend().
+From: Yan Zhao <yan.y.zhao@intel.com>
 
-Holding slots_lock prevents zaps due to memslot updates,
-filemap_invalidate_lock() prevents zaps due to guest_memfd PUNCH_HOLE,
-vcpu->mutex locks prevents updates from other vCPUs, kvm->lock prevents
-VM-scoped ioctls from creating havoc (e.g. by creating new vCPUs), and all
-usage of kvm_zap_gfn_range() is mutually exclusive with S-EPT entries that
-can be used for the initial image.
+During vCPU creation, a vCPU may be destroyed immediately after
+kvm_arch_vcpu_create() (e.g., due to vCPU id confiliction). However, the
+vcpu_load() inside kvm_arch_vcpu_create() may have associate the vCPU to
+pCPU via "list_add(&tdx->cpu_list, &per_cpu(associated_tdvcpus, cpu))"
+before invoking tdx_vcpu_free().
 
-For kvm_zap_gfn_range(), the call from sev.c is obviously mutually
-exclusive, TDX disallows KVM_X86_QUIRK_IGNORE_GUEST_PAT so the same goes
-for kvm_noncoherent_dma_assignment_start_or_stop(), and
-__kvm_set_or_clear_apicv_inhibit() is blocked by virtue of holding all
-VM and vCPU mutexes (and the APIC page has its own non-guest_memfd memslot
-and so can't be used for the initial image, which means that too is
-mutually exclusive irrespective of locking).
+Though there's no need to invoke tdh_vp_flush() on the vCPU, failing to
+dissociate the vCPU from pCPU (i.e., "list_del(&to_tdx(vcpu)->cpu_list)")
+will cause list corruption of the per-pCPU list associated_tdvcpus.
 
-Opportunistically return early if the region doesn't need to be measured
-in order to reduce line lengths and avoid wraps.  Similarly, immediately
-and explicitly return if TDH_MR_EXTEND fails to make it clear that KVM
-needs to bail entirely if extending the measurement fails.
+Then, a later list_add() during vcpu_load() would detect list corruption
+and print calltrace as shown below.
 
+Dissociate a vCPU from its associated pCPU in tdx_vcpu_free() for the vCPUs
+destroyed immediately after creation which must be in
+VCPU_TD_STATE_UNINITIALIZED state.
+
+kernel BUG at lib/list_debug.c:29!
+Oops: invalid opcode: 0000 [#2] SMP NOPTI
+RIP: 0010:__list_add_valid_or_report+0x82/0xd0
+
+Call Trace:
+ <TASK>
+ tdx_vcpu_load+0xa8/0x120
+ vt_vcpu_load+0x25/0x30
+ kvm_arch_vcpu_load+0x81/0x300
+ vcpu_load+0x55/0x90
+ kvm_arch_vcpu_create+0x24f/0x330
+ kvm_vm_ioctl_create_vcpu+0x1b1/0x53
+ kvm_vm_ioctl+0xc2/0xa60
+  __x64_sys_ioctl+0x9a/0xf0
+ x64_sys_call+0x10ee/0x20d0
+ do_syscall_64+0xc3/0x470
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Fixes: d789fa6efac9 ("KVM: TDX: Handle vCPU dissociation")
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/vmx/tdx.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ arch/x86/kvm/vmx/tdx.c | 43 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 38 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 8bcdec049ac6..762f2896547f 100644
+index 762f2896547f..db7ac7955ca1 100644
 --- a/arch/x86/kvm/vmx/tdx.c
 +++ b/arch/x86/kvm/vmx/tdx.c
-@@ -3123,21 +3123,23 @@ static int tdx_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
- 
- 	put_page(src_page);
- 
--	if (ret)
-+	if (ret || !(arg->flags & KVM_TDX_MEASURE_MEMORY_REGION))
- 		return ret;
- 
--	if (arg->flags & KVM_TDX_MEASURE_MEMORY_REGION) {
--		for (i = 0; i < PAGE_SIZE; i += TDX_EXTENDMR_CHUNKSIZE) {
--			err = tdh_mr_extend(&kvm_tdx->td, gpa + i, &entry,
--					    &level_state);
--			if (err) {
--				ret = -EIO;
--				break;
--			}
--		}
-+	/*
-+	 * Note, MR.EXTEND can fail if the S-EPT mapping is somehow removed
-+	 * between mapping the pfn and now, but slots_lock prevents memslot
-+	 * updates, filemap_invalidate_lock() prevents guest_memfd updates,
-+	 * mmu_notifier events can't reach S-EPT entries, and KVM's internal
-+	 * zapping flows are mutually exclusive with S-EPT mappings.
-+	 */
-+	for (i = 0; i < PAGE_SIZE; i += TDX_EXTENDMR_CHUNKSIZE) {
-+		err = tdh_mr_extend(&kvm_tdx->td, gpa + i, &entry, &level_state);
-+		if (TDX_BUG_ON_2(err, TDH_MR_EXTEND, entry, level_state, kvm))
-+			return -EIO;
- 	}
- 
--	return ret;
-+	return 0;
+@@ -843,19 +843,52 @@ void tdx_vcpu_put(struct kvm_vcpu *vcpu)
+ 	tdx_prepare_switch_to_host(vcpu);
  }
  
- static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *cmd)
++/*
++ * Life cycles for a TD and a vCPU:
++ * 1. KVM_CREATE_VM ioctl.
++ *    TD state is TD_STATE_UNINITIALIZED.
++ *    hkid is not assigned at this stage.
++ * 2. KVM_TDX_INIT_VM ioctl.
++ *    TD transitions to TD_STATE_INITIALIZED.
++ *    hkid is assigned after this stage.
++ * 3. KVM_CREATE_VCPU ioctl. (only when TD is TD_STATE_INITIALIZED).
++ *    3.1 tdx_vcpu_create() transitions vCPU state to VCPU_TD_STATE_UNINITIALIZED.
++ *    3.2 vcpu_load() and vcpu_put() in kvm_arch_vcpu_create().
++ *    3.3 (conditional) if any error encountered after kvm_arch_vcpu_create()
++ *        kvm_arch_vcpu_destroy() --> tdx_vcpu_free().
++ * 4. KVM_TDX_INIT_VCPU ioctl.
++ *    tdx_vcpu_init() transitions vCPU state to VCPU_TD_STATE_INITIALIZED.
++ *    vCPU control structures are allocated at this stage.
++ * 5. kvm_destroy_vm().
++ *    5.1 tdx_mmu_release_hkid(): (1) tdh_vp_flush(), disassociates all vCPUs.
++ *                                (2) puts hkid to !assigned state.
++ *    5.2 kvm_destroy_vcpus() --> tdx_vcpu_free():
++ *        transitions vCPU to VCPU_TD_STATE_UNINITIALIZED state.
++ *    5.3 tdx_vm_destroy()
++ *        transitions TD to TD_STATE_UNINITIALIZED state.
++ *
++ * tdx_vcpu_free() can be invoked only at 3.3 or 5.2.
++ * - If at 3.3, hkid is still assigned, but the vCPU must be in
++ *   VCPU_TD_STATE_UNINITIALIZED state.
++ * - if at 5.2, hkid must be !assigned and all vCPUs must be in
++ *   VCPU_TD_STATE_INITIALIZED state and have been dissociated.
++ */
+ void tdx_vcpu_free(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+ 	struct vcpu_tdx *tdx = to_tdx(vcpu);
+ 	int i;
+ 
++	if (vcpu->cpu != -1) {
++		KVM_BUG_ON(tdx->state == VCPU_TD_STATE_INITIALIZED, vcpu->kvm);
++		tdx_flush_vp_on_cpu(vcpu);
++		return;
++	}
++
+ 	/*
+ 	 * It is not possible to reclaim pages while hkid is assigned. It might
+-	 * be assigned if:
+-	 * 1. the TD VM is being destroyed but freeing hkid failed, in which
+-	 * case the pages are leaked
+-	 * 2. TD VCPU creation failed and this on the error path, in which case
+-	 * there is nothing to do anyway
++	 * be assigned if the TD VM is being destroyed but freeing hkid failed,
++	 * in which case the pages are leaked.
+ 	 */
+ 	if (is_hkid_assigned(kvm_tdx))
+ 		return;
 -- 
 2.51.1.930.gacf6e81ea2-goog
 
