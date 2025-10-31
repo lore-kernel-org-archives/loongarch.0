@@ -1,194 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA221347BB7
-	for <loongarch@lists.linux.dev>; Fri, 31 Oct 2025 11:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9626A33987;
+	Fri, 31 Oct 2025 16:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761911586; cv=none; b=cP6vNLOKdpliwrlRpYG44knitQXlXhyQeV7GpHVpxhlHe2rJFb7JVrS6Kk7wuBu20DJuunMp2vqmGqU4k5YYPficNXOUqboP3waPT6l/w+N8NRbshMbd6osdDr8wyUo5ExZTskabzM/9aiFa1juDsSMgvnRcFjd0XfJdNv5bb8M=
+	t=1761928254; cv=none; b=pw3cyiOwm9jUS1B898itAgvMAFK+UcLzdPfqTCYG0ORIdfoDo5Kvl6mShouJTWkJHR+VYFHjjPHdsZ7rHtLLcIif3UpSdvpzEJsfiaFr/bZ5aXoy7LqgECZ8oW4V7MxS9Bh9AWY+OX6EbIHIkoywjiWN6wWRL4X7PFexWds50lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761911586; c=relaxed/simple;
-	bh=6fzFmvYYmy0FD/zsZjCIHvVy5pIl85gYKYFQYc5ntms=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=c0Uf0jv+ZtmGIXZIkuQWqOAL0+GHv+sbhM9cDZzSKUCSS3r4YhzBz1JF7LzrcyQXIzfqcuiKJD5TxCDNvHo/isBbfcZVesknUFyXJCY8zSCMCV4u3NwwhTnwReOtAh5wAwd7FjZAI8YHQd++OzUxVN17zJhhNL7PVQWoNNZrndM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VLW/68ZH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1761928254; c=relaxed/simple;
+	bh=DPYN5cD7LqmkqnhJDPlutbIISQPyNyW8OlZfHe2zW8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMoFb3EjJszE4kypJJ5FDLAv8LuUsjZ6Zc9+WiMWtAWCwRdwQSFwYDDY5zY2Pl42OevFPLEVyp3k1I0Dc8j/MNf9UTcVNJLTZPtcAFpyLyrMKJYE/dtpMwRI7fKdyN41SwEEGLbp1zMAIBEA6HXqYpEckVUDxIM6R5+e7RTgAkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QhpH9OWU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLW/68ZH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761911581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gTUIS93GUZsQyg4tbyddEkDWsI2/kBv/P3HZONFfij8=;
-	b=VLW/68ZHSgBq5lCtIBt6zBfYUUL9IMbTYLjZAqwK/FhqjF+QAXx3GTgJuMBL3GSVIzTNtD
-	LkNkGQjSvlhnngMQwMoTJIMtampraNBpsyA+MGl4E7l8zOtU4XE6QYh/GSciXnW1xubfiQ
-	5jnxJTDgQ9z0DxI0INAjX7EOwrYO8QY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-151-mXtpozCEMreiXmpWIxXV1w-1; Fri, 31 Oct 2025 07:53:00 -0400
-X-MC-Unique: mXtpozCEMreiXmpWIxXV1w-1
-X-Mimecast-MFC-AGG-ID: mXtpozCEMreiXmpWIxXV1w_1761911579
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-427015f62a7so1711865f8f.0
-        for <loongarch@lists.linux.dev>; Fri, 31 Oct 2025 04:53:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761911579; x=1762516379;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gTUIS93GUZsQyg4tbyddEkDWsI2/kBv/P3HZONFfij8=;
-        b=QMWpQANeKPPyEufPwMlWRwH9p62S+YBSd5ziOTnVpA/K6F1Es+Gnhpvn0KKEIjYMSi
-         9fuYtT1KrEuvqFbHM2qzlvxfc0By9Rb5ZoJuDnwMkV0zMNOh62b9q4mHHQug8SBEIWlu
-         D4xEJtkOR3Fu97JBP+nddED17wCHaCtOQ0OawyRzqMwofMjqPylTMRJg3TwwmOw3MwlW
-         HyP/c3aTOgmSrcSoKapOukHrSZQIwIACe+uI4Bl8yofWXL6eYjR2nc3y0kEINDSTKoYj
-         eHSnQ9hnBwu7QO2DZjTqDlploj84Ot1fhIrjmggjElW4eKrUf7V5N/lI59RRJkf+9PGN
-         yPvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXAzwjmqjbcqSsi9R/WKzicIE+F9X1WtL53aGOtsfPplrc1MswZZgeomH58uUsVK8ze0Ea6RDomF9k=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzWjtvYcPPes7O0jU4TjuTbhRV2nJhryeKwO+/6f2Cy2XjY5z29
-	05OQg5/noEauZyWCvLrrNYKDsdTHA6aJ2u3qZEE/jY5aPyPXdU5aUKFBro9jfOvCS/U0Jnpej0q
-	I7RY6iu10xAyv9RTOupjouyoZOf0Ylh4/ZB7uHcugCqA5MOlgZIBlyraUKEIJ/g==
-X-Gm-Gg: ASbGncsGzxrPsYxTBgq54ftaiAzV7zbDYo7ccFQpTYhJjMNYWJf8YXrCWaGOryI2WTj
-	e/cmawZrbznNxr96mLHs5Cvdq71jeQKLuk7HTudeu+ZBguHzG6leSJqGfGUzXlBXhDM7FvBNdE9
-	0PgXSMtW7WxmiQqdw2L+zaY3UmIX/AXMoqcVyh37lFRlqt34I2GPazWj81CAjZLFeUp9+wfIiKd
-	B4PRsSuiYrcL2hibnGMXCxK2yZZsXpkz/O5GiSdP73Slf0Cl0JaUrsQk7n/OKYXI1Bv2Ht7NBll
-	cgwjUe/q9LA+F75aKWBsnULlqq0EYovXCwXVfN0RugFqYoN15R2oNbMP2q2R5O0kOmjYsS7eR4O
-	NJtNMkvnaUBuwB273u1kEZI83cyHtHcJQYuSTzT/kLLKq6j09Z1wM3Ih5yocO
-X-Received: by 2002:a5d:5888:0:b0:3e9:3b91:e846 with SMTP id ffacd0b85a97d-429bd676a88mr2912813f8f.10.1761911579314;
-        Fri, 31 Oct 2025 04:52:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH1wuetlLZ34asXy13r1bfmujThSOSUu3cZmMHhgfxqrER8G1YsbbHDsXHGv7ziQ36i83pqkg==
-X-Received: by 2002:a5d:5888:0:b0:3e9:3b91:e846 with SMTP id ffacd0b85a97d-429bd676a88mr2912761f8f.10.1761911578857;
-        Fri, 31 Oct 2025 04:52:58 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429c1142e7dsm3186896f8f.17.2025.10.31.04.52.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Oct 2025 04:52:58 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
- x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Josh
- Poimboeuf <jpoimboe@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy
- Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Paolo Bonzini
- <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
- "David S.
- Miller" <davem@davemloft.net>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, Josh
- Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, Andrew
- Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>,
- Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>, Jann Horn
- <jannh@google.com>, Dan Carpenter <dan.carpenter@linaro.org>, Oleg
- Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, Clark
- Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Marcelo Tosatti <mtosatti@redhat.com>, Daniel Wagner <dwagner@suse.de>
-Subject: Re: [PATCH v6 06/29] static_call: Add read-only-after-init static
- calls
-In-Reply-To: <20251030112251.5afcf9ed@mordecai>
-References: <20251010153839.151763-1-vschneid@redhat.com>
- <20251010153839.151763-7-vschneid@redhat.com>
- <20251030112251.5afcf9ed@mordecai>
-Date: Fri, 31 Oct 2025 12:52:56 +0100
-Message-ID: <xhsmhqzujp9t3.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QhpH9OWU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A52C4CEE7;
+	Fri, 31 Oct 2025 16:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1761928254;
+	bh=DPYN5cD7LqmkqnhJDPlutbIISQPyNyW8OlZfHe2zW8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QhpH9OWUOLDiL083ozNGkbZW0Itze6RFEmP8zTNj5wWjyijpvuUJPis39K3dXBHWv
+	 vF7m4TpK7NUPvFEQ5B+yZY/3+4W011//mBV/3uo5LPNjDQemZlQn4x7VJufehLuv8T
+	 fHh0M5fVIXLqIUPLFT13LneZLQmeF7eCHMKLsFBw=
+Date: Fri, 31 Oct 2025 17:30:50 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Haowei Zheng <zhenghaowei@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	ilpo.jarvinen@linux.intel.com, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v6 0/3] uart: Introduce uart driver for the Loongson
+ family
+Message-ID: <2025103139-overlabor-subsector-7f8e@gregkh>
+References: <cover.1760166651.git.zhoubinbin@loongson.cn>
+ <CAMpQs4L4A5pPG0pAKiua_2q3rBQB3WETBjc8iG8mbz5U1tWR7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: --cL0Ln26Rr9tqEmdx1aS5ImoYkfEfd3mfcN9ZglK7o_1761911579
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4L4A5pPG0pAKiua_2q3rBQB3WETBjc8iG8mbz5U1tWR7g@mail.gmail.com>
 
-On 30/10/25 11:25, Petr Tesarik wrote:
-> On Fri, 10 Oct 2025 17:38:16 +0200
-> Valentin Schneider <vschneid@redhat.com> wrote:
->
->> From: Josh Poimboeuf <jpoimboe@kernel.org>
->>
->> Deferring a code patching IPI is unsafe if the patched code is in a
->> noinstr region.  In that case the text poke code must trigger an
->> immediate IPI to all CPUs, which can rudely interrupt an isolated NO_HZ
->> CPU running in userspace.
->>
->> If a noinstr static call only needs to be patched during boot, its key
->> can be made ro-after-init to ensure it will never be patched at runtime.
->>
->> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
->> ---
->>  include/linux/static_call.h | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->>
->> diff --git a/include/linux/static_call.h b/include/linux/static_call.h
->> index 78a77a4ae0ea8..ea6ca57e2a829 100644
->> --- a/include/linux/static_call.h
->> +++ b/include/linux/static_call.h
->> @@ -192,6 +192,14 @@ extern long __static_call_return0(void);
->>      };								\
->>      ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
->>
->> +#define DEFINE_STATIC_CALL_RO(name, _func)				\
->> +	DECLARE_STATIC_CALL(name, _func);				\
->> +	struct static_call_key __ro_after_init STATIC_CALL_KEY(name) = {\
->> +		.func = _func,						\
->> +		.type = 1,						\
->> +	};								\
->> +	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
->> +
->>  #define DEFINE_STATIC_CALL_NULL(name, _func)				\
->>      DECLARE_STATIC_CALL(name, _func);				\
->>      struct static_call_key STATIC_CALL_KEY(name) = {		\
->> @@ -200,6 +208,14 @@ extern long __static_call_return0(void);
->>      };								\
->>      ARCH_DEFINE_STATIC_CALL_NULL_TRAMP(name)
->>
->> +#define DEFINE_STATIC_CALL_NULL_RO(name, _func)				\
->> +	DECLARE_STATIC_CALL(name, _func);				\
->> +	struct static_call_key __ro_after_init STATIC_CALL_KEY(name) = {\
->> +		.func = NULL,						\
->> +		.type = 1,						\
->> +	};								\
->> +	ARCH_DEFINE_STATIC_CALL_NULL_TRAMP(name)
->> +
->
-> I think it would be a good idea to add a comment describing when these
-> macros are supposed to be used, similar to the explanation you wrote for
-> the _NOINSTR variants. Just to provide a clue for people adding a new
-> static key in the future, because the commit message may become a bit
-> hard to find if there are a few cleanup patches on top.
->
+On Fri, Oct 31, 2025 at 10:36:00AM +0800, Binbin Zhou wrote:
+> On Sat, Oct 11, 2025 at 3:17 PM Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+> >
+> > Hi all:
+> >
+> > For various reasons, I will be taking over from Haowei and continuing to
+> > push forward with this patch set. Thanks to Haowei for his efforts so
+> > far.
+> >
+> > This patchset introduce a generic UART framework driver for Loongson family.
+> > It can be found on Loongson3 series cpus, Loongson-2K series cpus and Loongson
+> > LS7A bridge chips.
+> >
+> > Thanks.
+> >
+> > ------
+> > V6:
+> > Patch-1:
+> >  - Add Conor's Acked-by tag, thanks.
+> >
+> > Patch-2:
+> >  - Add more missing #include;
+> >  - Convert mcr_invert/msr_invert from int to u8;
+> >  - Split serial_fixup() on a preceding line;
+> >  - Add macro definition to avoid magic numbers, such as
+> >    LOONGSON_QUOT_FRAC_MASK;
+> >  - Rework the relevant data structures, where `loongson_uart_ddata`
+> >    represents the Soc's driver_data;
+> >  - Drop `PORT_LOONGSON` and use PORT_16550A instead.
+> >  - devm_platform_get_and_ioremap_resource() instead of platform_get_resource();
+> >  - Use uart_read_port_properties() and parse the clock attributes;
+> >  - Use switch-case instead of if-else in serial_fixup().
+> >
+> > Link to V5:
+> > https://lore.kernel.org/all/cover.1758676290.git.zhoubinbin@loongson.cn/
+> 
+> Hi all:
+> 
+> Gentle ping.
+> Any comments about this patchset ?
 
-I was about to write such a comment but I had another take; The _NOINSTR
-static key helpers are special and only relevant to IPI deferral; whereas
-the _RO helpers actually change the backing storage for the keys and as a
-bonus are used by the IPI deferral instrumentation.
-
-IMO it's the same here for the static calls, it makes sense to mark the
-relevant ones as _RO regardless of IPI deferral.
-
-I could however add a comment to ANNOTATE_NOINSTR_ALLOWED() itself,
-something like:
-
-```
-/*
- * This is used to tell objtool that a given static key is safe to be used
- * within .noinstr code, and it doesn't need to generate a warning about it.
- *
- * For more information, see tools/objtool/Documentation/objtool.txt,
- * "non-RO static key usage in noinstr code"
- */
-#define ANNOTATE_NOINSTR_ALLOWED(key) __ANNOTATE_NOINSTR_ALLOWED(key)
-```
-
-> Just my two cents,
-> Petr T
-
+Sorry, will try to get to it next week...
