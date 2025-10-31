@@ -1,124 +1,119 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28E251F03D7
-	for <loongarch@lists.linux.dev>; Fri, 31 Oct 2025 03:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F93F329C67;
+	Fri, 31 Oct 2025 07:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761880616; cv=none; b=Wekc8bGbG3aKJEqM41EnW89WXob3hA/sIq7PFYkPo0Z8y8nAY8rHGhRnwCb7GsD5h2um6Uac6WONmC2YyNQPYby359dbW8mY1ntq7/sv3sOQBjAR87YEgOXb5pjawoetnJFpHpwT4mT8V+7pPTeQDOxQJj0JD7wLuvjLrGH6LFM=
+	t=1761897514; cv=none; b=hSfJiOhicDr+YqRYFv6MXeO1C7dhvrO3We73qq1tTXkSM0UWdtq8z+IMQc8BtooIPsThluCBfKZSVzyMXCqBmH7Xe1TnOrSwxzfNMmbIkHcdMFdZ2SeZm952Ru4bIZY2VuVQLNR+iGNTQCquYJZtPnYyuqxkatuhUawQ5gEYIHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761880616; c=relaxed/simple;
-	bh=OupdCito8KXOWmdl+haqV9nwx66a8x9a5epBhc4k0x8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U3wVu2Gv8jqSjamj/Y9ZqegWR9keeZZVGE5wwFEZwGrwiB9TJzdqgWTkyniLrlm7G9wmOFbQA1+iarbyFfkRV9gJf1Z47e09d7bbmzhI7Amq6pc9/SOvmTLFprJOxxMpOKlJRXpeNxzi8oPZrssbXTRyWHM1hfoYc/t6AccOLmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxxtAlKgRpVu0cAA--.61801S3;
-	Fri, 31 Oct 2025 11:16:53 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBxjcEkKgRpxMkeAQ--.48052S2;
-	Fri, 31 Oct 2025 11:16:52 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH 6/6] KVM: LoongArch: selftests: Add SW emulated timer test
-Date: Fri, 31 Oct 2025 11:16:52 +0800
-Message-Id: <20251031031652.4020879-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20251031031227.4020738-1-maobibo@loongson.cn>
-References: <20251031031227.4020738-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1761897514; c=relaxed/simple;
+	bh=rzM0b8qPEYkMq5nIoO4tMjMsIEGrMoYlxde7BXZgKfY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HIogGFfNUKplNjSoFbbOA0M7H97Uv+ex7ea+WK3xNdb8q7hp4Iuwp6CdLoK2Zsq75FU0a6DETz7PnnFBzCyeal7+LzI8jlGhCh12m7P/asHDtMU3UARIqfgTOuleiaV4MQ1++hBGgI4hUOKtceNC/U4FVPRMtMhouOJ8Yb8GUaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=goZspn5d; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="goZspn5d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761897513; x=1793433513;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rzM0b8qPEYkMq5nIoO4tMjMsIEGrMoYlxde7BXZgKfY=;
+  b=goZspn5dnwSdx0wnGIBedLEsVmCijQR8zOYDAJ9DYziwKsyIJyYBEysK
+   9rmBTMXeIkJW8t94ZLfZGI/bH6NQh1aXyOtVQQF5K268be1bEl972jb1W
+   DTTNvLO7voXC/gPxSFH4D9OEtIQb7Yby5JgOWBuJlsoKb0EIDZP3salof
+   /EOu764ODGwOAYplkyRe5aUZuD4mrJZxspR9m5M70YBsCtdSyLayEWecp
+   S13125gqwWd10Np1sqThsaEDwQPA8514P/Wfx4s8Bx9WoLObGJ67+jZ07
+   jBp1f1sPtcuTqRWTYw6RCQrXTdE4Uk/m03NCvMApNYRK38lNbqpxKkeZa
+   w==;
+X-CSE-ConnectionGUID: BpmLtxwJSjyg38zjuMdL1Q==
+X-CSE-MsgGUID: TiAoZZ8IS++rr3hxauHiYQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="89517654"
+X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
+   d="scan'208";a="89517654"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 00:58:32 -0700
+X-CSE-ConnectionGUID: aelFfb7/T7+TXvXFUL/t7w==
+X-CSE-MsgGUID: o2Ju4geKSZSKLBD3vX8YRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
+   d="scan'208";a="186108753"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.240.28]) ([10.124.240.28])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 00:58:25 -0700
+Message-ID: <7e43061a-b901-4e8f-8ee9-57d67aaf4f38@linux.intel.com>
+Date: Fri, 31 Oct 2025 15:58:22 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxjcEkKgRpxMkeAQ--.48052S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 04/28] KVM: x86/mmu: Add dedicated API to map
+ guest_memfd pfn into TDP MMU
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, "Kirill A. Shutemov" <kas@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, x86@kernel.org, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+ Kai Huang <kai.huang@intel.com>, Michael Roth <michael.roth@amd.com>,
+ Yan Zhao <yan.y.zhao@intel.com>, Vishal Annapurve <vannapurve@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ackerley Tng <ackerleytng@google.com>
+References: <20251030200951.3402865-1-seanjc@google.com>
+ <20251030200951.3402865-5-seanjc@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20251030200951.3402865-5-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This test case setup one-shot timer and execute idle instruction
-immediately to indicate giving up CPU, hypervisor will emulate
-SW hrtimer and wakeup vCPU when SW hrtimer is fired.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- .../selftests/kvm/loongarch/arch_timer.c      | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/loongarch/arch_timer.c b/tools/testing/selftests/kvm/loongarch/arch_timer.c
-index 1be42ef33bf3..a30dd0414a34 100644
---- a/tools/testing/selftests/kvm/loongarch/arch_timer.c
-+++ b/tools/testing/selftests/kvm/loongarch/arch_timer.c
-@@ -114,6 +114,45 @@ static void guest_time_count_test(uint32_t cpu)
- 	}
- }
- 
-+static void do_idle(void)
-+{
-+	unsigned int intid;
-+	unsigned long estat;
-+
-+	__asm__ __volatile__("idle 0" : : : "memory");
-+
-+	estat = csr_read(LOONGARCH_CSR_ESTAT);
-+	intid = !!(estat & BIT(INT_TI));
-+
-+	/* Make sure pending timer IRQ arrived */
-+	GUEST_ASSERT_EQ(intid, 1);
-+	csr_write(CSR_TINTCLR_TI, LOONGARCH_CSR_TINTCLR);
-+}
-+
-+static void guest_test_emulate_timer(uint32_t cpu)
-+{
-+	uint32_t config_iter;
-+	uint64_t xcnt_diff_us, us;
-+	struct test_vcpu_shared_data *shared_data = &vcpu_shared_data[cpu];
-+
-+	local_irq_disable();
-+	shared_data->nr_iter = 0;
-+	us = msecs_to_usecs(test_args.timer_period_ms);
-+	for (config_iter = 0; config_iter < test_args.nr_iter; config_iter++) {
-+		shared_data->xcnt = timer_get_cycles();
-+
-+		/* Setup the next interrupt */
-+		timer_set_next_cmp_ms(test_args.timer_period_ms, false);
-+		do_idle();
-+
-+		xcnt_diff_us = cycles_to_usec(timer_get_cycles() - shared_data->xcnt);
-+		__GUEST_ASSERT(xcnt_diff_us >= us,
-+				"xcnt_diff_us = 0x%lx, us = 0x%lx.\n",
-+				xcnt_diff_us, us);
-+	}
-+	local_irq_enable();
-+}
-+
- static void guest_code(void)
- {
- 	uint32_t cpu = guest_get_vcpuid();
-@@ -123,6 +162,7 @@ static void guest_code(void)
- 	local_irq_enable();
- 	guest_test_oneshot_timer(cpu);
- 	guest_test_period_timer(cpu);
-+	guest_test_emulate_timer(cpu);
- 
- 	GUEST_DONE();
- }
--- 
-2.39.3
+On 10/31/2025 4:09 AM, Sean Christopherson wrote:
+> Add and use a new API for mapping a private pfn from guest_memfd into the
+> TDP MMU from TDX's post-populate hook instead of partially open-coding the
+> functionality into the TDX code.  Sharing code with the pre-fault path
+> sounded good on paper, but it's fatally flawed as simulating a fault loses
+> the pfn, and calling back into gmem to re-retrieve the pfn creates locking
+> problems, e.g. kvm_gmem_populate() already holds the gmem invalidation
+> lock.
+>
+> Providing a dedicated API will also removing several MMU exports that
+> ideally would not be exposed outside of the MMU, let alone to vendor code.
+> On that topic, opportunistically drop the kvm_mmu_load() export.  Leave
+> kvm_tdp_mmu_gpa_is_mapped() alone for now; the entire commit that added
+> kvm_tdp_mmu_gpa_is_mapped() will be removed in the near future.
+>
+> Gate the API on CONFIG_KVM_GUEST_MEMFD=y as private memory _must_ be backed
+> by guest_memfd.  Add a lockdep-only assert to that the incoming pfn is
+> indeed backed by guest_memfd, and that the gmem instance's invalidate lock
+> is held (which, combined with slots_lock being held, obviates the need to
+> check for a stale "fault").
+>
+> Cc: Michael Roth <michael.roth@amd.com>
+> Cc: Yan Zhao <yan.y.zhao@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Vishal Annapurve <vannapurve@google.com>
+> Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> Reviewed-by: Kai Huang <kai.huang@intel.com>
+> Link: https://lore.kernel.org/all/20250709232103.zwmufocd3l7sqk7y@amd.com
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 
