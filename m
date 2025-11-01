@@ -1,112 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4412275861
-	for <loongarch@lists.linux.dev>; Sat,  1 Nov 2025 16:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6077A2727FE;
+	Sat,  1 Nov 2025 17:57:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762016150; cv=none; b=N9vVghLUdhA56C89EGtnaAkPacCRmVyW/s7GzsWyOT1PaDGeuIC+55yc5UNynf8BkFb9WAFcRs/4jd02wGsAFJbY8DrS1QG7j+U42i6hOeXviQBMpYtg/EllB7txyDP9hKSIA7/42oHo+AI/medBitJEF9uReTAufJzx7B0Kq6A=
+	t=1762019871; cv=none; b=Oj3gInVsDBvnJ4dcUOtCKfKCHA06pCFddS5Jmp7r6ZXs01YXI106DtxBFD2T8kKVLUGfiziRLQ5SZl3aWGR8S9KxDw4wpORtkw9mKjALukC2NepZmzB6pFqm2/EMZhVUQY/Gkavv631ME+jghJs458UFACm+q1DAzEj0IJuKjq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762016150; c=relaxed/simple;
-	bh=sP80vbxc0GNP/r5uXwFDomQ23UoJ4yroWxjXP3XmNMU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u2sEXKL3p5z+cTAHe9GxC2YQDtxDBGuCdu+3P4NJM9C4IIPLwTYr6iKYIuie0Ce7SsG0GJnkHEka+c/jO20+7Q329jA/BAF2ZxcZcgD63MuJltt2qcVQg4EC4QxRhYT49UPSDsCp0HbR+pJOSutzrsspAY+9irwSs9QK/xF5cOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RF0EYwGk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762019871; c=relaxed/simple;
+	bh=I+kQ9tDRrEbESkDzWsCmJUi6GBWfk4oyAl58SJAjkxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I1FiaxlgpT8ZcgNpf6oYJLO4e+jrVKxzezAPLzuOFTjn2CldnoiuAJYqjBGoTTIlOkgHuSNMyI1dPwiq5Sb1N4rM4rniSekbKhYpp9lFi7Ji7OG3Uvb1vPP6xDoCWQXJvtT3uVmRvoq+9/P7KuDPfgCy/qdi5YJ+9qwejFad0IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Skve4AR4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RF0EYwGk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E0E2C19423
-	for <loongarch@lists.linux.dev>; Sat,  1 Nov 2025 16:55:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Skve4AR4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DDA5C4CEF1;
+	Sat,  1 Nov 2025 17:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762016150;
-	bh=sP80vbxc0GNP/r5uXwFDomQ23UoJ4yroWxjXP3XmNMU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RF0EYwGkYWAviePjW7xN/OJRvwNhbqV1hMMNIs20gYmgWjrUhX3VTiMTlz9ZOCZ5B
-	 NXQkgiqk8kYiwPDsvTA0VFMALLKyf5rQdgj/CBG1sTE15ccibfrhS1g63ZlKX1lHKM
-	 7UL3/hfHnLT5czan5cp/tcrvWDt4uWQ6UuGsdc+QEdMaz7s1qTGKGYYXQJYBe6vVca
-	 z1o0oo3gMr4PFJwzcE+qRl/dEms8SbUHTB8ZwVA2Uf/IDxdQO9JDrNb7/WRWaVtzGH
-	 71Lh5gelYwPa5qTi/Hg3BmeOn0k8gVwdT2WJ5JcjHGb8oMfT8U2c1Ut/j9b0mZ+sFJ
-	 GEsrrsx0XoT7g==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-378ddb31efaso36250141fa.3
-        for <loongarch@lists.linux.dev>; Sat, 01 Nov 2025 09:55:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVEhApzxvF4/CGR28n0eFIVs8+XW+8i8ieTd3sW6anY7+Prp1Ue0sdaaAEw7gePhM9iEdk77z8vQco=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzM7POdjVOJbGq1UEDHsgiNwqSVrEf0iFp0wo7herQBihRHRS4+
-	Du6tSCBX5VqIUn0jferMIkGHkZQtsmHKJOFtFko92Th8jD+LgVcUaxeF2Yevr3NRn7uenIWWUnF
-	yr2dazpZTc78T2K9Q7CM8Lcdt7Belx+8=
-X-Google-Smtp-Source: AGHT+IFzm6byOVEcoCYQ/cLxtsweQADoRZYzXMb1uWfsMHcHS2qxBFBPxKTICmebgyez5+m6RGoVxWrnW9Pxli+8r4A=
-X-Received: by 2002:a2e:b8cb:0:b0:37a:2c7d:2d69 with SMTP id
- 38308e7fff4ca-37a2c7d3241mr5473091fa.40.1762016148544; Sat, 01 Nov 2025
- 09:55:48 -0700 (PDT)
+	s=k20201202; t=1762019870;
+	bh=I+kQ9tDRrEbESkDzWsCmJUi6GBWfk4oyAl58SJAjkxc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Skve4AR4jkw+UfiyCWIydCfYHCOXy/vSWfd+651n1VLTlw/tYEIe1BViYrj+BZ3wg
+	 VZy09aPhIC1E0wXgaV1yAMPwg+mHjIdKx0l8FARVFpCOKz0n6oecBP815ueF/OE33l
+	 iYGmfdrezGx3O1axm/D50OIEOFsCReSSPoGs22dWFfvOVkDS5C9t8oSktiPuYbWDlV
+	 PsT84aLNZa1jvCLnOAy1ELwlPR1zsCIikuBg1L67DHlkj9/Iroi215Kys6QTNUeloQ
+	 bmKrxw304QGsJe1NpRRXBcESDacDA1itM/Hf9b0l1lgBgXVi1AL1JjXzhuaU21jmKq
+	 bhM1M9VaofAFg==
+Date: Sat, 1 Nov 2025 18:25:35 +0100
+From: Nicolas Schier <nsc@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH] rust: kbuild: support `-Cjump-tables=n` for Rust 1.93.0
+Message-ID: <aQZCj5XZvXAt_lgl@levanger>
+References: <20251101094011.1024534-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251101-kbuild-ms-extensions-dedicated-cflags-v1-1-38004aba524b@kernel.org>
-In-Reply-To: <20251101-kbuild-ms-extensions-dedicated-cflags-v1-1-38004aba524b@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 1 Nov 2025 17:55:37 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGy8s7Cc=aycKymv2d5wEZFL5J5_HxWyMb-QYDXkUrU9Q@mail.gmail.com>
-X-Gm-Features: AWmQ_bnURnp_FaiKs8-FENuEErFxDHIc7i6dKr7lAYFTzEG_ElUiaSBCxPBJiyA
-Message-ID: <CAMj1kXGy8s7Cc=aycKymv2d5wEZFL5J5_HxWyMb-QYDXkUrU9Q@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Add '-fms-extensions' to areas with dedicated CFLAGS
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-efi@vger.kernel.org, llvm@lists.linux.dev, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251101094011.1024534-1-ojeda@kernel.org>
 
-On Sat, 1 Nov 2025 at 17:36, Nathan Chancellor <nathan@kernel.org> wrote:
->
-> This is a follow up to commit c4781dc3d1cf ("Kbuild: enable
-> -fms-extensions") but in a separate change due to being substantially
-> different from the initial submission.
->
-> There are many places within the kernel that use their own CFLAGS
-> instead of the main KBUILD_CFLAGS, meaning code written with the main
-> kernel's use of '-fms-extensions' in mind that may be tangentially
-> included in these areas will result in "error: declaration does not
-> declare anything" messages from the compiler.
->
-> Add '-fms-extensions' to all these areas to ensure consistency, along
-> with -Wno-microsoft-anon-tag to silence clang's warning about use of the
-> extension that the kernel cares about using. parisc does not build with
-> clang so it does not need this warning flag. LoongArch does not need it
-> either because -W flags from KBUILD_FLAGS are pulled into cflags-vdso.
->
-> Reported-by: Christian Brauner <brauner@kernel.org>
-> Closes: https://lore.kernel.org/20251030-meerjungfrau-getrocknet-7b46eacc215d@brauner/
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+On Sat, Nov 01, 2025 at 10:40:11AM +0100, Miguel Ojeda wrote:
+> Rust 1.93.0 (expected 2026-01-22) is stabilizing `-Zno-jump-tables`
+> [1][2] as `-Cjump-tables=n` [3].
+> 
+> Without this change, one would eventually see:
+> 
+>       RUSTC L rust/core.o
+>     error: unknown unstable option: `no-jump-tables`
+> 
+> Thus support the upcoming version.
+> 
+> Link: https://github.com/rust-lang/rust/issues/116592 [1]
+> Link: https://github.com/rust-lang/rust/pull/105812 [2]
+> Link: https://github.com/rust-lang/rust/pull/145974 [3]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 > ---
-> I am taking the original '-fms-extensions' change [1] via a shared
-> branch in kbuild [2] so I would appreciate acks. I plan to finalize that
-> branch so that other maintainers can safely pull it on Thursday.
->
-> [1]: https://git.kernel.org/kbuild/c/c4781dc3d1cf0e017e1f290607ddc56cfe187afc
-> [2]: https://git.kernel.org/kbuild/l/kbuild-ms-extensions
-> ---
->  arch/arm64/kernel/vdso32/Makefile     | 3 ++-
->  arch/loongarch/vdso/Makefile          | 2 +-
->  arch/parisc/boot/compressed/Makefile  | 2 +-
->  arch/powerpc/boot/Makefile            | 3 ++-
->  arch/s390/Makefile                    | 3 ++-
->  arch/s390/purgatory/Makefile          | 3 ++-
->  arch/x86/Makefile                     | 4 +++-
->  arch/x86/boot/compressed/Makefile     | 7 +++++--
->  drivers/firmware/efi/libstub/Makefile | 4 ++--
->  9 files changed, 20 insertions(+), 11 deletions(-)
->
+>  arch/loongarch/Makefile | 2 +-
+>  arch/x86/Makefile       | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Nicolas Schier <nsc@kernel.org>
+
+-- 
+Nicolas
