@@ -1,103 +1,299 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A1923313E
-	for <loongarch@lists.linux.dev>; Sat,  1 Nov 2025 15:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0FF34D3A7;
+	Sat,  1 Nov 2025 16:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762012454; cv=none; b=c/Vv8c3Yrzwd5er2Y6qjF1E+lRTZoLB0qSIW6vuMKbLN7ElJknh0n+PEI5NOA/L28kVjZ1vT6e9Wp2CTrjN6/5hpqzEjbmGQtXJr3m4jy4Wwc//y+pkk/7ykkQlJglLgmjqLi9omC0uqQcEnbu9R0/kyEkRCg+8E9eg3mY2W9lQ=
+	t=1762014966; cv=none; b=EqyBqF0wi1vVbm2sUckW2k6zSXZ/mQseayYB6ixQoYZ+fv671HeGKbrISoi61oUVQreAGQp9S6RcyjJJ0pp2VYyAIYBJhJ0e14TuWnpnmLTdFfs2CFdby69xJE3IDCZO9p57W9W4uPO+tufiZ/PZFB6mbIBlLhlRfnpFQ9phY1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762012454; c=relaxed/simple;
-	bh=DZxrvCuj4VcRfVXQNKcqrzWO2/nyvtlkEBnmNGrmT9M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D1d4B1lKackRaQswtZ8deGOANpLn/uuduVzww+081yvfzkeO/PkWxwJXpYzogLwKchKBjBCeAQyvMG78p7ASVpbg7Ho5/1MMuNogNqec/HvMhUpK5rHdNfWriUnFLpidNiP/3zKFfm4zcmKetbA4hwraghL+D3bFMa2VxypwO0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YSkmc2c+; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762014966; c=relaxed/simple;
+	bh=mpbY/AMnkzNhmN4mkjkXlTWSkt2ZjxshAHZwo2hrI6c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gyxMZN2Ys7ZFBiGCxCfHM8oLxFWsQOZ0YXdInwOGZbcV8GW971slY7efqDa+RBCHexSz5J4Nqb+UsNt0ve46qShBCryJuNmnTJPYu+J6TlsJxphAZrSlV8zJl6KdDD/SeF/u7Db7ezMya9ndelrrr+n/r4ef3s7QJMnL+WXRES0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UPST1qGH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSkmc2c+"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-33e3018f113so563493a91.0
-        for <loongarch@lists.linux.dev>; Sat, 01 Nov 2025 08:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762012452; x=1762617252; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DZxrvCuj4VcRfVXQNKcqrzWO2/nyvtlkEBnmNGrmT9M=;
-        b=YSkmc2c+sEB1LAiChHeLpiYdCIHnGTAmpu9FKxTTx/yzy7HTENyIKHCV4yYGSBK8F8
-         et8gv3fu1jwkFeYk41dfTCGt7TzMB1pzMrWe90XrBiRu1QLYCysaFy6A4ZI4h2hgT+GX
-         WEq7VmDMMSHnuoldi8XR7l5FEgIfWmz5OvT8uvrjRtB0ShAQYNTF9IJOWTHKNcA6GpfD
-         Vcv5r6MJCDOr+ruKXUU21s4Y0AZOovUGWtbH6JmAIE4NFq/A1SjHwidgbD+0201xItg2
-         Aaz8vxt38JgYNZUbhMLTbBv6dD9I7Km3ZLEqm7OzRrABeTOxDcBX4ADm/yzZU4BihWyo
-         iSMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762012452; x=1762617252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DZxrvCuj4VcRfVXQNKcqrzWO2/nyvtlkEBnmNGrmT9M=;
-        b=udpM/qmXDSAuVWOwMnQJQT45Jv//GyMHzzINJfD5FqmJ0Pu0iWl/uiNrZcyHgrwkLM
-         WfyJzjap+chEto2uRvhVih3mKUTbJ9FMyQzU/LSVR/317CPIx7F4K+mMFQGSIXzjpZdn
-         MnGD97/O8T6KhdodiB1oSfpblfteZ/ggkaH5T/eCX81kEptapqVL27IYDSdtN61Z7DHw
-         /9JdHHhD0Pv3wgR8Hxc6kumIMbWo5HSVyDlSeedTNKd4PIQ+fFRPsOdYwYRKvTymr0U4
-         0otnIbYhabSdjksG7QuY0esAjvnYaVsYTdFPhqYvJKt1VF+223GPF8XZz9Bd1t8UPunv
-         k26w==
-X-Forwarded-Encrypted: i=1; AJvYcCUVf281HYuJi4DJBlYOAb5TBhvXUhQbwir2N8JLGBpNikCNy1Lul5pm/SNC9ehFpe7Gncf8qm6wu+U=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxExI6+La7P44DVfVXozPmZ3eerUO8aAB6upUiUO2jrif9fZc8l
-	StYJVBFYXwkc943pMUPpBuQHvW8JbY86k9ITg10KiquB2abGNXQm1F7nMjnsyW3db5dy9TRxu2F
-	Nxicahy8Wtc06oTVx1dxYg8oaDbh5nTo=
-X-Gm-Gg: ASbGnct9Q3UOWsuR1S1UJQfoy/twXiNO1hxvbGBN6rS+ShG3bHOCQFJNlIrwh6+vpPH
-	Q6j38etNPXqY31TIGgfHjnPcZ6S5VTRCvXJ+H+h0UG18RLq/HahOcstLHpt5eocAYhZg3guJsOZ
-	xHfovUXons9Y8Vf9r+zSFk3dRVCWhLLi9FgFzXtBUrSwyq0Hx7Cwtgf1NPNcvjHOeGgu2HuwAwx
-	3ne95DDksPbxRfyyhT9y0OKwyHIWAl9pwY/OOZ5Enk9AKaShhLkZbO44N8YuUJP/m7BvxSnR7Kv
-	vOY20MZN4i/c1sq+oKQt/cHdKKYQwG5STslncdncjUDoCvx6/zerCg/1lvp7bEwmw6UVH0HTKhG
-	VUo0=
-X-Google-Smtp-Source: AGHT+IH98SKG2dNVCAgDMWAsxf7IghHixGwIwUQXBJWnv1yD4/76UJbZrqEwBLzCN0HeDuDp9PdZmiEDyhXUpHiXB1s=
-X-Received: by 2002:a17:902:d505:b0:295:3f35:a31b with SMTP id
- d9443c01a7336-2953f35a4edmr28620535ad.0.1762012452072; Sat, 01 Nov 2025
- 08:54:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UPST1qGH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B26C4CEF1;
+	Sat,  1 Nov 2025 16:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762014965;
+	bh=mpbY/AMnkzNhmN4mkjkXlTWSkt2ZjxshAHZwo2hrI6c=;
+	h=From:Date:Subject:To:Cc:From;
+	b=UPST1qGHgAE675YAXk4URKXgHUGpWsPdqtGU7DUmfp2PIHngmcg+b3L1CMALapD9L
+	 3LKiWNHfT92b8SRq4jIO7DEACwCqQLQDdVVpD0u+Uowxm1MCM99NMteoAg9wv9EKCT
+	 B4nBU/jfaUW1KM62rRdXGqrqoE/WMLwHCu4biEfeGoDqiWJsQehn2tJbn8RXhNDQrs
+	 cAjDWk1eEEr2u015r27Q2xBsEUhuTHcE2lsF1xvJ0a0R45D+gmWP+U0T/edXtjEv7f
+	 /CSkgOVYYa3VZSGKtxsHOevA6An6Vofsw1PR6zrnm3g54PEKj2dEP7sZXHyKl4eBdi
+	 vDuVqRezhdNgg==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Sat, 01 Nov 2025 12:35:47 -0400
+Subject: [PATCH] kbuild: Add '-fms-extensions' to areas with dedicated
+ CFLAGS
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251101094011.1024534-1-ojeda@kernel.org> <CAH5fLgjC20QmK0s_6ht1edL8wSR3d-yrJ_viuwdOxTCQRpMmgg@mail.gmail.com>
-In-Reply-To: <CAH5fLgjC20QmK0s_6ht1edL8wSR3d-yrJ_viuwdOxTCQRpMmgg@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 1 Nov 2025 16:53:59 +0100
-X-Gm-Features: AWmQ_bmfFv9e45aUeUVbkE-t_FDmtneqkzR5nipR7SAGPuD1TLzugXVWW0zvQak
-Message-ID: <CANiq72nBEkTq7vos1Lv5Z1bgdZHt+UQWbauC0nr8xwxhuVBJJg@mail.gmail.com>
-Subject: Re: [PATCH] rust: kbuild: support `-Cjump-tables=n` for Rust 1.93.0
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Huacai Chen <chenhuacai@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251101-kbuild-ms-extensions-dedicated-cflags-v1-1-38004aba524b@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAOI2BmkC/x2N0QrCMAwAf2Xk2UBTJwx/RXxom3QGZ5Vmk8HYv
+ 6/6eHDcbWBSVQyu3QZVvmr6Lg3o1EF6hDIKKjcG7/yFyBE+46IT48tQ1lnKzzdkYU1hFsaUpzA
+ auqGPxMPZ55ihtT5Vsq7/z+2+7wcnsB1WdwAAAA==
+X-Change-ID: 20251101-kbuild-ms-extensions-dedicated-cflags-084b1d832fbf
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ Ard Biesheuvel <ardb@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, linux-parisc@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+ linux-efi@vger.kernel.org, llvm@lists.linux.dev, 
+ Christian Brauner <brauner@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10437; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=mpbY/AMnkzNhmN4mkjkXlTWSkt2ZjxshAHZwo2hrI6c=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDJlsZu8uX1HMSPkx/ce7dYfO722J5Lk+l9nuXGfXP+P5v
+ 9m1Ti7d1VHKwiDGxSArpshS/Vj1uKHhnLOMN05NgpnDygQyhIGLUwAmMoOF4X9meEHav5YSo7W7
+ /OItre2Ofqk4zyGxexsfr6//z4zsZXsY/lkIKJTfvOWkK/4hw/R7V80h01NRJ2yu6d5ZZdjQ+zJ
+ mOysA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Sat, Nov 1, 2025 at 12:15=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> Does this need a CC stable too?
+This is a follow up to commit c4781dc3d1cf ("Kbuild: enable
+-fms-extensions") but in a separate change due to being substantially
+different from the initial submission.
 
-Definitely -- I just forgot my usual line:
+There are many places within the kernel that use their own CFLAGS
+instead of the main KBUILD_CFLAGS, meaning code written with the main
+kernel's use of '-fms-extensions' in mind that may be tangentially
+included in these areas will result in "error: declaration does not
+declare anything" messages from the compiler.
 
-Cc: stable@vger.kernel.org # Needed in 6.12.y and later (Rust is
-pinned in older LTSs).
+Add '-fms-extensions' to all these areas to ensure consistency, along
+with -Wno-microsoft-anon-tag to silence clang's warning about use of the
+extension that the kernel cares about using. parisc does not build with
+clang so it does not need this warning flag. LoongArch does not need it
+either because -W flags from KBUILD_FLAGS are pulled into cflags-vdso.
 
-Thanks!
+Reported-by: Christian Brauner <brauner@kernel.org>
+Closes: https://lore.kernel.org/20251030-meerjungfrau-getrocknet-7b46eacc215d@brauner/
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+I am taking the original '-fms-extensions' change [1] via a shared
+branch in kbuild [2] so I would appreciate acks. I plan to finalize that
+branch so that other maintainers can safely pull it on Thursday.
 
-I will apply this when upstream's PR gets merged and send it together
-with a couple other fixes.
+[1]: https://git.kernel.org/kbuild/c/c4781dc3d1cf0e017e1f290607ddc56cfe187afc
+[2]: https://git.kernel.org/kbuild/l/kbuild-ms-extensions
+---
+ arch/arm64/kernel/vdso32/Makefile     | 3 ++-
+ arch/loongarch/vdso/Makefile          | 2 +-
+ arch/parisc/boot/compressed/Makefile  | 2 +-
+ arch/powerpc/boot/Makefile            | 3 ++-
+ arch/s390/Makefile                    | 3 ++-
+ arch/s390/purgatory/Makefile          | 3 ++-
+ arch/x86/Makefile                     | 4 +++-
+ arch/x86/boot/compressed/Makefile     | 7 +++++--
+ drivers/firmware/efi/libstub/Makefile | 4 ++--
+ 9 files changed, 20 insertions(+), 11 deletions(-)
 
-Cheers,
-Miguel
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index ffa3536581f6..9d0efed91414 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -63,7 +63,7 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+                $(filter -Werror,$(KBUILD_CPPFLAGS)) \
+                -Werror-implicit-function-declaration \
+                -Wno-format-security \
+-               -std=gnu11
++               -std=gnu11 -fms-extensions
+ VDSO_CFLAGS  += -O2
+ # Some useful compiler-dependent flags from top-level Makefile
+ VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
+@@ -71,6 +71,7 @@ VDSO_CFLAGS += -fno-strict-overflow
+ VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
+ VDSO_CFLAGS += -Werror=date-time
+ VDSO_CFLAGS += $(call cc32-option,-Werror=incompatible-pointer-types)
++VDSO_CFLAGS += $(if $(CONFIG_CC_IS_CLANG),-Wno-microsoft-anon-tag)
+ 
+ # Compile as THUMB2 or ARM. Unwinding via frame-pointers in THUMB2 is
+ # unreliable.
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index d8316f993482..c0cc3ca5da9f 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -19,7 +19,7 @@ ccflags-vdso := \
+ cflags-vdso := $(ccflags-vdso) \
+ 	-isystem $(shell $(CC) -print-file-name=include) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+-	-std=gnu11 -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
++	-std=gnu11 -fms-extensions -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+ 	$(call cc-option, -fno-asynchronous-unwind-tables) \
+ 	$(call cc-option, -fno-stack-protector)
+diff --git a/arch/parisc/boot/compressed/Makefile b/arch/parisc/boot/compressed/Makefile
+index 17c42d718eb3..f8481e4e9d21 100644
+--- a/arch/parisc/boot/compressed/Makefile
++++ b/arch/parisc/boot/compressed/Makefile
+@@ -18,7 +18,7 @@ KBUILD_CFLAGS += -fno-PIE -mno-space-regs -mdisable-fpregs -Os
+ ifndef CONFIG_64BIT
+ KBUILD_CFLAGS += -mfast-indirect-calls
+ endif
+-KBUILD_CFLAGS += -std=gnu11
++KBUILD_CFLAGS += -std=gnu11 -fms-extensions
+ 
+ LDFLAGS_vmlinux := -X -e startup --as-needed -T
+ $(obj)/vmlinux: $(obj)/vmlinux.lds $(addprefix $(obj)/, $(OBJECTS)) $(LIBGCC) FORCE
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index c47b78c1d3e7..f1a4761ebd44 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -70,7 +70,7 @@ BOOTCPPFLAGS	:= -nostdinc $(LINUXINCLUDE)
+ BOOTCPPFLAGS	+= -isystem $(shell $(BOOTCC) -print-file-name=include)
+ 
+ BOOTCFLAGS	:= $(BOOTTARGETFLAGS) \
+-		   -std=gnu11 \
++		   -std=gnu11 -fms-extensions \
+ 		   -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+ 		   -fno-strict-aliasing -O2 \
+ 		   -msoft-float -mno-altivec -mno-vsx \
+@@ -86,6 +86,7 @@ BOOTARFLAGS	:= -crD
+ 
+ ifdef CONFIG_CC_IS_CLANG
+ BOOTCFLAGS += $(CLANG_FLAGS)
++BOOTCFLAGS += -Wno-microsoft-anon-tag
+ BOOTAFLAGS += $(CLANG_FLAGS)
+ endif
+ 
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index b4769241332b..8578361133a4 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -22,7 +22,7 @@ KBUILD_AFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -D__ASSEMBLY__
+ ifndef CONFIG_AS_IS_LLVM
+ KBUILD_AFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),$(aflags_dwarf))
+ endif
+-KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2 -mpacked-stack -std=gnu11
++KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2 -mpacked-stack -std=gnu11 -fms-extensions
+ KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
+ KBUILD_CFLAGS_DECOMPRESSOR += -D__DECOMPRESSOR
+ KBUILD_CFLAGS_DECOMPRESSOR += -Wno-pointer-sign
+@@ -35,6 +35,7 @@ KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning, address-of-packed-membe
+ KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),-g)
+ KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO_DWARF4), $(call cc-option, -gdwarf-4,))
+ KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_CC_NO_ARRAY_BOUNDS),-Wno-array-bounds)
++KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_CC_IS_CLANG),-Wno-microsoft-anon-tag)
+ 
+ UTS_MACHINE	:= s390x
+ STACK_SIZE	:= $(if $(CONFIG_KASAN),65536,$(if $(CONFIG_KMSAN),65536,16384))
+diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+index bd39b36e7bd6..0c196a5b194a 100644
+--- a/arch/s390/purgatory/Makefile
++++ b/arch/s390/purgatory/Makefile
+@@ -13,7 +13,7 @@ CFLAGS_sha256.o := -D__NO_FORTIFY
+ $(obj)/mem.o: $(srctree)/arch/s390/lib/mem.S FORCE
+ 	$(call if_changed_rule,as_o_S)
+ 
+-KBUILD_CFLAGS := -std=gnu11 -fno-strict-aliasing -Wall -Wstrict-prototypes
++KBUILD_CFLAGS := -std=gnu11 -fms-extensions -fno-strict-aliasing -Wall -Wstrict-prototypes
+ KBUILD_CFLAGS += -Wno-pointer-sign -Wno-sign-compare
+ KBUILD_CFLAGS += -fno-zero-initialized-in-bss -fno-builtin -ffreestanding
+ KBUILD_CFLAGS += -Os -m64 -msoft-float -fno-common
+@@ -21,6 +21,7 @@ KBUILD_CFLAGS += -fno-stack-protector
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ KBUILD_CFLAGS += -D__DISABLE_EXPORTS
+ KBUILD_CFLAGS += $(CLANG_FLAGS)
++KBUILD_CFLAGS += $(if $(CONFIG_CC_IS_CLANG),-Wno-microsoft-anon-tag)
+ KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
+ KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
+ KBUILD_AFLAGS += -D__DISABLE_EXPORTS
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 4db7e4bf69f5..e20e25b8b16c 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -48,7 +48,8 @@ endif
+ 
+ # How to compile the 16-bit code.  Note we always compile for -march=i386;
+ # that way we can complain to the user if the CPU is insufficient.
+-REALMODE_CFLAGS	:= -std=gnu11 -m16 -g -Os -DDISABLE_BRANCH_PROFILING -D__DISABLE_EXPORTS \
++REALMODE_CFLAGS	:= -std=gnu11 -fms-extensions -m16 -g -Os \
++		   -DDISABLE_BRANCH_PROFILING -D__DISABLE_EXPORTS \
+ 		   -Wall -Wstrict-prototypes -march=i386 -mregparm=3 \
+ 		   -fno-strict-aliasing -fomit-frame-pointer -fno-pic \
+ 		   -mno-mmx -mno-sse $(call cc-option,-fcf-protection=none)
+@@ -60,6 +61,7 @@ REALMODE_CFLAGS += $(cc_stack_align4)
+ REALMODE_CFLAGS += $(CLANG_FLAGS)
+ ifdef CONFIG_CC_IS_CLANG
+ REALMODE_CFLAGS += -Wno-gnu
++REALMODE_CFLAGS += -Wno-microsoft-anon-tag
+ endif
+ export REALMODE_CFLAGS
+ 
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 74657589264d..68f9d7a1683b 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -25,7 +25,7 @@ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
+ # avoid errors with '-march=i386', and future flags may depend on the target to
+ # be valid.
+ KBUILD_CFLAGS := -m$(BITS) -O2 $(CLANG_FLAGS)
+-KBUILD_CFLAGS += -std=gnu11
++KBUILD_CFLAGS += -std=gnu11 -fms-extensions
+ KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
+ KBUILD_CFLAGS += -Wundef
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+@@ -36,7 +36,10 @@ KBUILD_CFLAGS += -mno-mmx -mno-sse
+ KBUILD_CFLAGS += -ffreestanding -fshort-wchar
+ KBUILD_CFLAGS += -fno-stack-protector
+ KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+-KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
++ifdef CONFIG_CC_IS_CLANG
++KBUILD_CFLAGS += -Wno-gnu
++KBUILD_CFLAGS += -Wno-microsoft-anon-tag
++endif
+ KBUILD_CFLAGS += -Wno-pointer-sign
+ KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+ KBUILD_CFLAGS += -D__DISABLE_EXPORTS
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 94b05e4451dd..7d15a85d579f 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -11,12 +11,12 @@ cflags-y			:= $(KBUILD_CFLAGS)
+ 
+ cflags-$(CONFIG_X86_32)		:= -march=i386
+ cflags-$(CONFIG_X86_64)		:= -mcmodel=small
+-cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ -std=gnu11 \
++cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ -std=gnu11 -fms-extensions \
+ 				   -fPIC -fno-strict-aliasing -mno-red-zone \
+ 				   -mno-mmx -mno-sse -fshort-wchar \
+ 				   -Wno-pointer-sign \
+ 				   $(call cc-disable-warning, address-of-packed-member) \
+-				   $(call cc-disable-warning, gnu) \
++				   $(if $(CONFIG_CC_IS_CLANG),-Wno-gnu -Wno-microsoft-anon-tag) \
+ 				   -fno-asynchronous-unwind-tables \
+ 				   $(CLANG_FLAGS)
+ 
+
+---
+base-commit: c4781dc3d1cf0e017e1f290607ddc56cfe187afc
+change-id: 20251101-kbuild-ms-extensions-dedicated-cflags-084b1d832fbf
+
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
+
