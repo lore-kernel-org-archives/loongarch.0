@@ -1,123 +1,114 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF693093D7
-	for <loongarch@lists.linux.dev>; Fri, 31 Oct 2025 17:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEA12C15B8;
+	Sat,  1 Nov 2025 09:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761932095; cv=none; b=DwoZktTNZChsXobF7Oobu8jU9f2HzJluBw9QMN79zxu7jUc1pI2klfBWOlH+FLdwjoAd531aqZVnV5twoaCPhxbRFmGK+bgVifekix12fuBa+9yzeyZqZxvrR3D2dSYcEz2AFK/ncF6Dm9ULggPwsh3dz7nh+15yS1buIbF/T0U=
+	t=1761990031; cv=none; b=gvCAvLdwIwNyEodnrzD7P8kdr0/2v+l7BVk8OEu3j8JMUaENKv0DafrOnYcARJz74Gi5ksSofGCzxCdCGIJ+uJoGVDr9Mobcv67TRTWGSEG199kIyWoGOkMedrxQcl62ybhedEdIEZOgnnA9ASvwimH1a33EWXEobNm0A8sfOXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761932095; c=relaxed/simple;
-	bh=tRSFG9dRXG0FAWpU/Id6Zgckz1056dIV6+Bvj3jPwAc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PMPIn+E9A0OV9QUoId+49E8ceyD0EwFWeRa0zssl7ok0k0VlxP+kq1qcm0pfu3GsLzqbuRK8W1drb4OAYqgDPTn7pqMl5eqEnW5L+DmUytnJopxsFzV7cl+9L2KOtSU7/i5uHoUxv+2kpHDx7VeL6jH91iFNgC9+d+MEr+0cKy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FuyWRhM2; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1761990031; c=relaxed/simple;
+	bh=KEyjwC/3ZixttteNhE28UtTrJX6xHVbizD+fICju5HQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jU7wbaixaq37QKMxPfLDz6yf7ZBHQuTyt5rLPEkOyxDbHZbuW49+ICOlouG1TvGwUi76gbpFwlps1eG9VU1E2DVAFWJvBH8E6jUPIJXA/Ti+6wz+vw8wNI7ihBjU3s7URuPk0CNZk69Jelr794Rko28Tap5/r3QOLy/PlDsj83k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4nu1emX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FuyWRhM2"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34082c48b2bso1561169a91.1
-        for <loongarch@lists.linux.dev>; Fri, 31 Oct 2025 10:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761932093; x=1762536893; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LtnXaqdbVR8gOvpEPR+6l9cfgKr6bsCXJtfhHUXOVv8=;
-        b=FuyWRhM2yhqov0rGElchNngn3avMJGEQyNRaE+vBKlSsjr4wow7KPCJJ1WGd9IFZ0t
-         Ck5OwkKUxjckHexA3jwQhAI0QkUR4VfuLK7MniIHTDFiaGdbj4+M/TKFle2TSgqPFyQB
-         a+Wji4vrf1g7OZ2CDCnJ2v634EpGuhfcNccUriiH3dABSkpOBz1VgBXDodIKA6dtXwxb
-         EFWGXxlzNVcpVklQQnGRHxngWCWulyDzZpUWV7U9yP/+Ss0Ut9pE+8PbR1Nkegntvoy1
-         90gd3sg5Xt8Mcfm8Img4z367HF6FwFzGtBd08BENjj4BH1RaaVFw0wXAnjSPI0cr/g6z
-         06Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761932093; x=1762536893;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LtnXaqdbVR8gOvpEPR+6l9cfgKr6bsCXJtfhHUXOVv8=;
-        b=T2it47/eKAwq/m4YoXvBQ0fXaC9WfA+PW2elNdCfRhaY+S2F0s8pty9B8MNJUTWKO7
-         JMLZISuE64Z+WguxVd+nYWIDFdDJNRyDbuCTQNwcKBcR5h4gMTXWfocCSt6uBQ3L6dQs
-         MpncnXGo+FIBFQqUbL1yveI/5zt7jb16o7zpMx2CwZB4gOGRIQ3nRoTxKAlEiYxHc8xx
-         E97j6gp3Mr8kXSt9O3is27C2RU9uK6Ojrt+15qNW5wAHL8kHmPLN+/Z5KojYxvEs0aYk
-         xRIWZt1p6q3ICyb1BW7x57k72nUxbhLrW4FT0UKt2N54s4UdQFSKo30IDxPWUd0rl1O0
-         S4ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlX8bKRqsSGOF8Lc9jbnWw21iUFnu6hRnEXXD3Pdn3TY2G0LO2LqtjReRwbmuGAiEN+9bNfUzjRLs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy/N6qCOSxzlS21EglgqYMN4OjhiBBuGzNGjIcsnjNzERhuh6j6
-	yScxEGFvQYlNmhSUS0rt1rOvatt7PrS7ieHUrKVvvqfgfI3KALjWtcf70+uQHdP9BUxEWuqez1L
-	wMYHe5w==
-X-Google-Smtp-Source: AGHT+IEhd62pQuR9tjnc3Il5ckB3BFxieNfGOf0XAASHT7mISEiuLVbYaHxfkZsCDA/umOxHYLwWX5NLxe4=
-X-Received: from pjbmg14.prod.google.com ([2002:a17:90b:370e:b0:33e:34c2:1e17])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:fc4b:b0:32e:5646:d43f
- with SMTP id 98e67ed59e1d1-3408306e65fmr6078929a91.19.1761932092859; Fri, 31
- Oct 2025 10:34:52 -0700 (PDT)
-Date: Fri, 31 Oct 2025 10:34:51 -0700
-In-Reply-To: <aQRyyieyDrZZMpIt@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4nu1emX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A056EC4CEF1;
+	Sat,  1 Nov 2025 09:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761990031;
+	bh=KEyjwC/3ZixttteNhE28UtTrJX6xHVbizD+fICju5HQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X4nu1emXFZUXSucv1dsi/I9LyoXD3yBy1scLkXVz0y0+zJaWdGWWzc5nFl/suDVGH
+	 9qLovUiIHNnQUwrpqTcj6KLr3B7CHrb6VrgoQVjr7MYTdqOVYKGF2k3bLkOmheIkVN
+	 pMR/rteY6XfnrH3eWoX8p4r5gWRlVZdqBoEhvq5DxUGEU2NQFM/I5x2mOqiMD8+EeE
+	 YmWUCugkhOHutuBNZ6Npz1v2NohxC7/zve+pCywq8huv9MGIT62UAG9DxqZzE0Q8w8
+	 ZxctAQ5osq+FNf9OLrRrqH/r0ltT1GkebJo2bMja7MMbtjpSjhF5wdoifpYx7OfIk6
+	 d+w+LEFGvwohQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH] rust: kbuild: support `-Cjump-tables=n` for Rust 1.93.0
+Date: Sat,  1 Nov 2025 10:40:11 +0100
+Message-ID: <20251101094011.1024534-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20251030200951.3402865-1-seanjc@google.com> <20251030200951.3402865-27-seanjc@google.com>
- <aQRyyieyDrZZMpIt@yzhao56-desk.sh.intel.com>
-Message-ID: <aQTzO7D1O02zQbcD@google.com>
-Subject: Re: [PATCH v4 26/28] KVM: TDX: Guard VM state transitions with "all"
- the locks
-From: Sean Christopherson <seanjc@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	"Kirill A. Shutemov" <kas@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Ira Weiny <ira.weiny@intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Binbin Wu <binbin.wu@linux.intel.com>, Michael Roth <michael.roth@amd.com>, 
-	Vishal Annapurve <vannapurve@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Ackerley Tng <ackerleytng@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 31, 2025, Yan Zhao wrote:
-> On Thu, Oct 30, 2025 at 01:09:49PM -0700, Sean Christopherson wrote:
-> > Acquire kvm->lock, kvm->slots_lock, and all vcpu->mutex locks when
-> > servicing ioctls that (a) transition the TD to a new state, i.e. when
-> > doing INIT or FINALIZE or (b) are only valid if the TD is in a specific
-> > state, i.e. when initializing a vCPU or memory region.  Acquiring "all"
-> > the locks fixes several KVM_BUG_ON() situations where a SEAMCALL can fail
-> > due to racing actions, e.g. if tdh_vp_create() contends with either
-> > tdh_mr_extend() or tdh_mr_finalize().
-> > 
-> > For all intents and purposes, the paths in question are fully serialized,
-> > i.e. there's no reason to try and allow anything remotely interesting to
-> > happen.  Smack 'em with a big hammer instead of trying to be "nice".
-> > 
-> > Acquire kvm->lock to prevent VM-wide things from happening, slots_lock to
-> > prevent kvm_mmu_zap_all_fast(), and _all_ vCPU mutexes to prevent vCPUs
-> s/kvm_mmu_zap_all_fast/kvm_mmu_zap_memslot
+Rust 1.93.0 (expected 2026-01-22) is stabilizing `-Zno-jump-tables`
+[1][2] as `-Cjump-tables=n` [3].
 
-Argh!  Third time's a charm?  Hopefully...
+Without this change, one would eventually see:
 
-> > @@ -3170,7 +3208,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
-> >  
-> >  int tdx_vcpu_unlocked_ioctl(struct kvm_vcpu *vcpu, void __user *argp)
-> >  {
-> > -	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
-> > +	struct kvm *kvm = vcpu->kvm;
-> > +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> reverse xmas tree ?
+      RUSTC L rust/core.o
+    error: unknown unstable option: `no-jump-tables`
 
-No, because the shorter line generates an input to the longer line.  E.g. we could
-do this if we really, really want an xmas tree:
+Thus support the upcoming version.
 
-	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
-	struct kvm *kvm = vcpu->kvm;
+Link: https://github.com/rust-lang/rust/issues/116592 [1]
+Link: https://github.com/rust-lang/rust/pull/105812 [2]
+Link: https://github.com/rust-lang/rust/pull/145974 [3]
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+ arch/loongarch/Makefile | 2 +-
+ arch/x86/Makefile       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-but this won't compile
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index dc5bd3f1b8d2..96ca1a688984 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -109,7 +109,7 @@ endif
+ ifdef CONFIG_RUSTC_HAS_ANNOTATE_TABLEJUMP
+ KBUILD_RUSTFLAGS		+= -Cllvm-args=--loongarch-annotate-tablejump
+ else
+-KBUILD_RUSTFLAGS		+= -Zno-jump-tables # keep compatibility with older compilers
++KBUILD_RUSTFLAGS		+= $(if $(call rustc-min-version,109300),-Cjump-tables=n,-Zno-jump-tables) # keep compatibility with older compilers
+ endif
+ ifdef CONFIG_LTO_CLANG
+ # The annotate-tablejump option can not be passed to LLVM backend when LTO is enabled.
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 4db7e4bf69f5..c60371db49d9 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -98,7 +98,7 @@ ifeq ($(CONFIG_X86_KERNEL_IBT),y)
+ #   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=104816
+ #
+ KBUILD_CFLAGS += $(call cc-option,-fcf-protection=branch -fno-jump-tables)
+-KBUILD_RUSTFLAGS += -Zcf-protection=branch -Zno-jump-tables
++KBUILD_RUSTFLAGS += -Zcf-protection=branch $(if $(call rustc-min-version,109300),-Cjump-tables=n,-Zno-jump-tables)
+ else
+ KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
+ endif
 
-	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-	struct kvm *kvm = vcpu->kvm;
+base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
+-- 
+2.51.2
+
