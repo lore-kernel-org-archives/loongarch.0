@@ -1,84 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from inert-arianrhow.relay-egress.a.mail.umich.edu (relay-egress-host.us-east-2.a.mail.umich.edu [18.216.144.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6077A2727FE;
-	Sat,  1 Nov 2025 17:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2559224AE6;
+	Sun,  2 Nov 2025 08:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.216.144.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762019871; cv=none; b=Oj3gInVsDBvnJ4dcUOtCKfKCHA06pCFddS5Jmp7r6ZXs01YXI106DtxBFD2T8kKVLUGfiziRLQ5SZl3aWGR8S9KxDw4wpORtkw9mKjALukC2NepZmzB6pFqm2/EMZhVUQY/Gkavv631ME+jghJs458UFACm+q1DAzEj0IJuKjq0=
+	t=1762070605; cv=none; b=Srz3jCiqh3bs0ofv4Yvsl4XPAljjxBfDCnXBIgmFqSWOKLXB4Xnd9H8Ig/fXDcBKH5392+Daj1b7AH6jZuYeiHW6g8leWcmku3y2BKePgiQvVjknHT2wNDHcHg3YqxtwSf4MHkyzNkbADQ7NDbQ7bUb4iPlQWTNA+g2IzuigsXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762019871; c=relaxed/simple;
-	bh=I+kQ9tDRrEbESkDzWsCmJUi6GBWfk4oyAl58SJAjkxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I1FiaxlgpT8ZcgNpf6oYJLO4e+jrVKxzezAPLzuOFTjn2CldnoiuAJYqjBGoTTIlOkgHuSNMyI1dPwiq5Sb1N4rM4rniSekbKhYpp9lFi7Ji7OG3Uvb1vPP6xDoCWQXJvtT3uVmRvoq+9/P7KuDPfgCy/qdi5YJ+9qwejFad0IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Skve4AR4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762070605; c=relaxed/simple;
+	bh=GnZVaprzaUNXLrszhG+AfitqnH/3NOGgJ9lds690guY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=iSt/PtW5Yx/IS6E6jJrVEbs+l313lpGR7RbyhbhQg0JRD9qY56mUbcVB6g3sCaG0YFYeoTvRP+B8MlVD1eVICqkCWZD2pENBSVfkkWOmRUr5jl0Qe8hj7Eql+meCINcJXtcB7+V9YmzhKcb83PIvhdHViFXjK9FdABKrXzUszAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=mSQt7UJy; arc=none smtp.client-ip=18.216.144.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Skve4AR4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DDA5C4CEF1;
-	Sat,  1 Nov 2025 17:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762019870;
-	bh=I+kQ9tDRrEbESkDzWsCmJUi6GBWfk4oyAl58SJAjkxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Skve4AR4jkw+UfiyCWIydCfYHCOXy/vSWfd+651n1VLTlw/tYEIe1BViYrj+BZ3wg
-	 VZy09aPhIC1E0wXgaV1yAMPwg+mHjIdKx0l8FARVFpCOKz0n6oecBP815ueF/OE33l
-	 iYGmfdrezGx3O1axm/D50OIEOFsCReSSPoGs22dWFfvOVkDS5C9t8oSktiPuYbWDlV
-	 PsT84aLNZa1jvCLnOAy1ELwlPR1zsCIikuBg1L67DHlkj9/Iroi215Kys6QTNUeloQ
-	 bmKrxw304QGsJe1NpRRXBcESDacDA1itM/Hf9b0l1lgBgXVi1AL1JjXzhuaU21jmKq
-	 bhM1M9VaofAFg==
-Date: Sat, 1 Nov 2025 18:25:35 +0100
-From: Nicolas Schier <nsc@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev, "H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH] rust: kbuild: support `-Cjump-tables=n` for Rust 1.93.0
-Message-ID: <aQZCj5XZvXAt_lgl@levanger>
-References: <20251101094011.1024534-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="mSQt7UJy"
+Received: from fond-ellyllon.authn-relay.a.mail.umich.edu (ip-10-0-74-91.us-east-2.compute.internal [10.0.74.91])
+	by inert-arianrhow.relay-egress.a.mail.umich.edu with ESMTPS
+	id 69070F05.2B98C4AA.5C5DB4D5.974104;
+	Sun, 02 Nov 2025 02:57:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=umich.edu;
+	s=relay-2; t=1762070274;
+	bh=JOCHX5StUrYQWAzbdTyea3OJMkuVyGm3IZMtYYvHQ5s=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=mSQt7UJysnXvFKKXtAnGgrl2JQEi0272axO6sMubWvJ4yV12qGYdhWJmwWnTl3BgJ
+	 p3G+Z8eaz6ymweRctxWkxYSUI+YNiogXWcZdi+t16S7uI7Q1ELmHfM7Ktu0p/SaYh7
+	 fdGcQF5UU+F6ADFDyPzFgpzgsy4vREG76fNIK+gwyzno+MafApTBCiHyMGu1TYkYPt
+	 5m+2vtf9E8BRpmUcnwI+wrdPVVUuLMHIGqLZdMHVOmZZkW2UlQZTIt8GUUrkiuk6xG
+	 TUqt5mg0LWxTSVxjyZcUt9oqysgcZxEgpBL0bpp0/CZTA+zMP7w5PTEMW92yMq968W
+	 4jfVzaqv5op0Q==
+Authentication-Results: fond-ellyllon.authn-relay.a.mail.umich.edu; 
+	iprev=fail policy.iprev=73.110.187.65 (Mismatch);
+	auth=pass smtp.auth=tmgross
+Received: from localhost (Mismatch [73.110.187.65])
+	by fond-ellyllon.authn-relay.a.mail.umich.edu with ESMTPSA
+	id 69070F01.33BAC196.2EB97120.90244;
+	Sun, 02 Nov 2025 02:57:54 -0500
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 02 Nov 2025 01:57:52 -0600
+Message-Id: <DDY1S4C4NY54.1S5RB5BI48AEJ@umich.edu>
+Subject: Re: [PATCH] rust: kbuild: support `-Cjump-tables=n` for Rust 1.93.0
+From: "Trevor Gross" <tmgross@umich.edu>
+To: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Nathan Chancellor" <nathan@kernel.org>, "Nicolas
+ Schier" <nicolas@fjasle.eu>, "Huacai Chen" <chenhuacai@kernel.org>, "Thomas
+ Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
+ <x86@kernel.org>
+Cc: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-kbuild@vger.kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ <loongarch@lists.linux.dev>, "H. Peter Anvin" <hpa@zytor.com>,
+ <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
+X-Mailer: aerc 0.21.0
+References: <20251101094011.1024534-1-ojeda@kernel.org>
 In-Reply-To: <20251101094011.1024534-1-ojeda@kernel.org>
 
-On Sat, Nov 01, 2025 at 10:40:11AM +0100, Miguel Ojeda wrote:
+On Sat Nov 1, 2025 at 4:40 AM CDT, Miguel Ojeda wrote:
 > Rust 1.93.0 (expected 2026-01-22) is stabilizing `-Zno-jump-tables`
-> [1][2] as `-Cjump-tables=n` [3].
-> 
+> [1][2] as `-Cjump-tables=3Dn` [3].
+>
 > Without this change, one would eventually see:
-> 
+>
 >       RUSTC L rust/core.o
 >     error: unknown unstable option: `no-jump-tables`
-> 
+>
 > Thus support the upcoming version.
-> 
+>
 > Link: https://github.com/rust-lang/rust/issues/116592 [1]
 > Link: https://github.com/rust-lang/rust/pull/105812 [2]
 > Link: https://github.com/rust-lang/rust/pull/145974 [3]
 > Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+
+Reviewed-by: Trevor Gross <tmgross@umich.edu>
+
 > ---
 >  arch/loongarch/Makefile | 2 +-
 >  arch/x86/Makefile       | 2 +-
 >  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
+>
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index dc5bd3f1b8d2..96ca1a688984 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -109,7 +109,7 @@ endif
+>  ifdef CONFIG_RUSTC_HAS_ANNOTATE_TABLEJUMP
+>  KBUILD_RUSTFLAGS		+=3D -Cllvm-args=3D--loongarch-annotate-tablejump
+>  else
+> -KBUILD_RUSTFLAGS		+=3D -Zno-jump-tables # keep compatibility with older =
+compilers
+> +KBUILD_RUSTFLAGS		+=3D $(if $(call rustc-min-version,109300),-Cjump-tabl=
+es=3Dn,-Zno-jump-tables) # keep compatibility with older compilers
+>  endif
+>  ifdef CONFIG_LTO_CLANG
+>  # The annotate-tablejump option can not be passed to LLVM backend when L=
+TO is enabled.
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index 4db7e4bf69f5..c60371db49d9 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -98,7 +98,7 @@ ifeq ($(CONFIG_X86_KERNEL_IBT),y)
+>  #   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D104816
+>  #
+>  KBUILD_CFLAGS +=3D $(call cc-option,-fcf-protection=3Dbranch -fno-jump-t=
+ables)
+> -KBUILD_RUSTFLAGS +=3D -Zcf-protection=3Dbranch -Zno-jump-tables
+> +KBUILD_RUSTFLAGS +=3D -Zcf-protection=3Dbranch $(if $(call rustc-min-ver=
+sion,109300),-Cjump-tables=3Dn,-Zno-jump-tables)
+>  else
+>  KBUILD_CFLAGS +=3D $(call cc-option,-fcf-protection=3Dnone)
+>  endif
+>
+> base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
 
-Acked-by: Nicolas Schier <nsc@kernel.org>
-
--- 
-Nicolas
