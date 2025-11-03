@@ -1,141 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D8B2E2851
-	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 09:09:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415F51B87C9
+	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 09:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762160996; cv=none; b=IqRqMTjebXCd2LZVqpVlbP+UDYTPw1r6vCzNL/CcQPTVIOv8RotqrV5LKMuraDGHYUOfpWh3X0oNdSQKneh17o+IaSscJbveV4q9/Q2wLhH55OanJ04+lVRKqSwsQGVv3K/ihno9hMnIU3SBDoaTOCF0XVN65ebNFoJ9Tc8cDPg=
+	t=1762161183; cv=none; b=DwaLGqNlXCWB6H+WsJj/R94l0NiTr5XazFfogjOoxJP2vTxe5FPuv6Oyt2CcN3t1ndChqbikSEl9DiF/Cs1i1QN+V7icCVSGwZHUERsQbJUQ16WbRA/hf+Y+Hop6T/CaGJdSEqdsCLgPmYTJcAlPyoQYZUGcMn46kMauRJAWYIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762160996; c=relaxed/simple;
-	bh=Pz4RARoS3t59jewVdeEcIvG3LcpwFyzVpFQTf5qdx/Y=;
+	s=arc-20240116; t=1762161183; c=relaxed/simple;
+	bh=BLeGKlH4tFOe01XvDJYeXPH2ybj5CxCOnxzNCYyzS9Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L4TF2p6UB++5I657gx0wGdOmsngq639IDWrF0/dR+qR7MtO10aEL/WwjWOFIDa0kAQYVF7rbbSP9L84KJWOvR//GQl3PYl9OF6MKevOSaBD8FALKCRLiueBdY+z6nAV4vYxfP8PaKNXmzBttywM08hAb/C2hYUjcoFr73Ez9sk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0dIhbF5; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=tNtE/Kb2wPBhQKGxtriy75lyNAHrBuHuW6lUpubeVaItiLimZzqyhLE2hMZIbzdbR4z+HyXwvDvoXleCNNKmoJOh4aeb7VKXaUYa2ULHGeEnia/e0IL+LIi72j4eRU3khIUzz94oFEOfTTje0gJWGxF/oY7hsDBaKeNYWyST160=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPCfat0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0dIhbF5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00B86C4AF0B
-	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 09:09:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPCfat0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1AB7C4AF09
+	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 09:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762160996;
-	bh=Pz4RARoS3t59jewVdeEcIvG3LcpwFyzVpFQTf5qdx/Y=;
+	s=k20201202; t=1762161182;
+	bh=BLeGKlH4tFOe01XvDJYeXPH2ybj5CxCOnxzNCYyzS9Y=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=K0dIhbF5sB9h/u7I394UPjJMwCjgICv5u/G4q0WuObozs8vlLLEqBZh7O897iCHcd
-	 eUd1rFIqw+VaEZ0VKb6xofumRHuSCFI3DDAJnnQpdgAtNGGfFWUUYsN4KvkO7Osdcl
-	 gaYDcEaEZKCC9UWvr9eGJW2T7k4EevGgkDlFFKgGs4r9AEBtlrG149TGLfXT0pmJC1
-	 htEd09q1QZjQOjgZoDAuFoDwJ3JRAhw5Sdq6wyk4zJISVmbFF61Z999IjyBv3yNScL
-	 WqxHlhqGfK2QjIf7n0aTGUtAwCizxQ4DVRzGuEzdKZbd5Iy/4oxk7chnqk4WinEbzy
-	 4yPLsbocLzKTQ==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b710601e659so71319066b.1
-        for <loongarch@lists.linux.dev>; Mon, 03 Nov 2025 01:09:55 -0800 (PST)
-X-Gm-Message-State: AOJu0YzZE/tgTXdu7j0QvprVCzf5Bh7CmBkxUnXz3LdcM0Af53pPCOgj
-	rw504mJng4vsbvzGwlFcwJ0HAO+wV9HKYlo7Aq95JOOYVhDZHXA87Vp+b/JuGiK60kkaFC443b2
-	qU70xqWW41Rnnhz1K3/wmPzUaEZ9XeG0=
-X-Google-Smtp-Source: AGHT+IHH7GRdDkSolFd0DKvnUwGufJhMU7ivv5E8xIf9Cr4Xjt0Gpi6A0fSAtca/U2zc7oqlkzM9lEUk2yQyn4++emQ=
-X-Received: by 2002:a17:907:60c9:b0:b70:b064:133 with SMTP id
- a640c23a62f3a-b70b0641cd1mr418428166b.4.1762160994556; Mon, 03 Nov 2025
- 01:09:54 -0800 (PST)
+	b=iPCfat0ME0F/ezuDxC18wmk524gaGHcXIrStcp/20v6QVA0pKkQTKj3IrpIQirzLz
+	 48tcfmefhU+Oh9TQZKifDzcHqaocRCw1itRArQz/0JO/eKwS4FAFKYLFRoXLRa2dA0
+	 bMVpknFMIot0s0ZmeJBQcDjXbr5oTNXtptBrictpBvu2jYpByV9FPwPgstQPWB5gvv
+	 8PfLJymn3pb1ehDKJ1vKr5gkLYREfoFyzN84zNplWlefUtURfBfHR1vrrpdoV/bFnW
+	 C5V2QyHVmFT82vTCLj8rivb2T6Ojx0+z0ebXix09gb0FhZcMPAbYguNCmX7V3X7zTd
+	 hM8ZfxD/mBOTg==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-640c6577120so979012a12.1
+        for <loongarch@lists.linux.dev>; Mon, 03 Nov 2025 01:13:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU1VXygLD96V2jQzId4hcUvqBeiKkaFLCYJZ/dv7CHEiIA8H4Lua+UWs0nUpqg3ouwgvV0DCb482KU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YykSM1ScqEidXERg/eaHFWt7cX8HvghoeRODKX39x2dDs78clxo
+	KBI/USI+IeLFMrNUldyU2bI7jWkrLNBydHeFkEAxYW4UbJz4+E/6qNJy4NKPXiWfn1xWevsr1uq
+	r1+8rDSTXGLeYhnuzb/ipj2jDpMLHnxk=
+X-Google-Smtp-Source: AGHT+IH/hMANbcDUCQ1Ja+g59TP7QZglZupzPFtaLLGpzDVLHNdE2GZ9jMCMW4PouhF4L90eNs/1uFe1GslDFbf1mMk=
+X-Received: by 2002:a17:907:2d29:b0:b71:8448:a8dd with SMTP id
+ a640c23a62f3a-b718448abcdmr68886166b.31.1762161181401; Mon, 03 Nov 2025
+ 01:13:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251014070227.22396-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20251014070227.22396-1-yangtiezhu@loongson.cn>
+References: <20251029-loongarch-uapi-ptrace-types-v1-1-5c84855a348d@weissschuh.net>
+In-Reply-To: <20251029-loongarch-uapi-ptrace-types-v1-1-5c84855a348d@weissschuh.net>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 3 Nov 2025 17:09:50 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6uRnP6MD7aV0fC-uL+rihuSDw=Opmx=0keQ9gFp9ERhw@mail.gmail.com>
-X-Gm-Features: AWmQ_bkZB4Ki-eY515Azwze_fTHRu9a-drb485T57pjSbKfaeIiEUUlUNniRcRU
-Message-ID: <CAAhV-H6uRnP6MD7aV0fC-uL+rihuSDw=Opmx=0keQ9gFp9ERhw@mail.gmail.com>
-Subject: Re: [PATCH v1] LoongArch: Refine init_hw_perf_events()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Mon, 3 Nov 2025 17:12:58 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4oDtOUB_CecFE2sPE-JSQNNWvFRmY8=ZdDOCdD8kdo7g@mail.gmail.com>
+X-Gm-Features: AWmQ_bnIJsb9uCZ9U0bHJfiDhKTUuVzIxImeO2vZ69sxQ1m-TL0S9eXxKzMeQ6E
+Message-ID: <CAAhV-H4oDtOUB_CecFE2sPE-JSQNNWvFRmY8=ZdDOCdD8kdo7g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: ptrace: Use UAPI types in UAPI header
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied without rename loongson to loongson64, because loongson32 and
-loongson64 have different event numbers, they need to be
-distinguished.
+Hi, Thomas,
+
+On Wed, Oct 29, 2025 at 11:20=E2=80=AFPM Thomas Wei=C3=9Fschuh <linux@weiss=
+schuh.net> wrote:
+>
+> The kernel UAPI headers already contain fixed-width integer types,
+> there is no need to rely on libc types. There may not be a libc
+> available or it may not provide <stdint.h>, like for example on nolibc.
+>
+> This also aligns the header with the rest of the LoongArch UAPI headers.
+Thank you for your patch, but could you please tell me some history
+and user guide about the three styles: u64, __u64 and unint64_t?
 
 Huacai
 
-On Tue, Oct 14, 2025 at 3:02=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
 >
-> (1) Use the existing CPUCFG6_PMNUM_SHIFT macro definition instead of
-> the magic value 4 to get the PMU number.
->
-> (2) Detect the value of PMU bits via CPUCFG instruction according to
-> the ISA manual instead of hard-coded as 64, because the value may be
-> different for various microarchitectures.
->
-> (3) Rename the PMU name without the postfix 64 due to it is redundant
-> and may be inaccurate.
->
-> Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-E=
-N.html#_cpucfg
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
 > ---
->  arch/loongarch/include/asm/loongarch.h | 1 +
->  arch/loongarch/kernel/perf_event.c     | 8 +++++---
->  2 files changed, 6 insertions(+), 3 deletions(-)
+> I'd like to take this through the nolibc tree, as this currently breaks
+> the upcoming nolibc ptrace support.
+> ---
+>  arch/loongarch/include/uapi/asm/ptrace.h | 40 ++++++++++++++------------=
+------
+>  1 file changed, 18 insertions(+), 22 deletions(-)
 >
-> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
-ude/asm/loongarch.h
-> index 09dfd7eb406e..89343b1a526f 100644
-> --- a/arch/loongarch/include/asm/loongarch.h
-> +++ b/arch/loongarch/include/asm/loongarch.h
-> @@ -128,6 +128,7 @@
->  #define  CPUCFG6_PMNUM                 GENMASK(7, 4)
->  #define  CPUCFG6_PMNUM_SHIFT           4
->  #define  CPUCFG6_PMBITS                        GENMASK(13, 8)
-> +#define  CPUCFG6_PMBITS_SHIFT          8
->  #define  CPUCFG6_UPM                   BIT(14)
+> diff --git a/arch/loongarch/include/uapi/asm/ptrace.h b/arch/loongarch/in=
+clude/uapi/asm/ptrace.h
+> index aafb3cd9e943..215e0f9e8aa3 100644
+> --- a/arch/loongarch/include/uapi/asm/ptrace.h
+> +++ b/arch/loongarch/include/uapi/asm/ptrace.h
+> @@ -10,10 +10,6 @@
 >
->  #define LOONGARCH_CPUCFG16             0x10
-> diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/p=
-erf_event.c
-> index 8ad098703488..ee5404d28423 100644
-> --- a/arch/loongarch/kernel/perf_event.c
-> +++ b/arch/loongarch/kernel/perf_event.c
-> @@ -846,18 +846,20 @@ static const struct loongarch_perf_event *loongarch=
-_pmu_map_raw_event(u64 config
->  static int __init init_hw_perf_events(void)
->  {
->         int counters;
-> +       int bits;
+>  #include <linux/types.h>
 >
->         if (!cpu_has_pmp)
->                 return -ENODEV;
+> -#ifndef __KERNEL__
+> -#include <stdint.h>
+> -#endif
+> -
+>  /*
+>   * For PTRACE_{POKE,PEEK}USR. 0 - 31 are GPRs,
+>   * 32 is syscall's original ARG0, 33 is PC, 34 is BADVADDR.
+> @@ -41,44 +37,44 @@ struct user_pt_regs {
+>  } __attribute__((aligned(8)));
 >
->         pr_info("Performance counters: ");
-> -       counters =3D ((read_cpucfg(LOONGARCH_CPUCFG6) & CPUCFG6_PMNUM) >>=
- 4) + 1;
-> +       counters =3D ((read_cpucfg(LOONGARCH_CPUCFG6) & CPUCFG6_PMNUM) >>=
- CPUCFG6_PMNUM_SHIFT) + 1;
-> +       bits =3D ((read_cpucfg(LOONGARCH_CPUCFG6) & CPUCFG6_PMBITS) >> CP=
-UCFG6_PMBITS_SHIFT) + 1;
+>  struct user_fp_state {
+> -       uint64_t fpr[32];
+> -       uint64_t fcc;
+> -       uint32_t fcsr;
+> +       __u64 fpr[32];
+> +       __u64 fcc;
+> +       __u32 fcsr;
+>  };
 >
->         loongarch_pmu.num_counters =3D counters;
->         loongarch_pmu.max_period =3D (1ULL << 63) - 1;
->         loongarch_pmu.valid_count =3D (1ULL << 63) - 1;
->         loongarch_pmu.overflow =3D 1ULL << 63;
-> -       loongarch_pmu.name =3D "loongarch/loongson64";
-> +       loongarch_pmu.name =3D "loongarch/loongson";
->         loongarch_pmu.read_counter =3D loongarch_pmu_read_counter;
->         loongarch_pmu.write_counter =3D loongarch_pmu_write_counter;
->         loongarch_pmu.map_raw_event =3D loongarch_pmu_map_raw_event;
-> @@ -867,7 +869,7 @@ static int __init init_hw_perf_events(void)
->         on_each_cpu(reset_counters, NULL, 1);
+>  struct user_lsx_state {
+>         /* 32 registers, 128 bits width per register. */
+> -       uint64_t vregs[32*2];
+> +       __u64 vregs[32*2];
+>  };
 >
->         pr_cont("%s PMU enabled, %d %d-bit counters available to each CPU=
-.\n",
-> -                       loongarch_pmu.name, counters, 64);
-> +                       loongarch_pmu.name, counters, bits);
+>  struct user_lasx_state {
+>         /* 32 registers, 256 bits width per register. */
+> -       uint64_t vregs[32*4];
+> +       __u64 vregs[32*4];
+>  };
 >
->         perf_pmu_register(&pmu, "cpu", PERF_TYPE_RAW);
+>  struct user_lbt_state {
+> -       uint64_t scr[4];
+> -       uint32_t eflags;
+> -       uint32_t ftop;
+> +       __u64 scr[4];
+> +       __u32 eflags;
+> +       __u32 ftop;
+>  };
 >
+>  struct user_watch_state {
+> -       uint64_t dbg_info;
+> +       __u64 dbg_info;
+>         struct {
+> -               uint64_t    addr;
+> -               uint64_t    mask;
+> -               uint32_t    ctrl;
+> -               uint32_t    pad;
+> +               __u64    addr;
+> +               __u64    mask;
+> +               __u32    ctrl;
+> +               __u32    pad;
+>         } dbg_regs[8];
+>  };
+>
+>  struct user_watch_state_v2 {
+> -       uint64_t dbg_info;
+> +       __u64 dbg_info;
+>         struct {
+> -               uint64_t    addr;
+> -               uint64_t    mask;
+> -               uint32_t    ctrl;
+> -               uint32_t    pad;
+> +               __u64    addr;
+> +               __u64    mask;
+> +               __u32    ctrl;
+> +               __u32    pad;
+>         } dbg_regs[14];
+>  };
+>
+>
+> ---
+> base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+> change-id: 20251029-loongarch-uapi-ptrace-types-0c5c6756f7e0
+>
+> Best regards,
 > --
-> 2.42.0
+> Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+>
 >
