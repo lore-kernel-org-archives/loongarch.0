@@ -1,126 +1,234 @@
-Received: from inert-arianrhow.relay-egress.a.mail.umich.edu (relay-egress-host.us-east-2.a.mail.umich.edu [18.216.144.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2559224AE6;
-	Sun,  2 Nov 2025 08:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.216.144.57
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762070605; cv=none; b=Srz3jCiqh3bs0ofv4Yvsl4XPAljjxBfDCnXBIgmFqSWOKLXB4Xnd9H8Ig/fXDcBKH5392+Daj1b7AH6jZuYeiHW6g8leWcmku3y2BKePgiQvVjknHT2wNDHcHg3YqxtwSf4MHkyzNkbADQ7NDbQ7bUb4iPlQWTNA+g2IzuigsXg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762070605; c=relaxed/simple;
-	bh=GnZVaprzaUNXLrszhG+AfitqnH/3NOGgJ9lds690guY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=iSt/PtW5Yx/IS6E6jJrVEbs+l313lpGR7RbyhbhQg0JRD9qY56mUbcVB6g3sCaG0YFYeoTvRP+B8MlVD1eVICqkCWZD2pENBSVfkkWOmRUr5jl0Qe8hj7Eql+meCINcJXtcB7+V9YmzhKcb83PIvhdHViFXjK9FdABKrXzUszAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=mSQt7UJy; arc=none smtp.client-ip=18.216.144.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A41427380C;
+	Mon,  3 Nov 2025 01:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762133971; cv=fail; b=mwiyaiVSoCQ+fEBD/QcEOM1f1/DQvjLqSHiO6zdm9OfNRqiLjyZYXkEt53PBuAH9E8MPL8mByAYYdqORSr/EsjlyDkNY/1vsiJQxy8PASBuizXQR5+rnlaPWom3rf5PhSfsV2TRHbBKafwM5cNgKBwq0u/Yg/degdQDiXRRgwdI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762133971; c=relaxed/simple;
+	bh=N/5KJTSI199ZZAfEjw3sIX2gdoZ0mNU7+vy3ThtWlWc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MrTmTiv5yu3FYDCMD2h5CU8ULd7ithvj2i2G6MQx2UAF/9N92rQV9c9LqcKNRAhrkmdODNHsrgBxHrqNVHeKgEeiCXnHm4v2TV1atoaJoGgVMMs1PrsRSoA6xQNJz3H3ow0C7jb4FSD9o0kb1DdtuheucMo3hSJ6DHH5D+GXOIY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lglUq4Wl; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="mSQt7UJy"
-Received: from fond-ellyllon.authn-relay.a.mail.umich.edu (ip-10-0-74-91.us-east-2.compute.internal [10.0.74.91])
-	by inert-arianrhow.relay-egress.a.mail.umich.edu with ESMTPS
-	id 69070F05.2B98C4AA.5C5DB4D5.974104;
-	Sun, 02 Nov 2025 02:57:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=umich.edu;
-	s=relay-2; t=1762070274;
-	bh=JOCHX5StUrYQWAzbdTyea3OJMkuVyGm3IZMtYYvHQ5s=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=mSQt7UJysnXvFKKXtAnGgrl2JQEi0272axO6sMubWvJ4yV12qGYdhWJmwWnTl3BgJ
-	 p3G+Z8eaz6ymweRctxWkxYSUI+YNiogXWcZdi+t16S7uI7Q1ELmHfM7Ktu0p/SaYh7
-	 fdGcQF5UU+F6ADFDyPzFgpzgsy4vREG76fNIK+gwyzno+MafApTBCiHyMGu1TYkYPt
-	 5m+2vtf9E8BRpmUcnwI+wrdPVVUuLMHIGqLZdMHVOmZZkW2UlQZTIt8GUUrkiuk6xG
-	 TUqt5mg0LWxTSVxjyZcUt9oqysgcZxEgpBL0bpp0/CZTA+zMP7w5PTEMW92yMq968W
-	 4jfVzaqv5op0Q==
-Authentication-Results: fond-ellyllon.authn-relay.a.mail.umich.edu; 
-	iprev=fail policy.iprev=73.110.187.65 (Mismatch);
-	auth=pass smtp.auth=tmgross
-Received: from localhost (Mismatch [73.110.187.65])
-	by fond-ellyllon.authn-relay.a.mail.umich.edu with ESMTPSA
-	id 69070F01.33BAC196.2EB97120.90244;
-	Sun, 02 Nov 2025 02:57:54 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lglUq4Wl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762133970; x=1793669970;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=N/5KJTSI199ZZAfEjw3sIX2gdoZ0mNU7+vy3ThtWlWc=;
+  b=lglUq4WlN0Cd8IujXjWdPET8ABQ3QFg6driIUD88/TFHOJDTCqpXHjLy
+   mmYFARLyajXx3mPAx/WzZMypWvnV3dViZDN6waG4knTlcPGAlNrG+WYII
+   nEP0LIETfJjaGsS1ULYYqE8NxsDxjwSKjbxaAEr9wxVlTXpfx46nd8yP+
+   ElpQdYjnfzueCyKV2NykfcWc+nrhbyikI58Ru59EBfLcInxiBIVqsauyz
+   xbwfQ6jeYm4oJpSUZtLSDQilkNApJ2fTmmodlzNtJgJ4D24vrFTyxVhbM
+   4rSST/8Qohvv6SrGjufjTE1Ihfpq57EYYSr6RlrCR4o7KzCWai5EYviR7
+   g==;
+X-CSE-ConnectionGUID: PqU0ws2tTUenG3rJkmUrsw==
+X-CSE-MsgGUID: uaa9tcMASBqXPC8c35oiPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11601"; a="64357581"
+X-IronPort-AV: E=Sophos;i="6.19,275,1754982000"; 
+   d="scan'208";a="64357581"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2025 17:39:29 -0800
+X-CSE-ConnectionGUID: w02tQKrfTM6p6yZbof+zGw==
+X-CSE-MsgGUID: tMlOg5wqTVy0Td+zigI6XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,275,1754982000"; 
+   d="scan'208";a="191854107"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2025 17:39:28 -0800
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Sun, 2 Nov 2025 17:39:27 -0800
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Sun, 2 Nov 2025 17:39:27 -0800
+Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.66) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Sun, 2 Nov 2025 17:39:27 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TZ37nahmGWZtMzNUItiTh+g7rYfnzKfdjZWASlxNakdPBzUZ3OYDPSl9pZ5UeuyeBwM2f8PjIUnH+jckqd70TPHXssBAr4KyeuRok030XTxo+63oc2BM0Zof9V4q3lUgHuKiLmcicjtGxV7oMxvXeWRtaDM8sJnr9+9WeiTCUvqeRgbW5ThCPqq1VBBNB3VR+mlrZ4jhCMcYX4onzQ62VigDvZVGVExDl0NklX1avJw+GeOrBwUD1q7VdsIyy5B+wMoSmlu8qv5TtNIAcfF8JIiskerxvP/bbIVrVhghQCKajjMEDoSyyYO/51lFugYYQz0Zj9z2FhRv1a9sP103OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ky2QnQU3NciDoPu3cRhaLSFzH40y+n+2Ic9g9pHOvlk=;
+ b=aMBvihl1GZxMvjLK82EiPDcHlA1rM/6n31Y87RdrIDhgUMaUYYh03H5VS72lvph8v0QBdIRQFYRnhJoIaac1u6mJQTnbfWJD3kYWgj7v+JLvor+hcrjNFODnk+8pcTBG6haZWZDwG4TcBpwgyL1p4l8ZX4p+XGkslzHDZdliHo8912cHshFBiYNhtQsPxLbL8BnJo0AiF41X5sxWkaSKKAVX4eyKAM8ObaShhxfSk64sW8dUnLby50aCA+3xs/wpA5RKPtx/0KFrJalIattb6r1d1PaRwPPNuLW6+i4Suvpbv3NGj3MX3MMOf4x+XGXo9qtnaraUOu/2ugcp+XU18Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ MW4PR11MB6714.namprd11.prod.outlook.com (2603:10b6:303:20f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.15; Mon, 3 Nov
+ 2025 01:39:25 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%6]) with mapi id 15.20.9275.013; Mon, 3 Nov 2025
+ 01:39:25 +0000
+Date: Mon, 3 Nov 2025 09:36:57 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
+	<maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley
+	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda
+	<imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, "Kirill A.
+ Shutemov" <kas@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <kvm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<x86@kernel.org>, <linux-coco@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>, Kai Huang
+	<kai.huang@intel.com>, Binbin Wu <binbin.wu@linux.intel.com>, Michael Roth
+	<michael.roth@amd.com>, Vishal Annapurve <vannapurve@google.com>, "Rick
+ Edgecombe" <rick.p.edgecombe@intel.com>, Ackerley Tng
+	<ackerleytng@google.com>
+Subject: Re: [PATCH v4 26/28] KVM: TDX: Guard VM state transitions with "all"
+ the locks
+Message-ID: <aQgHOcy28pSEfTZK@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20251030200951.3402865-1-seanjc@google.com>
+ <20251030200951.3402865-27-seanjc@google.com>
+ <aQRyyieyDrZZMpIt@yzhao56-desk.sh.intel.com>
+ <aQTzO7D1O02zQbcD@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aQTzO7D1O02zQbcD@google.com>
+X-ClientProxiedBy: KUZPR01CA0005.apcprd01.prod.exchangelabs.com
+ (2603:1096:d10:34::18) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 02 Nov 2025 01:57:52 -0600
-Message-Id: <DDY1S4C4NY54.1S5RB5BI48AEJ@umich.edu>
-Subject: Re: [PATCH] rust: kbuild: support `-Cjump-tables=n` for Rust 1.93.0
-From: "Trevor Gross" <tmgross@umich.edu>
-To: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Nathan Chancellor" <nathan@kernel.org>, "Nicolas
- Schier" <nicolas@fjasle.eu>, "Huacai Chen" <chenhuacai@kernel.org>, "Thomas
- Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav
- Petkov" <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
- <x86@kernel.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
- Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kbuild@vger.kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
- <loongarch@lists.linux.dev>, "H. Peter Anvin" <hpa@zytor.com>,
- <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
-X-Mailer: aerc 0.21.0
-References: <20251101094011.1024534-1-ojeda@kernel.org>
-In-Reply-To: <20251101094011.1024534-1-ojeda@kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|MW4PR11MB6714:EE_
+X-MS-Office365-Filtering-Correlation-Id: 21cb14b1-4042-460f-882d-08de1a79d1dd
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?64YMsPioydEklVA26gT/SEqnRklCj+AUOcbhDQCATiwYwQGxw2ojzT7z/4E5?=
+ =?us-ascii?Q?Fba/JQ0sbJFv9VGZS8PtmFh9PWFj1AcV7cDjIAiixvyyP8w0nuPio1m2EuyY?=
+ =?us-ascii?Q?MMEV+TzmIT5PFL+u8tHw+5vKMz2PZlXxIftTZAIl3fGqvpyaos6XKsmm+jei?=
+ =?us-ascii?Q?WSUELCbsjxLAiA+3GJ+8cWxnjVjkDKUnbduKzBK+loM/b2r866pYFFpt8suO?=
+ =?us-ascii?Q?U/LdtNiWkkpKiNHAyPiboU4s7M7Gx8ythXRwjZeohZuhzfLTXOPeUX8A7J29?=
+ =?us-ascii?Q?gBKF6lCJ4BZBg0SXmPxWSFauBoLQ283tVtAJqo7AmXwWbe49GzLg7OjBS04/?=
+ =?us-ascii?Q?ugyl/23VdSZjmqH6aM+3lgUexMddeeZn5xNChd7U+OmhZEeKNKHKUEG2kuol?=
+ =?us-ascii?Q?grWnC/SCYkqgUkBeIAQgj6YvfpikY0g/BphHsnIryGzv2QsfxlGSa2lGx3mB?=
+ =?us-ascii?Q?YgXzU/H3YTinKnSLLfqCbrzLkZ2GPkLdRTvHqpd3OXakcZR5s3Vpumyy7KTH?=
+ =?us-ascii?Q?wWVqpPkjCOHBbTIyOpZFVpm2AL99jYpixGE5N6KpJfbhHSFxbiX3W6pLfH7Y?=
+ =?us-ascii?Q?tvv6qsLeD1WStgDyonalD6cVNnFymIqyrqfU628ZiBOqRFmluAC2jyHTrfVm?=
+ =?us-ascii?Q?g6dh2tcAzPrczjWZJKxA5XWmh/GyzeuJHvJNAX8zhMYe26iE5Gtg3DlU0jDq?=
+ =?us-ascii?Q?rHkdNzqvjnINgXD3rhQ2rcC3qTCA/pzffVp20boYNMX+9e/KaZhQe+vkv6Gz?=
+ =?us-ascii?Q?gz93xZznND8/WVnalHPJeyIleJV1G+tjymi98E0IXoD2TIW3M1WspPGcn4s0?=
+ =?us-ascii?Q?NuFwNzLqVezc+q8Os9He+6MUwoLMzsnqheStztNllCARyIdL4AsqSo4SWzPq?=
+ =?us-ascii?Q?16bXV7ORQooALsClWJj+Q3IY7rTTkWNsHihzK+AmIJ39xfHq/IBL/jCWsg0J?=
+ =?us-ascii?Q?eSqet9VDSxR3W8U3J+7ilGnd7uQ6LYCRwwfT1b4Xjst6tmk6EK5HdlajG/o5?=
+ =?us-ascii?Q?BgvpcXrkD1SGQaUCUxtGS3LY0PdiU0t/OC/elbUSpzfcD6af2d1h6vF3DX+r?=
+ =?us-ascii?Q?OHmqhRgrg1SWD03Xof02VPiDOz4wWKt8J+3am+poxc5ZypV6fEZNmq5nM2XQ?=
+ =?us-ascii?Q?jPK3wvykzPJQI9pfgXrnCe6RlHeJLTa5+TfGi167QKJkfFGSvFJrf+2wI9U/?=
+ =?us-ascii?Q?JG0TG4pXOHJ9EUFEdFJ6ZLnBGRjaaHiEPhwMpmjDLeP/FKmffhIR4s8HX4js?=
+ =?us-ascii?Q?S6g17CSEbV6I//oHPOZypZJcHsS+x1AaAKDs/VZktrBlVkDMt0JmeiIAqGxH?=
+ =?us-ascii?Q?oLV9u2WYXrl5L/Uh0qqyKajp1aVgoHSzAJh+djmEVBLdLjJU6+wQp2rozNyP?=
+ =?us-ascii?Q?9WLW4cLoPX3AA+3wwGzn3hANzBy9Y6ONq1IK6HiCJmYG5bcOi+LQ/RMJ0uMx?=
+ =?us-ascii?Q?XbQItW/98eB9GpdF+yZlu3sUo6PxvuXW?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?P7R594Sn6oxeioHpa/PBumxMzFwifptYWZBUUqcpWn+MDLfiqtTd2isAtzZ+?=
+ =?us-ascii?Q?G5aj+X28emP0QIO0EhSHGlscLS+zVT+612LMUy+yVBoEyqgakw9c8AtLKHNl?=
+ =?us-ascii?Q?jlhW4JyiXX2ZgTHsI/9mzx3p1OZfqVUcyqvhuGcUu4Bg9e+5dl7nZFQnxZuU?=
+ =?us-ascii?Q?+i5evXI1ikZW/zhN4sgwcAmCWcyN8Mvn7wm2xSg18MgEU5V98tVhA+Cjk+FV?=
+ =?us-ascii?Q?1QhxicPGx4u5eGWYAvNrjUiMPzOceH/cJ4MlY/yRX4516+Z93+BaD3H8fZuT?=
+ =?us-ascii?Q?DSxlzNOcejiQ+E1irifTqlASr2bfgFqciN9ZfLViNozZYH8WoHf8Dlzr33pH?=
+ =?us-ascii?Q?V6pJj2TYlV2X2iKsbmrK73vZXoKeXcYkGyUwmRI0ndWTFy1bxetW/oGcqNWA?=
+ =?us-ascii?Q?XysKSA5ccDeP5sRkz1uFzAmLJcAuPzJEqritIr4wH8Js8fI86vJMc21SAd8v?=
+ =?us-ascii?Q?Gc1p21NM/CKCdU/PpRjfWcRsoEw5nY62x2g56Akyhvp8Fpy9B0pIC/qussN3?=
+ =?us-ascii?Q?daf5mdcqIWC1hzNXiN9KZ3JCUnlBo9HU6ywD+GBO2L0f8Xgcl8cEN+bEgnW9?=
+ =?us-ascii?Q?qCxHzwDWCPcLWdiMsgBN5uJfkzgUnZ/72mcpXuwC1J/lfJVdh2WmhHBlXwSs?=
+ =?us-ascii?Q?HaVq6ayFgvadibrcShv8xZTTufZ5pyA0g95XzJ8q4jgFtG7aiGs6JYo3xqYY?=
+ =?us-ascii?Q?3NU9ZDgqmHio/UwsfqIzMaVdRy9d8PYhcH7x3dyT5VF/r7KLoMgii06B8xXT?=
+ =?us-ascii?Q?wUm4tD09obOyr+l+wLCO7Lcu0TaE9abq7NmdrBlR+C7z/Qgm1wL4gIE1F1qx?=
+ =?us-ascii?Q?i9RxRpp4mVV794gKUzzwxLgHyMnJJ4IO1l9tBnggOkaGyWqngGvZLmDr6ook?=
+ =?us-ascii?Q?OLlMc6TxkxBlumiVPiacWNuvAC9YDln/36UdAJmUEkgZev+FGCD7hy1UQ2xA?=
+ =?us-ascii?Q?ywZgKIds3Pf+KadOmQPNP/7wbdK3/QQvr+ZGInE5gFfZQ3bT/F6DbElulzYr?=
+ =?us-ascii?Q?Jf+hNyyF2shd8kbB7M6jkCm5CcVKiAQkuVAr0CJ0g2bsw8iSNPTkaErdZ+FL?=
+ =?us-ascii?Q?XTD0DDT9Pg95BXBV5see1t64UvMyn/P2v8feVBbISAOtDvzO8r3VyiKk4yrx?=
+ =?us-ascii?Q?ANEYm1rE1Al+VdZ7cZJl+MknHokxjRgfIOOpFnawOgH1LjT3DXt0f+dK7Om7?=
+ =?us-ascii?Q?fQ0FzR/s+OzPLn++mNY2jAE2z8hUzziwQAKAQ1nfOeWejyVqPFDQduZQoCSl?=
+ =?us-ascii?Q?eoEDXPsflJ9pMiAmAZlr2LJtdHG3Hd/BrE1Wi/uHtEA+hoCxcYBuPaQyujzj?=
+ =?us-ascii?Q?lofQqOd60oLdMy9B/l7jTsJmt2WR3hz7F3HTezUylml1X7wTBF8kvfjhD9as?=
+ =?us-ascii?Q?OfeAsejb7+kSe6DaCIeW1onarXTxK/ztJa63UChBUbEowmDRlZuU1BgziIws?=
+ =?us-ascii?Q?vpCNw1PdfYO3B1EI4t/EULjhhsLfmqAS7Vr48krEAnZw+bqS+NYZQ0rIV8V7?=
+ =?us-ascii?Q?VR9k58+VdweIlA66PjLoGIYKedJ3EN+xuwFcC8lHK4UmVG2FIFujDcRgoxf8?=
+ =?us-ascii?Q?LzTo/87aF5Plzs3UbnvZFTrCxehsiXfdkg3fN2jx?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21cb14b1-4042-460f-882d-08de1a79d1dd
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2025 01:39:25.0038
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S0VFmCBg6QNFHvcN2chshxU0Ut75qSDA2aa5dg1IonrHIZ1D55Pe6Jhk/kb+KC3dK8kadjovOsA2DUo+miePhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6714
+X-OriginatorOrg: intel.com
 
-On Sat Nov 1, 2025 at 4:40 AM CDT, Miguel Ojeda wrote:
-> Rust 1.93.0 (expected 2026-01-22) is stabilizing `-Zno-jump-tables`
-> [1][2] as `-Cjump-tables=3Dn` [3].
->
-> Without this change, one would eventually see:
->
->       RUSTC L rust/core.o
->     error: unknown unstable option: `no-jump-tables`
->
-> Thus support the upcoming version.
->
-> Link: https://github.com/rust-lang/rust/issues/116592 [1]
-> Link: https://github.com/rust-lang/rust/pull/105812 [2]
-> Link: https://github.com/rust-lang/rust/pull/145974 [3]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-
-Reviewed-by: Trevor Gross <tmgross@umich.edu>
-
-> ---
->  arch/loongarch/Makefile | 2 +-
->  arch/x86/Makefile       | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index dc5bd3f1b8d2..96ca1a688984 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -109,7 +109,7 @@ endif
->  ifdef CONFIG_RUSTC_HAS_ANNOTATE_TABLEJUMP
->  KBUILD_RUSTFLAGS		+=3D -Cllvm-args=3D--loongarch-annotate-tablejump
->  else
-> -KBUILD_RUSTFLAGS		+=3D -Zno-jump-tables # keep compatibility with older =
-compilers
-> +KBUILD_RUSTFLAGS		+=3D $(if $(call rustc-min-version,109300),-Cjump-tabl=
-es=3Dn,-Zno-jump-tables) # keep compatibility with older compilers
->  endif
->  ifdef CONFIG_LTO_CLANG
->  # The annotate-tablejump option can not be passed to LLVM backend when L=
-TO is enabled.
-> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> index 4db7e4bf69f5..c60371db49d9 100644
-> --- a/arch/x86/Makefile
-> +++ b/arch/x86/Makefile
-> @@ -98,7 +98,7 @@ ifeq ($(CONFIG_X86_KERNEL_IBT),y)
->  #   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D104816
->  #
->  KBUILD_CFLAGS +=3D $(call cc-option,-fcf-protection=3Dbranch -fno-jump-t=
-ables)
-> -KBUILD_RUSTFLAGS +=3D -Zcf-protection=3Dbranch -Zno-jump-tables
-> +KBUILD_RUSTFLAGS +=3D -Zcf-protection=3Dbranch $(if $(call rustc-min-ver=
-sion,109300),-Cjump-tables=3Dn,-Zno-jump-tables)
->  else
->  KBUILD_CFLAGS +=3D $(call cc-option,-fcf-protection=3Dnone)
->  endif
->
-> base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
-
+On Fri, Oct 31, 2025 at 10:34:51AM -0700, Sean Christopherson wrote:
+> On Fri, Oct 31, 2025, Yan Zhao wrote:
+> > On Thu, Oct 30, 2025 at 01:09:49PM -0700, Sean Christopherson wrote:
+> > > Acquire kvm->lock, kvm->slots_lock, and all vcpu->mutex locks when
+> > > servicing ioctls that (a) transition the TD to a new state, i.e. when
+> > > doing INIT or FINALIZE or (b) are only valid if the TD is in a specific
+> > > state, i.e. when initializing a vCPU or memory region.  Acquiring "all"
+> > > the locks fixes several KVM_BUG_ON() situations where a SEAMCALL can fail
+> > > due to racing actions, e.g. if tdh_vp_create() contends with either
+> > > tdh_mr_extend() or tdh_mr_finalize().
+> > > 
+> > > For all intents and purposes, the paths in question are fully serialized,
+> > > i.e. there's no reason to try and allow anything remotely interesting to
+> > > happen.  Smack 'em with a big hammer instead of trying to be "nice".
+> > > 
+> > > Acquire kvm->lock to prevent VM-wide things from happening, slots_lock to
+> > > prevent kvm_mmu_zap_all_fast(), and _all_ vCPU mutexes to prevent vCPUs
+> > s/kvm_mmu_zap_all_fast/kvm_mmu_zap_memslot
+> 
+> Argh!  Third time's a charm?  Hopefully...
+> 
+> > > @@ -3170,7 +3208,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
+> > >  
+> > >  int tdx_vcpu_unlocked_ioctl(struct kvm_vcpu *vcpu, void __user *argp)
+> > >  {
+> > > -	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+> > > +	struct kvm *kvm = vcpu->kvm;
+> > > +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+> > reverse xmas tree ?
+> 
+> No, because the shorter line generates an input to the longer line.  E.g. we could
+> do this if we really, really want an xmas tree:
+> 
+> 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+> 	struct kvm *kvm = vcpu->kvm;
+> 
+> but this won't compile
+> 
+> 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+> 	struct kvm *kvm = vcpu->kvm;
+Ah! Sorry. My attention was caught by the line length, completely missing the
+dependency :(
