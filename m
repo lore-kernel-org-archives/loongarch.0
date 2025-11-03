@@ -1,116 +1,141 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4E92C0261
-	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 08:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D8B2E2851
+	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 09:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762159355; cv=none; b=VAlFCmJe0cF9siF5HqP40IFHTrtmnKaHM/Z/xqiRWHByfruYPYYJz3UqQ8y+YQcEpMWeEbNAQ24KELKDArYpec/o7AESXH4GDkm/7y8tKk116SpdHdFbYSuXY20xPDixhVqpunT7goIhenbZTgGB3dzmXCUTqmyu2gS1BYcrN3M=
+	t=1762160996; cv=none; b=IqRqMTjebXCd2LZVqpVlbP+UDYTPw1r6vCzNL/CcQPTVIOv8RotqrV5LKMuraDGHYUOfpWh3X0oNdSQKneh17o+IaSscJbveV4q9/Q2wLhH55OanJ04+lVRKqSwsQGVv3K/ihno9hMnIU3SBDoaTOCF0XVN65ebNFoJ9Tc8cDPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762159355; c=relaxed/simple;
-	bh=pL6QkzO6ebFeaF3cWNBoKsDA3L6V2A3jJUIGwOM82Hs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=b/yTijvdBOwDrZR7UEhYHP7t1bPjbosTcyw/pBMpbX2IIvFL4dm8FiJMySNA/4hjK6vrXWz2J1JjxmDj0qSuElGJ7VpUbjscMnJEP9EO4d3nq/AMMvBygMgD70D2rVxD05pRQ3X0wDcLmCDj9rRC3u4q1xkYpS8Qk7QjHgmgjic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=e2llAf04; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1762160996; c=relaxed/simple;
+	bh=Pz4RARoS3t59jewVdeEcIvG3LcpwFyzVpFQTf5qdx/Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L4TF2p6UB++5I657gx0wGdOmsngq639IDWrF0/dR+qR7MtO10aEL/WwjWOFIDa0kAQYVF7rbbSP9L84KJWOvR//GQl3PYl9OF6MKevOSaBD8FALKCRLiueBdY+z6nAV4vYxfP8PaKNXmzBttywM08hAb/C2hYUjcoFr73Ez9sk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0dIhbF5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="e2llAf04"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1762159350;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FQsNfh1GGsfH4N7UPatGUlnLBDtyUYCePR7Ny0Amo+M=;
-	b=e2llAf0407iTPU5zM/bNRIZWphIG7W5OPZgcRieYGV4z6ljt3aBx26CVYQRxpbiNxncQDv
-	Hp659gj5seIIffH4Y+OLmoH+Z5x+Gj3Yj31t3Qpth8gjcA+ZpZbaTpZN2wmpHW31fbJeJk
-	P+YtWKZmspXZwBBUF5ZYt5Wo5b+tgRE=
-From: george <dongtai.guo@linux.dev>
-Date: Mon, 03 Nov 2025 16:42:19 +0800
-Subject: [PATCH] LoongArch: BPF: Fix sign extension for 12-bit immediates
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0dIhbF5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00B86C4AF0B
+	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 09:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762160996;
+	bh=Pz4RARoS3t59jewVdeEcIvG3LcpwFyzVpFQTf5qdx/Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=K0dIhbF5sB9h/u7I394UPjJMwCjgICv5u/G4q0WuObozs8vlLLEqBZh7O897iCHcd
+	 eUd1rFIqw+VaEZ0VKb6xofumRHuSCFI3DDAJnnQpdgAtNGGfFWUUYsN4KvkO7Osdcl
+	 gaYDcEaEZKCC9UWvr9eGJW2T7k4EevGgkDlFFKgGs4r9AEBtlrG149TGLfXT0pmJC1
+	 htEd09q1QZjQOjgZoDAuFoDwJ3JRAhw5Sdq6wyk4zJISVmbFF61Z999IjyBv3yNScL
+	 WqxHlhqGfK2QjIf7n0aTGUtAwCizxQ4DVRzGuEzdKZbd5Iy/4oxk7chnqk4WinEbzy
+	 4yPLsbocLzKTQ==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b710601e659so71319066b.1
+        for <loongarch@lists.linux.dev>; Mon, 03 Nov 2025 01:09:55 -0800 (PST)
+X-Gm-Message-State: AOJu0YzZE/tgTXdu7j0QvprVCzf5Bh7CmBkxUnXz3LdcM0Af53pPCOgj
+	rw504mJng4vsbvzGwlFcwJ0HAO+wV9HKYlo7Aq95JOOYVhDZHXA87Vp+b/JuGiK60kkaFC443b2
+	qU70xqWW41Rnnhz1K3/wmPzUaEZ9XeG0=
+X-Google-Smtp-Source: AGHT+IHH7GRdDkSolFd0DKvnUwGufJhMU7ivv5E8xIf9Cr4Xjt0Gpi6A0fSAtca/U2zc7oqlkzM9lEUk2yQyn4++emQ=
+X-Received: by 2002:a17:907:60c9:b0:b70:b064:133 with SMTP id
+ a640c23a62f3a-b70b0641cd1mr418428166b.4.1762160994556; Mon, 03 Nov 2025
+ 01:09:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251103-1-v1-1-20e6641a57da@linux.dev>
-X-B4-Tracking: v=1; b=H4sIAOpqCGkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1NDQwNjXUNdS7O0xEQjE4NUizQTJaC6gqLUtMwKsBnRsbW1ADnkze9TAAA
- A
-X-Change-ID: 20251103-1-96faa240e8f4
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
- Hengqi Chen <hengqi.chen@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev, 
- linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>, 
- Bing Huang <huangbing@kylinos.cn>, george <dongtai.guo@linux.dev>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1762159345; l=1770;
- i=dongtai.guo@linux.dev; s=20251103; h=from:subject:message-id;
- bh=r6iB+4QUzkiglp5aKNaGVGvpWZUg0I6p/aqNCFK0rKM=;
- b=b6fz9sckY6WVUreZ8Lba7h8hRBGk7JGTdKxLeSiwHsv/vtTZiTkhpyg0ZcPubLyabtVrI15zB
- q4+opYAPvg3BJqIiyqbVvRuTGYZx3+srGEKEZtP5sCqew+rPuNmcxb2
-X-Developer-Key: i=dongtai.guo@linux.dev; a=ed25519;
- pk=yHUJPGx/kAXutP/NSHpj7hWW0KQNlv3w9H6ju4qUoTM=
-X-Migadu-Flow: FLOW_OUT
+References: <20251014070227.22396-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20251014070227.22396-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 3 Nov 2025 17:09:50 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6uRnP6MD7aV0fC-uL+rihuSDw=Opmx=0keQ9gFp9ERhw@mail.gmail.com>
+X-Gm-Features: AWmQ_bkZB4Ki-eY515Azwze_fTHRu9a-drb485T57pjSbKfaeIiEUUlUNniRcRU
+Message-ID: <CAAhV-H6uRnP6MD7aV0fC-uL+rihuSDw=Opmx=0keQ9gFp9ERhw@mail.gmail.com>
+Subject: Re: [PATCH v1] LoongArch: Refine init_hw_perf_events()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: George Guo <guodongtai@kylinos.cn>
+Applied without rename loongson to loongson64, because loongson32 and
+loongson64 have different event numbers, they need to be
+distinguished.
 
-When loading immediate values that fit within 12-bit signed range,
-the move_imm function incorrectly used zero extension instead of
-sign extension.
+Huacai
 
-The bug was exposed when scx_simple scheduler failed with -EINVAL
-in ops.init() after passing node = -1 to scx_bpf_create_dsq().
-Due to incorrect sign extension, `node >= (int)nr_node_ids`
-evaluated to true instead of false, causing BPF program failure.
-
-Verified by testing with the scx_simple scheduler (located in
-tools/sched_ext/). After building with `make` and running
-./tools/sched_ext/build/bin/scx_simple, the scheduler now
-initializes successfully with this fix.
-
-Fix this by using sign extension (sext) instead of zero extension
-for signed immediate values in move_imm.
-
-Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-Reported-by: Bing Huang <huangbing@kylinos.cn>
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
-Signed-off-by: george <dongtai.guo@linux.dev>
----
- arch/loongarch/net/bpf_jit.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-index 5697158fd1645fdc3d83f598b00a9e20dfaa8f6d..f1398eb135b69ae61a27ed81f80b4bb0788cf0a0 100644
---- a/arch/loongarch/net/bpf_jit.h
-+++ b/arch/loongarch/net/bpf_jit.h
-@@ -122,7 +122,8 @@ static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm
- 	/* addiw rd, $zero, imm_11_0 */
- 	if (is_signed_imm12(imm)) {
- 		emit_insn(ctx, addiw, rd, LOONGARCH_GPR_ZERO, imm);
--		goto zext;
-+		emit_sext_32(ctx, rd, is32);
-+		return;
- 	}
- 
- 	/* ori rd, $zero, imm_11_0 */
-
----
-base-commit: 6146a0f1dfae5d37442a9ddcba012add260bceb0
-change-id: 20251103-1-96faa240e8f4
-
-Best regards,
--- 
-george <dongtai.guo@linux.dev>
-
+On Tue, Oct 14, 2025 at 3:02=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> (1) Use the existing CPUCFG6_PMNUM_SHIFT macro definition instead of
+> the magic value 4 to get the PMU number.
+>
+> (2) Detect the value of PMU bits via CPUCFG instruction according to
+> the ISA manual instead of hard-coded as 64, because the value may be
+> different for various microarchitectures.
+>
+> (3) Rename the PMU name without the postfix 64 due to it is redundant
+> and may be inaccurate.
+>
+> Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-E=
+N.html#_cpucfg
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/loongarch.h | 1 +
+>  arch/loongarch/kernel/perf_event.c     | 8 +++++---
+>  2 files changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
+ude/asm/loongarch.h
+> index 09dfd7eb406e..89343b1a526f 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -128,6 +128,7 @@
+>  #define  CPUCFG6_PMNUM                 GENMASK(7, 4)
+>  #define  CPUCFG6_PMNUM_SHIFT           4
+>  #define  CPUCFG6_PMBITS                        GENMASK(13, 8)
+> +#define  CPUCFG6_PMBITS_SHIFT          8
+>  #define  CPUCFG6_UPM                   BIT(14)
+>
+>  #define LOONGARCH_CPUCFG16             0x10
+> diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/p=
+erf_event.c
+> index 8ad098703488..ee5404d28423 100644
+> --- a/arch/loongarch/kernel/perf_event.c
+> +++ b/arch/loongarch/kernel/perf_event.c
+> @@ -846,18 +846,20 @@ static const struct loongarch_perf_event *loongarch=
+_pmu_map_raw_event(u64 config
+>  static int __init init_hw_perf_events(void)
+>  {
+>         int counters;
+> +       int bits;
+>
+>         if (!cpu_has_pmp)
+>                 return -ENODEV;
+>
+>         pr_info("Performance counters: ");
+> -       counters =3D ((read_cpucfg(LOONGARCH_CPUCFG6) & CPUCFG6_PMNUM) >>=
+ 4) + 1;
+> +       counters =3D ((read_cpucfg(LOONGARCH_CPUCFG6) & CPUCFG6_PMNUM) >>=
+ CPUCFG6_PMNUM_SHIFT) + 1;
+> +       bits =3D ((read_cpucfg(LOONGARCH_CPUCFG6) & CPUCFG6_PMBITS) >> CP=
+UCFG6_PMBITS_SHIFT) + 1;
+>
+>         loongarch_pmu.num_counters =3D counters;
+>         loongarch_pmu.max_period =3D (1ULL << 63) - 1;
+>         loongarch_pmu.valid_count =3D (1ULL << 63) - 1;
+>         loongarch_pmu.overflow =3D 1ULL << 63;
+> -       loongarch_pmu.name =3D "loongarch/loongson64";
+> +       loongarch_pmu.name =3D "loongarch/loongson";
+>         loongarch_pmu.read_counter =3D loongarch_pmu_read_counter;
+>         loongarch_pmu.write_counter =3D loongarch_pmu_write_counter;
+>         loongarch_pmu.map_raw_event =3D loongarch_pmu_map_raw_event;
+> @@ -867,7 +869,7 @@ static int __init init_hw_perf_events(void)
+>         on_each_cpu(reset_counters, NULL, 1);
+>
+>         pr_cont("%s PMU enabled, %d %d-bit counters available to each CPU=
+.\n",
+> -                       loongarch_pmu.name, counters, 64);
+> +                       loongarch_pmu.name, counters, bits);
+>
+>         perf_pmu_register(&pmu, "cpu", PERF_TYPE_RAW);
+>
+> --
+> 2.42.0
+>
