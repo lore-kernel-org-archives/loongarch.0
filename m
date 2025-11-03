@@ -1,173 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415F51B87C9
-	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 09:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABB42EA151
+	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 09:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762161183; cv=none; b=DwaLGqNlXCWB6H+WsJj/R94l0NiTr5XazFfogjOoxJP2vTxe5FPuv6Oyt2CcN3t1ndChqbikSEl9DiF/Cs1i1QN+V7icCVSGwZHUERsQbJUQ16WbRA/hf+Y+Hop6T/CaGJdSEqdsCLgPmYTJcAlPyoQYZUGcMn46kMauRJAWYIA=
+	t=1762162047; cv=none; b=Oe1U2u/DNKNKgpJTB8XaZZ24T6VXI90VSn1Eaask3R0Vf9OPx1cxEojiYtVARrKutXLcnyic89neVLNzAxYYZmRwKagSQB/xnvyvlZHsmCly+fOwQgBLUrJW4ubBr+TmwzUW0oabKQxNOHSoENZ+xY+vSrOy24Uh3Vr3BVPEd0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762161183; c=relaxed/simple;
-	bh=BLeGKlH4tFOe01XvDJYeXPH2ybj5CxCOnxzNCYyzS9Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tNtE/Kb2wPBhQKGxtriy75lyNAHrBuHuW6lUpubeVaItiLimZzqyhLE2hMZIbzdbR4z+HyXwvDvoXleCNNKmoJOh4aeb7VKXaUYa2ULHGeEnia/e0IL+LIi72j4eRU3khIUzz94oFEOfTTje0gJWGxF/oY7hsDBaKeNYWyST160=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPCfat0M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762162047; c=relaxed/simple;
+	bh=2T3Xdr8r17HKPsoSbydWvx2P/0UQkjcbi4HlQeeoIew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XLJZ9IUlrEHuF8C1yQdyi4MvZUVlX0LhuwlrO0lWwgD4kIZsAczC8ktybuG9mlaPshLFttyE2q/5KAiaCJOwMp5DB/xKKQgW4w9mh2zu9OCmUW01t/fbqqphlm/jk9oasRJg6HcZJ9Dw8TL2j3coQIa5G054eh3MBR9jE9UvPV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=cX26JTlt; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPCfat0M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1AB7C4AF09
-	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 09:13:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762161182;
-	bh=BLeGKlH4tFOe01XvDJYeXPH2ybj5CxCOnxzNCYyzS9Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iPCfat0ME0F/ezuDxC18wmk524gaGHcXIrStcp/20v6QVA0pKkQTKj3IrpIQirzLz
-	 48tcfmefhU+Oh9TQZKifDzcHqaocRCw1itRArQz/0JO/eKwS4FAFKYLFRoXLRa2dA0
-	 bMVpknFMIot0s0ZmeJBQcDjXbr5oTNXtptBrictpBvu2jYpByV9FPwPgstQPWB5gvv
-	 8PfLJymn3pb1ehDKJ1vKr5gkLYREfoFyzN84zNplWlefUtURfBfHR1vrrpdoV/bFnW
-	 C5V2QyHVmFT82vTCLj8rivb2T6Ojx0+z0ebXix09gb0FhZcMPAbYguNCmX7V3X7zTd
-	 hM8ZfxD/mBOTg==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-640c6577120so979012a12.1
-        for <loongarch@lists.linux.dev>; Mon, 03 Nov 2025 01:13:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU1VXygLD96V2jQzId4hcUvqBeiKkaFLCYJZ/dv7CHEiIA8H4Lua+UWs0nUpqg3ouwgvV0DCb482KU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YykSM1ScqEidXERg/eaHFWt7cX8HvghoeRODKX39x2dDs78clxo
-	KBI/USI+IeLFMrNUldyU2bI7jWkrLNBydHeFkEAxYW4UbJz4+E/6qNJy4NKPXiWfn1xWevsr1uq
-	r1+8rDSTXGLeYhnuzb/ipj2jDpMLHnxk=
-X-Google-Smtp-Source: AGHT+IH/hMANbcDUCQ1Ja+g59TP7QZglZupzPFtaLLGpzDVLHNdE2GZ9jMCMW4PouhF4L90eNs/1uFe1GslDFbf1mMk=
-X-Received: by 2002:a17:907:2d29:b0:b71:8448:a8dd with SMTP id
- a640c23a62f3a-b718448abcdmr68886166b.31.1762161181401; Mon, 03 Nov 2025
- 01:13:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="cX26JTlt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1762162043;
+	bh=2T3Xdr8r17HKPsoSbydWvx2P/0UQkjcbi4HlQeeoIew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cX26JTlt2KnX/6F7uTKQO9FcOk7A1K96Eiq13lmAV/5tTRMiwy1tVolHrqylObJyS
+	 VWyynDHgDG0O30/+ir8D6a0em/Lf39f8hqSvhZlGvjOm9hvSwE+u1VMpH5qClIDwmR
+	 Cf5oy2dIpccho2VwLPvmfedtZtecZZgN/vEoZXYI=
+Date: Mon, 3 Nov 2025 10:27:22 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: ptrace: Use UAPI types in UAPI header
+Message-ID: <4f8402e5-2bfa-4ee3-9123-fac887ed866d@t-8ch.de>
+References: <20251029-loongarch-uapi-ptrace-types-v1-1-5c84855a348d@weissschuh.net>
+ <CAAhV-H4oDtOUB_CecFE2sPE-JSQNNWvFRmY8=ZdDOCdD8kdo7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251029-loongarch-uapi-ptrace-types-v1-1-5c84855a348d@weissschuh.net>
-In-Reply-To: <20251029-loongarch-uapi-ptrace-types-v1-1-5c84855a348d@weissschuh.net>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 3 Nov 2025 17:12:58 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4oDtOUB_CecFE2sPE-JSQNNWvFRmY8=ZdDOCdD8kdo7g@mail.gmail.com>
-X-Gm-Features: AWmQ_bnIJsb9uCZ9U0bHJfiDhKTUuVzIxImeO2vZ69sxQ1m-TL0S9eXxKzMeQ6E
-Message-ID: <CAAhV-H4oDtOUB_CecFE2sPE-JSQNNWvFRmY8=ZdDOCdD8kdo7g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: ptrace: Use UAPI types in UAPI header
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H4oDtOUB_CecFE2sPE-JSQNNWvFRmY8=ZdDOCdD8kdo7g@mail.gmail.com>
 
-Hi, Thomas,
+Hi Huacai,
 
-On Wed, Oct 29, 2025 at 11:20=E2=80=AFPM Thomas Wei=C3=9Fschuh <linux@weiss=
-schuh.net> wrote:
->
-> The kernel UAPI headers already contain fixed-width integer types,
-> there is no need to rely on libc types. There may not be a libc
-> available or it may not provide <stdint.h>, like for example on nolibc.
->
-> This also aligns the header with the rest of the LoongArch UAPI headers.
-Thank you for your patch, but could you please tell me some history
-and user guide about the three styles: u64, __u64 and unint64_t?
+On 2025-11-03 17:12:58+0800, Huacai Chen wrote:
+> On Wed, Oct 29, 2025 at 11:20 PM Thomas Weißschuh <linux@weissschuh.net> wrote:
+> >
+> > The kernel UAPI headers already contain fixed-width integer types,
+> > there is no need to rely on libc types. There may not be a libc
+> > available or it may not provide <stdint.h>, like for example on nolibc.
+> >
+> > This also aligns the header with the rest of the LoongArch UAPI headers.
 
-Huacai
+> Thank you for your patch, but could you please tell me some history
+> and user guide about the three styles: u64, __u64 and unint64_t?
 
->
-> Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
-> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> ---
-> I'd like to take this through the nolibc tree, as this currently breaks
-> the upcoming nolibc ptrace support.
-> ---
->  arch/loongarch/include/uapi/asm/ptrace.h | 40 ++++++++++++++------------=
-------
->  1 file changed, 18 insertions(+), 22 deletions(-)
->
-> diff --git a/arch/loongarch/include/uapi/asm/ptrace.h b/arch/loongarch/in=
-clude/uapi/asm/ptrace.h
-> index aafb3cd9e943..215e0f9e8aa3 100644
-> --- a/arch/loongarch/include/uapi/asm/ptrace.h
-> +++ b/arch/loongarch/include/uapi/asm/ptrace.h
-> @@ -10,10 +10,6 @@
->
->  #include <linux/types.h>
->
-> -#ifndef __KERNEL__
-> -#include <stdint.h>
-> -#endif
-> -
->  /*
->   * For PTRACE_{POKE,PEEK}USR. 0 - 31 are GPRs,
->   * 32 is syscall's original ARG0, 33 is PC, 34 is BADVADDR.
-> @@ -41,44 +37,44 @@ struct user_pt_regs {
->  } __attribute__((aligned(8)));
->
->  struct user_fp_state {
-> -       uint64_t fpr[32];
-> -       uint64_t fcc;
-> -       uint32_t fcsr;
-> +       __u64 fpr[32];
-> +       __u64 fcc;
-> +       __u32 fcsr;
->  };
->
->  struct user_lsx_state {
->         /* 32 registers, 128 bits width per register. */
-> -       uint64_t vregs[32*2];
-> +       __u64 vregs[32*2];
->  };
->
->  struct user_lasx_state {
->         /* 32 registers, 256 bits width per register. */
-> -       uint64_t vregs[32*4];
-> +       __u64 vregs[32*4];
->  };
->
->  struct user_lbt_state {
-> -       uint64_t scr[4];
-> -       uint32_t eflags;
-> -       uint32_t ftop;
-> +       __u64 scr[4];
-> +       __u32 eflags;
-> +       __u32 ftop;
->  };
->
->  struct user_watch_state {
-> -       uint64_t dbg_info;
-> +       __u64 dbg_info;
->         struct {
-> -               uint64_t    addr;
-> -               uint64_t    mask;
-> -               uint32_t    ctrl;
-> -               uint32_t    pad;
-> +               __u64    addr;
-> +               __u64    mask;
-> +               __u32    ctrl;
-> +               __u32    pad;
->         } dbg_regs[8];
->  };
->
->  struct user_watch_state_v2 {
-> -       uint64_t dbg_info;
-> +       __u64 dbg_info;
->         struct {
-> -               uint64_t    addr;
-> -               uint64_t    mask;
-> -               uint32_t    ctrl;
-> -               uint32_t    pad;
-> +               __u64    addr;
-> +               __u64    mask;
-> +               __u32    ctrl;
-> +               __u32    pad;
->         } dbg_regs[14];
->  };
->
->
-> ---
-> base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
-> change-id: 20251029-loongarch-uapi-ptrace-types-0c5c6756f7e0
->
-> Best regards,
-> --
-> Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
->
->
+uint64_t -> userspace type, should not be used within the kernel
+            can technically be used in UAPI it will be somewhat
+	    nonstandard and introduce a dependency on libc with no
+	    upsides.
+
+u64      -> kernel-internal type, used for regular kernel code
+            defined in include/linux/types.h
+
+__u64    -> UAPI type usable from both kernel and userspace code
+            defined in include/uapi/linux/types.
+
+As a note: When applying the patch I want to clarify the commit message
+a bit, as nolibc indeed has a stdint.h header. The real breakage comes
+from a validation step we perform which does not add the libc include
+directory to the include path.
+
+
+Thomas
