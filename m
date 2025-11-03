@@ -1,317 +1,437 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C112F3C12
-	for <loongarch@lists.linux.dev>; Mon,  3 Nov 2025 11:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD7A2E2665;
+	Mon,  3 Nov 2025 15:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762168999; cv=none; b=q80gwjT0RZGI+uP524W18QWMWCgqtjLMsWH+6AiIa8zCpxRr8shL5mmUCl0LnQ11uiMWWAggP8ajEn195Nc6ueG/fzaQk/U4U4EUGCeMUd8FQcevaPAKgmzrvqOPsrf/Je6vv4pFWz3DKZKXmt7uTfwxuuIZXI5O77PYjrKBBDk=
+	t=1762183482; cv=none; b=gt7/4n8nuamIkNgDz9jdhbVcB5PL0EDwQhIbLw0D20jvTX0BpLV2vpOLwylkX4qLjZ61ydDSJDEDicgyWSN7gwj9inwS0x9e5c0yg3WclFj3u1KN9586deImz6gw7PwyepuhjiG82nInmsCkBNfwnAGX22uGScErtbdsbeyObH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762168999; c=relaxed/simple;
-	bh=UR7P2KqrURkNHmJONJu/0NvJosGEaEBla2+TmGkIiRE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cUat4c19kH/Z6LV+nzQ7lhGXYxWtl2/oJFdWdpBNm0lAVf1/fHf6xDP5vIDZzXccRUKs8cowyPtghs939L4QlnTI9cuC+3W7rvIhFe5IK01+9AQOuDCDdCku/FjhEBDLIRlsZqKgiiaqPD1D+SgKsYu+l6J3AKi4UbrN5BYuaqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MfJ6DcF1; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1762183482; c=relaxed/simple;
+	bh=ERTab5426w7UT69sbyATXIKlIf/w637zeAtOZ9QJg5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c0FqAOt9n9qbAO2Fssu5CkMB9YgojjuBFSH/Zg2ranZD8fAb2TFqE8dYQvIx6Y0PquWxwnKLzba2TIsOKptM+4iy5nyUrabZNawBWWrMlm6G4pXMycIml/fiaedm5Hg82yt6O10flE4npJhBgFhudlxcXOp6yDK1tx35PH6Rbiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nVHnnPlW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MfJ6DcF1"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A3A02SE005329;
-	Mon, 3 Nov 2025 11:23:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=pszVEX
-	i5Cs8PQMngMpsaR/hAu0owJo9a30hFho3P6HI=; b=MfJ6DcF1wPszsFf00iUZXj
-	vlmw7DWMasKMyKcsdN6krxB/rbbKPVXWJwrq2I1yKIY13dbjjH1o7thA9MyDUi0y
-	vgECgF6TxRMtzGk/ZqlF5eYa9IgMAPYWDfq7aM7wjTNvMjwKuGXIolLUEuG61iwO
-	kk74Qm1mRyzm8LqHNHLDHWv8E+EGqs+wFivtdIo+I49EdaDi3fJMn10ZEm5TICWJ
-	RElsvSIcY6Ly37EOf5Xrh643VZ9INoQsd0Oz21V1+InjRalavHsdyuQVl0OffQIY
-	3vBNj6ETOfHzYsB4KwIBZIJObPGMaljbnqr1zilggODUATgBypF6yEldpNYftv+A
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59q8p9ra-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Nov 2025 11:23:15 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5A3BEuI7010884;
-	Mon, 3 Nov 2025 11:23:14 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59q8p9r9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Nov 2025 11:23:14 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A37cL9J019320;
-	Mon, 3 Nov 2025 11:23:13 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a5whn59y7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Nov 2025 11:23:13 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A3BNB3J31392476
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Nov 2025 11:23:12 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 99B2158056;
-	Mon,  3 Nov 2025 11:23:11 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B506858052;
-	Mon,  3 Nov 2025 11:23:08 +0000 (GMT)
-Received: from [9.111.82.153] (unknown [9.111.82.153])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Nov 2025 11:23:08 +0000 (GMT)
-Message-ID: <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
-Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
- and SR-IOV
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka
- <jan.kiszka@siemens.com>,
-        Bibo Mao <maobibo@loongson.cn>,
-        linux-s390
- <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev,
-        Farhan Ali
- <alifm@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Tianrui
- Zhao	 <zhaotianrui@loongson.cn>,
-        Gerald Schaefer
- <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Gerd Bayer	
- <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Date: Mon, 03 Nov 2025 12:23:08 +0100
-In-Reply-To: <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
-References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
-	 <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com>
-	 <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nVHnnPlW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C811C4CEFD;
+	Mon,  3 Nov 2025 15:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762183481;
+	bh=ERTab5426w7UT69sbyATXIKlIf/w637zeAtOZ9QJg5w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nVHnnPlWcjfbZLiMgW8XKBA3vo3EC8DGd2MerZrHd2e1HmEq03fkqaklYpVXv4SGB
+	 f58CMq1JqTYHhoA4aPHWifms5rqcCP6QwUHYmSUGtiQ1S7JJupWpokuuIzheYZX4kP
+	 ilRagb8HcJs9BV5SJV8tlaKzHv7v5I5VxjobyfRFyPQ/tQaBZtA0/uovXDVcL4/ZFh
+	 g+D4zxTLHhYQsKoBbMC8ilSWjas6DYbb0oA9OOWdmsDwmwMFlUluG/pZE2CJWzTQM3
+	 emCv4XY32LI7OmUj3HkZJNOLi9pW0vPA3d2dKhyXGCGCfP6Zpmxl/bAZBjOyOdGpNs
+	 vLL56lm1qBe5A==
+Date: Mon, 3 Nov 2025 15:24:38 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Nick Alcock <nick.alcock@oracle.com>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Shuah Khan <shuah@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+	Shannon Nelson <sln@onemain.com>, linux-kernel@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-s390@vger.kernel.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 23/35] vdso/datastore: Map pages through struct page
+Message-ID: <aQjJNmwniQwwjeBR@finisterre.sirena.org.uk>
+References: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
+ <20251014-vdso-sparc64-generic-2-v4-23-e0607bf49dea@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=StmdKfO0 c=1 sm=1 tr=0 ts=690890a3 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=CVEPJ6nH_zdpVceZYQoA:9 a=QEXdDO2ut3YA:10
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: 7rFSlMeYVcIwghoP9LHcpFeesyb62QRC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAxOCBTYWx0ZWRfXzEBdH0xuU4zj
- kHxnQKdqD9smWYR2WndNTSz+t31izFnHZQIYQyT1HN253o9z7KWAhyAN9HOw1UrYAhFfCJw7FHb
- +Q9XaKQT+pePHX1Ap5hceq0vmF3WpgKSMcMPb75lO/6+Juq2OoHTrRGtxRGCDcWjkPHjJoKXfnw
- Mb2OJrl7S9jXuHpgA60wpqc0VUXU5UgHdpCP2C83XF/HaqFoKWcQJ/RfLilK27dDUAZnQjV0ac9
- 6cV7yp16DBpEQi7uuyclz1DGgilzohzA/yxgr8jV//RynUFQXQGqPk/YoMnsXlsAPyYPyxdbPzj
- QryyJMXS/X6RqOEf2owKmK2EgV+fUj2Wv2mkMtEJ4Trq6yLTNvSQNmesVg55/q31bw1zEDjewBX
- EvEv4miN9KZOKQloR8SIanSJF6Op9w==
-X-Proofpoint-GUID: cHXcDtfakFCIOP8Neov1l0i0PTXzlcoR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-03_01,2025-10-29_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 phishscore=0 impostorscore=0 priorityscore=1501
- malwarescore=0 clxscore=1015 adultscore=0 bulkscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010018
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RnS/s1JLwGUeEB7l"
+Content-Disposition: inline
+In-Reply-To: <20251014-vdso-sparc64-generic-2-v4-23-e0607bf49dea@linutronix.de>
+X-Cookie: If you fail to plan, plan to fail.
 
-On Mon, 2025-11-03 at 17:50 +0800, Huacai Chen wrote:
-> Hi, Niklas,
->=20
-> On Wed, Oct 29, 2025 at 5:42=E2=80=AFPM Niklas Schnelle <schnelle@linux.i=
-bm.com> wrote:
-> >=20
-> > When the isolated PCI function probing mechanism is used in conjunction
-> > with ARI or SR-IOV it may not find all available PCI functions. In the
-> > case of ARI the problem is that next_ari_fn() always returns -ENODEV if
-> > dev is NULL and thus if fn 0 is missing the scan stops.
-> >=20
-> > For SR-IOV things are more complex. Here the problem is that the check
-> > for multifunction may fail. One example where this can occur is if the
-> > first passed-through function is a VF with devfn 8. Now in
-> > pci_scan_slot() this means it is fn 0 and thus multifunction doesn't ge=
-t
-> > set. Since VFs don't get multifunction set via PCI_HEADER_TYPE_MFD it
-> > remains unset and probing stops even if there is a devfn 9.
-> >=20
-> > Now at the moment both of these issues are hidden on s390. The first on=
-e
-> > because ARI is detected as disabled as struct pci_bus's self is NULL
-> > even though firmware does enable and use ARI. The second issue is hidde=
-n
-> > as a side effect of commit 25f39d3dcb48 ("s390/pci: Ignore RID for
-> > isolated VFs"). This is because VFs are either put on their own virtual
-> > bus if the parent PF is not passed-through to the same instance or VFs
-> > are hotplugged once SR-IOV is enabled on the parent PF and then
-> > pci_scan_single_device() is used.
-> >=20
-> > Still especially the first issue prevents correct detection of ARI and
-> > the second might be a problem for other users of isolated function
-> > probing. Fix both issues by keeping things as simple as possible. If
-> > isolated function probing is enabled simply scan every possible devfn.
-> I'm very sorry, but applying this patch on top of commit a02fd05661d7
-> ("PCI: Extend isolated function probing to LoongArch") we fail to
-> boot.
->=20
-> Boot log:
-> [   10.365340] megaraid cmm: 2.20.2.7 (Release Date: Sun Jul 16
-> 00:01:03 EST 2006)
-> [   10.372628] megaraid: 2.20.5.1 (Release Date: Thu Nov 16 15:32:35 EST =
-2006)
-> [   10.379564] megasas: 07.734.00.00-rc1
-> [   10.383222] mpt3sas version 54.100.00.00 loaded
-> [   10.388304] nvme nvme0: pci function 0000:08:00.0
-> [   10.395088] Freeing initrd memory: 45632K
-> [   10.469822] ------------[ cut here ]------------
-> [   10.474409] WARNING: CPU: 0 PID: 247 at drivers/ata/libahci.c:233
-> ahci_enable_ahci+0x64/0xb8
-> [   10.482804] Modules linked in:
-> [   10.485838] CPU: 0 UID: 0 PID: 247 Comm: kworker/0:11 Not tainted
-> 6.18.0-rc3 #1 PREEMPT(full)
-> [   10.494397] Hardware name: To be filled by O.E.M.To be fill To be
-> filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-> Loongson-UDK2018-V4.0.
-> [   10.508139] Workqueue: events work_for_cpu_fn
-> [   10.512468] pc 900000000103be2c ra 900000000103be28 tp
-> 900000010ae44000 sp 900000010ae47be0
-> [   10.520769] a0 0000000000000000 a1 00000000000000b0 a2
-> 0000000000000001 a3 9000000001810e0c
-> [   10.529069] a4 9000000002343e20 a5 0000000000000001 a6
-> 0000000000000010 a7 0000000000000000
-> [   10.537373] t0 d10951fa66920f31 t1 d10951fa66920f31 t2
-> 0000000000001280 t3 000000000674c000
-> [   10.545673] t4 0000000000000000 t5 0000000000000000 t6
-> 9000000008002480 t7 00000000000000b4
-> [   10.553972] t8 90000001055eab90 u0 900000010ae47b68 s9
-> 9000000002221a50 s0 0000000000000000
-> [   10.562272] s1 ffff800032435800 s2 0000000000000000 s3
-> ffffffff80000000 s4 9000000002221570
-> [   10.570571] s5 0000000000000005 s6 9000000101ccf0b8 s7
-> 90000000023dd000 s8 900000010ae47d08
-> [   10.578869]    ra: 900000000103be28 ahci_enable_ahci+0x60/0xb8
-> [   10.584665]   ERA: 900000000103be2c ahci_enable_ahci+0x64/0xb8
-> [   10.590461]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC -WE)
-> [   10.596609]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-> [   10.600937]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-> [   10.605698]  ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
-> [   10.610458] ESTAT: 000c0000 [BRK] (IS=3D ECode=3D12 EsubCode=3D0)
-> [   10.615994]  PRID: 0014d010 (Loongson-64bit, Loongson-3C6000/S)
-> [   10.621875] CPU: 0 UID: 0 PID: 247 Comm: kworker/0:11 Not tainted
-> 6.18.0-rc3 #1 PREEMPT(full)
-> [   10.621877] Hardware name: To be filled by O.E.M.To be fill To be
-> filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-> Loongson-UDK2018-V4.0.
-> [   10.621878] Workqueue: events work_for_cpu_fn
-> [   10.621881] Stack : 900000010ae47848 0000000000000000
-> 90000000002436bc 900000010ae44000
-> [   10.621884]         900000010ae47820 900000010ae47828
-> 0000000000000000 900000010ae47968
-> [   10.621887]         900000010ae47960 900000010ae47960
-> 900000010ae47630 0000000000000001
-> [   10.621890]         0000000000000001 900000010ae47828
-> d10951fa66920f31 9000000100414300
-> [   10.621893]         80000000ffffe34d fffffffffffffffe
-> 000000000000034f 000000000000002f
-> [   10.621896]         0000000000000063 0000000000000001
-> 000000000674c000 9000000002221a50
-> [   10.621899]         0000000000000000 0000000000000000
-> 90000000020b6500 90000000023dd000
-> [   10.621902]         00000000000000e9 0000000000000009
-> 0000000000000002 90000000023dd000
-> [   10.621905]         900000010ae47d08 0000000000000000
-> 90000000002436d4 0000000000000000
-> [   10.621908]         00000000000000b0 0000000000000004
-> 0000000000000000 0000000000071c1d
-> [   10.621910]         ...
-> [   10.621912] Call Trace:
-> [   10.621913] [<90000000002436d4>] show_stack+0x5c/0x180
-> [   10.621918] [<900000000023f328>] dump_stack_lvl+0x6c/0x9c
-> [   10.621923] [<9000000000266eb8>] __warn+0x80/0x108
-> [   10.621927] [<90000000017d1910>] report_bug+0x158/0x2a8
-> [   10.621932] [<900000000180b610>] do_bp+0x2d0/0x340
-> [   10.621938] [<9000000000241da0>] handle_bp+0x120/0x1c0
-> [   10.621940] [<900000000103be2c>] ahci_enable_ahci+0x64/0xb8
-> [   10.621943] [<900000000103beb8>] ahci_save_initial_config+0x38/0x4d8
-> [   10.621946] [<90000000010391b4>] ahci_init_one+0x354/0x1088
-> [   10.621950] [<9000000000d16cdc>] local_pci_probe+0x44/0xb8
-> [   10.621953] [<9000000000286f78>] work_for_cpu_fn+0x18/0x30
-> [   10.621956] [<900000000028a840>] process_one_work+0x160/0x330
-> [   10.621961] [<900000000028b208>] worker_thread+0x330/0x460
-> [   10.621964] [<9000000000295fdc>] kthread+0x11c/0x138
-> [   10.621968] [<900000000180b740>] ret_from_kernel_thread+0x28/0xa8
-> [   10.621971] [<9000000000241484>] ret_from_kernel_thread_asm+0xc/0x88
-> [   10.621973]
->=20
->=20
 
-This looks like a warning telling us that AHCI enable failed / timed
-out. Do you have Panic on Warn on that this directly causes a boot
-failure? The only relation I can see with my patch is that maybe this
-AHCI device wasn't probed before and somehow isn't working?
+--RnS/s1JLwGUeEB7l
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Niklas
+On Tue, Oct 14, 2025 at 08:49:09AM +0200, Thomas Wei=DFschuh wrote:
+
+> An upcoming change will allocate the datapages dynamically instead of as
+> part of the kernel image. Such pages can only be mapped through
+> 'struct page' and not through PFNs.
+
+I'm seeing some boot failures on some arm64 platforms in -next which are
+bisecting to this patch in -next.  Unfortunately the diagnostics aren't
+super useful, we seem to just stop making progress in userspace with no
+obvious output.  One sample log from the FVP is:
+
+   https://lava.sirena.org.uk/scheduler/job/2036229#L1268
+
+which isn't super instructive.  Not all platforms seem to be affected,
+I've seen this on at least the Arm FVP, Orion O6 and Libretech Renegade
+Elite.  The diagnostics aren't very clear here but given that I'm seeing
+the same issue and bisect result on multiple platforms it seemed worth
+mentioning.  Some platforms do seem fine.
+
+We do have some other serious breakage affecting arm64 in -next which
+are making it hard to get a clear picture of which platforms are
+affected, at least the FVP and O6 are unaffected by those other issues
+(due to using MTE on platforms that don't have it, those platforms do
+have MTE).
+
+bisect log:
+
+# bad: [9823120909776bbca58a3c55ef1f27d49283c1f3] Add linux-next specific f=
+iles for 20251103
+# good: [3575af345aa2424636e69ac101a568bda249abe6] Merge branch 'i2c/i2c-ho=
+st-fixes' of https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/lin=
+ux.git
+# good: [ed5d499b5c9cc11dd3edae1a7a55db7dfa4f1bdc] regcache: maple: Split -=
+>populate() from ->init()
+# good: [e73b743bfe8a6ff4e05b5657d3f7586a17ac3ba0] ASoC: soc-core: check op=
+s & auto_selectable_formats in snd_soc_dai_get_fmt() to prevent dereference=
+ error
+# good: [ecd0de438c1f0ee86cf8f6d5047965a2a181444b] spi: tle62x0: Add newlin=
+e to sysfs attribute output
+# good: [6ef8e042cdcaabe3e3c68592ba8bfbaee2fa10a3] ASoC: codec: wm8400: rep=
+lace printk() calls with dev_*() device aware logging
+# good: [f1dfbc1b5cf8650ae9a0d543e5f5335fc0f478ce] ASoC: max98090/91: fixin=
+g the stream index
+# good: [20bcda681f8597e86070a4b3b12d1e4f541865d3] ASoC: codecs: va-macro: =
+fix revision checking
+# good: [cf6bf51b53252284bafc7377a4d8dbf10f048b4d] ASoC: cs4271: Add suppor=
+t for the external mclk
+# good: [8fdb030fe283c84fd8d378c97ad0f32d6cdec6ce] ASoC: qcom: sc7280: make=
+ use of common helpers
+# good: [28039efa4d8e8bbf98b066133a906bd4e307d496] MAINTAINERS: remove obso=
+lete file entry in DIALOG SEMICONDUCTOR DRIVERS
+# good: [e062bdfdd6adbb2dee7751d054c1d8df63ddb8b8] regmap: warn users about=
+ uninitialized flat cache
+# good: [66fecfa91deb536a12ddf3d878a99590d7900277] ASoC: spacemit: use `dep=
+ends on` instead of `select`
+# good: [f034c16a4663eaf3198dc18b201ba50533fb5b81] ASoC: spacemit: add fail=
+ure check for spacemit_i2s_init_dai()
+# good: [4a5ac6cd05a7e54f1585d7779464d6ed6272c134] ASoC: sun4i-spdif: Suppo=
+rt SPDIF output on A523 family
+# good: [4795375d8aa072e9aacb0b278e6203c6ca41816a] ASoC: cs-amp-lib-test: A=
+dd test cases for cs_amp_set_efi_calibration_data()
+# good: [ef042df96d0e1089764f39ede61bc8f140a4be00] ASoC: SDCA: Add HID butt=
+on IRQ
+# good: [e7434adf0c53a84d548226304cdb41c8818da1cb] ASoC: cs530x: Add SPI bu=
+s support for cs530x parts
+# good: [01313661b248c5ba586acae09bff57077dbec0a5] regulator: Let raspberry=
+pi drivers depend on ARM
+# good: [d29479abaded34b2b1dab2e17efe96a65eba3d61] ASoC: renesas: fsi: Cons=
+tify struct fsi_stream_handler
+# good: [4c33cef58965eb655a0ac8e243aa323581ec025f] regulator: pca9450: link=
+ regulator inputs to supply groups
+# good: [e973dfe9259095fb509ab12658c68d46f0e439d7] ASoC: qcom: sm8250: add =
+qrb2210-sndcard compatible string
+# good: [77a58ba7c64ccca20616aa03599766ccb0d1a330] spi: spi-mem: Trace exec=
+_op
+# good: [c17fa4cbc546c431ccf13e9354d5d9c1cd247b7c] ASoC: sdw_utils: add nam=
+e_prefix for rt1321 part id
+# good: [310bf433c01f78e0756fd5056a43118a2f77318c] ASoC: max98090/91: fixin=
+g a space
+# good: [2528c15f314ece50218d1273654f630d74109583] ASoC: max98090/91: addin=
+g DAPM routing for digital output for max98091
+# good: [d054cc3a2ccfb19484f3b54d69b6e416832dc8f4] regulator: rpmh-regulato=
+r: Add RPMH regulator support for PMR735D
+# good: [fd5ef3d69f8975bad16c437a337b5cb04c8217a2] spi: spi-qpic-snand: mak=
+e qcom_spi_ecc_engine_ops_pipelined const
+# good: [638bae3fb225a708dc67db613af62f6d14c4eff4] ASoC: max98090/91: added=
+ DAPM widget for digital output for max98091
+# good: [ecba655bf54a661ffe078856cd8dbc898270e4b5] ASoC: fsl_aud2htx: add I=
+EC958_SUBFRAME_LE format in supported list
+# good: [7e1906643a7374529af74b013bba35e4fa4e6ffc] ASoC: codecs: va-macro: =
+Clean up on error path in probe()
+# good: [d742ebcfe524dc54023f7c520d2ed2e4b7203c19] ASoC: soc.h: remove snd_=
+soc_kcontrol_component()
+# good: [fce217449075d59b29052b8cdac567f0f3e22641] ASoC: spacemit: add i2s =
+support for K1 SoC
+# good: [6658472a3e2de08197acfe099ba71ee0e2505ecf] ASoC: amd: amd_sdw: Prop=
+agate the PCI subsystem Vendor and Device IDs
+# good: [0cc08c8130ac8f74419f99fe707dc193b7f79d86] spi: aspeed: Fix an IS_E=
+RR() vs NULL bug in probe()
+# good: [0743acf746a81e0460a56fd5ff847d97fa7eb370] spi: airoha: buffer must=
+ be 0xff-ed before writing
+# good: [d77daa49085b067137d0adbe3263f75a7ee13a1b] spi: aspeed: fix spellin=
+g mistake "triming" -> "trimming"
+# good: [1e570e77392f43a3cdab2849d1f81535f8a033e2] ASoC: mxs-saif: support =
+usage with simple-audio-card
+# good: [15afe57a874eaf104bfbb61ec598fa31627f7b19] ASoC: dt-bindings: qcom:=
+ Add Kaanapali LPASS macro codecs
+# good: [65efe5404d151767653c7b7dd39bd2e7ad532c2d] regulator: rpmh-regulato=
+r: Add RPMH regulator support for Glymur
+# good: [fb25114cd760c13cf177d9ac37837fafcc9657b5] regulator: sy7636a: add =
+gpios and input regulator
+# good: [6621b0f118d500092f5f3d72ddddb22aeeb3c3a0] ASoC: codecs: rt5670: us=
+e SOC_VALUE_ENUM_SINGLE_DECL for DAC2 L/R MX-1B
+# good: [0b0eb7702a9fa410755e86124b4b7cd36e7d1cb4] ASoC: replace use of sys=
+tem_wq with system_dfl_wq
+# good: [433e294c3c5b5d2020085a0e36c1cb47b694690a] regulator: core: forward=
+ undervoltage events downstream by default
+# good: [7e7e2c6e2a1cb250f8d03bb99eed01f6d982d5dd] ASoC: sof-function-topol=
+ogy-lib: escalate the log when missing function topoplogy
+# good: [6277a486a7faaa6c87f4bf1d59a2de233a093248] regulator: dt-bindings: =
+Convert Dialog DA9211 Regulators to DT schema
+# good: [64d87ccfae3326a9561fe41dc6073064a083e0df] spi: aspeed: Only map ne=
+cessary address window region
+# good: [4412ab501677606436e5c49e41151a1e6eac7ac0] spi: dt-bindings: spi-qp=
+ic-snand: Add IPQ5332 compatible
+# good: [5e537031f322d55315cd384398b726a9a0748d47] ASoC: codecs: Fix the er=
+ror of excessive semicolons
+# good: [4d410ba9aa275e7990a270f63ce436990ace1bea] dt-bindings: sound: Upda=
+te ADMAIF bindings for tegra264
+# good: [fe8cc44dd173cde5788ab4e3730ac61f3d316d9c] spi: dw: add target mode=
+ support
+# good: [b83fb1b14c06bdd765903ac852ba20a14e24f227] spi: offload: Add offset=
+ parameter
+# good: [9797329220a2c6622411eb9ecf6a35b24ce09d04] ASoC: sof-function-topol=
+ogy-lib: escalate the log when missing function topoplogy
+git bisect start '9823120909776bbca58a3c55ef1f27d49283c1f3' '3575af345aa242=
+4636e69ac101a568bda249abe6' 'ed5d499b5c9cc11dd3edae1a7a55db7dfa4f1bdc' 'e73=
+b743bfe8a6ff4e05b5657d3f7586a17ac3ba0' 'ecd0de438c1f0ee86cf8f6d5047965a2a18=
+1444b' '6ef8e042cdcaabe3e3c68592ba8bfbaee2fa10a3' 'f1dfbc1b5cf8650ae9a0d543=
+e5f5335fc0f478ce' '20bcda681f8597e86070a4b3b12d1e4f541865d3' 'cf6bf51b53252=
+284bafc7377a4d8dbf10f048b4d' '8fdb030fe283c84fd8d378c97ad0f32d6cdec6ce' '28=
+039efa4d8e8bbf98b066133a906bd4e307d496' 'e062bdfdd6adbb2dee7751d054c1d8df63=
+ddb8b8' '66fecfa91deb536a12ddf3d878a99590d7900277' 'f034c16a4663eaf3198dc18=
+b201ba50533fb5b81' '4a5ac6cd05a7e54f1585d7779464d6ed6272c134' '4795375d8aa0=
+72e9aacb0b278e6203c6ca41816a' 'ef042df96d0e1089764f39ede61bc8f140a4be00' 'e=
+7434adf0c53a84d548226304cdb41c8818da1cb' '01313661b248c5ba586acae09bff57077=
+dbec0a5' 'd29479abaded34b2b1dab2e17efe96a65eba3d61' '4c33cef58965eb655a0ac8=
+e243aa323581ec025f' 'e973dfe9259095fb509ab12658c68d46f0e439d7' '77a58ba7c64=
+ccca20616aa03599766ccb0d1a330' 'c17fa4cbc546c431ccf13e9354d5d9c1cd247b7c' '=
+310bf433c01f78e0756fd5056a43118a2f77318c' '2528c15f314ece50218d1273654f630d=
+74109583' 'd054cc3a2ccfb19484f3b54d69b6e416832dc8f4' 'fd5ef3d69f8975bad16c4=
+37a337b5cb04c8217a2' '638bae3fb225a708dc67db613af62f6d14c4eff4' 'ecba655bf5=
+4a661ffe078856cd8dbc898270e4b5' '7e1906643a7374529af74b013bba35e4fa4e6ffc' =
+'d742ebcfe524dc54023f7c520d2ed2e4b7203c19' 'fce217449075d59b29052b8cdac567f=
+0f3e22641' '6658472a3e2de08197acfe099ba71ee0e2505ecf' '0cc08c8130ac8f74419f=
+99fe707dc193b7f79d86' '0743acf746a81e0460a56fd5ff847d97fa7eb370' 'd77daa490=
+85b067137d0adbe3263f75a7ee13a1b' '1e570e77392f43a3cdab2849d1f81535f8a033e2'=
+ '15afe57a874eaf104bfbb61ec598fa31627f7b19' '65efe5404d151767653c7b7dd39bd2=
+e7ad532c2d' 'fb25114cd760c13cf177d9ac37837fafcc9657b5' '6621b0f118d500092f5=
+f3d72ddddb22aeeb3c3a0' '0b0eb7702a9fa410755e86124b4b7cd36e7d1cb4' '433e294c=
+3c5b5d2020085a0e36c1cb47b694690a' '7e7e2c6e2a1cb250f8d03bb99eed01f6d982d5dd=
+' '6277a486a7faaa6c87f4bf1d59a2de233a093248' '64d87ccfae3326a9561fe41dc6073=
+064a083e0df' '4412ab501677606436e5c49e41151a1e6eac7ac0' '5e537031f322d55315=
+cd384398b726a9a0748d47' '4d410ba9aa275e7990a270f63ce436990ace1bea' 'fe8cc44=
+dd173cde5788ab4e3730ac61f3d316d9c' 'b83fb1b14c06bdd765903ac852ba20a14e24f22=
+7' '9797329220a2c6622411eb9ecf6a35b24ce09d04'
+# test job: [ed5d499b5c9cc11dd3edae1a7a55db7dfa4f1bdc] https://lava.sirena.=
+org.uk/scheduler/job/2029024
+# test job: [e73b743bfe8a6ff4e05b5657d3f7586a17ac3ba0] https://lava.sirena.=
+org.uk/scheduler/job/2026405
+# test job: [ecd0de438c1f0ee86cf8f6d5047965a2a181444b] https://lava.sirena.=
+org.uk/scheduler/job/2026139
+# test job: [6ef8e042cdcaabe3e3c68592ba8bfbaee2fa10a3] https://lava.sirena.=
+org.uk/scheduler/job/2025827
+# test job: [f1dfbc1b5cf8650ae9a0d543e5f5335fc0f478ce] https://lava.sirena.=
+org.uk/scheduler/job/2025495
+# test job: [20bcda681f8597e86070a4b3b12d1e4f541865d3] https://lava.sirena.=
+org.uk/scheduler/job/2023002
+# test job: [cf6bf51b53252284bafc7377a4d8dbf10f048b4d] https://lava.sirena.=
+org.uk/scheduler/job/2023010
+# test job: [8fdb030fe283c84fd8d378c97ad0f32d6cdec6ce] https://lava.sirena.=
+org.uk/scheduler/job/2021423
+# test job: [28039efa4d8e8bbf98b066133a906bd4e307d496] https://lava.sirena.=
+org.uk/scheduler/job/2020312
+# test job: [e062bdfdd6adbb2dee7751d054c1d8df63ddb8b8] https://lava.sirena.=
+org.uk/scheduler/job/2020146
+# test job: [66fecfa91deb536a12ddf3d878a99590d7900277] https://lava.sirena.=
+org.uk/scheduler/job/2015355
+# test job: [f034c16a4663eaf3198dc18b201ba50533fb5b81] https://lava.sirena.=
+org.uk/scheduler/job/2015401
+# test job: [4a5ac6cd05a7e54f1585d7779464d6ed6272c134] https://lava.sirena.=
+org.uk/scheduler/job/2011275
+# test job: [4795375d8aa072e9aacb0b278e6203c6ca41816a] https://lava.sirena.=
+org.uk/scheduler/job/2009637
+# test job: [ef042df96d0e1089764f39ede61bc8f140a4be00] https://lava.sirena.=
+org.uk/scheduler/job/2010189
+# test job: [e7434adf0c53a84d548226304cdb41c8818da1cb] https://lava.sirena.=
+org.uk/scheduler/job/2007769
+# test job: [01313661b248c5ba586acae09bff57077dbec0a5] https://lava.sirena.=
+org.uk/scheduler/job/2008804
+# test job: [d29479abaded34b2b1dab2e17efe96a65eba3d61] https://lava.sirena.=
+org.uk/scheduler/job/2008456
+# test job: [4c33cef58965eb655a0ac8e243aa323581ec025f] https://lava.sirena.=
+org.uk/scheduler/job/2009446
+# test job: [e973dfe9259095fb509ab12658c68d46f0e439d7] https://lava.sirena.=
+org.uk/scheduler/job/2008154
+# test job: [77a58ba7c64ccca20616aa03599766ccb0d1a330] https://lava.sirena.=
+org.uk/scheduler/job/2007294
+# test job: [c17fa4cbc546c431ccf13e9354d5d9c1cd247b7c] https://lava.sirena.=
+org.uk/scheduler/job/2000033
+# test job: [310bf433c01f78e0756fd5056a43118a2f77318c] https://lava.sirena.=
+org.uk/scheduler/job/1996006
+# test job: [2528c15f314ece50218d1273654f630d74109583] https://lava.sirena.=
+org.uk/scheduler/job/1997609
+# test job: [d054cc3a2ccfb19484f3b54d69b6e416832dc8f4] https://lava.sirena.=
+org.uk/scheduler/job/1995710
+# test job: [fd5ef3d69f8975bad16c437a337b5cb04c8217a2] https://lava.sirena.=
+org.uk/scheduler/job/1996160
+# test job: [638bae3fb225a708dc67db613af62f6d14c4eff4] https://lava.sirena.=
+org.uk/scheduler/job/1991858
+# test job: [ecba655bf54a661ffe078856cd8dbc898270e4b5] https://lava.sirena.=
+org.uk/scheduler/job/1985138
+# test job: [7e1906643a7374529af74b013bba35e4fa4e6ffc] https://lava.sirena.=
+org.uk/scheduler/job/1978644
+# test job: [d742ebcfe524dc54023f7c520d2ed2e4b7203c19] https://lava.sirena.=
+org.uk/scheduler/job/1975972
+# test job: [fce217449075d59b29052b8cdac567f0f3e22641] https://lava.sirena.=
+org.uk/scheduler/job/1975665
+# test job: [6658472a3e2de08197acfe099ba71ee0e2505ecf] https://lava.sirena.=
+org.uk/scheduler/job/1975550
+# test job: [0cc08c8130ac8f74419f99fe707dc193b7f79d86] https://lava.sirena.=
+org.uk/scheduler/job/1965723
+# test job: [0743acf746a81e0460a56fd5ff847d97fa7eb370] https://lava.sirena.=
+org.uk/scheduler/job/1964844
+# test job: [d77daa49085b067137d0adbe3263f75a7ee13a1b] https://lava.sirena.=
+org.uk/scheduler/job/1962817
+# test job: [1e570e77392f43a3cdab2849d1f81535f8a033e2] https://lava.sirena.=
+org.uk/scheduler/job/1962293
+# test job: [15afe57a874eaf104bfbb61ec598fa31627f7b19] https://lava.sirena.=
+org.uk/scheduler/job/1962946
+# test job: [65efe5404d151767653c7b7dd39bd2e7ad532c2d] https://lava.sirena.=
+org.uk/scheduler/job/1959944
+# test job: [fb25114cd760c13cf177d9ac37837fafcc9657b5] https://lava.sirena.=
+org.uk/scheduler/job/1960141
+# test job: [6621b0f118d500092f5f3d72ddddb22aeeb3c3a0] https://lava.sirena.=
+org.uk/scheduler/job/1959728
+# test job: [0b0eb7702a9fa410755e86124b4b7cd36e7d1cb4] https://lava.sirena.=
+org.uk/scheduler/job/1957410
+# test job: [433e294c3c5b5d2020085a0e36c1cb47b694690a] https://lava.sirena.=
+org.uk/scheduler/job/1957405
+# test job: [7e7e2c6e2a1cb250f8d03bb99eed01f6d982d5dd] https://lava.sirena.=
+org.uk/scheduler/job/1954272
+# test job: [6277a486a7faaa6c87f4bf1d59a2de233a093248] https://lava.sirena.=
+org.uk/scheduler/job/1947019
+# test job: [64d87ccfae3326a9561fe41dc6073064a083e0df] https://lava.sirena.=
+org.uk/scheduler/job/1947206
+# test job: [4412ab501677606436e5c49e41151a1e6eac7ac0] https://lava.sirena.=
+org.uk/scheduler/job/1946280
+# test job: [5e537031f322d55315cd384398b726a9a0748d47] https://lava.sirena.=
+org.uk/scheduler/job/1946649
+# test job: [4d410ba9aa275e7990a270f63ce436990ace1bea] https://lava.sirena.=
+org.uk/scheduler/job/1947851
+# test job: [fe8cc44dd173cde5788ab4e3730ac61f3d316d9c] https://lava.sirena.=
+org.uk/scheduler/job/1947062
+# test job: [b83fb1b14c06bdd765903ac852ba20a14e24f227] https://lava.sirena.=
+org.uk/scheduler/job/1946842
+# test job: [9797329220a2c6622411eb9ecf6a35b24ce09d04] https://lava.sirena.=
+org.uk/scheduler/job/1947376
+# test job: [9823120909776bbca58a3c55ef1f27d49283c1f3] https://lava.sirena.=
+org.uk/scheduler/job/2036229
+# bad: [9823120909776bbca58a3c55ef1f27d49283c1f3] Add linux-next specific f=
+iles for 20251103
+git bisect bad 9823120909776bbca58a3c55ef1f27d49283c1f3
+# test job: [32db2b6bea82a3565aac82569f0a5dd3f808b1c9] https://lava.sirena.=
+org.uk/scheduler/job/2036846
+# good: [32db2b6bea82a3565aac82569f0a5dd3f808b1c9] Merge branch 'nand/next'=
+ of https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
+git bisect good 32db2b6bea82a3565aac82569f0a5dd3f808b1c9
+# test job: [b6ee14cdb3b42da9d2c3773014abca821e5bd6b6] https://lava.sirena.=
+org.uk/scheduler/job/2036933
+# good: [b6ee14cdb3b42da9d2c3773014abca821e5bd6b6] Merge branch 'for-next' =
+of https://git.kernel.org/pub/scm/linux/kernel/git/libata/linux
+git bisect good b6ee14cdb3b42da9d2c3773014abca821e5bd6b6
+# test job: [4bf8b41b640db6006ae9415262fac145590f69e3] https://lava.sirena.=
+org.uk/scheduler/job/2036996
+# bad: [4bf8b41b640db6006ae9415262fac145590f69e3] Merge branch 'driver-core=
+-next' of https://git.kernel.org/pub/scm/linux/kernel/git/driver-core/drive=
+r-core.git
+git bisect bad 4bf8b41b640db6006ae9415262fac145590f69e3
+# test job: [3eaa2454f5701a95dd0e7d080b3afd60b1e83ffa] https://lava.sirena.=
+org.uk/scheduler/job/2037194
+# bad: [3eaa2454f5701a95dd0e7d080b3afd60b1e83ffa] Merge branch into tip/mas=
+ter: 'timers/vdso'
+git bisect bad 3eaa2454f5701a95dd0e7d080b3afd60b1e83ffa
+# test job: [10eaf0467388d7cd57b7bd6075c3c5716e204184] https://lava.sirena.=
+org.uk/scheduler/job/2037413
+# good: [10eaf0467388d7cd57b7bd6075c3c5716e204184] Merge branch into tip/ma=
+ster: 'objtool/core'
+git bisect good 10eaf0467388d7cd57b7bd6075c3c5716e204184
+# test job: [973d20365abff9f24919deb015b12ef76aed0ff8] https://lava.sirena.=
+org.uk/scheduler/job/2037436
+# good: [973d20365abff9f24919deb015b12ef76aed0ff8] Merge branch into tip/ma=
+ster: 'x86/entry'
+git bisect good 973d20365abff9f24919deb015b12ef76aed0ff8
+# test job: [184372e1d10789d8730971070630ba5a10c9be34] https://lava.sirena.=
+org.uk/scheduler/job/2037468
+# bad: [184372e1d10789d8730971070630ba5a10c9be34] sparc64: vdso: Implement =
+clock_gettime64()
+git bisect bad 184372e1d10789d8730971070630ba5a10c9be34
+# test job: [189163e207c49196e52e86737dc3048f37a8eee9] https://lava.sirena.=
+org.uk/scheduler/job/2037700
+# good: [189163e207c49196e52e86737dc3048f37a8eee9] random: vDSO: Remove ifd=
+effery
+git bisect good 189163e207c49196e52e86737dc3048f37a8eee9
+# test job: [1280e8b97d703a686eb2270c5723f2d44e99252e] https://lava.sirena.=
+org.uk/scheduler/job/2037739
+# bad: [1280e8b97d703a686eb2270c5723f2d44e99252e] sparc64: vdso: Link with =
+-z noexecstack
+git bisect bad 1280e8b97d703a686eb2270c5723f2d44e99252e
+# test job: [5fd2a3424ce51df60deade50d5057177439c62b5] https://lava.sirena.=
+org.uk/scheduler/job/2038036
+# good: [5fd2a3424ce51df60deade50d5057177439c62b5] vdso/datastore: Reduce s=
+cope of some variables in vvar_fault()
+git bisect good 5fd2a3424ce51df60deade50d5057177439c62b5
+# test job: [6a011a22829362bfee8ff9fc1212f803c18af5f2] https://lava.sirena.=
+org.uk/scheduler/job/2038079
+# bad: [6a011a22829362bfee8ff9fc1212f803c18af5f2] vdso/datastore: Map pages=
+ through struct page
+git bisect bad 6a011a22829362bfee8ff9fc1212f803c18af5f2
+# test job: [8ebb65c38828760ed028f637850d4b4c62655993] https://lava.sirena.=
+org.uk/scheduler/job/2038136
+# good: [8ebb65c38828760ed028f637850d4b4c62655993] vdso/datastore: Drop inc=
+lusion of linux/mmap_lock.h
+git bisect good 8ebb65c38828760ed028f637850d4b4c62655993
+# first bad commit: [6a011a22829362bfee8ff9fc1212f803c18af5f2] vdso/datasto=
+re: Map pages through struct page
+
+--RnS/s1JLwGUeEB7l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmkIySkACgkQJNaLcl1U
+h9Dykgf+LB8fzcSU0f/ec57pHXyy2s964jvkol8e+OrYlOda+iUs3F10LD/gCFuj
+8saokN0lHhGscf7Y0E/Gj8FN7vnxSM/9OHiI7LPWKXaAA+cbD664enqVYqB20NC9
+dVT6NXW95+hhFRPw5uF62CjwjxTraOFwGd/Jw5lqaxsnwQB/PiqFPAQq/BlIPJGo
+rWnGjbikaMB8W8VEApnqWJCrZk0tSXCKXbyc4qSgAO9GNpk/zICxmZDEYDjAJqZt
+tD2Hh564sX5RIGNC1sae1Gl9LypfBJogssCYXtSwHvgmuV1/fKcAn4Gan/8Uo4ln
+fMHrZ9E4uvwvbvIRCHX5KokQWG8e1g==
+=OGOf
+-----END PGP SIGNATURE-----
+
+--RnS/s1JLwGUeEB7l--
