@@ -1,179 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD16230BD5
-	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 13:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3912561D9
+	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 15:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762263967; cv=none; b=B1Yhutde3qYQJoUBz/HOLj4OZ4BPVHa3klVDUq2luKFt0+Fv9K3vRiBt3OcZodB4THbAsnkB3AgzB4s/mw/Np4eJt4DiITgfjbkOLwAug5OdOcWSUZzGOa3hOUiKTg0vTgEXAVG/AX+iJjStEpxuwjMulpYeGvhGak3Wj2exmUY=
+	t=1762271023; cv=none; b=Y/Y4lewkevxOhzv6+HMjbwDEslplqnURklodDzYu4r/5F0GDkkxsu+HSU/KDfd38hgYZMn+jlshTlU+5624LsDpA5E9YGEP04kXRbfGu3CYoM83/Z7lHk7eF6S5rVhmWwkgZsFMVMA4D7M7PVGMP0Vg6DNv3C31rFIDV0d8l/qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762263967; c=relaxed/simple;
-	bh=6ox1zLtoIs3WHKjGHBqzO0nCO9DbDq7atxZ/hCyqdAU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Tma8kvu+DTKMjU50aetIGkfdVNEmvZ3VBq78hTIwQVPVVo/BxGJznx8d2PIwbEp+O34kS2kKl1oXXpeDuG5ymSYs1LsTGR2SQBuQ+3bkSRya6fWzZRm21gnba8h/E8Cgak6W69D0qVO+kD1P0TGtokMagwghZgrxyFDSDWQ9Pag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IWN1Kpr4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1762271023; c=relaxed/simple;
+	bh=KLrPQSaIQNrnjth1rrMVwNhWXm2E0ayWA44G954ZxC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l+C224NIQ742598UMpcbVsNy+FS3HumGTiN5yvlwZAKRx5YtiRGTu4bETgoA9aWiX6iebd7DeY5wRRQHDLzqpfNO9qdnYt1flNqQPI1jisJ1tVHXqvUpM0JLt6fPvbj2pbW+wm6qZ3SyZJyNsZ/sMbsIBZpNX6G6uLOFO7kud1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rjbrvle2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FojQgXp5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IWN1Kpr4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762263964;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rjbrvle2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FojQgXp5"
+Date: Tue, 4 Nov 2025 16:43:34 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1762271019;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qBb4JYjcOHMwFtnHDJyHLJFdY3oY5dMhkeGhI5Dhsqo=;
-	b=IWN1Kpr40kfs0YnBKC9M4Cuk7ev00HsghXjJSLPGebY+sWzvIgyz6g0ZnhZGFKud/++r6l
-	feVWduJAQMVOdNL2h84Svl8h2mKsykHrzIDr9kjFrazlYHhoW2ls1Bcg+p9lV6sS7n/Obz
-	dXr8pjVlDt0rC2qEynbnNURJgw8lmxY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-18-h6WNcLTWP8-2JOPFdXvRsA-1; Tue, 04 Nov 2025 08:46:01 -0500
-X-MC-Unique: h6WNcLTWP8-2JOPFdXvRsA-1
-X-Mimecast-MFC-AGG-ID: h6WNcLTWP8-2JOPFdXvRsA_1762263960
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-429cdb0706aso2420518f8f.0
-        for <loongarch@lists.linux.dev>; Tue, 04 Nov 2025 05:46:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762263960; x=1762868760;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qBb4JYjcOHMwFtnHDJyHLJFdY3oY5dMhkeGhI5Dhsqo=;
-        b=GeZPR0UvcgMYZqtBF2abOEpzXqDpgm3sasowl4zZO2yt8a33srJw1VVYutskJJ1QVx
-         ikxogc5BAT1mo7DLXSCapg6TYMWfEr1qlfbi2ydFGopuPZBcwAbjjF30twsX65A37OlT
-         8tbAlMxhVsrBJ5CNk1FbKVjWb4c11KM0nc/BG6gvHU4rkKKo18QEJTPqJ0L7FXUJ/3GL
-         2KTVqqe11V0thWWD9+5FEGb/8cdqehN6B6HSXGS02MhZ/AUulUJnt9Ih8F3f/GfIvUDh
-         C2f/y9bKB8qH3XCLie5/qCLoYz6Rro2sDuKOAPbQFXKoxFwKMnPbrho6CpOngxMYiW/M
-         muKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkKAYTGp9DyM2elwVZKZpFNtvdax/SSeLkdcWRDH3nkmJS0A6k+6kU1YThplifRk+e80ybkAuvMmY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzK4eLwCOHtWwWty7Iv2JnE5gDqWuJnEaBsCEXrcN8lK6OIJb3s
-	ebem61/blTzqXFuM4wH8kV+FyybR6kQ8DozLcsLO5bbJT3oQBBTxAc1UYCyxl1Ko4dSOYct8loa
-	S1NgGCJDGKjE1/2vo3hYU4RMiQo1xFTEbG10Miax7TRB5SM2n7OML703Ppp/Wew==
-X-Gm-Gg: ASbGncsbOnK9qarmDw/1ym2qPTHcbHO6gh1kXmg37FAnJ5FEXd97nkCnjyoUnNo11Ns
-	u7Zi87/X2NdRGxepAkDl2VswchtYiqAA/fzi/f31Z1EQXQUz6k5kGe8Kfu6vXYvGvflsJvKVzH+
-	wc+WNTsGJtzM0rhkRKH8OcONEhSYBx2xuUEo0dUajf7xyIcW04RFx0YK333HPTv6jFzxBrUb2Fi
-	LoJYzAnuT3l8yamp5v/PNtbJ1QYg4srMA/JohUTHWPg1eqlqXFsUlpviqpzeoavyR30bKPJWx5p
-	HMbDraZCuHrWSBejy7Svxhrx6X8bUuUiBOUpj1AE7dEkqonUOksmJ0gcUxRlebUv025XvNo9Pze
-	bswxr5NPnLN9Z3naWRh4tRxC3zCXYgLElSCE=
-X-Received: by 2002:a05:6000:22c9:b0:429:d11b:9ec4 with SMTP id ffacd0b85a97d-429d11ba360mr6284600f8f.41.1762263959567;
-        Tue, 04 Nov 2025 05:45:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGRnKz3y+r5XoY3ls/nBZPt8sht5PzwdeS+jf9m1q52xASXswgB53muxrTyL7Mvrv/sZwgkKw==
-X-Received: by 2002:a05:6000:22c9:b0:429:d11b:9ec4 with SMTP id ffacd0b85a97d-429d11ba360mr6284574f8f.41.1762263959010;
-        Tue, 04 Nov 2025 05:45:59 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2a01:e0a:36d:2b80:e937:44f0:a96a:94f2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429dc1a8528sm4959089f8f.21.2025.11.04.05.45.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Nov 2025 05:45:58 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: Nicolas Saenz Julienne <nsaenzju@redhat.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter
- Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Josh
- Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Arnd
- Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>, "Paul
- E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven
- Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Sami
- Tolvanen <samitolvanen@google.com>, "David S. Miller"
- <davem@davemloft.net>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel
- Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>,
- Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman
- <mgorman@suse.de>, Andrew Morton <akpm@linux-foundation.org>, Masahiro
- Yamada <masahiroy@kernel.org>, Han Shen <shenhan@google.com>, Rik van Riel
- <riel@surriel.com>, Jann Horn <jannh@google.com>, Dan Carpenter
- <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, Juri Lelli
- <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
- Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
- Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org,
- x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 23/29] context-tracking: Introduce work deferral
- infrastructure
-In-Reply-To: <dee4dc13-b187-42df-93ce-f738cfab32ea@linux.ibm.com>
-References: <20251010153839.151763-1-vschneid@redhat.com>
- <20251010153839.151763-24-vschneid@redhat.com>
- <dee4dc13-b187-42df-93ce-f738cfab32ea@linux.ibm.com>
-Date: Tue, 04 Nov 2025 14:45:56 +0100
-Message-ID: <xhsmhjz05ud0r.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	bh=6/0fonC1CcSFJ/vzCGw398TxXXxzhqjx7ZhCqclZhJI=;
+	b=rjbrvle2cRAQ2r1/E6AUyn/63AoNirT+MeY3CSkMLQkjVu4MZ9i9gsM5VaY1sb3+Qse+3E
+	k5Tsj3k0sX10MaW1Vt77Ml/iwrO90sXCi7ohIUnxBp8RCfq2diJY/ZCpc3gLIELLZkZ1gT
+	L/BTyFm2ieNoLfdbPm3joETfalKC7jCYGiBCKDuN65AUEULDiusUD1wLGQDHRp47rNGPSE
+	CNiRZhbWp4pKi5KAc4rKlwVrMeyIJALch4gPPlEKog+++hdtB+pAyXWGyDy2/FQb1lBsmj
+	YmFrBOIEWYHsmogSRF3LDckjk1IVIHNKXQ3GxfoNtiFlAXBk/A7zx0VxilqApg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1762271019;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6/0fonC1CcSFJ/vzCGw398TxXXxzhqjx7ZhCqclZhJI=;
+	b=FojQgXp5lZ7JuVC/TErfcQFIVgMu5YQg1OclEVtlB2s1//ebKD9BRtli3pju35zYRju4WW
+	6T9NeyF0VG7+qZCA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Mark Brown <broonie@kernel.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>, 
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Shuah Khan <shuah@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Russell King <linux@armlinux.org.uk>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>, Shannon Nelson <sln@onemain.com>, linux-kernel@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 23/35] vdso/datastore: Map pages through struct page
+Message-ID: <20251104162009-8cffa62d-e95b-466b-9a27-c51b0f5257cd@linutronix.de>
+References: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
+ <20251014-vdso-sparc64-generic-2-v4-23-e0607bf49dea@linutronix.de>
+ <aQjJNmwniQwwjeBR@finisterre.sirena.org.uk>
+ <CGME20251104084442eucas1p2af1bd88393f4d6a532df1cd41f32a287@eucas1p2.samsung.com>
+ <e7f05748-a11c-47eb-b1fa-cdc9dc6d05e0@samsung.com>
+ <aQn8G9r2OWv_yEQp@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ELVmGQs3ocBg2-jBLPa-37KjsXhXY1VPiMEvXy1Dw5g_1762263960
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aQn8G9r2OWv_yEQp@finisterre.sirena.org.uk>
 
-On 03/11/25 14:02, Shrikanth Hegde wrote:
-> Hi Valentin.
->
-> On 10/10/25 9:08 PM, Valentin Schneider wrote:
->> +++ b/include/linux/context_tracking_work.h
->> @@ -0,0 +1,26 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#ifndef _LINUX_CONTEXT_TRACKING_WORK_H
->> +#define _LINUX_CONTEXT_TRACKING_WORK_H
->> +
->> +#include <linux/bitops.h>
->> +
->> +enum {
->> +	CT_WORK_n_OFFSET,
->> +	CT_WORK_MAX_OFFSET
->> +};
->> +
->> +enum ct_work {
->> +	CT_WORK_n        = BIT(CT_WORK_n_OFFSET),
->> +	CT_WORK_MAX      = BIT(CT_WORK_MAX_OFFSET)
->> +};
->> +
->> +#include <asm/context_tracking_work.h>
->> +
->
-> It fails to compile on powerpc (likey any arch other than x86)
->
+On Tue, Nov 04, 2025 at 01:14:03PM +0000, Mark Brown wrote:
+> On Tue, Nov 04, 2025 at 09:44:38AM +0100, Marek Szyprowski wrote:
+> > On 03.11.2025 16:24, Mark Brown wrote:
+> 
+> > > We do have some other serious breakage affecting arm64 in -next which
+> > > are making it hard to get a clear picture of which platforms are
+> > > affected, at least the FVP and O6 are unaffected by those other issues
+> > > (due to using MTE on platforms that don't have it, those platforms do
+> > > have MTE).
+> 
+> > I got almost the same result while bisecting on ARM 32bit Exynos-based 
+> > boards, so the issue with this patchset is not fully ARM64 specific. For 
+> > some reasons it also doesn't affect all systems though. It is even 
+> > worse, because it affected only a subset of boards, but different for 
+> > each tested commit. The observed failure looks exactly the same:
+> 
+> I've now got the results for this specific commit, it looks like every
+> single arm64 system is failing.  I didn't test any other architectures.
 
-Woops, thanks for testing!
+Which one do you mean exactly with "this specific commit"?
 
-> In file included from ./include/linux/context_tracking_state.h:8,
->                   from ./include/linux/hardirq.h:5,
->                   from ./include/linux/interrupt.h:11,
->                   from ./include/linux/kernel_stat.h:8,
->                   from ./include/linux/cgroup.h:27,
->                   from ./include/linux/memcontrol.h:13,
->                   from ./include/linux/swap.h:9,
->                   from ./include/linux/suspend.h:5,
->                   from arch/powerpc/kernel/asm-offsets.c:21:
-> ./include/linux/context_tracking_work.h:17:10: fatal error:
-> asm/context_tracking_work.h: No such file or directory
->     17 | #include <asm/context_tracking_work.h>
->        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
->
-> Gating works for compile, but no benefit of the series.
->
-> +#ifdef HAVE_CONTEXT_TRACKING_WORK
->   #include <asm/context_tracking_work.h>
-> +#endif
->
+6a011a228293 ("vdso/datastore: Map pages through struct page")
+10d91dac2ea5 ("vdso/datastore: Allocate data pages dynamically")
 
-Huh, looking at this I wonder why I shoved that here. That include belongs
-in context_tracking.c itself; I'll fix that.
+> > Then I've tested it on ARM64bit (RaspberrryPi3b+ board) and got the 
+> > following panic on 6a011a228293 ("vdso/datastore: Map pages through 
+> > struct page") commit:
+> 
+> I'm seeing the same thing on at least some of the systems - this is with
+> arm64 defconfig (I suspect that's what Marek is doing too).  For
+> example:
 
->
-> I have been trying to debug/understand the issue seen with isolcpus= and
-> nohz_full=. system is idle, even then it occasionally woken up to do
-> some work. So I was interesting if this series can help.
+I can now reproduce this issue, too. Even on QEMU. But it goes away,
+as soon as the second commit is applied. The two commits should be merged.
+That could also explain the weird bisection results, landing on either one
+of the commits. However I can't reproduce the "silent freeze" issue on commit
+10d91dac2ea5 ("vdso/datastore: Allocate data pages dynamically") on my
+Raspberry Pi 3b+.
 
-Is there some ongoing thread for this particular issue or is this just
-something you're experimenting with?
+Any chance I could get remote access to one of your test machines?
+I don't have access to the exact machines and that should reduce the chance
+of chasing down dead ends.
 
-If you suspect stray IPIs hitting isolated CPUs I'd recommend tracing with
-these events enabled:
-  ipi_send_cpu
-  ipi_send_cpumask
 
+Thomas
