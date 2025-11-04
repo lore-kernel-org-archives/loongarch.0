@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0FF22E8B97
-	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 11:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C754E2E8E09
+	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 11:37:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762256230; cv=none; b=V1PP5fI9Q7ZoZnHyqZ0j874DRWZ2JViveAaQ0YmmqQ6jDJsd2I6nXAn2anZcq9kbCRqwuCY3AuDArg3mN/EHwst9jSujHoth7HUHhk9OZXrM3PRWWFkIxgIqb4lBB1IGCNRcFaXHGp5i6CDyNkukvZ7RvGpfcffEME8+/El4VuY=
+	t=1762256232; cv=none; b=pMnl1qT9xyx/rcFOMTBw3ACEvFdSUogYrwdAes1tUDBaSdYMOC/SWzCUFCgVhe/oxEv2U0xps6GsyArZD0c7GXmdWBe7TFgXb2xwf+fYo5HFP4Syoj5S8aHshwe7RWm/OIQ2m/tBBMMEgrsyo08/FxMza6qklSfA72jv2oZg83I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762256230; c=relaxed/simple;
-	bh=/eL7qO9Bg4rxngtC4qoLPKMphY8SvbMqkKlEZehmPKM=;
+	s=arc-20240116; t=1762256232; c=relaxed/simple;
+	bh=gz86dfn0DGmFu2yHhSbwFeWjke9Ber3pSX10dPmWSo8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s4aORzwkDKDghaz0NNdwstbRjIdwTwJxBmlCpL3YAzBm5wDELMnbdIQxcqHV9sjqzEuN1CjAnCDe90x3WuvzNA8509AN0zA+oF7GhB2LEM7FfxO3Uj2YWXmOM8qP+ms0WCVFsMOBpSgfjKz60Qv1GUJNV6dlCI5hdNm7xZZ8ulk=
+	 MIME-Version; b=Rh70vrjxqIw3+1BGbJ7uvY9qzBGaZQBFJkY7FrZHTR0Il483RPsWIYPf2C9M39aP2rjUyE6Zc8GrgrF0QD0DYLeZjxFtW+zb5+vdMzcERE6Q8aT9QbJ1NEIuctqg8iMLNQ+o/puMeyQqmR9K7FxvDyuwwuKcmaVQw8dSCFBnMl4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxN9Fg5QlpX7QeAA--.1309S3;
-	Tue, 04 Nov 2025 19:37:04 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bx2tFk5QlpZLQeAA--.1680S3;
+	Tue, 04 Nov 2025 19:37:08 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJDx_8Nc5QlpQTImAQ--.54832S3;
-	Tue, 04 Nov 2025 19:37:04 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBxjcFk5QlpTjImAQ--.63810S2;
+	Tue, 04 Nov 2025 19:37:08 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Sean Christopherson <seanjc@google.com>,
@@ -28,9 +28,9 @@ Cc: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 1/7] KVM: LoongArch: selftests: Add system registers save and restore on exception
-Date: Tue,  4 Nov 2025 19:36:53 +0800
-Message-Id: <20251104113700.1561752-2-maobibo@loongson.cn>
+Subject: [PATCH v2 2/7] KVM: LoongArch: selftests: Add exception handler register interface
+Date: Tue,  4 Nov 2025 19:36:54 +0800
+Message-Id: <20251104113700.1561752-3-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20251104113700.1561752-1-maobibo@loongson.cn>
 References: <20251104113700.1561752-1-maobibo@loongson.cn>
@@ -41,71 +41,108 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDx_8Nc5QlpQTImAQ--.54832S3
+X-CM-TRANSID:qMiowJBxjcFk5QlpTjImAQ--.63810S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-When system returns from exception with ertn instruction, PC comes
-from LOONGARCH_CSR_ERA, and CSR_CRMD comes LOONGARCH_CSR_PRMD.
-
-Here save CSR register CSR_ERA and CSR_PRMD in stack, and restore them
-from stack. So it can be modified by exception handler in future.
+Add interrupt and exception handler register interface. When exception
+happens, execute registered exception handler if exists, else report
+error.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- tools/testing/selftests/kvm/include/loongarch/processor.h | 5 ++++-
- tools/testing/selftests/kvm/lib/loongarch/exception.S     | 6 ++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ .../kvm/include/loongarch/processor.h         | 14 +++++++++
+ .../selftests/kvm/lib/loongarch/processor.c   | 29 +++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
 diff --git a/tools/testing/selftests/kvm/include/loongarch/processor.h b/tools/testing/selftests/kvm/include/loongarch/processor.h
-index 6427a3275e6a..374caddfb0db 100644
+index 374caddfb0db..a18ac7bff303 100644
 --- a/tools/testing/selftests/kvm/include/loongarch/processor.h
 +++ b/tools/testing/selftests/kvm/include/loongarch/processor.h
-@@ -124,18 +124,21 @@ struct ex_regs {
- 	unsigned long pc;
- 	unsigned long estat;
- 	unsigned long badv;
-+	unsigned long prmd;
- };
- 
- #define PC_OFFSET_EXREGS		offsetof(struct ex_regs, pc)
- #define ESTAT_OFFSET_EXREGS		offsetof(struct ex_regs, estat)
- #define BADV_OFFSET_EXREGS		offsetof(struct ex_regs, badv)
-+#define PRMD_OFFSET_EXREGS		offsetof(struct ex_regs, prmd)
+@@ -84,6 +84,11 @@
+ #define LOONGARCH_CSR_EUEN		0x2
+ #define LOONGARCH_CSR_ECFG		0x4
+ #define LOONGARCH_CSR_ESTAT		0x5  /* Exception status */
++#define  CSR_ESTAT_EXC_SHIFT		16
++#define  CSR_ESTAT_EXC_WIDTH		6
++#define  CSR_ESTAT_EXC			(0x3f << CSR_ESTAT_EXC_SHIFT)
++#define    EXCCODE_INT			0    /* Interrupt */
++#define      INT_TI			11   /* Timer interrupt*/
+ #define LOONGARCH_CSR_ERA		0x6  /* ERA */
+ #define LOONGARCH_CSR_BADV		0x7  /* Bad virtual address */
+ #define LOONGARCH_CSR_EENTRY		0xc
+@@ -133,6 +138,15 @@ struct ex_regs {
+ #define PRMD_OFFSET_EXREGS		offsetof(struct ex_regs, prmd)
  #define EXREGS_SIZE			sizeof(struct ex_regs)
  
++#define VECTOR_NUM			64
++typedef void(*handler_fn)(struct ex_regs *);
++struct handlers {
++	handler_fn exception_handlers[VECTOR_NUM];
++};
++
++void vm_init_descriptor_tables(struct kvm_vm *vm);
++void vm_install_exception_handler(struct kvm_vm *vm, int vector, handler_fn handler);
++
  #else
  #define PC_OFFSET_EXREGS		((EXREGS_GPRS + 0) * 8)
  #define ESTAT_OFFSET_EXREGS		((EXREGS_GPRS + 1) * 8)
- #define BADV_OFFSET_EXREGS		((EXREGS_GPRS + 2) * 8)
--#define EXREGS_SIZE			((EXREGS_GPRS + 3) * 8)
-+#define PRMD_OFFSET_EXREGS		((EXREGS_GPRS + 3) * 8)
-+#define EXREGS_SIZE			((EXREGS_GPRS + 4) * 8)
- #endif
+diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+index 0ac1abcb71cb..be537c5ff74e 100644
+--- a/tools/testing/selftests/kvm/lib/loongarch/processor.c
++++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+@@ -11,6 +11,7 @@
+ #define LOONGARCH_GUEST_STACK_VADDR_MIN		0x200000
  
- #endif /* SELFTEST_KVM_PROCESSOR_H */
-diff --git a/tools/testing/selftests/kvm/lib/loongarch/exception.S b/tools/testing/selftests/kvm/lib/loongarch/exception.S
-index 88bfa505c6f5..3f1e4b67c5ae 100644
---- a/tools/testing/selftests/kvm/lib/loongarch/exception.S
-+++ b/tools/testing/selftests/kvm/lib/loongarch/exception.S
-@@ -51,9 +51,15 @@ handle_exception:
- 	st.d   t0, sp, ESTAT_OFFSET_EXREGS
- 	csrrd  t0, LOONGARCH_CSR_BADV
- 	st.d   t0, sp, BADV_OFFSET_EXREGS
-+	csrrd  t0, LOONGARCH_CSR_PRMD
-+	st.d   t0, sp, PRMD_OFFSET_EXREGS
+ static vm_paddr_t invalid_pgtable[4];
++static vm_vaddr_t exception_handlers;
  
- 	or     a0, sp, zero
- 	bl route_exception
-+	ld.d   t0, sp, PC_OFFSET_EXREGS
-+	csrwr  t0, LOONGARCH_CSR_ERA
-+	ld.d   t0, sp, PRMD_OFFSET_EXREGS
-+	csrwr  t0, LOONGARCH_CSR_PRMD
- 	restore_gprs sp
- 	csrrd  sp, LOONGARCH_CSR_KS0
- 	ertn
+ static uint64_t virt_pte_index(struct kvm_vm *vm, vm_vaddr_t gva, int level)
+ {
+@@ -184,6 +185,13 @@ void assert_on_unhandled_exception(struct kvm_vcpu *vcpu)
+ void route_exception(struct ex_regs *regs)
+ {
+ 	unsigned long pc, estat, badv;
++	int vector;
++	struct handlers *handlers;
++
++	handlers = (struct handlers *)exception_handlers;
++	vector = (regs->estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
++	if (handlers && handlers->exception_handlers[vector])
++		return handlers->exception_handlers[vector](regs);
+ 
+ 	pc = regs->pc;
+ 	badv  = regs->badv;
+@@ -192,6 +200,27 @@ void route_exception(struct ex_regs *regs)
+ 	while (1) ;
+ }
+ 
++void vm_init_descriptor_tables(struct kvm_vm *vm)
++{
++	void *addr;
++
++	vm->handlers = __vm_vaddr_alloc(vm, sizeof(struct handlers),
++			LOONGARCH_GUEST_STACK_VADDR_MIN, MEM_REGION_DATA);
++
++	addr = addr_gva2hva(vm, vm->handlers);
++	memset(addr, 0, vm->page_size);
++	exception_handlers = vm->handlers;
++	sync_global_to_guest(vm, exception_handlers);
++}
++
++void vm_install_exception_handler(struct kvm_vm *vm, int vector, handler_fn handler)
++{
++	struct handlers *handlers = addr_gva2hva(vm, vm->handlers);
++
++	assert(vector < VECTOR_NUM);
++	handlers->exception_handlers[vector] = handler;
++}
++
+ void vcpu_args_set(struct kvm_vcpu *vcpu, unsigned int num, ...)
+ {
+ 	int i;
 -- 
 2.39.3
 
