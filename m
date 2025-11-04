@@ -1,122 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9935133291C;
-	Tue,  4 Nov 2025 16:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934C9321442
+	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 17:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762273312; cv=none; b=somKRkCCevsbPR8UovKaeIYYO2JNsdzfogiLUlRdNXtCar+2IhtWvw1HCAbv4BykMMmT0od0LKsvxgJHwd0cDktXK62xfkgWZbctoK/VvHEi+2hVUEAFCk1KP5JhtvVwdwu5++3shllwimsYjncwOl5ypcp7+Ll/Uh75FYQ6YCo=
+	t=1762279050; cv=none; b=KpM5GvPpm7TgvMUBnIA8ZAn8HSmZatVxdlodeakSdFemdr2aX/TCwny8LaiBm7q2Deglpdx0VOQqfFRXyY4/AMFpVGF7D1Dl/eKinDZPL9FPZ//ZiNQdhYH984z4Ly9Fy6fc4VBEnZaT0qWKeOspLBsgseSQmnvbD8ycX827koo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762273312; c=relaxed/simple;
-	bh=ZgapEV2f6UOkVKQ4Tm3UO+ujY8mCniaMXHTUMRbX7qU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JwPF5T5yQfxU0mhmmuKUidpmp9revRIG2RTiwVggAruvbY9hD85MPnnGgkBomqk0W9mpDL3556v7OPv1d/nkdryemQfp/fzjmjaEYpr+93XH452l4cMoX60EBxb8y8gYQOj9QhA1rEN23ciHVMXUjfjmgIAPR7mPD5W5tUZsYuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XERX5aBH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762279050; c=relaxed/simple;
+	bh=EKtg11I2y89dxK71syiNOTNg3HE8V+Mj31tEd40SOxE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uiPhxV0OAICrVBpNL+wRJfDoDO/sWiLUs5ehAioyMF9DLlqIOH2SK93GDiGeE7VdWi7VuBZbQXNOpAXo2JuAGerFLxQjg3Z9ZzyllSiMyPJiVQGiBX5t2g+3eKwTUPCn1r/rz+HVjxCDQEmE3sTWooQ9Fr916hxHMD/w9lN834c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HPiqO0G0; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XERX5aBH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA99BC4CEF8;
-	Tue,  4 Nov 2025 16:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762273312;
-	bh=ZgapEV2f6UOkVKQ4Tm3UO+ujY8mCniaMXHTUMRbX7qU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XERX5aBHazdMMA+oEnGRxw1zsSiVD03zD1/OvFrITxNP8TY8EKGHO897kQpHZcTC4
-	 AjOz22hE45sDXPt8Me6tOdmAhG+A6sT8FL6AjX6iYO6ZcS6KadkQT0rMkbJmui1OF/
-	 y4pOsmta37VrO7TikjmFAe6yJr0DOXYwKDoT/9gVY3btW9L5vhKbX9306CCCv2kmMU
-	 q0Xm6Z0TQ7+VPuX7Bj+EZ5H6rPQRzeur3ohk90yIJvxkO3YG03g9YEM8mYNDLcUFlG
-	 PnlmletPsDgf5n3+Go+pKne9UEK4e4ygPuzYRVo35SlZ1BzC2w6vuQ8zAxKAJKLqqA
-	 KeZdQ7RUrsN6Q==
-Date: Tue, 4 Nov 2025 16:21:49 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Nick Alcock <nick.alcock@oracle.com>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Shuah Khan <shuah@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-	Shannon Nelson <sln@onemain.com>, linux-kernel@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-s390@vger.kernel.org, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4 23/35] vdso/datastore: Map pages through struct page
-Message-ID: <aQooHZ5p4DNhwbar@finisterre.sirena.org.uk>
-References: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
- <20251014-vdso-sparc64-generic-2-v4-23-e0607bf49dea@linutronix.de>
- <aQjJNmwniQwwjeBR@finisterre.sirena.org.uk>
- <CGME20251104084442eucas1p2af1bd88393f4d6a532df1cd41f32a287@eucas1p2.samsung.com>
- <e7f05748-a11c-47eb-b1fa-cdc9dc6d05e0@samsung.com>
- <aQn8G9r2OWv_yEQp@finisterre.sirena.org.uk>
- <20251104162009-8cffa62d-e95b-466b-9a27-c51b0f5257cd@linutronix.de>
- <aQogAfbrP9rTPLvI@finisterre.sirena.org.uk>
- <20251104170215-3600e71c-1573-43aa-ad1d-8d02af9bbbf4@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HPiqO0G0"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-27c62320f16so73197235ad.1
+        for <loongarch@lists.linux.dev>; Tue, 04 Nov 2025 09:57:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1762279048; x=1762883848; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kxFvD6gKxB44i1bxk1sbjy38espILrC0yFM/UcBrpew=;
+        b=HPiqO0G0CclvjWePPkqamwPsUnzl+mcpYndGD+XKIGT/g2Sq20JwIfEAKkJVcoGhOo
+         YHODfjj7Tob7296nrz3GE6vazURwFYTMKl9gSP/9sQEEPZgi8F5A9dCCiGV8YsV3M3P6
+         y6WfuL6uRrm85yrl4j8YVJh4b9czEnN44lWdhN4FfT7TfuEEP9p13GZLYgUrJ8JkYSSv
+         wSZYdv47B4xDhx+HbM6UNiangXo4PAB7xut8dzZ4BmU6Dtbx3N6S5SAxUGcmo6JZrsSW
+         5M240r4t+LMMUKWG0SkkndfcMcI/8NLvd0oOSgPwF6WApR5q/yFYuqkD1nhuELTWfXx/
+         nFzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762279048; x=1762883848;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kxFvD6gKxB44i1bxk1sbjy38espILrC0yFM/UcBrpew=;
+        b=ardXUS4hr5wjmPI4SvE7cOGKJUpfd4qJZhpiGmHsETs6UJCTUKhzBVKFtXLljKqWSh
+         a8d5a00P21Mu7j0zkw5Dki0dx1xAr/3WtyxYQbsgq65BUbId4e9CZ5PfjvAE9k1m1Ueb
+         18Tuq7MffjC+SEUcf+pH8E3y4BdEr420CPtYzzQB4tr8jAWPs3bRX+hBbfRkGpBz1RqJ
+         pzYCOZCxNvoPMh70E8VGTbxnHRsSeZ9II3xAhDfvfjSOmTRTGNZiGMmle5KiOGVGawDj
+         sl3uOm2IUiBKbl0hkdpNiSBze48BFkzyd2NsH/dQk7cfPhiiZwQeJ5apjxVXk5STPGd7
+         j33w==
+X-Forwarded-Encrypted: i=1; AJvYcCWpoNO9PdtecWcmQa34PtVs600nhzZQVID6TWHkap0BTBfd1/HsOLulfL7nqZtnHYq/5fYaXiTn1OE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxfk4CNR7eZ67YkjqLWe1pe8bKGxSZi+e4Ms4iZqC85WzdGoCu/
+	fLfJcQtnVlBsfaXvnWPsMhPhYm3v4wM5dOS7r4akZF02gzcltTCHe7fsDa1y7ZSmhvAHCg2lR7F
+	W75c/HQ==
+X-Google-Smtp-Source: AGHT+IFJG/V0EfaymcoM6cPfayQ+DGikxVc9kN5RoO6CmqYed2gXkivkS54tuPy9BQi+XScmFB78yDVh2jQ=
+X-Received: from plblv11.prod.google.com ([2002:a17:903:2a8b:b0:290:28e2:ce5d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ffcf:b0:295:2c8e:8e56
+ with SMTP id d9443c01a7336-2962ae715edmr5562415ad.44.1762279047867; Tue, 04
+ Nov 2025 09:57:27 -0800 (PST)
+Date: Tue, 4 Nov 2025 09:57:26 -0800
+In-Reply-To: <aQMi/n9DVyeaWsVH@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vgxhQqUhFOf4jqrE"
-Content-Disposition: inline
-In-Reply-To: <20251104170215-3600e71c-1573-43aa-ad1d-8d02af9bbbf4@linutronix.de>
-X-Cookie: If in doubt, mumble.
+Mime-Version: 1.0
+References: <20251017003244.186495-1-seanjc@google.com> <20251017003244.186495-5-seanjc@google.com>
+ <aPhjYcOFjL1Z8m2s@yzhao56-desk.sh.intel.com> <aQMi/n9DVyeaWsVH@yzhao56-desk.sh.intel.com>
+Message-ID: <aQo-hus99rE7WBgb@google.com>
+Subject: Re: [PATCH v3 04/25] KVM: x86/mmu: Add dedicated API to map
+ guest_memfd pfn into TDP MMU
+From: Sean Christopherson <seanjc@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	"Kirill A. Shutemov" <kas@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Ira Weiny <ira.weiny@intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Michael Roth <michael.roth@amd.com>, Vishal Annapurve <vannapurve@google.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Ackerley Tng <ackerleytng@google.com>, 
+	Binbin Wu <binbin.wu@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
+On Thu, Oct 30, 2025, Yan Zhao wrote:
+> On Wed, Oct 22, 2025 at 12:53:53PM +0800, Yan Zhao wrote:
+> > On Thu, Oct 16, 2025 at 05:32:22PM -0700, Sean Christopherson wrote:
+> > > Link: https://lore.kernel.org/all/20250709232103.zwmufocd3l7sqk7y@amd.com
+> > 
+> > Hi Sean,                                                                         
+> > 
+> > Will you post [1] to fix the AB-BA deadlock issue for huge page in-place
+> > conversion as well?
 
---vgxhQqUhFOf4jqrE
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Nov 04, 2025 at 05:03:28PM +0100, Thomas Wei=DFschuh wrote:
-> On Tue, Nov 04, 2025 at 03:47:13PM +0000, Mark Brown wrote:
-
-> > I can let you submit LAVA jobs to my lab (there's an API, a web
-> > interface for (re)submitting jobs and a CLI tool for shoving jobs in) if
-> > that works?  That's how my own access to it works unless I go pull
-> > boards out.  You should be able to resubmit existing jobs, it downloads
-> > test binaries over HTTP.
-
-> Sounds good.
-
-OK, folllowing up off-list for that.
-
---vgxhQqUhFOf4jqrE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmkKKBwACgkQJNaLcl1U
-h9BB+Qf9EauYOf7gmQuIlmWkRFyAe3nL6GnUvplpFK7JQgCAmEpS6FK/StPLVbZL
-WwU/hE4esPcUwdBtU2pbY2fHKOHlAE3CNPiiEYfjkd51GcYtFX5b0Lw1PDB72Kgo
-ZFvKRrKRgkb3Mn3f7Dl2XoapM8m7YR/tRtJNCBk+SesiIQ0HfL5V4ExsYO+L5c7s
-wegS0czcQsWbwDBTsPWl3QJF+HPkq28QUpznRvaUwKfj7Pe5PJTpEQy9OZQf7u4r
-e8p94FrmEto2SEMlh98mHi5iZcmCBPvOtFtCrv8NmzDi7olabfnoQ+ECOnFB2+Cy
-tm2fLJofnR2UpxNKmXwxdF0pK8VkPw==
-=HhMt
------END PGP SIGNATURE-----
-
---vgxhQqUhFOf4jqrE--
+If you (or anyone) has the bandwidth, please pick it up.  I won't have cycles to
+look at that for many weeks (potentially not even this calendar year).
