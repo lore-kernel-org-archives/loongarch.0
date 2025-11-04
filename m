@@ -1,39 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 481BA2EACEE
-	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 11:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 962AA2D7DCE
+	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 11:47:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762256250; cv=none; b=GXv/ZolfLN+OVfVzbbxEssX/o5YTgmcpAb4eYM58k/c3F0Ep/i5WxveVWWGYGKOAeHrt2iquguGfeZvsmD6YdoC9YYNUuwzSy9Ao1FQqtrymoQ5K0zftEBEVSMeqKYCxnPTZOa7eWNcYlxDJ6ctZTvQFpVHRLbiV6K17et518tw=
+	t=1762256827; cv=none; b=VJ52VEP9lx7oaXJofR/7eueNAUfTKVyRMcqx6PLoTUV1qYddHCDKKoCNq18SaQkQ6t4ekD5f+a3cCc3MRPi07ZT0/Z3TbDMngf/H8eLSM6gZyV9i5N9TTl1B2zxJLDhIMp6PI4lPgBfMGIZHtzhcKagRNYn1CHYX/te2rDOgANM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762256250; c=relaxed/simple;
-	bh=EYH/yVHdnb089sbM06R3GlT36iMXXinhgjkzboFZYQI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RmMESV7mClDWVNvzx52UQabPjwixzvWDz0bOTS6xFC89IeJZKhLVJ7wlLoRees1NnIHbtOtkG+oIjsm2HdxB1BPIfoPaML7YqAZkeIIxAJN/YrrgMDC1Q4dDjOYgvJ/rvDYozlCgZckrX2oFNWPQ+S6NNkD/vSjh55YTqmDg/Xo=
+	s=arc-20240116; t=1762256827; c=relaxed/simple;
+	bh=lvS0akj3jwhum+640i2yy985glN9eEOQqYjI1B5pOMc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WNYkMXuiguYuT3TMZX5NA0/MEaDNunwnCEM/Mx5RmZMioyfl+aRzcn9FunkOsyarq5yyP8pkrgiv9QOYEhA0oPAvv/zQpZVCasn8y1ulJDdrd7jJSU9Id6U/oIH5W9K9yc2vtpLvuF2+n3VU9REdCeMjIV0NwdhY917u7nSqqUk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxM9By5Qlpi7QeAA--.1390S3;
-	Tue, 04 Nov 2025 19:37:22 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxztK25wlp6LUeAA--.575S3;
+	Tue, 04 Nov 2025 19:47:02 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAx+8Bw5QlpZDImAQ--.57838S3;
-	Tue, 04 Nov 2025 19:37:21 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJCxmcC15wlp0jQmAQ--.29563S2;
+	Tue, 04 Nov 2025 19:47:01 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 7/7] KVM: LoongArch: selftests: Add time counter test
-Date: Tue,  4 Nov 2025 19:36:59 +0800
-Message-Id: <20251104113700.1561752-8-maobibo@loongson.cn>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Add delay until timer interrupt injected
+Date: Tue,  4 Nov 2025 19:46:58 +0800
+Message-Id: <20251104114659.1562404-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20251104113700.1561752-1-maobibo@loongson.cn>
-References: <20251104113700.1561752-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,99 +35,51 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx+8Bw5QlpZDImAQ--.57838S3
+X-CM-TRANSID:qMiowJCxmcC15wlp0jQmAQ--.29563S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-With time counter test, it is to verify that time count starts from 0
-and always grows up then.
+When timer is fired in oneshot mode, CSR TVAL will stop with value -1
+rather than 0. However when register CSR TVAL is restored, it will
+continue to count down rather than stop there.
+
+Now the method is to write 0 to CSR TVAL, wait to count down for 1
+cycle at least, which is 10ns with timer freq 100MHZ, and retore timer
+interrupt status. Here add 2 cycles delay to assure that timer interrupt
+is injected.
+
+With this patch, timer selftest case passes to run always.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- .../selftests/kvm/lib/loongarch/processor.c   |  9 ++++++
- .../selftests/kvm/loongarch/arch_timer.c      | 29 +++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ arch/loongarch/kvm/timer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tools/testing/selftests/kvm/lib/loongarch/processor.c
-index 436990258068..ac2ffd076bff 100644
---- a/tools/testing/selftests/kvm/lib/loongarch/processor.c
-+++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
+index 32dc213374be..daf1b60a8d47 100644
+--- a/arch/loongarch/kvm/timer.c
++++ b/arch/loongarch/kvm/timer.c
 @@ -3,6 +3,7 @@
- #include <assert.h>
- #include <linux/compiler.h>
+  * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+  */
  
-+#include <asm/kvm.h>
- #include "kvm_util.h"
- #include "processor.h"
- #include "ucall_common.h"
-@@ -256,6 +257,11 @@ static void loongarch_set_csr(struct kvm_vcpu *vcpu, uint64_t id, uint64_t val)
- 	__vcpu_set_reg(vcpu, csrid, val);
- }
++#include <asm/delay.h>
+ #include <linux/kvm_host.h>
+ #include <asm/kvm_csr.h>
+ #include <asm/kvm_vcpu.h>
+@@ -95,6 +96,8 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
+ 		 * and set CSR TVAL with -1
+ 		 */
+ 		write_gcsr_timertick(0);
++		/* wait more than 1 cycle until timer interrupt injected */
++		__delay(2);
  
-+static void loongarch_set_reg(struct kvm_vcpu *vcpu, uint64_t id, uint64_t val)
-+{
-+	__vcpu_set_reg(vcpu, id, val);
-+}
-+
- static void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
- {
- 	int width;
-@@ -279,6 +285,9 @@ static void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
- 	loongarch_set_csr(vcpu, LOONGARCH_CSR_ECFG, 0);
- 	loongarch_set_csr(vcpu, LOONGARCH_CSR_TCFG, 0);
- 	loongarch_set_csr(vcpu, LOONGARCH_CSR_ASID, 1);
-+	/* time count start from 0 */
-+	val = 0;
-+	loongarch_set_reg(vcpu, KVM_REG_LOONGARCH_COUNTER, val);
- 
- 	val = 0;
- 	width = vm->page_shift - 3;
-diff --git a/tools/testing/selftests/kvm/loongarch/arch_timer.c b/tools/testing/selftests/kvm/loongarch/arch_timer.c
-index 579132a082cd..f3a25a0163fc 100644
---- a/tools/testing/selftests/kvm/loongarch/arch_timer.c
-+++ b/tools/testing/selftests/kvm/loongarch/arch_timer.c
-@@ -133,10 +133,39 @@ static void guest_test_emulate_timer(uint32_t cpu)
- 	local_irq_enable();
- }
- 
-+static void guest_time_count_test(uint32_t cpu)
-+{
-+	uint32_t config_iter;
-+	unsigned long start, end, prev, us;
-+
-+	/* Assuming that test case starts to run in 1 second */
-+	start = timer_get_cycles();
-+	us = msec_to_cycles(1000);
-+	__GUEST_ASSERT(start <= us,
-+			"start = 0x%lx, us = 0x%lx.\n",
-+			start, us);
-+
-+	us = msec_to_cycles(test_args.timer_period_ms);
-+	for (config_iter = 0; config_iter < test_args.nr_iter; config_iter++) {
-+		start = timer_get_cycles();
-+		end = start + us;
-+		/* test time count growing up always */
-+		while (start < end) {
-+			prev = start;
-+			start = timer_get_cycles();
-+			__GUEST_ASSERT(prev <= start,
-+					"prev = 0x%lx, start = 0x%lx.\n",
-+					prev, start);
-+		}
-+	}
-+}
-+
- static void guest_code(void)
- {
- 	uint32_t cpu = guest_get_vcpuid();
- 
-+	/* must run at first */
-+	guest_time_count_test(cpu);
- 	timer_irq_enable();
- 	local_irq_enable();
- 	guest_test_oneshot_timer(cpu);
+ 		/*
+ 		 * Writing CSR_TINTCLR_TI to LOONGARCH_CSR_TINTCLR will clear
+
+base-commit: ec0b62ccc986c06552c57f54116171cfd186ef92
 -- 
 2.39.3
 
