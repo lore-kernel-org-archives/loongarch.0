@@ -1,176 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7150D23F412
-	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 08:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963683064B5
+	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 08:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762243256; cv=none; b=JZXHn/HIFiSOQTrDPf8Vx53kahkYXn+t43mohYhT2ii5rLonwvs/dH5YYic07n1F8Pb3HfAX0akGdc6m9vkxD26AgpcWtckY2aW0jWJhDWSJImVJUc6s3ZGNja9q8ra0XDCebI84QhTBNBRgR3nsh56kHLseex1ksWNRi0dBLCE=
+	t=1762245887; cv=none; b=FVhpXDpjgEl3ncFWz67hVuLc170caS2QZHOhdMLoA11zOJ8vek153JqL9Js8ecopWrQzAebJGowYHl60YnIclpXjJIQZk3Ugwp0UzyTBbVQkQRNayFCxpxX7jNR+zHbe8iCzIPb4R7c2w+k7nV7k4Dus6gkjWHOGC0vVxCY/RpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762243256; c=relaxed/simple;
-	bh=PuqSRgKY4tTRslHCnIdLX5a9mAqIoTyPqIDfD9qJFTY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dzoIsqorQ8lCvq8bzWWh26k/d9HsxFzvUfzKy/N5cT7dFVgRDzqvfJ5BKmTYWUrrqdKsew1z8F/ouBQA2fBqXSY91xIGB8k6BR/tu6Qgh2Nzu5zx7JLPIcfg0kJDmZ5ZFK2aQmJuMf8xyyFDpaYPBHUV8QTLk3aX+ZeMfYMK2Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSJUp1lm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762245887; c=relaxed/simple;
+	bh=NToKopaiiCorKnog1Ua+Guz58w6YXipmGADFT5V1BS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=t1xXNMMMUwqyl7FyunoSk9XmT3YULkeEiVeY/pYtYhAzzmTYN5s8qN3BoWT47vXE3vpmIg67zTD5zRSmIlfR20LRGfQf6IiEVzBBas6i6xWFe0DurgoHryoSv1deDddIGbhXl9U2FctGmOj9pAFfeUuiDGDOoul6ESVPSjkw6l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=NIfzfLaK; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSJUp1lm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD23C19424
-	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 08:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762243256;
-	bh=PuqSRgKY4tTRslHCnIdLX5a9mAqIoTyPqIDfD9qJFTY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CSJUp1lmHp3hz0LCNyjgfhfrEzthneKW7/OKfLaYL2heWOT+Hn6JibpgVaBahiuSI
-	 uaNyA973U42y6JQwzIloVDlQxoJEyIyoTqmOYeVDagUGZMRGNeILgL5xJDANHyctk9
-	 RWg5qEF/OJyoFNoc8v44loQU5cS8nFCBQGEh35+e/1kuOdyJga0MHH91sQd118KStK
-	 +yJjfY6qnOgk/LMv+ollf0NN2i0MdOFRukL3WC8WYCQciCNcswesTva60wZ1n6yufS
-	 q4ClJ7Mw3OI6ZdknGap+DiXvjMZcNJimKkWkgt7FL/GqYpgEo8+Lvu0ORj9p0IQBd1
-	 vvbJCFQgJn3uA==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b4f323cf89bso165148366b.2
-        for <loongarch@lists.linux.dev>; Tue, 04 Nov 2025 00:00:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXKFT5AA9SlE7ou+Y7TK0nwUGJM7GdmSH0hNcWjaJRJAkpNWDopcLT0Ov0GHpeYcARqbDP2ECFTnBY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw/ry7zItLR0tvNHROZkkgedYvqRPOFHLJhdTSdWkoRRzn7pUfT
-	OIIwmKWVyfJr4iSCYARguVAFZU4F7DQ3FhTStsGBXXSXHwImW3D0P/Y6TZTsXpEfnaMIJl21Ahw
-	gstT1COMiiktMA7kcR1TrchLCM27laMA=
-X-Google-Smtp-Source: AGHT+IHIs4+6OBOp4RqpqefxiLfpCGnf/D+NxvdkoozjKR966Glf2llUVjvc8wIBEtQlwvpPcc3fyqEKerv7cThEoK4=
-X-Received: by 2002:a17:907:3d45:b0:b6d:9bab:a7ba with SMTP id
- a640c23a62f3a-b70704e16a2mr1560642266b.42.1762243254594; Tue, 04 Nov 2025
- 00:00:54 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NIfzfLaK"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20251104084442euoutp0102088d40135302607f87347b0dc37851~0wUsqg9XY0417804178euoutp01G;
+	Tue,  4 Nov 2025 08:44:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20251104084442euoutp0102088d40135302607f87347b0dc37851~0wUsqg9XY0417804178euoutp01G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1762245882;
+	bh=4Fu9AdCheOvxz3Im1FXmK3GvN5Xitn31VIJ6mONdECE=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=NIfzfLaKbrHZu0Gnes91/bNFpnUi+PCBujRxqfn1+x6PF4bWcGMTESoPuAVb8BCNe
+	 TtlBUOWDuOkNSnmVQ30DXStAE0ZC8Og/doIluRR7N6u64puk7uGLaCr147tEyKOLdV
+	 mk1n6uHGDW++q0sGM+SWQUfE/wNIAUBaBoIJ+ACU=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20251104084442eucas1p2af1bd88393f4d6a532df1cd41f32a287~0wUr8pCub0922509225eucas1p2b;
+	Tue,  4 Nov 2025 08:44:42 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20251104084440eusmtip27dfa57d3ff654ed50f16a811242c3a65~0wUqFptgI2591225912eusmtip2U;
+	Tue,  4 Nov 2025 08:44:39 +0000 (GMT)
+Message-ID: <e7f05748-a11c-47eb-b1fa-cdc9dc6d05e0@samsung.com>
+Date: Tue, 4 Nov 2025 09:44:38 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251104073006.1764241-1-zhangtianyang@loongson.cn>
-In-Reply-To: <20251104073006.1764241-1-zhangtianyang@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 4 Nov 2025 16:00:51 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5JnmJqTZ1GnhcgODtjL5FLy8x5HNRJxs6us=gzcFon5Q@mail.gmail.com>
-X-Gm-Features: AWmQ_bloCtvEGDGM7glFVyRnOfFYLga14ov4xbpTGd4Rhq6-yJ3cFAIVjrxTyOM
-Message-ID: <CAAhV-H5JnmJqTZ1GnhcgODtjL5FLy8x5HNRJxs6us=gzcFon5Q@mail.gmail.com>
-Subject: Re: [PATCH] Loongarch:Make pte/pmd_modify can set _PAGE_MODIFIED
-To: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: kernel@xen0n.name, akpm@linux-foundation.org, willy@infradead.org, 
-	david@redhat.com, linmag7@gmail.com, thuth@redhat.com, maobibo@loongson.cn, 
-	apopple@nvidia.com, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Liupu Wang <wangliupu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH v4 23/35] vdso/datastore: Map pages through struct page
+To: Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+	<thomas.weissschuh@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnd Bergmann
+	<arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Andreas Larsson
+	<andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>, John Stultz
+	<jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, John Paul Adrian
+	Glaubitz <glaubitz@physik.fu-berlin.de>, Shuah Khan <shuah@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Russell King <linux@armlinux.org.uk>, Madhavan Srinivasan
+	<maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas
+	Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Thomas
+	Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens
+	<hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+	<agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, Nagarathnam Muthusamy
+	<nagarathnam.muthusamy@oracle.com>, Shannon Nelson <sln@onemain.com>,
+	linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+	Aishwarya.TCV@arm.com
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <aQjJNmwniQwwjeBR@finisterre.sirena.org.uk>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20251104084442eucas1p2af1bd88393f4d6a532df1cd41f32a287
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20251104084442eucas1p2af1bd88393f4d6a532df1cd41f32a287
+X-EPHeader: CA
+X-CMS-RootMailID: 20251104084442eucas1p2af1bd88393f4d6a532df1cd41f32a287
+References: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
+	<20251014-vdso-sparc64-generic-2-v4-23-e0607bf49dea@linutronix.de>
+	<aQjJNmwniQwwjeBR@finisterre.sirena.org.uk>
+	<CGME20251104084442eucas1p2af1bd88393f4d6a532df1cd41f32a287@eucas1p2.samsung.com>
 
-Hi, Tianyang,
-
-The subject line can be:
-LoongArch: Let {pte,pmd}_modify() record the status of _PAGE_DIRTY (If
-I'm right in the later comments).
-
-On Tue, Nov 4, 2025 at 3:30=E2=80=AFPM Tianyang Zhang <zhangtianyang@loongs=
-on.cn> wrote:
+On 03.11.2025 16:24, Mark Brown wrote:
+> On Tue, Oct 14, 2025 at 08:49:09AM +0200, Thomas Weißschuh wrote:
 >
-> In the current pte_modify operation, _PAGE_DIRTY might be cleared. Since
-> the hardware-page-walk does not have a predefined _PAGE_MODIFIED flag,
-> this could lead to loss of valid data in certain scenarios.
+>> An upcoming change will allocate the datapages dynamically instead of as
+>> part of the kernel image. Such pages can only be mapped through
+>> 'struct page' and not through PFNs.
+> I'm seeing some boot failures on some arm64 platforms in -next which are
+> bisecting to this patch in -next.  Unfortunately the diagnostics aren't
+> super useful, we seem to just stop making progress in userspace with no
+> obvious output.  One sample log from the FVP is:
 >
-> The new modification involves checking whether the original PTE has the
-> _PAGE_DIRTY flag. If it exists, the _PAGE_MODIFIED bit is set, ensuring
-> that the pte_dirty interface can return accurate information.
-The description may be wrong here. Because pte_dirty() returns
-pte_val(pte) & (_PAGE_DIRTY | _PAGE_MODIFIED).
-If _PAGE_DIRTY isn't lost, pte_dirty() is always right, no matter
-whether there is or isn't _PAGE_MODIFIED.
+>     https://lava.sirena.org.uk/scheduler/job/2036229#L1268
+>
+> which isn't super instructive.  Not all platforms seem to be affected,
+> I've seen this on at least the Arm FVP, Orion O6 and Libretech Renegade
+> Elite.  The diagnostics aren't very clear here but given that I'm seeing
+> the same issue and bisect result on multiple platforms it seemed worth
+> mentioning.  Some platforms do seem fine.
+>
+> We do have some other serious breakage affecting arm64 in -next which
+> are making it hard to get a clear picture of which platforms are
+> affected, at least the FVP and O6 are unaffected by those other issues
+> (due to using MTE on platforms that don't have it, those platforms do
+> have MTE).
 
-I think the real reason is we need to set _PAGE_MODIFIED in
-pte/pmd_modify to record the status of _PAGE_DIRTY, so that we can
-recover _PAGE_DIRTY afterwards, such as in pte/pmd_mkwrite().
+I got almost the same result while bisecting on ARM 32bit Exynos-based 
+boards, so the issue with this patchset is not fully ARM64 specific. For 
+some reasons it also doesn't affect all systems though. It is even 
+worse, because it affected only a subset of boards, but different for 
+each tested commit. The observed failure looks exactly the same:
 
->
-> Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
-> Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> ---
->  arch/loongarch/include/asm/pgtable.h | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
-e/asm/pgtable.h
-> index bd128696e96d..106abfa5183b 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -424,8 +424,13 @@ static inline unsigned long pte_accessible(struct mm=
-_struct *mm, pte_t a)
->
->  static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
->  {
-> -       return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
-> -                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
-> +       unsigned long val =3D (pte_val(pte) & _PAGE_CHG_MASK) |
-> +                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
-> +
-> +       if (pte_val(pte) & _PAGE_DIRTY)
-> +               val |=3D _PAGE_MODIFIED;
-> +
-> +       return __pte(val);
->  }
->
->  extern void __update_tlb(struct vm_area_struct *vma,
-> @@ -547,9 +552,13 @@ static inline struct page *pmd_page(pmd_t pmd)
->
->  static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
->  {
-> -       pmd_val(pmd) =3D (pmd_val(pmd) & _HPAGE_CHG_MASK) |
-> +       unsigned long val =3D (pmd_val(pmd) & _HPAGE_CHG_MASK) |
->                                 (pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
-> -       return pmd;
-> +
-> +       if (pmd_val(pmd) & _PAGE_DIRTY)
-> +               val |=3D _PAGE_MODIFIED;
-> +
-> +       return __pmd(val);
->  }
-A minimal modification can be:
-diff --git a/arch/loongarch/include/asm/pgtable.h
-b/arch/loongarch/include/asm/pgtable.h
-index 1f20e9280062..907ece0199e0 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -448,8 +448,13 @@ static inline unsigned long pte_accessible(struct
-mm_struct *mm, pte_t a)
+...
 
- static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- {
--       return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
--                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
-+       pte_val(pte) =3D (pte_val(pte) & _PAGE_CHG_MASK) |
-+                       (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
-+
-+       if (pte_val(pte) & _PAGE_DIRTY)
-+               pte_val(pte) |=3D _PAGE_MODIFIED;
-+
-+       return pte;
- }
+[   10.199852] devtmpfs: mounted
+[   10.205013] Freeing unused kernel image (initmem) memory: 1024K
+[   10.210086] Run /sbin/init as init process
 
- extern void __update_tlb(struct vm_area_struct *vma,
-@@ -583,7 +588,11 @@ static inline struct page *pmd_page(pmd_t pmd)
- static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
- {
-        pmd_val(pmd) =3D (pmd_val(pmd) & _HPAGE_CHG_MASK) |
--                               (pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
-+                       (pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
-+
-+       if (pmd_val(pmd) & _PAGE_DIRTY)
-+               pmd_val(pmd) |=3D _PAGE_MODIFIED;
-+
-        return pmd;
- }
+INIT: version 2.88 booting
 
-You needn't define a new variable.
+(no more messages)
 
+The only difference is that bisecting on ARM32bit lead me to the next 
+patch (10d91dac2ea5 ("vdso/datastore: Allocate data pages dynamically") 
+/ [PATCH v4 24/35]).
 
-Huacai
+Then I've tested it on ARM64bit (RaspberrryPi3b+ board) and got the 
+following panic on 6a011a228293 ("vdso/datastore: Map pages through 
+struct page") commit:
 
->
->  static inline pmd_t pmd_mkinvalid(pmd_t pmd)
-> --
-> 2.41.0
->
->
+VFS: Mounted root (ext4 filesystem) on device 179:3. Trying to move old 
+root to /initrd ... okay devtmpfs: mounted Freeing unused kernel memory: 
+12672K Run /sbin/init as init process Unable to handle kernel paging 
+request at virtual address ffffffffc20b5d48 Mem abort info: ESR = 
+0x0000000096000006 EC = 0x25: DABT (current EL), IL = 32 bits SET = 0, 
+FnV = 0 EA = 0, S1PTW = 0 FSC = 0x06: level 2 translation fault Data 
+abort info: ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000 CM = 0, WnR = 
+0, TnD = 0, TagAccess = 0 GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0 
+swapper pgtable: 4k pages, 48-bit VAs, pgdp=000000000230b000 
+[ffffffffc20b5d48] pgd=0000000000000000, p4d=0000000003618403, 
+pud=0000000003619403, pmd=0000000000000000 Internal error: Oops: 
+0000000096000006 [#1] SMP Modules linked in: CPU: 2 UID: 0 PID: 1 Comm: 
+init Tainted: G W 6.18.0-rc1+ #16136 PREEMPT Tainted: [W]=WARN Hardware 
+name: Raspberry Pi 3 Model B (DT) pstate: 80000005 (Nzcv daif -PAN -UAO 
+-TCO -DIT -SSBS BTYPE=--) pc : vvar_fault+0x7c/0x17c lr : 
+vvar_fault+0x24/0x17c ... Call trace: vvar_fault+0x7c/0x17c (P) 
+special_mapping_fault+0x24/0xd0 __do_fault+0x3c/0x238 
+__handle_mm_fault+0xaa0/0x19e0 handle_mm_fault+0xcc/0x384 
+do_page_fault+0x1a0/0x720 do_translation_fault+0x60/0x6c 
+do_mem_abort+0x44/0x94 el0_da+0x54/0x230 el0t_64_sync_handler+0xd0/0xe4 
+el0t_64_sync+0x198/0x19c Code: f2d83fe0 8b010063 d34cfc63 8b031803 
+(f9400461) ---[ end trace 0000000000000000 ]--- Kernel panic - not 
+syncing: Attempted to kill init! exitcode=0x0000000b SMP: stopping 
+secondary CPUs Kernel Offset: disabled CPU features: 
+0x000000,00180000,40004000,0400421b Memory Limit: none ---[ end Kernel 
+panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+
+Reverting "clocksource: Remove ARCH_CLOCKSOURCE_DATA", "vdso/datastore: 
+Allocate data pages dynamically" and "vdso/datastore: Map pages through 
+struct page" on top of linux-next fixes booting on all tested boards.
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
