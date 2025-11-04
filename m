@@ -1,85 +1,151 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 962AA2D7DCE
-	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 11:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841812F6924;
+	Tue,  4 Nov 2025 13:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762256827; cv=none; b=VJ52VEP9lx7oaXJofR/7eueNAUfTKVyRMcqx6PLoTUV1qYddHCDKKoCNq18SaQkQ6t4ekD5f+a3cCc3MRPi07ZT0/Z3TbDMngf/H8eLSM6gZyV9i5N9TTl1B2zxJLDhIMp6PI4lPgBfMGIZHtzhcKagRNYn1CHYX/te2rDOgANM=
+	t=1762262047; cv=none; b=XzAhEl8NehWxWhnXAIr/F3OhoEs1X6sPeNkuoC2/lIR85jeWsPSse/rnVfLwf6bzvf6ZPIZVghoH5rX5VFv+VMIICIjURjTNFNFm94Zxa6UgkbDhh7QIiF8Ss7bBl1vCe7nsfjw3XBohA3yQzfQp2VJvai98cYtYn5W9ZsXA4n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762256827; c=relaxed/simple;
-	bh=lvS0akj3jwhum+640i2yy985glN9eEOQqYjI1B5pOMc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WNYkMXuiguYuT3TMZX5NA0/MEaDNunwnCEM/Mx5RmZMioyfl+aRzcn9FunkOsyarq5yyP8pkrgiv9QOYEhA0oPAvv/zQpZVCasn8y1ulJDdrd7jJSU9Id6U/oIH5W9K9yc2vtpLvuF2+n3VU9REdCeMjIV0NwdhY917u7nSqqUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxztK25wlp6LUeAA--.575S3;
-	Tue, 04 Nov 2025 19:47:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJCxmcC15wlp0jQmAQ--.29563S2;
-	Tue, 04 Nov 2025 19:47:01 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	s=arc-20240116; t=1762262047; c=relaxed/simple;
+	bh=TLHJRTKusGt1SWwlRj6IWh5YXbaorV2upXYBUOE5fxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uU8cChe63s65rDFnOIVmxvXybOFMTh/5FhW+MQVZK8JD1RP0rf6DaGoAMHxKrsqAbgXEaZyCGpAKiJINwfxlMRMUGcYhzOqyvlm9S/+OMs0i4y7jS6dUZamxfSa7wCJbal3PMoxQ2cg+fo7qNRe3r0KEPIIqcYAFVuILnHTvSy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUh2v7+A; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUh2v7+A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDC57C116C6;
+	Tue,  4 Nov 2025 13:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762262046;
+	bh=TLHJRTKusGt1SWwlRj6IWh5YXbaorV2upXYBUOE5fxA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AUh2v7+AGMG1M1KAwd9XVU0ZEEtc0idzYycFUQzUWn8Ne8ZLvkGSSY86BljMoFgdo
+	 s1x1F0zLMZZorAwGBDtwzXG008ekfB2o6bSkbmQN/YZNa0Yb3NX/0Spx1pK5LSCKJX
+	 tPsh/URzrvwZ4vKibGGiB2euAkENeKL+s3715RrKYE3esVh1YmYYRybpx7JSV58juE
+	 JQZeNQaexG/UFiAJgR03lFTyYNyYI4eUvWniKFIwObKCl+z9ty1e1jSGqNI/L/sUlC
+	 EWCrxCOXxDbQZzJGRUZPua9sRtBgCovGFpXYETDAkgeqp8F9+Y6erBbVv1roBV3Qhx
+	 7aVbMCZamwO6w==
+Date: Tue, 4 Nov 2025 13:14:03 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Nick Alcock <nick.alcock@oracle.com>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Shuah Khan <shuah@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Add delay until timer interrupt injected
-Date: Tue,  4 Nov 2025 19:46:58 +0800
-Message-Id: <20251104114659.1562404-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+	Shannon Nelson <sln@onemain.com>, linux-kernel@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-s390@vger.kernel.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 23/35] vdso/datastore: Map pages through struct page
+Message-ID: <aQn8G9r2OWv_yEQp@finisterre.sirena.org.uk>
+References: <20251014-vdso-sparc64-generic-2-v4-0-e0607bf49dea@linutronix.de>
+ <20251014-vdso-sparc64-generic-2-v4-23-e0607bf49dea@linutronix.de>
+ <aQjJNmwniQwwjeBR@finisterre.sirena.org.uk>
+ <CGME20251104084442eucas1p2af1bd88393f4d6a532df1cd41f32a287@eucas1p2.samsung.com>
+ <e7f05748-a11c-47eb-b1fa-cdc9dc6d05e0@samsung.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxmcC15wlp0jQmAQ--.29563S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rRRcUhwA4JOwqNzp"
+Content-Disposition: inline
+In-Reply-To: <e7f05748-a11c-47eb-b1fa-cdc9dc6d05e0@samsung.com>
+X-Cookie: If in doubt, mumble.
 
-When timer is fired in oneshot mode, CSR TVAL will stop with value -1
-rather than 0. However when register CSR TVAL is restored, it will
-continue to count down rather than stop there.
 
-Now the method is to write 0 to CSR TVAL, wait to count down for 1
-cycle at least, which is 10ns with timer freq 100MHZ, and retore timer
-interrupt status. Here add 2 cycles delay to assure that timer interrupt
-is injected.
+--rRRcUhwA4JOwqNzp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-With this patch, timer selftest case passes to run always.
+On Tue, Nov 04, 2025 at 09:44:38AM +0100, Marek Szyprowski wrote:
+> On 03.11.2025 16:24, Mark Brown wrote:
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/timer.c | 3 +++
- 1 file changed, 3 insertions(+)
+> > We do have some other serious breakage affecting arm64 in -next which
+> > are making it hard to get a clear picture of which platforms are
+> > affected, at least the FVP and O6 are unaffected by those other issues
+> > (due to using MTE on platforms that don't have it, those platforms do
+> > have MTE).
 
-diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
-index 32dc213374be..daf1b60a8d47 100644
---- a/arch/loongarch/kvm/timer.c
-+++ b/arch/loongarch/kvm/timer.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-  */
- 
-+#include <asm/delay.h>
- #include <linux/kvm_host.h>
- #include <asm/kvm_csr.h>
- #include <asm/kvm_vcpu.h>
-@@ -95,6 +96,8 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
- 		 * and set CSR TVAL with -1
- 		 */
- 		write_gcsr_timertick(0);
-+		/* wait more than 1 cycle until timer interrupt injected */
-+		__delay(2);
- 
- 		/*
- 		 * Writing CSR_TINTCLR_TI to LOONGARCH_CSR_TINTCLR will clear
+> I got almost the same result while bisecting on ARM 32bit Exynos-based=20
+> boards, so the issue with this patchset is not fully ARM64 specific. For=
+=20
+> some reasons it also doesn't affect all systems though. It is even=20
+> worse, because it affected only a subset of boards, but different for=20
+> each tested commit. The observed failure looks exactly the same:
 
-base-commit: ec0b62ccc986c06552c57f54116171cfd186ef92
--- 
-2.39.3
+I've now got the results for this specific commit, it looks like every
+single arm64 system is failing.  I didn't test any other architectures.
 
+> Then I've tested it on ARM64bit (RaspberrryPi3b+ board) and got the=20
+> following panic on 6a011a228293 ("vdso/datastore: Map pages through=20
+> struct page") commit:
+
+I'm seeing the same thing on at least some of the systems - this is with
+arm64 defconfig (I suspect that's what Marek is doing too).  For
+example:
+
+   https://lava.sirena.org.uk/scheduler/job/2039543#L1109
+
+I didn't check every single failure.  Feeding one of the backtraces
+through addr2line says:
+
+/build/stage/linux/include/linux/page-flags.h:284 (discriminator 2)
+/build/stage/linux/mm/mmap.c:1438
+/build/stage/linux/mm/memory.c:5280
+/build/stage/linux/mm/memory.c:5698
+/build/stage/linux/mm/memory.c:6487
+/build/stage/linux/arch/arm64/mm/fault.c:696
+/build/stage/linux/arch/arm64/mm/fault.c:793
+/build/stage/linux/arch/arm64/mm/fault.c:929 (discriminator 1)
+/build/stage/linux/arch/arm64/include/asm/irqflags.h:55
+/build/stage/linux/arch/arm64/kernel/entry-common.c:767
+/build/stage/linux/arch/arm64/kernel/entry.S:596
+
+(this is for this specific commit.)
+
+--rRRcUhwA4JOwqNzp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmkJ/BcACgkQJNaLcl1U
+h9AuDwf/ZhCLlPLgluyDWUvdRnCQxJ2N1dGVAjMGRwZUyrTvO3LxFTQzkTL5nIcp
+s6gUEfOujaroyD4CcDlNOBBu2V8JtVuzh/NuC5m2O9SbHiLyR2qay111fo14LogV
+u/rKBgA0DjjCOsWmxyWcAB8abWnwgcTjN2YzIzoXh9RR+I/zmwjoOyUcTGGJpNzk
+zT1lZjL5mXvMULyQVTH8fadw8kjyEt0TVMBb/kyMaX0KFWNc2g69WuSH9k72bHhk
+CZp8Nzicv6Tna9Efz9IPio1+lVoEVK3up3fJJHRiorhknWDffaxf3D7VHLvZ5NmA
+hQFWctpg74kN8ORA8oS1+bS5Ni2d/A==
+=CgDl
+-----END PGP SIGNATURE-----
+
+--rRRcUhwA4JOwqNzp--
