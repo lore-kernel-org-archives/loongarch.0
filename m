@@ -1,145 +1,117 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEBD2DCC06
-	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 06:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 953DF306B3F
+	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 07:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762239198; cv=none; b=JN3XNEKiYRC5XDSdzsBTQkk68u2rfRIqYXOI86fr1PVcaT/OmIOJfQj6qiXXcwlr2hMhXLbXnTMMe+ng/BB3lKtABm6nxZLWrJQikBGpNwtmzlPPiAW3UX6lMeOrulGI5M0gujJjObce9AVEzCQTePa7+p+2mi5uFIED2PTyrmU=
+	t=1762241417; cv=none; b=mGd1mmjwz0KU9qbCi03iq+L26r8vCya67b7T0VSyfy0qao0iXNtNKHtPoerg4N+TL8PzdhTNEZRzvxKaAyXtl1oqxxjpfMByFyhFwi4ri84n6xIYfZ4qbo0TC72jCn3UVjxBwUFjUp+P5Du8oWbcRTvqzXXEYShzF+EyrlrxWtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762239198; c=relaxed/simple;
-	bh=8p0MCf6z8owtO8dtPW0HAmvbfGUyTkXxQfEU6TFdLiQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dUV193k+GJtI7tv1fsz6XsMf7HE/2AtM/fJG0dcXpvThC3Dzmpx/8Y7Ran+B1FlhFXytAjNZ4ANuH5i8R4kQBB/iLQv/Ie2WmJBeDlSU7YmnpE2wf2e47x2R+dJjvgHiYDXoWLqakITo4MRusH90EJOsj/9z7DpPEQVZVdkoRKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e9/O0aA0; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9/O0aA0"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-44fa06c8975so1395889b6e.1
-        for <loongarch@lists.linux.dev>; Mon, 03 Nov 2025 22:53:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762239196; x=1762843996; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yunsIVG2xwSWPJMISQ9png0ZDy6Yvl2IENc61OHh6yo=;
-        b=e9/O0aA01zLWQ4YigN8BHrMquVecopd6RugAYnm7CWzNJLRgpe2+f80m8TjKYvvFnK
-         vZdzsVAPuxiBv0NgaOmA/vWvBwjPaJEjHFXHCHy4vqjAnQxHVyc/scytWV/J3CF3tVy+
-         xdlxomCpZWUWMRdGJmoB2gohp7IXCGBiMlOt/XWSeLDeLg/86EWiAbloQSO9yEWly4X8
-         cLZGGNxPnKe/NK94YeBoa1+rNLbhKlx2f9NaW5j/zx3M9NDoRtrD4XEBMkat9BGZXZBM
-         w5pL4WWzrbHWcOgU2OePqkbdV41BrKLHG51X3dprqbcSvFrOLBU+i7H7OJMbc/UN8g2M
-         XvXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762239196; x=1762843996;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yunsIVG2xwSWPJMISQ9png0ZDy6Yvl2IENc61OHh6yo=;
-        b=Q0Uq7+UWyVH7rGguLYvw89C8iKGhtGR0wkEyYzcJ45MDw7Ypo1irX1e7X3nuTTNA9B
-         B9C4M0xbHLUTDr/rb2CsjrUG/LCUcugeLnGa5MUWvKsx6P661w3783IooSD5TEfOy3YD
-         qYL2P5N0M0ExxuSXmMqEr6y5kajvTD1iUvXwa4ZcP+sqcON1yOdBUD8e2RynSBg9Qx7v
-         OA0wJPBS2EwDq6GT9FLMMuBFhUZ0zVjiKpVUqLxg26SkFJMNMMWRVM5DHx/k+OV/2jtn
-         ozEpom9qMGlB54g/JVvyoF9+VLbXBQNXPRfoRG/Izdllu1zx8cMuh0Vvf6jO2WafBYtK
-         cFLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWP6wknOdXi1H2VQL3Djpx5i/epRzNbvjcB2szaudUa3B6JfEtHCi1+uA1Jmkk57wv1FCyUkCyIk1U=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyG5u2ZBjwP2vCOsVGb5zjTzL0/FSX3fJFx5qs9HNvV+P8jY7xx
-	DKelh4LEDXVikynIUxatlJUpz5e47TGxnPYMAylYaaxiI1yu72Mz6DWG+/8p29sATLMy/qXoMAl
-	tEhcqKS+AWK13QTfMBXxZTcd0/9dE3rY=
-X-Gm-Gg: ASbGnct+L1lyxhnOsLx5XJx8m8QW63T3pIHWTIomnaNoLUWsHzcMdpblPpQjTzhO/fo
-	1Ta1ZwAEeScTDR1WVwF3kVkepY0Ae+U6io9CfvsQYl1BA13tQgWynA6dduKXhSsM66BY4HDDU+1
-	HoTnjZfss6wITG3qyEmP+MqfNgmXsjFkU7ON0tIaC95gtCzHkhT+dbxbzd4nygQ/iM2L4VDGZqC
-	glBVZ6yVUIeP9+tUObjG9YsyEz1FLw4FvmtaYAU3+Mx+VaKP73S/hoLn+yvcovS2BKmug==
-X-Google-Smtp-Source: AGHT+IGbn2X2/1JEEhqo1wnJ78iL2FeGF989Bo4JAY/FmMP1S8eKH8fgHgNdc4dVIuvXBjYdomI/sa/SfD70vvNJUAI=
-X-Received: by 2002:a05:6808:10c3:b0:43f:7dee:4693 with SMTP id
- 5614622812f47-44f95e27868mr6890297b6e.14.1762239195781; Mon, 03 Nov 2025
- 22:53:15 -0800 (PST)
+	s=arc-20240116; t=1762241417; c=relaxed/simple;
+	bh=4qu48qG7YL4eZS1i6WIUe1h73DZmFPEKiZYJlND7Mn0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lK5e4m5WUedqhu2kDpf7vhw9ulJhK0Yt0PSuV2B2k3OzcZIiUX/g4W3yNhBBqu1WldpxaaQBlBRkKYFbaJqMVWxLKZAkzM5/iSgk4IbfuCBIXQ5Xao1ttgS5d/cTtlwh2SRlgGzn0hkTMtZIIp9e8S+BUOeim7FwKFmavOonKqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.57.136])
+	by gateway (Coremail) with SMTP id _____8CxK9KCqwlpr5keAA--.64341S3;
+	Tue, 04 Nov 2025 15:30:10 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.57.136])
+	by front1 (Coremail) with SMTP id qMiowJAxfcGBqwlpo+MlAQ--.61910S2;
+	Tue, 04 Nov 2025 15:30:09 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	akpm@linux-foundation.org,
+	willy@infradead.org,
+	david@redhat.com,
+	linmag7@gmail.com,
+	thuth@redhat.com,
+	maobibo@loongson.cn,
+	apopple@nvidia.com
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>,
+	Liupu Wang <wangliupu@loongson.cn>
+Subject: [PATCH] Loongarch:Make pte/pmd_modify can set _PAGE_MODIFIED
+Date: Tue,  4 Nov 2025 15:30:06 +0800
+Message-ID: <20251104073006.1764241-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251103-1-v1-1-20e6641a57da@linux.dev>
-In-Reply-To: <20251103-1-v1-1-20e6641a57da@linux.dev>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Tue, 4 Nov 2025 14:53:04 +0800
-X-Gm-Features: AWmQ_bnyRUlNuwLxwBl63QPbG926jSDDFvsN0rhY6T22CSGWWq6GN0Hkme8uPf4
-Message-ID: <CAEyhmHQoLF9dcZ2CaasrpeH7RMiaQKyo0pFTrr7Nt1T64+dhuw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Fix sign extension for 12-bit immediates
-To: george <dongtai.guo@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Youling Tang <tangyouling@loongson.cn>, bpf@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>, 
-	Bing Huang <huangbing@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxfcGBqwlpo+MlAQ--.61910S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFWftFWkAFyxAw1xWw47KFX_yoW8Zr4UpF
+	s7CF9Yvay5Kr1xZay3JF17Xr15AwsrGas7J3sFk3WkG3Wqq3yjqr1xKwn8Zr1rXay8Zr18
+	X3yFgw45WF4UJwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-On Mon, Nov 3, 2025 at 4:42=E2=80=AFPM george <dongtai.guo@linux.dev> wrote=
-:
->
-> From: George Guo <guodongtai@kylinos.cn>
->
-> When loading immediate values that fit within 12-bit signed range,
-> the move_imm function incorrectly used zero extension instead of
-> sign extension.
->
-> The bug was exposed when scx_simple scheduler failed with -EINVAL
-> in ops.init() after passing node =3D -1 to scx_bpf_create_dsq().
-> Due to incorrect sign extension, `node >=3D (int)nr_node_ids`
-> evaluated to true instead of false, causing BPF program failure.
->
+In the current pte_modify operation, _PAGE_DIRTY might be cleared. Since
+the hardware-page-walk does not have a predefined _PAGE_MODIFIED flag,
+this could lead to loss of valid data in certain scenarios.
 
-Which bpf prog are you referring to?
+The new modification involves checking whether the original PTE has the
+_PAGE_DIRTY flag. If it exists, the _PAGE_MODIFIED bit is set, ensuring
+that the pte_dirty interface can return accurate information.
 
-> Verified by testing with the scx_simple scheduler (located in
-> tools/sched_ext/). After building with `make` and running
-> ./tools/sched_ext/build/bin/scx_simple, the scheduler now
-> initializes successfully with this fix.
->
-> Fix this by using sign extension (sext) instead of zero extension
-> for signed immediate values in move_imm.
->
-> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> Reported-by: Bing Huang <huangbing@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
-> Signed-off-by: george <dongtai.guo@linux.dev>
-> ---
->  arch/loongarch/net/bpf_jit.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-> index 5697158fd1645fdc3d83f598b00a9e20dfaa8f6d..f1398eb135b69ae61a27ed81f=
-80b4bb0788cf0a0 100644
-> --- a/arch/loongarch/net/bpf_jit.h
-> +++ b/arch/loongarch/net/bpf_jit.h
-> @@ -122,7 +122,8 @@ static inline void move_imm(struct jit_ctx *ctx, enum=
- loongarch_gpr rd, long imm
->         /* addiw rd, $zero, imm_11_0 */
->         if (is_signed_imm12(imm)) {
->                 emit_insn(ctx, addiw, rd, LOONGARCH_GPR_ZERO, imm);
-> -               goto zext;
-> +               emit_sext_32(ctx, rd, is32);
-> +               return;
->         }
+Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
+Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+---
+ arch/loongarch/include/asm/pgtable.h | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-This causes kernel panic on existing bpf selftests.
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index bd128696e96d..106abfa5183b 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -424,8 +424,13 @@ static inline unsigned long pte_accessible(struct mm_struct *mm, pte_t a)
+ 
+ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ {
+-	return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+-		     (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
++	unsigned long val = (pte_val(pte) & _PAGE_CHG_MASK) |
++		     (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
++
++	if (pte_val(pte) & _PAGE_DIRTY)
++		val |= _PAGE_MODIFIED;
++
++	return __pte(val);
+ }
+ 
+ extern void __update_tlb(struct vm_area_struct *vma,
+@@ -547,9 +552,13 @@ static inline struct page *pmd_page(pmd_t pmd)
+ 
+ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+ {
+-	pmd_val(pmd) = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
++	unsigned long val = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+ 				(pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
+-	return pmd;
++
++	if (pmd_val(pmd) & _PAGE_DIRTY)
++		val |= _PAGE_MODIFIED;
++
++	return __pmd(val);
+ }
+ 
+ static inline pmd_t pmd_mkinvalid(pmd_t pmd)
+-- 
+2.41.0
 
->
->         /* ori rd, $zero, imm_11_0 */
->
-> ---
-> base-commit: 6146a0f1dfae5d37442a9ddcba012add260bceb0
-> change-id: 20251103-1-96faa240e8f4
->
-> Best regards,
-> --
-> george <dongtai.guo@linux.dev>
->
