@@ -1,77 +1,77 @@
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 241001D5CC9;
-	Wed,  5 Nov 2025 13:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAB121CFF6
+	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 15:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762350340; cv=none; b=Ou2Nj+HNyhqWkoeUxRbdexVQtKNKGaZ1O3xmL/sk5daofw/cSZV64nB0ol8+lBi9vS8RktaB9xbXq2nI1OXWFXYRB9IpF739bGLGMz4OqOzA4BCq4dRLOEPyqrZFntwzYiKCCzojMqjmG2hL/iDiA+T2NJt4/o7T2rqdiXjdyAk=
+	t=1762355651; cv=none; b=Vl7iFQJDOfWiF2ov3BYUh5tJbPq7cO+tV1G51hYzwDL4RGigY2IvYnLBAVWahYBIC27ysC5zK9A3F8L53rxuw9y/WPL/PPG7LeqfSCTBVGlwBJQGLDCkdsN5Z7bhVNuYOZBbkPSUBpgaA0tMDJYXyp+bQgYWPeYKJ8w/dBdmq/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762350340; c=relaxed/simple;
-	bh=89xmLV1cc5APaC2SFgb02Pjd41W8Cu5yepL4zNtfdQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nHxOb57Lxg43gUHRsZDsasJKytCnDOhKlQNnSFhXpINbdOW4DI9/EAysDXHjv6F7zmOElI93FVLwkngteKbJEz6IeltPfEbBLkgcdf+7BPiofIsVyKslV4e4+lefcMnO5lD5hWGtZu3RUFvF64CCVjbf67GNVFp41o8JkChYkbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
-Received: from gate.crashing.org (localhost [127.0.0.1])
-	by gate.crashing.org (8.18.1/8.18.1/Debian-2) with ESMTP id 5A5DiSRa1593373;
-	Wed, 5 Nov 2025 07:44:28 -0600
-Received: (from segher@localhost)
-	by gate.crashing.org (8.18.1/8.18.1/Submit) id 5A5DiQRd1593372;
-	Wed, 5 Nov 2025 07:44:26 -0600
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date: Wed, 5 Nov 2025 07:44:26 -0600
-From: Segher Boessenkool <segher@kernel.crashing.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-efi@vger.kernel.org, llvm@lists.linux.dev,
-        Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH] kbuild: Add '-fms-extensions' to areas with dedicated
- CFLAGS
-Message-ID: <aQtUujos2ADVs-_O@gate>
-References: <20251101-kbuild-ms-extensions-dedicated-cflags-v1-1-38004aba524b@kernel.org>
+	s=arc-20240116; t=1762355651; c=relaxed/simple;
+	bh=qvi7oIPnIz+eY7U+jHRFqVIGC+y9ZfdAEbH8bTFuxeY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ljjTE8rQvM/ntsT6nIVWRDCpaMzNfIrbxevYPAvrD6o5+oggE90Udj3SuA9jpNH+1PcnmsM86jryGV4bOZ6Hgs7CiLqeRlKR1qHrCCcyPBm4pJ/FMN9u/ycUuiSSrKzhFVZvxzAbAolFN99BsweeCSnadxcG3eUFsiKb3o8fPwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=kWIy8uRM; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="kWIy8uRM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1762355650;
+	bh=cwlZVi0pf4Mx6crAaPM4cCr/ny6B50SfKYt8DlTwuhE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kWIy8uRMlHvuT/A0YFD2J6IwfaUYbo+hOrAC+Kk04ouBv1AAA3Qkyt0k++lHjGnv8
+	 X+Lj2wjHnYQm5yfU6fJT/jMEd6ToCqb/NAi6eWcDBMxn98H+VL+M0WFBeCzFfD5wZH
+	 7ZEfD50ZQNf6zQ9VQDc57a3A+Gf2V4hii0554eY4=
+Received: from stargazer (unknown [IPv6:2408:824e:302:e8a1:c427:8c70:2426:6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id EEC1066A4D;
+	Wed,  5 Nov 2025 10:14:06 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Mingcong Bai <jeffbai@aosc.io>,
+	Xi Ruoyao <xry111@xry111.site>,
+	loongarch@lists.linux.dev (open list:LOONGARCH),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] LoongArch: Simplify __arch_bitrev32 implementation
+Date: Wed,  5 Nov 2025 23:12:54 +0800
+Message-ID: <20251105151257.148530-3-xry111@xry111.site>
+X-Mailer: git-send-email 2.51.2
+In-Reply-To: <20251105151257.148530-1-xry111@xry111.site>
+References: <20251105151257.148530-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251101-kbuild-ms-extensions-dedicated-cflags-v1-1-38004aba524b@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi!
+LoongArch has the bitrev.w instruction to reverse bits in a 32-bit
+integer, thus there's no need to reverse the bytes and use bitrev.4b.
 
-On Sat, Nov 01, 2025 at 12:35:47PM -0400, Nathan Chancellor wrote:
-> There are many places within the kernel that use their own CFLAGS
-> instead of the main KBUILD_CFLAGS, meaning code written with the main
-> kernel's use of '-fms-extensions' in mind that may be tangentially
-> included in these areas will result in "error: declaration does not
-> declare anything" messages from the compiler.
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ arch/loongarch/include/asm/bitrev.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please fix such non-standard code then, instead?  The only (documented)
-thing -fms-extensions does for C code is give meaning to something that
-otherwise is a syntax error (and it is for a good reason!)
+diff --git a/arch/loongarch/include/asm/bitrev.h b/arch/loongarch/include/asm/bitrev.h
+index 46f275b9cdf7..757738ea38d7 100644
+--- a/arch/loongarch/include/asm/bitrev.h
++++ b/arch/loongarch/include/asm/bitrev.h
+@@ -11,7 +11,7 @@ static __always_inline __attribute_const__ u32 __arch_bitrev32(u32 x)
+ {
+ 	u32 ret;
+ 
+-	asm("bitrev.4b	%0, %1" : "=r"(ret) : "r"(__swab32(x)));
++	asm("bitrev.w	%0, %1" : "=r"(ret) : "r"(x));
+ 	return ret;
+ }
+ 
+-- 
+2.51.2
 
-
-Segher
