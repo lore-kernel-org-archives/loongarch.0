@@ -1,224 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1552323ABB9
-	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 00:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EF8F2472B6
+	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 00:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762304264; cv=none; b=WR955jgiYcnkvzi+MB/+S2mfZEr9v7BKD2lJXOCmpZ5UZnFJpWF/Q30MRvYuag2M/DLkseDEtymiAgXklx8VtwtXvBEr6cVma5HxjzXDV2hmM/EiE3dIr5B588/f55HUid8oRMP/U/CiKvsAGaG+YkC4KywEr09k/++qs8vFLlw=
+	t=1762304276; cv=none; b=fIfbIELBWgOXdMhXTH4qJWY7w1Pj9mW4iFrY1aQu9GkajP64OmLpcD9BuyXu1Ab3110kgbHCV7hYxFUOCgZL7tujn3ApZY20WYMeAMXtdPfxSMYQThvyw6R/7gFw8uNHix8r0MsZCfJc/UsEGk2ui5lS+sJQb/0K1/4P5W3docY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762304264; c=relaxed/simple;
-	bh=R2ULzT1ROAc+gRabXR8qulIwfehavOiQo/epHX3nGp4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ozXbPhHvNj5yP4a2NE3pOYC51sI+wnWfxch4fNDNhvDaxpH8wiHgYRzOFnAvKh1OTENkoVDFiWE/9WfyWvfLs9m45nt8VGrCcB4+QBI40BDju5UWAfuy9giTFfY4vejk5wE9uCutLfkQZD/0sEpS6PgHtDKV4gCImNANo9ujL/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hev1h5RO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hev1h5RO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCAABC4CEF7
-	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 00:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762304263;
-	bh=R2ULzT1ROAc+gRabXR8qulIwfehavOiQo/epHX3nGp4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hev1h5ROmIbMiLPtfKE0cvZnXsjyedxjgg0zm33Aq8jwyHBrB4wqRUkp8LJ9V4mJk
-	 5jhfo5QRp96euk+3aKfcMbLA8+T0o1TTwQw5PjnR+cTIso5JPCgNumJ/1GAV0ofxfv
-	 BDXRM7smhxGXXOJIoBUyNrEZH00gqV4RW9Cb2ZoBWNVF+DkRtnjaPRetqsxW4jgy5S
-	 iZSJ6rOtrBjI5lBp4kFSC+PJEOygZjLmIU3d+NavTaUDGqA3l5iSjgOtKuqCrX8FDg
-	 Vk2pTOrcj7abri45GIzhyxPqFcDWwepjNleFbyKt0PUNJMAbzgU30e7ldcXAAMgRpB
-	 dUjjx5mgLIDUQ==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b6d3340dc2aso75493566b.0
-        for <loongarch@lists.linux.dev>; Tue, 04 Nov 2025 16:57:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXfxbNKze+z94zs/UqTC4BENtnd2mGoykD9D0DyJmKW+sDibpcUPdXZrFtr1rTRDDyYgAX66Vi6Q18=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxNKv9uBm87EhRq2A5Rhu/Kg8vPgQFKOmeDHgth6szclH69W1Wg
-	oURMQqYWYjlTclm5uMuHQJXdMtwzO+MfpSOlC5mik4qLiC8hzuoyMQahlNcYP8e4eyjw6iwo3MP
-	8kqYEt8utKunTsyfcXg6FBJYsQUSjq08=
-X-Google-Smtp-Source: AGHT+IFeSBz7bs7u6rpSq+7VUa+zA4NlZ7MicraxVhwXsZ5G8cD5YwakyzfR7Z47dnQv1J0fLwegTPshYCmveN0pHmc=
-X-Received: by 2002:a17:907:944f:b0:b6d:f416:2f3 with SMTP id
- a640c23a62f3a-b7216f647f9mr566528666b.19.1762304262402; Tue, 04 Nov 2025
- 16:57:42 -0800 (PST)
+	s=arc-20240116; t=1762304276; c=relaxed/simple;
+	bh=RJ2qShkAkgf9KUuinRwcp1XT9Op7jqa88P8wTWEQIkg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=SFISkz7VB0y8epfPse41/tcvpLKKoWy+0yCPuDRDO1z4xuq+LH5vIO7uLB9ls7FkRX8KjV6x5eYXa9tH23Qmg31VXJJeu5Nl0SGKtm3nOfW5EwyFThbzbmZSgXRJzyAXHkfgxBpCuTPVIM7QJT4hjQYooQHiD2yCi+idK0MoXyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Dxb_APoQpplfEeAA--.2507S3;
+	Wed, 05 Nov 2025 08:57:51 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowJDxrcEMoQppDl0nAQ--.28498S3;
+	Wed, 05 Nov 2025 08:57:50 +0800 (CST)
+Subject: Re: [PATCH] Loongarch:Make pte/pmd_modify can set _PAGE_MODIFIED
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, akpm@linux-foundation.org, willy@infradead.org,
+ david@redhat.com, linmag7@gmail.com, thuth@redhat.com, maobibo@loongson.cn,
+ apopple@nvidia.com, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Liupu Wang <wangliupu@loongson.cn>
+References: <20251104073006.1764241-1-zhangtianyang@loongson.cn>
+ <CAAhV-H5JnmJqTZ1GnhcgODtjL5FLy8x5HNRJxs6us=gzcFon5Q@mail.gmail.com>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <95e6f0a6-fd6c-a85f-5983-5a37eaf960a2@loongson.cn>
+Date: Wed, 5 Nov 2025 08:56:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251029153649.33345-1-b10902118@ntu.edu.tw>
-In-Reply-To: <20251029153649.33345-1-b10902118@ntu.edu.tw>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 5 Nov 2025 08:57:39 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5E79jZ9rMYyP3h+KLX5rDGcB-Ec8WqyAhPC-pvuvv5UQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bkNEemHAcWDyDDxk5bTowCAMrEyiXOGzsdx_zd4Dcx3GXm9MZaFWommniQ
-Message-ID: <CAAhV-H5E79jZ9rMYyP3h+KLX5rDGcB-Ec8WqyAhPC-pvuvv5UQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: ptrace: Merge ptrace_hbp_set_*()
-To: Bill Tsui <b10902118@ntu.edu.tw>
-Cc: oleg@redhat.com, kernel@xen0n.name, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H5JnmJqTZ1GnhcgODtjL5FLy8x5HNRJxs6us=gzcFon5Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJDxrcEMoQppDl0nAQ--.28498S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxuFy5WF13Ww47WF18Zw48KrX_yoWruw43pF
+	s7AF109a15tF1xZayfXF17uF9xAwsrGas7Jwn0k3WkGa4jq3y8XF4xCrZ8ZFyrXFW8uw10
+	v3yvgr45WF47JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkU
+	UUUU=
 
-Hi, Tiezhu,
+Hi, Huacai
 
-On Wed, Oct 29, 2025 at 11:38=E2=80=AFPM Bill Tsui <b10902118@ntu.edu.tw> w=
-rote:
+在 2025/11/4 下午4:00, Huacai Chen 写道:
+> Hi, Tianyang,
 >
-> In hw_break_set(), those functions actually can be combined into one.
-> This eliminates intermediate calls to modify_user_hw_breakpoint() that
-> may leave hardware registers in a partially updated state.
+> The subject line can be:
+> LoongArch: Let {pte,pmd}_modify() record the status of _PAGE_DIRTY (If
+> I'm right in the later comments).
+Ok. I got it
 >
-> This redundancy was originally found in ARM ptrace, where it caused
-> non-4-byte address alignment checks to fail.
+> On Tue, Nov 4, 2025 at 3:30 PM Tianyang Zhang <zhangtianyang@loongson.cn> wrote:
+>> In the current pte_modify operation, _PAGE_DIRTY might be cleared. Since
+>> the hardware-page-walk does not have a predefined _PAGE_MODIFIED flag,
+>> this could lead to loss of valid data in certain scenarios.
+>>
+>> The new modification involves checking whether the original PTE has the
+>> _PAGE_DIRTY flag. If it exists, the _PAGE_MODIFIED bit is set, ensuring
+>> that the pte_dirty interface can return accurate information.
+> The description may be wrong here. Because pte_dirty() returns
+> pte_val(pte) & (_PAGE_DIRTY | _PAGE_MODIFIED).
+> If _PAGE_DIRTY isn't lost, pte_dirty() is always right, no matter
+> whether there is or isn't _PAGE_MODIFIED.
 >
-> Link:
-> https://lore.kernel.org/all/20251018133731.42505-2-b10902118@ntu.edu.tw/
+> I think the real reason is we need to set _PAGE_MODIFIED in
+> pte/pmd_modify to record the status of _PAGE_DIRTY, so that we can
+> recover _PAGE_DIRTY afterwards, such as in pte/pmd_mkwrite().
+Ok, I will adjust the description
 >
-> The LoongArch implementation appears to have been derived from ARM,
-> so this refactor helps avoid the same issue and simplifies future
-> maintenance.
-What do you think about it?
-
-Huacai
-
+>> Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
+>> Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
+>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/pgtable.h | 17 +++++++++++++----
+>>   1 file changed, 13 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+>> index bd128696e96d..106abfa5183b 100644
+>> --- a/arch/loongarch/include/asm/pgtable.h
+>> +++ b/arch/loongarch/include/asm/pgtable.h
+>> @@ -424,8 +424,13 @@ static inline unsigned long pte_accessible(struct mm_struct *mm, pte_t a)
+>>
+>>   static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+>>   {
+>> -       return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+>> -                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+>> +       unsigned long val = (pte_val(pte) & _PAGE_CHG_MASK) |
+>> +                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
+>> +
+>> +       if (pte_val(pte) & _PAGE_DIRTY)
+>> +               val |= _PAGE_MODIFIED;
+>> +
+>> +       return __pte(val);
+>>   }
+>>
+>>   extern void __update_tlb(struct vm_area_struct *vma,
+>> @@ -547,9 +552,13 @@ static inline struct page *pmd_page(pmd_t pmd)
+>>
+>>   static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+>>   {
+>> -       pmd_val(pmd) = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+>> +       unsigned long val = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+>>                                  (pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
+>> -       return pmd;
+>> +
+>> +       if (pmd_val(pmd) & _PAGE_DIRTY)
+>> +               val |= _PAGE_MODIFIED;
+>> +
+>> +       return __pmd(val);
+>>   }
+> A minimal modification can be:
+> diff --git a/arch/loongarch/include/asm/pgtable.h
+> b/arch/loongarch/include/asm/pgtable.h
+> index 1f20e9280062..907ece0199e0 100644
+> --- a/arch/loongarch/include/asm/pgtable.h
+> +++ b/arch/loongarch/include/asm/pgtable.h
+> @@ -448,8 +448,13 @@ static inline unsigned long pte_accessible(struct
+> mm_struct *mm, pte_t a)
 >
-> Signed-off-by: Bill Tsui <b10902118@ntu.edu.tw>
-> ---
->  arch/loongarch/kernel/ptrace.c | 69 +++++++++-------------------------
->  1 file changed, 17 insertions(+), 52 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrac=
-e.c
-> index 8edd0954e55a..c6cd51569a64 100644
-> --- a/arch/loongarch/kernel/ptrace.c
-> +++ b/arch/loongarch/kernel/ptrace.c
-> @@ -581,13 +581,15 @@ static int ptrace_hbp_get_addr(unsigned int note_ty=
-pe,
->         return 0;
->  }
->
-> -static int ptrace_hbp_set_ctrl(unsigned int note_type,
-> +static int ptrace_hbp_set(unsigned int note_type,
->                                struct task_struct *tsk,
-> -                              unsigned long idx, u32 uctrl)
-> +                              unsigned long idx, u64 addr,
-> +                                  u64 mask, u32 uctrl)
->  {
->         int err;
->         struct perf_event *bp;
->         struct perf_event_attr attr;
-> +       struct arch_hw_breakpoint *info;
->         struct arch_hw_breakpoint_ctrl ctrl;
->         struct thread_info *ti =3D task_thread_info(tsk);
->
-> @@ -597,6 +599,17 @@ static int ptrace_hbp_set_ctrl(unsigned int note_typ=
-e,
->
->         attr =3D bp->attr;
->
-> +       /* addr */
-> +       /* Kernel-space address cannot be monitored by user-space */
-> +       if ((unsigned long)addr >=3D XKPRANGE)
-> +               return -EINVAL;
-> +       attr.bp_addr =3D addr;
+>   static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+>   {
+> -       return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+> -                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+> +       pte_val(pte) = (pte_val(pte) & _PAGE_CHG_MASK) |
+> +                       (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
 > +
-> +       /* mask */
-> +       info =3D counter_arch_bp(bp);
-> +       info->mask =3D mask;
+> +       if (pte_val(pte) & _PAGE_DIRTY)
+> +               pte_val(pte) |= _PAGE_MODIFIED;
 > +
-> +       /* ctrl */
->         switch (note_type) {
->         case NT_LOONGARCH_HW_BREAK:
->                 ctrl.type =3D LOONGARCH_BREAKPOINT_EXECUTE;
-> @@ -623,46 +636,6 @@ static int ptrace_hbp_set_ctrl(unsigned int note_typ=
-e,
->         return modify_user_hw_breakpoint(bp, &attr);
->  }
+> +       return pte;
+>   }
+
++       pte_val(pte) = (pte_val(pte) & _PAGE_CHG_MASK) |
++                       (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
+
+After this step, _PAGE_DIRTY may have already disappeared,
+If no new variables are added, they can be modified in follow way:
+
+  static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+  {
++       if (pte_val(pte) & _PAGE_DIRTY)
++               pte_val(pte) |= _PAGE_MODIFIED;
++
+        return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+	 (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+
+  }
+
 >
-> -static int ptrace_hbp_set_mask(unsigned int note_type,
-> -                              struct task_struct *tsk,
-> -                              unsigned long idx, u64 mask)
-> -{
-> -       struct perf_event *bp;
-> -       struct perf_event_attr attr;
-> -       struct arch_hw_breakpoint *info;
-> -
-> -       bp =3D ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
-> -       if (IS_ERR(bp))
-> -               return PTR_ERR(bp);
-> -
-> -       attr =3D bp->attr;
-> -       info =3D counter_arch_bp(bp);
-> -       info->mask =3D mask;
-> -
-> -       return modify_user_hw_breakpoint(bp, &attr);
-> -}
-> -
-> -static int ptrace_hbp_set_addr(unsigned int note_type,
-> -                              struct task_struct *tsk,
-> -                              unsigned long idx, u64 addr)
-> -{
-> -       struct perf_event *bp;
-> -       struct perf_event_attr attr;
-> -
-> -       /* Kernel-space address cannot be monitored by user-space */
-> -       if ((unsigned long)addr >=3D XKPRANGE)
-> -               return -EINVAL;
-> -
-> -       bp =3D ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
-> -       if (IS_ERR(bp))
-> -               return PTR_ERR(bp);
-> -
-> -       attr =3D bp->attr;
-> -       attr.bp_addr =3D addr;
-> -
-> -       return modify_user_hw_breakpoint(bp, &attr);
-> -}
-> -
->  #define PTRACE_HBP_ADDR_SZ     sizeof(u64)
->  #define PTRACE_HBP_MASK_SZ     sizeof(u64)
->  #define PTRACE_HBP_CTRL_SZ     sizeof(u32)
-> @@ -733,10 +706,6 @@ static int hw_break_set(struct task_struct *target,
->                                          offset, offset + PTRACE_HBP_ADDR=
-_SZ);
->                 if (ret)
->                         return ret;
-> -
-> -               ret =3D ptrace_hbp_set_addr(note_type, target, idx, addr)=
-;
-> -               if (ret)
-> -                       return ret;
->                 offset +=3D PTRACE_HBP_ADDR_SZ;
+>   extern void __update_tlb(struct vm_area_struct *vma,
+> @@ -583,7 +588,11 @@ static inline struct page *pmd_page(pmd_t pmd)
+>   static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+>   {
+>          pmd_val(pmd) = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+> -                               (pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
+> +                       (pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
+> +
+> +       if (pmd_val(pmd) & _PAGE_DIRTY)
+> +               pmd_val(pmd) |= _PAGE_MODIFIED;
+> +
+>          return pmd;
+>   }
 >
->                 if (!count)
-> @@ -746,21 +715,17 @@ static int hw_break_set(struct task_struct *target,
->                                          offset, offset + PTRACE_HBP_MASK=
-_SZ);
->                 if (ret)
->                         return ret;
-> -
-> -               ret =3D ptrace_hbp_set_mask(note_type, target, idx, mask)=
-;
-> -               if (ret)
-> -                       return ret;
->                 offset +=3D PTRACE_HBP_MASK_SZ;
+> You needn't define a new variable.
 >
->                 ret =3D user_regset_copyin(&pos, &count, &kbuf, &ubuf, &c=
-trl,
->                                          offset, offset + PTRACE_HBP_CTRL=
-_SZ);
->                 if (ret)
->                         return ret;
-> +               offset +=3D PTRACE_HBP_CTRL_SZ;
 >
-> -               ret =3D ptrace_hbp_set_ctrl(note_type, target, idx, ctrl)=
-;
-> +               ret =3D ptrace_hbp_set(note_type, target, idx, addr, mask=
-, ctrl);
->                 if (ret)
->                         return ret;
-> -               offset +=3D PTRACE_HBP_CTRL_SZ;
+> Huacai
 >
->                 user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
->                                           offset, offset + PTRACE_HBP_PAD=
-_SZ);
-> --
-> 2.51.0
->
+>>   static inline pmd_t pmd_mkinvalid(pmd_t pmd)
+>> --
+>> 2.41.0
+>>
+>>
+Thanks
+
+Tianyang
+
