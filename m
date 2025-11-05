@@ -1,222 +1,220 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634C828DC4
-	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 01:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D013139579
+	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 01:07:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762304471; cv=none; b=knheFE7+d4Nf+Y7k/Nnyu3c11X7OSKs+roXs/iZzMKTnMRzQyxUM3xI4luHjtKHddVGnfBMrVXPdfyepQ8g0xCPtwPqLTGxwJxPnbucQEi0/TZJUAXqiiMwdaDWC3L5JY06MfwWxYXBs84bkxWw/r5CHFAJSjArU/tbcgHWq8J8=
+	t=1762304879; cv=none; b=o73mb2gdXHFX0MLurSkRh4MRuqTOlGLTesT+Kk2MwDbswPI2n4CwfcDjcynXk1RoCUbz8TWf3Zl/O28bK8e7HdmQx7DBFyRfZQgtr0JhC30yVHE6FyeeEWTXas+Aj+Fljq0zdunWer4nm/y9Tjf+wudzDq/4DlAJDVcr+iQZD/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762304471; c=relaxed/simple;
-	bh=LNzC0bHEUBXHkFiE99rHGDkuGYJKjTGVPzzIlLFvOF0=;
+	s=arc-20240116; t=1762304879; c=relaxed/simple;
+	bh=ilr2K9gJuHu546RJYoC8JkD3WBGGz5MW/TcnmPpAqHQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kR2ZmxdF5mNahFG9MjnY1Z1YLL4G6MtERwN+qnnyToFdh3bYVC84YGD3HXRKbFD70/r8ca3Ffke0tCSNob9zcIE8kFSrs26ZKb4hYTicby0jAaLA5HIuU9bG/gpVbtizBfDDl2S/851Gu4ZoENnOScegcSlmUfAS2ZeNasQp8Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nU9Z+vxA; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=jhGEbC8dPlmOtzuvQgAQIYc/rx1qloSz6O3TH9zdEOpEjk5z2z9aA9HkYCNdZ3f0TPilo9Jc/f0dvGW+gICZMg1t5alktFxt3JFH5inv/K+FgMJY1xZDujDF6O6vAHxCMDcuBwniOut7Vl5huqFn9aVPU9i2jjiK8tT8jC8s2Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQ7bTwEk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nU9Z+vxA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED0A3C116D0
-	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 01:01:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQ7bTwEk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6AC7C19421
+	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 01:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762304471;
-	bh=LNzC0bHEUBXHkFiE99rHGDkuGYJKjTGVPzzIlLFvOF0=;
+	s=k20201202; t=1762304878;
+	bh=ilr2K9gJuHu546RJYoC8JkD3WBGGz5MW/TcnmPpAqHQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nU9Z+vxAZpwquuKktAkLMKsXiREApigUxSSWvO4o7XqT2v9LZCozj/8Sb9KwlX/dv
-	 iy4iuzp0/M8fBLofYqKea6MzVwPMbMiXMSP5+zafnalBum1fgF4Ds3zv1NxZlvmwaJ
-	 vAoDdFc49vHmpZ4UuHPZzrlaelK7rS1xOxCikm66K+XWrsd08SEsn8ig5IRa7/k5xT
-	 fndLJHSnvwaZNCRPK+qJ9O2v+viB4amHiAze9s5sNQmGn5geMbInJfQoNmekzrw/pB
-	 d9Lgb4X0xoaiekq2Q44C6fRZg22pnTa3oY1xqSHNlY+2+pMiAlbz5HSxRokq0YfSMM
-	 H0iSnouEVHDyw==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-640741cdda7so8032701a12.2
-        for <loongarch@lists.linux.dev>; Tue, 04 Nov 2025 17:01:10 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWttIkyQm4UdZ11XhwHvaHsbzg4iwW+VviTCu0z+jgPHAKjS8XdutSJTgF3/lspuIrYwmLVOEbgSIc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxFMUgblYWidFTe2LWE/nT7koqquBgbERnhS7ZJ2lUNI0hr0SmC
-	zl6geiAAr4SLZWqIZH8lhIiwbF2KsDJIuw7Yf3DxNbsMcRB5r6rrsKGQMJc0DgdC1x0YNGSzzns
-	vVEy9aetE3rOzA2cP3SoSpwSb0sszwHU=
-X-Google-Smtp-Source: AGHT+IGrGxegHnyKau9LpVTGrgCjY6ZZT6K86nQYSNmmK0d4RdpQlY330regr/qFOTeAwxQkSbr86alOZaV1UFna+As=
-X-Received: by 2002:a17:907:7e96:b0:b72:5918:b90a with SMTP id
- a640c23a62f3a-b72652b86bcmr121172966b.25.1762304468276; Tue, 04 Nov 2025
- 17:01:08 -0800 (PST)
+	b=uQ7bTwEkSxG3O+wpJVz2wgHSxrMjLHmcv9i/4Jas0auXxg4LOJMqFoAfRP7hOM3EP
+	 lhKkXwaHhMBx5y3t1qHu6szpp7B7VDzn1ZT+TLGpnt66P/+Hq+j87KHaiauPaTXA/5
+	 rCfZWzkV1Cc8PFgQynR1+REz6FDN9qbq3yG9wck3NEdJDJTPunZUEc1j0nDXtVCMQ0
+	 8ZV1m6nPz0XZ1chkdiCobZrhmEeSdr6l9hXgn2ra/2BBLqHjmxvA6ZFfK5o/0ArAeN
+	 2vmAXAVa7ELOCUzvgGd1DQP/MdG84Q15bzLUzKG7NIGpp3TqEuSJe4AUubECu6je7Y
+	 iUjUgpjqQvMsA==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b3c2c748bc8so773710466b.2
+        for <loongarch@lists.linux.dev>; Tue, 04 Nov 2025 17:07:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUVUybW79vblM/qKV+cAOuTXCC84G2lI9Ht/0N73BLxkwnyzyeQELQEeZJzhdP7eHtyMN2lCSfK4tI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxEsttoGrsUegbx6iNXrUqv0Agnq7kspNX+1/0mf4dysYcU1jWB
+	6rpO39u1tiU43kzs/y7+ZUSyRfsscOkLorF1yZMAe1EAWZZKxaBTs21PwTTCRpVzmf21aN1C1YL
+	sv2jYla2NJWR0tSmiyqKY/vVeNkDjl+0=
+X-Google-Smtp-Source: AGHT+IFFm6EM5n08GOxTfEKlsUKIK572RyRhNYKmqXy1KMmkIGLteY1MmUaGQfeyEbd2XXI7rhCbSjzCsvpH3olAxkw=
+X-Received: by 2002:a17:906:c10c:b0:aff:fe6:78f0 with SMTP id
+ a640c23a62f3a-b726553bd09mr126618366b.54.1762304877244; Tue, 04 Nov 2025
+ 17:07:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
- <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com> <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
- <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
-In-Reply-To: <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
+References: <20251104073006.1764241-1-zhangtianyang@loongson.cn>
+ <CAAhV-H5JnmJqTZ1GnhcgODtjL5FLy8x5HNRJxs6us=gzcFon5Q@mail.gmail.com> <95e6f0a6-fd6c-a85f-5983-5a37eaf960a2@loongson.cn>
+In-Reply-To: <95e6f0a6-fd6c-a85f-5983-5a37eaf960a2@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 5 Nov 2025 09:01:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
-X-Gm-Features: AWmQ_blaQYn17oCd4-puacfkSPvyHc_K4OxzWeUbJCHm18Co-iitsn6Aix4lBVI
-Message-ID: <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
- and SR-IOV
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Bibo Mao <maobibo@loongson.cn>, linux-s390 <linux-s390@vger.kernel.org>, 
-	loongarch@lists.linux.dev, Farhan Ali <alifm@linux.ibm.com>, 
-	Matthew Rosato <mjrosato@linux.ibm.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
+Date: Wed, 5 Nov 2025 09:07:53 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4WrphWQqW7HoeD7xSvRuHV1KBt7jgESQU7N-y1HrSVVw@mail.gmail.com>
+X-Gm-Features: AWmQ_bmfgS4IrtLUxWGxshr7TnFNp6zw14tLIui5uCmLNt_hfBIr6fEunSdbzaw
+Message-ID: <CAAhV-H4WrphWQqW7HoeD7xSvRuHV1KBt7jgESQU7N-y1HrSVVw@mail.gmail.com>
+Subject: Re: [PATCH] Loongarch:Make pte/pmd_modify can set _PAGE_MODIFIED
+To: Tianyang Zhang <zhangtianyang@loongson.cn>
+Cc: kernel@xen0n.name, akpm@linux-foundation.org, willy@infradead.org, 
+	david@redhat.com, linmag7@gmail.com, thuth@redhat.com, maobibo@loongson.cn, 
+	apopple@nvidia.com, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Liupu Wang <wangliupu@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 3, 2025 at 7:23=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm.=
-com> wrote:
+On Wed, Nov 5, 2025 at 8:57=E2=80=AFAM Tianyang Zhang <zhangtianyang@loongs=
+on.cn> wrote:
 >
-> On Mon, 2025-11-03 at 17:50 +0800, Huacai Chen wrote:
-> > Hi, Niklas,
-> >
-> > On Wed, Oct 29, 2025 at 5:42=E2=80=AFPM Niklas Schnelle <schnelle@linux=
-.ibm.com> wrote:
-> > >
-> > > When the isolated PCI function probing mechanism is used in conjuncti=
-on
-> > > with ARI or SR-IOV it may not find all available PCI functions. In th=
-e
-> > > case of ARI the problem is that next_ari_fn() always returns -ENODEV =
-if
-> > > dev is NULL and thus if fn 0 is missing the scan stops.
-> > >
-> > > For SR-IOV things are more complex. Here the problem is that the chec=
-k
-> > > for multifunction may fail. One example where this can occur is if th=
-e
-> > > first passed-through function is a VF with devfn 8. Now in
-> > > pci_scan_slot() this means it is fn 0 and thus multifunction doesn't =
-get
-> > > set. Since VFs don't get multifunction set via PCI_HEADER_TYPE_MFD it
-> > > remains unset and probing stops even if there is a devfn 9.
-> > >
-> > > Now at the moment both of these issues are hidden on s390. The first =
-one
-> > > because ARI is detected as disabled as struct pci_bus's self is NULL
-> > > even though firmware does enable and use ARI. The second issue is hid=
-den
-> > > as a side effect of commit 25f39d3dcb48 ("s390/pci: Ignore RID for
-> > > isolated VFs"). This is because VFs are either put on their own virtu=
-al
-> > > bus if the parent PF is not passed-through to the same instance or VF=
-s
-> > > are hotplugged once SR-IOV is enabled on the parent PF and then
-> > > pci_scan_single_device() is used.
-> > >
-> > > Still especially the first issue prevents correct detection of ARI an=
-d
-> > > the second might be a problem for other users of isolated function
-> > > probing. Fix both issues by keeping things as simple as possible. If
-> > > isolated function probing is enabled simply scan every possible devfn=
-.
-> > I'm very sorry, but applying this patch on top of commit a02fd05661d7
-> > ("PCI: Extend isolated function probing to LoongArch") we fail to
-> > boot.
-> >
-> > Boot log:
-> > [   10.365340] megaraid cmm: 2.20.2.7 (Release Date: Sun Jul 16
-> > 00:01:03 EST 2006)
-> > [   10.372628] megaraid: 2.20.5.1 (Release Date: Thu Nov 16 15:32:35 ES=
-T 2006)
-> > [   10.379564] megasas: 07.734.00.00-rc1
-> > [   10.383222] mpt3sas version 54.100.00.00 loaded
-> > [   10.388304] nvme nvme0: pci function 0000:08:00.0
-> > [   10.395088] Freeing initrd memory: 45632K
-> > [   10.469822] ------------[ cut here ]------------
-> > [   10.474409] WARNING: CPU: 0 PID: 247 at drivers/ata/libahci.c:233
-> > ahci_enable_ahci+0x64/0xb8
-> > [   10.482804] Modules linked in:
-> > [   10.485838] CPU: 0 UID: 0 PID: 247 Comm: kworker/0:11 Not tainted
-> > 6.18.0-rc3 #1 PREEMPT(full)
-> > [   10.494397] Hardware name: To be filled by O.E.M.To be fill To be
-> > filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-> > Loongson-UDK2018-V4.0.
-> > [   10.508139] Workqueue: events work_for_cpu_fn
-> > [   10.512468] pc 900000000103be2c ra 900000000103be28 tp
-> > 900000010ae44000 sp 900000010ae47be0
-> > [   10.520769] a0 0000000000000000 a1 00000000000000b0 a2
-> > 0000000000000001 a3 9000000001810e0c
-> > [   10.529069] a4 9000000002343e20 a5 0000000000000001 a6
-> > 0000000000000010 a7 0000000000000000
-> > [   10.537373] t0 d10951fa66920f31 t1 d10951fa66920f31 t2
-> > 0000000000001280 t3 000000000674c000
-> > [   10.545673] t4 0000000000000000 t5 0000000000000000 t6
-> > 9000000008002480 t7 00000000000000b4
-> > [   10.553972] t8 90000001055eab90 u0 900000010ae47b68 s9
-> > 9000000002221a50 s0 0000000000000000
-> > [   10.562272] s1 ffff800032435800 s2 0000000000000000 s3
-> > ffffffff80000000 s4 9000000002221570
-> > [   10.570571] s5 0000000000000005 s6 9000000101ccf0b8 s7
-> > 90000000023dd000 s8 900000010ae47d08
-> > [   10.578869]    ra: 900000000103be28 ahci_enable_ahci+0x60/0xb8
-> > [   10.584665]   ERA: 900000000103be2c ahci_enable_ahci+0x64/0xb8
-> > [   10.590461]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC -W=
-E)
-> > [   10.596609]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-> > [   10.600937]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-> > [   10.605698]  ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
-> > [   10.610458] ESTAT: 000c0000 [BRK] (IS=3D ECode=3D12 EsubCode=3D0)
-> > [   10.615994]  PRID: 0014d010 (Loongson-64bit, Loongson-3C6000/S)
-> > [   10.621875] CPU: 0 UID: 0 PID: 247 Comm: kworker/0:11 Not tainted
-> > 6.18.0-rc3 #1 PREEMPT(full)
-> > [   10.621877] Hardware name: To be filled by O.E.M.To be fill To be
-> > filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-> > Loongson-UDK2018-V4.0.
-> > [   10.621878] Workqueue: events work_for_cpu_fn
-> > [   10.621881] Stack : 900000010ae47848 0000000000000000
-> > 90000000002436bc 900000010ae44000
-> > [   10.621884]         900000010ae47820 900000010ae47828
-> > 0000000000000000 900000010ae47968
-> > [   10.621887]         900000010ae47960 900000010ae47960
-> > 900000010ae47630 0000000000000001
-> > [   10.621890]         0000000000000001 900000010ae47828
-> > d10951fa66920f31 9000000100414300
-> > [   10.621893]         80000000ffffe34d fffffffffffffffe
-> > 000000000000034f 000000000000002f
-> > [   10.621896]         0000000000000063 0000000000000001
-> > 000000000674c000 9000000002221a50
-> > [   10.621899]         0000000000000000 0000000000000000
-> > 90000000020b6500 90000000023dd000
-> > [   10.621902]         00000000000000e9 0000000000000009
-> > 0000000000000002 90000000023dd000
-> > [   10.621905]         900000010ae47d08 0000000000000000
-> > 90000000002436d4 0000000000000000
-> > [   10.621908]         00000000000000b0 0000000000000004
-> > 0000000000000000 0000000000071c1d
-> > [   10.621910]         ...
-> > [   10.621912] Call Trace:
-> > [   10.621913] [<90000000002436d4>] show_stack+0x5c/0x180
-> > [   10.621918] [<900000000023f328>] dump_stack_lvl+0x6c/0x9c
-> > [   10.621923] [<9000000000266eb8>] __warn+0x80/0x108
-> > [   10.621927] [<90000000017d1910>] report_bug+0x158/0x2a8
-> > [   10.621932] [<900000000180b610>] do_bp+0x2d0/0x340
-> > [   10.621938] [<9000000000241da0>] handle_bp+0x120/0x1c0
-> > [   10.621940] [<900000000103be2c>] ahci_enable_ahci+0x64/0xb8
-> > [   10.621943] [<900000000103beb8>] ahci_save_initial_config+0x38/0x4d8
-> > [   10.621946] [<90000000010391b4>] ahci_init_one+0x354/0x1088
-> > [   10.621950] [<9000000000d16cdc>] local_pci_probe+0x44/0xb8
-> > [   10.621953] [<9000000000286f78>] work_for_cpu_fn+0x18/0x30
-> > [   10.621956] [<900000000028a840>] process_one_work+0x160/0x330
-> > [   10.621961] [<900000000028b208>] worker_thread+0x330/0x460
-> > [   10.621964] [<9000000000295fdc>] kthread+0x11c/0x138
-> > [   10.621968] [<900000000180b740>] ret_from_kernel_thread+0x28/0xa8
-> > [   10.621971] [<9000000000241484>] ret_from_kernel_thread_asm+0xc/0x88
-> > [   10.621973]
-> >
-> >
+> Hi, Huacai
 >
-> This looks like a warning telling us that AHCI enable failed / timed
-> out. Do you have Panic on Warn on that this directly causes a boot
-> failure? The only relation I can see with my patch is that maybe this
-> AHCI device wasn't probed before and somehow isn't working?
-The rootfs is on the AHCI controller, so AHCI failure causes the boot
-failure, without this patch no boot problems.
+> =E5=9C=A8 2025/11/4 =E4=B8=8B=E5=8D=884:00, Huacai Chen =E5=86=99=E9=81=
+=93:
+> > Hi, Tianyang,
+> >
+> > The subject line can be:
+> > LoongArch: Let {pte,pmd}_modify() record the status of _PAGE_DIRTY (If
+> > I'm right in the later comments).
+> Ok. I got it
+> >
+> > On Tue, Nov 4, 2025 at 3:30=E2=80=AFPM Tianyang Zhang <zhangtianyang@lo=
+ongson.cn> wrote:
+> >> In the current pte_modify operation, _PAGE_DIRTY might be cleared. Sin=
+ce
+> >> the hardware-page-walk does not have a predefined _PAGE_MODIFIED flag,
+> >> this could lead to loss of valid data in certain scenarios.
+> >>
+> >> The new modification involves checking whether the original PTE has th=
+e
+> >> _PAGE_DIRTY flag. If it exists, the _PAGE_MODIFIED bit is set, ensurin=
+g
+> >> that the pte_dirty interface can return accurate information.
+> > The description may be wrong here. Because pte_dirty() returns
+> > pte_val(pte) & (_PAGE_DIRTY | _PAGE_MODIFIED).
+> > If _PAGE_DIRTY isn't lost, pte_dirty() is always right, no matter
+> > whether there is or isn't _PAGE_MODIFIED.
+> >
+> > I think the real reason is we need to set _PAGE_MODIFIED in
+> > pte/pmd_modify to record the status of _PAGE_DIRTY, so that we can
+> > recover _PAGE_DIRTY afterwards, such as in pte/pmd_mkwrite().
+> Ok, I will adjust the description
+After some thinking, your original description may be right. Without
+this patch the scenario maybe like this:
+The pte is dirty _PAGE_DIRTY but without _PAGE_MODIFIED, after
+pte_modify() we lose _PAGE_DIRTY, then pte_dirty() returns false. So
+we need _PAGE_MODIFIED to record _PAGE_DIRTY here.
+
+But the description also needs to be updated.
+
+> >
+> >> Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
+> >> Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
+> >> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> >> ---
+> >>   arch/loongarch/include/asm/pgtable.h | 17 +++++++++++++----
+> >>   1 file changed, 13 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/inc=
+lude/asm/pgtable.h
+> >> index bd128696e96d..106abfa5183b 100644
+> >> --- a/arch/loongarch/include/asm/pgtable.h
+> >> +++ b/arch/loongarch/include/asm/pgtable.h
+> >> @@ -424,8 +424,13 @@ static inline unsigned long pte_accessible(struct=
+ mm_struct *mm, pte_t a)
+> >>
+> >>   static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+> >>   {
+> >> -       return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+> >> -                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+> >> +       unsigned long val =3D (pte_val(pte) & _PAGE_CHG_MASK) |
+> >> +                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
+> >> +
+> >> +       if (pte_val(pte) & _PAGE_DIRTY)
+> >> +               val |=3D _PAGE_MODIFIED;
+> >> +
+> >> +       return __pte(val);
+> >>   }
+> >>
+> >>   extern void __update_tlb(struct vm_area_struct *vma,
+> >> @@ -547,9 +552,13 @@ static inline struct page *pmd_page(pmd_t pmd)
+> >>
+> >>   static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+> >>   {
+> >> -       pmd_val(pmd) =3D (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+> >> +       unsigned long val =3D (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+> >>                                  (pgprot_val(newprot) & ~_HPAGE_CHG_MA=
+SK);
+> >> -       return pmd;
+> >> +
+> >> +       if (pmd_val(pmd) & _PAGE_DIRTY)
+> >> +               val |=3D _PAGE_MODIFIED;
+> >> +
+> >> +       return __pmd(val);
+> >>   }
+> > A minimal modification can be:
+> > diff --git a/arch/loongarch/include/asm/pgtable.h
+> > b/arch/loongarch/include/asm/pgtable.h
+> > index 1f20e9280062..907ece0199e0 100644
+> > --- a/arch/loongarch/include/asm/pgtable.h
+> > +++ b/arch/loongarch/include/asm/pgtable.h
+> > @@ -448,8 +448,13 @@ static inline unsigned long pte_accessible(struct
+> > mm_struct *mm, pte_t a)
+> >
+> >   static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+> >   {
+> > -       return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+> > -                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+> > +       pte_val(pte) =3D (pte_val(pte) & _PAGE_CHG_MASK) |
+> > +                       (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
+> > +
+> > +       if (pte_val(pte) & _PAGE_DIRTY)
+> > +               pte_val(pte) |=3D _PAGE_MODIFIED;
+> > +
+> > +       return pte;
+> >   }
+>
+> +       pte_val(pte) =3D (pte_val(pte) & _PAGE_CHG_MASK) |
+> +                       (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
+>
+> After this step, _PAGE_DIRTY may have already disappeared,
+> If no new variables are added, they can be modified in follow way:
+>
+>   static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+>   {
+> +       if (pte_val(pte) & _PAGE_DIRTY)
+> +               pte_val(pte) |=3D _PAGE_MODIFIED;
+> +
+>         return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+>          (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+>
+>   }
+OK, it makes sense.
 
 Huacai
-
 >
-> Thanks,
-> Niklas
+> >
+> >   extern void __update_tlb(struct vm_area_struct *vma,
+> > @@ -583,7 +588,11 @@ static inline struct page *pmd_page(pmd_t pmd)
+> >   static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+> >   {
+> >          pmd_val(pmd) =3D (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+> > -                               (pgprot_val(newprot) & ~_HPAGE_CHG_MASK=
+);
+> > +                       (pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
+> > +
+> > +       if (pmd_val(pmd) & _PAGE_DIRTY)
+> > +               pmd_val(pmd) |=3D _PAGE_MODIFIED;
+> > +
+> >          return pmd;
+> >   }
+> >
+> > You needn't define a new variable.
+> >
+> >
+> > Huacai
+> >
+> >>   static inline pmd_t pmd_mkinvalid(pmd_t pmd)
+> >> --
+> >> 2.41.0
+> >>
+> >>
+> Thanks
+>
+> Tianyang
+>
