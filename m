@@ -1,110 +1,224 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F18C2D3EE4
-	for <loongarch@lists.linux.dev>; Tue,  4 Nov 2025 19:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1552323ABB9
+	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 00:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762284330; cv=none; b=AmncCOvI1StFXb7PnS6EQXnmcQMTGVO01PlZGEQY2dRbgeRDpbNGhZCcE/hTNsyCehGkQK4APsJ691eEdYSjE3+RpjIRl58sAGCOky8zRNTBZrex9UR1zYXP02S+C/ljrbWVK04bIAAGhBz6zPlu0p+5F+sXEWGHQrYK28XjMsg=
+	t=1762304264; cv=none; b=WR955jgiYcnkvzi+MB/+S2mfZEr9v7BKD2lJXOCmpZ5UZnFJpWF/Q30MRvYuag2M/DLkseDEtymiAgXklx8VtwtXvBEr6cVma5HxjzXDV2hmM/EiE3dIr5B588/f55HUid8oRMP/U/CiKvsAGaG+YkC4KywEr09k/++qs8vFLlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762284330; c=relaxed/simple;
-	bh=K4Iyxi52gh1Iw5mMl2HUNeLP4ewV8sTogXEjAzGJ4AY=;
+	s=arc-20240116; t=1762304264; c=relaxed/simple;
+	bh=R2ULzT1ROAc+gRabXR8qulIwfehavOiQo/epHX3nGp4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gXtK9looDdLCODmO+O1jNQXpDgit5fzr7BSZ1Go7DEgTOrTp4A58Di520mHlc5KuisBnAygr57+/iNrK08BF0gs+O/nIvn1e6uJllef3Dgvn+qABT0fZ+e1r48Rwhc0x98easzzXrvkFMeP7ZFuDoRO592YPqWpLsON8aBQrZGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jBV/ADBu; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ozXbPhHvNj5yP4a2NE3pOYC51sI+wnWfxch4fNDNhvDaxpH8wiHgYRzOFnAvKh1OTENkoVDFiWE/9WfyWvfLs9m45nt8VGrCcB4+QBI40BDju5UWAfuy9giTFfY4vejk5wE9uCutLfkQZD/0sEpS6PgHtDKV4gCImNANo9ujL/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hev1h5RO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBV/ADBu"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-ba3b6f1df66so79984a12.3
-        for <loongarch@lists.linux.dev>; Tue, 04 Nov 2025 11:25:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762284328; x=1762889128; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5cZx+RW3Kt24V+mQj1nrZgt3YKwbbGOTRzEZ/APfqy8=;
-        b=jBV/ADBueDvVPB7Yaf30iE7PsB3wAXzJZqFOG/krjCYKjORGHFK44Ud3VnQA4FnXlq
-         v6VKIBP3faAe+lVnhhPl1M2agXB+8BF3f0D1EqTgvgxGFEhKvFLH0Jm0hciSorhunrvU
-         TKtZMxEjDiihNYIMHQC29n4GdHpn7lFcuLOy59ViIvpUTOeKgqyiQzZGjgfcKMV+8/68
-         k/RuuFL8Rur/x/4ZtPy5drsWEtsWdZWGdqGK3zCE8AVBq5LxI39bnqRdEUpw0G6c8MKj
-         tckTjjsa94kKO5v7GBjkDAuS679sz8QE5lIsuNIcTpUMQ1fSb3nuailF3gyFUvVGnj6l
-         EBQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762284328; x=1762889128;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5cZx+RW3Kt24V+mQj1nrZgt3YKwbbGOTRzEZ/APfqy8=;
-        b=uUxTPynN552qlj755uizvmTsceybqk9SSBx5vz6LgPxYdV4XpdInwFvcKQLhkVfTa/
-         +dBD6qcv/Zn4Xn/ExZahz7SdxzIxIdLeBZz0QI6704Xtlxj/ElQbA8hoqrpn/+Wr8w94
-         nO4ilmbrJSNYByFluruUZ2bliLHG+1Qr+MilyUK8kIDKjH/iBe+KdnfVqGAMT66B/LAr
-         AZRTjq8dQpgJE3fBxLD2gxz+5L6z5nKW3cBdEqXQRguo6fdfcn6mmSSxKHYLFp5YYvVN
-         i9MYO4JGhuE3o/ck/RfBkC7e7g0ynrVWMlXl1IeSjKMKVWGdYPplJPziX44jKpUA/Isa
-         kdKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXDIqzH2mrNYlAkmsQuMmBZd21BsLLYkimLITliZsFEbBeCmQM2870olpSKA2mK4w3b6kZgynnrxa4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzamrdGl8tVyEIKgyl3o4qa8pcTZRQsKNn0JK9SGf8D7iBDe3HX
-	gMflzka9PoroDYjcUq+zDW0xlhh+cm9etqDcONkH5+E6qwGKoCVwqJpp+MgA/IERYzP/kQgaSL0
-	dSiMX+gLJLoumR/4I8IL6QYRiyz1pMhY=
-X-Gm-Gg: ASbGncvGZFl85Q48vz1FgJoL51QIPi95ScIeueMUrUGzG1zKFZqhJ69cldfLGa7hfGg
-	Xn3xJXiE+jIeeOPe7Q6cVuuFxEyBsMsdMXUQ4YJDmD71W+2dzPZBhq+VnCVnvGwOhgy3E5g1F4p
-	97Pjrk2gwUD0leJfhAQx1e3Mn1W6sphc82p+HUtJwlzstWkRWyL2Fr9Op/bNYwbA/pNJ9qNNC69
-	E4AfqBKvFKWTGL2FlbNS5eFB55cIGqoZcy/+vXKp1W+EHpuq/7805fqmNawHoQepPeZZweoL94F
-	/yw7CR5M0IFvMKIF32lIdYrIMRseU3xlnDnU+ymZs+26SdoWckjMH0pVlW05OKVhqqSfQmiHkab
-	dNbA=
-X-Google-Smtp-Source: AGHT+IFWzYsYUL37lFrxSC7sVl0Ij5MeA0lOHpSQOZvdZ7ftbuS95sPOKOarVGGOk6+VoduotS4rq+ThkHUUIHnXHbM=
-X-Received: by 2002:a05:6a20:258b:b0:34e:8e9a:c610 with SMTP id
- adf61e73a8af0-34f8630155bmr221747637.6.1762284328313; Tue, 04 Nov 2025
- 11:25:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hev1h5RO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCAABC4CEF7
+	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 00:57:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762304263;
+	bh=R2ULzT1ROAc+gRabXR8qulIwfehavOiQo/epHX3nGp4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hev1h5ROmIbMiLPtfKE0cvZnXsjyedxjgg0zm33Aq8jwyHBrB4wqRUkp8LJ9V4mJk
+	 5jhfo5QRp96euk+3aKfcMbLA8+T0o1TTwQw5PjnR+cTIso5JPCgNumJ/1GAV0ofxfv
+	 BDXRM7smhxGXXOJIoBUyNrEZH00gqV4RW9Cb2ZoBWNVF+DkRtnjaPRetqsxW4jgy5S
+	 iZSJ6rOtrBjI5lBp4kFSC+PJEOygZjLmIU3d+NavTaUDGqA3l5iSjgOtKuqCrX8FDg
+	 Vk2pTOrcj7abri45GIzhyxPqFcDWwepjNleFbyKt0PUNJMAbzgU30e7ldcXAAMgRpB
+	 dUjjx5mgLIDUQ==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b6d3340dc2aso75493566b.0
+        for <loongarch@lists.linux.dev>; Tue, 04 Nov 2025 16:57:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXfxbNKze+z94zs/UqTC4BENtnd2mGoykD9D0DyJmKW+sDibpcUPdXZrFtr1rTRDDyYgAX66Vi6Q18=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxNKv9uBm87EhRq2A5Rhu/Kg8vPgQFKOmeDHgth6szclH69W1Wg
+	oURMQqYWYjlTclm5uMuHQJXdMtwzO+MfpSOlC5mik4qLiC8hzuoyMQahlNcYP8e4eyjw6iwo3MP
+	8kqYEt8utKunTsyfcXg6FBJYsQUSjq08=
+X-Google-Smtp-Source: AGHT+IFeSBz7bs7u6rpSq+7VUa+zA4NlZ7MicraxVhwXsZ5G8cD5YwakyzfR7Z47dnQv1J0fLwegTPshYCmveN0pHmc=
+X-Received: by 2002:a17:907:944f:b0:b6d:f416:2f3 with SMTP id
+ a640c23a62f3a-b7216f647f9mr566528666b.19.1762304262402; Tue, 04 Nov 2025
+ 16:57:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251101094011.1024534-1-ojeda@kernel.org>
-In-Reply-To: <20251101094011.1024534-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 4 Nov 2025 20:25:15 +0100
-X-Gm-Features: AWmQ_bny94bBmKIB7QhLmeowyrAuyscE1LVW-SgNclTZu6rQpXUrhoj1poxn8j0
-Message-ID: <CANiq72kWcptN+hu+gMwN2n8WkXrOku4kCHkSRsMzJmQeiCAJOQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: kbuild: support `-Cjump-tables=n` for Rust 1.93.0
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Huacai Chen <chenhuacai@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, patches@lists.linux.dev
+References: <20251029153649.33345-1-b10902118@ntu.edu.tw>
+In-Reply-To: <20251029153649.33345-1-b10902118@ntu.edu.tw>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 5 Nov 2025 08:57:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5E79jZ9rMYyP3h+KLX5rDGcB-Ec8WqyAhPC-pvuvv5UQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bkNEemHAcWDyDDxk5bTowCAMrEyiXOGzsdx_zd4Dcx3GXm9MZaFWommniQ
+Message-ID: <CAAhV-H5E79jZ9rMYyP3h+KLX5rDGcB-Ec8WqyAhPC-pvuvv5UQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: ptrace: Merge ptrace_hbp_set_*()
+To: Bill Tsui <b10902118@ntu.edu.tw>
+Cc: oleg@redhat.com, kernel@xen0n.name, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 1, 2025 at 10:40=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> Rust 1.93.0 (expected 2026-01-22) is stabilizing `-Zno-jump-tables`
-> [1][2] as `-Cjump-tables=3Dn` [3].
->
-> Without this change, one would eventually see:
->
->       RUSTC L rust/core.o
->     error: unknown unstable option: `no-jump-tables`
->
-> Thus support the upcoming version.
->
-> Link: https://github.com/rust-lang/rust/issues/116592 [1]
-> Link: https://github.com/rust-lang/rust/pull/105812 [2]
-> Link: https://github.com/rust-lang/rust/pull/145974 [3]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+Hi, Tiezhu,
 
-It got stabilized and merged upstream.
+On Wed, Oct 29, 2025 at 11:38=E2=80=AFPM Bill Tsui <b10902118@ntu.edu.tw> w=
+rote:
+>
+> In hw_break_set(), those functions actually can be combined into one.
+> This eliminates intermediate calls to modify_user_hw_breakpoint() that
+> may leave hardware registers in a partially updated state.
+>
+> This redundancy was originally found in ARM ptrace, where it caused
+> non-4-byte address alignment checks to fail.
+>
+> Link:
+> https://lore.kernel.org/all/20251018133731.42505-2-b10902118@ntu.edu.tw/
+>
+> The LoongArch implementation appears to have been derived from ARM,
+> so this refactor helps avoid the same issue and simplifies future
+> maintenance.
+What do you think about it?
 
-Applied to `rust-fixes` -- thanks everyone!
+Huacai
 
-Cheers,
-Miguel
+>
+> Signed-off-by: Bill Tsui <b10902118@ntu.edu.tw>
+> ---
+>  arch/loongarch/kernel/ptrace.c | 69 +++++++++-------------------------
+>  1 file changed, 17 insertions(+), 52 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrac=
+e.c
+> index 8edd0954e55a..c6cd51569a64 100644
+> --- a/arch/loongarch/kernel/ptrace.c
+> +++ b/arch/loongarch/kernel/ptrace.c
+> @@ -581,13 +581,15 @@ static int ptrace_hbp_get_addr(unsigned int note_ty=
+pe,
+>         return 0;
+>  }
+>
+> -static int ptrace_hbp_set_ctrl(unsigned int note_type,
+> +static int ptrace_hbp_set(unsigned int note_type,
+>                                struct task_struct *tsk,
+> -                              unsigned long idx, u32 uctrl)
+> +                              unsigned long idx, u64 addr,
+> +                                  u64 mask, u32 uctrl)
+>  {
+>         int err;
+>         struct perf_event *bp;
+>         struct perf_event_attr attr;
+> +       struct arch_hw_breakpoint *info;
+>         struct arch_hw_breakpoint_ctrl ctrl;
+>         struct thread_info *ti =3D task_thread_info(tsk);
+>
+> @@ -597,6 +599,17 @@ static int ptrace_hbp_set_ctrl(unsigned int note_typ=
+e,
+>
+>         attr =3D bp->attr;
+>
+> +       /* addr */
+> +       /* Kernel-space address cannot be monitored by user-space */
+> +       if ((unsigned long)addr >=3D XKPRANGE)
+> +               return -EINVAL;
+> +       attr.bp_addr =3D addr;
+> +
+> +       /* mask */
+> +       info =3D counter_arch_bp(bp);
+> +       info->mask =3D mask;
+> +
+> +       /* ctrl */
+>         switch (note_type) {
+>         case NT_LOONGARCH_HW_BREAK:
+>                 ctrl.type =3D LOONGARCH_BREAKPOINT_EXECUTE;
+> @@ -623,46 +636,6 @@ static int ptrace_hbp_set_ctrl(unsigned int note_typ=
+e,
+>         return modify_user_hw_breakpoint(bp, &attr);
+>  }
+>
+> -static int ptrace_hbp_set_mask(unsigned int note_type,
+> -                              struct task_struct *tsk,
+> -                              unsigned long idx, u64 mask)
+> -{
+> -       struct perf_event *bp;
+> -       struct perf_event_attr attr;
+> -       struct arch_hw_breakpoint *info;
+> -
+> -       bp =3D ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
+> -       if (IS_ERR(bp))
+> -               return PTR_ERR(bp);
+> -
+> -       attr =3D bp->attr;
+> -       info =3D counter_arch_bp(bp);
+> -       info->mask =3D mask;
+> -
+> -       return modify_user_hw_breakpoint(bp, &attr);
+> -}
+> -
+> -static int ptrace_hbp_set_addr(unsigned int note_type,
+> -                              struct task_struct *tsk,
+> -                              unsigned long idx, u64 addr)
+> -{
+> -       struct perf_event *bp;
+> -       struct perf_event_attr attr;
+> -
+> -       /* Kernel-space address cannot be monitored by user-space */
+> -       if ((unsigned long)addr >=3D XKPRANGE)
+> -               return -EINVAL;
+> -
+> -       bp =3D ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
+> -       if (IS_ERR(bp))
+> -               return PTR_ERR(bp);
+> -
+> -       attr =3D bp->attr;
+> -       attr.bp_addr =3D addr;
+> -
+> -       return modify_user_hw_breakpoint(bp, &attr);
+> -}
+> -
+>  #define PTRACE_HBP_ADDR_SZ     sizeof(u64)
+>  #define PTRACE_HBP_MASK_SZ     sizeof(u64)
+>  #define PTRACE_HBP_CTRL_SZ     sizeof(u32)
+> @@ -733,10 +706,6 @@ static int hw_break_set(struct task_struct *target,
+>                                          offset, offset + PTRACE_HBP_ADDR=
+_SZ);
+>                 if (ret)
+>                         return ret;
+> -
+> -               ret =3D ptrace_hbp_set_addr(note_type, target, idx, addr)=
+;
+> -               if (ret)
+> -                       return ret;
+>                 offset +=3D PTRACE_HBP_ADDR_SZ;
+>
+>                 if (!count)
+> @@ -746,21 +715,17 @@ static int hw_break_set(struct task_struct *target,
+>                                          offset, offset + PTRACE_HBP_MASK=
+_SZ);
+>                 if (ret)
+>                         return ret;
+> -
+> -               ret =3D ptrace_hbp_set_mask(note_type, target, idx, mask)=
+;
+> -               if (ret)
+> -                       return ret;
+>                 offset +=3D PTRACE_HBP_MASK_SZ;
+>
+>                 ret =3D user_regset_copyin(&pos, &count, &kbuf, &ubuf, &c=
+trl,
+>                                          offset, offset + PTRACE_HBP_CTRL=
+_SZ);
+>                 if (ret)
+>                         return ret;
+> +               offset +=3D PTRACE_HBP_CTRL_SZ;
+>
+> -               ret =3D ptrace_hbp_set_ctrl(note_type, target, idx, ctrl)=
+;
+> +               ret =3D ptrace_hbp_set(note_type, target, idx, addr, mask=
+, ctrl);
+>                 if (ret)
+>                         return ret;
+> -               offset +=3D PTRACE_HBP_CTRL_SZ;
+>
+>                 user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+>                                           offset, offset + PTRACE_HBP_PAD=
+_SZ);
+> --
+> 2.51.0
+>
