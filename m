@@ -1,158 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16169239E88;
-	Wed,  5 Nov 2025 17:46:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB6230F81F;
+	Wed,  5 Nov 2025 19:39:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762364792; cv=none; b=Vq09r7z4GTrmB6srJ89qtod2uxtJGGmFzdNRAOvsd9NAOIBV3Srda7wlTNpscHhNRKnCKyDKzPh9v/x+TUfI5CGlJx76RXFz+F4ThjwFQQaUm23op1RlXxfYbWCZeDI4MuwlIewG7UpThnd7lX0I7yHfITvYHM/y86+RQwvP27o=
+	t=1762371580; cv=none; b=f9kY/wG4g7dFUnunIP/tWtSM/qk+JooLmKubyXVzJv22ENSHY4sRSSxpXbQPgyvQfTrq6H3RB048lRP7Aq+oZoEqmZ5JfWEhVBXGwhW2QE4Yu8WSH2riH14KBgm+nr7hUGY6t+inZrh/jsO4n5DDcSwi/qPDlkLa45N152avtJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762364792; c=relaxed/simple;
-	bh=woawi0pKo/kryyYybe6UTBTWMoVsh5qziqijASjnREk=;
+	s=arc-20240116; t=1762371580; c=relaxed/simple;
+	bh=msHJOFVV1OB3Fpzsq8IVbuj9UIdZOpLQ1nNFvVBvM9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bvz8rShcpQbPzWdjrT7/BwbIt492YUOY5iCXSQyaUdsoPc3VH7Ix3IGdSAgimoUIztvsKiV1T89l4wb98+21lezcizqcIeSZtoQWFVG8Zof6+YhGrQvE8B+/KNd+Q0ANpK4EJKzfRkuQhqtgA1/7CoYC1x52te/UWdH6gs+kTI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7Mf6l0a; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aebIiUNqRPOy5gO5W6oS2XNf8X3Ef65H+jYBFnbFWgcIFJZZSYlCl9c35y/ar9n/wPcfwsBqE5DY1STTE4iPpM95A+Prx1YooQJKhT6NYcagBVM/UzRya6B7ziD/TEJ7Fcz/Q/XpTcTnZmJXb7/hP9gsRwZJEkkTnlOUUNiTnBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DCo8aa7t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7Mf6l0a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1533CC4CEF5;
-	Wed,  5 Nov 2025 17:46:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DCo8aa7t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F408C4CEF5;
+	Wed,  5 Nov 2025 19:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762364791;
-	bh=woawi0pKo/kryyYybe6UTBTWMoVsh5qziqijASjnREk=;
+	s=k20201202; t=1762371580;
+	bh=msHJOFVV1OB3Fpzsq8IVbuj9UIdZOpLQ1nNFvVBvM9I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X7Mf6l0akmdIq5iKgqrPQJacdZIwvZNDplWJ7ZFAiTj1m5jo/r4RZiwBnuufL7FJz
-	 rvjLuH5kIUsBewW58/KIJ4AtGpjFM65vgcq5Mq40hqFViVaFYaMO3B+3S2DJBgREr8
-	 Ydhgli/Ewi5GXUbKU7XplIRtFLKzGALUr+LrfoBKdNnCob1uuo8LERCMDso+bO1Ogb
-	 2kFxvq6vNnlZJHsASSZyjiY4DFFHKnlLj9M1sIw8Xs7M5lI6s7rwKH+tP57RLGeYQo
-	 I7shlbbDQcR6rzKbVlqZcx0moVDvOcKmF1aICmG6LscQYeQvqFcaYK64Yfrix1vGrk
-	 oPe9jn359SAFw==
-Date: Wed, 5 Nov 2025 18:46:28 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: Phil Auld <pauld@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, rcu@vger.kernel.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
+	b=DCo8aa7tr6qCXCAwbmbfBQHe6+J1XQ92v/dEdS0D1RmsTXvTBe2y4QWq3i4ntmkp4
+	 hCwptFye8pcPGdiXeKcVMxkeZBrhHluCYl/vU6sn2vu9+WiYI0AQa71hlYpPJp+uwk
+	 nLmGphbfV4NSrG1Ku28gkrTDNfaJG1ZzoKebd314vXufpylTRn3P6E0nSQVUMFx+/G
+	 nEygicNERiduVcddaetu2bZdLTIFFi4RDC/xSKeOjPk8imNyFUelcn9MA6scQFhpbq
+	 naUiHjcZXZDebrmf1ZMmCKbSsI1gDu42pHY/3/s/yeqOxXjPKqA78jz/c32pbgcTEw
+	 rVKRvBK26YgJQ==
+Date: Wed, 5 Nov 2025 12:39:31 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
 	Ard Biesheuvel <ardb@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>,
-	Jann Horn <jannh@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
-Subject: Re: [PATCH v6 00/29] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Message-ID: <aQuNdOEmPYkI03my@localhost.localdomain>
-References: <20251010153839.151763-1-vschneid@redhat.com>
- <aQDuY3rgOK-L8D04@localhost.localdomain>
- <xhsmhzf9aov51.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <aQJLpSYz3jdazzdb@localhost.localdomain>
- <xhsmh8qgk5txe.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	linux-efi@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] kbuild: Add '-fms-extensions' to areas with dedicated
+ CFLAGS
+Message-ID: <20251105193931.GA2480016@ax162>
+References: <20251101-kbuild-ms-extensions-dedicated-cflags-v1-1-38004aba524b@kernel.org>
+ <20251105-amnesie-eisig-277559b69bae@brauner>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <xhsmh8qgk5txe.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+In-Reply-To: <20251105-amnesie-eisig-277559b69bae@brauner>
 
-Le Wed, Nov 05, 2025 at 05:24:29PM +0100, Valentin Schneider a écrit :
-> On 29/10/25 18:15, Frederic Weisbecker wrote:
-> > Le Wed, Oct 29, 2025 at 11:32:58AM +0100, Valentin Schneider a écrit :
-> >> I need to have a think about that one; one pain point I see is the context
-> >> tracking work has to be NMI safe since e.g. an NMI can take us out of
-> >> userspace. Another is that NOHZ-full CPUs need to be special cased in the
-> >> stop machine queueing / completion.
-> >>
-> >> /me goes fetch a new notebook
-> >
-> > Something like the below (untested) ?
-> >
+On Wed, Nov 05, 2025 at 01:56:02PM +0100, Christian Brauner wrote:
+> On Sat, Nov 01, 2025 at 12:35:47PM -0400, Nathan Chancellor wrote:
+> > This is a follow up to commit c4781dc3d1cf ("Kbuild: enable
+> > -fms-extensions") but in a separate change due to being substantially
+> > different from the initial submission.
+> > 
+> > There are many places within the kernel that use their own CFLAGS
+> > instead of the main KBUILD_CFLAGS, meaning code written with the main
+> > kernel's use of '-fms-extensions' in mind that may be tangentially
+> > included in these areas will result in "error: declaration does not
+> > declare anything" messages from the compiler.
+> > 
+> > Add '-fms-extensions' to all these areas to ensure consistency, along
+> > with -Wno-microsoft-anon-tag to silence clang's warning about use of the
+> > extension that the kernel cares about using. parisc does not build with
+> > clang so it does not need this warning flag. LoongArch does not need it
+> > either because -W flags from KBUILD_FLAGS are pulled into cflags-vdso.
+> > 
+> > Reported-by: Christian Brauner <brauner@kernel.org>
+> > Closes: https://lore.kernel.org/20251030-meerjungfrau-getrocknet-7b46eacc215d@brauner/
+> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> > ---
+> > I am taking the original '-fms-extensions' change [1] via a shared
+> > branch in kbuild [2] so I would appreciate acks. I plan to finalize that
+> > branch so that other maintainers can safely pull it on Thursday.
+> > 
+> > [1]: https://git.kernel.org/kbuild/c/c4781dc3d1cf0e017e1f290607ddc56cfe187afc
+> > [2]: https://git.kernel.org/kbuild/l/kbuild-ms-extensions
+> > ---
 > 
-> Some minor nits below but otherwise that looks promising.
+> I'll give my ack:
 > 
-> One problem I'm having however is reasoning about the danger zone; what
-> forbidden actions could a NO_HZ_FULL CPU take when entering the kernel
-> while take_cpu_down() is happening?
+> Reviewed-by: Christian Brauner <brauner@kernel.org>
 > 
-> I'm actually not familiar with why we actually use stop_machine() for CPU
-> hotplug; I see things like CPUHP_AP_SMPCFD_DYING::smpcfd_dying_cpu() or
-> CPUHP_AP_TICK_DYING::tick_cpu_dying() expect other CPUs to be patiently
-> spinning in multi_cpu_stop(), and I *think* nothing in the entry code up to
-> context_tracking entry would disrupt that, but it's not a small thing to
-> reason about.
-> 
-> AFAICT we need to reason about every .teardown callback from
-> CPUHP_TEARDOWN_CPU to CPUHP_AP_OFFLINE and their explicit & implicit
-> dependencies on other CPUs being STOP'd.
+> but don't invalidate the branch just to add my RvB if you've already had
+> it stable.
 
-You're raising a very interesting question. The initial point of stop_machine()
-is to synchronize this:
+I was planning to make it stable tomorrow to give folks time to chime in
+at the beginning of the week. I have your tag and Ard's to add. After
+that, we will just have to rely on the link to this submission for
+follow ups.
 
-    set_cpu_online(cpu, 0)
-    migrate timers;
-    migrate hrtimers;
-    flush IPIs;
-    etc...
-
-against this pattern:
-
-    preempt_disable()
-    if (cpu_online(cpu))
-        queue something; // could be timer, IPI, etc...
-    preempt_enable()
-
-There have been attempts:
-
-      https://lore.kernel.org/all/20241218171531.2217275-1-costa.shul@redhat.com/
-
-And really it should be fine to just do:
-
-    set_cpu_online(cpu, 0)
-    synchronize_rcu()
-    migrate / flush stuff
-
-Probably we should try that instead of the busy loop I proposed
-which only papers over the problem.
-
-Of course there are other assumptions. For example the tick
-timekeeper is migrated easily knowing that all online CPUs are
-not idle (cf: tick_cpu_dying()). So I expect a few traps, with RCU
-for example and indeed all these hotplug callbacks must be audited
-one by one.
-
-I'm not entirely unfamiliar with many of them. Let me see what I can do...
-
-Thanks.
-
--- 
-Frederic Weisbecker
-SUSE Labs
+Cheers,
+Nathan
