@@ -1,143 +1,158 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A3031C56F
-	for <loongarch@lists.linux.dev>; Wed,  5 Nov 2025 16:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16169239E88;
+	Wed,  5 Nov 2025 17:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762361528; cv=none; b=OMOh1MOksu4Gqut7gYsxM2661FXMft0Z5nVjT+tWUiIhuGFSIUXDW0NWY92rLwEzKLfJ0cuvp1QE2sPLALoKUIDBSH7JDG6FU3JjKqbRAZz1JBnaSZbFJJetCpYoJ2nLmlcaFTiHEvS47PI7Lotn3eSmTNJb3TuiASxXnfmOT4k=
+	t=1762364792; cv=none; b=Vq09r7z4GTrmB6srJ89qtod2uxtJGGmFzdNRAOvsd9NAOIBV3Srda7wlTNpscHhNRKnCKyDKzPh9v/x+TUfI5CGlJx76RXFz+F4ThjwFQQaUm23op1RlXxfYbWCZeDI4MuwlIewG7UpThnd7lX0I7yHfITvYHM/y86+RQwvP27o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762361528; c=relaxed/simple;
-	bh=esO8jRq9uTUw55PJsW3htw0zar+bIhexF73TArzHxxk=;
+	s=arc-20240116; t=1762364792; c=relaxed/simple;
+	bh=woawi0pKo/kryyYybe6UTBTWMoVsh5qziqijASjnREk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SyeKl4OcXLTTlSF6tDqKqvh+yzC2k5tJl5ibIt65SHk/1KPWC00ROqfJY5QaiiM0nMiGamGxwu5UIgunL2ghFAdm4WbSVAywxrmUSNWKOvhNXz+nQqr4KFfhOlyDTSu0vtP2V7ts9RIoLRwetJQUhVifkQwze3ccAyUkfmez6Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKq8sZPs; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bvz8rShcpQbPzWdjrT7/BwbIt492YUOY5iCXSQyaUdsoPc3VH7Ix3IGdSAgimoUIztvsKiV1T89l4wb98+21lezcizqcIeSZtoQWFVG8Zof6+YhGrQvE8B+/KNd+Q0ANpK4EJKzfRkuQhqtgA1/7CoYC1x52te/UWdH6gs+kTI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7Mf6l0a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKq8sZPs"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47755a7652eso173175e9.0
-        for <loongarch@lists.linux.dev>; Wed, 05 Nov 2025 08:52:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762361524; x=1762966324; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=esO8jRq9uTUw55PJsW3htw0zar+bIhexF73TArzHxxk=;
-        b=MKq8sZPsyfDsK44WrhPceLVcVyH18owbBmPl5DSBbpVGJBCwSbpRdzJWqz5A3hL9o0
-         3UrXqQ/ki/AUXKZSdmOCTmb1xUiDSBLvRSGKQz+9T3AM9+qLtPw9KT9SR9XcgLTOlsxo
-         IdJ5VelFtaDCrf888br5WSqCRBoyCOnp+WUen6dYniMmBqpr4wdm5mzfi3xip2JbvuLx
-         cGd2vu9tNLMZJpjzHDQ3wwh/eNVtDrzDKTN24h7Rk5ejfhuqkxXUw8p6C7MPaNiQZL/m
-         waQiHUvjJ6CLhaES54FIKCJ4fMoqC7D6Hp/4VZqpBdu+rEwo+myFfvQdtLmSg5Z898VN
-         l1xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762361524; x=1762966324;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=esO8jRq9uTUw55PJsW3htw0zar+bIhexF73TArzHxxk=;
-        b=fTB4JMPzoKNRoeGpO6AaWEAqZwVv+BEL2bsm5gym/9L6otKgCn/aeddJ+SckfV9V/2
-         G2snM1HP4a+ZoKrPp4Ibxl7TxA+nn6S8h9pI0Stch49MIlnl8Ij3GYcKjuxtpo4mc9B2
-         aP5ZECkcteBwJcdHixL02vZs1Kcdkmwo7d4TvuBPIwpAev/5cldzikNv7qcgTJDD7wn8
-         FqtYJoS2j9W3Mem6lTsWEZl3RQlSAveaN8tpOjlGY/uBgtan/xzUipjJgu+D66ScOPMv
-         rxCee9q8l3jGR9IE+2ow0PJ5TP7iBF396kYZQRRAW6mFWgyE8Dw8Poyldlmyib/Cy69/
-         iI3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXqtiirhe6s7P03jD+oLHf5i2TAzjxoUFwAvaYT/rQq2MKOjs1oUujlkSHpBawsdZCij1me1SxUCXc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx1nye9BB7IzLrvDbm+52aM2xzBugg2PKYPK+SzUcbWZURY+CA3
-	COvfeRVz+topMn2XuFTXGonnUQPKSWsaEezaA1WbAzwLpROSjgViUgiH
-X-Gm-Gg: ASbGncvVTZ+CtlmTo6wegvJ0pHTw2fKJtLLSgrOcMGSYDQ3mCmF3vhR+J0s6debLp3t
-	Z2HAw57pyxhLeFinQTjVVelfw+VtJlSAjuNFUKGlTVm+TmvAHNqHRH3kkyoYzy6Oeg7yW7vIhPm
-	gQSH51y+NE0YrEkrndD80SDkt9S18gdHa51HMqBzU4EhH6smuvWLXMeciKft03/frSeuFoPHjlw
-	tx7pjI/cXsXK0Q8tfUE1QGhz75ft4iGj2McMqBox5A3U7rFzb7Mn6glLCOrEt7upxLbQMWoQrVD
-	x6DNEnJmj4a+V1KMLRKDUNHMOhxDmDH0OLth/xq42+d+qADO5HYjNHF3EkjsQg6aTHGexapADuJ
-	deFpnq+11S20E0y+Du6NSooNLxzUt69AaCDIsevu2ZBr6UyN7LrQWLiIKMGHjpiVUjagzR7nTwc
-	e1gzloxW/8lY5XX/RVb0eu4sVCIT5mpZKzbkdqYhbN2NZLpcXcoYXu02vHzmCjLBk=
-X-Google-Smtp-Source: AGHT+IF1eT04urNHEfsD9kdCj32CNL1YcHJ6oGuMVK3cU2BLT/aQRFRmm7ox5OYZe77ML31HK9v5ow==
-X-Received: by 2002:a05:600c:1c94:b0:477:fcb:2256 with SMTP id 5b1f17b1804b1-4775ce23efemr42468465e9.17.1762361524090;
-        Wed, 05 Nov 2025 08:52:04 -0800 (PST)
-Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4775ce210a7sm59725725e9.12.2025.11.05.08.52.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 08:52:02 -0800 (PST)
-Date: Wed, 5 Nov 2025 17:52:01 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] syscore: Pass context data to callbacks
-Message-ID: <3dzha4qyqdrbutxby3n5nkvihnxrhniqr6w726eumhzgln2w5l@fbu72mzmjz4m>
-References: <20251029163336.2785270-1-thierry.reding@gmail.com>
- <20251029163336.2785270-2-thierry.reding@gmail.com>
- <CAJZ5v0igMJ12KoYCmrWauvOfdxaNP5-XVKoSxUroaKFN7S-rTQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7Mf6l0a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1533CC4CEF5;
+	Wed,  5 Nov 2025 17:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762364791;
+	bh=woawi0pKo/kryyYybe6UTBTWMoVsh5qziqijASjnREk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X7Mf6l0akmdIq5iKgqrPQJacdZIwvZNDplWJ7ZFAiTj1m5jo/r4RZiwBnuufL7FJz
+	 rvjLuH5kIUsBewW58/KIJ4AtGpjFM65vgcq5Mq40hqFViVaFYaMO3B+3S2DJBgREr8
+	 Ydhgli/Ewi5GXUbKU7XplIRtFLKzGALUr+LrfoBKdNnCob1uuo8LERCMDso+bO1Ogb
+	 2kFxvq6vNnlZJHsASSZyjiY4DFFHKnlLj9M1sIw8Xs7M5lI6s7rwKH+tP57RLGeYQo
+	 I7shlbbDQcR6rzKbVlqZcx0moVDvOcKmF1aICmG6LscQYeQvqFcaYK64Yfrix1vGrk
+	 oPe9jn359SAFw==
+Date: Wed, 5 Nov 2025 18:46:28 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Phil Auld <pauld@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, rcu@vger.kernel.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Han Shen <shenhan@google.com>, Rik van Riel <riel@surriel.com>,
+	Jann Horn <jannh@google.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [PATCH v6 00/29] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+Message-ID: <aQuNdOEmPYkI03my@localhost.localdomain>
+References: <20251010153839.151763-1-vschneid@redhat.com>
+ <aQDuY3rgOK-L8D04@localhost.localdomain>
+ <xhsmhzf9aov51.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <aQJLpSYz3jdazzdb@localhost.localdomain>
+ <xhsmh8qgk5txe.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ykyajizgfjgayrmb"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0igMJ12KoYCmrWauvOfdxaNP5-XVKoSxUroaKFN7S-rTQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xhsmh8qgk5txe.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-
---ykyajizgfjgayrmb
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/7] syscore: Pass context data to callbacks
-MIME-Version: 1.0
-
-On Mon, Nov 03, 2025 at 05:18:08PM +0100, Rafael J. Wysocki wrote:
-> On Wed, Oct 29, 2025 at 5:33=E2=80=AFPM Thierry Reding <thierry.reding@gm=
-ail.com> wrote:
+Le Wed, Nov 05, 2025 at 05:24:29PM +0100, Valentin Schneider a écrit :
+> On 29/10/25 18:15, Frederic Weisbecker wrote:
+> > Le Wed, Oct 29, 2025 at 11:32:58AM +0100, Valentin Schneider a écrit :
+> >> I need to have a think about that one; one pain point I see is the context
+> >> tracking work has to be NMI safe since e.g. an NMI can take us out of
+> >> userspace. Another is that NOHZ-full CPUs need to be special cased in the
+> >> stop machine queueing / completion.
+> >>
+> >> /me goes fetch a new notebook
 > >
-> > From: Thierry Reding <treding@nvidia.com>
+> > Something like the below (untested) ?
 > >
-> > Several drivers can benefit from registering per-instance data along
-> > with the syscore operations. To achieve this, move the modifiable fields
-> > out of the syscore_ops structure and into a separate struct syscore that
-> > can be registered with the framework. Add a void * driver data field for
-> > drivers to store contextual data that will be passed to the syscore ops.
-> >
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
->=20
-> This change is fine with me, so I can apply it unless somebody has any
-> specific heartburn related to it (Greg?), but in case you want to
-> route it differently
->=20
-> Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+> 
+> Some minor nits below but otherwise that looks promising.
+> 
+> One problem I'm having however is reasoning about the danger zone; what
+> forbidden actions could a NO_HZ_FULL CPU take when entering the kernel
+> while take_cpu_down() is happening?
+> 
+> I'm actually not familiar with why we actually use stop_machine() for CPU
+> hotplug; I see things like CPUHP_AP_SMPCFD_DYING::smpcfd_dying_cpu() or
+> CPUHP_AP_TICK_DYING::tick_cpu_dying() expect other CPUs to be patiently
+> spinning in multi_cpu_stop(), and I *think* nothing in the entry code up to
+> context_tracking entry would disrupt that, but it's not a small thing to
+> reason about.
+> 
+> AFAICT we need to reason about every .teardown callback from
+> CPUHP_TEARDOWN_CPU to CPUHP_AP_OFFLINE and their explicit & implicit
+> dependencies on other CPUs being STOP'd.
 
-I have a few follow-up patches for the Tegra PMC driver that depend on
-this. 6.19 is what I was targetting, so if we could put this into a
-stable branch that'd be the best solution. I can set that up via the
-Tegra tree if you and Greg are okay with it.
+You're raising a very interesting question. The initial point of stop_machine()
+is to synchronize this:
 
-If that's all too complicated, I can probably wait until the next cycle
-to merge the PMC changes.
+    set_cpu_online(cpu, 0)
+    migrate timers;
+    migrate hrtimers;
+    flush IPIs;
+    etc...
 
-Thierry
+against this pattern:
 
---ykyajizgfjgayrmb
-Content-Type: application/pgp-signature; name="signature.asc"
+    preempt_disable()
+    if (cpu_online(cpu))
+        queue something; // could be timer, IPI, etc...
+    preempt_enable()
 
------BEGIN PGP SIGNATURE-----
+There have been attempts:
 
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkLgLAACgkQ3SOs138+
-s6F0Lg//dTn1/PUCYHRhF8cm1xB6JKggiLC40TRct49fcf9eF5gAdCqXm44qKoaF
-67aqiXAiwzovTctJIu3rz8p71/FeXp/qGWDdPm/+wI7yD+BoCcVO0nmvXuPwCzhd
-ZMwqeaRVm57JX4M9S5BdkOGtDLgAjyZ/6Qq/2isiQSPiWWl/IT3YiLyzw8vq8mcY
-VoepQGK5hm7CHFf8FOBs+sMt6q5JJDm0VjNi+seVcCNg9U25GaXCRc2D9ztAqRib
-3768/KMhlftnoJKsizCwWq2Gyw0Se7ifz66djjf51sHd064LLDv7OZpfeGyiFK01
-MvVGXoPFuIJB0yqIoMRBbeRULm4kq+dkUkt1JWwYAMw9ZJnhXPJJI8bal2IASj8/
-E6NADiYd9HS8kAXWYvLkm0xHv4FN5WXWG2a+Gf6K2vpBm07zG2xnI+eVjYQSnb9W
-O9TcZf3jDWvgEQ31plH5JFY32sI4vjLAdcKS2oRfkbxFDJvTS+RRjj3EPqFshNXf
-B5E6pXTCltOkUepuhbGDzIifVWzYgg/GyXNfwzdnJUXcAz7QPPJySfMraf/dn+8S
-hggVgAivRFDEtaNEqKU6iqoePR3HIUJe/Ebjrb199RV9t4FcnVYOpviJRf5EWpsF
-2YEUJPiA7neiac9fPLwCoRh33bJTIzanmWVxmFF1nQ2vozIt68U=
-=3Mmd
------END PGP SIGNATURE-----
+      https://lore.kernel.org/all/20241218171531.2217275-1-costa.shul@redhat.com/
 
---ykyajizgfjgayrmb--
+And really it should be fine to just do:
+
+    set_cpu_online(cpu, 0)
+    synchronize_rcu()
+    migrate / flush stuff
+
+Probably we should try that instead of the busy loop I proposed
+which only papers over the problem.
+
+Of course there are other assumptions. For example the tick
+timekeeper is migrated easily knowing that all online CPUs are
+not idle (cf: tick_cpu_dying()). So I expect a few traps, with RCU
+for example and indeed all these hotplug callbacks must be audited
+one by one.
+
+I'm not entirely unfamiliar with many of them. Let me see what I can do...
+
+Thanks.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
