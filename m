@@ -1,146 +1,119 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A539218845
-	for <loongarch@lists.linux.dev>; Thu,  6 Nov 2025 09:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF8C2773E9
+	for <loongarch@lists.linux.dev>; Thu,  6 Nov 2025 10:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762422881; cv=none; b=kR1UichdWYKEU6CXT0U3wLx2VLyOCYv/Dy/StJeXdhf5+421nfi/UKTg9C4GuRPZD7jLAtT50vWmenWmx2RwkTT8IB5PoSyvOFhNsFWlx1YKg4G1TD7cz3xyzjKGw52uuN0IvRjrf6xdOYny5hvmW5IHF0mG8ncge1ngXA6CdAs=
+	t=1762423336; cv=none; b=TTQwZcgWN+OmAKHjupy6hnGpUgGGz1Y7sj5hhUuO2PuMH3ZiHMHMImxI8sXzO/iHiFlQ9paWCrHians8kd6f7WM8vFit3101jx3LFnPE2d65cUYsLl9yB//+IWox+R20/0+DOOiHNFr5joEmAbj5HMEJjsLk0+37f+XJBDsob44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762422881; c=relaxed/simple;
-	bh=9qjHSty0byUHU5tZYNvEbUSL79HOCA8d/vcmVI7Wd3w=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=CID0B6iP64asDe3scRIQ8SxfZN/SM1zqf5+XKS2ihwX+jWT/GDaxIZprQ9D2Z2PoEeuTeY9WNImglwpBarAyWiYAfe3+gyPB6kCktV+1DZ5fLEGM1gSomrXrSXNuhSPdJGJBesTx99D2u1ioQSNaLYnkRAJMzvF/B1FeKn/HczA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8AxP_BccAxp26QfAA--.2858S3;
-	Thu, 06 Nov 2025 17:54:36 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowJBxjcFZcAxpkYEpAQ--.5449S3;
-	Thu, 06 Nov 2025 17:54:35 +0800 (CST)
-Subject: Re: [PATCH] Loongarch:Make pte/pmd_modify can set _PAGE_MODIFIED
-To: Bibo Mao <maobibo@loongson.cn>, chenhuacai@kernel.org, kernel@xen0n.name,
- akpm@linux-foundation.org, willy@infradead.org, david@redhat.com,
- linmag7@gmail.com, thuth@redhat.com, apopple@nvidia.com
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Liupu Wang <wangliupu@loongson.cn>
-References: <20251104073006.1764241-1-zhangtianyang@loongson.cn>
- <48f8f2d8-e6e0-ec2a-7323-11551c66dac2@loongson.cn>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <721fdf6e-61c4-2e31-c584-04d8380f2952@loongson.cn>
-Date: Thu, 6 Nov 2025 17:53:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1762423336; c=relaxed/simple;
+	bh=V9tDNcYgJIt9GytAgrSszi/+I+38Gq3Tgc4R1PI5n6s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AUTGdcw0ns8fdielxNrnwiawhle8ExXq6AcGW6wyR6sEOcT/aazIc6BRNLkAr/DljayQ0RBnyj6ffX09APQISVOw0vdGwY5gwO9naQiPTPVPkAvHq3FSvNG+HNLaIqrBdShcnoo+lXQY6xT5FLWT9Prp7Kx2m6erlsFvmWMzphQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tFcEZ+F2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dv4aXHzL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tFcEZ+F2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dv4aXHzL"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1762423331;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AA1RaYevhVsm4UU0YhUEK/PYFHQA4HTGOnbLyC3tUCM=;
+	b=tFcEZ+F2McnQR/yj4fr2Xzl/qH8/6ms9DrGJJEA7fL7kXcqCX8hv4zyKd2otBfY37FGEMv
+	2KoqENjQKbobna/HhKzV0a13m+kQAUyNfbgCcNeMvJwrxOwp4UUkJ5GB31sKEvK26EuVcZ
+	J2nsupkTFncr4BO3FtqqAHgRyL9zPra2lX0RBt7EvpZmeaeHQoP8DGBinFIHBZ9exbk2mq
+	NylqCM6rngQh4QiSqsBmuIdgwx+l77BtrybXZDDzcxnTxiRrQxzTKsgC7LJWm4+DZEOjyZ
+	Anyou1cfZ4co6SXagzJZoC5bQwao2fnYT4x/M9WSE8oOxNat5twRj+yM8uqeiQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1762423331;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AA1RaYevhVsm4UU0YhUEK/PYFHQA4HTGOnbLyC3tUCM=;
+	b=dv4aXHzL1Xjk+ugiHKiKHn4Zai+gBXRbTJznV37UCpAZWEQ/PoCZgmqHL6C2cMjGwpvgUK
+	J8M/KPUkt2+qRbBg==
+Date: Thu, 06 Nov 2025 11:01:57 +0100
+Subject: [PATCH v5 04/34] arm64: vDSO: compat_gettimeofday: Add explicit
+ includes
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <48f8f2d8-e6e0-ec2a-7323-11551c66dac2@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJBxjcFZcAxpkYEpAQ--.5449S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWFW3GFWUGFyxJw1fJw1kZwc_yoW5KF1kpF
-	1kAFyUZFWUtrn7JayUJr17Xry5Aw47J3WDJr1DJF1UJryUtryjqr1UXrn09r15Jr48Xr1U
-	Jr1UXrs8ZF47JrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r4a6rW5MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8vApUUUUUU==
+Message-Id: <20251106-vdso-sparc64-generic-2-v5-4-97ff2b6542f7@linutronix.de>
+References: <20251106-vdso-sparc64-generic-2-v5-0-97ff2b6542f7@linutronix.de>
+In-Reply-To: <20251106-vdso-sparc64-generic-2-v5-0-97ff2b6542f7@linutronix.de>
+To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>, 
+ John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, Shannon Nelson <sln@onemain.com>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+ linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1762423327; l=1077;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=V9tDNcYgJIt9GytAgrSszi/+I+38Gq3Tgc4R1PI5n6s=;
+ b=dCws47IlDG0vkiaRQIxj8kTBcuayHBXpMon0coy1Y4wHv/D0Q6Ui17Yiv8DDkmnY/1KURKs7c
+ RGT4PVlUYpJAvwj7qQeBdadKVIk+g7V23dttIV94IhYzkt9QxeQF/cD
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
+The reference to VDSO_CLOCKMODE_ARCHTIMER requires vdso/clocksource.h and
+'struct old_timespec32' requires vdso/time32.h. Currently these headers
+are included transitively, but those transitive inclusions are about to go
+away.
 
-在 2025/11/6 下午3:07, Bibo Mao 写道:
->
->
-> On 2025/11/4 下午3:30, Tianyang Zhang wrote:
->> In the current pte_modify operation, _PAGE_DIRTY might be cleared. Since
->> the hardware-page-walk does not have a predefined _PAGE_MODIFIED flag,
->> this could lead to loss of valid data in certain scenarios.
->>
->> The new modification involves checking whether the original PTE has the
->> _PAGE_DIRTY flag. If it exists, the _PAGE_MODIFIED bit is set, ensuring
->> that the pte_dirty interface can return accurate information.
->>
->> Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
->> Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
->> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/pgtable.h | 17 +++++++++++++----
->>   1 file changed, 13 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/pgtable.h 
->> b/arch/loongarch/include/asm/pgtable.h
->> index bd128696e96d..106abfa5183b 100644
->> --- a/arch/loongarch/include/asm/pgtable.h
->> +++ b/arch/loongarch/include/asm/pgtable.h
->> @@ -424,8 +424,13 @@ static inline unsigned long 
->> pte_accessible(struct mm_struct *mm, pte_t a)
->>     static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
->>   {
->> -    return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
->> -             (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
->> +    unsigned long val = (pte_val(pte) & _PAGE_CHG_MASK) |
->> +             (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
->> +
->> +    if (pte_val(pte) & _PAGE_DIRTY)
->> +        val |= _PAGE_MODIFIED;
-> Since ptep_get_and_clear() is not atomic operation on LoongArch like 
-> other architectures, considering this scenery with HW PTW enabled:
->     CPU 0:                         CPU1
->                              old_pte = ptep_modify_prot_start();
->                                   old_pte = ptep_get(ptep);
->
->     write(buf);
-> *HW will set _PAGE_DIRTY bit*
->                                   pte_clear(mm, address, ptep);
-> ^^^^^^^^^^ For CPU1, bit _PAGE_DIRTY is no set in old_pte, _PAGE_DIRTY 
-> will be lost also. ^^^^^^^^^^^
->                              pte = pte_modify(old_pte,)
->                              ptep_modify_prot_commit(.., pte)
+Explicitly include the headers.
 
-There does appear to be an issue here. It seems we should use 
-`__HAVE_ARCH_PTEP_GET_AND_CLEAR` and implement ptep_get_and_clear via 
-`atomic_xchg`.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Tested-by: Andreas Larsson <andreas@gaisler.com>
+Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+---
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-However, I believe this change should be submitted in a new patch.
+diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+index 7d1a116549b1b98d6eb7a78d053958c6a71799ec..2eb116d91235fea8362a11f3644619dbeb8201de 100644
+--- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+@@ -7,6 +7,9 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
++#include <vdso/clocksource.h>
++#include <vdso/time32.h>
++
+ #include <asm/barrier.h>
+ #include <asm/unistd_compat_32.h>
+ #include <asm/errno.h>
 
-Thanks
-
-Tianyang
-
->
-> Regards
-> Bibo Mao
->> +
->> +    return __pte(val);
->>   }
->>     extern void __update_tlb(struct vm_area_struct *vma,
->> @@ -547,9 +552,13 @@ static inline struct page *pmd_page(pmd_t pmd)
->>     static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
->>   {
->> -    pmd_val(pmd) = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
->> +    unsigned long val = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
->>                   (pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
->> -    return pmd;
->> +
->> +    if (pmd_val(pmd) & _PAGE_DIRTY)
->> +        val |= _PAGE_MODIFIED;
->> +
->> +    return __pmd(val);
->>   }
->>     static inline pmd_t pmd_mkinvalid(pmd_t pmd)
->>
+-- 
+2.51.0
 
