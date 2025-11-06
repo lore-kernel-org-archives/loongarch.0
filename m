@@ -1,93 +1,264 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECC7257AD1;
-	Wed,  5 Nov 2025 20:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA7852222CA
+	for <loongarch@lists.linux.dev>; Thu,  6 Nov 2025 01:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762373732; cv=none; b=QTpmSOUMp8likNFzDMoiZ+5WbNTjQOCphgmRi0C5RNe4r/uPlNiaU1IMOE14cDIkOM4K1J0lbmjcEbQ5EN2ssYGh4XxdcitLOlQQOW4ZAK8+mGYFJGrzBCH/rSWI6s2rXpqmEozUgvNOgseXo2p0qZcJRCmW10pvXEd49zFbOQ4=
+	t=1762394178; cv=none; b=Tv3fPlYJ2wgRk/0VNB91guZ1QdPkcHcjylxRPUTc6HHLgH0W3obmY+EQ6fJ1w1KmqtQTcabFfOXE/H/BApoC60mqQcaUfMIkT+hHBlxMlDUfpvW1ok3hbqoLZATYcEKgO53hr+vRi9lFfxCfpEqGyULRhUHON7sO1q8sj3c75gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762373732; c=relaxed/simple;
-	bh=Lw++o2HELy2ZtWzBIbekYFJktkL5pR/Om2RKn74v1rQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bwa9dJBs/dZIfKLSShxxH4njezKg7jC/hwlP49ycynaVW5nusOQyk7HZI8VZdIWE5Q4V4ZDKUV1m9wPT/YHgir+fOjomf6h2A89tqGm/hQRk2EoBm39QPfoPn/I0QshSE/HmfKKFFsiZ187wEnIhEu0tuo46Wapckp3oQpb1Sjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tVjlLypv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tVjlLypv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A94C4CEF5;
-	Wed,  5 Nov 2025 20:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762373731;
-	bh=Lw++o2HELy2ZtWzBIbekYFJktkL5pR/Om2RKn74v1rQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tVjlLypvxp3tK6h3M4G7McwvdI6gA8sxm/UocCXG0mBUTsqUSzgrjT87E1jK3B7rE
-	 ibU2ywmazXPh8J10A3IxweVZ8xaZofARrlwX0OlWkDzUJKqErx5FjL0EPddsf91/NQ
-	 3oPru8Psy5xRWnEgEShymCYgSetPXqw72puMPnE6ccAIz+Fu5j6x1iwibexdQ9zoiS
-	 fe18mkKCL625LUctrbKaESMKZ7GPUJftYZvZ2rxKR4a+sJN2uJfeLNcoyICvtUikQi
-	 PLh4WhrsOD8YLyih3t766j/ZSJe7NBsghwm5c25JoUzABBadcnwyLdEVVQJ7W553rD
-	 0eOxjwkaepv7Q==
-Date: Wed, 5 Nov 2025 13:15:22 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	linux-efi@vger.kernel.org, llvm@lists.linux.dev,
-	Christian Brauner <brauner@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] kbuild: Add '-fms-extensions' to areas with dedicated
- CFLAGS
-Message-ID: <20251105201522.GB3787308@ax162>
-References: <20251101-kbuild-ms-extensions-dedicated-cflags-v1-1-38004aba524b@kernel.org>
- <aQtUujos2ADVs-_O@gate>
+	s=arc-20240116; t=1762394178; c=relaxed/simple;
+	bh=Uy9YyrLDMDKCgUP3MXz7JoZCBcI0AC2ZMIJdmO0L164=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=j6KgEOykYxQDJN+2Na7rLGEXrHC7nM7ombC4dwtMKGkTdfxAU0mldswdIbxb5JQvlhPVauPhm+B7ZNXNZ/5IUlY/dzNz4YZyRulwXVTyis2V6xh6fzHYdn1vNxYjobSF9B0FOC3DRJlmSGGd33DF74gyFMIIzaYIZg3U5L5Ew1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Bx3tI9AAxpH4YfAA--.2904S3;
+	Thu, 06 Nov 2025 09:56:13 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowJAxT+Y6AAxpAxspAQ--.53990S3;
+	Thu, 06 Nov 2025 09:56:12 +0800 (CST)
+Subject: Re: [PATCH] Loongarch:Make pte/pmd_modify can set _PAGE_MODIFIED
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, akpm@linux-foundation.org, willy@infradead.org,
+ david@redhat.com, linmag7@gmail.com, thuth@redhat.com, apopple@nvidia.com,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Liupu Wang <wangliupu@loongson.cn>
+References: <20251104073006.1764241-1-zhangtianyang@loongson.cn>
+ <CAAhV-H5JnmJqTZ1GnhcgODtjL5FLy8x5HNRJxs6us=gzcFon5Q@mail.gmail.com>
+ <95e6f0a6-fd6c-a85f-5983-5a37eaf960a2@loongson.cn>
+ <CAAhV-H4WrphWQqW7HoeD7xSvRuHV1KBt7jgESQU7N-y1HrSVVw@mail.gmail.com>
+ <b839a6a6-3791-ba73-baff-e860aa879bbc@loongson.cn>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <833f6790-f1bf-d089-84cf-9f55e1c9866f@loongson.cn>
+Date: Thu, 6 Nov 2025 09:55:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQtUujos2ADVs-_O@gate>
+In-Reply-To: <b839a6a6-3791-ba73-baff-e860aa879bbc@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJAxT+Y6AAxpAxspAQ--.53990S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKF18XFW5ur4rXrWrArWfXrc_yoW3Cw1fpF
+	4kJFyUZFW5Jr1xAa40gF17Xry2yr4DJ3WkXr1DJF18Jr4Dt34jqr18Xrn09r1rJr48Jw1U
+	Xr1UJr43ZF43JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8fsqJUUUUU==
 
-On Wed, Nov 05, 2025 at 07:44:26AM -0600, Segher Boessenkool wrote:
-> On Sat, Nov 01, 2025 at 12:35:47PM -0400, Nathan Chancellor wrote:
-> > There are many places within the kernel that use their own CFLAGS
-> > instead of the main KBUILD_CFLAGS, meaning code written with the main
-> > kernel's use of '-fms-extensions' in mind that may be tangentially
-> > included in these areas will result in "error: declaration does not
-> > declare anything" messages from the compiler.
-> 
-> Please fix such non-standard code then, instead?  The only (documented)
-> thing -fms-extensions does for C code is give meaning to something that
-> otherwise is a syntax error (and it is for a good reason!)
+Hi ,Bibao
 
-Right, the kernel would like to start taking advantage of one of those
-extensions. See these other threads for more information.
+在 2025/11/5 上午9:18, Bibo Mao 写道:
+>
+>
+> On 2025/11/5 上午9:07, Huacai Chen wrote:
+>> On Wed, Nov 5, 2025 at 8:57 AM Tianyang Zhang 
+>> <zhangtianyang@loongson.cn> wrote:
+>>>
+>>> Hi, Huacai
+>>>
+>>> 在 2025/11/4 下午4:00, Huacai Chen 写道:
+>>>> Hi, Tianyang,
+>>>>
+>>>> The subject line can be:
+>>>> LoongArch: Let {pte,pmd}_modify() record the status of _PAGE_DIRTY (If
+>>>> I'm right in the later comments).
+>>> Ok. I got it
+>>>>
+>>>> On Tue, Nov 4, 2025 at 3:30 PM Tianyang Zhang 
+>>>> <zhangtianyang@loongson.cn> wrote:
+>>>>> In the current pte_modify operation, _PAGE_DIRTY might be cleared. 
+>>>>> Since
+>>>>> the hardware-page-walk does not have a predefined _PAGE_MODIFIED 
+>>>>> flag,
+>>>>> this could lead to loss of valid data in certain scenarios.
+>>>>>
+>>>>> The new modification involves checking whether the original PTE 
+>>>>> has the
+>>>>> _PAGE_DIRTY flag. If it exists, the _PAGE_MODIFIED bit is set, 
+>>>>> ensuring
+>>>>> that the pte_dirty interface can return accurate information.
+>>>> The description may be wrong here. Because pte_dirty() returns
+>>>> pte_val(pte) & (_PAGE_DIRTY | _PAGE_MODIFIED).
+>>>> If _PAGE_DIRTY isn't lost, pte_dirty() is always right, no matter
+>>>> whether there is or isn't _PAGE_MODIFIED.
+>>>>
+>>>> I think the real reason is we need to set _PAGE_MODIFIED in
+>>>> pte/pmd_modify to record the status of _PAGE_DIRTY, so that we can
+>>>> recover _PAGE_DIRTY afterwards, such as in pte/pmd_mkwrite().
+>>> Ok, I will adjust the description
+>> After some thinking, your original description may be right. Without
+>> this patch the scenario maybe like this:
+>> The pte is dirty _PAGE_DIRTY but without _PAGE_MODIFIED, after
+>> pte_modify() we lose _PAGE_DIRTY, then pte_dirty() returns false. So
+>> we need _PAGE_MODIFIED to record _PAGE_DIRTY here.
+> In theory pte_modify() is to modify RWX attribute. I think that it is 
+> a tricky to remove _PAGE_DIRTY and add _PAGE_MODIFIED with HW PTW system.
+>
+> Also _PAGE_ACCESSED is lost with pte_modify() API, is there any 
+> influence with HW PTW system, or wait until possible problems coming out.
 
-https://lore.kernel.org/20251020142228.1819871-1-linux@rasmusvillemoes.dk/
-https://lore.kernel.org/20251023082142.2104456-1-linux@rasmusvillemoes.dk/
+static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+{
+         return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+                      (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+}
+In my understand, During the  pte_modify process, it is essential to 
+ensure that specific bits are inherited from the original PTE rather 
+than simply replaced(as set_pte),
 
-Cheers,
-Nathan
+this guarantees the coherent operation of the memory management system.
+
+Since _PAGE_CHG_MASK explicitly requires preserving pte_modified, and 
+there is an inherent correlation between pte_dirty and pte_modified, 
+these attributes must be evaluated and handled accordingly.
+
+The pte_valid attribute, being a hardware property, is inherently the 
+target of modification in the pte_modify interface. Therefore, it is 
+reasonable not to preserve it.
+
+Thanks
+
+Tianyang
+
+>
+> Regards
+> Bibo Mao
+>>
+>> But the description also needs to be updated.
+>>
+>>>>
+>>>>> Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
+>>>>> Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
+>>>>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>>>>> ---
+>>>>>    arch/loongarch/include/asm/pgtable.h | 17 +++++++++++++----
+>>>>>    1 file changed, 13 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/loongarch/include/asm/pgtable.h 
+>>>>> b/arch/loongarch/include/asm/pgtable.h
+>>>>> index bd128696e96d..106abfa5183b 100644
+>>>>> --- a/arch/loongarch/include/asm/pgtable.h
+>>>>> +++ b/arch/loongarch/include/asm/pgtable.h
+>>>>> @@ -424,8 +424,13 @@ static inline unsigned long 
+>>>>> pte_accessible(struct mm_struct *mm, pte_t a)
+>>>>>
+>>>>>    static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+>>>>>    {
+>>>>> -       return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+>>>>> -                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+>>>>> +       unsigned long val = (pte_val(pte) & _PAGE_CHG_MASK) |
+>>>>> +                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
+>>>>> +
+>>>>> +       if (pte_val(pte) & _PAGE_DIRTY)
+>>>>> +               val |= _PAGE_MODIFIED;
+>>>>> +
+>>>>> +       return __pte(val);
+>>>>>    }
+>>>>>
+>>>>>    extern void __update_tlb(struct vm_area_struct *vma,
+>>>>> @@ -547,9 +552,13 @@ static inline struct page *pmd_page(pmd_t pmd)
+>>>>>
+>>>>>    static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+>>>>>    {
+>>>>> -       pmd_val(pmd) = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+>>>>> +       unsigned long val = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+>>>>>                                   (pgprot_val(newprot) & 
+>>>>> ~_HPAGE_CHG_MASK);
+>>>>> -       return pmd;
+>>>>> +
+>>>>> +       if (pmd_val(pmd) & _PAGE_DIRTY)
+>>>>> +               val |= _PAGE_MODIFIED;
+>>>>> +
+>>>>> +       return __pmd(val);
+>>>>>    }
+>>>> A minimal modification can be:
+>>>> diff --git a/arch/loongarch/include/asm/pgtable.h
+>>>> b/arch/loongarch/include/asm/pgtable.h
+>>>> index 1f20e9280062..907ece0199e0 100644
+>>>> --- a/arch/loongarch/include/asm/pgtable.h
+>>>> +++ b/arch/loongarch/include/asm/pgtable.h
+>>>> @@ -448,8 +448,13 @@ static inline unsigned long pte_accessible(struct
+>>>> mm_struct *mm, pte_t a)
+>>>>
+>>>>    static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+>>>>    {
+>>>> -       return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+>>>> -                    (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+>>>> +       pte_val(pte) = (pte_val(pte) & _PAGE_CHG_MASK) |
+>>>> +                       (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
+>>>> +
+>>>> +       if (pte_val(pte) & _PAGE_DIRTY)
+>>>> +               pte_val(pte) |= _PAGE_MODIFIED;
+>>>> +
+>>>> +       return pte;
+>>>>    }
+>>>
+>>> +       pte_val(pte) = (pte_val(pte) & _PAGE_CHG_MASK) |
+>>> +                       (pgprot_val(newprot) & ~_PAGE_CHG_MASK);
+>>>
+>>> After this step, _PAGE_DIRTY may have already disappeared,
+>>> If no new variables are added, they can be modified in follow way:
+>>>
+>>>    static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+>>>    {
+>>> +       if (pte_val(pte) & _PAGE_DIRTY)
+>>> +               pte_val(pte) |= _PAGE_MODIFIED;
+>>> +
+>>>          return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+>>>           (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+>>>
+>>>    }
+>> OK, it makes sense.
+>>
+>> Huacai
+>>>
+>>>>
+>>>>    extern void __update_tlb(struct vm_area_struct *vma,
+>>>> @@ -583,7 +588,11 @@ static inline struct page *pmd_page(pmd_t pmd)
+>>>>    static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+>>>>    {
+>>>>           pmd_val(pmd) = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+>>>> -                               (pgprot_val(newprot) & 
+>>>> ~_HPAGE_CHG_MASK);
+>>>> +                       (pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
+>>>> +
+>>>> +       if (pmd_val(pmd) & _PAGE_DIRTY)
+>>>> +               pmd_val(pmd) |= _PAGE_MODIFIED;
+>>>> +
+>>>>           return pmd;
+>>>>    }
+>>>>
+>>>> You needn't define a new variable.
+>>>>
+>>>>
+>>>> Huacai
+>>>>
+>>>>>    static inline pmd_t pmd_mkinvalid(pmd_t pmd)
+>>>>> -- 
+>>>>> 2.41.0
+>>>>>
+>>>>>
+>>> Thanks
+>>>
+>>> Tianyang
+>>>
+
