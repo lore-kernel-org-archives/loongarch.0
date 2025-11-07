@@ -1,289 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0AF3093C1
-	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 07:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D25B72D8795
+	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 09:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762502022; cv=none; b=BQFuHOI5qq24y/7agOzVdqM8lD8poVTO5oCVxiHaQgWTkVD54TZw7jCiTqYDGhbH2O4YENnfxnB9WyRBE2UC/RSuG9r2jsbriymqSzxn9WQa1LiiARezlVZ20iaNr0T+QR6MB2U6JncDSvTkbLEra0D1BBtwD5RlQ0mvwAu0W50=
+	t=1762508910; cv=none; b=NGb7ORNeMBn8rWh5t6NmAakYR5UIsvzQZdD8Gsf5LkSnt7Ut/qPesWazJB0Br/2vlcDVclvBIcohWIWtvfXZZsSynt0TOi8DDXnRnYcnjwNgCU3VJUWeVSvgGPNb6HaSfgQPDwRHUzEz/XwuNbrbg1a+vU1c+//sD5Yytk1ltJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762502022; c=relaxed/simple;
-	bh=cO5NurIQl/eg1guBeVUIGQOMKGzKw8tKWWLvGRxepIk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uttCf8e2kYEOvmp5GsGtIdmWk8xp7RqUg09IBbiisXxC6KuxQD6O4OMJzb+vxVxAKguXDDHAJLdGjQxomVfPcvEEr8bc0HKrhPv2ddWuHk8Y0GSQ9tRQvJZYan4xxSrzK3o6DBq2YK8zbVHiGcIkuyfamDL6xRcuSx8GarEre1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+tNtYA5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+tNtYA5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D41EC116B1
-	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 07:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762502022;
-	bh=cO5NurIQl/eg1guBeVUIGQOMKGzKw8tKWWLvGRxepIk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s+tNtYA5jpaX/k3+dOqINj6hHQa0kd9DLlsWPH5Pe4IVa8ahVr/KrsMWRFMTDk8Y2
-	 rYKHeQ9848OBVVHtl9+f+2wkZTNSc1LAZpjDvUzksWfrqXQd8oxc7frPsjZQPGKn4G
-	 s3fexwxpCgtiTKcPauPysoBeXTv6s86xGgamh+/Q8Q/GHCy5/l+0u4xyTWdgPuRFAY
-	 2IHf1zNE9sYCFVUYMhRFxS5q9mijcp42MnRt21vH+fFogsIlxup+EI/DLSQF7G3kOa
-	 cyoOXaJc9ogGskkf9RDlnukPAe06xJ+lqOiIUXoYbJi3Yc1AqgXF+vqfy45NP3/c8C
-	 QJL2BmUn0uZ9A==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-641458f71ffso491417a12.3
-        for <loongarch@lists.linux.dev>; Thu, 06 Nov 2025 23:53:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXF+QXPwbt0ffxbLEg6OhqtX2oF1lcnc+UpgbHk5/n9ZYKI2Dw4sApdovCUZeAvUw7qIpj9VujYKP0=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxf8dcKYXkIX2lhpPq8fqw6trVfr6YHYbLRNma3s0lQp0vfaFmj
-	Uc/QPpztriRAID82WKabrcHi8HSjyPAcs9Ek5rkXnlR/6D91NuNLOH86WyV5QZ+UVAVRDkEbiUN
-	6F5d1qxWZB3u7Ss2zw6B0AH+2rsMFMfI=
-X-Google-Smtp-Source: AGHT+IG8+ZR32d5pvl05Gv3SN6BjCgKJ1SPjMwA8rRsKu7izp2GUQCkf8OZT7z+sE2pIiwUpKhvd7JFoU1rk3B6kW4k=
-X-Received: by 2002:a17:907:d07:b0:b72:afb1:fc4 with SMTP id
- a640c23a62f3a-b72c0e833a9mr167122166b.50.1762502020450; Thu, 06 Nov 2025
- 23:53:40 -0800 (PST)
+	s=arc-20240116; t=1762508910; c=relaxed/simple;
+	bh=vCzSa6ltYMoZDydQYv0ilc4C+KkX3p8OkbQAVY3phhs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OjpsNQTVjfigYznwus/fxqjfb+QeaRkLNoR4gGU3tuMBZLUO4bzdB8PO2Py+ZT4HpgRK1/rIKywS3zz+hYOcunV+bgCQY8R0ShmDAxFeO6JW+QE9wIyEgRcClaLPEZypOlpYw7MpO9CQkSGpV47MLgK75hkdoDaICtuyGrsKuVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.45])
+	by gateway (Coremail) with SMTP id _____8AxSNFhwA1pvEEgAA--.5096S3;
+	Fri, 07 Nov 2025 17:48:17 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.45])
+	by front1 (Coremail) with SMTP id qMiowJDxscJYwA1poLwqAQ--.1671S2;
+	Fri, 07 Nov 2025 17:48:15 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Clarify 3 MSG interrupt features
+Date: Fri,  7 Nov 2025 17:47:59 +0800
+Message-ID: <20251107094759.3093531-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1762482089.git.zhoubinbin@loongson.cn> <d6153aa5457098cea388cff7ee2ceb43b207970b.1762482089.git.zhoubinbin@loongson.cn>
-In-Reply-To: <d6153aa5457098cea388cff7ee2ceb43b207970b.1762482089.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 7 Nov 2025 15:53:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4HRQGU72_GkGabNDSKes77a+MNFNyZmwNvmb=aipT-9Q@mail.gmail.com>
-X-Gm-Features: AWmQ_blhGgHAd63exmNQLO3p8vxZuKSPJ7NjueR30OlqT6i6LS_ztlbCdfMYl5A
-Message-ID: <CAAhV-H4HRQGU72_GkGabNDSKes77a+MNFNyZmwNvmb=aipT-9Q@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] watchdog: loongson1: Add Loongson-2k0300 watchdog support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, Xiaochuang Mao <maoxiaochuan@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxscJYwA1poLwqAQ--.1671S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJw48WF1fJr1ruw1kXryDCFX_yoWrtrWUpF
+	WDAFWkWFW5KFs2ka4qqF1a9rnrWFZ7Cr429r1UC3yDJF1UX348XrykKasxZF98Xa1DXa4I
+	9Fn5Cwn0va4DXwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOF4_UUUUU=
 
-Hi, Binbin,
+LoongArch's MSG interrupt features are used across multiple subsystems.
+Clarify these features to avoid misuse, existing users will be adjusted
+if necessary.
 
-On Fri, Nov 7, 2025 at 2:02=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
- wrote:
->
-> According to the manual, the Loongson-2K0300 watchdog is similar to the
-> Loongson-1, except for some register offsets and inconsistent register
-> bit definitions. Separate definitions via driver_data suffice.
->
-> Co-developed-by: Xiaochuang Mao <maoxiaochuan@loongson.cn>
-> Signed-off-by: Xiaochuang Mao <maoxiaochuan@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  drivers/watchdog/Kconfig         |  4 +-
->  drivers/watchdog/loongson1_wdt.c | 73 ++++++++++++++++++++++++++------
->  2 files changed, 62 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 0c25b2ed44eb..002eb785ca1f 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1965,10 +1965,10 @@ config LANTIQ_WDT
->
->  config LOONGSON1_WDT
->         tristate "Loongson1 SoC hardware watchdog"
-> -       depends on MACH_LOONGSON32 || COMPILE_TEST
-> +       depends on MACH_LOONGSON32 || MACH_LOONGSON64 || COMPILE_TEST
->         select WATCHDOG_CORE
->         help
-> -         Hardware driver for the Loongson1 SoC Watchdog Timer.
-> +         Hardware driver for the Loongson family Watchdog Timer.
->
->  config RALINK_WDT
->         tristate "Ralink SoC watchdog"
-> diff --git a/drivers/watchdog/loongson1_wdt.c b/drivers/watchdog/loongson=
-1_wdt.c
-> index 255198cbf5bf..2417519717cc 100644
-> --- a/drivers/watchdog/loongson1_wdt.c
-> +++ b/drivers/watchdog/loongson1_wdt.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0-or-later
->  /*
->   * Copyright (c) 2016 Yang Ling <gnaygnil@gmail.com>
-> + * Copyright (C) 2025 Binbin Zhou <zhoubinbin@loongson.cn>
->   */
->
->  #include <linux/clk.h>
-> @@ -10,10 +11,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/watchdog.h>
->
-> -/* Loongson 1 Watchdog Register Definitions */
-> +/* Loongson Watchdog Register Definitions */
->  #define WDT_EN                 0x0
-> -#define WDT_TIMER              0x4
-> -#define WDT_SET                        0x8
->
->  #define DEFAULT_HEARTBEAT      30
->
-> @@ -27,18 +26,37 @@ module_param(heartbeat, uint, 0);
->  MODULE_PARM_DESC(heartbeat, "Watchdog heartbeat in seconds. (default=3D"
->                  __MODULE_STRING(DEFAULT_HEARTBEAT) ")");
->
-> +struct ls1x_wdt_pdata {
-> +       u32 timer_offset;
-> +       u32 set_offset;
-> +       u32 wdt_en_bit;
-> +};
-> +
-> +static const struct ls1x_wdt_pdata ls1b_wdt_pdata =3D {
-> +       .timer_offset =3D 0x4,
-> +       .set_offset =3D 0x8,
-> +       .wdt_en_bit =3D BIT(0),
-> +};
-> +
-> +static const struct ls1x_wdt_pdata ls2k0300_wdt_pdata =3D {
-> +       .timer_offset =3D 0x8,
-> +       .set_offset =3D 0x4,
-> +       .wdt_en_bit =3D BIT(1),
-> +};
-> +
->  struct ls1x_wdt_drvdata {
->         void __iomem *base;
->         struct clk *clk;
->         unsigned long clk_rate;
->         struct watchdog_device wdt;
-> +       const struct ls1x_wdt_pdata *pdata;
->  };
->
->  static int ls1x_wdt_ping(struct watchdog_device *wdt_dev)
->  {
->         struct ls1x_wdt_drvdata *drvdata =3D watchdog_get_drvdata(wdt_dev=
-);
->
-> -       writel(0x1, drvdata->base + WDT_SET);
-> +       writel(0x1, drvdata->base + drvdata->pdata->set_offset);
->
->         return 0;
->  }
-> @@ -53,7 +71,7 @@ static int ls1x_wdt_set_timeout(struct watchdog_device =
-*wdt_dev,
->         wdt_dev->timeout =3D timeout;
->
->         counts =3D drvdata->clk_rate * min(timeout, max_hw_heartbeat);
-> -       writel(counts, drvdata->base + WDT_TIMER);
-> +       writel(counts, drvdata->base + drvdata->pdata->timer_offset);
->
->         return 0;
->  }
-> @@ -62,7 +80,7 @@ static int ls1x_wdt_start(struct watchdog_device *wdt_d=
-ev)
->  {
->         struct ls1x_wdt_drvdata *drvdata =3D watchdog_get_drvdata(wdt_dev=
-);
->
-> -       writel(0x1, drvdata->base + WDT_EN);
-> +       writel(drvdata->pdata->wdt_en_bit, drvdata->base + WDT_EN);
->
->         return 0;
->  }
-> @@ -70,8 +88,10 @@ static int ls1x_wdt_start(struct watchdog_device *wdt_=
-dev)
->  static int ls1x_wdt_stop(struct watchdog_device *wdt_dev)
->  {
->         struct ls1x_wdt_drvdata *drvdata =3D watchdog_get_drvdata(wdt_dev=
-);
-> +       u32 val =3D readl(drvdata->base + WDT_EN);
->
-> -       writel(0x0, drvdata->base + WDT_EN);
-> +       val &=3D ~(drvdata->pdata->wdt_en_bit);
-> +       writel(val, drvdata->base + WDT_EN);
->
->         return 0;
->  }
-> @@ -81,9 +101,9 @@ static int ls1x_wdt_restart(struct watchdog_device *wd=
-t_dev,
->  {
->         struct ls1x_wdt_drvdata *drvdata =3D watchdog_get_drvdata(wdt_dev=
-);
->
-> -       writel(0x1, drvdata->base + WDT_EN);
-> -       writel(0x1, drvdata->base + WDT_TIMER);
-> -       writel(0x1, drvdata->base + WDT_SET);
-> +       writel(drvdata->pdata->wdt_en_bit, drvdata->base + WDT_EN);
-> +       writel(0x1, drvdata->base + drvdata->pdata->timer_offset);
-> +       writel(0x1, drvdata->base + drvdata->pdata->set_offset);
->
->         return 0;
->  }
-> @@ -114,6 +134,8 @@ static int ls1x_wdt_probe(struct platform_device *pde=
-v)
->                 return -ENOMEM;
->         platform_set_drvdata(pdev, drvdata);
->
-> +       drvdata->pdata =3D of_device_get_match_data(dev);
-> +
->         drvdata->base =3D devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(drvdata->base))
->                 return PTR_ERR(drvdata->base);
-> @@ -142,9 +164,32 @@ static int ls1x_wdt_probe(struct platform_device *pd=
-ev)
->         return devm_watchdog_register_device(dev, &drvdata->wdt);
->  }
->
-> +static int ls1x_wdt_resume(struct device *dev)
-> +{
-> +       struct ls1x_wdt_drvdata *data =3D dev_get_drvdata(dev);
-> +
-> +       if (watchdog_active(&data->wdt))
-> +               ls1x_wdt_start(&data->wdt);
-> +
-> +       return 0;
-> +}
-> +
-> +static int ls1x_wdt_suspend(struct device *dev)
-> +{
-> +       struct ls1x_wdt_drvdata *data =3D dev_get_drvdata(dev);
-> +
-> +       if (watchdog_active(&data->wdt))
-> +               ls1x_wdt_stop(&data->wdt);
-> +
-> +       return 0;
-> +}
-We usually define suspend first and then resume, that looks more
-natural. But this is not a big deal.
+MSGINT: Infrastructure, means the CPU core supports message interupts.
+Indicated by CPUCFG1.MSGINT.
 
-Others look good to me.
+AVECINT: AVEC interrupt controller based on MSGINT, means the CPU chip
+supports direct message interrupts. Indicated by IOCSR.FEATURES.DMSI.
 
-For the whole series,
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+REDIRECTINT: REDIRECT interrupt controller based on MSGINT and AVECINT,
+means the CPU chip supports redirect message interrupts. Indicated by
+IOCSR.FEATURES.RMSI.
 
-Huacai
+For example:
+Loongson-3A5000/3C5000 doesn't support MSGINT/AVECINT/REDIRECTINT;
+Loongson-3A6000 supports MSGINT but doesn't support AVECINT/REDIRECTINT;
+Loongson-3C6000 supports MSGINT/AVECINT/REDIRECTINT.
 
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(ls1x_wdt_pm_ops, ls1x_wdt_suspend, ls1x_=
-wdt_resume);
-> +
->  static const struct of_device_id ls1x_wdt_dt_ids[] =3D {
-> -       { .compatible =3D "loongson,ls1b-wdt", },
-> -       { .compatible =3D "loongson,ls1c-wdt", },
-> +       { .compatible =3D "loongson,ls1b-wdt", .data =3D &ls1b_wdt_pdata =
-},
-> +       { .compatible =3D "loongson,ls1c-wdt", .data =3D &ls1b_wdt_pdata =
-},
-> +       { .compatible =3D "loongson,ls2k0300-wdt", .data =3D &ls2k0300_wd=
-t_pdata },
->         { /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, ls1x_wdt_dt_ids);
-> @@ -154,11 +199,13 @@ static struct platform_driver ls1x_wdt_driver =3D {
->         .driver =3D {
->                 .name =3D "ls1x-wdt",
->                 .of_match_table =3D ls1x_wdt_dt_ids,
-> +               .pm =3D pm_ptr(&ls1x_wdt_pm_ops),
->         },
->  };
->
->  module_platform_driver(ls1x_wdt_driver);
->
->  MODULE_AUTHOR("Yang Ling <gnaygnil@gmail.com>");
-> -MODULE_DESCRIPTION("Loongson1 Watchdog Driver");
-> +MODULE_AUTHOR("Binbin Zhou <zhoubinbin@loongson.cn>");
-> +MODULE_DESCRIPTION("Loongson Watchdog Driver");
->  MODULE_LICENSE("GPL");
-> --
-> 2.47.3
->
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/cpu-features.h | 2 ++
+ arch/loongarch/include/asm/cpu.h          | 6 +++++-
+ arch/loongarch/include/asm/loongarch.h    | 1 +
+ arch/loongarch/kernel/cpu-probe.c         | 4 ++++
+ 4 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
+index fc83bb32f9f0..bd5f0457ad21 100644
+--- a/arch/loongarch/include/asm/cpu-features.h
++++ b/arch/loongarch/include/asm/cpu-features.h
+@@ -67,6 +67,8 @@
+ #define cpu_has_hypervisor	cpu_opt(LOONGARCH_CPU_HYPERVISOR)
+ #define cpu_has_ptw		cpu_opt(LOONGARCH_CPU_PTW)
+ #define cpu_has_lspw		cpu_opt(LOONGARCH_CPU_LSPW)
++#define cpu_has_msgint		cpu_opt(LOONGARCH_CPU_MSGINT)
+ #define cpu_has_avecint		cpu_opt(LOONGARCH_CPU_AVECINT)
++#define cpu_has_redirectint	cpu_opt(LOONGARCH_CPU_REDIRECTINT)
+ 
+ #endif /* __ASM_CPU_FEATURES_H */
+diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
+index dfb982fe8701..d4cd4041bee7 100644
+--- a/arch/loongarch/include/asm/cpu.h
++++ b/arch/loongarch/include/asm/cpu.h
+@@ -101,7 +101,9 @@ enum cpu_type_enum {
+ #define CPU_FEATURE_HYPERVISOR		26	/* CPU has hypervisor (running in VM) */
+ #define CPU_FEATURE_PTW			27	/* CPU has hardware page table walker */
+ #define CPU_FEATURE_LSPW		28	/* CPU has LSPW (lddir/ldpte instructions) */
+-#define CPU_FEATURE_AVECINT		29	/* CPU has AVEC interrupt */
++#define CPU_FEATURE_MSGINT		29	/* CPU has MSG interrupt */
++#define CPU_FEATURE_AVECINT		30	/* CPU has AVEC interrupt */
++#define CPU_FEATURE_REDIRECTINT		31	/* CPU has interrupt remapping */
+ 
+ #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
+ #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
+@@ -132,6 +134,8 @@ enum cpu_type_enum {
+ #define LOONGARCH_CPU_HYPERVISOR	BIT_ULL(CPU_FEATURE_HYPERVISOR)
+ #define LOONGARCH_CPU_PTW		BIT_ULL(CPU_FEATURE_PTW)
+ #define LOONGARCH_CPU_LSPW		BIT_ULL(CPU_FEATURE_LSPW)
++#define LOONGARCH_CPU_MSGINT		BIT_ULL(CPU_FEATURE_MSGINT)
+ #define LOONGARCH_CPU_AVECINT		BIT_ULL(CPU_FEATURE_AVECINT)
++#define LOONGARCH_CPU_REDIRECTINT	BIT_ULL(CPU_FEATURE_REDIRECTINT)
+ 
+ #endif /* _ASM_CPU_H */
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 09dfd7eb406e..5b36fa57015f 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -1137,6 +1137,7 @@
+ #define  IOCSRF_FLATMODE		BIT_ULL(10)
+ #define  IOCSRF_VM			BIT_ULL(11)
+ #define  IOCSRF_AVEC			BIT_ULL(15)
++#define  IOCSRF_REDIRECT		BIT_ULL(16)
+ 
+ #define LOONGARCH_IOCSR_VENDOR		0x10
+ 
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index cbfce2872d71..6f943d1391ff 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -157,6 +157,8 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+ 		c->options |= LOONGARCH_CPU_TLB;
+ 	if (config & CPUCFG1_IOCSR)
+ 		c->options |= LOONGARCH_CPU_IOCSR;
++	if (config & CPUCFG1_MSGINT)
++		c->options |= LOONGARCH_CPU_MSGINT;
+ 	if (config & CPUCFG1_UAL) {
+ 		c->options |= LOONGARCH_CPU_UAL;
+ 		elf_hwcap |= HWCAP_LOONGARCH_UAL;
+@@ -331,6 +333,8 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int
+ 		c->options |= LOONGARCH_CPU_EIODECODE;
+ 	if (config & IOCSRF_AVEC)
+ 		c->options |= LOONGARCH_CPU_AVECINT;
++	if (config & IOCSRF_REDIRECT)
++		c->options |= LOONGARCH_CPU_REDIRECTINT;
+ 	if (config & IOCSRF_VM)
+ 		c->options |= LOONGARCH_CPU_HYPERVISOR;
+ }
+-- 
+2.47.3
+
