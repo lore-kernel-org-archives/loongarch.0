@@ -1,124 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8187E2BDC00;
-	Thu,  6 Nov 2025 17:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87BEB13D891
+	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 03:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762451281; cv=none; b=cIuYrpJ6V7DF4klTPvS6nNtXPg37ClSoqLRyEosaKOtvImkmaRq8pFPF3XhcV9k1rBEF7dnfTeHo+M+3UpL3m7qIblQGE2sL7gQzTjKK62paL5XFvpu44XXI94+h4HyN4M5RLa32weK0baR/+LVOQq2mH1dQ3nwKzr/+CYCJ1us=
+	t=1762487898; cv=none; b=SGTiBpSmLDeL6XclMw88LVlCO5fyzbG5HRzSNCRJN17yqRSPXfgVwVPsZNEWdOQVcv+tPdk4pFcble0379w3ihrvJE1NbzysTrQ085xzML0BCHq2wG+RVJHp6XJamMmFRf80sJFgsPoBWd3kADUDo9eRC2xhq65HeAurVZYIzSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762451281; c=relaxed/simple;
-	bh=13WsgUGoeK4bC41loapHpdur+Ccm2Mdg30VVAbVHLjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DHFUOeI6jbaFkxwF2R+T5pOHUnQ2VfIyqK3KVXXE0dS+fpFCIWgGxnKirXPoDWQlSQhGFHbt6B8J4zvCGLNeD8ppRdTuk+p5qfuVPpuf4IluDYgFsfNi7gevcsHVzUACEBYcN+a0J+HHChB/USHqhnZOrSgRNU5Al+RTbWPRRtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9FnDBrL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z9FnDBrL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD86C116C6;
-	Thu,  6 Nov 2025 17:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762451281;
-	bh=13WsgUGoeK4bC41loapHpdur+Ccm2Mdg30VVAbVHLjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z9FnDBrLQxnVZ8j0S6dXWmgDdhzRapTlDLeZphuGquMG48Y0ehHhp+zTZ1t5KXHbE
-	 txcGrmgh0jjFrb2R7Z4I4+T/u5lzxWz5dX1+SmKtEgYTcAlIG9Z7mJs448ffRsunb/
-	 NKjfdgOv8bmEebgrBMp3h9vh4pR0Pq8RkV/w1GvjFyMBhyadJ/0oXUr1y1nJ50U0ub
-	 aJnzIoOLRuwk0h/lQKZix1kH9a4jtd/PFlGQeCzBFejhXmzM34PXGVkA6w+0UTpxmg
-	 kZW7+JyfWA+DtE0VoLbWXC2bDxthopkWbymWnjEda4G9uauXq3ZbYJQm9H/atPuoWh
-	 K90fOO5tmdSWQ==
-Date: Thu, 6 Nov 2025 10:47:52 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	linux-efi@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] kbuild: Add '-fms-extensions' to areas with dedicated
- CFLAGS
-Message-ID: <20251106174752.GA2440428@ax162>
-References: <20251101-kbuild-ms-extensions-dedicated-cflags-v1-1-38004aba524b@kernel.org>
- <20251105-amnesie-eisig-277559b69bae@brauner>
- <20251105193931.GA2480016@ax162>
+	s=arc-20240116; t=1762487898; c=relaxed/simple;
+	bh=PXrE+deCMowO9AFWIGSKYMU86NoDQh1TE8UqdrIAGWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D7DPAeL+PdKodY5yeUjY3zC7739T1ExwhJFAYmMSs0SfJ+PjOK3ZDNq2TOGEON5Hskyg6qc2Y82alsvwGjQd8HbvdgAtc2vIXwjSlhgMBYE8lZcIBf2yqyi588K0RPKx2rdYEfDPg98ID7f9O/VExlhGbN8tiJlf8l5ePKtazMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.57.136])
+	by gateway (Coremail) with SMTP id _____8Bxnr9Pbg1pEx8gAA--.2467S3;
+	Fri, 07 Nov 2025 11:58:07 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.57.136])
+	by front1 (Coremail) with SMTP id qMiowJDxQ+RObg1pVHgqAQ--.1001S2;
+	Fri, 07 Nov 2025 11:58:06 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	akpm@linux-foundation.org,
+	willy@infradead.org,
+	david@redhat.com,
+	linmag7@gmail.com,
+	thuth@redhat.com,
+	maobibo@loongson.cn,
+	apopple@nvidia.com
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>,
+	Liupu Wang <wangliupu@loongson.cn>
+Subject: [PATCH v2] LoongArch: Let {pte,pmd}_modify() record the status of _PAGE_DIRTY
+Date: Fri,  7 Nov 2025 11:58:05 +0800
+Message-ID: <20251107035805.3094024-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251105193931.GA2480016@ax162>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxQ+RObg1pVHgqAQ--.1001S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFW8uw1rtryfCrW8Zw45CFX_yoW8Wry7pF
+	s7AFykua1rKF1xAay3GF13Xr13AwsrGFn7GrnFkF1kGasIq3yUXrW8Krn8AFyrXay8Za48
+	XrsYgw45WF47AwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-On Wed, Nov 05, 2025 at 12:39:31PM -0700, Nathan Chancellor wrote:
-> I was planning to make it stable tomorrow to give folks time to chime in
-> at the beginning of the week. I have your tag and Ard's to add. After
-> that, we will just have to rely on the link to this submission for
-> follow ups.
+Now, if the pte is dirty _PAGE_DIRTY but without _PAGE_MODIFIED, after
+pte_modify() we lose _PAGE_DIRTY, then pte_dirty() returns false. So
+we need _PAGE_MODIFIED to record _PAGE_DIRTY here.
 
-Alright, this should be the final result. If there are any other Acks
-that come in later, they will just have to be recorded here. If there
-are any follow up fixes needed, I will apply them on top and update the
-tag but the branch will not be rebased.
+The new modification involves checking whether the original PTE has the
+_PAGE_DIRTY flag. If it exists, the _PAGE_MODIFIED bit is set, ensuring
+that the pte_dirty interface can return accurate information.
 
-Cheers,
-Nathan
+Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
+Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+---
+ arch/loongarch/include/asm/pgtable.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-The following changes since commit 3a8660878839faadb4f1a6dd72c3179c1df56787:
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index bd128696e96d..e0b92fe850b3 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -424,6 +424,9 @@ static inline unsigned long pte_accessible(struct mm_struct *mm, pte_t a)
+ 
+ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ {
++	if (pte_val(pte) & _PAGE_DIRTY)
++		pte_val(pte) |= _PAGE_MODIFIED;
++
+ 	return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
+ 		     (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
+ }
+@@ -547,6 +550,9 @@ static inline struct page *pmd_page(pmd_t pmd)
+ 
+ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+ {
++	if (pmd_val(pmd) & _PAGE_DIRTY)
++		pmd_val(pmd) |= _PAGE_MODIFIED;
++
+ 	pmd_val(pmd) = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
+ 				(pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
+ 	return pmd;
+-- 
+2.41.0
 
-  Linux 6.18-rc1 (2025-10-12 13:42:36 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kbuild/linux.git tags/kbuild-ms-extensions-6.19
-
-for you to fetch changes up to 5ff8ad3909524ad55297a434f87c238224825bf4:
-
-  kbuild: Add '-fms-extensions' to areas with dedicated CFLAGS (2025-10-30 21:26:28 -0400)
-
-----------------------------------------------------------------
-Shared branch between Kbuild and other trees for enabling '-fms-extensions' for 6.19
-
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-
-----------------------------------------------------------------
-Nathan Chancellor (2):
-      jfs: Rename _inline to avoid conflict with clang's '-fms-extensions'
-      kbuild: Add '-fms-extensions' to areas with dedicated CFLAGS
-
-Rasmus Villemoes (1):
-      Kbuild: enable -fms-extensions
-
- Makefile                              | 3 +++
- arch/arm64/kernel/vdso32/Makefile     | 3 ++-
- arch/loongarch/vdso/Makefile          | 2 +-
- arch/parisc/boot/compressed/Makefile  | 2 +-
- arch/powerpc/boot/Makefile            | 3 ++-
- arch/s390/Makefile                    | 3 ++-
- arch/s390/purgatory/Makefile          | 3 ++-
- arch/x86/Makefile                     | 4 +++-
- arch/x86/boot/compressed/Makefile     | 7 +++++--
- drivers/firmware/efi/libstub/Makefile | 4 ++--
- fs/jfs/jfs_incore.h                   | 6 +++---
- scripts/Makefile.extrawarn            | 4 +++-
- 12 files changed, 29 insertions(+), 15 deletions(-)
