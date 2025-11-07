@@ -1,93 +1,94 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A8E248886
-	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 20:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD90D312820;
+	Fri,  7 Nov 2025 23:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762546180; cv=none; b=kBwsdDOAuONvrx0uOsM7bMMvzf4+7w8qanr4ILbGzs3tDD9Tj/EwS1oFuaFrrf147IXIlyWWe7v/qQMyaTomuMSqDcXkSv4DnWaKZ6x/1eyuc4/IYsywniVzdLIOmiGefrknWCxLjxSH5MpjUixfQ2tPmWijE1cn0DBmvQ3vQto=
+	t=1762558649; cv=none; b=Cr3rnVE7fPPpQFQaOrjapfWqAY712bNJdSMcBnz/LTuU/1R1ZmZwQpzP6HfOzElnN+snIKSw1dQlxe68gOtRc++aCHpmmj2eM/LmO8j3QlTsPZhk8mE0qjAp0h2xWGy8eVP1i4gixNAmMzOCDnCYSCfoaemZp4cQQhpmhM8i/ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762546180; c=relaxed/simple;
-	bh=Idr3E/zkkeCEv8V7VDTGlmx/cWjJFzCzAiP8NExxQUk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=NJI0NYRjYtBBL7CrkGDE7MRKqTes6dwPg7pUWnWd4aE/l5o539DPab7Ob73i5JzpJXZqY6agEDAATm6gcXDPc6sz3ARsd9kObdJ1qxhlclVGqQDeuj/M03I3zqkIGprUa/63QubuyYsEk7oRq66H+9JVs3nfojLs8zsJu3jCuj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z/1nwnwC; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762558649; c=relaxed/simple;
+	bh=D0NNPWpR++qrShSzv1aC4sQ1DTsXVkK4wHvcpIxLu9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DOSEGr4m/VklWJj30ChyexnOYL/yDVZm1C+S2k0ZdP5uY0lNcjRLLjI3D2ISExrt+srQtH80IetUXo/Bw1snV4ijxEufAxVXoqnpWv/Lcl431/vlrnqM39LyeoKHdxEsncBEA8lgdmAS5aZEZLhfEPB0SuBspdxj5FxLZh8GiBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=dDXksjjD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/1nwnwC"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4ed614777a3so10109191cf.2
-        for <loongarch@lists.linux.dev>; Fri, 07 Nov 2025 12:09:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762546178; x=1763150978; darn=lists.linux.dev;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Idr3E/zkkeCEv8V7VDTGlmx/cWjJFzCzAiP8NExxQUk=;
-        b=Z/1nwnwC7nsYB8TZYPO+44sWPiUYHZKusXdhiV5Dnh2PcIrw6w+TIUE8fhk3KjnquS
-         r9bQlTSp0kqilcVDYrIKUDYBZ8QiX7yqIMRlXPCydCQTk23Zv/2857mj7UwO0CuNwlJh
-         EfhnggsXS6KncJIo4FHzDuyFYR0GYUEtO/InkNAaecvqSCU4GRlS2jXMiyIhc29hJL5f
-         62o62FY2cbSyr/Q4T3jMRi2salmf2qzjkurih1bgmBZ7DZbLletCob9e5gP1RYwpygLJ
-         mTEnaRRBL/umAMslLZKCtc+amXhfuVcsMfgD6aC9tguk2QaaURfmr1lv/RDBBQI4+qIx
-         Otyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762546178; x=1763150978;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Idr3E/zkkeCEv8V7VDTGlmx/cWjJFzCzAiP8NExxQUk=;
-        b=fLKEZyh9NI+aupPs4ZSqwMIKi3TkJFo5PTV2KDE13M/eBT7AFj9GOttaIauvNJN/21
-         rwGOJ8QeoCCBbs+1dq2UDsB0BLeYhbrXLZeBqJWGUJc5TRmCiqNNuPxNK5lhEHjedMST
-         7tMbjAxewrPMEGB3ZV7oxk6p0kORBvgQSayHWHrCwD8yGov10AGBSkim6mr3YBKpaL22
-         juv71Y75d5yRxrV/maVu0k3inzDhDSbhsYR5g88ird+fmchU4IfnxKTnLuBtNOpkH1gO
-         3X1BJ7DRm11cDaG2kIn0qGPuRqZUBFFUTHKfBUWsnvB3emRo5KPEBa4d8DJjbcGXhbtF
-         yqBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWaDOS5NwDLNjR6UTsRRrA1CKRLklJsx+j9HKbFJ8IRFWulAtJCxpBk6DDd+N5nvKBR1nZVs9ysyg4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwiaOg8iLNtZjDTCowrnYjiSC3qIKGECIcWMXuqx7cpjidg4ZLH
-	st6Mt1/l7ElUxC+B1wioNIQgDPM6YOcHGhxzIQEIobZQtKhkCAEagM1cngyO/QpckPCV0KNLv0h
-	fMgWXYp6nWatBbc98lb6q2F2vOqzQX50=
-X-Gm-Gg: ASbGncvKraLbWVJjsR8rnSArdOSQu5K1CFmTg1oou96/uyqQWLJB9jgmcDDk/VEahqx
-	juIH8nTtaCcErQnUYTrdyUzU1uTjVgP1zJvL+xFdrOGtOoLScQFuaLnWspxEa4gWFF8yYo6CfhN
-	rgL0wS64W2prbaZ4oHMA9PvITPrLGbNf20DKNLS/V0M5TmBvAP4UT355AJoeWWCItxJLooOYzYj
-	2JiCgTgGzzqXnbHB8fYY0yseTVUnIAy59CC9x9BB4643ozNISAIWHDmcyyWRZZ2lEKDcY8=
-X-Google-Smtp-Source: AGHT+IHxMNYE2agUs5ia3KtYOYyJ39kAtkS0Y0AdnWuc696h5UYKwOpNCsDewx+J37sAIHKpOdem4/yd6nMMNrA1O/8=
-X-Received: by 2002:a05:622a:488:b0:4eb:a10c:de05 with SMTP id
- d75a77b69052e-4eda4fc4054mr4425761cf.55.1762546177900; Fri, 07 Nov 2025
- 12:09:37 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="dDXksjjD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DCA4C16AAE;
+	Fri,  7 Nov 2025 23:37:26 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="dDXksjjD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1762558644;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dKdfc/nifvizPXu6zHyg6q4B2C0WsM/OrjAHPKMoa1E=;
+	b=dDXksjjDOnQQAvQYvE1Q2Si/elVheo7rfOJrlpPYzvIjolTh+DWB3ui0oD+WvKtYKtV2Ww
+	zVuEO6gqpBzF/6r8WDKVuMQ5M4RaIZEHQGhw8I82WVPVMX5+Ds9rkaDFEbCvWTMYH6NMS3
+	UtGxV+9w1jkJbyFOAxboRQuCCIQq60I=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b0f7e3ba (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 7 Nov 2025 23:37:24 +0000 (UTC)
+Date: Sat, 8 Nov 2025 00:37:15 +0100
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Nick Alcock <nick.alcock@oracle.com>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Shuah Khan <shuah@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	Russell King <linux@armlinux.org.uk>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Shannon Nelson <sln@onemain.com>, linux-kernel@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: Re: [PATCH v5 17/34] random: vDSO: remove ifdeffery
+Message-ID: <aQ6Cq_5kiIXllEoS@zx2c4.com>
+References: <20251106-vdso-sparc64-generic-2-v5-0-97ff2b6542f7@linutronix.de>
+ <20251106-vdso-sparc64-generic-2-v5-17-97ff2b6542f7@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Fri, 7 Nov 2025 12:09:26 -0800
-X-Gm-Features: AWmQ_bkBhTo4BVYlj6KKcomjXdZbr-JbnqhwFs_A5lBtURF5cTA6PMnQVPji-5Y
-Message-ID: <CAK3+h2wYcpc+OwdLDUBvg2rF9rvvyc5amfHT-KcFaK93uoELPg@mail.gmail.com>
-Subject: [BUG BPF]: fentry on wireguard module function interrupt VPN traffic
-To: Chenghao Duan <duanchenghao@kylinos.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251106-vdso-sparc64-generic-2-v5-17-97ff2b6542f7@linutronix.de>
 
-Hi Chenghao,
+On Thu, Nov 06, 2025 at 11:02:10AM +0100, Thomas Weißschuh wrote:
+> -#endif
+> +	if (IS_ENABLED(CONFIG_VDSO_GETRANDOM))
+> +		smp_store_release((unsigned long *)&vdso_k_rng_data->generation, next_gen + 1);
+> +
 
-Sorry to bug you and bring you bad news :). I think this issue might
-relate to the bpf trampoline module_attach issue. I have wireguard
-loaded as a kernel module on my LoongFire OS project [0] to have VPN
-service. wireguard by default does not log peer handshake messages
-unless kernel dynamic debug [1] is enabled, that I prefer not to, so I
-came up bpf fentry on wireguard function
-SEC("fentry/wg_socket_set_peer_endpoint") [2] to log the VPN peer IP
-address, but I noticed that once the fentry program is attached, I am
-unable to ping each other between VPN peers, then I compiled wireguard
-in kernel as built in CONFIG_WIREGUARD=y instead of
-CONFIG_WIREGUARD=m, the issue is gone. so it looks like there is some
-serious bug with fentry on kernel module functions. This issue does
-not happen to x86 regardless if wireguard is a kernel module or built
-in.
+This is possible because vdso_k_rng_data is now defined in the C source
+on all platforms and under all configurations, even if
+!CONFIG_VDSO_GETRANDOM means it's null? Whereas before, some config's
+headers didn't have this at all, so the #ifdef was necessary?
 
-[0]: https://github.com/vincentmli/loongfire
-[1]: https://www.procustodibus.com/blog/2021/03/wireguard-logs/
-[2]: https://github.com/vincentmli/libbpf-bootstrap/blob/loongfire-port/examples/c/wg_handshake.bpf.c#L31-L68
+If so, can you mention this in the commit message?
 
-Thanks
-
-Vincent
+Jason
