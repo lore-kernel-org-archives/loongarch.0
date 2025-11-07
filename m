@@ -1,101 +1,93 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739EA2DFA48
-	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 18:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A8E248886
+	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 20:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762538780; cv=none; b=JCm03dla3LH5tI6+IOhzt/GIapcBovk/mmp0WTXUmCinm2sLcathQld/o5M69hk35anowRPqs+WAncxt2kAuFL7sW/RY77/fwdOw/MvhzkmVvRRSUuwPyoWDvEsizYyEmJSpEXbx0AcB0cL2yTG5mK1p90BNiTw4nT/Dzca3nD0=
+	t=1762546180; cv=none; b=kBwsdDOAuONvrx0uOsM7bMMvzf4+7w8qanr4ILbGzs3tDD9Tj/EwS1oFuaFrrf147IXIlyWWe7v/qQMyaTomuMSqDcXkSv4DnWaKZ6x/1eyuc4/IYsywniVzdLIOmiGefrknWCxLjxSH5MpjUixfQ2tPmWijE1cn0DBmvQ3vQto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762538780; c=relaxed/simple;
-	bh=bXO08HsRuK2ScRN9CtJfzG/AzZSvuFwB4eE3T97HZ9w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ARvzRC2mrSQXWabpzic1ih87K3vkhe1VBpe1zuQTsbgitsMtrAchV/s8nfsOUYDL167iTQ/VHisUSJg6BYcT3by630RqrT5LrWhHF/0xo8txw7iVzhZCXJCVXKr3OEljNShUKYvSZbqiE4PD8Q2SCQztjej8DlZj6nARjiWDkGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZkKLfx16; arc=none smtp.client-ip=209.85.215.177
+	s=arc-20240116; t=1762546180; c=relaxed/simple;
+	bh=Idr3E/zkkeCEv8V7VDTGlmx/cWjJFzCzAiP8NExxQUk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=NJI0NYRjYtBBL7CrkGDE7MRKqTes6dwPg7pUWnWd4aE/l5o539DPab7Ob73i5JzpJXZqY6agEDAATm6gcXDPc6sz3ARsd9kObdJ1qxhlclVGqQDeuj/M03I3zqkIGprUa/63QubuyYsEk7oRq66H+9JVs3nfojLs8zsJu3jCuj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z/1nwnwC; arc=none smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkKLfx16"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b6329b6e3b0so634118a12.1
-        for <loongarch@lists.linux.dev>; Fri, 07 Nov 2025 10:06:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/1nwnwC"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4ed614777a3so10109191cf.2
+        for <loongarch@lists.linux.dev>; Fri, 07 Nov 2025 12:09:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762538779; x=1763143579; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MfwD5o72GvI3Oi7do9Qhg/wh9m8XWbNc1QLnbh3PlwA=;
-        b=ZkKLfx16SIF++jzLC3le+k5Ew/Fu+DkEGtmu9QnQDYJ3rlgmVY1q5U84aQDO/k8bM5
-         JPxzrETtL81mBfHOS/M6+pjLGWju5HJdPb4bMWDuUTlYqcqGEGlfgE0a03cKmZhmAHSt
-         O/6TfTLvLBVHrnOwWlCNUFA2cdxlgxxNOlSRoDDtHIcfI8lu6mHH/UPWwFrEvSjiLOfZ
-         bD7FoXWvZh5ZAUsVB9AhefVG8Y5CZvLZJtbu3JeuJUKnZdWBZradvdKLyqpCrQmlf6uw
-         TycKatiJ7sG/JJzgGAKUz3hFTU0wMP7dstiyNjM5Bwelzv/EVsmCVUWZIACfbYukNGJN
-         abEA==
+        d=gmail.com; s=20230601; t=1762546178; x=1763150978; darn=lists.linux.dev;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Idr3E/zkkeCEv8V7VDTGlmx/cWjJFzCzAiP8NExxQUk=;
+        b=Z/1nwnwC7nsYB8TZYPO+44sWPiUYHZKusXdhiV5Dnh2PcIrw6w+TIUE8fhk3KjnquS
+         r9bQlTSp0kqilcVDYrIKUDYBZ8QiX7yqIMRlXPCydCQTk23Zv/2857mj7UwO0CuNwlJh
+         EfhnggsXS6KncJIo4FHzDuyFYR0GYUEtO/InkNAaecvqSCU4GRlS2jXMiyIhc29hJL5f
+         62o62FY2cbSyr/Q4T3jMRi2salmf2qzjkurih1bgmBZ7DZbLletCob9e5gP1RYwpygLJ
+         mTEnaRRBL/umAMslLZKCtc+amXhfuVcsMfgD6aC9tguk2QaaURfmr1lv/RDBBQI4+qIx
+         Otyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762538779; x=1763143579;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MfwD5o72GvI3Oi7do9Qhg/wh9m8XWbNc1QLnbh3PlwA=;
-        b=wMq0ABaIrUMILeK++Zq8/PqRIAfDMA1RiqoPTe6r2L741Ef9BCnrKzmezwgIRdiP1O
-         ppJPP6w9/3iXm9K/R3xYJ5050eer1uLL3/qqmtb4gGkegar8zI55i9eHJzw9TGQ7iR0q
-         K9KlHGLfBMzbYeL2rBQUtVMg8Fk1YfDvQ77v6vBYxXBtCbIJyiTx5WhkUONe8rkNsGWD
-         r1t09qcbF+LUPK/ve0gdgnZxHiGIsROXUmqWUmGC4/TuwiIXEkV0pM++hRGRpaYweLWY
-         XvJFzLI9YIh0vx+jttdPhsHdOcovZjQ8rDM+Z0nyK4hm1+c06scsKFcUYDfUNmnXpnVo
-         v/Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxvALdeX/d64etoVwIYqkrWZlPIJdTBXsip3oNUsj3cnY8IM+TVQqfxkv9q2R/v6tFcMACjJ84TUE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzPv4ABBbcAyENVFyxJd3do8sZdSjvM1P3LkPMxmK9UySQBD0NA
-	vQODpPDAhDbYTlL4q1AqqZnZfUdFe3PgCM60tTR4P5zMJiia3LLA4uew
-X-Gm-Gg: ASbGncsmUSsW3P29nQ7RZUpC0KaDMIWZut66UUGLi5wweZx1ZN6zjzuNCysLFT1DMCj
-	t0vAPLlVChf+byJ5cPwi/1I9bA/3li3yboEj63h6YSM/12S3CkP1Z+AobfR7ax4/DA85lMiVuZ7
-	W6ZNP4Lu1E3EzhL9ERVY4GGDj/XEcC9bPVN9KIlh7TVQu60WsX4Rn/1jXZskM8DUWecgU2xz3GJ
-	XT6QnsrJfAU4xdeSb7kUmNqS3MWeS9J/sLMg0lCZM8pesW+HVh7uL0/xAMelHsRRJjHDrJxWUHJ
-	f3XnXdmCRV5zJL6yC5m9ePt+mYqX2GGVSzoY1idmKgVeHLe8TuYzt3fhpNwnrllCopQJywUM59M
-	LP8KU4YemsuOQRXvHvngLETaxbVIIl1jvG2+seevYEBaLZB5ryShCFC8HEfFJsfrF8kQN9Lid7K
-	1Sx3ysJ3ZqKBL9ZgtLQ01NG90ESKL8IStT
-X-Google-Smtp-Source: AGHT+IGYsvRM3j8jIBPNh/tOz/jpy7JkvOUnVH0lWt7NtuZkUURJAGNXeQqSigiGcSls55h1u/VBUA==
-X-Received: by 2002:a17:902:e80e:b0:24b:270e:56d4 with SMTP id d9443c01a7336-297e1d7667fmr4448295ad.4.1762538778577;
-        Fri, 07 Nov 2025 10:06:18 -0800 (PST)
-Received: from fedora (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-296509683easm66131215ad.15.2025.11.07.10.06.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 10:06:18 -0800 (PST)
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [PATCH] LoongArch: Remove __GFP_HIGHMEM masking
-Date: Fri,  7 Nov 2025 10:06:01 -0800
-Message-ID: <20251107180601.86483-1-vishal.moola@gmail.com>
-X-Mailer: git-send-email 2.51.1
+        d=1e100.net; s=20230601; t=1762546178; x=1763150978;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Idr3E/zkkeCEv8V7VDTGlmx/cWjJFzCzAiP8NExxQUk=;
+        b=fLKEZyh9NI+aupPs4ZSqwMIKi3TkJFo5PTV2KDE13M/eBT7AFj9GOttaIauvNJN/21
+         rwGOJ8QeoCCBbs+1dq2UDsB0BLeYhbrXLZeBqJWGUJc5TRmCiqNNuPxNK5lhEHjedMST
+         7tMbjAxewrPMEGB3ZV7oxk6p0kORBvgQSayHWHrCwD8yGov10AGBSkim6mr3YBKpaL22
+         juv71Y75d5yRxrV/maVu0k3inzDhDSbhsYR5g88ird+fmchU4IfnxKTnLuBtNOpkH1gO
+         3X1BJ7DRm11cDaG2kIn0qGPuRqZUBFFUTHKfBUWsnvB3emRo5KPEBa4d8DJjbcGXhbtF
+         yqBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWaDOS5NwDLNjR6UTsRRrA1CKRLklJsx+j9HKbFJ8IRFWulAtJCxpBk6DDd+N5nvKBR1nZVs9ysyg4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwiaOg8iLNtZjDTCowrnYjiSC3qIKGECIcWMXuqx7cpjidg4ZLH
+	st6Mt1/l7ElUxC+B1wioNIQgDPM6YOcHGhxzIQEIobZQtKhkCAEagM1cngyO/QpckPCV0KNLv0h
+	fMgWXYp6nWatBbc98lb6q2F2vOqzQX50=
+X-Gm-Gg: ASbGncvKraLbWVJjsR8rnSArdOSQu5K1CFmTg1oou96/uyqQWLJB9jgmcDDk/VEahqx
+	juIH8nTtaCcErQnUYTrdyUzU1uTjVgP1zJvL+xFdrOGtOoLScQFuaLnWspxEa4gWFF8yYo6CfhN
+	rgL0wS64W2prbaZ4oHMA9PvITPrLGbNf20DKNLS/V0M5TmBvAP4UT355AJoeWWCItxJLooOYzYj
+	2JiCgTgGzzqXnbHB8fYY0yseTVUnIAy59CC9x9BB4643ozNISAIWHDmcyyWRZZ2lEKDcY8=
+X-Google-Smtp-Source: AGHT+IHxMNYE2agUs5ia3KtYOYyJ39kAtkS0Y0AdnWuc696h5UYKwOpNCsDewx+J37sAIHKpOdem4/yd6nMMNrA1O/8=
+X-Received: by 2002:a05:622a:488:b0:4eb:a10c:de05 with SMTP id
+ d75a77b69052e-4eda4fc4054mr4425761cf.55.1762546177900; Fri, 07 Nov 2025
+ 12:09:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Fri, 7 Nov 2025 12:09:26 -0800
+X-Gm-Features: AWmQ_bkBhTo4BVYlj6KKcomjXdZbr-JbnqhwFs_A5lBtURF5cTA6PMnQVPji-5Y
+Message-ID: <CAK3+h2wYcpc+OwdLDUBvg2rF9rvvyc5amfHT-KcFaK93uoELPg@mail.gmail.com>
+Subject: [BUG BPF]: fentry on wireguard module function interrupt VPN traffic
+To: Chenghao Duan <duanchenghao@kylinos.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Remove unnecessary __GFP_HIGHMEM masking, which was introduced with
-commit 382739797f79 ("loongarch: convert various functions to use
-ptdescs"). GFP_KERNEL doesn't contain __GFP_HIGHMEM.
+Hi Chenghao,
 
-Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
----
- arch/loongarch/include/asm/pgalloc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry to bug you and bring you bad news :). I think this issue might
+relate to the bpf trampoline module_attach issue. I have wireguard
+loaded as a kernel module on my LoongFire OS project [0] to have VPN
+service. wireguard by default does not log peer handshake messages
+unless kernel dynamic debug [1] is enabled, that I prefer not to, so I
+came up bpf fentry on wireguard function
+SEC("fentry/wg_socket_set_peer_endpoint") [2] to log the VPN peer IP
+address, but I noticed that once the fentry program is attached, I am
+unable to ping each other between VPN peers, then I compiled wireguard
+in kernel as built in CONFIG_WIREGUARD=y instead of
+CONFIG_WIREGUARD=m, the issue is gone. so it looks like there is some
+serious bug with fentry on kernel module functions. This issue does
+not happen to x86 regardless if wireguard is a kernel module or built
+in.
 
-diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongarch/include/asm/pgalloc.h
-index 1c63a9d9a6d3..08dcc698ec18 100644
---- a/arch/loongarch/include/asm/pgalloc.h
-+++ b/arch/loongarch/include/asm/pgalloc.h
-@@ -88,7 +88,7 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
- static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
- {
- 	pud_t *pud;
--	struct ptdesc *ptdesc = pagetable_alloc(GFP_KERNEL & ~__GFP_HIGHMEM, 0);
-+	struct ptdesc *ptdesc = pagetable_alloc(GFP_KERNEL, 0);
- 
- 	if (!ptdesc)
- 		return NULL;
--- 
-2.51.1
+[0]: https://github.com/vincentmli/loongfire
+[1]: https://www.procustodibus.com/blog/2021/03/wireguard-logs/
+[2]: https://github.com/vincentmli/libbpf-bootstrap/blob/loongfire-port/examples/c/wg_handshake.bpf.c#L31-L68
 
+Thanks
+
+Vincent
