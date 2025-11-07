@@ -1,40 +1,44 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87BEB13D891
-	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 03:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 648A1D27E
+	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 06:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762487898; cv=none; b=SGTiBpSmLDeL6XclMw88LVlCO5fyzbG5HRzSNCRJN17yqRSPXfgVwVPsZNEWdOQVcv+tPdk4pFcble0379w3ihrvJE1NbzysTrQ085xzML0BCHq2wG+RVJHp6XJamMmFRf80sJFgsPoBWd3kADUDo9eRC2xhq65HeAurVZYIzSo=
+	t=1762495308; cv=none; b=TsKI02h60tlSp6dwfQ+4zQxkso6hrLt49JS78kqmrebbPHYgTpgWuR/0a16kyzenn/GcLaxmryWpfyfrC6eZ8U/GDewjEDmpu7GrAVwNb5RLKuu8YNn48GXCGFoPpN2inn3hYGy/sbhTVkb/Bjxnq4nMteiobY2qq1jyDZmH93E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762487898; c=relaxed/simple;
-	bh=PXrE+deCMowO9AFWIGSKYMU86NoDQh1TE8UqdrIAGWY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D7DPAeL+PdKodY5yeUjY3zC7739T1ExwhJFAYmMSs0SfJ+PjOK3ZDNq2TOGEON5Hskyg6qc2Y82alsvwGjQd8HbvdgAtc2vIXwjSlhgMBYE8lZcIBf2yqyi588K0RPKx2rdYEfDPg98ID7f9O/VExlhGbN8tiJlf8l5ePKtazMQ=
+	s=arc-20240116; t=1762495308; c=relaxed/simple;
+	bh=DAlDqk1rXhpwahNwT2Cg1Y/rqXr/V8IHS9Yne0GOJjI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ah2H49ZSknGYpzmrDePcUpC+khl0I+7e5ml18Y2FJ5NbUDiookG6C7xiY8tznXu3+sWAKPKaEFLucA4nVeRyMWJXhHCx4APLvEsyXxxJBQYyWxc/aTpT5BgzeCRc7T66HOwIbLrhDjtuQwHcJ6cp0wuZr+ebEJbCakSO9BE9coU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.57.136])
-	by gateway (Coremail) with SMTP id _____8Bxnr9Pbg1pEx8gAA--.2467S3;
-	Fri, 07 Nov 2025 11:58:07 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.57.136])
-	by front1 (Coremail) with SMTP id qMiowJDxQ+RObg1pVHgqAQ--.1001S2;
-	Fri, 07 Nov 2025 11:58:06 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	akpm@linux-foundation.org,
-	willy@infradead.org,
-	david@redhat.com,
-	linmag7@gmail.com,
-	thuth@redhat.com,
-	maobibo@loongson.cn,
-	apopple@nvidia.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Liupu Wang <wangliupu@loongson.cn>
-Subject: [PATCH v2] LoongArch: Let {pte,pmd}_modify() record the status of _PAGE_DIRTY
-Date: Fri,  7 Nov 2025 11:58:05 +0800
-Message-ID: <20251107035805.3094024-1-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.41.0
+Received: from loongson.cn (unknown [223.64.68.45])
+	by gateway (Coremail) with SMTP id _____8BxmdFHiw1pmiYgAA--.4543S3;
+	Fri, 07 Nov 2025 14:01:43 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.45])
+	by front1 (Coremail) with SMTP id qMiowJBxzsFCiw1pSJIqAQ--.32958S3;
+	Fri, 07 Nov 2025 14:01:43 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 1/5] watchdog: loongson1: Add missing MODULE_PARM_DESC
+Date: Fri,  7 Nov 2025 14:01:27 +0800
+Message-ID: <707bfcf1a45008ecf5c8d517430332a66d4ee758.1762482089.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <cover.1762482089.git.zhoubinbin@loongson.cn>
+References: <cover.1762482089.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,64 +46,54 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxQ+RObg1pVHgqAQ--.1001S2
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFW8uw1rtryfCrW8Zw45CFX_yoW8Wry7pF
-	s7AFykua1rKF1xAay3GF13Xr13AwsrGFn7GrnFkF1kGasIq3yUXrW8Krn8AFyrXay8Za48
-	XrsYgw45WF47AwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
+X-CM-TRANSID:qMiowJBxzsFCiw1pSJIqAQ--.32958S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgETCGkNihMACAAAst
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Gr4DWw45Jw1xJryUKrWkXwc_yoWkJFc_Gr
+	yxZwn3Wr1DGF12q3Wjv3WFyrW09F4Uu3Z8uF1kKFW3Aa93try5CrWvqrWUWr13ZFW8Xr13
+	Ja1UXrWF93srKosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb78YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_
+	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8rwIDUUUUU==
 
-Now, if the pte is dirty _PAGE_DIRTY but without _PAGE_MODIFIED, after
-pte_modify() we lose _PAGE_DIRTY, then pte_dirty() returns false. So
-we need _PAGE_MODIFIED to record _PAGE_DIRTY here.
+Add documentation for module_param so that they're visible with
+modinfo command.
 
-The new modification involves checking whether the original PTE has the
-_PAGE_DIRTY flag. If it exists, the _PAGE_MODIFIED bit is set, ensuring
-that the pte_dirty interface can return accurate information.
-
-Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- arch/loongarch/include/asm/pgtable.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/watchdog/loongson1_wdt.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index bd128696e96d..e0b92fe850b3 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -424,6 +424,9 @@ static inline unsigned long pte_accessible(struct mm_struct *mm, pte_t a)
+diff --git a/drivers/watchdog/loongson1_wdt.c b/drivers/watchdog/loongson1_wdt.c
+index 0587ff44d3a1..8502263b0d6f 100644
+--- a/drivers/watchdog/loongson1_wdt.c
++++ b/drivers/watchdog/loongson1_wdt.c
+@@ -18,10 +18,14 @@
+ #define DEFAULT_HEARTBEAT	30
  
- static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- {
-+	if (pte_val(pte) & _PAGE_DIRTY)
-+		pte_val(pte) |= _PAGE_MODIFIED;
-+
- 	return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
- 		     (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
- }
-@@ -547,6 +550,9 @@ static inline struct page *pmd_page(pmd_t pmd)
+ static bool nowayout = WATCHDOG_NOWAYOUT;
+-module_param(nowayout, bool, 0444);
++module_param(nowayout, bool, 0);
++MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
++		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
  
- static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
- {
-+	if (pmd_val(pmd) & _PAGE_DIRTY)
-+		pmd_val(pmd) |= _PAGE_MODIFIED;
-+
- 	pmd_val(pmd) = (pmd_val(pmd) & _HPAGE_CHG_MASK) |
- 				(pgprot_val(newprot) & ~_HPAGE_CHG_MASK);
- 	return pmd;
+ static unsigned int heartbeat;
+-module_param(heartbeat, uint, 0444);
++module_param(heartbeat, uint, 0);
++MODULE_PARM_DESC(heartbeat, "Watchdog heartbeat in seconds. (default="
++		 __MODULE_STRING(DEFAULT_HEARTBEAT) ")");
+ 
+ struct ls1x_wdt_drvdata {
+ 	void __iomem *base;
 -- 
-2.41.0
+2.47.3
 
