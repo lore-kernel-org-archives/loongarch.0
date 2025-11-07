@@ -1,91 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECF8296BB6
-	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 10:13:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4B32BE658;
+	Fri,  7 Nov 2025 17:21:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762510415; cv=none; b=QjD6o9axWnDwayRCj9qkhMZZ7FUuSG5oSnMQHBY76Aql6YgmgAYJNec3Eh2pCYnXEjNvU3yBDoHSV7ZvVPpfo9tfz+yNkqL5VxiKVUDc/sGA8aLcGG+bj0Nfhx9b8FbMusuZhrGn3oEWd14RJovROTtlETdZ3sEcBs5nj6l25SU=
+	t=1762536062; cv=none; b=CxnGNmCZkYlCDAe3pX3Lr+gzM5WSjU/is1M23HzhqZN2NINA/8GNUIKGo3LPvcpUCDHmpHI3EG+J2D9huVY41WX25U5914H7EDqyzMvW5v4pZGBRjVcK0nw151FnR7b5B4hnPQ+FgUwfo4lsCGjSXW+tLZt/TGxClM/IN4SOJGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762510415; c=relaxed/simple;
-	bh=OGshpqcs1YvljdbZBs4NQqzOW1YzzqsZt8BfUaOPWY8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tksB5NvWc2C3ss9Cs0FsceXmdDry/wZdw48SkMQIVS23p2j6B3j/FdmjONOIo67oVAeWx3phZBIuCu7XBjCOcR0Vfem63CJO6FmW4PO0/ZlT3UKFr7lFZgooaxplHfD4ags2LzhZ38hgaJFmoIu4WAyedS1vEpHEV0P25dpWNbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORzl9Ttm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762536062; c=relaxed/simple;
+	bh=GvZYa5F5ySYoW05pxUy3AyDv6FWq9BSflVcoFS5vqck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EgV5XjTbRo/DATXrue9n/zuHmzlzcOwmSblVQ+lf2WW2FpKX6twfbyqKUg3ezPeAwjhuWwzDy2uXJUeQz5DZq5UY4TGkc+pMxrEZm6RM/wnTEJCUKIsX8md0qPOXtWro7uBNvvNLGFebMLG+b0hKho9/1LK1HpSvGa5c7iHxpoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PtZWpcp6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORzl9Ttm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E2E3C19422
-	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 10:13:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PtZWpcp6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A55C4CEF8;
+	Fri,  7 Nov 2025 17:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762510415;
-	bh=OGshpqcs1YvljdbZBs4NQqzOW1YzzqsZt8BfUaOPWY8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ORzl9Ttmz800bs6Y3Gz4IJR4J8svpSc8mZPRPmJciXDsh5lH+4enXcP5XmvB8cWpx
-	 Bknj+gebjuRy5sJsYJwvedeasd2UccI0vRvf5+srZYBScFPdiJk4UyZoPJDX5e417Y
-	 uzbOy5UXjSbSpeNiJTvzo8gqvAAxqfhK8MdW7hi4DBKslkj22Xj37dcGSzdoG9Lb77
-	 d/DnUzQOhX5v+jpcMAkfoj+hK1UzjhHWEuuZkkV+yQ+jzncT56bThutSPR7+xyQ5c6
-	 9WW0Fdq5owYgNNfq7v7FzqZRrTVaG7YFGhBaEHwWbEU3sG43dUB71fKIAD1rGfM3bG
-	 pXseKMd4qFeHQ==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-640ca678745so1012606a12.2
-        for <loongarch@lists.linux.dev>; Fri, 07 Nov 2025 02:13:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXq+xMmpuMDoiYRWe6NvhA2IVCuEViYoOJymfLMLm0+6xUiYwhjzOE2BUX2ea8CJXLV39sMQUchU3E=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwyXQf9IsDoxoiCDbELzb23E/Lt/vLmIYUzET36t1ZUKGP4b+Je
-	U8xW0cVMpuigkQypE9zdMejvQOWW0ywj/qys/IVSQBXyzAKO7dxqJrUGaebYj9kv4lnOMyyJ2qt
-	2YH3/EXOZqJ+JZcqBsp3QVq6J6EwC6Gs=
-X-Google-Smtp-Source: AGHT+IGJ9V/JQkTy0+fgCgt349C4363n7tsGZkHo3CZh519KFUKouqIns+HiecBdH84g1hnG+TsedjrB/PAjCC7/frA=
-X-Received: by 2002:a17:906:9f84:b0:b70:be0b:6ba8 with SMTP id
- a640c23a62f3a-b72c0d77caamr285981866b.61.1762510413841; Fri, 07 Nov 2025
- 02:13:33 -0800 (PST)
+	s=k20201202; t=1762536061;
+	bh=GvZYa5F5ySYoW05pxUy3AyDv6FWq9BSflVcoFS5vqck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PtZWpcp6S7pCvN2YBf8QF92ntcb6O70LvS12dppm4LaBzj5f1kKE9LEl/yue1fOSR
+	 UUHBsRCMTVFTjQt98QqX/u44BidjYP12wdZA/xOEPEvOSGXztnHhFa7s6alZui/QhQ
+	 PAnbiNcbv5DTaDKklm0pxbgPobHN4DYeV1ij2jNnBPPtClYMmXoe3t3JluSIM5judI
+	 GMb/KDGxDn42T5o9JUdSOBnc1Z5yQQtuxF3XPpH65gTjaBtBg6zv7FpMbkid5hdt6Z
+	 ngJo/RyBpZnJWeFZZ8nDERuVv0L1ZaZOyn8pckGalAS5kKfnpm7D6OpgYjzymMQtMc
+	 26JnvEZjgWbsg==
+Date: Fri, 7 Nov 2025 17:20:56 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] dt-bindings: watchdog: loongson,ls1x-wdt: Add
+ ls2k0300-wdt compatible
+Message-ID: <20251107-scandal-fifteen-5d11ebeea512@spud>
+References: <cover.1762482089.git.zhoubinbin@loongson.cn>
+ <a1f64f3d3816620b690aaff7b87162ba9e5b155f.1762482089.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251024072001.3164600-1-maobibo@loongson.cn>
-In-Reply-To: <20251024072001.3164600-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 7 Nov 2025 18:13:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H69wDWRoJEspck722fpRAeuS__7vWcGz1nEU5kDuz+Lww@mail.gmail.com>
-X-Gm-Features: AWmQ_bnnlZ0vnXXi7bLnzpFH5--xXP0QsVHebyebKIoTmY54c8nzJiNGtrW3fG0
-Message-ID: <CAAhV-H69wDWRoJEspck722fpRAeuS__7vWcGz1nEU5kDuz+Lww@mail.gmail.com>
-Subject: Re: [PATCH 0/2] LoongArch: KVM: Restore guest PMU if it is enabled
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Xianglai Li <lixianglai@loongson.cn>, Song Gao <gaosong@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hXx4OH+R/PAhzxJP"
+Content-Disposition: inline
+In-Reply-To: <a1f64f3d3816620b690aaff7b87162ba9e5b155f.1762482089.git.zhoubinbin@loongson.cn>
 
-Applied, thanks.
 
-Huacai
+--hXx4OH+R/PAhzxJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, Oct 24, 2025 at 3:20=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> On LoongArch system, guest PMU hardware is shared by guest and host
-> and PMU interrupt is separated. PMU is pass-through to VM, and there is
-> PMU context switch when exit to host and return to guest.
->
-> There is optimiation to check whether PMU is enabled by guest. If not,
-> it is not necessary to return to guest. However it is enabled, PMU
-> context for guest need switch on. Now KVM_REQ_PMU notification is set
-> on vcpu context switch, however it is missing if there is no vcpu context
-> switch and PMU is used by guest VM.
->
-> Also there is code cleanup about PMU checking on vCPU sched-on callback,
-> since it is already checked on VM exit entry or VM PMU CSR access abort
-> routine.
->
-> Bibo Mao (2):
->   LoongArch: KVM: Restore guest PMU if it is enabled
->   LoongArch: KVM: Skip PMU checking on vCPU context switch
->
->  arch/loongarch/kvm/vcpu.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
->
->
-> base-commit: 6fab32bb6508abbb8b7b1c5498e44f0c32320ed5
-> --
-> 2.39.3
->
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+pw-bot: not-applicable
+
+--hXx4OH+R/PAhzxJP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaQ4qeAAKCRB4tDGHoIJi
+0rcsAP4kyl9qKvFLpCvfCrj3UQUFnhCqaE277gT7JePNPQuDJQEA9TucVHY3R0j/
+59WO2zJGDl9XnrSUTTSyKXj8hs7s0AI=
+=U3mR
+-----END PGP SIGNATURE-----
+
+--hXx4OH+R/PAhzxJP--
