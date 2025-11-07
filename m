@@ -1,92 +1,91 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D75A37405A
-	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 09:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECF8296BB6
+	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 10:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762508945; cv=none; b=CzHPnpWyMortLus9MYm3zKBFox8XvmqPfpqG1Hwnh2C/Ns/zMCKjEvH33SGhOh+5cZjaVjxUNDok2EgN7qTAqkVW71g3FGwoNJfTO2+DNJXTO3hZ1jYorba7JQaATy72eo5fBEkLTyn/WyMdAH+1V6JJVFlVcnshQXTT4IRF+KM=
+	t=1762510415; cv=none; b=QjD6o9axWnDwayRCj9qkhMZZ7FUuSG5oSnMQHBY76Aql6YgmgAYJNec3Eh2pCYnXEjNvU3yBDoHSV7ZvVPpfo9tfz+yNkqL5VxiKVUDc/sGA8aLcGG+bj0Nfhx9b8FbMusuZhrGn3oEWd14RJovROTtlETdZ3sEcBs5nj6l25SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762508945; c=relaxed/simple;
-	bh=fe75sjK0pOyoToV9r2FlNemCMcnmSJDfSY8eP+vAGEs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RZesODxy0A1YFcdzpOzf1KSM9p2L0McC1zSJHGezwTHFFuAQ4Djl5ooyaQHiyNrlgIEquh/LKv1ELNYI2VVCUoF40U9fxDT9CkZNMECE8PjrNBzJoUZWL1aWEIhHooDC06xSFD4BwLgngoOPe41MxOSKU/afgn0w66kCITA7+88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.45])
-	by gateway (Coremail) with SMTP id _____8Cxbb+JwA1p1kEgAA--.3599S3;
-	Fri, 07 Nov 2025 17:48:57 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.45])
-	by front1 (Coremail) with SMTP id qMiowJDxK8F8wA1pz7wqAQ--.21331S2;
-	Fri, 07 Nov 2025 17:48:57 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Use correct accessor to read FWPC/MWPC
-Date: Fri,  7 Nov 2025 17:48:36 +0800
-Message-ID: <20251107094836.3093983-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1762510415; c=relaxed/simple;
+	bh=OGshpqcs1YvljdbZBs4NQqzOW1YzzqsZt8BfUaOPWY8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tksB5NvWc2C3ss9Cs0FsceXmdDry/wZdw48SkMQIVS23p2j6B3j/FdmjONOIo67oVAeWx3phZBIuCu7XBjCOcR0Vfem63CJO6FmW4PO0/ZlT3UKFr7lFZgooaxplHfD4ags2LzhZ38hgaJFmoIu4WAyedS1vEpHEV0P25dpWNbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORzl9Ttm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORzl9Ttm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E2E3C19422
+	for <loongarch@lists.linux.dev>; Fri,  7 Nov 2025 10:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762510415;
+	bh=OGshpqcs1YvljdbZBs4NQqzOW1YzzqsZt8BfUaOPWY8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ORzl9Ttmz800bs6Y3Gz4IJR4J8svpSc8mZPRPmJciXDsh5lH+4enXcP5XmvB8cWpx
+	 Bknj+gebjuRy5sJsYJwvedeasd2UccI0vRvf5+srZYBScFPdiJk4UyZoPJDX5e417Y
+	 uzbOy5UXjSbSpeNiJTvzo8gqvAAxqfhK8MdW7hi4DBKslkj22Xj37dcGSzdoG9Lb77
+	 d/DnUzQOhX5v+jpcMAkfoj+hK1UzjhHWEuuZkkV+yQ+jzncT56bThutSPR7+xyQ5c6
+	 9WW0Fdq5owYgNNfq7v7FzqZRrTVaG7YFGhBaEHwWbEU3sG43dUB71fKIAD1rGfM3bG
+	 pXseKMd4qFeHQ==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-640ca678745so1012606a12.2
+        for <loongarch@lists.linux.dev>; Fri, 07 Nov 2025 02:13:35 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXq+xMmpuMDoiYRWe6NvhA2IVCuEViYoOJymfLMLm0+6xUiYwhjzOE2BUX2ea8CJXLV39sMQUchU3E=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwyXQf9IsDoxoiCDbELzb23E/Lt/vLmIYUzET36t1ZUKGP4b+Je
+	U8xW0cVMpuigkQypE9zdMejvQOWW0ywj/qys/IVSQBXyzAKO7dxqJrUGaebYj9kv4lnOMyyJ2qt
+	2YH3/EXOZqJ+JZcqBsp3QVq6J6EwC6Gs=
+X-Google-Smtp-Source: AGHT+IGJ9V/JQkTy0+fgCgt349C4363n7tsGZkHo3CZh519KFUKouqIns+HiecBdH84g1hnG+TsedjrB/PAjCC7/frA=
+X-Received: by 2002:a17:906:9f84:b0:b70:be0b:6ba8 with SMTP id
+ a640c23a62f3a-b72c0d77caamr285981866b.61.1762510413841; Fri, 07 Nov 2025
+ 02:13:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxK8F8wA1pz7wqAQ--.21331S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zw4rKF1fCF45tr15GF1Dtwc_yoW8JF47pr
-	srAr95GFW5Kas7CFZ3tr13ur4YqFs7u34ava48K39FvF1DX3y3Wr95Jr9IqFy5G3yrXw4F
-	qFsI9r4S9a1jvwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOb18UUUUU=
+References: <20251024072001.3164600-1-maobibo@loongson.cn>
+In-Reply-To: <20251024072001.3164600-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 7 Nov 2025 18:13:31 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H69wDWRoJEspck722fpRAeuS__7vWcGz1nEU5kDuz+Lww@mail.gmail.com>
+X-Gm-Features: AWmQ_bnnlZ0vnXXi7bLnzpFH5--xXP0QsVHebyebKIoTmY54c8nzJiNGtrW3fG0
+Message-ID: <CAAhV-H69wDWRoJEspck722fpRAeuS__7vWcGz1nEU5kDuz+Lww@mail.gmail.com>
+Subject: Re: [PATCH 0/2] LoongArch: KVM: Restore guest PMU if it is enabled
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Xianglai Li <lixianglai@loongson.cn>, Song Gao <gaosong@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-CSR.FWPC and CSR.MWPC are 32bit registers, so use csr_read32() rather
-than csr_read64() to read the values of FWPC/MWPC.
+Applied, thanks.
 
-Cc: stable@vger.kernel.org
-Fixes: edffa33c7bb5a73 ("LoongArch: Add hardware breakpoints/watchpoints support")
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/hw_breakpoint.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Huacai
 
-diff --git a/arch/loongarch/include/asm/hw_breakpoint.h b/arch/loongarch/include/asm/hw_breakpoint.h
-index 13b2462f3d8c..5faa97a87a9e 100644
---- a/arch/loongarch/include/asm/hw_breakpoint.h
-+++ b/arch/loongarch/include/asm/hw_breakpoint.h
-@@ -134,13 +134,13 @@ static inline void hw_breakpoint_thread_switch(struct task_struct *next)
- /* Determine number of BRP registers available. */
- static inline int get_num_brps(void)
- {
--	return csr_read64(LOONGARCH_CSR_FWPC) & CSR_FWPC_NUM;
-+	return csr_read32(LOONGARCH_CSR_FWPC) & CSR_FWPC_NUM;
- }
- 
- /* Determine number of WRP registers available. */
- static inline int get_num_wrps(void)
- {
--	return csr_read64(LOONGARCH_CSR_MWPC) & CSR_MWPC_NUM;
-+	return csr_read32(LOONGARCH_CSR_MWPC) & CSR_MWPC_NUM;
- }
- 
- #endif	/* __KERNEL__ */
--- 
-2.47.3
-
+On Fri, Oct 24, 2025 at 3:20=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> On LoongArch system, guest PMU hardware is shared by guest and host
+> and PMU interrupt is separated. PMU is pass-through to VM, and there is
+> PMU context switch when exit to host and return to guest.
+>
+> There is optimiation to check whether PMU is enabled by guest. If not,
+> it is not necessary to return to guest. However it is enabled, PMU
+> context for guest need switch on. Now KVM_REQ_PMU notification is set
+> on vcpu context switch, however it is missing if there is no vcpu context
+> switch and PMU is used by guest VM.
+>
+> Also there is code cleanup about PMU checking on vCPU sched-on callback,
+> since it is already checked on VM exit entry or VM PMU CSR access abort
+> routine.
+>
+> Bibo Mao (2):
+>   LoongArch: KVM: Restore guest PMU if it is enabled
+>   LoongArch: KVM: Skip PMU checking on vCPU context switch
+>
+>  arch/loongarch/kvm/vcpu.c | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+>
+>
+> base-commit: 6fab32bb6508abbb8b7b1c5498e44f0c32320ed5
+> --
+> 2.39.3
+>
