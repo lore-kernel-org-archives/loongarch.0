@@ -1,113 +1,154 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 100FE13B58C
-	for <loongarch@lists.linux.dev>; Sun,  9 Nov 2025 02:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E8ED1FE47C
+	for <loongarch@lists.linux.dev>; Sun,  9 Nov 2025 03:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762655566; cv=none; b=WxITwhEcHfjoERAEDWQD9OHw5KEIkAHtWv0q7pas1PMtlZWKyTINEX6TgnYO5crgacaISNXy1dyhbrRMRj6vLkgxRclh+veQb31RItAD2eBNELI6Dhi1zMSDPRI5u36QenJ6R+42K6rDhaKTFOEcrE8L1MlZEFC+ftjhGePTnXU=
+	t=1762658621; cv=none; b=H0AdwBnUtNNIApGWUVSk4fTraUqhceKO/GMzElCUKK32r/ik3bpqO93JtXpYnoX47jp3KiATZ7wd9Jh+gOxzprd1qxM7cq1GYLQXpAkR+98dl+0xvaCFkIK0lFbSfGL3WDS3gsHiRDrX+7xnjavriI/y5skXMB/g7FF63sv+mpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762655566; c=relaxed/simple;
-	bh=yP0wUqwDv+VrvJrRl4MeGRT5eX9vSWFZy6msvm4MXXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y/LkuJHrUQ65STZS44IdXoLT9XVtQMifNhYqNjUpH8iOsIOCXNsEwodbKf2v/6U0x2cfSTlUR222VBth2Hkm7RPfcXJlHtNIBAPyoEgT0gsNPh26Ewjhx5UKuPbrldK5UTcJnLfGDQLEYC62JiKyuPnJKVlMS2CaYUtwN3cUOGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.45])
-	by gateway (Coremail) with SMTP id _____8Bx39NK_Q9p69cgAA--.1070S3;
-	Sun, 09 Nov 2025 10:32:42 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.45])
-	by front1 (Coremail) with SMTP id qMiowJAxleQ4_Q9pqzAsAQ--.2346S2;
-	Sun, 09 Nov 2025 10:32:41 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Consolidate early_ioremap()/ioremap_prot()
-Date: Sun,  9 Nov 2025 10:32:14 +0800
-Message-ID: <20251109023214.355231-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1762658621; c=relaxed/simple;
+	bh=QowzrGaBLdVxsRT22hxlBmbEeOIOwFKSItzXthyIZLc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=L/GMpCXJMm3v47A1sQQGw8ZKYpDG2LhAkVUTpF2N9wLsHhscAigjq57ua1XC8uxjiAAU0VyxK+/AcchizQdjskSSHq1KqqH9m3Wh81J3OkDB2zvGxcN/GQA1BOd/AIEgw3b44FoxlEr3p8CqNiJzoKpYnc+hO6TXxS6xsZcWEEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 5947792009C; Sun,  9 Nov 2025 04:23:31 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 57A8792009B;
+	Sun,  9 Nov 2025 03:23:31 +0000 (GMT)
+Date: Sun, 9 Nov 2025 03:23:31 +0000 (GMT)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Arnd Bergmann <arnd@arndb.de>
+cc: Andy Lutomirski <luto@kernel.org>, 
+    =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+    "David S . Miller" <davem@davemloft.net>, 
+    Andreas Larsson <andreas@gaisler.com>, 
+    Nick Alcock <nick.alcock@oracle.com>, John Stultz <jstultz@google.com>, 
+    Stephen Boyd <sboyd@kernel.org>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+    shuah <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+    Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+    "Jason A . Donenfeld" <Jason@zx2c4.com>, 
+    Russell King <linux@armlinux.org.uk>, 
+    Madhavan Srinivasan <maddy@linux.ibm.com>, 
+    Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+    Christophe Leroy <christophe.leroy@csgroup.eu>, 
+    Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+    Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+    Alexander Gordeev <agordeev@linux.ibm.com>, 
+    Christian Borntraeger <borntraeger@linux.ibm.com>, 
+    Sven Schnelle <svens@linux.ibm.com>, Shannon Nelson <sln@onemain.com>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+    linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+    loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+    linux-s390@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
+Subject: Re: [PATCH v5 00/34] sparc64: vdso: Switch to the generic vDSO
+ library
+In-Reply-To: <6452c785-872a-4fe7-90e1-8138d73c6218@app.fastmail.com>
+Message-ID: <alpine.DEB.2.21.2511090221080.25436@angie.orcam.me.uk>
+References: <20251106-vdso-sparc64-generic-2-v5-0-97ff2b6542f7@linutronix.de> <b870aa47-5ed4-4dcf-a407-eca83d1733d8@app.fastmail.com> <6452c785-872a-4fe7-90e1-8138d73c6218@app.fastmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxleQ4_Q9pqzAsAQ--.2346S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AFy5tFyrur1kAr1rJFyUXFc_yoW8ury8pF
-	92kr1kJFs8Kr1xGFykJFy7Wr1UtFnrKFWIqFW2kF9xu3Wjvr18ZrWkCr90vFyUXa95KFWr
-	XrZ3Wa43CF4UJagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+Content-Type: text/plain; charset=US-ASCII
 
-1. Use phys_addr_t instead of u64, which can work for both 32/64 bits.
-2. Check whether the input physical address is above TO_PHYS_MASK (and
-   return NULL if yes) for the DMW version.
+On Sat, 8 Nov 2025, Arnd Bergmann wrote:
 
-Note: In theory early_ioremap() also need the TO_PHYS_MASK checking, but
-the UEFI BIOS pass some DMW virtual addresses.
+> On other architectures, I see that parisc (always aliasing) has stubbed
+> out the vdso functions, while mips/loongson has limited the page size
+> selection to never alias. A few other mips platforms can theoretically
+> enable both small pages and vdso, but my guess is that in practice
+> they don't use the vdso (mips32/ath79) or they use 16KB pages
+> (rm, dec, ip22) based on the defconfig settings.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/io.h | 5 ++++-
- arch/loongarch/mm/ioremap.c     | 2 +-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ Umm, I'd have to dive into the details (and I hardly have the resources 
+at hand), but quite a bunch of MIPS microarchitectures suffer from cache 
+aliases; some even have VIVT caches.  A quick check with a system I have 
+running at my lab:
 
-diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
-index eaff72b38dc8..0130185e0349 100644
---- a/arch/loongarch/include/asm/io.h
-+++ b/arch/loongarch/include/asm/io.h
-@@ -14,7 +14,7 @@
- #include <asm/pgtable-bits.h>
- #include <asm/string.h>
- 
--extern void __init __iomem *early_ioremap(u64 phys_addr, unsigned long size);
-+extern void __init __iomem *early_ioremap(phys_addr_t phys_addr, unsigned long size);
- extern void __init early_iounmap(void __iomem *addr, unsigned long size);
- 
- #define early_memremap early_ioremap
-@@ -25,6 +25,9 @@ extern void __init early_iounmap(void __iomem *addr, unsigned long size);
- static inline void __iomem *ioremap_prot(phys_addr_t offset, unsigned long size,
- 					 pgprot_t prot)
- {
-+	if (offset > TO_PHYS_MASK)
-+		return NULL;
-+
- 	switch (pgprot_val(prot) & _CACHE_MASK) {
- 	case _CACHE_CC:
- 		return (void __iomem *)(unsigned long)(CACHE_BASE + offset);
-diff --git a/arch/loongarch/mm/ioremap.c b/arch/loongarch/mm/ioremap.c
-index df949a3d0f34..27c336959fe8 100644
---- a/arch/loongarch/mm/ioremap.c
-+++ b/arch/loongarch/mm/ioremap.c
-@@ -6,7 +6,7 @@
- #include <asm/io.h>
- #include <asm-generic/early_ioremap.h>
- 
--void __init __iomem *early_ioremap(u64 phys_addr, unsigned long size)
-+void __init __iomem *early_ioremap(phys_addr_t phys_addr, unsigned long size)
- {
- 	return ((void __iomem *)TO_CACHE(phys_addr));
- }
--- 
-2.47.3
+$ ldd /bin/true
+        linux-vdso.so.1 =>  (0x77ff4000)
+        libc.so.6 => /lib/libc.so.6 (0x77e50000)
+        /lib/ld.so.1 (0x77fcc000)
+$ getconf PAGESIZE
+4096
+$ dmesg | grep linesize
+Primary instruction cache 32kB, VIPT, 4-way, linesize 32 bytes.
+Primary data cache 32kB, 4-way, VIPT, cache aliases, linesize 32 bytes
+MIPS secondary cache 512kB, 8-way, linesize 32 bytes.
+$ 
 
+Some microarchitectures have aliasing prevention implemented in hardware, 
+e.g. with the MTI 24K core:
+
+                 Table 6-31 Config7 Register Field Descriptions
+-------------+---------------------------------------------+-------+---------
+   Fields    |                                             |       |
+------+------+                                             | Read/ |  Reset 
+ Name | Bits |                Description                  | Write |  State
+======+======+=============================================+=======+=========
+      |      | Alias removed: This bit indicates that the  |       |
+      |      | data cache is organized to avoid virtual    |       |
+  AR  |  16  | aliasing problems.  This bit is only set if |   R   |  Based
+      |      | the data cache config and MMU type would    |       |  on HW
+      |      | normally cause aliasing - i.e., only for    |       | present
+      |      | the 32KB data cache and TLB-based MMU.      |       |
+------+------+---------------------------------------------+-------+---------
+
+But this is entirely optional and not architecturally guaranteed; Config7 
+is a vendor space register.
+
+ DEC platforms have a selectable page size (for R4k CPUs; R3k CPUs have a 
+PIPT write-through cache, so no issue with aliasing ever) and 4KiB is the 
+common choice, but they never suffer from aliases as the hardware resolves 
+them.  It's not completely transparent as with the 24K option shown above, 
+as a virtual coherency exception is triggered instead, at separate levels 
+for the I$ and D$ each, and we handle it in software:
+
+$ getconf PAGESIZE
+4096
+$ dmesg | grep linesize
+Primary instruction cache 16kB, VIPT, direct mapped, linesize 16 bytes.
+Primary data cache 16kB, direct mapped, VIPT, cache aliases, linesize 16 bytes
+Unified secondary cache 1024kB direct mapped, linesize 32 bytes.
+$ uptime
+ 02:46:16  up 250 days,  4:03,  2 users,  load average: 0.01, 0.01, 0.00
+$ cat /proc/cpuinfo
+system type		: Digital DECstation 5000/2x0
+machine			: Unknown
+processor		: 0
+cpu model		: R4400SC V4.0  FPU V0.0
+BogoMIPS		: 59.60
+wait instruction	: no
+microsecond timers	: yes
+tlb_entries		: 48
+extra interrupt vector	: no
+hardware watchpoint	: yes, count: 0, address/irw mask: []
+isa			: mips1 mips2 mips3
+ASEs implemented	:
+Options implemented	: tlb 4kex 4k_cache fpu 32fpr cache_cdex_p cache_cdex_s llsc dc_aliases inclusive_pcaches nan_legacy
+shadow register sets	: 1
+kscratch registers	: 0
+package			: 0
+core			: 0
+VCED exceptions		: 372522
+VCEI exceptions		: 16922804
+
+$ 
+
+(see the figures at the bottom; uptime quoted for an idea of the rate, 
+though the system hasn't been heavily loaded).  It is possible with the 
+aid of S$, which is inclusive and PIPT.
+
+ FWIW,
+
+  Maciej
