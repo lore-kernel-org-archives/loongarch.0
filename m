@@ -1,100 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EB42D9EE0
-	for <loongarch@lists.linux.dev>; Sat,  8 Nov 2025 11:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1BA838F9C
+	for <loongarch@lists.linux.dev>; Sun,  9 Nov 2025 02:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762602881; cv=none; b=qQzuOqdvuOHuu0VJRqZvaEyyer1t9vJO+Z+04OfYBYhBmj/Rfug2IZEofFhOUp2k67MkDycc8IZVO3GyeiALUnoEENLVF0Un0MHH+zB7pqHGeYhSgKdRJidAd0JalDB52rdSf+cgV9CWRzj6iEGEfOrIv4ta0vFHCGHjABwDTTE=
+	t=1762655531; cv=none; b=nnbemNRag0Nf70K5+EO5rHsHzUeK3d6Oh39QXp+P7aX+oKzlWKfc3CqpzrEUK/Uzqv0uPEi1ElP7eeoQw3xKeqBor6UCeueYU408TYYjaQDMI/nDAa0RNKYQsLv8FtxPqD+n701aaZMNpbI8f10JZJq1nNl1J8ouuScgVDTZS0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762602881; c=relaxed/simple;
-	bh=JjmBnOELtYL2Z+Ms8Gl+U+Kgb9+9vO49fpmGW17yLhY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mk6cbpa1jpFbb0dj25qzydGhaoBJRdDptZUbtAAiMp7rlOzyyfa4/uNUzyvzHYXseZPUO/lOQI6zbQb5LOh3x+nOT5dkVykpEC5k9rN5yDvE6wgJtrPoVbji3IKaDK97YT7kZzCgNofI7zpJnXdkda5bupUkvInexfl+Dv4A0KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/BMyzUu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/BMyzUu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F93DC19421
-	for <loongarch@lists.linux.dev>; Sat,  8 Nov 2025 11:54:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762602881;
-	bh=JjmBnOELtYL2Z+Ms8Gl+U+Kgb9+9vO49fpmGW17yLhY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=f/BMyzUuLaPNNqL7OBffPO1on/itoPTd27U51krMmrstpD8eyowLSJ+QmhArJHTho
-	 TnMcIUrj9yI7fqVuc2tXFLnNgo8wC+tpYP13ap2sJVHZaGGdYvChZ+zi/WyRc7kDVX
-	 n6vkbkUhRl7gCchpkVQoiNWhKR4CvFDTccLJ0XDPAX96n6kkUc35ta41U9tJpFIzb1
-	 uHvvrCjWtrpAh3F+HcGEv+VEo34Z7wZjQ8EKTDCgQbKcpBrhArTnQKY71EhEz+ywuM
-	 SLzp9mSXmBLeIQxoCHs7/zNtEMYlGEmk/Yto8KZTQbk/saI1AOYZ0PozZeno2j2A5B
-	 1oga+DsOWgj+w==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b728a43e410so345886366b.1
-        for <loongarch@lists.linux.dev>; Sat, 08 Nov 2025 03:54:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXgC4RhMV/ChLW/msFmAy2vRMiwneg9EMKe2TRQzUbXy1fTBk+qh0YMcJmRWvRfs+QWj++DFKYYDgk=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxhuev2zcgJ6njAUKlhl9ATLNa37PkTlwUtCFXwEEBEDOqiI3lM
-	Fj++YDp0IWmHVxwimYL2nhtr3npvbm1ACSydGoDNjXddtOuKUPvb91dHr87Y9Xska6LTrGSTU6j
-	3LnAUL1FTIbfW/6MwLhqyfqIH+Q2s424=
-X-Google-Smtp-Source: AGHT+IHqBYT+axB9BZiN2sqZeeRbAIRm5Jznc2Lzyd1nIVtQAooGjUjXpKVeEoEBYy1D8Y2EU6h2crd5Lp0qkuxnMZo=
-X-Received: by 2002:a17:907:c13:b0:b71:ee24:8a41 with SMTP id
- a640c23a62f3a-b72e061a8edmr197739366b.55.1762602880135; Sat, 08 Nov 2025
- 03:54:40 -0800 (PST)
+	s=arc-20240116; t=1762655531; c=relaxed/simple;
+	bh=+OlPW1AdN85L2JeJwK1sgOjpmR2yyqTYsWYoymCotZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O83KhjVQPUsKfulbylHcsUlLK1plEo5HCtJvGpXzmeZXYo8C5pmoThvJF5UkBmrHhJay5+S091Ygd69tjXo+qW5bCoFpIV9r2B+HZKVtN4IXf7FRsiPfKkwQuN2icpuFfCu9Xc0UtfKIyn+1gM9YgjNT7BDqjD7WcMPhPsk5QNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.45])
+	by gateway (Coremail) with SMTP id _____8AxTNIl_Q9pz9cgAA--.1037S3;
+	Sun, 09 Nov 2025 10:32:05 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.45])
+	by front1 (Coremail) with SMTP id qMiowJAxleQT_Q9pdzAsAQ--.2345S2;
+	Sun, 09 Nov 2025 10:32:04 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: Use physical addresses for CSR_MERRENTRY/CSR_TLBRENTRY
+Date: Sun,  9 Nov 2025 10:31:36 +0800
+Message-ID: <20251109023136.355207-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251107180601.86483-1-vishal.moola@gmail.com>
-In-Reply-To: <20251107180601.86483-1-vishal.moola@gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 8 Nov 2025 19:54:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H58u2xXYG0X3giazizpuBqT-0qdGojbBsmwD2U1Z7D_vQ@mail.gmail.com>
-X-Gm-Features: AWmQ_blKLKtaUFkaK1b4OmOoYr8cN9MHEprk0cMi9STYqXx46onfrqx2NUZin-Y
-Message-ID: <CAAhV-H58u2xXYG0X3giazizpuBqT-0qdGojbBsmwD2U1Z7D_vQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Remove __GFP_HIGHMEM masking
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxleQT_Q9pdzAsAQ--.2345S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKr13Aryftw1kuF45CFykWFX_yoWkAFc_Zr
+	1xCw4UWr4kAayjkw1jyw4fWF15Za1IqF4Yka4I9rZ3AF15Ar1xCwsxJas8ZrZ0g3y3Krsx
+	Z3y7GFnIkr1jkosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8l38UUUUUU==
 
-Hi, Vishal,
+Now we use virtual addresses to fill CSR_MERRENTRY/CSR_TLBRENTRY, but
+hardware hope physical addresses. Now it works well because the high
+bits are ignored above PA_BITS (48 bits), but explicitly use physical
+addresses can avoid potential bugs. So fix it.
 
-On Sat, Nov 8, 2025 at 2:06=E2=80=AFAM Vishal Moola (Oracle)
-<vishal.moola@gmail.com> wrote:
->
-> Remove unnecessary __GFP_HIGHMEM masking, which was introduced with
-> commit 382739797f79 ("loongarch: convert various functions to use
-> ptdescs"). GFP_KERNEL doesn't contain __GFP_HIGHMEM.
-I have planned to submit a similar patch after [1] is merged, but
-anyway, thank you for your contribution.
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/traps.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[1] https://lore.kernel.org/linux-mm/CAAhV-H5C_Af72a5QcJs25qUMsJqO26=3D8oNv=
-vLrJ7z+xHZh8oKQ@mail.gmail.com/T/#t
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 3d9be6ca7ec5..da5926fead4a 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -1131,8 +1131,8 @@ static void configure_exception_vector(void)
+ 	tlbrentry = (unsigned long)exception_handlers + 80*VECSIZE;
+ 
+ 	csr_write64(eentry, LOONGARCH_CSR_EENTRY);
+-	csr_write64(eentry, LOONGARCH_CSR_MERRENTRY);
+-	csr_write64(tlbrentry, LOONGARCH_CSR_TLBRENTRY);
++	csr_write64(__pa(eentry), LOONGARCH_CSR_MERRENTRY);
++	csr_write64(__pa(tlbrentry), LOONGARCH_CSR_TLBRENTRY);
+ }
+ 
+ void per_cpu_trap_init(int cpu)
+-- 
+2.47.3
 
-Huacai
-
->
-> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-> ---
->  arch/loongarch/include/asm/pgalloc.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongarch/includ=
-e/asm/pgalloc.h
-> index 1c63a9d9a6d3..08dcc698ec18 100644
-> --- a/arch/loongarch/include/asm/pgalloc.h
-> +++ b/arch/loongarch/include/asm/pgalloc.h
-> @@ -88,7 +88,7 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm=
-, unsigned long address)
->  static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long a=
-ddress)
->  {
->         pud_t *pud;
-> -       struct ptdesc *ptdesc =3D pagetable_alloc(GFP_KERNEL & ~__GFP_HIG=
-HMEM, 0);
-> +       struct ptdesc *ptdesc =3D pagetable_alloc(GFP_KERNEL, 0);
->
->         if (!ptdesc)
->                 return NULL;
-> --
-> 2.51.1
->
->
