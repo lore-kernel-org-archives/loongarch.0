@@ -1,139 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018D52FBDF3;
-	Mon, 10 Nov 2025 11:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D7CD26F467
+	for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 12:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762774827; cv=none; b=k4vWHmFV4D1fgrcR7ZS1fi5YzLR+MhKcRs66Ha9A4fMe478v+T0dxhU+D1TX5dpX7tUwcUCHjR40KQpn9UUPRc9RLptROFzNrYJOjpad4QYVjwotnuYENY8+08zW4SUgv8ktdUiYztk9RV1yphysCkKstVe9brj3lLj55c5I6rg=
+	t=1762777481; cv=none; b=DiTnD4y1z7wTxRFZ+kl5AYF6xzzzocOXNA2RSm+r1uueWGBajBb+e44UM2zFQJpv5tHYO9bAvlCBptPnqNHibCts4MKx71rf65WgJFvXrA2nfXlNOwMRWz5YwoKLqGW7u1budPsIT0SxbABFDR+rkn7tjStD+9AV+XiMHKj3riE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762774827; c=relaxed/simple;
-	bh=VfU7HS9kW0PhHJZv2kXFACmzP980fzfTaKTjUj8rwZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S/gFpPPrpu82W1TimN81mxEVqcrFVtHifrYlM8iGuTy8JohY3EDLOjXHsvJyw7AgRKa6x5vjoF5NwvW8m6Col/KoBwcZbY1xTCnzuGJzcjzCN3dnI+NEvb56uBQXPUh44TL3pxrhBbH+/QI9gNLB+H7bF//GWaX/1GExw7ZBMNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=MkcLnaBT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="MkcLnaBT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 175A8C19421;
-	Mon, 10 Nov 2025 11:40:23 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="MkcLnaBT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1762774821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WUP/wtp+QdGXlvt3yNjaBtNTKb3hr2sjUsHqlx5bmiE=;
-	b=MkcLnaBThnMlfY6qf22oV4PqRJxxV9sAEsGKWW9vBI8C6fduJC1phQC/KL5eRD3v2F09zD
-	SMKKUag6VL9wsRLpIcAWX8HR444SZKLYuhbVw7XsNVIJ5uIDVyRfrdP33rS+EubmBkHMzC
-	XsknOx/WV33HVZ0CEH07YX7KePjg4M4=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9d386279 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 10 Nov 2025 11:40:20 +0000 (UTC)
-Date: Mon, 10 Nov 2025 12:40:17 +0100
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Nick Alcock <nick.alcock@oracle.com>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Shuah Khan <shuah@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-	Russell King <linux@armlinux.org.uk>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Shannon Nelson <sln@onemain.com>, linux-kernel@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-s390@vger.kernel.org
-Subject: Re: [PATCH v5 19/34] random: vDSO: only access vDSO datapage after
- random_init()
-Message-ID: <aRHPIXATFJAEv-CF@zx2c4.com>
-References: <20251106-vdso-sparc64-generic-2-v5-0-97ff2b6542f7@linutronix.de>
- <20251106-vdso-sparc64-generic-2-v5-19-97ff2b6542f7@linutronix.de>
- <aQ6EvdukQytvqK-u@zx2c4.com>
- <20251110094555-353883a9-1950-4cc6-a774-bb0ef5db11c5@linutronix.de>
- <aRHAU7bVAIyaOrpA@zx2c4.com>
- <20251110114550-a3f2afa8-4f86-4048-be5b-2dc4f4ef340d@linutronix.de>
+	s=arc-20240116; t=1762777481; c=relaxed/simple;
+	bh=5F52AzEPXsCHU2TlETR3GM8Gqw/rYkrelJ/fFBb3pdo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Qb8bccdxCuLNOWACAFFwpdP/fbtRjaZgz53RYNWv81tSjwkSOKY9MLR0tQqyVreYQJ8qFciydJYjouCEPioZ97hEJp8lTF/knfDjXK66TkeRJQYA9rsTBb3ITW+bbU0V8u9hluBHjkVtZQ1ZGzpDjlrMKFhxW0ci3uE5dGEBETU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.10.40.23])
+	by gateway (Coremail) with SMTP id _____8BxT_B82RFpWXchAA--.6422S3;
+	Mon, 10 Nov 2025 20:24:28 +0800 (CST)
+Received: from [10.10.40.23] (unknown [10.10.40.23])
+	by front1 (Coremail) with SMTP id qMiowJCxG8F52RFpzx0uAQ--.32684S3;
+	Mon, 10 Nov 2025 20:24:25 +0800 (CST)
+Subject: Re: [PATCH v2 0/2] LoongArch: Refine init_hw_perf_events()
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ akpm@linux-foundation.org, vishal.moola@gmail.com, arnd@arndb.de
+References: <20251110025906.17096-1-yangtiezhu@loongson.cn>
+ <CAAhV-H4=ZfYfRFE8VYmxyKxTAi8E=YKysG1fzed4kZRWnMUoeA@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <4deb96d9-509c-3b3f-934f-58de8d29241b@loongson.cn>
+Date: Mon, 10 Nov 2025 20:24:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CAAhV-H4=ZfYfRFE8VYmxyKxTAi8E=YKysG1fzed4kZRWnMUoeA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251110114550-a3f2afa8-4f86-4048-be5b-2dc4f4ef340d@linutronix.de>
+X-CM-TRANSID:qMiowJCxG8F52RFpzx0uAQ--.32684S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tFWUuw13AFW7Aw4kZw15WrX_yoW8XFyfpF
+	WDAFsI9r4DGrn7ZF4qga18WFyjqF1kWr9IgFy8J3s8uFWDZ3Wvvw18ur4xuF97Xr98KF1j
+	qFyfXa4kuFyUA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkU
+	UUUU=
 
-On Mon, Nov 10, 2025 at 12:24:13PM +0100, Thomas Weißschuh wrote:
-> > > > For example, one clean way of
-> > > > doing that would be to make vdso_k_rng_data always valid by having it
-> > > > initially point to __initdata memory, and then when it's time to
-> > > > initialize the real datapage, memcpy() the __initdata memory to the new
-> > > > specially allocated memory. Then we don't need the complex state
-> > > > tracking that this commit and the prior one introduce.
-> > > 
-> > > Wouldn't that require synchronization between the update path and the memcpy()
-> > > path? Also if the pointer is going to change at some point we'll probably need
-> > > to use READ_ONCE()/WRITE_ONCE(). In general I would be happy about a cleaner
-> > > solution for this but didn't find a great one.
-> > 
-> > This is still before userspace has started, and interrupts are disabled,
-> > so I don't think so?
+在 2025/11/10 下午2:48, Huacai Chen 写道:
+> V1 was applied last week and now in linux-next, don't do meaningless work.
 > 
-> Interrupts being disabled is a good point. But we are still leaking
-> implementation details from the random code into the vdso datastore.
-
-It wouldn't. You do this generically with memcpy().
-
+> Huacai
 > 
-> > Also, you only care about being after
-> > mm_core_init(), right? So move your thing before sched_init() and then
-> > you'll really have nothing to worry about.
-> 
-> The callchains random_init_early() -> crng_reseed()/_credit_init_bits() could
-> still touch the datapage before it is allocated.
-> Adding conditionals to prevent those is essentially what my patch does.
+> On Mon, Nov 10, 2025 at 10:59 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> This version is based on 6.18-rc5, use the proper patch title
+>> to make it clear.
+>>
+>> Tiezhu Yang (2):
+>>    LoongArch: Use CPUCFG6_PMNUM_SHIFT to get PMU number
+>>    LoongArch: Detect PMU bits via CPUCFG instruction
+>>
+>>   arch/loongarch/include/asm/loongarch.h | 1 +
+>>   arch/loongarch/kernel/perf_event.c     | 7 ++++---
+>>   2 files changed, 5 insertions(+), 3 deletions(-)
 
-I think I wasn't very clear in my proposal, because this isn't an issue
-in it.
+I do not like to argue with you, but I do not think what you said is
+right, there are double standards here.
 
-Global scope:
+The code are rebased frequently by you in linux-loongson.git, the latest
+is after 6.18-rc5 that is in this week, my patch is also rebased.
 
-static struct vdso_rng_data placeholder_vdso_k_rng_data __initdata;
-struct vdso_rng_data *vdso_k_rng_data = &placeholder_vdso_k_rng_data;
+You accepted the suggestion of your patch v1 title [1] and send v2 [2]
+although v1 has been applied by Andrew, because you think it is a good
+suggestion.
 
-Then,
+I just do the similar and right thing,  but your reply is not polite
+and friendly, and also do not do the thing what you should to do as a
+maintainer.
 
-void __init vdso_setup_data_pages(void)
-{
-    ...
-    vdso_k_rng_data = blabla();
-    ...
-    memcpy(vdso_k_rng_data, &placeholder_vdso_k_rng_data, sizeof(*vdso_k_rng_data);
-    ...
-}
+[1] 
+https://lore.kernel.org/linux-mm/20251108084724.3e389b6597294900347b0476@linux-foundation.org/
 
-If vdso_setup_data_pages() is called early enough in init, this is safe
-to do, and then you don't need to muck up the random code with awful
-state machine ordering stuff.
+[2] 
+https://lore.kernel.org/linux-mm/20251109021817.346181-1-chenhuacai@loongson.cn/
 
-Jason
+[3] 
+https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/commit/?h=loongarch-fixes&id=4c8a7c982772
+
+Thanks,
+Tiezhu
+
