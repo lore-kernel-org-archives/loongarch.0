@@ -1,126 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489CF314B6B
-	for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 14:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6617258EC3
+	for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 15:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762786772; cv=none; b=TBmjA4fXX73t9VnlGaWwvGEVg5MNOPpv+MYLI9iXwllIMBOHWLV2PZO3PF0tTxCGd/wbPkuZSYK20fUthrytQaDQ9XMpAbPma9lUNixK6xwAgCwzfTgKy5qdZt+9EVlcrO10RPIqO3FLQTpb4pzovi8Gr/CEMZvVF9Hx4qqVZI8=
+	t=1762789394; cv=none; b=D1h2d/tOUO4g3JfLgUekanjjR2vdgUfgy300gRo3GHRRkwP5CrvkU3ydKKzGyQetM+yr6o/xevFTD5oO8ZixgkbT3a2higOEWBZ5ugPkxuJL5QqAsGed0UQn4z62tO+4TNNNqzBGdXIfe8z3Oo0HrC4oT1kyL1ZEXYMeOApgK7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762786772; c=relaxed/simple;
-	bh=PkKyE5AHzhJy/4LiMXi5ErssS1dpQk0dA4EYefZXhSg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VwhZWa85ivxK8iAYI/JCAgCueQsgudGATn6vTSmNrGxuFHwvzUewxWMuV6dX1dic6NFGetGomTJqv+O8Tqneo6r2FY9+ybgW7jZVhecpNSyXMIaDY1urWhQRqQYzo4ax0ZY8RPbQ3mA7W1Ps1Kg/iM7LvijPCXbj6VofkLSIHzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wn3frxFW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762789394; c=relaxed/simple;
+	bh=Z6QBCawmA0V88I7dtIc6ikzQytNDqs3gMMcaJjnYR/s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NELnuwqPBi/WODUAIhKmfiCPmhhdZfFYRXiIgzslt3sZWkOQB5hr63cNOHvL+Atn0yyk/vYqlDDihE3l2KFpq1YX9oddzp8r1KAC2Uz/POIrq+yHVt7vDUFHmndJMG8sLOf94Pz8RTLfh3RrH+vG9JqQQX98c+OXtzoe0wMW6qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gf+BmCKf; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wn3frxFW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFF5C19424
-	for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 14:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762786772;
-	bh=PkKyE5AHzhJy/4LiMXi5ErssS1dpQk0dA4EYefZXhSg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Wn3frxFWXMscOKo4zV0Lg2HxLXFmwAKILwFkXNCIXxRXkC+lHAVgSTrSwiMVxyZjz
-	 0lyEWWzJXl6zBMnzOv8T8U0CbIfrB+aQR6XM7OXj4ZTbMQc3daizkXfLOAArUKYbsr
-	 VXAfGqwmxbk5d+VSP6Mq0azUHQxaCsC3rmiTaYtRrDOJbPydrbp1V0bTjaB5poKB44
-	 vDUnv0OJHNc6BIKWE4NlVlkcA1Zlze2k7DeKE6MGZtb6O5Ue2rAevzTZQeQpnZeYGN
-	 A2w0qvxT77V1Ziiwk/3gbw4n+Aj40Qj4xlvuft9EpgsiTfn+yw8peyZpnNLlCG++nX
-	 sqihjDGHGG2pQ==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b72bf7e703fso562191866b.2
-        for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 06:59:31 -0800 (PST)
-X-Gm-Message-State: AOJu0Yxc3e8vfJhXIuPTJ/Cx8axNklQTjE/RiipBzOhETYgrJb0a5ban
-	5fnqVhHBNuJJ7qFIB46OifJIHgSffzvYgFVSJJRFSsKwXxaEPiGFpCDvZGcZRaEmmjnCOEqORUi
-	IkOXHEC4EYnIVm/xcgzEjpoyaE8a4LNs=
-X-Google-Smtp-Source: AGHT+IH0g5tuzCAga9f8nm1U6xI8QuDy+NNxNGTsAl9AUpJHsCKMTDvBZoGWU5yHN3ywDyiM40N1FGtq7yVontI2ESQ=
-X-Received: by 2002:a17:907:3f9b:b0:b72:62b2:26a1 with SMTP id
- a640c23a62f3a-b72e0337345mr675259266b.19.1762786770480; Mon, 10 Nov 2025
- 06:59:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gf+BmCKf"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3438b1220bcso1665386a91.2
+        for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 07:43:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1762789392; x=1763394192; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=87FfliXTeIYU4Ti4q0mlK1AlR2N3oXTPIRkcYWMY8TY=;
+        b=Gf+BmCKfmAIBCtqgl8CWC2KVDJZAvbomroByBQC5cr1Zp/X763KCNZ2J/v8m1pMSC3
+         x0VXBddqEzzRHGHEaCzZypmq5jIXJIBXZH56vextlwdj68mCm6VroxnLwrG1Ctdm/F5e
+         rrl8OjolbddSAcA3KwEcWxGB6jQpcHgRFash3YAX7lkdBJJZ9Wj7xhhmXxl9a5eh+eop
+         foiKf3XvvAFdVyMrxgHEDPamjl64lLHJGoo2i+5GPMam6WyG/SCqiVqrLnsxX9U+Zs6H
+         5aYHTW7LC/HxGheUxKHQTxZboT19gwHwEl3vrDwxwm7FL+bb2iqcrur4upT4t3JXgkhG
+         ltdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762789392; x=1763394192;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=87FfliXTeIYU4Ti4q0mlK1AlR2N3oXTPIRkcYWMY8TY=;
+        b=CECwzw8w7byuu407wdqYyKLE2yTHeLioDy8BJzYKRluYFWXzgs1CmVsaOUr+XQLUWY
+         Q5ZG7FNGKbja8LsSq0325ylyIx1naF3KwnibmvysSGWRUqwvY9wP5hGQHZ2r0URuJRNB
+         Jygjn6o9vVfvIRfV+f0duLwSV4RnWpNPbdrni2msbnd6lL7r+udKZQI5KbLULsTgJcYm
+         yTo+kbUVsezm28M6z0SdeiFBHht+RxaQ2dbYzc4H3tVuBlf368790ffoSKU4fvoMcT7J
+         g469rwd8pKb08HHfhllgASrxxkwG0YqXwG5EQxCSLtaxiwo85uGpfqGs7pjtUn2oC8ej
+         M6Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCPtokptvyUelaemMPPkbYfm8AptXZa67mpx5ILavk3TZrZFi4ufrYgDegKiYUhLstSbMPmVZkrR0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzZWHV9PCWJ0iRsUICFzQPvlSObvmacnIW3x9cFMTEf823GhvJn
+	6l8mfrZqwgoVWoT84b3l1OlcdrY0k5IRu71TAvj6oucfp5TZmQy2wBP6W0Y2zNwDfWa6+J2RkRD
+	g1j6vbw==
+X-Google-Smtp-Source: AGHT+IGU2QqcHJOpKVyUh8wnC6DXg/rmfR5MmGRMoX3raYINDU0h+4Ytj4+FRCcbgxWr/CiKwQo1uRnxIsY=
+X-Received: from pjbdw16.prod.google.com ([2002:a17:90b:950:b0:343:6849:31ae])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a10:b0:341:124f:474f
+ with SMTP id 98e67ed59e1d1-3436cd0c3e9mr10428985a91.32.1762789392114; Mon, 10
+ Nov 2025 07:43:12 -0800 (PST)
+Date: Mon, 10 Nov 2025 07:37:29 -0800
+In-Reply-To: <20251030200951.3402865-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20251110025906.17096-1-yangtiezhu@loongson.cn>
- <CAAhV-H4=ZfYfRFE8VYmxyKxTAi8E=YKysG1fzed4kZRWnMUoeA@mail.gmail.com> <4deb96d9-509c-3b3f-934f-58de8d29241b@loongson.cn>
-In-Reply-To: <4deb96d9-509c-3b3f-934f-58de8d29241b@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 10 Nov 2025 22:59:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4J0VAYBDNMK0APws5uZXDJ--cpgmKdjU40+iSu62rNpA@mail.gmail.com>
-X-Gm-Features: AWmQ_bmOvCgFAGs2qsph0XjgIEaCahryG7gsqdcwWrN3RaQSfyH_JD2xqw2_P2Q
-Message-ID: <CAAhV-H4J0VAYBDNMK0APws5uZXDJ--cpgmKdjU40+iSu62rNpA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] LoongArch: Refine init_hw_perf_events()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, vishal.moola@gmail.com, arnd@arndb.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20251030200951.3402865-1-seanjc@google.com>
+X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
+Message-ID: <176278827443.918905.17609380057567446021.b4-ty@google.com>
+Subject: Re: [PATCH v4 00/28] KVM: x86/mmu: TDX post-populate cleanups
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	"Kirill A. Shutemov" <kas@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, x86@kernel.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>, 
+	Kai Huang <kai.huang@intel.com>, Binbin Wu <binbin.wu@linux.intel.com>, 
+	Michael Roth <michael.roth@amd.com>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Vishal Annapurve <vannapurve@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Ackerley Tng <ackerleytng@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Nov 10, 2025 at 8:24=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> =E5=9C=A8 2025/11/10 =E4=B8=8B=E5=8D=882:48, Huacai Chen =E5=86=99=E9=81=
-=93:
-> > V1 was applied last week and now in linux-next, don't do meaningless wo=
-rk.
-> >
-> > Huacai
-> >
-> > On Mon, Nov 10, 2025 at 10:59=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongs=
-on.cn> wrote:
-> >>
-> >> This version is based on 6.18-rc5, use the proper patch title
-> >> to make it clear.
-> >>
-> >> Tiezhu Yang (2):
-> >>    LoongArch: Use CPUCFG6_PMNUM_SHIFT to get PMU number
-> >>    LoongArch: Detect PMU bits via CPUCFG instruction
-> >>
-> >>   arch/loongarch/include/asm/loongarch.h | 1 +
-> >>   arch/loongarch/kernel/perf_event.c     | 7 ++++---
-> >>   2 files changed, 5 insertions(+), 3 deletions(-)
->
-> I do not like to argue with you, but I do not think what you said is
-> right, there are double standards here.
->
-> The code are rebased frequently by you in linux-loongson.git, the latest
-> is after 6.18-rc5 that is in this week, my patch is also rebased.
->
-> You accepted the suggestion of your patch v1 title [1] and send v2 [2]
-> although v1 has been applied by Andrew, because you think it is a good
-> suggestion.
->
-> I just do the similar and right thing,  but your reply is not polite
-> and friendly, and also do not do the thing what you should to do as a
-> maintainer.
-If my words make you uncomfortable, I apologize for that.
+On Thu, 30 Oct 2025 13:09:23 -0700, Sean Christopherson wrote:
+> Non-x86 folks, as with v3, patches 1 and 2 are likely the only thing of
+> interest here.  They make kvm_arch_vcpu_async_ioctl() mandatory and then
+> rename it to kvm_arch_vcpu_unlocked_ioctl().
+> 
+> As for the x86 side...
+> 
+> Clean up the TDX post-populate paths (and many tangentially related paths) to
+> address locking issues between gmem and TDX's post-populate hook[*], and
+> within KVM itself (KVM doesn't ensure full mutual exclusivity between paths
+> that for all intents and purposes the TDX-Module requires to be serialized).
+> 
+> [...]
 
-But something is different.
+Applied to kvm-x86 tdx, with fixups for the various typos.  Thanks for all the
+reviews and testing!
 
-1, I asked Andrew whether I should re-submit V2, Andrew said yes, then
-I re-submit. You asked me, too, but you re-submit in a hurry before I
-reply.
+Other KVM arch maintainers, please holler if you want a stable tag for the
+kvm_arch_vcpu_async_ioctl() changes (they're based directly on v6.18-rc4).
 
-2, Yes, linux-loongson.git is rebased, but the commits keep the same,
-this is because: A, changeset for PR should be based on a tag commit
-rather than a random commit; B, the commits in linux-next should keep
-stable for at least two days before send PR.
+[01/28] KVM: Make support for kvm_arch_vcpu_async_ioctl() mandatory
+        https://github.com/kvm-x86/linux/commit/0a0da3f92118
+[02/28] KVM: Rename kvm_arch_vcpu_async_ioctl() to kvm_arch_vcpu_unlocked_ioctl()
+        https://github.com/kvm-x86/linux/commit/50efc2340a59
+[03/28] KVM: TDX: Drop PROVE_MMU=y sanity check on to-be-populated mappings
+        https://github.com/kvm-x86/linux/commit/5294a4b93e07
+[04/28] KVM: x86/mmu: Add dedicated API to map guest_memfd pfn into TDP MMU
+        https://github.com/kvm-x86/linux/commit/3ab3283dbb2c
+[05/28] KVM: x86/mmu: WARN if KVM attempts to map into an invalid TDP MMU root
+        https://github.com/kvm-x86/linux/commit/c1f173fb3389
+[06/28] Revert "KVM: x86/tdp_mmu: Add a helper function to walk down the TDP MMU"
+        https://github.com/kvm-x86/linux/commit/fe7413e39810
+[07/28] KVM: x86/mmu: Rename kvm_tdp_map_page() to kvm_tdp_page_prefault()
+        https://github.com/kvm-x86/linux/commit/6de2fb089bb2
+[08/28] KVM: TDX: Drop superfluous page pinning in S-EPT management
+        https://github.com/kvm-x86/linux/commit/ce7b5695397b
+[09/28] KVM: TDX: Return -EIO, not -EINVAL, on a KVM_BUG_ON() condition
+        https://github.com/kvm-x86/linux/commit/e6348c90dda9
+[10/28] KVM: TDX: Fold tdx_sept_drop_private_spte() into tdx_sept_remove_private_spte()
+        https://github.com/kvm-x86/linux/commit/b836503300dc
+[11/28] KVM: x86/mmu: Drop the return code from kvm_x86_ops.remove_external_spte()
+        https://github.com/kvm-x86/linux/commit/7139c8606505
+[12/28] KVM: TDX: WARN if mirror SPTE doesn't have full RWX when creating S-EPT mapping
+        https://github.com/kvm-x86/linux/commit/b9d5cf6de0b6
+[13/28] KVM: TDX: Avoid a double-KVM_BUG_ON() in tdx_sept_zap_private_spte()
+        https://github.com/kvm-x86/linux/commit/24adff397052
+[14/28] KVM: TDX: Use atomic64_dec_return() instead of a poor equivalent
+        https://github.com/kvm-x86/linux/commit/af96d5452e5e
+[15/28] KVM: TDX: Fold tdx_mem_page_record_premap_cnt() into its sole caller
+        https://github.com/kvm-x86/linux/commit/b4b2b6eda5af
+[16/28] KVM: TDX: ADD pages to the TD image while populating mirror EPT entries
+        https://github.com/kvm-x86/linux/commit/6b5b71ffabf9
+[17/28] KVM: TDX: Fold tdx_sept_zap_private_spte() into tdx_sept_remove_private_spte()
+        https://github.com/kvm-x86/linux/commit/14c9938619be
+[18/28] KVM: TDX: Combine KVM_BUG_ON + pr_tdx_error() into TDX_BUG_ON()
+        https://github.com/kvm-x86/linux/commit/597d7068702f
+[19/28] KVM: TDX: Derive error argument names from the local variable names
+        https://github.com/kvm-x86/linux/commit/55560b6be5bc
+[20/28] KVM: TDX: Assert that mmu_lock is held for write when removing S-EPT entries
+        https://github.com/kvm-x86/linux/commit/2ff14116982c
+[21/28] KVM: TDX: Add macro to retry SEAMCALLs when forcing vCPUs out of guest
+        https://github.com/kvm-x86/linux/commit/3d626ce5a8cc
+[22/28] KVM: TDX: Add tdx_get_cmd() helper to get and validate sub-ioctl command
+        https://github.com/kvm-x86/linux/commit/59d5c1ed6df2
+[23/28] KVM: TDX: Convert INIT_MEM_REGION and INIT_VCPU to "unlocked" vCPU ioctl
+        https://github.com/kvm-x86/linux/commit/94428e3ba325
+[24/28] KVM: TDX: Use guard() to acquire kvm->lock in tdx_vm_ioctl()
+        https://github.com/kvm-x86/linux/commit/0b76e827b29d
+[25/28] KVM: TDX: Don't copy "cmd" back to userspace for KVM_TDX_CAPABILITIES
+        https://github.com/kvm-x86/linux/commit/f26061fe2c25
+[26/28] KVM: TDX: Guard VM state transitions with "all" the locks
+        https://github.com/kvm-x86/linux/commit/15945e9ec195
+[27/28] KVM: TDX: Bug the VM if extending the initial measurement fails
+        https://github.com/kvm-x86/linux/commit/ad44aa4c5d3f
+[28/28] KVM: TDX: Fix list_add corruption during vcpu_load()
+        https://github.com/kvm-x86/linux/commit/1e3a825c9ec9
 
-Huacai
-
->
-> [1]
-> https://lore.kernel.org/linux-mm/20251108084724.3e389b6597294900347b0476@=
-linux-foundation.org/
->
-> [2]
-> https://lore.kernel.org/linux-mm/20251109021817.346181-1-chenhuacai@loong=
-son.cn/
->
-> [3]
-> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
-.git/commit/?h=3Dloongarch-fixes&id=3D4c8a7c982772
->
-> Thanks,
-> Tiezhu
->
+--
+https://github.com/kvm-x86/linux/tree/next
