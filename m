@@ -1,140 +1,166 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33ADE2FF651
-	for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 09:24:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281D6268C40;
+	Mon, 10 Nov 2025 10:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762766675; cv=none; b=i97u1MOmIt0CuQXOO51bGuXf6VT/3FFZ7YLg7XsM8g1NwJ+IA8Z91vVszdcvvpN8Ej0UXf6J/+U0XrkOBar9oTi9JgY9+JQvILZgZWjgkLrgh+hIyUTwmX9V87fUGp2/pNmd4dqZhh5VEPZZ1KBf58b1rkNSxuqZqK5FvLXonK4=
+	t=1762771038; cv=none; b=F68jjMSfiV9bek5OkvHvnic76gtqRNiVlvgq90nNeWUpxAgsxLHGY21e2a46jG7hjxPZBOgu3H1RA24gXp23Cjk9kKoy3DRl+9KuiBVmOcfm0FVfEaYs4jHVZsvn/mn66QT56hjPwhqmI4dG9wmPdVFVJv7UZ5D+QBTo5gOWHB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762766675; c=relaxed/simple;
-	bh=12tkn2eW7OKiky0Am/v0/JrN2IhWAn/ZzkRw2A93Cwg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CexwhtdZKt+aPkE0Frr1sb0yON+mTwYuG5VasOnAO01+TaKZ5DEvq7MwsUqFYPsUs5huOv5Y2VuXJcBU+/jhjeFFe/TGaYcS+a5ImMRYLajuA2qsBCeJVtUEstzfUWzlwTlCprUHMydyqOTwXn90Xcbx5yiL3aURE3n14uMujx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCNs/tO5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762771038; c=relaxed/simple;
+	bh=5mJ5SG0Gwip7t2njbKaSVt8yyYamxwQDSTZJ66MYxYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PpHQ3ZVTYc0Xuroqr4pUy6LyWTz1LTxzNAJBk+/mv9uNMpk8y8z2tvffO1ke8TrgY59aP6mjB1oDQ1EoOV9bSmmxtlDdizAVLEfi/undNfJJWXBvFAf0/VynblYuDyY91BJNMl9tQxj6fgve13vLgNUf0opaZf7anWMFeJl2Fmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=WTAHFhLQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCNs/tO5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7560C116D0
-	for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 09:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762766674;
-	bh=12tkn2eW7OKiky0Am/v0/JrN2IhWAn/ZzkRw2A93Cwg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cCNs/tO5EsnPNMxP/SotUQtXnQ71dpVJYG81OT+YmAutR+A3zcT/umYw89tAP8tUa
-	 VfvSnUkU16V2PMbU60VLwi53xHVE+2nGCsh82OdHqTPN/o8gTJsM9O7zgC/dL9TUXN
-	 ibFyX6BZXBisNgDLNOHPwQtdUEYzZ7YNTZwqRdFf2xV/7MiPQyt7PngcRM+1vIUEEC
-	 xIKrsanxxl6lMxVViy1XF/C40Z75OS6raZAQh10wv/Q92ddsy14/YzyrAZGqlr52K8
-	 9iSlYPoN8kIBaqMP6x1c0SoFmDBDI95/BnP8svcSK9OhGWaSwfMaI1MNadleEUoYHi
-	 ReyQ3gASQxydg==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b3d196b7eeeso415353566b.0
-        for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 01:24:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW84aE39EwGFWYuPJPz69zs2xC2NyDFfPnFTyAps0LGxMhcztVDE2umIeiQlERhDTammi4gz8SZ7og=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywa5Q+e9kEffgFXHtJKjtGbcYMmyzctN9mPgnAWGAvWl6/AQ9E7
-	WhXhu1ejCeTLvZvPpgKxHtfBouzPPM3wR0E1KX3v/X+G+ThnoNvKXWpX9vRZfgWMUbIyNscW5rL
-	ztqgO8TNOiK0/JFo0MsZKGQtONwZD44E=
-X-Google-Smtp-Source: AGHT+IHKLwR3YcjGB27F6aLZCc3GGMDReeuLQsVw8nwIi5NtUxvpWutqEIYChjtFC5B0M3L6kaUwrciXh/cEPB/BUMM=
-X-Received: by 2002:a17:907:6eaa:b0:b70:b077:b957 with SMTP id
- a640c23a62f3a-b72e02d4af4mr791414866b.15.1762766673263; Mon, 10 Nov 2025
- 01:24:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WTAHFhLQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E76C4CEF5;
+	Mon, 10 Nov 2025 10:37:14 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WTAHFhLQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1762771032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1WrguxH4pokigxxkQ8JIMem650725yeeLwdoGz6ziPQ=;
+	b=WTAHFhLQBM9L4uVZANImYYYEpEwrJCJmpUsPeVS7opyWT3kewXLiJpB+S7cWvpyOqmRlk0
+	jOvTCsms0UYDa7uYKl2FQdhRurOUoi+bCEX1pnKZador3BykkqFb6xAp1lo4cuCgYvgUtd
+	mk8NOd2uY8oXx8TZ6HnEj3LlqXVn94g=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 190dbf96 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Mon, 10 Nov 2025 10:37:11 +0000 (UTC)
+Date: Mon, 10 Nov 2025 11:37:07 +0100
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Nick Alcock <nick.alcock@oracle.com>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Shuah Khan <shuah@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	Russell King <linux@armlinux.org.uk>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Shannon Nelson <sln@onemain.com>, linux-kernel@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: Re: [PATCH v5 19/34] random: vDSO: only access vDSO datapage after
+ random_init()
+Message-ID: <aRHAU7bVAIyaOrpA@zx2c4.com>
+References: <20251106-vdso-sparc64-generic-2-v5-0-97ff2b6542f7@linutronix.de>
+ <20251106-vdso-sparc64-generic-2-v5-19-97ff2b6542f7@linutronix.de>
+ <aQ6EvdukQytvqK-u@zx2c4.com>
+ <20251110094555-353883a9-1950-4cc6-a774-bb0ef5db11c5@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251021091114.982820-1-maqianga@uniontech.com>
-In-Reply-To: <20251021091114.982820-1-maqianga@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 10 Nov 2025 17:24:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6T-V8zV9L9wH-mGJNHAP3BGyQxDwKCWtKOxUGdtL4zOg@mail.gmail.com>
-X-Gm-Features: AWmQ_bmSDX66uxK8yo85VkAuS7JO9qpqETnO9k2fkOAx8Ls_pzNpFjyp-PE2Kno
-Message-ID: <CAAhV-H6T-V8zV9L9wH-mGJNHAP3BGyQxDwKCWtKOxUGdtL4zOg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: kexec_file: print out debugging message if required
-To: Qiang Ma <maqianga@uniontech.com>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251110094555-353883a9-1950-4cc6-a774-bb0ef5db11c5@linutronix.de>
 
-Applied, thanks.
+On Mon, Nov 10, 2025 at 10:04:17AM +0100, Thomas Weißschuh wrote:
+> On Sat, Nov 08, 2025 at 12:46:05AM +0100, Jason A. Donenfeld wrote:
+> > I'm not a huge fan of this change:
+> > 
+> > On Thu, Nov 06, 2025 at 11:02:12AM +0100, Thomas Weißschuh wrote:
+> > > +static DEFINE_STATIC_KEY_FALSE(random_vdso_is_ready);
+> > >  
+> > >  /* Control how we warn userspace. */
+> > >  static struct ratelimit_state urandom_warning =
+> > > @@ -252,6 +253,9 @@ static void random_vdso_update_generation(unsigned long next_gen)
+> > >  	if (!IS_ENABLED(CONFIG_VDSO_GETRANDOM))
+> > >  		return;
+> > >  
+> > > +	if (!static_branch_likely(&random_vdso_is_ready))
+> > > +		return;
+> > > +
+> > >  	/* base_crng.generation's invalid value is ULONG_MAX, while
+> > >  	 * vdso_k_rng_data->generation's invalid value is 0, so add one to the
+> > >  	 * former to arrive at the latter. Use smp_store_release so that this
+> > > @@ -274,6 +278,9 @@ static void random_vdso_set_ready(void)
+> > >  	if (!IS_ENABLED(CONFIG_VDSO_GETRANDOM))
+> > >  		return;
+> > >  
+> > > +	if (!static_branch_likely(&random_vdso_is_ready))
+> > > +		return;
+> > > +
+> > >  	WRITE_ONCE(vdso_k_rng_data->is_ready, true);
+> > >  }
+> > >  
+> > > @@ -925,6 +932,9 @@ void __init random_init(void)
+> > >  	_mix_pool_bytes(&entropy, sizeof(entropy));
+> > >  	add_latent_entropy();
+> > >  
+> > > +	if (IS_ENABLED(CONFIG_VDSO_GETRANDOM))
+> > > +		static_branch_enable(&random_vdso_is_ready);
+> > > +
+> > >  	/*
+> > >  	 * If we were initialized by the cpu or bootloader before jump labels
+> > >  	 * or workqueues are initialized, then we should enable the static
+> > > @@ -934,8 +944,10 @@ void __init random_init(void)
+> > >  		crng_set_ready(NULL);
+> > >  
+> > >  	/* Reseed if already seeded by earlier phases. */
+> > > -	if (crng_ready())
+> > > +	if (crng_ready()) {
+> > >  		crng_reseed(NULL);
+> > > +		random_vdso_set_ready();
+> > > +	}
+> > 
+> > The fact that the vdso datapage is set up by the time random_init() is
+> > called seems incredibly contingent on init details. Why not, instead,
+> > make this a necessary part of the structure of vdso setup code, which
+> > can actually know about what happens when?
+> 
+> The whole early init is "carefully" ordered in any case. I would have been
+> happy to allocate the data pages before the random initialization, but the
+> allocator is not yet usable by then.
+> We could also make the ordering more visible by having the vDSO datastore call
+> into a dedicated function to allow the random core to touch the data pages:
+> random_vdso_enable_datapages().
+> 
+> > For example, one clean way of
+> > doing that would be to make vdso_k_rng_data always valid by having it
+> > initially point to __initdata memory, and then when it's time to
+> > initialize the real datapage, memcpy() the __initdata memory to the new
+> > specially allocated memory. Then we don't need the complex state
+> > tracking that this commit and the prior one introduce.
+> 
+> Wouldn't that require synchronization between the update path and the memcpy()
+> path? Also if the pointer is going to change at some point we'll probably need
+> to use READ_ONCE()/WRITE_ONCE(). In general I would be happy about a cleaner
+> solution for this but didn't find a great one.
 
-Huacai
+This is still before userspace has started, and interrupts are disabled,
+so I don't think so? Also, you only care about being after
+mm_core_init(), right? So move your thing before sched_init() and then
+you'll really have nothing to worry about.
 
-On Tue, Oct 21, 2025 at 5:12=E2=80=AFPM Qiang Ma <maqianga@uniontech.com> w=
-rote:
->
-> When specifying '-d' for kexec_file_load interface, loaded locations
-> of kernel/initrd/cmdline etc can be printed out to help debug.
->
-> Commit eb7622d908a0 ("kexec_file, riscv: print out debugging message
-> if required") fixes the same issue on RISC-V.
->
-> So, remove kexec_image_info() because the content has been printed
-> out in generic code.
->
-> And on Loongson-3A5000, the printed messages look like below:
->
-> [  288.667939] kexec_file: kernel: 00000000d9aad283 kernel_size: 0x2e77f3=
-0
-> [  288.668414] kexec_file(EFI): No LoongArch PE image header.
-> [  288.703104] kexec_file: Loaded initrd at 0x80000000 bufsz=3D0x1637cd0 =
-memsz=3D0x1638000
-> [  288.703674] kexec_file(ELF): Loaded kernel at 0x9c20000 bufsz=3D0x27f1=
-800 memsz=3D0x2950000
-> [  288.704092] kexec_file: nr_segments =3D 2
-> [  288.704277] kexec_file: segment[0]: buf=3D0x00000000cc3e6c33 bufsz=3D0=
-x27f1800 mem=3D0x9c20000 memsz=3D0x2950000
-> [  288.741213] kexec_file: segment[1]: buf=3D0x00000000bb75a541 bufsz=3D0=
-x1637cd0 mem=3D0x80000000 memsz=3D0x1638000
-> [  288.757182] kexec_file: kexec_file_load: type:0, start:0xb15d000 head:=
-0x18db60002 flags:0x8
->
-> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
-> ---
->  arch/loongarch/kernel/machine_kexec.c | 22 ----------------------
->  1 file changed, 22 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kerne=
-l/machine_kexec.c
-> index e4b2bbc47e62..2d64b7c81e5e 100644
-> --- a/arch/loongarch/kernel/machine_kexec.c
-> +++ b/arch/loongarch/kernel/machine_kexec.c
-> @@ -39,34 +39,12 @@ static unsigned long systable_ptr;
->  static unsigned long start_addr;
->  static unsigned long first_ind_entry;
->
-> -static void kexec_image_info(const struct kimage *kimage)
-> -{
-> -       unsigned long i;
-> -
-> -       pr_debug("kexec kimage info:\n");
-> -       pr_debug("\ttype:        %d\n", kimage->type);
-> -       pr_debug("\tstart:       %lx\n", kimage->start);
-> -       pr_debug("\thead:        %lx\n", kimage->head);
-> -       pr_debug("\tnr_segments: %lu\n", kimage->nr_segments);
-> -
-> -       for (i =3D 0; i < kimage->nr_segments; i++) {
-> -               pr_debug("\t    segment[%lu]: %016lx - %016lx", i,
-> -                       kimage->segment[i].mem,
-> -                       kimage->segment[i].mem + kimage->segment[i].memsz=
-);
-> -               pr_debug("\t\t0x%lx bytes, %lu pages\n",
-> -                       (unsigned long)kimage->segment[i].memsz,
-> -                       (unsigned long)kimage->segment[i].memsz /  PAGE_S=
-IZE);
-> -       }
-> -}
-> -
->  int machine_kexec_prepare(struct kimage *kimage)
->  {
->         int i;
->         char *bootloader =3D "kexec";
->         void *cmdline_ptr =3D (void *)KEXEC_CMDLINE_ADDR;
->
-> -       kexec_image_info(kimage);
-> -
->         kimage->arch.efi_boot =3D fw_arg0;
->         kimage->arch.systable_ptr =3D fw_arg2;
->
-> --
-> 2.20.1
->
+But I think globally I agree with Andy/Arnd -- this is kind of ugly and
+not worth it. Disable vDSO for these old CPUs with cache aliasing
+issues.
+
+Jason
