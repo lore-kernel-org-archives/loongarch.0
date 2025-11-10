@@ -1,162 +1,134 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6617258EC3
-	for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 15:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405B42D9481
+	for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 17:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762789394; cv=none; b=D1h2d/tOUO4g3JfLgUekanjjR2vdgUfgy300gRo3GHRRkwP5CrvkU3ydKKzGyQetM+yr6o/xevFTD5oO8ZixgkbT3a2higOEWBZ5ugPkxuJL5QqAsGed0UQn4z62tO+4TNNNqzBGdXIfe8z3Oo0HrC4oT1kyL1ZEXYMeOApgK7Q=
+	t=1762797227; cv=none; b=ujsx+K957oOYuxg0FFfuQ5gc16F68O97mmAevN79DDZKhMtVMUS6dAk2Ro4iJe6NpaerHUonQMjqZGzblZYF+fAi1fnojC4I5u88XN4TtZA/SqtFJzYDIPuZSkSMdUPCXwPYVFHK2yJpqbmaqo5kbVzmXGJFF4IgVQ557gRLwJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762789394; c=relaxed/simple;
-	bh=Z6QBCawmA0V88I7dtIc6ikzQytNDqs3gMMcaJjnYR/s=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NELnuwqPBi/WODUAIhKmfiCPmhhdZfFYRXiIgzslt3sZWkOQB5hr63cNOHvL+Atn0yyk/vYqlDDihE3l2KFpq1YX9oddzp8r1KAC2Uz/POIrq+yHVt7vDUFHmndJMG8sLOf94Pz8RTLfh3RrH+vG9JqQQX98c+OXtzoe0wMW6qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gf+BmCKf; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1762797227; c=relaxed/simple;
+	bh=4B09DQRWmkSD4e2vpc/JMHmkNe6HHY01bx8UxeA9kDU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ncmVSR9ABTwNDFJgZZRg2BBcYMnrvl7PO7f4RHKflFnLlLSlSN2M48Z2KQRTRIpiFPKxoYVj2NveM+27yPj6ClbZdIQlRThtwIh6WHZrdJY9DOa2xBvYEPTAp1IhFU8X7Pq94qhgF3MZndxLp1wS+bc6vHu8tlTHeQvK/Dee4gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AnsX3U7e; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gf+BmCKf"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3438b1220bcso1665386a91.2
-        for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 07:43:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnsX3U7e"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7a59ec9bef4so3644899b3a.2
+        for <loongarch@lists.linux.dev>; Mon, 10 Nov 2025 09:53:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762789392; x=1763394192; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=87FfliXTeIYU4Ti4q0mlK1AlR2N3oXTPIRkcYWMY8TY=;
-        b=Gf+BmCKfmAIBCtqgl8CWC2KVDJZAvbomroByBQC5cr1Zp/X763KCNZ2J/v8m1pMSC3
-         x0VXBddqEzzRHGHEaCzZypmq5jIXJIBXZH56vextlwdj68mCm6VroxnLwrG1Ctdm/F5e
-         rrl8OjolbddSAcA3KwEcWxGB6jQpcHgRFash3YAX7lkdBJJZ9Wj7xhhmXxl9a5eh+eop
-         foiKf3XvvAFdVyMrxgHEDPamjl64lLHJGoo2i+5GPMam6WyG/SCqiVqrLnsxX9U+Zs6H
-         5aYHTW7LC/HxGheUxKHQTxZboT19gwHwEl3vrDwxwm7FL+bb2iqcrur4upT4t3JXgkhG
-         ltdg==
+        d=gmail.com; s=20230601; t=1762797225; x=1763402025; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QzqX/Bymcdd+4CECGYgS8MWRW/CXpvPBt3lGGZ11o7c=;
+        b=AnsX3U7eCJ9Lmx6vJZ8iFYq6qJVU2G22+/1CY01TSeXzHBfMEMSwKVSV1fHPd6KJEp
+         o3LGwY+Zvj1khlSuxLQZ+RXnYeFXnQgpA/VN9IhgsYD+wqe90WPniZOhfVRe4W/WeXmn
+         G0BroLlqKdUVGUHfeHAQL5ZTAhp0eOT81osK0/43LIhKn91lz3ChoKOSJ50lwNZoSV/c
+         XcAYUAQFNkjMofMKhzF1gaVPBUyMak7RewAmWvwjJ7qzH6e426WcsYU4/qHmTnNfd1C1
+         f3XpMFOHtS8Eu7Tg56m9otfED+h0ItTedr4mwu/G0hnpSwDxMJBt74FB6W6uaJGbXF5t
+         /9eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762789392; x=1763394192;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=87FfliXTeIYU4Ti4q0mlK1AlR2N3oXTPIRkcYWMY8TY=;
-        b=CECwzw8w7byuu407wdqYyKLE2yTHeLioDy8BJzYKRluYFWXzgs1CmVsaOUr+XQLUWY
-         Q5ZG7FNGKbja8LsSq0325ylyIx1naF3KwnibmvysSGWRUqwvY9wP5hGQHZ2r0URuJRNB
-         Jygjn6o9vVfvIRfV+f0duLwSV4RnWpNPbdrni2msbnd6lL7r+udKZQI5KbLULsTgJcYm
-         yTo+kbUVsezm28M6z0SdeiFBHht+RxaQ2dbYzc4H3tVuBlf368790ffoSKU4fvoMcT7J
-         g469rwd8pKb08HHfhllgASrxxkwG0YqXwG5EQxCSLtaxiwo85uGpfqGs7pjtUn2oC8ej
-         M6Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCPtokptvyUelaemMPPkbYfm8AptXZa67mpx5ILavk3TZrZFi4ufrYgDegKiYUhLstSbMPmVZkrR0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzZWHV9PCWJ0iRsUICFzQPvlSObvmacnIW3x9cFMTEf823GhvJn
-	6l8mfrZqwgoVWoT84b3l1OlcdrY0k5IRu71TAvj6oucfp5TZmQy2wBP6W0Y2zNwDfWa6+J2RkRD
-	g1j6vbw==
-X-Google-Smtp-Source: AGHT+IGU2QqcHJOpKVyUh8wnC6DXg/rmfR5MmGRMoX3raYINDU0h+4Ytj4+FRCcbgxWr/CiKwQo1uRnxIsY=
-X-Received: from pjbdw16.prod.google.com ([2002:a17:90b:950:b0:343:6849:31ae])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a10:b0:341:124f:474f
- with SMTP id 98e67ed59e1d1-3436cd0c3e9mr10428985a91.32.1762789392114; Mon, 10
- Nov 2025 07:43:12 -0800 (PST)
-Date: Mon, 10 Nov 2025 07:37:29 -0800
-In-Reply-To: <20251030200951.3402865-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1762797225; x=1763402025;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QzqX/Bymcdd+4CECGYgS8MWRW/CXpvPBt3lGGZ11o7c=;
+        b=Q1FbVfIIKovZSKyv28f7FCiNRtvSNVWt8HcTiA5bgSsVgVUmn4/5HfXFNccLiRak7k
+         h/YDK9kuWD5dwqyh4NQ8mFCiP4rFSQeK5NQk0C35zlhDSV1vnlObQvWDvMI8Pax3WL5D
+         OECZBEBEmiaw+ahMjQ+bQR3oGYnoZZr+nnuleo915JiDngyF09Na0L1fL7j1MMM87YKh
+         1ZtoXYqjKrYVKjprYYSSwg0dK/46CImtyPSxzkz2yJD0BSU7212msMRlGHoInRKQOPVf
+         76x96531gxBDN3rpzJywTU1dCMPL23ZFmsIwWZsFSISHF1BPKXGRJbxh8u5zOCUEXqg1
+         GPOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgAsuI1wAV8Bt2s73dCfYXfsWLgoQe0hnNBzQbGisY+DT2HPFNqL0Gn0Untgu3Z8o+psheLn/GTu8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz/ET+DERs9ySxAPu7l9O9/f+wLqJIIM/Y7UQBsTWCEKMEy0rmi
+	v9B4aSZpKBBH3jutj7L0vSqMzLDoJKPrxL0qpeuJRZusoFbINofzji4B
+X-Gm-Gg: ASbGncs1S4feo8whOsXFjEB4+Qd5jJ0IJqr9iKb43LBd/5m1BsDQCWAXkDiOfAwXYoK
+	ZiEsIFrI7cNTsB+sf7Au/l2BoDa9ffNhbiNHPUjicyFLw9X+J2Fi7sDpGmaz7DIHKRKeYDhqlH+
+	Ie33dxBf30hb2zS1wYSkjWJMz8Yz/fn76beqWXu/HUoDGBQinWTg3GfDorTW8BzkhhYB6sLA/to
+	ViLtPJ0fHeR5vqn507KgaaW3Emufv/K3DmsEI4m/ALvuqAez9hAU9KPLCimd13e72O6Iiuzmzjs
+	hwhXKX8amdRpN7Hcx/f8COAH/iPd7/LOhTCUfxoXArXFui7Hs30l1oOkbZSYE3whwXbnzcSAnF2
+	JTsX6bcCDj0GjlwLz2R2316Pjtx1058a+p+g+cWh4A5AThW1ElP8dditb3KxdkrgRW3Dku+iOhs
+	GnjtkuWuKQze/LKOjNlZ7jrlZRfiRXrwU=
+X-Google-Smtp-Source: AGHT+IFFNYilHm0Z2d/QlucupXMOX5PyD6V+cL+fkVSJ1b/o84lJ/uL54M3JQ5g+YJGL4e4cn4SsNg==
+X-Received: by 2002:a05:6a00:185:b0:7b6:1c9b:28e with SMTP id d2e1a72fcca58-7b61c9b0d65mr278984b3a.14.1762797225342;
+        Mon, 10 Nov 2025 09:53:45 -0800 (PST)
+Received: from fedora.hsd1.ca.comcast.net ([2601:648:4280:48f0::76e1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b0c953d0a6sm12428751b3a.12.2025.11.10.09.53.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Nov 2025 09:53:45 -0800 (PST)
+From: Vincent Li <vincent.mc.li@gmail.com>
+To: Chenghao Duan <duanchenghao@kylinos.cn>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	loongarch@lists.linux.dev
+Cc: Vincent Li <vincent.mc.li@gmail.com>
+Subject: [PATCH] LoongArch: BPF: Disable bpf trampoline kernel module function trace
+Date: Mon, 10 Nov 2025 09:53:30 -0800
+Message-Id: <20251110175330.73200-1-vincent.mc.li@gmail.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20251030200951.3402865-1-seanjc@google.com>
-X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <176278827443.918905.17609380057567446021.b4-ty@google.com>
-Subject: Re: [PATCH v4 00/28] KVM: x86/mmu: TDX post-populate cleanups
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	"Kirill A. Shutemov" <kas@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, x86@kernel.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>, 
-	Kai Huang <kai.huang@intel.com>, Binbin Wu <binbin.wu@linux.intel.com>, 
-	Michael Roth <michael.roth@amd.com>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Vishal Annapurve <vannapurve@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Ackerley Tng <ackerleytng@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 30 Oct 2025 13:09:23 -0700, Sean Christopherson wrote:
-> Non-x86 folks, as with v3, patches 1 and 2 are likely the only thing of
-> interest here.  They make kvm_arch_vcpu_async_ioctl() mandatory and then
-> rename it to kvm_arch_vcpu_unlocked_ioctl().
-> 
-> As for the x86 side...
-> 
-> Clean up the TDX post-populate paths (and many tangentially related paths) to
-> address locking issues between gmem and TDX's post-populate hook[*], and
-> within KVM itself (KVM doesn't ensure full mutual exclusivity between paths
-> that for all intents and purposes the TDX-Module requires to be serialized).
-> 
-> [...]
+The current LoongArch BPF trampoline implementation is incompatible
+with tracing functions in kernel modules. This causes several severe
+and user-visible problems:
 
-Applied to kvm-x86 tdx, with fixups for the various typos.  Thanks for all the
-reviews and testing!
+* Kernel lockups when a BPF program is attached to a module function [0].
+* The `bpf_selftests/module_attach` test fails consistently.
+* Critical kernel modules like WireGuard experience traffic disruption
+  when their functions are traced with fentry [1].
 
-Other KVM arch maintainers, please holler if you want a stable tag for the
-kvm_arch_vcpu_async_ioctl() changes (they're based directly on v6.18-rc4).
+Given the severity and the potential for other unknown side-effects,
+it is safest to disable the feature entirely for now. This patch
+prevents the BPF subsystem from allowing trampoline attachments to
+module functions on LoongArch.
 
-[01/28] KVM: Make support for kvm_arch_vcpu_async_ioctl() mandatory
-        https://github.com/kvm-x86/linux/commit/0a0da3f92118
-[02/28] KVM: Rename kvm_arch_vcpu_async_ioctl() to kvm_arch_vcpu_unlocked_ioctl()
-        https://github.com/kvm-x86/linux/commit/50efc2340a59
-[03/28] KVM: TDX: Drop PROVE_MMU=y sanity check on to-be-populated mappings
-        https://github.com/kvm-x86/linux/commit/5294a4b93e07
-[04/28] KVM: x86/mmu: Add dedicated API to map guest_memfd pfn into TDP MMU
-        https://github.com/kvm-x86/linux/commit/3ab3283dbb2c
-[05/28] KVM: x86/mmu: WARN if KVM attempts to map into an invalid TDP MMU root
-        https://github.com/kvm-x86/linux/commit/c1f173fb3389
-[06/28] Revert "KVM: x86/tdp_mmu: Add a helper function to walk down the TDP MMU"
-        https://github.com/kvm-x86/linux/commit/fe7413e39810
-[07/28] KVM: x86/mmu: Rename kvm_tdp_map_page() to kvm_tdp_page_prefault()
-        https://github.com/kvm-x86/linux/commit/6de2fb089bb2
-[08/28] KVM: TDX: Drop superfluous page pinning in S-EPT management
-        https://github.com/kvm-x86/linux/commit/ce7b5695397b
-[09/28] KVM: TDX: Return -EIO, not -EINVAL, on a KVM_BUG_ON() condition
-        https://github.com/kvm-x86/linux/commit/e6348c90dda9
-[10/28] KVM: TDX: Fold tdx_sept_drop_private_spte() into tdx_sept_remove_private_spte()
-        https://github.com/kvm-x86/linux/commit/b836503300dc
-[11/28] KVM: x86/mmu: Drop the return code from kvm_x86_ops.remove_external_spte()
-        https://github.com/kvm-x86/linux/commit/7139c8606505
-[12/28] KVM: TDX: WARN if mirror SPTE doesn't have full RWX when creating S-EPT mapping
-        https://github.com/kvm-x86/linux/commit/b9d5cf6de0b6
-[13/28] KVM: TDX: Avoid a double-KVM_BUG_ON() in tdx_sept_zap_private_spte()
-        https://github.com/kvm-x86/linux/commit/24adff397052
-[14/28] KVM: TDX: Use atomic64_dec_return() instead of a poor equivalent
-        https://github.com/kvm-x86/linux/commit/af96d5452e5e
-[15/28] KVM: TDX: Fold tdx_mem_page_record_premap_cnt() into its sole caller
-        https://github.com/kvm-x86/linux/commit/b4b2b6eda5af
-[16/28] KVM: TDX: ADD pages to the TD image while populating mirror EPT entries
-        https://github.com/kvm-x86/linux/commit/6b5b71ffabf9
-[17/28] KVM: TDX: Fold tdx_sept_zap_private_spte() into tdx_sept_remove_private_spte()
-        https://github.com/kvm-x86/linux/commit/14c9938619be
-[18/28] KVM: TDX: Combine KVM_BUG_ON + pr_tdx_error() into TDX_BUG_ON()
-        https://github.com/kvm-x86/linux/commit/597d7068702f
-[19/28] KVM: TDX: Derive error argument names from the local variable names
-        https://github.com/kvm-x86/linux/commit/55560b6be5bc
-[20/28] KVM: TDX: Assert that mmu_lock is held for write when removing S-EPT entries
-        https://github.com/kvm-x86/linux/commit/2ff14116982c
-[21/28] KVM: TDX: Add macro to retry SEAMCALLs when forcing vCPUs out of guest
-        https://github.com/kvm-x86/linux/commit/3d626ce5a8cc
-[22/28] KVM: TDX: Add tdx_get_cmd() helper to get and validate sub-ioctl command
-        https://github.com/kvm-x86/linux/commit/59d5c1ed6df2
-[23/28] KVM: TDX: Convert INIT_MEM_REGION and INIT_VCPU to "unlocked" vCPU ioctl
-        https://github.com/kvm-x86/linux/commit/94428e3ba325
-[24/28] KVM: TDX: Use guard() to acquire kvm->lock in tdx_vm_ioctl()
-        https://github.com/kvm-x86/linux/commit/0b76e827b29d
-[25/28] KVM: TDX: Don't copy "cmd" back to userspace for KVM_TDX_CAPABILITIES
-        https://github.com/kvm-x86/linux/commit/f26061fe2c25
-[26/28] KVM: TDX: Guard VM state transitions with "all" the locks
-        https://github.com/kvm-x86/linux/commit/15945e9ec195
-[27/28] KVM: TDX: Bug the VM if extending the initial measurement fails
-        https://github.com/kvm-x86/linux/commit/ad44aa4c5d3f
-[28/28] KVM: TDX: Fix list_add corruption during vcpu_load()
-        https://github.com/kvm-x86/linux/commit/1e3a825c9ec9
+This is a temporary mitigation until the core issues in the trampoline
+code for module handling can be identified and fixed.
 
---
-https://github.com/kvm-x86/linux/tree/next
+[root@fedora bpf]# ./test_progs -a module_attach -v
+bpf_testmod.ko is already unloaded.
+Loading bpf_testmod.ko...
+Successfully loaded bpf_testmod.ko.
+test_module_attach:PASS:skel_open 0 nsec
+test_module_attach:PASS:set_attach_target 0 nsec
+test_module_attach:PASS:set_attach_target_explicit 0 nsec
+test_module_attach:PASS:skel_load 0 nsec
+libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
+libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
+test_module_attach:FAIL:skel_attach skeleton attach failed: -524
+Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+Successfully unloaded bpf_testmod.ko.
+
+[0]: https://lore.kernel.org/loongarch/CAK3+h2wDmpC-hP4u4pJY8T-yfKyk4yRzpu2LMO+C13FMT58oqQ@mail.gmail.com/
+[1]: https://lore.kernel.org/loongarch/CAK3+h2wYcpc+OwdLDUBvg2rF9rvvyc5amfHT-KcFaK93uoELPg@mail.gmail.com/
+
+Signed-off-by: Vincent Li <vincent.mc.li@gmail.com>
+---
+ arch/loongarch/net/bpf_jit.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index cbe53d0b7fb0..ace89ca95f9b 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1624,6 +1624,9 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	/* Direct jump skips 5 NOP instructions */
+ 	else if (is_bpf_text_address((unsigned long)orig_call))
+ 		orig_call += LOONGARCH_BPF_FENTRY_NBYTES;
++	/* BPF selftests module_attach failed, disable module trace */
++	else if (is_module_text_address((unsigned long)orig_call))
++		return -ENOTSUPP;
+ 
+ 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
+ 		move_addr(ctx, LOONGARCH_GPR_A0, (const u64)im);
+-- 
+2.38.1
+
