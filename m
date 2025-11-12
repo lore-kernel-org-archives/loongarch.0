@@ -1,35 +1,31 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C1882777FE
-	for <loongarch@lists.linux.dev>; Wed, 12 Nov 2025 07:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521202F9998
+	for <loongarch@lists.linux.dev>; Wed, 12 Nov 2025 09:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762930850; cv=none; b=bWeHHUdQbk0Qsv5A2aXKHjuu3cIs/QHzL6lDsuG1cNPb45hx125wD2TQbuqXL5gVjNFfsQYOSDjyEgfAMvUSyBl+SH3gfh/VYlRwWRsatHxjByTMoI+SdxQHe+N9T3fVqj2YOTYiY7J3BUL3JfW+Hf5Dxq+hR92heX/nVMF2b/k=
+	t=1762938335; cv=none; b=VolzbWkB91+iKoSVZxALm3dhi721Qvt39Zkaw1rpf0/8sQr+ZUML4H6R/9DpKtNb1vh47kBTBP9Y7bBPr7L6Hohx0y90KWVsNKCV4Z7+q8HO/9cX3kLvtGBzB6WedaZSzfBaQ844dw26B7TiqlGGjK8dycgCRwin99m059YGj68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762930850; c=relaxed/simple;
-	bh=Gr2YxxqKvlpCtol3yYvDxV+srWVZwDKU2Wvd/qwfouY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZHQLM7MnBdmW91jOu249uo3UT2tj2kd6BDbMOTklR/R7sqQOyU1ymZfThEF0HtHuasiI6zowJlRJYF49hwEGSQ1CICvLDHnJC1TrtdIp0vas/iIR+pKMGFkJbQCCPMv4NP8K8KX+dSArO5yzAw9QxbDWi0cT39bEFdhw8fZQfYQ=
+	s=arc-20240116; t=1762938335; c=relaxed/simple;
+	bh=/bDpZgay3LWVFdpeWe0oDcxNAbPY+Mi5dboVZ09/wLU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EFX79ULxNgzCfmAHMKHHBq0v81RzFBt+Izjqfa6umjND8Ra3R0VQ4oMIucUGkD9kR55quc+ommTxrZOaqaC761VkLHlR//LNT+hKpDqCeFX5yVPaQuqpx5fiZQM2O589EL4WXqbDRd86FJfNxxtg8oqwxhpL1tFweSkbRQdD4s8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.45])
-	by gateway (Coremail) with SMTP id _____8Cxf9OVMBRpyVUiAA--.8214S3;
-	Wed, 12 Nov 2025 15:00:37 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.45])
-	by front1 (Coremail) with SMTP id qMiowJDxcMKRMBRpxUEwAQ--.3804S2;
-	Wed, 12 Nov 2025 15:00:37 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxE9DYTRRpL14iAA--.8521S3;
+	Wed, 12 Nov 2025 17:05:28 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJDxqcDXTRRpx1gwAQ--.51587S2;
+	Wed, 12 Nov 2025 17:05:28 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.18-rc6
-Date: Wed, 12 Nov 2025 15:00:19 +0800
-Message-ID: <20251112070019.2182638-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Fix numa node parsing with memblk on virt machine
+Date: Wed, 12 Nov 2025 17:05:09 +0800
+Message-Id: <20251112090511.2431689-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,98 +33,130 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxcMKRMBRpxUEwAQ--.3804S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGr1fGF4fXF4UuFWDGF47Jrc_yoW5Cw1fpr
-	y3urnrGFs5GrW3Zrnrt345urn8tr1xG34aqa1jy34rCr4jvF1UXr18Xr1kXFy5J3yrJFy0
-	qr1rWwnFqFyUJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUUUUU==
+X-CM-TRANSID:qMiowJDxqcDXTRRpx1gwAQ--.51587S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-The following changes since commit e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c:
+On physical machine, numa node comes high bit 44:48 of physical address.
+However it is not true on virt machine. With general method, it comes
+from ACPI SRAT table.
 
-  Linux 6.18-rc5 (2025-11-09 15:10:19 -0800)
+Here common function numa_memblks_init() is used to add numa node
+information with memblk.
 
-are available in the Git repository at:
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kernel/numa.c | 82 +-----------------------------------
+ 1 file changed, 2 insertions(+), 80 deletions(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.18-1
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index d6e73e8f9c0b..987496c3b915 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -157,74 +157,6 @@ static void __init node_mem_init(unsigned int node)
+ }
+ 
+ #ifdef CONFIG_ACPI_NUMA
+-
+-/*
+- * add_numamem_region
+- *
+- * Add a uasable memory region described by BIOS. The
+- * routine gets each intersection between BIOS's region
+- * and node's region, and adds them into node's memblock
+- * pool.
+- *
+- */
+-static void __init add_numamem_region(u64 start, u64 end, u32 type)
+-{
+-	u32 node = pa_to_nid(start);
+-	u64 size = end - start;
+-	static unsigned long num_physpages;
+-
+-	if (start >= end) {
+-		pr_debug("Invalid region: %016llx-%016llx\n", start, end);
+-		return;
+-	}
+-
+-	num_physpages += (size >> PAGE_SHIFT);
+-	pr_info("Node%d: mem_type:%d, mem_start:0x%llx, mem_size:0x%llx Bytes\n",
+-		node, type, start, size);
+-	pr_info("       start_pfn:0x%llx, end_pfn:0x%llx, num_physpages:0x%lx\n",
+-		start >> PAGE_SHIFT, end >> PAGE_SHIFT, num_physpages);
+-	memblock_set_node(start, size, &memblock.memory, node);
+-}
+-
+-static void __init init_node_memblock(void)
+-{
+-	u32 mem_type;
+-	u64 mem_end, mem_start, mem_size;
+-	efi_memory_desc_t *md;
+-
+-	/* Parse memory information and activate */
+-	for_each_efi_memory_desc(md) {
+-		mem_type = md->type;
+-		mem_start = md->phys_addr;
+-		mem_size = md->num_pages << EFI_PAGE_SHIFT;
+-		mem_end = mem_start + mem_size;
+-
+-		switch (mem_type) {
+-		case EFI_LOADER_CODE:
+-		case EFI_LOADER_DATA:
+-		case EFI_BOOT_SERVICES_CODE:
+-		case EFI_BOOT_SERVICES_DATA:
+-		case EFI_PERSISTENT_MEMORY:
+-		case EFI_CONVENTIONAL_MEMORY:
+-			add_numamem_region(mem_start, mem_end, mem_type);
+-			break;
+-		case EFI_PAL_CODE:
+-		case EFI_UNUSABLE_MEMORY:
+-		case EFI_ACPI_RECLAIM_MEMORY:
+-			add_numamem_region(mem_start, mem_end, mem_type);
+-			fallthrough;
+-		case EFI_RESERVED_TYPE:
+-		case EFI_RUNTIME_SERVICES_CODE:
+-		case EFI_RUNTIME_SERVICES_DATA:
+-		case EFI_MEMORY_MAPPED_IO:
+-		case EFI_MEMORY_MAPPED_IO_PORT_SPACE:
+-			pr_info("Resvd: mem_type:%d, mem_start:0x%llx, mem_size:0x%llx Bytes\n",
+-					mem_type, mem_start, mem_size);
+-			break;
+-		}
+-	}
+-}
+-
+ /*
+  * fake_numa_init() - For Non-ACPI systems
+  * Return: 0 on success, -errno on failure.
+@@ -249,22 +181,12 @@ int __init init_numa_memory(void)
+ 	for (i = 0; i < NR_CPUS; i++)
+ 		set_cpuid_to_node(i, NUMA_NO_NODE);
+ 
+-	numa_reset_distance();
+-	nodes_clear(numa_nodes_parsed);
+-	nodes_clear(node_possible_map);
+-	nodes_clear(node_online_map);
+-	WARN_ON(memblock_clear_hotplug(0, PHYS_ADDR_MAX));
+-
+ 	/* Parse SRAT and SLIT if provided by firmware. */
+-	ret = acpi_disabled ? fake_numa_init() : acpi_numa_init();
++	ret = acpi_disabled ? numa_memblks_init(fake_numa_init, false) :
++			numa_memblks_init(acpi_numa_init, false);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	node_possible_map = numa_nodes_parsed;
+-	if (WARN_ON(nodes_empty(node_possible_map)))
+-		return -EINVAL;
+-
+-	init_node_memblock();
+ 	if (!memblock_validate_numa_coverage(SZ_1M))
+ 		return -EINVAL;
+ 
 
-for you to fetch changes up to 237e74bfa261fb0cf75bd08c9be0c5094018ee20:
-
-  LoongArch: KVM: Fix max supported vCPUs set with EIOINTC (2025-11-10 08:37:07 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v6.18-rc6
-
-Fix a build error about Rust; fix some bugs about exception/interrupt,
-memory management, perf event, hardware breakpoint, kexec and KVM.
-----------------------------------------------------------------
-Bibo Mao (5):
-      LoongArch: KVM: Set page with write attribute if dirty track disabled
-      LoongArch: KVM: Add delay until timer interrupt injected
-      LoongArch: KVM: Restore guest PMU if it is enabled
-      LoongArch: KVM: Skip PMU checking on vCPU context switch
-      LoongArch: KVM: Fix max supported vCPUs set with EIOINTC
-
-Huacai Chen (5):
-      LoongArch: Clarify 3 MSG interrupt features
-      LoongArch: Use physical addresses for CSR_MERRENTRY/CSR_TLBRENTRY
-      LoongArch: Consolidate early_ioremap()/ioremap_prot()
-      LoongArch: Consolidate max_pfn & max_low_pfn calculation
-      LoongArch: Use correct accessor to read FWPC/MWPC
-
-Qiang Ma (1):
-      LoongArch: kexec: Print out debugging message if required
-
-Tianyang Zhang (1):
-      LoongArch: Let {pte,pmd}_modify() record the status of _PAGE_DIRTY
-
-Tiezhu Yang (1):
-      LoongArch: Refine the init_hw_perf_events() function
-
-Vishal Moola (Oracle) (1):
-      LoongArch: Remove __GFP_HIGHMEM masking in pud_alloc_one()
-
-Xi Ruoyao (1):
-      rust: Add -fno-isolate-erroneous-paths-dereference to bindgen_skip_c_flags
-
-Youling Tang (1):
-      LoongArch: kexec: Initialize the kexec_buf structure
-
- arch/loongarch/include/asm/cpu-features.h  |  2 ++
- arch/loongarch/include/asm/cpu.h           |  6 +++++-
- arch/loongarch/include/asm/hw_breakpoint.h |  4 ++--
- arch/loongarch/include/asm/io.h            |  5 ++++-
- arch/loongarch/include/asm/loongarch.h     |  2 ++
- arch/loongarch/include/asm/pgalloc.h       |  2 +-
- arch/loongarch/include/asm/pgtable.h       | 11 ++++++++---
- arch/loongarch/kernel/cpu-probe.c          |  4 ++++
- arch/loongarch/kernel/kexec_efi.c          |  2 +-
- arch/loongarch/kernel/kexec_elf.c          |  2 +-
- arch/loongarch/kernel/machine_kexec.c      | 22 ----------------------
- arch/loongarch/kernel/machine_kexec_file.c |  2 +-
- arch/loongarch/kernel/mem.c                |  7 +++----
- arch/loongarch/kernel/numa.c               | 23 ++---------------------
- arch/loongarch/kernel/perf_event.c         |  7 ++++---
- arch/loongarch/kernel/setup.c              |  5 ++---
- arch/loongarch/kernel/traps.c              |  4 ++--
- arch/loongarch/kvm/intc/eiointc.c          |  2 +-
- arch/loongarch/kvm/mmu.c                   |  2 +-
- arch/loongarch/kvm/timer.c                 |  2 ++
- arch/loongarch/kvm/vcpu.c                  | 19 +++++++++----------
- arch/loongarch/mm/init.c                   |  2 --
- arch/loongarch/mm/ioremap.c                |  2 +-
- rust/Makefile                              |  2 +-
- 24 files changed, 59 insertions(+), 82 deletions(-)
+base-commit: e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c
+-- 
+2.39.3
 
