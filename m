@@ -1,90 +1,155 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B893331A48
-	for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 08:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984A32D0C9D
+	for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 10:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763023739; cv=none; b=FpK1TysmFJ0vcr6p/XVgRs39PbiqzJH/t+q/P42muR0Ut93ZHH8FU6b0sXiiuGhx3shduQUFPEeYvOGPneqBIr4BcbB9v9ZmqKUKiqcmuSftgp0S/18MWT5o+Tqlfrjz2dRa+y3ULFihjluUdB9Sa2ZtfqPwmvR2efG2gD0SuJ4=
+	t=1763031406; cv=none; b=MjXgJe7NSX+mhbGtxi6V3+CTM5eeBk5U9LEzYUTIAZ4jKLszwNkeDmlZ/XPuX9a4jzKriDrCYkz1k2qc5ppcxRdrn9UF30zGCWiZhBifZrU1R62CZjmcprZPewXDWdnUydDUsvn5WRPXNNggK9I+8Xxk8yaJZIuQo/xECMM1YxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763023739; c=relaxed/simple;
-	bh=CsB2xyHaELaNpKlhQhPVYK1ESFwRam1zJJBBGUJkFc4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gorHtopBw3wOZIwhcMbNvERM3JvNGiJRspEl0Sdaph6a/j7xJi/0NvOIiqv8yCXJR6NsQkBqMJOIMAJSw5sJJr3kFMk6sBX4aTNtqO+eZPukAlCSVHRCiJG7fSvnfWtPPYR7fQFzjmLWsSjd6+Au7WkwFFUxidi24QS56PqQfP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.45])
-	by gateway (Coremail) with SMTP id _____8BxE9BpmxVppcoiAA--.9482S3;
-	Thu, 13 Nov 2025 16:48:41 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.45])
-	by front1 (Coremail) with SMTP id qMiowJAxQMJimxVpkYAxAQ--.3356S3;
-	Thu, 13 Nov 2025 16:48:38 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 1/2] dt-bindings: i2c: loongson,ls2x: Add ls2k0300-i2c compatible
-Date: Thu, 13 Nov 2025 16:48:23 +0800
-Message-ID: <75ff6d9ecb23082cb656da5936a5c4ac0a98074f.1763018288.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1763018288.git.zhoubinbin@loongson.cn>
-References: <cover.1763018288.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1763031406; c=relaxed/simple;
+	bh=krenDmY5Pa/azYQKBLv7banVwWeJRQZpar7uT320t2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nmpM4cCAGJH0Rbwd8FnXaSmo3wpcQ9D2z8ouHUC3j5xmNUhJEA5JxHEgchk5thF5iiBvFDgd2h3cIA5kDb6FZ1pCk1yF75f83cZ1xcd+AW8eGtUGApQ7rucj8BUVVzfvClb1JUz1K923gfpztMneAzdf6cc6CD2VckWeYTFC6O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OzMMcbPN; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzMMcbPN"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7c28ff7a42eso231090a34.3
+        for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 02:56:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763031404; x=1763636204; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RaId7/74gQivPIasGTR9XCBW+VTRGYF6n2hctAny4u8=;
+        b=OzMMcbPNqJQRay/x4+N+RVALtTkAtnnKJErcQoWiMWqQGFiMgrFXWu7Ws6QOPbMKtC
+         oTntzh+8/0T3mYu+7DsYBJ5O8Har4mGn1wpFXCdIaQvvBgIKVJ5Za4MZvU+1qfGn+Jrx
+         HwkQsY04rWjs7K4TAclsN6uhBdQ11+4j62nrz99deP5iWoGXJ891w/NGftmCoBx+nP+5
+         lnw1kn7riLQLa9Dz6VrXNmciWh8FUsCjLFHeGtHrwbqeEVBmNomZqdLwh0F+wJS2TrEE
+         U6/t1F+uFj5odJpitcTuacQhPy15imoNsIsVTLTnG0reVKa1zT+N8Mq0We/2Ci8PhgA1
+         /obQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763031404; x=1763636204;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RaId7/74gQivPIasGTR9XCBW+VTRGYF6n2hctAny4u8=;
+        b=eeHRj1U2mSelr9jPzfpdQz/oAs7NuyM6w01H4TnL8KI1jQ3hBa91NcVFiE4eRlaUaP
+         UrQhwDI/XqA9dqStv75RG80kBhj2xE8+InQAn01Fd78jYZSewqLX/HIHeQInTSaEPzCY
+         BZ4hCwS4G51RJyCfHfE2FOMyDRGFtAaquew3ktKGaNmfCFeVG+YgqSAbH4VDoq1e93bH
+         wB3CtW6MwsS9Cd0JNALbVRls30wLY2lBjJP/Y6KHj/8lzFv+SGNflJga8J1VME5GT+E5
+         RBCAwpNVe+bcP3EQaecFW5v9S+8DzxhsHW6xQmNluV6hjb2YjgSMs7r2a8X2OXkPfckT
+         q6VA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGbW7jzry4Y7ecDGe1qDoWR9HDrpevsyP6VBCJOWJ+rFD0RoumkvwXR45iM5VNXTDAhFi8OF66eLY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwNhLAcDpJo5DG6PEIMg79aZ8RjoEUnjb/mF9HxI4XgTx/sh8It
+	lKlzpoPl096sRCMBMLl/RAX1xPiZ7JTEap6O7VSLPUG4uO/0fGxRVg7IOyjnDYaFZxK9/iFPYSQ
+	Qz6hPmj+b5qJat99+8GRE6zqFWtVrIJ9tOn2F/BM=
+X-Gm-Gg: ASbGncuCmBGaCvWQw3QNfFn6Oq6ExJY2n/drlR7feHSS3YvjkDBfsQqvYTXUpqaRJwW
+	OcE7Eh1m6RhlBeZP9b+J4xI09wu17sZXoHLlNCK+QTmXYVEDpPhyBZwqNEzfWpywdTjFmf4XrcN
+	An/5N/6ymWHHLjFiQfd+2zmYptFEkQ3EFRwjz1J7VhkmJDkyMDtuCoPtm1ALbD8Ig5K1znAWdxN
+	0yD/DgY3aRYSZrhA51TkqoqTN6yRMtSBlgvGs5gOahOFE3lKMhY0tCdPyE=
+X-Google-Smtp-Source: AGHT+IGQGWhNH8gO5EqjoOQURkh/FR8tu20xPEMu7Vequbuu3IOon3DhSgp7HPHuzp8wDH6Pl0k2rVkRjY2Wpp8QiH8=
+X-Received: by 2002:a05:6808:6903:b0:44f:6d8b:5836 with SMTP id
+ 5614622812f47-4507444c435mr2750263b6e.1.1763031403647; Thu, 13 Nov 2025
+ 02:56:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxQMJimxVpkYAxAQ--.3356S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEFCGkVcxQCrQAAs6
-X-Coremail-Antispam: 1Uk129KBj9xXoWrtFWDuFy7CryUuF1rGry5KFX_yoW3KFgEy3
-	WIv3W8Grs8AF1Fgw1qvr48KF13XasFy3Z5C3WDAF4kAw17KrnxtF97J345Cryfu3y3urnx
-	Wa1kGrWSvanrGosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb78YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_
-	Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8vD73UUUUU==
+References: <20251110175330.73200-1-vincent.mc.li@gmail.com>
+In-Reply-To: <20251110175330.73200-1-vincent.mc.li@gmail.com>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Thu, 13 Nov 2025 18:56:32 +0800
+X-Gm-Features: AWmQ_blYnbtU1jLnbZ_yM4Z1iRh6dHavP1LxGvNFqPRWpVWU8LKAcj1ZvxL5OXQ
+Message-ID: <CAEyhmHQ+0TQUukapz6opSCQzN8QwD_hMsXOGAYsaDZcdq-8KkA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Disable bpf trampoline kernel module
+ function trace
+To: Vincent Li <vincent.mc.li@gmail.com>
+Cc: Chenghao Duan <duanchenghao@kylinos.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add "loongson,ls2k0300-i2c" dedicated compatible for representing I2C of
-Loongson-2K0300 chip, because its HW integration is quiet different from
-others.
+On Tue, Nov 11, 2025 at 1:53=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.com=
+> wrote:
+>
+> The current LoongArch BPF trampoline implementation is incompatible
+> with tracing functions in kernel modules. This causes several severe
+> and user-visible problems:
+>
+> * Kernel lockups when a BPF program is attached to a module function [0].
+> * The `bpf_selftests/module_attach` test fails consistently.
+> * Critical kernel modules like WireGuard experience traffic disruption
+>   when their functions are traced with fentry [1].
+>
+> Given the severity and the potential for other unknown side-effects,
+> it is safest to disable the feature entirely for now. This patch
+> prevents the BPF subsystem from allowing trampoline attachments to
+> module functions on LoongArch.
+>
+> This is a temporary mitigation until the core issues in the trampoline
+> code for module handling can be identified and fixed.
+>
+> [root@fedora bpf]# ./test_progs -a module_attach -v
+> bpf_testmod.ko is already unloaded.
+> Loading bpf_testmod.ko...
+> Successfully loaded bpf_testmod.ko.
+> test_module_attach:PASS:skel_open 0 nsec
+> test_module_attach:PASS:set_attach_target 0 nsec
+> test_module_attach:PASS:set_attach_target_explicit 0 nsec
+> test_module_attach:PASS:skel_load 0 nsec
+> libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
+> libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
+> test_module_attach:FAIL:skel_attach skeleton attach failed: -524
+> Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+> Successfully unloaded bpf_testmod.ko.
+>
+> [0]: https://lore.kernel.org/loongarch/CAK3+h2wDmpC-hP4u4pJY8T-yfKyk4yRzp=
+u2LMO+C13FMT58oqQ@mail.gmail.com/
+> [1]: https://lore.kernel.org/loongarch/CAK3+h2wYcpc+OwdLDUBvg2rF9rvvyc5am=
+fHT-KcFaK93uoELPg@mail.gmail.com/
+>
+> Signed-off-by: Vincent Li <vincent.mc.li@gmail.com>
+> ---
+>  arch/loongarch/net/bpf_jit.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml | 1 +
- 1 file changed, 1 insertion(+)
+You should add a Fixes tag.
 
-diff --git a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-index 67882ec6e06a..ac2bfb21b5b2 100644
---- a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-+++ b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-@@ -16,6 +16,7 @@ properties:
-   compatible:
-     enum:
-       - loongson,ls2k-i2c
-+      - loongson,ls2k0300-i2c
-       - loongson,ls7a-i2c
- 
-   reg:
--- 
-2.47.3
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index cbe53d0b7fb0..ace89ca95f9b 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1624,6 +1624,9 @@ static int __arch_prepare_bpf_trampoline(struct jit=
+_ctx *ctx, struct bpf_tramp_i
+>         /* Direct jump skips 5 NOP instructions */
+>         else if (is_bpf_text_address((unsigned long)orig_call))
+>                 orig_call +=3D LOONGARCH_BPF_FENTRY_NBYTES;
+> +       /* BPF selftests module_attach failed, disable module trace */
 
+We disable it not just because BPF selftests failed, actually it
+causes severe issues.
+So this comment should be reworded.
+
+I am also wondering why we didn't skip nops for kernel module
+functions in the first place.
+
+> +       else if (is_module_text_address((unsigned long)orig_call))
+> +               return -ENOTSUPP;
+>
+
+I am OK with this approach since we can't fix it in time.
+Except the comments above:
+
+Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
+
+>         if (flags & BPF_TRAMP_F_CALL_ORIG) {
+>                 move_addr(ctx, LOONGARCH_GPR_A0, (const u64)im);
+> --
+> 2.38.1
+>
