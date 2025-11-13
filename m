@@ -1,139 +1,159 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0F92FBDE3
-	for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 17:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0002F83AE
+	for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 18:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763053635; cv=none; b=SHlL8VGSXPAHB4AU/EgqMfjep1NixUcf7vJN3soZ+EfRVlvTXxKzLcgFOoG6zFVJ1KGgNCNy6JzAAd3q4qlDTcglxcwx4e2a+bRlkpZhzFXObDOOkdCqRV+KXpH607S/F+ahvE5JNjavys7ijAhDRK8dBOTfTLs30/+4JMkqFCs=
+	t=1763058766; cv=none; b=a76TFuxcbdMkun3K0l2/x2c53t7sls6/wof7ibzlG3sqN0I0W8gaq56HQPm0hMxEJZ+5iVg8LuXTxbHF/6HGZhYUiDXA6f+9Y0J8DN7gdijUOI6yR9K8lV7z1bxydDmTpmyhwmcSGaEAVxQgTXtgtld9gDN+8eVFd3rR7G5XWJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763053635; c=relaxed/simple;
-	bh=eIDJr2pEA2DRlPLQjPs6NNGihwqlyDxmUFqdN1+Zr80=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=i2Df2EvH8q0WV3jqTaHT3GS5aVZohMn7UP7QK4oiaehGjf5c95xiUpr2CMJC1b9wqx5tBdlYAFdY+aehu4grI2bkBll1SKa5goKwW25TW5wDR+8M48cQi0joJVSd7InvvFj8FNNRWy3vLAzXYyzZggYLz/wLFtwHenvba32nUv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bTqRo6qN; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1763058766; c=relaxed/simple;
+	bh=lVK6LGrRGW3eaG+V9l1z4aQDY2CjycAA5y0HtlS4sFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FAOTZrY99zATu5g9+shSjY2Apeu7zItK2Q7AhvNm2afxC12oy1y5j13A5kR1lar2XJX10cFmb96nUNbUqSJU0O07z/EgXojZqcofp5ewOE8zvbupnIfvBQL7PIBZjUN9rPRLwfCu0HxXYL/ncAp7xV1gHwB1AeEhT12bUIuQDj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rfg6rK4n; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTqRo6qN"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7aace33b75bso982808b3a.1
-        for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 09:07:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rfg6rK4n"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-477619f8ae5so9082345e9.3
+        for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 10:32:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763053633; x=1763658433; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SKwZSMmGzUdanwCTT7PnADQTRL8j3tcNkt4rj2Q3WSU=;
-        b=bTqRo6qNGmivxfJtdaHhaNNvjBJveiJ3LV/zCzK8K+4Z+MLdu6j/iwsI0Vw60eWolf
-         TpPmQa+rdkU8BNne3AcL6gx58A4CrTWJX1rjyyzEBr3/cwKzLXKw7YAixsbEUVLYNfxv
-         UQXYuHGPp1uIdAcRaK5BBIhzyvrbfgenwP1PvyLr4zodLicKi1ZOzP6DTAeeyi6RE3vt
-         atio0L0W79SY2rohYbbcNw+wALc/7yXg4Tq7r1bOcpt1+cp/38sEboOyPQKU3M/eae1W
-         itwDSiuGrj6NEJi5EVwEuvmh8pjXaElDLu0IUHK2WE7jn/mwbl/1RTdzMtE3LmD8pY8j
-         sJAA==
+        d=gmail.com; s=20230601; t=1763058763; x=1763663563; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=v9yZQXqBch1JSJzcaQQctkjx9YKy3u8FyEyL/vNPgfc=;
+        b=Rfg6rK4nG4TLiB4pyWacYxSYK9FM6KyrsYVaql++zeWc44oPwYlQkkeZFB0/x4f4pb
+         xTLLF/C1QQBf/P0mnjhYzgp9TE+oYmTTxiwbCHFJtrfHKEo+vMVBcoS+12OdN+tT+xh/
+         nC453LCuZsvpT0srOjqFrr0hjq7jjrx/8USNcov+nmimw1uAL0HONcjFpTuPvwLLVAs1
+         LQrh9/FubUYXLkfc23YeKtk405y0Q1aGAcwwUr0Y26VNJoTXDtEk2K+aXg4jRHQmhZg4
+         RCkGqoqOKPyyPTLEyTHaFyt+2/Jyz8/sUScmrYxHkNdqTMz2/zFBQe1rKcjMXtq4d6BT
+         lN4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763053633; x=1763658433;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SKwZSMmGzUdanwCTT7PnADQTRL8j3tcNkt4rj2Q3WSU=;
-        b=M7eRcmfvH+i5N1/OgZ4Mu+GK+1hy6i5peg6IvcUKiPr7y0x0sPqHItKLPXfGZFmsdI
-         C5Gn8H83wj4CLnIhGHfqjco7qyfVOMe2KnTjfhmSQcHdiODFHoU9RZO1P567uHJtLrZP
-         8qrKXafEe8Gh3avRWcz8eYepy4afsqOZwYYDkWu25HP40Z8apJBOXYtdHrvKBQP/FpFP
-         E3O04VX/FGTBnOd9jGNDKCtz0cdPhotN/wxtTgjY54nIVKjwHdvDJeoRaZH7Z0YjkHwl
-         1HUsdDg+l8DThhMi1biOOMbrhDfpIPKxh8aqqWy5LRe5y11EOo6nPGG/juFMv6TxuFbo
-         LAig==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ7DsmKPBV9oBKULZmHjwAF1dVQ8xTDQoW16Y/aTlG/p1dUDwao6e24wa8jBKT/roEyqqoIFE2qLY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzB81E7fvJorGEFmz4IDT/Vmw0Op77EJ6M1pCo4dCGdWQxcYZpV
-	P0oMyABZJQJqDim5iBPvd4r4RlCYnCaO3fmpyVr93pNCFhKX34wiuxlM
-X-Gm-Gg: ASbGncuABIk8+ZiZzL7pfjbKMlBceyMvCn++bAVgfu2sTyEQhL9ga5w2DV8CD76QjD1
-	vpJ2T8iX1cPa/XESJtCcA/eveyeyaYUPkvYNqLpdsPyky/ryDLZzgCylUZ7Ht6EGXbzBi8WMGqf
-	m14MQaQ09VInM9KPVoWe6i7Bo2pTeUmp0LCxENAGQCKW4YNxLkMn1o+E4jmo5yEbtF/JuA3KWYM
-	woX6L/mgnq7vFWKOlieP8pm2xcr/iE/qD8tKVMOEAC42yfunnnfVoc8pDjSFYA73QrMdTjONVOD
-	hU85LdTQN+qarCms2z2uPYsPMXWgtjO+izo8iCvxchKXJKWuFklBJs8n+3ZU6R1Uv3x2JfCrir1
-	/4g3n4h9Lj1OmgCHafFTf9AT9loy10K8GeNS29D93F/abqRTOqkioBfeMDJAZevbCUsRjQg4R5K
-	i4dBsPCC7zoQ==
-X-Google-Smtp-Source: AGHT+IEfUMMtqB0bhkhL0gj5Ig+FeOUTrhBZAFyF9owq3FJPGQALfGZUkSO+nlRFF81/4Zl757VY9g==
-X-Received: by 2002:a05:6a00:9a9:b0:7aa:a2a8:980f with SMTP id d2e1a72fcca58-7ba3b4ab38bmr229629b3a.20.1763053632940;
-        Thu, 13 Nov 2025 09:07:12 -0800 (PST)
-Received: from fedora.hsd1.ca.comcast.net ([2601:648:4280:48f0::76e1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b92772e713sm2770885b3a.54.2025.11.13.09.07.12
+        d=1e100.net; s=20230601; t=1763058763; x=1763663563;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v9yZQXqBch1JSJzcaQQctkjx9YKy3u8FyEyL/vNPgfc=;
+        b=ebzAv8ZslBTy3f6H6QAhHAyS0O/a25PuUeo+aQGhkMLmmkg4vhzJfrHnENvo+WjjRz
+         EQtwE6XP0/KrayaM7i7X8lAcO3XpHFo5zT/2n4UP7KtmLYrjmyu6DIOijRZlcUlRYPqO
+         DMf6YQCzlqOFyoipVfrb/sYPSbFKyQFvq6qxous/XCwegD/O57SOqavcVUyFAdAOomlr
+         vVgZU3zO5Z0NbfT/YOZgJtf44nh2C5JhwujnZLBnO6ZA3E7QQ157bnPooWgBtyGE9jFn
+         Gwb3IGnJ3cbRt3XRtPJAYMqlvUnYrpfTLmesbj2Hcnh9fxYnY+OLZ9NofcSnZpjaPCo3
+         UZuA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8RSFb246AKfCyGKXzMzijvrMCUOrn2V+frJMQ79OQ7flAD+k1+6/YlxDzCK2bA3WGCjKgRsiaNxs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyEPEp0it9pzggLpC8VNgwHkKxs71BL62zuuoreyZsH2oYD6qIX
+	xiv+AAM8yob/HNg6Rgx92wEoruVwIXNcex+DQRl7wT00wtpFfDTNEd+G
+X-Gm-Gg: ASbGnct0Nl++3mClOLrNubXYUerpQ8FN6yCB2g6Lam4utSwneqY/J1uK+AWOSNZt1RX
+	NKrMTVAKQ8MJ+4eU/4xkmt1R2rvfp4WeoS0YCRR50QGtvFsghF7GGNZ8yag1iysXxmuJ+E7A2Gl
+	KbSonUFqmLaY09lmqc/ZiigTksTXZBAcPlDe2i9/9P1vx6pNzwklly9Ec/CNI2bLACqEj8RVfTP
+	p28o7rUNDfeYz9kDF/byZ0UzgG9NSef63YscOQArIZTFxPjaQSeQVncbnBbJ+66w0YQDzyPK2wC
+	hxpPqYSL4Gf5G9FMwCaSBtxbuGztpwUe9JhWQkoayOPsDzFc5N3elBQ7hnbjvyeHvV6x22V/1B3
+	LE0NTV03+uQBeqrpzjfNu1NS98POIZIfd/3GVtCb6jYtHrPxEvxsZN3LxLMz4Y35jeZgTslN+xm
+	sDsu2cPD24Ij6vAsZMP7bIhGtM38tEMCktUxVqodqae4f/qrJYjF0jtobctOhl7DsfbVZwqoUeX
+	g==
+X-Google-Smtp-Source: AGHT+IEUOfl9Mj/MhDnCs6vXeSUiBJWe5OA5hhf/B85epyvDSKEXz8FsTxq8lGXRcYwvA52KNvjEqA==
+X-Received: by 2002:a05:600c:3b12:b0:477:67ca:cdbb with SMTP id 5b1f17b1804b1-4778febd327mr4653575e9.36.1763058762895;
+        Thu, 13 Nov 2025 10:32:42 -0800 (PST)
+Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4778c88bee1sm63595835e9.11.2025.11.13.10.32.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Nov 2025 09:07:12 -0800 (PST)
-From: Vincent Li <vincent.mc.li@gmail.com>
-To: Chenghao Duan <duanchenghao@kylinos.cn>,
-	Hengqi Chen <hengqi.chen@gmail.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	loongarch@lists.linux.dev
-Cc: Vincent Li <vincent.mc.li@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v1] LoongArch: BPF: Disable bpf trampoline kernel module function trace
-Date: Thu, 13 Nov 2025 09:06:51 -0800
-Message-Id: <20251113170651.367092-1-vincent.mc.li@gmail.com>
-X-Mailer: git-send-email 2.38.1
+        Thu, 13 Nov 2025 10:32:40 -0800 (PST)
+Date: Thu, 13 Nov 2025 19:32:38 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] syscore: Pass context data to callbacks
+Message-ID: <2tx3o5es77oa37zqvikcoo6n2ryxvepa54ezsaawcjdbf3g3wp@o2dbcbskjksk>
+References: <20251029163336.2785270-1-thierry.reding@gmail.com>
+ <20251029163336.2785270-2-thierry.reding@gmail.com>
+ <CAJZ5v0igMJ12KoYCmrWauvOfdxaNP5-XVKoSxUroaKFN7S-rTQ@mail.gmail.com>
+ <3dzha4qyqdrbutxby3n5nkvihnxrhniqr6w726eumhzgln2w5l@fbu72mzmjz4m>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7axrx4sqgqvkj2b7"
+Content-Disposition: inline
+In-Reply-To: <3dzha4qyqdrbutxby3n5nkvihnxrhniqr6w726eumhzgln2w5l@fbu72mzmjz4m>
 
-The current LoongArch BPF trampoline implementation is incompatible
-with tracing functions in kernel modules. This causes several severe
-and user-visible problems:
 
-* Kernel lockups when a BPF program is attached to a module function [0].
-* The `bpf_selftests/module_attach` test fails consistently.
-* Critical kernel modules like WireGuard experience traffic disruption
-  when their functions are traced with fentry [1].
+--7axrx4sqgqvkj2b7
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 1/7] syscore: Pass context data to callbacks
+MIME-Version: 1.0
 
-Given the severity and the potential for other unknown side-effects,
-it is safest to disable the feature entirely for now. This patch
-prevents the BPF subsystem from allowing trampoline attachments to
-module functions on LoongArch.
+On Wed, Nov 05, 2025 at 05:52:01PM +0100, Thierry Reding wrote:
+> On Mon, Nov 03, 2025 at 05:18:08PM +0100, Rafael J. Wysocki wrote:
+> > On Wed, Oct 29, 2025 at 5:33=E2=80=AFPM Thierry Reding <thierry.reding@=
+gmail.com> wrote:
+> > >
+> > > From: Thierry Reding <treding@nvidia.com>
+> > >
+> > > Several drivers can benefit from registering per-instance data along
+> > > with the syscore operations. To achieve this, move the modifiable fie=
+lds
+> > > out of the syscore_ops structure and into a separate struct syscore t=
+hat
+> > > can be registered with the framework. Add a void * driver data field =
+for
+> > > drivers to store contextual data that will be passed to the syscore o=
+ps.
+> > >
+> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> >=20
+> > This change is fine with me, so I can apply it unless somebody has any
+> > specific heartburn related to it (Greg?), but in case you want to
+> > route it differently
+> >=20
+> > Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+>=20
+> I have a few follow-up patches for the Tegra PMC driver that depend on
+> this. 6.19 is what I was targetting, so if we could put this into a
+> stable branch that'd be the best solution. I can set that up via the
+> Tegra tree if you and Greg are okay with it.
+>=20
+> If that's all too complicated, I can probably wait until the next cycle
+> to merge the PMC changes.
 
-This is a temporary mitigation until the core issues in the trampoline
-code for module handling can be identified and fixed.
+I've added this single patch to a branch based off of v6.18-rc1 that I
+plan to feed into linux-next so it can get some broader exposure.
 
-[root@fedora bpf]# ./test_progs -a module_attach -v
-bpf_testmod.ko is already unloaded.
-Loading bpf_testmod.ko...
-Successfully loaded bpf_testmod.ko.
-test_module_attach:PASS:skel_open 0 nsec
-test_module_attach:PASS:set_attach_target 0 nsec
-test_module_attach:PASS:set_attach_target_explicit 0 nsec
-test_module_attach:PASS:skel_load 0 nsec
-libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
-libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
-test_module_attach:FAIL:skel_attach skeleton attach failed: -524
-Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-Successfully unloaded bpf_testmod.ko.
+I can keep that branch stable so it can go through multiple trees if
+needed. If anyone's interested, the branch is here:
 
-[0]: https://lore.kernel.org/loongarch/CAK3+h2wDmpC-hP4u4pJY8T-yfKyk4yRzpu2LMO+C13FMT58oqQ@mail.gmail.com/
-[1]: https://lore.kernel.org/loongarch/CAK3+h2wYcpc+OwdLDUBvg2rF9rvvyc5amfHT-KcFaK93uoELPg@mail.gmail.com/
+	https://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux.git/log/?h=3Df=
+or-6.19/syscore
 
-Cc: stable@vger.kernel.org
-Fixes: f9b6b41f0cf3 (“LoongArch: BPF: Add basic bpf trampoline support”)
-Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
-Signed-off-by: Vincent Li <vincent.mc.li@gmail.com>
----
- arch/loongarch/net/bpf_jit.c | 3 +++
- 1 file changed, 3 insertions(+)
+Thierry
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index cbe53d0b7fb0..49c1d4b95404 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1624,6 +1624,9 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 	/* Direct jump skips 5 NOP instructions */
- 	else if (is_bpf_text_address((unsigned long)orig_call))
- 		orig_call += LOONGARCH_BPF_FENTRY_NBYTES;
-+	/* Module tracing not supported - causes kernel lockups */
-+	else if (is_module_text_address((unsigned long)orig_call))
-+		return -ENOTSUPP;
- 
- 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
- 		move_addr(ctx, LOONGARCH_GPR_A0, (const u64)im);
--- 
-2.38.1
+--7axrx4sqgqvkj2b7
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkWJEYACgkQ3SOs138+
+s6GbLQ/+LcY0n50MLCzG6P3cLlbnizYWB4fd77qBH6YbB2iRPf1TPkFtC1s24QiA
+KgZqLzCkJ5rw0Xtvmtzci4gr3GeqsMf/4DM0k3X5WdN/DMat0RTe1rhVuxq0MmGV
+7kmy+iB9FW6MgVt4kjeYdEL94ohEKXEUKTS6HTGfPFsonbJjnZdIsv4GVThClyxW
+Y3vE0mnoAvxjqtVu57jc/Ihryv5Zz6pYiX9AWhT1ryTG7tmgKuFWW0YgqkFy/Y9O
+rneSUrPJCeOBzjgL5oY6mPqTCl5f0VdGMb9S18RK+DKXSCLW7b0nGt4CCN7sEuOo
+7Dy1UuUjok1XLs8NYPQ7oDD29Q536WmrUmQMjMm0R3HuqmmD+PDO0/I9QA2cuOvw
+V1zUm+XqIlAyZs4lZkJXotqlCEBkPNCv0iIqEraETrCS1RYi/k0eqPF3Yu3oQc5p
+58cnaEW28DaJ9+Cy7T4NCu7lsDzDyyL+5n4HQyWGaFkVYU+Wkfh0H1ezo8bP9txU
+/Yan3s21OGdjzLMcCT0abiDrFOdN9N6HGOI2/UHnz87jxubwy7HjZ52Fkz3iGATD
+uz1HyHzrIav2FWTN0PkENUQpiTQIHTs0znDBKPpTvDkeVbTF5nQuP2S0+bUGxvLR
+BBevVnm7dT2dD5WqJbGfhem+DFPn66JVA5SFq9+/bvG0KsOpwpA=
+=Jfb5
+-----END PGP SIGNATURE-----
+
+--7axrx4sqgqvkj2b7--
