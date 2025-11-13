@@ -1,292 +1,135 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4682E4241
-	for <loongarch@lists.linux.dev>; Wed, 12 Nov 2025 23:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 126852110
+	for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 00:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762991710; cv=none; b=NFmPF037a3p0g8Z5M5ECB3357FvehNB11WskuBIsvKzMAkADG5d1JfrEfR9mzdO6cDcndhqYOY0JPN+mcSIMAjxkh0FpFU/jWFdDM9kWSQSQ+uEj8Fh1VkI1d3+WNa+h/7IOXQW+JyGbxhtIlBTbGC7f76qjfWJHo+FUnVR3rG4=
+	t=1762992698; cv=none; b=OMFcuvAvTzN79BxvPSZxESJTWQizqU8cS/8dbftUIKkSxxwgYOEXKmAh4XeeLIVGb9wLE9w572aXbVheBHSde8zl1Zk3MEB/a4JPwA3TUgN2MIaWl3a3KeKfJo+guMfZcXU6R5eG9Tb/hwYuSk8njvO3b1Puy10LSOKaswm72eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762991710; c=relaxed/simple;
-	bh=Us25Ow4LTRbEQvqsZr0IcOc4aoJJGqD1PGayCn9qrv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t0CdrZeyXkr5jyXUuQsguFiM7kmRWdkRlL9w05dAm9/0ikPZTiFsrcLc4WDPIzMoMBLoAd4Vr5u9gwirRrj5v2xBz5TeOjdR4g9Bx7Jm5IyfKXwtQqyi3Z2hZJMnKH7IcYe0HFFfLJrFyYu8HQROIcziaGvj67vwmfTx2AEP/Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YXQNXq5M; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXQNXq5M"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-340bb1cb9ddso180747a91.2
-        for <loongarch@lists.linux.dev>; Wed, 12 Nov 2025 15:55:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762991708; x=1763596508; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w6OffR4lIkpzwUex3aL8B2PN3fOXP6I4NsdzFgFrC6Q=;
-        b=YXQNXq5M+ZhDyIMn8E4NqmAjXGPXajUDA5jnekHXfFOkCvkhfQqb4HCw0xFxNeomDO
-         /xLf5L5SCLNfpvCZ851/pP+dzEyYDt+wEl50akYi+X/HuQLovf47C6cB4IkHA0OQIcbl
-         mjZe8csFWih9uPL6Zl5syMS+24p3NZPV9MbuLvUodIyrQLDSIPd6d/IDPYThKF6Ais8V
-         Qmtcf8ee26g3zk/FN51GEfaBHuuvROITGOxBL2cs+KftxU7C9q5YTw05wmNdA5dKaCxP
-         zpCVEs6Q9feoAhCX1bamBrjY2Qx9VCe2jmt4iYB1SOGpPNZiTQ0UScQR3EMDLBj9M5hr
-         7qlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762991708; x=1763596508;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=w6OffR4lIkpzwUex3aL8B2PN3fOXP6I4NsdzFgFrC6Q=;
-        b=Crz3IgmMw0sR3LrxO9nSejXIWopg9WD8bLZcYvAvI+BJ4oz7Qz7mK8fvf6JE+zuf8i
-         tuAg51BryxB/+jqtnLkMVrq/d3/9yIS1S/r9y30/LozvGdHUbNQuvsBMPyLIblOzrqor
-         NhufggZtebIDWpYtKLPwPBC2oNDtXkgXmF1R/vNZaYnJ74MFAKJ/0mF6anKWhTT8bpMN
-         b199q3XppAbmbWd03dUydBuxWhwa1wGLvrXUQy9N3hdeqsqg0W8yQiaFJYpAsQeVcmji
-         XGDXPNMJVFm8QTspS4we6ZtysJaXgqrwNhb8fdHmrUzhVsJlXEguSSnLg07oIApw844H
-         Ht+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUN671uIUHCWQp5lLUw5VeTAjdnJgGdsigLW5Qh7InUz9Xa9tZVg6f2bnJel9NkTOy2onpGSnnchQs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzHGoRpAciV9zNfGZQg8ANznI4SrsytBP4WGhHfRaveNoh8Cg/3
-	7IvKFIsYHLd2xAyUSXNbaXqT2Cvy3/brgXxQ+9f6rIvsyifRAAsCf2TM
-X-Gm-Gg: ASbGncvV2+yfLWPlVkk5n1V25GTkLZtRQT5dalHAyF7iJE4CCEzNeHXMWlouY50IcGk
-	tUzerJp/uaZtBvrIPgwJqg6FWRoMM1zz3Uc1hgC/ee9JFQStNwHAoh6t3ry9H/T2zi0cAS542Dx
-	2wnAcmPejGo11/FllCYr6UAPyzLDv7gjHIWHRoK7yeksOS2hVLlAPgFC03mJ9Buk4gJWKc4/T2t
-	GtWIxjbvD40Hi/SHHvWkE+KbxAPElKcwakRWpldb3dQnxsdKxyMBW8sFt6UQXwId8aMYm2WJd8T
-	mbGZsBRe6f8YNOaoNaFdO0mrS4mwlpbaQg9WQeWy1bG0CNO/ZD/XPJqut345bLQt23vaaEt9oqI
-	mBo2zxG5Kv1u1FGLD39ViHOB1JQor14zAh5YHvzmxsVFxReQLcd5sLm6lEsSI6oNCK9oweKhtEq
-	RonbOhaLW1HPJp
-X-Google-Smtp-Source: AGHT+IEE+ukQ2Egcy4293lQJqi7WMf+MbJ76O7jm9+X36I2yXPp50tCVwO5o7dcTEyhqPA51Cg8LYA==
-X-Received: by 2002:a17:90b:5487:b0:343:c839:21d2 with SMTP id 98e67ed59e1d1-343ddef34c5mr5046424a91.28.1762991708311;
-        Wed, 12 Nov 2025 15:55:08 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-343ed5331e3sm271066a91.11.2025.11.12.15.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 15:55:07 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 12 Nov 2025 15:55:06 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>
-Subject: Re: [PATCH v2 5/5] watchdog: loongson1: Add Loongson-2k0300 watchdog
- support
-Message-ID: <bcfb8eec-546e-40f5-bf12-fc2c68bbd7d4@roeck-us.net>
-References: <cover.1762482089.git.zhoubinbin@loongson.cn>
- <d6153aa5457098cea388cff7ee2ceb43b207970b.1762482089.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1762992698; c=relaxed/simple;
+	bh=Gr2YxxqKvlpCtol3yYvDxV+srWVZwDKU2Wvd/qwfouY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OfyCxmWM5reBe9HoAWaq+iO2dxv6zUenAef6lNuHoEks7cPyygCGriaDPYEo4QHJQANvaLBHaZ4lhE7GlP0Tjlq4yKCqb0YTXvukKgyYYE60lSOISU3K7upMSFFomjEUhSp2MQopAcGO15eLo1iKf7iTgToggClk9/77HARWvKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.45])
+	by gateway (Coremail) with SMTP id _____8CxHvAyIhVpuaAiAA--.9145S3;
+	Thu, 13 Nov 2025 08:11:30 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.45])
+	by front1 (Coremail) with SMTP id qMiowJAx_8EuIhVpGQYxAQ--.60387S2;
+	Thu, 13 Nov 2025 08:11:28 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.18-rc6
+Date: Thu, 13 Nov 2025 08:11:16 +0800
+Message-ID: <20251113001116.2758597-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d6153aa5457098cea388cff7ee2ceb43b207970b.1762482089.git.zhoubinbin@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAx_8EuIhVpGQYxAQ--.60387S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGr1fGF4fXF4UuFWDGF47Jrc_yoW5Cw1fpr
+	y3urnrGFs5GrW3Zrnrt345urn8tr1xG34aqa1jy34rCr4jvF1UXr18Xr1kXFy5J3yrJFy0
+	qr1rWwnFqFyUJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
+	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
+	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
+	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
+	0xZFpf9x07jepB-UUUUU=
 
-On Fri, Nov 07, 2025 at 02:01:51PM +0800, Binbin Zhou wrote:
-> According to the manual, the Loongson-2K0300 watchdog is similar to the
-> Loongson-1, except for some register offsets and inconsistent register
-> bit definitions. Separate definitions via driver_data suffice.
-> 
-> Co-developed-by: Xiaochuang Mao <maoxiaochuan@loongson.cn>
-> Signed-off-by: Xiaochuang Mao <maoxiaochuan@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+The following changes since commit e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+  Linux 6.18-rc5 (2025-11-09 15:10:19 -0800)
 
-> ---
->  drivers/watchdog/Kconfig         |  4 +-
->  drivers/watchdog/loongson1_wdt.c | 73 ++++++++++++++++++++++++++------
->  2 files changed, 62 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 0c25b2ed44eb..002eb785ca1f 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1965,10 +1965,10 @@ config LANTIQ_WDT
->  
->  config LOONGSON1_WDT
->  	tristate "Loongson1 SoC hardware watchdog"
-> -	depends on MACH_LOONGSON32 || COMPILE_TEST
-> +	depends on MACH_LOONGSON32 || MACH_LOONGSON64 || COMPILE_TEST
->  	select WATCHDOG_CORE
->  	help
-> -	  Hardware driver for the Loongson1 SoC Watchdog Timer.
-> +	  Hardware driver for the Loongson family Watchdog Timer.
->  
->  config RALINK_WDT
->  	tristate "Ralink SoC watchdog"
-> diff --git a/drivers/watchdog/loongson1_wdt.c b/drivers/watchdog/loongson1_wdt.c
-> index 255198cbf5bf..2417519717cc 100644
-> --- a/drivers/watchdog/loongson1_wdt.c
-> +++ b/drivers/watchdog/loongson1_wdt.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0-or-later
->  /*
->   * Copyright (c) 2016 Yang Ling <gnaygnil@gmail.com>
-> + * Copyright (C) 2025 Binbin Zhou <zhoubinbin@loongson.cn>
->   */
->  
->  #include <linux/clk.h>
-> @@ -10,10 +11,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/watchdog.h>
->  
-> -/* Loongson 1 Watchdog Register Definitions */
-> +/* Loongson Watchdog Register Definitions */
->  #define WDT_EN			0x0
-> -#define WDT_TIMER		0x4
-> -#define WDT_SET			0x8
->  
->  #define DEFAULT_HEARTBEAT	30
->  
-> @@ -27,18 +26,37 @@ module_param(heartbeat, uint, 0);
->  MODULE_PARM_DESC(heartbeat, "Watchdog heartbeat in seconds. (default="
->  		 __MODULE_STRING(DEFAULT_HEARTBEAT) ")");
->  
-> +struct ls1x_wdt_pdata {
-> +	u32 timer_offset;
-> +	u32 set_offset;
-> +	u32 wdt_en_bit;
-> +};
-> +
-> +static const struct ls1x_wdt_pdata ls1b_wdt_pdata = {
-> +	.timer_offset = 0x4,
-> +	.set_offset = 0x8,
-> +	.wdt_en_bit = BIT(0),
-> +};
-> +
-> +static const struct ls1x_wdt_pdata ls2k0300_wdt_pdata = {
-> +	.timer_offset = 0x8,
-> +	.set_offset = 0x4,
-> +	.wdt_en_bit = BIT(1),
-> +};
-> +
->  struct ls1x_wdt_drvdata {
->  	void __iomem *base;
->  	struct clk *clk;
->  	unsigned long clk_rate;
->  	struct watchdog_device wdt;
-> +	const struct ls1x_wdt_pdata *pdata;
->  };
->  
->  static int ls1x_wdt_ping(struct watchdog_device *wdt_dev)
->  {
->  	struct ls1x_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
->  
-> -	writel(0x1, drvdata->base + WDT_SET);
-> +	writel(0x1, drvdata->base + drvdata->pdata->set_offset);
->  
->  	return 0;
->  }
-> @@ -53,7 +71,7 @@ static int ls1x_wdt_set_timeout(struct watchdog_device *wdt_dev,
->  	wdt_dev->timeout = timeout;
->  
->  	counts = drvdata->clk_rate * min(timeout, max_hw_heartbeat);
-> -	writel(counts, drvdata->base + WDT_TIMER);
-> +	writel(counts, drvdata->base + drvdata->pdata->timer_offset);
->  
->  	return 0;
->  }
-> @@ -62,7 +80,7 @@ static int ls1x_wdt_start(struct watchdog_device *wdt_dev)
->  {
->  	struct ls1x_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
->  
-> -	writel(0x1, drvdata->base + WDT_EN);
-> +	writel(drvdata->pdata->wdt_en_bit, drvdata->base + WDT_EN);
->  
->  	return 0;
->  }
-> @@ -70,8 +88,10 @@ static int ls1x_wdt_start(struct watchdog_device *wdt_dev)
->  static int ls1x_wdt_stop(struct watchdog_device *wdt_dev)
->  {
->  	struct ls1x_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
-> +	u32 val = readl(drvdata->base + WDT_EN);
->  
-> -	writel(0x0, drvdata->base + WDT_EN);
-> +	val &= ~(drvdata->pdata->wdt_en_bit);
-> +	writel(val, drvdata->base + WDT_EN);
->  
->  	return 0;
->  }
-> @@ -81,9 +101,9 @@ static int ls1x_wdt_restart(struct watchdog_device *wdt_dev,
->  {
->  	struct ls1x_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
->  
-> -	writel(0x1, drvdata->base + WDT_EN);
-> -	writel(0x1, drvdata->base + WDT_TIMER);
-> -	writel(0x1, drvdata->base + WDT_SET);
-> +	writel(drvdata->pdata->wdt_en_bit, drvdata->base + WDT_EN);
-> +	writel(0x1, drvdata->base + drvdata->pdata->timer_offset);
-> +	writel(0x1, drvdata->base + drvdata->pdata->set_offset);
->  
->  	return 0;
->  }
-> @@ -114,6 +134,8 @@ static int ls1x_wdt_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	platform_set_drvdata(pdev, drvdata);
->  
-> +	drvdata->pdata = of_device_get_match_data(dev);
-> +
->  	drvdata->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(drvdata->base))
->  		return PTR_ERR(drvdata->base);
-> @@ -142,9 +164,32 @@ static int ls1x_wdt_probe(struct platform_device *pdev)
->  	return devm_watchdog_register_device(dev, &drvdata->wdt);
->  }
->  
-> +static int ls1x_wdt_resume(struct device *dev)
-> +{
-> +	struct ls1x_wdt_drvdata *data = dev_get_drvdata(dev);
-> +
-> +	if (watchdog_active(&data->wdt))
-> +		ls1x_wdt_start(&data->wdt);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ls1x_wdt_suspend(struct device *dev)
-> +{
-> +	struct ls1x_wdt_drvdata *data = dev_get_drvdata(dev);
-> +
-> +	if (watchdog_active(&data->wdt))
-> +		ls1x_wdt_stop(&data->wdt);
-> +
-> +	return 0;
-> +}
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(ls1x_wdt_pm_ops, ls1x_wdt_suspend, ls1x_wdt_resume);
-> +
->  static const struct of_device_id ls1x_wdt_dt_ids[] = {
-> -	{ .compatible = "loongson,ls1b-wdt", },
-> -	{ .compatible = "loongson,ls1c-wdt", },
-> +	{ .compatible = "loongson,ls1b-wdt", .data = &ls1b_wdt_pdata },
-> +	{ .compatible = "loongson,ls1c-wdt", .data = &ls1b_wdt_pdata },
-> +	{ .compatible = "loongson,ls2k0300-wdt", .data = &ls2k0300_wdt_pdata },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, ls1x_wdt_dt_ids);
-> @@ -154,11 +199,13 @@ static struct platform_driver ls1x_wdt_driver = {
->  	.driver = {
->  		.name = "ls1x-wdt",
->  		.of_match_table = ls1x_wdt_dt_ids,
-> +		.pm = pm_ptr(&ls1x_wdt_pm_ops),
->  	},
->  };
->  
->  module_platform_driver(ls1x_wdt_driver);
->  
->  MODULE_AUTHOR("Yang Ling <gnaygnil@gmail.com>");
-> -MODULE_DESCRIPTION("Loongson1 Watchdog Driver");
-> +MODULE_AUTHOR("Binbin Zhou <zhoubinbin@loongson.cn>");
-> +MODULE_DESCRIPTION("Loongson Watchdog Driver");
->  MODULE_LICENSE("GPL");
-> -- 
-> 2.47.3
-> 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.18-1
+
+for you to fetch changes up to 237e74bfa261fb0cf75bd08c9be0c5094018ee20:
+
+  LoongArch: KVM: Fix max supported vCPUs set with EIOINTC (2025-11-10 08:37:07 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.18-rc6
+
+Fix a build error about Rust; fix some bugs about exception/interrupt,
+memory management, perf event, hardware breakpoint, kexec and KVM.
+----------------------------------------------------------------
+Bibo Mao (5):
+      LoongArch: KVM: Set page with write attribute if dirty track disabled
+      LoongArch: KVM: Add delay until timer interrupt injected
+      LoongArch: KVM: Restore guest PMU if it is enabled
+      LoongArch: KVM: Skip PMU checking on vCPU context switch
+      LoongArch: KVM: Fix max supported vCPUs set with EIOINTC
+
+Huacai Chen (5):
+      LoongArch: Clarify 3 MSG interrupt features
+      LoongArch: Use physical addresses for CSR_MERRENTRY/CSR_TLBRENTRY
+      LoongArch: Consolidate early_ioremap()/ioremap_prot()
+      LoongArch: Consolidate max_pfn & max_low_pfn calculation
+      LoongArch: Use correct accessor to read FWPC/MWPC
+
+Qiang Ma (1):
+      LoongArch: kexec: Print out debugging message if required
+
+Tianyang Zhang (1):
+      LoongArch: Let {pte,pmd}_modify() record the status of _PAGE_DIRTY
+
+Tiezhu Yang (1):
+      LoongArch: Refine the init_hw_perf_events() function
+
+Vishal Moola (Oracle) (1):
+      LoongArch: Remove __GFP_HIGHMEM masking in pud_alloc_one()
+
+Xi Ruoyao (1):
+      rust: Add -fno-isolate-erroneous-paths-dereference to bindgen_skip_c_flags
+
+Youling Tang (1):
+      LoongArch: kexec: Initialize the kexec_buf structure
+
+ arch/loongarch/include/asm/cpu-features.h  |  2 ++
+ arch/loongarch/include/asm/cpu.h           |  6 +++++-
+ arch/loongarch/include/asm/hw_breakpoint.h |  4 ++--
+ arch/loongarch/include/asm/io.h            |  5 ++++-
+ arch/loongarch/include/asm/loongarch.h     |  2 ++
+ arch/loongarch/include/asm/pgalloc.h       |  2 +-
+ arch/loongarch/include/asm/pgtable.h       | 11 ++++++++---
+ arch/loongarch/kernel/cpu-probe.c          |  4 ++++
+ arch/loongarch/kernel/kexec_efi.c          |  2 +-
+ arch/loongarch/kernel/kexec_elf.c          |  2 +-
+ arch/loongarch/kernel/machine_kexec.c      | 22 ----------------------
+ arch/loongarch/kernel/machine_kexec_file.c |  2 +-
+ arch/loongarch/kernel/mem.c                |  7 +++----
+ arch/loongarch/kernel/numa.c               | 23 ++---------------------
+ arch/loongarch/kernel/perf_event.c         |  7 ++++---
+ arch/loongarch/kernel/setup.c              |  5 ++---
+ arch/loongarch/kernel/traps.c              |  4 ++--
+ arch/loongarch/kvm/intc/eiointc.c          |  2 +-
+ arch/loongarch/kvm/mmu.c                   |  2 +-
+ arch/loongarch/kvm/timer.c                 |  2 ++
+ arch/loongarch/kvm/vcpu.c                  | 19 +++++++++----------
+ arch/loongarch/mm/init.c                   |  2 --
+ arch/loongarch/mm/ioremap.c                |  2 +-
+ rust/Makefile                              |  2 +-
+ 24 files changed, 59 insertions(+), 82 deletions(-)
+
