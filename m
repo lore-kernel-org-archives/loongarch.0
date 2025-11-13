@@ -1,39 +1,40 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F832295DA6
-	for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 03:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C7EF274B37
+	for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 08:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763005773; cv=none; b=iNyqaBh0xE34IoCA+1YpF5dE7TQ0Kc1uiKpBp4uXi5tuC0m+6NOEbfYZCmD7Le41AHfQfwv7IMVLJxq9OCJs834tg9txWSDKLc2iZhqCvpFBU6PNLmkWh2n431hA4aoNpwtJYu/P4/PXLup+jP48DQLsC27/7h5hcgW1Gdp+3T8=
+	t=1763023733; cv=none; b=cfsgJe19nlofmPZxypGnSpq7q58VTj4WMGbP3BI+Llz4qvX+tydrBzx220knNXaFrfCscbSBgtoJzcXRjHbO6innvRBc6TjKJXe8wrOVqwhcNPEf03UABSltzZPQvFWTa1e2wzyuZ1uQxLO/E0Eum4kwvhK4KWxWxFdx30tudnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763005773; c=relaxed/simple;
-	bh=x11Y37J0bS/5OqxW0bzdcQwtXAeG3/BWc48b1Cuzy88=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TVg4kDW1SbsFeJFeSKdcEq+6pGs+MHVc2AGt/OhtChmiNCYpRfe6wCFUiFxVJciiNFykl70WR2bgizMCT/qgQgcVEPWG6dVVzvRJj4r7yoaOVCFGka+SP+U9CMJ8xUmxgbrgHKxh/xzE30sG/P3cG68/QGqmAhWWsi3SZajWFn0=
+	s=arc-20240116; t=1763023733; c=relaxed/simple;
+	bh=YOS1OUwRph7MAOs2qaWQ75lwbdHGF5OrgkOIbrVqLpM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p+7H/Vv/Y8bCkwscZ6Svufw3RAipTK4Snrxk4cQVP+EqaQECZaHDJA/Do52RJ4m7F9+xRYOddlRUhICTxEHrxn2P8z56m62zZptfP37Tb17/WzTSHeEOCvqElYVFTmdqQ3g9kYaGCLVIs+qJl1q//eVaUNjutQaxkBdV0oNyaEc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.46.139])
-	by gateway (Coremail) with SMTP id _____8Dx9tBEVRVp27ciAA--.4864S3;
-	Thu, 13 Nov 2025 11:49:24 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.46.139])
-	by front1 (Coremail) with SMTP id qMiowJCxM+REVRVpyDkxAQ--.9432S2;
-	Thu, 13 Nov 2025 11:49:24 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	akpm@linux-foundation.org,
-	willy@infradead.org,
-	david@redhat.com,
-	linmag7@gmail.com,
-	thuth@redhat.com,
-	maobibo@loongson.cn,
-	apopple@nvidia.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH v6 0/2]  Loongarch irq-redirect support
-Date: Thu, 13 Nov 2025 11:49:18 +0800
-Message-ID: <20251113034923.9699-1-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.41.0
+Received: from loongson.cn (unknown [223.64.68.45])
+	by gateway (Coremail) with SMTP id _____8AxidFlmxVpn8oiAA--.10091S3;
+	Thu, 13 Nov 2025 16:48:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.45])
+	by front1 (Coremail) with SMTP id qMiowJAxQMJimxVpkYAxAQ--.3356S2;
+	Thu, 13 Nov 2025 16:48:36 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-i2c@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH 0/2] i2c: Add Loongson-2K0300 I2C controller support
+Date: Thu, 13 Nov 2025 16:48:22 +0800
+Message-ID: <cover.1763018288.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,110 +42,51 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxM+REVRVpyDkxAQ--.9432S2
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGF4UKr1DZry5Cr1UJF1rXwc_yoWrJF1kpF
-	W7uas5Ars0kr4xCFn7Wa18ZFy3GrykG3y2q3W3C347uwn8Cr1qqF18KF98ZFy8Gw4rK3WI
-	qr4qq34DW3WDAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUJ529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUstxhDUUUU
+X-CM-TRANSID:qMiowJAxQMJimxVpkYAxAQ--.3356S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEFCGkVcy8C8QAAse
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XryDXrW8Kry5JF4fGry5WrX_yoWfCFbEkF
+	n7Wa47Aw1DCF93Aa48Ja1rZry3Cayqga4rZ3Zxtw4SkrW2qw1YgF9rJrZxZw4xXF4UWFsx
+	Ww1kAF4Iv3ZxWosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbzAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_
+	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+	AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
 
-This series of patches introduces support for interrupt-redirect
-controllers, and this hardware feature will be supported on 3C6000
-for the first time
+Hi all:
 
-change log:
-        v0->v1:
-        1.Rename the model names in the document.
-        2.Adjust the code format.
-        3.Remove architecture - specific prefixes.
-        4.Refactor the initialization logic, and IR driver no longer set 
-	  AVEC_ENABLE.
-        5.Enhance compatibility under certain configurations.
+This patch set describes the I2C controller integrated into the Loongson-2K0300 chip.
 
-        v1->v2:
-        1.Fixed an erroneous enabling issue.
+It has a significantly different design from the previous I2C controller (i2c-ls2x),
+such as support for master-slave transfer mode, and DMA transfers (implementation
+in progress), etc. Therefore, we try to name it i2c-ls2x-v2.
 
-        v2->v3
-        1.Replace smp_call with address mapping to access registers
-        2.Fix some code style issues
+Therefore we try to name it i2c-ls2x-v2.
 
-        v3->v4
-        1.Provide reasonable comments on the modifications made to
-	  IRQ_SET_MASK_OK_DONE
-        2.Replace meaningless empty functions with parent_mask/unmask/ack
-        3.Added and indeed released resources
-        4.Added judgment for data structure initialization completion to 
-          avoid duplicate creation during cpuhotplug
-        5.Fixed the code style and some unnecessary troubles
+Thanks.
 
-        v4->v5
-	1.when it is detected in avecintc_set_affinity that the current affinity
-	remains valid, the return value is modified to IRQ_SET_MASK_OK_DONE.
-	  After the introduction of redirect-domain, for each interrupt source, 
-	avecintc-domain only provides the CPU/interrupt vector, while redirect-domain 
-	provides other operations to synchronize interrupt affinity information 
-	among multiple cores. 	  The original intention is to notify the cascaded
-	redirect_set_affinity that multi-core synchronization is not required. 
-	  However, this introduces some compatibility issues, such as the new return
-	value causing msi_domain_set_affinity to no longer perform irq_chip_write_msi_msg.
-	  1) When redirect exist in the system, the msi msg_address and msg_data no 
-	longer changes after the allocation phase, so it does not actually require updating
-	the MSI message info.
-	  2) When only avecintc exists in the system, the irq_domain_activate_irq
-	interface will be responsible for the initial configuration of the MSI message,
-	which is unconditional. After that, if unnecessary, no modification to the MSI
-	message is alse correctly.
+Binbin Zhou (2):
+  dt-bindings: i2c: loongson,ls2x: Add ls2k0300-i2c compatible
+  i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C controller
 
-	2.Restructured the macro definitions to make them appear more logical.
+ .../bindings/i2c/loongson,ls2x-i2c.yaml       |   1 +
+ MAINTAINERS                                   |   1 +
+ drivers/i2c/busses/Kconfig                    |  10 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-ls2x-v2.c              | 513 ++++++++++++++++++
+ 5 files changed, 526 insertions(+)
+ create mode 100644 drivers/i2c/busses/i2c-ls2x-v2.c
 
-	3.Adjusted the layout of members struct redirect_queue\struct redirect_table and 
-	struct redirect_item, making redirect_item the primary interface for accessing
-	other members.
 
-	4.The method of accessing registers has been standardized to MMIO.
-
-	5.Initialize variables at declaration whenever possible.
-
-	6.Replaced the the "struct page" in redirect_table and redirect_queue with "struct folio".
-
-	7.Adjusted the initialization process so that all irq_desc configurations are completed
-	during driver initialization, no longer relying on specific CPUs being online.
-
-	8.Refactored portions of the code to make them more concise and logical.
-
-	v5->v6
-	Fix the warning messages reported by the test bot.
-
-Tianyang Zhang (2):
-  Docs/LoongArch: Add Advanced Extended-Redirect IRQ model description
-  irqchip/irq-loongarch-ir:Add Redirect irqchip support
-
- .../arch/loongarch/irq-chip-model.rst         |  38 ++
- .../zh_CN/arch/loongarch/irq-chip-model.rst   |  37 ++
- arch/loongarch/include/asm/cpu-features.h     |   1 +
- arch/loongarch/include/asm/cpu.h              |   2 +
- arch/loongarch/include/asm/loongarch.h        |   6 +
- arch/loongarch/kernel/cpu-probe.c             |   2 +
- drivers/irqchip/Makefile                      |   2 +-
- drivers/irqchip/irq-loongarch-avec.c          |  20 +-
- drivers/irqchip/irq-loongarch-ir.c            | 527 ++++++++++++++++++
- drivers/irqchip/irq-loongson.h                |  19 +
- 10 files changed, 640 insertions(+), 14 deletions(-)
- create mode 100644 drivers/irqchip/irq-loongarch-ir.c
-
+base-commit: e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c
 -- 
-2.41.0
+2.47.3
 
