@@ -1,408 +1,168 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98FD35CBD3
-	for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 13:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5A935B13C
+	for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 16:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763041583; cv=none; b=IvHUKoIB9T/KApiEzy0u049+XUTimTZ3TlfzAbRcWPYXt3jePf7iUNxasnrRdnd5ufo4EY5VSD0xPK3wGyxSYw8DoFAIpiMV+Z74Q1rkHFM2LhVIxxFkF2sQqGqmY9OfnwYrc88oAn2bSMXPnzXIfksfyMJyxyLXHDjR7tYg7ho=
+	t=1763051080; cv=none; b=Uc0izTvTSHo7tYHWVhn+VI6AjorB230eyoqjjU/vC7GmQt23pjgOjjYXDaAsIoB5TKxqsn+8OIJXpZx6nia0Sk60362JmElhF97zmeIrRNPEvmX3PnzLEEwvx9ioFjGMgHnCxzaSQSQ6+kh3kkDwMezxe2inX4wxJuvVqvMbVJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763041583; c=relaxed/simple;
-	bh=3TWhjn28LUWOEOTNhxUySr1lC8fUnJuCV2LfMxtKYLo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nIgtonwpKRMjnECZ3ETAszKBiyOREAUPFZBAeBCyusBUX+vQwxksNkWII6C9s3wfSLlAYzcdMeKEzk6dkW7DSXKZMcXJXgA8ViEOGGHjzSUagH0jYhTGrycE0Qr0t2G7CTMdkkMk/gCFcj5zw5eW1cd5xAejH3CGfsg3e69JMcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xL6KKFzu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5VDWruWo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1763051080; c=relaxed/simple;
+	bh=NXrY+ya6H9gGNunhw0dML8FCZaW/2ekmhsFvw65jgI4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fvsNBEF3wdqHe+Acobabm8lKAS05dAhvy+FKV11STsVg5crW5tv517ogIllBTeSEcXBkGWveUOOeflITHC447ouaiUD54i+Uuv1YilGWdceyw6jYZYpm3dAyJqDJpCzdBELfa9VjyjMQ+wGp+R2hEGkXK4fIZqB/U6AqEbRJSEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eJyiqRtv; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xL6KKFzu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5VDWruWo"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1763041579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BcELPkL6wDQwLgDXJox+08ranOjjapY/9/Uv/7w5s/8=;
-	b=xL6KKFzumb8h2juG9e4yy/kbTuJ1eI5gW+Om/ZuV8uHyeGtWAjf1GvfkEMAGS6kNF3J8a/
-	BhieBVbQREVcQ7sRN6DFc+XYzzrE8cA5bDKTlqcnynYGHebDub7UitIENx1j2QsNArxJZz
-	9pH87Nzl/OJJoMqdThOgj1qxVJPQ5LovWa0igX5Ex/zCHEtGa0ZuYhLAVBZv6wye+WqBua
-	BIJjqElAt10O2ApYqjw8zAcJEPYcHuUKps1urfgyJA3Fy9YbglOGOXG4VPkMg1sJv7DP/b
-	tQK07zPAL2acHUzYJo4mqq3sJejUpd9BoQ2K21OiBOxZluzRQf6ie9dLQklo2g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1763041579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BcELPkL6wDQwLgDXJox+08ranOjjapY/9/Uv/7w5s/8=;
-	b=5VDWruWoyFVxjyvMp4ssoP4LjuBxlZCRGS9rCq0lDMlTuAxkSkxzeGk+Xeib9WA1kGcQh/
-	rUAkB4hKyBr8GyDg==
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
- kernel@xen0n.name, akpm@linux-foundation.org, willy@infradead.org,
- david@redhat.com, linmag7@gmail.com, thuth@redhat.com,
- maobibo@loongson.cn, apopple@nvidia.com
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Tianyang Zhang
- <zhangtianyang@loongson.cn>, Liupu Wang <wangliupu@loongson.cn>
-Subject: Re: [PATCH v6 2/2] irqchip/irq-loongarch-ir:Add Redirect irqchip
- support
-In-Reply-To: <20251113034923.9699-3-zhangtianyang@loongson.cn>
-References: <20251113034923.9699-1-zhangtianyang@loongson.cn>
- <20251113034923.9699-3-zhangtianyang@loongson.cn>
-Date: Thu, 13 Nov 2025 14:46:17 +0100
-Message-ID: <87ecq2cafq.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJyiqRtv"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4ed9c19248bso9156131cf.1
+        for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 08:24:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763051077; x=1763655877; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IJlNsC13hZMbvuzsO18iDqnwYfO6+x6SXebzZ1yRpMU=;
+        b=eJyiqRtvpLI4VerA6ZcCJ23ac+HFg5jRBQOS6yzOgOT7w3lOPnNnqHMSmWhGcSeQf5
+         frMbnT8TO4UhstwlvzQI/Hfjpbjdkgb0/4bwxLyO+rO0MZYOy50YWap9xNGWpq1n94n7
+         GtTVti4xNIRB+QmzUh8WBJ3Dk8+UONkdAuo1XuMcW6eMIignGl6L7WJCToOalCa4pDpk
+         grCleXWY1MMEMek3XDW56CiRjryJ2ISnevXzwVwJREf5wJzeoSj4OeiMR5WfADObguOr
+         zmMFZS21qGZrCviea4MxigJ5yAfwwRDcoE+D0BvqAu9vyuQTu+H7pi5vQvESDVhMk/xJ
+         9f/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763051077; x=1763655877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IJlNsC13hZMbvuzsO18iDqnwYfO6+x6SXebzZ1yRpMU=;
+        b=CrT7ipyViMRAdKr/1Hh6xPgHIJui2VOA48vsS3Yw/LxLNOoNr0HE+GjOD8M4uZD5BQ
+         QkyE5/pGAFgnOa+SiQAuaV621RzMo47xIugfZDztUZXY7mVd8XDFMxod+3I1ckRTSrjp
+         46Kz3K3RVp+PdiEFiNG08KvBlEu2cuj9WH1oF8OQ4yGeKbS55niiOHpUCxqOSySENRT/
+         UAqd5P78LLik+6TpQPdahiaGzsap2X5J1obbcjiEau3q1/2MzkuY8NwGQxwxVV4qsJfW
+         bfHFQY6LKdbkHAj7eypuERMPKRF/Vxqt5HpHhMh0m5fnHcgGHeLfIL1DvijFEA0ywTj8
+         1h2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXV2Sa/lyi4161/UCjl1M+2gF05bmaaSzdE/uHB3lLMMR5nVTZUbfy06b4wsQbrZz1p1U7HRRSyLKg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzSXUat6ZbQ63L4agc4AstJE+pL0+evE/HjR8Vf61xfJwB2V/0I
+	TdTuYP7kS6VqScaRfViMCEAI6pA3yU+Pw/iZOIGf1H9UsHdDOkqgPgFa8z3FBS+TNoeOSAvW3V/
+	lQm/imF3RPumyDS2Yof6zJCpmvaCHW1A=
+X-Gm-Gg: ASbGnct5O7I2F5O6JluMz+JSgHYN3rsCPniArYFdj8CgHPUmVBK6mg4FeP+dQqd4unK
+	oePKl2AXGBBaFDmdR6wihaadAGXLm+N0SfxTr5uIa5AmOp5Mekj7RYXBUysLnQ9kiZMeZtW0YER
+	THG9nP3Iiom6kpJa43h25jt9qyhYcXE12AiL2y98c6lw/u+D285dQ1QaGvggBmoy70QieQvq59f
+	IMUtQZoE1sMfOUnjPQaK9fbV6Tmw2fQUkXXJS3pN836/GnhOXPd1m/ua0wE
+X-Google-Smtp-Source: AGHT+IGu9HwcxU3uEHsrPeX8m5Coic0zjCHjYD5RoHXPADKbXKcIMPSgR/oTaDV7hcYlkZfcfOksw4hMUr8pFVDrvVU=
+X-Received: by 2002:ac8:5916:0:b0:4ed:cbc2:67b7 with SMTP id
+ d75a77b69052e-4edf20e9fa2mr2937721cf.42.1763051077108; Thu, 13 Nov 2025
+ 08:24:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20251110175330.73200-1-vincent.mc.li@gmail.com> <CAEyhmHQ+0TQUukapz6opSCQzN8QwD_hMsXOGAYsaDZcdq-8KkA@mail.gmail.com>
+In-Reply-To: <CAEyhmHQ+0TQUukapz6opSCQzN8QwD_hMsXOGAYsaDZcdq-8KkA@mail.gmail.com>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Thu, 13 Nov 2025 08:24:26 -0800
+X-Gm-Features: AWmQ_bkNs5xNEAIy06T3DY_qOIC0lOBEOmZAvKDJb5BKk-32rQSAFDubsEHvjmQ
+Message-ID: <CAK3+h2z_j_sVg8B+KefVa-DokAigXA44WaO8MuNzv3wr=kHHNA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Disable bpf trampoline kernel module
+ function trace
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Chenghao Duan <duanchenghao@kylinos.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 13 2025 at 11:49, Tianyang Zhang wrote:
->  arch/loongarch/include/asm/cpu-features.h |   1 +
->  arch/loongarch/include/asm/cpu.h          |   2 +
->  arch/loongarch/include/asm/loongarch.h    |   6 +
->  arch/loongarch/kernel/cpu-probe.c         |   2 +
+On Thu, Nov 13, 2025 at 2:56=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> On Tue, Nov 11, 2025 at 1:53=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.c=
+om> wrote:
+> >
+> > The current LoongArch BPF trampoline implementation is incompatible
+> > with tracing functions in kernel modules. This causes several severe
+> > and user-visible problems:
+> >
+> > * Kernel lockups when a BPF program is attached to a module function [0=
+].
+> > * The `bpf_selftests/module_attach` test fails consistently.
+> > * Critical kernel modules like WireGuard experience traffic disruption
+> >   when their functions are traced with fentry [1].
+> >
+> > Given the severity and the potential for other unknown side-effects,
+> > it is safest to disable the feature entirely for now. This patch
+> > prevents the BPF subsystem from allowing trampoline attachments to
+> > module functions on LoongArch.
+> >
+> > This is a temporary mitigation until the core issues in the trampoline
+> > code for module handling can be identified and fixed.
+> >
+> > [root@fedora bpf]# ./test_progs -a module_attach -v
+> > bpf_testmod.ko is already unloaded.
+> > Loading bpf_testmod.ko...
+> > Successfully loaded bpf_testmod.ko.
+> > test_module_attach:PASS:skel_open 0 nsec
+> > test_module_attach:PASS:set_attach_target 0 nsec
+> > test_module_attach:PASS:set_attach_target_explicit 0 nsec
+> > test_module_attach:PASS:skel_load 0 nsec
+> > libbpf: prog 'handle_fentry': failed to attach: -ENOTSUPP
+> > libbpf: prog 'handle_fentry': failed to auto-attach: -ENOTSUPP
+> > test_module_attach:FAIL:skel_attach skeleton attach failed: -524
+> > Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
+> > Successfully unloaded bpf_testmod.ko.
+> >
+> > [0]: https://lore.kernel.org/loongarch/CAK3+h2wDmpC-hP4u4pJY8T-yfKyk4yR=
+zpu2LMO+C13FMT58oqQ@mail.gmail.com/
+> > [1]: https://lore.kernel.org/loongarch/CAK3+h2wYcpc+OwdLDUBvg2rF9rvvyc5=
+amfHT-KcFaK93uoELPg@mail.gmail.com/
+> >
+> > Signed-off-by: Vincent Li <vincent.mc.li@gmail.com>
+> > ---
+> >  arch/loongarch/net/bpf_jit.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+>
+> You should add a Fixes tag.
+>
 
-Can you please split the architecture parts out into a separate patch?
+ I will add the Fixes tag.
 
->  drivers/irqchip/Makefile                  |   2 +-
->  drivers/irqchip/irq-loongarch-avec.c      |  20 +-
->  drivers/irqchip/irq-loongarch-ir.c        | 527 ++++++++++++++++++++++
->  drivers/irqchip/irq-loongson.h            |  19 +
->  8 files changed, 565 insertions(+), 14 deletions(-)
->  create mode 100644 drivers/irqchip/irq-loongarch-ir.c
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 93e3ced023bb..a0be18891890 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -118,7 +118,7 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
->  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
->  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
->  obj-$(CONFIG_TI_PRUSS_INTC)		+= irq-pruss-intc.o
-> -obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o
-> +obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o irq-loongarch-ir.o
->  obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
->  obj-$(CONFIG_LOONGSON_EIOINTC)		+= irq-loongson-eiointc.o
->  obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-> diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-> index bf52dc8345f5..de7b6059c1b6 100644
-> --- a/drivers/irqchip/irq-loongarch-avec.c
-> +++ b/drivers/irqchip/irq-loongarch-avec.c
-> @@ -24,7 +24,6 @@
->  #define VECTORS_PER_REG		64
->  #define IRR_VECTOR_MASK		0xffUL
->  #define IRR_INVALID_MASK	0x80000000UL
-> -#define AVEC_MSG_OFFSET		0x100000
->  
->  #ifdef CONFIG_SMP
->  struct pending_list {
-> @@ -47,15 +46,6 @@ struct avecintc_chip {
->  
->  static struct avecintc_chip loongarch_avec;
->  
-> -struct avecintc_data {
-> -	struct list_head	entry;
-> -	unsigned int		cpu;
-> -	unsigned int		vec;
-> -	unsigned int		prev_cpu;
-> -	unsigned int		prev_vec;
-> -	unsigned int		moving;
-> -};
-> -
-...
-> -static void avecintc_sync(struct avecintc_data *adata)
-> +void avecintc_sync(struct avecintc_data *adata)
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
+c
+> > index cbe53d0b7fb0..ace89ca95f9b 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -1624,6 +1624,9 @@ static int __arch_prepare_bpf_trampoline(struct j=
+it_ctx *ctx, struct bpf_tramp_i
+> >         /* Direct jump skips 5 NOP instructions */
+> >         else if (is_bpf_text_address((unsigned long)orig_call))
+> >                 orig_call +=3D LOONGARCH_BPF_FENTRY_NBYTES;
+> > +       /* BPF selftests module_attach failed, disable module trace */
+>
+> We disable it not just because BPF selftests failed, actually it
+> causes severe issues.
+> So this comment should be reworded.
+>
+ok, make sense
 
-Moving the struct to the header and exposing this function should be a
-separate patch as well.
+> I am also wondering why we didn't skip nops for kernel module
+> functions in the first place.
+>
+> > +       else if (is_module_text_address((unsigned long)orig_call))
+> > +               return -ENOTSUPP;
+> >
+>
+> I am OK with this approach since we can't fix it in time.
+> Except the comments above:
+>
+> Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
 
+Thanks!
 
->  {
->  	struct pending_list *plist;
->  
-> @@ -109,7 +99,7 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
->  			return -EBUSY;
->  
->  		if (cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest))
-> -			return 0;
-> +			return IRQ_SET_MASK_OK_DONE;
-
-Changing that return value wants to be a separate patch with an
-explanation why this is done and why it's functionaly equivalent.
-
-> +#define IRD_ENTRY_SIZE			16
-
-Shouldn't that be sizeof(struct redirect_entry) or if you want to keep
-it this way then you want a compile time assert that ensures that
-sizeof(struct redirect_entry) == IRD_ENTRY_SIZE.
-
-> +struct irde_inv_cmd {
-
-Same for this one.
-
-> +#define REDIRECT_REG(reg, node) \
-> +	((void __iomem *)(IO_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | (reg)))
-> +
-
-This only works when @node is guaranteed to be a real node number and
-not NUMA_NO_NODE.
-
-> +static inline void redirect_write_reg64(u32 node, u64 val, u32 reg)
-> +{
-> +	void __iomem *reg_addr = REDIRECT_REG(reg, node);
-> +
-> +	return writeq(val, reg_addr);
-> +}
-> +
-> +static inline void redirect_write_reg32(int node, u32 val, u32 reg)
-
-Can you make your mind up and use a consistent data type for @node?
-
-> +static void irde_invalid_entry_node(struct redirect_item *item)
-> +{
-> +	struct irde_inv_cmd cmd;
-> +	u64 raddr = 0;
-> +
-> +	cmd.cmd_info = 0;
-> +	cmd.index.type = INVALID_INDEX;
-> +	cmd.index.need_notice = 1;
-> +	cmd.index.index = item->index;
-> +	cmd.notice_addr = (u64)(__pa(&raddr));
-> +
-> +	invalid_enqueue(item, &cmd);
-> +
-> +	while (!raddr)
-
-Please add a comment what this @raddr magic does.
-
-> +		cpu_relax();
-> +
-> +}
-> +
-> +static inline struct avecintc_data *irq_data_get_avec_data(struct irq_data *data)
-> +{
-> +	return data->parent_data->chip_data;
-> +}
-> +
-> +static int redirect_table_alloc(struct redirect_item *item)
-> +{
-> +	struct redirect_table *ird_table = &item->irde->ird_table;
-> +	int index;
-> +
-> +	guard(raw_spinlock_irqsave)(&ird_table->lock);
-> +
-> +	index = find_first_zero_bit(ird_table->bitmap, IRD_ENTRIES);
-> +	if (index > IRD_ENTRIES) {
-
-Off by one. Valid index is 0 ... (IRD_ENTRIES - 1)
-
-> +static void redirect_table_free(struct redirect_item *item)
-> +{
-> +	struct redirect_table *ird_table = &item->irde->ird_table;
-> +	struct redirect_entry *entry = item_get_entry(item);
-> +
-> +	memset(entry, 0, sizeof(*entry));
-> +
-> +	scoped_guard(raw_spinlock_irq, &ird_table->lock)
-> +		bitmap_release_region(ird_table->bitmap, item->index, 0);
-
-That's silly. bitmap_release_region(..., order = 0) is equivalent to
-clear_bit(...) no?
-
-> +	kfree(item->gpid);
-
-Is it correct to free this _before_ invalidating the entry?
-
-> +	irde_invalid_entry_node(item);
-> +}
-> +
-> +static inline void redirect_domain_prepare_entry(struct redirect_item *item,
-> +						 struct avecintc_data *adata)
-> +{
-> +	struct redirect_entry *entry = item_get_entry(item);
-> +
-> +	item->gpid->en = 1;
-> +	item->gpid->irqnum = adata->vec;
-> +	item->gpid->dst = adata->cpu;
-> +
-> +	entry->lo.valid = 1;
-> +	entry->lo.gpid = ((u64)item->gpid & GPID_ADDR_MASK) >> GPID_ADDR_SHIFT;
-> +	entry->lo.vector = 0xff;
-> +}
-> +
-> +static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
-> +{
-> +	struct redirect_item *item = data->chip_data;
-> +	int ret;
-> +
-> +	ret = irq_chip_set_affinity_parent(data, dest, force);
-> +	if (ret == IRQ_SET_MASK_OK_DONE) {
-> +		return ret;
-> +	} else if (ret) {
-> +		pr_err("IRDE:set_affinity error %d\n", ret);
-> +		return ret;
-> +	} else {
-> +		struct avecintc_data *adata = irq_data_get_avec_data(data);
-> +
-> +		redirect_domain_prepare_entry(item, adata);
-> +		irde_invalid_entry_node(item);
-
-Can you name that function irde_invalidate_entry() please? That's
-actually telling what it does. irde_invalid_entry_node() is confusing at
-best.
-
-> +		avecintc_sync(adata);
-> +	}
-> +
-> +	return IRQ_SET_MASK_OK;
-> +}
-
-> +static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +				 unsigned int nr_irqs, void *arg)
-> +{
-> +	msi_alloc_info_t *info = arg;
-> +	int ret, i, node;
-> +
-> +	node = dev_to_node(info->desc->dev);
-> +
-> +	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	for (i = 0; i < nr_irqs; i++) {
-> +		struct irq_data *irq_data = irq_domain_get_irq_data(domain, virq + i);
-> +		struct redirect_item *item;
-> +
-> +		item = kzalloc(sizeof(*item), GFP_KERNEL);
-> +		if (!item) {
-> +			pr_err("Alloc redirect descriptor failed\n");
-> +			goto out_free_resources;
-> +		}
-> +		item->irde = &irde_descs[node];
-> +
-> +		ret = redirect_table_alloc(item);
-> +		if (ret) {
-> +			pr_err("Alloc redirect table entry failed\n");
-> +			goto out_free_resources;
-> +		}
-> +		/*
-> +		 * Only bits 47:6 of the GPID are passed to the controller,
-> +		 * 64-byte alignment must be guaranteed.
-> +		 */
-> +		BUILD_BUG_ON(sizeof(*item->gpid) != 64);
-
-s/BUILD_BUG_ON()/static_assert()/
-
-Also sizeof() does help to guarantee alignment. It only tells you the size.
-
-> +		item->gpid = kzalloc_node(sizeof(*item->gpid), GFP_KERNEL, node);
-> +		if (!item->gpid) {
-> +			pr_err("Alloc redirect GPID failed\n");
-> +			goto out_free_resources;
-> +		}
-> +
-> +		irq_data->chip_data = item;
-> +		irq_data->chip = &loongarch_redirect_chip;
-> +
-> +		redirect_domain_prepare_entry(item, irq_data_get_avec_data(irq_data));
-> +	}
-> +	return 0;
-> +
-> +out_free_resources:
-> +	redirect_free_resources(domain, virq, nr_irqs);
-> +	irq_domain_free_irqs_common(domain, virq, nr_irqs);
-> +
-> +	return -ENOMEM;
-> +}
-
-> +static int redirect_table_init(struct irde_desc *irde)
-> +{
-> +	struct redirect_table *ird_table = &irde->ird_table;
-> +	struct folio *folio;
-> +	unsigned long *bitmap;
-> +	int node = irde->node;
-
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
-
-> +
-> +	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, IRD_TABLE_PAGE_ORDER, node);
-> +	if (!folio) {
-> +		pr_err("Node [%d] redirect table alloc pages failed!\n", node);
-> +		goto fail;
-
-No point in making this a goto. Just return -ENOMEM.
-
-> +static int redirect_irde_init(int node)
-> +{
-> +	struct irde_desc *irde = &irde_descs[node];
-> +	int ret;
-> +
-> +	irde->node = node;
-> +
-> +	ret = redirect_table_init(irde);
-> +	if (ret)
-> +		goto fail;
-
-Same
-
-> +	ret = redirect_queue_init(irde);
-> +	if (ret)
-> +		goto fail_clear;
-
-Just get rid of the goto and handle the failure here.
-
-> +	redirect_irde_cfg(irde);
-> +
-> +	return 0;
-> +
-> +fail_clear:
-> +	__redirect_irde_fini(irde);
-> +fail:
-> +	return ret;
-> +}
-
-> +#ifdef CONFIG_ACPI
-> static int __init pch_msi_parse_madt(union acpi_subtable_headers *header, const unsigned long end)
-
-So if ACPI is disabled, the code in this file is dead code. Why do you
-build it at all if ACPI is off?
-
-> +int __init redirect_acpi_init(struct irq_domain *parent)
-> +{
-> +	struct fwnode_handle *fwnode;
-> +	int ret = -EINVAL, node;
-> +
-> +	fwnode = irq_domain_alloc_named_fwnode("redirect");
-> +	if (!fwnode) {
-> +		pr_err("Unable to alloc redirect domain handle\n");
-> +		goto fail;
-> +	}
-> +
-> +	redirect_domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
-> +						      &redirect_domain_ops, irde_descs);
-> +	if (!redirect_domain) {
-> +		pr_err("Unable to alloc redirect domain\n");
-> +		goto out_free_fwnode;
-> +	}
-> +
-> +
-> +	for_each_node_mask(node, node_possible_map) {
-> +		ret = redirect_irde_init(node);
-> +		if (ret)
-> +			goto out_clear_irde;
-> +	}
-> +
-> +	ret = acpi_cascade_irqdomain_init();
-> +	if (ret < 0)
-> +		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
-> +
-> +	pr_info("loongarch irq redirect modules init succeeded\n");
-
-If acpi_cascade_irqdomain_init() fails, then this prints first an error
-and then claims that it succeeded and returns success. That doesn't make
-any sense.
-
-Thanks,
-
-        tglx
+>
+> >         if (flags & BPF_TRAMP_F_CALL_ORIG) {
+> >                 move_addr(ctx, LOONGARCH_GPR_A0, (const u64)im);
+> > --
+> > 2.38.1
+> >
