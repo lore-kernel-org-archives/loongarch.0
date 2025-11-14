@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E254328B52
-	for <loongarch@lists.linux.dev>; Fri, 14 Nov 2025 15:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171C62F6195
+	for <loongarch@lists.linux.dev>; Fri, 14 Nov 2025 15:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763133156; cv=none; b=AMzdx3gZDHPeJraeBEghmZbWYfimAiBnJA7tEP7BS7h46Bhvv1c+EoJ4cpoDfZGODGdAMmx7X6w46/N1UBtgCynZ/GCxYDDMIDH8+QXi+RmwHODq4SbLpLIiCJGYAUV2QqzxX+evHhzo1+K7vH/Uo77++/UjW1Z03Ob7MKa29Zo=
+	t=1763133302; cv=none; b=JiwuV2uilOFbcBmqREeuWpYTTydfx6JVhWrgoifMocpOse5lq+qsoHTjJ37t3TdLktaoVejXpkCf9dJ5YvjZQoKt0EvxM/f4AoqnhPeWt6jO69rP+nK6eh7JkkxJIWLaGMAoOAjUO27/8qaZCmdcD5lXNEi0wew313wvoVYtL7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763133156; c=relaxed/simple;
-	bh=f6D8yvxbg0lYFiy19xAVin58pXS33Mh16mjnQIK3rjo=;
+	s=arc-20240116; t=1763133302; c=relaxed/simple;
+	bh=ZGFNntgSflJVhOXYJ02XlQ2RYuItBnLdIXYmR6xh+/U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gp0Wf7pz9wDPe79Z3ZJLFHpFrFG1vilaOeM9YJV7RuV2cQPCVvOh57NCK5JgKMOSdma/2Hpmq4qAw80vcOPuXbd5wThSFb2tlQht8wa1gYKVizPt9aGhYat94LFdccnaOhWzUueugCoEvhNfY2UOOH2ghACUWJ0BF/8wt6YQ1yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lftjkop3; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=NFVn5K1anonMdQbOhTHMUbvd5kD+OET5mBrMWp/IzZVCUpIOkM+7kSU9L1gX3kG1LmYaquZsrnwYC+icNQCLZy7KlkfeIknMrBHH77rSRDweeU0ZB0GWvk+EvDkOJm4tjTyC48da7yEh+z/TwZCluN+C/kjMWWXiOV4RJmHx30o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AD/23y/g; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lftjkop3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AD/23y/g"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763133154;
+	s=mimecast20190719; t=1763133300;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KZ5SyK4DoPKkV4Z0L+pFMHxCyW+tdtvFdr+A8RoV6VQ=;
-	b=Lftjkop36pO3Cl5KnmHX3D0uDwIEK2juGnZfGfQxbMeVF7Vet5a2MP8igEQ3XLmLb2I+Tq
-	5sgoLUDHeMXWqezuJqJKbLnMej1aLHJCpAgG9x5RuB0s5jXOFCdfC+3FSmNtUXRezRAhZF
-	JAm+YGoh8qVvMlUL1tXW0pPn/QNhW+k=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=hKNAHPDAvmAC9QequSTQUruQa42RH3SMYJaJvkkmTRU=;
+	b=AD/23y/g5bu/BT/vFRvRra11SeNWHAg13Px/tWe89uqV/yR4CG4hhJ8cnsLuaDxL63+kzg
+	jPmUOsbCm6ATUUo/bACiSxSVG2JGjy7KC6dvEv/3H8az9NvP9HwP6cCTdP6NXuJ5Kd6+uc
+	uICrE6Fgl3lHX7M4NMO2FDUi5g8uj8g=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-411-hYML2ISBMs6U1QZt9CCgwQ-1; Fri,
- 14 Nov 2025 10:12:31 -0500
-X-MC-Unique: hYML2ISBMs6U1QZt9CCgwQ-1
-X-Mimecast-MFC-AGG-ID: hYML2ISBMs6U1QZt9CCgwQ_1763133147
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-644-7iDwu_fMODCphb54CSyEig-1; Fri,
+ 14 Nov 2025 10:14:58 -0500
+X-MC-Unique: 7iDwu_fMODCphb54CSyEig-1
+X-Mimecast-MFC-AGG-ID: 7iDwu_fMODCphb54CSyEig_1763133293
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB3D319560AD;
-	Fri, 14 Nov 2025 15:12:26 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 796421956088;
+	Fri, 14 Nov 2025 15:14:53 +0000 (UTC)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.45.226.10])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB1803000198;
-	Fri, 14 Nov 2025 15:12:11 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1DFC2180049F;
+	Fri, 14 Nov 2025 15:14:37 +0000 (UTC)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -53,7 +53,6 @@ To: linux-kernel@vger.kernel.org,
 	linux-arch@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
 Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
@@ -92,9 +91,9 @@ Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
 	Daniel Wagner <dwagner@suse.de>,
 	Petr Tesarik <ptesarik@suse.com>,
 	Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: [PATCH v7 20/31] KVM: VMX: Mark vmx_l1d_should flush and vmx_l1d_flush_cond keys as allowed in .noinstr
-Date: Fri, 14 Nov 2025 16:10:47 +0100
-Message-ID: <20251114151048.1061644-2-vschneid@redhat.com>
+Subject: [PATCH v7 21/31] stackleack: Mark stack_erasing_bypass key as allowed in .noinstr
+Date: Fri, 14 Nov 2025 16:14:18 +0100
+Message-ID: <20251114151428.1064524-1-vschneid@redhat.com>
 In-Reply-To: <20251114150133.1056710-1-vschneid@redhat.com>
 References: <20251114150133.1056710-1-vschneid@redhat.com>
 Precedence: bulk
@@ -104,50 +103,42 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
 Later commits will cause objtool to warn about static keys being used in
 .noinstr sections in order to safely defer instruction patching IPIs
 targeted at NOHZ_FULL CPUs.
 
-The VMX keys are used in .noinstr code, and can be modified at runtime
-(/proc/kernel/vmx* write). However it is not expected that they will be
-flipped during latency-sensitive operations, and thus shouldn't be a source
-of interference for NOHZ_FULL CPUs wrt the text patching IPI.
+stack_erasing_bypass is used in .noinstr code, and can be modified at runtime
+(proc/sys/kernel/stack_erasing write). However it is not expected that it
+will be  flipped during latency-sensitive operations, and thus shouldn't be
+a source of interference wrt the text patching IPI.
 
-Note, smp_text_poke_batch_finish() never defers IPIs if noinstr code is
-being patched, i.e. this is purely to tell objtool we're okay with updates
-to that key causing IPIs and to silence the associated objtool warning.
+Mark it to let objtool know not to warn about it.
 
 Reported-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-Acked-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ kernel/kstack_erase.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 91b6f2f3edc2a..99936a2af6641 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -203,8 +203,15 @@ module_param(pt_mode, int, S_IRUGO);
+diff --git a/kernel/kstack_erase.c b/kernel/kstack_erase.c
+index e49bb88b4f0a3..99ba44cf939bf 100644
+--- a/kernel/kstack_erase.c
++++ b/kernel/kstack_erase.c
+@@ -19,7 +19,11 @@
+ #include <linux/sysctl.h>
+ #include <linux/init.h>
  
- struct x86_pmu_lbr __ro_after_init vmx_lbr_caps;
- 
--static DEFINE_STATIC_KEY_FALSE(vmx_l1d_should_flush);
--static DEFINE_STATIC_KEY_FALSE(vmx_l1d_flush_cond);
+-static DEFINE_STATIC_KEY_FALSE(stack_erasing_bypass);
 +/*
-+ * NOINSTR: Both of these static keys end up being used in .noinstr sections,
-+ * however they are only modified:
-+ * - at init
-+ * - from a /proc/kernel/vmx* write
-+ * thus during latency-sensitive operations they should remain stable.
++ * NOINSTR: This static key can only be modified via its sysctl interface. It is
++ * expected it will remain stable during latency-senstive operations.
 + */
-+static DEFINE_STATIC_KEY_FALSE_NOINSTR(vmx_l1d_should_flush);
-+static DEFINE_STATIC_KEY_FALSE_NOINSTR(vmx_l1d_flush_cond);
- static DEFINE_MUTEX(vmx_l1d_flush_mutex);
++static DEFINE_STATIC_KEY_FALSE_NOINSTR(stack_erasing_bypass);
  
- /* Storage for pre module init parameter parsing */
+ #ifdef CONFIG_SYSCTL
+ static int stack_erasing_sysctl(const struct ctl_table *table, int write,
 -- 
 2.51.0
 
