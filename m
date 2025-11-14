@@ -1,77 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486A8319879;
-	Thu, 13 Nov 2025 19:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52E720298C
+	for <loongarch@lists.linux.dev>; Fri, 14 Nov 2025 04:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763062605; cv=none; b=M3tY2/PgvbYHWWwMIUoFvP9FPmHeMweOk5pgiEK6CAeic38YyGNM1jpnZ+Tky7gsSxVqqwvC3mM7jfSwqJrhC/vyA9TAPS45H2hbf42lRls07ERssirZiKEtEySOcZSOMLLkuFeE4SpJzPNL0RHNWRsCyKpUh3ivGuq6HWhVuN0=
+	t=1763095212; cv=none; b=Y5XHJhGjH79Fue5TcvKCe/a2vThb4fkHVcmqyuv7vC4gVovgLFxuYtRNTkG3oN+Cq6S7v/qz7pQ5YoBVJLwKeeXEi5fxkSz7Y8oi0d5SW5ENcPHfKE+wpDeSTsJGFQRWo8sD3R5UBY89IbRlOXC6mtdapqf+5U9X5rZ9f7imdog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763062605; c=relaxed/simple;
-	bh=LwV1U6Cq5cEu+tSpRxXgRX2MHT6VLD5wV+cjhY8i3yw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8qMxZrkXHdkfaMlwkMeubHeHOM6LUZvCws5nR2lWaeQAAhCm3NDiCusuqweYyh4y+Lism7AI59qHEFzOTMMLFlEJHIPugZc+My9rEkcfvzAjgvumZUIp8JDnslaA/tF4EpDsUhe2Y6D/Qr/n2fIzfmhgk8Edf5r4HKXBr1vu0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEQAPJkc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763095212; c=relaxed/simple;
+	bh=v6HrqhBuy9+ldB7R8U+6TYaR2yT2dWsihoYbTvmupVg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V2xOS19o6JO1PXZzvJugmZBLVSQrHC8eMh1XW9OBGQB7/YdyWlv1YWwq+Ytxh/jCShkBSDFP/jQZdqxLxD17x5U6OtlnzcjeEhpZ10d+C+YZGjYGRZSIwfSepi/aAI3NAxzuNSYdlClulxwIN4O7Y8y9NayIzdTJWWki5Uk5MgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xb/yTNBe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEQAPJkc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79014C4CEF7;
-	Thu, 13 Nov 2025 19:36:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xb/yTNBe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C56C8C113D0
+	for <loongarch@lists.linux.dev>; Fri, 14 Nov 2025 04:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763062604;
-	bh=LwV1U6Cq5cEu+tSpRxXgRX2MHT6VLD5wV+cjhY8i3yw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aEQAPJkct/DFPHMCGZE/tTEZrMl33vAfNdSvZBbFcLt57tqkUxIltVnkFH280xpjJ
-	 lS1NPtMLYSSO5kvF5Et/AVIOIZpthQEdaSdtZWSUe3eViGUvu5l7UkYxeKkprbu0iC
-	 LuafCxkfdpEq6iPOka5zLmd9MRSUniAK0rHyVV0aeYBICrTwoU2JsCvBFZRSM6WOyP
-	 +M4149rtgdigLaHrp3t41U7WWmhqfRPFslzlKXll6sJpfQuELEEWEBSdshktyVO73I
-	 B8JHcpcKFIwM8xopN4VIsiQfhqcnkFwSYSZNKxM4X/UftoYTfTmSA2vlPP1uIg+CMl
-	 jwpcoUY9W5VDw==
-Date: Thu, 13 Nov 2025 19:36:40 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: i2c: loongson,ls2x: Add ls2k0300-i2c
- compatible
-Message-ID: <20251113-zeppelin-parasite-64916707f9ab@spud>
-References: <cover.1763018288.git.zhoubinbin@loongson.cn>
- <75ff6d9ecb23082cb656da5936a5c4ac0a98074f.1763018288.git.zhoubinbin@loongson.cn>
+	s=k20201202; t=1763095211;
+	bh=v6HrqhBuy9+ldB7R8U+6TYaR2yT2dWsihoYbTvmupVg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Xb/yTNBeMGZevzMu1HMWRGDwUtt9I4fKTuT0yhMY9QDez4P7ypxhCeWJcs+nlaucz
+	 hcPSByfN/Y69Vy/CD6behlkBeKF/tZJKiIUnn3ujG8wQrFUixOt4F6MtH8qsjy15Wf
+	 W+eXVtm8R5ByTKdWNreZyHmk4V1E1is1+2Nhreigc8hFRMSBIDhpu9jW8vVWMGNBDf
+	 qlXDFLMuw3z/7DvLx2aLSLUygLWmODVEcwsx/w7jbeX56xouehc/z07Z3s6QwUeUid
+	 h78guwJVebIQljFb2o5yWkPHqtX5PkLiOqxFxZhHPyNLxDvHJFLeJWA84y3IPhSv16
+	 1wjWga56lPrQA==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b72b495aa81so187574666b.2
+        for <loongarch@lists.linux.dev>; Thu, 13 Nov 2025 20:40:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUr4TZ2yHSEDQO5fhP3nWQ5OV3S4ScBAjUdsjPtWqrb3g/pYE3iYn20BwObORRNiL4/gDXpxlfde6Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyqaNudsxV9fhVuaVoILtcjlY0KtbG/YkWy8frVj/OmmjSPF2hq
+	YI0j4Mzx6BBlNW1co1PkX8haefNmeEdtRv33EYmnvIgm3N+p3r7qB2f4y2cMZJPUEjdfILAEcS2
+	pZHfPvTX5G0umfO9luREkx9FjUBPa8/E=
+X-Google-Smtp-Source: AGHT+IGXnHAz5CUsb5+wbFnNyJeY3qA/eOIm/7NMxjarB87Hebn2vhlrR3CZQDxzB2FrVBX9tAX15//1aMb8BgjCSXs=
+X-Received: by 2002:a17:907:6eaa:b0:b70:52a0:f2b8 with SMTP id
+ a640c23a62f3a-b7367828b73mr159408566b.16.1763095210424; Thu, 13 Nov 2025
+ 20:40:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nKXF8pIjq4Op37EP"
-Content-Disposition: inline
-In-Reply-To: <75ff6d9ecb23082cb656da5936a5c4ac0a98074f.1763018288.git.zhoubinbin@loongson.cn>
+References: <20251105151257.148530-1-xry111@xry111.site>
+In-Reply-To: <20251105151257.148530-1-xry111@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 14 Nov 2025 12:40:08 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7_duGXebg+7upKcctPsSWPt5WTdk0aq=91dg148aR7UQ@mail.gmail.com>
+X-Gm-Features: AWmQ_blgSGpbW3CmUB83t2g2DZ6wk8b0Yxx1nm5EueGvUN1owUiIzt9O8kfJ1sM
+Message-ID: <CAAhV-H7_duGXebg+7upKcctPsSWPt5WTdk0aq=91dg148aR7UQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] LoongArch: Bit reverse improvements
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: WANG Xuerui <kernel@xen0n.name>, Mingcong Bai <jeffbai@aosc.io>, 
+	"open list:LOONGARCH" <loongarch@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Applied, thanks.
 
---nKXF8pIjq4Op37EP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Huacai
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-pw-bot: not-applicable
-
---nKXF8pIjq4Op37EP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaRYzSAAKCRB4tDGHoIJi
-0mZXAQDd3RrI00A5vVFloAvephXoJ1I28x1MhBR0hjnC8t1SfQD9FMx5WSVRmP4V
-61FrNSIUiyQCVaYIgmW4+r89Sk9EwA0=
-=/hpM
------END PGP SIGNATURE-----
-
---nKXF8pIjq4Op37EP--
+On Wed, Nov 5, 2025 at 11:14=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> Tie some loose ends in LoongArch bitrev.h to make it really useful.
+>
+> Xi Ruoyao (2):
+>   LoongArch: Select HAVE_ARCH_BITREVERSE
+>   LoongArch: Simplify __arch_bitrev32 implementation
+>
+>  arch/loongarch/Kconfig              | 1 +
+>  arch/loongarch/include/asm/bitrev.h | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+>
+> --
+> 2.51.2
+>
