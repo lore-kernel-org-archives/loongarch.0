@@ -1,109 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03BB1ACDFD
-	for <loongarch@lists.linux.dev>; Sat, 15 Nov 2025 03:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1B91ACDFD
+	for <loongarch@lists.linux.dev>; Sat, 15 Nov 2025 04:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763178202; cv=none; b=GgQBFluJyu2Qh/6LtNqUarpvpAjqOGZmCghXx/D/WFI9/ta9Sg5GV1zP1LAsps8Rb5TzQJvIDtzUjyPN+sy6hpUvwXK8XPBo2dE5xZWMHk3XKnH5R9X+MuQAKpuUtqMQ1DrgvbQq3aInY0UNkqF4hBgpsxXkUKO7NG9Eb1KqIH8=
+	t=1763179723; cv=none; b=e8OzIPRlCrthfCCM6nxzll8BWT/sRQtKJpbvqRRE4Le8SRA6G/YTfyER/Ry5yWaMZIlIzoO0q2PMXN85pQhHBJYTIcrCDlN5kl2aW/cPYj9oCm9CVEvj9yKJRb4PYL2S8TtTb8NMGiOTxnar3oyitolyev2nGjyzUWZLK7eIdwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763178202; c=relaxed/simple;
-	bh=0yAQqu9bySJFd0xkhj6bX2uJ+H6RWvo5fIeAxVQ9VqM=;
+	s=arc-20240116; t=1763179723; c=relaxed/simple;
+	bh=KZGqL2Ezl0HG8L3ZKNB+3v2T5VnKNS3msnMQ+mBqZBY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uiq21E0KxM1in5qbAYMvNVWgI0NbPg/5XkFh8fbH0+bVQt2Izux7BORkVz9qYG0e8Y1H7nmBtTv4gc9aTkYbJqlese64oO/pyP3Ckxt0DXLi/2CGcKNw9c8bi09yWW7rmvzHDiG/+TrKhuHMlPipZtESasEJBIh1emGdmImvQW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMvAIBeb; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=fG/OTAWZboxANoTPRszMlSLHPJCs/ubb1oyDsfLGNh/ln8eyqvlgWxReMm9pEDLeuvwuCUUS/japaLjFj0+F+cHQXEhh/KeYTrntTS6nUhN4gndtR/YnS8tFGZzz/m91g/Y6tRiMuAUnNzQvPvg4bA4Obq9E557wEllt/J8lkC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kdx/c78r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMvAIBeb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F179C116B1
-	for <loongarch@lists.linux.dev>; Sat, 15 Nov 2025 03:43:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kdx/c78r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24DC9C2BC9E
+	for <loongarch@lists.linux.dev>; Sat, 15 Nov 2025 04:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763178202;
-	bh=0yAQqu9bySJFd0xkhj6bX2uJ+H6RWvo5fIeAxVQ9VqM=;
+	s=k20201202; t=1763179723;
+	bh=KZGqL2Ezl0HG8L3ZKNB+3v2T5VnKNS3msnMQ+mBqZBY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fMvAIBebgijpoqlDV/dQOx3tM1LK6FOSehbQyjw/NcQ3quM9dRAZ2OG2pOL4FVmwZ
-	 24mOTBDlyDNaj37BPuxnHQQThjc5dK+ANWSd74Y4uQ+w5QfilpFhhroxPCWvNFTJEm
-	 pP9ZzL/BgG9KkFbi8auujDgCbLjZOydmooDDt2zmxngxC8IDC7JPjpjBTwOXGAOCtc
-	 A/Amv7qWzS3PPhWM4An1uzOE9ubvbbutORJxcKJ8BQJcjqmKEC5D+Lt6orqkFSdWVe
-	 xQWTI+8NpLKlRhtTXqZojtVKbOan+L/Rqa1l2h/T2moDEzrVP8XsJXgpS7sZ2PyGbl
-	 KXsSglb45g98A==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-afcb7ae6ed0so403101566b.3
-        for <loongarch@lists.linux.dev>; Fri, 14 Nov 2025 19:43:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXykulqH/P8I+CQ29AQutM34g8//e1VX15vV2dziR3OptvV+P1IKTDjxpR3GlchAhNBkefBYZJCzT4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyyFh8BU2K9Jo1s8VRRGMI0m8Cf0dktVNQwwIaHb1c1E5Cx+duy
-	JfbnjR1p+Spjr/ZxgwhW06Qy+9iEZuFOqB1Iu2FIwiJJ4bAtEJwyE/UarktBIce5URw2tO/yNE+
-	kbJeNE3cdZE//QVwSMhkmPPIRdSmrJNA=
-X-Google-Smtp-Source: AGHT+IEuj0++N4GmxwxCyzCk/7ufD05tKf89jPs6Txj8UozCXQFV46M5P8nSLbwbg+LbuBunhMubbMYq29f+xJORQIU=
-X-Received: by 2002:a17:906:581b:b0:b73:6931:558a with SMTP id
- a640c23a62f3a-b736931568emr390903366b.18.1763178201036; Fri, 14 Nov 2025
- 19:43:21 -0800 (PST)
+	b=Kdx/c78r7wuHriNVNHW5bfwCSFqYvYcHnuJcdhAREmfpSvpc9Datzo1GQ784ItIV8
+	 vWXGy3xOp2fbx5NPYsojEJkxKC2KhQ/stcmi8EMrOW+6AfGJBUD0LWIxs/x6/lw5SZ
+	 qcuV3/gTi+btPR2H8v/w6iCrKGTK3tjNle1G9ez0/aZ5N4V7+e9WPmXWG5l40PmkWP
+	 ZznLGCkHHQX9RYYglhsDeeCqO8LPNFPgiz3c/3WjRdalRVlclYWACOAsCETiuyPR/2
+	 JIjleG0XLOY8L3GQsYbOx8P3/Y36vok/nxP4Hu2JK1fKUWvIISFxslBhyVlJbk123x
+	 cqpGGej89kFMQ==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-64166a57f3bso4136036a12.1
+        for <loongarch@lists.linux.dev>; Fri, 14 Nov 2025 20:08:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWaA1/UZE740ZzKoRibAWpf50zs0uq4Dvo5JGtvaOde0cUIK/lfbPf/GWBfukbw8LvxqYSgUHnkpl4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyxJMqV3N2JJVz+KxQwWa3rZps5phvv4l/pa/+LtbYOOdwaNcUy
+	a0S2nZksfmppZ/3aoiPZB7eFTy0n4iuVjt4S2+iWjJtEE+XIQG577RAbXo/qvls4etIfbyHDJ7u
+	JwkZBbfAVqXJZ8/f475axaW0Y7I/yv1g=
+X-Google-Smtp-Source: AGHT+IG9cQ3842nU2X96hW6f/gkC+5SQGjvtKdtQOMK6m2HstYAXMYIkvNvxji/TrvC80TdUeDVdiXrTNf1BUzk4eTg=
+X-Received: by 2002:a17:907:9603:b0:b72:5d9c:b47b with SMTP id
+ a640c23a62f3a-b73678ed0a1mr518109066b.36.1763179721512; Fri, 14 Nov 2025
+ 20:08:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251104113700.1561752-1-maobibo@loongson.cn>
-In-Reply-To: <20251104113700.1561752-1-maobibo@loongson.cn>
+References: <20251104113700.1561752-1-maobibo@loongson.cn> <20251104113700.1561752-4-maobibo@loongson.cn>
+In-Reply-To: <20251104113700.1561752-4-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 15 Nov 2025 11:43:09 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6kU=6JtEoy3arisuo7RvVBHTn_g6TP7kGuz7AT2pRnQQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bne_bnQ1MX_aK6L6PAWnnYopTrqDR2KYqRIKDky8Cpc1wKuOlHuSG0m4GA
-Message-ID: <CAAhV-H6kU=6JtEoy3arisuo7RvVBHTn_g6TP7kGuz7AT2pRnQQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] KVM: LoongArch: selftests: Add timer test case
-To: Bibo Mao <maobibo@loongson.cn>, "open list:LOONGARCH" <loongarch@lists.linux.dev>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org
+Date: Sat, 15 Nov 2025 12:08:28 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5TNk-pxVthnau=GgfB=5K9fUQsFnKKKH=VqLaLmENFtA@mail.gmail.com>
+X-Gm-Features: AWmQ_bnuZb7NbZ1VUmGJms5OOq9ewjA1_-hRujqnV8OhCjjyH6ZWv0RIiUblj2g
+Message-ID: <CAAhV-H5TNk-pxVthnau=GgfB=5K9fUQsFnKKKH=VqLaLmENFtA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] KVM: LoongArch: selftests: Add basic interfaces
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hi, Bibo,
 
-I'm very confused with this series.
-1. The cover letter doesn't appear in the maillist.
-2. Patch-6 is missed in the thread.
-3. The one-shot and periodic test splitting is a little strange,
-because you put some common parts in the on-shot test, maybe you can
-consider merge these two.
-
-Huacai
-
 On Tue, Nov 4, 2025 at 7:37=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
 :
 >
-> This patchset adds timer test case for LoongArch system, it is based
-> on common arch_timer test case. And it includes one-shot and period mode
-> timer interrupt test, software emulated timer function and time counter
-> test.
+> Add some basic function interfaces such as CSR register access,
+> local irq enable or disable APIs.
+This is "basic interfaces", so better to be before Patch-2 (or keep
+the order but change the subject)?
+
+Huacai
+
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
-> v1 ... v2:
->   1. Restore PC and PRMD after exception handler.
->   2. Split patch 4 into two small patches with period timer test and
->      time counter test.
->   3. With time counter test, set time count with 0 when create VM. And
->      verify time count starts from 0 in guest code.
-> ---
-> Bibo Mao (7):
->   KVM: LoongArch: selftests: Add system registers save and restore on
->     exception
->   KVM: LoongArch: selftests: Add exception handler register interface
->   KVM: LoongArch: selftests: Add basic interfaces
->   KVM: LoongArch: selftests: Add timer test case with one-shot mode
->   KVM: LoongArch: selftests: Add period mode timer test
->   KVM: LoongArch: selftests: Add SW emulated timer test
->   KVM: LoongArch: selftests: Add time counter test
+>  .../kvm/include/loongarch/processor.h         | 52 +++++++++++++++++++
+>  .../selftests/kvm/lib/loongarch/processor.c   |  5 ++
+>  2 files changed, 57 insertions(+)
 >
->  tools/testing/selftests/kvm/Makefile.kvm      |  10 +-
->  .../kvm/include/loongarch/arch_timer.h        |  84 ++++++++
->  .../kvm/include/loongarch/processor.h         |  81 +++++++-
->  .../selftests/kvm/lib/loongarch/exception.S   |   6 +
->  .../selftests/kvm/lib/loongarch/processor.c   |  47 ++++-
->  .../selftests/kvm/loongarch/arch_timer.c      | 195 ++++++++++++++++++
->  6 files changed, 417 insertions(+), 6 deletions(-)
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/arch_ti=
-mer.h
->  create mode 100644 tools/testing/selftests/kvm/loongarch/arch_timer.c
+> diff --git a/tools/testing/selftests/kvm/include/loongarch/processor.h b/=
+tools/testing/selftests/kvm/include/loongarch/processor.h
+> index a18ac7bff303..b027f8f4dac7 100644
+> --- a/tools/testing/selftests/kvm/include/loongarch/processor.h
+> +++ b/tools/testing/selftests/kvm/include/loongarch/processor.h
+> @@ -118,6 +118,28 @@
+>  #define  CSR_TLBREHI_PS_SHIFT          0
+>  #define  CSR_TLBREHI_PS                        (0x3fUL << CSR_TLBREHI_PS=
+_SHIFT)
 >
+> +#define csr_read(csr)                          \
+> +({                                             \
+> +       register unsigned long __v;             \
+> +       __asm__ __volatile__(                   \
+> +               "csrrd %[val], %[reg]\n\t"      \
+> +               : [val] "=3Dr" (__v)              \
+> +               : [reg] "i" (csr)               \
+> +               : "memory");                    \
+> +       __v;                                    \
+> +})
+> +
+> +#define csr_write(v, csr)                      \
+> +({                                             \
+> +       register unsigned long __v =3D v;         \
+> +       __asm__ __volatile__ (                  \
+> +               "csrwr %[val], %[reg]\n\t"      \
+> +               : [val] "+r" (__v)              \
+> +               : [reg] "i" (csr)               \
+> +               : "memory");                    \
+> +       __v;                                    \
+> +})
+> +
+>  #define EXREGS_GPRS                    (32)
 >
-> base-commit: ec0b62ccc986c06552c57f54116171cfd186ef92
+>  #ifndef __ASSEMBLER__
+> @@ -147,6 +169,36 @@ struct handlers {
+>  void vm_init_descriptor_tables(struct kvm_vm *vm);
+>  void vm_install_exception_handler(struct kvm_vm *vm, int vector, handler=
+_fn handler);
+>
+> +static inline void local_irq_enable(void)
+> +{
+> +       unsigned int flags =3D CSR_CRMD_IE;
+> +
+> +       register unsigned int mask asm("$t0") =3D CSR_CRMD_IE;
+> +
+> +       __asm__ __volatile__(
+> +               "csrxchg %[val], %[mask], %[reg]\n\t"
+> +               : [val] "+r" (flags)
+> +               : [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+> +               : "memory");
+> +}
+> +
+> +static inline void local_irq_disable(void)
+> +{
+> +       unsigned int flags =3D 0;
+> +
+> +       register unsigned int mask asm("$t0") =3D CSR_CRMD_IE;
+> +
+> +       __asm__ __volatile__(
+> +               "csrxchg %[val], %[mask], %[reg]\n\t"
+> +               : [val] "+r" (flags)
+> +               : [mask] "r" (mask), [reg] "i" (LOONGARCH_CSR_CRMD)
+> +               : "memory");
+> +}
+> +
+> +static inline void cpu_relax(void)
+> +{
+> +       asm volatile("nop" ::: "memory");
+> +}
+>  #else
+>  #define PC_OFFSET_EXREGS               ((EXREGS_GPRS + 0) * 8)
+>  #define ESTAT_OFFSET_EXREGS            ((EXREGS_GPRS + 1) * 8)
+> diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tool=
+s/testing/selftests/kvm/lib/loongarch/processor.c
+> index be537c5ff74e..20ba476ccb72 100644
+> --- a/tools/testing/selftests/kvm/lib/loongarch/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+> @@ -373,3 +373,8 @@ void vcpu_arch_set_entry_point(struct kvm_vcpu *vcpu,=
+ void *guest_code)
+>         regs.pc =3D (uint64_t)guest_code;
+>         vcpu_regs_set(vcpu, &regs);
+>  }
+> +
+> +uint32_t guest_get_vcpuid(void)
+> +{
+> +       return csr_read(LOONGARCH_CSR_CPUID);
+> +}
 > --
 > 2.39.3
 >
