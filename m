@@ -1,96 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C643168EB
-	for <loongarch@lists.linux.dev>; Mon, 17 Nov 2025 06:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF4128640B;
+	Mon, 17 Nov 2025 11:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763362670; cv=none; b=SoYHGP0sw/yM/cQTcL3KcOyfxfmeINhCHBiEq1nkuM9z9rB9RDFaWqeAAjKuR196cUwlRpZP3CzkMuUbJ4Vu6hKOSpQN8HTMQ65ZHcoWWAaKa2pRK2VT0fpRMUajWWq+EM12YAr7Mcgpk5lQquZXABdXcF+GbshPqkVDLY9PC2Y=
+	t=1763379188; cv=none; b=U7SQP5bK1n/J4QZlT36e9NubCG99fJpYFIjkoblcwu0f6opDhEJVzGulL3yvx16aeYrif7H2D6JLexrP1oWIwugpHOfZQ4urfF3bzsvwRmSi6HwlTLGMseM9bGdrU6GMCoIwEYEHKyonuW9JtqUDMQBtXf9Y0PiLMnBpMoZ6RCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763362670; c=relaxed/simple;
-	bh=QFHJjbWXgZ5FLJu59KKPwWK2r2/tZ86nN8Ql1jm9c1k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MS43cfDSCcrnSpk/ShZqXyphf1ClG48mzqNx7mZoehbW2FYiIqjwe5AIjEL2E3XxP5ODLl4pkndnyZxk09aYxv7727B7dqz666UDOj9NHQC9bHiA9N/p3YO4YlcY0u16nHL/BX3paZ+6JRKpyOQzUcUyMpDDT1UacRCn8EGt7/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgEn9zes; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763379188; c=relaxed/simple;
+	bh=7c7c0+Y2B/04JUOEwi1O55W3Y0JytX6yoqbHe2m//uE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=acBKtAYy2zwjbdePSx68JEZJnA3lbuwcZWlmxjaXtf9GWvV26ty9xbyqww6K5vCd2OnERU+dPjHsomibhV8ABeZgSPsnmBqxfYIf2PaI6rwJPqObBP1sUuiwia70cwGnGPBumTE3PaDYqRQcZQzkdpUTWEzEN6NNAJ8YzVVhqew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0iH7zKi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgEn9zes"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB569C4CEF5
-	for <loongarch@lists.linux.dev>; Mon, 17 Nov 2025 06:57:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0iH7zKi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85FFEC4CEFB;
+	Mon, 17 Nov 2025 11:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763362669;
-	bh=QFHJjbWXgZ5FLJu59KKPwWK2r2/tZ86nN8Ql1jm9c1k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TgEn9zesgIRCkrmyUN3w5JmDr4gYs1GGuRuGQO48gd4V4EjRN6C5Msq0MIsDUo6Rq
-	 2T0q2HNtfFmfieLN040ZdcCSB4+kjAMkf3BfT7kLJM0ij0ZRLTTd0t2LhfRgXhvOTX
-	 wUcRiqerY+vy9iUWThAl5jGFg4WLdGNLtkeJfhPgcrg7QanuH9wVDDqgpx+sPiuM4B
-	 NP1xZcNj6i/hm/oI70m2A8SVfKRtW2hkYh24UkzuvtIqPyIGW1tt5nLb1JnJbnurn2
-	 r3gVqYVpX/Xkq0ye5fGg+mH7BgewPI9K2xfGVaCysRYj+fSoLu6K1b2/YWeOqGRcAp
-	 b4D8ocqGafeBw==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-640a0812658so6313579a12.0
-        for <loongarch@lists.linux.dev>; Sun, 16 Nov 2025 22:57:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX10TeEo1Wlgqjwqlt5vhYYqmxEeLa/eASy/X0WPtlu119eLj4zUcJ1L6kl64QiQcOtJ6+xcxzmIUY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyh1FZ7XRVL3V91W0uF80wkpFYRFfZT/NuCkJrNPWXbm0JTQgVm
-	jl4XmhSTE7jBc6r/FIcEaZfIDQSb5/tu5w+KlKpU07iIghUqsFsf+rt4Gg2ZJBlHfg7axILrvhY
-	G3Q+diXfiiaQasI2aTEKqEB+W65xrK4E=
-X-Google-Smtp-Source: AGHT+IGu0YWlJyZo9sBFqmWx/8Hh3O0yFNJjWzg2iDkfq3nhyb14i7bYZtnnHW6QkMeJqt8H8KA79+YcCaKiwhmN4Fo=
-X-Received: by 2002:a17:906:6a08:b0:b72:599:5385 with SMTP id
- a640c23a62f3a-b7367bab9e7mr1170101566b.61.1763362668048; Sun, 16 Nov 2025
- 22:57:48 -0800 (PST)
+	s=k20201202; t=1763379187;
+	bh=7c7c0+Y2B/04JUOEwi1O55W3Y0JytX6yoqbHe2m//uE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y0iH7zKi3zR5ITzvZgCo9KeJonwjYrYbonjxhYepOF3+xHZpaS3i9D0kEds9bBtBm
+	 tJVhUeo2NjA866SWv2uwt3B84zpsGt+rFkub8wba2n8v951OWWCU4Ddn/CRqhFholS
+	 t3JB2pOs8OAnnfo4XkYh5ksbvyG8Z2wOlp8SyxiDt8FhWpp/46kJIUxDt07hIkoRYi
+	 XHgQ9t+WpdVXZLdyBUt/JFVk0g3dfRlmreSb7STQNAVkigTmeYh/PoCPatGNe790Wb
+	 Fc0XZYMC40b+xXj9qVj/Dhc27kCOKFThiDS6ouhgXyf3oZzLgiJvVxpO1KCY61s7In
+	 tDypGsaVFETGQ==
+Date: Mon, 17 Nov 2025 11:33:01 +0000
+From: Will Deacon <will@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Ard Biesheuvel <ardb@kernel.org>, loongarch@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+Message-ID: <aRsH7RTpAah4g5Xr@willie-the-truck>
+References: <CAAhV-H6m5vszCyiF3qi94cpHBPVuqM2xH93D=gfsQqOSYvC-sA@mail.gmail.com>
+ <33612d85-e70b-26da-8460-ea6b9064ce08@loongson.cn>
+ <CAAhV-H5ZSTFDxvm-W1CrgEoQ5d_jw5yVsfetQ_J_qL5pqLtzgg@mail.gmail.com>
+ <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
+ <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
+ <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com>
+ <421c08e1-255b-447b-b5e3-ee6544fbefd2@loongson.cn>
+ <CAAhV-H5KsFShDJ_Cxu+1_ces8oojn8+S-7PLmE7aUj8gX5_GEw@mail.gmail.com>
+ <32s3lvzfu6jkyho7qenrqbsm5wkgjnzn2imdp6tfwycmyxpzgu@kg5367uxmxii>
+ <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1763117269.git.zhengqi.arch@bytedance.com>
- <146b5a0207052b38d04caac6b20756a61c2189b3.1763117269.git.zhengqi.arch@bytedance.com>
- <CAAhV-H6HL+mXeuLqgo5BOVBB0_GHTUmn7_7NTzdUpLX7NbuQ5w@mail.gmail.com> <8fbeb3e8-7c30-46f6-a0a4-289efbf45ac0@linux.dev>
-In-Reply-To: <8fbeb3e8-7c30-46f6-a0a4-289efbf45ac0@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 17 Nov 2025 14:57:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H73vNhjZqsDq0KGJD_PC2LtM39XAG-aZtvE=tphrQ8dJA@mail.gmail.com>
-X-Gm-Features: AWmQ_bmXPoa2u3pjJaGT_1E1BSy8DLhNHegRD0EaZ-4w9eHZIwpki4fOuwGYKs4
-Message-ID: <CAAhV-H73vNhjZqsDq0KGJD_PC2LtM39XAG-aZtvE=tphrQ8dJA@mail.gmail.com>
-Subject: Re: [PATCH 3/7] loongarch: mm: enable MMU_GATHER_RCU_TABLE_FREE
-To: Qi Zheng <qi.zheng@linux.dev>
-Cc: will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com, 
-	peterz@infradead.org, dev.jain@arm.com, akpm@linux-foundation.org, 
-	david@redhat.com, ioworker0@gmail.com, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	WANG Xuerui <kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com>
 
-On Mon, Nov 17, 2025 at 2:42=E2=80=AFPM Qi Zheng <qi.zheng@linux.dev> wrote=
-:
->
-> Hi Huacai,
->
-> On 11/14/25 10:17 PM, Huacai Chen wrote:
-> > Hi, Qi Zheng,
->
-> [...]
->
-> >>
-> >> -#define __pmd_free_tlb(tlb, x, addr)   pmd_free((tlb)->mm, x)
-> >> +#define __pmd_free_tlb(tlb, x, addr)   \
-> >> +       tlb_remove_ptdesc((tlb), virt_to_ptdesc(x))
-> > I think we can define it in one line.
->
-> Do we need to change __pte_free_tlb() to a single-line format
-> as well?
-Yes, there is no 80 columns limit now.
+On Sat, Nov 15, 2025 at 11:16:42AM +0800, Huacai Chen wrote:
+> On Wed, Nov 12, 2025 at 2:00 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> >
+> > On Mon, Nov 10, 2025 at 03:00:00PM +0800, Huacai Chen wrote:
+> > > On Mon, Nov 10, 2025 at 9:19 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> > > > If I understand correctly, I should modify this patch to remove the
+> > > > changes of arm and riscv for now, do the changes only when there is
+> > > > a real problem or requirement some day, right? If no more comments,
+> > > > I will send v3 later.
+> > >
+> > > Now everyone involved agrees that the efistub code is correct, so the
+> > > proper solution is to fix the compiler.
+> >
+> > Hm?  I don't see how it's a compiler bug.  It's really just an objtool
+> > limitation.
+> >
+> > > Changing efistub code and changing objtool (ignore __efistub prefix)
+> > > are both workarounds, but I think changing objtool is a little more
+> > > reasonable. Maybe Josh has different ideas?
+> >
+> > I thought the conversation had converged on what Tiezhu mentioned above,
+> > which is to skip objtool on libstub for loongarch, but leave the other
+> > arches alone.  That way objtool behavior is consistent between loongarch
+> > and x86, and objtool doesn't need to ignore any prefixes.
+> >
+> > So basically, the v2 patch minus the arm64/riscv changes.
+> 
+> Hi, ARM64 and RISC-V maintainers,
+> 
+> Would you mind that this patch modifies the three architectures
+> together (they are exactly the same style now)?
+> 
+> Madhavan is the author of ARM64's objtool, I think your opinion is
+> also very important.
 
-Huacai
+arm64 doesn't (yet) use objtool.
 
->
-> Thanks,
-> Qi
->
->
-> >>
->
->
+I defer to Ard on anything relating to the arm64 efistub. Reading the
+start of this thread, it doesn't look like he's convinced and I'm not
+surprised if it's purely an issue with objtool.
+
+Will
