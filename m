@@ -1,122 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from utopia.booyaka.com (utopia.booyaka.com [74.50.51.50])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85B72C236D;
-	Mon, 17 Nov 2025 16:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A5526E6F5
+	for <loongarch@lists.linux.dev>; Mon, 17 Nov 2025 23:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.51.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763398685; cv=none; b=njQeLDahRgbKTkMz8MyKVa3Kbw8XvMa6ZdOyRwu7RU+AVEeY4V8+rSphRuRelrm2kAfRzGMlJ8r9p7IoYZxt3nbI8hwW0wF+/papD0qXphVBYtp58RzMo7OXDQ4SAkr0d4juI72Z7HgN8wY+Z/g8PPA6gWEEDNXVYR+PbavPEbs=
+	t=1763422486; cv=none; b=rouxIHIHahd9yBtMLDc8yKKsQAWqzDUf3MRkOXUufQbYg8EzFVh5D+r1de8hHpuH1UnOMQltAm1uHG9tBNVPZoaYP85ai9koLsELxiSWfmeD9IgZN3BtOvp8UfONpc+hZ7XmX6GM0BAc7yY0wzCp5751GVDLJAG74RvnC/62ywU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763398685; c=relaxed/simple;
-	bh=XI7Dqc8hDG/imiQjwpaa5L5QUXIhiYHcmUsbHNJq770=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qD90mhmYWUD4VPGjw4iwOn/CXcnwonxwmaOmyC8veo1zigU6/KrpfFubJs8clYI08BK7IuHH0SHbmoYO500WM+U/EQuIPR6lNavdOCZ/2ZKIV1tGTtSrrDHlePNmnQBQtvrY2IUJVRf5B2XwpDMzK4p0fB6W+BarMcE3o7PZ5+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPT+kdRJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPT+kdRJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B11DDC116B1;
-	Mon, 17 Nov 2025 16:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763398685;
-	bh=XI7Dqc8hDG/imiQjwpaa5L5QUXIhiYHcmUsbHNJq770=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dPT+kdRJmrc++E4JgaDg0HvOn87ub1fN81aujiL3JuYrC+XABLmrn8IKbujtOxjox
-	 06UW28/7RYwaB1AdZehoyv5pTGVprSBAXjHnoKbjSL+FhOIiMfHk/eazN5xF1ef35L
-	 iI2y5+BgESdTBJPjDJ0iyZWOBGh7c+XsGh6M04pYgwNZsjWk51POupKSyh33gdm0EP
-	 45y5/jkWLrEhutdIoC4OWF5kMcmkisDNjsD7jjLCsAiCX9ZO+pgaVPoMulUmJlaGb9
-	 4LERACYZwJIsl5lju9+IsQAyONXCgmYbWkB3p/ehSBdOllMUN3kNW2OC6dfYrgwBMJ
-	 Dugsm9vMMNdlA==
-Message-ID: <355d3bf3-c6bc-403e-9f19-89259d868611@kernel.org>
-Date: Mon, 17 Nov 2025 17:57:58 +0100
+	s=arc-20240116; t=1763422486; c=relaxed/simple;
+	bh=DR2LJIdWOcOahT0XY08l8Xc5vbVRm5Cs9aOx/d+jTHg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=lTj/pHWomn0zw+dXzKUKmJua5CawMI/wYVksNqNq2YM+MXUgRz6a1/2txigjYgZsmzFBHKWgPZyeMgi9OwQ9dSRvIUHyvwEc8OGDH8h9caSR5Z5U2LXguwgMSjXD6Qnrj/gHkRrTQln0ipjxf5uRRvhNqT9gn4jVXY5Uj4ejoc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pwsan.com; spf=pass smtp.mailfrom=pwsan.com; arc=none smtp.client-ip=74.50.51.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pwsan.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pwsan.com
+Received: (qmail 9620 invoked by uid 1019); 17 Nov 2025 23:28:02 -0000
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 17 Nov 2025 23:28:02 -0000
+Date: Mon, 17 Nov 2025 23:28:02 +0000 (UTC)
+From: Paul Walmsley <paul@pwsan.com>
+To: Will Deacon <will@kernel.org>
+cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+    Catalin Marinas <catalin.marinas@arm.com>, Paul Walmsley <pjw@kernel.org>, 
+    Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+    "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>, 
+    Tiezhu Yang <yangtiezhu@loongson.cn>, Ard Biesheuvel <ardb@kernel.org>, 
+    loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+    linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+    linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+In-Reply-To: <aRsH7RTpAah4g5Xr@willie-the-truck>
+Message-ID: <alpine.DEB.2.21.999.2511172326340.8304@utopia.booyaka.com>
+References: <CAAhV-H6m5vszCyiF3qi94cpHBPVuqM2xH93D=gfsQqOSYvC-sA@mail.gmail.com> <33612d85-e70b-26da-8460-ea6b9064ce08@loongson.cn> <CAAhV-H5ZSTFDxvm-W1CrgEoQ5d_jw5yVsfetQ_J_qL5pqLtzgg@mail.gmail.com> <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
+ <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com> <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com> <421c08e1-255b-447b-b5e3-ee6544fbefd2@loongson.cn> <CAAhV-H5KsFShDJ_Cxu+1_ces8oojn8+S-7PLmE7aUj8gX5_GEw@mail.gmail.com>
+ <32s3lvzfu6jkyho7qenrqbsm5wkgjnzn2imdp6tfwycmyxpzgu@kg5367uxmxii> <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com> <aRsH7RTpAah4g5Xr@willie-the-truck>
+User-Agent: Alpine 2.21.999 (DEB 260 2018-02-26)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] mm: make PT_RECLAIM depend on
- MMU_GATHER_RCU_TABLE_FREE && 64BIT
-To: Qi Zheng <qi.zheng@linux.dev>, will@kernel.org, aneesh.kumar@kernel.org,
- npiggin@gmail.com, peterz@infradead.org, dev.jain@arm.com,
- akpm@linux-foundation.org, ioworker0@gmail.com
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>
-References: <cover.1763117269.git.zhengqi.arch@bytedance.com>
- <0a4d1e6f0bf299cafd1fc624f965bd1ca542cea8.1763117269.git.zhengqi.arch@bytedance.com>
-From: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Content-Language: en-US
-In-Reply-To: <0a4d1e6f0bf299cafd1fc624f965bd1ca542cea8.1763117269.git.zhengqi.arch@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 14.11.25 12:11, Qi Zheng wrote:
-> From: Qi Zheng <zhengqi.arch@bytedance.com>
+On Mon, 17 Nov 2025, Will Deacon wrote:
 
-Subject: s/&&/&/
-
+> On Sat, Nov 15, 2025 at 11:16:42AM +0800, Huacai Chen wrote:
+>
+> > Hi, ARM64 and RISC-V maintainers,
+> > 
+> > Would you mind that this patch modifies the three architectures
+> > together (they are exactly the same style now)?
+> > 
+> > Madhavan is the author of ARM64's objtool, I think your opinion is
+> > also very important.
 > 
-> Make PT_RECLAIM depend on MMU_GATHER_RCU_TABLE_FREE so that PT_RECLAIM can
-> be enabled by default on all architectures that support
-> MMU_GATHER_RCU_TABLE_FREE.
-> 
-> Considering that a large number of PTE page table pages (such as 100GB+)
-> can only be caused on a 64-bit system, let PT_RECLAIM also depend on
-> 64BIT.
-> 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> ---
->   arch/x86/Kconfig | 1 -
->   mm/Kconfig       | 6 +-----
->   2 files changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index eac2e86056902..96bff81fd4787 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -330,7 +330,6 @@ config X86
->   	select FUNCTION_ALIGNMENT_4B
->   	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
->   	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
-> -	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
->   	select ARCH_SUPPORTS_SCHED_SMT		if SMP
->   	select SCHED_SMT			if SMP
->   	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index a5a90b169435d..e795fbd69e50c 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -1440,14 +1440,10 @@ config ARCH_HAS_USER_SHADOW_STACK
->   	  The architecture has hardware support for userspace shadow call
->             stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
->   
-> -config ARCH_SUPPORTS_PT_RECLAIM
-> -	def_bool n
-> -
->   config PT_RECLAIM
->   	bool "reclaim empty user page table pages"
->   	default y
-> -	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
-> -	select MMU_GATHER_RCU_TABLE_FREE
-> +	depends on MMU_GATHER_RCU_TABLE_FREE && MMU && SMP && 64BIT
+> arm64 doesn't (yet) use objtool.
+>
+> I defer to Ard on anything relating to the arm64 efistub. Reading the
+> start of this thread, it doesn't look like he's convinced and I'm not
+> surprised if it's purely an issue with objtool.
 
-Who would we have MMU_GATHER_RCU_TABLE_FREE without MMU? (can we drop 
-the MMU part)
+Same for RISC-V.
 
-Why do we care about SMP in the first place? (can we frop SMP)
 
-But I also wonder why we need "MMU_GATHER_RCU_TABLE_FREE && 64BIT":
-
-Would it be harmful on 32bit (sure, we might not reclaim as much, but 
-still there is memory to be reclaimed?)?
-
-If all 64BIT support MMU_GATHER_RCU_TABLE_FREE (as you previously 
-state), why can't we only check for 64BIT?
-
--- 
-Cheers
-
-David
+- Paul
