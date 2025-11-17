@@ -1,106 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF4128640B;
-	Mon, 17 Nov 2025 11:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C754301484;
+	Mon, 17 Nov 2025 16:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763379188; cv=none; b=U7SQP5bK1n/J4QZlT36e9NubCG99fJpYFIjkoblcwu0f6opDhEJVzGulL3yvx16aeYrif7H2D6JLexrP1oWIwugpHOfZQ4urfF3bzsvwRmSi6HwlTLGMseM9bGdrU6GMCoIwEYEHKyonuW9JtqUDMQBtXf9Y0PiLMnBpMoZ6RCQ=
+	t=1763398429; cv=none; b=mPlrr1G5uk85u4uplxmdrsmBqBhSt1+u05nA2kZtkx9gfYTNzIeStzBmglscUPQXIk0Su/wxAwVjrBfejCT1cbPubwzp1cxNALuMxK3CxvIlrutEKEAt++/zGHBx98PPmSsLAhOj0gkVf+OIVtnoOmEkzszFmBYorADKjoqUgeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763379188; c=relaxed/simple;
-	bh=7c7c0+Y2B/04JUOEwi1O55W3Y0JytX6yoqbHe2m//uE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=acBKtAYy2zwjbdePSx68JEZJnA3lbuwcZWlmxjaXtf9GWvV26ty9xbyqww6K5vCd2OnERU+dPjHsomibhV8ABeZgSPsnmBqxfYIf2PaI6rwJPqObBP1sUuiwia70cwGnGPBumTE3PaDYqRQcZQzkdpUTWEzEN6NNAJ8YzVVhqew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0iH7zKi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763398429; c=relaxed/simple;
+	bh=xcaskcSeK6dNzaCv0moe8ATxJ9XohqfqvmJEObNmum4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W9lcjouSkt73qgdkw4oAnq++uRmGQWZAj5u34sr5yQo9d+XhiQPRZojHbjNnZM+TjeSsl8j5LrdkllrPoXsiaCelg3HFNN3oT3cD2ggeZfsMJfOBz0gBv/eecmlxL7cgarF9KmrfWUaBgzOPAWyTTWnYfeFRKfQMp0ORmHKlAM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=auYCSxxE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0iH7zKi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85FFEC4CEFB;
-	Mon, 17 Nov 2025 11:33:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="auYCSxxE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FD96C4CEF1;
+	Mon, 17 Nov 2025 16:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763379187;
-	bh=7c7c0+Y2B/04JUOEwi1O55W3Y0JytX6yoqbHe2m//uE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y0iH7zKi3zR5ITzvZgCo9KeJonwjYrYbonjxhYepOF3+xHZpaS3i9D0kEds9bBtBm
-	 tJVhUeo2NjA866SWv2uwt3B84zpsGt+rFkub8wba2n8v951OWWCU4Ddn/CRqhFholS
-	 t3JB2pOs8OAnnfo4XkYh5ksbvyG8Z2wOlp8SyxiDt8FhWpp/46kJIUxDt07hIkoRYi
-	 XHgQ9t+WpdVXZLdyBUt/JFVk0g3dfRlmreSb7STQNAVkigTmeYh/PoCPatGNe790Wb
-	 Fc0XZYMC40b+xXj9qVj/Dhc27kCOKFThiDS6ouhgXyf3oZzLgiJvVxpO1KCY61s7In
-	 tDypGsaVFETGQ==
-Date: Mon, 17 Nov 2025 11:33:01 +0000
-From: Will Deacon <will@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Ard Biesheuvel <ardb@kernel.org>, loongarch@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
-Message-ID: <aRsH7RTpAah4g5Xr@willie-the-truck>
-References: <CAAhV-H6m5vszCyiF3qi94cpHBPVuqM2xH93D=gfsQqOSYvC-sA@mail.gmail.com>
- <33612d85-e70b-26da-8460-ea6b9064ce08@loongson.cn>
- <CAAhV-H5ZSTFDxvm-W1CrgEoQ5d_jw5yVsfetQ_J_qL5pqLtzgg@mail.gmail.com>
- <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
- <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
- <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com>
- <421c08e1-255b-447b-b5e3-ee6544fbefd2@loongson.cn>
- <CAAhV-H5KsFShDJ_Cxu+1_ces8oojn8+S-7PLmE7aUj8gX5_GEw@mail.gmail.com>
- <32s3lvzfu6jkyho7qenrqbsm5wkgjnzn2imdp6tfwycmyxpzgu@kg5367uxmxii>
- <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com>
+	s=k20201202; t=1763398429;
+	bh=xcaskcSeK6dNzaCv0moe8ATxJ9XohqfqvmJEObNmum4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=auYCSxxEolEdVdPP5hVqXRlt7AuV/UT6WrPa29QCtPBvB6LhWtxK/veNm59+tg6iq
+	 rWqGh7NFp27ucHsHpE+PxOZC6j5PxVDjo5pOnD0QHkrYbGowV5ij7ERUBYhkkveU8s
+	 Qzg6TBFQc+DUeNZ14jTGRDww4CnIYZTFis12VZGpJEwzucgudCK3WO/qGAhAPMC7y/
+	 uuneSx1mR/5L0/EYwLyIp6CPdn57YNuXiEoHNjZnllcUZGQFacQDKvwPIybR0ThFFp
+	 q5NSzE8k0Nzvt6Mn+oVgHtGvj1wYQsVXpn4r7yvTJbgDFs0FNmoLC3DfEgh3t0L6cE
+	 NX3xoTtWTQtMg==
+Message-ID: <83e88171-54cb-4112-a344-f6a7d7f13784@kernel.org>
+Date: Mon, 17 Nov 2025 17:53:42 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/7] enable PT_RECLAIM on all 64-bit architectures
+To: Qi Zheng <qi.zheng@linux.dev>, will@kernel.org, aneesh.kumar@kernel.org,
+ npiggin@gmail.com, peterz@infradead.org, dev.jain@arm.com,
+ akpm@linux-foundation.org, ioworker0@gmail.com
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>
+References: <cover.1763117269.git.zhengqi.arch@bytedance.com>
+From: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Content-Language: en-US
+In-Reply-To: <cover.1763117269.git.zhengqi.arch@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Nov 15, 2025 at 11:16:42AM +0800, Huacai Chen wrote:
-> On Wed, Nov 12, 2025 at 2:00 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> >
-> > On Mon, Nov 10, 2025 at 03:00:00PM +0800, Huacai Chen wrote:
-> > > On Mon, Nov 10, 2025 at 9:19 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> > > > If I understand correctly, I should modify this patch to remove the
-> > > > changes of arm and riscv for now, do the changes only when there is
-> > > > a real problem or requirement some day, right? If no more comments,
-> > > > I will send v3 later.
-> > >
-> > > Now everyone involved agrees that the efistub code is correct, so the
-> > > proper solution is to fix the compiler.
-> >
-> > Hm?  I don't see how it's a compiler bug.  It's really just an objtool
-> > limitation.
-> >
-> > > Changing efistub code and changing objtool (ignore __efistub prefix)
-> > > are both workarounds, but I think changing objtool is a little more
-> > > reasonable. Maybe Josh has different ideas?
-> >
-> > I thought the conversation had converged on what Tiezhu mentioned above,
-> > which is to skip objtool on libstub for loongarch, but leave the other
-> > arches alone.  That way objtool behavior is consistent between loongarch
-> > and x86, and objtool doesn't need to ignore any prefixes.
-> >
-> > So basically, the v2 patch minus the arm64/riscv changes.
+On 14.11.25 12:11, Qi Zheng wrote:
+> From: Qi Zheng <zhengqi.arch@bytedance.com>
 > 
-> Hi, ARM64 and RISC-V maintainers,
+> Hi all,
 > 
-> Would you mind that this patch modifies the three architectures
-> together (they are exactly the same style now)?
+> This series aims to enable PT_RECLAIM on all 64-bit architectures.
 > 
-> Madhavan is the author of ARM64's objtool, I think your opinion is
-> also very important.
+> On a 64-bit system, madvise(MADV_DONTNEED) may cause a large number of empty PTE
+> page table pages (such as 100GB+). To resolve this problem, we need to enable
+> PT_RECLAIM, which depends on MMU_GATHER_RCU_TABLE_FREE.
+> 
 
-arm64 doesn't (yet) use objtool.
+Makes sense!
 
-I defer to Ard on anything relating to the arm64 efistub. Reading the
-start of this thread, it doesn't look like he's convinced and I'm not
-surprised if it's purely an issue with objtool.
+> Therefore, this series first enables MMU_GATHER_RCU_TABLE_FREE on all 64-bit
+> architectures, and finally makes PT_RECLAIM depend on MMU_GATHER_RCU_TABLE_FREE
+> && 64BIT. This way, PT_RECLAIM can be enabled by default on all 64-bit
+> architectures.
 
-Will
+Could we then even go ahead and stop making PT_RECLAIM user-selectable?
+
+-- 
+Cheers
+
+David
