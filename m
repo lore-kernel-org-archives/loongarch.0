@@ -1,135 +1,369 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38EB1E1A17
-	for <loongarch@lists.linux.dev>; Sun, 16 Nov 2025 04:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C565018A921
+	for <loongarch@lists.linux.dev>; Mon, 17 Nov 2025 01:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763265692; cv=none; b=JvYhha06nTRlRRkA3K57m+jDqSGU2gGx/UhWu2QVXuMKU8kd8IE+a2wK4jNB3/XcZV03HlhaOXzP2nvXyolW5m/DTRW1p+NLaHqFEoAXNZNh6VuQU/U/T8hd4yAcSX9AH0ioIfJC7M5CwKKjpWwTa/ve9xbXN/C121g9Tp9YmSI=
+	t=1763342408; cv=none; b=sfQvgkTG2Sh/gH7WszvuB1HKsv97G/0ulLpBH2q9pNa4IgMezF4TxtFdMViePSECs5g/esuF59XbJ4abRHNyekv5vAzwKNDvnkxsAAO+CiA4OYq3Q5O5J7HI2qodoiwvsBsJ+qj77EjqjYA5WcJp08GwwaOFB03mBXWJWFgXmOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763265692; c=relaxed/simple;
-	bh=ViKmEBt094e+TEyrkD/7l7Omxa8P2Y/BZpUwUU1mz/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HMGIfn5FP+uZ0RLHHqFPu0nAN6WESGYYwgnehc8uAEfEqS+JilcutZKeaIKHWCI3itiO5jjhr7p9tFSgCko0RWlqdtUuERbRuQAAgEEWjC9poN5/tQtKNSusqsFO4sqU0UhLpyr1kj3hInw3O5gxT7gs3mQSzvZ6mbKlsXnzyXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SEDMLTRi; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEDMLTRi"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5959187c5a9so40833e87.1
-        for <loongarch@lists.linux.dev>; Sat, 15 Nov 2025 20:01:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763265689; x=1763870489; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vHOnnfu2WV/v2N1dBqAfZarNGYxVE6UYUn92Rk5owLE=;
-        b=SEDMLTRiUsOOQUW9oipCzpZKVCk8Qy+QkDka8UK+djZCqS56XK7ebKr5p7jJp+v5g5
-         OOs8c7js9zva5uS4WYDDAOZHGO03dxShfKH1YUHzJgsVcfp1ROvQpSROxoK8sxOki4CF
-         HvIXDsyabRYflRp9hUpu3Vo5et+iGQ0K0pYUKy+FsOqD8BwJU/fMOv4gGnlBpyzylfO5
-         dJYe0Dxn7nkeURUAEViJZpEUQ74PzMMoJRLdyqdY7L5BTcZ23NahxiFkayaXro//VYJZ
-         onFrI8XnBwHxq2ccRteWRNtFd/bfMwQMIwsYSsIvPSUXEZ5QSiFG0lc88eX8aGVdKTGJ
-         Hs3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763265689; x=1763870489;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vHOnnfu2WV/v2N1dBqAfZarNGYxVE6UYUn92Rk5owLE=;
-        b=gSdh2Gl4vh4q/LI7GE/J4IrYGXgZ8jSdez9xCR1fgJMd8L0HLgUQwx4KLSx//hAUWl
-         0diOvC/VKeTQP8SrxXo8jdFnWD7z3Cb59Xn3WimaVUxLWk1AqlNbtrU+1FOz9rXuCtUU
-         cQSnPmGGYS6u/7whDN0id8hkz9r+ZHFs4mwBxp1n9caaeNsgOjh30zFh0GU1aRuspBkk
-         u9pCP61g4IRKgEn9BRLzAT0+HBcZyLmZAo7ZyzylBi+5zclgVSh6KZTPm3cbssH8HxJy
-         8uDognC+Cj2lKIUU+47ziEhnSU1XJYdElDkfeQBpDtTnI+b/3XPtkrgMiyYN6KKpbvbQ
-         6gCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjjscOTQJFaMJ2aEV/7OWicwH+9HRrcXp9G0BbjKGe6msRtbXbxZPLxcmhKOZUFQIIy3k9746092k=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx9UfgjL9MuvmBdS+8RaHLqClZ7YhZ0r0s4ExmI9qHGdX/ZEG/C
-	Y/BuExFSeN5M0w3pYEoTj9N/AWsro8cLSAvNPBYXOgJvSdJlONxA2vhVxYO2+yRDBgvV6ZkmC8P
-	dFil3JUKhB1xYPIxl0Ctg1eiWuU3ymfM=
-X-Gm-Gg: ASbGncsimBgpinVmmsxi7q7xLZCaug/Qjz3uxmci/wkM5T1oDsT7KOcuIN9CGOsiL0s
-	a8DfQ0W+HsNPFwsQq/HQcdnF+7MIylqIsrboXCodw9kqX/xlJTwXJGkUOOKcFq6R0uK2of5++Vd
-	+paJKIGFwmhRVErAUKRD5tva5DdY4jQ0vsEoDzGzjelGlUL4WnE6U+aWxEd1Of1j9VmPUXPQ4qN
-	fj00SjCSljiSfMxMn09M1bWk+chz4xAhusd6pUqZ27HoHyuGF+TU8ZpNy/l0QCk6mdo5nF+
-X-Google-Smtp-Source: AGHT+IGVtK1X6QVCCFl9oUOkghvq4uLoqfDGl5AxVVwOhFqg/9cS0AdZlrKDx+vFfKKDxtJFS1HxkFRUicMAHzHBZTM=
-X-Received: by 2002:a05:6512:108d:b0:594:2654:5e3c with SMTP id
- 2adb3069b0e04-595841f0b71mr2840106e87.33.1763265688745; Sat, 15 Nov 2025
- 20:01:28 -0800 (PST)
+	s=arc-20240116; t=1763342408; c=relaxed/simple;
+	bh=og0o7n076r2xu5C8O1ksZh1bZODpo9DIUn+r3gm3DPM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=CGpC3qlK81p2+k780FljDOEFZJ7TbF6oXbWRUH8zyviyt6W0sOblz5moU7MmwmdPL5QCV2cSqOyliDkQu+5sETWtVpZ58ciDSTFuOS2VBGVlLd655po7exZZkUBbq7UrEaT8LWpXU5uqIZhpn1D9rPaHx5GdXXIFg4WQdSOJ6z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxndI6eBppxzkkAA--.11889S3;
+	Mon, 17 Nov 2025 09:19:54 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDx6sAyeBppfIo1AQ--.62690S3;
+	Mon, 17 Nov 2025 09:19:51 +0800 (CST)
+Subject: Re: [PATCH v2 4/7] KVM: LoongArch: selftests: Add timer test case
+ with one-shot mode
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+References: <20251104113700.1561752-1-maobibo@loongson.cn>
+ <20251104113700.1561752-5-maobibo@loongson.cn>
+ <CAAhV-H7S5AQXb35iEL3at3nmXx68cKoM9s1bGUvJE-WCeb6Ufg@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <543c8d71-e354-2737-739b-d2c1e9066527@loongson.cn>
+Date: Mon, 17 Nov 2025 09:17:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1762482089.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1762482089.git.zhoubinbin@loongson.cn>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Sun, 16 Nov 2025 12:00:51 +0800
-X-Gm-Features: AWmQ_blIhjJIi_40FrZPKnXO2gKNnDJthQwdyLwC4vAHP_LVBvLT1GG6sptkjTU
-Message-ID: <CAJhJPsX537QiQZdk-0g_4RWVYGrhFasPrOY4Np+b-aVC6j1Urg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] Watchdog: Add Loongson-2K0300 watchdog support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-For the whole series:
-
-Reviewed-by: Keguang Zhang <keguang.zhang@gmail.com>
-Tested-by: Keguang Zhang <keguang.zhang@gmail.com> # on LS1B & LS1C
-
-On Fri, Nov 7, 2025 at 2:01=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
- wrote:
->
-> Hi all:
->
-> This patch set adds support for the Loongson-2K0300 watchdog driver.
-> It's similar to the Loongson-1, except for some different register offset=
-s.
-> Therefore, I've merged it with the Loongson-1 watchdog driver.
->
-> In addition, I've simply fixed some minor issues with the previous driver=
-.
->
-> Thanks.
->
-> -------
-> V2:
->
-> - Remove file and function renaming patch;
-> Patch 4:
->   - Update commit message.
->
-> Link to V1:
-> https://lore.kernel.org/all/20251029020847.1946295-1-zhoubinbin@loongson.=
-cn/
-> https://lore.kernel.org/all/20251029020913.1946321-1-zhoubinbin@loongson.=
-cn/
->
-> Binbin Zhou (5):
->   watchdog: loongson1: Add missing MODULE_PARM_DESC
->   watchdog: loongson1: Simplify ls1x_wdt_probe code
->   watchdog: loongson1: Drop CONFIG_OF
->   dt-bindings: watchdog: loongson,ls1x-wdt: Add ls2k0300-wdt compatible
->   watchdog: loongson1: Add Loongson-2k0300 watchdog support
->
->  .../bindings/watchdog/loongson,ls1x-wdt.yaml  |  3 +-
->  drivers/watchdog/Kconfig                      |  4 +-
->  drivers/watchdog/loongson1_wdt.c              | 89 ++++++++++++++-----
->  3 files changed, 69 insertions(+), 27 deletions(-)
->
->
-> base-commit: c64c2a50cdd487e2270c875c1770cd55705d75ff
-> --
-> 2.47.3
->
+In-Reply-To: <CAAhV-H7S5AQXb35iEL3at3nmXx68cKoM9s1bGUvJE-WCeb6Ufg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDx6sAyeBppfIo1AQ--.62690S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3tFWfKFW5Zw43CFW3tr1fAFc_yoWDuFy8pF
+	W0kFsFkFW0gFnrG348Xrn8ZFyxKrn7Kr42kF1fK390yr1qyry8AF1093sxGFy3u395Xr1S
+	va4Fv3Wa9F4DJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
 
---=20
-Best regards,
 
-Keguang Zhang
+On 2025/11/15 下午12:10, Huacai Chen wrote:
+> Hi, Bibo,
+> 
+> On Tue, Nov 4, 2025 at 7:37 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> Add timer test case based on common arch_timer code, one-shot mode
+>> is tested with timer interrupt.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   tools/testing/selftests/kvm/Makefile.kvm      | 10 +-
+>>   .../kvm/include/loongarch/arch_timer.h        | 79 +++++++++++++++
+>>   .../kvm/include/loongarch/processor.h         | 10 ++
+>>   .../selftests/kvm/lib/loongarch/processor.c   |  4 +-
+>>   .../selftests/kvm/loongarch/arch_timer.c      | 98 +++++++++++++++++++
+>>   5 files changed, 196 insertions(+), 5 deletions(-)
+>>   create mode 100644 tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>>   create mode 100644 tools/testing/selftests/kvm/loongarch/arch_timer.c
+>>
+>> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+>> index 148d427ff24b..662adf8f309b 100644
+>> --- a/tools/testing/selftests/kvm/Makefile.kvm
+>> +++ b/tools/testing/selftests/kvm/Makefile.kvm
+>> @@ -183,6 +183,8 @@ TEST_GEN_PROGS_arm64 += memslot_perf_test
+>>   TEST_GEN_PROGS_arm64 += mmu_stress_test
+>>   TEST_GEN_PROGS_arm64 += rseq_test
+>>   TEST_GEN_PROGS_arm64 += steal_time
+>> +SPLIT_TESTS_arm64    += arch_timer
+>> +SPLIT_TESTS_arm64    += get-reg-list
+>>
+>>   TEST_GEN_PROGS_s390 = $(TEST_GEN_PROGS_COMMON)
+>>   TEST_GEN_PROGS_s390 += s390/memop
+>> @@ -209,6 +211,8 @@ TEST_GEN_PROGS_riscv += memslot_perf_test
+>>   TEST_GEN_PROGS_riscv += mmu_stress_test
+>>   TEST_GEN_PROGS_riscv += rseq_test
+>>   TEST_GEN_PROGS_riscv += steal_time
+>> +SPLIT_TESTS_riscv    += arch_timer
+>> +SPLIT_TESTS_riscv    += get-reg-list
+>>
+>>   TEST_GEN_PROGS_loongarch += coalesced_io_test
+>>   TEST_GEN_PROGS_loongarch += demand_paging_test
+>> @@ -222,10 +226,10 @@ TEST_GEN_PROGS_loongarch += kvm_page_table_test
+>>   TEST_GEN_PROGS_loongarch += memslot_modification_stress_test
+>>   TEST_GEN_PROGS_loongarch += memslot_perf_test
+>>   TEST_GEN_PROGS_loongarch += set_memory_region_test
+>> +TEST_GEN_PROGS_loongarch += arch_timer
+> These tests should be in alpha-betical order.
+Sure, will do in next version.
+
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>> +SPLIT_TESTS_loongarch    = arch_timer
+>>
+>> -SPLIT_TESTS += arch_timer
+>> -SPLIT_TESTS += get-reg-list
+>> -
+>> +SPLIT_TESTS += $(SPLIT_TESTS_$(ARCH))
+>>   TEST_PROGS += $(TEST_PROGS_$(ARCH))
+>>   TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(ARCH))
+>>   TEST_GEN_PROGS_EXTENDED += $(TEST_GEN_PROGS_EXTENDED_$(ARCH))
+>> diff --git a/tools/testing/selftests/kvm/include/loongarch/arch_timer.h b/tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>> new file mode 100644
+>> index 000000000000..94b1cba2744d
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>> @@ -0,0 +1,79 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * LoongArch Constant Timer specific interface
+>> + */
+>> +#ifndef SELFTEST_KVM_ARCH_TIMER_H
+>> +#define SELFTEST_KVM_ARCH_TIMER_H
+>> +
+>> +#include "processor.h"
+>> +/* LoongArch timer frequency is constant 100MHZ */
+>> +#define        TIMER_FREQ              (100UL << 20)
+>> +#define msec_to_cycles(msec)    (TIMER_FREQ * (unsigned long)(msec) / 1000)
+>> +#define usec_to_cycles(usec)   (TIMER_FREQ * (unsigned long)(usec) / 1000000)
+>> +#define cycles_to_usec(cycles) ((unsigned long)(cycles) * 1000000 / TIMER_FREQ)
+>> +
+>> +static inline unsigned long timer_get_cycles(void)
+>> +{
+>> +       unsigned long val = 0;
+>> +
+>> +       __asm__ __volatile__(
+>> +               "rdtime.d %0, $zero\n\t"
+>> +               : "=r"(val)
+>> +               :
+>> +       );
+>> +
+>> +       return val;
+>> +}
+>> +
+>> +static inline void timer_set_next_cmp_ms(unsigned int msec, bool period)
+>> +{
+>> +       unsigned long val;
+>> +
+>> +       val = msec_to_cycles(msec) & CSR_TCFG_VAL;
+>> +       val |= CSR_TCFG_EN;
+>> +       if (period)
+>> +               val |= CSR_TCFG_PERIOD;
+>> +       csr_write(val, LOONGARCH_CSR_TCFG);
+>> +}
+>> +
+>> +static inline unsigned long timer_get_val(void)
+>> +{
+>> +       return csr_read(LOONGARCH_CSR_TVAL);
+>> +}
+>> +
+>> +static inline unsigned long timer_get_cfg(void)
+>> +{
+>> +       return csr_read(LOONGARCH_CSR_TCFG);
+>> +}
+>> +
+>> +static inline void timer_irq_enable(void)
+>> +{
+>> +       unsigned long val;
+>> +
+>> +       val = csr_read(LOONGARCH_CSR_ECFG);
+>> +       val |= ECFGF_TIMER;
+>> +       csr_write(val, LOONGARCH_CSR_ECFG);
+>> +}
+>> +
+>> +static inline void timer_irq_disable(void)
+>> +{
+>> +       unsigned long val;
+>> +
+>> +       val = csr_read(LOONGARCH_CSR_ECFG);
+>> +       val &= ~ECFGF_TIMER;
+>> +       csr_write(val, LOONGARCH_CSR_ECFG);
+>> +}
+>> +
+>> +static inline void __delay(uint64_t cycles)
+>> +{
+>> +       uint64_t start = timer_get_cycles();
+>> +
+>> +       while ((timer_get_cycles() - start) < cycles)
+>> +               cpu_relax();
+>> +}
+>> +
+>> +static inline void udelay(unsigned long usec)
+>> +{
+>> +       __delay(usec_to_cycles(usec));
+>> +}
+>> +#endif /* SELFTEST_KVM_ARCH_TIMER_H */
+>> diff --git a/tools/testing/selftests/kvm/include/loongarch/processor.h b/tools/testing/selftests/kvm/include/loongarch/processor.h
+>> index b027f8f4dac7..61f6e215046b 100644
+>> --- a/tools/testing/selftests/kvm/include/loongarch/processor.h
+>> +++ b/tools/testing/selftests/kvm/include/loongarch/processor.h
+>> @@ -83,6 +83,8 @@
+>>   #define LOONGARCH_CSR_PRMD             0x1
+>>   #define LOONGARCH_CSR_EUEN             0x2
+>>   #define LOONGARCH_CSR_ECFG             0x4
+>> +#define  ECFGB_TIMER                   11
+>> +#define  ECFGF_TIMER                   (BIT_ULL(ECFGB_TIMER))
+>>   #define LOONGARCH_CSR_ESTAT            0x5  /* Exception status */
+>>   #define  CSR_ESTAT_EXC_SHIFT           16
+>>   #define  CSR_ESTAT_EXC_WIDTH           6
+>> @@ -111,6 +113,14 @@
+>>   #define LOONGARCH_CSR_KS1              0x31
+>>   #define LOONGARCH_CSR_TMID             0x40
+>>   #define LOONGARCH_CSR_TCFG             0x41
+>> +#define  CSR_TCFG_VAL                  (BIT_ULL(48) - BIT_ULL(2))
+>> +#define  CSR_TCFG_PERIOD_SHIFT         1
+>> +#define  CSR_TCFG_PERIOD               (0x1UL << CSR_TCFG_PERIOD_SHIFT)
+>> +#define  CSR_TCFG_EN                   (0x1UL)
+>> +#define LOONGARCH_CSR_TVAL             0x42
+>> +#define LOONGARCH_CSR_TINTCLR          0x44 /* Timer interrupt clear */
+>> +#define  CSR_TINTCLR_TI_SHIFT          0
+>> +#define  CSR_TINTCLR_TI                        (1 << CSR_TINTCLR_TI_SHIFT)
+>>   /* TLB refill exception entry */
+>>   #define LOONGARCH_CSR_TLBRENTRY                0x88
+>>   #define LOONGARCH_CSR_TLBRSAVE         0x8b
+>> diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+>> index 20ba476ccb72..436990258068 100644
+>> --- a/tools/testing/selftests/kvm/lib/loongarch/processor.c
+>> +++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+>> @@ -271,8 +271,8 @@ static void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
+>>                  TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
+>>          }
+>>
+>> -       /* user mode and page enable mode */
+>> -       val = PLV_USER | CSR_CRMD_PG;
+>> +       /* kernel mode and page enable mode */
+>> +       val = PLV_KERN | CSR_CRMD_PG;
+>>          loongarch_set_csr(vcpu, LOONGARCH_CSR_CRMD, val);
+>>          loongarch_set_csr(vcpu, LOONGARCH_CSR_PRMD, val);
+>>          loongarch_set_csr(vcpu, LOONGARCH_CSR_EUEN, 1);
+>> diff --git a/tools/testing/selftests/kvm/loongarch/arch_timer.c b/tools/testing/selftests/kvm/loongarch/arch_timer.c
+>> new file mode 100644
+>> index 000000000000..2a2cebcf3885
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/kvm/loongarch/arch_timer.c
+>> @@ -0,0 +1,98 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + *
+>> + * The test validates one-shot constant timer IRQ using CSR_TCFG and
+>> + * CSR_TVAL registers.
+>> + */
+>> +#include "arch_timer.h"
+>> +#include "kvm_util.h"
+>> +#include "processor.h"
+>> +#include "timer_test.h"
+>> +#include "ucall_common.h"
+>> +
+>> +static void guest_irq_handler(struct ex_regs *regs)
+>> +{
+>> +       uint64_t xcnt, val, cfg, xcnt_diff_us;
+>> +       unsigned int intid;
+>> +       uint32_t cpu = guest_get_vcpuid();
+>> +       struct test_vcpu_shared_data *shared_data = &vcpu_shared_data[cpu];
+>> +
+>> +       intid = !!(regs->estat & BIT(INT_TI));
+>> +
+>> +       /* Make sure we are dealing with the correct timer IRQ */
+>> +       GUEST_ASSERT_EQ(intid, 1);
+>> +
+>> +       cfg = timer_get_cfg();
+>> +
+>> +       /*
+>> +        * On physical machine, value of LOONGARCH_CSR_TVAL is BIT_ULL(48) - 1
+>> +        * On virtual machine, its value counts down from BIT_ULL(48) - 1
+>> +        */
+>> +       val = timer_get_val();
+>> +       xcnt = timer_get_cycles();
+>> +       xcnt_diff_us = cycles_to_usec(xcnt - shared_data->xcnt);
+>> +
+>> +       /* Basic 'timer condition met' check */
+>> +       __GUEST_ASSERT(val > cfg,
+>> +                       "val = 0x%lx, cfg = 0x%lx, xcnt_diff_us = 0x%lx",
+>> +                       val, cfg, xcnt_diff_us);
+>> +
+>> +       csr_write(CSR_TINTCLR_TI, LOONGARCH_CSR_TINTCLR);
+>> +       WRITE_ONCE(shared_data->nr_iter, shared_data->nr_iter + 1);
+>> +}
+>> +
+>> +static void guest_test_oneshot_timer(uint32_t cpu)
+>> +{
+>> +       uint32_t irq_iter, config_iter;
+>> +       uint64_t us;
+>> +       struct test_vcpu_shared_data *shared_data = &vcpu_shared_data[cpu];
+>> +
+>> +       shared_data->nr_iter = 0;
+>> +       shared_data->guest_stage = 0;
+>> +       us = msecs_to_usecs(test_args.timer_period_ms) + test_args.timer_err_margin_us;
+>> +       for (config_iter = 0; config_iter < test_args.nr_iter; config_iter++) {
+>> +               shared_data->xcnt = timer_get_cycles();
+>> +
+>> +               /* Setup the next interrupt */
+>> +               timer_set_next_cmp_ms(test_args.timer_period_ms, false);
+>> +               /* Setup a timeout for the interrupt to arrive */
+>> +               udelay(us);
+>> +
+>> +               irq_iter = READ_ONCE(shared_data->nr_iter);
+>> +               __GUEST_ASSERT(config_iter + 1 == irq_iter,
+>> +                               "config_iter + 1 = 0x%x, irq_iter = 0x%x.\n"
+>> +                               "  Guest timer interrupt was not triggered within the specified\n"
+>> +                               "  interval, try to increase the error margin by [-e] option.\n",
+>> +                               config_iter + 1, irq_iter);
+>> +       }
+>> +}
+>> +
+>> +static void guest_code(void)
+>> +{
+>> +       uint32_t cpu = guest_get_vcpuid();
+>> +
+>> +       timer_irq_enable();
+>> +       local_irq_enable();
+>> +       guest_test_oneshot_timer(cpu);
+>> +
+>> +       GUEST_DONE();
+>> +}
+>> +
+>> +struct kvm_vm *test_vm_create(void)
+>> +{
+>> +       struct kvm_vm *vm;
+>> +       int nr_vcpus = test_args.nr_vcpus;
+>> +
+>> +       vm = vm_create_with_vcpus(nr_vcpus, guest_code, vcpus);
+>> +       vm_init_descriptor_tables(vm);
+>> +       vm_install_exception_handler(vm, EXCCODE_INT, guest_irq_handler);
+>> +
+>> +       /* Make all the test's cmdline args visible to the guest */
+>> +       sync_global_to_guest(vm, test_args);
+>> +       return vm;
+>> +}
+>> +
+>> +void test_vm_cleanup(struct kvm_vm *vm)
+>> +{
+>> +       kvm_vm_free(vm);
+>> +}
+>> --
+>> 2.39.3
+>>
+
