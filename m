@@ -1,193 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0DE2417E6
-	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 12:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EACB327204
+	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 13:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763470124; cv=none; b=HErA9IAiTn4GvwwUYbMuj9mmQS+zqi1XQ0nu30dxKU4xS2VXNUtQkX+hZ/FRDkI8XC2nFYxlioupOWg1KQaeCZ3/nlI9agqdBW2Jk3LIXAoWP3xmHZjC9lBHChwbFdPdDMgvcVLBjB/FrxbrOjrU8CW4dh+Hwfb86EYuxNnvuTI=
+	t=1763473325; cv=none; b=DoFAbIunBUZc7BpZr9dkiyBic0d4tK/mrRyw7PuOL/KIU5IuEX8aST8WU1VmhOYNHzZD8BFyr5wo/FuarWqKTHfJBkj5odHq0AgZwW2UcfeeBcVU9atoLAkgCkQBHk5ESDOn56xX+Vf1osoqe/4UIpf7RR37oVHKYH7iGO8XyLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763470124; c=relaxed/simple;
-	bh=pFdS3qA9WYaaq00VcckqdlanD8dVirrH/4YapO6gIKU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pD4Ty1Cjg8eek7lOB1WzVmoCRp0ws4n/T/BWMBIEWhmAtvmYUGxXbtRyjwoGKUB51TsRbjiJrQxmCR3g60pqGrW1Fgf3cMxHW9UkmKV5AxdMdnQgETDjQ9fo9YYGpre0aDa8fY+nlmTI7Ps8ZeT7hHhRLtlU5TSiwZ9QAp/GN7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMqQa2aT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763473325; c=relaxed/simple;
+	bh=1vKkiuCv3tF3FDXYU/cgFuNSWlR2vYn7x5Rk3J5TQGI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Em8OA8FK1dIpyjMW0iOcP5nm9Oyke65w5FvySY2FUAHJFIyT6Zpk/cuU8DnP3D3gz7pBcAv7uGcejncr6AIxdLsMa3rtLje2TnNHyWVcVq5ltgsRlZbrmTBPluSyfebrXkfzGRjR3k67Imsr9njrWJueUiWlShFEIrBr1rqhdck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=KvIYD0vF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MixAv3b7; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMqQa2aT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F229C4CEF5
-	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 12:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763470124;
-	bh=pFdS3qA9WYaaq00VcckqdlanD8dVirrH/4YapO6gIKU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fMqQa2aTQ6QF14qLJfJbMc6WGc1Ys3sI/GyLVlEzdBvuuuEsY6XzJHkHz4pjo84l4
-	 dHD9bcQF3Bhdhw+Ypaj2EcRHzNp/pEssVAJLhWwQVuYhog6MwqhUcnjVFjotGydDr7
-	 z7pqrkStgWHoq2a4p4v8uKLBbdwp4RXgAVrdlm5iUXqD2plGgZpZLWyXktJT1EL5qL
-	 3BeJ/VzACeGzcyx3Xn4+qTNBzh3QVMRQjW7vb6Ww615PYDnxvjJtuzbl2k6eR9XzR8
-	 1b5f7GexfHo3BK0Gnhn39sNsvrGkLyBWcrwdAxtA3+FE9BftcCZw69uabqKI17JNA/
-	 pnp3HFw+oWWIg==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-640aaa89697so7208920a12.3
-        for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 04:48:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWRIeP8i0UDvUIgZuaZUXvBILV+5bXPHdhTgjssL4HvmvJ/kRgXRbjnl00R6pOOHYBsNh1c5O1NAGE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwCbNM3qfawSoiTKKJAwXA4x3WSu0wnr+xC29S+U6yK8cJMfo9R
-	s6j18ExdwG1MtwWrZ/4113//hIGfj2/Ga+o1JvZKlIXZvkRC9HqOfuQPgRH+P8M6RApOFzpSDsp
-	VkO2/TuVTqP01Ln/QC6Spd8hNgG1zvek=
-X-Google-Smtp-Source: AGHT+IEDrP2TdyUTahNPJRfPwcoYAoS5gMqEHUbAvm5d4Dycw7x0zFNGBRQFdUMDmaXX2ULGwzkJBFq6jE806ti0w0o=
-X-Received: by 2002:a17:907:a44:b0:b73:544d:ba2e with SMTP id
- a640c23a62f3a-b736780d5bamr1948345866b.25.1763470120092; Tue, 18 Nov 2025
- 04:48:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="KvIYD0vF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MixAv3b7"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 5910A1400315;
+	Tue, 18 Nov 2025 08:42:02 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Tue, 18 Nov 2025 08:42:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1763473322;
+	 x=1763559722; bh=0dWNaPFbuwXQuyveDoRET9j1iGRCuWn48cS4ouwo/t0=; b=
+	KvIYD0vFPgGSF5oLMxIz1V6ocFAvWZxXzl8jfPRfuKCXTMoz24Hm/ZQd3ezHg6uw
+	4iCV2PFTdqJnkIFDNzXt1OOsM9HA7/XrSoDqfLUgjuiEVPS811JShZIF4yJVyecM
+	o/3wzb1p0D3ISKBnFfWMaN88A/vkTRbNCK4DL7eH1xUFx79LRsJXkaC95/sSi78Q
+	R0El4KTrcI6pL0HIgCakABYqU2KbEDzKBy0ZdnjYlPHc9TH/iz4Spr/2oRdAzrRl
+	yUgFqbMdNwDyKxh1neXKQvP04gSHYngAUppK+g7Nq3rRbkTFezlDPK4zgFLOzltC
+	ApnaVJfn8GEaCGBZ+dENVQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763473322; x=
+	1763559722; bh=0dWNaPFbuwXQuyveDoRET9j1iGRCuWn48cS4ouwo/t0=; b=M
+	ixAv3b7Nrq5Oeph2Ot6/aEM2/1Fyy0fICwTNUOq3bHT9xZWpZQxBpUTq6b9Xv2vn
+	RG4ZiGTr76KBCeQbT/BfWHc6H4MeV8LvD2x6PQpcTX+Wfse/i2lEUfjbK9LB1qHq
+	CkW8rL6HYaWxNZ6oChZQXJQopJfA1c1gxph0Zzghar7m/96HVRgio+/vAkaaw/3c
+	fKcQmo0vobtChMDfFTtQ1VO1l0xbDRehuKJUWuHvSV+ziepfKXalZsROFicWAblb
+	UVk+wfF1u7Uxl+b+zLHyhFJcoetMuz1/rzFhrsnAUZmopPOsTWYzWBlyFbfY7z/Z
+	ZlQckEo3ocvZnhd6Tf8KQ==
+X-ME-Sender: <xms:qXccaYGFvfYvE9EMQRWWcLMsszOchIl9a7IuooOxnIpQOPLCQhLdsw>
+    <xme:qXccacKRHiG5Ae1J2eEyKu-Aon76DcXNdV8YNyEvcRLo_LwvE8NDUho08QyfAJJAu
+    uF8vsAwtBwH9z8GRMiAyC9zanFiVGzHN3EyLSRRTHv-KOAiaexkoOE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvddugeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdprhgtph
+    htthhopegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhu
+    ohhrvghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhonhhgrghrtghhsehlih
+    hsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheptghhvghnhhhurggtrghisehlohho
+    nhhgshhonhdrtghnpdhrtghpthhtoheplhhigihuvghfvghngheslhhoohhnghhsohhnrd
+    gtnhdprhgtphhtthhopehlihhnuhigqdgrrhgthhesvhhgvghrrdhkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehkvghrnhgvlhesgigvnhdtnhdrnhgrmhgv
+X-ME-Proxy: <xmx:qXccadEnfU0Lfsn6mnPj9u_oSayKSuUyHWQCQfx-auZsJh7RiUnrqQ>
+    <xmx:qXccae6gh9qmPYPYYJxNcKtc_yZ1W8-pWCWJWFCtt4G_kiSGKhOHcw>
+    <xmx:qXccaTmSYxnq0yWLHUjYdFrnVFKP1AJ3yyYTOi7EQXQpuO9fC9gxHA>
+    <xmx:qXccaZ55xa8sd0gjgP0OTdqFV_gKtr0Iy_48GYDNfWZMyspiXeTpQg>
+    <xmx:qnccaZkqZEkzck9hKCc2brS43T0MVzxspdNe-oUknvkuQvOX9j4ns1Qn>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0DDAA700054; Tue, 18 Nov 2025 08:42:01 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251118080656.2012805-1-maobibo@loongson.cn> <20251118080656.2012805-3-maobibo@loongson.cn>
-In-Reply-To: <20251118080656.2012805-3-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 18 Nov 2025 20:48:41 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4hoS0Wo3TS+FdikXMkb7qjWNFSPDoajQr0bzdeROJwGw@mail.gmail.com>
-X-Gm-Features: AWmQ_bkSeXCgy-qK2rzvP-hL92k0XNXRWWttKpPo-xMdgC-eo-zjb1mltVmpNY4
-Message-ID: <CAAhV-H4hoS0Wo3TS+FdikXMkb7qjWNFSPDoajQr0bzdeROJwGw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] LoongArch: Add paravirt support with vcpu_is_preempted()
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, 
-	Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.makhalov@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	virtualization@lists.linux.dev, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: AWKx_ip9zbKJ
+Date: Tue, 18 Nov 2025 14:41:40 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Huacai Chen" <chenhuacai@loongson.cn>,
+ "Huacai Chen" <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
+ "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
+ linux-kernel@vger.kernel.org
+Message-Id: <4155a60c-81da-4c23-8a66-9a748b3383e4@app.fastmail.com>
+In-Reply-To: <20251118112728.571869-13-chenhuacai@loongson.cn>
+References: <20251118112728.571869-1-chenhuacai@loongson.cn>
+ <20251118112728.571869-13-chenhuacai@loongson.cn>
+Subject: Re: [PATCH V2 12/14] LoongArch: Adjust VDSO/VSYSCALL for 32BIT/64BIT
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi, Bibo,
+On Tue, Nov 18, 2025, at 12:27, Huacai Chen wrote:
+> Adjust VDSO/VSYSCALL because read_cpu_id() for 32BIT/64BIT are
+> different, and LoongArch32 doesn't support GENERIC_GETTIMEOFDAY now.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
-On Tue, Nov 18, 2025 at 4:07=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> Function vcpu_is_preempted() is used to check whether vCPU is preempted
-> or not. Here add implementation with vcpu_is_preempted() when option
-> CONFIG_PARAVIRT is enabled.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/include/asm/smp.h      |  1 +
->  arch/loongarch/include/asm/spinlock.h |  5 +++++
->  arch/loongarch/kernel/paravirt.c      | 16 ++++++++++++++++
->  arch/loongarch/kernel/smp.c           |  6 ++++++
->  4 files changed, 28 insertions(+)
->
-> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/as=
-m/smp.h
-> index 3a47f52959a8..5b37f7bf2060 100644
-> --- a/arch/loongarch/include/asm/smp.h
-> +++ b/arch/loongarch/include/asm/smp.h
-> @@ -18,6 +18,7 @@ struct smp_ops {
->         void (*init_ipi)(void);
->         void (*send_ipi_single)(int cpu, unsigned int action);
->         void (*send_ipi_mask)(const struct cpumask *mask, unsigned int ac=
-tion);
-> +       bool (*vcpu_is_preempted)(int cpu);
->  };
->  extern struct smp_ops mp_ops;
->
-> diff --git a/arch/loongarch/include/asm/spinlock.h b/arch/loongarch/inclu=
-de/asm/spinlock.h
-> index 7cb3476999be..c001cef893aa 100644
-> --- a/arch/loongarch/include/asm/spinlock.h
-> +++ b/arch/loongarch/include/asm/spinlock.h
-> @@ -5,6 +5,11 @@
->  #ifndef _ASM_SPINLOCK_H
->  #define _ASM_SPINLOCK_H
->
-> +#ifdef CONFIG_PARAVIRT
-> +#define vcpu_is_preempted      vcpu_is_preempted
-> +bool vcpu_is_preempted(int cpu);
-> +#endif
-Maybe paravirt.h is a better place?
+Are you planning to add vdso_clock_gettime() later, or is the
+architecture missing hardware access to the timer register
+on loongarch32?
 
-> +
->  #include <asm/processor.h>
->  #include <asm/qspinlock.h>
->  #include <asm/qrwlock.h>
-> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/par=
-avirt.c
-> index b1b51f920b23..b99404b6b13f 100644
-> --- a/arch/loongarch/kernel/paravirt.c
-> +++ b/arch/loongarch/kernel/paravirt.c
-> @@ -52,6 +52,13 @@ static u64 paravt_steal_clock(int cpu)
->  #ifdef CONFIG_SMP
->  static struct smp_ops native_ops;
->
-> +static bool pv_vcpu_is_preempted(int cpu)
-> +{
-> +       struct kvm_steal_time *src =3D &per_cpu(steal_time, cpu);
-> +
-> +       return !!(src->preempted & KVM_VCPU_PREEMPTED);
-> +}
-> +
->  static void pv_send_ipi_single(int cpu, unsigned int action)
->  {
->         int min, old;
-> @@ -308,6 +315,9 @@ int __init pv_time_init(void)
->                 pr_err("Failed to install cpu hotplug callbacks\n");
->                 return r;
->         }
-> +
-> +       if (kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT))
-> +               mp_ops.vcpu_is_preempted =3D pv_vcpu_is_preempted;
->  #endif
->
->         static_call_update(pv_steal_clock, paravt_steal_clock);
-> @@ -332,3 +342,9 @@ int __init pv_spinlock_init(void)
->
->         return 0;
->  }
-> +
-> +bool notrace vcpu_is_preempted(int cpu)
-> +{
-> +       return mp_ops.vcpu_is_preempted(cpu);
-> +}
+It would be good to add some comments here to ensure this is
+done correctly if someone adds the vdso32 support later:
+There should be clock_gettime32 support, but not the old
+clock_gettime(), clock_getres() or time().
 
-We can simplify the whole patch like this, then we don't need to touch
-smp.c, and we can merge Patch-2/3.
-
-+bool notrace vcpu_is_preempted(int cpu)
-+{
-+  if (!kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT))
-+     return false;
-+ else {
-+     struct kvm_steal_time *src =3D &per_cpu(steal_time, cpu);
-+     return !!(src->preempted & KVM_VCPU_PREEMPTED);
-+ }
-+}
-Huacai
-
-> +EXPORT_SYMBOL(vcpu_is_preempted);
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index 46036d98da75..f04192fedf8d 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -307,10 +307,16 @@ static void loongson_init_ipi(void)
->                 panic("IPI IRQ request failed\n");
->  }
->
-> +static bool loongson_vcpu_is_preempted(int cpu)
-> +{
-> +       return false;
-> +}
-> +
->  struct smp_ops mp_ops =3D {
->         .init_ipi               =3D loongson_init_ipi,
->         .send_ipi_single        =3D loongson_send_ipi_single,
->         .send_ipi_mask          =3D loongson_send_ipi_mask,
-> +       .vcpu_is_preempted      =3D loongson_vcpu_is_preempted,
->  };
->
->  static void __init fdt_smp_setup(void)
-> --
-> 2.39.3
->
->
+       Arnd
