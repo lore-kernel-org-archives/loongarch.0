@@ -1,117 +1,130 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA72393DC3
-	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 17:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6E33126B2
+	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 23:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763485781; cv=none; b=Ig4JSRgI8bIRscpcJGZZDFoQsoAmHI0+X3oua0oWOloA5Icny5uC2Q5g43mXq14heWQRABxDy7Z65gKCqT7DlaeL4hNnCjEw/nocEXm+KPwoZB1H2aqjJcAKt07Dj1Jt/7r+7ln6EqxhmcInqOtfRC5QG6ocUqw69wjw1moSEPM=
+	t=1763508688; cv=none; b=JMWtY2TJosTYafJx0aliK9TLPRg+avqED5Co2Wsf6+/JaUEnKYN5z2m7KRJ1JYm+6Cvl6WnXbX5NoWfweJSzrtY3wtV/Cn2WYiSNWTXGOZDHebEdfTYxG+L30zG9ijZPRHqnoShJVjkkojrTuTwDDGb7p1lQkD5qnfc5w9krHf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763485781; c=relaxed/simple;
-	bh=n0ahv9J5Kl6+P6HPlNJ38OxVVoh1FaxDHLeaN6W/57o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUAplj/+hiSC2xntxbUj+ugeEpsP34Y8IFOep1QPH8H1ZEH+R13mDl5xWCmtUnG2k4zu+b49/y7QhUeyGScyX5Q9ZJkB808X7fEUqp46wLbZLSMvUyCnyeym663HwEGmC9frWX4sEpXjAPNXqZAnG1xR0UcX61E62HnUqkt3nz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=fail (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Kc2mvjby reason="signature verification failed"; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1763508688; c=relaxed/simple;
+	bh=5WBwqUVhmKiZfIpTpsQTwtOFw21J/JhhQ4L/zj7meTg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jPjJ+E9+8OFTK6HQ8ZPxvfS4TxD+1XweTEYfAXzyc0Qh0oMSglXiTF5fZCcMxKOdqILnGh4NhMyMOc+FjQuCQxj7PKn0m4LGXMP5y0WRTu48YWbYZa8m4EYtO7a4hFeKpuJ8iMURNZ7l0rDfUGaRWj5pYHWegxofC+IO5SSA8/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dM4+h413; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Kc2mvjby"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id B83C225BFD;
-	Tue, 18 Nov 2025 18:09:35 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 6IF34XJUK659; Tue, 18 Nov 2025 18:09:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1763485774; bh=n0ahv9J5Kl6+P6HPlNJ38OxVVoh1FaxDHLeaN6W/57o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Kc2mvjbyAdOb4VYAkc9KStqoc9NeuHqwFtKCLbSNCWcZnV230XGGVU39qCpeAMCXL
-	 lkPowddwJWkiczZ2JUthpKpfhalyWRj2phQyoVxh22Ebno2w9cHKyLecABRo0rzqCj
-	 k58elY9ycXj48sLwXArt3i4z4hZJfoY8zGSVkY2M7Gw0t0G9aPLM/GcVKQ6I7ns1ii
-	 E82wx9D6piFTz+HCRUDj9uPH38YriYkQ66/PDZoM6reGnJ1htfKi/Z50kENXDe4gdZ
-	 d+LmxPBwQkT5ur891EDneHfDzbIjADQ/KeeXYRVFHs/FXt2A+O7oekqUT4uqqjKnO4
-	 +vQyGJS4tsD/A==
-Date: Tue, 18 Nov 2025 17:09:00 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@loongson.cn>,
-	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, f@disroot.org
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 04/14] LoongArch: Adjust boot & setup for 32BIT/64BIT
-Message-ID: <aRyoLBjD_8Hz91DV@pie>
-References: <20251118112728.571869-1-chenhuacai@loongson.cn>
- <20251118112728.571869-5-chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dM4+h413"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-34374bfbcccso6065514a91.0
+        for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 15:31:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763508684; x=1764113484; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vhbmIaudy7FUgPhz41c9iiSjQeSWp1bqqQI5ni0zcdI=;
+        b=dM4+h413M9e5eT8jdFlAi3oWJz8l0ODzEsU1+WISTVcLM9FYONH7qCpTtEWOmOYwGN
+         mcJ+0vmq9q62MkIEsHtpouM/EWiXlPDe+fCH4Af5dSeuEH9NxT7SfIwrJPpJ2dfukL3B
+         t9QkksyjgiX4DWmyfKtSGw8EZ9TFrtqTx3xBzRdg/u8riLwAwSoMz4CxYTYKSYHLPGp5
+         NtKC735JidSXWz3Y/iHdZf2ZUFaxYNwxYfXpDfzAQifkgbAJoby+T7vmlOKDfzmGUei0
+         9GYiXb2ShVed03aAav4Ya+B1kQ9CYyIUxF0NRUpOVwnRz/I5veXkaseNeeBWMBaL2gCd
+         RmuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763508684; x=1764113484;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vhbmIaudy7FUgPhz41c9iiSjQeSWp1bqqQI5ni0zcdI=;
+        b=ARAQmimHyrgbiMp6KAAQSyIUbdyUuJT8KE/gMer/LO6LKDCrwO6QfgJMYysrjrQI2T
+         mQw7JqG3qcUl6oj7O/BL9g0qpSNObcl5JWtCWxxjEGLP2U2pYnJTNGfpS4F5rPTKH6JR
+         BHxoqxyIImdyEuFButmD5CmGyEcGfpput8Acj0O4pz0hQeuq+O1KIaDIfrNOhML9v98B
+         yJtAcsdttrnKWLpxSJuMHvYvGQ0py/ZWNbTXYJ/MO5fP/83UtxdeXheVfaF4NkrGBlzG
+         +cjLxC/uf2giG0/b1ZyFX9SYOW4/QMwuX6/3Pvc9kWDGd8P0ZKVtiCE4T834ZRxRVRC/
+         lKGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcUXgdNCZDCrXBaxidEuiHJ0z3d4nQMnTO4I2vhDeA91DagfiJb76DH+NMXQyvJ2s2XEtzitDSzCU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxfZTVgJvQPxF6smUrIh5k0UWVPcAjC5Nykm71M31K/miwB4VGa
+	FGcJ+KWRFGfdjoEI2t6L6q+cU784IisxSwWwmN2voDMRocjNrEpAtPQ4MjAKjqDlizV+c0CWY9B
+	Hkpg6og==
+X-Google-Smtp-Source: AGHT+IE1o3OuDgEYh+WwImWCZtj32ss/bDTcBxOCjrPrz1sqG0DLMNd/QRhOEpFCg6/bq23FewNy3cS6Bik=
+X-Received: from pjbpd18.prod.google.com ([2002:a17:90b:1dd2:b0:340:e8f7:1b44])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5484:b0:341:124f:474f
+ with SMTP id 98e67ed59e1d1-343fa6390cfmr19214010a91.32.1763508684387; Tue, 18
+ Nov 2025 15:31:24 -0800 (PST)
+Date: Tue, 18 Nov 2025 15:31:22 -0800
+In-Reply-To: <20251028002824.1470939-1-rick.p.edgecombe@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251118112728.571869-5-chenhuacai@loongson.cn>
+Mime-Version: 1.0
+References: <aP-1qlTkmFUgTld-@google.com> <20251028002824.1470939-1-rick.p.edgecombe@intel.com>
+Message-ID: <aR0Byu3bd3URxzhu@google.com>
+Subject: Re: [PATCH] KVM: TDX: Take MMU lock around tdh_vp_init()
+From: Sean Christopherson <seanjc@google.com>
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: ackerleytng@google.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	binbin.wu@linux.intel.com, borntraeger@linux.ibm.com, chenhuacai@kernel.org, 
+	frankja@linux.ibm.com, imbrenda@linux.ibm.com, ira.weiny@intel.com, 
+	kai.huang@intel.com, kas@kernel.org, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev, maddy@linux.ibm.com, maobibo@loongson.cn, 
+	maz@kernel.org, michael.roth@amd.com, oliver.upton@linux.dev, 
+	palmer@dabbelt.com, pbonzini@redhat.com, pjw@kernel.org, 
+	vannapurve@google.com, x86@kernel.org, yan.y.zhao@intel.com, 
+	zhaotianrui@loongson.cn
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Nov 18, 2025 at 07:27:18PM +0800, Huacai Chen wrote:
-> Adjust boot & setup for both 32BIT and 64BIT, including: efi header
-> definition, MAX_IO_PICS definition, kernel entry and environment setup
-> routines, etc.
+On Mon, Oct 27, 2025, Rick Edgecombe wrote:
+> Take MMU lock around tdh_vp_init() in KVM_TDX_INIT_VCPU to prevent
+> meeting contention during retries in some no-fail MMU paths.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> The TDX module takes various try-locks internally, which can cause
+> SEAMCALLs to return an error code when contention is met. Dealing with
+> an error in some of the MMU paths that make SEAMCALLs is not straight
+> forward, so KVM takes steps to ensure that these will meet no contention
+> during a single BUSY error retry. The whole scheme relies on KVM to take
+> appropriate steps to avoid making any SEAMCALLs that could contend while
+> the retry is happening.
+> 
+> Unfortunately, there is a case where contention could be met if userspace
+> does something unusual. Specifically, hole punching a gmem fd while
+> initializing the TD vCPU. The impact would be triggering a KVM_BUG_ON().
+> 
+> The resource being contended is called the "TDR resource" in TDX docs 
+> parlance. The tdh_vp_init() can take this resource as exclusive if the 
+> 'version' passed is 1, which happens to be version the kernel passes. The 
+> various MMU operations (tdh_mem_range_block(), tdh_mem_track() and 
+> tdh_mem_page_remove()) take it as shared.
+> 
+> There isn't a KVM lock that maps conceptually and in a lock order friendly 
+> way to the TDR lock. So to minimize infrastructure, just take MMU lock 
+> around tdh_vp_init(). This makes the operations we care about mutually 
+> exclusive. Since the other operations are under a write mmu_lock, the code 
+> could just take the lock for read, however this is weirdly inverted from 
+> the actual underlying resource being contended. Since this is covering an 
+> edge case that shouldn't be hit in normal usage, be a little less weird 
+> and take the mmu_lock for write around the call.
+> 
+> Fixes: 02ab57707bdb ("KVM: TDX: Implement hooks to propagate changes of TDP MMU mirror page table")
+> Reported-by: Yan Zhao <yan.y.zhao@intel.com>
+> Suggested-by: Yan Zhao <yan.y.zhao@intel.com>
+> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 > ---
->  arch/loongarch/include/asm/addrspace.h |  2 +-
->  arch/loongarch/include/asm/irq.h       |  5 ++++
->  arch/loongarch/kernel/efi-header.S     |  4 +++
->  arch/loongarch/kernel/efi.c            |  4 ++-
->  arch/loongarch/kernel/env.c            |  9 ++++--
->  arch/loongarch/kernel/head.S           | 39 +++++++++++---------------
->  arch/loongarch/kernel/relocate.c       |  9 +++++-
->  7 files changed, 45 insertions(+), 27 deletions(-)
+> Hi,
 > 
+> It was indeed awkward, as Sean must have sniffed. But seems ok enough to
+> close the issue.
+> 
+> Yan, can you give it a look?
+> 
+> Posted here, but applies on top of this series.
 
-...
+In the future, please don't post in-reply-to, as it mucks up my b4 workflow.
 
-> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-> index 23bd5ae2212c..3e8a25eb901b 100644
-> --- a/arch/loongarch/kernel/env.c
-> +++ b/arch/loongarch/kernel/env.c
-> @@ -68,18 +68,23 @@ static int __init fdt_cpu_clk_init(void)
->  
->  	np = of_get_cpu_node(0, NULL);
->  	if (!np)
-> -		return -ENODEV;
-> +		goto fallback;
->  
->  	clk = of_clk_get(np, 0);
->  	of_node_put(np);
->  
->  	if (IS_ERR(clk))
-> -		return -ENODEV;
-> +		goto fallback;
->  
->  	cpu_clock_freq = clk_get_rate(clk);
->  	clk_put(clk);
->  
->  	return 0;
-> +
-> +fallback:
-> +	cpu_clock_freq = 200 * 1000 * 1000;
+Applied to kvm-x86 tdx, with a more verbose comment as suggested by Binbin.
 
-Why pick 200MHz here? And shouldn't the clock being always provided in
-devicetree if it's necessary for kernel to function?
-
-Per the schema for LoongArch CPUs (loongarch/cpus.yaml), "clocks"
-property is also described as mandantory, thus I don't think such
-fallback makes sense.
-
-> +
-> +	return -ENODEV;
->  }
->  late_initcall(fdt_cpu_clk_init);
-
-Best regards,
-Yao Zi
+[1/1] KVM: TDX: Take MMU lock around tdh_vp_init()
+      https://github.com/kvm-x86/linux/commit/9a89894f30d5
