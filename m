@@ -1,42 +1,34 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED51E306B10;
-	Tue, 18 Nov 2025 08:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA252F12D6;
+	Tue, 18 Nov 2025 11:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763453239; cv=none; b=ea8B+r810GpWX4N0zUIfPTsTVWS+v2dtJkVyjlo+aaoZPydQG8SPmKCM7/A9qc7mMNNxxieRlXN47HqmhIAW4AcZAAxCxAmHNm2uVOXmUCP0NeR5VYqoKWXqe33kHr5IIkgNnHnxfISKWseKhTiihL1wZKzWy/J+7tOANbdeCak=
+	t=1763465277; cv=none; b=eTnennDjBpYfrB3Bpo9Q0prSnue/Y6nzwMbV0BlzaTOZW1r5KatiwV4H/CsD2wPkdl5h6amBZnhlw1/MA7RwriNuSyKJvvB2ymbjzn3aZEesx6WOy2QVpc8BtYwVQJSdmiiFcZ+eJ1AtfjtQpC+OkS1siSihACUgJMIPVgxEUSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763453239; c=relaxed/simple;
-	bh=FHBYnYx9E71kz6F0WzQVGiFMwXRhZuGue7tKqX4UKcc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rHwuA05flxoLRIbQGCBg0IWc6Fh72PYiraZ0kwA95w2I0sGGxlcjC2KSh0yEw5wBJc3XDEHFQaG8w5wJ9zjAqaeWXRYM0M864YalJ/dWZxwxABDFnQ1CkBbnj30prkG7/3IMykTBVK0dH4xqTKk9j2FiM0AJEe3Djzt85Tx44kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Axz9MyKRxpB9kkAA--.8859S3;
-	Tue, 18 Nov 2025 16:07:14 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBxC8EsKRxpbBc3AQ--.49231S2;
-	Tue, 18 Nov 2025 16:07:13 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
+	s=arc-20240116; t=1763465277; c=relaxed/simple;
+	bh=PzC3f4GQwBO9nPr6IhO+01gQ4P7tutZWxJlje+gBQOE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uJwM+jorqTxy2YIUbaxfdwtw2CQChAuOajg+XjXWFyN9syaPv8OdslRsLP6RyC5ueUTdfQPlGZNufB9vgs/Xpycr63f+1hSxZOlC0rEWn6rZOfKN3HI3skSkYqFEHuGFKOH7bk7SIccEKNdYLLZ2ycf/JCWBQwt7d9HzOr32UiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F74C2BC86;
+	Tue, 18 Nov 2025 11:27:52 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	x86@kernel.org
-Subject: [PATCH 3/3] LoongArch: Add paravirt preempt hint print prompt
-Date: Tue, 18 Nov 2025 16:06:56 +0800
-Message-Id: <20251118080656.2012805-4-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20251118080656.2012805-1-maobibo@loongson.cn>
-References: <20251118080656.2012805-1-maobibo@loongson.cn>
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Yawei Li <liyawei@loongson.cn>
+Subject: [PATCH V2 00/14] LoongArch: Add basic LoongArch32 support
+Date: Tue, 18 Nov 2025 19:27:14 +0800
+Message-ID: <20251118112728.571869-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,57 +36,142 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxC8EsKRxpbBc3AQ--.49231S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Add paravirt preempt hint print prompt together with steal timer
-information, so that it is easy to check whether paravirt preempt hint
-feature is enabled or not.
+LoongArch includes a reduced 32-bit version (LA32R), a standard 32-bit
+version (LA32S) and a 64-bit version (LA64). LoongArch32 use FDT as its
+boot protocol which is already supported in LoongArch64. LoongArch32's
+ILP32 ABI use the same calling convention as LoongArch64.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+This patchset is adding basic LoongArch32 support in mainline kernel, it
+is the successor of Jiaxun Yang's previous work (V1):
+https://lore.kernel.org/loongarch/20250102-la32-uapi-v1-0-db32aa769b88@flygoat.com/
+
+We can see a complete snapshot here:
+https://github.com/chenhuacai/linux/tree/loongarch-next
+
+Cross-compile tool chain to build kernel:
+https://github.com/sunhaiyong1978/Yongbao-Embedded/releases/download/0.13-2025.9.3/loongarch32-unknown-linux-gnu-gcc-0.13-20251105.x86_64.tar.xz
+
+A CLFS-based Linux distro (Yongbao):
+https://github.com/sunhaiyong1978/Yongbao-Embedded/releases/download/0.13-2025.9.3/loongarch32-Yongbao-Embedded-0.13-20251018-sysroot.tar.xz
+
+Open-source tool chain which is under review (Also in maillist for upstream):
+https://github.com/cloudspurs/binutils-gdb/tree/la32/
+https://github.com/cloudspurs/gcc/tree/la32/
+https://github.com/cloudspurs/glibc/tree/la32/
+
+LA32 QEMU emulator (hardware is not as widely used as LA64):
+https://github.com/loongson-community/qemu/tree/la32-user-exp/
+
+Usage:
+1. Extract Yongbao to a virtual disk (la32.img);
+2. qemu-system-loongarch -kernel vmlinux -append "rw root=/dev/vda console=ttyS0,115200" \
+   -m 256M -cpu max32 -machine virt,accel=tcg -drive file=la32.img,format=raw,if=virtio -display none -serial stdio
+
+V1 -> V2:
+1, Rebased on 6.18-rc6;
+2, Port a full runnable kernel (except irqchip drivers);
+3, Remove controversial flush_icache syscall for now.
+
+Jiaxun Yang, Yawei Li and Huacai Chen(14):
+ LoongArch: Add atomic operations for 32BIT/64BIT;
+ LoongArch: Add adaptive CSR accessors for 32BIT/64BIT;
+ LoongArch: Adjust common macro definitions for 32BIT/64BIT;
+ LoongArch: Adjust boot & setup for 32BIT/64BIT;
+ LoongArch: Adjust memory management for 32BIT/64BIT;
+ LoongArch: Adjust process management for 32BIT/64BIT;
+ LoongArch: Adjust time routines for 32BIT/64BIT;
+ LoongArch: Adjust module loader for 32BIT/64BIT;
+ LoongArch: Adjust system call for 32BIT/64BIT;
+ LoongArch: Adjust user accessors for 32BIT/64BIT;
+ LoongArch: Adjust misc routines for 32BIT/64BIT;
+ LoongArch: Adjust VDSO/VSYSCALL for 32BIT/64BIT;
+ LoongArch: Adjust default config files for 32BIT/64BIT;
+ LoongArch: Adjust build infrastructure for 32BIT/64BIT.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Yawei Li <liyawei@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/paravirt.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-index b99404b6b13f..b7ea511c288b 100644
---- a/arch/loongarch/kernel/paravirt.c
-+++ b/arch/loongarch/kernel/paravirt.c
-@@ -294,6 +294,7 @@ static struct notifier_block pv_reboot_nb = {
- int __init pv_time_init(void)
- {
- 	int r;
-+	bool pv_preempted = false;
- 
- 	if (!kvm_para_has_feature(KVM_FEATURE_STEAL_TIME))
- 		return 0;
-@@ -316,8 +317,10 @@ int __init pv_time_init(void)
- 		return r;
- 	}
- 
--	if (kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT))
-+	if (kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT)) {
- 		mp_ops.vcpu_is_preempted = pv_vcpu_is_preempted;
-+		pv_preempted = true;
-+	}
- #endif
- 
- 	static_call_update(pv_steal_clock, paravt_steal_clock);
-@@ -328,7 +331,10 @@ int __init pv_time_init(void)
- 		static_key_slow_inc(&paravirt_steal_rq_enabled);
- #endif
- 
--	pr_info("Using paravirt steal-time\n");
-+	if (pv_preempted)
-+		pr_info("Using paravirt steal-time with preempt hint enabled\n");
-+	else
-+		pr_info("Using paravirt steal-time with preempt hint disabled\n");
- 
- 	return 0;
- }
--- 
-2.39.3
+ arch/loongarch/Kconfig                             |  115 +-
+ arch/loongarch/Makefile                            |   29 +-
+ arch/loongarch/boot/Makefile                       |    6 +
+ arch/loongarch/configs/loongson32_defconfig        | 1110 ++++++++++++++++++++
+ .../{loongson3_defconfig => loongson64_defconfig}  |    0
+ arch/loongarch/include/asm/Kbuild                  |    1 +
+ arch/loongarch/include/asm/addrspace.h             |   15 +-
+ arch/loongarch/include/asm/asm.h                   |   77 +-
+ arch/loongarch/include/asm/asmmacro.h              |  117 ++-
+ arch/loongarch/include/asm/atomic-amo.h            |  206 ++++
+ arch/loongarch/include/asm/atomic-llsc.h           |  100 ++
+ arch/loongarch/include/asm/atomic.h                |  197 +---
+ arch/loongarch/include/asm/checksum.h              |    4 +
+ arch/loongarch/include/asm/cmpxchg.h               |   48 +-
+ arch/loongarch/include/asm/cpu-features.h          |    3 -
+ arch/loongarch/include/asm/elf.h                   |    1 +
+ arch/loongarch/include/asm/inst.h                  |   12 +-
+ arch/loongarch/include/asm/irq.h                   |    5 +
+ arch/loongarch/include/asm/jump_label.h            |   12 +-
+ arch/loongarch/include/asm/local.h                 |   37 +
+ arch/loongarch/include/asm/loongarch.h             |  100 +-
+ arch/loongarch/include/asm/module.h                |   11 +
+ arch/loongarch/include/asm/page.h                  |    2 +-
+ arch/loongarch/include/asm/percpu.h                |   44 +-
+ arch/loongarch/include/asm/pgtable-bits.h          |   36 +-
+ arch/loongarch/include/asm/pgtable.h               |   74 +-
+ arch/loongarch/include/asm/stackframe.h            |   34 +-
+ arch/loongarch/include/asm/string.h                |    2 +
+ arch/loongarch/include/asm/timex.h                 |   29 +-
+ arch/loongarch/include/asm/uaccess.h               |   63 +-
+ arch/loongarch/include/asm/vdso/gettimeofday.h     |    4 +
+ arch/loongarch/include/uapi/asm/Kbuild             |    1 +
+ arch/loongarch/include/uapi/asm/unistd.h           |    6 +
+ arch/loongarch/kernel/Makefile.syscalls            |    1 +
+ arch/loongarch/kernel/cpu-probe.c                  |   23 +-
+ arch/loongarch/kernel/efi-header.S                 |    4 +
+ arch/loongarch/kernel/efi.c                        |    4 +-
+ arch/loongarch/kernel/entry.S                      |   22 +-
+ arch/loongarch/kernel/env.c                        |    9 +-
+ arch/loongarch/kernel/fpu.S                        |  111 ++
+ arch/loongarch/kernel/head.S                       |   39 +-
+ arch/loongarch/kernel/module.c                     |   80 +-
+ arch/loongarch/kernel/proc.c                       |   13 +-
+ arch/loongarch/kernel/process.c                    |    6 +-
+ arch/loongarch/kernel/ptrace.c                     |    5 +
+ arch/loongarch/kernel/relocate.c                   |    9 +-
+ arch/loongarch/kernel/switch.S                     |   25 +-
+ arch/loongarch/kernel/syscall.c                    |   15 +-
+ arch/loongarch/kernel/time.c                       |   31 +-
+ arch/loongarch/kernel/traps.c                      |   15 +-
+ arch/loongarch/kernel/unaligned.c                  |   30 +-
+ arch/loongarch/kernel/vmlinux.lds.S                |    7 +-
+ arch/loongarch/kvm/Kconfig                         |    2 +-
+ arch/loongarch/kvm/vcpu.c                          |    5 +-
+ arch/loongarch/lib/Makefile                        |    5 +-
+ arch/loongarch/lib/clear_user.S                    |   22 +-
+ arch/loongarch/lib/copy_user.S                     |   28 +-
+ arch/loongarch/lib/dump_tlb.c                      |   14 +-
+ arch/loongarch/lib/unaligned.S                     |   72 +-
+ arch/loongarch/mm/init.c                           |    4 +-
+ arch/loongarch/mm/page.S                           |  118 +--
+ arch/loongarch/mm/tlb.c                            |   12 +-
+ arch/loongarch/mm/tlbex.S                          |  322 ++++--
+ arch/loongarch/pci/pci.c                           |    8 +-
+ arch/loongarch/power/hibernate.c                   |    6 +-
+ arch/loongarch/power/suspend.c                     |   24 +-
+ arch/loongarch/power/suspend_asm.S                 |   72 +-
+ arch/loongarch/vdso/Makefile                       |    7 +-
+ arch/loongarch/vdso/vdso.lds.S                     |    4 +-
+ arch/loongarch/vdso/vgetcpu.c                      |    8 +
+ drivers/firmware/efi/libstub/Makefile              |    1 +
+ drivers/firmware/efi/libstub/loongarch.c           |    8 +-
+ drivers/pci/controller/Kconfig                     |    2 +-
+ lib/crc/Kconfig                                    |    2 +-
+ 74 files changed, 2915 insertions(+), 781 deletions(-)
+ create mode 100644 arch/loongarch/configs/loongson32_defconfig
+ rename arch/loongarch/configs/{loongson3_defconfig => loongson64_defconfig} (100%)
+ create mode 100644 arch/loongarch/include/asm/atomic-amo.h
+ create mode 100644 arch/loongarch/include/asm/atomic-llsc.h
+--
+2.27.0
 
