@@ -1,88 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD0E354ADC
-	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 14:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA72393DC3
+	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 17:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763476456; cv=none; b=Oz+eaO+ifncG/1kgOIluFSo8ZQcuC4yTYp1JbsEQvZSBa84vjlHFCeud2BDCg/50RTXld4p5H7b1mjDVEXGEhr+85mEKQL9zXXyHaXXW9UY+OM/dI/6LDc/r+eisCDW/dUgGUXhnuOy1rIw5vqA1BEA5SexvGevK1SQE5r2Ym3A=
+	t=1763485781; cv=none; b=Ig4JSRgI8bIRscpcJGZZDFoQsoAmHI0+X3oua0oWOloA5Icny5uC2Q5g43mXq14heWQRABxDy7Z65gKCqT7DlaeL4hNnCjEw/nocEXm+KPwoZB1H2aqjJcAKt07Dj1Jt/7r+7ln6EqxhmcInqOtfRC5QG6ocUqw69wjw1moSEPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763476456; c=relaxed/simple;
-	bh=oZw/G/YivSJQARxgSBgtPlPynJj/rFrGjeRiYZyYBDA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BaX0PcZrztU50/q46UkGkzQOW8ElV8zhMhbD/4Pr4YisHNGv3yl/kk9aqF7zHz/j43Z2eVWWoovCB3aUWyuv1uxaRA32jSK0YhCq7AJVPPjZUlfBl4QLfUrpQqNmBo7CAR+FGnE3y8RYvUVRPVr+7hwBS/g1EkurK7NRUBRn7Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bxlviAJd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763485781; c=relaxed/simple;
+	bh=n0ahv9J5Kl6+P6HPlNJ38OxVVoh1FaxDHLeaN6W/57o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lUAplj/+hiSC2xntxbUj+ugeEpsP34Y8IFOep1QPH8H1ZEH+R13mDl5xWCmtUnG2k4zu+b49/y7QhUeyGScyX5Q9ZJkB808X7fEUqp46wLbZLSMvUyCnyeym663HwEGmC9frWX4sEpXjAPNXqZAnG1xR0UcX61E62HnUqkt3nz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=fail (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Kc2mvjby reason="signature verification failed"; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bxlviAJd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8451FC2BCAF
-	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 14:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763476455;
-	bh=oZw/G/YivSJQARxgSBgtPlPynJj/rFrGjeRiYZyYBDA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bxlviAJdZ1MKRs9xB6Gq9WUHzMb85YhYtbV8pCrfw3ZMqUxhlrxbLEGuRgA0Quzqq
-	 osx2mKbpGXoe2aSoEL0rF14dFkPonV69BvSdKTpk79EmWlPnhZfm2IlnYji/69uNuy
-	 BsYgyZM8filtAPuuF0ghICfNZ12o0Xva4l12+m/ZQeKjqhflbqVH+uS1ZZdPsl6zC6
-	 Ad1FaahpDWItf0ZvKAkFroyDoIFzIxPR8xUrNjjWJH0uAq6n4dELNC3n2nvEm7WMrp
-	 F1d1a/lQo20QikOVQY0pQem3CeTFSOcE0pc85ewMFd1yHFN+0gmbpGLDmXMS00exGy
-	 lZfU2wJY+Oyag==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b7355f6ef12so961402366b.3
-        for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 06:34:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWaruVBlab9geavW8oBwjAKYfhwBh1nEGV+DFgMiy640qt+5zK9jATWedQXjqWL+kb0zO0A8I3Cl6g=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzCKuI9+qeYMj3XWf/VSsUICMbvO2M3L0xjHSzfrGlxm3tN8QPv
-	pJM2j9wMDNR5S6VexTIuMwUbAHmRlj/Puyl8s1qZyQsvNfoDZ2krq9O5B2GF0PAD4eMojtjP5oZ
-	bseTKZh38VOAI5xxeH1H4yQKGOfizMvs=
-X-Google-Smtp-Source: AGHT+IFy5sREltVG9yzsEtOi1XV0juUxvmkxQkiHNFl9nPlyLybu7jk/cbcs0JHoNBya8/YOWJ4RfsiEbxv5CcuO4Qk=
-X-Received: by 2002:a17:907:1c27:b0:b72:b289:6de3 with SMTP id
- a640c23a62f3a-b7367bff073mr1771104066b.58.1763476454170; Tue, 18 Nov 2025
- 06:34:14 -0800 (PST)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Kc2mvjby"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id B83C225BFD;
+	Tue, 18 Nov 2025 18:09:35 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 6IF34XJUK659; Tue, 18 Nov 2025 18:09:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1763485774; bh=n0ahv9J5Kl6+P6HPlNJ38OxVVoh1FaxDHLeaN6W/57o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Kc2mvjbyAdOb4VYAkc9KStqoc9NeuHqwFtKCLbSNCWcZnV230XGGVU39qCpeAMCXL
+	 lkPowddwJWkiczZ2JUthpKpfhalyWRj2phQyoVxh22Ebno2w9cHKyLecABRo0rzqCj
+	 k58elY9ycXj48sLwXArt3i4z4hZJfoY8zGSVkY2M7Gw0t0G9aPLM/GcVKQ6I7ns1ii
+	 E82wx9D6piFTz+HCRUDj9uPH38YriYkQ66/PDZoM6reGnJ1htfKi/Z50kENXDe4gdZ
+	 d+LmxPBwQkT5ur891EDneHfDzbIjADQ/KeeXYRVFHs/FXt2A+O7oekqUT4uqqjKnO4
+	 +vQyGJS4tsD/A==
+Date: Tue, 18 Nov 2025 17:09:00 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, f@disroot.org
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 04/14] LoongArch: Adjust boot & setup for 32BIT/64BIT
+Message-ID: <aRyoLBjD_8Hz91DV@pie>
+References: <20251118112728.571869-1-chenhuacai@loongson.cn>
+ <20251118112728.571869-5-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251118112728.571869-1-chenhuacai@loongson.cn>
- <20251118112728.571869-13-chenhuacai@loongson.cn> <4155a60c-81da-4c23-8a66-9a748b3383e4@app.fastmail.com>
-In-Reply-To: <4155a60c-81da-4c23-8a66-9a748b3383e4@app.fastmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 18 Nov 2025 22:34:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5__bTzjTbrHq++k3H+xuAfM5c-bLYa6A_GjHev8CbS4g@mail.gmail.com>
-X-Gm-Features: AWmQ_blyY4_3l3ootl-6tRAwB4KzXAszmPGaIvnkWWY4aO1M43O19NNB_3Tr4do
-Message-ID: <CAAhV-H5__bTzjTbrHq++k3H+xuAfM5c-bLYa6A_GjHev8CbS4g@mail.gmail.com>
-Subject: Re: [PATCH V2 12/14] LoongArch: Adjust VDSO/VSYSCALL for 32BIT/64BIT
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251118112728.571869-5-chenhuacai@loongson.cn>
 
-Hi, Arnd,
+On Tue, Nov 18, 2025 at 07:27:18PM +0800, Huacai Chen wrote:
+> Adjust boot & setup for both 32BIT and 64BIT, including: efi header
+> definition, MAX_IO_PICS definition, kernel entry and environment setup
+> routines, etc.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/addrspace.h |  2 +-
+>  arch/loongarch/include/asm/irq.h       |  5 ++++
+>  arch/loongarch/kernel/efi-header.S     |  4 +++
+>  arch/loongarch/kernel/efi.c            |  4 ++-
+>  arch/loongarch/kernel/env.c            |  9 ++++--
+>  arch/loongarch/kernel/head.S           | 39 +++++++++++---------------
+>  arch/loongarch/kernel/relocate.c       |  9 +++++-
+>  7 files changed, 45 insertions(+), 27 deletions(-)
+> 
 
-On Tue, Nov 18, 2025 at 9:42=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
-:
->
-> On Tue, Nov 18, 2025, at 12:27, Huacai Chen wrote:
-> > Adjust VDSO/VSYSCALL because read_cpu_id() for 32BIT/64BIT are
-> > different, and LoongArch32 doesn't support GENERIC_GETTIMEOFDAY now.
-> >
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> Are you planning to add vdso_clock_gettime() later, or is the
-> architecture missing hardware access to the timer register
-> on loongarch32?
-Hardware has no problem, vdso_clock_gettime() will be added later.
+...
 
-Huacai
+> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+> index 23bd5ae2212c..3e8a25eb901b 100644
+> --- a/arch/loongarch/kernel/env.c
+> +++ b/arch/loongarch/kernel/env.c
+> @@ -68,18 +68,23 @@ static int __init fdt_cpu_clk_init(void)
+>  
+>  	np = of_get_cpu_node(0, NULL);
+>  	if (!np)
+> -		return -ENODEV;
+> +		goto fallback;
+>  
+>  	clk = of_clk_get(np, 0);
+>  	of_node_put(np);
+>  
+>  	if (IS_ERR(clk))
+> -		return -ENODEV;
+> +		goto fallback;
+>  
+>  	cpu_clock_freq = clk_get_rate(clk);
+>  	clk_put(clk);
+>  
+>  	return 0;
+> +
+> +fallback:
+> +	cpu_clock_freq = 200 * 1000 * 1000;
 
->
-> It would be good to add some comments here to ensure this is
-> done correctly if someone adds the vdso32 support later:
-> There should be clock_gettime32 support, but not the old
-> clock_gettime(), clock_getres() or time().
->
->        Arnd
->
+Why pick 200MHz here? And shouldn't the clock being always provided in
+devicetree if it's necessary for kernel to function?
+
+Per the schema for LoongArch CPUs (loongarch/cpus.yaml), "clocks"
+property is also described as mandantory, thus I don't think such
+fallback makes sense.
+
+> +
+> +	return -ENODEV;
+>  }
+>  late_initcall(fdt_cpu_clk_init);
+
+Best regards,
+Yao Zi
