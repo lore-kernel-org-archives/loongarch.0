@@ -1,60 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA83F1898F8
-	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 12:46:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0DE2417E6
+	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 12:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763470013; cv=none; b=cHo86hcsb4cTfU6cDAmn5V4LuBtgvM45YJsJj67fwRK9ZL0z1wMUqDkrazb2DS2Ko3dbgCK9kyrAIfImS1CJ9SMuUVGCk2tBt3f+OCfmk2jilPiBENKJ6SeJoij5l8ux24MsvQnKNZosmMLMMpmpawc+LPHfmFYngdvSQEVNXWo=
+	t=1763470124; cv=none; b=HErA9IAiTn4GvwwUYbMuj9mmQS+zqi1XQ0nu30dxKU4xS2VXNUtQkX+hZ/FRDkI8XC2nFYxlioupOWg1KQaeCZ3/nlI9agqdBW2Jk3LIXAoWP3xmHZjC9lBHChwbFdPdDMgvcVLBjB/FrxbrOjrU8CW4dh+Hwfb86EYuxNnvuTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763470013; c=relaxed/simple;
-	bh=1Vx5zDIrUHe6525T1N4BHsoVznReo7/uJUmQjilLE5w=;
+	s=arc-20240116; t=1763470124; c=relaxed/simple;
+	bh=pFdS3qA9WYaaq00VcckqdlanD8dVirrH/4YapO6gIKU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R3N56r02T9zBkCthFRuOjs2+SF60/ghPDt1cdRZSf5unQUkyjXnxEX7za2ifgH5NwDM1qfhgYoU4acalx0KW3+6I6/KwOQVOh+2CN5NrZFHFFDJjM1aiXRm6Fv1GCbdG5l627LQ5G9qf7/OIS3/S8BqJKqhaHIrEKqshLhaXDJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pjo54oMU; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=pD4Ty1Cjg8eek7lOB1WzVmoCRp0ws4n/T/BWMBIEWhmAtvmYUGxXbtRyjwoGKUB51TsRbjiJrQxmCR3g60pqGrW1Fgf3cMxHW9UkmKV5AxdMdnQgETDjQ9fo9YYGpre0aDa8fY+nlmTI7Ps8ZeT7hHhRLtlU5TSiwZ9QAp/GN7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMqQa2aT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pjo54oMU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50335C16AAE
-	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 12:46:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMqQa2aT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F229C4CEF5
+	for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 12:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763470013;
-	bh=1Vx5zDIrUHe6525T1N4BHsoVznReo7/uJUmQjilLE5w=;
+	s=k20201202; t=1763470124;
+	bh=pFdS3qA9WYaaq00VcckqdlanD8dVirrH/4YapO6gIKU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Pjo54oMUS9XO2PRPjo5UH3GSpT0q60pUj+6blcR3Ms/i1OkhFZDKNPUIpbDhWq+SK
-	 4T8q+A6R0aA1uEtMwlVymVt7jIoI9U+LkghMQ3kV7DsTwhuaIZ5on1UBfFpPUkb4Jh
-	 HEhIHFyXycQOMrt1UHxAkM4f1SyiErBriuGs7BCznMG9/x1DBMskHgSGtqKFE6RADS
-	 rK+YIZ/YQ1XrWaRSZ02u7Lk56qeUfxfhpqJg5ycWtrT123f4C/ef98rZBwFxBJ00+O
-	 Vn9JROc/2iBDy+eoyqb8YJ+sYMByfq6U01vjmftHanuOlHesGxPsrS7Qftuhz0/qD5
-	 l0fNp160ggc7A==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-640b0639dabso9562053a12.3
-        for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 04:46:53 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVnKzN+sMNPSOgn+/mfDIldqhFbg4G4iWXrBXJbwfOVOzLQCB4Mv7yD8AlvhUES+66eWXoZGmuW2W4=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzfx+1+VyeDTbHsRuhNYqR02kElb6PeXxfk7awbLk9SxAk1uSO3
-	Ot6OiLFQsOjIV4+01nxLqqE3wP1Qfc3He7YuORmfFB9oyGAzx5as+JVzww58BgFZl6VS5LwAWwW
-	i+JVQ96hSYTsQvsnGWDwFTF4YN2WAHlY=
-X-Google-Smtp-Source: AGHT+IGtdp36AFp+DoS6ZpCiCJV51yKskUUbXD/ZQmhyZaRqm+V1iZPjh1uXIfTOOK2SAbRhvMRcdW7sb918gxJJLhE=
-X-Received: by 2002:a17:907:983:b0:b71:df18:9fb6 with SMTP id
- a640c23a62f3a-b736792f1dfmr1773592166b.26.1763470011118; Tue, 18 Nov 2025
- 04:46:51 -0800 (PST)
+	b=fMqQa2aTQ6QF14qLJfJbMc6WGc1Ys3sI/GyLVlEzdBvuuuEsY6XzJHkHz4pjo84l4
+	 dHD9bcQF3Bhdhw+Ypaj2EcRHzNp/pEssVAJLhWwQVuYhog6MwqhUcnjVFjotGydDr7
+	 z7pqrkStgWHoq2a4p4v8uKLBbdwp4RXgAVrdlm5iUXqD2plGgZpZLWyXktJT1EL5qL
+	 3BeJ/VzACeGzcyx3Xn4+qTNBzh3QVMRQjW7vb6Ww615PYDnxvjJtuzbl2k6eR9XzR8
+	 1b5f7GexfHo3BK0Gnhn39sNsvrGkLyBWcrwdAxtA3+FE9BftcCZw69uabqKI17JNA/
+	 pnp3HFw+oWWIg==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-640aaa89697so7208920a12.3
+        for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 04:48:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWRIeP8i0UDvUIgZuaZUXvBILV+5bXPHdhTgjssL4HvmvJ/kRgXRbjnl00R6pOOHYBsNh1c5O1NAGE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwCbNM3qfawSoiTKKJAwXA4x3WSu0wnr+xC29S+U6yK8cJMfo9R
+	s6j18ExdwG1MtwWrZ/4113//hIGfj2/Ga+o1JvZKlIXZvkRC9HqOfuQPgRH+P8M6RApOFzpSDsp
+	VkO2/TuVTqP01Ln/QC6Spd8hNgG1zvek=
+X-Google-Smtp-Source: AGHT+IEDrP2TdyUTahNPJRfPwcoYAoS5gMqEHUbAvm5d4Dycw7x0zFNGBRQFdUMDmaXX2ULGwzkJBFq6jE806ti0w0o=
+X-Received: by 2002:a17:907:a44:b0:b73:544d:ba2e with SMTP id
+ a640c23a62f3a-b736780d5bamr1948345866b.25.1763470120092; Tue, 18 Nov 2025
+ 04:48:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251118080656.2012805-1-maobibo@loongson.cn> <20251118080656.2012805-2-maobibo@loongson.cn>
-In-Reply-To: <20251118080656.2012805-2-maobibo@loongson.cn>
+References: <20251118080656.2012805-1-maobibo@loongson.cn> <20251118080656.2012805-3-maobibo@loongson.cn>
+In-Reply-To: <20251118080656.2012805-3-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 18 Nov 2025 20:46:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5qZ3_KTvkZ-zQni6Lg-6W5y9oBXDb9+2VAeFV82BEzhA@mail.gmail.com>
-X-Gm-Features: AWmQ_bknqpyGjG5hIRRFCLAPFjiuy7TGEfINhZrD6MmsmDSsayAkFn1F04oiX-g
-Message-ID: <CAAhV-H5qZ3_KTvkZ-zQni6Lg-6W5y9oBXDb9+2VAeFV82BEzhA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] LoongArch: KVM: Add preempt hint feature in
- hypervisor side
+Date: Tue, 18 Nov 2025 20:48:41 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4hoS0Wo3TS+FdikXMkb7qjWNFSPDoajQr0bzdeROJwGw@mail.gmail.com>
+X-Gm-Features: AWmQ_bkSeXCgy-qK2rzvP-hL92k0XNXRWWttKpPo-xMdgC-eo-zjb1mltVmpNY4
+Message-ID: <CAAhV-H4hoS0Wo3TS+FdikXMkb7qjWNFSPDoajQr0bzdeROJwGw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] LoongArch: Add paravirt support with vcpu_is_preempted()
 To: Bibo Mao <maobibo@loongson.cn>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, 
+	Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	virtualization@lists.linux.dev, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -63,208 +67,126 @@ Hi, Bibo,
 On Tue, Nov 18, 2025 at 4:07=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
 e:
 >
-> Feature KVM_FEATURE_PREEMPT_HINT is added to show whether vCPU is
-> preempted or not. It is to help guest OS scheduling or lock checking
-> etc. Here add KVM_FEATURE_PREEMPT_HINT feature and use one byte as
-> preempted flag in steal time structure.
+> Function vcpu_is_preempted() is used to check whether vCPU is preempted
+> or not. Here add implementation with vcpu_is_preempted() when option
+> CONFIG_PARAVIRT is enabled.
 >
 > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  arch/loongarch/include/asm/kvm_host.h      |  2 +
->  arch/loongarch/include/asm/kvm_para.h      |  5 +-
->  arch/loongarch/include/uapi/asm/kvm.h      |  1 +
->  arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
->  arch/loongarch/kvm/vcpu.c                  | 54 +++++++++++++++++++++-
->  arch/loongarch/kvm/vm.c                    |  5 +-
->  6 files changed, 65 insertions(+), 3 deletions(-)
+>  arch/loongarch/include/asm/smp.h      |  1 +
+>  arch/loongarch/include/asm/spinlock.h |  5 +++++
+>  arch/loongarch/kernel/paravirt.c      | 16 ++++++++++++++++
+>  arch/loongarch/kernel/smp.c           |  6 ++++++
+>  4 files changed, 28 insertions(+)
 >
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
-de/asm/kvm_host.h
-> index 0cecbd038bb3..04c6dd171877 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -163,6 +163,7 @@ enum emulation_result {
->  #define LOONGARCH_PV_FEAT_UPDATED      BIT_ULL(63)
->  #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |         \
->                                          BIT(KVM_FEATURE_STEAL_TIME) |  \
-> +                                        BIT(KVM_FEATURE_PREEMPT_HINT) |\
->                                          BIT(KVM_FEATURE_USER_HCALL) |  \
->                                          BIT(KVM_FEATURE_VIRT_EXTIOI))
->
-> @@ -250,6 +251,7 @@ struct kvm_vcpu_arch {
->                 u64 guest_addr;
->                 u64 last_steal;
->                 struct gfn_to_hva_cache cache;
-> +               u8  preempted;
->         } st;
+> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/as=
+m/smp.h
+> index 3a47f52959a8..5b37f7bf2060 100644
+> --- a/arch/loongarch/include/asm/smp.h
+> +++ b/arch/loongarch/include/asm/smp.h
+> @@ -18,6 +18,7 @@ struct smp_ops {
+>         void (*init_ipi)(void);
+>         void (*send_ipi_single)(int cpu, unsigned int action);
+>         void (*send_ipi_mask)(const struct cpumask *mask, unsigned int ac=
+tion);
+> +       bool (*vcpu_is_preempted)(int cpu);
 >  };
+>  extern struct smp_ops mp_ops;
 >
-> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/inclu=
-de/asm/kvm_para.h
-> index 3e4b397f423f..d8592a7f5922 100644
-> --- a/arch/loongarch/include/asm/kvm_para.h
-> +++ b/arch/loongarch/include/asm/kvm_para.h
-> @@ -37,8 +37,11 @@ struct kvm_steal_time {
->         __u64 steal;
->         __u32 version;
->         __u32 flags;
-> -       __u32 pad[12];
-> +       __u8  preempted;
-> +       __u8  u8_pad[3];
-> +       __u32 pad[11];
-Maybe a single __u8 pad[47] is enough?
+> diff --git a/arch/loongarch/include/asm/spinlock.h b/arch/loongarch/inclu=
+de/asm/spinlock.h
+> index 7cb3476999be..c001cef893aa 100644
+> --- a/arch/loongarch/include/asm/spinlock.h
+> +++ b/arch/loongarch/include/asm/spinlock.h
+> @@ -5,6 +5,11 @@
+>  #ifndef _ASM_SPINLOCK_H
+>  #define _ASM_SPINLOCK_H
+>
+> +#ifdef CONFIG_PARAVIRT
+> +#define vcpu_is_preempted      vcpu_is_preempted
+> +bool vcpu_is_preempted(int cpu);
+> +#endif
+Maybe paravirt.h is a better place?
 
->  };
-> +#define KVM_VCPU_PREEMPTED             (1 << 0)
->
->  /*
->   * Hypercall interface for KVM hypervisor
-> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/inclu=
-de/uapi/asm/kvm.h
-> index 57ba1a563bb1..bca7154aa651 100644
-> --- a/arch/loongarch/include/uapi/asm/kvm.h
-> +++ b/arch/loongarch/include/uapi/asm/kvm.h
-> @@ -104,6 +104,7 @@ struct kvm_fpu {
->  #define  KVM_LOONGARCH_VM_FEAT_PV_IPI          6
->  #define  KVM_LOONGARCH_VM_FEAT_PV_STEALTIME    7
->  #define  KVM_LOONGARCH_VM_FEAT_PTW             8
-> +#define KVM_LOONGARCH_VM_FEAT_PV_PREEMPT_HINT  10
-From the name it is a "hint", from include/linux/kvm_para.h we know
-features and hints are different. If preempt is really a feature,
-rename it?
-
->
->  /* Device Control API on vcpu fd */
->  #define KVM_LOONGARCH_VCPU_CPUCFG      0
-> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/=
-include/uapi/asm/kvm_para.h
-> index 76d802ef01ce..fe4107869ce6 100644
-> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
-> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
-> @@ -15,6 +15,7 @@
->  #define CPUCFG_KVM_FEATURE             (CPUCFG_KVM_BASE + 4)
->  #define  KVM_FEATURE_IPI               1
->  #define  KVM_FEATURE_STEAL_TIME                2
-> +#define  KVM_FEATURE_PREEMPT_HINT      3
->  /* BIT 24 - 31 are features configurable by user space vmm */
->  #define  KVM_FEATURE_VIRT_EXTIOI       24
->  #define  KVM_FEATURE_USER_HCALL                25
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 1245a6b35896..33a94b191b5d 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -180,6 +180,11 @@ static void kvm_update_stolen_time(struct kvm_vcpu *=
-vcpu)
->         }
->
->         st =3D (struct kvm_steal_time __user *)ghc->hva;
-> +       if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PREEMPT_HINT)) {
-> +               unsafe_put_user(0, &st->preempted, out);
-> +               vcpu->arch.st.preempted =3D 0;
-> +       }
 > +
->         unsafe_get_user(version, &st->version, out);
->         if (version & 1)
->                 version +=3D 1; /* first time write, random junk */
-> @@ -1757,11 +1762,58 @@ static int _kvm_vcpu_put(struct kvm_vcpu *vcpu, i=
-nt cpu)
->         return 0;
->  }
+>  #include <asm/processor.h>
+>  #include <asm/qspinlock.h>
+>  #include <asm/qrwlock.h>
+> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/par=
+avirt.c
+> index b1b51f920b23..b99404b6b13f 100644
+> --- a/arch/loongarch/kernel/paravirt.c
+> +++ b/arch/loongarch/kernel/paravirt.c
+> @@ -52,6 +52,13 @@ static u64 paravt_steal_clock(int cpu)
+>  #ifdef CONFIG_SMP
+>  static struct smp_ops native_ops;
 >
-> +static void _kvm_set_vcpu_preempted(struct kvm_vcpu *vcpu)
-Just using kvm_set_vcpu_preempted() is enough, no "_".
-
+> +static bool pv_vcpu_is_preempted(int cpu)
 > +{
-> +       struct gfn_to_hva_cache *ghc;
-> +       struct kvm_steal_time __user *st;
-> +       struct kvm_memslots *slots;
-> +       static const u8 preempted =3D KVM_VCPU_PREEMPTED;
-I'm not sure whether "static" is right, it's not reentrant.
-
-
-Huacai
-
-> +       gpa_t gpa;
+> +       struct kvm_steal_time *src =3D &per_cpu(steal_time, cpu);
 > +
-> +       gpa =3D vcpu->arch.st.guest_addr;
-> +       if (!(gpa & KVM_STEAL_PHYS_VALID))
-> +               return;
-> +
-> +       /* vCPU may be preempted for many times */
-> +       if (vcpu->arch.st.preempted)
-> +               return;
-> +
-> +       /* This happens on process exit */
-> +       if (unlikely(current->mm !=3D vcpu->kvm->mm))
-> +               return;
-> +
-> +       gpa &=3D KVM_STEAL_PHYS_MASK;
-> +       ghc =3D &vcpu->arch.st.cache;
-> +       slots =3D kvm_memslots(vcpu->kvm);
-> +       if (slots->generation !=3D ghc->generation || gpa !=3D ghc->gpa) =
-{
-> +               if (kvm_gfn_to_hva_cache_init(vcpu->kvm, ghc, gpa, sizeof=
-(*st))) {
-> +                       ghc->gpa =3D INVALID_GPA;
-> +                       return;
-> +               }
-> +       }
-> +
-> +       st =3D (struct kvm_steal_time __user *)ghc->hva;
-> +       unsafe_put_user(preempted, &st->preempted, out);
-> +       vcpu->arch.st.preempted =3D KVM_VCPU_PREEMPTED;
-> +out:
-> +       mark_page_dirty_in_slot(vcpu->kvm, ghc->memslot, gpa_to_gfn(ghc->=
-gpa));
+> +       return !!(src->preempted & KVM_VCPU_PREEMPTED);
 > +}
 > +
->  void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+>  static void pv_send_ipi_single(int cpu, unsigned int action)
 >  {
-> -       int cpu;
-> +       int cpu, idx;
->         unsigned long flags;
->
-> +       if (vcpu->preempted && kvm_guest_has_pv_feature(vcpu, KVM_FEATURE=
-_PREEMPT_HINT)) {
-> +               /*
-> +                * Take the srcu lock as memslots will be accessed to che=
-ck the gfn
-> +                * cache generation against the memslots generation.
-> +                */
-> +               idx =3D srcu_read_lock(&vcpu->kvm->srcu);
-> +               _kvm_set_vcpu_preempted(vcpu);
-> +               srcu_read_unlock(&vcpu->kvm->srcu, idx);
-> +       }
+>         int min, old;
+> @@ -308,6 +315,9 @@ int __init pv_time_init(void)
+>                 pr_err("Failed to install cpu hotplug callbacks\n");
+>                 return r;
+>         }
 > +
->         local_irq_save(flags);
->         cpu =3D smp_processor_id();
->         vcpu->arch.last_sched_cpu =3D cpu;
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index a49b1c1a3dd1..b8879110a0a1 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -45,8 +45,10 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long ty=
-pe)
+> +       if (kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT))
+> +               mp_ops.vcpu_is_preempted =3D pv_vcpu_is_preempted;
+>  #endif
 >
->         /* Enable all PV features by default */
->         kvm->arch.pv_features =3D BIT(KVM_FEATURE_IPI);
-> -       if (kvm_pvtime_supported())
-> +       if (kvm_pvtime_supported()) {
->                 kvm->arch.pv_features |=3D BIT(KVM_FEATURE_STEAL_TIME);
-> +               kvm->arch.pv_features |=3D BIT(KVM_FEATURE_PREEMPT_HINT);
-> +       }
+>         static_call_update(pv_steal_clock, paravt_steal_clock);
+> @@ -332,3 +342,9 @@ int __init pv_spinlock_init(void)
 >
->         /*
->          * cpu_vabits means user address space only (a half of total).
-> @@ -143,6 +145,7 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, s=
-truct kvm_device_attr *attr
->         case KVM_LOONGARCH_VM_FEAT_PV_IPI:
->                 return 0;
->         case KVM_LOONGARCH_VM_FEAT_PV_STEALTIME:
-> +       case KVM_LOONGARCH_VM_FEAT_PV_PREEMPT_HINT:
->                 if (kvm_pvtime_supported())
->                         return 0;
->                 return -ENXIO;
+>         return 0;
+>  }
+> +
+> +bool notrace vcpu_is_preempted(int cpu)
+> +{
+> +       return mp_ops.vcpu_is_preempted(cpu);
+> +}
+
+We can simplify the whole patch like this, then we don't need to touch
+smp.c, and we can merge Patch-2/3.
+
++bool notrace vcpu_is_preempted(int cpu)
++{
++  if (!kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT))
++     return false;
++ else {
++     struct kvm_steal_time *src =3D &per_cpu(steal_time, cpu);
++     return !!(src->preempted & KVM_VCPU_PREEMPTED);
++ }
++}
+Huacai
+
+> +EXPORT_SYMBOL(vcpu_is_preempted);
+> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> index 46036d98da75..f04192fedf8d 100644
+> --- a/arch/loongarch/kernel/smp.c
+> +++ b/arch/loongarch/kernel/smp.c
+> @@ -307,10 +307,16 @@ static void loongson_init_ipi(void)
+>                 panic("IPI IRQ request failed\n");
+>  }
+>
+> +static bool loongson_vcpu_is_preempted(int cpu)
+> +{
+> +       return false;
+> +}
+> +
+>  struct smp_ops mp_ops =3D {
+>         .init_ipi               =3D loongson_init_ipi,
+>         .send_ipi_single        =3D loongson_send_ipi_single,
+>         .send_ipi_mask          =3D loongson_send_ipi_mask,
+> +       .vcpu_is_preempted      =3D loongson_vcpu_is_preempted,
+>  };
+>
+>  static void __init fdt_smp_setup(void)
 > --
 > 2.39.3
 >
