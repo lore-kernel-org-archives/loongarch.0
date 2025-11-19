@@ -1,127 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0818323A9BD
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 14:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0453936405D
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 14:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763561626; cv=none; b=dlDVrY9jj8HrhR/oyOr7H4SHWwPBGZf0xbM3WsGh+HrH9ZrZnfEXjoZGm/mjaelWiv4IyxXo1zj1H2bRZsl9zCSOwZZKjaWwjtmcGpg3jHg3J7HHxGB7LbHDjUeuR0OJxxjGyAXcYovqiSsfsyfv22W5uAganwOpP5jN2Vavl/M=
+	t=1763562551; cv=none; b=C2TN6GvxB9dLVGdenJcpvyzIB595Ucp4+znF2Sope8yxAizkNyXN57ABdYCGIueujmKjXhO62eSiu1/OpklrSpn2OaRaj9OA3zjpt84KVbjaMEJ2PxBrh8K6/NKnS9X3Jbh1o81lUbYUkpiZb9MLuQrA/Lw30IvZ39Gie3HXA2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763561626; c=relaxed/simple;
-	bh=O5ALMS+79AgxoUnmTnm/aNB9JdSjZmIssnCqcNai018=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ij2RQ6/cf8gzYBwClk6cQd5kfnSiWGek7BdgYQR6qtWp55/MbdaefutT2HJrs4FhEaO2EB/r3R3nVPaMlbhTq46sXnZS//wu51rkaNGzUpcUEJsI6+1hEpdEJKasBajZggkkEjyfxTANVPqNuVZR0BtW+3LDYSlB5taaxJupNnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFRfAF0H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763562551; c=relaxed/simple;
+	bh=D4pmJd3Ppn89lKNhz9R+dwK6ne/msmIoPaGjqyhpew4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GGge2ORdlnjT6JcnWI8cXxyeVCt8zfX+KeRbHH+42ASWSqW1PWGe6C7jmS5TdQqrP0D83hRT/llO6rCnEId0Cf+TgHCcNkGmxj989fCHxD7S4p68n1tUQ+WTvIw216IEBtyLpEakZILb8eei5HCNCqK/Jznv098FAODSSyOfsv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=SONc/yve; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFRfAF0H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 611A0C4AF16
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 14:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763561625;
-	bh=O5ALMS+79AgxoUnmTnm/aNB9JdSjZmIssnCqcNai018=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UFRfAF0HD5oHSZnEj7I7NaWy6/kLOhKNY4gfairFcQYMeanv35ANenkKoxc0iE1M7
-	 van0wMgSd2o92pI1lsT0cOaSs8UpUxtwuwzQO7PvleKVAzD++YCUZm9X/TAMO5wnCR
-	 wYrv1G+e4sFhsX5E8e3w2p4PcwGwInUjM/EdA3cKoJcpNLrJ7sBO2GC51a1FIDNQPE
-	 LN3Y9wKagkGpt+zoUy91gFa417KZfnpEXAwr+0ZrHVL+DL9lcvYduiYEPZ2SfU0hH3
-	 KVDAr1+av1/DURFkuLUOTefeQF3Er3/CmpYbqYro8V+3IFPMfOP7TyP0xEwpqFn+td
-	 ZI0P5LBI0Xgyg==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b7277324204so941382966b.0
-        for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 06:13:45 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUWqLbsa/GwaDdBl5Y6rhX9EsqB7HFA9QGP8CVSBx9upQT2H1NixSkpUIJ7wsR6Bz0Pj0o6nOpadSo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy2Dc0nr3qnU8ELv78pXs5u+Ais2eRdlV0GN1VPdreNazn7SOFF
-	SwU1pnhiVuceKC5kS/SD71Q3TPWSoMmHxOOZ3MlWGCur9qbouOclmroWmsf8oA3or83zz/6+VET
-	984OsavhR/JK/R4ASEXS/0KQJJwRVqtQ=
-X-Google-Smtp-Source: AGHT+IH+bjds08p8EIsdtrev3LqTK1AhZqRyYMUdtwinlfGrIemCkKBThdVJjU4oIMXrtUARdMzMx21jMZBm4Nx51CU=
-X-Received: by 2002:a17:907:1c9d:b0:b73:3d1d:2249 with SMTP id
- a640c23a62f3a-b736786e8b6mr1981087066b.29.1763561622749; Wed, 19 Nov 2025
- 06:13:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="SONc/yve"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id B26B526494;
+	Wed, 19 Nov 2025 15:28:59 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 7zSM5JGZUy_G; Wed, 19 Nov 2025 15:28:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1763562538; bh=D4pmJd3Ppn89lKNhz9R+dwK6ne/msmIoPaGjqyhpew4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=SONc/yve+hklYYQYMD3ObC5hXM4J/o7laRQONp0lQqSe8rJ8TNktdUPejDOQJT2di
+	 c+8gWEJ9jmeMlMWDXnJEcPNY1R2RlJqwUDml3LddGKpBYIxlcTA5mv2BgQmO9Yw0fG
+	 Dw5497L5yi8YAXdCZruLdkbaLcyMa909KCHqJWx69YC2z+GF4XZ5LWTc+usM6+KZVx
+	 K2UKMnU86pjDQoylAWUpveFP+PuPujf2pmV/klJ+TiuNNEwjYasNg3FvVgE72//kug
+	 5slF9knht1xKli7tp1tJ9t6FS3artrBpFLyNjSfv6GmYhdzE2Y1gAS9CggUFuLoYO6
+	 zKEt/8rdj45Dg==
+Date: Wed, 19 Nov 2025 14:28:41 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+	f@disroot.org, loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 04/14] LoongArch: Adjust boot & setup for 32BIT/64BIT
+Message-ID: <aR3UGUlqGFvo5aX5@pie>
+References: <20251118112728.571869-1-chenhuacai@loongson.cn>
+ <20251118112728.571869-5-chenhuacai@loongson.cn>
+ <aRyoLBjD_8Hz91DV@pie>
+ <CAAhV-H5uoDjBRYpK_e7Z+vrcqLAbLXhEbEQP_aJ9f3aTdA+-eQ@mail.gmail.com>
+ <04b04b74-ef13-4dd0-a35a-d629acb617cb@app.fastmail.com>
+ <CAAhV-H6aM+nsK39iTDw1Fec25C7+D2UTh92X6FPf3gDouuyejQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251118112728.571869-1-chenhuacai@loongson.cn>
- <20251118112728.571869-14-chenhuacai@loongson.cn> <debb8b35-8253-4422-a197-6d92e8d0c701@app.fastmail.com>
- <CAAhV-H7NU5z4bZDG3ZW+oHEp3jUE9_69g+zUXmT-+RcM07bOOw@mail.gmail.com> <a618d371-3489-4e7b-830b-bec843e117d5@app.fastmail.com>
-In-Reply-To: <a618d371-3489-4e7b-830b-bec843e117d5@app.fastmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 19 Nov 2025 22:13:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4ZsZCUGhB5wSiHOH3KmUwYkSinLk3uUn2kTCj4+DoOyg@mail.gmail.com>
-X-Gm-Features: AWmQ_bnAc-zoKcsXnq_LcNnlgzTiQlw6YW1car-PjdZB0ZH4LET9jPsTQYwmAdM
-Message-ID: <CAAhV-H4ZsZCUGhB5wSiHOH3KmUwYkSinLk3uUn2kTCj4+DoOyg@mail.gmail.com>
-Subject: Re: [PATCH V2 13/14] LoongArch: Adjust default config files for 32BIT/64BIT
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H6aM+nsK39iTDw1Fec25C7+D2UTh92X6FPf3gDouuyejQ@mail.gmail.com>
 
-On Wed, Nov 19, 2025 at 4:13=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
-:
->
-> On Wed, Nov 19, 2025, at 09:01, Huacai Chen wrote:
-> > On Tue, Nov 18, 2025 at 9:46=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> w=
-rote:
-> >>
-> >> On Tue, Nov 18, 2025, at 12:27, Huacai Chen wrote:
-> >> > Add loongson32_defconfig (for 32BIT) and rename loongson3_defconfig =
-to
-> >> > loongson64_defconfig (for 64BIT).
-> >> >
-> >> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> >> > ---
-> >> >  arch/loongarch/configs/loongson32_defconfig   | 1110 ++++++++++++++=
-+++
-> >> >  ...ongson3_defconfig =3D> loongson64_defconfig} |    0
-> >>
-> >> I would suggest using .config fragment here and only listing
-> >> the differences in the defconfig files in there, rather than
-> >> duplicating everything.
-> >>
-> >> > +CONFIG_DMI=3Dy
-> >> > +CONFIG_EFI=3Dy
-> >> > +CONFIG_SUSPEND=3Dy
-> >> > +CONFIG_HIBERNATION=3Dy
-> >> > +CONFIG_ACPI=3Dy
-> >> > +CONFIG_ACPI_SPCR_TABLE=3Dy
-> >> > +CONFIG_ACPI_TAD=3Dy
-> >> > +CONFIG_ACPI_DOCK=3Dy
-> >> > +CONFIG_ACPI_IPMI=3Dm
-> >> > +CONFIG_ACPI_HOTPLUG_CPU=3Dy
-> >> > +CONFIG_ACPI_PCI_SLOT=3Dy
-> >> > +CONFIG_ACPI_HOTPLUG_MEMORY=3Dy
-> >> > +CONFIG_ACPI_BGRT=3Dy
-> >>
-> >> You mention that loongarch32 uses ftb based boot,
-> >> so ACPI should probably be disabled here.
-> > I have tried my best, adding #ifdef CONFIG_ACPI all over the world but
-> > still failed. :)
+On Wed, Nov 19, 2025 at 03:51:01PM +0800, Huacai Chen wrote:
+> On Wed, Nov 19, 2025 at 2:03 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 > >
-> > LoongArch is deeply coupled with ACPI and can hardly disabled. On the
-> > other hand, it is not forbidden to use ACPI for LoongArch32. So let's
-> > keep it, and I will modify the description for LoongArch32 booting.
->
-> Ok. You will probably want get back to it eventually, since the
-> 32-bit port is likely intended for small-memory devices, and the
-> ACPI code is fairly large.
->
-> >> I would suggest turning off CONFIG_FB here (also on loongarch64).
-> >> There is a replacement driver for FB_EFI in DRM now.
-> > Do you mean simpledrm? It probably works but not always works. From
-> > sysfb_init() we know it only mark EFIFB as a simpledrm device when
-> > "compatible", so we still need FB_EFI as a fallback.
->
-> I meant CONFIG_DRM_EFIDRM, which was added earlier this year.
-> EFIDRM should work more reliably than SIMPLEDRM.
-OK, I will disable FB_EFI and enable EFIDRM instead.
+> >
+> >
+> > On Wed, 19 Nov 2025, at 12:28 PM, Huacai Chen wrote:
+> > [...]
+> > >> Per the schema for LoongArch CPUs (loongarch/cpus.yaml), "clocks"
+> > >> property is also described as mandantory, thus I don't think such
+> > >> fallback makes sense.
+> > > Yes, "clocks" is mandatory in theory, but sometimes is missing in
+> > > practice, at least in QEMU. On the other hand, if "clocks" really
+> > > always exist, then the error checking in fdt_cpu_clk_init() can also
+> > > be removed. So the fallback makes sense.
+> >
+> > IMHO this should be fixed on QEMU side, but I recall QEMU do have clock
+> > supplied in generic fdt?
+> It is difficult to fix, you can have a try. :)
+> If without fallback, cpuinfo shows 0MHz now.
 
-Huacai
+A fake "200MHz" output sounds much worse than obviously wrong "0MHz":
+the latter informs the user something bad happened here, while a
+mysterious "200MHz" output only makes it more confusing since no one has
+specified so in the failing case.
 
->
->      Arnd
->
+> >
+> > >
+> > > Why pick 200MHz? That is because we assume the constant timer is
+> > > 100MHz (which is true for all real machines), 200MHz is the minimal
+> > > multiple of 100MHz, it is more reasonable than 0MHz.
+> >
+> > Maybe better panic here :-)
+> No, this is not a fatal error, we don't need to treat everything as
+> fatal. As you know, many "BUG_ON" have been replaced with "WARN_ON" in
+> kernel.
+
+But it is an error and shouldn't be ignored. I agree that panic is too
+serious for this, but at least a warning should be issued.
+
+> Huacai
+
+Regards,
+Yao Zi
+
+
+> >
+> > Thanks
+> > --
+> > - Jiaxun
+> >
