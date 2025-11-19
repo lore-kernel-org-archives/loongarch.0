@@ -1,148 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEE9227BB9;
-	Wed, 19 Nov 2025 14:31:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEC2298CAB
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 14:43:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763562715; cv=none; b=Wh4ySXY8899JC0ZCY/rpHYGK0zmPwca7C6Sx98WbgW9pT9yeAFsviX7jDYmShZGsftms+Ch5fWVakM/oPGmtbyvEnO6o/zLNVTzl46KtkugOuFsBeNtjkNeaP9sTEbEaBYA+D5ew1Fqwsl6QKFLIiqOcWDP2Qxb2rjH6M3tpSTQ=
+	t=1763563425; cv=none; b=uVmgwYnH/d1AgpwMWM+dV+2HxGcuUenONPn8sXiGb246Z/q4h10IiilYu8d5JyHj2sTm/EwwyZpAA2DLf9+d9gA1gSSb8cG4AmEqAfX2aCo/QtjJ3Pv7gcrvIZB4qRd2lTTlzh/cEz3zwW0P9JWPyzji2gqtrMrMm32DqqnpB6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763562715; c=relaxed/simple;
-	bh=t7JHEvub1bQJal+g6fm+oWNxS6WRDvkPwGmxdErav44=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Ymg75ZP1yjaWm7ZaVc0MKrezcZz0Pm58xtM1VgnT/Ji1hj22EJLhJ7fnHqmnYAgHzcM6Vpsz+yqq8gl8po+Sgr5IA8Zx7tv8OJSP8ZGSfGnWFioHrrU9OB4H2mlUD8mOwO6EDdHZRGHGqkUk1tGMhTArSIOKK4514FaTa88ggoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtZWl30O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763563425; c=relaxed/simple;
+	bh=2z064nicPkbhvbFdk3DNaYzeBT79ucpWGtEQFNcD5MA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KnFmve6i296p4Q3MuLAK8sf+JarLl6gg///8EP4ycQEfnviyUWAT9iZ/qmnps6t92pJ3B+TtMoPHUMB5fMlehX6OQulXFpVVtKwKG+0pwgVjB7UD5JKvjXf7fjF3CtaipJ+TQdWbXCTLleSIz0EKpfJv+PxAbquFYY3MxZQc0Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kPHExZkm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtZWl30O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4FD5C4AF0B;
-	Wed, 19 Nov 2025 14:31:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kPHExZkm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D389C4FDE1
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 14:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763562715;
-	bh=t7JHEvub1bQJal+g6fm+oWNxS6WRDvkPwGmxdErav44=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=OtZWl30OwqZXuRTvfhy8T6wVumbrZWoGCTYDInBW4XmfLWgDkgaJiJZrdS3ZzCUqL
-	 JDYIkSCAlSNwQ3IrhV3rISRAPVaQOiTwR4Qva9gSs9IYPdwgqPlnIkhsgQfxU7uCRb
-	 24LIwD/o8cRnOWFRY4Z+NTXYCT07fcCY6SpNfuiYEWIMQ5oM9o1iktT3XuNoUHeI2M
-	 92getoDiEJ44gJCiSqPnNwbWLQcJwZVzGUhlysAlQGvIc2qdycoaS7o0XRiLp/P9N2
-	 z7pq+1gTaEV6YuIKO1UhxoY/cdOa/Qb0xep0DulfN7FqgbU3DQ3BLiYKchggLduCz6
-	 kI2FGfuWG/FsA==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 560CFF4008D;
-	Wed, 19 Nov 2025 09:31:51 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Wed, 19 Nov 2025 09:31:51 -0500
-X-ME-Sender: <xms:19Qdaap8BjsJbFtssqDUjnsMU_LQS_YP23cqGo1hqasAALMZnLH2Jw>
-    <xme:19QdaTekCirxoT8xxcC2RnapN71lsrezhBKHk9cWFJTrytiWHrCnoOSQ_WG25jLgz
-    VLVYir4VtevPFlszmb_dX0zPBndPMUq9wQrH4t08wLIbtcqw1mEIP0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdeggeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehnugih
-    ucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecuggftrf
-    grthhtvghrnhepjeejvddvtdehffdtgfejjeefgefgjeeggfeuteeiuedvtefgfffhvdej
-    iefguedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnugihodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduudeiudekheei
-    fedvqddvieefudeiiedtkedqlhhuthhopeepkhgvrhhnvghlrdhorhhgsehlihhnuhigrd
-    hluhhtohdruhhspdhnsggprhgtphhtthhopeegkedpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepjhgsrghrohhnsegrkhgrmhgrihdrtghomhdprhgtphhtthhopegsphesrg
-    hlihgvnhekrdguvgdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthht
-    ohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrghthhhivg
-    hurdguvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegsohhq
-    uhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehurhgviihkihesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
-    tghpthhtohepjhgrnhhnhhesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:19QdaSQxr3HQaS5D5svYtdioLzJ9DrcJWaaCXygndJcKZTp8DQA1XQ>
-    <xmx:19QdaRuKJfSzLCcUvQaFs6zUjI1C5yzQpwXIrnbakBUBZf6Go7P5Dw>
-    <xmx:19QdaRsZ04AgZVVF3BYyQvlnngCHXui5cx1xuooIBwrJs48FrjqOhQ>
-    <xmx:19QdaZdxW-cnpAjF52S13LU5nKqG8Kl70x0BiZJ1Wz-zYL2XACcj4g>
-    <xmx:19QdaU7njPzMtRawVt5wHwKl1sfmi7DCVtIMkE__tcglxZK-V1ApZbUe>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 1FAFE700054; Wed, 19 Nov 2025 09:31:51 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1763563421;
+	bh=2z064nicPkbhvbFdk3DNaYzeBT79ucpWGtEQFNcD5MA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kPHExZkmprcEn8Rik7i0UQa234oy2IA0XFvjlZuXD43PTcXOnSdG4HSrgRg957BZe
+	 RK2kSCshtvoeqGPRW5frwVHm+U3HJ0IMVu9VkSiHi8czXek+AdW8iNY5SFRSlCyqtk
+	 ABkYad9YDEz/Gsyo+00ikRy+Jzn2XVfttaYH5Z21tLAYF/ZCbCz6M5SYz+H95Zt6RV
+	 RSWR335wJIX01ool4gqpUEYAupO0kavYmBNM57ft3eshJedwpXWGQFdjKzfvmkBLl/
+	 8+igb62+LbIFTQhJdmqVeB/r9qTCdQAUy1MbuMO/wL/OpPYm4oOze1bL2RDxE+ZotS
+	 g3Lv7Zh7nd6uw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-64080ccf749so9680838a12.2
+        for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 06:43:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX3tbC27VoAhCL+JTiEZsaRDbKALr63e9c5zh7uGWaXQc5QJJUpOeP+0+F2o/f+G90IUKPJ2k8Xs9s=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzh4SL+Td03bIu2b1E1iSThldkoj7s9uAHaCRotrPvI0ou+Yzhk
+	eK0B0zLMwYNjU3H3CjfNy5ypmDxbYcMZohs25vCFj5CwmOthwEi/OrqLBAeBvxw8qme0JC4InG3
+	lp+NmJYeHNTx8ekzmbMu09fNWdY/CtnQ=
+X-Google-Smtp-Source: AGHT+IGRRbE/yMt+CJhBJTjAeoFPwPJ7dbuG54h0FPb6G8ICb8kkGh3gMrGA7KjvSvQ3F+5qslNF7zZ9Tnjwa4bLlUM=
+X-Received: by 2002:a17:907:3c82:b0:b73:16fc:d469 with SMTP id
+ a640c23a62f3a-b736793dcdcmr2085515866b.51.1763563415202; Wed, 19 Nov 2025
+ 06:43:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: A2ZwPDH9FoLc
-Date: Wed, 19 Nov 2025 06:31:30 -0800
-From: "Andy Lutomirski" <luto@kernel.org>
-To: "Valentin Schneider" <vschneid@redhat.com>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- linux-mm@kvack.org, rcu@vger.kernel.org,
- "the arch/x86 maintainers" <x86@kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Paolo Bonzini" <pbonzini@redhat.com>, "Arnd Bergmann" <arnd@arndb.de>,
- "Frederic Weisbecker" <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Jason Baron" <jbaron@akamai.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Sami Tolvanen" <samitolvanen@google.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
- "Joel Fernandes" <joelagnelf@nvidia.com>,
- "Josh Triplett" <josh@joshtriplett.org>,
- "Boqun Feng" <boqun.feng@gmail.com>,
- "Uladzislau Rezki" <urezki@gmail.com>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Mel Gorman" <mgorman@suse.de>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Han Shen" <shenhan@google.com>, "Rik van Riel" <riel@surriel.com>,
- "Jann Horn" <jannh@google.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Oleg Nesterov" <oleg@redhat.com>, "Juri Lelli" <juri.lelli@redhat.com>,
- "Clark Williams" <williams@redhat.com>,
- "Yair Podemsky" <ypodemsk@redhat.com>,
- "Marcelo Tosatti" <mtosatti@redhat.com>,
- "Daniel Wagner" <dwagner@suse.de>, "Petr Tesarik" <ptesarik@suse.com>,
- "Shrikanth Hegde" <sshegde@linux.ibm.com>
-Message-Id: <65ae9404-5d7d-42a3-969e-7e2ceb56c433@app.fastmail.com>
-In-Reply-To: <20251114151428.1064524-9-vschneid@redhat.com>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
- <20251114151428.1064524-9-vschneid@redhat.com>
-Subject: Re: [RFC PATCH v7 29/31] x86/mm/pti: Implement a TLB flush immediately after a
- switch to kernel CR3
-Content-Type: text/plain; charset=utf-8
+References: <20251118112728.571869-1-chenhuacai@loongson.cn>
+ <20251118112728.571869-5-chenhuacai@loongson.cn> <aRyoLBjD_8Hz91DV@pie>
+ <CAAhV-H5uoDjBRYpK_e7Z+vrcqLAbLXhEbEQP_aJ9f3aTdA+-eQ@mail.gmail.com>
+ <04b04b74-ef13-4dd0-a35a-d629acb617cb@app.fastmail.com> <CAAhV-H6aM+nsK39iTDw1Fec25C7+D2UTh92X6FPf3gDouuyejQ@mail.gmail.com>
+ <aR3UGUlqGFvo5aX5@pie>
+In-Reply-To: <aR3UGUlqGFvo5aX5@pie>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 19 Nov 2025 22:43:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7OFnEjen0B6JbBvjrcgNDnOsXqKV1wp7KaRxKjkRYfrg@mail.gmail.com>
+X-Gm-Features: AWmQ_bkYanL2Vm4yxrUlXAat1BQPYrTDWEB8jFTLIria9RLYEuQHx6SD870O10I
+Message-ID: <CAAhV-H7OFnEjen0B6JbBvjrcgNDnOsXqKV1wp7KaRxKjkRYfrg@mail.gmail.com>
+Subject: Re: [PATCH V2 04/14] LoongArch: Adjust boot & setup for 32BIT/64BIT
+To: Yao Zi <ziyao@disroot.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Arnd Bergmann <arnd@arndb.de>, f@disroot.org, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On Fri, Nov 14, 2025, at 7:14 AM, Valentin Schneider wrote:
-> Deferring kernel range TLB flushes requires the guarantee that upon
-> entering the kernel, no stale entry may be accessed. The simplest way =
-to
-> provide such a guarantee is to issue an unconditional flush upon switc=
-hing
-> to the kernel CR3, as this is the pivoting point where such stale entr=
-ies
-> may be accessed.
+On Wed, Nov 19, 2025 at 10:29=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
 >
+> On Wed, Nov 19, 2025 at 03:51:01PM +0800, Huacai Chen wrote:
+> > On Wed, Nov 19, 2025 at 2:03=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoa=
+t.com> wrote:
+> > >
+> > >
+> > >
+> > > On Wed, 19 Nov 2025, at 12:28 PM, Huacai Chen wrote:
+> > > [...]
+> > > >> Per the schema for LoongArch CPUs (loongarch/cpus.yaml), "clocks"
+> > > >> property is also described as mandantory, thus I don't think such
+> > > >> fallback makes sense.
+> > > > Yes, "clocks" is mandatory in theory, but sometimes is missing in
+> > > > practice, at least in QEMU. On the other hand, if "clocks" really
+> > > > always exist, then the error checking in fdt_cpu_clk_init() can als=
+o
+> > > > be removed. So the fallback makes sense.
+> > >
+> > > IMHO this should be fixed on QEMU side, but I recall QEMU do have clo=
+ck
+> > > supplied in generic fdt?
+> > It is difficult to fix, you can have a try. :)
+> > If without fallback, cpuinfo shows 0MHz now.
+>
+> A fake "200MHz" output sounds much worse than obviously wrong "0MHz":
+> the latter informs the user something bad happened here, while a
+> mysterious "200MHz" output only makes it more confusing since no one has
+> specified so in the failing case.
+All CPU freq in QEMU TCG is fake, even if it is provided by DTS. But
+if someone fixes QEMU, I'm happy to remove this part.
 
-Doing this together with the PTI CR3 switch has no actual benefit: MOV C=
-R3 doesn=E2=80=99t flush global pages. And doing this in asm is pretty g=
-ross.  We don=E2=80=99t even get a free sync_core() out of it because IN=
-VPCID is not documented as being serializing.
+>
+> > >
+> > > >
+> > > > Why pick 200MHz? That is because we assume the constant timer is
+> > > > 100MHz (which is true for all real machines), 200MHz is the minimal
+> > > > multiple of 100MHz, it is more reasonable than 0MHz.
+> > >
+> > > Maybe better panic here :-)
+> > No, this is not a fatal error, we don't need to treat everything as
+> > fatal. As you know, many "BUG_ON" have been replaced with "WARN_ON" in
+> > kernel.
+>
+> But it is an error and shouldn't be ignored. I agree that panic is too
+> serious for this, but at least a warning should be issued.
+Yes, it is better to add a warning.
 
-Why can=E2=80=99t we do it in C?  What=E2=80=99s the actual risk?  In or=
-der to trip over a stale TLB entry, we would need to deference a pointer=
- to newly allocated kernel virtual memory that was not valid prior to ou=
-r entry into user mode. I can imagine BPF doing this, but plain noinstr =
-C in the entry path?  Especially noinstr C *that has RCU disabled*?  We =
-already can=E2=80=99t follow an RCU pointer, and ISTM the only style of =
-kernel code that might do this would use RCU to protect the pointer, and=
- we are already doomed if we follow an RCU pointer to any sort of memory.
 
-We do need to watch out for NMI/MCE hitting before we flush.
+Huacai
+>
+> > Huacai
+>
+> Regards,
+> Yao Zi
+>
+>
+> > >
+> > > Thanks
+> > > --
+> > > - Jiaxun
+> > >
+>
