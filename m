@@ -1,32 +1,32 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1AA1C84DE
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 07:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFA12E6106
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 07:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763537565; cv=none; b=r3SRezJU398hklsJ/M5KwyiurZDSueh/1ieXLpN0Kq6Idfs4M6mWLLfWBowi8G9GF5PJ8YnKzLSlpblLXx9DEmsVpRCOK7S9I9O8xQwarz75n2kxj7IDFIqaEeqb4A81MAn78fgTNl6VK/7lQib/drOH0Majq9jBgD81wRaBhnY=
+	t=1763537574; cv=none; b=tHJvZ3+rrokVXSkQvZtQoIxg2jzjgXhpRqLSeqWTgSYsjvs6u3R3jhBHgK9tpPEbV3gWalZpze/lXqV/DuU7b5ou1U7Wj3BJmUpIAtZPLzhRXPDGedU/nxTI3J7GY0Ba+wotN3rorM+8npTVvckPbqJAI2YK+CJOI4QK2oL6hkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763537565; c=relaxed/simple;
-	bh=J/3ntIk/FVsMM/cx480xqZtN/m3bUjrIkaLHKtbxWQk=;
+	s=arc-20240116; t=1763537574; c=relaxed/simple;
+	bh=11+Gw4P/9LydQICXj98068sKmY8lDHK8bLvUtxVXDtk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=szygqQBCHE5ONyI0Ch7AXgJweMq+OQkEaa0ZCEkdxTWyRWNrVLUeA1dYdERbnBxH6tWEabCJ+J7At5Pfpl5Pn1TfT1VG/qMDfPj+uDETp8bIe8cmThk2nQeU69VCr29qQgKlRcamSWhLSltoDnSazRL9wqajFl2l5A8A/snU+iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vbucHj67; arc=none smtp.client-ip=91.218.175.189
+	 MIME-Version; b=aTpD90x72xkfpyvFRsJ9CWEP6CXVYhfBG2/5XcjAFlOjSlzOIVH1v6IFBB46TZiRT/db7vj680LFdWSA+tqHTNDHhmzp7RN96i4hUDs6L6WIARycmdop1HRSpw/OgjjnK+xdNJnkn3UzxqrviU6O9sLFGsGbc9+1IuDx02lMSTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uyjpuiv9; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vbucHj67"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uyjpuiv9"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763537560;
+	t=1763537570;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=x1iNplE99sGAypoCEEPI8YVyyZSSPtGtkqVo740CsVs=;
-	b=vbucHj67nP76kiXE1QyY8BDwAzCLOGQUCC0PuxiMX09JuvuPEDA7TD6Faql30bLUhiVf76
-	IOCfwQsCxOzvk1jJIx6cB/4wVYkH1Ymgi7/nv/RuHvh3YJEurHzaNl8B/s41J5hlfHjpnD
-	Wr8XalvYuqFraXJCvIIVSZfyHo2LYco=
+	bh=nqzAgJ4OlgcGBu7aVY4MnPgaTUGUmQkYyYjl0T7Jjfo=;
+	b=uyjpuiv9TBbXB7w5nX9ezg2b/0arYsi+ngniUmEy5/UHQe7UIU+7bW+ZZH6JZOPtCOAwTM
+	I2y6i4tBKl8QNLVOSZZcx0mBsB2R/e0ql3nUife45Tqxisf0T9zBpRBX7bZtz84Wv3to6z
+	ik4dz5PKJGLLY8Z0cTmGxwsTW0EsQQg=
 From: Qi Zheng <qi.zheng@linux.dev>
 To: will@kernel.org,
 	aneesh.kumar@kernel.org,
@@ -45,10 +45,12 @@ Cc: linux-arch@vger.kernel.org,
 	linux-mips@vger.kernel.org,
 	linux-parisc@vger.kernel.org,
 	linux-um@lists.infradead.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v2 1/7] mm: change mm/pt_reclaim.c to use asm/tlb.h instead of asm-generic/tlb.h
-Date: Wed, 19 Nov 2025 15:31:18 +0800
-Message-ID: <e9d510106b5bf72a9b577b8c5ad161fd3c29c2b6.1763537007.git.zhengqi.arch@bytedance.com>
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>
+Subject: [PATCH v2 2/7] alpha: mm: enable MMU_GATHER_RCU_TABLE_FREE
+Date: Wed, 19 Nov 2025 15:31:19 +0800
+Message-ID: <54381c49729449b9c3a09e78a69bf14b4b107774.1763537007.git.zhengqi.arch@bytedance.com>
 In-Reply-To: <cover.1763537007.git.zhengqi.arch@bytedance.com>
 References: <cover.1763537007.git.zhengqi.arch@bytedance.com>
 Precedence: bulk
@@ -62,29 +64,46 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Qi Zheng <zhengqi.arch@bytedance.com>
 
-Generally, the asm/tlb.h will include asm-generic/tlb.h, so change
-mm/pt_reclaim.c to use asm/tlb.h instead of asm-generic/tlb.h. This can
-also fix compilation errors on some architecture when CONFIG_PT_RECLAIM
-is enabled (such as alpha).
+On a 64-bit system, madvise(MADV_DONTNEED) may cause a large number of
+empty PTE page table pages (such as 100GB+). To resolve this problem,
+first enable MMU_GATHER_RCU_TABLE_FREE to prepare for enabling the
+PT_RECLAIM feature, which resolves this problem.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>
+Cc: Matt Turner <mattst88@gmail.com>
 ---
- mm/pt_reclaim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/alpha/Kconfig           | 1 +
+ arch/alpha/include/asm/tlb.h | 6 +++---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/mm/pt_reclaim.c b/mm/pt_reclaim.c
-index 0d9cfbf4fe5d8..46771cfff8239 100644
---- a/mm/pt_reclaim.c
-+++ b/mm/pt_reclaim.c
-@@ -2,7 +2,7 @@
- #include <linux/hugetlb.h>
- #include <linux/pgalloc.h>
+diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
+index 80367f2cf821c..6c7dbf0adad62 100644
+--- a/arch/alpha/Kconfig
++++ b/arch/alpha/Kconfig
+@@ -38,6 +38,7 @@ config ALPHA
+ 	select OLD_SIGSUSPEND
+ 	select CPU_NO_EFFICIENT_FFS if !ALPHA_EV67
+ 	select MMU_GATHER_NO_RANGE
++	select MMU_GATHER_RCU_TABLE_FREE
+ 	select SPARSEMEM_EXTREME if SPARSEMEM
+ 	select ZONE_DMA
+ 	help
+diff --git a/arch/alpha/include/asm/tlb.h b/arch/alpha/include/asm/tlb.h
+index 4f79e331af5ea..ad586b898fd6b 100644
+--- a/arch/alpha/include/asm/tlb.h
++++ b/arch/alpha/include/asm/tlb.h
+@@ -4,7 +4,7 @@
  
--#include <asm-generic/tlb.h>
-+#include <asm/tlb.h>
+ #include <asm-generic/tlb.h>
  
- #include "internal.h"
- 
+-#define __pte_free_tlb(tlb, pte, address)		pte_free((tlb)->mm, pte)
+-#define __pmd_free_tlb(tlb, pmd, address)		pmd_free((tlb)->mm, pmd)
+- 
++#define __pte_free_tlb(tlb, pte, address)	tlb_remove_ptdesc((tlb), page_ptdesc(pte))
++#define __pmd_free_tlb(tlb, pmd, address)	tlb_remove_ptdesc((tlb), virt_to_ptdesc(pmd))
++
+ #endif
 -- 
 2.20.1
 
