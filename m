@@ -1,349 +1,114 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3A18313289;
-	Wed, 19 Nov 2025 06:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED58C126C03
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 07:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763532739; cv=none; b=EvfxaN7iY6GTwz8GY/fMzRuFS7Vq+BlxtkMwgZTiopgqs0Ola7NfDmWAuzj8SqThD5NUDv+A/+EdD5SjZODSntmbvZX68qz/UUv/kTwTj4EpePOwStI6xK/vHgadn6cnz4vII8nS80nJRMaoYp0PJGIvoBTZ/oWq9cVIdxWi2vk=
+	t=1763537555; cv=none; b=R9U2oc6w7FMCkh5mMmeLkPUkpEWU72b/nrHPfSCOSEP7k0QgaoddB5evaXzocjkZ8X+w9Dy1d4l/ZpKCFiJd+hNztq0W5guNMLl59vKT7YY59Dj+uiGF/0ZOOwGAre6LLTo5CWH4SppZAdfe/nXufgFdp1ICUq4zy0dEij8pHFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763532739; c=relaxed/simple;
-	bh=KxoYgn8R3u7q5pEkNPEUbXw3tyWVn1HAcjT/sw14z1U=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=NZyPr9hWhu70UV7k452PZJQykGfx3qYxPh9nI36nE433lrT9ncDV3HvxdTLS44RpDWpLzGWHD0JTMBSHvoBldS+zkdoulkJHFGKIEUQMtGk3QmTDz7Auxmve/IceKHZ4m+Lq6HgseOyHR0vxq952S6xNfKeOsXfhwclnWmye8tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxL9O7Xx1pKmglAA--.13823S3;
-	Wed, 19 Nov 2025 14:12:11 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDxQ+S2Xx1pCio4AQ--.29734S3;
-	Wed, 19 Nov 2025 14:12:09 +0800 (CST)
-Subject: Re: [PATCH 2/3] LoongArch: Add paravirt support with
- vcpu_is_preempted()
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Waiman Long <longman@redhat.com>, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, x86@kernel.org
-References: <20251118080656.2012805-1-maobibo@loongson.cn>
- <20251118080656.2012805-3-maobibo@loongson.cn>
- <CAAhV-H4hoS0Wo3TS+FdikXMkb7qjWNFSPDoajQr0bzdeROJwGw@mail.gmail.com>
- <db8a26ca-8430-9e7d-4ad1-9b7743c4cfd1@loongson.cn>
-Message-ID: <147fe837-5f81-4246-7d01-84b75cb94e6f@loongson.cn>
-Date: Wed, 19 Nov 2025 14:09:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1763537555; c=relaxed/simple;
+	bh=+D4SI0id3ghRpsncA0V/j2DS0LnrpMNXscT0G9mAsqo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jcgDdFead+lK/3y/mA8wciDAJIWBRx69MmulJnEOjV1+mXVS1ltObcGw3COqcHQQJgdz374vzeLlnNyZ3GJAByW1EjhG/bXsq+qgqkaKpeZLLU6+nXmD515NBpgY2r1N3Iutf0CCEersI4Po5g9cf+rtx44CHrL4u1rR0UuMEw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RkrZBK3O; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RkrZBK3O"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1763537550;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RM/LNY/jIqKvMu4siWA3n4g7le9dIkYSozgItVRuYzQ=;
+	b=RkrZBK3OBlnLn39KLbMXWTZHlkpQhan3nyk+UskGsUD7ugTEJOaYyfWLD3V1wFF7qXLd8d
+	89T9NsZlF9okuMBocxfIwiJRSi+XwXf2ys8YqEE8dcM+bWD2FAunmOg9NrueVwybIJH4fT
+	KGL4YWEpARpMdZqp/4K6fUM4DDEnpoI=
+From: Qi Zheng <qi.zheng@linux.dev>
+To: will@kernel.org,
+	aneesh.kumar@kernel.org,
+	npiggin@gmail.com,
+	peterz@infradead.org,
+	dev.jain@arm.com,
+	akpm@linux-foundation.org,
+	david@kernel.org,
+	ioworker0@gmail.com,
+	linmag7@gmail.com
+Cc: linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-alpha@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: [PATCH v2 0/7] enable PT_RECLAIM on all 64-bit architectures
+Date: Wed, 19 Nov 2025 15:31:17 +0800
+Message-ID: <cover.1763537007.git.zhengqi.arch@bytedance.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <db8a26ca-8430-9e7d-4ad1-9b7743c4cfd1@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxQ+S2Xx1pCio4AQ--.29734S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3uw4fKF45AFWrAFy7JFyxJFc_yoWDur1xpr
-	1kJFykJ3yUWr1kAw4UtF1jvryUJr18Jw1UXFy7XFyUtrsrWr1qqr1UXryjgr1UJr48Jr1j
-	qr1xJrW2vF17JabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
-	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8vA
-	pUUUUUU==
+X-Migadu-Flow: FLOW_OUT
 
+From: Qi Zheng <zhengqi.arch@bytedance.com>
 
+Changelog in v2:
+ - fix compilation errors (reported by Magnus Lindholm and kernel test robot)
+ - adjust some code style (suggested by Huacai Chen)
+ - make PT_RECLAIM user-unselectable (suggested by David Hildenbrand)
+ - rebase onto the next-20251119
 
-On 2025/11/19 上午9:59, Bibo Mao wrote:
-> 
-> 
-> On 2025/11/18 下午8:48, Huacai Chen wrote:
->> Hi, Bibo,
->>
->> On Tue, Nov 18, 2025 at 4:07 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>
->>> Function vcpu_is_preempted() is used to check whether vCPU is preempted
->>> or not. Here add implementation with vcpu_is_preempted() when option
->>> CONFIG_PARAVIRT is enabled.
->>>
->>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>> ---
->>>   arch/loongarch/include/asm/smp.h      |  1 +
->>>   arch/loongarch/include/asm/spinlock.h |  5 +++++
->>>   arch/loongarch/kernel/paravirt.c      | 16 ++++++++++++++++
->>>   arch/loongarch/kernel/smp.c           |  6 ++++++
->>>   4 files changed, 28 insertions(+)
->>>
->>> diff --git a/arch/loongarch/include/asm/smp.h 
->>> b/arch/loongarch/include/asm/smp.h
->>> index 3a47f52959a8..5b37f7bf2060 100644
->>> --- a/arch/loongarch/include/asm/smp.h
->>> +++ b/arch/loongarch/include/asm/smp.h
->>> @@ -18,6 +18,7 @@ struct smp_ops {
->>>          void (*init_ipi)(void);
->>>          void (*send_ipi_single)(int cpu, unsigned int action);
->>>          void (*send_ipi_mask)(const struct cpumask *mask, unsigned 
->>> int action);
->>> +       bool (*vcpu_is_preempted)(int cpu);
->>>   };
->>>   extern struct smp_ops mp_ops;
->>>
->>> diff --git a/arch/loongarch/include/asm/spinlock.h 
->>> b/arch/loongarch/include/asm/spinlock.h
->>> index 7cb3476999be..c001cef893aa 100644
->>> --- a/arch/loongarch/include/asm/spinlock.h
->>> +++ b/arch/loongarch/include/asm/spinlock.h
->>> @@ -5,6 +5,11 @@
->>>   #ifndef _ASM_SPINLOCK_H
->>>   #define _ASM_SPINLOCK_H
->>>
->>> +#ifdef CONFIG_PARAVIRT
->>> +#define vcpu_is_preempted      vcpu_is_preempted
->>> +bool vcpu_is_preempted(int cpu);
->>> +#endif
->> Maybe paravirt.h is a better place?
-> 
-> It is actually a little strange to add macro CONFIG_PARAVIRT in file 
-> asm/spinlock.h
-> 
-> vcpu_is_preempted is originally defined in header file 
-> include/linux/sched.h like this
-> #ifndef vcpu_is_preempted
-> static inline bool vcpu_is_preempted(int cpu)
-> {
->          return false;
-> }
-> #endif
-> 
-> that requires that header file is included before sched.h, file 
-> asm/spinlock.h can meet this requirement, however header file paravirt.h
-> maybe it is not included before sched.h in generic.
-> 
-> Here vcpu_is_preempted definition is added before the following including.
->     #include <asm/processor.h>
->     #include <asm/qspinlock.h>
->     #include <asm/qrwlock.h>
-> Maybe it is better to be added after the above header files including 
-> sentences, but need further investigation.
->>
->>> +
->>>   #include <asm/processor.h>
->>>   #include <asm/qspinlock.h>
->>>   #include <asm/qrwlock.h>
->>> diff --git a/arch/loongarch/kernel/paravirt.c 
->>> b/arch/loongarch/kernel/paravirt.c
->>> index b1b51f920b23..b99404b6b13f 100644
->>> --- a/arch/loongarch/kernel/paravirt.c
->>> +++ b/arch/loongarch/kernel/paravirt.c
->>> @@ -52,6 +52,13 @@ static u64 paravt_steal_clock(int cpu)
->>>   #ifdef CONFIG_SMP
->>>   static struct smp_ops native_ops;
->>>
->>> +static bool pv_vcpu_is_preempted(int cpu)
->>> +{
->>> +       struct kvm_steal_time *src = &per_cpu(steal_time, cpu);
->>> +
->>> +       return !!(src->preempted & KVM_VCPU_PREEMPTED);
->>> +}
->>> +
->>>   static void pv_send_ipi_single(int cpu, unsigned int action)
->>>   {
->>>          int min, old;
->>> @@ -308,6 +315,9 @@ int __init pv_time_init(void)
->>>                  pr_err("Failed to install cpu hotplug callbacks\n");
->>>                  return r;
->>>          }
->>> +
->>> +       if (kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT))
->>> +               mp_ops.vcpu_is_preempted = pv_vcpu_is_preempted;
->>>   #endif
->>>
->>>          static_call_update(pv_steal_clock, paravt_steal_clock);
->>> @@ -332,3 +342,9 @@ int __init pv_spinlock_init(void)
->>>
->>>          return 0;
->>>   }
->>> +
->>> +bool notrace vcpu_is_preempted(int cpu)
->>> +{
->>> +       return mp_ops.vcpu_is_preempted(cpu);
->>> +}
->>
->> We can simplify the whole patch like this, then we don't need to touch
->> smp.c, and we can merge Patch-2/3.
->>
->> +bool notrace vcpu_is_preempted(int cpu)
->> +{
->> +  if (!kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT))
->> +     return false;
->> + else {
->> +     struct kvm_steal_time *src = &per_cpu(steal_time, cpu);
->> +     return !!(src->preempted & KVM_VCPU_PREEMPTED);
->> + }
->> +}
-> 1. there is assembly output about relative vcpu_is_preempted
->   <loongson_vcpu_is_preempted>:
->                 move    $r4,$r0
->                 jirl    $r0,$r1,0
-> 
->   <pv_vcpu_is_preempted>:
->          pcalau12i       $r13,8759(0x2237)
->          slli.d  $r4,$r4,0x3
->          addi.d  $r13,$r13,-1000(0xc18)
->          ldx.d   $r13,$r13,$r4
->          pcalau12i       $r12,5462(0x1556)
->          addi.d  $r12,$r12,384(0x180)
->          add.d   $r12,$r13,$r12
->          ld.bu   $r4,$r12,16(0x10)
->          andi    $r4,$r4,0x1
->          jirl    $r0,$r1,0
-> 
->   <vcpu_is_preempted>:
->          pcalau12i       $r12,8775(0x2247)
->          ld.d    $r12,$r12,-472(0xe28)
->          jirl    $r0,$r12,0
->          andi    $r0,$r0,0x0
-> 
->   <vcpu_is_preempted_new>:
->          pcalau12i       $r12,8151(0x1fd7)
->          ld.d    $r12,$r12,-1008(0xc10)
->          bstrpick.d      $r12,$r12,0x1a,0x1a
->          beqz    $r12,188(0xbc) # 900000000024ec60
->          pcalau12i       $r12,11802(0x2e1a)
->          addi.d  $r12,$r12,-1400(0xa88)
->          ldptr.w $r14,$r12,36(0x24)
->          beqz    $r14,108(0x6c) # 900000000024ec20
->          addi.w  $r13,$r0,1(0x1)
->          bne     $r14,$r13,164(0xa4) # 900000000024ec60
->          ldptr.w $r13,$r12,40(0x28)
->          bnez    $r13,24(0x18) # 900000000024ebdc
->          lu12i.w $r14,262144(0x40000)
->          ori     $r14,$r14,0x4
->          cpucfg  $r14,$r14
->          slli.w  $r13,$r14,0x0
->          st.w    $r14,$r12,40(0x28)
->          bstrpick.d      $r13,$r13,0x3,0x3
->          beqz    $r13,128(0x80) # 900000000024ec60
->          pcalau12i       $r13,8759(0x2237)
->          slli.d  $r4,$r4,0x3
->          addi.d  $r13,$r13,-1000(0xc18)
->          ldx.d   $r13,$r13,$r4
->          pcalau12i       $r12,5462(0x1556)
->          addi.d  $r12,$r12,384(0x180)
->          add.d   $r12,$r13,$r12
->          ld.bu   $r4,$r12,16(0x10)
->          andi    $r4,$r4,0x1
->          jirl    $r0,$r1,0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          lu12i.w $r13,262144(0x40000)
->          cpucfg  $r13,$r13
->          lu12i.w $r15,1237(0x4d5)
->          ori     $r15,$r15,0x64b
->          slli.w  $r13,$r13,0x0
->          bne     $r13,$r15,-124(0x3ff84) # 900000000024ebb8
->          addi.w  $r13,$r0,1(0x1)
->          st.w    $r13,$r12,36(0x24)
->          b       -128(0xfffff80) # 900000000024ebc0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          andi    $r0,$r0,0x0
->          move    $r4,$r0
->          jirl    $r0,$r1,0
-> 
-> With vcpu_is_preempted(), there is one memory load and one jirl jump, 
-> with vcpu_is_preempted_new(), there is two memory load and two beq 
-> compare instructions.
-> 
-> 2. In some scenery such nr_cpus == 1, loongson_vcpu_is_preempted() is 
-> better than pv_vcpu_is_preempted() even if the preempt feature is enabled.
-how about use static key and keep file smp.c untouched?
-bool notrace vcpu_is_preempted(int cpu)
-{
-         struct kvm_steal_time *src;
+Hi all,
 
-         if (!static_branch_unlikely(&virt_preempt_key))
-                 return false;
+This series aims to enable PT_RECLAIM on all 64-bit architectures.
 
-         src = &per_cpu(steal_time, cpu);
-         return !!(src->preempted & KVM_VCPU_PREEMPTED);
-}
+On a 64-bit system, madvise(MADV_DONTNEED) may cause a large number of empty PTE
+page table pages (such as 100GB+). To resolve this problem, we need to enable
+PT_RECLAIM, which depends on MMU_GATHER_RCU_TABLE_FREE.
 
-it reduces one memory load, here is assembly output:
-  <vcpu_is_preempted>:
-         andi    $r0,$r0,0x0
-         move    $r4,$r0
-         jirl    $r0,$r1,0
-         andi    $r0,$r0,0x0
-         pcalau12i       $r13,8759(0x2237)
-         slli.d  $r4,$r4,0x3
-         addi.d  $r13,$r13,-1000(0xc18)
-         ldx.d   $r13,$r13,$r4
-         pcalau12i       $r12,5462(0x1556)
-         addi.d  $r12,$r12,384(0x180)
-         add.d   $r12,$r13,$r12
-         ld.bu   $r4,$r12,16(0x10)
-         andi    $r4,$r4,0x1
-         jirl    $r0,$r1,0
+Therefore, this series first enables MMU_GATHER_RCU_TABLE_FREE on all 64-bit
+architectures, and finally makes PT_RECLAIM depend on 64BIT. This way,
+PT_RECLAIM can be enabled by default on all 64-bit architectures.
 
-Regards
-Bibo Mao
+BTW, PT_RECLAIM works well on all 32-bit architectures as well. Although the
+benefit isn't significant, there's still memory that can be reclaimed. Perhaps
+PT_RECLAIM can be enabled on all 32-bit architectures in the future.
 
-> 
-> Regards
-> Bibo Mao
->> Huacai
->>
->>> +EXPORT_SYMBOL(vcpu_is_preempted);
->>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
->>> index 46036d98da75..f04192fedf8d 100644
->>> --- a/arch/loongarch/kernel/smp.c
->>> +++ b/arch/loongarch/kernel/smp.c
->>> @@ -307,10 +307,16 @@ static void loongson_init_ipi(void)
->>>                  panic("IPI IRQ request failed\n");
->>>   }
->>>
->>> +static bool loongson_vcpu_is_preempted(int cpu)
->>> +{
->>> +       return false;
->>> +}
->>> +
->>>   struct smp_ops mp_ops = {
->>>          .init_ipi               = loongson_init_ipi,
->>>          .send_ipi_single        = loongson_send_ipi_single,
->>>          .send_ipi_mask          = loongson_send_ipi_mask,
->>> +       .vcpu_is_preempted      = loongson_vcpu_is_preempted,
->>>   };
->>>
->>>   static void __init fdt_smp_setup(void)
->>> -- 
->>> 2.39.3
->>>
->>>
-> 
+Comments and suggestions are welcome!
+
+Thanks,
+Qi
+
+Qi Zheng (7):
+  mm: change mm/pt_reclaim.c to use asm/tlb.h instead of
+    asm-generic/tlb.h
+  alpha: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  LoongArch: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  mips: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  parisc: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  um: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  mm: enable PT_RECLAIM on all 64-bit architectures
+
+ arch/alpha/Kconfig                   | 1 +
+ arch/alpha/include/asm/tlb.h         | 6 +++---
+ arch/loongarch/Kconfig               | 1 +
+ arch/loongarch/include/asm/pgalloc.h | 7 +++----
+ arch/mips/Kconfig                    | 1 +
+ arch/mips/include/asm/pgalloc.h      | 7 +++----
+ arch/parisc/Kconfig                  | 1 +
+ arch/parisc/include/asm/tlb.h        | 4 ++--
+ arch/um/Kconfig                      | 1 +
+ arch/x86/Kconfig                     | 1 -
+ mm/Kconfig                           | 9 ++-------
+ mm/pt_reclaim.c                      | 2 +-
+ 12 files changed, 19 insertions(+), 22 deletions(-)
+
+-- 
+2.20.1
 
