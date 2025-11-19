@@ -1,114 +1,135 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E873F2F691B
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 04:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBF32FD7BD
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 04:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763526459; cv=none; b=m9a4jFn1i5P5FLuz6R55VLdRILJf+GEPOTcBu7fl8fKtBvE3BxhMeivRyoeGKJpv3z5bAemXffkft93ozvpHaGqFW1d1tmSXNozHrM/T87PtJnTVGBnCYcxgzrR3fBDC7WS23vFe5C3k7PMhOZIE/4dxDneM4lIqFzP4aNz4PCM=
+	t=1763526519; cv=none; b=eEYBI3KdNzfa9M8HBw2wxG/NMF+TEniyeqKyGc3BvHnCG6CaLRbOY6jE7qLOJgo7YuZ9cmDBPdOdL6dQtqpTNTuA9Bp5tsCx7rpD/BSX71lXM5fYmIkS2qKVlGHpaZY5nwquFRmhylf+nbKshuwoHjb7lj4dkClbmEmzfeDSGu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763526459; c=relaxed/simple;
-	bh=hLfuJ61oLqW2BaLcphzFXuJJWRUPwv1GeC9b/oMzyGU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oMmum9FUS7dMey730M6IPT+3yHoD03NqNp7jl8riokhYnXxSVQNL8QLHJs9f2+WzBbYdzGTZ+bmaXrPkvqK03ej5R0QI/uGUcimuOO0fCG1Sy/sgdixBuh0sMEXgP4unl+UjInGAdLbXV1RKBu+z5braturuOMesrgRu7BiH604=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx3tIwRx1p41clAA--.14769S3;
-	Wed, 19 Nov 2025 12:27:29 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxG8EsRx1pchQ4AQ--.53944S2;
-	Wed, 19 Nov 2025 12:27:25 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Nathan Chancellor <nathan@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-kbuild@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] kbuild: Add KBUILD_VMLINUX_LIBS_PRELINK
-Date: Wed, 19 Nov 2025 12:27:08 +0800
-Message-ID: <20251119042708.27658-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1763526519; c=relaxed/simple;
+	bh=20yE8xmrCxVj0HrYnRHPetvSNta/9P+r724P2CoUT8E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aaCV+W4J5lZZ+prExuH+9UG/uS1Q6sDfSl28KN1Rh4Kjps3cgtIYyPCJmxi87qX8he77nwlXsSA456X+w1mBF9rnqlaM37kvbaj9LrfZAjlG9QKK8BiHTeSc5g5rfJnsc6iRbzYbWHrd3eOvpqkSBwa/lUfAM/Zn+D1i/oejieU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBPcFOQO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBPcFOQO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF65C2BCB4
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 04:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763526518;
+	bh=20yE8xmrCxVj0HrYnRHPetvSNta/9P+r724P2CoUT8E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eBPcFOQObY6HKbBH9Auur0DYI/JH8481vt80z7E8X9PiAsAgxFcxeQFqBlsLLtv3F
+	 99LlN8u/9qwIy7DjDcbBGozMYRSsIWmZOsh1OmTbgGMgVotKfHhZUwPdg3O1W9r61u
+	 l7bzoQeL7K+f8nAAXVn6GXs70aRYd2f5mc2unG36Tf4m9qu9/QFDWfebfRvFzcrxJ8
+	 /ikLcf4pR8K0VFePmUO4FilVXQwEIDtQYoVg6Hdjh/Z+EiZoQGMsz2qDTl3Yq6py5t
+	 ulPzfNANNOUjKTmchlwIrow0m1DeEKoJvNjRg6aFdEmrItALb2xrrpHZgP2eEWSPXh
+	 /W+GX/LTr2gKg==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b7636c96b9aso54959566b.2
+        for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 20:28:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWcyrsdrOeitrNZlczIhAr3hY3oe/6rYaYtmKhLybRV+0leUM7HyZdQTaqLbrCiXF6tS/0E8EpfusA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyBF5yMRCLWOOyMgsL7HIV0Z6U5T/ICkt+A/VFR5ls3fQ3PLlyx
+	hsrWtsHMc+1joHiBVzcWWMd5ry1TxpwBmXjz4LPUirk5lMVFI3EdKzOec9KXDcoIYM7bfRcvpEE
+	7QURh8iBf27oe6Y6pefUhh75qELyvRzM=
+X-Google-Smtp-Source: AGHT+IGbWywcXwPsVFpJurJ5GAZ0bygPjNfZNq8uY4NQtMfmy5NOh6gv+cE5A/pgHpI4GEGww35ib53dEJCVASGJLdQ=
+X-Received: by 2002:a17:907:96a8:b0:b73:9280:2e7 with SMTP id
+ a640c23a62f3a-b739280114dmr1154628566b.34.1763526514307; Tue, 18 Nov 2025
+ 20:28:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxG8EsRx1pchQ4AQ--.53944S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tr1fWr1rGry8GFWxGFyrKrX_yoW8Zr1rpa
-	90kw42939rX3yvq397CrW0qw45tFZ8ZrWrWFWDJan8CryDXr4I9rZ2kr43AryDuFyDAF45
-	WF1xAFyakFyDu3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7
-	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1RB
-	T5UUUUU==
+References: <20251118112728.571869-1-chenhuacai@loongson.cn>
+ <20251118112728.571869-5-chenhuacai@loongson.cn> <aRyoLBjD_8Hz91DV@pie>
+In-Reply-To: <aRyoLBjD_8Hz91DV@pie>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 19 Nov 2025 12:28:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5uoDjBRYpK_e7Z+vrcqLAbLXhEbEQP_aJ9f3aTdA+-eQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bkAxEgaL09SmaycStpQZWVNv5BLUeJhpEXHn5nZFiBjratzLwjaG9XQB3s
+Message-ID: <CAAhV-H5uoDjBRYpK_e7Z+vrcqLAbLXhEbEQP_aJ9f3aTdA+-eQ@mail.gmail.com>
+Subject: Re: [PATCH V2 04/14] LoongArch: Adjust boot & setup for 32BIT/64BIT
+To: Yao Zi <ziyao@disroot.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, f@disroot.org, 
+	loongarch@lists.linux.dev, linux-arch@vger.kernel.org, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In order to only link libstub to the final vmlinux, it can not use the
-current KBUILD_VMLINUX_LIBS, just add KBUILD_VMLINUX_LIBS_PRELINK. This
-is preparation for later patch, no functionality change.
+On Wed, Nov 19, 2025 at 1:09=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
+>
+> On Tue, Nov 18, 2025 at 07:27:18PM +0800, Huacai Chen wrote:
+> > Adjust boot & setup for both 32BIT and 64BIT, including: efi header
+> > definition, MAX_IO_PICS definition, kernel entry and environment setup
+> > routines, etc.
+> >
+> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  arch/loongarch/include/asm/addrspace.h |  2 +-
+> >  arch/loongarch/include/asm/irq.h       |  5 ++++
+> >  arch/loongarch/kernel/efi-header.S     |  4 +++
+> >  arch/loongarch/kernel/efi.c            |  4 ++-
+> >  arch/loongarch/kernel/env.c            |  9 ++++--
+> >  arch/loongarch/kernel/head.S           | 39 +++++++++++---------------
+> >  arch/loongarch/kernel/relocate.c       |  9 +++++-
+> >  7 files changed, 45 insertions(+), 27 deletions(-)
+> >
+>
+> ...
+>
+> > diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+> > index 23bd5ae2212c..3e8a25eb901b 100644
+> > --- a/arch/loongarch/kernel/env.c
+> > +++ b/arch/loongarch/kernel/env.c
+> > @@ -68,18 +68,23 @@ static int __init fdt_cpu_clk_init(void)
+> >
+> >       np =3D of_get_cpu_node(0, NULL);
+> >       if (!np)
+> > -             return -ENODEV;
+> > +             goto fallback;
+> >
+> >       clk =3D of_clk_get(np, 0);
+> >       of_node_put(np);
+> >
+> >       if (IS_ERR(clk))
+> > -             return -ENODEV;
+> > +             goto fallback;
+> >
+> >       cpu_clock_freq =3D clk_get_rate(clk);
+> >       clk_put(clk);
+> >
+> >       return 0;
+> > +
+> > +fallback:
+> > +     cpu_clock_freq =3D 200 * 1000 * 1000;
+>
+> Why pick 200MHz here? And shouldn't the clock being always provided in
+> devicetree if it's necessary for kernel to function?
+>
+> Per the schema for LoongArch CPUs (loongarch/cpus.yaml), "clocks"
+> property is also described as mandantory, thus I don't think such
+> fallback makes sense.
+Yes, "clocks" is mandatory in theory, but sometimes is missing in
+practice, at least in QEMU. On the other hand, if "clocks" really
+always exist, then the error checking in fdt_cpu_clk_init() can also
+be removed. So the fallback makes sense.
 
-Link: https://lore.kernel.org/lkml/pq4h7jgndnt6p45lj4kgubxjd5gidfetugcuf5rcxzxxanzetd@6rrlpjnjsmuy/
-Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-There is a long discussion in the previous patch:
-https://lore.kernel.org/lkml/20250928085506.4471-1-yangtiezhu@loongson.cn/
+Why pick 200MHz? That is because we assume the constant timer is
+100MHz (which is true for all real machines), 200MHz is the minimal
+multiple of 100MHz, it is more reasonable than 0MHz.
 
-This version is based on 6.18-rc6, split the generic parts out
-into a separate patch to avoid merge conflicts, the other parts
-will send out after the merge window.
-
- Makefile                | 1 +
- scripts/link-vmlinux.sh | 5 ++---
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index d763c2c75cdb..69485f47b794 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1199,6 +1199,7 @@ KBUILD_VMLINUX_OBJS := built-in.a $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)
- KBUILD_VMLINUX_LIBS := $(filter-out %/, $(libs-y))
- 
- export KBUILD_VMLINUX_LIBS
-+export KBUILD_VMLINUX_LIBS_PRELINK
- export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
- 
- ifdef CONFIG_TRIM_UNUSED_KSYMS
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 433849ff7529..e72d3254b93f 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -61,12 +61,11 @@ vmlinux_link()
- 	shift
- 
- 	if is_enabled CONFIG_LTO_CLANG || is_enabled CONFIG_X86_KERNEL_IBT; then
--		# Use vmlinux.o instead of performing the slow LTO link again.
- 		objs=vmlinux.o
--		libs=
-+		libs="${KBUILD_VMLINUX_LIBS_PRELINK}"
- 	else
- 		objs=vmlinux.a
--		libs="${KBUILD_VMLINUX_LIBS}"
-+		libs="${KBUILD_VMLINUX_LIBS} ${KBUILD_VMLINUX_LIBS_PRELINK}"
- 	fi
- 
- 	if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
--- 
-2.42.0
-
+Huacai
+>
+> > +
+> > +     return -ENODEV;
+> >  }
+> >  late_initcall(fdt_cpu_clk_init);
+>
+> Best regards,
+> Yao Zi
+>
