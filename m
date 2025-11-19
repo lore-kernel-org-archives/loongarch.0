@@ -1,135 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBF32FD7BD
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 04:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4869E207DF7
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 06:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763526519; cv=none; b=eEYBI3KdNzfa9M8HBw2wxG/NMF+TEniyeqKyGc3BvHnCG6CaLRbOY6jE7qLOJgo7YuZ9cmDBPdOdL6dQtqpTNTuA9Bp5tsCx7rpD/BSX71lXM5fYmIkS2qKVlGHpaZY5nwquFRmhylf+nbKshuwoHjb7lj4dkClbmEmzfeDSGu4=
+	t=1763532207; cv=none; b=MTLEKbaGSTYURUtZ6m+rWLh3njXVuSudm+jWCOuII2tbKdjSZ15dzFFZ12/Ph2wuJ3OakGw3iKVFhKxEMqQpMg5oLSZIiHiRFOE4SVk7NXjK7yI/Dx4WS2cIz+Ih8Kz3thvnvj/3crjhuMzlwgbYfXoGCd0BuUA0kxXIhip/66g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763526519; c=relaxed/simple;
-	bh=20yE8xmrCxVj0HrYnRHPetvSNta/9P+r724P2CoUT8E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aaCV+W4J5lZZ+prExuH+9UG/uS1Q6sDfSl28KN1Rh4Kjps3cgtIYyPCJmxi87qX8he77nwlXsSA456X+w1mBF9rnqlaM37kvbaj9LrfZAjlG9QKK8BiHTeSc5g5rfJnsc6iRbzYbWHrd3eOvpqkSBwa/lUfAM/Zn+D1i/oejieU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBPcFOQO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763532207; c=relaxed/simple;
+	bh=W1vOcYg74ooxfJY5nvz6IM63KW7ZvhVMyoJo0Vprsnw=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=GH84wweiJLHI+8jKGy4ZRWeMCu8dCjvTzyHriVZE2KEvF0KaPKRl2oEOXKClr0RIA9GJtOMDCOeRZEBYOxvdSTGUpgcRkULbi0tGL6bCz5+SwBRztMH7J7X1VN2bzJhZJUDjtLdlUQbWuHOIggVRp6A/On80nls/Fubk/AZ9lqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=XbCE5UAx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nFk9lyy2; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBPcFOQO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF65C2BCB4
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 04:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763526518;
-	bh=20yE8xmrCxVj0HrYnRHPetvSNta/9P+r724P2CoUT8E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eBPcFOQObY6HKbBH9Auur0DYI/JH8481vt80z7E8X9PiAsAgxFcxeQFqBlsLLtv3F
-	 99LlN8u/9qwIy7DjDcbBGozMYRSsIWmZOsh1OmTbgGMgVotKfHhZUwPdg3O1W9r61u
-	 l7bzoQeL7K+f8nAAXVn6GXs70aRYd2f5mc2unG36Tf4m9qu9/QFDWfebfRvFzcrxJ8
-	 /ikLcf4pR8K0VFePmUO4FilVXQwEIDtQYoVg6Hdjh/Z+EiZoQGMsz2qDTl3Yq6py5t
-	 ulPzfNANNOUjKTmchlwIrow0m1DeEKoJvNjRg6aFdEmrItALb2xrrpHZgP2eEWSPXh
-	 /W+GX/LTr2gKg==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b7636c96b9aso54959566b.2
-        for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 20:28:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWcyrsdrOeitrNZlczIhAr3hY3oe/6rYaYtmKhLybRV+0leUM7HyZdQTaqLbrCiXF6tS/0E8EpfusA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyBF5yMRCLWOOyMgsL7HIV0Z6U5T/ICkt+A/VFR5ls3fQ3PLlyx
-	hsrWtsHMc+1joHiBVzcWWMd5ry1TxpwBmXjz4LPUirk5lMVFI3EdKzOec9KXDcoIYM7bfRcvpEE
-	7QURh8iBf27oe6Y6pefUhh75qELyvRzM=
-X-Google-Smtp-Source: AGHT+IGbWywcXwPsVFpJurJ5GAZ0bygPjNfZNq8uY4NQtMfmy5NOh6gv+cE5A/pgHpI4GEGww35ib53dEJCVASGJLdQ=
-X-Received: by 2002:a17:907:96a8:b0:b73:9280:2e7 with SMTP id
- a640c23a62f3a-b739280114dmr1154628566b.34.1763526514307; Tue, 18 Nov 2025
- 20:28:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="XbCE5UAx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nFk9lyy2"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 373927A010E;
+	Wed, 19 Nov 2025 01:03:24 -0500 (EST)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-03.internal (MEProxy); Wed, 19 Nov 2025 01:03:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1763532204;
+	 x=1763618604; bh=jUSoJ6fafuXmWl1wBQP5lDmyx0/SWetJ2BhVKFAnETY=; b=
+	XbCE5UAxNQHX2p6uAsBpg2lLcQEPqDxwmY70/yZqsOjpx4E+jIxxKjJU6c3h2kzV
+	ecBbT7B8JkWypzsV4w5zZCoc7Vzy3b59QeaC3iU1pWtNNidOacnjeNDoJTI7TLRN
+	R+0cnPVZu5+iT+bSbSOk3W0tncXH3lgREqGSFDR+mxvNepmXGhTqPrxvyUc1kSz7
+	+inEPjQ4Um8rYPjIdozcaF35RA7oZJWhew/RTQ9HIW8zFQt82HEnAlfBUke5L9Jf
+	wqeOYYi41xoHb4+6x/3j3O7w3t/Iu6A6I7ZiTHl/aMmJQKSNx8A/UgKPVFyS3qx3
+	e34wQFexDDki9iBrELz1IQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763532204; x=
+	1763618604; bh=jUSoJ6fafuXmWl1wBQP5lDmyx0/SWetJ2BhVKFAnETY=; b=n
+	Fk9lyy2pcjGYnq3/Ag1Qe7wMvXMW7Vq4tJca4qNB1mVWxe0qD1r+olEdDc9NE9oi
+	uNtBKRc0nE/r/kKlRPbkgfUKtcCUw7BWklWn6KWcVkLvPaP+MHztaoVeAu3P7q7D
+	tPWN5in6RuEfqCKnVn0f8Dt4JWVTW5gY4fUM6EliXZcXxhCvvq5U0S9wCWWx3BHw
+	lYiNXfAC7vGIA1pnnwJ44MseAWF1nFneSH4uV6s9fmElblrX5v+TjPdM1+uYznXn
+	mWwEsCgicVVkjKkTRgLZW1pHN2wBQvZHM+SsPqcMMxqlG1fRtTj0mmgAHAYxZUdf
+	2M8oh9g0o9N30KGSMDNIw==
+X-ME-Sender: <xms:q10dabTXgVCKAIPYZlQK12LY58KmEcLDcoUorBwaByrkKoWFtU3EFw>
+    <xme:q10daXljk7wNss50kjwjTjTA43DpfE8g0y_Z3TcdNvtiDnWKVd5nCIJrV8hTbt-Sk
+    rLo4VQgTzOq72wkwWdKvpd-IPuZ9aLj19RiGTvKT5RgAsuA3HITXu0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdefgeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedflfhirgig
+    uhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
+    cuggftrfgrthhtvghrnhephfethfdutdeigeelueeitddtheehudevffejtedtkedvueei
+    tddujeefieejieefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdpnhgspghrtghp
+    thhtohepuddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrhhnugesrghrnh
+    gusgdruggvpdhrtghpthhtohepfhesughishhrohhothdrohhrghdprhgtphhtthhopeii
+    ihihrghoseguihhsrhhoohhtrdhorhhgpdhrtghpthhtoheptghhvghnhhhurggtrghise
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehguhhorhgvnheskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishhtshdrlhhinhhugidruggvvhdprh
+    gtphhtthhopegthhgvnhhhuhgrtggriheslhhoohhnghhsohhnrdgtnhdprhgtphhtthho
+    pehlihiguhgvfhgvnhhgsehlohhonhhgshhonhdrtghnpdhrtghpthhtoheplhhinhhugi
+    dqrghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:q10daV41pg1jI9OyqXRZr9sQPxDxks9TCoAsWLQ06c8syyC9JVrdog>
+    <xmx:q10daeuXkJf4uHyykVN7g9E7CWBILrnQwInqGQ7hzBjsREq15RCQ9g>
+    <xmx:q10daX0KAxDKIzOPNwluDv3gCz7kDxFhAn0rL1uZjYSjQIN5vz1NEw>
+    <xmx:q10daXoCotB6U1u5JKnfMKC4WnqQpO_YVEp6n_dtW5G2DfpLW8lkAg>
+    <xmx:rF0daWNfHx91cc2sZqyBHJFde3svh-iaxe-gNFzv9J8H4AkakH_oXeMK>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 259D12CE0067; Wed, 19 Nov 2025 01:03:23 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-ThreadId: AMQGwR9H1XIg
+Date: Wed, 19 Nov 2025 14:03:01 +0800
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Huacai Chen" <chenhuacai@kernel.org>, "Yao Zi" <ziyao@disroot.org>
+Cc: "Huacai Chen" <chenhuacai@loongson.cn>, "Arnd Bergmann" <arnd@arndb.de>,
+ f@disroot.org, loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ "Xuefeng Li" <lixuefeng@loongson.cn>, "Guo Ren" <guoren@kernel.org>,
+ "Xuerui Wang" <kernel@xen0n.name>, linux-kernel@vger.kernel.org
+Message-Id: <04b04b74-ef13-4dd0-a35a-d629acb617cb@app.fastmail.com>
+In-Reply-To: 
+ <CAAhV-H5uoDjBRYpK_e7Z+vrcqLAbLXhEbEQP_aJ9f3aTdA+-eQ@mail.gmail.com>
 References: <20251118112728.571869-1-chenhuacai@loongson.cn>
  <20251118112728.571869-5-chenhuacai@loongson.cn> <aRyoLBjD_8Hz91DV@pie>
-In-Reply-To: <aRyoLBjD_8Hz91DV@pie>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 19 Nov 2025 12:28:36 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5uoDjBRYpK_e7Z+vrcqLAbLXhEbEQP_aJ9f3aTdA+-eQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bkAxEgaL09SmaycStpQZWVNv5BLUeJhpEXHn5nZFiBjratzLwjaG9XQB3s
-Message-ID: <CAAhV-H5uoDjBRYpK_e7Z+vrcqLAbLXhEbEQP_aJ9f3aTdA+-eQ@mail.gmail.com>
+ <CAAhV-H5uoDjBRYpK_e7Z+vrcqLAbLXhEbEQP_aJ9f3aTdA+-eQ@mail.gmail.com>
 Subject: Re: [PATCH V2 04/14] LoongArch: Adjust boot & setup for 32BIT/64BIT
-To: Yao Zi <ziyao@disroot.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, f@disroot.org, 
-	loongarch@lists.linux.dev, linux-arch@vger.kernel.org, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 19, 2025 at 1:09=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
->
-> On Tue, Nov 18, 2025 at 07:27:18PM +0800, Huacai Chen wrote:
-> > Adjust boot & setup for both 32BIT and 64BIT, including: efi header
-> > definition, MAX_IO_PICS definition, kernel entry and environment setup
-> > routines, etc.
-> >
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  arch/loongarch/include/asm/addrspace.h |  2 +-
-> >  arch/loongarch/include/asm/irq.h       |  5 ++++
-> >  arch/loongarch/kernel/efi-header.S     |  4 +++
-> >  arch/loongarch/kernel/efi.c            |  4 ++-
-> >  arch/loongarch/kernel/env.c            |  9 ++++--
-> >  arch/loongarch/kernel/head.S           | 39 +++++++++++---------------
-> >  arch/loongarch/kernel/relocate.c       |  9 +++++-
-> >  7 files changed, 45 insertions(+), 27 deletions(-)
-> >
->
-> ...
->
-> > diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-> > index 23bd5ae2212c..3e8a25eb901b 100644
-> > --- a/arch/loongarch/kernel/env.c
-> > +++ b/arch/loongarch/kernel/env.c
-> > @@ -68,18 +68,23 @@ static int __init fdt_cpu_clk_init(void)
-> >
-> >       np =3D of_get_cpu_node(0, NULL);
-> >       if (!np)
-> > -             return -ENODEV;
-> > +             goto fallback;
-> >
-> >       clk =3D of_clk_get(np, 0);
-> >       of_node_put(np);
-> >
-> >       if (IS_ERR(clk))
-> > -             return -ENODEV;
-> > +             goto fallback;
-> >
-> >       cpu_clock_freq =3D clk_get_rate(clk);
-> >       clk_put(clk);
-> >
-> >       return 0;
-> > +
-> > +fallback:
-> > +     cpu_clock_freq =3D 200 * 1000 * 1000;
->
-> Why pick 200MHz here? And shouldn't the clock being always provided in
-> devicetree if it's necessary for kernel to function?
->
-> Per the schema for LoongArch CPUs (loongarch/cpus.yaml), "clocks"
-> property is also described as mandantory, thus I don't think such
-> fallback makes sense.
-Yes, "clocks" is mandatory in theory, but sometimes is missing in
-practice, at least in QEMU. On the other hand, if "clocks" really
-always exist, then the error checking in fdt_cpu_clk_init() can also
-be removed. So the fallback makes sense.
 
-Why pick 200MHz? That is because we assume the constant timer is
-100MHz (which is true for all real machines), 200MHz is the minimal
-multiple of 100MHz, it is more reasonable than 0MHz.
 
-Huacai
+On Wed, 19 Nov 2025, at 12:28 PM, Huacai Chen wrote:
+[...]
+>> Per the schema for LoongArch CPUs (loongarch/cpus.yaml), "clocks"
+>> property is also described as mandantory, thus I don't think such
+>> fallback makes sense.
+> Yes, "clocks" is mandatory in theory, but sometimes is missing in
+> practice, at least in QEMU. On the other hand, if "clocks" really
+> always exist, then the error checking in fdt_cpu_clk_init() can also
+> be removed. So the fallback makes sense.
+
+IMHO this should be fixed on QEMU side, but I recall QEMU do have clock
+supplied in generic fdt?
+
 >
-> > +
-> > +     return -ENODEV;
-> >  }
-> >  late_initcall(fdt_cpu_clk_init);
->
-> Best regards,
-> Yao Zi
->
+> Why pick 200MHz? That is because we assume the constant timer is
+> 100MHz (which is true for all real machines), 200MHz is the minimal
+> multiple of 100MHz, it is more reasonable than 0MHz.
+
+Maybe better panic here :-)
+
+Thanks
+-- 
+- Jiaxun
