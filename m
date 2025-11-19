@@ -1,32 +1,32 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398BD2EFDBB
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 07:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109F52F617C
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 07:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763537601; cv=none; b=NsfY9yUle5RxMuv8gqfwZvu+zxLesH7h0OazmpWC8wtkJTR8Ijcf/2O2IkydQq4vDs6x79/SoX6c7p/C2YtFKQlhcK86UrWOcbzKBxQCp42F9UqJaGgkuykjwyLB7AFKffvYFLUBbhgq3ZBganPVtWw8OIi/qsBD/qRJcIl0BYU=
+	t=1763537611; cv=none; b=oMFLoVGojRUD/dld7oJiDAfEecRe/2Xrp0NJZi0aGA9UP0H4EMgF5++xWAIoMEtj9Gs1M0N4PF0yyd4x4rCIeUl+E+5J17HfGE6BhgvvoP0nxeSDjQqU+cQzzQFZR1TLFUW9exvKTQS29pYWtHi3ohAMdP/7l4in3D2haTmyiNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763537601; c=relaxed/simple;
-	bh=JBGvtd6lIDpE88cwSn1qvAi5ZYQhW95obYt/hFyoa6o=;
+	s=arc-20240116; t=1763537611; c=relaxed/simple;
+	bh=L77VHJOsxYGfJl12t5E1P3bJEqsaMDW4GIC4V2YxBI4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pR4PsciXJ22W+xQHi7HiNYmkulnKJZbUgYz84hcXT5HI7LGP1GBt1NEGtpKiuaInrT5gaCczUeNTsjqqHyLcJVojwk2bJ4An0isuKlGexg0krpJdZh8j18gbf1hTSoBLPcYpz+bKudwfTwFTBNINTiisxMK1aoCf6YoQpt6ka6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UPZyoHTW; arc=none smtp.client-ip=91.218.175.173
+	 MIME-Version; b=CEQWmkh8bI1PYQwd0FzfaRaJvMV620C3+beBOXFz9vSOq8mmJ6Snpi804dIWWVYZYxIJ0h7EKH95cUUf3eOcWDkI+cIgTZ+u+4UA7oKJOK2WKEY/6fC+i5sudaZThTHBLafmOy7zyKK7F9LhoSstAGmDum2JAxbFPXCxqoBnJDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W9W/9jbe; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UPZyoHTW"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W9W/9jbe"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763537598;
+	t=1763537608;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8PNYJl+4luznSu7Qs41hn6BnOWw9fSYJ1f3qY5qKkjU=;
-	b=UPZyoHTWlvcojbrasT0m6wZAA4vVJvUtdfGcqOc224298mAJZj8RgoKfcBwgHvUNwVVlYY
-	xUXSg/BFyvnGHDg1OT0FG3OvfiUEgAljF44L6ANy/FULPK7Dli6T59Yj/3HWliWxACip+2
-	cxcFG/pEkqS5KVkntRXLnkKsYrtQDIY=
+	bh=nUnrWplutHBzvgR2dvaxPt91n3EUIlT8RN+kjzr9YeU=;
+	b=W9W/9jbeN29NpXBktlOeuZdun6gLuLfTHYgZNBEnwmUPS2C7HbpVqgtF+wOLSoQrCR+nsv
+	lZVMJmsyMyvFqrgawPm3nejPEj5RiAp+GDf2+i+BBoiZ9m3cs51DJAzOJ7V5PQ2Bu8uOUa
+	OEIRgNRI0+JvdYgQt5MLrxebdOjajls=
 From: Qi Zheng <qi.zheng@linux.dev>
 To: will@kernel.org,
 	aneesh.kumar@kernel.org,
@@ -46,11 +46,12 @@ Cc: linux-arch@vger.kernel.org,
 	linux-parisc@vger.kernel.org,
 	linux-um@lists.infradead.org,
 	Qi Zheng <zhengqi.arch@bytedance.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>
-Subject: [PATCH v2 5/7] parisc: mm: enable MMU_GATHER_RCU_TABLE_FREE
-Date: Wed, 19 Nov 2025 15:31:22 +0800
-Message-ID: <74f0e72f11347656a9de0d4b9e2bccc17e4338a7.1763537007.git.zhengqi.arch@bytedance.com>
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>
+Subject: [PATCH v2 6/7] um: mm: enable MMU_GATHER_RCU_TABLE_FREE
+Date: Wed, 19 Nov 2025 15:31:23 +0800
+Message-ID: <16ab9e6ce0febaf2fc383b7e09e3f1fb2ad63a40.1763537007.git.zhengqi.arch@bytedance.com>
 In-Reply-To: <cover.1763537007.git.zhengqi.arch@bytedance.com>
 References: <cover.1763537007.git.zhengqi.arch@bytedance.com>
 Precedence: bulk
@@ -70,40 +71,25 @@ first enable MMU_GATHER_RCU_TABLE_FREE to prepare for enabling the
 PT_RECLAIM feature, which resolves this problem.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Helge Deller <deller@gmx.de>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
 ---
- arch/parisc/Kconfig           | 1 +
- arch/parisc/include/asm/tlb.h | 4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/um/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index 47fd9662d8005..62d5a89d5c7bc 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -79,6 +79,7 @@ config PARISC
- 	select GENERIC_CLOCKEVENTS
- 	select CPU_NO_EFFICIENT_FFS
+diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+index 097c6a6265ef3..47a41bc77bb24 100644
+--- a/arch/um/Kconfig
++++ b/arch/um/Kconfig
+@@ -41,6 +41,7 @@ config UML
+ 	select HAVE_SYSCALL_TRACEPOINTS
  	select THREAD_INFO_IN_TASK
+ 	select SPARSE_IRQ
 +	select MMU_GATHER_RCU_TABLE_FREE
- 	select NEED_DMA_MAP_STATE
- 	select NEED_SG_DMA_LENGTH
- 	select HAVE_ARCH_KGDB
-diff --git a/arch/parisc/include/asm/tlb.h b/arch/parisc/include/asm/tlb.h
-index 44235f367674d..4501fee0a8fa4 100644
---- a/arch/parisc/include/asm/tlb.h
-+++ b/arch/parisc/include/asm/tlb.h
-@@ -5,8 +5,8 @@
- #include <asm-generic/tlb.h>
  
- #if CONFIG_PGTABLE_LEVELS == 3
--#define __pmd_free_tlb(tlb, pmd, addr)	pmd_free((tlb)->mm, pmd)
-+#define __pmd_free_tlb(tlb, pmd, addr)	tlb_remove_ptdesc((tlb), virt_to_ptdesc(pmd))
- #endif
--#define __pte_free_tlb(tlb, pte, addr)	pte_free((tlb)->mm, pte)
-+#define __pte_free_tlb(tlb, pte, addr)	tlb_remove_ptdesc((tlb), page_ptdesc(pte))
- 
- #endif
+ config MMU
+ 	bool
 -- 
 2.20.1
 
