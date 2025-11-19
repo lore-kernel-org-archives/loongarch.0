@@ -1,110 +1,210 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E9932ABF1
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 07:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D269A322768
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 07:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763537621; cv=none; b=miF7I1hVAMduRW8thquw75weslY1Z3W6esEmpTK0tMxW0QOeXyHRPHWIJpsZJqv8zazJovcfyj0tfjVRaSv3ydm/TSe+D6aZ0vRVIr9eZevBc6Vf7gBaNmyGnmIg5xx0BNBwkruyc+crIWNrfWhrL3BOuchvnMET090KLN07G3M=
+	t=1763537802; cv=none; b=o6ifFw8JbV/N+dF0DrCIBjmiWfOyMFmAJCGr1G4nQsfCb+KYdtK20NAWKQ0MYLX4y6qnDUXG+WBhrkfidL1vybEvcZYm/uitP05hu6blh8AIcnpwZ7DXmmDs+kMpJChxk2/oAZRwLK6q3/2/KR0NkvJDhWiQDUAfA84arY662pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763537621; c=relaxed/simple;
-	bh=opxRmBMekzq2+Xp2ELM+kTyKgoYL1xD2QEfTCfk+1go=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e9xS0PzSc333k2G2fOu6foyZwTFKqgG9i0RiZrx2QDrcQ3v44qOmBNcb/aHbA43e74Xz+MXIuUbx9EoEu9Fc2VnC4NTn17CWZe5AK8+4aNssmVqZ8zgw2Q49MZrXxU9Ubdb+snHpZMLuYKCL8H37K+mxrrsr3g2EINhDF7fISKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LUgmfphZ; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1763537802; c=relaxed/simple;
+	bh=0mw9HAO5e/CcMMOTv7byl0dh9fytC5W4l+OFeGAMB2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PNRDjxIBxqC8VTdjZaHoCS1ejsrr/ns2HeV5PPjnbB9xRYNf25J8UEFYFIi29byOp1T/1WByzTxKQPkKZDwvdcNQZ82u9afVgujaOODEoLaz4nFpUpLelN5cfN6vtsHvu781pBYFCzr1S9sMbFLP/abq6T7LsFCgSKiiqeTgin4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eImdvL/a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LUgmfphZ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763537617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z/QZPwfh2tBLiGMNDgv3nVc2+27U6V/3aKYz1C9WyO4=;
-	b=LUgmfphZq+fvy8Fvu1tjVnrqGz9k2q8SBhj9h64+wRn+7bojNcXZyqdp6prQqscS2feFX8
-	bObNs5syxHC8+5XyV15RIhnayEGuvN50r1EUj1rPlsxFv7tOY7PB78KcZic/oWfkHREL8W
-	JIpYE0IsfsnkMqTZu6kB6Akc6TgnRVo=
-From: Qi Zheng <qi.zheng@linux.dev>
-To: will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	peterz@infradead.org,
-	dev.jain@arm.com,
-	akpm@linux-foundation.org,
-	david@kernel.org,
-	ioworker0@gmail.com,
-	linmag7@gmail.com
-Cc: linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-alpha@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v2 7/7] mm: enable PT_RECLAIM on all 64-bit architectures
-Date: Wed, 19 Nov 2025 15:31:24 +0800
-Message-ID: <caacf08b765ef00770b7c75afdb5e5754485b2aa.1763537007.git.zhengqi.arch@bytedance.com>
-In-Reply-To: <cover.1763537007.git.zhengqi.arch@bytedance.com>
-References: <cover.1763537007.git.zhengqi.arch@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eImdvL/a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57542C16AAE
+	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 07:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763537802;
+	bh=0mw9HAO5e/CcMMOTv7byl0dh9fytC5W4l+OFeGAMB2g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eImdvL/a7sJwE4ke5d5lhh6trBLNHxTN6ExZ+iG47g4c4Tqa3AqPdAgU9bukR3ZZx
+	 AtrJLAs5eM0c78Qx+F2xg3G+Rg/DjPnTiUb9AlUgXUi1kaqOsSwNLfjJPN/RfTgG90
+	 CCaunIWh4NGGNy1HBV4rvfK7b10HjxhBvhQhV7/Kc8n7waYeJVnPcdfIv5gVRsTxKP
+	 EqRRANxanIrSlpoiVHnZi0pc9f5QbQoEZj7N4uvKFe9Bc0gIJUMSVkHTL7k75hUb9U
+	 4N+JeHI1AmeqOjAPUi3GU4kvcbnv5zgYEFkVptV+6MK118gZRqVcpkdaWVsdZ5OhpX
+	 a0WoyH1w/DXCA==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-64312565c10so9551445a12.2
+        for <loongarch@lists.linux.dev>; Tue, 18 Nov 2025 23:36:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX9vQRMtMTtzuF5yrwyoIfeJUO3zKeTvdf0sZ140YN05NxZzcDRuZAP48IsdjO3imtaHc9+x1DcIbU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz0ur4QZEXDglxFxs69he5CCzH5u7Qeby9MGgI1oH83Bkumj2Ve
+	NxOmWGfxf1XF4xdtXH20e4nCNKh67kLdKASAfLCjH2KpEHGy8+bbRegtl5HpnhAJ9AMzoqpuYc1
+	I4wPJjsIJXzO8BlA5wNIYAYuduU9lFnA=
+X-Google-Smtp-Source: AGHT+IEYFg5ZA8XnpMfOTN7CUf7qX6/Go1Z0jJ+SibsPCNQ3YzH2ZASnZ4vVQmcrzmzM07sEeohXk2w2wI9W5Hs4u7A=
+X-Received: by 2002:a17:907:3cc3:b0:b73:2d99:d8a3 with SMTP id
+ a640c23a62f3a-b736782d0a8mr2250337166b.26.1763537797864; Tue, 18 Nov 2025
+ 23:36:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20251118080656.2012805-1-maobibo@loongson.cn> <20251118080656.2012805-3-maobibo@loongson.cn>
+ <CAAhV-H4hoS0Wo3TS+FdikXMkb7qjWNFSPDoajQr0bzdeROJwGw@mail.gmail.com> <77814b6c-7a51-e130-5006-d27a172e69aa@loongson.cn>
+In-Reply-To: <77814b6c-7a51-e130-5006-d27a172e69aa@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 19 Nov 2025 15:36:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4m0SqQ06eqnJi_LwFxuYSFY4Xi1FSD1dd1w3258NEHew@mail.gmail.com>
+X-Gm-Features: AWmQ_bkiBYHhLhC1TqLDPY4R0uxjwyZ0GlwygRfvid2KBRr4h7RxU8RV64RXIeg
+Message-ID: <CAAhV-H4m0SqQ06eqnJi_LwFxuYSFY4Xi1FSD1dd1w3258NEHew@mail.gmail.com>
+Subject: Re: [PATCH 2/3] LoongArch: Add paravirt support with vcpu_is_preempted()
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, 
+	Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	virtualization@lists.linux.dev, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Qi Zheng <zhengqi.arch@bytedance.com>
+On Wed, Nov 19, 2025 at 10:53=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
+te:
+>
+>
+>
+> On 2025/11/18 =E4=B8=8B=E5=8D=888:48, Huacai Chen wrote:
+> > Hi, Bibo,
+> >
+> > On Tue, Nov 18, 2025 at 4:07=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >> Function vcpu_is_preempted() is used to check whether vCPU is preempte=
+d
+> >> or not. Here add implementation with vcpu_is_preempted() when option
+> >> CONFIG_PARAVIRT is enabled.
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>   arch/loongarch/include/asm/smp.h      |  1 +
+> >>   arch/loongarch/include/asm/spinlock.h |  5 +++++
+> >>   arch/loongarch/kernel/paravirt.c      | 16 ++++++++++++++++
+> >>   arch/loongarch/kernel/smp.c           |  6 ++++++
+> >>   4 files changed, 28 insertions(+)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include=
+/asm/smp.h
+> >> index 3a47f52959a8..5b37f7bf2060 100644
+> >> --- a/arch/loongarch/include/asm/smp.h
+> >> +++ b/arch/loongarch/include/asm/smp.h
+> >> @@ -18,6 +18,7 @@ struct smp_ops {
+> >>          void (*init_ipi)(void);
+> >>          void (*send_ipi_single)(int cpu, unsigned int action);
+> >>          void (*send_ipi_mask)(const struct cpumask *mask, unsigned in=
+t action);
+> >> +       bool (*vcpu_is_preempted)(int cpu);
+> >>   };
+> >>   extern struct smp_ops mp_ops;
+> >>
+> >> diff --git a/arch/loongarch/include/asm/spinlock.h b/arch/loongarch/in=
+clude/asm/spinlock.h
+> >> index 7cb3476999be..c001cef893aa 100644
+> >> --- a/arch/loongarch/include/asm/spinlock.h
+> >> +++ b/arch/loongarch/include/asm/spinlock.h
+> >> @@ -5,6 +5,11 @@
+> >>   #ifndef _ASM_SPINLOCK_H
+> >>   #define _ASM_SPINLOCK_H
+> >>
+> >> +#ifdef CONFIG_PARAVIRT
+> >> +#define vcpu_is_preempted      vcpu_is_preempted
+> >> +bool vcpu_is_preempted(int cpu);
+> >> +#endif
+> > Maybe paravirt.h is a better place?
+> how about put it in asm/qspinlock.h since it is included by header file
+> asm/spinlock.h already?
+qspinlock.h is better than spinlock.h
 
-Now, the MMU_GATHER_RCU_TABLE_FREE is enabled on all 64-bit architectures,
-so make PT_RECLAIM depend on 64BIT, thereby enabling PT_RECLAIM on all
-64-bit architectures.
+Huacai
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
----
- arch/x86/Kconfig | 1 -
- mm/Kconfig       | 9 ++-------
- 2 files changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index eac2e86056902..96bff81fd4787 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -330,7 +330,6 @@ config X86
- 	select FUNCTION_ALIGNMENT_4B
- 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
- 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
--	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
- 	select ARCH_SUPPORTS_SCHED_SMT		if SMP
- 	select SCHED_SMT			if SMP
- 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
-diff --git a/mm/Kconfig b/mm/Kconfig
-index d548976d0e0ad..94eec5c0cad96 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1448,14 +1448,9 @@ config ARCH_HAS_USER_SHADOW_STACK
- 	  The architecture has hardware support for userspace shadow call
-           stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
- 
--config ARCH_SUPPORTS_PT_RECLAIM
--	def_bool n
--
- config PT_RECLAIM
--	bool "reclaim empty user page table pages"
--	default y
--	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
--	select MMU_GATHER_RCU_TABLE_FREE
-+	def_bool y
-+	depends on 64BIT
- 	help
- 	  Try to reclaim empty user page table pages in paths other than munmap
- 	  and exit_mmap path.
--- 
-2.20.1
-
+>
+> >
+> >> +
+> >>   #include <asm/processor.h>
+> >>   #include <asm/qspinlock.h>
+> >>   #include <asm/qrwlock.h>
+> >> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/=
+paravirt.c
+> >> index b1b51f920b23..b99404b6b13f 100644
+> >> --- a/arch/loongarch/kernel/paravirt.c
+> >> +++ b/arch/loongarch/kernel/paravirt.c
+> >> @@ -52,6 +52,13 @@ static u64 paravt_steal_clock(int cpu)
+> >>   #ifdef CONFIG_SMP
+> >>   static struct smp_ops native_ops;
+> >>
+> >> +static bool pv_vcpu_is_preempted(int cpu)
+> >> +{
+> >> +       struct kvm_steal_time *src =3D &per_cpu(steal_time, cpu);
+> >> +
+> >> +       return !!(src->preempted & KVM_VCPU_PREEMPTED);
+> >> +}
+> >> +
+> >>   static void pv_send_ipi_single(int cpu, unsigned int action)
+> >>   {
+> >>          int min, old;
+> >> @@ -308,6 +315,9 @@ int __init pv_time_init(void)
+> >>                  pr_err("Failed to install cpu hotplug callbacks\n");
+> >>                  return r;
+> >>          }
+> >> +
+> >> +       if (kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT))
+> >> +               mp_ops.vcpu_is_preempted =3D pv_vcpu_is_preempted;
+> >>   #endif
+> >>
+> >>          static_call_update(pv_steal_clock, paravt_steal_clock);
+> >> @@ -332,3 +342,9 @@ int __init pv_spinlock_init(void)
+> >>
+> >>          return 0;
+> >>   }
+> >> +
+> >> +bool notrace vcpu_is_preempted(int cpu)
+> >> +{
+> >> +       return mp_ops.vcpu_is_preempted(cpu);
+> >> +}
+> >
+> > We can simplify the whole patch like this, then we don't need to touch
+> > smp.c, and we can merge Patch-2/3.
+> >
+> > +bool notrace vcpu_is_preempted(int cpu)
+> > +{
+> > +  if (!kvm_para_has_feature(KVM_FEATURE_PREEMPT_HINT))
+> > +     return false;
+> > + else {
+> > +     struct kvm_steal_time *src =3D &per_cpu(steal_time, cpu);
+> > +     return !!(src->preempted & KVM_VCPU_PREEMPTED);
+> > + }
+> > +}
+> > Huacai
+> >
+> >> +EXPORT_SYMBOL(vcpu_is_preempted);
+> >> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> >> index 46036d98da75..f04192fedf8d 100644
+> >> --- a/arch/loongarch/kernel/smp.c
+> >> +++ b/arch/loongarch/kernel/smp.c
+> >> @@ -307,10 +307,16 @@ static void loongson_init_ipi(void)
+> >>                  panic("IPI IRQ request failed\n");
+> >>   }
+> >>
+> >> +static bool loongson_vcpu_is_preempted(int cpu)
+> >> +{
+> >> +       return false;
+> >> +}
+> >> +
+> >>   struct smp_ops mp_ops =3D {
+> >>          .init_ipi               =3D loongson_init_ipi,
+> >>          .send_ipi_single        =3D loongson_send_ipi_single,
+> >>          .send_ipi_mask          =3D loongson_send_ipi_mask,
+> >> +       .vcpu_is_preempted      =3D loongson_vcpu_is_preempted,
+> >>   };
+> >>
+> >>   static void __init fdt_smp_setup(void)
+> >> --
+> >> 2.39.3
+> >>
+> >>
+>
+>
