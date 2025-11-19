@@ -1,166 +1,228 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC5A28CF6F
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 15:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF82364E9D;
+	Wed, 19 Nov 2025 17:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763567101; cv=none; b=mnVzLwK4GEoIGMtMBufGyUQHn2Hre0iz5mqMgzgu+BUPrkuYO7H5tZNOH9ZiYv2KMjVGfOj8hq9zTjsrZK+0QEV3h20WcmpnJVxrpAr3pNjsWOm8S9W5IQOTXLEB/7uMU4eroZcyv8HOCKLPejBxCBxr5NgUk5kL8QWYFkumbuU=
+	t=1763573522; cv=none; b=K948AjLfV2z0cTWQpSBx2plwO91gH6ToBmiwOZ+/Lc27SM7wexaZ/VTnUbWuMc+wqoGOCwt1e3Na/ob6bh9JNR3Yax5ZjQIpAFC5Mt0o8dxozqA4PUWI6VlK0eqEhWQ0nGZKxfDy6g59t26yY7Dnr3v4BDqrXKJbefhTW++d6Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763567101; c=relaxed/simple;
-	bh=QL7KRLmdJkHYNOg+NNX2LL57E4h9RRUgMfoI/vTkpME=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TMSN341iyamynWAifZaEqJomgYALxq1hCp2CUP4M9al6DyPHRB7LKqKGOKcF2+y5hjm1BT0bHo7YKkPngGwBN35s2cTRjs3fdBeky2b5Q/bHnPgA3CUS0Jqhj6CVpDaRKU95tED4u9VRTrxfmEuEgis1w8U1h75JXUntwcxLA6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HhiScnxp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1763573522; c=relaxed/simple;
+	bh=/t2oTQtncuM/mvzgreWw/hJ7gSFNgj07SaGnfOfObKg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Mt5yQ48DZIrERZtBs2l6Iw38fka5Gh80NG7/Fxq1TTkqE+CNCizRvLyCnvpV1+0yZaNJ44/Q00GLgrwK08/vkgmLAGe7jbpW/3HKg0Oyoy0FTn7MnFtsMojLl8E/zGz6GYX3vlLtY9e0DPGdv86gjcrM4DzKOJERZdaLz+s0wdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdqOuymp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhiScnxp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763567098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8+2RMibk5qCZlj/6zmvcs/X6W3gfpL9YpQv70ggfokw=;
-	b=HhiScnxpgn15AZymJH8L62q7zzQZcw/12SX4XC4jrfdzda7jvcWGoNy/ehFyJbjs5r5HsZ
-	y33Q6e1iAv2TQxFcjHeqiTZVkyLuG0w96jQ2sihvXED4FB+LnM1sxmBxfrhmsl8rZv6Gyt
-	59kZMtYzUVJNQxZUMab5M+9//wc4sdo=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-487-T3nmE74MPemb6E-DyVDrYA-1; Wed, 19 Nov 2025 10:44:57 -0500
-X-MC-Unique: T3nmE74MPemb6E-DyVDrYA-1
-X-Mimecast-MFC-AGG-ID: T3nmE74MPemb6E-DyVDrYA_1763567096
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4779da35d27so35383315e9.3
-        for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 07:44:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763567096; x=1764171896;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kk13dNEBENY1o2hkoOmhPMN6DaHaKFtT0pxiR0fZhjU=;
-        b=WYUFRL9qKHJ7RtzbFqj3WeL3vcbcF7BUyc6rNfrUGvvlkFHlI3LnSSZNmeD0h97hHG
-         FspK1dAUq1hJDnoc42djZlWP1a+RetkBwe8XaBE7oa+Tlm8Vby6098o9925JfDjd06Hq
-         mD4dfuMPxZt2H3ellY0PnZ4+9kwS3C66cwajeKOmJL7zxb41o/hRP1snf725KqhqP1b4
-         4vBfz5J5N/CEaWSgaZWTww/GXP7NqL1r9k2J1zcQ3Z7oInmRUlY/XuEN5j1v9XzhV9pW
-         Cw45ZbNwNnEL28cPugiYE9EpBLtty2Dd9blNexEHouMmoPN9VxST58lT+7ucaN3qtNIj
-         UUsg==
-X-Forwarded-Encrypted: i=1; AJvYcCULJAQmpIhXQfonIpIM2k167MVzHCyJ2dT/omTGpBIz0QxxROU6aplPpMEiP/NsuL2H/ubNiIqgukM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwvrUoo4uGuB59QcmahBq4ciA333M/0FrzGvd8VlbKz35oDWdeU
-	sIMkCiXbCFrnzAOOzuxzrFYB6uLOws7d8NvD2JiI/TcTuX3n59OFOyvyaURb0rglv65JfDQtsdX
-	ujP5suORgK14e0mxh7LO+JY54Z7wgOYiManWWYSB59IMc8RDuJAwzUZD8ZDMqJA==
-X-Gm-Gg: ASbGncuUFGTDneUsE8AU9P/jOd1sAL/txTDna45M4n54TrtTLV0MuvXG4E0aruQELQ3
-	MypIORwLhS4FG0msqgf5qN3/BfMelSVEDTOumIH7SWxZon2YAf5U2d8PW17jIyUvh1doqmpP2hy
-	g++xigUIzNpRdmboiGUvbde9Y0VZO7nESPMWKNl1XysxRzCt5jSVDQTSV1oZeMbUF3IbKPE88He
-	n2XWLrjmvzAH6Tnb3iHAkWw9wXvlhwBuSYQQ7XnFLKJXzeqcH8B7gCoU/V6HWLqkbfBRInlgwnv
-	47gmX4PXjUXyTA5hMPLwkqcd0JeuwOwqSIoW68CavwE5gAGG/CCi5tejxADgZrl+O4Knmu8xSUO
-	YcQXzndJAL1HNBEFXtjDZRgfaAWRoMOP0TLloOx1DdKk2KUbSnIU4na1IGfi46OfsomapfLI=
-X-Received: by 2002:a05:600c:1d0e:b0:477:9cc3:7971 with SMTP id 5b1f17b1804b1-4779cc37a15mr119020965e9.20.1763567096264;
-        Wed, 19 Nov 2025 07:44:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEkP+NxoN8NdgRlSeWXCmLJ99Tn2hRpBffdqlJtKvc6mMNR3Hn0LkbgzbfrqY0lLueiMZLQiA==
-X-Received: by 2002:a05:600c:1d0e:b0:477:9cc3:7971 with SMTP id 5b1f17b1804b1-4779cc37a15mr119020335e9.20.1763567095710;
-        Wed, 19 Nov 2025 07:44:55 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477b10260adsm53340155e9.7.2025.11.19.07.44.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Nov 2025 07:44:54 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Andy Lutomirski <luto@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, linux-mm@kvack.org, rcu@vger.kernel.org,
- the arch/x86 maintainers <x86@kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)"
- <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Josh
- Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Arnd
- Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>, "Paul
- E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven
- Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Sami
- Tolvanen <samitolvanen@google.com>, "David S. Miller"
- <davem@davemloft.net>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel
- Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>,
- Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman
- <mgorman@suse.de>, Andrew Morton <akpm@linux-foundation.org>, Masahiro
- Yamada <masahiroy@kernel.org>, Han Shen <shenhan@google.com>, Rik van Riel
- <riel@surriel.com>, Jann Horn <jannh@google.com>, Dan Carpenter
- <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, Juri Lelli
- <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
- Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
- Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [RFC PATCH v7 29/31] x86/mm/pti: Implement a TLB flush
- immediately after a switch to kernel CR3
-In-Reply-To: <65ae9404-5d7d-42a3-969e-7e2ceb56c433@app.fastmail.com>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
- <20251114151428.1064524-9-vschneid@redhat.com>
- <65ae9404-5d7d-42a3-969e-7e2ceb56c433@app.fastmail.com>
-Date: Wed, 19 Nov 2025 16:44:53 +0100
-Message-ID: <xhsmhecpukowa.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdqOuymp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4087BC116B1;
+	Wed, 19 Nov 2025 17:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763573521;
+	bh=/t2oTQtncuM/mvzgreWw/hJ7gSFNgj07SaGnfOfObKg=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=KdqOuympGFQjKVKxCMIy8G0GAxGGFh55JJngpEAScQHQGWRysLKwPaRaPGp4qCDc1
+	 8btnkJMxNykpl0kqln4Hku4Rl7Wl6/H+ZbSDO9x3qt7/BMn8RhxRLMyNCYFiQ1dFGj
+	 F5bg0iS4PkrQC2NupcpUKMQJhzkMg4j1Ut1JLm54fGbqMQlfMv8aGSw8ofIhj60/6k
+	 LiWxVlRPgCl2E0x3jG55+VQjf7Lo24Qok6kiHWDwrJlVZJNvbPc6FJwfRvWJuarmi8
+	 h25G+4xIYjDKJYHN9BIr4was3SRjf1u+E/4z6iCp01yeGHECgheE+ihNjFtF4ocDTl
+	 c7OkIUzT+g7Iw==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 15FF1F4006F;
+	Wed, 19 Nov 2025 12:31:59 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-01.internal (MEProxy); Wed, 19 Nov 2025 12:31:59 -0500
+X-ME-Sender: <xms:Dv8daYw8V6oCHt7IdscAKP7ZmNBGAa5l2QAwxtemNAhqmc86Cvmz2w>
+    <xme:Dv8daXFjKfxoLeyJ2tQ-LMwJMhCMviHudxhtJj_7W7G9StSFxeNFWZzqbW4KphyxD
+    U3EneA33cqOoXiVDgcMLskQ2oHKFwMim-OnIq2k97GUUcvqh4MgBwbg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdegkedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehnugih
+    ucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecuggftrf
+    grthhtvghrnhephffgieeuueevvddvffehiedtteduveejtefhuedtteehfffgieehhfeg
+    ffehvddvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhguhidomhgvshhmthhprghuthhh
+    phgvrhhsohhnrghlihhthidqudduiedukeehieefvddqvdeifeduieeitdekqdhluhhtoh
+    eppehkvghrnhgvlhdrohhrgheslhhinhhugidrlhhuthhordhushdpnhgspghrtghpthht
+    ohepgeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjsggrrhhonhesrghkrg
+    hmrghirdgtohhmpdhrtghpthhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohep
+    rghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofh
+    htrdhnvghtpdhrtghpthhtohepmhgrthhhihgvuhdruggvshhnohihvghrshesvghffhhi
+    tghiohhsrdgtohhmpdhrtghpthhtohepsghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtohepuhhrvgiikhhisehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhho
+    shhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtthhopehjrghnnhhhsehgohhogh
+    hlvgdrtghomh
+X-ME-Proxy: <xmx:Dv8daRCKxEiK-0E-MKjf5NWUbib5nldBL-kYR9iWEijS3CsfVa89kg>
+    <xmx:D_8daX6x1rtaemMXGl1UUQ-GckmNeRG7S9C0cE8st-Pfk6O6QPlNqQ>
+    <xmx:D_8daW0MQGOGXibaGRTJmbXnHuAS5PAeFiV8Msmu0BCYqd_QjRTjZA>
+    <xmx:D_8daQVCyt9OWVjQ8WbjKcJmpn9xIBLHN3rVEdTmsuxpWYuoTd_HUQ>
+    <xmx:D_8daTkZEglornIN3N4-CtsqujdAUXdXlIbQgLT3HNoWB_wXN4CqSIGu>
+Feedback-ID: ieff94742:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D1DC6700063; Wed, 19 Nov 2025 12:31:58 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Z7H8i4fSysNEMGHLpxZYfIxd_s11L7P9PEzebdP8dVk_1763567096
-X-Mimecast-Originator: redhat.com
+X-ThreadId: A2ZwPDH9FoLc
+Date: Wed, 19 Nov 2025 09:31:37 -0800
+From: "Andy Lutomirski" <luto@kernel.org>
+To: "Valentin Schneider" <vschneid@redhat.com>,
+ "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+ linux-mm@kvack.org, rcu@vger.kernel.org,
+ "the arch/x86 maintainers" <x86@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Josh Poimboeuf" <jpoimboe@kernel.org>,
+ "Paolo Bonzini" <pbonzini@redhat.com>, "Arnd Bergmann" <arnd@arndb.de>,
+ "Frederic Weisbecker" <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ "Jason Baron" <jbaron@akamai.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Ard Biesheuvel" <ardb@kernel.org>,
+ "Sami Tolvanen" <samitolvanen@google.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>,
+ "Josh Triplett" <josh@joshtriplett.org>,
+ "Boqun Feng" <boqun.feng@gmail.com>,
+ "Uladzislau Rezki" <urezki@gmail.com>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Mel Gorman" <mgorman@suse.de>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Han Shen" <shenhan@google.com>, "Rik van Riel" <riel@surriel.com>,
+ "Jann Horn" <jannh@google.com>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Oleg Nesterov" <oleg@redhat.com>, "Juri Lelli" <juri.lelli@redhat.com>,
+ "Clark Williams" <williams@redhat.com>,
+ "Yair Podemsky" <ypodemsk@redhat.com>,
+ "Marcelo Tosatti" <mtosatti@redhat.com>,
+ "Daniel Wagner" <dwagner@suse.de>, "Petr Tesarik" <ptesarik@suse.com>,
+ "Shrikanth Hegde" <sshegde@linux.ibm.com>
+Message-Id: <91702ceb-afba-450e-819b-52d482d7bd11@app.fastmail.com>
+In-Reply-To: <xhsmhecpukowa.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+References: <20251114150133.1056710-1-vschneid@redhat.com>
+ <20251114151428.1064524-9-vschneid@redhat.com>
+ <65ae9404-5d7d-42a3-969e-7e2ceb56c433@app.fastmail.com>
+ <xhsmhecpukowa.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Subject: Re: [RFC PATCH v7 29/31] x86/mm/pti: Implement a TLB flush immediately after a
+ switch to kernel CR3
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 19/11/25 06:31, Andy Lutomirski wrote:
-> On Fri, Nov 14, 2025, at 7:14 AM, Valentin Schneider wrote:
->> Deferring kernel range TLB flushes requires the guarantee that upon
->> entering the kernel, no stale entry may be accessed. The simplest way to
->> provide such a guarantee is to issue an unconditional flush upon switchi=
-ng
->> to the kernel CR3, as this is the pivoting point where such stale entrie=
-s
->> may be accessed.
+
+On Wed, Nov 19, 2025, at 7:44 AM, Valentin Schneider wrote:
+> On 19/11/25 06:31, Andy Lutomirski wrote:
+>> On Fri, Nov 14, 2025, at 7:14 AM, Valentin Schneider wrote:
+>>> Deferring kernel range TLB flushes requires the guarantee that upon
+>>> entering the kernel, no stale entry may be accessed. The simplest wa=
+y to
+>>> provide such a guarantee is to issue an unconditional flush upon swi=
+tching
+>>> to the kernel CR3, as this is the pivoting point where such stale en=
+tries
+>>> may be accessed.
+>>>
+>>
+>> Doing this together with the PTI CR3 switch has no actual benefit: MO=
+V CR3 doesn=E2=80=99t flush global pages. And doing this in asm is prett=
+y gross.  We don=E2=80=99t even get a free sync_core() out of it because=
+ INVPCID is not documented as being serializing.
+>>
+>> Why can=E2=80=99t we do it in C?  What=E2=80=99s the actual risk?  In=
+ order to trip over a stale TLB entry, we would need to deference a poin=
+ter to newly allocated kernel virtual memory that was not valid prior to=
+ our entry into user mode. I can imagine BPF doing this, but plain noins=
+tr C in the entry path?  Especially noinstr C *that has RCU disabled*?  =
+We already can=E2=80=99t follow an RCU pointer, and ISTM the only style =
+of kernel code that might do this would use RCU to protect the pointer, =
+and we are already doomed if we follow an RCU pointer to any sort of mem=
+ory.
 >>
 >
-> Doing this together with the PTI CR3 switch has no actual benefit: MOV CR=
-3 doesn=E2=80=99t flush global pages. And doing this in asm is pretty gross=
-.  We don=E2=80=99t even get a free sync_core() out of it because INVPCID i=
-s not documented as being serializing.
+> So v4 and earlier had the TLB flush faff done in C in the context_trac=
+king entry
+> just like sync_core().
 >
-> Why can=E2=80=99t we do it in C?  What=E2=80=99s the actual risk?  In ord=
-er to trip over a stale TLB entry, we would need to deference a pointer to =
-newly allocated kernel virtual memory that was not valid prior to our entry=
- into user mode. I can imagine BPF doing this, but plain noinstr C in the e=
-ntry path?  Especially noinstr C *that has RCU disabled*?  We already can=
-=E2=80=99t follow an RCU pointer, and ISTM the only style of kernel code th=
-at might do this would use RCU to protect the pointer, and we are already d=
-oomed if we follow an RCU pointer to any sort of memory.
+> My biggest issue with it was that I couldn't figure out a way to instr=
+ument
+> memory accesses such that I would get an idea of where vmalloc'd acces=
+ses
+> happen - even with a hackish thing just to survey the landscape. So wh=
+ile I
+> agree with your reasoning wrt entry noinstr code, I don't have any way=
+ to
+> prove it.
+> That's unlike the text_poke sync_core() deferral for which I have all =
+of
+> that nice objtool instrumentation.
 >
+> Dave also pointed out that the whole stale entry flush deferral is a r=
+isky
+> move, and that the sanest thing would be to execute the deferred flush=
+ just
+> after switching to the kernel CR3.
+>
+> See the thread surrounding:
+>   https://lore.kernel.org/lkml/20250114175143.81438-30-vschneid@redhat=
+.com/
+>
+> mainly Dave's reply and subthread:
+>   https://lore.kernel.org/lkml/352317e3-c7dc-43b4-b4cb-9644489318d0@in=
+tel.com/
+>
+>> We do need to watch out for NMI/MCE hitting before we flush.
 
-So v4 and earlier had the TLB flush faff done in C in the context_tracking =
-entry
-just like sync_core().
+I read a decent fraction of that thread.
 
-My biggest issue with it was that I couldn't figure out a way to instrument
-memory accesses such that I would get an idea of where vmalloc'd accesses
-happen - even with a hackish thing just to survey the landscape. So while I
-agree with your reasoning wrt entry noinstr code, I don't have any way to
-prove it.
-That's unlike the text_poke sync_core() deferral for which I have all of
-that nice objtool instrumentation.
+Let's consider what we're worried about:
 
-Dave also pointed out that the whole stale entry flush deferral is a risky
-move, and that the sanest thing would be to execute the deferred flush just
-after switching to the kernel CR3.
+1. Architectural access to a kernel virtual address that has been unmapp=
+ed, in asm or early C.  If it hasn't been remapped, then we oops anyway.=
+  If it has, then that means we're accessing a pointer where either the =
+pointer has changed or the pointee has been remapped while we're in user=
+ mode, and that's a very strange thing to do for anything that the asm p=
+oints to or that early C points to, unless RCU is involved.  But RCU is =
+already disallowed in the entry paths that might be in extended quiescen=
+t states, so I think this is mostly a nonissue.
 
-See the thread surrounding:
-  https://lore.kernel.org/lkml/20250114175143.81438-30-vschneid@redhat.com/
+2. Non-speculative access via GDT access, etc.  We can't control this at=
+ all, but we're not avoid to move the GDT, IDT, LDT etc of a running tas=
+k while that task is in user mode.  We do move the LDT, but that's quite=
+ thoroughly synchronized via IPI.  (Should probably be double checked.  =
+I wrote that code, but that doesn't mean I remember it exactly.)
 
-mainly Dave's reply and subthread:
-  https://lore.kernel.org/lkml/352317e3-c7dc-43b4-b4cb-9644489318d0@intel.c=
-om/
+3. Speculative TLB fills.  We can't control this at all.  We have had ac=
+tual machine checks, on AMD IIRC, due to messing this up.  This is why w=
+e can't defer a flush after freeing a page table.
 
-> We do need to watch out for NMI/MCE hitting before we flush.
+4. Speculative or other nonarchitectural loads.  One would hope that the=
+se are not dangerous.  For example, an early version of TDX would machin=
+e check if we did a speculative load from TDX memory, but that was fixed=
+.  I don't see why this would be materially different between actual use=
+rspace execution (without LASS, anyway), kernel asm, and kernel C.
 
+5. Writes to page table dirty bits.  I don't think we use these.
+
+In any case, the current implementation in your series is really, really=
+, utterly horrifically slow.  It's probably fine for a task that genuine=
+ly sits in usermode forever, but I don't think it's likely to be somethi=
+ng that we'd be willing to enable for normal kernels and normal tasks.  =
+And it would be really nice for the don't-interrupt-user-code still to m=
+ove toward being always available rather than further from it.
+
+
+I admit that I'm kind of with dhansen: Zen 3+ can use INVLPGB and doesn'=
+t need any of this.  Some Intel CPUs support RAR and will eventually be =
+able to use RAR, possibly even for sync_core().
