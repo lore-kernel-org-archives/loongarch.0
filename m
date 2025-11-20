@@ -1,154 +1,118 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD07C262D0C;
-	Thu, 20 Nov 2025 11:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46486301716
+	for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 12:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763637309; cv=none; b=usIHewXToFsWenOoKjiT1pPSCLvZOoF8q4zXam0JIhqKp+zjf2NUsPUm8eqb4gwgwy6COuMEntp+5JE2krVFjUFPbnTJWWNwEW+sU2hHVyzC+8krI+8+om6UsUjoIkm4SOHliZO4JEAZAM0edTrgo4Slf01szuZb8Kf1jg5q/PY=
+	t=1763640255; cv=none; b=mysprmcLjDIrEeAjddFBtXjvMsoQ10u79P6VnrXHZhebOfjEEDPnHhKvMpLxJrhG+d5jyIjS8IXhSTW3O+vUK9HehlLdF8u+NZWbvRYVj5IW4Pzzfa3pLVp6vGYItLVR7o3PwtjiVD5O97nCtLHk0uS3BOUovzXeVXB2igcCPTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763637309; c=relaxed/simple;
-	bh=1Vg6DYW+hexc0MOfOWaOfb6WSnHE1cmSsy2nZHtVuwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NSpeAdpLXfWWSgEEoORizOGPE9HI4Nx9nBqWbACnKbKGQu2TBTZOsXXnANJEOXV3hnN9XuK5+W/iVUmpYzNQ4IO4pHRUIGIZOfORK3LaeE7HOv8aMJxwkx13KxfXmqFkSPFSjiMKL5tQ0upFjVk+Ggts+9ucZGeyg3+GQLL8I5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=runbox.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=Z7nA1sfC; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=runbox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
+	s=arc-20240116; t=1763640255; c=relaxed/simple;
+	bh=TvKuNxF8KVzTcJOUyKqukheXPBn2wF0Qdt9k4a0yJ1k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uswNhgn4WJs8USeYS2gpkSNMY0f/8RR+BBmdw3drFUde2H/zzaZjRCusebHNJX+/tNa5xXqHYIqiZaCiYvUcTs9Fd7sIoH4YdVHlmKslAyYQTnKWFwJHOHim6t7axuGnexsL2MsmRRXbcFXmbT3TTDXba7WUNOgrsnkgORRVzo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ut8pbL1i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="Z7nA1sfC"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <david.laight@runbox.com>)
-	id 1vM2cu-008aFj-3I; Thu, 20 Nov 2025 12:15:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
-	 s=selector1; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date;
-	bh=hS5k0J5KvFdKpV/+fNT+O4qCedTtvZpjST6nhDci7ts=; b=Z7nA1sfCM2SxNoVTfCPFmu01Za
-	iLYeIxy1IvKw4vWQyxB+efWfKZnce3FUTxYgj8UD7vivyh6upmlIcKdbRSFLFcvRKdqsfSguLCUmP
-	R5bP5IDjLDIb1SRntG7F20+ZO2XsGbbjnSI8sY1AdfriWOG0uNxP2BaT4h3A+i7G2Gkho3bi+2jOB
-	ogYoSlztlXtIXDMwLQidKxBlTd2bbaos4FcqROaXaVsqElF+7e6Bti4rg+hxgiWrWd7/RdRkGtaQS
-	vQUe5Z9L62mi+nads7NznZe3yiCxeamwHE163XNd/CVG0ij3l1a/EXFk7IwCWwl0UsEAKhBXfhuAY
-	La4hKfSA==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <david.laight@runbox.com>)
-	id 1vM2cs-00028n-1f; Thu, 20 Nov 2025 12:14:58 +0100
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1vM2cX-00H2uu-Ga; Thu, 20 Nov 2025 12:14:37 +0100
-Date: Thu, 20 Nov 2025 11:14:35 +0000
-From: david laight <david.laight@runbox.com>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, George Guo
- <guodongtai@kylinos.cn>
-Subject: Re: [PATCH 1/2] LoongArch: Add 128-bit atomic cmpxchg support
-Message-ID: <20251120111435.1382b52e@pumpkin>
-In-Reply-To: <20251120-2-v1-1-705bdc440550@linux.dev>
-References: <20251120-2-v1-0-705bdc440550@linux.dev>
-	<20251120-2-v1-1-705bdc440550@linux.dev>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ut8pbL1i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDCC7C4AF09
+	for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 12:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763640255;
+	bh=TvKuNxF8KVzTcJOUyKqukheXPBn2wF0Qdt9k4a0yJ1k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ut8pbL1iOuIzAmhZqxmV4XqEKwJJdvwTMezcdwfkaM1SL6mZy0Ug0qn7wOg4XmKKl
+	 92w9SmQTt9P8WpHVkyEZF5kD4cNDGD6hZCtaN+FHqySE6XbV7fuZJGwK1vWxZlZ4pN
+	 efL7QjPvRkx0UotwhtNHg7kSbx/uHTxhuN023ZuFpiB9f/A6vlFRn5wC8X67RVoqZg
+	 n+22RrGEEd7brKiqxVrsZXtgXabDJ2E++uf9v6notm6xvudGu/XX2TYJ/bNoQfDIPc
+	 8stUkPp0BENLSy1gwLXKm7xANF++i0oEuO5qH9A0RsL8fmJS6mQn+rbQX2Ig4L6vB5
+	 lVdYXcQyU96uw==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b73161849e1so209439266b.2
+        for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 04:04:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVJ1w5dQs25B+bcvQmw9jr10tJM3r/5Ja861Hh8jf5hWRQXAzehbgcU+XatDjdlf7jSv6mGRWnQIRg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyYGlZB1nelXL1jn9muSX6fXF/xO8SwB58Iihjtp3RLsodrsP25
+	6zok5VUkBBk+U85T97QWjw1T8FXiYChtL9oRqwS66/CltJojczTcmR+67BBjxCtKo9LsqX8wp8P
+	/MjthIVVnt+GK3Q3KIBi71veaVTDeaps=
+X-Google-Smtp-Source: AGHT+IHrwBCd3dKr6xvzcNJE2FOBI7NF7lucPKAfcahjjE/JI1kDrb5pYEtyohOxHciBo8tacJyC3pH8M4Bo7CRtiRg=
+X-Received: by 2002:a17:906:c107:b0:b2b:3481:93c8 with SMTP id
+ a640c23a62f3a-b76587b1c55mr227463066b.19.1763640253480; Thu, 20 Nov 2025
+ 04:04:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20251118112728.571869-1-chenhuacai@loongson.cn>
+ <20251118112728.571869-12-chenhuacai@loongson.cn> <8dd8334b-388b-4681-a62e-11e10b6d6466@xen0n.name>
+In-Reply-To: <8dd8334b-388b-4681-a62e-11e10b6d6466@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 20 Nov 2025 20:04:13 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H64h2AtMt-zZYLs7ZZAWadEpU=ZUpvPojC6ut-Z04YDdA@mail.gmail.com>
+X-Gm-Features: AWmQ_bltrBYAeaOpjcL3S1Z_kJJMPufmCCydAP9wpFgnNCsjI429Hjufo6Kmv4I
+Message-ID: <CAAhV-H64h2AtMt-zZYLs7ZZAWadEpU=ZUpvPojC6ut-Z04YDdA@mail.gmail.com>
+Subject: Re: [PATCH V2 11/14] LoongArch: Adjust misc routines for 32BIT/64BIT
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 20 Nov 2025 15:45:44 +0800
-George Guo <dongtai.guo@linux.dev> wrote:
+On Thu, Nov 20, 2025 at 6:45=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
+te:
+>
+> On 11/18/25 19:27, Huacai Chen wrote:
+> > Adjust misc routines for both 32BIT and 64BIT, including: checksum,
+> > jump label, unaligned access emulator, PCI init routines, sleep/wakeup
+> > routines, etc.
+> >
+> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >   arch/loongarch/include/asm/checksum.h   |  4 ++
+> >   arch/loongarch/include/asm/jump_label.h | 12 ++++-
+> >   arch/loongarch/include/asm/string.h     |  2 +
+> >   arch/loongarch/kernel/unaligned.c       | 30 ++++++++---
+> >   arch/loongarch/lib/unaligned.S          | 72 ++++++++++++------------=
+-
+> >   arch/loongarch/pci/pci.c                |  8 +--
+> >   arch/loongarch/power/suspend_asm.S      | 72 ++++++++++++------------=
+-
+> >   7 files changed, 116 insertions(+), 84 deletions(-)
+> >
+> > [snip]
+> > diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
+> > index 5bc9627a6cf9..d9fc5d520b37 100644
+> > --- a/arch/loongarch/pci/pci.c
+> > +++ b/arch/loongarch/pci/pci.c
+> > @@ -50,11 +50,11 @@ static int __init pcibios_init(void)
+> >        */
+> >       lsize =3D cpu_last_level_cache_line_size();
+> >
+> > -     BUG_ON(!lsize);
+> > +     if (lsize) {
+> > +             pci_dfl_cache_line_size =3D lsize >> 2;
+> >
+> > -     pci_dfl_cache_line_size =3D lsize >> 2;
+> > -
+> > -     pr_debug("PCI: pci_cache_line_size set to %d bytes\n", lsize);
+> > +             pr_debug("PCI: pci_cache_line_size set to %d bytes\n", ls=
+ize);
+> > +     }
+> >
+> >       return 0;
+> >   }
+> Mind adding a few words about why this is no longer considered a BUG and
+> why functionality isn't adversely affected by the change?
+Yes, you are right, so I split this part into a separate patch.
+https://lore.kernel.org/loongarch/20251120082039.2293136-1-chenhuacai@loong=
+son.cn/T/#u
 
-> From: George Guo <guodongtai@kylinos.cn>
-> 
-> Implement 128-bit atomic compare-and-exchange using LoongArch's
-> LL.D/SC.Q instructions.
-> 
-> At the same time, fix BPF scheduler test failures (scx_central scx_qmap)
-> caused by kmalloc_nolock_noprof returning NULL due to missing
-> 128-bit atomics. The NULL returns led to -ENOMEM errors during
-> scheduler initialization, causing test cases to fail.
-> 
-> Verified by testing with the scx_qmap scheduler (located in
-> tools/sched_ext/). Building with `make` and running
-> ./tools/sched_ext/build/bin/scx_qmap.
-> 
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/include/asm/cmpxchg.h | 46 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
-> 
-> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
-> index 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..5f8d418595cf62ec3153dd3825d80ac1fb31e883 100644
-> --- a/arch/loongarch/include/asm/cmpxchg.h
-> +++ b/arch/loongarch/include/asm/cmpxchg.h
-> @@ -111,6 +111,43 @@ __arch_xchg(volatile void *ptr, unsigned long x, int size)
->  	__ret;								\
->  })
->  
-> +union __u128_halves {
-> +	u128 full;
-> +	struct {
-> +		u64 low;
-> +		u64 high;
-> +	};
-> +};
-> +
-> +#define __cmpxchg128_asm(ld, st, ptr, old, new)				\
-> +({									\
-> +	union __u128_halves __old, __new, __ret;			\
-> +	volatile u64 *__ptr = (volatile u64 *)(ptr);			\
-> +									\
-> +	__old.full = (old);                                             \
-> +	__new.full = (new);						\
-> +									\
-> +	__asm__ __volatile__(						\
-> +	"1:   " ld "  %0, %4          # 128-bit cmpxchg low  \n"	\
-> +	"     " ld "  %1, %5          # 128-bit cmpxchg high \n"	\
-> +	"     bne     %0, %z6, 2f			     \n"	\
-> +	"     bne     %1, %z7, 2f                            \n"	\
-> +	"     move    $t0, %z8				     \n"	\
-> +	"     move    $t1, %z9				     \n"	\
-> +	"     " st "  $t0, $t1, %2                           \n"	\
-> +	"     beqz    $t0, 1b                                \n"	\
-> +	"2:                                                  \n"	\
-> +	__WEAK_LLSC_MB							\
-> +	: "=&r" (__ret.low), "=&r" (__ret.high),			\
-> +	  "=ZB" (__ptr[0]), "=ZB" (__ptr[1])				\
-> +	: "ZB" (__ptr[0]), "ZB" (__ptr[1]),				\
-> +	  "Jr" (__old.low), "Jr" (__old.high),				\
-> +	  "Jr" (__new.low), "Jr" (__new.high)				\
-> +	: "t0", "t1", "memory");					\
-
-I'd add symbolic names for the asm registers to it easier to read.
-eg: [ret_low] "=%r" (__ret.low) and replace %0 with %[rel_row]
-
-	David
-
-> +									\
-> +	__ret.full;							\
-> +})
-> +
->  static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned int old,
->  					   unsigned int new, unsigned int size)
->  {
-> @@ -198,6 +235,15 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new, unsigned int
->  	__res;								\
->  })
->  
-> +/* cmpxchg128 */
-> +#define system_has_cmpxchg128()		1
-> +
-> +#define arch_cmpxchg128(ptr, o, n)					\
-> +({									\
-> +	BUILD_BUG_ON(sizeof(*(ptr)) != 16);				\
-> +	__cmpxchg128_asm("ll.d", "sc.d", ptr, o, n);			\
-> +})
-> +
->  #ifdef CONFIG_64BIT
->  #define arch_cmpxchg64_local(ptr, o, n)					\
->    ({									\
-> 
-
+Huacai
+>
+> --
+> WANG "xen0n" Xuerui
+>
+> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+>
