@@ -1,174 +1,121 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315232868A2
-	for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 21:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2F62EA485;
+	Thu, 20 Nov 2025 02:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763587889; cv=none; b=htTxmLOXYxHDfj/cdq/nVl5af/ASYGDeRuMSFFMoxgZvrF+HAwRaZBMciTQ07xjABYZ5Axo08XSpX80bjFK+4v8uZKBUuwh3K9qevXzXKGZ3SJLVih0vBvtJhZ7kNebUEZhvlhXDQJD58UPlkI/hyRVM7XdHFCvcXPVJgV5J8Eg=
+	t=1763607136; cv=none; b=MUomgYD3DCjFfAxD1nWdsAkRSH/MLt3WSHfqPQzlptGL3tA5oLF78aPL82MGhDSYFjrGOqcqGehqIf4jE0U42CxsOZdTkfXGGrGoKFepCuYIg7xJ8WanRmNPQFowVfgZ9nFHuVx/JSWwm8aYPsiAZWw9vRQ0ytdJTwyKXZ2glyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763587889; c=relaxed/simple;
-	bh=xnVWHoRf7o0NcxPQfVQjG9xcAOWFFNXm2zL7SdEXGTY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rSKNGWgkEtQ6bXCAVqLG2GzEbTJWZH4dUvIimxntd3yK1m96z3gWSfx2qBxC1K9FJdxGWrQujV2QWfEoipcjNyQGa8p4xaZCqxH8BgbpZDSTP7q4HCX+N4hUWuv9eUUGd1pGUAkzppZ1jq3mW6B1aiTfDZPF9Fsk/+lmHrbHJXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XhCrzZ65; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1763607136; c=relaxed/simple;
+	bh=8LiRFCIrRrKHg+0I0NZU28Hv8xDScXSujB+5bD6/+Xs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fnJcZz0aduyIjddE7bDKumggkmP8rtGgw2TFNwKu/9YAairmOAwl4zy91cQA6SaQ8XkvBR3wfiZsURCysduBc29lO+vNoo5dxeh3gdYbXUgO5jakJSxO3/s/vnWaIj8yALmRuS85dWtXSh60ejCRxfs0MmxidaU779ygxnQkreQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XFRf/D+q; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XhCrzZ65"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-299d221b749so4765635ad.3
-        for <loongarch@lists.linux.dev>; Wed, 19 Nov 2025 13:31:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763587887; x=1764192687; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tRlBn8hNsoLzEGGI6zV1NxPFQ/eFHCg8PaMSNSKYawI=;
-        b=XhCrzZ65y4WSZ8RUnp2TkZts3YMFCE629Dd+ew+JOhKgTlxHoJOG9nAfXCPkBnfodn
-         wbcK2HsQRR2YNRSSlDZLwXi8OqMv76rjEFtZcc7H225wJop0ZOM+mVLucVmOJihjUYB3
-         lk6gxjt+OaF+tckbD9ijg0ZQH7YWVT98iDFT8hd6IVuL0MHWOQvA87NdGS+H+tC0SsRb
-         BNgmcDTwTm2H0+5JZ2ZQ40T/rAU84/TQkeVaR8asRWVdAdqttub5QbD09PgNUmPasw8i
-         H9CAgBP4zNZIBy9FOYAlUCR3MRhy/zFhcek9+YaTJc4UoIJ+t4yOmluIVL560TUlCxQG
-         8rVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763587887; x=1764192687;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tRlBn8hNsoLzEGGI6zV1NxPFQ/eFHCg8PaMSNSKYawI=;
-        b=kS51CsY5Xq/kpytm+aHy7+rbnNvYOJfPGcDJCVJcX7+Tjhnpg4fD1wkgPjzXtw1/hI
-         mikGwi9nFFQMwiw7qhrRoqBgXpOgtv9mC6hlcWGfOSlK2PbkZ/n3KfxcsMyAwyuopU90
-         DLBsGJENHW+0uiR6x6ko8l9yz8oFYhphBvPbzvFleqZrcuCybraboQ2EDjbM+ryL5zwc
-         rOUSPY7bMYhtTaY91ZyT7vuEYtvkkRZY2fpmC/CiAjH/Pkb8EmBPyTjJnfZAGWJ+lgCh
-         6rcewaPSlnoSBRxkfTl/YC4EpnUC0DQ8kVOe2pv0vXH0Rhxap2OWT1045UvVLCAJ2i89
-         +QlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3a/Zq/fVRpMJNUDwNEwAOIMCsQpMBBW9LigWXkGuyOJfCZOCfpYUX6LzJb7ZC3BGqxZqhkEnLV6o=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy7MReDCDFiIhiW2676dDiQgODKfc2zRP90zc8Ly7D/9YHK4ia4
-	wpqiSLAKwvW+K4vMLmREVo/67IN6Drhfh0LgDCn13cuNEmv81MDwCmyJ01UHRIcvG4siFpsg7gi
-	Phwp2rQ==
-X-Google-Smtp-Source: AGHT+IEd+gfd++T3e2i6Z4dBj2glGk6LJnNjNrz24WgF1sqa+HmClxx9J2N7UBfKQW53wCFECS0cLQGpQb0=
-X-Received: from plot18.prod.google.com ([2002:a17:902:8c92:b0:298:9ac:cfe9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ccc7:b0:298:49db:a9c5
- with SMTP id d9443c01a7336-29b5b136462mr7336255ad.43.1763587887332; Wed, 19
- Nov 2025 13:31:27 -0800 (PST)
-Date: Wed, 19 Nov 2025 13:31:26 -0800
-In-Reply-To: <aKNF7jc4qr9ab-Es@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XFRf/D+q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763607135; x=1795143135;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8LiRFCIrRrKHg+0I0NZU28Hv8xDScXSujB+5bD6/+Xs=;
+  b=XFRf/D+q7QwOK6NiWQ57NL+PXlmRl2jaLljQ+olHYEiCk813VRt3XBsP
+   fFZpLROC3CPZomab/ThzZ4GfSt9JFgaRyCQ+Cm+Lj6lpLYOVxLl+tbvjc
+   o7YayHM0B1aGB0NeNwFdr3I8KepUvIffni/4yG0tfSgsVUCP8zQyPvRqh
+   pNHdl11RqfPCeanReZ1TCb+Fc6PQI3QLaOxGwfV2oB4dPDBdNgMoVEKF9
+   /MoJquzT8tYJRjJ8i8dhawvm/vieJgi2w6Pp4HB2vo2oK6c6yopIgduhz
+   1BWFI7Fibmuy532lrQttS9IrXTWvZxJCcLuueorQXPboJqnlVzIt4+vCZ
+   A==;
+X-CSE-ConnectionGUID: I+HoliWkRRizTsPVU3uDVQ==
+X-CSE-MsgGUID: KFkquT6CRO6DjCtcqgvM7w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="88321347"
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="88321347"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 18:52:14 -0800
+X-CSE-ConnectionGUID: CWBNGojCRMOnXSHF6LW5xg==
+X-CSE-MsgGUID: lcNSHRC5RCSqKCzgJeRr6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="222164003"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 19 Nov 2025 18:52:09 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLumF-0003Y7-0q;
+	Thu, 20 Nov 2025 02:52:07 +0000
+Date: Thu, 20 Nov 2025 10:51:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: oe-kbuild-all@lists.linux.dev, kvm@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev, x86@kernel.org
+Subject: Re: [PATCH 2/3] LoongArch: Add paravirt support with
+ vcpu_is_preempted()
+Message-ID: <202511201009.WLpYNMAM-lkp@intel.com>
+References: <20251118080656.2012805-3-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-10-seanjc@google.com>
- <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
- <aJ9VQH87ytkWf1dH@google.com> <aJ9YbZTJAg66IiVh@google.com>
- <20250818143204.GH3289052@noisy.programming.kicks-ass.net> <aKNF7jc4qr9ab-Es@google.com>
-Message-ID: <aR43LoV1ti5-2WRD@google.com>
-Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
- vector on guest load/put context
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251118080656.2012805-3-maobibo@loongson.cn>
 
-On Mon, Aug 18, 2025, Sean Christopherson wrote:
-> On Mon, Aug 18, 2025, Peter Zijlstra wrote:
-> > On Fri, Aug 15, 2025 at 08:55:25AM -0700, Sean Christopherson wrote:
-> > > On Fri, Aug 15, 2025, Sean Christopherson wrote:
-> > > > On Fri, Aug 15, 2025, Peter Zijlstra wrote:
-> > > So if we're confident that switching the host LVTPC outside of
-> > > perf_{load,put}_guest_context() is functionally safe, I'm a-ok with it.
-> > 
-> > Let me see. So the hardware sets Masked when it raises the interrupt.
-> > 
-> > The interrupt handler clears it from software -- depending on uarch in 3
-> > different places:
-> >  1) right at the start of the PMI
-> >  2) in the middle, right before enabling the PMU (writing global control)
-> >  3) at the end of the PMI
-> > 
-> > the various changelogs adding that code mention spurious PMIs and
-> > malformed PEBS records.
-> > 
-> > So the fun all happens when the guest is doing PMI and gets a VM-exit
-> > while still Masked.
-> > 
-> > At that point, we can come in and completely rewrite the PMU state,
-> > reroute the PMI and enable things again. Then later, we 'restore' the
-> > PMU state, re-set LVTPC masked to the guest interrupt and 'resume'.
-> > 
-> > What could possibly go wrong :/ Kan, I'm assuming, but not knowing, that
-> > writing all the PMU MSRs is somehow serializing state sufficient to not
-> > cause the above mentioned fails? Specifically, clearing PEBS_ENABLE
-> > should inhibit those malformed PEBS records or something? What if the
-> > host also has PEBS and we don't actually clear the bit?
-> > 
-> > The current order ensures we rewrite LVTPC when global control is unset;
-> > I think we want to keep that.
-> 
-> Yes, for sure.
-> 
-> > While staring at this, I note that perf_load_guest_context() will clear
-> > global ctrl, clear all the counter programming, and re-enable an empty
-> > pmu. Now, an empty PMU should result in global control being zero --
-> > there is nothing run after all.
-> > 
-> > But then kvm_mediated_pmu_load() writes an explicit 0 again. Perhaps
-> > replace this with asserting it is 0 instead?
-> 
-> Yeah, I like that idea, a lot.  This?
-> 
-> 	perf_load_guest_context();
-> 
-> 	/*
-> 	 * Sanity check that "loading" guest context disabled all counters, as
-> 	 * modifying the LVTPC while host perf is active will cause explosions,
-> 	 * as will loading event selectors and PMCs with guest values.
-> 	 *
-> 	 * VMX will enable/disable counters at VM-Enter/VM-Exit by atomically
-> 	 * loading PERF_GLOBAL_CONTROL.  SVM effectively performs the switch by
-> 	 * configuring all events to be GUEST_ONLY.
-> 	 */
-> 	WARN_ON_ONCE(rdmsrq(kvm_pmu_ops.PERF_GLOBAL_CTRL));
+Hi Bibo,
 
-This doesn't actually work, because perf_load_guest_context() doesn't guarantee
-PERF_GLOBAL_CTRL is '0', it only guarantees all events are disabled.  E.g. if
-there are no perf events, perf_load_guest_context() is one big nop (I think).
+kernel test robot noticed the following build errors:
 
-And while it might seem reasonable to expect PERF_GLOBAL_CTRL to be '0' if
-there are no perf events, that doesn't hold true today.  E.g. amd_pmu_reload_virt()
-unconditionally sets all supported MSR_AMD64_PERF_CNTR_GLOBAL_CTL bits.
+[auto build test ERROR on 6a23ae0a96a600d1d12557add110e0bb6e32730c]
 
-I'm sure we could massage perf to really truly ensure PERF_GLOBAL_CTRL is '0',
-but I don't see any value in explicitly doing that in perf_load_guest_context()
-(versus simply doing it in KVM), and I would rather not play whack-a-mole in perf
-as part of this series.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-KVM-Add-preempt-hint-feature-in-hypervisor-side/20251118-161212
+base:   6a23ae0a96a600d1d12557add110e0bb6e32730c
+patch link:    https://lore.kernel.org/r/20251118080656.2012805-3-maobibo%40loongson.cn
+patch subject: [PATCH 2/3] LoongArch: Add paravirt support with vcpu_is_preempted()
+config: loongarch-randconfig-r052-20251120 (https://download.01.org/0day-ci/archive/20251120/202511201009.WLpYNMAM-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251120/202511201009.WLpYNMAM-lkp@intel.com/reproduce)
 
-So unless someone really, really wants to lean on perf to clear PERF_GLOBAL_CTRL,
-I'll go with this:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511201009.WLpYNMAM-lkp@intel.com/
 
-	/*
-	 * Explicitly clear PERF_GLOBAL_CTRL, as "loading" the guest's context
-	 * disables all individual counters (if any were enabled), but doesn't
-	 * globally disable the entire PMU.  Loading event selectors and PMCs
-	 * with guest values while PERF_GLOBAL_CTRL is non-zero will generate
-	 * unexpected events and PMIs.
-	 *
-	 * VMX will enable/disable counters at VM-Enter/VM-Exit by atomically
-	 * loading PERF_GLOBAL_CONTROL.  SVM effectively performs the switch by
-	 * configuring all events to be GUEST_ONLY.  Clear PERF_GLOBAL_CONTROL
-	 * even for SVM to minimize the damage if a perf event is left enabled,
-	 * and to ensure a consistent starting state.
-	 */
-	wrmsrq(kvm_pmu_ops.PERF_GLOBAL_CTRL, 0);
+All errors (new ones prefixed by >>):
+
+>> arch/loongarch/kernel/paravirt.c:346:14: error: redefinition of 'vcpu_is_preempted'
+     346 | bool notrace vcpu_is_preempted(int cpu)
+         |              ^
+   include/linux/sched.h:2263:20: note: previous definition is here
+    2263 | static inline bool vcpu_is_preempted(int cpu)
+         |                    ^
+>> arch/loongarch/kernel/paravirt.c:348:9: error: use of undeclared identifier 'mp_ops'
+     348 |         return mp_ops.vcpu_is_preempted(cpu);
+         |                ^
+   2 errors generated.
+
+
+vim +/vcpu_is_preempted +346 arch/loongarch/kernel/paravirt.c
+
+   345	
+ > 346	bool notrace vcpu_is_preempted(int cpu)
+   347	{
+ > 348		return mp_ops.vcpu_is_preempted(cpu);
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
