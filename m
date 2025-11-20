@@ -1,113 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908033081D9
-	for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 08:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8792FF645
+	for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 09:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763628869; cv=none; b=KOlTfwZJvM9wGRbD3dSaznNdpS8WoBtRAFkMn7TSE6MGmIQ3T6eOB3RboZb+KmeawL8ynEr2UJeFj8g/XY7+Zob6Tvuy7U2T+hEQc/6pGslzxa6EZB9Y4y35Nk5xfvpv5mQyeOnJ0rpayCB89VsWOUjdLh+VYggMRgXq74dIPis=
+	t=1763630749; cv=none; b=GrJ+YLiGidLv5ic99soFx9va33k5xOMGxGacx+45jkPnq1AtR6mW+kTpMcia30e//slzjJoFUMni+YEjqTmwrhwXUm5APik8C5TY9aNc/FbD5vfXIO6gvWznH6wxrow/pS0hUJqOUpmsZqZGqh9seehuM9GMAJFBZTiBdMIeceY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763628869; c=relaxed/simple;
-	bh=z7V5sTTWBNb0Ebb0bTuMbDCjryC/r12dVIbS0MW6VWA=;
+	s=arc-20240116; t=1763630749; c=relaxed/simple;
+	bh=u+UDEkoynGcMHXlDkVU8QdtSw3e7i+6xf4iNEpx05l4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JWl7Ulxod9p3c8hX31w8gTDBwRAme2SVgNNdmYz6Mnq3lzct34oShNibXWwCGjny0ZalT6C47DzxaYbTiO6Zzr/LtTb7eu/vrUFZppsv10BkMFbnjCcqIV1n9WRslu4ydAnnqR8/IoNq+ycJn4AaYGU5tq9MPRsfPNAcVW8cJXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjFQsmQ/; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=EzoVHwkWt7vKiYOZ86TTe6eflkERmK7G6wz97Lc6x9V30yw9FtGS/b/y/OZjLVi1Kp82JD/nXEWeuq6bo06OGvAI6351rAY4OfarEisA5dnjeFkv3l2BRpzb8Wikzv25rYJW7ZOIvNTob05F+PcCpagL/vSdzX10WoZMiFWe72c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b=gQtTm8to; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjFQsmQ/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CBDEC4AF09
-	for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 08:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763628869;
-	bh=z7V5sTTWBNb0Ebb0bTuMbDCjryC/r12dVIbS0MW6VWA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cjFQsmQ/DJwhkZvZEKUy3vdweALWiKVVaBqCUrFO4j1czUJLPrBaZuCVYqISq4iEa
-	 pG/qsL57+zE5c8paUjlQbsFTW72wHP8hu5Ou4YZzmsmLZ6UCdMZmimCSdXFijuPU3D
-	 hIY+Iw1PMF/+PGQQyKYLMM++n80kJty9FBpO1Rw9Tpfs0RdKts/AO9owk8OKARI30X
-	 D5zwgLHx7Lh5b+smXEXd1Hz3vDNEHCWCZChq7W1Wom9RkbzayvFWSiCtQdJwEk1b9A
-	 45bTUdTEmpLPY0f2msEa8a/tl9oRh9+xdDpSQRiozl+kSnVClY+H3tDH+PPV/ep/ig
-	 pyphLkVj72GUg==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-640860f97b5so865679a12.2
-        for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 00:54:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUVbiw6MwKTGNvPltocJiBmasfRXsUCtieDugpZI+MH6e9IOVmgB/llzwq5A9KfvfQfYIkQX+Aj2fc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz2iWoUiTN1zfkiQXntTgU/48dHGESLm7FY+sVyeaIuS9SkpB9w
-	CC/IIopLeOwBmIfFZrEygH8s2pVNj6RrmzHI1knjsAXPWsY1/f1ZTp4O4aKl1ZjwBJbHh+UgCJE
-	N/zeW58+RtpjHkBQrYZuNg7QPeqzU13M=
-X-Google-Smtp-Source: AGHT+IG3wwDdA2GqOg1psvgsTcecno6t3WhxUofFrHkzrSXDM2KAocWFgOej85XpFM03aRRIGvcq4/eQnBNseuZgUGw=
-X-Received: by 2002:a17:907:7fa8:b0:b72:d2df:641c with SMTP id
- a640c23a62f3a-b7654f11044mr227469166b.49.1763628867760; Thu, 20 Nov 2025
- 00:54:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b="gQtTm8to"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-787e35ab178so6173267b3.2
+        for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 01:25:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20230601.gappssmtp.com; s=20230601; t=1763630746; x=1764235546; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yiXIh/s+OivWHxLWH1Qh/HEfQkeEixVae/Gj+mJZp24=;
+        b=gQtTm8toeGM+1vhtD9BieFdeFs4X4Gx8FOKgyzfX3QyaguNRFsAh7185KgDch92CqY
+         UNBP+RN8+ujxKZQ+hhP/fwi6qGKEHz/ACvKGc29Ul5Wp+Zj8W6Qfpus3vi5e+olvUnbH
+         7/B03mkOQSj350jSeqmhKeEMyHtWxrTSmYpi22Eoqef+Tc5Hyx7/bpb+WZyb6jwVnGJh
+         1DlxjqIq3SMNaS/tc7bjQzS5ECFYdQzvLvxbXGoSLRie9kMAVTItBGuy2wtyI8z+Q0nN
+         3q+IPD1ydDwuCjyoL9/MFZ0Aj/1iFLL5knuxv1NbDHikHvtFz31BQ0cBbLnnke3IQUP1
+         ESzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763630746; x=1764235546;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yiXIh/s+OivWHxLWH1Qh/HEfQkeEixVae/Gj+mJZp24=;
+        b=IaG0AOdVEFO0NDbKpdSsp099Knq57i+Gv9csIyDPIrMCR/ovArEl1Z+9Y9LTmXd/C0
+         2sYHbwx/ZfvaTwlfjQbf0NJgtTtGAH5WGOKTq/6o/1i074/GX2uQz/yTlQPhW/QoAkgf
+         5yiOPC+xTnFkYHYL2p0RaIuQb2BNKkndTpbN8NX+qWvTfNBhowZ1HBImDKwsJYHaDkF9
+         O2hGxyLmib0rIYx7X4BGPtGyLkLWkUQbB91DlEO7bvPQ7zQEIHTreIT7KEXWq2Q6BEZw
+         LYY8LQPNoVvrzoNZ0GjLXKl1T28oYfKicshjrb8AfUk/5vP8INtjg/FpI1hm2idESjM1
+         XNxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfGe8mP/+1qomhENNRfSiFZBKwYkkVGI1urGok5G0wDbt0TxrFUUmw33AbDFRtHi9tbjjPXK01/ko=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxBgECzhSW/QAVFiN0BmtfgEacu8YwyiW/PAzUcSKrerbnAl1ay
+	7hVRC4lQFgQ2zSTwA6G/ZXzW3YVbAH3RKPOTKtdwyFd0NE1iH4JqOHzqZbahLp+lqQ4otwL6BFL
+	jorchnd9KcfvLvTpdhF49Bxg8vfl75Pxj/KFo+qWbpA==
+X-Gm-Gg: ASbGncsAJmSOGapz2x86hkYnIanSFeaW2wnTLjvGoIwA46nPDL9sV42WMlZu9pll3b/
+	0zKZyLsAymsknMGKnv1InpnqrkaK0hwsdruMlVWK+PaQVE362eyTlKZg0UDrQEE60YHsdBNFZJ7
+	2iu6VGhwsnj9Snt6InWvwcApOnWAGGgJzXObWppPy+Yd5XutpLcLlN6y3ZAgh2RnBSKZpOEBLPi
+	gyb2xwc5vj4EKZByuXx9+3WbCk7zHiGPuaYvMERNBNt/idWPmHHv92i/Jot6kR8tAJo8syxt6ZD
+	vDkuPkN9t5RAQalHAsBDTb7o5fE=
+X-Google-Smtp-Source: AGHT+IH21XJjet9blMWbHaVB56ehTAl8aI4v4OkpQfBmhjBHgLQ8HgtRArjFmeuPIXjCvR3thvEUHUJL5490xVgKR7E=
+X-Received: by 2002:a05:690c:6005:b0:788:1adf:fa6c with SMTP id
+ 00721157ae682-78a7abfdcd8mr18138957b3.33.1763630746435; Thu, 20 Nov 2025
+ 01:25:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251118112728.571869-1-chenhuacai@loongson.cn>
- <20251118112728.571869-14-chenhuacai@loongson.cn> <20251120090846-746f973f-e08a-46ab-a00d-87a5be759941@linutronix.de>
- <CAAhV-H52FAORNDM48nYjQUWjnDFxc7+RGUsOW+JNteJrpbF6ww@mail.gmail.com> <20251120091849-6ced7bf4-048f-405c-98ed-68df64816d25@linutronix.de>
-In-Reply-To: <20251120091849-6ced7bf4-048f-405c-98ed-68df64816d25@linutronix.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 20 Nov 2025 16:54:28 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5+0Yeut3nST4BpfmFcP=mNKQ3r=7k8vPW33cpJHeLKjQ@mail.gmail.com>
-X-Gm-Features: AWmQ_blJFk5sy2F60hPIJz-yBNjpQn3VOaY8xhLd8VyuC0sjedx_x6XOg5m6otw
-Message-ID: <CAAhV-H5+0Yeut3nST4BpfmFcP=mNKQ3r=7k8vPW33cpJHeLKjQ@mail.gmail.com>
-Subject: Re: [PATCH V2 13/14] LoongArch: Adjust default config files for 32BIT/64BIT
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+References: <20251120-2-v1-0-705bdc440550@linux.dev> <20251120-2-v1-1-705bdc440550@linux.dev>
+In-Reply-To: <20251120-2-v1-1-705bdc440550@linux.dev>
+From: hev <r@hev.cc>
+Date: Thu, 20 Nov 2025 17:25:34 +0800
+X-Gm-Features: AWmQ_bllAUYt5e8JsE2p7NcA9VsTMQWssTuSN10sX-y7qCv6-SC0Sp54dNsVoxo
+Message-ID: <CAHirt9j7xxYi1xrvksu=L29kh1MSbMgYBRAUQYgDh-AR+FXoOA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] LoongArch: Add 128-bit atomic cmpxchg support
+To: George Guo <dongtai.guo@linux.dev>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 20, 2025 at 4:27=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
+On Thu, Nov 20, 2025 at 3:46=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
+wrote:
 >
-> On Thu, Nov 20, 2025 at 04:16:25PM +0800, Huacai Chen wrote:
-> > Hi, Thomas,
-> >
-> > On Thu, Nov 20, 2025 at 4:11=E2=80=AFPM Thomas Wei=C3=9Fschuh
-> > <thomas.weissschuh@linutronix.de> wrote:
-> > >
-> > > On Tue, Nov 18, 2025 at 07:27:27PM +0800, Huacai Chen wrote:
-> > > > Add loongson32_defconfig (for 32BIT) and rename loongson3_defconfig=
- to
-> > > > loongson64_defconfig (for 64BIT).
-> > > >
-> > > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > ---
-> > > >  arch/loongarch/configs/loongson32_defconfig   | 1110 +++++++++++++=
-++++
-> > > >  ...ongson3_defconfig =3D> loongson64_defconfig} |    0
-> > > >  2 files changed, 1110 insertions(+)
-> > > >  create mode 100644 arch/loongarch/configs/loongson32_defconfig
-> > > >  rename arch/loongarch/configs/{loongson3_defconfig =3D> loongson64=
-_defconfig} (100%)
-> > >
-> > > KBUILD_DEFCONFIG also needs to be adapted to this rename.
-> > That is done in the last patch.
+> From: George Guo <guodongtai@kylinos.cn>
 >
-> That means the 64bit 'make defconfig' is broken within this series, poten=
-tially
-> breaking bisects.
-You are right, that should be done in this patch.
+> Implement 128-bit atomic compare-and-exchange using LoongArch's
+> LL.D/SC.Q instructions.
+>
+> At the same time, fix BPF scheduler test failures (scx_central scx_qmap)
+> caused by kmalloc_nolock_noprof returning NULL due to missing
+> 128-bit atomics. The NULL returns led to -ENOMEM errors during
+> scheduler initialization, causing test cases to fail.
+>
+> Verified by testing with the scx_qmap scheduler (located in
+> tools/sched_ext/). Building with `make` and running
+> ./tools/sched_ext/build/bin/scx_qmap.
+>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> ---
+>  arch/loongarch/include/asm/cmpxchg.h | 46 ++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 46 insertions(+)
+>
+> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/includ=
+e/asm/cmpxchg.h
+> index 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..5f8d418595cf62ec3153dd382=
+5d80ac1fb31e883 100644
+> --- a/arch/loongarch/include/asm/cmpxchg.h
+> +++ b/arch/loongarch/include/asm/cmpxchg.h
+> @@ -111,6 +111,43 @@ __arch_xchg(volatile void *ptr, unsigned long x, int=
+ size)
+>         __ret;                                                          \
+>  })
+>
+> +union __u128_halves {
+> +       u128 full;
+> +       struct {
+> +               u64 low;
+> +               u64 high;
+> +       };
+> +};
+> +
+> +#define __cmpxchg128_asm(ld, st, ptr, old, new)                         =
+       \
+> +({                                                                     \
+> +       union __u128_halves __old, __new, __ret;                        \
+> +       volatile u64 *__ptr =3D (volatile u64 *)(ptr);                   =
+ \
+> +                                                                       \
+> +       __old.full =3D (old);                                            =
+ \
+> +       __new.full =3D (new);                                            =
+ \
+> +                                                                       \
+> +       __asm__ __volatile__(                                           \
+> +       "1:   " ld "  %0, %4          # 128-bit cmpxchg low  \n"        \
+> +       "     " ld "  %1, %5          # 128-bit cmpxchg high \n"        \
+> +       "     bne     %0, %z6, 2f                            \n"        \
+> +       "     bne     %1, %z7, 2f                            \n"        \
+> +       "     move    $t0, %z8                               \n"        \
+> +       "     move    $t1, %z9                               \n"        \
+> +       "     " st "  $t0, $t1, %2                           \n"        \
+> +       "     beqz    $t0, 1b                                \n"        \
+> +       "2:                                                  \n"        \
+> +       __WEAK_LLSC_MB                                                  \
+> +       : "=3D&r" (__ret.low), "=3D&r" (__ret.high),                     =
+   \
+> +         "=3DZB" (__ptr[0]), "=3DZB" (__ptr[1])                         =
+   \
+> +       : "ZB" (__ptr[0]), "ZB" (__ptr[1]),                             \
 
->
-> > > FYI the cover letter says the series is based on v6.16-rc6, but the s=
-eries
-> > > doesn't apply to it.
-> > Not 6.16-rc6, but 6.18-rc6, and the next version will be on top of 6.18=
--rc7.
->
-> That was a mistype. It doesn't apply to v6.18-rc6.
->
-> Looking at the GitHub repo mentioned in the cover letter, there are addit=
-ional
-> patches on top of rc6. Which I guess is fine in general, but the changelo=
-g
-> could be a bit clearer.
-OK, I know, thank you.
+Address operand constraints:
+- ld.d: "m"
+- ll.d: "ZC"
+- sc.q: "r"
 
-Huacai
+> +         "Jr" (__old.low), "Jr" (__old.high),                          \
+> +         "Jr" (__new.low), "Jr" (__new.high)                           \
+> +       : "t0", "t1", "memory");                                        \
+> +                                                                       \
+> +       __ret.full;                                                     \
+> +})
+> +
+>  static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned =
+int old,
+>                                            unsigned int new, unsigned int=
+ size)
+>  {
+> @@ -198,6 +235,15 @@ __cmpxchg(volatile void *ptr, unsigned long old, uns=
+igned long new, unsigned int
+>         __res;                                                          \
+>  })
 >
+> +/* cmpxchg128 */
+> +#define system_has_cmpxchg128()                1
+> +
+> +#define arch_cmpxchg128(ptr, o, n)                                     \
+> +({                                                                     \
+> +       BUILD_BUG_ON(sizeof(*(ptr)) !=3D 16);                            =
+ \
+> +       __cmpxchg128_asm("ll.d", "sc.d", ptr, o, n);                    \
+
+"sc.d" -> "sc.q"
+
+__cmpxchg128_asm doesn=E2=80=99t have multiple variants, so no need to gene=
+ricize it?
+
+> +})
+> +
+>  #ifdef CONFIG_64BIT
+>  #define arch_cmpxchg64_local(ptr, o, n)                                 =
+       \
+>    ({                                                                   \
+>
+> --
+> 2.48.1
+>
+>
+
+--
+Rui
