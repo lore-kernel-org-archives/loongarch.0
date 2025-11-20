@@ -1,197 +1,211 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8792FF645
-	for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 09:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2818432B9B8;
+	Thu, 20 Nov 2025 10:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763630749; cv=none; b=GrJ+YLiGidLv5ic99soFx9va33k5xOMGxGacx+45jkPnq1AtR6mW+kTpMcia30e//slzjJoFUMni+YEjqTmwrhwXUm5APik8C5TY9aNc/FbD5vfXIO6gvWznH6wxrow/pS0hUJqOUpmsZqZGqh9seehuM9GMAJFBZTiBdMIeceY=
+	t=1763635079; cv=none; b=GslaZBnRm66aOxA60AEZMfGJ3dzysrrMxk9KO9NGQbUqBHOCIjNUpyb+p4B9v9HbY+roZQDVGnj46joUNVdpRsrddHEIrMdIiwA29DY5WTEzq5JlNqPfsKQ731JVI/6OwlSd7SI/s8TWW1HbEPXqQ78EGAplenet35PqEARqhR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763630749; c=relaxed/simple;
-	bh=u+UDEkoynGcMHXlDkVU8QdtSw3e7i+6xf4iNEpx05l4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EzoVHwkWt7vKiYOZ86TTe6eflkERmK7G6wz97Lc6x9V30yw9FtGS/b/y/OZjLVi1Kp82JD/nXEWeuq6bo06OGvAI6351rAY4OfarEisA5dnjeFkv3l2BRpzb8Wikzv25rYJW7ZOIvNTob05F+PcCpagL/vSdzX10WoZMiFWe72c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b=gQtTm8to; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+	s=arc-20240116; t=1763635079; c=relaxed/simple;
+	bh=AlKHnfMCe0Kx2+6ZKR/hBQWuTE5pstZT7QpjoJG+8Oo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nIzy29qn3Zgh67MQ1qoOjqUEY3bGj+85PFI8Dmj1WKMdNB8t6QQ0IsEYJvplLTf6q8gI04dN93/WM/UDo8ctbVXdIuTrLsN/MulL4OFQELOyJ+jwFJBTaZSfEqOi6qKU+7vPnJb65+fPjzlCtVNXSkMkrLtmlS8qvekhBglUWG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EReMv6Nx; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b="gQtTm8to"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-787e35ab178so6173267b3.2
-        for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 01:25:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20230601.gappssmtp.com; s=20230601; t=1763630746; x=1764235546; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yiXIh/s+OivWHxLWH1Qh/HEfQkeEixVae/Gj+mJZp24=;
-        b=gQtTm8toeGM+1vhtD9BieFdeFs4X4Gx8FOKgyzfX3QyaguNRFsAh7185KgDch92CqY
-         UNBP+RN8+ujxKZQ+hhP/fwi6qGKEHz/ACvKGc29Ul5Wp+Zj8W6Qfpus3vi5e+olvUnbH
-         7/B03mkOQSj350jSeqmhKeEMyHtWxrTSmYpi22Eoqef+Tc5Hyx7/bpb+WZyb6jwVnGJh
-         1DlxjqIq3SMNaS/tc7bjQzS5ECFYdQzvLvxbXGoSLRie9kMAVTItBGuy2wtyI8z+Q0nN
-         3q+IPD1ydDwuCjyoL9/MFZ0Aj/1iFLL5knuxv1NbDHikHvtFz31BQ0cBbLnnke3IQUP1
-         ESzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763630746; x=1764235546;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yiXIh/s+OivWHxLWH1Qh/HEfQkeEixVae/Gj+mJZp24=;
-        b=IaG0AOdVEFO0NDbKpdSsp099Knq57i+Gv9csIyDPIrMCR/ovArEl1Z+9Y9LTmXd/C0
-         2sYHbwx/ZfvaTwlfjQbf0NJgtTtGAH5WGOKTq/6o/1i074/GX2uQz/yTlQPhW/QoAkgf
-         5yiOPC+xTnFkYHYL2p0RaIuQb2BNKkndTpbN8NX+qWvTfNBhowZ1HBImDKwsJYHaDkF9
-         O2hGxyLmib0rIYx7X4BGPtGyLkLWkUQbB91DlEO7bvPQ7zQEIHTreIT7KEXWq2Q6BEZw
-         LYY8LQPNoVvrzoNZ0GjLXKl1T28oYfKicshjrb8AfUk/5vP8INtjg/FpI1hm2idESjM1
-         XNxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfGe8mP/+1qomhENNRfSiFZBKwYkkVGI1urGok5G0wDbt0TxrFUUmw33AbDFRtHi9tbjjPXK01/ko=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxBgECzhSW/QAVFiN0BmtfgEacu8YwyiW/PAzUcSKrerbnAl1ay
-	7hVRC4lQFgQ2zSTwA6G/ZXzW3YVbAH3RKPOTKtdwyFd0NE1iH4JqOHzqZbahLp+lqQ4otwL6BFL
-	jorchnd9KcfvLvTpdhF49Bxg8vfl75Pxj/KFo+qWbpA==
-X-Gm-Gg: ASbGncsAJmSOGapz2x86hkYnIanSFeaW2wnTLjvGoIwA46nPDL9sV42WMlZu9pll3b/
-	0zKZyLsAymsknMGKnv1InpnqrkaK0hwsdruMlVWK+PaQVE362eyTlKZg0UDrQEE60YHsdBNFZJ7
-	2iu6VGhwsnj9Snt6InWvwcApOnWAGGgJzXObWppPy+Yd5XutpLcLlN6y3ZAgh2RnBSKZpOEBLPi
-	gyb2xwc5vj4EKZByuXx9+3WbCk7zHiGPuaYvMERNBNt/idWPmHHv92i/Jot6kR8tAJo8syxt6ZD
-	vDkuPkN9t5RAQalHAsBDTb7o5fE=
-X-Google-Smtp-Source: AGHT+IH21XJjet9blMWbHaVB56ehTAl8aI4v4OkpQfBmhjBHgLQ8HgtRArjFmeuPIXjCvR3thvEUHUJL5490xVgKR7E=
-X-Received: by 2002:a05:690c:6005:b0:788:1adf:fa6c with SMTP id
- 00721157ae682-78a7abfdcd8mr18138957b3.33.1763630746435; Thu, 20 Nov 2025
- 01:25:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EReMv6Nx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763635078; x=1795171078;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AlKHnfMCe0Kx2+6ZKR/hBQWuTE5pstZT7QpjoJG+8Oo=;
+  b=EReMv6Nx/tRfcvuGS71HBJGdFwNghLpMIP1tTWGnBk66kBxrq+wFiODI
+   K3Pqnu8TSZKYaI35Um5IlacgsHPZoNb0mWadqXC9xUybgGNXWN+Z8qzTT
+   BqtGGu2QC3Y7sGlXTXRGmZSedVkS34KsJBurVOtCFKjxMOv4tqMXpRsDP
+   HpzNFSfnIcPWnsBsKORjrqF0ZPEjn64+am2QnejyovoCIeQrAA4s7I3LZ
+   zD1lwwK4diRmEV0ycmEv3v9UUfVxi7kIo0vnZZa/HCpkospv7stC/6TSH
+   g7+LA5SpVgjBadrbwEtsVtb8SDUvg1shZ+7yhxig+HFKEJvJf/KjL16+5
+   g==;
+X-CSE-ConnectionGUID: kdO2bJk6R1aDiMDRf+amjQ==
+X-CSE-MsgGUID: T073l9L+SiC9iqLjOpgPsQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65401705"
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="65401705"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 02:37:57 -0800
+X-CSE-ConnectionGUID: X5dmoaLPT8m6OOrOofxYTg==
+X-CSE-MsgGUID: lLEwymFWSsCD5rjgFeJBrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="191589579"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 20 Nov 2025 02:37:54 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vM22y-0003rb-1x;
+	Thu, 20 Nov 2025 10:37:52 +0000
+Date: Thu, 20 Nov 2025 18:37:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: George Guo <dongtai.guo@linux.dev>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	George Guo <dongtai.guo@linux.dev>
+Subject: Re: [PATCH 2/2] LoongArch: Enable 128-bit atomics cmpxchg support
+Message-ID: <202511201828.xfphUVkJ-lkp@intel.com>
+References: <20251120-2-v1-2-705bdc440550@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251120-2-v1-0-705bdc440550@linux.dev> <20251120-2-v1-1-705bdc440550@linux.dev>
-In-Reply-To: <20251120-2-v1-1-705bdc440550@linux.dev>
-From: hev <r@hev.cc>
-Date: Thu, 20 Nov 2025 17:25:34 +0800
-X-Gm-Features: AWmQ_bllAUYt5e8JsE2p7NcA9VsTMQWssTuSN10sX-y7qCv6-SC0Sp54dNsVoxo
-Message-ID: <CAHirt9j7xxYi1xrvksu=L29kh1MSbMgYBRAUQYgDh-AR+FXoOA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] LoongArch: Add 128-bit atomic cmpxchg support
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251120-2-v1-2-705bdc440550@linux.dev>
 
-On Thu, Nov 20, 2025 at 3:46=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
-wrote:
->
-> From: George Guo <guodongtai@kylinos.cn>
->
-> Implement 128-bit atomic compare-and-exchange using LoongArch's
-> LL.D/SC.Q instructions.
->
-> At the same time, fix BPF scheduler test failures (scx_central scx_qmap)
-> caused by kmalloc_nolock_noprof returning NULL due to missing
-> 128-bit atomics. The NULL returns led to -ENOMEM errors during
-> scheduler initialization, causing test cases to fail.
->
-> Verified by testing with the scx_qmap scheduler (located in
-> tools/sched_ext/). Building with `make` and running
-> ./tools/sched_ext/build/bin/scx_qmap.
->
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/include/asm/cmpxchg.h | 46 ++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 46 insertions(+)
->
-> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/includ=
-e/asm/cmpxchg.h
-> index 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..5f8d418595cf62ec3153dd382=
-5d80ac1fb31e883 100644
-> --- a/arch/loongarch/include/asm/cmpxchg.h
-> +++ b/arch/loongarch/include/asm/cmpxchg.h
-> @@ -111,6 +111,43 @@ __arch_xchg(volatile void *ptr, unsigned long x, int=
- size)
->         __ret;                                                          \
->  })
->
-> +union __u128_halves {
-> +       u128 full;
-> +       struct {
-> +               u64 low;
-> +               u64 high;
-> +       };
-> +};
-> +
-> +#define __cmpxchg128_asm(ld, st, ptr, old, new)                         =
-       \
-> +({                                                                     \
-> +       union __u128_halves __old, __new, __ret;                        \
-> +       volatile u64 *__ptr =3D (volatile u64 *)(ptr);                   =
- \
-> +                                                                       \
-> +       __old.full =3D (old);                                            =
- \
-> +       __new.full =3D (new);                                            =
- \
-> +                                                                       \
-> +       __asm__ __volatile__(                                           \
-> +       "1:   " ld "  %0, %4          # 128-bit cmpxchg low  \n"        \
-> +       "     " ld "  %1, %5          # 128-bit cmpxchg high \n"        \
-> +       "     bne     %0, %z6, 2f                            \n"        \
-> +       "     bne     %1, %z7, 2f                            \n"        \
-> +       "     move    $t0, %z8                               \n"        \
-> +       "     move    $t1, %z9                               \n"        \
-> +       "     " st "  $t0, $t1, %2                           \n"        \
-> +       "     beqz    $t0, 1b                                \n"        \
-> +       "2:                                                  \n"        \
-> +       __WEAK_LLSC_MB                                                  \
-> +       : "=3D&r" (__ret.low), "=3D&r" (__ret.high),                     =
-   \
-> +         "=3DZB" (__ptr[0]), "=3DZB" (__ptr[1])                         =
-   \
-> +       : "ZB" (__ptr[0]), "ZB" (__ptr[1]),                             \
+Hi George,
 
-Address operand constraints:
-- ld.d: "m"
-- ll.d: "ZC"
-- sc.q: "r"
+kernel test robot noticed the following build errors:
 
-> +         "Jr" (__old.low), "Jr" (__old.high),                          \
-> +         "Jr" (__new.low), "Jr" (__new.high)                           \
-> +       : "t0", "t1", "memory");                                        \
-> +                                                                       \
-> +       __ret.full;                                                     \
-> +})
-> +
->  static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned =
-int old,
->                                            unsigned int new, unsigned int=
- size)
->  {
-> @@ -198,6 +235,15 @@ __cmpxchg(volatile void *ptr, unsigned long old, uns=
-igned long new, unsigned int
->         __res;                                                          \
->  })
->
-> +/* cmpxchg128 */
-> +#define system_has_cmpxchg128()                1
-> +
-> +#define arch_cmpxchg128(ptr, o, n)                                     \
-> +({                                                                     \
-> +       BUILD_BUG_ON(sizeof(*(ptr)) !=3D 16);                            =
- \
-> +       __cmpxchg128_asm("ll.d", "sc.d", ptr, o, n);                    \
+[auto build test ERROR on 8b690556d8fe074b4f9835075050fba3fb180e93]
 
-"sc.d" -> "sc.q"
+url:    https://github.com/intel-lab-lkp/linux/commits/George-Guo/LoongArch-Add-128-bit-atomic-cmpxchg-support/20251120-160152
+base:   8b690556d8fe074b4f9835075050fba3fb180e93
+patch link:    https://lore.kernel.org/r/20251120-2-v1-2-705bdc440550%40linux.dev
+patch subject: [PATCH 2/2] LoongArch: Enable 128-bit atomics cmpxchg support
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20251120/202511201828.xfphUVkJ-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9e9fe08b16ea2c4d9867fb4974edf2a3776d6ece)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251120/202511201828.xfphUVkJ-lkp@intel.com/reproduce)
 
-__cmpxchg128_asm doesn=E2=80=99t have multiple variants, so no need to gene=
-ricize it?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511201828.xfphUVkJ-lkp@intel.com/
 
-> +})
-> +
->  #ifdef CONFIG_64BIT
->  #define arch_cmpxchg64_local(ptr, o, n)                                 =
-       \
->    ({                                                                   \
->
-> --
-> 2.48.1
->
->
+All errors (new ones prefixed by >>):
 
---
-Rui
+>> mm/slub.c:766:9: error: immediate must be a multiple of 4 in the range [-32768, 32764]
+     766 |         return try_cmpxchg_freelist(&slab->freelist_counter.full, &old.full, new.full);
+         |                ^
+   mm/slab.h:22:32: note: expanded from macro 'try_cmpxchg_freelist'
+      22 | # define try_cmpxchg_freelist           try_cmpxchg128
+         |                                         ^
+   include/linux/atomic/atomic-instrumented.h:4956:2: note: expanded from macro 'try_cmpxchg128'
+    4956 |         raw_try_cmpxchg128(__ai_ptr, __ai_oldp, __VA_ARGS__); \
+         |         ^
+   include/linux/atomic/atomic-arch-fallback.h:326:9: note: expanded from macro 'raw_try_cmpxchg128'
+     326 |         ___r = raw_cmpxchg128((_ptr), ___o, (_new)); \
+         |                ^
+   include/linux/atomic/atomic-arch-fallback.h:141:24: note: expanded from macro 'raw_cmpxchg128'
+     141 | #define raw_cmpxchg128 arch_cmpxchg128
+         |                        ^
+   arch/loongarch/include/asm/cmpxchg.h:244:2: note: expanded from macro 'arch_cmpxchg128'
+     244 |         __cmpxchg128_asm("ll.d", "sc.d", ptr, o, n);                    \
+         |         ^
+   arch/loongarch/include/asm/cmpxchg.h:137:3: note: expanded from macro '__cmpxchg128_asm'
+     137 |         "     " st "  $t0, $t1, %2                           \n"        \
+         |          ^
+   <inline asm>:7:23: note: instantiated into assembly here
+       7 |      sc.d  $t0, $t1, $a2, 0                           
+         |                       ^
+>> mm/slub.c:766:9: error: immediate must be a multiple of 4 in the range [-32768, 32764]
+     766 |         return try_cmpxchg_freelist(&slab->freelist_counter.full, &old.full, new.full);
+         |                ^
+   mm/slab.h:22:32: note: expanded from macro 'try_cmpxchg_freelist'
+      22 | # define try_cmpxchg_freelist           try_cmpxchg128
+         |                                         ^
+   include/linux/atomic/atomic-instrumented.h:4956:2: note: expanded from macro 'try_cmpxchg128'
+    4956 |         raw_try_cmpxchg128(__ai_ptr, __ai_oldp, __VA_ARGS__); \
+         |         ^
+   include/linux/atomic/atomic-arch-fallback.h:326:9: note: expanded from macro 'raw_try_cmpxchg128'
+     326 |         ___r = raw_cmpxchg128((_ptr), ___o, (_new)); \
+         |                ^
+   include/linux/atomic/atomic-arch-fallback.h:141:24: note: expanded from macro 'raw_cmpxchg128'
+     141 | #define raw_cmpxchg128 arch_cmpxchg128
+         |                        ^
+   arch/loongarch/include/asm/cmpxchg.h:244:2: note: expanded from macro 'arch_cmpxchg128'
+     244 |         __cmpxchg128_asm("ll.d", "sc.d", ptr, o, n);                    \
+         |         ^
+   arch/loongarch/include/asm/cmpxchg.h:137:3: note: expanded from macro '__cmpxchg128_asm'
+     137 |         "     " st "  $t0, $t1, %2                           \n"        \
+         |          ^
+   <inline asm>:7:23: note: instantiated into assembly here
+       7 |      sc.d  $t0, $t1, $a3, 0                           
+         |                       ^
+>> mm/slub.c:766:9: error: immediate must be a multiple of 4 in the range [-32768, 32764]
+     766 |         return try_cmpxchg_freelist(&slab->freelist_counter.full, &old.full, new.full);
+         |                ^
+   mm/slab.h:22:32: note: expanded from macro 'try_cmpxchg_freelist'
+      22 | # define try_cmpxchg_freelist           try_cmpxchg128
+         |                                         ^
+   include/linux/atomic/atomic-instrumented.h:4956:2: note: expanded from macro 'try_cmpxchg128'
+    4956 |         raw_try_cmpxchg128(__ai_ptr, __ai_oldp, __VA_ARGS__); \
+         |         ^
+   include/linux/atomic/atomic-arch-fallback.h:326:9: note: expanded from macro 'raw_try_cmpxchg128'
+     326 |         ___r = raw_cmpxchg128((_ptr), ___o, (_new)); \
+         |                ^
+   include/linux/atomic/atomic-arch-fallback.h:141:24: note: expanded from macro 'raw_cmpxchg128'
+     141 | #define raw_cmpxchg128 arch_cmpxchg128
+         |                        ^
+   arch/loongarch/include/asm/cmpxchg.h:244:2: note: expanded from macro 'arch_cmpxchg128'
+     244 |         __cmpxchg128_asm("ll.d", "sc.d", ptr, o, n);                    \
+         |         ^
+   arch/loongarch/include/asm/cmpxchg.h:137:3: note: expanded from macro '__cmpxchg128_asm'
+     137 |         "     " st "  $t0, $t1, %2                           \n"        \
+         |          ^
+   <inline asm>:7:23: note: instantiated into assembly here
+       7 |      sc.d  $t0, $t1, $a5, 0                           
+         |                       ^
+>> mm/slub.c:766:9: error: immediate must be a multiple of 4 in the range [-32768, 32764]
+     766 |         return try_cmpxchg_freelist(&slab->freelist_counter.full, &old.full, new.full);
+         |                ^
+   mm/slab.h:22:32: note: expanded from macro 'try_cmpxchg_freelist'
+      22 | # define try_cmpxchg_freelist           try_cmpxchg128
+         |                                         ^
+   include/linux/atomic/atomic-instrumented.h:4956:2: note: expanded from macro 'try_cmpxchg128'
+    4956 |         raw_try_cmpxchg128(__ai_ptr, __ai_oldp, __VA_ARGS__); \
+         |         ^
+   include/linux/atomic/atomic-arch-fallback.h:326:9: note: expanded from macro 'raw_try_cmpxchg128'
+     326 |         ___r = raw_cmpxchg128((_ptr), ___o, (_new)); \
+         |                ^
+   include/linux/atomic/atomic-arch-fallback.h:141:24: note: expanded from macro 'raw_cmpxchg128'
+     141 | #define raw_cmpxchg128 arch_cmpxchg128
+         |                        ^
+   arch/loongarch/include/asm/cmpxchg.h:244:2: note: expanded from macro 'arch_cmpxchg128'
+     244 |         __cmpxchg128_asm("ll.d", "sc.d", ptr, o, n);                    \
+         |         ^
+   arch/loongarch/include/asm/cmpxchg.h:137:3: note: expanded from macro '__cmpxchg128_asm'
+     137 |         "     " st "  $t0, $t1, %2                           \n"        \
+         |          ^
+   <inline asm>:7:23: note: instantiated into assembly here
+       7 |      sc.d  $t0, $t1, $t3, 0                           
+         |                       ^
+   4 errors generated.
+
+
+vim +766 mm/slub.c
+
+881db7fb03a77a Christoph Lameter 2011-06-01  756  
+6801be4f2653e5 Peter Zijlstra    2023-05-31  757  static inline bool
+6801be4f2653e5 Peter Zijlstra    2023-05-31  758  __update_freelist_fast(struct slab *slab,
+6801be4f2653e5 Peter Zijlstra    2023-05-31  759  		      void *freelist_old, unsigned long counters_old,
+6801be4f2653e5 Peter Zijlstra    2023-05-31  760  		      void *freelist_new, unsigned long counters_new)
+6801be4f2653e5 Peter Zijlstra    2023-05-31  761  {
+6801be4f2653e5 Peter Zijlstra    2023-05-31  762  #ifdef system_has_freelist_aba
+6801be4f2653e5 Peter Zijlstra    2023-05-31  763  	freelist_aba_t old = { .freelist = freelist_old, .counter = counters_old };
+6801be4f2653e5 Peter Zijlstra    2023-05-31  764  	freelist_aba_t new = { .freelist = freelist_new, .counter = counters_new };
+6801be4f2653e5 Peter Zijlstra    2023-05-31  765  
+6801be4f2653e5 Peter Zijlstra    2023-05-31 @766  	return try_cmpxchg_freelist(&slab->freelist_counter.full, &old.full, new.full);
+6801be4f2653e5 Peter Zijlstra    2023-05-31  767  #else
+6801be4f2653e5 Peter Zijlstra    2023-05-31  768  	return false;
+6801be4f2653e5 Peter Zijlstra    2023-05-31  769  #endif
+6801be4f2653e5 Peter Zijlstra    2023-05-31  770  }
+6801be4f2653e5 Peter Zijlstra    2023-05-31  771  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
