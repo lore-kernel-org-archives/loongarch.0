@@ -1,193 +1,160 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6AE330B00
-	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 09:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F951DF72C
+	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 10:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763718735; cv=none; b=pd4wObw8IM/fow7UQRhFkaseNOCQzLK+g+53Mg0niha4Wczl4ka2nNioJQcm/gOkSxCtCu4ADUTKY/IvgpVzrhWCBISOKzYqBEBFCFVbrN4w+IrZbtQuBH26si6/TtC1R7LHx2sur3uylNpMRdSWJlPtNm5aW0INOdX2baOt8g4=
+	t=1763719945; cv=none; b=GVAfbs8sOikFkAc26DMUHG8eHqOY2tlsk+AsRggNe+1eoJsXskhAjPcl1Y6uRAzNmRPiOEByn6lKt8LNZ3Mwq29/Mp2crXy1lOoPO3mCGk6wr2ea6Pz7DR01ebpZxUGgLpm4Qg2jsReafU0c9tXe3ml7xEDg6b82dbuQmduYBF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763718735; c=relaxed/simple;
-	bh=Kif3L7zyWwbGf0YiscmUcSLnS90QHLWDIeyjHEsCmyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jNHue8YKT7oHTLQgOm7mnZ91AQPzf6J8qwqD+coNkK3w6OmtcgttfefyLi+aB2/xzR/CPtPv2jJtrprIBLA6Emm05nt/S6H02pk4M9EI1XZrZZZMx+KgbFtvlwZnLJuzNNvdL5hvVjywn3bTkrMsNdii+lABvHxK2TXfYlHDJpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b5E1j+TC; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1763719945; c=relaxed/simple;
+	bh=nIxOA6aOVr6gGSQiExzc8nNHFfpPye0obYzpAtlDgI8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SdSpq4rTmx7hV92Hbi5OENhWyvaa9cLMEeNWlB2cgqWcBdHGtuYQtSxAOPjuMSV0nKc6NRwj6QNRu73fdYBQCG513ZYd+p3H4BukPAsozFpLtzDI0UTsPgzH5IYMSUFePIqHUkD2vUZhCEavou9FGdMfWrB+LvkBNemYVtAFfZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YOK+FY87; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b5E1j+TC"
-Date: Fri, 21 Nov 2025 17:51:51 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763718720;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YOK+FY87"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763719942;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=b8Ch4+tt7f8qc1gscNTfWWDqrLnApQWeC82ExILXnYI=;
-	b=b5E1j+TCDVPAHCvmqRXh2Gg4bQ98FaOSvJ5MKn5CCt5s0qZVisypndIPGhV+x+7eAlheci
-	/htKt9MtstGYGOQwt4Nf2CmCVSQ8Bme4d4RR9uFw6L/AW5scpHrSxLqhCdrfxgDkIwWCBb
-	TtZMHhBsNJ6tU57fQhvO9ZboCY8yONw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: George Guo <dongtai.guo@linux.dev>
-To: hev <r@hev.cc>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, George Guo
- <guodongtai@kylinos.cn>
-Subject: Re: [PATCH 1/2] LoongArch: Add 128-bit atomic cmpxchg support
-Message-ID: <20251121175151.0000124b@linux.dev>
-In-Reply-To: <CAHirt9j7xxYi1xrvksu=L29kh1MSbMgYBRAUQYgDh-AR+FXoOA@mail.gmail.com>
-References: <20251120-2-v1-0-705bdc440550@linux.dev>
-	<20251120-2-v1-1-705bdc440550@linux.dev>
-	<CAHirt9j7xxYi1xrvksu=L29kh1MSbMgYBRAUQYgDh-AR+FXoOA@mail.gmail.com>
+	bh=OZIk/6eiWFE7r0Pz8jIgtNeqgPIl4m+Z/Z67QWlEwbg=;
+	b=YOK+FY879Am7GnPXbNLmSgDD9+CwCE35ZTP111/C75w6L6OtMB75MILjDrXLsK9Yl7VOqd
+	9vkqDFih2SuH6BKKfbDoa82R2hHE2K5NtORIUpXT2hp6wqOPmxxN81vmwMRCetrS29N8wq
+	zHDfF3e3Mwkpx7biyfMKytTcPvPA2fs=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-519-noQKdGf2MWmffMbu3aC9iQ-1; Fri, 21 Nov 2025 05:12:20 -0500
+X-MC-Unique: noQKdGf2MWmffMbu3aC9iQ-1
+X-Mimecast-MFC-AGG-ID: noQKdGf2MWmffMbu3aC9iQ_1763719940
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-42b3086a055so1693527f8f.3
+        for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 02:12:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763719939; x=1764324739;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OZIk/6eiWFE7r0Pz8jIgtNeqgPIl4m+Z/Z67QWlEwbg=;
+        b=Shn3pbJrxaZbttH4MtwMTY1g+0ZxtbvLhWIDmJEyTPFR4/bxl04sQMgPslNNhV3wMl
+         ALft2A0aHMFOBBl5Kcvkg7K9zLu/BqqBI85l+/IKz7JQLvzkvXAswT3VV1sdEUfGGAdD
+         oPHXvdsUGOuwt9ZZaLyNLCcMO4P3BOzR2GtdboU+bX5wqI6pBkjSBLrFeuOsXTvyAuYb
+         G2eCdx9+kcHV7gmXRR+kh81IAguRTF1/OeewSLTAnqWU7jx+Qns2w9agPYN71p8oM9UD
+         HkOswm/2neGdpzXMDhd/5TKub4UPleRl/zASdpUmoum7zDrFFbOSkb74ufiv603dIuLd
+         Q6Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlcFsmzkDV2WjY1vuMeSDahs9NjDXGK26s4brQQidufqAUgjwXUA7X988PL94uwD4euHd9C2mcDqk=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz6PBzs95j2A8UogwRqCNJB/gPVTsEgtJ1sgHzov63i/i+RWn80
+	Cb+CgouaykuZjuT0az5ZuAur6Es0PuB6STIWtwwADsZfHa814d3hVVgRWHk349owiPyl2Hx1t2Z
+	l4xzFpw3KpAGY6z+rYdCfRN8kRx4nGDrlytjaXZTK/CHEa4vgGrprBAZbK0jKWA==
+X-Gm-Gg: ASbGncubPCQdTYaR1Pl7L5aL9GrAWyVfCKhiuYeRNJplQbJGYytaemUEXL07Y+v0fyr
+	uDyLwiObofea0LFXQG479E+nAAB/TZdN0qymBbQMcuVH6/RtwIST0HyQcs5Nm8noFAq/WAOrLnX
+	ElQkS5LuA+Y1pdbWvyLIc62GNjCc5tp/TajLwLW3Mv1vhurEYqSpKhNNFLoABzwrEE/2O/IVQF2
+	XaW1EfLzekpC/HqYkewh/QAd09MPpdcGjkzGy++du78TFmJAYK/XyYfgw+DCAdB/XWjdbbJRdnN
+	7ig0whfrTQqi7G9dbhmpwE+GeBY/0VqLrBxKBYEbXcaBkexxdp+zxHBj7/X4AuHH9OqjvOcu47l
+	+s7AYj/sYFkmiFLcCLQRHnTLjmeXeJBzBMSu/Mdmx6J3QxJ+w4FBKiqwspweea8xUCAUQQoU=
+X-Received: by 2002:a05:6000:1888:b0:42b:3ace:63c6 with SMTP id ffacd0b85a97d-42cc1cbcdfcmr1795922f8f.16.1763719939502;
+        Fri, 21 Nov 2025 02:12:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGQwvNnN1+6xkIr+bJK+olrvC0Z5OYdiF1L0OBTcrYbQMUdl7o+C2/hye3fKlSOf/cE5aQ8Qw==
+X-Received: by 2002:a05:6000:1888:b0:42b:3ace:63c6 with SMTP id ffacd0b85a97d-42cc1cbcdfcmr1795834f8f.16.1763719938945;
+        Fri, 21 Nov 2025 02:12:18 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7f2e432sm9799426f8f.9.2025.11.21.02.12.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Nov 2025 02:12:18 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Andy Lutomirski <luto@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, linux-mm@kvack.org, rcu@vger.kernel.org,
+ the arch/x86 maintainers <x86@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)"
+ <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Josh
+ Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Arnd
+ Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>, "Paul
+ E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven
+ Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Sami
+ Tolvanen <samitolvanen@google.com>, "David S. Miller"
+ <davem@davemloft.net>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel
+ Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mel Gorman
+ <mgorman@suse.de>, Andrew Morton <akpm@linux-foundation.org>, Masahiro
+ Yamada <masahiroy@kernel.org>, Han Shen <shenhan@google.com>, Rik van Riel
+ <riel@surriel.com>, Jann Horn <jannh@google.com>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>
+Subject: Re: [RFC PATCH v7 29/31] x86/mm/pti: Implement a TLB flush
+ immediately after a switch to kernel CR3
+In-Reply-To: <91702ceb-afba-450e-819b-52d482d7bd11@app.fastmail.com>
+References: <20251114150133.1056710-1-vschneid@redhat.com>
+ <20251114151428.1064524-9-vschneid@redhat.com>
+ <65ae9404-5d7d-42a3-969e-7e2ceb56c433@app.fastmail.com>
+ <xhsmhecpukowa.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <91702ceb-afba-450e-819b-52d482d7bd11@app.fastmail.com>
+Date: Fri, 21 Nov 2025 11:12:16 +0100
+Message-ID: <xhsmh8qfzu22n.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=GB18030
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: M8wK9ca-i12Lx7j_12WPFCh4tX4phQcN4fq7AiIV4lY_1763719940
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Thu, 20 Nov 2025 17:25:34 +0800
-hev <r@hev.cc> wrote:
+On 19/11/25 09:31, Andy Lutomirski wrote:
+> Let's consider what we're worried about:
+>
+> 1. Architectural access to a kernel virtual address that has been unmapped, in asm or early C.  If it hasn't been remapped, then we oops anyway.  If it has, then that means we're accessing a pointer where either the pointer has changed or the pointee has been remapped while we're in user mode, and that's a very strange thing to do for anything that the asm points to or that early C points to, unless RCU is involved.  But RCU is already disallowed in the entry paths that might be in extended quiescent states, so I think this is mostly a nonissue.
+>
+> 2. Non-speculative access via GDT access, etc.  We can't control this at all, but we're not avoid to move the GDT, IDT, LDT etc of a running task while that task is in user mode.  We do move the LDT, but that's quite thoroughly synchronized via IPI.  (Should probably be double checked.  I wrote that code, but that doesn't mean I remember it exactly.)
+>
+> 3. Speculative TLB fills.  We can't control this at all.  We have had actual machine checks, on AMD IIRC, due to messing this up.  This is why we can't defer a flush after freeing a page table.
+>
+> 4. Speculative or other nonarchitectural loads.  One would hope that these are not dangerous.  For example, an early version of TDX would machine check if we did a speculative load from TDX memory, but that was fixed.  I don't see why this would be materially different between actual userspace execution (without LASS, anyway), kernel asm, and kernel C.
+>
+> 5. Writes to page table dirty bits.  I don't think we use these.
+>
+> In any case, the current implementation in your series is really, really,
+> utterly horrifically slow.
 
-> On Thu, Nov 20, 2025 at 3:46 PM George Guo <dongtai.guo@linux.dev>
-> wrote:
-> >
-> > From: George Guo <guodongtai@kylinos.cn>
-> >
-> > Implement 128-bit atomic compare-and-exchange using LoongArch's
-> > LL.D/SC.Q instructions.
-> >
-> > At the same time, fix BPF scheduler test failures (scx_central
-> > scx_qmap) caused by kmalloc_nolock_noprof returning NULL due to
-> > missing 128-bit atomics. The NULL returns led to -ENOMEM errors
-> > during scheduler initialization, causing test cases to fail.
-> >
-> > Verified by testing with the scx_qmap scheduler (located in
-> > tools/sched_ext/). Building with `make` and running
-> > ./tools/sched_ext/build/bin/scx_qmap.
-> >
-> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > ---
-> >  arch/loongarch/include/asm/cmpxchg.h | 46
-> > ++++++++++++++++++++++++++++++++++++ 1 file changed, 46
-> > insertions(+)
-> >
-> > diff --git a/arch/loongarch/include/asm/cmpxchg.h
-> > b/arch/loongarch/include/asm/cmpxchg.h index
-> > 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..5f8d418595cf62ec3153dd3825d80ac1fb31e883
-> > 100644 --- a/arch/loongarch/include/asm/cmpxchg.h +++
-> > b/arch/loongarch/include/asm/cmpxchg.h @@ -111,6 +111,43 @@
-> > __arch_xchg(volatile void *ptr, unsigned long x, int size) __ret;
-> >                                                        \ })
-> >
-> > +union __u128_halves {
-> > +       u128 full;
-> > +       struct {
-> > +               u64 low;
-> > +               u64 high;
-> > +       };
-> > +};
-> > +
-> > +#define __cmpxchg128_asm(ld, st, ptr, old, new)
-> >             \ +({
-> >                   \
-> > +       union __u128_halves __old, __new, __ret;
-> >     \
-> > +       volatile u64 *__ptr = (volatile u64 *)(ptr);
-> >     \
-> > +
-> >     \
-> > +       __old.full = (old);
-> >     \
-> > +       __new.full = (new);
-> >     \
-> > +
-> >     \
-> > +       __asm__ __volatile__(
-> >     \
-> > +       "1:   " ld "  %0, %4          # 128-bit cmpxchg low  \n"
-> >     \
-> > +       "     " ld "  %1, %5          # 128-bit cmpxchg high \n"
-> >     \
-> > +       "     bne     %0, %z6, 2f                            \n"
-> >     \
-> > +       "     bne     %1, %z7, 2f                            \n"
-> >     \
-> > +       "     move    $t0, %z8                               \n"
-> >     \
-> > +       "     move    $t1, %z9                               \n"
-> >     \
-> > +       "     " st "  $t0, $t1, %2                           \n"
-> >     \
-> > +       "     beqz    $t0, 1b                                \n"
-> >     \
-> > +       "2:                                                  \n"
-> >     \
-> > +       __WEAK_LLSC_MB
-> >     \
-> > +       : "=&r" (__ret.low), "=&r" (__ret.high),
-> >     \
-> > +         "=ZB" (__ptr[0]), "=ZB" (__ptr[1])
-> >     \
-> > +       : "ZB" (__ptr[0]), "ZB" (__ptr[1]),
-> >     \  
-> 
-> Address operand constraints:
-> - ld.d: "m"
-> - ll.d: "ZC"
-> - sc.q: "r"
-> 
-Thanks for your advice. 
-Could you tell me how to find these constraints?
-> > +         "Jr" (__old.low), "Jr" (__old.high),
-> >     \
-> > +         "Jr" (__new.low), "Jr" (__new.high)
-> >     \
-> > +       : "t0", "t1", "memory");
-> >     \
-> > +
-> >     \
-> > +       __ret.full;
-> >     \ +})
-> > +
-> >  static inline unsigned int __cmpxchg_small(volatile void *ptr,
-> > unsigned int old, unsigned int new, unsigned int size)
-> >  {
-> > @@ -198,6 +235,15 @@ __cmpxchg(volatile void *ptr, unsigned long
-> > old, unsigned long new, unsigned int __res;
-> >                                  \ })
-> >
-> > +/* cmpxchg128 */
-> > +#define system_has_cmpxchg128()                1
-> > +
-> > +#define arch_cmpxchg128(ptr, o, n)
-> >     \ +({
-> >           \
-> > +       BUILD_BUG_ON(sizeof(*(ptr)) != 16);
-> >     \
-> > +       __cmpxchg128_asm("ll.d", "sc.d", ptr, o, n);
-> >     \  
-> 
-> "sc.d" -> "sc.q"
-> 
-> __cmpxchg128_asm doesn’t have multiple variants, so no need to
-> genericize it?
-> 
-> > +})
-> > +
-> >  #ifdef CONFIG_64BIT
-> >  #define arch_cmpxchg64_local(ptr, o, n)
-> >             \ ({
-> >                \
-> >
-> > --
-> > 2.48.1
-> >
-> >  
-> 
-> --
-> Rui
+Quite so :-)
+
+> It's probably fine for a task that genuinely sits in usermode forever,
+> but I don't think it's likely to be something that we'd be willing to
+> enable for normal kernels and normal tasks.  And it would be really nice
+> for the don't-interrupt-user-code still to move toward being always
+> available rather than further from it.
+>
+
+Well following Frederic's suggestion of using the "is NOHZ_FULL actually in
+use" static key in the ASM bits, none of the ugly bits get involved unless
+you do have 'nohz_full=' on the cmdline - not perfect, but it's something.
+
+RHEL kernels ship with NO_HZ_FULL=y [1], so we do care about that not impacting
+performance too much if it's just compiled-in and not actually used.
+
+[1]: https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-10/-/blob/main/redhat/configs/common/generic/CONFIG_NO_HZ_FULL
+>
+> I admit that I'm kind of with dhansen: Zen 3+ can use INVLPGB and doesn't
+> need any of this.  Some Intel CPUs support RAR and will eventually be
+> able to use RAR, possibly even for sync_core().
+
+Yeah that INVLPGB thing looks really nice, and AFAICT arm64 is similarly
+covered with TLBI VMALLE1IS.
+
+My goal here is to poke around and find out what's the minimal amount of
+ugly we can get away with to suppress those IPIs on existing fleets, but
+there's still too much ugly :/
 
