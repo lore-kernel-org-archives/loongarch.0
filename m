@@ -1,105 +1,212 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE202D2398
-	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 15:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266FE33CEB2
+	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 15:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763739513; cv=none; b=ufzR9LQ2GKeozXwEm8JKrzg0SJs8SryiFXj6OGZoFuowMXFx4MP1y101+oyEEZUqxHT++TDmGQFoO4ri4xbq5tGmiqDTkMTIa7BZXmNtW8PcPB21isZwqotjtkOYRvyg30r5jViUgUsJQsL+20Be+7XJjgwB8YlDgJODNUSy6lU=
+	t=1763740438; cv=none; b=UODQZ9za+/L0SsUx4xuo22sSTEWdU30aOUAjoCLK6l8oF+o6JUMk5S/wx1BWV7Xlc96nRM61RYtmCGCaBEcfg0tIuEhasVncR5lhBGsMeK5Ad2q14a6KuWwH4zJ/GnqxwlOgXZ84QQbkSgmBR/K7CAz8h3cm4fkmbJPg0TlW7zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763739513; c=relaxed/simple;
-	bh=ryCRWvv7XdBibWvL4fadsc3qqHedhZ8wvCfbdFXGCIc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DOMtnJGcSLkYKQUWIHW0/wHYKKcG+WwceAAZum+0gF1/0bSjIY/VMNlC9wZqpPpMj/zvUIn3NqfwF/apfIn63zmBIJoXsm4EAv7qnvpFiyJiZVQQzhMWWEHZV+2KOhcf+/HbCO1EoaN5bUtKiMVPmRPRQyIYFefFIklEBoNRZak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.219])
-	by gateway (Coremail) with SMTP id _____8CxqdFrhyBpxZ4mAA--.18216S3;
-	Fri, 21 Nov 2025 23:38:19 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.219])
-	by front1 (Coremail) with SMTP id qMiowJAxleRhhyBpzEA7AQ--.6972S2;
-	Fri, 21 Nov 2025 23:38:17 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.18-rc7
-Date: Fri, 21 Nov 2025 23:37:42 +0800
-Message-ID: <20251121153747.3337264-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1763740438; c=relaxed/simple;
+	bh=053W401yEqZ8TthBPex9IuFfmnmqRSZ0AgYLLM66T3A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BqdSHpmpOSk7KyeGk5r9sOidn8gwAEBq0g4cHgY+CUE+grycWvBJDtCN0rJCOCWdCkHTXLb/XOvmj3IeItVyFiJUXXs3RF1hDtasyHgrqoekWVOK7gMb9emd0yQTdX/haf84drqLSg2sB1v38YFTG5mYcrN8bcEsCKmAHh/9G+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SvHuPvJ1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TGM4PY6I; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=l/gDYfrD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=G4QprW/h; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SvHuPvJ1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TGM4PY6I";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="l/gDYfrD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="G4QprW/h"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id F0656210B7;
+	Fri, 21 Nov 2025 15:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1763740431; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NZ4fMvYN09XV3DpCLtI4Q6IQM3b2RzHinbyel8yt7oE=;
+	b=SvHuPvJ1qVFh4N7vqUZR6Vqe6XD2GAtLliOSLQJw2rEc/wZIv8u4tyqsotgBVI5uLhXqIp
+	6/YsJ2jjESWyO6n4PgCxpYK8hGJN624afaODcxozWXLIwxrt9kDQfl5oNx95AClQp12LAg
+	4rez778JRfx/F+7BTjy5dBih314U3e8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1763740431;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NZ4fMvYN09XV3DpCLtI4Q6IQM3b2RzHinbyel8yt7oE=;
+	b=TGM4PY6IO5/5Kf4+ELC7PJ+a/shhsrgHvQbR9Q4HOGHhJqeTZ2ZMAnmJiumYdXqh+PWOhe
+	2ka0uDIuigQpQnDw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="l/gDYfrD";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="G4QprW/h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1763740429; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NZ4fMvYN09XV3DpCLtI4Q6IQM3b2RzHinbyel8yt7oE=;
+	b=l/gDYfrDXgeDbB4fL7Qcnf/JDYWOxIHEkYjXKVVeSrDAea8L2qkR8RL7RJbBpjEZsDKw/A
+	RDrF3z2NVgRA06TIqBIdE+j861sjCM0o61oUPOYREGxqbg5c0KCnb85JEzZRTNi7prim4p
+	GL9HUDt3+urp78EzRLjqYn7Vq1ylido=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1763740429;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NZ4fMvYN09XV3DpCLtI4Q6IQM3b2RzHinbyel8yt7oE=;
+	b=G4QprW/hSJfX8bBwPUtlzi4YuwS3d5rUVuNBab8NOAPT/6kmn6uHNaqcfFLUXtdltnNWUZ
+	cOLzPAspcfqoF4BQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8BEC93EA61;
+	Fri, 21 Nov 2025 15:53:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vYq5IA2LIGniaAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 21 Nov 2025 15:53:49 +0000
+Message-ID: <199e7538-5b4a-483b-8976-84e4a8a0f2fd@suse.de>
+Date: Fri, 21 Nov 2025 16:53:49 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] arch, sysfb: Move screen and edid info into single
+ place
+To: Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Javier Martinez Canillas <javierm@redhat.com>, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org,
+ linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
+References: <20251121135624.494768-1-tzimmermann@suse.de>
+ <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
+ <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxleRhhyBpzEA7AQ--.6972S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KFy7CFy7tF45JFWUZryruFX_yoW8Aryfpr
-	y3urnxGF4rGr1fXwnxt3yUur15Jr1xG342qa13Gry8AFy5Zr1UJr18XryxXFyUJ3yfJryI
-	qF1rJw15KF1UJ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: F0656210B7
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.com:url,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,arndb.de:email]
+X-Spam-Score: -4.51
 
-The following changes since commit 6a23ae0a96a600d1d12557add110e0bb6e32730c:
+Hi
 
-  Linux 6.18-rc6 (2025-11-16 14:25:38 -0800)
+Am 21.11.25 um 16:16 schrieb Ard Biesheuvel:
+> On Fri, 21 Nov 2025 at 16:10, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Fri, Nov 21, 2025, at 14:36, Thomas Zimmermann wrote:
+>>> Replace screen_info and edid_info with sysfb_primary_device of type
+>>> struct sysfb_display_info. Update all users.
+>>>
+>>> Sysfb DRM drivers currently fetch the global edid_info directly, when
+>>> they should get that information together with the screen_info from their
+>>> device. Wrapping screen_info and edid_info in sysfb_primary_display and
+>>> passing this to drivers enables this.
+>>>
+>>> Replacing both with sysfb_primary_display has been motivate by the EFI
+>>> stub. EFI wants to transfer EDID via config table in a single entry.
+>>> Using struct sysfb_display_info this will become easily possible. Hence
+>>> accept some churn in architecture code for the long-term improvements.
+>> This all looks good to me,
+>>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-are available in the Git repository at:
+Thanks
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.18-2
+>>
+>> It should also bring us one step closer to eventually
+>> disconnecting the x86 boot ABI from the kernel-internal
+>> sysfb_primary_display.
+>>
+> Agreed
+>
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-for you to fetch changes up to 677e6123e3d24adaa252697dc89740f2ac07664e:
+Thanks
 
-  LoongArch: BPF: Disable trampoline for kernel module function trace (2025-11-20 14:42:05 +0800)
+>
+> I can take patches 1-2 right away, if that helps during the next cycle.
 
-----------------------------------------------------------------
-LoongArch fixes for v6.18-rc7
+ From my sysfb-focused POV, these patches would ideally all go through 
+the same tree, say efi or generic arch, or whatever fits best. Most of 
+the other code is only renames anyway.
 
-Use UAPI types in ptrace UAPI header to fix nolibc ptrace; fix some bugs
-about CPU name display, NUMA node parsing, kexec/kdump, PCI init and BPF
-trampoline.
-----------------------------------------------------------------
-Bibo Mao (1):
-      LoongArch: Fix NUMA node parsing with numa_memblks
+Best regards
+Thomas
 
-Huacai Chen (3):
-      LoongArch: Consolidate CPU names in /proc/cpuinfo
-      LoongArch: Mask all interrupts during kexec/kdump
-      LoongArch: Don't panic if no valid cache info for PCI
 
-Thomas Weißschuh (1):
-      LoongArch: Use UAPI types in ptrace UAPI header
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
 
-Vincent Li (1):
-      LoongArch: BPF: Disable trampoline for kernel module function trace
-
- arch/loongarch/include/asm/cpu.h         | 21 +++++++++++
- arch/loongarch/include/uapi/asm/ptrace.h | 40 ++++++++++-----------
- arch/loongarch/kernel/cpu-probe.c        | 34 ++++++------------
- arch/loongarch/kernel/machine_kexec.c    |  2 ++
- arch/loongarch/kernel/numa.c             | 60 ++++++++++----------------------
- arch/loongarch/kernel/proc.c             |  2 ++
- arch/loongarch/net/bpf_jit.c             |  3 ++
- arch/loongarch/pci/pci.c                 |  8 ++---
- 8 files changed, 79 insertions(+), 91 deletions(-)
 
