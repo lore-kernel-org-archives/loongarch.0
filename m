@@ -1,126 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6182FCBF7
-	for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 12:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6325B1BCA1C;
+	Fri, 21 Nov 2025 02:09:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763640336; cv=none; b=Y9+jF95xt4hU4Bu22DFFGwtYrXNwhMoK3mQWy7ghXydnP4uKALdIUzsdkxT69PTt653iWy0pE2M5Eo3F8mlWxRykFAuzkOqF1SAAxgDStNh3/JwSFHA+4ImryALMSe4SfVZwsXbcbzoORu/yhREVdXixptGP9vcirwp9H+leitE=
+	t=1763690963; cv=none; b=X3bfQOHMAWWDkAg94SWUCwxvSM/iExeOzPjNpoqkZDxrhoMDqmkVSHWihU2keF1MNpSF2J6DhPnTDAUBqBY5n60uOhGQoq2dAwM3Nnfa0jFcGXbm3HJz/Ivke5fvrJrPp3ExLWRBIr2TCUl+7wvjLqlsqUp51XlI6u6hfuk3l2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763640336; c=relaxed/simple;
-	bh=qKmkXnKph4CbdQSGt6eicwkmhyoCWM/p3XqY8UOFiyQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p5ozDt+4cVmKw2kQhua/c0DYFoUHoGNxvd+0F1vVTVmqvueaKt2H5Qy0nAuE/lMDf2THv6Ze2Yc2CBghKvIlzcTdUFSfRPl5NNwAKrIKwaFMGVzIWAWn16gn4S0t1QxTD+RQLLy0OGK2IsfGJOaELKuIKyS6hyiEWTaIshz+Uis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOMPzbuw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763690963; c=relaxed/simple;
+	bh=Bz7xeF2JFxhA+tr4bBYKwtM1aze7r6fWJHliCqTnUpU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LkPcocAkkZihTwp05j5ZWJ6A1Az/BhS3fKsOaA7QdeK8mNYd6xvAuhjARdAfmV5D6kyn07gEoXNDlcsJX2E1ZFpwTUa4EdMHlgji58A6MEuJtmbJoOuytqE2VDrhqQPgFJ3wgFswhfbU+FVLR7oWiB+k4aC6ZjZLpzrOAWba7PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3dSOGzT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOMPzbuw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 168A1C116B1
-	for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 12:05:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3dSOGzT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30026C4CEF1;
+	Fri, 21 Nov 2025 02:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763640336;
-	bh=qKmkXnKph4CbdQSGt6eicwkmhyoCWM/p3XqY8UOFiyQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tOMPzbuwj8UvuS/0GSB31Ol1xbKkfqULDluWIa4NHNu9na2DS7djM1rYFvbiV881d
-	 jDiuBSapQz+aoVlWy1CQTUJ60EV03JNE1+72NYNNOIRyrC2wYDrZrsVgbaKiHapNxu
-	 ZpC2k7C4EI5rc+eIevuvhpjZzA8/mnLwnZFQAMzP34f/AkMyHjugGvBILZKG9oObv3
-	 TumnCol5JthNIQSalOUe1a3xHhJQIY3O2j1sJeelYC4osU6OKC2Kqbit+6bBd0L3gq
-	 55N2RMuVyMEXAWvLuljvE0yqlrJbsn0TxenjsWJgHgO2Ql96cZnAD/9P63sLRC/pI+
-	 d6fHRhO08x1jw==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-640ca678745so1270348a12.2
-        for <loongarch@lists.linux.dev>; Thu, 20 Nov 2025 04:05:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUZPHErc6uVOlGoXvYAJqCnLYmtCh9EBc5eUgdil9Q9eX2bWgeUbWmHZa0ZHh79TNHBIIxBm7kh1qo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw6gnx82wEw6eHvOreGZa6vzdAoKGZSWh/Qk5L41C5eZ3Mn8QXb
-	jw9D9Fi8ZMyJGqUWjBo2mAZ5IGpDf1KTbobixcNrj2tG7oNN0myYsVypaizoI3XpHZ3RVZW2VLd
-	gULRjdvjhO1mOVd/g3EsettOLzjQeSx8=
-X-Google-Smtp-Source: AGHT+IGdOxQHn05ZaaIajL/4sDfJuw+pg9D2frqJgjeNKWOarJkzeaAsjW4/N0Mg+W73l6MarAmvPXJxrUOs1vfs7yc=
-X-Received: by 2002:a17:907:2dab:b0:b73:7ac4:a5f with SMTP id
- a640c23a62f3a-b7654d5d11amr317873766b.21.1763640334653; Thu, 20 Nov 2025
- 04:05:34 -0800 (PST)
+	s=k20201202; t=1763690963;
+	bh=Bz7xeF2JFxhA+tr4bBYKwtM1aze7r6fWJHliCqTnUpU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=j3dSOGzTqbCddJGVT5roKZn7ficPkxCfcZaQAbSHTo9ZEpPBpOUx6A+7D3iJGElrS
+	 xERwOpb0HglzyK+cyiMtdgu+xzC+v5c2uu28ifTlgYK2Oge6TJdh2knqdBtSef+qsa
+	 n4EASFxrLwd1zfxuHQhx80lddfRqlhkum8rXwIpnFiTVaQjEI29yJEKBIpe+M/FWR8
+	 OLEfnFo43eLM03+3tVi64Nr+UnQNI7VzrHe31zP9rsXTL7AzLiKeGnBkSfiX1Gvg3X
+	 9VJ4TWJNC3VVZ1aJwt1vadaOPQj2cIIv/pcsMPa30N8hKbqp7RTHENp04Ckbf6rwHH
+	 UvjI8iIQZXrfQ==
+Date: Thu, 20 Nov 2025 19:09:18 -0700 (MST)
+From: Paul Walmsley <pjw@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+cc: Will Deacon <will@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+    Catalin Marinas <catalin.marinas@arm.com>, Paul Walmsley <pjw@kernel.org>, 
+    Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+    "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>, 
+    Tiezhu Yang <yangtiezhu@loongson.cn>, Ard Biesheuvel <ardb@kernel.org>, 
+    loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+    linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+    linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+In-Reply-To: <aRsH7RTpAah4g5Xr@willie-the-truck>
+Message-ID: <e36f8b19-c801-c872-381e-7eb40dc5e3e4@kernel.org>
+References: <CAAhV-H6m5vszCyiF3qi94cpHBPVuqM2xH93D=gfsQqOSYvC-sA@mail.gmail.com> <33612d85-e70b-26da-8460-ea6b9064ce08@loongson.cn> <CAAhV-H5ZSTFDxvm-W1CrgEoQ5d_jw5yVsfetQ_J_qL5pqLtzgg@mail.gmail.com> <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
+ <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com> <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com> <421c08e1-255b-447b-b5e3-ee6544fbefd2@loongson.cn> <CAAhV-H5KsFShDJ_Cxu+1_ces8oojn8+S-7PLmE7aUj8gX5_GEw@mail.gmail.com>
+ <32s3lvzfu6jkyho7qenrqbsm5wkgjnzn2imdp6tfwycmyxpzgu@kg5367uxmxii> <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com> <aRsH7RTpAah4g5Xr@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251118112728.571869-1-chenhuacai@loongson.cn>
- <20251118112728.571869-10-chenhuacai@loongson.cn> <a13a5f0b-49ca-4116-8654-5bc57c0ca6a0@xen0n.name>
-In-Reply-To: <a13a5f0b-49ca-4116-8654-5bc57c0ca6a0@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 20 Nov 2025 20:05:36 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4YzfWXKjWwmA8co4qFjLm=jZggbD5dqq+OxntVH6OZrQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bkmbpeQkv2vYi0nogbpWugsAydiiMD2SigpieVGpX1I4Das_vmbAGLrmfA
-Message-ID: <CAAhV-H4YzfWXKjWwmA8co4qFjLm=jZggbD5dqq+OxntVH6OZrQ@mail.gmail.com>
-Subject: Re: [PATCH V2 09/14] LoongArch: Adjust system call for 32BIT/64BIT
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323329-1623710078-1763690962=:1910464"
 
-On Thu, Nov 20, 2025 at 6:40=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
-te:
->
-> On 11/18/25 19:27, Huacai Chen wrote:
-> > Adjust system call for both 32BIT and 64BIT, including: add the uapi
-> > unistd_{32,64}.h and syscall_table_{32,64}.h inclusion, add sys_mmap2()
-> > definition, change the system call entry routines, etc.
-> >
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >   arch/loongarch/include/asm/Kbuild        |  1 +
-> >   arch/loongarch/include/uapi/asm/Kbuild   |  1 +
-> >   arch/loongarch/include/uapi/asm/unistd.h |  6 ++++++
-> >   arch/loongarch/kernel/Makefile.syscalls  |  1 +
-> >   arch/loongarch/kernel/entry.S            | 22 +++++++++++-----------
-> >   arch/loongarch/kernel/syscall.c          | 13 +++++++++++++
-> >   6 files changed, 33 insertions(+), 11 deletions(-)
-> >
-> > [snip]
-> > diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/sy=
-scall.c
-> > index ab94eb5ce039..1249d82c1cd0 100644
-> > --- a/arch/loongarch/kernel/syscall.c
-> > +++ b/arch/loongarch/kernel/syscall.c
-> > @@ -34,9 +34,22 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned =
-long, len, unsigned long,
-> >       return ksys_mmap_pgoff(addr, len, prot, flags, fd, offset >> PAGE=
-_SHIFT);
-> >   }
-> >
-> > +SYSCALL_DEFINE6(mmap2, unsigned long, addr, unsigned long, len, unsign=
-ed long,
-> > +              prot, unsigned long, flags, unsigned long, fd, unsigned =
-long, offset)
-> > +{
-> > +     if (offset & (~PAGE_MASK >> 12))
-> > +             return -EINVAL;
-> > +
-> > +     return ksys_mmap_pgoff(addr, len, prot, flags, fd, offset >> (PAG=
-E_SHIFT - 12));
-> > +}
-> > +
->
-> Why not guard this with #ifdef CONFIG_32BIT?
-Because it is not only used by CONFIG_32BIT, but also by CONFIG_COMPAT.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Huacai
+--8323329-1623710078-1763690962=:1910464
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
->
-> >   void *sys_call_table[__NR_syscalls] =3D {
-> >       [0 ... __NR_syscalls - 1] =3D sys_ni_syscall,
-> > +#ifdef CONFIG_32BIT
-> > +#include <asm/syscall_table_32.h>
-> > +#else
-> >   #include <asm/syscall_table_64.h>
-> > +#endif
-> >   };
-> >
-> >   typedef long (*sys_call_fn)(unsigned long, unsigned long,
->
-> --
-> WANG "xen0n" Xuerui
->
-> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+On Mon, 17 Nov 2025, Will Deacon wrote:
+
+> On Sat, Nov 15, 2025 at 11:16:42AM +0800, Huacai Chen wrote:
+> > On Wed, Nov 12, 2025 at 2:00 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> > > On Mon, Nov 10, 2025 at 03:00:00PM +0800, Huacai Chen wrote:
+> > >
+> > > > Changing efistub code and changing objtool (ignore __efistub prefix)
+> > > > are both workarounds, but I think changing objtool is a little more
+> > > > reasonable. Maybe Josh has different ideas?
+> > >
+> > > I thought the conversation had converged on what Tiezhu mentioned above,
+> > > which is to skip objtool on libstub for loongarch, but leave the other
+> > > arches alone.  That way objtool behavior is consistent between loongarch
+> > > and x86, and objtool doesn't need to ignore any prefixes.
+> > >
+> > > So basically, the v2 patch minus the arm64/riscv changes.
+> > 
+> > Hi, ARM64 and RISC-V maintainers,
+> > 
+> > Would you mind that this patch modifies the three architectures
+> > together (they are exactly the same style now)?
+> > 
+> > Madhavan is the author of ARM64's objtool, I think your opinion is
+> > also very important.
+> 
+> arm64 doesn't (yet) use objtool.
+> 
+> I defer to Ard on anything relating to the arm64 efistub. Reading the
+> start of this thread, it doesn't look like he's convinced and I'm not
+> surprised if it's purely an issue with objtool.
+
+Same for RISC-V.
+
+
+- Paul
+--8323329-1623710078-1763690962=:1910464--
